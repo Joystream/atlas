@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { ChangeEvent, forwardRef, useEffect, useRef, useState } from 'react'
 import mergeRefs from 'react-merge-refs'
 import useResizeObserver from 'use-resize-observer'
 
@@ -30,7 +30,7 @@ export type CommentInputProps = {
   hasInitialValueChanged: boolean
   onComment?: () => void
   onCancel?: () => void
-  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onChange?: (e: ChangeEvent<HTMLTextAreaElement>) => void
   onFocus?: () => void
   initialFocus?: boolean
   reply?: boolean
@@ -40,7 +40,7 @@ export type CommentInputProps = {
 const COMMENT_LIMIT = 50000
 const ERROR_SNACKBAR_TIMEOUT = 5000
 
-export const CommentInput = React.forwardRef<HTMLTextAreaElement, CommentInputProps>(
+export const CommentInput = forwardRef<HTMLTextAreaElement, CommentInputProps>(
   (
     {
       processing,

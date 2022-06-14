@@ -1,5 +1,5 @@
 import { generateChannelMetaTags } from '@joystream/atlas-meta-server/src/tags'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useParams, useSearchParams } from 'react-router-dom'
 
@@ -51,7 +51,7 @@ import { TABS } from './utils'
 
 export const INITIAL_TILES_PER_ROW = 4
 
-export const ChannelView: React.FC = () => {
+export const ChannelView: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [tilesPerRow, setTilesPerRow] = useState(INITIAL_TILES_PER_ROW)
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null

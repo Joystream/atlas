@@ -1,6 +1,16 @@
 import { web3Accounts, web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp'
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import {
+  FC,
+  PropsWithChildren,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { useNavigate } from 'react-router'
 
 import { useMembership, useMemberships } from '@/api/hooks'
@@ -39,17 +49,17 @@ type ActiveUserContextValue = ActiveUserStoreActions & {
   isLoading: boolean
 }
 
-const ActiveUserContext = React.createContext<undefined | ActiveUserContextValue>(undefined)
+const ActiveUserContext = createContext<undefined | ActiveUserContextValue>(undefined)
 ActiveUserContext.displayName = 'ActiveUserContext'
 
 const EXTENSION_TIMEOUT = 1500
 
-export const ActiveUserProvider: React.FC = ({ children }) => {
+export const ActiveUserProvider: FC<PropsWithChildren<unknown>> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [openLongLoadingModal, closeLongLoadingModal] = useConfirmationModal()
   const activeUserState = useActiveUserStore((state) => state)
   const navigate = useNavigate()
-  const unsubscribeRef = React.useRef<(() => void) | null>()
+  const unsubscribeRef = useRef<(() => void) | null>()
   const {
     actions: { setActiveUser, resetActiveUser },
   } = activeUserState

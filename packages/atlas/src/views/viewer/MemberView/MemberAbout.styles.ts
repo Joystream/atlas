@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { HTMLProps } from 'react'
 
 import { LayoutGrid } from '@/components/LayoutGrid/LayoutGrid'
 import { Text } from '@/components/Text'
@@ -41,7 +42,7 @@ export const StyledChannelCard = styled(ChannelCard)`
   min-width: 136px;
 `
 
-export const Anchor = styled(Text)<React.HTMLProps<HTMLAnchorElement>>`
+export const Anchor = styled(Text)<HTMLProps<HTMLAnchorElement>>`
   text-decoration: none;
 
   &:hover {

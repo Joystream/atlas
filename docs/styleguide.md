@@ -103,7 +103,7 @@ Here is an example of a nicely written component:
 
 ```tsx
 // Component.tsx
-import React, { useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import { someSideEffect } from '@/utils'
@@ -114,7 +114,7 @@ type ComponentProps = {
 }
 
 // all components should use named exports
-export const Component: React.FC<ComponentProps> = ({ hidden, otherProp, ...rest }) => {
+export const Component: FC<ComponentProps> = ({ hidden, otherProp, ...rest }) => {
   // hooks first
   const [pressed, setPressed] = useState(false)
   const [count, setCount] = useState(0)

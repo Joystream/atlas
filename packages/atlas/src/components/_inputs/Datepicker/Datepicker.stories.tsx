@@ -1,6 +1,6 @@
 import { Meta, Story } from '@storybook/react'
 import { isValid } from 'date-fns'
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 
 import { Datepicker, DatepickerProps } from './Datepicker'
 

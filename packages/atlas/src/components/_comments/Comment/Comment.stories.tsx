@@ -1,5 +1,4 @@
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 
 import { InternalComment, InternalCommentProps } from './InternalComment'

@@ -1,5 +1,5 @@
 import { To } from 'history'
-import React, { FC, MouseEvent, ReactNode } from 'react'
+import { FC, MouseEvent, ReactNode } from 'react'
 
 import { SvgActionChevronR } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'

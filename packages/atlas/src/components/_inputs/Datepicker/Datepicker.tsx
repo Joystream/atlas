@@ -1,5 +1,5 @@
 import { format, isValid, parse } from 'date-fns'
-import React, { forwardRef, useEffect, useState } from 'react'
+import { ChangeEvent, FocusEvent, ForwardRefRenderFunction, forwardRef, useEffect, useState } from 'react'
 import NumberFormat from 'react-number-format'
 
 import { Input } from '@/components/_inputs/Input'
@@ -13,10 +13,10 @@ export type DatepickerProps = {
   error?: boolean
   disabled?: boolean
   onChange: (date: Date | null) => void
-  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void
+  onBlur?: (event: FocusEvent<HTMLInputElement>) => void
 }
 
-const DatepickerComponent: React.ForwardRefRenderFunction<HTMLInputElement, DatepickerProps> = (
+const DatepickerComponent: ForwardRefRenderFunction<HTMLInputElement, DatepickerProps> = (
   { name, value, required, error, disabled, onChange, onBlur },
   ref
 ) => {
@@ -30,7 +30,7 @@ const DatepickerComponent: React.ForwardRefRenderFunction<HTMLInputElement, Date
     }
   }, [value])
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setRawValue(value)
 

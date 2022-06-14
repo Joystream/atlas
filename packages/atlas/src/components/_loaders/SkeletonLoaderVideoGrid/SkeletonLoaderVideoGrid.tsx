@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { Grid } from '@/components/Grid'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
@@ -6,7 +6,7 @@ import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 type SkeletonLoaderVideoGridProps = {
   videosCount?: number
 }
-export const SkeletonLoaderVideoGrid: React.FC<SkeletonLoaderVideoGridProps> = ({ videosCount = 10 }) => {
+export const SkeletonLoaderVideoGrid: FC<SkeletonLoaderVideoGridProps> = ({ videosCount = 10 }) => {
   return (
     <Grid>
       {Array.from({ length: videosCount }).map((_, idx) => (

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { FC, Fragment } from 'react'
 
 import { SPECIAL_CHARACTERS } from '@/config/regex'
 
@@ -9,7 +9,7 @@ type ResultTitleProps = {
   query?: string
 }
 
-export const ResultTitle: React.FC<ResultTitleProps> = ({ title, query }) => {
+export const ResultTitle: FC<ResultTitleProps> = ({ title, query }) => {
   if (!title) {
     return null
   }

@@ -1,10 +1,10 @@
 import ls from '@livesession/sdk'
-import React, { useCallback, useEffect } from 'react'
+import { FC, useCallback, useEffect } from 'react'
 
 import { BUILD_ENV, readEnv } from '@/config/envs'
 import { usePersonalDataStore } from '@/providers/personalData'
 
-export const AnalyticsManager: React.FC = () => {
+export const AnalyticsManager: FC = () => {
   const cookiesAccepted = usePersonalDataStore((state) => state.cookiesAccepted)
   const analyticsEnabled = BUILD_ENV === 'production' && cookiesAccepted
 

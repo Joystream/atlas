@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import { FC, useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { useNftActions } from '@/providers/nftActions'
 
-export const PlaygroundNftPurchase: React.FC = () => {
+export const PlaygroundNftPurchase: FC = () => {
   const { openNftPurchase } = useNftActions()
 
   const [nftId, setNftId] = useState('')

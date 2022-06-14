@@ -1,13 +1,13 @@
-import React from 'react'
+import { FC, PropsWithChildren } from 'react'
 
 import { ChildrenWrapper, DropShadow, MainContainer, NumberWrapper, RankingNumber } from './RankingNumberTile.styles'
 
-export type RankingNumberTileProps = {
+export type RankingNumberTileProps = PropsWithChildren<{
   number: number
   className?: string
-}
+}>
 
-export const RankingNumberTile: React.FC<RankingNumberTileProps> = ({ number, children, className }) => {
+export const RankingNumberTile: FC<RankingNumberTileProps> = ({ number, children, className }) => {
   return (
     <MainContainer className={className}>
       <NumberWrapper>

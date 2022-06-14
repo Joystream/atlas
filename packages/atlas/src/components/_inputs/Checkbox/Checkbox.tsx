@@ -1,4 +1,4 @@
-import React from 'react'
+import { ChangeEvent, DetailedHTMLProps, InputHTMLAttributes, forwardRef } from 'react'
 
 import { SvgActionMinus } from '@/components/_icons'
 
@@ -6,7 +6,7 @@ import { CheckboxInput, Checkmark, Container, StyledGlyphCheck } from './Checkbo
 
 import { RadioAndCheckboxBase } from '../RadioAndCheckboxBase'
 
-type HTMLCheckboxProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
+type HTMLCheckboxProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
 export interface CheckboxProps extends Omit<HTMLCheckboxProps, 'value' | 'onChange' | 'checked' | 'multiple' | 'ref'> {
   name?: string
   value?: boolean
@@ -14,12 +14,12 @@ export interface CheckboxProps extends Omit<HTMLCheckboxProps, 'value' | 'onChan
   indeterminate?: boolean
   error?: boolean
   className?: string
-  onChange?: (value: boolean, event: React.ChangeEvent<HTMLInputElement>) => void
+  onChange?: (value: boolean, event: ChangeEvent<HTMLInputElement>) => void
   label?: string
   caption?: string
 }
 
-export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
+export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   (
     {
       name,
@@ -40,7 +40,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
     const isIndeterminate = indeterminate || false
     const isSelected = value
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       if (!disabled && onChange) {
         onChange(!value, e)
       }

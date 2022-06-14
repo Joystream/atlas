@@ -1,5 +1,5 @@
 import { addHours } from 'date-fns'
-import React from 'react'
+import { FC, PropsWithChildren } from 'react'
 
 import { BasicMembershipFieldsFragment } from '@/api/queries'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -27,7 +27,7 @@ type AcceptTermsProps = {
   formData: NftFormFields
 }
 
-export const AcceptTerms: React.FC<AcceptTermsProps> = ({ selectedType, formData }) => {
+export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData }) => {
   const { startDate, endDate, type } = formData
 
   const totalDaysAndHours = getTotalDaysAndHours(startDate, endDate)
@@ -183,15 +183,15 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({ selectedType, formData
   )
 }
 
-export const MemberWithResolvedAvatar: React.FC<{ member: BasicMembershipFieldsFragment }> = ({ member }) => {
+export const MemberWithResolvedAvatar: FC<{ member: BasicMembershipFieldsFragment }> = ({ member }) => {
   const { isLoadingAsset, url } = useMemberAvatar(member)
   return <StyledMemberBadge avatarUri={url} isLoadingAvatar={isLoadingAsset} handle={member.handle} />
 }
 
-export const TitleText: React.FC = ({ children }) => (
+export const TitleText: FC<PropsWithChildren<unknown>> = ({ children }) => (
   <Text variant="h300" secondary>
     {children}
   </Text>
 )
 
-export const DescriptionText: React.FC = ({ children }) => <Text variant="h400">{children}</Text>
+export const DescriptionText: FC<PropsWithChildren<unknown>> = ({ children }) => <Text variant="h400">{children}</Text>

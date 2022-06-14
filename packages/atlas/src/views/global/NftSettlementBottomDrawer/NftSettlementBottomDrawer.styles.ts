@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
-import Lottie from 'react-lottie-player'
 
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { LottiePlayer } from '@/components/LottiePlayer'
 import { media, sizes, zIndex } from '@/styles'
 
 export const StyledLimitedContainer = styled(LimitedWidthContainer)`
@@ -25,7 +25,7 @@ export const StyledGridItem = styled(GridItem)`
   align-items: center;
 `
 
-export const StyledLottie = styled(Lottie)`
+export const StyledLottie = styled(LottiePlayer)`
   height: 100vh;
   width: 100vh;
   left: 50%;

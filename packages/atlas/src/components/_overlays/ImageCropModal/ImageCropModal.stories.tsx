@@ -1,6 +1,6 @@
 import styled from '@emotion/styled/'
 import { Meta, Story } from '@storybook/react'
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 
 import { Avatar } from '@/components/Avatar'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'

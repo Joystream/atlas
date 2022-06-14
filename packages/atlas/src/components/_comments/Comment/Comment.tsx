@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import { Dispatch, FC, SetStateAction, memo, useRef, useState } from 'react'
 
 import { useComment } from '@/api/hooks'
 import { CommentFieldsFragment, CommentStatus, VideoFieldsFragment } from '@/api/queries'
@@ -25,13 +25,13 @@ export type CommentProps = {
   video?: VideoFieldsFragment | null
   userReactions?: number[]
   isReplyable?: boolean
-  setHighlightedCommentId?: React.Dispatch<React.SetStateAction<string | null>>
-  setRepliesOpen?: React.Dispatch<React.SetStateAction<boolean>>
+  setHighlightedCommentId?: Dispatch<SetStateAction<string | null>>
+  setRepliesOpen?: Dispatch<SetStateAction<boolean>>
   isRepliesOpen?: boolean
   onReplyPosted?: (replyId: string) => void
 } & Exclude<CommentRowProps, 'memberAvatarUrl' | 'isMemberAvatarLoading'>
 
-export const Comment: React.FC<CommentProps> = React.memo(
+export const Comment: FC<CommentProps> = memo(
   ({
     commentId,
     video,

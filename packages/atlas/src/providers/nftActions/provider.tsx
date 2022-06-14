@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import { Dispatch, FC, PropsWithChildren, SetStateAction, createContext, useCallback, useMemo, useState } from 'react'
 
 import { useNft } from '@/api/hooks'
 import { AcceptBidDialog } from '@/components/_overlays/AcceptBidDialog'
@@ -11,20 +11,20 @@ type ContextValue = {
   currentAction: NftAction | null
   currentNftId: string | null
   isBuyNowClicked?: boolean
-  setCurrentAction: React.Dispatch<React.SetStateAction<NftAction | null>>
-  setCurrentNftId: React.Dispatch<React.SetStateAction<string | null>>
+  setCurrentAction: Dispatch<SetStateAction<NftAction | null>>
+  setCurrentNftId: Dispatch<SetStateAction<string | null>>
   closeNftAction: () => void
-  setIsBuyNowClicked: React.Dispatch<React.SetStateAction<boolean | undefined>>
+  setIsBuyNowClicked: Dispatch<SetStateAction<boolean | undefined>>
 }
 
-export const NftActionsContext = React.createContext<
-  (ContextValue & ReturnType<typeof useNftTransactions>) | undefined
->(undefined)
+export const NftActionsContext = createContext<(ContextValue & ReturnType<typeof useNftTransactions>) | undefined>(
+  undefined
+)
 NftActionsContext.displayName = 'NftActionsContext'
 
 type NftAction = 'putOnSale' | 'purchase' | 'settle' | 'accept-bid' | 'change-price'
 
-export const NftActionsProvider: React.FC = ({ children }) => {
+export const NftActionsProvider: FC<PropsWithChildren<unknown>> = ({ children }) => {
   const [currentAction, setCurrentAction] = useState<NftAction | null>(null)
   const transactions = useNftTransactions()
   const [isBuyNowClicked, setIsBuyNowClicked] = useState<boolean>()

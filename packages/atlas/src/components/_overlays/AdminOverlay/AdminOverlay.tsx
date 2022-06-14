@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import { ChangeEvent, FC, useEffect, useState } from 'react'
 
 import { TabItem } from '@/components/Tabs'
 import { Button, TextButton } from '@/components/_buttons/Button'
-import { SvgActionClose, SvgActionNewTab, SvgAlertsWarning24 } from '@/components/_icons'
+import { SvgActionClose, SvgActionNewTab, SvgAlertsError24, SvgAlertsWarning24 } from '@/components/_icons'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
@@ -11,6 +11,7 @@ import { availableNodes } from '@/config/availableNodes'
 import { BUILD_ENV, availableEnvs } from '@/config/envs'
 import { absoluteRoutes } from '@/config/routes'
 import { NODE_URL } from '@/config/urls'
+import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useEnvironmentStore } from '@/providers/environment'
 import { useSnackbar } from '@/providers/snackbars'
 // explicitly import from 'user/store' file to not pull in Polkadot dependencies of ActiveUserContext
@@ -36,7 +37,7 @@ const environmentsItems = availableEnvs().map((item) => ({ name: ENVIRONMENT_NAM
 
 const TABS: TabItem[] = [{ name: 'Env' }, { name: 'State' }, { name: 'User' }]
 
-export const AdminOverlay: React.FC = () => {
+export const AdminOverlay: FC = () => {
   const [overlayOpen, setOverlayOpen] = useState(false)
   const [selectedTabIdx, setSelectedTabIdx] = useState(0)
 
@@ -93,7 +94,7 @@ export const AdminOverlay: React.FC = () => {
   )
 }
 
-const EnvTab: React.FC = () => {
+const EnvTab: FC = () => {
   const {
     targetDevEnv,
     nodeOverride,
@@ -132,7 +133,7 @@ const EnvTab: React.FC = () => {
     }
   }
 
-  const handleCustomNodeUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCustomNodeUrlChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCustomNodeUrl(e.target.value)
   }
 
@@ -168,8 +169,9 @@ const EnvTab: React.FC = () => {
   )
 }
 
-const StateTab: React.FC = () => {
+const StateTab: FC = () => {
   const { displaySnackbar } = useSnackbar()
+  const [openModal, closeModal] = useConfirmationModal()
 
   const handleExportClick = () => {
     const storageKeys = Object.keys(window.localStorage)
@@ -223,6 +225,27 @@ const StateTab: React.FC = () => {
     inputElement.click()
   }
 
+  const handleClearClick = () => {
+    openModal({
+      type: 'destructive',
+      title: 'Clear local state?',
+      description:
+        'Cleaning local state will remove all your personal data, including watched videos, followed channels, video drafts and more. This will not impact ownership of your accounts.',
+      primaryButton: {
+        text: 'Clear',
+        onClick: () => {
+          window.localStorage.clear()
+          window.location.reload()
+          closeModal()
+        },
+      },
+      secondaryButton: {
+        text: 'Cancel',
+        onClick: () => closeModal(),
+      },
+    })
+  }
+
   return (
     <VerticalSpacedContainer>
       <Button onClick={handleExportClick} variant="secondary" size="large">
@@ -231,11 +254,14 @@ const StateTab: React.FC = () => {
       <Button onClick={handleImportClick} variant="secondary" size="large" icon={<SvgAlertsWarning24 />}>
         Import local state
       </Button>
+      <Button onClick={handleClearClick} variant="secondary" size="large" icon={<SvgAlertsError24 />}>
+        Clear local state
+      </Button>
     </VerticalSpacedContainer>
   )
 }
 
-const UserTab: React.FC = () => {
+const UserTab: FC = () => {
   const {
     accountId,
     memberId,
@@ -256,15 +282,15 @@ const UserTab: React.FC = () => {
     return useActiveUserStore.subscribe(handler)
   }, [])
 
-  const handleAccountIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAccountIdChange = (e: ChangeEvent<HTMLInputElement>) => {
     setAccountIdValue(e.target.value)
   }
 
-  const handleMemberIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMemberIdChange = (e: ChangeEvent<HTMLInputElement>) => {
     setMemberIdValue(e.target.value)
   }
 
-  const handleChannelIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChannelIdChange = (e: ChangeEvent<HTMLInputElement>) => {
     setChannelIdValue(e.target.value)
   }
 

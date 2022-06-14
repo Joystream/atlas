@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC, PropsWithChildren, ReactNode } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
@@ -19,17 +19,17 @@ import {
 } from './FeaturedVideoCategoryCard.style'
 
 export type FeaturedVideoCategoryCardVariant = 'default' | 'compact'
-export type FeaturedVideoCategoryCardProps = {
+export type FeaturedVideoCategoryCardProps = PropsWithChildren<{
   title: string
-  icon: React.ReactNode
+  icon: ReactNode
   videoUrl: string
   videoTitle: string
   color: string
   variant?: FeaturedVideoCategoryCardVariant
   id?: string
-}
+}>
 
-export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps> = ({
+export const FeaturedVideoCategoryCard: FC<FeaturedVideoCategoryCardProps> = ({
   title,
   icon,
   videoUrl,

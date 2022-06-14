@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { MemberBadgeWrapper, RemoveButton, StyledHandleText, StyledSVGCloseIcon } from './MemberBadge.styles'
 
@@ -11,13 +11,7 @@ export type MemberBadgeProps = {
   className?: string
   isLoadingAvatar?: boolean
 }
-export const MemberBadge: React.FC<MemberBadgeProps> = ({
-  avatarUri,
-  handle,
-  onDeleteClick,
-  className,
-  isLoadingAvatar,
-}) => {
+export const MemberBadge: FC<MemberBadgeProps> = ({ avatarUri, handle, onDeleteClick, className, isLoadingAvatar }) => {
   return (
     <MemberBadgeWrapper className={className} withoutButton={!onDeleteClick}>
       <Avatar size="bid" assetUrl={avatarUri} loading={isLoadingAvatar} />

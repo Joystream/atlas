@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import { HTMLProps } from 'react'
 
 import { Avatar } from '@/components/Avatar'
 import { LayoutGrid } from '@/components/LayoutGrid/LayoutGrid'
@@ -60,7 +60,7 @@ export const StyledLayoutGrid = styled(LayoutGrid)`
   margin-bottom: 50px;
 `
 
-export const Anchor = styled(Text)<React.HTMLProps<HTMLAnchorElement>>`
+export const Anchor = styled(Text)<HTMLProps<HTMLAnchorElement>>`
   text-decoration: none;
 
   &:hover {

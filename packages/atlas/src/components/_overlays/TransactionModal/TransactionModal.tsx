@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
+import { LottiePlayer } from '@/components/LottiePlayer/LottiePlayer'
 import { Text } from '@/components/Text'
 import { SvgActionCheck } from '@/components/_icons'
 import { Dialog } from '@/components/_overlays/Dialog'
@@ -14,7 +15,6 @@ import {
   PolkadotLogoWrapper,
   Step,
   StepsBar,
-  StyledLottie,
   StyledModal,
   StyledPolkadotLogo,
   StyledTransactionIllustration,
@@ -30,7 +30,7 @@ export type TransactionModalProps = {
   errorCode?: ErrorCode | null
 }
 
-export const TransactionModal: React.FC<TransactionModalProps> = ({ onClose, status, className, errorCode }) => {
+export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, className, errorCode }) => {
   const [polkadotLogoVisible, setPolkadotLogoVisible] = useState(false)
   const [initialStatus, setInitialStatus] = useState<number | null>(null)
   const nonUploadTransaction = initialStatus === ExtrinsicStatus.Unsigned
@@ -73,7 +73,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ onClose, sta
   const transactionSteps = Array.from({ length: nonUploadTransaction ? 3 : 4 })
 
   return (
-    <StyledModal show={!!stepDetails} {...className}>
+    <StyledModal show={!!stepDetails} className={className}>
       <StepsBar>
         {transactionSteps.map((_, idx) => (
           <Step
@@ -104,11 +104,10 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ onClose, sta
             </Text>
           </PolkadotLogoWrapper>
         </CSSTransition>
-        {!polkadotLogoVisible && status !== ExtrinsicStatus.Completed && (
-          <StyledLottie
-            loop={stepDetails?.animation?.loop}
-            animationData={stepDetails?.animation?.data}
-            play
+        {!polkadotLogoVisible && status !== ExtrinsicStatus.Completed && stepDetails && (
+          <LottiePlayer
+            loop={stepDetails.animation.loop}
+            data={stepDetails.animation.data}
             onComplete={() =>
               !stepDetails?.animation?.loop && status === ExtrinsicStatus.Unsigned && setPolkadotLogoVisible(true)
             }

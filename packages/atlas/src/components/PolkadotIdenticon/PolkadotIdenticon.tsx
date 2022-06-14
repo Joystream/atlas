@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { useMemo } from 'react'
+import { FC, useMemo } from 'react'
 
 import { cVar } from '@/styles'
 
@@ -10,7 +10,7 @@ type PolkadotIdenticonProps = {
   id: string
 }
 
-export const PolkadotIdenticon: React.FC<PolkadotIdenticonProps> = ({ className, id }) => {
+export const PolkadotIdenticon: FC<PolkadotIdenticonProps> = ({ className, id }) => {
   const dots = useMemo(() => polkadotIcon(id), [id])
   return (
     <IconWrapper className={className}>

@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react'
+import { ElementType, FC, FormEvent, PropsWithChildren, ReactNode } from 'react'
 
 import { Text } from '@/components/Text'
 import { Button, ButtonProps } from '@/components/_buttons/Button'
@@ -20,25 +20,24 @@ export type DialogButtonProps = {
   text: string
 } & Omit<ButtonProps, 'children'>
 
-export type DialogProps = {
-  title?: React.ReactNode
+export type DialogProps = PropsWithChildren<{
+  title?: ReactNode
   dividers?: boolean
   size?: DialogSize
   primaryButton?: DialogButtonProps
   secondaryButton?: DialogButtonProps
-  additionalActionsNode?: React.ReactNode
+  additionalActionsNode?: ReactNode
   additionalActionsNodeMobilePosition?: 'top' | 'bottom'
   onExitClick?: () => void
-  children?: React.ReactNode
-  as?: React.ElementType
+  as?: ElementType
   onSubmit?: (e?: FormEvent) => void
   noContentPadding?: boolean
   actionDivider?: boolean
   className?: string
   contentClassName?: string
-}
+}>
 
-export const Dialog: React.FC<DialogProps> = ({
+export const Dialog: FC<DialogProps> = ({
   title,
   dividers = false,
   size = 'default',

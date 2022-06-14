@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { FC, MouseEvent, useState } from 'react'
 
 import { Avatar } from '@/components/Avatar'
 import { AvatarGroup, AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
@@ -17,13 +17,13 @@ export type CollectorsBoxProps = {
   maxShowedCollectors?: number
 }
 
-export const CollectorsBox: React.FC<CollectorsBoxProps> = ({ collectors, maxShowedCollectors = 5 }) => {
+export const CollectorsBox: FC<CollectorsBoxProps> = ({ collectors, maxShowedCollectors = 5 }) => {
   const [open, setOpen] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
 
   const mappedCollectors = [...collectors].map((collector) => ({
     ...collector,
-    onClick: (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    onClick: (e: MouseEvent<HTMLElement>) => {
       e.stopPropagation()
       collector.onClick?.(e)
     },

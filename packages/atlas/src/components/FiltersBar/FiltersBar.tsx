@@ -1,5 +1,5 @@
 import { add } from 'date-fns'
-import React, { useMemo, useRef } from 'react'
+import { FC, ReactNode, useMemo, useRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { useCategories } from '@/api/hooks'
@@ -52,7 +52,7 @@ const nftStatuses = [
   },
 ]
 
-export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> = ({
+export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> = ({
   setVideoWhereInput,
   videoWhereInput,
   activeFilters,
@@ -627,10 +627,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
   )
 }
 
-const MobileFilterDialog: React.FC<{ content: React.ReactNode } & DialogModalProps> = ({
-  content,
-  ...dialogModalProps
-}) => {
+const MobileFilterDialog: FC<{ content: ReactNode } & DialogModalProps> = ({ content, ...dialogModalProps }) => {
   return (
     <DialogModal {...dialogModalProps} dividers>
       {content}

@@ -1,6 +1,18 @@
 import { useApolloClient } from '@apollo/client'
 import { uniqBy } from 'lodash-es'
-import React, { SetStateAction, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import {
+  Dispatch,
+  FC,
+  MutableRefObject,
+  PropsWithChildren,
+  SetStateAction,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 
 import {
   GetDistributionBucketsWithOperatorsDocument,
@@ -20,17 +32,17 @@ import { OperatorInfo } from './types'
 type BagOperatorsMapping = Record<string, OperatorInfo[]>
 
 type OperatorsContextValue = {
-  distributionOperatorsMappingPromiseRef: React.MutableRefObject<Promise<BagOperatorsMapping> | undefined>
-  storageOperatorsMappingPromiseRef: React.MutableRefObject<Promise<BagOperatorsMapping> | undefined>
+  distributionOperatorsMappingPromiseRef: MutableRefObject<Promise<BagOperatorsMapping> | undefined>
+  storageOperatorsMappingPromiseRef: MutableRefObject<Promise<BagOperatorsMapping> | undefined>
   failedStorageOperatorIds: string[]
-  setFailedStorageOperatorIds: React.Dispatch<SetStateAction<string[]>>
+  setFailedStorageOperatorIds: Dispatch<SetStateAction<string[]>>
   fetchOperators: () => Promise<void>
   tryRefetchDistributionOperators: () => Promise<boolean>
 }
-const OperatorsContext = React.createContext<OperatorsContextValue | undefined>(undefined)
+const OperatorsContext = createContext<OperatorsContextValue | undefined>(undefined)
 OperatorsContext.displayName = 'OperatorsContext'
 
-export const OperatorsContextProvider: React.FC = ({ children }) => {
+export const OperatorsContextProvider: FC<PropsWithChildren<unknown>> = ({ children }) => {
   const distributionOperatorsMappingPromiseRef = useRef<Promise<BagOperatorsMapping>>()
   const storageOperatorsMappingPromiseRef = useRef<Promise<BagOperatorsMapping>>()
   const lastDistributionOperatorsFetchTimeRef = useRef<number>(Number.MAX_SAFE_INTEGER)

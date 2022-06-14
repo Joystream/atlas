@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC, ReactNode } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
@@ -22,7 +22,7 @@ import {
 
 export type VideoCategoryCardProps = {
   title: string
-  icon: React.ReactNode
+  icon: ReactNode
   coverImg: string
   color: string
   id: string
@@ -32,7 +32,7 @@ export type VideoCategoryCardProps = {
   isLoading?: boolean
 }
 
-export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
+export const VideoCategoryCard: FC<VideoCategoryCardProps> = ({
   variant = 'default',
   isLoading,
   title,

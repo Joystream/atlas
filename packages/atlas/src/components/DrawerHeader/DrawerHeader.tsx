@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC, memo } from 'react'
 
 import { Pill } from '@/components/Pill'
 import { Button } from '@/components/_buttons/Button'
@@ -12,7 +12,7 @@ export type DrawerHeaderProps = {
   onCloseClick: () => void
 }
 
-export const DrawerHeader: React.FC<DrawerHeaderProps> = React.memo(({ onCloseClick, title, label }) => {
+export const DrawerHeader: FC<DrawerHeaderProps> = memo(({ onCloseClick, title, label }) => {
   return (
     <Tabbar>
       <TabContainer>

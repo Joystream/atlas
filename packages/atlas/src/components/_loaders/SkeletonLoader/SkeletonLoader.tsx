@@ -1,6 +1,6 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import React from 'react'
+import { FC, HTMLAttributes } from 'react'
 
 import { cVar } from '@/styles/generated/variables'
 
@@ -9,7 +9,7 @@ export type SkeletonLoaderProps = {
   height?: string | number
   bottomSpace?: string | number
   rounded?: boolean
-} & React.HTMLAttributes<HTMLDivElement>
+} & HTMLAttributes<HTMLDivElement>
 
 const getPropValue = (v: string | number) => (typeof v === 'string' ? v : `${v}px`)
 
@@ -25,7 +25,7 @@ const pulse = keyframes`
   }
 `
 
-export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({ className, ...props }) => (
+export const SkeletonLoader: FC<SkeletonLoaderProps> = ({ className, ...props }) => (
   <SkeletonLoaderContainer {...props} className={className}>
     <SkeletonLoaderAnimated {...props} />
   </SkeletonLoaderContainer>

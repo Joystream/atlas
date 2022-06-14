@@ -1,4 +1,4 @@
-import React from 'react'
+import { MouseEvent, ReactNode, forwardRef } from 'react'
 import mergeRefs from 'react-merge-refs'
 
 import { useHover } from '@/hooks/useHover'
@@ -16,22 +16,22 @@ import {
 } from './ListItem.styles'
 
 export type ListItemProps = {
-  label: React.ReactNode
-  caption?: React.ReactNode
+  label: ReactNode
+  caption?: ReactNode
   selected?: boolean
   disabled?: boolean
   // indicative that onClick will perform a destructive action of some kind
   destructive?: boolean
   size?: ListItemSizes
-  nodeStart?: React.ReactNode
-  nodeEnd?: React.ReactNode
+  nodeStart?: ReactNode
+  nodeEnd?: ReactNode
   captionPosition?: 'right' | 'bottom'
-  onClick?: (e: React.MouseEvent) => void
+  onClick?: (e: MouseEvent) => void
   className?: string
   highlight?: boolean
 }
 
-export const ListItem = React.forwardRef<HTMLDivElement, ListItemProps>(
+export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
   (
     {
       label,

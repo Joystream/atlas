@@ -1,4 +1,4 @@
-import React, { FormEvent, useCallback, useEffect, useRef } from 'react'
+import { Dispatch, FC, FormEvent, KeyboardEvent, SetStateAction, useCallback, useEffect, useRef } from 'react'
 
 import { SvgActionSearch } from '@/components/_icons'
 
@@ -13,10 +13,10 @@ type SearchProps = {
   submitSearch: (searchQuery: string) => void
   setCurrentTab: (tab: typeof TABS[number]) => void
   searchQuery: string
-  setSearchQuery: React.Dispatch<React.SetStateAction<string>>
+  setSearchQuery: Dispatch<SetStateAction<string>>
 }
 
-export const ChannelSearch: React.FC<SearchProps> = ({
+export const ChannelSearch: FC<SearchProps> = ({
   isSearchInputOpen,
   setIsSearching,
   isSearching,
@@ -28,7 +28,7 @@ export const ChannelSearch: React.FC<SearchProps> = ({
   const searchInputRef = useRef<HTMLInputElement>(null)
 
   const handleEscape = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
+    (event: KeyboardEvent<HTMLInputElement>) => {
       if (event.key === 'Escape' || event.key === 'Esc') {
         setIsSearchingInputOpen(false)
         event.currentTarget.blur()

@@ -1,6 +1,6 @@
 import { useRef } from '@storybook/addons'
 import { Meta, Story } from '@storybook/react'
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import { Avatar } from '@/components/Avatar'
 import { Pill } from '@/components/Pill'

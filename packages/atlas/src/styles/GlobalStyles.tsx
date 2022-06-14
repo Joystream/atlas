@@ -1,6 +1,6 @@
 import { Global, SerializedStyles, css } from '@emotion/react'
 import emotionNormalize from 'emotion-normalize'
-import React from 'react'
+import { FC } from 'react'
 
 import { cVar, variables } from './generated/variables'
 import { media } from './media'
@@ -84,7 +84,7 @@ type GlobalStyleProps = {
   additionalStyles?: SerializedStyles[] | SerializedStyles
 }
 
-export const GlobalStyles: React.FC<GlobalStyleProps> = ({ additionalStyles }) => {
+export const GlobalStyles: FC<GlobalStyleProps> = ({ additionalStyles }) => {
   const additionalStylesArray = additionalStyles
     ? Array.isArray(additionalStyles)
       ? additionalStyles

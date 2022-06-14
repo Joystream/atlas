@@ -1,5 +1,5 @@
 import { To } from 'history'
-import React, { forwardRef, useState } from 'react'
+import { MouseEvent, ReactNode, forwardRef, useState } from 'react'
 import { LinkProps } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
@@ -23,7 +23,7 @@ import {
 
 export type SlotsObject = {
   [Property in SlotPosition]?: {
-    element: React.ReactNode
+    element: ReactNode
     type?: 'default' | 'hover'
     clickable?: boolean
     halfWidth?: boolean
@@ -48,10 +48,10 @@ export type VideoThumbnailProps = {
   thumbnailAlt?: string | null
   clickable?: boolean
   videosInPlaylist?: number
-  contentSlot?: React.ReactNode
+  contentSlot?: ReactNode
   onClick?: () => void
-  onMouseEnter?: (event: React.MouseEvent<HTMLAnchorElement>) => void
-  onMouseLeave?: (event: React.MouseEvent<HTMLAnchorElement>) => void
+  onMouseEnter?: (event: MouseEvent<HTMLAnchorElement>) => void
+  onMouseLeave?: (event: MouseEvent<HTMLAnchorElement>) => void
 } & ThumbnailType
 
 export const VideoThumbnail = forwardRef<HTMLAnchorElement, VideoThumbnailProps>(
@@ -76,7 +76,7 @@ export const VideoThumbnail = forwardRef<HTMLAnchorElement, VideoThumbnailProps>
     const [activeDisabled, setActiveDisabled] = useState(false)
     const slotsArray = slots && Object.entries(slots)
 
-    const handleClick = (e: React.MouseEvent) => {
+    const handleClick = (e: MouseEvent) => {
       if (!videoHref) {
         e.preventDefault()
       }

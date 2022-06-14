@@ -1,4 +1,14 @@
-import React, { forwardRef, useRef } from 'react'
+import {
+  ChangeEvent,
+  FocusEvent,
+  ForwardRefRenderFunction,
+  KeyboardEvent,
+  MouseEvent,
+  ReactNode,
+  WheelEvent,
+  forwardRef,
+  useRef,
+} from 'react'
 import mergeRefs from 'react-merge-refs'
 import useResizeObserver from 'use-resize-observer'
 
@@ -16,11 +26,11 @@ export type InputProps = {
   name?: string
   type?: 'text' | 'email' | 'password' | 'search' | 'number'
   value?: string | number
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
-  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void
-  onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void
-  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void
-  onWheel?: (event: React.WheelEvent<HTMLInputElement>) => void
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void
+  onBlur?: (event: FocusEvent<HTMLInputElement>) => void
+  onFocus?: (event: FocusEvent<HTMLInputElement>) => void
+  onKeyDown?: (event: KeyboardEvent<HTMLInputElement>) => void
+  onWheel?: (event: WheelEvent<HTMLInputElement>) => void
   className?: string
   placeholder?: string
   defaultValue?: string
@@ -29,12 +39,12 @@ export type InputProps = {
   disabled?: boolean
   size?: InputSize
   processing?: boolean
-  nodeStart?: React.ReactNode
+  nodeStart?: ReactNode
   actionButton?: Omit<ButtonProps, 'variant' | 'size'>
-  nodeEnd?: React.ReactNode
+  nodeEnd?: ReactNode
 }
 
-const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
+const InputComponent: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
   {
     name,
     size = 'large',
@@ -82,7 +92,7 @@ const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, InputProp
     nodeEnd
   )
 
-  const handleWheel = (event: React.WheelEvent<HTMLInputElement>) => {
+  const handleWheel = (event: WheelEvent<HTMLInputElement>) => {
     if (onWheel) {
       onWheel(event)
       return
@@ -95,7 +105,7 @@ const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, InputProp
     }, 0)
   }
 
-  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
     inputRef.current?.focus()
     e.currentTarget.blur()
     actionButton?.onClick?.(e)

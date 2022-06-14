@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC, MouseEvent } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useBasicChannel } from '@/api/hooks'
@@ -24,7 +24,7 @@ import {
 
 export type ChannelLinkProps = {
   id?: string
-  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void
+  onClick?: (e: MouseEvent<HTMLAnchorElement>) => void
   hideHandle?: boolean
   hideAvatar?: boolean
   noLink?: boolean
@@ -38,7 +38,7 @@ export type ChannelLinkProps = {
   followButton?: boolean
 }
 
-export const ChannelLink: React.FC<ChannelLinkProps> = ({
+export const ChannelLink: FC<ChannelLinkProps> = ({
   id,
   onClick,
   hideHandle,
@@ -63,7 +63,7 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
 
   const displayedChannel = overrideChannel || channel
 
-  const handleFollowButtonClick = (e: React.MouseEvent) => {
+  const handleFollowButtonClick = (e: MouseEvent) => {
     e.preventDefault()
     toggleFollowing()
   }

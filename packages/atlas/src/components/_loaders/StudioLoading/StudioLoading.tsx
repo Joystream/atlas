@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import { FC } from 'react'
 
 import { Text } from '@/components/Text'
 import { Spinner } from '@/components/_loaders/Spinner'
 import { sizes } from '@/styles'
 
-export const StudioLoading: React.FC = () => {
+export const StudioLoading: FC = () => {
   return (
     <LoadingStudioContainer>
       <Spinner size="large" />

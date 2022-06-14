@@ -1,5 +1,5 @@
 import loadable from '@loadable/component'
-import React, { useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 
 import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
@@ -33,7 +33,7 @@ const LoadablePlaygroundLayout = loadable(() => import('./views/playground/Playg
   fallback: <h1>Loading Playground...</h1>,
 })
 
-export const MainLayout: React.FC = () => {
+export const MainLayout: FC = () => {
   const scrollPosition = useRef<number>(0)
   const location = useLocation()
   const navigationType = useNavigationType()

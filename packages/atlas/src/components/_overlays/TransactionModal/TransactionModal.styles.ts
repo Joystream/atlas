@@ -1,9 +1,7 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import Lottie from 'react-lottie-player'
 
 import { SvgPolkadotLogoMono } from '@/components/_illustrations'
-import { Spinner } from '@/components/_loaders/Spinner'
 import { Modal } from '@/components/_overlays/Modal'
 import { cVar, sizes, square, transitions } from '@/styles'
 
@@ -83,19 +81,6 @@ export const StyledTransactionIllustration = styled.div`
   flex-direction: column;
   align-items: center;
   position: relative;
-`
-
-export const StyledSpinner = styled(Spinner)`
-  position: absolute;
-  top: ${sizes(8)};
-  left: ${sizes(6)};
-`
-
-export const StyledLottie = styled(Lottie, {
-  shouldForwardProp: (prop) => prop !== 'size',
-})<{ size?: { width: number; height: number } }>`
-  width: ${({ size }) => (size ? `${size.width}px` : 'auto')};
-  height: ${({ size }) => (size ? `${size.height}px` : 'auto')};
 `
 
 export const PolkadotLogoWrapper = styled.div`

@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import { FC, ReactNode } from 'react'
 
 import { SvgActionClose } from '@/components/_icons'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -8,13 +8,13 @@ import { BannerDescription, BannerHeader, BannerText, BannerWrapper, CloseButton
 export type BannerProps = {
   id: string
   title?: string
-  description?: React.ReactNode
+  description?: ReactNode
   className?: string
   dismissable?: boolean
   icon?: ReactNode
 }
 
-export const Banner: React.FC<BannerProps> = ({ title, description, className, icon, id = '', dismissable = true }) => {
+export const Banner: FC<BannerProps> = ({ title, description, className, icon, id = '', dismissable = true }) => {
   const isDismissedMessage = usePersonalDataStore((state) =>
     state.dismissedMessages.some((message) => message.id === id)
   )

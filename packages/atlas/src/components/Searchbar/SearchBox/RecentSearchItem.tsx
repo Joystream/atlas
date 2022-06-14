@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import { FC, memo, useCallback } from 'react'
 
 import { SvgActionClock } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
@@ -17,7 +17,7 @@ type RecentSearchItemProps = {
   selectedItem: null | number
 }
 
-export const RecentSearchItem: React.FC<RecentSearchItemProps> = React.memo(
+export const RecentSearchItem: FC<RecentSearchItemProps> = memo(
   ({ title, onDelete, query, onClick, selected, handleSelectedItem, selectedItem }) => {
     const onSelected = useCallback(
       (top: number) => {

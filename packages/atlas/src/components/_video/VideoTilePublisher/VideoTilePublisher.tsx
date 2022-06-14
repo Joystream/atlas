@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { useCallback } from 'react'
+import { FC, MouseEvent, memo, useCallback } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 
@@ -39,15 +39,15 @@ import { VideoTile } from '../VideoTile'
 
 type VideoTilePublisherProps = {
   id?: string
-  onEditClick?: (e?: React.MouseEvent<HTMLElement>) => void
-  onMintNftClick?: (e?: React.MouseEvent<HTMLElement>) => void
+  onEditClick?: (e?: MouseEvent<HTMLElement>) => void
+  onMintNftClick?: (e?: MouseEvent<HTMLElement>) => void
   onDeleteVideoClick?: () => void
   onReuploadVideoClick?: () => void
 }
 
 export const DELAYED_FADE_CLASSNAME = 'delayed-fade'
 
-export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
+export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
   ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onMintNftClick }) => {
     const { copyToClipboard } = useClipboard()
     const { video, loading } = useVideo(id ?? '', {

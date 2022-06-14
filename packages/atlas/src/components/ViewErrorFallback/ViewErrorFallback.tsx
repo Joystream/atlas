@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
-import { FallbackRender } from '@sentry/react/dist/errorboundary'
-import React from 'react'
+import { FallbackRender } from '@sentry/react/types/errorboundary'
+import { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { AnimatedError } from '@/components/AnimatedError'
@@ -21,7 +21,7 @@ type ViewErrorFallbackProps = {
   onResetClick?: () => void
 }
 
-export const ViewErrorFallback: React.FC<ViewErrorFallbackProps> = ({ onResetClick }) => {
+export const ViewErrorFallback: FC<ViewErrorFallbackProps> = ({ onResetClick }) => {
   const navigate = useNavigate()
 
   const handleResetClick = () => {

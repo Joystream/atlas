@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import { ChangeEvent, FC, MouseEvent, useCallback, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
@@ -28,7 +28,7 @@ import {
   StyledTopbarBase,
 } from './TopbarViewer.styles'
 
-export const TopbarViewer: React.FC = () => {
+export const TopbarViewer: FC = () => {
   const { activeAccountId, extensionConnected, activeMemberId, activeMembership, signIn } = useUser()
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
 
@@ -64,7 +64,7 @@ export const TopbarViewer: React.FC = () => {
     }
   }, [pathname, search, setSearchQuery])
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchOpen(true)
     setSearchQuery(event.currentTarget.value)
   }
@@ -81,7 +81,7 @@ export const TopbarViewer: React.FC = () => {
     setSearchQuery('')
   }
 
-  const handleDrawerToggle = (e: React.MouseEvent<HTMLElement>) => {
+  const handleDrawerToggle = (e: MouseEvent<HTMLElement>) => {
     e.stopPropagation()
     setIsMemberDropdownActive(!isMemberDropdownActive)
   }

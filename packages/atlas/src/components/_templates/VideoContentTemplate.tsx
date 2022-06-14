@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { useMemo } from 'react'
+import { FC, PropsWithChildren, useMemo } from 'react'
 
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
@@ -8,12 +8,12 @@ import { CTA_MAP } from '@/config/cta'
 import { cVar, media, sizes } from '@/styles'
 import { CtaData } from '@/types/cta'
 
-type VideoContentTemplateProps = {
+type VideoContentTemplateProps = PropsWithChildren<{
   title?: string
   cta?: CtaData[]
-}
+}>
 
-export const VideoContentTemplate: React.FC<VideoContentTemplateProps> = ({ children, title, cta }) => {
+export const VideoContentTemplate: FC<VideoContentTemplateProps> = ({ children, title, cta }) => {
   const ctaContent = useMemo(
     () => cta && cta.map((item, idx) => <CallToActionButton key={`cta-${idx}`} {...CTA_MAP[item]} />),
     [cta]

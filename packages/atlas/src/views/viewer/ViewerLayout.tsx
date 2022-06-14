@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
-import React from 'react'
+import { FC } from 'react'
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
@@ -51,7 +51,7 @@ const viewerRoutes = [
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.viewer.index()
 
-export const ViewerLayout: React.FC = () => {
+export const ViewerLayout: FC = () => {
   const location = useLocation()
   const locationState = location.state as RoutingState
   const { activeMemberId, isLoading } = useUser()

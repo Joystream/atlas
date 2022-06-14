@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC, PropsWithChildren } from 'react'
 import { To } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
@@ -44,7 +44,7 @@ export type VideoTileDetailsProps = {
   playlistUrl?: string
 }
 
-export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
+export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
   videoTitle,
   onVideoTitleClick,
   videoSubTitle,
@@ -145,10 +145,10 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
   )
 }
 
-type LinkWrapperProps = {
+type LinkWrapperProps = PropsWithChildren<{
   to?: To
-}
-const LinkWrapper: React.FC<LinkWrapperProps> = ({ children, to }) => {
+}>
+const LinkWrapper: FC<LinkWrapperProps> = ({ children, to }) => {
   if (to) {
     return <StyledLink to={to}>{children}</StyledLink>
   }

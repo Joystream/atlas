@@ -1,5 +1,5 @@
 import { format } from 'date-fns'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { BasicMembershipFieldsFragment } from '@/api/queries'
@@ -69,7 +69,7 @@ export type InternalCommentProps = {
   onReactionClick: ((reaction: ReactionId) => void) | undefined
 } & Pick<CommentRowProps, 'highlighted' | 'indented' | 'memberUrl'>
 
-export const InternalComment: React.FC<InternalCommentProps> = ({
+export const InternalComment: FC<InternalCommentProps> = ({
   indented,
   highlighted,
   author,

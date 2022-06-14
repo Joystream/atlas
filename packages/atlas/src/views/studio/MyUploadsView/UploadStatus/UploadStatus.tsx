@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react'
+import { FC, useCallback, useRef } from 'react'
 import { DropzoneOptions, useDropzone } from 'react-dropzone'
 import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
@@ -45,7 +45,7 @@ type UploadStatusProps = {
   size?: UploadStatusGroupSize
 }
 
-export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asset, size }) => {
+export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, size }) => {
   const navigate = useNavigate()
   const startFileUpload = useStartFileUpload()
   const uploadStatus = useUploadsStore((state) => state.uploadsStatus[asset.id])
@@ -94,7 +94,7 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
     },
   })
 
-  const onDrop: DropzoneOptions['onDrop'] = useCallback(
+  const onDrop = useCallback<NonNullable<DropzoneOptions['onDrop']>>(
     async (acceptedFiles) => {
       const [file] = acceptedFiles
       setUploadStatus(asset.id, { lastStatus: 'inProgress', progress: 0 })
@@ -134,7 +134,9 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
     multiple: false,
     noClick: true,
     noKeyboard: true,
-    accept: isVideo ? 'video/*' : 'image/*',
+    accept: {
+      [isVideo ? 'video/*' : 'image/*']: [],
+    },
   })
 
   const fileTypeText = isVideo ? 'Video file' : `${asset.type.charAt(0).toUpperCase() + asset.type.slice(1)} image`

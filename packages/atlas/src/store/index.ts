@@ -43,17 +43,24 @@ export const createStore = <TState extends object, TActions extends object>(
   initialStore: CommonStoreInit<TState, TActions>,
   opts: CommonStoreOpts<TState> = {}
 ) => {
-  let storeConfig = immer<CommonStore<TState, TActions>>((set, get, api) => ({
+  const imerStoreConfig = immer<CommonStore<TState, TActions>>((set, get, api) => ({
     ...initialStore.state,
     actions: initialStore.actionsFactory(set, get, api),
   }))
 
   if (opts.persist) {
     const config = opts.persist
-    storeConfig = persist(storeConfig, {
+    const persistedStoreConfig = persist(imerStoreConfig, {
       name: config.key,
-      whitelist: config.whitelist,
       version: config.version,
+      partialize: (state) => {
+        return (Object.keys(state) as (keyof TState)[]).reduce((acc, stateKey) => {
+          if (config.whitelist.includes(stateKey)) {
+            acc[stateKey] = state[stateKey]
+          }
+          return acc
+        }, {} as DeepPartial<CommonStore<TState, TActions>>)
+      },
       migrate: (oldState, oldVersion) => {
         const rawStorageValue = window.localStorage.getItem(config.key)
         const storageValue = rawStorageValue ? JSON.parse(rawStorageValue) : {}
@@ -68,7 +75,8 @@ export const createStore = <TState extends object, TActions extends object>(
         return config.onRehydrateStorage?.(state)
       },
     })
+    return create(persistedStoreConfig)
   }
 
-  return create(storeConfig)
+  return create(imerStoreConfig)
 }

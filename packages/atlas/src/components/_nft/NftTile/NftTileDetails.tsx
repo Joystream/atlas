@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import { FC, ReactNode, memo, useCallback, useMemo, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import { NumberFormat } from '@/components/NumberFormat'
@@ -71,7 +71,7 @@ type TileSize = 'small' | 'medium'
 
 const SMALL_SIZE_WIDTH = 288
 
-export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
+export const NftTileDetails: FC<NftTileDetailsProps> = ({
   loading,
   creator,
   owner,
@@ -316,12 +316,12 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
 
 type DetailsContentProps = {
   caption: string
-  icon: React.ReactNode
+  icon: ReactNode
   content: number | string
   secondary?: boolean
   tileSize: TileSize | undefined
 }
-const DetailsContent: React.FC<DetailsContentProps> = React.memo(({ tileSize, caption, icon, content, secondary }) => (
+const DetailsContent: FC<DetailsContentProps> = memo(({ tileSize, caption, icon, content, secondary }) => (
   <div>
     <Text variant={tileSize === 'medium' ? 't200' : 't100'} secondary>
       {caption}

@@ -1,5 +1,5 @@
 import { sampleSize } from 'lodash-es'
-import React from 'react'
+import { useMemo } from 'react'
 import { useParams } from 'react-router'
 
 import { useCategories, useCategoriesFeaturedVideos } from '@/api/hooks'
@@ -32,7 +32,7 @@ export const CategoryView = () => {
     ...videoCategories[category.id],
     ...category,
   }))
-  const otherCategory: Array<VideoCategoryData & VideoCategoryFieldsFragment> = React.useMemo(
+  const otherCategory: Array<VideoCategoryData & VideoCategoryFieldsFragment> = useMemo(
     () =>
       sampleSize(
         mappedVideoCategories?.filter((category) => category.id !== id),

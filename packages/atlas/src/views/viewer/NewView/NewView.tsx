@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { GetVideosConnectionDocument } from '@/api/queries'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
@@ -7,7 +7,7 @@ import { VideoContentTemplate } from '@/components/_templates/VideoContentTempla
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 
-export const NewView: React.FC = () => {
+export const NewView: FC = () => {
   const headTags = useHeadTags('New & Noteworthy')
 
   return (

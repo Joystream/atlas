@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import { FC, useRef, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { NumberFormat } from '@/components/NumberFormat'
@@ -30,7 +30,7 @@ type ReactionButtonProps = {
   reactionPopoverDismissed?: boolean
 }
 
-export const ReactionButton: React.FC<ReactionButtonProps> = ({
+export const ReactionButton: FC<ReactionButtonProps> = ({
   reactionsNumber,
   state,
   type,
@@ -117,7 +117,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
   )
 }
 
-const ReactionButtonLoader: React.FC = () => {
+const ReactionButtonLoader: FC = () => {
   return (
     <LoadingWrapper>
       <SkeletonLoader rounded width={16} height={16} /> <SkeletonLoader height={20} width={32} />

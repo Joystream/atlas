@@ -1,6 +1,6 @@
 import { NetworkStatus } from '@apollo/client'
 import { debounce } from 'lodash-es'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useComment, useCommentSectionComments, useUserCommentsReactions } from '@/api/hooks'
@@ -38,7 +38,7 @@ type CommentsSectionProps = {
 const SCROLL_TO_COMMENT_TIMEOUT = 300
 const INITIAL_COMMENTS = 10
 
-export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, video, videoLoading }) => {
+export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, videoLoading }) => {
   const [commentInputText, setCommentInputText] = useState('')
   const [commentInputIsProcessing, setCommentInputIsProcessing] = useState(false)
   const [highlightedCommentId, setHighlightedCommentId] = useState<string | null>(null)

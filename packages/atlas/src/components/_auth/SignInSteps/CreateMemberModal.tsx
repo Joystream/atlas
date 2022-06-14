@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios'
-import React, { useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { useLocation, useMatch, useNavigate } from 'react-router'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks'
@@ -32,7 +32,7 @@ type CreateMemberModalProps = {
   selectedAccountAddress?: string
 }
 
-export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show, selectedAccountAddress }) => {
+export const CreateMemberModal: FC<CreateMemberModalProps> = ({ show, selectedAccountAddress }) => {
   const { activeAccountId, refetchMemberships, extensionConnected, setActiveUser } = useUser()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const navigate = useNavigate()
@@ -122,7 +122,8 @@ export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show, sele
     } catch (error) {
       setActiveUser({ accountId: accountIdRef.current })
       closeCreatingMemberDialog()
-      const errorMessage = (error.isAxiosError && (error as AxiosError).response?.data.error) || 'Unknown error'
+      const errorMessage =
+        (error?.isAxiosError && (error as AxiosError<NewMemberResponse>).response?.data?.error) || 'Unknown error'
       openErrorDialog({
         type: 'destructive',
         title: 'Something went wrong...',
@@ -181,6 +182,7 @@ export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show, sele
 type NewMemberResponse = {
   memberId: MemberId
   block: number
+  error?: string
 }
 export const createNewMember = async (accountId: string, inputs: Inputs) => {
   try {

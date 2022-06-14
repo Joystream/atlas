@@ -1,5 +1,5 @@
 import { differenceInCalendarYears, differenceInDays, format } from 'date-fns'
-import React, { ReactNode, useMemo } from 'react'
+import { ChangeEvent, FC, ReactNode, useMemo } from 'react'
 
 import { Avatar } from '@/components/Avatar'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -64,14 +64,14 @@ const getNotificationText = (notification: NotificationRecord): ReactNode => {
 export type NotificationProps = {
   notification: NotificationRecord
   loading?: boolean
-  onCheckboxChange?: (selected: boolean, e: React.ChangeEvent<HTMLInputElement>) => void
+  onCheckboxChange?: (selected: boolean, e: ChangeEvent<HTMLInputElement>) => void
   onClick?: () => void
   selected?: boolean
   variant?: 'default' | 'compact'
   className?: string
 }
 
-export const NotificationTile: React.FC<NotificationProps> = ({
+export const NotificationTile: FC<NotificationProps> = ({
   notification,
   loading,
   onCheckboxChange,

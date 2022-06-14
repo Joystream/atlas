@@ -1,6 +1,5 @@
 import { ApolloProvider } from '@apollo/client'
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { createApolloClient } from '@/api'

@@ -1,5 +1,5 @@
 import beazierEasing from 'bezier-easing'
-import React, { useCallback, useEffect } from 'react'
+import { FC, MouseEvent, useCallback, useEffect } from 'react'
 import { DropzoneOptions, FileRejection, useDropzone } from 'react-dropzone'
 import { useTransition } from 'react-spring'
 
@@ -42,7 +42,7 @@ export type FileSelectProps = {
   maxSize?: number
 }
 
-export const FileSelect: React.FC<FileSelectProps> = ({
+export const FileSelect: FC<FileSelectProps> = ({
   onUploadFile,
   fileType,
   maxSize,
@@ -76,7 +76,7 @@ export const FileSelect: React.FC<FileSelectProps> = ({
     },
   })
 
-  const onDropAccepted: DropzoneOptions['onDropAccepted'] = useCallback(
+  const onDropAccepted = useCallback<NonNullable<DropzoneOptions['onDropAccepted']>>(
     (acceptedFiles) => {
       const [file] = acceptedFiles
       onUploadFile(file)
@@ -89,7 +89,9 @@ export const FileSelect: React.FC<FileSelectProps> = ({
     onDropRejected,
     maxFiles: 1,
     multiple: false,
-    accept: fileType + '/*',
+    accept: {
+      [fileType + '/*']: [],
+    },
     maxSize,
     noClick: true,
     noKeyboard: true,
@@ -123,7 +125,7 @@ export const FileSelect: React.FC<FileSelectProps> = ({
     })
   }, [closeErrorDialog, error, fileType, onError, open, openErrorDialog])
 
-  const handleReAdjustThumbnail = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
+  const handleReAdjustThumbnail = (e: MouseEvent<HTMLImageElement>) => {
     e.stopPropagation()
     onReAdjustThumbnail?.()
   }

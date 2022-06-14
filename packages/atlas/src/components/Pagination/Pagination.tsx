@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react'
+import { FC, useLayoutEffect, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import { SvgActionChevronL, SvgActionChevronR } from '@/components/_icons'
@@ -16,7 +16,7 @@ export type PaginationProps = {
 }
 
 // Codewise component works with index starting from 0 but it's rendered with index starting from 1
-export const Pagination: React.FC<PaginationProps> = ({
+export const Pagination: FC<PaginationProps> = ({
   itemsPerPage = 0,
   totalCount = 0,
   maxPaginationLinks = 5,

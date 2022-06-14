@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { useRef } from 'react'
+import { forwardRef, useRef } from 'react'
 import mergeRefs from 'react-merge-refs'
 
 import { Text, TextProps, TextVariant } from '@/components/Text'
@@ -17,7 +17,7 @@ export type NumberFormatProps = {
   variant?: TextVariant
 } & Omit<TextProps, 'children' | 'variant'>
 
-export const NumberFormat = React.forwardRef<HTMLHeadingElement, NumberFormatProps>(
+export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
   ({ value, format = 'full', withToken, withTooltip, variant = 'no-variant', ...textProps }, ref) => {
     const textRef = useRef<HTMLHeadingElement>(null)
     let formattedValue

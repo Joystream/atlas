@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { Pill } from './Pill'
 import { PillGroupWrapper } from './Pill.styles'
@@ -9,7 +9,7 @@ type PillGroupProps = {
   items: PillProps[]
 }
 
-export const PillGroup: React.FC<PillGroupProps> = ({ items, size = 'medium' }) => {
+export const PillGroup: FC<PillGroupProps> = ({ items, size = 'medium' }) => {
   return (
     <PillGroupWrapper size={size}>
       {items.map((item, idx) => (

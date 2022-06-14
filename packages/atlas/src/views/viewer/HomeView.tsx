@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import { FC } from 'react'
 
 import { useVideoHeroData, useVideosConnection } from '@/api/hooks'
 import { GetMostViewedVideosConnectionDocument } from '@/api/queries'
@@ -16,7 +16,7 @@ import { usePersonalDataStore } from '@/providers/personalData'
 import { sizes, transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
-export const HomeView: React.FC = () => {
+export const HomeView: FC = () => {
   const followedChannels = usePersonalDataStore((state) => state.followedChannels)
 
   const channelIdIn = followedChannels.map((channel) => channel.id)

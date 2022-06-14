@@ -1,23 +1,32 @@
 import { Global, css } from '@emotion/react'
 import styled from '@emotion/styled'
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import {
+  Dispatch,
+  FC,
+  PropsWithChildren,
+  RefObject,
+  SetStateAction,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { disablePageScroll, enablePageScroll } from 'scroll-lock'
 
 import { createId } from '@/utils/createId'
 
 type OverlayManagerContextValue = {
-  scrollLocked: boolean
   anyOverlaysOpen: boolean
-  setOverlaysSet: React.Dispatch<React.SetStateAction<Set<string>>>
-  modalContainerRef: React.RefObject<HTMLDivElement>
+  setOverlaysSet: Dispatch<SetStateAction<Set<string>>>
+  modalContainerRef: RefObject<HTMLDivElement>
 }
 
-const OverlayManagerContext = React.createContext<OverlayManagerContextValue | undefined>(undefined)
+const OverlayManagerContext = createContext<OverlayManagerContextValue | undefined>(undefined)
 OverlayManagerContext.displayName = 'OverlayManagerContext'
 
-export const OverlayManagerProvider: React.FC = ({ children }) => {
-  const [scrollLocked, setScrollLocked] = useState(false)
-  const [scrollbarGap, setScrollbarGap] = useState(0)
+export const OverlayManagerProvider: FC<PropsWithChildren<unknown>> = ({ children }) => {
   const [overlaysSet, setOverlaysSet] = useState(new Set<string>())
 
   const modalContainerRef = useRef<HTMLDivElement>(null)
@@ -25,24 +34,18 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
   const anyOverlaysOpen = overlaysSet.size > 0
 
   useEffect(() => {
-    if (!anyOverlaysOpen && scrollLocked) {
-      setScrollLocked(false)
-      setScrollbarGap(0)
+    if (!anyOverlaysOpen) {
       enablePageScroll()
-    } else if (anyOverlaysOpen && !scrollLocked) {
-      const scrollbarGap = window.innerWidth - document.documentElement.clientWidth
-      setScrollLocked(true)
-      setScrollbarGap(scrollbarGap)
+    } else {
       disablePageScroll()
     }
-  }, [anyOverlaysOpen, scrollLocked])
+  }, [anyOverlaysOpen])
 
   return (
     <>
-      <Global styles={[overlayManagerStyles(scrollbarGap)]} />
+      <Global styles={[overlayManagerStyles]} />
       <OverlayManagerContext.Provider
         value={{
-          scrollLocked,
           anyOverlaysOpen,
           setOverlaysSet,
           modalContainerRef,
@@ -94,11 +97,7 @@ export const useOverlayManager = () => {
   }
 }
 
-const overlayManagerStyles = (scrollbarGap = 0) => css`
-  :root {
-    --size-scrollbar-width: ${scrollbarGap}px;
-  }
-
+const overlayManagerStyles = css`
   body {
     overflow-y: scroll;
   }

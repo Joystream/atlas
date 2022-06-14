@@ -1,7 +1,6 @@
 import { ApolloProvider } from '@apollo/client'
 import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
 
 import { createApolloClient } from '@/api'
 import { cVar } from '@/styles'

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import { JOY_CURRENCY_TICKER } from '@/config/token'
 import { useTokenPrice } from '@/providers/joystream'

@@ -1,7 +1,7 @@
 import isPropValid from '@emotion/is-prop-valid'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import React, { ElementType } from 'react'
+import { ElementType, FC } from 'react'
 
 import {
   SvgJoyTokenMonochrome16,
@@ -55,7 +55,7 @@ const VARIANT_SIZE_COMPONENT_MAPPING: Record<JoyTokenIconVariant, Record<JoyToke
   },
 }
 
-export const JoyTokenIcon: React.FC<JoyTokenIconProps> = ({ variant = 'regular', size = 16, className }) => (
+export const JoyTokenIcon: FC<JoyTokenIconProps> = ({ variant = 'regular', size = 16, className }) => (
   <JoyTokenIconWrapper
     as={VARIANT_SIZE_COMPONENT_MAPPING[variant][size]}
     hasShadow={!['regular', 'gray'].includes(variant)}

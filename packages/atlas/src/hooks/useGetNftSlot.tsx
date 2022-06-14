@@ -1,5 +1,5 @@
 import { differenceInHours, differenceInSeconds, format } from 'date-fns'
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 
 import { NftStatus } from '@/api/hooks'
 import { PillGroup } from '@/components/Pill'

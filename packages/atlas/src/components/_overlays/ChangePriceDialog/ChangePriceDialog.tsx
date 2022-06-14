@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { useState } from 'react'
+import { FC, useState } from 'react'
 
 import { NumberFormat } from '@/components/NumberFormat'
 import { Pill } from '@/components/Pill'
@@ -17,7 +17,7 @@ type ChangePriceDialogProps = {
   nftId: string | null
 }
 
-export const ChangePriceDialog: React.FC<ChangePriceDialogProps> = ({ onModalClose, isOpen, onChangePrice, nftId }) => {
+export const ChangePriceDialog: FC<ChangePriceDialogProps> = ({ onModalClose, isOpen, onChangePrice, nftId }) => {
   const [price, setPrice] = useState<number | null>(null)
   const { convertToUSD } = useTokenPrice()
 

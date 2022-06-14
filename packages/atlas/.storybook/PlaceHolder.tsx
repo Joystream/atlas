@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import { FC } from 'react'
 
 import { Text } from '@/components/Text'
 import { SvgActionInformative } from '@/components/_icons'
 
-export const PlaceHolder: React.FC = () => {
+export const PlaceHolder: FC = () => {
   return (
     <PlaceHolderWrapper>
       <StyledSvgActionInformative />

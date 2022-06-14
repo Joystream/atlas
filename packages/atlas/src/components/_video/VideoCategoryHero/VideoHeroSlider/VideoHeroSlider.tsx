@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC, MouseEvent } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -21,11 +21,11 @@ export type VideoHeroSliderProps = {
   onTileClick?: (idx: number) => void
 }
 
-export const VideoHeroSlider: React.FC<VideoHeroSliderProps> = ({ videos, activeVideoIdx = 0, onTileClick }) => {
+export const VideoHeroSlider: FC<VideoHeroSliderProps> = ({ videos, activeVideoIdx = 0, onTileClick }) => {
   const smMatch = useMediaMatch('sm')
   const videosLength = videos?.length || 0
 
-  const handleChangeTile = (e: React.MouseEvent) => {
+  const handleChangeTile = (e: MouseEvent) => {
     if (smMatch || !videos) {
       return
     }
@@ -65,7 +65,7 @@ type VideoSliderPreviewProps = {
   onClick?: () => void
 }
 
-export const VideoSliderPreview: React.FC<VideoSliderPreviewProps> = ({
+export const VideoSliderPreview: FC<VideoSliderPreviewProps> = ({
   progress,
   active,
   thumbnailUrl,

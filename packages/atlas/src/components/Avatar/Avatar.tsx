@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC, MouseEvent, PropsWithChildren } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { SvgActionImage, SvgActionNewChannel } from '@/components/_icons'
@@ -16,8 +16,8 @@ import {
   StyledSvgIllustrativeFileFailed,
 } from './Avatar.styles'
 
-export type AvatarProps = {
-  onClick?: (event: React.MouseEvent<HTMLElement>) => void
+export type AvatarProps = PropsWithChildren<{
+  onClick?: (event: MouseEvent<HTMLElement>) => void
   assetUrl?: string | null
   hasAvatarUploadFailed?: boolean
   withoutOutline?: boolean
@@ -28,9 +28,9 @@ export type AvatarProps = {
   newChannel?: boolean
   clickable?: boolean
   onError?: () => void
-}
+}>
 
-export const Avatar: React.FC<AvatarProps> = ({
+export const Avatar: FC<AvatarProps> = ({
   assetUrl,
   hasAvatarUploadFailed,
   withoutOutline,

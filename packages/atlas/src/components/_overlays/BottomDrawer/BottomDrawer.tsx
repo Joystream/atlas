@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { FC, PropsWithChildren, useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
@@ -10,7 +10,7 @@ import { cVar } from '@/styles'
 
 import { Container, DrawerOverlay, ScrollContainer, StyledActionBar } from './BottomDrawer.styles'
 
-export type BottomDrawerProps = {
+export type BottomDrawerProps = PropsWithChildren<{
   isOpen: boolean
   onClose: () => void
   title?: string
@@ -18,9 +18,9 @@ export type BottomDrawerProps = {
   pageTitle?: string
   actionBar?: ActionBarProps
   fixedScrollbar?: boolean
-}
+}>
 
-export const BottomDrawer: React.FC<BottomDrawerProps> = ({
+export const BottomDrawer: FC<BottomDrawerProps> = ({
   isOpen,
   onClose,
   title,
@@ -59,7 +59,7 @@ export const BottomDrawer: React.FC<BottomDrawerProps> = ({
         appear
         mountOnEnter
         unmountOnExit
-        timeout={{ enter: 0, exit: parseInt(cVar('animationTimingSlow', true)) }}
+        timeout={parseInt(cVar('animationTimingSlow', true))}
         classNames="bottom-drawer-overlay"
       >
         <DrawerOverlay />
@@ -69,7 +69,7 @@ export const BottomDrawer: React.FC<BottomDrawerProps> = ({
         appear
         mountOnEnter
         unmountOnExit
-        timeout={{ enter: 0, exit: parseInt(cVar('animationTimingSlow', true)) }}
+        timeout={parseInt(cVar('animationTimingSlow', true))}
         classNames="bottom-drawer"
       >
         <Container role="dialog">

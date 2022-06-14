@@ -1,6 +1,6 @@
 import { formatISO } from 'date-fns'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Controller, FieldError, useForm } from 'react-hook-form'
 
 import { useCategories } from '@/api/hooks'
 import { License } from '@/api/queries'
@@ -77,7 +77,7 @@ type VideoFormProps = {
   setFormStatus: (data: VideoWorkspaceFormStatus | null) => void
 }
 
-export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFormStatus }) => {
+export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) => {
   const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
   const [cachedEditedVideoId, setCachedEditedVideoId] = useState('')
   const [royaltiesFieldEnabled, setRoyaltiesFieldEnabled] = useState(false)
@@ -460,7 +460,9 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                 id="assets-banner"
                 dismissable={false}
                 icon={<SvgAlertsWarning24 width={24} height={24} />}
-                description={<FileValidationText variant="t200">{errors.assets.message}</FileValidationText>}
+                description={
+                  <FileValidationText variant="t200">{(errors?.assets as FieldError)?.message}</FileValidationText>
+                }
               />
             )}
             <StyledMultiFileSelect

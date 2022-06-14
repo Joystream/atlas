@@ -1,5 +1,4 @@
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react'
-import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { DisplaySnackbarArgs, Snackbars, useSnackbar } from '@/providers/snackbars'
