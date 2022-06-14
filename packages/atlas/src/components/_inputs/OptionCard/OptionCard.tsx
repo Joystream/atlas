@@ -13,22 +13,23 @@ import {
 import { Checkbox, CheckboxProps } from '../Checkbox'
 import { RadioInput, RadioInputProps } from '../RadioInput'
 
-type CheckboxType = {
+export type CheckboxType = {
   onChange?: (value: boolean) => void
 } & CheckboxProps
-type RadioType = RadioInputProps
+export type RadioType = RadioInputProps
 
 export type OptionCardProps = PropsWithChildren<{
   checked?: boolean
   label: string
-  helperText?: string
+  caption?: string
   error?: boolean
   disabled?: boolean
   icon?: ReactNode
   className?: string
 }>
+
 export const OptionCardBase: FC<OptionCardProps> = ({
-  helperText,
+  caption,
   label,
   icon,
   disabled,
@@ -53,19 +54,19 @@ export const OptionCardBase: FC<OptionCardProps> = ({
         {children}
       </InputAndTitleWrapper>
       <Text as="span" variant="t100" color="colorText">
-        {helperText}
+        {caption}
       </Text>
     </OptionCardLabel>
   )
 }
 
 export const OptionCardRadio = forwardRef<HTMLInputElement, OptionCardProps & RadioType>(
-  ({ helperText, label, selectedValue, className, value, onChange, icon, disabled, error, ...props }, ref) => {
+  ({ caption, label, selectedValue, className, value, onChange, icon, disabled, error, ...props }, ref) => {
     return (
       <OptionCardBase
         icon={icon}
         label={label}
-        helperText={helperText}
+        caption={caption}
         disabled={disabled}
         checked={value === selectedValue}
         error={error}
@@ -87,12 +88,12 @@ export const OptionCardRadio = forwardRef<HTMLInputElement, OptionCardProps & Ra
 OptionCardRadio.displayName = 'OptionCardRadio'
 
 export const OptionCardCheckbox = forwardRef<HTMLInputElement, OptionCardProps & CheckboxType>(
-  ({ helperText, label, className, value, onChange, icon, disabled, error, ...props }, ref) => {
+  ({ caption, label, className, value, onChange, icon, disabled, error, ...props }, ref) => {
     return (
       <OptionCardBase
         icon={icon}
         label={label}
-        helperText={helperText}
+        caption={caption}
         disabled={disabled}
         checked={value}
         error={error}

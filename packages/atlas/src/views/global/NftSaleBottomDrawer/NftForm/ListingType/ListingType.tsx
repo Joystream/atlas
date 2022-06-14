@@ -28,7 +28,7 @@ export const ListingType: FC<ListingTypeProps> = ({ selectedType, onSelectType }
           value="Auction"
           label="Auction"
           icon={<SvgActionAuction />}
-          helperText="Put it on a timed or open auction. See the bids coming."
+          caption="Put it on a timed or open auction. See the bids coming."
         />
         <StyledOptionCardRadio
           onChange={() => onSelectType('Fixed price')}
@@ -36,7 +36,7 @@ export const ListingType: FC<ListingTypeProps> = ({ selectedType, onSelectType }
           value="Fixed price"
           label="Fixed price"
           icon={<SvgActionBuyNow />}
-          helperText="Sell it for a fixed price only. No bids."
+          caption="Sell it for a fixed price only. No bids."
         />
       </OptionsWrapper>
     </>

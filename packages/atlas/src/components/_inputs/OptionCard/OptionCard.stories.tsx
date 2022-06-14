@@ -12,7 +12,7 @@ export default {
   component: OptionCardBase,
   args: {
     label: 'Radio input label',
-    helperText: 'Radio helper text',
+    caption: 'Radio helper text',
     disabled: false,
     error: false,
   },

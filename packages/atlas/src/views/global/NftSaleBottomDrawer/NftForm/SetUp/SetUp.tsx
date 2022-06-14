@@ -185,14 +185,14 @@ export const SetUp: FC<SetUpProps> = ({
                   <OptionCardRadio
                     value="open"
                     label="Open auction"
-                    helperText="Pick the winning bid or cancel anytime"
+                    caption="Pick the winning bid or cancel anytime"
                     onChange={() => onChange('open')}
                     selectedValue={value}
                   />
                   <OptionCardRadio
                     value="english"
                     label="Timed auction"
-                    helperText="Highest bidder wins, cannot be cancelled once started"
+                    caption="Highest bidder wins, cannot be cancelled once started"
                     onChange={() => onChange('english')}
                     selectedValue={value}
                   />

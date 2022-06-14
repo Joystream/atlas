@@ -10,7 +10,10 @@ type OptionCardLabelProps = {
   error?: boolean
 }
 
-const getOptionCardBorderColor = ({ checked, error }: OptionCardLabelProps) => {
+const getOptionCardBorderColor = ({ checked, error, disabled }: OptionCardLabelProps) => {
+  if (disabled) {
+    return cVar('colorBorderMutedAlpha')
+  }
   if (error) {
     return cVar('colorBorderError')
   } else if (checked) {
@@ -21,7 +24,7 @@ const getOptionCardBorderColor = ({ checked, error }: OptionCardLabelProps) => {
 
 const getOptionCardBorderColorHover = ({ checked, error, disabled }: OptionCardLabelProps) => {
   if (disabled) {
-    return 'inherit'
+    return cVar('colorBorderMutedAlpha')
   }
   if (error) {
     return cVar('colorBorderError')
@@ -33,7 +36,7 @@ const getOptionCardBorderColorHover = ({ checked, error, disabled }: OptionCardL
 
 const getOptionCardBorderColorActive = ({ checked, error, disabled }: OptionCardLabelProps) => {
   if (disabled) {
-    return 'inherit'
+    return cVar('colorBorderMutedAlpha')
   }
   if (error) {
     return cVar('colorBorderError')

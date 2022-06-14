@@ -390,7 +390,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                 label="Public"
                 onChange={() => onChange(true)}
                 selectedValue={value?.toString()}
-                helperText="Visible to all"
+                caption="Visible to all"
                 disabled={videoFieldsLocked}
               />
               <OptionCardRadio
@@ -398,7 +398,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                 label="Unlisted"
                 onChange={() => onChange(false)}
                 selectedValue={value?.toString()}
-                helperText="Visible with link only"
+                caption="Visible with link only"
                 disabled={videoFieldsLocked}
               />
             </RadioCardButtonsContainer>
