@@ -56,18 +56,18 @@ export const SelectButton = styled.button<SelectButtonProps>`
 
   ${({ isOpen }) => isOpen && sharedInputStyles.focus};
 
-  /* overwrite hover styles when input is open */
-
-  :hover:not(:disabled) {
-    ${({ isOpen }) => (isOpen ? sharedInputStyles.focus : sharedInputStyles.hover)};
-  }
-
   :focus {
     ${NodeContainer} {
       > svg > path {
         fill: ${cVar('colorTextStrong')};
       }
     }
+  }
+
+  /* overwrite hover styles when input is open */
+
+  :hover:not(:disabled) {
+    ${({ isOpen }) => (isOpen ? sharedInputStyles.focus : sharedInputStyles.hover)};
   }
 `
 
