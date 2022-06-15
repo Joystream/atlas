@@ -108,7 +108,6 @@ export const AssetsManager: FC = () => {
 
 // deterministically sort distributors for a given dataObject
 // this is important for caching, if we pick the distributor at random, clients will end up caching [distributors.length] copies of each asset (all have unique URL)
-// TODO: take geographical locations into the account, to offer a distributor physically closest to the client, this should ensure best response times
 const sortDistributionOperators = (
   distributionOperators: OperatorInfo[],
   dataObject: StorageDataObjectFieldsFragment
@@ -119,7 +118,7 @@ const sortDistributionOperators = (
   return [
     ...distributionOperators.slice(firstDistributorIndex),
     ...distributionOperators.slice(0, firstDistributorIndex),
-  ]
+  ].sort((a, b) => (a.distance || 0) - (b.distance || 0))
 }
 
 const createDistributionOperatorDataObjectUrl = (

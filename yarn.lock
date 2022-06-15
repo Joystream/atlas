@@ -2565,6 +2565,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@joystream/atlas-cloudflare-geolocation-worker@workspace:packages/atlas-cloudflare-geolocation-worker":
+  version: 0.0.0-use.local
+  resolution: "@joystream/atlas-cloudflare-geolocation-worker@workspace:packages/atlas-cloudflare-geolocation-worker"
+  dependencies:
+    "@cloudflare/workers-types": ^3.11.0
+    ts-loader: ^9.3.0
+    webpack: ^5.73.0
+    webpack-cli: ^4.10.0
+  languageName: unknown
+  linkType: soft
+
 "@joystream/atlas-cloudflare-worker@workspace:packages/atlas-cloudflare-worker":
   version: 0.0.0-use.local
   resolution: "@joystream/atlas-cloudflare-worker@workspace:packages/atlas-cloudflare-worker"

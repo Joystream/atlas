@@ -274,7 +274,14 @@ export type DistributionBucketOperatorFieldFragment = {
   __typename?: 'DistributionBucketOperator'
   id: string
   status: Types.DistributionBucketOperatorStatus
-  metadata?: { __typename?: 'DistributionBucketOperatorMetadata'; nodeEndpoint?: string | null } | null
+  metadata?: {
+    __typename?: 'DistributionBucketOperatorMetadata'
+    nodeEndpoint?: string | null
+    nodeLocation?: {
+      __typename?: 'NodeLocationMetadata'
+      coordinates?: { __typename?: 'GeoCoordinates'; latitude: number; longitude: number } | null
+    } | null
+  } | null
 }
 
 export type VideoMediaMetadataFieldsFragment = {
@@ -1783,6 +1790,12 @@ export const DistributionBucketOperatorFieldFragmentDoc = gql`
     id
     metadata {
       nodeEndpoint
+      nodeLocation {
+        coordinates {
+          latitude
+          longitude
+        }
+      }
     }
     status
   }

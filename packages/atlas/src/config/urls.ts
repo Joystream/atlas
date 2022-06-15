@@ -16,3 +16,5 @@ export const JOYSTREAM_DISCORD_URL = 'https://discord.gg/DE9UN3YpRP'
 export const JOYSTREAM_STORAGE_DISCORD_URL = 'https://discord.gg/WUb7XwW72a'
 
 export const PIONEER_MEMBER_URL = 'https://dao.joystream.org/#/members'
+
+export const USER_LOCATION_SERVICE = 'https://atlas-geolocation-worker.rafal-pawlow.workers.dev/'

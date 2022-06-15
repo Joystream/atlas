@@ -17,7 +17,14 @@ export type GetDistributionBucketsWithOperatorsQuery = {
       __typename?: 'DistributionBucketOperator'
       id: string
       status: Types.DistributionBucketOperatorStatus
-      metadata?: { __typename?: 'DistributionBucketOperatorMetadata'; nodeEndpoint?: string | null } | null
+      metadata?: {
+        __typename?: 'DistributionBucketOperatorMetadata'
+        nodeEndpoint?: string | null
+        nodeLocation?: {
+          __typename?: 'NodeLocationMetadata'
+          coordinates?: { __typename?: 'GeoCoordinates'; latitude: number; longitude: number } | null
+        } | null
+      } | null
     }>
   }>
 }

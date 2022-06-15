@@ -1,0 +1,13 @@
+name = "atlas-geolocation-worker"
+type = "javascript"
+
+account_id = ""
+workers_dev = true
+route = ""
+zone_id = ""
+compatibility_date = "2022-06-14"
+
+[build]
+command = "yarn install --immutable && yarn build"
+[build.upload]
+format = "service-worker"

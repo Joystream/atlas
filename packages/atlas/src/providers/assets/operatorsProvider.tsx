@@ -27,6 +27,7 @@ import { ASSET_MIN_DISTRIBUTOR_REFETCH_TIME } from '@/config/assets'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { getRandomIntInclusive } from '@/utils/number'
 
+import { calculateDistance, getUserLocation } from './helpers'
 import { OperatorInfo } from './types'
 
 type BagOperatorsMapping = Record<string, OperatorInfo[]>
@@ -53,7 +54,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren<unknown>> = ({ child
 
   const client = useApolloClient()
 
-  const fetchDistributionOperators = useCallback(() => {
+  const fetchDistributionOperators = useCallback(async () => {
     const distributionOperatorsPromise = client.query<
       GetDistributionBucketsWithOperatorsQuery,
       GetDistributionBucketsWithOperatorsQueryVariables
@@ -61,6 +62,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren<unknown>> = ({ child
       query: GetDistributionBucketsWithOperatorsDocument,
       fetchPolicy: 'network-only',
     })
+    const userCoordinates = await getUserLocation()
     isFetchingDistributionOperatorsRef.current = true
     lastDistributionOperatorsFetchTimeRef.current = new Date().getTime()
     distributionOperatorsMappingPromiseRef.current = distributionOperatorsPromise.then((result) => {
@@ -72,7 +74,18 @@ export const OperatorsContextProvider: FC<PropsWithChildren<unknown>> = ({ child
         // we need to filter operators manually as query node doesn't support filtering this deep
         const operatorsInfos: OperatorInfo[] = bucket.operators
           .filter((operator) => operator.metadata?.nodeEndpoint?.includes('http') && operator.status === 'ACTIVE')
-          .map((operator) => ({ id: operator.id, endpoint: operator.metadata?.nodeEndpoint || '' }))
+          .map((operator) => ({
+            id: operator.id,
+            endpoint: operator.metadata?.nodeEndpoint || '',
+            distance: operator.metadata?.nodeLocation?.coordinates
+              ? calculateDistance({
+                  lat1: Number(userCoordinates.latitude),
+                  lng1: Number(userCoordinates.longitude),
+                  lat2: operator.metadata?.nodeLocation?.coordinates?.latitude,
+                  lng2: operator.metadata?.nodeLocation?.coordinates.longitude,
+                })
+              : null,
+          }))
 
         bagIds.forEach((bagId) => {
           if (!mapping[bagId]) {
