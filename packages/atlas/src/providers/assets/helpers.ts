@@ -1,7 +1,4 @@
-import axios from 'axios'
-
 import { DataObjectType, StorageDataObjectFieldsFragment } from '@/api/queries'
-import { USER_LOCATION_SERVICE } from '@/config/urls'
 import { ConsoleLogger } from '@/utils/logs'
 
 const imageAssetTypes: DataObjectType['__typename'][] = [
@@ -68,40 +65,4 @@ export const testAssetDownload = (url: string, dataObject: StorageDataObjectFiel
       reject()
     }
   })
-}
-
-type CalculateDistanceArgs = {
-  lat1: number
-  lng1: number
-  lat2: number
-  lng2: number
-}
-export const calculateDistance = ({ lat1, lng1, lat2, lng2 }: CalculateDistanceArgs) => {
-  const R = 6371e3 // metres
-  const latitude1 = (lat1 * Math.PI) / 180
-  const latitude2 = (lat2 * Math.PI) / 180
-  const deltaLatitude2 = ((lat2 - lat1) * Math.PI) / 180
-  const deltaLongitude = ((lng2 - lng1) * Math.PI) / 180
-
-  const a =
-    Math.sin(deltaLatitude2 / 2) * Math.sin(deltaLatitude2 / 2) +
-    Math.cos(latitude1) * Math.cos(latitude2) * Math.sin(deltaLongitude / 2) * Math.sin(deltaLongitude / 2)
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-
-  return Math.floor(R * c) // in metres
-}
-
-export const getUserLocation = async (): Promise<{ latitude: string; longitude: string }> => {
-  const storedLocation = localStorage.getItem('userLocation')
-  const parsedLocation = storedLocation && JSON.parse(storedLocation)
-  const sevenDaysMs = 604800000
-  const now = new Date()
-  if (!parsedLocation || now.getTime() > parsedLocation.expiry) {
-    const userLocation = await axios.get(USER_LOCATION_SERVICE)
-    localStorage.setItem(
-      'userLocation',
-      JSON.stringify({ value: userLocation.data, expiry: now.getTime() + sevenDaysMs })
-    )
-  }
-  return parsedLocation.value
 }

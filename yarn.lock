@@ -2565,20 +2565,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@joystream/atlas-cloudflare-geolocation-worker@workspace:packages/atlas-cloudflare-geolocation-worker":
+"@joystream/atlas-geolocation-worker@workspace:packages/atlas-geolocation-worker":
   version: 0.0.0-use.local
-  resolution: "@joystream/atlas-cloudflare-geolocation-worker@workspace:packages/atlas-cloudflare-geolocation-worker"
-  dependencies:
-    "@cloudflare/workers-types": ^3.11.0
-    ts-loader: ^9.3.0
-    webpack: ^5.73.0
-    webpack-cli: ^4.10.0
-  languageName: unknown
-  linkType: soft
-
-"@joystream/atlas-cloudflare-worker@workspace:packages/atlas-cloudflare-worker":
-  version: 0.0.0-use.local
-  resolution: "@joystream/atlas-cloudflare-worker@workspace:packages/atlas-cloudflare-worker"
+  resolution: "@joystream/atlas-geolocation-worker@workspace:packages/atlas-geolocation-worker"
   dependencies:
     "@cloudflare/workers-types": ^3.11.0
     ts-loader: ^9.3.0
@@ -2606,6 +2595,17 @@ __metadata:
     node-html-parser: ^5.3.3
     ts-node: ^10.8.1
     ts-node-dev: ^2.0.0
+  languageName: unknown
+  linkType: soft
+
+"@joystream/atlas-proxy-worker@workspace:packages/atlas-proxy-worker":
+  version: 0.0.0-use.local
+  resolution: "@joystream/atlas-proxy-worker@workspace:packages/atlas-proxy-worker"
+  dependencies:
+    "@cloudflare/workers-types": ^3.11.0
+    ts-loader: ^9.3.0
+    webpack: ^5.73.0
+    webpack-cli: ^4.10.0
   languageName: unknown
   linkType: soft
 
@@ -2675,6 +2675,7 @@ __metadata:
     graphql: ^16.5.0
     graphql-tag: ^2.12.6
     happy-dom: ^4.1.0
+    haversine-distance: ^1.2.1
     history: ^5.3.0
     immer: ^9.0.15
     localforage: ^1.10.0
@@ -12419,6 +12420,13 @@ fsevents@^1.2.7:
     property-information: ^5.0.0
     space-separated-tokens: ^1.0.0
   checksum: 5e50b85af0d2cb7c17979cb1ddca75d6b96b53019dd999b39e7833192c9004201c3cee6445065620ea05d0087d9ae147a4844e582d64868be5bc6b0232dfe52d
+  languageName: node
+  linkType: hard
+
+"haversine-distance@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "haversine-distance@npm:1.2.1"
+  checksum: a91819362af09da0b9081ef5406a771819e4cbae00d9ada02bf1898f2fd5176d79c54f3bae8e3dbedbd8f1101dd6cc07a3989e427e358a898e9cff28e938dfc5
   languageName: node
   linkType: hard
 

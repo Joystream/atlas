@@ -1,14 +1,15 @@
 {
-  "name": "@joystream/atlas-cloudflare-worker",
-  "license": "GPL-3.0",
+  "private": true,
+  "name": "@joystream/atlas-geolocation-worker",
   "version": "1.0.0",
-  "description": "Atlas Cloudflare worker",
+  "description": "A template for kick starting a Cloudflare Workers project",
   "main": "dist/worker.js",
   "scripts": {
     "build": "webpack",
-    "format": "prettier --write  '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
+    "format": "prettier --write '**/*.{js,css,json,md}'",
     "lint": "eslint --max-warnings=0 src && prettier --check '*.{json,js}' 'src/**/*.{js,ts}'"
   },
+  "license": "MIT",
   "devDependencies": {
     "@cloudflare/workers-types": "^3.11.0",
     "ts-loader": "^9.3.0",

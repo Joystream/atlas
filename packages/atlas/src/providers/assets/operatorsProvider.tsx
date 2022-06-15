@@ -1,4 +1,6 @@
 import { useApolloClient } from '@apollo/client'
+import axios from 'axios'
+import haversine from 'haversine-distance'
 import { uniqBy } from 'lodash-es'
 import {
   Dispatch,
@@ -24,10 +26,11 @@ import {
 } from '@/api/queries'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ASSET_MIN_DISTRIBUTOR_REFETCH_TIME } from '@/config/assets'
+import { USER_LOCATION_SERVICE } from '@/config/urls'
+import { Coordinates, useUserLocationStore } from '@/providers/userLocation'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { getRandomIntInclusive } from '@/utils/number'
 
-import { calculateDistance, getUserLocation } from './helpers'
 import { OperatorInfo } from './types'
 
 type BagOperatorsMapping = Record<string, OperatorInfo[]>
@@ -51,10 +54,17 @@ export const OperatorsContextProvider: FC<PropsWithChildren<unknown>> = ({ child
   const [distributionOperatorsError, setDistributionOperatorsError] = useState<unknown>(null)
   const [storageOperatorsError, setStorageOperatorsError] = useState<unknown>(null)
   const [failedStorageOperatorIds, setFailedStorageOperatorIds] = useState<string[]>([])
+  const {
+    coordinates,
+    expiry,
+    actions: { setUserLocation },
+  } = useUserLocationStore((state) => state)
 
   const client = useApolloClient()
 
   const fetchDistributionOperators = useCallback(async () => {
+    const now = new Date()
+    let userCoordinates: Coordinates
     const distributionOperatorsPromise = client.query<
       GetDistributionBucketsWithOperatorsQuery,
       GetDistributionBucketsWithOperatorsQueryVariables
@@ -62,7 +72,13 @@ export const OperatorsContextProvider: FC<PropsWithChildren<unknown>> = ({ child
       query: GetDistributionBucketsWithOperatorsDocument,
       fetchPolicy: 'network-only',
     })
-    const userCoordinates = await getUserLocation()
+    if (!coordinates || !expiry || now.getTime() > expiry) {
+      const getUserCoordinates = await axios.get(USER_LOCATION_SERVICE)
+      userCoordinates = getUserCoordinates.data
+      setUserLocation(userCoordinates)
+    } else {
+      userCoordinates = coordinates
+    }
     isFetchingDistributionOperatorsRef.current = true
     lastDistributionOperatorsFetchTimeRef.current = new Date().getTime()
     distributionOperatorsMappingPromiseRef.current = distributionOperatorsPromise.then((result) => {
@@ -78,12 +94,13 @@ export const OperatorsContextProvider: FC<PropsWithChildren<unknown>> = ({ child
             id: operator.id,
             endpoint: operator.metadata?.nodeEndpoint || '',
             distance: operator.metadata?.nodeLocation?.coordinates
-              ? calculateDistance({
-                  lat1: Number(userCoordinates.latitude),
-                  lng1: Number(userCoordinates.longitude),
-                  lat2: operator.metadata?.nodeLocation?.coordinates?.latitude,
-                  lng2: operator.metadata?.nodeLocation?.coordinates.longitude,
-                })
+              ? haversine(
+                  { lat: Number(userCoordinates.latitude), lng: Number(userCoordinates.longitude) },
+                  {
+                    lat: operator.metadata?.nodeLocation?.coordinates?.latitude,
+                    lng: operator.metadata?.nodeLocation?.coordinates.longitude,
+                  }
+                )
               : null,
           }))
 
@@ -104,7 +121,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren<unknown>> = ({ child
       isFetchingDistributionOperatorsRef.current = false
     })
     return distributionOperatorsMappingPromiseRef.current
-  }, [client])
+  }, [client, coordinates, expiry, setUserLocation])
 
   const fetchStorageOperators = useCallback(() => {
     const storageOperatorsPromise = client.query<GetStorageBucketsQuery, GetStorageBucketsQueryVariables>({
