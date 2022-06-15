@@ -58,7 +58,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren<unknown>> = ({ child
     coordinates,
     expiry,
     actions: { setUserLocation },
-  } = useUserLocationStore((state) => state)
+  } = useUserLocationStore()
 
   const client = useApolloClient()
 
@@ -101,15 +101,16 @@ export const OperatorsContextProvider: FC<PropsWithChildren<unknown>> = ({ child
             return {
               id: operator.id,
               endpoint: operator.metadata?.nodeEndpoint || '',
-              distance: coordinates
-                ? haversine(
-                    { lat: userCoordinates.latitude, lng: userCoordinates.longitude },
-                    {
-                      lat: coordinates.latitude,
-                      lng: coordinates.longitude,
-                    }
-                  )
-                : null,
+              distance:
+                coordinates && userCoordinates
+                  ? haversine(
+                      { lat: userCoordinates.latitude, lng: userCoordinates.longitude },
+                      {
+                        lat: coordinates.latitude,
+                        lng: coordinates.longitude,
+                      }
+                    )
+                  : null,
             }
           })
 
