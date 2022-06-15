@@ -11,7 +11,7 @@ import { removeVideoFromCache } from '@/utils/cachingAssets'
 export const useDeleteVideo = () => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useAuthorizedUser()
+  const { memberId } = useAuthorizedUser()
   const removeAssetsWithParentFromUploads = useUploadsStore((state) => state.actions.removeAssetsWithParentFromUploads)
   const [openDeleteVideoDialog, closeDeleteVideoDialog] = useConfirmationModal()
 
@@ -25,7 +25,7 @@ export const useDeleteVideo = () => {
 
       handleTransaction({
         txFactory: async (updateStatus) =>
-          (await joystream.extrinsics).deleteVideo(videoId, activeMemberId, proxyCallback(updateStatus)),
+          (await joystream.extrinsics).deleteVideo(videoId, memberId, proxyCallback(updateStatus)),
         onTxSync: async () => {
           removeVideoFromCache(videoId, client)
           removeAssetsWithParentFromUploads('video', videoId)
@@ -33,7 +33,7 @@ export const useDeleteVideo = () => {
         },
       })
     },
-    [activeMemberId, client, handleTransaction, joystream, proxyCallback, removeAssetsWithParentFromUploads]
+    [memberId, client, handleTransaction, joystream, proxyCallback, removeAssetsWithParentFromUploads]
   )
 
   return useCallback(

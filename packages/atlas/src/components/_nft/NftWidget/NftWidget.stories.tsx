@@ -7,7 +7,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { createApolloClient } from '@/api'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { JoystreamProvider } from '@/providers/joystream'
-import { ActiveUserProvider } from '@/providers/user'
+import { UserProvider } from '@/providers/user'
 
 import { NftWidget, NftWidgetProps } from '.'
 
@@ -69,11 +69,11 @@ export default {
         <BrowserRouter>
           <ApolloProvider client={apolloClient}>
             <ConfirmationModalProvider>
-              <ActiveUserProvider>
+              <UserProvider>
                 <JoystreamProvider>
                   <Story />
                 </JoystreamProvider>
-              </ActiveUserProvider>
+              </UserProvider>
             </ConfirmationModalProvider>
           </ApolloProvider>
         </BrowserRouter>

@@ -29,5 +29,5 @@ const VARIANT_TO_CONFIG: Record<LoaderVariant, LoaderConfig> = {
 
 export const Loader: FC<LoaderProps> = ({ variant = 'medium', className }) => {
   const config = VARIANT_TO_CONFIG[variant]
-  return <LottiePlayer data={config.data} size={config.size} className={className} />
+  return <LottiePlayer data={config.data} loop size={config.size} className={className} />
 }

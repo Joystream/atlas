@@ -5,7 +5,6 @@ import { REACTION_TYPE, ReactionId } from '@/config/reactions'
 type GetCommentReactionsArgs = {
   userReactionsIds?: number[]
   reactionsCount: CommentReactionsCountByReactionIdFieldsFragment[]
-  activeMemberId: string | null
   processingReactionsIds: ReactionId[]
   deleted?: boolean
 }

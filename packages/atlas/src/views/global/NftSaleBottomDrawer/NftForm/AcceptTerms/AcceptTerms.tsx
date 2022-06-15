@@ -188,10 +188,10 @@ export const MemberWithResolvedAvatar: FC<{ member: BasicMembershipFieldsFragmen
   return <StyledMemberBadge avatarUri={url} isLoadingAvatar={isLoadingAsset} handle={member.handle} />
 }
 
-export const TitleText: FC<PropsWithChildren<unknown>> = ({ children }) => (
+export const TitleText: FC<PropsWithChildren> = ({ children }) => (
   <Text variant="h300" secondary>
     {children}
   </Text>
 )
 
-export const DescriptionText: FC<PropsWithChildren<unknown>> = ({ children }) => <Text variant="h400">{children}</Text>
+export const DescriptionText: FC<PropsWithChildren> = ({ children }) => <Text variant="h400">{children}</Text>

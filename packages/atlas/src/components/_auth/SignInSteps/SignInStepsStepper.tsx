@@ -19,7 +19,7 @@ export const SignInStepsStepper: FC = () => {
   const navigate = useNavigate()
   const step = useRouterQuery(QUERY_PARAMS.LOGIN)
   const stepNumber = Number(step)
-  const { extensionConnected, signIn, isLoading } = useUser()
+  const { walletStatus, signIn } = useUser()
 
   const steps = [
     {
@@ -42,13 +42,14 @@ export const SignInStepsStepper: FC = () => {
     },
   ]
 
+  const walletUnknown = walletStatus === 'unknown'
   useEffect(() => {
-    if (extensionConnected === null && stepNumber >= 1) {
+    if (walletUnknown && stepNumber >= 1) {
       signIn()
     }
-  }, [extensionConnected, signIn, stepNumber])
+  }, [walletUnknown, signIn, stepNumber])
 
-  const showStepper = stepNumber >= 1 && !isLoading
+  const showStepper = stepNumber >= 1
   const showCreateMemberModal = step === 'member'
 
   return (

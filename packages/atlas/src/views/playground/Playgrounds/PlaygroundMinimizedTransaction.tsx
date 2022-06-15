@@ -12,7 +12,7 @@ import { useAuthorizedUser } from '@/providers/user'
 
 export const PlaygroundMinimizedTransaction = () => {
   const [editMode, setEditMode] = useState('')
-  const { activeChannelId, activeMemberId } = useAuthorizedUser()
+  const { channelId, memberId } = useAuthorizedUser()
   const handleTransaction = useTransaction()
   const { joystream, proxyCallback } = useJoystream()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -20,7 +20,7 @@ export const PlaygroundMinimizedTransaction = () => {
   const { edges, refetch } = useVideosConnection({
     where: {
       channel: {
-        id_eq: activeChannelId,
+        id_eq: channelId,
       },
       nft: {
         id_eq: null,
@@ -42,7 +42,7 @@ export const PlaygroundMinimizedTransaction = () => {
           await joystream.extrinsics
         ).updateVideo(
           id,
-          activeMemberId,
+          memberId,
           {
             title,
             nft: undefined,

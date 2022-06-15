@@ -24,7 +24,7 @@ NftActionsContext.displayName = 'NftActionsContext'
 
 type NftAction = 'putOnSale' | 'purchase' | 'settle' | 'accept-bid' | 'change-price'
 
-export const NftActionsProvider: FC<PropsWithChildren<unknown>> = ({ children }) => {
+export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
   const [currentAction, setCurrentAction] = useState<NftAction | null>(null)
   const transactions = useNftTransactions()
   const [isBuyNowClicked, setIsBuyNowClicked] = useState<boolean>()

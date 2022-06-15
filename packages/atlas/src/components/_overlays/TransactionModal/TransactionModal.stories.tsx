@@ -6,7 +6,7 @@ import { createApolloClient } from '@/api'
 import { ExtrinsicStatus } from '@/joystream-lib'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
-import { ActiveUserProvider } from '@/providers/user'
+import { UserProvider } from '@/providers/user'
 
 import { TransactionModal, TransactionModalProps } from './TransactionModal'
 
@@ -20,11 +20,11 @@ export default {
         <BrowserRouter>
           <ApolloProvider client={apolloClient}>
             <ConfirmationModalProvider>
-              <ActiveUserProvider>
+              <UserProvider>
                 <OverlayManagerProvider>
                   <Story />
                 </OverlayManagerProvider>
-              </ActiveUserProvider>
+              </UserProvider>
             </ConfirmationModalProvider>
           </ApolloProvider>
         </BrowserRouter>

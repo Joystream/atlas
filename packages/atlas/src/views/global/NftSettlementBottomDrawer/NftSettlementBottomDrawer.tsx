@@ -26,7 +26,7 @@ import {
 
 export const NftSettlementBottomDrawer: FC = () => {
   const xsMatch = useMediaMatch('xs')
-  const { activeMemberId } = useUser()
+  const { memberId } = useUser()
   const { currentNftId, closeNftAction, currentAction } = useNftActions()
   const { nft, loading, refetch } = useNft(currentNftId || '')
 
@@ -35,7 +35,7 @@ export const NftSettlementBottomDrawer: FC = () => {
   const { url: avatarUrl } = useAsset(nft?.video.channel.avatarPhoto)
   const { url: memberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
 
-  const isUserSeller = activeMemberId === nft?.ownerMember?.id
+  const isUserSeller = memberId === nft?.ownerMember?.id
 
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()

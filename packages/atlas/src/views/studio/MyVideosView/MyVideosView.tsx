@@ -68,10 +68,10 @@ export const MyVideosView = () => {
   const addToTabNotificationsCount = useRef(0)
 
   const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
-  const { activeChannelId } = useAuthorizedUser()
+  const { channelId } = useAuthorizedUser()
   const { removeDrafts, markAllDraftsAsSeenForChannel } = useDraftStore(({ actions }) => actions)
-  const unseenDrafts = useDraftStore(chanelUnseenDraftsSelector(activeChannelId))
-  const _drafts = useDraftStore(channelDraftsSelector(activeChannelId))
+  const unseenDrafts = useDraftStore(chanelUnseenDraftsSelector(channelId))
+  const _drafts = useDraftStore(channelDraftsSelector(channelId))
 
   const drafts = [
     ...(_drafts.length ? ['new-video-tile' as const] : []),
@@ -86,7 +86,7 @@ export const MyVideosView = () => {
       orderBy: sortVideosBy,
       where: {
         channel: {
-          id_eq: activeChannelId,
+          id_eq: channelId,
         },
         isPublic_eq,
       },
@@ -134,7 +134,7 @@ export const MyVideosView = () => {
     setCurrentVideosTab(tab)
     if (TABS[tab] === 'Drafts') {
       if (unseenDrafts.length > 0) {
-        markAllDraftsAsSeenForChannel(activeChannelId ?? '')
+        markAllDraftsAsSeenForChannel(channelId ?? '')
       }
     }
   }

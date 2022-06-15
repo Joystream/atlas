@@ -21,7 +21,7 @@ type ConfirmationModalContextValue = {
 const ConfirmationModalContext = createContext<undefined | ConfirmationModalContextValue>(undefined)
 ConfirmationModalContext.displayName = 'ConfirmationModalContext'
 
-export const ConfirmationModalProvider: FC<PropsWithChildren<unknown>> = ({ children }) => {
+export const ConfirmationModalProvider: FC<PropsWithChildren> = ({ children }) => {
   const [modals, setModals] = useState<Record<string, FC>>({})
 
   const openModal = useCallback(

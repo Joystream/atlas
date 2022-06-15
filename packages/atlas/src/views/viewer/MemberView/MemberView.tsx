@@ -38,7 +38,7 @@ export const MemberView: FC = () => {
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
   const [sortBy, setSortBy] = useState<'createdAt_ASC' | 'createdAt_DESC'>('createdAt_DESC')
   const [currentTab, setCurrentTab] = useState<typeof TABS[number] | null>(null)
-  const { activeMemberId, activeMembership } = useUser()
+  const { memberId, activeMembership } = useUser()
   const { handle } = useParams()
   const filtersBarLogic = useFiltersBar()
   const {
@@ -152,7 +152,7 @@ export const MemberView: FC = () => {
           handle={member?.handle}
           address={member?.controllerAccount}
           loading={loadingMember}
-          isOwner={activeMemberId === member?.id}
+          isOwner={memberId === member?.id}
         />
         <TabsWrapper isFiltersOpen={isFiltersOpen}>
           <TabsContainer isMemberActivityTab={currentTab === 'Activity'}>

@@ -60,18 +60,18 @@ type CommonProps = {
 const ReactToVideo: FC<CommonProps> = ({ videoId }) => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useUser()
+  const { memberId } = useUser()
   const [videoReaction, setVideoReaction] = useState<VideoReaction>('like')
 
   const handleLike = () => {
-    if (!joystream || !activeMemberId) {
+    if (!joystream || !memberId) {
       ConsoleLogger.error('no joystream or active member')
       return
     }
 
     handleTransaction({
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).reactToVideo(activeMemberId, videoId, videoReaction, proxyCallback(updateStatus)),
+        (await joystream.extrinsics).reactToVideo(memberId, videoId, videoReaction, proxyCallback(updateStatus)),
       minimized: {
         errorMessage: 'Failed to react to video',
       },
@@ -98,13 +98,13 @@ const ReactToVideo: FC<CommonProps> = ({ videoId }) => {
 const ReactToComment: FC<CommonProps> = () => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useUser()
+  const { memberId } = useUser()
 
   const [commentId, setCommentId] = useState<string>('')
   const [commentReaction, setCommentReaction] = useState<number>(1)
 
   const handleLike = () => {
-    if (!joystream || !activeMemberId || !commentId) {
+    if (!joystream || !memberId || !commentId) {
       ConsoleLogger.error('no joystream or active member')
       return
     }
@@ -112,7 +112,7 @@ const ReactToComment: FC<CommonProps> = () => {
     handleTransaction({
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).reactToVideoComment(
-          activeMemberId,
+          memberId,
           commentId,
           commentReaction,
           proxyCallback(updateStatus)
@@ -149,12 +149,12 @@ const ReactToComment: FC<CommonProps> = () => {
 const CreateComment: FC<CommonProps> = ({ videoId }) => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useUser()
+  const { memberId } = useUser()
   const [commentBody, setCommentBody] = useState('')
   const [parentCommentId, setParentCommentId] = useState('')
 
   const handleCreate = () => {
-    if (!joystream || !activeMemberId) {
+    if (!joystream || !memberId) {
       ConsoleLogger.error('no joystream or active member')
       return
     }
@@ -162,7 +162,7 @@ const CreateComment: FC<CommonProps> = ({ videoId }) => {
     handleTransaction({
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).createVideoComment(
-          activeMemberId,
+          memberId,
           videoId,
           commentBody,
           parentCommentId || null,
@@ -190,24 +190,19 @@ const CreateComment: FC<CommonProps> = ({ videoId }) => {
 const EditComment: FC<CommonProps> = () => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useUser()
+  const { memberId } = useUser()
   const [commentBody, setCommentBody] = useState('')
   const [commentId, setCommentId] = useState('')
 
   const handleCreate = () => {
-    if (!joystream || !activeMemberId) {
+    if (!joystream || !memberId) {
       ConsoleLogger.error('no joystream or active member')
       return
     }
 
     handleTransaction({
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).editVideoComment(
-          activeMemberId,
-          commentId,
-          commentBody,
-          proxyCallback(updateStatus)
-        ),
+        (await joystream.extrinsics).editVideoComment(memberId, commentId, commentBody, proxyCallback(updateStatus)),
       minimized: {
         errorMessage: 'Failed to edit video comment',
       },
@@ -230,18 +225,18 @@ const EditComment: FC<CommonProps> = () => {
 const DeleteComment: FC<CommonProps> = () => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useUser()
+  const { memberId } = useUser()
   const [commentId, setCommentId] = useState('')
 
   const handleDelete = () => {
-    if (!joystream || !activeMemberId) {
+    if (!joystream || !memberId) {
       ConsoleLogger.error('no joystream or active member')
       return
     }
 
     handleTransaction({
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).deleteVideoComment(activeMemberId, commentId, proxyCallback(updateStatus)),
+        (await joystream.extrinsics).deleteVideoComment(memberId, commentId, proxyCallback(updateStatus)),
       minimized: {
         errorMessage: 'Failed to delete comment',
       },

@@ -61,7 +61,7 @@ import {
 export const VideoView: FC = () => {
   useRedirectMigratedContent({ type: 'video' })
   const { id } = useParams()
-  const { activeMemberId, activeAccountId, signIn } = useUser()
+  const { memberId, signIn, isLoggedIn } = useUser()
   const { openSignInDialog } = useDisplaySignInDialog()
   const { openNftPutOnSale, cancelNftSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement } =
     useNftActions()
@@ -74,8 +74,6 @@ export const VideoView: FC = () => {
   const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
   const nftWidgetProps = useNftWidget(id)
   const { likeOrDislikeVideo } = useReactionTransactions()
-
-  const authorized = activeMemberId && activeAccountId
 
   const mdMatch = useMediaMatch('md')
   const { addVideoView } = useAddVideoView()
@@ -124,7 +122,7 @@ export const VideoView: FC = () => {
     if (videoReactionProcessing) {
       return 'processing'
     }
-    const myReaction = video?.reactions.find(({ memberId }) => memberId === activeMemberId)
+    const myReaction = video?.reactions.find(({ memberId: reactionMemberId }) => reactionMemberId === memberId)
     if (myReaction) {
       if (myReaction.reaction === 'LIKE') {
         return 'liked'
@@ -134,7 +132,7 @@ export const VideoView: FC = () => {
       }
     }
     return 'default'
-  }, [activeMemberId, videoReactionProcessing, video])
+  }, [memberId, videoReactionProcessing, video])
 
   useEffect(() => {
     if (!videoId || !channelId) {
@@ -172,7 +170,7 @@ export const VideoView: FC = () => {
 
   const handleReact = useCallback(
     async (reaction: VideoReaction) => {
-      if (!authorized) {
+      if (!isLoggedIn) {
         openSignInDialog({ onConfirm: signIn })
         return false
       } else if (video?.id) {
@@ -183,7 +181,7 @@ export const VideoView: FC = () => {
       }
       return false
     },
-    [authorized, likeOrDislikeVideo, openSignInDialog, signIn, video]
+    [isLoggedIn, likeOrDislikeVideo, openSignInDialog, signIn, video]
   )
 
   // use Media Session API to provide rich metadata to the browser
@@ -271,7 +269,7 @@ export const VideoView: FC = () => {
             )}
           </Meta>
           <StyledReactionStepper
-            reactionPopoverDismissed={reactionPopoverDismissed || !authorized}
+            reactionPopoverDismissed={reactionPopoverDismissed || !isLoggedIn}
             onReact={handleReact}
             state={reactionStepperState}
             likes={numberOfLikes}

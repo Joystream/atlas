@@ -172,7 +172,7 @@ export const useVideoFormDraft = (
   watch: UseFormWatch<VideoWorkspaceVideoFormFields>,
   dirtyFields: FieldNamesMarkedBoolean<VideoWorkspaceVideoFormFields>
 ) => {
-  const { activeChannelId } = useAuthorizedUser()
+  const { channelId } = useAuthorizedUser()
   const { editedVideoInfo, setEditedVideo } = useVideoWorkspace()
   const { updateDraft, addDraft } = useDraftStore((state) => state.actions)
 
@@ -189,7 +189,7 @@ export const useVideoFormDraft = (
       ) => {
         const draftData: RawDraft = {
           ...data,
-          channelId: activeChannelId,
+          channelId: channelId,
           type: 'video',
           publishedBeforeJoystream: isDateValid(data.publishedBeforeJoystream)
             ? formatISO(data.publishedBeforeJoystream as Date)
@@ -217,12 +217,12 @@ export const useVideoFormDraft = (
         return
       }
 
-      debouncedDraftSave.current(activeChannelId, editedVideoInfo, data, addDraft, updateDraft, setEditedVideo)
+      debouncedDraftSave.current(channelId, editedVideoInfo, data, addDraft, updateDraft, setEditedVideo)
     })
     return () => {
       subscription.unsubscribe()
     }
-  }, [addDraft, dirtyFields, editedVideoInfo, updateDraft, setEditedVideo, watch, activeChannelId])
+  }, [addDraft, dirtyFields, editedVideoInfo, updateDraft, setEditedVideo, watch, channelId])
 
   const flushDraftSave = useCallback(() => {
     debouncedDraftSave.current.flush()

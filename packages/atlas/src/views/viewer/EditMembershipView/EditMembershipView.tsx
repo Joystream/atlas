@@ -17,7 +17,7 @@ import { StyledActionBar, TextFieldsWrapper, Wrapper } from './EditMembershipVie
 
 export const EditMembershipView: FC = () => {
   const navigate = useNavigate()
-  const { activeAccountId, activeMembership, activeMembershipLoading, refetchActiveMembership } = useUser()
+  const { accountId, activeMembership, isLoggedIn, refetchUserMemberships } = useUser()
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
@@ -52,11 +52,12 @@ export const EditMembershipView: FC = () => {
     )
   }, [activeMembership, reset])
 
+  // reset the form whenever the active membership changes
   useEffect(() => {
-    if (!activeMembershipLoading && activeMembership) {
+    if (activeMembership) {
       resetForm()
     }
-  }, [activeMembership, activeMembershipLoading, resetForm])
+  }, [activeMembership, resetForm])
 
   const headTags = useHeadTags('Edit membership')
 
@@ -72,7 +73,7 @@ export const EditMembershipView: FC = () => {
           ...(dirtyFields.avatar ? { avatarUri: formData?.avatar } : {}),
         }
         return (await joystream.extrinsics).updateMember(
-          activeMembership?.id,
+          activeMembership.id,
           dirtyFields.handle ? formData.handle : null,
           memberInputMetadata,
           proxyCallback(updateStatus)
@@ -82,9 +83,12 @@ export const EditMembershipView: FC = () => {
         title: 'Profile updated successfully',
       },
     })
-    const { data } = await refetchActiveMembership()
+    const {
+      data: { memberships },
+    } = await refetchUserMemberships()
+    const updatedMembership = memberships.find((m) => m.id === activeMembership.id)
     if (success) {
-      navigate(absoluteRoutes.viewer.member(data.membershipByUniqueInput?.handle))
+      navigate(absoluteRoutes.viewer.member(updatedMembership?.handle))
     }
   })
 
@@ -93,11 +97,11 @@ export const EditMembershipView: FC = () => {
       {headTags}
       <LimitedWidthContainer>
         <MembershipInfo
-          address={activeAccountId}
+          address={accountId}
           avatarUrl={errors.avatar ? '' : getValues('avatar')}
           onAvatarEditClick={() => setFocus('avatar')}
           hasAvatarUploadFailed={!!errors.avatar}
-          loading={activeMembershipLoading}
+          loading={!isLoggedIn}
           editable
           handle={getValues('handle')}
         />

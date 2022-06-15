@@ -6,8 +6,8 @@ import { useNotificationStore } from './notifications.store'
 import { NftNotificationRecord, NotificationRecord } from './notifications.types'
 
 export const useNotifications = () => {
-  const { activeMemberId, activeChannelId } = useUser()
-  const { notifications: rawNotifications, ...rest } = useRawNotifications(activeChannelId, activeMemberId, {
+  const { memberId, channelId } = useUser()
+  const { notifications: rawNotifications, ...rest } = useRawNotifications(channelId, memberId, {
     fetchPolicy: 'cache-and-network', // this will make sure we will refetch every time member is changed
   })
   const {
@@ -15,7 +15,7 @@ export const useNotifications = () => {
     lastSeenNotificationBlock,
     actions: { markNotificationsAsRead, markNotificationsAsUnread, setLastSeenNotificationBlock },
   } = useNotificationStore()
-  const parsedNotifications = rawNotifications.map((n) => parseNotification(n, activeMemberId))
+  const parsedNotifications = rawNotifications.map((n) => parseNotification(n, memberId))
   const notifications = parsedNotifications.filter((n): n is NotificationRecord => !!n)
   const notificationsWithReadState = notifications.map((n) => ({ ...n, read: !!readNotificationsIdsMap[n.id] }))
 

@@ -33,13 +33,13 @@ type CreateMemberModalProps = {
 }
 
 export const CreateMemberModal: FC<CreateMemberModalProps> = ({ show, selectedAccountAddress }) => {
-  const { activeAccountId, refetchMemberships, extensionConnected, setActiveUser } = useUser()
+  const { accountId, setActiveUser, refetchUserMemberships } = useUser()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const isSignIn = useMatch(absoluteRoutes.studio.signIn())
   const isStudio = pathname.search(absoluteRoutes.studio.index()) !== -1
-  const accountIdRef = useRef(activeAccountId)
+  const accountIdRef = useRef(accountId)
 
   const [membershipBlock, setMembershipBlock] = useState<number | null>(null)
   const [openCreatingMemberDialog, closeCreatingMemberDialog] = useConfirmationModal({
@@ -59,20 +59,18 @@ export const CreateMemberModal: FC<CreateMemberModalProps> = ({ show, selectedAc
     SentryLogger.error('Failed to subscribe to query node state', 'CreateMemberView', queryNodeStateError)
   }, [queryNodeStateError])
 
-  const accountSet = !!selectedAccountAddress && !!extensionConnected
-
   const { reset, register, errors, handleSubmit, isValid, getValues, watch } = useCreateEditMemberForm({})
 
   // success
   useEffect(() => {
-    if (!membershipBlock || !queryNodeState || !activeAccountId) {
+    if (!membershipBlock || !queryNodeState || !accountId) {
       return
     }
 
     if (queryNodeState.indexerHead >= membershipBlock) {
       // trigger membership refetch
       closeCreatingMemberDialog()
-      refetchMemberships().then(({ data }) => {
+      refetchUserMemberships().then(({ data }) => {
         const lastCreatedMembership = data.memberships[data.memberships.length - 1]
         if (lastCreatedMembership) {
           setActiveUser({ memberId: lastCreatedMembership.id, channelId: null })
@@ -94,7 +92,7 @@ export const CreateMemberModal: FC<CreateMemberModalProps> = ({ show, selectedAc
       }
     }
   }, [
-    activeAccountId,
+    accountId,
     closeCreatingMemberDialog,
     displaySnackbar,
     isSignIn,
@@ -103,7 +101,7 @@ export const CreateMemberModal: FC<CreateMemberModalProps> = ({ show, selectedAc
     navigate,
     pathname,
     queryNodeState,
-    refetchMemberships,
+    refetchUserMemberships,
     reset,
     setActiveUser,
   ])
@@ -151,7 +149,7 @@ export const CreateMemberModal: FC<CreateMemberModalProps> = ({ show, selectedAc
     <DialogModal
       title="Create a Joystream membership"
       size="medium"
-      show={show && accountSet && !isCreatingMembership}
+      show={show && !isCreatingMembership}
       dividers
       as="form"
       onSubmit={handleCreateMember}

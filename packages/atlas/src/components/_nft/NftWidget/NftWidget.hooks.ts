@@ -15,7 +15,7 @@ const POLL_INTERVAL = 10000
 
 type UseNftWidgetReturn = NftWidgetProps | null
 export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
-  const { activeMemberId } = useUser()
+  const { memberId } = useUser()
   const { nft, nftStatus, called, startPolling, stopPolling } = useNft(videoId ?? '')
   const {
     isOwner,
@@ -51,17 +51,17 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
       where: {
         isCanceled_eq: false,
         nft: { id_eq: nft?.id },
-        bidder: { id_eq: activeMemberId },
+        bidder: { id_eq: memberId },
       },
     },
     {
       fetchPolicy: 'cache-and-network',
-      skip: !nft?.id || !activeMemberId,
+      skip: !nft?.id || !memberId,
       onError: (error) =>
         SentryLogger.error('Failed to fetch member bids', 'useNftState', error, {
           data: {
             nft: nft?.id,
-            member: activeMemberId,
+            member: memberId,
           },
         }),
     }
@@ -71,7 +71,7 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
     (bid) =>
       bid.auction.auctionType.__typename === 'AuctionTypeOpen' &&
       (nftStatus?.status !== 'auction' || bid.auction.id !== nftStatus.auctionId) &&
-      bid.auction.winningMemberId !== activeMemberId
+      bid.auction.winningMemberId !== memberId
   )
   const bidFromPreviousAuction = unwithdrawnUserBids?.[0]
 

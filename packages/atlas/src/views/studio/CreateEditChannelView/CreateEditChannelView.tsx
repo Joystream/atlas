@@ -14,6 +14,7 @@ import { ChannelCover } from '@/components/_channel/ChannelCover'
 import { FormField } from '@/components/_inputs/FormField'
 import { Select, SelectItem } from '@/components/_inputs/Select'
 import { TextArea } from '@/components/_inputs/TextArea'
+import { TitleInput } from '@/components/_inputs/TitleInput'
 import {
   ImageCropModal,
   ImageCropModalImperativeHandle,
@@ -38,15 +39,13 @@ import { createId } from '@/utils/createId'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { computeFileHash } from '@/utils/hashing'
 import { SentryLogger } from '@/utils/logs'
-import { SubTitleSkeletonLoader, TitleSkeletonLoader } from '@/views/viewer/ChannelView/ChannelView.styles'
+import { SubTitle, SubTitleSkeletonLoader, TitleSkeletonLoader } from '@/views/viewer/ChannelView/ChannelView.styles'
 
 import {
   ActionBarTransactionWrapper,
   InnerFormContainer,
   StyledAvatar,
   StyledProgressDrawer,
-  StyledSubTitle,
-  StyledTitleArea,
   StyledTitleSection,
   TitleContainer,
 } from './CreateEditChannelView.styles'
@@ -80,7 +79,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const [avatarHashPromise, setAvatarHashPromise] = useState<Promise<string> | null>(null)
   const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
 
-  const { activeMemberId, activeAccountId, activeChannelId, setActiveUser, refetchActiveMembership } = useUser()
+  const { memberId, accountId, channelId, setActiveUser, refetchUserMemberships } = useUser()
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
@@ -89,16 +88,11 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const navigate = useNavigate()
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
 
-  const {
-    channel,
-    loading,
-    error,
-    refetch: refetchChannel,
-  } = useChannel(activeChannelId || '', {
-    skip: newChannel || !activeChannelId,
+  const { channel, loading, error } = useChannel(channelId || '', {
+    skip: newChannel || !channelId,
     onError: (error) =>
       SentryLogger.error('Failed to fetch channel', 'CreateEditChannelView', error, {
-        channel: { id: activeChannelId },
+        channel: { id: channelId },
       }),
   })
   const startFileUpload = useStartFileUpload()
@@ -222,7 +216,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   }
 
   const submit = async (data: Inputs) => {
-    if (!joystream || !activeMemberId || !activeAccountId) {
+    if (!joystream || !memberId || !accountId) {
       return
     }
 
@@ -233,7 +227,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       ...(dirtyFields.description ? { description: data.description?.trim() ?? '' } : {}),
       ...(dirtyFields.language || newChannel ? { language: data.language } : {}),
       ...(dirtyFields.isPublic || newChannel ? { isPublic: data.isPublic } : {}),
-      ownerAccount: activeAccountId,
+      ownerAccount: accountId,
     }
 
     const assets: ChannelInputAssets = {}
@@ -307,8 +301,8 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
         addNewChannelIdToUploadsStore(channelId)
       }
 
-      const refetchPromiseList = [refetchActiveMembership(), ...(!newChannel ? [refetchChannel()] : [])]
-      await Promise.all(refetchPromiseList)
+      // membership includes full list of channels so the channel update will be fetched too
+      await refetchUserMemberships()
 
       if (newChannel) {
         // when creating a channel, refetch operators before uploading so that storage bag assignments gets populated for a new channel
@@ -325,10 +319,10 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       preProcess: processAssets,
       txFactory: async (updateStatus) =>
         newChannel
-          ? (await joystream.extrinsics).createChannel(activeMemberId, metadata, assets, proxyCallback(updateStatus))
+          ? (await joystream.extrinsics).createChannel(memberId, metadata, assets, proxyCallback(updateStatus))
           : (
               await joystream.extrinsics
-            ).updateChannel(activeChannelId ?? '', activeMemberId, metadata, assets, proxyCallback(updateStatus)),
+            ).updateChannel(channelId ?? '', memberId, metadata, assets, proxyCallback(updateStatus)),
       onTxSync: refetchDataAndUploadAssets,
     })
 
@@ -366,7 +360,8 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
 
   const hasAvatarUploadFailed = (channel?.avatarPhoto && !channel.avatarPhoto.isAccepted) || false
   const hasCoverUploadFailed = (channel?.coverPhoto && !channel.coverPhoto.isAccepted) || false
-  const isDisabled = !isDirty || nodeConnectionStatus !== 'connected' || !isValid
+  const isDisabled = !isDirty || nodeConnectionStatus !== 'connected'
+
   return (
     <form onSubmit={handleSubmit}>
       {headTags}
@@ -434,16 +429,25 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
                 control={control}
                 rules={textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 40, required: true })}
                 render={({ field: { value, onChange } }) => (
-                  <Tooltip text="Click to edit channel title" placement="top-start">
-                    <StyledTitleArea min={3} max={40} placeholder="Channel title" value={value} onChange={onChange} />
-                  </Tooltip>
+                  <FormField error={errors.title?.message}>
+                    <Tooltip text="Click to edit channel title" placement="top-start">
+                      <TitleInput
+                        min={3}
+                        max={40}
+                        placeholder="Channel title"
+                        value={value}
+                        onChange={onChange}
+                        error={!!errors.title}
+                      />
+                    </Tooltip>
+                  </FormField>
                 )}
               />
               {!newChannel && (
-                <StyledSubTitle variant="t200">
+                <SubTitle variant="t200">
                   {channel?.follows ? <NumberFormat value={channel.follows} format="short" variant="t200" /> : 0}{' '}
                   Followers
-                </StyledSubTitle>
+                </SubTitle>
               )}
             </>
           ) : (
@@ -517,9 +521,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
             unmountOnExit
           >
             <ActionBarTransactionWrapper ref={actionBarRef}>
-              {!activeChannelId && progressDrawerSteps?.length ? (
-                <StyledProgressDrawer steps={progressDrawerSteps} />
-              ) : null}
+              {!channelId && progressDrawerSteps?.length ? <StyledProgressDrawer steps={progressDrawerSteps} /> : null}
               <ActionBar
                 primaryText="Fee: 0 Joy"
                 variant={newChannel ? 'new' : 'edit'}

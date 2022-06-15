@@ -103,7 +103,7 @@ const Issue: FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   } = useForm<IssueInputs>()
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useAuthorizedUser()
+  const { memberId } = useAuthorizedUser()
 
   const handleSubmit = (data: IssueInputs) => {
     if (!joystream) return
@@ -114,7 +114,7 @@ const Issue: FC<FormProps> = ({ videoId, onSuccess, onError }) => {
     handleTransaction({
       onError,
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).issueNft(videoId, activeMemberId, metadata, proxyCallback(updateStatus)),
+        (await joystream.extrinsics).issueNft(videoId, memberId, metadata, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
     })
   }
@@ -146,7 +146,7 @@ const StartBuyNow: FC<FormProps> = ({ videoId, onSuccess, onError }) => {
 
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useAuthorizedUser()
+  const { memberId } = useAuthorizedUser()
 
   const handleSubmit = (data: BuyNowInputs) => {
     if (!joystream) return
@@ -158,7 +158,7 @@ const StartBuyNow: FC<FormProps> = ({ videoId, onSuccess, onError }) => {
     handleTransaction({
       onError,
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).putNftOnSale(videoId, activeMemberId, metadata, proxyCallback(updateStatus)),
+        (await joystream.extrinsics).putNftOnSale(videoId, memberId, metadata, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
     })
   }
@@ -195,7 +195,7 @@ const StartAuction: FC<FormProps> = ({ videoId, onSuccess, onError }) => {
 
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useAuthorizedUser()
+  const { memberId } = useAuthorizedUser()
 
   const handleSubmit = (data: AuctionInputs) => {
     if (!joystream) return
@@ -223,7 +223,7 @@ const StartAuction: FC<FormProps> = ({ videoId, onSuccess, onError }) => {
     handleTransaction({
       onError,
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).putNftOnSale(videoId, activeMemberId, metadata, proxyCallback(updateStatus)),
+        (await joystream.extrinsics).putNftOnSale(videoId, memberId, metadata, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
     })
   }
@@ -273,7 +273,7 @@ const BuyNow: FC<FormProps> = ({ videoId, onSuccess, onError }) => {
 
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useAuthorizedUser()
+  const { memberId } = useAuthorizedUser()
 
   const handleSubmit = (data: BuyNowInputs) => {
     if (!joystream) return
@@ -281,7 +281,7 @@ const BuyNow: FC<FormProps> = ({ videoId, onSuccess, onError }) => {
     handleTransaction({
       onError,
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).buyNftNow(videoId, activeMemberId, data.buyNowPrice, proxyCallback(updateStatus)),
+        (await joystream.extrinsics).buyNftNow(videoId, memberId, data.buyNowPrice, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
     })
   }
@@ -313,7 +313,7 @@ const MakeBid: FC<FormProps> = ({ videoId, onSuccess, onError, type }) => {
 
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useAuthorizedUser()
+  const { memberId } = useAuthorizedUser()
 
   const handleSubmit = (data: MakeBidInputs) => {
     if (!joystream || !type || type === 'buyNow') return
@@ -321,7 +321,7 @@ const MakeBid: FC<FormProps> = ({ videoId, onSuccess, onError, type }) => {
     handleTransaction({
       onError,
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).makeNftBid(videoId, activeMemberId, data.bid, type, proxyCallback(updateStatus)),
+        (await joystream.extrinsics).makeNftBid(videoId, memberId, data.bid, type, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
     })
   }
@@ -344,7 +344,7 @@ const MakeBid: FC<FormProps> = ({ videoId, onSuccess, onError, type }) => {
 const CancelSale: FC<FormProps> = ({ videoId, onSuccess, onError, type }) => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useAuthorizedUser()
+  const { memberId } = useAuthorizedUser()
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -353,7 +353,7 @@ const CancelSale: FC<FormProps> = ({ videoId, onSuccess, onError, type }) => {
     handleTransaction({
       onError,
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).cancelNftSale(videoId, activeMemberId, type, proxyCallback(updateStatus)),
+        (await joystream.extrinsics).cancelNftSale(videoId, memberId, type, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
     })
   }
@@ -370,7 +370,7 @@ const CancelSale: FC<FormProps> = ({ videoId, onSuccess, onError, type }) => {
 const CancelBid: FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useAuthorizedUser()
+  const { memberId } = useAuthorizedUser()
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -379,7 +379,7 @@ const CancelBid: FC<FormProps> = ({ videoId, onSuccess, onError }) => {
     handleTransaction({
       onError,
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).cancelNftBid(videoId, activeMemberId, proxyCallback(updateStatus)),
+        (await joystream.extrinsics).cancelNftBid(videoId, memberId, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
     })
   }

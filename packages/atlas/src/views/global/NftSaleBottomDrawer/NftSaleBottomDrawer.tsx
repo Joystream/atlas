@@ -21,7 +21,7 @@ export const NftSaleBottomDrawer: FC = () => {
   const { currentAction, currentNftId, closeNftAction } = useNftActions()
   const [formStatus, setFormStatus] = useState<NftFormStatus | null>(null)
 
-  const { activeMemberId } = useUser()
+  const { memberId } = useUser()
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const client = useApolloClient()
@@ -36,7 +36,7 @@ export const NftSaleBottomDrawer: FC = () => {
         return
       }
 
-      if (!currentNftId || !activeMemberId) {
+      if (!currentNftId || !memberId) {
         ConsoleLogger.error('Missing NFT or member ID')
         return
       }
@@ -51,7 +51,7 @@ export const NftSaleBottomDrawer: FC = () => {
 
       const completed = await handleTransaction({
         txFactory: async (cb) =>
-          (await joystream.extrinsics).putNftOnSale(currentNftId, activeMemberId, data, proxyCallback(cb)),
+          (await joystream.extrinsics).putNftOnSale(currentNftId, memberId, data, proxyCallback(cb)),
         onTxSync: refetchData,
       })
       if (completed) {
@@ -66,7 +66,7 @@ export const NftSaleBottomDrawer: FC = () => {
         closeNftAction()
       }
     },
-    [activeMemberId, client, closeNftAction, currentNftId, displaySnackbar, handleTransaction, joystream, proxyCallback]
+    [memberId, client, closeNftAction, currentNftId, displaySnackbar, handleTransaction, joystream, proxyCallback]
   )
 
   const handleCancel = useCallback(() => {
