@@ -1,13 +1,15 @@
 name = "atlas-geolocation-worker"
 type = "javascript"
-
 account_id = ""
-workers_dev = true
 route = ""
-zone_id = ""
-compatibility_date = "2022-06-14"
+compatibility_date = "2022-06-15"
+workers_dev = true
 
 [build]
 command = "yarn install --immutable && yarn build"
 [build.upload]
 format = "service-worker"
+
+[env.production]
+zone_id = "9b5baa89abf2e9aecd90951a5d561f04"
+routes = ["geolocation.joystream.org/"]

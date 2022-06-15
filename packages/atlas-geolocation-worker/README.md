@@ -1,6 +1,6 @@
 # Atlas Cloudflare Geolocation Worker
 
-This repository contains code for deploying a [Cloudflare Worker](https://developers.cloudflare.com/workers/) that can be used to get user location.
+This repository contains code for deploying a [Cloudflare Worker](https://developers.cloudflare.com/workers/) that can be used to get users' geographical coordinates, based on their IP address.
 
 **Deploying:**
 

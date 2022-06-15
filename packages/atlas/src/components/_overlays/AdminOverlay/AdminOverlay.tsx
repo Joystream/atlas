@@ -33,7 +33,9 @@ const ENVIRONMENT_NAMES: Record<string, string> = {
   next: 'Atlas Next Testnet',
   local: 'Local chain',
 }
-const environmentsItems = availableEnvs().map((item) => ({ name: ENVIRONMENT_NAMES[item] || item, value: item }))
+const environmentsItems = availableEnvs()
+  .filter((item) => ENVIRONMENT_NAMES[item])
+  .map((item) => ({ name: ENVIRONMENT_NAMES[item], value: item }))
 
 const TABS: TabItem[] = [{ name: 'Env' }, { name: 'State' }, { name: 'User' }]
 

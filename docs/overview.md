@@ -46,7 +46,8 @@ Please note that this repo is based on [Yarn Workspaces](https://yarnpkg.com/fea
       - `main.tsx` - app entry-point
       - `App.tsx` - React entry-point
   - `atlas-meta-server` - meta tags pre-rendering server
-  - `atlas-cloudflare-worker` - Cloudflare Worker to enable Atlas social previews on Cloudflare edge network
+  - `atlas-proxy-worker` - Cloudflare Worker to enable Atlas social previews on Cloudflare edge network
+  - `atlas-geolocation-worker` - Cloudflare Worker to enable picking closes distribution operators
 
 ### DevOps
 
@@ -61,7 +62,7 @@ Because social media crawling bots can't handle SPA apps, we decided to pre-rend
 There are 2 methods of handling the incoming traffic and redirecting:
 
 1. For self-hosted version of Atlas - docker-compose setup located in `ci/` directory. This will run docker-compose with NGINX that redirects any incoming traffic. Social crawlers' requests get sent to `atlas-meta-server` instance, and otherwise static files are served.
-2. For jsgenesis-run Atlas production instance - Cloudflare Worker setup located in `packages/atlas-cloudflare-worker`. This method uses [Cloudflare Workers](https://workers.cloudflare.com/) that runs redirection logic on Cloudflare edge network, allowing redundancy and very fast response times. If the request is a regular one, it gets redirected to Vercel deployment.
+2. For jsgenesis-run Atlas production instance - Cloudflare Worker setup located in `packages/atlas-proxy-worker`. This method uses [Cloudflare Workers](https://workers.cloudflare.com/) that runs redirection logic on Cloudflare edge network, allowing redundancy and very fast response times. If the request is a regular one, it gets redirected to Vercel deployment.
 
 To build and run `atlas-meta-server` for production:
 
@@ -78,6 +79,10 @@ yarn docker:meta-server
 cd ci
 docker-compose up -d
 ```
+
+## Selecting distributors
+
+As explained in the [architecture doc](architecture.md), distribution providers are used to fetch assets from the Joystream storage network. To pick the closest providers and ensure the best latency, Atlas uses a [Cloudflare Workers](https://workers.cloudflare.com/) that acts as a serverless function, returning the user's location (latitude + longitude), based on their IP address. This location is later used to find the closest distributors. Code for this worker can be found in `packages/atlas-geolocation-worker`.
 
 ## Architecture
 
