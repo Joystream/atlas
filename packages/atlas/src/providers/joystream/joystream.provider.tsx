@@ -2,7 +2,7 @@ import { ProxyMarked, Remote, proxy, wrap } from 'comlink'
 import { FC, PropsWithChildren, createContext, useCallback, useEffect, useRef, useState } from 'react'
 
 import { JOY_CURRENCY_TICKER } from '@/config/token'
-import { NODE_URL } from '@/config/urls'
+import { JOY_PRICE_SERVICE_URL, NODE_URL } from '@/config/urls'
 import { JoystreamLib } from '@/joystream-lib'
 import { useEnvironmentStore } from '@/providers/environment/store'
 import { useUserStore } from '@/providers/user'
@@ -10,8 +10,6 @@ import { SentryLogger } from '@/utils/logs'
 import JoystreamJsWorker from '@/utils/polkadot-worker?worker'
 
 import { useConnectionStatusStore } from '../connectionStatus'
-
-const JOYSTREAM_STATUS_URL = 'https://status.joystream.org/status'
 
 type ProxyCallbackFn = <T extends object>(callback: T) => T & ProxyMarked
 
@@ -113,7 +111,7 @@ const useJoystreamUtilFns = () => {
   useEffect(() => {
     const getPrice = async () => {
       try {
-        const data = await fetch(JOYSTREAM_STATUS_URL)
+        const data = await fetch(JOY_PRICE_SERVICE_URL)
         const json = await data.json()
         setTokenPrice(parseFloat(json.price))
       } catch (e) {
