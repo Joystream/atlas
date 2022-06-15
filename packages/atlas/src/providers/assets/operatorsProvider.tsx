@@ -26,7 +26,7 @@ import {
 } from '@/api/queries'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ASSET_MIN_DISTRIBUTOR_REFETCH_TIME } from '@/config/assets'
-import { USER_LOCATION_SERVICE } from '@/config/urls'
+import { USER_LOCATION_SERVICE_URL } from '@/config/urls'
 import { UserCoordinates, useUserLocationStore } from '@/providers/userLocation'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { getRandomIntInclusive } from '@/utils/number'
@@ -74,12 +74,12 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
     })
     if (!coordinates || !expiry || now.getTime() > expiry) {
       try {
-        const userCoordinatesResponse = await axios.get<UserCoordinates>(USER_LOCATION_SERVICE)
+        const userCoordinatesResponse = await axios.get<UserCoordinates>(USER_LOCATION_SERVICE_URL)
         userCoordinates = userCoordinatesResponse.data
         setUserLocation(userCoordinates)
       } catch (error) {
         SentryLogger.error('Failed to get user coordinates', 'operatorsProvider', error, {
-          request: { url: USER_LOCATION_SERVICE },
+          request: { url: USER_LOCATION_SERVICE_URL },
         })
       }
     } else {
