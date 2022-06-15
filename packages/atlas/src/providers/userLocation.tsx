@@ -2,14 +2,14 @@ import { addDays } from 'date-fns'
 
 import { createStore } from '@/store'
 
-export type Coordinates = { latitude: string; longitude: string }
+export type UserCoordinates = { latitude: number; longitude: number }
 type UserLocationStoreState = {
-  coordinates: Coordinates | null
+  coordinates: UserCoordinates | null
   expiry: number | null
 }
 
 type UserLocationStoreActions = {
-  setUserLocation: (coordinates: Coordinates) => void
+  setUserLocation: (coordinates: UserCoordinates) => void
 }
 
 export const useUserLocationStore = createStore<UserLocationStoreState, UserLocationStoreActions>(

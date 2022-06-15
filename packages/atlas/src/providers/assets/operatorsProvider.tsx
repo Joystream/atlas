@@ -27,7 +27,7 @@ import {
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ASSET_MIN_DISTRIBUTOR_REFETCH_TIME } from '@/config/assets'
 import { USER_LOCATION_SERVICE } from '@/config/urls'
-import { Coordinates, useUserLocationStore } from '@/providers/userLocation'
+import { UserCoordinates, useUserLocationStore } from '@/providers/userLocation'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { getRandomIntInclusive } from '@/utils/number'
 
@@ -64,7 +64,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren<unknown>> = ({ child
 
   const fetchDistributionOperators = useCallback(async () => {
     const now = new Date()
-    let userCoordinates: Coordinates
+    let userCoordinates: UserCoordinates
     const distributionOperatorsPromise = client.query<
       GetDistributionBucketsWithOperatorsQuery,
       GetDistributionBucketsWithOperatorsQueryVariables
@@ -73,9 +73,15 @@ export const OperatorsContextProvider: FC<PropsWithChildren<unknown>> = ({ child
       fetchPolicy: 'network-only',
     })
     if (!coordinates || !expiry || now.getTime() > expiry) {
-      const getUserCoordinates = await axios.get(USER_LOCATION_SERVICE)
-      userCoordinates = getUserCoordinates.data
-      setUserLocation(userCoordinates)
+      try {
+        const userCoordinatesResponse = await axios.get<UserCoordinates>(USER_LOCATION_SERVICE)
+        userCoordinates = userCoordinatesResponse.data
+        setUserLocation(userCoordinates)
+      } catch (error) {
+        SentryLogger.error('Failed to get user coordinates', 'operatorsProvider', error, {
+          request: { url: USER_LOCATION_SERVICE },
+        })
+      }
     } else {
       userCoordinates = coordinates
     }
@@ -90,19 +96,22 @@ export const OperatorsContextProvider: FC<PropsWithChildren<unknown>> = ({ child
         // we need to filter operators manually as query node doesn't support filtering this deep
         const operatorsInfos: OperatorInfo[] = bucket.operators
           .filter((operator) => operator.metadata?.nodeEndpoint?.includes('http') && operator.status === 'ACTIVE')
-          .map((operator) => ({
-            id: operator.id,
-            endpoint: operator.metadata?.nodeEndpoint || '',
-            distance: operator.metadata?.nodeLocation?.coordinates
-              ? haversine(
-                  { lat: Number(userCoordinates.latitude), lng: Number(userCoordinates.longitude) },
-                  {
-                    lat: operator.metadata?.nodeLocation?.coordinates?.latitude,
-                    lng: operator.metadata?.nodeLocation?.coordinates.longitude,
-                  }
-                )
-              : null,
-          }))
+          .map((operator) => {
+            const coordinates = operator.metadata?.nodeLocation?.coordinates
+            return {
+              id: operator.id,
+              endpoint: operator.metadata?.nodeEndpoint || '',
+              distance: coordinates
+                ? haversine(
+                    { lat: userCoordinates.latitude, lng: userCoordinates.longitude },
+                    {
+                      lat: coordinates.latitude,
+                      lng: coordinates.longitude,
+                    }
+                  )
+                : null,
+            }
+          })
 
         bagIds.forEach((bagId) => {
           if (!mapping[bagId]) {

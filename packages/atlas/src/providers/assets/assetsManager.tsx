@@ -1,4 +1,3 @@
-import BN from 'bn.js'
 import { FC, useEffect } from 'react'
 
 import { StorageDataObjectFieldsFragment } from '@/api/queries'
@@ -50,7 +49,7 @@ export const AssetsManager: FC = () => {
         return
       }
 
-      const sortedDistributionOperators = sortDistributionOperators(distributionOperators, dataObject)
+      const sortedDistributionOperators = sortDistributionOperators(distributionOperators)
 
       for (const distributionOperator of sortedDistributionOperators) {
         const assetUrl = createDistributionOperatorDataObjectUrl(distributionOperator, dataObject)
@@ -108,17 +107,16 @@ export const AssetsManager: FC = () => {
 
 // deterministically sort distributors for a given dataObject
 // this is important for caching, if we pick the distributor at random, clients will end up caching [distributors.length] copies of each asset (all have unique URL)
-const sortDistributionOperators = (
-  distributionOperators: OperatorInfo[],
-  dataObject: StorageDataObjectFieldsFragment
-): OperatorInfo[] => {
-  const dataObjectIdBn = new BN(dataObject.id)
-  const distributionOperatorsCountBn = new BN(distributionOperators.length)
-  const firstDistributorIndex = dataObjectIdBn.mod(distributionOperatorsCountBn).toNumber()
-  return [
-    ...distributionOperators.slice(firstDistributorIndex),
-    ...distributionOperators.slice(0, firstDistributorIndex),
-  ].sort((a, b) => (a.distance || 0) - (b.distance || 0))
+const sortDistributionOperators = (distributionOperators: OperatorInfo[]): OperatorInfo[] => {
+  return distributionOperators.sort((a, b) => {
+    if (!b.distance) {
+      return -1
+    }
+    if (!a.distance) {
+      return 1
+    }
+    return a.distance - b.distance
+  })
 }
 
 const createDistributionOperatorDataObjectUrl = (
