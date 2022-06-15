@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { ListItem, ListItemProps } from '@/components/ListItem'
 import { Loader } from '@/components/_loaders/Loader'
 
-import { ComboBoxWrapper, ListWrapper, StyledThumbnail } from './ComboBox.styles'
+import { ComboBoxWrapper, ListWrapper, StyledSvgActionPlus, StyledThumbnail } from './ComboBox.styles'
 
 import { Input, InputProps } from '../Input'
 
@@ -92,6 +92,7 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
           error={error || !!noItemsFound}
           {...getInputProps({ ref: textFieldRef })}
           nodeEnd={processing && <Loader variant="small" />}
+          nodeStart={<StyledSvgActionPlus />}
         />
       </div>
       <ListWrapper {...getMenuProps()} topPosition={getTextFieldBottomEdgePosition()}>

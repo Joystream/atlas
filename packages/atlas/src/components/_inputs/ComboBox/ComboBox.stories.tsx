@@ -1,6 +1,11 @@
+import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
+import { useState } from 'react'
 
+import { OutputPill } from '@/components/OutputPill'
+import { Text } from '@/components/Text'
 import { SvgActionCancel } from '@/components/_icons'
+import { cVar, sizes } from '@/styles'
 
 import { ComboBox, ComboBoxProps } from '.'
 
@@ -92,19 +97,18 @@ export default {
     charactersCount: { table: { disable: true } },
     maxLength: { table: { disable: true } },
     onWheel: { table: { disable: true } },
+    resetOnSelect: { table: { disable: true } },
   },
   args: {
-    label: 'Find user',
     placeholder: 'Type name here',
     notFoundNode: {
       label: 'Item not found',
       nodeStart: <SvgActionCancel />,
     },
     helperText: 'Some helper text here',
-    loading: false,
-    noseStart: false,
+    processing: false,
   },
-} as Meta
+} as Meta<ComboBoxProps>
 
 const Template: Story<ComboBoxProps> = (args) => {
   return <ComboBox items={MEMBERS.map((member) => ({ label: member.label }))} {...args} />
@@ -112,8 +116,62 @@ const Template: Story<ComboBoxProps> = (args) => {
 
 export const Default = Template.bind({})
 
-const TemplateWithNodeStart: Story<ComboBoxProps> = (args) => {
-  return <ComboBox items={MEMBERS} {...args} />
+type Member = { label: string; thumbnailUrl: string }
+const TemplateWithMembers: Story<ComboBoxProps> = (args) => {
+  const [selectedMembers, setSelectedMembers] = useState<Member[]>([])
+
+  const handleSelectMember = (item?: Member) => {
+    if (!item) {
+      return
+    }
+    setSelectedMembers((prev) => [...prev, item])
+  }
+
+  const handleDeleteMember = (memberId?: string) => {
+    setSelectedMembers((prev) => prev.filter((existingMember) => existingMember.label !== memberId))
+  }
+
+  return (
+    <div>
+      <ComboBox
+        {...args}
+        onSelectedItemChange={handleSelectMember}
+        items={MEMBERS.map((member) => ({
+          label: member.label,
+          thumbnailUrl: '',
+        }))}
+      />
+      <MemberBadgesWrapper>
+        {selectedMembers.length > 0 && <StyledSelectedText variant="t200-strong">Selected: </StyledSelectedText>}
+        {selectedMembers.map((member) => (
+          <StyledOutputPill
+            withAvatar
+            avatarUri={member.thumbnailUrl}
+            key={member.label}
+            handle={member.label}
+            onDeleteClick={() => handleDeleteMember(member.label)}
+          />
+        ))}
+      </MemberBadgesWrapper>
+    </div>
+  )
 }
 
-export const WithNodeStart = TemplateWithNodeStart.bind({})
+const MemberBadgesWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: ${sizes(4)};
+`
+
+const StyledSelectedText = styled(Text)`
+  color: ${cVar('colorTextMuted')};
+  margin-bottom: ${sizes(4)};
+  align-self: center;
+`
+
+const StyledOutputPill = styled(OutputPill)`
+  margin-left: ${sizes(4)};
+  margin-bottom: ${sizes(4)};
+`
+
+export const WithMembers = TemplateWithMembers.bind({})

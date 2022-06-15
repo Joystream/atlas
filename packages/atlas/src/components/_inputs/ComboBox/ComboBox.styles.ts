@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { SvgActionPlus } from '@/components/_icons'
 import { cVar, zIndex } from '@/styles'
 
 export const ComboBoxWrapper = styled.div`
@@ -22,4 +23,10 @@ export const ListWrapper = styled.ul<{ topPosition?: number }>`
 
 export const StyledThumbnail = styled.img`
   max-height: 32px;
+`
+
+export const StyledSvgActionPlus = styled(SvgActionPlus)`
+  path {
+    fill: ${cVar('colorTextMuted')} !important;
+  }
 `
