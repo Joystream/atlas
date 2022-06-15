@@ -3,9 +3,8 @@ import { Meta, Story } from '@storybook/react'
 import { useState } from 'react'
 
 import { OutputPill } from '@/components/OutputPill'
-import { Text } from '@/components/Text'
 import { SvgActionCancel } from '@/components/_icons'
-import { cVar, sizes } from '@/styles'
+import { sizes } from '@/styles'
 
 import { ComboBox, ComboBoxProps } from '.'
 
@@ -98,6 +97,8 @@ export default {
     maxLength: { table: { disable: true } },
     onWheel: { table: { disable: true } },
     resetOnSelect: { table: { disable: true } },
+    size: { table: { disable: true } },
+    actionButton: { table: { disable: true } },
   },
   args: {
     placeholder: 'Type name here',
@@ -142,9 +143,8 @@ const TemplateWithMembers: Story<ComboBoxProps> = (args) => {
         }))}
       />
       <MemberBadgesWrapper>
-        {selectedMembers.length > 0 && <StyledSelectedText variant="t200-strong">Selected: </StyledSelectedText>}
         {selectedMembers.map((member) => (
-          <StyledOutputPill
+          <OutputPill
             withAvatar
             avatarUri={member.thumbnailUrl}
             key={member.label}
@@ -161,17 +161,6 @@ const MemberBadgesWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin-top: ${sizes(4)};
-`
-
-const StyledSelectedText = styled(Text)`
-  color: ${cVar('colorTextMuted')};
-  margin-bottom: ${sizes(4)};
-  align-self: center;
-`
-
-const StyledOutputPill = styled(OutputPill)`
-  margin-left: ${sizes(4)};
-  margin-bottom: ${sizes(4)};
 `
 
 export const WithMembers = TemplateWithMembers.bind({})
