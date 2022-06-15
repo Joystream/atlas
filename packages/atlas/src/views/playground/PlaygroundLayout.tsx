@@ -13,7 +13,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useMemberAvatar } from '@/providers/assets'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
-import { ActiveUserProvider, useUser } from '@/providers/user'
+import { UserProvider, useUser } from '@/providers/user'
 import { cVar } from '@/styles'
 
 import {
@@ -48,11 +48,10 @@ const playgroundRoutes = [
 
 const PlaygroundLayout = () => {
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
-  const { activeMembership, activeAccountId, activeMemberId, extensionConnected, signIn } = useUser()
-  const isLoggedIn = activeAccountId && !!activeMemberId && !!extensionConnected
+  const { activeMembership, isLoggedIn, signIn } = useUser()
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
   return (
-    <ActiveUserProvider>
+    <UserProvider>
       <TopbarBase
         fullLogoNode={
           <LogoWrapper>
@@ -103,7 +102,7 @@ const PlaygroundLayout = () => {
         </Container>
         <ConnectionStatusManager />
       </ConfirmationModalProvider>
-    </ActiveUserProvider>
+    </UserProvider>
   )
 }
 

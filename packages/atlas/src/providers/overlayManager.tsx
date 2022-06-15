@@ -26,7 +26,7 @@ type OverlayManagerContextValue = {
 const OverlayManagerContext = createContext<OverlayManagerContextValue | undefined>(undefined)
 OverlayManagerContext.displayName = 'OverlayManagerContext'
 
-export const OverlayManagerProvider: FC<PropsWithChildren<unknown>> = ({ children }) => {
+export const OverlayManagerProvider: FC<PropsWithChildren> = ({ children }) => {
   const [overlaysSet, setOverlaysSet] = useState(new Set<string>())
 
   const modalContainerRef = useRef<HTMLDivElement>(null)

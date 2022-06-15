@@ -12,30 +12,17 @@ type StudioEntrypointProps = {
 }
 
 export const StudioEntrypoint: FC<StudioEntrypointProps> = ({ enterLocation }) => {
-  const {
-    activeAccountId,
-    activeMemberId,
-    activeChannelId,
-    extensionConnected,
-    memberships,
-    membershipsLoading,
-    activeMembership,
-    activeMembershipLoading,
-  } = useUser()
+  const { channelId, isLoggedIn, activeMembership, isAuthLoading } = useUser()
 
-  const hasMemberships = !membershipsLoading && memberships?.length
-
-  const accountSet = !!activeAccountId && extensionConnected === true
-  const memberSet = accountSet && !!activeMemberId
-  const channelSet = memberSet && !!activeChannelId
+  const channelSet = !!channelId
 
   // not signed user with not account set and/or no extension
-  if (!accountSet) {
+  if (!isLoggedIn) {
     return <Navigate to={absoluteRoutes.studio.signIn()} replace />
   }
 
   // signed users
-  if (!activeMembershipLoading && !membershipsLoading && !channelSet && hasMemberships && memberSet) {
+  if (!isAuthLoading && !channelSet && isLoggedIn) {
     if (!activeMembership?.channels.length) {
       return <Navigate to={absoluteRoutes.studio.signIn()} replace />
     }

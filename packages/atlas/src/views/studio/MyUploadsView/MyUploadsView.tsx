@@ -21,14 +21,11 @@ type GroupByParentObjectIdAcc = {
 
 export const MyUploadsView: FC = () => {
   const lgMatch = useMediaMatch('lg')
-  const { activeChannelId } = useUser()
+  const { channelId } = useUser()
 
   const headTags = useHeadTags('My uploads')
 
-  const channelUploads = useUploadsStore(
-    (state) => state.uploads.filter((asset) => asset.owner === activeChannelId),
-    shallow
-  )
+  const channelUploads = useUploadsStore((state) => state.uploads.filter((asset) => asset.owner === channelId), shallow)
   const isSyncing = useUploadsStore((state) => state.isSyncing)
 
   // Grouping all assets by parent id (videos, channel)

@@ -79,7 +79,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
   } = useJoystream()
   const { currentBlock } = useJoystreamStore()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useUser()
+  const { memberId } = useUser()
 
   const {
     watch,
@@ -146,21 +146,21 @@ export const NftPurchaseBottomDrawer: FC = () => {
   }, [auctionBuyNowPrice, setValue, type, watch])
 
   const handleBuyNow = useCallback(async () => {
-    if (!joystream || !currentNftId || !activeMemberId) return
+    if (!joystream || !currentNftId || !memberId) return
     const completed = await handleTransaction({
       onError: () => refetch(),
       txFactory: async (updateStatus) => {
         if (!isAuction) {
           return (await joystream.extrinsics).buyNftNow(
             currentNftId,
-            activeMemberId,
+            memberId,
             buyNowPrice,
             proxyCallback(updateStatus)
           )
         } else {
           return (await joystream.extrinsics).makeNftBid(
             currentNftId,
-            activeMemberId,
+            memberId,
             Number(auctionBuyNowPrice),
             isEnglishAuction ? 'english' : 'open',
             proxyCallback(updateStatus)
@@ -177,7 +177,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
       })
     }
   }, [
-    activeMemberId,
+    memberId,
     auctionBuyNowPrice,
     buyNowPrice,
     closeNftAction,
@@ -193,14 +193,14 @@ export const NftPurchaseBottomDrawer: FC = () => {
 
   const handleBidOnAuction = useCallback(() => {
     const submit = createSubmitHandler(async (data) => {
-      if (!joystream || !currentNftId || !activeMemberId) return
+      if (!joystream || !currentNftId || !memberId) return
       const completed = await handleTransaction({
         txFactory: async (updateStatus) =>
           (
             await joystream.extrinsics
           ).makeNftBid(
             currentNftId,
-            activeMemberId,
+            memberId,
             Number(data.bid),
             isEnglishAuction ? 'english' : 'open',
             proxyCallback(updateStatus)
@@ -225,7 +225,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
     })
     submit()
   }, [
-    activeMemberId,
+    memberId,
     auctionBuyNowPrice,
     closeNftAction,
     createSubmitHandler,

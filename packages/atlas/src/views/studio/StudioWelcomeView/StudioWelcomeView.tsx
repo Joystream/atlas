@@ -24,10 +24,9 @@ export type Membership = {
 }
 
 export const StudioWelcomeView: FC = () => {
-  const { signIn, activeMemberId, activeAccountId, extensionConnected, activeChannelId } = useUser()
+  const { signIn, isLoggedIn } = useUser()
   const headTags = useHeadTags('Studio')
 
-  const memberSet = activeMemberId && activeAccountId && extensionConnected && !activeChannelId
   return (
     <>
       {headTags}
@@ -39,7 +38,7 @@ export const StudioWelcomeView: FC = () => {
             and more!
           </SubTitle>
           <ButtonGroup>
-            {memberSet ? (
+            {isLoggedIn ? (
               <SignInButton size="large" to={absoluteRoutes.studio.newChannel()}>
                 Create first channel
               </SignInButton>

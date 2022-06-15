@@ -24,16 +24,18 @@ type ExtensionStepProps = {
 export const ExtensionStep: FC<ExtensionStepProps> = ({ nextStepPath }) => {
   const navigate = useNavigate()
   const step = useRouterQuery(QUERY_PARAMS.LOGIN)
-  const { extensionConnected } = useUser()
+  const { walletStatus } = useUser()
   const [openEnableExtensionDialog, closeEnableExtensionDialog] = useConfirmationModal({
     children: <PolkadotExtensionRejected />,
     onExitClick: () => closeEnableExtensionDialog(),
   })
+
+  const walletConnected = walletStatus === 'connected'
   useEffect(() => {
-    if (extensionConnected && step === '1') {
+    if (walletConnected && step === '1') {
       navigate({ search: nextStepPath })
     }
-  }, [extensionConnected, navigate, nextStepPath, step])
+  }, [navigate, nextStepPath, step, walletConnected])
 
   return (
     <>

@@ -55,7 +55,7 @@ export const Comment: FC<CommentProps> = memo(
     const [isEditingComment, setIsEditingComment] = useState(false)
     const [processingReactionsIds, setProcessingReactionsIds] = useState<ReactionId[]>([])
 
-    const { activeMemberId, activeMembership, activeAccountId, signIn } = useUser()
+    const { memberId, activeMembership, isLoggedIn, signIn } = useUser()
     const { comment } = useComment(
       { commentId: commentId ?? '' },
       {
@@ -70,10 +70,8 @@ export const Comment: FC<CommentProps> = memo(
     const [openModal, closeModal] = useConfirmationModal()
     const { reactToComment, deleteComment, moderateComment, updateComment, addComment } = useReactionTransactions()
 
-    const authorized = activeMemberId && activeAccountId
-
     const handleDeleteComment = (comment: CommentFieldsFragment) => {
-      const isChannelOwner = video?.channel.ownerMember?.id === activeMemberId && comment.author.id !== activeMemberId
+      const isChannelOwner = video?.channel.ownerMember?.id === memberId && comment.author.id !== memberId
       openModal({
         type: 'destructive',
         title: 'Delete this comment?',
@@ -153,7 +151,7 @@ export const Comment: FC<CommentProps> = memo(
       }
     }
     const handleCommentReaction = async (commentId: string, reactionId: ReactionId) => {
-      if (authorized) {
+      if (isLoggedIn) {
         setProcessingReactionsIds((previous) => [...previous, reactionId])
         await reactToComment(commentId, video?.id || '', reactionId, comment?.author.handle || '')
         setProcessingReactionsIds((previous) => previous.filter((r) => r !== reactionId))
@@ -183,7 +181,7 @@ export const Comment: FC<CommentProps> = memo(
     }
 
     const handleReplyClick = () => {
-      if (!authorized) {
+      if (!isLoggedIn) {
         handleOpenSignInDialog()
         return
       }
@@ -200,7 +198,7 @@ export const Comment: FC<CommentProps> = memo(
       }
     }
 
-    const handleOpenSignInDialog = () => !activeMemberId && openSignInDialog({ onConfirm: signIn })
+    const handleOpenSignInDialog = () => !memberId && openSignInDialog({ onConfirm: signIn })
 
     const handleOnEditLabelClick = () => {
       setShowEditHistory?.(true)
@@ -213,7 +211,7 @@ export const Comment: FC<CommentProps> = memo(
       ? 'processing'
       : comment && ['DELETED', 'MODERATED'].includes(comment.status)
       ? 'deleted'
-      : comment && (video?.channel.ownerMember?.id === activeMemberId || comment?.author.id === activeMemberId)
+      : comment && (video?.channel.ownerMember?.id === memberId || comment?.author.id === memberId)
       ? 'options'
       : 'default'
 
@@ -222,7 +220,6 @@ export const Comment: FC<CommentProps> = memo(
         getCommentReactions({
           userReactionsIds: userReactions,
           reactionsCount: comment?.reactionsCountByReactionId,
-          activeMemberId,
           processingReactionsIds,
           deleted: commentType === 'deleted',
         })) ||
@@ -233,7 +230,7 @@ export const Comment: FC<CommentProps> = memo(
         <CommentInput
           indented={!isReplyable}
           processing={editCommentInputIsProcessing}
-          readOnly={!activeMemberId}
+          readOnly={!memberId}
           memberHandle={activeMembership?.handle}
           memberAvatarUrl={memberAvatarUrl}
           isMemberAvatarLoading={isMemberAvatarLoading}
@@ -267,8 +264,8 @@ export const Comment: FC<CommentProps> = memo(
             loading={loading}
             createdAt={comment?.createdAt ? new Date(comment.createdAt ?? '') : undefined}
             text={comment?.text}
-            reactionPopoverDismissed={reactionPopoverDismissed || !authorized}
-            isAbleToEdit={comment?.author.id === activeMemberId}
+            reactionPopoverDismissed={reactionPopoverDismissed || !isLoggedIn}
+            isAbleToEdit={comment?.author.id === memberId}
             isModerated={comment?.status === CommentStatus.Moderated}
             memberHandle={comment?.author.handle}
             isEdited={comment?.isEdited}
@@ -287,7 +284,7 @@ export const Comment: FC<CommentProps> = memo(
               memberAvatarUrl={memberAvatarUrl}
               isMemberAvatarLoading={isMemberAvatarLoading}
               processing={replyCommentInputIsProcessing}
-              readOnly={!activeMemberId}
+              readOnly={!memberId}
               memberHandle={activeMembership?.handle}
               onFocus={handleOpenSignInDialog}
               onComment={handleComment}

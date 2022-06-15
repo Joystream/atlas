@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
@@ -54,7 +54,8 @@ const ENTRY_POINT_ROUTE = absoluteRoutes.viewer.index()
 export const ViewerLayout: FC = () => {
   const location = useLocation()
   const locationState = location.state as RoutingState
-  const { activeMemberId, isLoading } = useUser()
+  const { memberId, isWalletLoading } = useUser()
+  const [localIsWalletLoading, setLocalIsWalletLoading] = useState(false)
 
   const navigate = useNavigate()
   const mdMatch = useMediaMatch('md')
@@ -62,9 +63,23 @@ export const ViewerLayout: FC = () => {
 
   const displayedLocation = locationState?.overlaidLocation || location
 
+  // delay displaying the global loader by 500ms so the extension can be initialized if it's already connected
+  useEffect(() => {
+    let timeout: number
+    if (isWalletLoading) {
+      timeout = window.setTimeout(() => setLocalIsWalletLoading(true), 500)
+    } else {
+      setLocalIsWalletLoading(false)
+    }
+
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [isWalletLoading])
+
   return (
     <>
-      <StyledModal show={isLoading} noBoxShadow>
+      <StyledModal show={localIsWalletLoading} noBoxShadow>
         <Loader variant="xlarge" />
       </StyledModal>
       <TopbarViewer />
@@ -89,21 +104,13 @@ export const ViewerLayout: FC = () => {
                 <Route
                   path={relativeRoutes.viewer.editMembership()}
                   element={
-                    <PrivateRoute
-                      isAuth={!!activeMemberId}
-                      element={<EditMembershipView />}
-                      redirectTo={ENTRY_POINT_ROUTE}
-                    />
+                    <PrivateRoute isAuth={!!memberId} element={<EditMembershipView />} redirectTo={ENTRY_POINT_ROUTE} />
                   }
                 />
                 <Route
                   path={absoluteRoutes.viewer.notifications()}
                   element={
-                    <PrivateRoute
-                      isAuth={!!activeMemberId}
-                      element={<NotificationsView />}
-                      redirectTo={ENTRY_POINT_ROUTE}
-                    />
+                    <PrivateRoute isAuth={!!memberId} element={<NotificationsView />} redirectTo={ENTRY_POINT_ROUTE} />
                   }
                 />
                 <Route path="*" element={<NotFoundView />} />

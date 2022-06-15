@@ -29,10 +29,8 @@ import {
 } from './TopbarViewer.styles'
 
 export const TopbarViewer: FC = () => {
-  const { activeAccountId, extensionConnected, activeMemberId, activeMembership, signIn } = useUser()
+  const { isLoggedIn, activeMembership, signIn, isAuthLoading } = useUser()
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
-
-  const isLoggedIn = activeAccountId && !!activeMemberId && !!extensionConnected
 
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
 
@@ -86,7 +84,7 @@ export const TopbarViewer: FC = () => {
     setIsMemberDropdownActive(!isMemberDropdownActive)
   }
 
-  const topbarButtonLoaded = extensionConnected !== null
+  const topbarButtonLoaded = !isAuthLoading
 
   return (
     <>

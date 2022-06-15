@@ -15,8 +15,7 @@ export const useNftActions = () => {
   if (ctx === undefined) {
     throw new Error('useNftActions must be used within NftActionsProvider')
   }
-  const { activeMemberId, activeAccountId, signIn } = useUser()
-  const isSignedIn = activeMemberId && activeAccountId
+  const { signIn, isLoggedIn } = useUser()
   const { openSignInDialog } = useDisplaySignInDialog()
 
   const {
@@ -32,11 +31,11 @@ export const useNftActions = () => {
   } = ctx
 
   const checkIfSigned = useCallback(() => {
-    if (!isSignedIn) {
+    if (!isLoggedIn) {
       openSignInDialog({ onConfirm: signIn })
     }
-    return isSignedIn
-  }, [isSignedIn, openSignInDialog, signIn])
+    return isLoggedIn
+  }, [isLoggedIn, openSignInDialog, signIn])
 
   const openNftPurchase = useCallback(
     (nftId: string, opts?: OpenNftPurchaseOpts) => {

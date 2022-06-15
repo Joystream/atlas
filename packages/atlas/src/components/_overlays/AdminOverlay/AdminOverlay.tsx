@@ -14,8 +14,7 @@ import { NODE_URL } from '@/config/urls'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useEnvironmentStore } from '@/providers/environment'
 import { useSnackbar } from '@/providers/snackbars'
-// explicitly import from 'user/store' file to not pull in Polkadot dependencies of ActiveUserContext
-import { ActiveUserState, useActiveUserStore } from '@/providers/user/store'
+import { ActiveUserState, useUserStore } from '@/providers/user'
 import { SentryLogger } from '@/utils/logs'
 
 import {
@@ -105,7 +104,7 @@ const EnvTab: FC = () => {
   const determinedNodeFound = availableNodes.find((node) => node.value === determinedNode)
   const [usingCustomNodeUrl, setUsingCustomNodeUrl] = useState(!determinedNodeFound)
   const [customNodeUrl, setCustomNodeUrl] = useState(determinedNode)
-  const resetActiveUser = useActiveUserStore((state) => state.actions.resetActiveUser)
+  const resetActiveUser = useUserStore((state) => state.actions.resetActiveUser)
 
   const handleEnvironmentChange = (value?: string | null) => {
     if (!value) {
@@ -267,7 +266,7 @@ const UserTab: FC = () => {
     memberId,
     channelId,
     actions: { setActiveUser, resetActiveUser },
-  } = useActiveUserStore()
+  } = useUserStore()
 
   const [accountIdValue, setAccountIdValue] = useState(accountId)
   const [memberIdValue, setMemberIdValue] = useState(memberId)
@@ -279,7 +278,7 @@ const UserTab: FC = () => {
       setMemberIdValue(state.memberId)
       setChannelIdValue(state.channelId)
     }
-    return useActiveUserStore.subscribe(handler)
+    return useUserStore.subscribe(handler)
   }, [])
 
   const handleAccountIdChange = (e: ChangeEvent<HTMLInputElement>) => {

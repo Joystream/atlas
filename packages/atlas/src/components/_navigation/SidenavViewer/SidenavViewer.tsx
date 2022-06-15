@@ -23,9 +23,7 @@ export const SidenavViewer: FC = () => {
     updateChannelFollowing(id, false)
   }
 
-  const { signIn, activeMemberId, activeAccountId, extensionConnected } = useUser()
-
-  const isLoggedIn = !!activeAccountId && !!activeMemberId && !!extensionConnected
+  const { signIn, isLoggedIn } = useUser()
 
   const closeAndSignIn = () => {
     setExpanded(false)

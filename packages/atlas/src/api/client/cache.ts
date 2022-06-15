@@ -152,6 +152,15 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
       })
     )
   },
+  membershipByUniqueInput: (existing, { toReference, args }) => {
+    return (
+      existing ||
+      toReference({
+        __typename: 'Membership',
+        id: args?.where.id,
+      })
+    )
+  },
   ownedNftByUniqueInput: (existing, { toReference, args }) => {
     return (
       existing ||

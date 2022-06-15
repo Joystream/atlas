@@ -14,14 +14,14 @@ import { createLookup } from '@/utils/data'
 
 export const fetchMissingAssets = async (
   client: ApolloClient<unknown>,
-  activeChannelId: string
+  channelId: string
 ): Promise<[VideoFieldsFragment[], AllChannelFieldsFragment | null | undefined, Record<string, boolean>]> => {
   const videosMediaPromise = client.query<GetVideosQuery, GetVideosQueryVariables>({
     query: GetVideosDocument,
     variables: {
       where: {
         media: { isAccepted_eq: false },
-        channel: { id_eq: activeChannelId },
+        channel: { id_eq: channelId },
       },
     },
   })
@@ -31,14 +31,14 @@ export const fetchMissingAssets = async (
     variables: {
       where: {
         thumbnailPhoto: { isAccepted_eq: false },
-        channel: { id_eq: activeChannelId },
+        channel: { id_eq: channelId },
       },
     },
   })
 
   const channelPromise = client.query<GetChannelQuery, GetChannelQueryVariables>({
     query: GetChannelDocument,
-    variables: { where: { id: activeChannelId } },
+    variables: { where: { id: channelId } },
   })
 
   const [videosMediaResponse, videosThumbnailResponse, channelResponse] = await Promise.all([

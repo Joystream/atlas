@@ -31,7 +31,7 @@ import { useUser } from '@/providers/user'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 export const useReactionTransactions = () => {
-  const { activeMemberId } = useUser()
+  const { memberId } = useUser()
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const navigate = useNavigate()
@@ -68,13 +68,13 @@ export const useReactionTransactions = () => {
       return client.query<GetUserCommentsReactionsQuery, GetUserCommentsReactionsQueryVariables>({
         query: GetUserCommentsReactionsDocument,
         variables: {
-          memberId: activeMemberId || '',
+          memberId: memberId || '',
           videoId: videoId,
         },
         fetchPolicy: 'network-only',
       })
     },
-    [activeMemberId, client]
+    [memberId, client]
   )
 
   const refetchReplies = useCallback(
@@ -98,13 +98,13 @@ export const useReactionTransactions = () => {
       >({
         query: GetUserCommentsAndVideoCommentsConnectionDocument,
         variables: {
-          memberId: activeMemberId,
+          memberId: memberId,
           videoId: videoId,
         },
         fetchPolicy: 'network-only',
       })
     },
-    [activeMemberId, client]
+    [memberId, client]
   )
 
   const refetchVideo = useCallback(
@@ -135,7 +135,7 @@ export const useReactionTransactions = () => {
       videoTitle?: string | null
       commentAuthorHandle?: string
     }) => {
-      if (!joystream || !activeMemberId) {
+      if (!joystream || !memberId) {
         ConsoleLogger.error('no joystream or active member')
         return
       }
@@ -146,13 +146,7 @@ export const useReactionTransactions = () => {
         txFactory: async (updateStatus) =>
           (
             await joystream.extrinsics
-          ).createVideoComment(
-            activeMemberId,
-            videoId,
-            commentBody,
-            parentCommentId || null,
-            proxyCallback(updateStatus)
-          ),
+          ).createVideoComment(memberId, videoId, commentBody, parentCommentId || null, proxyCallback(updateStatus)),
         onTxSync: async (_, metaStatus) => {
           if (!metaStatus?.commentCreated) {
             SentryLogger.error('No comment created found in metaprotocol status event', 'useReactionTransactions')
@@ -181,7 +175,7 @@ export const useReactionTransactions = () => {
       return newCommentId
     },
     [
-      activeMemberId,
+      memberId,
       handleTransaction,
       joystream,
       proxyCallback,
@@ -194,7 +188,7 @@ export const useReactionTransactions = () => {
 
   const reactToComment = useCallback(
     async (commentId: string, videoId: string, reactionId: ReactionId, commentAuthorHandle: string) => {
-      if (!joystream || !activeMemberId) {
+      if (!joystream || !memberId) {
         ConsoleLogger.error('No joystream instance')
         return
       }
@@ -202,7 +196,7 @@ export const useReactionTransactions = () => {
       return handleTransaction({
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).reactToVideoComment(
-            activeMemberId,
+            memberId,
             commentId,
             reactionId,
             proxyCallback(updateStatus)
@@ -216,7 +210,7 @@ export const useReactionTransactions = () => {
         unsignedMessage: 'To add your reaction',
       })
     },
-    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComment, refetchReactions]
+    [memberId, handleTransaction, joystream, proxyCallback, refetchComment, refetchReactions]
   )
 
   const updateComment = useCallback(
@@ -231,16 +225,14 @@ export const useReactionTransactions = () => {
       commentBody: string
       videoTitle?: string | null
     }) => {
-      if (!joystream || !activeMemberId || !videoId) {
+      if (!joystream || !memberId || !videoId) {
         ConsoleLogger.error('no joystream or active member')
         return false
       }
 
       return await handleTransaction({
         txFactory: async (updateStatus) =>
-          (
-            await joystream.extrinsics
-          ).editVideoComment(activeMemberId, commentId, commentBody, proxyCallback(updateStatus)),
+          (await joystream.extrinsics).editVideoComment(memberId, commentId, commentBody, proxyCallback(updateStatus)),
         onTxSync: async () => refetchEdits(commentId),
         minimized: {
           errorMessage: `Your comment to the video "${videoTitle}" has not been edited.`,
@@ -248,18 +240,18 @@ export const useReactionTransactions = () => {
         unsignedMessage: 'To edit your comment',
       })
     },
-    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchEdits]
+    [memberId, handleTransaction, joystream, proxyCallback, refetchEdits]
   )
   const deleteComment = useCallback(
     async (commentId: string, videoTitle?: string, videoId?: string) => {
-      if (!joystream || !activeMemberId) {
+      if (!joystream || !memberId) {
         ConsoleLogger.error('no joystream or active member')
         return
       }
 
       return handleTransaction({
         txFactory: async (updateStatus) =>
-          (await joystream.extrinsics).deleteVideoComment(activeMemberId, commentId, proxyCallback(updateStatus)),
+          (await joystream.extrinsics).deleteVideoComment(memberId, commentId, proxyCallback(updateStatus)),
         snackbarSuccessMessage: {
           title: 'Comment deleted',
           description: 'Your comment has been deleted.',
@@ -272,24 +264,19 @@ export const useReactionTransactions = () => {
         unsignedMessage: 'To delete your comment',
       })
     },
-    [activeMemberId, handleTransaction, joystream, navigate, proxyCallback]
+    [memberId, handleTransaction, joystream, navigate, proxyCallback]
   )
 
   const moderateComment = useCallback(
     async (commentId: string, channelId: string, commentAuthorHandle?: string, videoId?: string) => {
-      if (!joystream || !activeMemberId) {
+      if (!joystream || !memberId) {
         ConsoleLogger.error('no joystream or active member')
         return
       }
 
       return handleTransaction({
         txFactory: async (updateStatus) =>
-          (await joystream.extrinsics).moderateComment(
-            activeMemberId,
-            channelId,
-            commentId,
-            proxyCallback(updateStatus)
-          ),
+          (await joystream.extrinsics).moderateComment(memberId, channelId, commentId, proxyCallback(updateStatus)),
         snackbarSuccessMessage: {
           title: 'Comment deleted',
           description: `Comment from "${commentAuthorHandle}" to your video has been deleted.`,
@@ -302,19 +289,19 @@ export const useReactionTransactions = () => {
         unsignedMessage: `To delete comment from "${commentAuthorHandle}"`,
       })
     },
-    [activeMemberId, handleTransaction, joystream, navigate, proxyCallback]
+    [memberId, handleTransaction, joystream, navigate, proxyCallback]
   )
 
   const likeOrDislikeVideo = useCallback(
     (videoId: string, reaction: VideoReaction, videoTitle?: string | null) => {
-      if (!joystream || !activeMemberId) {
+      if (!joystream || !memberId) {
         ConsoleLogger.error('No joystream instance')
         return Promise.reject(false)
       }
 
       return handleTransaction({
         txFactory: async (updateStatus) =>
-          (await joystream.extrinsics).reactToVideo(activeMemberId, videoId, reaction, proxyCallback(updateStatus)),
+          (await joystream.extrinsics).reactToVideo(memberId, videoId, reaction, proxyCallback(updateStatus)),
         minimized: {
           errorMessage: `Reaction to the video "${videoTitle || ''}" was not posted.`,
         },
@@ -324,7 +311,7 @@ export const useReactionTransactions = () => {
         unsignedMessage: 'To add your reaction',
       })
     },
-    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchVideo]
+    [memberId, handleTransaction, joystream, proxyCallback, refetchVideo]
   )
 
   return {

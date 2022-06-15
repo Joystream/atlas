@@ -22,12 +22,12 @@ type StudioTopbarProps = {
 }
 
 export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
-  const { activeChannelId, activeMembership, setActiveUser } = useUser()
+  const { channelId, activeMembership, setActiveUser } = useUser()
   const mdMatch = useMediaMatch('md')
 
   const { isWorkspaceOpen, setEditedVideo, setIsWorkspaceOpen } = useVideoWorkspace()
 
-  const currentChannel = activeMembership?.channels.find((channel) => channel.id === activeChannelId)
+  const currentChannel = activeMembership?.channels.find((channel) => channel.id === channelId)
 
   const { url: channelAvatarUrl, isLoadingAsset: channelAvatarLoading } = useAsset(currentChannel?.avatarPhoto)
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
@@ -48,7 +48,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
     setIsWorkspaceOpen(false)
   }
 
-  const avatars: AvatarGroupUrlAvatar[] = activeChannelId
+  const avatars: AvatarGroupUrlAvatar[] = channelId
     ? [
         {
           url: memberAvatarUrl,
@@ -65,7 +65,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
         {!hideChannelInfo && (
           <StudioTopbarContainer>
             <CSSTransition
-              in={!isWorkspaceOpen && !!activeChannelId}
+              in={!isWorkspaceOpen && !!channelId}
               unmountOnExit
               mountOnEnter
               timeout={parseInt(transitions.timings.loading)}

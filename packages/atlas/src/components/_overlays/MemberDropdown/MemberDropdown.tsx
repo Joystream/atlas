@@ -21,12 +21,13 @@ import { SvgActionSwitchMember } from '@/components/_icons/ActionSwitchMember'
 import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { absoluteRoutes } from '@/config/routes'
+import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { JOY_CURRENCY_TICKER } from '@/config/token'
 import { useSubscribeAccountBalance } from '@/hooks/useSubscribeAccountBalance'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useUser } from '@/providers/user'
 import { cVar } from '@/styles'
+import { urlParams } from '@/utils/url'
 
 import {
   AnimatedContainer,
@@ -60,7 +61,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const [isSwitchingMember, setIsSwitchingMember] = useState(false)
     const [isAnimatingSwitchMember, setIsAnimatingSwitchMember] = useState(false)
     const navigate = useNavigate()
-    const { activeChannelId, activeMembership, setActiveUser, memberships, signIn } = useUser()
+    const { channelId, activeMembership, setActiveUser, memberships } = useUser()
     const accountBalance = useSubscribeAccountBalance()
     const containerRef = useRef<HTMLDivElement>(null)
     const { ref: measureContainerRef, height: containerHeight = 0 } = useResizeObserver({ box: 'border-box' })
@@ -101,7 +102,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
       closeDropdown?.()
     }
     const handleAddNewMember = () => {
-      signIn()
+      navigate({ search: urlParams({ [QUERY_PARAMS.LOGIN]: 2 }) })
       closeDropdown?.()
       setIsSwitchingMember(false)
     }
@@ -248,7 +249,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                         <ChannelListItem
                           key={channel.id}
                           channel={channel}
-                          selected={channel.id === activeChannelId}
+                          selected={channel.id === channelId}
                           onClick={() => onChannelChange?.(channel.id)}
                         />
                       ))}

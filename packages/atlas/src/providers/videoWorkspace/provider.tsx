@@ -14,7 +14,7 @@ const generateVideo = () => ({
   mintNft: false,
 })
 
-export const VideoWorkspaceProvider: FC<PropsWithChildren<unknown>> = ({ children }) => {
+export const VideoWorkspaceProvider: FC<PropsWithChildren> = ({ children }) => {
   const [editedVideoInfo, setEditedVideoInfo] = useState<VideoWorkspace>(generateVideo())
   const [isWorkspaceOpen, setIsWorkspaceOpen] = useState(false)
   const setEditedVideo = useCallback((video?: VideoWorkspace) => {

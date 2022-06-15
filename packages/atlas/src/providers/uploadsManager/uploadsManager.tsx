@@ -23,14 +23,14 @@ const UPLOADED_SNACKBAR_TIMEOUT = 13000
 
 export const UploadsManager: FC = () => {
   const navigate = useNavigate()
-  const { activeChannelId } = useUser()
-  const [cachedActiveChannelId, setCachedActiveChannelId] = useState<string | null>(null)
+  const { channelId } = useUser()
+  const [cachedChannelId, setCachedChannelId] = useState<string | null>(null)
   const videoAssetsRef = useRef<VideoAssets[]>([])
 
   const { displaySnackbar } = useSnackbar()
   const { assetsFiles, channelUploads, uploadStatuses, isSyncing, processingAssets, newChannelsIds } = useUploadsStore(
     (state) => ({
-      channelUploads: state.uploads.filter((asset) => asset.owner === activeChannelId),
+      channelUploads: state.uploads.filter((asset) => asset.owner === channelId),
       isSyncing: state.isSyncing,
       assetsFiles: state.assetsFiles,
       processingAssets: state.processingAssets,
@@ -128,19 +128,14 @@ export const UploadsManager: FC = () => {
 
   useEffect(() => {
     // do this only on first render or when active channel changes
-    if (
-      !activeChannelId ||
-      cachedActiveChannelId === activeChannelId ||
-      newChannelsIds.includes(activeChannelId) ||
-      isSyncing
-    ) {
+    if (!channelId || cachedChannelId === channelId || newChannelsIds.includes(channelId) || isSyncing) {
       return
     }
-    setCachedActiveChannelId(activeChannelId)
+    setCachedChannelId(channelId)
     setIsSyncing(true)
 
     const init = async () => {
-      const [fetchedVideos, fetchedChannel, pendingAssetsLookup] = await fetchMissingAssets(client, activeChannelId)
+      const [fetchedVideos, fetchedChannel, pendingAssetsLookup] = await fetchMissingAssets(client, channelId)
 
       // start with assumption that all assets are missing
       const missingLocalAssetsLookup = { ...pendingAssetsLookup }
@@ -148,7 +143,7 @@ export const UploadsManager: FC = () => {
       // remove assets from local state that weren't returned by the query node
       // mark asset as not missing in local state
       channelUploads.forEach((asset) => {
-        if (asset.owner !== activeChannelId) {
+        if (asset.owner !== channelId) {
           return
         }
 
@@ -173,7 +168,7 @@ export const UploadsManager: FC = () => {
               type: 'video',
               id: video.id,
             },
-            owner: activeChannelId,
+            owner: channelId,
             type: 'video',
             size: media.size,
           })
@@ -187,7 +182,7 @@ export const UploadsManager: FC = () => {
               type: 'video',
               id: video.id,
             },
-            owner: activeChannelId,
+            owner: channelId,
             type: 'thumbnail',
             size: thumbnail.size,
           })
@@ -206,7 +201,7 @@ export const UploadsManager: FC = () => {
             type: 'channel',
             id: fetchedChannel?.id || '',
           },
-          owner: activeChannelId,
+          owner: channelId,
           type: 'avatar',
           size: avatar.size,
         })
@@ -219,7 +214,7 @@ export const UploadsManager: FC = () => {
             type: 'channel',
             id: fetchedChannel?.id || '',
           },
-          owner: activeChannelId,
+          owner: channelId,
           type: 'cover',
           size: cover.size,
         })
@@ -245,14 +240,14 @@ export const UploadsManager: FC = () => {
 
     init()
   }, [
-    activeChannelId,
+    channelId,
     channelUploads,
     client,
     displaySnackbar,
     navigate,
     removeAssetFromUploads,
     addAssetToUploads,
-    cachedActiveChannelId,
+    cachedChannelId,
     isSyncing,
     setIsSyncing,
     processingAssets,

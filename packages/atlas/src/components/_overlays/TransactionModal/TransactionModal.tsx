@@ -39,7 +39,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
     status != null
       ? getExtrisincStatusDetails(status === ExtrinsicStatus.Completed ? ExtrinsicStatus.Syncing : status, errorCode)
       : null
-  const { activeChannelId } = useUser()
+  const { channelId } = useUser()
 
   useEffect(() => {
     if (status !== null && initialStatus === null) {
@@ -145,8 +145,8 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
         }}
       >
         <Text variant="t200" secondary>
-          {status === ExtrinsicStatus.Error && errorCode === ErrorCode.VoucherSizeLimitExceeded && activeChannelId
-            ? `${stepDetails?.description} Channel ID: ${activeChannelId}`
+          {status === ExtrinsicStatus.Error && errorCode === ErrorCode.VoucherSizeLimitExceeded && channelId
+            ? `${stepDetails?.description} Channel ID: ${channelId}`
             : stepDetails?.description}
         </Text>
       </Dialog>

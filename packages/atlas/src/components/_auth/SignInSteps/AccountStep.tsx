@@ -46,10 +46,10 @@ export const AccountStep: FC<AccountStepProps> = ({
   selectedAccountAddress,
 }) => {
   const navigate = useNavigate()
-  const { accounts, memberships, membershipsLoading } = useUser()
+  const { walletAccounts, memberships, isAuthLoading } = useUser()
 
   const membershipsControllerAccounts = memberships?.map((a) => a.controllerAccount)
-  const accountsWithNoMembership = (accounts || []).filter((el) => !membershipsControllerAccounts?.includes(el.id))
+  const accountsWithNoMembership = walletAccounts.filter((el) => !membershipsControllerAccounts?.includes(el.address))
 
   const handleSubmitSelectedAccount = async (e: FormEvent) => {
     e.preventDefault()
@@ -62,7 +62,7 @@ export const AccountStep: FC<AccountStepProps> = ({
   const handleSelect = (id: string) => {
     setSelectedAccountAddress(id)
   }
-  if (membershipsLoading) {
+  if (isAuthLoading) {
     return <StyledSpinner />
   }
   return (
@@ -112,12 +112,12 @@ export const AccountStep: FC<AccountStepProps> = ({
                 Select Polkadot account which you want to use to manage your new Joystream membership:
               </StepSubTitle>
               <AccountsWrapper>
-                {accountsWithNoMembership?.map(({ id, name }) => (
+                {accountsWithNoMembership?.map(({ address, name }) => (
                   <AccountBar
-                    key={id}
-                    id={id}
+                    key={address}
+                    id={address}
                     name={name}
-                    onSelect={() => handleSelect(id)}
+                    onSelect={() => handleSelect(address)}
                     selectedValue={selectedAccountAddress}
                   />
                 ))}

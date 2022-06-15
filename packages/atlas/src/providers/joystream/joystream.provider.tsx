@@ -1,4 +1,3 @@
-import { web3FromAddress } from '@polkadot/extension-dapp'
 import { ProxyMarked, Remote, proxy, wrap } from 'comlink'
 import { FC, PropsWithChildren, createContext, useCallback, useEffect, useRef, useState } from 'react'
 
@@ -6,11 +5,11 @@ import { JOY_CURRENCY_TICKER } from '@/config/token'
 import { NODE_URL } from '@/config/urls'
 import { JoystreamLib } from '@/joystream-lib'
 import { useEnvironmentStore } from '@/providers/environment/store'
+import { useUserStore } from '@/providers/user'
 import { SentryLogger } from '@/utils/logs'
 import JoystreamJsWorker from '@/utils/polkadot-worker?worker'
 
 import { useConnectionStatusStore } from '../connectionStatus'
-import { useUser } from '../user'
 
 const JOYSTREAM_STATUS_URL = 'https://status.joystream.org/status'
 
@@ -27,8 +26,8 @@ JoystreamContext.displayName = 'JoystreamContext'
 const worker = new JoystreamJsWorker()
 const api = wrap<typeof JoystreamLib>(worker)
 
-export const JoystreamProvider: FC<PropsWithChildren<unknown>> = ({ children }) => {
-  const { activeAccountId, accounts } = useUser()
+export const JoystreamProvider: FC<PropsWithChildren> = ({ children }) => {
+  const { accountId, walletAccounts, wallet } = useUserStore()
   const { nodeOverride } = useEnvironmentStore((state) => state)
   const setNodeConnection = useConnectionStatusStore((state) => state.actions.setNodeConnection)
   const [initialized, setInitialized] = useState(false)
@@ -71,32 +70,32 @@ export const JoystreamProvider: FC<PropsWithChildren<unknown>> = ({ children }) 
     }
     const init = async () => {
       const instance = joystream.current
-      if (!instance || !activeAccountId || !accounts) {
+      if (!instance || !accountId || !walletAccounts || !wallet) {
         return
       }
 
-      const accountId = await instance?.selectedAccountId
-      if (accountId === activeAccountId) {
+      const previousAccountId = await instance?.selectedAccountId
+      if (accountId === previousAccountId) {
         return
       }
 
       const setActiveAccount = async () => {
-        if (activeAccountId) {
-          const { signer } = await web3FromAddress(activeAccountId)
+        if (accountId) {
+          const { signer } = wallet
           if (!signer) {
             SentryLogger.error('Failed to get signer from web3FromAddress', 'JoystreamProvider')
             return
           }
-          await instance.setActiveAccount(activeAccountId, proxy(signer))
+          await instance.setActiveAccount(accountId, proxy(signer))
         } else {
-          await instance.setActiveAccount(activeAccountId)
+          await instance.setActiveAccount(accountId)
         }
       }
 
       setActiveAccount()
     }
     init()
-  }, [activeAccountId, accounts, initialized])
+  }, [accountId, initialized, wallet, walletAccounts])
 
   return (
     <JoystreamContext.Provider

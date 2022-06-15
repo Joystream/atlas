@@ -47,17 +47,17 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
   const commentIdQueryParam = useRouterQuery(QUERY_PARAMS.COMMENT_ID)
   const mdMatch = useMediaMatch('md')
   const { id: videoId } = useParams()
-  const { activeMemberId, activeAccountId, signIn, activeMembership } = useUser()
+  const { memberId, signIn, activeMembership, isLoggedIn } = useUser()
   const { openSignInDialog } = useDisplaySignInDialog()
   const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)
 
   const queryVariables = useMemo(
     () => ({
-      memberId: activeMemberId,
+      memberId,
       videoId,
       orderBy: sortCommentsBy,
     }),
-    [activeMemberId, sortCommentsBy, videoId]
+    [memberId, sortCommentsBy, videoId]
   )
   const commentsSectionHeaderRef = useRef<HTMLDivElement>(null)
   const commentSectionWrapperRef = useRef<HTMLDivElement>(null)
@@ -67,7 +67,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
     { ...queryVariables, first: mobileCommentsOpen ? INITIAL_COMMENTS : 1 },
     { skip: disabled || !videoId, notifyOnNetworkStatusChange: true }
   )
-  const { userReactions } = useUserCommentsReactions(videoId, activeMemberId)
+  const { userReactions } = useUserCommentsReactions(videoId, memberId)
 
   const { addComment } = useReactionTransactions()
 
@@ -117,8 +117,6 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
       window.removeEventListener('scroll', scrollHandler)
     }
   }, [commentsLoading, mobileCommentsOpen, pageInfo?.hasNextPage])
-
-  const authorized = activeMemberId && activeAccountId
 
   // fetch more results when user scrolls to end of page
   useEffect(() => {
@@ -213,13 +211,13 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
       </CommentsSectionHeader>
       <CommentInput
         memberAvatarUrl={memberAvatarUrl}
-        isMemberAvatarLoading={authorized ? isMemberAvatarLoading : false}
+        isMemberAvatarLoading={isLoggedIn ? isMemberAvatarLoading : false}
         processing={commentInputIsProcessing}
-        readOnly={!activeMemberId}
+        readOnly={!memberId}
         memberHandle={activeMembership?.handle}
         value={commentInputText}
         hasInitialValueChanged={!!commentInputText}
-        onFocus={() => !activeMemberId && openSignInDialog({ onConfirm: signIn })}
+        onFocus={() => !memberId && openSignInDialog({ onConfirm: signIn })}
         onComment={() => handleComment()}
         onChange={(e) => setCommentInputText(e.target.value)}
       />

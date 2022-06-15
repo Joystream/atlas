@@ -20,7 +20,7 @@ export const LegalParagraph: FC<LegalParagraphProps> = ({ header, ...props }) =>
 const _StyledText = styled(Text)`
   /* stylelint-disable-line */
 `
-export const LegalListItem: FC<PropsWithChildren<unknown>> = (props) => (
+export const LegalListItem: FC<PropsWithChildren> = (props) => (
   <_StyledText variant="t200" secondary as="li" {...props} />
 )
 

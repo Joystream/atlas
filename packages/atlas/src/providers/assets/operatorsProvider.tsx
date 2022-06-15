@@ -42,7 +42,7 @@ type OperatorsContextValue = {
 const OperatorsContext = createContext<OperatorsContextValue | undefined>(undefined)
 OperatorsContext.displayName = 'OperatorsContext'
 
-export const OperatorsContextProvider: FC<PropsWithChildren<unknown>> = ({ children }) => {
+export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const distributionOperatorsMappingPromiseRef = useRef<Promise<BagOperatorsMapping>>()
   const storageOperatorsMappingPromiseRef = useRef<Promise<BagOperatorsMapping>>()
   const lastDistributionOperatorsFetchTimeRef = useRef<number>(Number.MAX_SAFE_INTEGER)
