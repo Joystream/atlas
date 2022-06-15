@@ -432,7 +432,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
               <Controller
                 name="title"
                 control={control}
-                rules={textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 40, required: true })}
+                rules={textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 40 })}
                 render={({ field: { value, onChange } }) => (
                   <Tooltip text="Click to edit channel title" placement="top-start">
                     <StyledTitleArea min={3} max={40} placeholder="Channel title" value={value} onChange={onChange} />
