@@ -82,6 +82,12 @@ fragment DistributionBucketOperatorField on DistributionBucketOperator {
   id
   metadata {
     nodeEndpoint
+    nodeLocation {
+      coordinates {
+        latitude
+        longitude
+      }
+    }
   }
   status
 }

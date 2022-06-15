@@ -1,8 +1,8 @@
-name = "atlas-worker"
+name = "atlas-proxy-worker"
 type = "javascript"
 account_id = ""
 route = ""
-compatibility_date = "2022-01-19"
+compatibility_date = "2022-06-15"
 workers_dev = true
 
 [vars]

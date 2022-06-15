@@ -1,4 +1,6 @@
 import { useApolloClient } from '@apollo/client'
+import axios from 'axios'
+import haversine from 'haversine-distance'
 import { uniqBy } from 'lodash-es'
 import {
   Dispatch,
@@ -24,6 +26,8 @@ import {
 } from '@/api/queries'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ASSET_MIN_DISTRIBUTOR_REFETCH_TIME } from '@/config/assets'
+import { USER_LOCATION_SERVICE } from '@/config/urls'
+import { UserCoordinates, useUserLocationStore } from '@/providers/userLocation'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { getRandomIntInclusive } from '@/utils/number'
 
@@ -50,10 +54,17 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
   const [distributionOperatorsError, setDistributionOperatorsError] = useState<unknown>(null)
   const [storageOperatorsError, setStorageOperatorsError] = useState<unknown>(null)
   const [failedStorageOperatorIds, setFailedStorageOperatorIds] = useState<string[]>([])
+  const {
+    coordinates,
+    expiry,
+    actions: { setUserLocation },
+  } = useUserLocationStore()
 
   const client = useApolloClient()
 
-  const fetchDistributionOperators = useCallback(() => {
+  const fetchDistributionOperators = useCallback(async () => {
+    const now = new Date()
+    let userCoordinates: UserCoordinates
     const distributionOperatorsPromise = client.query<
       GetDistributionBucketsWithOperatorsQuery,
       GetDistributionBucketsWithOperatorsQueryVariables
@@ -61,6 +72,19 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
       query: GetDistributionBucketsWithOperatorsDocument,
       fetchPolicy: 'network-only',
     })
+    if (!coordinates || !expiry || now.getTime() > expiry) {
+      try {
+        const userCoordinatesResponse = await axios.get<UserCoordinates>(USER_LOCATION_SERVICE)
+        userCoordinates = userCoordinatesResponse.data
+        setUserLocation(userCoordinates)
+      } catch (error) {
+        SentryLogger.error('Failed to get user coordinates', 'operatorsProvider', error, {
+          request: { url: USER_LOCATION_SERVICE },
+        })
+      }
+    } else {
+      userCoordinates = coordinates
+    }
     isFetchingDistributionOperatorsRef.current = true
     lastDistributionOperatorsFetchTimeRef.current = new Date().getTime()
     distributionOperatorsMappingPromiseRef.current = distributionOperatorsPromise.then((result) => {
@@ -72,7 +96,23 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
         // we need to filter operators manually as query node doesn't support filtering this deep
         const operatorsInfos: OperatorInfo[] = bucket.operators
           .filter((operator) => operator.metadata?.nodeEndpoint?.includes('http') && operator.status === 'ACTIVE')
-          .map((operator) => ({ id: operator.id, endpoint: operator.metadata?.nodeEndpoint || '' }))
+          .map((operator) => {
+            const coordinates = operator.metadata?.nodeLocation?.coordinates
+            return {
+              id: operator.id,
+              endpoint: operator.metadata?.nodeEndpoint || '',
+              distance:
+                coordinates && userCoordinates
+                  ? haversine(
+                      { lat: userCoordinates.latitude, lng: userCoordinates.longitude },
+                      {
+                        lat: coordinates.latitude,
+                        lng: coordinates.longitude,
+                      }
+                    )
+                  : null,
+            }
+          })
 
         bagIds.forEach((bagId) => {
           if (!mapping[bagId]) {
@@ -91,7 +131,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
       isFetchingDistributionOperatorsRef.current = false
     })
     return distributionOperatorsMappingPromiseRef.current
-  }, [client])
+  }, [client, coordinates, expiry, setUserLocation])
 
   const fetchStorageOperators = useCallback(() => {
     const storageOperatorsPromise = client.query<GetStorageBucketsQuery, GetStorageBucketsQueryVariables>({

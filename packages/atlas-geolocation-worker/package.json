@@ -1,8 +1,8 @@
 {
-  "name": "@joystream/atlas-cloudflare-worker",
+  "name": "@joystream/atlas-geolocation-worker",
   "license": "GPL-3.0",
   "version": "1.0.0",
-  "description": "Atlas Cloudflare worker",
+  "description": "Atlas Cloudflare geolocation worker",
   "main": "dist/worker.js",
   "scripts": {
     "build": "webpack",
