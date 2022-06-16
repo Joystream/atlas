@@ -9,7 +9,7 @@ import { AuctionDatePicker } from '@/components/_inputs/AuctionDatePicker'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { MemberComboBox } from '@/components/_inputs/MemberComboBox'
-import { OptionCardRadio } from '@/components/_inputs/OptionCard'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useTokenPrice } from '@/providers/joystream'
 import { pluralizeNoun } from '@/utils/misc'
 
@@ -17,9 +17,9 @@ import {
   AuctionDatePickerWrapper,
   DaysSummary,
   DaysSummaryInfo,
-  OptionCardRadioWrapper,
   StyledForm,
   StyledFormField,
+  StyledOptionCardGroupRadio,
 } from './SetUp.styles'
 
 import { useNftFormUtils } from '../NftForm.hooks'
@@ -54,6 +54,7 @@ export const SetUp: FC<SetUpProps> = ({
     formState: { errors },
   } = useFormContext<NftFormFields>()
 
+  const mdMatch = useMediaMatch('md')
   const startDate = watch('startDate')
   const endDate = watch('endDate')
 
@@ -181,22 +182,23 @@ export const SetUp: FC<SetUpProps> = ({
               control={control}
               defaultValue="open"
               render={({ field: { value, onChange } }) => (
-                <OptionCardRadioWrapper>
-                  <OptionCardRadio
-                    value="open"
-                    label="Open auction"
-                    caption="Pick the winning bid or cancel anytime"
-                    onChange={() => onChange('open')}
-                    selectedValue={value}
-                  />
-                  <OptionCardRadio
-                    value="english"
-                    label="Timed auction"
-                    caption="Highest bidder wins, cannot be cancelled once started"
-                    onChange={() => onChange('english')}
-                    selectedValue={value}
-                  />
-                </OptionCardRadioWrapper>
+                <StyledOptionCardGroupRadio
+                  selectedValue={value}
+                  onChange={onChange}
+                  direction={mdMatch ? 'horizontal' : 'vertical'}
+                  options={[
+                    {
+                      label: 'Open auction',
+                      caption: 'Pick the winning bid or cancel anytime',
+                      value: 'open',
+                    },
+                    {
+                      label: 'Timed auction',
+                      caption: 'Highest bidder wins, cannot be cancelled once started',
+                      value: 'english',
+                    },
+                  ]}
+                />
               )}
             />
             <AuctionDatePickerWrapper columns={isEnglishAuction ? 2 : 1}>

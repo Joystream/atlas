@@ -8,14 +8,6 @@ import { MultiFileSelect } from '@/components/_inputs/MultiFileSelect'
 import { TitleInput } from '@/components/_inputs/TitleInput'
 import { cVar, media, sizes } from '@/styles'
 
-export const RadioCardButtonsContainer = styled.div`
-  display: grid;
-  gap: ${sizes(6)};
-  ${media.sm} {
-    grid-template-columns: 1fr 1fr;
-  }
-`
-
 export const StyledMultiFileSelect = styled(MultiFileSelect)`
   ${media.md} {
     position: sticky;

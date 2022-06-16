@@ -9,33 +9,33 @@ import { OptionCardCheckbox, OptionCardRadio } from '../OptionCard/OptionCard'
 type Checkbox = {
   checkedValues: Array<number>
   onChange?: (id: number) => void
-  options: Array<{ label: string; caption?: string }>
+  options: Array<{ label: string; caption?: string; icon?: React.ReactNode }>
 }
 
 type Radio = {
   selectedValue?: string | number
   onChange?: (id: string | number) => void
-  options: Array<{ label: string; caption?: string; value: string | number }>
+  options: Array<{ label: string; caption?: string; value: string | number; icon?: React.ReactNode }>
 }
 
 export type OptionCardGroupProps = {
   disabled?: boolean
   error?: boolean
-  icon?: React.ReactNode
   direction?: 'vertical' | 'horizontal'
+  className?: string
 }
 
 export const OptionCardGroupRadio: React.FC<OptionCardGroupProps & Radio> = ({
   onChange,
   disabled,
   error,
-  icon,
   options,
   selectedValue,
   direction = 'horizontal',
+  className,
 }) => {
   return (
-    <Wrapper direction={direction}>
+    <Wrapper className={className} direction={direction}>
       {options.map((option, idx) => (
         <OptionCardRadio
           disabled={disabled}
@@ -43,7 +43,6 @@ export const OptionCardGroupRadio: React.FC<OptionCardGroupProps & Radio> = ({
           key={`radio-button-group-${idx}`}
           onChange={() => onChange?.(option.value)}
           selectedValue={selectedValue}
-          icon={icon}
           {...option}
         />
       ))}
@@ -55,13 +54,13 @@ export const OptionCardGroupCheckbox: React.FC<OptionCardGroupProps & Checkbox> 
   onChange,
   disabled,
   error,
-  icon,
   options,
   checkedValues,
   direction = 'horizontal',
+  className,
 }) => {
   return (
-    <Wrapper direction={direction}>
+    <Wrapper className={className} direction={direction}>
       {options.map((option, idx) => (
         <OptionCardCheckbox
           disabled={disabled}
@@ -69,7 +68,6 @@ export const OptionCardGroupCheckbox: React.FC<OptionCardGroupProps & Checkbox> 
           key={`checkbox-button-group-${idx}`}
           onChange={() => onChange?.(idx)}
           value={checkedValues.includes(idx)}
-          icon={icon}
           {...option}
         />
       ))}
@@ -80,6 +78,8 @@ export const OptionCardGroupCheckbox: React.FC<OptionCardGroupProps & Checkbox> 
 export const Wrapper = styled.div<{ direction: 'vertical' | 'horizontal' }>`
   display: grid;
   grid-auto-flow: ${({ direction }) => (direction === 'vertical' ? 'row' : 'column')};
+  grid-auto-columns: 1fr;
+  grid-auto-rows: 1fr;
   gap: ${sizes(4)};
 
   ${media.md} {

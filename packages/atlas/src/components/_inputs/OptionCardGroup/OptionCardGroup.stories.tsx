@@ -28,10 +28,9 @@ const Template: Story<OptionCardGroupProps> = (args) => {
     <div style={{ display: 'grid', gap: '48px', maxWidth: '650px' }}>
       <OptionCardGroupRadio
         {...args}
-        icon={<SvgActionTrash />}
         selectedValue={selected}
         options={[
-          { label: 'radio1', caption: 'caption1', value: 'radio1' },
+          { label: 'radio1', caption: 'caption1', value: 'radio1', icon: <SvgActionTrash /> },
           { label: 'radio2', caption: 'caption2', value: 'radio2' },
           { label: 'radio3', caption: 'caption3', value: 'radio3' },
         ]}
@@ -40,10 +39,9 @@ const Template: Story<OptionCardGroupProps> = (args) => {
 
       <OptionCardGroupCheckbox
         {...args}
-        icon={<SvgActionTrash />}
         checkedValues={checkedValues}
         options={[
-          { label: 'checkbox1', caption: 'caption1' },
+          { label: 'checkbox1', caption: 'caption1', icon: <SvgActionTrash /> },
           { label: 'checkbox2', caption: 'caption2' },
           { label: 'checkbox3', caption: 'caption3' },
         ]}
