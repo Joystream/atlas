@@ -56,7 +56,7 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
         {infoBadge ? (
           <>
             <DraftsBadgeContainer ref={infoBadgeRef}>
-              <Text variant={smMatch ? 't200' : 't100'} secondary>
+              <Text align="right" variant={smMatch ? 't200' : 't100'} secondary>
                 {infoBadge?.text}
               </Text>
               <DetailsIconWrapper>
