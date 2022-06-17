@@ -3,19 +3,79 @@ import styled from '@emotion/styled'
 import { animated } from 'react-spring'
 
 import { Text } from '@/components/Text'
-import { cVar, media, sizes, transitions } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 type DragAndDropAreaProps = {
   isDragAccept?: boolean
   isFileDialogActive?: boolean
+  fileAccepted?: boolean
 }
 
 type LoadingProp = {
   isLoading?: boolean
 }
 
+export const FileHoverOverlay = styled.div`
+  visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  border: 1px dashed ${cVar('colorCoreBlue500')};
+
+  ::before {
+    z-index: -1;
+    position: absolute;
+    content: '';
+    width: 100%;
+    height: 100%;
+    background: ${cVar('colorBackgroundOverlay')};
+  }
+`
+
+export const FileSelectedOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  border: 1px solid ${cVar('colorCoreBlue500')};
+
+  ::before {
+    position: absolute;
+    content: '';
+    width: 100%;
+    height: 100%;
+    background: ${cVar('colorCoreBlue500')};
+    opacity: 0.2;
+  }
+`
+
+export const InnerContainer = styled.div<DragAndDropAreaProps>`
+  display: flex;
+  justify-content: center;
+  opacity: ${({ fileAccepted }) => (fileAccepted ? '0.1' : '1')};
+`
+
 const dragAcceptCss = css`
-  background: radial-gradient(55.47% 148.24% at 50% 50%, rgba(0 0 0 / 0) 0%, rgba(64 56 255 / 0.2) 100%);
+  ${FileHoverOverlay} {
+    visibility: visible;
+  }
+
+  ${FileSelectedOverlay} {
+    visibility: hidden;
+  }
 `
 
 export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
@@ -23,9 +83,7 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
   position: relative;
   width: 100%;
   height: 400px;
-  display: flex;
-  justify-content: center;
-  transition: all ${transitions.timings.routing} ${transitions.easing};
+  transition: all ${cVar('animationTransitionMedium')};
   ${({ isDragAccept }) => isDragAccept && dragAcceptCss};
 
   ::after {
@@ -37,9 +95,7 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
     left: 0;
     height: 100%;
     width: 100%;
-    border: 1px dashed
-      ${({ isDragAccept, isFileDialogActive }) =>
-        isDragAccept || isFileDialogActive ? cVar('colorCoreBlue500') : cVar('colorCoreNeutral500')};
+    border: 1px dashed ${cVar('colorCoreNeutral500')};
   }
 
   ${media.sm} {
@@ -47,6 +103,7 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
     padding-top: 56.25%;
   }
 `
+
 export const SelectedFileInfo = styled(animated.div)<LoadingProp>`
   top: 0;
   width: 100%;
@@ -80,7 +137,7 @@ export const SelectedFileInfoBackground = styled.div`
   height: 100%;
 `
 
-export const InnerContainer = styled(animated.div, { shouldForwardProp: (prop) => prop !== 'isLoading' })<LoadingProp>`
+export const Content = styled(animated.div, { shouldForwardProp: (prop) => prop !== 'isLoading' })<LoadingProp>`
   position: absolute;
   z-index: 1;
   top: 0;
@@ -93,6 +150,10 @@ export const InnerContainer = styled(animated.div, { shouldForwardProp: (prop) =
   height: 100%;
   opacity: ${({ isLoading }) => (isLoading ? 0.1 : 1)};
   transition: opacity 400ms ease-out;
+
+  & > svg:first-of-type {
+    margin: ${sizes(2)} ${sizes(3)};
+  }
 `
 
 export const Thumbnail = styled(animated.img, { shouldForwardProp: (prop) => prop !== 'isLoading' })<LoadingProp>`
@@ -109,17 +170,14 @@ export const Thumbnail = styled(animated.img, { shouldForwardProp: (prop) => pro
 
 export const Title = styled(Text)`
   margin-top: ${sizes(2)};
-
-  ${media.sm} {
-    margin-top: ${sizes(4)};
-  }
 `
 
 export const ButtonsGroup = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: ${sizes(8)};
+  padding-top: ${sizes(1)};
+  margin-top: ${sizes(2)};
 `
 
 export const DragDropText = styled(Text)`
