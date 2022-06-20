@@ -52,7 +52,7 @@ export const _Select = <T extends unknown>(
   {
     inlineLabel,
     items,
-    placeholder = 'Select option',
+    placeholder = 'Select',
     error,
     disabled,
     value,
