@@ -36,7 +36,7 @@ const TABS = ['NFTs owned', 'Activity', 'About'] as const
 export const MemberView: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
-  const [sortBy, setSortBy] = useState<'createdAt_ASC' | 'createdAt_DESC'>('createdAt_DESC')
+  const [sortBy, setSortBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
   const [currentTab, setCurrentTab] = useState<typeof TABS[number] | null>(null)
   const { memberId, activeMembership } = useUser()
   const { handle } = useParams()
@@ -77,7 +77,7 @@ export const MemberView: FC = () => {
   const toggleFilters = () => {
     setIsFiltersOpen((value) => !value)
   }
-  const handleSorting = (value?: 'createdAt_ASC' | 'createdAt_DESC' | null) => {
+  const handleSorting = (value?: OwnedNftOrderByInput | null) => {
     if (value) {
       setSortBy(value)
     }
@@ -120,7 +120,7 @@ export const MemberView: FC = () => {
 
   useEffect(() => {
     if (currentTabName) {
-      setSortBy('createdAt_DESC')
+      setSortBy(OwnedNftOrderByInput.CreatedAtDesc)
       setCurrentTab(currentTabName)
       setIsFiltersOpen(false)
     }
@@ -164,7 +164,13 @@ export const MemberView: FC = () => {
             />
             {currentTab && ['NFTs owned', 'Activity'].includes(currentTab) && (
               <SortContainer>
-                <Select size="medium" value={sortBy} items={NFT_SORT_OPTIONS} onChange={handleSorting} />
+                <Select
+                  size="medium"
+                  inlineLabel="Sort by"
+                  value={sortBy}
+                  items={NFT_SORT_OPTIONS}
+                  onChange={handleSorting}
+                />
               </SortContainer>
             )}
             {currentTab === 'NFTs owned' && (
