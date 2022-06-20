@@ -3,7 +3,9 @@ import { useEffect } from 'react'
 
 import { useNft, useNftHistory } from '@/api/hooks'
 import { useBids } from '@/api/hooks/bids'
+import { FullVideoFieldsFragment } from '@/api/queries'
 import { NftWidgetProps } from '@/components/_nft/NftWidget/NftWidget'
+import { NFT_STATUS_POLLING_INTERVAL } from '@/config/nft'
 import { useNftState } from '@/hooks/useNftState'
 import { useMemberAvatar } from '@/providers/assets'
 import { useUser } from '@/providers/user'
@@ -11,12 +13,10 @@ import { SentryLogger } from '@/utils/logs'
 
 import { NftHistoryEntry } from './NftHistory'
 
-const POLL_INTERVAL = 10000
-
 type UseNftWidgetReturn = NftWidgetProps | null
-export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
+export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null): UseNftWidgetReturn => {
   const { memberId } = useUser()
-  const { nft, nftStatus, called, startPolling, stopPolling } = useNft(videoId ?? '')
+  const { nft, nftStatus, called, startPolling, stopPolling } = useNft(video?.id ?? '', { skip: !video || !video.nft })
   const {
     isOwner,
     englishTimerState,
@@ -39,7 +39,7 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
   const hasNft = !!nft
   useEffect(() => {
     if (!called || !hasNft) return
-    startPolling(POLL_INTERVAL)
+    startPolling(NFT_STATUS_POLLING_INTERVAL)
 
     return () => {
       stopPolling()
@@ -80,7 +80,10 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
   const { url: ownerAvatarUri } = useMemberAvatar(owner)
   const { url: topBidderAvatarUri } = useMemberAvatar(nftStatus?.status === 'auction' ? nftStatus.topBidder : undefined)
 
-  const { entries: nftHistory } = useNftHistoryEntries(videoId || null, { skip: !nft, pollInterval: POLL_INTERVAL })
+  const { entries: nftHistory } = useNftHistoryEntries(video?.id ?? '', {
+    skip: !nft,
+    pollInterval: NFT_STATUS_POLLING_INTERVAL,
+  })
 
   switch (nftStatus?.status) {
     case 'auction': {

@@ -12,15 +12,15 @@ import {
   GetCommentRepliesConnectionDocument,
   GetCommentRepliesConnectionQuery,
   GetCommentRepliesConnectionQueryVariables,
+  GetFullVideoDocument,
+  GetFullVideoQuery,
+  GetFullVideoQueryVariables,
   GetUserCommentsAndVideoCommentsConnectionDocument,
   GetUserCommentsAndVideoCommentsConnectionQuery,
   GetUserCommentsAndVideoCommentsConnectionQueryVariables,
   GetUserCommentsReactionsDocument,
   GetUserCommentsReactionsQuery,
   GetUserCommentsReactionsQueryVariables,
-  GetVideoDocument,
-  GetVideoQuery,
-  GetVideoQueryVariables,
 } from '@/api/queries'
 import { ReactionId } from '@/config/reactions'
 import { absoluteRoutes } from '@/config/routes'
@@ -109,8 +109,8 @@ export const useReactionTransactions = () => {
 
   const refetchVideo = useCallback(
     (id: string) =>
-      client.query<GetVideoQuery, GetVideoQueryVariables>({
-        query: GetVideoDocument,
+      client.query<GetFullVideoQuery, GetFullVideoQueryVariables>({
+        query: GetFullVideoDocument,
         variables: {
           where: {
             id,

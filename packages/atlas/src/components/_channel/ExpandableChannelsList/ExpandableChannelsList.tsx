@@ -1,7 +1,7 @@
 import { QueryHookOptions } from '@apollo/client'
 import { FC, Fragment, useState } from 'react'
 
-import { useChannels, useDiscoverChannels, usePopularChannels, usePromisingChannels } from '@/api/hooks'
+import { useBasicChannels, useDiscoverChannels, usePopularChannels, usePromisingChannels } from '@/api/hooks'
 import { ChannelOrderByInput } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridHeadingContainer, TitleContainer } from '@/components/GridHeading'
@@ -124,6 +124,7 @@ export const ExpandableChannelsList: FC<ExpandableChannelsListProps> = ({
 const useChannelsListData = (queryType: ChannelsQueryType, selectedLanguage: string | null | undefined) => {
   const commonOpts: QueryHookOptions = {
     onError: (error) => SentryLogger.error('Failed to fetch channels', 'ExpandableChannelsList', error),
+    context: { delay: 2000 },
   }
   const commonWhere = {
     where: {
@@ -135,7 +136,7 @@ const useChannelsListData = (queryType: ChannelsQueryType, selectedLanguage: str
   const popular = usePopularChannels(commonWhere, { ...commonOpts, skip: queryType !== 'popular' })
   const promising = usePromisingChannels(commonWhere, { ...commonOpts, skip: queryType !== 'promising' })
   // regular channels query needs explicit limit and sorting as it's not defined by Orion
-  const regular = useChannels(
+  const regular = useBasicChannels(
     {
       limit: 15,
       orderBy: ChannelOrderByInput.CreatedAtAsc,

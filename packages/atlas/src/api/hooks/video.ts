@@ -6,28 +6,26 @@ import {
   GetBasicVideoQueryVariables,
   GetBasicVideosQuery,
   GetBasicVideosQueryVariables,
+  GetFullVideoQuery,
+  GetFullVideoQueryVariables,
   GetTop10VideosThisMonthQuery,
   GetTop10VideosThisMonthQueryVariables,
   GetTop10VideosThisWeekQuery,
   GetTop10VideosThisWeekQueryVariables,
   GetVideoCountQuery,
   GetVideoCountQueryVariables,
-  GetVideoQuery,
-  GetVideoQueryVariables,
-  GetVideosQuery,
   VideoOrderByInput,
   useAddVideoViewMutation,
   useGetBasicVideoQuery,
   useGetBasicVideosQuery,
+  useGetFullVideoQuery,
   useGetTop10VideosThisMonthQuery,
   useGetTop10VideosThisWeekQuery,
   useGetVideoCountQuery,
-  useGetVideoQuery,
-  useGetVideosQuery,
 } from '@/api/queries'
 
-export const useVideo = (id: string, opts?: QueryHookOptions<GetVideoQuery, GetVideoQueryVariables>) => {
-  const { data, ...queryRest } = useGetVideoQuery({
+export const useFullVideo = (id: string, opts?: QueryHookOptions<GetFullVideoQuery, GetFullVideoQueryVariables>) => {
+  const { data, ...queryRest } = useGetFullVideoQuery({
     ...opts,
     variables: { where: { id } },
   })
@@ -39,9 +37,9 @@ export const useVideo = (id: string, opts?: QueryHookOptions<GetVideoQuery, GetV
 
 export const useChannelPreviewVideos = (
   channelId: string | null | undefined,
-  opts?: QueryHookOptions<GetVideosQuery>
+  opts?: QueryHookOptions<GetBasicVideosQuery, GetBasicVideosQueryVariables>
 ) => {
-  const { data, ...rest } = useGetVideosQuery({
+  const { data, ...rest } = useGetBasicVideosQuery({
     ...opts,
     variables: {
       where: {

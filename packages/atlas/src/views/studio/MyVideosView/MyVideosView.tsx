@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useVideosConnection } from '@/api/hooks'
+import { useFullVideosConnection } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
@@ -80,7 +80,7 @@ export const MyVideosView = () => {
       : _drafts.slice().sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime())),
   ]
 
-  const { edges, totalCount, loading, error, fetchMore, refetch, variables, pageInfo } = useVideosConnection(
+  const { edges, totalCount, loading, error, fetchMore, refetch, variables, pageInfo } = useFullVideosConnection(
     {
       first: INITIAL_FIRST,
       orderBy: sortVideosBy,

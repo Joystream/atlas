@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
-import { useChannel } from '@/api/hooks'
+import { useFullChannel } from '@/api/hooks'
 import { ActionBar } from '@/components/ActionBar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -88,7 +88,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const navigate = useNavigate()
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
 
-  const { channel, loading, error } = useChannel(channelId || '', {
+  const { channel, loading, error } = useFullChannel(channelId || '', {
     skip: newChannel || !channelId,
     onError: (error) =>
       SentryLogger.error('Failed to fetch channel', 'CreateEditChannelView', error, {

@@ -3,7 +3,7 @@ import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useParams, useSearchParams } from 'react-router-dom'
 
-import { useChannel, useChannelNftCollectors } from '@/api/hooks'
+import { useChannelNftCollectors, useFullChannel } from '@/api/hooks'
 import { OwnedNftOrderByInput, VideoOrderByInput } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
@@ -78,7 +78,7 @@ export const ChannelView: FC = () => {
     channel,
     loading,
     error: channelError,
-  } = useChannel(id ?? '', {
+  } = useFullChannel(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelView', error, { channel: { id } }),
   })
   const {

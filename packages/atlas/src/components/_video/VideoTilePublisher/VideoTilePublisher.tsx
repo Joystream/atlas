@@ -3,7 +3,7 @@ import { FC, MouseEvent, memo, useCallback } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 
-import { getNftStatus, useVideo } from '@/api/hooks'
+import { getNftStatus, useFullVideo } from '@/api/hooks'
 import { OwnerPill } from '@/components/OwnerPill'
 import { Pill } from '@/components/Pill'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
@@ -50,7 +50,7 @@ export const DELAYED_FADE_CLASSNAME = 'delayed-fade'
 export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
   ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onMintNftClick }) => {
     const { copyToClipboard } = useClipboard()
-    const { video, loading } = useVideo(id ?? '', {
+    const { video, loading } = useFullVideo(id ?? '', {
       skip: !id,
       onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTilePublisher', error, { video: { id } }),
     })

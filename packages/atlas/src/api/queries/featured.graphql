@@ -5,7 +5,7 @@ query GetVideoHero {
     heroVideoCutUrl
     heroPosterUrl
     video {
-      ...VideoFields
+      ...BasicVideoFields
     }
   }
 }
@@ -20,7 +20,7 @@ query GetAllCategoriesFeaturedVideos {
       videoId
       videoCutUrl
       video {
-        ...VideoFields
+        ...BasicVideoFields
       }
     }
   }
@@ -31,7 +31,7 @@ query GetCategoriesFeaturedVideos($categoryId: ID!) {
     videoId
     videoCutUrl
     video {
-      ...VideoFields
+      ...FullVideoFields
     }
   }
 }

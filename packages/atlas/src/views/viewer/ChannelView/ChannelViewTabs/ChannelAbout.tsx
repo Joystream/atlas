@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { AllChannelFieldsFragment } from '@/api/queries'
+import { FullChannelFieldsFragment } from '@/api/queries'
 import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
@@ -21,7 +21,7 @@ import {
 } from './ChannelAbout.styles'
 
 type ChannelAboutProps = {
-  channel?: AllChannelFieldsFragment | null
+  channel?: FullChannelFieldsFragment | null
 }
 
 export const ChannelAbout: FC<ChannelAboutProps> = ({ channel }) => {

@@ -31,20 +31,16 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
   playRandomVideoOnEnded = true,
 }) => {
   const [randomNextVideo, setRandomNextVideo] = useState<BasicVideoFieldsFragment | null>(null)
-  const { videos } = useBasicVideos({
-    where: {
-      channel: {
-        id_eq: channelId,
-      },
-      isPublic_eq: true,
-      media: {
-        isAccepted_eq: true,
-      },
-      thumbnailPhoto: {
-        isAccepted_eq: true,
+  const { videos } = useBasicVideos(
+    {
+      where: {
+        channel: {
+          id_eq: channelId,
+        },
       },
     },
-  })
+    { context: { delay: 2000 } }
+  )
 
   useEffect(() => {
     if (!videos?.length || videos.length <= 1) {

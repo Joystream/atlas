@@ -1,12 +1,12 @@
 query GetNft($id: ID!) {
   ownedNftByUniqueInput(where: { id: $id }) {
-    ...AllNftFields
+    ...FullNftFields
   }
 }
 
 query GetNfts($where: OwnedNftWhereInput, $orderBy: OwnedNftOrderByInput! = createdAt_DESC) {
   ownedNfts(where: $where, orderBy: [$orderBy]) {
-    ...AllNftFields
+    ...FullNftFields
   }
 }
 
@@ -20,7 +20,7 @@ query GetNftsConnection(
     edges {
       cursor
       node {
-        ...AllNftFields
+        ...FullNftFields
       }
     }
     pageInfo {

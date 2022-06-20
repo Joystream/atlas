@@ -14,7 +14,6 @@ export type BasicChannelFieldsFragment = {
   id: string
   title?: string | null
   createdAt: Date
-  views: number
   follows: number
   avatarPhoto?: {
     __typename?: 'StorageDataObject'
@@ -31,40 +30,11 @@ export type BasicChannelFieldsFragment = {
       | { __typename: 'DataObjectTypeVideoMedia' }
       | { __typename: 'DataObjectTypeVideoThumbnail' }
   } | null
-  ownerMember?: {
-    __typename?: 'Membership'
-    id: string
-    handle: string
-    metadata: {
-      __typename?: 'MemberMetadata'
-      about?: string | null
-      avatar?:
-        | {
-            __typename?: 'AvatarObject'
-            avatarObject?: {
-              __typename?: 'StorageDataObject'
-              id: string
-              createdAt: Date
-              size: string
-              isAccepted: boolean
-              ipfsHash: string
-              storageBag: { __typename?: 'StorageBag'; id: string }
-              type:
-                | { __typename: 'DataObjectTypeChannelAvatar' }
-                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                | { __typename: 'DataObjectTypeUnknown' }
-                | { __typename: 'DataObjectTypeVideoMedia' }
-                | { __typename: 'DataObjectTypeVideoThumbnail' }
-            } | null
-          }
-        | { __typename?: 'AvatarUri'; avatarUri: string }
-        | null
-    }
-  } | null
 }
 
-export type AllChannelFieldsFragment = {
+export type FullChannelFieldsFragment = {
   __typename?: 'Channel'
+  views: number
   activeVideosCounter: number
   description?: string | null
   isPublic?: boolean | null
@@ -72,7 +42,6 @@ export type AllChannelFieldsFragment = {
   id: string
   title?: string | null
   createdAt: Date
-  views: number
   follows: number
   language?: { __typename?: 'Language'; id: string; iso: string } | null
   ownerMember?: {
@@ -168,7 +137,7 @@ export type BasicMembershipFieldsFragment = {
   }
 }
 
-export type AllMembershipFieldsFragment = {
+export type FullMembershipFieldsFragment = {
   __typename?: 'Membership'
   controllerAccount: string
   createdAt: Date
@@ -179,7 +148,6 @@ export type AllMembershipFieldsFragment = {
     id: string
     title?: string | null
     createdAt: Date
-    views: number
     follows: number
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
@@ -195,36 +163,6 @@ export type AllMembershipFieldsFragment = {
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
-    } | null
-    ownerMember?: {
-      __typename?: 'Membership'
-      id: string
-      handle: string
-      metadata: {
-        __typename?: 'MemberMetadata'
-        about?: string | null
-        avatar?:
-          | {
-              __typename?: 'AvatarObject'
-              avatarObject?: {
-                __typename?: 'StorageDataObject'
-                id: string
-                createdAt: Date
-                size: string
-                isAccepted: boolean
-                ipfsHash: string
-                storageBag: { __typename?: 'StorageBag'; id: string }
-                type:
-                  | { __typename: 'DataObjectTypeChannelAvatar' }
-                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                  | { __typename: 'DataObjectTypeUnknown' }
-                  | { __typename: 'DataObjectTypeVideoMedia' }
-                  | { __typename: 'DataObjectTypeVideoThumbnail' }
-              } | null
-            }
-          | { __typename?: 'AvatarUri'; avatarUri: string }
-          | null
-      }
     } | null
   }>
   metadata: {
@@ -306,28 +244,11 @@ export type BasicVideoFieldsFragment = {
   views: number
   createdAt: Date
   duration?: number | null
-  isPublic?: boolean | null
-  media?: {
-    __typename?: 'StorageDataObject'
-    id: string
-    createdAt: Date
-    size: string
-    isAccepted: boolean
-    ipfsHash: string
-    storageBag: { __typename?: 'StorageBag'; id: string }
-    type:
-      | { __typename: 'DataObjectTypeChannelAvatar' }
-      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-      | { __typename: 'DataObjectTypeUnknown' }
-      | { __typename: 'DataObjectTypeVideoMedia' }
-      | { __typename: 'DataObjectTypeVideoThumbnail' }
-  } | null
   channel: {
     __typename?: 'Channel'
     id: string
     title?: string | null
     createdAt: Date
-    views: number
     follows: number
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
@@ -343,36 +264,6 @@ export type BasicVideoFieldsFragment = {
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
-    } | null
-    ownerMember?: {
-      __typename?: 'Membership'
-      id: string
-      handle: string
-      metadata: {
-        __typename?: 'MemberMetadata'
-        about?: string | null
-        avatar?:
-          | {
-              __typename?: 'AvatarObject'
-              avatarObject?: {
-                __typename?: 'StorageDataObject'
-                id: string
-                createdAt: Date
-                size: string
-                isAccepted: boolean
-                ipfsHash: string
-                storageBag: { __typename?: 'StorageBag'; id: string }
-                type:
-                  | { __typename: 'DataObjectTypeChannelAvatar' }
-                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                  | { __typename: 'DataObjectTypeUnknown' }
-                  | { __typename: 'DataObjectTypeVideoMedia' }
-                  | { __typename: 'DataObjectTypeVideoThumbnail' }
-              } | null
-            }
-          | { __typename?: 'AvatarUri'; avatarUri: string }
-          | null
-      }
     } | null
   }
   thumbnailPhoto?: {
@@ -390,50 +281,10 @@ export type BasicVideoFieldsFragment = {
       | { __typename: 'DataObjectTypeVideoMedia' }
       | { __typename: 'DataObjectTypeVideoThumbnail' }
   } | null
-  nft?: {
-    __typename?: 'OwnedNft'
-    id: string
-    createdAt: Date
-    creatorRoyalty?: number | null
-    ownerMember?: {
-      __typename?: 'Membership'
-      id: string
-      handle: string
-      metadata: {
-        __typename?: 'MemberMetadata'
-        about?: string | null
-        avatar?:
-          | {
-              __typename?: 'AvatarObject'
-              avatarObject?: {
-                __typename?: 'StorageDataObject'
-                id: string
-                createdAt: Date
-                size: string
-                isAccepted: boolean
-                ipfsHash: string
-                storageBag: { __typename?: 'StorageBag'; id: string }
-                type:
-                  | { __typename: 'DataObjectTypeChannelAvatar' }
-                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                  | { __typename: 'DataObjectTypeUnknown' }
-                  | { __typename: 'DataObjectTypeVideoMedia' }
-                  | { __typename: 'DataObjectTypeVideoThumbnail' }
-              } | null
-            }
-          | { __typename?: 'AvatarUri'; avatarUri: string }
-          | null
-      }
-    } | null
-    transactionalStatus?:
-      | { __typename: 'TransactionalStatusBuyNow' }
-      | { __typename: 'TransactionalStatusIdle' }
-      | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
-      | null
-  } | null
+  nft?: { __typename?: 'OwnedNft'; id: string } | null
 }
 
-export type VideoFieldsFragment = {
+export type FullVideoFieldsFragment = {
   __typename?: 'Video'
   id: string
   title?: string | null
@@ -456,7 +307,7 @@ export type VideoFieldsFragment = {
     reaction: Types.VideoReactionOptions
     memberId: string
   }>
-  category?: { __typename?: 'VideoCategory'; id: string } | null
+  category?: { __typename?: 'VideoCategory'; id: string; name?: string | null } | null
   language?: { __typename?: 'Language'; iso: string } | null
   mediaMetadata?: {
     __typename?: 'VideoMediaMetadata'
@@ -496,26 +347,16 @@ export type VideoFieldsFragment = {
   } | null
   channel: {
     __typename?: 'Channel'
+    views: number
+    activeVideosCounter: number
+    description?: string | null
+    isPublic?: boolean | null
+    isCensored: boolean
     id: string
     title?: string | null
     createdAt: Date
-    views: number
     follows: number
-    avatarPhoto?: {
-      __typename?: 'StorageDataObject'
-      id: string
-      createdAt: Date
-      size: string
-      isAccepted: boolean
-      ipfsHash: string
-      storageBag: { __typename?: 'StorageBag'; id: string }
-      type:
-        | { __typename: 'DataObjectTypeChannelAvatar' }
-        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-        | { __typename: 'DataObjectTypeUnknown' }
-        | { __typename: 'DataObjectTypeVideoMedia' }
-        | { __typename: 'DataObjectTypeVideoThumbnail' }
-    } | null
+    language?: { __typename?: 'Language'; id: string; iso: string } | null
     ownerMember?: {
       __typename?: 'Membership'
       id: string
@@ -545,6 +386,36 @@ export type VideoFieldsFragment = {
           | { __typename?: 'AvatarUri'; avatarUri: string }
           | null
       }
+    } | null
+    coverPhoto?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      createdAt: Date
+      size: string
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+    } | null
+    avatarPhoto?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      createdAt: Date
+      size: string
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
   }
   license?: {
@@ -596,7 +467,6 @@ export type VideoFieldsFragment = {
       id: string
       title?: string | null
       createdAt: Date
-      views: number
       follows: number
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
@@ -612,36 +482,6 @@ export type VideoFieldsFragment = {
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
-      } | null
-      ownerMember?: {
-        __typename?: 'Membership'
-        id: string
-        handle: string
-        metadata: {
-          __typename?: 'MemberMetadata'
-          about?: string | null
-          avatar?:
-            | {
-                __typename?: 'AvatarObject'
-                avatarObject?: {
-                  __typename?: 'StorageDataObject'
-                  id: string
-                  createdAt: Date
-                  size: string
-                  isAccepted: boolean
-                  ipfsHash: string
-                  storageBag: { __typename?: 'StorageBag'; id: string }
-                  type:
-                    | { __typename: 'DataObjectTypeChannelAvatar' }
-                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                    | { __typename: 'DataObjectTypeUnknown' }
-                    | { __typename: 'DataObjectTypeVideoMedia' }
-                    | { __typename: 'DataObjectTypeVideoThumbnail' }
-                } | null
-              }
-            | { __typename?: 'AvatarUri'; avatarUri: string }
-            | null
-        }
       } | null
     }
     transactionalStatusAuction?: {
@@ -810,28 +650,11 @@ export type VideoFieldsFragment = {
       views: number
       createdAt: Date
       duration?: number | null
-      isPublic?: boolean | null
-      media?: {
-        __typename?: 'StorageDataObject'
-        id: string
-        createdAt: Date
-        size: string
-        isAccepted: boolean
-        ipfsHash: string
-        storageBag: { __typename?: 'StorageBag'; id: string }
-        type:
-          | { __typename: 'DataObjectTypeChannelAvatar' }
-          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-          | { __typename: 'DataObjectTypeUnknown' }
-          | { __typename: 'DataObjectTypeVideoMedia' }
-          | { __typename: 'DataObjectTypeVideoThumbnail' }
-      } | null
       channel: {
         __typename?: 'Channel'
         id: string
         title?: string | null
         createdAt: Date
-        views: number
         follows: number
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
@@ -847,36 +670,6 @@ export type VideoFieldsFragment = {
             | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
-        } | null
-        ownerMember?: {
-          __typename?: 'Membership'
-          id: string
-          handle: string
-          metadata: {
-            __typename?: 'MemberMetadata'
-            about?: string | null
-            avatar?:
-              | {
-                  __typename?: 'AvatarObject'
-                  avatarObject?: {
-                    __typename?: 'StorageDataObject'
-                    id: string
-                    createdAt: Date
-                    size: string
-                    isAccepted: boolean
-                    ipfsHash: string
-                    storageBag: { __typename?: 'StorageBag'; id: string }
-                    type:
-                      | { __typename: 'DataObjectTypeChannelAvatar' }
-                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                      | { __typename: 'DataObjectTypeUnknown' }
-                      | { __typename: 'DataObjectTypeVideoMedia' }
-                      | { __typename: 'DataObjectTypeVideoThumbnail' }
-                  } | null
-                }
-              | { __typename?: 'AvatarUri'; avatarUri: string }
-              | null
-          }
         } | null
       }
       thumbnailPhoto?: {
@@ -894,94 +687,12 @@ export type VideoFieldsFragment = {
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
-      nft?: {
-        __typename?: 'OwnedNft'
-        id: string
-        createdAt: Date
-        creatorRoyalty?: number | null
-        ownerMember?: {
-          __typename?: 'Membership'
-          id: string
-          handle: string
-          metadata: {
-            __typename?: 'MemberMetadata'
-            about?: string | null
-            avatar?:
-              | {
-                  __typename?: 'AvatarObject'
-                  avatarObject?: {
-                    __typename?: 'StorageDataObject'
-                    id: string
-                    createdAt: Date
-                    size: string
-                    isAccepted: boolean
-                    ipfsHash: string
-                    storageBag: { __typename?: 'StorageBag'; id: string }
-                    type:
-                      | { __typename: 'DataObjectTypeChannelAvatar' }
-                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                      | { __typename: 'DataObjectTypeUnknown' }
-                      | { __typename: 'DataObjectTypeVideoMedia' }
-                      | { __typename: 'DataObjectTypeVideoThumbnail' }
-                  } | null
-                }
-              | { __typename?: 'AvatarUri'; avatarUri: string }
-              | null
-          }
-        } | null
-        transactionalStatus?:
-          | { __typename: 'TransactionalStatusBuyNow' }
-          | { __typename: 'TransactionalStatusIdle' }
-          | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
-          | null
-      } | null
+      nft?: { __typename?: 'OwnedNft'; id: string } | null
     }
   } | null
 }
 
-export type BasicNftFieldsFragment = {
-  __typename?: 'OwnedNft'
-  id: string
-  createdAt: Date
-  creatorRoyalty?: number | null
-  ownerMember?: {
-    __typename?: 'Membership'
-    id: string
-    handle: string
-    metadata: {
-      __typename?: 'MemberMetadata'
-      about?: string | null
-      avatar?:
-        | {
-            __typename?: 'AvatarObject'
-            avatarObject?: {
-              __typename?: 'StorageDataObject'
-              id: string
-              createdAt: Date
-              size: string
-              isAccepted: boolean
-              ipfsHash: string
-              storageBag: { __typename?: 'StorageBag'; id: string }
-              type:
-                | { __typename: 'DataObjectTypeChannelAvatar' }
-                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                | { __typename: 'DataObjectTypeUnknown' }
-                | { __typename: 'DataObjectTypeVideoMedia' }
-                | { __typename: 'DataObjectTypeVideoThumbnail' }
-            } | null
-          }
-        | { __typename?: 'AvatarUri'; avatarUri: string }
-        | null
-    }
-  } | null
-  transactionalStatus?:
-    | { __typename: 'TransactionalStatusBuyNow' }
-    | { __typename: 'TransactionalStatusIdle' }
-    | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
-    | null
-}
-
-export type AllNftFieldsFragment = {
+export type FullNftFieldsFragment = {
   __typename?: 'OwnedNft'
   id: string
   createdAt: Date
@@ -1023,7 +734,6 @@ export type AllNftFieldsFragment = {
     id: string
     title?: string | null
     createdAt: Date
-    views: number
     follows: number
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
@@ -1039,36 +749,6 @@ export type AllNftFieldsFragment = {
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
-    } | null
-    ownerMember?: {
-      __typename?: 'Membership'
-      id: string
-      handle: string
-      metadata: {
-        __typename?: 'MemberMetadata'
-        about?: string | null
-        avatar?:
-          | {
-              __typename?: 'AvatarObject'
-              avatarObject?: {
-                __typename?: 'StorageDataObject'
-                id: string
-                createdAt: Date
-                size: string
-                isAccepted: boolean
-                ipfsHash: string
-                storageBag: { __typename?: 'StorageBag'; id: string }
-                type:
-                  | { __typename: 'DataObjectTypeChannelAvatar' }
-                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                  | { __typename: 'DataObjectTypeUnknown' }
-                  | { __typename: 'DataObjectTypeVideoMedia' }
-                  | { __typename: 'DataObjectTypeVideoThumbnail' }
-              } | null
-            }
-          | { __typename?: 'AvatarUri'; avatarUri: string }
-          | null
-      }
     } | null
   }
   transactionalStatusAuction?: {
@@ -1237,28 +917,11 @@ export type AllNftFieldsFragment = {
     views: number
     createdAt: Date
     duration?: number | null
-    isPublic?: boolean | null
-    media?: {
-      __typename?: 'StorageDataObject'
-      id: string
-      createdAt: Date
-      size: string
-      isAccepted: boolean
-      ipfsHash: string
-      storageBag: { __typename?: 'StorageBag'; id: string }
-      type:
-        | { __typename: 'DataObjectTypeChannelAvatar' }
-        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-        | { __typename: 'DataObjectTypeUnknown' }
-        | { __typename: 'DataObjectTypeVideoMedia' }
-        | { __typename: 'DataObjectTypeVideoThumbnail' }
-    } | null
     channel: {
       __typename?: 'Channel'
       id: string
       title?: string | null
       createdAt: Date
-      views: number
       follows: number
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
@@ -1274,36 +937,6 @@ export type AllNftFieldsFragment = {
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
-      } | null
-      ownerMember?: {
-        __typename?: 'Membership'
-        id: string
-        handle: string
-        metadata: {
-          __typename?: 'MemberMetadata'
-          about?: string | null
-          avatar?:
-            | {
-                __typename?: 'AvatarObject'
-                avatarObject?: {
-                  __typename?: 'StorageDataObject'
-                  id: string
-                  createdAt: Date
-                  size: string
-                  isAccepted: boolean
-                  ipfsHash: string
-                  storageBag: { __typename?: 'StorageBag'; id: string }
-                  type:
-                    | { __typename: 'DataObjectTypeChannelAvatar' }
-                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                    | { __typename: 'DataObjectTypeUnknown' }
-                    | { __typename: 'DataObjectTypeVideoMedia' }
-                    | { __typename: 'DataObjectTypeVideoThumbnail' }
-                } | null
-              }
-            | { __typename?: 'AvatarUri'; avatarUri: string }
-            | null
-        }
       } | null
     }
     thumbnailPhoto?: {
@@ -1321,47 +954,7 @@ export type AllNftFieldsFragment = {
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
-    nft?: {
-      __typename?: 'OwnedNft'
-      id: string
-      createdAt: Date
-      creatorRoyalty?: number | null
-      ownerMember?: {
-        __typename?: 'Membership'
-        id: string
-        handle: string
-        metadata: {
-          __typename?: 'MemberMetadata'
-          about?: string | null
-          avatar?:
-            | {
-                __typename?: 'AvatarObject'
-                avatarObject?: {
-                  __typename?: 'StorageDataObject'
-                  id: string
-                  createdAt: Date
-                  size: string
-                  isAccepted: boolean
-                  ipfsHash: string
-                  storageBag: { __typename?: 'StorageBag'; id: string }
-                  type:
-                    | { __typename: 'DataObjectTypeChannelAvatar' }
-                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                    | { __typename: 'DataObjectTypeUnknown' }
-                    | { __typename: 'DataObjectTypeVideoMedia' }
-                    | { __typename: 'DataObjectTypeVideoThumbnail' }
-                } | null
-              }
-            | { __typename?: 'AvatarUri'; avatarUri: string }
-            | null
-        }
-      } | null
-      transactionalStatus?:
-        | { __typename: 'TransactionalStatusBuyNow' }
-        | { __typename: 'TransactionalStatusIdle' }
-        | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
-        | null
-    } | null
+    nft?: { __typename?: 'OwnedNft'; id: string } | null
   }
 }
 
@@ -1404,7 +997,7 @@ export type BasicBidFieldsFragment = {
   }
 }
 
-export type AllBidFieldsFragment = {
+export type FullBidFieldsFragment = {
   __typename?: 'Bid'
   amount: string
   createdAt: Date
@@ -1739,42 +1332,15 @@ export const BasicChannelFieldsFragmentDoc = gql`
     id
     title
     createdAt
-    views
     follows
     avatarPhoto {
       ...StorageDataObjectFields
     }
-    ownerMember {
-      ...BasicMembershipFields
-    }
   }
   ${StorageDataObjectFieldsFragmentDoc}
-  ${BasicMembershipFieldsFragmentDoc}
 `
-export const AllChannelFieldsFragmentDoc = gql`
-  fragment AllChannelFields on Channel {
-    ...BasicChannelFields
-    activeVideosCounter
-    description
-    isPublic
-    isCensored
-    language {
-      id
-      iso
-    }
-    ownerMember {
-      ...BasicMembershipFields
-    }
-    coverPhoto {
-      ...StorageDataObjectFields
-    }
-  }
-  ${BasicChannelFieldsFragmentDoc}
-  ${BasicMembershipFieldsFragmentDoc}
-  ${StorageDataObjectFieldsFragmentDoc}
-`
-export const AllMembershipFieldsFragmentDoc = gql`
-  fragment AllMembershipFields on Membership {
+export const FullMembershipFieldsFragmentDoc = gql`
+  fragment FullMembershipFields on Membership {
     ...BasicMembershipFields
     controllerAccount
     createdAt
@@ -1807,6 +1373,29 @@ export const VideoMediaMetadataFieldsFragmentDoc = gql`
     pixelWidth
   }
 `
+export const FullChannelFieldsFragmentDoc = gql`
+  fragment FullChannelFields on Channel {
+    ...BasicChannelFields
+    views
+    activeVideosCounter
+    description
+    isPublic
+    isCensored
+    language {
+      id
+      iso
+    }
+    ownerMember {
+      ...BasicMembershipFields
+    }
+    coverPhoto {
+      ...StorageDataObjectFields
+    }
+  }
+  ${BasicChannelFieldsFragmentDoc}
+  ${BasicMembershipFieldsFragmentDoc}
+  ${StorageDataObjectFieldsFragmentDoc}
+`
 export const LicenseFieldsFragmentDoc = gql`
   fragment LicenseFields on License {
     id
@@ -1828,20 +1417,6 @@ export const BasicBidFieldsFragmentDoc = gql`
   }
   ${BasicMembershipFieldsFragmentDoc}
 `
-export const BasicNftFieldsFragmentDoc = gql`
-  fragment BasicNftFields on OwnedNft {
-    id
-    createdAt
-    creatorRoyalty
-    ownerMember {
-      ...BasicMembershipFields
-    }
-    transactionalStatus {
-      __typename
-    }
-  }
-  ${BasicMembershipFieldsFragmentDoc}
-`
 export const BasicVideoFieldsFragmentDoc = gql`
   fragment BasicVideoFields on Video {
     id
@@ -1849,11 +1424,6 @@ export const BasicVideoFieldsFragmentDoc = gql`
     views
     createdAt
     duration
-    title
-    isPublic
-    media {
-      ...StorageDataObjectFields
-    }
     channel {
       ...BasicChannelFields
     }
@@ -1861,15 +1431,14 @@ export const BasicVideoFieldsFragmentDoc = gql`
       ...StorageDataObjectFields
     }
     nft {
-      ...BasicNftFields
+      id
     }
   }
-  ${StorageDataObjectFieldsFragmentDoc}
   ${BasicChannelFieldsFragmentDoc}
-  ${BasicNftFieldsFragmentDoc}
+  ${StorageDataObjectFieldsFragmentDoc}
 `
-export const AllNftFieldsFragmentDoc = gql`
-  fragment AllNftFields on OwnedNft {
+export const FullNftFieldsFragmentDoc = gql`
+  fragment FullNftFields on OwnedNft {
     id
     createdAt
     creatorRoyalty
@@ -1931,8 +1500,8 @@ export const AllNftFieldsFragmentDoc = gql`
   ${BasicBidFieldsFragmentDoc}
   ${BasicVideoFieldsFragmentDoc}
 `
-export const VideoFieldsFragmentDoc = gql`
-  fragment VideoFields on Video {
+export const FullVideoFieldsFragmentDoc = gql`
+  fragment FullVideoFields on Video {
     id
     title
     description
@@ -1944,6 +1513,7 @@ export const VideoFieldsFragmentDoc = gql`
     }
     category {
       id
+      name
     }
     views
     duration
@@ -1969,23 +1539,23 @@ export const VideoFieldsFragmentDoc = gql`
       ...StorageDataObjectFields
     }
     channel {
-      ...BasicChannelFields
+      ...FullChannelFields
     }
     license {
       ...LicenseFields
     }
     nft {
-      ...AllNftFields
+      ...FullNftFields
     }
   }
   ${VideoMediaMetadataFieldsFragmentDoc}
   ${StorageDataObjectFieldsFragmentDoc}
-  ${BasicChannelFieldsFragmentDoc}
+  ${FullChannelFieldsFragmentDoc}
   ${LicenseFieldsFragmentDoc}
-  ${AllNftFieldsFragmentDoc}
+  ${FullNftFieldsFragmentDoc}
 `
-export const AllBidFieldsFragmentDoc = gql`
-  fragment AllBidFields on Bid {
+export const FullBidFieldsFragmentDoc = gql`
+  fragment FullBidFields on Bid {
     ...BasicBidFields
     auction {
       auctionType {

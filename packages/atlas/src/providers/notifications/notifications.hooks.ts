@@ -8,7 +8,7 @@ import { NftNotificationRecord, NotificationRecord } from './notifications.types
 export const useNotifications = () => {
   const { memberId, channelId } = useUser()
   const { notifications: rawNotifications, ...rest } = useRawNotifications(channelId, memberId, {
-    fetchPolicy: 'cache-and-network', // this will make sure we will refetch every time member is changed
+    context: { delay: 3000 },
   })
   const {
     readNotificationsIdsMap,

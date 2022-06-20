@@ -2,7 +2,7 @@ import { differenceInSeconds } from 'date-fns'
 import { FC, memo } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
-import { AllBidFieldsFragment, BasicBidFieldsFragment } from '@/api/queries'
+import { BasicBidFieldsFragment, FullBidFieldsFragment } from '@/api/queries'
 import { Avatar } from '@/components/Avatar'
 import { Banner } from '@/components/Banner'
 import { GridItem } from '@/components/LayoutGrid'
@@ -64,7 +64,7 @@ export type NftWidgetProps = {
   ownerAvatarUri: string | null | undefined
   isOwner: boolean | undefined
   needsSettling: boolean | undefined
-  bidFromPreviousAuction: AllBidFieldsFragment | undefined
+  bidFromPreviousAuction: FullBidFieldsFragment | undefined
   saleType: NftSaleType | null
   nftStatus?:
     | {

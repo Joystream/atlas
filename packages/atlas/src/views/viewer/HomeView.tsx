@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
 
-import { useVideoHeroData, useVideosConnection } from '@/api/hooks'
+import { useBasicVideosConnection, useVideoHeroData } from '@/api/hooks'
 import { GetMostViewedVideosConnectionDocument } from '@/api/queries'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
@@ -28,7 +28,7 @@ export const HomeView: FC = () => {
     videosConnection,
     loading: followedLoading,
     error: followedError,
-  } = useVideosConnection(
+  } = useBasicVideosConnection(
     {
       where: {
         channel: {
@@ -72,7 +72,7 @@ export const HomeView: FC = () => {
         <TopTenVideos period="week" />
         <OfficialJoystreamUpdate />
         <DiscoverChannels withLink />
-        <InfiniteVideoGrid title="All content" onDemand />
+        <InfiniteVideoGrid title="All content" onDemand queryOpts={{ context: { delay: 2000 } }} />
       </Container>
     </VideoContentTemplate>
   )

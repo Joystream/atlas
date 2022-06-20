@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { AllMembershipFieldsFragmentDoc } from './fragments.generated'
+import { FullMembershipFieldsFragmentDoc } from './fragments.generated'
 
 const defaultOptions = {} as const
 export type GetMembershipQueryVariables = Types.Exact<{
@@ -22,7 +22,6 @@ export type GetMembershipQuery = {
       id: string
       title?: string | null
       createdAt: Date
-      views: number
       follows: number
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
@@ -38,36 +37,6 @@ export type GetMembershipQuery = {
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
-      } | null
-      ownerMember?: {
-        __typename?: 'Membership'
-        id: string
-        handle: string
-        metadata: {
-          __typename?: 'MemberMetadata'
-          about?: string | null
-          avatar?:
-            | {
-                __typename?: 'AvatarObject'
-                avatarObject?: {
-                  __typename?: 'StorageDataObject'
-                  id: string
-                  createdAt: Date
-                  size: string
-                  isAccepted: boolean
-                  ipfsHash: string
-                  storageBag: { __typename?: 'StorageBag'; id: string }
-                  type:
-                    | { __typename: 'DataObjectTypeChannelAvatar' }
-                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                    | { __typename: 'DataObjectTypeUnknown' }
-                    | { __typename: 'DataObjectTypeVideoMedia' }
-                    | { __typename: 'DataObjectTypeVideoThumbnail' }
-                } | null
-              }
-            | { __typename?: 'AvatarUri'; avatarUri: string }
-            | null
-        }
       } | null
     }>
     metadata: {
@@ -115,7 +84,6 @@ export type GetMembershipsQuery = {
       id: string
       title?: string | null
       createdAt: Date
-      views: number
       follows: number
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
@@ -131,36 +99,6 @@ export type GetMembershipsQuery = {
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
-      } | null
-      ownerMember?: {
-        __typename?: 'Membership'
-        id: string
-        handle: string
-        metadata: {
-          __typename?: 'MemberMetadata'
-          about?: string | null
-          avatar?:
-            | {
-                __typename?: 'AvatarObject'
-                avatarObject?: {
-                  __typename?: 'StorageDataObject'
-                  id: string
-                  createdAt: Date
-                  size: string
-                  isAccepted: boolean
-                  ipfsHash: string
-                  storageBag: { __typename?: 'StorageBag'; id: string }
-                  type:
-                    | { __typename: 'DataObjectTypeChannelAvatar' }
-                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                    | { __typename: 'DataObjectTypeUnknown' }
-                    | { __typename: 'DataObjectTypeVideoMedia' }
-                    | { __typename: 'DataObjectTypeVideoThumbnail' }
-                } | null
-              }
-            | { __typename?: 'AvatarUri'; avatarUri: string }
-            | null
-        }
       } | null
     }>
     metadata: {
@@ -194,10 +132,10 @@ export type GetMembershipsQuery = {
 export const GetMembershipDocument = gql`
   query GetMembership($where: MembershipWhereUniqueInput!) {
     membershipByUniqueInput(where: $where) {
-      ...AllMembershipFields
+      ...FullMembershipFields
     }
   }
-  ${AllMembershipFieldsFragmentDoc}
+  ${FullMembershipFieldsFragmentDoc}
 `
 
 /**
@@ -234,10 +172,10 @@ export type GetMembershipQueryResult = Apollo.QueryResult<GetMembershipQuery, Ge
 export const GetMembershipsDocument = gql`
   query GetMemberships($where: MembershipWhereInput!) {
     memberships(where: $where, orderBy: [createdAt_ASC]) {
-      ...AllMembershipFields
+      ...FullMembershipFields
     }
   }
-  ${AllMembershipFieldsFragmentDoc}
+  ${FullMembershipFieldsFragmentDoc}
 `
 
 /**

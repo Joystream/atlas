@@ -1,23 +1,23 @@
 import { ApolloClient } from '@apollo/client'
 
 import {
-  AllChannelFieldsFragment,
-  GetChannelDocument,
-  GetChannelQuery,
-  GetChannelQueryVariables,
-  GetVideosDocument,
-  GetVideosQuery,
-  GetVideosQueryVariables,
-  VideoFieldsFragment,
+  FullChannelFieldsFragment,
+  FullVideoFieldsFragment,
+  GetFullChannelDocument,
+  GetFullChannelQuery,
+  GetFullChannelQueryVariables,
+  GetFullVideosDocument,
+  GetFullVideosQuery,
+  GetFullVideosQueryVariables,
 } from '@/api/queries'
 import { createLookup } from '@/utils/data'
 
 export const fetchMissingAssets = async (
   client: ApolloClient<unknown>,
   channelId: string
-): Promise<[VideoFieldsFragment[], AllChannelFieldsFragment | null | undefined, Record<string, boolean>]> => {
-  const videosMediaPromise = client.query<GetVideosQuery, GetVideosQueryVariables>({
-    query: GetVideosDocument,
+): Promise<[FullVideoFieldsFragment[], FullChannelFieldsFragment | null | undefined, Record<string, boolean>]> => {
+  const videosMediaPromise = client.query<GetFullVideosQuery, GetFullVideosQueryVariables>({
+    query: GetFullVideosDocument,
     variables: {
       where: {
         media: { isAccepted_eq: false },
@@ -26,8 +26,8 @@ export const fetchMissingAssets = async (
     },
   })
 
-  const videosThumbnailPromise = client.query<GetVideosQuery, GetVideosQueryVariables>({
-    query: GetVideosDocument,
+  const videosThumbnailPromise = client.query<GetFullVideosQuery, GetFullVideosQueryVariables>({
+    query: GetFullVideosDocument,
     variables: {
       where: {
         thumbnailPhoto: { isAccepted_eq: false },
@@ -36,8 +36,8 @@ export const fetchMissingAssets = async (
     },
   })
 
-  const channelPromise = client.query<GetChannelQuery, GetChannelQueryVariables>({
-    query: GetChannelDocument,
+  const channelPromise = client.query<GetFullChannelQuery, GetFullChannelQueryVariables>({
+    query: GetFullChannelDocument,
     variables: { where: { id: channelId } },
   })
 

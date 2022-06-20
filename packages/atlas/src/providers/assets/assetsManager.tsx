@@ -25,6 +25,7 @@ export const AssetsManager: FC = () => {
   )
   const { coordinates } = useUserLocationStore()
 
+  // listen to changes in list of assets pending resolution and resolve them
   useEffect(() => {
     Object.values(pendingAssets).forEach(async (dataObject) => {
       // make sure we handle each asset only once
@@ -112,8 +113,8 @@ export const AssetsManager: FC = () => {
   return null
 }
 
-// deterministically sort distributors for a given dataObject
-// this is important for caching, if we pick the distributor at random, clients will end up caching [distributors.length] copies of each asset (all have unique URL)
+// if user coordinates are known, sort distributors by geographical distance
+// otherwise use semi-random fallback
 const sortDistributionOperators = (
   distributionOperators: OperatorInfo[],
   dataObject?: StorageDataObjectFieldsFragment

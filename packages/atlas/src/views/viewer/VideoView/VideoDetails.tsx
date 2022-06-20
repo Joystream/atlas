@@ -1,13 +1,13 @@
 import { FC, ReactNode, useState } from 'react'
 
-import { VideoFieldsFragment } from '@/api/queries'
+import { FullVideoFieldsFragment } from '@/api/queries'
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { VideoCategoryData } from '@/config/categories'
 import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
-import { useCategoryMatch } from '@/hooks/useCategoriesMatch'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import {
@@ -26,10 +26,10 @@ import {
 } from './VideoDetails.styles'
 
 type VideoDetailsProps = {
-  video?: VideoFieldsFragment | null
-  category?: ReturnType<typeof useCategoryMatch>
+  video?: FullVideoFieldsFragment | null
+  categoryData?: VideoCategoryData | null
 }
-export const VideoDetails: FC<VideoDetailsProps> = ({ video, category }) => {
+export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => {
   const mdMatch = useMediaMatch('md')
   const [detailsExpanded, setDetailsExpanded] = useState(false)
 
@@ -94,10 +94,10 @@ export const VideoDetails: FC<VideoDetailsProps> = ({ video, category }) => {
           {video ? (
             <>
               <DescriptionTitle variant="h100">Category</DescriptionTitle>
-              <Category to={absoluteRoutes.viewer.category(category?.id)}>
-                {category?.icon}
+              <Category to={absoluteRoutes.viewer.category(categoryData?.id)}>
+                {categoryData?.icon}
                 <Text variant={mdMatch ? 't300' : 't200'} secondary>
-                  {category?.name}
+                  {video?.category?.name}
                 </Text>
               </Category>
             </>

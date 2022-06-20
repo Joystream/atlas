@@ -4,7 +4,7 @@ import { throttle } from 'lodash-es'
 import { FC, useEffect, useRef } from 'react'
 import { useParams } from 'react-router'
 
-import { useAddVideoView, useVideo } from '@/api/hooks'
+import { useAddVideoView, useFullVideo } from '@/api/hooks'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
@@ -20,7 +20,7 @@ import { NotFoundVideoContainer, PlayerSkeletonLoader } from '../VideoView/Video
 export const EmbeddedView: FC = () => {
   useRedirectMigratedContent({ type: 'embedded-video' })
   const { id } = useParams()
-  const { loading, video, error } = useVideo(id ?? '', {
+  const { loading, video, error } = useFullVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
   const { addVideoView } = useAddVideoView()

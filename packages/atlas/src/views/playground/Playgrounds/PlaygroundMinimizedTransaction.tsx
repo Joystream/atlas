@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 
-import { useVideosConnection } from '@/api/hooks'
+import { useBasicVideosConnection } from '@/api/hooks'
 import { Grid } from '@/components/Grid'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionChevronR } from '@/components/_icons'
@@ -17,7 +17,7 @@ export const PlaygroundMinimizedTransaction = () => {
   const { joystream, proxyCallback } = useJoystream()
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const { edges, refetch } = useVideosConnection({
+  const { edges, refetch } = useBasicVideosConnection({
     where: {
       channel: {
         id_eq: channelId,

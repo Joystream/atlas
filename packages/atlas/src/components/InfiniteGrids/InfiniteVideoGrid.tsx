@@ -1,12 +1,13 @@
+import { QueryHookOptions } from '@apollo/client'
 import { DocumentNode } from 'graphql'
 import { ReactNode, forwardRef, useCallback, useState } from 'react'
 
 import {
+  GetBasicVideosConnectionDocument,
+  GetBasicVideosConnectionQuery,
+  GetBasicVideosConnectionQueryVariables,
   GetMostViewedVideosConnectionQuery,
   GetMostViewedVideosConnectionQueryVariables,
-  GetVideosConnectionDocument,
-  GetVideosConnectionQuery,
-  GetVideosConnectionQueryVariables,
   VideoOrderByInput,
   VideoWhereInput,
 } from '@/api/queries'
@@ -26,6 +27,7 @@ import { VideoTileViewer } from '../_video/VideoTileViewer'
 
 type InfiniteVideoGridProps = {
   query?: DocumentNode
+  queryOpts?: QueryHookOptions
   // `periodDays` argument to be passed to the most viewed connection query - it will let you set the time period of most views
   periodDays?: number
   // `limit` argument to be passed to the most viewed connection query - it will let you cap the number of videos in the connection
@@ -51,12 +53,13 @@ type InfiniteVideoGridProps = {
 
 const INITIAL_VIDEOS_PER_ROW = 1
 
-type VideoQuery = GetVideosConnectionQuery | GetMostViewedVideosConnectionQuery
+type VideoQuery = GetBasicVideosConnectionQuery | GetMostViewedVideosConnectionQuery
 
 export const InfiniteVideoGrid = forwardRef<HTMLElement, InfiniteVideoGridProps>(
   (
     {
-      query = GetVideosConnectionDocument,
+      query = GetBasicVideosConnectionDocument,
+      queryOpts,
       periodDays,
       limit,
       title,
@@ -81,7 +84,7 @@ export const InfiniteVideoGrid = forwardRef<HTMLElement, InfiniteVideoGridProps>
     const [initialGridResizeDone, setInitialGridResizeDone] = useState(false)
     const targetRowsCount = Math.max(_targetRowsCount, rowsToLoad)
 
-    const queryVariables: GetVideosConnectionQueryVariables & GetMostViewedVideosConnectionQueryVariables = {
+    const queryVariables: GetBasicVideosConnectionQueryVariables & GetMostViewedVideosConnectionQueryVariables = {
       periodDays,
       limit,
       orderBy,
@@ -104,10 +107,11 @@ export const InfiniteVideoGrid = forwardRef<HTMLElement, InfiniteVideoGridProps>
 
     const { placeholdersCount, displayedItems, error, totalCount, loading } = useInfiniteGrid<
       VideoQuery,
-      GetVideosConnectionQuery['videosConnection'],
-      GetVideosConnectionQueryVariables
+      GetBasicVideosConnectionQuery['videosConnection'],
+      GetBasicVideosConnectionQueryVariables
     >({
-      query: query || GetVideosConnectionDocument,
+      query: query || GetBasicVideosConnectionDocument,
+      queryOpts,
       isReady: ready && initialGridResizeDone,
       skipCount,
       queryVariables,

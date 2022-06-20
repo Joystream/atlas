@@ -4,7 +4,7 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { useParams } from 'react-router-dom'
 
-import { useAddVideoView, useVideo } from '@/api/hooks'
+import { useAddVideoView, useFullVideo } from '@/api/hooks'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
@@ -17,9 +17,9 @@ import { SvgActionLinkUrl } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NftWidget, useNftWidget } from '@/components/_nft/NftWidget'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
+import { videoCategories } from '@/config/categories'
 import { CTA_MAP } from '@/config/cta'
 import { absoluteRoutes } from '@/config/routes'
-import { useCategoryMatch } from '@/hooks/useCategoriesMatch'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useHeadTags } from '@/hooks/useHeadTags'
@@ -68,11 +68,11 @@ export const VideoView: FC = () => {
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
   const { withdrawBid } = useNftTransactions()
   const { copyToClipboard } = useClipboard()
-  const { loading, video, error } = useVideo(id ?? '', {
+  const { loading, video, error } = useFullVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
   const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
-  const nftWidgetProps = useNftWidget(id)
+  const nftWidgetProps = useNftWidget(video)
   const { likeOrDislikeVideo } = useReactionTransactions()
 
   const mdMatch = useMediaMatch('md')
@@ -82,7 +82,7 @@ export const VideoView: FC = () => {
     cinematicView,
     actions: { updateWatchedVideos },
   } = usePersonalDataStore((state) => state)
-  const category = useCategoryMatch(video?.category?.id)
+  const category = video?.category ? videoCategories[video.category.id] : null
 
   const { anyOverlaysOpen } = useOverlayManager()
   const { ref: playerRef, inView: isPlayerInView } = useInView()
@@ -245,7 +245,7 @@ export const VideoView: FC = () => {
         />
       )}
       <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />
-      <MoreVideos categoryId={category?.id} categoryName={category?.name} videoId={id} type="category" />
+      <MoreVideos categoryId={category?.id} categoryName={video?.category?.name} videoId={id} type="category" />
     </GridItem>
   )
 
@@ -283,7 +283,7 @@ export const VideoView: FC = () => {
       <ChannelContainer>
         <ChannelLink followButton id={channelId} textVariant="h300" avatarSize="small" />
       </ChannelContainer>
-      <VideoDetails video={video} category={category} />
+      <VideoDetails video={video} categoryData={category} />
     </>
   )
 
