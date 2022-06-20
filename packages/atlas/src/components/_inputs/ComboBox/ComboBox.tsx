@@ -46,31 +46,33 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
     }
   }, [items])
 
-  const { isOpen, getMenuProps, getInputProps, highlightedIndex, getItemProps, getComboboxProps, reset } = useCombobox({
-    items: inputItems,
-    itemToString: (item) => (item ? (item.label as string) : ''),
-    onSelectedItemChange: ({ selectedItem }) => {
-      if (!selectedItem) {
-        return
-      }
-      onSelectedItemChange?.(selectedItem)
-      setInputItems([])
-      if (resetOnSelect) {
-        reset()
-      }
-    },
-    onInputValueChange: ({ inputValue }) => {
-      if (!inputValue) {
-        reset()
-        return
-      }
-      const filteredItems = items.filter((item) =>
-        (item.label as string)?.toLowerCase().startsWith(inputValue?.toLowerCase())
-      )
-      setInputItems(filteredItems)
-      onInputValueChange?.(inputValue)
-    },
-  })
+  const { isOpen, getMenuProps, getInputProps, highlightedIndex, getItemProps, getComboboxProps, reset, toggleMenu } =
+    useCombobox({
+      items: inputItems,
+      itemToString: (item) => (item ? (item.label as string) : ''),
+      onSelectedItemChange: ({ selectedItem }) => {
+        if (!selectedItem) {
+          return
+        }
+        onSelectedItemChange?.(selectedItem)
+        setInputItems([])
+        if (resetOnSelect) {
+          reset()
+        }
+        toggleMenu()
+      },
+      onInputValueChange: ({ inputValue }) => {
+        if (!inputValue) {
+          reset()
+          return
+        }
+        const filteredItems = items.filter((item) =>
+          (item.label as string)?.toLowerCase().startsWith(inputValue?.toLowerCase())
+        )
+        setInputItems(filteredItems)
+        onInputValueChange?.(inputValue)
+      },
+    })
 
   const noItemsFound = isOpen && !error && inputItems.length === 0 && !processing && notFoundNode
 
@@ -93,6 +95,7 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
           {...getInputProps({ ref: textFieldRef })}
           nodeEnd={processing && <Loader variant="small" />}
           nodeStart={<StyledSvgActionPlus />}
+          onFocus={toggleMenu}
         />
       </div>
       <ListWrapper {...getMenuProps()} topPosition={getTextFieldBottomEdgePosition()}>

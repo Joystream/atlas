@@ -141,6 +141,7 @@ const TemplateWithMembers: Story<ComboBoxProps> = (args) => {
           label: member.label,
           thumbnailUrl: '',
         }))}
+        resetOnSelect
       />
       <MemberBadgesWrapper>
         {selectedMembers.map((member) => (
@@ -161,6 +162,7 @@ const MemberBadgesWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin-top: ${sizes(4)};
+  gap: ${sizes(3)};
 `
 
 export const WithMembers = TemplateWithMembers.bind({})
