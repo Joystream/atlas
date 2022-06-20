@@ -72,7 +72,7 @@ export const VideoView: FC = () => {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
   const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
-  const nftWidgetProps = useNftWidget(id)
+  const nftWidgetProps = useNftWidget(video)
   const { likeOrDislikeVideo } = useReactionTransactions()
 
   const mdMatch = useMediaMatch('md')

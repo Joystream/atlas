@@ -1,3 +1,4 @@
+import { QueryHookOptions } from '@apollo/client'
 import { DocumentNode } from 'graphql'
 import { ReactNode, forwardRef, useCallback, useState } from 'react'
 
@@ -26,6 +27,7 @@ import { VideoTileViewer } from '../_video/VideoTileViewer'
 
 type InfiniteVideoGridProps = {
   query?: DocumentNode
+  queryOpts?: QueryHookOptions
   // `periodDays` argument to be passed to the most viewed connection query - it will let you set the time period of most views
   periodDays?: number
   // `limit` argument to be passed to the most viewed connection query - it will let you cap the number of videos in the connection
@@ -57,6 +59,7 @@ export const InfiniteVideoGrid = forwardRef<HTMLElement, InfiniteVideoGridProps>
   (
     {
       query = GetBasicVideosConnectionDocument,
+      queryOpts,
       periodDays,
       limit,
       title,
@@ -108,6 +111,7 @@ export const InfiniteVideoGrid = forwardRef<HTMLElement, InfiniteVideoGridProps>
       GetBasicVideosConnectionQueryVariables
     >({
       query: query || GetBasicVideosConnectionDocument,
+      queryOpts,
       isReady: ready && initialGridResizeDone,
       skipCount,
       queryVariables,

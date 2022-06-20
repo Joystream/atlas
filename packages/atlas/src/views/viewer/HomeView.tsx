@@ -72,7 +72,7 @@ export const HomeView: FC = () => {
         <TopTenVideos period="week" />
         <OfficialJoystreamUpdate />
         <DiscoverChannels withLink />
-        <InfiniteVideoGrid title="All content" onDemand />
+        <InfiniteVideoGrid title="All content" onDemand queryOpts={{ context: { delay: 2000 } }} />
       </Container>
     </VideoContentTemplate>
   )

@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 
 import { useNft, useNftHistory } from '@/api/hooks'
 import { useBids } from '@/api/hooks/bids'
+import { FullVideoFieldsFragment } from '@/api/queries'
 import { NftWidgetProps } from '@/components/_nft/NftWidget/NftWidget'
 import { NFT_STATUS_POLLING_INTERVAL } from '@/config/nft'
 import { useNftState } from '@/hooks/useNftState'
@@ -13,9 +14,9 @@ import { SentryLogger } from '@/utils/logs'
 import { NftHistoryEntry } from './NftHistory'
 
 type UseNftWidgetReturn = NftWidgetProps | null
-export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
+export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null): UseNftWidgetReturn => {
   const { memberId } = useUser()
-  const { nft, nftStatus, called, startPolling, stopPolling } = useNft(videoId ?? '')
+  const { nft, nftStatus, called, startPolling, stopPolling } = useNft(video?.id ?? '', { skip: !video || !video.nft })
   const {
     isOwner,
     englishTimerState,
@@ -79,7 +80,7 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
   const { url: ownerAvatarUri } = useMemberAvatar(owner)
   const { url: topBidderAvatarUri } = useMemberAvatar(nftStatus?.status === 'auction' ? nftStatus.topBidder : undefined)
 
-  const { entries: nftHistory } = useNftHistoryEntries(videoId || null, {
+  const { entries: nftHistory } = useNftHistoryEntries(video?.id ?? '', {
     skip: !nft,
     pollInterval: NFT_STATUS_POLLING_INTERVAL,
   })

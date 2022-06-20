@@ -124,6 +124,7 @@ export const ExpandableChannelsList: FC<ExpandableChannelsListProps> = ({
 const useChannelsListData = (queryType: ChannelsQueryType, selectedLanguage: string | null | undefined) => {
   const commonOpts: QueryHookOptions = {
     onError: (error) => SentryLogger.error('Failed to fetch channels', 'ExpandableChannelsList', error),
+    context: { delay: 2000 },
   }
   const commonWhere = {
     where: {
