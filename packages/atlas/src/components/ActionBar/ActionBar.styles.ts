@@ -6,6 +6,8 @@ import { Tooltip } from '@/components/Tooltip'
 import { Button } from '@/components/_buttons/Button'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
+import { Information } from '../Information'
+
 type ActionBarContainerProps = {
   isActive?: boolean
 }
@@ -35,30 +37,19 @@ export const ActionBarContainer = styled.div<ActionBarContainerProps>`
   ${media.md} {
     padding: ${sizes(4)} ${sizes(8)};
   }
-
-  ${media.lg} {
-    grid-template: 'primary-text secondary-text badge secondary-button primary-button' auto / max-content 1fr max-content max-content max-content;
-  }
 `
 
 export const StyledPrimaryText = styled(Text)`
-  grid-area: primary-text;
   align-self: center;
   padding: 6px 0;
 `
 
-export const StyledSecondaryText = styled(Text)`
-  display: none;
-  ${media.lg} {
-    grid-area: secondary-text;
-    max-width: 320px;
-    align-self: center;
-    display: block;
-  }
-`
-
 export const ActionButtonPrimaryTooltip = styled(Tooltip)`
   display: contents;
+`
+
+export const StyledInformation = styled(Information)`
+  margin-left: ${sizes(1)};
 `
 
 export const ActionButtonPrimary = styled(Button)<{ secondaryButtonExists: boolean }>`
@@ -101,4 +92,14 @@ export const DraftsBadgeContainer = styled.div`
 
 export const DetailsIconWrapper = styled.span`
   margin-left: ${sizes(2)};
+
+  path {
+    fill: ${cVar('colorText')};
+  }
+`
+
+export const FeeContainer = styled.div`
+  grid-area: primary-text;
+  display: flex;
+  align-items: center;
 `

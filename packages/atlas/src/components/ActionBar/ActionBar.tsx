@@ -14,9 +14,10 @@ import {
   ActionButtonPrimaryTooltip,
   DetailsIconWrapper,
   DraftsBadgeContainer,
+  FeeContainer,
   SecondaryButton,
+  StyledInformation,
   StyledPrimaryText,
-  StyledSecondaryText,
 } from './ActionBar.styles'
 
 import { NumberFormat } from '../NumberFormat'
@@ -47,12 +48,18 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
 
     return (
       <ActionBarContainer ref={ref} className={className} isActive={isActive}>
-        <StyledPrimaryText variant={smMatch ? 'h400' : 'h200'}>
-          Fee: <NumberFormat format="short" withToken value={fee ?? 0} />
-        </StyledPrimaryText>
-        <StyledSecondaryText variant="t100" secondary>
-          Every change to the blockchain requires making a nominal transaction.
-        </StyledSecondaryText>
+        <FeeContainer>
+          <StyledPrimaryText variant={smMatch ? 'h400' : 'h200'}>
+            Fee: <NumberFormat format="short" withToken value={fee ?? 0} />
+          </StyledPrimaryText>
+          <StyledInformation
+            multiline
+            icon
+            placement="top-end"
+            headerText="Blockchain transaction"
+            text="This action requires a blockchain transaction, which comes with a fee."
+          />
+        </FeeContainer>
         {infoBadge ? (
           <>
             <DraftsBadgeContainer ref={infoBadgeRef}>
