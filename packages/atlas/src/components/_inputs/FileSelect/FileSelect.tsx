@@ -84,7 +84,7 @@ export const FileSelect: FC<FileSelectProps> = ({
     [onUploadFile]
   )
 
-  const { getRootProps, getInputProps, isDragAccept, isFileDialogActive, open, acceptedFiles } = useDropzone({
+  const { getRootProps, getInputProps, isDragAccept, isFileDialogActive, open } = useDropzone({
     onDropAccepted,
     onDropRejected,
     maxFiles: 1,
