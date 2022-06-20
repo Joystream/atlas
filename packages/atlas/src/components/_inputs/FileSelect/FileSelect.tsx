@@ -55,16 +55,6 @@ export const FileSelect: FC<FileSelectProps> = ({
 }) => {
   const fileType = type === 'video-file' ? 'video' : 'image'
 
-  const selectedFileTransition = useTransition(isLoading, {
-    from: { opacity: 0, transform: 'scale(1.5)', x: '0%' },
-    enter: { opacity: 1, transform: 'scale(1)', x: '0%' },
-    leave: { opacity: 0, transform: 'scale(1)', x: '-200%' },
-    config: {
-      duration: 400,
-      easing: beazierEasing(0, 0, 0.58, 1),
-    },
-  })
-
   const innerContainerTransition = useTransition(fileType, {
     from: { x: '200%' },
     enter: { x: '0%' },
