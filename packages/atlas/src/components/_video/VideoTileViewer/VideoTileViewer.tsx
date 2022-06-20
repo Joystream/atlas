@@ -71,9 +71,9 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, details
       videoTitle={video?.title}
       kebabMenuItems={[
         {
-          icon: <SvgActionCopy />,
+          nodeStart: <SvgActionCopy />,
           onClick: handleCopyVideoURLClick,
-          title: 'Copy video URL',
+          label: 'Copy video URL',
         },
       ]}
       direction={direction}

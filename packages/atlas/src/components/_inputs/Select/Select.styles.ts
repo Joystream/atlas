@@ -1,156 +1,83 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
-import { SvgAlertsInformative24 } from '@/components/_icons'
-import { cVar, sizes, transitions, zIndex } from '@/styles'
+import { cVar, sizes } from '@/styles'
 
-export type SelectSizes = 'regular' | 'small'
+import { InputSize, getBaseInputStyles, getInputPadding, sharedInputStyles } from '../inputs.utils'
 
-type SelectWrapperProps = {
-  labelPosition?: 'top' | 'left'
-}
-
-export const SelectWrapper = styled.div<SelectWrapperProps>`
+export const SelectWrapper = styled.div`
   width: 100%;
   position: relative;
-  ${({ labelPosition }) =>
-    labelPosition === 'left' &&
-    css`
-      display: flex;
-      align-items: center;
-    `};
-`
-
-export const SelectLabel = styled.label`
-  flex-shrink: 0;
-`
-type LabelText = {
-  labelPosition?: 'top' | 'left'
-}
-
-export const LabelText = styled(Text)<LabelText>`
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  margin-bottom: ${({ labelPosition }) => (labelPosition === 'top' ? sizes(2) : 0)};
-  margin-right: ${({ labelPosition }) => (labelPosition === 'left' ? sizes(2) : 0)};
 `
 
 export const SelectMenuWrapper = styled.div`
   position: relative;
   width: 100%;
 `
+
+export const InlineLabel = styled(Text)`
+  white-space: nowrap;
+  margin-right: ${sizes(1)};
+`
+
+export const ValueAndPlaceholderText = styled(Text)`
+  text-overflow: ellipsis;
+  overflow: hidden;
+  margin-right: ${sizes(2)};
+  white-space: nowrap;
+`
+
 type SelectButtonProps = {
   isOpen?: boolean
-  filled?: boolean
   error?: boolean
   disabled?: boolean
-  size?: SelectSizes
+  inputSize: InputSize
 }
+
+export const NodeContainer = styled.div<{ isOpen?: boolean }>`
+  display: flex;
+  align-items: center;
+  margin-right: ${sizes(2)};
+
+  > svg > path {
+    fill: ${({ isOpen }) => (isOpen ? cVar('colorTextStrong') : cVar('colorText'))};
+    transition: ${cVar('animationTransitionFast')};
+  }
+`
+
 export const SelectButton = styled.button<SelectButtonProps>`
-  cursor: pointer;
   width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  background: none;
-  color: ${({ filled }) => (filled ? cVar('colorCoreNeutral50') : cVar('colorCoreNeutral300'))};
   text-align: left;
   display: flex;
-  justify-content: space-between;
+  justify-items: start;
   align-items: center;
-  box-shadow: ${({ isOpen, error, disabled }) =>
-    `0 0 0 1px ${
-      isOpen ? cVar('colorCoreBlue500') : error && !disabled ? cVar('colorCoreRed400') : cVar('colorCoreNeutral200')
-    }`};
-  font: ${cVar('typographyDesktopT200')} !important;
-  letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')} !important;
-  text-transform: ${cVar('typographyDesktopT200TextTransform')} !important;
-  min-height: ${sizes(10)};
-  ${({ size }) => {
-    switch (size) {
-      case 'regular':
-        return css`
-          padding: ${sizes(3)} ${sizes(4)} !important;
-        `
-      case 'small':
-        return css`
-          padding: 0 ${sizes(4)} !important;
-        `
+  min-height: 40px;
+
+  ${getInputPadding};
+  ${getBaseInputStyles}
+
+  ${({ isOpen }) => isOpen && sharedInputStyles.focus};
+
+  :focus {
+    ${NodeContainer} {
+      > svg > path {
+        fill: ${cVar('colorTextStrong')};
+      }
     }
-  }}
+  }
 
-  .chevron-bottom {
-    transition: all ${transitions.timings.regular} ${transitions.easing};
-    transform: rotate(${({ isOpen }) => (isOpen ? 180 : 0)}deg);
-    color: ${({ isOpen }) => (isOpen ? cVar('colorCoreBlue400') : 'inherit')};
-    margin-left: auto;
+  /* overwrite hover styles when input is open */
+
+  :hover:not(:disabled):not(:focus) {
+    ${({ isOpen, error }) => (isOpen ? sharedInputStyles.focus : error ? null : sharedInputStyles.hover)};
   }
 `
 
-type SelectMenuProps = {
-  isOpen?: boolean
-}
+export const SelectChevronWrapper = styled.div`
+  margin-left: auto;
+`
 
-export const SelectMenu = styled.ul<SelectMenuProps>`
+export const SelectMenu = styled.div`
   width: 100%;
-  max-height: 300px;
-  position: absolute;
-  overflow-y: auto;
-  z-index: ${zIndex.globalOverlay};
-  padding: 0;
-  margin-top: ${({ isOpen }) => (isOpen ? sizes(1) : 0)};
-  background-color: ${cVar('colorCoreNeutral700')};
-  color: ${cVar('colorCoreBaseWhite')};
-  list-style: none;
-`
-type SelectOptionProps = {
-  isSelected?: boolean
-}
-
-export const SelectOption = styled.li<SelectOptionProps>`
-  display: flex;
-  align-items: center;
-  margin: 0;
-  cursor: pointer;
-  padding: ${sizes(2.5)};
-  font: ${cVar('typographyDesktopT200')};
-  letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
-  text-transform: ${cVar('typographyDesktopT200TextTransform')};
-  background-color: ${({ isSelected }) => (isSelected ? cVar('colorCoreNeutral600') : 'none')};
-
-  :hover {
-    background-color: ${cVar('colorCoreNeutral600')};
-  }
-
-  *:first-of-type {
-    margin-right: ${sizes(2)};
-  }
-`
-
-export const StyledSvgGlyphInfo = styled(SvgAlertsInformative24)`
-  opacity: 0.5;
-
-  &:hover {
-    opacity: 1;
-  }
-`
-export const StyledPill = styled(Pill)`
-  margin-left: ${sizes(3)};
-`
-
-export const NodeContainer = styled.div`
-  position: absolute;
-  display: flex;
-  align-items: center;
-  z-index: 2;
-  top: 0;
-  bottom: 0;
-`
-
-export const ValueContainer = styled.span<{ hasIconLeft: boolean }>`
-  /* padding + icon width */
-  padding-left: ${({ hasIconLeft }) => (hasIconLeft ? sizes(2, true) + 24 : 0)}px;
+  position: relative;
 `

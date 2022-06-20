@@ -7,7 +7,6 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { SvgControlsCalendar } from '@/components/_icons'
 import { Popover, PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
-import { cVar } from '@/styles'
 
 import { Select, SelectItem, SelectProps } from '../Select'
 
@@ -43,7 +42,7 @@ export const AuctionDatePicker: FC<AuctionDatePickerProps> = ({
   items,
   value,
   onChange,
-  label,
+  inlineLabel,
   minDate,
   maxDate,
   ...rest
@@ -127,10 +126,8 @@ export const AuctionDatePicker: FC<AuctionDatePickerProps> = ({
   return (
     <Container>
       <Select<AuctionDatePickerValueWithPickDate>
-        size="small"
-        label={label}
-        labelTextProps={{ variant: 'h100', color: cVar('colorTextMuted'), secondary: true }}
-        iconLeft={isPickDate ? <SvgControlsCalendar /> : undefined}
+        inlineLabel={inlineLabel}
+        icon={isPickDate ? <SvgControlsCalendar /> : undefined}
         value={pickedValue || { type: 'default' }}
         items={mappedItems}
         onChange={handleSelect}

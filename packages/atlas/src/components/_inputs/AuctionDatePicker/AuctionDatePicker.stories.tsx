@@ -39,7 +39,7 @@ const Template: Story<AuctionDatePickerProps> = (args) => {
         ]}
         onChange={setStartDate}
         value={startDate}
-        label="starting date"
+        inlineLabel="starting date"
       />
       <AuctionDatePicker
         {...args}
@@ -47,7 +47,7 @@ const Template: Story<AuctionDatePickerProps> = (args) => {
         minDate={startDate instanceof Date ? startDate : null}
         onChange={setExpirationDate}
         value={expirationDate}
-        label="expiration date"
+        inlineLabel="expiration date"
       />
     </div>
   )

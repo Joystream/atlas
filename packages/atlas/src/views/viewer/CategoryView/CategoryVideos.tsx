@@ -11,6 +11,7 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionFilters } from '@/components/_icons'
 import { languages } from '@/config/languages'
+import { VIDEO_SORT_OPTIONS } from '@/config/sorting'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import {
@@ -24,11 +25,6 @@ import {
 import { FallbackWrapper } from './CategoryView.styles'
 
 const SELECT_LANGUAGE_ITEMS = [{ name: 'All languages', value: 'undefined' }, ...languages]
-
-const ADAPTED_SORT_OPTIONS = [
-  { name: 'newest', value: VideoOrderByInput.CreatedAtDesc },
-  { name: 'oldest', value: VideoOrderByInput.CreatedAtAsc },
-]
 
 export const CategoryVideos: FC<{ categoryId: string }> = ({ categoryId }) => {
   const smMatch = useMediaMatch('sm')
@@ -90,10 +86,10 @@ export const CategoryVideos: FC<{ categoryId: string }> = ({ categoryId }) => {
 
   const sortingNode = (
     <StyledSelect
-      size="small"
+      size="medium"
       value={sortVideosBy}
-      valueLabel="Sort by: "
-      items={ADAPTED_SORT_OPTIONS}
+      inlineLabel="Sort by"
+      items={VIDEO_SORT_OPTIONS}
       onChange={handleSorting}
     />
   )
@@ -111,7 +107,7 @@ export const CategoryVideos: FC<{ categoryId: string }> = ({ categoryId }) => {
             {smMatch ? (
               <StyledSelect
                 onChange={handleSelectLanguage}
-                size="small"
+                size="medium"
                 value={language}
                 items={SELECT_LANGUAGE_ITEMS}
               />

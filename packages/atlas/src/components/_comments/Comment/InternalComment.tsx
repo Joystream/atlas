@@ -119,16 +119,16 @@ export const InternalComment: FC<InternalCommentProps> = ({
     ...(isAbleToEdit
       ? [
           {
-            icon: <SvgActionEdit />,
+            nodeStart: <SvgActionEdit />,
             onClick: onEditClick,
-            title: 'Edit',
+            label: 'Edit',
           },
         ]
       : []),
     {
-      icon: <SvgActionTrash />,
+      nodeStart: <SvgActionTrash />,
       onClick: onDeleteClick,
-      title: 'Delete',
+      label: 'Delete',
       destructive: true,
     },
   ]

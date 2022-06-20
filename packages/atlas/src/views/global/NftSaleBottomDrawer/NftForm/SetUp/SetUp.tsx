@@ -210,8 +210,7 @@ export const SetUp: FC<SetUpProps> = ({
                     disableErrorAnimation
                   >
                     <AuctionDatePicker
-                      size="regular"
-                      label="Starts"
+                      inlineLabel="Starts"
                       error={!!error}
                       minDate={new Date()}
                       maxDate={endDate?.type === 'date' && endDate.date < maxStartDate ? endDate.date : maxStartDate}
@@ -238,8 +237,7 @@ export const SetUp: FC<SetUpProps> = ({
                       disableErrorAnimation
                     >
                       <AuctionDatePicker
-                        size="regular"
-                        label="Ends"
+                        inlineLabel="Ends"
                         error={!!error}
                         minDate={(startDate?.type === 'date' && startDate.date) || new Date()}
                         maxDate={maxEndDate}

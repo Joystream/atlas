@@ -81,7 +81,7 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
             {smMatch && selectedTabIndex === 0 && (
               <StyledSelect
                 onChange={handleSelectLanguage}
-                size="small"
+                size="medium"
                 value={language}
                 items={[{ name: 'All languages', value: 'undefined' }, ...languages]}
               />

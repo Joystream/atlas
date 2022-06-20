@@ -17,8 +17,12 @@ export default {
     size: 'large',
     type: 'text',
     placeholder: 'placeholder text',
+    error: false,
+    disabled: false,
   },
   argTypes: {
+    size: { control: { type: 'select', options: ['medium', 'large'] } },
+    type: { control: { type: 'select', options: ['text', 'password', 'number'] } },
     value: { table: { disable: true } },
     onChange: { table: { disable: true } },
     onBlur: { table: { disable: true } },

@@ -112,7 +112,7 @@ const InputComponent: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
   }
 
   if (actionButton && nodeEnd) {
-    ConsoleLogger.warn('Input: actionButton and nodeEnd are mutually exclusive. nodeEnd will be ignored.')
+    ConsoleLogger.error('Input: actionButton and nodeEnd are mutually exclusive. nodeEnd will be ignored.')
   }
 
   return (

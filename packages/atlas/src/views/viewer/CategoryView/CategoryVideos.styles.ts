@@ -36,7 +36,7 @@ export const ControlsContainer = styled.div`
   background-color: ${cVar('colorCoreBaseBlack')};
 
   ${media.sm} {
-    grid-template-columns: auto 160px 1fr 160px;
+    grid-template-columns: auto 180px 1fr 180px;
   }
 `
 
