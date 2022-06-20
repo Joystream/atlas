@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
 
-import { VideoFieldsFragment } from '@/api/queries'
+import { BasicVideoFieldsFragment } from '@/api/queries'
 import { Grid } from '@/components/Grid'
 
 import { VideoTileViewer } from '../VideoTileViewer'
@@ -12,7 +12,7 @@ const StyledVideoTile = styled(VideoTileViewer)`
 `
 
 type VideoGridProps = {
-  videos: VideoFieldsFragment[]
+  videos: BasicVideoFieldsFragment[]
 }
 export const VideoGrid: FC<VideoGridProps> = ({ videos }) => {
   return (

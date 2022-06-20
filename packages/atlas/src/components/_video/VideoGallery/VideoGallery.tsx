@@ -1,14 +1,14 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
 
-import { VideoFieldsFragment } from '@/api/queries'
+import { FullVideoFieldsFragment } from '@/api/queries'
 import { Gallery } from '@/components/Gallery'
 import { RankingNumberTile } from '@/components/RankingNumberTile'
 import { breakpoints } from '@/styles/breakpoints'
 
 import { VideoTileViewer } from '../VideoTileViewer'
 
-interface VideoFieldsWithProgress extends VideoFieldsFragment {
+interface VideoFieldsWithProgress extends FullVideoFieldsFragment {
   progress?: number
 }
 

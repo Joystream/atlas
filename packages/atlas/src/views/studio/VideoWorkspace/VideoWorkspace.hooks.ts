@@ -2,9 +2,9 @@ import { useApolloClient } from '@apollo/client'
 import { useCallback } from 'react'
 
 import {
-  GetVideosConnectionDocument,
-  GetVideosConnectionQuery,
-  GetVideosConnectionQueryVariables,
+  GetFullVideosConnectionDocument,
+  GetFullVideosConnectionQuery,
+  GetFullVideosConnectionQueryVariables,
   VideoOrderByInput,
 } from '@/api/queries'
 import { VideoExtrinsicResult, VideoInputAssets } from '@/joystream-lib'
@@ -112,8 +112,8 @@ export const useHandleVideoWorkspaceSubmit = () => {
           addAsset(assetsIds.thumbnailPhoto, { url: data.assets.thumbnailPhoto?.url })
         }
 
-        const fetchedVideo = await client.query<GetVideosConnectionQuery, GetVideosConnectionQueryVariables>({
-          query: GetVideosConnectionDocument,
+        const fetchedVideo = await client.query<GetFullVideosConnectionQuery, GetFullVideosConnectionQueryVariables>({
+          query: GetFullVideosConnectionDocument,
           variables: {
             orderBy: VideoOrderByInput.CreatedAtDesc,
             where: {

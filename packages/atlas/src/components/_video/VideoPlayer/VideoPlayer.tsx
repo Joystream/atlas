@@ -12,7 +12,7 @@ import {
 } from 'react'
 import { VideoJsPlayer } from 'video.js'
 
-import { VideoFieldsFragment } from '@/api/queries'
+import { FullVideoFieldsFragment } from '@/api/queries'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
@@ -55,7 +55,7 @@ import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
 export type VideoPlayerProps = {
   isVideoPending?: boolean
-  nextVideo?: VideoFieldsFragment | null
+  nextVideo?: FullVideoFieldsFragment | null
   className?: string
   videoStyle?: CSSProperties
   autoplay?: boolean

@@ -1,9 +1,9 @@
 import { Wallet, WalletAccount } from '@talisman-connect/wallets'
 
 import { useMemberships } from '@/api/hooks'
-import { AllMembershipFieldsFragment } from '@/api/queries'
+import { FullMembershipFieldsFragment } from '@/api/queries'
 
-export type Membership = AllMembershipFieldsFragment
+export type Membership = FullMembershipFieldsFragment
 export type ActiveUserState = {
   accountId: string | null
   memberId: string | null

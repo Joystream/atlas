@@ -1,7 +1,7 @@
-import { VideoFieldsFragment } from '@/api/queries'
+import { FullVideoFieldsFragment } from '@/api/queries'
 
 export type VideoHeroFeaturedVideo = {
-  video: VideoFieldsFragment
+  video: FullVideoFieldsFragment
   videoCutUrl: string
   thumbnailPhotoUrl?: string
   isLoadingThumbnail?: boolean

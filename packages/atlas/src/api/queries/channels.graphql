@@ -4,9 +4,9 @@ query GetBasicChannel($where: ChannelWhereUniqueInput!) {
   }
 }
 
-query GetChannel($where: ChannelWhereUniqueInput!) {
+query GetFullChannel($where: ChannelWhereUniqueInput!) {
   channelByUniqueInput(where: $where) {
-    ...AllChannelFields
+    ...FullChannelFields
   }
 }
 
@@ -16,13 +16,17 @@ query GetVideoCount($where: VideoWhereInput) {
   }
 }
 
-query GetChannels($where: ChannelWhereInput, $limit: Int = 50, $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]) {
+query GetBasicChannels(
+  $where: ChannelWhereInput
+  $limit: Int = 50
+  $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]
+) {
   channels(where: $where, orderBy: $orderBy, limit: $limit) {
-    ...AllChannelFields
+    ...BasicChannelFields
   }
 }
 
-query GetChannelsConnection(
+query GetBasicChannelsConnection(
   $first: Int
   $after: String
   $where: ChannelWhereInput
@@ -32,7 +36,7 @@ query GetChannelsConnection(
     edges {
       cursor
       node {
-        ...AllChannelFields
+        ...BasicChannelFields
       }
     }
     pageInfo {
@@ -68,7 +72,7 @@ query GetMostViewedChannelsConnection(
     edges {
       cursor
       node {
-        ...AllChannelFields
+        ...BasicChannelFields
       }
     }
     pageInfo {
@@ -90,7 +94,7 @@ query GetMostFollowedChannelsConnection(
     edges {
       cursor
       node {
-        ...AllChannelFields
+        ...BasicChannelFields
       }
     }
     pageInfo {

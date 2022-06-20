@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { SearchQuery, VideoFieldsFragment, useSearchLazyQuery } from '@/api/queries'
+import { BasicVideoFieldsFragment, SearchQuery, useSearchLazyQuery } from '@/api/queries'
 
 export const usePagination = (currentTab: number) => {
   const [currentPage, setCurrentPage] = useState(0)
@@ -17,7 +17,7 @@ const getVideosFromSearch = (loading: boolean, data: SearchQuery['search'] | und
   if (loading || !data) {
     return { channels: [], videos: [] }
   }
-  const foundVideos: Array<{ __typename?: 'Video' } & VideoFieldsFragment> = data.flatMap((result) =>
+  const foundVideos: Array<{ __typename?: 'Video' } & BasicVideoFieldsFragment> = data.flatMap((result) =>
     result.item.__typename === 'Video' ? [result.item] : []
   )
   return { foundVideos }

@@ -1,13 +1,13 @@
 import { FC, useState } from 'react'
 
-import { AllNftFieldsFragment } from '@/api/queries'
+import { FullNftFieldsFragment } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Grid } from '@/components/Grid'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 
 type MemberNFTsProps = {
-  nfts?: AllNftFieldsFragment[]
+  nfts?: FullNftFieldsFragment[]
   loading?: boolean
   owner?: boolean
   isFiltersApplied?: boolean

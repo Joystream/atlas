@@ -4,7 +4,7 @@ import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useComment, useCommentSectionComments, useUserCommentsReactions } from '@/api/hooks'
-import { CommentOrderByInput, VideoFieldsFragment } from '@/api/queries'
+import { CommentOrderByInput, FullVideoFieldsFragment } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Text } from '@/components/Text'
 import { LoadMoreButton } from '@/components/_buttons/LoadMoreButton'
@@ -30,7 +30,7 @@ import {
 
 type CommentsSectionProps = {
   disabled?: boolean
-  video?: VideoFieldsFragment | null
+  video?: FullVideoFieldsFragment | null
   videoLoading: boolean
   videoAuthorId?: string
 }
@@ -252,7 +252,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
               ))
               .concat(isFetchingMore && commentsLoading ? mappedPlaceholders : [])}
       </CommentWrapper>
-      {!mobileCommentsOpen && !commentsLoading && comments && comments.length && pageInfo?.hasNextPage && (
+      {!mobileCommentsOpen && !commentsLoading && comments && !!comments.length && pageInfo?.hasNextPage && (
         <LoadMoreCommentsWrapper>
           <LoadMoreButton label="Show more comments" onClick={handleLoadMoreClick} />
         </LoadMoreCommentsWrapper>

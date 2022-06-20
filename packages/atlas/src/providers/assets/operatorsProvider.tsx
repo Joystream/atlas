@@ -46,6 +46,7 @@ type OperatorsContextValue = {
 const OperatorsContext = createContext<OperatorsContextValue | undefined>(undefined)
 OperatorsContext.displayName = 'OperatorsContext'
 
+// TODO: fetch storage bags only in studio, not needed for viewer
 export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const distributionOperatorsMappingPromiseRef = useRef<Promise<BagOperatorsMapping>>()
   const storageOperatorsMappingPromiseRef = useRef<Promise<BagOperatorsMapping>>()

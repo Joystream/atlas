@@ -5,21 +5,21 @@ import { offsetLimitPagination, relayStylePagination } from '@apollo/client/util
 import { parseISO } from 'date-fns'
 
 import {
-  AllChannelFieldsFragment,
-  GetChannelsConnectionQueryVariables,
+  FullChannelFieldsFragment,
+  FullVideoFieldsFragment,
   GetNftsConnectionQueryVariables,
-  GetVideosConnectionQueryVariables,
   Query,
+  QueryChannelsConnectionArgs,
   QueryCommentsConnectionArgs,
+  QueryVideosConnectionArgs,
   SearchQueryVariables,
   VideoConnection,
-  VideoFieldsFragment,
   VideoOrderByInput,
 } from '../queries'
 
 const stringifyValue = (value: unknown) => JSON.stringify(value || {})
 
-const getVideoKeyArgs = (args: GetVideosConnectionQueryVariables | null) => {
+const getVideoKeyArgs = (args: QueryVideosConnectionArgs | null) => {
   const onlyCount = args?.first === 0
   const channel = stringifyValue(args?.where?.channel)
   const category = stringifyValue(args?.where?.category)
@@ -55,7 +55,7 @@ const getNftKeyArgs = (args: GetNftsConnectionQueryVariables | null) => {
   return `${OR}:${ownerMember}:${creatorChannel}:${status}:${auctionStatus}:${sorting}:${createdAt_gte}:${video}`
 }
 
-const getChannelKeyArgs = (args: GetChannelsConnectionQueryVariables | null) => {
+const getChannelKeyArgs = (args: QueryChannelsConnectionArgs | null) => {
   // make sure queries asking for a specific category are separated in cache
   const language = stringifyValue(args?.where?.language)
   const idIn = args?.where?.id_in || []
@@ -103,11 +103,16 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
     ...relayStylePagination(getVideoKeyArgs),
     read(
       existing: VideoConnection,
-      { args, readField }: { args: GetVideosConnectionQueryVariables | null; readField: ReadFieldFunction }
+      { args, readField }: { args: QueryVideosConnectionArgs | null; readField: ReadFieldFunction }
     ) {
       const isPublic = args?.where?.isPublic_eq
       const filteredEdges =
-        existing?.edges.filter((edge) => readField('isPublic', edge.node) === isPublic || isPublic === undefined) ?? []
+        existing?.edges.filter((edge) => {
+          if (isPublic == null) return true // ignore if filter not applied
+          const nodeFieldValue = readField('isPublic', edge.node)
+          if (nodeFieldValue == null) return true // if the node doesn't have isPublic field, ignore filter
+          return nodeFieldValue === isPublic
+        }) ?? []
 
       const sortingASC = args?.orderBy?.[0] === VideoOrderByInput.CreatedAtAsc
       const preSortedDESC = (filteredEdges || []).slice().sort((a, b) => {
@@ -183,12 +188,12 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
   },
 }
 
-const videoCacheFields: CachePolicyFields<keyof VideoFieldsFragment> = {
+const videoCacheFields: CachePolicyFields<keyof FullVideoFieldsFragment> = {
   createdAt: createDateHandler(),
   publishedBeforeJoystream: createDateHandler(),
 }
 
-const channelCacheFields: CachePolicyFields<keyof AllChannelFieldsFragment> = {
+const channelCacheFields: CachePolicyFields<keyof FullChannelFieldsFragment> = {
   createdAt: createDateHandler(),
 }
 

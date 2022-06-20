@@ -17,11 +17,11 @@ const createApolloClient = () => {
   })
 
   const orionLink = new HttpLink({ uri: ORION_GRAPHQL_URL })
-  const batchedOrionLink = new BatchHttpLink({ uri: ORION_GRAPHQL_URL, batchMax: 10 })
+  const batchedOrionLink = new BatchHttpLink({ uri: ORION_GRAPHQL_URL, batchMax: 10, batchInterval: 300 })
 
   const orionSplitLink = split(
     ({ operationName }) => {
-      return operationName === 'GetVideos' || operationName === 'GetVideoCount'
+      return operationName === 'GetBasicVideos'
     },
     batchedOrionLink,
     orionLink

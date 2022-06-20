@@ -1,7 +1,7 @@
 import { Dispatch, FC, SetStateAction, memo, useRef, useState } from 'react'
 
 import { useComment } from '@/api/hooks'
-import { CommentFieldsFragment, CommentStatus, VideoFieldsFragment } from '@/api/queries'
+import { CommentFieldsFragment, CommentStatus, FullVideoFieldsFragment } from '@/api/queries'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { ReactionId } from '@/config/reactions'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
@@ -22,7 +22,7 @@ import { CommentRowProps } from '../CommentRow'
 
 export type CommentProps = {
   commentId?: string
-  video?: VideoFieldsFragment | null
+  video?: FullVideoFieldsFragment | null
   userReactions?: number[]
   isReplyable?: boolean
   setHighlightedCommentId?: Dispatch<SetStateAction<string | null>>

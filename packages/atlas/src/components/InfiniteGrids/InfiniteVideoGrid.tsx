@@ -2,11 +2,11 @@ import { DocumentNode } from 'graphql'
 import { ReactNode, forwardRef, useCallback, useState } from 'react'
 
 import {
+  GetBasicVideosConnectionDocument,
+  GetBasicVideosConnectionQuery,
+  GetBasicVideosConnectionQueryVariables,
   GetMostViewedVideosConnectionQuery,
   GetMostViewedVideosConnectionQueryVariables,
-  GetVideosConnectionDocument,
-  GetVideosConnectionQuery,
-  GetVideosConnectionQueryVariables,
   VideoOrderByInput,
   VideoWhereInput,
 } from '@/api/queries'
@@ -51,12 +51,12 @@ type InfiniteVideoGridProps = {
 
 const INITIAL_VIDEOS_PER_ROW = 1
 
-type VideoQuery = GetVideosConnectionQuery | GetMostViewedVideosConnectionQuery
+type VideoQuery = GetBasicVideosConnectionQuery | GetMostViewedVideosConnectionQuery
 
 export const InfiniteVideoGrid = forwardRef<HTMLElement, InfiniteVideoGridProps>(
   (
     {
-      query = GetVideosConnectionDocument,
+      query = GetBasicVideosConnectionDocument,
       periodDays,
       limit,
       title,
@@ -81,7 +81,7 @@ export const InfiniteVideoGrid = forwardRef<HTMLElement, InfiniteVideoGridProps>
     const [initialGridResizeDone, setInitialGridResizeDone] = useState(false)
     const targetRowsCount = Math.max(_targetRowsCount, rowsToLoad)
 
-    const queryVariables: GetVideosConnectionQueryVariables & GetMostViewedVideosConnectionQueryVariables = {
+    const queryVariables: GetBasicVideosConnectionQueryVariables & GetMostViewedVideosConnectionQueryVariables = {
       periodDays,
       limit,
       orderBy,
@@ -104,10 +104,10 @@ export const InfiniteVideoGrid = forwardRef<HTMLElement, InfiniteVideoGridProps>
 
     const { placeholdersCount, displayedItems, error, totalCount, loading } = useInfiniteGrid<
       VideoQuery,
-      GetVideosConnectionQuery['videosConnection'],
-      GetVideosConnectionQueryVariables
+      GetBasicVideosConnectionQuery['videosConnection'],
+      GetBasicVideosConnectionQueryVariables
     >({
-      query: query || GetVideosConnectionDocument,
+      query: query || GetBasicVideosConnectionDocument,
       isReady: ready && initialGridResizeDone,
       skipCount,
       queryVariables,

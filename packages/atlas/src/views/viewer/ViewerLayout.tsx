@@ -54,7 +54,7 @@ const ENTRY_POINT_ROUTE = absoluteRoutes.viewer.index()
 export const ViewerLayout: FC = () => {
   const location = useLocation()
   const locationState = location.state as RoutingState
-  const { memberId, isWalletLoading } = useUser()
+  const { isLoggedIn, isWalletLoading } = useUser()
   const [localIsWalletLoading, setLocalIsWalletLoading] = useState(false)
 
   const navigate = useNavigate()
@@ -104,13 +104,13 @@ export const ViewerLayout: FC = () => {
                 <Route
                   path={relativeRoutes.viewer.editMembership()}
                   element={
-                    <PrivateRoute isAuth={!!memberId} element={<EditMembershipView />} redirectTo={ENTRY_POINT_ROUTE} />
+                    <PrivateRoute isAuth={isLoggedIn} element={<EditMembershipView />} redirectTo={ENTRY_POINT_ROUTE} />
                   }
                 />
                 <Route
                   path={absoluteRoutes.viewer.notifications()}
                   element={
-                    <PrivateRoute isAuth={!!memberId} element={<NotificationsView />} redirectTo={ENTRY_POINT_ROUTE} />
+                    <PrivateRoute isAuth={isLoggedIn} element={<NotificationsView />} redirectTo={ENTRY_POINT_ROUTE} />
                   }
                 />
                 <Route path="*" element={<NotFoundView />} />

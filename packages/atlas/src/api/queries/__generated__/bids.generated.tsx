@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { AllBidFieldsFragmentDoc } from './fragments.generated'
+import { FullBidFieldsFragmentDoc } from './fragments.generated'
 
 const defaultOptions = {} as const
 export type GetBidsQueryVariables = Types.Exact<{
@@ -61,10 +61,10 @@ export type GetBidsQuery = {
 export const GetBidsDocument = gql`
   query GetBids($where: BidWhereInput!) {
     bids(where: $where, orderBy: [createdAt_ASC]) {
-      ...AllBidFields
+      ...FullBidFields
     }
   }
-  ${AllBidFieldsFragmentDoc}
+  ${FullBidFieldsFragmentDoc}
 `
 
 /**

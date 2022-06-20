@@ -36,7 +36,7 @@ export const NewNftSales: FC = () => {
       ],
     },
     orderBy: OwnedNftOrderByInput.CreatedAtDesc,
-    first: 10,
+    first: 8,
   })
   const handleResizeGrid = (sizes: number[]) => setTilesPerRow(sizes.length)
 

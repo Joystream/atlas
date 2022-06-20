@@ -1,11 +1,11 @@
 import { FC, useCallback, useMemo } from 'react'
 
-import { AllChannelFieldsFragment, VideoFieldsFragment } from '@/api/queries'
-import { ResultTitle } from '@/components/Searchbar/SearchBox/ResultTitle'
+import { BasicChannelFieldsFragment, BasicVideoFieldsFragment } from '@/api/queries'
 import { Text } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset } from '@/providers/assets'
 
+import { ResultTitle } from './ResultTitle'
 import { ResultWrapper } from './ResultWrapper'
 import {
   ResultContent,
@@ -16,8 +16,8 @@ import {
 } from './SearchBox.styles'
 
 type ResultProps = {
-  video?: VideoFieldsFragment
-  channel?: AllChannelFieldsFragment
+  video?: BasicVideoFieldsFragment
+  channel?: BasicChannelFieldsFragment
   query?: string
   selected?: boolean
   handleSelectedItem: (top: number, title?: string | null) => void

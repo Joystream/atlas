@@ -1,7 +1,7 @@
 import { QueryHookOptions } from '@apollo/client'
 import { FC, Fragment, useState } from 'react'
 
-import { useChannels, useDiscoverChannels, usePopularChannels, usePromisingChannels } from '@/api/hooks'
+import { useBasicChannels, useDiscoverChannels, usePopularChannels, usePromisingChannels } from '@/api/hooks'
 import { ChannelOrderByInput } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridHeadingContainer, TitleContainer } from '@/components/GridHeading'
@@ -135,7 +135,7 @@ const useChannelsListData = (queryType: ChannelsQueryType, selectedLanguage: str
   const popular = usePopularChannels(commonWhere, { ...commonOpts, skip: queryType !== 'popular' })
   const promising = usePromisingChannels(commonWhere, { ...commonOpts, skip: queryType !== 'promising' })
   // regular channels query needs explicit limit and sorting as it's not defined by Orion
-  const regular = useChannels(
+  const regular = useBasicChannels(
     {
       limit: 15,
       orderBy: ChannelOrderByInput.CreatedAtAsc,

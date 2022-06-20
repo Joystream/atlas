@@ -1,6 +1,5 @@
 import { QueryHookOptions } from '@apollo/client'
 
-import { VideoFieldsFragment } from '@/api/queries'
 import {
   GetAllCategoriesFeaturedVideosQuery,
   GetAllCategoriesFeaturedVideosQueryVariables,
@@ -9,11 +8,6 @@ import {
   useGetAllCategoriesFeaturedVideosQuery,
   useGetCategoriesFeaturedVideosQuery,
 } from '@/api/queries/__generated__/featured.generated'
-
-export type CategoriesFeaturedVideos = Record<
-  string,
-  Array<VideoFieldsFragment & { videoCutUrl?: string | null }> | undefined
->
 
 export const useAllCategoriesFeaturedVideos = (
   opts?: QueryHookOptions<GetAllCategoriesFeaturedVideosQuery, GetAllCategoriesFeaturedVideosQueryVariables>
