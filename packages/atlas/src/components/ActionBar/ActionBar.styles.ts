@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
@@ -57,27 +58,21 @@ export const StyledSecondaryText = styled(Text)`
 `
 
 export const ActionButtonPrimaryTooltip = styled(Tooltip)`
-  grid-area: primary-button;
+  display: contents;
 `
 
-export const ActionButtonPrimary = styled(Button)`
+export const ActionButtonPrimary = styled(Button)<{ secondaryButtonExists: boolean }>`
   grid-area: primary-button;
 
-  &:first-of-type {
-    grid-column: 1 / span 2;
-  }
+  ${({ secondaryButtonExists }) =>
+    !secondaryButtonExists &&
+    css`
+      grid-column: 1 / span 2;
 
-  ${media.sm} {
-    &:first-of-type {
-      grid-column: 3;
-    }
-  }
-
-  ${media.lg} {
-    &:first-of-type {
-      grid-column: 4;
-    }
-  }
+      ${media.sm} {
+        grid-column: -3 / span 2;
+      }
+    `}
 `
 
 export const SecondaryButton = styled(Button)`

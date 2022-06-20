@@ -78,7 +78,12 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
           </SecondaryButton>
         </CSSTransition>
         <ActionButtonPrimaryTooltip placement="top-end" {...primaryButton?.tooltip}>
-          <ActionButtonPrimary {...primaryButton} size={smMatch ? 'large' : 'medium'} type="submit">
+          <ActionButtonPrimary
+            {...primaryButton}
+            secondaryButtonExists={!!secondaryButton}
+            size={smMatch ? 'large' : 'medium'}
+            type="submit"
+          >
             {primaryButton.text}
           </ActionButtonPrimary>
         </ActionButtonPrimaryTooltip>
