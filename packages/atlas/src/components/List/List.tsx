@@ -2,8 +2,7 @@ import React from 'react'
 
 import { ListWrapper } from './List.styles'
 
-import { ListItem, ListItemProps } from '../ListItem'
-import { ListItemSizes } from '../ListItem/ListItem.styles'
+import { ListItem, ListItemProps, ListItemSizes } from '../ListItem'
 
 type ListProps = {
   className?: string

@@ -1,9 +1,8 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { ListItemSizes } from '@/components/ListItem'
 import { cVar, sizes, zIndex } from '@/styles'
-
-import { ListItemSizes } from '../ListItem/ListItem.styles'
 
 type ListWrapperProps = {
   scrollable: boolean

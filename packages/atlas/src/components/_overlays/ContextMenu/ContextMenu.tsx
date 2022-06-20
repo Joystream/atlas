@@ -2,8 +2,7 @@ import styled from '@emotion/styled'
 import { FC, useRef } from 'react'
 
 import { List } from '@/components/List'
-import { ListItemProps } from '@/components/ListItem'
-import { ListItemSizes } from '@/components/ListItem/ListItem.styles'
+import { ListItemProps, ListItemSizes } from '@/components/ListItem'
 
 import { Popover, PopoverImperativeHandle, PopoverProps } from '../Popover'
 

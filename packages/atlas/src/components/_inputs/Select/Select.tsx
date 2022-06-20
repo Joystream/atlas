@@ -84,7 +84,7 @@ export const _Select = <T extends unknown>(
   })
 
   if (inlineLabel && icon) {
-    ConsoleLogger.warn('Select: inlineLabel and icon are mutually exclusive. icon will be ignored.')
+    ConsoleLogger.error('Select: inlineLabel and icon are mutually exclusive. icon will be ignored.')
   }
 
   const selectedItem = useMemo(
