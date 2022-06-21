@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import { FC } from 'react'
 
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { media, sizes } from '@/styles'
@@ -25,7 +25,7 @@ export type OptionCardGroupProps = {
   className?: string
 }
 
-export const OptionCardGroupRadio: React.FC<OptionCardGroupProps & Radio> = ({
+export const OptionCardGroupRadio: FC<OptionCardGroupProps & Radio> = ({
   onChange,
   disabled,
   error,
