@@ -39,7 +39,7 @@ export const FileHoverOverlay = styled.div`
   }
 `
 
-export const FileSelectedOverlay = styled.div`
+export const FileSelectedOverlay = styled(animated.div)`
   position: absolute;
   top: 0;
   left: 0;
@@ -104,39 +104,6 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
   }
 `
 
-export const SelectedFileInfo = styled(animated.div)<LoadingProp>`
-  top: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`
-
-export const SelectedFileInfoInnerContainer = styled(animated.div)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`
-
-export const SelectedFileInfoHeading = styled(Text)`
-  color: ${cVar('colorCoreBlue200')};
-  display: block;
-  margin: ${sizes(4)} 0 ${sizes(1)} 0;
-`
-
-export const SelectedFileInfoBackground = styled.div`
-  width: 100%;
-  position: absolute;
-  z-index: -1;
-  opacity: 0.2;
-  background-color: ${cVar('colorCoreBlue500')};
-  height: 100%;
-`
-
 export const Content = styled(animated.div, { shouldForwardProp: (prop) => prop !== 'isLoading' })<LoadingProp>`
   position: absolute;
   z-index: 1;
@@ -166,6 +133,7 @@ export const Thumbnail = styled(animated.img, { shouldForwardProp: (prop) => pro
   display: block;
   opacity: ${({ isLoading }) => (isLoading ? 0.1 : 1)};
   transition: opacity 400ms ease-out;
+  padding: 1px;
 `
 
 export const Title = styled(Text)`

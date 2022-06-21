@@ -243,7 +243,7 @@ export const MultiFileSelect: FC<MultiFileSelectProps> = memo(
           maxSize={step === 'video' ? maxVideoSize : maxImageSize}
           onUploadFile={handleUploadFile}
           onReAdjustThumbnail={handleReAdjustThumbnail}
-          isLoading={isVideoLoading || isImgLoading}
+          isFileLoading={isVideoLoading || isImgLoading}
           type={step === 'video' ? 'video-file' : 'video-thumbnail'}
           thumbnailUrl={files.thumbnail?.url}
           error={error}

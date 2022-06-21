@@ -33,7 +33,7 @@ export type FileSelectProps = {
   file: File | undefined
   onUploadFile: (file: File) => void
   thumbnailUrl?: string | null
-  isLoading?: boolean
+  isFileLoading?: boolean
   onReAdjustThumbnail?: () => void
   onDropRejected?: (fileRejections: FileRejection[]) => void
   onError?: (error: string | null, fileType: FileType) => void
@@ -49,11 +49,21 @@ export const FileSelect: FC<FileSelectProps> = ({
   onDropRejected,
   onError,
   error,
-  isLoading,
+  isFileLoading,
   type,
   file,
 }) => {
   const fileType = type === 'video-file' ? 'video' : 'image'
+
+  const selectedFileTransition = useTransition(isFileLoading, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 },
+    config: {
+      duration: 400,
+      easing: beazierEasing(0, 0, 0.58, 1),
+    },
+  })
 
   const innerContainerTransition = useTransition(fileType, {
     from: { x: '200%' },
@@ -152,14 +162,14 @@ export const FileSelect: FC<FileSelectProps> = ({
           {innerContainerTransition((style, item) =>
             thumbnailUrl && fileType === 'image' ? (
               <Thumbnail
-                isLoading={isLoading}
+                isLoading={isFileLoading}
                 src={thumbnailUrl}
                 alt="video thumbnail"
                 onClick={handleReAdjustThumbnail}
                 title="Click to readjust"
               />
             ) : (
-              <Content key={item} style={style} isLoading={isLoading}>
+              <Content key={item} style={style} isLoading={isFileLoading}>
                 {fileType === 'video' ? <SvgIllustrativeVideo /> : <SvgIllustrativeImage />}
                 <Title as="span" variant="h400">
                   {title}
@@ -185,16 +195,20 @@ export const FileSelect: FC<FileSelectProps> = ({
             Drop file here to upload it
           </Text>
         </FileHoverOverlay>
-        {!!file && (
-          <FileSelectedOverlay>
-            <SvgIllustrativeFileSelected />
-            <Text margin={{ top: 2 }} color={cVar('colorCoreBlue200')} variant="t100">
-              selected
-            </Text>
-            <Text margin={{ top: 1 }} variant="t200">
-              {file.name}
-            </Text>
-          </FileSelectedOverlay>
+        {selectedFileTransition(
+          (styles, item) =>
+            !!file &&
+            item && (
+              <FileSelectedOverlay style={{ opacity: styles.opacity }}>
+                <SvgIllustrativeFileSelected />
+                <Text margin={{ top: 2 }} color={cVar('colorCoreBlue200')} variant="t100">
+                  selected
+                </Text>
+                <Text margin={{ top: 1 }} variant="t200">
+                  {file.name}
+                </Text>
+              </FileSelectedOverlay>
+            )
         )}
       </DragAndDropArea>
     </>
