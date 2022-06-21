@@ -8,8 +8,8 @@ import {
   NodeWidthProps,
   getBaseInputStyles,
   getInputPadding,
+  getSharedInputStyles,
   horizontalPadding,
-  sharedInputStyles,
 } from '../inputs.utils'
 
 type TextInputProps = {
@@ -82,7 +82,7 @@ export const InputContainer = styled.div<{ size: InputSize }>`
 
   :focus-within {
     ${TextInput} {
-      ${sharedInputStyles.focus};
+      ${getSharedInputStyles().focus};
     }
     ${NodeContainer} {
       > svg > path {

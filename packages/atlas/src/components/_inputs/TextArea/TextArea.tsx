@@ -1,8 +1,11 @@
-import { ChangeEvent, FC, ForwardRefRenderFunction, forwardRef, useEffect, useState } from 'react'
+import { ChangeEvent, ForwardRefRenderFunction, forwardRef, useState } from 'react'
 
-import { HelperTextCount, StyledTextArea } from './TextArea.styles'
+import { Text } from '@/components/Text'
+import { cVar } from '@/styles'
 
-import { InputBase, InputBaseProps } from '../InputBase'
+import { CustomBorder, StyledText, StyledTextArea, TextAreaContainer, TextAreaWrapper } from './TextArea.styles'
+
+import { InputSize } from '../inputs.utils'
 
 export type TextAreaProps = {
   name?: string
@@ -11,10 +14,14 @@ export type TextAreaProps = {
   onBlur?: (event: ChangeEvent<HTMLTextAreaElement>) => void
   value?: string
   className?: string
-  warning?: boolean
+  size?: InputSize
   rows?: number
   spellcheck?: boolean
-} & InputBaseProps
+  error?: boolean
+  counter?: boolean
+  maxLength?: number | undefined
+  disabled?: boolean
+}
 
 const TextAreaComponent: ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaProps> = (
   {
@@ -23,74 +30,66 @@ const TextAreaComponent: ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaP
     name,
     placeholder,
     value,
-    rows = 5,
+    rows,
     disabled,
+    counter,
     spellcheck = true,
     maxLength,
-    warning,
     error,
-    ...inputBaseProps
+    size = 'large',
   },
   ref
 ) => {
   const [charactersCount, setCharactersCount] = useState(0)
 
+  const defaultRows = size === 'medium' ? 4 : 3
+  const _rows = rows ? rows : defaultRows
+
   const handleOnChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setCharactersCount(e.target.value.length)
     onChange?.(e)
+    if (!counter) {
+      return
+    }
+    setCharactersCount(e.target.value.length)
   }
 
   return (
-    <InputBase disabled={disabled} charactersCount={charactersCount} {...inputBaseProps}>
-      <StyledTextArea
-        name={name}
-        ref={ref}
-        disabled={disabled}
-        placeholder={placeholder}
-        onChange={handleOnChange}
-        value={value}
-        rows={rows}
-        spellCheck={spellcheck}
-        onBlur={onBlur}
-      />
-      {charactersCount ? (
-        <CharacterCounter warning={warning} error={error} charactersCount={charactersCount} maxLength={maxLength} />
+    <TextAreaWrapper>
+      <TextAreaContainer>
+        <StyledTextArea
+          name={name}
+          ref={ref}
+          error={error}
+          inputSize={size}
+          disabled={disabled}
+          placeholder={placeholder}
+          onChange={handleOnChange}
+          value={value}
+          rows={_rows}
+          spellCheck={spellcheck}
+          onBlur={onBlur}
+        />
+        <CustomBorder disabled={disabled} />
+      </TextAreaContainer>
+      {counter && maxLength ? (
+        <StyledText disabled={disabled} variant="t100" color={cVar('colorTextMuted')}>
+          <Text
+            variant="t100"
+            color={
+              charactersCount
+                ? charactersCount > maxLength
+                  ? cVar('colorTextError')
+                  : cVar('colorTextStrong')
+                : cVar('colorTextMuted')
+            }
+          >
+            {charactersCount}
+          </Text>{' '}
+          / {maxLength}
+        </StyledText>
       ) : null}
-    </InputBase>
+    </TextAreaWrapper>
   )
-}
-
-export type CharacterCounterProps = {
-  error?: boolean
-  warning?: boolean
-  maxLength?: number
-  charactersCount?: number
-}
-
-export const CharacterCounter: FC<CharacterCounterProps> = ({ maxLength, charactersCount }) => {
-  const [charactersWarning, setCharactersWarning] = useState<'warning' | 'error' | null>(null)
-
-  useEffect(() => {
-    if (!maxLength || !charactersCount) {
-      return
-    }
-    const warningLength = maxLength * 0.8
-
-    if (charactersCount > warningLength) {
-      setCharactersWarning('warning')
-    } else {
-      setCharactersWarning(null)
-    }
-    if (charactersCount > maxLength) {
-      setCharactersWarning('error')
-    }
-  }, [charactersCount, maxLength])
-
-  return charactersWarning === 'warning' || charactersWarning === 'error' ? (
-    <HelperTextCount variant="t100" helperTextVariant={charactersWarning} secondary>
-      {charactersCount}/{maxLength}
-    </HelperTextCount>
-  ) : null
 }
 
 export const TextArea = forwardRef(TextAreaComponent)
