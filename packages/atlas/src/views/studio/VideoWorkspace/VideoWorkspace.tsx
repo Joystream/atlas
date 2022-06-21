@@ -63,7 +63,7 @@ export const VideoWorkspace: FC = memo(() => {
     secondaryButton:
       isEdit && formStatus?.isDirty
         ? {
-            text: isEdit ? 'Cancel' : undefined,
+            text: 'Cancel',
             onClick: () => formStatus?.triggerReset?.(),
           }
         : undefined,

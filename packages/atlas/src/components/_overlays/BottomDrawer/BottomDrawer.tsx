@@ -77,9 +77,7 @@ export const BottomDrawer: FC<BottomDrawerProps> = ({
           <ScrollContainer actionBarHeight={actionBarHeight} fixedScrollbar={fixedScrollbar}>
             {children}
           </ScrollContainer>
-          {actionBarProps ? (
-            <StyledActionBar ref={actionBarRef} {...actionBarProps} secondaryButton={undefined} />
-          ) : null}
+          {actionBarProps ? <StyledActionBar ref={actionBarRef} {...actionBarProps} /> : null}
         </Container>
       </CSSTransition>
     </>
