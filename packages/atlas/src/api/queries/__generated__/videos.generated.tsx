@@ -75,7 +75,6 @@ export type GetFullVideoQuery = {
     createdAt: Date
     isPublic?: boolean | null
     isExplicit?: boolean | null
-    isFeatured: boolean
     hasMarketing?: boolean | null
     isCensored: boolean
     isCommentSectionEnabled: boolean
@@ -565,7 +564,6 @@ export type GetFullVideosConnectionQuery = {
         createdAt: Date
         isPublic?: boolean | null
         isExplicit?: boolean | null
-        isFeatured: boolean
         hasMarketing?: boolean | null
         isCensored: boolean
         isCommentSectionEnabled: boolean
@@ -1043,7 +1041,6 @@ export type GetFullVideosQuery = {
     createdAt: Date
     isPublic?: boolean | null
     isExplicit?: boolean | null
-    isFeatured: boolean
     hasMarketing?: boolean | null
     isCensored: boolean
     isCommentSectionEnabled: boolean
