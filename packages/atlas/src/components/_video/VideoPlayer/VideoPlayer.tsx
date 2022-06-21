@@ -13,6 +13,9 @@ import {
 import { VideoJsPlayer } from 'video.js'
 
 import { FullVideoFieldsFragment } from '@/api/queries'
+import { Popover } from '@/components/_overlays/Popover'
+import { Setting, Settings } from '@/components/_video/Settings'
+import { AVAILABLE_PLAYBACK_SPEEDS } from '@/config/player'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
@@ -39,6 +42,8 @@ import {
   StyledSvgControlsPipOn,
   StyledSvgControlsPlay,
   StyledSvgControlsReplay,
+  StyledSvgControlsSettingsOutline,
+  StyledSvgControlsSettingsSolid,
   StyledSvgControlsSmallScreen,
   StyledSvgControlsSoundLowVolume,
   StyledSvgControlsVideoModeCinemaView,
@@ -96,22 +101,39 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
   const [isPlaying, setIsPlaying] = useState(false)
+  const settingsButtonRef = useRef<HTMLButtonElement>(null)
+
   const {
     currentVolume,
     cachedVolume,
     cinematicView,
-    actions: { setCurrentVolume, setCachedVolume, setCinematicView },
+    playbackRate,
+    actions: { setCurrentVolume, setCachedVolume, setCinematicView, setPlaybackRate },
   } = usePersonalDataStore((state) => state)
   const [volumeToSave, setVolumeToSave] = useState(0)
 
   const [videoTime, setVideoTime] = useState(0)
   const [isFullScreen, setIsFullScreen] = useState(false)
   const [isPiPEnabled, setIsPiPEnabled] = useState(false)
+  const [isSettingsOpened, setIsSettingsOpened] = useState(false)
 
   const [playerState, setPlayerState] = useState<PlayerState>('loading')
   const [isLoaded, setIsLoaded] = useState(false)
   const [needsManualPlay, setNeedsManualPlay] = useState(!autoplay)
   const mdMatch = useMediaMatch('md')
+
+  const settings: Setting[] = [
+    {
+      label: 'Speed',
+      value: playbackRate === 1 ? `Normal (${playbackRate}x)` : `${playbackRate}x`,
+      options: AVAILABLE_PLAYBACK_SPEEDS.map((s) => ({
+        checked: playbackRate === s,
+        onSettingClick: (opt) => setPlaybackRate(Number(opt.value)),
+        value: s,
+        label: s === 1 ? `Normal (${s}x)` : `${s}x`,
+      })),
+    },
+  ]
 
   const playVideo = useCallback(
     async (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => {
@@ -204,6 +226,13 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
       player.off('error', handler)
     }
   })
+
+  useEffect(() => {
+    if (!player) {
+      return
+    }
+    player.playbackRate(playbackRate)
+  }, [playbackRate, player])
 
   // handle video loading
   useEffect(() => {
@@ -485,6 +514,11 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     }
   }
 
+  const handleToggleSettings = (event: MouseEvent) => {
+    event.stopPropagation()
+    setIsSettingsOpened((opened) => !opened)
+  }
+
   const onVideoClick = useCallback(
     () =>
       player?.paused()
@@ -583,11 +617,25 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                       )}
                     </PlayerControlButton>
                   )}
+
                   {isPiPSupported && (
                     <PlayerControlButton onClick={handlePictureInPicture} tooltipText="Picture-in-picture">
                       {isPiPEnabled ? <StyledSvgControlsPipOff /> : <StyledSvgControlsPipOn />}
                     </PlayerControlButton>
                   )}
+                  <PlayerControlButton ref={settingsButtonRef} onClick={handleToggleSettings} tooltipText="Config">
+                    {isSettingsOpened ? <StyledSvgControlsSettingsSolid /> : <StyledSvgControlsSettingsOutline />}
+                  </PlayerControlButton>
+                  <Popover
+                    placement="top"
+                    offset={[0, 8]}
+                    triggerTarget={settingsButtonRef.current}
+                    trigger={null}
+                    onHide={() => setIsSettingsOpened(false)}
+                    onShow={() => setIsSettingsOpened(true)}
+                  >
+                    <Settings settings={settings} />
+                  </Popover>
                   <PlayerControlButton
                     isDisabled={!isFullScreenEnabled}
                     tooltipPosition="right"

@@ -9,6 +9,8 @@ import {
   SvgControlsPipOn,
   SvgControlsPlay,
   SvgControlsReplay,
+  SvgControlsSettingsOutline,
+  SvgControlsSettingsSolid,
   SvgControlsSmallScreen,
   SvgControlsSoundLowVolume,
   SvgControlsSoundOff,
@@ -77,6 +79,13 @@ export const StyledSvgControlsSmallScreen = styled(SvgControlsSmallScreen)`
 `
 
 export const StyledSvgControlsFullScreen = styled(SvgControlsFullScreen)`
+  ${defaultIconColor};
+`
+
+export const StyledSvgControlsSettingsSolid = styled(SvgControlsSettingsSolid)`
+  ${defaultIconColor};
+`
+export const StyledSvgControlsSettingsOutline = styled(SvgControlsSettingsOutline)`
   ${defaultIconColor};
 `
 
@@ -274,7 +283,7 @@ export const CurrentTime = styled(Text)`
 
 export const ScreenControls = styled.div`
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-auto-flow: column;
   gap: 0.25em;
   margin-left: auto;
 

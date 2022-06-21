@@ -9,8 +9,8 @@ export default {
 } as Meta<SettingsProps>
 
 const Template: Story<SettingsProps> = (args) => {
-  const [quality, setQuality] = useState<number | string>(320)
-  const [speed, setSpeed] = useState<number | string>(1.5)
+  const [quality, setQuality] = useState(320)
+  const [speed, setSpeed] = useState(1.5)
 
   const availableSpeeds = [2, 1.5, 1.25, 1, 0.5, 0.25]
   const availableQualities = [1440, 1080, 720, 480, 320, 240]
@@ -21,7 +21,7 @@ const Template: Story<SettingsProps> = (args) => {
       value: `Normal (${speed}x) speed`,
       options: availableSpeeds.map((s) => ({
         checked: speed === s,
-        onSettingClick: (opt) => setSpeed(opt.value),
+        onSettingClick: (opt) => setSpeed(Number(opt.value)),
         value: s,
         label: `${s}x`,
       })),
@@ -33,7 +33,7 @@ const Template: Story<SettingsProps> = (args) => {
         checked: q === quality,
         label: `${q}p`,
         value: q,
-        onSettingClick: (opt) => setQuality(opt.value),
+        onSettingClick: (opt) => setQuality(Number(opt.value)),
       })),
     },
   ]

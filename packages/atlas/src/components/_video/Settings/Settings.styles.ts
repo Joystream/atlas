@@ -3,9 +3,9 @@ import styled from '@emotion/styled'
 import { cVar, sizes } from '@/styles'
 
 export const SettingsWrapper = styled.section`
-  backdrop-filter: blur(32px);
-  width: 256px;
   background-color: ${cVar('colorCoreNeutral700Darken')};
+  width: 256px;
+  backdrop-filter: blur(32px);
 `
 
 export const SettingsHeader = styled.header`

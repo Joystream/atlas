@@ -11,14 +11,16 @@ import {
   SettingsWrapper,
 } from './Settings.styles'
 
+export type SettingValue = string | number | boolean
+
 type SettingsListItemProps = {
   label: string
-  value: string | number
+  value: SettingValue
   // for options
   isValueHidden?: boolean
   checked?: boolean
   toggleable?: boolean
-  onSettingClick?: (setting: { value: string | number; label: string }) => void
+  onSettingClick?: (setting: { value: SettingValue; label: string }) => void
 }
 
 export type SettingsProps = {
@@ -30,9 +32,9 @@ export type Setting = {
 } & SettingsListItemProps
 
 export const Settings: FC<SettingsProps> = ({ settings }) => {
-  const [openedOption, setOpenedOption] = useState<string | null>('')
+  const [openedOption, setOpenedOption] = useState<string | null>(null)
 
-  const ss: Setting[] = settings.map((s) => ({
+  const baseMenu: Setting[] = settings.map((s) => ({
     ...s,
     onSettingClick: ({ label }) => setOpenedOption(label),
   }))
@@ -52,13 +54,15 @@ export const Settings: FC<SettingsProps> = ({ settings }) => {
   return (
     <>
       {openedOption === null ? (
-        <SettingList title="Settings" settings={ss} />
+        <SettingList title="Settings" settings={baseMenu} />
       ) : (
         <SettingList
           title={openedOption}
           isValueHidden
           isOption
-          onHeaderClick={() => setOpenedOption(null)}
+          onHeaderClick={() => {
+            return setOpenedOption(null)
+          }}
           settings={options}
         />
       )}
@@ -83,7 +87,12 @@ export const SettingList: FC<SettingsListProps> = ({
 }) => {
   return (
     <SettingsWrapper>
-      <SettingsHeader onClick={onHeaderClick}>
+      <SettingsHeader
+        onClick={(e) => {
+          e.stopPropagation()
+          onHeaderClick?.()
+        }}
+      >
         {isOption && <SvgActionChevronL />}
         <Text variant="h100" secondary>
           {title}
@@ -107,7 +116,12 @@ const SettingsListItem: FC<SettingsListItemProps> = ({
   isValueHidden = false,
 }) => {
   return (
-    <SettingsListItemWrapper onClick={() => onSettingClick?.({ value, label })}>
+    <SettingsListItemWrapper
+      onClick={(e) => {
+        e.stopPropagation()
+        onSettingClick?.({ value, label })
+      }}
+    >
       <GridWrapper>
         {checked && !toggleable && <SvgActionCheck />}
         <Text variant="t200">{label}</Text>
