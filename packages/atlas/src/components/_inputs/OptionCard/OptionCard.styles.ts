@@ -58,12 +58,14 @@ export const IconContainer = styled.div<OptionCardLabelProps>`
 `
 
 export const OptionCardLabel = styled.label<OptionCardLabelProps>`
+  --border-height: ${({ checked }) => (checked ? '-2px' : '-1px')};
+
   padding: ${sizes(4)};
   display: flex;
   flex-direction: column;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-  box-shadow: inset 0 -1px 0 0 ${getOptionCardBorderColor};
-  transition: background-color ${cVar('animationTransitionFast')}, border-color ${cVar('animationTransitionFast')};
+  box-shadow: inset 0 var(--border-height) 0 0 ${getOptionCardBorderColor};
+  transition: all ${cVar('animationTransitionFast')};
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
   background: ${cVar('colorBackgroundMutedAlpha')};
 
@@ -73,7 +75,7 @@ export const OptionCardLabel = styled.label<OptionCardLabelProps>`
       :focus-within,
       :hover {
         background: ${cVar('colorBackgroundAlpha')};
-        box-shadow: inset 0 -1px 0 0 ${getOptionCardBorderColorHover({ checked, error, disabled })};
+        box-shadow: inset 0 var(--border-height) 0 0 ${getOptionCardBorderColorHover({ checked, error, disabled })};
 
         ${IconContainer} {
           * path {
@@ -85,7 +87,7 @@ export const OptionCardLabel = styled.label<OptionCardLabelProps>`
 
   :active {
     background: ${cVar('colorBackgroundMutedAlpha')};
-    box-shadow: inset 0 -1px 0 0 ${getOptionCardBorderColorActive};
+    box-shadow: inset 0 var(--border-height) 0 0 ${getOptionCardBorderColorActive};
   }
 `
 
