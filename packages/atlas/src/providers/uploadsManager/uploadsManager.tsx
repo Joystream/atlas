@@ -131,8 +131,19 @@ export const UploadsManager: FC = () => {
     if (!channelId || cachedChannelId === channelId || newChannelsIds.includes(channelId) || isSyncing) {
       return
     }
-    setCachedChannelId(channelId)
-    setIsSyncing(true)
+
+    /*
+    We use queueMicrotask to force both state updates to happen at the same time, after other work in the hook is done.
+    There is an issue with automatic batching that was introduced in React 18 here -
+    without this microtask, even though `setCachedChannelId` and `setIsSyncing` are called at the same time,
+    the call to `setCachedChannelId` is somehow ignored and the component re-renders with the old `cachedChannelId` and this hook runs in a forever loop.
+    This is somehow related to the `setIsSyncing(false)` call at the end of the `init` function. If you comment it out, state updates properly.
+    This is most likely bug in React batching itself, but I wasn't able to make a reproducible example to report an issue.
+    */
+    queueMicrotask(() => {
+      setCachedChannelId(channelId)
+      setIsSyncing(true)
+    })
 
     const init = async () => {
       const [fetchedVideos, fetchedChannel, pendingAssetsLookup] = await fetchMissingAssets(client, channelId)
