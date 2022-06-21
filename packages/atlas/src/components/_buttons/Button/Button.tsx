@@ -1,5 +1,5 @@
 import { To } from 'history'
-import { AnimationEvent, MouseEvent, PropsWithChildren, ReactNode, forwardRef } from 'react'
+import { AnimationEvent, KeyboardEvent, MouseEvent, PropsWithChildren, ReactNode, forwardRef } from 'react'
 
 import { Text, TextVariant } from '@/components/Text'
 import { getLinkPropsFromTo } from '@/utils/button'
@@ -23,6 +23,7 @@ export type ButtonProps = PropsWithChildren<{
   onMouseEnter?: (e: MouseEvent<HTMLButtonElement>) => void
   onMouseLeave?: (e: MouseEvent<HTMLButtonElement>) => void
   onAnimationEnd?: (e: AnimationEvent<HTMLButtonElement>) => void
+  onKeyPress?: (e: KeyboardEvent<HTMLButtonElement>) => void
   // internal
   _textOnly?: boolean
 }>

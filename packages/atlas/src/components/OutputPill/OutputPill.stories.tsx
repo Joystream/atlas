@@ -9,7 +9,6 @@ export default {
     avatarUri: 'https://placedog.net/100/100',
     handle: 'Member',
     withAvatar: true,
-    hasOnDeleteClick: false,
     readonly: false,
   },
   argTypes: {

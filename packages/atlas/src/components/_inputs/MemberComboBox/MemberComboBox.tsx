@@ -14,7 +14,7 @@ import { useMemberAvatar } from '@/providers/assets'
 import { createLookup } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
 
-import { MemberBadgesWrapper, StyledOutputPill, StyledSelectedText } from './MemberComboBox.styles'
+import { MemberBadgesWrapper, StyledOutputPill } from './MemberComboBox.styles'
 
 import { ComboBox } from '../ComboBox'
 
@@ -39,6 +39,7 @@ export const MemberComboBox: FC<MemberComboBoxProps> = ({
   const [members, setMembers] = useState<BasicMembershipFieldsFragment[]>([])
   const client = useApolloClient()
   const [isError, setIsError] = useState(false)
+  const [focusedElement, setFocusedElement] = useState<number | null>(null)
 
   const debounceFetchMembers = useRef(
     debouncePromise(async (val?: string) => {
@@ -71,9 +72,12 @@ export const MemberComboBox: FC<MemberComboBoxProps> = ({
     setMembers([])
   }
 
-  const handleDeleteClick = (memberId: string) => {
+  const handleDeleteClick = (memberId: string, id?: number) => {
     if (memberId) {
       onRemoveMember?.(memberId)
+    }
+    if (id) {
+      setFocusedElement(id === 0 ? null : id - 1)
     }
   }
 
@@ -112,16 +116,13 @@ export const MemberComboBox: FC<MemberComboBoxProps> = ({
         }}
       />
       <MemberBadgesWrapper>
-        {selectedMembers.length > 0 && (
-          <StyledSelectedText as="span" variant="t200-strong" margin={{ bottom: 4 }} color="colorTextMuted">
-            Selected:{' '}
-          </StyledSelectedText>
-        )}
-        {selectedMembers.map((member) => (
+        {selectedMembers.map((member, idx) => (
           <StyledOutputPillWithResolvedAsset
             key={member.id}
             member={member}
             onDeleteClick={() => handleDeleteClick(member.id)}
+            onKeyPress={() => handleDeleteClick(member.id, idx)}
+            focused={idx === focusedElement}
           />
         ))}
       </MemberBadgesWrapper>
@@ -141,9 +142,16 @@ const AvatarWithResolvedAsset: FC<AvatarWithResolvedAssetProps> = ({ member }) =
 type StyledOutputPillWithResolvedAssetProps = {
   member: BasicMembershipFieldsFragment
   onDeleteClick: () => void
+  onKeyPress: () => void
+  focused: boolean
 }
 
-const StyledOutputPillWithResolvedAsset: FC<StyledOutputPillWithResolvedAssetProps> = ({ member, onDeleteClick }) => {
+const StyledOutputPillWithResolvedAsset: FC<StyledOutputPillWithResolvedAssetProps> = ({
+  member,
+  onDeleteClick,
+  onKeyPress,
+  focused,
+}) => {
   const { url, isLoadingAsset } = useMemberAvatar(member)
   return (
     <StyledOutputPill
@@ -152,6 +160,8 @@ const StyledOutputPillWithResolvedAsset: FC<StyledOutputPillWithResolvedAssetPro
       avatarUri={url}
       isLoadingAvatar={isLoadingAsset}
       withAvatar
+      onKeyPress={onKeyPress}
+      focused={focused}
     />
   )
 }

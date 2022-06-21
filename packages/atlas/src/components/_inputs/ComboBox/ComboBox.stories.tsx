@@ -120,6 +120,7 @@ export const Default = Template.bind({})
 type Member = { label: string; thumbnailUrl: string }
 const TemplateWithMembers: Story<ComboBoxProps> = (args) => {
   const [selectedMembers, setSelectedMembers] = useState<Member[]>([])
+  const [focusedElement, setFocusedElement] = useState<number | null>(null)
 
   const handleSelectMember = (item?: Member) => {
     if (!item) {
@@ -128,8 +129,11 @@ const TemplateWithMembers: Story<ComboBoxProps> = (args) => {
     setSelectedMembers((prev) => [...prev, item])
   }
 
-  const handleDeleteMember = (memberId?: string) => {
+  const handleDeleteMember = (memberId?: string, id?: number) => {
     setSelectedMembers((prev) => prev.filter((existingMember) => existingMember.label !== memberId))
+    if (id) {
+      setFocusedElement(id === 0 ? null : id - 1)
+    }
   }
 
   return (
@@ -144,13 +148,15 @@ const TemplateWithMembers: Story<ComboBoxProps> = (args) => {
         resetOnSelect
       />
       <MemberBadgesWrapper>
-        {selectedMembers.map((member) => (
+        {selectedMembers.map((member, idx) => (
           <OutputPill
             withAvatar
             avatarUri={member.thumbnailUrl}
             key={member.label}
             handle={member.label}
             onDeleteClick={() => handleDeleteMember(member.label)}
+            onKeyPress={() => handleDeleteMember(member.label, idx)}
+            focused={focusedElement === idx}
           />
         ))}
       </MemberBadgesWrapper>

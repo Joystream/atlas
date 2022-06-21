@@ -10,7 +10,7 @@ export const OutputPillWrapper = styled.div<{ withoutButton?: boolean }>`
   background-color: ${cVar('colorBackgroundStrong')};
   display: inline-flex;
   align-items: center;
-  padding: ${({ withoutButton }) => (withoutButton ? `${sizes(1.5)} ${sizes(2)}` : `0 0 0 ${sizes(2)}`)};
+  padding: ${({ withoutButton }) => (withoutButton ? `${sizes(1)} ${sizes(2)}` : `0 0 0 ${sizes(2)}`)};
   border-radius: ${cVar('radiusSmall')};
 `
 
