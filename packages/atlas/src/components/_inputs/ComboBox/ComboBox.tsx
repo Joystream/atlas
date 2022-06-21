@@ -68,7 +68,6 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
       if (resetOnSelect) {
         reset()
       }
-      toggleMenu()
     },
     onInputValueChange: ({ inputValue }) => {
       if (!inputValue) {
@@ -105,9 +104,9 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
           nodeEnd={processing && <Loader variant="small" />}
           nodeStart={<StyledSvgActionPlus />}
           onFocus={(event) => {
-            toggleMenu()
             textFieldProps?.onFocus?.(event)
           }}
+          onClick={toggleMenu}
         />
       </div>
       <ListWrapper {...getMenuProps()} topPosition={getTextFieldBottomEdgePosition()}>

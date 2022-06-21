@@ -5,67 +5,83 @@ import { useState } from 'react'
 import { OutputPill } from '@/components/OutputPill'
 import { SvgActionCancel } from '@/components/_icons'
 import { sizes } from '@/styles'
+import { createLookup } from '@/utils/data'
 
 import { ComboBox, ComboBoxProps } from '.'
 
 const MEMBERS = [
   {
+    id: 1,
     label: 'Klaudiusz',
     thumbnailUrl: 'https://placedog.net/57/32?random=1',
   },
   {
+    id: 2,
     label: 'Diego',
     thumbnailUrl: 'https://placedog.net/57/32?random=2',
   },
   {
+    id: 3,
     label: 'Rafal',
     thumbnailUrl: 'https://placedog.net/57/32?random=3',
   },
   {
+    id: 3,
     label: 'Loic',
     thumbnailUrl: 'https://placedog.net/57/32?random=4',
   },
   {
+    id: 4,
     label: 'Bartosz',
     thumbnailUrl: 'https://placedog.net/57/32?random=5',
   },
   {
+    id: 5,
     label: 'Klaudiusz the Second',
     thumbnailUrl: 'https://placedog.net/57/32?random=6',
   },
   {
+    id: 6,
     label: 'Diego the Second',
     thumbnailUrl: 'https://placedog.net/57/32?random=7',
   },
   {
+    id: 7,
     label: 'Rafal the Second',
     thumbnailUrl: 'https://placedog.net/57/32?random=8',
   },
   {
+    id: 8,
     label: 'Loic the Second',
     thumbnailUrl: 'https://placedog.net/57/32?random=9',
   },
   {
+    id: 9,
     label: 'Bartosz the Second',
     thumbnailUrl: 'https://placedog.net/57/32?random=10',
   },
   {
+    id: 10,
     label: 'Klaudiusz the Third',
     thumbnailUrl: 'https://placedog.net/57/32?random=11',
   },
   {
+    id: 11,
     label: 'Diego the Third',
     thumbnailUrl: 'https://placedog.net/57/32?random=12',
   },
   {
+    id: 12,
     label: 'Rafal the Third',
     thumbnailUrl: 'https://placedog.net/57/32?random=13',
   },
   {
+    id: 13,
     label: 'Loic the Third',
     thumbnailUrl: 'https://placedog.net/57/32?random=14',
   },
   {
+    id: 14,
     label: 'Bartosz the Third',
     thumbnailUrl: 'https://placedog.net/57/32?random=15',
   },
@@ -117,7 +133,7 @@ const Template: Story<ComboBoxProps> = (args) => {
 
 export const Default = Template.bind({})
 
-type Member = { label: string; thumbnailUrl: string }
+type Member = { label: string; thumbnailUrl: string; id: string }
 const TemplateWithMembers: Story<ComboBoxProps> = (args) => {
   const [selectedMembers, setSelectedMembers] = useState<Member[]>([])
   const [focusedElement, setFocusedElement] = useState<number | null>(null)
@@ -130,18 +146,25 @@ const TemplateWithMembers: Story<ComboBoxProps> = (args) => {
   }
 
   const handleDeleteMember = (memberId?: string, id?: number) => {
-    setSelectedMembers((prev) => prev.filter((existingMember) => existingMember.label !== memberId))
+    setSelectedMembers((prev) => prev.filter((existingMember) => existingMember.id !== memberId))
     if (id) {
       setFocusedElement(id === 0 ? null : id - 1)
     }
   }
+
+  const selectedMembersLookup = selectedMembers ? createLookup(selectedMembers) : {}
+
+  const dropdownItems = MEMBERS.map((item) => ({ ...item, id: item.id.toString() })).filter(
+    (member) => !selectedMembersLookup[member.id]
+  )
 
   return (
     <div>
       <ComboBox
         {...args}
         onSelectedItemChange={handleSelectMember}
-        items={MEMBERS.map((member) => ({
+        items={dropdownItems.map((member) => ({
+          id: member.id,
           label: member.label,
           thumbnailUrl: '',
         }))}
@@ -152,10 +175,10 @@ const TemplateWithMembers: Story<ComboBoxProps> = (args) => {
           <OutputPill
             withAvatar
             avatarUri={member.thumbnailUrl}
-            key={member.label}
+            key={member.id}
             handle={member.label}
-            onDeleteClick={() => handleDeleteMember(member.label)}
-            onKeyPress={() => handleDeleteMember(member.label, idx)}
+            onDeleteClick={() => handleDeleteMember(member.id)}
+            onKeyPress={() => handleDeleteMember(member.id, idx)}
             focused={focusedElement === idx}
           />
         ))}
