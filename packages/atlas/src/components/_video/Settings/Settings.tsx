@@ -1,7 +1,7 @@
 import { FC, useState } from 'react'
 
 import { Text } from '@/components/Text'
-import { SvgActionCheck, SvgActionChevronL, SvgActionChevronR } from '@/components/_icons'
+import { SvgActionChevronL, SvgActionChevronR } from '@/components/_icons'
 
 import {
   GridWrapper,
@@ -9,6 +9,7 @@ import {
   SettingsListItemWrapper,
   SettingsUnorderedList,
   SettingsWrapper,
+  StyledSvgActionCheck,
 } from './Settings.styles'
 
 export type SettingValue = string | number | boolean
@@ -16,8 +17,7 @@ export type SettingValue = string | number | boolean
 type SettingsListItemProps = {
   label: string
   value: SettingValue
-  // for options
-  isValueHidden?: boolean
+  isOption?: boolean
   checked?: boolean
   toggleable?: boolean
   onSettingClick?: (setting: { value: SettingValue; label: string }) => void
@@ -58,7 +58,6 @@ export const Settings: FC<SettingsProps> = ({ settings }) => {
       ) : (
         <SettingList
           title={openedOption}
-          isValueHidden
           isOption
           onHeaderClick={() => {
             return setOpenedOption(null)
@@ -75,19 +74,13 @@ type SettingsListProps = {
   settings?: SettingsListItemProps[]
   onHeaderClick?: () => void
   isOption?: boolean
-  isValueHidden?: boolean
 }
 
-export const SettingList: FC<SettingsListProps> = ({
-  settings,
-  title,
-  onHeaderClick,
-  isOption = false,
-  isValueHidden,
-}) => {
+export const SettingList: FC<SettingsListProps> = ({ settings, title, onHeaderClick, isOption = false }) => {
   return (
     <SettingsWrapper>
       <SettingsHeader
+        isClickable={isOption}
         onClick={(e) => {
           e.stopPropagation()
           onHeaderClick?.()
@@ -100,7 +93,7 @@ export const SettingList: FC<SettingsListProps> = ({
       </SettingsHeader>
       <SettingsUnorderedList>
         {settings?.map((setting, idx) => (
-          <SettingsListItem isValueHidden={isValueHidden} key={idx} {...setting} />
+          <SettingsListItem isOption={isOption} key={idx} {...setting} />
         ))}
       </SettingsUnorderedList>
     </SettingsWrapper>
@@ -113,7 +106,7 @@ const SettingsListItem: FC<SettingsListItemProps> = ({
   checked,
   toggleable,
   onSettingClick,
-  isValueHidden = false,
+  isOption = false,
 }) => {
   return (
     <SettingsListItemWrapper
@@ -123,10 +116,10 @@ const SettingsListItem: FC<SettingsListItemProps> = ({
       }}
     >
       <GridWrapper>
-        {checked && !toggleable && <SvgActionCheck />}
+        {isOption && <StyledSvgActionCheck checked={checked} />}
         <Text variant="t200">{label}</Text>
       </GridWrapper>
-      {!isValueHidden && (
+      {!isOption && (
         <GridWrapper>
           <Text variant="t100" secondary>
             {value}
