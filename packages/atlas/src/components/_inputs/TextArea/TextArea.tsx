@@ -46,11 +46,11 @@ const TextAreaComponent: ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaP
   const _rows = rows ? rows : defaultRows
 
   const handleOnChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    onChange?.(e)
     if (!counter) {
       return
     }
     setCharactersCount(e.target.value.length)
-    onChange?.(e)
   }
 
   return (
@@ -69,7 +69,7 @@ const TextAreaComponent: ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaP
           spellCheck={spellcheck}
           onBlur={onBlur}
         />
-        <CustomBorder />
+        <CustomBorder disabled={disabled} />
       </TextAreaContainer>
       {counter && maxLength ? (
         <StyledText disabled={disabled} variant="t100" color={cVar('colorTextMuted')}>

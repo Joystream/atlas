@@ -8,8 +8,15 @@ import { TextArea, TextAreaProps } from './TextArea'
 export default {
   title: 'inputs/TextArea',
   component: TextArea,
-  args: {},
+  args: {
+    placeholder: 'this is placeholder',
+    error: false,
+    disabled: false,
+    rows: 3,
+    size: 'medium',
+  },
   argTypes: {
+    size: { control: { type: 'select', options: ['medium', 'large'] } },
     value: { table: { disable: true } },
     className: { table: { disable: true } },
     onChange: { table: { disable: true } },

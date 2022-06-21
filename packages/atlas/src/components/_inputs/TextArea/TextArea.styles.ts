@@ -28,20 +28,22 @@ export const TextAreaContainer = styled.div`
   width: 100%;
 `
 
-export const CustomBorder = styled.div`
+export const CustomBorder = styled.div<{ disabled?: boolean }>`
   position: absolute;
-  bottom: 3px;
+  bottom: 0;
   left: 0;
   background-color: ${inputBorderColors.default};
   width: 100%;
   height: 1px;
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
   transition: ${cVar('animationTransitionFast')};
-  transition-property: transform, background-color;
+  transition-property: transform, background-color, opacity;
 `
 
 export const StyledTextArea = styled.textarea<{ inputSize: InputSize; error?: boolean }>`
   width: 100%;
   resize: vertical;
+  display: block;
   overflow-y: auto;
   overflow-x: hidden;
   box-shadow: unset;
@@ -49,7 +51,7 @@ export const StyledTextArea = styled.textarea<{ inputSize: InputSize; error?: bo
   ${({ error }) => getBaseInputStyles({ error, ignoreBoxShadow: true })}
 
   :hover:not(:disabled) + ${CustomBorder} {
-    background-color: ${inputBorderColors.hover};
+    background-color: ${({ error }) => (error ? inputBorderColors.error : inputBorderColors.hover)};
   }
 
   :focus:not(:disabled) + ${CustomBorder} {
