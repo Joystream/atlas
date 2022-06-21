@@ -1,8 +1,16 @@
-import { ForwardRefRenderFunction, forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
+import {
+  ForwardRefRenderFunction,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionPan, SvgActionZoomIn, SvgActionZoomOut } from '@/components/_icons'
+import { SvgActionPan, SvgActionTrash, SvgActionZoomIn, SvgActionZoomOut } from '@/components/_icons'
 import { DialogModalProps } from '@/components/_overlays/DialogModal'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { validateImage } from '@/utils/image'
@@ -25,17 +33,19 @@ export type ImageCropModalProps = {
     croppedBlob: Blob,
     croppedUrl: string,
     assetDimensions: AssetDimensions,
-    imageCropData: ImageCropData
+    imageCropData: ImageCropData,
+    originalBlob: File | Blob | null
   ) => void
+  onDelete?: () => void
   onError?: (error: Error) => void
 } & Pick<DialogModalProps, 'onExitClick'>
 
 export type ImageCropModalImperativeHandle = {
-  open: (file?: File | Blob, cropData?: ImageCropData) => void
+  open: (file?: File | Blob | null, cropData?: ImageCropData, edit?: boolean) => void
 }
 
 const ImageCropModalComponent: ForwardRefRenderFunction<ImageCropModalImperativeHandle, ImageCropModalProps> = (
-  { imageType, onConfirm, onError },
+  { imageType, onConfirm, onDelete, onError },
   ref
 ) => {
   const [showModal, setShowModal] = useState(false)
@@ -43,6 +53,8 @@ const ImageCropModalComponent: ForwardRefRenderFunction<ImageCropModalImperative
   const [imageEl, setImageEl] = useState<HTMLImageElement | null>(null)
   const [editedImageHref, setEditedImageHref] = useState<string | null>(null)
   const [cropData, setCropData] = useState<ImageCropData | null>(null)
+  const [editMode, setEditMode] = useState(false)
+  const [originalBlob, setOriginalBlob] = useState<File | Blob | null>(null)
   const { currentZoom, zoomRange, zoomStep, handleZoomChange, cropImage } = useCropper({
     imageEl,
     imageType,
@@ -51,11 +63,20 @@ const ImageCropModalComponent: ForwardRefRenderFunction<ImageCropModalImperative
 
   const cropEditDisabled = !!cropData
 
+  useEffect(() => {
+    if (!showModal) {
+      setEditMode(false)
+    }
+  }, [showModal])
+
   // not great - ideally we'd have a data flow trigger this via prop change
   // however, since there's no way to detect whether the file pick succeeds, the component wouldn't be able to report back whether it was actually opened
   // because of that we're letting the consumer trigger the open manually
   useImperativeHandle(ref, () => ({
-    open: (file, cropData) => {
+    open: (file, cropData, edit) => {
+      if (edit) {
+        setEditMode(true)
+      }
       if (file) {
         const fileUrl = URL.createObjectURL(file)
         setEditedImageHref(fileUrl)
@@ -87,6 +108,7 @@ const ImageCropModalComponent: ForwardRefRenderFunction<ImageCropModalImperative
       return
     }
     const selectedFile = files[0]
+    setOriginalBlob(selectedFile)
     try {
       await validateImage(selectedFile)
       const fileUrl = URL.createObjectURL(selectedFile)
@@ -103,7 +125,12 @@ const ImageCropModalComponent: ForwardRefRenderFunction<ImageCropModalImperative
   const handleConfirmClick = async () => {
     const [blob, url, assetDimensions, imageCropData] = await cropImage()
     resetModal()
-    onConfirm(blob, url, assetDimensions, imageCropData)
+    onConfirm(blob, url, assetDimensions, imageCropData, originalBlob)
+  }
+
+  const handleDeleteClick = () => {
+    resetModal()
+    onDelete?.()
   }
 
   const zoomControlNode = (
@@ -138,20 +165,31 @@ const ImageCropModalComponent: ForwardRefRenderFunction<ImageCropModalImperative
         title="Crop and position"
         show={showModal && !!editedImageHref}
         primaryButton={{ text: 'Confirm', onClick: handleConfirmClick }}
+        secondaryButton={{ text: 'Cancel', onClick: resetModal }}
+        additionalActionsNodeMobilePosition="bottom"
+        additionalActionsNode={
+          editMode && (
+            <Button onClick={handleDeleteClick} variant="destructive-secondary" icon={<SvgActionTrash />}>
+              Delete
+            </Button>
+          )
+        }
         onExitClick={resetModal}
-        additionalActionsNode={zoomControlNode}
         dividers
       >
         <AlignInfoContainer>
           <SvgActionPan />
-          <Text as="span" variant="t200" margin={{ left: 2 }}>
+          <Text as="span" color="colorText" variant="t200" margin={{ left: 2 }}>
             Drag and adjust image position
           </Text>
         </AlignInfoContainer>
         {editedImageHref && (
-          <CropContainer rounded={imageType === 'avatar'} disabled={cropEditDisabled}>
-            <StyledImage src={editedImageHref} ref={imageElRefCallback} />
-          </CropContainer>
+          <>
+            <CropContainer rounded={imageType === 'avatar'} disabled={cropEditDisabled}>
+              <StyledImage src={editedImageHref} ref={imageElRefCallback} />
+            </CropContainer>
+            {zoomControlNode}
+          </>
         )}
       </StyledDialogModal>
     </>

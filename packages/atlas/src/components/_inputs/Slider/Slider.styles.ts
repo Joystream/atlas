@@ -27,6 +27,7 @@ export const StyledRcSlider = styled(RcSlider)`
     background-color: ${cVar('colorCoreBaseWhite')};
     border-radius: 0;
     border: none;
+    opacity: 1;
 
     &:hover {
       border: 1px solid ${cVar('colorCoreBlue300')};
