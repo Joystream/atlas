@@ -51,13 +51,6 @@ export const VideoWorkspace: FC = memo(() => {
     primaryButton: {
       disabled: formStatus?.isDisabled,
       onClick: formStatus?.triggerFormSubmit,
-      tooltip: formStatus?.isDisabled
-        ? undefined
-        : {
-            headerText: 'Fill all required fields to proceed',
-            text: 'Required: video file, thumbnail image, title, category, language',
-            multiline: true,
-          },
       text: formStatus?.actionBarPrimaryText,
     },
     secondaryButton:

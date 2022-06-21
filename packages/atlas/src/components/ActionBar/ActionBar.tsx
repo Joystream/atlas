@@ -11,7 +11,6 @@ import { transitions } from '@/styles'
 import {
   ActionBarContainer,
   ActionButtonPrimary,
-  ActionButtonPrimaryTooltip,
   DetailsIconWrapper,
   DraftsBadgeContainer,
   FeeContainer,
@@ -24,7 +23,6 @@ import { NumberFormat } from '../NumberFormat'
 
 export type ActionDialogButtonProps = {
   text?: string
-  tooltip?: TooltipProps
 } & Omit<ButtonProps, 'children'>
 
 type ActionDialogInfoBadge = {
@@ -84,16 +82,14 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
             {secondaryButton?.text}
           </SecondaryButton>
         </CSSTransition>
-        <ActionButtonPrimaryTooltip placement="top-end" {...primaryButton?.tooltip}>
-          <ActionButtonPrimary
-            {...primaryButton}
-            secondaryButtonExists={!!secondaryButton}
-            size={smMatch ? 'large' : 'medium'}
-            type="submit"
-          >
-            {primaryButton.text}
-          </ActionButtonPrimary>
-        </ActionButtonPrimaryTooltip>
+        <ActionButtonPrimary
+          {...primaryButton}
+          secondaryButtonExists={!!secondaryButton}
+          size={smMatch ? 'large' : 'medium'}
+          type="submit"
+        >
+          {primaryButton.text}
+        </ActionButtonPrimary>
       </ActionBarContainer>
     )
   }

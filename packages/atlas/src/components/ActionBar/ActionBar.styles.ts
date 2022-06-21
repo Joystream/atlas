@@ -2,7 +2,6 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { Tooltip } from '@/components/Tooltip'
 import { Button } from '@/components/_buttons/Button'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
@@ -42,10 +41,6 @@ export const ActionBarContainer = styled.div<ActionBarContainerProps>`
 export const StyledPrimaryText = styled(Text)`
   align-self: center;
   padding: 6px 0;
-`
-
-export const ActionButtonPrimaryTooltip = styled(Tooltip)`
-  display: contents;
 `
 
 export const StyledInformation = styled(Information)`

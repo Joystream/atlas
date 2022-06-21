@@ -528,21 +528,6 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
                   text: newChannel ? 'Create channel' : 'Publish changes',
                   disabled: isDisabled,
                   onClick: handleSubmit,
-                  tooltip: isDisabled
-                    ? {
-                        headerText: newChannel
-                          ? 'Fill all required fields to proceed'
-                          : isValid
-                          ? 'Change anything to proceed'
-                          : 'Fill all required fields to proceed',
-                        text: newChannel
-                          ? 'Required: title'
-                          : isValid
-                          ? 'To publish changes you have to provide new value to any field'
-                          : 'Required: title',
-                        icon: true,
-                      }
-                    : undefined,
                 }}
                 secondaryButton={
                   !newChannel && isDirty && nodeConnectionStatus === 'connected'
