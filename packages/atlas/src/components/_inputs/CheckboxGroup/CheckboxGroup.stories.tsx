@@ -1,5 +1,5 @@
 import { Meta, Story } from '@storybook/react'
-import React, { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 
 import { CheckboxGroup, CheckboxGroupProps } from './CheckboxGroup'
 
@@ -24,7 +24,7 @@ export default {
 
 const Template: Story = (args) => {
   const [selected, setSelected] = useState<number[]>([])
-  const handleChange: (id: number, e?: React.ChangeEvent<HTMLInputElement>) => void = (id) => {
+  const handleChange: (id: number, e?: ChangeEvent<HTMLInputElement>) => void = (id) => {
     setSelected((prevState) => {
       if (selected.includes(id)) {
         return prevState.filter((state) => state !== id)

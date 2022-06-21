@@ -1,26 +1,19 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import { ChangeEvent, FC } from 'react'
 
 import { Checkbox, CheckboxProps } from '@/components/_inputs/Checkbox'
 import { sizes } from '@/styles'
 
 export type CheckboxGroupProps = {
   options: CheckboxProps[]
-  onChange?: (id: number, event: React.ChangeEvent<HTMLInputElement>) => void
+  onChange?: (id: number, event: ChangeEvent<HTMLInputElement>) => void
   checkedIds: number[]
   name?: string
   disabled?: boolean
   error?: boolean
 }
 
-export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
-  options,
-  checkedIds,
-  onChange,
-  name,
-  disabled,
-  error,
-}) => {
+export const CheckboxGroup: FC<CheckboxGroupProps> = ({ options, checkedIds, onChange, name, disabled, error }) => {
   return (
     <Wrapper>
       {options.map((option, idx) => (
