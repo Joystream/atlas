@@ -142,7 +142,7 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData }) =>
               </Title>
               <Description>
                 <DescriptionText>{totalDaysAndHours}</DescriptionText>
-                <Text as="span" variant="h400" color="default">
+                <Text as="span" variant="h400" color="colorText">
                   &nbsp;/ <NumberFormat as="span" value={durationBlocks} variant="h400" /> blocks
                 </Text>
               </Description>
@@ -194,7 +194,7 @@ export const MemberWithResolvedAvatar: FC<{ member: BasicMembershipFieldsFragmen
 }
 
 export const TitleText: FC<PropsWithChildren> = ({ children }) => (
-  <Text as="span" variant="h300" color="default">
+  <Text as="span" variant="h300" color="colorText">
     {children}
   </Text>
 )

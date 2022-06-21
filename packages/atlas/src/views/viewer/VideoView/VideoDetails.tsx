@@ -53,7 +53,7 @@ export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => 
                     <DescriptionCopy
                       as="p"
                       variant={mdMatch ? 't300' : 't200'}
-                      color="default"
+                      color="colorText"
                       key={idx}
                       detailsExpanded={detailsExpanded}
                     >
@@ -81,11 +81,11 @@ export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => 
                 License
               </Text>
               {foundLicense && (
-                <Text as="p" variant={mdMatch ? 't300' : 't200'} color="default">
+                <Text as="p" variant={mdMatch ? 't300' : 't200'} color="colorText">
                   {foundLicense.name}
                 </Text>
               )}
-              <Text as="p" variant="t100" color="default" margin={{ top: 2 }}>
+              <Text as="p" variant="t100" color="colorText" margin={{ top: 2 }}>
                 {video.license?.customText}
               </Text>
             </>
@@ -101,7 +101,7 @@ export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => 
               </Text>
               <Category to={absoluteRoutes.viewer.category(categoryData?.id)}>
                 {categoryData?.icon}
-                <Text as="p" variant={mdMatch ? 't300' : 't200'} color="default">
+                <Text as="p" variant={mdMatch ? 't300' : 't200'} color="colorText">
                   {video?.category?.name}
                 </Text>
               </Category>

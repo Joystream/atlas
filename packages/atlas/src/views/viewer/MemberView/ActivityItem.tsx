@@ -78,7 +78,7 @@ export const ActivityItem: FC<ActivityItemProps> = ({
         {loading ? (
           <DescriptionSkeletonLoader />
         ) : (
-          <Text as="p" variant={lgMatch ? 't300' : 't200'} color="default">
+          <Text as="p" variant={lgMatch ? 't300' : 't200'} color="colorText">
             {description}
           </Text>
         )}
@@ -89,7 +89,7 @@ export const ActivityItem: FC<ActivityItemProps> = ({
         <PillAndDateContainer>
           <Pill label={type} size="medium" />
           {date && (
-            <DateText as="p" variant="t100" color="default">
+            <DateText as="p" variant="t100" color="colorText">
               <DateRow>{format(date, 'd MMM yyyy')},</DateRow>
               <DateRow> {format(date, 'HH:mm')}</DateRow>
             </DateText>

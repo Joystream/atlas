@@ -161,7 +161,7 @@ export const CreateMemberModal: FC<CreateMemberModalProps> = ({ show, selectedAc
       }}
     >
       <div>
-        <Text as="p" variant="t200" color="default">
+        <Text as="p" variant="t200" color="colorText">
           Membership represents you as a member of the Joystream community - it's your on-chain identity. It lets you
           interact with the network - create a channel, publish content, issue and trade NFTs. It also lets you to
           participate in the platform governance, shaping its future.

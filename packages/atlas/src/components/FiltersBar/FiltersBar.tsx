@@ -254,7 +254,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
           <>
             {activeFilters.includes('language') && (
               <MobileFilterContainer>
-                <Text as="span" color="default" variant="h100">
+                <Text as="span" color="colorText" variant="h100">
                   Language
                 </Text>
                 <Select
@@ -268,7 +268,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
             )}
             {activeFilters.includes('nftStatus') && (
               <MobileFilterContainer>
-                <Text as="span" color="default" variant="h100">
+                <Text as="span" color="colorText" variant="h100">
                   Status
                 </Text>
                 {nftStatusInputs}
@@ -276,7 +276,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
             )}
             {categories && activeFilters.includes('categories') && (
               <MobileFilterContainer>
-                <Text as="span" color="default" variant="h100">
+                <Text as="span" color="colorText" variant="h100">
                   Categories
                 </Text>
                 {categoriesInputs}
@@ -284,7 +284,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
             )}
             {activeFilters.includes('date') && (
               <MobileFilterContainer>
-                <Text as="span" color="default" variant="h100">
+                <Text as="span" color="colorText" variant="h100">
                   Date uploaded
                 </Text>
                 {dateUploadedInputs}
@@ -292,7 +292,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
             )}
             {activeFilters.includes('date-minted') && (
               <MobileFilterContainer>
-                <Text as="span" color="default" variant="h100">
+                <Text as="span" color="colorText" variant="h100">
                   Date minted
                 </Text>
                 {dateUploadedInputs}
@@ -300,7 +300,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
             )}
             {activeFilters.includes('length') && (
               <MobileFilterContainer>
-                <Text as="span" color="default" variant="h100">
+                <Text as="span" color="colorText" variant="h100">
                   Length
                 </Text>
                 {videoLengthInputs}
@@ -308,7 +308,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
             )}
             {activeFilters.includes('other') && (
               <MobileFilterContainer>
-                <OtherFilterStyledText as="span" color="default" variant="h100">
+                <OtherFilterStyledText as="span" color="colorText" variant="h100">
                   <OtherFilterStyledIcon />
                   Exclude:
                 </OtherFilterStyledText>
@@ -608,7 +608,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
                 disabled: !excludePaidPromotionalMaterialFilter && !excludeMatureContentRatingFilter,
               }}
             >
-              <OtherFilterStyledText as="span" color="default" variant="h100">
+              <OtherFilterStyledText as="span" color="colorText" variant="h100">
                 <OtherFilterStyledIcon />
                 Exclude:
               </OtherFilterStyledText>

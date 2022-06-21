@@ -58,7 +58,7 @@ export const CategoryLink: FC<CategoryLinkProps> = ({
             timeout={parseInt(transitions.timings.regular)}
           >
             {id ? (
-              <Text as="span" variant={_textVariant} color={textSecondary ? 'default' : undefined}>
+              <Text as="span" variant={_textVariant} color={textSecondary ? 'colorText' : undefined}>
                 More in {name}
               </Text>
             ) : (

@@ -127,7 +127,7 @@ export const EndingOverlay: FC<EndingOverlayProps> = ({
           >
             <VideoThumbnail src={thumbnailUrl} />
             <VideoInfo>
-              <Text as="span" variant={mdMatch ? 't300' : 't200'} color="default">
+              <Text as="span" variant={mdMatch ? 't300' : 't200'} color="colorText">
                 Up next
               </Text>
               <Heading as="h3" variant={mdMatch ? 'h500' : 'h400'}>
@@ -167,7 +167,7 @@ export const EndingOverlay: FC<EndingOverlayProps> = ({
         <Container>
           <InnerContainer>
             <VideoInfo noNextVideo>
-              <SubHeading as="span" variant={mdMatch ? 't300' : 't200'} color="default">
+              <SubHeading as="span" variant={mdMatch ? 't300' : 't200'} color="colorText">
                 You’ve finished watching a video from
               </SubHeading>
               <StyledChannelLink

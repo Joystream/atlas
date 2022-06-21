@@ -52,7 +52,7 @@ export const NoConnectionIndicator: FC<NoConnectionIndicatorProps> = ({
               </Text>
             )
           )}
-          <Text as="span" variant="t200" color="default">
+          <Text as="span" variant="t200" color="colorText">
             Wait for connection to restore
           </Text>
         </TextWrapper>

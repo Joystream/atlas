@@ -97,7 +97,7 @@ export const NotificationsView = () => {
           <Text
             as="span"
             variant="t300"
-            color="default"
+            color="colorText"
             margin={{ right: smMatch ? 8 : undefined, left: !smMatch ? 4 : undefined }}
           >
             <NumberFormat as="span" value={selectedNotifications.length} format="short" variant="t300" /> item(s)
@@ -132,7 +132,7 @@ const NotificationsEmptyFallback = () => {
       <NotificationEmptyRectangle opacity={0.8} />
       <NotificationEmptyRectangleWithText>
         <NotificationEmptyRectangle opacity={0.5} absolute />
-        <Text as="p" variant="h500" color="default">
+        <Text as="p" variant="h500" color="colorText">
           You don’t have any notifications
         </Text>
       </NotificationEmptyRectangleWithText>

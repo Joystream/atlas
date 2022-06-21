@@ -261,11 +261,11 @@ export const VideoView: FC = () => {
           <SkeletonLoader height={mdMatch ? 56 : 32} width={400} />
         )}
         <VideoUtils>
-          <Meta as="p" variant={mdMatch ? 't300' : 't100'} color="default">
+          <Meta as="span" variant={mdMatch ? 't300' : 't100'} color="colorText">
             {video ? (
               <>
                 {formatVideoDate(video.createdAt)} •{' '}
-                <NumberFormat as="span" format="full" value={video.views} color="default" /> views
+                <NumberFormat as="span" format="full" value={video.views} color="colorText" /> views
               </>
             ) : (
               <SkeletonLoader height={24} width={200} />

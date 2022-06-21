@@ -30,7 +30,7 @@ export const EmptyFallback: FC<EmptyFallbackProps> = ({
         </Title>
       )}
       {variant === 'large' && subtitle && (
-        <Subtitle as="p" variant="t200" color="default">
+        <Subtitle as="p" variant="t200" color="colorText">
           {subtitle}
         </Subtitle>
       )}

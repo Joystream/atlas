@@ -110,7 +110,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
       openModal({
         title: 'Start sale now?',
         children: (
-          <Text as="p" variant="t200" color="default">
+          <Text as="p" variant="t200" color="colorText">
             The start date{' '}
             <Text as="span" variant="t200">
               {formatDateTime(startDate)}{' '}
@@ -296,7 +296,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
       <NftWorkspaceFormWrapper>
         <NftPreview>
           <NftTile interactable={false} {...nftTileProps} />
-          <Text as="span" margin={{ top: 4 }} variant="h100" color="default">
+          <Text as="span" margin={{ top: 4 }} variant="h100" color="colorText">
             Your nft preview
           </Text>
         </NftPreview>

@@ -60,7 +60,7 @@ export const ResultWrapper: FC<SearchItemProps> = ({
     >
       <SearchItemContent>{children}</SearchItemContent>
       <Shortcut>
-        <Text as="span" color="default" variant="t100">
+        <Text as="span" color="colorText" variant="t100">
           Select
         </Text>
         <ShortcutIndicator>↩</ShortcutIndicator>

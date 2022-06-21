@@ -208,7 +208,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
                         isProcessing={isProcessing}
                         onClick={(e) => e.preventDefault()}
                       >
-                        <HighlightableText as="span" variant="t200" color="default" margin={{ left: 2, right: 2 }}>
+                        <HighlightableText as="span" variant="t200" color="colorText" margin={{ left: 2, right: 2 }}>
                           {formatDateAgo(createdAt || new Date())}
                         </HighlightableText>
                       </StyledLink>
@@ -219,7 +219,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
                         <HighlightableText
                           as="span"
                           variant="t200"
-                          color="default"
+                          color="colorText"
                           margin={{ left: 2 }}
                           onClick={onEditedLabelClick}
                         >
@@ -229,7 +229,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
                     )}
                   </CommentHeader>
                   {isDeleted ? (
-                    <DeletedComment as="span" variant="t200" color="muted">
+                    <DeletedComment as="span" variant="t200" color="colorTextMuted">
                       <StyledSvgActionTrash /> Comment deleted by {isModerated ? 'channel owner' : 'author'}
                     </DeletedComment>
                   ) : (

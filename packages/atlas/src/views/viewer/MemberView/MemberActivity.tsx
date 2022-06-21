@@ -121,7 +121,7 @@ export const MemberActivity: FC<MemberActivityProps> = ({ memberId, sort = 'crea
                 <OverviewItem>
                   <StyledIconWrapper icon={<SvgActionBuyNow />} size="large" />
                   <OverviewTextContainer>
-                    <Text as="span" variant="t100" color="default">
+                    <Text as="span" variant="t100" color="colorText">
                       NFTs bought
                     </Text>
                     <Text as="span" variant="t300">
@@ -132,7 +132,7 @@ export const MemberActivity: FC<MemberActivityProps> = ({ memberId, sort = 'crea
                 <OverviewItem>
                   <StyledIconWrapper icon={<SvgActionSell />} size="large" />
                   <OverviewTextContainer>
-                    <Text as="span" variant="t100" color="default">
+                    <Text as="span" variant="t100" color="colorText">
                       NFTs sold
                     </Text>
                     <Text as="span" variant="t300">
@@ -144,7 +144,7 @@ export const MemberActivity: FC<MemberActivityProps> = ({ memberId, sort = 'crea
                   <OverviewItem>
                     <StyledIconWrapper icon={<SvgActionMint />} size="large" />
                     <OverviewTextContainer>
-                      <Text as="span" variant="t100" color="default">
+                      <Text as="span" variant="t100" color="colorText">
                         NFTs created
                       </Text>
                       <Text as="span" variant="t300">
@@ -155,7 +155,7 @@ export const MemberActivity: FC<MemberActivityProps> = ({ memberId, sort = 'crea
                   <OverviewItem>
                     <StyledIconWrapper icon={<SvgActionBid />} size="large" />
                     <OverviewTextContainer>
-                      <Text as="span" variant="t100" color="default">
+                      <Text as="span" variant="t100" color="colorText">
                         Bid placed
                       </Text>
                       <Text as="span" variant="t300">

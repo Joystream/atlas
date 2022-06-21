@@ -46,13 +46,13 @@ export const OptionCardBase: FC<OptionCardProps> = ({
               {icon}
             </IconContainer>
           )}
-          <OptionCardTitle as="span" color={error ? 'error' : undefined} variant="h400">
+          <OptionCardTitle as="span" color={error ? 'colorTextError' : undefined} variant="h400">
             {label}
           </OptionCardTitle>
         </TitleIconWrapper>
         {children}
       </InputAndTitleWrapper>
-      <Text as="span" variant="t100" color="default">
+      <Text as="span" variant="t100" color="colorText">
         {helperText}
       </Text>
     </OptionCardLabel>

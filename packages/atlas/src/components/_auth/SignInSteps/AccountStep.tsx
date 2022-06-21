@@ -78,24 +78,24 @@ export const AccountStep: FC<AccountStepProps> = ({
               <StepTitle as="h1" variant="h500">
                 Create blockchain account
               </StepTitle>
-              <Text as="p" variant="t200" color="default" margin={{ top: 2 }}>
+              <Text as="p" variant="t200" color="colorText" margin={{ top: 2 }}>
                 Use the Polkadot extension to generate your personal keypair. Follow these instructions:
               </Text>
               <OrderedSteps>
-                <OrderedStep color="default" variant="t100" as="li">
+                <OrderedStep color="colorText" variant="t100" as="li">
                   Open the extension popup with the icon in your browser bar
                 </OrderedStep>
-                <OrderedStep color="default" variant="t100" as="li">
+                <OrderedStep color="colorText" variant="t100" as="li">
                   Click the plus icon
                 </OrderedStep>
-                <OrderedStep color="default" variant="t100" as="li">
+                <OrderedStep color="colorText" variant="t100" as="li">
                   Continue with instructions presented on the screen
                 </OrderedStep>
               </OrderedSteps>
             </StyledStepWrapper>
             <StepFooter>
               <BottomBarIcon />
-              <Text as="span" variant="t200" color="default">
+              <Text as="span" variant="t200" color="colorText">
                 Make sure to safely save your seed phrase!
               </Text>
             </StepFooter>
@@ -111,7 +111,7 @@ export const AccountStep: FC<AccountStepProps> = ({
               <StepTitle as="h1" variant="h500">
                 Connect account
               </StepTitle>
-              <StepSubTitle as="p" variant="t200" color="default">
+              <StepSubTitle as="p" variant="t200" color="colorText">
                 Select Polkadot account which you want to use to manage your new Joystream membership:
               </StepSubTitle>
               <AccountsWrapper>
@@ -155,7 +155,7 @@ export const AccountBar: FC<AccountBarProps> = ({ name, id, onSelect, selectedVa
           <Text as="span" variant="t300-strong">
             {name}
           </Text>
-          <AccountAddress as="span" color="default" variant="t100">
+          <AccountAddress as="span" color="colorText" variant="t100">
             {id}
           </AccountAddress>
         </div>

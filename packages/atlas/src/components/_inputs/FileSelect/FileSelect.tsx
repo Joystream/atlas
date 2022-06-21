@@ -166,11 +166,11 @@ export const FileSelect: FC<FileSelectProps> = ({
             <Title as="span" variant="h400">
               {title}
             </Title>
-            <Text variant="t200" as="p" color="default" margin={{ top: 3 }}>
+            <Text variant="t200" as="p" color="colorText" margin={{ top: 3 }}>
               {paragraph}
             </Text>
             <ButtonsGroup>
-              <DragDropText as="span" variant="t100" color="default">
+              <DragDropText as="span" variant="t100" color="colorText">
                 Drag and drop or
               </DragDropText>
               <Button size="medium" onClick={() => open()} icon={<SvgActionUpload />}>

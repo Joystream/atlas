@@ -106,14 +106,14 @@ export const _Select = <T extends unknown>(
         >
           {icon && !inlineLabel && <NodeContainer isOpen={isOpen}>{icon}</NodeContainer>}
           {inlineLabel && (
-            <InlineLabel as="span" variant={size === 'large' ? 't300-strong' : 't200-strong'} color="default">
+            <InlineLabel as="span" variant={size === 'large' ? 't300-strong' : 't200-strong'} color="colorText">
               {inlineLabel}:
             </InlineLabel>
           )}
           <ValueAndPlaceholderText
             as="span"
             variant={size === 'large' ? 't300' : 't200'}
-            color={selectedItem ? undefined : 'muted'}
+            color={selectedItem ? undefined : 'colorTextMuted'}
           >
             {selectedItem ? selectedItem.name : placeholder}
           </ValueAndPlaceholderText>

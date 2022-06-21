@@ -38,7 +38,7 @@ export const CommentBody: FC<CommentBodyProps> = ({ children }) => {
           ref={commentBodyRef}
           commentExpanded={commentExpanded}
           variant="t200"
-          color="default"
+          color="colorText"
         >
           {trimmedComment}
         </StyledCommentText>

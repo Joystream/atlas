@@ -39,7 +39,7 @@ export const ViewErrorFallback: FC<ViewErrorFallbackProps> = ({ onResetClick }) 
         <Text as="h1" variant="h600" margin={{ bottom: 2 }}>
           Oops! An error occurred.
         </Text>
-        <Text as="p" variant="t300" color="default">
+        <Text as="p" variant="t300" color="colorText">
           Something bad happened and the app broke. This has been logged and we&apos;ll try to resolve it as soon as
           possible. You can find support in our Discord community.
         </Text>

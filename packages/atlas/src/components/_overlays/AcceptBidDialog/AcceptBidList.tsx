@@ -57,17 +57,17 @@ export const BidRow: FC<BidRowProps> = ({ bidder, createdAt, amount, amountUSD, 
       <RadioInput selectedValue={selectedValue?.id} value={bidder.id} onChange={() => onSelect?.(bidder.id, amount)} />
       {xsMatch && <Avatar assetUrl={url} loading={isLoadingAsset} size="small" />}
       <div>
-        <Text as="p" variant="h300" color={!selected ? 'default' : undefined} margin={{ bottom: 1 }}>
+        <Text as="p" variant="h300" color={!selected ? 'colorText' : undefined} margin={{ bottom: 1 }}>
           {bidder?.handle}
         </Text>
-        <Text as="p" color="default" variant="t100">
+        <Text as="p" color="colorText" variant="t100">
           {formatDateTime(new Date(createdAt))}
         </Text>
       </div>
       <Price>
         <TokenPrice>
           <JoyTokenIcon variant={selected ? 'regular' : 'gray'} />
-          <Text as="p" variant="h300" margin={{ left: 1 }} color={!selected ? 'default' : undefined}>
+          <Text as="p" variant="h300" margin={{ left: 1 }} color={!selected ? 'colorText' : undefined}>
             {amount}
           </Text>
         </TokenPrice>
@@ -77,7 +77,11 @@ export const BidRow: FC<BidRowProps> = ({ bidder, createdAt, amount, amountUSD, 
             timeout={parseInt(cVar('animationTransitionFast', true))}
             classNames={transitions.names.fade}
           >
-            {amountUSD ? <NumberFormat value={amountUSD} format="dollar" as="p" variant="t100" color="default" /> : '‌'}
+            {amountUSD ? (
+              <NumberFormat value={amountUSD} format="dollar" as="p" variant="t100" color="colorText" />
+            ) : (
+              '‌'
+            )}
           </CSSTransition>
         </SwitchTransition>
       </Price>

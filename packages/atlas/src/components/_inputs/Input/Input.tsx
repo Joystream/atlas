@@ -76,7 +76,7 @@ const InputComponent: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
   const isNodeEndText = nodeEnd && typeof nodeEnd === 'string'
 
   const renderedNodeStart = isNodeStartText ? (
-    <Text as="span" variant={size === 'large' ? 't300' : 't200'} color="muted">
+    <Text as="span" variant={size === 'large' ? 't300' : 't200'} color="colorTextMuted">
       {nodeStart}
     </Text>
   ) : (
@@ -84,7 +84,7 @@ const InputComponent: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
   )
 
   const renderedNodeEnd = isNodeEndText ? (
-    <Text as="span" variant={size === 'large' ? 't300' : 't200'} color="muted">
+    <Text as="span" variant={size === 'large' ? 't300' : 't200'} color="colorTextMuted">
       {nodeEnd}
     </Text>
   ) : (

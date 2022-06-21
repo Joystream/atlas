@@ -151,7 +151,7 @@ export const SetUp: FC<SetUpProps> = ({
       <Text as="h1" variant="h500" margin={{ bottom: 4 }}>
         {selectedType && headerText[selectedType].header}
       </Text>
-      <Text as="p" variant="t300" color="default">
+      <Text as="p" variant="t300" color="colorText">
         {selectedType && headerText[selectedType].caption}
       </Text>
       <StyledForm onSubmit={handleSubmit}>
@@ -257,7 +257,7 @@ export const SetUp: FC<SetUpProps> = ({
             </AuctionDatePickerWrapper>
             {numberOfBlocks > 0 && (
               <DaysSummary>
-                <Text as="span" variant="t200-strong" color="muted">
+                <Text as="span" variant="t200-strong" color="colorTextMuted">
                   Total:
                 </Text>
                 &nbsp;
@@ -265,8 +265,8 @@ export const SetUp: FC<SetUpProps> = ({
                   {totalDaysAndHours}
                 </Text>
                 &nbsp;
-                <Text as="span" variant="t200-strong" color="default">
-                  / <NumberFormat as="span" color="default" value={numberOfBlocks} /> blocks
+                <Text as="span" variant="t200-strong" color="colorText">
+                  / <NumberFormat as="span" color="colorText" value={numberOfBlocks} /> blocks
                 </Text>
                 <DaysSummaryInfo
                   text="On blockchain, duration is expressed in number of blocks"

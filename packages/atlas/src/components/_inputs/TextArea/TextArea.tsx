@@ -71,11 +71,11 @@ const TextAreaComponent: ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaP
         <CustomBorder disabled={disabled} />
       </TextAreaContainer>
       {counter && maxLength ? (
-        <StyledText as="span" disabled={disabled} variant="t100" color="muted">
+        <StyledText as="span" disabled={disabled} variant="t100" color="colorTextMuted">
           <Text
             as="span"
             variant="t100"
-            color={charactersCount ? (charactersCount > maxLength ? 'error' : 'strong') : 'muted'}
+            color={charactersCount ? (charactersCount > maxLength ? 'colorTextError' : undefined) : 'colorTextMuted'}
           >
             {charactersCount}
           </Text>{' '}

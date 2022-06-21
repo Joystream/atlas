@@ -1,39 +1,11 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { cVar, sizes } from '@/styles'
+import { cVar, sizes, theme } from '@/styles'
 
-type ColorVariant =
-  | 'default'
-  | 'muted'
-  | 'strong'
-  | 'primary'
-  | 'error'
-  | 'success'
-  | 'caution'
-  | 'neutral100'
-  | 'neutral200'
-  | 'neutral200Lighten'
-  | 'neutral500'
-  | 'inherit'
-
-const mappedColors = {
-  default: cVar('colorText'),
-  muted: cVar('colorTextMuted'),
-  strong: cVar('colorTextStrong'),
-  primary: cVar('colorTextPrimary'),
-  error: cVar('colorTextError'),
-  success: cVar('colorTextSuccess'),
-  caution: cVar('colorTextCaution'),
-  neutral100: cVar('colorCoreNeutral100'),
-  neutral200: cVar('colorCoreNeutral200'),
-  neutral200Lighten: cVar('colorCoreNeutral200Lighten'),
-  neutral500: cVar('colorCoreNeutral500'),
-  inherit: 'inherit',
-}
-
+type FilterStartingWith<Keys, Prefix extends string> = Keys extends `${Prefix}${infer _}` ? Keys : never
 export type TextBaseProps = {
-  color?: ColorVariant
+  color?: FilterStartingWith<keyof typeof theme, 'color'> | 'inherit'
   clampAfterLine?: number
   margin?: MarginProps
   align?: AlignProps
@@ -74,8 +46,8 @@ const clampStyles = ({ clampAfterLine }: TextBaseProps) => css`
   overflow: hidden;
 `
 
-const baseStyles = ({ color = 'strong', clampAfterLine, margin, align }: TextBaseProps) => css`
-  color: ${mappedColors[color]};
+const baseStyles = ({ color = 'colorTextStrong', clampAfterLine, margin, align }: TextBaseProps) => css`
+  color: ${color === 'inherit' ? color : cVar(color)};
 
   ${clampAfterLine && clampStyles({ clampAfterLine })}
   ${marginStyles({ margin })}

@@ -57,7 +57,7 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
         </FeeContainer>
         {infoBadge ? (
           <DraftsBadgeContainer>
-            <Text as="span" align="right" variant={smMatch ? 't200' : 't100'} color="default">
+            <Text as="span" align="right" variant={smMatch ? 't200' : 't100'} color="colorText">
               {infoBadge?.text}
             </Text>
             <StyledInformation multiline placement="top-end" {...infoBadge.tooltip} />

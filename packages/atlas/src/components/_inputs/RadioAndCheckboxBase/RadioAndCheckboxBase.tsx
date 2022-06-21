@@ -26,12 +26,12 @@ export const RadioAndCheckboxBase: FC<RadioAndCheckboxBaseProps> = ({
     <RadioAndCheckboxLabel hasLabel={!!label} disabled={disabled} className={className} onClick={onClick}>
       {children}
       {label && (
-        <Text as="span" variant="t200" color={disabled ? 'default' : undefined}>
+        <Text as="span" variant="t200" color={disabled ? 'colorText' : undefined}>
           {label}
         </Text>
       )}
       {caption && (
-        <CaptionText as="span" variant="t100" color={error ? 'error' : 'default'}>
+        <CaptionText as="span" variant="t100" color={error ? 'colorTextError' : 'colorText'}>
           {caption}
         </CaptionText>
       )}

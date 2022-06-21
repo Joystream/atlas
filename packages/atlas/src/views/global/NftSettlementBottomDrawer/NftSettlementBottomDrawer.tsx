@@ -89,13 +89,13 @@ export const NftSettlementBottomDrawer: FC = () => {
               <Text as="h1" variant="h600">
                 {isUserSeller ? 'NFT sold!' : 'You won the auction!'} 🎉
               </Text>
-              <Text as="p" variant="t300" color="default" margin={{ top: 4, bottom: 10 }}>
+              <Text as="p" variant="t300" color="colorText" margin={{ top: 4, bottom: 10 }}>
                 Congratulations! To transfer the ownership, you need to settle the auction.
               </Text>
               <Button size="large" fullWidth={!xsMatch} onClick={handleSettleAuction}>
                 Settle auction
               </Button>
-              <Text as="span" variant="t100" color="default" margin={{ top: 4 }}>
+              <Text as="span" variant="t100" color="colorText" margin={{ top: 4 }}>
                 Transaction fee: <NumberFormat as="span" format="short" withToken variant="t100" value={0} />
               </Text>
             </Content>

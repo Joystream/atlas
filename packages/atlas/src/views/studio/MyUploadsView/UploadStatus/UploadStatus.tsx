@@ -210,7 +210,7 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
     if (uploadStatus?.lastStatus === 'error') {
       return (
         <FailedStatusWrapper>
-          <StatusText as="span" variant="t200" color="default" size={size}>
+          <StatusText as="span" variant="t200" color="colorText" size={size}>
             {failedStatusText}
           </StatusText>
           <RetryButton size="small" variant="secondary" icon={<SvgActionUpload />} onClick={handleChangeHost}>
@@ -222,7 +222,7 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
     if (!uploadStatus?.lastStatus) {
       return (
         <FailedStatusWrapper>
-          <StatusText as="span" variant="t200" color="default" size={size}>
+          <StatusText as="span" variant="t200" color="colorText" size={size}>
             {failedStatusText}
           </StatusText>
           <div {...getRootProps()}>
@@ -277,18 +277,18 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
               </Text>
             </FileInfoType>
             {size === 'compact' && isReconnecting ? (
-              <Text as="span" variant="t200" color="default">
+              <Text as="span" variant="t200" color="colorText">
                 Trying to reconnect...({uploadStatus.retries})
               </Text>
             ) : (
               <FileInfoDetails size={size}>
                 {assetDimension && (
-                  <Text as="span" variant="t200" color="default">
+                  <Text as="span" variant="t200" color="colorText">
                     {assetDimension}
                   </Text>
                 )}
                 {assetSize && (
-                  <Text as="span" variant="t200" color="default">
+                  <Text as="span" variant="t200" color="colorText">
                     {assetSize}
                   </Text>
                 )}

@@ -42,7 +42,7 @@ export const CookiePopover: FC = () => {
           _textOnly: true,
         }}
       >
-        <Text as="p" variant="t200" color="default">
+        <Text as="p" variant="t200" color="colorText">
           We use cookies and other tracking technologies to improve your experience and provide analytics.{' '}
           <StyledAnchor href="https://www.joystream.org/privacy-policy/">You can read more about it here.</StyledAnchor>
         </Text>

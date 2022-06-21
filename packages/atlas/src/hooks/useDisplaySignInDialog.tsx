@@ -17,7 +17,7 @@ const SignInDialogcontent = () => {
         <Text as="h1" variant="h500">
           Sign in to continue
         </Text>
-        <Text as="p" variant="t200" color="default">
+        <Text as="p" variant="t200" color="colorText">
           Sign in to Joystream using Polkadot extension in order proceed.
         </Text>
       </SignInDialogTextWrapper>

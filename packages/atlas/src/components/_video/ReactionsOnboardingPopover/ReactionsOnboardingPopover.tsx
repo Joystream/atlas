@@ -49,7 +49,7 @@ export const ReactionsOnboardingPopover = forwardRef<PopoverImperativeHandle, Re
           <Text as="h4" variant="h300">
             We save social interactions on blockchain
           </Text>
-          <Text as="p" variant="t200" color="default" margin={{ top: 2 }}>
+          <Text as="p" variant="t200" color="colorText" margin={{ top: 2 }}>
             Comments and reactions are stored on blockchain, meaning every action needs a wallet signature to take
             effect. Transaction fees apply.
           </Text>

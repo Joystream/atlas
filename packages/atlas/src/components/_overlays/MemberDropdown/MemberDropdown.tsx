@@ -202,7 +202,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                             href="https://www.joystream.org/token"
                             target="_blank"
                             rel="noopener noreferrer"
-                            color="neutral200Lighten"
+                            color="colorCoreNeutral200Lighten"
                           >
                             Learn about ${JOY_CURRENCY_TICKER}
                           </LearnAboutLink>
@@ -240,7 +240,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                   </SectionContainer>
                   {publisher && (
                     <SectionContainer>
-                      <ChannelsSectionTitle as="span" variant="t100" color="default">
+                      <ChannelsSectionTitle as="span" variant="t100" color="colorText">
                         Your channels
                       </ChannelsSectionTitle>
                       {activeMembership?.channels.map((channel) => (

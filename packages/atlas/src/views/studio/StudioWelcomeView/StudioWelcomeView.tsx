@@ -35,7 +35,7 @@ export const StudioWelcomeView: FC = () => {
           <Text as="h1" variant="h800" margin={{ top: 8 }}>
             Welcome to Joystream Studio
           </Text>
-          <SubTitle as="p" variant="t300" color="default">
+          <SubTitle as="p" variant="t300" color="colorText">
             Start your journey as a Joystream content creator. Manage your channels, publish video content, issue NFTs,
             and more!
           </SubTitle>

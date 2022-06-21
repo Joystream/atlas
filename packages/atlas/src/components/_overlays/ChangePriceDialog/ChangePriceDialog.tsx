@@ -45,7 +45,7 @@ export const ChangePriceDialog: FC<ChangePriceDialogProps> = ({ onModalClose, is
       }}
     >
       <>
-        <Text as="p" variant="t200" color="default">
+        <Text as="p" variant="t200" color="colorText">
           You can update the price of this NFT anytime.
         </Text>
         <StyledTextField

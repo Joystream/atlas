@@ -34,7 +34,7 @@ export const ChannelAbout: FC<ChannelAboutProps> = ({ channel }) => {
             <Text as="h2" variant="h500">
               Description
             </Text>
-            <Text as="p" variant="t300" color="default">
+            <Text as="p" variant="t300" color="colorText">
               {channel.description}
             </Text>
           </TextContainer>
@@ -48,7 +48,7 @@ export const ChannelAbout: FC<ChannelAboutProps> = ({ channel }) => {
         <DetailsMember>
           <StyledAvatar size="small" assetUrl={memberAvatarUrl} loading={memberAvatarLoading} />
           <MemberContainer>
-            <Text as="span" variant="t100" color="default">
+            <Text as="span" variant="t100" color="colorText">
               Owned by member
             </Text>
             <MemberLink to={absoluteRoutes.viewer.member(channel?.ownerMember?.handle)} variant="secondary">
@@ -58,7 +58,7 @@ export const ChannelAbout: FC<ChannelAboutProps> = ({ channel }) => {
         </DetailsMember>
 
         <Details>
-          <Text as="span" variant="t100" color="default">
+          <Text as="span" variant="t100" color="colorText">
             Joined on
           </Text>
           <Text as="span" variant="t300">
@@ -67,7 +67,7 @@ export const ChannelAbout: FC<ChannelAboutProps> = ({ channel }) => {
         </Details>
 
         <Details>
-          <Text as="span" variant="t100" color="default">
+          <Text as="span" variant="t100" color="colorText">
             Num. of views
           </Text>
           {typeof channel?.views === 'number' ? (
@@ -78,7 +78,7 @@ export const ChannelAbout: FC<ChannelAboutProps> = ({ channel }) => {
         </Details>
 
         <Details>
-          <Text as="span" variant="t100" color="default">
+          <Text as="span" variant="t100" color="colorText">
             Num. of videos
           </Text>
           <Text as="span" variant="t300">
@@ -87,7 +87,7 @@ export const ChannelAbout: FC<ChannelAboutProps> = ({ channel }) => {
         </Details>
 
         <Details>
-          <Text as="span" variant="t100" color="default">
+          <Text as="span" variant="t100" color="colorText">
             Language
           </Text>
           <Text as="span" variant="t300">

@@ -69,12 +69,12 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
             <LabelText
               as="span"
               variant="t200-strong"
-              color={destructive ? 'error' : isHovering || selected || highlight ? 'strong' : 'default'}
+              color={destructive ? 'colorTextError' : isHovering || selected || highlight ? undefined : 'colorText'}
             >
               {label}
             </LabelText>
           </LabelContainer>
-          <Caption as="span" captionPosition={captionPosition} color="default" variant="t100">
+          <Caption as="span" captionPosition={captionPosition} color="colorText" variant="t100">
             {caption}
           </Caption>
         </LabelCaptionContainer>

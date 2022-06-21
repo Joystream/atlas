@@ -29,7 +29,7 @@ export const MemberAbout = () => {
             <Text as="h2" variant="h500">
               About me
             </Text>
-            <Text as="p" variant="t300" color="default">
+            <Text as="p" variant="t300" color="colorText">
               {member.metadata.about}
             </Text>
           </TextContainer>
@@ -55,7 +55,7 @@ export const MemberAbout = () => {
         </Text>
 
         <Details>
-          <Text as="p" variant="t100" color="default">
+          <Text as="p" variant="t100" color="colorText">
             Join date
           </Text>
           <Text as="span" variant="t300">
@@ -64,7 +64,7 @@ export const MemberAbout = () => {
         </Details>
 
         <Details>
-          <Text as="p" variant="t100" color="default">
+          <Text as="p" variant="t100" color="colorText">
             Num. of channels
           </Text>
           <NumberFormat
@@ -80,7 +80,7 @@ export const MemberAbout = () => {
           variant="t300-strong"
           href={`${PIONEER_MEMBER_URL}/${member?.id}`}
           target="_blank"
-          color="primary"
+          color="colorTextPrimary"
         >
           Learn more
         </Anchor>

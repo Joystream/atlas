@@ -69,7 +69,7 @@ export const CommentSnapshot: FC<CommentSnapshotProps> = ({
                   </Text>
                 </StyledLink>
                 <CommentHeaderDot />
-                <Text as="span" variant="t100" color="default">
+                <Text as="span" variant="t100" color="colorText">
                   {createdAt && formatDateTime(createdAt)}
                 </Text>
               </CommentHeader>

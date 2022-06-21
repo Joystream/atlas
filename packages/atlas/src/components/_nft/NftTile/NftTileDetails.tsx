@@ -326,13 +326,13 @@ type DetailsContentProps = {
 }
 const DetailsContent: FC<DetailsContentProps> = memo(({ tileSize, caption, icon, content, secondary }) => (
   <div>
-    <Text as="span" variant={tileSize === 'medium' ? 't200' : 't100'} color="default">
+    <Text as="span" variant={tileSize === 'medium' ? 't200' : 't100'} color="colorText">
       {caption}
     </Text>
     <DetailsContentWrapper secondary={secondary}>
       {icon}{' '}
       {typeof content === 'string' ? (
-        <Text as="span" variant={tileSize === 'medium' ? 'h300' : 'h200'} color={secondary ? 'default' : undefined}>
+        <Text as="span" variant={tileSize === 'medium' ? 'h300' : 'h200'} color={secondary ? 'colorText' : undefined}>
           {content}
         </Text>
       ) : (
@@ -341,7 +341,7 @@ const DetailsContent: FC<DetailsContentProps> = memo(({ tileSize, caption, icon,
           value={content}
           format="short"
           variant={tileSize === 'medium' ? 'h300' : 'h200'}
-          color={secondary ? 'default' : undefined}
+          color={secondary ? 'colorText' : undefined}
         />
       )}
     </DetailsContentWrapper>

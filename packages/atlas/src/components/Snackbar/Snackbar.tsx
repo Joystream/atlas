@@ -53,7 +53,7 @@ export const Snackbar: FC<SnackbarProps> = ({
             {title}
           </Text>
           {description && (
-            <Text as="p" variant="t100" color="default" margin={{ top: 2 }}>
+            <Text as="p" variant="t100" color="colorText" margin={{ top: 2 }}>
               {description}
             </Text>
           )}

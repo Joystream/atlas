@@ -236,7 +236,7 @@ export const ChannelView: FC = () => {
                 <Text as="h1" variant={smMatch ? 'h700' : 'h600'}>
                   {channel.title}
                 </Text>
-                <SubTitle as="p" variant="t300" color="default">
+                <SubTitle as="p" variant="t300" color="colorText">
                   {channel.follows ? (
                     <NumberFormat as="span" value={channel.follows} format="short" variant="t300" />
                   ) : (

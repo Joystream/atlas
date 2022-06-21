@@ -83,11 +83,11 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
             {displayedChannel ? (
               <TitleWrapper followButton={followButton}>
                 <StyledLink onClick={onClick} to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink}>
-                  <Text as="span" variant={_textVariant} color={textSecondary ? 'neutral200' : undefined}>
+                  <Text as="span" variant={_textVariant} color={textSecondary ? 'colorCoreNeutral200' : undefined}>
                     {customTitle || displayedChannel?.title}
                   </Text>
                   {followButton && (
-                    <Text as="p" variant="t100" color="default" margin={{ top: 1 }}>
+                    <Text as="p" variant="t100" color="colorText" margin={{ top: 1 }}>
                       {displayedChannel.follows} {displayedChannel.follows === 1 ? 'follower' : 'followers'}
                     </Text>
                   )}
