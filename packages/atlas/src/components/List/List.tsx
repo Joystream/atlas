@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { ListWrapper } from './List.styles'
 
@@ -11,7 +11,7 @@ type ListProps = {
   scrollable?: boolean
 }
 
-export const List: React.FC<ListProps> = ({ items, size, className, scrollable = false }) => {
+export const List: FC<ListProps> = ({ items, size, className, scrollable = false }) => {
   return (
     <ListWrapper className={className} scrollable={scrollable} size={size}>
       {items.map((item, index) => (
