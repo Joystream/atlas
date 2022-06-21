@@ -15,7 +15,7 @@ import { VideoJsPlayer } from 'video.js'
 import { FullVideoFieldsFragment } from '@/api/queries'
 import { Popover } from '@/components/_overlays/Popover'
 import { Setting, Settings } from '@/components/_video/Settings'
-import { AVAILABLE_PLAYBACK_SPEEDS } from '@/config/player'
+import { AVAILABLE_PLAYBACK_RATE } from '@/config/player'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
@@ -126,7 +126,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     {
       label: 'Speed',
       value: playbackRate === 1 ? `Normal (${playbackRate}x)` : `${playbackRate}x`,
-      options: AVAILABLE_PLAYBACK_SPEEDS.map((s) => ({
+      options: AVAILABLE_PLAYBACK_RATE.map((s) => ({
         checked: playbackRate === s,
         onSettingClick: (opt) => setPlaybackRate(Number(opt.value)),
         value: s,
@@ -227,11 +227,14 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     }
   })
 
+  // handle setting playback rate
   useEffect(() => {
     if (!player) {
       return
     }
+    // we need to set both - playbackRate and defaultPlaybackRate to make this persistent
     player.playbackRate(playbackRate)
+    player.defaultPlaybackRate(playbackRate)
   }, [playbackRate, player])
 
   // handle video loading
