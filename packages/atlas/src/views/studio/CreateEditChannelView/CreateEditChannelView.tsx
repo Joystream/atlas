@@ -105,7 +105,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     register,
     handleSubmit: createSubmitHandler,
     control,
-    formState: { isDirty, dirtyFields, errors, isValid },
+    formState: { isDirty, dirtyFields, errors },
     watch,
     setFocus,
     setValue,
