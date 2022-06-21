@@ -140,7 +140,7 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData }) =>
               <Description>
                 <DescriptionText>{totalDaysAndHours}</DescriptionText>
                 <Text variant="h400" secondary>
-                  &nbsp;/ <NumberFormat value={durationBlocks} variant="h400" /> blocks
+                  &nbsp; / <NumberFormat value={durationBlocks} secondary variant="no-variant" /> blocks
                 </Text>
               </Description>
             </Row>
