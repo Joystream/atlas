@@ -14,9 +14,9 @@ export default {
       text: 'Cancel',
     },
     infoBadge: {
-      text: 'Saving drafts',
+      text: 'Lorem ipsum',
       tooltip: {
-        text: 'Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft.',
+        text: 'Lorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsum',
       },
     },
     fee: 100,
