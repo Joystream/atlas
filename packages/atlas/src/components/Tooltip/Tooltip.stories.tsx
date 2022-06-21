@@ -22,6 +22,7 @@ export default {
   },
   args: {
     customContent: false,
+    icon: false,
     offsetX: 0,
     offsetY: 0,
     placement: 'bottom-start',
@@ -34,7 +35,9 @@ const DefaultTooltip: Story<TooltipProps> = (args) => (
   <Tooltip
     {...args}
     showOnCreate
-    customContent={args.customContent && <div style={{ border: '1px solid red' }}>Custom content</div>}
+    customContent={
+      args.customContent && <div style={{ border: '1px solid red' }}>Custom content which is quite long</div>
+    }
   />
 )
 
