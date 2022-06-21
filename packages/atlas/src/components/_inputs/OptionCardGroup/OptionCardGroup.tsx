@@ -14,7 +14,7 @@ type Checkbox = {
 
 type Radio = {
   selectedValue?: string | number
-  onChange?: (id: string | number) => void
+  onChange?: (value: string | number) => void
   options: Array<{ label: string; caption?: string; value: string | number; icon?: React.ReactNode }>
 }
 

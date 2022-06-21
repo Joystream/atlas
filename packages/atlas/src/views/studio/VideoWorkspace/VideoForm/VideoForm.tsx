@@ -386,7 +386,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
             <OptionCardGroupRadio
               selectedValue={value?.toString()}
               disabled={videoFieldsLocked}
-              onChange={onChange}
+              onChange={(value) => onChange(value === 'true')}
               options={[
                 {
                   label: 'Public',

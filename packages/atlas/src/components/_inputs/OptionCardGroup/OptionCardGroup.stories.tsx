@@ -1,8 +1,6 @@
 import { Meta, Story } from '@storybook/react'
 import { useState } from 'react'
 
-import { SvgActionTrash } from '@/components/_icons'
-
 import { OptionCardGroupCheckbox, OptionCardGroupProps, OptionCardGroupRadio } from '.'
 
 export default {
@@ -26,7 +24,7 @@ const Template: Story<OptionCardGroupProps> = (args) => {
         {...args}
         selectedValue={selected}
         options={[
-          { label: 'radio1', caption: 'caption1', value: 'radio1', icon: <SvgActionTrash /> },
+          { label: 'radio1', caption: 'caption1', value: 'radio1' },
           { label: 'radio2', caption: 'caption2', value: 'radio2' },
           { label: 'radio3', caption: 'caption3', value: 'radio3' },
         ]}
@@ -37,7 +35,7 @@ const Template: Story<OptionCardGroupProps> = (args) => {
         {...args}
         checkedValues={checkedValues}
         options={[
-          { label: 'checkbox1', caption: 'caption1', icon: <SvgActionTrash /> },
+          { label: 'checkbox1', caption: 'caption1' },
           { label: 'checkbox2', caption: 'caption2' },
           { label: 'checkbox3', caption: 'caption3' },
         ]}
