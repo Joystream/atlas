@@ -69,28 +69,10 @@ export const DraftsBadgeContainer = styled.div`
   grid-area: badge;
   user-select: none;
   margin-left: auto;
-  padding: 0 ${sizes(2)};
   display: flex;
   align-items: center;
   justify-content: end;
   height: 100%;
-  transition: background-color ${transitions.timings.sharp} ${transitions.easing};
-
-  ${media.sm} {
-    padding: 0 ${sizes(3)};
-  }
-
-  :hover {
-    background-color: ${cVar('colorCoreNeutral700Lighten')};
-  }
-`
-
-export const DetailsIconWrapper = styled.span`
-  margin-left: ${sizes(2)};
-
-  path {
-    fill: ${cVar('colorText')};
-  }
 `
 
 export const FeeContainer = styled.div`

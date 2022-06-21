@@ -1,17 +1,15 @@
-import { forwardRef, useRef } from 'react'
+import { forwardRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
-import { Tooltip, TooltipProps } from '@/components/Tooltip'
+import { TooltipProps } from '@/components/Tooltip'
 import { ButtonProps } from '@/components/_buttons/Button'
-import { SvgActionInformative } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { transitions } from '@/styles'
 
 import {
   ActionBarContainer,
   ActionButtonPrimary,
-  DetailsIconWrapper,
   DraftsBadgeContainer,
   FeeContainer,
   SecondaryButton,
@@ -42,7 +40,6 @@ export type ActionBarProps = {
 export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
   ({ fee, isActive = true, className, primaryButton, secondaryButton, infoBadge }, ref) => {
     const smMatch = useMediaMatch('sm')
-    const infoBadgeRef = useRef(null)
 
     return (
       <ActionBarContainer ref={ref} className={className} isActive={isActive}>
@@ -59,17 +56,12 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
           />
         </FeeContainer>
         {infoBadge ? (
-          <>
-            <DraftsBadgeContainer ref={infoBadgeRef}>
-              <Text align="right" variant={smMatch ? 't200' : 't100'} secondary>
-                {infoBadge?.text}
-              </Text>
-              <DetailsIconWrapper>
-                <SvgActionInformative />
-              </DetailsIconWrapper>
-            </DraftsBadgeContainer>
-            <Tooltip reference={infoBadgeRef} placement="top-end" {...infoBadge?.tooltip} />
-          </>
+          <DraftsBadgeContainer>
+            <Text align="right" variant={smMatch ? 't200' : 't100'} secondary>
+              {infoBadge?.text}
+            </Text>
+            <StyledInformation multiline placement="top-end" {...infoBadge.tooltip} />
+          </DraftsBadgeContainer>
         ) : null}
         <CSSTransition
           in={!!secondaryButton}
