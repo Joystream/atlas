@@ -73,7 +73,7 @@ export const OptionCardLabel = styled.label<OptionCardLabelProps>`
       :focus-within,
       :hover {
         background: ${cVar('colorBackgroundAlpha')};
-        box-shadow: inset 0 -2px 0 0 ${getOptionCardBorderColorHover({ checked, error, disabled })};
+        box-shadow: inset 0 -1px 0 0 ${getOptionCardBorderColorHover({ checked, error, disabled })};
 
         ${IconContainer} {
           * path {
