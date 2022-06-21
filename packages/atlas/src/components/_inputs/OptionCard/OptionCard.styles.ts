@@ -84,6 +84,7 @@ export const OptionCardLabel = styled.label<OptionCardLabelProps>`
     `}
 
   :active {
+    background: ${cVar('colorBackgroundMutedAlpha')};
     box-shadow: inset 0 -1px 0 0 ${getOptionCardBorderColorActive};
   }
 `

@@ -3,16 +3,12 @@ import { useState } from 'react'
 
 import { SvgActionTrash } from '@/components/_icons'
 
-import { OptionCardGroupCheckbox } from './OptionCardGroup'
-
-import { OptionCardGroupProps, OptionCardGroupRadio } from '.'
+import { OptionCardGroupCheckbox, OptionCardGroupProps, OptionCardGroupRadio } from '.'
 
 export default {
   title: 'inputs/OptionCardGroup',
   component: OptionCardGroupRadio,
   args: {
-    label: 'Radio input label',
-    helperText: 'Radio helper text',
     disabled: false,
     error: false,
     direction: 'horizontal',
