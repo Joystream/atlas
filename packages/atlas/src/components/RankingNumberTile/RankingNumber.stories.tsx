@@ -40,7 +40,6 @@ const video = {
   'createdAt': '2022-01-31T07:33:30.000Z',
   'isPublic': true,
   'isExplicit': false,
-  'isFeatured': false,
   'hasMarketing': false,
   'isCensored': false,
   'language': { '__typename': 'Language', 'iso': 'en' },

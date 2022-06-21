@@ -136,7 +136,6 @@ fragment FullVideoFields on Video {
   createdAt
   isPublic
   isExplicit
-  isFeatured
   hasMarketing
   isCensored
   isCommentSectionEnabled
