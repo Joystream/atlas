@@ -15,6 +15,7 @@ export const LottiePlayer: FC<LottiePlayerProps> = ({ play = true, data, size, l
     <Player
       autoplay={play}
       loop={loop}
+      keepLastFrame
       src={data}
       style={size ? { width: size, height: size } : {}}
       onEvent={(e) => (e === 'complete' ? onComplete?.() : null)}
