@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 
 import { Information } from '@/components/Information'
 import { FormField } from '@/components/_inputs/FormField'
+import { OptionCardGroupRadio } from '@/components/_inputs/OptionCardGroup'
 import { media, sizes } from '@/styles'
 
 export const StyledForm = styled.form`
@@ -34,14 +35,6 @@ export const DaysSummaryInfo = styled(Information)`
   margin-left: ${sizes(2)};
 `
 
-export const OptionCardRadioWrapper = styled.div`
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  gap: ${sizes(6)};
+export const StyledOptionCardGroupRadio = styled(OptionCardGroupRadio)`
   margin-top: ${sizes(12)};
-
-  ${media.md} {
-    grid-template-rows: 1fr;
-    grid-template-columns: repeat(2, 1fr);
-  }
 `

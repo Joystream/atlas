@@ -53,10 +53,10 @@ export const StyledRadioInput = styled.div<StyledRadioInputProps>`
   }
 `
 
-const hoverStyles = css`
+const hoverStyles = ({ error }: { error?: boolean }) => css`
   :checked {
     + ${StyledRadioInput} {
-      background-color: ${cVar('colorBackgroundPrimaryStrong')};
+      background-color: ${!error && cVar('colorBackgroundPrimaryStrong')};
     }
   }
   + ${StyledRadioInput} {

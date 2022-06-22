@@ -15,7 +15,7 @@ import { Checkbox } from '@/components/_inputs/Checkbox'
 import { Datepicker } from '@/components/_inputs/Datepicker'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
-import { OptionCardRadio } from '@/components/_inputs/OptionCard'
+import { OptionCardGroupRadio } from '@/components/_inputs/OptionCardGroup'
 import { RadioButtonGroup } from '@/components/_inputs/RadioButtonGroup'
 import { Select, SelectItem } from '@/components/_inputs/Select'
 import { Switch } from '@/components/_inputs/Switch'
@@ -44,7 +44,6 @@ import {
   FormWrapper,
   InputsContainer,
   MoreSettingsSection,
-  RadioCardButtonsContainer,
   StyledBanner,
   StyledMultiFileSelect,
   StyledTitleArea,
@@ -384,24 +383,23 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
             validate: (value) => value !== null,
           }}
           render={({ field: { value, onChange } }) => (
-            <RadioCardButtonsContainer>
-              <OptionCardRadio
-                value="true"
-                label="Public"
-                onChange={() => onChange(true)}
-                selectedValue={value?.toString()}
-                helperText="Visible to all"
-                disabled={videoFieldsLocked}
-              />
-              <OptionCardRadio
-                value="false"
-                label="Unlisted"
-                onChange={() => onChange(false)}
-                selectedValue={value?.toString()}
-                helperText="Visible with link only"
-                disabled={videoFieldsLocked}
-              />
-            </RadioCardButtonsContainer>
+            <OptionCardGroupRadio
+              selectedValue={value?.toString()}
+              disabled={videoFieldsLocked}
+              onChange={(value) => onChange(value === 'true')}
+              options={[
+                {
+                  label: 'Public',
+                  caption: 'Visible to all',
+                  value: 'true',
+                },
+                {
+                  label: 'Unlisted',
+                  caption: 'Visible with link only',
+                  value: 'false',
+                },
+              ]}
+            />
           )}
         />
       </FormField>
