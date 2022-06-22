@@ -54,7 +54,9 @@ const TextTooltip: Story<TooltipProps> = (args) => (
       )
     }
   >
-    <Text variant="t200">Hello there!</Text>
+    <Text as="span" variant="t200">
+      Hello there!
+    </Text>
   </Tooltip>
 )
 
@@ -71,7 +73,9 @@ const HeadingTooltip: Story<TooltipProps> = (args) => (
       )
     }
   >
-    <Text variant="h800">Hello there!</Text>
+    <Text as="h1" variant="h800">
+      Hello there!
+    </Text>
   </Tooltip>
 )
 

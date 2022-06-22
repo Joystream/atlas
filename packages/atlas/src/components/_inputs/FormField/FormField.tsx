@@ -2,7 +2,6 @@ import { PropsWithChildren, forwardRef, memo, useRef } from 'react'
 
 import { Text } from '@/components/Text'
 import { TooltipProps } from '@/components/Tooltip'
-import { cVar } from '@/styles'
 
 import {
   ChildrenWrapper,
@@ -11,11 +10,9 @@ import {
   FormFieldHeader,
   FormFieldTitleWrapper,
   FormFieldWrapper,
-  OptionalText,
   StyledInformation,
   StyledSvgActionWarning,
   SwitchLabel,
-  SwitchTitle,
 } from './FormField.styles'
 
 import { Switch, SwitchProps } from '../Switch'
@@ -91,9 +88,9 @@ export const FormField = memo(
                   {switchable ? (
                     <SwitchLabel>
                       <Switch {...switchProps} />
-                      <SwitchTitle as="span" variant="h300">
+                      <Text as="span" variant="h300" margin={{ left: 2 }}>
                         {label}
-                      </SwitchTitle>
+                      </Text>
                     </SwitchLabel>
                   ) : (
                     <label onClick={handleFocusOnClick}>
@@ -103,9 +100,9 @@ export const FormField = memo(
                     </label>
                   )}
                   {optional && (
-                    <OptionalText variant="t200" secondary>
+                    <Text as="span" variant="t200" color="colorText" margin={{ left: 1 }}>
                       (optional)
-                    </OptionalText>
+                    </Text>
                   )}
                   {tooltip && <StyledInformation {...tooltip} />}
                 </FormFieldTitleWrapper>
@@ -113,12 +110,12 @@ export const FormField = memo(
               {description &&
                 (description instanceof Array ? (
                   description.map((p, idx) => (
-                    <FormFieldDescription secondary key={idx} variant="t200">
+                    <FormFieldDescription as="span" color="colorText" key={idx} variant="t200">
                       {p}
                     </FormFieldDescription>
                   ))
                 ) : (
-                  <FormFieldDescription secondary variant="t200">
+                  <FormFieldDescription as="span" color="colorText" variant="t200">
                     {description}
                   </FormFieldDescription>
                 ))}
@@ -132,7 +129,7 @@ export const FormField = memo(
           {error ? (
             <FormFieldFooter>
               <StyledSvgActionWarning />
-              <Text variant="t100" color={cVar('colorTextError')}>
+              <Text as="span" variant="t100" color="colorTextError">
                 {error}
               </Text>
             </FormFieldFooter>

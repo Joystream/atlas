@@ -132,7 +132,9 @@ export const PlaygroundImageDownsizing = () => {
 
   return (
     <div>
-      <Text variant="h600">Large images in terms of file size</Text>
+      <Text as="p" variant="h600">
+        Large images in terms of file size
+      </Text>
       <ul>
         {LARGE_FILE_IMAGES.map((image, idx) => (
           <li key={idx}>
@@ -145,7 +147,9 @@ export const PlaygroundImageDownsizing = () => {
       <StyledLink href="https://commons.wikimedia.org/wiki/Commons:Very_high-resolution_file_downloads">
         More
       </StyledLink>
-      <Text variant="h600">Large images in terms of width and height</Text>
+      <Text as="p" variant="h600">
+        Large images in terms of width and height
+      </Text>
       <ul>
         {LARGE_WIDTH_HEIGHT_IMAGES.map((image, idx) => (
           <li key={idx}>

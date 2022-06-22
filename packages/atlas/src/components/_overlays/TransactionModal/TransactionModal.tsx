@@ -99,7 +99,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
         >
           <PolkadotLogoWrapper>
             <StyledPolkadotLogo />
-            <Text secondary variant="t100">
+            <Text as="span" color="colorText" variant="t100">
               Continue in Polkadot extension
             </Text>
           </PolkadotLogoWrapper>
@@ -144,7 +144,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
           disabled: !canCancel,
         }}
       >
-        <Text variant="t200" secondary>
+        <Text as="span" variant="t200" color="colorText">
           {status === ExtrinsicStatus.Error && errorCode === ErrorCode.VoucherSizeLimitExceeded && channelId
             ? `${stepDetails?.description} Channel ID: ${channelId}`
             : stepDetails?.description}

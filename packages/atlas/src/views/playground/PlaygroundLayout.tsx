@@ -56,7 +56,7 @@ const PlaygroundLayout = () => {
         fullLogoNode={
           <LogoWrapper>
             <SvgJoystreamLogoShort />
-            <Text variant="h500" margin={{ left: 2 }}>
+            <Text as="p" variant="h500" margin={{ left: 2 }}>
               Playground
             </Text>
           </LogoWrapper>

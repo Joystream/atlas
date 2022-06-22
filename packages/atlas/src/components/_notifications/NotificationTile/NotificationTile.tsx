@@ -27,25 +27,25 @@ const getNotificationText = (notification: NotificationRecord): ReactNode => {
     case 'bid-made':
       return (
         <>
-          bid on your NFT for <NumberFormat value={notification.bidAmount} format="short" withToken />
+          bid on your NFT for <NumberFormat as="span" value={notification.bidAmount} format="short" withToken />
         </>
       )
     case 'got-outbid':
       return (
         <>
-          outbid you for <NumberFormat value={notification.bidAmount} format="short" withToken />
+          outbid you for <NumberFormat as="span" value={notification.bidAmount} format="short" withToken />
         </>
       )
     case 'bought':
       return (
         <>
-          purchased your NFT for <NumberFormat value={notification.price} format="short" withToken />
+          purchased your NFT for <NumberFormat as="span" value={notification.price} format="short" withToken />
         </>
       )
     case 'bid-accepted':
       return (
         <>
-          has accepted your bid of <NumberFormat value={notification.bidAmount} format="short" withToken />
+          has accepted your bid of <NumberFormat as="span" value={notification.bidAmount} format="short" withToken />
         </>
       )
     case 'auction-settled-owner':
@@ -121,7 +121,7 @@ export const NotificationTile: FC<NotificationProps> = ({
             !loading ? (
               <>
                 {member && (
-                  <Text as="span" variant="t200-strong" secondary>
+                  <Text as="span" variant="t200-strong" color="colorText">
                     {`${member.handle} `}
                   </Text>
                 )}
@@ -164,7 +164,7 @@ export const NotificationTile: FC<NotificationProps> = ({
         <Content>
           <Title>
             {member && (
-              <Text as="span" variant="h300" secondary>
+              <Text as="span" variant="h300" color="colorText">
                 {`${member.handle} `}
               </Text>
             )}
@@ -172,7 +172,7 @@ export const NotificationTile: FC<NotificationProps> = ({
               {getNotificationText(notification)}
             </Text>
           </Title>
-          <Text variant="t200" secondary>
+          <Text as="span" variant="t200" color="colorText">
             {formattedDate} • {video.title}
           </Text>
         </Content>

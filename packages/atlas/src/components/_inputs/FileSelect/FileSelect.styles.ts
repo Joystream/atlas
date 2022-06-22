@@ -115,10 +115,6 @@ export const Title = styled(Text)`
   }
 `
 
-export const Paragraph = styled(Text)`
-  margin-top: ${sizes(3)};
-`
-
 export const ButtonsGroup = styled.div`
   display: flex;
   align-items: center;

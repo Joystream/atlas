@@ -2,7 +2,6 @@ import { MouseEvent, ReactNode, forwardRef } from 'react'
 import mergeRefs from 'react-merge-refs'
 
 import { useHover } from '@/hooks/useHover'
-import { cVar } from '@/styles'
 
 import {
   Caption,
@@ -68,20 +67,14 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
         <LabelCaptionContainer captionBottom={captionPosition === 'bottom'}>
           <LabelContainer>
             <LabelText
+              as="span"
               variant="t200-strong"
-              secondary={!selected}
-              color={
-                destructive
-                  ? cVar('colorTextError')
-                  : isHovering || selected || highlight
-                  ? cVar('colorTextStrong')
-                  : cVar('colorText')
-              }
+              color={destructive ? 'colorTextError' : isHovering || selected || highlight ? undefined : 'colorText'}
             >
               {label}
             </LabelText>
           </LabelContainer>
-          <Caption captionPosition={captionPosition} secondary variant="t100">
+          <Caption as="span" captionPosition={captionPosition} color="colorText" variant="t100">
             {caption}
           </Caption>
         </LabelCaptionContainer>

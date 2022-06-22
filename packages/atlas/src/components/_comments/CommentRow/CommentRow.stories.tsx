@@ -34,8 +34,10 @@ const Template: Story<CommentRowProps> = (args) => (
         background: cVar('colorBackgroundPrimaryMuted'),
       }}
     >
-      <Text variant="h200">Please ignore styling of this blue box. It's for testing purposes only</Text>
-      <Text variant="t200">
+      <Text as="p" variant="h200">
+        Please ignore styling of this blue box. It's for testing purposes only
+      </Text>
+      <Text as="p" variant="t200">
         Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aspernatur aut, ipsam sit impedit voluptatem ad libero
         necessitatibus porro dignissimos voluptatum quis debitis tempora omnis, provident repellat iure accusantium,
         blanditiis voluptate!{' '}

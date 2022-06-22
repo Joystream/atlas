@@ -198,7 +198,9 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
   return (
     <CommentsSectionWrapper>
       <CommentsSectionHeader ref={commentsSectionHeaderRef}>
-        <Text variant="h400">{loading || !video?.commentsCount ? 'Comments' : `${video.commentsCount} comments`}</Text>
+        <Text as="p" variant="h400">
+          {loading || !video?.commentsCount ? 'Comments' : `${video.commentsCount} comments`}
+        </Text>
         <Select
           size="medium"
           inlineLabel={mdMatch ? 'Sort by' : ''}

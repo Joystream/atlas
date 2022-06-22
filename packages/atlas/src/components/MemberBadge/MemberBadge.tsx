@@ -1,6 +1,8 @@
 import { FC } from 'react'
 
-import { MemberBadgeWrapper, RemoveButton, StyledHandleText, StyledSVGCloseIcon } from './MemberBadge.styles'
+import { Text } from '@/components/Text'
+
+import { MemberBadgeWrapper, RemoveButton, StyledSVGCloseIcon } from './MemberBadge.styles'
 
 import { Avatar } from '../Avatar'
 
@@ -15,9 +17,9 @@ export const MemberBadge: FC<MemberBadgeProps> = ({ avatarUri, handle, onDeleteC
   return (
     <MemberBadgeWrapper className={className} withoutButton={!onDeleteClick}>
       <Avatar size="bid" assetUrl={avatarUri} loading={isLoadingAvatar} />
-      <StyledHandleText variant="t100" as="p">
+      <Text variant="t100" as="p" margin={{ left: 2 }}>
         {handle}
-      </StyledHandleText>
+      </Text>
       {onDeleteClick && (
         <RemoveButton type="button" onClick={onDeleteClick}>
           <StyledSVGCloseIcon />

@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 
-import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgIllustrativeFileFailed } from '@/components/_icons'
 import { SvgBgPattern } from '@/components/_illustrations'
@@ -80,11 +79,6 @@ export const EditCoverMobileButton = styled(Button)`
   ${media.md} {
     display: none;
   }
-`
-
-export const EditButtonMessage = styled(Text)`
-  color: ${cVar('colorCoreNeutral100')};
-  margin-top: ${sizes(1)};
 `
 
 export const FailedUploadContainer = styled.div`

@@ -1,6 +1,8 @@
 import { ChangeEvent, forwardRef } from 'react'
 
-import { LabelText, SwitchCheckbox, SwitchLabel, SwitchSlider, SwitchWrapper } from './Switch.styles'
+import { Text } from '@/components/Text'
+
+import { SwitchCheckbox, SwitchLabel, SwitchSlider, SwitchWrapper } from './Switch.styles'
 
 export type SwitchProps = {
   className?: string
@@ -26,7 +28,11 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
           />
           <SwitchSlider />
         </SwitchWrapper>
-        {label && <LabelText variant="t200">{label}</LabelText>}
+        {label && (
+          <Text as="span" variant="t200" margin={{ left: 2 }}>
+            {label}
+          </Text>
+        )}
       </SwitchLabel>
     )
   }

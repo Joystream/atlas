@@ -27,7 +27,7 @@ const getDescription = (activity: ActivitiesRecord) => {
       return (
         <>
           {activity.from.handle} placed a bid for{' '}
-          <NumberFormat color="inherit" format="short" value={activity.bidAmount} withToken />
+          <NumberFormat as="span" color="inherit" format="short" value={activity.bidAmount} withToken />
         </>
       )
     case 'Sale':
@@ -37,14 +37,14 @@ const getDescription = (activity: ActivitiesRecord) => {
           <StyledLink to={absoluteRoutes.viewer.member(activity.to?.handle)} onClick={(e) => e.stopPropagation()}>
             {activity.to?.handle}
           </StyledLink>{' '}
-          NFT for <NumberFormat color="inherit" format="short" value={activity.price} withToken />
+          NFT for <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken />
         </>
       )
     case 'Purchase':
       return (
         <>
           {activity.from?.handle} purchased NFT for{' '}
-          <NumberFormat color="inherit" format="short" value={activity.price} withToken /> from{' '}
+          <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken /> from{' '}
           <StyledLink to={absoluteRoutes.viewer.member(activity.to?.handle)} onClick={(e) => e.stopPropagation()}>
             {activity.to?.handle}{' '}
           </StyledLink>
@@ -56,7 +56,7 @@ const getDescription = (activity: ActivitiesRecord) => {
           {activity.from?.handle} listed NFT{' '}
           {activity.typeName === 'NftSellOrderMadeEvent' && activity.price && (
             <>
-              for <NumberFormat color="inherit" format="short" value={activity.price} withToken />
+              for <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken />
             </>
           )}
         </>
@@ -71,7 +71,7 @@ const getDescription = (activity: ActivitiesRecord) => {
       return (
         <>
           {activity.from?.handle} changed price to{' '}
-          <NumberFormat color="inherit" format="short" value={activity.price} withToken />
+          <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken />
         </>
       )
   }
@@ -114,43 +114,53 @@ export const MemberActivity: FC<MemberActivityProps> = ({ memberId, sort = 'crea
           </GridItem>
           {!loading && activitiesTotalCounts && (
             <GridItem colSpan={{ base: 12, sm: 3 }} colStart={{ sm: -4 }}>
-              <Text variant="h500">Overview</Text>
+              <Text as="span" variant="h500">
+                Overview
+              </Text>
               <OverviewContainer>
                 <OverviewItem>
                   <StyledIconWrapper icon={<SvgActionBuyNow />} size="large" />
                   <OverviewTextContainer>
-                    <Text variant="t100" secondary>
+                    <Text as="span" variant="t100" color="colorText">
                       NFTs bought
                     </Text>
-                    <Text variant="t300">{activitiesTotalCounts.nftsBoughts}</Text>
+                    <Text as="span" variant="t300">
+                      {activitiesTotalCounts.nftsBoughts}
+                    </Text>
                   </OverviewTextContainer>
                 </OverviewItem>
                 <OverviewItem>
                   <StyledIconWrapper icon={<SvgActionSell />} size="large" />
                   <OverviewTextContainer>
-                    <Text variant="t100" secondary>
+                    <Text as="span" variant="t100" color="colorText">
                       NFTs sold
                     </Text>
-                    <Text variant="t300">{activitiesTotalCounts.nftsSold}</Text>
+                    <Text as="span" variant="t300">
+                      {activitiesTotalCounts.nftsSold}
+                    </Text>
                   </OverviewTextContainer>
                 </OverviewItem>
                 <GridRowWrapper>
                   <OverviewItem>
                     <StyledIconWrapper icon={<SvgActionMint />} size="large" />
                     <OverviewTextContainer>
-                      <Text variant="t100" secondary>
+                      <Text as="span" variant="t100" color="colorText">
                         NFTs created
                       </Text>
-                      <Text variant="t300">{activitiesTotalCounts.nftsIssued}</Text>
+                      <Text as="span" variant="t300">
+                        {activitiesTotalCounts.nftsIssued}
+                      </Text>
                     </OverviewTextContainer>
                   </OverviewItem>
                   <OverviewItem>
                     <StyledIconWrapper icon={<SvgActionBid />} size="large" />
                     <OverviewTextContainer>
-                      <Text variant="t100" secondary>
+                      <Text as="span" variant="t100" color="colorText">
                         Bid placed
                       </Text>
-                      <Text variant="t300">{activitiesTotalCounts.nftsBidded}</Text>
+                      <Text as="span" variant="t300">
+                        {activitiesTotalCounts.nftsBidded}
+                      </Text>
                     </OverviewTextContainer>
                   </OverviewItem>
                 </GridRowWrapper>

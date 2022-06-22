@@ -41,8 +41,10 @@ export const ExtensionStep: FC<ExtensionStepProps> = ({ nextStepPath }) => {
     <>
       <StepWrapper>
         <StyledPolkadotLogo />
-        <StepTitle variant="h500">Add Polkadot extension</StepTitle>
-        <StepSubTitle secondary variant="t200">
+        <StepTitle as="h4" variant="h500">
+          Add Polkadot extension
+        </StepTitle>
+        <StepSubTitle as="p" color="colorText" variant="t200">
           To manage your blockchain account, you will need a Polkadot browser extension. Please install it using the
           following link:
         </StepSubTitle>
@@ -55,7 +57,7 @@ export const ExtensionStep: FC<ExtensionStepProps> = ({ nextStepPath }) => {
       </StepWrapper>
       <StyledStepFooter>
         <BottomBarIcon />
-        <Text variant="t200" secondary>
+        <Text as="span" variant="t200" color="colorText">
           Please reload the page and allow access after installing the extension
         </Text>
       </StyledStepFooter>
@@ -66,22 +68,24 @@ export const ExtensionStep: FC<ExtensionStepProps> = ({ nextStepPath }) => {
 export const PolkadotExtensionRejected: FC = () => (
   <PolkadotExtensionRejectedWrapper>
     <StyledPolkadotLogo />
-    <StepTitle variant="h500">Allow Polkadot extension access</StepTitle>
-    <StepSubTitle secondary variant="t200">
+    <StepTitle as="h4" variant="h500">
+      Allow Polkadot extension access
+    </StepTitle>
+    <StepSubTitle as="p" color="colorText" variant="t200">
       If you’ve denied Polkadot extension access for this website, you won’t be able to use Joystream studio. To allow
       access, you can take the following steps:
     </StepSubTitle>
     <ol>
-      <StyledListItem secondary as="li" variant="t100">
+      <StyledListItem color="colorText" as="li" variant="t100">
         Open the extension popup with the icon in your browser bar
       </StyledListItem>
-      <StyledListItem secondary as="li" variant="t100">
+      <StyledListItem color="colorText" as="li" variant="t100">
         Use cog icon in upper right corner to open settings and select "Manage Website Access"
       </StyledListItem>
-      <StyledListItem secondary as="li" variant="t100">
+      <StyledListItem color="colorText" as="li" variant="t100">
         Find play.joystream.org address and switch it to allowed
       </StyledListItem>
-      <StyledListItem secondary as="li" variant="t100">
+      <StyledListItem color="colorText" as="li" variant="t100">
         Reload the page
       </StyledListItem>
     </ol>

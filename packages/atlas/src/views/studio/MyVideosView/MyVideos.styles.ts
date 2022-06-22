@@ -3,14 +3,9 @@ import styled from '@emotion/styled'
 import { Banner } from '@/components/Banner'
 import { Grid } from '@/components/Grid'
 import { Pagination } from '@/components/Pagination'
-import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { Select } from '@/components/_inputs/Select'
 import { cVar, media, sizes } from '@/styles'
-
-export const StyledText = styled(Text)`
-  margin: ${sizes(12)} 0;
-`
 
 export const TabsContainer = styled.div`
   margin-bottom: ${sizes(12)};

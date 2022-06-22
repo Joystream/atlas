@@ -5,7 +5,6 @@ import { ForwardedRef, ReactNode, Ref, forwardRef, useMemo } from 'react'
 import { List } from '@/components/List'
 import { ListItemProps } from '@/components/ListItem'
 import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
-import { cVar } from '@/styles'
 import { ConsoleLogger } from '@/utils/logs'
 
 import {
@@ -107,13 +106,14 @@ export const _Select = <T extends unknown>(
         >
           {icon && !inlineLabel && <NodeContainer isOpen={isOpen}>{icon}</NodeContainer>}
           {inlineLabel && (
-            <InlineLabel variant={size === 'large' ? 't300-strong' : 't200-strong'} secondary>
+            <InlineLabel as="span" variant={size === 'large' ? 't300-strong' : 't200-strong'} color="colorText">
               {inlineLabel}:
             </InlineLabel>
           )}
           <ValueAndPlaceholderText
+            as="span"
             variant={size === 'large' ? 't300' : 't200'}
-            color={selectedItem ? undefined : cVar('colorTextMuted')}
+            color={selectedItem ? undefined : 'colorTextMuted'}
           >
             {selectedItem ? selectedItem.name : placeholder}
           </ValueAndPlaceholderText>

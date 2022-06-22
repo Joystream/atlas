@@ -13,7 +13,9 @@ const Link: FC<typeof viewerNavItems[number]> = ({ to, icon, name }) => {
   return (
     <NavLink to={to} active={match}>
       {icon}
-      <NavTitle variant="t100-strong">{name}</NavTitle>
+      <NavTitle as="span" variant="t100-strong">
+        {name}
+      </NavTitle>
     </NavLink>
   )
 }

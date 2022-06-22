@@ -22,15 +22,11 @@ export const TextAreaWrapper = styled.div`
 
 export const CustomPlaceholder = styled(Text)`
   position: absolute;
-  padding: 2px;
+  padding: ${sizes(0.5)};
   opacity: 0;
   top: 0;
-  color: ${cVar('colorTextMuted')};
   pointer-events: none;
   transition: all ${cVar('animationTransitionMedium')};
-`
-export const CustomPlaceholderHandle = styled(Text)`
-  color: inherit;
 `
 
 export const StyledTextArea = styled(TextareaAutosize)<{ 'data-processing'?: boolean }>`

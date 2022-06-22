@@ -9,7 +9,9 @@ export const StudioLoading: FC = () => {
   return (
     <LoadingStudioContainer>
       <Spinner size="large" />
-      <Text variant="h700">Loading Joystream Studio...</Text>
+      <Text as="span" variant="h700">
+        Loading Joystream Studio...
+      </Text>
     </LoadingStudioContainer>
   )
 }

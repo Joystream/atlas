@@ -444,8 +444,12 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
                 )}
               />
               {!newChannel && (
-                <SubTitle variant="t200">
-                  {channel?.follows ? <NumberFormat value={channel.follows} format="short" variant="t200" /> : 0}{' '}
+                <SubTitle as="span" variant="t200">
+                  {channel?.follows ? (
+                    <NumberFormat as="span" value={channel.follows} format="short" variant="t200" />
+                  ) : (
+                    0
+                  )}{' '}
                   Followers
                 </SubTitle>
               )}

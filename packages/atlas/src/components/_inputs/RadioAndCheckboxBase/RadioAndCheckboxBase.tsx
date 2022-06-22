@@ -1,7 +1,6 @@
 import { FC, MouseEvent, PropsWithChildren } from 'react'
 
 import { Text } from '@/components/Text'
-import { cVar } from '@/styles'
 
 import { CaptionText, RadioAndCheckboxLabel } from './RadioAndCheckboxBase.styles'
 
@@ -27,12 +26,12 @@ export const RadioAndCheckboxBase: FC<RadioAndCheckboxBaseProps> = ({
     <RadioAndCheckboxLabel hasLabel={!!label} disabled={disabled} className={className} onClick={onClick}>
       {children}
       {label && (
-        <Text variant="t200" secondary={disabled}>
+        <Text as="span" variant="t200" color={disabled ? 'colorText' : undefined}>
           {label}
         </Text>
       )}
       {caption && (
-        <CaptionText variant="t100" color={error ? cVar('colorTextError') : undefined} secondary>
+        <CaptionText as="span" variant="t100" color={error ? 'colorTextError' : 'colorText'}>
           {caption}
         </CaptionText>
       )}

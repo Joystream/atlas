@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 
 import { Banner } from '@/components/Banner'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { Text } from '@/components/Text'
 import { FormField } from '@/components/_inputs/FormField'
 import { MultiFileSelect } from '@/components/_inputs/MultiFileSelect'
 import { TitleInput } from '@/components/_inputs/TitleInput'
@@ -60,10 +59,6 @@ export const StyledTitleArea = styled(TitleInput)`
   width: 100%;
 `
 
-export const MoreSettingsDescription = styled(Text)`
-  margin-top: ${sizes(2)};
-`
-
 export const MoreSettingsSection = styled.div<MoreSettingsSectionProps>`
   display: grid;
   gap: ${sizes(8)};
@@ -101,8 +96,4 @@ export const FileValidationBanner = styled(Banner)`
   path {
     fill: ${cVar('colorTextError')};
   }
-`
-
-export const FileValidationText = styled(Text)`
-  color: ${cVar('colorTextError')};
 `

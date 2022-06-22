@@ -566,7 +566,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                   </VolumeSliderContainer>
                 </VolumeControl>
                 <CurrentTimeWrapper>
-                  <CurrentTime variant="t200">
+                  <CurrentTime as="span" variant="t200">
                     {formatDurationShort(videoTime)} / {formatDurationShort(round(player?.duration() || 0))}
                   </CurrentTime>
                 </CurrentTimeWrapper>

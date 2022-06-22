@@ -18,8 +18,12 @@ export const OwnerPill: FC<OwnerPillProps> = ({ handle, avatar, onClick, title }
   return (
     <OwnerPillWrapper onClick={onClick} title={title}>
       <Avatar size="bid" {...avatar} />
-      <DesaturedText variant="t100">Owner:</DesaturedText>
-      <MembershipHandle variant="t100">{handle}</MembershipHandle>
+      <DesaturedText as="span" variant="t100">
+        Owner:
+      </DesaturedText>
+      <MembershipHandle as="span" variant="t100">
+        {handle}
+      </MembershipHandle>
     </OwnerPillWrapper>
   )
 }

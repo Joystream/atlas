@@ -9,7 +9,9 @@ export const CopyrightPolicyView: FC = () => {
   return (
     <div>
       {headTags}
-      <Text variant="h400">DMCA Policy For Content Takedown</Text>
+      <Text as="h1" variant="h400">
+        DMCA Policy For Content Takedown
+      </Text>
       <LegalParagraph>
         Jsgenesis AS, the developers of the Joystream protocol, have established a copyright infringement policy in
         accordance with the Digital Millennium Copyright Act.

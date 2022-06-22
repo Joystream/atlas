@@ -117,7 +117,9 @@ export const NftsView: FC = () => {
       <HeaderWrapper>
         <HeaderContainer>
           <GridItem colSpan={{ base: 2, sm: 1 }}>
-            <Text variant={mdMatch ? 'h500' : 'h400'}>All NFTs {totalCount !== undefined && `(${totalCount})`}</Text>
+            <Text as="p" variant={mdMatch ? 'h500' : 'h400'}>
+              All NFTs {totalCount !== undefined && `(${totalCount})`}
+            </Text>
           </GridItem>
           {!smMatch && sortingNode}
           <div>

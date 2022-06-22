@@ -47,10 +47,6 @@ export const TitleContainer = styled.div`
   }
 `
 
-export const Title = styled(Text)`
-  margin-bottom: 0;
-`
-
 export const StyledSelect = styled(Select)`
   grid-area: sort;
 
