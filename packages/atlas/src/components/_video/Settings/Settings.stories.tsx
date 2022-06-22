@@ -37,7 +37,7 @@ const Template: Story<SettingsProps> = (args) => {
       })),
     },
   ]
-  return <Settings {...args} settings={settings} />
+  return <Settings {...args} openedOption="Speed" settings={settings} />
 }
 
 export const Default = Template.bind({})

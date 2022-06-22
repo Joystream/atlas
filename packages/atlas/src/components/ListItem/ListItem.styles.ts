@@ -40,6 +40,9 @@ const interactiveStyles = css`
 `
 type ContainerProps = { size: ListItemSizes; hasNodeStart: boolean; disabled?: boolean; highlight?: boolean }
 export const Container = styled.div<ContainerProps>`
+  border: none;
+  width: 100%;
+  justify-items: start;
   display: grid;
   grid-gap: ${sizes(3)};
   grid-auto-flow: column;

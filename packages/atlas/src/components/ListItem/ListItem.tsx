@@ -17,6 +17,7 @@ import {
 export type ListItemProps = {
   label: ReactNode
   caption?: ReactNode
+  asButton?: boolean
   selected?: boolean
   disabled?: boolean
   // indicative that onClick will perform a destructive action of some kind
@@ -36,6 +37,7 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
       label,
       size = 'medium',
       caption,
+      asButton,
       captionPosition = 'bottom',
       disabled,
       destructive,
@@ -52,6 +54,7 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
     return (
       <Container
         highlight={highlight}
+        as={asButton ? 'button' : undefined}
         className={className}
         onClick={onClick}
         disabled={disabled}

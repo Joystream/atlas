@@ -1,28 +1,12 @@
 import { FC } from 'react'
 
+import { ListItem } from '@/components/ListItem'
 import { Text } from '@/components/Text'
 import { SvgActionChevronL, SvgActionChevronR } from '@/components/_icons'
 
-import {
-  GridWrapper,
-  SettingsHeader,
-  SettingsListItemButton,
-  SettingsListItemWrapper,
-  SettingsUnorderedList,
-  SettingsWrapper,
-  StyledSvgActionCheck,
-} from './Settings.styles'
+import { NodeEndWrapper, SettingsContainer, SettingsWrapper, StyledSvgActionCheck } from './Settings.styles'
 
 export type SettingValue = string | number | boolean
-
-type SettingsListItemProps = {
-  label: string
-  value: SettingValue
-  isOption?: boolean
-  checked?: boolean
-  toggleable?: boolean
-  onSettingClick?: (setting: { value: SettingValue; label: string }) => void
-}
 
 export type SettingsProps = {
   settings: Setting[]
@@ -40,7 +24,7 @@ export const Settings: FC<SettingsProps> = ({ settings, openedOption, onOpenedOp
     onSettingClick: ({ label }) => onOpenedOption(label),
   }))
 
-  const selectedOptions = settings?.find((s) => s.label === openedOption)
+  const selectedOptions = settings?.find((setting) => setting.label === openedOption)
 
   const options = selectedOptions
     ? (selectedOptions.options.map((opt) => ({
@@ -63,6 +47,15 @@ export const Settings: FC<SettingsProps> = ({ settings, openedOption, onOpenedOp
   )
 }
 
+type SettingsListItemProps = {
+  label: string
+  value: SettingValue
+  isOption?: boolean
+  checked?: boolean
+  toggleable?: boolean
+  onSettingClick?: (setting: { value: SettingValue; label: string }) => void
+}
+
 type SettingsListProps = {
   title: string
   settings?: SettingsListItemProps[]
@@ -73,59 +66,41 @@ type SettingsListProps = {
 export const SettingList: FC<SettingsListProps> = ({ settings, title, onHeaderClick, isOption = false }) => {
   return (
     <SettingsWrapper>
-      <SettingsHeader
-        as={isOption ? 'button' : 'header'}
-        isClickable={isOption}
+      <ListItem
+        asButton={isOption}
+        nodeStart={isOption ? <SvgActionChevronL /> : undefined}
+        label={title}
+        size="large"
         onClick={(event) => {
           event.stopPropagation()
           onHeaderClick?.()
         }}
-      >
-        {isOption && <SvgActionChevronL />}
-        <Text variant="h100" color="colorText" as="span">
-          {title}
-        </Text>
-      </SettingsHeader>
-      <SettingsUnorderedList>
+      />
+      <SettingsContainer>
         {settings?.map((setting, idx) => (
-          <SettingsListItem isOption={isOption} key={idx} {...setting} />
+          <ListItem
+            size="large"
+            label={setting.label}
+            nodeEnd={
+              !isOption ? (
+                <NodeEndWrapper>
+                  <Text variant="t100" color="colorText" as="span">
+                    {setting.value}
+                  </Text>
+                  <SvgActionChevronR />
+                </NodeEndWrapper>
+              ) : undefined
+            }
+            nodeStart={isOption ? <StyledSvgActionCheck checked={setting.checked} /> : undefined}
+            asButton
+            onClick={(event) => {
+              event.stopPropagation()
+              setting.onSettingClick?.({ value: setting.value, label: setting.label })
+            }}
+            key={idx}
+          />
         ))}
-      </SettingsUnorderedList>
+      </SettingsContainer>
     </SettingsWrapper>
-  )
-}
-
-const SettingsListItem: FC<SettingsListItemProps> = ({
-  label,
-  value,
-  checked,
-  toggleable,
-  onSettingClick,
-  isOption = false,
-}) => {
-  return (
-    <SettingsListItemWrapper>
-      <SettingsListItemButton
-        onClick={(event) => {
-          event.stopPropagation()
-          onSettingClick?.({ value, label })
-        }}
-      >
-        <GridWrapper>
-          {isOption && <StyledSvgActionCheck checked={checked} />}
-          <Text variant="t200" as="span">
-            {label}
-          </Text>
-        </GridWrapper>
-        {!isOption && (
-          <GridWrapper>
-            <Text variant="t100" color="colorText" as="span">
-              {value}
-            </Text>
-            {!toggleable && <SvgActionChevronR />}
-          </GridWrapper>
-        )}
-      </SettingsListItemButton>
-    </SettingsListItemWrapper>
   )
 }

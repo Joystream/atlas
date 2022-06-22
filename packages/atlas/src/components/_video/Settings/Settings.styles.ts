@@ -28,30 +28,20 @@ export const SettingsUnorderedList = styled.ul`
   list-style: none;
 `
 
-export const SettingsListItemWrapper = styled.li`
+export const SettingsContainer = styled.div`
   padding: 0;
+  border-top: 1px solid ${cVar('colorBorderMutedAlpha')};
+  padding: ${sizes(2)} 0;
   margin: 0;
+  max-height: 320px;
+  overflow-y: auto;
 `
-export const SettingsListItemButton = styled.button<{ disabled?: boolean }>`
-  cursor: pointer;
-  border: none;
-  background: unset;
-  width: 100%;
-  padding: ${sizes(3.5)} ${sizes(4)};
-  display: flex;
-  justify-content: space-between;
-  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 
-  @supports selector(:focus-visible) {
-    :hover,
-    :focus-visible {
-      background-color: ${cVar('colorBackgroundStrongAlpha')};
-    }
-  }
-
-  :hover:not(:focus) {
-    background-color: ${cVar('colorBackgroundStrongAlpha')};
-  }
+export const NodeEndWrapper = styled.div`
+  display: grid;
+  grid-auto-flow: column;
+  gap: ${sizes(3)};
+  align-items: center;
 `
 
 export const StyledSvgActionCheck = styled(SvgActionCheck)<{ checked?: boolean }>`
@@ -61,11 +51,4 @@ export const StyledSvgActionCheck = styled(SvgActionCheck)<{ checked?: boolean }
   path {
     fill: ${cVar('colorTextStrong')};
   }
-`
-
-export const GridWrapper = styled.div`
-  display: grid;
-  grid-auto-flow: column;
-  gap: ${sizes(2)};
-  justify-content: start;
 `

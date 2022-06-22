@@ -48,6 +48,7 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({ boundaries
         ref={popoverRef}
         boundariesElement={boundariesElement}
         boundariesPadding={{ right: 16 }}
+        flipEnabled={false}
         trigger={
           <PlayerControlButton onClick={handleToggleSettings} tooltipText="Settings">
             {isSettingsOpened ? <StyledSvgControlsSettingsSolid /> : <StyledSvgControlsSettingsOutline />}
