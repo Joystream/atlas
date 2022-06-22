@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
-import { Placement } from '@popperjs/core'
+import { Boundary, Padding, Placement } from '@popperjs/core'
 import Tippy from '@tippyjs/react/headless'
 import { ForwardRefRenderFunction, PropsWithChildren, ReactNode, forwardRef, useImperativeHandle, useRef } from 'react'
-import { Instance } from 'tippy.js'
+import { Instance, Plugin } from 'tippy.js'
 
 export type PopoverImperativeHandle = {
   hide: () => void
@@ -13,6 +13,8 @@ export type PopoverProps = PropsWithChildren<{
   trigger: ReactNode
   triggerMode?: string
   triggerTarget?: Element | Element[] | null | undefined
+  boundariesElement?: Boundary | null
+  boundariesPadding?: Padding
   placement?: Placement
   offset?: [number, number]
   hideOnClick?: boolean
@@ -33,6 +35,26 @@ const onTrigger = (instance: Instance<unknown>) => {
   })
 }
 
+const hideOnEscPlugin: Plugin = {
+  name: 'hideOnEsc',
+  defaultValue: true,
+  fn({ hide }) {
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        hide()
+      }
+    }
+    return {
+      onShow() {
+        document.addEventListener('keydown', onKeyDown)
+      },
+      onHide() {
+        document.removeEventListener('keydown', onKeyDown)
+      },
+    }
+  },
+}
+
 const _Popover: ForwardRefRenderFunction<PopoverImperativeHandle | undefined, PopoverProps> = (
   {
     hideOnClick = true,
@@ -47,6 +69,8 @@ const _Popover: ForwardRefRenderFunction<PopoverImperativeHandle | undefined, Po
     className,
     disabled,
     flipEnabled = true,
+    boundariesElement,
+    boundariesPadding,
   },
   ref
 ) => {
@@ -55,6 +79,7 @@ const _Popover: ForwardRefRenderFunction<PopoverImperativeHandle | undefined, Po
   useImperativeHandle(ref, () => ({
     hide: () => tippyRef.current?.hide(),
     show: () => tippyRef.current?.show(),
+    unmount: () => tippyRef.current?.unmount(),
   }))
 
   return (
@@ -69,6 +94,7 @@ const _Popover: ForwardRefRenderFunction<PopoverImperativeHandle | undefined, Po
       onCreate={(instance) => {
         tippyRef.current = instance
       }}
+      plugins={[hideOnEscPlugin]}
       onTrigger={onTrigger}
       onShow={(instance) => {
         onTrigger(instance)
@@ -86,18 +112,30 @@ const _Popover: ForwardRefRenderFunction<PopoverImperativeHandle | undefined, Po
           }, EXIT_ANIMATION_DURATION)
         })
       }}
-      render={(attrs) => (
-        <ContentContainer {...attrs} className={className}>
-          {children}
-        </ContentContainer>
-      )}
+      render={(attrs) => {
+        return (
+          <ContentContainer {...attrs} className={className}>
+            {children}
+          </ContentContainer>
+        )
+      }}
       popperOptions={{
-        modifiers: [{ name: 'flip', enabled: flipEnabled }],
+        modifiers: [
+          { name: 'flip', enabled: flipEnabled },
+          {
+            name: 'preventOverflow',
+            enabled: !!boundariesElement,
+            options: {
+              boundary: boundariesElement,
+              padding: boundariesPadding,
+            },
+          },
+        ],
       }}
       placement={placement}
       offset={offset}
     >
-      <TriggerContainer tabIndex={0}>{trigger}</TriggerContainer>
+      <TriggerContainer tabIndex={1}>{trigger}</TriggerContainer>
     </Tippy>
   )
 }

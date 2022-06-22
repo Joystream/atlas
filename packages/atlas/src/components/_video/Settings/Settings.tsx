@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 
 import { Text } from '@/components/Text'
 import { SvgActionChevronL, SvgActionChevronR } from '@/components/_icons'
@@ -6,6 +6,7 @@ import { SvgActionChevronL, SvgActionChevronR } from '@/components/_icons'
 import {
   GridWrapper,
   SettingsHeader,
+  SettingsListItemButton,
   SettingsListItemWrapper,
   SettingsUnorderedList,
   SettingsWrapper,
@@ -25,18 +26,18 @@ type SettingsListItemProps = {
 
 export type SettingsProps = {
   settings: Setting[]
+  openedOption: string | null
+  onOpenedOption: (option: string | null) => void
 }
 
 export type Setting = {
   options: SettingsListItemProps[]
 } & SettingsListItemProps
 
-export const Settings: FC<SettingsProps> = ({ settings }) => {
-  const [openedOption, setOpenedOption] = useState<string | null>(null)
-
-  const baseMenu: Setting[] = settings.map((s) => ({
-    ...s,
-    onSettingClick: ({ label }) => setOpenedOption(label),
+export const Settings: FC<SettingsProps> = ({ settings, openedOption, onOpenedOption }) => {
+  const baseMenu: Setting[] = settings.map((setting) => ({
+    ...setting,
+    onSettingClick: ({ label }) => onOpenedOption(label),
   }))
 
   const selectedOptions = settings?.find((s) => s.label === openedOption)
@@ -46,7 +47,7 @@ export const Settings: FC<SettingsProps> = ({ settings }) => {
         ...opt,
         onSettingClick: (setting) => {
           opt?.onSettingClick?.(setting)
-          setOpenedOption(null)
+          onOpenedOption(null)
         },
       })) as SettingsListItemProps[])
     : []
@@ -56,14 +57,7 @@ export const Settings: FC<SettingsProps> = ({ settings }) => {
       {openedOption === null ? (
         <SettingList title="Settings" settings={baseMenu} />
       ) : (
-        <SettingList
-          title={openedOption}
-          isOption
-          onHeaderClick={() => {
-            return setOpenedOption(null)
-          }}
-          settings={options}
-        />
+        <SettingList title={openedOption} isOption onHeaderClick={() => onOpenedOption(null)} settings={options} />
       )}
     </>
   )
@@ -80,14 +74,15 @@ export const SettingList: FC<SettingsListProps> = ({ settings, title, onHeaderCl
   return (
     <SettingsWrapper>
       <SettingsHeader
+        as={isOption ? 'button' : 'header'}
         isClickable={isOption}
-        onClick={(e) => {
-          e.stopPropagation()
+        onClick={(event) => {
+          event.stopPropagation()
           onHeaderClick?.()
         }}
       >
         {isOption && <SvgActionChevronL />}
-        <Text variant="h100" secondary>
+        <Text variant="h100" color="colorText" as="span">
           {title}
         </Text>
       </SettingsHeader>
@@ -109,24 +104,28 @@ const SettingsListItem: FC<SettingsListItemProps> = ({
   isOption = false,
 }) => {
   return (
-    <SettingsListItemWrapper
-      onClick={(e) => {
-        e.stopPropagation()
-        onSettingClick?.({ value, label })
-      }}
-    >
-      <GridWrapper>
-        {isOption && <StyledSvgActionCheck checked={checked} />}
-        <Text variant="t200">{label}</Text>
-      </GridWrapper>
-      {!isOption && (
+    <SettingsListItemWrapper>
+      <SettingsListItemButton
+        onClick={(event) => {
+          event.stopPropagation()
+          onSettingClick?.({ value, label })
+        }}
+      >
         <GridWrapper>
-          <Text variant="t100" secondary>
-            {value}
+          {isOption && <StyledSvgActionCheck checked={checked} />}
+          <Text variant="t200" as="span">
+            {label}
           </Text>
-          {!toggleable && <SvgActionChevronR />}
         </GridWrapper>
-      )}
+        {!isOption && (
+          <GridWrapper>
+            <Text variant="t100" color="colorText" as="span">
+              {value}
+            </Text>
+            {!toggleable && <SvgActionChevronR />}
+          </GridWrapper>
+        )}
+      </SettingsListItemButton>
     </SettingsListItemWrapper>
   )
 }
