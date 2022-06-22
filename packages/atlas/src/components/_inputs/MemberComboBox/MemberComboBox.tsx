@@ -112,7 +112,11 @@ export const MemberComboBox: FC<MemberComboBoxProps> = ({
         }}
       />
       <MemberBadgesWrapper>
-        {selectedMembers.length > 0 && <StyledSelectedText variant="t200-strong">Selected: </StyledSelectedText>}
+        {selectedMembers.length > 0 && (
+          <StyledSelectedText as="span" variant="t200-strong" margin={{ bottom: 4 }} color="colorTextMuted">
+            Selected:{' '}
+          </StyledSelectedText>
+        )}
         {selectedMembers.map((member) => (
           <MemberBadgeWithResolvedAsset
             key={member.id}

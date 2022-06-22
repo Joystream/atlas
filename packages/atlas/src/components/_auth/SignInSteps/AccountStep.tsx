@@ -22,7 +22,6 @@ import {
   StyledRadioButton,
   StyledSpinner,
   StyledStepWrapper,
-  SubTitle,
 } from './AccountStep.styles'
 import {
   BottomBarIcon,
@@ -76,25 +75,27 @@ export const AccountStep: FC<AccountStepProps> = ({
           <>
             <StyledStepWrapper>
               <AccountStepImg />
-              <StepTitle variant="h500">Create blockchain account</StepTitle>
-              <SubTitle variant="t200" secondary>
+              <StepTitle as="h1" variant="h500">
+                Create blockchain account
+              </StepTitle>
+              <Text as="p" variant="t200" color="colorText" margin={{ top: 2 }}>
                 Use the Polkadot extension to generate your personal keypair. Follow these instructions:
-              </SubTitle>
+              </Text>
               <OrderedSteps>
-                <OrderedStep secondary variant="t100" as="li">
+                <OrderedStep color="colorText" variant="t100" as="li">
                   Open the extension popup with the icon in your browser bar
                 </OrderedStep>
-                <OrderedStep secondary variant="t100" as="li">
+                <OrderedStep color="colorText" variant="t100" as="li">
                   Click the plus icon
                 </OrderedStep>
-                <OrderedStep secondary variant="t100" as="li">
+                <OrderedStep color="colorText" variant="t100" as="li">
                   Continue with instructions presented on the screen
                 </OrderedStep>
               </OrderedSteps>
             </StyledStepWrapper>
             <StepFooter>
               <BottomBarIcon />
-              <Text variant="t200" secondary>
+              <Text as="span" variant="t200" color="colorText">
                 Make sure to safely save your seed phrase!
               </Text>
             </StepFooter>
@@ -107,8 +108,10 @@ export const AccountStep: FC<AccountStepProps> = ({
                 <SvgControlsConnect />
                 <StyledJoystreamLogo />
               </IconGroup>
-              <StepTitle variant="h500">Connect account</StepTitle>
-              <StepSubTitle variant="t200" secondary>
+              <StepTitle as="h1" variant="h500">
+                Connect account
+              </StepTitle>
+              <StepSubTitle as="p" variant="t200" color="colorText">
                 Select Polkadot account which you want to use to manage your new Joystream membership:
               </StepSubTitle>
               <AccountsWrapper>
@@ -149,8 +152,10 @@ export const AccountBar: FC<AccountBarProps> = ({ name, id, onSelect, selectedVa
       <AccountInfo>
         <StyledPolkadotIdenticon id={id} />
         <div>
-          <Text variant="t300-strong">{name}</Text>
-          <AccountAddress secondary variant="t100">
+          <Text as="span" variant="t300-strong">
+            {name}
+          </Text>
+          <AccountAddress as="span" color="colorText" variant="t100">
             {id}
           </AccountAddress>
         </div>

@@ -6,6 +6,7 @@ import { VideoOrderByInput } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Tabs } from '@/components/Tabs'
+import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionAddVideo, SvgActionUpload, SvgAlertsInformative24 } from '@/components/_icons'
@@ -31,7 +32,6 @@ import {
   StyledGrid,
   StyledPagination,
   StyledSelect,
-  StyledText,
   TabsContainer,
 } from './MyVideos.styles'
 import { NewVideoTile } from './NewVideoTile'
@@ -278,7 +278,9 @@ export const MyVideosView = () => {
   return (
     <LimitedWidthContainer>
       {headTags}
-      <StyledText variant="h700">My videos</StyledText>
+      <Text as="h1" variant="h700" margin={{ top: 12, bottom: 12 }}>
+        My videos
+      </Text>
       {!smMatch && sortVisibleAndUploadButtonVisible && (
         <MobileButton
           size="large"

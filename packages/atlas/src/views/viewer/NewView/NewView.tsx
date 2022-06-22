@@ -13,7 +13,6 @@ export const NewView: FC = () => {
     <VideoContentTemplate title="New & Noteworthy" cta={['home', 'channels', 'popular']}>
       {headTags}
       <InfiniteVideoGrid title="Recently uploaded" onDemand />
-      <InfiniteVideoGrid title="Videos worth watching" videoWhereInput={{ isFeatured_eq: true }} onDemand titleLoader />
       <ExpandableChannelsList
         title="Promising new channels"
         queryType="promising"

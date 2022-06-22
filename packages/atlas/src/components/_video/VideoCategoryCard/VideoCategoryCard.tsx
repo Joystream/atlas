@@ -16,7 +16,6 @@ import {
   IconCircle,
   PieChart,
   PieSegment,
-  Title,
   VideosNumberContainer,
 } from './VideoCategoryCard.style'
 
@@ -72,9 +71,13 @@ export const VideoCategoryCard: FC<VideoCategoryCardProps> = ({
                 height={variant === 'default' ? '32px' : '20px'}
               />
             ) : (
-              <Title variantCategory={variant} variant={variant === 'default' ? 'h500' : 'h300'}>
+              <Text
+                as="span"
+                variant={variant === 'default' ? 'h500' : 'h300'}
+                margin={{ bottom: variant === 'default' ? 6 : 4 }}
+              >
                 {title}
-              </Title>
+              </Text>
             )}
 
             <VideosNumberContainer>
@@ -86,7 +89,7 @@ export const VideoCategoryCard: FC<VideoCategoryCardProps> = ({
                     <CircleDefaultBackground />
                     <PieSegment value={pieChartValue} />
                   </PieChart>
-                  <Text variant={variant === 'default' ? 't200' : 't100'} secondary>
+                  <Text as="span" variant={variant === 'default' ? 't200' : 't100'} color="colorText">
                     {categoryVideosCount} videos
                   </Text>
                 </>

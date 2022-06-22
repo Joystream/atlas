@@ -3,6 +3,7 @@ import { CSSTransition } from 'react-transition-group'
 
 import { useBasicChannel } from '@/api/hooks'
 import { Avatar } from '@/components/Avatar'
+import { Text } from '@/components/Text'
 import { SvgActionNewChannel } from '@/components/_icons'
 import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { NavItem, NavItemProps } from '@/components/_navigation/NavItem'
@@ -13,7 +14,6 @@ import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
 import {
-  BrowseChannelsText,
   BrowseChannelsWrapper,
   ChannelTitle,
   ChannelsList,
@@ -48,7 +48,7 @@ export const ChannelNavItem: FC<NavItemProps & ChannelNavItemProps> = ({
     <NavItem to={to} expanded={expanded} itemName={itemName} onClick={onClick} isSecondary={isSecondary}>
       <Avatar loading={!channel} size="default" assetUrl={avatarPhotoUrl} />
       {channel ? (
-        <ChannelTitle variant="h300" secondary={true}>
+        <ChannelTitle as="p" variant="h300" color="colorText">
           {channel.title}
         </ChannelTitle>
       ) : (
@@ -79,7 +79,7 @@ export const FollowedChannels: FC<FollowedChannelsProps> = ({
       classNames={transitions.names.fade}
     >
       <FollowedChannelsWrapper>
-        <ChannelsTitle variant="h100" secondary>
+        <ChannelsTitle as="h4" variant="h100" color="colorText" margin={{ top: 6, bottom: 4 }}>
           Followed channels
         </ChannelsTitle>
         <ChannelsWrapper>
@@ -99,7 +99,9 @@ export const FollowedChannels: FC<FollowedChannelsProps> = ({
         </ChannelsWrapper>
         <BrowseChannelsWrapper to={absoluteRoutes.viewer.channels()} onClick={onClick}>
           <IconWrapper icon={<SvgActionNewChannel />} />
-          <BrowseChannelsText variant="h300">Browse channels</BrowseChannelsText>
+          <Text as="span" variant="h300" margin={{ left: 4 }} color="inherit">
+            Browse channels
+          </Text>
         </BrowseChannelsWrapper>
       </FollowedChannelsWrapper>
     </CSSTransition>

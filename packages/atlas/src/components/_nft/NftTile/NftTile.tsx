@@ -105,7 +105,7 @@ export const NftTile: FC<NftTileProps> = ({
             ? {
                 element: (
                   <Pill
-                    label={<NumberFormat color="inherit" value={views} format="short" />}
+                    label={<NumberFormat as="span" color="inherit" value={views} format="short" />}
                     size="medium"
                     icon={<SvgActionShow />}
                     variant="overlay"

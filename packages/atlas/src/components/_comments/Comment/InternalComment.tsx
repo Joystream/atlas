@@ -197,7 +197,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
                 <>
                   <CommentHeader>
                     <StyledLink to={memberUrl || ''} isProcessing={isProcessing}>
-                      <Text variant="h200" margin={{ right: 2 }}>
+                      <Text as="span" variant="h200" margin={{ right: 2 }}>
                         {memberHandle}
                       </Text>
                     </StyledLink>
@@ -208,7 +208,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
                         isProcessing={isProcessing}
                         onClick={(e) => e.preventDefault()}
                       >
-                        <HighlightableText variant="t200" secondary margin={{ left: 2, right: 2 }}>
+                        <HighlightableText as="span" variant="t200" color="colorText" margin={{ left: 2, right: 2 }}>
                           {formatDateAgo(createdAt || new Date())}
                         </HighlightableText>
                       </StyledLink>
@@ -216,14 +216,20 @@ export const InternalComment: FC<InternalCommentProps> = ({
                     {isEdited && !isDeleted && (
                       <>
                         <CommentHeaderDot />
-                        <HighlightableText variant="t200" secondary margin={{ left: 2 }} onClick={onEditedLabelClick}>
+                        <HighlightableText
+                          as="span"
+                          variant="t200"
+                          color="colorText"
+                          margin={{ left: 2 }}
+                          onClick={onEditedLabelClick}
+                        >
                           edited
                         </HighlightableText>
                       </>
                     )}
                   </CommentHeader>
                   {isDeleted ? (
-                    <DeletedComment variant="t200" color={cVar('colorTextMuted')}>
+                    <DeletedComment as="span" variant="t200" color="colorTextMuted">
                       <StyledSvgActionTrash /> Comment deleted by {isModerated ? 'channel owner' : 'author'}
                     </DeletedComment>
                   ) : (

@@ -1,5 +1,6 @@
 import { FC } from 'react'
 
+import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionChannel, SvgActionInformative } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
@@ -11,7 +12,6 @@ import {
   Header,
   SignInButton,
   StyledContainer,
-  StyledHero,
   StyledSignInIllustrationSVG,
   SubTitle,
 } from './StudioWelcomeView.styles'
@@ -32,8 +32,10 @@ export const StudioWelcomeView: FC = () => {
       {headTags}
       <StyledContainer>
         <Header>
-          <StyledHero variant="h800">Welcome to Joystream Studio</StyledHero>
-          <SubTitle variant="t300" secondary>
+          <Text as="h1" variant="h800" margin={{ top: 8 }}>
+            Welcome to Joystream Studio
+          </Text>
+          <SubTitle as="p" variant="t300" color="colorText">
             Start your journey as a Joystream content creator. Manage your channels, publish video content, issue NFTs,
             and more!
           </SubTitle>

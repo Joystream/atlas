@@ -33,7 +33,9 @@ export const NewVideoTile: FC<NewVideoTileProps> = ({ loading, onClick }) => {
             <NewVideoTileLink to={absoluteRoutes.studio.videoWorkspace()} onClick={onClick}>
               <TextAndIconWrapper>
                 <StyledIcon />
-                <StyledText variant="t200">Upload new video</StyledText>
+                <StyledText as="span" variant="t200" margin={{ top: 2 }} color="colorCoreNeutral500">
+                  Upload new video
+                </StyledText>
               </TextAndIconWrapper>
             </NewVideoTileLink>
           )}

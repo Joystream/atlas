@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 
-import { Text } from '@/components/Text'
 import { cVar, media, sizes } from '@/styles'
 
 export const StyledVideoHeroHeader = styled.header`
@@ -18,8 +17,4 @@ export const Divider = styled.div`
   ${media.md} {
     margin: 0 ${sizes(4)};
   }
-`
-
-export const VideoHeroHeaderTitle = styled(Text)`
-  margin-left: ${sizes(2)};
 `

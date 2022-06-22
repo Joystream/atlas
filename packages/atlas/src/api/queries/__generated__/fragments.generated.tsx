@@ -294,7 +294,6 @@ export type FullVideoFieldsFragment = {
   createdAt: Date
   isPublic?: boolean | null
   isExplicit?: boolean | null
-  isFeatured: boolean
   hasMarketing?: boolean | null
   isCensored: boolean
   isCommentSectionEnabled: boolean
@@ -1520,7 +1519,6 @@ export const FullVideoFieldsFragmentDoc = gql`
     createdAt
     isPublic
     isExplicit
-    isFeatured
     hasMarketing
     isCensored
     isCommentSectionEnabled

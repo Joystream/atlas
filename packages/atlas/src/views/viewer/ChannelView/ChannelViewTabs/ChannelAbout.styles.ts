@@ -1,9 +1,7 @@
 import styled from '@emotion/styled'
-import { HTMLProps } from 'react'
 
 import { Avatar } from '@/components/Avatar'
 import { LayoutGrid } from '@/components/LayoutGrid/LayoutGrid'
-import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
 import { cVar, sizes } from '@/styles'
 
@@ -12,21 +10,6 @@ export const TextContainer = styled.div`
   grid-gap: ${sizes(4)};
   padding-bottom: ${sizes(8)};
   margin-bottom: ${sizes(8)};
-`
-
-export const LinksContainer = styled.div`
-  display: grid;
-  grid-gap: ${sizes(6)};
-`
-
-export const Links = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-
-  > a {
-    margin-right: ${sizes(12)};
-    margin-bottom: ${sizes(6)};
-  }
 `
 
 export const Details = styled.div`
@@ -42,10 +25,6 @@ export const DetailsMember = styled(Details)`
   align-items: center;
 `
 
-export const DetailsText = styled(Text)`
-  margin-bottom: ${sizes(4)};
-`
-
 export const MemberContainer = styled.div`
   display: grid;
   grid-auto-flow: row;
@@ -58,14 +37,6 @@ export const StyledAvatar = styled(Avatar)`
 
 export const StyledLayoutGrid = styled(LayoutGrid)`
   margin-bottom: 50px;
-`
-
-export const Anchor = styled(Text)<HTMLProps<HTMLAnchorElement>>`
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
 `
 
 export const MemberLink = styled(TextButton)`

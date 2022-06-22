@@ -9,6 +9,7 @@ import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { NumberFormat } from '@/components/NumberFormat'
+import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { Button } from '@/components/_buttons/Button'
@@ -41,7 +42,6 @@ import {
   SubTitleSkeletonLoader,
   TabsContainer,
   TabsWrapper,
-  Title,
   TitleContainer,
   TitleSection,
   TitleSkeletonLoader,
@@ -233,9 +233,15 @@ export const ChannelView: FC = () => {
           <TitleContainer>
             {channel ? (
               <>
-                <Title variant={smMatch ? 'h700' : 'h600'}>{channel.title}</Title>
-                <SubTitle variant="t300" secondary>
-                  {channel.follows ? <NumberFormat value={channel.follows} format="short" variant="t300" /> : 0}{' '}
+                <Text as="h1" variant={smMatch ? 'h700' : 'h600'}>
+                  {channel.title}
+                </Text>
+                <SubTitle as="p" variant="t300" color="colorText">
+                  {channel.follows ? (
+                    <NumberFormat as="span" value={channel.follows} format="short" variant="t300" />
+                  ) : (
+                    0
+                  )}{' '}
                   Followers
                 </SubTitle>
               </>

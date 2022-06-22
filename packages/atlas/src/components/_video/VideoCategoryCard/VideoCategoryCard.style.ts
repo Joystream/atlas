@@ -3,7 +3,6 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { Text } from '@/components/Text'
 import { cVar, sizes, transitions } from '@/styles'
 
 type ColorProps = { color?: string }
@@ -118,10 +117,6 @@ export const IconCircle = styled.div<ColorProps>`
   path {
     fill: ${({ color }) => color};
   }
-`
-
-export const Title = styled(Text)<VariantProps>`
-  margin-bottom: ${({ variantCategory }) => (variantCategory === 'default' ? sizes(6) : sizes(4))};
 `
 
 // ref https://codeburst.io/how-to-pure-css-pie-charts-w-css-variables-38287aea161e

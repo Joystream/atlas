@@ -22,10 +22,6 @@ export const Details = styled.div`
   margin-bottom: ${sizes(4)};
 `
 
-export const DetailsText = styled(Text)`
-  margin-bottom: ${sizes(4)};
-`
-
 export const StyledLayoutGrid = styled(LayoutGrid)`
   margin-bottom: 50px;
 `

@@ -2,7 +2,6 @@ import styled from '@emotion/styled'
 
 import { cVar, sizes } from '@/styles'
 
-import { Text } from '../Text'
 import { SvgActionClose } from '../_icons'
 
 export const MemberBadgeWrapper = styled.div<{ withoutButton?: boolean }>`
@@ -10,10 +9,6 @@ export const MemberBadgeWrapper = styled.div<{ withoutButton?: boolean }>`
   display: inline-flex;
   align-items: center;
   padding: ${({ withoutButton }) => (withoutButton ? `${sizes(1)} ${sizes(2)}` : `0 0 0 ${sizes(2)}`)};
-`
-
-export const StyledHandleText = styled(Text)`
-  margin-left: ${sizes(2)};
 `
 
 export const StyledSVGCloseIcon = styled(SvgActionClose)`

@@ -64,7 +64,9 @@ export const Dialog: FC<DialogProps> = ({
       {(title || onExitClick) && (
         <Header dividers={dividers}>
           <HeaderContent>
-            <Text variant={isCompact ? 'h300' : smMatch ? 'h500' : 'h400'}>{title}</Text>
+            <Text as="h1" variant={isCompact ? 'h300' : smMatch ? 'h500' : 'h400'}>
+              {title}
+            </Text>
           </HeaderContent>
           {onExitClick && (
             <Button icon={<SvgActionClose />} aria-label="close modal" onClick={onExitClick} variant="tertiary" />

@@ -11,14 +11,12 @@ import { Input } from '@/components/_inputs/Input'
 import { MemberComboBox } from '@/components/_inputs/MemberComboBox'
 import { OptionCardRadio } from '@/components/_inputs/OptionCard'
 import { useTokenPrice } from '@/providers/joystream'
-import { cVar } from '@/styles'
 import { pluralizeNoun } from '@/utils/misc'
 
 import {
   AuctionDatePickerWrapper,
   DaysSummary,
   DaysSummaryInfo,
-  Header,
   OptionCardRadioWrapper,
   StyledForm,
   StyledFormField,
@@ -150,8 +148,10 @@ export const SetUp: FC<SetUpProps> = ({
 
   return (
     <>
-      <Header variant="h500">{selectedType && headerText[selectedType].header}</Header>
-      <Text variant="t300" secondary>
+      <Text as="h1" variant="h500" margin={{ bottom: 4 }}>
+        {selectedType && headerText[selectedType].header}
+      </Text>
+      <Text as="p" variant="t300" color="colorText">
         {selectedType && headerText[selectedType].caption}
       </Text>
       <StyledForm onSubmit={handleSubmit}>
@@ -165,7 +165,7 @@ export const SetUp: FC<SetUpProps> = ({
                 !!buyNowPrice && (
                   <Pill
                     variant="overlay"
-                    label={<NumberFormat format="dollar" value={convertToUSD(buyNowPrice ?? 0) ?? 0} />}
+                    label={<NumberFormat as="span" format="dollar" value={convertToUSD(buyNowPrice ?? 0) ?? 0} />}
                   />
                 )
               }
@@ -257,14 +257,16 @@ export const SetUp: FC<SetUpProps> = ({
             </AuctionDatePickerWrapper>
             {numberOfBlocks > 0 && (
               <DaysSummary>
-                <Text variant="t200-strong" color={cVar('colorTextMuted', true)}>
+                <Text as="span" variant="t200-strong" color="colorTextMuted">
                   Total:
                 </Text>
                 &nbsp;
-                <Text variant="t200-strong">{totalDaysAndHours}</Text>
+                <Text as="span" variant="t200-strong">
+                  {totalDaysAndHours}
+                </Text>
                 &nbsp;
-                <Text variant="t200-strong" secondary>
-                  / <NumberFormat secondary value={numberOfBlocks} /> blocks
+                <Text as="span" variant="t200-strong" color="colorText">
+                  / <NumberFormat as="span" color="colorText" value={numberOfBlocks} /> blocks
                 </Text>
                 <DaysSummaryInfo
                   text="On blockchain, duration is expressed in number of blocks"
@@ -293,7 +295,7 @@ export const SetUp: FC<SetUpProps> = ({
                   !!startingPrice && (
                     <Pill
                       variant="overlay"
-                      label={<NumberFormat format="dollar" value={convertToUSD(startingPrice ?? 0) ?? 0} />}
+                      label={<NumberFormat as="span" format="dollar" value={convertToUSD(startingPrice ?? 0) ?? 0} />}
                     />
                   )
                 }
@@ -325,7 +327,7 @@ export const SetUp: FC<SetUpProps> = ({
                   !!buyNowPrice && (
                     <Pill
                       variant="overlay"
-                      label={<NumberFormat format="dollar" value={convertToUSD(buyNowPrice ?? 0) ?? 0} />}
+                      label={<NumberFormat as="span" format="dollar" value={convertToUSD(buyNowPrice ?? 0) ?? 0} />}
                     />
                   )
                 }

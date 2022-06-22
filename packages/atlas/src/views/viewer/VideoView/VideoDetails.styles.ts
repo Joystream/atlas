@@ -17,10 +17,6 @@ export const DescriptionContainer = styled.div`
   margin: ${sizes(6)} 0;
 `
 
-export const DescriptionTitle = styled(Text)`
-  margin-bottom: ${sizes(2)};
-`
-
 type DetailsExpandedProps = {
   detailsExpanded?: boolean
 }
@@ -64,10 +60,6 @@ export const LicenceCategoryWrapper = styled.div<{ detailsExpanded: boolean }>`
   opacity: ${({ detailsExpanded }) => (detailsExpanded ? 1 : 0)};
   margin-bottom: ${({ detailsExpanded }) => (detailsExpanded ? sizes(6) : 0)};
   transition: opacity ${cVar('animationTransitionFast')};
-`
-
-export const LicenseCustomText = styled(Text)`
-  margin-top: ${sizes(2)};
 `
 
 export const ExpandButton = styled(TextButton)`

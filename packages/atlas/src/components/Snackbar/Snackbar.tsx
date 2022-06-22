@@ -7,7 +7,6 @@ import {
   SnackbarActionButton,
   SnackbarCloseButton,
   SnackbarContent,
-  SnackbarDescription,
   SnackbarIconContainer,
   SnackbarWrapper,
   StyledInnerWrapper,
@@ -50,11 +49,13 @@ export const Snackbar: FC<SnackbarProps> = ({
       <StyledInnerWrapper ref={ref}>
         {icon && <SnackbarIconContainer>{icon}</SnackbarIconContainer>}
         <SnackbarContent>
-          <Text variant="h200">{title}</Text>
+          <Text as="h1" variant="h200">
+            {title}
+          </Text>
           {description && (
-            <SnackbarDescription variant="t100" secondary>
+            <Text as="p" variant="t100" color="colorText" margin={{ top: 2 }}>
               {description}
-            </SnackbarDescription>
+            </Text>
           )}
           {actionText && (
             <SnackbarActionButton onClick={onActionClick} icon={actionIcon}>

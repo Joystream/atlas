@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { Text } from '@/components/Text'
 import { SvgActionAddVideo } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { cVar, sizes, transitions } from '@/styles'
+import { cVar, transitions } from '@/styles'
 
 export const StyledIcon = styled(SvgActionAddVideo)`
   > path {
@@ -15,8 +15,6 @@ export const StyledIcon = styled(SvgActionAddVideo)`
 
 export const StyledText = styled(Text)`
   text-align: center;
-  margin-top: ${sizes(2)};
-  color: ${cVar('colorCoreNeutral500')};
   transition: color ${transitions.timings.player} ease-out;
 `
 

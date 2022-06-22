@@ -56,22 +56,10 @@ export const StyledTextArea = styled(TextareaAutosize, { shouldForwardProp: isPr
   }
 `
 
-type CharactersCounterProps = {
-  hasValue: boolean
-}
-
 export const MinMaxChars = styled(Text)`
   white-space: nowrap;
-  margin-right: ${sizes(2)};
-  margin-bottom: ${sizes(1)};
-  color: ${cVar('colorTextMuted')};
 `
 
-export const CounterText = styled(Text)`
-  color: ${cVar('colorTextMuted')};
-`
-
-export const CharactersCounter = styled(Text)<CharactersCounterProps>`
-  color: ${({ hasValue }) => cVar(hasValue ? 'colorTextStrong' : 'colorTextMuted')};
+export const CharactersCounter = styled(Text)`
   font-feature-settings: 'tnum' on, 'lnum' on;
 `

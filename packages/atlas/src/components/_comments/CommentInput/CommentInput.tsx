@@ -14,7 +14,6 @@ import {
   ButtonsContainer,
   Container,
   CustomPlaceholder,
-  CustomPlaceholderHandle,
   Flex,
   StyledCommentRow,
   StyledTextArea,
@@ -137,10 +136,13 @@ export const CommentInput = forwardRef<HTMLTextAreaElement, CommentInputProps>(
               disabled={processing}
               data-processing={processing}
             />
-            <CustomPlaceholder as="p" variant="t200">
+            <CustomPlaceholder as="p" variant="t200" color="colorTextMuted">
               Leave a public {reply ? 'reply' : 'comment'} as
               {memberHandle ? (
-                <CustomPlaceholderHandle variant="t200-strong"> {memberHandle}</CustomPlaceholderHandle>
+                <Text as="span" variant="t200-strong" color="inherit">
+                  {' '}
+                  {memberHandle}
+                </Text>
               ) : (
                 '...'
               )}
@@ -155,7 +157,7 @@ export const CommentInput = forwardRef<HTMLTextAreaElement, CommentInputProps>(
                 text="To publish a comment you need to sign a transaction. For now, no fees are involved."
                 multiline
               />
-              <Text variant="t100" secondary margin={{ left: 1, right: 4 }}>
+              <Text as="span" variant="t100" color="colorText" margin={{ left: 1, right: 4 }}>
                 {smMatch && 'We store comments on blockchain'}
               </Text>
             </Flex>

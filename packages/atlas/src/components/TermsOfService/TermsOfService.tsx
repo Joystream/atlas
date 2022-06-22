@@ -7,7 +7,9 @@ import { LegalLastUpdateText, LegalListItem, LegalParagraph } from '../LegalText
 export const TermsOfService: FC = () => {
   return (
     <div>
-      <Text variant="h400">Terms of Service</Text>
+      <Text as="h1" variant="h400">
+        Terms of Service
+      </Text>
       <LegalLastUpdateText>Last updated on the 4th of May 2021</LegalLastUpdateText>
       <LegalParagraph>
         This Terms of Service (&quot;Agreement&quot;) is a binding obligation between you (&quot;User&quot;) and

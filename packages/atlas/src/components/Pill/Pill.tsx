@@ -8,7 +8,11 @@ export const Pill: FC<PillProps> = ({ label, icon, iconPlacement = 'left', ...pr
   return (
     <StyledPill {...props} hasLabel={!!label} iconPlacement={iconPlacement}>
       {icon && iconPlacement === 'left' && icon}
-      {label && <StyledLabel variant="t100">{label}</StyledLabel>}
+      {label && (
+        <StyledLabel as="span" variant="t100">
+          {label}
+        </StyledLabel>
+      )}
       {icon && iconPlacement === 'right' && icon}
     </StyledPill>
   )
