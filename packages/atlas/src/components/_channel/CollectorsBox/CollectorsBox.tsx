@@ -56,7 +56,7 @@ export const CollectorsBox: FC<CollectorsBoxProps> = ({ collectors, maxShowedCol
         onMouseMove={() => !open && setIsHovered(true)}
         onMouseOut={() => !open && setIsHovered(false)}
       >
-        <Text variant="t200" secondary={!isHovered}>
+        <Text as="span" variant="t200" color={!isHovered ? 'colorText' : undefined}>
           NFTs collected by
         </Text>
         <AvatarGroup
@@ -70,7 +70,7 @@ export const CollectorsBox: FC<CollectorsBoxProps> = ({ collectors, maxShowedCol
             <ListItem
               nodeStart={<Avatar size="small" assetUrl={collector.url} />}
               nodeEnd={
-                <Text variant="t100" secondary>
+                <Text as="span" variant="t100" color="colorText">
                   Owns {collector.nftsAmount}
                 </Text>
               }

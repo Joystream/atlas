@@ -8,10 +8,10 @@ export const PlaceHolder: FC = () => {
   return (
     <PlaceHolderWrapper>
       <StyledSvgActionInformative />
-      <PlaceholderTitle variant="t100-strong" color="#7b61ff">
+      <PlaceholderTitle as="p" variant="t100-strong">
         This is a placeholder for children.
       </PlaceholderTitle>
-      <PlaceholderDescription variant="t100" color="#7b61ff">
+      <PlaceholderDescription as="p" variant="t100">
         Children will be placed here
       </PlaceholderDescription>
     </PlaceHolderWrapper>
@@ -42,9 +42,11 @@ const PlaceholderTitle = styled(Text)`
   margin-top: 8px;
   margin-bottom: 0;
   font-weight: 700;
+  color: #7b61ff;
 `
 
 const PlaceholderDescription = styled(Text)`
   text-align: center;
   margin-top: 8px;
+  color: #7b61ff;
 `

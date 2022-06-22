@@ -60,10 +60,14 @@ export const Tooltip: FC<TooltipProps> = ({
             <StyledSvgAlertsInformative24 />
           </IconWrapper>
         )}
-        {headerText && <TooltipText variant="h100">{headerText}</TooltipText>}
+        {headerText && (
+          <TooltipText as="span" variant="h100">
+            {headerText}
+          </TooltipText>
+        )}
       </TooltipHeader>
       {text && text.length && (
-        <TooltipText withIcon={!!icon} headerText={!!headerText} variant="t100">
+        <TooltipText as="span" withIcon={!!icon} headerText={!!headerText} variant="t100">
           {text}
         </TooltipText>
       )}

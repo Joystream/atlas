@@ -64,10 +64,12 @@ export const CommentSnapshot: FC<CommentSnapshotProps> = ({
             <section>
               <CommentHeader>
                 <StyledLink to={memberUrl}>
-                  <Text variant="h200">{memberHandle}</Text>
+                  <Text as="span" variant="h200">
+                    {memberHandle}
+                  </Text>
                 </StyledLink>
                 <CommentHeaderDot />
-                <Text variant="t100" secondary>
+                <Text as="span" variant="t100" color="colorText">
                   {createdAt && formatDateTime(createdAt)}
                 </Text>
               </CommentHeader>

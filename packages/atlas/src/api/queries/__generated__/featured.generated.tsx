@@ -146,7 +146,6 @@ export type GetCategoriesFeaturedVideosQuery = {
       createdAt: Date
       isPublic?: boolean | null
       isExplicit?: boolean | null
-      isFeatured: boolean
       hasMarketing?: boolean | null
       isCensored: boolean
       isCommentSectionEnabled: boolean

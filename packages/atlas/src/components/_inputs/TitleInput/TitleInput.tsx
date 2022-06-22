@@ -1,13 +1,8 @@
 import { ChangeEvent, KeyboardEvent, forwardRef, useState } from 'react'
 
-import {
-  CharactersCounter,
-  Container,
-  CounterText,
-  MinMaxChars,
-  StyledTextArea,
-  TitleAreaInfo,
-} from './TitleInput.styles'
+import { Text } from '@/components/Text'
+
+import { CharactersCounter, Container, MinMaxChars, StyledTextArea, TitleAreaInfo } from './TitleInput.styles'
 
 export type TitleInputProps = {
   error?: boolean
@@ -72,15 +67,15 @@ export const TitleInput = forwardRef<HTMLTextAreaElement, TitleInputProps>(
           ref={ref}
         />
         <TitleAreaInfo visible={footerVisible || error || !!value?.length}>
-          <MinMaxChars variant="t100">
+          <MinMaxChars as="span" variant="t100" color="colorTextMuted" margin={{ bottom: 1, right: 2 }}>
             Min {min} chars • Max {max} chars
           </MinMaxChars>
-          <CounterText variant="t100">
-            <CharactersCounter hasValue={!!value?.length} variant="t100">
+          <Text as="span" variant="t100" color="colorTextMuted">
+            <CharactersCounter as="span" color={value?.length ? undefined : 'colorTextMuted'} variant="t100">
               {value?.length || 0} &nbsp;
             </CharactersCounter>
             / {max}
-          </CounterText>
+          </Text>
         </TitleAreaInfo>
       </Container>
     )

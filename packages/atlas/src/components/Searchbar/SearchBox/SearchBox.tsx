@@ -147,7 +147,7 @@ export const SearchBox: FC<SearchBoxProps> = memo(
       >
         {!!filteredRecentSearches.length && (
           <Section>
-            <Caption secondary variant="t100">
+            <Caption as="span" color="colorText" variant="t100">
               Recent searches
             </Caption>
             {filteredRecentSearches.map((recentSearch, idx) => (
@@ -167,7 +167,7 @@ export const SearchBox: FC<SearchBoxProps> = memo(
         {loading && !!searchQuery && <Section>{placeholders}</Section>}
         {!!slicedVideos.length && !loading && (
           <Section>
-            <Caption secondary variant="t100">
+            <Caption as="span" color="colorText" variant="t100">
               Videos
             </Caption>
             {slicedVideos.map((video, idx) => (
@@ -184,7 +184,7 @@ export const SearchBox: FC<SearchBoxProps> = memo(
         )}
         {!!slicedChannels.length && !loading && (
           <Section>
-            <Caption secondary variant="t100">
+            <Caption as="span" color="colorText" variant="t100">
               Channels
             </Caption>
             {slicedChannels.map((channel, idx) => (

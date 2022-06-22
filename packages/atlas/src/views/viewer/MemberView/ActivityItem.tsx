@@ -71,14 +71,14 @@ export const ActivityItem: FC<ActivityItemProps> = ({
         {loading ? (
           <TitleSkeletonLoader />
         ) : (
-          <Title variant={getTitleTextVariant()} clampAfterLine={smMatch ? 2 : 1}>
+          <Title as="h3" variant={getTitleTextVariant()} clampAfterLine={smMatch ? 2 : 1}>
             {title}
           </Title>
         )}
         {loading ? (
           <DescriptionSkeletonLoader />
         ) : (
-          <Text variant={lgMatch ? 't300' : 't200'} secondary>
+          <Text as="p" variant={lgMatch ? 't300' : 't200'} color="colorText">
             {description}
           </Text>
         )}
@@ -89,7 +89,7 @@ export const ActivityItem: FC<ActivityItemProps> = ({
         <PillAndDateContainer>
           <Pill label={type} size="medium" />
           {date && (
-            <DateText variant="t100" secondary>
+            <DateText as="p" variant="t100" color="colorText">
               <DateRow>{format(date, 'd MMM yyyy')},</DateRow>
               <DateRow> {format(date, 'HH:mm')}</DateRow>
             </DateText>

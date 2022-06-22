@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { MemberBadge } from '@/components/MemberBadge'
 import { Text } from '@/components/Text'
-import { cVar, sizes } from '@/styles'
+import { sizes } from '@/styles'
 
 export const MemberBadgesWrapper = styled.div`
   display: flex;
@@ -11,8 +11,6 @@ export const MemberBadgesWrapper = styled.div`
 `
 
 export const StyledSelectedText = styled(Text)`
-  color: ${cVar('colorTextMuted')};
-  margin-bottom: ${sizes(4)};
   align-self: center;
 `
 

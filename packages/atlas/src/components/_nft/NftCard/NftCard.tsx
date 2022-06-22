@@ -48,7 +48,9 @@ export const NftCard: FC<NftCardProps> = ({ title, creator, supporters, owner, t
           {loading ? (
             <SkeletonLoader width="70%" height={24} bottomSpace={24} />
           ) : (
-            <Title variant="h400">{title}</Title>
+            <Title as="h3" variant="h400">
+              {title}
+            </Title>
           )}
           <Content>
             <Members loading={loading} caption="Creator" members={creator} />

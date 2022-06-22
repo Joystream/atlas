@@ -85,7 +85,7 @@ export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
               <SkeletonLoader height={24} width="60%" />
             ) : (
               <LinkWrapper to={videoHref}>
-                <VideoTitle onClick={onVideoTitleClick} variant={size === 'medium' ? 'h400' : 'h300'}>
+                <VideoTitle as="h3" onClick={onVideoTitleClick} variant={size === 'medium' ? 'h400' : 'h300'}>
                   {videoTitle}
                 </VideoTitle>
               </LinkWrapper>
@@ -96,7 +96,7 @@ export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
                   <SkeletonLoader height={16} width="100%" bottomSpace={8} />
                 ) : (
                   <LinkWrapper to={channelHref}>
-                    <ChannelTitle variant="t200" secondary as="p">
+                    <ChannelTitle variant="t200" color="colorText" as="p">
                       {channelTitle}
                     </ChannelTitle>
                   </LinkWrapper>
@@ -106,12 +106,13 @@ export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
               ) : (
                 <>
                   {type === 'video' ? (
-                    <Text variant="t200" secondary as="p">
+                    <Text variant="t200" color="colorText" as="p">
                       {videoSubTitle
                         ? videoSubTitle
                         : createdAt && (
                             <>
-                              {formatVideoDate(createdAt)} • <Views value={views ?? 0} format="short" secondary />
+                              {formatVideoDate(createdAt)} •{' '}
+                              <Views as="span" value={views ?? 0} format="short" color="colorText" />
                               &nbsp;views
                             </>
                           )}

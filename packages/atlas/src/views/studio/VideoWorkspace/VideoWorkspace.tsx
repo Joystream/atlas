@@ -2,7 +2,6 @@ import { FC, memo, useCallback, useEffect, useState } from 'react'
 
 import { ActionBarProps } from '@/components/ActionBar'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
-import { JOY_CURRENCY_TICKER } from '@/config/token'
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { VideoWorkspaceFormStatus, useVideoWorkspace, useVideoWorkspaceData } from '@/providers/videoWorkspace'
@@ -47,30 +46,21 @@ export const VideoWorkspace: FC = memo(() => {
   }, [formStatus?.hasUnsavedAssets, openWarningDialog, setIsWorkspaceOpen])
 
   const actionBarProps: ActionBarProps = {
-    variant: isEdit ? 'edit' : 'new',
-    primaryText: `Fee: 0 ${JOY_CURRENCY_TICKER}`,
-    secondaryText:
-      'For the time being no fees are required for blockchain transactions. This will change in the future.',
+    isActive: isEdit ? !formStatus?.isDisabled : true,
+    fee: 0,
     primaryButton: {
       disabled: formStatus?.isDisabled,
       onClick: formStatus?.triggerFormSubmit,
-      tooltip: formStatus?.isDisabled
-        ? undefined
-        : {
-            headerText: 'Fill all required fields to proceed',
-            text: 'Required: video file, thumbnail image, title, category, language',
-            multiline: true,
-          },
       text: formStatus?.actionBarPrimaryText,
     },
-    secondaryButton: isEdit
-      ? {
-          visible: formStatus?.isDirty,
-          text: isEdit ? 'Cancel' : undefined,
-          onClick: () => formStatus?.triggerReset?.(),
-        }
-      : undefined,
-    draftBadge: !isEdit
+    secondaryButton:
+      isEdit && formStatus?.isDirty
+        ? {
+            text: 'Cancel',
+            onClick: () => formStatus?.triggerReset?.(),
+          }
+        : undefined,
+    infoBadge: !isEdit
       ? {
           text: mdMatch ? 'Drafts are saved automatically' : 'Saving drafts',
           tooltip: {

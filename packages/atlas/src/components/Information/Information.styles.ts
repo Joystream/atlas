@@ -46,6 +46,10 @@ export const TouchableWrapper = styled.div<{ isMobile?: boolean }>`
 
 export const InformationWrapper = styled.div`
   display: inline-flex;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
 
   & > span:focus {
     ${IconWrapper} {

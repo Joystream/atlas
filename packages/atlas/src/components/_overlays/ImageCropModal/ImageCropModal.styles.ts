@@ -1,7 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { Text } from '@/components/Text'
 import { Slider } from '@/components/_inputs/Slider'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { cVar, sizes } from '@/styles'
@@ -22,10 +21,6 @@ export const AlignInfoContainer = styled.div`
   align-items: center;
   justify-content: center;
   padding-bottom: ${sizes(4)};
-`
-
-export const AlignInfo = styled(Text)`
-  margin-left: ${sizes(2)};
 `
 
 export const HiddenInput = styled.input`

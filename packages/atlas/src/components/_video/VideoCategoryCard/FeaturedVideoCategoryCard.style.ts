@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 
-import { Text } from '@/components/Text'
 import { cVar, sizes, transitions } from '@/styles'
 
 import { Container, IconCircle } from './VideoCategoryCard.style'
@@ -51,8 +50,4 @@ export const FeaturedVideoTitleContainer = styled.div<VariantProps>`
   gap: ${sizes(1)};
   align-self: end;
   text-align: ${({ variantCategory }) => (variantCategory === 'default' ? 'right' : 'left')};
-`
-
-export const FeaturedVideoText = styled(Text)`
-  color: ${cVar('colorCoreNeutral200')};
 `

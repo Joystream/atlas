@@ -26,7 +26,6 @@ import { JOY_CURRENCY_TICKER } from '@/config/token'
 import { useSubscribeAccountBalance } from '@/hooks/useSubscribeAccountBalance'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useUser } from '@/providers/user'
-import { cVar } from '@/styles'
 import { urlParams } from '@/utils/url'
 
 import {
@@ -59,7 +58,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const { pathname } = useLocation()
 
     const [isSwitchingMember, setIsSwitchingMember] = useState(false)
-    const [isAnimatingSwitchMember, setIsAnimatingSwitchMember] = useState(false)
+    const [isAnimatingSwitchMember] = useState(false)
     const navigate = useNavigate()
     const { channelId, activeMembership, setActiveUser, memberships } = useUser()
     const accountBalance = useSubscribeAccountBalance()
@@ -76,8 +75,6 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
         duration: 250,
         easing: easings.easeOutCirc,
       },
-      onRest: () => setIsAnimatingSwitchMember(false),
-      onStart: () => setIsAnimatingSwitchMember(true),
     })
 
     const { url: avatarUrl, isLoadingAsset: avatarLoading } = useMemberAvatar(activeMembership)
@@ -183,13 +180,15 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                       <StyledAvatar size="fill" assetUrl={avatarUrl} loading={avatarLoading} />
                       <div>
                         {/* Using invisible unicode character ZERO WIDTH NON-JOINER (U+200C) to preserve the space while member handle loads */}
-                        <MemberHandleText variant="h400">{activeMembership?.handle ?? '‌‌ '}</MemberHandleText>
+                        <MemberHandleText as="span" variant="h400">
+                          {activeMembership?.handle ?? '‌‌ '}
+                        </MemberHandleText>
                         <BalanceContainer>
                           {accountBalance !== undefined ? (
                             <>
                               <UserBalance>
                                 <JoyTokenIcon size={16} variant="regular" />
-                                <NumberFormat variant="t200-strong" value={accountBalance} format="short" />
+                                <NumberFormat as="span" variant="t200-strong" value={accountBalance} format="short" />
                               </UserBalance>
                             </>
                           ) : (
@@ -203,8 +202,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                             href="https://www.joystream.org/token"
                             target="_blank"
                             rel="noopener noreferrer"
-                            secondary
-                            color={cVar('colorCoreNeutral200Lighten')}
+                            color="colorCoreNeutral200Lighten"
                           >
                             Learn about ${JOY_CURRENCY_TICKER}
                           </LearnAboutLink>
@@ -242,7 +240,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                   </SectionContainer>
                   {publisher && (
                     <SectionContainer>
-                      <ChannelsSectionTitle variant="t100" secondary>
+                      <ChannelsSectionTitle as="span" variant="t100" color="colorText">
                         Your channels
                       </ChannelsSectionTitle>
                       {activeMembership?.channels.map((channel) => (

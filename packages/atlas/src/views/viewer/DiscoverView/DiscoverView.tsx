@@ -63,7 +63,9 @@ export const DiscoverView: FC = () => {
   return (
     <StyledLimitedWidthContainer big>
       {headTags}
-      <Text variant="h700">Discover</Text>
+      <Text as="p" variant="h700">
+        Discover
+      </Text>
       {featuredVideoCategoryCardsData && (
         <FeaturedCategoriesContainer>
           {featuredVideoCategoryCardsData.map((category, i) => (
@@ -82,7 +84,9 @@ export const DiscoverView: FC = () => {
         </FeaturedCategoriesContainer>
       )}
       <StyledGridHeadingContainer>
-        <Text variant="h500">All categories</Text>
+        <Text as="h2" variant="h500">
+          All categories
+        </Text>
       </StyledGridHeadingContainer>
       <LayoutGrid>
         {(mappedVideoCategories ?? new Array(15).fill(null))?.map((category, i) => (

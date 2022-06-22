@@ -105,7 +105,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     register,
     handleSubmit: createSubmitHandler,
     control,
-    formState: { isDirty, dirtyFields, errors, isValid },
+    formState: { isDirty, dirtyFields, errors },
     watch,
     setFocus,
     setValue,
@@ -444,8 +444,12 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
                 )}
               />
               {!newChannel && (
-                <SubTitle variant="t200">
-                  {channel?.follows ? <NumberFormat value={channel.follows} format="short" variant="t200" /> : 0}{' '}
+                <SubTitle as="span" variant="t200">
+                  {channel?.follows ? (
+                    <NumberFormat as="span" value={channel.follows} format="short" variant="t200" />
+                  ) : (
+                    0
+                  )}{' '}
                   Followers
                 </SubTitle>
               )}
@@ -523,34 +527,20 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
             <ActionBarTransactionWrapper ref={actionBarRef}>
               {!channelId && progressDrawerSteps?.length ? <StyledProgressDrawer steps={progressDrawerSteps} /> : null}
               <ActionBar
-                primaryText="Fee: 0 Joy"
-                variant={newChannel ? 'new' : 'edit'}
-                secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
+                fee={0}
                 primaryButton={{
                   text: newChannel ? 'Create channel' : 'Publish changes',
                   disabled: isDisabled,
                   onClick: handleSubmit,
-                  tooltip: isDisabled
+                }}
+                secondaryButton={
+                  !newChannel && isDirty && nodeConnectionStatus === 'connected'
                     ? {
-                        headerText: newChannel
-                          ? 'Fill all required fields to proceed'
-                          : isValid
-                          ? 'Change anything to proceed'
-                          : 'Fill all required fields to proceed',
-                        text: newChannel
-                          ? 'Required: title'
-                          : isValid
-                          ? 'To publish changes you have to provide new value to any field'
-                          : 'Required: title',
-                        icon: true,
+                        text: 'Cancel',
+                        onClick: () => reset(),
                       }
-                    : undefined,
-                }}
-                secondaryButton={{
-                  visible: !newChannel && isDirty && nodeConnectionStatus === 'connected',
-                  text: 'Cancel',
-                  onClick: () => reset(),
-                }}
+                    : undefined
+                }
               />
             </ActionBarTransactionWrapper>
           </CSSTransition>

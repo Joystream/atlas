@@ -75,7 +75,6 @@ export const NftSaleBottomDrawer: FC = () => {
   }, [closeNftAction])
 
   const actionBarProps: ActionBarProps = {
-    variant: 'nft',
     primaryButton: {
       text: !formStatus?.canGoForward ? 'Start sale' : 'Next step',
       disabled: formStatus?.isDisabled,
@@ -85,7 +84,6 @@ export const NftSaleBottomDrawer: FC = () => {
       text: !formStatus?.canGoBack ? 'Cancel' : 'Go back',
       onClick: !formStatus?.canGoBack ? handleCancel : formStatus?.triggerGoBack,
       disabled: false,
-      visible: true,
     },
   }
 

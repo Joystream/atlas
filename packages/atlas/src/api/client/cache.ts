@@ -30,7 +30,6 @@ const getVideoKeyArgs = (args: QueryVideosConnectionArgs | null) => {
   const isPublic = args?.where?.isPublic_eq ?? ''
   const createdAtGte = args?.where?.createdAt_gte ? JSON.stringify(args.where.createdAt_gte) : ''
   const sorting = args?.orderBy?.[0] ? args.orderBy[0] : ''
-  const isFeatured = args?.where?.isFeatured_eq ?? ''
   const durationGte = args?.where?.duration_gte || ''
   const durationLte = args?.where?.duration_gte || ''
 
@@ -39,7 +38,7 @@ const getVideoKeyArgs = (args: QueryVideosConnectionArgs | null) => {
     return `${createdAtGte}:${channel}`
   }
 
-  return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${isPublic}:${idEq}:${idIn}:${sorting}:${isFeatured}:${durationGte}:${durationLte}`
+  return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${isPublic}:${idEq}:${idIn}:${sorting}:${durationGte}:${durationLte}`
 }
 
 const getNftKeyArgs = (args: GetNftsConnectionQueryVariables | null) => {

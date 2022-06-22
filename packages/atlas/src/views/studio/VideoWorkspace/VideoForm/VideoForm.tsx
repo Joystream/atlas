@@ -41,10 +41,8 @@ import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { useVideoFormAssets, useVideoFormDraft } from './VideoForm.hooks'
 import {
   FileValidationBanner,
-  FileValidationText,
   FormWrapper,
   InputsContainer,
-  MoreSettingsDescription,
   MoreSettingsSection,
   RadioCardButtonsContainer,
   StyledBanner,
@@ -466,7 +464,9 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                 dismissable={false}
                 icon={<SvgAlertsWarning24 width={24} height={24} />}
                 description={
-                  <FileValidationText variant="t200">{(errors?.assets as FieldError)?.message}</FileValidationText>
+                  <Text as="span" variant="t200">
+                    {(errors?.assets as FieldError)?.message}
+                  </Text>
                 }
               />
             )}
@@ -545,11 +545,11 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                 icon={<StyledSvgWarning width={24} height={24} />}
                 description={
                   !videoFieldsLocked ? (
-                    <Text variant="t200">
+                    <Text as="span" variant="t200">
                       You <YellowText>won’t be able to edit this video</YellowText> once you mint an NFT for it.
                     </Text>
                   ) : (
-                    <Text variant="t200">
+                    <Text as="span" variant="t200">
                       Many fields are disabled after minting an NFT for this video -
                       <VideoLink to={absoluteRoutes.viewer.video(editedVideoInfo.id)}>
                         &nbsp;go to it's video page.
@@ -611,11 +611,11 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           >
             {getHiddenSectionLabel()}
           </TextButton>
-          <MoreSettingsDescription as="p" variant="t200" secondary>
+          <Text as="p" variant="t200" color="colorText" margin={{ top: 2 }}>
             {!videoFieldsLocked
               ? `License, content rating, published before, marketing${isEdit ? ', delete video' : ''}`
               : 'Description, video category, video language, video visibility, licence, content rating, published before, marketing'}
-          </MoreSettingsDescription>
+          </Text>
         </div>
         <MoreSettingsSection expanded={moreSettingsVisible}>
           {videoFieldsLocked && videoEditFields}

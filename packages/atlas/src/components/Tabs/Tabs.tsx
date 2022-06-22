@@ -136,7 +136,8 @@ export const Tabs: FC<TabsProps> = memo(
               ref={selected === idx ? tabRef : null}
             >
               <Text
-                secondary={selected !== idx}
+                as="span"
+                color={selected !== idx ? 'colorText' : undefined}
                 variant={selected === idx ? 't200-strong' : 't200'}
                 align="center"
                 data-badge={tab.badgeNumber}

@@ -14,10 +14,10 @@ export const InactiveOverlay: FC = () => {
     <OverlayBackground>
       <InnerContainer>
         <StyledLoader variant={loaderVariant} />
-        <OverlayHeading variant={smMatch ? 'h600' : 'h400'}>
+        <OverlayHeading as="h3" variant={smMatch ? 'h600' : 'h400'}>
           This video hasn&apos;t finished uploading yet...
         </OverlayHeading>
-        <OverlayContent variant={smMatch ? 't300' : 't200'} secondary>
+        <OverlayContent as="p" variant={smMatch ? 't300' : 't200'} color="colorText">
           Please try again in a few minutes
         </OverlayContent>
       </InnerContainer>
