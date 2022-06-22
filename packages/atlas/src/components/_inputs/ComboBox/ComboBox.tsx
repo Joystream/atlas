@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { ListItem, ListItemProps } from '@/components/ListItem'
 import { Loader } from '@/components/_loaders/Loader'
 
-import { ComboBoxWrapper, ListWrapper, StyledThumbnail } from './ComboBox.styles'
+import { ComboBoxWrapper, ListWrapper, StyledSvgActionPlus, StyledThumbnail } from './ComboBox.styles'
 
 import { Input, InputProps } from '../Input'
 
@@ -15,7 +15,7 @@ type ModifiedListItemProps = ListItemProps & {
 
 export type ComboBoxProps<T = unknown> = {
   items?: (ModifiedListItemProps & T)[]
-  loading?: boolean
+  processing?: boolean
   onSelectedItemChange?: (item?: ModifiedListItemProps & T) => void
   onInputValueChange?: (item?: string) => void | Promise<void>
   resetOnSelect?: boolean
@@ -27,7 +27,7 @@ export type ComboBoxProps<T = unknown> = {
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
 export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
   const {
-    loading,
+    processing,
     items = [],
     onSelectedItemChange,
     onInputValueChange,
@@ -46,7 +46,17 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
     }
   }, [items])
 
-  const { isOpen, getMenuProps, getInputProps, highlightedIndex, getItemProps, getComboboxProps, reset } = useCombobox({
+  const {
+    isOpen,
+    getMenuProps,
+    getInputProps,
+    highlightedIndex,
+    getItemProps,
+    getComboboxProps,
+    reset,
+    toggleMenu,
+    inputValue,
+  } = useCombobox({
     items: inputItems,
     itemToString: (item) => (item ? (item.label as string) : ''),
     onSelectedItemChange: ({ selectedItem }) => {
@@ -72,7 +82,7 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
     },
   })
 
-  const noItemsFound = isOpen && !error && inputItems.length === 0 && !loading && notFoundNode
+  const noItemsFound = isOpen && !error && inputItems.length === 0 && !processing && notFoundNode && inputValue
 
   // This function will calculate the position of dropdown when TextField's helper text is present
   const getTextFieldBottomEdgePosition = () => {
@@ -91,7 +101,12 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
           {...textFieldProps}
           error={error || !!noItemsFound}
           {...getInputProps({ ref: textFieldRef })}
-          nodeEnd={loading && <Loader variant="small" />}
+          nodeEnd={processing && <Loader variant="small" />}
+          nodeStart={<StyledSvgActionPlus />}
+          onFocus={(event) => {
+            textFieldProps?.onFocus?.(event)
+          }}
+          onClick={toggleMenu}
         />
       </div>
       <ListWrapper {...getMenuProps()} topPosition={getTextFieldBottomEdgePosition()}>

@@ -30,6 +30,7 @@ export type InputProps = {
   onFocus?: (event: FocusEvent<HTMLInputElement>) => void
   onKeyDown?: (event: KeyboardEvent<HTMLInputElement>) => void
   onWheel?: (event: WheelEvent<HTMLInputElement>) => void
+  onClick?: (event: MouseEvent<HTMLInputElement>) => void
   className?: string
   placeholder?: string
   defaultValue?: string
@@ -54,6 +55,7 @@ const InputComponent: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
     onBlur,
     onFocus,
     onWheel,
+    onClick,
     error,
     disabled,
     placeholder,
@@ -130,6 +132,7 @@ const InputComponent: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
         onFocus={onFocus}
         onBlur={onBlur}
         onWheel={handleWheel}
+        onClick={onClick}
         onKeyDown={onKeyDown}
         placeholder={placeholder}
         type={type}

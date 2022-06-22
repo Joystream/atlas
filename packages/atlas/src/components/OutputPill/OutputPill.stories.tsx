@@ -1,19 +1,21 @@
 import { Meta, Story } from '@storybook/react'
 
-import { MemberBadge, MemberBadgeProps } from '.'
+import { OutputPill, OutputPillProps } from '.'
 
 export default {
-  title: 'Other/MemberBadge',
-  component: MemberBadge,
+  title: 'Other/OutputPill',
+  component: OutputPill,
   args: {
     avatarUri: 'https://placedog.net/100/100',
     handle: 'Member',
+    withAvatar: true,
+    readonly: false,
   },
   argTypes: {
     className: { table: { disable: true } },
     onDeleteClick: { table: { disable: true } },
   },
-} as Meta
+} as Meta<OutputPillProps>
 
-const Template: Story<MemberBadgeProps> = (args) => <MemberBadge {...args} />
+const Template: Story<OutputPillProps & { hasOnDeleteClick: boolean }> = (args) => <OutputPill {...args} />
 export const Default = Template.bind({})
