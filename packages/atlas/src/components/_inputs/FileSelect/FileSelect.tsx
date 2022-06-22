@@ -12,7 +12,6 @@ import {
   SvgIllustrativeVideo,
 } from '@/components/_icons'
 import { useConfirmationModal } from '@/providers/confirmationModal'
-import { cVar } from '@/styles'
 import { FileType } from '@/types/files'
 
 import {
@@ -23,7 +22,6 @@ import {
   FileHoverOverlay,
   FileSelectedOverlay,
   InnerContainer,
-  Paragraph,
   Thumbnail,
   Title,
 } from './FileSelect.styles'
@@ -174,9 +172,9 @@ export const FileSelect: FC<FileSelectProps> = ({
                 <Title as="span" variant="h400">
                   {title}
                 </Title>
-                <Paragraph variant="t200" as="p" color="colorText">
+                <Text margin={{ top: 3 }} variant="t200" as="p" color="colorText">
                   {paragraph}
-                </Paragraph>
+                </Text>
                 <ButtonsGroup>
                   <DragDropText as="span" variant="t100" color="colorText">
                     Drag and drop or
@@ -191,7 +189,7 @@ export const FileSelect: FC<FileSelectProps> = ({
         </InnerContainer>
         <FileHoverOverlay>
           {fileType === 'video' ? <SvgIllustrativeVideo /> : <SvgIllustrativeImage />}
-          <Text margin={{ top: 1 }} variant="t200-strong">
+          <Text as="span" margin={{ top: 1 }} variant="t200-strong">
             Drop file here to upload it
           </Text>
         </FileHoverOverlay>
@@ -201,10 +199,10 @@ export const FileSelect: FC<FileSelectProps> = ({
             item && (
               <FileSelectedOverlay style={{ opacity: styles.opacity }}>
                 <SvgIllustrativeFileSelected />
-                <Text margin={{ top: 2 }} color={cVar('colorCoreBlue200')} variant="t100">
+                <Text as="span" margin={{ top: 2 }} color="colorCoreBlue200" variant="t100">
                   selected
                 </Text>
-                <Text margin={{ top: 1 }} variant="t200">
+                <Text as="span" margin={{ top: 1 }} variant="t200">
                   {file.name}
                 </Text>
               </FileSelectedOverlay>

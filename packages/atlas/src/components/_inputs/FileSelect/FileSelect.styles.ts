@@ -16,6 +16,7 @@ type LoadingProp = {
 }
 
 export const FileHoverOverlay = styled.div`
+  pointer-events: none;
   visibility: hidden;
   position: absolute;
   top: 0;
@@ -65,7 +66,6 @@ export const FileSelectedOverlay = styled(animated.div)`
 export const InnerContainer = styled.div<DragAndDropAreaProps>`
   display: flex;
   justify-content: center;
-  opacity: ${({ fileAccepted }) => (fileAccepted ? '0.1' : '1')};
 `
 
 const dragAcceptCss = css`
