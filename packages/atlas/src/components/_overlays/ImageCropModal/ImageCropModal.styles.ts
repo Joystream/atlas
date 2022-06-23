@@ -3,10 +3,12 @@ import styled from '@emotion/styled'
 
 import { Slider } from '@/components/_inputs/Slider'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { cVar, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 export const StyledDialogModal = styled(DialogModal)`
-  width: 536px;
+  ${media.sm} {
+    width: 536px;
+  }
 `
 
 const roundedCropperCss = css`
