@@ -117,7 +117,7 @@ export const CustomControls = styled.div<CustomControlsProps>`
   transform: translateY(0.5em);
   padding: 0.5em 0.5em 0;
   bottom: ${({ isFullScreen }) => (isFullScreen ? '2.5em' : '1.25em')};
-  border-top: ${({ isEnded }) => (isEnded ? `1px solid ${cVar('colorCoreNeutral700Lighten')}` : 'unset')};
+  box-shadow: ${({ isEnded }) => (isEnded ? cVar('effectDividersTop') : 'unset')};
   left: 0;
   z-index: ${zIndex.nearOverlay - 1};
   display: flex;

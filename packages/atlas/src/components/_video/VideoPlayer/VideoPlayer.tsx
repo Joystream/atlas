@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import useResizeObserver from 'use-resize-observer'
 import { VideoJsPlayer } from 'video.js'
 
 import { FullVideoFieldsFragment } from '@/api/queries'
@@ -97,13 +98,22 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
   const [isPlaying, setIsPlaying] = useState(false)
-  const screenControlsRef = useRef<HTMLDivElement>(null)
+  const { height: playerHeight = 0 } = useResizeObserver({ box: 'border-box', ref: playerRef })
+  const customControlsRef = useRef<HTMLDivElement>(null)
+
+  const customControlsOffset =
+    ((customControlsRef.current?.getBoundingClientRect().top || 0) -
+      (playerRef.current?.getBoundingClientRect().bottom || 0)) *
+    -1
+
+  const playerHeightWithoutCustomControls = playerHeight - customControlsOffset
 
   const {
     currentVolume,
     cachedVolume,
     cinematicView,
     playbackRate,
+    playNext,
     actions: { setCurrentVolume, setCachedVolume, setCinematicView },
   } = usePersonalDataStore((state) => state)
   const [volumeToSave, setVolumeToSave] = useState(0)
@@ -525,7 +535,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
 
   return (
     <Container isFullScreen={isFullScreen} className={className}>
-      <div data-vjs-player onClick={handlePlayPause} ref={screenControlsRef}>
+      <div data-vjs-player onClick={handlePlayPause}>
         {needsManualPlay && (
           <BigPlayButtonContainer onClick={handlePlayPause}>
             <BigPlayButton onClick={handlePlayPause}>
@@ -545,7 +555,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                 playerState={playerState}
                 setPlayerState={setPlayerState}
               />
-              <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'}>
+              <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'} ref={customControlsRef}>
                 <PlayControl isLoading={playerState === 'loading'}>
                   {(!needsManualPlay || mdMatch) && (
                     <PlayButton
@@ -604,7 +614,8 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                     </PlayerControlButton>
                   )}
                   <SettingsButtonWithPopover
-                    boundariesElement={screenControlsRef.current}
+                    playerHeightWithoutCustomControls={playerHeightWithoutCustomControls}
+                    boundariesElement={playerRef.current}
                     isFullScreen={isFullScreen}
                   />
                   <PlayerControlButton
@@ -620,11 +631,10 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
             </ControlsOverlay>
           </>
         )}
-
         <VideoOverlay
           videoId={videoId}
           isFullScreen={isFullScreen}
-          isPlayNextDisabled={isPlayNextDisabled}
+          isPlayNextDisabled={isPlayNextDisabled || !playNext}
           playerState={playerState}
           onPlay={handlePlayPause}
           channelId={channelId}

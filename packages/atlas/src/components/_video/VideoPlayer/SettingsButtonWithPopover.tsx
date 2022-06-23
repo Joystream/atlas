@@ -4,6 +4,7 @@ import { FC, MouseEvent, useRef, useState } from 'react'
 import { Popover, PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { AVAILABLE_PLAYBACK_RATE } from '@/config/player'
 import { usePersonalDataStore } from '@/providers/personalData'
+import { isMobile } from '@/utils/browser'
 
 import { PlayerControlButton } from './PlayerControlButton'
 import { StyledSvgControlsSettingsOutline, StyledSvgControlsSettingsSolid } from './VideoPlayer.styles'
@@ -13,11 +14,24 @@ import { Setting, Settings } from '../Settings'
 type SettingsPopoverProps = {
   boundariesElement: Boundary | null | undefined
   isFullScreen?: boolean
+  playerHeightWithoutCustomControls?: number
 }
-export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({ boundariesElement, isFullScreen }) => {
+
+const TOP_OFFSET = 16
+
+export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
+  boundariesElement,
+  isFullScreen,
+  playerHeightWithoutCustomControls = 0,
+}) => {
+  const settingsRef = useRef<HTMLDivElement>(null)
   const popoverRef = useRef<PopoverImperativeHandle>(null)
+  const settingButtonRef = useRef<HTMLButtonElement>(null)
   const [isSettingsOpened, setIsSettingsOpened] = useState(false)
   const [openedSettting, setOpenedSetting] = useState<string | null>(null)
+  const mobile = isMobile()
+
+  const maxHeight = playerHeightWithoutCustomControls - TOP_OFFSET
 
   const handleToggleSettings = (event: MouseEvent) => {
     event.stopPropagation()
@@ -26,8 +40,8 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({ boundaries
 
   const {
     playbackRate,
-    autoplay,
-    actions: { setPlaybackRate, setAutoplay },
+    playNext,
+    actions: { setPlaybackRate, setPlayNext },
   } = usePersonalDataStore((state) => state)
 
   const settings: Setting[] = [
@@ -50,9 +64,9 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({ boundaries
     {
       type: 'boolean',
       label: 'Autoplay',
-      value: autoplay,
+      value: playNext,
       onSwitchClick: (value) => {
-        setAutoplay(value)
+        setPlayNext(value)
       },
     },
   ]
@@ -60,15 +74,13 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({ boundaries
     <span>
       <Popover
         placement="top"
+        disabled={mobile}
         ref={popoverRef}
         boundariesElement={boundariesElement}
-        boundariesPadding={{ right: 16 }}
+        boundariesPadding={{ right: 16, top: 16 }}
         flipEnabled={false}
-        trigger={
-          <PlayerControlButton onClick={handleToggleSettings} tooltipText="Settings">
-            {isSettingsOpened ? <StyledSvgControlsSettingsSolid /> : <StyledSvgControlsSettingsOutline />}
-          </PlayerControlButton>
-        }
+        trigger={null}
+        triggerTarget={settingButtonRef.current}
         onHide={() => {
           setIsSettingsOpened(false)
           setOpenedSetting(null)
@@ -78,12 +90,17 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({ boundaries
         }}
       >
         <Settings
+          ref={settingsRef}
+          maxHeight={maxHeight}
           settings={settings}
           onSettingClick={setOpenedSetting}
           openedSetting={openedSettting}
           isFullScreen={isFullScreen}
         />
       </Popover>
+      <PlayerControlButton onClick={handleToggleSettings} tooltipText="Settings" ref={settingButtonRef}>
+        {isSettingsOpened ? <StyledSvgControlsSettingsSolid /> : <StyledSvgControlsSettingsOutline />}
+      </PlayerControlButton>
     </span>
   )
 }

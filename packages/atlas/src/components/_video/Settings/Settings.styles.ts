@@ -15,9 +15,11 @@ export const SettingsWrapper = styled.section`
   backdrop-filter: blur(32px);
 `
 
-export const OptionsWrapper = styled.div<{ withBorder?: boolean }>`
+export const OptionsWrapper = styled.div<{ withBorder?: boolean; maxHeight?: number }>`
   box-shadow: ${({ withBorder }) => (withBorder ? cVar('effectDividersTop') : 'unset')};
   padding: ${sizes(2)} 0;
+  max-height: ${({ maxHeight }) => (maxHeight ? `${maxHeight}px` : 'unset')};
+  overflow: auto;
 `
 
 export const NodeEndWrapper = styled.div<{ gap: number }>`

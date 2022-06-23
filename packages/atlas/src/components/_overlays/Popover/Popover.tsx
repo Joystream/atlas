@@ -38,8 +38,8 @@ const onTrigger = (instance: Instance<unknown>) => {
 const hideOnEscPlugin: Plugin = {
   name: 'hideOnEsc',
   defaultValue: true,
-  fn({ hide }) {
-    function onKeyDown(event: KeyboardEvent) {
+  fn: ({ hide }) => {
+    const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         hide()
       }

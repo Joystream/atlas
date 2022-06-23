@@ -16,7 +16,7 @@ export type PersonalDataStoreState = {
   cookiesAccepted?: boolean
   reactionPopoverDismissed: boolean
   playbackRate: number
-  autoplay: boolean
+  playNext: boolean
 }
 
 const WHITELIST = [
@@ -30,7 +30,7 @@ const WHITELIST = [
   'cinematicView',
   'cookiesAccepted',
   'reactionPopoverDismissed',
-  'autoplay',
+  'playNext',
 ] as (keyof PersonalDataStoreState)[]
 
 export type PersonalDataStoreActions = {
@@ -42,7 +42,7 @@ export type PersonalDataStoreActions = {
   setCurrentVolume: (volume: number) => void
   setCachedVolume: (volume: number) => void
   setPlaybackRate: (playbackRate: number) => void
-  setAutoplay: (autoplay: boolean) => void
+  setPlayNext: (playNext: boolean) => void
   setCinematicView: (cinematicView: boolean) => void
   setCookiesAccepted: (accept: boolean) => void
   setReactionPopoverDismission: (reactionPopoverDismissed: boolean) => void
@@ -59,7 +59,7 @@ const initialState: PersonalDataStoreState = {
   cinematicView: false,
   cookiesAccepted: undefined,
   reactionPopoverDismissed: false,
-  autoplay: true,
+  playNext: true,
 }
 
 export const usePersonalDataStore = createStore<PersonalDataStoreState, PersonalDataStoreActions>(
@@ -121,9 +121,9 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
         set((state) => {
           state.playbackRate = playbackRate
         }),
-      setAutoplay: (autoPlay) =>
+      setPlayNext: (playNext) =>
         set((state) => {
-          state.autoplay = autoPlay
+          state.playNext = playNext
         }),
       setCinematicView: (cinematicView) =>
         set((state) => {

@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, forwardRef } from 'react'
 
 import { ListItem, ListItemProps } from '@/components/ListItem'
 import { Text } from '@/components/Text'
@@ -14,14 +14,19 @@ import {
   StyledSvgActionCheck,
 } from './Settings.styles'
 
-export type SettingValue = string | number | boolean
-
 export type SettingsProps = {
   settings: Setting[]
+  maxHeight?: number
   openedSetting: string | null
   onSettingClick: (value: string | null) => void
   isFullScreen?: boolean
 }
+
+type MultiValueOption = {
+  value: string | number
+  options?: never
+  onOptionClick?: (value: string | number) => void
+} & ListItemProps
 
 type MulitValueSetting = {
   type: 'multi-value'
@@ -38,34 +43,40 @@ type BooleanSetting = {
 
 export type Setting = MulitValueSetting | BooleanSetting
 
-export const Settings: FC<SettingsProps> = ({ settings, openedSetting = null, onSettingClick, isFullScreen }) => {
-  const selectedOption = settings.find((setting) => setting.label === openedSetting)
+const LIST_ITEM_HEIGHT = 48
 
-  return (
-    <SettingsContainer isFullScreen={isFullScreen}>
-      {openedSetting === null ? (
-        <SettingList title="Settings" settings={settings} onSettingClick={onSettingClick} />
-      ) : (
-        <SettingOptionsList
-          title={openedSetting || ''}
-          onClose={() => onSettingClick(null)}
-          settings={selectedOption?.options}
-        />
-      )}
-    </SettingsContainer>
-  )
+export const Settings = forwardRef<HTMLDivElement, SettingsProps>(
+  ({ settings, openedSetting = null, onSettingClick, isFullScreen, maxHeight }, ref) => {
+    const selectedOption = settings.find((setting) => setting.label === openedSetting)
+    const optionMaxHeight = (maxHeight || 0) + LIST_ITEM_HEIGHT
+    return (
+      <SettingsContainer isFullScreen={isFullScreen} ref={ref}>
+        {openedSetting === null ? (
+          <BaseMenu maxHeight={maxHeight} onSettingClick={onSettingClick} settings={settings} />
+        ) : (
+          <Options
+            onSettingClick={onSettingClick}
+            options={selectedOption?.options}
+            openedSetting={openedSetting}
+            maxHeight={optionMaxHeight}
+          />
+        )}
+      </SettingsContainer>
+    )
+  }
+)
+Settings.displayName = 'Settings'
+
+type BaseMenuProps = {
+  maxHeight?: number
+  settings: Setting[]
+  onSettingClick: (value: string | null) => void
 }
 
-type SettingsListProps = {
-  title: string
-  settings?: Setting[]
-  onSettingClick?: (value: string | null) => void
-}
-
-export const SettingList: FC<SettingsListProps> = ({ settings, onSettingClick }) => {
+const BaseMenu: FC<BaseMenuProps> = ({ maxHeight, settings, onSettingClick }) => {
   return (
     <SettingsWrapper>
-      <OptionsWrapper>
+      <OptionsWrapper maxHeight={maxHeight}>
         {settings?.map((setting, idx) =>
           setting.type === 'multi-value' ? (
             <ListItem
@@ -111,42 +122,35 @@ export const SettingList: FC<SettingsListProps> = ({ settings, onSettingClick })
     </SettingsWrapper>
   )
 }
-
-type MultiValueOption = {
-  value: string | number
-  options?: never
-  onOptionClick?: (value: string | number) => void
-} & Omit<ListItemProps, ''>
-
-type SettingOptionsListProps = {
-  title: string
-  settings?: MultiValueOption[]
-  onClose?: () => void
-  value?: string | number
+type OptionsProps = {
+  openedSetting: string
+  maxHeight?: number
+  options?: MultiValueOption[]
+  onSettingClick: (value: string | null) => void
 }
 
-export const SettingOptionsList: FC<SettingOptionsListProps> = ({ title, onClose, settings }) => {
+const Options: FC<OptionsProps> = ({ openedSetting, onSettingClick, maxHeight, options }) => {
   return (
     <SettingsWrapper>
       <ListItem
         asButton
         nodeStart={<SvgActionChevronL />}
-        label={title}
+        label={openedSetting}
         size="large"
         onClick={(event) => {
           event.stopPropagation()
-          onClose?.()
+          onSettingClick(null)
         }}
       />
-      <OptionsWrapper withBorder>
-        {settings?.map((setting, idx) => {
+      <OptionsWrapper withBorder maxHeight={maxHeight}>
+        {options?.map((setting, idx) => {
           return (
             <StyledListItem
               asButton
               key={idx}
               onClick={(event) => {
                 event.stopPropagation()
-                onClose?.()
+                onSettingClick(null)
                 setting.onOptionClick?.(setting.value)
               }}
               label={setting.label}
