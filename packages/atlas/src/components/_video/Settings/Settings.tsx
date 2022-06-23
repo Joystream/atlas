@@ -48,7 +48,8 @@ const LIST_ITEM_HEIGHT = 48
 export const Settings = forwardRef<HTMLDivElement, SettingsProps>(
   ({ settings, openedSetting = null, onSettingClick, isFullScreen, maxHeight }, ref) => {
     const selectedOption = settings.find((setting) => setting.label === openedSetting)
-    const optionMaxHeight = (maxHeight || 0) + LIST_ITEM_HEIGHT
+    const optionsMaxHeight = (maxHeight || 0) - LIST_ITEM_HEIGHT
+
     return (
       <SettingsContainer isFullScreen={isFullScreen} ref={ref}>
         {openedSetting === null ? (
@@ -58,7 +59,7 @@ export const Settings = forwardRef<HTMLDivElement, SettingsProps>(
             onSettingClick={onSettingClick}
             options={selectedOption?.options}
             openedSetting={openedSetting}
-            maxHeight={optionMaxHeight}
+            maxHeight={optionsMaxHeight}
           />
         )}
       </SettingsContainer>
