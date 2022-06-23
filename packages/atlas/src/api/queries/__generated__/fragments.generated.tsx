@@ -291,6 +291,7 @@ export type FullVideoFieldsFragment = {
   id: string
   title?: string | null
   description?: string | null
+  reactionsCount: number
   views: number
   duration?: number | null
   createdAt: Date
@@ -1512,6 +1513,7 @@ export const FullVideoFieldsFragmentDoc = gql`
     id
     title
     description
+    reactionsCount
     reactions {
       id
       createdAt

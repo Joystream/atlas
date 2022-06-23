@@ -145,6 +145,7 @@ export type GetCategoriesFeaturedVideosQuery = {
       id: string
       title?: string | null
       description?: string | null
+      reactionsCount: number
       views: number
       duration?: number | null
       createdAt: Date

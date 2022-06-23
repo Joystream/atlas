@@ -72,6 +72,7 @@ export type GetFullVideoQuery = {
     id: string
     title?: string | null
     description?: string | null
+    reactionsCount: number
     views: number
     duration?: number | null
     createdAt: Date
@@ -565,6 +566,7 @@ export type GetFullVideosConnectionQuery = {
         id: string
         title?: string | null
         description?: string | null
+        reactionsCount: number
         views: number
         duration?: number | null
         createdAt: Date
@@ -1046,6 +1048,7 @@ export type GetFullVideosQuery = {
     id: string
     title?: string | null
     description?: string | null
+    reactionsCount: number
     views: number
     duration?: number | null
     createdAt: Date

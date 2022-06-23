@@ -12,7 +12,6 @@ import {
   QueryChannelsConnectionArgs,
   QueryCommentsConnectionArgs,
   QueryVideosConnectionArgs,
-  SearchQueryVariables,
   VideoConnection,
   VideoOrderByInput,
 } from '../queries'
@@ -63,19 +62,6 @@ const getChannelKeyArgs = (args: QueryChannelsConnectionArgs | null) => {
   const titleContains = args?.where?.title_contains || ''
 
   return `${language}:${idIn}:${orderBy}:${titleContains}`
-}
-
-const getSearchKeyArgs = (args: SearchQueryVariables | null) => {
-  const text = args?.text || ''
-  const hasMarketingEq = args?.whereVideo?.hasMarketing_eq ?? ''
-  const isExplicitEq = args?.whereVideo?.isExplicit_eq ?? ''
-  const language = stringifyValue(args?.whereVideo?.language)
-  const category = stringifyValue(args?.whereVideo?.category)
-  const createdAtGte = args?.whereVideo?.createdAt_gte ? JSON.stringify(args.whereVideo.createdAt_gte) : ''
-  const durationGte = args?.whereVideo?.duration_gte || null
-  const durationLte = args?.whereVideo?.duration_lte || null
-
-  return `${text}:${language}:${createdAtGte}:${category}:${isExplicitEq}:${hasMarketingEq}:${durationLte}:${durationGte}`
 }
 
 const getCommentKeyArgs = (args: QueryCommentsConnectionArgs | null) => {
@@ -176,8 +162,6 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
       })
     )
   },
-  // @ts-ignore Apollo doesn't contain info on args type so Typescript will complain
-  search: offsetLimitPagination(getSearchKeyArgs),
   commentByUniqueInput: (existing, { toReference, args }) => {
     return (
       existing ||

@@ -123,6 +123,7 @@ fragment FullVideoFields on Video {
   id
   title
   description
+  reactionsCount
   reactions {
     id
     createdAt
