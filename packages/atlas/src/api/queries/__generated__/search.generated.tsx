@@ -46,6 +46,8 @@ export type SearchQuery = {
           views: number
           createdAt: Date
           duration?: number | null
+          reactionsCount: number
+          commentsCount: number
           channel: {
             __typename?: 'Channel'
             id: string

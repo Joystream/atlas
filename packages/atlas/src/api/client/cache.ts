@@ -32,13 +32,14 @@ const getVideoKeyArgs = (args: QueryVideosConnectionArgs | null) => {
   const sorting = args?.orderBy?.[0] ? args.orderBy[0] : ''
   const durationGte = args?.where?.duration_gte || ''
   const durationLte = args?.where?.duration_gte || ''
+  const titleContains = args?.where?.title_contains || ''
 
   // only for counting videos in HomeView
   if (args?.where?.channel?.id_in && !args?.first) {
     return `${createdAtGte}:${channel}`
   }
 
-  return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${isPublic}:${idEq}:${idIn}:${sorting}:${durationGte}:${durationLte}`
+  return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${isPublic}:${idEq}:${idIn}:${sorting}:${durationGte}:${durationLte}:${titleContains}`
 }
 
 const getNftKeyArgs = (args: GetNftsConnectionQueryVariables | null) => {
@@ -59,8 +60,9 @@ const getChannelKeyArgs = (args: QueryChannelsConnectionArgs | null) => {
   const language = stringifyValue(args?.where?.language)
   const idIn = args?.where?.id_in || []
   const orderBy = args?.orderBy || []
+  const titleContains = args?.where?.title_contains || ''
 
-  return `${language}:${idIn}:${orderBy}`
+  return `${language}:${idIn}:${orderBy}:${titleContains}`
 }
 
 const getSearchKeyArgs = (args: SearchQueryVariables | null) => {

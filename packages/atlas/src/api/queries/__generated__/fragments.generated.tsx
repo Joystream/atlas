@@ -244,6 +244,8 @@ export type BasicVideoFieldsFragment = {
   views: number
   createdAt: Date
   duration?: number | null
+  reactionsCount: number
+  commentsCount: number
   channel: {
     __typename?: 'Channel'
     id: string
@@ -649,6 +651,8 @@ export type FullVideoFieldsFragment = {
       views: number
       createdAt: Date
       duration?: number | null
+      reactionsCount: number
+      commentsCount: number
       channel: {
         __typename?: 'Channel'
         id: string
@@ -916,6 +920,8 @@ export type FullNftFieldsFragment = {
     views: number
     createdAt: Date
     duration?: number | null
+    reactionsCount: number
+    commentsCount: number
     channel: {
       __typename?: 'Channel'
       id: string
@@ -1423,6 +1429,8 @@ export const BasicVideoFieldsFragmentDoc = gql`
     views
     createdAt
     duration
+    reactionsCount
+    commentsCount
     channel {
       ...BasicChannelFields
     }

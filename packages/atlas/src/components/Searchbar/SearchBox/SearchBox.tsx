@@ -112,8 +112,8 @@ export const SearchBox: FC<SearchBoxProps> = memo(
           )
           .slice(0, 3)
       : recentSearches
-    const slicedVideos = videos.slice(0, 3)
-    const slicedChannels = channels.slice(0, 3)
+    const slicedVideos = videos.items.slice(0, 3)
+    const slicedChannels = channels.items.slice(0, 3)
 
     // Pass number off all results
     useEffect(() => {

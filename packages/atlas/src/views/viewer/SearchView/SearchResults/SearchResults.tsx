@@ -1,4 +1,4 @@
-import { FC, memo, useEffect, useState } from 'react'
+import { FC, memo, useEffect, useMemo, useState } from 'react'
 
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
@@ -16,16 +16,26 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSearchResults } from '@/hooks/useSearchResults'
 import { useSearchStore } from '@/providers/search'
 
-import { FiltersWrapper, PaddingWrapper, Results, SearchControls, StyledSelect } from './SearchResults.styles'
+import {
+  FiltersWrapper,
+  PaddingWrapper,
+  Results,
+  SearchControls,
+  StyledPagination,
+  StyledSelect,
+} from './SearchResults.styles'
 
 type SearchResultsProps = {
   query: string
 }
 const tabs = ['Videos', 'Channels']
 
+const NUMBER_OF_RESULTS = 20
+
 export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
   const smMatch = useMediaMatch('sm')
   const [selectedTabIndex, setSelectedTabIndex] = useState(0)
+  const [page, setPage] = useState(0)
   const filtersBarLogic = useFiltersBar()
   const {
     setVideoWhereInput,
@@ -36,7 +46,9 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
   const { videos, channels, loading, error } = useSearchResults({
     searchQuery: query,
     videoWhereInput: selectedTabIndex === 0 ? videoWhereInput : undefined,
+    first: NUMBER_OF_RESULTS,
   })
+  const refetch = selectedTabIndex === 0 ? videos.refetch : channels.refetch
   const {
     actions: { setSearchOpen, setSearchQuery },
   } = useSearchStore()
@@ -46,6 +58,33 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
       setIsFiltersOpen(false)
     }
   }, [selectedTabIndex, setIsFiltersOpen])
+
+  const paginationData = useMemo(() => {
+    return {
+      pageInfo: selectedTabIndex === 0 ? videos.pageInfo : channels.pageInfo,
+      totalCount: selectedTabIndex === 0 ? videos.totalCount : channels.totalCount,
+      type: selectedTabIndex === 0 ? 'videos' : 'channels',
+    }
+  }, [channels.pageInfo, channels.totalCount, selectedTabIndex, videos.pageInfo, videos.totalCount])
+
+  const handlePageChange = (page: number) => {
+    const fetchMore = selectedTabIndex === 0 ? videos.fetchMore : channels.fetchMore
+    const { totalCount, pageInfo } = paginationData
+    const items = selectedTabIndex === 0 ? videos.items : channels.items
+    setPage(page)
+    if (
+      !!items.length &&
+      page * NUMBER_OF_RESULTS + NUMBER_OF_RESULTS > items?.length &&
+      items?.length < (totalCount ?? 0)
+    ) {
+      fetchMore({
+        variables: {
+          first: page * NUMBER_OF_RESULTS + NUMBER_OF_RESULTS * 2 - items.length,
+          after: pageInfo?.endCursor,
+        },
+      })
+    }
+  }
 
   const handleSelectLanguage = (selectedLanguage: unknown) => {
     setLanguage(selectedLanguage as string | null | undefined)
@@ -61,6 +100,11 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
     setIsFiltersOpen((state) => !state)
   }
 
+  useEffect(() => {
+    setPage(0)
+    refetch()
+  }, [refetch, selectedTabIndex])
+
   if (error) {
     return <ViewErrorFallback />
   }
@@ -69,8 +113,14 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
 
   const showEmptyFallback =
     !loading &&
-    ((videos.length === 0 && selectedTabIndex === 0) || (channels.length === 0 && selectedTabIndex === 1)) &&
+    ((videos.items.length === 0 && selectedTabIndex === 0) ||
+      (channels.items.length === 0 && selectedTabIndex === 1)) &&
     !!query
+
+  const sliceStart = page * NUMBER_OF_RESULTS
+  const sliceEnd = page * NUMBER_OF_RESULTS + NUMBER_OF_RESULTS
+  const paginatedVideos = videos.items.slice(sliceStart, sliceEnd)
+  const paginatedChannels = channels.items.slice(sliceStart, sliceEnd)
 
   return (
     <ViewWrapper>
@@ -122,11 +172,19 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
             />
           ) : (
             <>
-              {selectedTabIndex === 0 && (loading ? <SkeletonLoaderVideoGrid /> : <VideoGrid videos={videos} />)}
+              {selectedTabIndex === 0 &&
+                (loading ? <SkeletonLoaderVideoGrid /> : <VideoGrid videos={paginatedVideos} />)}
               {selectedTabIndex === 1 &&
-                (loading ? <SkeletonLoaderVideoGrid /> : <ChannelGrid channels={channels} repeat="fill" />)}
+                (loading ? <SkeletonLoaderVideoGrid /> : <ChannelGrid channels={paginatedChannels} repeat="fill" />)}
             </>
           )}
+          <StyledPagination
+            onChangePage={handlePageChange}
+            page={page}
+            totalCount={paginationData.totalCount}
+            itemsPerPage={NUMBER_OF_RESULTS}
+            maxPaginationLinks={7}
+          />
         </LimitedWidthContainer>
       </Results>
     </ViewWrapper>

@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { Pagination } from '@/components/Pagination'
 import { Select } from '@/components/_inputs/Select'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
@@ -42,4 +43,8 @@ export const FiltersWrapper = styled.div`
 export const StyledSelect = styled(Select)`
   min-width: 170px;
   margin-right: ${sizes(4)};
+`
+
+export const StyledPagination = styled(Pagination)`
+  margin-top: ${sizes(12)};
 `

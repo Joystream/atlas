@@ -106,6 +106,8 @@ fragment BasicVideoFields on Video {
   views
   createdAt
   duration
+  reactionsCount
+  commentsCount
   channel {
     ...BasicChannelFields
   }
