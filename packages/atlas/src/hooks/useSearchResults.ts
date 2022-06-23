@@ -1,3 +1,4 @@
+import { NetworkStatus } from '@apollo/client'
 import { debounce } from 'lodash-es'
 import { useEffect, useRef, useState } from 'react'
 
@@ -37,6 +38,7 @@ export const useSearchResults = ({ searchQuery, first = 50, videoWhereInput }: S
     error: videosError,
     fetchMore: fetchMoreVideos,
     refetch: refetchVideos,
+    networkStatus: videosNetworkStatus,
   } = useBasicVideosConnection(
     {
       first,
@@ -59,7 +61,8 @@ export const useSearchResults = ({ searchQuery, first = 50, videoWhereInput }: S
       ],
     },
     {
-      skip: !searchQuery,
+      notifyOnNetworkStatusChange: true,
+      skip: !text,
       onError: (error) => SentryLogger.error('Failed to fetch video search results', 'SearchResults', error),
     }
   )
@@ -72,6 +75,7 @@ export const useSearchResults = ({ searchQuery, first = 50, videoWhereInput }: S
     error: channelsError,
     fetchMore: fetchMoreChannels,
     refetch: refetchChannels,
+    networkStatus: channelsNetworkStatus,
   } = useBasicChannelsConnection(
     {
       first,
@@ -83,7 +87,8 @@ export const useSearchResults = ({ searchQuery, first = 50, videoWhereInput }: S
       },
     },
     {
-      skip: !searchQuery,
+      notifyOnNetworkStatusChange: true,
+      skip: !text,
       onError: (error) => SentryLogger.error('Failed to fetch channel search results', 'SearchResults', error),
     }
   )
@@ -104,6 +109,11 @@ export const useSearchResults = ({ searchQuery, first = 50, videoWhereInput }: S
       refetch: refetchChannels,
     },
     error: videosError || channelsError,
-    loading: videosLoading || channelsLoading || typing,
+    loading:
+      videosLoading ||
+      channelsLoading ||
+      typing ||
+      videosNetworkStatus === NetworkStatus.fetchMore ||
+      channelsNetworkStatus === NetworkStatus.fetchMore,
   }
 }
