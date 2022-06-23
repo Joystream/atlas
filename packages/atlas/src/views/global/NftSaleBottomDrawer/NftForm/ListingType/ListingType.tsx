@@ -3,7 +3,6 @@ import { FC } from 'react'
 import { Text } from '@/components/Text'
 import { SvgActionAuction, SvgActionBuyNow } from '@/components/_icons'
 import { OptionCardGroupRadio } from '@/components/_inputs/OptionCardGroup'
-import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { OptionsWrapper } from './ListingTypes.styles'
 
@@ -15,7 +14,6 @@ type ListingTypeProps = {
 }
 
 export const ListingType: FC<ListingTypeProps> = ({ selectedType, onSelectType }) => {
-  const mdMatch = useMediaMatch('md')
   return (
     <>
       <Text as="h1" variant="h500" margin={{ bottom: 4 }}>
@@ -28,7 +26,6 @@ export const ListingType: FC<ListingTypeProps> = ({ selectedType, onSelectType }
         <OptionCardGroupRadio
           selectedValue={selectedType}
           onChange={(value) => onSelectType(value as Listing)}
-          direction={mdMatch ? 'horizontal' : 'vertical'}
           options={[
             {
               label: 'Auction',
