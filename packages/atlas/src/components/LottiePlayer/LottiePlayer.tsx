@@ -5,13 +5,14 @@ import { FC } from 'react'
 type LottiePlayerProps = {
   data: object
   play?: boolean
-  size?: number
+  size?: number | { width: number; height: number }
   loop?: boolean
   onComplete?: () => void
   className?: string
 }
 
 export const LottiePlayer: FC<LottiePlayerProps> = ({ play = true, data, size, loop, onComplete, className }) => {
+  const style = !size ? {} : typeof size === 'number' ? { width: size, height: size } : size
   return (
     <>
       <Global styles={playerContainerOverrides} />
@@ -20,7 +21,7 @@ export const LottiePlayer: FC<LottiePlayerProps> = ({ play = true, data, size, l
         loop={loop}
         keepLastFrame
         src={data}
-        style={size ? { width: size, height: size } : {}}
+        style={style}
         onEvent={(e) => (e === 'complete' ? onComplete?.() : null)}
         className={className}
       />

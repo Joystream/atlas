@@ -110,6 +110,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
           <LottiePlayer
             loop={stepDetails.animation.loop}
             data={stepDetails.animation.data}
+            size={stepDetails.animation.size}
             onComplete={() =>
               !stepDetails?.animation?.loop && status === ExtrinsicStatus.Unsigned && setPolkadotLogoVisible(true)
             }
