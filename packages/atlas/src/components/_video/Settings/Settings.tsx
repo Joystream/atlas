@@ -7,6 +7,7 @@ import { Switch } from '@/components/_inputs/Switch'
 
 import {
   NodeEndWrapper,
+  OptionsWrapper,
   SettingsContainer,
   SettingsWrapper,
   StyledListItem,
@@ -19,6 +20,7 @@ export type SettingsProps = {
   settings: Setting[]
   openedSetting: string | null
   onSettingClick: (value: string | null) => void
+  isFullScreen?: boolean
 }
 
 type MulitValueSetting = {
@@ -36,11 +38,11 @@ type BooleanSetting = {
 
 export type Setting = MulitValueSetting | BooleanSetting
 
-export const Settings: FC<SettingsProps> = ({ settings, openedSetting = null, onSettingClick }) => {
+export const Settings: FC<SettingsProps> = ({ settings, openedSetting = null, onSettingClick, isFullScreen }) => {
   const selectedOption = settings.find((setting) => setting.label === openedSetting)
 
   return (
-    <>
+    <SettingsContainer isFullScreen={isFullScreen}>
       {openedSetting === null ? (
         <SettingList title="Settings" settings={settings} onSettingClick={onSettingClick} />
       ) : (
@@ -50,7 +52,7 @@ export const Settings: FC<SettingsProps> = ({ settings, openedSetting = null, on
           settings={selectedOption?.options}
         />
       )}
-    </>
+    </SettingsContainer>
   )
 }
 
@@ -63,54 +65,49 @@ type SettingsListProps = {
 export const SettingList: FC<SettingsListProps> = ({ settings, onSettingClick }) => {
   return (
     <SettingsWrapper>
-      <SettingsContainer>
-        {settings?.map((setting, idx) => {
-          switch (setting.type) {
-            case 'multi-value':
-              return (
-                <ListItem
-                  key={idx}
-                  label={setting.label}
-                  size="large"
-                  asButton
-                  onClick={(event) => {
-                    event.stopPropagation()
-                    onSettingClick?.(String(setting.label))
-                  }}
-                  nodeEnd={
-                    <NodeEndWrapper gap={3}>
-                      <Text variant="t100" color="colorText" as="span">
-                        {setting.value}
-                      </Text>
-                      <SvgActionChevronR />
-                    </NodeEndWrapper>
-                  }
-                />
-              )
-            case 'boolean':
-              return (
-                <label key={idx}>
-                  <StyledListItem
-                    label={setting.label}
-                    size="large"
-                    onClick={(event) => event.stopPropagation()}
-                    nodeEnd={
-                      <NodeEndWrapper gap={2}>
-                        <Text as="span" variant="t100" color="colorText">
-                          {setting.value ? 'On' : 'Off'}
-                        </Text>
-                        <Switch
-                          value={setting.value}
-                          onChange={(e) => setting.onSwitchClick?.(!!e?.currentTarget.checked)}
-                        />
-                      </NodeEndWrapper>
-                    }
-                  />
-                </label>
-              )
-          }
-        })}
-      </SettingsContainer>
+      <OptionsWrapper>
+        {settings?.map((setting, idx) =>
+          setting.type === 'multi-value' ? (
+            <ListItem
+              key={idx}
+              label={setting.label}
+              size="large"
+              asButton
+              onClick={(event) => {
+                event.stopPropagation()
+                onSettingClick?.(String(setting.label))
+              }}
+              nodeEnd={
+                <NodeEndWrapper gap={3}>
+                  <Text variant="t100" color="colorText" as="span">
+                    {setting.value}
+                  </Text>
+                  <SvgActionChevronR />
+                </NodeEndWrapper>
+              }
+            />
+          ) : (
+            <label key={idx}>
+              <StyledListItem
+                label={setting.label}
+                size="large"
+                onClick={(event) => event.stopPropagation()}
+                nodeEnd={
+                  <NodeEndWrapper gap={2}>
+                    <Text as="span" variant="t100" color="colorText">
+                      {setting.value ? 'On' : 'Off'}
+                    </Text>
+                    <Switch
+                      value={setting.value}
+                      onChange={(e) => setting.onSwitchClick?.(!!e?.currentTarget.checked)}
+                    />
+                  </NodeEndWrapper>
+                }
+              />
+            </label>
+          )
+        )}
+      </OptionsWrapper>
     </SettingsWrapper>
   )
 }
@@ -141,7 +138,7 @@ export const SettingOptionsList: FC<SettingOptionsListProps> = ({ title, onClose
           onClose?.()
         }}
       />
-      <SettingsContainer withBorder>
+      <OptionsWrapper withBorder>
         {settings?.map((setting, idx) => {
           return (
             <StyledListItem
@@ -158,7 +155,7 @@ export const SettingOptionsList: FC<SettingOptionsListProps> = ({ title, onClose
             />
           )
         })}
-      </SettingsContainer>
+      </OptionsWrapper>
     </SettingsWrapper>
   )
 }

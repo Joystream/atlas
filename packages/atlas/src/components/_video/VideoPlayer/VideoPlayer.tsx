@@ -603,7 +603,10 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                       {isPiPEnabled ? <StyledSvgControlsPipOff /> : <StyledSvgControlsPipOn />}
                     </PlayerControlButton>
                   )}
-                  <SettingsButtonWithPopover boundariesElement={screenControlsRef.current} />
+                  <SettingsButtonWithPopover
+                    boundariesElement={screenControlsRef.current}
+                    isFullScreen={isFullScreen}
+                  />
                   <PlayerControlButton
                     isDisabled={!isFullScreenEnabled}
                     tooltipPosition="right"

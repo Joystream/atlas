@@ -12,9 +12,9 @@ import { Setting, Settings } from '../Settings'
 
 type SettingsPopoverProps = {
   boundariesElement: Boundary | null | undefined
+  isFullScreen?: boolean
 }
-
-export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({ boundariesElement }) => {
+export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({ boundariesElement, isFullScreen }) => {
   const popoverRef = useRef<PopoverImperativeHandle>(null)
   const [isSettingsOpened, setIsSettingsOpened] = useState(false)
   const [openedSettting, setOpenedSetting] = useState<string | null>(null)
@@ -77,7 +77,12 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({ boundaries
           setIsSettingsOpened(true)
         }}
       >
-        <Settings settings={settings} onSettingClick={setOpenedSetting} openedSetting={openedSettting} />
+        <Settings
+          settings={settings}
+          onSettingClick={setOpenedSetting}
+          openedSetting={openedSettting}
+          isFullScreen={isFullScreen}
+        />
       </Popover>
     </span>
   )

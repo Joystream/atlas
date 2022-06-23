@@ -4,19 +4,20 @@ import { ListItem } from '@/components/ListItem'
 import { SvgActionCheck } from '@/components/_icons'
 import { cVar, sizes } from '@/styles'
 
+export const SettingsContainer = styled.div<{ isFullScreen?: boolean }>`
+  transform: ${({ isFullScreen }) => (isFullScreen ? 'scale(2)' : 'scale(1)')};
+  transform-origin: bottom right;
+`
+
 export const SettingsWrapper = styled.section`
   background-color: ${cVar('colorCoreNeutral700Darken')};
   width: 256px;
   backdrop-filter: blur(32px);
 `
 
-export const SettingsContainer = styled.div<{ withBorder?: boolean }>`
-  padding: 0;
+export const OptionsWrapper = styled.div<{ withBorder?: boolean }>`
   box-shadow: ${({ withBorder }) => (withBorder ? cVar('effectDividersTop') : 'unset')};
   padding: ${sizes(2)} 0;
-  margin: 0;
-  max-height: 320px;
-  overflow-y: auto;
 `
 
 export const NodeEndWrapper = styled.div<{ gap: number }>`
