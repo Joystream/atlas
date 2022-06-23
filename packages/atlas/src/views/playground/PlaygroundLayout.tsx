@@ -78,7 +78,7 @@ const PlaygroundLayout = () => {
               onClick={() => setIsMemberDropdownActive(true)}
             />
           ) : (
-            <Button onClick={signIn}>Sign in</Button>
+            <Button onClick={() => signIn()}>Sign in</Button>
           )}
         </ButtonContainer>
       </TopbarBase>

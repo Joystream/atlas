@@ -35,6 +35,7 @@ export const InnerContainer = styled.div<{ isActive: boolean; containerHeight: n
   transition: transform ${cVar('animationTransitionMedium')}, height ${cVar('animationTransitionMedium')};
   will-change: height, transform;
   box-shadow: ${cVar('effectElevation24Layer2')}, ${cVar('effectElevation24Layer1')};
+  border-radius: 0 0 ${cVar('radiusMedium')} ${cVar('radiusMedium')};
   background-color: ${cVar('colorBackgroundStrong')};
   overflow-y: auto;
   overflow-x: hidden;

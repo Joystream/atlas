@@ -2,7 +2,7 @@ import { FC } from 'react'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionChannel, SvgActionInformative } from '@/components/_icons'
+import { SvgActionChannel, SvgActionInformative, SvgActionMember } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useUser } from '@/providers/user'
@@ -41,12 +41,12 @@ export const StudioWelcomeView: FC = () => {
           </SubTitle>
           <ButtonGroup>
             {isLoggedIn ? (
-              <SignInButton size="large" to={absoluteRoutes.studio.newChannel()}>
+              <SignInButton icon={<SvgActionChannel />} size="large" to={absoluteRoutes.studio.newChannel()}>
                 Create first channel
               </SignInButton>
             ) : (
-              <SignInButton icon={<SvgActionChannel />} size="large" onClick={signIn}>
-                Sign in
+              <SignInButton icon={<SvgActionMember />} size="large" onClick={() => signIn()}>
+                Connect wallet
               </SignInButton>
             )}
             <Button variant="secondary" icon={<SvgActionInformative />} size="large" to="https://www.joystream.org/">

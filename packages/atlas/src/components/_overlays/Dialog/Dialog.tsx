@@ -1,4 +1,4 @@
-import { ElementType, FC, FormEvent, PropsWithChildren, ReactNode } from 'react'
+import { FC, FormEvent, PropsWithChildren, ReactNode } from 'react'
 
 import { Text } from '@/components/Text'
 import { Button, ButtonProps } from '@/components/_buttons/Button'
@@ -29,7 +29,6 @@ export type DialogProps = PropsWithChildren<{
   additionalActionsNode?: ReactNode
   additionalActionsNodeMobilePosition?: 'top' | 'bottom'
   onExitClick?: () => void
-  as?: ElementType
   onSubmit?: (e?: FormEvent) => void
   noContentPadding?: boolean
   actionDivider?: boolean
@@ -46,7 +45,6 @@ export const Dialog: FC<DialogProps> = ({
   additionalActionsNode,
   onExitClick,
   children,
-  as,
   onSubmit,
   noContentPadding,
   actionDivider = false,
@@ -60,7 +58,7 @@ export const Dialog: FC<DialogProps> = ({
   const buttonSize = isCompact ? 'small' : 'medium'
 
   return (
-    <DialogContainer onSubmit={onSubmit} size={size} className={className} as={as}>
+    <DialogContainer onSubmit={onSubmit} size={size} className={className}>
       {(title || onExitClick) && (
         <Header dividers={dividers}>
           <HeaderContent>

@@ -146,7 +146,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
     BuyNow.displayName = 'BuyNow'
     const InfoBanner = ({ title, description }: { title: string; description: string }) => (
       <GridItem colSpan={buttonColumnSpan}>
-        <Banner id="" dismissable={false} icon={<SvgAlertsInformative24 />} {...{ title, description }} />
+        <Banner icon={<SvgAlertsInformative24 />} {...{ title, description }} />
       </GridItem>
     )
     const WithdrawBidFromPreviousAuction = ({ secondary }: { secondary?: boolean }) =>

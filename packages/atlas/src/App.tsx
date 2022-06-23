@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom'
 
 import { AnalyticsManager } from '@/AnalyticsManager'
 import { createApolloClient } from '@/api'
+import { SignInModal } from '@/components/_auth/SignInModal'
 import { OperatorsContextProvider } from '@/providers/assets'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { NftActionsProvider } from '@/providers/nftActions'
@@ -13,7 +14,6 @@ import { NftSaleBottomDrawer } from '@/views/global/NftSaleBottomDrawer'
 import { NftSettlementBottomDrawer } from '@/views/global/NftSettlementBottomDrawer'
 
 import { MainLayout } from './MainLayout'
-import { SignInStepsStepper } from './components/_auth/SignInSteps'
 import { AssetsManager } from './providers/assets'
 import { JoystreamManager, JoystreamProvider } from './providers/joystream'
 import { OverlayManagerProvider } from './providers/overlayManager'
@@ -43,7 +43,7 @@ export const App = () => {
                       <TransactionsManager />
                       <JoystreamManager />
                       <NotificationsManager />
-                      <SignInStepsStepper />
+                      <SignInModal />
                       <NftSettlementBottomDrawer />
                       <NftPurchaseBottomDrawer />
                       <NftSaleBottomDrawer />

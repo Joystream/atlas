@@ -88,7 +88,7 @@ export const SnackbarsContainer = styled.div<{ cookiesBannerOpen: boolean; botto
   bottom: ${({ cookiesBannerOpen, bottomNavOpen }) => sizes(cookiesBannerOpen ? (bottomNavOpen ? 89 : 73) : 18)};
   margin-left: ${sizes(4)};
   display: grid;
-  z-index: ${zIndex.nearVideoWorkspaceOverlay};
+  z-index: ${zIndex.snackbars};
   width: calc(100% - ${sizes(8)});
   transition: bottom ${cVar('animationTransitionMedium')}
     ${({ bottomNavOpen }) => (bottomNavOpen ? transitions.timings.routing : '0ms')};

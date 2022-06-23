@@ -12,6 +12,7 @@ import {
   SvgActionAddVideo,
   SvgActionChevronL,
   SvgActionChevronR,
+  SvgActionLogOut,
   SvgActionMember,
   SvgActionNewChannel,
   SvgActionPlay,
@@ -21,12 +22,11 @@ import { SvgActionSwitchMember } from '@/components/_icons/ActionSwitchMember'
 import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 import { JOY_CURRENCY_TICKER } from '@/config/token'
 import { useSubscribeAccountBalance } from '@/hooks/useSubscribeAccountBalance'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
-import { useUser } from '@/providers/user'
-import { urlParams } from '@/utils/url'
+import { useUser, useUserStore } from '@/providers/user'
 
 import {
   AnimatedContainer,
@@ -60,7 +60,8 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const [isSwitchingMember, setIsSwitchingMember] = useState(false)
     const [isAnimatingSwitchMember] = useState(false)
     const navigate = useNavigate()
-    const { channelId, activeMembership, setActiveUser, memberships } = useUser()
+    const { channelId, activeMembership, setActiveUser, memberships, signOut } = useUser()
+    const setSignInModalOpen = useUserStore((state) => state.actions.setSignInModalOpen)
     const accountBalance = useSubscribeAccountBalance()
     const containerRef = useRef<HTMLDivElement>(null)
     const { ref: measureContainerRef, height: containerHeight = 0 } = useResizeObserver({ box: 'border-box' })
@@ -99,7 +100,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
       closeDropdown?.()
     }
     const handleAddNewMember = () => {
-      navigate({ search: urlParams({ [QUERY_PARAMS.LOGIN]: 2 }) })
+      setSignInModalOpen(true)
       closeDropdown?.()
       setIsSwitchingMember(false)
     }
@@ -231,12 +232,6 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                         />
                       </>
                     )}
-                    <ListItem
-                      nodeStart={<IconWrapper icon={hasOneMember ? <SvgActionPlus /> : <SvgActionSwitchMember />} />}
-                      onClick={() => (hasOneMember ? handleAddNewMember() : setIsSwitchingMember(true))}
-                      label={hasOneMember ? 'Add new member...' : 'Switch member'}
-                      nodeEnd={!hasOneMember && <SvgActionChevronR />}
-                    />
                   </SectionContainer>
                   {publisher && (
                     <SectionContainer>
@@ -258,6 +253,23 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                       />
                     </SectionContainer>
                   )}
+                  <SectionContainer>
+                    <ListItem
+                      nodeStart={<IconWrapper icon={hasOneMember ? <SvgActionPlus /> : <SvgActionSwitchMember />} />}
+                      onClick={() => (hasOneMember ? handleAddNewMember() : setIsSwitchingMember(true))}
+                      label={hasOneMember ? 'Add new member...' : 'Switch member'}
+                      nodeEnd={!hasOneMember && <SvgActionChevronR />}
+                    />
+                    <ListItem
+                      label="Disconnect wallet"
+                      destructive
+                      nodeStart={<IconWrapper destructive icon={<SvgActionLogOut />} />}
+                      onClick={() => {
+                        closeDropdown?.()
+                        signOut()
+                      }}
+                    />
+                  </SectionContainer>
                 </div>
               </AnimatedContainer>
             )

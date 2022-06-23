@@ -25,7 +25,8 @@
     "graphql": "rimraf src/api/queries/__generated__ && graphql-codegen --config codegen.config.yml -r dotenv/config",
     "test": "vitest run",
     "test:dev": "vitest dev",
-    "madge:circular": "madge --circular ./src/* --ts-config ./tsconfig.json --extensions ts,tsx"
+    "madge:circular": "madge --circular ./src/* --ts-config ./tsconfig.json --extensions ts,tsx",
+    "madge:unused": "madge --orphans ./src/* --ts-config ./tsconfig.json --extensions ts,tsx --exclude '.stories.tsx$'"
   },
   "dependencies": {
     "@apollo/client": "^3.6.7",

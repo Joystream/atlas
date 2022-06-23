@@ -6,23 +6,23 @@ import { usePersonalDataStore } from '@/providers/personalData'
 import { BannerDescription, BannerHeader, BannerText, BannerWrapper, CloseButton, IconWrapper } from './Banner.styles'
 
 export type BannerProps = {
-  id: string
+  dismissibleId?: string
   title?: string
   description?: ReactNode
   className?: string
-  dismissable?: boolean
   icon?: ReactNode
 }
 
-export const Banner: FC<BannerProps> = ({ title, description, className, icon, id = '', dismissable = true }) => {
-  const isDismissedMessage = usePersonalDataStore((state) =>
-    state.dismissedMessages.some((message) => message.id === id)
-  )
+export const Banner: FC<BannerProps> = ({ title, description, className, icon, dismissibleId }) => {
+  const isDismissedMessage =
+    usePersonalDataStore((state) => state.dismissedMessages.some((message) => message.id === dismissibleId)) &&
+    !!dismissibleId
   const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
 
-  if (isDismissedMessage && dismissable) {
+  if (isDismissedMessage) {
     return null
   }
+
   return (
     <BannerWrapper className={className}>
       {title && (
@@ -31,11 +31,11 @@ export const Banner: FC<BannerProps> = ({ title, description, className, icon, i
           <BannerText as="h3" variant="h400">
             {title}
           </BannerText>
-          {dismissable && (
+          {dismissibleId && (
             <CloseButton
               icon={<SvgActionClose />}
               aria-label="close dialog"
-              onClick={() => updateDismissedMessages(id)}
+              onClick={() => updateDismissedMessages(dismissibleId)}
               variant="tertiary"
               size="small"
             />
@@ -48,11 +48,11 @@ export const Banner: FC<BannerProps> = ({ title, description, className, icon, i
           <BannerText as="p" variant="t200" color="colorText">
             {description}
           </BannerText>
-          {!title && dismissable && (
+          {!title && dismissibleId && (
             <CloseButton
               icon={<SvgActionClose />}
               aria-label="close dialog"
-              onClick={() => updateDismissedMessages(id)}
+              onClick={() => updateDismissedMessages(dismissibleId)}
               variant="tertiary"
               size="small"
             />

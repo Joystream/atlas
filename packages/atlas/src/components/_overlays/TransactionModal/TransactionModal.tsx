@@ -1,26 +1,27 @@
 import { FC, useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { LottiePlayer } from '@/components/LottiePlayer/LottiePlayer'
+import { LottiePlayer } from '@/components/LottiePlayer'
 import { Text } from '@/components/Text'
 import { SvgActionCheck } from '@/components/_icons'
 import { Dialog } from '@/components/_overlays/Dialog'
 import { JOYSTREAM_STORAGE_DISCORD_URL } from '@/config/urls'
 import { ErrorCode, ExtrinsicStatus } from '@/joystream-lib'
-import { useUser } from '@/providers/user'
+import { useUser, useUserStore } from '@/providers/user'
 import { transitions } from '@/styles'
 
 import { getExtrisincStatusDetails } from './TransactionModal.constants'
 import {
-  PolkadotLogoWrapper,
   Step,
   StepsBar,
+  StyledIconWrapper,
   StyledModal,
-  StyledPolkadotLogo,
   StyledTransactionIllustration,
   SuccessBackground,
   SuccessIcon,
   SuccessWrapper,
+  WalletInfoWrapper,
+  WalletLogo,
 } from './TransactionModal.styles'
 
 export type TransactionModalProps = {
@@ -40,6 +41,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
       ? getExtrisincStatusDetails(status === ExtrinsicStatus.Completed ? ExtrinsicStatus.Syncing : status, errorCode)
       : null
   const { channelId } = useUser()
+  const wallet = useUserStore((state) => state.wallet)
 
   useEffect(() => {
     if (status !== null && initialStatus === null) {
@@ -97,12 +99,12 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
           mountOnEnter
           unmountOnExit
         >
-          <PolkadotLogoWrapper>
-            <StyledPolkadotLogo />
+          <WalletInfoWrapper>
+            <StyledIconWrapper icon={<WalletLogo src={wallet?.logo.src} alt={wallet?.logo.alt} />} />
             <Text as="span" color="colorText" variant="t100">
-              Continue in Polkadot extension
+              Continue in {wallet?.title}
             </Text>
-          </PolkadotLogoWrapper>
+          </WalletInfoWrapper>
         </CSSTransition>
         {!polkadotLogoVisible && status !== ExtrinsicStatus.Completed && stepDetails && (
           <LottiePlayer

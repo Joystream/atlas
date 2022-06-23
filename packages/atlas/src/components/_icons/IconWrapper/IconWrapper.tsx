@@ -7,12 +7,13 @@ import { cVar, sizes } from '@/styles'
 export type IconWrapperProps = {
   size?: 'small' | 'medium' | 'large'
   icon: ReactNode
+  destructive?: boolean
   className?: string
 }
 
-export const IconWrapper: FC<IconWrapperProps> = ({ size = 'medium', icon, className }) => {
+export const IconWrapper: FC<IconWrapperProps> = ({ size = 'medium', icon, destructive, className }) => {
   return (
-    <IconContainer className={className} size={size}>
+    <IconContainer className={className} size={size} destructive={destructive}>
       {icon}
     </IconContainer>
   )
@@ -34,6 +35,13 @@ const getIconContainerPaddingStyles = ({ size }: IconContainerProps) => {
       `
   }
 }
+
+const destructiveIconStyles = css`
+  > svg > path {
+    fill: ${cVar('colorTextError')};
+  }
+`
+
 type IconContainerProps = Omit<IconWrapperProps, 'icon'>
 const IconContainer = styled.div<IconContainerProps>`
   display: flex;
@@ -44,4 +52,5 @@ const IconContainer = styled.div<IconContainerProps>`
   background: ${cVar('colorBackgroundAlpha')};
 
   ${getIconContainerPaddingStyles}
+  ${({ destructive }) => destructive && destructiveIconStyles};
 `

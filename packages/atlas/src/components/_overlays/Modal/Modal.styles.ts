@@ -17,7 +17,7 @@ export const ModalBackdrop = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: ${zIndex.globalOverlay};
+  z-index: ${zIndex.modals};
   background-color: ${cVar('colorBackgroundOverlay')};
   transition: opacity ${cVar('animationTransitionMedium')};
 `
@@ -29,7 +29,7 @@ type ModalContentProps = {
 
 export const ModalContent = styled.div<ModalContentProps>`
   display: flex;
-  z-index: ${zIndex.globalOverlay};
+  z-index: ${zIndex.modals};
   position: fixed;
   width: 100vw;
   max-height: calc(100vh - var(--size-topbar-height));

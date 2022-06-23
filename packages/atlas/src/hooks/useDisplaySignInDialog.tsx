@@ -15,10 +15,10 @@ const SignInDialogcontent = () => {
       </IllustrationWrapper>
       <SignInDialogTextWrapper>
         <Text as="h1" variant="h500">
-          Sign in to continue
+          Connect wallet to continue
         </Text>
         <Text as="p" variant="t200" color="colorText">
-          Sign in to Joystream using Polkadot extension in order proceed.
+          Connect your wallet and sign in to a free Joystream membership to continue.
         </Text>
       </SignInDialogTextWrapper>
     </>
@@ -87,7 +87,7 @@ export const useDisplaySignInDialog = () => {
         description: <SignInDialogcontent />,
         noIcon: true,
         primaryButton: {
-          text: 'Sign in',
+          text: 'Connect wallet',
           onClick: () => {
             onConfirm?.()
             closeDialog()

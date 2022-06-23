@@ -15,17 +15,13 @@ type Inputs = {
   about: string | null
 }
 
-type UseCreateEditMemberFormArgs = {
-  prevHandle?: string
-}
-
-export const useCreateEditMemberForm = ({ prevHandle }: UseCreateEditMemberFormArgs) => {
+export const useCreateEditMemberForm = (prevHandle?: string) => {
   const client = useApolloClient()
 
   const debouncedAvatarValidation = useRef(debouncePromise(imageUrlValidation, 500))
   const debouncedHandleUniqueValidation = useRef(
     debouncePromise(async (value: string, prevValue?: string) => {
-      if (value === prevValue) {
+      if (prevValue != null && value === prevValue) {
         return true
       }
       const {

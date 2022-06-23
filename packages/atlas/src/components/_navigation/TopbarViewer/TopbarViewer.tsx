@@ -139,8 +139,8 @@ export const TopbarViewer: FC = () => {
                   </SignedButtonsWrapper>
                 ) : (
                   mdMatch && (
-                    <Button icon={<SvgActionMember />} iconPlacement="left" size="medium" onClick={signIn}>
-                      Sign In
+                    <Button icon={<SvgActionMember />} iconPlacement="left" size="medium" onClick={() => signIn()}>
+                      Connect wallet
                     </Button>
                   )
                 )
@@ -150,7 +150,7 @@ export const TopbarViewer: FC = () => {
                 </SignedButtonsWrapper>
               )}
               {!searchQuery && !mdMatch && !isLoggedIn && topbarButtonLoaded && (
-                <StyledIconButton onClick={signIn}>Sign In</StyledIconButton>
+                <StyledIconButton onClick={() => signIn()}>Connect wallet</StyledIconButton>
               )}
             </ButtonWrapper>
           </CSSTransition>

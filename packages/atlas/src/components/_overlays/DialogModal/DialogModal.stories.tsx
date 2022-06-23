@@ -12,7 +12,6 @@ export default {
   argTypes: {
     onSubmit: { table: { disable: true } },
     onExitClick: { table: { disable: true } },
-    as: { table: { disable: true } },
     contentClassName: { table: { disable: true } },
     additionalActionsNode: { table: { disable: true } },
     className: { table: { disable: true } },

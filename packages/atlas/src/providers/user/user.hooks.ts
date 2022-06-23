@@ -1,3 +1,4 @@
+import { useSignerWallet } from './user.helpers'
 import { useUserContext } from './user.provider'
 import { UserStoreActions, useUserStore } from './user.store'
 import { ActiveUserState, SignerWalletAccount, SignerWalletStatus, UserContextValue } from './user.types'
@@ -10,11 +11,14 @@ type UseUserHookReturn = ActiveUserState &
 
     isLoggedIn: boolean
     isWalletLoading: boolean
+
+    getWalletsList: ReturnType<typeof useSignerWallet>['getWalletsList']
   }
 
 export const useUser = (): UseUserHookReturn => {
   const { accountId, memberId, channelId, walletStatus, walletAccounts, actions } = useUserStore()
   const userContext = useUserContext()
+  const { getWalletsList } = useSignerWallet()
 
   const isLoggedIn = !!accountId && !!memberId && walletStatus === 'connected'
 
@@ -26,6 +30,7 @@ export const useUser = (): UseUserHookReturn => {
     walletAccounts,
     isLoggedIn,
     isWalletLoading: walletStatus === 'pending',
+    getWalletsList,
     ...userContext,
     ...actions,
   }

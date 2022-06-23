@@ -76,6 +76,5 @@ export const absoluteRoutes = Object.entries(BASE_PATHS).reduce((absoluteRoutesA
 
 export const QUERY_PARAMS = {
   SEARCH: 'query',
-  LOGIN: 'loginStep',
   COMMENT_ID: 'commentId',
 }

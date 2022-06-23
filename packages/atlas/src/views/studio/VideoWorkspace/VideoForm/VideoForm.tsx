@@ -458,8 +458,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           <div>
             {errors.assets && (
               <FileValidationBanner
-                id="assets-banner"
-                dismissable={false}
                 icon={<SvgAlertsWarning24 width={24} height={24} />}
                 description={
                   <Text as="span" variant="t200">
@@ -538,8 +536,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           {watch('mintNft') && (
             <>
               <StyledBanner
-                id="issuing-nft"
-                dismissable={false}
                 icon={<StyledSvgWarning width={24} height={24} />}
                 description={
                   !videoFieldsLocked ? (

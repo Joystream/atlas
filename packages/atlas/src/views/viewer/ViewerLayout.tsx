@@ -1,16 +1,14 @@
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
-import { FC, useEffect, useState } from 'react'
+import { FC } from 'react'
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
-import { Loader } from '@/components/_loaders/Loader'
 import { BottomNav } from '@/components/_navigation/BottomNav'
 import { PrivateRoute } from '@/components/_navigation/PrivateRoute'
 import { SidenavViewer } from '@/components/_navigation/SidenavViewer'
 import { TopbarViewer } from '@/components/_navigation/TopbarViewer'
-import { Modal } from '@/components/_overlays/Modal'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSearchStore } from '@/providers/search'
@@ -54,8 +52,7 @@ const ENTRY_POINT_ROUTE = absoluteRoutes.viewer.index()
 export const ViewerLayout: FC = () => {
   const location = useLocation()
   const locationState = location.state as RoutingState
-  const { isLoggedIn, isWalletLoading } = useUser()
-  const [localIsWalletLoading, setLocalIsWalletLoading] = useState(false)
+  const { isLoggedIn } = useUser()
 
   const navigate = useNavigate()
   const mdMatch = useMediaMatch('md')
@@ -63,25 +60,8 @@ export const ViewerLayout: FC = () => {
 
   const displayedLocation = locationState?.overlaidLocation || location
 
-  // delay displaying the global loader by 500ms so the extension can be initialized if it's already connected
-  useEffect(() => {
-    let timeout: number
-    if (isWalletLoading) {
-      timeout = window.setTimeout(() => setLocalIsWalletLoading(true), 500)
-    } else {
-      setLocalIsWalletLoading(false)
-    }
-
-    return () => {
-      clearTimeout(timeout)
-    }
-  }, [isWalletLoading])
-
   return (
     <>
-      <StyledModal show={localIsWalletLoading} noBoxShadow>
-        <Loader variant="xlarge" />
-      </StyledModal>
       <TopbarViewer />
       <SidenavViewer />
       <MainContainer>
@@ -123,15 +103,6 @@ export const ViewerLayout: FC = () => {
     </>
   )
 }
-
-const StyledModal = styled(Modal)`
-  height: 100vh;
-  top: unset;
-  left: unset;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
 
 const MainContainer = styled.main`
   position: relative;
