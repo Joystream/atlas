@@ -1,105 +1,163 @@
 import { FC } from 'react'
 
-import { ListItem } from '@/components/ListItem'
+import { ListItem, ListItemProps } from '@/components/ListItem'
 import { Text } from '@/components/Text'
 import { SvgActionChevronL, SvgActionChevronR } from '@/components/_icons'
+import { Switch } from '@/components/_inputs/Switch'
 
-import { NodeEndWrapper, SettingsContainer, SettingsWrapper, StyledSvgActionCheck } from './Settings.styles'
+import {
+  NodeEndWrapper,
+  SettingsContainer,
+  SettingsWrapper,
+  StyledListItem,
+  StyledSvgActionCheck,
+} from './Settings.styles'
 
 export type SettingValue = string | number | boolean
 
 export type SettingsProps = {
   settings: Setting[]
-  openedOption: string | null
-  onOpenedOption: (option: string | null) => void
+  openedSetting: string | null
+  onSettingClick: (value: string | null) => void
 }
 
-export type Setting = {
-  options: SettingsListItemProps[]
-} & SettingsListItemProps
+type MulitValueSetting = {
+  type: 'multi-value'
+  value: string | number
+  options: MultiValueOption[]
+} & ListItemProps
 
-export const Settings: FC<SettingsProps> = ({ settings, openedOption, onOpenedOption }) => {
-  const baseMenu: Setting[] = settings.map((setting) => ({
-    ...setting,
-    onSettingClick: ({ label }) => onOpenedOption(label),
-  }))
+type BooleanSetting = {
+  type: 'boolean'
+  value: boolean
+  options?: never
+  onSwitchClick?: (value: boolean) => void
+} & ListItemProps
 
-  const selectedOptions = settings?.find((setting) => setting.label === openedOption)
+export type Setting = MulitValueSetting | BooleanSetting
 
-  const options = selectedOptions
-    ? (selectedOptions.options.map((opt) => ({
-        ...opt,
-        onSettingClick: (setting) => {
-          opt?.onSettingClick?.(setting)
-          onOpenedOption(null)
-        },
-      })) as SettingsListItemProps[])
-    : []
+export const Settings: FC<SettingsProps> = ({ settings, openedSetting = null, onSettingClick }) => {
+  const selectedOption = settings.find((setting) => setting.label === openedSetting)
 
   return (
     <>
-      {openedOption === null ? (
-        <SettingList title="Settings" settings={baseMenu} />
+      {openedSetting === null ? (
+        <SettingList title="Settings" settings={settings} onSettingClick={onSettingClick} />
       ) : (
-        <SettingList title={openedOption} isOption onHeaderClick={() => onOpenedOption(null)} settings={options} />
+        <SettingOptionsList
+          title={openedSetting || ''}
+          onClose={() => onSettingClick(null)}
+          settings={selectedOption?.options}
+        />
       )}
     </>
   )
 }
 
-type SettingsListItemProps = {
-  label: string
-  value: SettingValue
-  isOption?: boolean
-  checked?: boolean
-  toggleable?: boolean
-  onSettingClick?: (setting: { value: SettingValue; label: string }) => void
-}
-
 type SettingsListProps = {
   title: string
-  settings?: SettingsListItemProps[]
-  onHeaderClick?: () => void
-  isOption?: boolean
+  settings?: Setting[]
+  onSettingClick?: (value: string | null) => void
 }
 
-export const SettingList: FC<SettingsListProps> = ({ settings, title, onHeaderClick, isOption = false }) => {
+export const SettingList: FC<SettingsListProps> = ({ settings, onSettingClick }) => {
+  return (
+    <SettingsWrapper>
+      <SettingsContainer>
+        {settings?.map((setting, idx) => {
+          switch (setting.type) {
+            case 'multi-value':
+              return (
+                <ListItem
+                  key={idx}
+                  label={setting.label}
+                  size="large"
+                  asButton
+                  onClick={(event) => {
+                    event.stopPropagation()
+                    onSettingClick?.(String(setting.label))
+                  }}
+                  nodeEnd={
+                    <NodeEndWrapper gap={3}>
+                      <Text variant="t100" color="colorText" as="span">
+                        {setting.value}
+                      </Text>
+                      <SvgActionChevronR />
+                    </NodeEndWrapper>
+                  }
+                />
+              )
+            case 'boolean':
+              return (
+                <label key={idx}>
+                  <StyledListItem
+                    label={setting.label}
+                    size="large"
+                    onClick={(event) => event.stopPropagation()}
+                    nodeEnd={
+                      <NodeEndWrapper gap={2}>
+                        <Text as="span" variant="t100" color="colorText">
+                          {setting.value ? 'On' : 'Off'}
+                        </Text>
+                        <Switch
+                          value={setting.value}
+                          onChange={(e) => setting.onSwitchClick?.(!!e?.currentTarget.checked)}
+                        />
+                      </NodeEndWrapper>
+                    }
+                  />
+                </label>
+              )
+          }
+        })}
+      </SettingsContainer>
+    </SettingsWrapper>
+  )
+}
+
+type MultiValueOption = {
+  value: string | number
+  options?: never
+  onOptionClick?: (value: string | number) => void
+} & Omit<ListItemProps, ''>
+
+type SettingOptionsListProps = {
+  title: string
+  settings?: MultiValueOption[]
+  onClose?: () => void
+  value?: string | number
+}
+
+export const SettingOptionsList: FC<SettingOptionsListProps> = ({ title, onClose, settings }) => {
   return (
     <SettingsWrapper>
       <ListItem
-        asButton={isOption}
-        nodeStart={isOption ? <SvgActionChevronL /> : undefined}
+        asButton
+        nodeStart={<SvgActionChevronL />}
         label={title}
         size="large"
         onClick={(event) => {
           event.stopPropagation()
-          onHeaderClick?.()
+          onClose?.()
         }}
       />
-      <SettingsContainer>
-        {settings?.map((setting, idx) => (
-          <ListItem
-            size="large"
-            label={setting.label}
-            nodeEnd={
-              !isOption ? (
-                <NodeEndWrapper>
-                  <Text variant="t100" color="colorText" as="span">
-                    {setting.value}
-                  </Text>
-                  <SvgActionChevronR />
-                </NodeEndWrapper>
-              ) : undefined
-            }
-            nodeStart={isOption ? <StyledSvgActionCheck checked={setting.checked} /> : undefined}
-            asButton
-            onClick={(event) => {
-              event.stopPropagation()
-              setting.onSettingClick?.({ value: setting.value, label: setting.label })
-            }}
-            key={idx}
-          />
-        ))}
+      <SettingsContainer withBorder>
+        {settings?.map((setting, idx) => {
+          return (
+            <StyledListItem
+              asButton
+              key={idx}
+              onClick={(event) => {
+                event.stopPropagation()
+                onClose?.()
+                setting.onOptionClick?.(setting.value)
+              }}
+              label={setting.label}
+              size="large"
+              nodeStart={<StyledSvgActionCheck checked={setting.selected} />}
+            />
+          )
+        })}
       </SettingsContainer>
     </SettingsWrapper>
   )

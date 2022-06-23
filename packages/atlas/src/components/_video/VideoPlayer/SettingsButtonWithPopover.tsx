@@ -17,7 +17,7 @@ type SettingsPopoverProps = {
 export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({ boundariesElement }) => {
   const popoverRef = useRef<PopoverImperativeHandle>(null)
   const [isSettingsOpened, setIsSettingsOpened] = useState(false)
-  const [openedOption, setOpenedOption] = useState<string | null>(null)
+  const [openedSettting, setOpenedSetting] = useState<string | null>(null)
 
   const handleToggleSettings = (event: MouseEvent) => {
     event.stopPropagation()
@@ -26,19 +26,34 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({ boundaries
 
   const {
     playbackRate,
-    actions: { setPlaybackRate },
+    autoplay,
+    actions: { setPlaybackRate, setAutoplay },
   } = usePersonalDataStore((state) => state)
 
   const settings: Setting[] = [
     {
+      type: 'multi-value',
       label: 'Speed',
       value: playbackRate === 1 ? `Normal (${playbackRate}x)` : `${playbackRate}x`,
-      options: AVAILABLE_PLAYBACK_RATE.map((s) => ({
-        checked: playbackRate === s,
-        onSettingClick: (opt) => setPlaybackRate(Number(opt.value)),
-        value: s,
-        label: s === 1 ? `Normal (${s}x)` : `${s}x`,
+      options: AVAILABLE_PLAYBACK_RATE.map((availablePlaybackRate) => ({
+        value: availablePlaybackRate,
+        selected: availablePlaybackRate === playbackRate,
+        onOptionClick: (val) => {
+          if (typeof val === 'number') {
+            setPlaybackRate(val)
+            setOpenedSetting(null)
+          }
+        },
+        label: availablePlaybackRate === 1 ? `Normal (${availablePlaybackRate}x)` : `${availablePlaybackRate}x`,
       })),
+    },
+    {
+      type: 'boolean',
+      label: 'Autoplay',
+      value: autoplay,
+      onSwitchClick: (value) => {
+        setAutoplay(value)
+      },
     },
   ]
   return (
@@ -56,17 +71,13 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({ boundaries
         }
         onHide={() => {
           setIsSettingsOpened(false)
-          setOpenedOption(null)
+          setOpenedSetting(null)
         }}
         onShow={() => {
           setIsSettingsOpened(true)
         }}
       >
-        <Settings
-          settings={settings}
-          onOpenedOption={(option) => setOpenedOption(option)}
-          openedOption={openedOption}
-        />
+        <Settings settings={settings} onSettingClick={setOpenedSetting} openedSetting={openedSettting} />
       </Popover>
     </span>
   )
