@@ -4,7 +4,7 @@ import { Banner } from '@/components/Banner'
 import { PolkadotIdenticon } from '@/components/PolkadotIdenticon'
 import { Loader } from '@/components/_loaders/Loader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useUser } from '@/providers/user'
+import { useUser, useUserStore } from '@/providers/user'
 import { shortenAddress } from '@/utils/address'
 
 import { SignInModalStepTemplate } from './SignInModalStepTemplate'
@@ -27,6 +27,7 @@ export const SignInModalAccountStep: FC<SignInModalAccountStepProps> = ({
 
   const [localSelectedAddress, setLocalSelectedAddress] = useState<string | null>(selectedAddress)
   const { walletAccounts, memberships } = useUser()
+  const wallet = useUserStore((state) => state.wallet)
 
   const membershipsControllerAccounts = memberships?.map((a) => a.controllerAccount)
   const accountsWithNoMembership = walletAccounts.filter((el) => !membershipsControllerAccounts?.includes(el.address))
@@ -74,7 +75,7 @@ export const SignInModalAccountStep: FC<SignInModalAccountStepProps> = ({
           />
         ))
       ) : (
-        <Banner description="Waiting for new wallet accounts..." icon={<Loader variant="small" />} />
+        <Banner description={`Waiting for new ${wallet?.title} accounts...`} icon={<Loader variant="small" />} />
       )}
     </SignInModalStepTemplate>
   )

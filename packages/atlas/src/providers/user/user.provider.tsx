@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo } from 'react'
+import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
 import { useMemberships } from '@/api/hooks'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
@@ -18,9 +18,11 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   const { setActiveUser, setSignInModalOpen } = useUserStore((state) => state.actions)
   const { initSignerWallet } = useSignerWallet()
 
+  const [isAuthLoading, setIsAuthLoading] = useState(true)
+
   const accountsIds = walletAccounts.map((a) => a.address)
 
-  const { memberships, refetch, loading, error } = useMemberships(
+  const { memberships, refetch, error } = useMemberships(
     {
       where: {
         controllerAccount_in: accountsIds,
@@ -46,19 +48,17 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
         return true
       }
 
-      if (walletStatus !== 'connected') {
-        try {
-          const initializedAccounts = await initSignerWallet(walletName)
-          if (initializedAccounts == null) {
-            SentryLogger.error('Selected wallet not found or not installed', 'UserProvider')
-            setSignInModalOpen(true)
-            return false
-          }
-          accounts = initializedAccounts
-        } catch (e) {
-          SentryLogger.error('Failed to enable selected wallet', 'UserProvider', e)
+      try {
+        const initializedAccounts = await initSignerWallet(walletName)
+        if (initializedAccounts == null) {
+          SentryLogger.error('Selected wallet not found or not installed', 'UserProvider')
+          setSignInModalOpen(true)
           return false
         }
+        accounts = initializedAccounts
+      } catch (e) {
+        SentryLogger.error('Failed to enable selected wallet', 'UserProvider', e)
+        return false
       }
 
       const accountsIds = accounts.map((a) => a.address)
@@ -88,7 +88,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
 
       return true
     },
-    [initSignerWallet, memberId, refetch, setActiveUser, setSignInModalOpen, walletAccounts, walletStatus]
+    [initSignerWallet, memberId, refetch, setActiveUser, setSignInModalOpen, walletAccounts]
   )
 
   // keep user used by loggers in sync
@@ -105,18 +105,19 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   // if the user has account/member IDs set, initialize sign in automatically
   useEffect(() => {
     if (walletStatus !== 'unknown' || !lastUsedWalletName) {
+      setIsAuthLoading(false)
       return
     }
 
     if (!accountId || !memberId) {
+      setIsAuthLoading(false)
       return
     }
 
-    signIn(lastUsedWalletName)
+    signIn(lastUsedWalletName).then(() => setIsAuthLoading(false))
   }, [accountId, lastUsedWalletName, memberId, signIn, walletStatus])
 
   const activeMembership = (memberId && memberships?.find((membership) => membership.id === memberId)) || null
-  const isAuthLoading = walletStatus === 'pending' || loading
 
   const contextValue: UserContextValue = useMemo(
     () => ({
