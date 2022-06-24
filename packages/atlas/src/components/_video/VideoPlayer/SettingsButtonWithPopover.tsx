@@ -9,7 +9,7 @@ import { isMobile } from '@/utils/browser'
 import { PlayerControlButton } from './PlayerControlButton'
 import { StyledSvgControlsSettingsOutline, StyledSvgControlsSettingsSolid } from './VideoPlayer.styles'
 
-import { Setting, Settings } from '../Settings'
+import { MobileSettings, Setting, Settings } from '../Settings'
 
 type SettingsPopoverProps = {
   boundariesElement: Boundary | null | undefined
@@ -36,6 +36,10 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
   const handleToggleSettings = (event: MouseEvent) => {
     event.stopPropagation()
     setIsSettingsOpened((opened) => !opened)
+  }
+  const handleClose = () => {
+    setIsSettingsOpened(false)
+    setOpenedSetting(null)
   }
 
   const {
@@ -81,10 +85,7 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
         flipEnabled={false}
         trigger={null}
         triggerTarget={settingButtonRef.current}
-        onHide={() => {
-          setIsSettingsOpened(false)
-          setOpenedSetting(null)
-        }}
+        onHide={handleClose}
         onShow={() => {
           setIsSettingsOpened(true)
         }}
@@ -101,6 +102,15 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
       <PlayerControlButton onClick={handleToggleSettings} tooltipText="Settings" ref={settingButtonRef}>
         {isSettingsOpened ? <StyledSvgControlsSettingsSolid /> : <StyledSvgControlsSettingsOutline />}
       </PlayerControlButton>
+      {mobile && (
+        <MobileSettings
+          onClose={handleClose}
+          settings={settings}
+          onSettingClick={setOpenedSetting}
+          openedSetting={openedSettting}
+          show={isSettingsOpened && mobile}
+        />
+      )}
     </span>
   )
 }

@@ -4,9 +4,14 @@ import { ListItem } from '@/components/ListItem'
 import { SvgActionCheck } from '@/components/_icons'
 import { cVar, sizes } from '@/styles'
 
-export const SettingsContainer = styled.div<{ isFullScreen?: boolean }>`
+export const SettingsContainer = styled.div<{ isFullScreen?: boolean; isModal?: boolean }>`
   transform: ${({ isFullScreen }) => (isFullScreen ? 'scale(2)' : 'scale(1)')};
   transform-origin: bottom right;
+  margin: ${({ isModal }) => (isModal ? '0 calc(-1 * var(--local-size-dialog-padding))' : 'unset')};
+`
+
+export const Header = styled.header`
+  padding: ${sizes(2)} 0;
 `
 
 export const SettingsWrapper = styled.section`

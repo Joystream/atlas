@@ -4,8 +4,10 @@ import { ListItem, ListItemProps } from '@/components/ListItem'
 import { Text } from '@/components/Text'
 import { SvgActionChevronL, SvgActionChevronR } from '@/components/_icons'
 import { Switch } from '@/components/_inputs/Switch'
+import { DialogModal } from '@/components/_overlays/DialogModal'
 
 import {
+  Header,
   NodeEndWrapper,
   OptionsWrapper,
   SettingsContainer,
@@ -52,21 +54,56 @@ export const Settings = forwardRef<HTMLDivElement, SettingsProps>(
 
     return (
       <SettingsContainer isFullScreen={isFullScreen} ref={ref}>
-        {openedSetting === null ? (
-          <BaseMenu maxHeight={maxHeight} onSettingClick={onSettingClick} settings={settings} />
-        ) : (
-          <Options
-            onSettingClick={onSettingClick}
-            options={selectedOption?.options}
-            openedSetting={openedSetting}
-            maxHeight={optionsMaxHeight}
-          />
-        )}
+        <SettingsWrapper>
+          {openedSetting === null ? (
+            <BaseMenu maxHeight={maxHeight} onSettingClick={onSettingClick} settings={settings} />
+          ) : (
+            <Options
+              onSettingClick={onSettingClick}
+              options={selectedOption?.options}
+              openedSetting={openedSetting}
+              maxHeight={optionsMaxHeight}
+            />
+          )}
+        </SettingsWrapper>
       </SettingsContainer>
     )
   }
 )
 Settings.displayName = 'Settings'
+
+type MobileSettingsProps = {
+  settings: Setting[]
+  openedSetting: string | null
+  onSettingClick: (value: string | null) => void
+  onClose: () => void
+  show: boolean
+}
+
+export const MobileSettings: FC<MobileSettingsProps> = ({ onSettingClick, openedSetting, settings, show, onClose }) => {
+  const selectedOption = settings.find((setting) => setting.label === openedSetting)
+
+  return (
+    <DialogModal
+      show={show}
+      secondaryButton={{
+        text: 'Close',
+        onClick: (event) => {
+          event.stopPropagation()
+          onClose()
+        },
+      }}
+    >
+      <SettingsContainer isModal>
+        {openedSetting === null ? (
+          <BaseMenu onSettingClick={onSettingClick} settings={settings} />
+        ) : (
+          <Options onSettingClick={onSettingClick} options={selectedOption?.options} openedSetting={openedSetting} />
+        )}
+      </SettingsContainer>
+    </DialogModal>
+  )
+}
 
 type BaseMenuProps = {
   maxHeight?: number
@@ -76,51 +113,46 @@ type BaseMenuProps = {
 
 const BaseMenu: FC<BaseMenuProps> = ({ maxHeight, settings, onSettingClick }) => {
   return (
-    <SettingsWrapper>
-      <OptionsWrapper maxHeight={maxHeight}>
-        {settings?.map((setting, idx) =>
-          setting.type === 'multi-value' ? (
-            <ListItem
-              key={idx}
+    <OptionsWrapper maxHeight={maxHeight}>
+      {settings?.map((setting, idx) =>
+        setting.type === 'multi-value' ? (
+          <ListItem
+            key={idx}
+            label={setting.label}
+            size="large"
+            asButton
+            onClick={(event) => {
+              event.stopPropagation()
+              onSettingClick?.(String(setting.label))
+            }}
+            nodeEnd={
+              <NodeEndWrapper gap={3}>
+                <Text variant="t100" color="colorText" as="span">
+                  {setting.value}
+                </Text>
+                <SvgActionChevronR />
+              </NodeEndWrapper>
+            }
+          />
+        ) : (
+          <label key={idx}>
+            <StyledListItem
               label={setting.label}
               size="large"
-              asButton
-              onClick={(event) => {
-                event.stopPropagation()
-                onSettingClick?.(String(setting.label))
-              }}
+              onClick={(event) => event.stopPropagation()}
               nodeEnd={
-                <NodeEndWrapper gap={3}>
-                  <Text variant="t100" color="colorText" as="span">
-                    {setting.value}
+                <NodeEndWrapper gap={2}>
+                  <Text as="span" variant="t100" color="colorText">
+                    {setting.value ? 'On' : 'Off'}
                   </Text>
-                  <SvgActionChevronR />
+                  <Switch value={setting.value} onChange={(e) => setting.onSwitchClick?.(!!e?.currentTarget.checked)} />
                 </NodeEndWrapper>
               }
             />
-          ) : (
-            <label key={idx}>
-              <StyledListItem
-                label={setting.label}
-                size="large"
-                onClick={(event) => event.stopPropagation()}
-                nodeEnd={
-                  <NodeEndWrapper gap={2}>
-                    <Text as="span" variant="t100" color="colorText">
-                      {setting.value ? 'On' : 'Off'}
-                    </Text>
-                    <Switch
-                      value={setting.value}
-                      onChange={(e) => setting.onSwitchClick?.(!!e?.currentTarget.checked)}
-                    />
-                  </NodeEndWrapper>
-                }
-              />
-            </label>
-          )
-        )}
-      </OptionsWrapper>
-    </SettingsWrapper>
+          </label>
+        )
+      )}
+    </OptionsWrapper>
   )
 }
 type OptionsProps = {
@@ -132,17 +164,19 @@ type OptionsProps = {
 
 const Options: FC<OptionsProps> = ({ openedSetting, onSettingClick, maxHeight, options }) => {
   return (
-    <SettingsWrapper>
-      <ListItem
-        asButton
-        nodeStart={<SvgActionChevronL />}
-        label={openedSetting}
-        size="large"
-        onClick={(event) => {
-          event.stopPropagation()
-          onSettingClick(null)
-        }}
-      />
+    <div>
+      <Header>
+        <ListItem
+          asButton
+          nodeStart={<SvgActionChevronL />}
+          label={openedSetting}
+          size="large"
+          onClick={(event) => {
+            event.stopPropagation()
+            onSettingClick(null)
+          }}
+        />
+      </Header>
       <OptionsWrapper withBorder maxHeight={maxHeight}>
         {options?.map((setting, idx) => {
           return (
@@ -161,6 +195,6 @@ const Options: FC<OptionsProps> = ({ openedSetting, onSettingClick, maxHeight, o
           )
         })}
       </OptionsWrapper>
-    </SettingsWrapper>
+    </div>
   )
 }
