@@ -98,6 +98,9 @@ const InputComponent: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
       onWheel(event)
       return
     }
+    if (type !== 'number') {
+      return // goal of following code is to disabled scroll inside number inputs that can change value
+    }
     const target = event.target as HTMLInputElement
     target.blur()
 

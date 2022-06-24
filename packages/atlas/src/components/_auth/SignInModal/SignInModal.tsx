@@ -31,7 +31,7 @@ export const SignInModal: FC = () => {
   const [hasNavigatedBack, setHasNavigatedBack] = useState(false)
 
   const { displaySnackbar } = useSnackbar()
-  const { walletStatus, refetchUserMemberships, setActiveUser } = useUser()
+  const { walletStatus, refetchUserMemberships, setActiveUser, isLoggedIn } = useUser()
   const { signInModalOpen, setSignInModalOpen } = useUserStore(
     (state) => ({ signInModalOpen: state.signInModalOpen, setSignInModalOpen: state.actions.setSignInModalOpen }),
     shallow
@@ -148,16 +148,15 @@ export const SignInModal: FC = () => {
     }
   }
 
+  const backButtonVisible =
+    currentStepIdx && currentStepIdx > 0 && currentStep !== 'creating' && (currentStep !== 'account' || !isLoggedIn)
+
   return (
     <StyledDialogModal
       show={!!currentStep}
       dividers={currentStep !== 'creating'}
       primaryButton={primaryButtonProps}
-      secondaryButton={
-        currentStepIdx && currentStepIdx > 0 && currentStep !== 'creating'
-          ? { text: 'Back', onClick: goToPreviousStep }
-          : undefined
-      }
+      secondaryButton={backButtonVisible ? { text: 'Back', onClick: goToPreviousStep } : undefined}
       additionalActionsNode={
         currentStep !== 'creating' ? (
           <Button variant="tertiary" onClick={() => setSignInModalOpen(false)}>

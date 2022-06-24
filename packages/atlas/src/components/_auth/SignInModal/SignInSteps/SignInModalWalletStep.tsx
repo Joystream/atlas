@@ -4,7 +4,8 @@ import { SvgActionNewTab, SvgAlertsError24, SvgAlertsInformative24 } from '@/com
 import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { Loader } from '@/components/_loaders/Loader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useUser } from '@/providers/user'
+import { useMountEffect } from '@/hooks/useMountEffect'
+import { useUser, useUserStore } from '@/providers/user'
 
 import { SignInModalStepTemplate } from './SignInModalStepTemplate'
 import { StyledBottomBanner, StyledListItem, StyledTopBanner, WalletLogo } from './SignInSteps.styles'
@@ -21,6 +22,7 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
   const [hasError, setHasError] = useState(false)
   const [isConnecting, setIsConnecting] = useState(false)
   const { getWalletsList, signIn } = useUser()
+  const walletFromStore = useUserStore((state) => state.wallet)
 
   const wallets = useMemo(() => {
     const unsortedWallets = getWalletsList()
@@ -54,6 +56,17 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
     setSelectedWalletIdx(idx)
     setHasError(false)
   }, [])
+
+  // if the user has wallet connected already, mark the connected one as selected
+  useMountEffect(() => {
+    if (!walletFromStore) return
+
+    const index = wallets.findIndex((w) => w.extensionName === walletFromStore.extensionName)
+
+    if (selectedWalletIdx === index) return
+
+    setSelectedWalletIdx(index)
+  })
 
   // send updates to SignInModal on state of primary button
   useEffect(() => {

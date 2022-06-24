@@ -1,6 +1,6 @@
 import { useApolloClient } from '@apollo/client'
 import debouncePromise from 'awesome-debounce-promise'
-import { FC, useCallback, useEffect, useRef } from 'react'
+import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
@@ -27,10 +27,12 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
 }) => {
   const {
     register,
-    watch,
     handleSubmit: createSubmitHandler,
-    formState: { errors, isValidating, isSubmitting },
+    formState: { errors, isSubmitting },
   } = useForm<MemberFormData>({ mode: 'onBlur' })
+
+  const [displayedAvatarUrl, setDisplayedAvatarUrl] = useState<string | null>(null)
+  const [isHandleValidating, setIsHandleValidating] = useState(false)
 
   const client = useApolloClient()
 
@@ -39,6 +41,9 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
       if (prevValue != null && value === prevValue) {
         return true
       }
+
+      setIsHandleValidating(true)
+
       const {
         data: { membershipByUniqueInput },
       } = await client.query<GetMembershipQuery, GetMembershipQueryVariables>({
@@ -46,10 +51,18 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
         variables: { where: { handle: value } },
       })
 
+      setIsHandleValidating(false)
+
       return !membershipByUniqueInput
     }, 500)
   )
-  const debouncedAvatarValidation = useRef(debouncePromise(imageUrlValidation, 500))
+  const debouncedAvatarValidation = useRef(
+    debouncePromise(async (url: string) => {
+      const isValid = await imageUrlValidation(url)
+      setDisplayedAvatarUrl(isValid ? url : null)
+      return isValid
+    }, 500)
+  )
 
   const requestFormSubmit = useCallback(() => {
     createSubmitHandler(createMember)()
@@ -63,8 +76,6 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
       onClick: requestFormSubmit,
     })
   }, [isSubmitting, requestFormSubmit, setPrimaryButtonProps])
-
-  const avatarFieldValue = watch('avatarUrl')
 
   return (
     <SignInModalStepTemplate
@@ -93,7 +104,7 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
             })}
             placeholder="johnnysmith"
             error={!!errors.handle}
-            processing={isValidating || isSubmitting}
+            processing={isHandleValidating || isSubmitting}
             autoComplete="off"
           />
         </FormField>
@@ -101,10 +112,10 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
           label="Avatar URL"
           description="You can host your avatar image on external services such as imgbb.com, imgur.com, flickr.com, imgbox.com, and others."
           optional
-          error={errors.avatarUrl?.message}
+          error={errors.avatar?.message}
         >
           <Input
-            {...register('avatarUrl', {
+            {...register('avatar', {
               validate: {
                 validUrl: (value) => (!value ? true : URL_PATTERN.test(value) || 'Enter a valid URL.'),
                 validImage: async (value) => {
@@ -114,8 +125,8 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
               },
             })}
             placeholder="https://example.com/avatar.jpeg"
-            error={!!errors.avatarUrl}
-            nodeEnd={avatarFieldValue ? <Avatar assetUrl={avatarFieldValue} size="bid" /> : null}
+            error={!!errors.avatar}
+            nodeEnd={displayedAvatarUrl ? <Avatar assetUrl={displayedAvatarUrl} size="bid" /> : null}
             autoComplete="off"
           />
         </FormField>
