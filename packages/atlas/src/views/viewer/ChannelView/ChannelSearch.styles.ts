@@ -9,6 +9,8 @@ type TextFieldProps = {
 }
 export const StyledInput = styled(Input)<TextFieldProps>`
   width: 100%;
+
+  /* to align it with SearchIcon button */
   margin-left: -${sizes(1)};
 `
 
