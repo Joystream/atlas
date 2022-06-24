@@ -26,6 +26,7 @@ export const ListingType: FC<ListingTypeProps> = ({ selectedType, onSelectType }
         <OptionCardGroupRadio
           selectedValue={selectedType}
           onChange={(value) => onSelectType(value as Listing)}
+          direction="vertical"
           options={[
             {
               label: 'Auction',
