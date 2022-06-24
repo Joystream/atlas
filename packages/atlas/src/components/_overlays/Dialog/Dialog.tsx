@@ -1,4 +1,4 @@
-import { FC, FormEvent, PropsWithChildren, ReactNode } from 'react'
+import { FC, FormEvent, PropsWithChildren, ReactNode, Ref } from 'react'
 
 import { Text } from '@/components/Text'
 import { Button, ButtonProps } from '@/components/_buttons/Button'
@@ -34,6 +34,7 @@ export type DialogProps = PropsWithChildren<{
   actionDivider?: boolean
   className?: string
   contentClassName?: string
+  contentRef?: Ref<HTMLDivElement>
 }>
 
 export const Dialog: FC<DialogProps> = ({
@@ -51,6 +52,7 @@ export const Dialog: FC<DialogProps> = ({
   additionalActionsNodeMobilePosition = 'top',
   className,
   contentClassName,
+  contentRef,
 }) => {
   const isCompact = size === 'compact'
   const smMatch = useMediaMatch('sm')
@@ -71,7 +73,12 @@ export const Dialog: FC<DialogProps> = ({
           )}
         </Header>
       )}
-      <Content data-scroll-lock-scrollable noContentPadding={noContentPadding} className={contentClassName}>
+      <Content
+        data-scroll-lock-scrollable
+        noContentPadding={noContentPadding}
+        className={contentClassName}
+        ref={contentRef}
+      >
         {children}
       </Content>
       {hasFooter && (

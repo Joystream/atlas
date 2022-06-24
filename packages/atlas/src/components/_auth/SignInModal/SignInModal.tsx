@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios'
-import { FC, useCallback, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import shallow from 'zustand/shallow'
 
 import { Button } from '@/components/_buttons/Button'
@@ -29,6 +29,8 @@ export const SignInModal: FC = () => {
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Select wallet' }) // start with sensible default so that there are no jumps after first effect runs
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null)
   const [hasNavigatedBack, setHasNavigatedBack] = useState(false)
+
+  const dialogContentRef = useRef<HTMLDivElement>(null)
 
   const { displaySnackbar } = useSnackbar()
   const { walletStatus, refetchUserMemberships, setActiveUser, isLoggedIn } = useUser()
@@ -119,14 +121,21 @@ export const SignInModal: FC = () => {
     ]
   )
 
+  const displayedStep = currentStep || SIGN_IN_MODAL_STEPS[cachedStepsIdx]
+
+  // scroll the dialog content to top whenever the displayed step changes
+  useEffect(() => {
+    if (!dialogContentRef.current) return
+
+    dialogContentRef.current.scrollTo({ top: 0 })
+  }, [displayedStep])
+
   const renderStep = () => {
     const commonProps: SignInStepProps = {
       setPrimaryButtonProps,
       goToNextStep,
       hasNavigatedBack,
     }
-
-    const displayedStep = currentStep || SIGN_IN_MODAL_STEPS[cachedStepsIdx]
 
     switch (displayedStep) {
       case 'wallet':
@@ -165,6 +174,7 @@ export const SignInModal: FC = () => {
         ) : null
       }
       additionalActionsNodeMobilePosition="bottom"
+      contentRef={dialogContentRef}
     >
       {renderStep()}
     </StyledDialogModal>
