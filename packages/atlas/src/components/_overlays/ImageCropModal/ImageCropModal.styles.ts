@@ -3,10 +3,12 @@ import styled from '@emotion/styled'
 
 import { Slider } from '@/components/_inputs/Slider'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { cVar, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 export const StyledDialogModal = styled(DialogModal)`
-  width: 536px;
+  ${media.sm} {
+    width: 536px;
+  }
 `
 
 const roundedCropperCss = css`
@@ -20,7 +22,7 @@ export const AlignInfoContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-bottom: ${sizes(4)};
+  padding-bottom: ${sizes(6)};
 `
 
 export const HiddenInput = styled.input`
@@ -57,7 +59,7 @@ export const CropContainer = styled.div<{ rounded?: boolean; disabled?: boolean 
   }
 
   .cropper-modal {
-    background-color: ${cVar('colorCoreNeutral500Darken')};
+    background-color: ${cVar('colorBackgroundOverlay')};
   }
 
   pointer-events: ${({ disabled }) => disabled && 'none'};
@@ -72,6 +74,7 @@ export const ZoomControl = styled.div`
   display: flex;
   align-items: center;
   flex-grow: 2;
+  margin-top: ${sizes(6)};
 `
 
 export const StyledSlider = styled(Slider)`

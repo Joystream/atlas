@@ -181,7 +181,7 @@ export const MultiFileSelect: FC<MultiFileSelectProps> = memo(
 
     const handleReAdjustThumbnail = () => {
       if (files.thumbnail?.originalBlob) {
-        dialogRef.current?.open(files.thumbnail.originalBlob)
+        dialogRef.current?.open(files.thumbnail.originalBlob, files.thumbnail.imageCropData, true)
       }
     }
 
@@ -301,7 +301,12 @@ export const MultiFileSelect: FC<MultiFileSelectProps> = memo(
             </CSSTransition>
           )}
         </StepsContainer>
-        <ImageCropModal ref={dialogRef} imageType="videoThumbnail" onConfirm={updateThumbnailFile} />
+        <ImageCropModal
+          ref={dialogRef}
+          imageType="videoThumbnail"
+          onConfirm={updateThumbnailFile}
+          onDelete={() => handleDeleteFile('image')}
+        />
       </MultiFileSelectContainer>
     )
   }

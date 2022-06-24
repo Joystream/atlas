@@ -84,7 +84,6 @@ const getDenseHeaderContentStyles = ({ noContentPadding }: ContentProps) =>
 export const Content = styled.div<ContentProps>`
   overflow-y: auto;
   overflow-x: hidden;
-  display: grid;
   padding: ${({ noContentPadding }) => !noContentPadding && 'var(--local-size-dialog-padding)'};
   ${getDenseHeaderContentStyles};
 `
