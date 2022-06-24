@@ -285,7 +285,6 @@ export const ChannelView: FC = () => {
                     setIsSearching={setIsSearching}
                     submitSearch={submitSearch}
                     isSearching={isSearching}
-                    setCurrentTab={setCurrentTab}
                   />
                 )}
                 <StyledSelect

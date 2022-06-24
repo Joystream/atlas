@@ -1,9 +1,9 @@
-import { Dispatch, FC, FormEvent, KeyboardEvent, SetStateAction, useCallback, useEffect, useRef } from 'react'
+import { Dispatch, FC, FormEvent, SetStateAction, useCallback, useEffect, useRef } from 'react'
 
-import { SvgActionSearch } from '@/components/_icons'
+import { Button } from '@/components/_buttons/Button'
+import { SvgActionClose, SvgActionSearch } from '@/components/_icons'
 
-import { SearchButton, SearchContainerForm, StyledInput } from './ChannelSearch.styles'
-import { TABS } from './utils'
+import { SearchContainerForm, StyledInput } from './ChannelSearch.styles'
 
 type SearchProps = {
   isSearchInputOpen: boolean
@@ -11,7 +11,6 @@ type SearchProps = {
   setIsSearching: (isOpen: boolean) => void
   isSearching?: boolean
   submitSearch: (searchQuery: string) => void
-  setCurrentTab: (tab: typeof TABS[number]) => void
   searchQuery: string
   setSearchQuery: Dispatch<SetStateAction<string>>
 }
@@ -26,17 +25,11 @@ export const ChannelSearch: FC<SearchProps> = ({
   searchQuery,
 }) => {
   const searchInputRef = useRef<HTMLInputElement>(null)
-
-  const handleEscape = useCallback(
-    (event: KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Escape' || event.key === 'Esc') {
-        setIsSearchingInputOpen(false)
-        event.currentTarget.blur()
-        setSearchQuery('')
-      }
-    },
-    [setIsSearchingInputOpen, setSearchQuery]
-  )
+  useEffect(() => {
+    if (isSearchInputOpen) {
+      searchInputRef.current?.focus()
+    }
+  }, [isSearchInputOpen])
 
   const toggleSearchInput = useCallback(() => {
     if (isSearchInputOpen) {
@@ -46,20 +39,21 @@ export const ChannelSearch: FC<SearchProps> = ({
       setIsSearchingInputOpen(true)
       searchInputRef.current?.focus()
     }
-  }, [isSearchInputOpen, searchInputRef, setIsSearchingInputOpen])
+  }, [isSearchInputOpen, setIsSearchingInputOpen])
 
-  useEffect(() => {
-    const onClickOutsideSearch = (event: Event) => {
-      if (!isSearching && isSearchInputOpen && searchInputRef.current !== event.target) {
-        toggleSearchInput()
-      }
+  const handleCloseButton = () => {
+    if (searchQuery) {
+      setSearchQuery('')
+    } else {
+      searchInputRef.current?.blur()
     }
-    window.addEventListener('click', onClickOutsideSearch)
-    return () => {
-      window.removeEventListener('click', onClickOutsideSearch)
+  }
+  const handleInputBlur = () => {
+    if (!searchQuery) {
+      setIsSearchingInputOpen(false)
+      setIsSearching(false)
     }
-  }, [isSearching, isSearchInputOpen, searchInputRef, searchQuery, setIsSearchingInputOpen, toggleSearchInput])
-
+  }
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     if (searchQuery.trim() === '') {
@@ -72,17 +66,25 @@ export const ChannelSearch: FC<SearchProps> = ({
 
   return (
     <SearchContainerForm onSubmit={handleSubmit}>
-      <StyledInput
-        ref={searchInputRef}
-        isOpen={isSearchInputOpen}
-        isSearching={isSearching}
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        onKeyDown={handleEscape}
-        placeholder="Search"
-        type="search"
-      />
-      <SearchButton icon={<SvgActionSearch />} onClick={toggleSearchInput} variant="tertiary" />
+      {!isSearchInputOpen ? (
+        <Button icon={<SvgActionSearch />} onClick={toggleSearchInput} variant="tertiary" />
+      ) : (
+        <StyledInput
+          size="medium"
+          ref={searchInputRef}
+          isOpen={isSearchInputOpen}
+          isSearching={isSearching}
+          value={searchQuery}
+          onBlur={handleInputBlur}
+          actionButton={{
+            icon: <SvgActionClose />,
+            onClick: handleCloseButton,
+          }}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search"
+          type="search"
+        />
+      )}
     </SearchContainerForm>
   )
 }
