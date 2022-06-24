@@ -30,11 +30,12 @@ type SearchResultsProps = {
 }
 const tabs = ['Videos', 'Channels']
 
-const NUMBER_OF_RESULTS = 20
+const INITIAL_NUMBER_OF_RESULTS = 20
 
 export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
   const smMatch = useMediaMatch('sm')
   const [selectedTabIndex, setSelectedTabIndex] = useState(0)
+  const [numberOfColumns, setNumberOfColumns] = useState(1)
   const [page, setPage] = useState(0)
   const filtersBarLogic = useFiltersBar()
   const {
@@ -43,11 +44,18 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
     canClearFilters: { canClearAllFilters },
     videoWhereInput,
   } = filtersBarLogic
+
+  const numberOfFullyFilledRows = numberOfColumns ? Math.ceil(INITIAL_NUMBER_OF_RESULTS / numberOfColumns) : 6
+  const numberOfResults =
+    INITIAL_NUMBER_OF_RESULTS % numberOfColumns === 0
+      ? INITIAL_NUMBER_OF_RESULTS
+      : numberOfColumns * numberOfFullyFilledRows
   const { videos, channels, loading, error } = useSearchResults({
     searchQuery: query,
     videoWhereInput: selectedTabIndex === 0 ? videoWhereInput : undefined,
-    first: NUMBER_OF_RESULTS,
+    first: numberOfResults,
   })
+
   const refetch = selectedTabIndex === 0 ? videos.refetch : channels.refetch
   const {
     actions: { setSearchOpen, setSearchQuery },
@@ -74,12 +82,12 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
     setPage(page)
     if (
       !!items.length &&
-      page * NUMBER_OF_RESULTS + NUMBER_OF_RESULTS > items?.length &&
+      page * numberOfResults + numberOfResults > items?.length &&
       items?.length < (totalCount ?? 0)
     ) {
       fetchMore({
         variables: {
-          first: page * NUMBER_OF_RESULTS + NUMBER_OF_RESULTS * 2 - items.length,
+          first: page * numberOfResults + numberOfResults * 2 - items.length,
           after: pageInfo?.endCursor,
         },
       })
@@ -102,6 +110,10 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
 
   useEffect(() => {
     setPage(0)
+  }, [query])
+
+  useEffect(() => {
+    setPage(0)
     refetch()
   }, [refetch, selectedTabIndex])
 
@@ -117,10 +129,11 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
       (channels.items.length === 0 && selectedTabIndex === 1)) &&
     !!query
 
-  const sliceStart = page * NUMBER_OF_RESULTS
-  const sliceEnd = page * NUMBER_OF_RESULTS + NUMBER_OF_RESULTS
+  const sliceStart = page * numberOfResults
+  const sliceEnd = page * numberOfResults + numberOfResults
   const paginatedVideos = videos.items.slice(sliceStart, sliceEnd)
   const paginatedChannels = channels.items.slice(sliceStart, sliceEnd)
+  const placeHoldersCount = numberOfColumns * numberOfFullyFilledRows
 
   return (
     <ViewWrapper>
@@ -173,16 +186,34 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
           ) : (
             <>
               {selectedTabIndex === 0 &&
-                (loading ? <SkeletonLoaderVideoGrid /> : <VideoGrid videos={paginatedVideos} />)}
+                (loading ? (
+                  <SkeletonLoaderVideoGrid
+                    videosCount={placeHoldersCount}
+                    onResize={(sizes) => {
+                      setNumberOfColumns(sizes.length)
+                    }}
+                  />
+                ) : (
+                  <VideoGrid videos={paginatedVideos} />
+                ))}
               {selectedTabIndex === 1 &&
-                (loading ? <SkeletonLoaderVideoGrid /> : <ChannelGrid channels={paginatedChannels} repeat="fill" />)}
+                (loading ? (
+                  <SkeletonLoaderVideoGrid
+                    videosCount={placeHoldersCount}
+                    onResize={(sizes) => {
+                      setNumberOfColumns(sizes.length)
+                    }}
+                  />
+                ) : (
+                  <ChannelGrid channels={paginatedChannels} repeat="fill" />
+                ))}
             </>
           )}
           <StyledPagination
             onChangePage={handlePageChange}
             page={page}
             totalCount={paginationData.totalCount}
-            itemsPerPage={NUMBER_OF_RESULTS}
+            itemsPerPage={numberOfResults}
             maxPaginationLinks={7}
           />
         </LimitedWidthContainer>

@@ -11,9 +11,10 @@ type SearchResultData = {
   first?: number
   offset?: number
   videoWhereInput?: VideoWhereInput
+  isReady?: boolean
 }
 
-export const useSearchResults = ({ searchQuery, first = 50, videoWhereInput }: SearchResultData) => {
+export const useSearchResults = ({ searchQuery, first = 50, videoWhereInput, isReady = true }: SearchResultData) => {
   const [text, setText] = useState(searchQuery)
   const [typing, setTyping] = useState(false)
   const debouncedQuery = useRef(
@@ -62,7 +63,7 @@ export const useSearchResults = ({ searchQuery, first = 50, videoWhereInput }: S
     },
     {
       notifyOnNetworkStatusChange: true,
-      skip: !text,
+      skip: !text || !isReady,
       onError: (error) => SentryLogger.error('Failed to fetch video search results', 'SearchResults', error),
     }
   )
@@ -88,7 +89,7 @@ export const useSearchResults = ({ searchQuery, first = 50, videoWhereInput }: S
     },
     {
       notifyOnNetworkStatusChange: true,
-      skip: !text,
+      skip: !text || !isReady,
       onError: (error) => SentryLogger.error('Failed to fetch channel search results', 'SearchResults', error),
     }
   )
