@@ -133,7 +133,6 @@ export const Thumbnail = styled(animated.img, { shouldForwardProp: (prop) => pro
   display: block;
   opacity: ${({ isLoading }) => (isLoading ? 0.1 : 1)};
   transition: opacity 400ms ease-out;
-  padding: 1px;
 `
 
 export const Title = styled(Text)`
