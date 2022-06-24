@@ -102,7 +102,7 @@ export const SignInModal: FC = () => {
         displaySnackbar({
           title: 'Something went wrong',
           description: `There was a problem with creating your membership. Please try again later.${
-            errorCode && ` Error code: ${errorCode}`
+            errorCode ? ` Error code: ${errorCode}` : ''
           }`,
           iconType: 'error',
         })

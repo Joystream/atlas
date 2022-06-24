@@ -22,7 +22,12 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const accountsIds = walletAccounts.map((a) => a.address)
 
-  const { memberships, refetch, error } = useMemberships(
+  const {
+    memberships: currentMemberships,
+    previousData,
+    refetch,
+    error,
+  } = useMemberships(
     {
       where: {
         controllerAccount_in: accountsIds,
@@ -34,6 +39,8 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
         SentryLogger.error('Failed to fetch user memberships', 'UserProvider', error, { user: { accountsIds } }),
     }
   )
+
+  const memberships = currentMemberships ?? previousData?.memberships
 
   const refetchUserMemberships = useCallback(() => {
     return refetch()
