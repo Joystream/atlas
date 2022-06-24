@@ -9,13 +9,14 @@ type TextFieldProps = {
 }
 export const StyledInput = styled(Input)<TextFieldProps>`
   width: 100%;
+  margin-left: -${sizes(1)};
 `
 
 export const SearchContainerForm = styled.form`
   display: flex;
   grid-area: search;
   align-items: center;
-  margin: ${sizes(8)} 0 ${sizes(2)} 0;
+  margin: ${sizes(8)} ${sizes(1)} ${sizes(2)} 0;
   position: relative;
 
   ${media.sm} {

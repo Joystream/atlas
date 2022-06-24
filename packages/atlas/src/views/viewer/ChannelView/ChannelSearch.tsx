@@ -70,6 +70,7 @@ export const ChannelSearch: FC<SearchProps> = ({
         <Button icon={<SvgActionSearch />} onClick={toggleSearchInput} variant="tertiary" />
       ) : (
         <StyledInput
+          nodeStart={<SvgActionSearch />}
           size="medium"
           ref={searchInputRef}
           isOpen={isSearchInputOpen}
