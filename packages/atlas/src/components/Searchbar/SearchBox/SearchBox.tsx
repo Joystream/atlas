@@ -43,7 +43,7 @@ export const SearchBox: FC<SearchBoxProps> = memo(
     onMouseMove,
     hasFocus,
   }) => {
-    const { channels, videos, loading } = useSearchResults({ searchQuery, first: 3 })
+    const { channels, videos, loading } = useSearchResults({ searchQuery, first: 3, fetchPolicy: 'no-cache' })
     const { recentSearches, deleteRecentSearch } = usePersonalDataStore((state) => ({
       recentSearches: state.recentSearches,
       deleteRecentSearch: state.actions.deleteRecentSearch,
