@@ -31,6 +31,6 @@ export const LottiePlayer: FC<LottiePlayerProps> = ({ play = true, data, size, l
 
 const playerContainerOverrides = css`
   .lf-player-container {
-    width: min-content;
+    width: max-content;
   }
 `
