@@ -5,7 +5,11 @@ import propagatingChangesAnimation from '@/assets/animations/transaction/propaga
 import signatureAnimation from '@/assets/animations/transaction/signature.json'
 import { ErrorCode, ExtrinsicStatus } from '@/joystream-lib'
 
-export const getExtrisincStatusDetails = (status: ExtrinsicStatus, errorCode?: ErrorCode | null) => {
+export const getExtrinsicStatusDetails = (
+  status: ExtrinsicStatus,
+  errorCode?: ErrorCode | null,
+  walletName = 'Polkadot'
+) => {
   switch (status) {
     case ExtrinsicStatus.ProcessingAssets:
       return {
@@ -24,7 +28,7 @@ export const getExtrisincStatusDetails = (status: ExtrinsicStatus, errorCode?: E
     case ExtrinsicStatus.Unsigned:
       return {
         title: 'Waiting for your signature',
-        description: 'Please sign the transaction using the Polkadot browser extension.',
+        description: `Please sign the transaction using the ${walletName} wallet.`,
         animation: {
           data: signatureAnimation,
           size: {

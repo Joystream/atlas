@@ -15,7 +15,7 @@ export const writeVideoDataInCache = ({ edge, client }: WriteVideoDataCacheArg) 
   const video = client.cache.writeFragment({
     id: `Video:${edge.node.id}`,
     fragment: FullVideoFieldsFragmentDoc,
-    fragmentName: 'VideoFields',
+    fragmentName: 'FullVideoFields',
     data: edge.node,
   })
   client.cache.modify({

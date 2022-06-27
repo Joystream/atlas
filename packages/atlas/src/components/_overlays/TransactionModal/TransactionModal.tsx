@@ -4,16 +4,16 @@ import { CSSTransition } from 'react-transition-group'
 import { LottiePlayer } from '@/components/LottiePlayer'
 import { Text } from '@/components/Text'
 import { SvgActionCheck } from '@/components/_icons'
-import { Dialog } from '@/components/_overlays/Dialog'
 import { JOYSTREAM_STORAGE_DISCORD_URL } from '@/config/urls'
 import { ErrorCode, ExtrinsicStatus } from '@/joystream-lib'
 import { useUser, useUserStore } from '@/providers/user'
 import { transitions } from '@/styles'
 
-import { getExtrisincStatusDetails } from './TransactionModal.constants'
+import { getExtrinsicStatusDetails } from './TransactionModal.constants'
 import {
   Step,
   StepsBar,
+  StyledDialog,
   StyledIconWrapper,
   StyledModal,
   StyledTransactionIllustration,
@@ -34,11 +34,16 @@ export type TransactionModalProps = {
 export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, className, errorCode }) => {
   const [polkadotLogoVisible, setPolkadotLogoVisible] = useState(false)
   const [initialStatus, setInitialStatus] = useState<number | null>(null)
+  const userWalletName = useUserStore((state) => state.wallet?.title)
   const nonUploadTransaction = initialStatus === ExtrinsicStatus.Unsigned
   const error = status === ExtrinsicStatus.Error
   const stepDetails =
     status != null
-      ? getExtrisincStatusDetails(status === ExtrinsicStatus.Completed ? ExtrinsicStatus.Syncing : status, errorCode)
+      ? getExtrinsicStatusDetails(
+          status === ExtrinsicStatus.Completed ? ExtrinsicStatus.Syncing : status,
+          errorCode,
+          userWalletName
+        )
       : null
   const { channelId } = useUser()
   const wallet = useUserStore((state) => state.wallet)
@@ -131,7 +136,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
           </SuccessWrapper>
         </CSSTransition>
       </StyledTransactionIllustration>
-      <Dialog
+      <StyledDialog
         title={stepDetails?.title}
         primaryButton={
           status === ExtrinsicStatus.Error && errorCode === ErrorCode.VoucherSizeLimitExceeded
@@ -152,7 +157,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
             ? `${stepDetails?.description} Channel ID: ${channelId}`
             : stepDetails?.description}
         </Text>
-      </Dialog>
+      </StyledDialog>
     </StyledModal>
   )
 }

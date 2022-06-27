@@ -2,6 +2,7 @@ import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { IconWrapper } from '@/components/_icons/IconWrapper'
+import { Dialog } from '@/components/_overlays/Dialog'
 import { Modal } from '@/components/_overlays/Modal'
 import { cVar, sizes, square, transitions } from '@/styles'
 
@@ -43,6 +44,7 @@ export const StyledModal = styled(Modal)`
   display: flex;
   flex-direction: column;
   background-color: ${cVar('colorCoreNeutral800')};
+  border-radius: ${cVar('radiusMedium')};
 `
 
 export const StepsBar = styled.div`
@@ -81,6 +83,10 @@ export const StyledTransactionIllustration = styled.div`
   flex-direction: column;
   align-items: center;
   position: relative;
+`
+
+export const StyledDialog = styled(Dialog)`
+  border-radius: 0;
 `
 
 export const WalletInfoWrapper = styled.div`
