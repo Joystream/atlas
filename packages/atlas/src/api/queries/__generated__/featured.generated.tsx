@@ -22,6 +22,8 @@ export type GetVideoHeroQuery = {
       views: number
       createdAt: Date
       duration?: number | null
+      reactionsCount: number
+      commentsCount: number
       channel: {
         __typename?: 'Channel'
         id: string
@@ -83,6 +85,8 @@ export type GetAllCategoriesFeaturedVideosQuery = {
         views: number
         createdAt: Date
         duration?: number | null
+        reactionsCount: number
+        commentsCount: number
         channel: {
           __typename?: 'Channel'
           id: string
@@ -141,6 +145,7 @@ export type GetCategoriesFeaturedVideosQuery = {
       id: string
       title?: string | null
       description?: string | null
+      reactionsCount: number
       views: number
       duration?: number | null
       createdAt: Date
@@ -501,6 +506,8 @@ export type GetCategoriesFeaturedVideosQuery = {
           views: number
           createdAt: Date
           duration?: number | null
+          reactionsCount: number
+          commentsCount: number
           channel: {
             __typename?: 'Channel'
             id: string

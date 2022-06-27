@@ -13,10 +13,10 @@ query GetFullVideo($where: VideoWhereUniqueInput!) {
 query GetBasicVideosConnection(
   $first: Int
   $after: String
-  $orderBy: VideoOrderByInput! = createdAt_DESC
+  $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
   $where: VideoWhereInput
 ) {
-  videosConnection(first: $first, after: $after, where: $where, orderBy: [$orderBy]) {
+  videosConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
     edges {
       cursor
       node {

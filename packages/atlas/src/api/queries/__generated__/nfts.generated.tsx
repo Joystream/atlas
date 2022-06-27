@@ -236,6 +236,8 @@ export type GetNftQuery = {
       views: number
       createdAt: Date
       duration?: number | null
+      reactionsCount: number
+      commentsCount: number
       channel: {
         __typename?: 'Channel'
         id: string
@@ -510,6 +512,8 @@ export type GetNftsQuery = {
       views: number
       createdAt: Date
       duration?: number | null
+      reactionsCount: number
+      commentsCount: number
       channel: {
         __typename?: 'Channel'
         id: string
@@ -792,6 +796,8 @@ export type GetNftsConnectionQuery = {
           views: number
           createdAt: Date
           duration?: number | null
+          reactionsCount: number
+          commentsCount: number
           channel: {
             __typename?: 'Channel'
             id: string

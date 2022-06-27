@@ -43,7 +43,7 @@ export const SearchBox: FC<SearchBoxProps> = memo(
     onMouseMove,
     hasFocus,
   }) => {
-    const { channels, videos, loading } = useSearchResults({ searchQuery })
+    const { channels, videos, loading } = useSearchResults({ searchQuery, first: 3, fetchPolicy: 'no-cache' })
     const { recentSearches, deleteRecentSearch } = usePersonalDataStore((state) => ({
       recentSearches: state.recentSearches,
       deleteRecentSearch: state.actions.deleteRecentSearch,
@@ -112,8 +112,8 @@ export const SearchBox: FC<SearchBoxProps> = memo(
           )
           .slice(0, 3)
       : recentSearches
-    const slicedVideos = videos.slice(0, 3)
-    const slicedChannels = channels.slice(0, 3)
+    const slicedVideos = videos.items.slice(0, 3)
+    const slicedChannels = channels.items.slice(0, 3)
 
     // Pass number off all results
     useEffect(() => {

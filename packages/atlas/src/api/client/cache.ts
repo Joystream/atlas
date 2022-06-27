@@ -12,7 +12,6 @@ import {
   QueryChannelsConnectionArgs,
   QueryCommentsConnectionArgs,
   QueryVideosConnectionArgs,
-  SearchQueryVariables,
   VideoConnection,
   VideoOrderByInput,
 } from '../queries'
@@ -32,13 +31,14 @@ const getVideoKeyArgs = (args: QueryVideosConnectionArgs | null) => {
   const sorting = args?.orderBy?.[0] ? args.orderBy[0] : ''
   const durationGte = args?.where?.duration_gte || ''
   const durationLte = args?.where?.duration_gte || ''
+  const titleContains = args?.where?.title_contains || ''
 
   // only for counting videos in HomeView
   if (args?.where?.channel?.id_in && !args?.first) {
     return `${createdAtGte}:${channel}`
   }
 
-  return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${isPublic}:${idEq}:${idIn}:${sorting}:${durationGte}:${durationLte}`
+  return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${isPublic}:${idEq}:${idIn}:${sorting}:${durationGte}:${durationLte}:${titleContains}`
 }
 
 const getNftKeyArgs = (args: GetNftsConnectionQueryVariables | null) => {
@@ -59,21 +59,9 @@ const getChannelKeyArgs = (args: QueryChannelsConnectionArgs | null) => {
   const language = stringifyValue(args?.where?.language)
   const idIn = args?.where?.id_in || []
   const orderBy = args?.orderBy || []
+  const titleContains = args?.where?.title_contains || ''
 
-  return `${language}:${idIn}:${orderBy}`
-}
-
-const getSearchKeyArgs = (args: SearchQueryVariables | null) => {
-  const text = args?.text || ''
-  const hasMarketingEq = args?.whereVideo?.hasMarketing_eq ?? ''
-  const isExplicitEq = args?.whereVideo?.isExplicit_eq ?? ''
-  const language = stringifyValue(args?.whereVideo?.language)
-  const category = stringifyValue(args?.whereVideo?.category)
-  const createdAtGte = args?.whereVideo?.createdAt_gte ? JSON.stringify(args.whereVideo.createdAt_gte) : ''
-  const durationGte = args?.whereVideo?.duration_gte || null
-  const durationLte = args?.whereVideo?.duration_lte || null
-
-  return `${text}:${language}:${createdAtGte}:${category}:${isExplicitEq}:${hasMarketingEq}:${durationLte}:${durationGte}`
+  return `${language}:${idIn}:${orderBy}:${titleContains}`
 }
 
 const getCommentKeyArgs = (args: QueryCommentsConnectionArgs | null) => {
@@ -174,8 +162,6 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
       })
     )
   },
-  // @ts-ignore Apollo doesn't contain info on args type so Typescript will complain
-  search: offsetLimitPagination(getSearchKeyArgs),
   commentByUniqueInput: (existing, { toReference, args }) => {
     return (
       existing ||

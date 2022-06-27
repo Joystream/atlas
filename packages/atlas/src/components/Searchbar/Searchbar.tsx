@@ -114,11 +114,12 @@ export const Searchbar = forwardRef<HTMLDivElement, SearchbarProps>(
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
       if ((event.key === 'Enter' || event.key === 'NumpadEnter') && query?.trim() && typeof selectedItem !== 'number') {
         event.preventDefault()
-        addRecentSearch(query)
         handleClose()
-
-        // navigate to search results
-        navigate(absoluteRoutes.viewer.search({ query: query?.trim() }))
+        if (routerQuery !== searchQuery) {
+          addRecentSearch(query)
+          // navigate to search results
+          navigate(absoluteRoutes.viewer.search({ query: query?.trim() }))
+        }
       }
       if (event.key === 'Escape' || event.key === 'Esc' || event.key === 'Tab') {
         event.preventDefault()

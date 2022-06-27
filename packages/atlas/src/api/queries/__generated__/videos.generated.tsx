@@ -18,6 +18,8 @@ export type GetBasicVideoQuery = {
     views: number
     createdAt: Date
     duration?: number | null
+    reactionsCount: number
+    commentsCount: number
     channel: {
       __typename?: 'Channel'
       id: string
@@ -70,6 +72,7 @@ export type GetFullVideoQuery = {
     id: string
     title?: string | null
     description?: string | null
+    reactionsCount: number
     views: number
     duration?: number | null
     createdAt: Date
@@ -430,6 +433,8 @@ export type GetFullVideoQuery = {
         views: number
         createdAt: Date
         duration?: number | null
+        reactionsCount: number
+        commentsCount: number
         channel: {
           __typename?: 'Channel'
           id: string
@@ -476,7 +481,7 @@ export type GetFullVideoQuery = {
 export type GetBasicVideosConnectionQueryVariables = Types.Exact<{
   first?: Types.InputMaybe<Types.Scalars['Int']>
   after?: Types.InputMaybe<Types.Scalars['String']>
-  orderBy?: Types.VideoOrderByInput
+  orderBy?: Types.InputMaybe<Array<Types.VideoOrderByInput> | Types.VideoOrderByInput>
   where?: Types.InputMaybe<Types.VideoWhereInput>
 }>
 
@@ -495,6 +500,8 @@ export type GetBasicVideosConnectionQuery = {
         views: number
         createdAt: Date
         duration?: number | null
+        reactionsCount: number
+        commentsCount: number
         channel: {
           __typename?: 'Channel'
           id: string
@@ -559,6 +566,7 @@ export type GetFullVideosConnectionQuery = {
         id: string
         title?: string | null
         description?: string | null
+        reactionsCount: number
         views: number
         duration?: number | null
         createdAt: Date
@@ -919,6 +927,8 @@ export type GetFullVideosConnectionQuery = {
             views: number
             createdAt: Date
             duration?: number | null
+            reactionsCount: number
+            commentsCount: number
             channel: {
               __typename?: 'Channel'
               id: string
@@ -981,6 +991,8 @@ export type GetBasicVideosQuery = {
     views: number
     createdAt: Date
     duration?: number | null
+    reactionsCount: number
+    commentsCount: number
     channel: {
       __typename?: 'Channel'
       id: string
@@ -1036,6 +1048,7 @@ export type GetFullVideosQuery = {
     id: string
     title?: string | null
     description?: string | null
+    reactionsCount: number
     views: number
     duration?: number | null
     createdAt: Date
@@ -1396,6 +1409,8 @@ export type GetFullVideosQuery = {
         views: number
         createdAt: Date
         duration?: number | null
+        reactionsCount: number
+        commentsCount: number
         channel: {
           __typename?: 'Channel'
           id: string
@@ -1463,6 +1478,8 @@ export type GetMostViewedVideosConnectionQuery = {
         views: number
         createdAt: Date
         duration?: number | null
+        reactionsCount: number
+        commentsCount: number
         channel: {
           __typename?: 'Channel'
           id: string
@@ -1520,6 +1537,8 @@ export type GetTop10VideosThisWeekQuery = {
     views: number
     createdAt: Date
     duration?: number | null
+    reactionsCount: number
+    commentsCount: number
     channel: {
       __typename?: 'Channel'
       id: string
@@ -1574,6 +1593,8 @@ export type GetTop10VideosThisMonthQuery = {
     views: number
     createdAt: Date
     duration?: number | null
+    reactionsCount: number
+    commentsCount: number
     channel: {
       __typename?: 'Channel'
       id: string
@@ -1710,10 +1731,10 @@ export const GetBasicVideosConnectionDocument = gql`
   query GetBasicVideosConnection(
     $first: Int
     $after: String
-    $orderBy: VideoOrderByInput! = createdAt_DESC
+    $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
     $where: VideoWhereInput
   ) {
-    videosConnection(first: $first, after: $after, where: $where, orderBy: [$orderBy]) {
+    videosConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
       edges {
         cursor
         node {
