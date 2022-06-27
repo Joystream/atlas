@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { animated } from 'react-spring'
 
 import { Text } from '@/components/Text'
-import { cVar, media, sizes } from '@/styles'
+import { cVar, media, sizes, zIndex } from '@/styles'
 
 type DragAndDropAreaProps = {
   isDragAccept?: boolean
@@ -27,7 +27,7 @@ export const FileHoverOverlay = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 1;
+  z-index: ${zIndex.overlay};
   border: 1px dashed ${cVar('colorCoreBlue500')};
 
   ::before {
