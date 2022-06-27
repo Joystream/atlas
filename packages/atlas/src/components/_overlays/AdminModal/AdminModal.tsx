@@ -1,12 +1,15 @@
 import { ChangeEvent, FC, useEffect, useState } from 'react'
 
-import { TabItem } from '@/components/Tabs'
+import { Information } from '@/components/Information'
+import { TabItem, Tabs } from '@/components/Tabs'
 import { Button, TextButton } from '@/components/_buttons/Button'
-import { SvgActionClose, SvgActionNewTab, SvgAlertsError24, SvgAlertsWarning24 } from '@/components/_icons'
+import { SvgActionNewTab, SvgAlertsError24, SvgAlertsWarning24 } from '@/components/_icons'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { Select } from '@/components/_inputs/Select'
+import { Switch } from '@/components/_inputs/Switch'
+import { DialogModal } from '@/components/_overlays/DialogModal'
 import { availableNodes } from '@/config/availableNodes'
 import { BUILD_ENV, availableEnvs } from '@/config/envs'
 import { absoluteRoutes } from '@/config/routes'
@@ -15,16 +18,10 @@ import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useEnvironmentStore } from '@/providers/environment'
 import { useSnackbar } from '@/providers/snackbars'
 import { ActiveUserState, useUserStore } from '@/providers/user'
+import { useUserLocationStore } from '@/providers/userLocation'
 import { SentryLogger } from '@/utils/logs'
 
-import {
-  CloseButton,
-  Container,
-  CustomNodeUrlWrapper,
-  HorizontalSpacedContainer,
-  StyledTabs,
-  VerticalSpacedContainer,
-} from './AdminOverlay.styles'
+import { CustomNodeUrlWrapper, HorizontalSpacedContainer, VerticalSpacedContainer } from './AdminModal.styles'
 
 const ENVIRONMENT_NAMES: Record<string, string> = {
   production: 'Main Testnet',
@@ -36,9 +33,9 @@ const environmentsItems = availableEnvs()
   .filter((item) => ENVIRONMENT_NAMES[item])
   .map((item) => ({ name: ENVIRONMENT_NAMES[item], value: item }))
 
-const TABS: TabItem[] = [{ name: 'Env' }, { name: 'State' }, { name: 'User' }]
+const TABS: TabItem[] = [{ name: 'Environment' }, { name: 'Local state' }, { name: 'User' }, { name: 'Location' }]
 
-export const AdminOverlay: FC = () => {
+export const AdminModal: FC = () => {
   const [overlayOpen, setOverlayOpen] = useState(false)
   const [selectedTabIdx, setSelectedTabIdx] = useState(0)
 
@@ -69,29 +66,31 @@ export const AdminOverlay: FC = () => {
     setSelectedTabIdx(tabIdx)
   }
 
-  if (!overlayOpen) {
-    return null
-  }
-
   return (
-    <Container>
-      <CloseButton icon={<SvgActionClose />} variant="tertiary" onClick={handleCloseClick} size="small" />
-      <HorizontalSpacedContainer>
-        <TextButton variant="tertiary" icon={<SvgActionNewTab />} to={absoluteRoutes.viewer.index()}>
-          Home
-        </TextButton>
-        <TextButton variant="tertiary" icon={<SvgActionNewTab />} to={absoluteRoutes.studio.index()}>
-          Studio
-        </TextButton>
-        <TextButton variant="tertiary" icon={<SvgActionNewTab />} to={absoluteRoutes.playground.index()}>
-          Playground
-        </TextButton>
-      </HorizontalSpacedContainer>
-      <StyledTabs tabs={TABS} onSelectTab={handleTabSelect} selected={selectedTabIdx} />
+    <DialogModal
+      show={overlayOpen}
+      onClickOutside={handleCloseClick}
+      onExitClick={handleCloseClick}
+      title={
+        <HorizontalSpacedContainer>
+          <TextButton variant="tertiary" icon={<SvgActionNewTab />} to={absoluteRoutes.viewer.index()}>
+            Home
+          </TextButton>
+          <TextButton variant="tertiary" icon={<SvgActionNewTab />} to={absoluteRoutes.studio.index()}>
+            Studio
+          </TextButton>
+          <TextButton variant="tertiary" icon={<SvgActionNewTab />} to={absoluteRoutes.playground.index()}>
+            Playground
+          </TextButton>
+        </HorizontalSpacedContainer>
+      }
+    >
+      <Tabs tabs={TABS} onSelectTab={handleTabSelect} selected={selectedTabIdx} />
       {selectedTabIdx === 0 && <EnvTab />}
       {selectedTabIdx === 1 && <StateTab />}
       {selectedTabIdx === 2 && <UserTab />}
-    </Container>
+      {selectedTabIdx === 3 && <LocationTab />}
+    </DialogModal>
   )
 }
 
@@ -144,7 +143,7 @@ const EnvTab: FC = () => {
 
   return (
     <VerticalSpacedContainer>
-      <FormField label="Chain">
+      <FormField label="Environment">
         <Select
           items={environmentsItems}
           onChange={handleEnvironmentChange}
@@ -210,7 +209,7 @@ const StateTab: FC = () => {
         iconType: 'success',
       })
     } catch (error) {
-      SentryLogger.error('Failed to import local state', 'AdminOverlay', error)
+      SentryLogger.error('Failed to import local state', 'AdminModal', error)
       displaySnackbar({
         title: 'JSON file seems to be corrupted',
         description: 'Please try again with different file',
@@ -325,6 +324,92 @@ const UserTab: FC = () => {
       </Button>
       <Button onClick={handleRestClick} size="large" variant="secondary">
         Reset user
+      </Button>
+    </VerticalSpacedContainer>
+  )
+}
+
+const LocationTab: FC = () => {
+  const {
+    coordinates,
+    disableUserLocation,
+    actions: { setDisableUserLocation, setUserLocation, resetUserLocation },
+  } = useUserLocationStore()
+
+  const [latValue, setLatValue] = useState(coordinates?.latitude ?? null)
+  const [longValue, setLongValue] = useState(coordinates?.longitude ?? null)
+
+  const { displaySnackbar } = useSnackbar()
+
+  const handleLatChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const valueAsNumber = parseFloat(e.target.value)
+    if (!Number.isNaN(valueAsNumber)) {
+      setLatValue(valueAsNumber)
+    } else {
+      setLatValue(null)
+    }
+  }
+
+  const handleLongChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const valueAsNumber = parseFloat(e.target.value)
+    if (!Number.isNaN(valueAsNumber)) {
+      setLongValue(valueAsNumber)
+    } else {
+      setLongValue(null)
+    }
+  }
+
+  const handleSaveClick = () => {
+    if (latValue && longValue) {
+      setUserLocation({
+        latitude: latValue,
+        longitude: longValue,
+      })
+      displaySnackbar({
+        title: 'Location saved',
+        iconType: 'success',
+        timeout: 5000,
+      })
+    } else {
+      displaySnackbar({
+        title: 'Location not saved',
+        description: 'Incorrect values were provided',
+        iconType: 'error',
+      })
+    }
+  }
+
+  const handleResetClick = () => {
+    resetUserLocation()
+    setLongValue(null)
+    setLatValue(null)
+  }
+
+  const handleDisableChange = () => {
+    setDisableUserLocation(!disableUserLocation)
+    setLongValue(null)
+    setLatValue(null)
+  }
+
+  return (
+    <VerticalSpacedContainer>
+      <FormField description="User location is used to determine nearest storage operators to ensure best user experience. This data is never sent outside of your browser and not used for any additional purposes. We highly recommend leaving this enabled.">
+        <Switch label="Use location data" value={!disableUserLocation} onChange={handleDisableChange} />
+      </FormField>
+      <HorizontalSpacedContainer>
+        <FormField label="Latitude">
+          <Input value={latValue || ''} onChange={handleLatChange} type="number" />
+        </FormField>
+        <FormField label="Longitude">
+          <Input value={longValue || ''} onChange={handleLongChange} type="number" />
+        </FormField>
+      </HorizontalSpacedContainer>
+      <Button onClick={handleSaveClick} size="large" variant="secondary">
+        Save changes
+      </Button>
+      <Button onClick={handleResetClick} size="large" variant="secondary">
+        Reset location data{' '}
+        <Information text="Resetting will cause the app to fetch your location again on next startup" />
       </Button>
     </VerticalSpacedContainer>
   )

@@ -11,7 +11,6 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useRef,
   useState,
 } from 'react'
@@ -27,6 +26,7 @@ import {
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ASSET_MIN_DISTRIBUTOR_REFETCH_TIME } from '@/config/assets'
 import { USER_LOCATION_SERVICE_URL } from '@/config/urls'
+import { useMountEffect } from '@/hooks/useMountEffect'
 import { UserCoordinates, useUserLocationStore } from '@/providers/userLocation'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { getRandomIntInclusive } from '@/utils/number'
@@ -58,6 +58,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
   const {
     coordinates,
     expiry,
+    disableUserLocation,
     actions: { setUserLocation },
   } = useUserLocationStore()
 
@@ -65,7 +66,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
 
   const fetchDistributionOperators = useCallback(async () => {
     const now = new Date()
-    let userCoordinates: UserCoordinates
+    let userCoordinates: UserCoordinates | null = null
     const distributionOperatorsPromise = client.query<
       GetDistributionBucketsWithOperatorsQuery,
       GetDistributionBucketsWithOperatorsQueryVariables
@@ -73,7 +74,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
       query: GetDistributionBucketsWithOperatorsDocument,
       fetchPolicy: 'network-only',
     })
-    if (!coordinates || !expiry || now.getTime() > expiry) {
+    if ((!coordinates || !expiry || now.getTime() > expiry) && !disableUserLocation) {
       try {
         const userCoordinatesResponse = await axios.get<UserCoordinates>(USER_LOCATION_SERVICE_URL)
         userCoordinates = userCoordinatesResponse.data
@@ -132,7 +133,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
       isFetchingDistributionOperatorsRef.current = false
     })
     return distributionOperatorsMappingPromiseRef.current
-  }, [client, coordinates, expiry, setUserLocation])
+  }, [client, coordinates, disableUserLocation, expiry, setUserLocation])
 
   const fetchStorageOperators = useCallback(() => {
     const storageOperatorsPromise = client.query<GetStorageBucketsQuery, GetStorageBucketsQueryVariables>({
@@ -193,9 +194,9 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
   }, [fetchDistributionOperators])
 
   // runs once - fetch all operators and create associated mappings
-  useEffect(() => {
+  useMountEffect(() => {
     fetchOperators()
-  }, [fetchOperators])
+  })
 
   if (distributionOperatorsError || storageOperatorsError) {
     return <ViewErrorFallback />
