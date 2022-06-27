@@ -87,6 +87,10 @@ export const MobileSettings: FC<MobileSettingsProps> = ({ onSettingClick, opened
     <DialogModal
       show={show}
       dividers
+      onClickOutside={(event) => {
+        event?.stopPropagation()
+        onClose?.()
+      }}
       secondaryButton={{
         text: 'Close',
         onClick: (event) => {
