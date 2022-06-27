@@ -1,4 +1,4 @@
-import { FetchPolicy, NetworkStatus } from '@apollo/client'
+import { FetchPolicy, NetworkStatus, QueryHookOptions } from '@apollo/client'
 import { debounce } from 'lodash-es'
 import { useEffect, useRef, useState } from 'react'
 
@@ -38,6 +38,13 @@ export const useSearchResults = ({
     }
   }, [searchQuery])
 
+  const commonOptions: QueryHookOptions = {
+    fetchPolicy,
+    nextFetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: true,
+    skip: !text || !isReady,
+  }
+
   const {
     edges: videosEdges = [],
     pageInfo: videosPageInfo,
@@ -69,9 +76,7 @@ export const useSearchResults = ({
       ],
     },
     {
-      fetchPolicy,
-      notifyOnNetworkStatusChange: true,
-      skip: !text || !isReady,
+      ...commonOptions,
       onError: (error) => SentryLogger.error('Failed to fetch video search results', 'SearchResults', error),
     }
   )
@@ -96,9 +101,7 @@ export const useSearchResults = ({
       },
     },
     {
-      fetchPolicy,
-      notifyOnNetworkStatusChange: true,
-      skip: !text || !isReady,
+      ...commonOptions,
       onError: (error) => SentryLogger.error('Failed to fetch channel search results', 'SearchResults', error),
     }
   )
