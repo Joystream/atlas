@@ -62,7 +62,6 @@ export const useSearchResults = ({ searchQuery, first = 50, videoWhereInput, isR
       ],
     },
     {
-      fetchPolicy: 'no-cache',
       notifyOnNetworkStatusChange: true,
       skip: !text || !isReady,
       onError: (error) => SentryLogger.error('Failed to fetch video search results', 'SearchResults', error),
@@ -89,7 +88,6 @@ export const useSearchResults = ({ searchQuery, first = 50, videoWhereInput, isR
       },
     },
     {
-      fetchPolicy: 'no-cache',
       notifyOnNetworkStatusChange: true,
       skip: !text || !isReady,
       onError: (error) => SentryLogger.error('Failed to fetch channel search results', 'SearchResults', error),
