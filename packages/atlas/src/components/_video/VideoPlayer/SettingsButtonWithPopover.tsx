@@ -61,6 +61,9 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
             setPlaybackRate(val)
             setOpenedSetting(null)
           }
+          if (mobile) {
+            handleClose()
+          }
         },
         label: availablePlaybackRate === 1 ? `Normal (${availablePlaybackRate}x)` : `${availablePlaybackRate}x`,
       })),
@@ -71,6 +74,9 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
       value: playNext,
       onSwitchClick: (value) => {
         setPlayNext(value)
+        if (mobile) {
+          handleClose()
+        }
       },
     },
   ]
@@ -79,6 +85,7 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
       <Popover
         placement="top"
         disabled={mobile}
+        animation={false}
         ref={popoverRef}
         boundariesElement={boundariesElement}
         boundariesPadding={{ right: 16, top: 16 }}

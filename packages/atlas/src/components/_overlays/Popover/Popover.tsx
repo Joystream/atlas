@@ -23,6 +23,7 @@ export type PopoverProps = PropsWithChildren<{
   onShow?: () => void
   disabled?: boolean
   flipEnabled?: boolean
+  animation?: boolean
 }>
 
 const EXIT_ANIMATION_DURATION = 100
@@ -70,6 +71,7 @@ const _Popover: ForwardRefRenderFunction<PopoverImperativeHandle | undefined, Po
     disabled,
     flipEnabled = true,
     boundariesElement,
+    animation = true,
     boundariesPadding,
   },
   ref
@@ -114,7 +116,7 @@ const _Popover: ForwardRefRenderFunction<PopoverImperativeHandle | undefined, Po
       }}
       render={(attrs) => {
         return (
-          <ContentContainer {...attrs} className={className}>
+          <ContentContainer {...attrs} className={className} animation={animation}>
             {children}
           </ContentContainer>
         )
@@ -144,8 +146,8 @@ const TriggerContainer = styled.div`
   height: max-content;
 `
 
-const ContentContainer = styled.div`
-  transition: 150ms cubic-bezier(0.25, 0.01, 0.25, 1);
+const ContentContainer = styled.div<{ animation?: boolean }>`
+  transition: ${({ animation }) => (animation ? ' 150ms cubic-bezier(0.25, 0.01, 0.25, 1)' : 'unset')};
   opacity: 0;
   transform: scale(0.88);
 
@@ -157,7 +159,8 @@ const ContentContainer = styled.div`
   &.popover-exit-active {
     opacity: 0;
     transform: scale(0.88);
-    transition: ${EXIT_ANIMATION_DURATION}ms cubic-bezier(0.25, 0.01, 0.25, 1);
+    transition: ${({ animation }) =>
+      animation ? `${EXIT_ANIMATION_DURATION}ms cubic-bezier(0.25, 0.01, 0.25, 1) ` : 'unset'};
   }
 `
 

@@ -18,6 +18,7 @@ export const SettingsWrapper = styled.section`
   background-color: ${cVar('colorCoreNeutral700Darken')};
   width: 256px;
   backdrop-filter: blur(32px);
+  border-radius: ${cVar('radiusSmall')};
 `
 
 export const OptionsWrapper = styled.div<{ withBorder?: boolean; maxHeight?: number }>`
