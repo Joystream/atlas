@@ -66,7 +66,7 @@ export const TitleInput = forwardRef<HTMLTextAreaElement, TitleInputProps>(
           error={error}
           ref={ref}
         />
-        <TitleAreaInfo visible={footerVisible || error || !!value?.length}>
+        <TitleAreaInfo visible={(footerVisible || error || !!value?.length) && !disabled}>
           <MinMaxChars as="span" variant="t100" color="colorTextMuted" margin={{ bottom: 1, right: 2 }}>
             Min {min} chars • Max {max} chars
           </MinMaxChars>

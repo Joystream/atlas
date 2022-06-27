@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { Banner } from '@/components/Banner'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { SvgAlertsInformative24 } from '@/components/_icons'
 import { FormField } from '@/components/_inputs/FormField'
 import { MultiFileSelect } from '@/components/_inputs/MultiFileSelect'
 import { TitleInput } from '@/components/_inputs/TitleInput'
@@ -12,6 +13,12 @@ export const StyledMultiFileSelect = styled(MultiFileSelect)`
   ${media.md} {
     position: sticky;
     top: ${sizes(12)};
+  }
+`
+
+export const StyledSvgAlertsInformative24 = styled(SvgAlertsInformative24)`
+  path {
+    fill: ${cVar('colorTextStrong')};
   }
 `
 
