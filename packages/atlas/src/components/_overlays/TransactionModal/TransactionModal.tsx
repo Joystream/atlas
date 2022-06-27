@@ -106,7 +106,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
         >
           <WalletInfoWrapper>
             <StyledIconWrapper
-              icon={wallet.logo.src ? <WalletLogo src={wallet.logo.src} alt={wallet.logo.alt} /> : <SvgLogoPolkadot />}
+              icon={wallet?.logo.src ? <WalletLogo src={wallet.logo.src} alt={wallet.logo.alt} /> : <SvgLogoPolkadot />}
             />
             <Text as="span" color="colorText" variant="t100">
               Continue in {wallet?.title}
