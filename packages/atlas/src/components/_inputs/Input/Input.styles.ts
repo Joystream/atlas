@@ -52,7 +52,7 @@ const nodePlacementStyles = ({ left, size, isButton }: NodeContainerProps) =>
       `
     : css`
         right: 0;
-        padding-right: ${horizontalPadding[size] - (isButton ? sizes(1, true) : 0)}px;
+        padding-right: ${horizontalPadding[size] - (isButton ? sizes(2, true) : 0)}px;
       `
 
 export const NodeContainer = styled.div<NodeContainerProps>`
