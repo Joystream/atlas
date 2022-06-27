@@ -11,19 +11,21 @@ export const StyledInput = styled(Input)<TextFieldProps>`
   width: 100%;
 
   /* to align it with SearchIcon button */
-  margin-left: -${sizes(1)};
+  ${media.sm} {
+    margin-left: -${sizes(1)};
+  }
 `
 
 export const SearchContainerForm = styled.form`
   display: flex;
   grid-area: search;
   align-items: center;
-  margin: ${sizes(8)} ${sizes(1)} ${sizes(2)} 0;
+  margin: ${sizes(8)} 0 ${sizes(2)} 0;
   position: relative;
 
   ${media.sm} {
     grid-area: initial;
-    margin: 0;
+    margin: 0 ${sizes(1)} 0 0;
     max-width: 200px;
   }
 `

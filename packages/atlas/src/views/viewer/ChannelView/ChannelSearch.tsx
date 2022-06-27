@@ -2,6 +2,7 @@ import { Dispatch, FC, FormEvent, SetStateAction, useCallback, useEffect, useRef
 
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionClose, SvgActionSearch } from '@/components/_icons'
+import { isMobile } from '@/utils/browser'
 
 import { SearchContainerForm, StyledInput } from './ChannelSearch.styles'
 
@@ -24,6 +25,7 @@ export const ChannelSearch: FC<SearchProps> = ({
   setSearchQuery,
   searchQuery,
 }) => {
+  const mobile = isMobile()
   const searchInputRef = useRef<HTMLInputElement>(null)
   useEffect(() => {
     if (isSearchInputOpen) {
@@ -66,7 +68,7 @@ export const ChannelSearch: FC<SearchProps> = ({
 
   return (
     <SearchContainerForm onSubmit={handleSubmit}>
-      {!isSearchInputOpen ? (
+      {!isSearchInputOpen && !mobile ? (
         <Button icon={<SvgActionSearch />} onClick={toggleSearchInput} variant="tertiary" />
       ) : (
         <StyledInput
