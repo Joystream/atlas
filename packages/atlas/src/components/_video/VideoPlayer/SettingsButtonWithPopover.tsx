@@ -4,6 +4,7 @@ import { FC, MouseEvent, useRef, useState } from 'react'
 import { Popover, PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { AVAILABLE_PLAYBACK_RATE } from '@/config/player'
 import { usePersonalDataStore } from '@/providers/personalData'
+import { sizes } from '@/styles'
 import { isMobile } from '@/utils/browser'
 
 import { PlayerControlButton } from './PlayerControlButton'
@@ -19,7 +20,8 @@ type SettingsPopoverProps = {
   isSettingsPopoverOpened: boolean
 }
 
-const TOP_OFFSET = 16
+const TOP_OFFSET = sizes(8, true)
+const RIGHT_OFFSET = sizes(4, true)
 
 export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
   boundariesElement,
@@ -48,8 +50,8 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
 
   const {
     playbackRate,
-    playNext,
-    actions: { setPlaybackRate, setPlayNext },
+    autoPlayNext: playNext,
+    actions: { setPlaybackRate, setAutoPlayNext },
   } = usePersonalDataStore((state) => state)
 
   const settings: Setting[] = [
@@ -77,7 +79,7 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
       label: 'Autoplay',
       value: playNext,
       onSwitchClick: (value) => {
-        setPlayNext(value)
+        setAutoPlayNext(value)
         if (mobile) {
           handleClose()
         }
@@ -92,7 +94,7 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
         animation={false}
         ref={popoverRef}
         boundariesElement={boundariesElement}
-        boundariesPadding={{ right: 16 }}
+        boundariesPadding={{ right: RIGHT_OFFSET }}
         flipEnabled={false}
         trigger={null}
         triggerTarget={settingButtonRef.current}

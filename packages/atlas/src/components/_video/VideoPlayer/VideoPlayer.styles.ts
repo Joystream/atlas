@@ -341,7 +341,7 @@ export const Container = styled.div<ContainerProps>`
       opacity: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 1 : 0)};
       visibility: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 'visible' : 'hidden')};
       ${CustomControls} {
-        transform: translateY(0.5em);
+        transform: translateY(${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 0 : 0.5)}em);
       }
     }
   }
@@ -364,7 +364,7 @@ export const Container = styled.div<ContainerProps>`
         opacity: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 1 : 0)};
         visibility: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 'visible' : 'hidden')};
         ${CustomControls} {
-          transform: translateY(0.5em);
+          transform: translateY(${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 0 : 0.5)}em);
         }
       }
     }
@@ -385,7 +385,7 @@ export const Container = styled.div<ContainerProps>`
         opacity: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 1 : 0)};
         visibility: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 'visible' : 'hidden')};
         ${CustomControls} {
-          transform: translateY(0.5em);
+          transform: translateY(${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 0 : 0.5)}em);
         }
       }
     }

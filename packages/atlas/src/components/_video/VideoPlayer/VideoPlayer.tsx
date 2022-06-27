@@ -113,7 +113,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     cachedVolume,
     cinematicView,
     playbackRate,
-    playNext,
+    autoPlayNext,
     actions: { setCurrentVolume, setCachedVolume, setCinematicView },
   } = usePersonalDataStore((state) => state)
   const [volumeToSave, setVolumeToSave] = useState(0)
@@ -647,7 +647,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
         <VideoOverlay
           videoId={videoId}
           isFullScreen={isFullScreen}
-          isPlayNextDisabled={isPlayNextDisabled || !playNext}
+          isPlayNextDisabled={isPlayNextDisabled || !autoPlayNext}
           playerState={playerState}
           onPlay={handlePlayPause}
           channelId={channelId}
