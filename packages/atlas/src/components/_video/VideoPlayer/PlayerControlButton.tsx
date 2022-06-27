@@ -9,10 +9,23 @@ type PlayerControlButtonProps = PropsWithChildren<{
   onClick?: (e: MouseEvent) => void
   tooltipText?: string
   isDisabled?: boolean
+  tooltipEnabled?: boolean
 }>
 
 export const PlayerControlButton = forwardRef<HTMLButtonElement, PlayerControlButtonProps>(
-  ({ children, onClick, tooltipText, tooltipPosition, className, showTooltipOnlyOnFocus, isDisabled }, ref) => {
+  (
+    {
+      children,
+      onClick,
+      tooltipText,
+      tooltipPosition,
+      className,
+      showTooltipOnlyOnFocus,
+      isDisabled,
+      tooltipEnabled = true,
+    },
+    ref
+  ) => {
     const [disableFocus, setDisableFocus] = useState(true)
 
     useEffect(() => {
@@ -36,7 +49,7 @@ export const PlayerControlButton = forwardRef<HTMLButtonElement, PlayerControlBu
         onClick={onClick}
       >
         {children}
-        {!isDisabled && (
+        {tooltipEnabled && !isDisabled && (
           <ControlButtonTooltip tooltipPosition={tooltipPosition}>
             <ControlButtonTooltipText as="span" variant="t100">
               {tooltipText}

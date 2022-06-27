@@ -121,6 +121,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   const [videoTime, setVideoTime] = useState(0)
   const [isFullScreen, setIsFullScreen] = useState(false)
   const [isPiPEnabled, setIsPiPEnabled] = useState(false)
+  const [isSettingsOpened, setIsSettingsOpened] = useState(false)
 
   const [playerState, setPlayerState] = useState<PlayerState>('loading')
   const [isLoaded, setIsLoaded] = useState(false)
@@ -597,6 +598,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                 <ScreenControls>
                   {mdMatch && !isEmbedded && !player?.isFullscreen() && (
                     <PlayerControlButton
+                      tooltipEnabled={!isSettingsOpened}
                       onClick={toggleCinematicView}
                       tooltipText={cinematicView ? 'Exit cinematic mode (c)' : 'Cinematic view (c)'}
                     >
@@ -607,19 +609,25 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                       )}
                     </PlayerControlButton>
                   )}
-
                   {isPiPSupported && (
-                    <PlayerControlButton onClick={handlePictureInPicture} tooltipText="Picture-in-picture">
+                    <PlayerControlButton
+                      onClick={handlePictureInPicture}
+                      tooltipText="Picture-in-picture"
+                      tooltipEnabled={!isSettingsOpened}
+                    >
                       {isPiPEnabled ? <StyledSvgControlsPipOff /> : <StyledSvgControlsPipOn />}
                     </PlayerControlButton>
                   )}
                   <SettingsButtonWithPopover
+                    onSettingsToggle={setIsSettingsOpened}
+                    isSettingsOpened={!isSettingsOpened}
                     playerHeightWithoutCustomControls={playerHeightWithoutCustomControls}
                     boundariesElement={playerRef.current}
                     isFullScreen={isFullScreen}
                   />
                   <PlayerControlButton
                     isDisabled={!isFullScreenEnabled}
+                    tooltipEnabled={!isSettingsOpened}
                     tooltipPosition="right"
                     tooltipText={isFullScreen ? 'Exit full screen (f)' : 'Full screen (f)'}
                     onClick={handleFullScreen}

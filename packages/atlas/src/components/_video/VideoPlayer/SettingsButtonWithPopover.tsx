@@ -15,6 +15,8 @@ type SettingsPopoverProps = {
   boundariesElement: Boundary | null | undefined
   isFullScreen?: boolean
   playerHeightWithoutCustomControls?: number
+  onSettingsToggle: (isSettingsVisible: boolean) => void
+  isSettingsOpened: boolean
 }
 
 const TOP_OFFSET = 16
@@ -23,11 +25,13 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
   boundariesElement,
   isFullScreen,
   playerHeightWithoutCustomControls = 0,
+  onSettingsToggle,
+  isSettingsOpened,
 }) => {
   const settingsRef = useRef<HTMLDivElement>(null)
   const popoverRef = useRef<PopoverImperativeHandle>(null)
   const settingButtonRef = useRef<HTMLButtonElement>(null)
-  const [isSettingsOpened, setIsSettingsOpened] = useState(false)
+
   const [openedSettting, setOpenedSetting] = useState<string | null>(null)
   const mobile = isMobile()
 
@@ -35,10 +39,10 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
 
   const handleToggleSettings = (event: MouseEvent) => {
     event.stopPropagation()
-    setIsSettingsOpened((opened) => !opened)
+    onSettingsToggle(!isSettingsOpened)
   }
   const handleClose = () => {
-    setIsSettingsOpened(false)
+    onSettingsToggle(false)
     setOpenedSetting(null)
   }
 
@@ -88,13 +92,13 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
         animation={false}
         ref={popoverRef}
         boundariesElement={boundariesElement}
-        boundariesPadding={{ right: 16, top: 16 }}
+        boundariesPadding={{ right: 16 }}
         flipEnabled={false}
         trigger={null}
         triggerTarget={settingButtonRef.current}
         onHide={handleClose}
         onShow={() => {
-          setIsSettingsOpened(true)
+          onSettingsToggle(true)
         }}
       >
         <Settings
@@ -106,7 +110,12 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
           isFullScreen={isFullScreen}
         />
       </Popover>
-      <PlayerControlButton onClick={handleToggleSettings} tooltipText="Settings" ref={settingButtonRef}>
+      <PlayerControlButton
+        tooltipEnabled={isSettingsOpened}
+        onClick={handleToggleSettings}
+        tooltipText="Settings"
+        ref={settingButtonRef}
+      >
         {isSettingsOpened ? <StyledSvgControlsSettingsSolid /> : <StyledSvgControlsSettingsOutline />}
       </PlayerControlButton>
       {mobile && (
