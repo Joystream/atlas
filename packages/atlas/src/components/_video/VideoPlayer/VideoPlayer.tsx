@@ -121,7 +121,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   const [videoTime, setVideoTime] = useState(0)
   const [isFullScreen, setIsFullScreen] = useState(false)
   const [isPiPEnabled, setIsPiPEnabled] = useState(false)
-  const [isSettingsOpened, setIsSettingsOpened] = useState(false)
+  const [isSettingsPopoverOpened, setIsSettingsPopoverOpened] = useState(false)
 
   const [playerState, setPlayerState] = useState<PlayerState>('loading')
   const [isLoaded, setIsLoaded] = useState(false)
@@ -535,7 +535,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   const showControlsIndicator = playerState !== 'ended'
 
   return (
-    <Container isFullScreen={isFullScreen} className={className}>
+    <Container isFullScreen={isFullScreen} className={className} isSettingsPopoverOpened={isSettingsPopoverOpened}>
       <div data-vjs-player onClick={handlePlayPause}>
         {needsManualPlay && (
           <BigPlayButtonContainer onClick={handlePlayPause}>
@@ -547,7 +547,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
         <video style={videoStyle} ref={playerRef} className="video-js" onClick={onVideoClick} />
         {showPlayerControls && (
           <>
-            <ControlsOverlay isFullScreen={isFullScreen}>
+            <ControlsOverlay isSettingsPopoverOpened={isSettingsPopoverOpened} isFullScreen={isFullScreen}>
               <CustomTimeline
                 playVideo={playVideo}
                 pauseVideo={pauseVideo}
@@ -556,7 +556,12 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                 playerState={playerState}
                 setPlayerState={setPlayerState}
               />
-              <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'} ref={customControlsRef}>
+              <CustomControls
+                isFullScreen={isFullScreen}
+                isEnded={playerState === 'ended'}
+                ref={customControlsRef}
+                isSettingsPopoverOpened={isSettingsPopoverOpened}
+              >
                 <PlayControl isLoading={playerState === 'loading'}>
                   {(!needsManualPlay || mdMatch) && (
                     <PlayButton
@@ -598,7 +603,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                 <ScreenControls>
                   {mdMatch && !isEmbedded && !player?.isFullscreen() && (
                     <PlayerControlButton
-                      tooltipEnabled={!isSettingsOpened}
+                      tooltipEnabled={!isSettingsPopoverOpened}
                       onClick={toggleCinematicView}
                       tooltipText={cinematicView ? 'Exit cinematic mode (c)' : 'Cinematic view (c)'}
                     >
@@ -613,21 +618,21 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                     <PlayerControlButton
                       onClick={handlePictureInPicture}
                       tooltipText="Picture-in-picture"
-                      tooltipEnabled={!isSettingsOpened}
+                      tooltipEnabled={!isSettingsPopoverOpened}
                     >
                       {isPiPEnabled ? <StyledSvgControlsPipOff /> : <StyledSvgControlsPipOn />}
                     </PlayerControlButton>
                   )}
                   <SettingsButtonWithPopover
-                    onSettingsToggle={setIsSettingsOpened}
-                    isSettingsOpened={!isSettingsOpened}
+                    onSettingsPopoverToggle={setIsSettingsPopoverOpened}
+                    isSettingsPopoverOpened={isSettingsPopoverOpened}
                     playerHeightWithoutCustomControls={playerHeightWithoutCustomControls}
                     boundariesElement={playerRef.current}
                     isFullScreen={isFullScreen}
                   />
                   <PlayerControlButton
                     isDisabled={!isFullScreenEnabled}
-                    tooltipEnabled={!isSettingsOpened}
+                    tooltipEnabled={!isSettingsPopoverOpened}
                     tooltipPosition="right"
                     tooltipText={isFullScreen ? 'Exit full screen (f)' : 'Full screen (f)'}
                     onClick={handleFullScreen}

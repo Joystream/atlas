@@ -25,10 +25,12 @@ import { ControlButton } from './PlayerControlButton.styles'
 
 type ContainerProps = {
   isFullScreen?: boolean
+  isSettingsPopoverOpened?: boolean
 }
 type CustomControlsProps = {
   isFullScreen?: boolean
   isEnded?: boolean
+  isSettingsPopoverOpened?: boolean
 }
 
 const defaultIconColor = css`
@@ -93,7 +95,7 @@ export const TRANSITION_DELAY = '50ms'
 
 export const ControlsOverlay = styled.div<CustomControlsProps>`
   font-size: ${sizes(4)};
-  opacity: 0;
+  opacity: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 1 : 0)};
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -114,7 +116,7 @@ export const ControlsOverlay = styled.div<CustomControlsProps>`
 
 export const CustomControls = styled.div<CustomControlsProps>`
   position: absolute;
-  transform: translateY(0.5em);
+  transform: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 0 : 0.5)}em;
   padding: 0.5em 0.5em 0;
   bottom: ${({ isFullScreen }) => (isFullScreen ? '2.5em' : '1.25em')};
   box-shadow: ${({ isEnded }) => (isEnded ? cVar('effectDividersTop') : 'unset')};
@@ -336,8 +338,8 @@ export const Container = styled.div<ContainerProps>`
   /* don't hide player controls when paused(mobile) */
   .vjs-user-inactive:not(.vjs-ended):not(.vjs-paused) {
     ${ControlsOverlay} {
-      opacity: 0;
-      visibility: hidden;
+      opacity: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 1 : 0)};
+      visibility: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 'visible' : 'hidden')};
       ${CustomControls} {
         transform: translateY(0.5em);
       }
@@ -359,8 +361,8 @@ export const Container = styled.div<ContainerProps>`
   @media (hover: hover) {
     .vjs-user-active.vjs-playing {
       ${ControlsOverlay} {
-        opacity: 0;
-        visibility: hidden;
+        opacity: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 1 : 0)};
+        visibility: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 'visible' : 'hidden')};
         ${CustomControls} {
           transform: translateY(0.5em);
         }
@@ -380,8 +382,8 @@ export const Container = styled.div<ContainerProps>`
     .vjs-user-inactive.vjs-playing,
     .vjs-user-inactive.vjs-paused:not(.vjs-ended) {
       ${ControlsOverlay} {
-        opacity: 0;
-        visibility: hidden;
+        opacity: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 1 : 0)};
+        visibility: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 'visible' : 'hidden')};
         ${CustomControls} {
           transform: translateY(0.5em);
         }

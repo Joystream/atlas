@@ -15,8 +15,8 @@ type SettingsPopoverProps = {
   boundariesElement: Boundary | null | undefined
   isFullScreen?: boolean
   playerHeightWithoutCustomControls?: number
-  onSettingsToggle: (isSettingsVisible: boolean) => void
-  isSettingsOpened: boolean
+  onSettingsPopoverToggle: (isSettingsVisible: boolean) => void
+  isSettingsPopoverOpened: boolean
 }
 
 const TOP_OFFSET = 16
@@ -25,8 +25,8 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
   boundariesElement,
   isFullScreen,
   playerHeightWithoutCustomControls = 0,
-  onSettingsToggle,
-  isSettingsOpened,
+  onSettingsPopoverToggle,
+  isSettingsPopoverOpened,
 }) => {
   const settingsRef = useRef<HTMLDivElement>(null)
   const popoverRef = useRef<PopoverImperativeHandle>(null)
@@ -39,10 +39,10 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
 
   const handleToggleSettings = (event: MouseEvent) => {
     event.stopPropagation()
-    onSettingsToggle(!isSettingsOpened)
+    onSettingsPopoverToggle(!isSettingsPopoverOpened)
   }
   const handleClose = () => {
-    onSettingsToggle(false)
+    onSettingsPopoverToggle(false)
     setOpenedSetting(null)
   }
 
@@ -98,7 +98,7 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
         triggerTarget={settingButtonRef.current}
         onHide={handleClose}
         onShow={() => {
-          onSettingsToggle(true)
+          onSettingsPopoverToggle(true)
         }}
       >
         <Settings
@@ -111,12 +111,12 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
         />
       </Popover>
       <PlayerControlButton
-        tooltipEnabled={isSettingsOpened}
+        tooltipEnabled={!isSettingsPopoverOpened}
         onClick={handleToggleSettings}
         tooltipText="Settings"
         ref={settingButtonRef}
       >
-        {isSettingsOpened ? <StyledSvgControlsSettingsSolid /> : <StyledSvgControlsSettingsOutline />}
+        {isSettingsPopoverOpened ? <StyledSvgControlsSettingsSolid /> : <StyledSvgControlsSettingsOutline />}
       </PlayerControlButton>
       {mobile && (
         <MobileSettings
@@ -124,7 +124,7 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
           settings={settings}
           onSettingClick={setOpenedSetting}
           openedSetting={openedSettting}
-          show={isSettingsOpened && mobile}
+          show={isSettingsPopoverOpened && mobile}
         />
       )}
     </span>
