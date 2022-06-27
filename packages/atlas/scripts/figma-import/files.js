@@ -69,13 +69,22 @@ const generateIconsOrIllustrations = async (svgNodesArr) => {
 }
 
 const main = async () => {
-  clearFilesDir()
+  try {
+    await clearFilesDir()
 
-  const filesNodesArr = await getNodeChildren(
-    type === 'icons' ? config.FRAME_WITH_ICONS_ID : config.FRAME_WITH_ILLUSTRATIONS_ID
-  )
+    const filesNodesArr = await getNodeChildren(
+      type === 'icons' ? config.FRAME_WITH_ICONS_ID : config.FRAME_WITH_ILLUSTRATIONS_ID
+    )
 
-  await Promise.all([generateIconsOrIllustrations(filesNodesArr)])
+    if (!filesNodesArr) {
+      console.error('No nodes found')
+      return
+    }
+
+    await generateIconsOrIllustrations(filesNodesArr)
+  } catch (e) {
+    console.error('Unhandled error', e)
+  }
 }
 
 module.exports = main

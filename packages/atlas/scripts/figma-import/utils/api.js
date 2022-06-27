@@ -46,10 +46,16 @@ const getNode = async (nodeId) => instanceFiles.get(`/nodes?ids=${decodeURICompo
  * @return {Promise<[Object]>}
  */
 const getNodeChildren = async (nodeId) => {
-  const {
-    data: { nodes },
-  } = await instanceFiles.get(`/nodes?ids=${decodeURIComponent(nodeId)}`)
-  return nodes[nodeId].document.children
+  try {
+    const {
+      data: { nodes },
+    } = await instanceFiles.get(`/nodes?ids=${decodeURIComponent(nodeId)}`)
+    return nodes[nodeId].document.children
+  } catch (e) {
+    console.error(`Failed to get node children for node ID: "${nodeId}"`)
+    console.error(e?.response?.data)
+    return null
+  }
 }
 
 /**
