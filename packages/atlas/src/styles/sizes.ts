@@ -24,6 +24,8 @@ export const zIndex = {
   videoWorkspaceOverlay: 250,
   nearVideoWorkspaceOverlay: 260,
   globalOverlay: 999,
+  modals: 1000,
+  snackbars: 1010,
 }
 
 export function square(rawSize: string | number) {

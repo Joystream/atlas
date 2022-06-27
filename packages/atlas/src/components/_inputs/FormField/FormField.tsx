@@ -110,12 +110,12 @@ export const FormField = memo(
               {description &&
                 (description instanceof Array ? (
                   description.map((p, idx) => (
-                    <FormFieldDescription as="span" color="colorText" key={idx} variant="t200">
+                    <FormFieldDescription as="span" color="colorText" key={idx} variant="t100">
                       {p}
                     </FormFieldDescription>
                   ))
                 ) : (
-                  <FormFieldDescription as="span" color="colorText" variant="t200">
+                  <FormFieldDescription as="span" color="colorText" variant="t100">
                     {description}
                   </FormFieldDescription>
                 ))}

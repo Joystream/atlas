@@ -1,25 +1,26 @@
 import { createStore } from '@/store'
-import { readFromLocalStorage } from '@/utils/localStorage'
 
 import { ActiveUserState, SignerWallet, SignerWalletAccount, SignerWalletStatus } from './user.types'
-
-const LOCAL_STORAGE_KEY = 'activeUser'
 
 export type UserStoreState = ActiveUserState & {
   wallet: SignerWallet | null
   walletAccounts: SignerWalletAccount[]
   walletStatus: SignerWalletStatus
-}
+  lastUsedWalletName: string | null
 
-const WHITELIST = ['accountId', 'memberId', 'channelId'] as (keyof ActiveUserState)[]
+  signInModalOpen: boolean
+}
 
 export type UserStoreActions = {
   resetActiveUser: () => void
   setActiveUser: (activeUserChanges: Partial<ActiveUserState>) => void
+  signOut: () => void
 
   setWallet: (wallet: SignerWallet) => void
   setWalletAccounts: (accounts: SignerWalletAccount[]) => void
   setWalletStatus: (status: SignerWalletStatus) => void
+
+  setSignInModalOpen: (isOpen: boolean) => void
 }
 
 export const useUserStore = createStore<UserStoreState, UserStoreActions>(
@@ -32,6 +33,9 @@ export const useUserStore = createStore<UserStoreState, UserStoreActions>(
       wallet: null,
       walletAccounts: [],
       walletStatus: 'unknown',
+      lastUsedWalletName: null,
+
+      signInModalOpen: false,
     },
     actionsFactory: (set) => ({
       resetActiveUser: () => {
@@ -48,10 +52,22 @@ export const useUserStore = createStore<UserStoreState, UserStoreActions>(
           state.channelId = activeUserChanges.channelId !== undefined ? activeUserChanges.channelId : state.channelId
         })
       },
+      signOut: () => {
+        set((state) => {
+          state.accountId = null
+          state.memberId = null
+          state.channelId = null
+          state.wallet = null
+          state.walletStatus = 'unknown'
+          state.walletAccounts = []
+          state.lastUsedWalletName = null
+        })
+      },
 
       setWallet: (wallet) => {
         set((state) => {
           state.wallet = wallet
+          state.lastUsedWalletName = wallet.extensionName
         })
       },
       setWalletAccounts: (accounts) => {
@@ -59,25 +75,25 @@ export const useUserStore = createStore<UserStoreState, UserStoreActions>(
           state.walletAccounts = accounts
         })
       },
-
       setWalletStatus: (status) => {
         set((state) => {
           state.walletStatus = status
+        })
+      },
+      setSignInModalOpen: (isOpen) => {
+        set((state) => {
+          state.signInModalOpen = isOpen
         })
       },
     }),
   },
   {
     persist: {
-      key: LOCAL_STORAGE_KEY,
+      key: 'activeUser',
       version: 0,
-      whitelist: WHITELIST,
-      migrate: (oldState, oldVersion) => {
-        // migrate store before zustand was added
-        if (oldVersion === undefined) {
-          const activeUser = readFromLocalStorage<ActiveUserState>(LOCAL_STORAGE_KEY)
-          return activeUser
-        }
+      whitelist: ['accountId', 'memberId', 'channelId', 'lastUsedWalletName'],
+      migrate: (oldState) => {
+        return oldState
       },
     },
   }

@@ -25,7 +25,7 @@ export const transitions = {
 }
 
 export const transitionStyles = css`
-  .${transitions.names.fadeAndSlide}-enter {
+  .${transitions.names.fadeAndSlide}-enter, .${transitions.names.fadeAndSlide}-appear {
     opacity: 0;
 
     & .${transitions.names.slide} {
@@ -33,7 +33,7 @@ export const transitionStyles = css`
     }
   }
 
-  .${transitions.names.fadeAndSlide}-enter-active {
+  .${transitions.names.fadeAndSlide}-enter-active, .${transitions.names.fadeAndSlide}-appear-active {
     opacity: 1;
     & .${transitions.names.slide} {
       transform: translateY(0);
@@ -52,11 +52,11 @@ export const transitionStyles = css`
     transition: ${transitions.timings.routing} ${transitions.routingEasing};
   }
 
-  .${transitions.names.slideDown}-enter {
+  .${transitions.names.slideDown}-enter, .${transitions.names.slideDown}-appear {
     transform: translateY(-100%);
   }
 
-  .${transitions.names.slideDown}-enter-active {
+  .${transitions.names.slideDown}-enter-active, .${transitions.names.slideDown}-appear-active {
     transition: transform ${transitions.timings.routingSearchOverlay} ${transitions.routingEasing};
     transform: translateY(0%);
   }
@@ -70,11 +70,11 @@ export const transitionStyles = css`
     transform: translateY(-100%);
   }
 
-  .${transitions.names.fade}-enter {
+  .${transitions.names.fade}-enter, .${transitions.names.fade}-appear {
     opacity: 0 !important;
   }
 
-  .${transitions.names.fade}-enter-active {
+  .${transitions.names.fade}-enter-active, .${transitions.names.fade}-appear-active {
     opacity: 1 !important;
   }
 
@@ -90,11 +90,11 @@ export const transitionStyles = css`
     transition: opacity ${transitions.timings.loading} ${transitions.easing} !important;
   }
 
-  .${transitions.names.modal}-enter {
+  .${transitions.names.modal}-enter, .${transitions.names.modal}-appear {
     transform: translateY(100%);
   }
 
-  .${transitions.names.modal}-enter-active {
+  .${transitions.names.modal}-enter-active, .${transitions.names.modal}-appear-active {
     transform: translateY(0);
     transition: all ${cVar('animationTransitionMedium')};
   }
@@ -109,12 +109,12 @@ export const transitionStyles = css`
   }
 
   ${media.sm} {
-    .${transitions.names.modal}-enter {
+    .${transitions.names.modal}-enter, .${transitions.names.modal}-appear {
       transform: translate(-50%, -50%) scale(0.8) !important;
       opacity: 0 !important;
     }
 
-    .${transitions.names.modal}-enter-active {
+    .${transitions.names.modal}-enter-active, .${transitions.names.modal}-appear-active {
       transform: translate(-50%, -50%) scale(1) !important;
       opacity: 1 !important;
     }

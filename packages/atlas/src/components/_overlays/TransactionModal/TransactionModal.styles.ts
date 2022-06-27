@@ -1,7 +1,7 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SvgPolkadotLogoMono } from '@/components/_illustrations'
+import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { Modal } from '@/components/_overlays/Modal'
 import { cVar, sizes, square, transitions } from '@/styles'
 
@@ -83,7 +83,7 @@ export const StyledTransactionIllustration = styled.div`
   position: relative;
 `
 
-export const PolkadotLogoWrapper = styled.div`
+export const WalletInfoWrapper = styled.div`
   ${square('100%')};
 
   position: absolute;
@@ -93,10 +93,13 @@ export const PolkadotLogoWrapper = styled.div`
   flex-direction: column;
 `
 
-export const StyledPolkadotLogo = styled(SvgPolkadotLogoMono)`
-  margin-left: auto;
-  margin-right: auto;
+export const StyledIconWrapper = styled(IconWrapper)`
   margin-bottom: ${sizes(6)};
+`
+
+export const WalletLogo = styled.img`
+  width: 24px;
+  height: 24px;
 `
 
 export const SuccessBackground = styled.div`

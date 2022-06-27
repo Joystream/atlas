@@ -31,7 +31,7 @@ export const SidenavViewer: FC = () => {
   }
   const buttonsContent = !isLoggedIn ? (
     <Button icon={<SvgActionMember />} onClick={closeAndSignIn}>
-      Sign in
+      Connect wallet
     </Button>
   ) : (
     <Button

@@ -1,18 +1,17 @@
-import { WalletAccount, getWallets } from '@talisman-connect/wallets'
+import { InjectedWindowProvider } from '@polkadot/extension-inject/types'
+import { BaseDotsamaWallet, WalletAccount, getWallets } from '@talisman-connect/wallets'
 import { useCallback, useEffect } from 'react'
 import shallow from 'zustand/shallow'
 
 import { WEB3_APP_NAME } from '@/config/urls'
-import { useConfirmationModal } from '@/providers/confirmationModal'
-import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { ConsoleLogger } from '@/utils/logs'
 
 import { useUserStore } from './user.store'
 import { SignerWalletAccount } from './user.types'
 
-const WALLET_ACCESS_TIMEOUT = 10000
+type InjectedWeb3 = Record<string, InjectedWindowProvider>
 
 export const useSignerWallet = () => {
-  const [openModal, closeModal] = useConfirmationModal()
   const { walletStatus, walletAccounts, wallet, accountId } = useUserStore(
     (state) => ({
       walletStatus: state.walletStatus,
@@ -35,46 +34,65 @@ export const useSignerWallet = () => {
     [setWalletAccounts]
   )
 
-  const initSignerWallet = useCallback(async (): Promise<SignerWalletAccount[] | null> => {
-    try {
-      const extensionName = 'polkadot-js' // TODO: allow the user to pick the extension, for now it's hardcoded
+  const getWalletsList = useCallback(() => {
+    const supportedWallets = getWallets()
+    const supportedWalletsNames = supportedWallets.map((wallet) => wallet.extensionName)
 
-      setWalletStatus('pending')
-      const allWallets = getWallets()
-      const selectedWallet = allWallets.find((wallet) => wallet.extensionName === extensionName)
-      if (!selectedWallet || !selectedWallet.installed) {
-        ConsoleLogger.warn('No Polkadot extension detected')
-        setWalletStatus('disconnected')
-        resetActiveUser()
-        return null
-      }
-
-      await selectedWallet.enable(WEB3_APP_NAME)
-
-      // taken from https://github.com/TalismanSociety/talisman-connect/blob/47cfefee9f1333326c0605c159d6ee8ebfba3e84/libs/wallets/src/lib/base-dotsama-wallet/index.ts#L98-L107
-      // should be part of future talisman-connect release
-      const accounts = await selectedWallet.extension.accounts.get()
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const accountsWithWallet = accounts.map((account: any) => {
-        return {
-          ...account,
-          source: selectedWallet.extension?.name as string,
-          wallet: selectedWallet,
-          signer: selectedWallet.extension?.signer,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const unknownWallets = Object.keys(((window as any).injectedWeb3 as InjectedWeb3) || {}).reduce(
+      (acc, walletName) => {
+        if (supportedWalletsNames.includes(walletName)) {
+          // wallet is already in supportedWallets list
+          return acc
         }
-      })
 
-      setWalletAccounts(accountsWithWallet)
-      setWallet(selectedWallet)
-      setWalletStatus('connected')
+        return [...acc, new UnknownWallet(walletName)]
+      },
+      [] as UnknownWallet[]
+    )
 
-      return accountsWithWallet
-    } catch (e) {
-      setWalletStatus('disconnected')
-      SentryLogger.error('Failed to initialize Polkadot signer extension', 'ActiveUserProvider', e)
-      return null
-    }
-  }, [resetActiveUser, setWallet, setWalletAccounts, setWalletStatus])
+    return [...supportedWallets, ...unknownWallets]
+  }, [])
+
+  const initSignerWallet = useCallback(
+    async (walletName: string): Promise<SignerWalletAccount[] | null> => {
+      try {
+        setWalletStatus('pending')
+        const allWallets = getWalletsList()
+        const selectedWallet = allWallets.find((wallet) => wallet.extensionName === walletName)
+        if (!selectedWallet || !selectedWallet.installed) {
+          setWalletStatus('disconnected')
+          resetActiveUser()
+          return null
+        }
+
+        await selectedWallet.enable(WEB3_APP_NAME)
+
+        // taken from https://github.com/TalismanSociety/talisman-connect/blob/47cfefee9f1333326c0605c159d6ee8ebfba3e84/libs/wallets/src/lib/base-dotsama-wallet/index.ts#L98-L107
+        // should be part of future talisman-connect release
+        const accounts = await selectedWallet.extension.accounts.get()
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const accountsWithWallet = accounts.map((account: any) => {
+          return {
+            ...account,
+            source: selectedWallet.extension?.name as string,
+            wallet: selectedWallet,
+            signer: selectedWallet.extension?.signer,
+          }
+        })
+
+        setWalletAccounts(accountsWithWallet)
+        setWallet(selectedWallet)
+        setWalletStatus('connected')
+
+        return accountsWithWallet
+      } catch (e) {
+        setWalletStatus('disconnected')
+        throw e
+      }
+    },
+    [getWalletsList, resetActiveUser, setWallet, setWalletAccounts, setWalletStatus]
+  )
 
   // subscribe to account changes when extension is connected
   useEffect(() => {
@@ -107,42 +125,16 @@ export const useSignerWallet = () => {
     }
   }, [accountId, resetActiveUser, walletStatus, walletAccounts])
 
-  const isWalletPending = walletStatus === 'pending'
-  // show long loading modal
-  useEffect(() => {
-    if (!isWalletPending) {
-      closeModal()
-      return
-    }
+  return { getWalletsList, initSignerWallet }
+}
 
-    const timeout = setTimeout(() => {
-      openModal({
-        type: 'warning',
-        title: 'Failed to connect with extension',
-        description:
-          "Seems you didn't enable the Polkadot extension and we cannot access your accounts. You can do that by clicking the extension icon in your browser toolbar. If you cannot do that, please reload the page and try again.",
-        primaryButton: {
-          text: 'Reload page',
-          onClick: () => {
-            closeModal()
-            window.location.reload()
-          },
-        },
-        secondaryButton: {
-          text: 'Cancel',
-          onClick: () => {
-            closeModal()
-            setWalletStatus('disconnected')
-          },
-        },
-      })
-    }, WALLET_ACCESS_TIMEOUT)
+export class UnknownWallet extends BaseDotsamaWallet {
+  extensionName: string
+  title: string
 
-    return () => {
-      closeModal()
-      clearTimeout(timeout)
-    }
-  }, [isWalletPending, closeModal, openModal, setWalletStatus])
-
-  return { initSignerWallet }
+  constructor(walletName: string) {
+    super()
+    this.extensionName = walletName
+    this.title = walletName
+  }
 }

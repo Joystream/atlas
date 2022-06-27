@@ -4,7 +4,9 @@ import useResizeObserver from 'use-resize-observer'
 
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { MembershipInfo } from '@/components/MembershipInfo'
-import { CreateEditMemberInputs } from '@/components/_auth/CreateEditMemberInputs'
+import { FormField } from '@/components/_inputs/FormField'
+import { Input } from '@/components/_inputs/Input'
+import { TextArea } from '@/components/_inputs/TextArea'
 import { absoluteRoutes } from '@/config/routes'
 import { useCreateEditMemberForm } from '@/hooks/useCreateEditMember'
 import { useHeadTags } from '@/hooks/useHeadTags'
@@ -34,7 +36,7 @@ export const EditMembershipView: FC = () => {
     dirtyFields,
     isValidating,
     setFocus,
-  } = useCreateEditMemberForm({ prevHandle: activeMembership?.handle })
+  } = useCreateEditMemberForm(activeMembership?.handle)
 
   const resetForm = useCallback(() => {
     reset(
@@ -107,7 +109,37 @@ export const EditMembershipView: FC = () => {
         />
         <Wrapper actionBarHeight={actionBarBoundsHeight}>
           <TextFieldsWrapper>
-            <CreateEditMemberInputs register={register} errors={errors} watch={watch} />
+            <FormField label="Avatar URL" error={errors?.avatar?.message}>
+              <Input
+                autoComplete="off"
+                error={!!errors?.avatar}
+                placeholder="https://example.com/avatar.jpeg"
+                {...register('avatar')}
+                value={watch('avatar') || ''}
+              />
+            </FormField>
+            <FormField
+              label="Member handle"
+              description="Member handle may contain only lowercase letters, numbers and underscores"
+              error={errors?.handle?.message}
+            >
+              <Input
+                autoComplete="off"
+                placeholder="johnnysmith"
+                {...register('handle')}
+                value={watch('handle') || ''}
+                error={!!errors?.handle}
+              />
+            </FormField>
+            <FormField label="About" error={errors?.about?.message}>
+              <TextArea
+                placeholder="Anything you'd like to share about yourself with the Joystream community"
+                maxLength={1000}
+                {...register('about')}
+                value={watch('about') || ''}
+                error={!!errors?.about}
+              />
+            </FormField>
           </TextFieldsWrapper>
         </Wrapper>
         <StyledActionBar

@@ -1,11 +1,8 @@
-import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo } from 'react'
-import { useNavigate } from 'react-router'
+import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
 import { useMemberships } from '@/api/hooks'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
-import { QUERY_PARAMS } from '@/config/routes'
 import { AssetLogger, SentryLogger } from '@/utils/logs'
-import { urlParams } from '@/utils/url'
 
 import { useSignerWallet } from './user.helpers'
 import { useUserStore } from './user.store'
@@ -15,64 +12,91 @@ const UserContext = createContext<undefined | UserContextValue>(undefined)
 UserContext.displayName = 'UserContext'
 
 export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
-  const { accountId, memberId, channelId, walletAccounts, walletStatus } = useUserStore((state) => state)
-  const { setActiveUser } = useUserStore((state) => state.actions)
+  const { accountId, memberId, channelId, walletAccounts, walletStatus, lastUsedWalletName } = useUserStore(
+    (state) => state
+  )
+  const { setActiveUser, setSignInModalOpen } = useUserStore((state) => state.actions)
   const { initSignerWallet } = useSignerWallet()
 
-  const navigate = useNavigate()
+  const [isAuthLoading, setIsAuthLoading] = useState(true)
 
   const accountsIds = walletAccounts.map((a) => a.address)
 
-  const { memberships, refetch, loading, error } = useMemberships(
+  const {
+    memberships: currentMemberships,
+    previousData,
+    refetch,
+    error,
+  } = useMemberships(
     {
       where: {
         controllerAccount_in: accountsIds,
       },
     },
-    { skip: !accountsIds.length }
+    {
+      skip: !accountsIds.length,
+      onError: (error) =>
+        SentryLogger.error('Failed to fetch user memberships', 'UserProvider', error, { user: { accountsIds } }),
+    }
   )
+
+  const memberships = currentMemberships ?? previousData?.memberships
 
   const refetchUserMemberships = useCallback(() => {
     return refetch()
   }, [refetch])
 
-  const signIn = useCallback(async () => {
-    let accounts = walletAccounts
+  const signIn = useCallback(
+    async (walletName?: string): Promise<boolean> => {
+      let accounts = walletAccounts
 
-    if (walletStatus !== 'connected') {
-      const initializedAccounts = await initSignerWallet()
-      if (!initializedAccounts) {
-        navigate({ search: urlParams({ [QUERY_PARAMS.LOGIN]: 1 }) })
-        return
+      if (!walletName) {
+        setSignInModalOpen(true)
+        return true
       }
-      accounts = initializedAccounts
-    }
 
-    const accountsIds = accounts.map((a) => a.address)
+      try {
+        const initializedAccounts = await initSignerWallet(walletName)
+        if (initializedAccounts == null) {
+          SentryLogger.error('Selected wallet not found or not installed', 'UserProvider')
+          setSignInModalOpen(true)
+          return false
+        }
+        accounts = initializedAccounts
+      } catch (e) {
+        SentryLogger.error('Failed to enable selected wallet', 'UserProvider', e)
+        return false
+      }
 
-    const { data, error } = await refetch({ where: { controllerAccount_in: accountsIds } })
+      const accountsIds = accounts.map((a) => a.address)
 
-    if (error) {
-      // error is logged in hook
-      return
-    }
+      const { data, error } = await refetch({ where: { controllerAccount_in: accountsIds } })
 
-    const memberships = data?.memberships || []
+      if (error) {
+        // error is logged in hook
+        return false
+      }
 
-    if (!memberId && memberships.length) {
-      const firstMembership = memberships[0]
-      setActiveUser({
-        memberId: firstMembership.id,
-        accountId: firstMembership.controllerAccount,
-        channelId: firstMembership.channels[0]?.id || null,
-      })
-      return
-    }
+      const memberships = data?.memberships || []
 
-    if (!memberId) {
-      navigate({ search: urlParams({ [QUERY_PARAMS.LOGIN]: 2 }) })
-    }
-  }, [initSignerWallet, memberId, navigate, refetch, setActiveUser, walletAccounts, walletStatus])
+      if (memberships.length) {
+        setSignInModalOpen(false)
+      }
+
+      if (!memberId && memberships.length) {
+        const firstMembership = memberships[0]
+        setActiveUser({
+          memberId: firstMembership.id,
+          accountId: firstMembership.controllerAccount,
+          channelId: firstMembership.channels[0]?.id || null,
+        })
+        return true
+      }
+
+      return true
+    },
+    [initSignerWallet, memberId, refetch, setActiveUser, setSignInModalOpen, walletAccounts]
+  )
 
   // keep user used by loggers in sync
   useEffect(() => {
@@ -87,19 +111,20 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
 
   // if the user has account/member IDs set, initialize sign in automatically
   useEffect(() => {
-    if (walletStatus !== 'unknown') {
+    if (walletStatus !== 'unknown' || !lastUsedWalletName) {
+      setIsAuthLoading(false)
       return
     }
 
     if (!accountId || !memberId) {
+      setIsAuthLoading(false)
       return
     }
 
-    signIn()
-  }, [accountId, memberId, signIn, walletStatus])
+    signIn(lastUsedWalletName).then(() => setIsAuthLoading(false))
+  }, [accountId, lastUsedWalletName, memberId, signIn, walletStatus])
 
   const activeMembership = (memberId && memberships?.find((membership) => membership.id === memberId)) || null
-  const isAuthLoading = walletStatus === 'pending' || loading
 
   const contextValue: UserContextValue = useMemo(
     () => ({

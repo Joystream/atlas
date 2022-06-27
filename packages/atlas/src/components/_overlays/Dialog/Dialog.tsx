@@ -1,4 +1,4 @@
-import { ElementType, FC, FormEvent, PropsWithChildren, ReactNode } from 'react'
+import { FC, FormEvent, PropsWithChildren, ReactNode, Ref } from 'react'
 
 import { Text } from '@/components/Text'
 import { Button, ButtonProps } from '@/components/_buttons/Button'
@@ -29,12 +29,12 @@ export type DialogProps = PropsWithChildren<{
   additionalActionsNode?: ReactNode
   additionalActionsNodeMobilePosition?: 'top' | 'bottom'
   onExitClick?: () => void
-  as?: ElementType
   onSubmit?: (e?: FormEvent) => void
   noContentPadding?: boolean
   actionDivider?: boolean
   className?: string
   contentClassName?: string
+  contentRef?: Ref<HTMLDivElement>
 }>
 
 export const Dialog: FC<DialogProps> = ({
@@ -46,13 +46,13 @@ export const Dialog: FC<DialogProps> = ({
   additionalActionsNode,
   onExitClick,
   children,
-  as,
   onSubmit,
   noContentPadding,
   actionDivider = false,
   additionalActionsNodeMobilePosition = 'top',
   className,
   contentClassName,
+  contentRef,
 }) => {
   const isCompact = size === 'compact'
   const smMatch = useMediaMatch('sm')
@@ -60,7 +60,7 @@ export const Dialog: FC<DialogProps> = ({
   const buttonSize = isCompact ? 'small' : 'medium'
 
   return (
-    <DialogContainer onSubmit={onSubmit} size={size} className={className} as={as}>
+    <DialogContainer onSubmit={onSubmit} size={size} className={className}>
       {(title || onExitClick) && (
         <Header dividers={dividers}>
           <HeaderContent>
@@ -73,7 +73,12 @@ export const Dialog: FC<DialogProps> = ({
           )}
         </Header>
       )}
-      <Content data-scroll-lock-scrollable noContentPadding={noContentPadding} className={contentClassName}>
+      <Content
+        data-scroll-lock-scrollable
+        noContentPadding={noContentPadding}
+        className={contentClassName}
+        ref={contentRef}
+      >
         {children}
       </Content>
       {hasFooter && (

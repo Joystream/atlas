@@ -34,6 +34,7 @@ export const Modal: FC<ModalProps> = ({ children, size = 'small', show, onExitCl
         classNames={transitions.names.fade}
         mountOnEnter
         unmountOnExit
+        appear
       >
         <ModalBackdrop onClick={onExitClick} />
       </CSSTransition>

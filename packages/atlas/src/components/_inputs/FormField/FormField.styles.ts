@@ -25,7 +25,6 @@ export const FormFieldHeader = styled.header<{ switchable?: boolean }>`
 export const FormFieldTitleWrapper = styled.div`
   display: flex;
   align-items: center;
-  width: 85%;
   word-wrap: break-word;
 `
 
@@ -34,7 +33,6 @@ export const StyledInformation = styled(Information)`
 `
 
 export const FormFieldDescription = styled(Text)`
-  width: 85%;
   display: block;
   word-wrap: break-word;
 `

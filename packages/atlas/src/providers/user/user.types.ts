@@ -19,6 +19,6 @@ export type UserContextValue = {
 
   isAuthLoading: boolean
 
-  signIn: () => Promise<void>
+  signIn: (walletName?: string) => Promise<boolean>
   refetchUserMemberships: ReturnType<typeof useMemberships>['refetch']
 }

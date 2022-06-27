@@ -4,6 +4,7 @@
 // This has been converted from the original version that can be found at
 //
 // https://github.com/paritytech/oo7/blob/251ba2b7c45503b68eab4320c270b5afa9bccb60/packages/polkadot-identicon/src/index.jsx
+// TODO: rethink if it's worth importing @polkadot libs into main bundle just for the identicon
 import { blake2AsU8a, decodeAddress } from '@polkadot/util-crypto'
 
 type Circle = {
