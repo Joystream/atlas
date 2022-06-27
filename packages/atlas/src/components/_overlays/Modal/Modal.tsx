@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useEffect } from 'react'
+import { FC, MouseEvent, PropsWithChildren, useEffect } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Portal } from '@/components/Portal'
@@ -13,11 +13,20 @@ export type ModalProps = PropsWithChildren<{
   show?: boolean
   noBoxShadow?: boolean
   size?: ModalSize
+  onClickOutside?: (event?: MouseEvent) => void
   className?: string
 }> &
   Pick<DialogProps, 'onExitClick'>
 
-export const Modal: FC<ModalProps> = ({ children, size = 'small', show, onExitClick, className, noBoxShadow }) => {
+export const Modal: FC<ModalProps> = ({
+  children,
+  size = 'small',
+  show,
+  onExitClick,
+  onClickOutside,
+  className,
+  noBoxShadow,
+}) => {
   const { modalContainerRef, incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
 
   useEffect(() => {
@@ -36,7 +45,7 @@ export const Modal: FC<ModalProps> = ({ children, size = 'small', show, onExitCl
         unmountOnExit
         appear
       >
-        <ModalBackdrop onClick={onExitClick} />
+        <ModalBackdrop onClick={onExitClick || onClickOutside} />
       </CSSTransition>
       <CSSTransition
         in={show}
