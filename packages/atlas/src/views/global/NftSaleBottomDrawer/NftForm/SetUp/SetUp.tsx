@@ -210,9 +210,9 @@ export const SetUp: FC<SetUpProps> = ({
                     error={error?.message}
                     // TODO shake animation on date picker is very glitchy, for now just disable it
                     disableErrorAnimation
+                    label="Starts"
                   >
                     <AuctionDatePicker
-                      inlineLabel="Starts"
                       error={!!error}
                       minDate={new Date()}
                       maxDate={endDate?.type === 'date' && endDate.date < maxStartDate ? endDate.date : maxStartDate}
@@ -237,9 +237,9 @@ export const SetUp: FC<SetUpProps> = ({
                       error={error?.message}
                       // TODO shake animation on date picker is very glitchy, for now just disable it
                       disableErrorAnimation
+                      label="Ends"
                     >
                       <AuctionDatePicker
-                        inlineLabel="Ends"
                         error={!!error}
                         minDate={(startDate?.type === 'date' && startDate.date) || new Date()}
                         maxDate={maxEndDate}

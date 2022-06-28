@@ -123,17 +123,15 @@ export const _Select = <T extends unknown>(
           {isOpen && (
             <List
               scrollable
-              items={items.map((item, index) => {
-                return item.hideInMenu
-                  ? null
-                  : {
-                      selected: item.value === selectedItemValue,
-                      highlight: highlightedIndex === index,
-                      label: item.name,
-                      ...item,
-                      ...getItemProps({ item: item.value, index, onClick: item.onClick }),
-                    }
-              })}
+              items={items
+                .filter((item) => !item.hideInMenu)
+                .map((item, index) => ({
+                  selected: item.value === selectedItemValue,
+                  highlight: highlightedIndex === index,
+                  label: item.name,
+                  ...item,
+                  ...getItemProps({ item: item.value, index, onClick: item.onClick }),
+                }))}
               size={size === 'medium' ? 'small' : 'medium'}
             />
           )}
