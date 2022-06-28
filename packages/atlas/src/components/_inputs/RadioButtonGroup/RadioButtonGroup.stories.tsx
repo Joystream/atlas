@@ -1,5 +1,5 @@
 import { Meta, Story } from '@storybook/react'
-import { ChangeEvent, useState } from 'react'
+import { useState } from 'react'
 
 import { RadioButtonGroup, RadioButtonGroupProps } from './RadioButtonGroup'
 
@@ -23,11 +23,7 @@ export default {
 } as Meta<RadioButtonGroupProps>
 
 const Template: Story = (args) => {
-  const [selected, setSelected] = useState<string | number>('1')
-  const handleChange: (e: ChangeEvent<HTMLInputElement>) => void = (e) => {
-    const element = e.currentTarget
-    setSelected(element.value)
-  }
+  const [selected, setSelected] = useState<string | number | boolean>('1')
 
   const ITEMS = [
     {
@@ -47,7 +43,15 @@ const Template: Story = (args) => {
     },
   ]
 
-  return <RadioButtonGroup {...args} name="radio-group" options={ITEMS} onChange={handleChange} value={selected} />
+  return (
+    <RadioButtonGroup
+      {...args}
+      name="radio-group"
+      options={ITEMS}
+      onChange={(e) => setSelected(e.currentTarget.value)}
+      value={selected}
+    />
+  )
 }
 
 export const Default = Template.bind({})

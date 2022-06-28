@@ -14,7 +14,7 @@ export default {
 } as Meta<OptionCardGroupProps>
 
 const Template: Story<OptionCardGroupProps> = (args) => {
-  const [selected, setSelected] = useState<string | number>()
+  const [selected, setSelected] = useState<string | number | boolean>()
 
   const [checkedValues, setCheckedValues] = useState<number[]>([])
 
