@@ -316,14 +316,59 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
 
   const getHiddenSectionLabel = () => {
     if (videoFieldsLocked) {
-      return `${moreSettingsVisible ? 'Hide' : 'Show'} non-editable fields`
+      return `${moreSettingsVisible ? 'Hide' : 'Show'} locked options`
     }
-    return `Show ${moreSettingsVisible ? 'less' : 'more'} settings`
+    return `Show ${moreSettingsVisible ? 'less' : 'more'} options`
   }
 
   if (tabDataError || categoriesError) {
     return <ViewErrorFallback />
   }
+
+  const royaltiesField = (
+    <FormField
+      switchable
+      error={errors.nftRoyaltiesPercent?.message}
+      switchProps={{
+        value: videoFieldsLocked ? !!watch('nftRoyaltiesPercent') : royaltiesFieldEnabled,
+        onChange: (e) => {
+          if (e?.currentTarget.checked) {
+            setValue('nftRoyaltiesPercent', 1)
+          } else {
+            setValue('nftRoyaltiesPercent', undefined, { shouldValidate: true })
+            trigger()
+          }
+          setRoyaltiesFieldEnabled(!!e?.currentTarget.checked)
+        },
+        disabled: videoFieldsLocked,
+      }}
+      description="Royalties lets you earn commission from every sale of this NFT."
+      label="Royalties"
+    >
+      <Input
+        type="number"
+        {...register('nftRoyaltiesPercent', {
+          valueAsNumber: true,
+          min: {
+            value: nftMinCreatorRoyaltyPercentage,
+            message: `Creator royalties cannot be lower than ${nftMinCreatorRoyaltyPercentage}%`,
+          },
+          max: {
+            value: nftMaxCreatorRoyaltyPercentage,
+            message: `Creator royalties cannot be higher than ${nftMaxCreatorRoyaltyPercentage}%`,
+          },
+        })}
+        error={!!errors.nftRoyaltiesPercent}
+        placeholder="—"
+        nodeEnd={
+          <Text variant="t300" as="span" color="colorTextMuted">
+            %
+          </Text>
+        }
+        disabled={videoFieldsLocked}
+      />
+    </FormField>
+  )
 
   const videoEditFields = (
     <>
@@ -399,6 +444,40 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           )}
         />
       </FormField>
+      <Divider />
+      <FormField
+        label="NFT"
+        description="Minting an NFT creates a record of ownership on the blockchain that can be put on sale. This doesn't impact your intellectual rights to the video."
+        ref={mintNftFormFieldRef}
+      >
+        <Controller
+          name="mintNft"
+          control={control}
+          defaultValue={false}
+          render={({ field: { value, onChange } }) => (
+            <Switch
+              label="Mint NFT for this video"
+              value={value}
+              onChange={(e) => {
+                if (!e?.currentTarget.checked) {
+                  trigger()
+                  setRoyaltiesFieldEnabled(false)
+                  setValue('nftRoyaltiesPercent', undefined)
+                }
+                onChange(e)
+              }}
+            />
+          )}
+        />
+      </FormField>
+      {watch('mintNft') && (
+        <Banner
+          icon={<StyledSvgAlertsInformative24 />}
+          title="Heads up!"
+          description="You won't be able to edit this video once you mint an NFT for it."
+        />
+      )}
+      {watch('mintNft') && royaltiesField}
     </>
   )
 
@@ -509,84 +588,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
         {videoFieldsLocked && alwaysEditableFormFields}
         {!videoFieldsLocked && videoEditFields}
         <Divider />
-        <FormField
-          label="NFT"
-          description="Minting an NFT creates a record of ownership on the blockchain that can be put on sale. This doesn't impact your intellectual rights to the video."
-          ref={mintNftFormFieldRef}
-        >
-          <Controller
-            name="mintNft"
-            control={control}
-            defaultValue={false}
-            render={({ field: { value, onChange } }) => (
-              <Switch
-                label="Mint NFT for this video"
-                value={value}
-                onChange={(e) => {
-                  if (!e?.currentTarget.checked) {
-                    trigger()
-                    setRoyaltiesFieldEnabled(false)
-                    setValue('nftRoyaltiesPercent', undefined)
-                  }
-                  onChange(e)
-                }}
-                disabled={videoFieldsLocked}
-              />
-            )}
-          />
-        </FormField>
-        {watch('mintNft') && (
-          <Banner
-            icon={<StyledSvgAlertsInformative24 />}
-            title="Heads up!"
-            description="You won't be able to edit this video once you mint an NFT for it."
-          />
-        )}
-        {watch('mintNft') && (
-          <FormField
-            switchable
-            error={errors.nftRoyaltiesPercent?.message}
-            switchProps={{
-              value: videoFieldsLocked ? !!watch('nftRoyaltiesPercent') : royaltiesFieldEnabled,
-              onChange: (e) => {
-                if (e?.currentTarget.checked) {
-                  setValue('nftRoyaltiesPercent', 1)
-                } else {
-                  setValue('nftRoyaltiesPercent', undefined, { shouldValidate: true })
-                  trigger()
-                }
-                setRoyaltiesFieldEnabled(!!e?.currentTarget.checked)
-              },
-              disabled: videoFieldsLocked,
-            }}
-            description="Royalties lets you earn commission from every sale of this NFT."
-            label="Royalties"
-          >
-            <Input
-              type="number"
-              {...register('nftRoyaltiesPercent', {
-                valueAsNumber: true,
-                min: {
-                  value: nftMinCreatorRoyaltyPercentage,
-                  message: `Creator royalties cannot be lower than ${nftMinCreatorRoyaltyPercentage}%`,
-                },
-                max: {
-                  value: nftMaxCreatorRoyaltyPercentage,
-                  message: `Creator royalties cannot be higher than ${nftMaxCreatorRoyaltyPercentage}%`,
-                },
-              })}
-              error={!!errors.nftRoyaltiesPercent}
-              placeholder="—"
-              nodeEnd={
-                <Text variant="t300" as="span" color="colorTextMuted">
-                  %
-                </Text>
-              }
-              disabled={videoFieldsLocked}
-            />
-          </FormField>
-        )}
-        <Divider />
         <div>
           <TextButton
             size="large"
@@ -598,11 +599,12 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           </TextButton>
           <Text as="p" variant="t200" color="colorText" margin={{ top: 2 }}>
             {!videoFieldsLocked
-              ? `License, content rating, published before, marketing${isEdit ? ', delete video' : ''}`
-              : 'Description, video category, video language, video visibility, licence, content rating, published before, marketing'}
+              ? `License, comments, mature content, paid promotion, published date${isEdit ? ', delete video' : ''}`
+              : 'Royalties, description, category, language, visibility, license, mature content, paid promotion, published date'}
           </Text>
         </div>
         <MoreSettingsSection expanded={moreSettingsVisible}>
+          {videoFieldsLocked && royaltiesField}
           {videoFieldsLocked && videoEditFields}
           <Controller
             name="licenseCode"
