@@ -1,13 +1,9 @@
 import styled from '@emotion/styled'
 
 import { Banner } from '@/components/Banner'
-import { ListItem } from '@/components/ListItem'
 import { sizes } from '@/styles'
 
-export const StyledListItem = styled(ListItem)`
-  width: calc(100% + 2 * var(--local-size-dialog-padding));
-  padding-left: var(--local-size-dialog-padding);
-  padding-right: var(--local-size-dialog-padding);
+export const WalletsWrapper = styled.div`
   margin: 0 calc(-1 * var(--local-size-dialog-padding));
 `
 
