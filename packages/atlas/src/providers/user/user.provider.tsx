@@ -121,7 +121,10 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       return
     }
 
-    signIn(lastUsedWalletName).then(() => setIsAuthLoading(false))
+    setTimeout(() => {
+      // add a slight delay - sometimes the extension will not initialize by the time of this call and may appear unavailable
+      signIn(lastUsedWalletName).then(() => setIsAuthLoading(false))
+    }, 200)
   }, [accountId, lastUsedWalletName, memberId, signIn, walletStatus])
 
   const activeMembership = (memberId && memberships?.find((membership) => membership.id === memberId)) || null
