@@ -51,6 +51,8 @@ type NftFormWrapperProps = {
 export const NftFormWrapper = styled.div<NftFormWrapperProps>`
   height: 100%;
   padding-bottom: ${({ lastStep }) => lastStep && '40px'};
+  max-width: 720px;
+  margin: 0 auto;
 `
 export const StepperWrapper = styled.div`
   max-width: 100%;
@@ -67,9 +69,9 @@ export const StepperWrapper = styled.div`
 
 export const StepperInnerWrapper = styled.div`
   margin-left: ${sizes(2)};
-  width: 600px;
+  width: 100%;
   display: grid;
-  gap: ${sizes(6)};
+  gap: ${sizes(4)};
   grid-template-columns: repeat(3, max-content);
 `
 

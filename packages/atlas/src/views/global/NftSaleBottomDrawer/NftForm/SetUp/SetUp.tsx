@@ -2,7 +2,6 @@ import { ChangeEvent, Dispatch, FC, FocusEvent, FormEvent, SetStateAction, useEf
 import { Controller, useFormContext } from 'react-hook-form'
 
 import { NumberFormat } from '@/components/NumberFormat'
-import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { AuctionDatePicker } from '@/components/_inputs/AuctionDatePicker'
@@ -164,9 +163,12 @@ export const SetUp: FC<SetUpProps> = ({
               nodeStart={<JoyTokenIcon variant="gray" size={24} />}
               nodeEnd={
                 !!buyNowPrice && (
-                  <Pill
-                    variant="overlay"
-                    label={<NumberFormat as="span" format="dollar" value={convertToUSD(buyNowPrice ?? 0) ?? 0} />}
+                  <NumberFormat
+                    as="span"
+                    variant="t300"
+                    format="dollar"
+                    color="colorTextMuted"
+                    value={convertToUSD(buyNowPrice ?? 0) ?? 0}
                   />
                 )
               }
@@ -235,6 +237,7 @@ export const SetUp: FC<SetUpProps> = ({
                   render={({ field: { onChange, value }, fieldState: { error } }) => (
                     <FormField
                       error={error?.message}
+                      label="Ends"
                       // TODO shake animation on date picker is very glitchy, for now just disable it
                       disableErrorAnimation
                       label="Ends"
@@ -256,37 +259,37 @@ export const SetUp: FC<SetUpProps> = ({
                   )}
                 />
               )}
+              {numberOfBlocks > 0 && (
+                <DaysSummary>
+                  <Text as="span" variant="t100" color="colorTextMuted">
+                    Total:
+                  </Text>
+                  &nbsp;
+                  <Text as="span" variant="t100">
+                    {totalDaysAndHours}
+                  </Text>
+                  &nbsp;
+                  <Text as="span" variant="t100" color="colorText">
+                    / <NumberFormat as="span" color="colorText" value={numberOfBlocks} /> blocks
+                  </Text>
+                  <DaysSummaryInfo
+                    text="On blockchain, duration is expressed in number of blocks"
+                    placement="top"
+                    multiline
+                  />
+                </DaysSummary>
+              )}
             </AuctionDatePickerWrapper>
-            {numberOfBlocks > 0 && (
-              <DaysSummary>
-                <Text as="span" variant="t200-strong" color="colorTextMuted">
-                  Total:
-                </Text>
-                &nbsp;
-                <Text as="span" variant="t200-strong">
-                  {totalDaysAndHours}
-                </Text>
-                &nbsp;
-                <Text as="span" variant="t200-strong" color="colorText">
-                  / <NumberFormat as="span" color="colorText" value={numberOfBlocks} /> blocks
-                </Text>
-                <DaysSummaryInfo
-                  text="On blockchain, duration is expressed in number of blocks"
-                  placement="top"
-                  multiline
-                />
-              </DaysSummary>
-            )}
             <FormField
               label="Minimum bid"
               error={errors.startingPrice?.message}
+              description="Only bids higher than this value will be accepted."
               switchable
               switchProps={{
                 name: 'startingPrice',
                 onChange: toggleActiveInput,
                 value: activeInputs.includes('startingPrice'),
               }}
-              tooltip={{ text: 'Only bids higher than this value will be accepted', multiline: true }}
             >
               <Input
                 {...register('startingPrice', { valueAsNumber: true })}
@@ -295,9 +298,12 @@ export const SetUp: FC<SetUpProps> = ({
                 nodeStart={<JoyTokenIcon variant="gray" size={24} />}
                 nodeEnd={
                   !!startingPrice && (
-                    <Pill
-                      variant="overlay"
-                      label={<NumberFormat as="span" format="dollar" value={convertToUSD(startingPrice ?? 0) ?? 0} />}
+                    <NumberFormat
+                      color="colorTextMuted"
+                      as="span"
+                      variant="t300"
+                      format="dollar"
+                      value={convertToUSD(startingPrice ?? 0) ?? 0}
                     />
                   )
                 }
@@ -308,16 +314,13 @@ export const SetUp: FC<SetUpProps> = ({
             </FormField>
             <FormField
               label="Buy now price"
+              description="Bid matching this value will automatically end your auction."
               error={errors.buyNowPrice?.message}
               switchable
               switchProps={{
                 name: 'buyNowPrice',
                 onChange: toggleActiveInput,
                 value: activeInputs.includes('buyNowPrice'),
-              }}
-              tooltip={{
-                text: 'Bids matching this value will automatically end your auction',
-                multiline: true,
               }}
             >
               <Input
@@ -327,9 +330,12 @@ export const SetUp: FC<SetUpProps> = ({
                 nodeStart={<JoyTokenIcon variant="gray" size={24} />}
                 nodeEnd={
                   !!buyNowPrice && (
-                    <Pill
-                      variant="overlay"
-                      label={<NumberFormat as="span" format="dollar" value={convertToUSD(buyNowPrice ?? 0) ?? 0} />}
+                    <NumberFormat
+                      as="span"
+                      variant="t300"
+                      format="dollar"
+                      color="colorTextMuted"
+                      value={convertToUSD(buyNowPrice ?? 0) ?? 0}
                     />
                   )
                 }
@@ -348,15 +354,12 @@ export const SetUp: FC<SetUpProps> = ({
                 return (
                   <FormField
                     label="Whitelist"
+                    description="Only members included in the whitelist will be able to bid on your auction."
                     switchable
                     switchProps={{
                       name: 'whitelistedMembers',
                       onChange: toggleActiveInput,
                       value: activeInputs.includes('whitelistedMembers'),
-                    }}
-                    tooltip={{
-                      text: 'Only members included in the whitelist will be able to bid on this auction',
-                      multiline: true,
                     }}
                     error={error?.message}
                   >
