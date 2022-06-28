@@ -203,62 +203,63 @@ export const SetUp: FC<SetUpProps> = ({
                 />
               )}
             />
-            <AuctionDatePickerWrapper columns={isEnglishAuction ? 2 : 1}>
-              <Controller
-                name="startDate"
-                control={control}
-                render={({ field: { onChange, value }, fieldState: { error } }) => (
-                  <FormField
-                    error={error?.message}
-                    // TODO shake animation on date picker is very glitchy, for now just disable it
-                    disableErrorAnimation
-                    label="Starts"
-                  >
-                    <AuctionDatePicker
-                      error={!!error}
-                      minDate={new Date()}
-                      maxDate={endDate?.type === 'date' && endDate.date < maxStartDate ? endDate.date : maxStartDate}
-                      items={[
-                        {
-                          value: null,
-                          name: 'Now',
-                        },
-                      ]}
-                      onChange={onChange}
-                      value={value}
-                    />
-                  </FormField>
-                )}
-              />
-              {isEnglishAuction && (
+            <div>
+              <AuctionDatePickerWrapper columns={isEnglishAuction ? 2 : 1}>
                 <Controller
-                  name="endDate"
+                  name="startDate"
                   control={control}
                   render={({ field: { onChange, value }, fieldState: { error } }) => (
                     <FormField
                       error={error?.message}
-                      label="Ends"
                       // TODO shake animation on date picker is very glitchy, for now just disable it
                       disableErrorAnimation
-                      label="Ends"
+                      label="Starts"
                     >
                       <AuctionDatePicker
                         error={!!error}
-                        minDate={(startDate?.type === 'date' && startDate.date) || new Date()}
-                        maxDate={maxEndDate}
+                        minDate={new Date()}
+                        maxDate={endDate?.type === 'date' && endDate.date < maxStartDate ? endDate.date : maxStartDate}
+                        items={[
+                          {
+                            value: null,
+                            name: 'Now',
+                          },
+                        ]}
                         onChange={onChange}
-                        items={expirationDateItems}
-                        value={
-                          value || {
-                            type: 'duration',
-                            durationDays: 1,
-                          }
-                        }
+                        value={value}
                       />
                     </FormField>
                   )}
                 />
-              )}
+                {isEnglishAuction && (
+                  <Controller
+                    name="endDate"
+                    control={control}
+                    render={({ field: { onChange, value }, fieldState: { error } }) => (
+                      <FormField
+                        error={error?.message}
+                        label="Ends"
+                        // TODO shake animation on date picker is very glitchy, for now just disable it
+                        disableErrorAnimation
+                      >
+                        <AuctionDatePicker
+                          error={!!error}
+                          minDate={(startDate?.type === 'date' && startDate.date) || new Date()}
+                          maxDate={maxEndDate}
+                          onChange={onChange}
+                          items={expirationDateItems}
+                          value={
+                            value || {
+                              type: 'duration',
+                              durationDays: 1,
+                            }
+                          }
+                        />
+                      </FormField>
+                    )}
+                  />
+                )}
+              </AuctionDatePickerWrapper>
               {numberOfBlocks > 0 && (
                 <DaysSummary>
                   <Text as="span" variant="t100" color="colorTextMuted">
@@ -279,7 +280,7 @@ export const SetUp: FC<SetUpProps> = ({
                   />
                 </DaysSummary>
               )}
-            </AuctionDatePickerWrapper>
+            </div>
             <FormField
               label="Minimum bid"
               error={errors.startingPrice?.message}

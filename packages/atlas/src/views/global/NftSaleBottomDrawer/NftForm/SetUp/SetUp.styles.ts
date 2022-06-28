@@ -14,9 +14,9 @@ export const AuctionDatePickerWrapper = styled.div<{ columns: number }>`
   display: grid;
   align-items: start;
   grid-template-rows: 1fr 1fr;
-  gap: ${sizes(2)} ${sizes(6)};
+  gap: ${sizes(6)};
 
-  ${media.md} {
+  ${media.sm} {
     grid-template-rows: 1fr;
     grid-template-columns: ${({ columns }) => `repeat(${columns}, 1fr) `};
   }
@@ -28,6 +28,7 @@ export const StyledFormField = styled(FormField)`
 
 export const DaysSummary = styled.div`
   display: flex;
+  margin-top: ${sizes(4)};
   align-items: center;
 `
 
