@@ -6,7 +6,6 @@ import { useCategories } from '@/api/hooks'
 import { License } from '@/api/queries'
 import { Banner } from '@/components/Banner'
 import { Information } from '@/components/Information'
-import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
@@ -22,7 +21,6 @@ import { Select, SelectItem } from '@/components/_inputs/Select'
 import { Switch } from '@/components/_inputs/Switch'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { languages } from '@/config/languages'
-import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { NftIssuanceInputMetadata, VideoInputMetadata } from '@/joystream-lib'
@@ -41,20 +39,15 @@ import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { useVideoFormAssets, useVideoFormDraft } from './VideoForm.hooks'
 import {
+  Divider,
   FileValidationBanner,
   FormWrapper,
   InputsContainer,
   MoreSettingsSection,
-  StyledBanner,
   StyledMultiFileSelect,
   StyledSvgAlertsInformative24,
   StyledTitleArea,
-  SwitchFormField,
-  SwitchNftWrapper,
-  VideoLink,
 } from './VideoForm.styles'
-
-import { StyledSvgWarning, YellowText } from '../VideoWorkspace.style'
 
 const CUSTOM_LICENSE_CODE = 1000
 const SCROLL_TIMEOUT = 700
@@ -515,93 +508,85 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
         {titleTooltipVisible && <Tooltip text="Click to edit" placement="top-start" reference={titleInputRef} />}
         {videoFieldsLocked && alwaysEditableFormFields}
         {!videoFieldsLocked && videoEditFields}
-        <SwitchFormField
+        <Divider />
+        <FormField
           label="NFT"
           description="Minting an NFT creates a record of ownership on the blockchain that can be put on sale. This doesn't impact your intellectual rights to the video."
           ref={mintNftFormFieldRef}
         >
-          <SwitchNftWrapper>
-            <Controller
-              name="mintNft"
-              control={control}
-              defaultValue={false}
-              render={({ field: { value, onChange } }) => (
-                <Switch
-                  label="Mint NFT for this video"
-                  value={value}
-                  onChange={(e) => {
-                    if (!e?.currentTarget.checked) {
-                      trigger()
-                      setRoyaltiesFieldEnabled(false)
-                      setValue('nftRoyaltiesPercent', undefined)
-                    }
-                    onChange(e)
-                  }}
-                  disabled={videoFieldsLocked}
-                />
-              )}
-            />
-          </SwitchNftWrapper>
-          {watch('mintNft') && (
-            <>
-              <StyledBanner
-                icon={<StyledSvgWarning width={24} height={24} />}
-                description={
-                  !videoFieldsLocked ? (
-                    <Text as="span" variant="t200">
-                      You <YellowText>won’t be able to edit this video</YellowText> once you mint an NFT for it.
-                    </Text>
-                  ) : (
-                    <Text as="span" variant="t200">
-                      Many fields are disabled after minting an NFT for this video -
-                      <VideoLink to={absoluteRoutes.viewer.video(editedVideoInfo.id)}>
-                        &nbsp;go to it's video page.
-                      </VideoLink>
-                    </Text>
-                  )
-                }
-              />
-              <FormField
-                switchable
-                error={errors.nftRoyaltiesPercent?.message}
-                switchProps={{
-                  value: videoFieldsLocked ? !!watch('nftRoyaltiesPercent') : royaltiesFieldEnabled,
-                  onChange: (e) => {
-                    if (e?.currentTarget.checked) {
-                      setValue('nftRoyaltiesPercent', 1)
-                    } else {
-                      setValue('nftRoyaltiesPercent', undefined, { shouldValidate: true })
-                      trigger()
-                    }
-                    setRoyaltiesFieldEnabled(!!e?.currentTarget.checked)
-                  },
-                  disabled: videoFieldsLocked,
+          <Controller
+            name="mintNft"
+            control={control}
+            defaultValue={false}
+            render={({ field: { value, onChange } }) => (
+              <Switch
+                label="Mint NFT for this video"
+                value={value}
+                onChange={(e) => {
+                  if (!e?.currentTarget.checked) {
+                    trigger()
+                    setRoyaltiesFieldEnabled(false)
+                    setValue('nftRoyaltiesPercent', undefined)
+                  }
+                  onChange(e)
                 }}
-                description="Royalties lets you earn commission from every sale of this NFT."
-                label="Royalties"
-              >
-                <Input
-                  type="number"
-                  {...register('nftRoyaltiesPercent', {
-                    valueAsNumber: true,
-                    min: {
-                      value: nftMinCreatorRoyaltyPercentage,
-                      message: `Creator royalties cannot be lower than ${nftMinCreatorRoyaltyPercentage}%`,
-                    },
-                    max: {
-                      value: nftMaxCreatorRoyaltyPercentage,
-                      message: `Creator royalties cannot be higher than ${nftMaxCreatorRoyaltyPercentage}%`,
-                    },
-                  })}
-                  error={!!errors.nftRoyaltiesPercent}
-                  placeholder="—"
-                  nodeEnd={<Pill variant="default" label="%" />}
-                  disabled={videoFieldsLocked}
-                />
-              </FormField>
-            </>
-          )}
-        </SwitchFormField>
+                disabled={videoFieldsLocked}
+              />
+            )}
+          />
+        </FormField>
+        {watch('mintNft') && (
+          <Banner
+            icon={<StyledSvgAlertsInformative24 />}
+            title="Heads up!"
+            description="You won't be able to edit this video once you mint an NFT for it."
+          />
+        )}
+        {watch('mintNft') && (
+          <FormField
+            switchable
+            error={errors.nftRoyaltiesPercent?.message}
+            switchProps={{
+              value: videoFieldsLocked ? !!watch('nftRoyaltiesPercent') : royaltiesFieldEnabled,
+              onChange: (e) => {
+                if (e?.currentTarget.checked) {
+                  setValue('nftRoyaltiesPercent', 1)
+                } else {
+                  setValue('nftRoyaltiesPercent', undefined, { shouldValidate: true })
+                  trigger()
+                }
+                setRoyaltiesFieldEnabled(!!e?.currentTarget.checked)
+              },
+              disabled: videoFieldsLocked,
+            }}
+            description="Royalties lets you earn commission from every sale of this NFT."
+            label="Royalties"
+          >
+            <Input
+              type="number"
+              {...register('nftRoyaltiesPercent', {
+                valueAsNumber: true,
+                min: {
+                  value: nftMinCreatorRoyaltyPercentage,
+                  message: `Creator royalties cannot be lower than ${nftMinCreatorRoyaltyPercentage}%`,
+                },
+                max: {
+                  value: nftMaxCreatorRoyaltyPercentage,
+                  message: `Creator royalties cannot be higher than ${nftMaxCreatorRoyaltyPercentage}%`,
+                },
+              })}
+              error={!!errors.nftRoyaltiesPercent}
+              placeholder="—"
+              nodeEnd={
+                <Text variant="t300" as="span" color="colorTextMuted">
+                  %
+                </Text>
+              }
+              disabled={videoFieldsLocked}
+            />
+          </FormField>
+        )}
+        <Divider />
         <div>
           <TextButton
             size="large"

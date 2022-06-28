@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 import { Banner } from '@/components/Banner'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { SvgAlertsInformative24 } from '@/components/_icons'
-import { FormField } from '@/components/_inputs/FormField'
 import { MultiFileSelect } from '@/components/_inputs/MultiFileSelect'
 import { TitleInput } from '@/components/_inputs/TitleInput'
 import { cVar, media, sizes } from '@/styles'
@@ -69,11 +68,11 @@ export const MoreSettingsSection = styled.div<MoreSettingsSectionProps>`
   padding-bottom: ${sizes(10)};
 `
 
-export const SwitchFormField = styled(FormField)`
-  padding: ${sizes(10)} 0;
+export const Divider = styled.div`
   margin: ${sizes(2)} 0;
-  border-top: 1px solid ${cVar('colorCoreNeutral700')};
-  border-bottom: 1px solid ${cVar('colorCoreNeutral700')};
+  background-color: ${cVar('colorBackgroundMutedAlpha')};
+  height: 1px;
+  width: 100%;
 `
 
 export const SwitchNftWrapper = styled.div`
