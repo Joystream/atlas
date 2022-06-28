@@ -42,7 +42,6 @@ export const AuctionDatePicker: FC<AuctionDatePickerProps> = ({
   items,
   value,
   onChange,
-  inlineLabel,
   minDate,
   maxDate,
   ...rest
@@ -126,7 +125,6 @@ export const AuctionDatePicker: FC<AuctionDatePickerProps> = ({
   return (
     <Container>
       <Select<AuctionDatePickerValueWithPickDate>
-        inlineLabel={inlineLabel}
         icon={isPickDate ? <SvgControlsCalendar /> : undefined}
         value={pickedValue || { type: 'default' }}
         items={mappedItems}
