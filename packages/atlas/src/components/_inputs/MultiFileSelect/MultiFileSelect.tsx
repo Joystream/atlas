@@ -238,18 +238,14 @@ export const MultiFileSelect: FC<MultiFileSelectProps> = memo(
     return (
       <MultiFileSelectContainer className={className}>
         <FileSelect
+          key={step}
+          file={(step === 'video' ? files.video?.blob : files.thumbnail?.originalBlob) as File}
           maxSize={step === 'video' ? maxVideoSize : maxImageSize}
           onUploadFile={handleUploadFile}
           onReAdjustThumbnail={handleReAdjustThumbnail}
-          isLoading={isVideoLoading || isImgLoading}
-          fileType={step}
-          title={step === 'video' ? VIDEO_SELECT_TITLE : THUMBNAIL_SELECT_TITLE}
+          isFileLoading={isVideoLoading || isImgLoading}
+          type={step === 'video' ? 'video-file' : 'video-thumbnail'}
           thumbnailUrl={files.thumbnail?.url}
-          paragraph={
-            step === 'video'
-              ? `Maximum 10GB. Preferred format is WebM (VP9/VP8) or MP4 (H.264)`
-              : `Preferred 16:9 image ratio`
-          }
           error={error}
           onDropRejected={handleFileRejections}
         />
