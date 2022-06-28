@@ -1,7 +1,7 @@
 import { ReactNode, forwardRef } from 'react'
 
 import { Text } from '@/components/Text'
-import { SvgThumbsUpIllustration } from '@/components/_illustrations'
+import { SvgOtherThumbsUpIllustrationSvg } from '@/components/_illustrations'
 import { DialogPopover } from '@/components/_overlays/DialogPopover'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -43,7 +43,7 @@ export const ReactionsOnboardingPopover = forwardRef<PopoverImperativeHandle, Re
         trigger={trigger}
       >
         <PopoverIllustrationWrapper>
-          <SvgThumbsUpIllustration />
+          <SvgOtherThumbsUpIllustrationSvg />
         </PopoverIllustrationWrapper>
         <PopoverContentWrapper>
           <Text as="h4" variant="h300">

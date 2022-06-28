@@ -1,6 +1,6 @@
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 
-import { SvgActionNewTab, SvgAlertsError24, SvgAlertsInformative24 } from '@/components/_icons'
+import { SvgActionNewTab, SvgAlertsError24, SvgAlertsInformative24, SvgLogoPolkadot } from '@/components/_icons'
 import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { Loader } from '@/components/_loaders/Loader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -27,8 +27,13 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
   const wallets = useMemo(() => {
     const unsortedWallets = getWalletsList()
     return unsortedWallets.sort((w1, w2) => {
+      // sort order: wallets with logo, installed wallets, all the rest sorted alphabetically
+      if (w1.logo.src && !w2.logo.src) return -1
+      if (!w1.logo.src && w2.logo.src) return 1
+
       if (w1.installed && !w2.installed) return -1
       if (!w1.installed && w2.installed) return 1
+
       return w1.title.localeCompare(w2.title)
     })
   }, [getWalletsList])
@@ -106,7 +111,11 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
           size={smMatch ? 'large' : 'medium'}
           selected={selectedWalletIdx === idx}
           destructive={selectedWalletIdx === idx && hasError}
-          nodeStart={<IconWrapper icon={<WalletLogo src={wallet.logo.src} alt={wallet.logo.alt} />} />}
+          nodeStart={
+            <IconWrapper
+              icon={wallet.logo.src ? <WalletLogo src={wallet.logo.src} alt={wallet.logo.alt} /> : <SvgLogoPolkadot />}
+            />
+          }
           nodeEnd={selectedWalletIdx === idx && isConnecting ? <Loader variant="small" /> : undefined}
           onClick={() => handleSelectWallet(idx)}
         />
