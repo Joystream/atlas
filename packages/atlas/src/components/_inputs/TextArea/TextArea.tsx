@@ -1,4 +1,5 @@
-import { ChangeEvent, ForwardRefRenderFunction, forwardRef, useState } from 'react'
+import { ChangeEvent, ForwardRefRenderFunction, forwardRef, useRef, useState } from 'react'
+import mergeRefs from 'react-merge-refs'
 
 import { Text } from '@/components/Text'
 
@@ -39,10 +40,12 @@ const TextAreaComponent: ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaP
   },
   ref
 ) => {
+  const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const [charactersCount, setCharactersCount] = useState(0)
-
   const defaultRows = size === 'medium' ? 4 : 3
   const _rows = rows ? rows : defaultRows
+  const initialCharactersCount = textAreaRef.current?.value.length
+  const computedCharactersCount = charactersCount || initialCharactersCount
 
   const handleOnChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     onChange?.(e)
@@ -57,7 +60,7 @@ const TextAreaComponent: ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaP
       <TextAreaContainer>
         <StyledTextArea
           name={name}
-          ref={ref}
+          ref={mergeRefs([ref, textAreaRef])}
           error={error}
           inputSize={size}
           disabled={disabled}
@@ -75,9 +78,15 @@ const TextAreaComponent: ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaP
           <Text
             as="span"
             variant="t100"
-            color={charactersCount ? (charactersCount > maxLength ? 'colorTextError' : undefined) : 'colorTextMuted'}
+            color={
+              computedCharactersCount
+                ? computedCharactersCount > maxLength
+                  ? 'colorTextError'
+                  : undefined
+                : 'colorTextMuted'
+            }
           >
-            {charactersCount}
+            {computedCharactersCount}
           </Text>{' '}
           / {maxLength}
         </StyledText>
