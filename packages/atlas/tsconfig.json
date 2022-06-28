@@ -19,10 +19,7 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      // load type augments so we get proper typings
-      "@polkadot/types/augment": ["../../node_modules/@joystream/types/augment-codec/augment-types.ts"],
-      "@polkadot/api/augment": ["../../node_modules/@joystream/types/augment-codec/augment-api.ts"]
+      "@/*": ["src/*"]
     }
   },
   "include": ["src", "vitest-setup.ts"]

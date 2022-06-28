@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { FC, FormEvent, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -207,7 +208,10 @@ const StartAuction: FC<FormProps> = ({ videoId, onSuccess, onError }) => {
       minimalBidStep: parseInt(data.minimalBidStep),
       startingPrice: parseInt(data.startingPrice),
       startsAtBlock: data.startsAtBlock ? parseInt(data.startsAtBlock) : undefined,
-      whitelistedMembersIds: data.whitelistedMembers?.split(',').filter((member) => !!member),
+      whitelistedMembersIds: data.whitelistedMembers
+        ?.split(',')
+        .filter((member) => !!member)
+        .map((member) => new BN(member)),
     }
     const metadata: NftAuctionInputMetadata = isEnglishAuction
       ? {

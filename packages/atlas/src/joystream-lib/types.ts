@@ -1,6 +1,7 @@
 import { IChannelMetadata, IMembershipMetadata, IVideoMetadata } from '@joystream/metadata-protobuf'
 import { AugmentedEvent, AugmentedEvents } from '@polkadot/api/types/events'
 import { GenericEvent } from '@polkadot/types'
+import BN from 'bn.js'
 
 export type AccountId = string
 export type MemberId = string
@@ -10,7 +11,7 @@ export type VideoId = string
 export type DataObjectMetadata = {
   size: number
   ipfsHash: string
-  replacedDataObjectId?: string
+  replacedDataObjectId?: BN
 }
 
 type VideoAssetsKey = 'thumbnailPhoto' | 'media'
@@ -69,7 +70,7 @@ type NftCommonAuctionInputMetadata = {
   buyNowPrice?: number
   // if startsAtBlock is empty, current block (in which extrinsic is processed) will be used
   startsAtBlock?: number
-  whitelistedMembersIds?: string[]
+  whitelistedMembersIds?: BN[]
 }
 export type NftOpenAuctionInputMetadata = NftCommonAuctionInputMetadata & {
   type: 'open'
