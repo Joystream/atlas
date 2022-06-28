@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { FC } from 'react'
+import { FC, ReactNode } from 'react'
 
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { media, sizes } from '@/styles'
@@ -9,13 +9,13 @@ import { OptionCardCheckbox, OptionCardRadio } from '../OptionCard/OptionCard'
 type Checkbox = {
   checkedValues: Array<number>
   onChange?: (id: number) => void
-  options: Array<{ label: string; caption?: string; icon?: React.ReactNode }>
+  options: Array<{ label: string; caption?: string; icon?: ReactNode }>
 }
 
 type Radio = {
-  selectedValue?: string | number
-  onChange?: (value: string | number) => void
-  options: Array<{ label: string; caption?: string; value: string | number; icon?: React.ReactNode }>
+  selectedValue?: string | number | boolean | null
+  onChange?: (value: string | number | boolean) => void
+  options: Array<{ label: string; caption?: string; value: string | number | boolean; icon?: ReactNode }>
 }
 
 export type OptionCardGroupProps = {
@@ -50,7 +50,7 @@ export const OptionCardGroupRadio: FC<OptionCardGroupProps & Radio> = ({
   )
 }
 
-export const OptionCardGroupCheckbox: React.FC<OptionCardGroupProps & Checkbox> = ({
+export const OptionCardGroupCheckbox: FC<OptionCardGroupProps & Checkbox> = ({
   onChange,
   disabled,
   error,

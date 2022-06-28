@@ -384,19 +384,19 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           }}
           render={({ field: { value, onChange } }) => (
             <OptionCardGroupRadio
-              selectedValue={value?.toString()}
+              selectedValue={value}
               disabled={videoFieldsLocked}
-              onChange={(value) => onChange(value === 'true')}
+              onChange={(value) => onChange(value)}
               options={[
                 {
                   label: 'Public',
                   caption: 'Visible to all',
-                  value: 'true',
+                  value: true,
                 },
                 {
                   label: 'Unlisted',
                   caption: 'Visible with link only',
-                  value: 'false',
+                  value: false,
                 },
               ]}
             />
@@ -422,12 +422,12 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           <RadioButtonGroup
             ref={ref}
             options={[
-              { label: 'Enable comments', value: 'true' },
-              { label: 'Disable comments', value: 'false' },
+              { label: 'Enable comments', value: true },
+              { label: 'Disable comments', value: false },
             ]}
             error={!!errors.isExplicit}
             onChange={(event) => onChange(event.target.value)}
-            value={value?.toString() || 'true'}
+            value={value}
           />
         )}
       />
@@ -674,12 +674,12 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                 <RadioButtonGroup
                   ref={ref}
                   options={[
-                    { label: 'All audiences', value: 'false' },
-                    { label: 'Mature', value: 'true' },
+                    { label: 'All audiences', value: false },
+                    { label: 'Mature', value: true },
                   ]}
                   error={!!errors.isExplicit}
                   onChange={(event) => onChange(event.target.value)}
-                  value={value.toString()}
+                  value={value}
                   disabled={videoFieldsLocked}
                   caption={errors.isExplicit ? 'Content rating must be selected' : ''}
                 />
