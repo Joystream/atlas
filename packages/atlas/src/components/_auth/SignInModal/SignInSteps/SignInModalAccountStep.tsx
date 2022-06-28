@@ -8,7 +8,7 @@ import { useUser, useUserStore } from '@/providers/user'
 import { shortenAddress } from '@/utils/address'
 
 import { SignInModalStepTemplate } from './SignInModalStepTemplate'
-import { StyledListItem } from './SignInSteps.styles'
+import { ListItemsWrapper, StyledListItem } from './SignInSteps.styles'
 import { SignInStepProps } from './SignInSteps.types'
 
 type SignInModalAccountStepProps = SignInStepProps & {
@@ -63,17 +63,19 @@ export const SignInModalAccountStep: FC<SignInModalAccountStepProps> = ({
       hasNavigatedBack={hasNavigatedBack}
     >
       {accountsWithNoMembership.length !== 0 ? (
-        accountsWithNoMembership.map((account) => (
-          <StyledListItem
-            key={account.address}
-            label={account.name || 'Account'}
-            caption={shortenAddress(account.address, 5, 5)}
-            size={smMatch ? 'large' : 'medium'}
-            selected={localSelectedAddress === account.address}
-            nodeStart={<PolkadotIdenticon id={account.address} />}
-            onClick={() => setLocalSelectedAddress(account.address)}
-          />
-        ))
+        <ListItemsWrapper>
+          {accountsWithNoMembership.map((account) => (
+            <StyledListItem
+              key={account.address}
+              label={account.name || 'Account'}
+              caption={shortenAddress(account.address, 5, 5)}
+              size={smMatch ? 'large' : 'medium'}
+              selected={localSelectedAddress === account.address}
+              nodeStart={<PolkadotIdenticon id={account.address} />}
+              onClick={() => setLocalSelectedAddress(account.address)}
+            />
+          ))}
+        </ListItemsWrapper>
       ) : (
         <Banner description={`Waiting for new ${wallet?.title} accounts...`} icon={<Loader variant="small" />} />
       )}

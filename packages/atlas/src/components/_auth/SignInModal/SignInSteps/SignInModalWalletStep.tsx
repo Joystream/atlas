@@ -8,7 +8,7 @@ import { useMountEffect } from '@/hooks/useMountEffect'
 import { useUser, useUserStore } from '@/providers/user'
 
 import { SignInModalStepTemplate } from './SignInModalStepTemplate'
-import { StyledBottomBanner, StyledListItem, StyledTopBanner, WalletLogo } from './SignInSteps.styles'
+import { ListItemsWrapper, StyledBottomBanner, StyledListItem, StyledTopBanner, WalletLogo } from './SignInSteps.styles'
 import { SignInStepProps } from './SignInSteps.types'
 
 export const SignInModalWalletStep: FC<SignInStepProps> = ({
@@ -103,23 +103,27 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
           icon={<SvgAlertsError24 />}
         />
       ) : null}
-      {wallets.map((wallet, idx) => (
-        <StyledListItem
-          key={wallet.title}
-          label={wallet.title}
-          caption={wallet.installed ? 'Installed' : undefined}
-          size={smMatch ? 'large' : 'medium'}
-          selected={selectedWalletIdx === idx}
-          destructive={selectedWalletIdx === idx && hasError}
-          nodeStart={
-            <IconWrapper
-              icon={wallet.logo.src ? <WalletLogo src={wallet.logo.src} alt={wallet.logo.alt} /> : <SvgLogoPolkadot />}
-            />
-          }
-          nodeEnd={selectedWalletIdx === idx && isConnecting ? <Loader variant="small" /> : undefined}
-          onClick={() => handleSelectWallet(idx)}
-        />
-      ))}
+      <ListItemsWrapper>
+        {wallets.map((wallet, idx) => (
+          <StyledListItem
+            key={wallet.title}
+            label={wallet.title}
+            caption={wallet.installed ? 'Installed' : undefined}
+            size={smMatch ? 'large' : 'medium'}
+            selected={selectedWalletIdx === idx}
+            destructive={selectedWalletIdx === idx && hasError}
+            nodeStart={
+              <IconWrapper
+                icon={
+                  wallet.logo.src ? <WalletLogo src={wallet.logo.src} alt={wallet.logo.alt} /> : <SvgLogoPolkadot />
+                }
+              />
+            }
+            nodeEnd={selectedWalletIdx === idx && isConnecting ? <Loader variant="small" /> : undefined}
+            onClick={() => handleSelectWallet(idx)}
+          />
+        ))}
+      </ListItemsWrapper>
       {selectedWallet?.installed === false ? (
         <StyledBottomBanner
           description={`Refresh the page if ${selectedWallet.title} is already installed.`}
