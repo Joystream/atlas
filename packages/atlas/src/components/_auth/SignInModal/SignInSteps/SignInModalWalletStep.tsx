@@ -106,7 +106,6 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
       <ListItemsWrapper>
         {wallets.map((wallet, idx) => (
           <StyledListItem
-            asButton
             key={wallet.title}
             label={wallet.title}
             caption={wallet.installed ? 'Installed' : undefined}
