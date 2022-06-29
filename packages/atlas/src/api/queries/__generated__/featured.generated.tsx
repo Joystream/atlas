@@ -30,6 +30,7 @@ export type GetVideoHeroQuery = {
         title?: string | null
         createdAt: Date
         follows: number
+        rewardAccount?: string | null
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -93,6 +94,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
           title?: string | null
           createdAt: Date
           follows: number
+          rewardAccount?: string | null
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -212,6 +214,7 @@ export type GetCategoriesFeaturedVideosQuery = {
         title?: string | null
         createdAt: Date
         follows: number
+        rewardAccount?: string | null
         language?: { __typename?: 'Language'; id: string; iso: string } | null
         ownerMember?: {
           __typename?: 'Membership'
@@ -324,6 +327,7 @@ export type GetCategoriesFeaturedVideosQuery = {
           title?: string | null
           createdAt: Date
           follows: number
+          rewardAccount?: string | null
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -514,6 +518,7 @@ export type GetCategoriesFeaturedVideosQuery = {
             title?: string | null
             createdAt: Date
             follows: number
+            rewardAccount?: string | null
             avatarPhoto?: {
               __typename?: 'StorageDataObject'
               id: string

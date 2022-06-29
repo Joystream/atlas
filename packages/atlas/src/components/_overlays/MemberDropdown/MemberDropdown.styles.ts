@@ -102,6 +102,7 @@ export const UserBalance = styled.div`
   grid-auto-columns: min-content;
   align-items: center;
   gap: 5px;
+  margin-top: ${sizes(2)};
 `
 
 export const BalanceContainer = styled.div`
@@ -119,11 +120,21 @@ export const Divider = styled.div`
   background: ${cVar('colorBorderMutedAlpha')};
 `
 
-export const LearnAboutLink = styled(Text)`
+export const Link = styled(Text)`
   text-decoration: none;
+  cursor: pointer;
+  display: flex;
 
   &:hover {
     text-decoration: underline;
+  }
+
+  svg {
+    margin-left: ${sizes(1)};
+
+    path {
+      fill: ${cVar('colorCoreNeutral200Lighten')};
+    }
   }
 `
 

@@ -7,7 +7,16 @@ import { SvgAvatarSilhouette } from '@/components/_illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, media, square, zIndex } from '@/styles'
 
-export type AvatarSize = 'preview' | 'cover' | 'default' | 'fill' | 'bid' | 'small' | 'channel' | 'channel-card'
+export type AvatarSize =
+  | 'preview'
+  | 'cover'
+  | 'default'
+  | 'fill'
+  | 'bid'
+  | 'small'
+  | 'channel'
+  | 'channel-card'
+  | 'extra-small'
 
 type ContainerProps = {
   size: AvatarSize
@@ -23,65 +32,49 @@ type EditOverlayProps = {
 }
 
 const previewAvatarCss = css`
-  width: 136px;
-  min-width: 136px;
-  height: 136px;
+  ${square('136px')};
 `
 
 const coverAvatarCss = css`
-  width: 64px;
-  min-width: 64px;
-  height: 64px;
+  ${square('64px')};
 
   ${media.md} {
-    width: 88px;
-    min-width: 88px;
-    height: 88px;
+    ${square('88px')};
   }
 `
 
 const channelAvatarCss = css`
-  width: 88px;
-  min-width: 88px;
-  height: 88px;
+  ${square('88px')};
   ${media.md} {
-    width: 136px;
-    min-width: 136px;
-    height: 136px;
+    ${square('136px')};
   }
 `
 const channelCardAvatarCss = css`
-  width: 88px;
-  min-width: 88px;
-  height: 88px;
+  ${square('88px')};
   ${media.md} {
-    width: 104px;
-    min-width: 104px;
-    height: 104px;
+    ${square('104px')};
   }
 `
 
 const bidAvatarCss = css`
-  width: 24px;
-  min-width: 24px;
-  height: 24px;
+  ${square('24px')};
 `
 
 const smallAvatarCss = css`
-  width: 40px;
-  min-width: 40px;
-  height: 40px;
+  ${square('40px')};
 `
 
 const defaultAvatarCss = css`
-  width: 32px;
-  min-width: 32px;
-  height: 32px;
+  ${square('32px')};
 `
 
 const fillAvatarCss = css`
   width: 100%;
   height: 100%;
+`
+
+const extraSmallAvatarCss = css`
+  ${square('16px')};
 `
 
 const getAvatarSizeCss = ({ size }: ContainerProps): SerializedStyles => {
@@ -100,6 +93,8 @@ const getAvatarSizeCss = ({ size }: ContainerProps): SerializedStyles => {
       return bidAvatarCss
     case 'small':
       return smallAvatarCss
+    case 'extra-small':
+      return extraSmallAvatarCss
     default:
       return defaultAvatarCss
   }
