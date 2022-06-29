@@ -1,14 +1,14 @@
-import { types } from '@joystream/types'
+// load type augments
+import '@joystream/types'
 import { ApiPromise, WsProvider } from '@polkadot/api'
-import '@polkadot/api/augment'
 import { Signer } from '@polkadot/api/types'
 import { proxy } from 'comlink'
 
-import { JoystreamLibError } from '@/joystream-lib/errors'
+import { NFT_PERBILL_PERCENT } from '@/joystream-lib/config'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
+import { JoystreamLibError } from './errors'
 import { JoystreamLibExtrinsics } from './extrinsics'
-import { NFT_PERBILL_PERCENT } from './helpers'
 import { AccountId } from './types'
 
 export class JoystreamLib {
@@ -36,7 +36,7 @@ export class JoystreamLib {
       onNodeConnectionUpdate?.(false)
     })
 
-    this.api = new ApiPromise({ provider, types })
+    this.api = new ApiPromise({ provider })
     const extrinsics = new JoystreamLibExtrinsics(this.api, () => this.selectedAccountId, endpoint)
     this.extrinsics = proxy(extrinsics)
   }
