@@ -276,7 +276,7 @@ export const useReactionTransactions = () => {
 
       return handleTransaction({
         txFactory: async (updateStatus) =>
-          (await joystream.extrinsics).moderateComment(memberId, channelId, commentId, proxyCallback(updateStatus)),
+          (await joystream.extrinsics).moderateComment(channelId, commentId, proxyCallback(updateStatus)),
         snackbarSuccessMessage: {
           title: 'Comment deleted',
           description: `Comment from "${commentAuthorHandle}" to your video has been deleted.`,

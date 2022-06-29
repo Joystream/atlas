@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import BN from 'bn.js'
 import { addMilliseconds } from 'date-fns'
 import { FC, useCallback, useEffect, useMemo, useRef } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -168,7 +169,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
             minimalBidStep,
             buyNowPrice: data.buyNowPrice || undefined,
             auctionDurationBlocks: data.auctionDurationBlocks,
-            whitelistedMembersIds: data.whitelistedMembers?.map((member) => member.id),
+            whitelistedMembersIds: data.whitelistedMembers?.map((member) => new BN(member.id)),
           })
         } else {
           // auction has no duration, assume open
@@ -178,7 +179,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
             startingPrice,
             minimalBidStep,
             buyNowPrice: data.buyNowPrice || undefined,
-            whitelistedMembersIds: data.whitelistedMembers?.map((member) => member.id),
+            whitelistedMembersIds: data.whitelistedMembers?.map((member) => new BN(member.id)),
           })
         }
       } else {
