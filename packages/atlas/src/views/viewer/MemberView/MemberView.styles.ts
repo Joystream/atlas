@@ -54,10 +54,10 @@ export const TabsContainer = styled.div<{ isMemberActivityTab: boolean }>`
     ${({ isMemberActivityTab }) =>
       isMemberActivityTab
         ? css`
-            grid-template: 'tabs sort' 1fr / auto 160px;
+            grid-template: 'tabs sort' 1fr / auto 180px;
           `
         : css`
-            grid-template: 'tabs sort filter' 1fr / auto 160px 99px;
+            grid-template: 'tabs sort filter' 1fr / auto 180px 99px;
           `};
   }
 `

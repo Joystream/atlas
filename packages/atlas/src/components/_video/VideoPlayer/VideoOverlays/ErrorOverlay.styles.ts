@@ -9,14 +9,15 @@ export const AnimationWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: ${sizes(20)};
   position: relative;
+  margin-top: -30px;
+  ${media.sm} {
+    margin-top: -50px;
+  }
 `
 
 export const StyledAnimatedError = styled(AnimatedError)`
   width: 108px;
-  position: absolute;
-  bottom: 0;
   ${media.sm} {
     width: 216px;
   }

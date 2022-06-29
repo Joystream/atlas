@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import { FC, useCallback, useEffect, useRef } from 'react'
 
 import { useSnackbar } from '@/providers/snackbars'
 import { createStore } from '@/store'
@@ -34,7 +34,7 @@ export const useConnectionStatusStore = createStore<ConnectionStatusStoreState, 
   }),
 })
 
-export const ConnectionStatusManager: React.FC = () => {
+export const ConnectionStatusManager: FC = () => {
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
   const setInternetConnection = useConnectionStatusStore((state) => state.actions.setInternetConnection)
   const { displaySnackbar } = useSnackbar()

@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC, ReactNode } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
@@ -13,11 +13,11 @@ import { Size } from './NftWidget.styles'
 type NftInfoItemProps = {
   size: Size
   label: string
-  content: React.ReactNode
-  secondaryText?: React.ReactNode | null
+  content: ReactNode
+  secondaryText?: ReactNode | null
   loading?: boolean
 }
-export const NftInfoItem: React.FC<NftInfoItemProps> = ({ size, label, content, secondaryText, loading }) => {
+export const NftInfoItem: FC<NftInfoItemProps> = ({ size, label, content, secondaryText, loading }) => {
   if (loading) {
     return (
       <InfoItemContainer data-size={size}>
@@ -29,7 +29,7 @@ export const NftInfoItem: React.FC<NftInfoItemProps> = ({ size, label, content, 
   }
   return (
     <InfoItemContainer data-size={size}>
-      <Label variant="h100" secondary>
+      <Label as="span" variant="h100" color="colorText">
         {label}
       </Label>
       <InfoItemContent data-size={size}>{content}</InfoItemContent>
@@ -40,7 +40,7 @@ export const NftInfoItem: React.FC<NftInfoItemProps> = ({ size, label, content, 
           classNames={transitions.names.fade}
         >
           <SecondaryText data-size={size}>
-            <Text as="div" variant="t100" secondary>
+            <Text as="div" variant="t100" color="colorText">
               {secondaryText ?? '‌'}
             </Text>
           </SecondaryText>
@@ -50,7 +50,7 @@ export const NftInfoItem: React.FC<NftInfoItemProps> = ({ size, label, content, 
   )
 }
 
-export const NftTimerItem: React.FC<{ size: Size; time?: Date }> = ({ size, time }) => {
+export const NftTimerItem: FC<{ size: Size; time?: Date }> = ({ size, time }) => {
   useMsTimestamp()
 
   if (!time) {
@@ -73,42 +73,42 @@ export const NftTimerItem: React.FC<{ size: Size; time?: Date }> = ({ size, time
 
   return (
     <InfoItemContainer data-size={size}>
-      <Label variant="h100" secondary>
+      <Label as="span" variant="h100" color="colorText">
         Auction ends in
       </Label>
       <InfoItemContent data-size={size}>
         <div>
           <Text
             as="span"
-            color={lessThanAMinuteLeft ? cVar('colorTextError') : undefined}
+            color={lessThanAMinuteLeft ? 'colorTextError' : undefined}
             variant={size === 'small' ? 'h400' : 'h600'}
           >
             {hoursMinutesSecondsArray[0]}
           </Text>
           <Text
             as="span"
-            color={lessThanAMinuteLeft ? cVar('colorTextError') : cVar('colorText')}
+            color={lessThanAMinuteLeft ? 'colorTextError' : 'colorText'}
             variant={size === 'small' ? 'h400' : 'h600'}
           >
             :
           </Text>
           <Text
             as="span"
-            color={lessThanAMinuteLeft ? cVar('colorTextError') : undefined}
+            color={lessThanAMinuteLeft ? 'colorTextError' : undefined}
             variant={size === 'small' ? 'h400' : 'h600'}
           >
             {hoursMinutesSecondsArray[1]}
           </Text>
           <Text
             as="span"
-            color={lessThanAMinuteLeft ? cVar('colorTextError') : cVar('colorText')}
+            color={lessThanAMinuteLeft ? 'colorTextError' : 'colorText'}
             variant={size === 'small' ? 'h400' : 'h600'}
           >
             :
           </Text>
           <Text
             as="span"
-            color={lessThanAMinuteLeft ? cVar('colorTextError') : undefined}
+            color={lessThanAMinuteLeft ? 'colorTextError' : undefined}
             variant={size === 'small' ? 'h400' : 'h600'}
           >
             {hoursMinutesSecondsArray[2]}
@@ -117,7 +117,7 @@ export const NftTimerItem: React.FC<{ size: Size; time?: Date }> = ({ size, time
       </InfoItemContent>
       {lessThanAMinuteLeft && (
         <TimerSecondaryText
-          color={lessThanAMinuteLeft ? cVar('colorTextError') : undefined}
+          color={lessThanAMinuteLeft ? 'colorTextError' : undefined}
           as="p"
           variant="t100"
           data-size={size}
@@ -126,7 +126,7 @@ export const NftTimerItem: React.FC<{ size: Size; time?: Date }> = ({ size, time
         </TimerSecondaryText>
       )}
       {moreThan72HLeft && (
-        <TimerSecondaryText secondary as="p" variant="t100" data-size={size}>
+        <TimerSecondaryText color="colorText" as="p" variant="t100" data-size={size}>
           {formatDateTime(time)}
         </TimerSecondaryText>
       )}

@@ -47,10 +47,6 @@ export const TitleContainer = styled.div`
   }
 `
 
-export const Title = styled(Text)`
-  margin-bottom: 0;
-`
-
 export const StyledSelect = styled(Select)`
   grid-area: sort;
 
@@ -75,7 +71,7 @@ export const SubTitle = styled(Text)`
 
 export const StyledChannelLink = styled(ChannelLink)`
   position: relative;
-  border: solid 8px black;
+  border: solid 8px ${cVar('colorCoreBaseBlack')};
   border-radius: 100%;
   ${media.sm} {
     border: none;
@@ -143,7 +139,7 @@ const geTabsContainerGridTemplate = ({ tab }: TabsContainerProps) => {
           'search search search' auto
           'sort sort sort' auto / 1fr 1fr;
         ${media.sm} {
-          grid-template: 1fr / auto 1fr 160px;
+          grid-template: 1fr / auto 1fr 180px;
         }
       `
     case 'NFTs':
@@ -153,7 +149,7 @@ const geTabsContainerGridTemplate = ({ tab }: TabsContainerProps) => {
           'search search search' auto
           'sort sort filter' auto / 1fr 1fr;
         ${media.sm} {
-          grid-template: 1fr / 1fr 160px 99px;
+          grid-template: 1fr / 1fr 180px 99px;
         }
       `
   }

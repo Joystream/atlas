@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { HTMLProps } from 'react'
 
 import { LayoutGrid } from '@/components/LayoutGrid/LayoutGrid'
 import { Text } from '@/components/Text'
@@ -21,10 +22,6 @@ export const Details = styled.div`
   margin-bottom: ${sizes(4)};
 `
 
-export const DetailsText = styled(Text)`
-  margin-bottom: ${sizes(4)};
-`
-
 export const StyledLayoutGrid = styled(LayoutGrid)`
   margin-bottom: 50px;
 `
@@ -41,7 +38,7 @@ export const StyledChannelCard = styled(ChannelCard)`
   min-width: 136px;
 `
 
-export const Anchor = styled(Text)<React.HTMLProps<HTMLAnchorElement>>`
+export const Anchor = styled(Text)<HTMLProps<HTMLAnchorElement>>`
   text-decoration: none;
 
   &:hover {

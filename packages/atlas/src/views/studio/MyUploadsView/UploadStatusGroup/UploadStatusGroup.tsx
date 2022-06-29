@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import shallow from 'zustand/shallow'
 
-import { useChannel, useVideo } from '@/api/hooks'
+import { useFullChannel, useFullVideo } from '@/api/hooks'
 import { Text } from '@/components/Text'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
 import { SvgAlertsError24, SvgAlertsSuccess24 } from '@/components/_icons'
@@ -35,7 +35,7 @@ export type UploadStatusGroupProps = {
   size?: UploadStatusGroupSize
 }
 
-export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, size = 'compact' }) => {
+export const UploadStatusGroup: FC<UploadStatusGroupProps> = ({ uploads, size = 'compact' }) => {
   const [isAssetsDrawerActive, setAssetsDrawerActive] = useState(false)
   const [runCompletedAnimation, setRunCompletedAnimation] = useState(false)
   const [uploadGroupState, setUploadGroupState] = useState<UploadGroupState>(null)
@@ -47,8 +47,8 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
 
   const isChannelType = uploads[0].parentObject.type === 'channel'
 
-  const { video, loading: videoLoading } = useVideo(uploads[0].parentObject.id, { skip: isChannelType })
-  const { channel, loading: channelLoading } = useChannel(uploads[0].parentObject.id, { skip: !isChannelType })
+  const { video, loading: videoLoading } = useFullVideo(uploads[0].parentObject.id, { skip: isChannelType })
+  const { channel, loading: channelLoading } = useFullChannel(uploads[0].parentObject.id, { skip: !isChannelType })
 
   const isWaiting = uploadsStatuses.every((file) => file?.progress === 0 && file?.lastStatus === 'inProgress')
   const isCompleted = uploadsStatuses.every((file) => file?.lastStatus === 'completed')
@@ -169,14 +169,16 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
           )}
         </Thumbnail>
         <AssetsInfoContainer>
-          <AssetGroupTitleText variant="t300-strong">{assetsGroupTitleText}</AssetGroupTitleText>
-          <Text variant="t200" secondary>
+          <AssetGroupTitleText as="span" variant="t300-strong">
+            {assetsGroupTitleText}
+          </AssetGroupTitleText>
+          <Text as="span" variant="t200" color="colorText">
             {assetsGroupNumberText}
           </Text>
         </AssetsInfoContainer>
         <UploadInfoContainer>
           {size === 'large' && (
-            <Text variant="t200" secondary>
+            <Text as="span" variant="t200" color="colorText">
               {renderAssetsGroupInfo()}
             </Text>
           )}

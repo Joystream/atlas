@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { CallToActionButtonProps } from '@/components/_buttons/CallToActionButton'
 import {
   SvgSidebarChannels,

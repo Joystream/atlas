@@ -1,18 +1,19 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
+import { JOY_CURRENCY_TICKER } from '@/config/token'
 import { useTokenPrice } from '@/providers/joystream'
 
 export const PlaygroundTokenPrice = () => {
-  const { convertToUSD, convertToTJoy } = useTokenPrice()
+  const { convertToUSD, convertToTokenPrice } = useTokenPrice()
   const [toConvert, setToConvert] = useState(0)
-  const [unit, setUnit] = useState('tJoy')
+  const [unit, setUnit] = useState(JOY_CURRENCY_TICKER)
   const [converted, setConverted] = useState<number | string | null>(0)
   const [showConverted, setShowConverted] = useState(false)
   const convert = () => {
     setShowConverted(true)
-    unit === 'tJoy' ? setConverted(convertToUSD(toConvert)) : setConverted(convertToTJoy(toConvert))
+    unit === JOY_CURRENCY_TICKER ? setConverted(convertToUSD(toConvert)) : setConverted(convertToTokenPrice(toConvert))
   }
-  const convertedUnit = unit === 'usd' ? 'tJoy' : 'usd'
+  const convertedUnit = unit === 'usd' ? JOY_CURRENCY_TICKER : 'usd'
   return (
     <div>
       <div>
@@ -33,7 +34,7 @@ export const PlaygroundTokenPrice = () => {
           value={unit}
         >
           <option value="usd">USD</option>
-          <option value="tJoy">tJoy</option>
+          <option value={JOY_CURRENCY_TICKER}>{JOY_CURRENCY_TICKER}</option>
         </select>
       </div>
       <div>

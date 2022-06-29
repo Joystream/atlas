@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
-import React, { useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useBasicVideos } from '@/api/hooks'
 import { BasicVideoFieldsFragment } from '@/api/queries'
-import { oldColors, transitions } from '@/styles'
+import { cVar, transitions } from '@/styles'
 import { getRandomIntInclusive } from '@/utils/number'
 
 import { EndingOverlay, ErrorOverlay, InactiveOverlay } from './VideoOverlays'
@@ -20,7 +20,7 @@ type VideoOverlayProps = {
   isPlayNextDisabled?: boolean
   playRandomVideoOnEnded?: boolean
 }
-export const VideoOverlay: React.FC<VideoOverlayProps> = ({
+export const VideoOverlay: FC<VideoOverlayProps> = ({
   playerState,
   onPlay,
   channelId,
@@ -31,20 +31,16 @@ export const VideoOverlay: React.FC<VideoOverlayProps> = ({
   playRandomVideoOnEnded = true,
 }) => {
   const [randomNextVideo, setRandomNextVideo] = useState<BasicVideoFieldsFragment | null>(null)
-  const { videos } = useBasicVideos({
-    where: {
-      channel: {
-        id_eq: channelId,
-      },
-      isPublic_eq: true,
-      media: {
-        isAccepted_eq: true,
-      },
-      thumbnailPhoto: {
-        isAccepted_eq: true,
+  const { videos } = useBasicVideos(
+    {
+      where: {
+        channel: {
+          id_eq: channelId,
+        },
       },
     },
-  })
+    { context: { delay: 2000 } }
+  )
 
   useEffect(() => {
     if (!videos?.length || videos.length <= 1) {
@@ -95,7 +91,7 @@ export const LoadingOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: ${oldColors.transparentBlack[54]};
+  background: ${cVar('colorCoreNeutral500Darken')};
   display: flex;
   background-size: cover;
   justify-content: center;

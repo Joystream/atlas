@@ -1,45 +1,88 @@
-import React, { forwardRef, useState } from 'react'
+import { ChangeEvent, ForwardRefRenderFunction, forwardRef, useState } from 'react'
 
-import { StyledTextArea } from './TextArea.styles'
+import { Text } from '@/components/Text'
 
-import { InputBase, InputBaseProps } from '../InputBase'
+import { CustomBorder, StyledText, StyledTextArea, TextAreaContainer, TextAreaWrapper } from './TextArea.styles'
+
+import { InputSize } from '../inputs.utils'
 
 export type TextAreaProps = {
   name?: string
   placeholder?: string
-  onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
-  onBlur?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void
+  onBlur?: (event: ChangeEvent<HTMLTextAreaElement>) => void
   value?: string
   className?: string
+  size?: InputSize
   rows?: number
   spellcheck?: boolean
-} & InputBaseProps
+  error?: boolean
+  counter?: boolean
+  maxLength?: number | undefined
+  disabled?: boolean
+}
 
-const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaProps> = (
-  { onChange, onBlur, name, placeholder, value, rows = 5, disabled, spellcheck = true, ...inputBaseProps },
+const TextAreaComponent: ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaProps> = (
+  {
+    onChange,
+    onBlur,
+    name,
+    placeholder,
+    value,
+    rows,
+    disabled,
+    counter,
+    spellcheck = true,
+    maxLength,
+    error,
+    size = 'large',
+  },
   ref
 ) => {
   const [charactersCount, setCharactersCount] = useState(0)
 
-  const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setCharactersCount(e.target.value.length)
+  const defaultRows = size === 'medium' ? 4 : 3
+  const _rows = rows ? rows : defaultRows
+
+  const handleOnChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     onChange?.(e)
+    if (!counter) {
+      return
+    }
+    setCharactersCount(e.target.value.length)
   }
 
   return (
-    <InputBase disabled={disabled} charactersCount={charactersCount} {...inputBaseProps}>
-      <StyledTextArea
-        name={name}
-        ref={ref}
-        disabled={disabled}
-        placeholder={placeholder}
-        onChange={handleOnChange}
-        value={value}
-        rows={rows}
-        spellCheck={spellcheck}
-        onBlur={onBlur}
-      />
-    </InputBase>
+    <TextAreaWrapper>
+      <TextAreaContainer>
+        <StyledTextArea
+          name={name}
+          ref={ref}
+          error={error}
+          inputSize={size}
+          disabled={disabled}
+          placeholder={placeholder}
+          onChange={handleOnChange}
+          value={value}
+          rows={_rows}
+          spellCheck={spellcheck}
+          onBlur={onBlur}
+        />
+        <CustomBorder disabled={disabled} />
+      </TextAreaContainer>
+      {counter && maxLength ? (
+        <StyledText as="span" disabled={disabled} variant="t100" color="colorTextMuted">
+          <Text
+            as="span"
+            variant="t100"
+            color={charactersCount ? (charactersCount > maxLength ? 'colorTextError' : undefined) : 'colorTextMuted'}
+          >
+            {charactersCount}
+          </Text>{' '}
+          / {maxLength}
+        </StyledText>
+      ) : null}
+    </TextAreaWrapper>
   )
 }
 

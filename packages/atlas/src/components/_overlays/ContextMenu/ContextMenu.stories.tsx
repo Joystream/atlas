@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionCopy } from '@/components/_icons'
@@ -39,54 +38,54 @@ const Template: Story = (args) => {
           scrollable
           items={[
             {
-              icon: <SvgActionCopy />,
+              nodeStart: <SvgActionCopy />,
               onClick: () => {},
-              title: 'Copy video URL',
+              label: 'Copy video URL',
             },
             {
-              icon: <SvgActionCopy />,
+              nodeStart: <SvgActionCopy />,
               onClick: () => {},
-              title: 'Copy video URL',
+              label: 'Copy video URL',
             },
             {
-              icon: <SvgActionCopy />,
+              nodeStart: <SvgActionCopy />,
               onClick: () => {},
-              title: 'Copy video URL',
+              label: 'Copy video URL',
             },
             {
-              icon: <SvgActionCopy />,
+              nodeStart: <SvgActionCopy />,
               onClick: () => {},
-              title: 'Copy video URL',
+              label: 'Copy video URL',
             },
             {
-              icon: <SvgActionCopy />,
+              nodeStart: <SvgActionCopy />,
               onClick: () => {},
-              title: 'Copy video URL',
+              label: 'Copy video URL',
             },
             {
-              icon: <SvgActionCopy />,
+              nodeStart: <SvgActionCopy />,
               onClick: () => {},
-              title: 'Copy video URL',
+              label: 'Copy video URL',
             },
             {
-              icon: <SvgActionCopy />,
+              nodeStart: <SvgActionCopy />,
               onClick: () => {},
-              title: 'Copy video URL',
+              label: 'Copy video URL',
             },
             {
-              icon: <SvgActionCopy />,
+              nodeStart: <SvgActionCopy />,
               onClick: () => {},
-              title: 'Copy video URL',
+              label: 'Copy video URL',
             },
             {
-              icon: <SvgActionCopy />,
+              nodeStart: <SvgActionCopy />,
               onClick: () => {},
-              title: 'Copy video URL',
+              label: 'Copy video URL',
             },
             {
-              icon: <SvgActionCopy />,
+              nodeStart: <SvgActionCopy />,
               onClick: () => {},
-              title: 'Copy video URL',
+              label: 'Copy video URL',
             },
           ]}
           trigger={<Button>Open menu on the left side</Button>}

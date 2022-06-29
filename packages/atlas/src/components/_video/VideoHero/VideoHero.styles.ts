@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import { LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
-import { media, oldColors, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 type IsCategoryProp = {
   isCategory?: boolean
@@ -41,9 +41,14 @@ export const GradientOverlay = styled.div`
   right: 0;
   bottom: 0;
   left: 0;
-  background: linear-gradient(180deg, transparent 50%, ${oldColors.black} 93.23%, ${oldColors.black} 100%),
-    radial-gradient(50.66% 101.32% at 50% 50%, transparent 0%, ${oldColors.transparentBlack[54]} 100%),
-    ${oldColors.transparentBlack[54]};
+  background: linear-gradient(
+      180deg,
+      transparent 50%,
+      ${cVar('colorCoreBaseBlack')} 93.23%,
+      ${cVar('colorCoreBaseBlack')} 100%
+    ),
+    radial-gradient(50.66% 101.32% at 50% 50%, transparent 0%, ${cVar('colorCoreNeutral500Darken')} 100%),
+    ${cVar('colorCoreNeutral500Darken')};
 `
 
 export const InfoContainer = styled.div<IsCategoryProp>`

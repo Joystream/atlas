@@ -2,9 +2,8 @@ import styled from '@emotion/styled'
 
 import { Avatar } from '@/components/Avatar'
 import { ProgressDrawer } from '@/components/ProgressDrawer'
-import { TitleInput } from '@/components/_inputs/TitleInput'
 import { media, sizes, transitions, zIndex } from '@/styles'
-import { SubTitle, TitleSection } from '@/views/viewer/ChannelView/ChannelView.styles'
+import { TitleSection } from '@/views/viewer/ChannelView/ChannelView.styles'
 
 export const StyledTitleSection = styled(TitleSection)`
   margin-top: 0;
@@ -12,18 +11,6 @@ export const StyledTitleSection = styled(TitleSection)`
   display: inline-flex;
   width: auto;
   flex-direction: row;
-
-  /* Hidden visibility on container to not block hover state on Channel cover. 
-  TitleArea, SubTitle and Avatar must be visible  */
-  visibility: hidden;
-`
-
-export const StyledTitleArea = styled(TitleInput)`
-  visibility: visible;
-`
-
-export const StyledSubTitle = styled(SubTitle)`
-  visibility: visible;
 `
 
 export const TitleContainer = styled.div`
@@ -35,6 +22,8 @@ export const TitleContainer = styled.div`
 export const InnerFormContainer = styled.div<{ actionBarHeight: number }>`
   width: 100%;
   margin-top: 50px;
+  display: grid;
+  gap: ${sizes(3)};
   padding-bottom: ${({ actionBarHeight = 0 }) => actionBarHeight}px;
 `
 

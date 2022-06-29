@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from 'react'
 import { useLocation, useMatch } from 'react-router'
 import { useNavigate } from 'react-router-dom'
 
-import { useVideo } from '@/api/hooks'
+import { useFullVideo } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { RoutingState } from '@/types/routing'
 import { SentryLogger } from '@/utils/logs'
@@ -27,9 +27,9 @@ export const useVideoWorkspace = () => {
 
 export const useVideoWorkspaceData = () => {
   const { editedVideoInfo } = useVideoWorkspace()
-  const { activeChannelId } = useAuthorizedUser()
-  const drafts = useDraftStore(channelDraftsSelector(activeChannelId))
-  const { video, loading, error } = useVideo(editedVideoInfo?.id ?? '', {
+  const { channelId } = useAuthorizedUser()
+  const drafts = useDraftStore(channelDraftsSelector(channelId))
+  const { video, loading, error } = useFullVideo(editedVideoInfo?.id ?? '', {
     skip: editedVideoInfo?.isDraft,
     onError: (error) => SentryLogger.error('Failed to fetch video', 'useVideoWorkspaceData', error),
   })

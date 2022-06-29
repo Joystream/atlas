@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
@@ -20,7 +20,7 @@ export type NoConnectionIndicatorProps = {
   hasSidebar: boolean
 }
 
-export const NoConnectionIndicator: React.FC<NoConnectionIndicatorProps> = ({
+export const NoConnectionIndicator: FC<NoConnectionIndicatorProps> = ({
   nodeConnectionStatus,
   isConnectedToInternet,
   hasSidebar,
@@ -42,11 +42,17 @@ export const NoConnectionIndicator: React.FC<NoConnectionIndicatorProps> = ({
         </IconWrapper>
         <TextWrapper>
           {!isConnectedToInternet ? (
-            <Text variant="h400">No network connection</Text>
+            <Text as="span" variant="h400">
+              No network connection
+            </Text>
           ) : (
-            nodeConnectionStatus === 'disconnected' && <Text variant="t200">No node connection</Text>
+            nodeConnectionStatus === 'disconnected' && (
+              <Text as="span" variant="t200">
+                No node connection
+              </Text>
+            )
           )}
-          <Text variant="t200" secondary>
+          <Text as="span" variant="t200" color="colorText">
             Wait for connection to restore
           </Text>
         </TextWrapper>

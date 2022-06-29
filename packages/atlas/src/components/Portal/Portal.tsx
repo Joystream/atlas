@@ -1,11 +1,11 @@
-import React from 'react'
+import { FC, PropsWithChildren, RefObject } from 'react'
 import { createPortal } from 'react-dom'
 
-type PortalProps = {
-  containerRef: React.RefObject<HTMLDivElement>
-}
+type PortalProps = PropsWithChildren<{
+  containerRef: RefObject<HTMLDivElement>
+}>
 
-export const Portal: React.FC<PortalProps> = ({ children, containerRef }) => {
+export const Portal: FC<PortalProps> = ({ children, containerRef }) => {
   const element = containerRef.current
   if (!element) {
     return null

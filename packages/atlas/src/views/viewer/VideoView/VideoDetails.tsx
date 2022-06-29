@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
+import { FC, ReactNode, useState } from 'react'
 
-import { VideoFieldsFragment } from '@/api/queries'
+import { FullVideoFieldsFragment } from '@/api/queries'
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { VideoCategoryData } from '@/config/categories'
 import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
-import { useCategoryMatch } from '@/hooks/useCategoriesMatch'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import {
@@ -18,18 +18,16 @@ import {
   DescriptionCopy,
   DescriptionLink,
   DescriptionSkeletonLoader,
-  DescriptionTitle,
   DetailsWrapper,
   ExpandButton,
   LicenceCategoryWrapper,
-  LicenseCustomText,
 } from './VideoDetails.styles'
 
 type VideoDetailsProps = {
-  video?: VideoFieldsFragment | null
-  category?: ReturnType<typeof useCategoryMatch>
+  video?: FullVideoFieldsFragment | null
+  categoryData?: VideoCategoryData | null
 }
-export const VideoDetails: React.FC<VideoDetailsProps> = ({ video, category }) => {
+export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => {
   const mdMatch = useMediaMatch('md')
   const [detailsExpanded, setDetailsExpanded] = useState(false)
 
@@ -45,14 +43,17 @@ export const VideoDetails: React.FC<VideoDetailsProps> = ({ video, category }) =
         {video ? (
           video?.description && (
             <>
-              <DescriptionTitle variant="h100">Description</DescriptionTitle>
+              <Text as="h2" variant="h100" margin={{ bottom: 2 }}>
+                Description
+              </Text>
               <DescriptionBody detailsExpanded={detailsExpanded}>
                 {/* div below allows line-clamp to work properly for nested paragraphs */}
                 <div>
                   {video.description?.split('\n').map((line, idx) => (
                     <DescriptionCopy
+                      as="p"
                       variant={mdMatch ? 't300' : 't200'}
-                      secondary
+                      color="colorText"
                       key={idx}
                       detailsExpanded={detailsExpanded}
                     >
@@ -76,15 +77,17 @@ export const VideoDetails: React.FC<VideoDetailsProps> = ({ video, category }) =
         <GridItem>
           {video ? (
             <>
-              <DescriptionTitle variant="h100">License</DescriptionTitle>
+              <Text as="h2" variant="h100" margin={{ bottom: 2 }}>
+                License
+              </Text>
               {foundLicense && (
-                <Text variant={mdMatch ? 't300' : 't200'} secondary>
+                <Text as="p" variant={mdMatch ? 't300' : 't200'} color="colorText">
                   {foundLicense.name}
                 </Text>
               )}
-              <LicenseCustomText as="p" variant="t100" secondary>
+              <Text as="p" variant="t100" color="colorText" margin={{ top: 2 }}>
                 {video.license?.customText}
-              </LicenseCustomText>
+              </Text>
             </>
           ) : (
             <SkeletonLoader height={12} width={200} />
@@ -93,11 +96,13 @@ export const VideoDetails: React.FC<VideoDetailsProps> = ({ video, category }) =
         <CategoryWrapper>
           {video ? (
             <>
-              <DescriptionTitle variant="h100">Category</DescriptionTitle>
-              <Category to={absoluteRoutes.viewer.category(category?.id)}>
-                {category?.icon}
-                <Text variant={mdMatch ? 't300' : 't200'} secondary>
-                  {category?.name}
+              <Text as="h2" variant="h100" margin={{ bottom: 2 }}>
+                Category
+              </Text>
+              <Category to={absoluteRoutes.viewer.category(categoryData?.id)}>
+                {categoryData?.icon}
+                <Text as="p" variant={mdMatch ? 't300' : 't200'} color="colorText">
+                  {video?.category?.name}
                 </Text>
               </Category>
             </>
@@ -134,5 +139,5 @@ const replaceUrls = (text: string) => {
     )
 
     return [...acc, node]
-  }, [] as React.ReactNode[])
+  }, [] as ReactNode[])
 }

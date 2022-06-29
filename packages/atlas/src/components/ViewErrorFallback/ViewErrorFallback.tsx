@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
-import { FallbackRender } from '@sentry/react/dist/errorboundary'
-import React from 'react'
+import { FallbackRender } from '@sentry/react/types/errorboundary'
+import { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { AnimatedError } from '@/components/AnimatedError'
@@ -21,7 +21,7 @@ type ViewErrorFallbackProps = {
   onResetClick?: () => void
 }
 
-export const ViewErrorFallback: React.FC<ViewErrorFallbackProps> = ({ onResetClick }) => {
+export const ViewErrorFallback: FC<ViewErrorFallbackProps> = ({ onResetClick }) => {
   const navigate = useNavigate()
 
   const handleResetClick = () => {
@@ -36,8 +36,10 @@ export const ViewErrorFallback: React.FC<ViewErrorFallbackProps> = ({ onResetCli
     <Container>
       <AnimatedError />
       <Message>
-        <Header variant="h600">Oops! An error occurred.</Header>
-        <Text variant="t300" secondary>
+        <Text as="h1" variant="h600" margin={{ bottom: 2 }}>
+          Oops! An error occurred.
+        </Text>
+        <Text as="p" variant="t300" color="colorText">
           Something bad happened and the app broke. This has been logged and we&apos;ll try to resolve it as soon as
           possible. You can find support in our Discord community.
         </Text>
@@ -70,10 +72,6 @@ const Message = styled.div`
   ${media.sm} {
     max-width: 70%;
   }
-`
-
-const Header = styled(Text)`
-  margin-bottom: ${sizes(2)};
 `
 
 const ButtonsContainer = styled.div`

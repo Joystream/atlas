@@ -1,5 +1,4 @@
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
@@ -33,13 +32,27 @@ const Template: Story = (args) => {
           text: 'Action2',
         }}
       >
-        <Text variant="t200">Example text</Text>
-        <Text variant="t200">Example text</Text>
-        <Text variant="t200">Example text</Text>
-        <Text variant="t200">Example text</Text>
-        <Text variant="t200">Example text</Text>
-        <Text variant="t200">Example text</Text>
-        <Text variant="t200">Example text</Text>
+        <Text as="span" variant="t200">
+          Example text
+        </Text>
+        <Text as="span" variant="t200">
+          Example text
+        </Text>
+        <Text as="span" variant="t200">
+          Example text
+        </Text>
+        <Text as="span" variant="t200">
+          Example text
+        </Text>
+        <Text as="span" variant="t200">
+          Example text
+        </Text>
+        <Text as="span" variant="t200">
+          Example text
+        </Text>
+        <Text as="span" variant="t200">
+          Example text
+        </Text>
       </DialogPopover>
     </div>
   )

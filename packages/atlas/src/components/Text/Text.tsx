@@ -1,4 +1,4 @@
-import React from 'react'
+import { DetailedHTMLProps, HTMLAttributes, forwardRef } from 'react'
 
 import { TextBaseProps, styledVariants } from './Text.styles'
 
@@ -8,15 +8,13 @@ export type TextProps = {
   variant: TextVariant
   className?: string
   clampAfterLine?: number
-  as?: keyof JSX.IntrinsicElements
+  as: keyof JSX.IntrinsicElements
 } & TextBaseProps &
-  React.DetailedHTMLProps<React.HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>
+  DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>
 
-export const Text = React.forwardRef<HTMLHeadingElement, TextProps>(
-  ({ variant, secondary, as, ...otherProps }, ref) => {
-    const Tag = styledVariants[variant]
-    const FinalTag = as ? Tag.withComponent(as) : Tag
-    return <FinalTag {...otherProps} secondary={secondary} ref={ref} />
-  }
-)
+export const Text = forwardRef<HTMLHeadingElement, TextProps>(({ variant, as, ...otherProps }, ref) => {
+  const Tag = styledVariants[variant]
+  const FinalTag = as ? Tag.withComponent(as) : Tag
+  return <FinalTag {...otherProps} ref={ref} />
+})
 Text.displayName = 'Text'

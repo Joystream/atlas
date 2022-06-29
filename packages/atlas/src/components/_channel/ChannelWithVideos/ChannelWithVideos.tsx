@@ -1,7 +1,8 @@
-import React, { FC, useMemo, useState } from 'react'
+import { FC, MouseEvent, memo, useMemo, useState } from 'react'
 
 import { useBasicChannel, useChannelPreviewVideos } from '@/api/hooks'
 import { Grid } from '@/components/Grid'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
@@ -10,7 +11,6 @@ import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { useAsset } from '@/providers/assets'
 import { SentryLogger } from '@/utils/logs'
-import { formatNumberShort } from '@/utils/number'
 
 import { ChannelCardAnchor, ChannelFollows, FollowButton, InfoWrapper, StyledAvatar } from './ChannelWithVideos.styles'
 
@@ -20,7 +20,7 @@ type ChannelWithVideosProps = {
 
 const INITIAL_VIDEOS_PER_ROW = 4
 
-export const ChannelWithVideos: FC<ChannelWithVideosProps> = React.memo(({ channelId }) => {
+export const ChannelWithVideos: FC<ChannelWithVideosProps> = memo(({ channelId }) => {
   const videoRows = useVideoGridRows('compact')
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const {
@@ -57,7 +57,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = React.memo(({ chann
     [displayedVideos, placeholderItems]
   )
 
-  const handleFollowClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleFollowClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
     toggleFollowing()
   }
@@ -76,13 +76,15 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = React.memo(({ chann
           {isLoading ? (
             <SkeletonLoader width="120px" height="20px" bottomSpace="4px" />
           ) : (
-            <Text variant="h300">{channel?.title}</Text>
+            <Text as="h3" variant="h300">
+              {channel?.title}
+            </Text>
           )}
           {isLoading ? (
             <SkeletonLoader width="80px" height="20px" bottomSpace="8px" />
           ) : (
-            <ChannelFollows variant="t200" secondary>
-              {formatNumberShort(channel?.follows || 0)} followers
+            <ChannelFollows as="span" variant="t200" color="colorText">
+              <NumberFormat as="span" color="colorText" value={channel?.follows || 0} /> followers
             </ChannelFollows>
           )}
           {isLoading ? (

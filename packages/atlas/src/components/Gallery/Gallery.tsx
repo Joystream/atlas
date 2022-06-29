@@ -1,6 +1,6 @@
-import React, { ComponentProps, useRef } from 'react'
+import { FC, PropsWithChildren, useRef } from 'react'
 
-import { Carousel, CarouselProps } from '@/components/Carousel'
+import { Carousel, CarouselProps, CarouselRef } from '@/components/Carousel'
 import { Arrow } from '@/components/Carousel/Carousel.styles'
 import { GridHeadingContainer, TitleContainer } from '@/components/GridHeading'
 import { Text } from '@/components/Text'
@@ -8,27 +8,27 @@ import { SvgActionChevronL, SvgActionChevronR, SvgControlsPlay } from '@/compone
 
 import { CarouselArrowsContainer, Container, SeeAllLink } from './Gallery.styles'
 
-export type GalleryProps = {
+export type GalleryProps = PropsWithChildren<{
   title?: string
   className?: string
   seeAllUrl?: string
-} & CarouselProps
+}> &
+  CarouselProps
 
-type ImperativeHandleData = {
-  getPrevArrowProps: () => ComponentProps<typeof Arrow>
-  getNextArrowProps: () => ComponentProps<typeof Arrow>
-}
-
-export const Gallery: React.FC<GalleryProps> = ({ title, className, seeAllUrl, ...carouselProps }) => {
+export const Gallery: FC<GalleryProps> = ({ title, className, seeAllUrl, ...carouselProps }) => {
   // TODO: this is the only place in the app that requires refs to buttons. Once we refactor this component, we can remove forwardRef from buttons
   const prevArrowRef = useRef<HTMLButtonElement>(null)
   const nextArrowRef = useRef<HTMLButtonElement>(null)
-  const carouselRef = useRef<ImperativeHandleData>(null)
+  const carouselRef = useRef<CarouselRef>(null)
   return (
     <Container className={className}>
       <GridHeadingContainer>
         <TitleContainer>
-          {title && <Text variant="h500">{title}</Text>}
+          {title && (
+            <Text as="h2" variant="h500">
+              {title}
+            </Text>
+          )}
           {seeAllUrl && (
             <SeeAllLink
               iconPlacement="left"

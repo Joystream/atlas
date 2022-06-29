@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { useBasicVideos } from '@/api/hooks'
 import { CategoryLink } from '@/components/CategoryLink'
@@ -23,7 +23,7 @@ type MoreVideosProps = {
 
 const NUMBER_OF_VIDEOS = 6
 
-export const MoreVideos: React.FC<MoreVideosProps> = ({
+export const MoreVideos: FC<MoreVideosProps> = ({
   channelId,
   channelName,
   categoryId,

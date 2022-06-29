@@ -1,25 +1,48 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import { FC, PropsWithChildren } from 'react'
 
 import { Text } from '@/components/Text'
-import { sizes } from '@/styles'
+import { cVar, sizes } from '@/styles'
 
-const _LegalParagraph = styled(Text)`
-  margin-top: ${sizes(6)};
+type LegalParagraphProps = PropsWithChildren<{
+  header?: boolean
+  skipMargin?: boolean
+}>
 
-  ol + & {
+const _LegalParagraph = styled(Text)<LegalParagraphProps>`
+  display: block;
+  margin-top: ${({ header, skipMargin }) => sizes(skipMargin ? 0 : header ? 4 : 2)};
+
+  ol {
     margin-top: 0;
   }
-`
 
-export const LegalParagraph: React.FC<{ header?: boolean }> = ({ header, ...props }) => (
-  <_LegalParagraph variant={header ? 'h300' : 't200'} secondary={!header} {...props} />
+  a {
+    text-decoration: none;
+    color: ${cVar('colorTextStrong')};
+  }
+`
+export const LegalParagraph: FC<LegalParagraphProps> = ({ header, ...props }) => (
+  <_LegalParagraph
+    as={header ? 'h2' : 'span'}
+    variant={header ? 'h200' : 't100'}
+    color={!header ? 'colorText' : undefined}
+    header={header}
+    {...props}
+  />
 )
 // wrapper so we can use a specific element to render
 const _StyledText = styled(Text)`
   /* stylelint-disable-line */
 `
-export const LegalListItem: React.FC = (props) => <_StyledText variant="t200" secondary as="li" {...props} />
+
+export const LegalList = styled.ol`
+  margin: ${sizes(1)} 0;
+  padding-left: ${sizes(6)};
+`
+export const LegalListItem: FC<PropsWithChildren> = (props) => (
+  <_StyledText variant="t100" color="colorText" as="li" {...props} />
+)
 
 export const LegalLastUpdateText = styled(LegalParagraph)`
   font-style: italic;

@@ -1,5 +1,5 @@
 import { useApolloClient } from '@apollo/client'
-import React, { useCallback, useState } from 'react'
+import { FC, useCallback, useState } from 'react'
 
 import { GetNftDocument, GetNftQuery, GetNftQueryVariables } from '@/api/queries'
 import { ActionBarProps } from '@/components/ActionBar'
@@ -17,11 +17,11 @@ import { NftForm, NftFormData, NftFormStatus } from './NftForm'
 
 const SUCCESS_SNACKBAR_TIMEOUT = 6000
 
-export const NftSaleBottomDrawer: React.FC = () => {
+export const NftSaleBottomDrawer: FC = () => {
   const { currentAction, currentNftId, closeNftAction } = useNftActions()
   const [formStatus, setFormStatus] = useState<NftFormStatus | null>(null)
 
-  const { activeMemberId } = useUser()
+  const { memberId } = useUser()
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const client = useApolloClient()
@@ -36,7 +36,7 @@ export const NftSaleBottomDrawer: React.FC = () => {
         return
       }
 
-      if (!currentNftId || !activeMemberId) {
+      if (!currentNftId || !memberId) {
         ConsoleLogger.error('Missing NFT or member ID')
         return
       }
@@ -51,7 +51,7 @@ export const NftSaleBottomDrawer: React.FC = () => {
 
       const completed = await handleTransaction({
         txFactory: async (cb) =>
-          (await joystream.extrinsics).putNftOnSale(currentNftId, activeMemberId, data, proxyCallback(cb)),
+          (await joystream.extrinsics).putNftOnSale(currentNftId, memberId, data, proxyCallback(cb)),
         onTxSync: refetchData,
       })
       if (completed) {
@@ -66,7 +66,7 @@ export const NftSaleBottomDrawer: React.FC = () => {
         closeNftAction()
       }
     },
-    [activeMemberId, client, closeNftAction, currentNftId, displaySnackbar, handleTransaction, joystream, proxyCallback]
+    [memberId, client, closeNftAction, currentNftId, displaySnackbar, handleTransaction, joystream, proxyCallback]
   )
 
   const handleCancel = useCallback(() => {
@@ -75,7 +75,6 @@ export const NftSaleBottomDrawer: React.FC = () => {
   }, [closeNftAction])
 
   const actionBarProps: ActionBarProps = {
-    variant: 'nft',
     primaryButton: {
       text: !formStatus?.canGoForward ? 'Start sale' : 'Next step',
       disabled: formStatus?.isDisabled,
@@ -85,7 +84,6 @@ export const NftSaleBottomDrawer: React.FC = () => {
       text: !formStatus?.canGoBack ? 'Cancel' : 'Go back',
       onClick: !formStatus?.canGoBack ? handleCancel : formStatus?.triggerGoBack,
       disabled: false,
-      visible: true,
     },
   }
 

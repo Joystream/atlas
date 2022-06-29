@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import { FC, memo } from 'react'
 
 import { Pill } from '@/components/Pill'
 import { SvgActionDraft, SvgActionEdit, SvgActionTrash, SvgIllustrativeEdit } from '@/components/_icons'
@@ -15,19 +15,19 @@ type VideoTilePublisherProps = {
   onDeleteVideoClick?: () => void
 }
 
-export const VideoTileDraft: React.FC<VideoTilePublisherProps> = React.memo(({ id, onDeleteVideoClick, onClick }) => {
+export const VideoTileDraft: FC<VideoTilePublisherProps> = memo(({ id, onDeleteVideoClick, onClick }) => {
   const draft = useDraftStore(singleDraftSelector(id ?? ''))
 
   const kebabMenuItems = [
     {
-      icon: <SvgActionEdit />,
+      nodeStart: <SvgActionEdit />,
       onClick: onClick,
-      title: 'Edit draft',
+      label: 'Edit draft',
     },
     {
-      icon: <SvgActionTrash />,
+      nodeStart: <SvgActionTrash />,
       onClick: onDeleteVideoClick,
-      title: 'Delete draft',
+      label: 'Delete draft',
       destructive: true,
     },
   ]

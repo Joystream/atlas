@@ -1,5 +1,5 @@
 import { Meta, Story } from '@storybook/react'
-import React, { useState } from 'react'
+import { MouseEvent, useState } from 'react'
 
 import { SvgActionTrash } from '@/components/_icons'
 
@@ -12,7 +12,7 @@ export default {
   component: OptionCardBase,
   args: {
     label: 'Radio input label',
-    helperText: 'Radio helper text',
+    caption: 'Radio helper text',
     disabled: false,
     error: false,
   },
@@ -20,7 +20,7 @@ export default {
 
 const Template: Story<OptionCardProps> = (args) => {
   const [selected, setSelected] = useState<string | number>('1')
-  const handleClick: (e: React.MouseEvent<HTMLElement>) => void = (e) => {
+  const handleClick: (e: MouseEvent<HTMLElement>) => void = (e) => {
     const element = e.currentTarget as HTMLInputElement
     setSelected(element.value)
   }

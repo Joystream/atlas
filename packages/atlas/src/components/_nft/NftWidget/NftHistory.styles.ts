@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 
-import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { cVar, sizes } from '@/styles'
 
@@ -112,10 +111,6 @@ export const JoyPlusIcon = styled.div`
   grid-auto-flow: column;
   grid-auto-columns: max-content;
   justify-content: end;
-`
-
-export const DollarValue = styled(Text)`
-  text-align: end;
 `
 
 export const HistoryPanelContainer = styled.div`

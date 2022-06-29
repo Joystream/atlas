@@ -3,26 +3,10 @@ import { Link } from 'react-router-dom'
 
 import { Banner } from '@/components/Banner'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { MultiFileSelect } from '@/components/_inputs/MultiFileSelect'
-import { TextArea } from '@/components/_inputs/TextArea'
 import { TitleInput } from '@/components/_inputs/TitleInput'
 import { cVar, media, sizes } from '@/styles'
-
-export const RadioCardButtonsContainer = styled.div`
-  display: grid;
-  gap: ${sizes(6)};
-  ${media.sm} {
-    grid-template-columns: 1fr 1fr;
-  }
-`
-
-export const RadioButtonsContainer = styled.div`
-  display: grid;
-  grid-row-gap: ${sizes(2)};
-`
 
 export const StyledMultiFileSelect = styled(MultiFileSelect)`
   ${media.md} {
@@ -46,11 +30,14 @@ export const FormWrapper = styled(LimitedWidthContainer)`
   }
 `
 
+export const StyledBanner = styled(Banner)`
+  margin: ${sizes(8)} 0;
+`
+
 export const InputsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  gap: ${sizes(8)};
   margin-top: ${sizes(20)};
-  padding-bottom: ${sizes(40)};
 
   ${media.md} {
     margin-top: 0;
@@ -60,43 +47,24 @@ export const InputsContainer = styled.div`
 type MoreSettingsSectionProps = {
   expanded: boolean
 }
-type MoreSettingsDescriptionProps = {
-  visible: boolean
-}
 export const StyledTitleArea = styled(TitleInput)`
-  margin-bottom: ${sizes(8)};
   width: 100%;
 `
 
-export const MoreSettingsHeader = styled.div`
-  margin-top: ${sizes(10)};
-`
-
-export const MoreSettingsDescription = styled(Text)<MoreSettingsDescriptionProps>`
-  opacity: ${({ visible }) => (visible ? 1 : 0)};
-  height: ${({ visible }) => (visible ? 'auto' : '0')};
-  margin-top: ${sizes(4)};
-  transition: opacity 150ms ease-out;
-`
-
 export const MoreSettingsSection = styled.div<MoreSettingsSectionProps>`
+  display: grid;
+  gap: ${sizes(8)};
   visibility: ${({ expanded }) => (expanded ? 'visible' : 'hidden')};
-  max-height: ${({ expanded }) => (expanded ? '1200px' : '0px')};
+  max-height: ${({ expanded }) => (expanded ? '1400px' : '0px')};
   overflow: ${({ expanded }) => (expanded ? 'unset' : 'hidden')};
   opacity: ${({ expanded }) => (expanded ? 1 : 0)};
   transition: opacity 150ms ease-out, max-height 150ms ease-out 150ms;
-`
-
-export const DeleteVideoButton = styled(Button)`
-  margin-top: ${sizes(10)};
-`
-
-export const ExtendedMarginFormField = styled(FormField)`
-  margin-top: ${sizes(10)};
+  padding-bottom: ${sizes(10)};
 `
 
 export const SwitchFormField = styled(FormField)`
   padding: ${sizes(10)} 0;
+  margin: ${sizes(2)} 0;
   border-top: 1px solid ${cVar('colorCoreNeutral700')};
   border-bottom: 1px solid ${cVar('colorCoreNeutral700')};
 `
@@ -107,16 +75,11 @@ export const SwitchNftWrapper = styled.div`
   grid-gap: 4px;
   align-items: center;
   justify-content: start;
-  margin-bottom: ${sizes(4)};
 `
 
 export const VideoLink = styled(Link)`
   color: ${cVar('colorCoreBlue300')};
   text-decoration: none;
-`
-
-export const DescriptionTextArea = styled(TextArea)`
-  margin-top: ${({ disabled }) => (disabled ? sizes(10) : '')};
 `
 
 export const FileValidationBanner = styled(Banner)`
@@ -125,8 +88,4 @@ export const FileValidationBanner = styled(Banner)`
   path {
     fill: ${cVar('colorTextError')};
   }
-`
-
-export const FileValidationText = styled(Text)`
-  color: ${cVar('colorTextError')};
 `

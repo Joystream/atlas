@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { useChannelPreviewVideos } from '@/api/hooks'
 import { VideoGallery } from '@/components/_video/VideoGallery'
 import { readEnv } from '@/config/envs'
@@ -10,6 +8,7 @@ const channelId = readEnv('OFFICIAL_JOYSTREAM_CHANNEL_ID')
 export const OfficialJoystreamUpdate = () => {
   const { videos, loading, error } = useChannelPreviewVideos(channelId, {
     onError: (error) => SentryLogger.error('Failed to fetch videos', 'OfficialJoystreamUpdate', error),
+    context: { delay: 1500 },
   })
 
   if (error) {

@@ -2,9 +2,9 @@ import { useApolloClient } from '@apollo/client'
 import { useCallback } from 'react'
 
 import {
-  GetVideosConnectionDocument,
-  GetVideosConnectionQuery,
-  GetVideosConnectionQueryVariables,
+  GetFullVideosConnectionDocument,
+  GetFullVideosConnectionQuery,
+  GetFullVideosConnectionQueryVariables,
   VideoOrderByInput,
 } from '@/api/queries'
 import { VideoExtrinsicResult, VideoInputAssets } from '@/joystream-lib'
@@ -28,7 +28,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
 
   const { joystream, proxyCallback } = useJoystream()
   const startFileUpload = useStartFileUpload()
-  const { activeChannelId, activeMemberId } = useAuthorizedUser()
+  const { channelId, memberId } = useAuthorizedUser()
 
   const client = useApolloClient()
   const handleTransaction = useTransaction()
@@ -73,7 +73,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
         if (data.assets.media && assetsIds.media) {
           const uploadPromise = startFileUpload(data.assets.media.blob, {
             id: assetsIds.media,
-            owner: activeChannelId,
+            owner: channelId,
             parentObject: {
               type: 'video',
               id: videoId,
@@ -87,7 +87,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
         if (data.assets.thumbnailPhoto && assetsIds.thumbnailPhoto) {
           const uploadPromise = startFileUpload(data.assets.thumbnailPhoto.blob, {
             id: assetsIds.thumbnailPhoto,
-            owner: activeChannelId,
+            owner: channelId,
             parentObject: {
               type: 'video',
               id: videoId,
@@ -112,8 +112,8 @@ export const useHandleVideoWorkspaceSubmit = () => {
           addAsset(assetsIds.thumbnailPhoto, { url: data.assets.thumbnailPhoto?.url })
         }
 
-        const fetchedVideo = await client.query<GetVideosConnectionQuery, GetVideosConnectionQueryVariables>({
-          query: GetVideosConnectionDocument,
+        const fetchedVideo = await client.query<GetFullVideosConnectionQuery, GetFullVideosConnectionQueryVariables>({
+          query: GetFullVideosConnectionDocument,
           variables: {
             orderBy: VideoOrderByInput.CreatedAtDesc,
             where: {
@@ -146,19 +146,12 @@ export const useHandleVideoWorkspaceSubmit = () => {
           isNew
             ? (
                 await joystream.extrinsics
-              ).createVideo(
-                activeMemberId,
-                activeChannelId,
-                data.metadata,
-                data.nftMetadata,
-                assets,
-                proxyCallback(updateStatus)
-              )
+              ).createVideo(memberId, channelId, data.metadata, data.nftMetadata, assets, proxyCallback(updateStatus))
             : (
                 await joystream.extrinsics
               ).updateVideo(
                 editedVideoInfo.id,
-                activeMemberId,
+                memberId,
                 data.metadata,
                 data.nftMetadata,
                 assets,
@@ -178,8 +171,8 @@ export const useHandleVideoWorkspaceSubmit = () => {
       }
     },
     [
-      activeChannelId,
-      activeMemberId,
+      channelId,
+      memberId,
       addAsset,
       client,
       editedVideoInfo.id,

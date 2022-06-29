@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
-import { TextField } from '@/components/_inputs/TextField'
+import { FormField } from '@/components/_inputs/FormField'
+import { Input } from '@/components/_inputs/Input'
 import { useNftActions } from '@/providers/nftActions'
 
 export const PlaygroundNftSettleAuction = () => {
@@ -10,7 +11,9 @@ export const PlaygroundNftSettleAuction = () => {
 
   return (
     <>
-      <TextField value={nftId} onChange={(e) => setNftId(e.currentTarget.value)} label="Video ID" />
+      <FormField label="Video ID">
+        <Input value={nftId} onChange={(e) => setNftId(e.currentTarget.value)} />
+      </FormField>
       {nftId && <Button onClick={() => openNftSettlement(nftId)}>Open drawer</Button>}
     </>
   )

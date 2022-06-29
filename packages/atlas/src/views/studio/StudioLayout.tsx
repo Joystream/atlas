@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
-import React, { useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
@@ -34,24 +34,13 @@ const StudioLayout = () => {
   const displayedLocation = useVideoWorkspaceRouting()
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-  const {
-    activeAccountId,
-    activeMemberId,
-    activeChannelId,
-    memberships,
-    membershipsLoading,
-    activeMembershipLoading,
-    extensionConnected,
-    isLoading,
-  } = useUser()
+  const { channelId, memberships, isLoggedIn, isAuthLoading } = useUser()
 
   const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useConfirmationModal()
   const [enterLocation] = useState(location.pathname)
   const hasMembership = !!memberships?.length
 
-  const accountSet = !membershipsLoading && !!activeAccountId
-  const memberSet = accountSet && !!activeMemberId && hasMembership
-  const channelSet = memberSet && !!activeChannelId && hasMembership
+  const channelSet = !!channelId && hasMembership
 
   useEffect(() => {
     if (!isAllowedBrowser()) {
@@ -74,17 +63,13 @@ const StudioLayout = () => {
   }, [closeUnsupportedBrowserDialog, openUnsupportedBrowserDialog])
   return (
     <>
-      <TopbarStudio hideChannelInfo={!memberSet} />
+      <TopbarStudio hideChannelInfo={!channelSet} />
       <NoConnectionIndicator
         hasSidebar={channelSet}
         nodeConnectionStatus={nodeConnectionStatus}
         isConnectedToInternet={internetConnectionStatus === 'connected'}
       />
-      {activeMembershipLoading ||
-      membershipsLoading ||
-      isLoading ||
-      extensionConnected === 'pending' ||
-      extensionConnected === null ? (
+      {isAuthLoading ? (
         <StudioLoading />
       ) : (
         <>
@@ -114,7 +99,7 @@ const StudioLayout = () => {
                 element={
                   <PrivateRoute
                     element={<CreateEditChannelView newChannel />}
-                    isAuth={memberSet}
+                    isAuth={isLoggedIn}
                     redirectTo={ENTRY_POINT_ROUTE}
                   />
                 }
@@ -188,7 +173,7 @@ const StyledSidenavStudio = styled(SidenavStudio)`
   }
 `
 
-const StudioLayoutWrapper: React.FC = () => {
+const StudioLayoutWrapper: FC = () => {
   const navigate = useNavigate()
   return (
     <ErrorBoundary

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { useState } from 'react'
+import { FC, useState } from 'react'
 
 import { useNftsConnection } from '@/api/hooks'
 import { OwnedNftOrderByInput } from '@/api/queries'
@@ -13,7 +13,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { cVar, sizes } from '@/styles'
 
-export const NewNftSales: React.FC = () => {
+export const NewNftSales: FC = () => {
   const gridRows = useVideoGridRows('compact')
   const [tilesPerRow, setTilesPerRow] = useState(4)
   // fetch only NFTs currently on sale
@@ -36,7 +36,7 @@ export const NewNftSales: React.FC = () => {
       ],
     },
     orderBy: OwnedNftOrderByInput.CreatedAtDesc,
-    first: 10,
+    first: 8,
   })
   const handleResizeGrid = (sizes: number[]) => setTilesPerRow(sizes.length)
 
@@ -49,7 +49,9 @@ export const NewNftSales: React.FC = () => {
   return (
     <section>
       <NftHeader>
-        <Text variant="h500">New NFTs on sale</Text>
+        <Text as="h2" variant="h500">
+          New NFTs on sale
+        </Text>
         <Button
           icon={<SvgActionChevronR />}
           iconPlacement="right"

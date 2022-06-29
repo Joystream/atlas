@@ -1,13 +1,12 @@
 import styled from '@emotion/styled'
 import { format, roundToNearestMinutes, setMinutes } from 'date-fns'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
 import { SvgControlsCalendar } from '@/components/_icons'
 import { Popover, PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
-import { cVar } from '@/styles'
 
 import { Select, SelectItem, SelectProps } from '../Select'
 
@@ -39,11 +38,10 @@ export type AuctionDatePickerProps = {
   onChange: (value: AuctionDatePickerValue) => void
 } & Omit<SelectProps<AuctionDatePickerValue>, 'onChange'>
 
-export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
+export const AuctionDatePicker: FC<AuctionDatePickerProps> = ({
   items,
   value,
   onChange,
-  label,
   minDate,
   maxDate,
   ...rest
@@ -52,7 +50,7 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
   const popOverRef = useRef<PopoverImperativeHandle>(null)
   const [startDate, setStartDate] = useState<Date | null>(null)
   const [open, setOpen] = useState(false)
-  const pickDateItem: SelectItem<AuctionDatePickerValueWithPickDate> = React.useMemo(
+  const pickDateItem: SelectItem<AuctionDatePickerValueWithPickDate> = useMemo(
     () => ({
       value: { type: 'pick-date' },
       name: 'Pick specific date',
@@ -127,10 +125,7 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
   return (
     <Container>
       <Select<AuctionDatePickerValueWithPickDate>
-        size="small"
-        label={label}
-        labelTextProps={{ variant: 'h100', color: cVar('colorTextMuted'), secondary: true }}
-        iconLeft={isPickDate ? <SvgControlsCalendar /> : undefined}
+        icon={isPickDate ? <SvgControlsCalendar /> : undefined}
         value={pickedValue || { type: 'default' }}
         items={mappedItems}
         onChange={handleSelect}

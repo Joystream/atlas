@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Text } from '@/components/Text'
@@ -14,7 +14,7 @@ import { NotificationTile } from '../NotificationTile'
 
 type NotificationsWidgetProps = Omit<PopoverProps, 'content' | 'instanceRef'>
 
-export const NotificationsWidget: React.FC<NotificationsWidgetProps> = ({ ...rest }) => {
+export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ ...rest }) => {
   const popoverRef = useRef<PopoverImperativeHandle>()
   const { notifications, markNotificationsAsRead, setLastSeenNotificationBlock } = useNotifications()
   const firstNotification = notifications[0]
@@ -41,7 +41,9 @@ export const NotificationsWidget: React.FC<NotificationsWidgetProps> = ({ ...res
     <Popover hideOnClick ref={popoverRef} {...rest} onShow={handleShow} onHide={handleHide}>
       <Wrapper>
         <Header>
-          <Text variant="h400">Notifications</Text>
+          <Text as="h3" variant="h400">
+            Notifications
+          </Text>
           <Button variant="secondary" size="small" onClick={() => markNotificationsAsRead(notifications)}>
             Mark all as read
           </Button>
@@ -71,7 +73,9 @@ export const NotificationsWidget: React.FC<NotificationsWidgetProps> = ({ ...res
           to={absoluteRoutes.viewer.notifications()}
           onClick={popoverRef.current?.hide}
         >
-          <Text variant="t100">Go to notification center</Text>
+          <Text as="span" variant="t100">
+            Go to notification center
+          </Text>
         </StyledButton>
       </Wrapper>
     </Popover>

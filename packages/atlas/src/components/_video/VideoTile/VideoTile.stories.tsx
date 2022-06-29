@@ -1,5 +1,4 @@
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { OwnerPill } from '@/components/OwnerPill'
@@ -15,6 +14,7 @@ import {
   SvgIllustrativePlay,
 } from '@/components/_icons'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
+import { JOY_CURRENCY_TICKER } from '@/config/token'
 import { formatDateAgo } from '@/utils/time'
 
 import { VideoTile, VideoTileProps } from '.'
@@ -61,7 +61,7 @@ export default {
               },
               {
                 icon: <JoyTokenIcon size={16} variant="regular" />,
-                label: '24K tJOY',
+                label: `24K ${JOY_CURRENCY_TICKER}`,
                 variant: 'overlay',
               },
             ]}
@@ -126,12 +126,12 @@ Draft.args = {
   videoTitle: 'Draft',
   kebabMenuItems: [
     {
-      icon: <SvgActionEdit />,
-      title: 'Edit draft',
+      nodeStart: <SvgActionEdit />,
+      label: 'Edit draft',
     },
     {
-      icon: <SvgActionTrash />,
-      title: 'Delete draft',
+      nodeStart: <SvgActionTrash />,
+      label: 'Delete draft',
       destructive: true,
     },
   ],
@@ -183,20 +183,20 @@ Publisher.args = {
   },
   kebabMenuItems: [
     {
-      icon: <SvgActionPlay />,
-      title: 'Play in Joystream',
+      nodeStart: <SvgActionPlay />,
+      label: 'Play in Joystream',
     },
     {
-      icon: <SvgActionCopy />,
-      title: 'Copy video URL',
+      nodeStart: <SvgActionCopy />,
+      label: 'Copy video URL',
     },
     {
-      icon: <SvgActionEdit />,
-      title: 'Edit video',
+      nodeStart: <SvgActionEdit />,
+      label: 'Edit video',
     },
     {
-      icon: <SvgActionTrash />,
-      title: 'Delete video',
+      nodeStart: <SvgActionTrash />,
+      label: 'Delete video',
     },
   ],
   detailsVariant: 'withoutChannel',

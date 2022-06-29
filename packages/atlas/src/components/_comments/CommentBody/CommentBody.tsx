@@ -1,11 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 
 import { EmojiWrapper } from '@/components/EmojiWrapper'
 import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
 
 import { ExpandButton, StyledCommentText } from './CommentBody.styles'
 
-export const CommentBody = ({ children }: { children?: string }) => {
+type CommentBodyProps = {
+  children?: string
+}
+export const CommentBody: FC<CommentBodyProps> = ({ children }) => {
   const [commentExpanded, setCommentExpanded] = useState(false)
   const [isTruncated, setIsTruncated] = useState(false)
 
@@ -30,7 +33,13 @@ export const CommentBody = ({ children }: { children?: string }) => {
   return (
     <>
       <EmojiWrapper>
-        <StyledCommentText ref={commentBodyRef} commentExpanded={commentExpanded} variant="t200" secondary>
+        <StyledCommentText
+          as="span"
+          ref={commentBodyRef}
+          commentExpanded={commentExpanded}
+          variant="t200"
+          color="colorText"
+        >
           {trimmedComment}
         </StyledCommentText>
       </EmojiWrapper>

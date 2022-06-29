@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { ChangeEvent, forwardRef, useEffect, useRef, useState } from 'react'
 import mergeRefs from 'react-merge-refs'
 import useResizeObserver from 'use-resize-observer'
 
@@ -14,7 +14,6 @@ import {
   ButtonsContainer,
   Container,
   CustomPlaceholder,
-  CustomPlaceholderHandle,
   Flex,
   StyledCommentRow,
   StyledTextArea,
@@ -30,7 +29,7 @@ export type CommentInputProps = {
   hasInitialValueChanged: boolean
   onComment?: () => void
   onCancel?: () => void
-  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onChange?: (e: ChangeEvent<HTMLTextAreaElement>) => void
   onFocus?: () => void
   initialFocus?: boolean
   reply?: boolean
@@ -40,7 +39,7 @@ export type CommentInputProps = {
 const COMMENT_LIMIT = 50000
 const ERROR_SNACKBAR_TIMEOUT = 5000
 
-export const CommentInput = React.forwardRef<HTMLTextAreaElement, CommentInputProps>(
+export const CommentInput = forwardRef<HTMLTextAreaElement, CommentInputProps>(
   (
     {
       processing,
@@ -137,10 +136,13 @@ export const CommentInput = React.forwardRef<HTMLTextAreaElement, CommentInputPr
               disabled={processing}
               data-processing={processing}
             />
-            <CustomPlaceholder as="p" variant="t200">
+            <CustomPlaceholder as="p" variant="t200" color="colorTextMuted">
               Leave a public {reply ? 'reply' : 'comment'} as
               {memberHandle ? (
-                <CustomPlaceholderHandle variant="t200-strong"> {memberHandle}</CustomPlaceholderHandle>
+                <Text as="span" variant="t200-strong" color="inherit">
+                  {' '}
+                  {memberHandle}
+                </Text>
               ) : (
                 '...'
               )}
@@ -155,7 +157,7 @@ export const CommentInput = React.forwardRef<HTMLTextAreaElement, CommentInputPr
                 text="To publish a comment you need to sign a transaction. For now, no fees are involved."
                 multiline
               />
-              <Text variant="t100" secondary margin={{ left: 1, right: 4 }}>
+              <Text as="span" variant="t100" color="colorText" margin={{ left: 1, right: 4 }}>
                 {smMatch && 'We store comments on blockchain'}
               </Text>
             </Flex>

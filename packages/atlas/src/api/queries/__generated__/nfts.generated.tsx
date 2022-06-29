@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { AllNftFieldsFragmentDoc } from './fragments.generated'
+import { FullNftFieldsFragmentDoc } from './fragments.generated'
 
 const defaultOptions = {} as const
 export type GetNftQueryVariables = Types.Exact<{
@@ -53,7 +53,6 @@ export type GetNftQuery = {
       id: string
       title?: string | null
       createdAt: Date
-      views: number
       follows: number
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
@@ -69,36 +68,6 @@ export type GetNftQuery = {
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
-      } | null
-      ownerMember?: {
-        __typename?: 'Membership'
-        id: string
-        handle: string
-        metadata: {
-          __typename?: 'MemberMetadata'
-          about?: string | null
-          avatar?:
-            | {
-                __typename?: 'AvatarObject'
-                avatarObject?: {
-                  __typename?: 'StorageDataObject'
-                  id: string
-                  createdAt: Date
-                  size: string
-                  isAccepted: boolean
-                  ipfsHash: string
-                  storageBag: { __typename?: 'StorageBag'; id: string }
-                  type:
-                    | { __typename: 'DataObjectTypeChannelAvatar' }
-                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                    | { __typename: 'DataObjectTypeUnknown' }
-                    | { __typename: 'DataObjectTypeVideoMedia' }
-                    | { __typename: 'DataObjectTypeVideoThumbnail' }
-                } | null
-              }
-            | { __typename?: 'AvatarUri'; avatarUri: string }
-            | null
-        }
       } | null
     }
     transactionalStatusAuction?: {
@@ -267,28 +236,13 @@ export type GetNftQuery = {
       views: number
       createdAt: Date
       duration?: number | null
-      isPublic?: boolean | null
-      media?: {
-        __typename?: 'StorageDataObject'
-        id: string
-        createdAt: Date
-        size: string
-        isAccepted: boolean
-        ipfsHash: string
-        storageBag: { __typename?: 'StorageBag'; id: string }
-        type:
-          | { __typename: 'DataObjectTypeChannelAvatar' }
-          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-          | { __typename: 'DataObjectTypeUnknown' }
-          | { __typename: 'DataObjectTypeVideoMedia' }
-          | { __typename: 'DataObjectTypeVideoThumbnail' }
-      } | null
+      reactionsCount: number
+      commentsCount: number
       channel: {
         __typename?: 'Channel'
         id: string
         title?: string | null
         createdAt: Date
-        views: number
         follows: number
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
@@ -304,36 +258,6 @@ export type GetNftQuery = {
             | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
-        } | null
-        ownerMember?: {
-          __typename?: 'Membership'
-          id: string
-          handle: string
-          metadata: {
-            __typename?: 'MemberMetadata'
-            about?: string | null
-            avatar?:
-              | {
-                  __typename?: 'AvatarObject'
-                  avatarObject?: {
-                    __typename?: 'StorageDataObject'
-                    id: string
-                    createdAt: Date
-                    size: string
-                    isAccepted: boolean
-                    ipfsHash: string
-                    storageBag: { __typename?: 'StorageBag'; id: string }
-                    type:
-                      | { __typename: 'DataObjectTypeChannelAvatar' }
-                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                      | { __typename: 'DataObjectTypeUnknown' }
-                      | { __typename: 'DataObjectTypeVideoMedia' }
-                      | { __typename: 'DataObjectTypeVideoThumbnail' }
-                  } | null
-                }
-              | { __typename?: 'AvatarUri'; avatarUri: string }
-              | null
-          }
         } | null
       }
       thumbnailPhoto?: {
@@ -351,47 +275,7 @@ export type GetNftQuery = {
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
-      nft?: {
-        __typename?: 'OwnedNft'
-        id: string
-        createdAt: Date
-        creatorRoyalty?: number | null
-        ownerMember?: {
-          __typename?: 'Membership'
-          id: string
-          handle: string
-          metadata: {
-            __typename?: 'MemberMetadata'
-            about?: string | null
-            avatar?:
-              | {
-                  __typename?: 'AvatarObject'
-                  avatarObject?: {
-                    __typename?: 'StorageDataObject'
-                    id: string
-                    createdAt: Date
-                    size: string
-                    isAccepted: boolean
-                    ipfsHash: string
-                    storageBag: { __typename?: 'StorageBag'; id: string }
-                    type:
-                      | { __typename: 'DataObjectTypeChannelAvatar' }
-                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                      | { __typename: 'DataObjectTypeUnknown' }
-                      | { __typename: 'DataObjectTypeVideoMedia' }
-                      | { __typename: 'DataObjectTypeVideoThumbnail' }
-                  } | null
-                }
-              | { __typename?: 'AvatarUri'; avatarUri: string }
-              | null
-          }
-        } | null
-        transactionalStatus?:
-          | { __typename: 'TransactionalStatusBuyNow' }
-          | { __typename: 'TransactionalStatusIdle' }
-          | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
-          | null
-      } | null
+      nft?: { __typename?: 'OwnedNft'; id: string } | null
     }
   } | null
 }
@@ -445,7 +329,6 @@ export type GetNftsQuery = {
       id: string
       title?: string | null
       createdAt: Date
-      views: number
       follows: number
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
@@ -461,36 +344,6 @@ export type GetNftsQuery = {
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
-      } | null
-      ownerMember?: {
-        __typename?: 'Membership'
-        id: string
-        handle: string
-        metadata: {
-          __typename?: 'MemberMetadata'
-          about?: string | null
-          avatar?:
-            | {
-                __typename?: 'AvatarObject'
-                avatarObject?: {
-                  __typename?: 'StorageDataObject'
-                  id: string
-                  createdAt: Date
-                  size: string
-                  isAccepted: boolean
-                  ipfsHash: string
-                  storageBag: { __typename?: 'StorageBag'; id: string }
-                  type:
-                    | { __typename: 'DataObjectTypeChannelAvatar' }
-                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                    | { __typename: 'DataObjectTypeUnknown' }
-                    | { __typename: 'DataObjectTypeVideoMedia' }
-                    | { __typename: 'DataObjectTypeVideoThumbnail' }
-                } | null
-              }
-            | { __typename?: 'AvatarUri'; avatarUri: string }
-            | null
-        }
       } | null
     }
     transactionalStatusAuction?: {
@@ -659,28 +512,13 @@ export type GetNftsQuery = {
       views: number
       createdAt: Date
       duration?: number | null
-      isPublic?: boolean | null
-      media?: {
-        __typename?: 'StorageDataObject'
-        id: string
-        createdAt: Date
-        size: string
-        isAccepted: boolean
-        ipfsHash: string
-        storageBag: { __typename?: 'StorageBag'; id: string }
-        type:
-          | { __typename: 'DataObjectTypeChannelAvatar' }
-          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-          | { __typename: 'DataObjectTypeUnknown' }
-          | { __typename: 'DataObjectTypeVideoMedia' }
-          | { __typename: 'DataObjectTypeVideoThumbnail' }
-      } | null
+      reactionsCount: number
+      commentsCount: number
       channel: {
         __typename?: 'Channel'
         id: string
         title?: string | null
         createdAt: Date
-        views: number
         follows: number
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
@@ -696,36 +534,6 @@ export type GetNftsQuery = {
             | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
-        } | null
-        ownerMember?: {
-          __typename?: 'Membership'
-          id: string
-          handle: string
-          metadata: {
-            __typename?: 'MemberMetadata'
-            about?: string | null
-            avatar?:
-              | {
-                  __typename?: 'AvatarObject'
-                  avatarObject?: {
-                    __typename?: 'StorageDataObject'
-                    id: string
-                    createdAt: Date
-                    size: string
-                    isAccepted: boolean
-                    ipfsHash: string
-                    storageBag: { __typename?: 'StorageBag'; id: string }
-                    type:
-                      | { __typename: 'DataObjectTypeChannelAvatar' }
-                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                      | { __typename: 'DataObjectTypeUnknown' }
-                      | { __typename: 'DataObjectTypeVideoMedia' }
-                      | { __typename: 'DataObjectTypeVideoThumbnail' }
-                  } | null
-                }
-              | { __typename?: 'AvatarUri'; avatarUri: string }
-              | null
-          }
         } | null
       }
       thumbnailPhoto?: {
@@ -743,47 +551,7 @@ export type GetNftsQuery = {
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
-      nft?: {
-        __typename?: 'OwnedNft'
-        id: string
-        createdAt: Date
-        creatorRoyalty?: number | null
-        ownerMember?: {
-          __typename?: 'Membership'
-          id: string
-          handle: string
-          metadata: {
-            __typename?: 'MemberMetadata'
-            about?: string | null
-            avatar?:
-              | {
-                  __typename?: 'AvatarObject'
-                  avatarObject?: {
-                    __typename?: 'StorageDataObject'
-                    id: string
-                    createdAt: Date
-                    size: string
-                    isAccepted: boolean
-                    ipfsHash: string
-                    storageBag: { __typename?: 'StorageBag'; id: string }
-                    type:
-                      | { __typename: 'DataObjectTypeChannelAvatar' }
-                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                      | { __typename: 'DataObjectTypeUnknown' }
-                      | { __typename: 'DataObjectTypeVideoMedia' }
-                      | { __typename: 'DataObjectTypeVideoThumbnail' }
-                  } | null
-                }
-              | { __typename?: 'AvatarUri'; avatarUri: string }
-              | null
-          }
-        } | null
-        transactionalStatus?:
-          | { __typename: 'TransactionalStatusBuyNow' }
-          | { __typename: 'TransactionalStatusIdle' }
-          | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
-          | null
-      } | null
+      nft?: { __typename?: 'OwnedNft'; id: string } | null
     }
   }>
 }
@@ -845,7 +613,6 @@ export type GetNftsConnectionQuery = {
           id: string
           title?: string | null
           createdAt: Date
-          views: number
           follows: number
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
@@ -861,36 +628,6 @@ export type GetNftsConnectionQuery = {
               | { __typename: 'DataObjectTypeUnknown' }
               | { __typename: 'DataObjectTypeVideoMedia' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
-          } | null
-          ownerMember?: {
-            __typename?: 'Membership'
-            id: string
-            handle: string
-            metadata: {
-              __typename?: 'MemberMetadata'
-              about?: string | null
-              avatar?:
-                | {
-                    __typename?: 'AvatarObject'
-                    avatarObject?: {
-                      __typename?: 'StorageDataObject'
-                      id: string
-                      createdAt: Date
-                      size: string
-                      isAccepted: boolean
-                      ipfsHash: string
-                      storageBag: { __typename?: 'StorageBag'; id: string }
-                      type:
-                        | { __typename: 'DataObjectTypeChannelAvatar' }
-                        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                        | { __typename: 'DataObjectTypeUnknown' }
-                        | { __typename: 'DataObjectTypeVideoMedia' }
-                        | { __typename: 'DataObjectTypeVideoThumbnail' }
-                    } | null
-                  }
-                | { __typename?: 'AvatarUri'; avatarUri: string }
-                | null
-            }
           } | null
         }
         transactionalStatusAuction?: {
@@ -1059,28 +796,13 @@ export type GetNftsConnectionQuery = {
           views: number
           createdAt: Date
           duration?: number | null
-          isPublic?: boolean | null
-          media?: {
-            __typename?: 'StorageDataObject'
-            id: string
-            createdAt: Date
-            size: string
-            isAccepted: boolean
-            ipfsHash: string
-            storageBag: { __typename?: 'StorageBag'; id: string }
-            type:
-              | { __typename: 'DataObjectTypeChannelAvatar' }
-              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-              | { __typename: 'DataObjectTypeUnknown' }
-              | { __typename: 'DataObjectTypeVideoMedia' }
-              | { __typename: 'DataObjectTypeVideoThumbnail' }
-          } | null
+          reactionsCount: number
+          commentsCount: number
           channel: {
             __typename?: 'Channel'
             id: string
             title?: string | null
             createdAt: Date
-            views: number
             follows: number
             avatarPhoto?: {
               __typename?: 'StorageDataObject'
@@ -1096,36 +818,6 @@ export type GetNftsConnectionQuery = {
                 | { __typename: 'DataObjectTypeUnknown' }
                 | { __typename: 'DataObjectTypeVideoMedia' }
                 | { __typename: 'DataObjectTypeVideoThumbnail' }
-            } | null
-            ownerMember?: {
-              __typename?: 'Membership'
-              id: string
-              handle: string
-              metadata: {
-                __typename?: 'MemberMetadata'
-                about?: string | null
-                avatar?:
-                  | {
-                      __typename?: 'AvatarObject'
-                      avatarObject?: {
-                        __typename?: 'StorageDataObject'
-                        id: string
-                        createdAt: Date
-                        size: string
-                        isAccepted: boolean
-                        ipfsHash: string
-                        storageBag: { __typename?: 'StorageBag'; id: string }
-                        type:
-                          | { __typename: 'DataObjectTypeChannelAvatar' }
-                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                          | { __typename: 'DataObjectTypeUnknown' }
-                          | { __typename: 'DataObjectTypeVideoMedia' }
-                          | { __typename: 'DataObjectTypeVideoThumbnail' }
-                      } | null
-                    }
-                  | { __typename?: 'AvatarUri'; avatarUri: string }
-                  | null
-              }
             } | null
           }
           thumbnailPhoto?: {
@@ -1143,47 +835,7 @@ export type GetNftsConnectionQuery = {
               | { __typename: 'DataObjectTypeVideoMedia' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
           } | null
-          nft?: {
-            __typename?: 'OwnedNft'
-            id: string
-            createdAt: Date
-            creatorRoyalty?: number | null
-            ownerMember?: {
-              __typename?: 'Membership'
-              id: string
-              handle: string
-              metadata: {
-                __typename?: 'MemberMetadata'
-                about?: string | null
-                avatar?:
-                  | {
-                      __typename?: 'AvatarObject'
-                      avatarObject?: {
-                        __typename?: 'StorageDataObject'
-                        id: string
-                        createdAt: Date
-                        size: string
-                        isAccepted: boolean
-                        ipfsHash: string
-                        storageBag: { __typename?: 'StorageBag'; id: string }
-                        type:
-                          | { __typename: 'DataObjectTypeChannelAvatar' }
-                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                          | { __typename: 'DataObjectTypeUnknown' }
-                          | { __typename: 'DataObjectTypeVideoMedia' }
-                          | { __typename: 'DataObjectTypeVideoThumbnail' }
-                      } | null
-                    }
-                  | { __typename?: 'AvatarUri'; avatarUri: string }
-                  | null
-              }
-            } | null
-            transactionalStatus?:
-              | { __typename: 'TransactionalStatusBuyNow' }
-              | { __typename: 'TransactionalStatusIdle' }
-              | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
-              | null
-          } | null
+          nft?: { __typename?: 'OwnedNft'; id: string } | null
         }
       }
     }>
@@ -1194,10 +846,10 @@ export type GetNftsConnectionQuery = {
 export const GetNftDocument = gql`
   query GetNft($id: ID!) {
     ownedNftByUniqueInput(where: { id: $id }) {
-      ...AllNftFields
+      ...FullNftFields
     }
   }
-  ${AllNftFieldsFragmentDoc}
+  ${FullNftFieldsFragmentDoc}
 `
 
 /**
@@ -1230,10 +882,10 @@ export type GetNftQueryResult = Apollo.QueryResult<GetNftQuery, GetNftQueryVaria
 export const GetNftsDocument = gql`
   query GetNfts($where: OwnedNftWhereInput, $orderBy: OwnedNftOrderByInput! = createdAt_DESC) {
     ownedNfts(where: $where, orderBy: [$orderBy]) {
-      ...AllNftFields
+      ...FullNftFields
     }
   }
-  ${AllNftFieldsFragmentDoc}
+  ${FullNftFieldsFragmentDoc}
 `
 
 /**
@@ -1275,7 +927,7 @@ export const GetNftsConnectionDocument = gql`
       edges {
         cursor
         node {
-          ...AllNftFields
+          ...FullNftFields
         }
       }
       pageInfo {
@@ -1285,7 +937,7 @@ export const GetNftsConnectionDocument = gql`
       totalCount
     }
   }
-  ${AllNftFieldsFragmentDoc}
+  ${FullNftFieldsFragmentDoc}
 `
 
 /**

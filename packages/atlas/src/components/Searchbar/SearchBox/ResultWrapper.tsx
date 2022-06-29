@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import { FC, PropsWithChildren, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router'
 
 import { ShortcutIndicator } from '@/components/ShortcutIndicator'
@@ -7,7 +7,7 @@ import { SvgActionClose } from '@/components/_icons'
 
 import { DeleteButton, SearchItemContent, SearchItemWrapper, Shortcut } from './SearchBox.styles'
 
-type SearchItemProps = {
+type SearchItemProps = PropsWithChildren<{
   to: string
   onDelete?: () => void
   onClick?: () => void
@@ -15,9 +15,9 @@ type SearchItemProps = {
   selected?: boolean
   handleSelectedItem: (top: number) => void
   selectedItem: null | number
-}
+}>
 
-export const ResultWrapper: React.FC<SearchItemProps> = ({
+export const ResultWrapper: FC<SearchItemProps> = ({
   to,
   onDelete,
   children,
@@ -60,7 +60,7 @@ export const ResultWrapper: React.FC<SearchItemProps> = ({
     >
       <SearchItemContent>{children}</SearchItemContent>
       <Shortcut>
-        <Text secondary variant="t100">
+        <Text as="span" color="colorText" variant="t100">
           Select
         </Text>
         <ShortcutIndicator>↩</ShortcutIndicator>

@@ -1,26 +1,27 @@
-import React, { useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
+import { LottiePlayer } from '@/components/LottiePlayer'
 import { Text } from '@/components/Text'
-import { SvgActionCheck } from '@/components/_icons'
-import { Dialog } from '@/components/_overlays/Dialog'
+import { SvgActionCheck, SvgLogoPolkadot } from '@/components/_icons'
 import { JOYSTREAM_STORAGE_DISCORD_URL } from '@/config/urls'
 import { ErrorCode, ExtrinsicStatus } from '@/joystream-lib'
-import { useUser } from '@/providers/user'
+import { useUser, useUserStore } from '@/providers/user'
 import { transitions } from '@/styles'
 
-import { getExtrisincStatusDetails } from './TransactionModal.constants'
+import { getExtrinsicStatusDetails } from './TransactionModal.constants'
 import {
-  PolkadotLogoWrapper,
   Step,
   StepsBar,
-  StyledLottie,
+  StyledDialog,
+  StyledIconWrapper,
   StyledModal,
-  StyledPolkadotLogo,
   StyledTransactionIllustration,
   SuccessBackground,
   SuccessIcon,
   SuccessWrapper,
+  WalletInfoWrapper,
+  WalletLogo,
 } from './TransactionModal.styles'
 
 export type TransactionModalProps = {
@@ -30,16 +31,22 @@ export type TransactionModalProps = {
   errorCode?: ErrorCode | null
 }
 
-export const TransactionModal: React.FC<TransactionModalProps> = ({ onClose, status, className, errorCode }) => {
+export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, className, errorCode }) => {
   const [polkadotLogoVisible, setPolkadotLogoVisible] = useState(false)
   const [initialStatus, setInitialStatus] = useState<number | null>(null)
+  const userWalletName = useUserStore((state) => state.wallet?.title)
   const nonUploadTransaction = initialStatus === ExtrinsicStatus.Unsigned
   const error = status === ExtrinsicStatus.Error
   const stepDetails =
     status != null
-      ? getExtrisincStatusDetails(status === ExtrinsicStatus.Completed ? ExtrinsicStatus.Syncing : status, errorCode)
+      ? getExtrinsicStatusDetails(
+          status === ExtrinsicStatus.Completed ? ExtrinsicStatus.Syncing : status,
+          errorCode,
+          userWalletName
+        )
       : null
-  const { activeChannelId } = useUser()
+  const { channelId } = useUser()
+  const wallet = useUserStore((state) => state.wallet)
 
   useEffect(() => {
     if (status !== null && initialStatus === null) {
@@ -73,7 +80,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ onClose, sta
   const transactionSteps = Array.from({ length: nonUploadTransaction ? 3 : 4 })
 
   return (
-    <StyledModal show={!!stepDetails} {...className}>
+    <StyledModal show={!!stepDetails} className={className}>
       <StepsBar>
         {transactionSteps.map((_, idx) => (
           <Step
@@ -97,18 +104,20 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ onClose, sta
           mountOnEnter
           unmountOnExit
         >
-          <PolkadotLogoWrapper>
-            <StyledPolkadotLogo />
-            <Text secondary variant="t100">
-              Continue in Polkadot extension
+          <WalletInfoWrapper>
+            <StyledIconWrapper
+              icon={wallet?.logo.src ? <WalletLogo src={wallet.logo.src} alt={wallet.logo.alt} /> : <SvgLogoPolkadot />}
+            />
+            <Text as="span" color="colorText" variant="t100">
+              Continue in {wallet?.title}
             </Text>
-          </PolkadotLogoWrapper>
+          </WalletInfoWrapper>
         </CSSTransition>
-        {!polkadotLogoVisible && status !== ExtrinsicStatus.Completed && (
-          <StyledLottie
-            loop={stepDetails?.animation?.loop}
-            animationData={stepDetails?.animation?.data}
-            play
+        {!polkadotLogoVisible && status !== ExtrinsicStatus.Completed && stepDetails && (
+          <LottiePlayer
+            loop={stepDetails.animation.loop}
+            data={stepDetails.animation.data}
+            size={stepDetails.animation.size}
             onComplete={() =>
               !stepDetails?.animation?.loop && status === ExtrinsicStatus.Unsigned && setPolkadotLogoVisible(true)
             }
@@ -129,7 +138,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ onClose, sta
           </SuccessWrapper>
         </CSSTransition>
       </StyledTransactionIllustration>
-      <Dialog
+      <StyledDialog
         title={stepDetails?.title}
         primaryButton={
           status === ExtrinsicStatus.Error && errorCode === ErrorCode.VoucherSizeLimitExceeded
@@ -145,12 +154,12 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ onClose, sta
           disabled: !canCancel,
         }}
       >
-        <Text variant="t200" secondary>
-          {status === ExtrinsicStatus.Error && errorCode === ErrorCode.VoucherSizeLimitExceeded && activeChannelId
-            ? `${stepDetails?.description} Channel ID: ${activeChannelId}`
+        <Text as="span" variant="t200" color="colorText">
+          {status === ExtrinsicStatus.Error && errorCode === ErrorCode.VoucherSizeLimitExceeded && channelId
+            ? `${stepDetails?.description} Channel ID: ${channelId}`
             : stepDetails?.description}
         </Text>
-      </Dialog>
+      </StyledDialog>
     </StyledModal>
   )
 }

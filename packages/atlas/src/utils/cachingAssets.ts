@@ -1,11 +1,11 @@
 import { ApolloClient, Reference } from '@apollo/client'
 
-import { VideoEdge, VideoFieldsFragment, VideoFieldsFragmentDoc } from '@/api/queries'
+import { FullVideoFieldsFragment, FullVideoFieldsFragmentDoc, VideoEdge } from '@/api/queries'
 
 type WriteVideoDataCacheArg = {
   edge: {
     cursor: string
-    node: VideoFieldsFragment
+    node: FullVideoFieldsFragment
   }
   thumbnailUrl?: string | null
   client: ApolloClient<object>
@@ -14,8 +14,8 @@ type WriteVideoDataCacheArg = {
 export const writeVideoDataInCache = ({ edge, client }: WriteVideoDataCacheArg) => {
   const video = client.cache.writeFragment({
     id: `Video:${edge.node.id}`,
-    fragment: VideoFieldsFragmentDoc,
-    fragmentName: 'VideoFields',
+    fragment: FullVideoFieldsFragmentDoc,
+    fragmentName: 'FullVideoFields',
     data: edge.node,
   })
   client.cache.modify({
@@ -40,7 +40,7 @@ export const removeVideoFromCache = (videoId: string, client: ApolloClient<objec
   client.cache.modify({
     fields: {
       videos: (existingVideos = []) => {
-        return existingVideos.filter((video: VideoFieldsFragment) => video.id !== videoId)
+        return existingVideos.filter((video: FullVideoFieldsFragment) => video.id !== videoId)
       },
       videosConnection: (existing = {}) => {
         return (

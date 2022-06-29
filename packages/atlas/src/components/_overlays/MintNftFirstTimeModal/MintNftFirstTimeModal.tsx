@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { Text } from '@/components/Text'
 import { SvgOtherVideoTile } from '@/components/_illustrations'
@@ -11,7 +11,7 @@ type MintNftFirstTimeModalProps = {
   onClose: () => void
 }
 
-export const MintNftFirstTimeModal: React.FC<MintNftFirstTimeModalProps> = ({ show, onClose }) => {
+export const MintNftFirstTimeModal: FC<MintNftFirstTimeModalProps> = ({ show, onClose }) => {
   const handleDismiss = () => {
     onClose()
   }
@@ -29,7 +29,7 @@ export const MintNftFirstTimeModal: React.FC<MintNftFirstTimeModalProps> = ({ sh
         }}
         actionDivider
       >
-        <Text variant="t200" secondary>
+        <Text as="p" variant="t200" color="colorText">
           Now that you've minted your first NFT, you can put it on sale by choosing "Start sale" from your video
           options.
         </Text>

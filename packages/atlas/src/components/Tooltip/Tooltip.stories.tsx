@@ -1,5 +1,4 @@
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
@@ -23,6 +22,7 @@ export default {
   },
   args: {
     customContent: false,
+    icon: false,
     offsetX: 0,
     offsetY: 0,
     placement: 'bottom-start',
@@ -35,7 +35,9 @@ const DefaultTooltip: Story<TooltipProps> = (args) => (
   <Tooltip
     {...args}
     showOnCreate
-    customContent={args.customContent && <div style={{ border: '1px solid red' }}>Custom content</div>}
+    customContent={
+      args.customContent && <div style={{ border: '1px solid red' }}>Custom content which is quite long</div>
+    }
   />
 )
 
@@ -52,7 +54,9 @@ const TextTooltip: Story<TooltipProps> = (args) => (
       )
     }
   >
-    <Text variant="t200">Hello there!</Text>
+    <Text as="span" variant="t200">
+      Hello there!
+    </Text>
   </Tooltip>
 )
 
@@ -69,7 +73,9 @@ const HeadingTooltip: Story<TooltipProps> = (args) => (
       )
     }
   >
-    <Text variant="h800">Hello there!</Text>
+    <Text as="h1" variant="h800">
+      Hello there!
+    </Text>
   </Tooltip>
 )
 

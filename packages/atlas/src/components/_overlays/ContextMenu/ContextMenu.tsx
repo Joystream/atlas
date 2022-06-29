@@ -1,25 +1,17 @@
-import React, { ReactNode, useRef } from 'react'
+import styled from '@emotion/styled'
+import { FC, useRef } from 'react'
 
-import { ListItem } from '@/components/ListItem'
-
-import { ContextMenuSizes, StyledContainer } from './ContextMenu.styles'
+import { List } from '@/components/List'
+import { ListItemProps, ListItemSizes } from '@/components/ListItem'
 
 import { Popover, PopoverImperativeHandle, PopoverProps } from '../Popover'
 
-export type MenuItemProps = {
-  icon: ReactNode
-  title: string
-  onClick?: () => void
-  disabled?: boolean
-  destructive?: boolean
-}
-
-export type ContextMenuProps = { items: MenuItemProps[]; scrollable?: boolean; size?: ContextMenuSizes } & Omit<
+export type ContextMenuProps = { items: ListItemProps[]; scrollable?: boolean; size?: ListItemSizes } & Omit<
   PopoverProps,
   'content' | 'instanceRef'
 >
 
-export const ContextMenu: React.FC<ContextMenuProps> = ({
+export const ContextMenu: FC<ContextMenuProps> = ({
   children,
   items,
   scrollable = false,
@@ -29,21 +21,23 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
   const contextMenuInstanceRef = useRef<PopoverImperativeHandle>(null)
   return (
     <Popover hideOnClick ref={contextMenuInstanceRef} {...rest}>
-      <StyledContainer scrollable={scrollable} size={size}>
-        {items.map((item, index) => (
-          <ListItem
-            size={size}
-            key={index}
-            onClick={() => {
-              item.onClick?.()
+      <StyledContainer>
+        <List
+          scrollable={scrollable}
+          size={size}
+          items={items.map((item) => ({
+            ...item,
+            onClick: (e) => {
+              item.onClick?.(e)
               contextMenuInstanceRef.current?.hide()
-            }}
-            label={item.title}
-            nodeStart={item.icon}
-            destructive={item.destructive}
-          />
-        ))}
+            },
+          }))}
+        />
       </StyledContainer>
     </Popover>
   )
 }
+
+export const StyledContainer = styled.div`
+  width: 192px;
+`

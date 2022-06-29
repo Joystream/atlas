@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
-import React, { useCallback } from 'react'
+import { FC, MouseEvent, memo, useCallback } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 
-import { getNftStatus, useVideo } from '@/api/hooks'
+import { getNftStatus, useFullVideo } from '@/api/hooks'
 import { OwnerPill } from '@/components/OwnerPill'
 import { Pill } from '@/components/Pill'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
@@ -39,18 +39,18 @@ import { VideoTile } from '../VideoTile'
 
 type VideoTilePublisherProps = {
   id?: string
-  onEditClick?: (e?: React.MouseEvent<HTMLElement>) => void
-  onMintNftClick?: (e?: React.MouseEvent<HTMLElement>) => void
+  onEditClick?: (e?: MouseEvent<Element>) => void
+  onMintNftClick?: (e?: MouseEvent<Element>) => void
   onDeleteVideoClick?: () => void
   onReuploadVideoClick?: () => void
 }
 
 export const DELAYED_FADE_CLASSNAME = 'delayed-fade'
 
-export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
+export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
   ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onMintNftClick }) => {
     const { copyToClipboard } = useClipboard()
-    const { video, loading } = useVideo(id ?? '', {
+    const { video, loading } = useFullVideo(id ?? '', {
       skip: !id,
       onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTilePublisher', error, { video: { id } }),
     })
@@ -186,16 +186,16 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       }
       const assetFailedKebabItems = [
         {
-          icon: <SvgActionReupload />,
+          nodeStart: <SvgActionReupload />,
           onClick: onReuploadVideoClick,
-          title: 'Reupload file',
+          label: 'Reupload file',
         },
         ...(!hasNft
           ? [
               {
-                icon: <SvgActionTrash />,
+                nodeStart: <SvgActionTrash />,
                 onClick: onDeleteVideoClick,
-                title: 'Delete video',
+                label: 'Delete video',
                 destructive: true,
               },
             ]
@@ -210,54 +210,54 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
 
       const publisherBasicKebabItems = [
         {
-          icon: <SvgActionPlay />,
+          nodeStart: <SvgActionPlay />,
           onClick: onOpenInTabClick,
-          title: 'Play in Joystream',
+          label: 'Play in Joystream',
         },
         {
-          icon: <SvgActionCopy />,
+          nodeStart: <SvgActionCopy />,
           onClick: () => {
             copyToClipboard(videoHref ? location.origin + videoHref : '', 'Video URL copied to clipboard')
           },
-          title: 'Copy video URL',
+          label: 'Copy video URL',
         },
         {
-          icon: <SvgActionEdit />,
+          nodeStart: <SvgActionEdit />,
           onClick: onEditClick,
-          title: 'Edit video',
+          label: 'Edit video',
         },
         ...(hasNft
           ? [
               ...(needsSettling
                 ? [
                     {
-                      icon: <SvgActionShoppingCart />,
+                      nodeStart: <SvgActionShoppingCart />,
                       onClick: () => id && openNftSettlement(id),
-                      title: 'Settle auction',
+                      label: 'Settle auction',
                     },
                   ]
                 : []),
               ...(canPutOnSale
-                ? [{ icon: <SvgActionSell />, onClick: () => openNftPutOnSale(id || ''), title: 'Start sale' }]
+                ? [{ nodeStart: <SvgActionSell />, onClick: () => openNftPutOnSale(id || ''), label: 'Start sale' }]
                 : []),
               ...(canCancelSale && saleType
                 ? [
                     {
-                      icon: <SvgActionTrash />,
+                      nodeStart: <SvgActionTrash />,
                       onClick: () => cancelNftSale(id || '', saleType),
-                      title: 'Remove from sale',
+                      label: 'Remove from sale',
                       destructive: true,
                     },
                   ]
                 : []),
             ]
-          : [{ icon: <SvgActionMint />, onClick: onMintNftClick, title: 'Mint NFT' }]),
+          : [{ nodeStart: <SvgActionMint />, onClick: onMintNftClick, label: 'Mint NFT' }]),
         ...(!hasNft && !canCancelSale
           ? [
               {
-                icon: <SvgActionTrash />,
+                nodeStart: <SvgActionTrash />,
                 onClick: onDeleteVideoClick,
-                title: 'Delete video',
+                label: 'Delete video',
                 destructive: true,
               },
             ]

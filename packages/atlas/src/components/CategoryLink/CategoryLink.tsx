@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC, MouseEvent } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Text, TextVariant } from '@/components/Text'
@@ -13,7 +13,7 @@ import { Container, IconWrapper, StyledSkeletonLoader } from './CategoryLink.sty
 type CategoryLinkProps = {
   id?: string | null
   name?: string | null
-  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void
+  onClick?: (e: MouseEvent<HTMLAnchorElement>) => void
   categoryName?: string
   hideHandle?: boolean
   hideIcon?: boolean
@@ -23,7 +23,7 @@ type CategoryLinkProps = {
   textSecondary?: boolean
 }
 
-export const CategoryLink: React.FC<CategoryLinkProps> = ({
+export const CategoryLink: FC<CategoryLinkProps> = ({
   id,
   name,
   onClick,
@@ -58,7 +58,7 @@ export const CategoryLink: React.FC<CategoryLinkProps> = ({
             timeout={parseInt(transitions.timings.regular)}
           >
             {id ? (
-              <Text variant={_textVariant} secondary={!!textSecondary}>
+              <Text as="span" variant={_textVariant} color={textSecondary ? 'colorText' : undefined}>
                 More in {name}
               </Text>
             ) : (

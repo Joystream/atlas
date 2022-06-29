@@ -1,16 +1,17 @@
-import React, { FormEvent, useState } from 'react'
+import { FC, FormEvent, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { useNft } from '@/api/hooks'
 import { TabItem, Tabs } from '@/components/Tabs'
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
-import { TextField } from '@/components/_inputs/TextField'
+import { Input } from '@/components/_inputs/Input'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
 import { NftAuctionInputMetadata, NftIssuanceInputMetadata, NftSaleInputMetadata, NftSaleType } from '@/joystream-lib'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions'
 import { useAuthorizedUser } from '@/providers/user'
+import { sizes } from '@/styles'
 
 const TABS: TabItem[] = [
   { name: 'Issue NFT' },
@@ -23,7 +24,7 @@ const TABS: TabItem[] = [
   { name: 'Settle english auction' },
 ]
 
-export const PlaygroundNftExtrinsics: React.FC = () => {
+export const PlaygroundNftExtrinsics: FC = () => {
   const [videoId, setVideoId] = useState('')
   const [selectedTabIdx, setSelectedTabIdx] = useState(0)
   const { nft, nftStatus, refetch } = useNft(videoId)
@@ -65,7 +66,7 @@ export const PlaygroundNftExtrinsics: React.FC = () => {
       <div>
         <Tabs tabs={TABS} onSelectTab={setSelectedTabIdx} selected={selectedTabIdx} />
         {getTabContents()}
-        <div style={{ maxWidth: 320 }}>
+        <div style={{ maxWidth: 320, marginTop: sizes(8) }}>
           <NftTileViewer nftId={videoId} />
         </div>
         <pre>{JSON.stringify(nft, null, 2)}</pre>
@@ -75,7 +76,9 @@ export const PlaygroundNftExtrinsics: React.FC = () => {
 
   return (
     <div>
-      <TextField label="Video ID" value={videoId} onChange={(e) => setVideoId(e.target.value)} />
+      <FormField label="Video ID">
+        <Input value={videoId} onChange={(e) => setVideoId(e.target.value)} />
+      </FormField>
 
       {!!videoId && getDetailsContent()}
     </div>
@@ -92,7 +95,7 @@ type FormProps = {
 type IssueInputs = {
   royalties?: string
 }
-const Issue: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
+const Issue: FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   const {
     register,
     handleSubmit: createSubmitHandler,
@@ -100,7 +103,7 @@ const Issue: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   } = useForm<IssueInputs>()
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useAuthorizedUser()
+  const { memberId } = useAuthorizedUser()
 
   const handleSubmit = (data: IssueInputs) => {
     if (!joystream) return
@@ -111,20 +114,19 @@ const Issue: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
     handleTransaction({
       onError,
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).issueNft(videoId, activeMemberId, metadata, proxyCallback(updateStatus)),
+        (await joystream.extrinsics).issueNft(videoId, memberId, metadata, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
     })
   }
 
   return (
     <div>
-      <form onSubmit={createSubmitHandler(handleSubmit)}>
-        <FormField title="Royalties" optional>
-          <TextField
-            {...register('royalties', { min: 0, max: 100 })}
-            error={!!errors.royalties}
-            helperText={errors.royalties?.message}
-          />
+      <form
+        onSubmit={createSubmitHandler(handleSubmit)}
+        style={{ display: 'grid', gap: sizes(8), marginTop: sizes(8) }}
+      >
+        <FormField label="Royalties" optional error={errors.royalties?.message}>
+          <Input {...register('royalties', { min: 0, max: 100 })} error={!!errors.royalties} />
         </FormField>
         <Button type="submit">Issue NFT</Button>
       </form>
@@ -135,7 +137,7 @@ const Issue: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
 type BuyNowInputs = {
   buyNowPrice: number
 }
-const StartBuyNow: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
+const StartBuyNow: FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   const {
     register,
     handleSubmit: createSubmitHandler,
@@ -144,7 +146,7 @@ const StartBuyNow: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
 
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useAuthorizedUser()
+  const { memberId } = useAuthorizedUser()
 
   const handleSubmit = (data: BuyNowInputs) => {
     if (!joystream) return
@@ -156,20 +158,19 @@ const StartBuyNow: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
     handleTransaction({
       onError,
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).putNftOnSale(videoId, activeMemberId, metadata, proxyCallback(updateStatus)),
+        (await joystream.extrinsics).putNftOnSale(videoId, memberId, metadata, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
     })
   }
 
   return (
     <div>
-      <form onSubmit={createSubmitHandler(handleSubmit)}>
-        <FormField title="Buy now price">
-          <TextField
-            {...register('buyNowPrice')}
-            error={!!errors.buyNowPrice}
-            helperText={errors.buyNowPrice?.message}
-          />
+      <form
+        onSubmit={createSubmitHandler(handleSubmit)}
+        style={{ display: 'grid', gap: sizes(8), marginTop: sizes(8) }}
+      >
+        <FormField label="Buy now price" error={errors.buyNowPrice?.message}>
+          <Input {...register('buyNowPrice')} error={!!errors.buyNowPrice} />
         </FormField>
         <Button type="submit">Start buy now</Button>
       </form>
@@ -185,7 +186,7 @@ type AuctionInputs = {
   auctionDurationBlocks?: string
   whitelistedMembers?: string
 }
-const StartAuction: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
+const StartAuction: FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   const {
     register,
     handleSubmit: createSubmitHandler,
@@ -194,7 +195,7 @@ const StartAuction: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
 
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useAuthorizedUser()
+  const { memberId } = useAuthorizedUser()
 
   const handleSubmit = (data: AuctionInputs) => {
     if (!joystream) return
@@ -222,62 +223,39 @@ const StartAuction: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
     handleTransaction({
       onError,
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).putNftOnSale(videoId, activeMemberId, metadata, proxyCallback(updateStatus)),
+        (await joystream.extrinsics).putNftOnSale(videoId, memberId, metadata, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
     })
   }
 
   return (
     <div>
-      <form onSubmit={createSubmitHandler(handleSubmit)}>
-        <FormField title="Starting price">
-          <TextField
-            {...register('startingPrice', { required: true })}
-            type="number"
-            error={!!errors.startingPrice}
-            helperText={errors.startingPrice?.message}
-          />
+      <form
+        onSubmit={createSubmitHandler(handleSubmit)}
+        style={{ display: 'grid', gap: sizes(8), marginTop: sizes(8) }}
+      >
+        <FormField label="Starting price" error={errors.startingPrice?.message}>
+          <Input {...register('startingPrice', { required: true })} type="number" error={!!errors.startingPrice} />
         </FormField>
-        <FormField title="Minimal bid step">
-          <TextField
-            {...register('minimalBidStep', { required: true })}
-            type="number"
-            error={!!errors.minimalBidStep}
-            helperText={errors.minimalBidStep?.message}
-          />
+        <FormField label="Minimal bid step">
+          <Input {...register('minimalBidStep', { required: true })} type="number" error={!!errors.minimalBidStep} />
         </FormField>
-        <FormField title="Buy now price" optional>
-          <TextField
-            {...register('buyNowPrice')}
-            type="number"
-            error={!!errors.buyNowPrice}
-            helperText={errors.buyNowPrice?.message}
-          />
+        <FormField label="Buy now price" error={errors.buyNowPrice?.message} optional>
+          <Input {...register('buyNowPrice')} type="number" error={!!errors.buyNowPrice} />
         </FormField>
-        <FormField title="Starts at block" optional>
-          <TextField
-            {...register('startsAtBlock')}
-            type="number"
-            error={!!errors.startsAtBlock}
-            helperText={errors.startsAtBlock?.message}
-          />
+        <FormField label="Starts at block" error={errors.startsAtBlock?.message} optional>
+          <Input {...register('startsAtBlock')} type="number" error={!!errors.startsAtBlock} />
         </FormField>
-        <FormField title="Duration in blocks" optional>
-          <TextField
-            {...register('auctionDurationBlocks')}
-            type="number"
-            error={!!errors.auctionDurationBlocks}
-            helperText={errors.auctionDurationBlocks?.message}
-          />
+        <FormField label="Duration in blocks" error={errors.auctionDurationBlocks?.message} optional>
+          <Input {...register('auctionDurationBlocks')} type="number" error={!!errors.auctionDurationBlocks} />
         </FormField>
 
-        <FormField title="Whitelisted members (comma-separated IDs)" optional>
-          <TextField
-            {...register('whitelistedMembers')}
-            type="text"
-            error={!!errors.whitelistedMembers}
-            helperText={errors.whitelistedMembers?.message}
-          />
+        <FormField
+          error={errors.whitelistedMembers?.message}
+          label="Whitelisted members (comma-separated IDs)"
+          optional
+        >
+          <Input {...register('whitelistedMembers')} type="text" error={!!errors.whitelistedMembers} />
         </FormField>
 
         <Button type="submit">Start auction</Button>
@@ -286,7 +264,7 @@ const StartAuction: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   )
 }
 
-const BuyNow: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
+const BuyNow: FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   const {
     register,
     handleSubmit: createSubmitHandler,
@@ -295,7 +273,7 @@ const BuyNow: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
 
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useAuthorizedUser()
+  const { memberId } = useAuthorizedUser()
 
   const handleSubmit = (data: BuyNowInputs) => {
     if (!joystream) return
@@ -303,20 +281,19 @@ const BuyNow: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
     handleTransaction({
       onError,
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).buyNftNow(videoId, activeMemberId, data.buyNowPrice, proxyCallback(updateStatus)),
+        (await joystream.extrinsics).buyNftNow(videoId, memberId, data.buyNowPrice, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
     })
   }
 
   return (
     <div>
-      <form onSubmit={createSubmitHandler(handleSubmit)}>
-        <FormField title="Price">
-          <TextField
-            {...register('buyNowPrice')}
-            error={!!errors.buyNowPrice}
-            helperText={errors.buyNowPrice?.message}
-          />
+      <form
+        onSubmit={createSubmitHandler(handleSubmit)}
+        style={{ display: 'grid', gap: sizes(8), marginTop: sizes(8) }}
+      >
+        <FormField error={errors.buyNowPrice?.message} label="Price">
+          <Input {...register('buyNowPrice')} error={!!errors.buyNowPrice} />
         </FormField>
         <Button type="submit">Buy now</Button>
       </form>
@@ -327,7 +304,7 @@ const BuyNow: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
 type MakeBidInputs = {
   bid: number
 }
-const MakeBid: React.FC<FormProps> = ({ videoId, onSuccess, onError, type }) => {
+const MakeBid: FC<FormProps> = ({ videoId, onSuccess, onError, type }) => {
   const {
     register,
     handleSubmit: createSubmitHandler,
@@ -336,7 +313,7 @@ const MakeBid: React.FC<FormProps> = ({ videoId, onSuccess, onError, type }) => 
 
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useAuthorizedUser()
+  const { memberId } = useAuthorizedUser()
 
   const handleSubmit = (data: MakeBidInputs) => {
     if (!joystream || !type || type === 'buyNow') return
@@ -344,16 +321,19 @@ const MakeBid: React.FC<FormProps> = ({ videoId, onSuccess, onError, type }) => 
     handleTransaction({
       onError,
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).makeNftBid(videoId, activeMemberId, data.bid, type, proxyCallback(updateStatus)),
+        (await joystream.extrinsics).makeNftBid(videoId, memberId, data.bid, type, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
     })
   }
 
   return (
     <div>
-      <form onSubmit={createSubmitHandler(handleSubmit)}>
-        <FormField title="Bid">
-          <TextField {...register('bid')} error={!!errors.bid} helperText={errors.bid?.message} />
+      <form
+        onSubmit={createSubmitHandler(handleSubmit)}
+        style={{ display: 'grid', gap: sizes(8), marginTop: sizes(8) }}
+      >
+        <FormField label="Bid" error={errors.bid?.message}>
+          <Input {...register('bid')} error={!!errors.bid} />
         </FormField>
         <Button type="submit">Place bid</Button>
       </form>
@@ -361,10 +341,10 @@ const MakeBid: React.FC<FormProps> = ({ videoId, onSuccess, onError, type }) => 
   )
 }
 
-const CancelSale: React.FC<FormProps> = ({ videoId, onSuccess, onError, type }) => {
+const CancelSale: FC<FormProps> = ({ videoId, onSuccess, onError, type }) => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useAuthorizedUser()
+  const { memberId } = useAuthorizedUser()
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -373,24 +353,24 @@ const CancelSale: React.FC<FormProps> = ({ videoId, onSuccess, onError, type }) 
     handleTransaction({
       onError,
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).cancelNftSale(videoId, activeMemberId, type, proxyCallback(updateStatus)),
+        (await joystream.extrinsics).cancelNftSale(videoId, memberId, type, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
     })
   }
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
+    <div style={{ marginTop: sizes(8) }}>
+      <form onSubmit={handleSubmit} style={{ marginTop: sizes(8) }}>
         <Button type="submit">Cancel sale</Button>
       </form>
     </div>
   )
 }
 
-const CancelBid: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
+const CancelBid: FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useAuthorizedUser()
+  const { memberId } = useAuthorizedUser()
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -399,21 +379,21 @@ const CancelBid: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
     handleTransaction({
       onError,
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).cancelNftBid(videoId, activeMemberId, proxyCallback(updateStatus)),
+        (await joystream.extrinsics).cancelNftBid(videoId, memberId, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
     })
   }
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} style={{ marginTop: sizes(8) }}>
         <Button type="submit">Cancel bid</Button>
       </form>
     </div>
   )
 }
 
-const SettleAuction: React.FC<FormProps> = ({ videoId, onSuccess, type }) => {
+const SettleAuction: FC<FormProps> = ({ videoId, onSuccess, type }) => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
 
@@ -430,7 +410,7 @@ const SettleAuction: React.FC<FormProps> = ({ videoId, onSuccess, type }) => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} style={{ marginTop: sizes(8) }}>
         <Button type="submit">Settle auction</Button>
       </form>
     </div>

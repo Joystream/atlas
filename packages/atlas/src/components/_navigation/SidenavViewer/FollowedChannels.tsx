@@ -1,8 +1,9 @@
-import React from 'react'
+import { FC } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { useBasicChannel } from '@/api/hooks'
 import { Avatar } from '@/components/Avatar'
+import { Text } from '@/components/Text'
 import { SvgActionNewChannel } from '@/components/_icons'
 import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { NavItem, NavItemProps } from '@/components/_navigation/NavItem'
@@ -13,7 +14,6 @@ import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
 import {
-  BrowseChannelsText,
   BrowseChannelsWrapper,
   ChannelTitle,
   ChannelsList,
@@ -28,7 +28,7 @@ type ChannelNavItemProps = {
   onChannelNotFound?: (id: string) => void
 }
 
-export const ChannelNavItem: React.FC<NavItemProps & ChannelNavItemProps> = ({
+export const ChannelNavItem: FC<NavItemProps & ChannelNavItemProps> = ({
   id,
   to,
   expanded,
@@ -48,7 +48,7 @@ export const ChannelNavItem: React.FC<NavItemProps & ChannelNavItemProps> = ({
     <NavItem to={to} expanded={expanded} itemName={itemName} onClick={onClick} isSecondary={isSecondary}>
       <Avatar loading={!channel} size="default" assetUrl={avatarPhotoUrl} />
       {channel ? (
-        <ChannelTitle variant="h300" secondary={true}>
+        <ChannelTitle as="p" variant="h300" color="colorText">
           {channel.title}
         </ChannelTitle>
       ) : (
@@ -65,7 +65,7 @@ type FollowedChannelsProps = {
   onChannelNotFound?: (id: string) => void
 }
 
-export const FollowedChannels: React.FC<FollowedChannelsProps> = ({
+export const FollowedChannels: FC<FollowedChannelsProps> = ({
   followedChannels,
   expanded,
   onClick,
@@ -79,7 +79,7 @@ export const FollowedChannels: React.FC<FollowedChannelsProps> = ({
       classNames={transitions.names.fade}
     >
       <FollowedChannelsWrapper>
-        <ChannelsTitle variant="h100" secondary>
+        <ChannelsTitle as="h4" variant="h100" color="colorText" margin={{ top: 6, bottom: 4 }}>
           Followed channels
         </ChannelsTitle>
         <ChannelsWrapper>
@@ -99,7 +99,9 @@ export const FollowedChannels: React.FC<FollowedChannelsProps> = ({
         </ChannelsWrapper>
         <BrowseChannelsWrapper to={absoluteRoutes.viewer.channels()} onClick={onClick}>
           <IconWrapper icon={<SvgActionNewChannel />} />
-          <BrowseChannelsText variant="h300">Browse channels</BrowseChannelsText>
+          <Text as="span" variant="h300" margin={{ left: 4 }} color="inherit">
+            Browse channels
+          </Text>
         </BrowseChannelsWrapper>
       </FollowedChannelsWrapper>
     </CSSTransition>

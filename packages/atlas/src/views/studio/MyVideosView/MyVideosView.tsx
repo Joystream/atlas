@@ -1,11 +1,12 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useVideosConnection } from '@/api/hooks'
+import { useFullVideosConnection } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Tabs } from '@/components/Tabs'
+import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionAddVideo, SvgActionUpload, SvgAlertsInformative24 } from '@/components/_icons'
@@ -31,7 +32,6 @@ import {
   StyledGrid,
   StyledPagination,
   StyledSelect,
-  StyledText,
   TabsContainer,
 } from './MyVideos.styles'
 import { NewVideoTile } from './NewVideoTile'
@@ -68,10 +68,10 @@ export const MyVideosView = () => {
   const addToTabNotificationsCount = useRef(0)
 
   const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
-  const { activeChannelId } = useAuthorizedUser()
+  const { channelId } = useAuthorizedUser()
   const { removeDrafts, markAllDraftsAsSeenForChannel } = useDraftStore(({ actions }) => actions)
-  const unseenDrafts = useDraftStore(chanelUnseenDraftsSelector(activeChannelId))
-  const _drafts = useDraftStore(channelDraftsSelector(activeChannelId))
+  const unseenDrafts = useDraftStore(chanelUnseenDraftsSelector(channelId))
+  const _drafts = useDraftStore(channelDraftsSelector(channelId))
 
   const drafts = [
     ...(_drafts.length ? ['new-video-tile' as const] : []),
@@ -80,13 +80,13 @@ export const MyVideosView = () => {
       : _drafts.slice().sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime())),
   ]
 
-  const { edges, totalCount, loading, error, fetchMore, refetch, variables, pageInfo } = useVideosConnection(
+  const { edges, totalCount, loading, error, fetchMore, refetch, variables, pageInfo } = useFullVideosConnection(
     {
       first: INITIAL_FIRST,
       orderBy: sortVideosBy,
       where: {
         channel: {
-          id_eq: activeChannelId,
+          id_eq: channelId,
         },
         isPublic_eq,
       },
@@ -134,7 +134,7 @@ export const MyVideosView = () => {
     setCurrentVideosTab(tab)
     if (TABS[tab] === 'Drafts') {
       if (unseenDrafts.length > 0) {
-        markAllDraftsAsSeenForChannel(activeChannelId ?? '')
+        markAllDraftsAsSeenForChannel(channelId ?? '')
       }
     }
   }
@@ -266,9 +266,8 @@ export const MyVideosView = () => {
 
   const sortSelectNode = (
     <Select
-      size="small"
-      labelPosition="left"
-      label="Sort by"
+      size="medium"
+      inlineLabel="Sort by"
       value={sortVideosBy}
       items={VIDEO_SORT_OPTIONS}
       onChange={handleSorting}
@@ -279,7 +278,9 @@ export const MyVideosView = () => {
   return (
     <LimitedWidthContainer>
       {headTags}
-      <StyledText variant="h700">My videos</StyledText>
+      <Text as="h1" variant="h700" margin={{ top: 12, bottom: 12 }}>
+        My videos
+      </Text>
       {!smMatch && sortVisibleAndUploadButtonVisible && (
         <MobileButton
           size="large"
@@ -325,7 +326,7 @@ export const MyVideosView = () => {
           </TabsContainer>
           {isDraftTab && (
             <StyledBanner
-              id="video-draft-saved-locally-warning"
+              dismissibleId="video-draft-saved-locally-warning"
               title="Video drafts are saved locally"
               icon={<SvgAlertsInformative24 />}
               description="You will only be able to access drafts on the device you used to create them. Clearing your browser history will delete all your drafts."
@@ -333,7 +334,7 @@ export const MyVideosView = () => {
           )}
           {isUnlistedTab && (
             <StyledBanner
-              id="unlisted-video-link-info"
+              dismissibleId="unlisted-video-link-info"
               title="Unlisted videos can be seen only with direct link"
               icon={<SvgAlertsInformative24 />}
               description="You can share a private video with others by sharing a direct link to it. Unlisted video is not going to be searchable on our platform."
@@ -341,9 +342,8 @@ export const MyVideosView = () => {
           )}
           {!mdMatch && sortVisibleAndUploadButtonVisible && (
             <StyledSelect
-              size="small"
-              labelPosition="left"
-              label="Sort by"
+              size="medium"
+              inlineLabel="Sort by"
               value={sortVideosBy}
               items={VIDEO_SORT_OPTIONS}
               onChange={handleSorting}

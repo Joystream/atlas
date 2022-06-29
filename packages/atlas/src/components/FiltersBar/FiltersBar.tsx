@@ -1,5 +1,5 @@
 import { add } from 'date-fns'
-import React, { useMemo, useRef } from 'react'
+import { FC, ReactNode, useMemo, useRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { useCategories } from '@/api/hooks'
@@ -52,7 +52,7 @@ const nftStatuses = [
   },
 ]
 
-export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> = ({
+export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> = ({
   setVideoWhereInput,
   videoWhereInput,
   activeFilters,
@@ -254,13 +254,13 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
           <>
             {activeFilters.includes('language') && (
               <MobileFilterContainer>
-                <Text secondary variant="h100">
+                <Text as="span" color="colorText" variant="h100">
                   Language
                 </Text>
                 <Select
                   items={[{ name: 'All languages', value: 'undefined' }, ...languages]}
                   placeholder="Any language"
-                  size="small"
+                  size="medium"
                   value={language}
                   onChange={setLanguage}
                 />
@@ -268,7 +268,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
             )}
             {activeFilters.includes('nftStatus') && (
               <MobileFilterContainer>
-                <Text secondary variant="h100">
+                <Text as="span" color="colorText" variant="h100">
                   Status
                 </Text>
                 {nftStatusInputs}
@@ -276,7 +276,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
             )}
             {categories && activeFilters.includes('categories') && (
               <MobileFilterContainer>
-                <Text secondary variant="h100">
+                <Text as="span" color="colorText" variant="h100">
                   Categories
                 </Text>
                 {categoriesInputs}
@@ -284,7 +284,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
             )}
             {activeFilters.includes('date') && (
               <MobileFilterContainer>
-                <Text secondary variant="h100">
+                <Text as="span" color="colorText" variant="h100">
                   Date uploaded
                 </Text>
                 {dateUploadedInputs}
@@ -292,7 +292,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
             )}
             {activeFilters.includes('date-minted') && (
               <MobileFilterContainer>
-                <Text secondary variant="h100">
+                <Text as="span" color="colorText" variant="h100">
                   Date minted
                 </Text>
                 {dateUploadedInputs}
@@ -300,7 +300,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
             )}
             {activeFilters.includes('length') && (
               <MobileFilterContainer>
-                <Text secondary variant="h100">
+                <Text as="span" color="colorText" variant="h100">
                   Length
                 </Text>
                 {videoLengthInputs}
@@ -308,7 +308,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
             )}
             {activeFilters.includes('other') && (
               <MobileFilterContainer>
-                <OtherFilterStyledText secondary variant="h100">
+                <OtherFilterStyledText as="span" color="colorText" variant="h100">
                   <OtherFilterStyledIcon />
                   Exclude:
                 </OtherFilterStyledText>
@@ -608,7 +608,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                 disabled: !excludePaidPromotionalMaterialFilter && !excludeMatureContentRatingFilter,
               }}
             >
-              <OtherFilterStyledText secondary variant="h100">
+              <OtherFilterStyledText as="span" color="colorText" variant="h100">
                 <OtherFilterStyledIcon />
                 Exclude:
               </OtherFilterStyledText>
@@ -627,10 +627,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
   )
 }
 
-const MobileFilterDialog: React.FC<{ content: React.ReactNode } & DialogModalProps> = ({
-  content,
-  ...dialogModalProps
-}) => {
+const MobileFilterDialog: FC<{ content: ReactNode } & DialogModalProps> = ({ content, ...dialogModalProps }) => {
   return (
     <DialogModal {...dialogModalProps} dividers>
       {content}

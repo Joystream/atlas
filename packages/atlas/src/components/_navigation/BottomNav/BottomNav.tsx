@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import { FC, useCallback, useEffect, useRef } from 'react'
 import { useMatch } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
@@ -8,19 +8,21 @@ import { transitions } from '@/styles'
 
 import { Container, NavLink, NavTitle } from './BottomNav.styles'
 
-const Link: React.FC<typeof viewerNavItems[number]> = ({ to, icon, name }) => {
+const Link: FC<typeof viewerNavItems[number]> = ({ to, icon, name }) => {
   const match = useMatch(to)
   return (
     <NavLink to={to} active={match}>
       {icon}
-      <NavTitle variant="t100-strong">{name}</NavTitle>
+      <NavTitle as="span" variant="t100-strong">
+        {name}
+      </NavTitle>
     </NavLink>
   )
 }
 
 const OPENING_MARGIN = 24
 
-export const BottomNav = () => {
+export const BottomNav: FC = () => {
   const { open, setOpen } = useBottomNavStore((state) => ({ open: state.open, setOpen: state.actions.setOpen }))
   const pageYOffsetRef = useRef<number | null>(null)
 

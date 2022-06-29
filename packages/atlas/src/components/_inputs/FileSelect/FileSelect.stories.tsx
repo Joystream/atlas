@@ -1,5 +1,5 @@
 import { Meta, Story } from '@storybook/react'
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 
@@ -29,21 +29,34 @@ export default {
 } as Meta
 
 const Template: Story<FileSelectProps> = (args) => {
-  const [videofile, setVideoFile] = useState<null | File>(null)
+  const [file, setFile] = useState<File>()
   return (
     <>
-      <FileSelect {...args} onUploadFile={(file) => setVideoFile(file)} />
-      <p>{videofile ? 'File' : 'No uploaded file'}</p>
-      {videofile && (
+      <FileSelect {...args} file={file} onUploadFile={(file) => setFile(file)} />
+      <p>{file ? 'File' : 'No uploaded file'}</p>
+      {file && (
         <ul>
-          <li>name: {videofile.name}</li>
-          <li>size: {videofile.size}</li>
-          <li>type: {videofile.type}</li>
-          <li>lastModified: {videofile?.lastModified}</li>
+          <li>name: {file.name}</li>
+          <li>size: {file.size}</li>
+          <li>type: {file.type}</li>
+          <li>lastModified: {file?.lastModified}</li>
         </ul>
       )}
     </>
   )
 }
 
-export const Default = Template.bind({})
+export const playlist = Template.bind({})
+playlist.args = {
+  type: 'playlist-thumbnail',
+}
+
+export const VideoThumbnail = Template.bind({})
+VideoThumbnail.args = {
+  type: 'video-thumbnail',
+}
+
+export const VideoFile = Template.bind({})
+VideoFile.args = {
+  type: 'video-file',
+}

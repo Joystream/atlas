@@ -1,7 +1,7 @@
-import React, { forwardRef } from 'react'
+import { ReactNode, forwardRef } from 'react'
 
 import { Text } from '@/components/Text'
-import { SvgThumbsUpIllustration } from '@/components/_illustrations'
+import { SvgOtherThumbsUpIllustrationSvg } from '@/components/_illustrations'
 import { DialogPopover } from '@/components/_overlays/DialogPopover'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -12,7 +12,7 @@ type ReactionsOnboardingPopoverProps = {
   onDecline?: () => void
   onConfirm?: () => void
   disabled?: boolean
-  trigger: React.ReactNode
+  trigger: ReactNode
 }
 
 export const ReactionsOnboardingPopover = forwardRef<PopoverImperativeHandle, ReactionsOnboardingPopoverProps>(
@@ -43,11 +43,13 @@ export const ReactionsOnboardingPopover = forwardRef<PopoverImperativeHandle, Re
         trigger={trigger}
       >
         <PopoverIllustrationWrapper>
-          <SvgThumbsUpIllustration />
+          <SvgOtherThumbsUpIllustrationSvg />
         </PopoverIllustrationWrapper>
         <PopoverContentWrapper>
-          <Text variant="h300">We save social interactions on blockchain</Text>
-          <Text variant="t200" secondary margin={{ top: 2 }} as="p">
+          <Text as="h4" variant="h300">
+            We save social interactions on blockchain
+          </Text>
+          <Text as="p" variant="t200" color="colorText" margin={{ top: 2 }}>
             Comments and reactions are stored on blockchain, meaning every action needs a wallet signature to take
             effect. Transaction fees apply.
           </Text>

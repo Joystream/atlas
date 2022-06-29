@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react'
+import { FC, useCallback, useRef } from 'react'
 import { DropzoneOptions, useDropzone } from 'react-dropzone'
 import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
@@ -45,7 +45,7 @@ type UploadStatusProps = {
   size?: UploadStatusGroupSize
 }
 
-export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asset, size }) => {
+export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, size }) => {
   const navigate = useNavigate()
   const startFileUpload = useStartFileUpload()
   const uploadStatus = useUploadsStore((state) => state.uploadsStatus[asset.id])
@@ -94,7 +94,7 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
     },
   })
 
-  const onDrop: DropzoneOptions['onDrop'] = useCallback(
+  const onDrop = useCallback<NonNullable<DropzoneOptions['onDrop']>>(
     async (acceptedFiles) => {
       const [file] = acceptedFiles
       setUploadStatus(asset.id, { lastStatus: 'inProgress', progress: 0 })
@@ -134,7 +134,9 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
     multiple: false,
     noClick: true,
     noKeyboard: true,
-    accept: isVideo ? 'video/*' : 'image/*',
+    accept: {
+      [isVideo ? 'video/*' : 'image/*']: [],
+    },
   })
 
   const fileTypeText = isVideo ? 'Video file' : `${asset.type.charAt(0).toUpperCase() + asset.type.slice(1)} image`
@@ -208,7 +210,7 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
     if (uploadStatus?.lastStatus === 'error') {
       return (
         <FailedStatusWrapper>
-          <StatusText variant="t200" secondary size={size}>
+          <StatusText as="span" variant="t200" color="colorText" size={size}>
             {failedStatusText}
           </StatusText>
           <RetryButton size="small" variant="secondary" icon={<SvgActionUpload />} onClick={handleChangeHost}>
@@ -220,7 +222,7 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
     if (!uploadStatus?.lastStatus) {
       return (
         <FailedStatusWrapper>
-          <StatusText variant="t200" secondary size={size}>
+          <StatusText as="span" variant="t200" color="colorText" size={size}>
             {failedStatusText}
           </StatusText>
           <div {...getRootProps()}>
@@ -270,21 +272,23 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
           <FileInfo size={size}>
             <FileInfoType warning={isReconnecting && size === 'compact'}>
               {isVideo ? <SvgActionVideoFile /> : <SvgActionImageFile />}
-              <Text variant="t200">{fileTypeText}</Text>
+              <Text as="span" variant="t200">
+                {fileTypeText}
+              </Text>
             </FileInfoType>
             {size === 'compact' && isReconnecting ? (
-              <Text variant="t200" secondary>
+              <Text as="span" variant="t200" color="colorText">
                 Trying to reconnect...({uploadStatus.retries})
               </Text>
             ) : (
               <FileInfoDetails size={size}>
                 {assetDimension && (
-                  <Text variant="t200" secondary>
+                  <Text as="span" variant="t200" color="colorText">
                     {assetDimension}
                   </Text>
                 )}
                 {assetSize && (
-                  <Text variant="t200" secondary>
+                  <Text as="span" variant="t200" color="colorText">
                     {assetSize}
                   </Text>
                 )}

@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { Tooltip, TooltipProps } from '@/components/Tooltip'
 import { isMobile } from '@/utils/browser'
@@ -9,10 +9,10 @@ export type InformationProps = TooltipProps & {
   className?: string
 }
 
-export const Information: React.FC<InformationProps> = ({ className, ...tooltipProps }) => {
+export const Information: FC<InformationProps> = ({ className, ...tooltipProps }) => {
   return (
     <InformationWrapper>
-      <Tooltip {...tooltipProps} offsetY={4} offsetX={4} hideOnClick={false}>
+      <Tooltip {...tooltipProps} offsetY={8} offsetX={8} hideOnClick={false}>
         <TouchableWrapper
           onClick={(event) => {
             if (isMobile()) {

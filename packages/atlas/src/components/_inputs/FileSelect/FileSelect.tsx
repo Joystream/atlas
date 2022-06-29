@@ -1,10 +1,10 @@
 import beazierEasing from 'bezier-easing'
-import React, { useCallback, useEffect } from 'react'
+import { FC, MouseEvent, useCallback, useEffect } from 'react'
 import { DropzoneOptions, FileRejection, useDropzone } from 'react-dropzone'
 import { useTransition } from 'react-spring'
 
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
+import { Button, ButtonVariant } from '@/components/_buttons/Button'
 import {
   SvgActionUpload,
   SvgIllustrativeFileSelected,
@@ -16,25 +16,22 @@ import { FileType } from '@/types/files'
 
 import {
   ButtonsGroup,
+  Content,
   DragAndDropArea,
   DragDropText,
+  FileHoverOverlay,
+  FileSelectedOverlay,
   InnerContainer,
-  Paragraph,
-  SelectedFileInfo,
-  SelectedFileInfoBackground,
-  SelectedFileInfoHeading,
-  SelectedFileInfoInnerContainer,
   Thumbnail,
   Title,
 } from './FileSelect.styles'
 
 export type FileSelectProps = {
-  fileType: FileType
+  type: 'video-thumbnail' | 'playlist-thumbnail' | 'video-file'
+  file: File | undefined
   onUploadFile: (file: File) => void
-  title: string
-  paragraph: string
   thumbnailUrl?: string | null
-  isLoading?: boolean
+  isFileLoading?: boolean
   onReAdjustThumbnail?: () => void
   onDropRejected?: (fileRejections: FileRejection[]) => void
   onError?: (error: string | null, fileType: FileType) => void
@@ -42,23 +39,24 @@ export type FileSelectProps = {
   maxSize?: number
 }
 
-export const FileSelect: React.FC<FileSelectProps> = ({
+export const FileSelect: FC<FileSelectProps> = ({
   onUploadFile,
-  fileType,
   maxSize,
-  title,
-  paragraph,
   thumbnailUrl,
   onReAdjustThumbnail,
   onDropRejected,
   onError,
   error,
-  isLoading,
+  isFileLoading,
+  type,
+  file,
 }) => {
-  const selectedFileTransition = useTransition(isLoading, {
-    from: { opacity: 0, transform: 'scale(1.5)', x: '0%' },
-    enter: { opacity: 1, transform: 'scale(1)', x: '0%' },
-    leave: { opacity: 0, transform: 'scale(1)', x: '-200%' },
+  const fileType = type === 'video-file' ? 'video' : 'image'
+
+  const selectedFileTransition = useTransition(isFileLoading, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 },
     config: {
       duration: 400,
       easing: beazierEasing(0, 0, 0.58, 1),
@@ -69,14 +67,14 @@ export const FileSelect: React.FC<FileSelectProps> = ({
     from: { x: '200%' },
     enter: { x: '0%' },
     leave: { x: '-200%' },
-    immediate: fileType === 'video',
+    immediate: type !== 'video-thumbnail',
     config: {
       duration: 400,
       easing: beazierEasing(0, 0, 0.58, 1),
     },
   })
 
-  const onDropAccepted: DropzoneOptions['onDropAccepted'] = useCallback(
+  const onDropAccepted = useCallback<NonNullable<DropzoneOptions['onDropAccepted']>>(
     (acceptedFiles) => {
       const [file] = acceptedFiles
       onUploadFile(file)
@@ -84,12 +82,14 @@ export const FileSelect: React.FC<FileSelectProps> = ({
     [onUploadFile]
   )
 
-  const { getRootProps, getInputProps, isDragAccept, isFileDialogActive, open, acceptedFiles } = useDropzone({
+  const { getRootProps, getInputProps, isDragAccept, isFileDialogActive, open } = useDropzone({
     onDropAccepted,
     onDropRejected,
     maxFiles: 1,
     multiple: false,
-    accept: fileType + '/*',
+    accept: {
+      [fileType + '/*']: [],
+    },
     maxSize,
     noClick: true,
     noKeyboard: true,
@@ -123,54 +123,92 @@ export const FileSelect: React.FC<FileSelectProps> = ({
     })
   }, [closeErrorDialog, error, fileType, onError, open, openErrorDialog])
 
-  const handleReAdjustThumbnail = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
+  const handleReAdjustThumbnail = (e: MouseEvent<HTMLImageElement>) => {
     e.stopPropagation()
     onReAdjustThumbnail?.()
   }
 
+  let title: string
+  let paragraph: string
+  let buttonVariant: ButtonVariant = 'primary'
+
+  switch (type) {
+    case 'playlist-thumbnail':
+      title = 'Custom playlist thumbnail'
+      paragraph = 'Upload 16:9 thumbnail or select it from any video from your playlist'
+      buttonVariant = 'secondary'
+      break
+    case 'video-thumbnail':
+      title = 'Select thumbnail image'
+      paragraph = 'Preferred 16:9 image ratio'
+      break
+    case 'video-file':
+      title = 'Select video file'
+      paragraph = 'Maximum 10GB. Prefered format is MP4 (H.264) or WEBM (VP8,VP9)'
+      break
+  }
   return (
-    <DragAndDropArea {...getRootProps()} isDragAccept={isDragAccept} isFileDialogActive={isFileDialogActive}>
-      <input {...getInputProps()} />
-      {selectedFileTransition(
-        (styles, item) =>
-          item && (
-            <SelectedFileInfo style={{ opacity: styles.opacity }}>
-              <SelectedFileInfoBackground />
-              <SelectedFileInfoInnerContainer style={{ transform: styles.transform, x: styles.x }}>
+    <>
+      <DragAndDropArea
+        {...getRootProps()}
+        isDragAccept={isDragAccept}
+        fileAccepted={!!file}
+        isFileDialogActive={isFileDialogActive}
+      >
+        <InnerContainer fileAccepted={!!file}>
+          <input {...getInputProps()} />
+          {innerContainerTransition((style, item) =>
+            thumbnailUrl && fileType === 'image' ? (
+              <Thumbnail
+                isLoading={isFileLoading}
+                src={thumbnailUrl}
+                alt="video thumbnail"
+                onClick={handleReAdjustThumbnail}
+                title="Click to readjust"
+              />
+            ) : (
+              <Content key={item} style={style} isLoading={isFileLoading}>
+                {fileType === 'video' ? <SvgIllustrativeVideo /> : <SvgIllustrativeImage />}
+                <Title as="span" variant="h400">
+                  {title}
+                </Title>
+                <Text margin={{ top: 3 }} variant="t200" as="p" color="colorText">
+                  {paragraph}
+                </Text>
+                <ButtonsGroup>
+                  <DragDropText as="span" variant="t100" color="colorText">
+                    Drag and drop or
+                  </DragDropText>
+                  <Button variant={buttonVariant} size="medium" onClick={() => open()} icon={<SvgActionUpload />}>
+                    Select a file
+                  </Button>
+                </ButtonsGroup>
+              </Content>
+            )
+          )}
+        </InnerContainer>
+        <FileHoverOverlay>
+          {fileType === 'video' ? <SvgIllustrativeVideo /> : <SvgIllustrativeImage />}
+          <Text as="span" margin={{ top: 1 }} variant="t200-strong">
+            Drop file here to upload it
+          </Text>
+        </FileHoverOverlay>
+        {selectedFileTransition(
+          (styles, item) =>
+            !!file &&
+            item && (
+              <FileSelectedOverlay style={{ opacity: styles.opacity }}>
                 <SvgIllustrativeFileSelected />
-                <SelectedFileInfoHeading variant="t100">selected</SelectedFileInfoHeading>
-                {acceptedFiles.length !== 0 && <Text variant="t200">{acceptedFiles[0].name}</Text>}
-              </SelectedFileInfoInnerContainer>
-            </SelectedFileInfo>
-          )
-      )}
-      {innerContainerTransition((style, item) =>
-        thumbnailUrl && fileType === 'image' ? (
-          <Thumbnail
-            isLoading={isLoading}
-            src={thumbnailUrl}
-            alt="video thumbnail"
-            onClick={handleReAdjustThumbnail}
-            title="Click to readjust"
-          />
-        ) : (
-          <InnerContainer key={item} style={style} isLoading={isLoading}>
-            {fileType === 'video' ? <SvgIllustrativeVideo /> : <SvgIllustrativeImage />}
-            <Title variant="h400">{title}</Title>
-            <Paragraph variant="t200" as="p" secondary>
-              {paragraph}
-            </Paragraph>
-            <ButtonsGroup>
-              <DragDropText variant="t100" secondary>
-                Drag and drop or
-              </DragDropText>
-              <Button size="medium" onClick={() => open()} icon={<SvgActionUpload />}>
-                Select a file
-              </Button>
-            </ButtonsGroup>
-          </InnerContainer>
-        )
-      )}
-    </DragAndDropArea>
+                <Text as="span" margin={{ top: 2 }} color="colorCoreBlue200" variant="t100">
+                  selected
+                </Text>
+                <Text as="span" margin={{ top: 1 }} variant="t200">
+                  {file.name}
+                </Text>
+              </FileSelectedOverlay>
+            )
+        )}
+      </DragAndDropArea>
+    </>
   )
 }

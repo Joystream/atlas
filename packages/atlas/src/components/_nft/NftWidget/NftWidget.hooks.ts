@@ -3,7 +3,9 @@ import { useEffect } from 'react'
 
 import { useNft, useNftHistory } from '@/api/hooks'
 import { useBids } from '@/api/hooks/bids'
+import { FullVideoFieldsFragment } from '@/api/queries'
 import { NftWidgetProps } from '@/components/_nft/NftWidget/NftWidget'
+import { NFT_STATUS_POLLING_INTERVAL } from '@/config/nft'
 import { useNftState } from '@/hooks/useNftState'
 import { useMemberAvatar } from '@/providers/assets'
 import { useUser } from '@/providers/user'
@@ -11,12 +13,10 @@ import { SentryLogger } from '@/utils/logs'
 
 import { NftHistoryEntry } from './NftHistory'
 
-const POLL_INTERVAL = 10000
-
 type UseNftWidgetReturn = NftWidgetProps | null
-export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
-  const { activeMemberId } = useUser()
-  const { nft, nftStatus, called, startPolling, stopPolling } = useNft(videoId ?? '')
+export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null): UseNftWidgetReturn => {
+  const { memberId } = useUser()
+  const { nft, nftStatus, called, startPolling, stopPolling } = useNft(video?.id ?? '', { skip: !video || !video.nft })
   const {
     isOwner,
     englishTimerState,
@@ -39,7 +39,7 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
   const hasNft = !!nft
   useEffect(() => {
     if (!called || !hasNft) return
-    startPolling(POLL_INTERVAL)
+    startPolling(NFT_STATUS_POLLING_INTERVAL)
 
     return () => {
       stopPolling()
@@ -51,17 +51,17 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
       where: {
         isCanceled_eq: false,
         nft: { id_eq: nft?.id },
-        bidder: { id_eq: activeMemberId },
+        bidder: { id_eq: memberId },
       },
     },
     {
       fetchPolicy: 'cache-and-network',
-      skip: !nft?.id || !activeMemberId,
+      skip: !nft?.id || !memberId,
       onError: (error) =>
         SentryLogger.error('Failed to fetch member bids', 'useNftState', error, {
           data: {
             nft: nft?.id,
-            member: activeMemberId,
+            member: memberId,
           },
         }),
     }
@@ -71,7 +71,7 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
     (bid) =>
       bid.auction.auctionType.__typename === 'AuctionTypeOpen' &&
       (nftStatus?.status !== 'auction' || bid.auction.id !== nftStatus.auctionId) &&
-      bid.auction.winningMemberId !== activeMemberId
+      bid.auction.winningMemberId !== memberId
   )
   const bidFromPreviousAuction = unwithdrawnUserBids?.[0]
 
@@ -80,7 +80,10 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
   const { url: ownerAvatarUri } = useMemberAvatar(owner)
   const { url: topBidderAvatarUri } = useMemberAvatar(nftStatus?.status === 'auction' ? nftStatus.topBidder : undefined)
 
-  const { entries: nftHistory } = useNftHistoryEntries(videoId || null, { skip: !nft, pollInterval: POLL_INTERVAL })
+  const { entries: nftHistory } = useNftHistoryEntries(video?.id ?? '', {
+    skip: !nft,
+    pollInterval: NFT_STATUS_POLLING_INTERVAL,
+  })
 
   switch (nftStatus?.status) {
     case 'auction': {

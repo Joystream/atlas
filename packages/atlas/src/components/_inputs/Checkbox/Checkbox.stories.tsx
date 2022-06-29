@@ -1,5 +1,4 @@
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
 
 import { WithValue } from '@/components/../../.storybook/WithValue'
 
@@ -22,6 +21,11 @@ export default {
     onChange: { table: { disable: true } },
     onFocus: { table: { disable: true } },
     onBlur: { table: { disable: true } },
+  },
+  args: {
+    disabled: false,
+    error: false,
+    indeterminate: false,
   },
 } as Meta
 
@@ -50,8 +54,8 @@ Single.argTypes = {
   indeterminate: { table: { disable: false } },
   disabled: { table: { disable: false } },
   error: { table: { disable: false } },
-  helperText: {
-    defaultValue: 'With helper text',
+  caption: {
+    defaultValue: 'With caption',
   },
 }
 

@@ -15,16 +15,11 @@ export const useTokenPrice = () => {
 
   const convertToUSD = useCallback(
     (tokens: number) => {
-      const formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        maximumSignificantDigits: 3,
-      })
-      return tokenPrice ? formatter.format(tokens * tokenPrice) : null
+      return tokenPrice ? tokens * tokenPrice : null
     },
     [tokenPrice]
   )
-  const convertToTJoy = useCallback(
+  const convertToTokenPrice = useCallback(
     (dollars: number) => {
       if (!tokenPrice) return 0
       return dollars / tokenPrice
@@ -35,7 +30,7 @@ export const useTokenPrice = () => {
 
   return {
     convertToUSD,
-    convertToTJoy,
+    convertToTokenPrice,
     isLoadingPrice,
   }
 }

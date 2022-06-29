@@ -53,10 +53,6 @@ export const OverviewContainer = styled.div`
   }
 `
 
-export const PriceText = styled.span`
-  color: ${cVar('colorTextStrong')};
-`
-
 export const StyledLink = styled(Link)`
   color: inherit;
   text-decoration: none;

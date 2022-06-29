@@ -1,10 +1,11 @@
 import styled from '@emotion/styled'
-import React, { useState } from 'react'
+import { FC, useState } from 'react'
 
+import { NumberFormat } from '@/components/NumberFormat'
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
-import { TextField } from '@/components/_inputs/TextField'
+import { Input } from '@/components/_inputs/Input'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { useTokenPrice } from '@/providers/joystream'
 import { sizes } from '@/styles'
@@ -16,7 +17,7 @@ type ChangePriceDialogProps = {
   nftId: string | null
 }
 
-export const ChangePriceDialog: React.FC<ChangePriceDialogProps> = ({ onModalClose, isOpen, onChangePrice, nftId }) => {
+export const ChangePriceDialog: FC<ChangePriceDialogProps> = ({ onModalClose, isOpen, onChangePrice, nftId }) => {
   const [price, setPrice] = useState<number | null>(null)
   const { convertToUSD } = useTokenPrice()
 
@@ -44,20 +45,20 @@ export const ChangePriceDialog: React.FC<ChangePriceDialogProps> = ({ onModalClo
       }}
     >
       <>
-        <Text variant="t200" secondary>
+        <Text as="p" variant="t200" color="colorText">
           You can update the price of this NFT anytime.
         </Text>
         <StyledTextField
           type="text"
           onChange={(event) => setPrice(Number(event.target.value))}
           nodeStart={<JoyTokenIcon size={24} variant="gray" />}
-          nodeEnd={<Pill label={convertToUSD(price ?? 0)} />}
+          nodeEnd={<Pill label={<NumberFormat as="span" format="dollar" value={convertToUSD(price ?? 0) ?? 0} />} />}
         />
       </>
     </DialogModal>
   )
 }
 
-export const StyledTextField = styled(TextField)`
+export const StyledTextField = styled(Input)`
   margin-top: ${sizes(6)};
 `

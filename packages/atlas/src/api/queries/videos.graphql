@@ -1,20 +1,26 @@
-query GetVideo($where: VideoWhereUniqueInput!) {
+query GetBasicVideo($where: VideoWhereUniqueInput!) {
   videoByUniqueInput(where: $where) {
-    ...VideoFields
+    ...BasicVideoFields
   }
 }
 
-query GetVideosConnection(
+query GetFullVideo($where: VideoWhereUniqueInput!) {
+  videoByUniqueInput(where: $where) {
+    ...FullVideoFields
+  }
+}
+
+query GetBasicVideosConnection(
   $first: Int
   $after: String
-  $orderBy: VideoOrderByInput! = createdAt_DESC
+  $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
   $where: VideoWhereInput
 ) {
-  videosConnection(first: $first, after: $after, where: $where, orderBy: [$orderBy]) {
+  videosConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
     edges {
       cursor
       node {
-        ...VideoFields
+        ...BasicVideoFields
       }
     }
     pageInfo {
@@ -25,21 +31,41 @@ query GetVideosConnection(
   }
 }
 
-query GetVideos($offset: Int, $limit: Int, $where: VideoWhereInput, $orderBy: VideoOrderByInput! = createdAt_DESC) {
+query GetFullVideosConnection(
+  $first: Int
+  $after: String
+  $orderBy: VideoOrderByInput! = createdAt_DESC
+  $where: VideoWhereInput
+) {
+  videosConnection(first: $first, after: $after, where: $where, orderBy: [$orderBy]) {
+    edges {
+      cursor
+      node {
+        ...FullVideoFields
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
+  }
+}
+
+query GetBasicVideos(
+  $offset: Int
+  $limit: Int
+  $where: VideoWhereInput
+  $orderBy: VideoOrderByInput! = createdAt_DESC
+) {
   videos(offset: $offset, limit: $limit, where: $where, orderBy: [$orderBy]) {
-    ...VideoFields
-  }
-}
-
-query GetBasicVideos($limit: Int, $where: VideoWhereInput, $orderBy: VideoOrderByInput! = createdAt_DESC) {
-  videos(limit: $limit, where: $where, orderBy: [$orderBy]) {
     ...BasicVideoFields
   }
 }
 
-query GetBasicVideo($where: VideoWhereUniqueInput!) {
-  videoByUniqueInput(where: $where) {
-    ...BasicVideoFields
+query GetFullVideos($offset: Int, $limit: Int, $where: VideoWhereInput, $orderBy: VideoOrderByInput! = createdAt_DESC) {
+  videos(offset: $offset, limit: $limit, where: $where, orderBy: [$orderBy]) {
+    ...FullVideoFields
   }
 }
 
@@ -62,7 +88,7 @@ query GetMostViewedVideosConnection(
     edges {
       cursor
       node {
-        ...VideoFields
+        ...BasicVideoFields
       }
     }
     pageInfo {
@@ -75,13 +101,13 @@ query GetMostViewedVideosConnection(
 
 query GetTop10VideosThisWeek($where: VideoWhereInput) {
   top10VideosThisWeek(where: $where) {
-    ...VideoFields
+    ...BasicVideoFields
   }
 }
 
 query GetTop10VideosThisMonth($where: VideoWhereInput) {
   top10VideosThisMonth(where: $where) {
-    ...VideoFields
+    ...BasicVideoFields
   }
 }
 

@@ -1,17 +1,19 @@
-import React from 'react'
+import { FC, PropsWithChildren } from 'react'
 import { To } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { ListItemProps } from '@/components/ListItem'
 import { Text } from '@/components/Text'
 import { SvgActionMore } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { ContextMenu, MenuItemProps } from '@/components/_overlays/ContextMenu'
+import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { cVar, transitions } from '@/styles'
-import { formatVideoDate, formatVideoViews } from '@/utils/video'
+import { formatVideoDate } from '@/utils/video'
 
 import {
   ChannelTitle,
   KebabMenuButtonIcon,
+  PlaylistButton,
   StyledAvatar,
   StyledLink,
   VideoDetailsContainer,
@@ -37,11 +39,13 @@ export type VideoTileDetailsProps = {
   loadingAvatar?: boolean
   loading?: boolean
   size?: 'small' | 'medium'
-  kebabMenuItems?: MenuItemProps[]
+  kebabMenuItems?: ListItemProps[]
   variant?: VideoDetailsVariant
+  type?: 'video' | 'playlist'
+  playlistUrl?: string
 }
 
-export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
+export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
   videoTitle,
   onVideoTitleClick,
   videoSubTitle,
@@ -57,6 +61,8 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
   loading,
   kebabMenuItems = [],
   variant = 'withChannelNameAndAvatar',
+  type = 'playlist',
+  playlistUrl,
 }) => {
   return (
     <VideoDetailsContainer>
@@ -79,7 +85,7 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
               <SkeletonLoader height={24} width="60%" />
             ) : (
               <LinkWrapper to={videoHref}>
-                <VideoTitle onClick={onVideoTitleClick} variant={size === 'medium' ? 'h400' : 'h300'}>
+                <VideoTitle as="h3" onClick={onVideoTitleClick} variant={size === 'medium' ? 'h400' : 'h300'}>
                   {videoTitle}
                 </VideoTitle>
               </LinkWrapper>
@@ -90,7 +96,7 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
                   <SkeletonLoader height={16} width="100%" bottomSpace={8} />
                 ) : (
                   <LinkWrapper to={channelHref}>
-                    <ChannelTitle variant="t200" secondary as="p">
+                    <ChannelTitle variant="t200" color="colorText" as="p">
                       {channelTitle}
                     </ChannelTitle>
                   </LinkWrapper>
@@ -98,15 +104,25 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
               {loading ? (
                 <SkeletonLoader height={variant === 'withoutChannel' ? 20 : 16} width="100%" />
               ) : (
-                <Text variant="t200" secondary as="p">
-                  {videoSubTitle
-                    ? videoSubTitle
-                    : createdAt && (
-                        <>
-                          {formatVideoDate(createdAt)} • <Views>{formatVideoViews(views || 0)}</Views>
-                        </>
-                      )}
-                </Text>
+                <>
+                  {type === 'video' ? (
+                    <Text variant="t200" color="colorText" as="p">
+                      {videoSubTitle
+                        ? videoSubTitle
+                        : createdAt && (
+                            <>
+                              {formatVideoDate(createdAt)} •{' '}
+                              <Views as="span" value={views ?? 0} format="short" color="colorText" />
+                              &nbsp;views
+                            </>
+                          )}
+                    </Text>
+                  ) : (
+                    <PlaylistButton variant="tertiary" size="small" to={playlistUrl}>
+                      View playlist details
+                    </PlaylistButton>
+                  )}
+                </>
               )}
             </VideoMetaContainer>
           </VideoInfoContainer>
@@ -131,10 +147,10 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
   )
 }
 
-type LinkWrapperProps = {
+type LinkWrapperProps = PropsWithChildren<{
   to?: To
-}
-const LinkWrapper: React.FC<LinkWrapperProps> = ({ children, to }) => {
+}>
+const LinkWrapper: FC<LinkWrapperProps> = ({ children, to }) => {
   if (to) {
     return <StyledLink to={to}>{children}</StyledLink>
   }

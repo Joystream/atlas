@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { FC, ReactNode, SyntheticEvent, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
@@ -26,15 +26,15 @@ import {
 
 export type VideoHeroProps = {
   isCategory?: boolean
-  headerNode?: React.ReactNode
-  sliderNode?: React.ReactNode
+  headerNode?: ReactNode
+  sliderNode?: ReactNode
   withMuteButton?: boolean
   videoHeroData?: VideoHeroData | null
-  onTimeUpdate?: (e: React.SyntheticEvent<HTMLVideoElement, Event>) => void
-  onEnded?: (e: React.SyntheticEvent<HTMLVideoElement, Event>) => void
+  onTimeUpdate?: (e: SyntheticEvent<HTMLVideoElement, Event>) => void
+  onEnded?: (e: SyntheticEvent<HTMLVideoElement, Event>) => void
 }
 
-export const VideoHero: React.FC<VideoHeroProps> = ({
+export const VideoHero: FC<VideoHeroProps> = ({
   videoHeroData = null,
   headerNode,
   isCategory,
@@ -52,7 +52,7 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
     setSoundMuted(!soundMuted)
   }
 
-  const handleEnded = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+  const handleEnded = (e: SyntheticEvent<HTMLVideoElement, Event>) => {
     onEnded?.(e)
   }
 
@@ -87,7 +87,7 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
                 >
                   {videoHeroData ? (
                     <Link to={absoluteRoutes.viewer.video(videoHeroData.video?.id)}>
-                      <TitleText isCategory={isCategory} variant={smMatch ? 'h700' : 'h500'}>
+                      <TitleText as="h1" isCategory={isCategory} variant={smMatch ? 'h700' : 'h500'}>
                         {videoHeroData.heroTitle}
                       </TitleText>
                     </Link>

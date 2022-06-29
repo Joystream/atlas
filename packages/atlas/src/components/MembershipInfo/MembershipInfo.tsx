@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { FC, MouseEvent, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
@@ -27,7 +27,7 @@ export type MembershipInfoProps = {
   avatarUrl?: string | null
   avatarLoading?: boolean
   hasAvatarUploadFailed?: boolean
-  onAvatarEditClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+  onAvatarEditClick?: (event: MouseEvent<HTMLElement>) => void
   handle?: string | null
   address?: string | null
   loading?: boolean
@@ -36,7 +36,7 @@ export type MembershipInfoProps = {
   className?: string
 }
 
-export const MembershipInfo: React.FC<MembershipInfoProps> = ({
+export const MembershipInfo: FC<MembershipInfoProps> = ({
   address,
   avatarUrl,
   avatarLoading,
@@ -84,12 +84,14 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
               {loading ? (
                 <SkeletonLoader width={200} height={smMatch ? 56 : 40} bottomSpace={8} />
               ) : (
-                <StyledHandle variant={smMatch ? 'h700' : 'h600'}>{handle || '\xa0'}</StyledHandle>
+                <StyledHandle as="h1" variant={smMatch ? 'h700' : 'h600'}>
+                  {handle || '\xa0'}
+                </StyledHandle>
               )}
               {loading || !address ? (
                 <SkeletonLoader width={140} height={24} />
               ) : (
-                <StyledText variant="t300" secondary onClick={handleCopyAddress}>
+                <StyledText as="p" variant="t300" color="colorText" onClick={handleCopyAddress}>
                   {shortenAddress(address, 6, 4)}
                   <Tooltip text="Copy account address" placement="top">
                     {copyButtonClicked ? <StyledSvgActionCheck /> : <StyledSvgActionCopy />}

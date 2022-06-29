@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import { FC, ReactNode } from 'react'
 
 import { SvgActionClose } from '@/components/_icons'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -6,34 +6,36 @@ import { usePersonalDataStore } from '@/providers/personalData'
 import { BannerDescription, BannerHeader, BannerText, BannerWrapper, CloseButton, IconWrapper } from './Banner.styles'
 
 export type BannerProps = {
-  id: string
+  dismissibleId?: string
   title?: string
-  description?: React.ReactNode
+  description?: ReactNode
   className?: string
-  dismissable?: boolean
   icon?: ReactNode
 }
 
-export const Banner: React.FC<BannerProps> = ({ title, description, className, icon, id = '', dismissable = true }) => {
-  const isDismissedMessage = usePersonalDataStore((state) =>
-    state.dismissedMessages.some((message) => message.id === id)
-  )
+export const Banner: FC<BannerProps> = ({ title, description, className, icon, dismissibleId }) => {
+  const isDismissedMessage =
+    usePersonalDataStore((state) => state.dismissedMessages.some((message) => message.id === dismissibleId)) &&
+    !!dismissibleId
   const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
 
-  if (isDismissedMessage && dismissable) {
+  if (isDismissedMessage) {
     return null
   }
+
   return (
     <BannerWrapper className={className}>
       {title && (
         <BannerHeader>
           {icon && <IconWrapper>{icon}</IconWrapper>}
-          <BannerText variant="h400">{title}</BannerText>
-          {dismissable && (
+          <BannerText as="h3" variant="h400">
+            {title}
+          </BannerText>
+          {dismissibleId && (
             <CloseButton
               icon={<SvgActionClose />}
               aria-label="close dialog"
-              onClick={() => updateDismissedMessages(id)}
+              onClick={() => updateDismissedMessages(dismissibleId)}
               variant="tertiary"
               size="small"
             />
@@ -43,14 +45,14 @@ export const Banner: React.FC<BannerProps> = ({ title, description, className, i
       {description && (
         <BannerDescription withTitle={!!title}>
           {icon && !title && <IconWrapper>{icon}</IconWrapper>}
-          <BannerText as="p" variant="t200" secondary>
+          <BannerText as="p" variant="t200" color="colorText">
             {description}
           </BannerText>
-          {!title && dismissable && (
+          {!title && dismissibleId && (
             <CloseButton
               icon={<SvgActionClose />}
               aria-label="close dialog"
-              onClick={() => updateDismissedMessages(id)}
+              onClick={() => updateDismissedMessages(dismissibleId)}
               variant="tertiary"
               size="small"
             />

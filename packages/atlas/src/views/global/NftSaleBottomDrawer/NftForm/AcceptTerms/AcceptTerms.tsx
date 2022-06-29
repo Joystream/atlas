@@ -1,20 +1,19 @@
 import { addHours } from 'date-fns'
-import React from 'react'
+import { FC, PropsWithChildren } from 'react'
 
 import { BasicMembershipFieldsFragment } from '@/api/queries'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { useMemberAvatar } from '@/providers/assets'
-import { formatNumber, formatTokens } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 
 import {
   Description,
   Divider,
-  Header,
   MembersList,
   Row,
   StyledInformation,
-  StyledMemberBadge,
+  StyledOutputPill,
   Title,
   WhiteListRow,
 } from './AcceptTerms.styles'
@@ -27,7 +26,7 @@ type AcceptTermsProps = {
   formData: NftFormFields
 }
 
-export const AcceptTerms: React.FC<AcceptTermsProps> = ({ selectedType, formData }) => {
+export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData }) => {
   const { startDate, endDate, type } = formData
 
   const totalDaysAndHours = getTotalDaysAndHours(startDate, endDate)
@@ -43,9 +42,13 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({ selectedType, formData
 
   return (
     <>
-      <Header variant="h500">Review listing terms</Header>
+      <Text as="h1" variant="h500" margin={{ bottom: 8 }}>
+        Review listing terms
+      </Text>
       <Divider />
-      <Text variant="h400">Listing terms</Text>
+      <Text as="h2" variant="h400">
+        Listing terms
+      </Text>
       <Row>
         <Title>
           <TitleText>Listing type</TitleText>
@@ -72,7 +75,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({ selectedType, formData
             <StyledInformation text="Only bids higher than this value will be accepted" placement="top" multiline />
           </Title>
           <Description>
-            <DescriptionText>{formatTokens(formData.startingPrice, true)}</DescriptionText>
+            <NumberFormat as="span" value={formData.startingPrice} variant="h400" withToken />
           </Description>
         </Row>
       )}
@@ -91,7 +94,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({ selectedType, formData
             />
           </Title>
           <Description>
-            <DescriptionText>{formatTokens(formData.buyNowPrice, true)}</DescriptionText>
+            <NumberFormat as="span" value={formData.buyNowPrice} variant="h400" withToken />
           </Description>
         </Row>
       )}
@@ -139,8 +142,8 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({ selectedType, formData
               </Title>
               <Description>
                 <DescriptionText>{totalDaysAndHours}</DescriptionText>
-                <Text variant="h400" secondary>
-                  &nbsp;/ {formatNumber(durationBlocks)} blocks
+                <Text as="span" variant="h400" color="colorText">
+                  &nbsp; / <NumberFormat as="span" value={durationBlocks} variant="no-variant" /> blocks
                 </Text>
               </Description>
             </Row>
@@ -165,7 +168,9 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({ selectedType, formData
         </WhiteListRow>
       )}
       <Divider />
-      <Text variant="h400">Transaction</Text>
+      <Text as="h2" variant="h400">
+        Transaction
+      </Text>
       <Row>
         <Title>
           <TitleText>Fee</TitleText>
@@ -176,22 +181,26 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({ selectedType, formData
           />
         </Title>
         <Description>
-          <DescriptionText>{formatTokens(0)}</DescriptionText>
+          <NumberFormat as="span" value={0} format="short" withToken variant="h400" />
         </Description>
       </Row>
     </>
   )
 }
 
-export const MemberWithResolvedAvatar: React.FC<{ member: BasicMembershipFieldsFragment }> = ({ member }) => {
+export const MemberWithResolvedAvatar: FC<{ member: BasicMembershipFieldsFragment }> = ({ member }) => {
   const { isLoadingAsset, url } = useMemberAvatar(member)
-  return <StyledMemberBadge avatarUri={url} isLoadingAvatar={isLoadingAsset} handle={member.handle} />
+  return <StyledOutputPill avatarUri={url} isLoadingAvatar={isLoadingAsset} handle={member.handle} withAvatar />
 }
 
-export const TitleText: React.FC = ({ children }) => (
-  <Text variant="h300" secondary>
+export const TitleText: FC<PropsWithChildren> = ({ children }) => (
+  <Text as="span" variant="h300" color="colorText">
     {children}
   </Text>
 )
 
-export const DescriptionText: React.FC = ({ children }) => <Text variant="h400">{children}</Text>
+export const DescriptionText: FC<PropsWithChildren> = ({ children }) => (
+  <Text as="span" variant="h400">
+    {children}
+  </Text>
+)

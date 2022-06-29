@@ -1,9 +1,10 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { Text } from '@/components/Text'
 import { SvgActionAuction, SvgActionBuyNow } from '@/components/_icons'
+import { OptionCardGroupRadio } from '@/components/_inputs/OptionCardGroup'
 
-import { Header, OptionsWrapper, StyledOptionCardRadio } from './ListingTypes.styles'
+import { OptionsWrapper } from './ListingTypes.styles'
 
 import { Listing } from '../NftForm.types'
 
@@ -12,29 +13,34 @@ type ListingTypeProps = {
   onSelectType: (type: Listing) => void
 }
 
-export const ListingType: React.FC<ListingTypeProps> = ({ selectedType, onSelectType }) => {
+export const ListingType: FC<ListingTypeProps> = ({ selectedType, onSelectType }) => {
   return (
     <>
-      <Header variant="h500">Choose listing type</Header>
-      <Text variant="t300" secondary>
+      <Text as="h1" variant="h500" margin={{ bottom: 4 }}>
+        Choose listing type
+      </Text>
+      <Text as="p" variant="t300" color="colorText">
         Choose the listing type for your NFT
       </Text>
       <OptionsWrapper>
-        <StyledOptionCardRadio
-          onChange={() => onSelectType('Auction')}
+        <OptionCardGroupRadio
           selectedValue={selectedType}
-          value="Auction"
-          label="Auction"
-          icon={<SvgActionAuction />}
-          helperText="Put it on a timed or open auction. See the bids coming."
-        />
-        <StyledOptionCardRadio
-          onChange={() => onSelectType('Fixed price')}
-          selectedValue={selectedType}
-          value="Fixed price"
-          label="Fixed price"
-          icon={<SvgActionBuyNow />}
-          helperText="Sell it for a fixed price only. No bids."
+          onChange={(value) => onSelectType(value as Listing)}
+          direction="vertical"
+          options={[
+            {
+              label: 'Auction',
+              caption: 'Put it on a timed or open auction. See the bids coming.',
+              value: 'Auction',
+              icon: <SvgActionAuction />,
+            },
+            {
+              label: 'Fixed price',
+              caption: 'Sell it for a fixed price only. No bids.',
+              value: 'Fixed price',
+              icon: <SvgActionBuyNow />,
+            },
+          ]}
         />
       </OptionsWrapper>
     </>

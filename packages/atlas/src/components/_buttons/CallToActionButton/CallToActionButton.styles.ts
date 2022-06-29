@@ -2,7 +2,7 @@ import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { cVar, media, oldColors, sizes, transitions } from '@/styles'
+import { cVar, media, sizes, transitions } from '@/styles'
 
 export type ColorVariants = 'red' | 'green' | 'yellow' | 'blue' | 'lightBlue' | 'white'
 
@@ -54,7 +54,7 @@ export const StyledContainer = styled('button', { shouldForwardProp: isPropValid
   align-items: center;
   cursor: pointer;
   border: 0;
-  color: ${oldColors.white};
+  color: ${cVar('colorCoreBaseWhite')};
   text-decoration: none;
   background-color: transparent;
 

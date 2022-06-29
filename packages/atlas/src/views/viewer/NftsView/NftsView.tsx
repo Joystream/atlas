@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 
 import { useNftsConnection } from '@/api/hooks'
 import { OwnedNftOrderByInput } from '@/api/queries'
@@ -24,7 +24,7 @@ const SORT_OPTIONS = [
   { name: 'oldest', value: OwnedNftOrderByInput.CreatedAtAsc },
 ]
 
-export const NftsView: React.FC = () => {
+export const NftsView: FC = () => {
   const headTags = useHeadTags('Video NFTs')
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
@@ -108,14 +108,7 @@ export const NftsView: React.FC = () => {
   }
 
   const sortingNode = (
-    <Select
-      size="small"
-      helperText={null}
-      value={sortBy}
-      valueLabel="Sort by: "
-      items={SORT_OPTIONS}
-      onChange={handleSortingChange}
-    />
+    <Select size="medium" value={sortBy} inlineLabel="Sort by" items={SORT_OPTIONS} onChange={handleSortingChange} />
   )
 
   return (
@@ -124,7 +117,9 @@ export const NftsView: React.FC = () => {
       <HeaderWrapper>
         <HeaderContainer>
           <GridItem colSpan={{ base: 2, sm: 1 }}>
-            <Text variant={mdMatch ? 'h500' : 'h400'}>All NFTs {totalCount !== undefined && `(${totalCount})`}</Text>
+            <Text as="p" variant={mdMatch ? 'h500' : 'h400'}>
+              All NFTs {totalCount !== undefined && `(${totalCount})`}
+            </Text>
           </GridItem>
           {!smMatch && sortingNode}
           <div>

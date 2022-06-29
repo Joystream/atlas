@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import { FC } from 'react'
 
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { media, oldColors } from '@/styles'
+import { cVar, media } from '@/styles'
 
 import {
   AssetsInfoContainer,
@@ -11,10 +11,10 @@ import {
   UploadStatusGroupContainer,
 } from './UploadStatusGroup.styles'
 
-export const UploadStatusGroupSkeletonLoader: React.FC = () => {
+export const UploadStatusGroupSkeletonLoader: FC = () => {
   return (
     <Container>
-      <UploadStatusGroupContainer style={{ backgroundColor: `${oldColors.gray[800]}` }}>
+      <UploadStatusGroupContainer style={{ backgroundColor: `${cVar('colorCoreNeutral800')}` }}>
         <StyledSkeletonLoaderThumbnail width="72px" height="48px" />
         <AssetsInfoContainer>
           <SkeletonLoader width="120px" height="14px" />

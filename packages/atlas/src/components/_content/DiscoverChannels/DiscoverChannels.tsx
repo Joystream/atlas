@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { ExpandableChannelsList } from '@/components/_channel/ExpandableChannelsList'
 import { absoluteRoutes } from '@/config/routes'
@@ -9,7 +9,7 @@ type DiscoverChannelsProps = {
   withLink?: boolean
 }
 
-export const DiscoverChannels: React.FC<DiscoverChannelsProps> = ({ withLink }) => {
+export const DiscoverChannels: FC<DiscoverChannelsProps> = ({ withLink }) => {
   return (
     <ExpandableChannelsList
       title="Discover new channels"

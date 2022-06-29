@@ -35,6 +35,7 @@ export const InnerContainer = styled.div<{ isActive: boolean; containerHeight: n
   transition: transform ${cVar('animationTransitionMedium')}, height ${cVar('animationTransitionMedium')};
   will-change: height, transform;
   box-shadow: ${cVar('effectElevation24Layer2')}, ${cVar('effectElevation24Layer1')};
+  border-radius: 0 0 ${cVar('radiusMedium')} ${cVar('radiusMedium')};
   background-color: ${cVar('colorBackgroundStrong')};
   overflow-y: auto;
   overflow-x: hidden;
@@ -95,7 +96,7 @@ export const SwitchMemberItemListContainer = styled.div`
   padding: ${sizes(2)} 0;
 `
 
-export const BalanceContainer = styled.div`
+export const UserBalance = styled.div`
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: min-content;
@@ -103,7 +104,7 @@ export const BalanceContainer = styled.div`
   gap: 5px;
 `
 
-export const TjoyContainer = styled.div`
+export const BalanceContainer = styled.div`
   margin-top: ${sizes(1)};
   display: grid;
   grid-auto-flow: column;
@@ -118,7 +119,7 @@ export const Divider = styled.div`
   background: ${cVar('colorBorderMutedAlpha')};
 `
 
-export const LearnAboutTjoyLink = styled(Text)`
+export const LearnAboutLink = styled(Text)`
   text-decoration: none;
 
   &:hover {

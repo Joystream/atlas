@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import React from 'react'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
@@ -13,10 +12,10 @@ export const NotFoundView = () => {
       <Container>
         <InnerContainer>
           <SvgSmallCursor />
-          <Text align="center" variant="h600">
+          <Text as="h1" align="center" variant="h600">
             You have reached <br /> the end of the Internet
           </Text>
-          <Text margin={{ top: 4, bottom: 16 }} align="center" variant="t300" secondary>
+          <Text as="p" margin={{ top: 4, bottom: 16 }} align="center" variant="t300" color="colorText">
             This page does not exist, but you can find lots of other cool content on our platform!
           </Text>
           <Button size="large" to="/">

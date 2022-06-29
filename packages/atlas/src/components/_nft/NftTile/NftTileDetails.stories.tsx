@@ -1,5 +1,5 @@
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
+import { BrowserRouter } from 'react-router-dom'
 
 import { NftTileDetails, NftTileDetailsProps } from '.'
 
@@ -28,13 +28,16 @@ export default {
     canCancelSale: false,
     canBuyNow: false,
     canMakeBid: false,
+    videoHref: '',
   },
 } as Meta
 
 const Template: Story<NftTileDetailsProps> = (args) => (
-  <div style={{ width: '320px' }}>
-    <NftTileDetails {...args} />
-  </div>
+  <BrowserRouter>
+    <div style={{ width: '320px' }}>
+      <NftTileDetails {...args} />
+    </div>
+  </BrowserRouter>
 )
 
 export const Default = Template.bind({})

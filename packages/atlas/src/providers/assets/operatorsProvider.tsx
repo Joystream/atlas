@@ -1,6 +1,19 @@
 import { useApolloClient } from '@apollo/client'
+import axios from 'axios'
+import haversine from 'haversine-distance'
 import { uniqBy } from 'lodash-es'
-import React, { SetStateAction, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import {
+  Dispatch,
+  FC,
+  MutableRefObject,
+  PropsWithChildren,
+  SetStateAction,
+  createContext,
+  useCallback,
+  useContext,
+  useRef,
+  useState,
+} from 'react'
 
 import {
   GetDistributionBucketsWithOperatorsDocument,
@@ -12,6 +25,9 @@ import {
 } from '@/api/queries'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ASSET_MIN_DISTRIBUTOR_REFETCH_TIME } from '@/config/assets'
+import { USER_LOCATION_SERVICE_URL } from '@/config/urls'
+import { useMountEffect } from '@/hooks/useMountEffect'
+import { UserCoordinates, useUserLocationStore } from '@/providers/userLocation'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { getRandomIntInclusive } from '@/utils/number'
 
@@ -20,17 +36,18 @@ import { OperatorInfo } from './types'
 type BagOperatorsMapping = Record<string, OperatorInfo[]>
 
 type OperatorsContextValue = {
-  distributionOperatorsMappingPromiseRef: React.MutableRefObject<Promise<BagOperatorsMapping> | undefined>
-  storageOperatorsMappingPromiseRef: React.MutableRefObject<Promise<BagOperatorsMapping> | undefined>
+  distributionOperatorsMappingPromiseRef: MutableRefObject<Promise<BagOperatorsMapping> | undefined>
+  storageOperatorsMappingPromiseRef: MutableRefObject<Promise<BagOperatorsMapping> | undefined>
   failedStorageOperatorIds: string[]
-  setFailedStorageOperatorIds: React.Dispatch<SetStateAction<string[]>>
+  setFailedStorageOperatorIds: Dispatch<SetStateAction<string[]>>
   fetchOperators: () => Promise<void>
   tryRefetchDistributionOperators: () => Promise<boolean>
 }
-const OperatorsContext = React.createContext<OperatorsContextValue | undefined>(undefined)
+const OperatorsContext = createContext<OperatorsContextValue | undefined>(undefined)
 OperatorsContext.displayName = 'OperatorsContext'
 
-export const OperatorsContextProvider: React.FC = ({ children }) => {
+// TODO: fetch storage bags only in studio, not needed for viewer
+export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const distributionOperatorsMappingPromiseRef = useRef<Promise<BagOperatorsMapping>>()
   const storageOperatorsMappingPromiseRef = useRef<Promise<BagOperatorsMapping>>()
   const lastDistributionOperatorsFetchTimeRef = useRef<number>(Number.MAX_SAFE_INTEGER)
@@ -38,10 +55,18 @@ export const OperatorsContextProvider: React.FC = ({ children }) => {
   const [distributionOperatorsError, setDistributionOperatorsError] = useState<unknown>(null)
   const [storageOperatorsError, setStorageOperatorsError] = useState<unknown>(null)
   const [failedStorageOperatorIds, setFailedStorageOperatorIds] = useState<string[]>([])
+  const {
+    coordinates,
+    expiry,
+    disableUserLocation,
+    actions: { setUserLocation },
+  } = useUserLocationStore()
 
   const client = useApolloClient()
 
-  const fetchDistributionOperators = useCallback(() => {
+  const fetchDistributionOperators = useCallback(async () => {
+    const now = new Date()
+    let userCoordinates: UserCoordinates | null = null
     const distributionOperatorsPromise = client.query<
       GetDistributionBucketsWithOperatorsQuery,
       GetDistributionBucketsWithOperatorsQueryVariables
@@ -49,6 +74,19 @@ export const OperatorsContextProvider: React.FC = ({ children }) => {
       query: GetDistributionBucketsWithOperatorsDocument,
       fetchPolicy: 'network-only',
     })
+    if ((!coordinates || !expiry || now.getTime() > expiry) && !disableUserLocation) {
+      try {
+        const userCoordinatesResponse = await axios.get<UserCoordinates>(USER_LOCATION_SERVICE_URL)
+        userCoordinates = userCoordinatesResponse.data
+        setUserLocation(userCoordinates)
+      } catch (error) {
+        SentryLogger.error('Failed to get user coordinates', 'operatorsProvider', error, {
+          request: { url: USER_LOCATION_SERVICE_URL },
+        })
+      }
+    } else {
+      userCoordinates = coordinates
+    }
     isFetchingDistributionOperatorsRef.current = true
     lastDistributionOperatorsFetchTimeRef.current = new Date().getTime()
     distributionOperatorsMappingPromiseRef.current = distributionOperatorsPromise.then((result) => {
@@ -60,7 +98,23 @@ export const OperatorsContextProvider: React.FC = ({ children }) => {
         // we need to filter operators manually as query node doesn't support filtering this deep
         const operatorsInfos: OperatorInfo[] = bucket.operators
           .filter((operator) => operator.metadata?.nodeEndpoint?.includes('http') && operator.status === 'ACTIVE')
-          .map((operator) => ({ id: operator.id, endpoint: operator.metadata?.nodeEndpoint || '' }))
+          .map((operator) => {
+            const coordinates = operator.metadata?.nodeLocation?.coordinates
+            return {
+              id: operator.id,
+              endpoint: operator.metadata?.nodeEndpoint || '',
+              distance:
+                coordinates && userCoordinates
+                  ? haversine(
+                      { lat: userCoordinates.latitude, lng: userCoordinates.longitude },
+                      {
+                        lat: coordinates.latitude,
+                        lng: coordinates.longitude,
+                      }
+                    )
+                  : null,
+            }
+          })
 
         bagIds.forEach((bagId) => {
           if (!mapping[bagId]) {
@@ -79,7 +133,7 @@ export const OperatorsContextProvider: React.FC = ({ children }) => {
       isFetchingDistributionOperatorsRef.current = false
     })
     return distributionOperatorsMappingPromiseRef.current
-  }, [client])
+  }, [client, coordinates, disableUserLocation, expiry, setUserLocation])
 
   const fetchStorageOperators = useCallback(() => {
     const storageOperatorsPromise = client.query<GetStorageBucketsQuery, GetStorageBucketsQueryVariables>({
@@ -140,9 +194,9 @@ export const OperatorsContextProvider: React.FC = ({ children }) => {
   }, [fetchDistributionOperators])
 
   // runs once - fetch all operators and create associated mappings
-  useEffect(() => {
+  useMountEffect(() => {
     fetchOperators()
-  }, [fetchOperators])
+  })
 
   if (distributionOperatorsError || storageOperatorsError) {
     return <ViewErrorFallback />

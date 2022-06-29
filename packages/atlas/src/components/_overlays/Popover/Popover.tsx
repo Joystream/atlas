@@ -1,28 +1,30 @@
 import styled from '@emotion/styled'
-import { Placement } from '@popperjs/core'
+import { Boundary, Padding, Placement } from '@popperjs/core'
 import Tippy from '@tippyjs/react/headless'
-import React, { forwardRef, useImperativeHandle, useRef } from 'react'
-import { Instance } from 'tippy.js'
+import { ForwardRefRenderFunction, PropsWithChildren, ReactNode, forwardRef, useImperativeHandle, useRef } from 'react'
+import { Instance, Plugin } from 'tippy.js'
 
 export type PopoverImperativeHandle = {
   hide: () => void
   show: () => void
 }
 
-export type PopoverProps = {
-  trigger: React.ReactNode
+export type PopoverProps = PropsWithChildren<{
+  trigger: ReactNode
   triggerMode?: string
   triggerTarget?: Element | Element[] | null | undefined
+  boundariesElement?: Boundary | null
+  boundariesPadding?: Padding
   placement?: Placement
   offset?: [number, number]
   hideOnClick?: boolean
   className?: string
   onHide?: () => void
   onShow?: () => void
-  children?: React.ReactNode
   disabled?: boolean
   flipEnabled?: boolean
-}
+  animation?: boolean
+}>
 
 const EXIT_ANIMATION_DURATION = 100
 
@@ -34,7 +36,27 @@ const onTrigger = (instance: Instance<unknown>) => {
   })
 }
 
-const _Popover: React.ForwardRefRenderFunction<PopoverImperativeHandle | undefined, PopoverProps> = (
+const hideOnEscPlugin: Plugin = {
+  name: 'hideOnEsc',
+  defaultValue: true,
+  fn: ({ hide }) => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        hide()
+      }
+    }
+    return {
+      onShow() {
+        document.addEventListener('keydown', onKeyDown)
+      },
+      onHide() {
+        document.removeEventListener('keydown', onKeyDown)
+      },
+    }
+  },
+}
+
+const _Popover: ForwardRefRenderFunction<PopoverImperativeHandle | undefined, PopoverProps> = (
   {
     hideOnClick = true,
     onHide,
@@ -48,6 +70,9 @@ const _Popover: React.ForwardRefRenderFunction<PopoverImperativeHandle | undefin
     className,
     disabled,
     flipEnabled = true,
+    boundariesElement,
+    animation = true,
+    boundariesPadding,
   },
   ref
 ) => {
@@ -56,6 +81,7 @@ const _Popover: React.ForwardRefRenderFunction<PopoverImperativeHandle | undefin
   useImperativeHandle(ref, () => ({
     hide: () => tippyRef.current?.hide(),
     show: () => tippyRef.current?.show(),
+    unmount: () => tippyRef.current?.unmount(),
   }))
 
   return (
@@ -70,6 +96,7 @@ const _Popover: React.ForwardRefRenderFunction<PopoverImperativeHandle | undefin
       onCreate={(instance) => {
         tippyRef.current = instance
       }}
+      plugins={[hideOnEscPlugin]}
       onTrigger={onTrigger}
       onShow={(instance) => {
         onTrigger(instance)
@@ -87,18 +114,30 @@ const _Popover: React.ForwardRefRenderFunction<PopoverImperativeHandle | undefin
           }, EXIT_ANIMATION_DURATION)
         })
       }}
-      render={(attrs) => (
-        <ContentContainer {...attrs} className={className}>
-          {children}
-        </ContentContainer>
-      )}
+      render={(attrs) => {
+        return (
+          <ContentContainer {...attrs} className={className} animation={animation}>
+            {children}
+          </ContentContainer>
+        )
+      }}
       popperOptions={{
-        modifiers: [{ name: 'flip', enabled: flipEnabled }],
+        modifiers: [
+          { name: 'flip', enabled: flipEnabled },
+          {
+            name: 'preventOverflow',
+            enabled: !!boundariesElement,
+            options: {
+              boundary: boundariesElement,
+              padding: boundariesPadding,
+            },
+          },
+        ],
       }}
       placement={placement}
       offset={offset}
     >
-      <TriggerContainer tabIndex={0}>{trigger}</TriggerContainer>
+      <TriggerContainer tabIndex={1}>{trigger}</TriggerContainer>
     </Tippy>
   )
 }
@@ -107,8 +146,8 @@ const TriggerContainer = styled.div`
   height: max-content;
 `
 
-const ContentContainer = styled.div`
-  transition: 150ms cubic-bezier(0.25, 0.01, 0.25, 1);
+const ContentContainer = styled.div<{ animation?: boolean }>`
+  transition: ${({ animation }) => (animation ? ' 150ms cubic-bezier(0.25, 0.01, 0.25, 1)' : 'unset')};
   opacity: 0;
   transform: scale(0.88);
 
@@ -120,7 +159,8 @@ const ContentContainer = styled.div`
   &.popover-exit-active {
     opacity: 0;
     transform: scale(0.88);
-    transition: ${EXIT_ANIMATION_DURATION}ms cubic-bezier(0.25, 0.01, 0.25, 1);
+    transition: ${({ animation }) =>
+      animation ? `${EXIT_ANIMATION_DURATION}ms cubic-bezier(0.25, 0.01, 0.25, 1) ` : 'unset'};
   }
 `
 

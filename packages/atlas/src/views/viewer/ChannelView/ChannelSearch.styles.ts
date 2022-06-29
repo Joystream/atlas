@@ -1,50 +1,19 @@
 import styled from '@emotion/styled'
 
-import { Button } from '@/components/_buttons/Button'
-import { TextField } from '@/components/_inputs/TextField'
-import { cVar, media, sizes, transitions } from '@/styles'
+import { Input } from '@/components/_inputs/Input'
+import { media, sizes } from '@/styles'
 
 type TextFieldProps = {
   isOpen?: boolean
   isSearching?: boolean
 }
-export const StyledTextField = styled(TextField)<TextFieldProps>`
-  transition: all ${transitions.timings.regular} ${transitions.easing};
-  will-change: max-width;
-  align-items: center;
-  position: relative;
+export const StyledInput = styled(Input)<TextFieldProps>`
+  width: 100%;
 
+  /* to align it with SearchIcon button */
   ${media.sm} {
-    max-width: ${({ isOpen }) => (isOpen ? '200px' : '0px')};
+    margin-left: -${sizes(1)};
   }
-
-  input {
-    height: 40px;
-    padding: 10px 16px 10px 42px;
-    caret-color: ${cVar('colorCoreBlue500')};
-    font: ${cVar('typographyDesktopT200')};
-    letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
-    text-transform: ${cVar('typographyDesktopT200TextTransform')};
-    border-radius: 0;
-
-    ${media.sm} {
-      ${({ isOpen }) => isOpen === false && 'box-shadow: none !important'};
-    }
-
-    :focus {
-      box-shadow: 0 0 0 1px ${cVar('colorCoreNeutral50')};
-    }
-
-    ::-webkit-search-cancel-button,
-    &[type='search'] {
-      /* stylelint-disable-next-line property-no-vendor-prefix */
-      -webkit-appearance: none;
-    }
-  }
-`
-
-export const SearchButton = styled(Button)`
-  position: absolute;
 `
 
 export const SearchContainerForm = styled.form`
@@ -56,7 +25,7 @@ export const SearchContainerForm = styled.form`
 
   ${media.sm} {
     grid-area: initial;
-    margin: 0;
+    margin: 0 ${sizes(1)} 0 0;
     max-width: 200px;
   }
 `

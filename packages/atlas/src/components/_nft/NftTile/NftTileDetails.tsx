@@ -1,6 +1,8 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import { FC, ReactNode, memo, useCallback, useMemo, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
+import { ListItemProps } from '@/components/ListItem'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import {
   SvgActionBid,
@@ -15,10 +17,9 @@ import {
 } from '@/components/_icons'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { ContextMenu, MenuItemProps } from '@/components/_overlays/ContextMenu'
+import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { useClipboard } from '@/hooks/useClipboard'
 import { cVar } from '@/styles'
-import { formatNumberShort } from '@/utils/number'
 
 import {
   CaptionSkeletonWrapper,
@@ -71,7 +72,7 @@ type TileSize = 'small' | 'medium'
 
 const SMALL_SIZE_WIDTH = 288
 
-export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
+export const NftTileDetails: FC<NftTileDetailsProps> = ({
   loading,
   creator,
   owner,
@@ -122,53 +123,53 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
   }, [copyToClipboard, videoHref])
 
   const getContextMenuContent = useMemo(() => {
-    const elements: MenuItemProps[] = [
+    const elements: ListItemProps[] = [
       {
-        icon: <SvgActionCopy />,
-        title: 'Copy video URL',
+        nodeStart: <SvgActionCopy />,
+        label: 'Copy video URL',
         onClick: handleCopyVideoURLClick,
       },
     ]
     if (needsSettling && (isOwner || isUserTopBidder)) {
       elements.unshift({
-        icon: <SvgActionShoppingCart />,
-        title: 'Settle auction',
+        nodeStart: <SvgActionShoppingCart />,
+        label: 'Settle auction',
         onClick: () => onSettleAuction && onSettleAuction(),
       })
     }
     if (canPutOnSale) {
       elements.unshift({
-        icon: <SvgActionSell />,
-        title: 'Start sale',
+        nodeStart: <SvgActionSell />,
+        label: 'Start sale',
         onClick: () => onPutOnSale && onPutOnSale(),
       })
     }
     if (canCancelSale) {
       elements.unshift({
-        icon: <SvgActionCancel />,
-        title: 'Remove from sale',
+        nodeStart: <SvgActionCancel />,
+        label: 'Remove from sale',
         destructive: true,
         onClick: onRemoveFromSale,
       })
     }
     if (canChangePrice) {
       elements.unshift({
-        icon: <SvgActionChangePrice />,
-        title: 'Change price',
+        nodeStart: <SvgActionChangePrice />,
+        label: 'Change price',
         onClick: onChangePrice,
       })
     }
     if (canBuyNow) {
       elements.unshift({
-        icon: <SvgActionBuyNow />,
-        title: 'Buy now',
+        nodeStart: <SvgActionBuyNow />,
+        label: 'Buy now',
         onClick: onBuyNow,
       })
     }
     if (canMakeBid) {
       elements.unshift({
-        icon: <SvgActionBid />,
-        title: 'Place bid',
+        nodeStart: <SvgActionBid />,
+        label: 'Place bid',
         onClick: onMakeBid,
       })
     }
@@ -216,7 +217,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
           <DetailsContent
             tileSize={tileSize}
             caption="Buy now"
-            content={formatNumberShort(buyNowPrice ?? 0)}
+            content={buyNowPrice ?? 0}
             icon={<JoyTokenIcon size={16} variant="regular" />}
           />
         )
@@ -227,14 +228,14 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
               <DetailsContent
                 tileSize={tileSize}
                 caption="Top bid"
-                content={formatNumberShort(topBid)}
+                content={topBid}
                 icon={<JoyTokenIcon size={16} variant="regular" />}
               />
             ) : (
               <DetailsContent
                 tileSize={tileSize}
                 caption="Min bid"
-                content={formatNumberShort(startingPrice ?? 0)}
+                content={startingPrice ?? 0}
                 icon={<JoyTokenIcon size={16} variant="regular" />}
               />
             )}
@@ -242,7 +243,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
               <DetailsContent
                 tileSize={tileSize}
                 caption="Buy now"
-                content={formatNumberShort(buyNowPrice)}
+                content={buyNowPrice}
                 icon={<JoyTokenIcon size={16} variant="regular" />}
               />
             )}
@@ -307,7 +308,9 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
       {loading ? (
         <SkeletonLoader width="55.6%" height={24} />
       ) : (
-        <Title variant={tileSize === 'medium' ? 'h400' : 'h300'}>{title}</Title>
+        <Title as="h3" variant={tileSize === 'medium' ? 'h400' : 'h300'}>
+          {title}
+        </Title>
       )}
       <Details>{getDetails}</Details>
     </Content>
@@ -316,21 +319,31 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
 
 type DetailsContentProps = {
   caption: string
-  icon: React.ReactNode
-  content: string | number
+  icon: ReactNode
+  content: number | string
   secondary?: boolean
   tileSize: TileSize | undefined
 }
-const DetailsContent: React.FC<DetailsContentProps> = React.memo(({ tileSize, caption, icon, content, secondary }) => (
+const DetailsContent: FC<DetailsContentProps> = memo(({ tileSize, caption, icon, content, secondary }) => (
   <div>
-    <Text variant={tileSize === 'medium' ? 't200' : 't100'} secondary>
+    <Text as="span" variant={tileSize === 'medium' ? 't200' : 't100'} color="colorText">
       {caption}
     </Text>
     <DetailsContentWrapper secondary={secondary}>
       {icon}{' '}
-      <Text variant={tileSize === 'medium' ? 'h300' : 'h200'} secondary={secondary}>
-        {content}
-      </Text>
+      {typeof content === 'string' ? (
+        <Text as="span" variant={tileSize === 'medium' ? 'h300' : 'h200'} color={secondary ? 'colorText' : undefined}>
+          {content}
+        </Text>
+      ) : (
+        <NumberFormat
+          as="span"
+          value={content}
+          format="short"
+          variant={tileSize === 'medium' ? 'h300' : 'h200'}
+          color={secondary ? 'colorText' : undefined}
+        />
+      )}
     </DetailsContentWrapper>
   </div>
 ))

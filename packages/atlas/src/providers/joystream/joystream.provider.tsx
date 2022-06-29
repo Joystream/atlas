@@ -1,17 +1,15 @@
-import { web3FromAddress } from '@polkadot/extension-dapp'
 import { ProxyMarked, Remote, proxy, wrap } from 'comlink'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { FC, PropsWithChildren, createContext, useCallback, useEffect, useRef, useState } from 'react'
 
-import { NODE_URL } from '@/config/urls'
+import { JOY_CURRENCY_TICKER } from '@/config/token'
+import { JOY_PRICE_SERVICE_URL, NODE_URL } from '@/config/urls'
 import { JoystreamLib } from '@/joystream-lib'
 import { useEnvironmentStore } from '@/providers/environment/store'
+import { useUserStore } from '@/providers/user'
 import { SentryLogger } from '@/utils/logs'
 import JoystreamJsWorker from '@/utils/polkadot-worker?worker'
 
 import { useConnectionStatusStore } from '../connectionStatus'
-import { useUser } from '../user'
-
-const JOYSTREAM_STATUS_URL = 'https://status.joystream.org/status'
 
 type ProxyCallbackFn = <T extends object>(callback: T) => T & ProxyMarked
 
@@ -21,13 +19,13 @@ export type JoystreamContextValue = {
   chainState: ReturnType<typeof useJoystreamChainState>
 } & ReturnType<typeof useJoystreamUtilFns>
 
-export const JoystreamContext = React.createContext<JoystreamContextValue | undefined>(undefined)
+export const JoystreamContext = createContext<JoystreamContextValue | undefined>(undefined)
 JoystreamContext.displayName = 'JoystreamContext'
 const worker = new JoystreamJsWorker()
 const api = wrap<typeof JoystreamLib>(worker)
 
-export const JoystreamProvider: React.FC = ({ children }) => {
-  const { activeAccountId, accounts } = useUser()
+export const JoystreamProvider: FC<PropsWithChildren> = ({ children }) => {
+  const { accountId, walletAccounts, wallet } = useUserStore()
   const { nodeOverride } = useEnvironmentStore((state) => state)
   const setNodeConnection = useConnectionStatusStore((state) => state.actions.setNodeConnection)
   const [initialized, setInitialized] = useState(false)
@@ -70,32 +68,32 @@ export const JoystreamProvider: React.FC = ({ children }) => {
     }
     const init = async () => {
       const instance = joystream.current
-      if (!instance || !activeAccountId || !accounts) {
+      if (!instance || !accountId || !walletAccounts || !wallet) {
         return
       }
 
-      const accountId = await instance?.selectedAccountId
-      if (accountId === activeAccountId) {
+      const previousAccountId = await instance?.selectedAccountId
+      if (accountId === previousAccountId) {
         return
       }
 
       const setActiveAccount = async () => {
-        if (activeAccountId) {
-          const { signer } = await web3FromAddress(activeAccountId)
+        if (accountId) {
+          const { signer } = wallet
           if (!signer) {
             SentryLogger.error('Failed to get signer from web3FromAddress', 'JoystreamProvider')
             return
           }
-          await instance.setActiveAccount(activeAccountId, proxy(signer))
+          await instance.setActiveAccount(accountId, proxy(signer))
         } else {
-          await instance.setActiveAccount(activeAccountId)
+          await instance.setActiveAccount(accountId)
         }
       }
 
       setActiveAccount()
     }
     init()
-  }, [activeAccountId, accounts, initialized])
+  }, [accountId, initialized, wallet, walletAccounts])
 
   return (
     <JoystreamContext.Provider
@@ -109,15 +107,15 @@ export const JoystreamProvider: React.FC = ({ children }) => {
 const useJoystreamUtilFns = () => {
   const [tokenPrice, setTokenPrice] = useState(0)
 
-  // fetch tJOY token price from the status server
+  // fetch token price from the status server
   useEffect(() => {
     const getPrice = async () => {
       try {
-        const data = await fetch(JOYSTREAM_STATUS_URL)
+        const data = await fetch(JOY_PRICE_SERVICE_URL)
         const json = await data.json()
         setTokenPrice(parseFloat(json.price))
       } catch (e) {
-        SentryLogger.error('Failed to fetch tJoy price', e)
+        SentryLogger.error(`Failed to fetch ${JOY_CURRENCY_TICKER} price`, e)
       }
     }
     getPrice()

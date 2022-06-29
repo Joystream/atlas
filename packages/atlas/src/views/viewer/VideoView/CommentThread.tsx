@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { memo, useState } from 'react'
+import { FC, memo, useState } from 'react'
 
 import { UserCommentReactions, useComment, useCommentRepliesConnection } from '@/api/hooks'
 import { TextButton } from '@/components/_buttons/Button'
@@ -17,7 +17,7 @@ type CommentThreadProps = {
 const INITIAL_REPLIES_COUNT = 10
 const LOAD_MORE_REPLIES_COUNT = 20
 
-const _CommentThread: React.FC<CommentThreadProps> = ({
+const _CommentThread: FC<CommentThreadProps> = ({
   commentId,
   video,
   setHighlightedCommentId,

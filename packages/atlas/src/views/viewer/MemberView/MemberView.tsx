@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { useSearchParams } from 'react-router-dom'
 
@@ -33,12 +33,12 @@ import {
 
 const TABS = ['NFTs owned', 'Activity', 'About'] as const
 
-export const MemberView: React.FC = () => {
+export const MemberView: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
-  const [sortBy, setSortBy] = useState<'createdAt_ASC' | 'createdAt_DESC'>('createdAt_DESC')
+  const [sortBy, setSortBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
   const [currentTab, setCurrentTab] = useState<typeof TABS[number] | null>(null)
-  const { activeMemberId, activeMembership } = useUser()
+  const { memberId, activeMembership } = useUser()
   const { handle } = useParams()
   const filtersBarLogic = useFiltersBar()
   const {
@@ -77,7 +77,7 @@ export const MemberView: React.FC = () => {
   const toggleFilters = () => {
     setIsFiltersOpen((value) => !value)
   }
-  const handleSorting = (value?: 'createdAt_ASC' | 'createdAt_DESC' | null) => {
+  const handleSorting = (value?: OwnedNftOrderByInput | null) => {
     if (value) {
       setSortBy(value)
     }
@@ -90,7 +90,7 @@ export const MemberView: React.FC = () => {
     name: tab,
     pillText: tab === 'NFTs owned' && nfts && nfts.length ? nfts.length : undefined,
   }))
-  const tabContent = React.useMemo(() => {
+  const tabContent = useMemo(() => {
     switch (currentTab) {
       case 'NFTs owned':
         return (
@@ -120,7 +120,7 @@ export const MemberView: React.FC = () => {
 
   useEffect(() => {
     if (currentTabName) {
-      setSortBy('createdAt_DESC')
+      setSortBy(OwnedNftOrderByInput.CreatedAtDesc)
       setCurrentTab(currentTabName)
       setIsFiltersOpen(false)
     }
@@ -152,7 +152,7 @@ export const MemberView: React.FC = () => {
           handle={member?.handle}
           address={member?.controllerAccount}
           loading={loadingMember}
-          isOwner={activeMemberId === member?.id}
+          isOwner={memberId === member?.id}
         />
         <TabsWrapper isFiltersOpen={isFiltersOpen}>
           <TabsContainer isMemberActivityTab={currentTab === 'Activity'}>
@@ -165,8 +165,8 @@ export const MemberView: React.FC = () => {
             {currentTab && ['NFTs owned', 'Activity'].includes(currentTab) && (
               <SortContainer>
                 <Select
-                  size="small"
-                  labelPosition="left"
+                  size="medium"
+                  inlineLabel="Sort by"
                   value={sortBy}
                   items={NFT_SORT_OPTIONS}
                   onChange={handleSorting}

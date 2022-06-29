@@ -1,5 +1,5 @@
-import Tippy from '@tippyjs/react/headless'
-import React, { useState } from 'react'
+import Tippy, { TippyProps } from '@tippyjs/react/headless'
+import { FC, PropsWithChildren, ReactNode, RefObject, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { transitions } from '@/styles'
@@ -14,7 +14,7 @@ import {
 } from './Tooltip.styles'
 
 type Placement = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' | 'top'
-export type TooltipProps = {
+export type TooltipProps = PropsWithChildren<{
   text?: string
   headerText?: string
   icon?: boolean
@@ -23,14 +23,15 @@ export type TooltipProps = {
   offsetY?: number
   delay?: number | [number | null, number | null] | undefined
   hideOnClick?: boolean | 'toggle'
-  reference?: Element | React.RefObject<Element> | null | undefined
-  customContent?: React.ReactNode
+  reference?: Element | RefObject<Element> | null | undefined
+  customContent?: ReactNode
   showOnCreate?: boolean
   multiline?: boolean
   className?: string
-}
+}> &
+  Pick<TippyProps, 'delay'>
 
-export const Tooltip: React.FC<TooltipProps> = ({
+export const Tooltip: FC<TooltipProps> = ({
   text,
   headerText,
   icon,
@@ -45,6 +46,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   showOnCreate,
   multiline,
   className,
+  ...tippyProps
 }) => {
   const [isVisible, setIsVisible] = useState(false)
 
@@ -58,10 +60,14 @@ export const Tooltip: React.FC<TooltipProps> = ({
             <StyledSvgAlertsInformative24 />
           </IconWrapper>
         )}
-        {headerText && <TooltipText variant="h100">{headerText}</TooltipText>}
+        {headerText && (
+          <TooltipText as="span" variant="h100">
+            {headerText}
+          </TooltipText>
+        )}
       </TooltipHeader>
       {text && text.length && (
-        <TooltipText withIcon={!!icon} headerText={!!headerText} variant="t100">
+        <TooltipText as="span" withIcon={!!icon} headerText={!!headerText} variant="t100">
           {text}
         </TooltipText>
       )}
@@ -74,6 +80,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
 
   return (
     <Tippy
+      {...tippyProps}
       delay={delay}
       onMount={() => setIsVisible(true)}
       hideOnClick={hideOnClick}
@@ -100,9 +107,11 @@ export const Tooltip: React.FC<TooltipProps> = ({
         </CSSTransition>
       )}
     >
-      <span tabIndex={0} className={className}>
-        {children}
-      </span>
+      {children ? (
+        <span tabIndex={0} className={className}>
+          {children}
+        </span>
+      ) : undefined}
     </Tippy>
   )
 }

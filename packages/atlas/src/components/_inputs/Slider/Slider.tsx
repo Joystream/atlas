@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { StyledRcSlider } from './Slider.styles'
 
@@ -12,7 +12,7 @@ export type SliderProps = {
   disabled?: boolean
 }
 
-export const Slider: React.FC<SliderProps> = ({
+export const Slider: FC<SliderProps> = ({
   value = 50,
   onChange,
   min = 0,
@@ -24,7 +24,13 @@ export const Slider: React.FC<SliderProps> = ({
   return (
     <StyledRcSlider
       value={value}
-      onChange={onChange}
+      onChange={(value) => {
+        if (Array.isArray(value)) {
+          onChange(value[0])
+        } else {
+          onChange(value)
+        }
+      }}
       min={min}
       max={max}
       step={step}

@@ -1,7 +1,6 @@
-import React from 'react'
+import { FC, PropsWithChildren, ReactNode, forwardRef } from 'react'
 
 import { Text } from '@/components/Text'
-import { cVar } from '@/styles'
 
 import {
   IconContainer,
@@ -14,23 +13,23 @@ import {
 import { Checkbox, CheckboxProps } from '../Checkbox'
 import { RadioInput, RadioInputProps } from '../RadioInput'
 
-type CheckboxType = {
+export type CheckboxType = {
   onChange?: (value: boolean) => void
 } & CheckboxProps
-type RadioType = RadioInputProps
+export type RadioType = RadioInputProps
 
-export type OptionCardProps = {
+export type OptionCardProps = PropsWithChildren<{
   checked?: boolean
   label: string
-  helperText?: string
+  caption?: string
   error?: boolean
   disabled?: boolean
-  icon?: React.ReactNode
-  children?: React.ReactNode
+  icon?: ReactNode
   className?: string
-}
-export const OptionCardBase: React.FC<OptionCardProps> = ({
-  helperText,
+}>
+
+export const OptionCardBase: FC<OptionCardProps> = ({
+  caption,
   label,
   icon,
   disabled,
@@ -48,26 +47,26 @@ export const OptionCardBase: React.FC<OptionCardProps> = ({
               {icon}
             </IconContainer>
           )}
-          <OptionCardTitle color={error ? cVar('colorTextError') : undefined} variant="h400">
+          <OptionCardTitle as="span" color={error ? 'colorTextError' : undefined} variant="h300">
             {label}
           </OptionCardTitle>
         </TitleIconWrapper>
         {children}
       </InputAndTitleWrapper>
-      <Text variant="t100" secondary>
-        {helperText}
+      <Text as="span" variant="t100" color="colorText">
+        {caption}
       </Text>
     </OptionCardLabel>
   )
 }
 
-export const OptionCardRadio = React.forwardRef<HTMLInputElement, OptionCardProps & RadioType>(
-  ({ helperText, label, selectedValue, className, value, onChange, icon, disabled, error, ...props }, ref) => {
+export const OptionCardRadio = forwardRef<HTMLInputElement, OptionCardProps & RadioType>(
+  ({ caption, label, selectedValue, className, value, onChange, icon, disabled, error, ...props }, ref) => {
     return (
       <OptionCardBase
         icon={icon}
         label={label}
-        helperText={helperText}
+        caption={caption}
         disabled={disabled}
         checked={value === selectedValue}
         error={error}
@@ -75,6 +74,7 @@ export const OptionCardRadio = React.forwardRef<HTMLInputElement, OptionCardProp
       >
         <RadioInput
           {...props}
+          error={error}
           ref={ref}
           selectedValue={selectedValue}
           value={value}
@@ -87,19 +87,19 @@ export const OptionCardRadio = React.forwardRef<HTMLInputElement, OptionCardProp
 )
 OptionCardRadio.displayName = 'OptionCardRadio'
 
-export const OptionCardCheckbox = React.forwardRef<HTMLInputElement, OptionCardProps & CheckboxType>(
-  ({ helperText, label, className, value, onChange, icon, disabled, error, ...props }, ref) => {
+export const OptionCardCheckbox = forwardRef<HTMLInputElement, OptionCardProps & CheckboxType>(
+  ({ caption, label, className, value, onChange, icon, disabled, error, ...props }, ref) => {
     return (
       <OptionCardBase
         icon={icon}
         label={label}
-        helperText={helperText}
+        caption={caption}
         disabled={disabled}
         checked={value}
         error={error}
         className={className}
       >
-        <Checkbox {...props} ref={ref} value={value} disabled={disabled} onChange={onChange} />
+        <Checkbox {...props} error={error} ref={ref} value={value} disabled={disabled} onChange={onChange} />
       </OptionCardBase>
     )
   }

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { FC, memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { FileRejection } from 'react-dropzone'
 import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
@@ -62,7 +62,7 @@ export type MultiFileSelectProps = {
 const THUMBNAIL_SELECT_TITLE = 'Select thumbnail image'
 const VIDEO_SELECT_TITLE = 'Select video file'
 
-export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
+export const MultiFileSelect: FC<MultiFileSelectProps> = memo(
   ({ onVideoChange, onThumbnailChange, files, maxImageSize, maxVideoSize, editMode = false, disabled, className }) => {
     const dialogRef = useRef<ImageCropModalImperativeHandle>(null)
     const [step, setStep] = useState<FileType>('video')
@@ -181,7 +181,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
 
     const handleReAdjustThumbnail = () => {
       if (files.thumbnail?.originalBlob) {
-        dialogRef.current?.open(files.thumbnail.originalBlob)
+        dialogRef.current?.open(files.thumbnail.originalBlob, files.thumbnail.imageCropData, true)
       }
     }
 
@@ -238,18 +238,14 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
     return (
       <MultiFileSelectContainer className={className}>
         <FileSelect
+          key={step}
+          file={(step === 'video' ? files.video?.blob : files.thumbnail?.originalBlob) as File}
           maxSize={step === 'video' ? maxVideoSize : maxImageSize}
           onUploadFile={handleUploadFile}
           onReAdjustThumbnail={handleReAdjustThumbnail}
-          isLoading={isVideoLoading || isImgLoading}
-          fileType={step}
-          title={step === 'video' ? VIDEO_SELECT_TITLE : THUMBNAIL_SELECT_TITLE}
+          isFileLoading={isVideoLoading || isImgLoading}
+          type={step === 'video' ? 'video-file' : 'video-thumbnail'}
           thumbnailUrl={files.thumbnail?.url}
-          paragraph={
-            step === 'video'
-              ? `Maximum 10GB. Preferred format is WebM (VP9/VP8) or MP4 (H.264)`
-              : `Preferred 16:9 image ratio`
-          }
           error={error}
           onDropRejected={handleFileRejections}
         />
@@ -301,7 +297,12 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
             </CSSTransition>
           )}
         </StepsContainer>
-        <ImageCropModal ref={dialogRef} imageType="videoThumbnail" onConfirm={updateThumbnailFile} />
+        <ImageCropModal
+          ref={dialogRef}
+          imageType="videoThumbnail"
+          onConfirm={updateThumbnailFile}
+          onDelete={() => handleDeleteFile('image')}
+        />
       </MultiFileSelectContainer>
     )
   }

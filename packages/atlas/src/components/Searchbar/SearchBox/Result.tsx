@@ -1,11 +1,11 @@
-import React, { useCallback, useMemo } from 'react'
+import { FC, useCallback, useMemo } from 'react'
 
-import { AllChannelFieldsFragment, VideoFieldsFragment } from '@/api/queries'
-import { ResultTitle } from '@/components/Searchbar/SearchBox/ResultTitle'
+import { BasicChannelFieldsFragment, BasicVideoFieldsFragment } from '@/api/queries'
 import { Text } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset } from '@/providers/assets'
 
+import { ResultTitle } from './ResultTitle'
 import { ResultWrapper } from './ResultWrapper'
 import {
   ResultContent,
@@ -16,22 +16,15 @@ import {
 } from './SearchBox.styles'
 
 type ResultProps = {
-  video?: VideoFieldsFragment
-  channel?: AllChannelFieldsFragment
+  video?: BasicVideoFieldsFragment
+  channel?: BasicChannelFieldsFragment
   query?: string
   selected?: boolean
   handleSelectedItem: (top: number, title?: string | null) => void
   selectedItem: null | number
 }
 
-export const Result: React.FC<ResultProps> = ({
-  video,
-  channel,
-  query,
-  selected,
-  handleSelectedItem,
-  selectedItem,
-}) => {
+export const Result: FC<ResultProps> = ({ video, channel, query, selected, handleSelectedItem, selectedItem }) => {
   const title = video ? video.title : channel?.title
   const { url: channelAvatar, isLoadingAsset: channelAvatarLoading } = useAsset(channel?.avatarPhoto)
   const { url: videoThumbnail, isLoadingAsset: videoThumbnailLoading } = useAsset(video?.thumbnailPhoto)
@@ -67,10 +60,10 @@ export const Result: React.FC<ResultProps> = ({
           <ResultThumbnail src={thumbnailUrl || ''} rounded={!!channel} />
         )}
         <div>
-          <Title secondary={!selected} variant="t200-strong">
+          <Title as="span" color={!selected ? 'colorText' : undefined} variant="t200-strong">
             <ResultTitle title={title} query={query} />
           </Title>
-          <Text secondary variant="t100">
+          <Text as="span" color="colorText" variant="t100">
             {video ? video.channel?.title : `${channel?.follows} ${channel?.follows === 1 ? 'Follower' : 'Followers'}`}
           </Text>
         </div>

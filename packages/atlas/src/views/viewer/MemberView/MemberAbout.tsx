@@ -1,19 +1,16 @@
-import React from 'react'
 import { useParams } from 'react-router'
 
 import { useMemberships } from '@/api/hooks'
 import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { PIONEER_MEMBER_URL } from '@/config/urls'
-import { cVar } from '@/styles'
-import { formatNumberShort } from '@/utils/number'
 import { formatDate } from '@/utils/time'
 
 import {
   Anchor,
   ChannelsOwnedContainerGrid,
   Details,
-  DetailsText,
   StyledChannelCard,
   StyledLayoutGrid,
   TextContainer,
@@ -29,15 +26,19 @@ export const MemberAbout = () => {
       <GridItem colSpan={{ base: 12, sm: 8 }} rowStart={{ base: 2, sm: 1 }}>
         {!!member?.metadata.about && (
           <TextContainer withDivider={!!member?.channels.length}>
-            <Text variant="h500">About me</Text>
-            <Text variant="t300" secondary>
+            <Text as="h2" variant="h500">
+              About me
+            </Text>
+            <Text as="p" variant="t300" color="colorText">
               {member.metadata.about}
             </Text>
           </TextContainer>
         )}
         {!!member?.channels.length && (
           <div>
-            <Text variant="h500">Channels owned</Text>
+            <Text as="h2" variant="h500">
+              Channels owned
+            </Text>
             <ChannelsOwnedContainerGrid>
               {member?.channels.map((channel) => (
                 <GridItem key={channel.id} colSpan={{ base: 6, lg: 3 }}>
@@ -49,20 +50,29 @@ export const MemberAbout = () => {
         )}
       </GridItem>
       <GridItem colSpan={{ base: 12, sm: 3 }} colStart={{ sm: -4 }}>
-        <DetailsText variant="h500">Details</DetailsText>
+        <Text as="h3" variant="h500" margin={{ bottom: 4 }}>
+          Details
+        </Text>
 
         <Details>
-          <Text variant="t100" secondary>
+          <Text as="p" variant="t100" color="colorText">
             Join date
           </Text>
-          <Text variant="t300">{member?.createdAt ? formatDate(new Date(member.createdAt)) : ''}</Text>
+          <Text as="span" variant="t300">
+            {member?.createdAt ? formatDate(new Date(member.createdAt)) : ''}
+          </Text>
         </Details>
 
         <Details>
-          <Text variant="t100" secondary>
+          <Text as="p" variant="t100" color="colorText">
             Num. of channels
           </Text>
-          <Text variant="t300">{member?.channels.length ? formatNumberShort(member?.channels.length) : '0'}</Text>
+          <NumberFormat
+            as="span"
+            format="short"
+            value={member?.channels.length ? member?.channels.length : 0}
+            variant="t300"
+          />
         </Details>
 
         <Anchor
@@ -70,7 +80,7 @@ export const MemberAbout = () => {
           variant="t300-strong"
           href={`${PIONEER_MEMBER_URL}/${member?.id}`}
           target="_blank"
-          color={cVar('colorCoreBlue300')}
+          color="colorTextPrimary"
         >
           Learn more
         </Anchor>

@@ -1,8 +1,19 @@
 import { debounce, round } from 'lodash-es'
-import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react'
+import {
+  CSSProperties,
+  ChangeEvent,
+  ForwardRefRenderFunction,
+  MouseEvent,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
+import useResizeObserver from 'use-resize-observer'
 import { VideoJsPlayer } from 'video.js'
 
-import { VideoFieldsFragment } from '@/api/queries'
+import { FullVideoFieldsFragment } from '@/api/queries'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
@@ -11,6 +22,7 @@ import { formatDurationShort } from '@/utils/time'
 import { ControlsIndicator } from './ControlsIndicator'
 import { CustomTimeline } from './CustomTimeline'
 import { PlayerControlButton } from './PlayerControlButton'
+import { SettingsButtonWithPopover } from './SettingsButtonWithPopover'
 import { VideoOverlay } from './VideoOverlay'
 import {
   BigPlayButton,
@@ -45,7 +57,7 @@ import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
 export type VideoPlayerProps = {
   isVideoPending?: boolean
-  nextVideo?: VideoFieldsFragment | null
+  nextVideo?: FullVideoFieldsFragment | null
   className?: string
   videoStyle?: CSSProperties
   autoplay?: boolean
@@ -68,7 +80,7 @@ declare global {
 
 const isPiPSupported = 'pictureInPictureEnabled' in document
 
-const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
+const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
   {
     isVideoPending,
     className,
@@ -86,10 +98,22 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
   const [isPlaying, setIsPlaying] = useState(false)
+  const { height: playerHeight = 0 } = useResizeObserver({ box: 'border-box', ref: playerRef })
+  const customControlsRef = useRef<HTMLDivElement>(null)
+
+  const customControlsOffset =
+    ((customControlsRef.current?.getBoundingClientRect().top || 0) -
+      (playerRef.current?.getBoundingClientRect().bottom || 0)) *
+    -1
+
+  const playerHeightWithoutCustomControls = playerHeight - customControlsOffset
+
   const {
     currentVolume,
     cachedVolume,
     cinematicView,
+    playbackRate,
+    autoPlayNext,
     actions: { setCurrentVolume, setCachedVolume, setCinematicView },
   } = usePersonalDataStore((state) => state)
   const [volumeToSave, setVolumeToSave] = useState(0)
@@ -97,6 +121,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   const [videoTime, setVideoTime] = useState(0)
   const [isFullScreen, setIsFullScreen] = useState(false)
   const [isPiPEnabled, setIsPiPEnabled] = useState(false)
+  const [isSettingsPopoverOpened, setIsSettingsPopoverOpened] = useState(false)
 
   const [playerState, setPlayerState] = useState<PlayerState>('loading')
   const [isLoaded, setIsLoaded] = useState(false)
@@ -194,6 +219,16 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       player.off('error', handler)
     }
   })
+
+  // handle setting playback rate
+  useEffect(() => {
+    if (!player) {
+      return
+    }
+    // we need to set both - playbackRate and defaultPlaybackRate to make this persistent
+    player.playbackRate(playbackRate)
+    player.defaultPlaybackRate(playbackRate)
+  }, [playbackRate, player])
 
   // handle video loading
   useEffect(() => {
@@ -436,7 +471,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }, [isPlaying, pauseVideo, playVideo, player, playerState])
 
-  const handleChangeVolume = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeVolume = (event: ChangeEvent<HTMLInputElement>) => {
     setCurrentVolume(Number(event.target.value))
   }
 
@@ -448,7 +483,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }
 
-  const handlePictureInPicture = (event: React.MouseEvent) => {
+  const handlePictureInPicture = (event: MouseEvent) => {
     event.stopPropagation()
     if (document.pictureInPictureElement) {
       // @ts-ignore @types/video.js is outdated and doesn't provide types for some newer video.js features
@@ -463,7 +498,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }
 
-  const handleFullScreen = (event: React.MouseEvent) => {
+  const handleFullScreen = (event: MouseEvent) => {
     event.stopPropagation()
     if (!isFullScreenEnabled) {
       return
@@ -491,7 +526,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }
 
-  const toggleCinematicView = (event: React.MouseEvent) => {
+  const toggleCinematicView = (event: MouseEvent) => {
     event.stopPropagation()
     setCinematicView(!cinematicView)
   }
@@ -500,7 +535,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   const showControlsIndicator = playerState !== 'ended'
 
   return (
-    <Container isFullScreen={isFullScreen} className={className}>
+    <Container isFullScreen={isFullScreen} className={className} isSettingsPopoverOpened={isSettingsPopoverOpened}>
       <div data-vjs-player onClick={handlePlayPause}>
         {needsManualPlay && (
           <BigPlayButtonContainer onClick={handlePlayPause}>
@@ -512,7 +547,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
         <video style={videoStyle} ref={playerRef} className="video-js" onClick={onVideoClick} />
         {showPlayerControls && (
           <>
-            <ControlsOverlay isFullScreen={isFullScreen}>
+            <ControlsOverlay isSettingsPopoverOpened={isSettingsPopoverOpened} isFullScreen={isFullScreen}>
               <CustomTimeline
                 playVideo={playVideo}
                 pauseVideo={pauseVideo}
@@ -521,7 +556,12 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                 playerState={playerState}
                 setPlayerState={setPlayerState}
               />
-              <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'}>
+              <CustomControls
+                isFullScreen={isFullScreen}
+                isEnded={playerState === 'ended'}
+                ref={customControlsRef}
+                isSettingsPopoverOpened={isSettingsPopoverOpened}
+              >
                 <PlayControl isLoading={playerState === 'loading'}>
                   {(!needsManualPlay || mdMatch) && (
                     <PlayButton
@@ -556,13 +596,14 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                   </VolumeSliderContainer>
                 </VolumeControl>
                 <CurrentTimeWrapper>
-                  <CurrentTime variant="t200">
+                  <CurrentTime as="span" variant="t200">
                     {formatDurationShort(videoTime)} / {formatDurationShort(round(player?.duration() || 0))}
                   </CurrentTime>
                 </CurrentTimeWrapper>
                 <ScreenControls>
                   {mdMatch && !isEmbedded && !player?.isFullscreen() && (
                     <PlayerControlButton
+                      tooltipEnabled={!isSettingsPopoverOpened}
                       onClick={toggleCinematicView}
                       tooltipText={cinematicView ? 'Exit cinematic mode (c)' : 'Cinematic view (c)'}
                     >
@@ -574,12 +615,24 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                     </PlayerControlButton>
                   )}
                   {isPiPSupported && (
-                    <PlayerControlButton onClick={handlePictureInPicture} tooltipText="Picture-in-picture">
+                    <PlayerControlButton
+                      onClick={handlePictureInPicture}
+                      tooltipText="Picture-in-picture"
+                      tooltipEnabled={!isSettingsPopoverOpened}
+                    >
                       {isPiPEnabled ? <StyledSvgControlsPipOff /> : <StyledSvgControlsPipOn />}
                     </PlayerControlButton>
                   )}
+                  <SettingsButtonWithPopover
+                    onSettingsPopoverToggle={setIsSettingsPopoverOpened}
+                    isSettingsPopoverOpened={isSettingsPopoverOpened}
+                    playerHeightWithoutCustomControls={playerHeightWithoutCustomControls}
+                    boundariesElement={playerRef.current}
+                    isFullScreen={isFullScreen}
+                  />
                   <PlayerControlButton
                     isDisabled={!isFullScreenEnabled}
+                    tooltipEnabled={!isSettingsPopoverOpened}
                     tooltipPosition="right"
                     tooltipText={isFullScreen ? 'Exit full screen (f)' : 'Full screen (f)'}
                     onClick={handleFullScreen}
@@ -594,7 +647,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
         <VideoOverlay
           videoId={videoId}
           isFullScreen={isFullScreen}
-          isPlayNextDisabled={isPlayNextDisabled}
+          isPlayNextDisabled={isPlayNextDisabled || !autoPlayNext}
           playerState={playerState}
           onPlay={handlePlayPause}
           channelId={channelId}
@@ -607,4 +660,4 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   )
 }
 
-export const VideoPlayer = React.forwardRef(VideoPlayerComponent)
+export const VideoPlayer = forwardRef(VideoPlayerComponent)

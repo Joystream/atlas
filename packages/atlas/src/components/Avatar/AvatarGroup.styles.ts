@@ -80,7 +80,7 @@ export const AvatarOverlay = styled.div<AvatarOverlayProps>`
   ${square('100%')}
 
   border-radius: 50%;
-  background-color: black;
+  background-color: ${cVar('colorCoreBaseBlack')};
   opacity: ${({ dimmed }) => (dimmed ? 0.5 : 0)};
   transition: opacity ${cVar('animationTransitionFast')};
 `

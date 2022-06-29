@@ -1,10 +1,11 @@
 import BN from 'bn.js'
-import React, { useEffect } from 'react'
+import { FC, useEffect } from 'react'
 
 import { StorageDataObjectFieldsFragment } from '@/api/queries'
 import { ASSET_RESPONSE_TIMEOUT } from '@/config/assets'
 import { BUILD_ENV } from '@/config/envs'
 import { DISTRIBUTOR_ASSET_PATH } from '@/config/urls'
+import { useUserLocationStore } from '@/providers/userLocation'
 import { joinUrlFragments } from '@/utils/asset'
 import { AssetLogger, ConsoleLogger, DataObjectResponseMetric, DistributorEventEntry, SentryLogger } from '@/utils/logs'
 import { TimeoutError, withTimeout } from '@/utils/misc'
@@ -14,7 +15,7 @@ import { useDistributionOperators, useOperatorsContext } from './operatorsProvid
 import { useAssetStore } from './store'
 import { OperatorInfo } from './types'
 
-export const AssetsManager: React.FC = () => {
+export const AssetsManager: FC = () => {
   const { tryRefetchDistributionOperators } = useOperatorsContext()
   const { getAllDistributionOperatorsForBag } = useDistributionOperators()
   const pendingAssets = useAssetStore((state) => state.pendingAssets)
@@ -22,7 +23,9 @@ export const AssetsManager: React.FC = () => {
   const { addAsset, addAssetBeingResolved, removeAssetBeingResolved, removePendingAsset } = useAssetStore(
     (state) => state.actions
   )
+  const { coordinates } = useUserLocationStore()
 
+  // listen to changes in list of assets pending resolution and resolve them
   useEffect(() => {
     Object.values(pendingAssets).forEach(async (dataObject) => {
       // make sure we handle each asset only once
@@ -50,7 +53,10 @@ export const AssetsManager: React.FC = () => {
         return
       }
 
-      const sortedDistributionOperators = sortDistributionOperators(distributionOperators, dataObject)
+      const sortedDistributionOperators = sortDistributionOperators(
+        distributionOperators,
+        !coordinates ? dataObject : undefined
+      )
 
       for (const distributionOperator of sortedDistributionOperators) {
         const assetUrl = createDistributionOperatorDataObjectUrl(distributionOperator, dataObject)
@@ -96,6 +102,7 @@ export const AssetsManager: React.FC = () => {
     addAsset,
     addAssetBeingResolved,
     assetIdsBeingResolved,
+    coordinates,
     getAllDistributionOperatorsForBag,
     pendingAssets,
     removeAssetBeingResolved,
@@ -106,20 +113,30 @@ export const AssetsManager: React.FC = () => {
   return null
 }
 
-// deterministically sort distributors for a given dataObject
-// this is important for caching, if we pick the distributor at random, clients will end up caching [distributors.length] copies of each asset (all have unique URL)
-// TODO: take geographical locations into the account, to offer a distributor physically closest to the client, this should ensure best response times
+// if user coordinates are known, sort distributors by geographical distance
+// otherwise use semi-random fallback
 const sortDistributionOperators = (
   distributionOperators: OperatorInfo[],
-  dataObject: StorageDataObjectFieldsFragment
+  dataObject?: StorageDataObjectFieldsFragment
 ): OperatorInfo[] => {
-  const dataObjectIdBn = new BN(dataObject.id)
-  const distributionOperatorsCountBn = new BN(distributionOperators.length)
-  const firstDistributorIndex = dataObjectIdBn.mod(distributionOperatorsCountBn).toNumber()
-  return [
-    ...distributionOperators.slice(firstDistributorIndex),
-    ...distributionOperators.slice(0, firstDistributorIndex),
-  ]
+  if (dataObject) {
+    const dataObjectIdBn = new BN(dataObject.id)
+    const distributionOperatorsCountBn = new BN(distributionOperators.length)
+    const firstDistributorIndex = dataObjectIdBn.mod(distributionOperatorsCountBn).toNumber()
+    return [
+      ...distributionOperators.slice(firstDistributorIndex),
+      ...distributionOperators.slice(0, firstDistributorIndex),
+    ]
+  }
+  return distributionOperators.sort((a, b) => {
+    if (!b.distance) {
+      return -1
+    }
+    if (!a.distance) {
+      return 1
+    }
+    return a.distance - b.distance
+  })
 }
 
 const createDistributionOperatorDataObjectUrl = (

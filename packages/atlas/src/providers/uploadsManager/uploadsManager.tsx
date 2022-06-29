@@ -1,5 +1,5 @@
 import { useApolloClient } from '@apollo/client'
-import React, { useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import shallow from 'zustand/shallow'
 
@@ -21,16 +21,16 @@ type VideoAssets = AssetUpload & { uploadStatus?: AssetUploadStatus }
 
 const UPLOADED_SNACKBAR_TIMEOUT = 13000
 
-export const UploadsManager: React.FC = () => {
+export const UploadsManager: FC = () => {
   const navigate = useNavigate()
-  const { activeChannelId } = useUser()
-  const [cachedActiveChannelId, setCachedActiveChannelId] = useState<string | null>(null)
+  const { channelId } = useUser()
+  const [cachedChannelId, setCachedChannelId] = useState<string | null>(null)
   const videoAssetsRef = useRef<VideoAssets[]>([])
 
   const { displaySnackbar } = useSnackbar()
   const { assetsFiles, channelUploads, uploadStatuses, isSyncing, processingAssets, newChannelsIds } = useUploadsStore(
     (state) => ({
-      channelUploads: state.uploads.filter((asset) => asset.owner === activeChannelId),
+      channelUploads: state.uploads.filter((asset) => asset.owner === channelId),
       isSyncing: state.isSyncing,
       assetsFiles: state.assetsFiles,
       processingAssets: state.processingAssets,
@@ -128,19 +128,25 @@ export const UploadsManager: React.FC = () => {
 
   useEffect(() => {
     // do this only on first render or when active channel changes
-    if (
-      !activeChannelId ||
-      cachedActiveChannelId === activeChannelId ||
-      newChannelsIds.includes(activeChannelId) ||
-      isSyncing
-    ) {
+    if (!channelId || cachedChannelId === channelId || newChannelsIds.includes(channelId) || isSyncing) {
       return
     }
-    setCachedActiveChannelId(activeChannelId)
-    setIsSyncing(true)
+
+    /*
+    We use queueMicrotask to force both state updates to happen at the same time, after other work in the hook is done.
+    There is an issue with automatic batching that was introduced in React 18 here -
+    without this microtask, even though `setCachedChannelId` and `setIsSyncing` are called at the same time,
+    the call to `setCachedChannelId` is somehow ignored and the component re-renders with the old `cachedChannelId` and this hook runs in a forever loop.
+    This is somehow related to the `setIsSyncing(false)` call at the end of the `init` function. If you comment it out, state updates properly.
+    This is most likely bug in React batching itself, but I wasn't able to make a reproducible example to report an issue.
+    */
+    queueMicrotask(() => {
+      setCachedChannelId(channelId)
+      setIsSyncing(true)
+    })
 
     const init = async () => {
-      const [fetchedVideos, fetchedChannel, pendingAssetsLookup] = await fetchMissingAssets(client, activeChannelId)
+      const [fetchedVideos, fetchedChannel, pendingAssetsLookup] = await fetchMissingAssets(client, channelId)
 
       // start with assumption that all assets are missing
       const missingLocalAssetsLookup = { ...pendingAssetsLookup }
@@ -148,7 +154,7 @@ export const UploadsManager: React.FC = () => {
       // remove assets from local state that weren't returned by the query node
       // mark asset as not missing in local state
       channelUploads.forEach((asset) => {
-        if (asset.owner !== activeChannelId) {
+        if (asset.owner !== channelId) {
           return
         }
 
@@ -173,7 +179,7 @@ export const UploadsManager: React.FC = () => {
               type: 'video',
               id: video.id,
             },
-            owner: activeChannelId,
+            owner: channelId,
             type: 'video',
             size: media.size,
           })
@@ -187,7 +193,7 @@ export const UploadsManager: React.FC = () => {
               type: 'video',
               id: video.id,
             },
-            owner: activeChannelId,
+            owner: channelId,
             type: 'thumbnail',
             size: thumbnail.size,
           })
@@ -206,7 +212,7 @@ export const UploadsManager: React.FC = () => {
             type: 'channel',
             id: fetchedChannel?.id || '',
           },
-          owner: activeChannelId,
+          owner: channelId,
           type: 'avatar',
           size: avatar.size,
         })
@@ -219,7 +225,7 @@ export const UploadsManager: React.FC = () => {
             type: 'channel',
             id: fetchedChannel?.id || '',
           },
-          owner: activeChannelId,
+          owner: channelId,
           type: 'cover',
           size: cover.size,
         })
@@ -245,14 +251,14 @@ export const UploadsManager: React.FC = () => {
 
     init()
   }, [
-    activeChannelId,
+    channelId,
     channelUploads,
     client,
     displaySnackbar,
     navigate,
     removeAssetFromUploads,
     addAssetToUploads,
-    cachedActiveChannelId,
+    cachedChannelId,
     isSyncing,
     setIsSyncing,
     processingAssets,

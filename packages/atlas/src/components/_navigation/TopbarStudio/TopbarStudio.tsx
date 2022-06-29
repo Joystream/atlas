@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { FC, MouseEvent, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
@@ -21,20 +21,20 @@ type StudioTopbarProps = {
   hideChannelInfo?: boolean
 }
 
-export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
-  const { activeChannelId, activeMembership, setActiveUser } = useUser()
+export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
+  const { channelId, activeMembership, setActiveUser } = useUser()
   const mdMatch = useMediaMatch('md')
 
   const { isWorkspaceOpen, setEditedVideo, setIsWorkspaceOpen } = useVideoWorkspace()
 
-  const currentChannel = activeMembership?.channels.find((channel) => channel.id === activeChannelId)
+  const currentChannel = activeMembership?.channels.find((channel) => channel.id === channelId)
 
   const { url: channelAvatarUrl, isLoadingAsset: channelAvatarLoading } = useAsset(currentChannel?.avatarPhoto)
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
 
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
 
-  const handleDrawerToggle: (e: React.MouseEvent<HTMLElement>) => void = (e) => {
+  const handleDrawerToggle: (e: MouseEvent<HTMLElement>) => void = (e) => {
     e.stopPropagation()
     setIsMemberDropdownActive(!isMemberDropdownActive)
   }
@@ -48,7 +48,7 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
     setIsWorkspaceOpen(false)
   }
 
-  const avatars: AvatarGroupUrlAvatar[] = activeChannelId
+  const avatars: AvatarGroupUrlAvatar[] = channelId
     ? [
         {
           url: memberAvatarUrl,
@@ -65,7 +65,7 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
         {!hideChannelInfo && (
           <StudioTopbarContainer>
             <CSSTransition
-              in={!isWorkspaceOpen && !!activeChannelId}
+              in={!isWorkspaceOpen && !!channelId}
               unmountOnExit
               mountOnEnter
               timeout={parseInt(transitions.timings.loading)}

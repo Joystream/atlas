@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
-import { HelperText } from '@/components/HelperText'
-import { oldColors, sizes } from '@/styles'
+import { Text } from '@/components/Text'
+import { sizes } from '@/styles'
 
 export const RadioAndCheckboxLabel = styled.label<{ disabled?: boolean; hasLabel?: boolean }>`
   display: inline-grid;
@@ -12,11 +12,7 @@ export const RadioAndCheckboxLabel = styled.label<{ disabled?: boolean; hasLabel
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
 `
 
-export const StyledHelperText = styled(HelperText)<{ error?: boolean }>`
+export const CaptionText = styled(Text)<{ error?: boolean }>`
   margin: 0;
   grid-column-start: 2;
-
-  span {
-    ${({ error }) => !error && `color: ${oldColors.gray[300]}`}
-  }
 `

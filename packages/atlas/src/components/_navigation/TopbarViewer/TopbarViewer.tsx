@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import { ChangeEvent, FC, MouseEvent, useCallback, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
@@ -28,11 +28,9 @@ import {
   StyledTopbarBase,
 } from './TopbarViewer.styles'
 
-export const TopbarViewer: React.FC = () => {
-  const { activeAccountId, extensionConnected, activeMemberId, activeMembership, signIn } = useUser()
+export const TopbarViewer: FC = () => {
+  const { isLoggedIn, activeMembership, signIn, isAuthLoading } = useUser()
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
-
-  const isLoggedIn = activeAccountId && !!activeMemberId && !!extensionConnected
 
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
 
@@ -64,7 +62,7 @@ export const TopbarViewer: React.FC = () => {
     }
   }, [pathname, search, setSearchQuery])
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchOpen(true)
     setSearchQuery(event.currentTarget.value)
   }
@@ -81,12 +79,12 @@ export const TopbarViewer: React.FC = () => {
     setSearchQuery('')
   }
 
-  const handleDrawerToggle = (e: React.MouseEvent<HTMLElement>) => {
+  const handleDrawerToggle = (e: MouseEvent<HTMLElement>) => {
     e.stopPropagation()
     setIsMemberDropdownActive(!isMemberDropdownActive)
   }
 
-  const topbarButtonLoaded = extensionConnected !== null
+  const topbarButtonLoaded = !isAuthLoading
 
   return (
     <>
@@ -141,8 +139,8 @@ export const TopbarViewer: React.FC = () => {
                   </SignedButtonsWrapper>
                 ) : (
                   mdMatch && (
-                    <Button icon={<SvgActionMember />} iconPlacement="left" size="medium" onClick={signIn}>
-                      Sign In
+                    <Button icon={<SvgActionMember />} iconPlacement="left" size="medium" onClick={() => signIn()}>
+                      Connect wallet
                     </Button>
                   )
                 )
@@ -152,7 +150,7 @@ export const TopbarViewer: React.FC = () => {
                 </SignedButtonsWrapper>
               )}
               {!searchQuery && !mdMatch && !isLoggedIn && topbarButtonLoaded && (
-                <StyledIconButton onClick={signIn}>Sign In</StyledIconButton>
+                <StyledIconButton onClick={() => signIn()}>Connect wallet</StyledIconButton>
               )}
             </ButtonWrapper>
           </CSSTransition>

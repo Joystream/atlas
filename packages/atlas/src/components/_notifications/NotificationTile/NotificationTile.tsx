@@ -1,14 +1,14 @@
 import { differenceInCalendarYears, differenceInDays, format } from 'date-fns'
-import React, { useMemo } from 'react'
+import { ChangeEvent, FC, ReactNode, useMemo } from 'react'
 
 import { Avatar } from '@/components/Avatar'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useMemberAvatar } from '@/providers/assets'
 import { NotificationRecord } from '@/providers/notifications'
-import { formatTokens } from '@/utils/number'
 import { formatDateAgo } from '@/utils/time'
 
 import { NoActorNotificationAvatar } from './NoActorNotificationAvatar'
@@ -22,16 +22,32 @@ import {
   Wrapper,
 } from './NotificationTile.styles'
 
-const getNotificationText = (notification: NotificationRecord): string => {
+const getNotificationText = (notification: NotificationRecord): ReactNode => {
   switch (notification.type) {
     case 'bid-made':
-      return `bid on your NFT for ${formatTokens(notification.bidAmount)}`
+      return (
+        <>
+          bid on your NFT for <NumberFormat as="span" value={notification.bidAmount} format="short" withToken />
+        </>
+      )
     case 'got-outbid':
-      return `outbid you for ${formatTokens(notification.bidAmount)}`
+      return (
+        <>
+          outbid you for <NumberFormat as="span" value={notification.bidAmount} format="short" withToken />
+        </>
+      )
     case 'bought':
-      return `purchased your NFT for ${formatTokens(notification.price)}`
+      return (
+        <>
+          purchased your NFT for <NumberFormat as="span" value={notification.price} format="short" withToken />
+        </>
+      )
     case 'bid-accepted':
-      return `has accepted your bid of ${formatTokens(notification.bidAmount)}`
+      return (
+        <>
+          has accepted your bid of <NumberFormat as="span" value={notification.bidAmount} format="short" withToken />
+        </>
+      )
     case 'auction-settled-owner':
       return 'Your auction has been settled'
     case 'auction-settled-winner':
@@ -48,14 +64,14 @@ const getNotificationText = (notification: NotificationRecord): string => {
 export type NotificationProps = {
   notification: NotificationRecord
   loading?: boolean
-  onCheckboxChange?: (selected: boolean, e: React.ChangeEvent<HTMLInputElement>) => void
+  onCheckboxChange?: (selected: boolean, e: ChangeEvent<HTMLInputElement>) => void
   onClick?: () => void
   selected?: boolean
   variant?: 'default' | 'compact'
   className?: string
 }
 
-export const NotificationTile: React.FC<NotificationProps> = ({
+export const NotificationTile: FC<NotificationProps> = ({
   notification,
   loading,
   onCheckboxChange,
@@ -105,7 +121,7 @@ export const NotificationTile: React.FC<NotificationProps> = ({
             !loading ? (
               <>
                 {member && (
-                  <Text as="span" variant="t200-strong" secondary>
+                  <Text as="span" variant="t200-strong" color="colorText">
                     {`${member.handle} `}
                   </Text>
                 )}
@@ -148,7 +164,7 @@ export const NotificationTile: React.FC<NotificationProps> = ({
         <Content>
           <Title>
             {member && (
-              <Text as="span" variant="h300" secondary>
+              <Text as="span" variant="h300" color="colorText">
                 {`${member.handle} `}
               </Text>
             )}
@@ -156,7 +172,7 @@ export const NotificationTile: React.FC<NotificationProps> = ({
               {getNotificationText(notification)}
             </Text>
           </Title>
-          <Text variant="t200" secondary>
+          <Text as="span" variant="t200" color="colorText">
             {formattedDate} • {video.title}
           </Text>
         </Content>

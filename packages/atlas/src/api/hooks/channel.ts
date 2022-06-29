@@ -4,14 +4,14 @@ import {
   FollowChannelMutation,
   GetBasicChannelQuery,
   GetBasicChannelQueryVariables,
+  GetBasicChannelsQuery,
+  GetBasicChannelsQueryVariables,
   GetChannelNftCollectorsQuery,
   GetChannelNftCollectorsQueryVariables,
-  GetChannelQuery,
-  GetChannelQueryVariables,
-  GetChannelsQuery,
-  GetChannelsQueryVariables,
   GetDiscoverChannelsQuery,
   GetDiscoverChannelsQueryVariables,
+  GetFullChannelQuery,
+  GetFullChannelQueryVariables,
   GetPopularChannelsQuery,
   GetPopularChannelsQueryVariables,
   GetPromisingChannelsQuery,
@@ -21,10 +21,10 @@ import {
   UnfollowChannelMutation,
   useFollowChannelMutation,
   useGetBasicChannelQuery,
+  useGetBasicChannelsQuery,
   useGetChannelNftCollectorsQuery,
-  useGetChannelQuery,
-  useGetChannelsQuery,
   useGetDiscoverChannelsQuery,
+  useGetFullChannelQuery,
   useGetPopularChannelsQuery,
   useGetPromisingChannelsQuery,
   useGetTop10ChannelsQuery,
@@ -45,8 +45,11 @@ export const useBasicChannel = (
   }
 }
 
-export const useChannel = (id: string, opts?: QueryHookOptions<GetChannelQuery, GetChannelQueryVariables>) => {
-  const { data, ...rest } = useGetChannelQuery({
+export const useFullChannel = (
+  id: string,
+  opts?: QueryHookOptions<GetFullChannelQuery, GetFullChannelQueryVariables>
+) => {
+  const { data, ...rest } = useGetFullChannelQuery({
     ...opts,
     variables: { where: { id } },
   })
@@ -56,11 +59,11 @@ export const useChannel = (id: string, opts?: QueryHookOptions<GetChannelQuery, 
   }
 }
 
-export const useChannels = (
-  variables?: GetChannelsQueryVariables,
-  opts?: QueryHookOptions<GetChannelsQuery, GetChannelsQueryVariables>
+export const useBasicChannels = (
+  variables?: GetBasicChannelsQueryVariables,
+  opts?: QueryHookOptions<GetBasicChannelsQuery, GetBasicChannelsQueryVariables>
 ) => {
-  const { data, ...rest } = useGetChannelsQuery({
+  const { data, ...rest } = useGetBasicChannelsQuery({
     ...opts,
     variables: {
       ...variables,

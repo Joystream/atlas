@@ -1,6 +1,6 @@
 import { useApolloClient } from '@apollo/client'
 import debouncePromise from 'awesome-debounce-promise'
-import React, { useRef, useState } from 'react'
+import { FC, useRef, useState } from 'react'
 
 import {
   BasicMembershipFieldsFragment,
@@ -14,7 +14,7 @@ import { useMemberAvatar } from '@/providers/assets'
 import { createLookup } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
 
-import { MemberBadgesWrapper, StyledMemberBadge, StyledSelectedText } from './MemberComboBox.styles'
+import { MemberBadgesWrapper, StyledOutputPill } from './MemberComboBox.styles'
 
 import { ComboBox } from '../ComboBox'
 
@@ -23,24 +23,23 @@ type MemberComboBoxProps = {
   className?: string
   onSelectMember?: (member: BasicMembershipFieldsFragment) => void
   onRemoveMember?: (memberId: string) => void
-  helperText?: string
   disabled?: boolean
   error?: boolean
 }
 
-export const MemberComboBox: React.FC<MemberComboBoxProps> = ({
+export const MemberComboBox: FC<MemberComboBoxProps> = ({
   selectedMembers,
   className,
   onSelectMember,
   onRemoveMember,
   disabled,
   error,
-  helperText,
 }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [members, setMembers] = useState<BasicMembershipFieldsFragment[]>([])
   const client = useApolloClient()
   const [isError, setIsError] = useState(false)
+  const [focusedElement, setFocusedElement] = useState<number | null>(null)
 
   const debounceFetchMembers = useRef(
     debouncePromise(async (val?: string) => {
@@ -73,9 +72,12 @@ export const MemberComboBox: React.FC<MemberComboBoxProps> = ({
     setMembers([])
   }
 
-  const handleDeleteClick = (memberId: string) => {
+  const handleDeleteClick = (memberId: string, id?: number) => {
     if (memberId) {
       onRemoveMember?.(memberId)
+    }
+    if (id) {
+      setFocusedElement(id === 0 ? null : id - 1)
     }
   }
 
@@ -104,10 +106,9 @@ export const MemberComboBox: React.FC<MemberComboBoxProps> = ({
         placeholder={selectedMembers.length ? 'Enter another member handle' : 'Enter member handle'}
         notFoundNode={notFoundNode}
         resetOnSelect
-        loading={isLoading}
+        processing={isLoading}
         error={isError || error}
         onSelectedItemChange={handleSelect}
-        helperText={isError ? 'Something went wrong' : helperText}
         onInputValueChange={(val) => {
           setIsError(false)
           setIsLoading(true)
@@ -115,12 +116,13 @@ export const MemberComboBox: React.FC<MemberComboBoxProps> = ({
         }}
       />
       <MemberBadgesWrapper>
-        {selectedMembers.length > 0 && <StyledSelectedText variant="t200-strong">Selected: </StyledSelectedText>}
-        {selectedMembers.map((member) => (
-          <MemberBadgeWithResolvedAsset
+        {selectedMembers.map((member, idx) => (
+          <StyledOutputPillWithResolvedAsset
             key={member.id}
             member={member}
             onDeleteClick={() => handleDeleteClick(member.id)}
+            onKeyPress={() => handleDeleteClick(member.id, idx)}
+            focused={idx === focusedElement}
           />
         ))}
       </MemberBadgesWrapper>
@@ -132,24 +134,34 @@ type AvatarWithResolvedAssetProps = {
   member: BasicMembershipFieldsFragment
 }
 
-const AvatarWithResolvedAsset: React.FC<AvatarWithResolvedAssetProps> = ({ member }) => {
+const AvatarWithResolvedAsset: FC<AvatarWithResolvedAssetProps> = ({ member }) => {
   const { url, isLoadingAsset } = useMemberAvatar(member)
   return <Avatar assetUrl={url} loading={isLoadingAsset} />
 }
 
-type MemberBadgeWithResolvedAssetProps = {
+type StyledOutputPillWithResolvedAssetProps = {
   member: BasicMembershipFieldsFragment
   onDeleteClick: () => void
+  onKeyPress: () => void
+  focused: boolean
 }
 
-const MemberBadgeWithResolvedAsset: React.FC<MemberBadgeWithResolvedAssetProps> = ({ member, onDeleteClick }) => {
+const StyledOutputPillWithResolvedAsset: FC<StyledOutputPillWithResolvedAssetProps> = ({
+  member,
+  onDeleteClick,
+  onKeyPress,
+  focused,
+}) => {
   const { url, isLoadingAsset } = useMemberAvatar(member)
   return (
-    <StyledMemberBadge
+    <StyledOutputPill
       handle={member.handle}
       onDeleteClick={onDeleteClick}
       avatarUri={url}
       isLoadingAvatar={isLoadingAsset}
+      withAvatar
+      onKeyPress={onKeyPress}
+      focused={focused}
     />
   )
 }

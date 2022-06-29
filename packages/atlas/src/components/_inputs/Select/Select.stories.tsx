@@ -1,5 +1,7 @@
 import { Meta, Story } from '@storybook/react'
-import React, { useState } from 'react'
+import { useState } from 'react'
+
+import { SvgActionAddImage } from '@/components/_icons'
 
 import { Select, SelectItem, SelectProps } from '.'
 
@@ -14,18 +16,21 @@ export default {
   component: Select,
   args: {
     items,
-    label: 'change value',
-    placeholder: 'placeholder',
+    size: 'large',
     disabled: false,
-    error: '',
-    helperText: '',
-    warning: '',
-    fullWidth: {
-      control: { type: 'select', options: ['regular', 'small'] },
-      defaultValue: 'regular',
-    },
+    error: false,
   },
-} as Meta
+  argTypes: {
+    size: { control: { type: 'select', options: ['medium', 'large'] } },
+    items: { table: { disable: true } },
+    value: { table: { disable: true } },
+    icon: { table: { disable: true } },
+    className: { table: { disable: true } },
+    containerRef: { table: { disable: true } },
+    ref: { table: { disable: true } },
+    onChange: { table: { disable: true } },
+  },
+} as Meta<SelectProps>
 
 const Template: Story<SelectProps> = (args) => <Select {...args} />
 
@@ -37,3 +42,9 @@ const TemplateWithControlledInput: Story<SelectProps> = (args) => {
 export const Default = Template.bind({})
 
 export const WithControlledInput = TemplateWithControlledInput.bind({})
+
+export const WithIcon = TemplateWithControlledInput.bind({})
+
+WithIcon.args = {
+  icon: <SvgActionAddImage />,
+}

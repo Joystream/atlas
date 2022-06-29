@@ -1,10 +1,10 @@
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 
-import { useVideosConnection } from '@/api/hooks'
+import { useBasicVideosConnection } from '@/api/hooks'
 import { Grid } from '@/components/Grid'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionChevronR } from '@/components/_icons'
-import { TextField } from '@/components/_inputs/TextField'
+import { Input } from '@/components/_inputs/Input'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions'
@@ -12,15 +12,15 @@ import { useAuthorizedUser } from '@/providers/user'
 
 export const PlaygroundMinimizedTransaction = () => {
   const [editMode, setEditMode] = useState('')
-  const { activeChannelId, activeMemberId } = useAuthorizedUser()
+  const { channelId, memberId } = useAuthorizedUser()
   const handleTransaction = useTransaction()
   const { joystream, proxyCallback } = useJoystream()
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const { edges, refetch } = useVideosConnection({
+  const { edges, refetch } = useBasicVideosConnection({
     where: {
       channel: {
-        id_eq: activeChannelId,
+        id_eq: channelId,
       },
       nft: {
         id_eq: null,
@@ -42,7 +42,7 @@ export const PlaygroundMinimizedTransaction = () => {
           await joystream.extrinsics
         ).updateVideo(
           id,
-          activeMemberId,
+          memberId,
           {
             title,
             nft: undefined,
@@ -63,7 +63,7 @@ export const PlaygroundMinimizedTransaction = () => {
           <div style={{ display: 'flex', marginTop: '16px' }}>
             {editMode === id ? (
               <>
-                <TextField defaultValue={title ?? ''} ref={inputRef} />
+                <Input defaultValue={title ?? ''} ref={inputRef} />
                 <Button onClick={() => updateVideoName(id)} icon={<SvgActionChevronR />} />
               </>
             ) : (

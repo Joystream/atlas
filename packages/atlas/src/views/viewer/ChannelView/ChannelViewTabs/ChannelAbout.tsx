@@ -1,18 +1,17 @@
-import React from 'react'
+import { FC } from 'react'
 
-import { AllChannelFieldsFragment } from '@/api/queries'
+import { FullChannelFieldsFragment } from '@/api/queries'
 import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useMemberAvatar } from '@/providers/assets'
-import { formatNumberShort } from '@/utils/number'
 import { formatDate } from '@/utils/time'
 
 import {
   Details,
   DetailsMember,
-  DetailsText,
   MemberContainer,
   MemberLink,
   StyledAvatar,
@@ -21,10 +20,10 @@ import {
 } from './ChannelAbout.styles'
 
 type ChannelAboutProps = {
-  channel?: AllChannelFieldsFragment | null
+  channel?: FullChannelFieldsFragment | null
 }
 
-export const ChannelAbout: React.FC<ChannelAboutProps> = ({ channel }) => {
+export const ChannelAbout: FC<ChannelAboutProps> = ({ channel }) => {
   const videoCount = channel?.activeVideosCounter
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(channel?.ownerMember)
   return (
@@ -32,20 +31,24 @@ export const ChannelAbout: React.FC<ChannelAboutProps> = ({ channel }) => {
       <GridItem colSpan={{ xxs: 12, sm: 8 }} rowStart={{ xxs: 2, sm: 1 }}>
         {!!channel?.description && (
           <TextContainer>
-            <Text variant="h500">Description</Text>
-            <Text variant="t300" secondary>
+            <Text as="h2" variant="h500">
+              Description
+            </Text>
+            <Text as="p" variant="t300" color="colorText">
               {channel.description}
             </Text>
           </TextContainer>
         )}
       </GridItem>
       <GridItem colSpan={{ xxs: 12, sm: 3 }} colStart={{ sm: -4 }}>
-        <DetailsText variant="h400">Details</DetailsText>
+        <Text as="h3" variant="h400" margin={{ bottom: 4 }}>
+          Details
+        </Text>
 
         <DetailsMember>
           <StyledAvatar size="small" assetUrl={memberAvatarUrl} loading={memberAvatarLoading} />
           <MemberContainer>
-            <Text variant="t100" secondary>
+            <Text as="span" variant="t100" color="colorText">
               Owned by member
             </Text>
             <MemberLink to={absoluteRoutes.viewer.member(channel?.ownerMember?.handle)} variant="secondary">
@@ -55,31 +58,39 @@ export const ChannelAbout: React.FC<ChannelAboutProps> = ({ channel }) => {
         </DetailsMember>
 
         <Details>
-          <Text variant="t100" secondary>
+          <Text as="span" variant="t100" color="colorText">
             Joined on
           </Text>
-          <Text variant="t300">{channel?.createdAt ? formatDate(new Date(channel.createdAt)) : ''}</Text>
+          <Text as="span" variant="t300">
+            {channel?.createdAt ? formatDate(new Date(channel.createdAt)) : ''}
+          </Text>
         </Details>
 
         <Details>
-          <Text variant="t100" secondary>
+          <Text as="span" variant="t100" color="colorText">
             Num. of views
           </Text>
-          <Text variant="t300">{typeof channel?.views === 'number' ? formatNumberShort(channel.views) : ''}</Text>
+          {typeof channel?.views === 'number' ? (
+            <NumberFormat as="span" variant="t300" value={channel.views} format="short" />
+          ) : (
+            ''
+          )}
         </Details>
 
         <Details>
-          <Text variant="t100" secondary>
+          <Text as="span" variant="t100" color="colorText">
             Num. of videos
           </Text>
-          <Text variant="t300">{videoCount}</Text>
+          <Text as="span" variant="t300">
+            {videoCount}
+          </Text>
         </Details>
 
         <Details>
-          <Text variant="t100" secondary>
+          <Text as="span" variant="t100" color="colorText">
             Language
           </Text>
-          <Text variant="t300">
+          <Text as="span" variant="t300">
             {channel?.language?.iso ? languages.find(({ value }) => value === channel.language?.iso)?.name : ''}
           </Text>
         </Details>

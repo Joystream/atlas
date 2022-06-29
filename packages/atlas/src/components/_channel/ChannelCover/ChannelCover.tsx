@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC, MouseEvent } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
@@ -8,7 +8,6 @@ import { transitions } from '@/styles'
 import {
   CoverImage,
   CoverWrapper,
-  EditButtonMessage,
   EditCoverDesktopOverlay,
   EditCoverMobileButton,
   EditableControls,
@@ -24,10 +23,10 @@ export type ChannelCoverProps = {
   hasCoverUploadFailed?: boolean
   editable?: boolean
   disabled?: boolean
-  onCoverEditClick?: (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>) => void
+  onCoverEditClick?: (e: MouseEvent<HTMLButtonElement | HTMLDivElement>) => void
 }
 
-export const ChannelCover: React.FC<ChannelCoverProps> = ({
+export const ChannelCover: FC<ChannelCoverProps> = ({
   assetUrl,
   hasCoverUploadFailed,
   editable,
@@ -41,9 +40,9 @@ export const ChannelCover: React.FC<ChannelCoverProps> = ({
           <EditableControls>
             <EditCoverDesktopOverlay onClick={onCoverEditClick}>
               <SvgActionImage />
-              <EditButtonMessage variant="t200-strong">{`${
+              <Text as="span" variant="t200-strong" margin={{ top: 1 }} color="colorCoreNeutral100">{`${
                 assetUrl ? 'Edit ' : 'Add '
-              } cover image`}</EditButtonMessage>
+              } cover image`}</Text>
             </EditCoverDesktopOverlay>
             <EditCoverMobileButton icon={<SvgActionImageFile />} onClick={onCoverEditClick} variant="tertiary" />
           </EditableControls>
@@ -60,7 +59,7 @@ export const ChannelCover: React.FC<ChannelCoverProps> = ({
               ) : hasCoverUploadFailed ? (
                 <FailedUploadContainer>
                   <StyledSvgIllustrativeFileFailed />
-                  <Text variant="t100" secondary>
+                  <Text as="span" variant="t100" color="colorText">
                     Failed upload
                   </Text>
                 </FailedUploadContainer>

@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 
-import { Text } from '@/components/Text'
-import { oldColors, sizes, transitions } from '@/styles'
+import { cVar, sizes, transitions } from '@/styles'
 
 import { Container, IconCircle } from './VideoCategoryCard.style'
 
@@ -41,7 +40,7 @@ export const FeaturedIconCircle = styled(IconCircle)`
   margin-bottom: ${sizes(4)};
 
   path {
-    fill: ${oldColors.black};
+    fill: ${cVar('colorCoreBaseBlack')};
   }
 `
 
@@ -51,8 +50,4 @@ export const FeaturedVideoTitleContainer = styled.div<VariantProps>`
   gap: ${sizes(1)};
   align-self: end;
   text-align: ${({ variantCategory }) => (variantCategory === 'default' ? 'right' : 'left')};
-`
-
-export const FeaturedVideoText = styled(Text)`
-  color: ${oldColors.gray[200]};
 `

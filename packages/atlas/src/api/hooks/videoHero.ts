@@ -7,10 +7,10 @@ import {
 } from '@/api/queries/__generated__/featured.generated'
 import { SentryLogger } from '@/utils/logs'
 
-import { VideoFieldsFragment } from '../queries'
+import { BasicVideoFieldsFragment } from '../queries'
 
 export type VideoHeroData = {
-  video?: VideoFieldsFragment | null
+  video?: BasicVideoFieldsFragment | null
   heroTitle: string
   heroVideoCutUrl: string
   heroPosterUrl: string | null

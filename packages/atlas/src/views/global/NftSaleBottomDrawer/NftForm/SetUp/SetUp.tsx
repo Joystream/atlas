@@ -1,26 +1,25 @@
-import React, { useEffect } from 'react'
+import { ChangeEvent, Dispatch, FC, FocusEvent, FormEvent, SetStateAction, useEffect } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 
+import { NumberFormat } from '@/components/NumberFormat'
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { AuctionDatePicker } from '@/components/_inputs/AuctionDatePicker'
 import { FormField } from '@/components/_inputs/FormField'
+import { Input } from '@/components/_inputs/Input'
 import { MemberComboBox } from '@/components/_inputs/MemberComboBox'
-import { OptionCardRadio } from '@/components/_inputs/OptionCard'
-import { TextField } from '@/components/_inputs/TextField'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useTokenPrice } from '@/providers/joystream'
-import { cVar } from '@/styles'
 import { pluralizeNoun } from '@/utils/misc'
-import { formatNumber } from '@/utils/number'
 
 import {
   AuctionDatePickerWrapper,
   DaysSummary,
   DaysSummaryInfo,
-  Header,
-  OptionCardRadioWrapper,
+  StyledForm,
   StyledFormField,
+  StyledOptionCardGroupRadio,
 } from './SetUp.styles'
 
 import { useNftFormUtils } from '../NftForm.hooks'
@@ -32,11 +31,11 @@ type SetUpProps = {
   maxEndDate: Date
   selectedType: Listing
   activeInputs: string[]
-  setActiveInputs: React.Dispatch<React.SetStateAction<string[]>>
+  setActiveInputs: Dispatch<SetStateAction<string[]>>
   handleGoForward: () => void
 }
 
-export const SetUp: React.FC<SetUpProps> = ({
+export const SetUp: FC<SetUpProps> = ({
   selectedType,
   activeInputs,
   setActiveInputs,
@@ -55,6 +54,7 @@ export const SetUp: React.FC<SetUpProps> = ({
     formState: { errors },
   } = useFormContext<NftFormFields>()
 
+  const mdMatch = useMediaMatch('md')
   const startDate = watch('startDate')
   const endDate = watch('endDate')
 
@@ -86,7 +86,7 @@ export const SetUp: React.FC<SetUpProps> = ({
     setValue('auctionDurationBlocks', numberOfBlocks || undefined)
   }, [numberOfBlocks, setValue])
 
-  const toggleActiveInput = (event?: React.ChangeEvent<HTMLInputElement>) => {
+  const toggleActiveInput = (event?: ChangeEvent<HTMLInputElement>) => {
     if (!event) {
       return
     }
@@ -135,12 +135,12 @@ export const SetUp: React.FC<SetUpProps> = ({
     },
   }))
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     handleGoForward()
   }
 
-  const handleNumberInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+  const handleNumberInputBlur = (event: FocusEvent<HTMLInputElement>) => {
     const { target } = event
     if (Number(target.value) % 1 !== 0) {
       setValue(target.name as 'buyNowPrice' | 'startingPrice', Math.floor(Number(event.target.value)))
@@ -149,20 +149,28 @@ export const SetUp: React.FC<SetUpProps> = ({
 
   return (
     <>
-      <Header variant="h500">{selectedType && headerText[selectedType].header}</Header>
-      <Text variant="t300" secondary>
+      <Text as="h1" variant="h500" margin={{ bottom: 4 }}>
+        {selectedType && headerText[selectedType].header}
+      </Text>
+      <Text as="p" variant="t300" color="colorText">
         {selectedType && headerText[selectedType].caption}
       </Text>
-      <form onSubmit={handleSubmit}>
+      <StyledForm onSubmit={handleSubmit}>
         {selectedType === 'Fixed price' && (
-          <StyledFormField title="">
-            <TextField
+          <StyledFormField label="" error={errors.buyNowPrice?.message}>
+            <Input
               {...register('buyNowPrice', { valueAsNumber: true })}
               type="number"
               nodeStart={<JoyTokenIcon variant="gray" size={24} />}
-              nodeEnd={!!buyNowPrice && <Pill variant="overlay" label={`${convertToUSD(buyNowPrice)}`} />}
+              nodeEnd={
+                !!buyNowPrice && (
+                  <Pill
+                    variant="overlay"
+                    label={<NumberFormat as="span" format="dollar" value={convertToUSD(buyNowPrice ?? 0) ?? 0} />}
+                  />
+                )
+              }
               error={!!errors.buyNowPrice}
-              helperText={errors.buyNowPrice?.message}
               onBlur={handleNumberInputBlur}
             />
           </StyledFormField>
@@ -174,22 +182,23 @@ export const SetUp: React.FC<SetUpProps> = ({
               control={control}
               defaultValue="open"
               render={({ field: { value, onChange } }) => (
-                <OptionCardRadioWrapper>
-                  <OptionCardRadio
-                    value="open"
-                    label="Open auction"
-                    helperText="Pick the winning bid or cancel anytime"
-                    onChange={() => onChange('open')}
-                    selectedValue={value}
-                  />
-                  <OptionCardRadio
-                    value="english"
-                    label="Timed auction"
-                    helperText="Highest bidder wins, cannot be cancelled once started"
-                    onChange={() => onChange('english')}
-                    selectedValue={value}
-                  />
-                </OptionCardRadioWrapper>
+                <StyledOptionCardGroupRadio
+                  selectedValue={value}
+                  onChange={onChange}
+                  direction={mdMatch ? 'horizontal' : 'vertical'}
+                  options={[
+                    {
+                      label: 'Open auction',
+                      caption: 'Pick the winning bid or cancel anytime',
+                      value: 'open',
+                    },
+                    {
+                      label: 'Timed auction',
+                      caption: 'Highest bidder wins, cannot be cancelled once started',
+                      value: 'english',
+                    },
+                  ]}
+                />
               )}
             />
             <AuctionDatePickerWrapper columns={isEnglishAuction ? 2 : 1}>
@@ -197,22 +206,26 @@ export const SetUp: React.FC<SetUpProps> = ({
                 name="startDate"
                 control={control}
                 render={({ field: { onChange, value }, fieldState: { error } }) => (
-                  <AuctionDatePicker
-                    size="regular"
+                  <FormField
+                    error={error?.message}
+                    // TODO shake animation on date picker is very glitchy, for now just disable it
+                    disableErrorAnimation
                     label="Starts"
-                    error={!!error}
-                    helperText={error?.message}
-                    minDate={new Date()}
-                    maxDate={endDate?.type === 'date' && endDate.date < maxStartDate ? endDate.date : maxStartDate}
-                    items={[
-                      {
-                        value: null,
-                        name: 'Now',
-                      },
-                    ]}
-                    onChange={onChange}
-                    value={value}
-                  />
+                  >
+                    <AuctionDatePicker
+                      error={!!error}
+                      minDate={new Date()}
+                      maxDate={endDate?.type === 'date' && endDate.date < maxStartDate ? endDate.date : maxStartDate}
+                      items={[
+                        {
+                          value: null,
+                          name: 'Now',
+                        },
+                      ]}
+                      onChange={onChange}
+                      value={value}
+                    />
+                  </FormField>
                 )}
               />
               {isEnglishAuction && (
@@ -220,36 +233,42 @@ export const SetUp: React.FC<SetUpProps> = ({
                   name="endDate"
                   control={control}
                   render={({ field: { onChange, value }, fieldState: { error } }) => (
-                    <AuctionDatePicker
-                      size="regular"
+                    <FormField
+                      error={error?.message}
+                      // TODO shake animation on date picker is very glitchy, for now just disable it
+                      disableErrorAnimation
                       label="Ends"
-                      error={!!error}
-                      helperText={error?.message}
-                      minDate={(startDate?.type === 'date' && startDate.date) || new Date()}
-                      maxDate={maxEndDate}
-                      onChange={onChange}
-                      items={expirationDateItems}
-                      value={
-                        value || {
-                          type: 'duration',
-                          durationDays: 1,
+                    >
+                      <AuctionDatePicker
+                        error={!!error}
+                        minDate={(startDate?.type === 'date' && startDate.date) || new Date()}
+                        maxDate={maxEndDate}
+                        onChange={onChange}
+                        items={expirationDateItems}
+                        value={
+                          value || {
+                            type: 'duration',
+                            durationDays: 1,
+                          }
                         }
-                      }
-                    />
+                      />
+                    </FormField>
                   )}
                 />
               )}
             </AuctionDatePickerWrapper>
             {numberOfBlocks > 0 && (
               <DaysSummary>
-                <Text variant="t200-strong" color={cVar('colorTextMuted', true)}>
+                <Text as="span" variant="t200-strong" color="colorTextMuted">
                   Total:
                 </Text>
                 &nbsp;
-                <Text variant="t200-strong">{totalDaysAndHours}</Text>
+                <Text as="span" variant="t200-strong">
+                  {totalDaysAndHours}
+                </Text>
                 &nbsp;
-                <Text variant="t200-strong" secondary>
-                  / {formatNumber(numberOfBlocks)} blocks
+                <Text as="span" variant="t200-strong" color="colorText">
+                  / <NumberFormat as="span" color="colorText" value={numberOfBlocks} /> blocks
                 </Text>
                 <DaysSummaryInfo
                   text="On blockchain, duration is expressed in number of blocks"
@@ -259,87 +278,104 @@ export const SetUp: React.FC<SetUpProps> = ({
               </DaysSummary>
             )}
             <FormField
-              title="Minimum bid"
+              label="Minimum bid"
+              error={errors.startingPrice?.message}
+              switchable
               switchProps={{
                 name: 'startingPrice',
                 onChange: toggleActiveInput,
                 value: activeInputs.includes('startingPrice'),
               }}
-              infoTooltip={{ text: 'Only bids higher than this value will be accepted', multiline: true }}
+              tooltip={{ text: 'Only bids higher than this value will be accepted', multiline: true }}
             >
-              <TextField
+              <Input
                 {...register('startingPrice', { valueAsNumber: true })}
                 type="number"
                 defaultValue={chainState.nftMinStartingPrice?.toString()}
                 nodeStart={<JoyTokenIcon variant="gray" size={24} />}
-                nodeEnd={!!startingPrice && <Pill variant="overlay" label={`${convertToUSD(startingPrice)}`} />}
+                nodeEnd={
+                  !!startingPrice && (
+                    <Pill
+                      variant="overlay"
+                      label={<NumberFormat as="span" format="dollar" value={convertToUSD(startingPrice ?? 0) ?? 0} />}
+                    />
+                  )
+                }
                 disabled={!activeInputs.includes('startingPrice')}
                 error={!!errors.startingPrice}
-                helperText={errors.startingPrice?.message}
                 onBlur={handleNumberInputBlur}
               />
             </FormField>
             <FormField
-              title="Buy now price"
+              label="Buy now price"
+              error={errors.buyNowPrice?.message}
+              switchable
               switchProps={{
                 name: 'buyNowPrice',
                 onChange: toggleActiveInput,
                 value: activeInputs.includes('buyNowPrice'),
               }}
-              infoTooltip={{
+              tooltip={{
                 text: 'Bids matching this value will automatically end your auction',
                 multiline: true,
               }}
             >
-              <TextField
+              <Input
                 {...register('buyNowPrice', { valueAsNumber: true })}
                 placeholder="—"
                 type="number"
                 nodeStart={<JoyTokenIcon variant="gray" size={24} />}
-                nodeEnd={!!buyNowPrice && <Pill variant="overlay" label={`${convertToUSD(buyNowPrice)}`} />}
+                nodeEnd={
+                  !!buyNowPrice && (
+                    <Pill
+                      variant="overlay"
+                      label={<NumberFormat as="span" format="dollar" value={convertToUSD(buyNowPrice ?? 0) ?? 0} />}
+                    />
+                  )
+                }
                 disabled={!activeInputs.includes('buyNowPrice')}
                 error={!!errors.buyNowPrice}
-                helperText={errors.buyNowPrice?.message}
                 onBlur={(event) => {
                   trigger() // trigger form validation to make sure starting price is valid
                   handleNumberInputBlur(event)
                 }}
               />
             </FormField>
-            <FormField
-              title="Whitelist"
-              switchProps={{
-                name: 'whitelistedMembers',
-                onChange: toggleActiveInput,
-                value: activeInputs.includes('whitelistedMembers'),
-              }}
-              infoTooltip={{
-                text: 'Only members included in the whitelist will be able to bid on this auction',
-                multiline: true,
-              }}
-            >
-              <Controller
-                name="whitelistedMembers"
-                control={control}
-                render={({ field: { onChange, value: existingMembers }, fieldState: { error } }) => {
-                  return (
+            <Controller
+              name="whitelistedMembers"
+              control={control}
+              render={({ field: { onChange, value: existingMembers }, fieldState: { error } }) => {
+                return (
+                  <FormField
+                    label="Whitelist"
+                    switchable
+                    switchProps={{
+                      name: 'whitelistedMembers',
+                      onChange: toggleActiveInput,
+                      value: activeInputs.includes('whitelistedMembers'),
+                    }}
+                    tooltip={{
+                      text: 'Only members included in the whitelist will be able to bid on this auction',
+                      multiline: true,
+                    }}
+                    error={error?.message}
+                  >
                     <MemberComboBox
                       disabled={!activeInputs.includes('whitelistedMembers')}
                       selectedMembers={existingMembers || []}
                       error={!!error}
-                      helperText={error?.message}
                       onSelectMember={(member) => onChange([member, ...(existingMembers ? existingMembers : [])])}
                       onRemoveMember={(memberId) =>
                         onChange(existingMembers?.filter((existingMember) => existingMember.id !== memberId))
                       }
                     />
-                  )
-                }}
-              />
-            </FormField>
+                  </FormField>
+                )
+              }}
+            />
           </>
         )}
-      </form>
+      </StyledForm>
     </>
   )
 }

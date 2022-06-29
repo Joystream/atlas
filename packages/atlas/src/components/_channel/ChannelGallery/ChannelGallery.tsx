@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { FC, useMemo } from 'react'
 
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { Gallery } from '@/components/Gallery'
@@ -17,7 +17,7 @@ type ChannelGalleryProps = {
 const PLACEHOLDERS_COUNT = 10
 const CAROUSEL_SMALL_BREAKPOINT = 688
 
-export const ChannelGallery: React.FC<ChannelGalleryProps> = ({ title, channels = [], loading, hasRanking }) => {
+export const ChannelGallery: FC<ChannelGalleryProps> = ({ title, channels = [], loading, hasRanking }) => {
   const breakpoints = useMemo(() => {
     return breakpointsOfGrid({
       breakpoints: 6,

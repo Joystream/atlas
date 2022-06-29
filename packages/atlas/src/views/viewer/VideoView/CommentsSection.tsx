@@ -1,10 +1,10 @@
 import { NetworkStatus } from '@apollo/client'
 import { debounce } from 'lodash-es'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useComment, useCommentSectionComments, useUserCommentsReactions } from '@/api/hooks'
-import { CommentOrderByInput, VideoFieldsFragment } from '@/api/queries'
+import { CommentOrderByInput, FullVideoFieldsFragment } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Text } from '@/components/Text'
 import { LoadMoreButton } from '@/components/_buttons/LoadMoreButton'
@@ -30,7 +30,7 @@ import {
 
 type CommentsSectionProps = {
   disabled?: boolean
-  video?: VideoFieldsFragment | null
+  video?: FullVideoFieldsFragment | null
   videoLoading: boolean
   videoAuthorId?: string
 }
@@ -38,7 +38,7 @@ type CommentsSectionProps = {
 const SCROLL_TO_COMMENT_TIMEOUT = 300
 const INITIAL_COMMENTS = 10
 
-export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, video, videoLoading }) => {
+export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, videoLoading }) => {
   const [commentInputText, setCommentInputText] = useState('')
   const [commentInputIsProcessing, setCommentInputIsProcessing] = useState(false)
   const [highlightedCommentId, setHighlightedCommentId] = useState<string | null>(null)
@@ -47,17 +47,17 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const commentIdQueryParam = useRouterQuery(QUERY_PARAMS.COMMENT_ID)
   const mdMatch = useMediaMatch('md')
   const { id: videoId } = useParams()
-  const { activeMemberId, activeAccountId, signIn, activeMembership } = useUser()
+  const { memberId, signIn, activeMembership, isLoggedIn } = useUser()
   const { openSignInDialog } = useDisplaySignInDialog()
   const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)
 
   const queryVariables = useMemo(
     () => ({
-      memberId: activeMemberId,
+      memberId,
       videoId,
       orderBy: sortCommentsBy,
     }),
-    [activeMemberId, sortCommentsBy, videoId]
+    [memberId, sortCommentsBy, videoId]
   )
   const commentsSectionHeaderRef = useRef<HTMLDivElement>(null)
   const commentSectionWrapperRef = useRef<HTMLDivElement>(null)
@@ -67,7 +67,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     { ...queryVariables, first: mobileCommentsOpen ? INITIAL_COMMENTS : 1 },
     { skip: disabled || !videoId, notifyOnNetworkStatusChange: true }
   )
-  const { userReactions } = useUserCommentsReactions(videoId, activeMemberId)
+  const { userReactions } = useUserCommentsReactions(videoId, memberId)
 
   const { addComment } = useReactionTransactions()
 
@@ -117,8 +117,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       window.removeEventListener('scroll', scrollHandler)
     }
   }, [commentsLoading, mobileCommentsOpen, pageInfo?.hasNextPage])
-
-  const authorized = activeMemberId && activeAccountId
 
   // fetch more results when user scrolls to end of page
   useEffect(() => {
@@ -200,11 +198,12 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   return (
     <CommentsSectionWrapper>
       <CommentsSectionHeader ref={commentsSectionHeaderRef}>
-        <Text variant="h400">{loading || !video?.commentsCount ? 'Comments' : `${video.commentsCount} comments`}</Text>
+        <Text as="p" variant="h400">
+          {loading || !video?.commentsCount ? 'Comments' : `${video.commentsCount} comments`}
+        </Text>
         <Select
-          size="small"
-          labelPosition="left"
-          label={mdMatch ? 'Sort by' : ''}
+          size="medium"
+          inlineLabel={mdMatch ? 'Sort by' : ''}
           value={sortCommentsBy}
           items={COMMENTS_SORT_OPTIONS}
           onChange={handleSorting}
@@ -213,13 +212,13 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       </CommentsSectionHeader>
       <CommentInput
         memberAvatarUrl={memberAvatarUrl}
-        isMemberAvatarLoading={authorized ? isMemberAvatarLoading : false}
+        isMemberAvatarLoading={isLoggedIn ? isMemberAvatarLoading : false}
         processing={commentInputIsProcessing}
-        readOnly={!activeMemberId}
+        readOnly={!memberId}
         memberHandle={activeMembership?.handle}
         value={commentInputText}
         hasInitialValueChanged={!!commentInputText}
-        onFocus={() => !activeMemberId && openSignInDialog({ onConfirm: signIn })}
+        onFocus={() => !memberId && openSignInDialog({ onConfirm: signIn })}
         onComment={() => handleComment()}
         onChange={(e) => setCommentInputText(e.target.value)}
       />
@@ -254,7 +253,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
               ))
               .concat(isFetchingMore && commentsLoading ? mappedPlaceholders : [])}
       </CommentWrapper>
-      {!mobileCommentsOpen && !commentsLoading && comments && comments.length && pageInfo?.hasNextPage && (
+      {!mobileCommentsOpen && !commentsLoading && comments && !!comments.length && pageInfo?.hasNextPage && (
         <LoadMoreCommentsWrapper>
           <LoadMoreButton label="Show more comments" onClick={handleLoadMoreClick} />
         </LoadMoreCommentsWrapper>

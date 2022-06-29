@@ -1,15 +1,16 @@
 import styled from '@emotion/styled'
 
+import { Pagination } from '@/components/Pagination'
 import { Select } from '@/components/_inputs/Select'
-import { media, oldColors, sizes, transitions, zIndex } from '@/styles'
+import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 export const PaddingWrapper = styled.div<{ filtersOpen: boolean }>`
   position: relative;
   display: flex;
   padding: 0 var(--size-global-horizontal-padding);
-  border-bottom: 1px solid ${({ filtersOpen }) => oldColors.gray[filtersOpen ? 800 : 700]};
+  border-bottom: 1px solid ${({ filtersOpen }) => cVar(filtersOpen ? 'colorCoreNeutral800' : 'colorCoreNeutral700')};
   z-index: ${zIndex.nearOverlay};
-  background-color: ${oldColors.gray[900]};
+  background-color: ${cVar('colorCoreNeutral900')};
 `
 
 export const SearchControls = styled.div`
@@ -17,7 +18,7 @@ export const SearchControls = styled.div`
   left: var(--size-sidenav-width-collapsed);
   top: var(--size-topbar-height);
   width: 100%;
-  background-color: ${oldColors.gray[900]};
+  background-color: ${cVar('colorCoreNeutral900')};
   z-index: ${zIndex.nearOverlay};
   ${media.md} {
     width: calc(100% - var(--size-sidenav-width-collapsed));
@@ -42,4 +43,8 @@ export const FiltersWrapper = styled.div`
 export const StyledSelect = styled(Select)`
   min-width: 170px;
   margin-right: ${sizes(4)};
+`
+
+export const StyledPagination = styled(Pagination)`
+  margin-top: ${sizes(12)};
 `

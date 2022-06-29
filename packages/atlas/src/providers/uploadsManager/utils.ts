@@ -1,44 +1,44 @@
 import { ApolloClient } from '@apollo/client'
 
 import {
-  AllChannelFieldsFragment,
-  GetChannelDocument,
-  GetChannelQuery,
-  GetChannelQueryVariables,
-  GetVideosDocument,
-  GetVideosQuery,
-  GetVideosQueryVariables,
-  VideoFieldsFragment,
+  FullChannelFieldsFragment,
+  FullVideoFieldsFragment,
+  GetFullChannelDocument,
+  GetFullChannelQuery,
+  GetFullChannelQueryVariables,
+  GetFullVideosDocument,
+  GetFullVideosQuery,
+  GetFullVideosQueryVariables,
 } from '@/api/queries'
 import { createLookup } from '@/utils/data'
 
 export const fetchMissingAssets = async (
   client: ApolloClient<unknown>,
-  activeChannelId: string
-): Promise<[VideoFieldsFragment[], AllChannelFieldsFragment | null | undefined, Record<string, boolean>]> => {
-  const videosMediaPromise = client.query<GetVideosQuery, GetVideosQueryVariables>({
-    query: GetVideosDocument,
+  channelId: string
+): Promise<[FullVideoFieldsFragment[], FullChannelFieldsFragment | null | undefined, Record<string, boolean>]> => {
+  const videosMediaPromise = client.query<GetFullVideosQuery, GetFullVideosQueryVariables>({
+    query: GetFullVideosDocument,
     variables: {
       where: {
         media: { isAccepted_eq: false },
-        channel: { id_eq: activeChannelId },
+        channel: { id_eq: channelId },
       },
     },
   })
 
-  const videosThumbnailPromise = client.query<GetVideosQuery, GetVideosQueryVariables>({
-    query: GetVideosDocument,
+  const videosThumbnailPromise = client.query<GetFullVideosQuery, GetFullVideosQueryVariables>({
+    query: GetFullVideosDocument,
     variables: {
       where: {
         thumbnailPhoto: { isAccepted_eq: false },
-        channel: { id_eq: activeChannelId },
+        channel: { id_eq: channelId },
       },
     },
   })
 
-  const channelPromise = client.query<GetChannelQuery, GetChannelQueryVariables>({
-    query: GetChannelDocument,
-    variables: { where: { id: activeChannelId } },
+  const channelPromise = client.query<GetFullChannelQuery, GetFullChannelQueryVariables>({
+    query: GetFullChannelDocument,
+    variables: { where: { id: channelId } },
   })
 
   const [videosMediaResponse, videosThumbnailResponse, channelResponse] = await Promise.all([

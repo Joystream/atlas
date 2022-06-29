@@ -1,13 +1,13 @@
-import React, { useRef, useState } from 'react'
+import { FC, useRef, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { NumberFormat } from '@/components/NumberFormat'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionDislikeOutline, SvgActionLikeOutline } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { VideoReaction } from '@/joystream-lib'
 import { cVar, transitions } from '@/styles'
-import { formatNumberShort } from '@/utils/number'
 
 import {
   LoadingWrapper,
@@ -30,7 +30,7 @@ type ReactionButtonProps = {
   reactionPopoverDismissed?: boolean
 }
 
-export const ReactionButton: React.FC<ReactionButtonProps> = ({
+export const ReactionButton: FC<ReactionButtonProps> = ({
   reactionsNumber,
   state,
   type,
@@ -105,8 +105,8 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
                 variant="tertiary"
                 icon={isReacted && !isProcessing ? renderSolidIcon() : renderOutlineIcon()}
               >
-                <ReactionsCounter type={type} state={state} disabled={isProcessing} variant="t200-strong">
-                  {formatNumberShort(reactionsNumber || 0)}
+                <ReactionsCounter as="span" type={type} state={state} disabled={isProcessing} variant="t200-strong">
+                  <NumberFormat as="span" format="short" value={reactionsNumber ?? 0} color="inherit" />
                 </ReactionsCounter>
               </Button>
             }
@@ -117,7 +117,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
   )
 }
 
-const ReactionButtonLoader: React.FC = () => {
+const ReactionButtonLoader: FC = () => {
   return (
     <LoadingWrapper>
       <SkeletonLoader rounded width={16} height={16} /> <SkeletonLoader height={20} width={32} />

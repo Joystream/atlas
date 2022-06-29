@@ -1,10 +1,12 @@
-import React, { useCallback, useEffect } from 'react'
+import { FC, useCallback, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import useResizeObserver from 'use-resize-observer'
 
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { MembershipInfo } from '@/components/MembershipInfo'
-import { CreateEditMemberInputs } from '@/components/_auth/CreateEditMemberInputs'
+import { FormField } from '@/components/_inputs/FormField'
+import { Input } from '@/components/_inputs/Input'
+import { TextArea } from '@/components/_inputs/TextArea'
 import { absoluteRoutes } from '@/config/routes'
 import { useCreateEditMemberForm } from '@/hooks/useCreateEditMember'
 import { useHeadTags } from '@/hooks/useHeadTags'
@@ -15,9 +17,9 @@ import { useUser } from '@/providers/user'
 
 import { StyledActionBar, TextFieldsWrapper, Wrapper } from './EditMembershipView.styles'
 
-export const EditMembershipView: React.FC = () => {
+export const EditMembershipView: FC = () => {
   const navigate = useNavigate()
-  const { activeAccountId, activeMembership, activeMembershipLoading, refetchActiveMembership } = useUser()
+  const { accountId, activeMembership, isLoggedIn, refetchUserMemberships } = useUser()
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
@@ -34,7 +36,7 @@ export const EditMembershipView: React.FC = () => {
     dirtyFields,
     isValidating,
     setFocus,
-  } = useCreateEditMemberForm({ prevHandle: activeMembership?.handle })
+  } = useCreateEditMemberForm(activeMembership?.handle)
 
   const resetForm = useCallback(() => {
     reset(
@@ -52,11 +54,12 @@ export const EditMembershipView: React.FC = () => {
     )
   }, [activeMembership, reset])
 
+  // reset the form whenever the active membership changes
   useEffect(() => {
-    if (!activeMembershipLoading && activeMembership) {
+    if (activeMembership) {
       resetForm()
     }
-  }, [activeMembership, activeMembershipLoading, resetForm])
+  }, [activeMembership, resetForm])
 
   const headTags = useHeadTags('Edit membership')
 
@@ -72,7 +75,7 @@ export const EditMembershipView: React.FC = () => {
           ...(dirtyFields.avatar ? { avatarUri: formData?.avatar } : {}),
         }
         return (await joystream.extrinsics).updateMember(
-          activeMembership?.id,
+          activeMembership.id,
           dirtyFields.handle ? formData.handle : null,
           memberInputMetadata,
           proxyCallback(updateStatus)
@@ -82,9 +85,12 @@ export const EditMembershipView: React.FC = () => {
         title: 'Profile updated successfully',
       },
     })
-    const { data } = await refetchActiveMembership()
+    const {
+      data: { memberships },
+    } = await refetchUserMemberships()
+    const updatedMembership = memberships.find((m) => m.id === activeMembership.id)
     if (success) {
-      navigate(absoluteRoutes.viewer.member(data.membershipByUniqueInput?.handle))
+      navigate(absoluteRoutes.viewer.member(updatedMembership?.handle))
     }
   })
 
@@ -93,30 +99,58 @@ export const EditMembershipView: React.FC = () => {
       {headTags}
       <LimitedWidthContainer>
         <MembershipInfo
-          address={activeAccountId}
+          address={accountId}
           avatarUrl={errors.avatar ? '' : getValues('avatar')}
           onAvatarEditClick={() => setFocus('avatar')}
           hasAvatarUploadFailed={!!errors.avatar}
-          loading={activeMembershipLoading}
+          loading={!isLoggedIn}
           editable
           handle={getValues('handle')}
         />
         <Wrapper actionBarHeight={actionBarBoundsHeight}>
           <TextFieldsWrapper>
-            <CreateEditMemberInputs register={register} errors={errors} watch={watch} />
+            <FormField label="Avatar URL" error={errors?.avatar?.message}>
+              <Input
+                autoComplete="off"
+                error={!!errors?.avatar}
+                placeholder="https://example.com/avatar.jpeg"
+                {...register('avatar')}
+                value={watch('avatar') || ''}
+              />
+            </FormField>
+            <FormField
+              label="Member handle"
+              description="Member handle may contain only lowercase letters, numbers and underscores"
+              error={errors?.handle?.message}
+            >
+              <Input
+                autoComplete="off"
+                placeholder="johnnysmith"
+                {...register('handle')}
+                value={watch('handle') || ''}
+                error={!!errors?.handle}
+              />
+            </FormField>
+            <FormField label="About" error={errors?.about?.message}>
+              <TextArea
+                placeholder="Anything you'd like to share about yourself with the Joystream community"
+                maxLength={1000}
+                {...register('about')}
+                value={watch('about') || ''}
+                error={!!errors?.about}
+              />
+            </FormField>
           </TextFieldsWrapper>
         </Wrapper>
         <StyledActionBar
           ref={actionBarRef}
-          primaryText="Fee: 0 Joy"
-          secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
+          fee={0}
           primaryButton={{
             disabled: !isDirty || !isValid || isValidating,
             text: 'Publish changes',
             type: 'submit',
           }}
           secondaryButton={{
-            visible: true,
             text: 'Cancel',
             to: absoluteRoutes.viewer.member(activeMembership?.handle),
           }}

@@ -2,7 +2,6 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { CustomRadioInput, activeState, hoverState } from '@/components/_inputs/RadioInput/RadioInput.styles'
 import { cVar, sizes } from '@/styles'
 
 type OptionCardLabelProps = {
@@ -11,37 +10,40 @@ type OptionCardLabelProps = {
   error?: boolean
 }
 
-const getOptionCardBorderColor = ({ checked, error }: OptionCardLabelProps) => {
+const getOptionCardBorderColor = ({ checked, error, disabled }: OptionCardLabelProps) => {
+  if (disabled) {
+    return cVar('colorBorderMutedAlpha')
+  }
   if (error) {
-    return cVar('colorCoreRed500')
-  } else if (checked && !error) {
-    return cVar('colorCoreBlue500')
+    return cVar('colorBorderError')
+  } else if (checked) {
+    return cVar('colorBorderPrimary')
   }
   return cVar('colorBorderAlpha')
 }
 
 const getOptionCardBorderColorHover = ({ checked, error, disabled }: OptionCardLabelProps) => {
   if (disabled) {
-    return 'inherit'
+    return cVar('colorBorderMutedAlpha')
   }
   if (error) {
-    return cVar('colorCoreRed300')
-  } else if (checked && !error) {
-    return cVar('colorCoreBlue300')
+    return cVar('colorBorderError')
+  } else if (checked) {
+    return cVar('colorBorderPrimary')
   }
   return cVar('colorBorderStrongAlpha')
 }
 
 const getOptionCardBorderColorActive = ({ checked, error, disabled }: OptionCardLabelProps) => {
   if (disabled) {
-    return 'inherit'
+    return cVar('colorBorderMutedAlpha')
   }
   if (error) {
-    return cVar('colorCoreRed700')
-  } else if (checked && !error) {
-    return cVar('colorCoreBlue700')
+    return cVar('colorBorderError')
+  } else if (checked) {
+    return cVar('colorBorderPrimary')
   }
-  return cVar('colorBorderMutedAlpha')
+  return cVar('colorBorderStrongAlpha')
 }
 
 const IconStyles = ({ error, checked, disabled }: OptionCardLabelProps) => css`
@@ -56,33 +58,36 @@ export const IconContainer = styled.div<OptionCardLabelProps>`
 `
 
 export const OptionCardLabel = styled.label<OptionCardLabelProps>`
+  --border-height: ${({ checked }) => (checked ? '-2px' : '-1px')};
+
   padding: ${sizes(4)};
   display: flex;
   flex-direction: column;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-  border: 1px solid ${getOptionCardBorderColor};
-  transition: background-color ${cVar('animationTransitionFast')}, border-color ${cVar('animationTransitionFast')};
+  box-shadow: inset 0 var(--border-height) 0 0 ${getOptionCardBorderColor};
+  transition: all ${cVar('animationTransitionFast')};
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+  background: ${cVar('colorBackgroundMutedAlpha')};
 
-  :hover {
-    border: 1px solid ${getOptionCardBorderColorHover};
-    ${CustomRadioInput} {
-      ${({ checked, disabled, error }) => !disabled && !error && hoverState(checked)};
-    }
+  ${({ disabled, checked, error }) =>
+    !disabled &&
+    css`
+      :focus-within,
+      :hover {
+        background: ${cVar('colorBackgroundAlpha')};
+        box-shadow: inset 0 var(--border-height) 0 0 ${getOptionCardBorderColorHover({ checked, error, disabled })};
 
-    ${IconContainer} {
-      * path {
-        fill: ${({ error, disabled }) =>
-          error ? cVar('colorTextError') : !disabled ? cVar('colorTextStrong') : cVar('colorText')};
+        ${IconContainer} {
+          * path {
+            fill: ${error ? cVar('colorTextError') : !disabled ? cVar('colorTextStrong') : cVar('colorText')};
+          }
+        }
       }
-    }
-  }
+    `}
 
   :active {
-    border: 1px solid ${getOptionCardBorderColorActive};
-    ${CustomRadioInput} {
-      ${({ checked, disabled, error }) => !disabled && !error && activeState(checked)};
-    }
+    background: ${cVar('colorBackgroundMutedAlpha')};
+    box-shadow: inset 0 var(--border-height) 0 0 ${getOptionCardBorderColorActive};
   }
 `
 
@@ -91,7 +96,7 @@ export const InputAndTitleWrapper = styled.div`
   grid-template-columns: 1fr auto;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: ${sizes(4)};
+  margin-bottom: ${sizes(2)};
 `
 
 export const TitleIconWrapper = styled.div`

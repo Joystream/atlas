@@ -5,21 +5,20 @@ import { offsetLimitPagination, relayStylePagination } from '@apollo/client/util
 import { parseISO } from 'date-fns'
 
 import {
-  AllChannelFieldsFragment,
-  GetChannelsConnectionQueryVariables,
+  FullChannelFieldsFragment,
+  FullVideoFieldsFragment,
   GetNftsConnectionQueryVariables,
-  GetVideosConnectionQueryVariables,
   Query,
+  QueryChannelsConnectionArgs,
   QueryCommentsConnectionArgs,
-  SearchQueryVariables,
+  QueryVideosConnectionArgs,
   VideoConnection,
-  VideoFieldsFragment,
   VideoOrderByInput,
 } from '../queries'
 
 const stringifyValue = (value: unknown) => JSON.stringify(value || {})
 
-const getVideoKeyArgs = (args: GetVideosConnectionQueryVariables | null) => {
+const getVideoKeyArgs = (args: QueryVideosConnectionArgs | null) => {
   const onlyCount = args?.first === 0
   const channel = stringifyValue(args?.where?.channel)
   const category = stringifyValue(args?.where?.category)
@@ -29,17 +28,19 @@ const getVideoKeyArgs = (args: GetVideosConnectionQueryVariables | null) => {
   const idIn = args?.where?.id_in || []
   const isPublic = args?.where?.isPublic_eq ?? ''
   const createdAtGte = args?.where?.createdAt_gte ? JSON.stringify(args.where.createdAt_gte) : ''
-  const sorting = args?.orderBy?.[0] ? args.orderBy[0] : ''
-  const isFeatured = args?.where?.isFeatured_eq ?? ''
   const durationGte = args?.where?.duration_gte || ''
   const durationLte = args?.where?.duration_gte || ''
+  const titleContains = args?.where?.title_contains || ''
+
+  const sortingArray = args?.orderBy != null ? (Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]) : []
+  const sorting = stringifyValue(sortingArray)
 
   // only for counting videos in HomeView
   if (args?.where?.channel?.id_in && !args?.first) {
     return `${createdAtGte}:${channel}`
   }
 
-  return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${isPublic}:${idEq}:${idIn}:${sorting}:${isFeatured}:${durationGte}:${durationLte}`
+  return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${isPublic}:${idEq}:${idIn}:${sorting}:${durationGte}:${durationLte}:${titleContains}`
 }
 
 const getNftKeyArgs = (args: GetNftsConnectionQueryVariables | null) => {
@@ -48,33 +49,23 @@ const getNftKeyArgs = (args: GetNftsConnectionQueryVariables | null) => {
   const creatorChannel = stringifyValue(args?.where?.creatorChannel)
   const status = stringifyValue(args?.where?.transactionalStatus_json)
   const auctionStatus = stringifyValue(args?.where?.transactionalStatusAuction)
-  const sorting = args?.orderBy?.[0] ? args.orderBy[0] : ''
+  const sortingArray = args?.orderBy != null ? (Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]) : []
+  const sorting = stringifyValue(sortingArray)
   const createdAt_gte = stringifyValue(args?.where?.createdAt_gte)
   const video = stringifyValue(args?.where?.video)
 
   return `${OR}:${ownerMember}:${creatorChannel}:${status}:${auctionStatus}:${sorting}:${createdAt_gte}:${video}`
 }
 
-const getChannelKeyArgs = (args: GetChannelsConnectionQueryVariables | null) => {
+const getChannelKeyArgs = (args: QueryChannelsConnectionArgs | null) => {
   // make sure queries asking for a specific category are separated in cache
   const language = stringifyValue(args?.where?.language)
   const idIn = args?.where?.id_in || []
-  const orderBy = args?.orderBy || []
+  const sortingArray = args?.orderBy != null ? (Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]) : []
+  const sorting = stringifyValue(sortingArray)
+  const titleContains = args?.where?.title_contains || ''
 
-  return `${language}:${idIn}:${orderBy}`
-}
-
-const getSearchKeyArgs = (args: SearchQueryVariables | null) => {
-  const text = args?.text || ''
-  const hasMarketingEq = args?.whereVideo?.hasMarketing_eq ?? ''
-  const isExplicitEq = args?.whereVideo?.isExplicit_eq ?? ''
-  const language = stringifyValue(args?.whereVideo?.language)
-  const category = stringifyValue(args?.whereVideo?.category)
-  const createdAtGte = args?.whereVideo?.createdAt_gte ? JSON.stringify(args.whereVideo.createdAt_gte) : ''
-  const durationGte = args?.whereVideo?.duration_gte || null
-  const durationLte = args?.whereVideo?.duration_lte || null
-
-  return `${text}:${language}:${createdAtGte}:${category}:${isExplicitEq}:${hasMarketingEq}:${durationLte}:${durationGte}`
+  return `${language}:${idIn}:${sorting}:${titleContains}`
 }
 
 const getCommentKeyArgs = (args: QueryCommentsConnectionArgs | null) => {
@@ -103,13 +94,19 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
     ...relayStylePagination(getVideoKeyArgs),
     read(
       existing: VideoConnection,
-      { args, readField }: { args: GetVideosConnectionQueryVariables | null; readField: ReadFieldFunction }
+      { args, readField }: { args: QueryVideosConnectionArgs | null; readField: ReadFieldFunction }
     ) {
       const isPublic = args?.where?.isPublic_eq
       const filteredEdges =
-        existing?.edges.filter((edge) => readField('isPublic', edge.node) === isPublic || isPublic === undefined) ?? []
+        existing?.edges.filter((edge) => {
+          if (isPublic == null) return true // ignore if filter not applied
+          const nodeFieldValue = readField('isPublic', edge.node)
+          if (nodeFieldValue == null) return true // if the node doesn't have isPublic field, ignore filter
+          return nodeFieldValue === isPublic
+        }) ?? []
 
-      const sortingASC = args?.orderBy?.[0] === VideoOrderByInput.CreatedAtAsc
+      const sortingArray = args?.orderBy != null ? (Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]) : []
+      const sortingASC = sortingArray[0] === VideoOrderByInput.CreatedAtAsc
       const preSortedDESC = (filteredEdges || []).slice().sort((a, b) => {
         return (readField('createdAt', b.node) as Date).getTime() - (readField('createdAt', a.node) as Date).getTime()
       })
@@ -152,6 +149,15 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
       })
     )
   },
+  membershipByUniqueInput: (existing, { toReference, args }) => {
+    return (
+      existing ||
+      toReference({
+        __typename: 'Membership',
+        id: args?.where.id,
+      })
+    )
+  },
   ownedNftByUniqueInput: (existing, { toReference, args }) => {
     return (
       existing ||
@@ -161,8 +167,6 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
       })
     )
   },
-  // @ts-ignore Apollo doesn't contain info on args type so Typescript will complain
-  search: offsetLimitPagination(getSearchKeyArgs),
   commentByUniqueInput: (existing, { toReference, args }) => {
     return (
       existing ||
@@ -174,12 +178,12 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
   },
 }
 
-const videoCacheFields: CachePolicyFields<keyof VideoFieldsFragment> = {
+const videoCacheFields: CachePolicyFields<keyof FullVideoFieldsFragment> = {
   createdAt: createDateHandler(),
   publishedBeforeJoystream: createDateHandler(),
 }
 
-const channelCacheFields: CachePolicyFields<keyof AllChannelFieldsFragment> = {
+const channelCacheFields: CachePolicyFields<keyof FullChannelFieldsFragment> = {
   createdAt: createDateHandler(),
 }
 

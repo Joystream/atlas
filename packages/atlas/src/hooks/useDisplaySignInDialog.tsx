@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 
 import { Text } from '@/components/Text'
 import { SvgLargeWall, SvgOtherSignInDialogPatterns } from '@/components/_illustrations'
@@ -14,9 +14,11 @@ const SignInDialogcontent = () => {
         <StyledSvgOtherSignInDialogPatterns />
       </IllustrationWrapper>
       <SignInDialogTextWrapper>
-        <Text variant="h500">Sign in to continue</Text>
-        <Text variant="t200" secondary>
-          Sign in to Joystream using Polkadot extension in order proceed.
+        <Text as="h1" variant="h500">
+          Connect wallet to continue
+        </Text>
+        <Text as="p" variant="t200" color="colorText">
+          Connect your wallet and sign in to a free Joystream membership to continue.
         </Text>
       </SignInDialogTextWrapper>
     </>
@@ -85,7 +87,7 @@ export const useDisplaySignInDialog = () => {
         description: <SignInDialogcontent />,
         noIcon: true,
         primaryButton: {
-          text: 'Sign in',
+          text: 'Connect wallet',
           onClick: () => {
             onConfirm?.()
             closeDialog()

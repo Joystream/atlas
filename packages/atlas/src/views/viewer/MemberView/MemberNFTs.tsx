@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
+import { FC, useState } from 'react'
 
-import { AllNftFieldsFragment } from '@/api/queries'
+import { FullNftFieldsFragment } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Grid } from '@/components/Grid'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 
 type MemberNFTsProps = {
-  nfts?: AllNftFieldsFragment[]
+  nfts?: FullNftFieldsFragment[]
   loading?: boolean
   owner?: boolean
   isFiltersApplied?: boolean
@@ -15,7 +15,7 @@ type MemberNFTsProps = {
 
 const INITIAL_TILES_PER_ROW = 4
 
-export const MemberNFTs: React.FC<MemberNFTsProps> = ({ nfts, loading, owner, isFiltersApplied }) => {
+export const MemberNFTs: FC<MemberNFTsProps> = ({ nfts, loading, owner, isFiltersApplied }) => {
   const [tilesPerRow, setTilesPerRow] = useState(INITIAL_TILES_PER_ROW)
   const nftRows = useVideoGridRows('main')
   const tilesPerPage = nftRows * tilesPerRow

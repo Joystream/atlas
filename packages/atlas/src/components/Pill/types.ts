@@ -1,11 +1,11 @@
-import React from 'react'
+import { ReactNode } from 'react'
 
 export type Sizes = 'small' | 'medium' | 'large'
 export type Variants = 'default' | 'overlay' | 'danger'
 
 export type PillProps = {
-  label?: React.ReactNode
-  icon?: React.ReactNode
+  label?: ReactNode
+  icon?: ReactNode
   iconPlacement?: 'left' | 'right'
   size?: Sizes
   variant?: Variants

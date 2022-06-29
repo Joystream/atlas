@@ -1,5 +1,5 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { css } from '@storybook/theming'
 import { Link } from 'react-router-dom'
 
 import { Avatar } from '@/components/Avatar'

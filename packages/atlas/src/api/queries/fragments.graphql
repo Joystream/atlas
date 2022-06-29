@@ -7,20 +7,16 @@ fragment BasicChannelFields on Channel {
   id
   title
   createdAt
-  views
   follows
 
   avatarPhoto {
     ...StorageDataObjectFields
   }
-
-  ownerMember {
-    ...BasicMembershipFields
-  }
 }
 
-fragment AllChannelFields on Channel {
+fragment FullChannelFields on Channel {
   ...BasicChannelFields
+  views
   activeVideosCounter
   description
   isPublic
@@ -55,7 +51,7 @@ fragment BasicMembershipFields on Membership {
   }
 }
 
-fragment AllMembershipFields on Membership {
+fragment FullMembershipFields on Membership {
   ...BasicMembershipFields
   controllerAccount
   createdAt
@@ -82,6 +78,12 @@ fragment DistributionBucketOperatorField on DistributionBucketOperator {
   id
   metadata {
     nodeEndpoint
+    nodeLocation {
+      coordinates {
+        latitude
+        longitude
+      }
+    }
   }
   status
 }
@@ -104,11 +106,8 @@ fragment BasicVideoFields on Video {
   views
   createdAt
   duration
-  title
-  isPublic
-  media {
-    ...StorageDataObjectFields
-  }
+  reactionsCount
+  commentsCount
   channel {
     ...BasicChannelFields
   }
@@ -116,14 +115,15 @@ fragment BasicVideoFields on Video {
     ...StorageDataObjectFields
   }
   nft {
-    ...BasicNftFields
+    id # just to check whether NFT exists
   }
 }
 
-fragment VideoFields on Video {
+fragment FullVideoFields on Video {
   id
   title
   description
+  reactionsCount
   reactions {
     id
     createdAt
@@ -132,13 +132,13 @@ fragment VideoFields on Video {
   }
   category {
     id
+    name
   }
   views
   duration
   createdAt
   isPublic
   isExplicit
-  isFeatured
   hasMarketing
   isCensored
   isCommentSectionEnabled
@@ -157,29 +157,17 @@ fragment VideoFields on Video {
     ...StorageDataObjectFields
   }
   channel {
-    ...BasicChannelFields
+    ...FullChannelFields
   }
   license {
     ...LicenseFields
   }
   nft {
-    ...AllNftFields
+    ...FullNftFields
   }
 }
 
-fragment BasicNftFields on OwnedNft {
-  id
-  createdAt
-  creatorRoyalty
-  ownerMember {
-    ...BasicMembershipFields
-  }
-  transactionalStatus {
-    __typename
-  }
-}
-
-fragment AllNftFields on OwnedNft {
+fragment FullNftFields on OwnedNft {
   id
   createdAt
   creatorRoyalty
@@ -251,7 +239,7 @@ fragment BasicBidFields on Bid {
   id
 }
 
-fragment AllBidFields on Bid {
+fragment FullBidFields on Bid {
   ...BasicBidFields
   auction {
     auctionType {

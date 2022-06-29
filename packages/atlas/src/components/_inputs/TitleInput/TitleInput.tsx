@@ -1,32 +1,24 @@
-import React, { useState } from 'react'
+import { ChangeEvent, KeyboardEvent, forwardRef, useState } from 'react'
 
-import { HelperText } from '@/components/HelperText'
+import { Text } from '@/components/Text'
 
-import {
-  CharactersCounter,
-  Container,
-  CounterText,
-  MinMaxChars,
-  StyledTextArea,
-  TitleAreaInfo,
-} from './TitleInput.styles'
+import { CharactersCounter, Container, MinMaxChars, StyledTextArea, TitleAreaInfo } from './TitleInput.styles'
 
 export type TitleInputProps = {
   error?: boolean
-  helperText?: string
   name?: string
   value?: string
   min?: number
   max?: number
   placeholder?: string
-  onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
-  onBlur?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
-  onFocus?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void
+  onBlur?: (event: ChangeEvent<HTMLTextAreaElement>) => void
+  onFocus?: (event: ChangeEvent<HTMLTextAreaElement>) => void
   className?: string
   disabled?: boolean
 }
 
-export const TitleInput = React.forwardRef<HTMLTextAreaElement, TitleInputProps>(
+export const TitleInput = forwardRef<HTMLTextAreaElement, TitleInputProps>(
   (
     {
       name,
@@ -40,18 +32,17 @@ export const TitleInput = React.forwardRef<HTMLTextAreaElement, TitleInputProps>
       min = 5,
       disabled,
       error,
-      helperText,
     },
     ref
   ) => {
     const [footerVisible, setFooterVisible] = useState(false)
-    const handleKeyDown = (e: React.KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Enter') {
         e.preventDefault()
       }
     }
 
-    const handleFocus = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const handleFocus = (event: ChangeEvent<HTMLTextAreaElement>) => {
       onFocus?.(event)
       if (!footerVisible) {
         setFooterVisible(true)
@@ -76,17 +67,16 @@ export const TitleInput = React.forwardRef<HTMLTextAreaElement, TitleInputProps>
           ref={ref}
         />
         <TitleAreaInfo visible={footerVisible || error || !!value?.length}>
-          <MinMaxChars variant="t100">
+          <MinMaxChars as="span" variant="t100" color="colorTextMuted" margin={{ bottom: 1, right: 2 }}>
             Min {min} chars • Max {max} chars
           </MinMaxChars>
-          <CounterText variant="t100">
-            <CharactersCounter hasValue={!!value?.length} variant="t100">
+          <Text as="span" variant="t100" color="colorTextMuted">
+            <CharactersCounter as="span" color={value?.length ? undefined : 'colorTextMuted'} variant="t100">
               {value?.length || 0} &nbsp;
             </CharactersCounter>
             / {max}
-          </CounterText>
+          </Text>
         </TitleAreaInfo>
-        {helperText && <HelperText error={error} helperText={helperText} />}
       </Container>
     )
   }

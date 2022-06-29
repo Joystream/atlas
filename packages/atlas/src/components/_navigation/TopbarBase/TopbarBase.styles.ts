@@ -18,15 +18,13 @@ export const Header = styled.header`
   background-color: ${cVar('colorCoreBaseBlack')};
 
   /* add left padding to reserve space for sidenav hamburger button */
-  padding: ${sizes(3)} calc(${sizes(4)} + var(--size-scrollbar-width)) ${sizes(3)}
-    calc(${sizes(4)} + 48px + ${sizes(2)});
+  padding: ${sizes(3)} ${sizes(4)} ${sizes(3)} calc(${sizes(4)} + 48px + ${sizes(2)});
 
   ${media.md} {
     display: grid;
     grid-template-rows: auto;
     grid-template-columns: 1fr minmax(480px, 1fr) 1fr;
-    padding: ${sizes(4)} calc(${sizes(8)} + var(--size-scrollbar-width)) ${sizes(4)}
-      calc(var(--size-sidenav-width-collapsed) + ${sizes(8)});
+    padding: ${sizes(4)} ${sizes(8)} ${sizes(4)} calc(var(--size-sidenav-width-collapsed) + ${sizes(8)});
   }
 `
 

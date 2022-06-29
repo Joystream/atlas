@@ -1,5 +1,5 @@
 import { debounce } from 'lodash-es'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { FC, MouseEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { SPECIAL_CHARACTERS } from '@/config/regex'
@@ -27,11 +27,11 @@ type SearchBoxProps = {
   onLastSelectedItem: () => void
   onSelectItem: (title?: string | null) => void
   handleSetNumberOfItems: (items: number) => void
-  onMouseMove: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
+  onMouseMove: (event: MouseEvent<HTMLDivElement>) => void
   hasFocus: boolean
 }
 
-export const SearchBox: React.FC<SearchBoxProps> = React.memo(
+export const SearchBox: FC<SearchBoxProps> = memo(
   ({
     searchQuery,
     onSelectRecentSearch,
@@ -43,7 +43,7 @@ export const SearchBox: React.FC<SearchBoxProps> = React.memo(
     onMouseMove,
     hasFocus,
   }) => {
-    const { channels, videos, loading } = useSearchResults({ searchQuery })
+    const { channels, videos, loading } = useSearchResults({ searchQuery, first: 3, fetchPolicy: 'no-cache' })
     const { recentSearches, deleteRecentSearch } = usePersonalDataStore((state) => ({
       recentSearches: state.recentSearches,
       deleteRecentSearch: state.actions.deleteRecentSearch,
@@ -112,8 +112,8 @@ export const SearchBox: React.FC<SearchBoxProps> = React.memo(
           )
           .slice(0, 3)
       : recentSearches
-    const slicedVideos = videos.slice(0, 3)
-    const slicedChannels = channels.slice(0, 3)
+    const slicedVideos = videos.items.slice(0, 3)
+    const slicedChannels = channels.items.slice(0, 3)
 
     // Pass number off all results
     useEffect(() => {
@@ -147,7 +147,7 @@ export const SearchBox: React.FC<SearchBoxProps> = React.memo(
       >
         {!!filteredRecentSearches.length && (
           <Section>
-            <Caption secondary variant="t100">
+            <Caption as="span" color="colorText" variant="t100">
               Recent searches
             </Caption>
             {filteredRecentSearches.map((recentSearch, idx) => (
@@ -167,7 +167,7 @@ export const SearchBox: React.FC<SearchBoxProps> = React.memo(
         {loading && !!searchQuery && <Section>{placeholders}</Section>}
         {!!slicedVideos.length && !loading && (
           <Section>
-            <Caption secondary variant="t100">
+            <Caption as="span" color="colorText" variant="t100">
               Videos
             </Caption>
             {slicedVideos.map((video, idx) => (
@@ -184,7 +184,7 @@ export const SearchBox: React.FC<SearchBoxProps> = React.memo(
         )}
         {!!slicedChannels.length && !loading && (
           <Section>
-            <Caption secondary variant="t100">
+            <Caption as="span" color="colorText" variant="t100">
               Channels
             </Caption>
             {slicedChannels.map((channel, idx) => (

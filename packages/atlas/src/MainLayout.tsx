@@ -1,10 +1,10 @@
 import loadable from '@loadable/component'
-import React, { useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 
 import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
 import { StudioLoading } from '@/components/_loaders/StudioLoading'
-import { AdminOverlay } from '@/components/_overlays/AdminOverlay'
+import { AdminModal } from '@/components/_overlays/AdminModal'
 import { CookiePopover } from '@/components/_overlays/CookiePopover'
 import { BASE_PATHS, absoluteRoutes } from '@/config/routes'
 import { transitions } from '@/styles'
@@ -33,7 +33,7 @@ const LoadablePlaygroundLayout = loadable(() => import('./views/playground/Playg
   fallback: <h1>Loading Playground...</h1>,
 })
 
-export const MainLayout: React.FC = () => {
+export const MainLayout: FC = () => {
   const scrollPosition = useRef<number>(0)
   const location = useLocation()
   const navigationType = useNavigationType()
@@ -87,7 +87,7 @@ export const MainLayout: React.FC = () => {
         <Route path={BASE_PATHS.studio + '/*'} element={<LoadableStudioLayout />} />
         <Route path={BASE_PATHS.playground + '/*'} element={<LoadablePlaygroundLayout />} />
       </Routes>
-      <AdminOverlay />
+      <AdminModal />
     </>
   )
 }

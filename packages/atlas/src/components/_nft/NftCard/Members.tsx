@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
@@ -27,7 +27,7 @@ type MembersProps =
     }
   | { caption: 'Supporters'; members: Member[]; loading?: boolean }
 
-export const Members: React.FC<MembersProps> = ({ caption, members, loading }) => {
+export const Members: FC<MembersProps> = ({ caption, members, loading }) => {
   const avatars =
     members && Array.isArray(members)
       ? members.map((member) => ({ assetUrl: member.assetUrl, ...(member.name ? { tooltipText: member.name } : {}) }))
@@ -35,7 +35,7 @@ export const Members: React.FC<MembersProps> = ({ caption, members, loading }) =
   const isArray = Array.isArray(members)
   return (
     <MembersWrapper>
-      <Caption variant="t200" secondary>
+      <Caption as="span" variant="t200" color="colorText">
         {caption}
       </Caption>
       {isArray && avatars && (
@@ -46,7 +46,7 @@ export const Members: React.FC<MembersProps> = ({ caption, members, loading }) =
             size="small"
             avatarStrokeColor={cVar('colorBackgroundStrong', true)}
           />
-          <Text variant="t100" secondary>
+          <Text as="span" variant="t100" color="colorText">
             {avatars.length > 3 && `+${avatars.length - 3}`}
           </Text>
         </AvatarGroupWrapper>
@@ -54,7 +54,13 @@ export const Members: React.FC<MembersProps> = ({ caption, members, loading }) =
       {!isArray && (
         <AvatarWrapper>
           <StyledAvatar size="bid" assetUrl={members.assetUrl} loading={loading} />
-          {loading ? <SkeletonLoader width={64} height={24} /> : <MemberName variant="h300">{members.name}</MemberName>}
+          {loading ? (
+            <SkeletonLoader width={64} height={24} />
+          ) : (
+            <MemberName as="span" variant="h300">
+              {members.name}
+            </MemberName>
+          )}
         </AvatarWrapper>
       )}
     </MembersWrapper>

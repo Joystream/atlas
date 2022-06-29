@@ -1,4 +1,4 @@
-import { ApolloError, NetworkStatus, useQuery } from '@apollo/client'
+import { ApolloError, NetworkStatus, QueryHookOptions, useQuery } from '@apollo/client'
 import { TypedDocumentNode } from '@graphql-typed-document-node/core'
 import { DocumentNode } from 'graphql'
 import { debounce, isEqual } from 'lodash-es'
@@ -34,6 +34,8 @@ const PREFETCHED_ITEMS_COUNT = 12
 
 type UseInfiniteGridParams<TRawData, TPaginatedData extends PaginatedData<unknown>, TArgs> = {
   query: DocumentNode | TypedDocumentNode<TRawData, TArgs>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  queryOpts?: QueryHookOptions<any, TArgs>
   dataAccessor: (rawData?: TRawData) => TPaginatedData | undefined
   isReady: boolean
   targetRowsCount: number
@@ -63,6 +65,7 @@ export const useInfiniteGrid = <
   TArgs extends PaginatedDataArgs
 >({
   query,
+  queryOpts,
   dataAccessor,
   isReady,
   targetRowsCount,
@@ -95,6 +98,7 @@ export const useInfiniteGrid = <
       first: targetDisplayedItemsCount + PREFETCHED_ITEMS_COUNT,
     },
     onError,
+    ...queryOpts,
   })
 
   const data = dataAccessor(rawData)

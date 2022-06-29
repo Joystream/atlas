@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { SvgActionInformative } from '@/components/_icons'
-import { cVar, square } from '@/styles'
+import { cVar, sizes } from '@/styles'
 
 export const StyledSvgActionInformative = styled(SvgActionInformative)`
   path {
@@ -12,9 +12,8 @@ export const StyledSvgActionInformative = styled(SvgActionInformative)`
 `
 
 export const IconWrapper = styled.div`
-  ${square(32)};
-
   border-radius: 50%;
+  padding: ${sizes(2)};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -46,6 +45,10 @@ export const TouchableWrapper = styled.div<{ isMobile?: boolean }>`
 
 export const InformationWrapper = styled.div`
   display: inline-flex;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
 
   & > span:focus {
     ${IconWrapper} {

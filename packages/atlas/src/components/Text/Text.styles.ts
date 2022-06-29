@@ -1,11 +1,11 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { cVar, sizes } from '@/styles'
+import { cVar, sizes, theme } from '@/styles'
 
+type FilterStartingWith<Keys, Prefix extends string> = Keys extends `${Prefix}${infer _}` ? Keys : never
 export type TextBaseProps = {
-  color?: string
-  secondary?: boolean
+  color?: FilterStartingWith<keyof typeof theme, 'color'> | 'inherit'
   clampAfterLine?: number
   margin?: MarginProps
   align?: AlignProps
@@ -20,7 +20,7 @@ type MarginProps =
     }
   | number
 
-type AlignProps = 'left' | 'center' | 'right' | 'justify'
+type AlignProps = 'left' | 'center' | 'right' | 'justify' | 'end'
 
 const alignStyles = ({ align }: TextBaseProps) =>
   !!align &&
@@ -46,8 +46,8 @@ const clampStyles = ({ clampAfterLine }: TextBaseProps) => css`
   overflow: hidden;
 `
 
-const baseStyles = ({ color, secondary, clampAfterLine, margin, align }: TextBaseProps) => css`
-  color: ${color ? color : secondary ? cVar('colorText') : cVar('colorTextStrong')};
+const baseStyles = ({ color = 'colorTextStrong', clampAfterLine, margin, align }: TextBaseProps) => css`
+  color: ${color === 'inherit' ? color : cVar(color)};
 
   ${clampAfterLine && clampStyles({ clampAfterLine })}
   ${marginStyles({ margin })}
@@ -55,63 +55,63 @@ const baseStyles = ({ color, secondary, clampAfterLine, margin, align }: TextBas
 `
 
 export const styledVariants = {
-  h900: styled.h1<TextBaseProps>`
+  h900: styled.span<TextBaseProps>`
     ${baseStyles};
 
     font: ${cVar('typographyDesktopH900')};
     letter-spacing: ${cVar('typographyDesktopH900LetterSpacing')};
     text-transform: ${cVar('typographyDesktopH900TextTransform')};
   `,
-  h800: styled.h1<TextBaseProps>`
+  h800: styled.span<TextBaseProps>`
     ${baseStyles};
 
     font: ${cVar('typographyDesktopH800')};
     letter-spacing: ${cVar('typographyDesktopH800LetterSpacing')};
     text-transform: ${cVar('typographyDesktopH800TextTransform')};
   `,
-  h700: styled.h2<TextBaseProps>`
+  h700: styled.span<TextBaseProps>`
     ${baseStyles};
 
     font: ${cVar('typographyDesktopH700')};
     letter-spacing: ${cVar('typographyDesktopH700LetterSpacing')};
     text-transform: ${cVar('typographyDesktopH700TextTransform')};
   `,
-  h600: styled.h3<TextBaseProps>`
+  h600: styled.span<TextBaseProps>`
     ${baseStyles};
 
     font: ${cVar('typographyDesktopH600')};
     letter-spacing: ${cVar('typographyDesktopH600LetterSpacing')};
     text-transform: ${cVar('typographyDesktopH600TextTransform')};
   `,
-  h500: styled.h4<TextBaseProps>`
+  h500: styled.span<TextBaseProps>`
     ${baseStyles};
 
     font: ${cVar('typographyDesktopH500')};
     letter-spacing: ${cVar('typographyDesktopH500LetterSpacing')};
     text-transform: ${cVar('typographyDesktopH500TextTransform')};
   `,
-  h400: styled.h5<TextBaseProps>`
+  h400: styled.span<TextBaseProps>`
     ${baseStyles};
 
     font: ${cVar('typographyDesktopH400')};
     letter-spacing: ${cVar('typographyDesktopH400LetterSpacing')};
     text-transform: ${cVar('typographyDesktopH400TextTransform')};
   `,
-  h300: styled.h6<TextBaseProps>`
+  h300: styled.span<TextBaseProps>`
     ${baseStyles};
 
     font: ${cVar('typographyDesktopH300')};
     letter-spacing: ${cVar('typographyDesktopH300LetterSpacing')};
     text-transform: ${cVar('typographyDesktopH300TextTransform')};
   `,
-  h200: styled.h6<TextBaseProps>`
+  h200: styled.span<TextBaseProps>`
     ${baseStyles};
 
     font: ${cVar('typographyDesktopH200')};
     letter-spacing: ${cVar('typographyDesktopH200LetterSpacing')};
     text-transform: ${cVar('typographyDesktopH200TextTransform')};
   `,
-  h100: styled.h6<TextBaseProps>`
+  h100: styled.span<TextBaseProps>`
     ${baseStyles};
 
     font: ${cVar('typographyDesktopH100')};
@@ -159,5 +159,8 @@ export const styledVariants = {
     font: ${cVar('typographyDesktopT100Strong')};
     letter-spacing: ${cVar('typographyDesktopT100StrongLetterSpacing')};
     text-transform: ${cVar('typographyDesktopT100StrongTextTransform')};
+  `,
+  'no-variant': styled.span<TextBaseProps>`
+    ${baseStyles};
   `,
 }

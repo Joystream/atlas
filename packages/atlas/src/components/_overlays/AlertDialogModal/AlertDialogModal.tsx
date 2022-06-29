@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react'
+import { FC, FormEvent, PropsWithChildren, ReactNode } from 'react'
 
 import { Text } from '@/components/Text'
 import { ButtonProps } from '@/components/_buttons/Button'
@@ -14,30 +14,30 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { HeaderIconContainer, InformativeIconWrapper } from './AlertDialogModal.styles'
 
-type DialogButtonProps = {
+type DialogButtonProps = PropsWithChildren<{
   text: string
   disabled?: boolean
-  onClick?: (e: React.MouseEvent) => void
-} & Omit<ButtonProps, 'children'>
+  onClick?: (e: MouseEvent) => void
+}> &
+  Omit<ButtonProps, 'children'>
 
-export type AlertDialogProps = {
-  title?: React.ReactNode
-  description?: React.ReactNode
+export type AlertDialogProps = PropsWithChildren<{
+  title?: ReactNode
+  description?: ReactNode
   primaryButton?: DialogButtonProps
   secondaryButton?: DialogButtonProps
   className?: string
   onSubmit?: (e?: FormEvent) => void
   type?: 'destructive' | 'warning' | 'informative'
   noIcon?: boolean
-  headerIcon?: React.ReactNode
+  headerIcon?: ReactNode
   onExitClick?: () => void
   dividers?: boolean
-  children?: React.ReactNode
-}
+}>
 
 export type AlertDialogModalProps = Pick<ModalProps, 'show'> & AlertDialogProps
 
-export const AlertDialogModal: React.FC<AlertDialogModalProps> = ({
+export const AlertDialogModal: FC<AlertDialogModalProps> = ({
   show,
   onExitClick,
   primaryButton,
@@ -81,11 +81,11 @@ export const AlertDialogModal: React.FC<AlertDialogModalProps> = ({
               </HeaderIconContainer>
             ))}
           {title && (
-            <Text variant={smMatch ? 'h500' : 'h400'} margin={{ bottom: 2 }}>
+            <Text as="h1" variant={smMatch ? 'h500' : 'h400'} margin={{ bottom: 2 }}>
               {title}
             </Text>
           )}
-          <Text variant="t200" secondary>
+          <Text as="p" variant="t200" color="colorText">
             {description}
           </Text>
         </>

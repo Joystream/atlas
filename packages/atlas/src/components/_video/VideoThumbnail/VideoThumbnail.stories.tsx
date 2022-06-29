@@ -1,18 +1,20 @@
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { Pill, PillGroup } from '@/components/Pill'
+import { Text } from '@/components/Text'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
 import { Button } from '@/components/_buttons/Button'
 import {
   SvgActionBid,
   SvgActionEdit,
+  SvgActionPlay,
   SvgAlertsWarning24,
   SvgIllustrativePlay,
   SvgIllustrativeReupload,
 } from '@/components/_icons'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
+import { JOY_CURRENCY_TICKER } from '@/config/token'
 import { cVar } from '@/styles'
 
 import { VideoThumbnail, VideoThumbnailProps } from './VideoThumbnail'
@@ -25,18 +27,21 @@ export default {
     loading: false,
     thumbnailUrl: 'https://picsum.photos/320/180',
     thumbnailAlt: 'This person does not exist',
+    type: 'video',
     slots: {
       bottomLeft: {
         element: (
           <PillGroup
-            size="small"
+            size="medium"
             items={[
               {
                 label: 'NFT',
+                variant: 'overlay',
               },
               {
                 icon: <JoyTokenIcon size={16} variant="regular" />,
-                label: '24K tJOY',
+                label: `24K ${JOY_CURRENCY_TICKER}`,
+                variant: 'overlay',
               },
             ]}
           />
@@ -56,6 +61,7 @@ export default {
   },
   argTypes: {
     slots: { table: { disable: true } },
+    type: { table: { disable: true } },
     contentSlot: { table: { disable: true } },
     onClick: { action: 'clicked' },
   },
@@ -77,6 +83,44 @@ const Template: Story<VideoThumbnailProps> = (args) => (
 )
 export const Default = Template.bind({})
 
+export const Playlist = Template.bind({})
+Playlist.args = {
+  ...Playlist.args,
+  type: 'playlist',
+  slots: {
+    bottomLeft: {
+      element: (
+        <PillGroup
+          size="medium"
+          items={[
+            {
+              label: 'NFT',
+              variant: 'overlay',
+            },
+            {
+              icon: <JoyTokenIcon size={16} variant="regular" />,
+              label: `24K ${JOY_CURRENCY_TICKER}`,
+              variant: 'overlay',
+            },
+          ]}
+        />
+      ),
+      type: 'default',
+    },
+    center: {
+      element: (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <SvgActionPlay />
+          <Text as="span" margin={{ left: 2 }} variant="t200-strong">
+            Play all videos
+          </Text>
+        </div>
+      ),
+      type: 'hover',
+    },
+  },
+}
+
 export const UploadProgress = Template.bind({})
 UploadProgress.args = {
   ...UploadProgress.args,
@@ -88,6 +132,7 @@ UploadProgress.args = {
 export const FailedUpload = Template.bind({})
 FailedUpload.args = {
   ...FailedUpload.args,
+  type: 'video',
   slots: {
     bottomRight: {
       element: <Pill label="Failed upload" variant="danger" icon={<SvgAlertsWarning24 />} size="medium" />,
@@ -102,6 +147,8 @@ FailedUpload.args = {
 export const Draft = Template.bind({})
 Draft.args = {
   ...Draft.args,
+  type: 'video',
+
   slots: {
     topRight: {
       element: <Button size="small" variant="tertiary" icon={<SvgActionEdit />} />,
@@ -109,11 +156,11 @@ Draft.args = {
       clickable: true,
     },
     bottomRight: {
-      element: <Pill label="8:24" />,
+      element: <Pill variant="overlay" label="8:24" />,
       type: 'default',
     },
     bottomLeft: {
-      element: <Pill label="Draft" />,
+      element: <Pill variant="overlay" label="Draft" />,
       type: 'default',
     },
     center: {
@@ -126,6 +173,7 @@ Draft.args = {
 export const CustomContent = Template.bind({})
 CustomContent.args = {
   ...CustomContent.args,
+  type: 'video',
   contentSlot: (
     <div
       style={{
@@ -134,7 +182,7 @@ CustomContent.args = {
         justifyContent: 'center',
         alignItems: 'center',
         height: '100%',
-        color: 'white',
+        color: cVar('colorCoreBaseWhite'),
       }}
     >
       Hello world!
@@ -142,7 +190,7 @@ CustomContent.args = {
   ),
   slots: {
     bottomRight: {
-      element: <Pill label="8:24" />,
+      element: <Pill variant="overlay" label="8:24" />,
       type: 'default',
     },
     bottomLeft: {

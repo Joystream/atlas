@@ -1,18 +1,20 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
-import { useChannel } from '@/api/hooks'
+import { useFullChannel } from '@/api/hooks'
 import { ActionBar } from '@/components/ActionBar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Tooltip } from '@/components/Tooltip'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ChannelCover } from '@/components/_channel/ChannelCover'
 import { FormField } from '@/components/_inputs/FormField'
 import { Select, SelectItem } from '@/components/_inputs/Select'
 import { TextArea } from '@/components/_inputs/TextArea'
+import { TitleInput } from '@/components/_inputs/TitleInput'
 import {
   ImageCropModal,
   ImageCropModalImperativeHandle,
@@ -37,16 +39,13 @@ import { createId } from '@/utils/createId'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { computeFileHash } from '@/utils/hashing'
 import { SentryLogger } from '@/utils/logs'
-import { formatNumberShort } from '@/utils/number'
-import { SubTitleSkeletonLoader, TitleSkeletonLoader } from '@/views/viewer/ChannelView/ChannelView.styles'
+import { SubTitle, SubTitleSkeletonLoader, TitleSkeletonLoader } from '@/views/viewer/ChannelView/ChannelView.styles'
 
 import {
   ActionBarTransactionWrapper,
   InnerFormContainer,
   StyledAvatar,
   StyledProgressDrawer,
-  StyledSubTitle,
-  StyledTitleArea,
   StyledTitleSection,
   TitleContainer,
 } from './CreateEditChannelView.styles'
@@ -60,6 +59,7 @@ type ImageAsset = {
   contentId: string | null
   assetDimensions: AssetDimensions | null
   imageCropData: ImageCropData | null
+  originalBlob?: File | Blob | null
 }
 type Inputs = {
   title?: string
@@ -74,13 +74,13 @@ type CreateEditChannelViewProps = {
   newChannel?: boolean
 }
 
-export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChannel }) => {
+export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChannel }) => {
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const [avatarHashPromise, setAvatarHashPromise] = useState<Promise<string> | null>(null)
   const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
 
-  const { activeMemberId, activeAccountId, activeChannelId, setActiveUser, refetchActiveMembership } = useUser()
+  const { memberId, accountId, channelId, setActiveUser, refetchUserMemberships } = useUser()
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
@@ -89,16 +89,11 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const navigate = useNavigate()
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
 
-  const {
-    channel,
-    loading,
-    error,
-    refetch: refetchChannel,
-  } = useChannel(activeChannelId || '', {
-    skip: newChannel || !activeChannelId,
+  const { channel, loading, error } = useFullChannel(channelId || '', {
+    skip: newChannel || !channelId,
     onError: (error) =>
       SentryLogger.error('Failed to fetch channel', 'CreateEditChannelView', error, {
-        channel: { id: activeChannelId },
+        channel: { id: channelId },
       }),
   })
   const startFileUpload = useStartFileUpload()
@@ -111,16 +106,17 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
     register,
     handleSubmit: createSubmitHandler,
     control,
-    formState: { isDirty, dirtyFields, errors, isValid },
+    formState: { isDirty, dirtyFields, errors },
     watch,
     setFocus,
     setValue,
     reset,
+    getValues,
   } = useForm<Inputs>({
-    mode: 'onChange',
+    mode: 'onSubmit',
     defaultValues: {
-      avatar: { contentId: null, assetDimensions: null, imageCropData: null },
-      cover: { contentId: null, assetDimensions: null, imageCropData: null },
+      avatar: { contentId: null, assetDimensions: null, imageCropData: null, originalBlob: undefined },
+      cover: { contentId: null, assetDimensions: null, imageCropData: null, originalBlob: undefined },
       title: '',
       description: '',
       language: languages[0].value,
@@ -162,11 +158,13 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
         contentId: channel.avatarPhoto?.id,
         assetDimensions: null,
         imageCropData: null,
+        originalBlob: undefined,
       },
       cover: {
         contentId: channel.coverPhoto?.id,
         assetDimensions: null,
         imageCropData: null,
+        originalBlob: undefined,
       },
       title: title || '',
       description: description || '',
@@ -203,26 +201,36 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
     croppedBlob,
     croppedUrl,
     assetDimensions,
-    imageCropData
+    imageCropData,
+    originalBlob
   ) => {
     const newCoverAssetId = `local-cover-${createId()}`
     addAsset(newCoverAssetId, { url: croppedUrl, blob: croppedBlob })
-    setValue('cover', { contentId: newCoverAssetId, assetDimensions, imageCropData }, { shouldDirty: true })
+    setValue(
+      'cover',
+      { contentId: newCoverAssetId, assetDimensions, imageCropData, originalBlob },
+      { shouldDirty: true }
+    )
   }
 
   const handleAvatarChange: ImageCropModalProps['onConfirm'] = (
     croppedBlob,
     croppedUrl,
     assetDimensions,
-    imageCropData
+    imageCropData,
+    originalBlob
   ) => {
     const newAvatarAssetId = `local-avatar-${createId()}`
     addAsset(newAvatarAssetId, { url: croppedUrl, blob: croppedBlob })
-    setValue('avatar', { contentId: newAvatarAssetId, assetDimensions, imageCropData }, { shouldDirty: true })
+    setValue(
+      'avatar',
+      { contentId: newAvatarAssetId, assetDimensions, imageCropData, originalBlob },
+      { shouldDirty: true }
+    )
   }
 
   const submit = async (data: Inputs) => {
-    if (!joystream || !activeMemberId || !activeAccountId) {
+    if (!joystream || !memberId || !accountId) {
       return
     }
 
@@ -233,7 +241,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       ...(dirtyFields.description ? { description: data.description?.trim() ?? '' } : {}),
       ...(dirtyFields.language || newChannel ? { language: data.language } : {}),
       ...(dirtyFields.isPublic || newChannel ? { isPublic: data.isPublic } : {}),
-      ownerAccount: activeAccountId,
+      ownerAccount: accountId,
     }
 
     const assets: ChannelInputAssets = {}
@@ -307,8 +315,8 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
         addNewChannelIdToUploadsStore(channelId)
       }
 
-      const refetchPromiseList = [refetchActiveMembership(), ...(!newChannel ? [refetchChannel()] : [])]
-      await Promise.all(refetchPromiseList)
+      // membership includes full list of channels so the channel update will be fetched too
+      await refetchUserMemberships()
 
       if (newChannel) {
         // when creating a channel, refetch operators before uploading so that storage bag assignments gets populated for a new channel
@@ -325,16 +333,24 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       preProcess: processAssets,
       txFactory: async (updateStatus) =>
         newChannel
-          ? (await joystream.extrinsics).createChannel(activeMemberId, metadata, assets, proxyCallback(updateStatus))
+          ? (await joystream.extrinsics).createChannel(memberId, metadata, assets, proxyCallback(updateStatus))
           : (
               await joystream.extrinsics
-            ).updateChannel(activeChannelId ?? '', activeMemberId, metadata, assets, proxyCallback(updateStatus)),
+            ).updateChannel(channelId ?? '', memberId, metadata, assets, proxyCallback(updateStatus)),
       onTxSync: refetchDataAndUploadAssets,
     })
 
     if (completed && newChannel) {
       navigate(absoluteRoutes.studio.videos())
     }
+  }
+
+  const handleDeleteAvatar = () => {
+    setValue(
+      'avatar',
+      { contentId: null, assetDimensions: null, imageCropData: null, originalBlob: undefined },
+      { shouldDirty: true }
+    )
   }
 
   if (error) {
@@ -366,7 +382,8 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
 
   const hasAvatarUploadFailed = (channel?.avatarPhoto && !channel.avatarPhoto.isAccepted) || false
   const hasCoverUploadFailed = (channel?.coverPhoto && !channel.coverPhoto.isAccepted) || false
-  const isDisabled = !isDirty || nodeConnectionStatus !== 'connected' || !isValid
+  const isDisabled = !isDirty || nodeConnectionStatus !== 'connected'
+
   return (
     <form onSubmit={handleSubmit}>
       {headTags}
@@ -378,7 +395,10 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
             <ChannelCover
               assetUrl={loading ? null : coverAsset?.url}
               hasCoverUploadFailed={hasCoverUploadFailed}
-              onCoverEditClick={() => coverDialogRef.current?.open()}
+              onCoverEditClick={() => {
+                const cover = getValues('cover')
+                coverDialogRef.current?.open(cover.originalBlob, cover.imageCropData || undefined, !!cover.originalBlob)
+              }}
               editable
               disabled={loading}
             />
@@ -407,7 +427,14 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
                 assetUrl={avatarAsset?.url}
                 hasAvatarUploadFailed={hasAvatarUploadFailed}
                 size="fill"
-                onClick={() => avatarDialogRef.current?.open()}
+                onClick={() => {
+                  const avatar = getValues('avatar')
+                  avatarDialogRef.current?.open(
+                    avatar.originalBlob,
+                    avatar.imageCropData || undefined,
+                    !!avatar.originalBlob
+                  )
+                }}
                 editable
                 loading={loading}
               />
@@ -421,6 +448,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
                   })
                 }
                 ref={avatarDialogRef}
+                onDelete={handleDeleteAvatar}
               />
             </>
           )}
@@ -434,15 +462,29 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
                 control={control}
                 rules={textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 40, required: true })}
                 render={({ field: { value, onChange } }) => (
-                  <Tooltip text="Click to edit channel title" placement="top-start">
-                    <StyledTitleArea min={3} max={40} placeholder="Channel title" value={value} onChange={onChange} />
-                  </Tooltip>
+                  <FormField error={errors.title?.message}>
+                    <Tooltip text="Click to edit channel title" placement="top-start">
+                      <TitleInput
+                        min={3}
+                        max={40}
+                        placeholder="Channel title"
+                        value={value}
+                        onChange={onChange}
+                        error={!!errors.title}
+                      />
+                    </Tooltip>
+                  </FormField>
                 )}
               />
               {!newChannel && (
-                <StyledSubTitle variant="t200">
-                  {channel?.follows ? formatNumberShort(channel.follows) : 0} Followers
-                </StyledSubTitle>
+                <SubTitle as="span" variant="t200">
+                  {channel?.follows ? (
+                    <NumberFormat as="span" value={channel.follows} format="short" variant="t200" />
+                  ) : (
+                    0
+                  )}{' '}
+                  Followers
+                </SubTitle>
               )}
             </>
           ) : (
@@ -455,7 +497,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       </StyledTitleSection>
       <LimitedWidthContainer>
         <InnerFormContainer actionBarHeight={actionBarBoundsHeight}>
-          <FormField title="Description">
+          <FormField label="Description" error={errors.description?.message}>
             <Tooltip text="Click to edit channel description">
               <TextArea
                 placeholder="Description of your channel to share with your audience"
@@ -466,11 +508,14 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
                 )}
                 maxLength={1000}
                 error={!!errors.description}
-                helperText={errors.description?.message}
               />
             </Tooltip>
           </FormField>
-          <FormField title="Language" description="Main language of the content you publish on your channel">
+          <FormField
+            label="Language"
+            description="Main language of the content you publish on your channel"
+            error={(errors.language as FieldError)?.message}
+          >
             <Controller
               name="language"
               control={control}
@@ -482,15 +527,15 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
                   value={value}
                   onChange={onChange}
                   error={!!errors.language && !value}
-                  helperText={(errors.language as FieldError)?.message}
                 />
               )}
             />
           </FormField>
 
           <FormField
-            title="Privacy"
+            label="Privacy"
             description="Privacy of your channel. Please note that because of nature of the blockchain, even unlisted channels can be publicly visible by querying the blockchain data."
+            error={(errors.isPublic as FieldError)?.message}
           >
             <Controller
               name="isPublic"
@@ -502,7 +547,6 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
                   value={value}
                   onChange={onChange}
                   error={!!errors.isPublic && !value}
-                  helperText={(errors.isPublic as FieldError)?.message}
                 />
               )}
             />
@@ -514,38 +558,22 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
             unmountOnExit
           >
             <ActionBarTransactionWrapper ref={actionBarRef}>
-              {!activeChannelId && progressDrawerSteps?.length ? (
-                <StyledProgressDrawer steps={progressDrawerSteps} />
-              ) : null}
+              {!channelId && progressDrawerSteps?.length ? <StyledProgressDrawer steps={progressDrawerSteps} /> : null}
               <ActionBar
-                primaryText="Fee: 0 Joy"
-                variant={newChannel ? 'new' : 'edit'}
-                secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
+                fee={0}
                 primaryButton={{
                   text: newChannel ? 'Create channel' : 'Publish changes',
                   disabled: isDisabled,
                   onClick: handleSubmit,
-                  tooltip: isDisabled
+                }}
+                secondaryButton={
+                  !newChannel && isDirty && nodeConnectionStatus === 'connected'
                     ? {
-                        headerText: newChannel
-                          ? 'Fill all required fields to proceed'
-                          : isValid
-                          ? 'Change anything to proceed'
-                          : 'Fill all required fields to proceed',
-                        text: newChannel
-                          ? 'Required: title'
-                          : isValid
-                          ? 'To publish changes you have to provide new value to any field'
-                          : 'Required: title',
-                        icon: true,
+                        text: 'Cancel',
+                        onClick: () => reset(),
                       }
-                    : undefined,
-                }}
-                secondaryButton={{
-                  visible: !newChannel && isDirty && nodeConnectionStatus === 'connected',
-                  text: 'Cancel',
-                  onClick: () => reset(),
-                }}
+                    : undefined
+                }
               />
             </ActionBarTransactionWrapper>
           </CSSTransition>

@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC, useMemo } from 'react'
 
 import { useAllCategoriesFeaturedVideos, useCategories } from '@/api/hooks'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
@@ -7,6 +7,7 @@ import { FeaturedVideoCategoryCard, VideoCategoryCard } from '@/components/_vide
 import { useCategoriesMatch } from '@/hooks/useCategoriesMatch'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { cVar } from '@/styles'
 import { createLookup } from '@/utils/data'
 
 import {
@@ -15,7 +16,7 @@ import {
   StyledLimitedWidthContainer,
 } from './DiscoverView.styles'
 
-export const DiscoverView: React.FC = () => {
+export const DiscoverView: FC = () => {
   const { categories, totalVideosCount, loading } = useCategories()
   const mappedVideoCategories = useCategoriesMatch()
 
@@ -25,7 +26,7 @@ export const DiscoverView: React.FC = () => {
     ? createLookup(allCategoriesFeaturedVideos.map((category) => ({ id: category.categoryId, ...category })))
     : null
 
-  const featuredVideoCategoryCardsData = React.useMemo(() => {
+  const featuredVideoCategoryCardsData = useMemo(() => {
     const _featuredVideoCategoryCardsData =
       categories
         ?.map((category) => {
@@ -62,7 +63,9 @@ export const DiscoverView: React.FC = () => {
   return (
     <StyledLimitedWidthContainer big>
       {headTags}
-      <Text variant="h700">Discover</Text>
+      <Text as="p" variant="h700">
+        Discover
+      </Text>
       {featuredVideoCategoryCardsData && (
         <FeaturedCategoriesContainer>
           {featuredVideoCategoryCardsData.map((category, i) => (
@@ -72,7 +75,7 @@ export const DiscoverView: React.FC = () => {
                 title={category?.name ?? ''}
                 videoTitle={category?.videoTitle ?? ''}
                 videoUrl={category?.videoUrl ?? ''}
-                color={category?.color ?? 'white'}
+                color={category?.color ?? cVar('colorCoreBaseWhite')}
                 icon={category?.icon}
                 id={category?.id}
               />
@@ -81,7 +84,9 @@ export const DiscoverView: React.FC = () => {
         </FeaturedCategoriesContainer>
       )}
       <StyledGridHeadingContainer>
-        <Text variant="h500">All categories</Text>
+        <Text as="h2" variant="h500">
+          All categories
+        </Text>
       </StyledGridHeadingContainer>
       <LayoutGrid>
         {(mappedVideoCategories ?? new Array(15).fill(null))?.map((category, i) => (
@@ -91,7 +96,7 @@ export const DiscoverView: React.FC = () => {
               title={category?.name ?? ''}
               categoryVideosCount={category?.activeVideosCounter}
               coverImg={category?.coverImg ?? ''}
-              color={category?.color ?? 'white'}
+              color={category?.color ?? cVar('colorCoreBaseWhite')}
               icon={category?.icon}
               videosTotalCount={totalVideosCount}
               variant={isMdBreakpoint ? 'default' : 'compact'}

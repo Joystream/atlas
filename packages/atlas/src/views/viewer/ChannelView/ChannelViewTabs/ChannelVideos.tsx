@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import { FC, useEffect } from 'react'
 
-import { useVideosConnection } from '@/api/hooks'
-import { VideoFieldsFragment, VideoOrderByInput } from '@/api/queries'
+import { useBasicVideosConnection } from '@/api/hooks'
+import { BasicVideoFieldsFragment, VideoOrderByInput } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Grid } from '@/components/Grid'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
@@ -17,14 +17,14 @@ type ChannelVideosProps = {
   isSearching?: boolean
   searchedText?: string
   channelId: string
-  foundVideos?: VideoFieldsFragment[]
+  foundVideos?: BasicVideoFieldsFragment[]
   loadingSearch?: boolean
   sortVideosBy?: VideoOrderByInput
   tilesPerPage: number
   onResize: (sizes: number[]) => void
 }
 
-export const ChannelVideos: React.FC<ChannelVideosProps> = ({
+export const ChannelVideos: FC<ChannelVideosProps> = ({
   isSearching,
   searchedText,
   channelId,
@@ -45,7 +45,7 @@ export const ChannelVideos: React.FC<ChannelVideosProps> = ({
     refetch,
     variables,
     pageInfo,
-  } = useVideosConnection(
+  } = useBasicVideosConnection(
     {
       orderBy: sortVideosBy,
       where: {

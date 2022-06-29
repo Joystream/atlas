@@ -1,7 +1,8 @@
-import React from 'react'
+import { FC } from 'react'
 
+import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionChannel, SvgActionInformative } from '@/components/_icons'
+import { SvgActionChannel, SvgActionInformative, SvgActionMember } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useUser } from '@/providers/user'
@@ -11,7 +12,6 @@ import {
   Header,
   SignInButton,
   StyledContainer,
-  StyledHero,
   StyledSignInIllustrationSVG,
   SubTitle,
 } from './StudioWelcomeView.styles'
@@ -23,29 +23,30 @@ export type Membership = {
   avatarUri?: string
 }
 
-export const StudioWelcomeView: React.FC = () => {
-  const { signIn, activeMemberId, activeAccountId, extensionConnected, activeChannelId } = useUser()
+export const StudioWelcomeView: FC = () => {
+  const { signIn, isLoggedIn } = useUser()
   const headTags = useHeadTags('Studio')
 
-  const memberSet = activeMemberId && activeAccountId && extensionConnected && !activeChannelId
   return (
     <>
       {headTags}
       <StyledContainer>
         <Header>
-          <StyledHero variant="h800">Welcome to Joystream Studio</StyledHero>
-          <SubTitle variant="t300" secondary>
+          <Text as="h1" variant="h800" margin={{ top: 8 }}>
+            Welcome to Joystream Studio
+          </Text>
+          <SubTitle as="p" variant="t300" color="colorText">
             Start your journey as a Joystream content creator. Manage your channels, publish video content, issue NFTs,
             and more!
           </SubTitle>
           <ButtonGroup>
-            {memberSet ? (
-              <SignInButton size="large" to={absoluteRoutes.studio.newChannel()}>
+            {isLoggedIn ? (
+              <SignInButton icon={<SvgActionChannel />} size="large" to={absoluteRoutes.studio.newChannel()}>
                 Create first channel
               </SignInButton>
             ) : (
-              <SignInButton icon={<SvgActionChannel />} size="large" onClick={signIn}>
-                Sign in
+              <SignInButton icon={<SvgActionMember />} size="large" onClick={() => signIn()}>
+                Connect wallet
               </SignInButton>
             )}
             <Button variant="secondary" icon={<SvgActionInformative />} size="large" to="https://www.joystream.org/">

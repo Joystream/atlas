@@ -1,8 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Information } from '@/components/Information'
-import { MemberBadge } from '@/components/MemberBadge'
-import { Text } from '@/components/Text'
+import { OutputPill } from '@/components/OutputPill'
 import { cVar, media, sizes } from '@/styles'
 
 export const Row = styled.div`
@@ -42,7 +41,7 @@ export const MembersList = styled.div`
   }
 `
 
-export const StyledMemberBadge = styled(MemberBadge)`
+export const StyledOutputPill = styled(OutputPill)`
   justify-content: flex-end;
   margin-bottom: ${sizes(2)};
   margin-right: ${sizes(2)};
@@ -50,10 +49,6 @@ export const StyledMemberBadge = styled(MemberBadge)`
     margin-right: 0;
     margin-left: ${sizes(2)};
   }
-`
-
-export const Header = styled(Text)`
-  margin-bottom: ${sizes(8)};
 `
 
 export const Divider = styled.hr`

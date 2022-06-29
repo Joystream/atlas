@@ -1,8 +1,7 @@
-import React from 'react'
+import { MouseEvent, ReactNode, forwardRef } from 'react'
 import mergeRefs from 'react-merge-refs'
 
 import { useHover } from '@/hooks/useHover'
-import { cVar } from '@/styles'
 
 import {
   Caption,
@@ -16,27 +15,29 @@ import {
 } from './ListItem.styles'
 
 export type ListItemProps = {
-  label: React.ReactNode
-  caption?: React.ReactNode
+  label: ReactNode
+  caption?: ReactNode
+  asButton?: boolean
   selected?: boolean
   disabled?: boolean
   // indicative that onClick will perform a destructive action of some kind
   destructive?: boolean
   size?: ListItemSizes
-  nodeStart?: React.ReactNode
-  nodeEnd?: React.ReactNode
+  nodeStart?: ReactNode
+  nodeEnd?: ReactNode
   captionPosition?: 'right' | 'bottom'
-  onClick?: (e: React.MouseEvent) => void
+  onClick?: (e: MouseEvent) => void
   className?: string
   highlight?: boolean
 }
 
-export const ListItem = React.forwardRef<HTMLDivElement, ListItemProps>(
+export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
   (
     {
       label,
       size = 'medium',
       caption,
+      asButton,
       captionPosition = 'bottom',
       disabled,
       destructive,
@@ -53,6 +54,7 @@ export const ListItem = React.forwardRef<HTMLDivElement, ListItemProps>(
     return (
       <Container
         highlight={highlight}
+        as={asButton ? 'button' : undefined}
         className={className}
         onClick={onClick}
         disabled={disabled}
@@ -68,20 +70,14 @@ export const ListItem = React.forwardRef<HTMLDivElement, ListItemProps>(
         <LabelCaptionContainer captionBottom={captionPosition === 'bottom'}>
           <LabelContainer>
             <LabelText
+              as="span"
               variant="t200-strong"
-              secondary={!selected}
-              color={
-                destructive
-                  ? cVar('colorTextError')
-                  : isHovering || selected || highlight
-                  ? cVar('colorTextStrong')
-                  : cVar('colorText')
-              }
+              color={destructive ? 'colorTextError' : isHovering || selected || highlight ? undefined : 'colorText'}
             >
               {label}
             </LabelText>
           </LabelContainer>
-          <Caption captionPosition={captionPosition} secondary variant="t100">
+          <Caption as="span" captionPosition={captionPosition} color="colorText" variant="t100">
             {caption}
           </Caption>
         </LabelCaptionContainer>

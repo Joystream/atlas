@@ -1,10 +1,9 @@
 import { ApolloProvider } from '@apollo/client'
 import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
 
 import { createApolloClient } from '@/api'
-import { oldColors } from '@/styles'
+import { cVar } from '@/styles'
 
 import { VideoPlayer, VideoPlayerProps } from './VideoPlayer'
 
@@ -36,6 +35,6 @@ Regular.args = {
 }
 
 const Wrapper = styled.div`
-  background-color: ${oldColors.gray['500']};
+  background-color: ${cVar('colorCoreNeutral500')};
   height: 800px;
 `

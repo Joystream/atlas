@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { TextField } from '@/components/_inputs/TextField'
+import { SvgActionPlus } from '@/components/_icons'
 import { cVar, zIndex } from '@/styles'
 
 export const ComboBoxWrapper = styled.div`
@@ -21,18 +21,12 @@ export const ListWrapper = styled.ul<{ topPosition?: number }>`
   margin: 0;
 `
 
-export const StyledTextField = styled(TextField)`
-  input {
-    :not(:placeholder-shown) {
-      :not(button) {
-        :focus {
-          box-shadow: 0 0 0 1px ${({ error }) => cVar(error ? 'colorCoreRed400' : 'colorCoreBlue500')};
-        }
-      }
-    }
-  }
-`
-
 export const StyledThumbnail = styled.img`
   max-height: 32px;
+`
+
+export const StyledSvgActionPlus = styled(SvgActionPlus)`
+  path {
+    fill: ${cVar('colorTextMuted')} !important;
+  }
 `

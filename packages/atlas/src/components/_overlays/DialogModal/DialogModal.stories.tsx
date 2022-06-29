@@ -1,5 +1,5 @@
 import { Meta, Story } from '@storybook/react'
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
@@ -12,7 +12,6 @@ export default {
   argTypes: {
     onSubmit: { table: { disable: true } },
     onExitClick: { table: { disable: true } },
-    as: { table: { disable: true } },
     contentClassName: { table: { disable: true } },
     additionalActionsNode: { table: { disable: true } },
     className: { table: { disable: true } },

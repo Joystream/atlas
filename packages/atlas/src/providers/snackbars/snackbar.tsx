@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { ReactNode, useEffect } from 'react'
+import { FC, ReactNode, useEffect } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 import { Snackbar } from '@/components/Snackbar'
@@ -35,7 +35,7 @@ const SNACKBARS_LIMIT = 3
 
 export const useSnackbar = () => useSnackbarStore((state) => state.actions)
 
-export const Snackbars: React.FC = () => {
+export const Snackbars: FC = () => {
   const { closeSnackbar, cancelSnackbarTimeout, restartSnackbarTimeout } = useSnackbar()
   const snackbars = useSnackbarStore((state) => state.snackbars)
   const { cookiesAccepted } = usePersonalDataStore((state) => ({
@@ -88,7 +88,7 @@ export const SnackbarsContainer = styled.div<{ cookiesBannerOpen: boolean; botto
   bottom: ${({ cookiesBannerOpen, bottomNavOpen }) => sizes(cookiesBannerOpen ? (bottomNavOpen ? 89 : 73) : 18)};
   margin-left: ${sizes(4)};
   display: grid;
-  z-index: ${zIndex.nearVideoWorkspaceOverlay};
+  z-index: ${zIndex.snackbars};
   width: calc(100% - ${sizes(8)});
   transition: bottom ${cVar('animationTransitionMedium')}
     ${({ bottomNavOpen }) => (bottomNavOpen ? transitions.timings.routing : '0ms')};

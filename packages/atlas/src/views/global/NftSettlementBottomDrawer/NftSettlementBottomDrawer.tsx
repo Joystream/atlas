@@ -1,8 +1,9 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { useNft } from '@/api/hooks'
 import confetti from '@/assets/animations/confetti.json'
 import { GridItem } from '@/components/LayoutGrid'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { NftCard } from '@/components/_nft/NftCard'
@@ -14,7 +15,6 @@ import { useNftActions } from '@/providers/nftActions'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions'
 import { useUser } from '@/providers/user'
-import { formatTokens } from '@/utils/number'
 
 import {
   Content,
@@ -24,9 +24,9 @@ import {
   StyledLottie,
 } from './NftSettlementBottomDrawer.styles'
 
-export const NftSettlementBottomDrawer: React.FC = () => {
+export const NftSettlementBottomDrawer: FC = () => {
   const xsMatch = useMediaMatch('xs')
-  const { activeMemberId } = useUser()
+  const { memberId } = useUser()
   const { currentNftId, closeNftAction, currentAction } = useNftActions()
   const { nft, loading, refetch } = useNft(currentNftId || '')
 
@@ -35,7 +35,7 @@ export const NftSettlementBottomDrawer: React.FC = () => {
   const { url: avatarUrl } = useAsset(nft?.video.channel.avatarPhoto)
   const { url: memberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
 
-  const isUserSeller = activeMemberId === nft?.ownerMember?.id
+  const isUserSeller = memberId === nft?.ownerMember?.id
 
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
@@ -63,7 +63,7 @@ export const NftSettlementBottomDrawer: React.FC = () => {
   const isOpen = currentAction === 'settle'
   return (
     <BottomDrawer isOpen={isOpen} onClose={closeNftAction}>
-      <StyledLottie play={isOpen} loop={false} animationData={confetti} />
+      <StyledLottie play={isOpen} data={confetti} />
       <StyledLimitedContainer>
         <StyledLayoutGrid>
           <GridItem rowStart={{ base: 2, sm: 1 }} colSpan={{ base: 12, sm: 6, md: 5, lg: 4 }} colStart={{ lg: 3 }}>
@@ -72,6 +72,7 @@ export const NftSettlementBottomDrawer: React.FC = () => {
               thumbnail={{
                 loading: thumbnailLoading,
                 thumbnailUrl: thumbnailUrl,
+                type: 'video',
               }}
               creator={{ name: nft?.video.channel.title, assetUrl: avatarUrl }}
               owner={{ name: nft?.ownerMember?.handle, assetUrl: memberAvatarUrl }}
@@ -85,15 +86,17 @@ export const NftSettlementBottomDrawer: React.FC = () => {
             colStart={{ sm: 8, md: 7, lg: 8 }}
           >
             <Content>
-              <Text variant="h600">{isUserSeller ? 'NFT sold!' : 'You won the auction!'} 🎉</Text>
-              <Text variant="t300" secondary margin={{ top: 4, bottom: 10 }}>
+              <Text as="h1" variant="h600">
+                {isUserSeller ? 'NFT sold!' : 'You won the auction!'} 🎉
+              </Text>
+              <Text as="p" variant="t300" color="colorText" margin={{ top: 4, bottom: 10 }}>
                 Congratulations! To transfer the ownership, you need to settle the auction.
               </Text>
               <Button size="large" fullWidth={!xsMatch} onClick={handleSettleAuction}>
                 Settle auction
               </Button>
-              <Text variant="t100" secondary margin={{ top: 4 }}>
-                Transaction fee: <Text variant="t100">{formatTokens(0)}</Text>
+              <Text as="span" variant="t100" color="colorText" margin={{ top: 4 }}>
+                Transaction fee: <NumberFormat as="span" format="short" withToken variant="t100" value={0} />
               </Text>
             </Content>
           </StyledGridItem>

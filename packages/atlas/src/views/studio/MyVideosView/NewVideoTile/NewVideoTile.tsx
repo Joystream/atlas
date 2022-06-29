@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
@@ -18,7 +18,7 @@ type NewVideoTileProps = {
   onClick?: () => void
 }
 
-export const NewVideoTile: React.FC<NewVideoTileProps> = ({ loading, onClick }) => {
+export const NewVideoTile: FC<NewVideoTileProps> = ({ loading, onClick }) => {
   return (
     <SwitchTransition>
       <CSSTransition
@@ -33,7 +33,9 @@ export const NewVideoTile: React.FC<NewVideoTileProps> = ({ loading, onClick }) 
             <NewVideoTileLink to={absoluteRoutes.studio.videoWorkspace()} onClick={onClick}>
               <TextAndIconWrapper>
                 <StyledIcon />
-                <StyledText variant="t200">Upload new video</StyledText>
+                <StyledText as="span" variant="t200" margin={{ top: 2 }} color="colorCoreNeutral500">
+                  Upload new video
+                </StyledText>
               </TextAndIconWrapper>
             </NewVideoTileLink>
           )}

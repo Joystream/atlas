@@ -1,5 +1,4 @@
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
 
 import { Text } from '@/components/Text'
 
@@ -30,12 +29,12 @@ const Template: Story<ReactionPopoverProps> = (args) => (
 const EdgeOfTheScreenTemplate: Story<ReactionPopoverProps> = (args) => (
   <div style={{ marginLeft: '-15px' }}>
     <ReactionPopover {...args} />
-    <Text as="p" variant="t100" secondary>
+    <Text as="p" variant="t100" color="colorText">
       Reaction popover should be displayed at the bottom and should never go beyond the boundaries of the viewport.
     </Text>
     <div style={{ marginTop: '80px' }}>
       <ReactionPopover {...args} />
-      <Text as="p" variant="t100" secondary>
+      <Text as="p" variant="t100" color="colorText">
         Reaction popover should be displayed at the top and should never go beyond the boundaries of the viewport.
       </Text>
     </div>

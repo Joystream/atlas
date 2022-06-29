@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import { FC } from 'react'
 
 import { Loader } from '@/components/_loaders/Loader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { InnerContainer, OverlayBackground, OverlayContent, OverlayHeading } from './VideoOverlays.styles'
 
-export const InactiveOverlay: React.FC = () => {
+export const InactiveOverlay: FC = () => {
   const smMatch = useMediaMatch('sm')
   const xsMatch = useMediaMatch('xs')
   const loaderVariant = xsMatch ? (smMatch ? 'xlarge' : 'large') : 'compact'
@@ -14,10 +14,10 @@ export const InactiveOverlay: React.FC = () => {
     <OverlayBackground>
       <InnerContainer>
         <StyledLoader variant={loaderVariant} />
-        <OverlayHeading variant={smMatch ? 'h600' : 'h400'}>
+        <OverlayHeading as="h3" variant={smMatch ? 'h600' : 'h400'}>
           This video hasn&apos;t finished uploading yet...
         </OverlayHeading>
-        <OverlayContent variant={smMatch ? 't300' : 't200'} secondary>
+        <OverlayContent as="p" variant={smMatch ? 't300' : 't200'} color="colorText">
           Please try again in a few minutes
         </OverlayContent>
       </InnerContainer>

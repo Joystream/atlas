@@ -40,7 +40,7 @@ export const DialogContainer = styled.div`
   border-radius: ${cVar('radiusMedium')};
   box-shadow: ${cVar('effectElevation24Layer1')}, ${cVar('effectElevation24Layer2')};
 
-  ${getDialogPaddingVariableStyles}
+  ${getDialogPaddingVariableStyles};
 `
 
 const headerDividersStyles = css`
@@ -75,18 +75,10 @@ export const HeaderContent = styled.div`
   justify-content: center;
 `
 
-const getDenseHeaderContentStyles = ({ noContentPadding }: ContentProps) =>
-  noContentPadding &&
-  css`
-    padding-top: ${sizes(3)};
-  `
-
 export const Content = styled.div<ContentProps>`
   overflow-y: auto;
   overflow-x: hidden;
-  display: grid;
   padding: ${({ noContentPadding }) => !noContentPadding && 'var(--local-size-dialog-padding)'};
-  ${getDenseHeaderContentStyles};
 `
 
 export const footerDividersStyles = css`

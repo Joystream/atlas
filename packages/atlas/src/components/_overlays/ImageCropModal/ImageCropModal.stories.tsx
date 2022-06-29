@@ -1,10 +1,11 @@
 import styled from '@emotion/styled/'
 import { Meta, Story } from '@storybook/react'
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 
 import { Avatar } from '@/components/Avatar'
-import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { Text } from '@/components/Text'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
+import { cVar } from '@/styles'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 
 import { ImageCropModal, ImageCropModalImperativeHandle, ImageCropModalProps } from './ImageCropModal'
@@ -13,8 +14,8 @@ export default {
   title: 'overlays/ImageCropModal',
   component: ImageCropModal,
   argTypes: {
-    showDialog: { table: { disable: true } },
     imageType: { table: { disable: true } },
+    onDelete: { table: { disable: true } },
   },
   decorators: [
     (Story) => (
@@ -23,73 +24,133 @@ export default {
       </OverlayManagerProvider>
     ),
   ],
-} as Meta
+} as Meta<ImageCropModalProps>
+
+type ImageData = {
+  url: string
+  cropData: ImageCropData
+  originalBlob: File | Blob | null
+}
 
 const RegularTemplate: Story<ImageCropModalProps> = () => {
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const thumbnailDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropModalImperativeHandle>(null)
-  const [avatarImageUrl, setAvatarImageUrl] = useState<string | null>(null)
-  const [thumbnailImageUrl, setThumbnailImageUrl] = useState<string | null>(null)
-  const [coverImageUrl, setCoverImageUrl] = useState<string | null>(null)
+  const [avatarImage, setAvatarImage] = useState<ImageData | null>(null)
+  const [thumbnailImage, setThumbnailImage] = useState<ImageData | null>(null)
+  const [coverImage, setCoverImage] = useState<ImageData | null>(null)
 
   const handleAvatarConfirm = (
     blob: Blob,
     url: string,
     _assetDimensions: AssetDimensions,
-    _imageCropData: ImageCropData
+    _imageCropData: ImageCropData,
+    originalBlob: File | Blob | null
   ) => {
-    setAvatarImageUrl(url)
+    setAvatarImage({ url, cropData: _imageCropData, originalBlob })
   }
 
   const handleThumbnailConfirm = (
     blob: Blob,
     url: string,
     _assetDimensions: AssetDimensions,
-    _imageCropData: ImageCropData
+    _imageCropData: ImageCropData,
+    originalBlob: File | Blob | null
   ) => {
-    setThumbnailImageUrl(url)
+    setThumbnailImage({ url, cropData: _imageCropData, originalBlob })
   }
 
   const handleCoverConfirm = (
     blob: Blob,
     url: string,
     _assetDimensions: AssetDimensions,
-    _imageCropData: ImageCropData
+    _imageCropData: ImageCropData,
+    originalBlob: File | Blob | null
   ) => {
-    setCoverImageUrl(url)
+    setCoverImage({ url, cropData: _imageCropData, originalBlob })
+  }
+
+  const handleAvatarDelete = () => {
+    setAvatarImage(null)
+  }
+
+  const handleThumbnailDelete = () => {
+    setThumbnailImage(null)
+  }
+
+  const handleCoverDelete = () => {
+    setCoverImage(null)
   }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start', gap: '24px' }}>
-      <Avatar assetUrl={avatarImageUrl} editable onClick={() => avatarDialogRef.current?.open()} size="cover" />
+      <Avatar
+        assetUrl={avatarImage?.url}
+        editable
+        onClick={() => avatarDialogRef.current?.open(avatarImage?.originalBlob, avatarImage?.cropData, true)}
+        size="cover"
+      />
 
-      {thumbnailImageUrl ? (
-        <Image src={thumbnailImageUrl} onClick={() => thumbnailDialogRef.current?.open()} />
+      {thumbnailImage ? (
+        <Image
+          src={thumbnailImage.url}
+          onClick={() => thumbnailDialogRef.current?.open(thumbnailImage.originalBlob, thumbnailImage.cropData, true)}
+        />
       ) : (
-        <ImageSkeletonLoader onClick={() => thumbnailDialogRef.current?.open()} />
+        <Placeholder onClick={() => thumbnailDialogRef.current?.open()}>
+          <Text as="p" variant="h200">
+            Add thumbnail
+          </Text>
+        </Placeholder>
       )}
-      {coverImageUrl ? (
-        <Image src={coverImageUrl} onClick={() => coverDialogRef.current?.open()} />
+      {coverImage ? (
+        <Image
+          src={coverImage.url}
+          onClick={() => coverDialogRef.current?.open(coverImage.originalBlob, coverImage.cropData, true)}
+        />
       ) : (
-        <ImageSkeletonLoader onClick={() => coverDialogRef.current?.open()} />
+        <Placeholder onClick={() => coverDialogRef.current?.open()}>
+          <Text as="p" variant="h200">
+            Add cover
+          </Text>
+        </Placeholder>
       )}
 
-      <ImageCropModal imageType="avatar" onConfirm={handleAvatarConfirm} ref={avatarDialogRef} />
-      <ImageCropModal imageType="videoThumbnail" onConfirm={handleThumbnailConfirm} ref={thumbnailDialogRef} />
-      <ImageCropModal imageType="cover" onConfirm={handleCoverConfirm} ref={coverDialogRef} />
+      <ImageCropModal
+        onDelete={avatarImage ? handleAvatarDelete : undefined}
+        imageType="avatar"
+        onConfirm={handleAvatarConfirm}
+        ref={avatarDialogRef}
+      />
+      <ImageCropModal
+        onDelete={thumbnailImage ? handleThumbnailDelete : undefined}
+        imageType="videoThumbnail"
+        onConfirm={handleThumbnailConfirm}
+        ref={thumbnailDialogRef}
+      />
+      <ImageCropModal
+        onDelete={handleCoverDelete}
+        imageType="cover"
+        onConfirm={handleCoverConfirm}
+        ref={coverDialogRef}
+      />
     </div>
   )
 }
 export const Regular = RegularTemplate.bind({})
 
-const ImageSkeletonLoader = styled(SkeletonLoader)`
-  width: 600px;
-  min-height: 200px;
-  cursor: pointer;
-`
-
 const Image = styled.img`
   width: 600px;
   cursor: pointer;
+`
+
+const Placeholder = styled.div`
+  width: 600px;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${cVar('colorBackground')};
+  cursor: pointer;
+  border: 2px dashed ${cVar('colorBorderAlpha')};
 `

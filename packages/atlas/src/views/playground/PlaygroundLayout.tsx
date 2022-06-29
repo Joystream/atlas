@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { Link } from 'react-router-dom'
 
@@ -13,8 +13,8 @@ import { absoluteRoutes } from '@/config/routes'
 import { useMemberAvatar } from '@/providers/assets'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
-import { ActiveUserProvider, useUser } from '@/providers/user'
-import { oldColors } from '@/styles'
+import { UserProvider, useUser } from '@/providers/user'
+import { cVar } from '@/styles'
 
 import {
   PlaygroundEstimatingBlockTime,
@@ -35,7 +35,7 @@ const playgroundRoutes = [
   { path: 'settling-auction', element: <PlaygroundNftSettleAuction />, name: 'NFT Settling an auction' },
   { path: 'whitelisting-members', element: <PlaygroundNftWhitelistMembers />, name: 'NFT Whitelisting members' },
   { path: 'block-time', element: <PlaygroundEstimatingBlockTime />, name: 'Estimating block time' },
-  { path: 'tjoy-price', element: <PlaygroundTokenPrice />, name: 'Token price' },
+  { path: 'token-price', element: <PlaygroundTokenPrice />, name: 'Token price' },
   { path: 'indirect-signin-dialog', element: <PlaygroundIndirectSignInDialog />, name: 'Indirect sign in dialog' },
   { path: 'image-downsizing', element: <PlaygroundImageDownsizing />, name: 'Image downsizing' },
   {
@@ -48,16 +48,15 @@ const playgroundRoutes = [
 
 const PlaygroundLayout = () => {
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
-  const { activeMembership, activeAccountId, activeMemberId, extensionConnected, signIn } = useUser()
-  const isLoggedIn = activeAccountId && !!activeMemberId && !!extensionConnected
+  const { activeMembership, isLoggedIn, signIn } = useUser()
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
   return (
-    <ActiveUserProvider>
+    <UserProvider>
       <TopbarBase
         fullLogoNode={
           <LogoWrapper>
             <SvgJoystreamLogoShort />
-            <Text variant="h500" margin={{ left: 2 }}>
+            <Text as="p" variant="h500" margin={{ left: 2 }}>
               Playground
             </Text>
           </LogoWrapper>
@@ -79,7 +78,7 @@ const PlaygroundLayout = () => {
               onClick={() => setIsMemberDropdownActive(true)}
             />
           ) : (
-            <Button onClick={signIn}>Sign in</Button>
+            <Button onClick={() => signIn()}>Sign in</Button>
           )}
         </ButtonContainer>
       </TopbarBase>
@@ -103,7 +102,7 @@ const PlaygroundLayout = () => {
         </Container>
         <ConnectionStatusManager />
       </ConfirmationModalProvider>
-    </ActiveUserProvider>
+    </UserProvider>
   )
 }
 
@@ -132,7 +131,7 @@ const NavContainer = styled.div`
   font-size: 20px;
 
   a {
-    color: ${oldColors.gray[50]};
+    color: ${cVar('colorCoreNeutral50')};
     margin-bottom: 20px;
   }
 `

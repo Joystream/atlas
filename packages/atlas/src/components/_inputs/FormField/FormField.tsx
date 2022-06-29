@@ -1,4 +1,4 @@
-import React from 'react'
+import { PropsWithChildren, forwardRef, memo, useRef } from 'react'
 
 import { Text } from '@/components/Text'
 import { TooltipProps } from '@/components/Tooltip'
@@ -6,59 +6,134 @@ import { TooltipProps } from '@/components/Tooltip'
 import {
   ChildrenWrapper,
   FormFieldDescription,
+  FormFieldFooter,
   FormFieldHeader,
+  FormFieldTitleWrapper,
   FormFieldWrapper,
-  OptionalText,
   StyledInformation,
+  StyledSvgActionWarning,
   SwitchLabel,
-  SwitchTitle,
 } from './FormField.styles'
 
 import { Switch, SwitchProps } from '../Switch'
 
-export type FormFieldProps = {
-  title: string
-  optional?: boolean
-  description?: string | string[]
-  dense?: boolean
-  className?: string
-  switchProps?: Omit<SwitchProps, 'label'>
-  infoTooltip?: TooltipProps
-}
+type WithSwitchProps =
+  | {
+      switchable: true
+      switchProps: Omit<SwitchProps, 'label'>
+    }
+  | {
+      switchable?: false
+      switchProps?: never
+    }
 
-export const FormField = React.memo(
-  React.forwardRef<HTMLDivElement, React.PropsWithChildren<FormFieldProps>>(
-    ({ children, title, description, className, optional, dense, switchProps, infoTooltip }, ref) => {
+export type FormFieldProps = PropsWithChildren<{
+  label?: string
+  optional?: boolean
+  error?: string
+  disableErrorAnimation?: boolean
+  description?: string | string[]
+  className?: string
+  tooltip?: TooltipProps
+}> &
+  WithSwitchProps
+
+export const FormField = memo(
+  forwardRef<HTMLDivElement, FormFieldProps>(
+    (
+      {
+        children,
+        label,
+        description,
+        className,
+        optional,
+        switchProps,
+        tooltip,
+        error,
+        disableErrorAnimation,
+        switchable,
+      },
+      ref
+    ) => {
+      const childrenWrapperRef = useRef<HTMLDivElement>(null)
+
+      const handleFocusOnClick = () => {
+        // This handler imitates the behavior of the native <label> without need of passing custom htmlFor attribute.
+        const input = childrenWrapperRef.current?.getElementsByTagName('input')[0]
+        if (input?.type === 'radio' || input?.type === 'checkbox') {
+          input.click()
+        } else {
+          input?.focus()
+        }
+
+        const textArea = childrenWrapperRef.current?.getElementsByTagName('textarea')[0]
+        if (textArea) {
+          textArea?.focus()
+        }
+
+        const button = childrenWrapperRef.current?.getElementsByTagName('button')[0]
+        // If Formfield is wrapping custom Select and you click on the label it will click select toggle button and open select menu
+        if (button && button.getAttribute('data-select')) {
+          button.click()
+        }
+      }
+
+      const isInputOpen = switchable ? switchProps?.value : true
       return (
-        <FormFieldWrapper className={className} dense={dense} ref={ref}>
-          <FormFieldHeader>
-            {switchProps ? (
-              <SwitchLabel>
-                <Switch {...switchProps} /> <SwitchTitle variant="h300">{title}</SwitchTitle>
-              </SwitchLabel>
-            ) : (
-              <Text variant="h300">{title}</Text>
-            )}
-            {infoTooltip && <StyledInformation {...infoTooltip} />}
-            {optional && (
-              <OptionalText variant="t200" secondary>
-                (Optional)
-              </OptionalText>
-            )}
-          </FormFieldHeader>
-          {description &&
-            (description instanceof Array ? (
-              description.map((p, idx) => (
-                <FormFieldDescription secondary key={idx} variant="t200">
-                  {p}
-                </FormFieldDescription>
-              ))
-            ) : (
-              <FormFieldDescription secondary variant="t200">
-                {description}
-              </FormFieldDescription>
-            ))}
-          <ChildrenWrapper>{children}</ChildrenWrapper>
+        <FormFieldWrapper className={className} ref={ref}>
+          {(label || description) && (
+            <FormFieldHeader switchable={switchable}>
+              {label && (
+                <FormFieldTitleWrapper>
+                  {switchable ? (
+                    <SwitchLabel>
+                      <Switch {...switchProps} />
+                      <Text as="span" variant="h300" margin={{ left: 2 }}>
+                        {label}
+                      </Text>
+                    </SwitchLabel>
+                  ) : (
+                    <label onClick={handleFocusOnClick}>
+                      <Text variant="h300" as="span">
+                        {label}
+                      </Text>
+                    </label>
+                  )}
+                  {optional && (
+                    <Text as="span" variant="t200" color="colorText" margin={{ left: 1 }}>
+                      (optional)
+                    </Text>
+                  )}
+                  {tooltip && <StyledInformation {...tooltip} />}
+                </FormFieldTitleWrapper>
+              )}
+              {description &&
+                (description instanceof Array ? (
+                  description.map((p, idx) => (
+                    <FormFieldDescription as="span" color="colorText" key={idx} variant="t100">
+                      {p}
+                    </FormFieldDescription>
+                  ))
+                ) : (
+                  <FormFieldDescription as="span" color="colorText" variant="t100">
+                    {description}
+                  </FormFieldDescription>
+                ))}
+            </FormFieldHeader>
+          )}
+          {isInputOpen && (
+            <ChildrenWrapper ref={childrenWrapperRef} disableErrorAnimation={disableErrorAnimation} isError={!!error}>
+              {children}
+            </ChildrenWrapper>
+          )}
+          {error ? (
+            <FormFieldFooter>
+              <StyledSvgActionWarning />
+              <Text as="span" variant="t100" color="colorTextError">
+                {error}
+              </Text>
+            </FormFieldFooter>
+          ) : null}
         </FormFieldWrapper>
       )
     }

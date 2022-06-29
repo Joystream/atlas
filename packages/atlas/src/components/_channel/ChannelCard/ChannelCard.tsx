@@ -1,14 +1,14 @@
-import React, { useState } from 'react'
+import { FC, MouseEvent, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { BasicChannelFieldsFragment } from '@/api/queries'
+import { NumberFormat } from '@/components/NumberFormat'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useAsset } from '@/providers/assets'
 import { cVar, transitions } from '@/styles'
-import { formatNumberShort } from '@/utils/number'
 
 import {
   ChannelCardAnchor,
@@ -28,7 +28,7 @@ export type ChannelCardProps = {
   channel?: BasicChannelFieldsFragment
 }
 
-export const ChannelCard: React.FC<ChannelCardProps> = ({
+export const ChannelCard: FC<ChannelCardProps> = ({
   className,
   onClick,
   withFollowButton = true,
@@ -42,7 +42,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
 
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(channel?.id, channel?.title)
 
-  const handleFollowButtonClick = (e: React.MouseEvent) => {
+  const handleFollowButtonClick = (e: MouseEvent) => {
     e.preventDefault()
     toggleFollowing()
   }
@@ -65,9 +65,11 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
                 </>
               ) : (
                 <>
-                  <ChannelTitle variant={mdMatch ? 'h300' : 't200-strong'}>{channel.title}</ChannelTitle>
-                  <ChannelFollows variant={mdMatch ? 't200' : 't100'} secondary>
-                    {formatNumberShort(channel.follows || 0)} followers
+                  <ChannelTitle as="h3" variant={mdMatch ? 'h300' : 't200-strong'}>
+                    {channel.title}
+                  </ChannelTitle>
+                  <ChannelFollows as="p" variant={mdMatch ? 't200' : 't100'} color="colorText">
+                    <NumberFormat as="span" format="short" value={channel.follows || 0} color="colorText" /> followers
                   </ChannelFollows>
                   {withFollowButton && (
                     <FollowButton

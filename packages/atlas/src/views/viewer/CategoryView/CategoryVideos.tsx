@@ -1,6 +1,6 @@
 import { Global } from '@emotion/react'
 import { isEqual } from 'lodash-es'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { FC, useCallback, useEffect, useRef, useState } from 'react'
 
 import { useVideoCount } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
@@ -11,6 +11,7 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionFilters } from '@/components/_icons'
 import { languages } from '@/config/languages'
+import { VIDEO_SORT_OPTIONS } from '@/config/sorting'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import {
@@ -25,12 +26,7 @@ import { FallbackWrapper } from './CategoryView.styles'
 
 const SELECT_LANGUAGE_ITEMS = [{ name: 'All languages', value: 'undefined' }, ...languages]
 
-const ADAPTED_SORT_OPTIONS = [
-  { name: 'newest', value: VideoOrderByInput.CreatedAtDesc },
-  { name: 'oldest', value: VideoOrderByInput.CreatedAtAsc },
-]
-
-export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId }) => {
+export const CategoryVideos: FC<{ categoryId: string }> = ({ categoryId }) => {
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
   const containerRef = useRef<HTMLDivElement>(null)
@@ -90,11 +86,10 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
 
   const sortingNode = (
     <StyledSelect
-      size="small"
-      helperText={null}
+      size="medium"
       value={sortVideosBy}
-      valueLabel="Sort by: "
-      items={ADAPTED_SORT_OPTIONS}
+      inlineLabel="Sort by"
+      items={VIDEO_SORT_OPTIONS}
       onChange={handleSorting}
     />
   )
@@ -105,14 +100,14 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
         <StyledSticky style={{ top: topbarHeight - 1 }}>
           <ControlsContainer>
             <GridItem colSpan={{ base: 2, sm: 1 }}>
-              <Text variant={mdMatch ? 'h500' : 'h400'}>
+              <Text as="h2" variant={mdMatch ? 'h500' : 'h400'}>
                 All videos {videoCount !== undefined && `(${videoCount})`}
               </Text>
             </GridItem>
             {smMatch ? (
               <StyledSelect
                 onChange={handleSelectLanguage}
-                size="small"
+                size="medium"
                 value={language}
                 items={SELECT_LANGUAGE_ITEMS}
               />

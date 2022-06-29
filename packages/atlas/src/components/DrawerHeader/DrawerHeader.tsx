@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC, memo } from 'react'
 
 import { Pill } from '@/components/Pill'
 import { Button } from '@/components/_buttons/Button'
@@ -12,13 +12,15 @@ export type DrawerHeaderProps = {
   onCloseClick: () => void
 }
 
-export const DrawerHeader: React.FC<DrawerHeaderProps> = React.memo(({ onCloseClick, title, label }) => {
+export const DrawerHeader: FC<DrawerHeaderProps> = memo(({ onCloseClick, title, label }) => {
   return (
     <Tabbar>
       <TabContainer>
         <Tab>
           {label && <Pill label={label} size="small" />}
-          <TabTitle variant="t200">{title}</TabTitle>
+          <TabTitle as="span" variant="t200">
+            {title}
+          </TabTitle>
         </Tab>
       </TabContainer>
       <Button variant="tertiary" onClick={onCloseClick} icon={<SvgActionClose />} />

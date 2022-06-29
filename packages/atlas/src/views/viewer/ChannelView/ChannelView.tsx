@@ -1,13 +1,15 @@
 import { generateChannelMetaTags } from '@joystream/atlas-meta-server/src/tags'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useParams, useSearchParams } from 'react-router-dom'
 
-import { useChannel, useChannelNftCollectors } from '@/api/hooks'
+import { useChannelNftCollectors, useFullChannel } from '@/api/hooks'
 import { OwnedNftOrderByInput, VideoOrderByInput } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { NumberFormat } from '@/components/NumberFormat'
+import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { Button } from '@/components/_buttons/Button'
@@ -24,7 +26,6 @@ import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { useAsset } from '@/providers/assets'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
-import { formatNumberShort } from '@/utils/number'
 
 import { ChannelSearch } from './ChannelSearch'
 import { useSearchVideos } from './ChannelView.hooks'
@@ -41,7 +42,6 @@ import {
   SubTitleSkeletonLoader,
   TabsContainer,
   TabsWrapper,
-  Title,
   TitleContainer,
   TitleSection,
   TitleSkeletonLoader,
@@ -51,7 +51,7 @@ import { TABS } from './utils'
 
 export const INITIAL_TILES_PER_ROW = 4
 
-export const ChannelView: React.FC = () => {
+export const ChannelView: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [tilesPerRow, setTilesPerRow] = useState(INITIAL_TILES_PER_ROW)
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
@@ -78,7 +78,7 @@ export const ChannelView: React.FC = () => {
     channel,
     loading,
     error: channelError,
-  } = useChannel(id ?? '', {
+  } = useFullChannel(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelView', error, { channel: { id } }),
   })
   const {
@@ -233,9 +233,16 @@ export const ChannelView: React.FC = () => {
           <TitleContainer>
             {channel ? (
               <>
-                <Title variant={smMatch ? 'h700' : 'h600'}>{channel.title}</Title>
-                <SubTitle variant="t300" secondary>
-                  {channel.follows ? formatNumberShort(channel.follows) : 0} Followers
+                <Text as="h1" variant={smMatch ? 'h700' : 'h600'}>
+                  {channel.title}
+                </Text>
+                <SubTitle as="p" variant="t300" color="colorText">
+                  {channel.follows ? (
+                    <NumberFormat as="span" value={channel.follows} format="short" variant="t300" />
+                  ) : (
+                    0
+                  )}{' '}
+                  Followers
                 </SubTitle>
               </>
             ) : (
@@ -278,12 +285,11 @@ export const ChannelView: React.FC = () => {
                     setIsSearching={setIsSearching}
                     submitSearch={submitSearch}
                     isSearching={isSearching}
-                    setCurrentTab={setCurrentTab}
                   />
                 )}
                 <StyledSelect
-                  size="small"
-                  labelPosition="left"
+                  size="medium"
+                  inlineLabel="Sort by"
                   disabled={isSearching}
                   value={!isSearching ? (currentTab === 'Videos' ? sortVideosBy : sortNftsBy) : 0}
                   placeholder={isSearching ? 'Best match' : undefined}

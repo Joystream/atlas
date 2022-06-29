@@ -1,5 +1,5 @@
 import { throttle } from 'lodash-es'
-import React, { useEffect, useRef, useState } from 'react'
+import { FC, memo, useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import useDraggableScroll from 'use-draggable-scroll'
 
@@ -26,7 +26,7 @@ export type TabsProps = {
 
 const SCROLL_SHADOW_OFFSET = 10
 
-export const Tabs: React.FC<TabsProps> = React.memo(
+export const Tabs: FC<TabsProps> = memo(
   ({ tabs, onSelectTab, initialIndex = -1, selected: paramsSelected, underline, className }) => {
     const [_selected, setSelected] = useState(initialIndex)
     const selected = paramsSelected ?? _selected
@@ -136,7 +136,8 @@ export const Tabs: React.FC<TabsProps> = React.memo(
               ref={selected === idx ? tabRef : null}
             >
               <Text
-                secondary={selected !== idx}
+                as="span"
+                color={selected !== idx ? 'colorText' : undefined}
                 variant={selected === idx ? 't200-strong' : 't200'}
                 align="center"
                 data-badge={tab.badgeNumber}

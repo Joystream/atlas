@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 
 import { GetMostViewedVideosConnectionDocument } from '@/api/queries'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'

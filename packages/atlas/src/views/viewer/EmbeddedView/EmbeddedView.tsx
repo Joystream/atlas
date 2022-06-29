@@ -1,10 +1,10 @@
 import { Global, SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { throttle } from 'lodash-es'
-import React, { useEffect, useRef } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import { useParams } from 'react-router'
 
-import { useAddVideoView, useVideo } from '@/api/hooks'
+import { useAddVideoView, useFullVideo } from '@/api/hooks'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
@@ -17,10 +17,10 @@ import { SentryLogger } from '@/utils/logs'
 
 import { NotFoundVideoContainer, PlayerSkeletonLoader } from '../VideoView/VideoView.styles'
 
-export const EmbeddedView: React.FC = () => {
+export const EmbeddedView: FC = () => {
   useRedirectMigratedContent({ type: 'embedded-video' })
   const { id } = useParams()
-  const { loading, video, error } = useVideo(id ?? '', {
+  const { loading, video, error } = useFullVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
   const { addVideoView } = useAddVideoView()
@@ -121,7 +121,7 @@ export const EmbeddedView: React.FC = () => {
 type GlobalStyleProps = {
   additionalStyles?: SerializedStyles[] | SerializedStyles
 }
-export const EmbeddedGlobalStyles: React.FC<GlobalStyleProps> = ({ additionalStyles }) => {
+export const EmbeddedGlobalStyles: FC<GlobalStyleProps> = ({ additionalStyles }) => {
   const additionalStylesArray = additionalStyles
     ? Array.isArray(additionalStyles)
       ? additionalStyles

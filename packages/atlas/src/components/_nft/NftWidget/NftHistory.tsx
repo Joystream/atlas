@@ -1,9 +1,10 @@
-import React from 'react'
+import { FC } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { BasicMembershipFieldsFragment } from '@/api/queries'
 import { Avatar } from '@/components/Avatar'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { SvgActionChevronB } from '@/components/_icons'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
@@ -12,12 +13,10 @@ import { useToggle } from '@/hooks/useToggle'
 import { useMemberAvatar } from '@/providers/assets'
 import { useTokenPrice } from '@/providers/joystream'
 import { cVar, transitions } from '@/styles'
-import { formatNumberShort } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 
 import {
   CopyContainer,
-  DollarValue,
   FadingBlock,
   HistoryItemContainer,
   HistoryPanel,
@@ -31,13 +30,15 @@ import {
 import { OwnerHandle, Size } from './NftWidget.styles'
 
 type NftHistoryProps = { size: Size; width: number; historyItems: NftHistoryEntry[] }
-export const NftHistory: React.FC<NftHistoryProps> = ({ size, width, historyItems }) => {
+export const NftHistory: FC<NftHistoryProps> = ({ size, width, historyItems }) => {
   const [isOpen, toggleIsOpen] = useToggle()
 
   return (
     <>
       <NftHistoryHeader data-open={isOpen} data-size={size} onClick={toggleIsOpen}>
-        <Text variant={size === 'small' ? 'h300' : 'h400'}>History</Text>
+        <Text as="h3" variant={size === 'small' ? 'h300' : 'h400'}>
+          History
+        </Text>
         <StyledChevronButton data-open={isOpen} variant="tertiary" icon={<SvgActionChevronB />} />
       </NftHistoryHeader>
       {isOpen && (
@@ -64,7 +65,7 @@ export type NftHistoryEntry = {
 type HistoryItemProps = {
   size: Size
 } & NftHistoryEntry
-export const HistoryItem: React.FC<HistoryItemProps> = ({ size, member, date, joyAmount, text }) => {
+export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmount, text }) => {
   const navigate = useNavigate()
   const { url, isLoadingAsset } = useMemberAvatar(member)
   const { convertToUSD } = useTokenPrice()
@@ -81,7 +82,7 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({ size, member, date, jo
       />
       <TextContainer>
         <CopyContainer>
-          <Text variant={size === 'medium' ? 'h300' : 'h200'} secondary>
+          <Text as="span" variant={size === 'medium' ? 'h300' : 'h200'} color="colorText">
             {text}
             {' by '}
             <OwnerHandle to={absoluteRoutes.viewer.member(member?.handle)}>
@@ -91,7 +92,7 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({ size, member, date, jo
             </OwnerHandle>
           </Text>
         </CopyContainer>
-        <Text variant="t100" secondary>
+        <Text as="span" variant="t100" color="colorText">
           {formatDateTime(date)}
         </Text>
       </TextContainer>
@@ -99,7 +100,7 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({ size, member, date, jo
         <ValueContainer>
           <JoyPlusIcon>
             <JoyTokenIcon size={16} variant="silver" />
-            <Text variant={size === 'medium' ? 'h300' : 'h200'}>{formatNumberShort(joyAmount)}</Text>
+            <NumberFormat as="span" format="short" value={joyAmount} variant={size === 'medium' ? 'h300' : 'h200'} />
           </JoyPlusIcon>
           <SwitchTransition>
             <CSSTransition
@@ -107,9 +108,18 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({ size, member, date, jo
               timeout={parseInt(cVar('animationTransitionFast', true))}
               classNames={transitions.names.fade}
             >
-              <DollarValue variant="t100" secondary>
-                {dollarValue ?? '‌'}
-              </DollarValue>
+              {dollarValue ? (
+                <NumberFormat
+                  as="span"
+                  format="dollar"
+                  variant="t100"
+                  color="colorText"
+                  value={dollarValue}
+                  align="end"
+                />
+              ) : (
+                '‌'
+              )}
             </CSSTransition>
           </SwitchTransition>
         </ValueContainer>

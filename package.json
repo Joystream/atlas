@@ -40,30 +40,37 @@
   },
   "devDependencies": {
     "@emotion/eslint-plugin": "^11.7.0",
-    "@stylelint/postcss-css-in-js": "^0.37.2",
+    "@stylelint/postcss-css-in-js": "^0.38.0",
     "@trivago/prettier-plugin-sort-imports": "^3.2.0",
-    "@types/node": "^14",
-    "@typescript-eslint/eslint-plugin": "^5.11.0",
-    "@typescript-eslint/parser": "^5.11.0",
-    "eslint": "^8.8.0",
-    "eslint-config-prettier": "^8.3.0",
-    "husky": "^7.0.4",
-    "lint-staged": "^12.3.3",
-    "prettier": "~2.5.1",
-    "stylelint": "^14.3.0",
+    "@types/node": "^16.11.39",
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
+    "@typescript-eslint/parser": "^5.27.1",
+    "eslint": "^8.17.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-jest-dom": "^4.0.2",
+    "eslint-plugin-react": "^7.30.0",
+    "eslint-plugin-react-hooks": "^4.5.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.1",
+    "prettier": "~2.6.2",
+    "stylelint": "^14.9.1",
     "stylelint-config-prettier": "^9.0.3",
-    "stylelint-config-standard": "^24.0.0",
-    "typescript": "4.5.2"
+    "stylelint-config-standard": "^26.0.0",
+    "typescript": "4.7.3"
   },
   "resolutions": {
-    "postcss-safe-parser": "4.0.2",
-    "bn.js": "4.12.0",
-    "vite": "2.7.13",
+    "@polkadot/api": "5.9.1",
+    "@polkadot/types": "5.9.1",
+    "@polkadot/keyring": "7.9.2",
+    "@polkadot/extension-dapp": "0.44.1",
+    "@polkadot/util": "7.9.2",
+    "@polkadot/util-crypto": "7.9.2",
     "blake3": "patch:blake3@npm:2.1.7#.yarn/patches/blake3-npm-2.1.7-7bf40c44b4",
     "@joystream/types": "patch:@joystream/types@npm:0.19.3#.yarn/patches/@joystream-types-npm-0.19.3-e4e33d4bf2"
   },
   "engines": {
-    "node": ">=14"
+    "node": "^16"
   },
-  "packageManager": "yarn@3.1.1"
+  "packageManager": "yarn@3.2.1"
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { VideoThumbnail, VideoThumbnailProps } from '@/components/_video/VideoThumbnail'
@@ -27,15 +27,7 @@ export type NftCardProps = {
   fullWidth?: boolean
 }
 
-export const NftCard: React.FC<NftCardProps> = ({
-  title,
-  creator,
-  supporters,
-  owner,
-  thumbnail,
-  fullWidth,
-  loading,
-}) => {
+export const NftCard: FC<NftCardProps> = ({ title, creator, supporters, owner, thumbnail, fullWidth, loading }) => {
   const reflectionCells = Array.from({ length: 100 })
   return (
     <Container fullWidth={fullWidth}>
@@ -56,7 +48,9 @@ export const NftCard: React.FC<NftCardProps> = ({
           {loading ? (
             <SkeletonLoader width="70%" height={24} bottomSpace={24} />
           ) : (
-            <Title variant="h400">{title}</Title>
+            <Title as="h3" variant="h400">
+              {title}
+            </Title>
           )}
           <Content>
             <Members loading={loading} caption="Creator" members={creator} />

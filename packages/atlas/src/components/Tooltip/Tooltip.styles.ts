@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
@@ -26,6 +27,7 @@ type TooltipTextProps = {
 
 export const TooltipText = styled(Text)<TooltipTextProps>`
   display: inline-block;
+  max-width: 200px;
 
   ${({ withIcon, headerText }) => withIcon && headerText && `margin-left: ${sizes(7)}`};
 `
@@ -41,14 +43,18 @@ type TooltipContainerProps = {
   multiline: boolean
 }
 
+const customContentCss = css`
+  max-width: 264px;
+`
+
 export const TooltipContainer = styled.div<TooltipContainerProps>`
   display: inline-flex;
   flex-direction: ${({ hasHeader, hasCustomContent }) => (hasHeader || hasCustomContent ? 'column' : 'row')};
   padding: ${({ hasHeader, multiline }) => sizes(hasHeader || multiline ? 3 : 2)};
   background-color: ${cVar('colorBackgroundElevated')};
   border-radius: ${cVar('radiusSmall')};
-  max-width: ${({ hasCustomContent }) => (hasCustomContent ? '264px' : '224px')};
   align-items: ${({ multiline, hasHeader }) => (!multiline && !hasHeader ? 'center' : 'flex-start')};
+  ${({ hasCustomContent }) => hasCustomContent && customContentCss};
 
   ${TooltipHeader} {
     align-items: ${({ hasHeader }) => (hasHeader ? 'center' : 'flex-start')};

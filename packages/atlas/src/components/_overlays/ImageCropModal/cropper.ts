@@ -1,5 +1,6 @@
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.min.css'
+import { debounce } from 'lodash-es'
 import { useEffect, useState } from 'react'
 
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
@@ -40,6 +41,26 @@ export const useCropper = ({ imageEl, imageType, cropData }: UseCropperOpts) => 
   const [cropper, setCropper] = useState<Cropper | null>(null)
   const [currentZoom, setCurrentZoom] = useState(0)
   const [zoomRange, setZoomRange] = useState<[number, number]>([0, 1])
+
+  const cropBoxData = cropper?.getCropBoxData()
+
+  useEffect(() => {
+    if (!cropper) {
+      return
+    }
+    const debounceResize = debounce(() => {
+      cropBoxData && cropper.setCropBoxData(cropBoxData)
+      cropper.zoom(0)
+    }, 200)
+    const handleResize = () => {
+      debounceResize()
+    }
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [cropBoxData, cropper])
 
   const zoomStep = (zoomRange[1] - zoomRange[0]) / 20
 
@@ -102,6 +123,7 @@ export const useCropper = ({ imageEl, imageType, cropData }: UseCropperOpts) => 
       autoCropArea: 0.9,
       toggleDragModeOnDblclick: false,
       ready: handleReady,
+      restore: false,
     })
     setCropper(cropper)
 

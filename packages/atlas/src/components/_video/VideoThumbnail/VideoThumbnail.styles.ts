@@ -12,7 +12,7 @@ const sharedOverlayStyles = css`
   width: 100%;
   height: 100%;
   padding-top: 56.25%;
-  transition: ${cVar('animationTransitionFast')};
+  transition: all ${cVar('animationTransitionFast')};
 `
 
 export type SlotPosition = 'topLeft' | 'topRight' | 'center' | 'bottomLeft' | 'bottomRight'
@@ -68,7 +68,7 @@ export const ContentOverlay = styled.div`
   ${sharedOverlayStyles};
 
   position: relative;
-  background: black;
+  background: ${cVar('colorCoreBaseBlack')};
   transition: transform ${cVar('animationTransitionFast')};
   display: flex;
   justify-content: center;
@@ -117,42 +117,135 @@ export const HoverOverlay = styled('div', { shouldForwardProp: (prop) => prop !=
 type VideoThumbnailContainerProps = {
   clickable: boolean
   activeDisabled: boolean
+  isPlaylist: boolean
 }
 
+export const PlaylistOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  transition: transform ${cVar('animationTransitionFast')};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: ${cVar('colorBackgroundOverlay')};
+  width: 50%;
+`
+
 export const VideoThumbnailContainer = styled(Link, {
-  shouldForwardProp: (prop) => !(prop === 'clickable' || prop === 'activeDisabled'),
+  shouldForwardProp: (prop) => !(prop === 'clickable' || prop === 'activeDisabled' || prop === 'isPlaylist'),
 })<VideoThumbnailContainerProps>`
   min-width: 166px;
   display: block;
   position: relative;
-  background-color: black;
-  transition: background-color ${cVar('animationTransitionFast')};
+  background-color: ${cVar('colorCoreBaseBlack')};
+  transition: all ${cVar('animationTransitionFast')};
 
-  ${({ clickable }) =>
-    clickable &&
-    css`
-      :hover {
+  /* stylelint-disable no-duplicate-selectors */
+
+  ::before {
+    height: 100%;
+    width: calc(100% - 16px * 2);
+    content: ' ';
+    display: block;
+    position: absolute;
+    transition: transform ${cVar('animationTransitionFast')}, background-color ${cVar('animationTransitionFast')};
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    background-color: ${({ isPlaylist }) => (isPlaylist ? cVar('colorBackgroundOverlay') : 'transparent')};
+  }
+
+  ::after {
+    height: 100%;
+    width: calc(100% - 24px * 2);
+    content: ' ';
+    display: block;
+    position: absolute;
+    top: 0;
+    z-index: -1;
+    transition: transform ${cVar('animationTransitionFast')}, background-color ${cVar('animationTransitionFast')};
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    background-color: ${cVar('colorBackgroundOverlay')};
+  }
+
+  :hover,
+  :focus-visible {
+    ${({ clickable }) =>
+      clickable &&
+      css`
         cursor: pointer;
+
+        ${HoverOverlay}, ${SlotContainer} {
+          opacity: 1;
+        }
+      `}
+    ${({ clickable, isPlaylist }) =>
+      !isPlaylist &&
+      clickable &&
+      css`
         background-color: ${cVar('colorBackgroundPrimary')};
 
         ${ContentOverlay}, ${HoverOverlay}, ${SlotsOverlay} {
           transform: translate(-8px, -8px);
         }
-        ${HoverOverlay}, ${SlotContainer} {
-          opacity: 1;
+      `}
+    ${({ clickable, isPlaylist }) =>
+      isPlaylist &&
+      clickable &&
+      css`
+        &::before {
+          background-color: ${cVar('colorBackgroundPrimary')};
+          transform: translate(0, 4px);
         }
-      }
-    `}
-  ${({ clickable, activeDisabled }) =>
-    clickable &&
-    !activeDisabled &&
-    css`
-      :active {
+
+        &::after {
+          background-color: ${cVar('colorBackgroundPrimaryMuted')};
+          transform: translate(0, 12px);
+        }
+
+        ${ContentOverlay}, ${HoverOverlay}, ${PlaylistOverlay}, ${SlotsOverlay}, {
+          transform: translate(0, -4px);
+        }
+        ${PlaylistOverlay} {
+          opacity: 0;
+        }
+      `}
+  }
+
+  :active {
+    ${({ clickable, isPlaylist, activeDisabled }) =>
+      clickable &&
+      !activeDisabled &&
+      isPlaylist &&
+      css`
+        &::before {
+          transform: translate(0, 4px);
+        }
+
+        &::after {
+          transform: translate(0, 4px);
+        }
+
+        ${ContentOverlay}, ${HoverOverlay}, ${SlotsOverlay} {
+          transform: translate(0, 4px);
+        }
+      `}
+    ${({ clickable, activeDisabled, isPlaylist }) =>
+      clickable &&
+      !activeDisabled &&
+      !isPlaylist &&
+      css`
         ${ContentOverlay}, ${HoverOverlay}, ${SlotsOverlay} {
           transform: translate(0, 0);
         }
-      }
-    `};
+      `}
+  }
+  /* stylelint-enable no-duplicate-selectors */
 `
 
 export const ThumbnailSkeletonLoader = styled(SkeletonLoader)`

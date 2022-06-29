@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC, PropsWithChildren, ReactNode } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
@@ -13,23 +13,22 @@ import {
   FeaturedContainer,
   FeaturedContent,
   FeaturedIconCircle,
-  FeaturedVideoText,
   FeaturedVideoTitleContainer,
   PlayerContainer,
 } from './FeaturedVideoCategoryCard.style'
 
 export type FeaturedVideoCategoryCardVariant = 'default' | 'compact'
-export type FeaturedVideoCategoryCardProps = {
+export type FeaturedVideoCategoryCardProps = PropsWithChildren<{
   title: string
-  icon: React.ReactNode
+  icon: ReactNode
   videoUrl: string
   videoTitle: string
   color: string
   variant?: FeaturedVideoCategoryCardVariant
   id?: string
-}
+}>
 
-export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps> = ({
+export const FeaturedVideoCategoryCard: FC<FeaturedVideoCategoryCardProps> = ({
   title,
   icon,
   videoUrl,
@@ -73,16 +72,20 @@ export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps>
               {isLoading ? (
                 <SkeletonLoader width="312px" height={variant === 'default' ? '40px' : '32px'} />
               ) : (
-                <Text variant={variant === 'default' ? 'h600' : 'h500'}>{title}</Text>
+                <Text as="h3" variant={variant === 'default' ? 'h600' : 'h500'}>
+                  {title}
+                </Text>
               )}
             </div>
 
             {!isLoading && (
               <FeaturedVideoTitleContainer variantCategory={variant}>
-                <FeaturedVideoText variant="t100" secondary>
+                <Text as="span" variant="t100" color="colorText">
                   Featured video
-                </FeaturedVideoText>
-                <Text variant="h300">{videoTitle}</Text>
+                </Text>
+                <Text as="h4" variant="h300">
+                  {videoTitle}
+                </Text>
               </FeaturedVideoTitleContainer>
             )}
           </FeaturedContent>

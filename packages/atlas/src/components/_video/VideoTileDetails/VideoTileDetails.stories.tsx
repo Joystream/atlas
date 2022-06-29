@@ -1,5 +1,4 @@
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
 
 import { SvgActionReupload, SvgActionTrash } from '@/components/_icons'
 
@@ -21,20 +20,22 @@ export default {
       'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Provident distinctio omnis, voluptates molestias temporibus, incidunt tenetur totam impedit sed sunt atque veritatis ratione quisquam cum sapiente molestiae in voluptatibus iusto',
     kebabMenuItems: [
       {
-        icon: <SvgActionTrash />,
-        title: 'Delete video',
+        nodeStart: <SvgActionTrash />,
+        label: 'Delete video',
       },
       {
-        icon: <SvgActionReupload />,
-        title: 'Reupload file',
+        nodeStart: <SvgActionReupload />,
+        label: 'Reupload file',
       },
     ],
+    type: 'video',
   },
   argTypes: {
     onVideoTitleClick: { table: { disable: true } },
     onChannelAvatarClick: { table: { disable: true } },
     kebabMenuItems: { table: { disable: true } },
     video: { table: { disable: true } },
+    onPlaylistDetailsClick: { table: { disable: true } },
     variant: {
       options: ['withChannelNameAndAvatar', 'withChannelName', 'withoutChannel'] as VideoDetailsVariant[],
       control: {
@@ -50,7 +51,7 @@ export default {
       },
     },
   },
-} as Meta
+} as Meta<VideoTileDetailsProps>
 
 const Template: Story<VideoTileDetailsProps> = (args) => (
   <div style={{ maxWidth: '320px' }}>

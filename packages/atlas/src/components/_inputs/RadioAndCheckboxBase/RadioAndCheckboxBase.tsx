@@ -1,23 +1,23 @@
-import React from 'react'
+import { FC, MouseEvent, PropsWithChildren } from 'react'
 
 import { Text } from '@/components/Text'
 
-import { RadioAndCheckboxLabel, StyledHelperText } from './RadioAndCheckboxBase.styles'
+import { CaptionText, RadioAndCheckboxLabel } from './RadioAndCheckboxBase.styles'
 
-type RadioAndCheckboxBaseProps = {
+type RadioAndCheckboxBaseProps = PropsWithChildren<{
   disabled?: boolean
   className?: string
   label?: string
-  helperText?: string
+  caption?: string
   error?: boolean
-  onClick?: (e: React.MouseEvent) => void
-}
+  onClick?: (e: MouseEvent) => void
+}>
 
-export const RadioAndCheckboxBase: React.FC<RadioAndCheckboxBaseProps> = ({
+export const RadioAndCheckboxBase: FC<RadioAndCheckboxBaseProps> = ({
   disabled,
   children,
   label,
-  helperText,
+  caption,
   error,
   className,
   onClick,
@@ -26,11 +26,15 @@ export const RadioAndCheckboxBase: React.FC<RadioAndCheckboxBaseProps> = ({
     <RadioAndCheckboxLabel hasLabel={!!label} disabled={disabled} className={className} onClick={onClick}>
       {children}
       {label && (
-        <Text variant="t200" secondary={disabled}>
+        <Text as="span" variant="t200" color={disabled ? 'colorText' : undefined}>
           {label}
         </Text>
       )}
-      {helperText && <StyledHelperText helperText={helperText} error={error} />}
+      {caption && (
+        <CaptionText as="span" variant="t100" color={error ? 'colorTextError' : 'colorText'}>
+          {caption}
+        </CaptionText>
+      )}
     </RadioAndCheckboxLabel>
   )
 }

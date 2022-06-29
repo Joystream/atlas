@@ -1,7 +1,8 @@
-import React from 'react'
+import { FC } from 'react'
 import shallow from 'zustand/shallow'
 
 import { EmptyFallback } from '@/components/EmptyFallback'
+import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionUpload } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
@@ -11,7 +12,7 @@ import { useUploadsStore } from '@/providers/uploadsManager/store'
 import { AssetUpload } from '@/providers/uploadsManager/types'
 import { useUser } from '@/providers/user'
 
-import { StyledText, UploadsContainer } from './MyUploadsView.styles'
+import { UploadsContainer } from './MyUploadsView.styles'
 import { UploadStatusGroup } from './UploadStatusGroup'
 import { UploadStatusGroupSkeletonLoader } from './UploadStatusGroup/UploadStatusGroupSkeletonLoader'
 
@@ -19,16 +20,13 @@ type GroupByParentObjectIdAcc = {
   [key: string]: AssetUpload[]
 }
 
-export const MyUploadsView: React.FC = () => {
+export const MyUploadsView: FC = () => {
   const lgMatch = useMediaMatch('lg')
-  const { activeChannelId } = useUser()
+  const { channelId } = useUser()
 
   const headTags = useHeadTags('My uploads')
 
-  const channelUploads = useUploadsStore(
-    (state) => state.uploads.filter((asset) => asset.owner === activeChannelId),
-    shallow
-  )
+  const channelUploads = useUploadsStore((state) => state.uploads.filter((asset) => asset.owner === channelId), shallow)
   const isSyncing = useUploadsStore((state) => state.isSyncing)
 
   // Grouping all assets by parent id (videos, channel)
@@ -52,7 +50,9 @@ export const MyUploadsView: React.FC = () => {
   return (
     <UploadsContainer>
       {headTags}
-      <StyledText variant="h700">My uploads</StyledText>
+      <Text as="h1" variant="h700" margin={{ top: 12, bottom: 12 }}>
+        My uploads
+      </Text>
       {isSyncing ? (
         placeholderItems
       ) : hasUploads ? (

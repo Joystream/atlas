@@ -1,9 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { addMilliseconds } from 'date-fns'
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import { FC, useCallback, useEffect, useMemo, useRef } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
-import { useVideo } from '@/api/hooks'
+import { useFullVideo } from '@/api/hooks'
 import { Step, StepProps, getStepVariant } from '@/components/Step'
 import { Text } from '@/components/Text'
 import { SvgActionChevronR } from '@/components/_icons'
@@ -54,7 +54,7 @@ type NftFormProps = {
   videoId: string
 }
 
-export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) => {
+export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) => {
   const { activeMembership } = useUser()
   const scrollableWrapperRef = useRef<HTMLDivElement>(null)
   const {
@@ -93,7 +93,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
     formState: { isValid },
   } = formMethods
 
-  const { video, loading: loadingVideo } = useVideo(videoId, { fetchPolicy: 'cache-only' })
+  const { video, loading: loadingVideo } = useFullVideo(videoId, { fetchPolicy: 'cache-only' })
 
   const { url: channelAvatarUrl } = useAsset(video?.channel.avatarPhoto)
   const { url: thumbnailPhotoUrl } = useAsset(video?.thumbnailPhoto)
@@ -110,9 +110,12 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
       openModal({
         title: 'Start sale now?',
         children: (
-          <Text variant="t200" secondary>
-            The start date <Text variant="t200">{formatDateTime(startDate)} </Text> you selected has already passed. Do
-            you want to put your NFT on sale now?
+          <Text as="p" variant="t200" color="colorText">
+            The start date{' '}
+            <Text as="span" variant="t200">
+              {formatDateTime(startDate)}{' '}
+            </Text>{' '}
+            you selected has already passed. Do you want to put your NFT on sale now?
           </Text>
         ),
         primaryButton: {
@@ -263,7 +266,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
 
   const nftTileProps: NftTileProps = {
     status: getNftStatus(),
-    thumbnail: { thumbnailUrl: thumbnailPhotoUrl },
+    thumbnail: { thumbnailUrl: thumbnailPhotoUrl, type: 'video' },
     title: video?.title,
     owner: { assetUrl: memberAvatarUri, name: activeMembership?.handle },
     creator: { assetUrl: channelAvatarUrl, name: video?.channel.title ?? '' },
@@ -293,7 +296,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
       <NftWorkspaceFormWrapper>
         <NftPreview>
           <NftTile interactable={false} {...nftTileProps} />
-          <Text margin={{ top: 4 }} variant="h100" secondary>
+          <Text as="span" margin={{ top: 4 }} variant="h100" color="colorText">
             Your nft preview
           </Text>
         </NftPreview>

@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react'
+import { FC, FormEvent, PropsWithChildren, ReactNode, Ref } from 'react'
 
 import { Text } from '@/components/Text'
 import { Button, ButtonProps } from '@/components/_buttons/Button'
@@ -20,25 +20,24 @@ export type DialogButtonProps = {
   text: string
 } & Omit<ButtonProps, 'children'>
 
-export type DialogProps = {
-  title?: React.ReactNode
+export type DialogProps = PropsWithChildren<{
+  title?: ReactNode
   dividers?: boolean
   size?: DialogSize
   primaryButton?: DialogButtonProps
   secondaryButton?: DialogButtonProps
-  additionalActionsNode?: React.ReactNode
+  additionalActionsNode?: ReactNode
   additionalActionsNodeMobilePosition?: 'top' | 'bottom'
   onExitClick?: () => void
-  children?: React.ReactNode
-  as?: React.ElementType
   onSubmit?: (e?: FormEvent) => void
   noContentPadding?: boolean
   actionDivider?: boolean
   className?: string
   contentClassName?: string
-}
+  contentRef?: Ref<HTMLDivElement>
+}>
 
-export const Dialog: React.FC<DialogProps> = ({
+export const Dialog: FC<DialogProps> = ({
   title,
   dividers = false,
   size = 'default',
@@ -47,13 +46,13 @@ export const Dialog: React.FC<DialogProps> = ({
   additionalActionsNode,
   onExitClick,
   children,
-  as,
   onSubmit,
   noContentPadding,
   actionDivider = false,
   additionalActionsNodeMobilePosition = 'top',
   className,
   contentClassName,
+  contentRef,
 }) => {
   const isCompact = size === 'compact'
   const smMatch = useMediaMatch('sm')
@@ -61,18 +60,25 @@ export const Dialog: React.FC<DialogProps> = ({
   const buttonSize = isCompact ? 'small' : 'medium'
 
   return (
-    <DialogContainer onSubmit={onSubmit} size={size} className={className} as={as}>
+    <DialogContainer onSubmit={onSubmit} size={size} className={className}>
       {(title || onExitClick) && (
         <Header dividers={dividers}>
           <HeaderContent>
-            <Text variant={isCompact ? 'h300' : smMatch ? 'h500' : 'h400'}>{title}</Text>
+            <Text as="h1" variant={isCompact ? 'h300' : smMatch ? 'h500' : 'h400'}>
+              {title}
+            </Text>
           </HeaderContent>
           {onExitClick && (
             <Button icon={<SvgActionClose />} aria-label="close modal" onClick={onExitClick} variant="tertiary" />
           )}
         </Header>
       )}
-      <Content data-scroll-lock-scrollable noContentPadding={noContentPadding} className={contentClassName}>
+      <Content
+        data-scroll-lock-scrollable
+        noContentPadding={noContentPadding}
+        className={contentClassName}
+        ref={contentRef}
+      >
         {children}
       </Content>
       {hasFooter && (

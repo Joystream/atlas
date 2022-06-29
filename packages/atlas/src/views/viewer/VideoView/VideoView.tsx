@@ -1,13 +1,14 @@
 import { generateVideoMetaTags } from '@joystream/atlas-meta-server/src/tags'
 import { throttle } from 'lodash-es'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { useParams } from 'react-router-dom'
 
-import { useAddVideoView, useVideo } from '@/api/hooks'
+import { useAddVideoView, useFullVideo } from '@/api/hooks'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { NumberFormat } from '@/components/NumberFormat'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { CallToActionButton } from '@/components/_buttons/CallToActionButton'
@@ -16,9 +17,9 @@ import { SvgActionLinkUrl } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NftWidget, useNftWidget } from '@/components/_nft/NftWidget'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
+import { videoCategories } from '@/config/categories'
 import { CTA_MAP } from '@/config/cta'
 import { absoluteRoutes } from '@/config/routes'
-import { useCategoryMatch } from '@/hooks/useCategoriesMatch'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useHeadTags } from '@/hooks/useHeadTags'
@@ -35,7 +36,7 @@ import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
-import { formatVideoViewsAndDate } from '@/utils/video'
+import { formatVideoDate } from '@/utils/video'
 
 import { CommentsSection } from './CommentsSection'
 import { MoreVideos } from './MoreVideos'
@@ -57,24 +58,22 @@ import {
   VideoUtils,
 } from './VideoView.styles'
 
-export const VideoView: React.FC = () => {
+export const VideoView: FC = () => {
   useRedirectMigratedContent({ type: 'video' })
   const { id } = useParams()
-  const { activeMemberId, activeAccountId, signIn } = useUser()
+  const { memberId, signIn, isLoggedIn } = useUser()
   const { openSignInDialog } = useDisplaySignInDialog()
   const { openNftPutOnSale, cancelNftSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement } =
     useNftActions()
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
   const { withdrawBid } = useNftTransactions()
   const { copyToClipboard } = useClipboard()
-  const { loading, video, error } = useVideo(id ?? '', {
+  const { loading, video, error } = useFullVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
   const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
-  const nftWidgetProps = useNftWidget(id)
+  const nftWidgetProps = useNftWidget(video)
   const { likeOrDislikeVideo } = useReactionTransactions()
-
-  const authorized = activeMemberId && activeAccountId
 
   const mdMatch = useMediaMatch('md')
   const { addVideoView } = useAddVideoView()
@@ -83,7 +82,7 @@ export const VideoView: React.FC = () => {
     cinematicView,
     actions: { updateWatchedVideos },
   } = usePersonalDataStore((state) => state)
-  const category = useCategoryMatch(video?.category?.id)
+  const category = video?.category ? videoCategories[video.category.id] : null
 
   const { anyOverlaysOpen } = useOverlayManager()
   const { ref: playerRef, inView: isPlayerInView } = useInView()
@@ -123,7 +122,7 @@ export const VideoView: React.FC = () => {
     if (videoReactionProcessing) {
       return 'processing'
     }
-    const myReaction = video?.reactions.find(({ memberId }) => memberId === activeMemberId)
+    const myReaction = video?.reactions.find(({ memberId: reactionMemberId }) => reactionMemberId === memberId)
     if (myReaction) {
       if (myReaction.reaction === 'LIKE') {
         return 'liked'
@@ -133,7 +132,7 @@ export const VideoView: React.FC = () => {
       }
     }
     return 'default'
-  }, [activeMemberId, videoReactionProcessing, video])
+  }, [memberId, videoReactionProcessing, video])
 
   useEffect(() => {
     if (!videoId || !channelId) {
@@ -171,7 +170,7 @@ export const VideoView: React.FC = () => {
 
   const handleReact = useCallback(
     async (reaction: VideoReaction) => {
-      if (!authorized) {
+      if (!isLoggedIn) {
         openSignInDialog({ onConfirm: signIn })
         return false
       } else if (video?.id) {
@@ -182,7 +181,7 @@ export const VideoView: React.FC = () => {
       }
       return false
     },
-    [authorized, likeOrDislikeVideo, openSignInDialog, signIn, video]
+    [isLoggedIn, likeOrDislikeVideo, openSignInDialog, signIn, video]
   )
 
   // use Media Session API to provide rich metadata to the browser
@@ -246,7 +245,7 @@ export const VideoView: React.FC = () => {
         />
       )}
       <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />
-      <MoreVideos categoryId={category?.id} categoryName={category?.name} videoId={id} type="category" />
+      <MoreVideos categoryId={category?.id} categoryName={video?.category?.name} videoId={id} type="category" />
     </GridItem>
   )
 
@@ -255,20 +254,25 @@ export const VideoView: React.FC = () => {
       {headTags}
       <TitleContainer>
         {video ? (
-          <TitleText variant={mdMatch ? 'h500' : 'h400'}>{video.title}</TitleText>
+          <TitleText as="h1" variant={mdMatch ? 'h500' : 'h400'}>
+            {video.title}
+          </TitleText>
         ) : (
           <SkeletonLoader height={mdMatch ? 56 : 32} width={400} />
         )}
         <VideoUtils>
-          <Meta variant={mdMatch ? 't300' : 't100'} secondary>
+          <Meta as="span" variant={mdMatch ? 't300' : 't100'} color="colorText">
             {video ? (
-              formatVideoViewsAndDate(video.views || null, video.createdAt, { fullViews: true })
+              <>
+                {formatVideoDate(video.createdAt)} •{' '}
+                <NumberFormat as="span" format="full" value={video.views} color="colorText" /> views
+              </>
             ) : (
               <SkeletonLoader height={24} width={200} />
             )}
           </Meta>
           <StyledReactionStepper
-            reactionPopoverDismissed={reactionPopoverDismissed || !authorized}
+            reactionPopoverDismissed={reactionPopoverDismissed || !isLoggedIn}
             onReact={handleReact}
             state={reactionStepperState}
             likes={numberOfLikes}
@@ -282,7 +286,7 @@ export const VideoView: React.FC = () => {
       <ChannelContainer>
         <ChannelLink followButton id={channelId} textVariant="h300" avatarSize="small" />
       </ChannelContainer>
-      <VideoDetails video={video} category={category} />
+      <VideoDetails video={video} categoryData={category} />
     </>
   )
 

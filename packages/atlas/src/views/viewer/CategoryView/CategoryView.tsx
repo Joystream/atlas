@@ -1,5 +1,5 @@
 import { sampleSize } from 'lodash-es'
-import React from 'react'
+import { useMemo } from 'react'
 import { useParams } from 'react-router'
 
 import { useCategories, useCategoriesFeaturedVideos } from '@/api/hooks'
@@ -32,7 +32,7 @@ export const CategoryView = () => {
     ...videoCategories[category.id],
     ...category,
   }))
-  const otherCategory: Array<VideoCategoryData & VideoCategoryFieldsFragment> = React.useMemo(
+  const otherCategory: Array<VideoCategoryData & VideoCategoryFieldsFragment> = useMemo(
     () =>
       sampleSize(
         mappedVideoCategories?.filter((category) => category.id !== id),
@@ -61,7 +61,9 @@ export const CategoryView = () => {
       {!!categoriesFeaturedVideos?.length && (
         <>
           <TitleContainer>
-            <Text variant="h500">Featured category videos</Text>
+            <Text as="h2" variant="h500">
+              Featured category videos
+            </Text>
           </TitleContainer>
           <Grid>
             {categoriesFeaturedVideos?.map((featuredVideo, idx) => (
@@ -74,7 +76,9 @@ export const CategoryView = () => {
       <CategoryVideos categoryId={id} />
 
       <TitleContainer>
-        <Text variant="h500">Other categories</Text>
+        <Text as="h2" variant="h500">
+          Other categories
+        </Text>
         <Button
           icon={<SvgActionChevronR />}
           to={absoluteRoutes.viewer.discover()}

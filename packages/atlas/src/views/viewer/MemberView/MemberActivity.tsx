@@ -1,14 +1,14 @@
-import React from 'react'
+import { FC } from 'react'
 import { useNavigate } from 'react-router'
 
 import { StorageDataObjectFieldsFragment } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid/LayoutGrid'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { SvgActionBid, SvgActionBuyNow, SvgActionMint, SvgActionSell } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset } from '@/providers/assets'
-import { formatTokens } from '@/utils/number'
 
 import { ActivityItem, ActivityItemProps } from './ActivityItem'
 import { ActivitiesRecord, useActivities } from './MemberActivity.hooks'
@@ -17,7 +17,6 @@ import {
   OverviewContainer,
   OverviewItem,
   OverviewTextContainer,
-  PriceText,
   StyledIconWrapper,
   StyledLink,
 } from './MemberActivity.styles'
@@ -27,7 +26,8 @@ const getDescription = (activity: ActivitiesRecord) => {
     case 'Bid':
       return (
         <>
-          {activity.from.handle} placed a bid for <PriceText>{formatTokens(activity.bidAmount)}</PriceText>
+          {activity.from.handle} placed a bid for{' '}
+          <NumberFormat as="span" color="inherit" format="short" value={activity.bidAmount} withToken />
         </>
       )
     case 'Sale':
@@ -37,13 +37,14 @@ const getDescription = (activity: ActivitiesRecord) => {
           <StyledLink to={absoluteRoutes.viewer.member(activity.to?.handle)} onClick={(e) => e.stopPropagation()}>
             {activity.to?.handle}
           </StyledLink>{' '}
-          NFT for <PriceText>{formatTokens(activity.price)}</PriceText>
+          NFT for <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken />
         </>
       )
     case 'Purchase':
       return (
         <>
-          {activity.from?.handle} purchased NFT for <PriceText>{formatTokens(activity.price)} </PriceText> from{' '}
+          {activity.from?.handle} purchased NFT for{' '}
+          <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken /> from{' '}
           <StyledLink to={absoluteRoutes.viewer.member(activity.to?.handle)} onClick={(e) => e.stopPropagation()}>
             {activity.to?.handle}{' '}
           </StyledLink>
@@ -55,7 +56,7 @@ const getDescription = (activity: ActivitiesRecord) => {
           {activity.from?.handle} listed NFT{' '}
           {activity.typeName === 'NftSellOrderMadeEvent' && activity.price && (
             <>
-              for <PriceText>{formatTokens(activity.price)}</PriceText>
+              for <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken />
             </>
           )}
         </>
@@ -69,7 +70,8 @@ const getDescription = (activity: ActivitiesRecord) => {
     case 'Price change':
       return (
         <>
-          {activity.from?.handle} changed price to <PriceText>{formatTokens(activity.price)}</PriceText>
+          {activity.from?.handle} changed price to{' '}
+          <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken />
         </>
       )
   }
@@ -82,7 +84,7 @@ type MemberActivityProps = {
 
 const PLACEHOLDERS_COUNT = 8
 
-export const MemberActivity: React.FC<MemberActivityProps> = ({ memberId, sort = 'createdAt_DESC' }) => {
+export const MemberActivity: FC<MemberActivityProps> = ({ memberId, sort = 'createdAt_DESC' }) => {
   const { activities, loading, activitiesTotalCounts } = useActivities(memberId, sort)
   const navigate = useNavigate()
   const placeholderItems = Array.from({ length: PLACEHOLDERS_COUNT }, () => ({ id: undefined }))
@@ -112,43 +114,53 @@ export const MemberActivity: React.FC<MemberActivityProps> = ({ memberId, sort =
           </GridItem>
           {!loading && activitiesTotalCounts && (
             <GridItem colSpan={{ base: 12, sm: 3 }} colStart={{ sm: -4 }}>
-              <Text variant="h500">Overview</Text>
+              <Text as="span" variant="h500">
+                Overview
+              </Text>
               <OverviewContainer>
                 <OverviewItem>
                   <StyledIconWrapper icon={<SvgActionBuyNow />} size="large" />
                   <OverviewTextContainer>
-                    <Text variant="t100" secondary>
+                    <Text as="span" variant="t100" color="colorText">
                       NFTs bought
                     </Text>
-                    <Text variant="t300">{activitiesTotalCounts.nftsBoughts}</Text>
+                    <Text as="span" variant="t300">
+                      {activitiesTotalCounts.nftsBoughts}
+                    </Text>
                   </OverviewTextContainer>
                 </OverviewItem>
                 <OverviewItem>
                   <StyledIconWrapper icon={<SvgActionSell />} size="large" />
                   <OverviewTextContainer>
-                    <Text variant="t100" secondary>
+                    <Text as="span" variant="t100" color="colorText">
                       NFTs sold
                     </Text>
-                    <Text variant="t300">{activitiesTotalCounts.nftsSold}</Text>
+                    <Text as="span" variant="t300">
+                      {activitiesTotalCounts.nftsSold}
+                    </Text>
                   </OverviewTextContainer>
                 </OverviewItem>
                 <GridRowWrapper>
                   <OverviewItem>
                     <StyledIconWrapper icon={<SvgActionMint />} size="large" />
                     <OverviewTextContainer>
-                      <Text variant="t100" secondary>
+                      <Text as="span" variant="t100" color="colorText">
                         NFTs created
                       </Text>
-                      <Text variant="t300">{activitiesTotalCounts.nftsIssued}</Text>
+                      <Text as="span" variant="t300">
+                        {activitiesTotalCounts.nftsIssued}
+                      </Text>
                     </OverviewTextContainer>
                   </OverviewItem>
                   <OverviewItem>
                     <StyledIconWrapper icon={<SvgActionBid />} size="large" />
                     <OverviewTextContainer>
-                      <Text variant="t100" secondary>
+                      <Text as="span" variant="t100" color="colorText">
                         Bid placed
                       </Text>
-                      <Text variant="t300">{activitiesTotalCounts.nftsBidded}</Text>
+                      <Text as="span" variant="t300">
+                        {activitiesTotalCounts.nftsBidded}
+                      </Text>
                     </OverviewTextContainer>
                   </OverviewItem>
                 </GridRowWrapper>
@@ -165,7 +177,7 @@ type ActivityItemWithResolvedAssetProps = {
   thumbnailPhoto?: StorageDataObjectFieldsFragment | null
 } & Omit<ActivityItemProps, 'thumnailUri'>
 
-export const ActivityItemWithResolvedAsset: React.FC<ActivityItemWithResolvedAssetProps> = ({
+export const ActivityItemWithResolvedAsset: FC<ActivityItemWithResolvedAssetProps> = ({
   thumbnailPhoto,
   ...restProps
 }) => {

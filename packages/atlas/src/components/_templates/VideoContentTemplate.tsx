@@ -1,19 +1,21 @@
 import styled from '@emotion/styled'
-import React, { useMemo } from 'react'
+import { FC, PropsWithChildren, useMemo } from 'react'
 
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { CallToActionButton, CallToActionWrapper } from '@/components/_buttons/CallToActionButton'
 import { CTA_MAP } from '@/config/cta'
-import { cVar, media, sizes } from '@/styles'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { sizes } from '@/styles'
 import { CtaData } from '@/types/cta'
 
-type VideoContentTemplateProps = {
+type VideoContentTemplateProps = PropsWithChildren<{
   title?: string
   cta?: CtaData[]
-}
+}>
 
-export const VideoContentTemplate: React.FC<VideoContentTemplateProps> = ({ children, title, cta }) => {
+export const VideoContentTemplate: FC<VideoContentTemplateProps> = ({ children, title, cta }) => {
+  const lgMatch = useMediaMatch('lg')
   const ctaContent = useMemo(
     () => cta && cta.map((item, idx) => <CallToActionButton key={`cta-${idx}`} {...CTA_MAP[item]} />),
     [cta]
@@ -21,25 +23,16 @@ export const VideoContentTemplate: React.FC<VideoContentTemplateProps> = ({ chil
 
   return (
     <StyledViewWrapper big>
-      {title && <Header variant="h600">{title}</Header>}
+      {title && (
+        <Text as="h1" variant={lgMatch ? 'h700' : 'h600'} margin={{ top: 16, bottom: 16 }}>
+          {title}
+        </Text>
+      )}
       {children}
       {cta && <CallToActionWrapper>{ctaContent}</CallToActionWrapper>}
     </StyledViewWrapper>
   )
 }
-
-const Header = styled(Text)`
-  margin: ${sizes(16)} 0;
-  font: ${cVar('typographyDesktopH600')};
-  letter-spacing: ${cVar('typographyDesktopH600LetterSpacing')};
-  text-transform: ${cVar('typographyDesktopH600TextTransform')};
-
-  ${media.lg} {
-    font: ${cVar('typographyDesktopH700')};
-    letter-spacing: ${cVar('typographyDesktopH700LetterSpacing')};
-    text-transform: ${cVar('typographyDesktopH700TextTransform')};
-  }
-`
 
 const StyledViewWrapper = styled(LimitedWidthContainer)`
   padding-bottom: ${sizes(16)};

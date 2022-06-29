@@ -1,27 +1,24 @@
 import { UseSelectStateChange, useSelect } from 'downshift'
 import { isEqual } from 'lodash-es'
-import React, { Ref, forwardRef, useMemo } from 'react'
+import { ForwardedRef, ReactNode, Ref, forwardRef, useMemo } from 'react'
 
-import { TextProps } from '@/components/Text'
-import { Tooltip } from '@/components/Tooltip'
-import { SvgActionChevronB } from '@/components/_icons'
+import { List } from '@/components/List'
+import { ListItemProps } from '@/components/ListItem'
+import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
+import { ConsoleLogger } from '@/utils/logs'
 
 import {
+  InlineLabel,
   NodeContainer,
   SelectButton,
-  SelectLabel,
+  SelectChevronWrapper,
   SelectMenu,
   SelectMenuWrapper,
-  SelectOption,
-  SelectSizes,
   SelectWrapper,
-  StyledLabelText,
-  StyledPill,
-  StyledSvgGlyphInfo,
-  ValueContainer,
+  ValueAndPlaceholderText,
 } from './Select.styles'
 
-import { InputBase, InputBaseProps } from '../InputBase'
+import { InputSize } from '../inputs.utils'
 
 export type SelectItem<T = string> = {
   value: T
@@ -30,47 +27,41 @@ export type SelectItem<T = string> = {
   menuName?: string
   // hides the item in the menu list
   hideInMenu?: boolean
-  tooltipHeaderText?: string
-  tooltipText?: string
-  tooltipMultiline?: boolean
-  badgeText?: string
   onClick?: () => void
-}
+} & Omit<ListItemProps, 'label' | 'highlight' | 'size'>
 
 export type SelectProps<T = string> = {
   onChange?: (value?: T | null) => void
+  inlineLabel?: string
   value?: T | null
-  valueLabel?: string
-  labelPosition?: 'top' | 'left'
-  labelTextProps?: Omit<TextProps, 'ref'>
   items: SelectItem<T>[]
   placeholder?: string
   containerRef?: Ref<HTMLDivElement>
-  size?: SelectSizes
-  iconLeft?: React.ReactNode
-} & InputBaseProps
+  size?: InputSize
+  icon?: ReactNode
+  error?: boolean
+  disabled?: boolean
+  className?: string
+}
 
-// don't use React.FC so we can use a generic type on a component
+// don't use FC so we can use a generic type on a component
 // `T extends unknown` is a workaround, ESBuild seems to have hard time parsing <T,> generic declaration
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
 export const _Select = <T extends unknown>(
   {
-    label = '',
-    labelTextProps,
-    labelPosition = 'top',
+    inlineLabel,
     items,
-    placeholder = 'Select option',
+    placeholder = 'Select',
     error,
-    value,
-    valueLabel,
     disabled,
+    value,
+    className,
     onChange,
     containerRef,
-    size = 'regular',
-    iconLeft,
-    ...inputBaseProps
+    size = 'large',
+    icon,
   }: SelectProps<T>,
-  ref: React.ForwardedRef<HTMLDivElement>
+  ref: ForwardedRef<HTMLDivElement>
 ) => {
   const itemsValues = items.map((item) => item.value)
 
@@ -82,7 +73,6 @@ export const _Select = <T extends unknown>(
     isOpen,
     selectedItem: selectedItemValue,
     getToggleButtonProps,
-    getLabelProps,
     getMenuProps,
     highlightedIndex,
     getItemProps,
@@ -91,78 +81,67 @@ export const _Select = <T extends unknown>(
     selectedItem: value !== undefined ? value : null,
     onSelectedItemChange: handleItemSelect,
   })
+
+  if (inlineLabel && icon) {
+    ConsoleLogger.error('Select: inlineLabel and icon are mutually exclusive. icon will be ignored.')
+  }
+
   const selectedItem = useMemo(
     () => items.find((item) => isEqual(item.value, selectedItemValue)),
     [items, selectedItemValue]
   )
-
   return (
-    <InputBase error={error} disabled={disabled} {...inputBaseProps} isSelect={true}>
-      <SelectWrapper labelPosition={labelPosition}>
-        <SelectLabel {...getLabelProps()} ref={ref} tabIndex={disabled ? -1 : 0}>
-          {label && (
-            <StyledLabelText variant="t200" {...labelTextProps} labelPosition={labelPosition}>
-              {label}
-            </StyledLabelText>
+    <SelectWrapper ref={containerRef} className={className}>
+      <SelectMenuWrapper>
+        <SelectButton
+          ref={ref}
+          disabled={disabled}
+          error={error}
+          isOpen={isOpen}
+          type="button"
+          tabIndex={disabled ? -1 : 0}
+          inputSize={size}
+          data-select
+          {...getToggleButtonProps()}
+        >
+          {icon && !inlineLabel && <NodeContainer isOpen={isOpen}>{icon}</NodeContainer>}
+          {inlineLabel && (
+            <InlineLabel as="span" variant={size === 'large' ? 't300-strong' : 't200-strong'} color="colorText">
+              {inlineLabel}:
+            </InlineLabel>
           )}
-        </SelectLabel>
-        <SelectMenuWrapper>
-          <SelectButton
-            disabled={disabled}
-            error={error}
-            filled={selectedItemValue != null}
-            isOpen={isOpen}
-            type="button"
-            {...getToggleButtonProps()}
-            tabIndex={disabled ? -1 : 0}
-            size={size}
+          <ValueAndPlaceholderText
+            as="span"
+            variant={size === 'large' ? 't300' : 't200'}
+            color={selectedItem ? undefined : 'colorTextMuted'}
           >
-            {iconLeft && <NodeContainer>{iconLeft}</NodeContainer>}
-            <ValueContainer hasIconLeft={!!iconLeft}>
-              {(valueLabel ?? '') + (selectedItem?.name || placeholder)}
-            </ValueContainer>
-            {selectedItem?.badgeText && <StyledPill label={selectedItem.badgeText} />}
-            <SvgActionChevronB className="chevron-bottom" />
-          </SelectButton>
-          <SelectMenu isOpen={isOpen} {...getMenuProps()}>
-            {isOpen &&
-              items.map((item, index) => {
-                const itemProps = { ...getItemProps({ item: item.value, index }) }
-                if (item.hideInMenu) return null
-                return (
-                  <SelectOption
-                    isSelected={highlightedIndex === index}
-                    key={`${item.name}-${index}`}
-                    {...itemProps}
-                    onClick={(e) => {
-                      item.onClick?.()
-                      itemProps.onClick(e)
-                    }}
-                  >
-                    {item.tooltipText && (
-                      <Tooltip
-                        headerText={item.tooltipHeaderText}
-                        text={item.tooltipText}
-                        multiline={item.tooltipMultiline}
-                        placement="top-end"
-                        offsetX={6}
-                        offsetY={12}
-                      >
-                        <StyledSvgGlyphInfo />
-                      </Tooltip>
-                    )}
-                    {item?.menuName ?? item?.name}
-                  </SelectOption>
-                )
-              })}
-          </SelectMenu>
-        </SelectMenuWrapper>
-      </SelectWrapper>
-    </InputBase>
+            {selectedItem ? selectedItem.name : placeholder}
+          </ValueAndPlaceholderText>
+          <SelectChevronWrapper>{isOpen ? <SvgActionChevronT /> : <SvgActionChevronB />}</SelectChevronWrapper>
+        </SelectButton>
+        <SelectMenu {...getMenuProps()}>
+          {isOpen && (
+            <List
+              scrollable
+              items={items
+                .filter((item) => !item.hideInMenu)
+                .map((item, index) => ({
+                  selected: item.value === selectedItemValue,
+                  highlight: highlightedIndex === index,
+                  label: item.name,
+                  ...item,
+                  ...getItemProps({ item: item.value, index, onClick: item.onClick }),
+                }))}
+              size={size === 'medium' ? 'small' : 'medium'}
+            />
+          )}
+        </SelectMenu>
+      </SelectMenuWrapper>
+    </SelectWrapper>
   )
 }
 
 // https://fettblog.eu/typescript-react-generic-forward-refs/#option-1%3A-type-assertion
 export const Select = forwardRef(_Select) as <T>(
-  props: SelectProps<T> & { ref?: React.ForwardedRef<HTMLDivElement> }
+  props: SelectProps<T> & { ref?: ForwardedRef<HTMLButtonElement> }
 ) => ReturnType<typeof _Select>

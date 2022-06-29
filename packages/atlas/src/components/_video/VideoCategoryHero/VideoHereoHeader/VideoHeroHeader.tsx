@@ -1,21 +1,22 @@
-import React from 'react'
+import { FC, ReactNode } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionChevronL } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { transitions } from '@/styles'
 
-import { Divider, StyledVideoHeroHeader, VideoHeroHeaderTitle } from './VideoHeroHeader.style'
+import { Divider, StyledVideoHeroHeader } from './VideoHeroHeader.style'
 
 type VideoHeroHeaderProps = {
   loading?: boolean
-  icon: React.ReactNode
+  icon: ReactNode
   title: string
 }
 
-export const VideoHeroHeader: React.FC<VideoHeroHeaderProps> = ({ loading, icon, title }) => {
+export const VideoHeroHeader: FC<VideoHeroHeaderProps> = ({ loading, icon, title }) => {
   return (
     <SwitchTransition>
       <CSSTransition
@@ -33,7 +34,9 @@ export const VideoHeroHeader: React.FC<VideoHeroHeaderProps> = ({ loading, icon,
           {!loading ? (
             <>
               {icon}
-              <VideoHeroHeaderTitle variant="h400">{title}</VideoHeroHeaderTitle>
+              <Text as="h1" variant="h400" margin={{ left: 2 }}>
+                {title}
+              </Text>
             </>
           ) : (
             <SkeletonLoader height={24} width={160} />

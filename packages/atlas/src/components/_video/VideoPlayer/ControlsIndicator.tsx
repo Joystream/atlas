@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { FC, ReactNode, useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { VideoJsPlayer } from 'video.js'
 
@@ -32,7 +32,7 @@ type VideoEvent = CustomVideojsEvents | null
 type EventState = {
   type: VideoEvent
   description: string | null
-  icon: React.ReactNode | null
+  icon: ReactNode | null
   isVisible: boolean
 }
 
@@ -41,7 +41,7 @@ type ControlsIndicatorProps = {
   isLoading?: boolean
 }
 
-export const ControlsIndicator: React.FC<ControlsIndicatorProps> = ({ player, isLoading }) => {
+export const ControlsIndicator: FC<ControlsIndicatorProps> = ({ player, isLoading }) => {
   const [indicator, setIndicator] = useState<EventState | null>(null)
   useEffect(() => {
     if (!player) {
@@ -93,7 +93,9 @@ export const ControlsIndicator: React.FC<ControlsIndicatorProps> = ({ player, is
         <ControlsIndicatorWrapper>
           <ControlsIndicatorIconWrapper>{indicator?.icon}</ControlsIndicatorIconWrapper>
           <ControlsIndicatorTooltip>
-            <Text variant="t100">{indicator?.description}</Text>
+            <Text as="span" variant="t100">
+              {indicator?.description}
+            </Text>
           </ControlsIndicatorTooltip>
         </ControlsIndicatorWrapper>
       </CSSTransition>

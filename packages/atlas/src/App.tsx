@@ -1,9 +1,9 @@
 import { ApolloProvider } from '@apollo/client'
-import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { AnalyticsManager } from '@/AnalyticsManager'
 import { createApolloClient } from '@/api'
+import { SignInModal } from '@/components/_auth/SignInModal'
 import { OperatorsContextProvider } from '@/providers/assets'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { NftActionsProvider } from '@/providers/nftActions'
@@ -14,13 +14,12 @@ import { NftSaleBottomDrawer } from '@/views/global/NftSaleBottomDrawer'
 import { NftSettlementBottomDrawer } from '@/views/global/NftSettlementBottomDrawer'
 
 import { MainLayout } from './MainLayout'
-import { SignInStepsStepper } from './components/_auth/SignInSteps'
 import { AssetsManager } from './providers/assets'
 import { JoystreamManager, JoystreamProvider } from './providers/joystream'
 import { OverlayManagerProvider } from './providers/overlayManager'
 import { Snackbars } from './providers/snackbars'
 import { TransactionsManager } from './providers/transactions'
-import { ActiveUserProvider } from './providers/user'
+import { UserProvider } from './providers/user'
 
 export const App = () => {
   // App doesn't accept props and doesn't contain state so should never rerender
@@ -35,7 +34,7 @@ export const App = () => {
           <OperatorsContextProvider>
             <OverlayManagerProvider>
               <ConfirmationModalProvider>
-                <ActiveUserProvider>
+                <UserProvider>
                   <JoystreamProvider>
                     <NftActionsProvider>
                       <MainLayout />
@@ -44,13 +43,13 @@ export const App = () => {
                       <TransactionsManager />
                       <JoystreamManager />
                       <NotificationsManager />
-                      <SignInStepsStepper />
+                      <SignInModal />
                       <NftSettlementBottomDrawer />
                       <NftPurchaseBottomDrawer />
                       <NftSaleBottomDrawer />
                     </NftActionsProvider>
                   </JoystreamProvider>
-                </ActiveUserProvider>
+                </UserProvider>
               </ConfirmationModalProvider>
             </OverlayManagerProvider>
           </OperatorsContextProvider>

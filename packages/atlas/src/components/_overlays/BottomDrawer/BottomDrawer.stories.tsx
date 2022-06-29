@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
-import { TextField } from '@/components/_inputs/TextField'
+import { Input } from '@/components/_inputs/Input'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 
 import { BottomDrawer, BottomDrawerProps } from './BottomDrawer'
@@ -42,7 +42,6 @@ const Template: Story<BottomDrawerProps> = (args) => {
         title={args.title}
         titleLabel={args.titleLabel}
         actionBar={{
-          variant: 'edit',
           primaryButton: {
             text: 'Submit',
             disabled: !actionBarOpen,
@@ -55,20 +54,20 @@ const Template: Story<BottomDrawerProps> = (args) => {
       >
         <Content>
           <Button onClick={() => setActionBarOpen((prev) => !prev)}>Toggle action bar</Button>
-          <FormField title="Test field">
-            <TextField />
+          <FormField label="Test field">
+            <Input />
           </FormField>
-          <FormField title="Test field">
-            <TextField />
+          <FormField label="Test field">
+            <Input />
           </FormField>
-          <FormField title="Test field">
-            <TextField />
+          <FormField label="Test field">
+            <Input />
           </FormField>
-          <FormField title="Test field">
-            <TextField />
+          <FormField label="Test field">
+            <Input />
           </FormField>
-          <FormField title="Test field">
-            <TextField />
+          <FormField label="Test field">
+            <Input />
           </FormField>
         </Content>
       </BottomDrawer>

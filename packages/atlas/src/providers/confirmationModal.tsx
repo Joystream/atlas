@@ -1,21 +1,31 @@
-import React, { useCallback, useContext, useMemo, useRef, useState } from 'react'
+import {
+  FC,
+  FunctionComponent,
+  PropsWithChildren,
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { TransitionGroup } from 'react-transition-group'
 
 import { AlertDialogModal, AlertDialogModalProps } from '@/components/_overlays/AlertDialogModal'
 import { createId } from '@/utils/createId'
 
 type ConfirmationModalContextValue = {
-  openModal: (key: string, modal: React.FunctionComponent<{ in?: boolean }>) => void
+  openModal: (key: string, modal: FunctionComponent<{ in?: boolean }>) => void
   closeModal: (key: string) => void
 }
-const ConfirmationModalContext = React.createContext<undefined | ConfirmationModalContextValue>(undefined)
+const ConfirmationModalContext = createContext<undefined | ConfirmationModalContextValue>(undefined)
 ConfirmationModalContext.displayName = 'ConfirmationModalContext'
 
-export const ConfirmationModalProvider: React.FC = ({ children }) => {
-  const [modals, setModals] = useState<Record<string, React.FC>>({})
+export const ConfirmationModalProvider: FC<PropsWithChildren> = ({ children }) => {
+  const [modals, setModals] = useState<Record<string, FC>>({})
 
   const openModal = useCallback(
-    (key: string, modal: React.FC) =>
+    (key: string, modal: FC) =>
       setModals((modals) => ({
         ...modals,
         [key]: modal,

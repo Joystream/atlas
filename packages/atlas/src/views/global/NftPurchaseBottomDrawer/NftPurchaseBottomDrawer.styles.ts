@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { cVar, media, sizes, zIndex } from '@/styles'
@@ -118,7 +119,7 @@ export const StyledJoyTokenIcon = styled(JoyTokenIcon)`
   position: relative;
 `
 
-export const BidAmount = styled(Text)`
+export const BidAmount = styled(NumberFormat)`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

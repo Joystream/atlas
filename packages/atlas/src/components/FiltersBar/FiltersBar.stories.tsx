@@ -1,12 +1,12 @@
 import { ApolloProvider } from '@apollo/client'
 import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { createApolloClient } from '@/api'
 import { Button } from '@/components/_buttons/Button'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
-import { media, oldColors, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 import { FiltersBar, FiltersBarProps } from './FiltersBar'
 import { useFiltersBar } from './useFiltersBar'
@@ -77,10 +77,10 @@ const ControlsContainer = styled.div`
   grid-template-columns: 1fr auto;
   align-items: center;
   padding-bottom: ${sizes(4)};
-  border-bottom: 1px solid ${oldColors.gray[700]};
+  border-bottom: 1px solid ${cVar('colorCoreNeutral700')};
   z-index: 100;
   position: relative;
-  background-color: black;
+  background-color: ${cVar('colorCoreBaseBlack')};
   min-height: 72px;
 
   ${media.md} {

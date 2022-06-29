@@ -1,5 +1,4 @@
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -11,7 +10,7 @@ export default {
   title: 'other/Banner',
   component: Banner,
   args: {
-    id: 'some-id',
+    dismissibleId: 'some-id',
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod, animi tempore dicta vero temporibus debitis.',
     title: 'Banner Title',
@@ -27,7 +26,8 @@ const Template: Story<BannerProps> = (args) => {
       <div style={{ marginTop: 16 }}>
         <Button
           onClick={() => {
-            updateDismissedMessages(args.id, false)
+            if (!args.dismissibleId) return
+            updateDismissedMessages(args.dismissibleId, false)
           }}
         >
           Reset

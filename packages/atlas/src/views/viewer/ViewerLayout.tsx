@@ -1,16 +1,14 @@
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
-import React from 'react'
+import { FC } from 'react'
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
-import { Loader } from '@/components/_loaders/Loader'
 import { BottomNav } from '@/components/_navigation/BottomNav'
 import { PrivateRoute } from '@/components/_navigation/PrivateRoute'
 import { SidenavViewer } from '@/components/_navigation/SidenavViewer'
 import { TopbarViewer } from '@/components/_navigation/TopbarViewer'
-import { Modal } from '@/components/_overlays/Modal'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSearchStore } from '@/providers/search'
@@ -51,10 +49,10 @@ const viewerRoutes = [
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.viewer.index()
 
-export const ViewerLayout: React.FC = () => {
+export const ViewerLayout: FC = () => {
   const location = useLocation()
   const locationState = location.state as RoutingState
-  const { activeMemberId, isLoading } = useUser()
+  const { isLoggedIn } = useUser()
 
   const navigate = useNavigate()
   const mdMatch = useMediaMatch('md')
@@ -64,9 +62,6 @@ export const ViewerLayout: React.FC = () => {
 
   return (
     <>
-      <Modal show={isLoading} noBoxShadow>
-        <Loader variant="xlarge" />
-      </Modal>
       <TopbarViewer />
       <SidenavViewer />
       <MainContainer>
@@ -89,21 +84,13 @@ export const ViewerLayout: React.FC = () => {
                 <Route
                   path={relativeRoutes.viewer.editMembership()}
                   element={
-                    <PrivateRoute
-                      isAuth={!!activeMemberId}
-                      element={<EditMembershipView />}
-                      redirectTo={ENTRY_POINT_ROUTE}
-                    />
+                    <PrivateRoute isAuth={isLoggedIn} element={<EditMembershipView />} redirectTo={ENTRY_POINT_ROUTE} />
                   }
                 />
                 <Route
                   path={absoluteRoutes.viewer.notifications()}
                   element={
-                    <PrivateRoute
-                      isAuth={!!activeMemberId}
-                      element={<NotificationsView />}
-                      redirectTo={ENTRY_POINT_ROUTE}
-                    />
+                    <PrivateRoute isAuth={isLoggedIn} element={<NotificationsView />} redirectTo={ENTRY_POINT_ROUTE} />
                   }
                 />
                 <Route path="*" element={<NotFoundView />} />

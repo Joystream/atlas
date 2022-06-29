@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { FC, MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { BasicVideoFieldsFragment } from '@/api/queries'
@@ -36,7 +36,7 @@ type EndingOverlayProps = {
 // 10 seconds
 const NEXT_VIDEO_TIMEOUT = 10 * 1000
 
-export const EndingOverlay: React.FC<EndingOverlayProps> = ({
+export const EndingOverlay: FC<EndingOverlayProps> = ({
   onPlayAgain,
   isFullScreen,
   channelId,
@@ -95,7 +95,7 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
     }
   }, [disablePlayNext, isPlayNextDisabled])
 
-  const handleCountDownButton = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleCountDownButton = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation()
     if (isCountDownStarted) {
       disablePlayNext()
@@ -112,7 +112,7 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
     }
   }, [currentThumbnailUrl, randomNextVideo, randomNextVideoThumbnailUrl])
 
-  const stopPropagationx = (e: React.MouseEvent) => {
+  const stopPropagationx = (e: MouseEvent) => {
     e.stopPropagation()
   }
 
@@ -127,10 +127,12 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
           >
             <VideoThumbnail src={thumbnailUrl} />
             <VideoInfo>
-              <Text variant={mdMatch ? 't300' : 't200'} secondary>
+              <Text as="span" variant={mdMatch ? 't300' : 't200'} color="colorText">
                 Up next
               </Text>
-              <Heading variant={mdMatch ? 'h500' : 'h400'}>{randomNextVideo.title}</Heading>
+              <Heading as="h3" variant={mdMatch ? 'h500' : 'h400'}>
+                {randomNextVideo.title}
+              </Heading>
               <StyledChannelLink
                 onClick={stopPropagationx}
                 id={channelId}
@@ -165,7 +167,7 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
         <Container>
           <InnerContainer>
             <VideoInfo noNextVideo>
-              <SubHeading variant={mdMatch ? 't300' : 't200'} secondary>
+              <SubHeading as="span" variant={mdMatch ? 't300' : 't200'} color="colorText">
                 You’ve finished watching a video from
               </SubHeading>
               <StyledChannelLink

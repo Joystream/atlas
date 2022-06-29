@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
@@ -8,7 +8,7 @@ import { transitions } from '@/styles'
 
 import { CookieEmoticon, StyledAnchor, StyledDialog } from './CookiePopover.styles'
 
-export const CookiePopover: React.FC = () => {
+export const CookiePopover: FC = () => {
   const { cookiesAccepted, setCookiesAccepted } = usePersonalDataStore((state) => ({
     cookiesAccepted: state.cookiesAccepted,
     setCookiesAccepted: state.actions.setCookiesAccepted,
@@ -42,7 +42,7 @@ export const CookiePopover: React.FC = () => {
           _textOnly: true,
         }}
       >
-        <Text variant="t200" secondary>
+        <Text as="p" variant="t200" color="colorText">
           We use cookies and other tracking technologies to improve your experience and provide analytics.{' '}
           <StyledAnchor href="https://www.joystream.org/privacy-policy/">You can read more about it here.</StyledAnchor>
         </Text>

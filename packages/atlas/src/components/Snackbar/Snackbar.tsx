@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useRef, useState } from 'react'
+import { FC, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
 
 import { Text } from '@/components/Text'
 import { SvgActionClose } from '@/components/_icons'
@@ -7,7 +7,6 @@ import {
   SnackbarActionButton,
   SnackbarCloseButton,
   SnackbarContent,
-  SnackbarDescription,
   SnackbarIconContainer,
   SnackbarWrapper,
   StyledInnerWrapper,
@@ -18,14 +17,14 @@ export type SnackbarProps = {
   title: string
   description?: string
   actionText?: string
-  actionIcon?: React.ReactNode
-  onActionClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-  onMouseEnter?: (e: React.MouseEvent) => void
-  onMouseLeave?: (e: React.MouseEvent) => void
+  actionIcon?: ReactNode
+  onActionClick?: (event: MouseEvent<HTMLButtonElement>) => void
+  onClick?: (event: MouseEvent<HTMLButtonElement>) => void
+  onMouseEnter?: (e: MouseEvent) => void
+  onMouseLeave?: (e: MouseEvent) => void
 }
 
-export const Snackbar: React.FC<SnackbarProps> = ({
+export const Snackbar: FC<SnackbarProps> = ({
   icon,
   title,
   description,
@@ -50,11 +49,13 @@ export const Snackbar: React.FC<SnackbarProps> = ({
       <StyledInnerWrapper ref={ref}>
         {icon && <SnackbarIconContainer>{icon}</SnackbarIconContainer>}
         <SnackbarContent>
-          <Text variant="h200">{title}</Text>
+          <Text as="h1" variant="h200">
+            {title}
+          </Text>
           {description && (
-            <SnackbarDescription variant="t100" secondary>
+            <Text as="p" variant="t100" color="colorText" margin={{ top: 2 }}>
               {description}
-            </SnackbarDescription>
+            </Text>
           )}
           {actionText && (
             <SnackbarActionButton onClick={onActionClick} icon={actionIcon}>

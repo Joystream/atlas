@@ -1,5 +1,5 @@
 import { easings, useSpringRef, useTransition } from '@react-spring/web'
-import React, { useEffect, useRef, useState } from 'react'
+import { FC, forwardRef, useEffect, useRef, useState } from 'react'
 import mergeRefs from 'react-merge-refs'
 import { useLocation, useNavigate } from 'react-router'
 import useResizeObserver from 'use-resize-observer'
@@ -7,11 +7,12 @@ import useResizeObserver from 'use-resize-observer'
 import { BasicChannelFieldsFragment, BasicMembershipFieldsFragment } from '@/api/queries'
 import { Avatar } from '@/components/Avatar'
 import { ListItem } from '@/components/ListItem'
-import { Text } from '@/components/Text'
+import { NumberFormat } from '@/components/NumberFormat'
 import {
   SvgActionAddVideo,
   SvgActionChevronL,
   SvgActionChevronR,
+  SvgActionLogOut,
   SvgActionMember,
   SvgActionNewChannel,
   SvgActionPlay,
@@ -22,11 +23,10 @@ import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
+import { JOY_CURRENCY_TICKER } from '@/config/token'
 import { useSubscribeAccountBalance } from '@/hooks/useSubscribeAccountBalance'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
-import { useUser } from '@/providers/user'
-import { cVar } from '@/styles'
-import { formatNumberShort } from '@/utils/number'
+import { useUser, useUserStore } from '@/providers/user'
 
 import {
   AnimatedContainer,
@@ -37,13 +37,13 @@ import {
   Divider,
   Filter,
   InnerContainer,
-  LearnAboutTjoyLink,
+  LearnAboutLink,
   MemberHandleText,
   MemberInfoContainer,
   SectionContainer,
   StyledAvatar,
   SwitchMemberItemListContainer,
-  TjoyContainer,
+  UserBalance,
 } from './MemberDropdown.styles'
 
 export type MemberDropdownProps = {
@@ -53,14 +53,15 @@ export type MemberDropdownProps = {
   onChannelChange?: (channelId: string) => void
 }
 
-export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownProps>(
+export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
   ({ publisher, isActive, closeDropdown, onChannelChange }, ref) => {
     const { pathname } = useLocation()
 
     const [isSwitchingMember, setIsSwitchingMember] = useState(false)
-    const [isAnimatingSwitchMember, setIsAnimatingSwitchMember] = useState(false)
+    const [isAnimatingSwitchMember] = useState(false)
     const navigate = useNavigate()
-    const { activeChannelId, activeMembership, setActiveUser, memberships, signIn } = useUser()
+    const { channelId, activeMembership, setActiveUser, memberships, signOut } = useUser()
+    const setSignInModalOpen = useUserStore((state) => state.actions.setSignInModalOpen)
     const accountBalance = useSubscribeAccountBalance()
     const containerRef = useRef<HTMLDivElement>(null)
     const { ref: measureContainerRef, height: containerHeight = 0 } = useResizeObserver({ box: 'border-box' })
@@ -75,8 +76,6 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
         duration: 250,
         easing: easings.easeOutCirc,
       },
-      onRest: () => setIsAnimatingSwitchMember(false),
-      onStart: () => setIsAnimatingSwitchMember(true),
     })
 
     const { url: avatarUrl, isLoadingAsset: avatarLoading } = useMemberAvatar(activeMembership)
@@ -101,7 +100,7 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
       closeDropdown?.()
     }
     const handleAddNewMember = () => {
-      signIn()
+      setSignInModalOpen(true)
       closeDropdown?.()
       setIsSwitchingMember(false)
     }
@@ -182,32 +181,33 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
                       <StyledAvatar size="fill" assetUrl={avatarUrl} loading={avatarLoading} />
                       <div>
                         {/* Using invisible unicode character ZERO WIDTH NON-JOINER (U+200C) to preserve the space while member handle loads */}
-                        <MemberHandleText variant="h400">{activeMembership?.handle ?? '‌‌ '}</MemberHandleText>
-                        <TjoyContainer>
+                        <MemberHandleText as="span" variant="h400">
+                          {activeMembership?.handle ?? '‌‌ '}
+                        </MemberHandleText>
+                        <BalanceContainer>
                           {accountBalance !== undefined ? (
                             <>
-                              <BalanceContainer>
+                              <UserBalance>
                                 <JoyTokenIcon size={16} variant="regular" />
-                                <Text variant="t200-strong">{formatNumberShort(accountBalance)}</Text>
-                              </BalanceContainer>
+                                <NumberFormat as="span" variant="t200-strong" value={accountBalance} format="short" />
+                              </UserBalance>
                             </>
                           ) : (
                             <SkeletonLoader width={30} height={20} />
                           )}
                           <Divider />
-                          <LearnAboutTjoyLink
+                          <LearnAboutLink
                             variant="t100"
                             as="a"
                             // @ts-ignore our types don't allow this but its fine here
                             href="https://www.joystream.org/token"
                             target="_blank"
                             rel="noopener noreferrer"
-                            secondary
-                            color={cVar('colorCoreNeutral200Lighten')}
+                            color="colorCoreNeutral200Lighten"
                           >
-                            Learn about tJOY
-                          </LearnAboutTjoyLink>
-                        </TjoyContainer>
+                            Learn about ${JOY_CURRENCY_TICKER}
+                          </LearnAboutLink>
+                        </BalanceContainer>
                       </div>
                     </MemberInfoContainer>
                   </BlurredBG>
@@ -232,23 +232,17 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
                         />
                       </>
                     )}
-                    <ListItem
-                      nodeStart={<IconWrapper icon={hasOneMember ? <SvgActionPlus /> : <SvgActionSwitchMember />} />}
-                      onClick={() => (hasOneMember ? handleAddNewMember() : setIsSwitchingMember(true))}
-                      label={hasOneMember ? 'Add new member...' : 'Switch member'}
-                      nodeEnd={!hasOneMember && <SvgActionChevronR />}
-                    />
                   </SectionContainer>
                   {publisher && (
                     <SectionContainer>
-                      <ChannelsSectionTitle variant="t100" secondary>
+                      <ChannelsSectionTitle as="span" variant="t100" color="colorText">
                         Your channels
                       </ChannelsSectionTitle>
                       {activeMembership?.channels.map((channel) => (
                         <ChannelListItem
                           key={channel.id}
                           channel={channel}
-                          selected={channel.id === activeChannelId}
+                          selected={channel.id === channelId}
                           onClick={() => onChannelChange?.(channel.id)}
                         />
                       ))}
@@ -259,6 +253,23 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
                       />
                     </SectionContainer>
                   )}
+                  <SectionContainer>
+                    <ListItem
+                      nodeStart={<IconWrapper icon={hasOneMember ? <SvgActionPlus /> : <SvgActionSwitchMember />} />}
+                      onClick={() => (hasOneMember ? handleAddNewMember() : setIsSwitchingMember(true))}
+                      label={hasOneMember ? 'Add new member...' : 'Switch member'}
+                      nodeEnd={!hasOneMember && <SvgActionChevronR />}
+                    />
+                    <ListItem
+                      label="Disconnect wallet"
+                      destructive
+                      nodeStart={<IconWrapper destructive icon={<SvgActionLogOut />} />}
+                      onClick={() => {
+                        closeDropdown?.()
+                        signOut()
+                      }}
+                    />
+                  </SectionContainer>
                 </div>
               </AnimatedContainer>
             )
@@ -275,7 +286,7 @@ type ChannelListItemProps = {
   selected: boolean
   onClick: () => void
 }
-const ChannelListItem: React.FC<ChannelListItemProps> = ({ channel, selected, onClick }) => {
+const ChannelListItem: FC<ChannelListItemProps> = ({ channel, selected, onClick }) => {
   const { url, isLoadingAsset } = useAsset(channel?.avatarPhoto)
   return (
     <ListItem
@@ -293,7 +304,7 @@ type MemberListItemProps = {
   selected: boolean
   onClick: () => void
 }
-const MemberListItem: React.FC<MemberListItemProps> = ({ member, selected, onClick }) => {
+const MemberListItem: FC<MemberListItemProps> = ({ member, selected, onClick }) => {
   const { url, isLoadingAsset } = useMemberAvatar(member)
   return (
     <ListItem
