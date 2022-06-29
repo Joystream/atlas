@@ -28,10 +28,12 @@ const getVideoKeyArgs = (args: QueryVideosConnectionArgs | null) => {
   const idIn = args?.where?.id_in || []
   const isPublic = args?.where?.isPublic_eq ?? ''
   const createdAtGte = args?.where?.createdAt_gte ? JSON.stringify(args.where.createdAt_gte) : ''
-  const sorting = args?.orderBy?.[0] ? args.orderBy[0] : ''
   const durationGte = args?.where?.duration_gte || ''
   const durationLte = args?.where?.duration_gte || ''
   const titleContains = args?.where?.title_contains || ''
+
+  const sortingArray = args?.orderBy != null ? (Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]) : []
+  const sorting = stringifyValue(sortingArray)
 
   // only for counting videos in HomeView
   if (args?.where?.channel?.id_in && !args?.first) {
@@ -47,7 +49,8 @@ const getNftKeyArgs = (args: GetNftsConnectionQueryVariables | null) => {
   const creatorChannel = stringifyValue(args?.where?.creatorChannel)
   const status = stringifyValue(args?.where?.transactionalStatus_json)
   const auctionStatus = stringifyValue(args?.where?.transactionalStatusAuction)
-  const sorting = args?.orderBy?.[0] ? args.orderBy[0] : ''
+  const sortingArray = args?.orderBy != null ? (Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]) : []
+  const sorting = stringifyValue(sortingArray)
   const createdAt_gte = stringifyValue(args?.where?.createdAt_gte)
   const video = stringifyValue(args?.where?.video)
 
@@ -58,10 +61,11 @@ const getChannelKeyArgs = (args: QueryChannelsConnectionArgs | null) => {
   // make sure queries asking for a specific category are separated in cache
   const language = stringifyValue(args?.where?.language)
   const idIn = args?.where?.id_in || []
-  const orderBy = args?.orderBy || []
+  const sortingArray = args?.orderBy != null ? (Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]) : []
+  const sorting = stringifyValue(sortingArray)
   const titleContains = args?.where?.title_contains || ''
 
-  return `${language}:${idIn}:${orderBy}:${titleContains}`
+  return `${language}:${idIn}:${sorting}:${titleContains}`
 }
 
 const getCommentKeyArgs = (args: QueryCommentsConnectionArgs | null) => {
@@ -101,7 +105,8 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
           return nodeFieldValue === isPublic
         }) ?? []
 
-      const sortingASC = args?.orderBy?.[0] === VideoOrderByInput.CreatedAtAsc
+      const sortingArray = args?.orderBy != null ? (Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]) : []
+      const sortingASC = sortingArray[0] === VideoOrderByInput.CreatedAtAsc
       const preSortedDESC = (filteredEdges || []).slice().sort((a, b) => {
         return (readField('createdAt', b.node) as Date).getTime() - (readField('createdAt', a.node) as Date).getTime()
       })
