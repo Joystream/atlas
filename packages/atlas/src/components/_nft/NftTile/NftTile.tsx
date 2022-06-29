@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { FC, useState } from 'react'
 
 import { NumberFormat } from '@/components/NumberFormat'
@@ -6,6 +7,7 @@ import { SvgActionShow } from '@/components/_icons'
 import { VideoThumbnail, VideoThumbnailProps } from '@/components/_video/VideoThumbnail'
 import { useGetNftSlot } from '@/hooks/useGetNftSlot'
 import { EnglishTimerState } from '@/hooks/useNftState'
+import { HapiBNToTJOYNumber } from '@/utils/number'
 import { formatDurationShort } from '@/utils/time'
 
 import { Container } from './NftTile.styles'
@@ -20,9 +22,9 @@ export type NftTileProps = {
   loading?: boolean
   duration?: number | null
   views?: number | null
-  buyNowPrice?: number | null
-  startingPrice?: number | null
-  topBidAmount?: number | null
+  buyNowPrice?: BN | null
+  startingPrice?: BN | null
+  topBidAmount?: BN | null
   fullWidth?: boolean
   interactable?: boolean
   canPutOnSale?: boolean
@@ -124,12 +126,12 @@ export const NftTile: FC<NftTileProps> = ({
         hovered={hovered}
         owner={owner}
         nftStatus={status}
-        buyNowPrice={buyNowPrice}
+        buyNowPrice={buyNowPrice ? HapiBNToTJOYNumber(buyNowPrice) : undefined}
         loading={loading}
-        topBid={topBid}
+        topBid={topBid ? HapiBNToTJOYNumber(topBid) : undefined}
         creator={creator}
         title={title}
-        startingPrice={startingPrice}
+        startingPrice={startingPrice ? HapiBNToTJOYNumber(startingPrice) : undefined}
         interactable={interactable}
         canBuyNow={canBuyNow}
         canCancelSale={canCancelSale}

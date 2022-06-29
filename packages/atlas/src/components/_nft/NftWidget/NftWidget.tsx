@@ -125,7 +125,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
     const buttonSize = size === 'small' ? 'medium' : 'large'
     const buttonColumnSpan = size === 'small' ? 1 : 2
     const timerColumnSpan = size === 'small' ? 1 : 2
-    const BuyNow = memo(({ buyNowPrice }: { buyNowPrice?: number }) =>
+    const BuyNow = memo(({ buyNowPrice }: { buyNowPrice?: BN }) =>
       buyNowPrice ? (
         <NftInfoItem
           size={size}
@@ -133,7 +133,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
           content={
             <>
               <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
-              <NumberFormat as="span" value={buyNowPrice} format="short" variant={contentTextVariant} />
+              <NumberFormat as="span" value={buyNowPrice} withToken format="short" variant={contentTextVariant} />
             </>
           }
           secondaryText={
@@ -161,7 +161,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
               You bid{' '}
               <NumberFormat
                 as="span"
-                value={Number(bidFromPreviousAuction?.amount)}
+                value={new BN(bidFromPreviousAuction?.amount)}
                 format="short"
                 variant="t100"
                 color="colorText"
@@ -196,6 +196,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
                       format="short"
                       variant={contentTextVariant}
                       color="colorText"
+                      withToken
                     />
                   </>
                 }
@@ -372,6 +373,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
                       format="short"
                       value={nftStatus.topBidAmount}
                       variant={contentTextVariant}
+                      withToken
                     />
                   </>
                 }
@@ -405,6 +407,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
                       as="span"
                       format="short"
                       value={nftStatus.startingPrice}
+                      withToken
                       variant={contentTextVariant}
                     />
                   </>

@@ -1,4 +1,5 @@
 import { easings, useSpringRef, useTransition } from '@react-spring/web'
+import { BN } from 'bn.js'
 import { FC, forwardRef, useEffect, useRef, useState } from 'react'
 import mergeRefs from 'react-merge-refs'
 import { useLocation, useNavigate } from 'react-router'
@@ -153,7 +154,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
 
     const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
     const { url: channelAvatarUrl, isLoadingAsset: isChannelAvatarLoading } = useAsset(selectedChannel?.avatarPhoto)
-    const channelBalance = /* useSubscribeAccountBalance(selectedChannel?.rewardAccount) || */ 0 // TODO: fix for Carthage
+    const channelBalance = /* useSubscribeAccountBalance(selectedChannel?.rewardAccount) || */ new BN(0) // TODO: fix for Carthage
 
     useEffect(() => {
       transRef.start()
@@ -226,6 +227,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                                   as="span"
                                   variant="t200-strong"
                                   value={publisher ? channelBalance : accountBalance}
+                                  withToken
                                   format="short"
                                 />
                               </UserBalance>

@@ -110,7 +110,7 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
           auctionBeginsInDays: startsAtDate ? differenceInCalendarDays(startsAtDate, new Date()) : 0,
           auctionBeginsInSeconds: startsAtDate ? differenceInSeconds(startsAtDate, new Date()) : 0,
           topBidderHandle: nftStatus.topBidder?.handle,
-          userBidAmount: Number(userBid?.amount) || undefined,
+          userBidAmount: userBid?.amount ? new BN(userBid?.amount) : undefined,
           isUserWhitelisted,
         },
         nftHistory,

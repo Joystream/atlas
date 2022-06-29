@@ -630,7 +630,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
             <ActionBarTransactionWrapper ref={actionBarRef}>
               {!channelId && progressDrawerSteps?.length ? <StyledProgressDrawer steps={progressDrawerSteps} /> : null}
               <ActionBar
-                fee={newChannel ? createChannelFee : updateChannelFee}
+                fee={newChannel ? new BN(createChannelFee) : new BN(updateChannelFee)}
                 feeLoading={newChannel ? createChannelFeeLoading : updateChannelFeeLoading}
                 primaryButton={{
                   text: newChannel ? 'Create channel' : 'Publish changes',

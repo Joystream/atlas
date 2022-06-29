@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { FC, useCallback, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import useResizeObserver from 'use-resize-observer'
@@ -159,7 +160,7 @@ export const EditMembershipView: FC = () => {
         </Wrapper>
         <StyledActionBar
           ref={actionBarRef}
-          fee={fee}
+          fee={new BN(fee)}
           primaryButton={{
             disabled: !isDirty || !isValid || isValidating,
             text: 'Publish changes',

@@ -16,6 +16,7 @@ import {
   useGetNftQuery,
   useGetNftsConnectionQuery,
 } from '@/api/queries'
+import { TJOYNUmberToHapiBN } from '@/utils/number'
 
 type CommonNftProperties = {
   title: string | null | undefined
@@ -74,7 +75,7 @@ export const getNftStatus = (nft?: FullNftFieldsFragment | null): NftStatus | un
       topBidder: auction.topBid?.bidder,
       auctionPlannedEndBlock: englishAuction ? englishAuction.plannedEndAtBlock : undefined,
       bidLockingTime: openAuction ? openAuction.bidLockDuration : undefined,
-      minimalBidStep: englishAuction ? englishAuction.minimalBidStep : undefined,
+      minimalBidStep: englishAuction ? TJOYNUmberToHapiBN(englishAuction.minimalBidStep) : undefined,
       whitelistedMembers: auction.whitelistedMembers,
     }
   }

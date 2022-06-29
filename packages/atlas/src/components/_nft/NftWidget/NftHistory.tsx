@@ -101,7 +101,13 @@ export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmoun
         <ValueContainer>
           <JoyPlusIcon>
             <JoyTokenIcon size={16} variant="silver" />
-            <NumberFormat as="span" format="short" value={joyAmount} variant={size === 'medium' ? 'h300' : 'h200'} />
+            <NumberFormat
+              as="span"
+              format="short"
+              value={joyAmount}
+              withToken
+              variant={size === 'medium' ? 'h300' : 'h200'}
+            />
           </JoyPlusIcon>
           <SwitchTransition>
             <CSSTransition

@@ -322,8 +322,8 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
     loading: loadingVideo,
     duration: video?.duration,
     views: video?.views,
-    buyNowPrice: watch('buyNowPrice') || 0,
-    startingPrice: watch('startingPrice') || 0,
+    buyNowPrice: TJOYNUmberToHapiBN(watch('buyNowPrice') || 0),
+    startingPrice: TJOYNUmberToHapiBN(watch('startingPrice') || 0),
   }
 
   const stepsContent = [

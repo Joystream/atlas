@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { forwardRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
@@ -27,7 +28,7 @@ type ActionDialogInfoBadge = {
 }
 
 export type ActionBarProps = {
-  fee?: number
+  fee?: BN
   feeLoading?: boolean
   infoBadge?: ActionDialogInfoBadge
   primaryButton: ActionDialogButtonProps
@@ -43,7 +44,12 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
     return (
       <ActionBarContainer ref={ref} className={className} isActive={isActive}>
         <FeeContainer>
-          <Fee amount={fee ?? 0} variant={smMatch ? 'h400' : 'h200'} loading={feeLoading} />
+          <Fee
+            variant={smMatch ? 'h400' : 'h200'}
+            withToken
+            amount={BN.isBN(fee) ? fee : new BN(0)}
+            loading={feeLoading}
+          />
         </FeeContainer>
         {infoBadge ? (
           <DraftsBadgeContainer>
