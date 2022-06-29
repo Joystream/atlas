@@ -17,6 +17,7 @@ import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUser } from '@/providers/user'
 import { SentryLogger } from '@/utils/logs'
+import { HapiBNToTJOYNumber, TJOYNUmberToHapiBN } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 
 import { AcceptTerms } from './AcceptTerms'
@@ -75,7 +76,13 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
     mode: 'onChange',
     resolver: (data, ctx, options) => {
       const resolver = zodResolver(
-        createValidationSchema(data, maxStartDate, maxEndDate, listingType, chainState.nftMinStartingPrice)
+        createValidationSchema(
+          data,
+          maxStartDate,
+          maxEndDate,
+          listingType,
+          HapiBNToTJOYNumber(chainState.nftMinStartingPrice)
+        )
       )
       return resolver(data, ctx, options)
     },
@@ -83,7 +90,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
     defaultValues: {
       startDate: null,
       endDate: null,
-      startingPrice: chainState.nftMinStartingPrice || undefined,
+      startingPrice: HapiBNToTJOYNumber(chainState.nftMinStartingPrice) || undefined,
     },
   })
   const {
@@ -116,7 +123,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
       const startDateValue = getValues('startDate')
       const startDate = startDateValue?.type === 'date' && startDateValue.date
       const startsAtBlock = startDate ? convertMsTimestampToBlock(startDate.getTime()) : undefined
-      const startingPrice = data.startingPrice || chainState.nftMinStartingPrice
+      const startingPrice = data.startingPrice ?? HapiBNToTJOYNumber(chainState.nftMinStartingPrice)
       const minimalBidStep = Math.ceil(startingPrice * NFT_MIN_BID_STEP_MULTIPLIER)
 
       if (data.auctionDurationBlocks) {
@@ -124,10 +131,10 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
         return {
           type: 'english',
           startsAtBlock,
-          startingPrice,
-          minimalBidStep,
-          buyNowPrice: data.buyNowPrice || undefined,
-          auctionDurationBlocks: data.auctionDurationBlocks || 0,
+          startingPrice: TJOYNUmberToHapiBN(startingPrice),
+          minimalBidStep: TJOYNUmberToHapiBN(minimalBidStep),
+          buyNowPrice: typeof data.buyNowPrice === 'number' ? TJOYNUmberToHapiBN(data.buyNowPrice) : undefined,
+          auctionDurationBlocks: data.auctionDurationBlocks,
           whitelistedMembersIds: data.whitelistedMembers?.map((member) => new BN(member.id)),
         }
       } else {
@@ -135,9 +142,9 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
         return {
           type: 'open',
           startsAtBlock,
-          startingPrice,
-          minimalBidStep,
-          buyNowPrice: data.buyNowPrice || undefined,
+          startingPrice: TJOYNUmberToHapiBN(startingPrice),
+          minimalBidStep: TJOYNUmberToHapiBN(minimalBidStep),
+          buyNowPrice: typeof data.buyNowPrice === 'number' ? TJOYNUmberToHapiBN(data.buyNowPrice) : undefined,
           whitelistedMembersIds: data.whitelistedMembers?.map((member) => new BN(member.id)),
         }
       }

@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { ProxyMarked, Remote, proxy, wrap } from 'comlink'
 import { FC, PropsWithChildren, createContext, useCallback, useEffect, useRef, useState } from 'react'
 
@@ -105,7 +106,7 @@ export const JoystreamProvider: FC<PropsWithChildren> = ({ children }) => {
 }
 
 const useJoystreamUtilFns = () => {
-  const [tokenPrice, setTokenPrice] = useState(0)
+  const [tokenPrice, setTokenPrice] = useState(new BN(0))
 
   // fetch token price from the status server
   useEffect(() => {
@@ -113,7 +114,7 @@ const useJoystreamUtilFns = () => {
       try {
         const data = await fetch(JOY_PRICE_SERVICE_URL)
         const json = await data.json()
-        setTokenPrice(parseFloat(json.price))
+        setTokenPrice(new BN(json.price))
       } catch (e) {
         SentryLogger.error(`Failed to fetch ${JOY_CURRENCY_TICKER} price`, e)
       }
@@ -127,7 +128,7 @@ const useJoystreamUtilFns = () => {
 }
 
 type JoystreamChainState = {
-  nftMinStartingPrice: number
+  nftMinStartingPrice: BN
   nftMaxAuctionDuration: number
   nftAuctionStartsAtMaxDelta: number
   nftMaxCreatorRoyaltyPercentage: number
@@ -136,7 +137,7 @@ type JoystreamChainState = {
 }
 const useJoystreamChainState = (joystream: Remote<JoystreamLib> | undefined) => {
   const [chainState, setChainState] = useState<JoystreamChainState>({
-    nftMinStartingPrice: 1,
+    nftMinStartingPrice: new BN(1),
     nftMaxAuctionDuration: 1_296_000,
     nftAuctionStartsAtMaxDelta: 432_000,
     nftMaxCreatorRoyaltyPercentage: 50,

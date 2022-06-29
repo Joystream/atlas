@@ -13,6 +13,7 @@ import { sizes } from '@/styles'
 type ChangePriceDialogProps = {
   onModalClose: () => void
   isOpen: boolean
+  // price to BN ?
   onChangePrice: (id: string, price: number) => void
   nftId: string | null
 }

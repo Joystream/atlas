@@ -1,3 +1,5 @@
+import BN from 'bn.js'
+
 import { BasicMembershipFieldsFragment } from '@/api/queries'
 
 export type NftNotificationRecord = {
@@ -13,23 +15,23 @@ export type NftNotificationRecord = {
 export type NotificationRecord = { read?: boolean } & (
   | ({
       type: 'bid-made'
-      bidAmount: number
+      bidAmount: BN
       member: BasicMembershipFieldsFragment
     } & NftNotificationRecord)
   | ({
       type: 'bought'
-      price: number
+      price: BN
       member: BasicMembershipFieldsFragment
     } & NftNotificationRecord)
   | ({
       type: 'bid-accepted'
       member: BasicMembershipFieldsFragment | null
-      bidAmount: number
+      bidAmount: BN
     } & NftNotificationRecord)
   | ({
       type: 'got-outbid'
       member: BasicMembershipFieldsFragment
-      bidAmount: number
+      bidAmount: BN
     } & NftNotificationRecord)
   | ({
       type: 'auction-settled-owner'

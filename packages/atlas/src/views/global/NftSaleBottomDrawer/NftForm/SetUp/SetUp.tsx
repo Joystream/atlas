@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { ChangeEvent, Dispatch, FC, FocusEvent, FormEvent, SetStateAction, useEffect } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 
@@ -11,6 +12,7 @@ import { MemberComboBox } from '@/components/_inputs/MemberComboBox'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useTokenPrice } from '@/providers/joystream'
 import { pluralizeNoun } from '@/utils/misc'
+import { HapiBNToTJOYNumber } from '@/utils/number'
 
 import {
   AuctionDatePickerWrapper,
@@ -106,7 +108,7 @@ export const SetUp: FC<SetUpProps> = ({
         setValue('startDate', null)
         setValue('endDate', null)
       } else if (name === 'startingPrice') {
-        setValue('startingPrice', chainState.nftMinStartingPrice || undefined)
+        setValue('startingPrice', HapiBNToTJOYNumber(chainState.nftMinStartingPrice) || undefined)
       } else {
         reset({ ...getValues(), [name]: undefined })
       }
@@ -169,7 +171,7 @@ export const SetUp: FC<SetUpProps> = ({
                     variant="t300"
                     format="dollar"
                     color="colorTextMuted"
-                    value={convertToUSD(buyNowPrice ?? 0) ?? 0}
+                    value={convertToUSD(new BN(Number(buyNowPrice) * 10 ** 10 || 0))}
                   />
                 )
               }
@@ -305,7 +307,7 @@ export const SetUp: FC<SetUpProps> = ({
                       as="span"
                       variant="t300"
                       format="dollar"
-                      value={convertToUSD(startingPrice ?? 0) ?? 0}
+                      value={convertToUSD(new BN(Number(startingPrice) * 10 ** 10 || 0)) ?? 0}
                     />
                   )
                 }
@@ -337,7 +339,7 @@ export const SetUp: FC<SetUpProps> = ({
                       variant="t300"
                       format="dollar"
                       color="colorTextMuted"
-                      value={convertToUSD(buyNowPrice ?? 0) ?? 0}
+                      value={convertToUSD(new BN(Number(buyNowPrice) * 10 ** 10 || 0))}
                     />
                   )
                 }

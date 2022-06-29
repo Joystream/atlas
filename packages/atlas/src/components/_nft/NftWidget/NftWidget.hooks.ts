@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { differenceInCalendarDays, differenceInSeconds } from 'date-fns'
 import { useEffect } from 'react'
 
@@ -169,28 +170,28 @@ export const useNftHistoryEntries = (videoId: string | null, opts?: Parameters<t
             date: e.createdAt,
             member: e.ownerMember,
             text: 'Put on sale',
-            joyAmount: Number(e.price),
+            joyAmount: new BN(e.price),
           }
         } else if (e.__typename === 'AuctionBidMadeEvent') {
           return {
             date: e.createdAt,
             member: e.member,
             text: 'Bid placed',
-            joyAmount: Number(e.bidAmount),
+            joyAmount: new BN(e.bidAmount),
           }
         } else if (e.__typename === 'BidMadeCompletingAuctionEvent') {
           return {
             date: e.createdAt,
             member: e.member,
             text: 'Auction won',
-            joyAmount: Number(e.price),
+            joyAmount: new BN(e.price),
           }
         } else if (e.__typename === 'NftBoughtEvent') {
           return {
             date: e.createdAt,
             member: e.member,
             text: 'Bought',
-            joyAmount: Number(e.price),
+            joyAmount: new BN(e.price),
           }
         } else if (e.__typename === 'EnglishAuctionSettledEvent') {
           return {
@@ -203,7 +204,7 @@ export const useNftHistoryEntries = (videoId: string | null, opts?: Parameters<t
             date: e.createdAt,
             member: e.winningBid?.bidder,
             text: 'Auction won',
-            joyAmount: Number(e.winningBid?.amount) || undefined,
+            joyAmount: e.winningBid?.amount ? new BN(e.winningBid?.amount) : undefined,
           }
         } else if (e.__typename === 'AuctionBidCanceledEvent') {
           return {
@@ -228,7 +229,7 @@ export const useNftHistoryEntries = (videoId: string | null, opts?: Parameters<t
             date: e.createdAt,
             member: e.ownerMember,
             text: 'Price changed',
-            joyAmount: Number(e.newPrice),
+            joyAmount: new BN(e.newPrice),
           }
         } else {
           throw 'Unknown history event type'

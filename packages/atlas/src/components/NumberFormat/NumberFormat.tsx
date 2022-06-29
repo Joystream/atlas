@@ -1,16 +1,25 @@
+import BN from 'bn.js'
 import { forwardRef, useRef } from 'react'
 import mergeRefs from 'react-merge-refs'
 
 import { Text, TextProps, TextVariant } from '@/components/Text'
-import { JOY_CURRENCY_TICKER } from '@/config/joystream'
-import { formatNumber } from '@/utils/number'
+import { JOY_CURRENCY_TICKER } from '@/config/token'
+import { HapiBNToTJOYNumber, formatNumber } from '@/utils/number'
 
 import { Tooltip } from '../Tooltip'
 
-export type NumberFormatProps = {
+type BigNumber = {
+  value: BN
+  withToken: true
+}
+
+type JSNumber = {
   value: number
+  withToken?: false | undefined
+}
+
+export type NumberFormatProps = (BigNumber | JSNumber) & {
   format?: 'full' | 'short' | 'dollar'
-  withToken?: boolean
   withTooltip?: boolean
   children?: never
   variant?: TextVariant
@@ -32,28 +41,32 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
     },
     ref
   ) => {
+    const internalValue = BN.isBN(value) ? HapiBNToTJOYNumber(value) : value
+
     const textRef = useRef<HTMLHeadingElement>(null)
     let formattedValue
     let tooltipText
     switch (format) {
       case 'short':
-        formattedValue = formatNumberShort(value)
-        tooltipText = formatNumber(value)
+        formattedValue = formatNumberShort(internalValue)
+        tooltipText = formatNumber(internalValue)
         break
       case 'full':
-        formattedValue = tooltipText = formatNumber(value)
+        formattedValue = tooltipText = formatNumber(internalValue)
         break
       case 'dollar':
-        formattedValue = formatDollars(value)
+        formattedValue = formatDollars(internalValue)
         tooltipText = new Intl.NumberFormat('en-US', { maximumSignificantDigits, ...currencyFormatOptions })
-          .format(value)
+          .format(internalValue)
           .replaceAll(',', ' ')
         break
     }
 
-    const hasDecimals = value - Math.floor(value) !== 0
+    const hasDecimals = internalValue - Math.floor(internalValue) !== 0
     const hasTooltip =
-      withTooltip || (format === 'short' && (value > 999 || hasDecimals)) || (format === 'dollar' && hasDecimals)
+      withTooltip ||
+      (format === 'short' && (internalValue > 999 || hasDecimals)) ||
+      (format === 'dollar' && hasDecimals)
     const content = (
       <Text {...textProps} variant={variant} ref={mergeRefs([ref, textRef])}>
         {displayedValue || formattedValue}

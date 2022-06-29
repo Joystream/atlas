@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { useCallback, useContext } from 'react'
 
 import { JoystreamContext, JoystreamContextValue } from './joystream.provider'
@@ -14,19 +15,19 @@ export const useTokenPrice = () => {
   const { tokenPrice } = useJoystream()
 
   const convertToUSD = useCallback(
-    (tokens: number) => {
-      return tokenPrice ? tokens * tokenPrice : null
+    (tokens: BN) => {
+      return tokenPrice ? tokens.mul(tokenPrice).toNumber() : 0
     },
     [tokenPrice]
   )
   const convertToTokenPrice = useCallback(
     (dollars: number) => {
-      if (!tokenPrice) return 0
-      return dollars / tokenPrice
+      if (!tokenPrice) return new BN(0)
+      return new BN(dollars).div(tokenPrice)
     },
     [tokenPrice]
   )
-  const isLoadingPrice = tokenPrice === 0
+  const isLoadingPrice = tokenPrice.isZero()
 
   return {
     convertToUSD,

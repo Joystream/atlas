@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { differenceInSeconds, formatDuration, intervalToDuration } from 'date-fns'
 import { FC, useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -29,6 +30,7 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions'
 import { useUser } from '@/providers/user'
 import { pluralizeNoun } from '@/utils/misc'
+import { HapiBNToTJOYNumber, TJOYNUmberToHapiBN } from '@/utils/number'
 import { formatDateTime, formatDurationShort } from '@/utils/time'
 
 import {
@@ -105,13 +107,16 @@ export const NftPurchaseBottomDrawer: FC = () => {
     }
   }, [isBuyNow, isEnglishAuction, isOpenAuction])
 
-  const auctionBuyNowPrice = (isAuction && nftStatus.buyNowPrice) || 0
+  const auctionBuyNowPrice = isAuction ? HapiBNToTJOYNumber(nftStatus.buyNowPrice || new BN(0)) : 0
   const bidLockingTime = isAuction && nftStatus.bidLockingTime && convertBlocksToDuration(nftStatus.bidLockingTime)
-  const buyNowPrice = (isBuyNow && nftStatus.buyNowPrice) || 0
-  const startingPrice = isAuction && nftStatus.startingPrice
+  const buyNowPrice = isBuyNow ? HapiBNToTJOYNumber(nftStatus.buyNowPrice || new BN(0)) : 0
+  const startingPrice = isAuction && HapiBNToTJOYNumber(nftStatus.startingPrice)
   const topBidder = isAuction && nftStatus.topBidder ? nftStatus.topBidder : undefined
-  const topBidAmount = (isAuction && !nftStatus.topBid?.isCanceled && nftStatus.topBidAmount) || 0
-  const minimalBidStep = (isAuction && nftStatus.minimalBidStep) || 0
+  const topBidAmount =
+    isAuction && !nftStatus.topBid?.isCanceled && !!nftStatus.topBidAmount
+      ? HapiBNToTJOYNumber(nftStatus.topBidAmount)
+      : 0
+  const minimalBidStep = isAuction && nftStatus.minimalBidStep ? HapiBNToTJOYNumber(nftStatus.minimalBidStep) : 0
   const endAtBlock = isAuction && nftStatus.auctionPlannedEndBlock
 
   const minimumBidEnglishAuction = startingPrice > topBidAmount ? startingPrice : topBidAmount + minimalBidStep
@@ -365,7 +370,13 @@ export const NftPurchaseBottomDrawer: FC = () => {
                           <TokenWrapper>
                             <StyledJoyTokenIcon variant="gray" size={24} />
                           </TokenWrapper>
-                          <BidAmount as="span" variant="h400" value={topBidAmount} format="short" />
+                          <BidAmount
+                            as="span"
+                            variant="h400"
+                            value={TJOYNUmberToHapiBN(topBidAmount)}
+                            withToken
+                            format="short"
+                          />
                         </FlexWrapper>
                         <Text as="span" variant="t100" color="colorText" margin={{ top: 1 }}>
                           {topBidder.handle === userBid?.bidder.handle ? 'You' : topBidder.handle}
@@ -415,7 +426,13 @@ export const NftPurchaseBottomDrawer: FC = () => {
                     </MinimumBid>
                     {auctionBuyNowPrice > 0 && (
                       <Text as="span" variant="t100" color="colorText">
-                        Buy now: <NumberFormat as="span" variant="t100" value={auctionBuyNowPrice} withToken />
+                        Buy now:{' '}
+                        <NumberFormat
+                          as="span"
+                          variant="t100"
+                          value={TJOYNUmberToHapiBN(auctionBuyNowPrice)}
+                          withToken
+                        />
                       </Text>
                     )}
                   </MinimumBidWrapper>
@@ -449,7 +466,13 @@ export const NftPurchaseBottomDrawer: FC = () => {
                       !!bid && (
                         <Pill
                           variant="default"
-                          label={<NumberFormat as="span" format="dollar" value={convertToUSD(bid ?? 0) ?? 0} />}
+                          label={
+                            <NumberFormat
+                              as="span"
+                              format="dollar"
+                              value={convertToUSD(TJOYNUmberToHapiBN(bid ?? 0)) ?? 0}
+                            />
+                          }
                         />
                       )
                     }
@@ -556,7 +579,13 @@ export const NftPurchaseBottomDrawer: FC = () => {
               {(bid > 0 || isBuyNowClicked || type === 'buy_now') && (
                 <NumberFormat
                   as="span"
-                  value={type !== 'buy_now' ? (isBuyNowClicked ? auctionBuyNowPrice : bid) : buyNowPrice}
+                  value={
+                    type !== 'buy_now'
+                      ? isBuyNowClicked
+                        ? TJOYNUmberToHapiBN(auctionBuyNowPrice)
+                        : TJOYNUmberToHapiBN(bid)
+                      : TJOYNUmberToHapiBN(buyNowPrice)
+                  }
                   withToken
                   variant="t100"
                   color="colorText"
@@ -577,7 +606,11 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   </Text>
                   <NumberFormat
                     as="span"
-                    value={(type === 'buy_now' ? buyNowPrice : Number(bid) || 0) + transactionFee}
+                    value={
+                      type === 'buy_now'
+                        ? TJOYNUmberToHapiBN(buyNowPrice)
+                        : TJOYNUmberToHapiBN(bid).add(new BN(transactionFee))
+                    }
                     withToken
                     format="short"
                     withTooltip

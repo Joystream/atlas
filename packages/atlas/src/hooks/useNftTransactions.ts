@@ -79,6 +79,7 @@ export const useNftTransactions = () => {
   )
 
   const changeNftPrice = useCallback(
+    // price to BN ?
     (id: string, price: number) => {
       if (!joystream || !memberId) {
         return

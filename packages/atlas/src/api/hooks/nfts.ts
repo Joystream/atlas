@@ -1,4 +1,5 @@
 import { QueryHookOptions } from '@apollo/client'
+import BN from 'bn.js'
 import { useMemo } from 'react'
 
 import {
@@ -27,24 +28,24 @@ export type NftStatus = (
       status: 'auction'
       auctionId: string
       type: 'open' | 'english'
-      startingPrice: number
-      buyNowPrice: number | undefined
+      startingPrice: BN
+      buyNowPrice: BN | undefined
       topBid: BasicBidFieldsFragment | undefined
-      topBidAmount: number | undefined
+      topBidAmount: BN | undefined
       topBidder: BasicMembershipFieldsFragment | undefined
       auctionPlannedEndBlock: number | undefined
       bidLockingTime: number | undefined
-      minimalBidStep: number | undefined
+      minimalBidStep: BN | undefined
       whitelistedMembers: BasicMembershipFieldsFragment[] | undefined
     }
   | {
       status: 'idle'
-      lastSalePrice: number | undefined
+      lastSalePrice: BN | undefined
       lastSaleDate: Date | undefined
     }
   | {
       status: 'buy-now'
-      buyNowPrice: number
+      buyNowPrice: BN
     }
 ) &
   CommonNftProperties
@@ -66,10 +67,10 @@ export const getNftStatus = (nft?: FullNftFieldsFragment | null): NftStatus | un
       status: 'auction',
       auctionId: auction.id,
       type: openAuction ? 'open' : 'english',
-      startingPrice: Number(auction.startingPrice) || 0,
-      buyNowPrice: Number(auction.buyNowPrice) || undefined,
+      startingPrice: new BN(auction.startingPrice || 0),
+      buyNowPrice: auction.buyNowPrice ? new BN(auction.buyNowPrice) : undefined,
       topBid: auction.topBid || undefined,
-      topBidAmount: Number(auction.topBid?.amount) || undefined,
+      topBidAmount: auction.topBid?.amount ? new BN(auction.topBid?.amount) : undefined,
       topBidder: auction.topBid?.bidder,
       auctionPlannedEndBlock: englishAuction ? englishAuction.plannedEndAtBlock : undefined,
       bidLockingTime: openAuction ? openAuction.bidLockDuration : undefined,
@@ -86,13 +87,13 @@ export const getNftStatus = (nft?: FullNftFieldsFragment | null): NftStatus | un
       return {
         ...commonProperties,
         status: 'buy-now',
-        buyNowPrice: Number(nft.transactionalStatus.price),
+        buyNowPrice: new BN(nft.transactionalStatus.price),
       }
     case 'TransactionalStatusIdle':
       return {
         ...commonProperties,
         status: 'idle',
-        lastSalePrice: Number(nft.lastSalePrice) || undefined,
+        lastSalePrice: nft.lastSalePrice ? new BN(nft.lastSalePrice) : undefined,
         lastSaleDate: nft.lastSaleDate ? new Date(nft.lastSaleDate) : undefined,
       }
     default:

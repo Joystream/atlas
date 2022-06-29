@@ -2,6 +2,7 @@
 import '@joystream/types'
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { Signer } from '@polkadot/api/types'
+import BN from 'bn.js'
 import { proxy } from 'comlink'
 
 import { NFT_PERBILL_PERCENT } from '@/joystream-lib/config'
@@ -91,11 +92,11 @@ export class JoystreamLib {
     return number.toNumber()
   }
 
-  async subscribeAccountBalance(accountId: AccountId, callback: (balance: number) => void) {
+  async subscribeAccountBalance(accountId: AccountId, callback: (balance: BN) => void) {
     await this.ensureApi()
 
     const unsubscribe = await this.api.derive.balances.all(accountId, ({ availableBalance }) => {
-      callback(availableBalance.toNumber())
+      callback(availableBalance)
     })
 
     return proxy(unsubscribe)
@@ -131,7 +132,7 @@ export class JoystreamLib {
 
     return {
       maxAuctionDuration: maxAuctionDuration.toNumber(),
-      minStartingPrice: minStartingPrice.toNumber(),
+      minStartingPrice: new BN(minStartingPrice),
       auctionStartsAtMaxDelta: auctionStartsAtMaxDelta.toNumber(),
       maxCreatorRoyalty: maxCreatorRoyalty.toNumber() / NFT_PERBILL_PERCENT,
       minCreatorRoyalty: minCreatorRoyalty.toNumber() / NFT_PERBILL_PERCENT,

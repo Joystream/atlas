@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { Dispatch, FC, PropsWithChildren, SetStateAction, createContext, useCallback, useMemo, useState } from 'react'
 
 import { useNft } from '@/api/hooks'
@@ -6,6 +7,7 @@ import { ChangePriceDialog } from '@/components/_overlays/ChangePriceDialog'
 import { useNftState } from '@/hooks/useNftState'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useTokenPrice } from '@/providers/joystream'
+import { HapiBNToTJOYNumber } from '@/utils/number'
 
 type ContextValue = {
   currentAction: NftAction | null
@@ -36,12 +38,12 @@ export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
   const mappedBids = auction?.bids
     ? auction?.bids
         .filter((bid) => !bid.isCanceled)
-        .sort((bidA, bidB) => Number(bidB.amount) - Number(bidA.amount))
+        .sort((bidA, bidB) => HapiBNToTJOYNumber(new BN(bidB.amount)) - HapiBNToTJOYNumber(new BN(bidA.amount)))
         .map(({ id, createdAt, amount, bidder }) => ({
           id,
           createdAt,
           amount,
-          amountUSD: convertToUSD(Number(amount)),
+          amountUSD: convertToUSD(new BN(amount)),
           bidder,
         }))
     : []

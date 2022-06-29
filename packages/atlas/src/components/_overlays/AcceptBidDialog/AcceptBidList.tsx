@@ -21,6 +21,7 @@ type SelectedBidder = {
 
 type BidRowProps = {
   selectedValue?: SelectedBidder
+  // price to BN ?
   onSelect?: (selectedBid: string, price: string) => void
   size?: 'medium' | 'small'
 } & Bid

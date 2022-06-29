@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { differenceInSeconds } from 'date-fns'
 import { FC, memo } from 'react'
 import useResizeObserver from 'use-resize-observer'
@@ -37,14 +38,14 @@ import {
 export type Auction = {
   status: 'auction'
   type: 'open' | 'english'
-  startingPrice: number
-  buyNowPrice: number | undefined
+  startingPrice: BN
+  buyNowPrice: BN | undefined
   topBid: BasicBidFieldsFragment | undefined
-  topBidAmount: number | undefined
+  topBidAmount: BN | undefined
   topBidderHandle: string | undefined
   topBidderAvatarUri: string | null | undefined
   isUserTopBidder: boolean | undefined
-  userBidAmount: number | undefined
+  userBidAmount: BN | undefined
   userBidUnlockDate: Date | undefined
   canWithdrawBid: boolean | undefined
   canChangeBid: boolean | undefined
@@ -69,12 +70,12 @@ export type NftWidgetProps = {
   nftStatus?:
     | {
         status: 'idle'
-        lastSalePrice: number | undefined
+        lastSalePrice: BN | undefined
         lastSaleDate: Date | undefined
       }
     | {
         status: 'buy-now'
-        buyNowPrice: number
+        buyNowPrice: BN
       }
     | Auction
     | undefined
