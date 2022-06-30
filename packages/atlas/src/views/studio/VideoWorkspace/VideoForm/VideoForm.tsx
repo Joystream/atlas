@@ -25,6 +25,7 @@ import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { NftIssuanceInputMetadata, VideoInputMetadata } from '@/joystream-lib'
 import { useRawAssetResolver } from '@/providers/assets'
+import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useJoystream } from '@/providers/joystream'
 import {
   VideoFormAssets,
@@ -57,6 +58,7 @@ const MAX_TITLE_LENGTH = 60
 const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((license) => ({
   name: license.name,
   value: license.code,
+  caption: license.longName,
   nodeStart: (
     <Information
       multiline
@@ -81,6 +83,23 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const [titleTooltipVisible, setTitleTooltipVisible] = useState(true)
   const mintNftFormFieldRef = useRef<HTMLDivElement>(null)
   const titleInputRef = useRef<HTMLTextAreaElement>(null)
+  const [openEditDialog, closeEditDialog] = useConfirmationModal({
+    type: 'warning',
+    title: 'Discard changes?',
+    description:
+      'You have unsaved changes which are going to be lost if you close this window. Are you sure you want to continue?',
+    primaryButton: {
+      onClick: () => {
+        reset()
+        closeEditDialog()
+      },
+      text: 'Confirm and discard',
+    },
+    secondaryButton: {
+      text: 'Cancel',
+      onClick: () => closeEditDialog(),
+    },
+  })
 
   const { editedVideoInfo } = useVideoWorkspace()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useVideoWorkspaceData()
@@ -294,9 +313,9 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
       actionBarPrimaryText,
       isValid: isFormValid,
       triggerFormSubmit: handleSubmit,
-      triggerReset: reset,
+      triggerReset: openEditDialog,
     }),
-    [actionBarPrimaryText, handleSubmit, hasUnsavedAssets, isDirty, isEdit, isFormValid, reset]
+    [actionBarPrimaryText, handleSubmit, hasUnsavedAssets, isDirty, isEdit, isFormValid, openEditDialog]
   )
 
   // sent updates on form status to VideoWorkspace
@@ -444,40 +463,44 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           )}
         />
       </FormField>
-      <Divider />
-      <FormField
-        label="NFT"
-        description="Minting an NFT creates a record of ownership on the blockchain that can be put on sale. This doesn't impact your intellectual rights to the video."
-        ref={mintNftFormFieldRef}
-      >
-        <Controller
-          name="mintNft"
-          control={control}
-          defaultValue={false}
-          render={({ field: { value, onChange } }) => (
-            <Switch
-              label="Mint NFT for this video"
-              value={value}
-              onChange={(e) => {
-                if (!e?.currentTarget.checked) {
-                  trigger()
-                  setRoyaltiesFieldEnabled(false)
-                  setValue('nftRoyaltiesPercent', undefined)
-                }
-                onChange(e)
-              }}
+      {!videoFieldsLocked && (
+        <>
+          <Divider />
+          <FormField
+            label="NFT"
+            description="Minting an NFT creates a record of ownership on the blockchain that can be put on sale. This doesn't impact your intellectual rights to the video."
+            ref={mintNftFormFieldRef}
+          >
+            <Controller
+              name="mintNft"
+              control={control}
+              defaultValue={false}
+              render={({ field: { value, onChange } }) => (
+                <Switch
+                  label="Mint NFT for this video"
+                  value={value}
+                  onChange={(e) => {
+                    if (!e?.currentTarget.checked) {
+                      trigger()
+                      setRoyaltiesFieldEnabled(false)
+                      setValue('nftRoyaltiesPercent', undefined)
+                    }
+                    onChange(e)
+                  }}
+                />
+              )}
             />
-          )}
-        />
-      </FormField>
-      {watch('mintNft') && (
-        <Banner
-          icon={<StyledSvgAlertsInformative24 />}
-          title="Heads up!"
-          description="You won't be able to edit this video once you mint an NFT for it."
-        />
+          </FormField>
+          {watch('mintNft') && (
+            <Banner
+              icon={<StyledSvgAlertsInformative24 />}
+              title="Heads up!"
+              description="You won't be able to edit this video once you mint an NFT for it."
+            />
+          )}{' '}
+          {watch('mintNft') && royaltiesField}
+        </>
       )}
-      {watch('mintNft') && royaltiesField}
     </>
   )
 
@@ -643,10 +666,10 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
               <TextArea
                 {...register(
                   'licenseCustomText',
-                  textFieldValidation({ name: 'License', maxLength: 5000, required: false })
+                  textFieldValidation({ name: 'License', maxLength: 5000, required: true })
                 )}
                 maxLength={5000}
-                placeholder="Type your license content here"
+                placeholder="Describe your custom license"
                 error={!!errors.licenseCustomText}
               />
             </FormField>
@@ -706,7 +729,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
               )}
             />
           </FormField>
-
           {isEdit && !videoFieldsLocked && (
             <Button
               fullWidth

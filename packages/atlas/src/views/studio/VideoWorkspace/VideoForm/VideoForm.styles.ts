@@ -28,7 +28,8 @@ export const FormWrapper = styled(LimitedWidthContainer)`
   padding: ${sizes(12)} ${sizes(4)};
 
   ${media.md} {
-    padding: ${sizes(12)} ${sizes(8)};
+    max-width: 1440px;
+    padding: ${sizes(12)};
     padding-bottom: 0;
     grid-gap: ${sizes(12)};
     grid-template-rows: 1fr;
@@ -43,7 +44,7 @@ export const StyledBanner = styled(Banner)`
 export const InputsContainer = styled.div`
   display: grid;
   gap: ${sizes(8)};
-  margin-top: ${sizes(20)};
+  margin-top: ${sizes(12)};
 
   ${media.md} {
     margin-top: 0;
