@@ -130,7 +130,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
     formState: { errors, dirtyFields, isDirty, touchedFields, isValid },
   } = useForm<VideoWorkspaceVideoFormFields>({
     shouldFocusError: true,
-    mode: 'onSubmit',
   })
 
   const videoFieldsLocked = tabData?.mintNft && isEdit
@@ -579,26 +578,38 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
         <Controller
           name="title"
           control={control}
-          rules={textFieldValidation({
-            name: 'Video title',
-            minLength: MIN_TITLE_LENGTH,
-            maxLength: MAX_TITLE_LENGTH,
-            required: true,
-          })}
-          render={({ field: { value, onChange } }) => (
-            <StyledTitleArea
-              ref={titleInputRef}
-              onChange={onChange}
-              value={value}
-              min={MIN_TITLE_LENGTH}
-              max={MAX_TITLE_LENGTH}
-              placeholder="Enter video title"
-              disabled={videoFieldsLocked}
-              error={!!errors.title}
-              onFocus={() => setTitleTooltipVisible(false)}
-              onBlur={() => setTitleTooltipVisible(true)}
-            />
-          )}
+          rules={{
+            maxLength: {
+              value: MAX_TITLE_LENGTH,
+              message: 'Enter a valid video title',
+            },
+            minLength: {
+              value: MAX_TITLE_LENGTH,
+              message: 'Enter a valid video title',
+            },
+            required: {
+              value: true,
+              message: 'Enter a video title',
+            },
+          }}
+          render={({ field: { value, onChange, ref }, fieldState: { error } }) => {
+            return (
+              <FormField error={error?.message}>
+                <StyledTitleArea
+                  ref={ref}
+                  onChange={onChange}
+                  value={value}
+                  min={MIN_TITLE_LENGTH}
+                  max={MAX_TITLE_LENGTH}
+                  placeholder="Enter video title"
+                  disabled={videoFieldsLocked}
+                  error={!!error}
+                  onFocus={() => setTitleTooltipVisible(false)}
+                  onBlur={() => setTitleTooltipVisible(true)}
+                />
+              </FormField>
+            )
+          }}
         />
         {videoFieldsLocked && (
           <Banner
