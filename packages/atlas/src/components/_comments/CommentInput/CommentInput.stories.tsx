@@ -11,6 +11,7 @@ export default {
     onComment: { table: { disable: true } },
     onCancel: { table: { disable: true } },
     className: { table: { disable: true } },
+    fee: { type: 'number' },
   },
   args: {
     cancelButton: false,

@@ -2,10 +2,9 @@ import { ChangeEvent, forwardRef, useEffect, useRef, useState } from 'react'
 import mergeRefs from 'react-merge-refs'
 import useResizeObserver from 'use-resize-observer'
 
-import { Information } from '@/components/Information'
+import { Fee } from '@/components/Fee'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSnackbar } from '@/providers/snackbars'
 import { formatNumber } from '@/utils/number'
 
@@ -34,6 +33,7 @@ export type CommentInputProps = {
   initialFocus?: boolean
   reply?: boolean
   className?: string
+  fee?: number
 } & Omit<CommentRowProps, 'isInput'>
 
 const COMMENT_LIMIT = 50000
@@ -54,11 +54,11 @@ export const CommentInput = forwardRef<HTMLTextAreaElement, CommentInputProps>(
       initialFocus,
       reply,
       className,
+      fee = 0,
       ...rest
     },
     ref
   ) => {
-    const smMatch = useMediaMatch('sm')
     const containerRef = useRef<HTMLLabelElement>(null)
     const textAreaRef = useRef<HTMLTextAreaElement>(null)
     const [active, setActive] = useState(false)
@@ -151,15 +151,7 @@ export const CommentInput = forwardRef<HTMLTextAreaElement, CommentInputProps>(
 
           <ButtonsContainer>
             <Flex>
-              <Information
-                placement="top-start"
-                headerText="Comments on blockchain"
-                text="To publish a comment you need to sign a transaction. For now, no fees are involved."
-                multiline
-              />
-              <Text as="span" variant="t100" color="colorText" margin={{ left: 1, right: 4 }}>
-                {smMatch && 'We store comments on blockchain'}
-              </Text>
+              <Fee amount={fee} color="colorText" variant="t100" hideOnMobile />
             </Flex>
             {onCancel && (
               <Button

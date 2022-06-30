@@ -15,10 +15,11 @@ export type NumberFormatProps = {
   withTooltip?: boolean
   children?: never
   variant?: TextVariant
+  displayedValue?: string | number
 } & Omit<TextProps, 'children' | 'variant'>
 
 export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
-  ({ value, format = 'full', withToken, withTooltip, variant = 'no-variant', ...textProps }, ref) => {
+  ({ value, format = 'full', withToken, withTooltip, variant = 'no-variant', displayedValue, ...textProps }, ref) => {
     const textRef = useRef<HTMLHeadingElement>(null)
     let formattedValue
     let tooltipText
@@ -45,7 +46,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
     return (
       <>
         <Text {...textProps} variant={variant} ref={mergeRefs([ref, textRef])}>
-          {formattedValue}
+          {displayedValue || formattedValue}
           {withToken && ` ${JOY_CURRENCY_TICKER}`}
         </Text>
         {hasTooltip && <StyledTooltip reference={textRef} placement="top" delay={[500, null]} text={tooltipText} />}

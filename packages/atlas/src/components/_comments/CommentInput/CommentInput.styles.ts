@@ -132,4 +132,5 @@ export const Flex = styled.div`
   display: flex;
   align-items: center;
   justify-content: end;
+  margin-right: ${sizes(4)};
 `

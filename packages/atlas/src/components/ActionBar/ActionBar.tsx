@@ -1,6 +1,7 @@
 import { forwardRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
+import { Fee } from '@/components/Fee'
 import { Text } from '@/components/Text'
 import { TooltipProps } from '@/components/Tooltip'
 import { ButtonProps } from '@/components/_buttons/Button'
@@ -14,10 +15,7 @@ import {
   FeeContainer,
   SecondaryButton,
   StyledInformation,
-  StyledPrimaryText,
 } from './ActionBar.styles'
-
-import { NumberFormat } from '../NumberFormat'
 
 export type ActionDialogButtonProps = {
   text?: string
@@ -44,16 +42,7 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
     return (
       <ActionBarContainer ref={ref} className={className} isActive={isActive}>
         <FeeContainer>
-          <StyledPrimaryText as="span" variant={smMatch ? 'h400' : 'h200'}>
-            Fee: <NumberFormat as="span" format="short" withToken value={fee ?? 0} />
-          </StyledPrimaryText>
-          <StyledInformation
-            multiline
-            icon
-            placement="top-end"
-            headerText="Blockchain transaction"
-            text="This action requires a blockchain transaction, which comes with a fee."
-          />
+          <Fee amount={fee ?? 0} variant={smMatch ? 'h400' : 'h200'} />
         </FeeContainer>
         {infoBadge ? (
           <DraftsBadgeContainer>
