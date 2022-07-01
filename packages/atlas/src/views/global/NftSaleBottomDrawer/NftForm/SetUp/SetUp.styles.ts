@@ -13,7 +13,7 @@ export const StyledForm = styled.form`
 export const AuctionDatePickerWrapper = styled.div<{ columns: number }>`
   display: grid;
   align-items: start;
-  grid-template-rows: 1fr 1fr;
+  grid-auto-rows: 1fr;
   gap: ${sizes(6)};
 
   ${media.sm} {

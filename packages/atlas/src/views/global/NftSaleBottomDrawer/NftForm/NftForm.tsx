@@ -294,11 +294,8 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
   return (
     <ScrollableWrapper ref={scrollableWrapperRef}>
       <NftWorkspaceFormWrapper>
-        <NftPreview>
+        <NftPreview fixedHeight={scrollableWrapperRef.current?.clientHeight}>
           <NftTile interactable={false} {...nftTileProps} />
-          <Text as="span" margin={{ top: 4 }} variant="h100" color="colorText">
-            Your nft preview
-          </Text>
         </NftPreview>
         <NftFormScrolling>
           <FormProvider {...formMethods}>
