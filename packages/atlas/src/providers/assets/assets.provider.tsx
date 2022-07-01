@@ -11,9 +11,11 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useRef,
   useState,
 } from 'react'
+import { useLocation } from 'react-router'
 
 import {
   GetDistributionBucketsWithOperatorsDocument,
@@ -25,13 +27,14 @@ import {
 } from '@/api/queries'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ASSET_MIN_DISTRIBUTOR_REFETCH_TIME } from '@/config/assets'
+import { absoluteRoutes } from '@/config/routes'
 import { USER_LOCATION_SERVICE_URL } from '@/config/urls'
 import { useMountEffect } from '@/hooks/useMountEffect'
 import { UserCoordinates, useUserLocationStore } from '@/providers/userLocation'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { getRandomIntInclusive } from '@/utils/number'
 
-import { OperatorInfo } from './types'
+import { OperatorInfo } from './assets.types'
 
 type BagOperatorsMapping = Record<string, OperatorInfo[]>
 
@@ -46,7 +49,6 @@ type OperatorsContextValue = {
 const OperatorsContext = createContext<OperatorsContextValue | undefined>(undefined)
 OperatorsContext.displayName = 'OperatorsContext'
 
-// TODO: fetch storage bags only in studio, not needed for viewer
 export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const distributionOperatorsMappingPromiseRef = useRef<Promise<BagOperatorsMapping>>()
   const storageOperatorsMappingPromiseRef = useRef<Promise<BagOperatorsMapping>>()
@@ -193,10 +195,22 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
     return true
   }, [fetchDistributionOperators])
 
-  // runs once - fetch all operators and create associated mappings
+  // runs once - fetch distribution operators and create associated mappings
   useMountEffect(() => {
-    fetchOperators()
+    fetchDistributionOperators()
   })
+
+  const { pathname } = useLocation()
+  const hasFetchedStorageProvidersRef = useRef(false)
+  const isStudio = pathname.search(absoluteRoutes.studio.index()) !== -1
+  // runs once - fetch storage operators and create associated mappings, but only if user is in the Studio
+  useEffect(() => {
+    if (hasFetchedStorageProvidersRef.current || !isStudio) return
+
+    hasFetchedStorageProvidersRef.current = true
+
+    fetchStorageOperators()
+  }, [fetchStorageOperators, isStudio])
 
   if (distributionOperatorsError || storageOperatorsError) {
     return <ViewErrorFallback />
