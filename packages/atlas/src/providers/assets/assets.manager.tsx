@@ -10,10 +10,10 @@ import { joinUrlFragments } from '@/utils/asset'
 import { AssetLogger, ConsoleLogger, DataObjectResponseMetric, DistributorEventEntry, SentryLogger } from '@/utils/logs'
 import { TimeoutError, withTimeout } from '@/utils/misc'
 
-import { testAssetDownload } from './helpers'
-import { useDistributionOperators, useOperatorsContext } from './operatorsProvider'
-import { useAssetStore } from './store'
-import { OperatorInfo } from './types'
+import { testAssetDownload } from './assets.helpers'
+import { useDistributionOperators, useOperatorsContext } from './assets.provider'
+import { useAssetStore } from './assets.store'
+import { OperatorInfo } from './assets.types'
 
 export const AssetsManager: FC = () => {
   const { tryRefetchDistributionOperators } = useOperatorsContext()

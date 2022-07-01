@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 
 import { BasicMembershipFieldsFragment, StorageDataObjectFieldsFragment } from '@/api/queries'
 
-import { useAssetStore } from './store'
+import { useAssetStore } from './assets.store'
 
 export const useAsset = (dataObject?: StorageDataObjectFieldsFragment | null) => {
   const contentId = dataObject?.id ?? null
