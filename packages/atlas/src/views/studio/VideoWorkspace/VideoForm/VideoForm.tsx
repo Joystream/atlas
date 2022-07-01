@@ -393,7 +393,12 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
       <FormField optional label="Description" error={errors.description?.message}>
         <TextArea
           counter
-          {...register('description', textFieldValidation({ name: 'Description', maxLength: 5000 }))}
+          {...register('description', {
+            maxLength: {
+              value: 5000,
+              message: 'Enter a valid description.',
+            },
+          })}
           maxLength={5000}
           placeholder="Description of the video to share with your audience"
           error={!!errors.description}
@@ -404,7 +409,12 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
         <Controller
           name="category"
           control={control}
-          rules={requiredValidation('Video category')}
+          rules={{
+            required: {
+              value: true,
+              message: 'Select a video category.',
+            },
+          }}
           render={({ field: { value, onChange, ref } }) => (
             <Select
               containerRef={ref}
@@ -532,7 +542,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   )
 
   return (
-    <FormWrapper as="form" onSubmit={handleSubmit}>
+    <FormWrapper as="form">
       <Controller
         name="assets"
         control={control}
@@ -581,15 +591,15 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           rules={{
             maxLength: {
               value: MAX_TITLE_LENGTH,
-              message: 'Enter a valid video title',
+              message: 'Enter a valid video title.',
             },
             minLength: {
-              value: MAX_TITLE_LENGTH,
-              message: 'Enter a valid video title',
+              value: MIN_TITLE_LENGTH,
+              message: 'Enter a valid video title.',
             },
             required: {
               value: true,
-              message: 'Enter a video title',
+              message: 'Enter a video title.',
             },
           }}
           render={({ field: { value, onChange, ref }, fieldState: { error } }) => {
@@ -675,10 +685,16 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           {watch('licenseCode') === CUSTOM_LICENSE_CODE && (
             <FormField label="Custom license" error={errors.licenseCustomText?.message}>
               <TextArea
-                {...register(
-                  'licenseCustomText',
-                  textFieldValidation({ name: 'License', maxLength: 5000, required: true })
-                )}
+                {...register('licenseCustomText', {
+                  maxLength: {
+                    value: 5000,
+                    message: 'Enter a valid custom license.',
+                  },
+                  required: {
+                    value: true,
+                    message: 'Provide a custom license.',
+                  },
+                })}
                 maxLength={5000}
                 placeholder="Describe your custom license"
                 error={!!errors.licenseCustomText}
@@ -720,7 +736,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           </FormField>
           <FormField
             label="Published before"
-            error={errors.publishedBeforeJoystream ? 'Please provide a valid date.' : ''}
+            error={errors.publishedBeforeJoystream ? 'Enter a valid date.' : ''}
             optional
             description="If you are reuploading content that you already published in the past on another platform you can enter the original publish date below."
           >
