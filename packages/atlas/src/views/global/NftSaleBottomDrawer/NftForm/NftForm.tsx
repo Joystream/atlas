@@ -250,7 +250,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
         setValue('buyNowPrice', 1)
       })
     }
-    setActiveInputs([])
+    setActiveInputs(['startingPrice'])
   }, [listingType, reset, setActiveInputs, setValue])
 
   const getNftStatus = () => {

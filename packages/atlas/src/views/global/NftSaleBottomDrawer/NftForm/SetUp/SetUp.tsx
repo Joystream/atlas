@@ -93,7 +93,8 @@ export const SetUp: FC<SetUpProps> = ({
     setActiveInputs((prevState) => {
       if (!prevState.includes(name)) {
         if (name === 'buyNowPrice') {
-          setValue('buyNowPrice', 2)
+          const startingPrice = getValues('startingPrice')
+          setValue('buyNowPrice', startingPrice ? startingPrice + 1 : 2)
           trigger() // trigger form validation to make sure starting price is valid
         }
         return [...prevState, name]

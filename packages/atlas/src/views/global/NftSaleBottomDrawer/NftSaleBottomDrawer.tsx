@@ -81,7 +81,7 @@ export const NftSaleBottomDrawer: FC = () => {
       onClick: !formStatus?.canGoForward ? formStatus?.triggerSubmit : formStatus?.triggerGoForward,
     },
     secondaryButton: {
-      text: !formStatus?.canGoBack ? 'Cancel' : 'Go back',
+      text: !formStatus?.canGoBack ? 'Cancel' : 'Back',
       onClick: !formStatus?.canGoBack ? handleCancel : formStatus?.triggerGoBack,
       disabled: false,
     },
