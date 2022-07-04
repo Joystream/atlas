@@ -15,7 +15,7 @@ import { useTokenPrice } from '@/providers/joystream'
 import { Fee } from './Fee'
 import { BalanceWrapper, DestinationAccountWrapper, Summary, SummaryRow } from './SendTransferDialogs.styles'
 
-type WithdrawDialogProps = {
+type WithdrawFundsDialogProps = {
   onExitClick: () => void
   accountBalance?: number
   activeMembership?: FullMembershipFieldsFragment | null
@@ -26,7 +26,7 @@ type WithdrawDialogProps = {
 
 const ADDRESS_CHARACTERS_LIMIT = 4
 
-export const WithdrawDialog: FC<WithdrawDialogProps> = ({
+export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
   onExitClick,
   accountBalance = 0,
   activeMembership,

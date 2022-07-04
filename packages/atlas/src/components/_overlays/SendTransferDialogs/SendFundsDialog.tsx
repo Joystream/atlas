@@ -25,13 +25,13 @@ import { SentryLogger } from '@/utils/logs'
 import { Fee } from './Fee'
 import { BalanceWrapper, FormFieldsWrapper, LabelFlexWrapper } from './SendTransferDialogs.styles'
 
-type SendFoundsDialogProps = {
+type SendFundsDialogProps = {
   onExitClick: () => void
   accountBalance?: number
   show: boolean
 }
 
-export const SendFoundsDialog: FC<SendFoundsDialogProps> = ({ onExitClick, accountBalance = 0, show }) => {
+export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, accountBalance = 0, show }) => {
   const [destinationAccount, setDestinationAccount] = useState<BasicMembershipFieldsFragment>()
   const { convertToUSD } = useTokenPrice()
   const client = useApolloClient()

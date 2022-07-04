@@ -24,7 +24,7 @@ import { SvgActionSwitchMember } from '@/components/_icons/ActionSwitchMember'
 import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { SendFoundsDialog, WithdrawDialog } from '@/components/_overlays/SendTransferDialogs'
+import { SendFundsDialog, WithdrawFundsDialog } from '@/components/_overlays/SendTransferDialogs'
 import { absoluteRoutes } from '@/config/routes'
 import { JOY_CURRENCY_TICKER } from '@/config/token'
 import { useSubscribeAccountBalance } from '@/hooks/useSubscribeAccountBalance'
@@ -156,7 +156,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     }, [isSwitchingMember, transRef])
     return (
       <>
-        <WithdrawDialog
+        <WithdrawFundsDialog
           avatarUrl={avatarUrl}
           activeMembership={activeMembership}
           show={showWithdrawDialog}
@@ -164,7 +164,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
           accountBalance={accountBalance}
           channelBalance={channelBalance}
         />
-        <SendFoundsDialog show={showSendDialog} onExitClick={toggleSendDialog} accountBalance={accountBalance} />
+        <SendFundsDialog show={showSendDialog} onExitClick={toggleSendDialog} accountBalance={accountBalance} />
         <Container ref={ref}>
           <InnerContainer isActive={isActive} containerHeight={containerHeight}>
             {transitions((style, isSwitchingMemberMode) =>

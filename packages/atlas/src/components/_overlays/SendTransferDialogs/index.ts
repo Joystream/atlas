@@ -1,2 +1,2 @@
-export * from './WithdrawDialog'
-export * from './SendFoundsDialog'
+export * from './WithdrawFundsDialog'
+export * from './SendFundsDialog'
