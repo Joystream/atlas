@@ -17,7 +17,7 @@ const stepperVariantStyles = ({ stepType, stepVariant, showOtherStepsOnMobile }:
   switch (stepType) {
     case 'default':
       return css`
-        padding: 0;
+        padding: 0 ${sizes(3)} 0 ${sizes(2)};
         display: ${stepVariant === 'current' || showOtherStepsOnMobile ? 'flex' : 'none'};
         align-items: center;
 
@@ -51,7 +51,7 @@ type StepWrapperProps = {
 }
 
 export const StepWrapper = styled.div<StepWrapperProps>`
-  height: ${sizes(14)};
+  height: 56px;
   width: 100%;
   display: grid;
   grid-template-columns: auto ${sizes(10)};

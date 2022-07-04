@@ -20,7 +20,7 @@ export const ListingType: FC<ListingTypeProps> = ({ selectedType, onSelectType }
         Choose listing type
       </Text>
       <Text as="p" variant="t300" color="colorText">
-        Choose the listing type for your NFT
+        Choose how you want to sale your NFT.
       </Text>
       <OptionsWrapper>
         <OptionCardGroupRadio

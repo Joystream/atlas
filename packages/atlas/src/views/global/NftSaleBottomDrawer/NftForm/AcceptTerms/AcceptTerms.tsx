@@ -42,10 +42,9 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData }) =>
 
   return (
     <>
-      <Text as="h1" variant="h500" margin={{ bottom: 8 }}>
+      <Text as="h1" variant="h500" margin={{ bottom: 12 }}>
         Review listing terms
       </Text>
-      <Divider />
       <Text as="h2" variant="h400">
         Listing terms
       </Text>

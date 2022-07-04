@@ -9,7 +9,7 @@ import { daysToMilliseconds } from '@/utils/time'
 import { Listing } from './NftForm.types'
 
 export const useNftForm = () => {
-  const [activeInputs, setActiveInputs] = useState<string[]>([])
+  const [activeInputs, setActiveInputs] = useState<string[]>(['startingPrice'])
   const [listingType, setListingType] = useState<Listing>('Auction')
   const [currentStep, setCurrentStep] = useState(0)
 

@@ -54,8 +54,8 @@ export const StyledOutputPill = styled(OutputPill)`
 export const Divider = styled.hr`
   height: 1px;
   border: 0;
-  box-shadow: ${cVar('effectDividersTop')};
-  margin: ${sizes(10)} 0;
+  background: ${cVar('colorBackgroundMutedAlpha')};
+  margin: ${sizes(12)} 0;
 `
 
 export const StyledInformation = styled(Information)`

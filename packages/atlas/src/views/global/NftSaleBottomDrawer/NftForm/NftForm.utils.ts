@@ -29,12 +29,15 @@ export const createValidationSchema = (
     .optional()
 
   const buyNowPrice = z
-    .number({ required_error: 'Buy now price must be provided', invalid_type_error: 'Buy now price must be a number' })
+    .number({
+      required_error: 'Buy now price must be provided.',
+      invalid_type_error: 'Buy now price must be a number.',
+    })
     .min(1, 'Fixed price must be at least 1')
 
   const startingPriceBase = z
-    .number({ invalid_type_error: 'Minimum bid must be a number' })
-    .min(minStartingPrice, `Minimum bid must be at least ${minStartingPrice}`)
+    .number({ invalid_type_error: 'Minimum bid must be a number.' })
+    .min(minStartingPrice, `Minimum bid must be at least ${minStartingPrice}.`)
 
   return z.object({
     startDate: auctionDateType
@@ -45,7 +48,7 @@ export const createValidationSchema = (
           }
           return true
         },
-        { message: `Start date must be before ${formatDateTime(maxStartDate)}` }
+        { message: `Start date must be before ${formatDateTime(maxStartDate)}.` }
       )
       .refine(
         (val) => {
@@ -54,7 +57,7 @@ export const createValidationSchema = (
           }
           return true
         },
-        { message: 'Start date must be in the future' }
+        { message: 'Start date must be in the future.' }
       )
       .refine(
         (val) => {
@@ -64,7 +67,7 @@ export const createValidationSchema = (
           }
           return true
         },
-        { message: 'End date must be after the start date' }
+        { message: 'End date must be after the start date.' }
       ),
     endDate: auctionDateType
       .refine(
@@ -74,7 +77,7 @@ export const createValidationSchema = (
           }
           return true
         },
-        { message: `End date must be before ${formatDateTime(maxEndDate)}` }
+        { message: `End date must be before ${formatDateTime(maxEndDate)}.` }
       )
       .refine(
         (val) => {
@@ -83,7 +86,7 @@ export const createValidationSchema = (
           }
           return true
         },
-        { message: 'End date must be in the future' }
+        { message: 'End date must be in the future.' }
       )
       .refine(
         (val) => {
@@ -98,17 +101,17 @@ export const createValidationSchema = (
     royalty: z.number().nullable().optional(),
     startingPrice:
       data.buyNowPrice && listingType === 'Auction'
-        ? startingPriceBase.max(data.buyNowPrice - 1, 'Minimum bid must be lower than the buy now price').optional()
+        ? startingPriceBase.max(data.buyNowPrice - 1, 'Minimum bid must be lower than the buy now price.').optional()
         : startingPriceBase.optional(),
     buyNowPrice:
       listingType === 'Auction'
-        ? buyNowPrice.min(1, 'Buy now price must be at least 1').nullable().optional()
+        ? buyNowPrice.min(1, 'Buy now price must be at least 1.').nullable().optional()
         : buyNowPrice,
     auctionDurationBlocks: z.number().nullable().optional(),
     whitelistedMembers: z
       .array(z.object({ id: z.string() }))
       .refine((val) => val.length === 0 || val.length >= 2, {
-        message: 'Whitelist must contain at least two members',
+        message: 'Whitelist must contain at least two members.',
       })
       .nullable()
       .optional(),

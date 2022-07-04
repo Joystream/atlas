@@ -7,6 +7,7 @@ import { Text } from '@/components/Text'
 import { Button, ButtonVariant } from '@/components/_buttons/Button'
 import {
   SvgActionUpload,
+  SvgIllustrativeEdit,
   SvgIllustrativeFileSelected,
   SvgIllustrativeImage,
   SvgIllustrativeVideo,
@@ -19,6 +20,7 @@ import {
   Content,
   DragAndDropArea,
   DragDropText,
+  EditFileHoverOverlay,
   FileHoverOverlay,
   FileSelectedOverlay,
   InnerContainer,
@@ -31,6 +33,7 @@ export type FileSelectProps = {
   file: File | undefined
   onUploadFile: (file: File) => void
   thumbnailUrl?: string | null
+  thumbnailEditable?: boolean
   isFileLoading?: boolean
   onReAdjustThumbnail?: () => void
   onDropRejected?: (fileRejections: FileRejection[]) => void
@@ -43,6 +46,7 @@ export const FileSelect: FC<FileSelectProps> = ({
   onUploadFile,
   maxSize,
   thumbnailUrl,
+  thumbnailEditable,
   onReAdjustThumbnail,
   onDropRejected,
   onError,
@@ -159,13 +163,23 @@ export const FileSelect: FC<FileSelectProps> = ({
           <input {...getInputProps()} />
           {innerContainerTransition((style, item) =>
             thumbnailUrl && fileType === 'image' ? (
-              <Thumbnail
-                isLoading={isFileLoading}
-                src={thumbnailUrl}
-                alt="video thumbnail"
-                onClick={handleReAdjustThumbnail}
-                title="Click to readjust"
-              />
+              <>
+                <Thumbnail
+                  isLoading={isFileLoading}
+                  src={thumbnailUrl}
+                  alt="video thumbnail"
+                  onClick={handleReAdjustThumbnail}
+                  title="Click to readjust"
+                />
+                {thumbnailEditable && !isDragAccept && (
+                  <EditFileHoverOverlay>
+                    <SvgIllustrativeEdit />
+                    <Text variant="t200" as="p">
+                      Edit thumbnail
+                    </Text>
+                  </EditFileHoverOverlay>
+                )}
+              </>
             ) : (
               <Content key={item} style={style} isLoading={isFileLoading}>
                 {fileType === 'video' ? <SvgIllustrativeVideo /> : <SvgIllustrativeImage />}

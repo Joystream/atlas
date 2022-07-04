@@ -4,13 +4,13 @@ import { Controller, FieldError, useForm } from 'react-hook-form'
 
 import { useCategories } from '@/api/hooks'
 import { License } from '@/api/queries'
+import { Banner } from '@/components/Banner'
 import { Information } from '@/components/Information'
-import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button, TextButton } from '@/components/_buttons/Button'
-import { SvgActionChevronB, SvgActionChevronT, SvgAlertsWarning24 } from '@/components/_icons'
+import { SvgActionChevronB, SvgActionChevronT, SvgActionTrash, SvgAlertsWarning24 } from '@/components/_icons'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { Datepicker } from '@/components/_inputs/Datepicker'
 import { FormField } from '@/components/_inputs/FormField'
@@ -21,11 +21,11 @@ import { Select, SelectItem } from '@/components/_inputs/Select'
 import { Switch } from '@/components/_inputs/Switch'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { languages } from '@/config/languages'
-import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { NftIssuanceInputMetadata, VideoInputMetadata } from '@/joystream-lib'
 import { useRawAssetResolver } from '@/providers/assets'
+import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useJoystream } from '@/providers/joystream'
 import {
   VideoFormAssets,
@@ -40,19 +40,15 @@ import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { useVideoFormAssets, useVideoFormDraft } from './VideoForm.hooks'
 import {
+  Divider,
   FileValidationBanner,
   FormWrapper,
   InputsContainer,
   MoreSettingsSection,
-  StyledBanner,
   StyledMultiFileSelect,
+  StyledSvgAlertsInformative24,
   StyledTitleArea,
-  SwitchFormField,
-  SwitchNftWrapper,
-  VideoLink,
 } from './VideoForm.styles'
-
-import { StyledSvgWarning, YellowText } from '../VideoWorkspace.style'
 
 const CUSTOM_LICENSE_CODE = 1000
 const SCROLL_TIMEOUT = 700
@@ -62,6 +58,7 @@ const MAX_TITLE_LENGTH = 60
 const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((license) => ({
   name: license.name,
   value: license.code,
+  caption: license.longName,
   nodeStart: (
     <Information
       multiline
@@ -86,6 +83,23 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const [titleTooltipVisible, setTitleTooltipVisible] = useState(true)
   const mintNftFormFieldRef = useRef<HTMLDivElement>(null)
   const titleInputRef = useRef<HTMLTextAreaElement>(null)
+  const [openEditDialog, closeEditDialog] = useConfirmationModal({
+    type: 'warning',
+    title: 'Discard changes?',
+    description:
+      'You have unsaved changes which are going to be lost if you close this window. Are you sure you want to continue?',
+    primaryButton: {
+      onClick: () => {
+        reset()
+        closeEditDialog()
+      },
+      text: 'Confirm and discard',
+    },
+    secondaryButton: {
+      text: 'Cancel',
+      onClick: () => closeEditDialog(),
+    },
+  })
 
   const { editedVideoInfo } = useVideoWorkspace()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useVideoWorkspaceData()
@@ -116,7 +130,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
     formState: { errors, dirtyFields, isDirty, touchedFields, isValid },
   } = useForm<VideoWorkspaceVideoFormFields>({
     shouldFocusError: true,
-    mode: 'onSubmit',
   })
 
   const videoFieldsLocked = tabData?.mintNft && isEdit
@@ -299,9 +312,9 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
       actionBarPrimaryText,
       isValid: isFormValid,
       triggerFormSubmit: handleSubmit,
-      triggerReset: reset,
+      triggerReset: openEditDialog,
     }),
-    [actionBarPrimaryText, handleSubmit, hasUnsavedAssets, isDirty, isEdit, isFormValid, reset]
+    [actionBarPrimaryText, handleSubmit, hasUnsavedAssets, isDirty, isEdit, isFormValid, openEditDialog]
   )
 
   // sent updates on form status to VideoWorkspace
@@ -321,31 +334,87 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
 
   const getHiddenSectionLabel = () => {
     if (videoFieldsLocked) {
-      return `${moreSettingsVisible ? 'Hide' : 'Show'} non-editable fields`
+      return `${moreSettingsVisible ? 'Hide' : 'Show'} locked options`
     }
-    return `Show ${moreSettingsVisible ? 'less' : 'more'} settings`
+    return `Show ${moreSettingsVisible ? 'less' : 'more'} options`
   }
 
   if (tabDataError || categoriesError) {
     return <ViewErrorFallback />
   }
 
+  const royaltiesField = (
+    <FormField
+      switchable
+      error={errors.nftRoyaltiesPercent?.message}
+      switchProps={{
+        value: videoFieldsLocked ? !!watch('nftRoyaltiesPercent') : royaltiesFieldEnabled,
+        onChange: (e) => {
+          if (e?.currentTarget.checked) {
+            setValue('nftRoyaltiesPercent', 1)
+          } else {
+            setValue('nftRoyaltiesPercent', undefined, { shouldValidate: true })
+            trigger()
+          }
+          setRoyaltiesFieldEnabled(!!e?.currentTarget.checked)
+        },
+        disabled: videoFieldsLocked,
+      }}
+      description="Royalties lets you earn commission from every sale of this NFT."
+      label="Royalties"
+    >
+      <Input
+        type="number"
+        {...register('nftRoyaltiesPercent', {
+          valueAsNumber: true,
+          min: {
+            value: nftMinCreatorRoyaltyPercentage,
+            message: `Creator royalties cannot be lower than ${nftMinCreatorRoyaltyPercentage}%`,
+          },
+          max: {
+            value: nftMaxCreatorRoyaltyPercentage,
+            message: `Creator royalties cannot be higher than ${nftMaxCreatorRoyaltyPercentage}%`,
+          },
+        })}
+        error={!!errors.nftRoyaltiesPercent}
+        placeholder="—"
+        nodeEnd={
+          <Text variant="t300" as="span" color="colorTextMuted">
+            %
+          </Text>
+        }
+        disabled={videoFieldsLocked}
+      />
+    </FormField>
+  )
+
   const videoEditFields = (
     <>
-      <FormField error={errors.description?.message}>
+      <FormField optional label="Description" error={errors.description?.message}>
         <TextArea
-          {...register('description', textFieldValidation({ name: 'Description', maxLength: 5000 }))}
+          counter
+          {...register('description', {
+            maxLength: {
+              value: 5000,
+              message: 'Enter a valid description.',
+            },
+          })}
           maxLength={5000}
           placeholder="Description of the video to share with your audience"
           error={!!errors.description}
           disabled={videoFieldsLocked}
         />
       </FormField>
-      <FormField label="Video category" error={errors.category?.message}>
+      <FormField label="Category" error={errors.category?.message}>
         <Controller
           name="category"
           control={control}
-          rules={requiredValidation('Video category')}
+          rules={{
+            required: {
+              value: true,
+              message: 'Select a video category.',
+            },
+          }}
           render={({ field: { value, onChange, ref } }) => (
             <Select
               containerRef={ref}
@@ -358,7 +427,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           )}
         />
       </FormField>
-      <FormField label="Video language">
+      <FormField label="Language">
         <Controller
           name="language"
           control={control}
@@ -374,7 +443,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           )}
         />
       </FormField>
-      <FormField label="Video visibility">
+      <FormField label="Visibility">
         <Controller
           name="isPublic"
           control={control}
@@ -390,12 +459,12 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
               options={[
                 {
                   label: 'Public',
-                  caption: 'Visible to all',
+                  caption: 'Everyone can watch your video.',
                   value: true,
                 },
                 {
                   label: 'Unlisted',
-                  caption: 'Visible with link only',
+                  caption: 'Anyone with the link can watch your video.',
                   value: false,
                 },
               ]}
@@ -403,6 +472,44 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           )}
         />
       </FormField>
+      {!videoFieldsLocked && (
+        <>
+          <Divider />
+          <FormField
+            label="NFT"
+            description="Minting an NFT creates a record of ownership on the blockchain that can be put on sale. This doesn't impact your intellectual rights to the video."
+            ref={mintNftFormFieldRef}
+          >
+            <Controller
+              name="mintNft"
+              control={control}
+              defaultValue={false}
+              render={({ field: { value, onChange } }) => (
+                <Switch
+                  label="Mint NFT for this video"
+                  value={value}
+                  onChange={(e) => {
+                    if (!e?.currentTarget.checked) {
+                      trigger()
+                      setRoyaltiesFieldEnabled(false)
+                      setValue('nftRoyaltiesPercent', undefined)
+                    }
+                    onChange(e)
+                  }}
+                />
+              )}
+            />
+          </FormField>
+          {watch('mintNft') && (
+            <Banner
+              icon={<StyledSvgAlertsInformative24 />}
+              title="Heads up!"
+              description="You won't be able to edit this video once you mint an NFT for it."
+            />
+          )}{' '}
+          {watch('mintNft') && royaltiesField}
+        </>
+      )}
     </>
   )
 
@@ -435,7 +542,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   )
 
   return (
-    <FormWrapper as="form" onSubmit={handleSubmit}>
+    <FormWrapper as="form">
       <Controller
         name="assets"
         control={control}
@@ -481,121 +588,50 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
         <Controller
           name="title"
           control={control}
-          rules={textFieldValidation({
-            name: 'Video title',
-            minLength: MIN_TITLE_LENGTH,
-            maxLength: MAX_TITLE_LENGTH,
-            required: true,
-          })}
-          render={({ field: { value, onChange } }) => (
-            <StyledTitleArea
-              ref={titleInputRef}
-              onChange={onChange}
-              value={value}
-              min={MIN_TITLE_LENGTH}
-              max={MAX_TITLE_LENGTH}
-              placeholder="Enter video title"
-              disabled={videoFieldsLocked}
-              error={!!errors.title}
-              onFocus={() => setTitleTooltipVisible(false)}
-              onBlur={() => setTitleTooltipVisible(true)}
-            />
-          )}
+          rules={{
+            maxLength: {
+              value: MAX_TITLE_LENGTH,
+              message: 'Enter a valid video title.',
+            },
+            minLength: {
+              value: MIN_TITLE_LENGTH,
+              message: 'Enter a valid video title.',
+            },
+            required: {
+              value: true,
+              message: 'Enter a video title.',
+            },
+          }}
+          render={({ field: { value, onChange, ref }, fieldState: { error } }) => {
+            return (
+              <FormField error={error?.message}>
+                <StyledTitleArea
+                  ref={ref}
+                  onChange={onChange}
+                  value={value}
+                  min={MIN_TITLE_LENGTH}
+                  max={MAX_TITLE_LENGTH}
+                  placeholder="Enter video title"
+                  disabled={videoFieldsLocked}
+                  error={!!error}
+                  onFocus={() => setTitleTooltipVisible(false)}
+                  onBlur={() => setTitleTooltipVisible(true)}
+                />
+              </FormField>
+            )
+          }}
         />
+        {videoFieldsLocked && (
+          <Banner
+            icon={<StyledSvgAlertsInformative24 />}
+            title="There's an NFT for this video"
+            description="Only selected options can be changed since there's an NFT minted for this video."
+          />
+        )}
         {titleTooltipVisible && <Tooltip text="Click to edit" placement="top-start" reference={titleInputRef} />}
         {videoFieldsLocked && alwaysEditableFormFields}
         {!videoFieldsLocked && videoEditFields}
-        <SwitchFormField label="Mint NFT" ref={mintNftFormFieldRef}>
-          <SwitchNftWrapper>
-            <Controller
-              name="mintNft"
-              control={control}
-              defaultValue={false}
-              render={({ field: { value, onChange } }) => (
-                <Switch
-                  label="Mint NFT for this video"
-                  value={value}
-                  onChange={(e) => {
-                    if (!e?.currentTarget.checked) {
-                      trigger()
-                      setRoyaltiesFieldEnabled(false)
-                      setValue('nftRoyaltiesPercent', undefined)
-                    }
-                    onChange(e)
-                  }}
-                  disabled={videoFieldsLocked}
-                />
-              )}
-            />
-            <Information
-              placement="top"
-              text="Minting an NFT creates a record of ownership on the blockchain that can be put on sale. This will not impact your intellectual rights of the video."
-              multiline
-            />
-          </SwitchNftWrapper>
-          {watch('mintNft') && (
-            <>
-              <StyledBanner
-                icon={<StyledSvgWarning width={24} height={24} />}
-                description={
-                  !videoFieldsLocked ? (
-                    <Text as="span" variant="t200">
-                      You <YellowText>won’t be able to edit this video</YellowText> once you mint an NFT for it.
-                    </Text>
-                  ) : (
-                    <Text as="span" variant="t200">
-                      Many fields are disabled after minting an NFT for this video -
-                      <VideoLink to={absoluteRoutes.viewer.video(editedVideoInfo.id)}>
-                        &nbsp;go to it's video page.
-                      </VideoLink>
-                    </Text>
-                  )
-                }
-              />
-              <FormField
-                switchable
-                error={errors.nftRoyaltiesPercent?.message}
-                switchProps={{
-                  value: videoFieldsLocked ? !!watch('nftRoyaltiesPercent') : royaltiesFieldEnabled,
-                  onChange: (e) => {
-                    if (e?.currentTarget.checked) {
-                      setValue('nftRoyaltiesPercent', 1)
-                    } else {
-                      setValue('nftRoyaltiesPercent', undefined, { shouldValidate: true })
-                      trigger()
-                    }
-                    setRoyaltiesFieldEnabled(!!e?.currentTarget.checked)
-                  },
-                  disabled: videoFieldsLocked,
-                }}
-                label="Set creator's royalties"
-                tooltip={{
-                  text: 'Setting royalties lets you earn commission from every sale of this NFT.',
-                  multiline: true,
-                }}
-              >
-                <Input
-                  type="number"
-                  {...register('nftRoyaltiesPercent', {
-                    valueAsNumber: true,
-                    min: {
-                      value: nftMinCreatorRoyaltyPercentage,
-                      message: `Creator royalties cannot be lower than ${nftMinCreatorRoyaltyPercentage}%`,
-                    },
-                    max: {
-                      value: nftMaxCreatorRoyaltyPercentage,
-                      message: `Creator royalties cannot be higher than ${nftMaxCreatorRoyaltyPercentage}%`,
-                    },
-                  })}
-                  error={!!errors.nftRoyaltiesPercent}
-                  placeholder="—"
-                  nodeEnd={<Pill variant="default" label="%" />}
-                  disabled={videoFieldsLocked}
-                />
-              </FormField>
-            </>
-          )}
-        </SwitchFormField>
+        <Divider />
         <div>
           <TextButton
             size="large"
@@ -607,11 +643,12 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           </TextButton>
           <Text as="p" variant="t200" color="colorText" margin={{ top: 2 }}>
             {!videoFieldsLocked
-              ? `License, content rating, published before, marketing${isEdit ? ', delete video' : ''}`
-              : 'Description, video category, video language, video visibility, licence, content rating, published before, marketing'}
+              ? `License, comments, mature content, paid promotion, published date${isEdit ? ', delete video' : ''}`
+              : 'Royalties, description, category, language, visibility, license, mature content, paid promotion, published date'}
           </Text>
         </div>
         <MoreSettingsSection expanded={moreSettingsVisible}>
+          {videoFieldsLocked && royaltiesField}
           {videoFieldsLocked && videoEditFields}
           <Controller
             name="licenseCode"
@@ -648,21 +685,24 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           {watch('licenseCode') === CUSTOM_LICENSE_CODE && (
             <FormField label="Custom license" error={errors.licenseCustomText?.message}>
               <TextArea
-                {...register(
-                  'licenseCustomText',
-                  textFieldValidation({ name: 'License', maxLength: 5000, required: false })
-                )}
+                {...register('licenseCustomText', {
+                  maxLength: {
+                    value: 5000,
+                    message: 'Enter a valid custom license.',
+                  },
+                  required: {
+                    value: true,
+                    message: 'Provide a custom license.',
+                  },
+                })}
                 maxLength={5000}
-                placeholder="Type your license content here"
+                placeholder="Describe your custom license"
                 error={!!errors.licenseCustomText}
               />
             </FormField>
           )}
           {!videoFieldsLocked && alwaysEditableFormFields}
-          <FormField
-            label="Content rating"
-            description="If the content you are publishing contains explicit material (sex, violence, etc.), please mark it as mature."
-          >
+          <FormField label="Mature content">
             <Controller
               name="isExplicit"
               control={control}
@@ -670,27 +710,35 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
               rules={{
                 validate: (value) => value !== null,
               }}
-              render={({ field: { value, onChange, ref } }) => (
-                <RadioButtonGroup
-                  ref={ref}
-                  options={[
-                    { label: 'All audiences', value: false },
-                    { label: 'Mature', value: true },
-                  ]}
-                  error={!!errors.isExplicit}
-                  onChange={(event) => onChange(event.target.value)}
-                  value={value}
+              render={({ field: { value, onChange } }) => (
+                <Checkbox
+                  value={value ?? false}
+                  label="My video contains mature content such as sex, violence, etc."
+                  onChange={onChange}
                   disabled={videoFieldsLocked}
-                  caption={errors.isExplicit ? 'Content rating must be selected' : ''}
+                />
+              )}
+            />
+          </FormField>
+          <FormField label="Paid promotion">
+            <Controller
+              name="hasMarketing"
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <Checkbox
+                  value={value ?? false}
+                  label="My video contains paid promotion content."
+                  onChange={onChange}
+                  disabled={videoFieldsLocked}
                 />
               )}
             />
           </FormField>
           <FormField
-            label="Prior publication"
-            error={errors.publishedBeforeJoystream ? 'Please provide a valid date.' : ''}
+            label="Published before"
+            error={errors.publishedBeforeJoystream ? 'Enter a valid date.' : ''}
             optional
-            description="If the content you are publishing was originally published outside of Joystream, please provide the original publication date."
+            description="If you are reuploading content that you already published in the past on another platform you can enter the original publish date below."
           >
             <Controller
               name="publishedBeforeJoystream"
@@ -708,22 +756,14 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
               )}
             />
           </FormField>
-          <FormField label="Marketing" optional>
-            <Controller
-              name="hasMarketing"
-              control={control}
-              render={({ field: { value, onChange } }) => (
-                <Checkbox
-                  value={value ?? false}
-                  label="My video features a paid promotion material"
-                  onChange={onChange}
-                  disabled={videoFieldsLocked}
-                />
-              )}
-            />
-          </FormField>
           {isEdit && !videoFieldsLocked && (
-            <Button fullWidth size="large" variant="destructive-secondary" onClick={handleDeleteVideo}>
+            <Button
+              fullWidth
+              size="large"
+              variant="destructive-secondary"
+              icon={<SvgActionTrash />}
+              onClick={handleDeleteVideo}
+            >
               Delete video
             </Button>
           )}
