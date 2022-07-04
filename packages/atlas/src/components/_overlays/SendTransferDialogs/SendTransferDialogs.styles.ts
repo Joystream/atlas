@@ -39,3 +39,9 @@ export const FormFieldsWrapper = styled.div`
   grid-template-rows: auto auto;
   gap: ${sizes(6)};
 `
+
+export const LabelFlexWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`

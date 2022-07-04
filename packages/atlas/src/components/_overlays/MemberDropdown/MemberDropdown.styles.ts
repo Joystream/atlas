@@ -120,7 +120,7 @@ export const Divider = styled.div`
   background: ${cVar('colorBorderMutedAlpha')};
 `
 
-export const Link = styled(Text)`
+export const TextLink = styled(Text)`
   text-decoration: none;
   cursor: pointer;
   display: flex;

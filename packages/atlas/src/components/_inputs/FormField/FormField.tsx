@@ -1,4 +1,4 @@
-import { PropsWithChildren, forwardRef, memo, useRef } from 'react'
+import { PropsWithChildren, ReactNode, forwardRef, memo, useRef } from 'react'
 
 import { Text } from '@/components/Text'
 import { TooltipProps } from '@/components/Tooltip'
@@ -10,6 +10,7 @@ import {
   FormFieldHeader,
   FormFieldTitleWrapper,
   FormFieldWrapper,
+  Label,
   StyledInformation,
   StyledSvgActionWarning,
   SwitchLabel,
@@ -28,7 +29,8 @@ type WithSwitchProps =
     }
 
 export type FormFieldProps = PropsWithChildren<{
-  label?: string
+  // We use ReactNode only in exceptional circumstances! In most cases you should use regular string.
+  label?: ReactNode
   optional?: boolean
   error?: string
   disableErrorAnimation?: boolean
@@ -88,16 +90,24 @@ export const FormField = memo(
                   {switchable ? (
                     <SwitchLabel>
                       <Switch {...switchProps} />
-                      <Text as="span" variant="h300" margin={{ left: 2 }}>
-                        {label}
-                      </Text>
+                      {typeof label === 'string' ? (
+                        <Text as="span" variant="h300" margin={{ left: 2 }}>
+                          {label}
+                        </Text>
+                      ) : (
+                        label
+                      )}
                     </SwitchLabel>
                   ) : (
-                    <label onClick={handleFocusOnClick}>
-                      <Text variant="h300" as="span">
-                        {label}
-                      </Text>
-                    </label>
+                    <Label onClick={handleFocusOnClick}>
+                      {typeof label === 'string' ? (
+                        <Text as="span" variant="h300" margin={{ left: 2 }}>
+                          {label}
+                        </Text>
+                      ) : (
+                        label
+                      )}
+                    </Label>
                   )}
                   {optional && (
                     <Text as="span" variant="t200" color="colorText" margin={{ left: 1 }}>

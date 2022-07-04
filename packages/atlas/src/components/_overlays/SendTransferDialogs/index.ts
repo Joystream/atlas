@@ -1,2 +1,2 @@
 export * from './WithdrawDialog'
-export * from './SendDialog'
+export * from './SendFoundsDialog'

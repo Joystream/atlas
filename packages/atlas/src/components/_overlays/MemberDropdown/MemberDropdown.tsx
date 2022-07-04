@@ -24,7 +24,7 @@ import { SvgActionSwitchMember } from '@/components/_icons/ActionSwitchMember'
 import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { SendDialog, WithdrawDialog } from '@/components/_overlays/SendTransferDialogs'
+import { SendFoundsDialog, WithdrawDialog } from '@/components/_overlays/SendTransferDialogs'
 import { absoluteRoutes } from '@/config/routes'
 import { JOY_CURRENCY_TICKER } from '@/config/token'
 import { useSubscribeAccountBalance } from '@/hooks/useSubscribeAccountBalance'
@@ -40,12 +40,12 @@ import {
   Divider,
   Filter,
   InnerContainer,
-  Link,
   MemberHandleText,
   MemberInfoContainer,
   SectionContainer,
   StyledAvatar,
   SwitchMemberItemListContainer,
+  TextLink,
   UserBalance,
 } from './MemberDropdown.styles'
 
@@ -164,7 +164,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
           accountBalance={accountBalance}
           channelBalance={channelBalance}
         />
-        <SendDialog show={showSendDialog} onExitClick={toggleSendDialog} accountBalance={accountBalance} />
+        <SendFoundsDialog show={showSendDialog} onExitClick={toggleSendDialog} accountBalance={accountBalance} />
         <Container ref={ref}>
           <InnerContainer isActive={isActive} containerHeight={containerHeight}>
             {transitions((style, isSwitchingMemberMode) =>
@@ -230,7 +230,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                             <SkeletonLoader width={30} height={20} />
                           )}
                           <BalanceContainer>
-                            <Link
+                            <TextLink
                               as="span"
                               onClick={() => {
                                 closeDropdown?.()
@@ -240,9 +240,9 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                               color="colorCoreNeutral200Lighten"
                             >
                               {publisher ? 'Withdraw' : 'Transfer'}
-                            </Link>
+                            </TextLink>
                             <Divider />
-                            <Link
+                            <TextLink
                               variant="t100"
                               as="a"
                               // @ts-ignore our types don't allow this but its fine here
@@ -252,7 +252,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                               color="colorCoreNeutral200Lighten"
                             >
                               Learn about {JOY_CURRENCY_TICKER} <SvgActionNewTab />
-                            </Link>
+                            </TextLink>
                           </BalanceContainer>
                         </div>
                       </MemberInfoContainer>
@@ -279,6 +279,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                         </>
                       )}
                       <ListItem
+                        asButton
                         onClick={handleGoToMyChannel}
                         nodeStart={<IconWrapper icon={<SvgActionChannel />} />}
                         caption={selectedChannel?.title}
@@ -365,6 +366,7 @@ const MemberListItem: FC<MemberListItemProps> = ({ member, selected, onClick }) 
       nodeStart={<Avatar assetUrl={url} loading={isLoadingAsset} />}
       label={member.handle ?? ''}
       selected={selected}
+      asButton
     />
   )
 }

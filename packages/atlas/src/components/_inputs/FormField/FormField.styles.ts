@@ -67,3 +67,7 @@ export const StyledSvgActionWarning = styled(SvgActionWarning)`
 export const FormFieldFooter = styled.footer`
   display: flex;
 `
+
+export const Label = styled.label`
+  width: 100%;
+`

@@ -1,4 +1,5 @@
-import { FC, useState } from 'react'
+import { FC, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
 
 import { FullMembershipFieldsFragment } from '@/api/queries'
 import { Avatar } from '@/components/Avatar'
@@ -33,26 +34,25 @@ export const WithdrawDialog: FC<WithdrawDialogProps> = ({
   avatarUrl,
   channelBalance = 0,
 }) => {
-  const [amount, setAmount] = useState<number | null>(null)
+  const {
+    handleSubmit,
+    watch,
+    reset,
+    register,
+    formState: { errors },
+  } = useForm<{ amount: number | null }>({ mode: 'onSubmit' })
   const { convertToUSD } = useTokenPrice()
-  const convertedAmount = convertToUSD(amount || 0)
-  const [error, setError] = useState<string>()
+  const convertedAmount = convertToUSD(watch('amount') || 0)
 
-  const handleWithdraw = () => {
-    if (!amount || isNaN(amount) || amount < 0) {
-      setError('The number of JOY tokens to withdraw has to be an integer and greater than 0 (e.g. 15).')
-      return
+  useEffect(() => {
+    if (!show) {
+      reset({ amount: null })
     }
-    if (amount > channelBalance) {
-      setError(
-        'Membership wallet has insufficient balance to cover transaction fees. Top up your channel wallet and try again.'
-      )
-      return
-    }
-    if (amount > accountBalance) {
-      setError('Not enough tokens in your account balance.')
-      return
-    }
+  }, [show, reset])
+
+  const handleWithdraw = async () => {
+    const handler = await handleSubmit(() => null)
+    return handler()
   }
 
   return (
@@ -81,14 +81,44 @@ export const WithdrawDialog: FC<WithdrawDialogProps> = ({
         value={convertToUSD(channelBalance) || 0}
         margin={{ top: 1, bottom: 6 }}
       />
-      <FormField label="Amount to withdraw" error={error}>
+      <FormField label="Amount to withdraw" error={errors.amount?.message}>
         <Input
+          {...register('amount', {
+            valueAsNumber: true,
+            validate: {
+              valid: (value) => {
+                if (!value || isNaN(value) || value < 0) {
+                  return 'The number of JOY tokens to withdraw has to be an integer and greater than 0 (e.g. 15).'
+                }
+                return true
+              },
+              channelBalance: (value) => {
+                if (value && value > channelBalance) {
+                  return 'Membership wallet has insufficient balance to cover transaction fees. Top up your channel wallet and try again.'
+                }
+                return true
+              },
+              accountBalance: (value) => {
+                if (value && value > accountBalance) {
+                  return 'Not enough tokens in your account balance.'
+                }
+                return true
+              },
+            },
+          })}
           type="number"
-          value={amount || ''}
-          onChange={(event) => setAmount(Number(event.target.value))}
-          nodeEnd={<NumberFormat color="colorText" format="dollar" value={convertedAmount || 0} as="span" />}
+          nodeStart={<JoyTokenIcon variant="regular" />}
+          nodeEnd={
+            <NumberFormat
+              variant="t300"
+              color="colorTextMuted"
+              format="dollar"
+              value={convertedAmount || 0}
+              as="span"
+            />
+          }
           placeholder={`${JOY_CURRENCY_TICKER} amount`}
-          error={!!error}
+          error={!!errors.amount}
         />
       </FormField>
       <Summary>
