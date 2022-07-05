@@ -39,7 +39,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
     watch,
     reset,
     register,
-    formState: { errors, submitCount },
+    formState: { errors },
   } = useForm<{ amount: number | null }>()
   const { convertToUSD } = useTokenPrice()
   const convertedAmount = convertToUSD(watch('amount') || 0)
@@ -81,7 +81,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
         value={convertToUSD(channelBalance) || 0}
         margin={{ top: 1, bottom: 6 }}
       />
-      <FormField label="Amount to withdraw" error={errors.amount?.message} disableErrorAnimation={submitCount > 1}>
+      <FormField label="Amount to withdraw" error={errors.amount?.message}>
         <Input
           {...register('amount', {
             valueAsNumber: true,

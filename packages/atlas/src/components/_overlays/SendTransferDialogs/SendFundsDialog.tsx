@@ -43,7 +43,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
     handleSubmit,
     watch,
     setValue,
-    formState: { errors, submitCount },
+    formState: { errors },
   } = useForm<{ amount: number | null; account: string | null }>()
   const convertedAmount = convertToUSD(watch('amount') || 0)
 
@@ -120,7 +120,6 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
             </LabelFlexWrapper>
           }
           error={errors.amount?.message}
-          disableErrorAnimation={submitCount > 1}
         >
           <Input
             {...register('amount', {
@@ -158,7 +157,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
             error={!!errors.amount}
           />
         </FormField>
-        <FormField label="Destination account" error={errors.account?.message} disableErrorAnimation={submitCount > 1}>
+        <FormField label="Destination account" error={errors.account?.message}>
           <Input
             {...register('account', {
               validate: {
