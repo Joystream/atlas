@@ -37,7 +37,7 @@ export const Fee: FC<FeeProps> = ({
             value={amount}
             as="span"
             variant={variant}
-            color={loading ? 'colorText' : color}
+            color={loading ? 'colorTextMuted' : color}
             withToken
             withTooltip
             format="short"
