@@ -10,10 +10,12 @@ import {
   useRef,
   useState,
 } from 'react'
+import { Link } from 'react-router-dom'
 import useResizeObserver from 'use-resize-observer'
 import { VideoJsPlayer } from 'video.js'
 
 import { FullVideoFieldsFragment } from '@/api/queries'
+import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
@@ -35,6 +37,7 @@ import {
   PlayButton,
   PlayControl,
   ScreenControls,
+  StyledJoystreamLogo,
   StyledSvgControlsFullScreen,
   StyledSvgControlsPause,
   StyledSvgControlsPipOff,
@@ -639,6 +642,11 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                   >
                     {isFullScreen ? <StyledSvgControlsSmallScreen /> : <StyledSvgControlsFullScreen />}
                   </PlayerControlButton>
+                  {isEmbedded && (
+                    <Link to={absoluteRoutes.viewer.video(videoId)}>
+                      <StyledJoystreamLogo width="unset" />
+                    </Link>
+                  )}
                 </ScreenControls>
               </CustomControls>
             </ControlsOverlay>
