@@ -18,6 +18,7 @@ import {
   SvgControlsVideoModeCinemaView,
   SvgControlsVideoModeCompactView,
 } from '@/components/_icons'
+import { SvgJoystreamLogoFull } from '@/components/_illustrations'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 import { PlayerControlButton } from './PlayerControlButton'
@@ -285,6 +286,7 @@ export const CurrentTime = styled(Text)`
 
 export const ScreenControls = styled.div`
   display: grid;
+  align-items: center;
   grid-auto-flow: column;
   gap: 0.25em;
   margin-left: auto;
@@ -294,6 +296,16 @@ export const ScreenControls = styled.div`
   }
   ${media.sm} {
     gap: 0.5em;
+  }
+`
+
+export const StyledJoystreamLogo = styled(SvgJoystreamLogoFull)`
+  padding: 0.5em;
+  max-height: 2.5em;
+  height: 100%;
+
+  path {
+    fill: ${cVar('colorTextStrong')};
   }
 `
 
