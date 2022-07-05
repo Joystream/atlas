@@ -23,7 +23,7 @@ import { useTokenPrice } from '@/providers/joystream'
 import { SentryLogger } from '@/utils/logs'
 
 import { Fee } from './Fee'
-import { BalanceWrapper, FormFieldsWrapper, LabelFlexWrapper } from './SendTransferDialogs.styles'
+import { FormFieldsWrapper, LabelFlexWrapper, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
 
 type SendFundsDialogProps = {
   onExitClick: () => void
@@ -41,8 +41,9 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
     handleSubmit,
     watch,
     setValue,
-    formState: { errors },
-  } = useForm<{ amount: number | null; account: string | null }>({ mode: 'onSubmit' })
+    setError,
+    formState: { errors, isSubmitted },
+  } = useForm<{ amount: number | null; account: string | null }>()
   const convertedAmount = convertToUSD(watch('amount') || 0)
 
   useEffect(() => {
@@ -63,6 +64,9 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
           query: GetMembershipsDocument,
           variables: { where: { controllerAccount_eq: val } },
         })
+        if (!memberships.length) {
+          setError('account', { message: 'Account does not exist!' })
+        }
         setDestinationAccount(memberships.length ? memberships[0] : undefined)
       } catch (error) {
         SentryLogger.error('Failed to fetch memberships', 'WhiteListTextField', error)
@@ -91,12 +95,12 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
       <Text as="h4" variant="h300" margin={{ bottom: 4 }}>
         Your channel balance
       </Text>
-      <BalanceWrapper>
+      <VerticallyCenteredDiv>
         <JoyTokenIcon variant="gray" />
         <Text as="p" variant="h400" margin={{ left: 1 }}>
           {accountBalance}
         </Text>
-      </BalanceWrapper>
+      </VerticallyCenteredDiv>
       <NumberFormat
         as="p"
         color="colorText"
@@ -118,6 +122,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
             </LabelFlexWrapper>
           }
           error={errors.amount?.message}
+          disableErrorAnimation={!isSubmitted}
         >
           <Input
             {...register('amount', {
@@ -155,7 +160,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
             error={!!errors.amount}
           />
         </FormField>
-        <FormField label="Destination account" error={errors.account?.message}>
+        <FormField label="Destination account" error={errors.account?.message} disableErrorAnimation={!isSubmitted}>
           <Input
             {...register('account', {
               validate: {

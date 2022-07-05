@@ -105,7 +105,11 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
       closeDropdown?.()
     }
     const handleGoToMyChannel = () => {
-      navigate(absoluteRoutes.viewer.channel(channelId ?? undefined))
+      navigate(
+        activeMembership?.channels.length
+          ? absoluteRoutes.viewer.channel(channelId ?? undefined)
+          : absoluteRoutes.studio.signIn()
+      )
       closeDropdown?.()
     }
     const handleAddNewMember = () => {

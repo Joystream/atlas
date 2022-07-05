@@ -73,10 +73,13 @@ type CaptionPosition = {
   captionPosition?: 'right' | 'bottom'
 }
 const captionRightStyles = ({ captionPosition }: CaptionPosition) =>
-  captionPosition === 'right' &&
-  css`
-    text-align: right;
-  `
+  captionPosition === 'right'
+    ? css`
+        text-align: right;
+      `
+    : css`
+        text-align: left;
+      `
 export const Caption = styled(Text)<CaptionPosition>`
   ${captionRightStyles};
 `

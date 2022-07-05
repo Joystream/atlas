@@ -1,15 +1,10 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { sizes } from '@/styles'
 
-const verticallyCenteredFlex = css`
+export const VerticallyCenteredDiv = styled.div`
   display: flex;
   align-items: center;
-`
-
-export const BalanceWrapper = styled.div`
-  ${verticallyCenteredFlex}
 `
 
 export const Summary = styled.div`
@@ -21,10 +16,6 @@ export const SummaryRow = styled.div`
   justify-content: space-between;
   grid-template: auto auto / 1fr auto;
   gap: ${sizes(2)};
-`
-
-export const DestinationAccountWrapper = styled.div`
-  ${verticallyCenteredFlex}
 `
 
 export const FeeWrapper = styled.div`

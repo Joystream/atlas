@@ -13,7 +13,7 @@ import { JOY_CURRENCY_TICKER } from '@/config/token'
 import { useTokenPrice } from '@/providers/joystream'
 
 import { Fee } from './Fee'
-import { BalanceWrapper, DestinationAccountWrapper, Summary, SummaryRow } from './SendTransferDialogs.styles'
+import { Summary, SummaryRow, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
 
 type WithdrawFundsDialogProps = {
   onExitClick: () => void
@@ -39,8 +39,8 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
     watch,
     reset,
     register,
-    formState: { errors },
-  } = useForm<{ amount: number | null }>({ mode: 'onSubmit' })
+    formState: { errors, isSubmitted },
+  } = useForm<{ amount: number | null }>()
   const { convertToUSD } = useTokenPrice()
   const convertedAmount = convertToUSD(watch('amount') || 0)
 
@@ -67,12 +67,12 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
       <Text as="h4" variant="h300" margin={{ bottom: 4 }}>
         Your channel balance
       </Text>
-      <BalanceWrapper>
+      <VerticallyCenteredDiv>
         <JoyTokenIcon variant="gray" />
         <Text as="p" variant="h400" margin={{ left: 1 }}>
           {channelBalance || 0}
         </Text>
-      </BalanceWrapper>
+      </VerticallyCenteredDiv>
       <NumberFormat
         as="p"
         color="colorText"
@@ -81,7 +81,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
         value={convertToUSD(channelBalance) || 0}
         margin={{ top: 1, bottom: 6 }}
       />
-      <FormField label="Amount to withdraw" error={errors.amount?.message}>
+      <FormField label="Amount to withdraw" error={errors.amount?.message} disableErrorAnimation={!isSubmitted}>
         <Input
           {...register('amount', {
             valueAsNumber: true,
@@ -126,7 +126,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
           <Text as="span" variant="t100" color="colorText">
             Destination account
           </Text>
-          <DestinationAccountWrapper>
+          <VerticallyCenteredDiv>
             <Avatar size="extra-small" assetUrl={avatarUrl} />
             <Text as="span" variant="t100" margin={{ left: 2, right: 1 }}>
               {activeMembership?.handle}
@@ -135,7 +135,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
               ({activeMembership?.controllerAccount.slice(0, ADDRESS_CHARACTERS_LIMIT)}...
               {activeMembership?.controllerAccount.slice(-ADDRESS_CHARACTERS_LIMIT)})
             </Text>
-          </DestinationAccountWrapper>
+          </VerticallyCenteredDiv>
         </SummaryRow>
         <SummaryRow>
           <Text as="span" variant="t100" color="colorText">
