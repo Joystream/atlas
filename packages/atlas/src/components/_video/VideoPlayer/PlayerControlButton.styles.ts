@@ -101,7 +101,7 @@ export const ControlButton = styled.button<ControlButtonProps>`
 `
 
 type ControlButtonTooltipProps = {
-  tooltipPosition?: 'left' | 'right'
+  tooltipPosition?: 'left' | 'right' | 'bottom'
 }
 
 export const ControlButtonTooltip = styled.div<ControlButtonTooltipProps>`
@@ -119,6 +119,14 @@ export const ControlButtonTooltip = styled.div<ControlButtonTooltipProps>`
   padding: 0.5em;
   white-space: nowrap;
   transition: opacity ${transitions.timings.player} ease-in, backdrop-filter ${transitions.timings.player} ease-in;
+
+  ${({ tooltipPosition }) =>
+    tooltipPosition === 'bottom' &&
+    css`
+      top: 3em;
+      bottom: unset;
+    `};
+
   ${media.xs} {
     display: flex;
   }

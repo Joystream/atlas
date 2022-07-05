@@ -27,6 +27,7 @@ export const EmbeddedView: FC = () => {
 
   const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset(video?.media)
   const { url: thumbnailUrl, isLoadingAsset: isThumbnailLoading } = useAsset(video?.thumbnailPhoto)
+  const { url: channelAvatarUrl, isLoadingAsset: isChannelAvatarLoading } = useAsset(video?.channel.avatarPhoto)
 
   const { startTimestamp } = useVideoStartTimestamp(video?.duration)
 
@@ -101,6 +102,10 @@ export const EmbeddedView: FC = () => {
           <VideoPlayer
             isVideoPending={!video?.media?.isAccepted}
             channelId={video.channel?.id}
+            channelAvatarUrl={channelAvatarUrl}
+            isChannelAvatarLoading={isChannelAvatarLoading}
+            title={video.title}
+            channelTitle={video.channel.title}
             videoId={video.id}
             src={mediaUrl}
             posterUrl={thumbnailUrl}

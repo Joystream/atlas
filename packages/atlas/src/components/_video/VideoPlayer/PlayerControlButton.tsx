@@ -5,7 +5,7 @@ import { ControlButton, ControlButtonTooltip, ControlButtonTooltipText } from '.
 type PlayerControlButtonProps = PropsWithChildren<{
   className?: string
   showTooltipOnlyOnFocus?: boolean
-  tooltipPosition?: 'left' | 'right'
+  tooltipPosition?: 'left' | 'right' | 'bottom'
   onClick?: (e: MouseEvent) => void
   tooltipText?: string
   isDisabled?: boolean
