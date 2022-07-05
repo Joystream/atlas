@@ -26,6 +26,7 @@ export type GetBasicVideoQuery = {
       title?: string | null
       createdAt: Date
       follows: number
+      rewardAccount?: string | null
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -139,6 +140,7 @@ export type GetFullVideoQuery = {
       title?: string | null
       createdAt: Date
       follows: number
+      rewardAccount?: string | null
       language?: { __typename?: 'Language'; id: string; iso: string } | null
       ownerMember?: {
         __typename?: 'Membership'
@@ -251,6 +253,7 @@ export type GetFullVideoQuery = {
         title?: string | null
         createdAt: Date
         follows: number
+        rewardAccount?: string | null
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -441,6 +444,7 @@ export type GetFullVideoQuery = {
           title?: string | null
           createdAt: Date
           follows: number
+          rewardAccount?: string | null
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -508,6 +512,7 @@ export type GetBasicVideosConnectionQuery = {
           title?: string | null
           createdAt: Date
           follows: number
+          rewardAccount?: string | null
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -633,6 +638,7 @@ export type GetFullVideosConnectionQuery = {
           title?: string | null
           createdAt: Date
           follows: number
+          rewardAccount?: string | null
           language?: { __typename?: 'Language'; id: string; iso: string } | null
           ownerMember?: {
             __typename?: 'Membership'
@@ -745,6 +751,7 @@ export type GetFullVideosConnectionQuery = {
             title?: string | null
             createdAt: Date
             follows: number
+            rewardAccount?: string | null
             avatarPhoto?: {
               __typename?: 'StorageDataObject'
               id: string
@@ -935,6 +942,7 @@ export type GetFullVideosConnectionQuery = {
               title?: string | null
               createdAt: Date
               follows: number
+              rewardAccount?: string | null
               avatarPhoto?: {
                 __typename?: 'StorageDataObject'
                 id: string
@@ -999,6 +1007,7 @@ export type GetBasicVideosQuery = {
       title?: string | null
       createdAt: Date
       follows: number
+      rewardAccount?: string | null
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -1115,6 +1124,7 @@ export type GetFullVideosQuery = {
       title?: string | null
       createdAt: Date
       follows: number
+      rewardAccount?: string | null
       language?: { __typename?: 'Language'; id: string; iso: string } | null
       ownerMember?: {
         __typename?: 'Membership'
@@ -1227,6 +1237,7 @@ export type GetFullVideosQuery = {
         title?: string | null
         createdAt: Date
         follows: number
+        rewardAccount?: string | null
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -1417,6 +1428,7 @@ export type GetFullVideosQuery = {
           title?: string | null
           createdAt: Date
           follows: number
+          rewardAccount?: string | null
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -1486,6 +1498,7 @@ export type GetMostViewedVideosConnectionQuery = {
           title?: string | null
           createdAt: Date
           follows: number
+          rewardAccount?: string | null
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -1545,6 +1558,7 @@ export type GetTop10VideosThisWeekQuery = {
       title?: string | null
       createdAt: Date
       follows: number
+      rewardAccount?: string | null
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -1601,6 +1615,7 @@ export type GetTop10VideosThisMonthQuery = {
       title?: string | null
       createdAt: Date
       follows: number
+      rewardAccount?: string | null
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string

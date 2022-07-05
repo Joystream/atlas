@@ -73,10 +73,13 @@ type CaptionPosition = {
   captionPosition?: 'right' | 'bottom'
 }
 const captionRightStyles = ({ captionPosition }: CaptionPosition) =>
-  captionPosition === 'right' &&
-  css`
-    text-align: right;
-  `
+  captionPosition === 'right'
+    ? css`
+        text-align: right;
+      `
+    : css`
+        text-align: left;
+      `
 export const Caption = styled(Text)<CaptionPosition>`
   ${captionRightStyles};
 `
@@ -90,6 +93,7 @@ export const LabelContainer = styled.div`
 export const LabelText = styled(Text)`
   width: 100%;
   word-break: break-word;
+  text-align: left;
 `
 
 const iconStyles = ({ destructive, isHovering, isSelected }: NodeContainerProps) =>
