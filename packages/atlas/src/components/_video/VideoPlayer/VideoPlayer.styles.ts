@@ -303,10 +303,9 @@ export const StyledJoystreamLogo = styled(SvgJoystreamLogoFull)`
   padding: 0.5em;
   max-height: 2.5em;
   height: 100%;
+  filter: drop-shadow(${cVar('effectElevation1Layer1')});
 
-  path {
-    fill: ${cVar('colorTextStrong')};
-  }
+  ${defaultIconColor};
 `
 
 export const Container = styled.div<ContainerProps>`
