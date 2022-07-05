@@ -25,6 +25,8 @@ import { SentryLogger } from '@/utils/logs'
 import { Fee } from './Fee'
 import { FormFieldsWrapper, LabelFlexWrapper, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
 
+const ADDRESS_LENGTH = 48
+
 type SendFundsDialogProps = {
   onExitClick: () => void
   accountBalance?: number
@@ -41,8 +43,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
     handleSubmit,
     watch,
     setValue,
-    setError,
-    formState: { errors, isSubmitted },
+    formState: { errors, submitCount },
   } = useForm<{ amount: number | null; account: string | null }>()
   const convertedAmount = convertToUSD(watch('amount') || 0)
 
@@ -64,9 +65,6 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
           query: GetMembershipsDocument,
           variables: { where: { controllerAccount_eq: val } },
         })
-        if (!memberships.length) {
-          setError('account', { message: 'Account does not exist!' })
-        }
         setDestinationAccount(memberships.length ? memberships[0] : undefined)
       } catch (error) {
         SentryLogger.error('Failed to fetch memberships', 'WhiteListTextField', error)
@@ -122,7 +120,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
             </LabelFlexWrapper>
           }
           error={errors.amount?.message}
-          disableErrorAnimation={!isSubmitted}
+          disableErrorAnimation={submitCount > 1}
         >
           <Input
             {...register('amount', {
@@ -160,21 +158,33 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
             error={!!errors.amount}
           />
         </FormField>
-        <FormField label="Destination account" error={errors.account?.message} disableErrorAnimation={!isSubmitted}>
+        <FormField label="Destination account" error={errors.account?.message} disableErrorAnimation={submitCount > 1}>
           <Input
             {...register('account', {
               validate: {
                 required: (value) => {
                   if (!value) {
-                    return 'Enter destination account'
+                    return 'Enter destination account.'
+                  }
+                  return true
+                },
+                wrongAddress: (value) => {
+                  if (value && value.length !== ADDRESS_LENGTH) {
+                    return 'Invalid destination account format.'
+                  }
+                  return true
+                },
+                accountNotFound: () => {
+                  if (!destinationAccount) {
+                    return 'Account does not exist.'
                   }
                   return true
                 },
               },
               onChange: (event) => {
                 const { value } = event.target
-                setValue('account', event.target.value, { shouldTouch: true, shouldDirty: true, shouldValidate: true })
-                if (value.length === 48) {
+                setValue('account', event.target.value, { shouldTouch: true, shouldDirty: true })
+                if (value.length === ADDRESS_LENGTH) {
                   debounceFetchMembers.current(value)
                 } else {
                   setDestinationAccount(undefined)
