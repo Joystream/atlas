@@ -1,4 +1,7 @@
+import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
+
+import { sizes } from '@/styles'
 
 import { Fee, FeeProps } from './Fee'
 
@@ -18,6 +21,14 @@ export default {
   },
 } as Meta<FeeProps>
 
-const Template: Story<FeeProps> = (args) => <Fee {...args} />
+const Template: Story<FeeProps> = (args) => (
+  <Wrapper>
+    <Fee {...args} />
+  </Wrapper>
+)
 
 export const Default = Template.bind({})
+
+const Wrapper = styled.div`
+  padding: ${sizes(20)};
+`

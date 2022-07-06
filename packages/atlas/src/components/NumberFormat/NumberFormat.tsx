@@ -1,4 +1,3 @@
-import styled from '@emotion/styled'
 import { forwardRef, useRef } from 'react'
 import mergeRefs from 'react-merge-refs'
 
@@ -42,15 +41,22 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
     const hasDecimals = value - Math.floor(value) !== 0
     const hasTooltip =
       withTooltip || (format === 'short' && (value > 999 || hasDecimals)) || (format === 'dollar' && hasDecimals)
+    const content = (
+      <Text {...textProps} variant={variant} ref={mergeRefs([ref, textRef])}>
+        {displayedValue || formattedValue}
+        {withToken && ` ${JOY_CURRENCY_TICKER}`}
+      </Text>
+    )
 
-    return (
-      <>
-        <Text {...textProps} variant={variant} ref={mergeRefs([ref, textRef])}>
-          {displayedValue || formattedValue}
-          {withToken && ` ${JOY_CURRENCY_TICKER}`}
-        </Text>
-        {hasTooltip && <StyledTooltip reference={textRef} placement="top" delay={[500, null]} text={tooltipText} />}
-      </>
+    // TODO: This is workaround. For some reason this tooltip doesn't work properly.
+    //  Dear developer, if you find a solution, the project will thank you, otherwise we should consider
+    //  using Floating UI (https://github.com/floating-ui/floating-ui)
+    return hasTooltip ? (
+      <Tooltip placement="top" delay={[500, null]} text={tooltipText}>
+        {content}
+      </Tooltip>
+    ) : (
+      content
     )
   }
 )
@@ -87,7 +93,3 @@ const formatNumberShort = (num: number): string => {
 
 const formatDollars = (num: number) =>
   (num >= 1 ? dollarFormatter.format(num) : dollarSmallNumberFormatter.format(num)).replaceAll(',', ' ')
-
-const StyledTooltip = styled(Tooltip)`
-  position: absolute;
-`
