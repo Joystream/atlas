@@ -1,5 +1,6 @@
 import { FC, FormEvent, PropsWithChildren, ReactNode, Ref } from 'react'
 
+import { Fee } from '@/components/Fee'
 import { Text } from '@/components/Text'
 import { Button, ButtonProps } from '@/components/_buttons/Button'
 import { SvgActionClose } from '@/components/_icons'
@@ -35,6 +36,7 @@ export type DialogProps = PropsWithChildren<{
   className?: string
   contentClassName?: string
   contentRef?: Ref<HTMLDivElement>
+  fee?: number
 }>
 
 export const Dialog: FC<DialogProps> = ({
@@ -53,10 +55,12 @@ export const Dialog: FC<DialogProps> = ({
   className,
   contentClassName,
   contentRef,
+  fee,
 }) => {
   const isCompact = size === 'compact'
   const smMatch = useMediaMatch('sm')
   const hasFooter = !!additionalActionsNode || !!primaryButton || !!secondaryButton
+  const hasAdditionalActionsNode = !!additionalActionsNode || fee !== undefined
   const buttonSize = isCompact ? 'small' : 'medium'
 
   return (
@@ -84,9 +88,10 @@ export const Dialog: FC<DialogProps> = ({
       {hasFooter && (
         <Footer
           dividers={dividers || actionDivider}
-          data-has-additional-actions={!!additionalActionsNode}
+          data-has-additional-actions={!!hasAdditionalActionsNode}
           additionalActionsNodeMobilePosition={additionalActionsNodeMobilePosition}
         >
+          {fee !== undefined && <Fee amount={fee} variant="h200" color="colorTextStrong" />}
           {additionalActionsNode}
           <FooterButtonsContainer additionalActionsNodeMobilePosition={additionalActionsNodeMobilePosition}>
             {secondaryButton && (
