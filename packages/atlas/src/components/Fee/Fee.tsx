@@ -42,6 +42,7 @@ export const Fee: FC<FeeProps> = ({
             withTooltip
             format="short"
             margin={{ right: 1 }}
+            tooltipAsWrapper
           />
         </>
       )}
