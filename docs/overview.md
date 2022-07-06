@@ -48,6 +48,7 @@ Please note that this repo is based on [Yarn Workspaces](https://yarnpkg.com/fea
   - `atlas-meta-server` - meta tags pre-rendering server
   - `atlas-proxy-worker` - Cloudflare Worker to enable Atlas social previews on Cloudflare edge network
   - `atlas-geolocation-worker` - Cloudflare Worker to enable picking closes distribution operators
+  - `atlas-avatar-service` - users avatars upload service
 
 ### DevOps
 

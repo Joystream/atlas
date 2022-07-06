@@ -13,6 +13,7 @@ lerna-debug.log*
 .now
 dist/
 dist-storybook
+uploads/
 
 .history
 .idea
