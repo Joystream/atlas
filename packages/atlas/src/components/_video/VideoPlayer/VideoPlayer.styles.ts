@@ -1,5 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
 import {
@@ -11,6 +12,7 @@ import {
   SvgControlsReplay,
   SvgControlsSettingsOutline,
   SvgControlsSettingsSolid,
+  SvgControlsShare,
   SvgControlsSmallScreen,
   SvgControlsSoundLowVolume,
   SvgControlsSoundOff,
@@ -91,27 +93,71 @@ export const StyledSvgControlsSettingsSolid = styled(SvgControlsSettingsSolid)`
 export const StyledSvgControlsSettingsOutline = styled(SvgControlsSettingsOutline)`
   ${defaultIconColor};
 `
+export const StyledSvgControlsShare = styled(SvgControlsShare)`
+  ${defaultIconColor};
+`
 
 export const TRANSITION_DELAY = '50ms'
 
+const sharedOverlayStyles = css`
+  transition: opacity, visibility;
+  transition-delay: ${TRANSITION_DELAY};
+  transition-duration: 200ms;
+  transition-timing-function: ${transitions.easing};
+`
+
+export const EmbbeddedTopBarOverlay = styled.div<{ isFullScreen: boolean }>`
+  font-size: 16px;
+  width: 100%;
+  z-index: ${zIndex.overlay};
+  position: relative;
+  background: linear-gradient(180deg, rgb(11 12 15 / 0.9) 0%, transparent 100%);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  padding: 0.5em 0.5em 0.5em 1em;
+  gap: 1em;
+  opacity: 0;
+  visibility: hidden;
+  ${sharedOverlayStyles};
+
+  @media (hover: hover) {
+    font-size: ${({ isFullScreen }) => (isFullScreen ? '32px' : '16px')};
+    padding: 1em 1em 1em 1.5em;
+  }
+`
+
+export const TitleContainer = styled(Link)<{ isFullscreen: boolean }>`
+  text-decoration: none;
+  @media (hover: hover) {
+    ${({ isFullscreen }) =>
+      isFullscreen &&
+      css`
+        transform: scale(2);
+        transform-origin: left;
+      `};
+  }
+`
+
+export const StyledText = styled(Text)`
+  text-shadow: ${cVar('effectElevation1Layer1')};
+`
+
 export const ControlsOverlay = styled.div<CustomControlsProps>`
-  font-size: ${sizes(4)};
+  font-size: 16px;
   opacity: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 1 : 0)};
+  visibility: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 'visible' : 'hidden')};
   position: absolute;
   bottom: 0;
   width: 100%;
   background: ${cVar('colorCoreNeutral500Darken')};
   height: 100%;
-  visibility: hidden;
-  transition: opacity, visibility;
-  transition-delay: ${TRANSITION_DELAY};
-  transition-duration: 200ms;
-  transition-timing-function: ${transitions.easing};
+  ${sharedOverlayStyles}
 
   @media (hover: hover) {
     height: 8em;
     background: linear-gradient(180deg, transparent 0%, ${cVar('colorCoreNeutral900')} 100%);
-    font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))};
+    font-size: ${({ isFullScreen }) => (isFullScreen ? '32px' : '16px')};
   }
 `
 
@@ -348,7 +394,7 @@ export const Container = styled.div<ContainerProps>`
   .vjs-user-inactive.vjs-playing,
   /* don't hide player controls when paused(mobile) */
   .vjs-user-inactive:not(.vjs-ended):not(.vjs-paused) {
-    ${ControlsOverlay} {
+    ${ControlsOverlay}, ${EmbbeddedTopBarOverlay} {
       opacity: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 1 : 0)};
       visibility: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 'visible' : 'hidden')};
       ${CustomControls} {
@@ -360,7 +406,7 @@ export const Container = styled.div<ContainerProps>`
   .vjs-ended,
   .vjs-paused,
   .vjs-user-active:not(.vjs-waiting) {
-    ${ControlsOverlay} {
+    ${ControlsOverlay}, ${EmbbeddedTopBarOverlay} {
       opacity: 1;
       visibility: visible;
       ${CustomControls} {
@@ -371,7 +417,7 @@ export const Container = styled.div<ContainerProps>`
 
   @media (hover: hover) {
     .vjs-user-active.vjs-playing {
-      ${ControlsOverlay} {
+      ${ControlsOverlay}, ${EmbbeddedTopBarOverlay} {
         opacity: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 1 : 0)};
         visibility: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 'visible' : 'hidden')};
         ${CustomControls} {
@@ -381,7 +427,7 @@ export const Container = styled.div<ContainerProps>`
     }
 
     .vjs-playing:hover {
-      ${ControlsOverlay} {
+      ${ControlsOverlay}, ${EmbbeddedTopBarOverlay} {
         opacity: 1;
         visibility: visible;
         ${CustomControls} {
@@ -392,7 +438,7 @@ export const Container = styled.div<ContainerProps>`
 
     .vjs-user-inactive.vjs-playing,
     .vjs-user-inactive.vjs-paused:not(.vjs-ended) {
-      ${ControlsOverlay} {
+      ${ControlsOverlay}, ${EmbbeddedTopBarOverlay} {
         opacity: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 1 : 0)};
         visibility: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 'visible' : 'hidden')};
         ${CustomControls} {

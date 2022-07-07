@@ -15,9 +15,11 @@ import useResizeObserver from 'use-resize-observer'
 import { VideoJsPlayer } from 'video.js'
 
 import { FullVideoFieldsFragment } from '@/api/queries'
+import { Avatar } from '@/components/Avatar'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { usePersonalDataStore } from '@/providers/personalData'
+import { isMobile } from '@/utils/browser'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { formatDurationShort } from '@/utils/time'
 
@@ -34,6 +36,7 @@ import {
   CurrentTime,
   CurrentTimeWrapper,
   CustomControls,
+  EmbbeddedTopBarOverlay,
   PlayButton,
   PlayControl,
   ScreenControls,
@@ -44,12 +47,15 @@ import {
   StyledSvgControlsPipOn,
   StyledSvgControlsPlay,
   StyledSvgControlsReplay,
+  StyledSvgControlsShare,
   StyledSvgControlsSmallScreen,
   StyledSvgControlsSoundLowVolume,
   StyledSvgControlsVideoModeCinemaView,
   StyledSvgControlsVideoModeCompactView,
   StyledSvgPlayerSoundOff,
   StyledSvgPlayerSoundOn,
+  StyledText,
+  TitleContainer,
   VolumeButton,
   VolumeControl,
   VolumeSlider,
@@ -59,6 +65,10 @@ import { CustomVideojsEvents, PlayerState, VOLUME_STEP, hotkeysHandler, isFullSc
 import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
 export type VideoPlayerProps = {
+  title?: string | null
+  channelTitle?: string | null
+  channelAvatarUrl?: string | null
+  isChannelAvatarLoading?: boolean
   isVideoPending?: boolean
   nextVideo?: FullVideoFieldsFragment | null
   className?: string
@@ -87,6 +97,10 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   {
     isVideoPending,
     className,
+    title,
+    channelTitle,
+    channelAvatarUrl,
+    isChannelAvatarLoading,
     playing,
     nextVideo,
     channelId,
@@ -547,6 +561,33 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
             </BigPlayButton>
           </BigPlayButtonContainer>
         )}
+        {isEmbedded && (
+          <EmbbeddedTopBarOverlay isFullScreen={isFullScreen}>
+            <Link to={absoluteRoutes.viewer.channel(channelId)}>
+              <Avatar
+                clickable
+                size={isFullScreen && !isMobile() ? 'cover' : 'default'}
+                assetUrl={channelAvatarUrl}
+                loading={isChannelAvatarLoading}
+              />
+            </Link>
+            <TitleContainer to={absoluteRoutes.viewer.video(videoId)} isFullscreen={isFullScreen}>
+              <StyledText variant="h300" as="h2">
+                {title}
+              </StyledText>
+              <StyledText variant="t100-strong" as="p" margin={{ top: 0.5 }}>
+                {channelTitle}
+              </StyledText>
+            </TitleContainer>
+            <PlayerControlButton
+              tooltipText="Share"
+              tooltipPosition="bottom-right"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <StyledSvgControlsShare />
+            </PlayerControlButton>
+          </EmbbeddedTopBarOverlay>
+        )}
         <video style={videoStyle} ref={playerRef} className="video-js" onClick={onVideoClick} />
         {showPlayerControls && (
           <>
@@ -571,7 +612,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                       isEnded={playerState === 'ended'}
                       onClick={handlePlayPause}
                       tooltipText={isPlaying ? 'Pause (k)' : playerState === 'ended' ? 'Play again (k)' : 'Play (k)'}
-                      tooltipPosition="left"
+                      tooltipPosition="top-left"
                     >
                       {playerState === 'ended' ? (
                         <StyledSvgControlsReplay />
@@ -636,7 +677,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                   <PlayerControlButton
                     isDisabled={!isFullScreenEnabled}
                     tooltipEnabled={!isSettingsPopoverOpened}
-                    tooltipPosition="right"
+                    tooltipPosition="top-right"
                     tooltipText={isFullScreen ? 'Exit full screen (f)' : 'Full screen (f)'}
                     onClick={handleFullScreen}
                   >
