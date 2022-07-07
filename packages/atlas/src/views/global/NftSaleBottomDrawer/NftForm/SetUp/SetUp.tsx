@@ -1,4 +1,3 @@
-import BN from 'bn.js'
 import { ChangeEvent, Dispatch, FC, FocusEvent, FormEvent, SetStateAction, useEffect } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 
@@ -307,7 +306,7 @@ export const SetUp: FC<SetUpProps> = ({
                       as="span"
                       variant="t300"
                       format="dollar"
-                      value={convertToUSD(new BN(Number(startingPrice) * 10 ** 10 || 0)) ?? 0}
+                      value={convertToUSD(TJOYNUmberToHapiBN(startingPrice || 0)) ?? 0}
                     />
                   )
                 }

@@ -9,7 +9,6 @@ type AcceptBidDialogProps = {
   onModalClose: () => void
   isOpen: boolean
   bids: Bid[]
-  // price to BN ?
   onAcceptBid: (ownerId: string, videoId: string, bidderId: string, price: string) => void
   nftId: string | null
   ownerId?: string

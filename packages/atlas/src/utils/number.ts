@@ -9,7 +9,6 @@ export const formatNumber = (num: number): string => {
   return numberFormatter.format(num).replaceAll(',', ' ')
 }
 
-export const HapiBNToTJOYNumber = (bn: BN) => bn.div(new BN(10 ** 10)).toNumber()
-
-const bn = new BN(10 ** 10)
-export const TJOYNUmberToHapiBN = (number: number) => new BN(number).mul(bn)
+const conversionBN = new BN(10 ** 10)
+export const HapiBNToTJOYNumber = (bn: BN) => bn.div(conversionBN).toNumber()
+export const TJOYNUmberToHapiBN = (number: number) => new BN(number).mul(conversionBN)
