@@ -14,9 +14,9 @@ import { Link } from 'react-router-dom'
 import useResizeObserver from 'use-resize-observer'
 import { VideoJsPlayer } from 'video.js'
 
+import { useFullVideo } from '@/api/hooks'
 import { FullVideoFieldsFragment } from '@/api/queries'
 import { Avatar } from '@/components/Avatar'
-import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -62,13 +62,11 @@ import {
   VolumeSlider,
   VolumeSliderContainer,
 } from './VideoPlayer.styles'
-import { VideoSharing } from './VideoSharing'
+import { VideoShare } from './VideoShare'
 import { CustomVideojsEvents, PlayerState, VOLUME_STEP, hotkeysHandler, isFullScreenEnabled } from './utils'
 import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
 export type VideoPlayerProps = {
-  title?: string | null
-  channelTitle?: string | null
   channelAvatarUrl?: string | null
   isChannelAvatarLoading?: boolean
   isShareDialogOpen?: boolean
@@ -79,7 +77,6 @@ export type VideoPlayerProps = {
   videoStyle?: CSSProperties
   autoplay?: boolean
   playing?: boolean
-  channelId?: string
   videoId?: string
   isEmbedded?: boolean
   isPlayNextDisabled?: boolean
@@ -101,15 +98,12 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   {
     isVideoPending,
     className,
-    title,
-    channelTitle,
     channelAvatarUrl,
     isChannelAvatarLoading,
     onCloseShareDialog,
     isShareDialogOpen,
     playing,
     nextVideo,
-    channelId,
     videoId,
     autoplay,
     videoStyle,
@@ -121,7 +115,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
   const [isPlaying, setIsPlaying] = useState(false)
-  const [isSharingOverlayOpen, setIsSharingOverlayOpen] = useState(true)
+  const [isSharingOverlayOpen, setIsSharingOverlayOpen] = useState(false)
   const { height: playerHeight = 0 } = useResizeObserver({ box: 'border-box', ref: playerRef })
   const customControlsRef = useRef<HTMLDivElement>(null)
 
@@ -141,6 +135,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     actions: { setCurrentVolume, setCachedVolume, setCinematicView },
   } = usePersonalDataStore((state) => state)
   const [volumeToSave, setVolumeToSave] = useState(0)
+  const { video } = useFullVideo(videoId || '')
 
   const [videoTime, setVideoTime] = useState(0)
   const [isFullScreen, setIsFullScreen] = useState(false)
@@ -550,6 +545,11 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     }
   }
 
+  const handleCloseSharingDialog = () => {
+    onCloseShareDialog?.()
+    setIsSharingOverlayOpen(false)
+  }
+
   const toggleCinematicView = (event: MouseEvent) => {
     event.stopPropagation()
     setCinematicView(!cinematicView)
@@ -557,6 +557,8 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
 
   const showPlayerControls = isLoaded && playerState && !isSharingOverlayOpen
   const showControlsIndicator = playerState !== 'ended'
+
+  const playNextDisabled = isPlayNextDisabled || !autoPlayNext || isShareDialogOpen || isSharingOverlayOpen
 
   return (
     <Container isFullScreen={isFullScreen} className={className} isSettingsPopoverOpened={isSettingsPopoverOpened}>
@@ -567,33 +569,6 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
               <StyledSvgControlsPlay />
             </BigPlayButton>
           </BigPlayButtonContainer>
-        )}
-        {isEmbedded && (
-          <EmbbeddedTopBarOverlay isFullScreen={isFullScreen}>
-            <Link to={absoluteRoutes.viewer.channel(channelId)}>
-              <Avatar
-                clickable
-                size={isFullScreen && !isMobile() ? 'cover' : 'default'}
-                assetUrl={channelAvatarUrl}
-                loading={isChannelAvatarLoading}
-              />
-            </Link>
-            <TitleContainer to={absoluteRoutes.viewer.video(videoId)} isFullscreen={isFullScreen}>
-              <StyledText variant="h300" as="h2">
-                {title}
-              </StyledText>
-              <StyledText variant="t100-strong" as="p" margin={{ top: 0.5 }}>
-                {channelTitle}
-              </StyledText>
-            </TitleContainer>
-            <PlayerControlButton
-              tooltipText="Share"
-              tooltipPosition="bottom-right"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <StyledSvgControlsShare />
-            </PlayerControlButton>
-          </EmbbeddedTopBarOverlay>
         )}
         <video style={videoStyle} ref={playerRef} className="video-js" onClick={onVideoClick} />
         {showPlayerControls && (
@@ -703,20 +678,53 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
         <VideoOverlay
           videoId={videoId}
           isFullScreen={isFullScreen}
-          isPlayNextDisabled={isPlayNextDisabled || !autoPlayNext}
+          isPlayNextDisabled={playNextDisabled}
           playerState={playerState}
-          isSharingOverlayOpen={isSharingOverlayOpen}
           onPlay={handlePlayPause}
-          currentTime={videoTime}
-          channelId={channelId}
+          channelId={video?.channel.id}
           currentThumbnailUrl={videoJsConfig.posterUrl}
           playRandomVideoOnEnded={!isEmbedded}
         />
         {showControlsIndicator && <ControlsIndicator player={player} isLoading={playerState === 'loading'} />}
+        {isEmbedded && !isSharingOverlayOpen && (
+          <EmbbeddedTopBarOverlay isFullScreen={isFullScreen}>
+            <Link to={absoluteRoutes.viewer.channel(video?.channel.id)}>
+              <Avatar
+                clickable
+                size={isFullScreen && !isMobile() ? 'cover' : 'default'}
+                assetUrl={channelAvatarUrl}
+                loading={isChannelAvatarLoading}
+              />
+            </Link>
+            <TitleContainer to={absoluteRoutes.viewer.video(videoId)} isFullscreen={isFullScreen}>
+              <StyledText variant="h300" as="h2">
+                {video?.title}
+              </StyledText>
+              <StyledText variant="t100-strong" as="p" margin={{ top: 0.5 }}>
+                {video?.channel.title}
+              </StyledText>
+            </TitleContainer>
+            <PlayerControlButton
+              tooltipText="Share"
+              tooltipPosition="bottom-right"
+              onClick={(e) => {
+                setIsSharingOverlayOpen(true)
+                e.stopPropagation()
+              }}
+            >
+              <StyledSvgControlsShare />
+            </PlayerControlButton>
+          </EmbbeddedTopBarOverlay>
+        )}
+        <VideoShare
+          onCloseShareDialog={handleCloseSharingDialog}
+          isEmbedded={isEmbedded}
+          currentTime={videoTime}
+          isFullScreen={isFullScreen}
+          videoId={videoId}
+          isShareDialogOpen={isShareDialogOpen || isSharingOverlayOpen}
+        />
       </div>
-      <DialogModal title="Share Video" show={isShareDialogOpen} onExitClick={onCloseShareDialog}>
-        <VideoSharing videoId={videoId} currentTime={videoTime} />
-      </DialogModal>
     </Container>
   )
 }

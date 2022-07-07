@@ -101,11 +101,8 @@ export const EmbeddedView: FC = () => {
         {!isMediaLoading && !isThumbnailLoading && video ? (
           <VideoPlayer
             isVideoPending={!video?.media?.isAccepted}
-            channelId={video.channel?.id}
             channelAvatarUrl={channelAvatarUrl}
             isChannelAvatarLoading={isChannelAvatarLoading}
-            title={video.title}
-            channelTitle={video.channel.title}
             videoId={video.id}
             src={mediaUrl}
             posterUrl={thumbnailUrl}

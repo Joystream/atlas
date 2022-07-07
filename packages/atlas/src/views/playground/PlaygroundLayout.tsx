@@ -18,6 +18,7 @@ import { cVar } from '@/styles'
 
 import {
   PlaygroundEstimatingBlockTime,
+  PlaygroundIframe,
   PlaygroundImageDownsizing,
   PlaygroundIndirectSignInDialog,
   PlaygroundMinimizedTransaction,
@@ -44,6 +45,7 @@ const playgroundRoutes = [
     name: 'Minimized transaction snackbar',
   },
   { path: 'reactions-comments', element: <PlaygroundReactionsComments />, name: 'Reactions & comments' },
+  { path: 'iframe', element: <PlaygroundIframe />, name: 'Iframe' },
 ]
 
 const PlaygroundLayout = () => {

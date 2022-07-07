@@ -8,15 +8,12 @@ import { cVar, transitions } from '@/styles'
 import { getRandomIntInclusive } from '@/utils/number'
 
 import { EndingOverlay, ErrorOverlay, InactiveOverlay } from './VideoOverlays'
-import { EmbeddedShareOverlay } from './VideoOverlays/EmbeddedShareOverlay'
 import { PlayerState } from './utils'
 
 type VideoOverlayProps = {
   playerState: PlayerState
-  isSharingOverlayOpen?: boolean
   onPlay: () => void
   channelId?: string
-  currentTime: number
   currentThumbnailUrl?: string | null
   videoId?: string
   isFullScreen?: boolean
@@ -25,10 +22,8 @@ type VideoOverlayProps = {
 }
 export const VideoOverlay: FC<VideoOverlayProps> = ({
   playerState,
-  isSharingOverlayOpen,
   onPlay,
   channelId,
-  currentTime,
   currentThumbnailUrl,
   videoId,
   isFullScreen,
@@ -68,14 +63,13 @@ export const VideoOverlay: FC<VideoOverlayProps> = ({
         appear
       >
         <div>
-          {isSharingOverlayOpen && <EmbeddedShareOverlay videoId={videoId} currentTime={currentTime} />}
           {playerState === 'pending' && <InactiveOverlay />}
           {playerState === 'loading' && <LoadingOverlay />}
           {playerState === 'ended' && (
             <EndingOverlay
               isFullScreen={isFullScreen}
               isEnded={true}
-              isPlayNextDisabled={isPlayNextDisabled || isSharingOverlayOpen}
+              isPlayNextDisabled={isPlayNextDisabled}
               onPlayAgain={onPlay}
               channelId={channelId}
               currentThumbnailUrl={currentThumbnailUrl}

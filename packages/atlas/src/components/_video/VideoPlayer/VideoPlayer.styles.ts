@@ -109,7 +109,7 @@ const sharedOverlayStyles = css`
 export const EmbbeddedTopBarOverlay = styled.div<{ isFullScreen: boolean }>`
   font-size: 16px;
   width: 100%;
-  z-index: ${zIndex.overlay};
+  z-index: ${zIndex.nearOverlay};
   position: relative;
   background: linear-gradient(180deg, rgb(11 12 15 / 0.9) 0%, transparent 100%);
   display: grid;

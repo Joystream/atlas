@@ -293,7 +293,6 @@ export const VideoView: FC = () => {
                   onCloseShareDialog={() => setShareDialogOpen(false)}
                   isShareDialogOpen={isShareDialogOpen}
                   isVideoPending={!video?.media?.isAccepted}
-                  channelId={video?.channel?.id}
                   videoId={video?.id}
                   autoplay
                   src={mediaUrl}
