@@ -1,11 +1,16 @@
 import { MouseEvent, PropsWithChildren, forwardRef, useEffect, useState } from 'react'
 
-import { ControlButton, ControlButtonTooltip, ControlButtonTooltipText } from './PlayerControlButton.styles'
+import {
+  ControlButton,
+  ControlButtonTooltip,
+  ControlButtonTooltipText,
+  TooltipPosition,
+} from './PlayerControlButton.styles'
 
 type PlayerControlButtonProps = PropsWithChildren<{
   className?: string
   showTooltipOnlyOnFocus?: boolean
-  tooltipPosition?: 'left' | 'right' | 'bottom'
+  tooltipPosition?: TooltipPosition
   onClick?: (e: MouseEvent) => void
   tooltipText?: string
   isDisabled?: boolean
@@ -18,7 +23,7 @@ export const PlayerControlButton = forwardRef<HTMLButtonElement, PlayerControlBu
       children,
       onClick,
       tooltipText,
-      tooltipPosition,
+      tooltipPosition = 'top-right',
       className,
       showTooltipOnlyOnFocus,
       isDisabled,

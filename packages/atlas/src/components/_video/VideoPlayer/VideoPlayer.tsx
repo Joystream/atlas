@@ -36,7 +36,7 @@ import {
   CurrentTime,
   CurrentTimeWrapper,
   CustomControls,
-  EmbbeddedTopBar,
+  EmbbeddedTopBarOverlay,
   PlayButton,
   PlayControl,
   ScreenControls,
@@ -562,7 +562,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
           </BigPlayButtonContainer>
         )}
         {isEmbedded && (
-          <EmbbeddedTopBar isFullScreen={isFullScreen}>
+          <EmbbeddedTopBarOverlay isFullScreen={isFullScreen}>
             <Link to={absoluteRoutes.viewer.channel(channelId)}>
               <Avatar
                 clickable
@@ -579,10 +579,14 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                 {channelTitle}
               </StyledText>
             </TitleContainer>
-            <PlayerControlButton tooltipText="Share" tooltipPosition="bottom" onClick={(e) => e.stopPropagation()}>
+            <PlayerControlButton
+              tooltipText="Share"
+              tooltipPosition="bottom-right"
+              onClick={(e) => e.stopPropagation()}
+            >
               <StyledSvgControlsShare />
             </PlayerControlButton>
-          </EmbbeddedTopBar>
+          </EmbbeddedTopBarOverlay>
         )}
         <video style={videoStyle} ref={playerRef} className="video-js" onClick={onVideoClick} />
         {showPlayerControls && (
@@ -608,7 +612,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                       isEnded={playerState === 'ended'}
                       onClick={handlePlayPause}
                       tooltipText={isPlaying ? 'Pause (k)' : playerState === 'ended' ? 'Play again (k)' : 'Play (k)'}
-                      tooltipPosition="left"
+                      tooltipPosition="top-left"
                     >
                       {playerState === 'ended' ? (
                         <StyledSvgControlsReplay />
@@ -673,7 +677,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                   <PlayerControlButton
                     isDisabled={!isFullScreenEnabled}
                     tooltipEnabled={!isSettingsPopoverOpened}
-                    tooltipPosition="right"
+                    tooltipPosition="top-right"
                     tooltipText={isFullScreen ? 'Exit full screen (f)' : 'Full screen (f)'}
                     onClick={handleFullScreen}
                   >
