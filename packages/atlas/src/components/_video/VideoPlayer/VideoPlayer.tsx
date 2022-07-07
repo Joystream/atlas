@@ -575,7 +575,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
               <StyledText variant="h300" as="h2">
                 {title}
               </StyledText>
-              <StyledText variant="t100-strong" as="p">
+              <StyledText variant="t100-strong" as="p" margin={{ top: 0.5 }}>
                 {channelTitle}
               </StyledText>
             </TitleContainer>
