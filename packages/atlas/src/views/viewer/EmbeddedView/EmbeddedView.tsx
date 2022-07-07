@@ -29,7 +29,7 @@ export const EmbeddedView: FC = () => {
   const { url: thumbnailUrl, isLoadingAsset: isThumbnailLoading } = useAsset(video?.thumbnailPhoto)
   const { url: channelAvatarUrl, isLoadingAsset: isChannelAvatarLoading } = useAsset(video?.channel.avatarPhoto)
 
-  const { startTimestamp } = useVideoStartTimestamp(video?.duration)
+  const startTimestamp = useVideoStartTimestamp(video?.duration)
 
   const channelId = video?.channel?.id
   const videoId = video?.id

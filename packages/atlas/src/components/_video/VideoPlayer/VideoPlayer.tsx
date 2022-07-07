@@ -16,6 +16,7 @@ import { VideoJsPlayer } from 'video.js'
 
 import { FullVideoFieldsFragment } from '@/api/queries'
 import { Avatar } from '@/components/Avatar'
+import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -61,6 +62,7 @@ import {
   VolumeSlider,
   VolumeSliderContainer,
 } from './VideoPlayer.styles'
+import { VideoSharing } from './VideoSharing'
 import { CustomVideojsEvents, PlayerState, VOLUME_STEP, hotkeysHandler, isFullScreenEnabled } from './utils'
 import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
@@ -69,6 +71,8 @@ export type VideoPlayerProps = {
   channelTitle?: string | null
   channelAvatarUrl?: string | null
   isChannelAvatarLoading?: boolean
+  isShareDialogOpen?: boolean
+  onCloseShareDialog?: () => void
   isVideoPending?: boolean
   nextVideo?: FullVideoFieldsFragment | null
   className?: string
@@ -101,6 +105,8 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     channelTitle,
     channelAvatarUrl,
     isChannelAvatarLoading,
+    onCloseShareDialog,
+    isShareDialogOpen,
     playing,
     nextVideo,
     channelId,
@@ -115,6 +121,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [isSharingOverlayOpen, setIsSharingOverlayOpen] = useState(true)
   const { height: playerHeight = 0 } = useResizeObserver({ box: 'border-box', ref: playerRef })
   const customControlsRef = useRef<HTMLDivElement>(null)
 
@@ -478,7 +485,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
 
   // button/input handlers
   const handlePlayPause = useCallback(() => {
-    if (playerState === 'error') {
+    if (playerState === 'error' || isSharingOverlayOpen) {
       return
     }
     if (isPlaying) {
@@ -486,7 +493,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     } else {
       playVideo(player, true, () => setIsPlaying(true))
     }
-  }, [isPlaying, pauseVideo, playVideo, player, playerState])
+  }, [isPlaying, isSharingOverlayOpen, pauseVideo, playVideo, player, playerState])
 
   const handleChangeVolume = (event: ChangeEvent<HTMLInputElement>) => {
     setCurrentVolume(Number(event.target.value))
@@ -548,7 +555,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     setCinematicView(!cinematicView)
   }
 
-  const showPlayerControls = isLoaded && playerState
+  const showPlayerControls = isLoaded && playerState && !isSharingOverlayOpen
   const showControlsIndicator = playerState !== 'ended'
 
   return (
@@ -698,13 +705,18 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
           isFullScreen={isFullScreen}
           isPlayNextDisabled={isPlayNextDisabled || !autoPlayNext}
           playerState={playerState}
+          isSharingOverlayOpen={isSharingOverlayOpen}
           onPlay={handlePlayPause}
+          currentTime={videoTime}
           channelId={channelId}
           currentThumbnailUrl={videoJsConfig.posterUrl}
           playRandomVideoOnEnded={!isEmbedded}
         />
         {showControlsIndicator && <ControlsIndicator player={player} isLoading={playerState === 'loading'} />}
       </div>
+      <DialogModal title="Share Video" show={isShareDialogOpen} onExitClick={onCloseShareDialog}>
+        <VideoSharing videoId={videoId} currentTime={videoTime} />
+      </DialogModal>
     </Container>
   )
 }
