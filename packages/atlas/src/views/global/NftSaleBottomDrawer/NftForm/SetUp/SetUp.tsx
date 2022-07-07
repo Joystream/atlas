@@ -12,7 +12,7 @@ import { MemberComboBox } from '@/components/_inputs/MemberComboBox'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useTokenPrice } from '@/providers/joystream'
 import { pluralizeNoun } from '@/utils/misc'
-import { HapiBNToTJOYNumber } from '@/utils/number'
+import { HapiBNToTJOYNumber, TJOYNUmberToHapiBN } from '@/utils/number'
 
 import {
   AuctionDatePickerWrapper,
@@ -171,7 +171,7 @@ export const SetUp: FC<SetUpProps> = ({
                     variant="t300"
                     format="dollar"
                     color="colorTextMuted"
-                    value={convertToUSD(new BN(Number(buyNowPrice) * 10 ** 10 || 0))}
+                    value={convertToUSD(TJOYNUmberToHapiBN(buyNowPrice)) ?? 0}
                   />
                 )
               }
@@ -339,7 +339,7 @@ export const SetUp: FC<SetUpProps> = ({
                       variant="t300"
                       format="dollar"
                       color="colorTextMuted"
-                      value={convertToUSD(new BN(Number(buyNowPrice) * 10 ** 10 || 0))}
+                      value={convertToUSD(TJOYNUmberToHapiBN(buyNowPrice)) ?? 0}
                     />
                   )
                 }

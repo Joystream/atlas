@@ -69,6 +69,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const { channelId, activeMembership, setActiveUser, memberships, signOut } = useUser()
     const setSignInModalOpen = useUserStore((state) => state.actions.setSignInModalOpen)
     const accountBalance = useSubscribeAccountBalance()
+
     const containerRef = useRef<HTMLDivElement>(null)
     const { ref: measureContainerRef, height: containerHeight = 0 } = useResizeObserver({ box: 'border-box' })
     const transRef = useSpringRef()

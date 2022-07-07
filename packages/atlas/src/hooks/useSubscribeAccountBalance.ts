@@ -18,7 +18,7 @@ export const useSubscribeAccountBalance = (controllerAccount?: string | null) =>
     const init = async () => {
       unsubscribe = await joystream.subscribeAccountBalance(
         controllerAccount || activeMembership.controllerAccount,
-        proxyCallback(setAccountBalance)
+        proxyCallback((balance) => setAccountBalance(new BN(balance)))
       )
     }
     init()

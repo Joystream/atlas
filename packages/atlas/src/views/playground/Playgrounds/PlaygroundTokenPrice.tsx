@@ -12,7 +12,9 @@ export const PlaygroundTokenPrice = () => {
   const [showConverted, setShowConverted] = useState(false)
   const convert = () => {
     setShowConverted(true)
-    unit === JOY_CURRENCY_TICKER ? setConverted(convertToUSD(toConvert)) : setToConvert(convertToTokenPrice(converted))
+    unit === JOY_CURRENCY_TICKER
+      ? setConverted(convertToUSD(toConvert) ?? 0)
+      : setToConvert(convertToTokenPrice(converted))
   }
   const convertedUnit = unit === 'usd' ? JOY_CURRENCY_TICKER : 'usd'
   return (

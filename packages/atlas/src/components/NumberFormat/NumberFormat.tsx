@@ -42,7 +42,6 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
     ref
   ) => {
     const internalValue = BN.isBN(value) ? HapiBNToTJOYNumber(value) : value
-
     const textRef = useRef<HTMLHeadingElement>(null)
     let formattedValue
     let tooltipText

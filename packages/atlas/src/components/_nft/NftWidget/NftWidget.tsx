@@ -368,6 +368,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
                         <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
                       </TopBidderTokenContainer>
                     </TopBidderContainer>
+                    {nftStatus.topBidAmount.toString()}
                     <NumberFormat
                       as="span"
                       format="short"

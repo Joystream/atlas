@@ -115,18 +115,20 @@ export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmoun
               timeout={parseInt(cVar('animationTransitionFast', true))}
               classNames={transitions.names.fade}
             >
-              {dollarValue ? (
-                <NumberFormat
-                  as="span"
-                  format="dollar"
-                  variant="t100"
-                  color="colorText"
-                  value={dollarValue}
-                  align="end"
-                />
-              ) : (
-                '‌'
-              )}
+              <span>
+                {dollarValue ? (
+                  <NumberFormat
+                    as="span"
+                    format="dollar"
+                    variant="t100"
+                    color="colorText"
+                    value={dollarValue}
+                    align="end"
+                  />
+                ) : (
+                  '‌'
+                )}
+              </span>
             </CSSTransition>
           </SwitchTransition>
         </ValueContainer>

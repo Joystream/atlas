@@ -106,7 +106,7 @@ export const JoystreamProvider: FC<PropsWithChildren> = ({ children }) => {
 }
 
 const useJoystreamUtilFns = () => {
-  const [tokenPrice, setTokenPrice] = useState(new BN(0))
+  const [tokenPrice, setTokenPrice] = useState(0)
 
   // fetch token price from the status server
   useEffect(() => {
@@ -114,7 +114,7 @@ const useJoystreamUtilFns = () => {
       try {
         const data = await fetch(JOY_PRICE_SERVICE_URL)
         const json = await data.json()
-        setTokenPrice(new BN(json.price))
+        setTokenPrice(json.price)
       } catch (e) {
         SentryLogger.error(`Failed to fetch ${JOY_CURRENCY_TICKER} price`, e)
       }
