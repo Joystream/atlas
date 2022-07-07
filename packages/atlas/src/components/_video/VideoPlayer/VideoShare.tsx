@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, MouseEvent, useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Tooltip } from '@/components/Tooltip'
@@ -116,7 +116,8 @@ const VideoShareContent: FC<VideoShareContentProps> = ({ videoId, isEmbedded, cu
     }
   }
 
-  const handleGenerateIframe = () => {
+  const handleGenerateIframe = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
     const url =
       window.location.origin + absoluteRoutes.embedded.video(videoId) + (timeStampChecked ? `?time=${startsAt}` : '')
 
@@ -133,8 +134,9 @@ const VideoShareContent: FC<VideoShareContentProps> = ({ videoId, isEmbedded, cu
           size={isMobile() || !xsMatch ? 'medium' : 'large'}
           value={url}
           actionButton={{
+            dontFocusOnClick: true,
             onClick: (e) => {
-              e.preventDefault()
+              e.stopPropagation()
               copyToClipboard(url)
             },
             icon: <SvgActionCopy />,
@@ -147,7 +149,7 @@ const VideoShareContent: FC<VideoShareContentProps> = ({ videoId, isEmbedded, cu
         />
       </InputContainer>
       <ShareButtonsContainer>
-        <Tooltip hideOnClick="toggle" text="Copy iframe code">
+        <Tooltip hideOnClick="toggle" text="Copy iframe code" placement="top">
           <ShareButton variant={!isEmbedded ? 'primary' : 'secondary'} onClick={handleGenerateIframe}>
             <SvgActionEmbed />
           </ShareButton>

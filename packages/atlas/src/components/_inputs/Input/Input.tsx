@@ -40,7 +40,7 @@ export type InputProps = {
   size?: InputSize
   processing?: boolean
   nodeStart?: ReactNode
-  actionButton?: Omit<ButtonProps, 'variant' | 'size'>
+  actionButton?: Omit<ButtonProps, 'variant' | 'size'> & { dontFocusOnClick?: boolean }
   nodeEnd?: ReactNode
 }
 
@@ -110,7 +110,9 @@ const InputComponent: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
   }
 
   const handleButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
-    inputRef.current?.focus()
+    if (!actionButton?.dontFocusOnClick) {
+      inputRef.current?.focus()
+    }
     e.currentTarget.blur()
     actionButton?.onClick?.(e)
   }
