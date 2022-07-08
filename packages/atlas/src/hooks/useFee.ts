@@ -1,5 +1,5 @@
 import debouncePromise from 'awesome-debounce-promise'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { JoystreamLibExtrinsics } from '@/joystream-lib/extrinsics'
 import { useJoystream } from '@/providers/joystream'
@@ -42,30 +42,27 @@ export const useFee = <TFnName extends FeeMethodName, TArgs extends Parameters<F
   const { joystream } = useJoystream()
   const accountBalance = useSubscribeAccountBalance()
   const [fee, setfee] = useState(0)
-  const firstRender = useRef(true)
 
-  const getFee = useCallback(
-    async (args?: TArgs) => {
-      if (!args) {
-        setfee(0)
-        return
-      }
-      // @ts-ignore Warning about not having spread argument as a tuple. We can ignore this
-      const fee = await (await joystream?.extrinsics)?.[methodName](...args)
-      if (fee) {
-        setfee(fee)
-      }
-    },
+  const getFee = useMemo(
+    () =>
+      debouncePromise(async (args?: TArgs) => {
+        if (!args) {
+          return
+        }
+        // @ts-ignore Warning about not having spread argument as a tuple. We can ignore this
+        const fee = await (await joystream?.extrinsics)?.[methodName](...args)
+        if (fee) {
+          setfee(fee)
+        }
+      }, 500),
     [joystream, methodName]
   )
-  const debouncedGetFee = useRef(debouncePromise(getFee, 500))
 
   useEffect(() => {
-    if (firstRender.current) {
-      getFee(args)
-      firstRender.current = false
+    if (!args) {
+      return
     }
-    debouncedGetFee.current(args)
+    getFee(args)
   }, [args, getFee])
 
   return { fee, hasEnoughFunds: fee > (accountBalance || 0) }
