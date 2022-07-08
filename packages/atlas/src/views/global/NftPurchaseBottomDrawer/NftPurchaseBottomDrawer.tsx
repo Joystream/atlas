@@ -257,10 +257,11 @@ export const NftPurchaseBottomDrawer: FC = () => {
       ? [accountId, currentNftId, memberId, Number(watch('bid')), isEnglishAuction ? 'english' : 'open']
       : undefined
 
-  const { fee: buyNowFee } = useFee('getBuyNftNowFee', buyNowFeeArgs)
-  const { fee: makeBidFee } = useFee('getMakeNftBidFee', makeBidArgs)
+  const { fee: buyNowFee, loading: buynowFeeLoading } = useFee('getBuyNftNowFee', buyNowFeeArgs)
+  const { fee: makeBidFee, loading: makeBidFeeLoading } = useFee('getMakeNftBidFee', makeBidArgs)
 
   const transactionFee = type === 'buy_now' ? buyNowFee : makeBidFee
+  const feeLoading = buynowFeeLoading || makeBidFeeLoading
   const isBuyNowAffordable = (buyNowPrice || auctionBuyNowPrice) + transactionFee < (accountBalance || 0)
 
   const blocksLeft = endAtBlock && endAtBlock - currentBlock
@@ -287,6 +288,8 @@ export const NftPurchaseBottomDrawer: FC = () => {
         closeNftAction()
       }}
       actionBar={{
+        fee: transactionFee,
+        feeLoading: feeLoading,
         primaryButton: {
           text: primaryButtonText,
           disabled: isBuyNowClicked || type === 'buy_now' ? !isBuyNowAffordable : hasErrors,
@@ -576,6 +579,9 @@ export const NftPurchaseBottomDrawer: FC = () => {
                     as="span"
                     value={(type === 'buy_now' ? buyNowPrice : Number(bid) || 0) + transactionFee}
                     withToken
+                    format="short"
+                    withTooltip
+                    tooltipAsWrapper
                     variant="h500"
                   />
                 </Row>

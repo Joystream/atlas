@@ -200,8 +200,14 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       ? [accountId, memberId, channelMetadata, channelAssets]
       : undefined
 
-  const { fee: updateChannelFee } = useFee('getUpdateChannelFee', updateChannelFeeArgs)
-  const { fee: createChannelFee } = useFee('getCreateChannelFee', createChannelFeeArgs)
+  const { fee: updateChannelFee, loading: updateChannelFeeLoading } = useFee(
+    'getUpdateChannelFee',
+    updateChannelFeeArgs
+  )
+  const { fee: createChannelFee, loading: createChannelFeeLoading } = useFee(
+    'getCreateChannelFee',
+    createChannelFeeArgs
+  )
 
   useEffect(() => {
     if (loading || newChannel || !channel) {
@@ -608,6 +614,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
               {!channelId && progressDrawerSteps?.length ? <StyledProgressDrawer steps={progressDrawerSteps} /> : null}
               <ActionBar
                 fee={newChannel ? createChannelFee : updateChannelFee}
+                feeLoading={newChannel ? createChannelFeeLoading : updateChannelFeeLoading}
                 primaryButton={{
                   text: newChannel ? 'Create channel' : 'Publish changes',
                   disabled: isDisabled,

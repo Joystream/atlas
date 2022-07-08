@@ -1,6 +1,6 @@
 import debouncePromise from 'awesome-debounce-promise'
 import { isEqual } from 'lodash-es'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { JoystreamLibExtrinsics } from '@/joystream-lib/extrinsics'
 import { useJoystream } from '@/providers/joystream'
@@ -46,6 +46,18 @@ export const useFee = <TFnName extends FeeMethodName, TArgs extends Parameters<F
   const [loading, setLoading] = useState(false)
   const argsRef = useRef(args)
 
+  const calculateFee = useCallback(
+    async (args?: TArgs) => {
+      if (args) {
+        return
+      }
+      // @ts-ignore Warning about not having spread argument as a tuple. We can ignore this
+      const fee = await (await joystream?.extrinsics)?.[methodName](...args)
+      return fee
+    },
+    [joystream, methodName]
+  )
+
   const getFee = useMemo(
     () =>
       debouncePromise(async (args?: TArgs) => {
@@ -71,5 +83,5 @@ export const useFee = <TFnName extends FeeMethodName, TArgs extends Parameters<F
     getFee(args)
   }, [args, getFee])
 
-  return { fee, hasEnoughFunds: fee > (accountBalance || 0), loading }
+  return { fee, hasEnoughFunds: fee > (accountBalance || 0), loading, calculateFee }
 }
