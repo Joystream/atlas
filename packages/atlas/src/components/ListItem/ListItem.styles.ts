@@ -52,6 +52,10 @@ export const Container = styled.div<ContainerProps>`
   cursor: pointer;
   background-color: ${({ highlight }) => (highlight ? cVar('colorBackgroundMutedAlpha') : 'unset')};
 
+  :active {
+    text-decoration: none;
+  }
+
   ${({ disabled }) => disabled && disabledStyles};
   ${({ size }) => getContainerPadding(size)};
   ${({ disabled }) => !disabled && interactiveStyles};
