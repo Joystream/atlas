@@ -14,7 +14,6 @@ import { isBrowserOutdated } from '@/utils/browser'
 import { TopbarBase } from './components/_navigation/TopbarBase'
 import { useConfirmationModal } from './providers/confirmationModal'
 import { LegalLayout } from './views/legal'
-import { EmbeddedView } from './views/viewer'
 import { ViewerLayout } from './views/viewer/ViewerLayout'
 
 history.scrollRestoration = 'manual'
@@ -81,7 +80,6 @@ export const MainLayout: FC = () => {
     <>
       <CookiePopover />
       <Routes>
-        <Route path={absoluteRoutes.embedded.video()} element={<EmbeddedView />} />
         <Route path={BASE_PATHS.viewer + '/*'} element={<ViewerLayout />} />
         <Route path={BASE_PATHS.legal + '/*'} element={<LegalLayout />} />
         <Route path={BASE_PATHS.studio + '/*'} element={<LoadableStudioLayout />} />

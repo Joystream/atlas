@@ -29,7 +29,7 @@ export const useRedirectMigratedContent = ({ type }: { type: 'channel' | 'video'
     if (!migratedId) return
 
     if (type === 'embedded-video') {
-      navigate(absoluteRoutes.embedded.video(migratedId))
+      //navigate(absoluteRoutes.embedded.video(migratedId))
     } else {
       navigate(absoluteRoutes.viewer.video(migratedId))
     }
