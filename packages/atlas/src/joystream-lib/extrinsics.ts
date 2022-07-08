@@ -57,6 +57,8 @@ import {
 
 type AccountIdAccessor = () => AccountId | null
 
+const BILLION = 1_000_000_000
+
 export class JoystreamLibExtrinsics {
   readonly api: PolkadotApi
   readonly getAccount: AccountIdAccessor
@@ -147,7 +149,7 @@ export class JoystreamLibExtrinsics {
   }
 
   private async getFee(tx: SubmittableExtrinsic<'promise'>, address: string) {
-    return (await tx.paymentInfo(address)).partialFee.toNumber()
+    return (await tx.paymentInfo(address)).partialFee.toNumber() / BILLION
   }
 
   async getCreateChannelFee(

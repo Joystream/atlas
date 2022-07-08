@@ -1,5 +1,6 @@
 import debouncePromise from 'awesome-debounce-promise'
-import { useEffect, useMemo, useState } from 'react'
+import { isEqual } from 'lodash-es'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { JoystreamLibExtrinsics } from '@/joystream-lib/extrinsics'
 import { useJoystream } from '@/providers/joystream'
@@ -42,6 +43,8 @@ export const useFee = <TFnName extends FeeMethodName, TArgs extends Parameters<F
   const { joystream } = useJoystream()
   const accountBalance = useSubscribeAccountBalance()
   const [fee, setfee] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const argsRef = useRef(args)
 
   const getFee = useMemo(
     () =>
@@ -54,16 +57,19 @@ export const useFee = <TFnName extends FeeMethodName, TArgs extends Parameters<F
         if (fee) {
           setfee(fee)
         }
+        setLoading(false)
       }, 500),
     [joystream, methodName]
   )
 
   useEffect(() => {
-    if (!args) {
+    if (!args || isEqual(args, argsRef.current)) {
       return
     }
+    argsRef.current = args
+    setLoading(true)
     getFee(args)
   }, [args, getFee])
 
-  return { fee, hasEnoughFunds: fee > (accountBalance || 0) }
+  return { fee, hasEnoughFunds: fee > (accountBalance || 0), loading }
 }

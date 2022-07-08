@@ -6,6 +6,7 @@ import { DialogModal } from '@/components/_overlays/DialogModal'
 import { ReactionId } from '@/config/reactions'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
+import { useFee } from '@/hooks/useFee'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useMemberAvatar } from '@/providers/assets'
@@ -55,7 +56,7 @@ export const Comment: FC<CommentProps> = memo(
     const [isEditingComment, setIsEditingComment] = useState(false)
     const [processingReactionsIds, setProcessingReactionsIds] = useState<ReactionId[]>([])
 
-    const { memberId, activeMembership, isLoggedIn, signIn } = useUser()
+    const { memberId, activeMembership, isLoggedIn, signIn, accountId } = useUser()
     const { comment } = useComment(
       { commentId: commentId ?? '' },
       {
@@ -69,6 +70,17 @@ export const Comment: FC<CommentProps> = memo(
     const { openSignInDialog } = useDisplaySignInDialog()
     const [openModal, closeModal] = useConfirmationModal()
     const { reactToComment, deleteComment, moderateComment, updateComment, addComment } = useReactionTransactions()
+    const { fee: replyCommentFee, loading: replyCommentFeeLoading } = useFee(
+      'getCreateVideoCommentFee',
+      accountId && memberId && video?.id && replyCommentInputText && comment?.id !== undefined
+        ? [accountId, memberId, video?.id, replyCommentInputText, comment?.id || null]
+        : undefined
+    )
+
+    const { fee: editVideoFee, loading: editVideoFeeLoading } = useFee(
+      'getEditVideoCommentFee',
+      accountId && memberId && comment?.id ? [accountId, memberId, comment?.id, editCommentInputText] : undefined
+    )
 
     const handleDeleteComment = (comment: CommentFieldsFragment) => {
       const isChannelOwner = video?.channel.ownerMember?.id === memberId && comment.author.id !== memberId
@@ -229,6 +241,8 @@ export const Comment: FC<CommentProps> = memo(
       return (
         <CommentInput
           indented={!isReplyable}
+          fee={editVideoFee}
+          feeLoading={editVideoFeeLoading}
           processing={editCommentInputIsProcessing}
           readOnly={!memberId}
           memberHandle={activeMembership?.handle}
@@ -237,7 +251,7 @@ export const Comment: FC<CommentProps> = memo(
           value={editCommentInputText}
           hasInitialValueChanged={comment?.text !== editCommentInputText}
           onFocus={handleOpenSignInDialog}
-          onComment={() => handleUpdateComment()}
+          onComment={handleUpdateComment}
           onChange={(e) => setEditCommentInputText(e.target.value)}
           onCancel={() =>
             comment?.text !== editCommentInputText
@@ -281,6 +295,8 @@ export const Comment: FC<CommentProps> = memo(
           {isReplyable && replyInputOpen && (
             <CommentInput
               ref={replyCommentInputRef}
+              fee={replyCommentFee}
+              feeLoading={replyCommentFeeLoading}
               memberAvatarUrl={memberAvatarUrl}
               isMemberAvatarLoading={isMemberAvatarLoading}
               processing={replyCommentInputIsProcessing}

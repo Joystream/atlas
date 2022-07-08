@@ -34,6 +34,7 @@ export type CommentInputProps = {
   reply?: boolean
   className?: string
   fee?: number
+  feeLoading?: boolean
 } & Omit<CommentRowProps, 'isInput'>
 
 const COMMENT_LIMIT = 50000
@@ -55,6 +56,7 @@ export const CommentInput = forwardRef<HTMLTextAreaElement, CommentInputProps>(
       reply,
       className,
       fee = 0,
+      feeLoading,
       ...rest
     },
     ref
@@ -151,7 +153,7 @@ export const CommentInput = forwardRef<HTMLTextAreaElement, CommentInputProps>(
 
           <ButtonsContainer>
             <Flex>
-              <Fee amount={fee} color="colorText" variant="t100" hideOnMobile />
+              <Fee amount={fee} color="colorText" variant="t100" hideOnMobile loading={feeLoading} />
             </Flex>
             {onCancel && (
               <Button
