@@ -346,20 +346,29 @@ export const ScreenControls = styled.div`
   }
 `
 
-const logoStyles = css`
-  padding: 0.5em;
-  max-height: 2.5em;
+export const StyledEmbeddedLogoLink = styled(Link)`
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  z-index: ${zIndex.overlay};
+  ${media.sm} {
+    bottom: 24px;
+    right: 24px;
+  }
+`
+
+export const StyledJoystreamLogo = styled(SvgJoystreamLogoFull)<{ embedded?: boolean }>`
+  padding: ${({ embedded }) => (embedded ? 0 : '0.5em')};
+  max-height: ${({ embedded }) => (embedded ? '2em' : '2.5em')};
   height: 100%;
   filter: drop-shadow(${cVar('effectElevation1Layer1')});
 
   ${defaultIconColor};
 `
 
-export const StyledJoystreamLogo = styled(SvgJoystreamLogoFull)`
-  ${logoStyles};
-`
 export const StyledJoystreamLogoShort = styled(SvgJoystreamLogoShort)`
-  ${logoStyles};
+  padding: 0.5em;
+  max-height: 2.5em;
 `
 
 export const Container = styled.div<ContainerProps>`
