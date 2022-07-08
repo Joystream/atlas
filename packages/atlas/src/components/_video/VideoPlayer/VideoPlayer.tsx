@@ -747,6 +747,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
           isFullScreen={isFullScreen}
           videoId={videoId}
           isShareDialogOpen={isShareDialogOpen || isSharingOverlayOpen}
+          videoTitle={video?.title}
         />
       </div>
     </Container>
