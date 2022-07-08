@@ -578,17 +578,17 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
         <video style={videoStyle} ref={playerRef} className="video-js" onClick={onVideoClick} />
         {showPlayerControls && (
           <>
-            <ControlsOverlay isSettingsPopoverOpened={isSettingsPopoverOpened} isFullScreen={isFullScreen}>
+            <ControlsOverlay isSettingsPopoverOpened={isSettingsPopoverOpened} elevated={isFullScreen}>
               <CustomTimeline
                 playVideo={playVideo}
                 pauseVideo={pauseVideo}
                 player={player}
-                isFullScreen={isFullScreen}
+                elevated={isFullScreen || isEmbedded}
                 playerState={playerState}
                 setPlayerState={setPlayerState}
               />
               <CustomControls
-                isFullScreen={isFullScreen}
+                elevated={isFullScreen || isEmbedded}
                 isEnded={playerState === 'ended'}
                 ref={customControlsRef}
                 isSettingsPopoverOpened={isSettingsPopoverOpened}

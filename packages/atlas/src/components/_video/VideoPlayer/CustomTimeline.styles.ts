@@ -7,19 +7,19 @@ import { cVar, media, transitions, zIndex } from '@/styles'
 import { CustomControls, TRANSITION_DELAY } from './VideoPlayer.styles'
 
 type ProgressControlProps = {
-  isFullScreen?: boolean
+  elevated?: boolean
   isScrubbing?: boolean
 }
 
 // expand ProgressControl area when scrubbing
-const scrubbingStyles = (isFullScreen?: boolean) => css`
+const scrubbingStyles = (elevated?: boolean) => css`
   height: 100vh;
-  bottom: ${isFullScreen ? 0 : '-200px'};
-  padding-bottom: ${isFullScreen ? `1.5em 1.5em` : '200px'};
+  bottom: ${elevated ? 0 : '-200px'};
+  padding-bottom: ${elevated ? `1.5em 1.5em` : '200px'};
 `
 
 export const ProgressControl = styled.div<ProgressControlProps>`
-  padding: ${({ isFullScreen }) => (isFullScreen ? `1.5em 1em` : `0`)};
+  padding: ${({ elevated }) => (elevated ? `1.5em 1em` : `0`)};
   position: absolute;
   height: 1.5em;
   z-index: ${zIndex.nearOverlay};
@@ -31,8 +31,8 @@ export const ProgressControl = styled.div<ProgressControlProps>`
 
   @media (hover: hover) {
     cursor: pointer;
-    padding: ${({ isFullScreen }) => (isFullScreen ? `1.5em 1.5em` : `0`)};
-    ${({ isScrubbing, isFullScreen }) => isScrubbing && scrubbingStyles(isFullScreen)};
+    padding: ${({ elevated }) => (elevated ? `1.5em 1.5em` : `0`)};
+    ${({ isScrubbing, elevated }) => isScrubbing && scrubbingStyles(elevated)};
 
     :hover ${() => SeekBar} {
       height: 0.5em;
@@ -103,7 +103,7 @@ export const MouseDisplay = styled.div`
 `
 
 type MouseDisplayTooltipProps = {
-  isFullScreen?: boolean
+  elevated?: boolean
 }
 
 export const MouseDisplayTooltip = styled.div<MouseDisplayTooltipProps>`
@@ -111,7 +111,7 @@ export const MouseDisplayTooltip = styled.div<MouseDisplayTooltipProps>`
   user-select: none;
   opacity: 0;
   position: absolute;
-  padding: ${({ isFullScreen }) => (isFullScreen ? `0` : `0 1em`)};
+  padding: ${({ elevated }) => (elevated ? `0` : `0 1em`)};
   bottom: 1.5em;
   transition: transform ${transitions.timings.player} ${TRANSITION_DELAY} ${transitions.easing},
     opacity ${transitions.timings.player} ${TRANSITION_DELAY} ${transitions.easing};

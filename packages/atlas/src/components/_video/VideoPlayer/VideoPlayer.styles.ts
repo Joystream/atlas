@@ -32,7 +32,7 @@ type ContainerProps = {
   isSettingsPopoverOpened?: boolean
 }
 type CustomControlsProps = {
-  isFullScreen?: boolean
+  elevated?: boolean
   isEnded?: boolean
   isSettingsPopoverOpened?: boolean
 }
@@ -158,7 +158,7 @@ export const ControlsOverlay = styled.div<CustomControlsProps>`
   @media (hover: hover) {
     height: 8em;
     background: linear-gradient(180deg, transparent 0%, ${cVar('colorCoreNeutral900')} 100%);
-    font-size: ${({ isFullScreen }) => (isFullScreen ? '32px' : '16px')};
+    font-size: ${({ elevated: isFullScreen }) => (isFullScreen ? '32px' : '16px')};
   }
 `
 
@@ -166,7 +166,7 @@ export const CustomControls = styled.div<CustomControlsProps>`
   position: absolute;
   transform: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 0 : 0.5)}em;
   padding: 0.5em 0.5em 0;
-  bottom: ${({ isFullScreen }) => (isFullScreen ? '2.5em' : '1.25em')};
+  bottom: ${({ elevated: isFullScreen }) => (isFullScreen ? '3em' : '1.25em')};
   box-shadow: ${({ isEnded }) => (isEnded ? cVar('effectDividersTop') : 'unset')};
   left: 0;
   z-index: ${zIndex.nearOverlay - 1};
