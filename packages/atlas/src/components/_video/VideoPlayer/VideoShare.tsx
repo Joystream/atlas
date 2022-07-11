@@ -93,11 +93,23 @@ const VideoShareContent: FC<VideoShareContentProps> = ({ videoId, isEmbedded, cu
   const [url, setUrl] = useState(window.location.origin + absoluteRoutes.viewer.video(videoId))
   const xsMatch = useMediaMatch('xs')
   const { copyToClipboard } = useClipboard()
+  const [copyButtonClicked, setCopyButtonClicked] = useState(false)
 
   const [startsAt, setStartsAt] = useState(0)
   const [timeStampChecked, setTimeStampChecked] = useState(false)
 
   const firstRender = useRef(true)
+
+  useEffect(() => {
+    if (!copyButtonClicked) {
+      return
+    }
+    const timeout = setTimeout(() => {
+      setCopyButtonClicked(false)
+    }, 2000)
+
+    return () => clearTimeout(timeout)
+  }, [copyButtonClicked])
 
   useEffect(() => {
     if (!firstRender.current || !currentTime) {
@@ -124,6 +136,7 @@ const VideoShareContent: FC<VideoShareContentProps> = ({ videoId, isEmbedded, cu
     const iframe = `<iframe src="${url}" scrolling="no" height="400px" width="600px" allowfullscreen></iframe>`
 
     copyToClipboard(iframe)
+    setCopyButtonClicked(true)
   }
 
   return (
@@ -135,22 +148,33 @@ const VideoShareContent: FC<VideoShareContentProps> = ({ videoId, isEmbedded, cu
           value={url}
           actionButton={{
             dontFocusOnClick: true,
+            tooltipText: copyButtonClicked ? 'Copied to clipboard' : 'Copy URL',
+            onMouseLeave: () => setCopyButtonClicked(false),
             onClick: (e) => {
               e.stopPropagation()
+              setCopyButtonClicked(true)
               copyToClipboard(url)
             },
             icon: <SvgActionCopy />,
           }}
         />
         <Checkbox
-          label={`Starts at ${formatDurationShort(startsAt || 0)}`}
+          label={`Start at ${formatDurationShort(startsAt || 0)}`}
           value={timeStampChecked}
           onChange={handleCheckboxChange}
         />
       </InputContainer>
       <ShareButtonsContainer>
-        <Tooltip hideOnClick="toggle" text="Copy iframe code" placement="top">
-          <ShareButton variant={!isEmbedded ? 'primary' : 'secondary'} onClick={handleGenerateIframe}>
+        <Tooltip
+          hideOnClick={false}
+          text={copyButtonClicked ? 'Copied to clipboard' : 'Copy embed code'}
+          placement="top"
+        >
+          <ShareButton
+            variant={!isEmbedded ? 'primary' : 'secondary'}
+            onClick={handleGenerateIframe}
+            onMouseLeave={() => setCopyButtonClicked(false)}
+          >
             <SvgActionEmbed />
           </ShareButton>
         </Tooltip>
