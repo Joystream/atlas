@@ -4,7 +4,7 @@ import mergeRefs from 'react-merge-refs'
 
 import { Text, TextProps, TextVariant } from '@/components/Text'
 import { JOY_CURRENCY_TICKER } from '@/config/token'
-import { HapiBNToTJOYNumber, formatNumber } from '@/utils/number'
+import { HapiBNToTokenNumber, formatNumber } from '@/utils/number'
 
 import { Tooltip } from '../Tooltip'
 
@@ -41,7 +41,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
     },
     ref
   ) => {
-    const internalValue = BN.isBN(value) ? HapiBNToTJOYNumber(value) : value
+    const internalValue = BN.isBN(value) ? HapiBNToTokenNumber(value) : value
     const textRef = useRef<HTMLHeadingElement>(null)
     let formattedValue
     let tooltipText

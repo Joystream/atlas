@@ -10,5 +10,5 @@ export const formatNumber = (num: number): string => {
 }
 
 const conversionBN = new BN(10 ** 10)
-export const HapiBNToTJOYNumber = (bn: BN) => bn.div(conversionBN).toNumber()
-export const TJOYNUmberToHapiBN = (number: number) => new BN(number).mul(conversionBN)
+export const HapiBNToTokenNumber = (bn: BN) => bn.div(conversionBN).toNumber()
+export const TokenNumberToHapiBN = (number: number) => new BN(number).mul(conversionBN)

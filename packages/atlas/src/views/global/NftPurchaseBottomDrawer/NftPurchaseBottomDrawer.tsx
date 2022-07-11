@@ -30,7 +30,7 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions'
 import { useUser } from '@/providers/user'
 import { pluralizeNoun } from '@/utils/misc'
-import { HapiBNToTJOYNumber, TJOYNUmberToHapiBN } from '@/utils/number'
+import { HapiBNToTokenNumber, TokenNumberToHapiBN } from '@/utils/number'
 import { formatDateTime, formatDurationShort } from '@/utils/time'
 
 import {
@@ -107,16 +107,16 @@ export const NftPurchaseBottomDrawer: FC = () => {
     }
   }, [isBuyNow, isEnglishAuction, isOpenAuction])
 
-  const auctionBuyNowPrice = isAuction ? HapiBNToTJOYNumber(nftStatus.buyNowPrice || new BN(0)) : 0
+  const auctionBuyNowPrice = isAuction ? HapiBNToTokenNumber(nftStatus.buyNowPrice || new BN(0)) : 0
   const bidLockingTime = isAuction && nftStatus.bidLockingTime && convertBlocksToDuration(nftStatus.bidLockingTime)
-  const buyNowPrice = isBuyNow ? HapiBNToTJOYNumber(nftStatus.buyNowPrice || new BN(0)) : 0
-  const startingPrice = isAuction && HapiBNToTJOYNumber(nftStatus.startingPrice)
+  const buyNowPrice = isBuyNow ? HapiBNToTokenNumber(nftStatus.buyNowPrice || new BN(0)) : 0
+  const startingPrice = isAuction && HapiBNToTokenNumber(nftStatus.startingPrice)
   const topBidder = isAuction && nftStatus.topBidder ? nftStatus.topBidder : undefined
   const topBidAmount =
     isAuction && !nftStatus.topBid?.isCanceled && !!nftStatus.topBidAmount
-      ? HapiBNToTJOYNumber(nftStatus.topBidAmount)
+      ? HapiBNToTokenNumber(nftStatus.topBidAmount)
       : 0
-  const minimalBidStep = isAuction && nftStatus.minimalBidStep ? HapiBNToTJOYNumber(nftStatus.minimalBidStep) : 0
+  const minimalBidStep = isAuction && nftStatus.minimalBidStep ? HapiBNToTokenNumber(nftStatus.minimalBidStep) : 0
   const endAtBlock = isAuction && nftStatus.auctionPlannedEndBlock
 
   const minimumBidEnglishAuction = startingPrice > topBidAmount ? startingPrice : topBidAmount + minimalBidStep
@@ -373,7 +373,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                           <BidAmount
                             as="span"
                             variant="h400"
-                            value={TJOYNUmberToHapiBN(topBidAmount)}
+                            value={TokenNumberToHapiBN(topBidAmount)}
                             withToken
                             format="short"
                           />
@@ -430,7 +430,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                         <NumberFormat
                           as="span"
                           variant="t100"
-                          value={TJOYNUmberToHapiBN(auctionBuyNowPrice)}
+                          value={TokenNumberToHapiBN(auctionBuyNowPrice)}
                           withToken
                         />
                       </Text>
@@ -470,7 +470,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                             <NumberFormat
                               as="span"
                               format="dollar"
-                              value={convertToUSD(TJOYNUmberToHapiBN(bid ?? 0)) ?? 0}
+                              value={convertToUSD(TokenNumberToHapiBN(bid ?? 0)) ?? 0}
                             />
                           }
                         />
@@ -582,9 +582,9 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   value={
                     type !== 'buy_now'
                       ? isBuyNowClicked
-                        ? TJOYNUmberToHapiBN(auctionBuyNowPrice)
-                        : TJOYNUmberToHapiBN(bid)
-                      : TJOYNUmberToHapiBN(buyNowPrice)
+                        ? TokenNumberToHapiBN(auctionBuyNowPrice)
+                        : TokenNumberToHapiBN(bid)
+                      : TokenNumberToHapiBN(buyNowPrice)
                   }
                   withToken
                   variant="t100"
@@ -608,8 +608,8 @@ export const NftPurchaseBottomDrawer: FC = () => {
                     as="span"
                     value={
                       type === 'buy_now'
-                        ? TJOYNUmberToHapiBN(buyNowPrice)
-                        : TJOYNUmberToHapiBN(bid).add(new BN(transactionFee))
+                        ? TokenNumberToHapiBN(buyNowPrice)
+                        : TokenNumberToHapiBN(bid).add(new BN(transactionFee))
                     }
                     withToken
                     format="short"

@@ -7,7 +7,7 @@ import { SvgActionShow } from '@/components/_icons'
 import { VideoThumbnail, VideoThumbnailProps } from '@/components/_video/VideoThumbnail'
 import { useGetNftSlot } from '@/hooks/useGetNftSlot'
 import { EnglishTimerState } from '@/hooks/useNftState'
-import { HapiBNToTJOYNumber } from '@/utils/number'
+import { HapiBNToTokenNumber } from '@/utils/number'
 import { formatDurationShort } from '@/utils/time'
 
 import { Container } from './NftTile.styles'
@@ -126,12 +126,12 @@ export const NftTile: FC<NftTileProps> = ({
         hovered={hovered}
         owner={owner}
         nftStatus={status}
-        buyNowPrice={buyNowPrice ? HapiBNToTJOYNumber(buyNowPrice) : undefined}
+        buyNowPrice={buyNowPrice ? HapiBNToTokenNumber(buyNowPrice) : undefined}
         loading={loading}
-        topBid={topBid ? HapiBNToTJOYNumber(topBid) : undefined}
+        topBid={topBid ? HapiBNToTokenNumber(topBid) : undefined}
         creator={creator}
         title={title}
-        startingPrice={startingPrice ? HapiBNToTJOYNumber(startingPrice) : undefined}
+        startingPrice={startingPrice ? HapiBNToTokenNumber(startingPrice) : undefined}
         interactable={interactable}
         canBuyNow={canBuyNow}
         canCancelSale={canCancelSale}

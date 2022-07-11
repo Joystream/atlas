@@ -17,7 +17,7 @@ import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUser } from '@/providers/user'
 import { SentryLogger } from '@/utils/logs'
-import { HapiBNToTJOYNumber, TJOYNUmberToHapiBN } from '@/utils/number'
+import { HapiBNToTokenNumber, TokenNumberToHapiBN } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 
 import { AcceptTerms } from './AcceptTerms'
@@ -81,7 +81,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
           maxStartDate,
           maxEndDate,
           listingType,
-          HapiBNToTJOYNumber(chainState.nftMinStartingPrice)
+          HapiBNToTokenNumber(chainState.nftMinStartingPrice)
         )
       )
       return resolver(data, ctx, options)
@@ -90,7 +90,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
     defaultValues: {
       startDate: null,
       endDate: null,
-      startingPrice: HapiBNToTJOYNumber(chainState.nftMinStartingPrice) || undefined,
+      startingPrice: HapiBNToTokenNumber(chainState.nftMinStartingPrice) || undefined,
     },
   })
   const {
@@ -123,7 +123,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
       const startDateValue = getValues('startDate')
       const startDate = startDateValue?.type === 'date' && startDateValue.date
       const startsAtBlock = startDate ? convertMsTimestampToBlock(startDate.getTime()) : undefined
-      const startingPrice = data.startingPrice ?? HapiBNToTJOYNumber(chainState.nftMinStartingPrice)
+      const startingPrice = data.startingPrice ?? HapiBNToTokenNumber(chainState.nftMinStartingPrice)
       const minimalBidStep = Math.ceil(startingPrice * NFT_MIN_BID_STEP_MULTIPLIER)
 
       if (data.auctionDurationBlocks) {
@@ -131,9 +131,9 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
         return {
           type: 'english',
           startsAtBlock,
-          startingPrice: TJOYNUmberToHapiBN(startingPrice),
-          minimalBidStep: TJOYNUmberToHapiBN(minimalBidStep),
-          buyNowPrice: typeof data.buyNowPrice === 'number' ? TJOYNUmberToHapiBN(data.buyNowPrice) : undefined,
+          startingPrice: TokenNumberToHapiBN(startingPrice),
+          minimalBidStep: TokenNumberToHapiBN(minimalBidStep),
+          buyNowPrice: typeof data.buyNowPrice === 'number' ? TokenNumberToHapiBN(data.buyNowPrice) : undefined,
           auctionDurationBlocks: data.auctionDurationBlocks,
           whitelistedMembersIds: data.whitelistedMembers?.map((member) => new BN(member.id)),
         }
@@ -142,9 +142,9 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
         return {
           type: 'open',
           startsAtBlock,
-          startingPrice: TJOYNUmberToHapiBN(startingPrice),
-          minimalBidStep: TJOYNUmberToHapiBN(minimalBidStep),
-          buyNowPrice: typeof data.buyNowPrice === 'number' ? TJOYNUmberToHapiBN(data.buyNowPrice) : undefined,
+          startingPrice: TokenNumberToHapiBN(startingPrice),
+          minimalBidStep: TokenNumberToHapiBN(minimalBidStep),
+          buyNowPrice: typeof data.buyNowPrice === 'number' ? TokenNumberToHapiBN(data.buyNowPrice) : undefined,
           whitelistedMembersIds: data.whitelistedMembers?.map((member) => new BN(member.id)),
         }
       }
@@ -322,8 +322,8 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
     loading: loadingVideo,
     duration: video?.duration,
     views: video?.views,
-    buyNowPrice: TJOYNUmberToHapiBN(watch('buyNowPrice') || 0),
-    startingPrice: TJOYNUmberToHapiBN(watch('startingPrice') || 0),
+    buyNowPrice: TokenNumberToHapiBN(watch('buyNowPrice') || 0),
+    startingPrice: TokenNumberToHapiBN(watch('startingPrice') || 0),
   }
 
   const stepsContent = [

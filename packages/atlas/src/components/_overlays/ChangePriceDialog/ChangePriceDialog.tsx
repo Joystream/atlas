@@ -9,7 +9,7 @@ import { Input } from '@/components/_inputs/Input'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { useTokenPrice } from '@/providers/joystream'
 import { sizes } from '@/styles'
-import { TJOYNUmberToHapiBN } from '@/utils/number'
+import { TokenNumberToHapiBN } from '@/utils/number'
 
 type ChangePriceDialogProps = {
   onModalClose: () => void
@@ -56,7 +56,7 @@ export const ChangePriceDialog: FC<ChangePriceDialogProps> = ({ onModalClose, is
           nodeEnd={
             <Pill
               label={
-                <NumberFormat as="span" format="dollar" value={convertToUSD(TJOYNUmberToHapiBN(price ?? 0)) ?? 0} />
+                <NumberFormat as="span" format="dollar" value={convertToUSD(TokenNumberToHapiBN(price ?? 0)) ?? 0} />
               }
             />
           }

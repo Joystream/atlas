@@ -11,7 +11,7 @@ import { MemberComboBox } from '@/components/_inputs/MemberComboBox'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useTokenPrice } from '@/providers/joystream'
 import { pluralizeNoun } from '@/utils/misc'
-import { HapiBNToTJOYNumber, TJOYNUmberToHapiBN } from '@/utils/number'
+import { HapiBNToTokenNumber, TokenNumberToHapiBN } from '@/utils/number'
 
 import {
   AuctionDatePickerWrapper,
@@ -107,7 +107,7 @@ export const SetUp: FC<SetUpProps> = ({
         setValue('startDate', null)
         setValue('endDate', null)
       } else if (name === 'startingPrice') {
-        setValue('startingPrice', HapiBNToTJOYNumber(chainState.nftMinStartingPrice) || undefined)
+        setValue('startingPrice', HapiBNToTokenNumber(chainState.nftMinStartingPrice) || undefined)
       } else {
         reset({ ...getValues(), [name]: undefined })
       }
@@ -170,7 +170,7 @@ export const SetUp: FC<SetUpProps> = ({
                     variant="t300"
                     format="dollar"
                     color="colorTextMuted"
-                    value={convertToUSD(TJOYNUmberToHapiBN(buyNowPrice)) ?? 0}
+                    value={convertToUSD(TokenNumberToHapiBN(buyNowPrice)) ?? 0}
                   />
                 )
               }
@@ -306,7 +306,7 @@ export const SetUp: FC<SetUpProps> = ({
                       as="span"
                       variant="t300"
                       format="dollar"
-                      value={convertToUSD(TJOYNUmberToHapiBN(startingPrice || 0)) ?? 0}
+                      value={convertToUSD(TokenNumberToHapiBN(startingPrice || 0)) ?? 0}
                     />
                   )
                 }
@@ -338,7 +338,7 @@ export const SetUp: FC<SetUpProps> = ({
                       variant="t300"
                       format="dollar"
                       color="colorTextMuted"
-                      value={convertToUSD(TJOYNUmberToHapiBN(buyNowPrice)) ?? 0}
+                      value={convertToUSD(TokenNumberToHapiBN(buyNowPrice)) ?? 0}
                     />
                   )
                 }
