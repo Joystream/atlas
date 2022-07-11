@@ -567,13 +567,11 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     <Container isFullScreen={isFullScreen} className={className} isSettingsPopoverOpened={isSettingsPopoverOpened}>
       <div data-vjs-player onClick={handlePlayPause}>
         {needsManualPlay && (
-          <>
-            <BigPlayButtonContainer onClick={handlePlayPause}>
-              <BigPlayButton onClick={handlePlayPause}>
-                <StyledSvgControlsPlay />
-              </BigPlayButton>
-            </BigPlayButtonContainer>
-          </>
+          <BigPlayButtonContainer onClick={handlePlayPause}>
+            <BigPlayButton onClick={handlePlayPause}>
+              <StyledSvgControlsPlay />
+            </BigPlayButton>
+          </BigPlayButtonContainer>
         )}
         <video style={videoStyle} ref={playerRef} className="video-js" onClick={onVideoClick} />
         {showPlayerControls && (
@@ -731,7 +729,12 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
               </PlayerControlButton>
             </EmbbeddedTopBarOverlay>
             {needsManualPlay && (
-              <StyledEmbeddedLogoLink to={absoluteRoutes.viewer.video(videoId)}>
+              <StyledEmbeddedLogoLink
+                href={window.location.origin + absoluteRoutes.viewer.video(videoId)}
+                rel="noopener noreferrer"
+                target="_blank"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <StyledJoystreamLogo embedded />
               </StyledEmbeddedLogoLink>
             )}

@@ -346,14 +346,14 @@ export const ScreenControls = styled.div`
   }
 `
 
-export const StyledEmbeddedLogoLink = styled(Link)`
+export const StyledEmbeddedLogoLink = styled.a`
   position: absolute;
-  bottom: 16px;
-  right: 16px;
+  bottom: ${sizes(4)};
+  right: ${sizes(4)};
   z-index: ${zIndex.overlay};
   ${media.sm} {
-    bottom: 24px;
-    right: 24px;
+    bottom: ${sizes(6)};
+    right: ${sizes(6)};
   }
 `
 
