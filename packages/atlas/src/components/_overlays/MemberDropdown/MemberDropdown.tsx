@@ -88,30 +88,6 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const isStudio = pathname.search(absoluteRoutes.studio.index()) !== -1
     const hasOneMember = memberships?.length === 1
 
-    const handleAddNewChannel = () => {
-      navigate(absoluteRoutes.studio.newChannel())
-      closeDropdown?.()
-    }
-    const handleGoToJoystream = () => {
-      navigate(absoluteRoutes.viewer.index())
-      closeDropdown?.()
-    }
-    const handleGoToStudio = () => {
-      navigate(absoluteRoutes.studio.index())
-      closeDropdown?.()
-    }
-    const handleGoToMyProfile = () => {
-      navigate(absoluteRoutes.viewer.member(activeMembership?.handle))
-      closeDropdown?.()
-    }
-    const handleGoToMyChannel = () => {
-      navigate(
-        activeMembership?.channels.length
-          ? absoluteRoutes.viewer.channel(channelId ?? undefined)
-          : absoluteRoutes.studio.signIn()
-      )
-      closeDropdown?.()
-    }
     const handleAddNewMember = () => {
       setSignInModalOpen(true)
       closeDropdown?.()
@@ -264,30 +240,38 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                     <SectionContainer>
                       {publisher ? (
                         <ListItem
-                          onClick={handleGoToJoystream}
+                          onClick={closeDropdown}
                           nodeStart={<IconWrapper icon={<SvgActionPlay />} />}
                           label="Joystream"
+                          to={absoluteRoutes.viewer.index()}
                         />
                       ) : (
                         <>
                           <ListItem
-                            onClick={handleGoToStudio}
+                            onClick={closeDropdown}
                             nodeStart={<IconWrapper icon={<SvgActionAddVideo />} />}
                             label="Studio"
+                            to={absoluteRoutes.studio.index()}
                           />
                           <ListItem
-                            onClick={handleGoToMyProfile}
+                            onClick={closeDropdown}
                             nodeStart={<IconWrapper icon={<SvgActionMember />} />}
                             label="My profile"
+                            to={absoluteRoutes.viewer.member(activeMembership?.handle)}
                           />
                         </>
                       )}
                       <ListItem
                         asButton
-                        onClick={handleGoToMyChannel}
+                        onClick={closeDropdown}
                         nodeStart={<IconWrapper icon={<SvgActionChannel />} />}
                         caption={selectedChannel?.title}
                         label="My channel"
+                        to={
+                          activeMembership?.channels.length
+                            ? absoluteRoutes.viewer.channel(channelId ?? undefined)
+                            : absoluteRoutes.studio.signIn()
+                        }
                       />
                     </SectionContainer>
                     {publisher && (
@@ -304,9 +288,10 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                           />
                         ))}
                         <ListItem
-                          onClick={handleAddNewChannel}
+                          onClick={closeDropdown}
                           nodeStart={<IconWrapper icon={<SvgActionPlus />} />}
                           label="Add new channel..."
+                          to={absoluteRoutes.studio.newChannel()}
                         />
                       </SectionContainer>
                     )}

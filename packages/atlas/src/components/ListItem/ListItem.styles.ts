@@ -51,6 +51,7 @@ export const Container = styled.div<ContainerProps>`
   user-select: none;
   cursor: pointer;
   background-color: ${({ highlight }) => (highlight ? cVar('colorBackgroundMutedAlpha') : 'unset')};
+  text-decoration: none;
 
   ${({ disabled }) => disabled && disabledStyles};
   ${({ size }) => getContainerPadding(size)};
