@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { ReactNode, forwardRef } from 'react'
 
 import { NumberFormat } from '@/components/NumberFormat'
@@ -15,11 +16,11 @@ type ReactionsOnboardingPopoverProps = {
   onConfirm?: () => void
   disabled?: boolean
   trigger: ReactNode
-  fee?: number
+  fee?: BN
 }
 
 export const ReactionsOnboardingPopover = forwardRef<PopoverImperativeHandle, ReactionsOnboardingPopoverProps>(
-  ({ onDecline, disabled, onConfirm, trigger, fee = 0 }, ref) => {
+  ({ onDecline, disabled, onConfirm, trigger, fee = new BN(0) }, ref) => {
     const setReactionPopoverDismission = usePersonalDataStore((state) => state.actions.setReactionPopoverDismission)
 
     return (
@@ -63,7 +64,7 @@ export const ReactionsOnboardingPopover = forwardRef<PopoverImperativeHandle, Re
             Comments and reactions are stored on blockchain and come with a fee
           </Text>
           <Text as="p" variant="t200" color="colorText" margin={{ top: 2 }}>
-            <NumberFormat value={fee} as="span" color="colorText" variant="t200" format="short" withToken /> is the
+            <NumberFormat value={fee} withToken as="span" color="colorText" variant="t200" format="short" /> is the
             transaction fee for each reaction you leave under a video or comment, while the fee for posting a comment
             depends on its length.
           </Text>

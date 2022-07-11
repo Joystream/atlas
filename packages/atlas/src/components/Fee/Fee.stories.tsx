@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
+import BN from 'bn.js'
 
 import { sizes } from '@/styles'
 
@@ -15,7 +16,7 @@ export default {
   },
   args: {
     variant: 'h500',
-    amount: 0,
+    amount: new BN(0),
     loading: false,
     hideOnMobile: false,
   },

@@ -125,8 +125,8 @@ export const NftWidget: FC<NftWidgetProps> = ({
     const buttonSize = size === 'small' ? 'medium' : 'large'
     const buttonColumnSpan = size === 'small' ? 1 : 2
     const timerColumnSpan = size === 'small' ? 1 : 2
-    const BuyNow = memo(({ buyNowPrice }: { buyNowPrice?: BN }) =>
-      buyNowPrice ? (
+    const BuyNow = memo(({ buyNowPrice }: { buyNowPrice?: BN }) => {
+      return buyNowPrice ? (
         <NftInfoItem
           size={size}
           label="Buy now"
@@ -143,7 +143,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
           }
         />
       ) : null
-    )
+    })
     BuyNow.displayName = 'BuyNow'
     const InfoBanner = ({ title, description }: { title: string; description: string }) => (
       <GridItem colSpan={buttonColumnSpan}>

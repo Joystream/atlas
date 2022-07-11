@@ -31,6 +31,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useSubscribeAccountBalance } from '@/hooks/useSubscribeAccountBalance'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useUser, useUserStore } from '@/providers/user'
+import { HapiBNToTokenNumber } from '@/utils/number'
 
 import {
   AnimatedContainer,
@@ -160,6 +161,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     useEffect(() => {
       transRef.start()
     }, [isSwitchingMember, transRef])
+
     return (
       <>
         <WithdrawFundsDialog
@@ -167,10 +169,14 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
           activeMembership={activeMembership}
           show={showWithdrawDialog}
           onExitClick={toggleWithdrawDialog}
-          accountBalance={accountBalance}
-          channelBalance={channelBalance}
+          accountBalance={accountBalance && HapiBNToTokenNumber(accountBalance)}
+          channelBalance={channelBalance && HapiBNToTokenNumber(channelBalance)}
         />
-        <SendFundsDialog show={showSendDialog} onExitClick={toggleSendDialog} accountBalance={accountBalance} />
+        <SendFundsDialog
+          show={showSendDialog}
+          onExitClick={toggleSendDialog}
+          accountBalance={accountBalance && HapiBNToTokenNumber(accountBalance)}
+        />
         <Container ref={ref}>
           <InnerContainer isActive={isActive} containerHeight={containerHeight}>
             {transitions((style, isSwitchingMemberMode) =>

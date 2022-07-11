@@ -1,3 +1,4 @@
+import { BN } from 'bn.js'
 import { FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -42,7 +43,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
     formState: { errors },
   } = useForm<{ amount: number | null }>()
   const { convertToUSD } = useTokenPrice()
-  const convertedAmount = convertToUSD(watch('amount') || 0)
+  const convertedAmount = convertToUSD(new BN(watch('amount') || 0))
 
   useEffect(() => {
     if (!show) {
@@ -78,7 +79,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
         color="colorText"
         format="dollar"
         variant="t100"
-        value={convertToUSD(channelBalance) || 0}
+        value={convertToUSD(new BN(channelBalance)) || 0}
         margin={{ top: 1, bottom: 6 }}
       />
       <FormField label="Amount to withdraw" error={errors.amount?.message}>
