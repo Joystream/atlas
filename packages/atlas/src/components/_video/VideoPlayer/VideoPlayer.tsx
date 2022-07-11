@@ -42,6 +42,7 @@ import {
   PlayControl,
   ScreenControls,
   StyledJoystreamLogo,
+  StyledJoystreamLogoShort,
   StyledSvgControlsFullScreen,
   StyledSvgControlsPause,
   StyledSvgControlsPipOff,
@@ -146,6 +147,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   const [isLoaded, setIsLoaded] = useState(false)
   const [needsManualPlay, setNeedsManualPlay] = useState(!autoplay)
   const mdMatch = useMediaMatch('md')
+  const xsMatch = useMediaMatch('xs')
 
   const playVideo = useCallback(
     async (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => {
@@ -672,7 +674,11 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                       rel="noopener noreferrer"
                       target="_blank"
                     >
-                      <StyledJoystreamLogo width="unset" />
+                      {xsMatch ? (
+                        <StyledJoystreamLogo width={undefined} />
+                      ) : (
+                        <StyledJoystreamLogoShort width={undefined} />
+                      )}
                     </a>
                   )}
                 </ScreenControls>

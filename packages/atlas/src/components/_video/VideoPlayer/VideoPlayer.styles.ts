@@ -20,7 +20,7 @@ import {
   SvgControlsVideoModeCinemaView,
   SvgControlsVideoModeCompactView,
 } from '@/components/_icons'
-import { SvgJoystreamLogoFull } from '@/components/_illustrations'
+import { SvgJoystreamLogoFull, SvgJoystreamLogoShort } from '@/components/_illustrations'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 import { PlayerControlButton } from './PlayerControlButton'
@@ -345,13 +345,20 @@ export const ScreenControls = styled.div`
   }
 `
 
-export const StyledJoystreamLogo = styled(SvgJoystreamLogoFull)`
+const logoStyles = css`
   padding: 0.5em;
   max-height: 2.5em;
   height: 100%;
   filter: drop-shadow(${cVar('effectElevation1Layer1')});
 
   ${defaultIconColor};
+`
+
+export const StyledJoystreamLogo = styled(SvgJoystreamLogoFull)`
+  ${logoStyles};
+`
+export const StyledJoystreamLogoShort = styled(SvgJoystreamLogoShort)`
+  ${logoStyles};
 `
 
 export const Container = styled.div<ContainerProps>`
