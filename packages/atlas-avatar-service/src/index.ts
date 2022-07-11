@@ -17,7 +17,17 @@ const storage = multer.diskStorage({
     callback(null, `${uuid()}${path.extname(file.originalname)}`)
   },
 })
-const upload = multer({ storage })
+const upload = multer({
+  storage,
+  fileFilter: (req, file, callback) => {
+    const extension = path.extname(file.originalname)
+    if (!['.png', '.jpg', '.gif', '.jpeg', '.tiff', '.tif'].includes(extension.toLowerCase())) {
+      return callback(new Error('Only images are allowed'))
+    }
+    callback(null, true)
+  },
+  limits: { fileSize: 1048576 },
+})
 
 const app = express()
 app.use(cors())
@@ -25,17 +35,14 @@ app.use(`/${DIRECTORY_NAME}`, express.static(path.resolve(UPLOAD_DIRECTORY)))
 
 const PORT = 80
 
-app.post('/upload-avatar', upload.single('file'), (req, res) => {
+app.post('/uploads', upload.single('file'), (req, res) => {
+  if (req.headers['content-type'] && !/multipart\/form-data/.test(req.headers['content-type'])) {
+    res.status(500).send('Content-Type header must be set to multipart/form-data')
+    return
+  }
   try {
+    console.log(req.headers)
     const fileName = req.file?.filename
-    const oldAvatar = req.body.oldAvatar
-    if (oldAvatar) {
-      fs.unlink(`${UPLOAD_DIRECTORY}/${oldAvatar}`, (error) => {
-        if (error) {
-          console.error(error)
-        }
-      })
-    }
     const uploadedImagePath = `${req.protocol}://${req.hostname}/${DIRECTORY_NAME}/${fileName}`
     res.end(uploadedImagePath)
   } catch (error) {
@@ -45,5 +52,10 @@ app.post('/upload-avatar', upload.single('file'), (req, res) => {
 })
 
 app
-  .listen(PORT, () => console.log('listening on ' + PORT + '...'))
+  .listen(PORT, () => {
+    if (!fs.existsSync(UPLOAD_DIRECTORY)) {
+      fs.mkdirSync(UPLOAD_DIRECTORY)
+    }
+    console.log('listening on ' + PORT + '...')
+  })
   .on('error', (error) => console.log('Error during app startup', error))
