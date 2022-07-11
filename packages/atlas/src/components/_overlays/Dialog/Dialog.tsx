@@ -1,4 +1,4 @@
-import { FC, FormEvent, MouseEvent, PropsWithChildren, ReactNode, Ref } from 'react'
+import { FC, FormEvent, PropsWithChildren, ReactNode, Ref } from 'react'
 
 import { Fee } from '@/components/Fee'
 import { Text } from '@/components/Text'
@@ -29,7 +29,7 @@ export type DialogProps = PropsWithChildren<{
   secondaryButton?: DialogButtonProps
   additionalActionsNode?: ReactNode
   additionalActionsNodeMobilePosition?: 'top' | 'bottom'
-  onExitClick?: (e?: MouseEvent<HTMLButtonElement>) => void
+  onExitClick?: () => void
   onSubmit?: (e?: FormEvent) => void
   noContentPadding?: boolean
   actionDivider?: boolean
