@@ -38,7 +38,7 @@ export const CloseButton = styled(Button)<{ isFullScreen: boolean }>`
 `
 
 export const EmbeddedShareWrapper = styled.div`
-  padding: 0 56px;
+  padding: 0 ${sizes(13)};
   width: 100%;
   display: grid;
   gap: ${sizes(6)};
@@ -63,9 +63,6 @@ export const ShareWrapper = styled.div`
   display: grid;
   gap: ${sizes(6)};
   justify-items: center;
-  @media (hover: hover) and (min-width: ${breakpoints.xs}) {
-    gap: ${sizes(10)};
-  }
 `
 
 export const InputContainer = styled.div`
@@ -78,6 +75,10 @@ export const ShareButtonsContainer = styled.div`
   display: grid;
   grid-auto-flow: column;
   gap: ${sizes(2)};
+
+  @media (hover: hover) and (min-width: ${breakpoints.xs}) {
+    padding: ${sizes(4)} 0;
+  }
 `
 
 const shareButtonstyles = {
