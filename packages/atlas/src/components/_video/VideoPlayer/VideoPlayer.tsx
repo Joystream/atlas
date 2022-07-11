@@ -666,9 +666,14 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                     {isFullScreen ? <StyledSvgControlsSmallScreen /> : <StyledSvgControlsFullScreen />}
                   </PlayerControlButton>
                   {isEmbedded && (
-                    <Link to={absoluteRoutes.viewer.video(videoId)}>
+                    <a
+                      onClick={(e) => e.stopPropagation()}
+                      href={window.location.origin + absoluteRoutes.viewer.video(videoId)}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
                       <StyledJoystreamLogo width="unset" />
-                    </Link>
+                    </a>
                   )}
                 </ScreenControls>
               </CustomControls>
