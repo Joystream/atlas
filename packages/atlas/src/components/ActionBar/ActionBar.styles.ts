@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { cVar, media, sizes, transitions } from '@/styles'
+import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 import { Information } from '../Information'
 
@@ -17,7 +17,7 @@ export const ActionBarContainer = styled.div<ActionBarContainerProps>`
   display: grid;
   gap: ${sizes(4)};
   padding: ${sizes(4)};
-  z-index: 9999999;
+  z-index: ${zIndex.transactionBar};
   transform: translateY(${({ isActive }) => (isActive ? '0' : '100%')});
   transition: transform ${transitions.timings.regular} ${transitions.easing};
 

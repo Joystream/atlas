@@ -614,13 +614,8 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                     placeholder="Enter video title"
                     disabled={videoFieldsLocked}
                     error={!!error}
-                    onFocus={() => {
-                      setTitleTooltipVisible(false)
-                    }}
-                    onBlur={() => {
-                      // Unfortunately we need this hack because for some reason setting state here causes problems with ActionBar
-                      setTimeout(() => setTitleTooltipVisible(true), 100)
-                    }}
+                    onFocus={() => setTitleTooltipVisible(false)}
+                    onBlur={() => setTitleTooltipVisible(true)}
                   />
                 </FormField>
               </Tooltip>

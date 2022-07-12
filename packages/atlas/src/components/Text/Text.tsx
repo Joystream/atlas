@@ -14,7 +14,6 @@ export type TextProps = {
 
 export const Text = forwardRef<HTMLHeadingElement, TextProps>(({ variant, as, ...otherProps }, ref) => {
   const Tag = styledVariants[variant]
-  const FinalTag = as ? Tag.withComponent(as) : Tag
-  return <FinalTag {...otherProps} ref={ref} />
+  return <Tag {...otherProps} as={as} ref={ref} />
 })
 Text.displayName = 'Text'
