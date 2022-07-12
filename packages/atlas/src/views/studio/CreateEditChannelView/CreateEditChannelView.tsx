@@ -189,7 +189,6 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
 
   const channelMetadata = createChannelMetadata(watch())
   const channelAssets = createChannelAssets()
-  console.log(channelAssets)
 
   const updateChannelFeeArgs: Parameters<FeeMethod['getUpdateChannelFee']> | undefined =
     accountId && channelId && memberId && channelMetadata && isDirty && !newChannel
