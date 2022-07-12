@@ -508,7 +508,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
                   )
                 : nftStatus.englishTimerState === 'running' &&
                   nftStatus.isUserWhitelisted !== false &&
-                  (nftStatus.buyNowPrice ? (
+                  (nftStatus.buyNowPrice?.gtn(0) ? (
                     <GridItem colSpan={buttonColumnSpan}>
                       <ButtonGrid data-size={size} data-two-columns={size === 'medium'}>
                         <Button fullWidth variant="secondary" size={buttonSize} onClick={onNftPurchase}>
