@@ -189,6 +189,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
 
   const channelMetadata = createChannelMetadata(watch())
   const channelAssets = createChannelAssets()
+  console.log(channelAssets)
 
   const updateChannelFeeArgs: Parameters<FeeMethod['getUpdateChannelFee']> | undefined =
     accountId && channelId && memberId && channelMetadata && isDirty && !newChannel
@@ -314,9 +315,12 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       const avatarIpfsHash = await avatarHashPromise
       const coverIpfsHash = await coverHashPromise
       const createdAssets = createChannelAssets(avatarIpfsHash, coverIpfsHash)
-
-      assets.avatarPhoto = createdAssets.avatarPhoto
-      assets.coverPhoto = createdAssets.coverPhoto
+      if (createdAssets.avatarPhoto) {
+        assets.avatarPhoto = createdAssets.avatarPhoto
+      }
+      if (createdAssets.coverPhoto) {
+        assets.coverPhoto = createdAssets.coverPhoto
+      }
     }
 
     const uploadAssets = async ({ channelId, assetsIds }: ChannelExtrinsicResult) => {
