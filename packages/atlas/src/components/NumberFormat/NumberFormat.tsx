@@ -8,19 +8,11 @@ import { HapiBNToTokenNumber, formatNumber } from '@/utils/number'
 
 import { Tooltip } from '../Tooltip'
 
-type BigNumber = {
-  value: BN
-  withToken: true
-}
-
-type JSNumber = {
-  value: number
-  withToken?: false | undefined
-}
-
-export type NumberFormatProps = (BigNumber | JSNumber) & {
+export type NumberFormatProps = {
+  value: BN | number
   format?: 'full' | 'short' | 'dollar'
   withTooltip?: boolean
+  withToken?: boolean
   children?: never
   variant?: TextVariant
   displayedValue?: string | number

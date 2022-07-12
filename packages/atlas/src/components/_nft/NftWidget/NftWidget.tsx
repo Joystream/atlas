@@ -125,15 +125,15 @@ export const NftWidget: FC<NftWidgetProps> = ({
     const buttonSize = size === 'small' ? 'medium' : 'large'
     const buttonColumnSpan = size === 'small' ? 1 : 2
     const timerColumnSpan = size === 'small' ? 1 : 2
-    const BuyNow = memo(({ buyNowPrice }: { buyNowPrice?: BN }) => {
-      return buyNowPrice ? (
+    const BuyNow = memo(({ buyNowPrice }: { buyNowPrice?: BN }) =>
+      buyNowPrice?.gtn(0) ? (
         <NftInfoItem
           size={size}
           label="Buy now"
           content={
             <>
               <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
-              <NumberFormat as="span" value={buyNowPrice} withToken format="short" variant={contentTextVariant} />
+              <NumberFormat as="span" value={buyNowPrice} format="short" variant={contentTextVariant} />
             </>
           }
           secondaryText={
@@ -143,7 +143,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
           }
         />
       ) : null
-    })
+    )
     BuyNow.displayName = 'BuyNow'
     const InfoBanner = ({ title, description }: { title: string; description: string }) => (
       <GridItem colSpan={buttonColumnSpan}>
@@ -196,7 +196,6 @@ export const NftWidget: FC<NftWidgetProps> = ({
                       format="short"
                       variant={contentTextVariant}
                       color="colorText"
-                      withToken
                     />
                   </>
                 }
@@ -373,7 +372,6 @@ export const NftWidget: FC<NftWidgetProps> = ({
                       format="short"
                       value={nftStatus.topBidAmount}
                       variant={contentTextVariant}
-                      withToken
                     />
                   </>
                 }
@@ -407,7 +405,6 @@ export const NftWidget: FC<NftWidgetProps> = ({
                       as="span"
                       format="short"
                       value={nftStatus.startingPrice}
-                      withToken
                       variant={contentTextVariant}
                     />
                   </>

@@ -374,7 +374,6 @@ export const NftPurchaseBottomDrawer: FC = () => {
                             as="span"
                             variant="h400"
                             value={TokenNumberToHapiBN(topBidAmount)}
-                            withToken
                             format="short"
                           />
                         </FlexWrapper>

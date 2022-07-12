@@ -234,7 +234,6 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                                   as="span"
                                   variant="t200-strong"
                                   value={publisher ? channelBalance : accountBalance}
-                                  withToken
                                   format="short"
                                 />
                               </UserBalance>
