@@ -268,7 +268,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
         )
       case 'auction': {
         const getInfoBannerProps = () => {
-          const hasBids = !nftStatus.topBid?.isCanceled && nftStatus.topBidAmount
+          const hasBids = !nftStatus.topBid?.isCanceled && nftStatus.topBidAmount?.gtn(0)
           if (nftStatus.type === 'open' && bidFromPreviousAuction) {
             return {
               title: 'Withdraw your bid to participate',
@@ -337,7 +337,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
         }
         const infoBannerProps = getInfoBannerProps()
 
-        const infoTextNode = !!nftStatus.userBidAmount && nftStatus.userBidUnlockDate && (
+        const infoTextNode = !!nftStatus.userBidAmount?.gtn(0) && nftStatus.userBidUnlockDate && (
           <GridItem colSpan={buttonColumnSpan}>
             {nftStatus.type === 'english' ? (
               <BidPlacingInfoText />
@@ -355,7 +355,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
 
         return (
           <>
-            {nftStatus.topBidAmount && !nftStatus.topBid?.isCanceled ? (
+            {nftStatus.topBidAmount?.gtn(0) && !nftStatus.topBid?.isCanceled ? (
               <NftInfoItem
                 size={size}
                 label="Top bid"
@@ -376,7 +376,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
                   </>
                 }
                 secondaryText={
-                  !isLoadingPrice && nftStatus.topBidAmount ? (
+                  !isLoadingPrice && !nftStatus.topBidAmount.isZero() ? (
                     <>
                       <NumberFormat
                         as="span"
