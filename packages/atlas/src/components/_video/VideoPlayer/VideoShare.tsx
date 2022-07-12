@@ -141,7 +141,7 @@ const VideoShareContent: FC<VideoShareContentProps> = ({ videoId, isEmbedded, cu
 
   return (
     <ShareWrapper>
-      <InputContainer>
+      <InputContainer isEmbedded={isEmbedded}>
         <Input
           onChange={() => null}
           size={isMobile() || !xsMatch ? 'medium' : 'large'}

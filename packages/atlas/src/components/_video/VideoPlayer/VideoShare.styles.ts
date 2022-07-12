@@ -65,10 +65,10 @@ export const ShareWrapper = styled.div`
   justify-items: center;
 `
 
-export const InputContainer = styled.div`
+export const InputContainer = styled.div<{ isEmbedded?: boolean }>`
   width: 100%;
   display: grid;
-  gap: ${sizes(2)};
+  gap: ${({ isEmbedded }) => (isEmbedded ? sizes(2) : sizes(4))};
 `
 
 export const ShareButtonsContainer = styled.div`
