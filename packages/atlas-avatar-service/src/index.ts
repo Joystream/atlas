@@ -20,8 +20,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   fileFilter: (req, file, callback) => {
-    const extension = path.extname(file.originalname)
-    if (!['.png', '.jpg', '.gif', '.jpeg', '.tiff', '.tif'].includes(extension.toLowerCase())) {
+    if (!['image/png', 'image/jpg', 'image/jpeg', 'image/webp', 'image/avif'].includes(file.mimetype)) {
       return callback(new Error('Only images are allowed'))
     }
     callback(null, true)
@@ -41,7 +40,6 @@ app.post('/uploads', upload.single('file'), (req, res) => {
     return
   }
   try {
-    console.log(req.headers)
     const fileName = req.file?.filename
     const uploadedImagePath = `${req.protocol}://${req.hostname}/${DIRECTORY_NAME}/${fileName}`
     res.end(uploadedImagePath)
