@@ -47,7 +47,8 @@ export const VideoWorkspace: FC = memo(() => {
 
   const actionBarProps: ActionBarProps = {
     isActive: isEdit ? !formStatus?.isDisabled : true,
-    fee: 0,
+    fee: formStatus?.actionBarFee,
+    feeLoading: formStatus?.actionBarFeeLoading,
     primaryButton: {
       disabled: formStatus?.isDisabled,
       onClick: formStatus?.triggerFormSubmit,
