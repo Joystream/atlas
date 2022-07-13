@@ -61,12 +61,14 @@ export type InternalCommentProps = {
   isCommentFromUrl: boolean | undefined
   videoId: string | undefined
   commentId: string | undefined
+  reactionFee: number | undefined
   onEditedLabelClick: (() => void) | undefined
   onEditClick: (() => void) | undefined
   onDeleteClick: (() => void) | undefined
   onReplyClick: (() => void) | undefined
   onToggleReplies: (() => void) | undefined
   onReactionClick: ((reaction: ReactionId) => void) | undefined
+  onOnBoardingPopoverOpen: ((reaction: ReactionId) => void) | undefined
 } & Pick<CommentRowProps, 'highlighted' | 'indented' | 'memberUrl'>
 
 export const InternalComment: FC<InternalCommentProps> = ({
@@ -83,10 +85,12 @@ export const InternalComment: FC<InternalCommentProps> = ({
   isModerated,
   isAbleToEdit,
   reactionPopoverDismissed,
+  reactionFee,
   onEditedLabelClick,
   onEditClick,
   onDeleteClick,
   onReactionClick,
+  onOnBoardingPopoverOpen,
   reactions,
   onReplyClick,
   replyAvatars,
@@ -156,6 +160,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
 
   const handleCommentReactionClick = useCallback(
     (reactionId: ReactionId) => {
+      onOnBoardingPopoverOpen?.(reactionId)
       if (!reactionPopoverDismissed) {
         setTempReactionId(reactionId)
         popoverRef.current?.show()
@@ -163,7 +168,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
         onReactionClick?.(reactionId)
       }
     },
-    [onReactionClick, reactionPopoverDismissed]
+    [onOnBoardingPopoverOpen, onReactionClick, reactionPopoverDismissed]
   )
 
   const sortedReactions = reactions && [...reactions].sort((a, b) => (b.count || 0) - (a.count || 0))
@@ -246,6 +251,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
                 ) : (
                   <ReactionsOnboardingPopover
                     ref={popoverRef}
+                    fee={reactionFee}
                     onConfirm={() => {
                       tempReactionId && onReactionClick?.(tempReactionId)
                       handleOnboardingPopoverHide()

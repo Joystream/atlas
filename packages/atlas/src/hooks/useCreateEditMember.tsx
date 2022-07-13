@@ -9,7 +9,7 @@ import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables 
 import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
 import { imageUrlValidation } from '@/utils/asset'
 
-type Inputs = {
+export type EditMemberFormInputs = {
   handle: string | null
   avatar: string | null
   about: string | null
@@ -73,7 +73,7 @@ export const useCreateEditMemberForm = (prevHandle?: string) => {
     reset,
     watch,
     formState: { errors, isDirty, isValid, dirtyFields, isValidating },
-  } = useForm<Inputs>({
+  } = useForm<EditMemberFormInputs>({
     mode: 'onChange',
     resolver: zodResolver(schema),
     shouldFocusError: true,

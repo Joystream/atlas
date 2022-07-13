@@ -66,6 +66,8 @@ export type VideoWorkspaceFormStatus = {
   isDisabled: boolean
   hasUnsavedAssets: boolean
   actionBarPrimaryText: string
+  actionBarFee?: number
+  actionBarFeeLoading?: boolean
   triggerFormSubmit: () => void
   triggerReset: () => void
 }

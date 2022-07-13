@@ -28,6 +28,7 @@ type ActionDialogInfoBadge = {
 
 export type ActionBarProps = {
   fee?: number
+  feeLoading?: boolean
   infoBadge?: ActionDialogInfoBadge
   primaryButton: ActionDialogButtonProps
   secondaryButton?: ActionDialogButtonProps
@@ -36,13 +37,13 @@ export type ActionBarProps = {
 }
 
 export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
-  ({ fee, isActive = true, className, primaryButton, secondaryButton, infoBadge }, ref) => {
+  ({ fee, feeLoading, isActive = true, className, primaryButton, secondaryButton, infoBadge }, ref) => {
     const smMatch = useMediaMatch('sm')
 
     return (
       <ActionBarContainer ref={ref} className={className} isActive={isActive}>
         <FeeContainer>
-          <Fee amount={fee ?? 0} variant={smMatch ? 'h400' : 'h200'} />
+          <Fee amount={fee ?? 0} variant={smMatch ? 'h400' : 'h200'} loading={feeLoading} />
         </FeeContainer>
         {infoBadge ? (
           <DraftsBadgeContainer>

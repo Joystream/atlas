@@ -14,6 +14,7 @@ import { Select } from '@/components/_inputs/Select'
 import { QUERY_PARAMS } from '@/config/routes'
 import { COMMENTS_SORT_OPTIONS } from '@/config/sorting'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
+import { useFee } from '@/hooks/useFee'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
@@ -47,9 +48,16 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
   const commentIdQueryParam = useRouterQuery(QUERY_PARAMS.COMMENT_ID)
   const mdMatch = useMediaMatch('md')
   const { id: videoId } = useParams()
-  const { memberId, signIn, activeMembership, isLoggedIn } = useUser()
+  const { memberId, signIn, activeMembership, isLoggedIn, accountId } = useUser()
   const { openSignInDialog } = useDisplaySignInDialog()
   const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)
+
+  const { fee, loading: feeLoading } = useFee(
+    'getCreateVideoCommentFee',
+    accountId && memberId && video?.id && commentInputText
+      ? [accountId, memberId, video?.id, commentInputText, null]
+      : undefined
+  )
 
   const queryVariables = useMemo(
     () => ({
@@ -217,6 +225,8 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
         readOnly={!memberId}
         memberHandle={activeMembership?.handle}
         value={commentInputText}
+        fee={fee}
+        feeLoading={feeLoading}
         hasInitialValueChanged={!!commentInputText}
         onFocus={() => !memberId && openSignInDialog({ onConfirm: signIn })}
         onComment={() => handleComment()}

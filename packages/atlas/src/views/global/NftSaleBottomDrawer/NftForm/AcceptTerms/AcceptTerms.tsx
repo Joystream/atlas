@@ -24,9 +24,10 @@ import { getTotalDaysAndHours } from '../NftForm.utils'
 type AcceptTermsProps = {
   selectedType: Listing
   formData: NftFormFields
+  fee: number
 }
 
-export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData }) => {
+export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData, fee }) => {
   const { startDate, endDate, type } = formData
 
   const totalDaysAndHours = getTotalDaysAndHours(startDate, endDate)
@@ -180,7 +181,7 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData }) =>
           />
         </Title>
         <Description>
-          <NumberFormat as="span" value={0} format="short" withToken variant="h400" />
+          <NumberFormat as="span" value={fee} format="full" withToken variant="h400" />
         </Description>
       </Row>
     </>

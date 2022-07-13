@@ -17,6 +17,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NftCard } from '@/components/_nft/NftCard'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
+import { FeeMethod, useFee } from '@/hooks/useFee'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { useNftState } from '@/hooks/useNftState'
@@ -53,8 +54,6 @@ import {
   TokenWrapper,
 } from './NftPurchaseBottomDrawer.styles'
 
-const TRANSACTION_FEE = 0
-
 export const NftPurchaseBottomDrawer: FC = () => {
   const { displaySnackbar } = useSnackbar()
   const [type, setType] = useState<'english_auction' | 'open_auction' | 'buy_now'>('english_auction')
@@ -78,7 +77,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
   } = useJoystream()
   const { currentBlock } = useJoystreamStore()
   const handleTransaction = useTransaction()
-  const { memberId } = useUser()
+  const { memberId, accountId } = useUser()
 
   const {
     watch,
@@ -236,7 +235,6 @@ export const NftPurchaseBottomDrawer: FC = () => {
     proxyCallback,
     refetch,
   ])
-  const isBuyNowAffordable = (buyNowPrice || auctionBuyNowPrice) + TRANSACTION_FEE < (accountBalance || 0)
   const bid = watch('bid')
   const timeLeftUnderMinute = !!timeLeftSeconds && timeLeftSeconds < 60
   const auctionEnded = type === 'english_auction' && timeLeftSeconds <= 0
@@ -248,6 +246,24 @@ export const NftPurchaseBottomDrawer: FC = () => {
       : canChangeBid
       ? 'Change bid'
       : 'Place bid'
+
+  const buyNowFeeArgs: Parameters<FeeMethod['getBuyNftNowFee']> | undefined =
+    accountId && currentNftId && memberId && buyNowPrice
+      ? [accountId, currentNftId, memberId, auctionBuyNowPrice]
+      : undefined
+
+  const makeBidArgs: Parameters<FeeMethod['getMakeNftBidFee']> | undefined =
+    accountId && currentNftId && memberId && watch('bid')
+      ? [accountId, currentNftId, memberId, Number(watch('bid')), isEnglishAuction ? 'english' : 'open']
+      : undefined
+
+  const { fee: buyNowFee, loading: buynowFeeLoading } = useFee('getBuyNftNowFee', buyNowFeeArgs)
+  const { fee: makeBidFee, loading: makeBidFeeLoading } = useFee('getMakeNftBidFee', makeBidArgs)
+
+  const transactionFee = type === 'buy_now' ? buyNowFee : makeBidFee
+  const feeLoading = buynowFeeLoading || makeBidFeeLoading
+  const isBuyNowAffordable = (buyNowPrice || auctionBuyNowPrice) + transactionFee < (accountBalance || 0)
+
   const blocksLeft = endAtBlock && endAtBlock - currentBlock
 
   const isOpen = currentAction === 'purchase'
@@ -272,6 +288,8 @@ export const NftPurchaseBottomDrawer: FC = () => {
         closeNftAction()
       }}
       actionBar={{
+        fee: transactionFee,
+        feeLoading: feeLoading,
         primaryButton: {
           text: primaryButtonText,
           disabled: isBuyNowClicked || type === 'buy_now' ? !isBuyNowAffordable : hasErrors,
@@ -418,7 +436,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                         bidTooLow: (value) =>
                           Number(value) >= minimumBid ? true : 'Your bid must be higher than the minimum bid',
                         bidTooHigh: (value) => {
-                          return Number(value) + TRANSACTION_FEE > (accountBalance || 0)
+                          return Number(value) + transactionFee > (accountBalance || 0)
                             ? 'You do not have enough funds to place this bid'
                             : true
                         },
@@ -551,7 +569,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   <Text as="span" variant="t100" color="colorText">
                     Transaction fee
                   </Text>
-                  <NumberFormat as="span" value={TRANSACTION_FEE} withToken variant="t100" color="colorText" />
+                  <NumberFormat as="span" value={transactionFee} withToken variant="t100" color="colorText" />
                 </Row>
                 <Row>
                   <Text as="span" variant="h500" color="colorText">
@@ -559,8 +577,11 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   </Text>
                   <NumberFormat
                     as="span"
-                    value={(type === 'buy_now' ? buyNowPrice : Number(bid) || 0) + TRANSACTION_FEE}
+                    value={(type === 'buy_now' ? buyNowPrice : Number(bid) || 0) + transactionFee}
                     withToken
+                    format="short"
+                    withTooltip
+                    tooltipAsWrapper
                     variant="h500"
                   />
                 </Row>

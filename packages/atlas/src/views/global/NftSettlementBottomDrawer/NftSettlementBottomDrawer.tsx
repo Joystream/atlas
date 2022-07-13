@@ -8,6 +8,7 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { NftCard } from '@/components/_nft/NftCard'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
+import { useFee } from '@/hooks/useFee'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useJoystream } from '@/providers/joystream'
@@ -26,7 +27,7 @@ import {
 
 export const NftSettlementBottomDrawer: FC = () => {
   const xsMatch = useMediaMatch('xs')
-  const { memberId } = useUser()
+  const { memberId, accountId } = useUser()
   const { currentNftId, closeNftAction, currentAction } = useNftActions()
   const { nft, loading, refetch } = useNft(currentNftId || '')
 
@@ -61,6 +62,11 @@ export const NftSettlementBottomDrawer: FC = () => {
     })
   }
   const isOpen = currentAction === 'settle'
+
+  const { fee } = useFee(
+    'getSettleEnglishAuctionFee',
+    accountId && currentNftId ? [accountId, currentNftId] : undefined
+  )
   return (
     <BottomDrawer isOpen={isOpen} onClose={closeNftAction}>
       <StyledLottie play={isOpen} data={confetti} />
@@ -96,7 +102,7 @@ export const NftSettlementBottomDrawer: FC = () => {
                 Settle auction
               </Button>
               <Text as="span" variant="t100" color="colorText" margin={{ top: 4 }}>
-                Transaction fee: <NumberFormat as="span" format="short" withToken variant="t100" value={0} />
+                Transaction fee: <NumberFormat as="span" format="short" withToken variant="t100" value={fee} />
               </Text>
             </Content>
           </StyledGridItem>
