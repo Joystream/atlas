@@ -90,7 +90,7 @@ index c56161d96a47321e024185a89aca087b6af4585f..e27d37b2ff1bfd30fa2bbc0cbb38eed6
 -Object.defineProperty(exports, "__esModule", { value: true });
 +export {};
 diff --git a/augment/lookup.js b/augment/lookup.js
-index e284b5e832363b0ff16b8eb9c83cc609d541c097..39b2368d33f4f1b9e8c43c208e1f0b4973ce6a7e 100644
+index c2d61d9a563260bdaad7b2a2f72473a7255b59e8..5d75f7a9c4d7f67adb6f191f28b872ebaf470281 100644
 --- a/augment/lookup.js
 +++ b/augment/lookup.js
 @@ -1,9 +1,7 @@
@@ -163,7 +163,7 @@ index 58f95495c7507fcecd4207eddeb60e9dea8c3052..15487b2f5a4c777f4f1d3530ed694499
 -exports.JOYSTREAM_ADDRESS_PREFIX = 126;
 +export const JOYSTREAM_ADDRESS_PREFIX = 126;
 diff --git a/package.json b/package.json
-index 5cbafd149758c01fa0d0a596960401fe86767830..4d0be6ae05bf4a0ce22bc6ec4c05c3550ff4cd15 100644
+index 9e02f6cc5822e3bebfb96cbd682ab74842cb4c8d..d8452ddbc34ea4344e95e17f658fe790a2f183cd 100644
 --- a/package.json
 +++ b/package.json
 @@ -4,6 +4,8 @@

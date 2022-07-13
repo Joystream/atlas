@@ -1,1 +1,2 @@
 export const JOY_CURRENCY_TICKER = 'tJOY'
+export const JOYSTREAM_SS58_PREFIX = 126

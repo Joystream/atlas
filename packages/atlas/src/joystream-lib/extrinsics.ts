@@ -132,15 +132,19 @@ export class JoystreamLibExtrinsics {
 
     const [channelMetadata, channelAssets] = await parseChannelExtrinsicInput(this.api, inputMetadata, inputAssets)
 
-    const dataObjectStateBloatBondFee = await this.api.query.storage.dataObjectStateBloatBondValue()
+    const dataObjectStateBloatBond = await this.api.query.storage.dataObjectStateBloatBondValue()
+    const channelStateBloatBond = await this.api.query.content.channelStateBloatBondValue()
 
     const creationParameters = createType('PalletContentChannelCreationParametersRecord', {
       meta: channelMetadata,
       assets: channelAssets,
       collaborators: createType('BTreeMap<u64, BTreeSet<PalletContentChannelActionPermission>>', {}),
-      storageBuckets: createType('BTreeSet<u64>', []), // TODO: provide values
-      distributionBuckets: createType('BTreeSet<PalletStorageDistributionBucketIdRecord>', []), // TODO: provide values
-      expectedDataObjectStateBloatBond: dataObjectStateBloatBondFee,
+      storageBuckets: createType('BTreeSet<u64>', [0]), // TODO: provide values
+      distributionBuckets: createType('BTreeSet<PalletStorageDistributionBucketIdRecord>', [
+        { distributionBucketFamilyId: 0, distributionBucketIndex: 0 },
+      ]), // TODO: provide values
+      expectedDataObjectStateBloatBond: dataObjectStateBloatBond,
+      expectedChannelStateBloatBond: channelStateBloatBond,
     })
 
     const channelOwner = createType('PalletContentChannelOwner', { Member: parseInt(memberId) })
@@ -245,7 +249,8 @@ export class JoystreamLibExtrinsics {
   ) {
     await this.ensureApi()
 
-    const dataObjectStateBloatBondFee = await this.api.query.storage.dataObjectStateBloatBondValue()
+    const dataObjectStateBloatBond = await this.api.query.storage.dataObjectStateBloatBondValue()
+    const videoStateBloatBond = await this.api.query.content.videoStateBloatBondValue()
 
     const [videoMetadata, videoAssets] = await parseVideoExtrinsicInput(this.api, inputMetadata, inputAssets)
 
@@ -255,7 +260,8 @@ export class JoystreamLibExtrinsics {
       meta: videoMetadata,
       assets: videoAssets,
       autoIssueNft: nftIssuanceParameters,
-      expectedDataObjectStateBloatBond: dataObjectStateBloatBondFee,
+      expectedDataObjectStateBloatBond: dataObjectStateBloatBond,
+      expectedVideoStateBloatBond: videoStateBloatBond,
     })
 
     const actor = createType('PalletContentPermissionsContentActor', {

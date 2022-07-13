@@ -1,7 +1,7 @@
 import { ProxyMarked, Remote, proxy, wrap } from 'comlink'
 import { FC, PropsWithChildren, createContext, useCallback, useEffect, useRef, useState } from 'react'
 
-import { JOY_CURRENCY_TICKER } from '@/config/token'
+import { JOY_CURRENCY_TICKER } from '@/config/joystream'
 import { JOY_PRICE_SERVICE_URL, NODE_URL } from '@/config/urls'
 import { JoystreamLib } from '@/joystream-lib'
 import { useEnvironmentStore } from '@/providers/environment/store'
