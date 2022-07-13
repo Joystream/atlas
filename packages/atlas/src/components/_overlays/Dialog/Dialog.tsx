@@ -64,7 +64,7 @@ export const Dialog: FC<DialogProps> = ({
   const buttonSize = isCompact ? 'small' : 'medium'
 
   return (
-    <DialogContainer onSubmit={onSubmit} size={size} className={className}>
+    <DialogContainer onSubmit={onSubmit} size={size} className={className} onClick={(e) => e.stopPropagation()}>
       {(title || onExitClick) && (
         <Header dividers={dividers}>
           <HeaderContent>

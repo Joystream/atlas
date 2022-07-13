@@ -6,6 +6,7 @@ import { cVar, sizes, square, zIndex } from '@/styles'
 
 export const Container = styled.div`
   position: relative;
+  z-index: 0;
   width: max-content;
   padding: ${sizes(2)};
   margin: -${sizes(2)};

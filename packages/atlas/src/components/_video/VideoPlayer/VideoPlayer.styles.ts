@@ -1,3 +1,4 @@
+import isPropValid from '@emotion/is-prop-valid'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
@@ -20,7 +21,7 @@ import {
   SvgControlsVideoModeCinemaView,
   SvgControlsVideoModeCompactView,
 } from '@/components/_icons'
-import { SvgJoystreamLogoFull } from '@/components/_illustrations'
+import { SvgJoystreamLogoFull, SvgJoystreamLogoShort } from '@/components/_illustrations'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 import { PlayerControlButton } from './PlayerControlButton'
@@ -109,7 +110,7 @@ const sharedOverlayStyles = css`
 export const EmbbeddedTopBarOverlay = styled.div<{ isFullScreen: boolean }>`
   font-size: 16px;
   width: 100%;
-  z-index: ${zIndex.overlay};
+  z-index: ${zIndex.nearOverlay};
   position: relative;
   background: linear-gradient(180deg, rgb(11 12 15 / 0.9) 0%, transparent 100%);
   display: grid;
@@ -127,7 +128,7 @@ export const EmbbeddedTopBarOverlay = styled.div<{ isFullScreen: boolean }>`
   }
 `
 
-export const TitleContainer = styled(Link)<{ isFullscreen: boolean }>`
+export const TitleContainer = styled(Link, { shouldForwardProp: isPropValid })<{ isFullscreen: boolean }>`
   text-decoration: none;
   @media (hover: hover) {
     ${({ isFullscreen }) =>
@@ -345,13 +346,20 @@ export const ScreenControls = styled.div`
   }
 `
 
-export const StyledJoystreamLogo = styled(SvgJoystreamLogoFull)`
+const logoStyles = css`
   padding: 0.5em;
   max-height: 2.5em;
   height: 100%;
   filter: drop-shadow(${cVar('effectElevation1Layer1')});
 
   ${defaultIconColor};
+`
+
+export const StyledJoystreamLogo = styled(SvgJoystreamLogoFull)`
+  ${logoStyles};
+`
+export const StyledJoystreamLogoShort = styled(SvgJoystreamLogoShort)`
+  ${logoStyles};
 `
 
 export const Container = styled.div<ContainerProps>`
