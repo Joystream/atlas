@@ -47,8 +47,13 @@ const _CommentThread: FC<CommentThreadProps> = ({
   const repliesLeftToLoadCount = totalCount - allRepliesCount
   const allRepliesContainNewReply = !!replies.find((r) => r.id === newReplyId)
 
-  const placeholderCount =
-    repliesLeftToLoadCount || (repliesCount > INITIAL_REPLIES_COUNT ? INITIAL_REPLIES_COUNT : repliesCount)
+  const placeholderCount = repliesLeftToLoadCount
+    ? repliesLeftToLoadCount > LOAD_MORE_REPLIES_COUNT
+      ? LOAD_MORE_REPLIES_COUNT
+      : repliesLeftToLoadCount
+    : repliesCount > INITIAL_REPLIES_COUNT
+    ? INITIAL_REPLIES_COUNT
+    : repliesCount
   const placeholderItems = loading
     ? Array.from({ length: placeholderCount }, () => ({
         id: undefined,
