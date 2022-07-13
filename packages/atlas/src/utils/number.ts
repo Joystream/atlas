@@ -10,5 +10,14 @@ export const formatNumber = (num: number): string => {
 }
 
 const conversionBN = new BN(10 ** 10)
-export const HapiBNToTokenNumber = (bn: BN) => bn.div(conversionBN).toNumber()
-export const TokenNumberToHapiBN = (number: number) => new BN(number).mul(conversionBN)
+export const HapiBNToTokenNumber = (bn: BN) => {
+  const integer = bn.div(conversionBN).toNumber()
+  if (integer) {
+    return integer
+  } else {
+    return bn.toNumber() / conversionBN.toNumber()
+  }
+}
+export const TokenNumberToHapiBN = (number: number) => {
+  return new BN(number * 10 ** 10)
+}

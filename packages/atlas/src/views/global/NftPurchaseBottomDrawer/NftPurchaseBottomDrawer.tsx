@@ -499,9 +499,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                     Price:
                   </Text>
                   <JoyTokenIcon variant="silver" size={24} />{' '}
-                  <Text as="span" variant="h400">
-                    {buyNowPrice || auctionBuyNowPrice}
-                  </Text>
+                  <NumberFormat as="span" variant="h400" format="short" value={buyNowPrice || auctionBuyNowPrice} />
                 </MinimumBid>
               </MinimumBidWrapper>
             )}
