@@ -101,7 +101,7 @@ export const FormField = memo(
                   ) : (
                     <Label onClick={handleFocusOnClick}>
                       {typeof label === 'string' ? (
-                        <Text as="span" variant="h300" margin={{ left: 2 }}>
+                        <Text as="span" variant="h300">
                           {label}
                         </Text>
                       ) : (

@@ -111,7 +111,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
         <FormField
           label={
             <LabelFlexWrapper>
-              <Text as="span" variant="h300" margin={{ left: 2 }}>
+              <Text as="span" variant="h300">
                 Amount to withdraw
               </Text>
               <Button onClick={handleMaxClick} size="medium" variant="tertiary" _textOnly>
