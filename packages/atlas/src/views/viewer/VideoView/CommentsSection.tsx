@@ -235,6 +235,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
             highlightedCommentId={highlightedCommentId}
             setHighlightedCommentId={setHighlightedCommentId}
             linkedReplyId={parentCommentFromUrl ? commentFromUrl?.id : null}
+            repliesCount={displayedCommentFromUrl.repliesCount}
           />
         )}
         {commentsLoading && !isFetchingMore
@@ -246,6 +247,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
                   commentId={comment.id}
                   video={video}
                   hasAnyReplies={comment.repliesCount > 0}
+                  repliesCount={comment.repliesCount}
                   userReactionsLookup={userReactions}
                   highlightedCommentId={highlightedCommentId}
                   setHighlightedCommentId={setHighlightedCommentId}
