@@ -20,7 +20,7 @@ import { PlayerState } from './utils'
 
 type CustomTimelineProps = {
   player?: VideoJsPlayer | null
-  isFullScreen?: boolean
+  elevated?: boolean
   playerState: PlayerState
   setPlayerState: Dispatch<SetStateAction<PlayerState>>
   playVideo: (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => Promise<void>
@@ -31,7 +31,7 @@ const UPDATE_INTERVAL = 30
 
 export const CustomTimeline: FC<CustomTimelineProps> = ({
   player,
-  isFullScreen,
+  elevated,
   playerState,
   playVideo,
   pauseVideo,
@@ -172,7 +172,7 @@ export const CustomTimeline: FC<CustomTimelineProps> = ({
     <ProgressControl
       onClick={(event) => event.stopPropagation()}
       isScrubbing={isScrubbing}
-      isFullScreen={isFullScreen}
+      elevated={elevated}
       onMouseMove={handleMouseAndTouchMove}
       onTouchMove={handleMouseAndTouchMove}
       onMouseLeave={handleJumpToTime}
@@ -192,7 +192,7 @@ export const CustomTimeline: FC<CustomTimelineProps> = ({
                 mouseDisplayTooltipWidth / 2
               }px), calc(100% - ${mouseDisplayTooltipWidth}px))`,
             }}
-            isFullScreen={isFullScreen}
+            elevated={elevated}
           >
             <StyledTooltipText as="span" variant="t200">
               {mouseDisplayTooltipTime}

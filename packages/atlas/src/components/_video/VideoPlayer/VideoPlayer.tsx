@@ -41,6 +41,7 @@ import {
   PlayButton,
   PlayControl,
   ScreenControls,
+  StyledEmbeddedLogoLink,
   StyledJoystreamLogo,
   StyledJoystreamLogoShort,
   StyledSvgControlsFullScreen,
@@ -557,7 +558,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     setCinematicView(!cinematicView)
   }
 
-  const showPlayerControls = isLoaded && playerState && !isSharingOverlayOpen
+  const showPlayerControls = isEmbedded ? !needsManualPlay : isLoaded && playerState && !isSharingOverlayOpen
   const showControlsIndicator = playerState !== 'ended'
 
   const playNextDisabled = isPlayNextDisabled || !autoPlayNext || isShareDialogOpen || isSharingOverlayOpen
@@ -575,17 +576,17 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
         <video style={videoStyle} ref={playerRef} className="video-js" onClick={onVideoClick} />
         {showPlayerControls && (
           <>
-            <ControlsOverlay isSettingsPopoverOpened={isSettingsPopoverOpened} isFullScreen={isFullScreen}>
+            <ControlsOverlay isSettingsPopoverOpened={isSettingsPopoverOpened} elevated={isFullScreen}>
               <CustomTimeline
                 playVideo={playVideo}
                 pauseVideo={pauseVideo}
                 player={player}
-                isFullScreen={isFullScreen}
+                elevated={isFullScreen || isEmbedded}
                 playerState={playerState}
                 setPlayerState={setPlayerState}
               />
               <CustomControls
-                isFullScreen={isFullScreen}
+                elevated={isFullScreen || isEmbedded}
                 isEnded={playerState === 'ended'}
                 ref={customControlsRef}
                 isSettingsPopoverOpened={isSettingsPopoverOpened}
@@ -698,34 +699,46 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
         />
         {showControlsIndicator && <ControlsIndicator player={player} isLoading={playerState === 'loading'} />}
         {isEmbedded && !isSharingOverlayOpen && (
-          <EmbbeddedTopBarOverlay isFullScreen={isFullScreen}>
-            <Link to={absoluteRoutes.viewer.channel(video?.channel.id)}>
-              <Avatar
-                clickable
-                size={isFullScreen && !isMobile() ? 'cover' : 'default'}
-                assetUrl={channelAvatarUrl}
-                loading={isChannelAvatarLoading}
-              />
-            </Link>
-            <TitleContainer to={absoluteRoutes.viewer.video(videoId)} isFullscreen={isFullScreen}>
-              <StyledText variant="h300" as="h2">
-                {video?.title}
-              </StyledText>
-              <StyledText variant="t100-strong" as="p" margin={{ top: 0.5 }}>
-                {video?.channel.title}
-              </StyledText>
-            </TitleContainer>
-            <PlayerControlButton
-              tooltipText="Share"
-              tooltipPosition="bottom-right"
-              onClick={(e) => {
-                setIsSharingOverlayOpen(true)
-                e.stopPropagation()
-              }}
-            >
-              <StyledSvgControlsShare />
-            </PlayerControlButton>
-          </EmbbeddedTopBarOverlay>
+          <>
+            <EmbbeddedTopBarOverlay isFullScreen={isFullScreen}>
+              <Link to={absoluteRoutes.viewer.channel(video?.channel.id)}>
+                <Avatar
+                  clickable
+                  size={isFullScreen && !isMobile() ? 'cover' : 'default'}
+                  assetUrl={channelAvatarUrl}
+                  loading={isChannelAvatarLoading}
+                />
+              </Link>
+              <TitleContainer to={absoluteRoutes.viewer.video(videoId)} isFullscreen={isFullScreen}>
+                <StyledText variant="h300" as="h2">
+                  {video?.title}
+                </StyledText>
+                <StyledText variant="t100-strong" as="p" margin={{ top: 0.5 }}>
+                  {video?.channel.title}
+                </StyledText>
+              </TitleContainer>
+              <PlayerControlButton
+                tooltipText="Share"
+                tooltipPosition="bottom-right"
+                onClick={(e) => {
+                  setIsSharingOverlayOpen(true)
+                  e.stopPropagation()
+                }}
+              >
+                <StyledSvgControlsShare />
+              </PlayerControlButton>
+            </EmbbeddedTopBarOverlay>
+            {needsManualPlay && (
+              <StyledEmbeddedLogoLink
+                href={window.location.origin + absoluteRoutes.viewer.video(videoId)}
+                rel="noopener noreferrer"
+                target="_blank"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <StyledJoystreamLogo embedded />
+              </StyledEmbeddedLogoLink>
+            )}
+          </>
         )}
         <VideoShare
           onCloseShareDialog={handleCloseSharingDialog}
