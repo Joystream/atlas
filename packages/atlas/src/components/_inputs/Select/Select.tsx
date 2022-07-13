@@ -2,7 +2,6 @@ import { UseSelectStateChange, useSelect } from 'downshift'
 import { isEqual } from 'lodash-es'
 import { ForwardedRef, ReactNode, Ref, forwardRef, useMemo } from 'react'
 
-import { List } from '@/components/List'
 import { ListItemProps } from '@/components/ListItem'
 import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
 import { ConsoleLogger } from '@/utils/logs'
@@ -15,6 +14,7 @@ import {
   SelectMenu,
   SelectMenuWrapper,
   SelectWrapper,
+  StyledList,
   ValueAndPlaceholderText,
 } from './Select.styles'
 
@@ -121,7 +121,7 @@ export const _Select = <T extends unknown>(
         </SelectButton>
         <SelectMenu {...getMenuProps()}>
           {isOpen && (
-            <List
+            <StyledList
               scrollable
               items={items
                 .filter((item) => !item.hideInMenu)
