@@ -9,15 +9,20 @@ export const formatNumber = (num: number): string => {
   return numberFormatter.format(num).replaceAll(',', ' ')
 }
 
-const conversionBN = new BN(10 ** 10)
+const TEN_BILLIONS = 10 ** 10
+
+const conversionBN = new BN(TEN_BILLIONS)
+
 export const HapiBNToTokenNumber = (bn: BN) => {
-  const integer = bn.div(conversionBN).toNumber()
-  if (integer) {
-    return integer
-  } else {
-    return bn.toNumber() / conversionBN.toNumber()
-  }
+  const div = bn.div(conversionBN).toNumber()
+  const mod = bn.mod(conversionBN).toNumber()
+  return div + mod / TEN_BILLIONS
 }
+
 export const TokenNumberToHapiBN = (number: number) => {
-  return new BN(number * 10 ** 10)
+  if (Number.isInteger(number)) {
+    return new BN(number).mul(conversionBN)
+  } else {
+    return new BN(number * TEN_BILLIONS)
+  }
 }

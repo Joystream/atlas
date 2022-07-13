@@ -370,12 +370,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                           <TokenWrapper>
                             <StyledJoyTokenIcon variant="gray" size={24} />
                           </TokenWrapper>
-                          <BidAmount
-                            as="span"
-                            variant="h400"
-                            value={TokenNumberToHapiBN(topBidAmount)}
-                            format="short"
-                          />
+                          <BidAmount as="span" variant="h400" value={topBidAmount} format="short" />
                         </FlexWrapper>
                         <Text as="span" variant="t100" color="colorText" margin={{ top: 1 }}>
                           {topBidder.handle === userBid?.bidder.handle ? 'You' : topBidder.handle}
@@ -419,9 +414,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                         Minimum bid
                       </Text>
                       <JoyTokenIcon variant="gray" size={24} />{' '}
-                      <Text as="span" variant="h400">
-                        {minimumBid}
-                      </Text>
+                      <NumberFormat as="span" variant="h400" value={minimumBid || 0} />
                     </MinimumBid>
                     {auctionBuyNowPrice > 0 && (
                       <Text as="span" variant="t100" color="colorText">
