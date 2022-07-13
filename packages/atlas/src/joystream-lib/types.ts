@@ -60,11 +60,11 @@ export type ChannelInputMetadata = Omit<IChannelMetadata, 'coverPhoto' | 'avatar
 }
 export type MemberInputMetadata = Omit<IMembershipMetadata, 'avatarObject'>
 
-type NftBuyNowInputMetadata = {
+export type NftBuyNowInputMetadata = {
   type: 'buyNow'
   buyNowPrice: number
 }
-type NftCommonAuctionInputMetadata = {
+export type NftCommonAuctionInputMetadata = {
   startingPrice: number
   minimalBidStep: number
   buyNowPrice?: number
