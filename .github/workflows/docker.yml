@@ -36,3 +36,18 @@ jobs:
           file: packages/atlas-meta-server/Dockerfile
           push: true
           tags: joystream/atlas-meta-server:latest
+  atlas-avatar-service:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          file: packages/atlas-avatar-service/Dockerfile
+          push: true
+          tags: joystream/atlas-avatar-service:latest
