@@ -57,9 +57,7 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
   })
 
   const refetch = selectedTabIndex === 0 ? videos.refetch : channels.refetch
-  const {
-    actions: { setSearchOpen, setSearchQuery },
-  } = useSearchStore()
+  const { setSearchOpen, setSearchQuery } = useSearchStore((state) => state.actions)
 
   useEffect(() => {
     if (selectedTabIndex === 1) {
