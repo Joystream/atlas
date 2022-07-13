@@ -93,6 +93,8 @@ export const NftSaleBottomDrawer: FC = () => {
   }, [closeNftAction])
 
   const actionBarProps: ActionBarProps = {
+    fee: formStatus?.actionBarFee,
+    feeLoading: formStatus?.actionBarLoading,
     primaryButton: {
       text: !formStatus?.canGoForward ? 'Start sale' : 'Next step',
       disabled: formStatus?.isDisabled,

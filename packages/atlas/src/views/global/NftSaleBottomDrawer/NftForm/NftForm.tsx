@@ -11,6 +11,8 @@ import { SvgActionChevronR } from '@/components/_icons'
 import { NftTile, NftTileProps } from '@/components/_nft/NftTile'
 import { NFT_MIN_BID_STEP_MULTIPLIER } from '@/config/nft'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
+import { useFee } from '@/hooks/useFee'
+import { NftBuyNowInputMetadata, NftSaleInputMetadata } from '@/joystream-lib'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUser } from '@/providers/user'
@@ -56,7 +58,7 @@ type NftFormProps = {
 }
 
 export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) => {
-  const { activeMembership } = useUser()
+  const { activeMembership, accountId, memberId } = useUser()
   const scrollableWrapperRef = useRef<HTMLDivElement>(null)
   const {
     state: { activeInputs, setActiveInputs, listingType, setListingType, currentStep, previousStep, nextStep },
@@ -102,8 +104,69 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
 
   const [openModal, closeModal] = useConfirmationModal()
 
+  const createBuyNowPriceMetadata = (data: NftFormFields): NftBuyNowInputMetadata | undefined => {
+    return {
+      type: 'buyNow',
+      buyNowPrice: data.buyNowPrice || 0,
+    }
+  }
+
+  const createAuctionMetadata = useCallback(
+    (data: NftFormFields): NftSaleInputMetadata | undefined => {
+      const startDateValue = getValues('startDate')
+      const startDate = startDateValue?.type === 'date' && startDateValue.date
+      const startsAtBlock = startDate ? convertMsTimestampToBlock(startDate.getTime()) : undefined
+      const startingPrice = data.startingPrice || chainState.nftMinStartingPrice
+      const minimalBidStep = Math.ceil(startingPrice * NFT_MIN_BID_STEP_MULTIPLIER)
+
+      if (data.auctionDurationBlocks) {
+        // auction has duration, assume english
+        return {
+          type: 'english',
+          startsAtBlock,
+          startingPrice,
+          minimalBidStep,
+          buyNowPrice: data.buyNowPrice || undefined,
+          auctionDurationBlocks: data.auctionDurationBlocks || 0,
+          whitelistedMembersIds: data.whitelistedMembers?.map((member) => new BN(member.id)),
+        }
+      } else {
+        // auction has no duration, assume open
+        return {
+          type: 'open',
+          startsAtBlock,
+          startingPrice,
+          minimalBidStep,
+          buyNowPrice: data.buyNowPrice || undefined,
+          whitelistedMembersIds: data.whitelistedMembers?.map((member) => new BN(member.id)),
+        }
+      }
+    },
+    [chainState.nftMinStartingPrice, convertMsTimestampToBlock, getValues]
+  )
+
+  const getInputMetadataData = useCallback(
+    (data: NftFormFields) => {
+      if (listingType === 'Auction') {
+        return createAuctionMetadata(data)
+      }
+      if (listingType === 'Fixed price') {
+        return createBuyNowPriceMetadata(data)
+      }
+      return
+    },
+    [createAuctionMetadata, listingType]
+  )
+
+  const inputMetadata = getInputMetadataData(getValues())
+
+  const { fee, loading: feeLoading } = useFee(
+    'getPutNftOnSaleFee',
+    accountId && memberId && inputMetadata ? [accountId, videoId, memberId, inputMetadata] : undefined
+  )
+
   const handleSubmit = useCallback(() => {
-    const startDateValue = getValues('startDate')
+    const startDateValue = watch('startDate')
     const startDate = startDateValue?.type === 'date' && startDateValue.date
     if (startDate && new Date() > startDate) {
       trigger('startDate')
@@ -150,37 +213,14 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
           })
           return
         }
-
         onSubmit({
           type: 'buyNow',
           buyNowPrice: data.buyNowPrice,
         })
       } else if (listingType === 'Auction') {
-        const startsAtBlock = startDate ? convertMsTimestampToBlock(startDate.getTime()) : undefined
-        const startingPrice = data.startingPrice || chainState.nftMinStartingPrice
-        const minimalBidStep = Math.ceil(startingPrice * NFT_MIN_BID_STEP_MULTIPLIER)
-
-        if (data.auctionDurationBlocks) {
-          // auction has duration, assume english
-          onSubmit({
-            type: 'english',
-            startsAtBlock,
-            startingPrice,
-            minimalBidStep,
-            buyNowPrice: data.buyNowPrice || undefined,
-            auctionDurationBlocks: data.auctionDurationBlocks,
-            whitelistedMembersIds: data.whitelistedMembers?.map((member) => new BN(member.id)),
-          })
-        } else {
-          // auction has no duration, assume open
-          onSubmit({
-            type: 'open',
-            startsAtBlock,
-            startingPrice,
-            minimalBidStep,
-            buyNowPrice: data.buyNowPrice || undefined,
-            whitelistedMembersIds: data.whitelistedMembers?.map((member) => new BN(member.id)),
-          })
+        const inputMetadata = createAuctionMetadata(data)
+        if (inputMetadata) {
+          onSubmit(inputMetadata)
         }
       } else {
         SentryLogger.error('Unknown listing type', 'NftForm', null, {
@@ -190,17 +230,16 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
     })
     return handler()
   }, [
-    chainState.nftMinStartingPrice,
     closeModal,
-    convertMsTimestampToBlock,
+    createAuctionMetadata,
     createSubmitHandler,
-    getValues,
     listingType,
     onSubmit,
     openModal,
     previousStep,
     setValue,
     trigger,
+    watch,
   ])
 
   const handleGoForward = useCallback(() => {
@@ -231,11 +270,13 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
       isDisabled: formDisabled,
       canGoBack: !isOnFirstStep,
       canGoForward: !isOnLastStep,
+      actionBarFee: fee,
+      actionBarLoading: feeLoading,
       triggerGoBack: handleGoBack,
       triggerGoForward: handleGoForward,
       triggerSubmit: handleSubmit,
     }),
-    [isValid, formDisabled, isOnFirstStep, isOnLastStep, handleGoBack, handleGoForward, handleSubmit]
+    [isValid, formDisabled, isOnFirstStep, isOnLastStep, fee, feeLoading, handleGoBack, handleGoForward, handleSubmit]
   )
 
   // sent updates on form status to VideoWorkspace
@@ -289,7 +330,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
       setActiveInputs={setActiveInputs}
       handleGoForward={handleGoForward}
     />,
-    <AcceptTerms key="step-content-3" selectedType={listingType} formData={getValues()} />,
+    <AcceptTerms key="step-content-3" selectedType={listingType} formData={getValues()} fee={fee || 0} />,
   ]
 
   return (

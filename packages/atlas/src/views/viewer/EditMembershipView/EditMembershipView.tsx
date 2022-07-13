@@ -8,7 +8,8 @@ import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { absoluteRoutes } from '@/config/routes'
-import { useCreateEditMemberForm } from '@/hooks/useCreateEditMember'
+import { EditMemberFormInputs, useCreateEditMemberForm } from '@/hooks/useCreateEditMember'
+import { useFee } from '@/hooks/useFee'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { MemberInputMetadata } from '@/joystream-lib'
 import { useJoystream } from '@/providers/joystream'
@@ -19,7 +20,7 @@ import { StyledActionBar, TextFieldsWrapper, Wrapper } from './EditMembershipVie
 
 export const EditMembershipView: FC = () => {
   const navigate = useNavigate()
-  const { accountId, activeMembership, isLoggedIn, refetchUserMemberships } = useUser()
+  const { accountId, memberId, activeMembership, isLoggedIn, refetchUserMemberships } = useUser()
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
@@ -63,6 +64,23 @@ export const EditMembershipView: FC = () => {
 
   const headTags = useHeadTags('Edit membership')
 
+  const createMemberInputMetadata = useCallback(
+    (data: EditMemberFormInputs) => {
+      return {
+        ...(dirtyFields.about ? { about: data?.about } : {}),
+        ...(dirtyFields.avatar ? { avatarUri: data?.avatar } : {}),
+      }
+    },
+    [dirtyFields]
+  )
+
+  const { fee } = useFee(
+    'getUpdateMemberFee',
+    accountId && memberId && isDirty
+      ? [accountId, memberId, dirtyFields.handle ? watch('handle') : null, createMemberInputMetadata(watch())]
+      : undefined
+  )
+
   const handleEditMember = handleSubmit(async (formData) => {
     if (!joystream || !activeMembership) {
       return
@@ -70,10 +88,7 @@ export const EditMembershipView: FC = () => {
 
     const success = await handleTransaction({
       txFactory: async (updateStatus) => {
-        const memberInputMetadata: MemberInputMetadata = {
-          ...(dirtyFields.about ? { about: formData?.about } : {}),
-          ...(dirtyFields.avatar ? { avatarUri: formData?.avatar } : {}),
-        }
+        const memberInputMetadata: MemberInputMetadata = createMemberInputMetadata(formData)
         return (await joystream.extrinsics).updateMember(
           activeMembership.id,
           dirtyFields.handle ? formData.handle : null,
@@ -144,7 +159,7 @@ export const EditMembershipView: FC = () => {
         </Wrapper>
         <StyledActionBar
           ref={actionBarRef}
-          fee={0}
+          fee={fee}
           primaryButton={{
             disabled: !isDirty || !isValid || isValidating,
             text: 'Publish changes',

@@ -1,5 +1,5 @@
 import BN from 'bn.js'
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
@@ -23,6 +23,7 @@ import {
 } from '@/components/_overlays/ImageCropModal'
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
+import { FeeMethod, useFee } from '@/hooks/useFee'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib'
 import { useAsset, useAssetStore, useOperatorsContext, useRawAsset } from '@/providers/assets'
@@ -145,6 +146,69 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     }
   }, [newChannel, reset])
 
+  const createChannelMetadata = useCallback(
+    (data: Inputs) => {
+      return isDirty
+        ? {
+            ...(dirtyFields.title ? { title: data.title?.trim() ?? '' } : {}),
+            ...(dirtyFields.description ? { description: data.description?.trim() ?? '' } : {}),
+            ...(dirtyFields.language || newChannel ? { language: data.language } : {}),
+            ...(dirtyFields.isPublic || newChannel ? { isPublic: data.isPublic } : {}),
+            ownerAccount: accountId || '',
+          }
+        : null
+    },
+    [accountId, dirtyFields, isDirty, newChannel]
+  )
+
+  const createChannelAssets = useCallback(
+    (avatarHash?: string | null, coverPhotoHash?: string | null): ChannelInputAssets => {
+      return {
+        ...(avatarAsset?.blob?.size
+          ? {
+              avatarPhoto: {
+                size: avatarAsset?.blob.size,
+                ipfsHash: avatarHash || '',
+                replacedDataObjectId: channel?.avatarPhoto?.id ? new BN(channel.avatarPhoto.id) : undefined,
+              },
+            }
+          : {}),
+        ...(coverAsset?.blob?.size
+          ? {
+              coverPhoto: {
+                size: coverAsset.blob.size,
+                ipfsHash: coverPhotoHash || '',
+                replacedDataObjectId: channel?.coverPhoto?.id ? new BN(channel.coverPhoto.id) : undefined,
+              },
+            }
+          : {}),
+      }
+    },
+    [avatarAsset?.blob?.size, channel?.avatarPhoto?.id, channel?.coverPhoto?.id, coverAsset?.blob?.size]
+  )
+
+  const channelMetadata = createChannelMetadata(watch())
+  const channelAssets = createChannelAssets()
+
+  const updateChannelFeeArgs: Parameters<FeeMethod['getUpdateChannelFee']> | undefined =
+    accountId && channelId && memberId && channelMetadata && isDirty && !newChannel
+      ? [accountId, channelId, memberId, channelMetadata, channelAssets]
+      : undefined
+
+  const createChannelFeeArgs: Parameters<FeeMethod['getCreateChannelFee']> | undefined =
+    accountId && memberId && channelMetadata && newChannel
+      ? [accountId, memberId, channelMetadata, channelAssets]
+      : undefined
+
+  const { fee: updateChannelFee, loading: updateChannelFeeLoading } = useFee(
+    'getUpdateChannelFee',
+    updateChannelFeeArgs
+  )
+  const { fee: createChannelFee, loading: createChannelFeeLoading } = useFee(
+    'getCreateChannelFee',
+    createChannelFeeArgs
+  )
+
   useEffect(() => {
     if (loading || newChannel || !channel) {
       return
@@ -246,24 +310,15 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     }
 
     const assets: ChannelInputAssets = {}
-
     const processAssets = async () => {
-      if (dirtyFields.avatar && avatarAsset?.blob && avatarHashPromise) {
-        const ipfsHash = await avatarHashPromise
-        assets.avatarPhoto = {
-          size: avatarAsset.blob.size,
-          ipfsHash,
-          replacedDataObjectId: channel?.avatarPhoto?.id ? new BN(channel.avatarPhoto.id) : undefined,
-        }
+      const avatarIpfsHash = await avatarHashPromise
+      const coverIpfsHash = await coverHashPromise
+      const createdAssets = createChannelAssets(avatarIpfsHash, coverIpfsHash)
+      if (createdAssets.avatarPhoto) {
+        assets.avatarPhoto = createdAssets.avatarPhoto
       }
-
-      if (dirtyFields.cover && coverAsset?.blob && coverHashPromise) {
-        const ipfsHash = await coverHashPromise
-        assets.coverPhoto = {
-          size: coverAsset.blob.size,
-          ipfsHash,
-          replacedDataObjectId: channel?.coverPhoto?.id ? new BN(channel.coverPhoto.id) : undefined,
-        }
+      if (createdAssets.coverPhoto) {
+        assets.coverPhoto = createdAssets.coverPhoto
       }
     }
 
@@ -561,7 +616,8 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
             <ActionBarTransactionWrapper ref={actionBarRef}>
               {!channelId && progressDrawerSteps?.length ? <StyledProgressDrawer steps={progressDrawerSteps} /> : null}
               <ActionBar
-                fee={0}
+                fee={newChannel ? createChannelFee : updateChannelFee}
+                feeLoading={newChannel ? createChannelFeeLoading : updateChannelFeeLoading}
                 primaryButton={{
                   text: newChannel ? 'Create channel' : 'Publish changes',
                   disabled: isDisabled,

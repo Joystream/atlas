@@ -23,14 +23,17 @@ import { TextArea } from '@/components/_inputs/TextArea'
 import { languages } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
-import { NftIssuanceInputMetadata, VideoInputMetadata } from '@/joystream-lib'
+import { useFee } from '@/hooks/useFee'
+import { NftIssuanceInputMetadata, VideoInputAssets, VideoInputMetadata } from '@/joystream-lib'
 import { useRawAssetResolver } from '@/providers/assets'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useJoystream } from '@/providers/joystream'
+import { useUser } from '@/providers/user'
 import {
   VideoFormAssets,
   VideoFormData,
   VideoWorkspaceFormStatus,
+  VideoWorkspaceVideoAssets,
   VideoWorkspaceVideoFormFields,
   useVideoWorkspace,
   useVideoWorkspaceData,
@@ -82,6 +85,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const [royaltiesFieldEnabled, setRoyaltiesFieldEnabled] = useState(false)
   const [titleTooltipVisible, setTitleTooltipVisible] = useState(true)
   const mintNftFormFieldRef = useRef<HTMLDivElement>(null)
+  const { accountId, memberId, channelId } = useUser()
   const [openEditDialog, closeEditDialog] = useConfirmationModal({
     type: 'warning',
     title: 'Discard changes?',
@@ -132,6 +136,104 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   })
 
   const videoFieldsLocked = tabData?.mintNft && isEdit
+
+  const createVideoInputMetadata = useCallback(
+    (data: VideoWorkspaceVideoFormFields): VideoInputMetadata => {
+      const videoInputFile = data?.assets?.video
+      const license = {
+        code: data.licenseCode ?? undefined,
+        attribution: data.licenseAttribution ?? undefined,
+        customText: data.licenseCustomText ?? undefined,
+      }
+      const anyLicenseFieldsDirty =
+        dirtyFields.licenseCode || dirtyFields.licenseAttribution || dirtyFields.licenseCustomText
+
+      const metadata: VideoInputMetadata = {
+        ...(isNew || dirtyFields.title ? { title: data.title } : {}),
+        ...(isNew || dirtyFields.description ? { description: data.description } : {}),
+        ...(isNew || dirtyFields.category ? { category: Number(data.category) } : {}),
+        ...(isNew || dirtyFields.isPublic ? { isPublic: data.isPublic } : {}),
+        ...((isNew || dirtyFields.hasMarketing) && data.hasMarketing != null
+          ? { hasMarketing: data.hasMarketing }
+          : {}),
+        ...((isNew || dirtyFields.isExplicit) && data.isExplicit != null ? { isExplicit: data.isExplicit } : {}),
+        ...((isNew || dirtyFields.language) && data.language != null ? { language: data.language } : {}),
+        ...(isNew || anyLicenseFieldsDirty ? { license } : {}),
+        ...((isNew || dirtyFields.enableComments) && data.enableComments != null
+          ? { enableComments: data.enableComments }
+          : {}),
+        ...((isNew || dirtyFields.publishedBeforeJoystream) && data.publishedBeforeJoystream != null
+          ? {
+              publishedBeforeJoystream: formatISO(data.publishedBeforeJoystream),
+            }
+          : {}),
+        ...(isNew || dirtyFields.assets?.video
+          ? {
+              mimeMediaType: videoInputFile?.mimeType,
+            }
+          : {}),
+        ...(isNew || dirtyFields.assets?.video ? { duration: Math.round(videoInputFile?.duration || 0) } : {}),
+        ...(isNew || dirtyFields.assets?.video ? { mediaPixelHeight: videoInputFile?.mediaPixelHeight } : {}),
+        ...(isNew || dirtyFields.assets?.video ? { mediaPixelWidth: videoInputFile?.mediaPixelWidth } : {}),
+      }
+      return metadata
+    },
+    [dirtyFields, isNew]
+  )
+
+  const createNftInputMetadata = useCallback(
+    (data: VideoWorkspaceVideoFormFields): NftIssuanceInputMetadata | undefined => {
+      return data.mintNft && !videoFieldsLocked
+        ? {
+            royalty: data.nftRoyaltiesPercent || undefined,
+          }
+        : undefined
+    },
+    [videoFieldsLocked]
+  )
+
+  // for fee only
+  const createBasicVideoInputAssetsInfo = (assets?: VideoWorkspaceVideoAssets): VideoInputAssets => {
+    if (!assets) {
+      return {}
+    }
+    const videoAsset = resolveAsset(assets?.video.id)
+    const thumbnailAsset = resolveAsset(assets?.thumbnail.cropId)
+    return {
+      ...(videoAsset?.blob?.size
+        ? {
+            media: {
+              ipfsHash: '',
+              size: videoAsset.blob.size,
+            },
+          }
+        : {}),
+      ...(thumbnailAsset?.blob?.size
+        ? {
+            thumbnailPhoto: {
+              ipfsHash: '',
+              size: thumbnailAsset.blob.size,
+            },
+          }
+        : {}),
+    }
+  }
+
+  const videoInputMetadata = createVideoInputMetadata(getValues())
+  const nftMetadata = createNftInputMetadata(getValues())
+  const assets = createBasicVideoInputAssetsInfo(getValues('assets'))
+
+  const isSigned = accountId && memberId && channelId
+  const { fee: createVideoFee, loading: createVideoFeeLoading } = useFee(
+    'getCreateVideoFee',
+    isSigned && isNew ? [accountId, memberId, channelId, videoInputMetadata, nftMetadata, assets] : undefined
+  )
+  const { fee: updateVideoFee, loading: updateVideoFeeLoading } = useFee(
+    'getUpdateVideoFee',
+    isSigned && isEdit && editedVideoInfo.id
+      ? [accountId, editedVideoInfo.id, memberId, videoInputMetadata, nftMetadata, assets]
+      : undefined
+  )
 
   // manage assets used by the form
   const {
@@ -200,42 +302,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
         return
       }
 
-      const license = {
-        code: data.licenseCode ?? undefined,
-        attribution: data.licenseAttribution ?? undefined,
-        customText: data.licenseCustomText ?? undefined,
-      }
-      const anyLicenseFieldsDirty =
-        dirtyFields.licenseCode || dirtyFields.licenseAttribution || dirtyFields.licenseCustomText
-
-      const metadata: VideoInputMetadata = {
-        ...(isNew || dirtyFields.title ? { title: data.title } : {}),
-        ...(isNew || dirtyFields.description ? { description: data.description } : {}),
-        ...(isNew || dirtyFields.category ? { category: Number(data.category) } : {}),
-        ...(isNew || dirtyFields.isPublic ? { isPublic: data.isPublic } : {}),
-        ...((isNew || dirtyFields.hasMarketing) && data.hasMarketing != null
-          ? { hasMarketing: data.hasMarketing }
-          : {}),
-        ...((isNew || dirtyFields.isExplicit) && data.isExplicit != null ? { isExplicit: data.isExplicit } : {}),
-        ...((isNew || dirtyFields.language) && data.language != null ? { language: data.language } : {}),
-        ...(isNew || anyLicenseFieldsDirty ? { license } : {}),
-        ...((isNew || dirtyFields.enableComments) && data.enableComments != null
-          ? { enableComments: data.enableComments }
-          : {}),
-        ...((isNew || dirtyFields.publishedBeforeJoystream) && data.publishedBeforeJoystream != null
-          ? {
-              publishedBeforeJoystream: formatISO(data.publishedBeforeJoystream),
-            }
-          : {}),
-        ...(isNew || dirtyFields.assets?.video
-          ? {
-              mimeMediaType: videoInputFile?.mimeType,
-            }
-          : {}),
-        ...(isNew || dirtyFields.assets?.video ? { duration: Math.round(videoInputFile?.duration || 0) } : {}),
-        ...(isNew || dirtyFields.assets?.video ? { mediaPixelHeight: videoInputFile?.mediaPixelHeight } : {}),
-        ...(isNew || dirtyFields.assets?.video ? { mediaPixelWidth: videoInputFile?.mediaPixelWidth } : {}),
-      }
+      const metadata = createVideoInputMetadata(data)
 
       const videoWidth = videoInputFile?.mediaPixelWidth
       const videoHeight = videoInputFile?.mediaPixelHeight
@@ -266,12 +333,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           : {}),
       }
 
-      const nftMetadata: NftIssuanceInputMetadata | undefined =
-        data.mintNft && !videoFieldsLocked
-          ? {
-              royalty: data.nftRoyaltiesPercent || undefined,
-            }
-          : undefined
+      const nftMetadata = createNftInputMetadata(data)
 
       onSubmit({
         metadata,
@@ -282,16 +344,16 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
 
     return handler()
   }, [
-    createSubmitHandler,
-    dirtyFields,
-    editedVideoInfo,
-    videoFieldsLocked,
     flushDraftSave,
-    isNew,
-    onSubmit,
+    createSubmitHandler,
+    editedVideoInfo,
     resolveAsset,
-    thumbnailHashPromise,
+    isNew,
     videoHashPromise,
+    thumbnailHashPromise,
+    createVideoInputMetadata,
+    createNftInputMetadata,
+    onSubmit,
   ])
 
   const actionBarPrimaryText = watch('mintNft')
@@ -309,11 +371,25 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
       isDirty,
       isDisabled: isEdit ? !isDirty : false,
       actionBarPrimaryText,
+      actionBarFee: isEdit ? updateVideoFee : createVideoFee,
+      actionBarFeeLoading: isEdit ? updateVideoFeeLoading : createVideoFeeLoading,
       isValid: isFormValid,
       triggerFormSubmit: handleSubmit,
       triggerReset: openEditDialog,
     }),
-    [actionBarPrimaryText, handleSubmit, hasUnsavedAssets, isDirty, isEdit, isFormValid, openEditDialog]
+    [
+      actionBarPrimaryText,
+      createVideoFee,
+      createVideoFeeLoading,
+      handleSubmit,
+      hasUnsavedAssets,
+      isDirty,
+      isEdit,
+      isFormValid,
+      openEditDialog,
+      updateVideoFee,
+      updateVideoFeeLoading,
+    ]
   )
 
   // sent updates on form status to VideoWorkspace

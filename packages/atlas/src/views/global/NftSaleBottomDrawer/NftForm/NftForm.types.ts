@@ -25,6 +25,8 @@ export type NftFormStatus = {
   isDisabled: boolean
   canGoBack: boolean
   canGoForward: boolean
+  actionBarFee?: number
+  actionBarLoading?: boolean
   triggerGoBack: () => void
   triggerGoForward: () => void
   triggerSubmit: () => void
