@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom'
 
 import { CommonProviders } from '@/CommonProviders'
 import { absoluteRoutes } from '@/config/routes'
-import { EmbeddedView } from '@/views/viewer'
+import { EmbeddedView } from '@/views/viewer/EmbeddedView'
 
 export const App = () => {
   return (
