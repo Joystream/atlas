@@ -99,7 +99,7 @@ export const SwitchMemberItemListContainer = styled.div`
 export const UserBalance = styled.div`
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: min-content;
+  grid-auto-columns: max-content;
   align-items: center;
   gap: 5px;
   margin-top: ${sizes(2)};

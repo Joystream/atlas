@@ -39,7 +39,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
     let tooltipText
     switch (format) {
       case 'short':
-        formattedValue = (internalValue > 0.01 ? formatNumberShort(internalValue) : `< 0.01`) || 0
+        formattedValue = internalValue ? (internalValue > 0.01 ? formatNumberShort(internalValue) : `< 0.01`) : 0
         tooltipText = formatNumber(internalValue)
         break
       case 'full':
