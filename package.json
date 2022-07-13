@@ -25,8 +25,10 @@
     "atlas:tokens:build": "yarn workspace @joystream/atlas tokens:build",
     "atlas:graphql": "yarn workspace @joystream/atlas graphql",
     "meta-server:build": "yarn workspace @joystream/atlas-meta-server build",
+    "avatar-service:build": "yarn workspace @joystream/atlas-avatar-service build",
     "docker:atlas": "ci/build-docker-atlas.sh",
     "docker:meta-server": "ci/build-docker-meta-server.sh",
+    "docker:avatar-service": "ci/build-docker-avatar-service.sh",
     "lint-staged": "lint-staged",
     "postinstall": "husky install",
     "atlas:madge:circular": "yarn workspace @joystream/atlas madge:circular"
