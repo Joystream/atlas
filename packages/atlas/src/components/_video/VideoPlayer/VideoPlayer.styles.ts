@@ -369,6 +369,9 @@ export const StyledJoystreamLogo = styled(SvgJoystreamLogoFull)<{ embedded?: boo
 export const StyledJoystreamLogoShort = styled(SvgJoystreamLogoShort)`
   padding: 0.5em;
   max-height: 2.5em;
+  height: 100%;
+
+  ${defaultIconColor};
 `
 
 export const Container = styled.div<ContainerProps>`
