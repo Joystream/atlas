@@ -9,8 +9,17 @@ import checker from 'vite-plugin-checker'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  root: './src',
   build: {
     target: ['chrome87', 'edge88', 'es2020', 'firefox78', 'safari14'],
+    emptyOutDir: true,
+    outDir: path.resolve(__dirname, 'dist'),
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'src/index.html'),
+        embedded: path.resolve(__dirname, 'src/embedded/index.html'),
+      },
+    },
   },
   test: {
     environment: 'happy-dom',
@@ -18,17 +27,31 @@ export default defineConfig({
     globals: true,
   },
   plugins: [
+    {
+      name: 'embedded-fallback',
+      configureServer(server) {
+        server.middlewares.use('/embedded', (req, res, next) => {
+          if (req.url.includes('.')) {
+            next()
+            return
+          }
+          req.url = '/index.html'
+          req.originalUrl = '/embedded/index.html'
+          next()
+        })
+      },
+    },
     react({
       exclude: /\.stories\.[tj]sx?$/,
     }),
     checker({
       typescript: true,
-      eslint: { lintCommand: 'eslint "./src/**/*.{js,jsx,ts,tsx}"' },
+      eslint: { lintCommand: 'eslint "./**/*.{js,jsx,ts,tsx}"' },
       overlay: false,
     }),
     babel({
       extensions: ['.tsx', '.ts'],
-      include: ['src/**/*.style.*', 'src/**/*.styles.*'],
+      include: ['**/*.style.*', '**/*.styles.*'],
       plugins: ['@emotion'],
       compact: false,
       babelHelpers: 'bundled',
