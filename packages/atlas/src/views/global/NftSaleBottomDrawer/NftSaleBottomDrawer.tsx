@@ -108,6 +108,8 @@ export const NftSaleBottomDrawer: FC = () => {
   const handleClose = () => {
     if (formStatus?.canGoBack || !formStatus?.canGoForward) {
       openPuttingOnSaleDialog()
+    } else {
+      closeNftAction()
     }
   }
 
