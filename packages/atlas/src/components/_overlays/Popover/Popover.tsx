@@ -19,6 +19,7 @@ export type PopoverProps = PropsWithChildren<{
   offset?: [number, number]
   hideOnClick?: boolean
   className?: string
+  appendTo?: Element | 'parent' | ((ref: Element) => Element) | undefined
   onHide?: () => void
   onShow?: () => void
   disabled?: boolean
@@ -61,6 +62,7 @@ const _Popover: ForwardRefRenderFunction<PopoverImperativeHandle | undefined, Po
     hideOnClick = true,
     onHide,
     onShow,
+    appendTo,
     triggerTarget,
     triggerMode = 'click',
     placement = 'bottom-start',
@@ -90,6 +92,7 @@ const _Popover: ForwardRefRenderFunction<PopoverImperativeHandle | undefined, Po
       disabled={disabled}
       trigger={triggerMode}
       hideOnClick={hideOnClick}
+      appendTo={appendTo}
       interactive
       animation
       triggerTarget={triggerTarget}

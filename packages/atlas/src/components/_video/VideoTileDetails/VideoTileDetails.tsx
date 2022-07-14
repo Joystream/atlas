@@ -131,6 +131,7 @@ export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
       {kebabMenuItems.length > 0 && !loading && (
         <ContextMenu
           placement="bottom-end"
+          appendTo={document.body}
           items={kebabMenuItems}
           trigger={
             <KebabMenuButtonIcon

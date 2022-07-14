@@ -31,8 +31,6 @@ const getHeightStyles = ({ scrollable, size }: ListWrapperProps) => {
 
 export const ListWrapper = styled.ul`
   width: 100%;
-  position: absolute;
-  top: 0;
   overflow-y: auto;
   margin-top: 0;
   z-index: ${zIndex.globalOverlay};
