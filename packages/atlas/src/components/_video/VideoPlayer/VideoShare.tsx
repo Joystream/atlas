@@ -1,8 +1,20 @@
-import { FC, MouseEvent, useEffect, useRef, useState } from 'react'
+import { FC, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Tooltip } from '@/components/Tooltip'
-import { SvgActionClose, SvgActionCopy, SvgActionEmbed } from '@/components/_icons'
+import {
+  SvgActionClose,
+  SvgActionCopy,
+  SvgActionEmbed,
+  SvgLogoFacebookMonochrome,
+  SvgLogoFacebookOnLight,
+  SvgLogoRedditMonochrome,
+  SvgLogoRedditOnLight,
+  SvgLogoTwitterMonochrome,
+  SvgLogoTwitterOnLight,
+  SvgLogoVkMonochrome,
+  SvgLogoVkOnLight,
+} from '@/components/_icons'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { Input } from '@/components/_inputs/Input'
 import { DialogModal } from '@/components/_overlays/DialogModal'
@@ -11,6 +23,7 @@ import { useClipboard } from '@/hooks/useClipboard'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { cVar, transitions } from '@/styles'
 import { isMobile } from '@/utils/browser'
+import { getLinkPropsFromTo } from '@/utils/button'
 import { formatDurationShort } from '@/utils/time'
 
 import {
@@ -31,6 +44,7 @@ type VideoShareProps = {
   isShareDialogOpen?: boolean
   onCloseShareDialog?: () => void
   isFullScreen: boolean
+  videoTitle?: string | null
 }
 
 export const VideoShare: FC<VideoShareProps> = ({
@@ -40,11 +54,17 @@ export const VideoShare: FC<VideoShareProps> = ({
   isShareDialogOpen,
   isFullScreen,
   onCloseShareDialog,
+  videoTitle,
 }) => {
+  const commonVideoShareContentProps = {
+    videoId,
+    currentTime,
+    videoTitle,
+  }
   if (!isEmbedded) {
     return (
       <DialogModal title="Share video" show={isShareDialogOpen} onExitClick={onCloseShareDialog}>
-        <VideoShareContent videoId={videoId} currentTime={currentTime} />
+        <VideoShareContent {...commonVideoShareContentProps} />
       </DialogModal>
     )
   } else {
@@ -75,7 +95,7 @@ export const VideoShare: FC<VideoShareProps> = ({
             <ShareTitle variant="h600" as="h2">
               Share video
             </ShareTitle>
-            <VideoShareContent videoId={videoId} currentTime={currentTime} isEmbedded />
+            <VideoShareContent {...commonVideoShareContentProps} isEmbedded />
           </EmbeddedShareWrapper>
         </OverlayBackground>
       </CSSTransition>
@@ -87,9 +107,10 @@ type VideoShareContentProps = {
   videoId?: string
   isEmbedded?: boolean
   currentTime?: number
+  videoTitle?: string | null
 }
 
-const VideoShareContent: FC<VideoShareContentProps> = ({ videoId, isEmbedded, currentTime }) => {
+const VideoShareContent: FC<VideoShareContentProps> = ({ videoId, isEmbedded, currentTime, videoTitle }) => {
   const [url, setUrl] = useState(window.location.origin + absoluteRoutes.viewer.video(videoId))
   const xsMatch = useMediaMatch('xs')
   const { copyToClipboard } = useClipboard()
@@ -165,30 +186,69 @@ const VideoShareContent: FC<VideoShareContentProps> = ({ videoId, isEmbedded, cu
         />
       </InputContainer>
       <ShareButtonsContainer>
-        <Tooltip
-          hideOnClick={false}
+        <ShareButtonWithTooltip
           text={copyButtonClicked ? 'Copied to clipboard' : 'Copy embed code'}
-          placement="top"
-        >
-          <ShareButton
-            variant={!isEmbedded ? 'primary' : 'secondary'}
-            onClick={handleGenerateIframe}
-            onMouseLeave={() => setCopyButtonClicked(false)}
-          >
-            <SvgActionEmbed />
-          </ShareButton>
-        </Tooltip>
-        {/* TODO add these button once integration is ready */}
-        {/* <ShareButton variant={!isEmbedded ? 'primary' : 'secondary'}>
-          {!isEmbedded ? <SvgLogoFacebookOnLight /> : <SvgLogoFacebookMonochrome />}
-        </ShareButton>
-        <ShareButton variant={!isEmbedded ? 'primary' : 'secondary'}>
-          {!isEmbedded ? <SvgLogoTwitterOnLight /> : <SvgLogoTwitterMonochrome />}
-        </ShareButton>
-        <ShareButton variant={!isEmbedded ? 'primary' : 'secondary'}>
-          {!isEmbedded ? <SvgLogoVkOnLight /> : <SvgLogoVkMonochrome />}
-        </ShareButton> */}
+          buttonVariant={!isEmbedded ? 'primary' : 'secondary'}
+          onClick={handleGenerateIframe}
+          onMouseLeave={() => setCopyButtonClicked(false)}
+          icon={<SvgActionEmbed />}
+        />
+        <ShareButtonWithTooltip
+          text="Share on Facebook"
+          buttonVariant={!isEmbedded ? 'primary' : 'secondary'}
+          url={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`}
+          icon={!isEmbedded ? <SvgLogoFacebookOnLight /> : <SvgLogoFacebookMonochrome />}
+        />
+        <ShareButtonWithTooltip
+          text="Share on Twitter"
+          buttonVariant={!isEmbedded ? 'primary' : 'secondary'}
+          url={`http://www.twitter.com/share?url=${window.location.href}`}
+          icon={!isEmbedded ? <SvgLogoTwitterOnLight /> : <SvgLogoTwitterMonochrome />}
+        />
+        <ShareButtonWithTooltip
+          text="Share on VK"
+          buttonVariant={!isEmbedded ? 'primary' : 'secondary'}
+          url={`https://vk.com/share.php?url=${window.location.href}`}
+          icon={!isEmbedded ? <SvgLogoVkOnLight /> : <SvgLogoVkMonochrome />}
+        />
+        <ShareButtonWithTooltip
+          text="Share on Reddit"
+          buttonVariant={!isEmbedded ? 'primary' : 'secondary'}
+          url={`https://www.reddit.com/submit?url=${window.location.href}&title=${videoTitle}`}
+          icon={!isEmbedded ? <SvgLogoRedditOnLight /> : <SvgLogoRedditMonochrome />}
+        />
       </ShareButtonsContainer>
     </ShareWrapper>
+  )
+}
+
+type ShareButtonWithTooltipProps = {
+  text: string
+  url?: string
+  icon: ReactNode
+  buttonVariant: 'primary' | 'secondary'
+  onClick?: (event: MouseEvent<HTMLButtonElement>) => void
+  onMouseLeave?: () => void
+}
+
+const ShareButtonWithTooltip: FC<ShareButtonWithTooltipProps> = ({
+  text,
+  url,
+  icon,
+  buttonVariant,
+  onClick,
+  onMouseLeave,
+}) => {
+  return (
+    <Tooltip text={text} placement="top" hideOnClick={false}>
+      <ShareButton
+        {...getLinkPropsFromTo(url, true)}
+        onClick={onClick}
+        onMouseLeave={onMouseLeave}
+        variant={buttonVariant}
+      >
+        {icon}
+      </ShareButton>
+    </Tooltip>
   )
 }
