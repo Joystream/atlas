@@ -121,6 +121,7 @@ export const ShareButton = styled.button<{ variant?: 'primary' | 'secondary' }>`
   border-radius: 100%;
   background: none;
   padding: ${sizes(3)};
+  display: block;
 
   ${({ variant = 'primary' }) => shareButtonstyles[variant]};
 

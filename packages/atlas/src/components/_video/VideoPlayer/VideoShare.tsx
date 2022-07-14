@@ -199,30 +199,41 @@ const VideoShareContent: FC<VideoShareContentProps> = ({ videoId, isEmbedded, cu
             <SvgActionEmbed />
           </ShareButton>
         </Tooltip>
-        <ShareButton
-          {...getLinkPropsFromTo(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`, true)}
-          variant={!isEmbedded ? 'primary' : 'secondary'}
-        >
-          {!isEmbedded ? <SvgLogoFacebookOnLight /> : <SvgLogoFacebookMonochrome />}
-        </ShareButton>
-        <ShareButton
-          {...getLinkPropsFromTo(`http://www.twitter.com/share?url=${window.location.href}`, true)}
-          variant={!isEmbedded ? 'primary' : 'secondary'}
-        >
-          {!isEmbedded ? <SvgLogoTwitterOnLight /> : <SvgLogoTwitterMonochrome />}
-        </ShareButton>
-        <ShareButton
-          {...getLinkPropsFromTo(`https://vk.com/share.php?url=${window.location.href}`, true)}
-          variant={!isEmbedded ? 'primary' : 'secondary'}
-        >
-          {!isEmbedded ? <SvgLogoVkOnLight /> : <SvgLogoVkMonochrome />}
-        </ShareButton>
-        <ShareButton
-          {...getLinkPropsFromTo(`https://www.reddit.com/submit?url=${window.location.href}&title=${videoTitle}`, true)}
-          variant={!isEmbedded ? 'primary' : 'secondary'}
-        >
-          {!isEmbedded ? <SvgLogoRedditOnLight /> : <SvgLogoRedditMonochrome />}
-        </ShareButton>
+        <Tooltip text="Share on Facebook" placement="top">
+          <ShareButton
+            {...getLinkPropsFromTo(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`, true)}
+            variant={!isEmbedded ? 'primary' : 'secondary'}
+          >
+            {!isEmbedded ? <SvgLogoFacebookOnLight /> : <SvgLogoFacebookMonochrome />}
+          </ShareButton>
+        </Tooltip>
+        <Tooltip text="Share on Twitter" placement="top">
+          <ShareButton
+            {...getLinkPropsFromTo(`http://www.twitter.com/share?url=${window.location.href}`, true)}
+            variant={!isEmbedded ? 'primary' : 'secondary'}
+          >
+            {!isEmbedded ? <SvgLogoTwitterOnLight /> : <SvgLogoTwitterMonochrome />}
+          </ShareButton>
+        </Tooltip>
+        <Tooltip text="Share on VK" placement="top">
+          <ShareButton
+            {...getLinkPropsFromTo(`https://vk.com/share.php?url=${window.location.href}`, true)}
+            variant={!isEmbedded ? 'primary' : 'secondary'}
+          >
+            {!isEmbedded ? <SvgLogoVkOnLight /> : <SvgLogoVkMonochrome />}
+          </ShareButton>
+        </Tooltip>
+        <Tooltip text="Share on Reddit" placement="top">
+          <ShareButton
+            {...getLinkPropsFromTo(
+              `https://www.reddit.com/submit?url=${window.location.href}&title=${videoTitle}`,
+              true
+            )}
+            variant={!isEmbedded ? 'primary' : 'secondary'}
+          >
+            {!isEmbedded ? <SvgLogoRedditOnLight /> : <SvgLogoRedditMonochrome />}
+          </ShareButton>
+        </Tooltip>
       </ShareButtonsContainer>
     </ShareWrapper>
   )
