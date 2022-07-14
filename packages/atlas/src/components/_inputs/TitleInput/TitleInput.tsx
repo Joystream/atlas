@@ -1,4 +1,4 @@
-import { ChangeEvent, KeyboardEvent, forwardRef, useState } from 'react'
+import { ChangeEvent, FocusEvent, KeyboardEvent, forwardRef, useState } from 'react'
 
 import { Text } from '@/components/Text'
 
@@ -12,8 +12,8 @@ export type TitleInputProps = {
   max?: number
   placeholder?: string
   onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void
-  onBlur?: (event: ChangeEvent<HTMLTextAreaElement>) => void
-  onFocus?: (event: ChangeEvent<HTMLTextAreaElement>) => void
+  onBlur?: (event: FocusEvent<HTMLTextAreaElement>) => void
+  onFocus?: (event: FocusEvent<HTMLTextAreaElement>) => void
   className?: string
   disabled?: boolean
 }
@@ -42,7 +42,7 @@ export const TitleInput = forwardRef<HTMLTextAreaElement, TitleInputProps>(
       }
     }
 
-    const handleFocus = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    const handleFocus = (event: FocusEvent<HTMLTextAreaElement>) => {
       onFocus?.(event)
       if (!footerVisible) {
         setFooterVisible(true)

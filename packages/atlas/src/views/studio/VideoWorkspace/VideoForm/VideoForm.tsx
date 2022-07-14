@@ -82,7 +82,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const [royaltiesFieldEnabled, setRoyaltiesFieldEnabled] = useState(false)
   const [titleTooltipVisible, setTitleTooltipVisible] = useState(true)
   const mintNftFormFieldRef = useRef<HTMLDivElement>(null)
-  const titleInputRef = useRef<HTMLTextAreaElement>(null)
   const [openEditDialog, closeEditDialog] = useConfirmationModal({
     type: 'warning',
     title: 'Discard changes?',
@@ -604,20 +603,22 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           }}
           render={({ field: { value, onChange, ref }, fieldState: { error } }) => {
             return (
-              <FormField error={error?.message}>
-                <StyledTitleArea
-                  ref={ref}
-                  onChange={onChange}
-                  value={value}
-                  min={MIN_TITLE_LENGTH}
-                  max={MAX_TITLE_LENGTH}
-                  placeholder="Enter video title"
-                  disabled={videoFieldsLocked}
-                  error={!!error}
-                  onFocus={() => setTitleTooltipVisible(false)}
-                  onBlur={() => setTitleTooltipVisible(true)}
-                />
-              </FormField>
+              <Tooltip text="Click to edit" placement="top-start" hidden={!titleTooltipVisible}>
+                <FormField error={error?.message}>
+                  <StyledTitleArea
+                    ref={ref}
+                    onChange={onChange}
+                    value={value}
+                    min={MIN_TITLE_LENGTH}
+                    max={MAX_TITLE_LENGTH}
+                    placeholder="Enter video title"
+                    disabled={videoFieldsLocked}
+                    error={!!error}
+                    onFocus={() => setTitleTooltipVisible(false)}
+                    onBlur={() => setTitleTooltipVisible(true)}
+                  />
+                </FormField>
+              </Tooltip>
             )
           }}
         />
@@ -628,7 +629,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
             description="Only selected options can be changed since there's an NFT minted for this video."
           />
         )}
-        {titleTooltipVisible && <Tooltip text="Click to edit" placement="top-start" reference={titleInputRef} />}
         {videoFieldsLocked && alwaysEditableFormFields}
         {!videoFieldsLocked && videoEditFields}
         <Divider />

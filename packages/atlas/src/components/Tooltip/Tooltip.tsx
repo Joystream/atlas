@@ -27,6 +27,7 @@ export type TooltipProps = PropsWithChildren<{
   customContent?: ReactNode
   showOnCreate?: boolean
   multiline?: boolean
+  hidden?: boolean
   className?: string
 }> &
   Pick<TippyProps, 'delay'>
@@ -45,10 +46,13 @@ export const Tooltip: FC<TooltipProps> = ({
   customContent,
   showOnCreate,
   multiline,
+  hidden,
   className,
   ...tippyProps
 }) => {
   const [isVisible, setIsVisible] = useState(false)
+
+  const shouldShow = isVisible && !hidden
 
   const content = customContent ? (
     customContent
@@ -91,7 +95,7 @@ export const Tooltip: FC<TooltipProps> = ({
       showOnCreate={showOnCreate}
       render={(attrs) => (
         <CSSTransition
-          in={isVisible}
+          in={shouldShow}
           timeout={parseInt(transitions.timings.sharp)}
           classNames={transitions.names.fade}
           unmountOnExit
