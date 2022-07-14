@@ -48,15 +48,13 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
   const commentIdQueryParam = useRouterQuery(QUERY_PARAMS.COMMENT_ID)
   const mdMatch = useMediaMatch('md')
   const { id: videoId } = useParams()
-  const { memberId, signIn, activeMembership, isLoggedIn, accountId } = useUser()
+  const { memberId, signIn, activeMembership, isLoggedIn } = useUser()
   const { openSignInDialog } = useDisplaySignInDialog()
   const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)
 
   const { fee, loading: feeLoading } = useFee(
-    'getCreateVideoCommentFee',
-    accountId && memberId && video?.id && commentInputText
-      ? [accountId, memberId, video?.id, commentInputText, null]
-      : undefined
+    'createVideoCommentTx',
+    memberId && video?.id && commentInputText ? [memberId, video?.id, commentInputText, null] : undefined
   )
 
   const queryVariables = useMemo(

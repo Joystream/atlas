@@ -1,4 +1,3 @@
-import BN from 'bn.js'
 import { FC, FormEvent, PropsWithChildren, ReactNode, Ref } from 'react'
 
 import { Fee } from '@/components/Fee'
@@ -37,7 +36,7 @@ export type DialogProps = PropsWithChildren<{
   className?: string
   contentClassName?: string
   contentRef?: Ref<HTMLDivElement>
-  fee?: BN
+  fee?: number
 }>
 
 export const Dialog: FC<DialogProps> = ({

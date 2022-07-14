@@ -18,7 +18,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NftCard } from '@/components/_nft/NftCard'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
-import { FeeMethod, useFee } from '@/hooks/useFee'
+import { useFee } from '@/hooks/useFee'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { useNftState } from '@/hooks/useNftState'
@@ -79,7 +79,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
   } = useJoystream()
   const { currentBlock } = useJoystreamStore()
   const handleTransaction = useTransaction()
-  const { memberId, accountId } = useUser()
+  const { memberId } = useUser()
 
   const {
     watch,
@@ -252,18 +252,17 @@ export const NftPurchaseBottomDrawer: FC = () => {
       ? 'Change bid'
       : 'Place bid'
 
-  const buyNowFeeArgs: Parameters<FeeMethod['getBuyNftNowFee']> | undefined =
-    accountId && currentNftId && memberId && buyNowPrice
-      ? [accountId, currentNftId, memberId, auctionBuyNowPrice]
-      : undefined
+  const { fee: buyNowFee, loading: buynowFeeLoading } = useFee(
+    'buyNftNowTx',
+    currentNftId && memberId && auctionBuyNowPrice ? [currentNftId, memberId, auctionBuyNowPrice] : undefined
+  )
 
-  const makeBidArgs: Parameters<FeeMethod['getMakeNftBidFee']> | undefined =
-    accountId && currentNftId && memberId && watch('bid')
-      ? [accountId, currentNftId, memberId, Number(watch('bid')), isEnglishAuction ? 'english' : 'open']
+  const { fee: makeBidFee, loading: makeBidFeeLoading } = useFee(
+    'makeNftBidTx',
+    currentNftId && memberId && watch('bid')
+      ? [currentNftId, memberId, Number(watch('bid')), isEnglishAuction ? 'english' : 'open']
       : undefined
-
-  const { fee: buyNowFee, loading: buynowFeeLoading } = useFee('getBuyNftNowFee', buyNowFeeArgs)
-  const { fee: makeBidFee, loading: makeBidFeeLoading } = useFee('getMakeNftBidFee', makeBidArgs)
+  )
 
   const transactionFee = type === 'buy_now' ? buyNowFee : makeBidFee
   const feeLoading = buynowFeeLoading || makeBidFeeLoading
@@ -370,7 +369,13 @@ export const NftPurchaseBottomDrawer: FC = () => {
                           <TokenWrapper>
                             <StyledJoyTokenIcon variant="gray" size={24} />
                           </TokenWrapper>
-                          <BidAmount as="span" variant="h400" value={topBidAmount} format="short" />
+                          <BidAmount
+                            as="span"
+                            variant="h400"
+                            value={TokenNumberToHapiBN(topBidAmount)}
+                            withToken
+                            format="short"
+                          />
                         </FlexWrapper>
                         <Text as="span" variant="t100" color="colorText" margin={{ top: 1 }}>
                           {topBidder.handle === userBid?.bidder.handle ? 'You' : topBidder.handle}
@@ -414,7 +419,9 @@ export const NftPurchaseBottomDrawer: FC = () => {
                         Minimum bid
                       </Text>
                       <JoyTokenIcon variant="gray" size={24} />{' '}
-                      <NumberFormat as="span" variant="h400" value={minimumBid || 0} />
+                      <Text as="span" variant="h400">
+                        {minimumBid}
+                      </Text>
                     </MinimumBid>
                     {auctionBuyNowPrice > 0 && (
                       <Text as="span" variant="t100" color="colorText">
@@ -492,7 +499,9 @@ export const NftPurchaseBottomDrawer: FC = () => {
                     Price:
                   </Text>
                   <JoyTokenIcon variant="silver" size={24} />{' '}
-                  <NumberFormat as="span" variant="h400" format="short" value={buyNowPrice || auctionBuyNowPrice} />
+                  <Text as="span" variant="h400">
+                    {buyNowPrice || auctionBuyNowPrice}
+                  </Text>
                 </MinimumBid>
               </MinimumBidWrapper>
             )}

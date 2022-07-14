@@ -1,4 +1,3 @@
-import BN from 'bn.js'
 import { ReactNode, forwardRef } from 'react'
 
 import { NumberFormat } from '@/components/NumberFormat'
@@ -16,11 +15,11 @@ type ReactionsOnboardingPopoverProps = {
   onConfirm?: () => void
   disabled?: boolean
   trigger: ReactNode
-  fee?: BN
+  fee?: number
 }
 
 export const ReactionsOnboardingPopover = forwardRef<PopoverImperativeHandle, ReactionsOnboardingPopoverProps>(
-  ({ onDecline, disabled, onConfirm, trigger, fee = new BN(0) }, ref) => {
+  ({ onDecline, disabled, onConfirm, trigger, fee = 0 }, ref) => {
     const setReactionPopoverDismission = usePersonalDataStore((state) => state.actions.setReactionPopoverDismission)
 
     return (

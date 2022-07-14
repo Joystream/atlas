@@ -59,7 +59,7 @@ type NftFormProps = {
 }
 
 export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) => {
-  const { activeMembership, accountId, memberId } = useUser()
+  const { activeMembership, memberId } = useUser()
   const scrollableWrapperRef = useRef<HTMLDivElement>(null)
   const {
     state: { activeInputs, setActiveInputs, listingType, setListingType, currentStep, previousStep, nextStep },
@@ -168,8 +168,8 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
   const inputMetadata = getInputMetadataData(getValues())
 
   const { fee, loading: feeLoading } = useFee(
-    'getPutNftOnSaleFee',
-    accountId && memberId && inputMetadata ? [accountId, videoId, memberId, inputMetadata] : undefined
+    'putNftOnSaleTx',
+    memberId && inputMetadata ? [videoId, memberId, inputMetadata] : undefined
   )
 
   const handleSubmit = useCallback(() => {

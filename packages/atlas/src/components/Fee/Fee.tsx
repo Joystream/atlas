@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import BN from 'bn.js'
 import { FC } from 'react'
 
 import { Information } from '@/components/Information'
@@ -9,7 +8,8 @@ import { Color } from '@/components/Text/Text.styles'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 export type FeeProps = {
-  amount: BN
+  amount: number
+  withToken?: boolean
   variant: TextVariant
   color?: Color
   hideOnMobile?: boolean
@@ -19,6 +19,7 @@ export type FeeProps = {
 
 export const Fee: FC<FeeProps> = ({
   amount,
+  withToken,
   variant = 't100',
   color = 'colorTextStrong',
   hideOnMobile,
@@ -31,11 +32,11 @@ export const Fee: FC<FeeProps> = ({
       {(!hideOnMobile || smMatch) && (
         <>
           <Text as="span" variant={variant} color={color}>
-            Fee:&nbsp;{amount.lt(new BN(0.01)) && '<'}&nbsp;
+            Fee:&nbsp;{amount < 0.01 && '<'}&nbsp;
           </Text>
           <NumberFormat
-            withToken
-            displayedValue={amount.lt(new BN(0.01)) ? 0.01 : undefined}
+            withToken={withToken}
+            displayedValue={amount < 0.01 ? 0.01 : undefined}
             value={amount}
             as="span"
             variant={variant}

@@ -1,4 +1,3 @@
-import BN from 'bn.js'
 import { FC, useCallback, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import useResizeObserver from 'use-resize-observer'
@@ -76,9 +75,9 @@ export const EditMembershipView: FC = () => {
   )
 
   const { fee } = useFee(
-    'getUpdateMemberFee',
-    accountId && memberId && isDirty
-      ? [accountId, memberId, dirtyFields.handle ? watch('handle') : null, createMemberInputMetadata(watch())]
+    'updateMemberTx',
+    memberId && isDirty
+      ? [memberId, dirtyFields.handle ? watch('handle') : null, createMemberInputMetadata(watch())]
       : undefined
   )
 
@@ -160,7 +159,7 @@ export const EditMembershipView: FC = () => {
         </Wrapper>
         <StyledActionBar
           ref={actionBarRef}
-          fee={new BN(fee)}
+          fee={fee}
           primaryButton={{
             disabled: !isDirty || !isValid || isValidating,
             text: 'Publish changes',

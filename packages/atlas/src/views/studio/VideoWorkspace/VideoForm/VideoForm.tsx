@@ -86,7 +86,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const [titleTooltipVisible, setTitleTooltipVisible] = useState(true)
   const mintNftFormFieldRef = useRef<HTMLDivElement>(null)
   const titleInputRef = useRef<HTMLTextAreaElement>(null)
-  const { accountId, memberId, channelId } = useUser()
+  const { memberId, channelId } = useUser()
   const [openEditDialog, closeEditDialog] = useConfirmationModal({
     type: 'warning',
     title: 'Discard changes?',
@@ -224,15 +224,15 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const nftMetadata = createNftInputMetadata(getValues())
   const assets = createBasicVideoInputAssetsInfo(getValues('assets'))
 
-  const isSigned = accountId && memberId && channelId
+  const isSigned = memberId && channelId
   const { fee: createVideoFee, loading: createVideoFeeLoading } = useFee(
-    'getCreateVideoFee',
-    isSigned && isNew ? [accountId, memberId, channelId, videoInputMetadata, nftMetadata, assets] : undefined
+    'createVideoTx',
+    isSigned && isNew ? [memberId, channelId, videoInputMetadata, nftMetadata, assets] : undefined
   )
   const { fee: updateVideoFee, loading: updateVideoFeeLoading } = useFee(
-    'getUpdateVideoFee',
+    'updateVideoTx',
     isSigned && isEdit && editedVideoInfo.id
-      ? [accountId, editedVideoInfo.id, memberId, videoInputMetadata, nftMetadata, assets]
+      ? [editedVideoInfo.id, memberId, videoInputMetadata, nftMetadata, assets]
       : undefined
   )
 

@@ -1,4 +1,3 @@
-import BN from 'bn.js'
 import { ChangeEvent, forwardRef, useEffect, useRef, useState } from 'react'
 import mergeRefs from 'react-merge-refs'
 import useResizeObserver from 'use-resize-observer'
@@ -34,7 +33,7 @@ export type CommentInputProps = {
   initialFocus?: boolean
   reply?: boolean
   className?: string
-  fee?: number | BN
+  fee?: number
   feeLoading?: boolean
 } & Omit<CommentRowProps, 'isInput'>
 
