@@ -1,4 +1,4 @@
-import { FC, MouseEvent, useEffect, useRef, useState } from 'react'
+import { FC, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Tooltip } from '@/components/Tooltip'
@@ -186,55 +186,69 @@ const VideoShareContent: FC<VideoShareContentProps> = ({ videoId, isEmbedded, cu
         />
       </InputContainer>
       <ShareButtonsContainer>
-        <Tooltip
-          hideOnClick={false}
+        <ShareButtonWithTooltip
           text={copyButtonClicked ? 'Copied to clipboard' : 'Copy embed code'}
-          placement="top"
-        >
-          <ShareButton
-            variant={!isEmbedded ? 'primary' : 'secondary'}
-            onClick={handleGenerateIframe}
-            onMouseLeave={() => setCopyButtonClicked(false)}
-          >
-            <SvgActionEmbed />
-          </ShareButton>
-        </Tooltip>
-        <Tooltip text="Share on Facebook" placement="top">
-          <ShareButton
-            {...getLinkPropsFromTo(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`, true)}
-            variant={!isEmbedded ? 'primary' : 'secondary'}
-          >
-            {!isEmbedded ? <SvgLogoFacebookOnLight /> : <SvgLogoFacebookMonochrome />}
-          </ShareButton>
-        </Tooltip>
-        <Tooltip text="Share on Twitter" placement="top">
-          <ShareButton
-            {...getLinkPropsFromTo(`http://www.twitter.com/share?url=${window.location.href}`, true)}
-            variant={!isEmbedded ? 'primary' : 'secondary'}
-          >
-            {!isEmbedded ? <SvgLogoTwitterOnLight /> : <SvgLogoTwitterMonochrome />}
-          </ShareButton>
-        </Tooltip>
-        <Tooltip text="Share on VK" placement="top">
-          <ShareButton
-            {...getLinkPropsFromTo(`https://vk.com/share.php?url=${window.location.href}`, true)}
-            variant={!isEmbedded ? 'primary' : 'secondary'}
-          >
-            {!isEmbedded ? <SvgLogoVkOnLight /> : <SvgLogoVkMonochrome />}
-          </ShareButton>
-        </Tooltip>
-        <Tooltip text="Share on Reddit" placement="top">
-          <ShareButton
-            {...getLinkPropsFromTo(
-              `https://www.reddit.com/submit?url=${window.location.href}&title=${videoTitle}`,
-              true
-            )}
-            variant={!isEmbedded ? 'primary' : 'secondary'}
-          >
-            {!isEmbedded ? <SvgLogoRedditOnLight /> : <SvgLogoRedditMonochrome />}
-          </ShareButton>
-        </Tooltip>
+          buttonVariant={!isEmbedded ? 'primary' : 'secondary'}
+          onClick={handleGenerateIframe}
+          onMouseLeave={() => setCopyButtonClicked(false)}
+          icon={<SvgActionEmbed />}
+        />
+        <ShareButtonWithTooltip
+          text="Share on Facebook"
+          buttonVariant={!isEmbedded ? 'primary' : 'secondary'}
+          url={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`}
+          icon={!isEmbedded ? <SvgLogoFacebookOnLight /> : <SvgLogoFacebookMonochrome />}
+        />
+        <ShareButtonWithTooltip
+          text="Share on Twitter"
+          buttonVariant={!isEmbedded ? 'primary' : 'secondary'}
+          url={`http://www.twitter.com/share?url=${window.location.href}`}
+          icon={!isEmbedded ? <SvgLogoTwitterOnLight /> : <SvgLogoTwitterMonochrome />}
+        />
+        <ShareButtonWithTooltip
+          text="Share on VK"
+          buttonVariant={!isEmbedded ? 'primary' : 'secondary'}
+          url={`https://vk.com/share.php?url=${window.location.href}`}
+          icon={!isEmbedded ? <SvgLogoVkOnLight /> : <SvgLogoVkMonochrome />}
+        />
+        <ShareButtonWithTooltip
+          text="Share on Reddit"
+          buttonVariant={!isEmbedded ? 'primary' : 'secondary'}
+          url={`https://www.reddit.com/submit?url=${window.location.href}&title=${videoTitle}`}
+          icon={!isEmbedded ? <SvgLogoRedditOnLight /> : <SvgLogoRedditMonochrome />}
+        />
       </ShareButtonsContainer>
     </ShareWrapper>
+  )
+}
+
+type ShareButtonWithTooltipProps = {
+  text: string
+  url?: string
+  icon: ReactNode
+  buttonVariant: 'primary' | 'secondary'
+  onClick?: (event: MouseEvent<HTMLButtonElement>) => void
+  onMouseLeave?: () => void
+}
+
+const ShareButtonWithTooltip: FC<ShareButtonWithTooltipProps> = ({
+  text,
+  url,
+  icon,
+  buttonVariant,
+  onClick,
+  onMouseLeave,
+}) => {
+  return (
+    <Tooltip text={text} placement="top" hideOnClick={false}>
+      <ShareButton
+        {...getLinkPropsFromTo(url, true)}
+        onClick={onClick}
+        onMouseLeave={onMouseLeave}
+        variant={buttonVariant}
+      >
+        {icon}
+      </ShareButton>
+    </Tooltip>
   )
 }
