@@ -217,6 +217,7 @@ export const Searchbar: FC<SearchbarProps> = ({
               )}
               <StyledForm action=".">
                 <Input
+                  value={query}
                   placeholder={placeholder}
                   type="search"
                   onChange={handleChange}
