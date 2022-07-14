@@ -111,7 +111,11 @@ export const Tooltip: FC<TooltipProps> = ({
         </CSSTransition>
       )}
     >
-      <>{children}</>
+      {children ? (
+        <span tabIndex={0} className={className}>
+          {children}
+        </span>
+      ) : undefined}
     </Tippy>
   )
 }
