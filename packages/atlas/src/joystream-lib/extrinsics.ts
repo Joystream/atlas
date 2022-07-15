@@ -33,6 +33,7 @@ import {
   ChannelExtrinsicResult,
   ChannelId,
   ChannelInputAssets,
+  ChannelInputBuckets,
   ChannelInputMetadata,
   CommentReaction,
   ExtrinsicStatus,
@@ -126,7 +127,8 @@ export class JoystreamLibExtrinsics {
   private async createChannelTx(
     memberId: MemberId,
     inputMetadata: ChannelInputMetadata,
-    inputAssets: ChannelInputAssets
+    inputAssets: ChannelInputAssets,
+    inputBuckets: ChannelInputBuckets
   ) {
     await this.ensureApi()
 
@@ -139,10 +141,8 @@ export class JoystreamLibExtrinsics {
       meta: channelMetadata,
       assets: channelAssets,
       collaborators: createType('BTreeMap<u64, BTreeSet<PalletContentChannelActionPermission>>', {}),
-      storageBuckets: createType('BTreeSet<u64>', [0]), // TODO: provide values
-      distributionBuckets: createType('BTreeSet<PalletStorageDistributionBucketIdRecord>', [
-        { distributionBucketFamilyId: 0, distributionBucketIndex: 0 },
-      ]), // TODO: provide values
+      storageBuckets: createType('BTreeSet<u64>', inputBuckets.storage),
+      distributionBuckets: createType('BTreeSet<PalletStorageDistributionBucketIdRecord>', inputBuckets.distribution),
       expectedDataObjectStateBloatBond: dataObjectStateBloatBond,
       expectedChannelStateBloatBond: channelStateBloatBond,
     })
@@ -160,9 +160,10 @@ export class JoystreamLibExtrinsics {
     address: string,
     memberId: MemberId,
     inputMetadata: ChannelInputMetadata,
-    inputAssets: ChannelInputAssets
+    inputAssets: ChannelInputAssets,
+    inputBuckets: ChannelInputBuckets
   ) {
-    const tx = await this.createChannelTx(memberId, inputMetadata, inputAssets)
+    const tx = await this.createChannelTx(memberId, inputMetadata, inputAssets, inputBuckets)
 
     return this.getFee(tx, address)
   }
@@ -171,9 +172,10 @@ export class JoystreamLibExtrinsics {
     memberId: MemberId,
     inputMetadata: ChannelInputMetadata,
     inputAssets: ChannelInputAssets,
+    inputBuckets: ChannelInputBuckets,
     cb?: ExtrinsicStatusCallbackFn
   ): Promise<ChannelExtrinsicResult> {
-    const tx = await this.createChannelTx(memberId, inputMetadata, inputAssets)
+    const tx = await this.createChannelTx(memberId, inputMetadata, inputAssets, inputBuckets)
 
     const { block, getEventData } = await this.sendExtrinsic(tx, cb)
 
@@ -236,7 +238,7 @@ export class JoystreamLibExtrinsics {
     return {
       channelId,
       block,
-      assetsIds: extractChannelResultAssetsIds(inputAssets, getEventData),
+      assetsIds: extractChannelResultAssetsIds(inputAssets, getEventData, true),
     }
   }
 
