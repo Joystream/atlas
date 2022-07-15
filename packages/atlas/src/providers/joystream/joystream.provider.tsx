@@ -150,7 +150,7 @@ const useJoystreamChainState = (joystream: Remote<JoystreamLib> | undefined) => 
     joystream.getNftChainState().then((nftChainState) =>
       setChainState({
         nftMaxAuctionDuration: nftChainState.maxAuctionDuration,
-        nftMinStartingPrice: nftChainState.minStartingPrice,
+        nftMinStartingPrice: Math.max(nftChainState.minStartingPrice, 1),
         nftAuctionStartsAtMaxDelta: nftChainState.auctionStartsAtMaxDelta,
         nftMaxCreatorRoyaltyPercentage: nftChainState.maxCreatorRoyalty,
         nftMinCreatorRoyaltyPercentage: nftChainState.minCreatorRoyalty,
