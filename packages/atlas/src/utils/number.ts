@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js'
 import BN from 'bn.js'
 
 import { HAPI_TO_JOY_RATE } from '@/config/joystream'
@@ -23,6 +24,8 @@ export const tokenNumberToHapiBn = (number: number) => {
   if (Number.isInteger(number)) {
     return new BN(number).mul(conversionBn)
   } else {
-    return new BN(number * HAPI_TO_JOY_RATE)
+    // we need to use different library in this case since BN doesn't support decimals
+    const multiplied = new BigNumber(number).multipliedBy(HAPI_TO_JOY_RATE).toString()
+    return new BN(multiplied)
   }
 }
