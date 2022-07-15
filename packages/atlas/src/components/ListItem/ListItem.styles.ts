@@ -1,3 +1,4 @@
+import isPropValid from '@emotion/is-prop-valid'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
@@ -39,7 +40,7 @@ const interactiveStyles = css`
   }
 `
 type ContainerProps = { size: ListItemSizes; hasNodeStart: boolean; disabled?: boolean; highlight?: boolean }
-export const Container = styled.div<ContainerProps>`
+export const Container = styled('div', { shouldForwardProp: isPropValid })<ContainerProps>`
   border: none;
   width: 100%;
   justify-items: start;
