@@ -508,12 +508,10 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   const handlePictureInPicture = (event: MouseEvent) => {
     event.stopPropagation()
     if (document.pictureInPictureElement) {
-      // @ts-ignore @types/video.js is outdated and doesn't provide types for some newer video.js features
-      player.exitPictureInPicture()
+      player?.exitPictureInPicture()
     } else {
       if (document.pictureInPictureEnabled) {
-        // @ts-ignore @types/video.js is outdated and doesn't provide types for some newer video.js features
-        player.requestPictureInPicture().catch((e) => {
+        player?.requestPictureInPicture().catch((e) => {
           ConsoleLogger.warn('Picture in picture failed', e)
         })
       }
