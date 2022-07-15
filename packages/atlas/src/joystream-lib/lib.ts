@@ -77,14 +77,6 @@ export class JoystreamLib {
     this.api.setSigner(signer)
   }
 
-  async getAccountBalance(accountId: AccountId): Promise<number> {
-    await this.ensureApi()
-
-    const { availableBalance } = await this.api.derive.balances.all(accountId)
-
-    return availableBalance.toNumber()
-  }
-
   async getCurrentBlock(): Promise<number> {
     await this.ensureApi()
     const header = await this.api.rpc.chain.getHeader()

@@ -17,7 +17,7 @@ import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUser } from '@/providers/user'
 import { SentryLogger } from '@/utils/logs'
-import { TokenNumberToHapiBN } from '@/utils/number'
+import { tokenNumberToHapiBn } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 
 import { AcceptTerms } from './AcceptTerms'
@@ -125,9 +125,9 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
         return {
           type: 'english',
           startsAtBlock,
-          startingPrice: TokenNumberToHapiBN(startingPrice),
-          minimalBidStep: TokenNumberToHapiBN(minimalBidStep),
-          buyNowPrice: typeof data.buyNowPrice === 'number' ? TokenNumberToHapiBN(data.buyNowPrice) : undefined,
+          startingPrice: tokenNumberToHapiBn(startingPrice),
+          minimalBidStep: tokenNumberToHapiBn(minimalBidStep),
+          buyNowPrice: typeof data.buyNowPrice === 'number' ? tokenNumberToHapiBn(data.buyNowPrice) : undefined,
           auctionDurationBlocks: data.auctionDurationBlocks,
           whitelistedMembersIds: data.whitelistedMembers?.map((member) => new BN(member.id)),
         }
@@ -136,9 +136,9 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
         return {
           type: 'open',
           startsAtBlock,
-          startingPrice: TokenNumberToHapiBN(startingPrice),
-          minimalBidStep: TokenNumberToHapiBN(minimalBidStep),
-          buyNowPrice: typeof data.buyNowPrice === 'number' ? TokenNumberToHapiBN(data.buyNowPrice) : undefined,
+          startingPrice: tokenNumberToHapiBn(startingPrice),
+          minimalBidStep: tokenNumberToHapiBn(minimalBidStep),
+          buyNowPrice: typeof data.buyNowPrice === 'number' ? tokenNumberToHapiBn(data.buyNowPrice) : undefined,
           whitelistedMembersIds: data.whitelistedMembers?.map((member) => new BN(member.id)),
         }
       }
@@ -316,8 +316,8 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
     loading: loadingVideo,
     duration: video?.duration,
     views: video?.views,
-    buyNowPrice: TokenNumberToHapiBN(watch('buyNowPrice') || 0),
-    startingPrice: TokenNumberToHapiBN(watch('startingPrice') || 0),
+    buyNowPrice: tokenNumberToHapiBn(watch('buyNowPrice') || 0),
+    startingPrice: tokenNumberToHapiBn(watch('startingPrice') || 0),
   }
 
   const stepsContent = [

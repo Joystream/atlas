@@ -7,7 +7,7 @@ import { ChangePriceDialog } from '@/components/_overlays/ChangePriceDialog'
 import { useNftState } from '@/hooks/useNftState'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useTokenPrice } from '@/providers/joystream'
-import { HapiBNToTokenNumber } from '@/utils/number'
+import { hapiBnToTokenNumber } from '@/utils/number'
 
 type ContextValue = {
   currentAction: NftAction | null
@@ -38,7 +38,7 @@ export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
   const mappedBids = auction?.bids
     ? auction?.bids
         .filter((bid) => !bid.isCanceled)
-        .sort((bidA, bidB) => HapiBNToTokenNumber(new BN(bidB.amount)) - HapiBNToTokenNumber(new BN(bidA.amount)))
+        .sort((bidA, bidB) => hapiBnToTokenNumber(new BN(bidB.amount)) - hapiBnToTokenNumber(new BN(bidA.amount)))
         .map(({ id, createdAt, amount, bidder }) => ({
           id,
           createdAt,

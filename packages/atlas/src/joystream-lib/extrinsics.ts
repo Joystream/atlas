@@ -11,7 +11,7 @@ import { SubmittableExtrinsic } from '@polkadot/api/types'
 import Long from 'long'
 
 import { SentryLogger } from '@/utils/logs'
-import { HapiBNToTokenNumber } from '@/utils/number'
+import { hapiBnToTokenNumber } from '@/utils/number'
 
 import { JoystreamLibError } from './errors'
 import {
@@ -159,7 +159,7 @@ export class JoystreamLibExtrinsics {
   ) {
     // @ts-ignore Warning about not having spread argument as a tuple. We can ignore this
     const tx = await this[method](...args)
-    return HapiBNToTokenNumber((await tx.paymentInfo(address)).partialFee.toBn())
+    return hapiBnToTokenNumber((await tx.paymentInfo(address)).partialFee.toBn())
   }
 
   async createChannel(

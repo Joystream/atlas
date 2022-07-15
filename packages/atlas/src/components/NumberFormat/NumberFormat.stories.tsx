@@ -1,6 +1,6 @@
 import { Meta, Story } from '@storybook/react'
 
-import { TokenNumberToHapiBN } from '@/utils/number'
+import { tokenNumberToHapiBn } from '@/utils/number'
 
 import { NumberFormat, NumberFormatProps } from './NumberFormat'
 
@@ -24,7 +24,7 @@ export default {
 
 const Template: Story<Omit<NumberFormatProps, 'ref'>> = (args) => (
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '12px', padding: '200px' }}>
-    <NumberFormat {...args} value={TokenNumberToHapiBN(args.value as number)} withToken />
+    <NumberFormat {...args} value={tokenNumberToHapiBn(args.value as number)} withToken />
     <NumberFormat {...args} value={args.value as number} withToken={false} />
   </div>
 )
