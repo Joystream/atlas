@@ -11,7 +11,7 @@ import { MemberComboBox } from '@/components/_inputs/MemberComboBox'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useTokenPrice } from '@/providers/joystream'
 import { pluralizeNoun } from '@/utils/misc'
-import { HapiBNToTokenNumber, TokenNumberToHapiBN } from '@/utils/number'
+import { TokenNumberToHapiBN } from '@/utils/number'
 
 import {
   AuctionDatePickerWrapper,
@@ -107,7 +107,7 @@ export const SetUp: FC<SetUpProps> = ({
         setValue('startDate', null)
         setValue('endDate', null)
       } else if (name === 'startingPrice') {
-        setValue('startingPrice', HapiBNToTokenNumber(chainState.nftMinStartingPrice) || undefined)
+        setValue('startingPrice', chainState.nftMinStartingPrice || undefined)
       } else {
         reset({ ...getValues(), [name]: undefined })
       }

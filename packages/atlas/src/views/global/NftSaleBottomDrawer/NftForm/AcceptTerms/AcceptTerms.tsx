@@ -1,4 +1,3 @@
-import BN from 'bn.js'
 import { addHours } from 'date-fns'
 import { FC, PropsWithChildren } from 'react'
 
@@ -76,7 +75,7 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData, fee 
             <StyledInformation text="Only bids higher than this value will be accepted" placement="top" multiline />
           </Title>
           <Description>
-            <NumberFormat as="span" value={new BN(formData.startingPrice ** 10)} variant="h400" withToken />
+            <NumberFormat as="span" value={formData.startingPrice} variant="h400" withToken />
           </Description>
         </Row>
       )}
@@ -95,7 +94,7 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData, fee 
             />
           </Title>
           <Description>
-            <NumberFormat as="span" value={new BN(formData.buyNowPrice ** 10)} variant="h400" withToken />
+            <NumberFormat as="span" value={formData.buyNowPrice} variant="h400" withToken />
           </Description>
         </Row>
       )}

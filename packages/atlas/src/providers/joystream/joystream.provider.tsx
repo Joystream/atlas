@@ -1,4 +1,3 @@
-import BN from 'bn.js'
 import { ProxyMarked, Remote, proxy, wrap } from 'comlink'
 import { FC, PropsWithChildren, createContext, useCallback, useEffect, useRef, useState } from 'react'
 
@@ -128,7 +127,7 @@ const useJoystreamUtilFns = () => {
 }
 
 type JoystreamChainState = {
-  nftMinStartingPrice: BN
+  nftMinStartingPrice: number
   nftMaxAuctionDuration: number
   nftAuctionStartsAtMaxDelta: number
   nftMaxCreatorRoyaltyPercentage: number
@@ -137,7 +136,7 @@ type JoystreamChainState = {
 }
 const useJoystreamChainState = (joystream: Remote<JoystreamLib> | undefined) => {
   const [chainState, setChainState] = useState<JoystreamChainState>({
-    nftMinStartingPrice: new BN(1),
+    nftMinStartingPrice: 1,
     nftMaxAuctionDuration: 1_296_000,
     nftAuctionStartsAtMaxDelta: 432_000,
     nftMaxCreatorRoyaltyPercentage: 50,

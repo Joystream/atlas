@@ -17,7 +17,7 @@ import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUser } from '@/providers/user'
 import { SentryLogger } from '@/utils/logs'
-import { HapiBNToTokenNumber, TokenNumberToHapiBN } from '@/utils/number'
+import { TokenNumberToHapiBN } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 
 import { AcceptTerms } from './AcceptTerms'
@@ -76,13 +76,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
     mode: 'onChange',
     resolver: (data, ctx, options) => {
       const resolver = zodResolver(
-        createValidationSchema(
-          data,
-          maxStartDate,
-          maxEndDate,
-          listingType,
-          HapiBNToTokenNumber(chainState.nftMinStartingPrice)
-        )
+        createValidationSchema(data, maxStartDate, maxEndDate, listingType, chainState.nftMinStartingPrice)
       )
       return resolver(data, ctx, options)
     },
@@ -90,7 +84,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
     defaultValues: {
       startDate: null,
       endDate: null,
-      startingPrice: HapiBNToTokenNumber(chainState.nftMinStartingPrice) || undefined,
+      startingPrice: chainState.nftMinStartingPrice || undefined,
     },
   })
   const {
@@ -123,7 +117,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
       const startDateValue = getValues('startDate')
       const startDate = startDateValue?.type === 'date' && startDateValue.date
       const startsAtBlock = startDate ? convertMsTimestampToBlock(startDate.getTime()) : undefined
-      const startingPrice = data.startingPrice ?? HapiBNToTokenNumber(chainState.nftMinStartingPrice)
+      const startingPrice = data.startingPrice ?? chainState.nftMinStartingPrice
       const minimalBidStep = Math.ceil(startingPrice * NFT_MIN_BID_STEP_MULTIPLIER)
 
       if (data.auctionDurationBlocks) {

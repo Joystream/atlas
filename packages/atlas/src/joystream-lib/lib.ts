@@ -132,7 +132,7 @@ export class JoystreamLib {
 
     return {
       maxAuctionDuration: maxAuctionDuration.toNumber(),
-      minStartingPrice: new BN(minStartingPrice),
+      minStartingPrice: minStartingPrice.toNumber(),
       auctionStartsAtMaxDelta: auctionStartsAtMaxDelta.toNumber(),
       maxCreatorRoyalty: maxCreatorRoyalty.toNumber() / NFT_PERBILL_PERCENT,
       minCreatorRoyalty: minCreatorRoyalty.toNumber() / NFT_PERBILL_PERCENT,
