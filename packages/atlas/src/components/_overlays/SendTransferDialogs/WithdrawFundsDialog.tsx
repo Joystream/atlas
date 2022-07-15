@@ -9,7 +9,7 @@ import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { JOY_CURRENCY_TICKER } from '@/config/token'
+import { JOY_CURRENCY_TICKER } from '@/config/joystream'
 import { useTokenPrice } from '@/providers/joystream'
 
 import { Fee } from './Fee'

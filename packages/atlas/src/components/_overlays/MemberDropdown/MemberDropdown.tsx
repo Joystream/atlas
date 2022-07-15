@@ -25,8 +25,8 @@ import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { SendFundsDialog, WithdrawFundsDialog } from '@/components/_overlays/SendTransferDialogs'
+import { JOY_CURRENCY_TICKER } from '@/config/joystream'
 import { absoluteRoutes } from '@/config/routes'
-import { JOY_CURRENCY_TICKER } from '@/config/token'
 import { useSubscribeAccountBalance } from '@/hooks/useSubscribeAccountBalance'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useUser, useUserStore } from '@/providers/user'
@@ -129,7 +129,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
 
     const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
     const { url: channelAvatarUrl, isLoadingAsset: isChannelAvatarLoading } = useAsset(selectedChannel?.avatarPhoto)
-    const channelBalance = useSubscribeAccountBalance(selectedChannel?.rewardAccount) || 0
+    const channelBalance = /* useSubscribeAccountBalance(selectedChannel?.rewardAccount) || */ 0 // TODO: fix for Carthage
 
     useEffect(() => {
       transRef.start()

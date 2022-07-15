@@ -23,7 +23,6 @@ export type SearchQuery = {
           title?: string | null
           createdAt: Date
           follows: number
-          rewardAccount?: string | null
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -55,7 +54,6 @@ export type SearchQuery = {
             title?: string | null
             createdAt: Date
             follows: number
-            rewardAccount?: string | null
             avatarPhoto?: {
               __typename?: 'StorageDataObject'
               id: string

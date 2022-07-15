@@ -65,7 +65,7 @@
     "@polkadot/api": "8.9.1",
     "bn.js": "5.2.1",
     "blake3": "patch:blake3@npm:2.1.7#.yarn/patches/blake3-npm-2.1.7-7bf40c44b4",
-    "@joystream/types": "patch:@joystream/types@npm:0.20.0#.yarn/patches/@joystream-types-npm-0.20.0-a4d3af27b4.patch"
+    "@joystream/types@0.20.1": "patch:@joystream/types@npm:0.20.1#.yarn/patches/@joystream-types-npm-0.20.1-034fcceb67.patch"
   },
   "engines": {
     "node": "^16"

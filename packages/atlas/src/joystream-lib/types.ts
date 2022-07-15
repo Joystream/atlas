@@ -26,6 +26,10 @@ export type ChannelAssets<T> = {
   [key in ChannelAssetsKey]?: T
 }
 export type ChannelInputAssets = ChannelAssets<DataObjectMetadata>
+export type ChannelInputBuckets = {
+  storage: number[]
+  distribution: { distributionBucketFamilyId: number; distributionBucketIndex: number }[]
+}
 export type ChannelAssetsIds = ChannelAssets<string>
 
 export enum ExtrinsicStatus {
@@ -101,7 +105,8 @@ export type GetEventDataFn = <TSection extends keyof JoystreamEvents, TMethod ex
 ) => JoystreamEventData<JoystreamEvents[TSection][TMethod]>
 export type ExtractChannelResultsAssetsIdsFn = (
   inputAssets: ChannelInputAssets,
-  getEventData: GetEventDataFn
+  getEventData: GetEventDataFn,
+  update?: boolean
 ) => ChannelAssetsIds
 export type ExtractVideoResultsAssetsIdsFn = (
   inputAssets: VideoInputAssets,

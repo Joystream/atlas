@@ -2,7 +2,7 @@ import { forwardRef, useRef } from 'react'
 import mergeRefs from 'react-merge-refs'
 
 import { Text, TextProps, TextVariant } from '@/components/Text'
-import { JOY_CURRENCY_TICKER } from '@/config/token'
+import { JOY_CURRENCY_TICKER } from '@/config/joystream'
 import { formatNumber } from '@/utils/number'
 
 import { Tooltip } from '../Tooltip'
