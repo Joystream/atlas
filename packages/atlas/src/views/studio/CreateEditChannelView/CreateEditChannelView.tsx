@@ -197,7 +197,13 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
 
   const createChannelFeeArgs: Parameters<FeeMethod['getCreateChannelFee']> | undefined =
     accountId && memberId && channelMetadata && newChannel
-      ? [accountId, memberId, channelMetadata, channelAssets]
+      ? [
+          accountId,
+          memberId,
+          channelMetadata,
+          channelAssets,
+          { storage: [0], distribution: [{ distributionBucketFamilyId: 0, distributionBucketIndex: 0 }] }, // TODO: provide better values
+        ]
       : undefined
 
   const { fee: updateChannelFee, loading: updateChannelFeeLoading } = useFee(
@@ -389,7 +395,15 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       preProcess: processAssets,
       txFactory: async (updateStatus) =>
         newChannel
-          ? (await joystream.extrinsics).createChannel(memberId, metadata, assets, proxyCallback(updateStatus))
+          ? (
+              await joystream.extrinsics
+            ).createChannel(
+              memberId,
+              metadata,
+              assets,
+              { storage: [0], distribution: [{ distributionBucketFamilyId: 0, distributionBucketIndex: 0 }] }, // TODO: provide better values
+              proxyCallback(updateStatus)
+            )
           : (
               await joystream.extrinsics
             ).updateChannel(channelId ?? '', memberId, metadata, assets, proxyCallback(updateStatus)),

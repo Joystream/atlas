@@ -187,7 +187,10 @@ const getResultVideoDataObjectsIds = (assets: VideoAssets<unknown>, dataObjectsI
   }
 }
 
-const getResultChannelDataObjectsIds = (assets: ChannelAssets<unknown>, dataObjectsIds: Vec<u64>): ChannelAssetsIds => {
+const getResultChannelDataObjectsIds = (
+  assets: ChannelAssets<unknown>,
+  dataObjectsIds: Vec<u64> | u64[]
+): ChannelAssetsIds => {
   const ids = dataObjectsIds.map((dataObjectsId) => dataObjectsId.toString())
 
   const hasAvatar = !!assets.avatarPhoto
@@ -199,11 +202,20 @@ const getResultChannelDataObjectsIds = (assets: ChannelAssets<unknown>, dataObje
   }
 }
 
-export const extractChannelResultAssetsIds: ExtractChannelResultsAssetsIdsFn = (inputAssets, getEventData) => {
+export const extractChannelResultAssetsIds: ExtractChannelResultsAssetsIdsFn = (
+  inputAssets,
+  getEventData,
+  update = false
+) => {
   const anyAssetsChanged = !!Object.values(inputAssets).find((asset) => !!asset)
   try {
-    const [dataObjectsIds] = getEventData('storage', 'DataObjectsUploaded')
-    return getResultChannelDataObjectsIds(inputAssets, dataObjectsIds)
+    if (update) {
+      const [dataObjectsIds] = getEventData('storage', 'DataObjectsUploaded')
+      return getResultChannelDataObjectsIds(inputAssets, dataObjectsIds)
+    } else {
+      const [_, channelRecord] = getEventData('content', 'ChannelCreated')
+      return getResultChannelDataObjectsIds(inputAssets, [...channelRecord.dataObjects])
+    }
   } catch (error) {
     // If no assets were changed as part of this extrinsic, let's catch the missing error and ignore it. In any other case, we re-throw
     if ((error as JoystreamLibError).name === 'MissingRequiredEventError' && !anyAssetsChanged) {

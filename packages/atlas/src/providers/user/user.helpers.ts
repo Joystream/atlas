@@ -1,8 +1,10 @@
 import { InjectedWindowProvider } from '@polkadot/extension-inject/types'
+import { decodeAddress, encodeAddress } from '@polkadot/util-crypto'
 import { BaseDotsamaWallet, WalletAccount, getWallets } from '@talisman-connect/wallets'
 import { useCallback, useEffect } from 'react'
 import shallow from 'zustand/shallow'
 
+import { JOYSTREAM_SS58_PREFIX } from '@/config/joystream'
 import { WEB3_APP_NAME } from '@/config/urls'
 import { ConsoleLogger } from '@/utils/logs'
 
@@ -10,6 +12,11 @@ import { useUserStore } from './user.store'
 import { SignerWalletAccount } from './user.types'
 
 type InjectedWeb3 = Record<string, InjectedWindowProvider>
+
+const formatJoystreamAddress = (address: string) => {
+  const publicKey = decodeAddress(address)
+  return encodeAddress(publicKey, JOYSTREAM_SS58_PREFIX)
+}
 
 export const useSignerWallet = () => {
   const { walletStatus, walletAccounts, wallet, accountId } = useUserStore(
@@ -21,7 +28,25 @@ export const useSignerWallet = () => {
     }),
     shallow
   )
-  const { setWalletAccounts, setWalletStatus, resetActiveUser, setWallet } = useUserStore((state) => state.actions)
+  const {
+    setWalletAccounts: _setWalletAccount,
+    setWalletStatus,
+    resetActiveUser,
+    setWallet,
+  } = useUserStore((state) => state.actions)
+
+  const setWalletAccounts = useCallback(
+    async (accounts: WalletAccount[]) => {
+      const mappedAccounts = accounts.map((account) => {
+        return {
+          ...account,
+          address: formatJoystreamAddress(account.address),
+        }
+      })
+      _setWalletAccount(mappedAccounts)
+    },
+    [_setWalletAccount]
+  )
 
   const handleAccountsChange = useCallback(
     (accounts?: WalletAccount[]) => {
@@ -75,6 +100,7 @@ export const useSignerWallet = () => {
         const accountsWithWallet = accounts.map((account: any) => {
           return {
             ...account,
+            address: formatJoystreamAddress(account.address),
             source: selectedWallet.extension?.name as string,
             wallet: selectedWallet,
             signer: selectedWallet.extension?.signer,

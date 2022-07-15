@@ -33,6 +33,7 @@ import {
   ChannelExtrinsicResult,
   ChannelId,
   ChannelInputAssets,
+  ChannelInputBuckets,
   ChannelInputMetadata,
   CommentReaction,
   ExtrinsicStatus,
@@ -126,21 +127,24 @@ export class JoystreamLibExtrinsics {
   private async createChannelTx(
     memberId: MemberId,
     inputMetadata: ChannelInputMetadata,
-    inputAssets: ChannelInputAssets
+    inputAssets: ChannelInputAssets,
+    inputBuckets: ChannelInputBuckets
   ) {
     await this.ensureApi()
 
     const [channelMetadata, channelAssets] = await parseChannelExtrinsicInput(this.api, inputMetadata, inputAssets)
 
-    const dataObjectStateBloatBondFee = await this.api.query.storage.dataObjectStateBloatBondValue()
+    const dataObjectStateBloatBond = await this.api.query.storage.dataObjectStateBloatBondValue()
+    const channelStateBloatBond = await this.api.query.content.channelStateBloatBondValue()
 
     const creationParameters = createType('PalletContentChannelCreationParametersRecord', {
       meta: channelMetadata,
       assets: channelAssets,
       collaborators: createType('BTreeMap<u64, BTreeSet<PalletContentChannelActionPermission>>', {}),
-      storageBuckets: createType('BTreeSet<u64>', []), // TODO: provide values
-      distributionBuckets: createType('BTreeSet<PalletStorageDistributionBucketIdRecord>', []), // TODO: provide values
-      expectedDataObjectStateBloatBond: dataObjectStateBloatBondFee,
+      storageBuckets: createType('BTreeSet<u64>', inputBuckets.storage),
+      distributionBuckets: createType('BTreeSet<PalletStorageDistributionBucketIdRecord>', inputBuckets.distribution),
+      expectedDataObjectStateBloatBond: dataObjectStateBloatBond,
+      expectedChannelStateBloatBond: channelStateBloatBond,
     })
 
     const channelOwner = createType('PalletContentChannelOwner', { Member: parseInt(memberId) })
@@ -156,9 +160,10 @@ export class JoystreamLibExtrinsics {
     address: string,
     memberId: MemberId,
     inputMetadata: ChannelInputMetadata,
-    inputAssets: ChannelInputAssets
+    inputAssets: ChannelInputAssets,
+    inputBuckets: ChannelInputBuckets
   ) {
-    const tx = await this.createChannelTx(memberId, inputMetadata, inputAssets)
+    const tx = await this.createChannelTx(memberId, inputMetadata, inputAssets, inputBuckets)
 
     return this.getFee(tx, address)
   }
@@ -167,9 +172,10 @@ export class JoystreamLibExtrinsics {
     memberId: MemberId,
     inputMetadata: ChannelInputMetadata,
     inputAssets: ChannelInputAssets,
+    inputBuckets: ChannelInputBuckets,
     cb?: ExtrinsicStatusCallbackFn
   ): Promise<ChannelExtrinsicResult> {
-    const tx = await this.createChannelTx(memberId, inputMetadata, inputAssets)
+    const tx = await this.createChannelTx(memberId, inputMetadata, inputAssets, inputBuckets)
 
     const { block, getEventData } = await this.sendExtrinsic(tx, cb)
 
@@ -232,7 +238,7 @@ export class JoystreamLibExtrinsics {
     return {
       channelId,
       block,
-      assetsIds: extractChannelResultAssetsIds(inputAssets, getEventData),
+      assetsIds: extractChannelResultAssetsIds(inputAssets, getEventData, true),
     }
   }
 
@@ -245,7 +251,8 @@ export class JoystreamLibExtrinsics {
   ) {
     await this.ensureApi()
 
-    const dataObjectStateBloatBondFee = await this.api.query.storage.dataObjectStateBloatBondValue()
+    const dataObjectStateBloatBond = await this.api.query.storage.dataObjectStateBloatBondValue()
+    const videoStateBloatBond = await this.api.query.content.videoStateBloatBondValue()
 
     const [videoMetadata, videoAssets] = await parseVideoExtrinsicInput(this.api, inputMetadata, inputAssets)
 
@@ -255,7 +262,8 @@ export class JoystreamLibExtrinsics {
       meta: videoMetadata,
       assets: videoAssets,
       autoIssueNft: nftIssuanceParameters,
-      expectedDataObjectStateBloatBond: dataObjectStateBloatBondFee,
+      expectedDataObjectStateBloatBond: dataObjectStateBloatBond,
+      expectedVideoStateBloatBond: videoStateBloatBond,
     })
 
     const actor = createType('PalletContentPermissionsContentActor', {

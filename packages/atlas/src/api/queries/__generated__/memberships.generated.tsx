@@ -23,7 +23,6 @@ export type GetMembershipQuery = {
       title?: string | null
       createdAt: Date
       follows: number
-      rewardAccount?: string | null
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -86,7 +85,6 @@ export type GetMembershipsQuery = {
       title?: string | null
       createdAt: Date
       follows: number
-      rewardAccount?: string | null
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
