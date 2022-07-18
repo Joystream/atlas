@@ -9,6 +9,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 export type FeeProps = {
   amount: number
+  withToken?: boolean
   variant: TextVariant
   color?: Color
   hideOnMobile?: boolean
@@ -18,6 +19,7 @@ export type FeeProps = {
 
 export const Fee: FC<FeeProps> = ({
   amount,
+  withToken,
   variant = 't100',
   color = 'colorTextStrong',
   hideOnMobile,
@@ -33,12 +35,12 @@ export const Fee: FC<FeeProps> = ({
             Fee:&nbsp;{amount < 0.01 && '<'}&nbsp;
           </Text>
           <NumberFormat
+            withToken={withToken}
             displayedValue={amount < 0.01 ? 0.01 : undefined}
             value={amount}
             as="span"
             variant={variant}
             color={loading ? 'colorTextMuted' : color}
-            withToken
             withTooltip
             format="short"
             margin={{ right: 1 }}

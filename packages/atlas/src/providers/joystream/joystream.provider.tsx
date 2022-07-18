@@ -113,7 +113,7 @@ const useJoystreamUtilFns = () => {
       try {
         const data = await fetch(JOY_PRICE_SERVICE_URL)
         const json = await data.json()
-        setTokenPrice(parseFloat(json.price))
+        setTokenPrice(json.price)
       } catch (e) {
         SentryLogger.error(`Failed to fetch ${JOY_CURRENCY_TICKER} price`, e)
       }
@@ -150,7 +150,7 @@ const useJoystreamChainState = (joystream: Remote<JoystreamLib> | undefined) => 
     joystream.getNftChainState().then((nftChainState) =>
       setChainState({
         nftMaxAuctionDuration: nftChainState.maxAuctionDuration,
-        nftMinStartingPrice: nftChainState.minStartingPrice,
+        nftMinStartingPrice: Math.max(nftChainState.minStartingPrice, 1),
         nftAuctionStartsAtMaxDelta: nftChainState.auctionStartsAtMaxDelta,
         nftMaxCreatorRoyaltyPercentage: nftChainState.maxCreatorRoyalty,
         nftMinCreatorRoyaltyPercentage: nftChainState.minCreatorRoyalty,

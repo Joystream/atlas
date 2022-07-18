@@ -1,17 +1,18 @@
+import BN from 'bn.js'
 import { forwardRef, useRef } from 'react'
 import mergeRefs from 'react-merge-refs'
 
 import { Text, TextProps, TextVariant } from '@/components/Text'
 import { JOY_CURRENCY_TICKER } from '@/config/joystream'
-import { formatNumber } from '@/utils/number'
+import { formatNumber, hapiBnToTokenNumber } from '@/utils/number'
 
 import { Tooltip } from '../Tooltip'
 
 export type NumberFormatProps = {
-  value: number
+  value: BN | number
   format?: 'full' | 'short' | 'dollar'
-  withToken?: boolean
   withTooltip?: boolean
+  withToken?: boolean
   children?: never
   variant?: TextVariant
   displayedValue?: string | number
@@ -32,28 +33,31 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
     },
     ref
   ) => {
+    const internalValue = BN.isBN(value) ? hapiBnToTokenNumber(value) : value
     const textRef = useRef<HTMLHeadingElement>(null)
     let formattedValue
     let tooltipText
     switch (format) {
       case 'short':
-        formattedValue = formatNumberShort(value)
-        tooltipText = formatNumber(value)
+        formattedValue = internalValue ? (internalValue > 0.01 ? formatNumberShort(internalValue) : `< 0.01`) : 0
+        tooltipText = formatNumber(internalValue)
         break
       case 'full':
-        formattedValue = tooltipText = formatNumber(value)
+        formattedValue = tooltipText = formatNumber(internalValue)
         break
       case 'dollar':
-        formattedValue = formatDollars(value)
+        formattedValue = formatDollars(internalValue)
         tooltipText = new Intl.NumberFormat('en-US', { maximumSignificantDigits, ...currencyFormatOptions })
-          .format(value)
+          .format(internalValue)
           .replaceAll(',', ' ')
         break
     }
 
-    const hasDecimals = value - Math.floor(value) !== 0
+    const hasDecimals = internalValue - Math.floor(internalValue) !== 0
     const hasTooltip =
-      withTooltip || (format === 'short' && (value > 999 || hasDecimals)) || (format === 'dollar' && hasDecimals)
+      withTooltip ||
+      (format === 'short' && (internalValue > 999 || hasDecimals)) ||
+      (format === 'dollar' && hasDecimals)
     const content = (
       <Text {...textProps} variant={variant} ref={mergeRefs([ref, textRef])}>
         {displayedValue || formattedValue}

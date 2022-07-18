@@ -1,4 +1,5 @@
 import { easings, useSpringRef, useTransition } from '@react-spring/web'
+import BN from 'bn.js'
 import { FC, forwardRef, useEffect, useRef, useState } from 'react'
 import mergeRefs from 'react-merge-refs'
 import { useLocation, useNavigate } from 'react-router'
@@ -30,6 +31,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useSubscribeAccountBalance } from '@/hooks/useSubscribeAccountBalance'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useUser, useUserStore } from '@/providers/user'
+import { hapiBnToTokenNumber } from '@/utils/number'
 
 import {
   AnimatedContainer,
@@ -68,6 +70,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const { channelId, activeMembership, setActiveUser, memberships, signOut } = useUser()
     const setSignInModalOpen = useUserStore((state) => state.actions.setSignInModalOpen)
     const accountBalance = useSubscribeAccountBalance()
+
     const containerRef = useRef<HTMLDivElement>(null)
     const { ref: measureContainerRef, height: containerHeight = 0 } = useResizeObserver({ box: 'border-box' })
     const transRef = useSpringRef()
@@ -129,11 +132,12 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
 
     const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
     const { url: channelAvatarUrl, isLoadingAsset: isChannelAvatarLoading } = useAsset(selectedChannel?.avatarPhoto)
-    const channelBalance = /* useSubscribeAccountBalance(selectedChannel?.rewardAccount) || */ 0 // TODO: fix for Carthage
+    const channelBalance = /* useSubscribeAccountBalance(selectedChannel?.rewardAccount) || */ new BN(0) // TODO: fix for Carthage
 
     useEffect(() => {
       transRef.start()
     }, [isSwitchingMember, transRef])
+
     return (
       <>
         <WithdrawFundsDialog
@@ -141,10 +145,14 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
           activeMembership={activeMembership}
           show={showWithdrawDialog}
           onExitClick={toggleWithdrawDialog}
-          accountBalance={accountBalance}
-          channelBalance={channelBalance}
+          accountBalance={accountBalance && hapiBnToTokenNumber(accountBalance)}
+          channelBalance={channelBalance && hapiBnToTokenNumber(channelBalance)}
         />
-        <SendFundsDialog show={showSendDialog} onExitClick={toggleSendDialog} accountBalance={accountBalance} />
+        <SendFundsDialog
+          show={showSendDialog}
+          onExitClick={toggleSendDialog}
+          accountBalance={accountBalance && hapiBnToTokenNumber(accountBalance)}
+        />
         <Container ref={ref}>
           <InnerContainer isActive={isActive} containerHeight={containerHeight}>
             {transitions((style, isSwitchingMemberMode) =>

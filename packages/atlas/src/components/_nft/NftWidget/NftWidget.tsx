@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { differenceInSeconds } from 'date-fns'
 import { FC, memo } from 'react'
 import useResizeObserver from 'use-resize-observer'
@@ -37,14 +38,14 @@ import {
 export type Auction = {
   status: 'auction'
   type: 'open' | 'english'
-  startingPrice: number
-  buyNowPrice: number | undefined
+  startingPrice: BN
+  buyNowPrice: BN | undefined
   topBid: BasicBidFieldsFragment | undefined
-  topBidAmount: number | undefined
+  topBidAmount: BN | undefined
   topBidderHandle: string | undefined
   topBidderAvatarUri: string | null | undefined
   isUserTopBidder: boolean | undefined
-  userBidAmount: number | undefined
+  userBidAmount: BN | undefined
   userBidUnlockDate: Date | undefined
   canWithdrawBid: boolean | undefined
   canChangeBid: boolean | undefined
@@ -69,12 +70,12 @@ export type NftWidgetProps = {
   nftStatus?:
     | {
         status: 'idle'
-        lastSalePrice: number | undefined
+        lastSalePrice: BN | undefined
         lastSaleDate: Date | undefined
       }
     | {
         status: 'buy-now'
-        buyNowPrice: number
+        buyNowPrice: BN
       }
     | Auction
     | undefined
@@ -124,8 +125,8 @@ export const NftWidget: FC<NftWidgetProps> = ({
     const buttonSize = size === 'small' ? 'medium' : 'large'
     const buttonColumnSpan = size === 'small' ? 1 : 2
     const timerColumnSpan = size === 'small' ? 1 : 2
-    const BuyNow = memo(({ buyNowPrice }: { buyNowPrice?: number }) =>
-      buyNowPrice ? (
+    const BuyNow = memo(({ buyNowPrice }: { buyNowPrice?: BN }) =>
+      buyNowPrice?.gtn(0) ? (
         <NftInfoItem
           size={size}
           label="Buy now"
@@ -160,7 +161,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
               You bid{' '}
               <NumberFormat
                 as="span"
-                value={Number(bidFromPreviousAuction?.amount)}
+                value={new BN(bidFromPreviousAuction?.amount)}
                 format="short"
                 variant="t100"
                 color="colorText"
@@ -267,7 +268,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
         )
       case 'auction': {
         const getInfoBannerProps = () => {
-          const hasBids = !nftStatus.topBid?.isCanceled && nftStatus.topBidAmount
+          const hasBids = !nftStatus.topBid?.isCanceled && nftStatus.topBidAmount?.gtn(0)
           if (nftStatus.type === 'open' && bidFromPreviousAuction) {
             return {
               title: 'Withdraw your bid to participate',
@@ -336,7 +337,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
         }
         const infoBannerProps = getInfoBannerProps()
 
-        const infoTextNode = !!nftStatus.userBidAmount && nftStatus.userBidUnlockDate && (
+        const infoTextNode = !!nftStatus.userBidAmount?.gtn(0) && nftStatus.userBidUnlockDate && (
           <GridItem colSpan={buttonColumnSpan}>
             {nftStatus.type === 'english' ? (
               <BidPlacingInfoText />
@@ -354,7 +355,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
 
         return (
           <>
-            {nftStatus.topBidAmount && !nftStatus.topBid?.isCanceled ? (
+            {nftStatus.topBidAmount?.gtn(0) && !nftStatus.topBid?.isCanceled ? (
               <NftInfoItem
                 size={size}
                 label="Top bid"
@@ -375,7 +376,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
                   </>
                 }
                 secondaryText={
-                  !isLoadingPrice && nftStatus.topBidAmount ? (
+                  !isLoadingPrice && !nftStatus.topBidAmount.isZero() ? (
                     <>
                       <NumberFormat
                         as="span"
@@ -507,7 +508,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
                   )
                 : nftStatus.englishTimerState === 'running' &&
                   nftStatus.isUserWhitelisted !== false &&
-                  (nftStatus.buyNowPrice ? (
+                  (nftStatus.buyNowPrice?.gtn(0) ? (
                     <GridItem colSpan={buttonColumnSpan}>
                       <ButtonGrid data-size={size} data-two-columns={size === 'medium'}>
                         <Button fullWidth variant="secondary" size={buttonSize} onClick={onNftPurchase}>

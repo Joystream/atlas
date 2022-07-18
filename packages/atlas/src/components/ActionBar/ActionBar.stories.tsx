@@ -20,13 +20,13 @@ export default {
       },
     },
     fee: 100,
-  } as ActionBarProps,
+  } as Omit<ActionBarProps, 'fee'>,
   argTypes: {
     onClick: { table: { disable: true } },
     className: { table: { disable: true } },
   },
 } as Meta<ActionBarProps>
 
-const Template: Story<ActionBarProps> = (args) => <ActionBar {...args} />
+const Template: Story<ActionBarProps> = (args) => <ActionBar {...args} fee={0} />
 
 export const Default = Template.bind({})

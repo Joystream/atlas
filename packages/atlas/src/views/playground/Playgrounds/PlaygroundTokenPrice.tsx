@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { useState } from 'react'
 
 import { JOY_CURRENCY_TICKER } from '@/config/joystream'
@@ -5,13 +6,15 @@ import { useTokenPrice } from '@/providers/joystream'
 
 export const PlaygroundTokenPrice = () => {
   const { convertToUSD, convertToTokenPrice } = useTokenPrice()
-  const [toConvert, setToConvert] = useState(0)
+  const [toConvert, setToConvert] = useState(new BN(0))
+  const [converted, setConverted] = useState<number>(0)
   const [unit, setUnit] = useState(JOY_CURRENCY_TICKER)
-  const [converted, setConverted] = useState<number | string | null>(0)
   const [showConverted, setShowConverted] = useState(false)
   const convert = () => {
     setShowConverted(true)
-    unit === JOY_CURRENCY_TICKER ? setConverted(convertToUSD(toConvert)) : setConverted(convertToTokenPrice(toConvert))
+    unit === JOY_CURRENCY_TICKER
+      ? setConverted(convertToUSD(toConvert) ?? 0)
+      : setToConvert(convertToTokenPrice(converted))
   }
   const convertedUnit = unit === 'usd' ? JOY_CURRENCY_TICKER : 'usd'
   return (
@@ -20,10 +23,10 @@ export const PlaygroundTokenPrice = () => {
         Converter:
         <input
           type="number"
-          value={toConvert}
+          value={toConvert.toString()}
           onChange={(v) => {
             setShowConverted(false)
-            setToConvert(parseInt(v.target.value))
+            setToConvert(new BN(v.target.value))
           }}
         />
         <select
@@ -43,7 +46,7 @@ export const PlaygroundTokenPrice = () => {
       </div>
       {showConverted ? (
         <div>
-          {toConvert} {unit} = {converted} {convertedUnit}
+          {toConvert.toString()} {unit} = {converted} {convertedUnit}
         </div>
       ) : null}
     </div>

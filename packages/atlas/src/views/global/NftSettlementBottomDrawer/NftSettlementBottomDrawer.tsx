@@ -27,7 +27,7 @@ import {
 
 export const NftSettlementBottomDrawer: FC = () => {
   const xsMatch = useMediaMatch('xs')
-  const { memberId, accountId } = useUser()
+  const { memberId } = useUser()
   const { currentNftId, closeNftAction, currentAction } = useNftActions()
   const { nft, loading, refetch } = useNft(currentNftId || '')
 
@@ -63,10 +63,7 @@ export const NftSettlementBottomDrawer: FC = () => {
   }
   const isOpen = currentAction === 'settle'
 
-  const { fee } = useFee(
-    'getSettleEnglishAuctionFee',
-    accountId && currentNftId ? [accountId, currentNftId] : undefined
-  )
+  const { fee } = useFee('settleEnglishAuctionTx', currentNftId ? [currentNftId] : undefined)
   return (
     <BottomDrawer isOpen={isOpen} onClose={closeNftAction}>
       <StyledLottie play={isOpen} data={confetti} />
