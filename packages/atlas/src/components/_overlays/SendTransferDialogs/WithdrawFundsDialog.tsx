@@ -1,4 +1,4 @@
-import { BN } from 'bn.js'
+import BN from 'bn.js'
 import { FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 

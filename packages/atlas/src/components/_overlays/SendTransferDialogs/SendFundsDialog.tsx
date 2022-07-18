@@ -1,6 +1,6 @@
 import { useApolloClient } from '@apollo/client'
 import debouncePromise from 'awesome-debounce-promise'
-import { BN } from 'bn.js'
+import BN from 'bn.js'
 import { FC, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 

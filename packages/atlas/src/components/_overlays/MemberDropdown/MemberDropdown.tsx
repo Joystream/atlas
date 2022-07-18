@@ -1,5 +1,5 @@
 import { easings, useSpringRef, useTransition } from '@react-spring/web'
-import { BN } from 'bn.js'
+import BN from 'bn.js'
 import { FC, forwardRef, useEffect, useRef, useState } from 'react'
 import mergeRefs from 'react-merge-refs'
 import { useLocation, useNavigate } from 'react-router'
