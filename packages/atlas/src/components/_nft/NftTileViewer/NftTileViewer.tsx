@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router'
 import { useNft } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { useNftState } from '@/hooks/useNftState'
+import { useVideoContextMenu } from '@/hooks/useVideoContextMenu'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useNftActions } from '@/providers/nftActions'
 
@@ -17,40 +18,25 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
   const { nftStatus, nft, loading } = useNft(nftId || '')
   const navigate = useNavigate()
   const thumbnail = useAsset(nft?.video.thumbnailPhoto)
-  const { openNftPurchase, openNftChangePrice, openNftSettlement } = useNftActions()
+  const nftActions = useNftActions()
   const creatorAvatar = useAsset(nft?.video.channel.avatarPhoto)
-  const {
-    canPutOnSale,
-    canMakeBid,
-    canCancelSale,
-    canBuyNow,
-    canChangePrice,
-    auctionPlannedEndDate,
-    needsSettling,
-    startsAtDate,
-    englishTimerState,
-    timerLoading,
-    saleType,
-    isOwner,
-    isUserTopBidder,
-  } = useNftState(nft)
+  const nftState = useNftState(nft)
+  const { auctionPlannedEndDate, needsSettling, startsAtDate, englishTimerState, timerLoading } = nftState
 
-  const { cancelNftSale, openNftPutOnSale } = useNftActions()
   const { url: ownerMemberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
 
-  const handleRemoveOnSale = () => {
-    if (!nftId || !saleType) {
-      return
-    }
-    cancelNftSale(nftId, saleType)
-  }
+  const auction = nft?.transactionalStatusAuction
 
-  const handlePutOnSale = () => {
-    if (!nftId) {
-      return
-    }
-    openNftPutOnSale(nftId)
-  }
+  const contextMenuItems = useVideoContextMenu({
+    publisher: false,
+    nftState,
+    hasNft: true,
+    nftActions,
+    videoId: nftId,
+    videoHref: absoluteRoutes.viewer.video(nftId),
+    topBid: auction?.topBid?.amount ? Number(auction?.topBid?.amount) : undefined,
+    buyNowPrice: auction?.buyNowPrice ? Number(auction?.buyNowPrice) : undefined,
+  })
 
   const nftCommonProps: NftTileProps = {
     ...nftStatus,
@@ -76,6 +62,7 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
       assetUrl: creatorAvatar.url,
       onClick: () => navigate(absoluteRoutes.viewer.channel(nft?.video.channel.id)),
     },
+    contextMenuItems,
   }
 
   return (
@@ -89,21 +76,8 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
       auctionPlannedEndDate={auctionPlannedEndDate}
       startsAtDate={startsAtDate}
       englishTimerState={englishTimerState}
-      canPutOnSale={canPutOnSale}
-      canBuyNow={canBuyNow}
-      canCancelSale={canCancelSale}
-      canMakeBid={canMakeBid}
-      canChangePrice={canChangePrice}
       needsSettling={needsSettling}
-      isUserTopBidder={isUserTopBidder}
-      isOwner={isOwner}
       fullWidth
-      onRemoveFromSale={handleRemoveOnSale}
-      onNftPurchase={() => nftId && openNftPurchase(nftId)}
-      onNftBuyNow={() => nftId && openNftPurchase(nftId, { fixedPrice: true })}
-      onPutOnSale={handlePutOnSale}
-      onChangePrice={() => nftId && openNftChangePrice(nftId)}
-      onSettleAuction={() => nftId && openNftSettlement(nftId)}
     />
   )
 }

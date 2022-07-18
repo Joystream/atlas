@@ -1,24 +1,13 @@
-import { FC, ReactNode, memo, useCallback, useMemo, useState } from 'react'
+import { FC, ReactNode, memo, useMemo, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import { ListItemProps } from '@/components/ListItem'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
-import {
-  SvgActionBid,
-  SvgActionBuyNow,
-  SvgActionCancel,
-  SvgActionChangePrice,
-  SvgActionCopy,
-  SvgActionMore,
-  SvgActionNotForSale,
-  SvgActionSell,
-  SvgActionShoppingCart,
-} from '@/components/_icons'
+import { SvgActionMore, SvgActionNotForSale } from '@/components/_icons'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
-import { useClipboard } from '@/hooks/useClipboard'
 import { cVar } from '@/styles'
 
 import {
@@ -52,20 +41,7 @@ export type NftTileDetailsProps = {
   hovered?: boolean
   interactable?: boolean
   videoHref?: string
-  onRemoveFromSale?: () => void
-  canPutOnSale?: boolean
-  canCancelSale?: boolean
-  canBuyNow?: boolean
-  canMakeBid?: boolean
-  canChangePrice?: boolean
-  needsSettling?: boolean
-  isOwner?: boolean
-  isUserTopBidder?: boolean
-  onMakeBid?: () => void
-  onBuyNow?: () => void
-  onPutOnSale?: () => void
-  onChangePrice?: () => void
-  onSettleAuction?: () => void
+  contextMenuItems: ListItemProps[]
 }
 
 type TileSize = 'small' | 'medium'
@@ -84,22 +60,8 @@ export const NftTileDetails: FC<NftTileDetailsProps> = ({
   hovered,
   videoHref,
   interactable = true,
-  onRemoveFromSale,
-  canPutOnSale,
-  canCancelSale,
-  canBuyNow,
-  canMakeBid,
-  canChangePrice,
-  needsSettling,
-  isOwner,
-  isUserTopBidder,
-  onMakeBid,
-  onBuyNow,
-  onPutOnSale,
-  onChangePrice,
-  onSettleAuction,
+  contextMenuItems,
 }) => {
-  const { copyToClipboard } = useClipboard()
   const [contentHovered, setContentHovered] = useState(false)
   const toggleContentHover = () => setContentHovered((prevState) => !prevState)
   const [tileSize, setTileSize] = useState<TileSize>()
@@ -117,80 +79,6 @@ export const NftTileDetails: FC<NftTileDetailsProps> = ({
       }
     },
   })
-
-  const handleCopyVideoURLClick = useCallback(() => {
-    copyToClipboard(videoHref ? location.origin + videoHref : '')
-  }, [copyToClipboard, videoHref])
-
-  const getContextMenuContent = useMemo(() => {
-    const elements: ListItemProps[] = [
-      {
-        nodeStart: <SvgActionCopy />,
-        label: 'Copy video URL',
-        onClick: handleCopyVideoURLClick,
-      },
-    ]
-    if (needsSettling && (isOwner || isUserTopBidder)) {
-      elements.unshift({
-        nodeStart: <SvgActionShoppingCart />,
-        label: 'Settle auction',
-        onClick: () => onSettleAuction && onSettleAuction(),
-      })
-    }
-    if (canPutOnSale) {
-      elements.unshift({
-        nodeStart: <SvgActionSell />,
-        label: 'Start sale',
-        onClick: () => onPutOnSale && onPutOnSale(),
-      })
-    }
-    if (canCancelSale) {
-      elements.unshift({
-        nodeStart: <SvgActionCancel />,
-        label: 'Remove from sale',
-        destructive: true,
-        onClick: onRemoveFromSale,
-      })
-    }
-    if (canChangePrice) {
-      elements.unshift({
-        nodeStart: <SvgActionChangePrice />,
-        label: 'Change price',
-        onClick: onChangePrice,
-      })
-    }
-    if (canBuyNow) {
-      elements.unshift({
-        nodeStart: <SvgActionBuyNow />,
-        label: 'Buy now',
-        onClick: onBuyNow,
-      })
-    }
-    if (canMakeBid) {
-      elements.unshift({
-        nodeStart: <SvgActionBid />,
-        label: 'Place bid',
-        onClick: onMakeBid,
-      })
-    }
-    return elements
-  }, [
-    handleCopyVideoURLClick,
-    needsSettling,
-    isOwner,
-    isUserTopBidder,
-    canPutOnSale,
-    canCancelSale,
-    canChangePrice,
-    canBuyNow,
-    canMakeBid,
-    onSettleAuction,
-    onPutOnSale,
-    onRemoveFromSale,
-    onChangePrice,
-    onBuyNow,
-    onMakeBid,
-  ])
 
   const getDetails = useMemo(() => {
     if (loading) {
@@ -298,7 +186,7 @@ export const NftTileDetails: FC<NftTileDetailsProps> = ({
           <ContextMenu
             placement="bottom-end"
             disabled={loading}
-            items={getContextMenuContent}
+            items={contextMenuItems}
             trigger={
               <KebabMenuButtonIcon icon={<SvgActionMore />} variant="tertiary" size="small" isActive={!loading} />
             }
