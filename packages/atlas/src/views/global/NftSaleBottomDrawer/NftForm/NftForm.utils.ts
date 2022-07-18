@@ -101,7 +101,9 @@ export const createValidationSchema = (
     royalty: z.number().nullable().optional(),
     startingPrice:
       data.buyNowPrice && listingType === 'Auction'
-        ? startingPriceBase.max(data.buyNowPrice - 1, 'Minimum bid must be lower than the buy now price.').optional()
+        ? startingPriceBase
+            .max(Number(data.buyNowPrice) - 1, 'Minimum bid must be lower than the buy now price')
+            .optional()
         : startingPriceBase.optional(),
     buyNowPrice:
       listingType === 'Auction'

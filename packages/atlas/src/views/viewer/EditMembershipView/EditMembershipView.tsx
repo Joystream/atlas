@@ -75,9 +75,9 @@ export const EditMembershipView: FC = () => {
   )
 
   const { fee } = useFee(
-    'getUpdateMemberFee',
-    accountId && memberId && isDirty
-      ? [accountId, memberId, dirtyFields.handle ? watch('handle') : null, createMemberInputMetadata(watch())]
+    'updateMemberTx',
+    memberId && isDirty
+      ? [memberId, dirtyFields.handle ? watch('handle') : null, createMemberInputMetadata(watch())]
       : undefined
   )
 

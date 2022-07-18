@@ -56,7 +56,7 @@ export const Comment: FC<CommentProps> = memo(
     const [isEditingComment, setIsEditingComment] = useState(false)
     const [processingReactionsIds, setProcessingReactionsIds] = useState<ReactionId[]>([])
 
-    const { memberId, activeMembership, isLoggedIn, signIn, accountId } = useUser()
+    const { memberId, activeMembership, isLoggedIn, signIn } = useUser()
     const { comment } = useComment(
       { commentId: commentId ?? '' },
       {
@@ -72,17 +72,17 @@ export const Comment: FC<CommentProps> = memo(
     const [openModal, closeModal] = useConfirmationModal()
     const { reactToComment, deleteComment, moderateComment, updateComment, addComment } = useReactionTransactions()
     const { fee: replyCommentFee, loading: replyCommentFeeLoading } = useFee(
-      'getCreateVideoCommentFee',
-      accountId && memberId && video?.id && replyCommentInputText && comment?.id !== undefined
-        ? [accountId, memberId, video?.id, replyCommentInputText, comment?.id || null]
+      'createVideoCommentTx',
+      memberId && video?.id && replyCommentInputText && comment?.id !== undefined
+        ? [memberId, video?.id, replyCommentInputText, comment?.id || null]
         : undefined
     )
 
     const { fee: editVideoFee, loading: editVideoFeeLoading } = useFee(
-      'getEditVideoCommentFee',
-      accountId && memberId && comment?.id ? [accountId, memberId, comment?.id, editCommentInputText] : undefined
+      'editVideoCommentTx',
+      memberId && comment?.id ? [memberId, comment?.id, editCommentInputText] : undefined
     )
-    const { calculateFee: getReactToVideoCommentFee } = useFee('getReactToVideoCommentFee')
+    const { calculateFee: getReactToVideoCommentFee } = useFee('reactToVideoCommentTx')
 
     const handleDeleteComment = (comment: CommentFieldsFragment) => {
       const isChannelOwner = video?.channel.ownerMember?.id === memberId && comment.author.id !== memberId
@@ -176,7 +176,7 @@ export const Comment: FC<CommentProps> = memo(
 
     const handleOnBoardingPopoverOpen = async (reactionId: number) => {
       const reactionFee = await getReactToVideoCommentFee(
-        accountId && memberId && comment?.id ? [accountId, memberId, comment.id, reactionId] : undefined
+        memberId && comment?.id ? [memberId, comment.id, reactionId] : undefined
       )
       setReactionFee(reactionFee)
     }

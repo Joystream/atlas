@@ -1,10 +1,11 @@
+import BN from 'bn.js'
 import { useEffect, useState } from 'react'
 
 import { useJoystream } from '@/providers/joystream'
 import { useUser } from '@/providers/user'
 
 export const useSubscribeAccountBalance = (controllerAccount?: string | null) => {
-  const [accountBalance, setAccountBalance] = useState<number | undefined>()
+  const [accountBalance, setAccountBalance] = useState<BN | undefined>()
   const { activeMembership } = useUser()
   const { joystream, proxyCallback } = useJoystream()
 
@@ -17,7 +18,7 @@ export const useSubscribeAccountBalance = (controllerAccount?: string | null) =>
     const init = async () => {
       unsubscribe = await joystream.subscribeAccountBalance(
         controllerAccount || activeMembership.controllerAccount,
-        proxyCallback(setAccountBalance)
+        proxyCallback((balance) => setAccountBalance(new BN(balance)))
       )
     }
     init()

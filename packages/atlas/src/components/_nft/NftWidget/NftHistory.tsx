@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { FC } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
@@ -59,7 +60,7 @@ export const NftHistory: FC<NftHistoryProps> = ({ size, width, historyItems }) =
 export type NftHistoryEntry = {
   member: BasicMembershipFieldsFragment | undefined | null
   date: Date
-  joyAmount?: number
+  joyAmount?: BN
   text: string
 }
 type HistoryItemProps = {

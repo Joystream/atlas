@@ -43,7 +43,7 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
     return (
       <ActionBarContainer ref={ref} className={className} isActive={isActive}>
         <FeeContainer>
-          <Fee amount={fee ?? 0} variant={smMatch ? 'h400' : 'h200'} loading={feeLoading} />
+          <Fee variant={smMatch ? 'h400' : 'h200'} withToken amount={fee || 0} loading={feeLoading} />
         </FeeContainer>
         {infoBadge ? (
           <DraftsBadgeContainer>

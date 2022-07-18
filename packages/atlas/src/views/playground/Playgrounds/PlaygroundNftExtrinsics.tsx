@@ -204,9 +204,9 @@ const StartAuction: FC<FormProps> = ({ videoId, onSuccess, onError }) => {
     const isEnglishAuction = !!data.auctionDurationBlocks
 
     const commonAuctionFields = {
-      buyNowPrice: data.buyNowPrice ? parseInt(data.buyNowPrice) : undefined,
-      minimalBidStep: parseInt(data.minimalBidStep),
-      startingPrice: parseInt(data.startingPrice),
+      buyNowPrice: data.buyNowPrice ? new BN(data.buyNowPrice) : undefined,
+      minimalBidStep: new BN(data.minimalBidStep),
+      startingPrice: new BN(data.startingPrice),
       startsAtBlock: data.startsAtBlock ? parseInt(data.startsAtBlock) : undefined,
       whitelistedMembersIds: data.whitelistedMembers
         ?.split(',')

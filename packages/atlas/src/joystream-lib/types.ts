@@ -3,6 +3,8 @@ import { AugmentedEvent, AugmentedEvents } from '@polkadot/api/types/events'
 import { GenericEvent } from '@polkadot/types'
 import BN from 'bn.js'
 
+import { JoystreamLibExtrinsics } from './extrinsics'
+
 export type AccountId = string
 export type MemberId = string
 export type ChannelId = string
@@ -68,10 +70,10 @@ export type NftBuyNowInputMetadata = {
   type: 'buyNow'
   buyNowPrice: number
 }
-export type NftCommonAuctionInputMetadata = {
-  startingPrice: number
-  minimalBidStep: number
-  buyNowPrice?: number
+type NftCommonAuctionInputMetadata = {
+  startingPrice: BN
+  minimalBidStep: BN
+  buyNowPrice?: BN
   // if startsAtBlock is empty, current block (in which extrinsic is processed) will be used
   startsAtBlock?: number
   whitelistedMembersIds?: BN[]
@@ -128,3 +130,7 @@ export type VideoExtrinsicResult = ExtrinsicResult<{
 export type MemberExtrinsicResult = ExtrinsicResult<{ memberId: MemberId }>
 export type NftExtrinsicResult = ExtrinsicResult
 export type MetaprotcolExtrinsicResult = ExtrinsicResult<{ transactionHash: string }>
+
+type TxMethodsFromClass<T> = T extends `${infer _}Tx` ? T : never
+
+export type TxMethodName = TxMethodsFromClass<keyof JoystreamLibExtrinsics>

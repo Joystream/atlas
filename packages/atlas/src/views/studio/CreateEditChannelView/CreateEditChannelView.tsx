@@ -23,7 +23,7 @@ import {
 } from '@/components/_overlays/ImageCropModal'
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
-import { FeeMethod, useFee } from '@/hooks/useFee'
+import { useFee } from '@/hooks/useFee'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib'
 import { useAsset, useAssetStore, useOperatorsContext, useRawAsset } from '@/providers/assets'
@@ -190,29 +190,23 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const channelMetadata = createChannelMetadata(watch())
   const channelAssets = createChannelAssets()
 
-  const updateChannelFeeArgs: Parameters<FeeMethod['getUpdateChannelFee']> | undefined =
-    accountId && channelId && memberId && channelMetadata && isDirty && !newChannel
-      ? [accountId, channelId, memberId, channelMetadata, channelAssets]
+  const { fee: updateChannelFee, loading: updateChannelFeeLoading } = useFee(
+    'updateChannelTx',
+    channelId && memberId && channelMetadata && isDirty && !newChannel
+      ? [channelId, memberId, channelMetadata, channelAssets]
       : undefined
-
-  const createChannelFeeArgs: Parameters<FeeMethod['getCreateChannelFee']> | undefined =
-    accountId && memberId && channelMetadata && newChannel
+  )
+  const { fee: createChannelFee, loading: createChannelFeeLoading } = useFee(
+    'createChannelTx',
+    memberId && channelMetadata && newChannel
       ? [
-          accountId,
           memberId,
           channelMetadata,
           channelAssets,
-          { storage: [0], distribution: [{ distributionBucketFamilyId: 0, distributionBucketIndex: 0 }] }, // TODO: provide better values
+          // TODO: provide better values
+          { storage: [0], distribution: [{ distributionBucketFamilyId: 0, distributionBucketIndex: 0 }] },
         ]
       : undefined
-
-  const { fee: updateChannelFee, loading: updateChannelFeeLoading } = useFee(
-    'getUpdateChannelFee',
-    updateChannelFeeArgs
-  )
-  const { fee: createChannelFee, loading: createChannelFeeLoading } = useFee(
-    'getCreateChannelFee',
-    createChannelFeeArgs
   )
 
   useEffect(() => {

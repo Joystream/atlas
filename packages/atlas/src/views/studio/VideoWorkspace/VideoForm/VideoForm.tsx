@@ -86,7 +86,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const [titleTooltipVisible, setTitleTooltipVisible] = useState(true)
   const mintNftFormFieldRef = useRef<HTMLDivElement>(null)
   const titleInputRef = useRef<HTMLTextAreaElement>(null)
-  const { accountId, memberId, channelId } = useUser()
+  const { memberId, channelId } = useUser()
   const [openEditDialog, closeEditDialog] = useConfirmationModal({
     type: 'warning',
     title: 'Discard changes?',
@@ -118,7 +118,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const isNew = !isEdit
   const mintNft = editedVideoInfo?.mintNft
 
-  const { categories, error: categoriesError } = useCategories(undefined, {
+  const { error: categoriesError } = useCategories(undefined, {
     onError: (error) => SentryLogger.error('Failed to fetch categories', 'VideoWorkspace', error),
   })
 
@@ -224,15 +224,15 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const nftMetadata = createNftInputMetadata(getValues())
   const assets = createBasicVideoInputAssetsInfo(getValues('assets'))
 
-  const isSigned = accountId && memberId && channelId
+  const isSigned = memberId && channelId
   const { fee: createVideoFee, loading: createVideoFeeLoading } = useFee(
-    'getCreateVideoFee',
-    isSigned && isNew ? [accountId, memberId, channelId, videoInputMetadata, nftMetadata, assets] : undefined
+    'createVideoTx',
+    isSigned && isNew ? [memberId, channelId, videoInputMetadata, nftMetadata, assets] : undefined
   )
   const { fee: updateVideoFee, loading: updateVideoFeeLoading } = useFee(
-    'getUpdateVideoFee',
+    'updateVideoTx',
     isSigned && isEdit && editedVideoInfo.id
-      ? [accountId, editedVideoInfo.id, memberId, videoInputMetadata, nftMetadata, assets]
+      ? [editedVideoInfo.id, memberId, videoInputMetadata, nftMetadata, assets]
       : undefined
   )
 
@@ -401,12 +401,12 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const handleDeleteVideo = () => {
     editedVideoInfo && deleteVideo(editedVideoInfo.id)
   }
-
-  const categoriesSelectItems: SelectItem[] =
-    categories?.map((c) => ({
-      name: c.name || 'Unknown category',
-      value: c.id,
-    })) || []
+  // TODO uncomment once we have categories available
+  // const categoriesSelectItems: SelectItem[] =
+  //   categories?.map((c) => ({
+  //     name: c.name || 'Unknown category',
+  //     value: c.id,
+  //   })) || []
 
   const getHiddenSectionLabel = () => {
     if (videoFieldsLocked) {
@@ -481,7 +481,8 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           disabled={videoFieldsLocked}
         />
       </FormField>
-      <FormField label="Category" error={errors.category?.message}>
+      {/* TODO uncomment once we have categories available */}
+      {/* <FormField label="Category" error={errors.category?.message}>
         <Controller
           name="category"
           control={control}
@@ -502,7 +503,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
             />
           )}
         />
-      </FormField>
+      </FormField> */}
       <FormField label="Language">
         <Controller
           name="language"
