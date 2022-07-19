@@ -106,6 +106,10 @@ export class JoystreamLib {
     await this.ensureApi()
 
     const [
+      dataObjectPerMegabyteFee,
+      dataObjectStateBloatBondValue,
+      videoStateBloatBondValue,
+      channelStateBloatBondValue,
       maxAuctionDuration,
       minStartingPrice,
       auctionStartsAtMaxDelta,
@@ -113,6 +117,10 @@ export class JoystreamLib {
       minCreatorRoyalty,
       platformFeePercentage,
     ] = await Promise.all([
+      this.api.query.storage.dataObjectPerMegabyteFee(),
+      this.api.query.storage.dataObjectStateBloatBondValue(),
+      this.api.query.content.videoStateBloatBondValue(),
+      this.api.query.content.channelStateBloatBondValue(),
       this.api.query.content.maxAuctionDuration(),
       this.api.query.content.minStartingPrice(),
       this.api.query.content.auctionStartsAtMaxDelta(),
@@ -122,6 +130,10 @@ export class JoystreamLib {
     ])
 
     return {
+      dataObjectPerMegabyteFee: dataObjectPerMegabyteFee.toNumber(),
+      dataObjectStateBloatBondValue: dataObjectStateBloatBondValue.toNumber(),
+      videoStateBloatBondValue: videoStateBloatBondValue.toNumber(),
+      channelStateBloatBondValue: channelStateBloatBondValue.toNumber(),
       maxAuctionDuration: maxAuctionDuration.toNumber(),
       minStartingPrice: minStartingPrice.toNumber(),
       auctionStartsAtMaxDelta: auctionStartsAtMaxDelta.toNumber(),
