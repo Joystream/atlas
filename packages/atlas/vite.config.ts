@@ -17,6 +17,10 @@ export default defineConfig({
     setupFiles: ['vitest-setup.ts'],
     globals: true,
   },
+  // This should fix https://github.com/Joystream/atlas/issues/3005
+  worker: {
+    format: 'es',
+  },
   plugins: [
     react({
       exclude: /\.stories\.[tj]sx?$/,
