@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 
 import { FullMembershipFieldsFragment } from '@/api/queries'
 import { Avatar } from '@/components/Avatar'
+import { Fee } from '@/components/Fee'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
@@ -11,9 +12,12 @@ import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { JOY_CURRENCY_TICKER } from '@/config/joystream'
-import { useTokenPrice } from '@/providers/joystream'
+import { useFee } from '@/hooks/useFee'
+import { createActor } from '@/joystream-lib/helpers'
+import { useJoystream, useTokenPrice } from '@/providers/joystream'
+import { useTransaction } from '@/providers/transactions'
+import { formatNumber } from '@/utils/number'
 
-import { Fee } from './Fee'
 import { Summary, SummaryRow, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
 
 type WithdrawFundsDialogProps = {
@@ -23,6 +27,7 @@ type WithdrawFundsDialogProps = {
   show: boolean
   avatarUrl?: string | null
   channelBalance?: number
+  channelId?: string | null
 }
 
 const ADDRESS_CHARACTERS_LIMIT = 4
@@ -34,6 +39,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
   show,
   avatarUrl,
   channelBalance = 0,
+  channelId,
 }) => {
   const {
     handleSubmit,
@@ -43,7 +49,14 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
     formState: { errors },
   } = useForm<{ amount: number | null }>()
   const { convertToUSD } = useTokenPrice()
-  const convertedAmount = convertToUSD(new BN(watch('amount') || 0))
+  const amount = new BN(watch('amount') || 0)
+  const convertedAmount = convertToUSD(new BN(amount))
+  const { joystream, proxyCallback } = useJoystream()
+  const handleTransaction = useTransaction()
+  const { fee, loading: feeLoading } = useFee(
+    'withdrawFromChannelBalanceTx',
+    channelId && activeMembership ? [createActor(activeMembership.id), channelId, amount] : undefined
+  )
 
   useEffect(() => {
     if (!show) {
@@ -52,7 +65,26 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
   }, [show, reset])
 
   const handleWithdraw = async () => {
-    const handler = await handleSubmit(() => null)
+    const handler = await handleSubmit((data) => {
+      if (!joystream || !activeMembership || !data.amount || !channelId) {
+        return
+      }
+      handleTransaction({
+        snackbarSuccessMessage: {
+          title: `${formatNumber(
+            data.amount
+          )} ${JOY_CURRENCY_TICKER} (${convertedAmount}) tokens have been sent over to ${activeMembership.handle}`,
+        },
+        txFactory: async (updateStatus) =>
+          (await joystream.extrinsics).withdrawFromChannelBalance(
+            activeMembership.id,
+            channelId,
+            amount,
+            proxyCallback(updateStatus)
+          ),
+        onTxSync: async () => onExitClick(),
+      })
+    })
     return handler()
   }
 
@@ -63,7 +95,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
       onExitClick={onExitClick}
       primaryButton={{ text: 'Withdraw', onClick: handleWithdraw }}
       secondaryButton={{ text: 'Cancel', onClick: onExitClick }}
-      additionalActionsNode={<Fee />}
+      additionalActionsNode={<Fee loading={feeLoading} variant="h200" amount={fee} />}
     >
       <Text as="h4" variant="h300" margin={{ bottom: 4 }}>
         Your channel balance

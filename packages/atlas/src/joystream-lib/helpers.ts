@@ -28,6 +28,7 @@ import {
   ExtractVideoResultsAssetsIdsFn,
   ExtrinsicStatus,
   ExtrinsicStatusCallbackFn,
+  MemberId,
   NftAuctionInputMetadata,
   NftEnglishAuctionInputMetadata,
   NftIssuanceInputMetadata,
@@ -315,3 +316,8 @@ export const createNftIssuanceParameters = (
     initTransactionalStatus: initTransactionalStatus,
   })
 }
+
+export const createActor = (memberId: MemberId) =>
+  createType('PalletContentPermissionsContentActor', {
+    Member: parseInt(memberId),
+  })
