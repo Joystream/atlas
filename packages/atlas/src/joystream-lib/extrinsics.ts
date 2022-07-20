@@ -8,7 +8,6 @@ import {
 import { createType } from '@joystream/types'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
-import { PalletContentPermissionsContentActor } from '@polkadot/types/lookup'
 import BN, { isBN } from 'bn.js'
 import Long from 'long'
 
@@ -796,15 +795,15 @@ export class JoystreamLibExtrinsics {
     return await this.sendExtrinsic(tx, cb)
   }
 
-  async withdrawFromChannelBalanceTx(actor: PalletContentPermissionsContentActor, channelId: string, amount: BN) {
+  async withdrawFromChannelBalanceTx(memberId: string, channelId: string, amount: BN) {
     await this.ensureApi()
+    const actor = createActor(memberId)
 
     return this.api.tx.content.withdrawFromChannelBalance(actor, channelId, amount)
   }
 
   async withdrawFromChannelBalance(memberId: string, channelId: string, amount: BN, cb?: ExtrinsicStatusCallbackFn) {
-    const actor = createActor(memberId)
-    const tx = await this.withdrawFromChannelBalanceTx(actor, channelId, amount)
+    const tx = await this.withdrawFromChannelBalanceTx(memberId, channelId, amount)
 
     return await this.sendExtrinsic(tx, cb)
   }

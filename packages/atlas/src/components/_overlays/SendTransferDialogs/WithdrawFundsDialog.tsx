@@ -13,7 +13,6 @@ import { Input } from '@/components/_inputs/Input'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { JOY_CURRENCY_TICKER } from '@/config/joystream'
 import { useFee } from '@/hooks/useFee'
-import { createActor } from '@/joystream-lib/helpers'
 import { useJoystream, useTokenPrice } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions'
 import { formatNumber } from '@/utils/number'
@@ -55,7 +54,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
   const handleTransaction = useTransaction()
   const { fee, loading: feeLoading } = useFee(
     'withdrawFromChannelBalanceTx',
-    channelId && activeMembership ? [createActor(activeMembership.id), channelId, amount] : undefined
+    channelId && activeMembership ? [activeMembership.id, channelId, amount] : undefined
   )
 
   useEffect(() => {
