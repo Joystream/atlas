@@ -792,7 +792,9 @@ export class JoystreamLibExtrinsics {
 
   async sendFunds(destinationAccount: MemberId, value: BN, cb?: ExtrinsicStatusCallbackFn) {
     const tx = await this.sendFundsTx(destinationAccount, value)
-    return await this.sendExtrinsic(tx, cb)
+
+    const { block, transactionHash } = await this.sendExtrinsic(tx, cb)
+    return { block, transactionHash }
   }
 
   async withdrawFromChannelBalanceTx(memberId: string, channelId: string, amount: BN) {
@@ -805,6 +807,7 @@ export class JoystreamLibExtrinsics {
   async withdrawFromChannelBalance(memberId: string, channelId: string, amount: BN, cb?: ExtrinsicStatusCallbackFn) {
     const tx = await this.withdrawFromChannelBalanceTx(memberId, channelId, amount)
 
-    return await this.sendExtrinsic(tx, cb)
+    const { block, transactionHash } = await this.sendExtrinsic(tx, cb)
+    return { block, transactionHash }
   }
 }
