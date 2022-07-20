@@ -63,7 +63,7 @@ export const NftSettlementBottomDrawer: FC = () => {
   }
   const isOpen = currentAction === 'settle'
 
-  const { fee } = useFee('settleEnglishAuctionTx', currentNftId ? [currentNftId] : undefined)
+  const { fullFee: fee } = useFee('settleEnglishAuctionTx', currentNftId ? [currentNftId] : undefined)
   return (
     <BottomDrawer isOpen={isOpen} onClose={closeNftAction}>
       <StyledLottie play={isOpen} data={confetti} />

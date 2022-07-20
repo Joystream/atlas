@@ -135,3 +135,10 @@ export type MetaprotcolExtrinsicResult = ExtrinsicResult<{ metaprotocol: true; t
 type TxMethodsFromClass<T> = T extends `${infer _}Tx` ? T : never
 
 export type TxMethodName = TxMethodsFromClass<keyof JoystreamLibExtrinsics>
+
+export type AdditionalFee = {
+  dataObjectPerMegabyteFee?: BN
+  dataObjectStateBloatBondValue?: BN
+  videoStateBloatBondValue?: BN
+  channelStateBloatBondValue?: BN
+}

@@ -49,6 +49,7 @@ export const PlaygroundMinimizedTransaction = () => {
           },
           undefined,
           {},
+          0,
           proxyCallback(updateStatus)
         ),
       onTxSync: () => refetch(),

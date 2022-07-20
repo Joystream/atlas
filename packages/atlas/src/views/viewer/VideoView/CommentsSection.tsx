@@ -52,7 +52,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
   const { openSignInDialog } = useDisplaySignInDialog()
   const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)
 
-  const { fee, loading: feeLoading } = useFee(
+  const { fullFee: fee, loading: feeLoading } = useFee(
     'createVideoCommentTx',
     memberId && video?.id && commentInputText ? [memberId, video?.id, commentInputText, null] : undefined
   )

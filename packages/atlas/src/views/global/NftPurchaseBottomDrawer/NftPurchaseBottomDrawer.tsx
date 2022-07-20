@@ -252,12 +252,12 @@ export const NftPurchaseBottomDrawer: FC = () => {
       ? 'Change bid'
       : 'Place bid'
 
-  const { fee: buyNowFee, loading: buynowFeeLoading } = useFee(
+  const { fullFee: buyNowFee, loading: buynowFeeLoading } = useFee(
     'buyNftNowTx',
     currentNftId && memberId && auctionBuyNowPrice ? [currentNftId, memberId, auctionBuyNowPrice] : undefined
   )
 
-  const { fee: makeBidFee, loading: makeBidFeeLoading } = useFee(
+  const { fullFee: makeBidFee, loading: makeBidFeeLoading } = useFee(
     'makeNftBidTx',
     currentNftId && memberId && watch('bid')
       ? [currentNftId, memberId, Number(watch('bid')), isEnglishAuction ? 'english' : 'open']
