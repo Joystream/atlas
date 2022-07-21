@@ -9,14 +9,14 @@ type AcceptBidDialogProps = {
   onModalClose: () => void
   isOpen: boolean
   bids: Bid[]
-  onAcceptBid: (ownerId: string, videoId: string, bidderId: string, price: string) => void
+  onAcceptBid: (ownerId: string, videoId: string, bidderId: string, price: number) => void
   nftId: string | null
   ownerId?: string
 }
 
 type SelectedBidder = {
   id: string
-  amount: string
+  amount: number
 }
 
 export const AcceptBidDialog: FC<AcceptBidDialogProps> = ({

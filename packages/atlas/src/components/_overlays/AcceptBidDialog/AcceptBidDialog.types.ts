@@ -2,7 +2,7 @@ import { BasicMembershipFieldsFragment } from '@/api/queries'
 
 export type Bid = {
   createdAt: Date
-  amount: string
+  amount: number
   amountUSD: number | null
   bidder: BasicMembershipFieldsFragment
 }

@@ -373,7 +373,6 @@ export const NftPurchaseBottomDrawer: FC = () => {
                             as="span"
                             variant="h400"
                             value={tokenNumberToHapiBn(topBidAmount)}
-                            withToken
                             format="short"
                           />
                         </FlexWrapper>
@@ -391,7 +390,12 @@ export const NftPurchaseBottomDrawer: FC = () => {
                             <TokenWrapper>
                               <StyledJoyTokenIcon variant="gray" size={24} />
                             </TokenWrapper>
-                            <BidAmount as="span" variant="h400" value={Number(userBid.amount)} format="short" />
+                            <BidAmount
+                              as="span"
+                              variant="h400"
+                              value={hapiBnToTokenNumber(new BN(userBid.amount))}
+                              format="short"
+                            />
                           </FlexWrapper>
                           <Text as="span" variant="t100" color="colorText" margin={{ top: 1 }}>
                             You

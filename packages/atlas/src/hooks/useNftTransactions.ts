@@ -98,7 +98,7 @@ export const useNftTransactions = () => {
   )
 
   const acceptNftBid = useCallback(
-    (ownerId: string, id: string, bidderId: string, price: string) => {
+    (ownerId: string, id: string, bidderId: string, price: number) => {
       if (!joystream || !memberId) {
         return
       }

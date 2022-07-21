@@ -42,7 +42,7 @@ export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
         .map(({ id, createdAt, amount, bidder }) => ({
           id,
           createdAt,
-          amount,
+          amount: hapiBnToTokenNumber(new BN(amount)),
           amountUSD: convertToUSD(new BN(amount)),
           bidder,
         }))
