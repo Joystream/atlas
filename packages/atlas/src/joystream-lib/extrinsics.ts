@@ -467,7 +467,7 @@ export class JoystreamLibExtrinsics {
   async buyNftNowTx(videoId: VideoId, memberId: MemberId, priceCommitment: number) {
     await this.ensureApi()
 
-    const tx = this.api.tx.content.buyNft(videoId, memberId, priceCommitment)
+    const tx = this.api.tx.content.buyNft(videoId, memberId, tokenNumberToHapiBn(priceCommitment))
     return tx
   }
 
@@ -489,8 +489,8 @@ export class JoystreamLibExtrinsics {
 
     const tx =
       auctionType === 'open'
-        ? this.api.tx.content.makeOpenAuctionBid(memberId, videoId, bidPrice)
-        : this.api.tx.content.makeEnglishAuctionBid(memberId, videoId, bidPrice)
+        ? this.api.tx.content.makeOpenAuctionBid(memberId, videoId, tokenNumberToHapiBn(bidPrice))
+        : this.api.tx.content.makeEnglishAuctionBid(memberId, videoId, tokenNumberToHapiBn(bidPrice))
 
     return tx
   }
@@ -527,12 +527,12 @@ export class JoystreamLibExtrinsics {
     return { block }
   }
 
-  async acceptNftBidTx(ownerId: MemberId, videoId: VideoId, bidderId: MemberId, price: string) {
+  async acceptNftBidTx(ownerId: MemberId, videoId: VideoId, bidderId: MemberId, price: number) {
     await this.ensureApi()
     const actor = createType('PalletContentPermissionsContentActor', {
       Member: parseInt(ownerId),
     })
-    const tx = this.api.tx.content.pickOpenAuctionWinner(actor, videoId, bidderId, price)
+    const tx = this.api.tx.content.pickOpenAuctionWinner(actor, videoId, bidderId, tokenNumberToHapiBn(price))
     return tx
   }
 
@@ -540,7 +540,7 @@ export class JoystreamLibExtrinsics {
     ownerId: MemberId,
     videoId: VideoId,
     bidderId: MemberId,
-    price: string,
+    price: number,
     cb?: ExtrinsicStatusCallbackFn
   ): Promise<NftExtrinsicResult> {
     const tx = await this.acceptNftBidTx(ownerId, videoId, bidderId, price)
