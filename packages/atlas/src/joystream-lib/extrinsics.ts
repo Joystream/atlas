@@ -173,8 +173,7 @@ export class JoystreamLibExtrinsics {
 
     const { block, getEventData } = await this.sendExtrinsic(tx, cb)
 
-    const channelId = getEventData('content', 'ChannelCreated')[1]
-
+    const channelId = getEventData('content', 'ChannelCreated')[0]
     return {
       channelId: channelId.toString(),
       block,
