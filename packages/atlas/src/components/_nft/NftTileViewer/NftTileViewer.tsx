@@ -25,8 +25,6 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
 
   const { url: ownerMemberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
 
-  const auction = nft?.transactionalStatusAuction
-
   const contextMenuItems = useVideoContextMenu({
     publisher: false,
     nftState,
@@ -34,8 +32,8 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
     nftActions,
     videoId: nftId,
     videoHref: absoluteRoutes.viewer.video(nftId),
-    topBid: auction?.topBid?.amount ? Number(auction?.topBid?.amount) : undefined,
-    buyNowPrice: auction?.buyNowPrice ? Number(auction?.buyNowPrice) : undefined,
+    topBid: nftStatus?.status === 'auction' ? nftStatus.topBidAmount : undefined,
+    buyNowPrice: nftStatus?.status === 'auction' || nftStatus?.status === 'buy-now' ? nftStatus.buyNowPrice : undefined,
   })
 
   const nftCommonProps: NftTileProps = {

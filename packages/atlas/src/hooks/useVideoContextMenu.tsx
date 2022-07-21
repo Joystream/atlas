@@ -9,7 +9,6 @@ import {
   SvgActionLinkUrl,
   SvgActionMint,
   SvgActionNotForSale,
-  SvgActionPlay,
   SvgActionSell,
   SvgActionShoppingCart,
   SvgActionTrash,
@@ -17,7 +16,6 @@ import {
 import { useClipboard } from '@/hooks/useClipboard'
 import { useNftState } from '@/hooks/useNftState'
 import { useNftActions } from '@/providers/nftActions'
-import { openInNewTab } from '@/utils/browser'
 
 type VideoContextMenuData = {
   publisher: boolean
@@ -54,12 +52,6 @@ export const useVideoContextMenu = ({
     copyToClipboard(videoHref ? location.origin + videoHref : '', 'Video URL copied to clipboard')
   }, [videoHref, copyToClipboard])
 
-  const onOpenInTabClick = () => {
-    if (videoHref) {
-      openInNewTab(videoHref, true)
-    }
-  }
-
   const commonItems = [
     {
       nodeStart: <SvgActionLinkUrl />,
@@ -78,7 +70,7 @@ export const useVideoContextMenu = ({
                   label: 'Buy now',
                   onClick: () => videoId && nftActions?.openNftPurchase(videoId, { fixedPrice: true }),
                   caption: buyNowPrice ? (
-                    <NumberFormat value={buyNowPrice || 0} as="span" format="short" withToken />
+                    <NumberFormat color="inherit" value={buyNowPrice || 0} as="span" format="short" withToken />
                   ) : undefined,
                 },
               ]
@@ -91,7 +83,7 @@ export const useVideoContextMenu = ({
                   onClick: () => videoId && nftActions?.openNftPurchase(videoId),
                   caption: topBid ? (
                     <>
-                      Top: <NumberFormat value={topBid || 0} as="span" format="short" withToken />
+                      Top: <NumberFormat color="inherit" value={topBid || 0} as="span" format="short" withToken />
                     </>
                   ) : undefined,
                 },
@@ -105,7 +97,14 @@ export const useVideoContextMenu = ({
                   onClick: () => videoId && nftActions?.openNftPurchase(videoId),
                   caption: nftState.userBid ? (
                     <>
-                      Last: <NumberFormat value={Number(nftState.userBid.amount)} as="span" format="short" withToken />
+                      Last:{' '}
+                      <NumberFormat
+                        color="inherit"
+                        value={Number(nftState.userBid.amount)}
+                        as="span"
+                        format="short"
+                        withToken
+                      />
                     </>
                   ) : undefined,
                 },
@@ -120,7 +119,13 @@ export const useVideoContextMenu = ({
                   caption: nftState.userBid ? (
                     <>
                       Winning:{' '}
-                      <NumberFormat value={Number(nftState.userBid.amount)} as="span" format="short" withToken />
+                      <NumberFormat
+                        color="inherit"
+                        value={Number(nftState.userBid.amount)}
+                        as="span"
+                        format="short"
+                        withToken
+                      />
                     </>
                   ) : undefined,
                 },
@@ -134,7 +139,8 @@ export const useVideoContextMenu = ({
                   onClick: onChangePrice,
                   caption: (
                     <>
-                      Currently: <NumberFormat value={buyNowPrice || 0} as="span" format="short" withToken />
+                      Currently:{' '}
+                      <NumberFormat color="inherit" value={buyNowPrice || 0} as="span" format="short" withToken />
                     </>
                   ),
                 },
@@ -170,11 +176,6 @@ export const useVideoContextMenu = ({
         nodeStart: <SvgActionEdit />,
         onClick: onEditClick,
         label: 'Edit video',
-      },
-      {
-        nodeStart: <SvgActionPlay />,
-        onClick: onOpenInTabClick,
-        label: 'Play in Joystream',
       },
       ...nftItems,
       ...(!hasNft && !nftState?.canCancelSale

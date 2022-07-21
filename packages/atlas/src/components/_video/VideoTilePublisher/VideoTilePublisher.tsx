@@ -77,6 +77,9 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
       nftActions,
       videoId: video?.id,
       videoHref,
+      buyNowPrice:
+        nftStatus?.status === 'auction' || nftStatus?.status === 'buy-now' ? nftStatus.buyNowPrice : undefined,
+      topBid: nftStatus?.status === 'auction' ? nftStatus.topBidAmount : undefined,
       onDeleteVideoClick,
       onEditClick,
       onMintNftClick,
