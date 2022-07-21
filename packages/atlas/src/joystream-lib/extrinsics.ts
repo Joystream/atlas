@@ -8,6 +8,7 @@ import {
 import { createType } from '@joystream/types'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
+import { isBN } from 'bn.js'
 import Long from 'long'
 
 import { SentryLogger } from '@/utils/logs'
@@ -173,7 +174,13 @@ export class JoystreamLibExtrinsics {
 
     const { block, getEventData } = await this.sendExtrinsic(tx, cb)
 
-    const channelId = getEventData('content', 'ChannelCreated')[0]
+    const channelId = getEventData('content', 'ChannelCreated').find((el) => isBN(el))
+    if (!channelId) {
+      throw new JoystreamLibError({
+        name: 'FailedError',
+        message: `Channel id was not returned from event data`,
+      })
+    }
     return {
       channelId: channelId.toString(),
       block,
