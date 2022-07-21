@@ -16,12 +16,12 @@ import { BidRowWrapper, Price, TokenPrice } from './AcceptBidList.styles'
 
 type SelectedBidder = {
   id: string
-  amount: string
+  amount: number
 }
 
 type BidRowProps = {
   selectedValue?: SelectedBidder
-  onSelect?: (selectedBid: string, price: string) => void
+  onSelect?: (selectedBid: string, price: number) => void
   size?: 'medium' | 'small'
 } & Bid
 

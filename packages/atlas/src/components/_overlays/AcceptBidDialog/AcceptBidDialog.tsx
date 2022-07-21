@@ -16,7 +16,7 @@ type AcceptBidDialogProps = {
 
 type SelectedBidder = {
   id: string
-  amount: string
+  amount: number
 }
 
 export const AcceptBidDialog: FC<AcceptBidDialogProps> = ({
@@ -38,7 +38,7 @@ export const AcceptBidDialog: FC<AcceptBidDialogProps> = ({
     if (!selectedBidder || !nftId || !ownerId) {
       return
     }
-    onAcceptBid(ownerId, nftId, selectedBidder.id, parseInt(selectedBidder.amount))
+    onAcceptBid(ownerId, nftId, selectedBidder.id, selectedBidder.amount)
     handleModalClose()
   }
 
