@@ -21,6 +21,9 @@ export const hapiBnToTokenNumber = (bn: BN) => {
 }
 
 export const tokenNumberToHapiBn = (number: number) => {
+  if (isNaN(number)) {
+    return new BN(0)
+  }
   if (Number.isInteger(number)) {
     return new BN(number).mul(conversionBn)
   } else {

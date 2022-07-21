@@ -71,12 +71,12 @@ export type NftBuyNowInputMetadata = {
   buyNowPrice: number
 }
 type NftCommonAuctionInputMetadata = {
-  startingPrice: BN
-  minimalBidStep: BN
-  buyNowPrice?: BN
+  startingPrice: number
+  minimalBidStep: number
+  buyNowPrice?: number
   // if startsAtBlock is empty, current block (in which extrinsic is processed) will be used
   startsAtBlock?: number
-  whitelistedMembersIds?: BN[]
+  whitelistedMembersIds?: string[]
 }
 export type NftOpenAuctionInputMetadata = NftCommonAuctionInputMetadata & {
   type: 'open'

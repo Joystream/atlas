@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import BN from 'bn.js'
 import { addMilliseconds } from 'date-fns'
 import { FC, useCallback, useEffect, useMemo, useRef } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -119,27 +118,26 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
       const startsAtBlock = startDate ? convertMsTimestampToBlock(startDate.getTime()) : undefined
       const startingPrice = data.startingPrice ?? chainState.nftMinStartingPrice
       const minimalBidStep = Math.ceil(startingPrice * NFT_MIN_BID_STEP_MULTIPLIER)
-
       if (data.auctionDurationBlocks) {
         // auction has duration, assume english
         return {
           type: 'english',
           startsAtBlock,
-          startingPrice: tokenNumberToHapiBn(startingPrice),
-          minimalBidStep: tokenNumberToHapiBn(minimalBidStep),
-          buyNowPrice: typeof data.buyNowPrice === 'number' ? tokenNumberToHapiBn(data.buyNowPrice) : undefined,
+          startingPrice: startingPrice,
+          minimalBidStep: minimalBidStep,
+          buyNowPrice: typeof data.buyNowPrice === 'number' ? data.buyNowPrice : undefined,
           auctionDurationBlocks: data.auctionDurationBlocks,
-          whitelistedMembersIds: data.whitelistedMembers?.map((member) => new BN(member.id)),
+          whitelistedMembersIds: data.whitelistedMembers?.map((member) => member.id),
         }
       } else {
         // auction has no duration, assume open
         return {
           type: 'open',
           startsAtBlock,
-          startingPrice: tokenNumberToHapiBn(startingPrice),
-          minimalBidStep: tokenNumberToHapiBn(minimalBidStep),
-          buyNowPrice: typeof data.buyNowPrice === 'number' ? tokenNumberToHapiBn(data.buyNowPrice) : undefined,
-          whitelistedMembersIds: data.whitelistedMembers?.map((member) => new BN(member.id)),
+          startingPrice: startingPrice,
+          minimalBidStep: minimalBidStep,
+          buyNowPrice: typeof data.buyNowPrice === 'number' ? data.buyNowPrice : undefined,
+          whitelistedMembersIds: data.whitelistedMembers?.map((member) => member.id),
         }
       }
     },

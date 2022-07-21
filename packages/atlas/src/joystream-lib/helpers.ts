@@ -12,8 +12,10 @@ import {
   PalletContentStorageAssetsRecord,
 } from '@polkadot/types/lookup'
 import { Registry } from '@polkadot/types/types'
+import { BN } from 'bn.js'
 
 import { SentryLogger } from '@/utils/logs'
+import { tokenNumberToHapiBn } from '@/utils/number'
 
 import { NFT_DEFAULT_BID_LOCK_DURATION, NFT_DEFAULT_EXTENSION_PERIOD, NFT_PERBILL_PERCENT } from './config'
 import { JoystreamLibError } from './errors'
@@ -241,10 +243,12 @@ export const extractVideoResultAssetsIds: ExtractVideoResultsAssetsIdsFn = (inpu
 
 const createCommonAuctionParams = (inputMetadata: NftAuctionInputMetadata) => {
   return {
-    startingPrice: createType('u128', inputMetadata.startingPrice),
-    buyNowPrice: createType('Option<u128>', inputMetadata.buyNowPrice),
+    startingPrice: createType('u128', tokenNumberToHapiBn(inputMetadata.startingPrice)),
+    buyNowPrice: inputMetadata.buyNowPrice
+      ? createType('Option<u128>', tokenNumberToHapiBn(inputMetadata.buyNowPrice))
+      : undefined,
     startsAt: createType('Option<u32>', inputMetadata.startsAtBlock),
-    whitelist: createType('BTreeSet<u64>', inputMetadata.whitelistedMembersIds || []),
+    whitelist: createType('BTreeSet<u64>', inputMetadata.whitelistedMembersIds?.map((id) => new BN(id)) || []),
   }
 }
 
@@ -277,7 +281,7 @@ const createNftIssuanceTransactionalStatus = (
 
   if (inputMetadata.sale.type === 'buyNow') {
     return createType('PalletContentNftTypesInitTransactionalStatusRecord', {
-      BuyNow: createType('u128', inputMetadata.sale.buyNowPrice),
+      BuyNow: createType('u128', tokenNumberToHapiBn(inputMetadata.sale.buyNowPrice)),
     })
   } else if (inputMetadata.sale.type === 'open') {
     return createType('PalletContentNftTypesInitTransactionalStatusRecord', {

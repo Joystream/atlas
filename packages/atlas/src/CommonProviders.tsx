@@ -14,10 +14,12 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
     <>
       <GlobalStyles />
       <ApolloProvider client={apolloClient}>
-        <OperatorsContextProvider>
-          <AssetsManager />
-          <BrowserRouter>{children}</BrowserRouter>
-        </OperatorsContextProvider>
+        <BrowserRouter>
+          <OperatorsContextProvider>
+            <AssetsManager />
+            {children}
+          </OperatorsContextProvider>
+        </BrowserRouter>
       </ApolloProvider>
     </>
   )

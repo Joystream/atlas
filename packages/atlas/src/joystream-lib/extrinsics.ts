@@ -12,7 +12,7 @@ import { isBN } from 'bn.js'
 import Long from 'long'
 
 import { SentryLogger } from '@/utils/logs'
-import { hapiBnToTokenNumber } from '@/utils/number'
+import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/utils/number'
 
 import { JoystreamLibError } from './errors'
 import {
@@ -391,7 +391,7 @@ export class JoystreamLibExtrinsics {
     })
     const tx =
       inputMetadata.type === 'buyNow'
-        ? this.api.tx.content.sellNft(videoId, actor, inputMetadata.buyNowPrice)
+        ? this.api.tx.content.sellNft(videoId, actor, tokenNumberToHapiBn(inputMetadata.buyNowPrice))
         : inputMetadata.type === 'open'
         ? this.api.tx.content.startOpenAuction(actor, videoId, createNftOpenAuctionParams(inputMetadata))
         : this.api.tx.content.startEnglishAuction(actor, videoId, createNftEnglishAuctionParams(inputMetadata))
@@ -417,7 +417,7 @@ export class JoystreamLibExtrinsics {
     const actor = createType('PalletContentPermissionsContentActor', {
       Member: parseInt(memberId),
     })
-    const tx = this.api.tx.content.updateBuyNowPrice(actor, videoId, price)
+    const tx = this.api.tx.content.updateBuyNowPrice(actor, videoId, tokenNumberToHapiBn(price))
 
     return tx
   }
