@@ -1,3 +1,4 @@
+// we need to use different library for big number, because BN doesn't support decimals
 import BigNumber from 'bignumber.js'
 import BN from 'bn.js'
 
@@ -12,23 +13,17 @@ export const formatNumber = (num: number): string => {
   return numberFormatter.format(num).replaceAll(',', ' ')
 }
 
-const conversionBn = new BN(HAPI_TO_JOY_RATE)
-
 export const hapiBnToTokenNumber = (bn: BN) => {
-  const div = bn.div(conversionBn).toNumber()
-  const mod = bn.mod(conversionBn).toNumber()
-  return div + mod / HAPI_TO_JOY_RATE
+  const bnToString = bn.toString()
+  const token = new BigNumber(bnToString).dividedBy(new BigNumber(HAPI_TO_JOY_RATE))
+  return token.toNumber()
 }
 
 export const tokenNumberToHapiBn = (number: number) => {
-  if (isNaN(number)) {
+  const numberToString = number.toFixed()
+  if (new BigNumber(numberToString).isNaN()) {
     return new BN(0)
   }
-  if (Number.isInteger(number)) {
-    return new BN(number).mul(conversionBn)
-  } else {
-    // we need to use different library in this case since BN doesn't support decimals
-    const multiplied = new BigNumber(number).multipliedBy(HAPI_TO_JOY_RATE).toString()
-    return new BN(multiplied)
-  }
+  const bn = new BigNumber(numberToString).multipliedBy(new BigNumber(HAPI_TO_JOY_RATE)).toFixed()
+  return new BN(bn)
 }
