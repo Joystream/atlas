@@ -30,6 +30,7 @@ export type DialogProps = PropsWithChildren<{
   additionalActionsNode?: ReactNode
   additionalActionsNodeMobilePosition?: 'top' | 'bottom'
   onExitClick?: () => void
+  onEscPress?: () => void
   onSubmit?: (e?: FormEvent) => void
   noContentPadding?: boolean
   actionDivider?: boolean

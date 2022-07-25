@@ -1,4 +1,4 @@
-import { FC, MouseEvent, PropsWithChildren, useEffect } from 'react'
+import { FC, MouseEvent, PropsWithChildren, useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Portal } from '@/components/Portal'
@@ -16,7 +16,7 @@ export type ModalProps = PropsWithChildren<{
   onClickOutside?: (event?: MouseEvent) => void
   className?: string
 }> &
-  Pick<DialogProps, 'onExitClick'>
+  Pick<DialogProps, 'onExitClick' | 'onEscPress'>
 
 export const Modal: FC<ModalProps> = ({
   children,
@@ -24,16 +24,31 @@ export const Modal: FC<ModalProps> = ({
   show,
   onExitClick,
   onClickOutside,
+  onEscPress,
   className,
   noBoxShadow,
 }) => {
-  const { modalContainerRef, incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
+  const { modalContainerRef, incrementOverlaysOpenCount, decrementOverlaysOpenCount, lastOverlayId } =
+    useOverlayManager()
+  const [overlayId, setOverlayId] = useState<string | null>(null)
 
   useEffect(() => {
-    return () => {
-      decrementOverlaysOpenCount()
+    if (!onEscPress) {
+      return
     }
-  }, [decrementOverlaysOpenCount])
+    const handleEscPress = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (lastOverlayId === overlayId) {
+          onEscPress?.()
+        }
+      }
+    }
+    document.addEventListener('keydown', handleEscPress)
+
+    return () => {
+      document.removeEventListener('keydown', handleEscPress)
+    }
+  }, [lastOverlayId, onEscPress, overlayId])
 
   return (
     <Portal containerRef={modalContainerRef}>
@@ -54,7 +69,10 @@ export const Modal: FC<ModalProps> = ({
         mountOnEnter
         unmountOnExit
         appear
-        onEnter={incrementOverlaysOpenCount}
+        onEnter={() => {
+          const id = incrementOverlaysOpenCount()
+          setOverlayId(id)
+        }}
         onExited={decrementOverlaysOpenCount}
       >
         <ModalContent data-size={size} noBoxShadow={noBoxShadow} className={className}>

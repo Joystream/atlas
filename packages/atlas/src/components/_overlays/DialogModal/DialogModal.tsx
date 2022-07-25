@@ -14,7 +14,13 @@ export const DialogModal: FC<DialogModalProps> = ({
   ...dialogProps
 }) => {
   return (
-    <Modal show={show} onExitClick={onExitClick} size={size} onClickOutside={onClickOutside}>
+    <Modal
+      show={show}
+      onExitClick={onExitClick}
+      onEscPress={() => dialogProps.secondaryButton?.onClick || onExitClick}
+      size={size}
+      onClickOutside={onClickOutside}
+    >
       <Dialog {...dialogProps} onExitClick={onExitClick}>
         {children}
       </Dialog>

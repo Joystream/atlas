@@ -27,15 +27,16 @@ export const BottomDrawer: FC<BottomDrawerProps> = ({
   titleLabel,
   pageTitle,
   children,
-  actionBar: actionBarProps,
+  actionBar,
   fixedScrollbar,
 }) => {
   const headTags = useHeadTags(pageTitle || title)
 
   const [cachedIsOpen, setCachedIsOpen] = useState(false)
-  const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
+  const { lastOverlayId, decrementOverlaysOpenCount, incrementOverlaysOpenCount } = useOverlayManager()
+  const [overlayId, setOverlayId] = useState<string | null>(null)
 
-  const actionBarActive = actionBarProps?.isActive ?? true
+  const actionBarActive = actionBar?.isActive ?? true
   const { ref: actionBarRef, height: _actionBarHeight } = useResizeObserver({ box: 'border-box' })
   const actionBarHeight = actionBarActive ? _actionBarHeight : 0
 
@@ -45,11 +46,28 @@ export const BottomDrawer: FC<BottomDrawerProps> = ({
     setCachedIsOpen(isOpen)
 
     if (isOpen) {
-      incrementOverlaysOpenCount()
+      const id = incrementOverlaysOpenCount()
+      setOverlayId(id)
     } else {
       decrementOverlaysOpenCount()
+      setOverlayId(null)
     }
   }, [cachedIsOpen, decrementOverlaysOpenCount, incrementOverlaysOpenCount, isOpen])
+
+  useEffect(() => {
+    const handleEscPress = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (lastOverlayId === overlayId) {
+          onClose()
+        }
+      }
+    }
+    document.addEventListener('keydown', handleEscPress)
+
+    return () => {
+      document.removeEventListener('keydown', handleEscPress)
+    }
+  }, [lastOverlayId, onClose, overlayId])
 
   return (
     <>
@@ -77,7 +95,7 @@ export const BottomDrawer: FC<BottomDrawerProps> = ({
           <ScrollContainer actionBarHeight={actionBarHeight} fixedScrollbar={fixedScrollbar}>
             {children}
           </ScrollContainer>
-          {actionBarProps ? <StyledActionBar ref={actionBarRef} {...actionBarProps} /> : null}
+          {actionBar ? <StyledActionBar ref={actionBarRef} {...actionBar} /> : null}
         </Container>
       </CSSTransition>
     </>

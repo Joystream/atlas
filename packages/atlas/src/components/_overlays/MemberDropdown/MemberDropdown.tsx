@@ -104,9 +104,6 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
       }
     }
 
-    const toggleWithdrawDialog = () => setShowWithdrawDialog((prevState) => !prevState)
-    const toggleSendDialog = () => setShowSendDialog((prevState) => !prevState)
-
     useEffect(() => {
       if (!isActive) {
         return
@@ -140,11 +137,15 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
           avatarUrl={avatarUrl}
           activeMembership={activeMembership}
           show={showWithdrawDialog}
-          onExitClick={toggleWithdrawDialog}
+          onExitClick={() => setShowWithdrawDialog(false)}
           accountBalance={accountBalance}
           channelBalance={channelBalance}
         />
-        <SendFundsDialog show={showSendDialog} onExitClick={toggleSendDialog} accountBalance={accountBalance} />
+        <SendFundsDialog
+          show={showSendDialog}
+          onExitClick={() => setShowWithdrawDialog(false)}
+          accountBalance={accountBalance}
+        />
         <Container ref={ref}>
           <InnerContainer isActive={isActive} containerHeight={containerHeight}>
             {transitions((style, isSwitchingMemberMode) =>
