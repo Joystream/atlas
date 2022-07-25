@@ -611,6 +611,7 @@ export class JoystreamLibExtrinsics {
 
     return {
       block,
+      metaprotocol: true,
       transactionHash,
     }
   }
@@ -632,6 +633,7 @@ export class JoystreamLibExtrinsics {
 
     return {
       block,
+      metaprotocol: true,
       transactionHash,
     }
   }
@@ -647,7 +649,12 @@ export class JoystreamLibExtrinsics {
     return this.metaprotocolMemberExtrinsicTx(memberId, msg)
   }
 
-  async reactToVideo(memberId: MemberId, videoId: VideoId, reaction: VideoReaction, cb?: ExtrinsicStatusCallbackFn) {
+  async reactToVideo(
+    memberId: MemberId,
+    videoId: VideoId,
+    reaction: VideoReaction,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<MetaprotcolExtrinsicResult> {
     const tx = await this.reactToVideoTx(memberId, videoId, reaction)
     return this.sendMetaprotocolMemberExtrinsic(tx, cb)
   }
@@ -676,7 +683,7 @@ export class JoystreamLibExtrinsics {
     commentBody: string,
     parentCommentId: string | null,
     cb?: ExtrinsicStatusCallbackFn
-  ) {
+  ): Promise<MetaprotcolExtrinsicResult> {
     const tx = await this.createVideoCommentTx(memberId, videoId, commentBody, parentCommentId)
     return this.sendMetaprotocolMemberExtrinsic(tx, cb)
   }
@@ -693,7 +700,12 @@ export class JoystreamLibExtrinsics {
 
     return this.metaprotocolMemberExtrinsicTx(memberId, msg)
   }
-  async editVideoComment(memberId: MemberId, commentId: string, newBody: string, cb?: ExtrinsicStatusCallbackFn) {
+  async editVideoComment(
+    memberId: MemberId,
+    commentId: string,
+    newBody: string,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<MetaprotcolExtrinsicResult> {
     const tx = await this.editVideoCommentTx(memberId, commentId, newBody)
     return this.sendMetaprotocolMemberExtrinsic(tx, cb)
   }
@@ -709,7 +721,11 @@ export class JoystreamLibExtrinsics {
     return this.metaprotocolMemberExtrinsicTx(memberId, msg)
   }
 
-  async deleteVideoComment(memberId: MemberId, commentId: string, cb?: ExtrinsicStatusCallbackFn) {
+  async deleteVideoComment(
+    memberId: MemberId,
+    commentId: string,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<MetaprotcolExtrinsicResult> {
     const tx = await this.deleteVideoCommentTx(memberId, commentId)
     return this.sendMetaprotocolMemberExtrinsic(tx, cb)
   }
@@ -726,7 +742,11 @@ export class JoystreamLibExtrinsics {
     return this.metaprotocolChannelExtrinsicTx(channelId, msg)
   }
 
-  async moderateComment(channelId: ChannelId, commentId: string, cb?: ExtrinsicStatusCallbackFn) {
+  async moderateComment(
+    channelId: ChannelId,
+    commentId: string,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<MetaprotcolExtrinsicResult> {
     const tx = await this.moderateCommentTx(channelId, commentId)
     return this.sendMetaprotocolChannelExtrinsic(tx, cb)
   }
@@ -748,7 +768,7 @@ export class JoystreamLibExtrinsics {
     commentId: string,
     reactionId: CommentReaction,
     cb?: ExtrinsicStatusCallbackFn
-  ) {
+  ): Promise<MetaprotcolExtrinsicResult> {
     const tx = await this.reactToVideoCommentTx(memberId, commentId, reactionId)
     return this.sendMetaprotocolMemberExtrinsic(tx, cb)
   }
