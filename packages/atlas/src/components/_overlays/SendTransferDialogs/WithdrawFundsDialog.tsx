@@ -48,7 +48,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
     formState: { errors },
   } = useForm<{ amount: number | null }>()
   const { convertToUSD } = useTokenPrice()
-  const amount = new BN(watch('amount') || 0)
+  const amount = watch('amount') || 0
   const convertedAmount = convertToUSD(new BN(amount))
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
@@ -70,9 +70,9 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
       }
       handleTransaction({
         snackbarSuccessMessage: {
-          title: `${formatNumber(
-            data.amount
-          )} ${JOY_CURRENCY_TICKER} (${convertedAmount}) tokens have been sent over to ${activeMembership.handle}`,
+          title: `${formatNumber(data.amount)} ${JOY_CURRENCY_TICKER} ($${formatNumber(
+            convertedAmount || 0
+          )}) tokens have been sent over to ${activeMembership.handle}`,
         },
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).withdrawFromChannelBalance(

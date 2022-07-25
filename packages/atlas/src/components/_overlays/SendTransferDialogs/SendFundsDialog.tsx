@@ -54,7 +54,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
   } = useForm<{ amount: number | null; account: string | null }>()
   const convertedAmount = convertToUSD(new BN(watch('amount') || 0))
   const account = watch('account')
-  const amount = new BN(watch('amount') || 0)
+  const amount = watch('amount') || 0
   const { fee, loading: feeLoading } = useFee('sendFundsTx', account && amount ? [account, amount] : undefined)
 
   useEffect(() => {
@@ -90,12 +90,9 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
       }
       handleTransaction({
         snackbarSuccessMessage: {
-          title: `${formatNumber(
-            data.amount
-          )} ${JOY_CURRENCY_TICKER} (${convertedAmount}) tokens have been sent over to ${data.account.slice(
-            0,
-            ADDRESS_CHARACTERS_LIMIT
-          )}...
+          title: `${formatNumber(data.amount)} ${JOY_CURRENCY_TICKER} ($${formatNumber(
+            convertedAmount || 0
+          )}) tokens have been sent over to ${data.account.slice(0, ADDRESS_CHARACTERS_LIMIT)}...
           ${data.account.slice(-ADDRESS_CHARACTERS_LIMIT)} wallet address`,
         },
         txFactory: async (updateStatus) =>
@@ -199,12 +196,6 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
                 wrongAddress: (value) => {
                   if (value && value.length < ADDRESS_LENGTH) {
                     return 'Invalid destination account format.'
-                  }
-                  return true
-                },
-                accountNotFound: () => {
-                  if (!destinationAccount) {
-                    return 'Account does not exist.'
                   }
                   return true
                 },

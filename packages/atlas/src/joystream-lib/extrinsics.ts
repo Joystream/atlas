@@ -8,7 +8,7 @@ import {
 import { createType } from '@joystream/types'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
-import BN, { isBN } from 'bn.js'
+import { isBN } from 'bn.js'
 import Long from 'long'
 
 import { SentryLogger } from '@/utils/logs'
@@ -39,6 +39,7 @@ import {
   ChannelInputBuckets,
   ChannelInputMetadata,
   CommentReaction,
+  ExtrinsicResult,
   ExtrinsicStatus,
   ExtrinsicStatusCallbackFn,
   GetEventDataFn,
@@ -784,30 +785,39 @@ export class JoystreamLibExtrinsics {
     return this.sendMetaprotocolMemberExtrinsic(tx, cb)
   }
 
-  async sendFundsTx(destinationAccount: MemberId, value: BN) {
+  async sendFundsTx(destinationAccount: MemberId, value: number) {
     await this.ensureApi()
 
-    return this.api.tx.balances.transfer(destinationAccount, value)
+    return this.api.tx.balances.transfer(destinationAccount, tokenNumberToHapiBn(value))
   }
 
-  async sendFunds(destinationAccount: MemberId, value: BN, cb?: ExtrinsicStatusCallbackFn) {
+  async sendFunds(
+    destinationAccount: MemberId,
+    value: number,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<ExtrinsicResult> {
     const tx = await this.sendFundsTx(destinationAccount, value)
 
-    const { block, transactionHash } = await this.sendExtrinsic(tx, cb)
-    return { block, transactionHash }
+    const { block } = await this.sendExtrinsic(tx, cb)
+    return { block }
   }
 
-  async withdrawFromChannelBalanceTx(memberId: string, channelId: string, amount: BN) {
+  async withdrawFromChannelBalanceTx(memberId: string, channelId: string, amount: number) {
     await this.ensureApi()
     const actor = createActor(memberId)
 
-    return this.api.tx.content.withdrawFromChannelBalance(actor, channelId, amount)
+    return this.api.tx.content.withdrawFromChannelBalance(actor, channelId, tokenNumberToHapiBn(amount))
   }
 
-  async withdrawFromChannelBalance(memberId: string, channelId: string, amount: BN, cb?: ExtrinsicStatusCallbackFn) {
+  async withdrawFromChannelBalance(
+    memberId: string,
+    channelId: string,
+    amount: number,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<ExtrinsicResult> {
     const tx = await this.withdrawFromChannelBalanceTx(memberId, channelId, amount)
 
-    const { block, transactionHash } = await this.sendExtrinsic(tx, cb)
-    return { block, transactionHash }
+    const { block } = await this.sendExtrinsic(tx, cb)
+    return { block }
   }
 }

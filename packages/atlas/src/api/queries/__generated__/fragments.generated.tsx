@@ -15,6 +15,7 @@ export type BasicChannelFieldsFragment = {
   title?: string | null
   createdAt: Date
   follows: number
+  rewardAccount: string
   avatarPhoto?: {
     __typename?: 'StorageDataObject'
     id: string
@@ -43,6 +44,7 @@ export type FullChannelFieldsFragment = {
   title?: string | null
   createdAt: Date
   follows: number
+  rewardAccount: string
   language?: { __typename?: 'Language'; id: string; iso: string } | null
   ownerMember?: {
     __typename?: 'Membership'
@@ -149,6 +151,7 @@ export type FullMembershipFieldsFragment = {
     title?: string | null
     createdAt: Date
     follows: number
+    rewardAccount: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -252,6 +255,7 @@ export type BasicVideoFieldsFragment = {
     title?: string | null
     createdAt: Date
     follows: number
+    rewardAccount: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -358,6 +362,7 @@ export type FullVideoFieldsFragment = {
     title?: string | null
     createdAt: Date
     follows: number
+    rewardAccount: string
     language?: { __typename?: 'Language'; id: string; iso: string } | null
     ownerMember?: {
       __typename?: 'Membership'
@@ -470,6 +475,7 @@ export type FullVideoFieldsFragment = {
       title?: string | null
       createdAt: Date
       follows: number
+      rewardAccount: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -660,6 +666,7 @@ export type FullVideoFieldsFragment = {
         title?: string | null
         createdAt: Date
         follows: number
+        rewardAccount: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -739,6 +746,7 @@ export type FullNftFieldsFragment = {
     title?: string | null
     createdAt: Date
     follows: number
+    rewardAccount: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -929,6 +937,7 @@ export type FullNftFieldsFragment = {
       title?: string | null
       createdAt: Date
       follows: number
+      rewardAccount: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -1339,6 +1348,7 @@ export const BasicChannelFieldsFragmentDoc = gql`
     title
     createdAt
     follows
+    rewardAccount
     avatarPhoto {
       ...StorageDataObjectFields
     }

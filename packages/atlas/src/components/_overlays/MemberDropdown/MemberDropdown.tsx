@@ -132,8 +132,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
 
     const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
     const { url: channelAvatarUrl, isLoadingAsset: isChannelAvatarLoading } = useAsset(selectedChannel?.avatarPhoto)
-
-    const channelBalance = /* useSubscribeAccountBalance(selectedChannel?.rewardAccount) || */ new BN(0) // TODO: fix for Carthage
+    const channelBalance = useSubscribeAccountBalance(selectedChannel?.rewardAccount) || new BN(0)
 
     useEffect(() => {
       transRef.start()

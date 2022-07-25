@@ -1,6 +1,6 @@
 overwrite: true
 
-schema: ${VITE_NEXT_ORION_URL}
+schema: https://atlas-next.joystream.org/orion/graphql
 
 documents:
   - './src/api/queries/**/*.graphql'
