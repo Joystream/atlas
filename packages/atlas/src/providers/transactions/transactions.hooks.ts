@@ -157,7 +157,7 @@ export const useTransaction = (): HandleTransactionFn => {
           const syncCallback = async () => {
             let status: MetaprotocolTransactionSuccessFieldsFragment | undefined = undefined
             try {
-              if (result.transactionHash) {
+              if (result.metaprotocol && result.transactionHash) {
                 status = await getMetaprotocolTxStatus(result.transactionHash)
               }
             } catch (e) {

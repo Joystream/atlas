@@ -47,9 +47,10 @@ export type ExtrinsicResult<T = undefined> = T extends undefined
   ? {
       block: number
       transactionHash?: string
+      metaprotocol?: true
     }
-  : T extends { transactionHash: string }
-  ? { block: number; transactionHash: string } & T
+  : T extends { transactionHash: string; metaprotocol: true }
+  ? { block: number; transactionHash: string; metaprotocol: true } & T
   : { block: number } & T
 
 export type VideoInputMetadata = Omit<
@@ -129,7 +130,7 @@ export type VideoExtrinsicResult = ExtrinsicResult<{
 }>
 export type MemberExtrinsicResult = ExtrinsicResult<{ memberId: MemberId }>
 export type NftExtrinsicResult = ExtrinsicResult
-export type MetaprotcolExtrinsicResult = ExtrinsicResult<{ transactionHash: string }>
+export type MetaprotcolExtrinsicResult = ExtrinsicResult<{ metaprotocol: true; transactionHash: string }>
 
 type TxMethodsFromClass<T> = T extends `${infer _}Tx` ? T : never
 
