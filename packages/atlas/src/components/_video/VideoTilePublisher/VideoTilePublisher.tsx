@@ -20,6 +20,7 @@ import {
 import { absoluteRoutes } from '@/config/routes'
 import { useGetNftSlot } from '@/hooks/useGetNftSlot'
 import { useNftState } from '@/hooks/useNftState'
+import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useVideoContextMenu } from '@/hooks/useVideoContextMenu'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
 import { useMemberAvatar } from '@/providers/assets'
@@ -59,6 +60,7 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
 
     const nftStatus = getNftStatus(video?.nft)
 
+    const { withdrawBid } = useNftTransactions()
     const nftState = useNftState(video?.nft)
     const { auctionPlannedEndDate, englishTimerState, needsSettling, startsAtDate, timerLoading } = nftState
     const nftTilePublisher = useGetNftSlot({
@@ -70,6 +72,7 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
       withNftLabel: true,
       timerLoading,
     })
+    const isAuction = nftStatus?.status === 'auction'
     const contextMenuItems = useVideoContextMenu({
       publisher: true,
       nftState,
@@ -77,12 +80,15 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
       nftActions,
       videoId: video?.id,
       videoHref,
-      buyNowPrice:
-        nftStatus?.status === 'auction' || nftStatus?.status === 'buy-now' ? nftStatus.buyNowPrice : undefined,
-      topBid: nftStatus?.status === 'auction' ? nftStatus.topBidAmount : undefined,
+      buyNowPrice: isAuction || nftStatus?.status === 'buy-now' ? nftStatus.buyNowPrice : undefined,
+      topBid: isAuction ? nftStatus.topBidAmount : undefined,
+      startingPrice: isAuction ? nftStatus.startingPrice : undefined,
       onDeleteVideoClick,
       onEditClick,
       onMintNftClick,
+      onWithdrawBid: () => video?.id && withdrawBid(video?.id),
+      hasBids:
+        isAuction && !!nftStatus.topBidder && !!(isAuction && !nftStatus.topBid?.isCanceled && nftStatus.topBidAmount),
     })
 
     const uploadVideoStatus = useUploadsStore((state) => state.uploadsStatus[video?.media?.id || ''])

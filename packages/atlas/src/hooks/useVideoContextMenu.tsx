@@ -5,6 +5,7 @@ import { ListItemProps } from '@/components/ListItem'
 import { NumberFormat } from '@/components/NumberFormat'
 import {
   SvgActionBid,
+  SvgActionBidCancel,
   SvgActionEdit,
   SvgActionLinkUrl,
   SvgActionMint,
@@ -30,7 +31,10 @@ type VideoContextMenuData = {
   nftState?: ReturnType<typeof useNftState>
   nftActions?: ReturnType<typeof useNftActions>
   buyNowPrice?: number
+  startingPrice?: number
   topBid?: number
+  onWithdrawBid?: () => void
+  hasBids?: boolean
 }
 export const useVideoContextMenu = ({
   videoHref,
@@ -44,7 +48,10 @@ export const useVideoContextMenu = ({
   nftState,
   nftActions,
   buyNowPrice,
+  startingPrice,
   topBid,
+  onWithdrawBid,
+  hasBids,
 }: VideoContextMenuData): ListItemProps[] => {
   const { copyToClipboard } = useClipboard()
 
@@ -59,6 +66,8 @@ export const useVideoContextMenu = ({
       label: 'Copy video URL',
     },
   ]
+
+  const bids = nftState?.bids ? nftState.bids?.filter((bid) => !bid.isCanceled).length : 0
 
   const nftItems: ListItemProps[] = [
     ...(hasNft
@@ -75,17 +84,22 @@ export const useVideoContextMenu = ({
                 },
               ]
             : []),
-          ...(nftState?.canMakeBid
+          ...(nftState?.canMakeBid && !nftState?.canChangeBid
             ? [
                 {
                   nodeStart: <SvgActionBid />,
                   label: 'Place bid',
                   onClick: () => videoId && nftActions?.openNftPurchase(videoId),
-                  caption: topBid ? (
+                  caption: !hasBids ? (
+                    <>
+                      Min:{' '}
+                      <NumberFormat color="inherit" value={startingPrice || 0} as="span" format="short" withToken />
+                    </>
+                  ) : (
                     <>
                       Top: <NumberFormat color="inherit" value={topBid || 0} as="span" format="short" withToken />
                     </>
-                  ) : undefined,
+                  ),
                 },
               ]
             : []),
@@ -107,6 +121,16 @@ export const useVideoContextMenu = ({
                       />
                     </>
                   ) : undefined,
+                },
+              ]
+            : []),
+          ...(nftState?.canReviewBid
+            ? [
+                {
+                  nodeStart: <SvgActionBid />,
+                  label: 'Review bids',
+                  onClick: () => videoId && nftActions?.openNftAcceptBid(videoId),
+                  caption: bids ? `${bids} ${bids > 1 ? 'bids' : 'bid'}` : undefined,
                 },
               ]
             : []),
@@ -152,6 +176,16 @@ export const useVideoContextMenu = ({
                   nodeStart: <SvgActionSell />,
                   onClick: () => nftActions?.openNftPutOnSale(videoId || ''),
                   label: 'Put on sale',
+                },
+              ]
+            : []),
+          ...(nftState?.canWithdrawBid
+            ? [
+                {
+                  nodeStart: <SvgActionBidCancel />,
+                  onClick: onWithdrawBid,
+                  label: 'Withdraw bid',
+                  destructive: true,
                 },
               ]
             : []),

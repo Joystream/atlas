@@ -6,6 +6,7 @@ import { Pill } from '@/components/Pill'
 import { SvgIllustrativePlay } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useNftState } from '@/hooks/useNftState'
+import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useVideoContextMenu } from '@/hooks/useVideoContextMenu'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
 import { useNftActions } from '@/providers/nftActions'
@@ -34,6 +35,7 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, details
   const channelHref = absoluteRoutes.viewer.channel(video?.channel.id)
   const nftState = useNftState(video?.nft)
   const nftActions = useNftActions()
+  const { withdrawBid } = useNftTransactions()
   const auction = video?.nft?.transactionalStatusAuction
   const contextMenuItems = useVideoContextMenu({
     publisher: false,
@@ -44,6 +46,10 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, details
     videoHref,
     topBid: auction?.topBid?.amount ? Number(auction?.topBid?.amount) : undefined,
     buyNowPrice: auction?.buyNowPrice ? Number(auction?.buyNowPrice) : undefined,
+    startingPrice: auction?.startingPrice ? Number(auction?.startingPrice) : undefined,
+    onWithdrawBid: () => video?.id && withdrawBid(video?.id),
+    hasBids:
+      !!auction && !!auction.topBid?.bidder && !!(auction && !auction.topBid?.isCanceled && auction.topBid.amount),
   })
 
   return (

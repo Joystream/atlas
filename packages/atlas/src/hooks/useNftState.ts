@@ -56,6 +56,7 @@ export const useNftState = (nft?: FullNftFieldsFragment | null) => {
   const canCancelSale = isOwner && ((englishAuction && !auction.bids.length) || openAuction || isBuyNow)
   const canWithdrawBid = auction?.isCompleted || (openAuction && userBid && currentBlock >= (userBidUnlockBlock ?? 0))
   const canChangePrice = isBuyNow && isOwner
+  const canReviewBid = openAuction && auction?.topBid && !auction?.topBid.isCanceled
 
   const canChangeBid = !auction?.isCompleted && auction?.auctionType.__typename === 'AuctionTypeOpen' && userBid
 
@@ -75,6 +76,7 @@ export const useNftState = (nft?: FullNftFieldsFragment | null) => {
     canCancelSale: !!canCancelSale,
     canPutOnSale: !!canPutOnSale,
     canChangePrice: canChangePrice,
+    canReviewBid,
     needsSettling: !!needsSettling,
     canWithdrawBid: !!canWithdrawBid,
     auctionPlannedEndDate,
@@ -93,6 +95,7 @@ export const useNftState = (nft?: FullNftFieldsFragment | null) => {
     videoId: nft?.video.id,
     userBid,
     userBidUnlockDate,
+    bids: auction?.bids,
     auction,
     startsAtDate,
     saleType,

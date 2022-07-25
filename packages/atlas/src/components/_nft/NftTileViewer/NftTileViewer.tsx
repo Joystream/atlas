@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router'
 import { useNft } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { useNftState } from '@/hooks/useNftState'
+import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useVideoContextMenu } from '@/hooks/useVideoContextMenu'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useNftActions } from '@/providers/nftActions'
@@ -22,9 +23,11 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
   const creatorAvatar = useAsset(nft?.video.channel.avatarPhoto)
   const nftState = useNftState(nft)
   const { auctionPlannedEndDate, needsSettling, startsAtDate, englishTimerState, timerLoading } = nftState
+  const { withdrawBid } = useNftTransactions()
 
   const { url: ownerMemberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
 
+  const isAuction = nftStatus?.status === 'auction'
   const contextMenuItems = useVideoContextMenu({
     publisher: false,
     nftState,
@@ -32,8 +35,12 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
     nftActions,
     videoId: nftId,
     videoHref: absoluteRoutes.viewer.video(nftId),
-    topBid: nftStatus?.status === 'auction' ? nftStatus.topBidAmount : undefined,
-    buyNowPrice: nftStatus?.status === 'auction' || nftStatus?.status === 'buy-now' ? nftStatus.buyNowPrice : undefined,
+    topBid: isAuction ? nftStatus.topBidAmount : undefined,
+    buyNowPrice: isAuction || nftStatus?.status === 'buy-now' ? nftStatus.buyNowPrice : undefined,
+    startingPrice: isAuction ? nftStatus.startingPrice : undefined,
+    onWithdrawBid: () => nftId && withdrawBid(nftId),
+    hasBids:
+      isAuction && !!nftStatus.topBidder && !!(isAuction && !nftStatus.topBid?.isCanceled && nftStatus.topBidAmount),
   })
 
   const nftCommonProps: NftTileProps = {
