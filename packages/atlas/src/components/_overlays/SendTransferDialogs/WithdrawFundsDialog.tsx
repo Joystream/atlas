@@ -1,4 +1,3 @@
-import BN from 'bn.js'
 import { FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -15,7 +14,7 @@ import { JOY_CURRENCY_TICKER } from '@/config/joystream'
 import { useFee } from '@/hooks/useFee'
 import { useJoystream, useTokenPrice } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions'
-import { formatNumber } from '@/utils/number'
+import { formatNumber, tokenNumberToHapiBn } from '@/utils/number'
 
 import { Summary, SummaryRow, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
 
@@ -49,7 +48,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
   } = useForm<{ amount: number | null }>()
   const { convertToUSD } = useTokenPrice()
   const amount = watch('amount') || 0
-  const convertedAmount = convertToUSD(new BN(amount))
+  const convertedAmount = convertToUSD(tokenNumberToHapiBn(amount) || 0)
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { fee, loading: feeLoading } = useFee(
@@ -101,16 +100,14 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
       </Text>
       <VerticallyCenteredDiv>
         <JoyTokenIcon variant="gray" />
-        <Text as="p" variant="h400" margin={{ left: 1 }}>
-          {channelBalance || 0}
-        </Text>
+        <NumberFormat value={channelBalance || 0} as="p" variant="h400" margin={{ left: 1 }} format="short" />
       </VerticallyCenteredDiv>
       <NumberFormat
         as="p"
         color="colorText"
         format="dollar"
         variant="t100"
-        value={convertToUSD(new BN(channelBalance)) || 0}
+        value={convertToUSD(tokenNumberToHapiBn(parseFloat(channelBalance?.toFixed(2)))) || 0}
         margin={{ top: 1, bottom: 6 }}
       />
       <FormField label="Amount to withdraw" error={errors.amount?.message}>

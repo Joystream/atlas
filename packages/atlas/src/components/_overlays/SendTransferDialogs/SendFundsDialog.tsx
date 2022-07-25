@@ -25,7 +25,7 @@ import { useMemberAvatar } from '@/providers/assets'
 import { useJoystream, useTokenPrice } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions'
 import { SentryLogger } from '@/utils/logs'
-import { formatNumber } from '@/utils/number'
+import { formatNumber, tokenNumberToHapiBn } from '@/utils/number'
 
 import { FormFieldsWrapper, LabelFlexWrapper, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
 
@@ -52,7 +52,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
     setValue,
     formState: { errors },
   } = useForm<{ amount: number | null; account: string | null }>()
-  const convertedAmount = convertToUSD(new BN(watch('amount') || 0))
+  const convertedAmount = convertToUSD(tokenNumberToHapiBn(watch('amount') || 0))
   const account = watch('account')
   const amount = watch('amount') || 0
   const { fee, loading: feeLoading } = useFee('sendFundsTx', account && amount ? [account, amount] : undefined)
