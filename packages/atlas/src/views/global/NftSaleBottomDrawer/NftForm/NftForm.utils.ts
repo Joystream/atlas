@@ -12,7 +12,8 @@ export const createValidationSchema = (
   maxStartDate: Date,
   maxEndDate: Date,
   listingType: Listing,
-  minStartingPrice: number
+  minStartingPrice: number,
+  maxStartingPrice: number
 ) => {
   const auctionDateType = z
     .union([
@@ -38,6 +39,7 @@ export const createValidationSchema = (
   const startingPriceBase = z
     .number({ invalid_type_error: 'Minimum bid must be a number.' })
     .min(minStartingPrice, `Minimum bid must be at least ${minStartingPrice}.`)
+    .max(maxStartingPrice, `Minimum bid cannot be higher than ${maxStartingPrice}`)
 
   return z.object({
     startDate: auctionDateType

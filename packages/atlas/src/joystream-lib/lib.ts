@@ -6,6 +6,7 @@ import { proxy } from 'comlink'
 
 import { NFT_PERBILL_PERCENT } from '@/joystream-lib/config'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { hapiBnToTokenNumber } from '@/utils/number'
 
 import { JoystreamLibError } from './errors'
 import { JoystreamLibExtrinsics } from './extrinsics'
@@ -108,6 +109,7 @@ export class JoystreamLib {
     const [
       maxAuctionDuration,
       minStartingPrice,
+      maxStartingPrice,
       auctionStartsAtMaxDelta,
       maxCreatorRoyalty,
       minCreatorRoyalty,
@@ -115,6 +117,7 @@ export class JoystreamLib {
     ] = await Promise.all([
       this.api.query.content.maxAuctionDuration(),
       this.api.query.content.minStartingPrice(),
+      this.api.query.content.maxStartingPrice(),
       this.api.query.content.auctionStartsAtMaxDelta(),
       this.api.query.content.maxCreatorRoyalty(),
       this.api.query.content.minCreatorRoyalty(),
@@ -123,7 +126,8 @@ export class JoystreamLib {
 
     return {
       maxAuctionDuration: maxAuctionDuration.toNumber(),
-      minStartingPrice: minStartingPrice.toNumber(),
+      minStartingPrice: hapiBnToTokenNumber(minStartingPrice),
+      maxStartingPrice: hapiBnToTokenNumber(maxStartingPrice),
       auctionStartsAtMaxDelta: auctionStartsAtMaxDelta.toNumber(),
       maxCreatorRoyalty: maxCreatorRoyalty.toNumber() / NFT_PERBILL_PERCENT,
       minCreatorRoyalty: minCreatorRoyalty.toNumber() / NFT_PERBILL_PERCENT,

@@ -75,7 +75,14 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
     mode: 'onChange',
     resolver: (data, ctx, options) => {
       const resolver = zodResolver(
-        createValidationSchema(data, maxStartDate, maxEndDate, listingType, chainState.nftMinStartingPrice)
+        createValidationSchema(
+          data,
+          maxStartDate,
+          maxEndDate,
+          listingType,
+          chainState.nftMinStartingPrice,
+          chainState.nftMaxStartingPrice
+        )
       )
       return resolver(data, ctx, options)
     },
