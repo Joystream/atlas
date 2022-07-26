@@ -18,12 +18,12 @@ import {
 import { useLocation } from 'react-router'
 
 import {
-  GetDistributionBucketsWithOperatorsDocument,
-  GetDistributionBucketsWithOperatorsQuery,
-  GetDistributionBucketsWithOperatorsQueryVariables,
-  GetStorageBucketsDocument,
-  GetStorageBucketsQuery,
-  GetStorageBucketsQueryVariables,
+  GetDistributionBucketsWithBagsDocument,
+  GetDistributionBucketsWithBagsQuery,
+  GetDistributionBucketsWithBagsQueryVariables,
+  GetStorageBucketsWithBagsDocument,
+  GetStorageBucketsWithBagsQuery,
+  GetStorageBucketsWithBagsQueryVariables,
 } from '@/api/queries'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ASSET_MIN_DISTRIBUTOR_REFETCH_TIME } from '@/config/assets'
@@ -70,10 +70,10 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
     const now = new Date()
     let userCoordinates: UserCoordinates | null = null
     const distributionOperatorsPromise = client.query<
-      GetDistributionBucketsWithOperatorsQuery,
-      GetDistributionBucketsWithOperatorsQueryVariables
+      GetDistributionBucketsWithBagsQuery,
+      GetDistributionBucketsWithBagsQueryVariables
     >({
-      query: GetDistributionBucketsWithOperatorsDocument,
+      query: GetDistributionBucketsWithBagsDocument,
       fetchPolicy: 'network-only',
     })
     if ((!coordinates || !expiry || now.getTime() > expiry) && !disableUserLocation) {
@@ -138,8 +138,11 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
   }, [client, coordinates, disableUserLocation, expiry, setUserLocation])
 
   const fetchStorageOperators = useCallback(() => {
-    const storageOperatorsPromise = client.query<GetStorageBucketsQuery, GetStorageBucketsQueryVariables>({
-      query: GetStorageBucketsDocument,
+    const storageOperatorsPromise = client.query<
+      GetStorageBucketsWithBagsQuery,
+      GetStorageBucketsWithBagsQueryVariables
+    >({
+      query: GetStorageBucketsWithBagsDocument,
       fetchPolicy: 'network-only',
     })
     storageOperatorsMappingPromiseRef.current = storageOperatorsPromise.then((result) => {
