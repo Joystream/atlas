@@ -23,7 +23,7 @@ import {
 } from '@/components/_overlays/ImageCropModal'
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
-import { useFee } from '@/hooks/useFee'
+import { useBloatFeesAndPerMbFees, useFee } from '@/hooks/useFee'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib'
 import { useAsset, useAssetStore, useOperatorsContext, useRawAsset } from '@/providers/assets'
@@ -191,7 +191,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const channelMetadata = createChannelMetadata(watch())
   const channelAssets = createChannelAssets()
 
-  const { channelStateBloatBondValue, dataObjectStateBloatBondValue } = useFee('createChannelTx')
+  const { channelStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
 
   const { fullFee: updateChannelFee, loading: updateChannelFeeLoading } = useFee(
     'updateChannelTx',

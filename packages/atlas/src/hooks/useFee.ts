@@ -12,7 +12,7 @@ import { hapiBnToTokenNumber } from '@/utils/number'
 
 import { useSubscribeAccountBalance } from './useSubscribeAccountBalance'
 
-const useBloatFeesAndPerMbFees = (assets?: VideoInputAssets | ChannelInputAssets) => {
+export const useBloatFeesAndPerMbFees = (assets?: VideoInputAssets | ChannelInputAssets) => {
   const {
     chainState: {
       dataObjectPerMegabyteFee,
@@ -67,13 +67,8 @@ export const useFee = <TFnName extends TxMethodName, TArgs extends Parameters<Jo
 ) => {
   const { joystream } = useJoystream()
 
-  const {
-    totalFeePerMb,
-    totalStateBloatBondFee,
-    channelStateBloatBondValue,
-    videoStateBloatBondValue,
-    dataObjectStateBloatBondValue,
-  } = useBloatFeesAndPerMbFees(assets)
+  const { totalFeePerMb, totalStateBloatBondFee, channelStateBloatBondValue, videoStateBloatBondValue } =
+    useBloatFeesAndPerMbFees(assets)
 
   const accountBalance = useSubscribeAccountBalance()
   const [fullFee, setFullfee] = useState(0)
@@ -142,9 +137,6 @@ export const useFee = <TFnName extends TxMethodName, TArgs extends Parameters<Jo
   return {
     fullFee,
     getBasicFee,
-    dataObjectStateBloatBondValue,
-    channelStateBloatBondValue,
-    videoStateBloatBondValue,
     hasEnoughFunds: fullFee > (accountBalance || 0),
     loading,
   }

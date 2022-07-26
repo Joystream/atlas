@@ -8,7 +8,7 @@ import {
   GetFullVideosConnectionQueryVariables,
   VideoOrderByInput,
 } from '@/api/queries'
-import { useFee } from '@/hooks/useFee'
+import { useBloatFeesAndPerMbFees } from '@/hooks/useFee'
 import { VideoExtrinsicResult, VideoInputAssets } from '@/joystream-lib'
 import { useAssetStore } from '@/providers/assets'
 import { useDraftStore } from '@/providers/drafts'
@@ -38,7 +38,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
   const removeDrafts = useDraftStore((state) => state.actions.removeDrafts)
   const { tabData } = useVideoWorkspaceData()
 
-  const { videoStateBloatBondValue, dataObjectStateBloatBondValue } = useFee('createVideoCommentTx')
+  const { videoStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
 
   const isEdit = !editedVideoInfo?.isDraft
 
