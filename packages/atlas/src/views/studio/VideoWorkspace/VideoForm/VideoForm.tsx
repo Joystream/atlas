@@ -23,7 +23,7 @@ import { TextArea } from '@/components/_inputs/TextArea'
 import { languages } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
-import { useBloatFeesAndPerMbFees, useFee } from '@/hooks/useFee'
+import { useFee } from '@/hooks/useFee'
 import { NftIssuanceInputMetadata, VideoInputAssets, VideoInputMetadata } from '@/joystream-lib'
 import { useRawAssetResolver } from '@/providers/assets'
 import { useConfirmationModal } from '@/providers/confirmationModal'
@@ -223,7 +223,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const nftMetadata = createNftInputMetadata(getValues())
   const assets = createBasicVideoInputAssetsInfo(getValues('assets'))
 
-  const { videoStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees(assets)
+  const { videoStateBloatBondValue, dataObjectStateBloatBondValue } = useFee('createVideoTx')
 
   const isSigned = memberId && channelId
   const { fullFee: createVideoFee, loading: createVideoFeeLoading } = useFee(
