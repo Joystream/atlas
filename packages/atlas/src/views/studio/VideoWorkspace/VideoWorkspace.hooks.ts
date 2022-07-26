@@ -8,6 +8,7 @@ import {
   GetFullVideosConnectionQueryVariables,
   VideoOrderByInput,
 } from '@/api/queries'
+import { useBloatFeesAndPerMbFees } from '@/hooks/useFee'
 import { VideoExtrinsicResult, VideoInputAssets } from '@/joystream-lib'
 import { useAssetStore } from '@/providers/assets'
 import { useDraftStore } from '@/providers/drafts'
@@ -36,6 +37,8 @@ export const useHandleVideoWorkspaceSubmit = () => {
   const addAsset = useAssetStore((state) => state.actions.addAsset)
   const removeDrafts = useDraftStore((state) => state.actions.removeDrafts)
   const { tabData } = useVideoWorkspaceData()
+
+  const { videoStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
 
   const isEdit = !editedVideoInfo?.isDraft
 
@@ -149,7 +152,16 @@ export const useHandleVideoWorkspaceSubmit = () => {
           isNew
             ? (
                 await joystream.extrinsics
-              ).createVideo(memberId, channelId, data.metadata, data.nftMetadata, assets, proxyCallback(updateStatus))
+              ).createVideo(
+                memberId,
+                channelId,
+                data.metadata,
+                data.nftMetadata,
+                assets,
+                dataObjectStateBloatBondValue,
+                videoStateBloatBondValue,
+                proxyCallback(updateStatus)
+              )
             : (
                 await joystream.extrinsics
               ).updateVideo(
@@ -158,6 +170,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
                 data.metadata,
                 data.nftMetadata,
                 assets,
+                dataObjectStateBloatBondValue,
                 proxyCallback(updateStatus)
               ),
         onTxSync: refetchDataAndUploadAssets,
@@ -174,23 +187,25 @@ export const useHandleVideoWorkspaceSubmit = () => {
       }
     },
     [
-      channelId,
-      memberId,
-      addAsset,
-      client,
-      editedVideoInfo.id,
-      handleTransaction,
-      isEdit,
-      isNftMintDismissed,
       joystream,
-      proxyCallback,
-      removeDrafts,
-      setEditedVideo,
-      setIsWorkspaceOpen,
-      setShowFistMintDialog,
-      startFileUpload,
-      tabData?.assets.thumbnail.cropId,
+      isEdit,
+      handleTransaction,
       tabData?.assets.video.id,
+      tabData?.assets.thumbnail.cropId,
+      startFileUpload,
+      channelId,
+      client,
+      addAsset,
+      setEditedVideo,
+      removeDrafts,
+      editedVideoInfo.id,
+      memberId,
+      dataObjectStateBloatBondValue,
+      videoStateBloatBondValue,
+      proxyCallback,
+      setIsWorkspaceOpen,
+      isNftMintDismissed,
+      setShowFistMintDialog,
     ]
   )
 

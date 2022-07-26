@@ -23,7 +23,7 @@ import {
 } from '@/components/_overlays/ImageCropModal'
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
-import { useFee } from '@/hooks/useFee'
+import { useBloatFeesAndPerMbFees, useFee } from '@/hooks/useFee'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib'
 import { useAsset, useAssetStore, useOperatorsContext, useRawAsset } from '@/providers/assets'
@@ -191,13 +191,16 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const channelMetadata = createChannelMetadata(watch())
   const channelAssets = createChannelAssets()
 
-  const { fee: updateChannelFee, loading: updateChannelFeeLoading } = useFee(
+  const { channelStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
+
+  const { fullFee: updateChannelFee, loading: updateChannelFeeLoading } = useFee(
     'updateChannelTx',
     channelId && memberId && channelMetadata && isDirty && !newChannel
-      ? [channelId, memberId, channelMetadata, channelAssets]
-      : undefined
+      ? [channelId, memberId, channelMetadata, channelAssets, dataObjectStateBloatBondValue]
+      : undefined,
+    channelAssets
   )
-  const { fee: createChannelFee, loading: createChannelFeeLoading } = useFee(
+  const { fullFee: createChannelFee, loading: createChannelFeeLoading } = useFee(
     'createChannelTx',
     memberId && channelMetadata && newChannel
       ? [
@@ -206,8 +209,11 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
           channelAssets,
           // TODO: use basic buckets config for fee estimation
           { storage: [0], distribution: [{ distributionBucketFamilyId: 0, distributionBucketIndex: 0 }] },
+          dataObjectStateBloatBondValue,
+          channelStateBloatBondValue,
         ]
-      : undefined
+      : undefined,
+    channelAssets
   )
 
   useEffect(() => {
@@ -392,10 +398,25 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
         newChannel
           ? (
               await joystream.extrinsics
-            ).createChannel(memberId, metadata, assets, getBucketsConfigForNewChannel(), proxyCallback(updateStatus))
+            ).createChannel(
+              memberId,
+              metadata,
+              assets,
+              getBucketsConfigForNewChannel(),
+              dataObjectStateBloatBondValue,
+              channelStateBloatBondValue,
+              proxyCallback(updateStatus)
+            )
           : (
               await joystream.extrinsics
-            ).updateChannel(channelId ?? '', memberId, metadata, assets, proxyCallback(updateStatus)),
+            ).updateChannel(
+              channelId ?? '',
+              memberId,
+              metadata,
+              assets,
+              dataObjectStateBloatBondValue,
+              proxyCallback(updateStatus)
+            ),
       onTxSync: refetchDataAndUploadAssets,
     })
 

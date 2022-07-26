@@ -71,18 +71,18 @@ export const Comment: FC<CommentProps> = memo(
     const [reactionFee, setReactionFee] = useState<undefined | number>(0)
     const [openModal, closeModal] = useConfirmationModal()
     const { reactToComment, deleteComment, moderateComment, updateComment, addComment } = useReactionTransactions()
-    const { fee: replyCommentFee, loading: replyCommentFeeLoading } = useFee(
+    const { fullFee: replyCommentFee, loading: replyCommentFeeLoading } = useFee(
       'createVideoCommentTx',
       memberId && video?.id && replyCommentInputText && comment?.id !== undefined
         ? [memberId, video?.id, replyCommentInputText, comment?.id || null]
         : undefined
     )
 
-    const { fee: editVideoFee, loading: editVideoFeeLoading } = useFee(
+    const { fullFee: editVideoFee, loading: editVideoFeeLoading } = useFee(
       'editVideoCommentTx',
       memberId && comment?.id ? [memberId, comment?.id, editCommentInputText] : undefined
     )
-    const { calculateFee: getReactToVideoCommentFee } = useFee('reactToVideoCommentTx')
+    const { getBasicFee: getReactToVideoCommentFee } = useFee('reactToVideoCommentTx')
 
     const handleDeleteComment = (comment: CommentFieldsFragment) => {
       const isChannelOwner = video?.channel.ownerMember?.id === memberId && comment.author.id !== memberId

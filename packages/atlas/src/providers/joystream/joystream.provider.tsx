@@ -127,6 +127,10 @@ const useJoystreamUtilFns = () => {
 }
 
 type JoystreamChainState = {
+  dataObjectPerMegabyteFee: number
+  dataObjectStateBloatBondValue: number
+  videoStateBloatBondValue: number
+  channelStateBloatBondValue: number
   nftMinStartingPrice: number
   nftMaxAuctionDuration: number
   nftAuctionStartsAtMaxDelta: number
@@ -136,6 +140,10 @@ type JoystreamChainState = {
 }
 const useJoystreamChainState = (joystream: Remote<JoystreamLib> | undefined) => {
   const [chainState, setChainState] = useState<JoystreamChainState>({
+    dataObjectPerMegabyteFee: 0,
+    dataObjectStateBloatBondValue: 0,
+    videoStateBloatBondValue: 0,
+    channelStateBloatBondValue: 0,
     nftMinStartingPrice: 1,
     nftMaxAuctionDuration: 1_296_000,
     nftAuctionStartsAtMaxDelta: 432_000,
@@ -149,6 +157,10 @@ const useJoystreamChainState = (joystream: Remote<JoystreamLib> | undefined) => 
 
     joystream.getNftChainState().then((nftChainState) =>
       setChainState({
+        dataObjectPerMegabyteFee: nftChainState.dataObjectPerMegabyteFee,
+        dataObjectStateBloatBondValue: nftChainState.dataObjectStateBloatBondValue,
+        videoStateBloatBondValue: nftChainState.videoStateBloatBondValue,
+        channelStateBloatBondValue: nftChainState.channelStateBloatBondValue,
         nftMaxAuctionDuration: nftChainState.maxAuctionDuration,
         nftMinStartingPrice: Math.max(nftChainState.minStartingPrice, 1),
         nftAuctionStartsAtMaxDelta: nftChainState.auctionStartsAtMaxDelta,
