@@ -93,7 +93,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
     formState: { isValid },
   } = formMethods
 
-  const { video, loading: loadingVideo } = useFullVideo(videoId, { fetchPolicy: 'cache-only' })
+  const { video, loading: loadingVideo } = useFullVideo(videoId, { fetchPolicy: 'cache-first' })
 
   const { url: channelAvatarUrl } = useAsset(video?.channel.avatarPhoto)
   const { url: thumbnailPhotoUrl } = useAsset(video?.thumbnailPhoto)
