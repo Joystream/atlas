@@ -1,12 +1,15 @@
-import { FC, useCallback } from 'react'
+import { FC } from 'react'
 import { useNavigate } from 'react-router'
 
-import { useBasicVideo } from '@/api/hooks'
+import { useFullVideo } from '@/api/hooks'
 import { Pill } from '@/components/Pill'
-import { SvgActionCopy, SvgIllustrativePlay } from '@/components/_icons'
+import { SvgIllustrativePlay } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
-import { useClipboard } from '@/hooks/useClipboard'
+import { useNftState } from '@/hooks/useNftState'
+import { useNftTransactions } from '@/hooks/useNftTransactions'
+import { useVideoContextMenu } from '@/hooks/useVideoContextMenu'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
+import { useNftActions } from '@/providers/nftActions'
 import { SentryLogger } from '@/utils/logs'
 import { formatDurationShort } from '@/utils/time'
 
@@ -21,20 +24,33 @@ type VideoTileViewerProps = {
 }
 
 export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, detailsVariant, direction }) => {
-  const { copyToClipboard } = useClipboard()
   const navigate = useNavigate()
-  const { video, loading } = useBasicVideo(id ?? '', {
+  const { video, loading } = useFullVideo(id ?? '', {
     skip: !id,
     onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTile', error, { video: { id } }),
   })
   const { avatarPhotoUrl, isLoadingAvatar, isLoadingThumbnail, thumbnailPhotoUrl, videoHref } =
     useVideoTileSharedLogic(video)
 
-  const handleCopyVideoURLClick = useCallback(() => {
-    copyToClipboard(videoHref ? location.origin + videoHref : '', 'Video URL copied to clipboard')
-  }, [videoHref, copyToClipboard])
-
   const channelHref = absoluteRoutes.viewer.channel(video?.channel.id)
+  const nftState = useNftState(video?.nft)
+  const nftActions = useNftActions()
+  const { withdrawBid } = useNftTransactions()
+  const auction = video?.nft?.transactionalStatusAuction
+  const contextMenuItems = useVideoContextMenu({
+    publisher: false,
+    nftState,
+    hasNft: !!video?.nft,
+    nftActions,
+    videoId: video?.id,
+    videoHref,
+    topBid: auction?.topBid?.amount ? Number(auction?.topBid?.amount) : undefined,
+    buyNowPrice: auction?.buyNowPrice ? Number(auction?.buyNowPrice) : undefined,
+    startingPrice: auction?.startingPrice ? Number(auction?.startingPrice) : undefined,
+    onWithdrawBid: () => video?.id && withdrawBid(video?.id),
+    hasBids:
+      !!auction && !!auction.topBid?.bidder && !!(auction && !auction.topBid?.isCanceled && auction.topBid.amount),
+  })
 
   return (
     <VideoTile
@@ -69,13 +85,7 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, details
       loadingAvatar={isLoadingAvatar}
       channelTitle={video?.channel?.title}
       videoTitle={video?.title}
-      kebabMenuItems={[
-        {
-          nodeStart: <SvgActionCopy />,
-          onClick: handleCopyVideoURLClick,
-          label: 'Copy video URL',
-        },
-      ]}
+      kebabMenuItems={contextMenuItems}
       direction={direction}
     />
   )
