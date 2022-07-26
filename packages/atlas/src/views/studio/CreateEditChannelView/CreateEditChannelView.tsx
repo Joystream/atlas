@@ -28,7 +28,7 @@ import { useHeadTags } from '@/hooks/useHeadTags'
 import { ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib'
 import { useAsset, useAssetStore, useOperatorsContext, useRawAsset } from '@/providers/assets'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
-import { useJoystream } from '@/providers/joystream'
+import { useBucketsConfigForNewChannel, useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions'
 import { useUploadsStore } from '@/providers/uploadsManager'
@@ -84,6 +84,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
 
   const { memberId, accountId, channelId, setActiveUser, refetchUserMemberships } = useUser()
   const { joystream, proxyCallback } = useJoystream()
+  const getBucketsConfigForNewChannel = useBucketsConfigForNewChannel()
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
@@ -203,7 +204,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
           memberId,
           channelMetadata,
           channelAssets,
-          // TODO: provide better values
+          // TODO: use basic buckets config for fee estimation
           { storage: [0], distribution: [{ distributionBucketFamilyId: 0, distributionBucketIndex: 0 }] },
         ]
       : undefined
@@ -391,13 +392,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
         newChannel
           ? (
               await joystream.extrinsics
-            ).createChannel(
-              memberId,
-              metadata,
-              assets,
-              { storage: [0], distribution: [{ distributionBucketFamilyId: 0, distributionBucketIndex: 0 }] }, // TODO: provide better values
-              proxyCallback(updateStatus)
-            )
+            ).createChannel(memberId, metadata, assets, getBucketsConfigForNewChannel(), proxyCallback(updateStatus))
           : (
               await joystream.extrinsics
             ).updateChannel(channelId ?? '', memberId, metadata, assets, proxyCallback(updateStatus)),

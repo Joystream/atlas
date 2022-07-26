@@ -1,5 +1,5 @@
-query GetDistributionBucketsWithOperators {
-  distributionBuckets(limit: 50, where: { distributing_eq: true }) {
+query GetDistributionBucketsWithBags {
+  distributionBuckets(limit: 500, where: { distributing_eq: true }) {
     id
     bags {
       id
@@ -10,9 +10,9 @@ query GetDistributionBucketsWithOperators {
   }
 }
 
-query GetStorageBuckets {
+query GetStorageBucketsWithBags {
   storageBuckets(
-    limit: 50
+    limit: 500
     where: {
       operatorStatus_json: { isTypeOf_eq: "StorageBucketOperatorStatusActive" }
       operatorMetadata: { nodeEndpoint_contains: "http" }
@@ -25,5 +25,21 @@ query GetStorageBuckets {
     bags {
       id
     }
+  }
+}
+
+query GetBasicDistributionBuckets {
+  distributionBuckets(limit: 500, where: { acceptingNewBags_eq: true }) {
+    id
+    bucketIndex
+    family {
+      id
+    }
+  }
+}
+
+query GetBasicStorageBuckets {
+  storageBuckets(limit: 500, where: { acceptingNewBags_eq: true }) {
+    id
   }
 }
