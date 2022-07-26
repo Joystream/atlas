@@ -19,6 +19,7 @@ import {
 
 export type DialogButtonProps = {
   text: string
+  onClick?: (e?: MouseEvent) => void
 } & Omit<ButtonProps, 'children'>
 
 export type DialogProps = PropsWithChildren<{
@@ -30,7 +31,6 @@ export type DialogProps = PropsWithChildren<{
   additionalActionsNode?: ReactNode
   additionalActionsNodeMobilePosition?: 'top' | 'bottom'
   onExitClick?: () => void
-  onEscPress?: () => void
   onSubmit?: (e?: FormEvent) => void
   noContentPadding?: boolean
   actionDivider?: boolean

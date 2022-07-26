@@ -94,7 +94,7 @@ export const MobileSettings: FC<MobileSettingsProps> = ({ onSettingClick, opened
       secondaryButton={{
         text: 'Close',
         onClick: (event) => {
-          event.stopPropagation()
+          event?.stopPropagation()
           onClose()
         },
       }}

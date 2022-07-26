@@ -14,9 +14,10 @@ export type ModalProps = PropsWithChildren<{
   noBoxShadow?: boolean
   size?: ModalSize
   onClickOutside?: (event?: MouseEvent) => void
+  onEscPress?: () => void
   className?: string
 }> &
-  Pick<DialogProps, 'onExitClick' | 'onEscPress'>
+  Pick<DialogProps, 'onExitClick'>
 
 export const Modal: FC<ModalProps> = ({
   children,

@@ -143,7 +143,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
         />
         <SendFundsDialog
           show={showSendDialog}
-          onExitClick={() => setShowWithdrawDialog(false)}
+          onExitClick={() => setShowSendDialog(false)}
           accountBalance={accountBalance}
         />
         <Container ref={ref}>
