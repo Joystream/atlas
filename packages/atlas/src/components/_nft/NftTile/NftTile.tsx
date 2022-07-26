@@ -31,7 +31,7 @@ export type NftTileProps = {
   englishTimerState?: EnglishTimerState
   startsAtDate?: Date
   auctionPlannedEndDate?: Date
-  contextMenuItems: ListItemProps[]
+  contextMenuItems?: ListItemProps[]
 }
 
 export const NftTile: FC<NftTileProps> = ({

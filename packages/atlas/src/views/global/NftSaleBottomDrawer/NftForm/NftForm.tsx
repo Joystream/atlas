@@ -275,7 +275,6 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
     views: video?.views,
     buyNowPrice: watch('buyNowPrice') || 0,
     startingPrice: watch('startingPrice') || 0,
-    contextMenuItems: [],
   }
 
   const stepsContent = [

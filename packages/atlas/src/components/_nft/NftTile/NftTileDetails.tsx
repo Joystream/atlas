@@ -41,7 +41,7 @@ export type NftTileDetailsProps = {
   hovered?: boolean
   interactable?: boolean
   videoHref?: string
-  contextMenuItems: ListItemProps[]
+  contextMenuItems?: ListItemProps[]
 }
 
 type TileSize = 'small' | 'medium'
@@ -177,21 +177,23 @@ export const NftTileDetails: FC<NftTileDetailsProps> = ({
               : []),
           ]}
         />
-        <div
-          onClick={(e) => {
-            e.stopPropagation()
-            e.preventDefault()
-          }}
-        >
-          <ContextMenu
-            placement="bottom-end"
-            disabled={loading}
-            items={contextMenuItems}
-            trigger={
-              <KebabMenuButtonIcon icon={<SvgActionMore />} variant="tertiary" size="small" isActive={!loading} />
-            }
-          />
-        </div>
+        {contextMenuItems && (
+          <div
+            onClick={(e) => {
+              e.stopPropagation()
+              e.preventDefault()
+            }}
+          >
+            <ContextMenu
+              placement="bottom-end"
+              disabled={loading}
+              items={contextMenuItems}
+              trigger={
+                <KebabMenuButtonIcon icon={<SvgActionMore />} variant="tertiary" size="small" isActive={!loading} />
+              }
+            />
+          </div>
+        )}
       </Header>
       {loading ? (
         <SkeletonLoader width="55.6%" height={24} />
