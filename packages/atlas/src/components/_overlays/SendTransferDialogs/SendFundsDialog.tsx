@@ -55,7 +55,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
   const convertedAmount = convertToUSD(tokenNumberToHapiBn(watch('amount') || 0))
   const account = watch('account')
   const amount = watch('amount') || 0
-  const { fee, loading: feeLoading } = useFee('sendFundsTx', account && amount ? [account, amount] : undefined)
+  const { fullFee, loading: feeLoading } = useFee('sendFundsTx', account && amount ? [account, amount] : undefined)
 
   useEffect(() => {
     if (!show) {
@@ -114,7 +114,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
       onExitClick={onExitClick}
       primaryButton={{ text: 'Send', onClick: handleSendFounds }}
       secondaryButton={{ text: 'Cancel', onClick: onExitClick }}
-      additionalActionsNode={<Fee loading={feeLoading} variant="h200" amount={fee} />}
+      additionalActionsNode={<Fee loading={feeLoading} variant="h200" amount={fullFee} />}
     >
       <Text as="h4" variant="h300" margin={{ bottom: 4 }}>
         Your account balance

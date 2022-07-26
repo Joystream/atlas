@@ -51,7 +51,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
   const convertedAmount = convertToUSD(tokenNumberToHapiBn(amount) || 0)
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { fee, loading: feeLoading } = useFee(
+  const { fullFee, loading: feeLoading } = useFee(
     'withdrawFromChannelBalanceTx',
     channelId && activeMembership ? [activeMembership.id, channelId, amount] : undefined
   )
@@ -93,7 +93,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
       onExitClick={onExitClick}
       primaryButton={{ text: 'Withdraw', onClick: handleWithdraw }}
       secondaryButton={{ text: 'Cancel', onClick: onExitClick }}
-      additionalActionsNode={<Fee loading={feeLoading} variant="h200" amount={fee} />}
+      additionalActionsNode={<Fee loading={feeLoading} variant="h200" amount={fullFee} />}
     >
       <Text as="h4" variant="h300" margin={{ bottom: 4 }}>
         Your channel balance
