@@ -223,7 +223,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const nftMetadata = createNftInputMetadata(getValues())
   const assets = createBasicVideoInputAssetsInfo(getValues('assets'))
 
-  const { videoStateBloatBondValue, getTotalStateBloatBondFee } = useBloatFeesAndPerMbFees(assets)
+  const { videoStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees(assets)
 
   const isSigned = memberId && channelId
   const { fullFee: createVideoFee, loading: createVideoFeeLoading } = useFee(
@@ -235,7 +235,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           videoInputMetadata,
           nftMetadata,
           assets,
-          getTotalStateBloatBondFee() || 0,
+          dataObjectStateBloatBondValue,
           videoStateBloatBondValue,
         ]
       : undefined,
@@ -244,7 +244,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const { fullFee: updateVideoFee, loading: updateVideoFeeLoading } = useFee(
     'updateVideoTx',
     isSigned && isEdit && editedVideoInfo.id
-      ? [editedVideoInfo.id, memberId, videoInputMetadata, nftMetadata, assets, getTotalStateBloatBondFee() || 0]
+      ? [editedVideoInfo.id, memberId, videoInputMetadata, nftMetadata, assets, dataObjectStateBloatBondValue]
       : undefined,
     assets
   )

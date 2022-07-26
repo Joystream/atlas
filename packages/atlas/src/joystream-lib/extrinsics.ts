@@ -143,8 +143,8 @@ export class JoystreamLibExtrinsics {
       collaborators: createType('BTreeMap<u64, BTreeSet<PalletContentChannelActionPermission>>', {}),
       storageBuckets: createType('BTreeSet<u64>', inputBuckets.storage),
       distributionBuckets: createType('BTreeSet<PalletStorageDistributionBucketIdRecord>', inputBuckets.distribution),
-      expectedDataObjectStateBloatBond,
-      expectedChannelStateBloatBond,
+      expectedDataObjectStateBloatBond: tokenNumberToHapiBn(expectedDataObjectStateBloatBond),
+      expectedChannelStateBloatBond: tokenNumberToHapiBn(expectedChannelStateBloatBond),
     })
 
     const channelOwner = createType('PalletContentChannelOwner', { Member: parseInt(memberId) })
@@ -211,7 +211,7 @@ export class JoystreamLibExtrinsics {
       assetsToUpload: channelAssets,
       assetsToRemove: createType('BTreeSet<u64>', getReplacedDataObjectsIds(inputAssets)),
       collaborators: createType('Option<BTreeMap<u64, BTreeSet<PalletContentChannelActionPermission>>>', null),
-      expectedDataObjectStateBloatBond,
+      expectedDataObjectStateBloatBond: tokenNumberToHapiBn(expectedDataObjectStateBloatBond),
     })
     const actor = createType('PalletContentPermissionsContentActor', {
       Member: parseInt(memberId),
@@ -258,13 +258,12 @@ export class JoystreamLibExtrinsics {
     const [videoMetadata, videoAssets] = await parseVideoExtrinsicInput(this.api, inputMetadata, inputAssets)
 
     const nftIssuanceParameters = createNftIssuanceParameters(nftInputMetadata)
-
     const creationParameters = createType('PalletContentVideoCreationParametersRecord', {
       meta: videoMetadata,
       assets: videoAssets,
       autoIssueNft: nftIssuanceParameters,
-      expectedDataObjectStateBloatBond,
-      expectedVideoStateBloatBond,
+      expectedDataObjectStateBloatBond: tokenNumberToHapiBn(expectedDataObjectStateBloatBond),
+      expectedVideoStateBloatBond: tokenNumberToHapiBn(expectedVideoStateBloatBond),
     })
 
     const actor = createType('PalletContentPermissionsContentActor', {
@@ -324,7 +323,7 @@ export class JoystreamLibExtrinsics {
       assetsToUpload: videoAssets,
       assetsToRemove: getReplacedDataObjectsIds(inputAssets),
       autoIssueNft: nftIssuanceParameters,
-      expectedDataObjectStateBloatBond,
+      expectedDataObjectStateBloatBond: tokenNumberToHapiBn(expectedDataObjectStateBloatBond),
     })
 
     const actor = createType('PalletContentPermissionsContentActor', {

@@ -191,12 +191,12 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const channelMetadata = createChannelMetadata(watch())
   const channelAssets = createChannelAssets()
 
-  const { channelStateBloatBondValue, totalStateBloatBondFee } = useBloatFeesAndPerMbFees(channelAssets)
+  const { channelStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees(channelAssets)
 
   const { fullFee: updateChannelFee, loading: updateChannelFeeLoading } = useFee(
     'updateChannelTx',
     channelId && memberId && channelMetadata && isDirty && !newChannel
-      ? [channelId, memberId, channelMetadata, channelAssets, totalStateBloatBondFee || 0]
+      ? [channelId, memberId, channelMetadata, channelAssets, dataObjectStateBloatBondValue]
       : undefined,
     channelAssets
   )
@@ -209,7 +209,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
           channelAssets,
           // TODO: use basic buckets config for fee estimation
           { storage: [0], distribution: [{ distributionBucketFamilyId: 0, distributionBucketIndex: 0 }] },
-          totalStateBloatBondFee || 0,
+          dataObjectStateBloatBondValue,
           channelStateBloatBondValue,
         ]
       : undefined,
@@ -403,7 +403,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
               metadata,
               assets,
               getBucketsConfigForNewChannel(),
-              totalStateBloatBondFee || 0,
+              dataObjectStateBloatBondValue,
               channelStateBloatBondValue,
               proxyCallback(updateStatus)
             )
@@ -414,7 +414,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
               memberId,
               metadata,
               assets,
-              totalStateBloatBondFee || 0,
+              dataObjectStateBloatBondValue,
               proxyCallback(updateStatus)
             ),
       onTxSync: refetchDataAndUploadAssets,

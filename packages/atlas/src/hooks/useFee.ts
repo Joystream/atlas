@@ -1,4 +1,5 @@
 import debouncePromise from 'awesome-debounce-promise'
+import BigNumber from 'bignumber.js'
 import { BN } from 'bn.js'
 import { isEqual } from 'lodash-es'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -7,6 +8,7 @@ import { ChannelInputAssets, TxMethodName, VideoInputAssets } from '@/joystream-
 import { JoystreamLibExtrinsics } from '@/joystream-lib/extrinsics'
 import { useJoystream } from '@/providers/joystream'
 import { useUser } from '@/providers/user'
+import { hapiBnToTokenNumber } from '@/utils/number'
 
 import { useSubscribeAccountBalance } from './useSubscribeAccountBalance'
 
@@ -44,7 +46,7 @@ export const useFee = <TFnName extends TxMethodName, TArgs extends Parameters<Jo
           return
         }
         let videoOrChannelBloatFee = 0
-        if (methodName === 'createVideoCommentTx') {
+        if (methodName === 'createVideoTx') {
           videoOrChannelBloatFee = videoStateBloatBondValue
         }
         if (methodName === 'createChannelTx') {
@@ -54,7 +56,12 @@ export const useFee = <TFnName extends TxMethodName, TArgs extends Parameters<Jo
         const basicFee = await getBasicFee(args)
 
         if (basicFee) {
-          setFullfee(basicFee + (feePerMb || 0) + (totalStateBloatBondFee || 0) + videoOrChannelBloatFee)
+          const fullFee = new BigNumber(basicFee)
+            .plus(new BigNumber(feePerMb || 0))
+            .plus(new BigNumber(totalStateBloatBondFee || 0))
+            .plus(videoOrChannelBloatFee || 0)
+
+          setFullfee(fullFee.toNumber())
         }
         setLoading(false)
       }, 500),
@@ -109,7 +116,7 @@ export const useBloatFeesAndPerMbFees = (assets?: VideoInputAssets | ChannelInpu
         .toNumber()
       const totalStorageFee = new BN(dataObjectPerMegabyteFee).muln(Math.ceil(totalBytes / 1024 / 1024))
 
-      return totalStorageFee.toNumber()
+      return hapiBnToTokenNumber(totalStorageFee)
     },
     [dataObjectPerMegabyteFee]
   )
@@ -120,7 +127,7 @@ export const useBloatFeesAndPerMbFees = (assets?: VideoInputAssets | ChannelInpu
         return
       }
       const totalStateBloatBond = new BN(dataObjectStateBloatBondValue).muln(Object.values(assets).length)
-      return totalStateBloatBond.toNumber()
+      return hapiBnToTokenNumber(totalStateBloatBond)
     },
     [dataObjectStateBloatBondValue]
   )
@@ -130,7 +137,8 @@ export const useBloatFeesAndPerMbFees = (assets?: VideoInputAssets | ChannelInpu
     totalStateBloatBondFee: getTotalStateBloatBondFee(assets),
     getFeePerMb,
     getTotalStateBloatBondFee,
-    channelStateBloatBondValue,
-    videoStateBloatBondValue,
+    dataObjectStateBloatBondValue: hapiBnToTokenNumber(new BN(dataObjectStateBloatBondValue)),
+    channelStateBloatBondValue: hapiBnToTokenNumber(new BN(channelStateBloatBondValue)),
+    videoStateBloatBondValue: hapiBnToTokenNumber(new BN(videoStateBloatBondValue)),
   }
 }

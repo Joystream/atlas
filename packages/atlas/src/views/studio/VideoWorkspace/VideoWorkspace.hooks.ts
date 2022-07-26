@@ -38,7 +38,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
   const removeDrafts = useDraftStore((state) => state.actions.removeDrafts)
   const { tabData } = useVideoWorkspaceData()
 
-  const { videoStateBloatBondValue, getTotalStateBloatBondFee } = useBloatFeesAndPerMbFees()
+  const { videoStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
 
   const isEdit = !editedVideoInfo?.isDraft
 
@@ -158,7 +158,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
                 data.metadata,
                 data.nftMetadata,
                 assets,
-                getTotalStateBloatBondFee(assets) || 0,
+                dataObjectStateBloatBondValue,
                 videoStateBloatBondValue,
                 proxyCallback(updateStatus)
               )
@@ -170,7 +170,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
                 data.metadata,
                 data.nftMetadata,
                 assets,
-                getTotalStateBloatBondFee(assets) || 0,
+                dataObjectStateBloatBondValue,
                 proxyCallback(updateStatus)
               ),
         onTxSync: refetchDataAndUploadAssets,
@@ -200,7 +200,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
       removeDrafts,
       editedVideoInfo.id,
       memberId,
-      getTotalStateBloatBondFee,
+      dataObjectStateBloatBondValue,
       videoStateBloatBondValue,
       proxyCallback,
       setIsWorkspaceOpen,
