@@ -50,7 +50,10 @@ export default defineConfig({
     }),
     checker({
       typescript: true,
-      eslint: { lintCommand: 'eslint "./**/*.{js,jsx,ts,tsx}"' },
+      eslint: {
+        lintCommand: 'eslint "./**/*.{js,jsx,ts,tsx}"',
+        dev: { overrideConfig: { ignorePath: '../.eslintignore' } },
+      },
       overlay: false,
     }),
     babel({
