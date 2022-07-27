@@ -3,7 +3,7 @@ import { addMilliseconds } from 'date-fns'
 import { FC, useCallback, useEffect, useMemo, useRef } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
-import { useFullVideo } from '@/api/hooks'
+import { useBasicVideo } from '@/api/hooks'
 import { Step, StepProps, getStepVariant } from '@/components/Step'
 import { Text } from '@/components/Text'
 import { SvgActionChevronR } from '@/components/_icons'
@@ -93,7 +93,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
     formState: { isValid },
   } = formMethods
 
-  const { video, loading: loadingVideo } = useFullVideo(videoId, { fetchPolicy: 'cache-first' })
+  const { video, loading: loadingVideo } = useBasicVideo(videoId, { fetchPolicy: 'cache-only' })
 
   const { url: channelAvatarUrl } = useAsset(video?.channel.avatarPhoto)
   const { url: thumbnailPhotoUrl } = useAsset(video?.thumbnailPhoto)
