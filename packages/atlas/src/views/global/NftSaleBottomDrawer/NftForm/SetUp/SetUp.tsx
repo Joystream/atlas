@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, FC, FocusEvent, FormEvent, SetStateAction, useEffect } from 'react'
+import { ChangeEvent, Dispatch, FC, FormEvent, SetStateAction, useEffect } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 
 import { NumberFormat } from '@/components/NumberFormat'
@@ -141,13 +141,6 @@ export const SetUp: FC<SetUpProps> = ({
     handleGoForward()
   }
 
-  const handleNumberInputBlur = (event: FocusEvent<HTMLInputElement>) => {
-    const { target } = event
-    if (Number(target.value) % 1 !== 0) {
-      setValue(target.name as 'buyNowPrice' | 'startingPrice', Math.floor(Number(event.target.value)))
-    }
-  }
-
   return (
     <>
       <Text as="h1" variant="h500" margin={{ bottom: 4 }}>
@@ -175,7 +168,6 @@ export const SetUp: FC<SetUpProps> = ({
                 )
               }
               error={!!errors.buyNowPrice}
-              onBlur={handleNumberInputBlur}
             />
           </StyledFormField>
         )}
@@ -312,7 +304,6 @@ export const SetUp: FC<SetUpProps> = ({
                 }
                 disabled={!activeInputs.includes('startingPrice')}
                 error={!!errors.startingPrice}
-                onBlur={handleNumberInputBlur}
               />
             </FormField>
             <FormField
@@ -344,9 +335,8 @@ export const SetUp: FC<SetUpProps> = ({
                 }
                 disabled={!activeInputs.includes('buyNowPrice')}
                 error={!!errors.buyNowPrice}
-                onBlur={(event) => {
+                onBlur={() => {
                   trigger() // trigger form validation to make sure starting price is valid
-                  handleNumberInputBlur(event)
                 }}
               />
             </FormField>
