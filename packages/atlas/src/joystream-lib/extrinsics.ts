@@ -16,6 +16,7 @@ import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/utils/number'
 
 import { JoystreamLibError } from './errors'
 import {
+  createActor,
   createNftEnglishAuctionParams,
   createNftIssuanceParameters,
   createNftOpenAuctionParams,
@@ -38,6 +39,7 @@ import {
   ChannelInputBuckets,
   ChannelInputMetadata,
   CommentReaction,
+  ExtrinsicResult,
   ExtrinsicStatus,
   ExtrinsicStatusCallbackFn,
   GetEventDataFn,
@@ -214,9 +216,8 @@ export class JoystreamLibExtrinsics {
       collaborators: createType('Option<BTreeMap<u64, BTreeSet<PalletContentChannelActionPermission>>>', null),
       expectedDataObjectStateBloatBond: tokenNumberToHapiBn(expectedDataObjectStateBloatBond),
     })
-    const actor = createType('PalletContentPermissionsContentActor', {
-      Member: parseInt(memberId),
-    })
+
+    const actor = createActor(memberId)
     const tx = this.api.tx.content.updateChannel(actor, channelId, updateParameters)
     return tx
   }
@@ -267,9 +268,7 @@ export class JoystreamLibExtrinsics {
       expectedVideoStateBloatBond: tokenNumberToHapiBn(expectedVideoStateBloatBond),
     })
 
-    const actor = createType('PalletContentPermissionsContentActor', {
-      Member: parseInt(memberId),
-    })
+    const actor = createActor(memberId)
     const tx = this.api.tx.content.createVideo(actor, channelId, creationParameters)
 
     return tx
@@ -327,9 +326,7 @@ export class JoystreamLibExtrinsics {
       expectedDataObjectStateBloatBond: tokenNumberToHapiBn(expectedDataObjectStateBloatBond),
     })
 
-    const actor = createType('PalletContentPermissionsContentActor', {
-      Member: parseInt(memberId),
-    })
+    const actor = createActor(memberId)
     const tx = this.api.tx.content.updateVideo(actor, videoId, updateParameters)
     return tx
   }
@@ -364,9 +361,7 @@ export class JoystreamLibExtrinsics {
   async deleteVideoTx(videoId: VideoId, memberId: MemberId) {
     await this.ensureApi()
 
-    const actor = createType('PalletContentPermissionsContentActor', {
-      Member: parseInt(memberId),
-    })
+    const actor = createActor(memberId)
     const tx = this.api.tx.content.deleteVideo(actor, videoId, 2) // all videos should have 2 assets (media + thumbnail)
 
     return tx
@@ -391,9 +386,7 @@ export class JoystreamLibExtrinsics {
 
     const nftIssuanceParameters = createNftIssuanceParameters(inputMetadata).unwrap()
 
-    const actor = createType('PalletContentPermissionsContentActor', {
-      Member: parseInt(memberId),
-    })
+    const actor = createActor(memberId)
     const tx = this.api.tx.content.issueNft(actor, videoId, nftIssuanceParameters)
 
     return tx
@@ -415,9 +408,7 @@ export class JoystreamLibExtrinsics {
   async putNftOnSaleTx(videoId: VideoId, memberId: MemberId, inputMetadata: NftSaleInputMetadata) {
     await this.ensureApi()
 
-    const actor = createType('PalletContentPermissionsContentActor', {
-      Member: parseInt(memberId),
-    })
+    const actor = createActor(memberId)
     const tx =
       inputMetadata.type === 'buyNow'
         ? this.api.tx.content.sellNft(videoId, actor, tokenNumberToHapiBn(inputMetadata.buyNowPrice))
@@ -443,9 +434,7 @@ export class JoystreamLibExtrinsics {
 
   async changeNftPriceTx(memberId: MemberId, videoId: VideoId, price: number) {
     await this.ensureApi()
-    const actor = createType('PalletContentPermissionsContentActor', {
-      Member: parseInt(memberId),
-    })
+    const actor = createActor(memberId)
     const tx = this.api.tx.content.updateBuyNowPrice(actor, videoId, tokenNumberToHapiBn(price))
 
     return tx
@@ -467,9 +456,7 @@ export class JoystreamLibExtrinsics {
   async cancelNftSaleTx(videoId: VideoId, memberId: MemberId, saleType: NftSaleType) {
     await this.ensureApi()
 
-    const actor = createType('PalletContentPermissionsContentActor', {
-      Member: parseInt(memberId),
-    })
+    const actor = createActor(memberId)
     const tx =
       saleType === 'buyNow'
         ? this.api.tx.content.cancelBuyNow(actor, videoId)
@@ -558,9 +545,7 @@ export class JoystreamLibExtrinsics {
 
   async acceptNftBidTx(ownerId: MemberId, videoId: VideoId, bidderId: MemberId, price: number) {
     await this.ensureApi()
-    const actor = createType('PalletContentPermissionsContentActor', {
-      Member: parseInt(ownerId),
-    })
+    const actor = createActor(ownerId)
     const tx = this.api.tx.content.pickOpenAuctionWinner(actor, videoId, bidderId, tokenNumberToHapiBn(price))
     return tx
   }
@@ -799,5 +784,41 @@ export class JoystreamLibExtrinsics {
   ): Promise<MetaprotcolExtrinsicResult> {
     const tx = await this.reactToVideoCommentTx(memberId, commentId, reactionId)
     return this.sendMetaprotocolMemberExtrinsic(tx, cb)
+  }
+
+  async sendFundsTx(destinationAccount: MemberId, value: number) {
+    await this.ensureApi()
+
+    return this.api.tx.balances.transfer(destinationAccount, tokenNumberToHapiBn(value))
+  }
+
+  async sendFunds(
+    destinationAccount: MemberId,
+    value: number,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<ExtrinsicResult> {
+    const tx = await this.sendFundsTx(destinationAccount, value)
+
+    const { block } = await this.sendExtrinsic(tx, cb)
+    return { block }
+  }
+
+  async withdrawFromChannelBalanceTx(memberId: string, channelId: string, amount: number) {
+    await this.ensureApi()
+    const actor = createActor(memberId)
+
+    return this.api.tx.content.withdrawFromChannelBalance(actor, channelId, tokenNumberToHapiBn(amount))
+  }
+
+  async withdrawFromChannelBalance(
+    memberId: string,
+    channelId: string,
+    amount: number,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<ExtrinsicResult> {
+    const tx = await this.withdrawFromChannelBalanceTx(memberId, channelId, amount)
+
+    const { block } = await this.sendExtrinsic(tx, cb)
+    return { block }
   }
 }

@@ -21,6 +21,7 @@ export type GetBasicChannelQuery = {
     title?: string | null
     createdAt: Date
     follows: number
+    rewardAccount: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -56,6 +57,7 @@ export type GetFullChannelQuery = {
     title?: string | null
     createdAt: Date
     follows: number
+    rewardAccount: string
     language?: { __typename?: 'Language'; id: string; iso: string } | null
     ownerMember?: {
       __typename?: 'Membership'
@@ -143,6 +145,7 @@ export type GetBasicChannelsQuery = {
     title?: string | null
     createdAt: Date
     follows: number
+    rewardAccount: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -182,6 +185,7 @@ export type GetBasicChannelsConnectionQuery = {
         title?: string | null
         createdAt: Date
         follows: number
+        rewardAccount: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -243,6 +247,7 @@ export type GetMostViewedChannelsConnectionQuery = {
         title?: string | null
         createdAt: Date
         follows: number
+        rewardAccount: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -286,6 +291,7 @@ export type GetMostFollowedChannelsConnectionQuery = {
         title?: string | null
         createdAt: Date
         follows: number
+        rewardAccount: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -319,6 +325,7 @@ export type GetTop10ChannelsQuery = {
     title?: string | null
     createdAt: Date
     follows: number
+    rewardAccount: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -349,6 +356,7 @@ export type GetPromisingChannelsQuery = {
     title?: string | null
     createdAt: Date
     follows: number
+    rewardAccount: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -379,6 +387,7 @@ export type GetDiscoverChannelsQuery = {
     title?: string | null
     createdAt: Date
     follows: number
+    rewardAccount: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -409,6 +418,7 @@ export type GetPopularChannelsQuery = {
     title?: string | null
     createdAt: Date
     follows: number
+    rewardAccount: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string

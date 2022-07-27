@@ -277,7 +277,6 @@ const useMetaprotocolTransactionStatus = () => {
           transactionHash: txHash,
         },
       })
-
       return data?.metaprotocolTransactionStatusEvents[0]?.status || null
     },
     [client]

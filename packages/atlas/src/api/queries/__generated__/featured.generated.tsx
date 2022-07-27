@@ -2,7 +2,13 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { BasicVideoFieldsFragmentDoc, FullVideoFieldsFragmentDoc } from './fragments.generated'
+import {
+  BasicChannelFieldsFragmentDoc,
+  BasicMembershipFieldsFragmentDoc,
+  BasicVideoFieldsFragmentDoc,
+  FullChannelFieldsFragmentDoc,
+  FullVideoFieldsFragmentDoc,
+} from './fragments.generated'
 
 const defaultOptions = {} as const
 export type GetVideoHeroQueryVariables = Types.Exact<{ [key: string]: never }>
@@ -30,6 +36,7 @@ export type GetVideoHeroQuery = {
         title?: string | null
         createdAt: Date
         follows: number
+        rewardAccount: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -93,6 +100,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
           title?: string | null
           createdAt: Date
           follows: number
+          rewardAccount: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -212,6 +220,7 @@ export type GetCategoriesFeaturedVideosQuery = {
         title?: string | null
         createdAt: Date
         follows: number
+        rewardAccount: string
         language?: { __typename?: 'Language'; id: string; iso: string } | null
         ownerMember?: {
           __typename?: 'Membership'
@@ -324,6 +333,7 @@ export type GetCategoriesFeaturedVideosQuery = {
           title?: string | null
           createdAt: Date
           follows: number
+          rewardAccount: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -514,6 +524,7 @@ export type GetCategoriesFeaturedVideosQuery = {
             title?: string | null
             createdAt: Date
             follows: number
+            rewardAccount: string
             avatarPhoto?: {
               __typename?: 'StorageDataObject'
               id: string

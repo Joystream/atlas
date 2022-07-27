@@ -1,6 +1,5 @@
 import { useApolloClient } from '@apollo/client'
 import debouncePromise from 'awesome-debounce-promise'
-import BN from 'bn.js'
 import { FC, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -11,6 +10,7 @@ import {
   GetMembershipsQueryVariables,
 } from '@/api/queries'
 import { Avatar, AvatarProps } from '@/components/Avatar'
+import { Fee } from '@/components/Fee'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
@@ -19,14 +19,17 @@ import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { JOY_CURRENCY_TICKER } from '@/config/joystream'
+import { useFee } from '@/hooks/useFee'
 import { useMemberAvatar } from '@/providers/assets'
-import { useTokenPrice } from '@/providers/joystream'
+import { useJoystream, useTokenPrice } from '@/providers/joystream'
+import { useTransaction } from '@/providers/transactions'
 import { SentryLogger } from '@/utils/logs'
+import { formatNumber, tokenNumberToHapiBn } from '@/utils/number'
 
-import { Fee } from './Fee'
 import { FormFieldsWrapper, LabelFlexWrapper, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
 
-const ADDRESS_LENGTH = 48
+const ADDRESS_LENGTH = 49
+const ADDRESS_CHARACTERS_LIMIT = 4
 
 type SendFundsDialogProps = {
   onExitClick: () => void
@@ -38,6 +41,8 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
   const [destinationAccount, setDestinationAccount] = useState<BasicMembershipFieldsFragment>()
   const { convertToUSD } = useTokenPrice()
   const client = useApolloClient()
+  const { joystream, proxyCallback } = useJoystream()
+  const handleTransaction = useTransaction()
   const {
     register,
     reset,
@@ -46,11 +51,15 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
     setValue,
     formState: { errors },
   } = useForm<{ amount: number | null; account: string | null }>()
-  const convertedAmount = convertToUSD(new BN(watch('amount') || 0))
+  const convertedAmount = convertToUSD(tokenNumberToHapiBn(watch('amount') || 0))
+  const account = watch('account')
+  const amount = watch('amount') || 0
+  const { fullFee, loading: feeLoading } = useFee('sendFundsTx', account && amount ? [account, amount] : undefined)
 
   useEffect(() => {
     if (!show) {
       reset({ amount: null, account: null })
+      setDestinationAccount(undefined)
     }
   }, [reset, show])
 
@@ -74,7 +83,22 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
   )
 
   const handleSendFounds = async () => {
-    const handler = await handleSubmit(() => null)
+    const handler = await handleSubmit((data) => {
+      if (!joystream || !data.account || !data.amount) {
+        return
+      }
+      handleTransaction({
+        snackbarSuccessMessage: {
+          title: `${formatNumber(data.amount)} ${JOY_CURRENCY_TICKER} ($${formatNumber(
+            convertedAmount || 0
+          )}) tokens have been sent over to ${data.account.slice(0, ADDRESS_CHARACTERS_LIMIT)}...
+          ${data.account.slice(-ADDRESS_CHARACTERS_LIMIT)} wallet address`,
+        },
+        txFactory: async (updateStatus) =>
+          (await joystream.extrinsics).sendFunds(data.account || '', amount, proxyCallback(updateStatus)),
+        onTxSync: async () => onExitClick(),
+      })
+    })
     return handler()
   }
 
@@ -89,23 +113,21 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
       onExitClick={onExitClick}
       primaryButton={{ text: 'Send', onClick: handleSendFounds }}
       secondaryButton={{ text: 'Cancel', onClick: onExitClick }}
-      additionalActionsNode={<Fee />}
+      additionalActionsNode={<Fee loading={feeLoading} variant="h200" amount={fullFee} />}
     >
       <Text as="h4" variant="h300" margin={{ bottom: 4 }}>
-        Your channel balance
+        Your account balance
       </Text>
       <VerticallyCenteredDiv>
         <JoyTokenIcon variant="gray" />
-        <Text as="p" variant="h400" margin={{ left: 1 }}>
-          {accountBalance}
-        </Text>
+        <NumberFormat value={accountBalance} as="p" variant="h400" margin={{ left: 1 }} format="short" />
       </VerticallyCenteredDiv>
       <NumberFormat
         as="p"
         color="colorText"
         format="dollar"
         variant="t100"
-        value={convertToUSD(new BN(accountBalance)) || 0}
+        value={convertToUSD(tokenNumberToHapiBn(accountBalance)) || 0}
         margin={{ top: 1, bottom: 6 }}
       />
       <FormFieldsWrapper>
@@ -169,14 +191,8 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
                   return true
                 },
                 wrongAddress: (value) => {
-                  if (value && value.length !== ADDRESS_LENGTH) {
+                  if (value && value.length < ADDRESS_LENGTH) {
                     return 'Invalid destination account format.'
-                  }
-                  return true
-                },
-                accountNotFound: () => {
-                  if (!destinationAccount) {
-                    return 'Account does not exist.'
                   }
                   return true
                 },

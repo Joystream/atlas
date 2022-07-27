@@ -54,6 +54,7 @@ export type GetNftQuery = {
       title?: string | null
       createdAt: Date
       follows: number
+      rewardAccount: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -244,6 +245,7 @@ export type GetNftQuery = {
         title?: string | null
         createdAt: Date
         follows: number
+        rewardAccount: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -330,6 +332,7 @@ export type GetNftsQuery = {
       title?: string | null
       createdAt: Date
       follows: number
+      rewardAccount: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -520,6 +523,7 @@ export type GetNftsQuery = {
         title?: string | null
         createdAt: Date
         follows: number
+        rewardAccount: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -614,6 +618,7 @@ export type GetNftsConnectionQuery = {
           title?: string | null
           createdAt: Date
           follows: number
+          rewardAccount: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -804,6 +809,7 @@ export type GetNftsConnectionQuery = {
             title?: string | null
             createdAt: Date
             follows: number
+            rewardAccount: string
             avatarPhoto?: {
               __typename?: 'StorageDataObject'
               id: string
