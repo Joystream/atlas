@@ -481,7 +481,7 @@ export type GetFullVideoQuery = {
 export type GetBasicVideosConnectionQueryVariables = Types.Exact<{
   first?: Types.InputMaybe<Types.Scalars['Int']>
   after?: Types.InputMaybe<Types.Scalars['String']>
-  orderBy?: Types.InputMaybe<Array<Types.VideoOrderByInput> | Types.VideoOrderByInput>
+  orderBy?: Types.InputMaybe<Types.VideoOrderByInput>
   where?: Types.InputMaybe<Types.VideoWhereInput>
 }>
 
@@ -549,7 +549,7 @@ export type GetBasicVideosConnectionQuery = {
 export type GetFullVideosConnectionQueryVariables = Types.Exact<{
   first?: Types.InputMaybe<Types.Scalars['Int']>
   after?: Types.InputMaybe<Types.Scalars['String']>
-  orderBy?: Types.VideoOrderByInput
+  orderBy?: Types.InputMaybe<Types.VideoOrderByInput>
   where?: Types.InputMaybe<Types.VideoWhereInput>
 }>
 
@@ -979,7 +979,7 @@ export type GetBasicVideosQueryVariables = Types.Exact<{
   offset?: Types.InputMaybe<Types.Scalars['Int']>
   limit?: Types.InputMaybe<Types.Scalars['Int']>
   where?: Types.InputMaybe<Types.VideoWhereInput>
-  orderBy?: Types.VideoOrderByInput
+  orderBy?: Types.InputMaybe<Array<Types.VideoOrderByInput> | Types.VideoOrderByInput>
 }>
 
 export type GetBasicVideosQuery = {
@@ -1038,7 +1038,7 @@ export type GetFullVideosQueryVariables = Types.Exact<{
   offset?: Types.InputMaybe<Types.Scalars['Int']>
   limit?: Types.InputMaybe<Types.Scalars['Int']>
   where?: Types.InputMaybe<Types.VideoWhereInput>
-  orderBy?: Types.VideoOrderByInput
+  orderBy?: Types.InputMaybe<Array<Types.VideoOrderByInput> | Types.VideoOrderByInput>
 }>
 
 export type GetFullVideosQuery = {
@@ -1459,7 +1459,7 @@ export type GetMostViewedVideosConnectionQueryVariables = Types.Exact<{
   periodDays?: Types.InputMaybe<Types.Scalars['Int']>
   first?: Types.InputMaybe<Types.Scalars['Int']>
   after?: Types.InputMaybe<Types.Scalars['String']>
-  orderBy?: Types.VideoOrderByInput
+  orderBy?: Types.InputMaybe<Array<Types.VideoOrderByInput> | Types.VideoOrderByInput>
   where?: Types.InputMaybe<Types.VideoWhereInput>
 }>
 
@@ -1731,7 +1731,7 @@ export const GetBasicVideosConnectionDocument = gql`
   query GetBasicVideosConnection(
     $first: Int
     $after: String
-    $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
+    $orderBy: VideoOrderByInput = createdAt_DESC
     $where: VideoWhereInput
   ) {
     videosConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
@@ -1798,10 +1798,10 @@ export const GetFullVideosConnectionDocument = gql`
   query GetFullVideosConnection(
     $first: Int
     $after: String
-    $orderBy: VideoOrderByInput! = createdAt_DESC
+    $orderBy: VideoOrderByInput = createdAt_DESC
     $where: VideoWhereInput
   ) {
-    videosConnection(first: $first, after: $after, where: $where, orderBy: [$orderBy]) {
+    videosConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
       edges {
         cursor
         node {
@@ -1866,9 +1866,9 @@ export const GetBasicVideosDocument = gql`
     $offset: Int
     $limit: Int
     $where: VideoWhereInput
-    $orderBy: VideoOrderByInput! = createdAt_DESC
+    $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
   ) {
-    videos(offset: $offset, limit: $limit, where: $where, orderBy: [$orderBy]) {
+    videos(offset: $offset, limit: $limit, where: $where, orderBy: $orderBy) {
       ...BasicVideoFields
     }
   }
@@ -1914,9 +1914,9 @@ export const GetFullVideosDocument = gql`
     $offset: Int
     $limit: Int
     $where: VideoWhereInput
-    $orderBy: VideoOrderByInput! = createdAt_DESC
+    $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
   ) {
-    videos(offset: $offset, limit: $limit, where: $where, orderBy: [$orderBy]) {
+    videos(offset: $offset, limit: $limit, where: $where, orderBy: $orderBy) {
       ...FullVideoFields
     }
   }
@@ -1963,7 +1963,7 @@ export const GetMostViewedVideosConnectionDocument = gql`
     $periodDays: Int
     $first: Int
     $after: String
-    $orderBy: VideoOrderByInput! = createdAt_DESC
+    $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
     $where: VideoWhereInput
   ) {
     mostViewedVideosConnection(
@@ -1971,7 +1971,7 @@ export const GetMostViewedVideosConnectionDocument = gql`
       first: $first
       after: $after
       periodDays: $periodDays
-      orderBy: [$orderBy]
+      orderBy: $orderBy
       where: $where
     ) {
       edges {

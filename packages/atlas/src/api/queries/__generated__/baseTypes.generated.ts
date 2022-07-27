@@ -10615,7 +10615,6 @@ export enum EventTypeOptions {
   VideoReactedEvent = 'VideoReactedEvent',
   VideoReactionsPreferenceEvent = 'VideoReactionsPreferenceEvent',
   VoteCastEvent = 'VoteCastEvent',
-  VoteOnPollEvent = 'VoteOnPollEvent',
   VoteRevealedEvent = 'VoteRevealedEvent',
   VotingPeriodStartedEvent = 'VotingPeriodStartedEvent',
   WorkEntrantFundsWithdrawnEvent = 'WorkEntrantFundsWithdrawnEvent',
@@ -10856,221 +10855,6 @@ export type ForumCategoryWhereInput = {
 }
 
 export type ForumCategoryWhereUniqueInput = {
-  id: Scalars['ID']
-}
-
-export type ForumPoll = BaseGraphQlObject & {
-  __typename?: 'ForumPoll'
-  createdAt: Scalars['DateTime']
-  createdById: Scalars['ID']
-  deletedAt?: Maybe<Scalars['DateTime']>
-  deletedById?: Maybe<Scalars['ID']>
-  /** Poll description */
-  description: Scalars['String']
-  /** The time at which the poll ends */
-  endTime: Scalars['DateTime']
-  id: Scalars['ID']
-  pollAlternatives: Array<ForumPollAlternative>
-  thread: ForumThread
-  threadId: Scalars['String']
-  updatedAt?: Maybe<Scalars['DateTime']>
-  updatedById?: Maybe<Scalars['ID']>
-  version: Scalars['Int']
-}
-
-export type ForumPollAlternative = BaseGraphQlObject & {
-  __typename?: 'ForumPollAlternative'
-  createdAt: Scalars['DateTime']
-  createdById: Scalars['ID']
-  deletedAt?: Maybe<Scalars['DateTime']>
-  deletedById?: Maybe<Scalars['ID']>
-  id: Scalars['ID']
-  /** Index uniquely identifying the alternative in given poll */
-  index: Scalars['Int']
-  poll: ForumPoll
-  pollId: Scalars['String']
-  /** The alternative text */
-  text: Scalars['String']
-  updatedAt?: Maybe<Scalars['DateTime']>
-  updatedById?: Maybe<Scalars['ID']>
-  version: Scalars['Int']
-  votes: Array<VoteOnPollEvent>
-}
-
-export type ForumPollAlternativeConnection = {
-  __typename?: 'ForumPollAlternativeConnection'
-  edges: Array<ForumPollAlternativeEdge>
-  pageInfo: PageInfo
-  totalCount: Scalars['Int']
-}
-
-export type ForumPollAlternativeCreateInput = {
-  index: Scalars['Float']
-  poll: Scalars['ID']
-  text: Scalars['String']
-}
-
-export type ForumPollAlternativeEdge = {
-  __typename?: 'ForumPollAlternativeEdge'
-  cursor: Scalars['String']
-  node: ForumPollAlternative
-}
-
-export enum ForumPollAlternativeOrderByInput {
-  CreatedAtAsc = 'createdAt_ASC',
-  CreatedAtDesc = 'createdAt_DESC',
-  DeletedAtAsc = 'deletedAt_ASC',
-  DeletedAtDesc = 'deletedAt_DESC',
-  IndexAsc = 'index_ASC',
-  IndexDesc = 'index_DESC',
-  PollAsc = 'poll_ASC',
-  PollDesc = 'poll_DESC',
-  TextAsc = 'text_ASC',
-  TextDesc = 'text_DESC',
-  UpdatedAtAsc = 'updatedAt_ASC',
-  UpdatedAtDesc = 'updatedAt_DESC',
-}
-
-export type ForumPollAlternativeUpdateInput = {
-  index?: InputMaybe<Scalars['Float']>
-  poll?: InputMaybe<Scalars['ID']>
-  text?: InputMaybe<Scalars['String']>
-}
-
-export type ForumPollAlternativeWhereInput = {
-  AND?: InputMaybe<Array<ForumPollAlternativeWhereInput>>
-  NOT?: InputMaybe<Array<ForumPollAlternativeWhereInput>>
-  OR?: InputMaybe<Array<ForumPollAlternativeWhereInput>>
-  createdAt_eq?: InputMaybe<Scalars['DateTime']>
-  createdAt_gt?: InputMaybe<Scalars['DateTime']>
-  createdAt_gte?: InputMaybe<Scalars['DateTime']>
-  createdAt_lt?: InputMaybe<Scalars['DateTime']>
-  createdAt_lte?: InputMaybe<Scalars['DateTime']>
-  createdById_eq?: InputMaybe<Scalars['ID']>
-  createdById_in?: InputMaybe<Array<Scalars['ID']>>
-  deletedAt_all?: InputMaybe<Scalars['Boolean']>
-  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
-  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
-  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
-  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
-  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
-  deletedById_eq?: InputMaybe<Scalars['ID']>
-  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
-  id_eq?: InputMaybe<Scalars['ID']>
-  id_in?: InputMaybe<Array<Scalars['ID']>>
-  index_eq?: InputMaybe<Scalars['Int']>
-  index_gt?: InputMaybe<Scalars['Int']>
-  index_gte?: InputMaybe<Scalars['Int']>
-  index_in?: InputMaybe<Array<Scalars['Int']>>
-  index_lt?: InputMaybe<Scalars['Int']>
-  index_lte?: InputMaybe<Scalars['Int']>
-  poll?: InputMaybe<ForumPollWhereInput>
-  text_contains?: InputMaybe<Scalars['String']>
-  text_endsWith?: InputMaybe<Scalars['String']>
-  text_eq?: InputMaybe<Scalars['String']>
-  text_in?: InputMaybe<Array<Scalars['String']>>
-  text_startsWith?: InputMaybe<Scalars['String']>
-  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
-  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
-  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
-  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
-  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
-  updatedById_eq?: InputMaybe<Scalars['ID']>
-  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
-  votes_every?: InputMaybe<VoteOnPollEventWhereInput>
-  votes_none?: InputMaybe<VoteOnPollEventWhereInput>
-  votes_some?: InputMaybe<VoteOnPollEventWhereInput>
-}
-
-export type ForumPollAlternativeWhereUniqueInput = {
-  id: Scalars['ID']
-}
-
-export type ForumPollConnection = {
-  __typename?: 'ForumPollConnection'
-  edges: Array<ForumPollEdge>
-  pageInfo: PageInfo
-  totalCount: Scalars['Int']
-}
-
-export type ForumPollCreateInput = {
-  description: Scalars['String']
-  endTime: Scalars['DateTime']
-  thread: Scalars['ID']
-}
-
-export type ForumPollEdge = {
-  __typename?: 'ForumPollEdge'
-  cursor: Scalars['String']
-  node: ForumPoll
-}
-
-export enum ForumPollOrderByInput {
-  CreatedAtAsc = 'createdAt_ASC',
-  CreatedAtDesc = 'createdAt_DESC',
-  DeletedAtAsc = 'deletedAt_ASC',
-  DeletedAtDesc = 'deletedAt_DESC',
-  DescriptionAsc = 'description_ASC',
-  DescriptionDesc = 'description_DESC',
-  EndTimeAsc = 'endTime_ASC',
-  EndTimeDesc = 'endTime_DESC',
-  ThreadAsc = 'thread_ASC',
-  ThreadDesc = 'thread_DESC',
-  UpdatedAtAsc = 'updatedAt_ASC',
-  UpdatedAtDesc = 'updatedAt_DESC',
-}
-
-export type ForumPollUpdateInput = {
-  description?: InputMaybe<Scalars['String']>
-  endTime?: InputMaybe<Scalars['DateTime']>
-  thread?: InputMaybe<Scalars['ID']>
-}
-
-export type ForumPollWhereInput = {
-  AND?: InputMaybe<Array<ForumPollWhereInput>>
-  NOT?: InputMaybe<Array<ForumPollWhereInput>>
-  OR?: InputMaybe<Array<ForumPollWhereInput>>
-  createdAt_eq?: InputMaybe<Scalars['DateTime']>
-  createdAt_gt?: InputMaybe<Scalars['DateTime']>
-  createdAt_gte?: InputMaybe<Scalars['DateTime']>
-  createdAt_lt?: InputMaybe<Scalars['DateTime']>
-  createdAt_lte?: InputMaybe<Scalars['DateTime']>
-  createdById_eq?: InputMaybe<Scalars['ID']>
-  createdById_in?: InputMaybe<Array<Scalars['ID']>>
-  deletedAt_all?: InputMaybe<Scalars['Boolean']>
-  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
-  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
-  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
-  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
-  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
-  deletedById_eq?: InputMaybe<Scalars['ID']>
-  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
-  description_contains?: InputMaybe<Scalars['String']>
-  description_endsWith?: InputMaybe<Scalars['String']>
-  description_eq?: InputMaybe<Scalars['String']>
-  description_in?: InputMaybe<Array<Scalars['String']>>
-  description_startsWith?: InputMaybe<Scalars['String']>
-  endTime_eq?: InputMaybe<Scalars['DateTime']>
-  endTime_gt?: InputMaybe<Scalars['DateTime']>
-  endTime_gte?: InputMaybe<Scalars['DateTime']>
-  endTime_lt?: InputMaybe<Scalars['DateTime']>
-  endTime_lte?: InputMaybe<Scalars['DateTime']>
-  id_eq?: InputMaybe<Scalars['ID']>
-  id_in?: InputMaybe<Array<Scalars['ID']>>
-  pollAlternatives_every?: InputMaybe<ForumPollAlternativeWhereInput>
-  pollAlternatives_none?: InputMaybe<ForumPollAlternativeWhereInput>
-  pollAlternatives_some?: InputMaybe<ForumPollAlternativeWhereInput>
-  thread?: InputMaybe<ForumThreadWhereInput>
-  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
-  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
-  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
-  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
-  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
-  updatedById_eq?: InputMaybe<Scalars['ID']>
-  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
-}
-
-export type ForumPollWhereUniqueInput = {
   id: Scalars['ID']
 }
 
@@ -11351,7 +11135,6 @@ export type ForumThread = BaseGraphQlObject & {
   madeStickyInEvents: Array<CategoryStickyThreadUpdateEvent>
   metadataUpdates: Array<ThreadMetadataUpdatedEvent>
   movedInEvents: Array<ThreadMovedEvent>
-  poll?: Maybe<ForumPoll>
   posts: Array<ForumPost>
   /** Current thread status */
   status: ThreadStatus
@@ -11556,7 +11339,6 @@ export type ForumThreadWhereInput = {
   movedInEvents_every?: InputMaybe<ThreadMovedEventWhereInput>
   movedInEvents_none?: InputMaybe<ThreadMovedEventWhereInput>
   movedInEvents_some?: InputMaybe<ThreadMovedEventWhereInput>
-  poll?: InputMaybe<ForumPollWhereInput>
   posts_every?: InputMaybe<ForumPostWhereInput>
   posts_none?: InputMaybe<ForumPostWhereInput>
   posts_some?: InputMaybe<ForumPostWhereInput>
@@ -13977,7 +13759,6 @@ export type Membership = BaseGraphQlObject & {
   version: Scalars['Int']
   videoreactedeventreactingMember?: Maybe<Array<VideoReactedEvent>>
   videoreactionmember?: Maybe<Array<VideoReaction>>
-  voteonpolleventvotingMember?: Maybe<Array<VoteOnPollEvent>>
   whitelistedIn: Array<ProposalDiscussionWhitelist>
   whitelistedInAuctions: Array<Auction>
   whitelistedInBounties: Array<BountyEntrantWhitelist>
@@ -14802,9 +14583,6 @@ export type MembershipWhereInput = {
   videoreactionmember_every?: InputMaybe<VideoReactionWhereInput>
   videoreactionmember_none?: InputMaybe<VideoReactionWhereInput>
   videoreactionmember_some?: InputMaybe<VideoReactionWhereInput>
-  voteonpolleventvotingMember_every?: InputMaybe<VoteOnPollEventWhereInput>
-  voteonpolleventvotingMember_none?: InputMaybe<VoteOnPollEventWhereInput>
-  voteonpolleventvotingMember_some?: InputMaybe<VoteOnPollEventWhereInput>
   whitelistedInAuctions_every?: InputMaybe<AuctionWhereInput>
   whitelistedInAuctions_none?: InputMaybe<AuctionWhereInput>
   whitelistedInAuctions_some?: InputMaybe<AuctionWhereInput>
@@ -21086,12 +20864,6 @@ export type Query = {
   forumCategories: Array<ForumCategory>
   forumCategoriesConnection: ForumCategoryConnection
   forumCategoryByUniqueInput?: Maybe<ForumCategory>
-  forumPollAlternativeByUniqueInput?: Maybe<ForumPollAlternative>
-  forumPollAlternatives: Array<ForumPollAlternative>
-  forumPollAlternativesConnection: ForumPollAlternativeConnection
-  forumPollByUniqueInput?: Maybe<ForumPoll>
-  forumPolls: Array<ForumPoll>
-  forumPollsConnection: ForumPollConnection
   forumPostByUniqueInput?: Maybe<ForumPost>
   forumPostReactionByUniqueInput?: Maybe<ForumPostReaction>
   forumPostReactions: Array<ForumPostReaction>
@@ -21453,9 +21225,6 @@ export type Query = {
   voteCastEventByUniqueInput?: Maybe<VoteCastEvent>
   voteCastEvents: Array<VoteCastEvent>
   voteCastEventsConnection: VoteCastEventConnection
-  voteOnPollEventByUniqueInput?: Maybe<VoteOnPollEvent>
-  voteOnPollEvents: Array<VoteOnPollEvent>
-  voteOnPollEventsConnection: VoteOnPollEventConnection
   voteRevealedEventByUniqueInput?: Maybe<VoteRevealedEvent>
   voteRevealedEvents: Array<VoteRevealedEvent>
   voteRevealedEventsConnection: VoteRevealedEventConnection
@@ -21532,7 +21301,7 @@ export type QueryAnnouncingPeriodStartedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<AnnouncingPeriodStartedEventOrderByInput>>
+  orderBy?: InputMaybe<AnnouncingPeriodStartedEventOrderByInput>
   where?: InputMaybe<AnnouncingPeriodStartedEventWhereInput>
 }
 
@@ -21552,7 +21321,7 @@ export type QueryApplicationFormQuestionAnswersConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ApplicationFormQuestionAnswerOrderByInput>>
+  orderBy?: InputMaybe<ApplicationFormQuestionAnswerOrderByInput>
   where?: InputMaybe<ApplicationFormQuestionAnswerWhereInput>
 }
 
@@ -21572,7 +21341,7 @@ export type QueryApplicationFormQuestionsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ApplicationFormQuestionOrderByInput>>
+  orderBy?: InputMaybe<ApplicationFormQuestionOrderByInput>
   where?: InputMaybe<ApplicationFormQuestionWhereInput>
 }
 
@@ -21592,7 +21361,7 @@ export type QueryApplicationWithdrawnEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ApplicationWithdrawnEventOrderByInput>>
+  orderBy?: InputMaybe<ApplicationWithdrawnEventOrderByInput>
   where?: InputMaybe<ApplicationWithdrawnEventWhereInput>
 }
 
@@ -21612,7 +21381,7 @@ export type QueryAppliedOnOpeningEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<AppliedOnOpeningEventOrderByInput>>
+  orderBy?: InputMaybe<AppliedOnOpeningEventOrderByInput>
   where?: InputMaybe<AppliedOnOpeningEventWhereInput>
 }
 
@@ -21632,7 +21401,7 @@ export type QueryAuctionBidCanceledEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<AuctionBidCanceledEventOrderByInput>>
+  orderBy?: InputMaybe<AuctionBidCanceledEventOrderByInput>
   where?: InputMaybe<AuctionBidCanceledEventWhereInput>
 }
 
@@ -21652,7 +21421,7 @@ export type QueryAuctionBidMadeEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<AuctionBidMadeEventOrderByInput>>
+  orderBy?: InputMaybe<AuctionBidMadeEventOrderByInput>
   where?: InputMaybe<AuctionBidMadeEventWhereInput>
 }
 
@@ -21676,7 +21445,7 @@ export type QueryAuctionCanceledEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<AuctionCanceledEventOrderByInput>>
+  orderBy?: InputMaybe<AuctionCanceledEventOrderByInput>
   where?: InputMaybe<AuctionCanceledEventWhereInput>
 }
 
@@ -21692,7 +21461,7 @@ export type QueryAuctionsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<AuctionOrderByInput>>
+  orderBy?: InputMaybe<AuctionOrderByInput>
   where?: InputMaybe<AuctionWhereInput>
 }
 
@@ -21716,7 +21485,7 @@ export type QueryBidMadeCompletingAuctionEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<BidMadeCompletingAuctionEventOrderByInput>>
+  orderBy?: InputMaybe<BidMadeCompletingAuctionEventOrderByInput>
   where?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
 }
 
@@ -21732,7 +21501,7 @@ export type QueryBidsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<BidOrderByInput>>
+  orderBy?: InputMaybe<BidOrderByInput>
   where?: InputMaybe<BidWhereInput>
 }
 
@@ -21748,7 +21517,7 @@ export type QueryBountiesConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<BountyOrderByInput>>
+  orderBy?: InputMaybe<BountyOrderByInput>
   where?: InputMaybe<BountyWhereInput>
 }
 
@@ -21772,7 +21541,7 @@ export type QueryBountyCanceledEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<BountyCanceledEventOrderByInput>>
+  orderBy?: InputMaybe<BountyCanceledEventOrderByInput>
   where?: InputMaybe<BountyCanceledEventWhereInput>
 }
 
@@ -21792,7 +21561,7 @@ export type QueryBountyContributionsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<BountyContributionOrderByInput>>
+  orderBy?: InputMaybe<BountyContributionOrderByInput>
   where?: InputMaybe<BountyContributionWhereInput>
 }
 
@@ -21812,7 +21581,7 @@ export type QueryBountyCreatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<BountyCreatedEventOrderByInput>>
+  orderBy?: InputMaybe<BountyCreatedEventOrderByInput>
   where?: InputMaybe<BountyCreatedEventWhereInput>
 }
 
@@ -21832,7 +21601,7 @@ export type QueryBountyCreatorCherryWithdrawalEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<BountyCreatorCherryWithdrawalEventOrderByInput>>
+  orderBy?: InputMaybe<BountyCreatorCherryWithdrawalEventOrderByInput>
   where?: InputMaybe<BountyCreatorCherryWithdrawalEventWhereInput>
 }
 
@@ -21852,7 +21621,7 @@ export type QueryBountyEntrantWhitelistsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<BountyEntrantWhitelistOrderByInput>>
+  orderBy?: InputMaybe<BountyEntrantWhitelistOrderByInput>
   where?: InputMaybe<BountyEntrantWhitelistWhereInput>
 }
 
@@ -21868,7 +21637,7 @@ export type QueryBountyEntriesConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<BountyEntryOrderByInput>>
+  orderBy?: InputMaybe<BountyEntryOrderByInput>
   where?: InputMaybe<BountyEntryWhereInput>
 }
 
@@ -21892,7 +21661,7 @@ export type QueryBountyFundedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<BountyFundedEventOrderByInput>>
+  orderBy?: InputMaybe<BountyFundedEventOrderByInput>
   where?: InputMaybe<BountyFundedEventWhereInput>
 }
 
@@ -21912,7 +21681,7 @@ export type QueryBountyFundingWithdrawalEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<BountyFundingWithdrawalEventOrderByInput>>
+  orderBy?: InputMaybe<BountyFundingWithdrawalEventOrderByInput>
   where?: InputMaybe<BountyFundingWithdrawalEventWhereInput>
 }
 
@@ -21932,7 +21701,7 @@ export type QueryBountyMaxFundingReachedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<BountyMaxFundingReachedEventOrderByInput>>
+  orderBy?: InputMaybe<BountyMaxFundingReachedEventOrderByInput>
   where?: InputMaybe<BountyMaxFundingReachedEventWhereInput>
 }
 
@@ -21952,7 +21721,7 @@ export type QueryBountyRemovedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<BountyRemovedEventOrderByInput>>
+  orderBy?: InputMaybe<BountyRemovedEventOrderByInput>
   where?: InputMaybe<BountyRemovedEventWhereInput>
 }
 
@@ -21972,7 +21741,7 @@ export type QueryBountyVetoedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<BountyVetoedEventOrderByInput>>
+  orderBy?: InputMaybe<BountyVetoedEventOrderByInput>
   where?: InputMaybe<BountyVetoedEventWhereInput>
 }
 
@@ -21992,7 +21761,7 @@ export type QueryBudgetBalanceSetEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<BudgetBalanceSetEventOrderByInput>>
+  orderBy?: InputMaybe<BudgetBalanceSetEventOrderByInput>
   where?: InputMaybe<BudgetBalanceSetEventWhereInput>
 }
 
@@ -22012,7 +21781,7 @@ export type QueryBudgetIncrementUpdatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<BudgetIncrementUpdatedEventOrderByInput>>
+  orderBy?: InputMaybe<BudgetIncrementUpdatedEventOrderByInput>
   where?: InputMaybe<BudgetIncrementUpdatedEventWhereInput>
 }
 
@@ -22032,7 +21801,7 @@ export type QueryBudgetRefillEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<BudgetRefillEventOrderByInput>>
+  orderBy?: InputMaybe<BudgetRefillEventOrderByInput>
   where?: InputMaybe<BudgetRefillEventWhereInput>
 }
 
@@ -22052,7 +21821,7 @@ export type QueryBudgetRefillPlannedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<BudgetRefillPlannedEventOrderByInput>>
+  orderBy?: InputMaybe<BudgetRefillPlannedEventOrderByInput>
   where?: InputMaybe<BudgetRefillPlannedEventWhereInput>
 }
 
@@ -22072,7 +21841,7 @@ export type QueryBudgetSetEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<BudgetSetEventOrderByInput>>
+  orderBy?: InputMaybe<BudgetSetEventOrderByInput>
   where?: InputMaybe<BudgetSetEventWhereInput>
 }
 
@@ -22092,7 +21861,7 @@ export type QueryBudgetSpendingEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<BudgetSpendingEventOrderByInput>>
+  orderBy?: InputMaybe<BudgetSpendingEventOrderByInput>
   where?: InputMaybe<BudgetSpendingEventWhereInput>
 }
 
@@ -22112,7 +21881,7 @@ export type QueryBudgetUpdatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<BudgetUpdatedEventOrderByInput>>
+  orderBy?: InputMaybe<BudgetUpdatedEventOrderByInput>
   where?: InputMaybe<BudgetUpdatedEventWhereInput>
 }
 
@@ -22132,7 +21901,7 @@ export type QueryBuyNowCanceledEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<BuyNowCanceledEventOrderByInput>>
+  orderBy?: InputMaybe<BuyNowCanceledEventOrderByInput>
   where?: InputMaybe<BuyNowCanceledEventWhereInput>
 }
 
@@ -22152,7 +21921,7 @@ export type QueryBuyNowPriceUpdatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<BuyNowPriceUpdatedEventOrderByInput>>
+  orderBy?: InputMaybe<BuyNowPriceUpdatedEventOrderByInput>
   where?: InputMaybe<BuyNowPriceUpdatedEventWhereInput>
 }
 
@@ -22172,7 +21941,7 @@ export type QueryCandidacyNoteMetadataConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CandidacyNoteMetadataOrderByInput>>
+  orderBy?: InputMaybe<CandidacyNoteMetadataOrderByInput>
   where?: InputMaybe<CandidacyNoteMetadataWhereInput>
 }
 
@@ -22192,7 +21961,7 @@ export type QueryCandidacyNoteSetEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CandidacyNoteSetEventOrderByInput>>
+  orderBy?: InputMaybe<CandidacyNoteSetEventOrderByInput>
   where?: InputMaybe<CandidacyNoteSetEventWhereInput>
 }
 
@@ -22212,7 +21981,7 @@ export type QueryCandidacyStakeReleaseEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CandidacyStakeReleaseEventOrderByInput>>
+  orderBy?: InputMaybe<CandidacyStakeReleaseEventOrderByInput>
   where?: InputMaybe<CandidacyStakeReleaseEventWhereInput>
 }
 
@@ -22232,7 +22001,7 @@ export type QueryCandidacyWithdrawEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CandidacyWithdrawEventOrderByInput>>
+  orderBy?: InputMaybe<CandidacyWithdrawEventOrderByInput>
   where?: InputMaybe<CandidacyWithdrawEventWhereInput>
 }
 
@@ -22252,7 +22021,7 @@ export type QueryCandidatesConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CandidateOrderByInput>>
+  orderBy?: InputMaybe<CandidateOrderByInput>
   where?: InputMaybe<CandidateWhereInput>
 }
 
@@ -22272,7 +22041,7 @@ export type QueryCastVotesConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CastVoteOrderByInput>>
+  orderBy?: InputMaybe<CastVoteOrderByInput>
   where?: InputMaybe<CastVoteWhereInput>
 }
 
@@ -22292,7 +22061,7 @@ export type QueryCategoryArchivalStatusUpdatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CategoryArchivalStatusUpdatedEventOrderByInput>>
+  orderBy?: InputMaybe<CategoryArchivalStatusUpdatedEventOrderByInput>
   where?: InputMaybe<CategoryArchivalStatusUpdatedEventWhereInput>
 }
 
@@ -22312,7 +22081,7 @@ export type QueryCategoryCreatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CategoryCreatedEventOrderByInput>>
+  orderBy?: InputMaybe<CategoryCreatedEventOrderByInput>
   where?: InputMaybe<CategoryCreatedEventWhereInput>
 }
 
@@ -22332,7 +22101,7 @@ export type QueryCategoryDeletedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CategoryDeletedEventOrderByInput>>
+  orderBy?: InputMaybe<CategoryDeletedEventOrderByInput>
   where?: InputMaybe<CategoryDeletedEventWhereInput>
 }
 
@@ -22356,7 +22125,7 @@ export type QueryCategoryMembershipOfModeratorUpdatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CategoryMembershipOfModeratorUpdatedEventOrderByInput>>
+  orderBy?: InputMaybe<CategoryMembershipOfModeratorUpdatedEventOrderByInput>
   where?: InputMaybe<CategoryMembershipOfModeratorUpdatedEventWhereInput>
 }
 
@@ -22376,7 +22145,7 @@ export type QueryCategoryStickyThreadUpdateEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CategoryStickyThreadUpdateEventOrderByInput>>
+  orderBy?: InputMaybe<CategoryStickyThreadUpdateEventOrderByInput>
   where?: InputMaybe<CategoryStickyThreadUpdateEventWhereInput>
 }
 
@@ -22396,7 +22165,7 @@ export type QueryChannelAssetsDeletedByModeratorEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ChannelAssetsDeletedByModeratorEventOrderByInput>>
+  orderBy?: InputMaybe<ChannelAssetsDeletedByModeratorEventOrderByInput>
   where?: InputMaybe<ChannelAssetsDeletedByModeratorEventWhereInput>
 }
 
@@ -22423,7 +22192,7 @@ export type QueryChannelCategoriesConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ChannelCategoryOrderByInput>>
+  orderBy?: InputMaybe<ChannelCategoryOrderByInput>
   where?: InputMaybe<ChannelCategoryWhereInput>
 }
 
@@ -22447,7 +22216,7 @@ export type QueryChannelDeletedByModeratorEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ChannelDeletedByModeratorEventOrderByInput>>
+  orderBy?: InputMaybe<ChannelDeletedByModeratorEventOrderByInput>
   where?: InputMaybe<ChannelDeletedByModeratorEventWhereInput>
 }
 
@@ -22467,7 +22236,7 @@ export type QueryChannelNftCollectorsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ChannelNftCollectorsOrderByInput>>
+  orderBy?: InputMaybe<ChannelNftCollectorsOrderByInput>
   where?: InputMaybe<ChannelNftCollectorsWhereInput>
 }
 
@@ -22483,7 +22252,7 @@ export type QueryChannelsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ChannelOrderByInput>>
+  orderBy?: InputMaybe<ChannelOrderByInput>
   where?: InputMaybe<ChannelWhereInput>
 }
 
@@ -22507,7 +22276,7 @@ export type QueryCommentCreatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CommentCreatedEventOrderByInput>>
+  orderBy?: InputMaybe<CommentCreatedEventOrderByInput>
   where?: InputMaybe<CommentCreatedEventWhereInput>
 }
 
@@ -22527,7 +22296,7 @@ export type QueryCommentDeletedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CommentDeletedEventOrderByInput>>
+  orderBy?: InputMaybe<CommentDeletedEventOrderByInput>
   where?: InputMaybe<CommentDeletedEventWhereInput>
 }
 
@@ -22547,7 +22316,7 @@ export type QueryCommentModeratedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CommentModeratedEventOrderByInput>>
+  orderBy?: InputMaybe<CommentModeratedEventOrderByInput>
   where?: InputMaybe<CommentModeratedEventWhereInput>
 }
 
@@ -22567,7 +22336,7 @@ export type QueryCommentPinnedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CommentPinnedEventOrderByInput>>
+  orderBy?: InputMaybe<CommentPinnedEventOrderByInput>
   where?: InputMaybe<CommentPinnedEventWhereInput>
 }
 
@@ -22587,7 +22356,7 @@ export type QueryCommentReactedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CommentReactedEventOrderByInput>>
+  orderBy?: InputMaybe<CommentReactedEventOrderByInput>
   where?: InputMaybe<CommentReactedEventWhereInput>
 }
 
@@ -22607,7 +22376,7 @@ export type QueryCommentReactionsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CommentReactionOrderByInput>>
+  orderBy?: InputMaybe<CommentReactionOrderByInput>
   where?: InputMaybe<CommentReactionWhereInput>
 }
 
@@ -22627,7 +22396,7 @@ export type QueryCommentReactionsCountByReactionIdsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CommentReactionsCountByReactionIdOrderByInput>>
+  orderBy?: InputMaybe<CommentReactionsCountByReactionIdOrderByInput>
   where?: InputMaybe<CommentReactionsCountByReactionIdWhereInput>
 }
 
@@ -22654,7 +22423,7 @@ export type QueryCommentTextUpdatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CommentTextUpdatedEventOrderByInput>>
+  orderBy?: InputMaybe<CommentTextUpdatedEventOrderByInput>
   where?: InputMaybe<CommentTextUpdatedEventWhereInput>
 }
 
@@ -22670,7 +22439,7 @@ export type QueryCommentsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CommentOrderByInput>>
+  orderBy?: InputMaybe<CommentOrderByInput>
   where?: InputMaybe<CommentWhereInput>
 }
 
@@ -22690,7 +22459,7 @@ export type QueryCouncilMembersConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CouncilMemberOrderByInput>>
+  orderBy?: InputMaybe<CouncilMemberOrderByInput>
   where?: InputMaybe<CouncilMemberWhereInput>
 }
 
@@ -22710,7 +22479,7 @@ export type QueryCouncilStageUpdatesConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CouncilStageUpdateOrderByInput>>
+  orderBy?: InputMaybe<CouncilStageUpdateOrderByInput>
   where?: InputMaybe<CouncilStageUpdateWhereInput>
 }
 
@@ -22730,7 +22499,7 @@ export type QueryCouncilorRewardUpdatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CouncilorRewardUpdatedEventOrderByInput>>
+  orderBy?: InputMaybe<CouncilorRewardUpdatedEventOrderByInput>
   where?: InputMaybe<CouncilorRewardUpdatedEventWhereInput>
 }
 
@@ -22754,7 +22523,7 @@ export type QueryCuratorGroupsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CuratorGroupOrderByInput>>
+  orderBy?: InputMaybe<CuratorGroupOrderByInput>
   where?: InputMaybe<CuratorGroupWhereInput>
 }
 
@@ -22770,7 +22539,7 @@ export type QueryCuratorsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CuratorOrderByInput>>
+  orderBy?: InputMaybe<CuratorOrderByInput>
   where?: InputMaybe<CuratorWhereInput>
 }
 
@@ -22794,7 +22563,7 @@ export type QueryDistributionBucketFamiliesConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<DistributionBucketFamilyOrderByInput>>
+  orderBy?: InputMaybe<DistributionBucketFamilyOrderByInput>
   where?: InputMaybe<DistributionBucketFamilyWhereInput>
 }
 
@@ -22818,7 +22587,7 @@ export type QueryDistributionBucketFamilyGeographicAreasConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<DistributionBucketFamilyGeographicAreaOrderByInput>>
+  orderBy?: InputMaybe<DistributionBucketFamilyGeographicAreaOrderByInput>
   where?: InputMaybe<DistributionBucketFamilyGeographicAreaWhereInput>
 }
 
@@ -22838,7 +22607,7 @@ export type QueryDistributionBucketFamilyMetadataConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<DistributionBucketFamilyMetadataOrderByInput>>
+  orderBy?: InputMaybe<DistributionBucketFamilyMetadataOrderByInput>
   where?: InputMaybe<DistributionBucketFamilyMetadataWhereInput>
 }
 
@@ -22862,7 +22631,7 @@ export type QueryDistributionBucketOperatorMetadataConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<DistributionBucketOperatorMetadataOrderByInput>>
+  orderBy?: InputMaybe<DistributionBucketOperatorMetadataOrderByInput>
   where?: InputMaybe<DistributionBucketOperatorMetadataWhereInput>
 }
 
@@ -22878,7 +22647,7 @@ export type QueryDistributionBucketOperatorsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<DistributionBucketOperatorOrderByInput>>
+  orderBy?: InputMaybe<DistributionBucketOperatorOrderByInput>
   where?: InputMaybe<DistributionBucketOperatorWhereInput>
 }
 
@@ -22894,7 +22663,7 @@ export type QueryDistributionBucketsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<DistributionBucketOrderByInput>>
+  orderBy?: InputMaybe<DistributionBucketOrderByInput>
   where?: InputMaybe<DistributionBucketWhereInput>
 }
 
@@ -22914,7 +22683,7 @@ export type QueryElectedCouncilsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ElectedCouncilOrderByInput>>
+  orderBy?: InputMaybe<ElectedCouncilOrderByInput>
   where?: InputMaybe<ElectedCouncilWhereInput>
 }
 
@@ -22934,7 +22703,7 @@ export type QueryElectionRoundsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ElectionRoundOrderByInput>>
+  orderBy?: InputMaybe<ElectionRoundOrderByInput>
   where?: InputMaybe<ElectionRoundWhereInput>
 }
 
@@ -22954,7 +22723,7 @@ export type QueryEnglishAuctionSettledEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<EnglishAuctionSettledEventOrderByInput>>
+  orderBy?: InputMaybe<EnglishAuctionSettledEventOrderByInput>
   where?: InputMaybe<EnglishAuctionSettledEventWhereInput>
 }
 
@@ -22974,7 +22743,7 @@ export type QueryEnglishAuctionStartedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<EnglishAuctionStartedEventOrderByInput>>
+  orderBy?: InputMaybe<EnglishAuctionStartedEventOrderByInput>
   where?: InputMaybe<EnglishAuctionStartedEventWhereInput>
 }
 
@@ -22997,52 +22766,12 @@ export type QueryForumCategoriesConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ForumCategoryOrderByInput>>
+  orderBy?: InputMaybe<ForumCategoryOrderByInput>
   where?: InputMaybe<ForumCategoryWhereInput>
 }
 
 export type QueryForumCategoryByUniqueInputArgs = {
   where: ForumCategoryWhereUniqueInput
-}
-
-export type QueryForumPollAlternativeByUniqueInputArgs = {
-  where: ForumPollAlternativeWhereUniqueInput
-}
-
-export type QueryForumPollAlternativesArgs = {
-  limit?: InputMaybe<Scalars['Int']>
-  offset?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ForumPollAlternativeOrderByInput>>
-  where?: InputMaybe<ForumPollAlternativeWhereInput>
-}
-
-export type QueryForumPollAlternativesConnectionArgs = {
-  after?: InputMaybe<Scalars['String']>
-  before?: InputMaybe<Scalars['String']>
-  first?: InputMaybe<Scalars['Int']>
-  last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ForumPollAlternativeOrderByInput>>
-  where?: InputMaybe<ForumPollAlternativeWhereInput>
-}
-
-export type QueryForumPollByUniqueInputArgs = {
-  where: ForumPollWhereUniqueInput
-}
-
-export type QueryForumPollsArgs = {
-  limit?: InputMaybe<Scalars['Int']>
-  offset?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ForumPollOrderByInput>>
-  where?: InputMaybe<ForumPollWhereInput>
-}
-
-export type QueryForumPollsConnectionArgs = {
-  after?: InputMaybe<Scalars['String']>
-  before?: InputMaybe<Scalars['String']>
-  first?: InputMaybe<Scalars['Int']>
-  last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ForumPollOrderByInput>>
-  where?: InputMaybe<ForumPollWhereInput>
 }
 
 export type QueryForumPostByUniqueInputArgs = {
@@ -23065,7 +22794,7 @@ export type QueryForumPostReactionsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ForumPostReactionOrderByInput>>
+  orderBy?: InputMaybe<ForumPostReactionOrderByInput>
   where?: InputMaybe<ForumPostReactionWhereInput>
 }
 
@@ -23081,7 +22810,7 @@ export type QueryForumPostsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ForumPostOrderByInput>>
+  orderBy?: InputMaybe<ForumPostOrderByInput>
   where?: InputMaybe<ForumPostWhereInput>
 }
 
@@ -23105,7 +22834,7 @@ export type QueryForumThreadTagsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ForumThreadTagOrderByInput>>
+  orderBy?: InputMaybe<ForumThreadTagOrderByInput>
   where?: InputMaybe<ForumThreadTagWhereInput>
 }
 
@@ -23121,7 +22850,7 @@ export type QueryForumThreadsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ForumThreadOrderByInput>>
+  orderBy?: InputMaybe<ForumThreadOrderByInput>
   where?: InputMaybe<ForumThreadWhereInput>
 }
 
@@ -23141,7 +22870,7 @@ export type QueryFundingRequestDestinationsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<FundingRequestDestinationOrderByInput>>
+  orderBy?: InputMaybe<FundingRequestDestinationOrderByInput>
   where?: InputMaybe<FundingRequestDestinationWhereInput>
 }
 
@@ -23161,7 +22890,7 @@ export type QueryFundingRequestDestinationsListsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<FundingRequestDestinationsListOrderByInput>>
+  orderBy?: InputMaybe<FundingRequestDestinationsListOrderByInput>
   where?: InputMaybe<FundingRequestDestinationsListWhereInput>
 }
 
@@ -23181,7 +22910,7 @@ export type QueryGeoCoordinatesConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<GeoCoordinatesOrderByInput>>
+  orderBy?: InputMaybe<GeoCoordinatesOrderByInput>
   where?: InputMaybe<GeoCoordinatesWhereInput>
 }
 
@@ -23201,7 +22930,7 @@ export type QueryInitialInvitationBalanceUpdatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<InitialInvitationBalanceUpdatedEventOrderByInput>>
+  orderBy?: InputMaybe<InitialInvitationBalanceUpdatedEventOrderByInput>
   where?: InputMaybe<InitialInvitationBalanceUpdatedEventWhereInput>
 }
 
@@ -23221,7 +22950,7 @@ export type QueryInitialInvitationCountUpdatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<InitialInvitationCountUpdatedEventOrderByInput>>
+  orderBy?: InputMaybe<InitialInvitationCountUpdatedEventOrderByInput>
   where?: InputMaybe<InitialInvitationCountUpdatedEventWhereInput>
 }
 
@@ -23241,7 +22970,7 @@ export type QueryInvitesTransferredEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<InvitesTransferredEventOrderByInput>>
+  orderBy?: InputMaybe<InvitesTransferredEventOrderByInput>
   where?: InputMaybe<InvitesTransferredEventWhereInput>
 }
 
@@ -23261,7 +22990,7 @@ export type QueryLanguagesConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<LanguageOrderByInput>>
+  orderBy?: InputMaybe<LanguageOrderByInput>
   where?: InputMaybe<LanguageWhereInput>
 }
 
@@ -23281,7 +23010,7 @@ export type QueryLeaderInvitationQuotaUpdatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<LeaderInvitationQuotaUpdatedEventOrderByInput>>
+  orderBy?: InputMaybe<LeaderInvitationQuotaUpdatedEventOrderByInput>
   where?: InputMaybe<LeaderInvitationQuotaUpdatedEventWhereInput>
 }
 
@@ -23301,7 +23030,7 @@ export type QueryLeaderSetEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<LeaderSetEventOrderByInput>>
+  orderBy?: InputMaybe<LeaderSetEventOrderByInput>
   where?: InputMaybe<LeaderSetEventWhereInput>
 }
 
@@ -23321,7 +23050,7 @@ export type QueryLeaderUnsetEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<LeaderUnsetEventOrderByInput>>
+  orderBy?: InputMaybe<LeaderUnsetEventOrderByInput>
   where?: InputMaybe<LeaderUnsetEventWhereInput>
 }
 
@@ -23341,7 +23070,7 @@ export type QueryLicensesConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<LicenseOrderByInput>>
+  orderBy?: InputMaybe<LicenseOrderByInput>
   where?: InputMaybe<LicenseWhereInput>
 }
 
@@ -23361,7 +23090,7 @@ export type QueryMemberAccountsUpdatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<MemberAccountsUpdatedEventOrderByInput>>
+  orderBy?: InputMaybe<MemberAccountsUpdatedEventOrderByInput>
   where?: InputMaybe<MemberAccountsUpdatedEventWhereInput>
 }
 
@@ -23381,7 +23110,7 @@ export type QueryMemberBannedFromChannelEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<MemberBannedFromChannelEventOrderByInput>>
+  orderBy?: InputMaybe<MemberBannedFromChannelEventOrderByInput>
   where?: InputMaybe<MemberBannedFromChannelEventWhereInput>
 }
 
@@ -23401,7 +23130,7 @@ export type QueryMemberInvitedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<MemberInvitedEventOrderByInput>>
+  orderBy?: InputMaybe<MemberInvitedEventOrderByInput>
   where?: InputMaybe<MemberInvitedEventWhereInput>
 }
 
@@ -23421,7 +23150,7 @@ export type QueryMemberMetadataConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<MemberMetadataOrderByInput>>
+  orderBy?: InputMaybe<MemberMetadataOrderByInput>
   where?: InputMaybe<MemberMetadataWhereInput>
 }
 
@@ -23441,7 +23170,7 @@ export type QueryMemberProfileUpdatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<MemberProfileUpdatedEventOrderByInput>>
+  orderBy?: InputMaybe<MemberProfileUpdatedEventOrderByInput>
   where?: InputMaybe<MemberProfileUpdatedEventWhereInput>
 }
 
@@ -23461,7 +23190,7 @@ export type QueryMemberVerificationStatusUpdatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<MemberVerificationStatusUpdatedEventOrderByInput>>
+  orderBy?: InputMaybe<MemberVerificationStatusUpdatedEventOrderByInput>
   where?: InputMaybe<MemberVerificationStatusUpdatedEventWhereInput>
 }
 
@@ -23488,7 +23217,7 @@ export type QueryMembershipBoughtEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<MembershipBoughtEventOrderByInput>>
+  orderBy?: InputMaybe<MembershipBoughtEventOrderByInput>
   where?: InputMaybe<MembershipBoughtEventWhereInput>
 }
 
@@ -23512,7 +23241,7 @@ export type QueryMembershipPriceUpdatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<MembershipPriceUpdatedEventOrderByInput>>
+  orderBy?: InputMaybe<MembershipPriceUpdatedEventOrderByInput>
   where?: InputMaybe<MembershipPriceUpdatedEventWhereInput>
 }
 
@@ -23532,7 +23261,7 @@ export type QueryMembershipSystemSnapshotsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<MembershipSystemSnapshotOrderByInput>>
+  orderBy?: InputMaybe<MembershipSystemSnapshotOrderByInput>
   where?: InputMaybe<MembershipSystemSnapshotWhereInput>
 }
 
@@ -23548,7 +23277,7 @@ export type QueryMembershipsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<MembershipOrderByInput>>
+  orderBy?: InputMaybe<MembershipOrderByInput>
   where?: InputMaybe<MembershipWhereInput>
 }
 
@@ -23568,7 +23297,7 @@ export type QueryMetaprotocolTransactionStatusEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<MetaprotocolTransactionStatusEventOrderByInput>>
+  orderBy?: InputMaybe<MetaprotocolTransactionStatusEventOrderByInput>
   where?: InputMaybe<MetaprotocolTransactionStatusEventWhereInput>
 }
 
@@ -23630,7 +23359,7 @@ export type QueryNewCandidateEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<NewCandidateEventOrderByInput>>
+  orderBy?: InputMaybe<NewCandidateEventOrderByInput>
   where?: InputMaybe<NewCandidateEventWhereInput>
 }
 
@@ -23650,7 +23379,7 @@ export type QueryNewCouncilElectedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<NewCouncilElectedEventOrderByInput>>
+  orderBy?: InputMaybe<NewCouncilElectedEventOrderByInput>
   where?: InputMaybe<NewCouncilElectedEventWhereInput>
 }
 
@@ -23670,7 +23399,7 @@ export type QueryNewCouncilNotElectedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<NewCouncilNotElectedEventOrderByInput>>
+  orderBy?: InputMaybe<NewCouncilNotElectedEventOrderByInput>
   where?: InputMaybe<NewCouncilNotElectedEventWhereInput>
 }
 
@@ -23690,7 +23419,7 @@ export type QueryNewMissedRewardLevelReachedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<NewMissedRewardLevelReachedEventOrderByInput>>
+  orderBy?: InputMaybe<NewMissedRewardLevelReachedEventOrderByInput>
   where?: InputMaybe<NewMissedRewardLevelReachedEventWhereInput>
 }
 
@@ -23710,7 +23439,7 @@ export type QueryNftBoughtEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<NftBoughtEventOrderByInput>>
+  orderBy?: InputMaybe<NftBoughtEventOrderByInput>
   where?: InputMaybe<NftBoughtEventWhereInput>
 }
 
@@ -23730,7 +23459,7 @@ export type QueryNftIssuedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<NftIssuedEventOrderByInput>>
+  orderBy?: InputMaybe<NftIssuedEventOrderByInput>
   where?: InputMaybe<NftIssuedEventWhereInput>
 }
 
@@ -23750,7 +23479,7 @@ export type QueryNftSellOrderMadeEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<NftSellOrderMadeEventOrderByInput>>
+  orderBy?: InputMaybe<NftSellOrderMadeEventOrderByInput>
   where?: InputMaybe<NftSellOrderMadeEventWhereInput>
 }
 
@@ -23770,7 +23499,7 @@ export type QueryNftSlingedBackToTheOriginalArtistEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<NftSlingedBackToTheOriginalArtistEventOrderByInput>>
+  orderBy?: InputMaybe<NftSlingedBackToTheOriginalArtistEventOrderByInput>
   where?: InputMaybe<NftSlingedBackToTheOriginalArtistEventWhereInput>
 }
 
@@ -23790,7 +23519,7 @@ export type QueryNodeLocationMetadataConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<NodeLocationMetadataOrderByInput>>
+  orderBy?: InputMaybe<NodeLocationMetadataOrderByInput>
   where?: InputMaybe<NodeLocationMetadataWhereInput>
 }
 
@@ -23810,7 +23539,7 @@ export type QueryNotEnoughCandidatesEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<NotEnoughCandidatesEventOrderByInput>>
+  orderBy?: InputMaybe<NotEnoughCandidatesEventOrderByInput>
   where?: InputMaybe<NotEnoughCandidatesEventWhereInput>
 }
 
@@ -23830,7 +23559,7 @@ export type QueryOfferAcceptedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<OfferAcceptedEventOrderByInput>>
+  orderBy?: InputMaybe<OfferAcceptedEventOrderByInput>
   where?: InputMaybe<OfferAcceptedEventWhereInput>
 }
 
@@ -23850,7 +23579,7 @@ export type QueryOfferCanceledEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<OfferCanceledEventOrderByInput>>
+  orderBy?: InputMaybe<OfferCanceledEventOrderByInput>
   where?: InputMaybe<OfferCanceledEventWhereInput>
 }
 
@@ -23870,7 +23599,7 @@ export type QueryOfferStartedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<OfferStartedEventOrderByInput>>
+  orderBy?: InputMaybe<OfferStartedEventOrderByInput>
   where?: InputMaybe<OfferStartedEventWhereInput>
 }
 
@@ -23890,7 +23619,7 @@ export type QueryOpenAuctionBidAcceptedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<OpenAuctionBidAcceptedEventOrderByInput>>
+  orderBy?: InputMaybe<OpenAuctionBidAcceptedEventOrderByInput>
   where?: InputMaybe<OpenAuctionBidAcceptedEventWhereInput>
 }
 
@@ -23910,7 +23639,7 @@ export type QueryOpenAuctionStartedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<OpenAuctionStartedEventOrderByInput>>
+  orderBy?: InputMaybe<OpenAuctionStartedEventOrderByInput>
   where?: InputMaybe<OpenAuctionStartedEventWhereInput>
 }
 
@@ -23930,7 +23659,7 @@ export type QueryOpeningAddedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<OpeningAddedEventOrderByInput>>
+  orderBy?: InputMaybe<OpeningAddedEventOrderByInput>
   where?: InputMaybe<OpeningAddedEventWhereInput>
 }
 
@@ -23950,7 +23679,7 @@ export type QueryOpeningCanceledEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<OpeningCanceledEventOrderByInput>>
+  orderBy?: InputMaybe<OpeningCanceledEventOrderByInput>
   where?: InputMaybe<OpeningCanceledEventWhereInput>
 }
 
@@ -23970,7 +23699,7 @@ export type QueryOpeningFilledEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<OpeningFilledEventOrderByInput>>
+  orderBy?: InputMaybe<OpeningFilledEventOrderByInput>
   where?: InputMaybe<OpeningFilledEventWhereInput>
 }
 
@@ -23990,7 +23719,7 @@ export type QueryOracleJudgmentSubmittedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<OracleJudgmentSubmittedEventOrderByInput>>
+  orderBy?: InputMaybe<OracleJudgmentSubmittedEventOrderByInput>
   where?: InputMaybe<OracleJudgmentSubmittedEventWhereInput>
 }
 
@@ -24010,7 +23739,7 @@ export type QueryOwnedNftsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<OwnedNftOrderByInput>>
+  orderBy?: InputMaybe<OwnedNftOrderByInput>
   where?: InputMaybe<OwnedNftWhereInput>
 }
 
@@ -24034,7 +23763,7 @@ export type QueryPostAddedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<PostAddedEventOrderByInput>>
+  orderBy?: InputMaybe<PostAddedEventOrderByInput>
   where?: InputMaybe<PostAddedEventWhereInput>
 }
 
@@ -24054,7 +23783,7 @@ export type QueryPostDeletedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<PostDeletedEventOrderByInput>>
+  orderBy?: InputMaybe<PostDeletedEventOrderByInput>
   where?: InputMaybe<PostDeletedEventWhereInput>
 }
 
@@ -24074,7 +23803,7 @@ export type QueryPostModeratedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<PostModeratedEventOrderByInput>>
+  orderBy?: InputMaybe<PostModeratedEventOrderByInput>
   where?: InputMaybe<PostModeratedEventWhereInput>
 }
 
@@ -24094,7 +23823,7 @@ export type QueryPostReactedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<PostReactedEventOrderByInput>>
+  orderBy?: InputMaybe<PostReactedEventOrderByInput>
   where?: InputMaybe<PostReactedEventWhereInput>
 }
 
@@ -24114,7 +23843,7 @@ export type QueryPostTextUpdatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<PostTextUpdatedEventOrderByInput>>
+  orderBy?: InputMaybe<PostTextUpdatedEventOrderByInput>
   where?: InputMaybe<PostTextUpdatedEventWhereInput>
 }
 
@@ -24149,7 +23878,7 @@ export type QueryProposalCancelledEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ProposalCancelledEventOrderByInput>>
+  orderBy?: InputMaybe<ProposalCancelledEventOrderByInput>
   where?: InputMaybe<ProposalCancelledEventWhereInput>
 }
 
@@ -24169,7 +23898,7 @@ export type QueryProposalCreatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ProposalCreatedEventOrderByInput>>
+  orderBy?: InputMaybe<ProposalCreatedEventOrderByInput>
   where?: InputMaybe<ProposalCreatedEventWhereInput>
 }
 
@@ -24189,7 +23918,7 @@ export type QueryProposalDecisionMadeEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ProposalDecisionMadeEventOrderByInput>>
+  orderBy?: InputMaybe<ProposalDecisionMadeEventOrderByInput>
   where?: InputMaybe<ProposalDecisionMadeEventWhereInput>
 }
 
@@ -24213,7 +23942,7 @@ export type QueryProposalDiscussionPostCreatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ProposalDiscussionPostCreatedEventOrderByInput>>
+  orderBy?: InputMaybe<ProposalDiscussionPostCreatedEventOrderByInput>
   where?: InputMaybe<ProposalDiscussionPostCreatedEventWhereInput>
 }
 
@@ -24233,7 +23962,7 @@ export type QueryProposalDiscussionPostDeletedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ProposalDiscussionPostDeletedEventOrderByInput>>
+  orderBy?: InputMaybe<ProposalDiscussionPostDeletedEventOrderByInput>
   where?: InputMaybe<ProposalDiscussionPostDeletedEventWhereInput>
 }
 
@@ -24253,7 +23982,7 @@ export type QueryProposalDiscussionPostUpdatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ProposalDiscussionPostUpdatedEventOrderByInput>>
+  orderBy?: InputMaybe<ProposalDiscussionPostUpdatedEventOrderByInput>
   where?: InputMaybe<ProposalDiscussionPostUpdatedEventWhereInput>
 }
 
@@ -24269,7 +23998,7 @@ export type QueryProposalDiscussionPostsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ProposalDiscussionPostOrderByInput>>
+  orderBy?: InputMaybe<ProposalDiscussionPostOrderByInput>
   where?: InputMaybe<ProposalDiscussionPostWhereInput>
 }
 
@@ -24293,7 +24022,7 @@ export type QueryProposalDiscussionThreadModeChangedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ProposalDiscussionThreadModeChangedEventOrderByInput>>
+  orderBy?: InputMaybe<ProposalDiscussionThreadModeChangedEventOrderByInput>
   where?: InputMaybe<ProposalDiscussionThreadModeChangedEventWhereInput>
 }
 
@@ -24309,7 +24038,7 @@ export type QueryProposalDiscussionThreadsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ProposalDiscussionThreadOrderByInput>>
+  orderBy?: InputMaybe<ProposalDiscussionThreadOrderByInput>
   where?: InputMaybe<ProposalDiscussionThreadWhereInput>
 }
 
@@ -24329,7 +24058,7 @@ export type QueryProposalDiscussionWhitelistsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ProposalDiscussionWhitelistOrderByInput>>
+  orderBy?: InputMaybe<ProposalDiscussionWhitelistOrderByInput>
   where?: InputMaybe<ProposalDiscussionWhitelistWhereInput>
 }
 
@@ -24349,7 +24078,7 @@ export type QueryProposalExecutedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ProposalExecutedEventOrderByInput>>
+  orderBy?: InputMaybe<ProposalExecutedEventOrderByInput>
   where?: InputMaybe<ProposalExecutedEventWhereInput>
 }
 
@@ -24369,7 +24098,7 @@ export type QueryProposalStatusUpdatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ProposalStatusUpdatedEventOrderByInput>>
+  orderBy?: InputMaybe<ProposalStatusUpdatedEventOrderByInput>
   where?: InputMaybe<ProposalStatusUpdatedEventWhereInput>
 }
 
@@ -24389,7 +24118,7 @@ export type QueryProposalVotedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ProposalVotedEventOrderByInput>>
+  orderBy?: InputMaybe<ProposalVotedEventOrderByInput>
   where?: InputMaybe<ProposalVotedEventWhereInput>
 }
 
@@ -24412,7 +24141,7 @@ export type QueryProposalsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ProposalOrderByInput>>
+  orderBy?: InputMaybe<ProposalOrderByInput>
   where?: InputMaybe<ProposalWhereInput>
 }
 
@@ -24432,7 +24161,7 @@ export type QueryReferendumFinishedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ReferendumFinishedEventOrderByInput>>
+  orderBy?: InputMaybe<ReferendumFinishedEventOrderByInput>
   where?: InputMaybe<ReferendumFinishedEventWhereInput>
 }
 
@@ -24452,7 +24181,7 @@ export type QueryReferendumStageRevealingsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ReferendumStageRevealingOrderByInput>>
+  orderBy?: InputMaybe<ReferendumStageRevealingOrderByInput>
   where?: InputMaybe<ReferendumStageRevealingWhereInput>
 }
 
@@ -24472,7 +24201,7 @@ export type QueryReferendumStageVotingsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ReferendumStageVotingOrderByInput>>
+  orderBy?: InputMaybe<ReferendumStageVotingOrderByInput>
   where?: InputMaybe<ReferendumStageVotingWhereInput>
 }
 
@@ -24492,7 +24221,7 @@ export type QueryReferendumStartedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ReferendumStartedEventOrderByInput>>
+  orderBy?: InputMaybe<ReferendumStartedEventOrderByInput>
   where?: InputMaybe<ReferendumStartedEventWhereInput>
 }
 
@@ -24512,7 +24241,7 @@ export type QueryReferendumStartedForcefullyEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ReferendumStartedForcefullyEventOrderByInput>>
+  orderBy?: InputMaybe<ReferendumStartedForcefullyEventOrderByInput>
   where?: InputMaybe<ReferendumStartedForcefullyEventWhereInput>
 }
 
@@ -24532,7 +24261,7 @@ export type QueryReferralCutUpdatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ReferralCutUpdatedEventOrderByInput>>
+  orderBy?: InputMaybe<ReferralCutUpdatedEventOrderByInput>
   where?: InputMaybe<ReferralCutUpdatedEventWhereInput>
 }
 
@@ -24552,7 +24281,7 @@ export type QueryRequestFundedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<RequestFundedEventOrderByInput>>
+  orderBy?: InputMaybe<RequestFundedEventOrderByInput>
   where?: InputMaybe<RequestFundedEventWhereInput>
 }
 
@@ -24572,7 +24301,7 @@ export type QueryRevealingStageStartedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<RevealingStageStartedEventOrderByInput>>
+  orderBy?: InputMaybe<RevealingStageStartedEventOrderByInput>
   where?: InputMaybe<RevealingStageStartedEventWhereInput>
 }
 
@@ -24592,7 +24321,7 @@ export type QueryRewardPaidEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<RewardPaidEventOrderByInput>>
+  orderBy?: InputMaybe<RewardPaidEventOrderByInput>
   where?: InputMaybe<RewardPaidEventWhereInput>
 }
 
@@ -24612,7 +24341,7 @@ export type QueryRewardPaymentEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<RewardPaymentEventOrderByInput>>
+  orderBy?: InputMaybe<RewardPaymentEventOrderByInput>
   where?: InputMaybe<RewardPaymentEventWhereInput>
 }
 
@@ -24632,7 +24361,7 @@ export type QueryRuntimeWasmBytecodesConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<RuntimeWasmBytecodeOrderByInput>>
+  orderBy?: InputMaybe<RuntimeWasmBytecodeOrderByInput>
   where?: InputMaybe<RuntimeWasmBytecodeWhereInput>
 }
 
@@ -24660,7 +24389,7 @@ export type QueryStakeDecreasedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<StakeDecreasedEventOrderByInput>>
+  orderBy?: InputMaybe<StakeDecreasedEventOrderByInput>
   where?: InputMaybe<StakeDecreasedEventWhereInput>
 }
 
@@ -24680,7 +24409,7 @@ export type QueryStakeIncreasedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<StakeIncreasedEventOrderByInput>>
+  orderBy?: InputMaybe<StakeIncreasedEventOrderByInput>
   where?: InputMaybe<StakeIncreasedEventWhereInput>
 }
 
@@ -24700,7 +24429,7 @@ export type QueryStakeReleasedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<StakeReleasedEventOrderByInput>>
+  orderBy?: InputMaybe<StakeReleasedEventOrderByInput>
   where?: InputMaybe<StakeReleasedEventWhereInput>
 }
 
@@ -24720,7 +24449,7 @@ export type QueryStakeSlashedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<StakeSlashedEventOrderByInput>>
+  orderBy?: InputMaybe<StakeSlashedEventOrderByInput>
   where?: InputMaybe<StakeSlashedEventWhereInput>
 }
 
@@ -24740,7 +24469,7 @@ export type QueryStakingAccountAddedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<StakingAccountAddedEventOrderByInput>>
+  orderBy?: InputMaybe<StakingAccountAddedEventOrderByInput>
   where?: InputMaybe<StakingAccountAddedEventWhereInput>
 }
 
@@ -24760,7 +24489,7 @@ export type QueryStakingAccountConfirmedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<StakingAccountConfirmedEventOrderByInput>>
+  orderBy?: InputMaybe<StakingAccountConfirmedEventOrderByInput>
   where?: InputMaybe<StakingAccountConfirmedEventWhereInput>
 }
 
@@ -24780,7 +24509,7 @@ export type QueryStakingAccountRemovedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<StakingAccountRemovedEventOrderByInput>>
+  orderBy?: InputMaybe<StakingAccountRemovedEventOrderByInput>
   where?: InputMaybe<StakingAccountRemovedEventWhereInput>
 }
 
@@ -24800,7 +24529,7 @@ export type QueryStatusTextChangedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<StatusTextChangedEventOrderByInput>>
+  orderBy?: InputMaybe<StatusTextChangedEventOrderByInput>
   where?: InputMaybe<StatusTextChangedEventWhereInput>
 }
 
@@ -24820,7 +24549,7 @@ export type QueryStorageBagsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<StorageBagOrderByInput>>
+  orderBy?: InputMaybe<StorageBagOrderByInput>
   where?: InputMaybe<StorageBagWhereInput>
 }
 
@@ -24844,7 +24573,7 @@ export type QueryStorageBucketOperatorMetadataConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<StorageBucketOperatorMetadataOrderByInput>>
+  orderBy?: InputMaybe<StorageBucketOperatorMetadataOrderByInput>
   where?: InputMaybe<StorageBucketOperatorMetadataWhereInput>
 }
 
@@ -24860,7 +24589,7 @@ export type QueryStorageBucketsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<StorageBucketOrderByInput>>
+  orderBy?: InputMaybe<StorageBucketOrderByInput>
   where?: InputMaybe<StorageBucketWhereInput>
 }
 
@@ -24880,7 +24609,7 @@ export type QueryStorageDataObjectsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<StorageDataObjectOrderByInput>>
+  orderBy?: InputMaybe<StorageDataObjectOrderByInput>
   where?: InputMaybe<StorageDataObjectWhereInput>
 }
 
@@ -24900,7 +24629,7 @@ export type QueryStorageSystemParametersConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<StorageSystemParametersOrderByInput>>
+  orderBy?: InputMaybe<StorageSystemParametersOrderByInput>
   where?: InputMaybe<StorageSystemParametersWhereInput>
 }
 
@@ -24920,7 +24649,7 @@ export type QueryTerminatedLeaderEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<TerminatedLeaderEventOrderByInput>>
+  orderBy?: InputMaybe<TerminatedLeaderEventOrderByInput>
   where?: InputMaybe<TerminatedLeaderEventWhereInput>
 }
 
@@ -24940,7 +24669,7 @@ export type QueryTerminatedWorkerEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<TerminatedWorkerEventOrderByInput>>
+  orderBy?: InputMaybe<TerminatedWorkerEventOrderByInput>
   where?: InputMaybe<TerminatedWorkerEventWhereInput>
 }
 
@@ -24960,7 +24689,7 @@ export type QueryThreadCreatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ThreadCreatedEventOrderByInput>>
+  orderBy?: InputMaybe<ThreadCreatedEventOrderByInput>
   where?: InputMaybe<ThreadCreatedEventWhereInput>
 }
 
@@ -24980,7 +24709,7 @@ export type QueryThreadDeletedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ThreadDeletedEventOrderByInput>>
+  orderBy?: InputMaybe<ThreadDeletedEventOrderByInput>
   where?: InputMaybe<ThreadDeletedEventWhereInput>
 }
 
@@ -25000,7 +24729,7 @@ export type QueryThreadMetadataUpdatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ThreadMetadataUpdatedEventOrderByInput>>
+  orderBy?: InputMaybe<ThreadMetadataUpdatedEventOrderByInput>
   where?: InputMaybe<ThreadMetadataUpdatedEventWhereInput>
 }
 
@@ -25020,7 +24749,7 @@ export type QueryThreadModeratedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ThreadModeratedEventOrderByInput>>
+  orderBy?: InputMaybe<ThreadModeratedEventOrderByInput>
   where?: InputMaybe<ThreadModeratedEventWhereInput>
 }
 
@@ -25040,7 +24769,7 @@ export type QueryThreadMovedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ThreadMovedEventOrderByInput>>
+  orderBy?: InputMaybe<ThreadMovedEventOrderByInput>
   where?: InputMaybe<ThreadMovedEventWhereInput>
 }
 
@@ -25079,7 +24808,7 @@ export type QueryTransactionalStatusUpdatesConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<TransactionalStatusUpdateOrderByInput>>
+  orderBy?: InputMaybe<TransactionalStatusUpdateOrderByInput>
   where?: InputMaybe<TransactionalStatusUpdateWhereInput>
 }
 
@@ -25099,7 +24828,7 @@ export type QueryUpcomingWorkingGroupOpeningsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<UpcomingWorkingGroupOpeningOrderByInput>>
+  orderBy?: InputMaybe<UpcomingWorkingGroupOpeningOrderByInput>
   where?: InputMaybe<UpcomingWorkingGroupOpeningWhereInput>
 }
 
@@ -25119,7 +24848,7 @@ export type QueryVideoAssetsDeletedByModeratorEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<VideoAssetsDeletedByModeratorEventOrderByInput>>
+  orderBy?: InputMaybe<VideoAssetsDeletedByModeratorEventOrderByInput>
   where?: InputMaybe<VideoAssetsDeletedByModeratorEventWhereInput>
 }
 
@@ -25146,7 +24875,7 @@ export type QueryVideoCategoriesConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<VideoCategoryOrderByInput>>
+  orderBy?: InputMaybe<VideoCategoryOrderByInput>
   where?: InputMaybe<VideoCategoryWhereInput>
 }
 
@@ -25170,7 +24899,7 @@ export type QueryVideoDeletedByModeratorEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<VideoDeletedByModeratorEventOrderByInput>>
+  orderBy?: InputMaybe<VideoDeletedByModeratorEventOrderByInput>
   where?: InputMaybe<VideoDeletedByModeratorEventWhereInput>
 }
 
@@ -25190,7 +24919,7 @@ export type QueryVideoDeletedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<VideoDeletedEventOrderByInput>>
+  orderBy?: InputMaybe<VideoDeletedEventOrderByInput>
   where?: InputMaybe<VideoDeletedEventWhereInput>
 }
 
@@ -25210,7 +24939,7 @@ export type QueryVideoMediaEncodingsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<VideoMediaEncodingOrderByInput>>
+  orderBy?: InputMaybe<VideoMediaEncodingOrderByInput>
   where?: InputMaybe<VideoMediaEncodingWhereInput>
 }
 
@@ -25230,7 +24959,7 @@ export type QueryVideoMediaMetadataConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<VideoMediaMetadataOrderByInput>>
+  orderBy?: InputMaybe<VideoMediaMetadataOrderByInput>
   where?: InputMaybe<VideoMediaMetadataWhereInput>
 }
 
@@ -25250,7 +24979,7 @@ export type QueryVideoReactedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<VideoReactedEventOrderByInput>>
+  orderBy?: InputMaybe<VideoReactedEventOrderByInput>
   where?: InputMaybe<VideoReactedEventWhereInput>
 }
 
@@ -25270,7 +24999,7 @@ export type QueryVideoReactionsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<VideoReactionOrderByInput>>
+  orderBy?: InputMaybe<VideoReactionOrderByInput>
   where?: InputMaybe<VideoReactionWhereInput>
 }
 
@@ -25290,7 +25019,7 @@ export type QueryVideoReactionsCountByReactionTypesConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<VideoReactionsCountByReactionTypeOrderByInput>>
+  orderBy?: InputMaybe<VideoReactionsCountByReactionTypeOrderByInput>
   where?: InputMaybe<VideoReactionsCountByReactionTypeWhereInput>
 }
 
@@ -25310,7 +25039,7 @@ export type QueryVideoReactionsPreferenceEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<VideoReactionsPreferenceEventOrderByInput>>
+  orderBy?: InputMaybe<VideoReactionsPreferenceEventOrderByInput>
   where?: InputMaybe<VideoReactionsPreferenceEventWhereInput>
 }
 
@@ -25330,7 +25059,7 @@ export type QueryVideoVisibilitySetByModeratorEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<VideoVisibilitySetByModeratorEventOrderByInput>>
+  orderBy?: InputMaybe<VideoVisibilitySetByModeratorEventOrderByInput>
   where?: InputMaybe<VideoVisibilitySetByModeratorEventWhereInput>
 }
 
@@ -25346,7 +25075,7 @@ export type QueryVideosConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<VideoOrderByInput>>
+  orderBy?: InputMaybe<VideoOrderByInput>
   where?: InputMaybe<VideoWhereInput>
 }
 
@@ -25366,28 +25095,8 @@ export type QueryVoteCastEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<VoteCastEventOrderByInput>>
+  orderBy?: InputMaybe<VoteCastEventOrderByInput>
   where?: InputMaybe<VoteCastEventWhereInput>
-}
-
-export type QueryVoteOnPollEventByUniqueInputArgs = {
-  where: VoteOnPollEventWhereUniqueInput
-}
-
-export type QueryVoteOnPollEventsArgs = {
-  limit?: InputMaybe<Scalars['Int']>
-  offset?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<VoteOnPollEventOrderByInput>>
-  where?: InputMaybe<VoteOnPollEventWhereInput>
-}
-
-export type QueryVoteOnPollEventsConnectionArgs = {
-  after?: InputMaybe<Scalars['String']>
-  before?: InputMaybe<Scalars['String']>
-  first?: InputMaybe<Scalars['Int']>
-  last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<VoteOnPollEventOrderByInput>>
-  where?: InputMaybe<VoteOnPollEventWhereInput>
 }
 
 export type QueryVoteRevealedEventByUniqueInputArgs = {
@@ -25406,7 +25115,7 @@ export type QueryVoteRevealedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<VoteRevealedEventOrderByInput>>
+  orderBy?: InputMaybe<VoteRevealedEventOrderByInput>
   where?: InputMaybe<VoteRevealedEventWhereInput>
 }
 
@@ -25426,7 +25135,7 @@ export type QueryVotingPeriodStartedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<VotingPeriodStartedEventOrderByInput>>
+  orderBy?: InputMaybe<VotingPeriodStartedEventOrderByInput>
   where?: InputMaybe<VotingPeriodStartedEventWhereInput>
 }
 
@@ -25446,7 +25155,7 @@ export type QueryWorkEntrantFundsWithdrawnEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<WorkEntrantFundsWithdrawnEventOrderByInput>>
+  orderBy?: InputMaybe<WorkEntrantFundsWithdrawnEventOrderByInput>
   where?: InputMaybe<WorkEntrantFundsWithdrawnEventWhereInput>
 }
 
@@ -25466,7 +25175,7 @@ export type QueryWorkEntryAnnouncedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<WorkEntryAnnouncedEventOrderByInput>>
+  orderBy?: InputMaybe<WorkEntryAnnouncedEventOrderByInput>
   where?: InputMaybe<WorkEntryAnnouncedEventWhereInput>
 }
 
@@ -25486,7 +25195,7 @@ export type QueryWorkEntrySlashedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<WorkEntrySlashedEventOrderByInput>>
+  orderBy?: InputMaybe<WorkEntrySlashedEventOrderByInput>
   where?: InputMaybe<WorkEntrySlashedEventWhereInput>
 }
 
@@ -25506,7 +25215,7 @@ export type QueryWorkEntryWithdrawnEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<WorkEntryWithdrawnEventOrderByInput>>
+  orderBy?: InputMaybe<WorkEntryWithdrawnEventOrderByInput>
   where?: InputMaybe<WorkEntryWithdrawnEventWhereInput>
 }
 
@@ -25526,7 +25235,7 @@ export type QueryWorkSubmittedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<WorkSubmittedEventOrderByInput>>
+  orderBy?: InputMaybe<WorkSubmittedEventOrderByInput>
   where?: InputMaybe<WorkSubmittedEventWhereInput>
 }
 
@@ -25550,7 +25259,7 @@ export type QueryWorkerExitedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<WorkerExitedEventOrderByInput>>
+  orderBy?: InputMaybe<WorkerExitedEventOrderByInput>
   where?: InputMaybe<WorkerExitedEventWhereInput>
 }
 
@@ -25570,7 +25279,7 @@ export type QueryWorkerRewardAccountUpdatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<WorkerRewardAccountUpdatedEventOrderByInput>>
+  orderBy?: InputMaybe<WorkerRewardAccountUpdatedEventOrderByInput>
   where?: InputMaybe<WorkerRewardAccountUpdatedEventWhereInput>
 }
 
@@ -25590,7 +25299,7 @@ export type QueryWorkerRewardAmountUpdatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<WorkerRewardAmountUpdatedEventOrderByInput>>
+  orderBy?: InputMaybe<WorkerRewardAmountUpdatedEventOrderByInput>
   where?: InputMaybe<WorkerRewardAmountUpdatedEventWhereInput>
 }
 
@@ -25610,7 +25319,7 @@ export type QueryWorkerRoleAccountUpdatedEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<WorkerRoleAccountUpdatedEventOrderByInput>>
+  orderBy?: InputMaybe<WorkerRoleAccountUpdatedEventOrderByInput>
   where?: InputMaybe<WorkerRoleAccountUpdatedEventWhereInput>
 }
 
@@ -25630,7 +25339,7 @@ export type QueryWorkerStartedLeavingEventsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<WorkerStartedLeavingEventOrderByInput>>
+  orderBy?: InputMaybe<WorkerStartedLeavingEventOrderByInput>
   where?: InputMaybe<WorkerStartedLeavingEventWhereInput>
 }
 
@@ -25646,7 +25355,7 @@ export type QueryWorkersConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<WorkerOrderByInput>>
+  orderBy?: InputMaybe<WorkerOrderByInput>
   where?: InputMaybe<WorkerWhereInput>
 }
 
@@ -25666,7 +25375,7 @@ export type QueryWorkingGroupApplicationsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<WorkingGroupApplicationOrderByInput>>
+  orderBy?: InputMaybe<WorkingGroupApplicationOrderByInput>
   where?: InputMaybe<WorkingGroupApplicationWhereInput>
 }
 
@@ -25690,7 +25399,7 @@ export type QueryWorkingGroupMetadataConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<WorkingGroupMetadataOrderByInput>>
+  orderBy?: InputMaybe<WorkingGroupMetadataOrderByInput>
   where?: InputMaybe<WorkingGroupMetadataWhereInput>
 }
 
@@ -25714,7 +25423,7 @@ export type QueryWorkingGroupOpeningMetadataConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<WorkingGroupOpeningMetadataOrderByInput>>
+  orderBy?: InputMaybe<WorkingGroupOpeningMetadataOrderByInput>
   where?: InputMaybe<WorkingGroupOpeningMetadataWhereInput>
 }
 
@@ -25730,7 +25439,7 @@ export type QueryWorkingGroupOpeningsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<WorkingGroupOpeningOrderByInput>>
+  orderBy?: InputMaybe<WorkingGroupOpeningOrderByInput>
   where?: InputMaybe<WorkingGroupOpeningWhereInput>
 }
 
@@ -25746,7 +25455,7 @@ export type QueryWorkingGroupsConnectionArgs = {
   before?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
   last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<WorkingGroupOrderByInput>>
+  orderBy?: InputMaybe<WorkingGroupOrderByInput>
   where?: InputMaybe<WorkingGroupWhereInput>
 }
 
@@ -28959,6 +28668,8 @@ export type StorageSystemParameters = BaseGraphQlObject & {
   createdById: Scalars['ID']
   /** Additional fee for storing 1 MB of data */
   dataObjectFeePerMb: Scalars['BigInt']
+  /** Data Object state bloat bond value */
+  dataObjectStateBloatBondValue: Scalars['Int']
   deletedAt?: Maybe<Scalars['DateTime']>
   deletedById?: Maybe<Scalars['ID']>
   /** How many buckets can be assigned to distribute a bag */
@@ -28989,6 +28700,7 @@ export type StorageSystemParametersConnection = {
 export type StorageSystemParametersCreateInput = {
   blacklist: Array<Scalars['String']>
   dataObjectFeePerMb: Scalars['String']
+  dataObjectStateBloatBondValue: Scalars['Float']
   distributionBucketsPerBagLimit: Scalars['Float']
   nextDataObjectId: Scalars['String']
   storageBucketMaxObjectsCountLimit: Scalars['String']
@@ -29008,6 +28720,8 @@ export enum StorageSystemParametersOrderByInput {
   CreatedAtDesc = 'createdAt_DESC',
   DataObjectFeePerMbAsc = 'dataObjectFeePerMb_ASC',
   DataObjectFeePerMbDesc = 'dataObjectFeePerMb_DESC',
+  DataObjectStateBloatBondValueAsc = 'dataObjectStateBloatBondValue_ASC',
+  DataObjectStateBloatBondValueDesc = 'dataObjectStateBloatBondValue_DESC',
   DeletedAtAsc = 'deletedAt_ASC',
   DeletedAtDesc = 'deletedAt_DESC',
   DistributionBucketsPerBagLimitAsc = 'distributionBucketsPerBagLimit_ASC',
@@ -29029,6 +28743,7 @@ export enum StorageSystemParametersOrderByInput {
 export type StorageSystemParametersUpdateInput = {
   blacklist?: InputMaybe<Array<Scalars['String']>>
   dataObjectFeePerMb?: InputMaybe<Scalars['String']>
+  dataObjectStateBloatBondValue?: InputMaybe<Scalars['Float']>
   distributionBucketsPerBagLimit?: InputMaybe<Scalars['Float']>
   nextDataObjectId?: InputMaybe<Scalars['String']>
   storageBucketMaxObjectsCountLimit?: InputMaybe<Scalars['String']>
@@ -29057,6 +28772,12 @@ export type StorageSystemParametersWhereInput = {
   dataObjectFeePerMb_in?: InputMaybe<Array<Scalars['BigInt']>>
   dataObjectFeePerMb_lt?: InputMaybe<Scalars['BigInt']>
   dataObjectFeePerMb_lte?: InputMaybe<Scalars['BigInt']>
+  dataObjectStateBloatBondValue_eq?: InputMaybe<Scalars['Int']>
+  dataObjectStateBloatBondValue_gt?: InputMaybe<Scalars['Int']>
+  dataObjectStateBloatBondValue_gte?: InputMaybe<Scalars['Int']>
+  dataObjectStateBloatBondValue_in?: InputMaybe<Array<Scalars['Int']>>
+  dataObjectStateBloatBondValue_lt?: InputMaybe<Scalars['Int']>
+  dataObjectStateBloatBondValue_lte?: InputMaybe<Scalars['Int']>
   deletedAt_all?: InputMaybe<Scalars['Boolean']>
   deletedAt_eq?: InputMaybe<Scalars['DateTime']>
   deletedAt_gt?: InputMaybe<Scalars['DateTime']>
@@ -32449,140 +32170,6 @@ export type VoteCastEventWhereInput = {
 }
 
 export type VoteCastEventWhereUniqueInput = {
-  id: Scalars['ID']
-}
-
-export type VoteOnPollEvent = BaseGraphQlObject &
-  Event & {
-    __typename?: 'VoteOnPollEvent'
-    createdAt: Scalars['DateTime']
-    createdById: Scalars['ID']
-    deletedAt?: Maybe<Scalars['DateTime']>
-    deletedById?: Maybe<Scalars['ID']>
-    id: Scalars['ID']
-    /** Blocknumber of the block in which the event was emitted. */
-    inBlock: Scalars['Int']
-    /** Hash of the extrinsic which caused the event to be emitted */
-    inExtrinsic?: Maybe<Scalars['String']>
-    /** Index of event in block from which it was emitted. */
-    indexInBlock: Scalars['Int']
-    /** Network the block was produced in */
-    network: Network
-    pollAlternative: ForumPollAlternative
-    pollAlternativeId: Scalars['String']
-    /** Filtering options for interface implementers */
-    type?: Maybe<EventTypeOptions>
-    updatedAt?: Maybe<Scalars['DateTime']>
-    updatedById?: Maybe<Scalars['ID']>
-    version: Scalars['Int']
-    votingMember: Membership
-    votingMemberId: Scalars['String']
-  }
-
-export type VoteOnPollEventConnection = {
-  __typename?: 'VoteOnPollEventConnection'
-  edges: Array<VoteOnPollEventEdge>
-  pageInfo: PageInfo
-  totalCount: Scalars['Int']
-}
-
-export type VoteOnPollEventCreateInput = {
-  inBlock: Scalars['Float']
-  inExtrinsic?: InputMaybe<Scalars['String']>
-  indexInBlock: Scalars['Float']
-  network: Network
-  pollAlternative: Scalars['ID']
-  votingMember: Scalars['ID']
-}
-
-export type VoteOnPollEventEdge = {
-  __typename?: 'VoteOnPollEventEdge'
-  cursor: Scalars['String']
-  node: VoteOnPollEvent
-}
-
-export enum VoteOnPollEventOrderByInput {
-  CreatedAtAsc = 'createdAt_ASC',
-  CreatedAtDesc = 'createdAt_DESC',
-  DeletedAtAsc = 'deletedAt_ASC',
-  DeletedAtDesc = 'deletedAt_DESC',
-  InBlockAsc = 'inBlock_ASC',
-  InBlockDesc = 'inBlock_DESC',
-  InExtrinsicAsc = 'inExtrinsic_ASC',
-  InExtrinsicDesc = 'inExtrinsic_DESC',
-  IndexInBlockAsc = 'indexInBlock_ASC',
-  IndexInBlockDesc = 'indexInBlock_DESC',
-  NetworkAsc = 'network_ASC',
-  NetworkDesc = 'network_DESC',
-  PollAlternativeAsc = 'pollAlternative_ASC',
-  PollAlternativeDesc = 'pollAlternative_DESC',
-  UpdatedAtAsc = 'updatedAt_ASC',
-  UpdatedAtDesc = 'updatedAt_DESC',
-  VotingMemberAsc = 'votingMember_ASC',
-  VotingMemberDesc = 'votingMember_DESC',
-}
-
-export type VoteOnPollEventUpdateInput = {
-  inBlock?: InputMaybe<Scalars['Float']>
-  inExtrinsic?: InputMaybe<Scalars['String']>
-  indexInBlock?: InputMaybe<Scalars['Float']>
-  network?: InputMaybe<Network>
-  pollAlternative?: InputMaybe<Scalars['ID']>
-  votingMember?: InputMaybe<Scalars['ID']>
-}
-
-export type VoteOnPollEventWhereInput = {
-  AND?: InputMaybe<Array<VoteOnPollEventWhereInput>>
-  NOT?: InputMaybe<Array<VoteOnPollEventWhereInput>>
-  OR?: InputMaybe<Array<VoteOnPollEventWhereInput>>
-  createdAt_eq?: InputMaybe<Scalars['DateTime']>
-  createdAt_gt?: InputMaybe<Scalars['DateTime']>
-  createdAt_gte?: InputMaybe<Scalars['DateTime']>
-  createdAt_lt?: InputMaybe<Scalars['DateTime']>
-  createdAt_lte?: InputMaybe<Scalars['DateTime']>
-  createdById_eq?: InputMaybe<Scalars['ID']>
-  createdById_in?: InputMaybe<Array<Scalars['ID']>>
-  deletedAt_all?: InputMaybe<Scalars['Boolean']>
-  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
-  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
-  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
-  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
-  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
-  deletedById_eq?: InputMaybe<Scalars['ID']>
-  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
-  id_eq?: InputMaybe<Scalars['ID']>
-  id_in?: InputMaybe<Array<Scalars['ID']>>
-  inBlock_eq?: InputMaybe<Scalars['Int']>
-  inBlock_gt?: InputMaybe<Scalars['Int']>
-  inBlock_gte?: InputMaybe<Scalars['Int']>
-  inBlock_in?: InputMaybe<Array<Scalars['Int']>>
-  inBlock_lt?: InputMaybe<Scalars['Int']>
-  inBlock_lte?: InputMaybe<Scalars['Int']>
-  inExtrinsic_contains?: InputMaybe<Scalars['String']>
-  inExtrinsic_endsWith?: InputMaybe<Scalars['String']>
-  inExtrinsic_eq?: InputMaybe<Scalars['String']>
-  inExtrinsic_in?: InputMaybe<Array<Scalars['String']>>
-  inExtrinsic_startsWith?: InputMaybe<Scalars['String']>
-  indexInBlock_eq?: InputMaybe<Scalars['Int']>
-  indexInBlock_gt?: InputMaybe<Scalars['Int']>
-  indexInBlock_gte?: InputMaybe<Scalars['Int']>
-  indexInBlock_in?: InputMaybe<Array<Scalars['Int']>>
-  indexInBlock_lt?: InputMaybe<Scalars['Int']>
-  indexInBlock_lte?: InputMaybe<Scalars['Int']>
-  network_eq?: InputMaybe<Network>
-  network_in?: InputMaybe<Array<Network>>
-  pollAlternative?: InputMaybe<ForumPollAlternativeWhereInput>
-  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
-  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
-  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
-  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
-  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
-  updatedById_eq?: InputMaybe<Scalars['ID']>
-  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
-  votingMember?: InputMaybe<MembershipWhereInput>
-}
-
-export type VoteOnPollEventWhereUniqueInput = {
   id: Scalars['ID']
 }
 
