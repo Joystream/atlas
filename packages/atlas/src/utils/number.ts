@@ -20,7 +20,7 @@ export const hapiBnToTokenNumber = (bn: BN) => {
 }
 
 export const tokenNumberToHapiBn = (number: number) => {
-  const numberToString = number.toFixed()
+  const numberToString = number.toPrecision()
   if (new BigNumber(numberToString).isNaN()) {
     return new BN(0)
   }
