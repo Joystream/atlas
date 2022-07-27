@@ -13,7 +13,7 @@ query GetFullVideo($where: VideoWhereUniqueInput!) {
 query GetBasicVideosConnection(
   $first: Int
   $after: String
-  $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
+  $orderBy: VideoOrderByInput = createdAt_DESC
   $where: VideoWhereInput
 ) {
   videosConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
@@ -34,10 +34,10 @@ query GetBasicVideosConnection(
 query GetFullVideosConnection(
   $first: Int
   $after: String
-  $orderBy: VideoOrderByInput! = createdAt_DESC
+  $orderBy: VideoOrderByInput = createdAt_DESC
   $where: VideoWhereInput
 ) {
-  videosConnection(first: $first, after: $after, where: $where, orderBy: [$orderBy]) {
+  videosConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
     edges {
       cursor
       node {
@@ -56,15 +56,20 @@ query GetBasicVideos(
   $offset: Int
   $limit: Int
   $where: VideoWhereInput
-  $orderBy: VideoOrderByInput! = createdAt_DESC
+  $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
 ) {
-  videos(offset: $offset, limit: $limit, where: $where, orderBy: [$orderBy]) {
+  videos(offset: $offset, limit: $limit, where: $where, orderBy: $orderBy) {
     ...BasicVideoFields
   }
 }
 
-query GetFullVideos($offset: Int, $limit: Int, $where: VideoWhereInput, $orderBy: VideoOrderByInput! = createdAt_DESC) {
-  videos(offset: $offset, limit: $limit, where: $where, orderBy: [$orderBy]) {
+query GetFullVideos(
+  $offset: Int
+  $limit: Int
+  $where: VideoWhereInput
+  $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
+) {
+  videos(offset: $offset, limit: $limit, where: $where, orderBy: $orderBy) {
     ...FullVideoFields
   }
 }
@@ -74,7 +79,7 @@ query GetMostViewedVideosConnection(
   $periodDays: Int
   $first: Int
   $after: String
-  $orderBy: VideoOrderByInput! = createdAt_DESC
+  $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
   $where: VideoWhereInput
 ) {
   mostViewedVideosConnection(
@@ -82,7 +87,7 @@ query GetMostViewedVideosConnection(
     first: $first
     after: $after
     periodDays: $periodDays
-    orderBy: [$orderBy]
+    orderBy: $orderBy
     where: $where
   ) {
     edges {

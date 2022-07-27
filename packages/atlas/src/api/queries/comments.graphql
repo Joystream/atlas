@@ -8,7 +8,7 @@ query GetCommentRepliesConnection(
   $first: Int
   $after: String
   $parentCommentId: ID!
-  $orderBy: [CommentOrderByInput!] = [createdAt_ASC]
+  $orderBy: CommentOrderByInput = createdAt_ASC
 ) {
   commentsConnection(
     first: $first
@@ -35,7 +35,7 @@ query GetUserCommentsAndVideoCommentsConnection(
   $after: String
   $memberId: ID
   $videoId: ID
-  $orderBy: [CommentOrderByInput!] = [createdAt_DESC]
+  $orderBy: CommentOrderByInput = createdAt_DESC
 ) {
   userComments: comments(
     where: {

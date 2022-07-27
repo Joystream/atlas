@@ -61,7 +61,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
     () => ({
       memberId,
       videoId,
-      orderBy: sortCommentsBy,
+      orderBy: sortCommentsBy[0],
     }),
     [memberId, sortCommentsBy, videoId]
   )

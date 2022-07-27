@@ -282,7 +282,7 @@ export type GetNftQuery = {
 
 export type GetNftsQueryVariables = Types.Exact<{
   where?: Types.InputMaybe<Types.OwnedNftWhereInput>
-  orderBy?: Types.OwnedNftOrderByInput
+  orderBy?: Types.InputMaybe<Array<Types.OwnedNftOrderByInput> | Types.OwnedNftOrderByInput>
 }>
 
 export type GetNftsQuery = {
@@ -558,7 +558,7 @@ export type GetNftsQuery = {
 
 export type GetNftsConnectionQueryVariables = Types.Exact<{
   where?: Types.InputMaybe<Types.OwnedNftWhereInput>
-  orderBy?: Types.OwnedNftOrderByInput
+  orderBy?: Types.InputMaybe<Types.OwnedNftOrderByInput>
   first?: Types.InputMaybe<Types.Scalars['Int']>
   after?: Types.InputMaybe<Types.Scalars['String']>
 }>
@@ -880,8 +880,8 @@ export type GetNftQueryHookResult = ReturnType<typeof useGetNftQuery>
 export type GetNftLazyQueryHookResult = ReturnType<typeof useGetNftLazyQuery>
 export type GetNftQueryResult = Apollo.QueryResult<GetNftQuery, GetNftQueryVariables>
 export const GetNftsDocument = gql`
-  query GetNfts($where: OwnedNftWhereInput, $orderBy: OwnedNftOrderByInput! = createdAt_DESC) {
-    ownedNfts(where: $where, orderBy: [$orderBy]) {
+  query GetNfts($where: OwnedNftWhereInput, $orderBy: [OwnedNftOrderByInput!] = [createdAt_DESC]) {
+    ownedNfts(where: $where, orderBy: $orderBy) {
       ...FullNftFields
     }
   }
@@ -919,11 +919,11 @@ export type GetNftsQueryResult = Apollo.QueryResult<GetNftsQuery, GetNftsQueryVa
 export const GetNftsConnectionDocument = gql`
   query GetNftsConnection(
     $where: OwnedNftWhereInput
-    $orderBy: OwnedNftOrderByInput! = createdAt_DESC
+    $orderBy: OwnedNftOrderByInput = createdAt_DESC
     $first: Int
     $after: String
   ) {
-    ownedNftsConnection(where: $where, orderBy: [$orderBy], first: $first, after: $after) {
+    ownedNftsConnection(where: $where, orderBy: $orderBy, first: $first, after: $after) {
       edges {
         cursor
         node {

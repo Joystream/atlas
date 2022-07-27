@@ -69,11 +69,7 @@ export const useSearchResults = ({
         isCensored_eq: false,
         ...videoWhereInput,
       },
-      orderBy: [
-        VideoOrderByInput.ReactionsCountDesc,
-        VideoOrderByInput.CommentsCountDesc,
-        VideoOrderByInput.CreatedAtDesc,
-      ],
+      orderBy: VideoOrderByInput.ReactionsCountDesc,
     },
     {
       ...commonOptions,

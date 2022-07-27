@@ -4,19 +4,19 @@ query GetNft($id: ID!) {
   }
 }
 
-query GetNfts($where: OwnedNftWhereInput, $orderBy: OwnedNftOrderByInput! = createdAt_DESC) {
-  ownedNfts(where: $where, orderBy: [$orderBy]) {
+query GetNfts($where: OwnedNftWhereInput, $orderBy: [OwnedNftOrderByInput!] = [createdAt_DESC]) {
+  ownedNfts(where: $where, orderBy: $orderBy) {
     ...FullNftFields
   }
 }
 
 query GetNftsConnection(
   $where: OwnedNftWhereInput
-  $orderBy: OwnedNftOrderByInput! = createdAt_DESC
+  $orderBy: OwnedNftOrderByInput = createdAt_DESC
   $first: Int
   $after: String
 ) {
-  ownedNftsConnection(where: $where, orderBy: [$orderBy], first: $first, after: $after) {
+  ownedNftsConnection(where: $where, orderBy: $orderBy, first: $first, after: $after) {
     edges {
       cursor
       node {
