@@ -1,6 +1,5 @@
 import { useApolloClient } from '@apollo/client'
 import debouncePromise from 'awesome-debounce-promise'
-import BN from 'bn.js'
 import { FC, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -121,16 +120,14 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
       </Text>
       <VerticallyCenteredDiv>
         <JoyTokenIcon variant="gray" />
-        <Text as="p" variant="h400" margin={{ left: 1 }}>
-          {accountBalance}
-        </Text>
+        <NumberFormat value={accountBalance} as="p" variant="h400" margin={{ left: 1 }} format="short" />
       </VerticallyCenteredDiv>
       <NumberFormat
         as="p"
         color="colorText"
         format="dollar"
         variant="t100"
-        value={convertToUSD(new BN(accountBalance)) || 0}
+        value={convertToUSD(tokenNumberToHapiBn(accountBalance)) || 0}
         margin={{ top: 1, bottom: 6 }}
       />
       <FormFieldsWrapper>
