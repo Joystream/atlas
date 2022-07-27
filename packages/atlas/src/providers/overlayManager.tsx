@@ -19,7 +19,8 @@ import { createId } from '@/utils/createId'
 
 type OverlayManagerContextValue = {
   anyOverlaysOpen: boolean
-  setOverlaysSet: Dispatch<SetStateAction<Set<string>>>
+  setOverlays: Dispatch<SetStateAction<string[]>>
+  lastOverlayId: string | null
   modalContainerRef: RefObject<HTMLDivElement>
 }
 
@@ -27,11 +28,11 @@ const OverlayManagerContext = createContext<OverlayManagerContextValue | undefin
 OverlayManagerContext.displayName = 'OverlayManagerContext'
 
 export const OverlayManagerProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [overlaysSet, setOverlaysSet] = useState(new Set<string>())
+  const [overlays, setOverlays] = useState<string[]>([])
 
   const modalContainerRef = useRef<HTMLDivElement>(null)
 
-  const anyOverlaysOpen = overlaysSet.size > 0
+  const anyOverlaysOpen = overlays.length > 0
 
   useEffect(() => {
     if (!anyOverlaysOpen) {
@@ -47,8 +48,9 @@ export const OverlayManagerProvider: FC<PropsWithChildren> = ({ children }) => {
       <OverlayManagerContext.Provider
         value={{
           anyOverlaysOpen,
-          setOverlaysSet,
+          setOverlays,
           modalContainerRef,
+          lastOverlayId: overlays[overlays.length - 1],
         }}
       >
         {children}
@@ -71,29 +73,26 @@ export const useOverlayManager = () => {
   if (!context) {
     throw new Error(`useOverlayManager must be used within a OverlayManagerProvider.`)
   }
-  const { setOverlaysSet, modalContainerRef, anyOverlaysOpen } = context
+  const { setOverlays, modalContainerRef, anyOverlaysOpen, lastOverlayId } = context
 
   const overlayId = useRef(createId()).current
   const incrementOverlaysOpenCount = useCallback(() => {
-    setOverlaysSet((prevSet) => new Set(prevSet).add(overlayId))
-  }, [setOverlaysSet, overlayId])
+    setOverlays((prev) => [...new Set([...prev, overlayId])])
+    return overlayId
+  }, [setOverlays, overlayId])
 
   const decrementOverlaysOpenCount = useCallback(() => {
-    setOverlaysSet((prevSet) => {
-      if (prevSet.size === 1) {
-        prevSet.clear()
-      } else {
-        prevSet.delete(overlayId)
-      }
-      return new Set(prevSet)
+    setOverlays((prev) => {
+      return prev.filter((_, i) => i !== prev.length - 1)
     })
-  }, [overlayId, setOverlaysSet])
+  }, [setOverlays])
 
   return {
     anyOverlaysOpen,
     incrementOverlaysOpenCount,
     decrementOverlaysOpenCount,
     modalContainerRef,
+    lastOverlayId,
   }
 }
 

@@ -6,6 +6,7 @@ import { Text } from '@/components/Text'
 import { SvgActionCheck, SvgLogoPolkadot } from '@/components/_icons'
 import { JOYSTREAM_STORAGE_DISCORD_URL } from '@/config/urls'
 import { ErrorCode, ExtrinsicStatus } from '@/joystream-lib'
+import { useOverlayManager } from '@/providers/overlayManager'
 import { useUser, useUserStore } from '@/providers/user'
 import { transitions } from '@/styles'
 
@@ -33,6 +34,7 @@ export type TransactionModalProps = {
 
 export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, className, errorCode }) => {
   const [polkadotLogoVisible, setPolkadotLogoVisible] = useState(false)
+  const { decrementOverlaysOpenCount } = useOverlayManager()
   const [initialStatus, setInitialStatus] = useState<number | null>(null)
   const userWalletName = useUserStore((state) => state.wallet?.title)
   const nonUploadTransaction = initialStatus === ExtrinsicStatus.Unsigned
@@ -78,6 +80,12 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
     ].includes(status)
 
   const transactionSteps = Array.from({ length: nonUploadTransaction ? 3 : 4 })
+
+  useEffect(() => {
+    return () => {
+      decrementOverlaysOpenCount()
+    }
+  }, [decrementOverlaysOpenCount])
 
   return (
     <StyledModal show={!!stepDetails} className={className}>

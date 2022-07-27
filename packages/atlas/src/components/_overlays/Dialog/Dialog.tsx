@@ -19,6 +19,7 @@ import {
 
 export type DialogButtonProps = {
   text: string
+  onClick?: (e?: MouseEvent) => void
 } & Omit<ButtonProps, 'children'>
 
 export type DialogProps = PropsWithChildren<{
