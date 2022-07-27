@@ -13,7 +13,7 @@ export type VideoId = string
 export type DataObjectMetadata = {
   size: number
   ipfsHash: string
-  replacedDataObjectId?: BN
+  replacedDataObjectId?: string
 }
 
 type VideoAssetsKey = 'thumbnailPhoto' | 'media'
@@ -113,7 +113,8 @@ export type ExtractChannelResultsAssetsIdsFn = (
 ) => ChannelAssetsIds
 export type ExtractVideoResultsAssetsIdsFn = (
   inputAssets: VideoInputAssets,
-  getEventData: GetEventDataFn
+  getEventData: GetEventDataFn,
+  update?: boolean
 ) => VideoAssetsIds
 export type SendExtrinsicResult = ExtrinsicResult<{
   events: GenericEvent[]

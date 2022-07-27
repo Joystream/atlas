@@ -1,7 +1,7 @@
 import { createType } from '@joystream/types'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
-import { BTreeSet, Option, Vec, u64 } from '@polkadot/types'
+import { BTreeSet, Option, u64 } from '@polkadot/types'
 import { Hash } from '@polkadot/types/interfaces/runtime'
 import { DispatchError, Event, EventRecord } from '@polkadot/types/interfaces/system'
 import {
@@ -174,10 +174,10 @@ export const getReplacedDataObjectsIds = (assets: VideoInputAssets | ChannelInpu
     'BTreeSet<u64>',
     Object.values(assets)
       .filter((asset): asset is Required<DataObjectMetadata> => !!asset.replacedDataObjectId)
-      .map((asset) => asset.replacedDataObjectId)
+      .map((asset) => new BN(asset.replacedDataObjectId))
   )
 
-const getResultVideoDataObjectsIds = (assets: VideoAssets<unknown>, dataObjectsIds: Vec<u64>): VideoAssetsIds => {
+const getResultVideoDataObjectsIds = (assets: VideoAssets<unknown>, dataObjectsIds: u64[]): VideoAssetsIds => {
   const ids = dataObjectsIds.map((dataObjectsId) => dataObjectsId.toString())
 
   const hasMedia = !!assets.media
@@ -189,10 +189,7 @@ const getResultVideoDataObjectsIds = (assets: VideoAssets<unknown>, dataObjectsI
   }
 }
 
-const getResultChannelDataObjectsIds = (
-  assets: ChannelAssets<unknown>,
-  dataObjectsIds: Vec<u64> | u64[]
-): ChannelAssetsIds => {
+const getResultChannelDataObjectsIds = (assets: ChannelAssets<unknown>, dataObjectsIds: u64[]): ChannelAssetsIds => {
   const ids = dataObjectsIds.map((dataObjectsId) => dataObjectsId.toString())
 
   const hasAvatar = !!assets.avatarPhoto
@@ -212,8 +209,8 @@ export const extractChannelResultAssetsIds: ExtractChannelResultsAssetsIdsFn = (
   const anyAssetsChanged = !!Object.values(inputAssets).find((asset) => !!asset)
   try {
     if (update) {
-      const [dataObjectsIds] = getEventData('storage', 'DataObjectsUploaded')
-      return getResultChannelDataObjectsIds(inputAssets, dataObjectsIds)
+      const dataObjects = getEventData('content', 'ChannelUpdated')[3]
+      return getResultChannelDataObjectsIds(inputAssets, [...dataObjects])
     } else {
       const [_, channelRecord] = getEventData('content', 'ChannelCreated')
       return getResultChannelDataObjectsIds(inputAssets, [...channelRecord.dataObjects])
@@ -227,11 +224,20 @@ export const extractChannelResultAssetsIds: ExtractChannelResultsAssetsIdsFn = (
   }
 }
 
-export const extractVideoResultAssetsIds: ExtractVideoResultsAssetsIdsFn = (inputAssets, getEventData) => {
+export const extractVideoResultAssetsIds: ExtractVideoResultsAssetsIdsFn = (
+  inputAssets,
+  getEventData,
+  update = false
+) => {
   const anyAssetsChanged = !!Object.values(inputAssets).find((asset) => !!asset)
   try {
-    const [dataObjectsIds] = getEventData('storage', 'DataObjectsUploaded')
-    return getResultVideoDataObjectsIds(inputAssets, dataObjectsIds)
+    if (update) {
+      const dataObjects = getEventData('content', 'VideoUpdated')[3]
+      return getResultVideoDataObjectsIds(inputAssets, [...dataObjects])
+    } else {
+      const dataObjects = getEventData('content', 'VideoCreated')[4]
+      return getResultVideoDataObjectsIds(inputAssets, [...dataObjects])
+    }
   } catch (error) {
     // If no assets were changed as part of this extrinsic, let's catch the missing error and ignore it. In any other case, we re-throw
     if ((error as JoystreamLibError).name === 'MissingRequiredEventError' && !anyAssetsChanged) {

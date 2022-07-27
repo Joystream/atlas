@@ -1,4 +1,3 @@
-import BN from 'bn.js'
 import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
@@ -170,7 +169,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
               avatarPhoto: {
                 size: avatarAsset?.blob.size,
                 ipfsHash: avatarHash || '',
-                replacedDataObjectId: channel?.avatarPhoto?.id ? new BN(channel.avatarPhoto.id) : undefined,
+                replacedDataObjectId: channel?.avatarPhoto?.id ? channel.avatarPhoto.id : undefined,
               },
             }
           : {}),
@@ -179,7 +178,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
               coverPhoto: {
                 size: coverAsset.blob.size,
                 ipfsHash: coverPhotoHash || '',
-                replacedDataObjectId: channel?.coverPhoto?.id ? new BN(channel.coverPhoto.id) : undefined,
+                replacedDataObjectId: channel?.coverPhoto?.id ? channel.coverPhoto.id : undefined,
               },
             }
           : {}),

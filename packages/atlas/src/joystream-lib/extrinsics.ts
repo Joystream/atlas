@@ -93,9 +93,10 @@ export class JoystreamLibExtrinsics {
       )
 
       const blockHeader = await this.api.rpc.chain.getHeader(blockHash)
-
       const getEventData: GetEventDataFn = (section, method) => {
-        const event = events.find((event) => event.section === section && event.method === method)
+        const event = events.find((event) => {
+          return event.section === section && event.method === method
+        })
 
         if (!event) {
           throw new JoystreamLibError({
@@ -356,7 +357,7 @@ export class JoystreamLibExtrinsics {
     return {
       videoId,
       block,
-      assetsIds: extractVideoResultAssetsIds(inputAssets, getEventData),
+      assetsIds: extractVideoResultAssetsIds(inputAssets, getEventData, true),
     }
   }
 

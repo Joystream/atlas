@@ -1,5 +1,4 @@
 import { useApolloClient } from '@apollo/client'
-import BN from 'bn.js'
 import { useCallback } from 'react'
 
 import {
@@ -58,7 +57,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
           assets.media = {
             size: data.assets.media.blob.size,
             ipfsHash,
-            replacedDataObjectId: tabData?.assets.video.id ? new BN(tabData.assets.video.id) : undefined,
+            replacedDataObjectId: tabData?.assets.video.id ? tabData.assets.video.id : undefined,
           }
         }
 
@@ -67,9 +66,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
           assets.thumbnailPhoto = {
             size: data.assets.thumbnailPhoto.blob.size,
             ipfsHash,
-            replacedDataObjectId: tabData?.assets.thumbnail.cropId
-              ? new BN(tabData.assets.thumbnail.cropId)
-              : undefined,
+            replacedDataObjectId: tabData?.assets.thumbnail.cropId ? tabData.assets.thumbnail.cropId : undefined,
           }
         }
       }
