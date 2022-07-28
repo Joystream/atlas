@@ -43,6 +43,7 @@ export const StyledBanner = styled(Banner)`
 
 export const InputsContainer = styled.div`
   display: grid;
+  align-content: start;
   gap: ${sizes(8)};
   margin-top: ${sizes(12)};
 
