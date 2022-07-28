@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { addMilliseconds } from 'date-fns'
-import { FC, useCallback, useEffect, useMemo, useRef } from 'react'
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
 import { useBasicVideo } from '@/api/hooks'
@@ -57,6 +57,7 @@ type NftFormProps = {
 export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) => {
   const { activeMembership } = useUser()
   const scrollableWrapperRef = useRef<HTMLDivElement>(null)
+  const [shouldValidateOnchange, setShouldValidateOnChange] = useState(false)
   const {
     state: { activeInputs, setActiveInputs, listingType, setListingType, currentStep, previousStep, nextStep },
   } = useNftForm()
@@ -69,7 +70,6 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
   const maxEndDate = addMilliseconds(new Date(), convertBlocksToDuration(chainState.nftMaxAuctionDuration))
 
   const formMethods = useForm<NftFormFields>({
-    mode: 'onChange',
     resolver: (data, ctx, options) => {
       const resolver = zodResolver(
         createValidationSchema(data, maxStartDate, maxEndDate, listingType, chainState.nftMinStartingPrice)
@@ -202,39 +202,34 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
     trigger,
   ])
 
-  const handleGoForward = useCallback(() => {
+  const handleGoForward = useCallback(async () => {
+    const triggerResult = await trigger()
+    if (!triggerResult) {
+      setShouldValidateOnChange(true)
+      return
+    }
     scrollableWrapperRef.current?.scrollIntoView()
     if (isOnLastStep) return
     nextStep()
-  }, [isOnLastStep, nextStep])
+  }, [isOnLastStep, nextStep, trigger])
 
   const handleGoBack = useCallback(() => {
     if (isOnFirstStep) return
+    setShouldValidateOnChange(false)
     scrollableWrapperRef.current?.scrollIntoView()
     previousStep()
   }, [isOnFirstStep, previousStep])
 
-  const formDisabled = useMemo(() => {
-    if (currentStep === 0) {
-      return !listingType
-    }
-    if (currentStep === 1) {
-      return !isValid
-    }
-    return false
-  }, [currentStep, isValid, listingType])
-
   const formStatus: NftFormStatus = useMemo(
     () => ({
       isValid,
-      isDisabled: formDisabled,
       canGoBack: !isOnFirstStep,
       canGoForward: !isOnLastStep,
       triggerGoBack: handleGoBack,
       triggerGoForward: handleGoForward,
       triggerSubmit: handleSubmit,
     }),
-    [isValid, formDisabled, isOnFirstStep, isOnLastStep, handleGoBack, handleGoForward, handleSubmit]
+    [isValid, isOnFirstStep, isOnLastStep, handleGoBack, handleGoForward, handleSubmit]
   )
 
   // sent updates on form status to VideoWorkspace
@@ -283,6 +278,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
       maxStartDate={maxStartDate}
       maxEndDate={maxEndDate}
       key="step-content-2"
+      shouldValidateOnChange={shouldValidateOnchange}
       selectedType={listingType}
       activeInputs={activeInputs}
       setActiveInputs={setActiveInputs}
