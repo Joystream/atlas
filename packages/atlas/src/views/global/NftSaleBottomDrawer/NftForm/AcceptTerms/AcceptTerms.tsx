@@ -1,7 +1,7 @@
 import { addHours } from 'date-fns'
 import { FC, PropsWithChildren } from 'react'
 
-import { BasicMembershipFieldsFragment } from '@/api/queries'
+import { BasicMembershipFieldsFragment, BasicVideoFieldsFragment } from '@/api/queries'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { useMemberAvatar } from '@/providers/assets'
@@ -24,9 +24,10 @@ import { getTotalDaysAndHours } from '../NftForm.utils'
 type AcceptTermsProps = {
   selectedType: Listing
   formData: NftFormFields
+  nft?: BasicVideoFieldsFragment['nft']
 }
 
-export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData }) => {
+export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData, nft }) => {
   const { startDate, endDate, type } = formData
 
   const totalDaysAndHours = getTotalDaysAndHours(startDate, endDate)
@@ -67,6 +68,26 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData }) =>
           </DescriptionText>
         </Description>
       </Row>
+      {nft?.creatorRoyalty && (
+        <Row>
+          <Title>
+            <TitleText>Royalties</TitleText>
+            <StyledInformation
+              text="By setting royalties you will be entitled to a percentage share in revenue from any future secondary market sale. So if someone sells your work you will get paid."
+              multiline
+              placement="top"
+            />
+          </Title>
+          <Description>
+            <DescriptionText>
+              <Text variant="h400" as="span" color="colorText">
+                {nft.creatorChannel.title}:
+              </Text>{' '}
+              {nft.creatorRoyalty}%
+            </DescriptionText>
+          </Description>
+        </Row>
+      )}
       {formData.startingPrice && isAuction && (
         <Row>
           <Title>

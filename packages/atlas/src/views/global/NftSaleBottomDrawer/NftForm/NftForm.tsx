@@ -288,7 +288,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
       setActiveInputs={setActiveInputs}
       handleGoForward={handleGoForward}
     />,
-    <AcceptTerms key="step-content-3" selectedType={listingType} formData={getValues()} />,
+    <AcceptTerms key="step-content-3" selectedType={listingType} formData={getValues()} nft={video?.nft} />,
   ]
 
   return (

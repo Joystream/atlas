@@ -116,7 +116,11 @@ fragment BasicVideoFields on Video {
     ...StorageDataObjectFields
   }
   nft {
-    id # just to check whether NFT exists
+    id
+    creatorRoyalty
+    creatorChannel {
+      title
+    }
   }
 }
 

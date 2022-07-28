@@ -287,7 +287,12 @@ export type BasicVideoFieldsFragment = {
       | { __typename: 'DataObjectTypeVideoMedia' }
       | { __typename: 'DataObjectTypeVideoThumbnail' }
   } | null
-  nft?: { __typename?: 'OwnedNft'; id: string } | null
+  nft?: {
+    __typename?: 'OwnedNft'
+    id: string
+    creatorRoyalty?: number | null
+    creatorChannel: { __typename?: 'Channel'; title?: string | null }
+  } | null
 }
 
 export type FullVideoFieldsFragment = {
@@ -698,7 +703,12 @@ export type FullVideoFieldsFragment = {
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
-      nft?: { __typename?: 'OwnedNft'; id: string } | null
+      nft?: {
+        __typename?: 'OwnedNft'
+        id: string
+        creatorRoyalty?: number | null
+        creatorChannel: { __typename?: 'Channel'; title?: string | null }
+      } | null
     }
   } | null
 }
@@ -969,7 +979,12 @@ export type FullNftFieldsFragment = {
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
-    nft?: { __typename?: 'OwnedNft'; id: string } | null
+    nft?: {
+      __typename?: 'OwnedNft'
+      id: string
+      creatorRoyalty?: number | null
+      creatorChannel: { __typename?: 'Channel'; title?: string | null }
+    } | null
   }
 }
 
@@ -1450,6 +1465,10 @@ export const BasicVideoFieldsFragmentDoc = gql`
     }
     nft {
       id
+      creatorRoyalty
+      creatorChannel {
+        title
+      }
     }
   }
   ${BasicChannelFieldsFragmentDoc}

@@ -277,7 +277,12 @@ export type GetNftQuery = {
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
-      nft?: { __typename?: 'OwnedNft'; id: string } | null
+      nft?: {
+        __typename?: 'OwnedNft'
+        id: string
+        creatorRoyalty?: number | null
+        creatorChannel: { __typename?: 'Channel'; title?: string | null }
+      } | null
     }
   } | null
 }
@@ -555,7 +560,12 @@ export type GetNftsQuery = {
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
-      nft?: { __typename?: 'OwnedNft'; id: string } | null
+      nft?: {
+        __typename?: 'OwnedNft'
+        id: string
+        creatorRoyalty?: number | null
+        creatorChannel: { __typename?: 'Channel'; title?: string | null }
+      } | null
     }
   }>
 }
@@ -841,7 +851,12 @@ export type GetNftsConnectionQuery = {
               | { __typename: 'DataObjectTypeVideoMedia' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
           } | null
-          nft?: { __typename?: 'OwnedNft'; id: string } | null
+          nft?: {
+            __typename?: 'OwnedNft'
+            id: string
+            creatorRoyalty?: number | null
+            creatorChannel: { __typename?: 'Channel'; title?: string | null }
+          } | null
         }
       }
     }>
