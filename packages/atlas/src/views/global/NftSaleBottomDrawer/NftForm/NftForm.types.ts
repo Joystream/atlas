@@ -22,7 +22,6 @@ export type NftFormData = NftSaleInputMetadata
 
 export type NftFormStatus = {
   isValid: boolean
-  isDisabled: boolean
   canGoBack: boolean
   canGoForward: boolean
   triggerGoBack: () => void
