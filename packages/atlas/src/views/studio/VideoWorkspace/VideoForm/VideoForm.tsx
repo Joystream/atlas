@@ -603,34 +603,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
     </>
   )
 
-  const alwaysEditableFormFields = (
-    <FormField
-      label="Comments"
-      description="Disabling the comments section does not allow for posting new comments under this video and hides any existing comments made in the past."
-    >
-      <Controller
-        name="enableComments"
-        control={control}
-        defaultValue={true}
-        rules={{
-          validate: (value) => value !== null,
-        }}
-        render={({ field: { value, onChange, ref } }) => (
-          <RadioButtonGroup
-            ref={ref}
-            options={[
-              { label: 'Enable comments', value: true },
-              { label: 'Disable comments', value: false },
-            ]}
-            error={!!errors.isExplicit}
-            onChange={(event) => onChange(event.target.value)}
-            value={value}
-          />
-        )}
-      />
-    </FormField>
-  )
-
   return (
     <FormWrapper as="form">
       <Controller
@@ -694,7 +666,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           }}
           render={({ field: { value, onChange, ref }, fieldState: { error } }) => {
             return (
-              <Tooltip text="Click to edit" placement="top-start" hidden={!titleTooltipVisible}>
+              <Tooltip text="Click to edit" placement="top-start" hidden={!titleTooltipVisible || videoFieldsLocked}>
                 <FormField error={error?.message}>
                   <StyledTitleArea
                     ref={ref}
@@ -717,10 +689,9 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           <Banner
             icon={<StyledSvgAlertsInformative24 />}
             title="There's an NFT for this video"
-            description="Only selected options can be changed since there's an NFT minted for this video."
+            description="You can't edit or delete this video, having minted an NFT for it."
           />
         )}
-        {videoFieldsLocked && alwaysEditableFormFields}
         {!videoFieldsLocked && videoEditFields}
         <Divider />
         <div>
@@ -735,7 +706,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           <Text as="p" variant="t200" color="colorText" margin={{ top: 2 }}>
             {!videoFieldsLocked
               ? `License, comments, mature content, paid promotion, published date${isEdit ? ', delete video' : ''}`
-              : 'Royalties, description, category, language, visibility, license, mature content, paid promotion, published date'}
+              : 'Royalties, description, category, language, visibility, license, comments, mature content, paid promotion, published date'}
           </Text>
         </div>
         <MoreSettingsSection expanded={moreSettingsVisible}>
@@ -792,7 +763,32 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
               />
             </FormField>
           )}
-          {!videoFieldsLocked && alwaysEditableFormFields}
+          <FormField
+            label="Comments"
+            description="Disabling the comments section does not allow for posting new comments under this video and hides any existing comments made in the past."
+          >
+            <Controller
+              name="enableComments"
+              control={control}
+              defaultValue={true}
+              rules={{
+                validate: (value) => value !== null,
+              }}
+              render={({ field: { value, onChange, ref } }) => (
+                <RadioButtonGroup
+                  ref={ref}
+                  options={[
+                    { label: 'Enable comments', value: true },
+                    { label: 'Disable comments', value: false },
+                  ]}
+                  error={!!errors.isExplicit}
+                  onChange={(event) => onChange(event.target.value)}
+                  value={value}
+                  disabled={videoFieldsLocked}
+                />
+              )}
+            />
+          </FormField>
           <FormField label="Mature content">
             <Controller
               name="isExplicit"

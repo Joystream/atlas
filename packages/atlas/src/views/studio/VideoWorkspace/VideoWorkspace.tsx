@@ -45,15 +45,23 @@ export const VideoWorkspace: FC = memo(() => {
     }
   }, [formStatus?.hasUnsavedAssets, openWarningDialog, setIsWorkspaceOpen])
 
+  const videoFieldsLocked = tabData?.mintNft && isEdit
+
   const actionBarProps: ActionBarProps = {
-    isActive: isEdit ? !formStatus?.isDisabled : true,
+    isActive: isEdit ? !formStatus?.isDisabled || videoFieldsLocked : true,
     fee: formStatus?.actionBarFee,
     feeLoading: formStatus?.actionBarFeeLoading,
-    primaryButton: {
-      disabled: formStatus?.isDisabled,
-      onClick: formStatus?.triggerFormSubmit,
-      text: formStatus?.actionBarPrimaryText,
-    },
+    primaryButton: videoFieldsLocked
+      ? {
+          onClick: closeVideoWorkspace,
+          text: 'Close',
+          variant: 'secondary',
+        }
+      : {
+          disabled: formStatus?.isDisabled,
+          onClick: formStatus?.triggerFormSubmit,
+          text: formStatus?.actionBarPrimaryText,
+        },
     secondaryButton:
       isEdit && formStatus?.isDirty
         ? {
