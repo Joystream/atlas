@@ -146,4 +146,19 @@ export class JoystreamLib {
       platformFeePercentage: platformFeePercentage.toNumber() / NFT_PERBILL_PERCENT,
     }
   }
+
+  async getDynamicBagCreationPolicies() {
+    await this.ensureApi()
+
+    const { numberOfStorageBuckets, families } = await this.api.query.storage.dynamicBagCreationPolicies('Channel')
+    const transformedFamilies = Object.fromEntries(families)
+    Object.keys(transformedFamilies).forEach((key) => {
+      transformedFamilies[key] = transformedFamilies[key].toNumber()
+    })
+
+    return {
+      numberOfStorageBuckets: numberOfStorageBuckets.toNumber(),
+      families: transformedFamilies,
+    }
+  }
 }
