@@ -118,9 +118,6 @@ fragment BasicVideoFields on Video {
   nft {
     id
     creatorRoyalty
-    creatorChannel {
-      title
-    }
   }
 }
 

@@ -1,7 +1,7 @@
 import { addHours } from 'date-fns'
 import { FC, PropsWithChildren } from 'react'
 
-import { BasicMembershipFieldsFragment, BasicVideoFieldsFragment } from '@/api/queries'
+import { BasicMembershipFieldsFragment } from '@/api/queries'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { useMemberAvatar } from '@/providers/assets'
@@ -24,10 +24,11 @@ import { getTotalDaysAndHours } from '../NftForm.utils'
 type AcceptTermsProps = {
   selectedType: Listing
   formData: NftFormFields
-  nft?: BasicVideoFieldsFragment['nft']
+  creatorRoyalty?: number | null
+  channelTitle?: string | null
 }
 
-export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData, nft }) => {
+export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData, creatorRoyalty, channelTitle }) => {
   const { startDate, endDate, type } = formData
 
   const totalDaysAndHours = getTotalDaysAndHours(startDate, endDate)
@@ -68,7 +69,7 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData, nft 
           </DescriptionText>
         </Description>
       </Row>
-      {nft?.creatorRoyalty && (
+      {creatorRoyalty && (
         <Row>
           <Title>
             <TitleText>Royalties</TitleText>
@@ -81,9 +82,9 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData, nft 
           <Description>
             <DescriptionText>
               <Text variant="h400" as="span" color="colorText">
-                {nft.creatorChannel.title}:
+                {channelTitle}:
               </Text>{' '}
-              {nft.creatorRoyalty}%
+              {creatorRoyalty}%
             </DescriptionText>
           </Description>
         </Row>
