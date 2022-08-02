@@ -24,9 +24,11 @@ import { getTotalDaysAndHours } from '../NftForm.utils'
 type AcceptTermsProps = {
   selectedType: Listing
   formData: NftFormFields
+  creatorRoyalty?: number | null
+  channelTitle?: string | null
 }
 
-export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData }) => {
+export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData, creatorRoyalty, channelTitle }) => {
   const { startDate, endDate, type } = formData
 
   const totalDaysAndHours = getTotalDaysAndHours(startDate, endDate)
@@ -67,6 +69,26 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData }) =>
           </DescriptionText>
         </Description>
       </Row>
+      {creatorRoyalty && (
+        <Row>
+          <Title>
+            <TitleText>Royalties</TitleText>
+            <StyledInformation
+              text="Royalties let the video creator earn revenue from secondary NFT sales"
+              multiline
+              placement="top"
+            />
+          </Title>
+          <Description>
+            <DescriptionText>
+              <Text variant="h400" as="span" color="colorText">
+                {channelTitle}:
+              </Text>{' '}
+              {creatorRoyalty}%
+            </DescriptionText>
+          </Description>
+        </Row>
+      )}
       {formData.startingPrice && isAuction && (
         <Row>
           <Title>

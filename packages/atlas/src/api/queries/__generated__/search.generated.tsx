@@ -87,7 +87,7 @@ export type SearchQuery = {
               | { __typename: 'DataObjectTypeVideoMedia' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
           } | null
-          nft?: { __typename?: 'OwnedNft'; id: string } | null
+          nft?: { __typename?: 'OwnedNft'; id: string; creatorRoyalty?: number | null } | null
         }
   }>
 }

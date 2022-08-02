@@ -58,7 +58,7 @@ export type GetBasicVideoQuery = {
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
-    nft?: { __typename?: 'OwnedNft'; id: string } | null
+    nft?: { __typename?: 'OwnedNft'; id: string; creatorRoyalty?: number | null } | null
   } | null
 }
 
@@ -476,7 +476,7 @@ export type GetFullVideoQuery = {
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
         } | null
-        nft?: { __typename?: 'OwnedNft'; id: string } | null
+        nft?: { __typename?: 'OwnedNft'; id: string; creatorRoyalty?: number | null } | null
       }
     } | null
   } | null
@@ -544,7 +544,7 @@ export type GetBasicVideosConnectionQuery = {
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
         } | null
-        nft?: { __typename?: 'OwnedNft'; id: string } | null
+        nft?: { __typename?: 'OwnedNft'; id: string; creatorRoyalty?: number | null } | null
       }
     }>
     pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: string | null }
@@ -974,7 +974,7 @@ export type GetFullVideosConnectionQuery = {
                 | { __typename: 'DataObjectTypeVideoMedia' }
                 | { __typename: 'DataObjectTypeVideoThumbnail' }
             } | null
-            nft?: { __typename?: 'OwnedNft'; id: string } | null
+            nft?: { __typename?: 'OwnedNft'; id: string; creatorRoyalty?: number | null } | null
           }
         } | null
       }
@@ -1039,7 +1039,7 @@ export type GetBasicVideosQuery = {
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
-    nft?: { __typename?: 'OwnedNft'; id: string } | null
+    nft?: { __typename?: 'OwnedNft'; id: string; creatorRoyalty?: number | null } | null
   }>
 }
 
@@ -1460,7 +1460,7 @@ export type GetFullVideosQuery = {
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
         } | null
-        nft?: { __typename?: 'OwnedNft'; id: string } | null
+        nft?: { __typename?: 'OwnedNft'; id: string; creatorRoyalty?: number | null } | null
       }
     } | null
   }>
@@ -1530,7 +1530,7 @@ export type GetMostViewedVideosConnectionQuery = {
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
         } | null
-        nft?: { __typename?: 'OwnedNft'; id: string } | null
+        nft?: { __typename?: 'OwnedNft'; id: string; creatorRoyalty?: number | null } | null
       }
     }>
     pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: string | null }
@@ -1590,7 +1590,7 @@ export type GetTop10VideosThisWeekQuery = {
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
-    nft?: { __typename?: 'OwnedNft'; id: string } | null
+    nft?: { __typename?: 'OwnedNft'; id: string; creatorRoyalty?: number | null } | null
   }>
 }
 
@@ -1647,7 +1647,7 @@ export type GetTop10VideosThisMonthQuery = {
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
-    nft?: { __typename?: 'OwnedNft'; id: string } | null
+    nft?: { __typename?: 'OwnedNft'; id: string; creatorRoyalty?: number | null } | null
   }>
 }
 
