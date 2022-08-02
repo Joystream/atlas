@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "@emotion/eslint-plugin": "^11.7.0",
+    "@polkadot/api": "8.9.1",
     "@stylelint/postcss-css-in-js": "^0.38.0",
     "@trivago/prettier-plugin-sort-imports": "^3.2.0",
     "@types/node": "^16.11.39",
@@ -62,10 +63,10 @@
     "typescript": "4.7.3"
   },
   "resolutions": {
-    "@polkadot/api": "8.9.1",
     "bn.js": "5.2.1",
     "blake3": "patch:blake3@npm:2.1.7#.yarn/patches/blake3-npm-2.1.7-7bf40c44b4",
-    "@joystream/types@0.20.1": "patch:@joystream/types@npm:0.20.1#.yarn/patches/@joystream-types-npm-0.20.1-034fcceb67.patch"
+    "@joystream/types@0.20.1": "patch:@joystream/types@npm:0.20.1#.yarn/patches/@joystream-types-npm-0.20.1-034fcceb67.patch",
+    "@polkadot/api@8.9.1": "patch:@polkadot/api@npm:8.9.1#.yarn/patches/@polkadot-api-npm-8.9.1-ec90430f8c.patch"
   },
   "engines": {
     "node": "^16"
