@@ -26,7 +26,6 @@ import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { useBloatFeesAndPerMbFees, useFee } from '@/hooks/useFee'
 import { NftIssuanceInputMetadata, VideoInputAssets, VideoInputMetadata } from '@/joystream-lib'
 import { useRawAssetResolver } from '@/providers/assets'
-import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useJoystream } from '@/providers/joystream'
 import { useUser } from '@/providers/user'
 import {
@@ -86,23 +85,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const [titleTooltipVisible, setTitleTooltipVisible] = useState(true)
   const mintNftFormFieldRef = useRef<HTMLDivElement>(null)
   const { memberId, channelId } = useUser()
-  const [openEditDialog, closeEditDialog] = useConfirmationModal({
-    type: 'warning',
-    title: 'Discard changes?',
-    description:
-      'You have unsaved changes which are going to be lost if you close this window. Are you sure you want to continue?',
-    primaryButton: {
-      onClick: () => {
-        reset()
-        closeEditDialog()
-      },
-      text: 'Confirm and discard',
-    },
-    secondaryButton: {
-      text: 'Cancel',
-      onClick: () => closeEditDialog(),
-    },
-  })
 
   const { editedVideoInfo } = useVideoWorkspace()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useVideoWorkspaceData()
@@ -389,7 +371,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
       actionBarFeeLoading: isEdit ? updateVideoFeeLoading : createVideoFeeLoading,
       isValid: isFormValid,
       triggerFormSubmit: handleSubmit,
-      triggerReset: openEditDialog,
     }),
     [
       actionBarPrimaryText,
@@ -400,7 +381,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
       isDirty,
       isEdit,
       isFormValid,
-      openEditDialog,
       updateVideoFee,
       updateVideoFeeLoading,
     ]

@@ -97,7 +97,6 @@ export const NftSaleBottomDrawer: FC = () => {
     feeLoading: formStatus?.actionBarLoading,
     primaryButton: {
       text: !formStatus?.canGoForward ? 'Start sale' : 'Next step',
-      disabled: formStatus?.isDisabled,
       onClick: !formStatus?.canGoForward ? formStatus?.triggerSubmit : formStatus?.triggerGoForward,
     },
     secondaryButton: {

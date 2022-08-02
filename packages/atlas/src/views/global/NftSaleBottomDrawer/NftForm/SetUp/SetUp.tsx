@@ -31,6 +31,7 @@ type SetUpProps = {
   maxEndDate: Date
   selectedType: Listing
   activeInputs: string[]
+  shouldValidateOnChange: boolean
   setActiveInputs: Dispatch<SetStateAction<string[]>>
   handleGoForward: () => void
 }
@@ -41,6 +42,7 @@ export const SetUp: FC<SetUpProps> = ({
   setActiveInputs,
   maxEndDate,
   maxStartDate,
+  shouldValidateOnChange,
   handleGoForward,
 }) => {
   const {
@@ -96,7 +98,7 @@ export const SetUp: FC<SetUpProps> = ({
         if (name === 'buyNowPrice') {
           const startingPrice = getValues('startingPrice')
           setValue('buyNowPrice', startingPrice ? startingPrice + 1 : 2)
-          trigger() // trigger form validation to make sure starting price is valid
+          shouldValidateOnChange && trigger() // trigger form validation to make sure starting price is valid
         }
         return [...prevState, name]
       }
@@ -219,7 +221,10 @@ export const SetUp: FC<SetUpProps> = ({
                             name: 'Now',
                           },
                         ]}
-                        onChange={onChange}
+                        onChange={(value) => {
+                          onChange(value)
+                          shouldValidateOnChange && trigger('startDate')
+                        }}
                         value={value}
                       />
                     </FormField>
@@ -240,7 +245,10 @@ export const SetUp: FC<SetUpProps> = ({
                           error={!!error}
                           minDate={(startDate?.type === 'date' && startDate.date) || new Date()}
                           maxDate={maxEndDate}
-                          onChange={onChange}
+                          onChange={(value) => {
+                            onChange(value)
+                            shouldValidateOnChange && trigger('endDate')
+                          }}
                           items={expirationDateItems}
                           value={
                             value || {
@@ -287,7 +295,10 @@ export const SetUp: FC<SetUpProps> = ({
               }}
             >
               <Input
-                {...register('startingPrice', { valueAsNumber: true })}
+                {...register('startingPrice', {
+                  valueAsNumber: true,
+                  onChange: () => shouldValidateOnChange && trigger('startingPrice'),
+                })}
                 type="number"
                 defaultValue={chainState.nftMinStartingPrice?.toString()}
                 nodeStart={<JoyTokenIcon variant="gray" size={24} />}
@@ -318,7 +329,10 @@ export const SetUp: FC<SetUpProps> = ({
               }}
             >
               <Input
-                {...register('buyNowPrice', { valueAsNumber: true })}
+                {...register('buyNowPrice', {
+                  valueAsNumber: true,
+                  onChange: () => shouldValidateOnChange && trigger('buyNowPrice'),
+                })}
                 placeholder="—"
                 type="number"
                 nodeStart={<JoyTokenIcon variant="gray" size={24} />}
@@ -336,7 +350,7 @@ export const SetUp: FC<SetUpProps> = ({
                 disabled={!activeInputs.includes('buyNowPrice')}
                 error={!!errors.buyNowPrice}
                 onBlur={() => {
-                  trigger() // trigger form validation to make sure starting price is valid
+                  shouldValidateOnChange && trigger() // trigger form validation to make sure starting price is valid
                 }}
               />
             </FormField>
@@ -347,7 +361,7 @@ export const SetUp: FC<SetUpProps> = ({
                 return (
                   <FormField
                     label="Whitelist"
-                    description="Only members included in the whitelist will be able to bid on your auction."
+                    description="Only members included in the whitelist will be able to bid on your auction(provide at least two members)."
                     switchable
                     switchProps={{
                       name: 'whitelistedMembers',
@@ -360,10 +374,14 @@ export const SetUp: FC<SetUpProps> = ({
                       disabled={!activeInputs.includes('whitelistedMembers')}
                       selectedMembers={existingMembers || []}
                       error={!!error}
-                      onSelectMember={(member) => onChange([member, ...(existingMembers ? existingMembers : [])])}
-                      onRemoveMember={(memberId) =>
+                      onSelectMember={(member) => {
+                        onChange([member, ...(existingMembers ? existingMembers : [])])
+                        shouldValidateOnChange && trigger('whitelistedMembers')
+                      }}
+                      onRemoveMember={(memberId) => {
                         onChange(existingMembers?.filter((existingMember) => existingMember.id !== memberId))
-                      }
+                        shouldValidateOnChange && trigger('whitelistedMembers')
+                      }}
                     />
                   </FormField>
                 )

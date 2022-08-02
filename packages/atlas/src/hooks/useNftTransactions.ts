@@ -1,7 +1,7 @@
 import { useApolloClient } from '@apollo/client'
 import { useCallback } from 'react'
 
-import { GetNftDocument } from '@/api/queries'
+import { GetNftDocument, GetNftQuery, GetNftQueryVariables } from '@/api/queries'
 import { GetBidsDocument } from '@/api/queries/__generated__/bids.generated'
 import { NftSaleType } from '@/joystream-lib'
 import { useConfirmationModal } from '@/providers/confirmationModal'
@@ -16,11 +16,16 @@ export const useNftTransactions = () => {
   const [openModal, closeModal] = useConfirmationModal()
   const client = useApolloClient()
 
-  const _refetchData = useCallback(
-    (includeBids = false) =>
-      client.refetchQueries({
-        include: [GetNftDocument, ...(includeBids ? [GetBidsDocument] : [])],
-      }),
+  const refetchNftData = useCallback(
+    (id: string) => {
+      client.query<GetNftQuery, GetNftQueryVariables>({
+        query: GetNftDocument,
+        variables: {
+          id,
+        },
+        fetchPolicy: 'network-only',
+      })
+    },
     [client]
   )
 
@@ -35,10 +40,15 @@ export const useNftTransactions = () => {
         },
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).cancelNftBid(id, memberId, proxyCallback(updateStatus)),
-        onTxSync: async () => _refetchData(true),
+        onTxSync: async () => {
+          client.refetchQueries({
+            include: [GetBidsDocument],
+          })
+          return refetchNftData(id)
+        },
       })
     },
-    [_refetchData, memberId, handleTransaction, joystream, proxyCallback]
+    [joystream, memberId, handleTransaction, proxyCallback, client, refetchNftData]
   )
 
   const cancelNftSale = useCallback(
@@ -50,7 +60,9 @@ export const useNftTransactions = () => {
         handleTransaction({
           txFactory: async (updateStatus) =>
             (await joystream.extrinsics).cancelNftSale(id, memberId, saleType, proxyCallback(updateStatus)),
-          onTxSync: async () => _refetchData(),
+          onTxSync: async () => {
+            return refetchNftData(id)
+          },
           snackbarSuccessMessage: {
             title: 'NFT removed from sale successfully',
             description: 'You can put it back on sale anytime.',
@@ -75,7 +87,7 @@ export const useNftTransactions = () => {
         },
       })
     },
-    [_refetchData, memberId, closeModal, handleTransaction, joystream, openModal, proxyCallback]
+    [refetchNftData, memberId, closeModal, handleTransaction, joystream, openModal, proxyCallback]
   )
 
   const changeNftPrice = useCallback(
@@ -87,14 +99,14 @@ export const useNftTransactions = () => {
       return handleTransaction({
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).changeNftPrice(memberId, id, price, proxyCallback(updateStatus)),
-        onTxSync: async () => _refetchData(),
+        onTxSync: async () => refetchNftData(id),
         snackbarSuccessMessage: {
           title: 'NFT price changed successfully',
           description: 'You can update the price anytime.',
         },
       })
     },
-    [_refetchData, memberId, handleTransaction, joystream, proxyCallback]
+    [refetchNftData, memberId, handleTransaction, joystream, proxyCallback]
   )
 
   const acceptNftBid = useCallback(
@@ -105,14 +117,14 @@ export const useNftTransactions = () => {
       return handleTransaction({
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).acceptNftBid(ownerId, id, bidderId, price, proxyCallback(updateStatus)),
-        onTxSync: async () => _refetchData(),
+        onTxSync: async () => refetchNftData(id),
         snackbarSuccessMessage: {
           title: 'Bid accepted',
           description: 'Your auction has ended. The ownership has been transferred.',
         },
       })
     },
-    [_refetchData, memberId, handleTransaction, joystream, proxyCallback]
+    [refetchNftData, memberId, handleTransaction, joystream, proxyCallback]
   )
 
   return {
