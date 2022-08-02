@@ -25,7 +25,7 @@ const config: CustomizedStorybookConfig = {
       root: viteConfig.root,
       resolve: viteConfig.resolve,
       build: {
-        target: ['chrome87', 'edge88', 'es2020', 'firefox78', 'safari14'],
+        target: viteConfig.build?.target,
       },
       // eslint-disable-next-line
       plugins: [viteConfig.plugins?.find((p) => (p as any).name === 'babel')],
