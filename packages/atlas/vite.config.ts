@@ -31,7 +31,7 @@ export default defineConfig({
       name: 'embedded-fallback',
       configureServer(server) {
         server.middlewares.use('/embedded', (req, res, next) => {
-          if (req.url.includes('.')) {
+          if (req.url?.includes('.')) {
             next()
             return
           }
