@@ -2,9 +2,10 @@
 import 'blake3/dist/wasm/web/blake3_js_bg.wasm'
 
 import type { HashingRequest, HashingResponse } from './worker'
-import HashingWorker from './worker?worker'
 
-const worker = new HashingWorker()
+const worker = new Worker(new URL('./worker', import.meta.url), {
+  type: 'module',
+})
 
 const promiseResolveMap: Record<string, (hash: string) => void> = {}
 
