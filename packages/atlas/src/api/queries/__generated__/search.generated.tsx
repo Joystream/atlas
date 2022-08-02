@@ -2,13 +2,7 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import {
-  BasicChannelFieldsFragmentDoc,
-  BasicMembershipFieldsFragmentDoc,
-  BasicVideoFieldsFragmentDoc,
-  FullChannelFieldsFragmentDoc,
-  FullVideoFieldsFragmentDoc,
-} from './fragments.generated'
+import { BasicChannelFieldsFragmentDoc, BasicVideoFieldsFragmentDoc } from './fragments.generated'
 
 const defaultOptions = {} as const
 export type SearchQueryVariables = Types.Exact<{
@@ -93,7 +87,7 @@ export type SearchQuery = {
               | { __typename: 'DataObjectTypeVideoMedia' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
           } | null
-          nft?: { __typename?: 'OwnedNft'; id: string } | null
+          nft?: { __typename?: 'OwnedNft'; id: string; creatorRoyalty?: number | null } | null
         }
   }>
 }

@@ -1,9 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { addMilliseconds } from 'date-fns'
-import { FC, useCallback, useEffect, useMemo, useRef } from 'react'
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
-import { useFullVideo } from '@/api/hooks'
+import { useBasicVideo } from '@/api/hooks'
 import { Step, StepProps, getStepVariant } from '@/components/Step'
 import { Text } from '@/components/Text'
 import { SvgActionChevronR } from '@/components/_icons'
@@ -60,6 +60,7 @@ type NftFormProps = {
 export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) => {
   const { activeMembership, memberId } = useUser()
   const scrollableWrapperRef = useRef<HTMLDivElement>(null)
+  const [shouldValidateOnchange, setShouldValidateOnChange] = useState(false)
   const {
     state: { activeInputs, setActiveInputs, listingType, setListingType, currentStep, previousStep, nextStep },
   } = useNftForm()
@@ -72,7 +73,6 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
   const maxEndDate = addMilliseconds(new Date(), convertBlocksToDuration(chainState.nftMaxAuctionDuration))
 
   const formMethods = useForm<NftFormFields>({
-    mode: 'onChange',
     resolver: (data, ctx, options) => {
       const resolver = zodResolver(
         createValidationSchema(
@@ -103,7 +103,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
     formState: { isValid },
   } = formMethods
 
-  const { video, loading: loadingVideo } = useFullVideo(videoId, { fetchPolicy: 'cache-only' })
+  const { video, loading: loadingVideo } = useBasicVideo(videoId, { fetchPolicy: 'cache-only' })
 
   const { url: channelAvatarUrl } = useAsset(video?.channel.avatarPhoto)
   const { url: thumbnailPhotoUrl } = useAsset(video?.thumbnailPhoto)
@@ -248,32 +248,27 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
     watch,
   ])
 
-  const handleGoForward = useCallback(() => {
+  const handleGoForward = useCallback(async () => {
+    const triggerResult = await trigger()
+    if (!triggerResult) {
+      setShouldValidateOnChange(true)
+      return
+    }
     scrollableWrapperRef.current?.scrollIntoView()
     if (isOnLastStep) return
     nextStep()
-  }, [isOnLastStep, nextStep])
+  }, [isOnLastStep, nextStep, trigger])
 
   const handleGoBack = useCallback(() => {
     if (isOnFirstStep) return
+    setShouldValidateOnChange(false)
     scrollableWrapperRef.current?.scrollIntoView()
     previousStep()
   }, [isOnFirstStep, previousStep])
 
-  const formDisabled = useMemo(() => {
-    if (currentStep === 0) {
-      return !listingType
-    }
-    if (currentStep === 1) {
-      return !isValid
-    }
-    return false
-  }, [currentStep, isValid, listingType])
-
   const formStatus: NftFormStatus = useMemo(
     () => ({
       isValid,
-      isDisabled: formDisabled,
       canGoBack: !isOnFirstStep,
       canGoForward: !isOnLastStep,
       actionBarFee: fee,
@@ -282,7 +277,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
       triggerGoForward: handleGoForward,
       triggerSubmit: handleSubmit,
     }),
-    [isValid, formDisabled, isOnFirstStep, isOnLastStep, fee, feeLoading, handleGoBack, handleGoForward, handleSubmit]
+    [isValid, isOnFirstStep, isOnLastStep, fee, feeLoading, handleGoBack, handleGoForward, handleSubmit]
   )
 
   // sent updates on form status to VideoWorkspace
@@ -331,12 +326,20 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
       maxStartDate={maxStartDate}
       maxEndDate={maxEndDate}
       key="step-content-2"
+      shouldValidateOnChange={shouldValidateOnchange}
       selectedType={listingType}
       activeInputs={activeInputs}
       setActiveInputs={setActiveInputs}
       handleGoForward={handleGoForward}
     />,
-    <AcceptTerms key="step-content-3" selectedType={listingType} formData={getValues()} fee={fee || 0} />,
+    <AcceptTerms
+      key="step-content-3"
+      selectedType={listingType}
+      formData={getValues()}
+      creatorRoyalty={video?.nft?.creatorRoyalty}
+      channelTitle={video?.channel.title}
+      fee={fee || 0}
+    />,
   ]
 
   return (

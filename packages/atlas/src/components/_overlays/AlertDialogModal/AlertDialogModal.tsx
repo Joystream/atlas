@@ -17,7 +17,7 @@ import { HeaderIconContainer, InformativeIconWrapper } from './AlertDialogModal.
 type DialogButtonProps = PropsWithChildren<{
   text: string
   disabled?: boolean
-  onClick?: (e: MouseEvent) => void
+  onClick?: (e?: MouseEvent) => void
 }> &
   Omit<ButtonProps, 'children'>
 
@@ -55,7 +55,7 @@ export const AlertDialogModal: FC<AlertDialogModalProps> = ({
   const primaryButtonColor = isInformative ? 'primary' : type
 
   return (
-    <Modal show={show} onExitClick={onExitClick}>
+    <Modal show={show} onEscPress={secondaryButton?.onClick || onExitClick} onExitClick={onExitClick}>
       <Dialog
         {...dialogProps}
         primaryButton={primaryButton ? { ...primaryButton, variant: primaryButtonColor } : undefined}

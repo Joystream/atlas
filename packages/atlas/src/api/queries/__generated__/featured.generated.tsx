@@ -2,13 +2,7 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import {
-  BasicChannelFieldsFragmentDoc,
-  BasicMembershipFieldsFragmentDoc,
-  BasicVideoFieldsFragmentDoc,
-  FullChannelFieldsFragmentDoc,
-  FullVideoFieldsFragmentDoc,
-} from './fragments.generated'
+import { BasicVideoFieldsFragmentDoc, FullVideoFieldsFragmentDoc } from './fragments.generated'
 
 const defaultOptions = {} as const
 export type GetVideoHeroQueryVariables = Types.Exact<{ [key: string]: never }>
@@ -68,7 +62,7 @@ export type GetVideoHeroQuery = {
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
-      nft?: { __typename?: 'OwnedNft'; id: string } | null
+      nft?: { __typename?: 'OwnedNft'; id: string; creatorRoyalty?: number | null } | null
     }
   }
 }
@@ -132,7 +126,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
         } | null
-        nft?: { __typename?: 'OwnedNft'; id: string } | null
+        nft?: { __typename?: 'OwnedNft'; id: string; creatorRoyalty?: number | null } | null
       }
     }>
   }>
@@ -556,7 +550,7 @@ export type GetCategoriesFeaturedVideosQuery = {
               | { __typename: 'DataObjectTypeVideoMedia' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
           } | null
-          nft?: { __typename?: 'OwnedNft'; id: string } | null
+          nft?: { __typename?: 'OwnedNft'; id: string; creatorRoyalty?: number | null } | null
         }
       } | null
     }

@@ -69,5 +69,4 @@ export type VideoWorkspaceFormStatus = {
   actionBarFee?: number
   actionBarFeeLoading?: boolean
   triggerFormSubmit: () => void
-  triggerReset: () => void
 }
