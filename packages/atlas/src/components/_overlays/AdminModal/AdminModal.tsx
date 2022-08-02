@@ -1,5 +1,6 @@
 import { ChangeEvent, FC, useEffect, useState } from 'react'
 
+import { useGetKillSwitch, useSetKillSwitch } from '@/api/hooks/killSwitch'
 import { Information } from '@/components/Information'
 import { TabItem, Tabs } from '@/components/Tabs'
 import { Button, TextButton } from '@/components/_buttons/Button'
@@ -33,7 +34,13 @@ const environmentsItems = availableEnvs()
   .filter((item) => ENVIRONMENT_NAMES[item])
   .map((item) => ({ name: ENVIRONMENT_NAMES[item], value: item }))
 
-const TABS: TabItem[] = [{ name: 'Environment' }, { name: 'Local state' }, { name: 'User' }, { name: 'Location' }]
+const TABS: TabItem[] = [
+  { name: 'Environment' },
+  { name: 'Local state' },
+  { name: 'User' },
+  { name: 'Location' },
+  { name: 'Kill switch' },
+]
 
 export const AdminModal: FC = () => {
   const [overlayOpen, setOverlayOpen] = useState(false)
@@ -90,6 +97,7 @@ export const AdminModal: FC = () => {
       {selectedTabIdx === 1 && <StateTab />}
       {selectedTabIdx === 2 && <UserTab />}
       {selectedTabIdx === 3 && <LocationTab />}
+      {selectedTabIdx === 4 && <KillSwitch />}
     </DialogModal>
   )
 }
@@ -410,6 +418,43 @@ const LocationTab: FC = () => {
       <Button onClick={handleResetClick} size="large" variant="secondary">
         Reset location data{' '}
         <Information text="Resetting will cause the app to fetch your location again on next startup" />
+      </Button>
+    </VerticalSpacedContainer>
+  )
+}
+
+const KillSwitch: FC = () => {
+  const [secret, setSecret] = useState('')
+  const [isKilledSwitch, setIsKilledSwitch] = useState(false)
+  const { setKillSwitch, error } = useSetKillSwitch()
+  const { isKilled, loading } = useGetKillSwitch()
+
+  useEffect(() => {
+    if (isKilled) {
+      setIsKilledSwitch(isKilled)
+    }
+  }, [isKilled])
+
+  const handleKillSwitch = async () => {
+    await setKillSwitch(isKilledSwitch, secret)
+    window.location.reload()
+  }
+
+  return (
+    <VerticalSpacedContainer>
+      <FormField>
+        <Switch
+          disabled={loading}
+          label="Use location data"
+          value={isKilledSwitch}
+          onChange={() => setIsKilledSwitch((prevState) => !prevState)}
+        />
+      </FormField>
+      <FormField label="Secret" error={error ? error.message : undefined}>
+        <Input value={secret} onChange={(event) => setSecret(event.target.value)} type="text" error={!!error} />
+      </FormField>
+      <Button disabled={!secret.length} onClick={handleKillSwitch} size="large" variant="secondary">
+        Save changes
       </Button>
     </VerticalSpacedContainer>
   )
