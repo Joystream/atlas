@@ -74,7 +74,7 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData, crea
           <Title>
             <TitleText>Royalties</TitleText>
             <StyledInformation
-              text="By setting royalties you will be entitled to a percentage share in revenue from any future secondary market sale. So if someone sells your work you will get paid."
+              text="Royalties let the video creator earn revenue from secondary NFT sales"
               multiline
               placement="top"
             />
