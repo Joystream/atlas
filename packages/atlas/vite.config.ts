@@ -26,9 +26,22 @@ export default defineConfig({
     setupFiles: ['vitest-setup.ts'],
     globals: true,
   },
-  // This should fix https://github.com/Joystream/atlas/issues/3005
   worker: {
-    format: 'es',
+    plugins: [
+      // This plugin fixes:
+      // https://github.com/Joystream/atlas/issues/3005
+      // By default vite was transpiling `import.meta.url` (that you can find in `node_modules/@polkadot/api/packageInfo.js`)
+      // to the code which uses `document.baseURI`. `Document` is not available in workers and in the result we got reference errors.
+      // This plugin replace `document.baseURI` with `self.location.href` which should be available in the worker
+      {
+        name: 'resolve-import-meta-polkadot',
+        resolveImportMeta(_, { chunkId }) {
+          if (chunkId === 'polkadot-worker.js') {
+            return 'self.location.href'
+          }
+        },
+      },
+    ],
   },
   plugins: [
     {

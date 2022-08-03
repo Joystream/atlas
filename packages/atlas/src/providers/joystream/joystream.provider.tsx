@@ -7,7 +7,6 @@ import { JoystreamLib } from '@/joystream-lib'
 import { useEnvironmentStore } from '@/providers/environment/store'
 import { useUserStore } from '@/providers/user'
 import { SentryLogger } from '@/utils/logs'
-import JoystreamJsWorker from '@/utils/polkadot-worker?worker'
 
 import { useConnectionStatusStore } from '../connectionStatus'
 
@@ -21,7 +20,10 @@ export type JoystreamContextValue = {
 
 export const JoystreamContext = createContext<JoystreamContextValue | undefined>(undefined)
 JoystreamContext.displayName = 'JoystreamContext'
-const worker = new JoystreamJsWorker()
+
+const worker = new Worker(new URL('../../utils/polkadot-worker', import.meta.url), {
+  type: 'module',
+})
 const api = wrap<typeof JoystreamLib>(worker)
 
 export const JoystreamProvider: FC<PropsWithChildren> = ({ children }) => {
