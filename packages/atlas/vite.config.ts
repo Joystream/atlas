@@ -26,9 +26,20 @@ export default defineConfig({
     setupFiles: ['vitest-setup.ts'],
     globals: true,
   },
-  // This should fix https://github.com/Joystream/atlas/issues/3005
   worker: {
-    format: 'es',
+    // This plugin fixes:
+    // https://github.com/Joystream/atlas/issues/3005 and
+    // https://github.com/Joystream/atlas/issues/3042
+    plugins: [
+      {
+        name: 'resolve-import-meta-polkadot',
+        resolveImportMeta(_, { chunkId }) {
+          if (chunkId === 'polkadot-worker.js') {
+            return 'self.location.href'
+          }
+        },
+      },
+    ],
   },
   plugins: [
     {
