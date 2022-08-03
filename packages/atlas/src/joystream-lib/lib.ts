@@ -157,8 +157,8 @@ export class JoystreamLib {
     })
 
     return {
-      numberOfStorageBuckets: numberOfStorageBuckets.toNumber(),
-      families: transformedFamilies,
+      storageBucketsCount: numberOfStorageBuckets.toNumber(),
+      distributionBucketsCountPerFamily: transformedFamilies,
     }
   }
 }

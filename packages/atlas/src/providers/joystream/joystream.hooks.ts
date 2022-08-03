@@ -98,18 +98,21 @@ export const useBucketsConfigForNewChannel = () => {
     const storageBuckets = allStorageBuckets.current
     const distributionFamiliesToBucketsMapping = allDistributionFamiliesToBucketsMapping.current
     const storage =
-      storageBuckets && dynamicBagCreationPolicies?.numberOfStorageBuckets
-        ? sampleSize(storageBuckets, dynamicBagCreationPolicies.numberOfStorageBuckets)
+      storageBuckets && dynamicBagCreationPolicies?.storageBucketsCount
+        ? sampleSize(storageBuckets, dynamicBagCreationPolicies.storageBucketsCount)
         : []
     const distribution = distributionFamiliesToBucketsMapping
       ? Object.entries(distributionFamiliesToBucketsMapping).reduce((acc, [familyIdStr, buckets]) => {
           const familyId = parseInt(familyIdStr)
-          const familyBuckets: ChannelInputBuckets['distribution'] = dynamicBagCreationPolicies?.families
-            ? sampleSize(buckets, dynamicBagCreationPolicies.families[familyId]).map((bucketIndex) => ({
-                distributionBucketIndex: bucketIndex,
-                distributionBucketFamilyId: familyId,
-              }))
-            : []
+          const familyBuckets: ChannelInputBuckets['distribution'] =
+            dynamicBagCreationPolicies?.distributionBucketsCountPerFamily
+              ? sampleSize(buckets, dynamicBagCreationPolicies.distributionBucketsCountPerFamily[familyId]).map(
+                  (bucketIndex) => ({
+                    distributionBucketIndex: bucketIndex,
+                    distributionBucketFamilyId: familyId,
+                  })
+                )
+              : []
           return [...acc, ...familyBuckets]
         }, [] as ChannelInputBuckets['distribution'])
       : []
