@@ -16,7 +16,7 @@ import { SentryLogger } from '@/utils/logs'
 
 import { MemberBadgesWrapper, StyledOutputPill } from './MemberComboBox.styles'
 
-import { ComboBox } from '../ComboBox'
+import { ComboBox, ComboBoxProps } from '../ComboBox'
 
 type MemberComboBoxProps = {
   selectedMembers: BasicMembershipFieldsFragment[]
@@ -25,7 +25,7 @@ type MemberComboBoxProps = {
   onRemoveMember?: (memberId: string) => void
   disabled?: boolean
   error?: boolean
-}
+} & Pick<ComboBoxProps, 'onBlur'>
 
 export const MemberComboBox: FC<MemberComboBoxProps> = ({
   selectedMembers,
@@ -34,6 +34,7 @@ export const MemberComboBox: FC<MemberComboBoxProps> = ({
   onRemoveMember,
   disabled,
   error,
+  onBlur,
 }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [members, setMembers] = useState<BasicMembershipFieldsFragment[]>([])
@@ -114,6 +115,7 @@ export const MemberComboBox: FC<MemberComboBoxProps> = ({
           setIsLoading(true)
           debounceFetchMembers.current(val)
         }}
+        onBlur={onBlur}
       />
       <MemberBadgesWrapper>
         {selectedMembers.map((member, idx) => (

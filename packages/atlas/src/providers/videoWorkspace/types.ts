@@ -1,3 +1,5 @@
+import BN from 'bn.js'
+
 import { ImageInputMetadata, MediaInputMetadata } from '@/components/_inputs/MultiFileSelect'
 import { NftIssuanceInputMetadata, VideoAssets, VideoInputMetadata } from '@/joystream-lib'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
@@ -66,7 +68,7 @@ export type VideoWorkspaceFormStatus = {
   isDisabled: boolean
   hasUnsavedAssets: boolean
   actionBarPrimaryText: string
-  actionBarFee?: number
+  actionBarFee?: BN
   actionBarFeeLoading?: boolean
   triggerFormSubmit: () => void
 }

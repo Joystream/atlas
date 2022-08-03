@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
 
+import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { sizes } from '@/styles'
 
 import { Fee, FeeProps } from './Fee'
@@ -12,10 +13,11 @@ export default {
     className: { table: { disable: true } },
     variant: { table: { disable: true } },
     color: { table: { disable: true } },
+    amount: { table: { disable: true } },
   },
   args: {
     variant: 'h500',
-    amount: 0,
+    amountToken: 0,
     loading: false,
     hideOnMobile: false,
   },
@@ -23,7 +25,8 @@ export default {
 
 const Template: Story<FeeProps> = (args) => (
   <Wrapper>
-    <Fee {...args} />
+    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+    <Fee {...args} amount={tokenNumberToHapiBn((args as any).amountToken)} />
   </Wrapper>
 )
 

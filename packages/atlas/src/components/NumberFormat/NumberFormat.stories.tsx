@@ -1,6 +1,6 @@
 import { Meta, Story } from '@storybook/react'
 
-import { tokenNumberToHapiBn } from '@/utils/number'
+import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
 
 import { NumberFormat, NumberFormatProps } from './NumberFormat'
 

@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { ChangeEvent, forwardRef, useEffect, useRef, useState } from 'react'
 import mergeRefs from 'react-merge-refs'
 import useResizeObserver from 'use-resize-observer'
@@ -33,7 +34,7 @@ export type CommentInputProps = {
   initialFocus?: boolean
   reply?: boolean
   className?: string
-  fee?: number
+  fee?: BN
   feeLoading?: boolean
 } & Omit<CommentRowProps, 'isInput'>
 
@@ -55,7 +56,7 @@ export const CommentInput = forwardRef<HTMLTextAreaElement, CommentInputProps>(
       initialFocus,
       reply,
       className,
-      fee = 0,
+      fee = new BN(0),
       feeLoading,
       ...rest
     },

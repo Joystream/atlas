@@ -1,7 +1,8 @@
 import { useApolloClient } from '@apollo/client'
+import debouncePromise from 'awesome-debounce-promise'
 import BN from 'bn.js'
-import { sampleSize } from 'lodash-es'
-import { useCallback, useContext, useEffect, useRef } from 'react'
+import { isEqual, sampleSize } from 'lodash-es'
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 
 import {
   GetBasicDistributionBucketsDocument,
@@ -11,10 +12,20 @@ import {
   GetBasicStorageBucketsQuery,
   GetBasicStorageBucketsQueryVariables,
 } from '@/api/queries'
-import { ChannelInputBuckets } from '@/joystream-lib'
-import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/utils/number'
+import { JoystreamLibExtrinsics } from '@/joystream-lib/extrinsics'
+import { ChannelInputAssets, ChannelInputBuckets, TxMethodName, VideoInputAssets } from '@/joystream-lib/types'
+import {
+  calculateAssetsBloatFee,
+  calculateAssetsSizeFee,
+  hapiBnToTokenNumber,
+  tokenNumberToHapiBn,
+} from '@/joystream-lib/utils'
+import { useUser } from '@/providers/user'
+import { ConsoleLogger } from '@/utils/logs'
 
 import { JoystreamContext, JoystreamContextValue } from './joystream.provider'
+
+const USE_FEE_DEBOUNCE = 500
 
 export const useJoystream = (): JoystreamContextValue => {
   const ctx = useContext(JoystreamContext)
@@ -26,13 +37,15 @@ export const useJoystream = (): JoystreamContextValue => {
 
 export const useTokenPrice = () => {
   const { tokenPrice } = useJoystream()
-  const convertToUSD = useCallback(
-    (tokens: BN) => {
-      return tokenPrice ? hapiBnToTokenNumber(tokens) * tokenPrice : null
+  const convertHapiToUSD = useCallback(
+    (hapis: BN) => {
+      if (!tokenPrice) return null
+      const tokens = hapiBnToTokenNumber(hapis)
+      return tokens * tokenPrice
     },
     [tokenPrice]
   )
-  const convertToTokenPrice = useCallback(
+  const convertUSDToHapi = useCallback(
     (dollars: number) => {
       if (!tokenPrice) return new BN(0)
       return tokenNumberToHapiBn(dollars / tokenPrice)
@@ -42,8 +55,8 @@ export const useTokenPrice = () => {
   const isLoadingPrice = tokenPrice === 0
 
   return {
-    convertToUSD,
-    convertToTokenPrice,
+    convertHapiToUSD,
+    convertUSDToHapi,
     isLoadingPrice,
   }
 }
@@ -126,4 +139,143 @@ export const useBucketsConfigForNewChannel = () => {
   }, [joystream])
 
   return getBucketsConfigForNewChannel
+}
+
+export const useSubscribeAccountBalance = (controllerAccount?: string | null) => {
+  const [accountBalance, setAccountBalance] = useState<BN | undefined>()
+  const { activeMembership } = useUser()
+  const { joystream, proxyCallback } = useJoystream()
+
+  useEffect(() => {
+    if (!activeMembership?.controllerAccount || !joystream) {
+      return
+    }
+
+    let unsubscribe: (() => void) | undefined
+    const init = async () => {
+      unsubscribe = await joystream.subscribeAccountBalance(
+        controllerAccount || activeMembership.controllerAccount,
+        proxyCallback((balance) => setAccountBalance(new BN(balance)))
+      )
+    }
+    init()
+
+    return () => {
+      unsubscribe?.()
+    }
+  }, [activeMembership, controllerAccount, joystream, proxyCallback])
+
+  return accountBalance
+}
+
+export const useBloatFeesAndPerMbFees = (assets?: VideoInputAssets | ChannelInputAssets) => {
+  const {
+    chainState: {
+      dataObjectPerMegabyteFee,
+      dataObjectStateBloatBondValue,
+      channelStateBloatBondValue,
+      videoStateBloatBondValue,
+    },
+  } = useJoystream()
+
+  const totalAssetSizeFee = useMemo(
+    () => calculateAssetsSizeFee(dataObjectPerMegabyteFee, assets),
+    [assets, dataObjectPerMegabyteFee]
+  )
+
+  const totalAssetBloatFee = useMemo(
+    () => calculateAssetsBloatFee(dataObjectStateBloatBondValue, assets),
+    [assets, dataObjectStateBloatBondValue]
+  )
+
+  return {
+    totalAssetSizeFee,
+    totalAssetBloatFee,
+    dataObjectStateBloatBondValue,
+    channelStateBloatBondValue,
+    videoStateBloatBondValue,
+  }
+}
+
+export const useFee = <TFnName extends TxMethodName, TArgs extends Parameters<JoystreamLibExtrinsics[TFnName]>>(
+  methodName: TFnName,
+  args?: TArgs,
+  assets?: ChannelInputAssets | VideoInputAssets
+) => {
+  const { joystream } = useJoystream()
+
+  const { totalAssetSizeFee, totalAssetBloatFee, channelStateBloatBondValue, videoStateBloatBondValue } =
+    useBloatFeesAndPerMbFees(assets)
+
+  const accountBalance = useSubscribeAccountBalance()
+  const [fullFee, setFullFee] = useState(new BN(0))
+  const [loading, setLoading] = useState(false)
+
+  const { accountId } = useUser()
+
+  const getTxFee = useCallback(
+    async (args?: TArgs) => {
+      const extrinsics = await joystream?.extrinsics
+      if (!args || !accountId || !extrinsics) {
+        return new BN(0)
+      }
+
+      const strFee = await extrinsics.getFee(accountId, methodName, args)
+      return new BN(strFee)
+    },
+    [accountId, joystream, methodName]
+  )
+
+  const updateFullFee = useMemo(
+    () =>
+      debouncePromise(async (args?: TArgs) => {
+        if (!args || !accountId) {
+          return
+        }
+
+        let videoOrChannelBloatFee = new BN(0)
+        if (methodName === 'createVideoTx') {
+          videoOrChannelBloatFee = videoStateBloatBondValue
+        }
+        if (methodName === 'createChannelTx') {
+          videoOrChannelBloatFee = channelStateBloatBondValue
+        }
+
+        const txFee = await getTxFee(args)
+
+        if (txFee.eqn(0)) {
+          ConsoleLogger.warn('tx fee equal to 0')
+        }
+
+        const fullFee = txFee.add(totalAssetSizeFee).add(totalAssetBloatFee).add(videoOrChannelBloatFee)
+        setFullFee(fullFee)
+        setLoading(false)
+      }, USE_FEE_DEBOUNCE),
+    [
+      accountId,
+      channelStateBloatBondValue,
+      totalAssetSizeFee,
+      getTxFee,
+      methodName,
+      totalAssetBloatFee,
+      videoStateBloatBondValue,
+    ]
+  )
+
+  const argsRef = useRef(args)
+  useEffect(() => {
+    if (!args || isEqual(args, argsRef.current)) {
+      return
+    }
+    argsRef.current = args
+    setLoading(true)
+    updateFullFee(args)
+  }, [args, updateFullFee])
+
+  return {
+    fullFee,
+    getTxFee,
+    hasEnoughFunds: !accountBalance || accountBalance.gt(fullFee),
+    loading,
+  }
 }

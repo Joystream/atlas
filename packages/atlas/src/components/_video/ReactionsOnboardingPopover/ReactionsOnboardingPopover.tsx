@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { ReactNode, forwardRef } from 'react'
 
 import { NumberFormat } from '@/components/NumberFormat'
@@ -15,7 +16,7 @@ type ReactionsOnboardingPopoverProps = {
   onConfirm?: () => void
   disabled?: boolean
   trigger: ReactNode
-  fee?: number
+  fee?: BN
 }
 
 export const ReactionsOnboardingPopover = forwardRef<PopoverImperativeHandle, ReactionsOnboardingPopoverProps>(

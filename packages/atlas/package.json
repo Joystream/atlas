@@ -112,6 +112,7 @@
     "@testing-library/dom": "^8.13.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
+    "@types/bn.js": "^5.1.0",
     "@types/glider-js": "^1.7.6",
     "@types/loadable__component": "^5.13.4",
     "@types/lodash-es": "^4.17.6",

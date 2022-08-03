@@ -23,10 +23,9 @@ import { TextArea } from '@/components/_inputs/TextArea'
 import { languages } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
-import { useBloatFeesAndPerMbFees, useFee } from '@/hooks/useFee'
 import { NftIssuanceInputMetadata, VideoInputAssets, VideoInputMetadata } from '@/joystream-lib'
 import { useRawAssetResolver } from '@/providers/assets'
-import { useJoystream } from '@/providers/joystream'
+import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joystream'
 import { useUser } from '@/providers/user'
 import {
   VideoFormAssets,
@@ -217,8 +216,8 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           videoInputMetadata,
           nftMetadata,
           assets,
-          dataObjectStateBloatBondValue,
-          videoStateBloatBondValue,
+          dataObjectStateBloatBondValue.toString(),
+          videoStateBloatBondValue.toString(),
         ]
       : undefined,
     assets
@@ -226,7 +225,14 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const { fullFee: updateVideoFee, loading: updateVideoFeeLoading } = useFee(
     'updateVideoTx',
     isSigned && isEdit && editedVideoInfo.id
-      ? [editedVideoInfo.id, memberId, videoInputMetadata, nftMetadata, assets, dataObjectStateBloatBondValue]
+      ? [
+          editedVideoInfo.id,
+          memberId,
+          videoInputMetadata,
+          nftMetadata,
+          assets,
+          dataObjectStateBloatBondValue.toString(),
+        ]
       : undefined,
     assets
   )

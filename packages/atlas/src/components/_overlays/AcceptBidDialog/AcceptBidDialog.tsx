@@ -1,22 +1,18 @@
+import BN from 'bn.js'
 import { FC, useState } from 'react'
 
 import { DialogModal } from '@/components/_overlays/DialogModal'
 
-import { Bid } from './AcceptBidDialog.types'
+import { Bid, SelectedBid } from './AcceptBidDialog.types'
 import { AcceptBidList } from './AcceptBidList'
 
 type AcceptBidDialogProps = {
   onModalClose: () => void
   isOpen: boolean
   bids: Bid[]
-  onAcceptBid: (ownerId: string, videoId: string, bidderId: string, price: number) => void
+  onAcceptBid: (ownerId: string, videoId: string, bidderId: string, price: BN) => void
   nftId: string | null
   ownerId?: string
-}
-
-type SelectedBidder = {
-  id: string
-  amount: number
 }
 
 export const AcceptBidDialog: FC<AcceptBidDialogProps> = ({
@@ -27,18 +23,18 @@ export const AcceptBidDialog: FC<AcceptBidDialogProps> = ({
   nftId,
   ownerId,
 }) => {
-  const [selectedBidder, setSelectedBidder] = useState<SelectedBidder | undefined>()
+  const [selectedBid, setSelectedBid] = useState<SelectedBid | undefined>()
 
   const handleModalClose = () => {
-    setSelectedBidder(undefined)
+    setSelectedBid(undefined)
     onModalClose()
   }
 
   const handleAcceptBid = () => {
-    if (!selectedBidder || !nftId || !ownerId) {
+    if (!selectedBid || !nftId || !ownerId) {
       return
     }
-    onAcceptBid(ownerId, nftId, selectedBidder.id, selectedBidder.amount)
+    onAcceptBid(ownerId, nftId, selectedBid.bidderId, selectedBid.amount)
     handleModalClose()
   }
 
@@ -50,7 +46,7 @@ export const AcceptBidDialog: FC<AcceptBidDialogProps> = ({
       noContentPadding
       primaryButton={{
         text: 'Accept bid',
-        disabled: !selectedBidder,
+        disabled: !selectedBid,
         onClick: handleAcceptBid,
       }}
       secondaryButton={{
@@ -58,7 +54,7 @@ export const AcceptBidDialog: FC<AcceptBidDialogProps> = ({
         onClick: handleModalClose,
       }}
     >
-      <AcceptBidList items={bids} onSelect={(value) => setSelectedBidder(value)} selectedBidder={selectedBidder} />
+      <AcceptBidList items={bids} onSelect={(value) => setSelectedBid(value)} selectedBid={selectedBid} />
     </DialogModal>
   )
 }

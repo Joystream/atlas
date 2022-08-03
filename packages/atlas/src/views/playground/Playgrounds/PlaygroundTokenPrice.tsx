@@ -5,7 +5,7 @@ import { JOY_CURRENCY_TICKER } from '@/config/joystream'
 import { useTokenPrice } from '@/providers/joystream'
 
 export const PlaygroundTokenPrice = () => {
-  const { convertToUSD, convertToTokenPrice } = useTokenPrice()
+  const { convertHapiToUSD, convertUSDToHapi } = useTokenPrice()
   const [toConvert, setToConvert] = useState(new BN(0))
   const [converted, setConverted] = useState<number>(0)
   const [unit, setUnit] = useState(JOY_CURRENCY_TICKER)
@@ -13,8 +13,8 @@ export const PlaygroundTokenPrice = () => {
   const convert = () => {
     setShowConverted(true)
     unit === JOY_CURRENCY_TICKER
-      ? setConverted(convertToUSD(toConvert) ?? 0)
-      : setToConvert(convertToTokenPrice(converted))
+      ? setConverted(convertHapiToUSD(toConvert) ?? 0)
+      : setToConvert(convertUSDToHapi(converted))
   }
   const convertedUnit = unit === 'usd' ? JOY_CURRENCY_TICKER : 'usd'
   return (

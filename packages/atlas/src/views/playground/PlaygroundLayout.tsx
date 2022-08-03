@@ -21,8 +21,6 @@ import {
   PlaygroundIframe,
   PlaygroundImageDownsizing,
   PlaygroundIndirectSignInDialog,
-  PlaygroundMinimizedTransaction,
-  PlaygroundNftExtrinsics,
   PlaygroundNftPurchase,
   PlaygroundNftSettleAuction,
   PlaygroundNftWhitelistMembers,
@@ -31,7 +29,6 @@ import {
 } from './Playgrounds'
 
 const playgroundRoutes = [
-  { path: 'nft-extrinsics', element: <PlaygroundNftExtrinsics />, name: 'NFT extrinsics' },
   { path: 'nft-purchase', element: <PlaygroundNftPurchase />, name: 'NFT Purchase' },
   { path: 'settling-auction', element: <PlaygroundNftSettleAuction />, name: 'NFT Settling an auction' },
   { path: 'whitelisting-members', element: <PlaygroundNftWhitelistMembers />, name: 'NFT Whitelisting members' },
@@ -39,11 +36,6 @@ const playgroundRoutes = [
   { path: 'token-price', element: <PlaygroundTokenPrice />, name: 'Token price' },
   { path: 'indirect-signin-dialog', element: <PlaygroundIndirectSignInDialog />, name: 'Indirect sign in dialog' },
   { path: 'image-downsizing', element: <PlaygroundImageDownsizing />, name: 'Image downsizing' },
-  {
-    path: 'minimized-transaction',
-    element: <PlaygroundMinimizedTransaction />,
-    name: 'Minimized transaction snackbar',
-  },
   { path: 'reactions-comments', element: <PlaygroundReactionsComments />, name: 'Reactions & comments' },
   { path: 'iframe', element: <PlaygroundIframe />, name: 'Iframe' },
 ]

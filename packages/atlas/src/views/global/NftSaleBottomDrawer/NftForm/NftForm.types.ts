@@ -1,3 +1,5 @@
+import BN from 'bn.js'
+
 import { BasicMembershipFieldsFragment } from '@/api/queries'
 import { AuctionDatePickerValue } from '@/components/_inputs/AuctionDatePicker'
 import { NftSaleInputMetadata } from '@/joystream-lib'
@@ -13,7 +15,7 @@ export type NftFormFields = {
   type: 'open' | 'english' | 'buyNow'
   royalty?: number
   startingPrice?: number
-  buyNowPrice?: number | ''
+  buyNowPrice?: number
   auctionDurationBlocks?: number
   whitelistedMembers?: BasicMembershipFieldsFragment[]
 } & AuctionDate
@@ -24,7 +26,7 @@ export type NftFormStatus = {
   isValid: boolean
   canGoBack: boolean
   canGoForward: boolean
-  actionBarFee?: number
+  actionBarFee?: BN
   actionBarLoading?: boolean
   triggerGoBack: () => void
   triggerGoForward: () => void

@@ -16,7 +16,7 @@ import {
   useGetNftQuery,
   useGetNftsConnectionQuery,
 } from '@/api/queries'
-import { tokenNumberToHapiBn } from '@/utils/number'
+import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
 
 type CommonNftProperties = {
   title: string | null | undefined

@@ -1,4 +1,5 @@
 import { useApolloClient } from '@apollo/client'
+import BN from 'bn.js'
 import { useCallback } from 'react'
 
 import { GetNftDocument, GetNftQuery, GetNftQueryVariables } from '@/api/queries'
@@ -91,14 +92,13 @@ export const useNftTransactions = () => {
   )
 
   const changeNftPrice = useCallback(
-    // price to BN ?
-    (id: string, price: number) => {
+    (id: string, price: BN) => {
       if (!joystream || !memberId) {
         return
       }
       return handleTransaction({
         txFactory: async (updateStatus) =>
-          (await joystream.extrinsics).changeNftPrice(memberId, id, price, proxyCallback(updateStatus)),
+          (await joystream.extrinsics).changeNftPrice(memberId, id, price.toString(), proxyCallback(updateStatus)),
         onTxSync: async () => refetchNftData(id),
         snackbarSuccessMessage: {
           title: 'NFT price changed successfully',
@@ -110,13 +110,19 @@ export const useNftTransactions = () => {
   )
 
   const acceptNftBid = useCallback(
-    (ownerId: string, id: string, bidderId: string, price: number) => {
+    (ownerId: string, id: string, bidderId: string, price: BN) => {
       if (!joystream || !memberId) {
         return
       }
       return handleTransaction({
         txFactory: async (updateStatus) =>
-          (await joystream.extrinsics).acceptNftBid(ownerId, id, bidderId, price, proxyCallback(updateStatus)),
+          (await joystream.extrinsics).acceptNftBid(
+            ownerId,
+            id,
+            bidderId,
+            price.toString(),
+            proxyCallback(updateStatus)
+          ),
         onTxSync: async () => refetchNftData(id),
         snackbarSuccessMessage: {
           title: 'Bid accepted',

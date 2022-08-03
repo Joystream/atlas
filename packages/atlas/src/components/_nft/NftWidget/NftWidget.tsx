@@ -115,7 +115,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
   })
 
   const size: Size = width > SMALL_VARIANT_MAXIMUM_SIZE ? 'medium' : 'small'
-  const { convertToUSD, isLoadingPrice } = useTokenPrice()
+  const { convertHapiToUSD, isLoadingPrice } = useTokenPrice()
 
   const content = useDeepMemo(() => {
     if (!nftStatus) {
@@ -137,8 +137,8 @@ export const NftWidget: FC<NftWidgetProps> = ({
             </>
           }
           secondaryText={
-            convertToUSD(buyNowPrice) ? (
-              <NumberFormat as="span" color="colorText" format="dollar" value={convertToUSD(buyNowPrice) ?? 0} />
+            convertHapiToUSD(buyNowPrice) ? (
+              <NumberFormat as="span" color="colorText" format="dollar" value={convertHapiToUSD(buyNowPrice) ?? 0} />
             ) : undefined
           }
         />
@@ -382,7 +382,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
                         as="span"
                         color="colorText"
                         format="dollar"
-                        value={convertToUSD(nftStatus.topBidAmount) ?? 0}
+                        value={convertHapiToUSD(nftStatus.topBidAmount) ?? 0}
                       />{' '}
                       from{' '}
                       <OwnerHandle to={absoluteRoutes.viewer.member(nftStatus.topBidderHandle)}>
@@ -410,12 +410,12 @@ export const NftWidget: FC<NftWidgetProps> = ({
                   </>
                 }
                 secondaryText={
-                  convertToUSD(nftStatus.startingPrice) ? (
+                  convertHapiToUSD(nftStatus.startingPrice) ? (
                     <NumberFormat
                       as="span"
                       color="colorText"
                       format="dollar"
-                      value={convertToUSD(nftStatus.startingPrice) ?? 0}
+                      value={convertHapiToUSD(nftStatus.startingPrice) ?? 0}
                     />
                   ) : undefined
                 }
@@ -555,7 +555,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
   }, [
     nftStatus,
     size,
-    convertToUSD,
+    convertHapiToUSD,
     bidFromPreviousAuction,
     onWithdrawBid,
     isOwner,

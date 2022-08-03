@@ -1,7 +1,9 @@
+import BN from 'bn.js'
 import { formatDuration, intervalToDuration } from 'date-fns'
 import { z } from 'zod'
 
 import { AuctionDatePickerValue } from '@/components/_inputs/AuctionDatePicker'
+import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { pluralizeNoun } from '@/utils/misc'
 import { formatDateTime } from '@/utils/time'
 
@@ -12,8 +14,8 @@ export const createValidationSchema = (
   maxStartDate: Date,
   maxEndDate: Date,
   listingType: Listing,
-  minStartingPrice: number,
-  maxStartingPrice: number
+  minStartingPrice: BN,
+  maxStartingPrice: BN
 ) => {
   const auctionDateType = z
     .union([
@@ -36,10 +38,13 @@ export const createValidationSchema = (
     })
     .min(1, 'Fixed price must be at least 1')
 
+  const minStartingPriceNumber = hapiBnToTokenNumber(minStartingPrice)
+  const maxStartingPriceNumber = hapiBnToTokenNumber(maxStartingPrice)
+
   const startingPriceBase = z
     .number({ invalid_type_error: 'Minimum bid must be a number.' })
-    .min(minStartingPrice, `Minimum bid must be at least ${minStartingPrice}.`)
-    .max(maxStartingPrice, `Minimum bid cannot be higher than ${maxStartingPrice}`)
+    .min(minStartingPriceNumber, `Minimum bid must be at least ${minStartingPriceNumber}.`)
+    .max(maxStartingPriceNumber, `Minimum bid cannot be higher than ${maxStartingPriceNumber}`)
 
   return z.object({
     startDate: auctionDateType

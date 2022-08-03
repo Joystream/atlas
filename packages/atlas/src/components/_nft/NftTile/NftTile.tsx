@@ -8,7 +8,7 @@ import { SvgActionShow } from '@/components/_icons'
 import { VideoThumbnail, VideoThumbnailProps } from '@/components/_video/VideoThumbnail'
 import { useGetNftSlot } from '@/hooks/useGetNftSlot'
 import { EnglishTimerState } from '@/hooks/useNftState'
-import { hapiBnToTokenNumber } from '@/utils/number'
+import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { formatDurationShort } from '@/utils/time'
 
 import { Container } from './NftTile.styles'
