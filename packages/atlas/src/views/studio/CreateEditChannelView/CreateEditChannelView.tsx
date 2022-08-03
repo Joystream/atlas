@@ -401,7 +401,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
               memberId,
               metadata,
               assets,
-              getBucketsConfigForNewChannel(),
+              await getBucketsConfigForNewChannel(),
               dataObjectStateBloatBondValue,
               channelStateBloatBondValue,
               proxyCallback(updateStatus)

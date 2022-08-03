@@ -11,7 +11,6 @@ import {
   GetBasicStorageBucketsQuery,
   GetBasicStorageBucketsQueryVariables,
 } from '@/api/queries'
-import { NEW_CHANNEL_DISTRIBUTION_BUCKETS_PER_FAMILY, NEW_CHANNEL_STORAGE_BUCKETS_COUNT } from '@/config/joystream'
 import { ChannelInputBuckets } from '@/joystream-lib'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/utils/number'
 
@@ -52,6 +51,7 @@ export const useTokenPrice = () => {
 export const useBucketsConfigForNewChannel = () => {
   const allStorageBuckets = useRef<number[]>()
   const allDistributionFamiliesToBucketsMapping = useRef<Record<number, number[]>>()
+  const { joystream } = useJoystream()
 
   const client = useApolloClient()
 
@@ -93,18 +93,26 @@ export const useBucketsConfigForNewChannel = () => {
     })
   }, [client])
 
-  const getBucketsConfigForNewChannel = useCallback((): ChannelInputBuckets => {
+  const getBucketsConfigForNewChannel = useCallback(async (): Promise<ChannelInputBuckets> => {
+    const dynamicBagCreationPolicies = await joystream?.getDynamicBagCreationPolicies()
     const storageBuckets = allStorageBuckets.current
     const distributionFamiliesToBucketsMapping = allDistributionFamiliesToBucketsMapping.current
-
-    const storage = storageBuckets ? sampleSize(storageBuckets, NEW_CHANNEL_STORAGE_BUCKETS_COUNT) : []
+    const storage =
+      storageBuckets && dynamicBagCreationPolicies?.storageBucketsCount
+        ? sampleSize(storageBuckets, dynamicBagCreationPolicies.storageBucketsCount)
+        : []
     const distribution = distributionFamiliesToBucketsMapping
       ? Object.entries(distributionFamiliesToBucketsMapping).reduce((acc, [familyIdStr, buckets]) => {
           const familyId = parseInt(familyIdStr)
-          const familyBuckets: ChannelInputBuckets['distribution'] = sampleSize(
-            buckets,
-            NEW_CHANNEL_DISTRIBUTION_BUCKETS_PER_FAMILY[familyId]
-          ).map((bucketIndex) => ({ distributionBucketIndex: bucketIndex, distributionBucketFamilyId: familyId }))
+          const familyBuckets: ChannelInputBuckets['distribution'] =
+            dynamicBagCreationPolicies?.distributionBucketsCountPerFamily
+              ? sampleSize(buckets, dynamicBagCreationPolicies.distributionBucketsCountPerFamily[familyId]).map(
+                  (bucketIndex) => ({
+                    distributionBucketIndex: bucketIndex,
+                    distributionBucketFamilyId: familyId,
+                  })
+                )
+              : []
           return [...acc, ...familyBuckets]
         }, [] as ChannelInputBuckets['distribution'])
       : []
@@ -115,7 +123,7 @@ export const useBucketsConfigForNewChannel = () => {
         ? distribution
         : [{ distributionBucketFamilyId: 0, distributionBucketIndex: 0 }],
     }
-  }, [])
+  }, [joystream])
 
   return getBucketsConfigForNewChannel
 }
