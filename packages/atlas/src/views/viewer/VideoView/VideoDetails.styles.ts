@@ -32,10 +32,8 @@ export const DescriptionBody = styled(EmojiWrapper)<DetailsExpandedProps>`
   color: ${cVar('colorText')}; /* needed for proper ellipsis color */
 `
 
-export const DescriptionCopy = styled(Text)<DetailsExpandedProps>`
-  /* this fixes Safari issue with line-clamp - it works only for inline elements
-  once the description is expanded we don't need clamp anymore */
-  display: ${({ detailsExpanded }) => (detailsExpanded ? 'block' : 'inline')};
+export const DescriptionCopy = styled(Text)`
+  display: block;
   word-break: break-word;
 `
 

@@ -1,4 +1,4 @@
-import { FC, ReactNode, useState } from 'react'
+import { FC, ReactNode, useRef, useState } from 'react'
 
 import { FullVideoFieldsFragment } from '@/api/queries'
 import { GridItem } from '@/components/LayoutGrid'
@@ -29,6 +29,7 @@ type VideoDetailsProps = {
 }
 export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => {
   const mdMatch = useMediaMatch('md')
+  const copyRef = useRef<HTMLParagraphElement>(null)
   const [detailsExpanded, setDetailsExpanded] = useState(false)
 
   const foundLicense = knownLicenses.find((license) => license.code === video?.license?.code)
@@ -36,6 +37,7 @@ export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => 
   const toggleDetailsExpand = () => {
     setDetailsExpanded((prevState) => !prevState)
   }
+  const lineHeight = copyRef.current && parseInt(window.getComputedStyle(copyRef.current).lineHeight)
 
   return (
     <DetailsWrapper>
@@ -48,14 +50,14 @@ export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => 
               </Text>
               <DescriptionBody detailsExpanded={detailsExpanded}>
                 {/* div below allows line-clamp to work properly for nested paragraphs */}
-                <div>
+                <div style={{ height: detailsExpanded ? 'unset' : lineHeight ? lineHeight * 3 : 0 }}>
                   {video.description?.split('\n').map((line, idx) => (
                     <DescriptionCopy
+                      ref={copyRef}
                       as="p"
                       variant={mdMatch ? 't300' : 't200'}
                       color="colorText"
                       key={idx}
-                      detailsExpanded={detailsExpanded}
                     >
                       {replaceUrls(line)}
                     </DescriptionCopy>
