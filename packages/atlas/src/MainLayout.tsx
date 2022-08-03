@@ -3,7 +3,7 @@ import { FC, useEffect, useRef, useState } from 'react'
 import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 
 import { Maintenance } from '@/Maintenance'
-import { useGetKillSwitch } from '@/api/hooks/killSwitch'
+import { useGetKillSwitch } from '@/api/hooks/admin'
 import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
 import { StudioLoading } from '@/components/_loaders/StudioLoading'
 import { AdminModal } from '@/components/_overlays/AdminModal'
@@ -35,7 +35,7 @@ const LoadablePlaygroundLayout = loadable(() => import('./views/playground/Playg
 })
 
 export const MainLayout: FC = () => {
-  const { isKilled } = useGetKillSwitch()
+  const { isKilled, wasKilledLastTime, loading } = useGetKillSwitch()
   const scrollPosition = useRef<number>(0)
   const location = useLocation()
   const navigationType = useNavigationType()
@@ -81,7 +81,7 @@ export const MainLayout: FC = () => {
 
   return (
     <>
-      {isKilled ? (
+      {isKilled || (loading && wasKilledLastTime) ? (
         <Maintenance />
       ) : (
         <>

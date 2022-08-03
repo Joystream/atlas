@@ -20,6 +20,11 @@ export type Scalars = {
   JSONObject: any
 }
 
+export type Admin = {
+  __typename?: 'Admin'
+  isKilled: Scalars['Boolean']
+}
+
 export type AmendConstitutionProposalDetails = {
   __typename?: 'AmendConstitutionProposalDetails'
   /** New (proposed) constitution text (md-formatted) */
@@ -12088,11 +12093,6 @@ export type InvitesTransferredEventWhereUniqueInput = {
   id: Scalars['ID']
 }
 
-export type KillSwitch = {
-  __typename?: 'KillSwitch'
-  isKilled: Scalars['Boolean']
-}
-
 export type Language = BaseGraphQlObject & {
   __typename?: 'Language'
   channellanguage?: Maybe<Array<Channel>>
@@ -14829,7 +14829,7 @@ export type Mutation = {
   /** Add a single follow to the target channel */
   followChannel: ChannelFollowsInfo
   setCategoryFeaturedVideos: Array<FeaturedVideo>
-  setKillSwitch: KillSwitch
+  setKillSwitch: Admin
   setVideoHero: VideoHero
   /** Remove a single follow from the target channel */
   unfollowChannel: ChannelFollowsInfo
@@ -20710,6 +20710,8 @@ export type ProposalsByTitleSearchResult = Proposal
 
 export type Query = {
   __typename?: 'Query'
+  /** Set killed instance */
+  admin: Admin
   /** Get featured videos for all categories */
   allCategoriesFeaturedVideos: Array<CategoryFeaturedVideos>
   announcingPeriodStartedEventByUniqueInput?: Maybe<AnnouncingPeriodStartedEvent>
@@ -20968,8 +20970,6 @@ export type Query = {
   invitesTransferredEventByUniqueInput?: Maybe<InvitesTransferredEvent>
   invitesTransferredEvents: Array<InvitesTransferredEvent>
   invitesTransferredEventsConnection: InvitesTransferredEventConnection
-  /** Set killed instance */
-  killSwitch: KillSwitch
   languageByUniqueInput?: Maybe<Language>
   languages: Array<Language>
   languagesConnection: LanguageConnection

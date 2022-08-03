@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, useEffect, useState } from 'react'
 
-import { useGetKillSwitch, useSetKillSwitch } from '@/api/hooks/killSwitch'
+import { useGetKillSwitch, useSetKillSwitch } from '@/api/hooks/admin'
 import { Information } from '@/components/Information'
 import { TabItem, Tabs } from '@/components/Tabs'
 import { Button, TextButton } from '@/components/_buttons/Button'
@@ -445,7 +445,7 @@ const KillSwitch: FC = () => {
       <FormField>
         <Switch
           disabled={loading}
-          label="Use location data"
+          label="Kill instance"
           value={isKilledSwitch}
           onChange={() => setIsKilledSwitch((prevState) => !prevState)}
         />
