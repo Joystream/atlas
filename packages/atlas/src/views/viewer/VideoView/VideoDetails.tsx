@@ -15,7 +15,7 @@ import {
   CategoryWrapper,
   DescriptionBody,
   DescriptionContainer,
-  DescriptionCopy,
+  DescriptionCopyWrapper,
   DescriptionLink,
   DescriptionSkeletonLoader,
   DetailsWrapper,
@@ -37,7 +37,6 @@ export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => 
   const toggleDetailsExpand = () => {
     setDetailsExpanded((prevState) => !prevState)
   }
-  const lineHeight = copyRef.current && parseInt(window.getComputedStyle(copyRef.current).lineHeight)
 
   return (
     <DetailsWrapper>
@@ -49,20 +48,9 @@ export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => 
                 Description
               </Text>
               <DescriptionBody detailsExpanded={detailsExpanded}>
-                {/* div below allows line-clamp to work properly for nested paragraphs */}
-                <div style={{ height: detailsExpanded ? 'unset' : lineHeight ? lineHeight * 3 : 0 }}>
-                  {video.description?.split('\n').map((line, idx) => (
-                    <DescriptionCopy
-                      ref={copyRef}
-                      as="p"
-                      variant={mdMatch ? 't300' : 't200'}
-                      color="colorText"
-                      key={idx}
-                    >
-                      {replaceUrls(line)}
-                    </DescriptionCopy>
-                  ))}
-                </div>
+                <DescriptionCopyWrapper ref={copyRef} as="div" variant={mdMatch ? 't300' : 't200'}>
+                  {replaceUrls(video.description)}
+                </DescriptionCopyWrapper>
               </DescriptionBody>
             </>
           )

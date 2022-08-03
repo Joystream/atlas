@@ -31,9 +31,8 @@ export const DescriptionBody = styled(EmojiWrapper)<DetailsExpandedProps>`
   -webkit-box-orient: vertical;
   color: ${cVar('colorText')}; /* needed for proper ellipsis color */
 `
-
-export const DescriptionCopy = styled(Text)`
-  display: block;
+export const DescriptionCopyWrapper = styled(Text)`
+  white-space: pre-wrap;
   word-break: break-word;
 `
 
