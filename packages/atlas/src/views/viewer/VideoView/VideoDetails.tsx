@@ -1,4 +1,4 @@
-import { FC, ReactNode, useRef, useState } from 'react'
+import { FC, ReactNode, useState } from 'react'
 
 import { FullVideoFieldsFragment } from '@/api/queries'
 import { GridItem } from '@/components/LayoutGrid'
@@ -29,7 +29,6 @@ type VideoDetailsProps = {
 }
 export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => {
   const mdMatch = useMediaMatch('md')
-  const copyRef = useRef<HTMLParagraphElement>(null)
   const [detailsExpanded, setDetailsExpanded] = useState(false)
 
   const foundLicense = knownLicenses.find((license) => license.code === video?.license?.code)
@@ -48,7 +47,7 @@ export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => 
                 Description
               </Text>
               <DescriptionBody detailsExpanded={detailsExpanded}>
-                <DescriptionCopyWrapper ref={copyRef} as="div" variant={mdMatch ? 't300' : 't200'}>
+                <DescriptionCopyWrapper as="div" variant={mdMatch ? 't300' : 't200'}>
                   {replaceUrls(video.description)}
                 </DescriptionCopyWrapper>
               </DescriptionBody>
