@@ -127,12 +127,6 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
                 }
                 return true
               },
-              accountBalance: (value) => {
-                if (value && value > accountBalance) {
-                  return 'Not enough tokens in your account balance.'
-                }
-                return true
-              },
             },
           })}
           type="number"
