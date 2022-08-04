@@ -49,7 +49,8 @@ const Template: Story<TokenInputProps> = (args) => {
 
   const setRandomValue = () => {
     const random = Math.random() * 10000
-    setValue(random)
+    const cappedFractionStr = random.toFixed(3)
+    setValue(parseFloat(cappedFractionStr))
   }
 
   return (
