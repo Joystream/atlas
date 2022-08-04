@@ -101,7 +101,7 @@ export const CopyContainer = styled.div`
 export const ValueContainer = styled.div`
   display: grid;
   gap: ${sizes(1)};
-  grid-auto-rows: max-content;
+  grid-auto-rows: 1fr;
 `
 
 export const JoyPlusIcon = styled.div`

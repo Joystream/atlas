@@ -7,6 +7,10 @@ export const VerticallyCenteredDiv = styled.div`
   align-items: center;
 `
 
+export const PriceWrapper = styled.div`
+  margin-bottom: ${sizes(6)};
+`
+
 export const Summary = styled.div`
   margin-top: ${sizes(6)};
 `

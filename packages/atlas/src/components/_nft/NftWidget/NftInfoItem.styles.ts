@@ -5,13 +5,20 @@ import { sizes } from '@/styles'
 
 import { SizeProps, sizeObj } from './NftWidget.styles'
 
-export const InfoItemContainer = styled.div<SizeProps>`
+export const InfoItemContainer = styled.div<SizeProps & { disableSecondary?: boolean }>`
   display: grid;
   gap: ${sizes(1)};
-  grid-template:
-    'label' min-content
-    'content' min-content
-    'secondary' min-content / 1fr;
+  grid-template: ${({ disableSecondary }) =>
+    disableSecondary
+      ? `
+  'label' min-content
+  'content' min-content / 1fr
+  `
+      : `
+  'label' min-content
+  'content' min-content
+  'secondary' min-content / 1fr
+  `};
 
   &[data-size=${sizeObj.small}] {
     gap: ${sizes(2)};

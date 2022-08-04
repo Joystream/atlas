@@ -13,6 +13,7 @@ import { Button } from '@/components/_buttons/Button'
 import { SvgAlertsInformative24 } from '@/components/_icons'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { absoluteRoutes } from '@/config/routes'
+import { JOY_PRICE_SERVICE_URL } from '@/config/urls'
 import { useDeepMemo } from '@/hooks/useDeepMemo'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { EnglishTimerState } from '@/hooks/useNftState'
@@ -130,6 +131,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
         <NftInfoItem
           size={size}
           label="Buy now"
+          disableSecondary={!JOY_PRICE_SERVICE_URL}
           content={
             <>
               <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
@@ -376,7 +378,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
                   </>
                 }
                 secondaryText={
-                  !isLoadingPrice && !nftStatus.topBidAmount.isZero() ? (
+                  !isLoadingPrice && nftStatus.topBidderHandle && !nftStatus.topBidAmount.isZero() ? (
                     <>
                       <NumberFormat
                         as="span"
@@ -409,6 +411,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
                     />
                   </>
                 }
+                disableSecondary={!JOY_PRICE_SERVICE_URL}
                 secondaryText={
                   convertHapiToUSD(nftStatus.startingPrice) ? (
                     <NumberFormat

@@ -17,7 +17,7 @@ import { useFee, useJoystream, useTokenPrice } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions'
 import { formatNumber } from '@/utils/number'
 
-import { Summary, SummaryRow, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
+import { PriceWrapper, Summary, SummaryRow, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
 
 type WithdrawFundsDialogProps = {
   onExitClick: () => void
@@ -97,18 +97,20 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
       <Text as="h4" variant="h300" margin={{ bottom: 4 }}>
         Your channel balance
       </Text>
-      <VerticallyCenteredDiv>
-        <JoyTokenIcon variant="gray" />
-        <NumberFormat value={channelBalance || 0} as="p" variant="h400" margin={{ left: 1 }} format="short" />
-      </VerticallyCenteredDiv>
-      <NumberFormat
-        as="p"
-        color="colorText"
-        format="dollar"
-        variant="t100"
-        value={convertHapiToUSD(channelBalance) || 0}
-        margin={{ top: 1, bottom: 6 }}
-      />
+      <PriceWrapper>
+        <VerticallyCenteredDiv>
+          <JoyTokenIcon variant="gray" />
+          <NumberFormat value={channelBalance || 0} as="p" variant="h400" margin={{ left: 1 }} format="short" />
+        </VerticallyCenteredDiv>
+        <NumberFormat
+          as="p"
+          color="colorText"
+          format="dollar"
+          variant="t100"
+          value={convertHapiToUSD(channelBalance) || 0}
+          margin={{ top: 1 }}
+        />
+      </PriceWrapper>
       <FormField label="Amount to withdraw" error={errors.amount?.message}>
         <Controller
           control={control}

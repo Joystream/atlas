@@ -109,11 +109,14 @@ export const JoystreamProvider: FC<PropsWithChildren> = ({ children }) => {
 }
 
 const useJoystreamUtilFns = () => {
-  const [tokenPrice, setTokenPrice] = useState(0)
+  const [tokenPrice, setTokenPrice] = useState<undefined>()
 
   // fetch token price from the status server
   useEffect(() => {
     const getPrice = async () => {
+      if (!JOY_PRICE_SERVICE_URL) {
+        return
+      }
       try {
         const data = await fetch(JOY_PRICE_SERVICE_URL)
         const json = await data.json()

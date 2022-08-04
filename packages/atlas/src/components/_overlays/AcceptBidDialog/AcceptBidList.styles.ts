@@ -27,6 +27,7 @@ export const BidRowWrapper = styled.div<{ selected: boolean }>`
 
 export const Price = styled.div`
   text-align: right;
+  align-self: flex-start;
 `
 
 export const TokenPrice = styled.div`

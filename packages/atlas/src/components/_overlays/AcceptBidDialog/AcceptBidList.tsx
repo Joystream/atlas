@@ -1,6 +1,6 @@
 import BN from 'bn.js'
 import { FC } from 'react'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
+import { CSSTransition } from 'react-transition-group'
 
 import { Avatar } from '@/components/Avatar'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -72,19 +72,13 @@ export const BidRow: FC<BidRowProps> = ({ bidder, createdAt, amount, amountUSD, 
             {hapiBnToTokenNumber(amount)}
           </Text>
         </TokenPrice>
-        <SwitchTransition>
-          <CSSTransition
-            key={amountUSD ? 'placeholder' : 'content'}
-            timeout={parseInt(cVar('animationTransitionFast', true))}
-            classNames={transitions.names.fade}
-          >
-            {amountUSD ? (
-              <NumberFormat value={amountUSD} format="dollar" as="p" variant="t100" color="colorText" />
-            ) : (
-              '‌'
-            )}
-          </CSSTransition>
-        </SwitchTransition>
+        <CSSTransition
+          in={!!amountUSD}
+          timeout={parseInt(cVar('animationTransitionFast', true))}
+          classNames={transitions.names.fade}
+        >
+          <NumberFormat value={amountUSD || 0} format="dollar" as="p" variant="t100" color="colorText" />
+        </CSSTransition>
       </Price>
     </BidRowWrapper>
   )
