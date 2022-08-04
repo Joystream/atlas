@@ -23,10 +23,9 @@ export default {
   },
 } as Meta<FeeProps>
 
-const Template: Story<FeeProps> = (args) => (
+const Template: Story<FeeProps & { amountToken: number }> = (args) => (
   <Wrapper>
-    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-    <Fee {...args} amount={tokenNumberToHapiBn((args as any).amountToken)} />
+    <Fee {...args} amount={tokenNumberToHapiBn(args.amountToken)} />
   </Wrapper>
 )
 
