@@ -1,4 +1,4 @@
-import { ChangeEvent, ForwardRefRenderFunction, forwardRef, useState } from 'react'
+import { ChangeEvent, ForwardRefRenderFunction, forwardRef, useEffect, useState } from 'react'
 
 import { NumberFormat } from '@/components/NumberFormat'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
@@ -22,6 +22,13 @@ const _TokenInput: ForwardRefRenderFunction<HTMLInputElement, TokenInputProps> =
   const valueInUSD = valueBN && convertHapiToUSD(valueBN)
 
   const [internalValue, setInternalValue] = useState(value ? value.toString() : '')
+
+  // react to external changes to value
+  useEffect(() => {
+    if ((value?.toString() || '') !== internalValue) {
+      setInternalValue(value ? value.toString() : '')
+    }
+  }, [internalValue, value])
 
   return (
     <Input
