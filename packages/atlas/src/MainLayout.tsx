@@ -2,8 +2,6 @@ import loadable from '@loadable/component'
 import { FC, useEffect, useRef, useState } from 'react'
 import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 
-import { Maintenance } from '@/Maintenance'
-import { useGetKillSwitch } from '@/api/hooks/admin'
 import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
 import { StudioLoading } from '@/components/_loaders/StudioLoading'
 import { AdminModal } from '@/components/_overlays/AdminModal'
@@ -35,7 +33,6 @@ const LoadablePlaygroundLayout = loadable(() => import('./views/playground/Playg
 })
 
 export const MainLayout: FC = () => {
-  const { isKilled, wasKilledLastTime, loading } = useGetKillSwitch()
   const scrollPosition = useRef<number>(0)
   const location = useLocation()
   const navigationType = useNavigationType()
@@ -81,19 +78,13 @@ export const MainLayout: FC = () => {
 
   return (
     <>
-      {isKilled || (loading && wasKilledLastTime) ? (
-        <Maintenance />
-      ) : (
-        <>
-          <CookiePopover />
-          <Routes>
-            <Route path={BASE_PATHS.viewer + '/*'} element={<ViewerLayout />} />
-            <Route path={BASE_PATHS.legal + '/*'} element={<LegalLayout />} />
-            <Route path={BASE_PATHS.studio + '/*'} element={<LoadableStudioLayout />} />
-            <Route path={BASE_PATHS.playground + '/*'} element={<LoadablePlaygroundLayout />} />
-          </Routes>
-        </>
-      )}
+      <CookiePopover />
+      <Routes>
+        <Route path={BASE_PATHS.viewer + '/*'} element={<ViewerLayout />} />
+        <Route path={BASE_PATHS.legal + '/*'} element={<LegalLayout />} />
+        <Route path={BASE_PATHS.studio + '/*'} element={<LoadableStudioLayout />} />
+        <Route path={BASE_PATHS.playground + '/*'} element={<LoadablePlaygroundLayout />} />
+      </Routes>
       <AdminModal />
     </>
   )
