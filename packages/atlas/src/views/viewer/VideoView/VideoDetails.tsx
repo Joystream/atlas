@@ -15,7 +15,7 @@ import {
   CategoryWrapper,
   DescriptionBody,
   DescriptionContainer,
-  DescriptionCopy,
+  DescriptionCopyWrapper,
   DescriptionLink,
   DescriptionSkeletonLoader,
   DetailsWrapper,
@@ -47,20 +47,9 @@ export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => 
                 Description
               </Text>
               <DescriptionBody detailsExpanded={detailsExpanded}>
-                {/* div below allows line-clamp to work properly for nested paragraphs */}
-                <div>
-                  {video.description?.split('\n').map((line, idx) => (
-                    <DescriptionCopy
-                      as="p"
-                      variant={mdMatch ? 't300' : 't200'}
-                      color="colorText"
-                      key={idx}
-                      detailsExpanded={detailsExpanded}
-                    >
-                      {replaceUrls(line)}
-                    </DescriptionCopy>
-                  ))}
-                </div>
+                <DescriptionCopyWrapper as="div" variant={mdMatch ? 't300' : 't200'}>
+                  {replaceUrls(video.description)}
+                </DescriptionCopyWrapper>
               </DescriptionBody>
             </>
           )
