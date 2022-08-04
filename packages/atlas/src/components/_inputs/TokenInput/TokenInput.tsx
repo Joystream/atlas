@@ -1,4 +1,4 @@
-import { ChangeEvent, ForwardRefRenderFunction, forwardRef } from 'react'
+import { ChangeEvent, ForwardRefRenderFunction, forwardRef, useState } from 'react'
 
 import { NumberFormat } from '@/components/NumberFormat'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
@@ -11,6 +11,8 @@ export type TokenInputProps = {
   onChange: (value: number | null) => void
 } & Omit<InputProps, 'value' | 'onChange' | 'nodeStart' | 'nodeEnd'>
 
+const MAX_LENGTH = 15
+
 const _TokenInput: ForwardRefRenderFunction<HTMLInputElement, TokenInputProps> = (
   { value, onChange, ...rest },
   ref
@@ -18,6 +20,8 @@ const _TokenInput: ForwardRefRenderFunction<HTMLInputElement, TokenInputProps> =
   const valueBN = value && tokenNumberToHapiBn(value)
   const { convertHapiToUSD } = useTokenPrice()
   const valueInUSD = valueBN && convertHapiToUSD(valueBN)
+
+  const [internalValue, setInternalValue] = useState(value ? value.toString() : '')
 
   return (
     <Input
@@ -30,10 +34,15 @@ const _TokenInput: ForwardRefRenderFunction<HTMLInputElement, TokenInputProps> =
           <NumberFormat as="span" variant="t300" format="dollar" color="colorTextMuted" value={valueInUSD} />
         )
       }
-      value={value == null ? '' : Number.isNaN(value) ? '' : value}
+      value={internalValue}
       onChange={(event: ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.valueAsNumber
-        onChange(value)
+        const valueStr = event.target.value
+        const valueNum = event.target.valueAsNumber
+
+        if (valueStr.length < MAX_LENGTH) {
+          setInternalValue(valueStr)
+          onChange(valueNum)
+        }
       }}
     />
   )

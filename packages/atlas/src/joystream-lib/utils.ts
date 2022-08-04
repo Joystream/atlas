@@ -2,6 +2,7 @@ import BN from 'bn.js'
 
 import { HAPI_TO_JOY_RATE } from '@/joystream-lib/config'
 import { ChannelInputAssets, VideoInputAssets } from '@/joystream-lib/types'
+import { ConsoleLogger } from '@/utils/logs'
 
 const MAX_SAFE_NUMBER_BN = new BN(Number.MAX_SAFE_INTEGER)
 const HAPI_TO_JOY_RATE_BN = new BN(HAPI_TO_JOY_RATE)
@@ -21,7 +22,12 @@ export const hapiBnToTokenNumber = (bn: BN) => {
   return wholeUnits + fractionalJoyUnits
 }
 
-export const tokenNumberToHapiBn = (number: number) => {
+export const tokenNumberToHapiBn = (rawNumber: number) => {
+  let number = rawNumber
+  if (rawNumber > Number.MAX_SAFE_INTEGER) {
+    ConsoleLogger.warn('Trying to convert unsafe number to BN, will cap at MAX_SAFE_INTEGER')
+    number = Number.MAX_SAFE_INTEGER
+  }
   const wholeUnits = Math.floor(number)
   const wholeUnitsBn = new BN(wholeUnits)
   const wholeHapiUnitsBn = wholeUnitsBn.mul(HAPI_TO_JOY_RATE_BN)
