@@ -1,9 +1,11 @@
+import BN from 'bn.js'
 import { ProxyMarked, Remote, proxy, wrap } from 'comlink'
 import { FC, PropsWithChildren, createContext, useCallback, useEffect, useRef, useState } from 'react'
 
 import { JOY_CURRENCY_TICKER } from '@/config/joystream'
 import { JOY_PRICE_SERVICE_URL, NODE_URL } from '@/config/urls'
 import { JoystreamLib } from '@/joystream-lib'
+import { HAPI_TO_JOY_RATE } from '@/joystream-lib/config'
 import { useEnvironmentStore } from '@/providers/environment/store'
 import { useUserStore } from '@/providers/user'
 import { SentryLogger } from '@/utils/logs'
@@ -15,7 +17,7 @@ type ProxyCallbackFn = <T extends object>(callback: T) => T & ProxyMarked
 export type JoystreamContextValue = {
   joystream: Remote<JoystreamLib> | undefined
   proxyCallback: ProxyCallbackFn
-  chainState: ReturnType<typeof useJoystreamChainState>
+  chainState: ReturnType<typeof useJoystreamChainConstants>
 } & ReturnType<typeof useJoystreamUtilFns>
 
 export const JoystreamContext = createContext<JoystreamContextValue | undefined>(undefined)
@@ -42,7 +44,7 @@ export const JoystreamProvider: FC<PropsWithChildren> = ({ children }) => {
   const proxyCallback = useCallback(<T extends object>(callback: T) => proxy(callback), [])
 
   const utilFns = useJoystreamUtilFns()
-  const chainState = useJoystreamChainState(joystream.current)
+  const chainState = useJoystreamChainConstants(joystream.current)
 
   // initialize Joystream Lib
   useEffect(() => {
@@ -128,27 +130,20 @@ const useJoystreamUtilFns = () => {
   }
 }
 
-type JoystreamChainState = {
-  dataObjectPerMegabyteFee: number
-  dataObjectStateBloatBondValue: number
-  videoStateBloatBondValue: number
-  channelStateBloatBondValue: number
-  nftMinStartingPrice: number
-  nftMaxStartingPrice: number
-  nftMaxAuctionDuration: number
-  nftAuctionStartsAtMaxDelta: number
-  nftMaxCreatorRoyaltyPercentage: number
-  nftMinCreatorRoyaltyPercentage: number
-  nftPlatformFeePercentage: number
+type RawJoystreamChainConstants = Awaited<ReturnType<JoystreamLib['getChainConstants']>>
+type JoystreamChainConstants = {
+  [p in keyof RawJoystreamChainConstants]: RawJoystreamChainConstants[p] extends string
+    ? BN
+    : RawJoystreamChainConstants[p]
 }
-const useJoystreamChainState = (joystream: Remote<JoystreamLib> | undefined) => {
-  const [chainState, setChainState] = useState<JoystreamChainState>({
-    dataObjectPerMegabyteFee: 0,
-    dataObjectStateBloatBondValue: 0,
-    videoStateBloatBondValue: 0,
-    channelStateBloatBondValue: 0,
-    nftMinStartingPrice: 1,
-    nftMaxStartingPrice: 20_000_000,
+const useJoystreamChainConstants = (joystream: Remote<JoystreamLib> | undefined) => {
+  const [chainConstant, setChainConstant] = useState<JoystreamChainConstants>({
+    dataObjectPerMegabyteFee: new BN(0),
+    dataObjectStateBloatBondValue: new BN(0),
+    videoStateBloatBondValue: new BN(0),
+    channelStateBloatBondValue: new BN(0),
+    nftMinStartingPrice: new BN(HAPI_TO_JOY_RATE),
+    nftMaxStartingPrice: new BN('200000000000000000'),
     nftMaxAuctionDuration: 1_296_000,
     nftAuctionStartsAtMaxDelta: 432_000,
     nftMaxCreatorRoyaltyPercentage: 50,
@@ -159,22 +154,22 @@ const useJoystreamChainState = (joystream: Remote<JoystreamLib> | undefined) => 
   useEffect(() => {
     if (!joystream) return
 
-    joystream.getNftChainState().then((nftChainState) =>
-      setChainState({
-        dataObjectPerMegabyteFee: nftChainState.dataObjectPerMegabyteFee,
-        dataObjectStateBloatBondValue: nftChainState.dataObjectStateBloatBondValue,
-        videoStateBloatBondValue: nftChainState.videoStateBloatBondValue,
-        channelStateBloatBondValue: nftChainState.channelStateBloatBondValue,
-        nftMaxAuctionDuration: nftChainState.maxAuctionDuration,
-        nftMinStartingPrice: Math.max(nftChainState.minStartingPrice, 1),
-        nftMaxStartingPrice: nftChainState.maxStartingPrice,
-        nftAuctionStartsAtMaxDelta: nftChainState.auctionStartsAtMaxDelta,
-        nftMaxCreatorRoyaltyPercentage: nftChainState.maxCreatorRoyalty,
-        nftMinCreatorRoyaltyPercentage: nftChainState.minCreatorRoyalty,
-        nftPlatformFeePercentage: nftChainState.platformFeePercentage,
+    joystream.getChainConstants().then((chainConstants) =>
+      setChainConstant({
+        dataObjectPerMegabyteFee: new BN(chainConstants.dataObjectPerMegabyteFee),
+        dataObjectStateBloatBondValue: new BN(chainConstants.dataObjectStateBloatBondValue),
+        videoStateBloatBondValue: new BN(chainConstants.videoStateBloatBondValue),
+        channelStateBloatBondValue: new BN(chainConstants.channelStateBloatBondValue),
+        nftMinStartingPrice: BN.max(new BN(chainConstants.nftMinStartingPrice), new BN(HAPI_TO_JOY_RATE)),
+        nftMaxStartingPrice: new BN(chainConstants.nftMaxStartingPrice),
+        nftMaxAuctionDuration: chainConstants.nftMaxAuctionDuration,
+        nftAuctionStartsAtMaxDelta: chainConstants.nftAuctionStartsAtMaxDelta,
+        nftMaxCreatorRoyaltyPercentage: chainConstants.nftMaxCreatorRoyaltyPercentage,
+        nftMinCreatorRoyaltyPercentage: chainConstants.nftMinCreatorRoyaltyPercentage,
+        nftPlatformFeePercentage: chainConstants.nftPlatformFeePercentage,
       })
     )
   }, [joystream])
 
-  return chainState
+  return chainConstant
 }

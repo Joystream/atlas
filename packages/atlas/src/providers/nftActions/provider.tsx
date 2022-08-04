@@ -7,8 +7,8 @@ import { ChangePriceDialog } from '@/components/_overlays/ChangePriceDialog'
 import { useNftState } from '@/hooks/useNftState'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useTokenPrice } from '@/providers/joystream'
-import { hapiBnToTokenNumber } from '@/utils/number'
 
+type NftAction = 'putOnSale' | 'purchase' | 'settle' | 'accept-bid' | 'change-price'
 type ContextValue = {
   currentAction: NftAction | null
   currentNftId: string | null
@@ -24,8 +24,6 @@ export const NftActionsContext = createContext<(ContextValue & ReturnType<typeof
 )
 NftActionsContext.displayName = 'NftActionsContext'
 
-type NftAction = 'putOnSale' | 'purchase' | 'settle' | 'accept-bid' | 'change-price'
-
 export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
   const [currentAction, setCurrentAction] = useState<NftAction | null>(null)
   const transactions = useNftTransactions()
@@ -33,19 +31,19 @@ export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
   const [currentNftId, setCurrentNftId] = useState<string | null>(null)
   const { nft } = useNft(currentNftId || '')
   const { auction } = useNftState(nft)
-  const { convertToUSD } = useTokenPrice()
+  const { convertHapiToUSD } = useTokenPrice()
 
   const mappedBids = auction?.bids
     ? auction?.bids
         .filter((bid) => !bid.isCanceled)
-        .sort((bidA, bidB) => hapiBnToTokenNumber(new BN(bidB.amount)) - hapiBnToTokenNumber(new BN(bidA.amount)))
         .map(({ id, createdAt, amount, bidder }) => ({
           id,
           createdAt,
-          amount: hapiBnToTokenNumber(new BN(amount)),
-          amountUSD: convertToUSD(new BN(amount)),
+          amount: new BN(amount),
+          amountUSD: convertHapiToUSD(new BN(amount)),
           bidder,
         }))
+        .sort((bidA, bidB) => bidB.amount.cmp(bidA.amount))
     : []
 
   const closeNftAction = useCallback(() => {

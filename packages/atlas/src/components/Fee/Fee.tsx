@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import BN from 'bn.js'
 import { FC } from 'react'
 
 import { Information } from '@/components/Information'
@@ -6,9 +7,10 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Text, TextVariant } from '@/components/Text'
 import { Color } from '@/components/Text/Text.styles'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 
 export type FeeProps = {
-  amount: number
+  amount: BN
   withToken?: boolean
   variant: TextVariant
   color?: Color
@@ -19,7 +21,7 @@ export type FeeProps = {
 
 export const Fee: FC<FeeProps> = ({
   amount,
-  withToken,
+  withToken = true,
   variant = 't100',
   color = 'colorTextStrong',
   hideOnMobile,
@@ -27,16 +29,17 @@ export const Fee: FC<FeeProps> = ({
   loading,
 }) => {
   const smMatch = useMediaMatch('sm')
+  const feeNumber = hapiBnToTokenNumber(amount)
   return (
     <Wrapper className={className}>
       {(!hideOnMobile || smMatch) && (
         <>
           <Text as="span" variant={variant} color={color}>
-            Fee:&nbsp;{amount < 0.01 && '<'}&nbsp;
+            Fee:&nbsp;{feeNumber < 0.01 && '<'}&nbsp;
           </Text>
           <NumberFormat
             withToken={withToken}
-            displayedValue={amount < 0.01 ? 0.01 : undefined}
+            displayedValue={feeNumber < 0.01 ? 0.01 : undefined}
             value={amount}
             as="span"
             variant={variant}

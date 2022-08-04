@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { Dispatch, FC, SetStateAction, memo, useRef, useState } from 'react'
 
 import { useComment } from '@/api/hooks'
@@ -6,11 +7,11 @@ import { DialogModal } from '@/components/_overlays/DialogModal'
 import { ReactionId } from '@/config/reactions'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
-import { useFee } from '@/hooks/useFee'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useMemberAvatar } from '@/providers/assets'
 import { useConfirmationModal } from '@/providers/confirmationModal'
+import { useFee } from '@/providers/joystream'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user'
 
@@ -68,7 +69,7 @@ export const Comment: FC<CommentProps> = memo(
     const commentIdQueryParam = useRouterQuery(QUERY_PARAMS.COMMENT_ID)
     const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
     const { openSignInDialog } = useDisplaySignInDialog()
-    const [reactionFee, setReactionFee] = useState<undefined | number>(0)
+    const [reactionFee, setReactionFee] = useState<undefined | BN>(undefined)
     const [openModal, closeModal] = useConfirmationModal()
     const { reactToComment, deleteComment, moderateComment, updateComment, addComment } = useReactionTransactions()
     const { fullFee: replyCommentFee, loading: replyCommentFeeLoading } = useFee(
@@ -82,7 +83,7 @@ export const Comment: FC<CommentProps> = memo(
       'editVideoCommentTx',
       memberId && comment?.id ? [memberId, comment?.id, editCommentInputText] : undefined
     )
-    const { getBasicFee: getReactToVideoCommentFee } = useFee('reactToVideoCommentTx')
+    const { getTxFee: getReactToVideoCommentFee } = useFee('reactToVideoCommentTx')
 
     const handleDeleteComment = (comment: CommentFieldsFragment) => {
       const isChannelOwner = video?.channel.ownerMember?.id === memberId && comment.author.id !== memberId

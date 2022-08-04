@@ -28,10 +28,9 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { SendFundsDialog, WithdrawFundsDialog } from '@/components/_overlays/SendTransferDialogs'
 import { JOY_CURRENCY_TICKER } from '@/config/joystream'
 import { absoluteRoutes } from '@/config/routes'
-import { useSubscribeAccountBalance } from '@/hooks/useSubscribeAccountBalance'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
+import { useSubscribeAccountBalance } from '@/providers/joystream'
 import { useUser, useUserStore } from '@/providers/user'
-import { hapiBnToTokenNumber } from '@/utils/number'
 
 import {
   AnimatedContainer,
@@ -145,15 +144,11 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
           activeMembership={activeMembership}
           show={showWithdrawDialog}
           onExitClick={toggleWithdrawDialog}
-          accountBalance={accountBalance && hapiBnToTokenNumber(accountBalance)}
-          channelBalance={channelBalance && hapiBnToTokenNumber(channelBalance)}
+          accountBalance={accountBalance}
+          channelBalance={channelBalance}
           channelId={channelId}
         />
-        <SendFundsDialog
-          show={showSendDialog}
-          onExitClick={toggleSendDialog}
-          accountBalance={accountBalance && hapiBnToTokenNumber(accountBalance)}
-        />
+        <SendFundsDialog show={showSendDialog} onExitClick={toggleSendDialog} accountBalance={accountBalance} />
         <Container ref={ref}>
           <InnerContainer isActive={isActive} containerHeight={containerHeight}>
             {transitions((style, isSwitchingMemberMode) =>

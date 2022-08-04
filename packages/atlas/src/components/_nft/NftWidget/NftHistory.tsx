@@ -69,9 +69,9 @@ type HistoryItemProps = {
 export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmount, text }) => {
   const navigate = useNavigate()
   const { url, isLoadingAsset } = useMemberAvatar(member)
-  const { convertToUSD } = useTokenPrice()
+  const { convertHapiToUSD } = useTokenPrice()
 
-  const dollarValue = joyAmount ? convertToUSD(joyAmount) : null
+  const dollarValue = joyAmount ? convertHapiToUSD(joyAmount) : null
 
   return (
     <HistoryItemContainer data-size={size}>

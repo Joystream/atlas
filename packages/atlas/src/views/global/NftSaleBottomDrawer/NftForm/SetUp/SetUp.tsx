@@ -3,15 +3,13 @@ import { Controller, useFormContext } from 'react-hook-form'
 
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
-import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { AuctionDatePicker } from '@/components/_inputs/AuctionDatePicker'
 import { FormField } from '@/components/_inputs/FormField'
-import { Input } from '@/components/_inputs/Input'
 import { MemberComboBox } from '@/components/_inputs/MemberComboBox'
+import { TokenInput } from '@/components/_inputs/TokenInput'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useTokenPrice } from '@/providers/joystream'
+import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { pluralizeNoun } from '@/utils/misc'
-import { tokenNumberToHapiBn } from '@/utils/number'
 
 import {
   AuctionDatePickerWrapper,
@@ -31,7 +29,6 @@ type SetUpProps = {
   maxEndDate: Date
   selectedType: Listing
   activeInputs: string[]
-  shouldValidateOnChange: boolean
   setActiveInputs: Dispatch<SetStateAction<string[]>>
   handleGoForward: () => void
 }
@@ -42,11 +39,9 @@ export const SetUp: FC<SetUpProps> = ({
   setActiveInputs,
   maxEndDate,
   maxStartDate,
-  shouldValidateOnChange,
   handleGoForward,
 }) => {
   const {
-    register,
     setValue,
     getValues,
     watch,
@@ -61,14 +56,12 @@ export const SetUp: FC<SetUpProps> = ({
   const endDate = watch('endDate')
 
   const { getNumberOfBlocks, chainState } = useNftFormUtils()
-  const { convertToUSD } = useTokenPrice()
 
-  const numberOfBlocks = getNumberOfBlocks(startDate, endDate) || 0
+  const rawNumberOfBlocks = getNumberOfBlocks(startDate, endDate) || 0
+  const numberOfBlocks = Math.max(rawNumberOfBlocks, 0)
 
   const totalDaysAndHours = getTotalDaysAndHours(startDate, endDate)
   const isEnglishAuction = watch('type') === 'english'
-  const buyNowPrice = watch('buyNowPrice')
-  const startingPrice = watch('startingPrice')
 
   useEffect(() => {
     setTimeout(() => {
@@ -98,7 +91,7 @@ export const SetUp: FC<SetUpProps> = ({
         if (name === 'buyNowPrice') {
           const startingPrice = getValues('startingPrice')
           setValue('buyNowPrice', startingPrice ? startingPrice + 1 : 2)
-          shouldValidateOnChange && trigger() // trigger form validation to make sure starting price is valid
+          trigger() // trigger form validation to make sure starting price is valid
         }
         return [...prevState, name]
       }
@@ -109,7 +102,7 @@ export const SetUp: FC<SetUpProps> = ({
         setValue('startDate', null)
         setValue('endDate', null)
       } else if (name === 'startingPrice') {
-        setValue('startingPrice', chainState.nftMinStartingPrice || undefined)
+        setValue('startingPrice', hapiBnToTokenNumber(chainState.nftMinStartingPrice))
       } else {
         reset({ ...getValues(), [name]: undefined })
       }
@@ -154,22 +147,12 @@ export const SetUp: FC<SetUpProps> = ({
       <StyledForm onSubmit={handleSubmit}>
         {selectedType === 'Fixed price' && (
           <StyledFormField label="" error={errors.buyNowPrice?.message}>
-            <Input
-              {...register('buyNowPrice', { valueAsNumber: true })}
-              type="number"
-              nodeStart={<JoyTokenIcon variant="gray" size={24} />}
-              nodeEnd={
-                !!buyNowPrice && (
-                  <NumberFormat
-                    as="span"
-                    variant="t300"
-                    format="dollar"
-                    color="colorTextMuted"
-                    value={convertToUSD(tokenNumberToHapiBn(buyNowPrice)) ?? 0}
-                  />
-                )
-              }
-              error={!!errors.buyNowPrice}
+            <Controller
+              control={control}
+              name="buyNowPrice"
+              render={({ field: { value, onChange, onBlur } }) => (
+                <TokenInput value={value} onChange={onChange} onBlur={onBlur} error={!!errors.buyNowPrice} />
+              )}
             />
           </StyledFormField>
         )}
@@ -223,7 +206,7 @@ export const SetUp: FC<SetUpProps> = ({
                         ]}
                         onChange={(value) => {
                           onChange(value)
-                          shouldValidateOnChange && trigger('startDate')
+                          trigger('startDate')
                         }}
                         value={value}
                       />
@@ -247,7 +230,7 @@ export const SetUp: FC<SetUpProps> = ({
                           maxDate={maxEndDate}
                           onChange={(value) => {
                             onChange(value)
-                            shouldValidateOnChange && trigger('endDate')
+                            trigger('endDate')
                           }}
                           items={expirationDateItems}
                           value={
@@ -294,27 +277,18 @@ export const SetUp: FC<SetUpProps> = ({
                 value: activeInputs.includes('startingPrice'),
               }}
             >
-              <Input
-                {...register('startingPrice', {
-                  valueAsNumber: true,
-                  onChange: () => shouldValidateOnChange && trigger('startingPrice'),
-                })}
-                type="number"
-                defaultValue={chainState.nftMinStartingPrice?.toString()}
-                nodeStart={<JoyTokenIcon variant="gray" size={24} />}
-                nodeEnd={
-                  !!startingPrice && (
-                    <NumberFormat
-                      color="colorTextMuted"
-                      as="span"
-                      variant="t300"
-                      format="dollar"
-                      value={convertToUSD(tokenNumberToHapiBn(startingPrice || 0)) ?? 0}
-                    />
-                  )
-                }
-                disabled={!activeInputs.includes('startingPrice')}
-                error={!!errors.startingPrice}
+              <Controller
+                control={control}
+                name="startingPrice"
+                render={({ field: { value, onChange, onBlur } }) => (
+                  <TokenInput
+                    value={value}
+                    onChange={onChange}
+                    disabled={!activeInputs.includes('startingPrice')}
+                    error={!!errors.startingPrice}
+                    onBlur={onBlur}
+                  />
+                )}
               />
             </FormField>
             <FormField
@@ -328,36 +302,25 @@ export const SetUp: FC<SetUpProps> = ({
                 value: activeInputs.includes('buyNowPrice'),
               }}
             >
-              <Input
-                {...register('buyNowPrice', {
-                  valueAsNumber: true,
-                  onChange: () => shouldValidateOnChange && trigger('buyNowPrice'),
-                })}
-                placeholder="—"
-                type="number"
-                nodeStart={<JoyTokenIcon variant="gray" size={24} />}
-                nodeEnd={
-                  !!buyNowPrice && (
-                    <NumberFormat
-                      as="span"
-                      variant="t300"
-                      format="dollar"
-                      color="colorTextMuted"
-                      value={convertToUSD(tokenNumberToHapiBn(buyNowPrice)) ?? 0}
-                    />
-                  )
-                }
-                disabled={!activeInputs.includes('buyNowPrice')}
-                error={!!errors.buyNowPrice}
-                onBlur={() => {
-                  shouldValidateOnChange && trigger() // trigger form validation to make sure starting price is valid
-                }}
+              <Controller
+                control={control}
+                name="buyNowPrice"
+                render={({ field: { value, onChange, onBlur } }) => (
+                  <TokenInput
+                    value={value}
+                    onChange={onChange}
+                    placeholder="—"
+                    disabled={!activeInputs.includes('buyNowPrice')}
+                    error={!!errors.buyNowPrice}
+                    onBlur={onBlur}
+                  />
+                )}
               />
             </FormField>
             <Controller
               name="whitelistedMembers"
               control={control}
-              render={({ field: { onChange, value: existingMembers }, fieldState: { error } }) => {
+              render={({ field: { onChange, value: existingMembers, onBlur }, fieldState: { error } }) => {
                 return (
                   <FormField
                     label="Whitelist"
@@ -376,12 +339,11 @@ export const SetUp: FC<SetUpProps> = ({
                       error={!!error}
                       onSelectMember={(member) => {
                         onChange([member, ...(existingMembers ? existingMembers : [])])
-                        shouldValidateOnChange && trigger('whitelistedMembers')
                       }}
                       onRemoveMember={(memberId) => {
                         onChange(existingMembers?.filter((existingMember) => existingMember.id !== memberId))
-                        shouldValidateOnChange && trigger('whitelistedMembers')
                       }}
+                      onBlur={onBlur}
                     />
                   </FormField>
                 )

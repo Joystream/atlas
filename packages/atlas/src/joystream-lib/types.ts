@@ -1,9 +1,10 @@
 import { IChannelMetadata, IMembershipMetadata, IVideoMetadata } from '@joystream/metadata-protobuf'
 import { AugmentedEvent, AugmentedEvents } from '@polkadot/api/types/events'
 import { GenericEvent } from '@polkadot/types'
-import BN from 'bn.js'
 
 import { JoystreamLibExtrinsics } from './extrinsics'
+
+export type StringifiedNumber = string
 
 export type AccountId = string
 export type MemberId = string
@@ -69,12 +70,12 @@ export type MemberInputMetadata = Omit<IMembershipMetadata, 'avatarObject'>
 
 export type NftBuyNowInputMetadata = {
   type: 'buyNow'
-  buyNowPrice: number
+  buyNowPrice: StringifiedNumber
 }
 type NftCommonAuctionInputMetadata = {
-  startingPrice: number
-  minimalBidStep: number
-  buyNowPrice?: number
+  startingPrice: StringifiedNumber
+  minimalBidStep: StringifiedNumber
+  buyNowPrice?: StringifiedNumber
   // if startsAtBlock is empty, current block (in which extrinsic is processed) will be used
   startsAtBlock?: number
   whitelistedMembersIds?: string[]
@@ -136,10 +137,3 @@ export type MetaprotcolExtrinsicResult = ExtrinsicResult<{ metaprotocol: true; t
 type TxMethodsFromClass<T> = T extends `${infer _}Tx` ? T : never
 
 export type TxMethodName = TxMethodsFromClass<keyof JoystreamLibExtrinsics>
-
-export type AdditionalFee = {
-  dataObjectPerMegabyteFee?: BN
-  dataObjectStateBloatBondValue?: BN
-  videoStateBloatBondValue?: BN
-  channelStateBloatBondValue?: BN
-}

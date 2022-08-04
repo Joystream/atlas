@@ -1,10 +1,12 @@
+import styled from '@emotion/styled'
 import BN from 'bn.js'
 import { forwardRef, useRef } from 'react'
 import mergeRefs from 'react-merge-refs'
 
 import { Text, TextProps, TextVariant } from '@/components/Text'
 import { JOY_CURRENCY_TICKER } from '@/config/joystream'
-import { formatNumber, hapiBnToTokenNumber } from '@/utils/number'
+import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
+import { formatNumber } from '@/utils/number'
 
 import { Tooltip } from '../Tooltip'
 
@@ -59,10 +61,10 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
       (format === 'short' && (internalValue > 999 || hasDecimals)) ||
       (format === 'dollar' && hasDecimals)
     const content = (
-      <Text {...textProps} variant={variant} ref={mergeRefs([ref, textRef])}>
+      <StyledText {...textProps} variant={variant} ref={mergeRefs([ref, textRef])}>
         {displayedValue || formattedValue}
         {withToken && ` ${JOY_CURRENCY_TICKER}`}
-      </Text>
+      </StyledText>
     )
 
     // TODO: This is workaround. For some reason this tooltip doesn't work properly.
@@ -85,6 +87,10 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
   }
 )
 NumberFormat.displayName = 'Number'
+
+const StyledText = styled(Text)`
+  display: inline-block;
+`
 
 const maximumSignificantDigits = 21
 

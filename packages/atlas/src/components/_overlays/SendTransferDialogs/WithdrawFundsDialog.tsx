@@ -1,5 +1,6 @@
+import BN from 'bn.js'
 import { FC, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 
 import { FullMembershipFieldsFragment } from '@/api/queries'
 import { Avatar } from '@/components/Avatar'
@@ -8,23 +9,23 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { FormField } from '@/components/_inputs/FormField'
-import { Input } from '@/components/_inputs/Input'
+import { TokenInput } from '@/components/_inputs/TokenInput'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { JOY_CURRENCY_TICKER } from '@/config/joystream'
-import { useFee } from '@/hooks/useFee'
-import { useJoystream, useTokenPrice } from '@/providers/joystream'
+import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
+import { useFee, useJoystream, useTokenPrice } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions'
-import { formatNumber, tokenNumberToHapiBn } from '@/utils/number'
+import { formatNumber } from '@/utils/number'
 
 import { Summary, SummaryRow, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
 
 type WithdrawFundsDialogProps = {
   onExitClick: () => void
-  accountBalance?: number
   activeMembership?: FullMembershipFieldsFragment | null
   show: boolean
+  accountBalance?: BN
+  channelBalance?: BN
   avatarUrl?: string | null
-  channelBalance?: number
   channelId?: string | null
 }
 
@@ -32,28 +33,27 @@ const ADDRESS_CHARACTERS_LIMIT = 4
 
 export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
   onExitClick,
-  accountBalance = 0,
   activeMembership,
   show,
   avatarUrl,
-  channelBalance = 0,
+  accountBalance = new BN(0),
+  channelBalance = new BN(0),
   channelId,
 }) => {
   const {
     handleSubmit,
     watch,
     reset,
-    register,
+    control,
     formState: { errors },
   } = useForm<{ amount: number | null }>()
-  const { convertToUSD } = useTokenPrice()
-  const amount = watch('amount') || 0
-  const convertedAmount = convertToUSD(tokenNumberToHapiBn(amount) || 0)
+  const { convertHapiToUSD } = useTokenPrice()
+  const amountBn = tokenNumberToHapiBn(watch('amount') || 0)
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { fullFee, loading: feeLoading } = useFee(
     'withdrawFromChannelBalanceTx',
-    channelId && activeMembership ? [activeMembership.id, channelId, amount] : undefined
+    channelId && activeMembership && amountBn ? [activeMembership.id, channelId, amountBn.toString()] : undefined
   )
 
   useEffect(() => {
@@ -69,15 +69,14 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
       }
       handleTransaction({
         snackbarSuccessMessage: {
-          title: `${formatNumber(data.amount)} ${JOY_CURRENCY_TICKER} ($${formatNumber(
-            convertedAmount || 0
-          )}) tokens have been sent over to ${activeMembership.handle}`,
+          title: 'Tokens withdrawn successfully',
+          description: `You have withdrawn ${formatNumber(data.amount)} ${JOY_CURRENCY_TICKER}!`,
         },
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).withdrawFromChannelBalance(
             activeMembership.id,
             channelId,
-            amount,
+            amountBn.toString(),
             proxyCallback(updateStatus)
           ),
         onTxSync: async () => onExitClick(),
@@ -107,13 +106,14 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
         color="colorText"
         format="dollar"
         variant="t100"
-        value={convertToUSD(tokenNumberToHapiBn(parseFloat(channelBalance?.toFixed(2)))) || 0}
+        value={convertHapiToUSD(channelBalance) || 0}
         margin={{ top: 1, bottom: 6 }}
       />
       <FormField label="Amount to withdraw" error={errors.amount?.message}>
-        <Input
-          {...register('amount', {
-            valueAsNumber: true,
+        <Controller
+          control={control}
+          name="amount"
+          rules={{
             validate: {
               valid: (value) => {
                 if (!value || isNaN(value) || value < 0) {
@@ -122,26 +122,21 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
                 return true
               },
               channelBalance: (value) => {
-                if (value && value > channelBalance) {
-                  return 'Membership wallet has insufficient balance to cover transaction fees. Top up your channel wallet and try again.'
+                if (value && tokenNumberToHapiBn(value).gt(channelBalance)) {
+                  return 'Not enough tokens in channel balance.'
                 }
                 return true
               },
             },
-          })}
-          type="number"
-          nodeStart={<JoyTokenIcon variant="regular" />}
-          nodeEnd={
-            <NumberFormat
-              variant="t300"
-              color="colorTextMuted"
-              format="dollar"
-              value={convertedAmount || 0}
-              as="span"
+          }}
+          render={({ field: { value, onChange } }) => (
+            <TokenInput
+              value={value}
+              onChange={onChange}
+              placeholder={`${JOY_CURRENCY_TICKER} amount`}
+              error={!!errors.amount}
             />
-          }
-          placeholder={`${JOY_CURRENCY_TICKER} amount`}
-          error={!!errors.amount}
+          )}
         />
       </FormField>
       <Summary>

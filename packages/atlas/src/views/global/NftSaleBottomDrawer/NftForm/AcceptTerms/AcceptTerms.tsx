@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { addHours } from 'date-fns'
 import { FC, PropsWithChildren } from 'react'
 
@@ -26,7 +27,7 @@ type AcceptTermsProps = {
   formData: NftFormFields
   creatorRoyalty?: number | null
   channelTitle?: string | null
-  fee: number
+  fee: BN
 }
 
 export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData, creatorRoyalty, channelTitle, fee }) => {

@@ -15,9 +15,8 @@ import { Registry } from '@polkadot/types/types'
 import { BN } from 'bn.js'
 
 import { SentryLogger } from '@/utils/logs'
-import { tokenNumberToHapiBn } from '@/utils/number'
 
-import { NFT_DEFAULT_BID_LOCK_DURATION, NFT_DEFAULT_EXTENSION_PERIOD, NFT_PERBILL_PERCENT } from './config'
+import { NFT_DEFAULT_BID_LOCK_DURATION, NFT_DEFAULT_EXTENSION_PERIOD, PERBILL_ONE_PERCENT } from './config'
 import { JoystreamLibError } from './errors'
 import {
   ChannelAssets,
@@ -250,11 +249,9 @@ export const extractVideoResultAssetsIds: ExtractVideoResultsAssetsIdsFn = (
 
 const createCommonAuctionParams = (inputMetadata: NftAuctionInputMetadata) => {
   return {
-    startingPrice: createType('u128', tokenNumberToHapiBn(inputMetadata.startingPrice)),
-    buyNowPrice: inputMetadata.buyNowPrice
-      ? createType('Option<u128>', tokenNumberToHapiBn(inputMetadata.buyNowPrice))
-      : undefined,
-    startsAt: createType('Option<u32>', inputMetadata.startsAtBlock),
+    startingPrice: createType('u128', new BN(inputMetadata.startingPrice)),
+    buyNowPrice: createType('Option<u128>', inputMetadata.buyNowPrice ? new BN(inputMetadata.buyNowPrice) : undefined),
+    startsAt: createType('Option<u32>', inputMetadata.startsAtBlock ? new BN(inputMetadata.startsAtBlock) : undefined),
     whitelist: createType('BTreeSet<u64>', inputMetadata.whitelistedMembersIds?.map((id) => new BN(id)) || []),
   }
 }
@@ -264,7 +261,7 @@ export const createNftOpenAuctionParams = (
 ): PalletContentNftTypesOpenAuctionParamsRecord => {
   return createType('PalletContentNftTypesOpenAuctionParamsRecord', {
     ...createCommonAuctionParams(inputMetadata),
-    bidLockDuration: createType('u32', inputMetadata.bidLockDuration ?? NFT_DEFAULT_BID_LOCK_DURATION),
+    bidLockDuration: createType('u32', new BN(inputMetadata.bidLockDuration ?? NFT_DEFAULT_BID_LOCK_DURATION)),
   })
 }
 
@@ -273,9 +270,9 @@ export const createNftEnglishAuctionParams = (
 ): PalletContentNftTypesEnglishAuctionParamsRecord => {
   return createType('PalletContentNftTypesEnglishAuctionParamsRecord', {
     ...createCommonAuctionParams(inputMetadata),
-    duration: createType('u32', inputMetadata.auctionDurationBlocks),
-    extensionPeriod: createType('u32', inputMetadata.extensionPeriodBlocks ?? NFT_DEFAULT_EXTENSION_PERIOD),
-    minBidStep: createType('u128', inputMetadata.minimalBidStep),
+    duration: createType('u32', new BN(inputMetadata.auctionDurationBlocks)),
+    extensionPeriod: createType('u32', new BN(inputMetadata.extensionPeriodBlocks ?? NFT_DEFAULT_EXTENSION_PERIOD)),
+    minBidStep: createType('u128', new BN(inputMetadata.minimalBidStep)),
   })
 }
 
@@ -288,7 +285,7 @@ const createNftIssuanceTransactionalStatus = (
 
   if (inputMetadata.sale.type === 'buyNow') {
     return createType('PalletContentNftTypesInitTransactionalStatusRecord', {
-      BuyNow: createType('u128', tokenNumberToHapiBn(inputMetadata.sale.buyNowPrice)),
+      BuyNow: createType('u128', new BN(inputMetadata.sale.buyNowPrice)),
     })
   } else if (inputMetadata.sale.type === 'open') {
     return createType('PalletContentNftTypesInitTransactionalStatusRecord', {
@@ -316,7 +313,7 @@ export const createNftIssuanceParameters = (
     nftMetadata: createType('Bytes', '0x0'),
     royalty: createType(
       'Option<u64>',
-      inputMetadata.royalty ? createType('u64', inputMetadata.royalty * NFT_PERBILL_PERCENT) : null
+      inputMetadata.royalty ? createType('u64', inputMetadata.royalty * PERBILL_ONE_PERCENT) : null
     ),
     nonChannelOwner: createType('Option<u64>', null),
     initTransactionalStatus: initTransactionalStatus,

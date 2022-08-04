@@ -1,12 +1,14 @@
 // load type augments
 import '@joystream/types'
 import { ApiPromise, WsProvider } from '@polkadot/api'
+import { QueryableStorageMultiArg } from '@polkadot/api-base/types/storage'
 import { Signer } from '@polkadot/api/types'
+import { Codec } from '@polkadot/types/types'
+import BN from 'bn.js'
 import { proxy } from 'comlink'
 
-import { NFT_PERBILL_PERCENT } from '@/joystream-lib/config'
+import { PERBILL_ONE_PERCENT } from '@/joystream-lib/config'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
-import { hapiBnToTokenNumber } from '@/utils/number'
 
 import { JoystreamLibError } from './errors'
 import { JoystreamLibExtrinsics } from './extrinsics'
@@ -84,11 +86,11 @@ export class JoystreamLib {
     return number.toNumber()
   }
 
-  async subscribeAccountBalance(accountId: AccountId, callback: (balance: number) => void) {
+  async subscribeAccountBalance(accountId: AccountId, callback: (balance: string) => void) {
     await this.ensureApi()
 
     const unsubscribe = await this.api.derive.balances.all(accountId, ({ availableBalance }) => {
-      callback(availableBalance.toNumber())
+      callback(availableBalance.toString())
     })
 
     return proxy(unsubscribe)
@@ -103,8 +105,24 @@ export class JoystreamLib {
     return proxy(unsubscribe)
   }
 
-  async getNftChainState() {
+  async getChainConstants() {
     await this.ensureApi()
+
+    // use queryMulti for better performance
+    // there are some type mismatches so we need to assert type of each query
+    const results = await this.api.queryMulti([
+      this.api.query.storage.dataObjectPerMegabyteFee as QueryableStorageMultiArg<'promise'>,
+      this.api.query.storage.dataObjectStateBloatBondValue as QueryableStorageMultiArg<'promise'>,
+      this.api.query.content.videoStateBloatBondValue as QueryableStorageMultiArg<'promise'>,
+      this.api.query.content.channelStateBloatBondValue as QueryableStorageMultiArg<'promise'>,
+      this.api.query.content.maxAuctionDuration as QueryableStorageMultiArg<'promise'>,
+      this.api.query.content.minStartingPrice as QueryableStorageMultiArg<'promise'>,
+      this.api.query.content.maxStartingPrice as QueryableStorageMultiArg<'promise'>,
+      this.api.query.content.auctionStartsAtMaxDelta as QueryableStorageMultiArg<'promise'>,
+      this.api.query.content.maxCreatorRoyalty as QueryableStorageMultiArg<'promise'>,
+      this.api.query.content.minCreatorRoyalty as QueryableStorageMultiArg<'promise'>,
+      this.api.query.content.platfromFeePercentage as QueryableStorageMultiArg<'promise'>,
+    ])
 
     const [
       dataObjectPerMegabyteFee,
@@ -118,33 +136,34 @@ export class JoystreamLib {
       maxCreatorRoyalty,
       minCreatorRoyalty,
       platformFeePercentage,
-    ] = await Promise.all([
-      this.api.query.storage.dataObjectPerMegabyteFee(),
-      this.api.query.storage.dataObjectStateBloatBondValue(),
-      this.api.query.content.videoStateBloatBondValue(),
-      this.api.query.content.channelStateBloatBondValue(),
-      this.api.query.content.maxAuctionDuration(),
-      this.api.query.content.minStartingPrice(),
-      this.api.query.content.maxStartingPrice(),
-      this.api.query.content.auctionStartsAtMaxDelta(),
-      this.api.query.content.maxCreatorRoyalty(),
-      this.api.query.content.minCreatorRoyalty(),
-      this.api.query.content.platfromFeePercentage(),
-    ])
+    ] = results
+
+    const asStringifiedBN = (raw: Codec) => {
+      const bn = new BN(raw.toString())
+      return bn.toString()
+    }
+
+    const asNumber = (raw: Codec) => {
+      return parseInt(raw.toString())
+    }
+
+    const asPercentage = (raw: Codec) => {
+      return asNumber(raw) / PERBILL_ONE_PERCENT
+    }
 
     return {
-      dataObjectPerMegabyteFee: dataObjectPerMegabyteFee.toNumber(),
-      dataObjectStateBloatBondValue: dataObjectStateBloatBondValue.toNumber(),
-      videoStateBloatBondValue: videoStateBloatBondValue.toNumber(),
-      channelStateBloatBondValue: channelStateBloatBondValue.toNumber(),
-      maxAuctionDuration: maxAuctionDuration.toNumber(),
-      minStartingPrice: hapiBnToTokenNumber(minStartingPrice),
-      maxStartingPrice: hapiBnToTokenNumber(maxStartingPrice),
-      auctionStartsAtMaxDelta: auctionStartsAtMaxDelta.toNumber(),
-      maxCreatorRoyalty: maxCreatorRoyalty.toNumber() / NFT_PERBILL_PERCENT,
-      minCreatorRoyalty: minCreatorRoyalty.toNumber() / NFT_PERBILL_PERCENT,
-      platformFeePercentage: platformFeePercentage.toNumber() / NFT_PERBILL_PERCENT,
-    }
+      dataObjectPerMegabyteFee: asStringifiedBN(dataObjectPerMegabyteFee),
+      dataObjectStateBloatBondValue: asStringifiedBN(dataObjectStateBloatBondValue),
+      videoStateBloatBondValue: asStringifiedBN(videoStateBloatBondValue),
+      channelStateBloatBondValue: asStringifiedBN(channelStateBloatBondValue),
+      nftMinStartingPrice: asStringifiedBN(minStartingPrice),
+      nftMaxStartingPrice: asStringifiedBN(maxStartingPrice),
+      nftMaxAuctionDuration: asNumber(maxAuctionDuration),
+      nftAuctionStartsAtMaxDelta: asNumber(auctionStartsAtMaxDelta),
+      nftMaxCreatorRoyaltyPercentage: asPercentage(maxCreatorRoyalty),
+      nftMinCreatorRoyaltyPercentage: asPercentage(minCreatorRoyalty),
+      nftPlatformFeePercentage: asPercentage(platformFeePercentage),
+    } as const
   }
 
   async getDynamicBagCreationPolicies() {

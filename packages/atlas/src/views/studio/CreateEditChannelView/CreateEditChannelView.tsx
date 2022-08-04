@@ -22,12 +22,11 @@ import {
 } from '@/components/_overlays/ImageCropModal'
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
-import { useBloatFeesAndPerMbFees, useFee } from '@/hooks/useFee'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib'
 import { useAsset, useAssetStore, useOperatorsContext, useRawAsset } from '@/providers/assets'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
-import { useBucketsConfigForNewChannel, useJoystream } from '@/providers/joystream'
+import { useBloatFeesAndPerMbFees, useBucketsConfigForNewChannel, useFee, useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions'
 import { useUploadsStore } from '@/providers/uploadsManager'
@@ -195,7 +194,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const { fullFee: updateChannelFee, loading: updateChannelFeeLoading } = useFee(
     'updateChannelTx',
     channelId && memberId && channelMetadata && isDirty && !newChannel
-      ? [channelId, memberId, channelMetadata, channelAssets, dataObjectStateBloatBondValue]
+      ? [channelId, memberId, channelMetadata, channelAssets, dataObjectStateBloatBondValue.toString()]
       : undefined,
     channelAssets
   )
@@ -206,10 +205,10 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
           memberId,
           channelMetadata,
           channelAssets,
-          // TODO: use basic buckets config for fee estimation
+          // use basic buckets config for fee estimation
           { storage: [0], distribution: [{ distributionBucketFamilyId: 0, distributionBucketIndex: 0 }] },
-          dataObjectStateBloatBondValue,
-          channelStateBloatBondValue,
+          dataObjectStateBloatBondValue.toString(),
+          channelStateBloatBondValue.toString(),
         ]
       : undefined,
     channelAssets
@@ -402,8 +401,8 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
               metadata,
               assets,
               await getBucketsConfigForNewChannel(),
-              dataObjectStateBloatBondValue,
-              channelStateBloatBondValue,
+              dataObjectStateBloatBondValue.toString(),
+              channelStateBloatBondValue.toString(),
               proxyCallback(updateStatus)
             )
           : (
@@ -413,7 +412,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
               memberId,
               metadata,
               assets,
-              dataObjectStateBloatBondValue,
+              dataObjectStateBloatBondValue.toString(),
               proxyCallback(updateStatus)
             ),
       onTxSync: refetchDataAndUploadAssets,

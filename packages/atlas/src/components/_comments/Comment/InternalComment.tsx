@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { format } from 'date-fns'
 import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
@@ -61,7 +62,7 @@ export type InternalCommentProps = {
   isCommentFromUrl: boolean | undefined
   videoId: string | undefined
   commentId: string | undefined
-  reactionFee: number | undefined
+  reactionFee: BN | undefined
   onEditedLabelClick: (() => void) | undefined
   onEditClick: (() => void) | undefined
   onDeleteClick: (() => void) | undefined

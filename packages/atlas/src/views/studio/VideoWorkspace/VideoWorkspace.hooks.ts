@@ -7,11 +7,10 @@ import {
   GetFullVideosConnectionQueryVariables,
   VideoOrderByInput,
 } from '@/api/queries'
-import { useBloatFeesAndPerMbFees } from '@/hooks/useFee'
 import { VideoExtrinsicResult, VideoInputAssets } from '@/joystream-lib'
 import { useAssetStore } from '@/providers/assets'
 import { useDraftStore } from '@/providers/drafts'
-import { useJoystream } from '@/providers/joystream'
+import { useBloatFeesAndPerMbFees, useJoystream } from '@/providers/joystream'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useTransaction, useTransactionManagerStore } from '@/providers/transactions'
 import { useStartFileUpload } from '@/providers/uploadsManager'
@@ -155,8 +154,8 @@ export const useHandleVideoWorkspaceSubmit = () => {
                 data.metadata,
                 data.nftMetadata,
                 assets,
-                dataObjectStateBloatBondValue,
-                videoStateBloatBondValue,
+                dataObjectStateBloatBondValue.toString(),
+                videoStateBloatBondValue.toString(),
                 proxyCallback(updateStatus)
               )
             : (
@@ -167,7 +166,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
                 data.metadata,
                 data.nftMetadata,
                 assets,
-                dataObjectStateBloatBondValue,
+                dataObjectStateBloatBondValue.toString(),
                 proxyCallback(updateStatus)
               ),
         onTxSync: refetchDataAndUploadAssets,
