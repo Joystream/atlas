@@ -23,6 +23,7 @@ import {
   useGetTop10VideosThisWeekQuery,
   useGetVideoCountQuery,
 } from '@/api/queries'
+import { videoFilters } from '@/utils/video'
 
 export const useFullVideo = (id: string, opts?: QueryHookOptions<GetFullVideoQuery, GetFullVideoQueryVariables>) => {
   const { data, ...queryRest } = useGetFullVideoQuery({
@@ -46,14 +47,7 @@ export const useChannelPreviewVideos = (
         channel: {
           id_eq: channelId,
         },
-        isPublic_eq: true,
-        isCensored_eq: false,
-        thumbnailPhoto: {
-          isAccepted_eq: true,
-        },
-        media: {
-          isAccepted_eq: true,
-        },
+        ...videoFilters,
       },
       orderBy: VideoOrderByInput.CreatedAtDesc,
       offset: 0,
@@ -97,15 +91,8 @@ export const useBasicVideos = (
     variables: {
       ...variables,
       where: {
+        ...videoFilters,
         ...variables?.where,
-        isPublic_eq: true,
-        isCensored_eq: false,
-        thumbnailPhoto: {
-          isAccepted_eq: true,
-        },
-        media: {
-          isAccepted_eq: true,
-        },
       },
     },
   })
@@ -135,15 +122,8 @@ export const useTop10VideosThisWeek = (
     variables: {
       ...variables,
       where: {
+        ...videoFilters,
         ...variables?.where,
-        isPublic_eq: true,
-        isCensored_eq: false,
-        thumbnailPhoto: {
-          isAccepted_eq: true,
-        },
-        media: {
-          isAccepted_eq: true,
-        },
       },
     },
   })
@@ -162,15 +142,8 @@ export const useTop10VideosThisMonth = (
     variables: {
       ...variables,
       where: {
+        ...videoFilters,
         ...variables?.where,
-        isPublic_eq: true,
-        isCensored_eq: false,
-        thumbnailPhoto: {
-          isAccepted_eq: true,
-        },
-        media: {
-          isAccepted_eq: true,
-        },
       },
     },
   })
@@ -189,14 +162,7 @@ export const useVideoCount = (
     variables: {
       ...variables,
       where: {
-        isPublic_eq: true,
-        isCensored_eq: false,
-        thumbnailPhoto: {
-          isAccepted_eq: true,
-        },
-        media: {
-          isAccepted_eq: true,
-        },
+        ...videoFilters,
         ...variables?.where,
       },
     },

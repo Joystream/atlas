@@ -1,5 +1,8 @@
+import { VideoWhereInput } from '@/api/queries'
 import { ConsoleLogger } from '@/utils/logs'
 import { formatDateAgo } from '@/utils/time'
+
+import queryFilter from '../../queryFilter.json'
 
 export const formatVideoDate = (date: Date) => formatDateAgo(date)
 
@@ -40,4 +43,20 @@ export const getVideoMetadata = async (file: File): Promise<VideoMetadata> => {
       reject(new Error("Can't play video file"))
     }
   })
+}
+
+export const videoFilters: VideoWhereInput = {
+  isCensored_eq: false,
+  isPublic_eq: true,
+  thumbnailPhoto: {
+    isAccepted_eq: true,
+  },
+  media: {
+    isAccepted_eq: true,
+  },
+  NOT: [
+    { id_in: queryFilter.video },
+    { thumbnailPhoto: { id_in: queryFilter.dataObject.thumbnail } },
+    { media: { id_in: queryFilter.dataObject.video } },
+  ],
 }

@@ -19,6 +19,7 @@ import { SvgActionChevronR } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { SentryLogger } from '@/utils/logs'
+import { videoFilters } from '@/utils/video'
 
 import { AdditionalLink, LoadMoreButtonWrapper } from './InfiniteGrid.styles'
 import { useInfiniteGrid } from './useInfiniteGrid'
@@ -89,14 +90,7 @@ export const InfiniteVideoGrid = forwardRef<HTMLElement, InfiniteVideoGridProps>
       limit,
       orderBy,
       where: {
-        isPublic_eq: true,
-        isCensored_eq: false,
-        thumbnailPhoto: {
-          isAccepted_eq: true,
-        },
-        media: {
-          isAccepted_eq: true,
-        },
+        ...videoFilters,
         ...(videoWhereInput ? videoWhereInput : {}),
       },
     }
