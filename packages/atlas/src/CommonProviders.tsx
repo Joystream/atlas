@@ -19,12 +19,14 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
       <GlobalStyles />
       <OverlayManagerProvider>
         <ApolloProvider client={apolloClient}>
-          <MaintenanceWrapper>
-            <OperatorsContextProvider>
-              <AssetsManager />
-              <BrowserRouter>{children}</BrowserRouter>
-            </OperatorsContextProvider>
-          </MaintenanceWrapper>
+          <BrowserRouter>
+            <MaintenanceWrapper>
+              <OperatorsContextProvider>
+                <AssetsManager />
+                {children}
+              </OperatorsContextProvider>
+            </MaintenanceWrapper>
+          </BrowserRouter>
         </ApolloProvider>
       </OverlayManagerProvider>
     </>
@@ -34,20 +36,13 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
 const MaintenanceWrapper: FC<PropsWithChildren> = ({ children }) => {
   const { isKilled, wasKilledLastTime, error, loading } = useGetKillSwitch()
 
+  const shouldRenderMaintenance = isKilled || (error && wasKilledLastTime) || (loading && wasKilledLastTime)
+  const shouldRenderAdminModal = !loading && !error
+
   return (
     <>
-      {isKilled || (error && wasKilledLastTime) || (loading && wasKilledLastTime) ? (
-        <>
-          <Maintenance />
-        </>
-      ) : (
-        children
-      )}
-      {(isKilled || (loading && wasKilledLastTime)) && !loading && !error && (
-        <BrowserRouter>
-          <AdminModal />
-        </BrowserRouter>
-      )}
+      {shouldRenderMaintenance ? <Maintenance /> : children}
+      {shouldRenderAdminModal && <AdminModal />}
     </>
   )
 }
