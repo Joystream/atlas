@@ -14,7 +14,6 @@ import { Avatar, AvatarProps } from '@/components/Avatar'
 import { Fee } from '@/components/Fee'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
@@ -28,7 +27,7 @@ import { useTransaction } from '@/providers/transactions'
 import { SentryLogger } from '@/utils/logs'
 import { formatNumber } from '@/utils/number'
 
-import { FormFieldsWrapper, LabelFlexWrapper, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
+import { FormFieldsWrapper, StyledMaxButton, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
 
 const ADDRESS_LENGTH = 49
 const ADDRESS_CHARACTERS_LIMIT = 4
@@ -142,15 +141,11 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
       />
       <FormFieldsWrapper>
         <FormField
-          label={
-            <LabelFlexWrapper>
-              <Text as="span" variant="h300">
-                Amount to withdraw
-              </Text>
-              <Button onClick={handleMaxClick} size="medium" variant="tertiary" _textOnly>
-                Max
-              </Button>
-            </LabelFlexWrapper>
+          label="Amount to Withdraw"
+          headerNode={
+            <StyledMaxButton onClick={handleMaxClick} size="medium" variant="tertiary" _textOnly>
+              Max
+            </StyledMaxButton>
           }
           error={errors.amount?.message}
         >
