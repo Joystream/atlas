@@ -10,7 +10,6 @@ import { NftSettlementBottomDrawer } from '@/views/global/NftSettlementBottomDra
 
 import { MainLayout } from './MainLayout'
 import { JoystreamManager, JoystreamProvider } from './providers/joystream'
-import { OverlayManagerProvider } from './providers/overlayManager'
 import { Snackbars } from './providers/snackbars'
 import { TransactionsManager } from './providers/transactions'
 import { UserProvider } from './providers/user'
@@ -19,25 +18,23 @@ export const App = () => {
   return (
     <CommonProviders>
       <AnalyticsManager />
-      <OverlayManagerProvider>
-        <ConfirmationModalProvider>
-          <UserProvider>
-            <JoystreamProvider>
-              <NftActionsProvider>
-                <MainLayout />
-                <Snackbars />
-                <TransactionsManager />
-                <JoystreamManager />
-                <NotificationsManager />
-                <SignInModal />
-                <NftSettlementBottomDrawer />
-                <NftPurchaseBottomDrawer />
-                <NftSaleBottomDrawer />
-              </NftActionsProvider>
-            </JoystreamProvider>
-          </UserProvider>
-        </ConfirmationModalProvider>
-      </OverlayManagerProvider>
+      <ConfirmationModalProvider>
+        <UserProvider>
+          <JoystreamProvider>
+            <NftActionsProvider>
+              <MainLayout />
+              <Snackbars />
+              <TransactionsManager />
+              <JoystreamManager />
+              <NotificationsManager />
+              <SignInModal />
+              <NftSettlementBottomDrawer />
+              <NftPurchaseBottomDrawer />
+              <NftSaleBottomDrawer />
+            </NftActionsProvider>
+          </JoystreamProvider>
+        </UserProvider>
+      </ConfirmationModalProvider>
     </CommonProviders>
   )
 }

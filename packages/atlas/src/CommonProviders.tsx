@@ -2,8 +2,12 @@ import { ApolloProvider } from '@apollo/client'
 import { FC, PropsWithChildren } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
+import { Maintenance } from '@/Maintenance'
 import { createApolloClient } from '@/api'
+import { useGetKillSwitch } from '@/api/hooks/admin'
+import { AdminModal } from '@/components/_overlays/AdminModal'
 import { AssetsManager, OperatorsContextProvider } from '@/providers/assets'
+import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { GlobalStyles } from '@/styles'
 
 export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
@@ -13,12 +17,29 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
   return (
     <>
       <GlobalStyles />
-      <ApolloProvider client={apolloClient}>
-        <OperatorsContextProvider>
-          <AssetsManager />
-          <BrowserRouter>{children}</BrowserRouter>
-        </OperatorsContextProvider>
-      </ApolloProvider>
+      <OverlayManagerProvider>
+        <ApolloProvider client={apolloClient}>
+          <BrowserRouter>
+            <AdminModal />
+            <MaintenanceWrapper>
+              <OperatorsContextProvider>
+                <AssetsManager />
+                {children}
+              </OperatorsContextProvider>
+            </MaintenanceWrapper>
+          </BrowserRouter>
+        </ApolloProvider>
+      </OverlayManagerProvider>
     </>
   )
+}
+
+const MaintenanceWrapper: FC<PropsWithChildren> = ({ children }) => {
+  const { isKilled, wasKilledLastTime, error, loading } = useGetKillSwitch()
+
+  if (isKilled || (error && wasKilledLastTime) || (loading && wasKilledLastTime)) {
+    return <Maintenance />
+  } else {
+    return <>{children}</>
+  }
 }

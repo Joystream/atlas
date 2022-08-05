@@ -1,3 +1,4 @@
+export * from './__generated__/admin.generated'
 export * from './__generated__/baseTypes.generated'
 export * from './__generated__/categories.generated'
 export * from './__generated__/channels.generated'
