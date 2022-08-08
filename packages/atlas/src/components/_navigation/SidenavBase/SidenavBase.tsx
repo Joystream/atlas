@@ -11,13 +11,16 @@ import {
   ButtonGroup,
   DrawerOverlay,
   LegalLink,
-  LegalLinksWrapper,
+  LinksRow,
+  LinksWrapper,
   LogoLink,
   ScrollContainer,
   SidebarNav,
   SidebarNavFooter,
   SidebarNavList,
+  StyledAnchor,
   StyledHamburgerButton,
+  StyledSvgJoystreamLogoFull,
 } from './SidenavBase.styles'
 
 export type SidenavProps = {
@@ -98,19 +101,35 @@ const SidenavBase: FC<SidenavProps> = ({
         >
           <SidebarNavFooter>
             <ButtonGroup>{buttonsContent}</ButtonGroup>
-            <LegalLinksWrapper>
-              <LegalLink to={absoluteRoutes.legal.termsOfService()} target="_blank">
+            <LinksWrapper>
+              <LinksRow>
+                <LegalLink to={absoluteRoutes.legal.termsOfService()} target="_blank">
+                  <Text as="span" variant="t100" color="inherit">
+                    Terms of Service
+                  </Text>
+                </LegalLink>
                 <Text as="span" variant="t100" color="inherit">
-                  Terms of Service
+                  •
                 </Text>
-              </LegalLink>
-              <span>•</span>
-              <LegalLink to={absoluteRoutes.legal.copyright()} target="_blank">
+                <LegalLink to={absoluteRoutes.legal.copyright()} target="_blank">
+                  <Text as="span" variant="t100" color="inherit">
+                    Copyright Policy
+                  </Text>
+                </LegalLink>
+              </LinksRow>
+              <LinksRow>
+                <StyledAnchor href="">
+                  <Text as="span" variant="t100" color="inherit">
+                    Powered by
+                  </Text>
+                  <StyledSvgJoystreamLogoFull />
+                </StyledAnchor>
                 <Text as="span" variant="t100" color="inherit">
-                  Copyright Policy
+                  •
                 </Text>
-              </LegalLink>
-            </LegalLinksWrapper>
+                <StyledAnchor />
+              </LinksRow>
+            </LinksWrapper>
           </SidebarNavFooter>
         </CSSTransition>
       </SidebarNav>
