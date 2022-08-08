@@ -5,7 +5,8 @@ import { useMemo } from 'react'
 import {
   BasicBidFieldsFragment,
   BasicMembershipFieldsFragment,
-  FullNftFieldsFragment,
+  BasicNftFieldsFragment,
+  BasicVideoFieldsFragment,
   GetNftHistoryQuery,
   GetNftHistoryQueryVariables,
   GetNftQuery,
@@ -51,12 +52,15 @@ export type NftStatus = (
 ) &
   CommonNftProperties
 
-export const getNftStatus = (nft?: FullNftFieldsFragment | null): NftStatus | undefined => {
+export const getNftStatus = (
+  nft: BasicNftFieldsFragment | null | undefined,
+  video: BasicVideoFieldsFragment | null | undefined
+): NftStatus | undefined => {
   if (!nft) return undefined
   const commonProperties = {
-    title: nft?.video?.title,
-    duration: nft?.video?.duration,
-    views: nft?.video?.views,
+    title: video?.title,
+    duration: video?.duration,
+    views: video?.views,
   }
 
   if (nft?.transactionalStatusAuction) {
@@ -108,7 +112,7 @@ export const useNft = (id: string, opts?: QueryHookOptions<GetNftQuery, GetNftQu
 
   return {
     nft,
-    nftStatus: getNftStatus(nft),
+    nftStatus: getNftStatus(nft, nft?.video),
     ...rest,
   }
 }

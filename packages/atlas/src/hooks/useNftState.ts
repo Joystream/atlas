@@ -1,6 +1,6 @@
 import BN from 'bn.js'
 
-import { FullNftFieldsFragment } from '@/api/queries'
+import { BasicNftFieldsFragment } from '@/api/queries'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { NftSaleType } from '@/joystream-lib'
 import { useJoystreamStore } from '@/providers/joystream'
@@ -8,7 +8,7 @@ import { useUser } from '@/providers/user'
 
 export type EnglishTimerState = 'expired' | 'running' | 'upcoming' | null
 
-export const useNftState = (nft?: FullNftFieldsFragment | null) => {
+export const useNftState = (nft?: BasicNftFieldsFragment | null) => {
   const { activeMembership } = useUser()
   const { currentBlock, currentBlockMsTimestamp } = useJoystreamStore()
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
@@ -97,7 +97,7 @@ export const useNftState = (nft?: FullNftFieldsFragment | null) => {
     isRunning,
     englishTimerState,
     isUpcoming,
-    videoId: nft?.video.id,
+    videoId: nft?.id,
     userBid,
     userBidUnlockDate,
     bids: auction?.bids,

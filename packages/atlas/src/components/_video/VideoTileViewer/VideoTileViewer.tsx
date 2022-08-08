@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { useNavigate } from 'react-router'
 
-import { getNftStatus, useFullVideo } from '@/api/hooks'
+import { getNftStatus, useBasicVideo } from '@/api/hooks'
 import { Pill } from '@/components/Pill'
 import { SvgIllustrativePlay } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
@@ -25,11 +25,11 @@ type VideoTileViewerProps = {
 
 export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, detailsVariant, direction }) => {
   const navigate = useNavigate()
-  const { video, loading } = useFullVideo(id ?? '', {
+  const { video, loading } = useBasicVideo(id ?? '', {
     skip: !id,
     onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTile', error, { video: { id } }),
   })
-  const nftStatus = getNftStatus(video?.nft)
+  const nftStatus = getNftStatus(video?.nft, video)
   const { avatarPhotoUrl, isLoadingAvatar, isLoadingThumbnail, thumbnailPhotoUrl, videoHref } =
     useVideoTileSharedLogic(video)
 
