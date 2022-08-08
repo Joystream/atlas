@@ -33,6 +33,10 @@ export const SubtitleDetails = styled.div`
   justify-content: start;
 `
 
+export const InvisibleInput = styled.input`
+  display: none;
+`
+
 export const StyledSvgActionCheck = styled(SvgActionCheck)`
   path {
     fill: ${cVar('colorTextSuccess')};

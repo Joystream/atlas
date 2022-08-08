@@ -6,22 +6,26 @@ import { ListItemProps, ListItemSizes } from '@/components/ListItem'
 
 import { Popover, PopoverImperativeHandle, PopoverProps } from '../Popover'
 
-export type ContextMenuProps = { items: ListItemProps[]; scrollable?: boolean; size?: ListItemSizes } & Omit<
-  PopoverProps,
-  'content' | 'instanceRef'
->
+export type ContextMenuProps = {
+  items: ListItemProps[]
+  scrollable?: boolean
+  size?: ListItemSizes
+  customWidth?: number
+} & Omit<PopoverProps, 'content' | 'instanceRef'>
 
 export const ContextMenu: FC<ContextMenuProps> = ({
   children,
   items,
   scrollable = false,
   size = 'medium',
+  customWidth = 192,
   ...rest
 }) => {
   const contextMenuInstanceRef = useRef<PopoverImperativeHandle>(null)
   return (
     <Popover hideOnClick ref={contextMenuInstanceRef} {...rest}>
       <StyledList
+        customWidth={customWidth}
         scrollable={scrollable}
         size={size}
         items={items.map((item) => ({
@@ -36,6 +40,6 @@ export const ContextMenu: FC<ContextMenuProps> = ({
   )
 }
 
-export const StyledList = styled(List)`
-  width: 192px;
+export const StyledList = styled(List)<{ customWidth: number }>`
+  width: ${({ customWidth }) => customWidth}px;
 `

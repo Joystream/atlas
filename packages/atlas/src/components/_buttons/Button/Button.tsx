@@ -1,5 +1,5 @@
 import { To } from 'history'
-import { AnimationEvent, KeyboardEvent, MouseEvent, PropsWithChildren, ReactNode, forwardRef } from 'react'
+import { AnimationEvent, ElementType, KeyboardEvent, MouseEvent, PropsWithChildren, ReactNode, forwardRef } from 'react'
 
 import { Text, TextVariant } from '@/components/Text'
 import { getLinkPropsFromTo } from '@/utils/button'
@@ -7,6 +7,7 @@ import { getLinkPropsFromTo } from '@/utils/button'
 import { BorderWrapper, ButtonBase, ButtonIconWrapper, ButtonSize, ButtonVariant, IconPlacement } from './Button.styles'
 
 export type ButtonProps = PropsWithChildren<{
+  as?: ElementType
   icon?: ReactNode
   iconPlacement?: IconPlacement
   badge?: boolean | string | number
@@ -36,6 +37,7 @@ const BUTTON_SIZE_TO_TEXT_VARIANT: Record<ButtonSize, TextVariant> = {
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
   const {
+    as,
     icon,
     children,
     onClick,
@@ -56,6 +58,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) =>
   const linkProps = getLinkPropsFromTo(to, openLinkInNewTab)
   return (
     <ButtonBase
+      as={as}
       ref={ref}
       tabIndex={tabIndex}
       type={to ? undefined : type}

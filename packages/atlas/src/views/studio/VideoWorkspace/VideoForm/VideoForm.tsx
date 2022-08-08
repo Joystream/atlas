@@ -18,6 +18,7 @@ import { Input } from '@/components/_inputs/Input'
 import { OptionCardGroupRadio } from '@/components/_inputs/OptionCardGroup'
 import { RadioButtonGroup } from '@/components/_inputs/RadioButtonGroup'
 import { Select, SelectItem } from '@/components/_inputs/Select'
+import { SubtitlesCombobox } from '@/components/_inputs/SubtitlesComboBox'
 import { Switch } from '@/components/_inputs/Switch'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { languages } from '@/config/languages'
@@ -87,6 +88,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
 
   const { editedVideoInfo } = useVideoWorkspace()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useVideoWorkspaceData()
+  const [availableLanguages, setAvailableLanguages] = useState(languages.map((language) => language.name))
 
   const {
     chainState: { nftMaxCreatorRoyaltyPercentage, nftMinCreatorRoyaltyPercentage },
@@ -696,6 +698,55 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           </Text>
         </div>
         <MoreSettingsSection expanded={moreSettingsVisible}>
+          <Controller
+            control={control}
+            name="subtitlesArray"
+            render={({ field: { onChange, value: subtitlesArray } }) => {
+              return (
+                <FormField label="Subtitles" optional>
+                  <SubtitlesCombobox
+                    onLanguageAdd={(language) => {
+                      setAvailableLanguages((availableLanguages) =>
+                        availableLanguages.filter((prevLanguage) => prevLanguage !== language)
+                      )
+                      onChange([...(subtitlesArray ? subtitlesArray : []), { language }])
+                    }}
+                    onLanguageDelete={(language) => {
+                      onChange(subtitlesArray?.filter((prevSubtitles) => prevSubtitles.language !== language))
+                      setAvailableLanguages((prevLanguages) =>
+                        [...prevLanguages, language].sort((a, b) => a.localeCompare(b))
+                      )
+                    }}
+                    onSubtitlesAdd={({ language, file }) => {
+                      const idxToEdit = subtitlesArray?.findIndex(
+                        (prevSubtitles) => prevSubtitles.language === language
+                      )
+                      onChange(
+                        subtitlesArray?.map((subtitles, idx) =>
+                          idx === idxToEdit ? { ...subtitles, file } : subtitles
+                        )
+                      )
+                    }}
+                    onMarkAsCC={(language) => {
+                      const idxToEdit = subtitlesArray?.findIndex(
+                        (prevSubtitles) => prevSubtitles.language === language
+                      )
+                      onChange(
+                        subtitlesArray?.map((subtitles, idx) =>
+                          idx === idxToEdit
+                            ? { ...subtitles, isClosedCaptions: !subtitles.isClosedCaptions }
+                            : subtitles
+                        )
+                      )
+                    }}
+                    availableLanguages={availableLanguages}
+                    subtitlesArray={subtitlesArray}
+                  />
+                </FormField>
+              )
+            }}
+          />
+
           {videoFieldsLocked && royaltiesField}
           {videoFieldsLocked && videoEditFields}
           <Controller

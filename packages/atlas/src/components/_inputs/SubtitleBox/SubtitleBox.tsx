@@ -1,33 +1,88 @@
-import { FC } from 'react'
+import { ChangeEventHandler, FC } from 'react'
 
+import { ListItemProps } from '@/components/ListItem'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionMore } from '@/components/_icons'
+import { SvgActionMore, SvgActionTrash } from '@/components/_icons'
+import { ContextMenu } from '@/components/_overlays/ContextMenu'
 
-import { StyledSvgActionCheck, SubtitleBoxWrapper, SubtitleDetails, SubtitlesFileName } from './SubtitleBox.styles'
+import {
+  InvisibleInput,
+  StyledSvgActionCheck,
+  SubtitleBoxWrapper,
+  SubtitleDetails,
+  SubtitlesFileName,
+} from './SubtitleBox.styles'
+
+export type Subtitles = {
+  language: string
+  isClosedCaptions?: boolean
+  file?: File
+}
 
 export type SubtitleBoxProps = {
   className?: string
-  language: string
-  subtitles?: string
-}
+  onChange?: ChangeEventHandler<HTMLInputElement>
+  onRemove?: () => void
+  onMarkAsCC?: () => void
+  onDownload?: () => void
+} & Subtitles
 
-export const SubtitleBox: FC<SubtitleBoxProps> = ({ className, language, subtitles }) => {
+export const SubtitleBox: FC<SubtitleBoxProps> = ({
+  className,
+  language,
+  isClosedCaptions,
+  file,
+  onChange,
+  onRemove,
+  onMarkAsCC,
+  onDownload,
+}) => {
+  const contexMenuItems: ListItemProps[] = [
+    ...(file
+      ? [
+          {
+            label: `${isClosedCaptions ? 'Unmark' : 'Mark'} as closed captions`,
+            onClick: onMarkAsCC,
+          },
+          {
+            label: 'Download file',
+            onClick: onDownload,
+            externalLink: {
+              href: URL.createObjectURL(file),
+              download: file.name,
+            },
+          },
+        ]
+      : []),
+    {
+      label: 'Remove subtitles',
+      destructive: true,
+      onClick: onRemove,
+      nodeStart: <SvgActionTrash />,
+    },
+  ]
   return (
     <SubtitleBoxWrapper className={className}>
       <SubtitleDetails>
         <Text variant="t100-strong" as="p">
-          {language}
+          {language} {isClosedCaptions ? '(CC)' : ''}
         </Text>
         <SubtitlesFileName variant="t100" as="p" color="colorText">
-          {subtitles ? subtitles : 'Add subtitles file'}
+          {file ? file.name : 'Add subtitles file'}
         </SubtitlesFileName>
-        {subtitles ? <StyledSvgActionCheck /> : null}
+        {file ? <StyledSvgActionCheck /> : null}
       </SubtitleDetails>
-      <Button size="small" variant={subtitles ? 'secondary' : 'primary'}>
+      <Button as="label" size="small" variant={file ? 'secondary' : 'primary'}>
         Select file
+        <InvisibleInput type="file" accept=".vtt" onChange={onChange} />
       </Button>
-      <Button icon={<SvgActionMore />} variant="tertiary" size="small" />
+      <ContextMenu
+        customWidth={240}
+        placement="bottom-end"
+        items={contexMenuItems}
+        trigger={<Button icon={<SvgActionMore />} variant="tertiary" size="small" />}
+      />
     </SubtitleBoxWrapper>
   )
 }

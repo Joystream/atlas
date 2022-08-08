@@ -65,6 +65,7 @@ export const useVideoWorkspaceData = () => {
       }
 
   const normalizedData: VideoWorkspaceVideoFormFields = {
+    subtitlesArray: null,
     title: editedVideoInfo.isDraft ? draft?.title ?? '' : video?.title ?? '',
     description: (editedVideoInfo.isDraft ? draft?.description : video?.description) ?? '',
     category: (editedVideoInfo.isDraft ? draft?.category : video?.category?.id) ?? null,
