@@ -1,5 +1,6 @@
 import { round } from 'lodash-es'
 
+import { BUILD_ENV } from '@/config/envs'
 import { channelIdsMapEntries, videoIdsMapEntries } from '@/data/migratedContentIdMappings.json'
 import { createStore } from '@/store'
 
@@ -46,6 +47,8 @@ export type PersonalDataStoreActions = {
   setCinematicView: (cinematicView: boolean) => void
   setCookiesAccepted: (accept: boolean) => void
   setReactionPopoverDismission: (reactionPopoverDismissed: boolean) => void
+
+  getIsCookiesPopoverVisible: () => boolean
 }
 
 const initialState: PersonalDataStoreState = {
@@ -65,7 +68,7 @@ const initialState: PersonalDataStoreState = {
 export const usePersonalDataStore = createStore<PersonalDataStoreState, PersonalDataStoreActions>(
   {
     state: initialState,
-    actionsFactory: (set) => ({
+    actionsFactory: (set, get) => ({
       updateWatchedVideos: (__typename, id, timestamp) => {
         set((state) => {
           const currentVideo = state.watchedVideos.find((v) => v.id === id)
@@ -137,6 +140,10 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
         set((state) => {
           state.reactionPopoverDismissed = reactionPopoverDismissed
         }),
+      getIsCookiesPopoverVisible: () => {
+        const cookiesAccepted = get().cookiesAccepted
+        return cookiesAccepted === undefined && BUILD_ENV === 'production'
+      },
     }),
   },
   {

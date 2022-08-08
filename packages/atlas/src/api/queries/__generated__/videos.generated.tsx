@@ -609,7 +609,7 @@ export type GetFullVideoQuery = {
 export type GetBasicVideosConnectionQueryVariables = Types.Exact<{
   first?: Types.InputMaybe<Types.Scalars['Int']>
   after?: Types.InputMaybe<Types.Scalars['String']>
-  orderBy?: Types.InputMaybe<Types.VideoOrderByInput>
+  orderBy?: Types.InputMaybe<Array<Types.VideoOrderByInput> | Types.VideoOrderByInput>
   where?: Types.InputMaybe<Types.VideoWhereInput>
 }>
 
@@ -874,7 +874,7 @@ export type GetBasicVideosConnectionQuery = {
 export type GetFullVideosConnectionQueryVariables = Types.Exact<{
   first?: Types.InputMaybe<Types.Scalars['Int']>
   after?: Types.InputMaybe<Types.Scalars['String']>
-  orderBy?: Types.InputMaybe<Types.VideoOrderByInput>
+  orderBy?: Types.InputMaybe<Array<Types.VideoOrderByInput> | Types.VideoOrderByInput>
   where?: Types.InputMaybe<Types.VideoWhereInput>
 }>
 
@@ -2706,7 +2706,7 @@ export const GetBasicVideosConnectionDocument = gql`
   query GetBasicVideosConnection(
     $first: Int
     $after: String
-    $orderBy: VideoOrderByInput = createdAt_DESC
+    $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
     $where: VideoWhereInput
   ) {
     videosConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
@@ -2773,7 +2773,7 @@ export const GetFullVideosConnectionDocument = gql`
   query GetFullVideosConnection(
     $first: Int
     $after: String
-    $orderBy: VideoOrderByInput = createdAt_DESC
+    $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
     $where: VideoWhereInput
   ) {
     videosConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
