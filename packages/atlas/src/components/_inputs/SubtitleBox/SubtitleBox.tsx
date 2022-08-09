@@ -1,10 +1,11 @@
-import { ChangeEventHandler, FC } from 'react'
+import { ChangeEvent, ChangeEventHandler, FC, useRef } from 'react'
 
 import { ListItemProps } from '@/components/ListItem'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionClosedCaptions, SvgActionDownload, SvgActionMore, SvgActionTrash } from '@/components/_icons'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
+import { useConfirmationModal } from '@/providers/confirmationModal'
 
 import {
   InvisibleInput,
@@ -38,6 +39,8 @@ export const SubtitleBox: FC<SubtitleBoxProps> = ({
   onMarkAsCC,
   onDownload,
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [openUnsuportedFileDialog, closeUnsuportedFileDialog] = useConfirmationModal()
   const contexMenuItems: ListItemProps[] = [
     ...(file
       ? [
@@ -64,6 +67,32 @@ export const SubtitleBox: FC<SubtitleBoxProps> = ({
       nodeStart: <SvgActionTrash />,
     },
   ]
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.currentTarget.files?.[0]?.type !== 'text/vtt') {
+      openUnsuportedFileDialog({
+        title: 'File format unsupported',
+        description:
+          'It looks like you selected a file format which is not supported. Reselect file and choose .webvtt file to proceed.',
+        type: 'informative',
+        primaryButton: {
+          onClick: () => {
+            inputRef.current?.click()
+            closeUnsuportedFileDialog()
+          },
+          text: 'Select another file',
+        },
+        secondaryButton: {
+          text: 'Cancel',
+          onClick: () => {
+            closeUnsuportedFileDialog()
+          },
+        },
+      })
+      return
+    }
+    onChange?.(e)
+  }
   return (
     <SubtitleBoxWrapper className={className}>
       <SubtitleDetails>
@@ -77,7 +106,7 @@ export const SubtitleBox: FC<SubtitleBoxProps> = ({
       </SubtitleDetails>
       <Button as="label" size="small" variant={file ? 'secondary' : 'primary'}>
         Select file
-        <InvisibleInput type="file" accept=".vtt" onChange={onChange} />
+        <InvisibleInput ref={inputRef} type="file" accept=".vtt" onChange={handleChange} />
       </Button>
       <ContextMenu
         customWidth={240}
