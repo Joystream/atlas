@@ -4,6 +4,7 @@ import { CSSTransition } from 'react-transition-group'
 import { Text } from '@/components/Text'
 import { NavItem, NavItemType } from '@/components/_navigation/NavItem'
 import { absoluteRoutes } from '@/config/routes'
+import { ATLAS_GITHUB_URL, JOYSTREAM_URL } from '@/config/urls'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { transitions } from '@/styles'
 
@@ -19,6 +20,7 @@ import {
   SidebarNavFooter,
   SidebarNavList,
   StyledAnchor,
+  StyledGhLogo,
   StyledHamburgerButton,
   StyledSvgJoystreamLogoFull,
 } from './SidenavBase.styles'
@@ -118,7 +120,7 @@ const SidenavBase: FC<SidenavProps> = ({
                 </LegalLink>
               </LinksRow>
               <LinksRow>
-                <StyledAnchor href="">
+                <StyledAnchor href={JOYSTREAM_URL} target="_blank">
                   <Text as="span" variant="t100" color="inherit">
                     Powered by
                   </Text>
@@ -127,6 +129,9 @@ const SidenavBase: FC<SidenavProps> = ({
                 <Text as="span" variant="t100" color="inherit">
                   •
                 </Text>
+                <StyledAnchor href={ATLAS_GITHUB_URL} target="_blank">
+                  <StyledGhLogo />
+                </StyledAnchor>
                 <StyledAnchor />
               </LinksRow>
             </LinksWrapper>

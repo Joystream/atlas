@@ -16,6 +16,8 @@ export const JOYSTREAM_DISCORD_URL = 'https://discord.gg/DE9UN3YpRP'
 export const JOYSTREAM_STORAGE_DISCORD_URL = 'https://discord.gg/WUb7XwW72a'
 
 export const PIONEER_MEMBER_URL = 'https://dao.joystream.org/#/members'
+export const JOYSTREAM_URL = 'https://www.joystream.org/'
+export const ATLAS_GITHUB_URL = 'https://github.com/Joystream/atlas'
 
 export const JOY_PRICE_SERVICE_URL = readEnv('PRICE_SERVICE_URL', true, true)
 export const USER_LOCATION_SERVICE_URL = readEnv('GEOLOCATION_SERVICE_URL', true, true)

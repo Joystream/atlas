@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { HamburgerButton } from '@/components/_buttons/HamburgerButton'
-import { SvgJoystreamLogoFull } from '@/components/_illustrations'
+import { SvgGithubLogo, SvgJoystreamLogoFull } from '@/components/_illustrations'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 type ExpandableElementProps = {
@@ -93,8 +93,6 @@ export const LinksRow = styled.div`
   gap: ${sizes(2)};
 `
 
-export const JoystreamLinksWrapper = styled.div``
-
 const linkStyles = css`
   text-decoration: none;
   color: ${cVar('colorTextMuted')};
@@ -124,6 +122,12 @@ export const StyledSvgJoystreamLogoFull = styled(SvgJoystreamLogoFull)`
   margin-left: ${sizes(2)};
   width: unset;
 
+  path {
+    fill: ${cVar('colorTextMuted')};
+  }
+`
+
+export const StyledGhLogo = styled(SvgGithubLogo)`
   path {
     fill: ${cVar('colorTextMuted')};
   }

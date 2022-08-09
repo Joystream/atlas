@@ -9,22 +9,14 @@ const SvgOtherVideoTile = (props: SVGProps<SVGSVGElement>) => (
         <path fill="#272D33" d="M0-136h320V44.005H0z" />
         <g clipPath="url(#clip2_1038_9458)">
           <g filter="url(#filter0_b_1038_9458)">
-            <path
-              d="M8 14a2 2 0 0 1 2-2h33a2 2 0 0 1 2 2v20a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2V14Z"
-              fill="#101214"
-              fillOpacity={0.75}
-            />
+            <rect x={8} y={12} width={37} height={24} rx={2} fill="#101214" fillOpacity={0.75} />
             <path
               d="M22.95 19.273V28h-1.21l-4.436-6.4h-.08V28h-1.318v-8.727h1.22l4.44 6.409h.08v-6.41h1.304ZM24.991 28v-8.727h5.412v1.133h-4.095v2.66h3.707v1.129h-3.707V28H24.99Zm6.721-7.594v-1.133h6.754v1.133h-2.723V28h-1.312v-7.594h-2.719Z"
               fill="#F4F6F8"
             />
           </g>
           <g filter="url(#filter1_b_1038_9458)">
-            <path
-              d="M51 14a2 2 0 0 1 2-2h20a2 2 0 0 1 2 2v20a2 2 0 0 1-2 2H53a2 2 0 0 1-2-2V14Z"
-              fill="#101214"
-              fillOpacity={0.75}
-            />
+            <rect x={51} y={12} width={24} height={24} rx={2} fill="#101214" fillOpacity={0.75} />
             <path
               d="m56.315 24.762 1.599-1.599 5.923 5.923-1.599 1.599a1.077 1.077 0 0 1-1.523 0l-4.4-4.4a1.077 1.077 0 0 1 0-1.523Z"
               fill="#F4F6F8"
@@ -45,11 +37,7 @@ const SvgOtherVideoTile = (props: SVGProps<SVGSVGElement>) => (
       <rect y={68.005} width={220} height={10} rx={5} fill="#C2E0FF" fillOpacity={0.2} />
       <rect y={90.005} width={129} height={10} rx={5} fill="#C2E0FF" fillOpacity={0.2} />
       <rect y={122.005} width={158} height={8} rx={4} fill="#C2E0FF" fillOpacity={0.2} />
-      <path
-        d="M288 76.005c0-8.836 7.163-16 16-16s16 7.164 16 16c0 8.837-7.163 16-16 16s-16-7.163-16-16Z"
-        fill="#BBD9F6"
-        fillOpacity={0.13}
-      />
+      <rect x={288} y={60.005} width={32} height={32} rx={16} fill="#BBD9F6" fillOpacity={0.13} />
       <path d="M303 69.005h2v2h-2v-2ZM303 75.005h2v2h-2v-2ZM303 81.005h2v2h-2v-2Z" fill="#F4F6F8" />
       <g filter="url(#filter3_dd_1038_9458)">
         <rect x={128} y={92} width={192} height={168} rx={2} fill="#272D33" />
