@@ -37,7 +37,6 @@ const BUTTON_SIZE_TO_TEXT_VARIANT: Record<ButtonSize, TextVariant> = {
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
   const {
-    as,
     icon,
     children,
     onClick,
@@ -58,7 +57,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) =>
   const linkProps = getLinkPropsFromTo(to, openLinkInNewTab)
   return (
     <ButtonBase
-      as={as}
       ref={ref}
       tabIndex={tabIndex}
       type={to ? undefined : type}

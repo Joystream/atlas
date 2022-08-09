@@ -104,10 +104,10 @@ export const SubtitleBox: FC<SubtitleBoxProps> = ({
         </SubtitlesFileName>
         {file ? <StyledSvgActionCheck /> : null}
       </SubtitleDetails>
-      <Button as="label" size="small" variant={file ? 'secondary' : 'primary'}>
+      <Button size="small" onClick={() => inputRef.current?.click()} variant={file ? 'secondary' : 'primary'}>
         Select file
-        <InvisibleInput ref={inputRef} type="file" accept=".vtt" onChange={handleChange} />
       </Button>
+      <InvisibleInput ref={inputRef} type="file" accept=".vtt" onChange={handleChange} />
       <ContextMenu
         customWidth={240}
         placement="bottom-end"
