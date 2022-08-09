@@ -88,7 +88,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
 
   const { editedVideoInfo } = useVideoWorkspace()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useVideoWorkspaceData()
-  const [availableLanguages, setAvailableLanguages] = useState(languages.map((language) => language.name))
+  const availableLanguages = languages.map((language) => language.name)
 
   const {
     chainState: { nftMaxCreatorRoyaltyPercentage, nftMinCreatorRoyaltyPercentage },
@@ -708,16 +708,17 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                 <FormField label="Subtitles" optional>
                   <SubtitlesCombobox
                     onLanguageAdd={(language) => {
-                      setAvailableLanguages((availableLanguages) =>
-                        availableLanguages.filter((prevLanguage) => prevLanguage !== language)
-                      )
                       onChange([...(subtitlesArray ? subtitlesArray : []), { language }])
+                      // todo - should we remove languages from combobox?
+                      // setAvailableLanguages((availableLanguages) =>
+                      //   availableLanguages.filter((prevLanguage) => prevLanguage !== language)
+                      // )
                     }}
                     onLanguageDelete={(language) => {
                       onChange(subtitlesArray?.filter((prevSubtitles) => prevSubtitles.language !== language))
-                      setAvailableLanguages((prevLanguages) =>
-                        [...prevLanguages, language].sort((a, b) => a.localeCompare(b))
-                      )
+                      // setAvailableLanguages((prevLanguages) =>
+                      //   [...prevLanguages, language].sort((a, b) => a.localeCompare(b))
+                      // )
                     }}
                     onSubtitlesAdd={({ language, file }) => {
                       const idxToEdit = subtitlesArray?.findIndex(
