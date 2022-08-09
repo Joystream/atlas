@@ -3,7 +3,7 @@ import { ChangeEventHandler, FC } from 'react'
 import { ListItemProps } from '@/components/ListItem'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionMore, SvgActionTrash } from '@/components/_icons'
+import { SvgActionClosedCaptions, SvgActionDownload, SvgActionMore, SvgActionTrash } from '@/components/_icons'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 
 import {
@@ -44,6 +44,7 @@ export const SubtitleBox: FC<SubtitleBoxProps> = ({
           {
             label: `${isClosedCaptions ? 'Unmark' : 'Mark'} as closed captions`,
             onClick: onMarkAsCC,
+            nodeStart: <SvgActionClosedCaptions />,
           },
           {
             label: 'Download file',
@@ -52,6 +53,7 @@ export const SubtitleBox: FC<SubtitleBoxProps> = ({
               href: URL.createObjectURL(file),
               download: file.name,
             },
+            nodeStart: <SvgActionDownload />,
           },
         ]
       : []),
