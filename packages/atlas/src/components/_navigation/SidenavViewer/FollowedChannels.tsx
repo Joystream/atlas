@@ -39,7 +39,7 @@ export const ChannelNavItem: FC<NavItemProps & ChannelNavItemProps> = ({
 }) => {
   const { channel } = useBasicChannel(id ?? '', {
     skip: !id,
-    onCompleted: (data) => !data.channelByUniqueInput && onChannelNotFound?.(id),
+    onCompleted: (data) => !data.channels.length && onChannelNotFound?.(id),
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelLink', error, { channel: { id } }),
   })
   const { url: avatarPhotoUrl } = useAsset(channel?.avatarPhoto)
