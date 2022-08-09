@@ -2,16 +2,14 @@ import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
 
 import {
   FollowChannelMutation,
-  GetBasicChannelQuery,
-  GetBasicChannelQueryVariables,
   GetBasicChannelsQuery,
   GetBasicChannelsQueryVariables,
   GetChannelNftCollectorsQuery,
   GetChannelNftCollectorsQueryVariables,
   GetDiscoverChannelsQuery,
   GetDiscoverChannelsQueryVariables,
-  GetFullChannelQuery,
-  GetFullChannelQueryVariables,
+  GetFullChannelsQuery,
+  GetFullChannelsQueryVariables,
   GetPopularChannelsQuery,
   GetPopularChannelsQueryVariables,
   GetPromisingChannelsQuery,
@@ -20,41 +18,41 @@ import {
   GetTop10ChannelsQueryVariables,
   UnfollowChannelMutation,
   useFollowChannelMutation,
-  useGetBasicChannelQuery,
   useGetBasicChannelsQuery,
   useGetChannelNftCollectorsQuery,
   useGetDiscoverChannelsQuery,
-  useGetFullChannelQuery,
+  useGetFullChannelsQuery,
   useGetPopularChannelsQuery,
   useGetPromisingChannelsQuery,
   useGetTop10ChannelsQuery,
   useUnfollowChannelMutation,
 } from '@/api/queries'
+import { channelFilter } from '@/config/channelFilter'
 
 export const useBasicChannel = (
   id: string,
-  opts?: QueryHookOptions<GetBasicChannelQuery, GetBasicChannelQueryVariables>
+  opts?: QueryHookOptions<GetBasicChannelsQuery, GetBasicChannelsQueryVariables>
 ) => {
-  const { data, ...rest } = useGetBasicChannelQuery({
+  const { data, ...rest } = useGetBasicChannelsQuery({
     ...opts,
-    variables: { where: { id } },
+    variables: { where: { id_eq: id }, ...channelFilter },
   })
   return {
-    channel: data?.channelByUniqueInput,
+    channel: data?.channels[0],
     ...rest,
   }
 }
 
 export const useFullChannel = (
   id: string,
-  opts?: QueryHookOptions<GetFullChannelQuery, GetFullChannelQueryVariables>
+  opts?: QueryHookOptions<GetFullChannelsQuery, GetFullChannelsQueryVariables>
 ) => {
-  const { data, ...rest } = useGetFullChannelQuery({
+  const { data, ...rest } = useGetFullChannelsQuery({
     ...opts,
-    variables: { where: { id } },
+    variables: { where: { id_eq: id }, ...channelFilter },
   })
   return {
-    channel: data?.channelByUniqueInput,
+    channel: data?.channels[0],
     ...rest,
   }
 }
@@ -68,8 +66,7 @@ export const useBasicChannels = (
     variables: {
       ...variables,
       where: {
-        isCensored_eq: false,
-        isPublic_eq: true,
+        ...channelFilter,
         ...variables?.where,
       },
     },
@@ -139,8 +136,7 @@ export const useTop10Channels = (
     variables: {
       ...variables,
       where: {
-        isCensored_eq: false,
-        isPublic_eq: true,
+        ...channelFilter,
         activeVideosCounter_gt: 0,
         ...variables?.where,
       },
@@ -161,8 +157,7 @@ export const useDiscoverChannels = (
     variables: {
       ...variables,
       where: {
-        isCensored_eq: false,
-        isPublic_eq: true,
+        ...channelFilter,
         activeVideosCounter_gt: 0,
         ...variables?.where,
       },
@@ -183,8 +178,7 @@ export const usePromisingChannels = (
     variables: {
       ...variables,
       where: {
-        isCensored_eq: false,
-        isPublic_eq: true,
+        ...channelFilter,
         activeVideosCounter_gt: 0,
         ...variables?.where,
       },
@@ -205,8 +199,7 @@ export const usePopularChannels = (
     variables: {
       ...variables,
       where: {
-        isCensored_eq: false,
-        isPublic_eq: true,
+        ...channelFilter,
         activeVideosCounter_gt: 0,
         ...variables?.where,
       },
@@ -222,7 +215,10 @@ export const useChannelNftCollectors = (
   variables?: GetChannelNftCollectorsQueryVariables,
   opts?: QueryHookOptions<GetChannelNftCollectorsQuery, GetChannelNftCollectorsQueryVariables>
 ) => {
-  const { data, ...rest } = useGetChannelNftCollectorsQuery({ ...opts, variables })
+  const { data, ...rest } = useGetChannelNftCollectorsQuery({
+    ...opts,
+    variables: { ...variables, where: { ...channelFilter, ...variables?.where } },
+  })
 
   return {
     channelNftCollectors: data?.channelNftCollectors,

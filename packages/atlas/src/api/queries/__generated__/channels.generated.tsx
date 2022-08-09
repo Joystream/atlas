@@ -164,6 +164,90 @@ export type GetBasicChannelsQuery = {
   }>
 }
 
+export type GetFullChannelsQueryVariables = Types.Exact<{
+  where?: Types.InputMaybe<Types.ChannelWhereInput>
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+  orderBy?: Types.InputMaybe<Array<Types.ChannelOrderByInput> | Types.ChannelOrderByInput>
+}>
+
+export type GetFullChannelsQuery = {
+  __typename?: 'Query'
+  channels: Array<{
+    __typename?: 'Channel'
+    views: number
+    activeVideosCounter: number
+    description?: string | null
+    isPublic?: boolean | null
+    isCensored: boolean
+    id: string
+    title?: string | null
+    createdAt: Date
+    follows: number
+    rewardAccount: string
+    language?: { __typename?: 'Language'; id: string; iso: string } | null
+    ownerMember?: {
+      __typename?: 'Membership'
+      id: string
+      handle: string
+      metadata: {
+        __typename?: 'MemberMetadata'
+        about?: string | null
+        avatar?:
+          | {
+              __typename?: 'AvatarObject'
+              avatarObject?: {
+                __typename?: 'StorageDataObject'
+                id: string
+                createdAt: Date
+                size: string
+                isAccepted: boolean
+                ipfsHash: string
+                storageBag: { __typename?: 'StorageBag'; id: string }
+                type:
+                  | { __typename: 'DataObjectTypeChannelAvatar' }
+                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeUnknown' }
+                  | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoThumbnail' }
+              } | null
+            }
+          | { __typename?: 'AvatarUri'; avatarUri: string }
+          | null
+      }
+    } | null
+    coverPhoto?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      createdAt: Date
+      size: string
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+    } | null
+    avatarPhoto?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      createdAt: Date
+      size: string
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+    } | null
+  }>
+}
+
 export type GetBasicChannelsConnectionQueryVariables = Types.Exact<{
   first?: Types.InputMaybe<Types.Scalars['Int']>
   after?: Types.InputMaybe<Types.Scalars['String']>
@@ -646,6 +730,52 @@ export function useGetBasicChannelsLazyQuery(
 export type GetBasicChannelsQueryHookResult = ReturnType<typeof useGetBasicChannelsQuery>
 export type GetBasicChannelsLazyQueryHookResult = ReturnType<typeof useGetBasicChannelsLazyQuery>
 export type GetBasicChannelsQueryResult = Apollo.QueryResult<GetBasicChannelsQuery, GetBasicChannelsQueryVariables>
+export const GetFullChannelsDocument = gql`
+  query GetFullChannels(
+    $where: ChannelWhereInput
+    $limit: Int = 50
+    $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]
+  ) {
+    channels(where: $where, orderBy: $orderBy, limit: $limit) {
+      ...FullChannelFields
+    }
+  }
+  ${FullChannelFieldsFragmentDoc}
+`
+
+/**
+ * __useGetFullChannelsQuery__
+ *
+ * To run a query within a React component, call `useGetFullChannelsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFullChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFullChannelsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useGetFullChannelsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetFullChannelsQuery, GetFullChannelsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetFullChannelsQuery, GetFullChannelsQueryVariables>(GetFullChannelsDocument, options)
+}
+export function useGetFullChannelsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetFullChannelsQuery, GetFullChannelsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetFullChannelsQuery, GetFullChannelsQueryVariables>(GetFullChannelsDocument, options)
+}
+export type GetFullChannelsQueryHookResult = ReturnType<typeof useGetFullChannelsQuery>
+export type GetFullChannelsLazyQueryHookResult = ReturnType<typeof useGetFullChannelsLazyQuery>
+export type GetFullChannelsQueryResult = Apollo.QueryResult<GetFullChannelsQuery, GetFullChannelsQueryVariables>
 export const GetBasicChannelsConnectionDocument = gql`
   query GetBasicChannelsConnection(
     $first: Int
