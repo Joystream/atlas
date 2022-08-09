@@ -168,7 +168,7 @@ export type GetBasicChannelsConnectionQueryVariables = Types.Exact<{
   first?: Types.InputMaybe<Types.Scalars['Int']>
   after?: Types.InputMaybe<Types.Scalars['String']>
   where?: Types.InputMaybe<Types.ChannelWhereInput>
-  orderBy?: Types.InputMaybe<Types.ChannelOrderByInput>
+  orderBy?: Types.InputMaybe<Array<Types.ChannelOrderByInput> | Types.ChannelOrderByInput>
 }>
 
 export type GetBasicChannelsConnectionQuery = {
@@ -651,7 +651,7 @@ export const GetBasicChannelsConnectionDocument = gql`
     $first: Int
     $after: String
     $where: ChannelWhereInput
-    $orderBy: ChannelOrderByInput = createdAt_DESC
+    $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]
   ) {
     channelsConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
       edges {

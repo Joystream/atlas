@@ -9,14 +9,14 @@ import { transitions } from '@/styles'
 import { CookieEmoticon, StyledAnchor, StyledDialog } from './CookiePopover.styles'
 
 export const CookiePopover: FC = () => {
-  const { cookiesAccepted, setCookiesAccepted } = usePersonalDataStore((state) => ({
-    cookiesAccepted: state.cookiesAccepted,
+  const { isCookiesPopoverVisible, setCookiesAccepted } = usePersonalDataStore((state) => ({
+    isCookiesPopoverVisible: state.actions.getIsCookiesPopoverVisible(),
     setCookiesAccepted: state.actions.setCookiesAccepted,
   }))
-  const open = useBottomNavStore((state) => state.open)
+  const bottomNavOpen = useBottomNavStore((state) => state.open)
   return (
     <CSSTransition
-      in={cookiesAccepted === undefined}
+      in={isCookiesPopoverVisible}
       timeout={200}
       classNames={transitions.names.modal}
       mountOnEnter
@@ -24,7 +24,7 @@ export const CookiePopover: FC = () => {
       appear
     >
       <StyledDialog
-        bottomNavOpen={open}
+        bottomNavOpen={bottomNavOpen}
         size="compact"
         title={
           <>

@@ -12,7 +12,7 @@ query GetNfts($where: OwnedNftWhereInput, $orderBy: [OwnedNftOrderByInput!] = [c
 
 query GetNftsConnection(
   $where: OwnedNftWhereInput
-  $orderBy: OwnedNftOrderByInput = createdAt_DESC
+  $orderBy: [OwnedNftOrderByInput!] = [createdAt_DESC]
   $first: Int
   $after: String
 ) {

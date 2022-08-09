@@ -38,8 +38,8 @@ export const useSnackbar = () => useSnackbarStore((state) => state.actions)
 export const Snackbars: FC = () => {
   const { closeSnackbar, cancelSnackbarTimeout, restartSnackbarTimeout } = useSnackbar()
   const snackbars = useSnackbarStore((state) => state.snackbars)
-  const { cookiesAccepted } = usePersonalDataStore((state) => ({
-    cookiesAccepted: state.cookiesAccepted,
+  const { isCookiesPopoverVisible } = usePersonalDataStore((state) => ({
+    isCookiesPopoverVisible: state.actions.getIsCookiesPopoverVisible(),
   }))
   const bottomNavOpen = useBottomNavStore((state) => state.open)
   const nonStickedSnackbars = snackbars.filter((snackbar) => !snackbar.sticked)
@@ -53,7 +53,7 @@ export const Snackbars: FC = () => {
   }, [nonStickedSnackbars, closeSnackbar])
 
   return (
-    <SnackbarsContainer cookiesBannerOpen={cookiesAccepted === undefined} bottomNavOpen={bottomNavOpen}>
+    <SnackbarsContainer cookiesBannerOpen={isCookiesPopoverVisible} bottomNavOpen={bottomNavOpen}>
       <TransitionGroup>
         {snackbars.map(({ id, iconType, onActionClick, onExit, ...snackbarProps }) => (
           <CSSTransition key={id} timeout={parseInt(cVar('animationTimingMedium', true)) * 2} classNames="snackbar">

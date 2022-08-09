@@ -264,7 +264,7 @@ query GetNftActivities($memberId: ID!, $limit: Int!) {
   auctionBidMadeEventsConnection(
     first: $limit
     where: { OR: [{ member: { id_eq: $memberId } }, { previousTopBidder: { id_eq: $memberId } }] }
-    orderBy: createdAt_DESC
+    orderBy: [createdAt_DESC]
   ) {
     edges {
       node {
@@ -296,7 +296,7 @@ query GetNftActivities($memberId: ID!, $limit: Int!) {
   purchaseEnglishAuctionSettledEventsConnection: englishAuctionSettledEventsConnection(
     where: { winner: { id_eq: $memberId } }
     first: $limit
-    orderBy: createdAt_DESC
+    orderBy: [createdAt_DESC]
   ) {
     edges {
       node {
@@ -328,7 +328,7 @@ query GetNftActivities($memberId: ID!, $limit: Int!) {
   purchaseNftBoughtEventsConnection: nftBoughtEventsConnection(
     where: { member: { id_eq: $memberId } }
     first: $limit
-    orderBy: createdAt_DESC
+    orderBy: [createdAt_DESC]
   ) {
     edges {
       node {
@@ -357,7 +357,7 @@ query GetNftActivities($memberId: ID!, $limit: Int!) {
   purchaseBidMadeCompletingAuctionEventsConnection: bidMadeCompletingAuctionEventsConnection(
     where: { member: { id_eq: $memberId } }
     first: $limit
-    orderBy: createdAt_DESC
+    orderBy: [createdAt_DESC]
   ) {
     edges {
       node {
@@ -386,7 +386,7 @@ query GetNftActivities($memberId: ID!, $limit: Int!) {
   purchaseOpenAuctionBidAcceptedEventsConnection: openAuctionBidAcceptedEventsConnection(
     where: { winningBidder: { id_eq: $memberId } }
     first: $limit
-    orderBy: createdAt_DESC
+    orderBy: [createdAt_DESC]
   ) {
     edges {
       node {
@@ -417,7 +417,7 @@ query GetNftActivities($memberId: ID!, $limit: Int!) {
   saleEnglishAuctionSettledEventsConnection: englishAuctionSettledEventsConnection(
     where: { ownerMember: { id_eq: $memberId } }
     first: $limit
-    orderBy: createdAt_DESC
+    orderBy: [createdAt_DESC]
   ) {
     edges {
       node {
@@ -448,7 +448,7 @@ query GetNftActivities($memberId: ID!, $limit: Int!) {
   saleNftBoughtEventsConnection: nftBoughtEventsConnection(
     where: { ownerMember: { id_eq: $memberId } }
     first: $limit
-    orderBy: createdAt_DESC
+    orderBy: [createdAt_DESC]
   ) {
     edges {
       node {
@@ -477,7 +477,7 @@ query GetNftActivities($memberId: ID!, $limit: Int!) {
   saleBidMadeCompletingAuctionEventsConnection: bidMadeCompletingAuctionEventsConnection(
     where: { ownerMember: { id_eq: $memberId } }
     first: $limit
-    orderBy: createdAt_DESC
+    orderBy: [createdAt_DESC]
   ) {
     edges {
       node {
@@ -506,7 +506,7 @@ query GetNftActivities($memberId: ID!, $limit: Int!) {
   saleOpenAuctionBidAcceptedEventsConnection: openAuctionBidAcceptedEventsConnection(
     where: { ownerMember: { id_eq: $memberId } }
     first: $limit
-    orderBy: createdAt_DESC
+    orderBy: [createdAt_DESC]
   ) {
     edges {
       node {
@@ -538,7 +538,7 @@ query GetNftActivities($memberId: ID!, $limit: Int!) {
   englishAuctionStartedEventsConnection(
     where: { ownerMember: { id_eq: $memberId } }
     first: $limit
-    orderBy: createdAt_DESC
+    orderBy: [createdAt_DESC]
   ) {
     edges {
       node {
@@ -562,7 +562,7 @@ query GetNftActivities($memberId: ID!, $limit: Int!) {
   openAuctionStartedEventsConnection(
     where: { ownerMember: { id_eq: $memberId } }
     first: $limit
-    orderBy: createdAt_DESC
+    orderBy: [createdAt_DESC]
   ) {
     edges {
       node {
@@ -587,7 +587,7 @@ query GetNftActivities($memberId: ID!, $limit: Int!) {
   nftSellOrderMadeEventsConnection(
     where: { ownerMember: { id_eq: $memberId } }
     first: $limit
-    orderBy: createdAt_DESC
+    orderBy: [createdAt_DESC]
   ) {
     edges {
       node {
@@ -611,7 +611,11 @@ query GetNftActivities($memberId: ID!, $limit: Int!) {
   }
 
   # withdrawal
-  auctionBidCanceledEventsConnection(where: { member: { id_eq: $memberId } }, first: $limit, orderBy: createdAt_DESC) {
+  auctionBidCanceledEventsConnection(
+    where: { member: { id_eq: $memberId } }
+    first: $limit
+    orderBy: [createdAt_DESC]
+  ) {
     edges {
       node {
         id
@@ -633,7 +637,11 @@ query GetNftActivities($memberId: ID!, $limit: Int!) {
   }
 
   # cancellings
-  buyNowCanceledEventsConnection(where: { ownerMember: { id_eq: $memberId } }, first: $limit, orderBy: createdAt_DESC) {
+  buyNowCanceledEventsConnection(
+    where: { ownerMember: { id_eq: $memberId } }
+    first: $limit
+    orderBy: [createdAt_DESC]
+  ) {
     edges {
       node {
         id
@@ -656,7 +664,7 @@ query GetNftActivities($memberId: ID!, $limit: Int!) {
   auctionCanceledEventsConnection(
     where: { ownerMember: { id_eq: $memberId } }
     first: $limit
-    orderBy: createdAt_DESC
+    orderBy: [createdAt_DESC]
   ) {
     edges {
       node {
@@ -681,7 +689,7 @@ query GetNftActivities($memberId: ID!, $limit: Int!) {
   buyNowPriceUpdatedEventsConnection(
     where: { ownerMember: { id_eq: $memberId } }
     first: $limit
-    orderBy: createdAt_DESC
+    orderBy: [createdAt_DESC]
   ) {
     edges {
       node {
@@ -704,7 +712,7 @@ query GetNftActivities($memberId: ID!, $limit: Int!) {
     totalCount
   }
   # minted
-  nftIssuedEventsConnection(where: { ownerMember: { id_eq: $memberId } }, first: $limit, orderBy: createdAt_DESC) {
+  nftIssuedEventsConnection(where: { ownerMember: { id_eq: $memberId } }, first: $limit, orderBy: [createdAt_DESC]) {
     edges {
       node {
         id

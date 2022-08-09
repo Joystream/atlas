@@ -2674,7 +2674,7 @@ export const GetNftActivitiesDocument = gql`
     auctionBidMadeEventsConnection(
       first: $limit
       where: { OR: [{ member: { id_eq: $memberId } }, { previousTopBidder: { id_eq: $memberId } }] }
-      orderBy: createdAt_DESC
+      orderBy: [createdAt_DESC]
     ) {
       edges {
         node {
@@ -2705,7 +2705,7 @@ export const GetNftActivitiesDocument = gql`
     purchaseEnglishAuctionSettledEventsConnection: englishAuctionSettledEventsConnection(
       where: { winner: { id_eq: $memberId } }
       first: $limit
-      orderBy: createdAt_DESC
+      orderBy: [createdAt_DESC]
     ) {
       edges {
         node {
@@ -2735,7 +2735,7 @@ export const GetNftActivitiesDocument = gql`
     purchaseNftBoughtEventsConnection: nftBoughtEventsConnection(
       where: { member: { id_eq: $memberId } }
       first: $limit
-      orderBy: createdAt_DESC
+      orderBy: [createdAt_DESC]
     ) {
       edges {
         node {
@@ -2763,7 +2763,7 @@ export const GetNftActivitiesDocument = gql`
     purchaseBidMadeCompletingAuctionEventsConnection: bidMadeCompletingAuctionEventsConnection(
       where: { member: { id_eq: $memberId } }
       first: $limit
-      orderBy: createdAt_DESC
+      orderBy: [createdAt_DESC]
     ) {
       edges {
         node {
@@ -2791,7 +2791,7 @@ export const GetNftActivitiesDocument = gql`
     purchaseOpenAuctionBidAcceptedEventsConnection: openAuctionBidAcceptedEventsConnection(
       where: { winningBidder: { id_eq: $memberId } }
       first: $limit
-      orderBy: createdAt_DESC
+      orderBy: [createdAt_DESC]
     ) {
       edges {
         node {
@@ -2821,7 +2821,7 @@ export const GetNftActivitiesDocument = gql`
     saleEnglishAuctionSettledEventsConnection: englishAuctionSettledEventsConnection(
       where: { ownerMember: { id_eq: $memberId } }
       first: $limit
-      orderBy: createdAt_DESC
+      orderBy: [createdAt_DESC]
     ) {
       edges {
         node {
@@ -2851,7 +2851,7 @@ export const GetNftActivitiesDocument = gql`
     saleNftBoughtEventsConnection: nftBoughtEventsConnection(
       where: { ownerMember: { id_eq: $memberId } }
       first: $limit
-      orderBy: createdAt_DESC
+      orderBy: [createdAt_DESC]
     ) {
       edges {
         node {
@@ -2879,7 +2879,7 @@ export const GetNftActivitiesDocument = gql`
     saleBidMadeCompletingAuctionEventsConnection: bidMadeCompletingAuctionEventsConnection(
       where: { ownerMember: { id_eq: $memberId } }
       first: $limit
-      orderBy: createdAt_DESC
+      orderBy: [createdAt_DESC]
     ) {
       edges {
         node {
@@ -2907,7 +2907,7 @@ export const GetNftActivitiesDocument = gql`
     saleOpenAuctionBidAcceptedEventsConnection: openAuctionBidAcceptedEventsConnection(
       where: { ownerMember: { id_eq: $memberId } }
       first: $limit
-      orderBy: createdAt_DESC
+      orderBy: [createdAt_DESC]
     ) {
       edges {
         node {
@@ -2937,7 +2937,7 @@ export const GetNftActivitiesDocument = gql`
     englishAuctionStartedEventsConnection(
       where: { ownerMember: { id_eq: $memberId } }
       first: $limit
-      orderBy: createdAt_DESC
+      orderBy: [createdAt_DESC]
     ) {
       edges {
         node {
@@ -2961,7 +2961,7 @@ export const GetNftActivitiesDocument = gql`
     openAuctionStartedEventsConnection(
       where: { ownerMember: { id_eq: $memberId } }
       first: $limit
-      orderBy: createdAt_DESC
+      orderBy: [createdAt_DESC]
     ) {
       edges {
         node {
@@ -2985,7 +2985,7 @@ export const GetNftActivitiesDocument = gql`
     nftSellOrderMadeEventsConnection(
       where: { ownerMember: { id_eq: $memberId } }
       first: $limit
-      orderBy: createdAt_DESC
+      orderBy: [createdAt_DESC]
     ) {
       edges {
         node {
@@ -3010,7 +3010,7 @@ export const GetNftActivitiesDocument = gql`
     auctionBidCanceledEventsConnection(
       where: { member: { id_eq: $memberId } }
       first: $limit
-      orderBy: createdAt_DESC
+      orderBy: [createdAt_DESC]
     ) {
       edges {
         node {
@@ -3034,7 +3034,7 @@ export const GetNftActivitiesDocument = gql`
     buyNowCanceledEventsConnection(
       where: { ownerMember: { id_eq: $memberId } }
       first: $limit
-      orderBy: createdAt_DESC
+      orderBy: [createdAt_DESC]
     ) {
       edges {
         node {
@@ -3058,7 +3058,7 @@ export const GetNftActivitiesDocument = gql`
     auctionCanceledEventsConnection(
       where: { ownerMember: { id_eq: $memberId } }
       first: $limit
-      orderBy: createdAt_DESC
+      orderBy: [createdAt_DESC]
     ) {
       edges {
         node {
@@ -3082,7 +3082,7 @@ export const GetNftActivitiesDocument = gql`
     buyNowPriceUpdatedEventsConnection(
       where: { ownerMember: { id_eq: $memberId } }
       first: $limit
-      orderBy: createdAt_DESC
+      orderBy: [createdAt_DESC]
     ) {
       edges {
         node {
@@ -3104,7 +3104,7 @@ export const GetNftActivitiesDocument = gql`
       }
       totalCount
     }
-    nftIssuedEventsConnection(where: { ownerMember: { id_eq: $memberId } }, first: $limit, orderBy: createdAt_DESC) {
+    nftIssuedEventsConnection(where: { ownerMember: { id_eq: $memberId } }, first: $limit, orderBy: [createdAt_DESC]) {
       edges {
         node {
           id

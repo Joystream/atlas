@@ -63,7 +63,7 @@ export type GetCommentRepliesConnectionQueryVariables = Types.Exact<{
   first?: Types.InputMaybe<Types.Scalars['Int']>
   after?: Types.InputMaybe<Types.Scalars['String']>
   parentCommentId: Types.Scalars['ID']
-  orderBy?: Types.InputMaybe<Types.CommentOrderByInput>
+  orderBy?: Types.InputMaybe<Array<Types.CommentOrderByInput> | Types.CommentOrderByInput>
 }>
 
 export type GetCommentRepliesConnectionQuery = {
@@ -130,7 +130,7 @@ export type GetUserCommentsAndVideoCommentsConnectionQueryVariables = Types.Exac
   after?: Types.InputMaybe<Types.Scalars['String']>
   memberId?: Types.InputMaybe<Types.Scalars['ID']>
   videoId?: Types.InputMaybe<Types.Scalars['ID']>
-  orderBy?: Types.InputMaybe<Types.CommentOrderByInput>
+  orderBy?: Types.InputMaybe<Array<Types.CommentOrderByInput> | Types.CommentOrderByInput>
 }>
 
 export type GetUserCommentsAndVideoCommentsConnectionQuery = {
@@ -306,7 +306,7 @@ export const GetCommentRepliesConnectionDocument = gql`
     $first: Int
     $after: String
     $parentCommentId: ID!
-    $orderBy: CommentOrderByInput = createdAt_ASC
+    $orderBy: [CommentOrderByInput!] = [createdAt_ASC]
   ) {
     commentsConnection(
       first: $first
@@ -379,7 +379,7 @@ export const GetUserCommentsAndVideoCommentsConnectionDocument = gql`
     $after: String
     $memberId: ID
     $videoId: ID
-    $orderBy: CommentOrderByInput = createdAt_DESC
+    $orderBy: [CommentOrderByInput!] = [createdAt_DESC]
   ) {
     userComments: comments(
       where: {
