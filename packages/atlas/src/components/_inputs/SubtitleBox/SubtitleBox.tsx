@@ -42,13 +42,13 @@ export const SubtitleBox: FC<SubtitleBoxProps> = ({
   const inputRef = useRef<HTMLInputElement>(null)
   const [openUnsuportedFileDialog, closeUnsuportedFileDialog] = useConfirmationModal()
   const contexMenuItems: ListItemProps[] = [
+    {
+      label: `${isClosedCaptions ? 'Unmark' : 'Mark'} as closed captions`,
+      onClick: onMarkAsCC,
+      nodeStart: <SvgActionClosedCaptions />,
+    },
     ...(file
       ? [
-          {
-            label: `${isClosedCaptions ? 'Unmark' : 'Mark'} as closed captions`,
-            onClick: onMarkAsCC,
-            nodeStart: <SvgActionClosedCaptions />,
-          },
           {
             label: 'Download file',
             onClick: onDownload,
