@@ -2,12 +2,10 @@ import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
 
 import {
   AddVideoViewMutation,
-  GetBasicVideoQuery,
-  GetBasicVideoQueryVariables,
   GetBasicVideosQuery,
   GetBasicVideosQueryVariables,
-  GetFullVideoQuery,
-  GetFullVideoQueryVariables,
+  GetFullVideosQuery,
+  GetFullVideosQueryVariables,
   GetTop10VideosThisMonthQuery,
   GetTop10VideosThisMonthQueryVariables,
   GetTop10VideosThisWeekQuery,
@@ -16,22 +14,21 @@ import {
   GetVideoCountQueryVariables,
   VideoOrderByInput,
   useAddVideoViewMutation,
-  useGetBasicVideoQuery,
   useGetBasicVideosQuery,
-  useGetFullVideoQuery,
+  useGetFullVideosQuery,
   useGetTop10VideosThisMonthQuery,
   useGetTop10VideosThisWeekQuery,
   useGetVideoCountQuery,
 } from '@/api/queries'
-import { videoFilters } from '@/utils/video'
+import { videoFilter } from '@/config/videoFilter'
 
-export const useFullVideo = (id: string, opts?: QueryHookOptions<GetFullVideoQuery, GetFullVideoQueryVariables>) => {
-  const { data, ...queryRest } = useGetFullVideoQuery({
+export const useFullVideo = (id: string, opts?: QueryHookOptions<GetFullVideosQuery, GetFullVideosQueryVariables>) => {
+  const { data, ...queryRest } = useGetFullVideosQuery({
     ...opts,
-    variables: { where: { id } },
+    variables: { where: { id_eq: id }, ...videoFilter },
   })
   return {
-    video: data?.videoByUniqueInput,
+    video: data?.videos[0],
     ...queryRest,
   }
 }
@@ -47,7 +44,7 @@ export const useChannelPreviewVideos = (
         channel: {
           id_eq: channelId,
         },
-        ...videoFilters,
+        ...videoFilter,
       },
       orderBy: VideoOrderByInput.CreatedAtDesc,
       offset: 0,
@@ -91,7 +88,7 @@ export const useBasicVideos = (
     variables: {
       ...variables,
       where: {
-        ...videoFilters,
+        ...videoFilter,
         ...variables?.where,
       },
     },
@@ -102,13 +99,16 @@ export const useBasicVideos = (
   }
 }
 
-export const useBasicVideo = (id: string, opts?: QueryHookOptions<GetBasicVideoQuery, GetBasicVideoQueryVariables>) => {
-  const { data, ...rest } = useGetBasicVideoQuery({
+export const useBasicVideo = (
+  id: string,
+  opts?: QueryHookOptions<GetBasicVideosQuery, GetBasicVideosQueryVariables>
+) => {
+  const { data, ...rest } = useGetBasicVideosQuery({
     ...opts,
-    variables: { where: { id } },
+    variables: { where: { id_eq: id }, ...videoFilter },
   })
   return {
-    video: data?.videoByUniqueInput,
+    video: data?.videos[0],
     ...rest,
   }
 }
@@ -122,7 +122,7 @@ export const useTop10VideosThisWeek = (
     variables: {
       ...variables,
       where: {
-        ...videoFilters,
+        ...videoFilter,
         ...variables?.where,
       },
     },
@@ -142,7 +142,7 @@ export const useTop10VideosThisMonth = (
     variables: {
       ...variables,
       where: {
-        ...videoFilters,
+        ...videoFilter,
         ...variables?.where,
       },
     },
@@ -162,7 +162,7 @@ export const useVideoCount = (
     variables: {
       ...variables,
       where: {
-        ...videoFilters,
+        ...videoFilter,
         ...variables?.where,
       },
     },

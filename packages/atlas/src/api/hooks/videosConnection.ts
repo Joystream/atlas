@@ -8,7 +8,7 @@ import {
   useGetBasicVideosConnectionQuery,
   useGetFullVideosConnectionQuery,
 } from '@/api/queries'
-import { videoFilters } from '@/utils/video'
+import { videoFilter } from '@/config/videoFilter'
 
 export const useBasicVideosConnection = (
   variables?: GetBasicVideosConnectionQueryVariables,
@@ -16,7 +16,7 @@ export const useBasicVideosConnection = (
 ) => {
   const { data, ...rest } = useGetBasicVideosConnectionQuery({
     ...opts,
-    variables: { ...variables, where: { ...videoFilters, ...variables?.where } },
+    variables: { ...variables, where: { ...videoFilter, ...variables?.where } },
   })
 
   return {
@@ -34,7 +34,7 @@ export const useFullVideosConnection = (
 ) => {
   const { data, ...rest } = useGetFullVideosConnectionQuery({
     ...opts,
-    variables: { ...variables, where: { ...videoFilters, ...variables?.where } },
+    variables: { ...variables, where: { ...videoFilter, ...variables?.where } },
   })
 
   return {
