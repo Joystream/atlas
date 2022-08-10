@@ -88,14 +88,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
 
   const { editedVideoInfo } = useVideoWorkspace()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useVideoWorkspaceData()
-  const [availableLanguages, setAvailableLanguages] = useState(
-    languages
-      .map((language) => [
-        { language: language.name, type: 'subtitles' as const, disabled: false },
-        { language: language.name, type: 'closed-captions' as const, disabled: false },
-      ])
-      .flat(1)
-  )
 
   const {
     chainState: { nftMaxCreatorRoyaltyPercentage, nftMinCreatorRoyaltyPercentage },
@@ -715,37 +707,9 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                 <FormField label="Subtitles" optional>
                   <SubtitlesCombobox
                     onLanguageAdd={(subtitlesLanguage) => {
-                      setAvailableLanguages((availableLanguages) =>
-                        availableLanguages.map((availableLanguage) => {
-                          if (
-                            availableLanguage.language === subtitlesLanguage.language &&
-                            availableLanguage.type === subtitlesLanguage.type
-                          ) {
-                            return {
-                              ...availableLanguage,
-                              disabled: true,
-                            }
-                          }
-                          return availableLanguage
-                        })
-                      )
                       onChange([...(subtitlesArray ? subtitlesArray : []), { ...subtitlesLanguage }])
                     }}
                     onLanguageDelete={(subtitlesLanguage) => {
-                      setAvailableLanguages((availableLanguages) =>
-                        availableLanguages.map((availableLanguage) => {
-                          if (
-                            availableLanguage.language === subtitlesLanguage.language &&
-                            availableLanguage.type === subtitlesLanguage.type
-                          ) {
-                            return {
-                              ...availableLanguage,
-                              disabled: false,
-                            }
-                          }
-                          return availableLanguage
-                        })
-                      )
                       onChange(
                         subtitlesArray?.filter(
                           (prevSubtitles) =>
@@ -765,7 +729,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                         )
                       )
                     }}
-                    availableLanguages={availableLanguages}
+                    languages={languages.map(({ name }) => name)}
                     subtitlesArray={subtitlesArray}
                   />
                 </FormField>

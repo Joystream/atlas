@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { FC } from 'react'
+import { FC, useState } from 'react'
 
 import { sizes } from '@/styles'
 
@@ -12,15 +12,13 @@ type Subtitles = {
   type: 'subtitles' | 'closed-captions'
 }
 
-type SubtitlesLanguage = {
-  language: string
-  type: 'subtitles' | 'closed-captions'
+type AvailableLanguage = Subtitles & {
   disabled: boolean
 }
 
 type SubtitlesComboboxProps = {
   subtitlesArray: Subtitles[] | null
-  availableLanguages: SubtitlesLanguage[]
+  languages: string[]
   onLanguageAdd: (language: Subtitles) => void
   onLanguageDelete: (language: Subtitles) => void
   onSubtitlesDownload?: () => void
@@ -28,16 +26,38 @@ type SubtitlesComboboxProps = {
 }
 
 export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
-  availableLanguages,
+  languages,
   subtitlesArray,
   onLanguageAdd,
   onSubtitlesDownload,
   onLanguageDelete,
   onSubtitlesAdd,
 }) => {
+  const [availableLanguages, setAvailableLanguages] = useState<AvailableLanguage[]>(
+    languages
+      .map((language) => [
+        { language, type: 'subtitles' as const, disabled: false },
+        { language, type: 'closed-captions' as const, disabled: false },
+      ])
+      .flat(1)
+  )
+
+  const toggleLanguage = (subtitles: Subtitles, disabled: boolean) => {
+    setAvailableLanguages((availableLanguages) =>
+      availableLanguages.map((availableLanguage) => {
+        if (availableLanguage.language === subtitles.language && availableLanguage.type === subtitles.type) {
+          return {
+            ...availableLanguage,
+            disabled,
+          }
+        }
+        return availableLanguage
+      })
+    )
+  }
   return (
     <Wrapper>
-      <ComboBox<SubtitlesLanguage>
+      <ComboBox<AvailableLanguage>
         placeholder="Add language"
         items={availableLanguages.map((subtitlesLanguage) => ({
           ...subtitlesLanguage,
@@ -48,6 +68,7 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
           if (item?.disabled || !item) {
             return
           }
+          toggleLanguage(item, true)
           onLanguageAdd({ language: item.language, type: item.type })
         }}
       />
@@ -56,7 +77,10 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
           key={language + type}
           type={type}
           language={language}
-          onRemove={() => onLanguageDelete({ language, type })}
+          onRemove={() => {
+            toggleLanguage({ language, type }, false)
+            return onLanguageDelete({ language, type })
+          }}
           onDownload={onSubtitlesDownload}
           file={file}
           onChange={(e) => {
