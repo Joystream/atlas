@@ -1,7 +1,9 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { HamburgerButton } from '@/components/_buttons/HamburgerButton'
+import { SvgGithubLogo, SvgJoystreamLogoFull } from '@/components/_illustrations'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 type ExpandableElementProps = {
@@ -76,30 +78,58 @@ export const DrawerOverlay = styled.div`
   z-index: ${zIndex.sideNav};
   background-color: rgba(0 0 0 / 0.5);
 `
-
-export const LegalLinksWrapper = styled.span`
-  display: flex;
-  align-items: center;
-  margin-top: ${sizes(6)};
+export const LinksWrapper = styled.div`
   padding: ${sizes(6)} 0;
-  border-top: 1px solid ${cVar('colorBorderMuted')};
-  color: ${cVar('colorTextMuted')};
+  display: grid;
+  gap: ${sizes(2)};
+`
 
-  > * + * {
-    margin-left: ${sizes(2)};
+export const LinksRow = styled.div`
+  justify-content: center;
+  display: grid;
+  color: ${cVar('colorTextMuted')};
+  grid-auto-flow: column;
+  align-items: center;
+  gap: ${sizes(2)};
+`
+
+const linkStyles = css`
+  text-decoration: none;
+  color: ${cVar('colorTextMuted')};
+  align-items: center;
+  display: flex;
+
+  :hover,
+  :focus {
+    color: ${cVar('colorText')};
+  }
+
+  :hover path,
+  :focus path {
+    fill: ${cVar('colorText')};
+  }
+`
+export const LegalLink = styled(Link)`
+  ${linkStyles}
+`
+
+export const StyledAnchor = styled.a`
+  ${linkStyles}
+`
+
+export const StyledSvgJoystreamLogoFull = styled(SvgJoystreamLogoFull)`
+  height: 16px;
+  margin-left: ${sizes(2)};
+  width: unset;
+
+  path {
+    fill: ${cVar('colorTextMuted')};
   }
 `
 
-export const LegalLink = styled(Link)`
-  text-decoration: none;
-  color: ${cVar('colorTextMuted')};
-
-  &:hover {
-    color: ${cVar('colorText')};
-  }
-
-  &:focus {
-    color: ${cVar('colorText')};
+export const StyledGhLogo = styled(SvgGithubLogo)`
+  path {
+    fill: ${cVar('colorTextMuted')};
   }
 `
 

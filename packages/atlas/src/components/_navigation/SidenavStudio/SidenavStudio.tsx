@@ -77,7 +77,7 @@ export const SidenavStudio: FC<SidenavStudioProps> = ({ className }) => {
         onClick={() => setExpanded(false)}
         icon={<SvgActionPlay />}
       >
-        Go to Joystream
+        Go to Atlas
       </Button>
     </>
   )

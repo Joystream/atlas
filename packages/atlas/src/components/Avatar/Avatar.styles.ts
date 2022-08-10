@@ -175,6 +175,7 @@ export const Container = styled('div', { shouldForwardProp: isPropValid })<Conta
   ${getBorderStyles};
 
   border-radius: 100%;
+  overflow: hidden;
   padding: 0;
   border: 0;
   background: none;

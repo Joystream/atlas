@@ -4,6 +4,7 @@ import { CSSTransition } from 'react-transition-group'
 import { Text } from '@/components/Text'
 import { NavItem, NavItemType } from '@/components/_navigation/NavItem'
 import { absoluteRoutes } from '@/config/routes'
+import { ATLAS_GITHUB_URL, JOYSTREAM_URL } from '@/config/urls'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { transitions } from '@/styles'
 
@@ -11,13 +12,17 @@ import {
   ButtonGroup,
   DrawerOverlay,
   LegalLink,
-  LegalLinksWrapper,
+  LinksRow,
+  LinksWrapper,
   LogoLink,
   ScrollContainer,
   SidebarNav,
   SidebarNavFooter,
   SidebarNavList,
+  StyledAnchor,
+  StyledGhLogo,
   StyledHamburgerButton,
+  StyledSvgJoystreamLogoFull,
 } from './SidenavBase.styles'
 
 export type SidenavProps = {
@@ -98,19 +103,38 @@ const SidenavBase: FC<SidenavProps> = ({
         >
           <SidebarNavFooter>
             <ButtonGroup>{buttonsContent}</ButtonGroup>
-            <LegalLinksWrapper>
-              <LegalLink to={absoluteRoutes.legal.termsOfService()} target="_blank">
+            <LinksWrapper>
+              <LinksRow>
+                <LegalLink to={absoluteRoutes.legal.termsOfService()} target="_blank">
+                  <Text as="span" variant="t100" color="inherit">
+                    Terms of Service
+                  </Text>
+                </LegalLink>
                 <Text as="span" variant="t100" color="inherit">
-                  Terms of Service
+                  •
                 </Text>
-              </LegalLink>
-              <span>•</span>
-              <LegalLink to={absoluteRoutes.legal.copyright()} target="_blank">
+                <LegalLink to={absoluteRoutes.legal.copyright()} target="_blank">
+                  <Text as="span" variant="t100" color="inherit">
+                    Copyright Policy
+                  </Text>
+                </LegalLink>
+              </LinksRow>
+              <LinksRow>
+                <StyledAnchor href={JOYSTREAM_URL} target="_blank">
+                  <Text as="span" variant="t100" color="inherit">
+                    Powered by
+                  </Text>
+                  <StyledSvgJoystreamLogoFull />
+                </StyledAnchor>
                 <Text as="span" variant="t100" color="inherit">
-                  Copyright Policy
+                  •
                 </Text>
-              </LegalLink>
-            </LegalLinksWrapper>
+                <StyledAnchor href={ATLAS_GITHUB_URL} target="_blank">
+                  <StyledGhLogo />
+                </StyledAnchor>
+                <StyledAnchor />
+              </LinksRow>
+            </LinksWrapper>
           </SidebarNavFooter>
         </CSSTransition>
       </SidebarNav>
