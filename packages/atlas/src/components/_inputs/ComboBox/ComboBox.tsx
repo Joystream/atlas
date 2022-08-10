@@ -64,13 +64,13 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
         return
       }
       onSelectedItemChange?.(selectedItem)
-      setInputItems([])
       if (resetOnSelect) {
         reset()
       }
     },
     onInputValueChange: ({ inputValue }) => {
       if (!inputValue) {
+        setInputItems(items)
         reset()
         return
       }
