@@ -28,7 +28,7 @@ import { useTransaction } from '@/providers/transactions'
 import { SentryLogger } from '@/utils/logs'
 import { formatNumber } from '@/utils/number'
 
-import { FormFieldsWrapper, LabelFlexWrapper, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
+import { FormFieldsWrapper, LabelFlexWrapper, PriceWrapper, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
 
 const ADDRESS_LENGTH = 49
 const ADDRESS_CHARACTERS_LIMIT = 4
@@ -128,18 +128,20 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
       <Text as="h4" variant="h300" margin={{ bottom: 4 }}>
         Your account balance
       </Text>
-      <VerticallyCenteredDiv>
-        <JoyTokenIcon variant="gray" />
-        <NumberFormat value={accountBalance} as="p" variant="h400" margin={{ left: 1 }} format="short" />
-      </VerticallyCenteredDiv>
-      <NumberFormat
-        as="p"
-        color="colorText"
-        format="dollar"
-        variant="t100"
-        value={convertHapiToUSD(accountBalance) || 0}
-        margin={{ top: 1, bottom: 6 }}
-      />
+      <PriceWrapper>
+        <VerticallyCenteredDiv>
+          <JoyTokenIcon variant="gray" />
+          <NumberFormat value={accountBalance} as="p" variant="h400" margin={{ left: 1 }} format="short" />
+        </VerticallyCenteredDiv>
+        <NumberFormat
+          as="p"
+          color="colorText"
+          format="dollar"
+          variant="t100"
+          value={convertHapiToUSD(accountBalance) || 0}
+          margin={{ top: 1 }}
+        />
+      </PriceWrapper>
       <FormFieldsWrapper>
         <FormField
           label={

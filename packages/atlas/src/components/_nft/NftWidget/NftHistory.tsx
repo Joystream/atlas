@@ -1,7 +1,6 @@
 import BN from 'bn.js'
 import { FC } from 'react'
 import { useNavigate } from 'react-router'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { BasicMembershipFieldsFragment } from '@/api/queries'
 import { Avatar } from '@/components/Avatar'
@@ -13,7 +12,6 @@ import { absoluteRoutes } from '@/config/routes'
 import { useToggle } from '@/hooks/useToggle'
 import { useMemberAvatar } from '@/providers/assets'
 import { useTokenPrice } from '@/providers/joystream'
-import { cVar, transitions } from '@/styles'
 import { formatDateTime } from '@/utils/time'
 
 import {
@@ -103,26 +101,16 @@ export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmoun
             <JoyTokenIcon size={16} variant="silver" />
             <NumberFormat as="span" format="short" value={joyAmount} variant={size === 'medium' ? 'h300' : 'h200'} />
           </JoyPlusIcon>
-          <SwitchTransition>
-            <CSSTransition
-              key={dollarValue ? 'placeholder' : 'content'}
-              timeout={parseInt(cVar('animationTransitionFast', true))}
-              classNames={transitions.names.fade}
-            >
-              {dollarValue ? (
-                <NumberFormat
-                  as="span"
-                  format="dollar"
-                  variant="t100"
-                  color="colorText"
-                  value={dollarValue}
-                  align="end"
-                />
-              ) : (
-                '‌'
-              )}
-            </CSSTransition>
-          </SwitchTransition>
+          {dollarValue !== null && (
+            <NumberFormat
+              as="span"
+              format="dollar"
+              variant="t100"
+              color="colorText"
+              value={dollarValue || 0}
+              align="end"
+            />
+          )}
         </ValueContainer>
       )}
     </HistoryItemContainer>

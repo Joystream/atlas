@@ -1,6 +1,5 @@
 import BN from 'bn.js'
 import { FC } from 'react'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Avatar } from '@/components/Avatar'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -10,7 +9,6 @@ import { RadioInput } from '@/components/_inputs/RadioInput'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useMemberAvatar } from '@/providers/assets'
-import { cVar, transitions } from '@/styles'
 import { formatDateTime } from '@/utils/time'
 
 import { Bid, SelectedBid } from './AcceptBidDialog.types'
@@ -72,19 +70,9 @@ export const BidRow: FC<BidRowProps> = ({ bidder, createdAt, amount, amountUSD, 
             {hapiBnToTokenNumber(amount)}
           </Text>
         </TokenPrice>
-        <SwitchTransition>
-          <CSSTransition
-            key={amountUSD ? 'placeholder' : 'content'}
-            timeout={parseInt(cVar('animationTransitionFast', true))}
-            classNames={transitions.names.fade}
-          >
-            {amountUSD ? (
-              <NumberFormat value={amountUSD} format="dollar" as="p" variant="t100" color="colorText" />
-            ) : (
-              '‌'
-            )}
-          </CSSTransition>
-        </SwitchTransition>
+        {amountUSD !== null && (
+          <NumberFormat value={amountUSD} format="dollar" as="p" variant="t100" color="colorText" />
+        )}
       </Price>
     </BidRowWrapper>
   )

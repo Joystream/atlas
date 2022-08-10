@@ -1,8 +1,9 @@
 import isPropValid from '@emotion/is-prop-valid'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { ElementType, FC } from 'react'
+import { ElementType, FC, useRef } from 'react'
 
+import { Tooltip } from '@/components/Tooltip'
 import {
   SvgJoyTokenMonochrome16,
   SvgJoyTokenMonochrome24,
@@ -17,6 +18,7 @@ import {
   SvgJoyTokenSilver32,
   SvgJoyTokenSilver48,
 } from '@/components/_icons'
+import { JOY_CURRENCY_TICKER } from '@/config/joystream'
 import { cVar } from '@/styles'
 
 type JoyTokenIconVariant = 'primary' | 'silver' | 'regular' | 'gray'
@@ -55,14 +57,26 @@ const VARIANT_SIZE_COMPONENT_MAPPING: Record<JoyTokenIconVariant, Record<JoyToke
   },
 }
 
-export const JoyTokenIcon: FC<JoyTokenIconProps> = ({ variant = 'regular', size = 16, className }) => (
-  <JoyTokenIconWrapper
-    as={VARIANT_SIZE_COMPONENT_MAPPING[variant][size]}
-    hasShadow={!['regular', 'gray'].includes(variant)}
-    className={className}
-    variant={variant}
-  />
-)
+export const JoyTokenIcon: FC<JoyTokenIconProps> = ({ variant = 'regular', size = 16, className }) => {
+  const ref = useRef<HTMLDivElement>(null)
+  return (
+    <>
+      <Tooltip
+        text={`Exchanging ${JOY_CURRENCY_TICKER} will be possible shortly after mainnet launch. We're actively working on it.`}
+        multiline
+        reference={ref.current}
+        delay={1000}
+      />
+      <JoyTokenIconWrapper
+        ref={ref}
+        as={VARIANT_SIZE_COMPONENT_MAPPING[variant][size]}
+        hasShadow={!['regular', 'gray'].includes(variant)}
+        className={className}
+        variant={variant}
+      />
+    </>
+  )
+}
 
 const shadowCss = css`
   filter: drop-shadow(0 6px 11px rgba(0 0 0 / 0.65)) drop-shadow(0 1.809px 3.316px rgba(0 0 0 / 0.4235))

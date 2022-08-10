@@ -19,5 +19,5 @@ export const PIONEER_MEMBER_URL = 'https://dao.joystream.org/#/members'
 export const JOYSTREAM_URL = 'https://www.joystream.org/'
 export const ATLAS_GITHUB_URL = 'https://github.com/Joystream/atlas'
 
-export const JOY_PRICE_SERVICE_URL = readEnv('PRICE_SERVICE_URL', true, true)
+export const JOY_PRICE_SERVICE_URL = readEnv('PRICE_SERVICE_URL', false, true)
 export const USER_LOCATION_SERVICE_URL = readEnv('GEOLOCATION_SERVICE_URL', true, true)
