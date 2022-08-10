@@ -9,16 +9,21 @@ import { SubtitleBox } from '../SubtitleBox'
 type Subtitles = {
   language: string
   file?: File
-  isClosedCaptions?: boolean
+  type: 'subtitles' | 'closed-captions'
+}
+
+type SubtitlesLanguage = {
+  language: string
+  type: 'subtitles' | 'closed-captions'
+  disabled: boolean
 }
 
 type SubtitlesComboboxProps = {
   subtitlesArray: Subtitles[] | null
-  availableLanguages: string[]
-  onLanguageAdd: (language: string) => void
-  onLanguageDelete: (language: string) => void
+  availableLanguages: SubtitlesLanguage[]
+  onLanguageAdd: (language: Subtitles) => void
+  onLanguageDelete: (language: Subtitles) => void
   onSubtitlesDownload?: () => void
-  onMarkAsCC?: (language: string) => void
   onSubtitlesAdd: (subtitles: Subtitles) => void
 }
 
@@ -27,33 +32,35 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
   subtitlesArray,
   onLanguageAdd,
   onSubtitlesDownload,
-  onMarkAsCC,
   onLanguageDelete,
   onSubtitlesAdd,
 }) => {
   return (
     <Wrapper>
-      <ComboBox
+      <ComboBox<SubtitlesLanguage>
         placeholder="Add language"
-        items={availableLanguages.map((language) => ({ label: language }))}
+        items={availableLanguages.map((subtitlesLanguage) => ({
+          ...subtitlesLanguage,
+          label: `${subtitlesLanguage.language} ${subtitlesLanguage.type === 'closed-captions' ? '(CC)' : ''}`,
+        }))}
         resetOnSelect
         onSelectedItemChange={(item) => {
-          if (item) {
-            return onLanguageAdd(item?.label)
+          if (item?.disabled || !item) {
+            return
           }
+          onLanguageAdd({ language: item.language, type: item.type })
         }}
       />
-      {subtitlesArray?.map(({ language, file, isClosedCaptions }) => (
+      {subtitlesArray?.map(({ language, file, type }) => (
         <SubtitleBox
-          key={language}
-          isClosedCaptions={isClosedCaptions}
+          key={language + type}
+          type={type}
           language={language}
-          onRemove={() => onLanguageDelete(language)}
+          onRemove={() => onLanguageDelete({ language, type })}
           onDownload={onSubtitlesDownload}
-          onMarkAsCC={() => onMarkAsCC?.(language)}
           file={file}
           onChange={(e) => {
-            onSubtitlesAdd({ language, file: e.currentTarget.files?.[0] })
+            onSubtitlesAdd({ language, file: e.currentTarget.files?.[0], type })
           }}
         />
       ))}

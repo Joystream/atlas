@@ -88,7 +88,14 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
 
   const { editedVideoInfo } = useVideoWorkspace()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useVideoWorkspaceData()
-  const availableLanguages = languages.map((language) => language.name)
+  const [availableLanguages, setAvailableLanguages] = useState(
+    languages
+      .map((language) => [
+        { language: language.name, type: 'subtitles' as const, disabled: false },
+        { language: language.name, type: 'closed-captions' as const, disabled: false },
+      ])
+      .flat(1)
+  )
 
   const {
     chainState: { nftMaxCreatorRoyaltyPercentage, nftMinCreatorRoyaltyPercentage },
@@ -707,37 +714,53 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
               return (
                 <FormField label="Subtitles" optional>
                   <SubtitlesCombobox
-                    onLanguageAdd={(language) => {
-                      onChange([...(subtitlesArray ? subtitlesArray : []), { language }])
-                      // todo - should we remove languages from combobox?
-                      // setAvailableLanguages((availableLanguages) =>
-                      //   availableLanguages.filter((prevLanguage) => prevLanguage !== language)
-                      // )
+                    onLanguageAdd={(subtitlesLanguage) => {
+                      setAvailableLanguages((availableLanguages) =>
+                        availableLanguages.map((availableLanguage) => {
+                          if (
+                            availableLanguage.language === subtitlesLanguage.language &&
+                            availableLanguage.type === subtitlesLanguage.type
+                          ) {
+                            return {
+                              ...availableLanguage,
+                              disabled: true,
+                            }
+                          }
+                          return availableLanguage
+                        })
+                      )
+                      onChange([...(subtitlesArray ? subtitlesArray : []), { ...subtitlesLanguage }])
                     }}
-                    onLanguageDelete={(language) => {
-                      onChange(subtitlesArray?.filter((prevSubtitles) => prevSubtitles.language !== language))
-                      // setAvailableLanguages((prevLanguages) =>
-                      //   [...prevLanguages, language].sort((a, b) => a.localeCompare(b))
-                      // )
-                    }}
-                    onSubtitlesAdd={({ language, file }) => {
-                      const idxToEdit = subtitlesArray?.findIndex(
-                        (prevSubtitles) => prevSubtitles.language === language
+                    onLanguageDelete={(subtitlesLanguage) => {
+                      setAvailableLanguages((availableLanguages) =>
+                        availableLanguages.map((availableLanguage) => {
+                          if (
+                            availableLanguage.language === subtitlesLanguage.language &&
+                            availableLanguage.type === subtitlesLanguage.type
+                          ) {
+                            return {
+                              ...availableLanguage,
+                              disabled: false,
+                            }
+                          }
+                          return availableLanguage
+                        })
                       )
                       onChange(
-                        subtitlesArray?.map((subtitles, idx) =>
-                          idx === idxToEdit ? { ...subtitles, file } : subtitles
+                        subtitlesArray?.filter(
+                          (prevSubtitles) =>
+                            !(
+                              prevSubtitles.language === subtitlesLanguage.language &&
+                              prevSubtitles.type === subtitlesLanguage.type
+                            )
                         )
                       )
                     }}
-                    onMarkAsCC={(language) => {
-                      const idxToEdit = subtitlesArray?.findIndex(
-                        (prevSubtitles) => prevSubtitles.language === language
-                      )
+                    onSubtitlesAdd={({ language, file, type }) => {
                       onChange(
-                        subtitlesArray?.map((subtitles, idx) =>
-                          idx === idxToEdit
-                            ? { ...subtitles, isClosedCaptions: !subtitles.isClosedCaptions }
+                        subtitlesArray?.map((subtitles) =>
+                          subtitles.language === language && subtitles.type === type
+                            ? { ...subtitles, file }
                             : subtitles
                         )
                       )

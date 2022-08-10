@@ -3,7 +3,7 @@ import { ChangeEvent, ChangeEventHandler, FC, useRef } from 'react'
 import { ListItemProps } from '@/components/ListItem'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionClosedCaptions, SvgActionDownload, SvgActionMore, SvgActionTrash } from '@/components/_icons'
+import { SvgActionDownload, SvgActionMore, SvgActionTrash } from '@/components/_icons'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 
@@ -17,7 +17,7 @@ import {
 
 export type Subtitles = {
   language: string
-  isClosedCaptions?: boolean
+  type: 'closed-captions' | 'subtitles'
   file?: File
 }
 
@@ -25,28 +25,21 @@ export type SubtitleBoxProps = {
   className?: string
   onChange?: ChangeEventHandler<HTMLInputElement>
   onRemove?: () => void
-  onMarkAsCC?: () => void
   onDownload?: () => void
 } & Subtitles
 
 export const SubtitleBox: FC<SubtitleBoxProps> = ({
   className,
   language,
-  isClosedCaptions,
+  type,
   file,
   onChange,
   onRemove,
-  onMarkAsCC,
   onDownload,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null)
   const [openUnsuportedFileDialog, closeUnsuportedFileDialog] = useConfirmationModal()
   const contexMenuItems: ListItemProps[] = [
-    {
-      label: `${isClosedCaptions ? 'Unmark' : 'Mark'} as closed captions`,
-      onClick: onMarkAsCC,
-      nodeStart: <SvgActionClosedCaptions />,
-    },
     ...(file
       ? [
           {
@@ -97,7 +90,7 @@ export const SubtitleBox: FC<SubtitleBoxProps> = ({
     <SubtitleBoxWrapper className={className}>
       <SubtitleDetails>
         <Text variant="t100-strong" as="p">
-          {language} {isClosedCaptions ? '(CC)' : ''}
+          {language} {type === 'closed-captions' ? '(CC)' : ''}
         </Text>
         <SubtitlesFileName variant="t100" as="p" color="colorText">
           {file ? file.name : 'Add subtitles file'}
