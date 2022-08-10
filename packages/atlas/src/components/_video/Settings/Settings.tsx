@@ -30,7 +30,7 @@ type MultiValueOption = {
   onOptionClick?: (value: string | number) => void
 } & ListItemProps
 
-type MulitValueSetting = {
+type MultiValueSetting = {
   type: 'multi-value'
   value: string | number
   options: MultiValueOption[]
@@ -43,7 +43,7 @@ type BooleanSetting = {
   onSwitchClick?: (value: boolean) => void
 } & ListItemProps
 
-export type Setting = MulitValueSetting | BooleanSetting
+export type Setting = MultiValueSetting | BooleanSetting
 
 const LIST_ITEM_HEIGHT = 48
 

@@ -2802,7 +2802,7 @@ __metadata:
     "@types/react-helmet": ^6.1.5
     "@types/react-transition-group": ^4.4.4
     "@types/scroll-lock": ^2.1.0
-    "@types/video.js": ^7.3.40
+    "@types/video.js": ^7.3.44
     "@vitejs/plugin-react": ^1.3.2
     awesome-debounce-promise: ^2.1.0
     axios: ^0.27.2
@@ -6898,10 +6898,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/video.js@npm:^7.3.40":
-  version: 7.3.40
-  resolution: "@types/video.js@npm:7.3.40"
-  checksum: 1e24dd9cbcd3ef0b5c8e8cbb7beb79f39083533d66da2081af8ae8aee6fcfcd7a857a387770d22ff21407b8ccf9d44bb4dfbd32da868c464e1353362d4de0574
+"@types/video.js@npm:^7.3.44":
+  version: 7.3.44
+  resolution: "@types/video.js@npm:7.3.44"
+  checksum: d42b254992e2320c84883666f8e5ae6d1470f00e0a090c2dcc0246892a24b94ff87e496d9126c4b37dedbc03d11de8f88d382b21fc97ac6be82cd319f2b844ff
   languageName: node
   linkType: hard
 

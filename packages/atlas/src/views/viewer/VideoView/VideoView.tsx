@@ -57,6 +57,25 @@ import {
   VideoUtils,
 } from './VideoView.styles'
 
+// This is temporary, will be removed after integration with QN
+const AVAILABLE_TRACKS = [
+  {
+    src: 'https://dl.dropboxusercontent.com/s/84zyiqw82gtf106/upc-video-subtitles-en.vtt?dl=0',
+    language: 'en',
+    label: 'English',
+  },
+  {
+    src: 'https://dl.dropboxusercontent.com/s/ghnr6iypkpo7axg/upc-video-subtitles-de.vtt?dl=0',
+    language: 'de',
+    label: 'German',
+  },
+  {
+    src: 'https://dl.dropboxusercontent.com/s/eb74k0qub6iiqqq/upc-video-subtitles-fr.vtt?dl=0',
+    language: 'fr',
+    label: 'French',
+  },
+]
+
 export const VideoView: FC = () => {
   useRedirectMigratedContent({ type: 'video' })
   const { id } = useParams()
@@ -301,6 +320,7 @@ export const VideoView: FC = () => {
                   startTime={startTimestamp}
                   isPlayNextDisabled={pausePlayNext}
                   ref={playerRef}
+                  availableTextTracks={AVAILABLE_TRACKS}
                 />
               ) : (
                 <PlayerSkeletonLoader />
