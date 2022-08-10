@@ -13,7 +13,6 @@ import { Button } from '@/components/_buttons/Button'
 import { SvgAlertsInformative24 } from '@/components/_icons'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { absoluteRoutes } from '@/config/routes'
-import { JOY_PRICE_SERVICE_URL } from '@/config/urls'
 import { useDeepMemo } from '@/hooks/useDeepMemo'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { EnglishTimerState } from '@/hooks/useNftState'
@@ -131,7 +130,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
         <NftInfoItem
           size={size}
           label="Buy now"
-          disableSecondary={!JOY_PRICE_SERVICE_URL}
+          disableSecondary={convertHapiToUSD(buyNowPrice) === null}
           content={
             <>
               <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
@@ -355,6 +354,8 @@ export const NftWidget: FC<NftWidgetProps> = ({
           </GridItem>
         )
 
+        const topBidAmountInUsd = nftStatus.topBidAmount && convertHapiToUSD(nftStatus.topBidAmount)
+
         return (
           <>
             {nftStatus.topBidAmount?.gtn(0) && !nftStatus.topBid?.isCanceled ? (
@@ -378,14 +379,11 @@ export const NftWidget: FC<NftWidgetProps> = ({
                   </>
                 }
                 secondaryText={
-                  !isLoadingPrice && nftStatus.topBidderHandle && !nftStatus.topBidAmount.isZero() ? (
+                  !isLoadingPrice && nftStatus.topBidderHandle ? (
                     <>
-                      <NumberFormat
-                        as="span"
-                        color="colorText"
-                        format="dollar"
-                        value={convertHapiToUSD(nftStatus.topBidAmount) ?? 0}
-                      />{' '}
+                      {topBidAmountInUsd ? (
+                        <NumberFormat as="span" color="colorText" format="dollar" value={topBidAmountInUsd} />
+                      ) : null}{' '}
                       from{' '}
                       <OwnerHandle to={absoluteRoutes.viewer.member(nftStatus.topBidderHandle)}>
                         <Text as="span" variant="t100">
@@ -411,7 +409,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
                     />
                   </>
                 }
-                disableSecondary={!JOY_PRICE_SERVICE_URL}
+                disableSecondary={convertHapiToUSD(nftStatus.startingPrice) === null}
                 secondaryText={
                   convertHapiToUSD(nftStatus.startingPrice) ? (
                     <NumberFormat

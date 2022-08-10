@@ -5,7 +5,6 @@ import mergeRefs from 'react-merge-refs'
 
 import { Text, TextProps, TextVariant } from '@/components/Text'
 import { JOY_CURRENCY_TICKER } from '@/config/joystream'
-import { JOY_PRICE_SERVICE_URL } from '@/config/urls'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { formatNumber } from '@/utils/number'
 
@@ -67,10 +66,6 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
         {withToken && ` ${JOY_CURRENCY_TICKER}`}
       </StyledText>
     )
-
-    if (format === 'dollar' && !JOY_PRICE_SERVICE_URL) {
-      return null
-    }
 
     // TODO: This is workaround. For some reason this tooltip doesn't work properly.
     //  Dear developer, if you find a solution, the project will thank you, otherwise we should consider
