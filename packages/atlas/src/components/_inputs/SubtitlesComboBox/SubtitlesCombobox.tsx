@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { FC, useState } from 'react'
 
+import { Text } from '@/components/Text'
 import { sizes } from '@/styles'
 
 import { ComboBox } from '../ComboBox'
@@ -62,6 +63,11 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
         items={availableLanguages.map((subtitlesLanguage) => ({
           ...subtitlesLanguage,
           label: `${subtitlesLanguage.language} ${subtitlesLanguage.type === 'closed-captions' ? '(CC)' : ''}`,
+          nodeEnd: subtitlesLanguage.disabled ? (
+            <Text variant="t200" as="span" color="colorTextMuted">
+              Added
+            </Text>
+          ) : null,
         }))}
         resetOnSelect
         onSelectedItemChange={(item) => {
