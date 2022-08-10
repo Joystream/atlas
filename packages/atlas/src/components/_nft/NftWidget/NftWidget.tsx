@@ -125,12 +125,14 @@ export const NftWidget: FC<NftWidgetProps> = ({
     const buttonSize = size === 'small' ? 'medium' : 'large'
     const buttonColumnSpan = size === 'small' ? 1 : 2
     const timerColumnSpan = size === 'small' ? 1 : 2
-    const BuyNow = memo(({ buyNowPrice }: { buyNowPrice?: BN }) =>
-      buyNowPrice?.gtn(0) ? (
+
+    const BuyNow = memo(({ buyNowPrice }: { buyNowPrice?: BN }) => {
+      const buyNowPriceInUsd = buyNowPrice && convertHapiToUSD(buyNowPrice)
+      return buyNowPrice?.gtn(0) ? (
         <NftInfoItem
           size={size}
           label="Buy now"
-          disableSecondary={convertHapiToUSD(buyNowPrice) === null}
+          disableSecondary={buyNowPriceInUsd === null}
           content={
             <>
               <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
@@ -138,13 +140,11 @@ export const NftWidget: FC<NftWidgetProps> = ({
             </>
           }
           secondaryText={
-            convertHapiToUSD(buyNowPrice) ? (
-              <NumberFormat as="span" color="colorText" format="dollar" value={convertHapiToUSD(buyNowPrice) ?? 0} />
-            ) : undefined
+            buyNowPriceInUsd && <NumberFormat as="span" color="colorText" format="dollar" value={buyNowPriceInUsd} />
           }
         />
       ) : null
-    )
+    })
     BuyNow.displayName = 'BuyNow'
     const InfoBanner = ({ title, description }: { title: string; description: string }) => (
       <GridItem colSpan={buttonColumnSpan}>
@@ -355,6 +355,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
         )
 
         const topBidAmountInUsd = nftStatus.topBidAmount && convertHapiToUSD(nftStatus.topBidAmount)
+        const startingPriceInUsd = convertHapiToUSD(nftStatus.startingPrice)
 
         return (
           <>
@@ -409,16 +410,11 @@ export const NftWidget: FC<NftWidgetProps> = ({
                     />
                   </>
                 }
-                disableSecondary={convertHapiToUSD(nftStatus.startingPrice) === null}
+                disableSecondary={startingPriceInUsd === null}
                 secondaryText={
-                  convertHapiToUSD(nftStatus.startingPrice) ? (
-                    <NumberFormat
-                      as="span"
-                      color="colorText"
-                      format="dollar"
-                      value={convertHapiToUSD(nftStatus.startingPrice) ?? 0}
-                    />
-                  ) : undefined
+                  startingPriceInUsd && (
+                    <NumberFormat as="span" color="colorText" format="dollar" value={startingPriceInUsd ?? 0} />
+                  )
                 }
               />
             )}
