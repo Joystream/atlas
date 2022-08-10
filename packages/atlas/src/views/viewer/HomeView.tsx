@@ -64,7 +64,7 @@ export const HomeView: FC = () => {
         <InfiniteVideoGrid
           periodDays={7}
           query={GetMostViewedVideosConnectionDocument}
-          title="Popular on Joystream"
+          title="Popular on Atlas"
           onDemand
           titleLoader
         />

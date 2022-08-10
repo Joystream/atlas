@@ -21,7 +21,7 @@ import {
   SvgControlsVideoModeCinemaView,
   SvgControlsVideoModeCompactView,
 } from '@/components/_icons'
-import { SvgJoystreamLogoFull, SvgJoystreamLogoShort } from '@/components/_illustrations'
+import { SvgAtlasLogoFull, SvgAtlasLogoShort } from '@/components/_illustrations'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 import { PlayerControlButton } from './PlayerControlButton'
@@ -357,7 +357,7 @@ export const StyledEmbeddedLogoLink = styled.a`
   }
 `
 
-export const StyledJoystreamLogo = styled(SvgJoystreamLogoFull)<{ embedded?: boolean }>`
+export const StyledAtlasLogo = styled(SvgAtlasLogoFull)<{ embedded?: boolean }>`
   padding: ${({ embedded }) => (embedded ? 0 : '0.5em')};
   max-height: ${({ embedded }) => (embedded ? '2em' : '2.5em')};
   height: 100%;
@@ -366,7 +366,7 @@ export const StyledJoystreamLogo = styled(SvgJoystreamLogoFull)<{ embedded?: boo
   ${defaultIconColor};
 `
 
-export const StyledJoystreamLogoShort = styled(SvgJoystreamLogoShort)`
+export const StyledAtlasLogoShort = styled(SvgAtlasLogoShort)`
   padding: 0.5em;
   max-height: 2.5em;
   height: 100%;

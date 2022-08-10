@@ -5,7 +5,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { Searchbar } from '@/components/Searchbar'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionMember } from '@/components/_icons'
-import { SvgJoystreamLogoFull } from '@/components/_illustrations'
+import { SvgAtlasLogoFull } from '@/components/_illustrations'
 import { NotificationsButton } from '@/components/_navigation/NotificationsButton'
 import { NotificationsWidget } from '@/components/_notifications/NotificationsWidget'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
@@ -91,7 +91,7 @@ export const TopbarViewer: FC = () => {
       <StyledTopbarBase
         hasFocus={searchOpen}
         noLogo={!mdMatch && !!searchQuery}
-        fullLogoNode={<SvgJoystreamLogoFull />}
+        fullLogoNode={<SvgAtlasLogoFull />}
         logoLinkUrl={absoluteRoutes.viewer.index()}
       >
         <SearchbarContainer>

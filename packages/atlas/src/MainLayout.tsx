@@ -2,7 +2,7 @@ import loadable from '@loadable/component'
 import { FC, useEffect, useRef, useState } from 'react'
 import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 
-import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
+import { SvgAtlasLogoStudio } from '@/components/_illustrations'
 import { StudioLoading } from '@/components/_loaders/StudioLoading'
 import { AdminModal } from '@/components/_overlays/AdminModal'
 import { CookiePopover } from '@/components/_overlays/CookiePopover'
@@ -22,7 +22,7 @@ const ROUTING_ANIMATION_OFFSET = 100
 const LoadableStudioLayout = loadable(() => import('./views/studio/StudioLayout'), {
   fallback: (
     <>
-      <TopbarBase fullLogoNode={<SvgJoystreamLogoStudio />} logoLinkUrl={absoluteRoutes.studio.index()} />
+      <TopbarBase fullLogoNode={<SvgAtlasLogoStudio />} logoLinkUrl={absoluteRoutes.studio.index()} />
       <StudioLoading />
     </>
   ),

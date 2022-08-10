@@ -41,9 +41,9 @@ import {
   PlayButton,
   PlayControl,
   ScreenControls,
+  StyledAtlasLogo,
+  StyledAtlasLogoShort,
   StyledEmbeddedLogoLink,
-  StyledJoystreamLogo,
-  StyledJoystreamLogoShort,
   StyledSvgControlsFullScreen,
   StyledSvgControlsPause,
   StyledSvgControlsPipOff,
@@ -673,11 +673,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                       rel="noopener noreferrer"
                       target="_blank"
                     >
-                      {xsMatch ? (
-                        <StyledJoystreamLogo width={undefined} />
-                      ) : (
-                        <StyledJoystreamLogoShort width={undefined} />
-                      )}
+                      {xsMatch ? <StyledAtlasLogo width={undefined} /> : <StyledAtlasLogoShort width={undefined} />}
                     </a>
                   )}
                 </ScreenControls>
@@ -733,7 +729,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                 target="_blank"
                 onClick={(e) => e.stopPropagation()}
               >
-                <StyledJoystreamLogo embedded />
+                <StyledAtlasLogo embedded />
               </StyledEmbeddedLogoLink>
             )}
           </>

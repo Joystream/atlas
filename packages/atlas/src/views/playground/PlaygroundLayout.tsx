@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgJoystreamLogoShort } from '@/components/_illustrations'
+import { SvgAtlasLogoShort } from '@/components/_illustrations'
 import { TopbarBase } from '@/components/_navigation/TopbarBase'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { absoluteRoutes } from '@/config/routes'
@@ -49,7 +49,7 @@ const PlaygroundLayout = () => {
       <TopbarBase
         fullLogoNode={
           <LogoWrapper>
-            <SvgJoystreamLogoShort />
+            <SvgAtlasLogoShort />
             <Text as="p" variant="h500" margin={{ left: 2 }}>
               Playground
             </Text>

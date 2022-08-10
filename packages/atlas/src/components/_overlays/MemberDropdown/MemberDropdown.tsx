@@ -246,7 +246,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                         <ListItem
                           onClick={closeDropdown}
                           nodeStart={<IconWrapper icon={<SvgActionPlay />} />}
-                          label="Joystream"
+                          label="Atlas"
                           to={absoluteRoutes.viewer.index()}
                         />
                       ) : (
