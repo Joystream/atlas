@@ -102,7 +102,6 @@ export const SubtitleBox: FC<SubtitleBoxProps> = ({
       </Button>
       <InvisibleInput ref={inputRef} type="file" accept=".vtt" onChange={handleChange} />
       <ContextMenu
-        customWidth={240}
         placement="bottom-end"
         items={contexMenuItems}
         trigger={<Button icon={<SvgActionMore />} variant="tertiary" size="small" />}
