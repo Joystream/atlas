@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { Banner } from '@/components/Banner'
 import { ListItem } from '@/components/ListItem'
-import { sizes } from '@/styles'
+import { cVar, sizes } from '@/styles'
 
 export const ListItemsWrapper = styled.div`
   margin: 0 calc(-1 * var(--local-size-dialog-padding));
@@ -27,7 +27,16 @@ export const StyledBottomBanner = styled(Banner)`
 `
 
 export const StyledForm = styled.form`
+  margin-top: -${sizes(11)};
   display: grid;
-  grid-template-rows: auto auto;
   gap: ${sizes(6)};
+`
+
+export const Anchor = styled.a`
+  display: block;
+  text-decoration: none;
+  margin-top: ${sizes(2)};
+  margin-bottom: ${sizes(11)};
+  cursor: pointer;
+  color: ${cVar('colorTextPrimary')};
 `

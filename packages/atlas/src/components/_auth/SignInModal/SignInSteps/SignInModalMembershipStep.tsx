@@ -5,13 +5,15 @@ import { useForm } from 'react-hook-form'
 
 import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
 import { Avatar } from '@/components/Avatar'
+import { Text } from '@/components/Text'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
-import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
+import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
+import { JOYSTREAM_URL } from '@/config/urls'
 import { imageUrlValidation } from '@/utils/asset'
 
 import { SignInModalStepTemplate } from './SignInModalStepTemplate'
-import { StyledForm } from './SignInSteps.styles'
+import { Anchor, StyledForm } from './SignInSteps.styles'
 import { SignInStepProps } from './SignInSteps.types'
 
 import { MemberFormData } from '../SignInModal.types'
@@ -79,58 +81,48 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
 
   return (
     <SignInModalStepTemplate
+      darkBackground
       title="Create Joystream membership"
-      subtitle="Tell us more about yourself."
+      subtitle={
+        <>
+          To get the full Atlas experience, you need a free Joystream blockchain membership.
+          <Anchor href={JOYSTREAM_URL} target="_blank">
+            <Text as="span" variant="t100" color="inherit">
+              Learn about joystream &rarr;
+            </Text>
+          </Anchor>
+        </>
+      }
       hasNavigatedBack={hasNavigatedBack}
-    >
-      <StyledForm onSubmit={createSubmitHandler(createMember)}>
-        <FormField
-          label="Member handle"
-          description="Member handle may contain only lowercase letters, numbers and underscores."
-          error={errors.handle?.message}
-        >
-          <Input
-            {...register('handle', {
-              validate: {
-                valid: (value) =>
-                  !value ? true : MEMBERSHIP_NAME_PATTERN.test(value) || 'Enter a valid member handle.',
-                unique: async (value) => {
-                  const valid = await debouncedHandleUniqueValidation.current(value)
-                  return valid || 'This member handle is already in use.'
+      formNode={
+        <StyledForm onSubmit={createSubmitHandler(createMember)}>
+          <Avatar size="cover" />
+          <FormField
+            label="Member handle"
+            description="Member handle may contain only lowercase letters, numbers and underscores."
+            error={errors.handle?.message}
+          >
+            <Input
+              {...register('handle', {
+                validate: {
+                  valid: (value) =>
+                    !value ? true : MEMBERSHIP_NAME_PATTERN.test(value) || 'Enter a valid member handle.',
+                  unique: async (value) => {
+                    const valid = await debouncedHandleUniqueValidation.current(value)
+                    return valid || 'This member handle is already in use.'
+                  },
                 },
-              },
-              required: { value: true, message: 'Member handle is required.' },
-              minLength: { value: 5, message: 'Member handle must be at least 5 characters long.' },
-            })}
-            placeholder="johnnysmith"
-            error={!!errors.handle}
-            processing={isHandleValidating || isSubmitting}
-            autoComplete="off"
-          />
-        </FormField>
-        <FormField
-          label="Avatar URL"
-          description="You can host your avatar image on external services such as imgbb.com, imgur.com, flickr.com, imgbox.com, and others."
-          optional
-          error={errors.avatar?.message}
-        >
-          <Input
-            {...register('avatar', {
-              validate: {
-                validUrl: (value) => (!value ? true : URL_PATTERN.test(value) || 'Enter a valid URL.'),
-                validImage: async (value) => {
-                  const valid = !value || (await debouncedAvatarValidation.current(value))
-                  return valid || 'Image not found.'
-                },
-              },
-            })}
-            placeholder="https://example.com/avatar.jpeg"
-            error={!!errors.avatar}
-            nodeEnd={displayedAvatarUrl ? <Avatar assetUrl={displayedAvatarUrl} size="bid" /> : null}
-            autoComplete="off"
-          />
-        </FormField>
-      </StyledForm>
-    </SignInModalStepTemplate>
+                required: { value: true, message: 'Member handle is required.' },
+                minLength: { value: 5, message: 'Member handle must be at least 5 characters long.' },
+              })}
+              placeholder="johnnysmith"
+              error={!!errors.handle}
+              processing={isHandleValidating || isSubmitting}
+              autoComplete="off"
+            />
+          </FormField>
+        </StyledForm>
+      }
+    />
   )
 }

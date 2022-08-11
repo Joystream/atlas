@@ -1,4 +1,4 @@
-import { keyframes } from '@emotion/react'
+import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { SvgAtlasLogoShort } from '@/components/_illustrations'
@@ -45,11 +45,40 @@ const backAnimation = keyframes`
     transform: translateX(-32px);
     opacity: 0;
   }
+  `
+
+type CustomBackgroundContainerProps = {
+  darkBackground?: boolean
+  backgroundImage?: string
+}
+
+const getBackground = ({ backgroundImage, darkBackground }: CustomBackgroundContainerProps) => {
+  if (backgroundImage) {
+    return css`
+      background-image: url(${darkBackground});
+    `
+  }
+  if (darkBackground) {
+    return css`
+      background-color: ${cVar('colorBackground')};
+    `
+  }
+}
+
+export const CustomBackgroundContainer = styled.div<CustomBackgroundContainerProps>`
+  /* add negative margin to allow changing background of the container */
+
+  margin: calc(-1 * var(--local-size-dialog-padding));
+  margin-bottom: unset;
+  padding: var(--local-size-dialog-padding);
+
+  ${getBackground};
 `
 
 type AnimatedContainerProps = {
   hasNavigatedBack: boolean
 }
+
 export const AnimatedContainer = styled.div<AnimatedContainerProps>`
   display: grid;
   animation: ${({ hasNavigatedBack }) => (hasNavigatedBack ? backAnimation : forwardAnimation)}
