@@ -85,6 +85,8 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
     return handler()
   }
 
+  const channelBalanceInUsd = convertHapiToUSD(channelBalance)
+
   return (
     <DialogModal
       show={show}
@@ -102,14 +104,16 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
           <JoyTokenIcon variant="gray" />
           <NumberFormat value={channelBalance || 0} as="p" variant="h400" margin={{ left: 1 }} format="short" />
         </VerticallyCenteredDiv>
-        <NumberFormat
-          as="p"
-          color="colorText"
-          format="dollar"
-          variant="t100"
-          value={convertHapiToUSD(channelBalance) || 0}
-          margin={{ top: 1 }}
-        />
+        {channelBalanceInUsd !== null && (
+          <NumberFormat
+            as="p"
+            color="colorText"
+            format="dollar"
+            variant="t100"
+            value={channelBalanceInUsd}
+            margin={{ top: 1 }}
+          />
+        )}
       </PriceWrapper>
       <FormField label="Amount to withdraw" error={errors.amount?.message}>
         <Controller

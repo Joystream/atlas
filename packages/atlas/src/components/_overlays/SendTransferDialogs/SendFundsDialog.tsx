@@ -95,9 +95,9 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
       }
       handleTransaction({
         snackbarSuccessMessage: {
-          title: `${formatNumber(data.amount)} ${JOY_CURRENCY_TICKER} ($${formatNumber(
-            convertedAmount || 0
-          )}) tokens have been sent over to ${data.account.slice(0, ADDRESS_CHARACTERS_LIMIT)}...
+          title: `${formatNumber(data.amount)} ${JOY_CURRENCY_TICKER} ${
+            convertedAmount === null ? '' : `$(${formatNumber(convertedAmount || 0)})`
+          } tokens have been sent over to ${data.account.slice(0, ADDRESS_CHARACTERS_LIMIT)}...
           ${data.account.slice(-ADDRESS_CHARACTERS_LIMIT)} wallet address`,
         },
         txFactory: async (updateStatus) =>
@@ -115,6 +115,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
       shouldValidate: true,
     })
   }
+  const accountBalanceInUsd = convertHapiToUSD(accountBalance)
 
   return (
     <DialogModal
@@ -133,14 +134,16 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
           <JoyTokenIcon variant="gray" />
           <NumberFormat value={accountBalance} as="p" variant="h400" margin={{ left: 1 }} format="short" />
         </VerticallyCenteredDiv>
-        <NumberFormat
-          as="p"
-          color="colorText"
-          format="dollar"
-          variant="t100"
-          value={convertHapiToUSD(accountBalance) || 0}
-          margin={{ top: 1 }}
-        />
+        {accountBalanceInUsd !== null && (
+          <NumberFormat
+            as="p"
+            color="colorText"
+            format="dollar"
+            variant="t100"
+            value={accountBalanceInUsd}
+            margin={{ top: 1 }}
+          />
+        )}
       </PriceWrapper>
       <FormFieldsWrapper>
         <FormField
