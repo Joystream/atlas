@@ -7,6 +7,7 @@ import { ChangePriceDialog } from '@/components/_overlays/ChangePriceDialog'
 import { useNftState } from '@/hooks/useNftState'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useTokenPrice } from '@/providers/joystream'
+import { useUser } from '@/providers/user'
 
 type NftAction = 'putOnSale' | 'purchase' | 'settle' | 'accept-bid' | 'change-price'
 type ContextValue = {
@@ -32,6 +33,7 @@ export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
   const { nft } = useNft(currentNftId || '')
   const { auction } = useNftState(nft)
   const { convertHapiToUSD } = useTokenPrice()
+  const { memberId } = useUser()
 
   const mappedBids = auction?.bids
     ? auction?.bids
@@ -80,6 +82,7 @@ export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
         onModalClose={closeNftAction}
         onChangePrice={transactions.changeNftPrice}
         nftId={currentNftId}
+        memberId={memberId}
       />
       {children}
     </NftActionsContext.Provider>
