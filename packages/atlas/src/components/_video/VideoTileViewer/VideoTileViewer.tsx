@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { FC } from 'react'
 import { useNavigate } from 'react-router'
 
@@ -30,11 +31,18 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, details
     onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTile', error, { video: { id } }),
   })
   const nftStatus = getNftStatus(video?.nft, video)
+  const nftState = useNftState(video?.nft)
   const { avatarPhotoUrl, isLoadingAvatar, isLoadingThumbnail, thumbnailPhotoUrl, videoHref } =
     useVideoTileSharedLogic(video)
 
+  const handleWithdrawBid = () => {
+    if (!nftState?.userBid?.amount || !nftState.userBidCreatedAt || !video?.id) {
+      return
+    }
+    withdrawBid(video?.id, new BN(nftState.userBid.amount), nftState.userBidCreatedAt)
+  }
+
   const channelHref = absoluteRoutes.viewer.channel(video?.channel.id)
-  const nftState = useNftState(video?.nft)
   const nftActions = useNftActions()
   const { withdrawBid } = useNftTransactions()
   const auction = video?.nft?.transactionalStatusAuction
@@ -49,7 +57,7 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, details
     buyNowPrice: isAuction || nftStatus?.status === 'buy-now' ? nftStatus.buyNowPrice : undefined,
     topBid: isAuction ? nftStatus.topBidAmount : undefined,
     startingPrice: isAuction ? nftStatus.startingPrice : undefined,
-    onWithdrawBid: () => video?.id && withdrawBid(video?.id),
+    onWithdrawBid: handleWithdrawBid,
     hasBids:
       !!auction && !!auction.topBid?.bidder && !!(auction && !auction.topBid?.isCanceled && auction.topBid.amount),
   })

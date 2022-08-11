@@ -200,7 +200,8 @@ export const useBloatFeesAndPerMbFees = (assets?: VideoInputAssets | ChannelInpu
 export const useFee = <TFnName extends TxMethodName, TArgs extends Parameters<JoystreamLibExtrinsics[TFnName]>>(
   methodName: TFnName,
   args?: TArgs,
-  assets?: ChannelInputAssets | VideoInputAssets
+  assets?: ChannelInputAssets | VideoInputAssets,
+  manualCall?: boolean
 ) => {
   const { joystream } = useJoystream()
 
@@ -250,6 +251,7 @@ export const useFee = <TFnName extends TxMethodName, TArgs extends Parameters<Jo
         const fullFee = txFee.add(totalAssetSizeFee).add(totalAssetBloatFee).add(videoOrChannelBloatFee)
         setFullFee(fullFee)
         setLoading(false)
+        return fullFee
       }, USE_FEE_DEBOUNCE),
     [
       accountId,
@@ -262,20 +264,29 @@ export const useFee = <TFnName extends TxMethodName, TArgs extends Parameters<Jo
     ]
   )
 
-  const argsRef = useRef<TArgs>()
+  const updateFullFeeHandler = useCallback(
+    async (args: TArgs) => {
+      setLoading(true)
+      argsRef.current = args
+      const fullFee = await updateFullFee(args)
+      return fullFee
+    },
+    [updateFullFee]
+  )
+
+  const argsRef = useRef<TArgs | undefined>(args)
   useEffect(() => {
-    if (!args || isEqual(args, argsRef.current)) {
+    if (!args || isEqual(args, argsRef.current) || manualCall) {
       return
     }
-    argsRef.current = args
-    setLoading(true)
-    updateFullFee(args)
-  }, [args, updateFullFee])
+    updateFullFeeHandler(args)
+  }, [args, manualCall, updateFullFeeHandler])
 
   return {
     fullFee,
     getTxFee,
     hasEnoughFunds: !accountBalance || accountBalance.gt(fullFee),
     loading,
+    updateFullFeeHandler,
   }
 }

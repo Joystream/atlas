@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { FC } from 'react'
 import { useNavigate } from 'react-router'
 
@@ -28,6 +29,14 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
   const { url: ownerMemberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
 
   const isAuction = nftStatus?.status === 'auction'
+
+  const handleWithdrawBid = () => {
+    if (!nftState?.userBid?.amount || !nftState.userBidCreatedAt || !nftId) {
+      return
+    }
+    withdrawBid(nftId, new BN(nftState.userBid.amount), nftState.userBidCreatedAt)
+  }
+
   const contextMenuItems = useVideoContextMenu({
     publisher: false,
     nftState,
@@ -38,7 +47,7 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
     topBid: isAuction ? nftStatus.topBidAmount : undefined,
     buyNowPrice: isAuction || nftStatus?.status === 'buy-now' ? nftStatus.buyNowPrice : undefined,
     startingPrice: isAuction ? nftStatus.startingPrice : undefined,
-    onWithdrawBid: () => nftId && withdrawBid(nftId),
+    onWithdrawBid: handleWithdrawBid,
     hasBids:
       isAuction && !!nftStatus.topBidder && !!(isAuction && !nftStatus.topBid?.isCanceled && nftStatus.topBidAmount),
   })

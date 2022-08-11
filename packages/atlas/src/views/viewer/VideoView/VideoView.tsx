@@ -1,4 +1,5 @@
 import { generateVideoMetaTags } from '@joystream/atlas-meta-server/src/tags'
+import BN from 'bn.js'
 import { throttle } from 'lodash-es'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
@@ -237,7 +238,7 @@ export const VideoView: FC = () => {
           onNftPurchase={() => id && openNftPurchase(id)}
           onNftSettlement={() => id && openNftSettlement(id)}
           onNftBuyNow={() => id && openNftPurchase(id, { fixedPrice: true })}
-          onWithdrawBid={() => id && withdrawBid(id)}
+          onWithdrawBid={(bid: BN, date: Date) => id && withdrawBid(id, bid, date)}
         />
       )}
       <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />

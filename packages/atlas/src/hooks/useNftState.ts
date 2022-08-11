@@ -34,6 +34,7 @@ export const useNftState = (nft?: BasicNftFieldsFragment | null) => {
   const userBidUnlockBlock = openAuction && userBid ? userBid?.createdInBlock + openAuction.bidLockDuration : undefined
   const userBidUnlockBlockTimestamp = userBidUnlockBlock && convertBlockToMsTimestamp(userBidUnlockBlock)
   const userBidUnlockDate = userBidUnlockBlockTimestamp ? new Date(userBidUnlockBlockTimestamp) : undefined
+  const userBidCreatedAt = userBid?.createdAt ? new Date(userBid?.createdAt) : undefined
 
   const startsAtDateBlockTimestamp = isAuction && convertBlockToMsTimestamp(auction?.startsAtBlock)
   const startsAtDate = startsAtDateBlockTimestamp ? new Date(startsAtDateBlockTimestamp) : undefined
@@ -100,6 +101,7 @@ export const useNftState = (nft?: BasicNftFieldsFragment | null) => {
     videoId: nft?.id,
     userBid,
     userBidUnlockDate,
+    userBidCreatedAt,
     bids: auction?.bids,
     auction,
     startsAtDate,

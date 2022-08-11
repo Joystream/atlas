@@ -20,7 +20,6 @@ import {
 import { absoluteRoutes } from '@/config/routes'
 import { useGetNftSlot } from '@/hooks/useGetNftSlot'
 import { useNftState } from '@/hooks/useNftState'
-import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useVideoContextMenu } from '@/hooks/useVideoContextMenu'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
 import { useMemberAvatar } from '@/providers/assets'
@@ -72,7 +71,6 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
 
     const nftStatus = getNftStatus(video?.nft, video)
 
-    const { withdrawBid } = useNftTransactions()
     const nftState = useNftState(video?.nft)
     const { auctionPlannedEndDate, englishTimerState, needsSettling, startsAtDate, timerLoading } = nftState
     const nftTilePublisher = useGetNftSlot({
@@ -98,7 +96,6 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
       onDeleteVideoClick,
       onEditClick,
       onMintNftClick,
-      onWithdrawBid: () => video?.id && withdrawBid(video?.id),
       hasBids:
         isAuction && !!nftStatus.topBidder && !!(isAuction && !nftStatus.topBid?.isCanceled && nftStatus.topBidAmount),
     })

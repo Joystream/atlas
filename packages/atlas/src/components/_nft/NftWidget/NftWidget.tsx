@@ -47,6 +47,7 @@ export type Auction = {
   isUserTopBidder: boolean | undefined
   userBidAmount: BN | undefined
   userBidUnlockDate: Date | undefined
+  userBidCreatedAt: Date | undefined
   canWithdrawBid: boolean | undefined
   canChangeBid: boolean | undefined
   hasTimersLoaded: boolean | undefined
@@ -87,7 +88,7 @@ export type NftWidgetProps = {
   onNftAcceptBid?: () => void
   onNftCancelSale?: () => void
   onNftChangePrice?: () => void
-  onWithdrawBid?: () => void
+  onWithdrawBid?: (bid: BN, date: Date) => void
 }
 
 const SMALL_VARIANT_MAXIMUM_SIZE = 416
@@ -151,11 +152,24 @@ export const NftWidget: FC<NftWidgetProps> = ({
         <Banner icon={<SvgAlertsInformative24 />} {...{ title, description }} />
       </GridItem>
     )
+
+    const handleWithdrawBid = () => {
+      if (nftStatus.status !== 'auction' || !nftStatus.userBidAmount?.gtn(0) || !nftStatus.userBidCreatedAt) {
+        return
+      }
+      onWithdrawBid?.(new BN(nftStatus?.userBidAmount), new Date(nftStatus.userBidCreatedAt))
+    }
+
     const WithdrawBidFromPreviousAuction = ({ secondary }: { secondary?: boolean }) =>
       bidFromPreviousAuction ? (
         <>
           <GridItem colSpan={buttonColumnSpan}>
-            <Button variant={secondary ? 'secondary' : undefined} fullWidth size={buttonSize} onClick={onWithdrawBid}>
+            <Button
+              variant={secondary ? 'secondary' : undefined}
+              fullWidth
+              size={buttonSize}
+              onClick={handleWithdrawBid}
+            >
               Withdraw last bid
             </Button>
             <Text as="p" margin={{ top: 2 }} variant="t100" color="colorText" align="center">
@@ -517,7 +531,12 @@ export const NftWidget: FC<NftWidgetProps> = ({
                         {/* second row button */}
                         {nftStatus.canWithdrawBid && (
                           <GridItem colSpan={buttonColumnSpan}>
-                            <Button fullWidth size={buttonSize} variant="destructive-secondary" onClick={onWithdrawBid}>
+                            <Button
+                              fullWidth
+                              size={buttonSize}
+                              variant="destructive-secondary"
+                              onClick={handleWithdrawBid}
+                            >
                               Withdraw bid
                             </Button>
                           </GridItem>
@@ -536,7 +555,12 @@ export const NftWidget: FC<NftWidgetProps> = ({
                         </GridItem>
                         {nftStatus.canWithdrawBid && (
                           <GridItem colSpan={buttonColumnSpan}>
-                            <Button fullWidth size={buttonSize} variant="destructive-secondary" onClick={onWithdrawBid}>
+                            <Button
+                              fullWidth
+                              size={buttonSize}
+                              variant="destructive-secondary"
+                              onClick={handleWithdrawBid}
+                            >
                               Withdraw bid
                             </Button>
                           </GridItem>
