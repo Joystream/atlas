@@ -140,7 +140,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
             color="colorText"
             format="dollar"
             variant="t100"
-            value={convertHapiToUSD(accountBalance) || 0}
+            value={accountBalanceInUsd}
             margin={{ top: 1 }}
           />
         )}
