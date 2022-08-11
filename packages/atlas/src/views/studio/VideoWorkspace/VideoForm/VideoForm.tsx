@@ -692,7 +692,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           </TextButton>
           <Text as="p" variant="t200" color="colorText" margin={{ top: 2 }}>
             {!videoFieldsLocked
-              ? `Subtitles, License, comments, mature content, paid promotion, published date${
+              ? `Subtitles, license, comments, mature content, paid promotion, published date${
                   isEdit ? ', delete video' : ''
                 }`
               : 'Royalties, description, category, language, visibility, subtitles, license, comments, mature content, paid promotion, published date'}
