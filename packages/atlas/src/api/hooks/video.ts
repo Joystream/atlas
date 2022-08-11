@@ -25,7 +25,7 @@ import { videoFilter } from '@/config/videoFilter'
 export const useFullVideo = (id: string, opts?: QueryHookOptions<GetFullVideosQuery, GetFullVideosQueryVariables>) => {
   const { data, ...queryRest } = useGetFullVideosQuery({
     ...opts,
-    variables: { where: { id_eq: id }, ...videoFilter },
+    variables: { where: { id_eq: id, ...videoFilter } },
   })
   return {
     video: data?.videos[0],
@@ -105,7 +105,7 @@ export const useBasicVideo = (
 ) => {
   const { data, ...rest } = useGetBasicVideosQuery({
     ...opts,
-    variables: { where: { id_eq: id }, ...videoFilter },
+    variables: { where: { id_eq: id, ...videoFilter } },
   })
   return {
     video: data?.videos[0],
