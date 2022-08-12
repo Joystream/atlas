@@ -27,7 +27,7 @@ import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 import { PlayerControlButton } from './PlayerControlButton'
 import { ControlButton } from './PlayerControlButton.styles'
 
-const DEFAULT_SUBTITLES_POSITION = '0.36em'
+const DEFAULT_SUBTITLES_POSITION = '0.8em'
 const HOVERED_SUBTITLES_POSITION = '3.5em'
 
 type ContainerProps = {
@@ -405,8 +405,10 @@ export const Container = styled.div<ContainerProps>`
 
       > div {
         inset: unset !important;
-        bottom: 0.36em !important;
-        transition: bottom 150ms linear;
+        transition: bottom;
+        transition-delay: ${TRANSITION_DELAY};
+        transition-duration: 200ms;
+        transition-timing-function: ${transitions.easing};
 
         > div {
           background-color: ${cVar('colorBackgroundOverlay')} !important;

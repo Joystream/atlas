@@ -139,7 +139,8 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     playbackRate,
     autoPlayNext,
     captionsEnabled,
-    actions: { setCurrentVolume, setCachedVolume, setCinematicView, setCaptionsEnabled },
+    captionsLanguage,
+    actions: { setCurrentVolume, setCachedVolume, setCinematicView, setCaptionsEnabled, setCaptionsLanguage },
   } = usePersonalDataStore((state) => state)
   const [volumeToSave, setVolumeToSave] = useState(0)
   const { video } = useFullVideo(videoId || '')
@@ -154,6 +155,8 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   const [needsManualPlay, setNeedsManualPlay] = useState(!autoplay)
   const mdMatch = useMediaMatch('md')
   const xsMatch = useMediaMatch('xs')
+  const storedLanguageExists =
+    captionsLanguage && availableTextTracks?.map((track) => track.language).includes(captionsLanguage)
 
   const playVideo = useCallback(
     async (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => {
@@ -516,13 +519,33 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     })
   }, [availableTextTracks, player])
 
+  useEffect(() => {
+    if (!captionsEnabled || !captionsLanguage) {
+      return
+    }
+    if (!storedLanguageExists) {
+      setCaptionsEnabled(false)
+      setCaptionsLanguage(null)
+    }
+  }, [
+    availableTextTracks,
+    captionsEnabled,
+    storedLanguageExists,
+    setCaptionsEnabled,
+    setCaptionsLanguage,
+    captionsLanguage,
+  ])
+
   // handle toggling subtitles
   useEffect(() => {
     const tracks = player?.remoteTextTracks()
     if (!tracks || !availableTextTracks) {
       return
     }
-    const findDefaultLanguage = availableTextTracks.find((availableTrack) => availableTrack.language === 'en')
+
+    const findDefaultLanguage = availableTextTracks.find((availableTrack) =>
+      storedLanguageExists ? availableTrack.language === captionsLanguage : availableTrack.language === 'en'
+    )
     for (let i = 0; i < tracks.length; i++) {
       const track = tracks[i]
 
@@ -539,7 +562,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     if (!activeTrack) {
       setActiveTrack(findDefaultLanguage || availableTextTracks[0])
     }
-  }, [activeTrack, availableTextTracks, captionsEnabled, player])
+  }, [activeTrack, availableTextTracks, captionsEnabled, captionsLanguage, player, storedLanguageExists])
 
   // button/input handlers
   const handlePlayPause = useCallback(() => {

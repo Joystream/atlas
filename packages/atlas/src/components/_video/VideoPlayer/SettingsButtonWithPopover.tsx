@@ -63,7 +63,7 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
   const {
     playbackRate,
     autoPlayNext: playNext,
-    actions: { setPlaybackRate, setAutoPlayNext },
+    actions: { setPlaybackRate, setAutoPlayNext, setCaptionsLanguage },
   } = usePersonalDataStore((state) => state)
 
   const subtitlesSettings: Setting = {
@@ -77,6 +77,7 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
         selected: activeTrack?.language === track.language,
         onOptionClick: () => {
           onTrackChange(track)
+          setCaptionsLanguage(track.language)
         },
       })) || [],
   }
