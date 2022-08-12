@@ -32,6 +32,10 @@ export type ListItemProps = {
   className?: string
   highlight?: boolean
   to?: To
+  externalLink?: {
+    href: string
+    download?: string
+  }
 }
 
 export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
@@ -51,6 +55,7 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
       className,
       highlight,
       to,
+      externalLink,
     },
     ref
   ) => {
@@ -59,7 +64,7 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
     return (
       <Container
         highlight={highlight}
-        as={asButton ? 'button' : undefined}
+        as={externalLink ? 'a' : asButton ? 'button' : undefined}
         className={className}
         onClick={onClick}
         disabled={disabled}
@@ -67,6 +72,7 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
         size={size}
         ref={mergeRefs([hoverRef, ref])}
         {...linkProps}
+        {...externalLink}
       >
         {!!nodeStart && (
           <NodeContainer isSelected={selected} isHovering={isHovering} destructive={destructive}>

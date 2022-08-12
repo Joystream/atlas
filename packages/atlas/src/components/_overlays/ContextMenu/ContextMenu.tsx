@@ -6,10 +6,11 @@ import { ListItemProps, ListItemSizes } from '@/components/ListItem'
 
 import { Popover, PopoverImperativeHandle, PopoverProps } from '../Popover'
 
-export type ContextMenuProps = { items: ListItemProps[]; scrollable?: boolean; size?: ListItemSizes } & Omit<
-  PopoverProps,
-  'content' | 'instanceRef'
->
+export type ContextMenuProps = {
+  items: ListItemProps[]
+  scrollable?: boolean
+  size?: ListItemSizes
+} & Omit<PopoverProps, 'content' | 'instanceRef'>
 
 export const ContextMenu: FC<ContextMenuProps> = ({
   children,
