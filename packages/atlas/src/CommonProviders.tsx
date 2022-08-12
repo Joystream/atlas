@@ -7,6 +7,7 @@ import { createApolloClient } from '@/api'
 import { useGetKillSwitch } from '@/api/hooks/admin'
 import { AdminModal } from '@/components/_overlays/AdminModal'
 import { AssetsManager, OperatorsContextProvider } from '@/providers/assets'
+import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { GlobalStyles } from '@/styles'
 
@@ -18,17 +19,19 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
     <>
       <GlobalStyles />
       <OverlayManagerProvider>
-        <ApolloProvider client={apolloClient}>
-          <BrowserRouter>
-            <AdminModal />
-            <MaintenanceWrapper>
-              <OperatorsContextProvider>
-                <AssetsManager />
-                {children}
-              </OperatorsContextProvider>
-            </MaintenanceWrapper>
-          </BrowserRouter>
-        </ApolloProvider>
+        <ConfirmationModalProvider>
+          <ApolloProvider client={apolloClient}>
+            <BrowserRouter>
+              <AdminModal />
+              <MaintenanceWrapper>
+                <OperatorsContextProvider>
+                  <AssetsManager />
+                  {children}
+                </OperatorsContextProvider>
+              </MaintenanceWrapper>
+            </BrowserRouter>
+          </ApolloProvider>
+        </ConfirmationModalProvider>
       </OverlayManagerProvider>
     </>
   )
