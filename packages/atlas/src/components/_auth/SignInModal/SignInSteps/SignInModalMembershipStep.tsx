@@ -4,7 +4,6 @@ import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
-import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
@@ -14,7 +13,7 @@ import { JOYSTREAM_URL } from '@/config/urls'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 
 import { SignInModalStepTemplate } from './SignInModalStepTemplate'
-import { Anchor, StyledForm } from './SignInSteps.styles'
+import { Anchor, StyledAvatar, StyledForm } from './SignInSteps.styles'
 import { SignInStepProps } from './SignInSteps.types'
 
 import { MemberFormData } from '../SignInModal.types'
@@ -118,7 +117,7 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
       hasNavigatedBack={hasNavigatedBack}
       formNode={
         <StyledForm onSubmit={createSubmitHandler(createMember)}>
-          <Avatar
+          <StyledAvatar
             size="cover"
             onClick={() =>
               avatarDialogRef.current?.open(

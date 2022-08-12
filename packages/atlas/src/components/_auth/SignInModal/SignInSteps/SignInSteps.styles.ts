@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { Avatar } from '@/components/Avatar'
 import { Banner } from '@/components/Banner'
 import { ListItem } from '@/components/ListItem'
 import { cVar, sizes } from '@/styles'
@@ -26,8 +27,15 @@ export const StyledBottomBanner = styled(Banner)`
   margin-top: ${sizes(6)};
 `
 
+export const StyledAvatar = styled(Avatar)`
+  position: absolute;
+  transform: translateY(-50%);
+  top: 0;
+`
+
 export const StyledForm = styled.form`
-  margin-top: -${sizes(11)};
+  position: relative;
+  padding-top: ${sizes(17)};
   display: grid;
   gap: ${sizes(6)};
 `
