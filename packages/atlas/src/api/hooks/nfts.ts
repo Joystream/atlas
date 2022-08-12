@@ -9,14 +9,15 @@ import {
   BasicVideoFieldsFragment,
   GetNftHistoryQuery,
   GetNftHistoryQueryVariables,
-  GetNftQuery,
-  GetNftQueryVariables,
   GetNftsConnectionQuery,
   GetNftsConnectionQueryVariables,
+  GetNftsQuery,
+  GetNftsQueryVariables,
   useGetNftHistoryQuery,
-  useGetNftQuery,
   useGetNftsConnectionQuery,
+  useGetNftsQuery,
 } from '@/api/queries'
+import { videoFilter } from '@/config/videoFilter'
 import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
 
 type CommonNftProperties = {
@@ -24,6 +25,8 @@ type CommonNftProperties = {
   duration: number | null | undefined
   views: number | undefined
 }
+
+const VIDEO_ID_FILTER = videoFilter.NOT?.find((item) => item.id_in)
 
 export type NftStatus = (
   | {
@@ -106,9 +109,13 @@ export const getNftStatus = (
   }
 }
 
-export const useNft = (id: string, opts?: QueryHookOptions<GetNftQuery, GetNftQueryVariables>) => {
-  const { data, ...rest } = useGetNftQuery({ variables: { id }, skip: !id, ...opts })
-  const nft = data?.ownedNftByUniqueInput
+export const useNft = (id: string, opts?: QueryHookOptions<GetNftsQuery, GetNftsQueryVariables>) => {
+  const { data, ...rest } = useGetNftsQuery({
+    variables: { where: { id_eq: id, NOT: [{ id_in: VIDEO_ID_FILTER ? VIDEO_ID_FILTER.id_in : [] }] } },
+    skip: !id,
+    ...opts,
+  })
+  const nft = data?.ownedNfts[0]
 
   return {
     nft,
@@ -121,7 +128,13 @@ export const useNftsConnection = (
   variables?: GetNftsConnectionQueryVariables,
   opts?: QueryHookOptions<GetNftsConnectionQuery, GetNftsConnectionQueryVariables>
 ) => {
-  const { data, ...rest } = useGetNftsConnectionQuery({ variables, ...opts })
+  const { data, ...rest } = useGetNftsConnectionQuery({
+    variables: {
+      ...variables,
+      where: { ...variables?.where, NOT: [{ id_in: VIDEO_ID_FILTER ? VIDEO_ID_FILTER.id_in : [] }] },
+    },
+    ...opts,
+  })
 
   return {
     nfts: data?.ownedNftsConnection.edges.map(({ node }) => node),

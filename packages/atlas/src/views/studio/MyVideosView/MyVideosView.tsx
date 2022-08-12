@@ -89,9 +89,9 @@ export const MyVideosView = () => {
           id_eq: channelId,
         },
         isPublic_eq,
-        media: {
-          isAccepted_eq: undefined,
-        },
+        isCensored_eq: undefined,
+        media: undefined,
+        thumbnailPhoto: undefined,
       },
     },
     {

@@ -29,6 +29,8 @@ import {
 } from '@/api/queries'
 import { channelFilter } from '@/config/channelFilter'
 
+const CHANNEL_ID_FILTER = channelFilter.NOT?.find((item) => item.id_in)
+
 export const useBasicChannel = (
   id: string,
   opts?: QueryHookOptions<GetBasicChannelsQuery, GetBasicChannelsQueryVariables>
@@ -49,7 +51,7 @@ export const useFullChannel = (
 ) => {
   const { data, ...rest } = useGetFullChannelsQuery({
     ...opts,
-    variables: { where: { id_eq: id, ...channelFilter } },
+    variables: { where: { id_eq: id, NOT: [{ id_in: CHANNEL_ID_FILTER ? CHANNEL_ID_FILTER.id_in : [] }] } },
   })
   return {
     channel: data?.channels[0],
@@ -217,7 +219,10 @@ export const useChannelNftCollectors = (
 ) => {
   const { data, ...rest } = useGetChannelNftCollectorsQuery({
     ...opts,
-    variables: { ...variables, where: { ...channelFilter, ...variables?.where } },
+    variables: {
+      ...variables,
+      where: { ...variables?.where, NOT: [{ channel: { id_in: CHANNEL_ID_FILTER ? CHANNEL_ID_FILTER.id_in : [] } }] },
+    },
   })
 
   return {
