@@ -8,9 +8,10 @@ import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
+import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
 import { JOYSTREAM_URL } from '@/config/urls'
-import { imageUrlValidation } from '@/utils/asset'
+import { AssetDimensions, ImageCropData } from '@/types/cropper'
 
 import { SignInModalStepTemplate } from './SignInModalStepTemplate'
 import { Anchor, StyledForm } from './SignInSteps.styles'
@@ -31,12 +32,39 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
     register,
     handleSubmit: createSubmitHandler,
     formState: { errors, isSubmitting },
-  } = useForm<MemberFormData>({ mode: 'onBlur' })
+  } = useForm<MemberFormData>({ mode: 'onBlur', shouldFocusError: true })
+  const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
 
   const [displayedAvatarUrl, setDisplayedAvatarUrl] = useState<string | null>(null)
+
+  const [avatarFile, setAvatarFile] = useState<Blob | null>(null)
+  const [avatarCropData, setAvatarCropData] = useState<ImageCropData | undefined>()
+
+  const [originalAvatarFile, setOriginalAvatarFile] = useState<Blob | null>(null)
+
   const [isHandleValidating, setIsHandleValidating] = useState(false)
 
   const client = useApolloClient()
+
+  const handleConfirmAvatar = (
+    croppedFileBlob: Blob | null,
+    croppedUrl: string,
+    _: AssetDimensions,
+    cropData: ImageCropData,
+    originalFileBlob: Blob | null
+  ) => {
+    setDisplayedAvatarUrl(croppedUrl)
+    setAvatarFile(croppedFileBlob)
+    setOriginalAvatarFile(originalFileBlob)
+    setAvatarCropData(cropData)
+  }
+
+  const handleDeleteAvatar = () => {
+    setDisplayedAvatarUrl(null)
+    setAvatarFile(null)
+    setOriginalAvatarFile(null)
+    setAvatarCropData(undefined)
+  }
 
   const debouncedHandleUniqueValidation = useRef(
     debouncePromise(async (value: string, prevValue?: string) => {
@@ -58,13 +86,6 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
       return !membershipByUniqueInput
     }, 500)
   )
-  const debouncedAvatarValidation = useRef(
-    debouncePromise(async (url: string) => {
-      const isValid = await imageUrlValidation(url)
-      setDisplayedAvatarUrl(isValid ? url : null)
-      return isValid
-    }, 500)
-  )
 
   const requestFormSubmit = useCallback(() => {
     createSubmitHandler(createMember)()
@@ -73,30 +94,42 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
   // send updates to SignInModal on state of primary button
   useEffect(() => {
     setPrimaryButtonProps({
-      text: isSubmitting ? 'Please wait...' : 'Create membership',
-      disabled: isSubmitting,
+      text: isSubmitting || isHandleValidating ? 'Please wait...' : 'Create membership',
+      disabled: isSubmitting || isHandleValidating,
       onClick: requestFormSubmit,
     })
-  }, [isSubmitting, requestFormSubmit, setPrimaryButtonProps])
+  }, [isHandleValidating, isSubmitting, requestFormSubmit, setPrimaryButtonProps])
 
   return (
     <SignInModalStepTemplate
       darkBackground
       title="Create Joystream membership"
+      backgroundImage={displayedAvatarUrl || ''}
       subtitle={
         <>
           To get the full Atlas experience, you need a free Joystream blockchain membership.
-          <Anchor href={JOYSTREAM_URL} target="_blank">
-            <Text as="span" variant="t100" color="inherit">
+          <Text as="p" variant="t100" color="inherit">
+            <Anchor href={JOYSTREAM_URL} target="_blank">
               Learn about joystream &rarr;
-            </Text>
-          </Anchor>
+            </Anchor>
+          </Text>
         </>
       }
       hasNavigatedBack={hasNavigatedBack}
       formNode={
         <StyledForm onSubmit={createSubmitHandler(createMember)}>
-          <Avatar size="cover" />
+          <Avatar
+            size="cover"
+            onClick={() =>
+              avatarDialogRef.current?.open(
+                originalAvatarFile ? originalAvatarFile : avatarFile,
+                avatarCropData,
+                !!avatarFile
+              )
+            }
+            assetUrl={displayedAvatarUrl}
+            editable
+          />
           <FormField
             label="Member handle"
             description="Member handle may contain only lowercase letters, numbers and underscores."
@@ -121,6 +154,12 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
               autoComplete="off"
             />
           </FormField>
+          <ImageCropModal
+            imageType="avatar"
+            onConfirm={handleConfirmAvatar}
+            onDelete={handleDeleteAvatar}
+            ref={avatarDialogRef}
+          />
         </StyledForm>
       }
     />

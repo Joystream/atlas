@@ -7,6 +7,8 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import {
   AnimatedContainer,
+  BackgroundImage,
+  BackgroundImageOverlay,
   ContentContainer,
   CustomBackgroundContainer,
   HeaderContainer,
@@ -40,7 +42,13 @@ export const SignInModalStepTemplate: FC<SignInModalStepTemplateProps> = ({
 
   return (
     <>
-      <CustomBackgroundContainer darkBackground={darkBackground} backgroundImage={backgroundImage}>
+      <CustomBackgroundContainer darkBackground={darkBackground} hasDivider={!!(backgroundImage || darkBackground)}>
+        {backgroundImage && (
+          <>
+            <BackgroundImage src={backgroundImage} alt="" />
+            <BackgroundImageOverlay />
+          </>
+        )}
         <AnimatedContainer hasNavigatedBack={hasNavigatedBack}>
           <LogoContainer>{loader ? <Loader variant="medium" /> : <StyledAtlasLogoShort />}</LogoContainer>
           <HeaderContainer>

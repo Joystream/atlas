@@ -33,7 +33,7 @@ export const StyledForm = styled.form`
 `
 
 export const Anchor = styled.a`
-  display: block;
+  display: inline-block;
   text-decoration: none;
   margin-top: ${sizes(2)};
   margin-bottom: ${sizes(11)};

@@ -49,30 +49,42 @@ const backAnimation = keyframes`
 
 type CustomBackgroundContainerProps = {
   darkBackground?: boolean
-  backgroundImage?: string
+  hasDivider?: boolean
 }
 
-const getBackground = ({ backgroundImage, darkBackground }: CustomBackgroundContainerProps) => {
-  if (backgroundImage) {
-    return css`
-      background-image: url(${darkBackground});
-    `
-  }
-  if (darkBackground) {
-    return css`
-      background-color: ${cVar('colorBackground')};
-    `
-  }
-}
+export const BackgroundImageOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: ${cVar('colorBackgroundOverlay')};
+  z-index: -1;
+`
+
+export const BackgroundImage = styled.img`
+  position: absolute;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  filter: blur(${sizes(8)});
+  z-index: -1;
+`
 
 export const CustomBackgroundContainer = styled.div<CustomBackgroundContainerProps>`
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+
   /* add negative margin to allow changing background of the container */
 
-  margin: calc(-1 * var(--local-size-dialog-padding));
-  margin-bottom: unset;
+  margin: calc(-1 * var(--local-size-dialog-padding)) calc(-1 * var(--local-size-dialog-padding)) 0
+    calc(-1 * var(--local-size-dialog-padding));
   padding: var(--local-size-dialog-padding);
-
-  ${getBackground};
+  background-color: ${({ darkBackground }) => (darkBackground ? cVar('colorBackground') : 'unset')};
+  box-shadow: ${({ hasDivider }) => (hasDivider ? cVar('effectDividersBottom') : 'unset')};
 `
 
 type AnimatedContainerProps = {
@@ -81,6 +93,7 @@ type AnimatedContainerProps = {
 
 export const AnimatedContainer = styled.div<AnimatedContainerProps>`
   display: grid;
-  animation: ${({ hasNavigatedBack }) => (hasNavigatedBack ? backAnimation : forwardAnimation)}
-    ${cVar('animationTransitionMedium')};
+  animation: ${({ hasNavigatedBack }) => css`
+    ${hasNavigatedBack ? backAnimation : forwardAnimation} ${cVar('animationTransitionMedium')}
+  `};
 `
