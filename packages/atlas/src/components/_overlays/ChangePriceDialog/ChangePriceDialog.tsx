@@ -29,7 +29,7 @@ export const ChangePriceDialog: FC<ChangePriceDialogProps> = ({
   const amountBn = tokenNumberToHapiBn(price || 0)
   const { fullFee, loading: feeLoading } = useFee(
     'changeNftPriceTx',
-    memberId && nftId ? [memberId, nftId, amountBn.toString()] : undefined
+    isOpen && memberId && nftId ? [memberId, nftId, amountBn.toString()] : undefined
   )
 
   const handleSubmitPriceChange = () => {

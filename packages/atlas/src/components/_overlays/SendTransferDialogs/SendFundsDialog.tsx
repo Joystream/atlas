@@ -59,7 +59,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
   const amountBN = tokenNumberToHapiBn(watch('amount') || 0)
   const { fullFee, loading: feeLoading } = useFee(
     'sendFundsTx',
-    account && amountBN ? [account, amountBN.toString()] : undefined
+    show && account && amountBN ? [account, amountBN.toString()] : undefined
   )
 
   useEffect(() => {
