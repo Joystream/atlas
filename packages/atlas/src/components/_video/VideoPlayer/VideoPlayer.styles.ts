@@ -28,7 +28,7 @@ import { PlayerControlButton } from './PlayerControlButton'
 import { ControlButton } from './PlayerControlButton.styles'
 
 const DEFAULT_SUBTITLES_POSITION = '0.8em'
-const HOVERED_SUBTITLES_POSITION = '3.5em'
+const HOVERED_SUBTITLES_POSITION = '5.25em'
 
 type ContainerProps = {
   isFullScreen?: boolean
@@ -402,6 +402,7 @@ export const Container = styled.div<ContainerProps>`
   .vjs-text-track-display {
     > div {
       margin: 0 !important;
+      font-size: 16px;
 
       > div {
         inset: unset !important;
@@ -413,7 +414,7 @@ export const Container = styled.div<ContainerProps>`
         > div {
           background-color: ${cVar('colorBackgroundOverlay')} !important;
           font: ${cVar('typographyDesktopT300Strong')} !important;
-          font-size: 0.7em !important;
+          font-size: 1em !important;
           letter-spacing: ${cVar('typographyDesktopT300StrongLetterSpacing')} !important;
           text-transform: ${cVar('typographyDesktopT300StrongTextTransform')} !important;
           padding: ${sizes(1)} ${sizes(2)};
