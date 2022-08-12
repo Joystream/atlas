@@ -1,7 +1,6 @@
 import { AnalyticsManager } from '@/AnalyticsManager'
 import { CommonProviders } from '@/CommonProviders'
 import { SignInModal } from '@/components/_auth/SignInModal'
-import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { NftActionsProvider } from '@/providers/nftActions'
 import { NotificationsManager } from '@/providers/notifications'
 import { NftPurchaseBottomDrawer } from '@/views/global/NftPurchaseBottomDrawer'
@@ -18,23 +17,21 @@ export const App = () => {
   return (
     <CommonProviders>
       <AnalyticsManager />
-      <ConfirmationModalProvider>
-        <UserProvider>
-          <JoystreamProvider>
-            <NftActionsProvider>
-              <MainLayout />
-              <Snackbars />
-              <TransactionsManager />
-              <JoystreamManager />
-              <NotificationsManager />
-              <SignInModal />
-              <NftSettlementBottomDrawer />
-              <NftPurchaseBottomDrawer />
-              <NftSaleBottomDrawer />
-            </NftActionsProvider>
-          </JoystreamProvider>
-        </UserProvider>
-      </ConfirmationModalProvider>
+      <UserProvider>
+        <JoystreamProvider>
+          <NftActionsProvider>
+            <MainLayout />
+            <Snackbars />
+            <TransactionsManager />
+            <JoystreamManager />
+            <NotificationsManager />
+            <SignInModal />
+            <NftSettlementBottomDrawer />
+            <NftPurchaseBottomDrawer />
+            <NftSaleBottomDrawer />
+          </NftActionsProvider>
+        </JoystreamProvider>
+      </UserProvider>
     </CommonProviders>
   )
 }
