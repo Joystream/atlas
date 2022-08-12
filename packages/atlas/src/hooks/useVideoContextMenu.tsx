@@ -26,7 +26,6 @@ type VideoContextMenuData = {
   onEditClick?: (event?: MouseEvent<Element>) => void
   onMintNftClick?: (event?: MouseEvent<Element>) => void
   onDeleteVideoClick?: () => void
-  onChangePrice?: () => void
   hasNft: boolean
   nft?: FullNftFieldsFragment | null
   nftState?: ReturnType<typeof useNftState>
@@ -44,7 +43,6 @@ export const useVideoContextMenu = ({
   onEditClick,
   onDeleteVideoClick,
   onMintNftClick,
-  onChangePrice,
   hasNft,
   nftState,
   nftActions,
@@ -161,7 +159,7 @@ export const useVideoContextMenu = ({
                 {
                   nodeStart: <SvgActionSell />,
                   label: 'Change price',
-                  onClick: onChangePrice,
+                  onClick: () => videoId && nftActions?.openNftChangePrice(videoId),
                   caption: (
                     <>
                       Currently:{' '}

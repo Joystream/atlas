@@ -1,11 +1,13 @@
 import styled from '@emotion/styled'
 import BN from 'bn.js'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 
+import { Fee } from '@/components/Fee'
 import { Text } from '@/components/Text'
 import { TokenInput } from '@/components/_inputs/TokenInput'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
+import { useFee } from '@/providers/joystream'
 import { sizes } from '@/styles'
 
 type ChangePriceDialogProps = {
@@ -13,10 +15,22 @@ type ChangePriceDialogProps = {
   isOpen: boolean
   onChangePrice: (id: string, price: BN) => void
   nftId: string | null
+  memberId: string | null
 }
 
-export const ChangePriceDialog: FC<ChangePriceDialogProps> = ({ onModalClose, isOpen, onChangePrice, nftId }) => {
-  const [price, setPrice] = useState<number | null>()
+export const ChangePriceDialog: FC<ChangePriceDialogProps> = ({
+  onModalClose,
+  isOpen,
+  onChangePrice,
+  nftId,
+  memberId,
+}) => {
+  const [price, setPrice] = useState<number | null>(null)
+  const amountBn = tokenNumberToHapiBn(price || 0)
+  const { fullFee, loading: feeLoading } = useFee(
+    'changeNftPriceTx',
+    isOpen && memberId && nftId ? [memberId, nftId, amountBn.toString()] : undefined
+  )
 
   const handleSubmitPriceChange = () => {
     if (!nftId || !price) {
@@ -26,6 +40,12 @@ export const ChangePriceDialog: FC<ChangePriceDialogProps> = ({ onModalClose, is
     onModalClose()
     onChangePrice(nftId, tokenNumberToHapiBn(price))
   }
+
+  useEffect(() => {
+    if (!isOpen) {
+      setPrice(null)
+    }
+  }, [isOpen])
 
   return (
     <DialogModal
@@ -40,6 +60,8 @@ export const ChangePriceDialog: FC<ChangePriceDialogProps> = ({ onModalClose, is
         text: 'Cancel',
         onClick: onModalClose,
       }}
+      onExitClick={onModalClose}
+      additionalActionsNode={<Fee amount={fullFee} loading={feeLoading} variant="h200" />}
     >
       <>
         <Text as="p" variant="t200" color="colorText">

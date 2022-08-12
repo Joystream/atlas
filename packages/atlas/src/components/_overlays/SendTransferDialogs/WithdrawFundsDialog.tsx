@@ -53,7 +53,9 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
   const handleTransaction = useTransaction()
   const { fullFee, loading: feeLoading } = useFee(
     'withdrawFromChannelBalanceTx',
-    channelId && activeMembership && amountBn ? [activeMembership.id, channelId, amountBn.toString()] : undefined
+    show && channelId && activeMembership && amountBn
+      ? [activeMembership.id, channelId, amountBn.toString()]
+      : undefined
   )
 
   useEffect(() => {
