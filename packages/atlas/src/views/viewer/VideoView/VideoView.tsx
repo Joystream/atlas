@@ -126,21 +126,6 @@ export const VideoView: FC = () => {
     return 'default'
   }, [memberId, videoReactionProcessing, video])
 
-  useEffect(() => {
-    if (!videoId || !channelId) {
-      return
-    }
-    addVideoView({
-      variables: {
-        videoId,
-        channelId,
-        categoryId,
-      },
-    }).catch((error) => {
-      SentryLogger.error('Failed to increase video views', 'VideoView', error)
-    })
-  }, [addVideoView, videoId, channelId, categoryId])
-
   // Save the video timestamp
   // disabling eslint for this line since debounce is an external fn and eslint can't figure out its args, so it will complain.
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -200,6 +185,21 @@ export const VideoView: FC = () => {
   const handleShare = () => {
     setShareDialogOpen(true)
   }
+
+  const handleAddVideoView = useCallback(() => {
+    if (!videoId || !channelId) {
+      return
+    }
+    addVideoView({
+      variables: {
+        videoId,
+        channelId,
+        categoryId,
+      },
+    }).catch((error) => {
+      SentryLogger.error('Failed to increase video views', 'VideoView', error)
+    })
+  }, [addVideoView, categoryId, channelId, videoId])
 
   if (error) {
     return <ViewErrorFallback />
@@ -291,6 +291,7 @@ export const VideoView: FC = () => {
               {!isMediaLoading && video ? (
                 <VideoPlayer
                   onCloseShareDialog={() => setShareDialogOpen(false)}
+                  onAddVideoView={handleAddVideoView}
                   isShareDialogOpen={isShareDialogOpen}
                   isVideoPending={!video?.media?.isAccepted}
                   videoId={video?.id}

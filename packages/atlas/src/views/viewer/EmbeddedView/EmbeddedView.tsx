@@ -1,7 +1,7 @@
 import { Global, SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { throttle } from 'lodash-es'
-import { FC, useEffect, useRef } from 'react'
+import { FC, useCallback, useRef } from 'react'
 import { useParams } from 'react-router'
 
 import { useAddVideoView, useFullVideo } from '@/api/hooks'
@@ -35,7 +35,7 @@ export const EmbeddedView: FC = () => {
   const videoId = video?.id
   const categoryId = video?.category?.id
 
-  useEffect(() => {
+  const handleAddVideoView = useCallback(() => {
     if (!videoId || !channelId) {
       return
     }
@@ -48,7 +48,7 @@ export const EmbeddedView: FC = () => {
     }).catch((error) => {
       SentryLogger.error('Failed to increase video views', 'VideoView', error)
     })
-  }, [addVideoView, videoId, channelId, categoryId])
+  }, [addVideoView, categoryId, channelId, videoId])
 
   const handleVideoEnded = () => {
     if (window.top) {
@@ -100,6 +100,7 @@ export const EmbeddedView: FC = () => {
       <Container>
         {!isMediaLoading && !isThumbnailLoading && video ? (
           <VideoPlayer
+            onAddVideoView={handleAddVideoView}
             isVideoPending={!video?.media?.isAccepted}
             channelAvatarUrl={channelAvatarUrl}
             isChannelAvatarLoading={isChannelAvatarLoading}
