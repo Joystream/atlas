@@ -37,7 +37,7 @@ export const useBasicChannel = (
 ) => {
   const { data, ...rest } = useGetBasicChannelsQuery({
     ...opts,
-    variables: { where: { id_eq: id, ...channelFilter } },
+    variables: { where: { id_eq: id, NOT: [{ id_in: CHANNEL_ID_FILTER ? CHANNEL_ID_FILTER.id_in : [] }] } },
   })
   return {
     channel: data?.channels[0],
