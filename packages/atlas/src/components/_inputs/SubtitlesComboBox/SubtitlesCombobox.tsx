@@ -40,7 +40,7 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
         { language, type: 'subtitles' as const, disabled: false },
         { language, type: 'closed-captions' as const, disabled: false },
       ])
-      .flat(1)
+      .flat()
   )
 
   const toggleLanguage = (subtitles: Subtitles, disabled: boolean) => {

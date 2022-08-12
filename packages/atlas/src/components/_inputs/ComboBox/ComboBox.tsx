@@ -74,6 +74,7 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
         (item.label as string)?.toLowerCase().startsWith(inputValue?.toLowerCase() || '')
       )
       setInputItems(filteredItems)
+      onInputValueChange?.(inputValue)
     },
   })
 
@@ -96,7 +97,7 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
           {...textFieldProps}
           error={error || !!noItemsFound}
           {...getInputProps({ ref: textFieldRef })}
-          nodeEnd={processing && <Loader variant="small" />}
+          nodeEnd={processing && inputValue && <Loader variant="small" />}
           nodeStart={<StyledSvgActionPlus />}
           onFocus={(event) => {
             textFieldProps?.onFocus?.(event)

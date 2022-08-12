@@ -66,7 +66,7 @@ export const SubtitleBox: FC<SubtitleBoxProps> = ({
       openUnsuportedFileDialog({
         title: 'File format unsupported',
         description:
-          'It looks like you selected a file format which is not supported. Reselect file and choose .webvtt file to proceed.',
+          'It looks like you selected a file format which is not supported. Reselect file and choose .vtt file to proceed.',
         type: 'informative',
         primaryButton: {
           onClick: () => {
