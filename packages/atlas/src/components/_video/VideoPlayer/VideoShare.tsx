@@ -196,25 +196,25 @@ const VideoShareContent: FC<VideoShareContentProps> = ({ videoId, isEmbedded, cu
         <ShareButtonWithTooltip
           text="Share on Facebook"
           buttonVariant={!isEmbedded ? 'primary' : 'secondary'}
-          url={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`}
+          url={`https://www.facebook.com/sharer/sharer.php?u=${url}`}
           icon={!isEmbedded ? <SvgLogoFacebookOnLight /> : <SvgLogoFacebookMonochrome />}
         />
         <ShareButtonWithTooltip
           text="Share on Twitter"
           buttonVariant={!isEmbedded ? 'primary' : 'secondary'}
-          url={`http://www.twitter.com/share?url=${window.location.href}`}
+          url={`http://www.twitter.com/share?url=${url}`}
           icon={!isEmbedded ? <SvgLogoTwitterOnLight /> : <SvgLogoTwitterMonochrome />}
         />
         <ShareButtonWithTooltip
           text="Share on VK"
           buttonVariant={!isEmbedded ? 'primary' : 'secondary'}
-          url={`https://vk.com/share.php?url=${window.location.href}`}
+          url={`https://vk.com/share.php?url=${url}`}
           icon={!isEmbedded ? <SvgLogoVkOnLight /> : <SvgLogoVkMonochrome />}
         />
         <ShareButtonWithTooltip
           text="Share on Reddit"
           buttonVariant={!isEmbedded ? 'primary' : 'secondary'}
-          url={`https://www.reddit.com/submit?url=${window.location.href}&title=${videoTitle}`}
+          url={`https://www.reddit.com/submit?url=${url}&title=${videoTitle}`}
           icon={!isEmbedded ? <SvgLogoRedditOnLight /> : <SvgLogoRedditMonochrome />}
         />
       </ShareButtonsContainer>
