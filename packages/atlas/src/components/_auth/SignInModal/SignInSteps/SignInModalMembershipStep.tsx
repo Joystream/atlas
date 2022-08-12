@@ -1,5 +1,5 @@
 import { useApolloClient } from '@apollo/client'
-import debouncePromise from 'awesome-debounce-promise'
+import { debounce } from 'lodash-es'
 import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -30,8 +30,9 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
   const {
     register,
     handleSubmit: createSubmitHandler,
+    trigger,
     formState: { errors, isSubmitting },
-  } = useForm<MemberFormData>({ mode: 'onBlur', shouldFocusError: true })
+  } = useForm<MemberFormData>()
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
 
   const [displayedAvatarUrl, setDisplayedAvatarUrl] = useState<string | null>(null)
@@ -65,26 +66,24 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
     setAvatarCropData(undefined)
   }
 
-  const debouncedHandleUniqueValidation = useRef(
-    debouncePromise(async (value: string, prevValue?: string) => {
-      if (prevValue != null && value === prevValue) {
-        return true
-      }
+  const validateUserHandle = async (value: string, prevValue?: string) => {
+    if (prevValue != null && value === prevValue) {
+      return true
+    }
 
-      setIsHandleValidating(true)
+    setIsHandleValidating(true)
 
-      const {
-        data: { membershipByUniqueInput },
-      } = await client.query<GetMembershipQuery, GetMembershipQueryVariables>({
-        query: GetMembershipDocument,
-        variables: { where: { handle: value } },
-      })
+    const {
+      data: { membershipByUniqueInput },
+    } = await client.query<GetMembershipQuery, GetMembershipQueryVariables>({
+      query: GetMembershipDocument,
+      variables: { where: { handle: value } },
+    })
 
-      setIsHandleValidating(false)
+    setIsHandleValidating(false)
 
-      return !membershipByUniqueInput
-    }, 500)
-  )
+    return !membershipByUniqueInput
+  }
 
   const requestFormSubmit = useCallback(() => {
     createSubmitHandler(createMember)()
@@ -136,11 +135,12 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
           >
             <Input
               {...register('handle', {
+                onChange: debounce(() => trigger('handle'), 500),
                 validate: {
                   valid: (value) =>
                     !value ? true : MEMBERSHIP_NAME_PATTERN.test(value) || 'Enter a valid member handle.',
                   unique: async (value) => {
-                    const valid = await debouncedHandleUniqueValidation.current(value)
+                    const valid = await validateUserHandle(value)
                     return valid || 'This member handle is already in use.'
                   },
                 },
