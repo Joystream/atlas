@@ -1,7 +1,7 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SvgJoystreamLogoShort } from '@/components/_illustrations'
+import { SvgAtlasLogoShort } from '@/components/_illustrations'
 import { cVar, media, sizes } from '@/styles'
 
 export const HeaderContainer = styled.div`
@@ -20,7 +20,7 @@ export const LogoContainer = styled.div`
   }
 `
 
-export const StyledJoystreamLogo = styled(SvgJoystreamLogoShort)`
+export const StyledAtlasLogoShort = styled(SvgAtlasLogoShort)`
   height: 36px;
   width: auto;
 

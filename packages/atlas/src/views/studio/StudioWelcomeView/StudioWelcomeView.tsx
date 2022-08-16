@@ -33,11 +33,11 @@ export const StudioWelcomeView: FC = () => {
       <StyledContainer>
         <Header>
           <Text as="h1" variant="h800" margin={{ top: 8 }}>
-            Welcome to Joystream Studio
+            Welcome to Atlas Studio
           </Text>
           <SubTitle as="p" variant="t300" color="colorText">
-            Start your journey as a Joystream content creator. Manage your channels, publish video content, issue NFTs,
-            and more!
+            Start your journey as a Atlas content creator. Manage your channels, publish video content, issue NFTs, and
+            more!
           </SubTitle>
           <ButtonGroup>
             {isLoggedIn ? (

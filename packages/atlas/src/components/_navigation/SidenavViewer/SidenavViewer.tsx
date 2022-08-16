@@ -2,7 +2,7 @@ import { FC, useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionMember, SvgActionNewTab } from '@/components/_icons'
-import { SvgJoystreamLogoFull } from '@/components/_illustrations'
+import { SvgAtlasLogoFull } from '@/components/_illustrations'
 import { viewerNavItems } from '@/config/nav'
 import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -48,7 +48,7 @@ export const SidenavViewer: FC = () => {
     <SidenavBase
       expanded={expanded}
       toggleSideNav={setExpanded}
-      logoNode={<SvgJoystreamLogoFull />}
+      logoNode={<SvgAtlasLogoFull />}
       logoLinkUrl={absoluteRoutes.viewer.index()}
       items={viewerNavItems}
       additionalContent={

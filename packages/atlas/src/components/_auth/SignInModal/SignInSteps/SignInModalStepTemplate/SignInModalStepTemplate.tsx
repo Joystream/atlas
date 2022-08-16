@@ -10,7 +10,7 @@ import {
   ContentContainer,
   HeaderContainer,
   LogoContainer,
-  StyledJoystreamLogo,
+  StyledAtlasLogoShort,
 } from './SignInModalStepTemplate.styles'
 
 type SignInModalStepTemplateProps = PropsWithChildren<{
@@ -33,7 +33,7 @@ export const SignInModalStepTemplate: FC<SignInModalStepTemplateProps> = ({
 
   return (
     <AnimatedContainer hasNavigatedBack={hasNavigatedBack}>
-      <LogoContainer>{loader ? <Loader variant="medium" /> : <StyledJoystreamLogo />}</LogoContainer>
+      <LogoContainer>{loader ? <Loader variant="medium" /> : <StyledAtlasLogoShort />}</LogoContainer>
       <HeaderContainer>
         <Text as="h3" variant={smMatch ? 'h500' : 'h400'}>
           {title}

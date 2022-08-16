@@ -39,7 +39,7 @@ app.get('/video/:id', async (req, res) => {
     const title = html.querySelector('title')
 
     if (title) {
-      title.innerHTML = `${video.title} - Joystream`
+      title.innerHTML = `${video.title} - Atlas`
     }
 
     const thumbnailUrl = video.thumbnailPhoto ? generateAssetUrl(video.thumbnailPhoto) : ''
@@ -72,7 +72,7 @@ app.get('/channel/:id', async (req, res) => {
     const title = html.querySelector('title')
 
     if (title) {
-      title.innerHTML = `${channel.title} - Joystream`
+      title.innerHTML = `${channel.title} - Atlas`
     }
 
     const avatarUrl = channel.avatarPhoto ? generateAssetUrl(channel.avatarPhoto) : ''

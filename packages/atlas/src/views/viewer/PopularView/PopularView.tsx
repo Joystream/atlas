@@ -16,7 +16,7 @@ export const PopularView: FC = () => {
   const headTags = useHeadTags('Popular')
 
   return (
-    <VideoContentTemplate title="Popular on Joystream" cta={CTA}>
+    <VideoContentTemplate title="Popular on Atlas" cta={CTA}>
       {headTags}
       <TopTenVideos period="month" />
       <InfiniteVideoGrid title="Popular videos" query={GetMostViewedVideosConnectionDocument} limit={50} onDemand />

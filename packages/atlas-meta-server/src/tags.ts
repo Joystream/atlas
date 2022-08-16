@@ -19,12 +19,12 @@ export type MetaTags = Record<string, string | number>
 
 const commonMetaTags = {
   'twitter:site': '@JoystreamDAO',
-  'og:site_name': 'Joystream',
+  'og:site_name': 'Atlas',
 }
 
 const sanitizeDescription = (fullDescription?: string | null, title?: string | null) => {
   if (!fullDescription) {
-    return `${title || ''} on Joystream`
+    return `${title || ''} on Atlas`
   }
 
   const oneLineDescription = fullDescription
@@ -48,7 +48,7 @@ export const generateVideoMetaTags = (video: BasicVideoFieldsFragment, thumbnail
     'og:type': 'video.other',
     'og:url': videoUrl,
     'og:image': thumbnailUrl,
-    'og:image:alt': `Thumbnail for Joystream video '${video.title}'`,
+    'og:image:alt': `Thumbnail for Atlas video '${video.title}'`,
     'og:image:width': THUMBNAIL_WIDTH,
     'og:image:height': THUMBNAIL_HEIGHT,
     'og:image:type': 'image/webp',
@@ -75,7 +75,7 @@ export const generateChannelMetaTags = (channel: BasicChannelFieldsFragment, ava
     'og:type': 'profile',
     'og:url': channelUrl,
     'og:image': avatarUrl,
-    'og:image:alt': `Avatar photo for Joystream channel '${channel.title}'`,
+    'og:image:alt': `Avatar photo for Atlas channel '${channel.title}'`,
     'og:image:width': AVATAR_SIZE,
     'og:image:height': AVATAR_SIZE,
     'og:image:type': 'image/webp',

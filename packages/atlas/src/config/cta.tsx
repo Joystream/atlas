@@ -29,7 +29,7 @@ export const CTA_MAP: Record<string, CallToActionButtonProps> = {
     icon: <SvgSidebarChannels />,
   },
   popular: {
-    label: 'Popular on Joystream',
+    label: 'Popular on Atlas',
     to: absoluteRoutes.viewer.popular(),
     colorVariant: 'red',
     icon: <SvgSidebarPopular />,

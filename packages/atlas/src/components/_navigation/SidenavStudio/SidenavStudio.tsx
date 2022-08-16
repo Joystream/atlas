@@ -8,7 +8,7 @@ import {
   SvgSidebarUpload,
   SvgSidebarVideos,
 } from '@/components/_icons'
-import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
+import { SvgAtlasLogoStudio } from '@/components/_illustrations'
 import { NavItemType } from '@/components/_navigation/NavItem'
 import { SidenavBase } from '@/components/_navigation/SidenavBase'
 import { absoluteRoutes } from '@/config/routes'
@@ -86,7 +86,7 @@ export const SidenavStudio: FC<SidenavStudioProps> = ({ className }) => {
     <SidenavBase
       expanded={expanded}
       toggleSideNav={setExpanded}
-      logoNode={<SvgJoystreamLogoStudio />}
+      logoNode={<SvgAtlasLogoStudio />}
       logoLinkUrl={absoluteRoutes.studio.index()}
       items={studioNavbarItemsWithBadge}
       buttonsContent={buttons}

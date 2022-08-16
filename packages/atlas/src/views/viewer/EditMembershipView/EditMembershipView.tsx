@@ -147,7 +147,7 @@ export const EditMembershipView: FC = () => {
             </FormField>
             <FormField label="About" error={errors?.about?.message}>
               <TextArea
-                placeholder="Anything you'd like to share about yourself with the Joystream community"
+                placeholder="Anything you'd like to share about yourself with the Atlas community"
                 maxLength={1000}
                 {...register('about')}
                 value={watch('about') || ''}

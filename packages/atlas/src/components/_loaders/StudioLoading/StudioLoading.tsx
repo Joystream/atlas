@@ -10,7 +10,7 @@ export const StudioLoading: FC = () => {
     <LoadingStudioContainer>
       <Spinner size="large" />
       <Text as="span" variant="h700">
-        Loading Joystream Studio...
+        Loading Atlas Studio...
       </Text>
     </LoadingStudioContainer>
   )
