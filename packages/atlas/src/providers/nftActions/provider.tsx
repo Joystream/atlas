@@ -76,6 +76,15 @@ export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <NftActionsContext.Provider value={value}>
+      <WithdrawBidDialog
+        isOpen={currentAction === 'withdraw-bid'}
+        onModalClose={closeNftAction}
+        userBidAmount={userBidAmount || new BN(0)}
+        userBidCreatedAt={userBidCreatedAt || new Date()}
+        nftId={currentNftId}
+        memberId={memberId}
+        onWithdrawBid={transactions.withdrawBid}
+      />
       <AcceptBidDialog
         isOpen={currentAction === 'accept-bid'}
         onModalClose={closeNftAction}
@@ -90,15 +99,6 @@ export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
         onChangePrice={transactions.changeNftPrice}
         nftId={currentNftId}
         memberId={memberId}
-      />
-      <WithdrawBidDialog
-        isOpen={currentAction === 'withdraw-bid'}
-        onModalClose={closeNftAction}
-        userBidAmount={userBidAmount || new BN(0)}
-        userBidCreatedAt={userBidCreatedAt || new Date()}
-        nftId={currentNftId}
-        memberId={memberId}
-        onWithdrawBid={transactions.withdrawBid}
       />
       <RemoveFromSaleDialog
         isOpen={currentAction === 'cancel-sale'}
