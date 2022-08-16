@@ -98,6 +98,14 @@ export const useNftActions = () => {
     [setCurrentAction, setCurrentNftId, setCurrentSaleType]
   )
 
+  const openWithdrawBid = useCallback(
+    (nftId: string) => {
+      setCurrentNftId(nftId)
+      setCurrentAction('withdraw-bid')
+    },
+    [setCurrentAction, setCurrentNftId]
+  )
+
   return {
     currentAction,
     isBuyNowClicked,
@@ -111,5 +119,6 @@ export const useNftActions = () => {
     openRemoveFromSale,
     cancelNftSale,
     changeNftPrice,
+    openWithdrawBid,
   }
 }

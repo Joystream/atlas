@@ -1,4 +1,3 @@
-import BN from 'bn.js'
 import { FC } from 'react'
 import { useNavigate } from 'react-router'
 
@@ -31,10 +30,10 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
   const isAuction = nftStatus?.status === 'auction'
 
   const handleWithdrawBid = () => {
-    if (!nftState?.userBid?.amount || !nftState.userBidCreatedAt || !nftId) {
+    if (!nftId) {
       return
     }
-    withdrawBid(nftId, new BN(nftState.userBid.amount), nftState.userBidCreatedAt)
+    withdrawBid(nftId)
   }
 
   const contextMenuItems = useVideoContextMenu({

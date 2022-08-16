@@ -1,4 +1,3 @@
-import BN from 'bn.js'
 import { FC } from 'react'
 import { useNavigate } from 'react-router'
 
@@ -36,10 +35,10 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, details
     useVideoTileSharedLogic(video)
 
   const handleWithdrawBid = () => {
-    if (!nftState?.userBid?.amount || !nftState.userBidCreatedAt || !video?.id) {
+    if (!video?.id) {
       return
     }
-    withdrawBid(video?.id, new BN(nftState.userBid.amount), nftState.userBidCreatedAt)
+    withdrawBid(video?.id)
   }
 
   const channelHref = absoluteRoutes.viewer.channel(video?.channel.id)

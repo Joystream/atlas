@@ -1,5 +1,4 @@
 import { generateVideoMetaTags } from '@joystream/atlas-meta-server/src/tags'
-import BN from 'bn.js'
 import { throttle } from 'lodash-es'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
@@ -24,7 +23,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useNftTransactions } from '@/hooks/useNftTransactions'
+import { useNftState } from '@/hooks/useNftState'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useRedirectMigratedContent } from '@/hooks/useRedirectMigratedContent'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
@@ -65,7 +64,6 @@ export const VideoView: FC = () => {
   const { openSignInDialog } = useDisplaySignInDialog()
   const { openNftPutOnSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement } = useNftActions()
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
-  const { withdrawBid } = useNftTransactions()
   const { openRemoveFromSale } = useNftActions()
   const { loading, video, error } = useFullVideo(
     id ?? '',
@@ -76,7 +74,9 @@ export const VideoView: FC = () => {
   )
   const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
   const nftWidgetProps = useNftWidget(video)
+  const { bidFromPreviousAuction } = useNftState(video?.nft)
   const { likeOrDislikeVideo } = useReactionTransactions()
+  const { openWithdrawBid } = useNftActions()
 
   const mdMatch = useMediaMatch('md')
   const { addVideoView } = useAddVideoView()
@@ -231,6 +231,7 @@ export const VideoView: FC = () => {
       {!!nftWidgetProps && (
         <NftWidget
           {...nftWidgetProps}
+          bidFromPreviousAuction={bidFromPreviousAuction}
           onNftPutOnSale={() => id && openNftPutOnSale(id)}
           onNftCancelSale={() => id && nftWidgetProps.saleType && openRemoveFromSale(id, nftWidgetProps.saleType)}
           onNftAcceptBid={() => id && openNftAcceptBid(id)}
@@ -238,7 +239,7 @@ export const VideoView: FC = () => {
           onNftPurchase={() => id && openNftPurchase(id)}
           onNftSettlement={() => id && openNftSettlement(id)}
           onNftBuyNow={() => id && openNftPurchase(id, { fixedPrice: true })}
-          onWithdrawBid={(bid: BN, date: Date) => id && withdrawBid(id, bid, date)}
+          onWithdrawBid={() => id && openWithdrawBid(id)}
         />
       )}
       <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />

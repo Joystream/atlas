@@ -5,6 +5,7 @@ import { useNft } from '@/api/hooks'
 import { AcceptBidDialog } from '@/components/_overlays/AcceptBidDialog'
 import { ChangePriceDialog } from '@/components/_overlays/ChangePriceDialog'
 import { RemoveFromSaleDialog } from '@/components/_overlays/RemoveFromSaleDialog'
+import { WithdrawBidDialog } from '@/components/_overlays/WithdrawBidDialog'
 import { useNftState } from '@/hooks/useNftState'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { NftSaleType } from '@/joystream-lib'
@@ -12,7 +13,7 @@ import { useTokenPrice } from '@/providers/joystream'
 import { useUser } from '@/providers/user'
 
 type SaleType = NftSaleType | null
-type NftAction = 'putOnSale' | 'purchase' | 'settle' | 'accept-bid' | 'change-price' | 'cancel-sale'
+type NftAction = 'putOnSale' | 'purchase' | 'settle' | 'accept-bid' | 'change-price' | 'cancel-sale' | 'withdraw-bid'
 type ContextValue = {
   currentAction: NftAction | null
   currentNftId: string | null
@@ -35,10 +36,10 @@ export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
   const transactions = useNftTransactions()
   const [isBuyNowClicked, setIsBuyNowClicked] = useState<boolean>()
   const [currentNftId, setCurrentNftId] = useState<string | null>(null)
-  const { nft } = useNft(currentNftId || '')
-  const { auction } = useNftState(nft)
-  const { convertHapiToUSD } = useTokenPrice()
   const { memberId } = useUser()
+  const { nft } = useNft(currentNftId || '')
+  const { auction, userBidCreatedAt, userBidAmount } = useNftState(nft)
+  const { convertHapiToUSD } = useTokenPrice()
 
   const mappedBids = auction?.bids
     ? auction?.bids
@@ -89,6 +90,15 @@ export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
         onChangePrice={transactions.changeNftPrice}
         nftId={currentNftId}
         memberId={memberId}
+      />
+      <WithdrawBidDialog
+        isOpen={currentAction === 'withdraw-bid'}
+        onModalClose={closeNftAction}
+        userBidAmount={userBidAmount || new BN(0)}
+        userBidCreatedAt={userBidCreatedAt || new Date()}
+        nftId={currentNftId}
+        memberId={memberId}
+        onWithdrawBid={transactions.withdrawBid}
       />
       <RemoveFromSaleDialog
         isOpen={currentAction === 'cancel-sale'}
