@@ -1,5 +1,5 @@
 import { useApolloClient } from '@apollo/client'
-import { debounce } from 'lodash-es'
+import debouncePromise from 'awesome-debounce-promise'
 import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -33,6 +33,7 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
     trigger,
     formState: { errors, isSubmitting },
   } = useForm<MemberFormData>()
+  const handleInputRef = useRef<HTMLInputElement | null>(null)
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
 
   const [displayedAvatarUrl, setDisplayedAvatarUrl] = useState<string | null>(null)
@@ -66,21 +67,15 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
     setAvatarCropData(undefined)
   }
 
-  const validateUserHandle = async (value: string, prevValue?: string) => {
-    if (prevValue != null && value === prevValue) {
-      return true
-    }
+  const debouncePromiseRef = useRef(debouncePromise)
 
-    setIsHandleValidating(true)
-
+  const validateUserHandle = async (value: string) => {
     const {
       data: { membershipByUniqueInput },
     } = await client.query<GetMembershipQuery, GetMembershipQueryVariables>({
       query: GetMembershipDocument,
       variables: { where: { handle: value } },
     })
-
-    setIsHandleValidating(false)
 
     return !membershipByUniqueInput
   }
@@ -97,6 +92,37 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
       onClick: requestFormSubmit,
     })
   }, [isHandleValidating, isSubmitting, requestFormSubmit, setPrimaryButtonProps])
+
+  const { ref, ...handleRest } = register('handle', {
+    onChange: debouncePromiseRef.current(
+      async () => {
+        await trigger('handle')
+        setIsHandleValidating(false)
+      },
+      500,
+      {
+        key() {
+          setIsHandleValidating(true)
+          return null
+        },
+      }
+    ),
+    validate: {
+      valid: (value) => (!value ? true : MEMBERSHIP_NAME_PATTERN.test(value) || 'Enter a valid member handle.'),
+      unique: async (value) => {
+        const valid = await validateUserHandle(value)
+        return valid || 'This member handle is already in use.'
+      },
+    },
+    required: { value: true, message: 'Member handle is required.' },
+    minLength: { value: 5, message: 'Member handle must be at least 5 characters long.' },
+  })
+
+  useEffect(() => {
+    if (errors.handle) {
+      handleInputRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [errors.handle])
 
   return (
     <SignInModalStepTemplate
@@ -129,24 +155,17 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
             editable
           />
           <FormField
+            disableErrorAnimation={document.activeElement === handleInputRef.current}
             label="Member handle"
             description="Member handle may contain only lowercase letters, numbers and underscores."
             error={errors.handle?.message}
           >
             <Input
-              {...register('handle', {
-                onChange: debounce(() => trigger('handle'), 500),
-                validate: {
-                  valid: (value) =>
-                    !value ? true : MEMBERSHIP_NAME_PATTERN.test(value) || 'Enter a valid member handle.',
-                  unique: async (value) => {
-                    const valid = await validateUserHandle(value)
-                    return valid || 'This member handle is already in use.'
-                  },
-                },
-                required: { value: true, message: 'Member handle is required.' },
-                minLength: { value: 5, message: 'Member handle must be at least 5 characters long.' },
-              })}
+              {...handleRest}
+              ref={(e) => {
+                ref(e)
+                handleInputRef.current = e
+              }}
               placeholder="johnnysmith"
               error={!!errors.handle}
               processing={isHandleValidating || isSubmitting}
