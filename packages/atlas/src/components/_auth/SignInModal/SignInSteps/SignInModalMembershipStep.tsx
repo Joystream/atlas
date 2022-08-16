@@ -1,7 +1,7 @@
 import { useApolloClient } from '@apollo/client'
 import debouncePromise from 'awesome-debounce-promise'
 import { FC, useCallback, useEffect, useRef, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 
 import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
 import { Text } from '@/components/Text'
@@ -10,7 +10,7 @@ import { Input } from '@/components/_inputs/Input'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
 import { JOYSTREAM_URL } from '@/config/urls'
-import { AssetDimensions, ImageCropData } from '@/types/cropper'
+import { ImageCropData } from '@/types/cropper'
 
 import { SignInModalStepTemplate } from './SignInModalStepTemplate'
 import { Anchor, StyledAvatar, StyledForm } from './SignInSteps.styles'
@@ -31,38 +31,28 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
     register,
     handleSubmit: createSubmitHandler,
     trigger,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<MemberFormData>()
   const handleInputRef = useRef<HTMLInputElement | null>(null)
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
 
-  const [displayedAvatarUrl, setDisplayedAvatarUrl] = useState<string | null>(null)
-
-  const [avatarFile, setAvatarFile] = useState<Blob | null>(null)
-  const [avatarCropData, setAvatarCropData] = useState<ImageCropData | undefined>()
-
   const [originalAvatarFile, setOriginalAvatarFile] = useState<Blob | null>(null)
+  const [displayedAvatarUrl, setDisplayedAvatarUrl] = useState<string | null>(null)
+  const [avatarCropData, setAvatarCropData] = useState<ImageCropData | undefined>()
 
   const [isHandleValidating, setIsHandleValidating] = useState(false)
 
   const client = useApolloClient()
 
-  const handleConfirmAvatar = (
-    croppedFileBlob: Blob | null,
-    croppedUrl: string,
-    _: AssetDimensions,
-    cropData: ImageCropData,
-    originalFileBlob: Blob | null
-  ) => {
+  const handleConfirmAvatar = (croppedUrl: string, cropData: ImageCropData, originalFileBlob: Blob | null) => {
     setDisplayedAvatarUrl(croppedUrl)
-    setAvatarFile(croppedFileBlob)
     setOriginalAvatarFile(originalFileBlob)
     setAvatarCropData(cropData)
   }
 
   const handleDeleteAvatar = () => {
     setDisplayedAvatarUrl(null)
-    setAvatarFile(null)
     setOriginalAvatarFile(null)
     setAvatarCropData(undefined)
   }
@@ -142,17 +132,34 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
       hasNavigatedBack={hasNavigatedBack}
       formNode={
         <StyledForm onSubmit={createSubmitHandler(createMember)}>
-          <StyledAvatar
-            size="cover"
-            onClick={() =>
-              avatarDialogRef.current?.open(
-                originalAvatarFile ? originalAvatarFile : avatarFile,
-                avatarCropData,
-                !!avatarFile
-              )
-            }
-            assetUrl={displayedAvatarUrl}
-            editable
+          <Controller
+            control={control}
+            name="avatar"
+            render={({ field: { value: avatarFile, onChange } }) => (
+              <>
+                <StyledAvatar
+                  size="cover"
+                  onClick={() =>
+                    avatarDialogRef.current?.open(
+                      originalAvatarFile ? originalAvatarFile : avatarFile,
+                      avatarCropData,
+                      !!avatarFile
+                    )
+                  }
+                  assetUrl={displayedAvatarUrl}
+                  editable
+                />
+                <ImageCropModal
+                  imageType="avatar"
+                  onConfirm={(croppedBlob, croppedUrl, _2, imageCropData, originalBlob) => {
+                    handleConfirmAvatar(croppedUrl, imageCropData, originalBlob)
+                    onChange(croppedBlob)
+                  }}
+                  onDelete={handleDeleteAvatar}
+                  ref={avatarDialogRef}
+                />
+              </>
+            )}
           />
           <FormField
             disableErrorAnimation={document.activeElement === handleInputRef.current}
@@ -172,12 +179,6 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
               autoComplete="off"
             />
           </FormField>
-          <ImageCropModal
-            imageType="avatar"
-            onConfirm={handleConfirmAvatar}
-            onDelete={handleDeleteAvatar}
-            ref={avatarDialogRef}
-          />
         </StyledForm>
       }
     />
