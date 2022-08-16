@@ -204,10 +204,11 @@ type NewMemberResponse = {
 }
 const createNewMember = async (address: string, data: MemberFormData) => {
   let fileUrl
+  const croppedBlob = data.avatar?.blob
 
-  if (data.avatar) {
+  if (croppedBlob) {
     const formData = new FormData()
-    formData.append('file', data.avatar, `upload.${data.avatar?.type === 'image/webp' ? 'webp' : 'jpg'}`)
+    formData.append('file', croppedBlob, `upload.${croppedBlob.type === 'image/webp' ? 'webp' : 'jpg'}`)
     const response = await axios.post<string>(AVATAR_SERVICE_URL, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',

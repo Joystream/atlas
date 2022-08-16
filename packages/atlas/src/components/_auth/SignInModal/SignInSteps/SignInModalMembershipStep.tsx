@@ -10,7 +10,6 @@ import { Input } from '@/components/_inputs/Input'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
 import { JOYSTREAM_URL } from '@/config/urls'
-import { ImageCropData } from '@/types/cropper'
 
 import { SignInModalStepTemplate } from './SignInModalStepTemplate'
 import { Anchor, StyledAvatar, StyledForm } from './SignInSteps.styles'
@@ -31,31 +30,16 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
     register,
     handleSubmit: createSubmitHandler,
     trigger,
+    watch,
     control,
     formState: { errors, isSubmitting },
   } = useForm<MemberFormData>()
   const handleInputRef = useRef<HTMLInputElement | null>(null)
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
 
-  const [originalAvatarFile, setOriginalAvatarFile] = useState<Blob | null>(null)
-  const [displayedAvatarUrl, setDisplayedAvatarUrl] = useState<string | null>(null)
-  const [avatarCropData, setAvatarCropData] = useState<ImageCropData | undefined>()
-
   const [isHandleValidating, setIsHandleValidating] = useState(false)
 
   const client = useApolloClient()
-
-  const handleConfirmAvatar = (croppedUrl: string, cropData: ImageCropData, originalFileBlob: Blob | null) => {
-    setDisplayedAvatarUrl(croppedUrl)
-    setOriginalAvatarFile(originalFileBlob)
-    setAvatarCropData(cropData)
-  }
-
-  const handleDeleteAvatar = () => {
-    setDisplayedAvatarUrl(null)
-    setOriginalAvatarFile(null)
-    setAvatarCropData(undefined)
-  }
 
   const debouncePromiseRef = useRef(debouncePromise)
 
@@ -118,7 +102,7 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
     <SignInModalStepTemplate
       darkBackground
       title="Create Joystream membership"
-      backgroundImage={displayedAvatarUrl || ''}
+      backgroundImage={watch('avatar')?.url || undefined}
       subtitle={
         <>
           To get the full Atlas experience, you need a free Joystream blockchain membership.
@@ -135,27 +119,33 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
           <Controller
             control={control}
             name="avatar"
-            render={({ field: { value: avatarFile, onChange } }) => (
+            render={({ field: { value: imageInputFile, onChange } }) => (
               <>
                 <StyledAvatar
                   size="cover"
                   onClick={() =>
                     avatarDialogRef.current?.open(
-                      originalAvatarFile ? originalAvatarFile : avatarFile,
-                      avatarCropData,
-                      !!avatarFile
+                      imageInputFile?.originalBlob ? imageInputFile.originalBlob : imageInputFile?.blob,
+                      imageInputFile?.imageCropData,
+                      !!imageInputFile?.blob
                     )
                   }
-                  assetUrl={displayedAvatarUrl}
+                  assetUrl={imageInputFile?.url}
                   editable
                 />
                 <ImageCropModal
                   imageType="avatar"
-                  onConfirm={(croppedBlob, croppedUrl, _2, imageCropData, originalBlob) => {
-                    handleConfirmAvatar(croppedUrl, imageCropData, originalBlob)
-                    onChange(croppedBlob)
+                  onConfirm={(blob, url, _, imageCropData, originalBlob) => {
+                    onChange({
+                      blob,
+                      url,
+                      imageCropData,
+                      originalBlob,
+                    })
                   }}
-                  onDelete={handleDeleteAvatar}
+                  onDelete={() => {
+                    onChange(undefined)
+                  }}
                   ref={avatarDialogRef}
                 />
               </>
