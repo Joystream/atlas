@@ -65,6 +65,7 @@ export const WithdrawBidDialog: FC<WithdrawBidDialogProps> = ({
         text: 'Cancel',
         onClick: () => {
           onModalClose()
+          setWithdrawData(undefined)
         },
       }}
     />

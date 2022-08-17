@@ -5,7 +5,6 @@ import { useCallback } from 'react'
 import { GetNftDocument, GetNftQuery, GetNftQueryVariables } from '@/api/queries'
 import { GetBidsDocument } from '@/api/queries/__generated__/bids.generated'
 import { NftSaleType } from '@/joystream-lib'
-import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions'
 import { useUser } from '@/providers/user'
@@ -14,7 +13,6 @@ export const useNftTransactions = () => {
   const { memberId } = useUser()
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const [openModal, closeModal] = useConfirmationModal()
   const client = useApolloClient()
 
   const refetchNftData = useCallback(
