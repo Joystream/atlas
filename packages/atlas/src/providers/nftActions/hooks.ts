@@ -1,6 +1,7 @@
 import { useCallback, useContext } from 'react'
 
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
+import { NftSaleType } from '@/joystream-lib'
 
 import { NftActionsContext } from './provider'
 
@@ -28,6 +29,7 @@ export const useNftActions = () => {
     closeNftAction,
     cancelNftSale,
     changeNftPrice,
+    setCurrentSaleType,
   } = ctx
 
   const checkIfSigned = useCallback(() => {
@@ -87,6 +89,15 @@ export const useNftActions = () => {
     [setCurrentAction, setCurrentNftId]
   )
 
+  const openRemoveFromSale = useCallback(
+    (nftId: string, saleType: NftSaleType) => {
+      setCurrentNftId(nftId)
+      setCurrentAction('cancel-sale')
+      setCurrentSaleType(saleType)
+    },
+    [setCurrentAction, setCurrentNftId, setCurrentSaleType]
+  )
+
   return {
     currentAction,
     isBuyNowClicked,
@@ -97,6 +108,7 @@ export const useNftActions = () => {
     closeNftAction,
     openNftAcceptBid,
     openNftChangePrice,
+    openRemoveFromSale,
     cancelNftSale,
     changeNftPrice,
   }

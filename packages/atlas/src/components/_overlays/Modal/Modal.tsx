@@ -17,7 +17,7 @@ export type ModalProps = PropsWithChildren<{
   onEscPress?: () => void
   className?: string
 }> &
-  Pick<DialogProps, 'onExitClick'>
+  Pick<DialogProps, 'onExitClick' | 'additionalActionsNode'>
 
 export const Modal: FC<ModalProps> = ({
   children,

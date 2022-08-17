@@ -1,7 +1,9 @@
 import BN from 'bn.js'
 import { FC, useState } from 'react'
 
+import { Fee } from '@/components/Fee'
 import { DialogModal } from '@/components/_overlays/DialogModal'
+import { useFee } from '@/providers/joystream'
 
 import { Bid, SelectedBid } from './AcceptBidDialog.types'
 import { AcceptBidList } from './AcceptBidList'
@@ -24,6 +26,10 @@ export const AcceptBidDialog: FC<AcceptBidDialogProps> = ({
   ownerId,
 }) => {
   const [selectedBid, setSelectedBid] = useState<SelectedBid | undefined>()
+  const { fullFee, loading } = useFee(
+    'acceptNftBidTx',
+    nftId && ownerId && selectedBid ? [ownerId, nftId, selectedBid.bidderId, selectedBid.amount.toString()] : undefined
+  )
 
   const handleModalClose = () => {
     setSelectedBid(undefined)
@@ -53,6 +59,7 @@ export const AcceptBidDialog: FC<AcceptBidDialogProps> = ({
         text: 'Cancel',
         onClick: handleModalClose,
       }}
+      additionalActionsNode={<Fee loading={loading} variant="h200" amount={fullFee || new BN(0)} />}
     >
       <AcceptBidList items={bids} onSelect={(value) => setSelectedBid(value)} selectedBid={selectedBid} />
     </DialogModal>

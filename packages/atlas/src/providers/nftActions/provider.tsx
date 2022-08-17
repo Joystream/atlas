@@ -4,20 +4,24 @@ import { Dispatch, FC, PropsWithChildren, SetStateAction, createContext, useCall
 import { useNft } from '@/api/hooks'
 import { AcceptBidDialog } from '@/components/_overlays/AcceptBidDialog'
 import { ChangePriceDialog } from '@/components/_overlays/ChangePriceDialog'
+import { RemoveFromSaleDialog } from '@/components/_overlays/RemoveFromSaleDialog'
 import { useNftState } from '@/hooks/useNftState'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
+import { NftSaleType } from '@/joystream-lib'
 import { useTokenPrice } from '@/providers/joystream'
 import { useUser } from '@/providers/user'
 
-type NftAction = 'putOnSale' | 'purchase' | 'settle' | 'accept-bid' | 'change-price'
+type SaleType = NftSaleType | null
+type NftAction = 'putOnSale' | 'purchase' | 'settle' | 'accept-bid' | 'change-price' | 'cancel-sale'
 type ContextValue = {
   currentAction: NftAction | null
   currentNftId: string | null
   isBuyNowClicked?: boolean
   setCurrentAction: Dispatch<SetStateAction<NftAction | null>>
   setCurrentNftId: Dispatch<SetStateAction<string | null>>
-  closeNftAction: () => void
   setIsBuyNowClicked: Dispatch<SetStateAction<boolean | undefined>>
+  setCurrentSaleType: Dispatch<SetStateAction<SaleType>>
+  closeNftAction: () => void
 }
 
 export const NftActionsContext = createContext<(ContextValue & ReturnType<typeof useNftTransactions>) | undefined>(
@@ -27,6 +31,7 @@ NftActionsContext.displayName = 'NftActionsContext'
 
 export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
   const [currentAction, setCurrentAction] = useState<NftAction | null>(null)
+  const [currentSaleType, setCurrentSaleType] = useState<SaleType>(null)
   const transactions = useNftTransactions()
   const [isBuyNowClicked, setIsBuyNowClicked] = useState<boolean>()
   const [currentNftId, setCurrentNftId] = useState<string | null>(null)
@@ -61,6 +66,7 @@ export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
       setIsBuyNowClicked,
       setCurrentAction,
       setCurrentNftId,
+      setCurrentSaleType,
       closeNftAction,
       ...transactions,
     }),
@@ -83,6 +89,14 @@ export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
         onChangePrice={transactions.changeNftPrice}
         nftId={currentNftId}
         memberId={memberId}
+      />
+      <RemoveFromSaleDialog
+        isOpen={currentAction === 'cancel-sale'}
+        nftId={currentNftId}
+        saleType={currentSaleType}
+        onRemoveFromSale={transactions.cancelNftSale}
+        memberId={memberId}
+        onModalClose={closeNftAction}
       />
       {children}
     </NftActionsContext.Provider>
