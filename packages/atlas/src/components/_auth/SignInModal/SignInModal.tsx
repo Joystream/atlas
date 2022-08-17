@@ -203,7 +203,7 @@ type NewMemberResponse = {
   error?: string
 }
 const createNewMember = async (address: string, data: MemberFormData) => {
-  let fileUrl
+  let fileName
   const croppedBlob = data.avatar?.blob
 
   if (croppedBlob) {
@@ -214,13 +214,13 @@ const createNewMember = async (address: string, data: MemberFormData) => {
         'Content-Type': 'multipart/form-data',
       },
     })
-    fileUrl = response.data
+    fileName = response.data
   }
 
   const body = {
     account: address,
     handle: data.handle,
-    avatar: fileUrl,
+    avatar: AVATAR_SERVICE_URL + '/' + fileName,
   }
   const response = await axios.post<NewMemberResponse>(FAUCET_URL, body)
   return response.data

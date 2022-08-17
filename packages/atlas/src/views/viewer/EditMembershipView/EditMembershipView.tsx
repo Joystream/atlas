@@ -22,6 +22,7 @@ import { MemberInputMetadata } from '@/joystream-lib'
 import { useFee, useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions'
 import { useUser } from '@/providers/user'
+import { ConsoleLogger } from '@/utils/logs'
 
 import { StyledActionBar, TextFieldsWrapper, Wrapper } from './EditMembershipView.styles'
 
@@ -76,7 +77,9 @@ export const EditMembershipView: FC = () => {
   const resetForm = useCallback(async () => {
     let blob
     if (activeMembership?.metadata.avatar?.__typename === 'AvatarUri' && activeMembership.metadata.avatar.avatarUri) {
-      blob = await fetch(activeMembership.metadata.avatar.avatarUri).then((r) => r.blob())
+      await fetch(activeMembership.metadata.avatar.avatarUri)
+        .then((r) => (blob = r.blob()))
+        .catch((err) => ConsoleLogger.warn(`Cannot fetch avatar`, err))
     }
     reset(
       {
@@ -127,24 +130,24 @@ export const EditMembershipView: FC = () => {
 
     const success = await handleTransaction({
       txFactory: async (updateStatus) => {
-        let fileUrl
+        let fileName
         const croppedBlob = data.avatar?.blob
 
         if (croppedBlob) {
           const formData = new FormData()
           formData.append('file', croppedBlob, `upload.${croppedBlob.type === 'image/webp' ? 'webp' : 'jpg'}`)
-          const response = await axios.post<string>(AVATAR_SERVICE_URL, formData, {
+          const response = await axios.post<{ fileName: string }>(AVATAR_SERVICE_URL, formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
           })
-          fileUrl = response.data
+          fileName = response.data.fileName
         }
 
         const memberInputMetadata: MemberInputMetadata = {
           name: data.handle,
           about: data.about,
-          avatarUri: data.avatar === null ? '' : fileUrl,
+          avatarUri: data.avatar === null ? '' : AVATAR_SERVICE_URL + '/' + fileName,
         }
         return (await joystream.extrinsics).updateMember(
           activeMembership.id,

@@ -3,8 +3,6 @@ import styled from '@emotion/styled'
 
 import { cVar, square } from '@/styles'
 
-import { sharedAvatarActiveStyles, sharedAvatarHoverStyles } from './Avatar.styles'
-
 import { Avatar } from '.'
 
 export type AvatarGroupSize = 'small' | 'medium' | 'large'
@@ -42,16 +40,6 @@ type AvatarGroupContainerProps = {
 export const AvatarGroupContainer = styled.div<AvatarGroupContainerProps>`
   display: inline-grid;
   grid-row: auto;
-  ${({ shouldHighlightEveryAvatar }) =>
-    shouldHighlightEveryAvatar &&
-    css`
-      :hover ${StyledAvatar} {
-        ${sharedAvatarHoverStyles};
-      }
-      :active ${StyledAvatar} {
-        ${sharedAvatarActiveStyles};
-      }
-    `};
   ${getSizeOfGridColumn};
 `
 

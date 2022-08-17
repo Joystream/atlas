@@ -1,7 +1,7 @@
-import { FC, MouseEvent, PropsWithChildren } from 'react'
+import { FC, MouseEvent, PropsWithChildren, useCallback } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { SvgActionImage, SvgActionNewChannel } from '@/components/_icons'
+import { SvgActionNewChannel } from '@/components/_icons'
 import { cVar, transitions } from '@/styles'
 
 import {
@@ -9,10 +9,13 @@ import {
   ChildrenWrapper,
   Container,
   EditOverlay,
+  IconAndOverlayWrapper,
   NewChannelAvatar,
   SilhouetteAvatar,
   StyledImage,
   StyledSkeletonLoader,
+  StyledSvgActionAddImage,
+  StyledSvgActionEdit,
   StyledSvgIllustrativeFileFailed,
 } from './Avatar.styles'
 
@@ -43,7 +46,6 @@ export type AvatarProps = PropsWithChildren<{
 export const Avatar: FC<AvatarProps> = ({
   assetUrl,
   hasAvatarUploadFailed,
-  withoutOutline,
   loading = false,
   size = 'default',
   children,
@@ -56,6 +58,19 @@ export const Avatar: FC<AvatarProps> = ({
 }) => {
   const isEditable = !loading && editable && size !== 'default' && size !== 'bid'
 
+  const getEditableIconSize = useCallback(() => {
+    const smallIconSizes = ['bid', 'default', 'small']
+    if (smallIconSizes.includes(size)) {
+      return
+    } else {
+      return 24
+    }
+  }, [size])
+
+  const handleError = () => {
+    onError?.()
+  }
+
   return (
     <Container
       as={onClick ? 'button' : 'div'}
@@ -64,14 +79,18 @@ export const Avatar: FC<AvatarProps> = ({
       size={size}
       className={className}
       isLoading={loading}
-      withoutOutline={withoutOutline}
       isClickable={clickable || !!onClick}
     >
-      {isEditable && (
-        <EditOverlay size={size}>
-          <SvgActionImage />
-          <span>{assetUrl ? 'Edit avatar' : 'Add avatar'}</span>
-        </EditOverlay>
+      {(clickable || !!onClick) && (
+        <IconAndOverlayWrapper>
+          <EditOverlay />
+          {isEditable &&
+            (assetUrl ? (
+              <StyledSvgActionEdit width={getEditableIconSize()} height={getEditableIconSize()} />
+            ) : (
+              <StyledSvgActionAddImage width={getEditableIconSize()} height={getEditableIconSize()} />
+            ))}
+        </IconAndOverlayWrapper>
       )}
       {!children &&
         (newChannel && !isEditable ? (
@@ -88,7 +107,7 @@ export const Avatar: FC<AvatarProps> = ({
               {loading ? (
                 <StyledSkeletonLoader rounded />
               ) : assetUrl ? (
-                <StyledImage src={assetUrl} onError={onError} />
+                <StyledImage src={assetUrl} onError={handleError} />
               ) : hasAvatarUploadFailed ? (
                 <NewChannelAvatar>
                   <StyledSvgIllustrativeFileFailed />
