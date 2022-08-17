@@ -1,7 +1,7 @@
 import { useApolloClient } from '@apollo/client'
 import debouncePromise from 'awesome-debounce-promise'
 import axios from 'axios'
-import { FC, useCallback, useEffect, useRef } from 'react'
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import useResizeObserver from 'use-resize-observer'
@@ -34,6 +34,7 @@ export type EditMemberFormInputs = {
 export const EditMembershipView: FC = () => {
   const navigate = useNavigate()
   const handleInputRef = useRef<HTMLInputElement | null>(null)
+  const [isHandleValidating, setIsHandleValidating] = useState(false)
   const { accountId, memberId, activeMembership, isLoggedIn, refetchUserMemberships } = useUser()
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
   const { joystream, proxyCallback } = useJoystream()
@@ -42,31 +43,33 @@ export const EditMembershipView: FC = () => {
 
   const client = useApolloClient()
 
-  const validateUserHandle = async (value: string, prevValue?: string) => {
-    if (prevValue != null && value === prevValue) {
-      return true
-    }
-    const {
-      data: { membershipByUniqueInput },
-    } = await client.query<GetMembershipQuery, GetMembershipQueryVariables>({
-      query: GetMembershipDocument,
-      variables: { where: { handle: value } },
-    })
+  const validateUserHandle = useCallback(
+    async (value: string | null, prevValue?: string) => {
+      if ((prevValue != null && value === prevValue) || !value) {
+        return true
+      }
+      const {
+        data: { membershipByUniqueInput },
+      } = await client.query<GetMembershipQuery, GetMembershipQueryVariables>({
+        query: GetMembershipDocument,
+        variables: { where: { handle: value } },
+      })
 
-    return !membershipByUniqueInput
-  }
-
-  const debouncedHandleUniqueValidation = useRef(debouncePromise(validateUserHandle, 500))
+      return !membershipByUniqueInput
+    },
+    [client]
+  )
+  const debouncePromiseRef = useRef(debouncePromise)
 
   const {
     register,
+    trigger,
     handleSubmit,
     reset,
     watch,
     control,
-    formState: { errors, isDirty, isValid, dirtyFields, isValidating },
+    formState: { errors, isDirty, dirtyFields },
   } = useForm<EditMemberFormInputs>({
-    mode: 'onChange',
     shouldFocusError: true,
   })
 
@@ -163,20 +166,34 @@ export const EditMembershipView: FC = () => {
     }
   })
 
-  const { ref, ...handleRest } = register('handle', {
-    validate: {
-      valid: (value) => (!value ? true : MEMBERSHIP_NAME_PATTERN.test(value) || 'Enter a valid member handle.'),
-      unique: async (value) => {
-        if (!value) {
-          return 'Member handle is required.'
-        }
-        const valid = await debouncedHandleUniqueValidation.current(value)
-        return valid || 'This member handle is already in use.'
-      },
-    },
-    required: { value: true, message: 'Member handle is required.' },
-    minLength: { value: 5, message: 'Member handle must be at least 5 characters long.' },
-  })
+  const { ref, ...handleRest } = useMemo(
+    () =>
+      register('handle', {
+        onChange: debouncePromiseRef.current(
+          async () => {
+            await trigger('handle')
+            setIsHandleValidating(false)
+          },
+          500,
+          {
+            key() {
+              setIsHandleValidating(true)
+              return null
+            },
+          }
+        ),
+        validate: {
+          valid: (value) => (!value ? true : MEMBERSHIP_NAME_PATTERN.test(value) || 'Enter a valid member handle.'),
+          unique: async (value) => {
+            const isUnique = await validateUserHandle(value, activeMembership?.handle)
+            return isUnique || 'This member handle is already in use.'
+          },
+        },
+        required: { value: true, message: 'Member handle is required.' },
+        minLength: { value: 5, message: 'Member handle must be at least 5 characters long.' },
+      }),
+    [activeMembership?.handle, register, trigger, validateUserHandle]
+  )
   const isHandleInputActiveElement = document.activeElement === handleInputRef.current
   return (
     <form onSubmit={handleEditMember}>
@@ -234,9 +251,9 @@ export const EditMembershipView: FC = () => {
                   ref(e)
                   handleInputRef.current = e
                 }}
-                processing={isValidating && isHandleInputActiveElement}
+                processing={isHandleValidating}
                 placeholder="johnnysmith"
-                error={!!errors?.handle && !isValidating}
+                error={!!errors?.handle}
               />
             </FormField>
             <FormField label="About" error={errors?.about?.message}>
@@ -257,7 +274,7 @@ export const EditMembershipView: FC = () => {
           fee={fee}
           feeLoading={feeLoading}
           primaryButton={{
-            disabled: !isDirty || !isValid || isValidating,
+            disabled: !isDirty || isHandleValidating,
             text: 'Publish changes',
             type: 'submit',
           }}
