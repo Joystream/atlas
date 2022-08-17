@@ -22,17 +22,19 @@ import {
 } from '@/api/queries'
 import { videoFilter } from '@/config/videoFilter'
 
-export const useFullVideo = (id: string, opts?: QueryHookOptions<GetFullVideosQuery, GetFullVideosQueryVariables>) => {
+export const useFullVideo = (
+  id: string,
+  opts?: QueryHookOptions<GetFullVideosQuery, GetFullVideosQueryVariables>,
+  variables?: GetFullVideosQueryVariables
+) => {
   const { data, ...queryRest } = useGetFullVideosQuery({
     ...opts,
     variables: {
+      ...variables,
       where: {
         id_eq: id,
         ...videoFilter,
-        isPublic_eq: undefined,
-        isCensored_eq: undefined,
-        media: undefined,
-        thumbnailPhoto: undefined,
+        ...variables?.where,
       },
     },
   })
