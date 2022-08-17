@@ -66,9 +66,13 @@ export const VideoView: FC = () => {
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
   const { withdrawBid } = useNftTransactions()
   const { openRemoveFromSale } = useNftActions()
-  const { loading, video, error } = useFullVideo(id ?? '', {
-    onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
-  })
+  const { loading, video, error } = useFullVideo(
+    id ?? '',
+    {
+      onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
+    },
+    { where: { isPublic_eq: undefined } }
+  )
   const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
   const nftWidgetProps = useNftWidget(video)
   const { likeOrDislikeVideo } = useReactionTransactions()
