@@ -47,11 +47,15 @@ export const useBasicChannel = (
 
 export const useFullChannel = (
   id: string,
-  opts?: QueryHookOptions<GetFullChannelsQuery, GetFullChannelsQueryVariables>
+  opts?: QueryHookOptions<GetFullChannelsQuery, GetFullChannelsQueryVariables>,
+  variables?: GetFullChannelsQueryVariables
 ) => {
   const { data, ...rest } = useGetFullChannelsQuery({
     ...opts,
-    variables: { where: { id_eq: id, NOT: [{ id_in: CHANNEL_ID_FILTER ? CHANNEL_ID_FILTER.id_in : [] }] } },
+    variables: {
+      ...variables,
+      where: { id_eq: id, NOT: [{ id_in: CHANNEL_ID_FILTER ? CHANNEL_ID_FILTER.id_in : [] }], ...variables?.where },
+    },
   })
   return {
     channel: data?.channels[0],

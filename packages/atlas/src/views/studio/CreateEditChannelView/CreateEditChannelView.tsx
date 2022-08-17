@@ -90,13 +90,17 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const navigate = useNavigate()
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
 
-  const { channel, loading, error } = useFullChannel(channelId || '', {
-    skip: newChannel || !channelId,
-    onError: (error) =>
-      SentryLogger.error('Failed to fetch channel', 'CreateEditChannelView', error, {
-        channel: { id: channelId },
-      }),
-  })
+  const { channel, loading, error } = useFullChannel(
+    channelId || '',
+    {
+      skip: newChannel || !channelId,
+      onError: (error) =>
+        SentryLogger.error('Failed to fetch channel', 'CreateEditChannelView', error, {
+          channel: { id: channelId },
+        }),
+    },
+    { where: { NOT: [{ id_in: [] }] } }
+  )
   const startFileUpload = useStartFileUpload()
 
   // trigger use asset to make sure the channel assets get resolved
