@@ -33,6 +33,7 @@ export type EditMemberFormInputs = {
 
 export const EditMembershipView: FC = () => {
   const navigate = useNavigate()
+  const handleInputRef = useRef<HTMLInputElement | null>(null)
   const { accountId, memberId, activeMembership, isLoggedIn, refetchUserMemberships } = useUser()
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
   const { joystream, proxyCallback } = useJoystream()
@@ -162,6 +163,21 @@ export const EditMembershipView: FC = () => {
     }
   })
 
+  const { ref, ...handleRest } = register('handle', {
+    validate: {
+      valid: (value) => (!value ? true : MEMBERSHIP_NAME_PATTERN.test(value) || 'Enter a valid member handle.'),
+      unique: async (value) => {
+        if (!value) {
+          return 'Member handle is required.'
+        }
+        const valid = await debouncedHandleUniqueValidation.current(value)
+        return valid || 'This member handle is already in use.'
+      },
+    },
+    required: { value: true, message: 'Member handle is required.' },
+    minLength: { value: 5, message: 'Member handle must be at least 5 characters long.' },
+  })
+  const isHandleInputActiveElement = document.activeElement === handleInputRef.current
   return (
     <form onSubmit={handleEditMember}>
       {headTags}
@@ -207,31 +223,19 @@ export const EditMembershipView: FC = () => {
           <TextFieldsWrapper>
             <FormField
               label="Member handle"
+              disableErrorAnimation={isHandleInputActiveElement}
               description="Member handle may contain only lowercase letters, numbers and underscores"
-              error={isValidating ? undefined : errors?.handle?.message}
+              error={errors?.handle?.message}
             >
               <Input
                 autoComplete="off"
-                processing={isValidating}
+                {...handleRest}
+                ref={(e) => {
+                  ref(e)
+                  handleInputRef.current = e
+                }}
+                processing={isValidating && isHandleInputActiveElement}
                 placeholder="johnnysmith"
-                {...register('handle', {
-                  validate: async (value) => {
-                    if (!value) {
-                      return 'Member handle cannot be empty'
-                    }
-                    if (value.length < 5) {
-                      return 'Member handle must be at least 5 characters'
-                    }
-                    if (value.length > 40) {
-                      return `Member handle cannot be longer than 40 characters`
-                    }
-                    if (!MEMBERSHIP_NAME_PATTERN.test(value)) {
-                      return 'Member handle may contain only lowercase letters, numbers and underscores'
-                    }
-                    const isUnique = await debouncedHandleUniqueValidation.current(value, activeMembership?.handle)
-                    return isUnique || 'Member handle already in use'
-                  },
-                })}
                 error={!!errors?.handle && !isValidating}
               />
             </FormField>
