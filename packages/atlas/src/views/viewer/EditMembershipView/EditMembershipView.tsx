@@ -1,4 +1,6 @@
-import { FC, useCallback, useEffect } from 'react'
+import axios from 'axios'
+import { FC, useCallback, useEffect, useRef } from 'react'
+import { Controller } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import useResizeObserver from 'use-resize-observer'
 
@@ -7,7 +9,9 @@ import { MembershipInfo } from '@/components/MembershipInfo'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { TextArea } from '@/components/_inputs/TextArea'
+import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
 import { absoluteRoutes } from '@/config/routes'
+import { AVATAR_SERVICE_URL } from '@/config/urls'
 import { EditMemberFormInputs, useCreateEditMemberForm } from '@/hooks/useCreateEditMember'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { MemberInputMetadata } from '@/joystream-lib'
@@ -23,29 +27,26 @@ export const EditMembershipView: FC = () => {
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
+  const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
 
-  const {
-    register,
-    handleSubmit,
-    getValues,
-    reset,
-    watch,
-    errors,
-    isDirty,
-    isValid,
-    dirtyFields,
-    isValidating,
-    setFocus,
-  } = useCreateEditMemberForm(activeMembership?.handle)
+  const { register, handleSubmit, reset, watch, errors, isDirty, isValid, control, dirtyFields, isValidating } =
+    useCreateEditMemberForm(activeMembership?.handle)
 
-  const resetForm = useCallback(() => {
+  const resetForm = useCallback(async () => {
+    let blob
+    if (activeMembership?.metadata.avatar?.__typename === 'AvatarUri' && activeMembership.metadata.avatar.avatarUri) {
+      blob = await fetch(activeMembership.metadata.avatar.avatarUri).then((r) => r.blob())
+    }
     reset(
       {
         handle: activeMembership?.handle,
         avatar:
           activeMembership?.metadata.avatar?.__typename === 'AvatarUri'
-            ? activeMembership.metadata.avatar.avatarUri
-            : null,
+            ? {
+                url: activeMembership.metadata.avatar.avatarUri,
+                blob: blob,
+              }
+            : {},
         about: activeMembership?.metadata.about,
       },
       {
@@ -67,7 +68,7 @@ export const EditMembershipView: FC = () => {
     (data: EditMemberFormInputs) => {
       return {
         ...(dirtyFields.about ? { about: data?.about } : {}),
-        ...(dirtyFields.avatar ? { avatarUri: data?.avatar } : {}),
+        ...(dirtyFields.avatar ? { avatarUri: data?.avatar?.url } : null),
       }
     },
     [dirtyFields]
@@ -78,17 +79,35 @@ export const EditMembershipView: FC = () => {
     memberId ? [memberId, watch('handle'), createMemberInputMetadata(watch())] : undefined
   )
 
-  const handleEditMember = handleSubmit(async (formData) => {
+  const handleEditMember = handleSubmit(async (data) => {
     if (!joystream || !activeMembership) {
       return
     }
 
     const success = await handleTransaction({
       txFactory: async (updateStatus) => {
-        const memberInputMetadata: MemberInputMetadata = createMemberInputMetadata(formData)
+        let fileUrl
+        const croppedBlob = data.avatar?.blob
+
+        if (croppedBlob) {
+          const formData = new FormData()
+          formData.append('file', croppedBlob, `upload.${croppedBlob.type === 'image/webp' ? 'webp' : 'jpg'}`)
+          const response = await axios.post<string>(AVATAR_SERVICE_URL, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          })
+          fileUrl = response.data
+        }
+
+        const memberInputMetadata: MemberInputMetadata = {
+          name: data.handle,
+          about: data.about,
+          avatarUri: data.avatar === null ? '' : fileUrl,
+        }
         return (await joystream.extrinsics).updateMember(
           activeMembership.id,
-          dirtyFields.handle ? formData.handle : null,
+          dirtyFields.handle ? data.handle : null,
           memberInputMetadata,
           proxyCallback(updateStatus)
         )
@@ -110,26 +129,45 @@ export const EditMembershipView: FC = () => {
     <form onSubmit={handleEditMember}>
       {headTags}
       <LimitedWidthContainer>
-        <MembershipInfo
-          address={accountId}
-          avatarUrl={errors.avatar ? '' : getValues('avatar')}
-          onAvatarEditClick={() => setFocus('avatar')}
-          hasAvatarUploadFailed={!!errors.avatar}
-          loading={!isLoggedIn}
-          editable
-          handle={getValues('handle')}
+        <Controller
+          control={control}
+          name="avatar"
+          render={({ field: { onChange, value: avatarInputFile } }) => (
+            <>
+              <MembershipInfo
+                address={accountId}
+                avatarUrl={avatarInputFile?.url}
+                onAvatarEditClick={() =>
+                  avatarDialogRef.current?.open(
+                    avatarInputFile?.originalBlob ? avatarInputFile.originalBlob : avatarInputFile?.blob,
+                    avatarInputFile?.imageCropData,
+                    !!avatarInputFile?.blob
+                  )
+                }
+                loading={!isLoggedIn}
+                editable
+                handle={watch('handle')}
+              />
+              <ImageCropModal
+                imageType="avatar"
+                onConfirm={(blob, url, _, imageCropData, originalBlob) => {
+                  onChange({
+                    blob,
+                    url,
+                    imageCropData,
+                    originalBlob,
+                  })
+                }}
+                onDelete={() => {
+                  onChange(null)
+                }}
+                ref={avatarDialogRef}
+              />
+            </>
+          )}
         />
         <Wrapper actionBarHeight={actionBarBoundsHeight}>
           <TextFieldsWrapper>
-            <FormField label="Avatar URL" error={errors?.avatar?.message}>
-              <Input
-                autoComplete="off"
-                error={!!errors?.avatar}
-                placeholder="https://example.com/avatar.jpeg"
-                {...register('avatar')}
-                value={watch('avatar') || ''}
-              />
-            </FormField>
             <FormField
               label="Member handle"
               description="Member handle may contain only lowercase letters, numbers and underscores"
