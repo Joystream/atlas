@@ -1,18 +1,22 @@
+import { useApolloClient } from '@apollo/client'
+import debouncePromise from 'awesome-debounce-promise'
 import axios from 'axios'
 import { FC, useCallback, useEffect, useRef } from 'react'
-import { Controller } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import useResizeObserver from 'use-resize-observer'
 
+import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { MembershipInfo } from '@/components/MembershipInfo'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
+import { ImageInputFile } from '@/components/_inputs/MultiFileSelect'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
+import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
 import { absoluteRoutes } from '@/config/routes'
 import { AVATAR_SERVICE_URL } from '@/config/urls'
-import { EditMemberFormInputs, useCreateEditMemberForm } from '@/hooks/useCreateEditMember'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { MemberInputMetadata } from '@/joystream-lib'
 import { useFee, useJoystream } from '@/providers/joystream'
@@ -20,6 +24,12 @@ import { useTransaction } from '@/providers/transactions'
 import { useUser } from '@/providers/user'
 
 import { StyledActionBar, TextFieldsWrapper, Wrapper } from './EditMembershipView.styles'
+
+export type EditMemberFormInputs = {
+  handle: string | null
+  avatar: ImageInputFile
+  about: string | null
+}
 
 export const EditMembershipView: FC = () => {
   const navigate = useNavigate()
@@ -29,8 +39,35 @@ export const EditMembershipView: FC = () => {
   const handleTransaction = useTransaction()
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
 
-  const { register, handleSubmit, reset, watch, errors, isDirty, isValid, control, dirtyFields, isValidating } =
-    useCreateEditMemberForm(activeMembership?.handle)
+  const client = useApolloClient()
+
+  const validateUserHandle = async (value: string, prevValue?: string) => {
+    if (prevValue != null && value === prevValue) {
+      return true
+    }
+    const {
+      data: { membershipByUniqueInput },
+    } = await client.query<GetMembershipQuery, GetMembershipQueryVariables>({
+      query: GetMembershipDocument,
+      variables: { where: { handle: value } },
+    })
+
+    return !membershipByUniqueInput
+  }
+
+  const debouncedHandleUniqueValidation = useRef(debouncePromise(validateUserHandle, 500))
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    control,
+    formState: { errors, isDirty, isValid, dirtyFields, isValidating },
+  } = useForm<EditMemberFormInputs>({
+    mode: 'onChange',
+    shouldFocusError: true,
+  })
 
   const resetForm = useCallback(async () => {
     let blob
@@ -171,21 +208,40 @@ export const EditMembershipView: FC = () => {
             <FormField
               label="Member handle"
               description="Member handle may contain only lowercase letters, numbers and underscores"
-              error={errors?.handle?.message}
+              error={isValidating ? undefined : errors?.handle?.message}
             >
               <Input
                 autoComplete="off"
+                processing={isValidating}
                 placeholder="johnnysmith"
-                {...register('handle')}
-                value={watch('handle') || ''}
-                error={!!errors?.handle}
+                {...register('handle', {
+                  validate: async (value) => {
+                    if (!value) {
+                      return 'Member handle cannot be empty'
+                    }
+                    if (value.length < 5) {
+                      return 'Member handle must be at least 5 characters'
+                    }
+                    if (value.length > 40) {
+                      return `Member handle cannot be longer than 40 characters`
+                    }
+                    if (!MEMBERSHIP_NAME_PATTERN.test(value)) {
+                      return 'Member handle may contain only lowercase letters, numbers and underscores'
+                    }
+                    const isUnique = await debouncedHandleUniqueValidation.current(value, activeMembership?.handle)
+                    return isUnique || 'Member handle already in use'
+                  },
+                })}
+                error={!!errors?.handle && !isValidating}
               />
             </FormField>
             <FormField label="About" error={errors?.about?.message}>
               <TextArea
                 placeholder="Anything you'd like to share about yourself with the Atlas community"
                 maxLength={1000}
-                {...register('about')}
+                {...register('about', {
+                  maxLength: { value: 1000, message: 'About cannot be longer than 1000 characters' },
+                })}
                 value={watch('about') || ''}
                 error={!!errors?.about}
               />
