@@ -74,8 +74,8 @@ export const Comment: FC<CommentProps> = memo(
     const { reactToComment, deleteComment, moderateComment, updateComment, addComment } = useReactionTransactions()
     const { fullFee: replyCommentFee, loading: replyCommentFeeLoading } = useFee(
       'createVideoCommentTx',
-      memberId && video?.id && replyCommentInputText && comment?.id !== undefined
-        ? [memberId, video?.id, replyCommentInputText, comment?.id || null]
+      memberId && video?.id && comment?.id !== undefined
+        ? [memberId, video?.id, replyCommentInputText || '', comment?.id || null]
         : undefined
     )
 

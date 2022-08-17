@@ -28,7 +28,7 @@ export const AcceptBidDialog: FC<AcceptBidDialogProps> = ({
   const [selectedBid, setSelectedBid] = useState<SelectedBid | undefined>()
   const { fullFee, loading } = useFee(
     'acceptNftBidTx',
-    nftId && ownerId && selectedBid ? [ownerId, nftId, selectedBid.bidderId, selectedBid.amount.toString()] : undefined
+    nftId && ownerId ? [ownerId, nftId, selectedBid?.bidderId || '', selectedBid?.amount.toString() || ''] : undefined
   )
 
   const handleModalClose = () => {

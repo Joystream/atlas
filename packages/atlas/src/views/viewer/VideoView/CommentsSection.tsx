@@ -54,7 +54,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
 
   const { fullFee: fee, loading: feeLoading } = useFee(
     'createVideoCommentTx',
-    memberId && video?.id && commentInputText ? [memberId, video?.id, commentInputText, null] : undefined
+    memberId && video?.id ? [memberId, video?.id, commentInputText || '', null] : undefined
   )
 
   const queryVariables = useMemo(
