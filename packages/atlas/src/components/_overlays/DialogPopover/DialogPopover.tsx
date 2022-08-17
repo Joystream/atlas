@@ -31,12 +31,13 @@ const _DialogPopover: ForwardRefRenderFunction<PopoverImperativeHandle, DialogPo
     additionalActionsNode,
     additionalActionsNodeMobilePosition,
     noContentPadding,
+    flipEnabled = false,
     ...popoverProps
   },
   ref
 ) => {
   return (
-    <Popover {...popoverProps} ref={ref} flipEnabled={false}>
+    <Popover {...popoverProps} ref={ref} flipEnabled={flipEnabled}>
       <StyledDialog
         noContentPadding={noContentPadding}
         popoverWidth={popoverWidth}

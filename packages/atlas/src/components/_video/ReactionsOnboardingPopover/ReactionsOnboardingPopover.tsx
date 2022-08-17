@@ -33,6 +33,7 @@ export const ReactionsOnboardingPopover = forwardRef<PopoverImperativeHandle, Re
         onHide={onDecline}
         disabled={disabled}
         popoverWidth="wide"
+        flipEnabled
         primaryButton={{
           text: 'Got it',
           onClick: () => {
