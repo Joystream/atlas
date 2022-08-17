@@ -35,8 +35,7 @@ export const useNftTransactions = () => {
       if (!joystream || !memberId) {
         return
       }
-
-      handleTransaction({
+      return handleTransaction({
         snackbarSuccessMessage: {
           title: 'Bid withdrawn successfully',
         },

@@ -5,7 +5,7 @@ import { useNft } from '@/api/hooks'
 import { AcceptBidDialog } from '@/components/_overlays/AcceptBidDialog'
 import { ChangePriceDialog } from '@/components/_overlays/ChangePriceDialog'
 import { RemoveFromSaleDialog } from '@/components/_overlays/RemoveFromSaleDialog'
-import { WithdrawBidDialog } from '@/components/_overlays/WithdrawBidDialog'
+import { WithdrawBidDialog, WithdrawData } from '@/components/_overlays/WithdrawBidDialog'
 import { useNftState } from '@/hooks/useNftState'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { NftSaleType } from '@/joystream-lib'
@@ -23,6 +23,7 @@ type ContextValue = {
   setIsBuyNowClicked: Dispatch<SetStateAction<boolean | undefined>>
   setCurrentSaleType: Dispatch<SetStateAction<SaleType>>
   closeNftAction: () => void
+  setWithdrawData: Dispatch<SetStateAction<WithdrawData>>
 }
 
 export const NftActionsContext = createContext<(ContextValue & ReturnType<typeof useNftTransactions>) | undefined>(
@@ -33,6 +34,7 @@ NftActionsContext.displayName = 'NftActionsContext'
 export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
   const [currentAction, setCurrentAction] = useState<NftAction | null>(null)
   const [currentSaleType, setCurrentSaleType] = useState<SaleType>(null)
+  const [withdrawData, setWithdrawData] = useState<WithdrawData>()
   const transactions = useNftTransactions()
   const [isBuyNowClicked, setIsBuyNowClicked] = useState<boolean>()
   const [currentNftId, setCurrentNftId] = useState<string | null>(null)
@@ -68,6 +70,7 @@ export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
       setCurrentAction,
       setCurrentNftId,
       setCurrentSaleType,
+      setWithdrawData,
       closeNftAction,
       ...transactions,
     }),
@@ -79,11 +82,12 @@ export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
       <WithdrawBidDialog
         isOpen={currentAction === 'withdraw-bid'}
         onModalClose={closeNftAction}
-        userBidAmount={userBidAmount || new BN(0)}
-        userBidCreatedAt={userBidCreatedAt || new Date()}
+        userBidAmount={withdrawData ? withdrawData.bid : userBidAmount || new BN(0)}
+        userBidCreatedAt={withdrawData ? withdrawData.createdAt : userBidCreatedAt || new Date()}
         nftId={currentNftId}
         memberId={memberId}
         onWithdrawBid={transactions.withdrawBid}
+        setWithdrawData={setWithdrawData}
       />
       <AcceptBidDialog
         isOpen={currentAction === 'accept-bid'}

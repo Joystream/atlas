@@ -3,16 +3,20 @@ import { differenceInCalendarDays, differenceInSeconds } from 'date-fns'
 import { useEffect } from 'react'
 
 import { useNft, useNftHistory } from '@/api/hooks'
+import { useBids } from '@/api/hooks/bids'
 import { FullVideoFieldsFragment } from '@/api/queries'
 import { NftWidgetProps } from '@/components/_nft/NftWidget/NftWidget'
 import { NFT_STATUS_POLLING_INTERVAL } from '@/config/nft'
 import { useNftState } from '@/hooks/useNftState'
 import { useMemberAvatar } from '@/providers/assets'
+import { useUser } from '@/providers/user'
+import { SentryLogger } from '@/utils/logs'
 
 import { NftHistoryEntry } from './NftHistory'
 
 type UseNftWidgetReturn = NftWidgetProps | null
 export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null): UseNftWidgetReturn => {
+  const { memberId } = useUser()
   const { nft, nftStatus, called, startPolling, stopPolling } = useNft(video?.id ?? '', { skip: !video || !video.nft })
   const {
     isOwner,
@@ -24,7 +28,6 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
     startsAtDate,
     isUserTopBidder,
     userBidUnlockDate,
-    userBidCreatedAt,
     saleType,
     startsAtBlock,
     canChangeBid,
@@ -44,6 +47,35 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
     }
   }, [called, hasNft, startPolling, stopPolling])
 
+  const { bids: userBids } = useBids(
+    {
+      where: {
+        isCanceled_eq: false,
+        nft: { id_eq: nft?.id },
+        bidder: { id_eq: memberId },
+      },
+    },
+    {
+      fetchPolicy: 'cache-and-network',
+      skip: !nft?.id || !memberId,
+      onError: (error) =>
+        SentryLogger.error('Failed to fetch member bids', 'useNftState', error, {
+          data: {
+            nft: nft?.id,
+            member: memberId,
+          },
+        }),
+    }
+  )
+
+  const unwithdrawnUserBids = userBids?.filter(
+    (bid) =>
+      bid.auction.auctionType.__typename === 'AuctionTypeOpen' &&
+      (nftStatus?.status !== 'auction' || bid.auction.id !== nftStatus.auctionId) &&
+      bid.auction.winningMemberId !== memberId
+  )
+  const bidFromPreviousAuction = unwithdrawnUserBids?.[0]
+
   const owner = nft?.ownerMember
 
   const { url: ownerAvatarUri } = useMemberAvatar(owner)
@@ -61,6 +93,7 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
         ownerAvatarUri,
         isOwner,
         needsSettling,
+        bidFromPreviousAuction,
         nftStatus: {
           ...nftStatus,
           startsAtDate,
@@ -71,7 +104,6 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
           topBidderAvatarUri,
           isUserTopBidder,
           userBidUnlockDate,
-          userBidCreatedAt,
           startsAtBlock,
           plannedEndAtBlock,
           hasTimersLoaded,
@@ -91,6 +123,7 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
         ownerAvatarUri,
         isOwner,
         needsSettling,
+        bidFromPreviousAuction,
         nftStatus: {
           ...nftStatus,
         },
@@ -103,6 +136,7 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
         ownerAvatarUri,
         isOwner,
         needsSettling,
+        bidFromPreviousAuction,
         nftStatus: {
           ...nftStatus,
         },

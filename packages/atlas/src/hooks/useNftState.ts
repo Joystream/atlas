@@ -1,50 +1,19 @@
 import BN from 'bn.js'
 
-import { useBids } from '@/api/hooks/bids'
 import { BasicNftFieldsFragment } from '@/api/queries'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { NftSaleType } from '@/joystream-lib'
 import { useJoystreamStore } from '@/providers/joystream'
 import { useUser } from '@/providers/user'
-import { SentryLogger } from '@/utils/logs'
 
 export type EnglishTimerState = 'expired' | 'running' | 'upcoming' | null
 
 export const useNftState = (nft?: BasicNftFieldsFragment | null) => {
-  const { activeMembership, memberId } = useUser()
+  const { activeMembership } = useUser()
   const { currentBlock, currentBlockMsTimestamp } = useJoystreamStore()
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
 
-  const { bids: userBids } = useBids(
-    {
-      where: {
-        isCanceled_eq: false,
-        nft: { id_eq: nft?.id },
-        bidder: { id_eq: memberId },
-      },
-    },
-    {
-      fetchPolicy: 'cache-and-network',
-      skip: !nft?.id || !memberId,
-      onError: (error) =>
-        SentryLogger.error('Failed to fetch member bids', 'useNftState', error, {
-          data: {
-            nft: nft?.id,
-            member: memberId,
-          },
-        }),
-    }
-  )
-
   const auction = nft?.transactionalStatusAuction || null
-  const auctionId = auction && auction.id
-  const unwithdrawnUserBids = userBids?.filter(
-    (bid) =>
-      bid.auction.auctionType.__typename === 'AuctionTypeOpen' &&
-      (auction || bid.auction.id !== auctionId) &&
-      bid.auction.winningMemberId !== memberId
-  )
-  const bidFromPreviousAuction = unwithdrawnUserBids?.[0]
 
   const hasTimersLoaded = !!currentBlock && !!currentBlockMsTimestamp
   const isOwner = nft?.ownerMember?.id === activeMembership?.id
@@ -133,13 +102,12 @@ export const useNftState = (nft?: BasicNftFieldsFragment | null) => {
     videoId: nft?.id,
     userBid,
     userBidUnlockDate,
-    userBidCreatedAt: bidFromPreviousAuction ? new Date(bidFromPreviousAuction.createdAt) : userBidCreatedAt,
-    userBidAmount: bidFromPreviousAuction ? new BN(bidFromPreviousAuction.amount) : userBidAmount,
+    userBidCreatedAt,
+    userBidAmount,
     bids: auction?.bids,
     auction,
     startsAtDate,
     saleType,
     hasTimersLoaded,
-    bidFromPreviousAuction,
   }
 }

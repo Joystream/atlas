@@ -1,5 +1,5 @@
 import BN from 'bn.js'
-import { FC } from 'react'
+import { Dispatch, FC, SetStateAction } from 'react'
 
 import { Fee } from '@/components/Fee'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -9,6 +9,7 @@ import { formatDateTime } from '@/utils/time'
 
 type MemberId = string | null
 type NftId = string | null
+export type WithdrawData = { bid: BN; createdAt: Date } | undefined
 
 type WithdrawBidDialogProps = {
   isOpen: boolean
@@ -18,6 +19,7 @@ type WithdrawBidDialogProps = {
   nftId: NftId
   memberId: MemberId
   onWithdrawBid: (nftId: string) => void
+  setWithdrawData: Dispatch<SetStateAction<WithdrawData>>
 }
 
 export const WithdrawBidDialog: FC<WithdrawBidDialogProps> = ({
@@ -28,6 +30,7 @@ export const WithdrawBidDialog: FC<WithdrawBidDialogProps> = ({
   nftId,
   memberId,
   onWithdrawBid,
+  setWithdrawData,
 }) => {
   const { loading, fullFee } = useFee('cancelNftBidTx', nftId && memberId ? [nftId, memberId] : undefined)
   return (
@@ -55,6 +58,7 @@ export const WithdrawBidDialog: FC<WithdrawBidDialogProps> = ({
           }
           onWithdrawBid(nftId)
           onModalClose()
+          setWithdrawData(undefined)
         },
       }}
       secondaryButton={{
