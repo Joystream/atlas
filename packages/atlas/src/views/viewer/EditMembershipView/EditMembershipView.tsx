@@ -1,6 +1,5 @@
 import { useApolloClient } from '@apollo/client'
 import debouncePromise from 'awesome-debounce-promise'
-import axios from 'axios'
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
@@ -16,12 +15,12 @@ import { TextArea } from '@/components/_inputs/TextArea'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
 import { absoluteRoutes } from '@/config/routes'
-import { AVATAR_SERVICE_URL } from '@/config/urls'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { MemberInputMetadata } from '@/joystream-lib'
 import { useFee, useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions'
 import { useUser } from '@/providers/user'
+import { uploadAvatarImage } from '@/utils/image'
 import { ConsoleLogger } from '@/utils/logs'
 
 import { StyledActionBar, TextFieldsWrapper, Wrapper } from './EditMembershipView.styles'
@@ -130,24 +129,15 @@ export const EditMembershipView: FC = () => {
 
     const success = await handleTransaction({
       txFactory: async (updateStatus) => {
-        let fileName
-        const croppedBlob = data.avatar?.blob
-
-        if (croppedBlob) {
-          const formData = new FormData()
-          formData.append('file', croppedBlob, `upload.${croppedBlob.type === 'image/webp' ? 'webp' : 'jpg'}`)
-          const response = await axios.post<{ fileName: string }>(AVATAR_SERVICE_URL, formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          })
-          fileName = response.data.fileName
+        let fileUrl
+        if (data.avatar.blob) {
+          fileUrl = await uploadAvatarImage(data.avatar.blob)
         }
 
         const memberInputMetadata: MemberInputMetadata = {
           name: data.handle,
           about: data.about,
-          avatarUri: data.avatar === null ? '' : AVATAR_SERVICE_URL + '/' + fileName,
+          avatarUri: data.avatar === null ? '' : fileUrl,
         }
         return (await joystream.extrinsics).updateMember(
           activeMembership.id,

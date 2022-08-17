@@ -6,13 +6,14 @@ import shallow from 'zustand/shallow'
 import { Button } from '@/components/_buttons/Button'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { JOY_CURRENCY_TICKER } from '@/config/joystream'
-import { AVATAR_SERVICE_URL, FAUCET_URL } from '@/config/urls'
+import { FAUCET_URL } from '@/config/urls'
 import { MemberId } from '@/joystream-lib'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransactionManagerStore } from '@/providers/transactions'
 import { useUser, useUserStore } from '@/providers/user'
+import { uploadAvatarImage } from '@/utils/image'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { StyledDialogModal } from './SignInModal.styles'
@@ -203,24 +204,16 @@ type NewMemberResponse = {
   error?: string
 }
 const createNewMember = async (address: string, data: MemberFormData) => {
-  let fileName
-  const croppedBlob = data.avatar?.blob
+  let fileUrl
 
-  if (croppedBlob) {
-    const formData = new FormData()
-    formData.append('file', croppedBlob, `upload.${croppedBlob.type === 'image/webp' ? 'webp' : 'jpg'}`)
-    const response = await axios.post<string>(AVATAR_SERVICE_URL, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-    fileName = response.data
+  if (data.avatar?.blob) {
+    fileUrl = await uploadAvatarImage(data.avatar.blob)
   }
 
   const body = {
     account: address,
     handle: data.handle,
-    avatar: AVATAR_SERVICE_URL + '/' + fileName,
+    avatar: fileUrl,
   }
   const response = await axios.post<NewMemberResponse>(FAUCET_URL, body)
   return response.data
