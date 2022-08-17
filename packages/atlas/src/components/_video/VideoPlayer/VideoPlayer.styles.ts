@@ -414,10 +414,14 @@ export const Container = styled.div<ContainerProps>`
         > div {
           background-color: ${cVar('colorBackgroundOverlay')} !important;
           font: ${cVar('typographyDesktopT300Strong')} !important;
-          font-size: ${({ isFullScreen }) => (isFullScreen ? '0.64em' : '16px')} !important;
+          font-size: ${({ isFullScreen }) => (isFullScreen ? '32px' : '16px')} !important;
           letter-spacing: ${cVar('typographyDesktopT300StrongLetterSpacing')} !important;
           text-transform: ${cVar('typographyDesktopT300StrongTextTransform')} !important;
           padding: ${sizes(1)} ${sizes(2)};
+
+          ${media.sm} {
+            font-size: 12px !important;
+          }
         }
       }
     }
