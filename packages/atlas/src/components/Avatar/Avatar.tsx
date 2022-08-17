@@ -1,8 +1,9 @@
-import { FC, MouseEvent, PropsWithChildren, useCallback } from 'react'
+import { FC, MouseEvent, PropsWithChildren, useCallback, useEffect, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { SvgActionNewChannel } from '@/components/_icons'
 import { cVar, transitions } from '@/styles'
+import { validateImage } from '@/utils/image'
 
 import {
   AvatarSize,
@@ -18,6 +19,8 @@ import {
   StyledSvgActionEdit,
   StyledSvgIllustrativeFileFailed,
 } from './Avatar.styles'
+
+import { Text } from '../Text'
 
 export type AvatarProps = PropsWithChildren<{
   onClick?: (event: MouseEvent<HTMLElement>) => void
@@ -57,6 +60,28 @@ export const Avatar: FC<AvatarProps> = ({
   onError,
 }) => {
   const isEditable = !loading && editable && size !== 'default' && size !== 'bid'
+  const [invalidImage, setInvalidImage] = useState(false)
+
+  const checkIfImageIsValid = useCallback(async () => {
+    if (!assetUrl) {
+      return
+    }
+    try {
+      await validateImage(assetUrl)
+      setInvalidImage(false)
+    } catch (error) {
+      setInvalidImage(true)
+    }
+  }, [assetUrl])
+
+  useEffect(() => {
+    if (!assetUrl) {
+      return
+    }
+    checkIfImageIsValid()
+  }, [assetUrl, checkIfImageIsValid])
+
+  const isImageInvalid = invalidImage || hasAvatarUploadFailed
 
   const getEditableIconSize = useCallback(() => {
     const smallIconSizes = ['bid', 'default', 'small']
@@ -70,6 +95,18 @@ export const Avatar: FC<AvatarProps> = ({
   const handleError = () => {
     onError?.()
   }
+
+  const getFailedIconSize = useCallback(() => {
+    const smallIconSizes = ['default', 'small']
+    if (size === 'bid') {
+      return 16
+    }
+    if (smallIconSizes.includes(size)) {
+      return 24
+    } else {
+      return
+    }
+  }, [size])
 
   return (
     <Container
@@ -97,6 +134,15 @@ export const Avatar: FC<AvatarProps> = ({
           <NewChannelAvatar>
             <SvgActionNewChannel />
           </NewChannelAvatar>
+        ) : isImageInvalid ? (
+          <NewChannelAvatar>
+            <StyledSvgIllustrativeFileFailed width={getFailedIconSize()} />
+            {size === 'preview' && (
+              <Text variant="t100" as="span" margin={{ top: 2 }}>
+                Failed upload
+              </Text>
+            )}
+          </NewChannelAvatar>
         ) : (
           <SwitchTransition>
             <CSSTransition
@@ -108,10 +154,6 @@ export const Avatar: FC<AvatarProps> = ({
                 <StyledSkeletonLoader rounded />
               ) : assetUrl ? (
                 <StyledImage src={assetUrl} onError={handleError} />
-              ) : hasAvatarUploadFailed ? (
-                <NewChannelAvatar>
-                  <StyledSvgIllustrativeFileFailed />
-                </NewChannelAvatar>
               ) : (
                 <SilhouetteAvatar />
               )}

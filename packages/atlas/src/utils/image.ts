@@ -2,12 +2,12 @@ import axios from 'axios'
 
 import { AVATAR_SERVICE_URL } from '@/config/urls'
 
-export const validateImage = async (file: File): Promise<File> => {
+export const validateImage = async (fileOrUrl: File | string): Promise<File | string> => {
   return new Promise((resolve, reject) => {
     const img = new Image()
-    const fileURL = URL.createObjectURL(file)
+    const fileURL = typeof fileOrUrl === 'string' ? fileOrUrl : URL.createObjectURL(fileOrUrl)
     img.src = fileURL
-    img.onload = () => resolve(file)
+    img.onload = () => resolve(fileOrUrl)
     img.onerror = () => reject(new Error('Image could not be loaded'))
   })
 }

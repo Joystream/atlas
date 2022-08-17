@@ -214,6 +214,7 @@ export const NewChannelAvatar = styled.div`
   position: absolute;
   display: flex;
   justify-content: center;
+  flex-direction: column;
   align-items: center;
   width: 100%;
   height: 100%;
@@ -229,6 +230,6 @@ export const ChildrenWrapper = styled.div`
 `
 export const StyledSvgIllustrativeFileFailed = styled(SvgIllustrativeFileFailed)`
   path {
-    fill: ${cVar('colorCoreNeutral300')};
+    fill: ${cVar('colorCoreNeutral100')};
   }
 `
