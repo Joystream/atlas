@@ -1,6 +1,6 @@
 import { useApolloClient } from '@apollo/client'
 import debouncePromise from 'awesome-debounce-promise'
-import { FC, useCallback, useEffect, useRef, useState } from 'react'
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
@@ -43,16 +43,19 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
 
   const debouncePromiseRef = useRef(debouncePromise)
 
-  const validateUserHandle = async (value: string) => {
-    const {
-      data: { membershipByUniqueInput },
-    } = await client.query<GetMembershipQuery, GetMembershipQueryVariables>({
-      query: GetMembershipDocument,
-      variables: { where: { handle: value } },
-    })
+  const validateUserHandle = useCallback(
+    async (value: string) => {
+      const {
+        data: { membershipByUniqueInput },
+      } = await client.query<GetMembershipQuery, GetMembershipQueryVariables>({
+        query: GetMembershipDocument,
+        variables: { where: { handle: value } },
+      })
 
-    return !membershipByUniqueInput
-  }
+      return !membershipByUniqueInput
+    },
+    [client]
+  )
 
   const requestFormSubmit = useCallback(() => {
     createSubmitHandler(createMember)()
@@ -67,30 +70,34 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
     })
   }, [isHandleValidating, isSubmitting, requestFormSubmit, setPrimaryButtonProps])
 
-  const { ref, ...handleRest } = register('handle', {
-    onChange: debouncePromiseRef.current(
-      async () => {
-        await trigger('handle')
-        setIsHandleValidating(false)
-      },
-      500,
-      {
-        key() {
-          setIsHandleValidating(true)
-          return null
+  const { ref, ...handleRest } = useMemo(
+    () =>
+      register('handle', {
+        onChange: debouncePromiseRef.current(
+          async () => {
+            await trigger('handle')
+            setIsHandleValidating(false)
+          },
+          500,
+          {
+            key() {
+              setIsHandleValidating(true)
+              return null
+            },
+          }
+        ),
+        validate: {
+          valid: (value) => (!value ? true : MEMBERSHIP_NAME_PATTERN.test(value) || 'Enter a valid member handle.'),
+          unique: async (value) => {
+            const valid = await validateUserHandle(value)
+            return valid || 'This member handle is already in use.'
+          },
         },
-      }
-    ),
-    validate: {
-      valid: (value) => (!value ? true : MEMBERSHIP_NAME_PATTERN.test(value) || 'Enter a valid member handle.'),
-      unique: async (value) => {
-        const valid = await validateUserHandle(value)
-        return valid || 'This member handle is already in use.'
-      },
-    },
-    required: { value: true, message: 'Member handle is required.' },
-    minLength: { value: 5, message: 'Member handle must be at least 5 characters long.' },
-  })
+        required: { value: true, message: 'Member handle is required.' },
+        minLength: { value: 5, message: 'Member handle must be at least 5 characters long.' },
+      }),
+    [register, trigger, validateUserHandle]
+  )
 
   useEffect(() => {
     if (errors.handle) {
