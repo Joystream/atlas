@@ -1,4 +1,5 @@
 import { generateVideoMetaTags } from '@joystream/atlas-meta-server/src/tags'
+import BN from 'bn.js'
 import { throttle } from 'lodash-es'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
@@ -29,6 +30,7 @@ import { useRedirectMigratedContent } from '@/hooks/useRedirectMigratedContent'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { VideoReaction } from '@/joystream-lib'
 import { useAsset } from '@/providers/assets'
+import { useFee } from '@/providers/joystream'
 import { useNftActions } from '@/providers/nftActions'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -61,6 +63,7 @@ export const VideoView: FC = () => {
   useRedirectMigratedContent({ type: 'video' })
   const { id } = useParams()
   const { memberId, signIn, isLoggedIn } = useUser()
+  const [reactionFee, setReactionFee] = useState<BN | undefined>()
   const { openSignInDialog } = useDisplaySignInDialog()
   const { openNftPutOnSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement } = useNftActions()
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
@@ -159,6 +162,14 @@ export const VideoView: FC = () => {
       updateWatchedVideos('COMPLETED', video?.id)
     }
   }, [video?.id, handleTimeUpdate, updateWatchedVideos])
+
+  const { getTxFee: getReactionFee } = useFee('reactToVideoTx')
+
+  const handleCalculateFeeForPopover = async (reaction: VideoReaction) => {
+    if (!memberId || !video?.id) return
+    const fee = await getReactionFee([memberId, video?.id, reaction])
+    setReactionFee(fee)
+  }
 
   const handleReact = useCallback(
     async (reaction: VideoReaction) => {
@@ -266,6 +277,8 @@ export const VideoView: FC = () => {
           <StyledReactionStepper
             reactionPopoverDismissed={reactionPopoverDismissed || !isLoggedIn}
             onReact={handleReact}
+            fee={reactionFee}
+            onCalculateFee={handleCalculateFeeForPopover}
             state={reactionStepperState}
             likes={numberOfLikes}
             dislikes={numberOfDislikes}

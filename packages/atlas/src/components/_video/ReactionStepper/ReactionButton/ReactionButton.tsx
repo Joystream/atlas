@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { FC, useRef, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
@@ -24,7 +25,8 @@ type ReactionButtonProps = {
   onReact: (reaction: VideoReaction) => Promise<boolean>
   state: ReactionSteppperState
   type: VideoReaction
-  onPopoverShow?: () => void
+  fee?: BN
+  onPopoverShow?: () => Promise<void>
   onPopoverHide?: () => void
   isPopoverOpen?: boolean
   reactionPopoverDismissed?: boolean
@@ -34,6 +36,7 @@ export const ReactionButton: FC<ReactionButtonProps> = ({
   reactionsNumber,
   state,
   type,
+  fee,
   isPopoverOpen,
   onReact,
   onPopoverHide,
@@ -65,7 +68,7 @@ export const ReactionButton: FC<ReactionButtonProps> = ({
 
   const handleReact = async (reactionPopoverDismissed: boolean) => {
     if (!reactionPopoverDismissed) {
-      onPopoverShow?.()
+      await onPopoverShow?.()
       popoverRef.current?.show()
     } else {
       if (onReact) {
@@ -89,6 +92,7 @@ export const ReactionButton: FC<ReactionButtonProps> = ({
         ) : (
           <ReactionsOnboardingPopover
             ref={popoverRef}
+            fee={fee}
             disabled={reactionPopoverDismissed}
             onConfirm={() => {
               handleReact(true)
