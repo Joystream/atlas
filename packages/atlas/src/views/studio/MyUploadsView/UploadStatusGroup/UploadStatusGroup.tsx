@@ -56,14 +56,13 @@ export const UploadStatusGroup: FC<UploadStatusGroupProps> = ({ uploads, size = 
         isCensored_eq: undefined,
         media: undefined,
         thumbnailPhoto: undefined,
-        NOT: [{ id_in: [] }, { thumbnailPhoto: { id_in: [] } }, { media: { id_in: [] } }, { channel: { id_in: [] } }],
       },
     }
   )
   const { channel, loading: channelLoading } = useFullChannel(
     uploads[0].parentObject.id,
     { skip: !isChannelType },
-    { where: { NOT: [{ id_in: [] }] } }
+    { where: { isPublic_eq: undefined } }
   )
 
   const isWaiting = uploadsStatuses.every((file) => file?.progress === 0 && file?.lastStatus === 'inProgress')

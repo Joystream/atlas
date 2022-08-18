@@ -99,7 +99,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
           channel: { id: channelId },
         }),
     },
-    { where: { NOT: [{ id_in: [] }] } }
+    { where: { isPublic_eq: undefined, isCensored_eq: undefined, NOT: [{ id_in: [] }] } }
   )
   const startFileUpload = useStartFileUpload()
 
