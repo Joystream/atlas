@@ -420,7 +420,7 @@ export const Container = styled.div<ContainerProps>`
           letter-spacing: ${cVar('typographyDesktopT300StrongLetterSpacing')} !important;
           text-transform: ${cVar('typographyDesktopT300StrongTextTransform')} !important;
           padding: ${sizes(1)} ${sizes(2)};
-          word-wrap: break-word;
+          word-break: break-all;
 
           ${media.sm} {
             font-size: ${({ isFullScreen }) => (isFullScreen ? '32px' : '16px')} !important;
