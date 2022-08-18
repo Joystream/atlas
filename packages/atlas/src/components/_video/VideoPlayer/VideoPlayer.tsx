@@ -713,7 +713,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
         {isEmbedded && !isSharingOverlayOpen && (
           <>
             <EmbbeddedTopBarOverlay isFullScreen={isFullScreen}>
-              <a href={absoluteRoutes.viewer.channel(video?.channel.id)} target="_blank" rel="noreferrer">
+              <a href={absoluteRoutes.viewer.channel(video?.channel.id)} target="_blank" rel="noopener noreferrer">
                 <Avatar
                   clickable
                   size={isFullScreen && !isMobile() ? 'cover' : 'default'}
@@ -721,7 +721,12 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                   loading={isChannelAvatarLoading}
                 />
               </a>
-              <TitleContainer href={absoluteRoutes.viewer.video(videoId)} isFullscreen={isFullScreen} target="_blank">
+              <TitleContainer
+                href={absoluteRoutes.viewer.video(videoId)}
+                isFullscreen={isFullScreen}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <StyledText variant="h300" as="h2">
                   {video?.title}
                 </StyledText>
