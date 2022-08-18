@@ -179,7 +179,17 @@ export const MultiFileSelect: FC<MultiFileSelectProps> = memo(
       }
     }
 
-    const handleReAdjustThumbnail = () => {
+    const handleReAdjustThumbnail = async () => {
+      if (!editMode || disabled) {
+        return
+      }
+      if (files.thumbnail?.url && !files.thumbnail?.originalBlob) {
+        const file = await fetch(files.thumbnail.url)
+          .then((r) => r.blob())
+          .then((blobFile) => new File([blobFile], 'temporary-file', { type: 'image/png' }))
+        setRawImageFile(file)
+        dialogRef.current?.open(file, undefined, true)
+      }
       if (files.thumbnail?.originalBlob) {
         dialogRef.current?.open(files.thumbnail.originalBlob, files.thumbnail.imageCropData, true)
       }
@@ -239,6 +249,7 @@ export const MultiFileSelect: FC<MultiFileSelectProps> = memo(
       <MultiFileSelectContainer className={className}>
         <FileSelect
           key={step}
+          thumbnailEditable={editMode && !disabled}
           file={(step === 'video' ? files.video?.blob : files.thumbnail?.originalBlob) as File}
           maxSize={step === 'video' ? maxVideoSize : maxImageSize}
           onUploadFile={handleUploadFile}

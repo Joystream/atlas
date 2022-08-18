@@ -56,8 +56,7 @@ export const ViewerLayout: FC = () => {
 
   const navigate = useNavigate()
   const mdMatch = useMediaMatch('md')
-  const { searchOpen } = useSearchStore()
-
+  const searchOpen = useSearchStore((state) => state.searchOpen)
   const displayedLocation = locationState?.overlaidLocation || location
 
   return (

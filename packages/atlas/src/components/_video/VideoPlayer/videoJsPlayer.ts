@@ -36,7 +36,7 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
   onEnd,
   onTimeUpdated,
 }) => {
-  const playerRef = useRef<HTMLVideoElement>(null)
+  const playerRef = useRef<HTMLVideoElement | null>(null)
   const [player, setPlayer] = useState<VideoJsPlayer | null>(null)
 
   useEffect(() => {
@@ -58,7 +58,13 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
     setPlayer(playerInstance)
 
     return () => {
+      // playerInstance.dispose is causing the app breaks every time you updating the player
+      // more details here:
+      // https://github.com/videojs/video.js/issues/4970
+
+      // for your convienience you can comment the line below while making changes to the player
       playerInstance.dispose()
+      // but don't forget to uncomment once you're done with updating the player
     }
   }, [])
 
@@ -101,7 +107,6 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
       return
     }
 
-    // @ts-ignore @types/video.js is outdated and doesn't provide types for some newer video.js features
     player.fill(Boolean(fill))
   }, [player, fill])
 

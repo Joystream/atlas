@@ -12,6 +12,7 @@ type CommentThreadProps = {
   linkedReplyId?: string | null
   hasAnyReplies: boolean
   userReactionsLookup: UserCommentReactions | undefined
+  repliesCount: number
 } & CommentProps
 
 const INITIAL_REPLIES_COUNT = 10
@@ -25,6 +26,7 @@ const _CommentThread: FC<CommentThreadProps> = ({
   linkedReplyId,
   hasAnyReplies,
   userReactionsLookup,
+  repliesCount,
   ...commentProps
 }) => {
   const [repliesOpen, setRepliesOpen] = useState(false)
@@ -45,7 +47,24 @@ const _CommentThread: FC<CommentThreadProps> = ({
   const repliesLeftToLoadCount = totalCount - allRepliesCount
   const allRepliesContainNewReply = !!replies.find((r) => r.id === newReplyId)
 
-  const placeholderItems = loading ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
+  const getPlaceholderCount = () => {
+    if (repliesLeftToLoadCount) {
+      if (repliesLeftToLoadCount > LOAD_MORE_REPLIES_COUNT) {
+        return LOAD_MORE_REPLIES_COUNT
+      }
+      return repliesLeftToLoadCount
+    }
+    if (repliesCount > INITIAL_REPLIES_COUNT) {
+      return INITIAL_REPLIES_COUNT
+    }
+    return repliesCount
+  }
+
+  const placeholderItems = loading
+    ? Array.from({ length: getPlaceholderCount() }, () => ({
+        id: undefined,
+      }))
+    : []
 
   const handleLoadMore = () => {
     fetchMore({

@@ -4,6 +4,7 @@ import { ActionBarProps } from '@/components/ActionBar'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useConfirmationModal } from '@/providers/confirmationModal'
 import { VideoWorkspaceFormStatus, useVideoWorkspace, useVideoWorkspaceData } from '@/providers/videoWorkspace'
 
 import { VideoForm } from './VideoForm'
@@ -14,6 +15,24 @@ export const VideoWorkspace: FC = memo(() => {
 
   const { isWorkspaceOpen, setIsWorkspaceOpen, editedVideoInfo } = useVideoWorkspace()
   const { tabData } = useVideoWorkspaceData()
+
+  const [openEditDialog, closeEditDialog] = useConfirmationModal({
+    type: 'warning',
+    title: 'Discard changes?',
+    description:
+      'You have unsaved changes which are going to be lost if you close this window. Are you sure you want to continue?',
+    primaryButton: {
+      onClick: () => {
+        closeEditDialog()
+        setIsWorkspaceOpen(false)
+      },
+      text: 'Confirm and discard',
+    },
+    secondaryButton: {
+      text: 'Cancel',
+      onClick: () => closeEditDialog(),
+    },
+  })
 
   const { openWarningDialog } = useDisplayDataLostWarning()
 
@@ -38,12 +57,16 @@ export const VideoWorkspace: FC = memo(() => {
   }, [formStatus?.hasUnsavedAssets, isWorkspaceOpen])
 
   const closeVideoWorkspace = useCallback(() => {
+    if (isEdit && formStatus?.isDirty) {
+      openEditDialog()
+      return
+    }
     if (formStatus?.hasUnsavedAssets) {
       openWarningDialog({ onConfirm: () => setIsWorkspaceOpen(false) })
     } else {
       setIsWorkspaceOpen(false)
     }
-  }, [formStatus?.hasUnsavedAssets, openWarningDialog, setIsWorkspaceOpen])
+  }, [formStatus?.hasUnsavedAssets, formStatus?.isDirty, isEdit, openEditDialog, openWarningDialog, setIsWorkspaceOpen])
 
   const actionBarProps: ActionBarProps = {
     isActive: isEdit ? !formStatus?.isDisabled : true,
@@ -57,7 +80,7 @@ export const VideoWorkspace: FC = memo(() => {
       isEdit && formStatus?.isDirty
         ? {
             text: 'Cancel',
-            onClick: () => formStatus?.triggerReset?.(),
+            onClick: () => closeVideoWorkspace(),
           }
         : undefined,
     infoBadge: !isEdit

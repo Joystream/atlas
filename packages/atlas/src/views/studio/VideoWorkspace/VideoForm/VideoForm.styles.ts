@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { Banner } from '@/components/Banner'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { FormField } from '@/components/_inputs/FormField'
+import { SvgAlertsInformative24 } from '@/components/_icons'
 import { MultiFileSelect } from '@/components/_inputs/MultiFileSelect'
 import { TitleInput } from '@/components/_inputs/TitleInput'
 import { cVar, media, sizes } from '@/styles'
@@ -15,6 +15,12 @@ export const StyledMultiFileSelect = styled(MultiFileSelect)`
   }
 `
 
+export const StyledSvgAlertsInformative24 = styled(SvgAlertsInformative24)`
+  path {
+    fill: ${cVar('colorTextStrong')};
+  }
+`
+
 export const FormWrapper = styled(LimitedWidthContainer)`
   display: grid;
   grid-template-rows: max-content max-content;
@@ -22,7 +28,8 @@ export const FormWrapper = styled(LimitedWidthContainer)`
   padding: ${sizes(12)} ${sizes(4)};
 
   ${media.md} {
-    padding: ${sizes(12)} ${sizes(8)};
+    max-width: 1440px;
+    padding: ${sizes(12)};
     padding-bottom: 0;
     grid-gap: ${sizes(12)};
     grid-template-rows: 1fr;
@@ -37,7 +44,7 @@ export const StyledBanner = styled(Banner)`
 export const InputsContainer = styled.div`
   display: grid;
   gap: ${sizes(8)};
-  margin-top: ${sizes(20)};
+  margin-top: ${sizes(12)};
 
   ${media.md} {
     margin-top: 0;
@@ -62,11 +69,11 @@ export const MoreSettingsSection = styled.div<MoreSettingsSectionProps>`
   padding-bottom: ${sizes(10)};
 `
 
-export const SwitchFormField = styled(FormField)`
-  padding: ${sizes(10)} 0;
+export const Divider = styled.div`
   margin: ${sizes(2)} 0;
-  border-top: 1px solid ${cVar('colorCoreNeutral700')};
-  border-bottom: 1px solid ${cVar('colorCoreNeutral700')};
+  background-color: ${cVar('colorBackgroundMutedAlpha')};
+  height: 1px;
+  width: 100%;
 `
 
 export const SwitchNftWrapper = styled.div`

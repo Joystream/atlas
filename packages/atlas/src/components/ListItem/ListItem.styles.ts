@@ -1,3 +1,4 @@
+import isPropValid from '@emotion/is-prop-valid'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
@@ -39,7 +40,7 @@ const interactiveStyles = css`
   }
 `
 type ContainerProps = { size: ListItemSizes; hasNodeStart: boolean; disabled?: boolean; highlight?: boolean }
-export const Container = styled.div<ContainerProps>`
+export const Container = styled('div', { shouldForwardProp: isPropValid })<ContainerProps>`
   border: none;
   width: 100%;
   justify-items: start;
@@ -51,6 +52,7 @@ export const Container = styled.div<ContainerProps>`
   user-select: none;
   cursor: pointer;
   background-color: ${({ highlight }) => (highlight ? cVar('colorBackgroundMutedAlpha') : 'unset')};
+  text-decoration: none;
 
   ${({ disabled }) => disabled && disabledStyles};
   ${({ size }) => getContainerPadding(size)};
@@ -73,10 +75,13 @@ type CaptionPosition = {
   captionPosition?: 'right' | 'bottom'
 }
 const captionRightStyles = ({ captionPosition }: CaptionPosition) =>
-  captionPosition === 'right' &&
-  css`
-    text-align: right;
-  `
+  captionPosition === 'right'
+    ? css`
+        text-align: right;
+      `
+    : css`
+        text-align: left;
+      `
 export const Caption = styled(Text)<CaptionPosition>`
   ${captionRightStyles};
 `
@@ -90,6 +95,7 @@ export const LabelContainer = styled.div`
 export const LabelText = styled(Text)`
   width: 100%;
   word-break: break-word;
+  text-align: left;
 `
 
 const iconStyles = ({ destructive, isHovering, isSelected }: NodeContainerProps) =>

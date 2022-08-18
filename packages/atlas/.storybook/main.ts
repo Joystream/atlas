@@ -22,10 +22,13 @@ const config: CustomizedStorybookConfig = {
   },
   viteFinal(config) {
     return mergeConfig(config, {
+      root: viteConfig.root,
       resolve: viteConfig.resolve,
-      build: viteConfig.build,
+      build: {
+        target: viteConfig.build?.target,
+      },
       // eslint-disable-next-line
-      plugins: [viteConfig.plugins.find((p) => (p as any).name === 'babel')],
+      plugins: [viteConfig.plugins?.find((p) => (p as any).name === 'babel')],
     })
   },
 }

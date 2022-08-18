@@ -13,6 +13,7 @@ import mergeRefs from 'react-merge-refs'
 import useResizeObserver from 'use-resize-observer'
 
 import { Text } from '@/components/Text'
+import { Tooltip } from '@/components/Tooltip'
 import { Button, ButtonProps } from '@/components/_buttons/Button'
 import { Loader } from '@/components/_loaders/Loader'
 import { ConsoleLogger } from '@/utils/logs'
@@ -40,7 +41,7 @@ export type InputProps = {
   size?: InputSize
   processing?: boolean
   nodeStart?: ReactNode
-  actionButton?: Omit<ButtonProps, 'variant' | 'size'>
+  actionButton?: Omit<ButtonProps, 'variant' | 'size'> & { dontFocusOnClick?: boolean; tooltipText?: string }
   nodeEnd?: ReactNode
 }
 
@@ -110,7 +111,9 @@ const InputComponent: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
   }
 
   const handleButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
-    inputRef.current?.focus()
+    if (!actionButton?.dontFocusOnClick) {
+      inputRef.current?.focus()
+    }
     e.currentTarget.blur()
     actionButton?.onClick?.(e)
   }
@@ -151,7 +154,15 @@ const InputComponent: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
         <NodeContainer size={size} ref={nodeRightRef} disabled={disabled} isButton={!!actionButton}>
           {processing && <Loader variant="xsmall" />}
           {actionButton ? (
-            <Button {...actionButton} variant="tertiary" disabled={disabled} size="small" onClick={handleButtonClick} />
+            <Tooltip text={actionButton.tooltipText} placement="top" hideOnClick={false}>
+              <Button
+                {...actionButton}
+                variant="tertiary"
+                disabled={disabled}
+                size="small"
+                onClick={handleButtonClick}
+              />
+            </Tooltip>
           ) : (
             renderedNodeEnd
           )}

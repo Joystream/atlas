@@ -4,6 +4,10 @@
   },
   "rewrites": [
     {
+      "source": "/embedded/(.*)",
+      "destination": "/embedded/index.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

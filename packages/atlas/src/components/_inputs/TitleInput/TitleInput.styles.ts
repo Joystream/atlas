@@ -40,12 +40,13 @@ export const StyledTextArea = styled(TextareaAutosize, { shouldForwardProp: isPr
     text-transform: ${cVar('typographyDesktopH700TextTransform')};
   }
 
-  &:hover:not(:focus) {
+  &:hover:not(:focus):not(:disabled) {
     opacity: 0.5;
   }
 
   ::placeholder {
     color: ${({ error }) => cVar(error ? 'colorTextError' : 'colorTextMuted')};
+    opacity: 1;
   }
 
   :focus,

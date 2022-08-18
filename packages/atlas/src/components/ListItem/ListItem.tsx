@@ -1,7 +1,9 @@
+import { To } from 'history'
 import { MouseEvent, ReactNode, forwardRef } from 'react'
 import mergeRefs from 'react-merge-refs'
 
 import { useHover } from '@/hooks/useHover'
+import { getLinkPropsFromTo } from '@/utils/button'
 
 import {
   Caption,
@@ -29,6 +31,7 @@ export type ListItemProps = {
   onClick?: (e: MouseEvent) => void
   className?: string
   highlight?: boolean
+  to?: To
 }
 
 export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
@@ -47,10 +50,12 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
       onClick,
       className,
       highlight,
+      to,
     },
     ref
   ) => {
     const [hoverRef, isHovering] = useHover<HTMLDivElement>()
+    const linkProps = getLinkPropsFromTo(to)
     return (
       <Container
         highlight={highlight}
@@ -61,6 +66,7 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
         hasNodeStart={!!nodeStart}
         size={size}
         ref={mergeRefs([hoverRef, ref])}
+        {...linkProps}
       >
         {!!nodeStart && (
           <NodeContainer isSelected={selected} isHovering={isHovering} destructive={destructive}>

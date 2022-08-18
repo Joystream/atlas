@@ -21,23 +21,21 @@ export const ContextMenu: FC<ContextMenuProps> = ({
   const contextMenuInstanceRef = useRef<PopoverImperativeHandle>(null)
   return (
     <Popover hideOnClick ref={contextMenuInstanceRef} {...rest}>
-      <StyledContainer>
-        <List
-          scrollable={scrollable}
-          size={size}
-          items={items.map((item) => ({
-            ...item,
-            onClick: (e) => {
-              item.onClick?.(e)
-              contextMenuInstanceRef.current?.hide()
-            },
-          }))}
-        />
-      </StyledContainer>
+      <StyledList
+        scrollable={scrollable}
+        size={size}
+        items={items.map((item) => ({
+          ...item,
+          onClick: (e) => {
+            item.onClick?.(e)
+            contextMenuInstanceRef.current?.hide()
+          },
+        }))}
+      />
     </Popover>
   )
 }
 
-export const StyledContainer = styled.div`
+export const StyledList = styled(List)`
   width: 192px;
 `

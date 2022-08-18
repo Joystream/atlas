@@ -8,6 +8,7 @@ fragment BasicChannelFields on Channel {
   title
   createdAt
   follows
+  rewardAccount
 
   avatarPhoto {
     ...StorageDataObjectFields
@@ -115,7 +116,7 @@ fragment BasicVideoFields on Video {
     ...StorageDataObjectFields
   }
   nft {
-    id # just to check whether NFT exists
+    ...BasicNftFields
   }
 }
 
@@ -163,11 +164,11 @@ fragment FullVideoFields on Video {
     ...LicenseFields
   }
   nft {
-    ...FullNftFields
+    ...BasicNftFields
   }
 }
 
-fragment FullNftFields on OwnedNft {
+fragment BasicNftFields on OwnedNft {
   id
   createdAt
   creatorRoyalty
@@ -175,9 +176,6 @@ fragment FullNftFields on OwnedNft {
   lastSalePrice
   ownerMember {
     ...BasicMembershipFields
-  }
-  creatorChannel {
-    ...BasicChannelFields
   }
   transactionalStatusAuction {
     id
@@ -222,6 +220,13 @@ fragment FullNftFields on OwnedNft {
     ... on TransactionalStatusBuyNow {
       price
     }
+  }
+}
+
+fragment FullNftFields on OwnedNft {
+  ...BasicNftFields
+  creatorChannel {
+    ...BasicChannelFields
   }
   video {
     ...BasicVideoFields

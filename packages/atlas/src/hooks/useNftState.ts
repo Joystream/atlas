@@ -1,4 +1,4 @@
-import { FullNftFieldsFragment } from '@/api/queries'
+import { BasicNftFieldsFragment } from '@/api/queries'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { NftSaleType } from '@/joystream-lib'
 import { useJoystreamStore } from '@/providers/joystream'
@@ -6,7 +6,7 @@ import { useUser } from '@/providers/user'
 
 export type EnglishTimerState = 'expired' | 'running' | 'upcoming' | null
 
-export const useNftState = (nft?: FullNftFieldsFragment | null) => {
+export const useNftState = (nft?: BasicNftFieldsFragment | null) => {
   const { activeMembership } = useUser()
   const { currentBlock, currentBlockMsTimestamp } = useJoystreamStore()
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
@@ -50,12 +50,13 @@ export const useNftState = (nft?: FullNftFieldsFragment | null) => {
         : auction.whitelistedMembers.some((member) => member.id === activeMembership.id)
   }
 
-  const canBuyNow = !isOwner && ((!!Number(auction?.buyNowPrice) && isRunning) || isBuyNow)
+  const canBuyNow = !isOwner && ((!!Number(auction?.buyNowPrice) && isRunning) || isBuyNow) && isUserWhitelisted
   const canMakeBid = !isOwner && isAuction && isRunning && isUserWhitelisted
   const canPutOnSale = isOwner && isIdle
   const canCancelSale = isOwner && ((englishAuction && !auction.bids.length) || openAuction || isBuyNow)
   const canWithdrawBid = auction?.isCompleted || (openAuction && userBid && currentBlock >= (userBidUnlockBlock ?? 0))
   const canChangePrice = isBuyNow && isOwner
+  const canReviewBid = isOwner && openAuction && auction?.topBid && !auction?.topBid.isCanceled
 
   const canChangeBid = !auction?.isCompleted && auction?.auctionType.__typename === 'AuctionTypeOpen' && userBid
 
@@ -75,6 +76,7 @@ export const useNftState = (nft?: FullNftFieldsFragment | null) => {
     canCancelSale: !!canCancelSale,
     canPutOnSale: !!canPutOnSale,
     canChangePrice: canChangePrice,
+    canReviewBid,
     needsSettling: !!needsSettling,
     canWithdrawBid: !!canWithdrawBid,
     auctionPlannedEndDate,
@@ -90,9 +92,10 @@ export const useNftState = (nft?: FullNftFieldsFragment | null) => {
     isRunning,
     englishTimerState,
     isUpcoming,
-    videoId: nft?.video.id,
+    videoId: nft?.id,
     userBid,
     userBidUnlockDate,
+    bids: auction?.bids,
     auction,
     startsAtDate,
     saleType,

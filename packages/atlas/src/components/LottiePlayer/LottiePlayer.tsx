@@ -20,7 +20,9 @@ export const LottiePlayer: FC<LottiePlayerProps> = ({ play = true, data, size, l
         autoplay={play}
         loop={loop}
         keepLastFrame
-        src={data}
+        // stringifying animation data will improve performance. Read more below:
+        // https://github.com/LottieFiles/lottie-react/issues/48
+        src={JSON.stringify(data)}
         style={style}
         onEvent={(e) => (e === 'complete' ? onComplete?.() : null)}
         className={className}

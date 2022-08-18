@@ -10,12 +10,17 @@ import {
   useRef,
   useState,
 } from 'react'
+import { Link } from 'react-router-dom'
 import useResizeObserver from 'use-resize-observer'
 import { VideoJsPlayer } from 'video.js'
 
+import { useFullVideo } from '@/api/hooks'
 import { FullVideoFieldsFragment } from '@/api/queries'
+import { Avatar } from '@/components/Avatar'
+import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { usePersonalDataStore } from '@/providers/personalData'
+import { isMobile } from '@/utils/browser'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { formatDurationShort } from '@/utils/time'
 
@@ -32,37 +37,49 @@ import {
   CurrentTime,
   CurrentTimeWrapper,
   CustomControls,
+  EmbbeddedTopBarOverlay,
   PlayButton,
   PlayControl,
   ScreenControls,
+  StyledEmbeddedLogoLink,
+  StyledJoystreamLogo,
+  StyledJoystreamLogoShort,
   StyledSvgControlsFullScreen,
   StyledSvgControlsPause,
   StyledSvgControlsPipOff,
   StyledSvgControlsPipOn,
   StyledSvgControlsPlay,
   StyledSvgControlsReplay,
+  StyledSvgControlsShare,
   StyledSvgControlsSmallScreen,
   StyledSvgControlsSoundLowVolume,
   StyledSvgControlsVideoModeCinemaView,
   StyledSvgControlsVideoModeCompactView,
   StyledSvgPlayerSoundOff,
   StyledSvgPlayerSoundOn,
+  StyledText,
+  TitleContainer,
   VolumeButton,
   VolumeControl,
   VolumeSlider,
   VolumeSliderContainer,
 } from './VideoPlayer.styles'
+import { VideoShare } from './VideoShare'
 import { CustomVideojsEvents, PlayerState, VOLUME_STEP, hotkeysHandler, isFullScreenEnabled } from './utils'
 import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
 export type VideoPlayerProps = {
+  channelAvatarUrl?: string | null
+  isChannelAvatarLoading?: boolean
+  isShareDialogOpen?: boolean
+  onCloseShareDialog?: () => void
+  onAddVideoView?: () => void
   isVideoPending?: boolean
   nextVideo?: FullVideoFieldsFragment | null
   className?: string
   videoStyle?: CSSProperties
   autoplay?: boolean
   playing?: boolean
-  channelId?: string
   videoId?: string
   isEmbedded?: boolean
   isPlayNextDisabled?: boolean
@@ -84,9 +101,13 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   {
     isVideoPending,
     className,
+    channelAvatarUrl,
+    isChannelAvatarLoading,
+    onCloseShareDialog,
+    onAddVideoView,
+    isShareDialogOpen,
     playing,
     nextVideo,
-    channelId,
     videoId,
     autoplay,
     videoStyle,
@@ -98,6 +119,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [isSharingOverlayOpen, setIsSharingOverlayOpen] = useState(false)
   const { height: playerHeight = 0 } = useResizeObserver({ box: 'border-box', ref: playerRef })
   const customControlsRef = useRef<HTMLDivElement>(null)
 
@@ -117,6 +139,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     actions: { setCurrentVolume, setCachedVolume, setCinematicView },
   } = usePersonalDataStore((state) => state)
   const [volumeToSave, setVolumeToSave] = useState(0)
+  const { video } = useFullVideo(videoId || '')
 
   const [videoTime, setVideoTime] = useState(0)
   const [isFullScreen, setIsFullScreen] = useState(false)
@@ -127,6 +150,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   const [isLoaded, setIsLoaded] = useState(false)
   const [needsManualPlay, setNeedsManualPlay] = useState(!autoplay)
   const mdMatch = useMediaMatch('md')
+  const xsMatch = useMediaMatch('xs')
 
   const playVideo = useCallback(
     async (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => {
@@ -285,6 +309,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     if (playPromise) {
       playPromise
         .then(() => {
+          onAddVideoView?.()
           setIsPlaying(true)
         })
         .catch((e) => {
@@ -292,7 +317,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
           ConsoleLogger.warn('Video autoplay failed', e)
         })
     }
-  }, [player, isLoaded, autoplay])
+  }, [player, isLoaded, autoplay, onAddVideoView])
 
   // handle playing and pausing from outside the component
   useEffect(() => {
@@ -460,16 +485,22 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   }, [currentVolume, volumeToSave, player, setCachedVolume])
 
   // button/input handlers
-  const handlePlayPause = useCallback(() => {
-    if (playerState === 'error') {
-      return
-    }
-    if (isPlaying) {
-      pauseVideo(player, true, () => setIsPlaying(false))
-    } else {
-      playVideo(player, true, () => setIsPlaying(true))
-    }
-  }, [isPlaying, pauseVideo, playVideo, player, playerState])
+  const handlePlayPause = useCallback(
+    (shouldAddView?: boolean) => {
+      if (playerState === 'error' || isSharingOverlayOpen) {
+        return
+      }
+      if (shouldAddView) {
+        onAddVideoView?.()
+      }
+      if (isPlaying) {
+        pauseVideo(player, true, () => setIsPlaying(false))
+      } else {
+        playVideo(player, true, () => setIsPlaying(true))
+      }
+    },
+    [isPlaying, isSharingOverlayOpen, onAddVideoView, pauseVideo, playVideo, player, playerState]
+  )
 
   const handleChangeVolume = (event: ChangeEvent<HTMLInputElement>) => {
     setCurrentVolume(Number(event.target.value))
@@ -486,12 +517,10 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   const handlePictureInPicture = (event: MouseEvent) => {
     event.stopPropagation()
     if (document.pictureInPictureElement) {
-      // @ts-ignore @types/video.js is outdated and doesn't provide types for some newer video.js features
-      player.exitPictureInPicture()
+      player?.exitPictureInPicture()
     } else {
       if (document.pictureInPictureEnabled) {
-        // @ts-ignore @types/video.js is outdated and doesn't provide types for some newer video.js features
-        player.requestPictureInPicture().catch((e) => {
+        player?.requestPictureInPicture().catch((e) => {
           ConsoleLogger.warn('Picture in picture failed', e)
         })
       }
@@ -526,20 +555,31 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     }
   }
 
+  const handleCloseSharingDialog = () => {
+    onCloseShareDialog?.()
+    setIsSharingOverlayOpen(false)
+  }
+
   const toggleCinematicView = (event: MouseEvent) => {
     event.stopPropagation()
     setCinematicView(!cinematicView)
   }
 
-  const showPlayerControls = isLoaded && playerState
+  const showPlayerControls = isEmbedded ? !needsManualPlay : isLoaded && playerState && !isSharingOverlayOpen
   const showControlsIndicator = playerState !== 'ended'
+
+  const playNextDisabled = isPlayNextDisabled || !autoPlayNext || isShareDialogOpen || isSharingOverlayOpen
 
   return (
     <Container isFullScreen={isFullScreen} className={className} isSettingsPopoverOpened={isSettingsPopoverOpened}>
-      <div data-vjs-player onClick={handlePlayPause}>
+      <div data-vjs-player onClick={() => handlePlayPause()}>
         {needsManualPlay && (
-          <BigPlayButtonContainer onClick={handlePlayPause}>
-            <BigPlayButton onClick={handlePlayPause}>
+          <BigPlayButtonContainer
+            onClick={() => {
+              handlePlayPause(true)
+            }}
+          >
+            <BigPlayButton>
               <StyledSvgControlsPlay />
             </BigPlayButton>
           </BigPlayButtonContainer>
@@ -547,17 +587,17 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
         <video style={videoStyle} ref={playerRef} className="video-js" onClick={onVideoClick} />
         {showPlayerControls && (
           <>
-            <ControlsOverlay isSettingsPopoverOpened={isSettingsPopoverOpened} isFullScreen={isFullScreen}>
+            <ControlsOverlay isSettingsPopoverOpened={isSettingsPopoverOpened} elevated={isFullScreen}>
               <CustomTimeline
                 playVideo={playVideo}
                 pauseVideo={pauseVideo}
                 player={player}
-                isFullScreen={isFullScreen}
+                elevated={isFullScreen || isEmbedded}
                 playerState={playerState}
                 setPlayerState={setPlayerState}
               />
               <CustomControls
-                isFullScreen={isFullScreen}
+                elevated={isFullScreen || isEmbedded}
                 isEnded={playerState === 'ended'}
                 ref={customControlsRef}
                 isSettingsPopoverOpened={isSettingsPopoverOpened}
@@ -566,9 +606,9 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                   {(!needsManualPlay || mdMatch) && (
                     <PlayButton
                       isEnded={playerState === 'ended'}
-                      onClick={handlePlayPause}
+                      onClick={() => handlePlayPause(playerState === 'ended')}
                       tooltipText={isPlaying ? 'Pause (k)' : playerState === 'ended' ? 'Play again (k)' : 'Play (k)'}
-                      tooltipPosition="left"
+                      tooltipPosition="top-left"
                     >
                       {playerState === 'ended' ? (
                         <StyledSvgControlsReplay />
@@ -633,12 +673,26 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                   <PlayerControlButton
                     isDisabled={!isFullScreenEnabled}
                     tooltipEnabled={!isSettingsPopoverOpened}
-                    tooltipPosition="right"
+                    tooltipPosition="top-right"
                     tooltipText={isFullScreen ? 'Exit full screen (f)' : 'Full screen (f)'}
                     onClick={handleFullScreen}
                   >
                     {isFullScreen ? <StyledSvgControlsSmallScreen /> : <StyledSvgControlsFullScreen />}
                   </PlayerControlButton>
+                  {isEmbedded && (
+                    <a
+                      onClick={(e) => e.stopPropagation()}
+                      href={window.location.origin + absoluteRoutes.viewer.video(videoId)}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      {xsMatch ? (
+                        <StyledJoystreamLogo width={undefined} />
+                      ) : (
+                        <StyledJoystreamLogoShort width={undefined} />
+                      )}
+                    </a>
+                  )}
                 </ScreenControls>
               </CustomControls>
             </ControlsOverlay>
@@ -647,14 +701,67 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
         <VideoOverlay
           videoId={videoId}
           isFullScreen={isFullScreen}
-          isPlayNextDisabled={isPlayNextDisabled || !autoPlayNext}
+          isPlayNextDisabled={playNextDisabled}
           playerState={playerState}
-          onPlay={handlePlayPause}
-          channelId={channelId}
+          onPlayAgain={() => {
+            handlePlayPause(true)
+          }}
+          channelId={video?.channel.id}
           currentThumbnailUrl={videoJsConfig.posterUrl}
           playRandomVideoOnEnded={!isEmbedded}
         />
         {showControlsIndicator && <ControlsIndicator player={player} isLoading={playerState === 'loading'} />}
+        {isEmbedded && !isSharingOverlayOpen && (
+          <>
+            <EmbbeddedTopBarOverlay isFullScreen={isFullScreen}>
+              <Link to={absoluteRoutes.viewer.channel(video?.channel.id)}>
+                <Avatar
+                  clickable
+                  size={isFullScreen && !isMobile() ? 'cover' : 'default'}
+                  assetUrl={channelAvatarUrl}
+                  loading={isChannelAvatarLoading}
+                />
+              </Link>
+              <TitleContainer to={absoluteRoutes.viewer.video(videoId)} isFullscreen={isFullScreen}>
+                <StyledText variant="h300" as="h2">
+                  {video?.title}
+                </StyledText>
+                <StyledText variant="t100-strong" as="p" margin={{ top: 0.5 }}>
+                  {video?.channel.title}
+                </StyledText>
+              </TitleContainer>
+              <PlayerControlButton
+                tooltipText="Share"
+                tooltipPosition="bottom-right"
+                onClick={(e) => {
+                  setIsSharingOverlayOpen(true)
+                  e.stopPropagation()
+                }}
+              >
+                <StyledSvgControlsShare />
+              </PlayerControlButton>
+            </EmbbeddedTopBarOverlay>
+            {needsManualPlay && (
+              <StyledEmbeddedLogoLink
+                href={window.location.origin + absoluteRoutes.viewer.video(videoId)}
+                rel="noopener noreferrer"
+                target="_blank"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <StyledJoystreamLogo embedded />
+              </StyledEmbeddedLogoLink>
+            )}
+          </>
+        )}
+        <VideoShare
+          onCloseShareDialog={handleCloseSharingDialog}
+          isEmbedded={isEmbedded}
+          currentTime={videoTime}
+          isFullScreen={isFullScreen}
+          videoId={videoId}
+          isShareDialogOpen={isShareDialogOpen || isSharingOverlayOpen}
+          videoTitle={video?.title}
+        />
       </div>
     </Container>
   )

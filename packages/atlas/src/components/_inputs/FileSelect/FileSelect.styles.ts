@@ -123,6 +123,26 @@ export const Content = styled(animated.div, { shouldForwardProp: (prop) => prop 
   }
 `
 
+export const EditFileHoverOverlay = styled.div`
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  background: ${cVar('colorBackgroundOverlay')};
+  pointer-events: none;
+  transition: opacity ${cVar('animationTransitionFast')};
+  display: grid;
+  place-content: center;
+  gap: ${sizes(1)};
+  justify-items: center;
+`
+
+export const ThumbailContainer = styled.div`
+  position: absolute;
+`
+
 export const Thumbnail = styled(animated.img, { shouldForwardProp: (prop) => prop !== 'isLoading' })<LoadingProp>`
   position: absolute;
   top: 0;
@@ -133,6 +153,12 @@ export const Thumbnail = styled(animated.img, { shouldForwardProp: (prop) => pro
   display: block;
   opacity: ${({ isLoading }) => (isLoading ? 0.1 : 1)};
   transition: opacity 400ms ease-out;
+
+  :hover {
+    + ${EditFileHoverOverlay} {
+      opacity: 1;
+    }
+  }
 `
 
 export const Title = styled(Text)`

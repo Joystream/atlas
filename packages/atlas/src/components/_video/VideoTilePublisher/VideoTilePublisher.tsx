@@ -9,28 +9,23 @@ import { Pill } from '@/components/Pill'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
 import { Button } from '@/components/_buttons/Button'
 import {
-  SvgActionCopy,
   SvgActionEdit,
   SvgActionHide,
-  SvgActionMint,
-  SvgActionPlay,
   SvgActionReupload,
-  SvgActionSell,
-  SvgActionShoppingCart,
   SvgActionTrash,
   SvgActionWarning,
   SvgIllustrativePlay,
   SvgIllustrativeReupload,
 } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
-import { useClipboard } from '@/hooks/useClipboard'
 import { useGetNftSlot } from '@/hooks/useGetNftSlot'
 import { useNftState } from '@/hooks/useNftState'
+import { useNftTransactions } from '@/hooks/useNftTransactions'
+import { useVideoContextMenu } from '@/hooks/useVideoContextMenu'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
 import { useMemberAvatar } from '@/providers/assets'
 import { useNftActions } from '@/providers/nftActions'
 import { useUploadsStore } from '@/providers/uploadsManager'
-import { openInNewTab } from '@/utils/browser'
 import { SentryLogger } from '@/utils/logs'
 import { formatDurationShort } from '@/utils/time'
 
@@ -49,7 +44,6 @@ export const DELAYED_FADE_CLASSNAME = 'delayed-fade'
 
 export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
   ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onMintNftClick }) => {
-    const { copyToClipboard } = useClipboard()
     const { video, loading } = useFullVideo(id ?? '', {
       skip: !id,
       onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTilePublisher', error, { video: { id } }),
@@ -59,23 +53,16 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
 
     const hasNft = !!video?.nft
 
-    const { openNftPutOnSale, cancelNftSale, openNftSettlement } = useNftActions()
+    const nftActions = useNftActions()
     const owner = video?.nft?.ownerMember?.id !== video?.channel.ownerMember?.id ? video?.nft?.ownerMember : undefined
 
     const ownerAvatar = useMemberAvatar(video?.nft?.ownerMember)
 
-    const nftStatus = getNftStatus(video?.nft)
+    const nftStatus = getNftStatus(video?.nft, video)
 
-    const {
-      auctionPlannedEndDate,
-      englishTimerState,
-      needsSettling,
-      startsAtDate,
-      timerLoading,
-      canCancelSale,
-      canPutOnSale,
-      saleType,
-    } = useNftState(video?.nft)
+    const { withdrawBid } = useNftTransactions()
+    const nftState = useNftState(video?.nft)
+    const { auctionPlannedEndDate, englishTimerState, needsSettling, startsAtDate, timerLoading } = nftState
     const nftTilePublisher = useGetNftSlot({
       auctionPlannedEndDate,
       status: nftStatus?.status,
@@ -84,6 +71,24 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
       startsAtDate,
       withNftLabel: true,
       timerLoading,
+    })
+    const isAuction = nftStatus?.status === 'auction'
+    const contextMenuItems = useVideoContextMenu({
+      publisher: true,
+      nftState,
+      hasNft: !!video?.nft,
+      nftActions,
+      videoId: video?.id,
+      videoHref,
+      buyNowPrice: isAuction || nftStatus?.status === 'buy-now' ? nftStatus.buyNowPrice : undefined,
+      topBid: isAuction ? nftStatus.topBidAmount : undefined,
+      startingPrice: isAuction ? nftStatus.startingPrice : undefined,
+      onDeleteVideoClick,
+      onEditClick,
+      onMintNftClick,
+      onWithdrawBid: () => video?.id && withdrawBid(video?.id),
+      hasBids:
+        isAuction && !!nftStatus.topBidder && !!(isAuction && !nftStatus.topBid?.isCanceled && nftStatus.topBidAmount),
     })
 
     const uploadVideoStatus = useUploadsStore((state) => state.uploadsStatus[video?.media?.id || ''])
@@ -202,88 +207,8 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
           : []),
       ]
 
-      const onOpenInTabClick = () => {
-        if (videoHref) {
-          openInNewTab(videoHref, true)
-        }
-      }
-
-      const publisherBasicKebabItems = [
-        {
-          nodeStart: <SvgActionPlay />,
-          onClick: onOpenInTabClick,
-          label: 'Play in Joystream',
-        },
-        {
-          nodeStart: <SvgActionCopy />,
-          onClick: () => {
-            copyToClipboard(videoHref ? location.origin + videoHref : '', 'Video URL copied to clipboard')
-          },
-          label: 'Copy video URL',
-        },
-        {
-          nodeStart: <SvgActionEdit />,
-          onClick: onEditClick,
-          label: 'Edit video',
-        },
-        ...(hasNft
-          ? [
-              ...(needsSettling
-                ? [
-                    {
-                      nodeStart: <SvgActionShoppingCart />,
-                      onClick: () => id && openNftSettlement(id),
-                      label: 'Settle auction',
-                    },
-                  ]
-                : []),
-              ...(canPutOnSale
-                ? [{ nodeStart: <SvgActionSell />, onClick: () => openNftPutOnSale(id || ''), label: 'Start sale' }]
-                : []),
-              ...(canCancelSale && saleType
-                ? [
-                    {
-                      nodeStart: <SvgActionTrash />,
-                      onClick: () => cancelNftSale(id || '', saleType),
-                      label: 'Remove from sale',
-                      destructive: true,
-                    },
-                  ]
-                : []),
-            ]
-          : [{ nodeStart: <SvgActionMint />, onClick: onMintNftClick, label: 'Mint NFT' }]),
-        ...(!hasNft && !canCancelSale
-          ? [
-              {
-                nodeStart: <SvgActionTrash />,
-                onClick: onDeleteVideoClick,
-                label: 'Delete video',
-                destructive: true,
-              },
-            ]
-          : []),
-      ]
-
-      return hasAssetUploadFailed ? assetFailedKebabItems : publisherBasicKebabItems
-    }, [
-      isUploading,
-      hasAssetUploadFailed,
-      onReuploadVideoClick,
-      hasNft,
-      onDeleteVideoClick,
-      onEditClick,
-      needsSettling,
-      canPutOnSale,
-      canCancelSale,
-      saleType,
-      onMintNftClick,
-      videoHref,
-      copyToClipboard,
-      id,
-      openNftSettlement,
-      openNftPutOnSale,
-      cancelNftSale,
-    ])
+      return hasAssetUploadFailed ? assetFailedKebabItems : contextMenuItems
+    }, [isUploading, hasAssetUploadFailed, onReuploadVideoClick, hasNft, onDeleteVideoClick, contextMenuItems])
 
     const getVideoSubtitle = useCallback(() => {
       if (hasAssetUploadFailed) {

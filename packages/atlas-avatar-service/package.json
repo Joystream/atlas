@@ -1,0 +1,26 @@
+{
+  "name": "@joystream/atlas-avatar-service",
+  "description": "Node server for uploading Atlas user's avatars",
+  "license": "GPL-3.0",
+  "scripts": {
+    "build": "tsc",
+    "dev": "NODE_ENV=development ts-node-dev --respawn src/index.ts"
+  },
+  "devDependencies": {
+    "@types/cors": "^2",
+    "@types/multer": "^1",
+    "@types/uuid": "^8",
+    "express": "^4.18.1"
+  },
+  "dependencies": {
+    "@types/express": "^4.17.13",
+    "cors": "^2.8.5",
+    "multer": "^1.4.5-lts.1",
+    "ts-node": "^10.8.1",
+    "ts-node-dev": "^2.0.0",
+    "uuid": "^8.3.2"
+  },
+  "engines": {
+    "node": "^16"
+  }
+}

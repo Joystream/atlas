@@ -20,6 +20,11 @@ export type Scalars = {
   JSONObject: any
 }
 
+export type Admin = {
+  __typename?: 'Admin'
+  isKilled: Scalars['Boolean']
+}
+
 export type AmendConstitutionProposalDetails = {
   __typename?: 'AmendConstitutionProposalDetails'
   /** New (proposed) constitution text (md-formatted) */
@@ -14602,7 +14607,10 @@ export type Mutation = {
   addVideoView: EntityViewsInfo
   /** Add a single follow to the target channel */
   followChannel: ChannelFollowsInfo
+  /** Report a video */
+  reportVideo: ReportVideoInfo
   setCategoryFeaturedVideos: Array<FeaturedVideo>
+  setKillSwitch: Admin
   setVideoHero: VideoHero
   /** Remove a single follow from the target channel */
   unfollowChannel: ChannelFollowsInfo
@@ -14618,9 +14626,18 @@ export type MutationFollowChannelArgs = {
   channelId: Scalars['ID']
 }
 
+export type MutationReportVideoArgs = {
+  rationale: Scalars['String']
+  videoId: Scalars['ID']
+}
+
 export type MutationSetCategoryFeaturedVideosArgs = {
   categoryId: Scalars['ID']
   videos: Array<FeaturedVideoInput>
+}
+
+export type MutationSetKillSwitchArgs = {
+  isKilled: Scalars['Boolean']
 }
 
 export type MutationSetVideoHeroArgs = {
@@ -20432,6 +20449,8 @@ export type ProposalsByTitleSearchResult = Proposal
 
 export type Query = {
   __typename?: 'Query'
+  /** Set killed instance */
+  admin: Admin
   /** Get featured videos for all categories */
   allCategoriesFeaturedVideos: Array<CategoryFeaturedVideos>
   announcingPeriodStartedEventByUniqueInput?: Maybe<AnnouncingPeriodStartedEvent>
@@ -20890,6 +20909,7 @@ export type Query = {
   referralCutUpdatedEventByUniqueInput?: Maybe<ReferralCutUpdatedEvent>
   referralCutUpdatedEvents: Array<ReferralCutUpdatedEvent>
   referralCutUpdatedEventsConnection: ReferralCutUpdatedEventConnection
+  reportedVideos: Array<ReportVideoInfo>
   requestFundedEventByUniqueInput?: Maybe<RequestFundedEvent>
   requestFundedEvents: Array<RequestFundedEvent>
   requestFundedEventsConnection: RequestFundedEventConnection
@@ -24052,6 +24072,13 @@ export type QueryReferralCutUpdatedEventsConnectionArgs = {
   where?: InputMaybe<ReferralCutUpdatedEventWhereInput>
 }
 
+export type QueryReportedVideosArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<VideoReportOrderByInput>
+  skip?: InputMaybe<Scalars['Int']>
+  where?: InputMaybe<VideoReportWhereInput>
+}
+
 export type QueryRequestFundedEventByUniqueInputArgs = {
   where: RequestFundedEventWhereUniqueInput
 }
@@ -25904,6 +25931,15 @@ export type ReferralCutUpdatedEventWhereInput = {
 
 export type ReferralCutUpdatedEventWhereUniqueInput = {
   id: Scalars['ID']
+}
+
+export type ReportVideoInfo = {
+  __typename?: 'ReportVideoInfo'
+  createdAt: Scalars['DateTime']
+  id: Scalars['ID']
+  rationale: Scalars['String']
+  reporterIp: Scalars['String']
+  videoId: Scalars['ID']
 }
 
 export type RequestFundedEvent = BaseGraphQlObject &
@@ -30922,6 +30958,18 @@ export type VideoReactionsPreferenceEventWhereInput = {
 
 export type VideoReactionsPreferenceEventWhereUniqueInput = {
   id: Scalars['ID']
+}
+
+export enum VideoReportOrderByInput {
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+}
+
+export type VideoReportWhereInput = {
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  reporterIp?: InputMaybe<Scalars['String']>
+  videoId?: InputMaybe<Scalars['ID']>
 }
 
 export type VideoUpdateInput = {

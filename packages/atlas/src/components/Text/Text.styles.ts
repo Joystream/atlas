@@ -4,8 +4,9 @@ import styled from '@emotion/styled'
 import { cVar, sizes, theme } from '@/styles'
 
 type FilterStartingWith<Keys, Prefix extends string> = Keys extends `${Prefix}${infer _}` ? Keys : never
+export type Color = FilterStartingWith<keyof typeof theme, 'color'> | 'inherit'
 export type TextBaseProps = {
-  color?: FilterStartingWith<keyof typeof theme, 'color'> | 'inherit'
+  color?: Color
   clampAfterLine?: number
   margin?: MarginProps
   align?: AlignProps

@@ -67,5 +67,4 @@ export type VideoWorkspaceFormStatus = {
   hasUnsavedAssets: boolean
   actionBarPrimaryText: string
   triggerFormSubmit: () => void
-  triggerReset: () => void
 }

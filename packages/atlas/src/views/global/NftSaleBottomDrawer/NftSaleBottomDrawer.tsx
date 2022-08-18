@@ -5,6 +5,7 @@ import { GetNftDocument, GetNftQuery, GetNftQueryVariables } from '@/api/queries
 import { ActionBarProps } from '@/components/ActionBar'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
 import { absoluteRoutes } from '@/config/routes'
+import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useJoystream } from '@/providers/joystream'
 import { useNftActions } from '@/providers/nftActions'
 import { useSnackbar } from '@/providers/snackbars'
@@ -20,6 +21,23 @@ const SUCCESS_SNACKBAR_TIMEOUT = 6000
 export const NftSaleBottomDrawer: FC = () => {
   const { currentAction, currentNftId, closeNftAction } = useNftActions()
   const [formStatus, setFormStatus] = useState<NftFormStatus | null>(null)
+  const [openPuttingOnSaleDialog, closeCancelPuttingOnSaleDialog] = useConfirmationModal({
+    type: 'warning',
+    title: 'Cancel putting on sale?',
+    description:
+      'You have unsaved changes which are going to be lost if you close this window. Are you sure you want to continue?',
+    primaryButton: {
+      onClick: () => {
+        closeNftAction()
+        closeCancelPuttingOnSaleDialog()
+      },
+      text: 'Confirm and close',
+    },
+    secondaryButton: {
+      onClick: () => closeCancelPuttingOnSaleDialog(),
+      text: 'Cancel',
+    },
+  })
 
   const { memberId } = useUser()
   const { joystream, proxyCallback } = useJoystream()
@@ -77,18 +95,25 @@ export const NftSaleBottomDrawer: FC = () => {
   const actionBarProps: ActionBarProps = {
     primaryButton: {
       text: !formStatus?.canGoForward ? 'Start sale' : 'Next step',
-      disabled: formStatus?.isDisabled,
       onClick: !formStatus?.canGoForward ? formStatus?.triggerSubmit : formStatus?.triggerGoForward,
     },
     secondaryButton: {
-      text: !formStatus?.canGoBack ? 'Cancel' : 'Go back',
+      text: !formStatus?.canGoBack ? 'Cancel' : 'Back',
       onClick: !formStatus?.canGoBack ? handleCancel : formStatus?.triggerGoBack,
       disabled: false,
     },
   }
 
+  const handleClose = () => {
+    if (formStatus?.canGoBack || !formStatus?.canGoForward) {
+      openPuttingOnSaleDialog()
+    } else {
+      closeNftAction()
+    }
+  }
+
   return (
-    <BottomDrawer isOpen={isOpen} onClose={closeNftAction} actionBar={actionBarProps}>
+    <BottomDrawer isOpen={isOpen} onClose={handleClose} actionBar={actionBarProps}>
       {isOpen && currentNftId && (
         <NftForm onSubmit={handleSubmit} videoId={currentNftId} setFormStatus={setFormStatus} />
       )}

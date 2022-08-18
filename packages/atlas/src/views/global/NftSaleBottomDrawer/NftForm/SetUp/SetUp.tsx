@@ -2,7 +2,6 @@ import { ChangeEvent, Dispatch, FC, FocusEvent, FormEvent, SetStateAction, useEf
 import { Controller, useFormContext } from 'react-hook-form'
 
 import { NumberFormat } from '@/components/NumberFormat'
-import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { AuctionDatePicker } from '@/components/_inputs/AuctionDatePicker'
@@ -31,6 +30,7 @@ type SetUpProps = {
   maxEndDate: Date
   selectedType: Listing
   activeInputs: string[]
+  shouldValidateOnChange: boolean
   setActiveInputs: Dispatch<SetStateAction<string[]>>
   handleGoForward: () => void
 }
@@ -41,6 +41,7 @@ export const SetUp: FC<SetUpProps> = ({
   setActiveInputs,
   maxEndDate,
   maxStartDate,
+  shouldValidateOnChange,
   handleGoForward,
 }) => {
   const {
@@ -94,8 +95,9 @@ export const SetUp: FC<SetUpProps> = ({
     setActiveInputs((prevState) => {
       if (!prevState.includes(name)) {
         if (name === 'buyNowPrice') {
-          setValue('buyNowPrice', 2)
-          trigger() // trigger form validation to make sure starting price is valid
+          const startingPrice = getValues('startingPrice')
+          setValue('buyNowPrice', startingPrice ? startingPrice + 1 : 2)
+          shouldValidateOnChange && trigger() // trigger form validation to make sure starting price is valid
         }
         return [...prevState, name]
       }
@@ -164,9 +166,12 @@ export const SetUp: FC<SetUpProps> = ({
               nodeStart={<JoyTokenIcon variant="gray" size={24} />}
               nodeEnd={
                 !!buyNowPrice && (
-                  <Pill
-                    variant="overlay"
-                    label={<NumberFormat as="span" format="dollar" value={convertToUSD(buyNowPrice ?? 0) ?? 0} />}
+                  <NumberFormat
+                    as="span"
+                    variant="t300"
+                    format="dollar"
+                    color="colorTextMuted"
+                    value={convertToUSD(buyNowPrice ?? 0) ?? 0}
                   />
                 )
               }
@@ -201,103 +206,117 @@ export const SetUp: FC<SetUpProps> = ({
                 />
               )}
             />
-            <AuctionDatePickerWrapper columns={isEnglishAuction ? 2 : 1}>
-              <Controller
-                name="startDate"
-                control={control}
-                render={({ field: { onChange, value }, fieldState: { error } }) => (
-                  <FormField
-                    error={error?.message}
-                    // TODO shake animation on date picker is very glitchy, for now just disable it
-                    disableErrorAnimation
-                    label="Starts"
-                  >
-                    <AuctionDatePicker
-                      error={!!error}
-                      minDate={new Date()}
-                      maxDate={endDate?.type === 'date' && endDate.date < maxStartDate ? endDate.date : maxStartDate}
-                      items={[
-                        {
-                          value: null,
-                          name: 'Now',
-                        },
-                      ]}
-                      onChange={onChange}
-                      value={value}
-                    />
-                  </FormField>
-                )}
-              />
-              {isEnglishAuction && (
+            <div>
+              <AuctionDatePickerWrapper columns={isEnglishAuction ? 2 : 1}>
                 <Controller
-                  name="endDate"
+                  name="startDate"
                   control={control}
                   render={({ field: { onChange, value }, fieldState: { error } }) => (
                     <FormField
                       error={error?.message}
                       // TODO shake animation on date picker is very glitchy, for now just disable it
                       disableErrorAnimation
-                      label="Ends"
+                      label="Starts"
                     >
                       <AuctionDatePicker
                         error={!!error}
-                        minDate={(startDate?.type === 'date' && startDate.date) || new Date()}
-                        maxDate={maxEndDate}
-                        onChange={onChange}
-                        items={expirationDateItems}
-                        value={
-                          value || {
-                            type: 'duration',
-                            durationDays: 1,
-                          }
-                        }
+                        minDate={new Date()}
+                        maxDate={endDate?.type === 'date' && endDate.date < maxStartDate ? endDate.date : maxStartDate}
+                        items={[
+                          {
+                            value: null,
+                            name: 'Now',
+                          },
+                        ]}
+                        onChange={(value) => {
+                          onChange(value)
+                          shouldValidateOnChange && trigger('startDate')
+                        }}
+                        value={value}
                       />
                     </FormField>
                   )}
                 />
+                {isEnglishAuction && (
+                  <Controller
+                    name="endDate"
+                    control={control}
+                    render={({ field: { onChange, value }, fieldState: { error } }) => (
+                      <FormField
+                        error={error?.message}
+                        label="Ends"
+                        // TODO shake animation on date picker is very glitchy, for now just disable it
+                        disableErrorAnimation
+                      >
+                        <AuctionDatePicker
+                          error={!!error}
+                          minDate={(startDate?.type === 'date' && startDate.date) || new Date()}
+                          maxDate={maxEndDate}
+                          onChange={(value) => {
+                            onChange(value)
+                            shouldValidateOnChange && trigger('endDate')
+                          }}
+                          items={expirationDateItems}
+                          value={
+                            value || {
+                              type: 'duration',
+                              durationDays: 1,
+                            }
+                          }
+                        />
+                      </FormField>
+                    )}
+                  />
+                )}
+              </AuctionDatePickerWrapper>
+              {numberOfBlocks > 0 && (
+                <DaysSummary>
+                  <Text as="span" variant="t100" color="colorTextMuted">
+                    Total:
+                  </Text>
+                  &nbsp;
+                  <Text as="span" variant="t100">
+                    {totalDaysAndHours}
+                  </Text>
+                  &nbsp;
+                  <Text as="span" variant="t100" color="colorText">
+                    / <NumberFormat as="span" color="colorText" value={numberOfBlocks} /> blocks
+                  </Text>
+                  <DaysSummaryInfo
+                    text="On blockchain, duration is expressed in number of blocks"
+                    placement="top"
+                    multiline
+                  />
+                </DaysSummary>
               )}
-            </AuctionDatePickerWrapper>
-            {numberOfBlocks > 0 && (
-              <DaysSummary>
-                <Text as="span" variant="t200-strong" color="colorTextMuted">
-                  Total:
-                </Text>
-                &nbsp;
-                <Text as="span" variant="t200-strong">
-                  {totalDaysAndHours}
-                </Text>
-                &nbsp;
-                <Text as="span" variant="t200-strong" color="colorText">
-                  / <NumberFormat as="span" color="colorText" value={numberOfBlocks} /> blocks
-                </Text>
-                <DaysSummaryInfo
-                  text="On blockchain, duration is expressed in number of blocks"
-                  placement="top"
-                  multiline
-                />
-              </DaysSummary>
-            )}
+            </div>
             <FormField
               label="Minimum bid"
               error={errors.startingPrice?.message}
+              description="Only bids higher than this value will be accepted."
               switchable
               switchProps={{
                 name: 'startingPrice',
                 onChange: toggleActiveInput,
                 value: activeInputs.includes('startingPrice'),
               }}
-              tooltip={{ text: 'Only bids higher than this value will be accepted', multiline: true }}
             >
               <Input
-                {...register('startingPrice', { valueAsNumber: true })}
+                {...register('startingPrice', {
+                  valueAsNumber: true,
+                  onChange: () => shouldValidateOnChange && trigger('startingPrice'),
+                })}
                 type="number"
                 defaultValue={chainState.nftMinStartingPrice?.toString()}
                 nodeStart={<JoyTokenIcon variant="gray" size={24} />}
                 nodeEnd={
                   !!startingPrice && (
-                    <Pill
-                      variant="overlay"
-                      label={<NumberFormat as="span" format="dollar" value={convertToUSD(startingPrice ?? 0) ?? 0} />}
+                    <NumberFormat
+                      color="colorTextMuted"
+                      as="span"
+                      variant="t300"
+                      format="dollar"
+                      value={convertToUSD(startingPrice ?? 0) ?? 0}
                     />
                   )
                 }
@@ -308,6 +327,7 @@ export const SetUp: FC<SetUpProps> = ({
             </FormField>
             <FormField
               label="Buy now price"
+              description="Bid matching this value will automatically end your auction."
               error={errors.buyNowPrice?.message}
               switchable
               switchProps={{
@@ -315,28 +335,30 @@ export const SetUp: FC<SetUpProps> = ({
                 onChange: toggleActiveInput,
                 value: activeInputs.includes('buyNowPrice'),
               }}
-              tooltip={{
-                text: 'Bids matching this value will automatically end your auction',
-                multiline: true,
-              }}
             >
               <Input
-                {...register('buyNowPrice', { valueAsNumber: true })}
+                {...register('buyNowPrice', {
+                  valueAsNumber: true,
+                  onChange: () => shouldValidateOnChange && trigger('buyNowPrice'),
+                })}
                 placeholder="—"
                 type="number"
                 nodeStart={<JoyTokenIcon variant="gray" size={24} />}
                 nodeEnd={
                   !!buyNowPrice && (
-                    <Pill
-                      variant="overlay"
-                      label={<NumberFormat as="span" format="dollar" value={convertToUSD(buyNowPrice ?? 0) ?? 0} />}
+                    <NumberFormat
+                      as="span"
+                      variant="t300"
+                      format="dollar"
+                      color="colorTextMuted"
+                      value={convertToUSD(buyNowPrice ?? 0) ?? 0}
                     />
                   )
                 }
                 disabled={!activeInputs.includes('buyNowPrice')}
                 error={!!errors.buyNowPrice}
                 onBlur={(event) => {
-                  trigger() // trigger form validation to make sure starting price is valid
+                  shouldValidateOnChange && trigger() // trigger form validation to make sure starting price is valid
                   handleNumberInputBlur(event)
                 }}
               />
@@ -348,15 +370,12 @@ export const SetUp: FC<SetUpProps> = ({
                 return (
                   <FormField
                     label="Whitelist"
+                    description="Only members included in the whitelist will be able to bid on your auction(provide at least two members)."
                     switchable
                     switchProps={{
                       name: 'whitelistedMembers',
                       onChange: toggleActiveInput,
                       value: activeInputs.includes('whitelistedMembers'),
-                    }}
-                    tooltip={{
-                      text: 'Only members included in the whitelist will be able to bid on this auction',
-                      multiline: true,
                     }}
                     error={error?.message}
                   >
@@ -364,10 +383,14 @@ export const SetUp: FC<SetUpProps> = ({
                       disabled={!activeInputs.includes('whitelistedMembers')}
                       selectedMembers={existingMembers || []}
                       error={!!error}
-                      onSelectMember={(member) => onChange([member, ...(existingMembers ? existingMembers : [])])}
-                      onRemoveMember={(memberId) =>
+                      onSelectMember={(member) => {
+                        onChange([member, ...(existingMembers ? existingMembers : [])])
+                        shouldValidateOnChange && trigger('whitelistedMembers')
+                      }}
+                      onRemoveMember={(memberId) => {
                         onChange(existingMembers?.filter((existingMember) => existingMember.id !== memberId))
-                      }
+                        shouldValidateOnChange && trigger('whitelistedMembers')
+                      }}
                     />
                   </FormField>
                 )

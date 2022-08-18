@@ -13,14 +13,13 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { CallToActionButton } from '@/components/_buttons/CallToActionButton'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
-import { SvgActionLinkUrl } from '@/components/_icons'
+import { SvgActionShare } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NftWidget, useNftWidget } from '@/components/_nft/NftWidget'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { videoCategories } from '@/config/categories'
 import { CTA_MAP } from '@/config/cta'
 import { absoluteRoutes } from '@/config/routes'
-import { useClipboard } from '@/hooks/useClipboard'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -67,7 +66,6 @@ export const VideoView: FC = () => {
     useNftActions()
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
   const { withdrawBid } = useNftTransactions()
-  const { copyToClipboard } = useClipboard()
   const { loading, video, error } = useFullVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
@@ -97,16 +95,10 @@ export const VideoView: FC = () => {
   }, [video, thumbnailUrl])
   const headTags = useHeadTags(video?.title, videoMetaTags)
 
-  const { startTimestamp, setStartTimestamp } = useVideoStartTimestamp(video?.duration)
+  const [isShareDialogOpen, setShareDialogOpen] = useState(false)
 
-  // Restore an interrupted video state
-  useEffect(() => {
-    if (startTimestamp != null || !video) {
-      return
-    }
-    const currentVideo = watchedVideos.find((v) => v.id === video?.id)
-    setStartTimestamp(currentVideo?.__typename === 'INTERRUPTED' ? currentVideo.timestamp : 0)
-  }, [watchedVideos, startTimestamp, video, setStartTimestamp])
+  const savedVideoTimestamp = watchedVideos?.find((v) => v.id === video?.id)?.timestamp
+  const startTimestamp = useVideoStartTimestamp(video?.duration, savedVideoTimestamp)
 
   const channelId = video?.channel?.id
   const channelName = video?.channel?.title
@@ -133,21 +125,6 @@ export const VideoView: FC = () => {
     }
     return 'default'
   }, [memberId, videoReactionProcessing, video])
-
-  useEffect(() => {
-    if (!videoId || !channelId) {
-      return
-    }
-    addVideoView({
-      variables: {
-        videoId,
-        channelId,
-        categoryId,
-      },
-    }).catch((error) => {
-      SentryLogger.error('Failed to increase video views', 'VideoView', error)
-    })
-  }, [addVideoView, videoId, channelId, categoryId])
 
   // Save the video timestamp
   // disabling eslint for this line since debounce is an external fn and eslint can't figure out its args, so it will complain.
@@ -205,9 +182,24 @@ export const VideoView: FC = () => {
     }
   }, [thumbnailUrl, video])
 
-  const handleCopyLink = () => {
-    copyToClipboard(window.location.href, 'Video URL copied to clipboard')
+  const handleShare = () => {
+    setShareDialogOpen(true)
   }
+
+  const handleAddVideoView = useCallback(() => {
+    if (!videoId || !channelId) {
+      return
+    }
+    addVideoView({
+      variables: {
+        videoId,
+        channelId,
+        categoryId,
+      },
+    }).catch((error) => {
+      SentryLogger.error('Failed to increase video views', 'VideoView', error)
+    })
+  }, [addVideoView, categoryId, channelId, videoId])
 
   if (error) {
     return <ViewErrorFallback />
@@ -278,8 +270,8 @@ export const VideoView: FC = () => {
             likes={numberOfLikes}
             dislikes={numberOfDislikes}
           />
-          <CopyLink variant="tertiary" icon={<SvgActionLinkUrl />} onClick={handleCopyLink}>
-            Copy link
+          <CopyLink variant="tertiary" icon={<SvgActionShare />} onClick={handleShare}>
+            Share
           </CopyLink>
         </VideoUtils>
       </TitleContainer>
@@ -298,8 +290,10 @@ export const VideoView: FC = () => {
             <PlayerContainer className={transitions.names.slide} cinematicView={cinematicView}>
               {!isMediaLoading && video ? (
                 <VideoPlayer
+                  onCloseShareDialog={() => setShareDialogOpen(false)}
+                  onAddVideoView={handleAddVideoView}
+                  isShareDialogOpen={isShareDialogOpen}
                   isVideoPending={!video?.media?.isAccepted}
-                  channelId={video?.channel?.id}
                   videoId={video?.id}
                   autoplay
                   src={mediaUrl}

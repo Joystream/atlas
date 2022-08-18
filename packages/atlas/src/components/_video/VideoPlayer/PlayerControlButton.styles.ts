@@ -1,4 +1,4 @@
-import { css } from '@emotion/react'
+import { SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
@@ -99,27 +99,46 @@ export const ControlButton = styled.button<ControlButtonProps>`
     }
   }
 `
+export type TooltipPosition = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
 
 type ControlButtonTooltipProps = {
-  tooltipPosition?: 'left' | 'right'
+  tooltipPosition: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+}
+
+export const tooltipPositionStyles: Record<TooltipPosition, SerializedStyles> = {
+  'top-left': css`
+    left: 0;
+    bottom: 3em;
+  `,
+  'top-right': css`
+    right: 0;
+    bottom: 3em;
+  `,
+  'bottom-right': css`
+    right: 0;
+    top: 3em;
+  `,
+  'bottom-left': css`
+    left: 0;
+    top: 3em;
+  `,
 }
 
 export const ControlButtonTooltip = styled.div<ControlButtonTooltipProps>`
-  ${({ tooltipPosition }) => tooltipPosition === 'left' && 'left: 0'};
-  ${({ tooltipPosition }) => tooltipPosition === 'right' && 'right: 0'};
-
   display: none;
   opacity: 0;
   pointer-events: none;
   position: absolute;
-  bottom: 3em;
   background: ${cVar('colorBackgroundOverlay')};
   backdrop-filter: blur(${sizes(8)});
-  align-items: center;
   padding: 0.5em;
   white-space: nowrap;
   transition: opacity ${transitions.timings.player} ease-in, backdrop-filter ${transitions.timings.player} ease-in;
+
+  ${({ tooltipPosition }) => tooltipPositionStyles[tooltipPosition]};
+
   ${media.xs} {
+    align-items: center;
     display: flex;
   }
 `

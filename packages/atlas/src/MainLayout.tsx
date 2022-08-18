@@ -4,7 +4,6 @@ import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 
 import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
 import { StudioLoading } from '@/components/_loaders/StudioLoading'
-import { AdminModal } from '@/components/_overlays/AdminModal'
 import { CookiePopover } from '@/components/_overlays/CookiePopover'
 import { BASE_PATHS, absoluteRoutes } from '@/config/routes'
 import { transitions } from '@/styles'
@@ -14,7 +13,6 @@ import { isBrowserOutdated } from '@/utils/browser'
 import { TopbarBase } from './components/_navigation/TopbarBase'
 import { useConfirmationModal } from './providers/confirmationModal'
 import { LegalLayout } from './views/legal'
-import { EmbeddedView } from './views/viewer'
 import { ViewerLayout } from './views/viewer/ViewerLayout'
 
 history.scrollRestoration = 'manual'
@@ -81,13 +79,11 @@ export const MainLayout: FC = () => {
     <>
       <CookiePopover />
       <Routes>
-        <Route path={absoluteRoutes.embedded.video()} element={<EmbeddedView />} />
         <Route path={BASE_PATHS.viewer + '/*'} element={<ViewerLayout />} />
         <Route path={BASE_PATHS.legal + '/*'} element={<LegalLayout />} />
         <Route path={BASE_PATHS.studio + '/*'} element={<LoadableStudioLayout />} />
         <Route path={BASE_PATHS.playground + '/*'} element={<LoadablePlaygroundLayout />} />
       </Routes>
-      <AdminModal />
     </>
   )
 }
