@@ -69,7 +69,7 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
       englishTimerState,
       needsSettling,
       startsAtDate,
-      withNftLabel: true,
+      withNftLabel: !!video?.nft,
       timerLoading,
     })
     const isAuction = nftStatus?.status === 'auction'
