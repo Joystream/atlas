@@ -14,11 +14,11 @@ export const OverlayBackground = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: ${zIndex.overlay};
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  z-index: ${zIndex.globalOverlay};
 `
 
 export const CloseButton = styled(Button)<{ isFullScreen: boolean }>`
