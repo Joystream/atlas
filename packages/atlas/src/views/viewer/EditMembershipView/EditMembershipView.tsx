@@ -72,6 +72,7 @@ export const EditMembershipView: FC = () => {
     formState: { errors, isDirty, dirtyFields },
   } = useForm<EditMemberFormInputs>({
     shouldFocusError: true,
+    reValidateMode: 'onSubmit',
   })
 
   const resetForm = useCallback(async () => {

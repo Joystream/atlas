@@ -33,7 +33,7 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
     watch,
     control,
     formState: { errors, isSubmitting },
-  } = useForm<MemberFormData>()
+  } = useForm<MemberFormData>({ reValidateMode: 'onSubmit' })
   const handleInputRef = useRef<HTMLInputElement | null>(null)
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
 
@@ -58,14 +58,15 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
   )
 
   const requestFormSubmit = useCallback(() => {
+    setIsHandleValidating(false)
     createSubmitHandler(createMember)()
   }, [createMember, createSubmitHandler])
 
   // send updates to SignInModal on state of primary button
   useEffect(() => {
     setPrimaryButtonProps({
-      text: isSubmitting || isHandleValidating ? 'Please wait...' : 'Create membership',
-      disabled: isSubmitting || isHandleValidating,
+      text: isSubmitting ? 'Please wait...' : 'Create membership',
+      disabled: isSubmitting,
       onClick: requestFormSubmit,
     })
   }, [isHandleValidating, isSubmitting, requestFormSubmit, setPrimaryButtonProps])
