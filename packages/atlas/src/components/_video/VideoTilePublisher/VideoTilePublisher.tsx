@@ -58,7 +58,7 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
 
     const ownerAvatar = useMemberAvatar(video?.nft?.ownerMember)
 
-    const nftStatus = getNftStatus(video?.nft)
+    const nftStatus = getNftStatus(video?.nft, video)
 
     const { withdrawBid } = useNftTransactions()
     const nftState = useNftState(video?.nft)
