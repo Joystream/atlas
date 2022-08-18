@@ -69,7 +69,7 @@ export type InternalCommentProps = {
   onReplyClick: (() => void) | undefined
   onToggleReplies: (() => void) | undefined
   onReactionClick: ((reaction: ReactionId) => void) | undefined
-  onOnBoardingPopoverOpen: ((reaction: ReactionId) => void) | undefined
+  onOnBoardingPopoverOpen: ((reaction: ReactionId) => Promise<void>) | undefined
 } & Pick<CommentRowProps, 'highlighted' | 'indented' | 'memberUrl'>
 
 export const InternalComment: FC<InternalCommentProps> = ({
@@ -160,10 +160,10 @@ export const InternalComment: FC<InternalCommentProps> = ({
   }, [])
 
   const handleCommentReactionClick = useCallback(
-    (reactionId: ReactionId) => {
-      onOnBoardingPopoverOpen?.(reactionId)
+    async (reactionId: ReactionId) => {
       if (!reactionPopoverDismissed) {
         setTempReactionId(reactionId)
+        await onOnBoardingPopoverOpen?.(reactionId)
         popoverRef.current?.show()
       } else {
         onReactionClick?.(reactionId)
