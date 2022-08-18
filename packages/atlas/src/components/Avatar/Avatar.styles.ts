@@ -33,7 +33,6 @@ export const IconAndOverlayWrapper = styled.div`
   bottom: 0;
   left: 0;
   border-radius: 100%;
-  opacity: 0;
   z-index: 3;
   display: flex;
   flex-direction: column;
@@ -50,7 +49,7 @@ export const StyledSvgActionAddImage = styled(SvgActionAddImage)`
   z-index: 1;
 `
 
-export const EditOverlay = styled.div`
+export const Overlay = styled.div<{ isEdit?: boolean }>`
   position: absolute;
   top: 0;
   right: 0;
@@ -59,6 +58,13 @@ export const EditOverlay = styled.div`
   border-radius: 100%;
   transition: background-color ${cVar('animationTransitionMedium')};
   opacity: 0;
+
+  ${({ isEdit }) =>
+    isEdit &&
+    css`
+      background-color: ${cVar('colorBackgroundOverlay')};
+      opacity: 0.5;
+    `};
 `
 
 const previewAvatarCss = css`
@@ -154,7 +160,7 @@ const getInteractiveStyles = ({ isLoading }: Omit<ContainerProps, 'size'>) => {
       ${IconAndOverlayWrapper} {
         opacity: 1;
       }
-      ${EditOverlay} {
+      ${Overlay} {
         opacity: 0.5;
         background-color: ${cVar('colorBackgroundOverlay')};
       }
@@ -167,7 +173,7 @@ const getInteractiveStyles = ({ isLoading }: Omit<ContainerProps, 'size'>) => {
       ${IconAndOverlayWrapper} {
         opacity: 1;
       }
-      ${EditOverlay} {
+      ${Overlay} {
         opacity: 1;
         background-color: ${cVar('colorBackgroundOverlay')};
       }

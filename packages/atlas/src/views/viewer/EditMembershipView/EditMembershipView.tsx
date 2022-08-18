@@ -34,6 +34,7 @@ export type EditMemberFormInputs = {
 export const EditMembershipView: FC = () => {
   const navigate = useNavigate()
   const handleInputRef = useRef<HTMLInputElement | null>(null)
+  const [isImageValid, setIsImageValid] = useState(false)
   const [isHandleValidating, setIsHandleValidating] = useState(false)
   const { accountId, memberId, activeMembership, isLoggedIn, refetchUserMemberships } = useUser()
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
@@ -77,7 +78,8 @@ export const EditMembershipView: FC = () => {
     let blob
     if (activeMembership?.metadata.avatar?.__typename === 'AvatarUri' && activeMembership.metadata.avatar.avatarUri) {
       await fetch(activeMembership.metadata.avatar.avatarUri)
-        .then((r) => (blob = r.blob()))
+        .then((r) => r.blob())
+        .then((createdBlob) => (blob = createdBlob))
         .catch((err) => ConsoleLogger.warn(`Cannot fetch avatar`, err))
     }
     reset(
@@ -88,6 +90,7 @@ export const EditMembershipView: FC = () => {
             ? {
                 url: activeMembership.metadata.avatar.avatarUri,
                 blob: blob,
+                originalBlob: blob,
               }
             : {},
         about: activeMembership?.metadata.about,
@@ -200,6 +203,8 @@ export const EditMembershipView: FC = () => {
               <MembershipInfo
                 address={accountId}
                 avatarUrl={avatarInputFile?.url}
+                onImageValidation={setIsImageValid}
+                hasAvatarUploadFailed={!isImageValid}
                 onAvatarEditClick={() =>
                   avatarDialogRef.current?.open(
                     avatarInputFile?.originalBlob ? avatarInputFile.originalBlob : avatarInputFile?.blob,

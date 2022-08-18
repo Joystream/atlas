@@ -9,9 +9,9 @@ import {
   AvatarSize,
   ChildrenWrapper,
   Container,
-  EditOverlay,
   IconAndOverlayWrapper,
   NewChannelAvatar,
+  Overlay,
   SilhouetteAvatar,
   StyledImage,
   StyledSkeletonLoader,
@@ -24,6 +24,8 @@ import { Text } from '../Text'
 
 export type AvatarProps = PropsWithChildren<{
   onClick?: (event: MouseEvent<HTMLElement>) => void
+  onImageValidation?: (validImage: boolean) => void
+  onError?: () => void
   assetUrl?: string | null
   hasAvatarUploadFailed?: boolean
   withoutOutline?: boolean
@@ -43,7 +45,6 @@ export type AvatarProps = PropsWithChildren<{
   editable?: boolean
   newChannel?: boolean
   clickable?: boolean
-  onError?: () => void
 }>
 
 export const Avatar: FC<AvatarProps> = ({
@@ -52,15 +53,17 @@ export const Avatar: FC<AvatarProps> = ({
   loading = false,
   size = 'default',
   children,
-  onClick,
   className,
   editable,
   newChannel,
   clickable,
   onError,
+  onClick,
+  onImageValidation,
 }) => {
   const isEditable = !loading && editable && size !== 'default' && size !== 'bid'
-  const [invalidImage, setInvalidImage] = useState(false)
+
+  const [validImage, setValidImage] = useState(false)
 
   const checkIfImageIsValid = useCallback(async () => {
     if (!assetUrl) {
@@ -68,11 +71,13 @@ export const Avatar: FC<AvatarProps> = ({
     }
     try {
       await validateImage(assetUrl)
-      setInvalidImage(false)
+      setValidImage(true)
+      onImageValidation?.(true)
     } catch (error) {
-      setInvalidImage(true)
+      setValidImage(false)
+      onImageValidation?.(false)
     }
-  }, [assetUrl])
+  }, [assetUrl, onImageValidation])
 
   useEffect(() => {
     if (!assetUrl) {
@@ -81,30 +86,12 @@ export const Avatar: FC<AvatarProps> = ({
     checkIfImageIsValid()
   }, [assetUrl, checkIfImageIsValid])
 
-  const isImageInvalid = invalidImage || hasAvatarUploadFailed
-
   const getEditableIconSize = useCallback(() => {
     const smallIconSizes = ['bid', 'default', 'small']
     if (smallIconSizes.includes(size)) {
       return
     } else {
       return 24
-    }
-  }, [size])
-
-  const handleError = () => {
-    onError?.()
-  }
-
-  const getFailedIconSize = useCallback(() => {
-    const smallIconSizes = ['default', 'small']
-    if (size === 'bid') {
-      return 16
-    }
-    if (smallIconSizes.includes(size)) {
-      return 24
-    } else {
-      return
     }
   }, [size])
 
@@ -120,7 +107,7 @@ export const Avatar: FC<AvatarProps> = ({
     >
       {(clickable || !!onClick) && (
         <IconAndOverlayWrapper>
-          <EditOverlay />
+          <Overlay isEdit={isEditable && !!assetUrl} />
           {isEditable &&
             (assetUrl ? (
               <StyledSvgActionEdit width={getEditableIconSize()} height={getEditableIconSize()} />
@@ -134,9 +121,9 @@ export const Avatar: FC<AvatarProps> = ({
           <NewChannelAvatar>
             <SvgActionNewChannel />
           </NewChannelAvatar>
-        ) : isImageInvalid ? (
+        ) : hasAvatarUploadFailed ? (
           <NewChannelAvatar>
-            <StyledSvgIllustrativeFileFailed width={getFailedIconSize()} />
+            <StyledSvgIllustrativeFileFailed />
             {size === 'preview' && (
               <Text variant="t100" as="span" margin={{ top: 2 }}>
                 Failed upload
@@ -152,8 +139,8 @@ export const Avatar: FC<AvatarProps> = ({
             >
               {loading ? (
                 <StyledSkeletonLoader rounded />
-              ) : assetUrl ? (
-                <StyledImage src={assetUrl} onError={handleError} />
+              ) : assetUrl && validImage ? (
+                <StyledImage src={assetUrl} onError={onError} />
               ) : (
                 <SilhouetteAvatar />
               )}
