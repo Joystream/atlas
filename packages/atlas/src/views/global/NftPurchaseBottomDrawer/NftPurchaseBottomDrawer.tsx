@@ -129,7 +129,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
 
   const { fullFee: buyNowFee, loading: buyNowFeeLoading } = useFee(
     'buyNftNowTx',
-    currentNftId && memberId && (auctionBuyNowPrice || buyNowPrice)
+    currentNftId && memberId && canBuyNow
       ? [currentNftId, memberId, tokenNumberToHapiBn(auctionBuyNowPrice || buyNowPrice).toString()]
       : undefined
   )
@@ -141,7 +141,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
       : undefined
   )
 
-  const transactionFee = type === 'buy_now' || auctionBuyNowPrice ? buyNowFee : makeBidFee
+  const transactionFee = canBuyNow ? buyNowFee : makeBidFee
   const feeLoading = buyNowFeeLoading || makeBidFeeLoading
 
   const isBuyNowAffordable =
@@ -589,7 +589,9 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   <Text as="span" variant="t100" color="colorText">
                     Transaction fee
                   </Text>
-                  {buyNowFeeLoading || makeBidFeeLoading ? (
+                  {(canBuyNow ? !buyNowFee.toNumber() : !makeBidFee.toNumber()) ||
+                  buyNowFeeLoading ||
+                  makeBidFeeLoading ? (
                     <SkeletonLoader width={80} height={16} />
                   ) : (
                     <NumberFormat as="span" value={transactionFee} withToken variant="t100" color="colorText" />
@@ -599,7 +601,9 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   <Text as="span" variant="h500" color="colorText">
                     You will pay
                   </Text>
-                  {buyNowFeeLoading || makeBidFeeLoading ? (
+                  {(canBuyNow ? !buyNowFee.toNumber() : !makeBidFee.toNumber()) ||
+                  buyNowFeeLoading ||
+                  makeBidFeeLoading ? (
                     <SkeletonLoader width={112} height={32} />
                   ) : (
                     <NumberFormat
