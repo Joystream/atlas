@@ -4,11 +4,10 @@ import { Dispatch, FC, SetStateAction } from 'react'
 import { Fee } from '@/components/Fee'
 import { NumberFormat } from '@/components/NumberFormat'
 import { AlertDialogModal } from '@/components/_overlays/AlertDialogModal'
+import { MemberId, VideoId } from '@/joystream-lib'
 import { useFee } from '@/providers/joystream'
 import { formatDateTime } from '@/utils/time'
 
-type MemberId = string | null
-type NftId = string | null
 export type WithdrawData = { bid: BN; createdAt: Date } | undefined
 
 type WithdrawBidDialogProps = {
@@ -16,8 +15,8 @@ type WithdrawBidDialogProps = {
   onModalClose: () => void
   userBidAmount: BN
   userBidCreatedAt: Date
-  nftId: NftId
-  memberId: MemberId
+  nftId: VideoId | null
+  memberId: MemberId | null
   onWithdrawBid: (nftId: string) => void
   setWithdrawData: Dispatch<SetStateAction<WithdrawData>>
 }
