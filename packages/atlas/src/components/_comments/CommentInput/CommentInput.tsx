@@ -31,6 +31,7 @@ export type CommentInputProps = {
   onCancel?: () => void
   onChange?: (e: ChangeEvent<HTMLTextAreaElement>) => void
   onFocus?: () => void
+  onCommentInputActive?: (active: boolean) => void
   initialFocus?: boolean
   reply?: boolean
   className?: string
@@ -51,6 +52,7 @@ export const CommentInput = forwardRef<HTMLTextAreaElement, CommentInputProps>(
       onComment,
       onChange,
       onFocus,
+      onCommentInputActive,
       value,
       hasInitialValueChanged,
       initialFocus,
@@ -68,6 +70,10 @@ export const CommentInput = forwardRef<HTMLTextAreaElement, CommentInputProps>(
     const { displaySnackbar } = useSnackbar()
 
     const { ref: measureRef, height: textAreaHeight = 40 } = useResizeObserver({ box: 'border-box' })
+
+    useEffect(() => {
+      onCommentInputActive?.(active)
+    }, [onCommentInputActive, active])
 
     // focus textarea on first render
     useEffect(() => {

@@ -70,11 +70,12 @@ export const Comment: FC<CommentProps> = memo(
     const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
     const { openSignInDialog } = useDisplaySignInDialog()
     const [reactionFee, setReactionFee] = useState<undefined | BN>(undefined)
+    const [replyCommentInputActive, setCommentInputActive] = useState(false)
     const [openModal, closeModal] = useConfirmationModal()
     const { reactToComment, deleteComment, moderateComment, updateComment, addComment } = useReactionTransactions()
     const { fullFee: replyCommentFee, loading: replyCommentFeeLoading } = useFee(
       'createVideoCommentTx',
-      memberId && video?.id && comment?.id !== undefined
+      memberId && video?.id && comment?.id !== undefined && replyCommentInputActive
         ? [memberId, video?.id, replyCommentInputText || '', comment?.id || null]
         : undefined
     )
@@ -220,7 +221,9 @@ export const Comment: FC<CommentProps> = memo(
       }
     }
 
-    const handleOpenSignInDialog = () => !memberId && openSignInDialog({ onConfirm: signIn })
+    const handleOpenSignInDialog = () => {
+      !memberId && openSignInDialog({ onConfirm: signIn })
+    }
 
     const handleOnEditLabelClick = () => {
       setShowEditHistory?.(true)
@@ -268,6 +271,7 @@ export const Comment: FC<CommentProps> = memo(
               ? handleCancelConfirmation(handleCancelEditComment)
               : handleCancelEditComment()
           }
+          onCommentInputActive={setCommentInputActive}
           initialFocus
         />
       )
@@ -325,6 +329,7 @@ export const Comment: FC<CommentProps> = memo(
               }}
               initialFocus
               reply
+              onCommentInputActive={setCommentInputActive}
             />
           )}
           <DialogModal
