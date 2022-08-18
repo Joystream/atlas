@@ -30,10 +30,10 @@ export const Fee: FC<FeeProps> = ({
       {(!hideOnMobile || smMatch) && (
         <>
           <Text as="span" variant={variant} color={color}>
-            Fee:&nbsp;{amount < 0.01 && '<'}&nbsp;
+            Fee:&nbsp;{amount < 0.01 && amount !== 0 && '<'}&nbsp;
           </Text>
           <NumberFormat
-            displayedValue={amount < 0.01 ? 0.01 : undefined}
+            displayedValue={!amount ? 0 : amount < 0.01 ? 0.01 : undefined}
             value={amount}
             as="span"
             variant={variant}
