@@ -62,10 +62,10 @@ export const VideoView: FC = () => {
   const { id } = useParams()
   const { memberId, signIn, isLoggedIn } = useUser()
   const { openSignInDialog } = useDisplaySignInDialog()
-  const { openNftPutOnSale, cancelNftSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement } =
-    useNftActions()
+  const { openNftPutOnSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement } = useNftActions()
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
   const { withdrawBid } = useNftTransactions()
+  const { openRemoveFromSale } = useNftActions()
   const { loading, video, error } = useFullVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
@@ -227,7 +227,7 @@ export const VideoView: FC = () => {
         <NftWidget
           {...nftWidgetProps}
           onNftPutOnSale={() => id && openNftPutOnSale(id)}
-          onNftCancelSale={() => id && nftWidgetProps.saleType && cancelNftSale(id, nftWidgetProps.saleType)}
+          onNftCancelSale={() => id && nftWidgetProps.saleType && openRemoveFromSale(id, nftWidgetProps.saleType)}
           onNftAcceptBid={() => id && openNftAcceptBid(id)}
           onNftChangePrice={() => id && openNftChangePrice(id)}
           onNftPurchase={() => id && openNftPurchase(id)}

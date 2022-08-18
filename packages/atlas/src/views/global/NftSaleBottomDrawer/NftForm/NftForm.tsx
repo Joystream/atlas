@@ -168,7 +168,6 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
   )
 
   const inputMetadata = getInputMetadataData(getValues())
-
   const { fullFee: fee, loading: feeLoading } = useFee(
     'putNftOnSaleTx',
     memberId && inputMetadata ? [videoId, memberId, inputMetadata] : undefined

@@ -73,11 +73,9 @@ export const EditMembershipView: FC = () => {
     [dirtyFields]
   )
 
-  const { fullFee: fee } = useFee(
+  const { fullFee: fee, loading: feeLoading } = useFee(
     'updateMemberTx',
-    memberId && isDirty
-      ? [memberId, dirtyFields.handle ? watch('handle') : null, createMemberInputMetadata(watch())]
-      : undefined
+    memberId ? [memberId, watch('handle'), createMemberInputMetadata(watch())] : undefined
   )
 
   const handleEditMember = handleSubmit(async (formData) => {
@@ -159,6 +157,7 @@ export const EditMembershipView: FC = () => {
         <StyledActionBar
           ref={actionBarRef}
           fee={fee}
+          feeLoading={feeLoading}
           primaryButton={{
             disabled: !isDirty || !isValid || isValidating,
             text: 'Publish changes',

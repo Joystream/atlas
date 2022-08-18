@@ -45,6 +45,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
   const [highlightedCommentId, setHighlightedCommentId] = useState<string | null>(null)
   const [sortCommentsBy, setSortCommentsBy] = useState(COMMENTS_SORT_OPTIONS[0].value)
   const [commentsOpen, setCommentsOpen] = useState(false)
+  const [commentInputActive, setCommentInputActive] = useState(false)
   const commentIdQueryParam = useRouterQuery(QUERY_PARAMS.COMMENT_ID)
   const mdMatch = useMediaMatch('md')
   const { id: videoId } = useParams()
@@ -54,7 +55,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
 
   const { fullFee: fee, loading: feeLoading } = useFee(
     'createVideoCommentTx',
-    memberId && video?.id && commentInputText ? [memberId, video?.id, commentInputText, null] : undefined
+    memberId && video?.id && commentInputActive ? [memberId, video?.id, commentInputText || '', null] : undefined
   )
 
   const queryVariables = useMemo(
@@ -229,6 +230,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
         onFocus={() => !memberId && openSignInDialog({ onConfirm: signIn })}
         onComment={() => handleComment()}
         onChange={(e) => setCommentInputText(e.target.value)}
+        onCommentInputActive={setCommentInputActive}
       />
       {comments && !comments.length && !commentsLoading && (
         <EmptyFallback title="Be the first to comment" subtitle="Nobody has left a comment under this video yet." />
