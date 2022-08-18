@@ -26,6 +26,16 @@ query GetBasicChannels(
   }
 }
 
+query GetFullChannels(
+  $where: ChannelWhereInput
+  $limit: Int = 50
+  $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]
+) {
+  channels(where: $where, orderBy: $orderBy, limit: $limit) {
+    ...FullChannelFields
+  }
+}
+
 query GetBasicChannelsConnection(
   $first: Int
   $after: String

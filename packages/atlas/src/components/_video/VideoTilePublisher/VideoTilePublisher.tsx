@@ -44,10 +44,22 @@ export const DELAYED_FADE_CLASSNAME = 'delayed-fade'
 
 export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
   ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onMintNftClick }) => {
-    const { video, loading } = useFullVideo(id ?? '', {
-      skip: !id,
-      onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTilePublisher', error, { video: { id } }),
-    })
+    const { video, loading } = useFullVideo(
+      id ?? '',
+      {
+        skip: !id,
+        onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTilePublisher', error, { video: { id } }),
+      },
+      {
+        where: {
+          isPublic_eq: undefined,
+          isCensored_eq: undefined,
+          media: undefined,
+          thumbnailPhoto: undefined,
+          NOT: [{ id_in: [] }, { thumbnailPhoto: { id_in: [] } }, { media: { id_in: [] } }, { channel: { id_in: [] } }],
+        },
+      }
+    )
     const { isLoadingThumbnail, thumbnailPhotoUrl, videoHref } = useVideoTileSharedLogic(video)
     const navigate = useNavigate()
 

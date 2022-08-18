@@ -47,8 +47,23 @@ export const UploadStatusGroup: FC<UploadStatusGroupProps> = ({ uploads, size = 
 
   const isChannelType = uploads[0].parentObject.type === 'channel'
 
-  const { video, loading: videoLoading } = useFullVideo(uploads[0].parentObject.id, { skip: isChannelType })
-  const { channel, loading: channelLoading } = useFullChannel(uploads[0].parentObject.id, { skip: !isChannelType })
+  const { video, loading: videoLoading } = useFullVideo(
+    uploads[0].parentObject.id,
+    { skip: isChannelType },
+    {
+      where: {
+        isPublic_eq: undefined,
+        isCensored_eq: undefined,
+        media: undefined,
+        thumbnailPhoto: undefined,
+      },
+    }
+  )
+  const { channel, loading: channelLoading } = useFullChannel(
+    uploads[0].parentObject.id,
+    { skip: !isChannelType },
+    { where: { isPublic_eq: undefined } }
+  )
 
   const isWaiting = uploadsStatuses.every((file) => file?.progress === 0 && file?.lastStatus === 'inProgress')
   const isCompleted = uploadsStatuses.every((file) => file?.lastStatus === 'completed')
