@@ -413,6 +413,7 @@ export const Container = styled.div<ContainerProps>`
         padding: 0 ${sizes(3)};
 
         > div {
+          display: inline-block !important;
           background-color: ${cVar('colorBackgroundOverlay')} !important;
           font: ${cVar('typographyDesktopT300Strong')} !important;
           font-size: 12px !important;
