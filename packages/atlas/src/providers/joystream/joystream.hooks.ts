@@ -262,7 +262,7 @@ export const useFee = <TFnName extends TxMethodName, TArgs extends Parameters<Jo
     ]
   )
 
-  const argsRef = useRef<TArgs>()
+  const argsRef = useRef<TArgs | undefined>(args)
   useEffect(() => {
     if (!args || isEqual(args, argsRef.current)) {
       return

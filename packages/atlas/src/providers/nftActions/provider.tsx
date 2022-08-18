@@ -5,6 +5,7 @@ import { useNft } from '@/api/hooks'
 import { AcceptBidDialog } from '@/components/_overlays/AcceptBidDialog'
 import { ChangePriceDialog } from '@/components/_overlays/ChangePriceDialog'
 import { RemoveFromSaleDialog } from '@/components/_overlays/RemoveFromSaleDialog'
+import { WithdrawBidDialog, WithdrawData } from '@/components/_overlays/WithdrawBidDialog'
 import { useNftState } from '@/hooks/useNftState'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { NftSaleType } from '@/joystream-lib'
@@ -12,7 +13,7 @@ import { useTokenPrice } from '@/providers/joystream'
 import { useUser } from '@/providers/user'
 
 type SaleType = NftSaleType | null
-type NftAction = 'putOnSale' | 'purchase' | 'settle' | 'accept-bid' | 'change-price' | 'cancel-sale'
+type NftAction = 'putOnSale' | 'purchase' | 'settle' | 'accept-bid' | 'change-price' | 'cancel-sale' | 'withdraw-bid'
 type ContextValue = {
   currentAction: NftAction | null
   currentNftId: string | null
@@ -22,6 +23,7 @@ type ContextValue = {
   setIsBuyNowClicked: Dispatch<SetStateAction<boolean | undefined>>
   setCurrentSaleType: Dispatch<SetStateAction<SaleType>>
   closeNftAction: () => void
+  setWithdrawData: Dispatch<SetStateAction<WithdrawData>>
 }
 
 export const NftActionsContext = createContext<(ContextValue & ReturnType<typeof useNftTransactions>) | undefined>(
@@ -32,13 +34,14 @@ NftActionsContext.displayName = 'NftActionsContext'
 export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
   const [currentAction, setCurrentAction] = useState<NftAction | null>(null)
   const [currentSaleType, setCurrentSaleType] = useState<SaleType>(null)
+  const [withdrawData, setWithdrawData] = useState<WithdrawData>()
   const transactions = useNftTransactions()
   const [isBuyNowClicked, setIsBuyNowClicked] = useState<boolean>()
   const [currentNftId, setCurrentNftId] = useState<string | null>(null)
-  const { nft } = useNft(currentNftId || '')
-  const { auction } = useNftState(nft)
-  const { convertHapiToUSD } = useTokenPrice()
   const { memberId } = useUser()
+  const { nft } = useNft(currentNftId || '')
+  const { auction, userBidCreatedAt, userBidAmount } = useNftState(nft)
+  const { convertHapiToUSD } = useTokenPrice()
 
   const mappedBids = auction?.bids
     ? auction?.bids
@@ -67,6 +70,7 @@ export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
       setCurrentAction,
       setCurrentNftId,
       setCurrentSaleType,
+      setWithdrawData,
       closeNftAction,
       ...transactions,
     }),
@@ -75,6 +79,16 @@ export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <NftActionsContext.Provider value={value}>
+      <WithdrawBidDialog
+        isOpen={currentAction === 'withdraw-bid'}
+        onModalClose={closeNftAction}
+        userBidAmount={withdrawData ? withdrawData.bid : userBidAmount || new BN(0)}
+        userBidCreatedAt={withdrawData ? withdrawData.createdAt : userBidCreatedAt || new Date()}
+        nftId={currentNftId}
+        memberId={memberId}
+        onWithdrawBid={transactions.withdrawBid}
+        setWithdrawData={setWithdrawData}
+      />
       <AcceptBidDialog
         isOpen={currentAction === 'accept-bid'}
         onModalClose={closeNftAction}

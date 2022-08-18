@@ -28,6 +28,14 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
   const { url: ownerMemberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
 
   const isAuction = nftStatus?.status === 'auction'
+
+  const handleWithdrawBid = () => {
+    if (!nftId) {
+      return
+    }
+    withdrawBid(nftId)
+  }
+
   const contextMenuItems = useVideoContextMenu({
     publisher: false,
     nftState,
@@ -38,7 +46,7 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
     topBid: isAuction ? nftStatus.topBidAmount : undefined,
     buyNowPrice: isAuction || nftStatus?.status === 'buy-now' ? nftStatus.buyNowPrice : undefined,
     startingPrice: isAuction ? nftStatus.startingPrice : undefined,
-    onWithdrawBid: () => nftId && withdrawBid(nftId),
+    onWithdrawBid: handleWithdrawBid,
     hasBids:
       isAuction && !!nftStatus.topBidder && !!(isAuction && !nftStatus.topBid?.isCanceled && nftStatus.topBidAmount),
   })

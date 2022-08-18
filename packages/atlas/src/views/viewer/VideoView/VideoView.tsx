@@ -23,7 +23,6 @@ import { absoluteRoutes } from '@/config/routes'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useRedirectMigratedContent } from '@/hooks/useRedirectMigratedContent'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
@@ -64,7 +63,6 @@ export const VideoView: FC = () => {
   const { openSignInDialog } = useDisplaySignInDialog()
   const { openNftPutOnSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement } = useNftActions()
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
-  const { withdrawBid } = useNftTransactions()
   const { openRemoveFromSale } = useNftActions()
   const { loading, video, error } = useFullVideo(
     id ?? '',
@@ -76,6 +74,7 @@ export const VideoView: FC = () => {
   const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
   const nftWidgetProps = useNftWidget(video)
   const { likeOrDislikeVideo } = useReactionTransactions()
+  const { openWithdrawBid } = useNftActions()
 
   const mdMatch = useMediaMatch('md')
   const { addVideoView } = useAddVideoView()
@@ -237,7 +236,7 @@ export const VideoView: FC = () => {
           onNftPurchase={() => id && openNftPurchase(id)}
           onNftSettlement={() => id && openNftSettlement(id)}
           onNftBuyNow={() => id && openNftPurchase(id, { fixedPrice: true })}
-          onWithdrawBid={() => id && withdrawBid(id)}
+          onWithdrawBid={(bid, createdAt) => id && openWithdrawBid(id, bid, createdAt)}
         />
       )}
       <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />
