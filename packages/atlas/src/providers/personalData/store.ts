@@ -1,7 +1,6 @@
 import { round } from 'lodash-es'
 
 import { BUILD_ENV } from '@/config/envs'
-import { channelIdsMapEntries, videoIdsMapEntries } from '@/data/migratedContentIdMappings.json'
 import { createStore } from '@/store'
 
 import { DismissedMessage, FollowedChannel, RecentSearch, WatchedVideo, WatchedVideoStatus } from './types'
@@ -152,30 +151,7 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
       whitelist: WHITELIST,
       version: 2,
       migrate: (oldState) => {
-        const typedOldState = oldState as PersonalDataStoreState
-
-        const migratedWatchedVideos = typedOldState.watchedVideos.reduce((acc, cur) => {
-          const migratedId = (videoIdsMapEntries as Record<string, string>)[cur.id]
-          if (migratedId) {
-            return [...acc, { ...cur, id: migratedId }]
-          }
-          return acc
-        }, [] as WatchedVideo[])
-
-        const migratedFollowedChannels = typedOldState.followedChannels.reduce((acc, cur) => {
-          const migratedId = (channelIdsMapEntries as Record<string, string>)[cur.id]
-          if (migratedId) {
-            return [...acc, { ...cur, id: migratedId }]
-          }
-          return acc
-        }, [] as FollowedChannel[])
-
-        const migratedState: PersonalDataStoreState = {
-          ...typedOldState,
-          watchedVideos: migratedWatchedVideos,
-          followedChannels: migratedFollowedChannels,
-        }
-        return migratedState
+        return oldState
       },
     },
   }

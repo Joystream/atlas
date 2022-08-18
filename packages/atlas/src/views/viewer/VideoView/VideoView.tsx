@@ -25,7 +25,6 @@ import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
-import { useRedirectMigratedContent } from '@/hooks/useRedirectMigratedContent'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { VideoReaction } from '@/joystream-lib'
 import { useAsset } from '@/providers/assets'
@@ -59,7 +58,6 @@ import {
 } from './VideoView.styles'
 
 export const VideoView: FC = () => {
-  useRedirectMigratedContent({ type: 'video' })
   const { id } = useParams()
   const { memberId, signIn, isLoggedIn } = useUser()
   const [reactionFee, setReactionFee] = useState<BN | undefined>()
