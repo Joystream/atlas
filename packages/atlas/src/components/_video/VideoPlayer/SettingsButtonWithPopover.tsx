@@ -25,7 +25,7 @@ type SettingsPopoverProps = {
   onSettingsPopoverToggle: (isSettingsVisible: boolean) => void
   isSettingsPopoverOpened: boolean
   availableTracks?: AvailableTrack[]
-  onTrackChange: (selectedTrack: AvailableTrack | null) => void
+  onTrackChange: (selectedTrack: AvailableTrack) => void
   activeTrack?: AvailableTrack
 }
 
@@ -63,7 +63,6 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
   const {
     playbackRate,
     autoPlayNext: playNext,
-    captionsLanguage,
     actions: { setPlaybackRate, setAutoPlayNext, setCaptionsLanguage, setCaptionsEnabled },
   } = usePersonalDataStore((state) => state)
 
