@@ -74,6 +74,11 @@ const AVAILABLE_TRACKS = [
     language: 'fr',
     label: 'French',
   },
+  {
+    src: 'https://dl.dropboxusercontent.com/s/gu1zs9gob85x7e4/upc-video-subtitles-ru.vtt?dl=0',
+    language: 'ru',
+    label: 'Russian',
+  },
 ]
 
 export const VideoView: FC = () => {

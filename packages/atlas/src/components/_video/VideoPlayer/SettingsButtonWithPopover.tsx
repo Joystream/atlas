@@ -25,7 +25,7 @@ type SettingsPopoverProps = {
   onSettingsPopoverToggle: (isSettingsVisible: boolean) => void
   isSettingsPopoverOpened: boolean
   availableTracks?: AvailableTrack[]
-  onTrackChange: (selectedTrack: AvailableTrack) => void
+  onTrackChange: (selectedTrack: AvailableTrack | null) => void
   activeTrack?: AvailableTrack
 }
 
@@ -63,23 +63,47 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
   const {
     playbackRate,
     autoPlayNext: playNext,
-    actions: { setPlaybackRate, setAutoPlayNext, setCaptionsLanguage },
+    captionsLanguage,
+    actions: { setPlaybackRate, setAutoPlayNext, setCaptionsLanguage, setCaptionsEnabled },
   } = usePersonalDataStore((state) => state)
 
   const subtitlesSettings: Setting = {
     type: 'multi-value',
     label: 'Subtitles/CC',
     value: activeTrack?.label || '',
-    options:
-      availableTracks?.map((track) => ({
-        label: track.label,
-        value: track.language,
-        selected: activeTrack?.language === track.language,
-        onOptionClick: () => {
-          onTrackChange(track)
-          setCaptionsLanguage(track.language)
-        },
-      })) || [],
+    options: availableTracks
+      ? [
+          {
+            label: 'Off',
+            value: 'off',
+            selected: !activeTrack,
+            onOptionClick: () => {
+              setCaptionsEnabled(false)
+              onTrackChange({
+                language: 'off',
+                label: 'Off',
+                src: '',
+              })
+              setCaptionsLanguage(null)
+              if (mobile) {
+                handleClose()
+              }
+            },
+          },
+          ...availableTracks.map((track) => ({
+            label: track.label,
+            value: track.language,
+            selected: activeTrack?.language === track.language,
+            onOptionClick: () => {
+              onTrackChange(track)
+              setCaptionsLanguage(track.language)
+              if (mobile) {
+                handleClose()
+              }
+            },
+          })),
+        ]
+      : [],
   }
 
   const speedSettings: Setting = {

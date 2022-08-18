@@ -410,17 +410,19 @@ export const Container = styled.div<ContainerProps>`
         transition-delay: ${TRANSITION_DELAY};
         transition-duration: 200ms;
         transition-timing-function: ${transitions.easing};
+        padding: 0 ${sizes(3)};
 
         > div {
           background-color: ${cVar('colorBackgroundOverlay')} !important;
           font: ${cVar('typographyDesktopT300Strong')} !important;
-          font-size: ${({ isFullScreen }) => (isFullScreen ? '32px' : '16px')} !important;
+          font-size: 12px !important;
           letter-spacing: ${cVar('typographyDesktopT300StrongLetterSpacing')} !important;
           text-transform: ${cVar('typographyDesktopT300StrongTextTransform')} !important;
           padding: ${sizes(1)} ${sizes(2)};
+          word-wrap: break-word;
 
           ${media.sm} {
-            font-size: 12px !important;
+            font-size: ${({ isFullScreen }) => (isFullScreen ? '32px' : '16px')} !important;
           }
         }
       }
