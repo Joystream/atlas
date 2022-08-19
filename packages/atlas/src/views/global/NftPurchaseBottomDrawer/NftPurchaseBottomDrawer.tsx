@@ -583,7 +583,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                 />
               )}
             </Row>
-            {(bid || canBuyNow) && (
+            {bid || canBuyNow ? (
               <>
                 <Row>
                   <Text as="span" variant="t100" color="colorText">
@@ -620,6 +620,12 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   )}
                 </Row>
               </>
+            ) : (
+              <Row>
+                <Text as="span" variant="t100" color="colorText">
+                  You need to fill out the amount first
+                </Text>
+              </Row>
             )}
             {type === 'open_auction' && bidLockingTime && (
               <Messages>
