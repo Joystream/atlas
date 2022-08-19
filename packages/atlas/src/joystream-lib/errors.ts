@@ -6,6 +6,7 @@ export type JoystreamLibErrorType =
   | 'AccountNotSelectedError'
   | 'MissingRequiredEventError'
   | 'MetaprotocolTransactionError'
+  | 'AccountBalanceTooLow'
 
 // ExtrinsicStatus:: 1010: Invalid Transaction: Inability to pay some fees , e.g. account balance too low,
 type JoystreamLibErrorArgs = {
@@ -32,6 +33,7 @@ export enum ErrorCode {
   ChannelStateBloatBondChanged = 'ChannelStateBloatBondChanged', // video state bloat bond changed
   InsufficientBalance = 'InsufficientBalance', // balance to low to send tokens
   InsufficientBalanceForChannelCreation = 'InsufficientBalanceForChannelCreation', // Cannot create the channel: channel creator has insufficient balance, (budget for channel state bloat bond + channel data objs state bloat bonds + data objs storage fees))
+  InsufficientBalanceForVideoCreation = ' InsufficientBalanceForVideoCreation,', /// Cannot create the video: video creator has insufficient balance,  (budget for video state bloat bond + video data objs state bloat bonds + data objs storage fees)
 }
 
 // More error codes https://github.com/Joystream/joystream/blob/master/runtime-modules/content/src/errors.rs

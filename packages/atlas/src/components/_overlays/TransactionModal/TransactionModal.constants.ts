@@ -143,6 +143,55 @@ export const getExtrinsicStatusDetails = (
               "Your transaction failed because publishing associated assets would exceed your storage quota. Each channel has a dedicated storage limit that's controlled by the DAO storage working group. You can ask for additional storage space in #storage-provider channel on Joystream Discord and then try again.",
             animation: sharedAnimation,
           }
+        case ErrorCode.LiquidityRestrictions:
+          return {
+            title: sharedTitle,
+            description: "You can't transfer tokens because you don't have enough tokens to pay transaction fee.",
+            animation: sharedAnimation,
+          }
+        case ErrorCode.WithdrawFromChannelAmountExceedsBalanceMinusExistentialDeposit:
+          return {
+            title: sharedTitle,
+            description:
+              "You can't withdraw tokens from channel because you don't have enough tokens to pay transaction fee.",
+            animation: sharedAnimation,
+          }
+        case ErrorCode.DataObjectStateBloatBondChanged:
+          return {
+            title: sharedTitle,
+            description: 'Data object state bloat bond fee changed. Try again.',
+            animation: sharedAnimation,
+          }
+        case ErrorCode.VideoStateBloatBondChanged:
+          return {
+            title: sharedTitle,
+            description: 'Video object state bloat bond fee changed. Try again.',
+            animation: sharedAnimation,
+          }
+        case ErrorCode.ChannelStateBloatBondChanged:
+          return {
+            title: sharedTitle,
+            description: 'Channel object state bloat bond fee changed. Try again.',
+            animation: sharedAnimation,
+          }
+        case ErrorCode.InsufficientBalance:
+          return {
+            title: sharedTitle,
+            description: 'Insufficient balance to perform this action.',
+            animation: sharedAnimation,
+          }
+        case ErrorCode.InsufficientBalanceForChannelCreation:
+          return {
+            title: sharedTitle,
+            description: 'Insufficient balance to create a channel.',
+            animation: sharedAnimation,
+          }
+        case ErrorCode.InsufficientBalanceForVideoCreation:
+          return {
+            title: sharedTitle,
+            description: 'Insufficient balance to create a video.',
+            animation: sharedAnimation,
+          }
         default:
           return {
             title: sharedTitle,

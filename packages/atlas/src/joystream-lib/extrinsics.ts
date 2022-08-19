@@ -128,6 +128,12 @@ export class JoystreamLibExtrinsics {
 
       return { events, block: blockHeader.number.toNumber(), getEventData, transactionHash }
     } catch (error) {
+      if (error.name === 'RpcError' && error?.data === 'Inability to pay some fees (e.g. account balance too low)') {
+        throw new JoystreamLibError({
+          name: 'AccountBalanceTooLow',
+          details: error,
+        })
+      }
       if (error?.message === 'Cancelled') {
         throw new JoystreamLibError({ name: 'SignCancelledError' })
       }

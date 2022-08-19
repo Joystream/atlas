@@ -114,8 +114,8 @@ export const useTransaction = (): HandleTransactionFn => {
       }
       addTransaction(transaction)
 
-      const updateStatus = (status: ExtrinsicStatus) => {
-        updateTransaction(transactionId, { ...transaction, status })
+      const updateStatus = (status: ExtrinsicStatus, errorCode?: ErrorCode) => {
+        updateTransaction(transactionId, { ...transaction, status, errorCode: errorCode || null })
       }
 
       try {
@@ -199,6 +199,11 @@ export const useTransaction = (): HandleTransactionFn => {
         onError?.()
 
         const errorName = error.name as JoystreamLibErrorType
+
+        if (errorName === 'AccountBalanceTooLow') {
+          updateStatus(ExtrinsicStatus.Error, ErrorCode.InsufficientBalance)
+          return false
+        }
 
         if (errorName === 'SignCancelledError') {
           ConsoleLogger.warn('Sign cancelled')
