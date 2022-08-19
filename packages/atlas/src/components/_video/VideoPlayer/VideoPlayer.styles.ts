@@ -421,9 +421,13 @@ export const Container = styled.div<ContainerProps>`
           text-transform: ${cVar('typographyDesktopT300StrongTextTransform')} !important;
           padding: ${sizes(1)} ${sizes(2)};
           word-break: break-all;
+          line-height: 16px !important;
 
           ${media.sm} {
             font-size: ${({ isFullScreen }) => (isFullScreen ? '32px' : '16px')} !important;
+            padding: ${({ isFullScreen }) =>
+              isFullScreen ? `${sizes(2)} ${sizes(4)}` : `${sizes(1)} ${sizes(2)}`} !important;
+            line-height: 24px !important;
           }
         }
       }
