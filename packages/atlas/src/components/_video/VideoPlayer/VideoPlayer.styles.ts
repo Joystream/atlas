@@ -427,7 +427,7 @@ export const Container = styled.div<ContainerProps>`
             font-size: ${({ isFullScreen }) => (isFullScreen ? '32px' : '16px')} !important;
             padding: ${({ isFullScreen }) =>
               isFullScreen ? `${sizes(2)} ${sizes(4)}` : `${sizes(1)} ${sizes(2)}`} !important;
-            line-height: 24px !important;
+            line-height: ${({ isFullScreen }) => (isFullScreen ? '48px' : '24px')} !important;
           }
         }
       }
