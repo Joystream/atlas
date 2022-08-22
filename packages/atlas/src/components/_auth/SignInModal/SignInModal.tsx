@@ -1,15 +1,19 @@
 import axios, { AxiosError } from 'axios'
+import { BN } from 'bn.js'
 import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import shallow from 'zustand/shallow'
 
 import { Button } from '@/components/_buttons/Button'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
+import { JOY_CURRENCY_TICKER } from '@/config/joystream'
 import { FAUCET_URL } from '@/config/urls'
 import { MemberId } from '@/joystream-lib'
+import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
+import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransactionManagerStore } from '@/providers/transactions'
 import { useUser, useUserStore } from '@/providers/user'
-import { SentryLogger } from '@/utils/logs'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { StyledDialogModal } from './SignInModal.styles'
 import { MemberFormData, SIGN_IN_MODAL_STEPS } from './SignInModal.types'
@@ -29,7 +33,7 @@ export const SignInModal: FC = () => {
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Select wallet' }) // start with sensible default so that there are no jumps after first effect runs
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null)
   const [hasNavigatedBack, setHasNavigatedBack] = useState(false)
-
+  const { joystream } = useJoystream()
   const dialogContentRef = useRef<HTMLDivElement>(null)
 
   const { displaySnackbar } = useSnackbar()
@@ -80,18 +84,28 @@ export const SignInModal: FC = () => {
       goToNextStep() // createMember will be called in member step, go to creating
 
       try {
-        const callback = () => {
-          refetchUserMemberships().then(({ data }) => {
-            const lastCreatedMembership = data.memberships[data.memberships.length - 1]
-            if (lastCreatedMembership) {
-              setActiveUser({ accountId: selectedAddress, memberId: lastCreatedMembership.id, channelId: null })
-              displaySnackbar({
-                title: 'Your membership has been created',
-                description: 'Browse, watch, create, collect videos across the platform and have fun!',
-                iconType: 'success',
-              })
-              setSignInModalOpen(false)
-            }
+        const callback = async () => {
+          const { data } = await refetchUserMemberships()
+          const lastCreatedMembership = data.memberships[data.memberships.length - 1]
+          if (lastCreatedMembership) {
+            setActiveUser({ accountId: selectedAddress, memberId: lastCreatedMembership.id, channelId: null })
+            displaySnackbar({
+              title: 'Your membership has been created',
+              description: 'Browse, watch, create, collect videos across the platform and have fun!',
+              iconType: 'success',
+            })
+            setSignInModalOpen(false)
+          }
+          if (!joystream) {
+            ConsoleLogger.error('No joystream instance')
+            return
+          }
+          const { lockedBalance } = await joystream.getAccountBalance(selectedAddress)
+          const amountOfTokens = `${hapiBnToTokenNumber(new BN(lockedBalance))} ${JOY_CURRENCY_TICKER}`
+          displaySnackbar({
+            title: `You received ${amountOfTokens}`,
+            description: `Enjoy your ${amountOfTokens} tokens to help you cover transaction fees. These tokens are non-transferable and can't be spent on NFTs or other purchases.`,
+            iconType: 'info',
           })
         }
         const { block } = await createNewMember(selectedAddress, data)
@@ -114,6 +128,7 @@ export const SignInModal: FC = () => {
       displaySnackbar,
       goToNextStep,
       goToPreviousStep,
+      joystream,
       refetchUserMemberships,
       selectedAddress,
       setActiveUser,

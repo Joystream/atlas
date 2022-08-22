@@ -86,6 +86,16 @@ export class JoystreamLib {
     return number.toNumber()
   }
 
+  async getAccountBalance(accountId: AccountId) {
+    await this.ensureApi()
+
+    const balances = await this.api.derive.balances.all(accountId)
+    return {
+      availableBalance: balances.freeBalance.toString(),
+      lockedBalance: balances.lockedBalance.toString(),
+    }
+  }
+
   async subscribeAccountBalance(
     accountId: AccountId,
     callback: (balances: { availableBalance: string; lockedBalance: string }) => void
