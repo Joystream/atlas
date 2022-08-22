@@ -11,27 +11,24 @@ import { MainLayout } from './MainLayout'
 import { JoystreamManager, JoystreamProvider } from './providers/joystream'
 import { Snackbars } from './providers/snackbars'
 import { TransactionsManager } from './providers/transactions'
-import { UserProvider } from './providers/user'
 
 export const App = () => {
   return (
-    <CommonProviders>
-      <AnalyticsManager />
-      <UserProvider>
-        <JoystreamProvider>
-          <NftActionsProvider>
-            <MainLayout />
-            <Snackbars />
-            <TransactionsManager />
-            <JoystreamManager />
-            <NotificationsManager />
-            <SignInModal />
-            <NftSettlementBottomDrawer />
-            <NftPurchaseBottomDrawer />
-            <NftSaleBottomDrawer />
-          </NftActionsProvider>
-        </JoystreamProvider>
-      </UserProvider>
-    </CommonProviders>
+    <JoystreamProvider>
+      <CommonProviders>
+        <AnalyticsManager />
+        <NftActionsProvider>
+          <MainLayout />
+          <Snackbars />
+          <TransactionsManager />
+          <JoystreamManager />
+          <NotificationsManager />
+          <SignInModal />
+          <NftSettlementBottomDrawer />
+          <NftPurchaseBottomDrawer />
+          <NftSaleBottomDrawer />
+        </NftActionsProvider>
+      </CommonProviders>
+    </JoystreamProvider>
   )
 }

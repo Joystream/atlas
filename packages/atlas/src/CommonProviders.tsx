@@ -9,6 +9,7 @@ import { AdminModal } from '@/components/_overlays/AdminModal'
 import { AssetsManager, OperatorsContextProvider } from '@/providers/assets'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
+import { UserProvider } from '@/providers/user'
 import { GlobalStyles } from '@/styles'
 
 export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
@@ -18,21 +19,23 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
   return (
     <>
       <GlobalStyles />
-      <OverlayManagerProvider>
-        <ConfirmationModalProvider>
-          <ApolloProvider client={apolloClient}>
-            <BrowserRouter>
-              <AdminModal />
-              <MaintenanceWrapper>
-                <OperatorsContextProvider>
-                  <AssetsManager />
-                  {children}
-                </OperatorsContextProvider>
-              </MaintenanceWrapper>
-            </BrowserRouter>
-          </ApolloProvider>
-        </ConfirmationModalProvider>
-      </OverlayManagerProvider>
+      <ApolloProvider client={apolloClient}>
+        <UserProvider>
+          <OverlayManagerProvider>
+            <ConfirmationModalProvider>
+              <BrowserRouter>
+                <AdminModal />
+                <MaintenanceWrapper>
+                  <OperatorsContextProvider>
+                    <AssetsManager />
+                    {children}
+                  </OperatorsContextProvider>
+                </MaintenanceWrapper>
+              </BrowserRouter>
+            </ConfirmationModalProvider>
+          </OverlayManagerProvider>
+        </UserProvider>
+      </ApolloProvider>
     </>
   )
 }

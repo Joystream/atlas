@@ -1,5 +1,7 @@
+import BN from 'bn.js'
 import { FC, FormEvent, PropsWithChildren, ReactNode } from 'react'
 
+import { Fee } from '@/components/Fee'
 import { Text } from '@/components/Text'
 import { ButtonProps } from '@/components/_buttons/Button'
 import {
@@ -11,6 +13,9 @@ import {
 import { Dialog } from '@/components/_overlays/Dialog'
 import { Modal, ModalProps } from '@/components/_overlays/Modal'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { TxMethodName } from '@/joystream-lib'
+import { JoystreamLibExtrinsics } from '@/joystream-lib/extrinsics'
+import { useFee } from '@/providers/joystream'
 
 import { HeaderIconContainer, InformativeIconWrapper } from './AlertDialogModal.styles'
 
@@ -33,6 +38,10 @@ export type AlertDialogProps = PropsWithChildren<{
   headerIcon?: ReactNode
   onExitClick?: () => void
   dividers?: boolean
+  fee?: {
+    methodName: TxMethodName
+    args?: Parameters<JoystreamLibExtrinsics[TxMethodName]>
+  }
 }>
 
 export type AlertDialogModalProps = Pick<ModalProps, 'show' | 'additionalActionsNode'> & AlertDialogProps
@@ -48,11 +57,13 @@ export const AlertDialogModal: FC<AlertDialogModalProps> = ({
   type = 'informative',
   noIcon,
   headerIcon,
+  fee,
   ...dialogProps
 }) => {
   const smMatch = useMediaMatch('sm')
   const isInformative = type === 'informative'
   const primaryButtonColor = isInformative ? 'primary' : type
+  const { fullFee, loading } = useFee(fee ? fee.methodName : undefined, fee && show ? fee.args : undefined)
 
   return (
     <Modal show={show} onEscPress={secondaryButton?.onClick || onExitClick} onExitClick={onExitClick}>
@@ -60,6 +71,7 @@ export const AlertDialogModal: FC<AlertDialogModalProps> = ({
         {...dialogProps}
         primaryButton={primaryButton ? { ...primaryButton, variant: primaryButtonColor } : undefined}
         secondaryButton={secondaryButton}
+        additionalActionsNode={fee && <Fee loading={loading} variant="h200" amount={fullFee || new BN(0)} />}
       >
         <>
           {!noIcon &&

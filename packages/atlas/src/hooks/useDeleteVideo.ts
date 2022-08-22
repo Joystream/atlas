@@ -56,8 +56,12 @@ export const useDeleteVideo = () => {
           },
         },
         type: 'destructive',
+        fee: {
+          methodName: 'deleteVideoTx',
+          args: [videoId, memberId],
+        },
       })
     },
-    [closeDeleteVideoDialog, confirmDeleteVideo, openDeleteVideoDialog]
+    [closeDeleteVideoDialog, confirmDeleteVideo, memberId, openDeleteVideoDialog]
   )
 }
