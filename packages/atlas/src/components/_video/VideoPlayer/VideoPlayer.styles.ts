@@ -1,7 +1,6 @@
 import isPropValid from '@emotion/is-prop-valid'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { Link } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
 import {
@@ -128,7 +127,7 @@ export const EmbbeddedTopBarOverlay = styled.div<{ isFullScreen: boolean }>`
   }
 `
 
-export const TitleContainer = styled(Link, { shouldForwardProp: isPropValid })<{ isFullscreen: boolean }>`
+export const TitleContainer = styled('a', { shouldForwardProp: isPropValid })<{ isFullscreen: boolean }>`
   text-decoration: none;
   @media (hover: hover) {
     ${({ isFullscreen }) =>

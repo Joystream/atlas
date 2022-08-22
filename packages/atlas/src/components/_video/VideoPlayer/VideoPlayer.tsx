@@ -10,7 +10,6 @@ import {
   useRef,
   useState,
 } from 'react'
-import { Link } from 'react-router-dom'
 import useResizeObserver from 'use-resize-observer'
 import { VideoJsPlayer } from 'video.js'
 
@@ -714,15 +713,20 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
         {isEmbedded && !isSharingOverlayOpen && (
           <>
             <EmbbeddedTopBarOverlay isFullScreen={isFullScreen}>
-              <Link to={absoluteRoutes.viewer.channel(video?.channel.id)}>
+              <a href={absoluteRoutes.viewer.channel(video?.channel.id)} target="_blank" rel="noopener noreferrer">
                 <Avatar
                   clickable
                   size={isFullScreen && !isMobile() ? 'cover' : 'default'}
                   assetUrl={channelAvatarUrl}
                   loading={isChannelAvatarLoading}
                 />
-              </Link>
-              <TitleContainer to={absoluteRoutes.viewer.video(videoId)} isFullscreen={isFullScreen}>
+              </a>
+              <TitleContainer
+                href={absoluteRoutes.viewer.video(videoId)}
+                isFullscreen={isFullScreen}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <StyledText variant="h300" as="h2">
                   {video?.title}
                 </StyledText>
@@ -743,7 +747,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
             </EmbbeddedTopBarOverlay>
             {needsManualPlay && (
               <StyledEmbeddedLogoLink
-                href={window.location.origin + absoluteRoutes.viewer.video(videoId)}
+                href={absoluteRoutes.viewer.video(videoId)}
                 rel="noopener noreferrer"
                 target="_blank"
                 onClick={(e) => e.stopPropagation()}
