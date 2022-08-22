@@ -12,12 +12,12 @@ import { FormField } from '@/components/_inputs/FormField'
 import { TokenInput } from '@/components/_inputs/TokenInput'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { JOY_CURRENCY_TICKER } from '@/config/joystream'
-import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
+import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useFee, useJoystream, useTokenPrice } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions'
 import { formatNumber } from '@/utils/number'
 
-import { PriceWrapper, Summary, SummaryRow, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
+import { PriceWrapper, StyledMaxButton, Summary, SummaryRow, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
 
 type WithdrawFundsDialogProps = {
   onExitClick: () => void
@@ -45,6 +45,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
     watch,
     reset,
     control,
+    setValue,
     formState: { errors },
   } = useForm<{ amount: number | null }>()
   const { convertHapiToUSD } = useTokenPrice()
@@ -89,6 +90,18 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
 
   const channelBalanceInUsd = convertHapiToUSD(channelBalance)
 
+  const handleMaxClick = async () => {
+    if (fullFee.gte(accountBalance)) {
+      return
+    }
+    const value = Math.floor(hapiBnToTokenNumber(channelBalance) * 100) / 100
+    setValue('amount', value, {
+      shouldTouch: true,
+      shouldDirty: true,
+      shouldValidate: true,
+    })
+  }
+
   return (
     <DialogModal
       show={show}
@@ -117,7 +130,15 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
           />
         )}
       </PriceWrapper>
-      <FormField label="Amount to withdraw" error={errors.amount?.message}>
+      <FormField
+        label="Amount to withdraw"
+        error={errors.amount?.message}
+        headerNode={
+          <StyledMaxButton onClick={handleMaxClick} size="medium" variant="tertiary" _textOnly>
+            Max
+          </StyledMaxButton>
+        }
+      >
         <Controller
           control={control}
           name="amount"

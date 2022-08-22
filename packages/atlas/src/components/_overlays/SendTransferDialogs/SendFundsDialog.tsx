@@ -58,7 +58,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
   const amountBN = tokenNumberToHapiBn(watch('amount') || 0)
   const { fullFee, loading: feeLoading } = useFee(
     'sendFundsTx',
-    show && account && amountBN ? [account, amountBN.toString()] : undefined
+    show && amountBN ? [account || '', amountBN.toString()] : undefined
   )
 
   useEffect(() => {
@@ -99,19 +99,25 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
           } tokens have been sent over to ${data.account.slice(0, ADDRESS_CHARACTERS_LIMIT)}...
           ${data.account.slice(-ADDRESS_CHARACTERS_LIMIT)} wallet address`,
         },
-        txFactory: async (updateStatus) =>
-          (await joystream.extrinsics).sendFunds(data.account || '', amountBN.toString(), proxyCallback(updateStatus)),
+        txFactory: async (updateStatus) => {
+          const amount = amountBN.add(fullFee).gte(accountBalance) ? amountBN.sub(fullFee) : amountBN
+          return (await joystream.extrinsics).sendFunds(
+            data.account || '',
+            amount.toString(),
+            proxyCallback(updateStatus)
+          )
+        },
         onTxSync: async () => onExitClick(),
       })
     })
     return handler()
   }
 
-  const handleMaxClick = () => {
+  const handleMaxClick = async () => {
     if (fullFee.gte(accountBalance)) {
       return
     }
-    const value = hapiBnToTokenNumber(accountBalance.sub(fullFee))
+    const value = Math.floor(hapiBnToTokenNumber(accountBalance) * 100) / 100
     setValue('amount', value, {
       shouldTouch: true,
       shouldDirty: true,
@@ -150,7 +156,8 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
       </PriceWrapper>
       <FormFieldsWrapper>
         <FormField
-          label="Amount to withdraw"
+          label="Amount to transfer"
+          description="The transaction fee will be deducted from this amount."
           headerNode={
             <StyledMaxButton onClick={handleMaxClick} size="medium" variant="tertiary" _textOnly>
               Max
@@ -173,21 +180,23 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
                   return true
                 },
                 accountBalance: (value) => {
-                  if (value && tokenNumberToHapiBn(value).add(fullFee).gte(accountBalance)) {
+                  if (value && tokenNumberToHapiBn(value).gte(accountBalance)) {
                     return 'Not enough tokens in your account balance.'
                   }
                   return true
                 },
               },
             }}
-            render={({ field: { value, onChange } }) => (
-              <TokenInput
-                value={value}
-                onChange={onChange}
-                placeholder={`${JOY_CURRENCY_TICKER} amount`}
-                error={!!errors.amount}
-              />
-            )}
+            render={({ field: { value, onChange } }) => {
+              return (
+                <TokenInput
+                  value={value}
+                  onChange={onChange}
+                  placeholder={`${JOY_CURRENCY_TICKER} amount`}
+                  error={!!errors.amount}
+                />
+              )
+            }}
           />
         </FormField>
         <FormField label="Destination account" error={errors.account?.message}>

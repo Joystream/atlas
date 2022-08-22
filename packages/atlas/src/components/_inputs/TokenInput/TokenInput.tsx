@@ -25,7 +25,9 @@ const _TokenInput: ForwardRefRenderFunction<HTMLInputElement, TokenInputProps> =
 
   // react to external changes to value
   useEffect(() => {
-    if ((value?.toString() || '') !== internalValue) {
+    const valueStr = value?.toString() || ''
+    const sanitizedInternalValue = parseFloat(internalValue).toString()
+    if (valueStr !== sanitizedInternalValue) {
       setInternalValue(value ? value.toString() : '')
     }
   }, [internalValue, value])
