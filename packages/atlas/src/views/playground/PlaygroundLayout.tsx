@@ -17,6 +17,7 @@ import { UserProvider, useUser } from '@/providers/user'
 import { cVar } from '@/styles'
 
 import {
+  PlaygroundCaptcha,
   PlaygroundEstimatingBlockTime,
   PlaygroundIframe,
   PlaygroundImageDownsizing,
@@ -38,6 +39,7 @@ const playgroundRoutes = [
   { path: 'image-downsizing', element: <PlaygroundImageDownsizing />, name: 'Image downsizing' },
   { path: 'reactions-comments', element: <PlaygroundReactionsComments />, name: 'Reactions & comments' },
   { path: 'iframe', element: <PlaygroundIframe />, name: 'Iframe' },
+  { path: 'captcha', element: <PlaygroundCaptcha />, name: 'Captcha' },
 ]
 
 const PlaygroundLayout = () => {

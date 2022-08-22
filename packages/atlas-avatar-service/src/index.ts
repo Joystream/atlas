@@ -6,12 +6,12 @@ import multer from 'multer'
 import path from 'path'
 import { v4 as uuid } from 'uuid'
 
-const DIRECTORY_NAME = 'uploads'
-const UPLOAD_DIRECTORY = `./${DIRECTORY_NAME}`
+const UPLOADS_DIR_PATH = `./uploads`
+const PORT = process.env.AVATAR_SERVICE_PORT || 80
 
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, path.resolve(UPLOAD_DIRECTORY))
+    callback(null, path.resolve(UPLOADS_DIR_PATH))
   },
   filename: (req, file, callback) => {
     callback(null, `${uuid()}${path.extname(file.originalname)}`)
@@ -30,19 +30,16 @@ const upload = multer({
 
 const app = express()
 app.use(cors())
-app.use(`/${DIRECTORY_NAME}`, express.static(path.resolve(UPLOAD_DIRECTORY)))
+app.use('/', express.static(path.resolve(UPLOADS_DIR_PATH)))
 
-const PORT = 80
-
-app.post('/uploads', upload.single('file'), (req, res) => {
+app.post('/', upload.single('file'), (req, res) => {
   if (req.headers['content-type'] && !/multipart\/form-data/.test(req.headers['content-type'])) {
     res.status(500).send('Content-Type header must be set to multipart/form-data')
     return
   }
   try {
     const fileName = req.file?.filename
-    const uploadedImagePath = `${req.protocol}://${req.hostname}/${DIRECTORY_NAME}/${fileName}`
-    res.end(uploadedImagePath)
+    res.json({ fileName }).send()
   } catch (error) {
     console.error(error)
     return res.status(500).send()
@@ -51,8 +48,8 @@ app.post('/uploads', upload.single('file'), (req, res) => {
 
 app
   .listen(PORT, () => {
-    if (!fs.existsSync(UPLOAD_DIRECTORY)) {
-      fs.mkdirSync(UPLOAD_DIRECTORY)
+    if (!fs.existsSync(UPLOADS_DIR_PATH)) {
+      fs.mkdirSync(UPLOADS_DIR_PATH)
     }
     console.log('listening on ' + PORT + '...')
   })

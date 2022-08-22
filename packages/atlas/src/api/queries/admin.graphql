@@ -1,0 +1,11 @@
+query GetKillSwitch {
+  admin {
+    isKilled
+  }
+}
+
+mutation SetKillSwitch($isKilled: Boolean!) {
+  setKillSwitch(isKilled: $isKilled) {
+    isKilled
+  }
+}

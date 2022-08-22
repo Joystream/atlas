@@ -4,7 +4,6 @@ import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 
 import { SvgAtlasLogoStudio } from '@/components/_illustrations'
 import { StudioLoading } from '@/components/_loaders/StudioLoading'
-import { AdminModal } from '@/components/_overlays/AdminModal'
 import { CookiePopover } from '@/components/_overlays/CookiePopover'
 import { BASE_PATHS, absoluteRoutes } from '@/config/routes'
 import { transitions } from '@/styles'
@@ -85,7 +84,6 @@ export const MainLayout: FC = () => {
         <Route path={BASE_PATHS.studio + '/*'} element={<LoadableStudioLayout />} />
         <Route path={BASE_PATHS.playground + '/*'} element={<LoadablePlaygroundLayout />} />
       </Routes>
-      <AdminModal />
     </>
   )
 }

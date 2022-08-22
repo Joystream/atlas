@@ -37,8 +37,7 @@ import {
   BalanceContainer,
   BlurredBG,
   ChannelsSectionTitle,
-  Container,
-  Divider,
+  Container, // Divider,
   Filter,
   InnerContainer,
   MemberHandleText,
@@ -214,18 +213,18 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                             <SkeletonLoader width={30} height={20} />
                           )}
                           <BalanceContainer>
-                            <TextLink
-                              as="span"
-                              onClick={() => {
-                                closeDropdown?.()
-                                publisher ? setShowWithdrawDialog(true) : setShowSendDialog(true)
-                              }}
-                              variant="t100"
-                              color="colorCoreNeutral200Lighten"
-                            >
-                              {publisher ? 'Withdraw' : 'Transfer'}
-                            </TextLink>
-                            <Divider />
+                            {/*<TextLink*/}
+                            {/*  as="span"*/}
+                            {/*  onClick={() => {*/}
+                            {/*    closeDropdown?.()*/}
+                            {/*    publisher ? setShowWithdrawDialog(true) : setShowSendDialog(true)*/}
+                            {/*  }}*/}
+                            {/*  variant="t100"*/}
+                            {/*  color="colorCoreNeutral200Lighten"*/}
+                            {/*>*/}
+                            {/*  {publisher ? 'Withdraw' : 'Transfer'}*/}
+                            {/*</TextLink>*/}
+                            {/*<Divider />*/}
                             <TextLink
                               variant="t100"
                               as="a"
