@@ -67,7 +67,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const navigate = useNavigate()
     const { channelId, activeMembership, setActiveUser, memberships, signOut } = useUser()
     const setSignInModalOpen = useUserStore((state) => state.actions.setSignInModalOpen)
-    const accountBalance = useSubscribeAccountBalance()
+    const { accountBalance } = useSubscribeAccountBalance()
 
     const containerRef = useRef<HTMLDivElement>(null)
     const { ref: measureContainerRef, height: containerHeight = 0 } = useResizeObserver({ box: 'border-box' })
@@ -130,7 +130,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
 
     const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
     const { url: channelAvatarUrl, isLoadingAsset: isChannelAvatarLoading } = useAsset(selectedChannel?.avatarPhoto)
-    const channelBalance = useSubscribeAccountBalance(selectedChannel?.rewardAccount) || new BN(0)
+    const { accountBalance: channelBalance } = useSubscribeAccountBalance(selectedChannel?.rewardAccount) || new BN(0)
 
     useEffect(() => {
       transRef.start()
@@ -197,7 +197,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                           <MemberHandleText as="span" variant="h400">
                             {publisher ? selectedChannel?.title : activeMembership?.handle ?? '‌‌ '}
                           </MemberHandleText>
-                          {accountBalance !== undefined ? (
+                          {accountBalance !== undefined && channelBalance !== undefined ? (
                             <>
                               <UserBalance>
                                 <JoyTokenIcon size={16} variant="regular" />

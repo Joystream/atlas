@@ -143,6 +143,7 @@ export const useBucketsConfigForNewChannel = () => {
 
 export const useSubscribeAccountBalance = (controllerAccount?: string | null) => {
   const [accountBalance, setAccountBalance] = useState<BN | undefined>()
+  const [lockedAccountBalance, setLockedAccountBalance] = useState<BN | undefined>()
   const { activeMembership } = useUser()
   const { joystream, proxyCallback } = useJoystream()
 
@@ -153,9 +154,13 @@ export const useSubscribeAccountBalance = (controllerAccount?: string | null) =>
 
     let unsubscribe: (() => void) | undefined
     const init = async () => {
+      joystream.subscribeAccountBalance
       unsubscribe = await joystream.subscribeAccountBalance(
         controllerAccount || activeMembership.controllerAccount,
-        proxyCallback((balance) => setAccountBalance(new BN(balance)))
+        proxyCallback(({ availableBalance, lockedBalance }) => {
+          setLockedAccountBalance(new BN(lockedBalance))
+          setAccountBalance(new BN(availableBalance))
+        })
       )
     }
     init()
@@ -165,7 +170,7 @@ export const useSubscribeAccountBalance = (controllerAccount?: string | null) =>
     }
   }, [activeMembership, controllerAccount, joystream, proxyCallback])
 
-  return accountBalance
+  return { accountBalance, lockedAccountBalance }
 }
 
 export const useBloatFeesAndPerMbFees = (assets?: VideoInputAssets | ChannelInputAssets) => {
@@ -207,7 +212,7 @@ export const useFee = <TFnName extends TxMethodName, TArgs extends Parameters<Jo
   const { totalAssetSizeFee, totalAssetBloatFee, channelStateBloatBondValue, videoStateBloatBondValue } =
     useBloatFeesAndPerMbFees(assets)
 
-  const accountBalance = useSubscribeAccountBalance()
+  const { accountBalance } = useSubscribeAccountBalance()
   const [fullFee, setFullFee] = useState(new BN(0))
   const [loading, setLoading] = useState(false)
 
