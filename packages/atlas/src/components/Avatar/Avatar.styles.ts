@@ -33,7 +33,7 @@ export const IconAndOverlayWrapper = styled.div`
   bottom: 0;
   left: 0;
   border-radius: 100%;
-  z-index: 3;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -42,11 +42,9 @@ export const IconAndOverlayWrapper = styled.div`
 
 export const StyledSvgActionEdit = styled(SvgActionEdit)`
   position: relative;
-  z-index: 1;
 `
 export const StyledSvgActionAddImage = styled(SvgActionAddImage)`
   position: relative;
-  z-index: 1;
 `
 
 export const Overlay = styled.div<{ isEdit?: boolean }>`
