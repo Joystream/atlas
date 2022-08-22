@@ -605,7 +605,6 @@ export const NftPurchaseBottomDrawer: FC = () => {
                     withToken
                     format="short"
                     withTooltip
-                    tooltipAsWrapper
                     variant="h500"
                   />
                 </Row>

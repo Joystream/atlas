@@ -18,23 +18,10 @@ export type NumberFormatProps = {
   children?: never
   variant?: TextVariant
   displayedValue?: string | number
-  tooltipAsWrapper?: boolean
 } & Omit<TextProps, 'children' | 'variant'>
 
 export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
-  (
-    {
-      value,
-      format = 'full',
-      withToken,
-      withTooltip,
-      variant = 'no-variant',
-      displayedValue,
-      tooltipAsWrapper,
-      ...textProps
-    },
-    ref
-  ) => {
+  ({ value, format = 'full', withToken, withTooltip, variant = 'no-variant', displayedValue, ...textProps }, ref) => {
     const internalValue = BN.isBN(value) ? hapiBnToTokenNumber(value) : value
     const textRef = useRef<HTMLHeadingElement>(null)
     let formattedValue
@@ -66,17 +53,6 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
         {withToken && ` ${JOY_CURRENCY_TICKER}`}
       </StyledText>
     )
-
-    // TODO: This is workaround. For some reason this tooltip doesn't work properly.
-    //  Dear developer, if you find a solution, the project will thank you, otherwise we should consider
-    //  using Floating UI (https://github.com/floating-ui/floating-ui)
-    if (tooltipAsWrapper) {
-      return (
-        <Tooltip placement="top" delay={[500, null]} text={hasTooltip ? tooltipText : undefined}>
-          {content}
-        </Tooltip>
-      )
-    }
 
     return (
       <>
