@@ -248,6 +248,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
           playVideo,
           pauseVideo,
           () => setCinematicView(!cinematicView),
+          captionsEnabled,
           () => setCaptionsEnabled(!captionsEnabled)
         )
       }
@@ -785,6 +786,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                     availableTracks={availableTextTracks}
                     onTrackChange={handleTrackChange}
                     activeTrack={activeTrack}
+                    player={player}
                   />
                   <PlayerControlButton
                     isDisabled={!isFullScreenEnabled}

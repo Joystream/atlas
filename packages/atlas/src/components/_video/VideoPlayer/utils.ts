@@ -17,6 +17,8 @@ export enum CustomVideojsEvents {
   VolumeDecrease = 'VOLUME_DECREASE',
   PlayControl = 'PLAY_CONTROL',
   PauseControl = 'PAUSE_CONTROL',
+  CaptionsSet = 'CAPTIONS_SET',
+  PlaybackSpeedSet = 'PLAYBACK_SPEED_SET',
 }
 
 export const isFullScreenEnabled =
@@ -34,6 +36,7 @@ export const hotkeysHandler = (
   playVideo: (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => Promise<void>,
   pauseVideo: (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => void,
   toggleCinematicView: () => void,
+  captionsEnabled: boolean,
   toggleCaptions: () => void
 ) => {
   if (!playerInstance) {

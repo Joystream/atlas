@@ -1,7 +1,9 @@
 import { Boundary } from '@popperjs/core'
 import { FC, MouseEvent, useRef, useState } from 'react'
+import { VideoJsPlayer } from 'video.js'
 
 import { Popover, PopoverImperativeHandle } from '@/components/_overlays/Popover'
+import { CustomVideojsEvents } from '@/components/_video/VideoPlayer/utils'
 import { AVAILABLE_PLAYBACK_RATE } from '@/config/player'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { sizes } from '@/styles'
@@ -27,6 +29,7 @@ type SettingsPopoverProps = {
   availableTracks?: AvailableTrack[]
   onTrackChange: (selectedTrack: AvailableTrack) => void
   activeTrack?: AvailableTrack
+  player: VideoJsPlayer | null
 }
 
 const TOP_OFFSET = sizes(8, true)
@@ -41,6 +44,7 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
   availableTracks,
   onTrackChange,
   activeTrack,
+  player,
 }) => {
   const settingsRef = useRef<HTMLDivElement>(null)
   const popoverRef = useRef<PopoverImperativeHandle>(null)
@@ -85,6 +89,7 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
                 src: '',
               })
               setCaptionsLanguage(null)
+              player?.trigger(CustomVideojsEvents.CaptionsSet)
               if (mobile) {
                 handleClose()
               }
@@ -97,6 +102,7 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
             onOptionClick: () => {
               onTrackChange(track)
               setCaptionsLanguage(track.language)
+              player?.trigger(CustomVideojsEvents.CaptionsSet)
               if (!captionsEnabled) {
                 setCaptionsEnabled(true)
               }
@@ -116,9 +122,10 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
     options: AVAILABLE_PLAYBACK_RATE.map((availablePlaybackRate) => ({
       value: availablePlaybackRate,
       selected: availablePlaybackRate === playbackRate,
-      onOptionClick: (val) => {
+      onOptionClick: async (val) => {
         if (typeof val === 'number') {
-          setPlaybackRate(val)
+          await setPlaybackRate(val)
+          player?.trigger(CustomVideojsEvents.PlaybackSpeedSet)
           setOpenedSetting(null)
         }
         if (mobile) {

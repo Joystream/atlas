@@ -21,6 +21,7 @@ import {
   SvgControlsVideoModeCompactView,
 } from '@/components/_icons'
 import { SvgAtlasLogoFull, SvgAtlasLogoShort } from '@/components/_illustrations'
+import { ControlsIndicatorWrapper } from '@/components/_video/VideoPlayer/ControlsIndicator.styles'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 import { PlayerControlButton } from './PlayerControlButton'
@@ -28,6 +29,7 @@ import { ControlButton } from './PlayerControlButton.styles'
 
 const DEFAULT_SUBTITLES_POSITION = '0.8em'
 const HOVERED_SUBTITLES_POSITION = '5.25em'
+const HOVERED_CONTROLS_INDICATOR_POSITION = '-5em'
 
 type ContainerProps = {
   isFullScreen?: boolean
@@ -398,6 +400,13 @@ export const Container = styled.div<ContainerProps>`
     }
   }
 
+  ${ControlsIndicatorWrapper} {
+    transition: transform;
+    transition-delay: ${TRANSITION_DELAY};
+    transition-duration: 200ms;
+    transition-timing-function: ${transitions.easing};
+  }
+
   .vjs-text-track-display {
     > div {
       margin: 0 !important;
@@ -466,6 +475,12 @@ export const Container = styled.div<ContainerProps>`
     /* Need to disable this rule because fixing it would break functionality */
     /* stylelint-disable no-descending-specificity */
 
+    ${ControlsIndicatorWrapper} {
+      transform: translateY(
+        ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? HOVERED_CONTROLS_INDICATOR_POSITION : '0')}
+      );
+    }
+
     .vjs-text-track-display {
       > div {
         > div {
@@ -487,6 +502,10 @@ export const Container = styled.div<ContainerProps>`
       }
     }
 
+    ${ControlsIndicatorWrapper} {
+      transform: translateY(HOVERED_CONTROLS_INDICATOR_POSITION);
+    }
+
     .vjs-text-track-display {
       > div {
         > div {
@@ -504,6 +523,12 @@ export const Container = styled.div<ContainerProps>`
         ${CustomControls} {
           transform: translateY(${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 0 : 0.5)}em);
         }
+      }
+
+      ${ControlsIndicatorWrapper} {
+        transform: translateY(
+          ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? HOVERED_CONTROLS_INDICATOR_POSITION : 0)}
+        );
       }
 
       .vjs-text-track-display {
@@ -525,6 +550,10 @@ export const Container = styled.div<ContainerProps>`
         }
       }
 
+      ${ControlsIndicatorWrapper} {
+        transform: translateY(HOVERED_CONTROLS_INDICATOR_POSITION);
+      }
+
       .vjs-text-track-display {
         > div {
           > div {
@@ -542,6 +571,12 @@ export const Container = styled.div<ContainerProps>`
         ${CustomControls} {
           transform: translateY(${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 0 : 0.5)}em);
         }
+      }
+
+      ${ControlsIndicatorWrapper} {
+        transform: translateY(
+          ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? HOVERED_CONTROLS_INDICATOR_POSITION : 0)}
+        );
       }
 
       .vjs-text-track-display {
