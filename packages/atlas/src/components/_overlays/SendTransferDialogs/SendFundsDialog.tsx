@@ -174,9 +174,6 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
                   if (!value) {
                     return 'Enter amount to transfer.'
                   }
-                  if (!value || isNaN(value) || value < 0) {
-                    return 'The number of JOY tokens to withdraw has to be an integer and greater than 0 (e.g. 15).'
-                  }
                   return true
                 },
                 accountBalance: (value) => {

@@ -144,15 +144,15 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
           name="amount"
           rules={{
             validate: {
-              valid: (value) => {
-                if (!value || isNaN(value) || value < 0) {
-                  return 'The number of JOY tokens to withdraw has to be an integer and greater than 0 (e.g. 15).'
-                }
-                return true
-              },
               channelBalance: (value) => {
                 if (value && tokenNumberToHapiBn(value).gt(channelBalance)) {
                   return 'Not enough tokens in channel balance.'
+                }
+                return true
+              },
+              memberBalance: () => {
+                if (fullFee.gt(accountBalance)) {
+                  return 'Membership wallet has insufficient balance to cover transaction fees. Top up your membership wallet and try again. '
                 }
                 return true
               },
