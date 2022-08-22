@@ -49,6 +49,7 @@ export const relativeRoutes = {
     uploads: () => 'uploads',
     signIn: () => 'signin',
     notifications: () => 'notifications',
+    payments: () => 'payments',
   },
   playground: {
     index: () => '',

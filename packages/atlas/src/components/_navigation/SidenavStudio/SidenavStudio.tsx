@@ -5,6 +5,7 @@ import {
   SvgActionAddVideo,
   SvgActionPlay,
   SvgSidebarChannel,
+  SvgSidebarPayments,
   SvgSidebarUpload,
   SvgSidebarVideos,
 } from '@/components/_icons'
@@ -34,6 +35,12 @@ const studioNavbarItems: NavItemType[] = [
     name: 'Uploads',
     expandedName: 'My uploads',
     to: absoluteRoutes.studio.uploads(),
+  },
+  {
+    icon: <SvgSidebarPayments />,
+    name: 'Payments',
+    expandedName: 'My payments',
+    to: absoluteRoutes.studio.payments(),
   },
 ]
 

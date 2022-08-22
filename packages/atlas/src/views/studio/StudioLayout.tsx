@@ -22,6 +22,7 @@ import { transitions } from '@/styles'
 import { isAllowedBrowser } from '@/utils/browser'
 import { NotificationsView } from '@/views/notifications'
 import { CreateEditChannelView, MyUploadsView, MyVideosView, VideoWorkspace } from '@/views/studio'
+import { MyPaymentsView } from '@/views/studio/MyPaymentsView'
 
 import { StudioWelcomeView } from './StudioWelcomeView'
 
@@ -118,6 +119,12 @@ const StudioLayout = () => {
                 path={relativeRoutes.studio.uploads()}
                 element={
                   <PrivateRoute element={<MyUploadsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                }
+              />
+              <Route
+                path={relativeRoutes.studio.payments()}
+                element={
+                  <PrivateRoute element={<MyPaymentsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
                 }
               />
               <Route
