@@ -103,6 +103,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
     }
   }, [isBuyNow, isEnglishAuction, isOpenAuction])
 
+  const bid = watch('bid')
   const auctionBuyNowPrice = isAuction ? hapiBnToTokenNumber(nftStatus.buyNowPrice || new BN(0)) : 0
   const bidLockingTime = isAuction && nftStatus.bidLockingTime && convertBlocksToDuration(nftStatus.bidLockingTime)
   const buyNowPrice = isBuyNow ? hapiBnToTokenNumber(nftStatus.buyNowPrice || new BN(0)) : 0
@@ -124,11 +125,12 @@ export const NftPurchaseBottomDrawer: FC = () => {
 
   const creatorRoyalty = nft?.creatorRoyalty || 0
   const ownerRoyalty = 100 - creatorRoyalty - nftPlatformFeePercentage
+  const canBuyNow = type === 'buy_now' || (auctionBuyNowPrice && auctionBuyNowPrice <= bid) || isBuyNowClicked
 
   const { fullFee: buyNowFee, loading: buyNowFeeLoading } = useFee(
     'buyNftNowTx',
-    currentNftId && memberId && auctionBuyNowPrice
-      ? [currentNftId, memberId, tokenNumberToHapiBn(auctionBuyNowPrice).toString()]
+    currentNftId && memberId && canBuyNow
+      ? [currentNftId, memberId, tokenNumberToHapiBn(auctionBuyNowPrice || buyNowPrice).toString()]
       : undefined
   )
 
@@ -139,7 +141,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
       : undefined
   )
 
-  const transactionFee = type === 'buy_now' ? buyNowFee : makeBidFee
+  const transactionFee = canBuyNow ? buyNowFee : makeBidFee
   const feeLoading = buyNowFeeLoading || makeBidFeeLoading
 
   const isBuyNowAffordable =
@@ -261,16 +263,10 @@ export const NftPurchaseBottomDrawer: FC = () => {
     proxyCallback,
     refetch,
   ])
-  const bid = watch('bid')
   const timeLeftUnderMinute = !!timeLeftSeconds && timeLeftSeconds < 60
   const auctionEnded = type === 'english_auction' && timeLeftSeconds <= 0
 
-  const primaryButtonText =
-    type === 'buy_now' || (auctionBuyNowPrice && auctionBuyNowPrice <= bid) || isBuyNowClicked
-      ? 'Buy NFT'
-      : canChangeBid
-      ? 'Change bid'
-      : 'Place bid'
+  const primaryButtonText = canBuyNow ? 'Buy NFT' : canChangeBid ? 'Change bid' : 'Place bid'
 
   const blocksLeft = endAtBlock && endAtBlock - currentBlock
 
@@ -587,28 +583,49 @@ export const NftPurchaseBottomDrawer: FC = () => {
                 />
               )}
             </Row>
-            {(bid || type === 'buy_now') && (
+            {bid || canBuyNow ? (
               <>
                 <Row>
                   <Text as="span" variant="t100" color="colorText">
                     Transaction fee
                   </Text>
-                  <NumberFormat as="span" value={transactionFee} withToken variant="t100" color="colorText" />
+                  {(canBuyNow ? !buyNowFee.toNumber() : !makeBidFee.toNumber()) ||
+                  buyNowFeeLoading ||
+                  makeBidFeeLoading ? (
+                    <SkeletonLoader width={80} height={16} />
+                  ) : (
+                    <NumberFormat as="span" value={transactionFee} withToken variant="t100" color="colorText" />
+                  )}
                 </Row>
                 <Row>
                   <Text as="span" variant="h500" color="colorText">
                     You will pay
                   </Text>
-                  <NumberFormat
-                    as="span"
-                    value={(type === 'buy_now' ? buyNowPrice : bid) + hapiBnToTokenNumber(transactionFee)}
-                    withToken
-                    format="short"
-                    withTooltip
-                    variant="h500"
-                  />
+                  {(canBuyNow ? !buyNowFee.toNumber() : !makeBidFee.toNumber()) ||
+                  buyNowFeeLoading ||
+                  makeBidFeeLoading ? (
+                    <SkeletonLoader width={112} height={32} />
+                  ) : (
+                    <NumberFormat
+                      as="span"
+                      value={
+                        (type === 'buy_now' ? buyNowPrice : bid || auctionBuyNowPrice) +
+                        hapiBnToTokenNumber(transactionFee)
+                      }
+                      withToken
+                      format="short"
+                      withTooltip
+                      variant="h500"
+                    />
+                  )}
                 </Row>
               </>
+            ) : (
+              <Row>
+                <Text as="span" variant="t100" color="colorText">
+                  You need to fill out the amount first
+                </Text>
+              </Row>
             )}
             {type === 'open_auction' && bidLockingTime && (
               <Messages>
