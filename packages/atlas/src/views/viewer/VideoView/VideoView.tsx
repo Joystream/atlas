@@ -14,9 +14,11 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { CallToActionButton } from '@/components/_buttons/CallToActionButton'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
-import { SvgActionShare } from '@/components/_icons'
+import { SvgActionMore, SvgActionReplay, SvgActionShare } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NftWidget, useNftWidget } from '@/components/_nft/NftWidget'
+import { ContextMenu } from '@/components/_overlays/ContextMenu'
+import { ReportModal } from '@/components/_overlays/ReportModal'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { videoCategories } from '@/config/categories'
 import { CTA_MAP } from '@/config/cta'
@@ -41,8 +43,8 @@ import { CommentsSection } from './CommentsSection'
 import { MoreVideos } from './MoreVideos'
 import { VideoDetails } from './VideoDetails'
 import {
+  ButtonsContainer,
   ChannelContainer,
-  CopyLink,
   Meta,
   NotFoundVideoContainer,
   PlayerContainer,
@@ -60,6 +62,7 @@ import {
 export const VideoView: FC = () => {
   const { id } = useParams()
   const { memberId, signIn, isLoggedIn } = useUser()
+  const [showReportDialog, setShowReportDialog] = useState(false)
   const [reactionFee, setReactionFee] = useState<BN | undefined>()
   const { openSignInDialog } = useDisplaySignInDialog()
   const { openNftPutOnSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement } = useNftActions()
@@ -284,9 +287,30 @@ export const VideoView: FC = () => {
             likes={numberOfLikes}
             dislikes={numberOfDislikes}
           />
-          <CopyLink variant="tertiary" icon={<SvgActionShare />} onClick={handleShare}>
-            Share
-          </CopyLink>
+          <ButtonsContainer>
+            <Button variant="tertiary" icon={<SvgActionShare />} onClick={handleShare}>
+              Share
+            </Button>
+            <ContextMenu
+              placement="bottom-end"
+              items={[
+                {
+                  onClick: () => setShowReportDialog(true),
+                  label: 'Report video',
+                  nodeStart: <SvgActionReplay />,
+                },
+              ]}
+              trigger={<Button icon={<SvgActionMore />} variant="tertiary" size="small" />}
+            />
+            {video?.id && (
+              <ReportModal
+                show={showReportDialog}
+                onClose={() => setShowReportDialog(false)}
+                id={video?.id}
+                type="video"
+              />
+            )}
+          </ButtonsContainer>
         </VideoUtils>
       </TitleContainer>
       <ChannelContainer>

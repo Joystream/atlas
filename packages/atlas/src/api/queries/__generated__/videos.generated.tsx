@@ -2622,6 +2622,16 @@ export type AddVideoViewMutation = {
   addVideoView: { __typename?: 'EntityViewsInfo'; id: string; views: number }
 }
 
+export type ReportVideoMutationVariables = Types.Exact<{
+  videoId: Types.Scalars['ID']
+  rationale: Types.Scalars['String']
+}>
+
+export type ReportVideoMutation = {
+  __typename?: 'Mutation'
+  reportVideo: { __typename?: 'ReportVideoInfo'; id: string; videoId: string }
+}
+
 export const GetBasicVideoDocument = gql`
   query GetBasicVideo($where: VideoWhereUniqueInput!) {
     videoByUniqueInput(where: $where) {
@@ -3154,3 +3164,40 @@ export type AddVideoViewMutationOptions = Apollo.BaseMutationOptions<
   AddVideoViewMutation,
   AddVideoViewMutationVariables
 >
+export const ReportVideoDocument = gql`
+  mutation ReportVideo($videoId: ID!, $rationale: String!) {
+    reportVideo(videoId: $videoId, rationale: $rationale) {
+      id
+      videoId
+    }
+  }
+`
+export type ReportVideoMutationFn = Apollo.MutationFunction<ReportVideoMutation, ReportVideoMutationVariables>
+
+/**
+ * __useReportVideoMutation__
+ *
+ * To run a mutation, you first call `useReportVideoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useReportVideoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [reportVideoMutation, { data, loading, error }] = useReportVideoMutation({
+ *   variables: {
+ *      videoId: // value for 'videoId'
+ *      rationale: // value for 'rationale'
+ *   },
+ * });
+ */
+export function useReportVideoMutation(
+  baseOptions?: Apollo.MutationHookOptions<ReportVideoMutation, ReportVideoMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<ReportVideoMutation, ReportVideoMutationVariables>(ReportVideoDocument, options)
+}
+export type ReportVideoMutationHookResult = ReturnType<typeof useReportVideoMutation>
+export type ReportVideoMutationResult = Apollo.MutationResult<ReportVideoMutation>
+export type ReportVideoMutationOptions = Apollo.BaseMutationOptions<ReportVideoMutation, ReportVideoMutationVariables>
