@@ -12,12 +12,21 @@ import { StyledSvgControlsSettingsOutline, StyledSvgControlsSettingsSolid } from
 
 import { MobileSettings, Setting, Settings } from '../Settings'
 
+export type AvailableTrack = {
+  src: string
+  language: string
+  label: string
+}
+
 type SettingsPopoverProps = {
   boundariesElement: Boundary | null | undefined
   isFullScreen?: boolean
   playerHeightWithoutCustomControls?: number
   onSettingsPopoverToggle: (isSettingsVisible: boolean) => void
   isSettingsPopoverOpened: boolean
+  availableTracks?: AvailableTrack[]
+  onTrackChange: (selectedTrack: AvailableTrack) => void
+  activeTrack?: AvailableTrack
 }
 
 const TOP_OFFSET = sizes(8, true)
@@ -29,6 +38,9 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
   playerHeightWithoutCustomControls = 0,
   onSettingsPopoverToggle,
   isSettingsPopoverOpened,
+  availableTracks,
+  onTrackChange,
+  activeTrack,
 }) => {
   const settingsRef = useRef<HTMLDivElement>(null)
   const popoverRef = useRef<PopoverImperativeHandle>(null)
@@ -51,41 +63,90 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
   const {
     playbackRate,
     autoPlayNext: playNext,
-    actions: { setPlaybackRate, setAutoPlayNext },
+    captionsEnabled,
+    actions: { setPlaybackRate, setAutoPlayNext, setCaptionsLanguage, setCaptionsEnabled },
   } = usePersonalDataStore((state) => state)
 
-  const settings: Setting[] = [
-    {
-      type: 'multi-value',
-      label: 'Speed',
-      value: playbackRate === 1 ? `Normal (${playbackRate}x)` : `${playbackRate}x`,
-      options: AVAILABLE_PLAYBACK_RATE.map((availablePlaybackRate) => ({
-        value: availablePlaybackRate,
-        selected: availablePlaybackRate === playbackRate,
-        onOptionClick: (val) => {
-          if (typeof val === 'number') {
-            setPlaybackRate(val)
-            setOpenedSetting(null)
-          }
-          if (mobile) {
-            handleClose()
-          }
-        },
-        label: availablePlaybackRate === 1 ? `Normal (${availablePlaybackRate}x)` : `${availablePlaybackRate}x`,
-      })),
-    },
-    {
-      type: 'boolean',
-      label: 'Autoplay',
-      value: playNext,
-      onSwitchClick: (value) => {
-        setAutoPlayNext(value)
+  const subtitlesSettings: Setting = {
+    type: 'multi-value',
+    label: 'Subtitles/CC',
+    value: activeTrack?.label || '',
+    options: availableTracks
+      ? [
+          {
+            label: 'Off',
+            value: 'off',
+            selected: !activeTrack,
+            onOptionClick: () => {
+              setCaptionsEnabled(false)
+              onTrackChange({
+                language: 'off',
+                label: 'Off',
+                src: '',
+              })
+              setCaptionsLanguage(null)
+              if (mobile) {
+                handleClose()
+              }
+            },
+          },
+          ...availableTracks.map((track) => ({
+            label: track.label,
+            value: track.language,
+            selected: activeTrack?.language === track.language,
+            onOptionClick: () => {
+              onTrackChange(track)
+              setCaptionsLanguage(track.language)
+              if (!captionsEnabled) {
+                setCaptionsEnabled(true)
+              }
+              if (mobile) {
+                handleClose()
+              }
+            },
+          })),
+        ]
+      : [],
+  }
+
+  const speedSettings: Setting = {
+    type: 'multi-value',
+    label: 'Speed',
+    value: playbackRate === 1 ? `Normal (${playbackRate}x)` : `${playbackRate}x`,
+    options: AVAILABLE_PLAYBACK_RATE.map((availablePlaybackRate) => ({
+      value: availablePlaybackRate,
+      selected: availablePlaybackRate === playbackRate,
+      onOptionClick: (val) => {
+        if (typeof val === 'number') {
+          setPlaybackRate(val)
+          setOpenedSetting(null)
+        }
         if (mobile) {
           handleClose()
         }
       },
+      label: availablePlaybackRate === 1 ? `Normal (${availablePlaybackRate}x)` : `${availablePlaybackRate}x`,
+    })),
+  }
+
+  const autoPlaySettings: Setting = {
+    type: 'boolean',
+    label: 'Autoplay',
+    value: playNext,
+    onSwitchClick: (value) => {
+      setAutoPlayNext(value)
+      if (mobile) {
+        handleClose()
+      }
     },
-  ]
+  }
+
+  let settings: Setting[] = [speedSettings, autoPlaySettings]
+
+  if (availableTracks) {
+    settings = [speedSettings, subtitlesSettings, autoPlaySettings]
+  }
+
   return (
     <span>
       <Popover

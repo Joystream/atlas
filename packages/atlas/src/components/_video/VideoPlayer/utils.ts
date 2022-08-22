@@ -33,7 +33,8 @@ export const hotkeysHandler = (
   playerInstance: VideoJsPlayer,
   playVideo: (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => Promise<void>,
   pauseVideo: (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => void,
-  toggleCinematicView: () => void
+  toggleCinematicView: () => void,
+  toggleCaptions: () => void
 ) => {
   if (!playerInstance) {
     return
@@ -113,6 +114,9 @@ export const hotkeysHandler = (
       }
       return
     case 'KeyC':
+      toggleCaptions()
+      return
+    case 'KeyT':
       !playerInstance.isFullscreen() && toggleCinematicView()
       return
     default:
