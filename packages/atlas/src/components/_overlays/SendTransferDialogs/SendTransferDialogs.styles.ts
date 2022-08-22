@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { Button } from '@/components/_buttons/Button'
 import { sizes } from '@/styles'
 
 export const VerticallyCenteredDiv = styled.div`
@@ -35,8 +36,6 @@ export const FormFieldsWrapper = styled.div`
   gap: ${sizes(6)};
 `
 
-export const LabelFlexWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+export const StyledMaxButton = styled(Button)`
+  margin-left: auto;
 `
