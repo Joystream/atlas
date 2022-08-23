@@ -141,11 +141,17 @@ export const useBucketsConfigForNewChannel = () => {
   return getBucketsConfigForNewChannel
 }
 
-export const useSubscribeAccountBalance = (controllerAccount?: string | null) => {
+type UseSubscribeAccountBalanceOpts = {
+  isRewardAccount: true
+}
+export const useSubscribeAccountBalance = (
+  controllerAccount?: string | null,
+  opts?: UseSubscribeAccountBalanceOpts
+) => {
   const [accountBalance, setAccountBalance] = useState<BN | undefined>()
   const [lockedAccountBalance, setLockedAccountBalance] = useState<BN | undefined>()
   const { activeMembership } = useUser()
-  const { joystream, proxyCallback } = useJoystream()
+  const { joystream, proxyCallback, chainState } = useJoystream()
 
   useEffect(() => {
     if (!activeMembership?.controllerAccount || !joystream) {
@@ -158,6 +164,13 @@ export const useSubscribeAccountBalance = (controllerAccount?: string | null) =>
         controllerAccount || activeMembership.controllerAccount,
         proxyCallback(({ availableBalance, lockedBalance }) => {
           setLockedAccountBalance(new BN(lockedBalance))
+          if (opts?.isRewardAccount) {
+            // substract existential deposit from channel balance
+            // TODO in future existentialDeposit will be replaced with channel state bloat bond
+            const rewardBalance = new BN(availableBalance).sub(chainState.existentialDeposit)
+            setAccountBalance(rewardBalance)
+            return
+          }
           setAccountBalance(new BN(availableBalance))
         })
       )
@@ -167,7 +180,14 @@ export const useSubscribeAccountBalance = (controllerAccount?: string | null) =>
     return () => {
       unsubscribe?.()
     }
-  }, [activeMembership, controllerAccount, joystream, proxyCallback])
+  }, [
+    activeMembership,
+    chainState.existentialDeposit,
+    controllerAccount,
+    joystream,
+    opts?.isRewardAccount,
+    proxyCallback,
+  ])
 
   return { accountBalance, lockedAccountBalance }
 }

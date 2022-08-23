@@ -163,8 +163,10 @@ export class JoystreamLib {
     const asPercentage = (raw: Codec) => {
       return asNumber(raw) / PERBILL_ONE_PERCENT
     }
+    const existentialDeposit = this.api.consts.balances.existentialDeposit
 
     return {
+      existentialDeposit: asStringifiedBN(existentialDeposit),
       dataObjectPerMegabyteFee: asStringifiedBN(dataObjectPerMegabyteFee),
       dataObjectStateBloatBondValue: asStringifiedBN(dataObjectStateBloatBondValue),
       videoStateBloatBondValue: asStringifiedBN(videoStateBloatBondValue),
