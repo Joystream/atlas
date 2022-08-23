@@ -62,9 +62,9 @@ export const VideoView: FC = () => {
   const { memberId, signIn, isLoggedIn } = useUser()
   const [reactionFee, setReactionFee] = useState<BN | undefined>()
   const { openSignInDialog } = useDisplaySignInDialog()
-  const { openNftPutOnSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement } = useNftActions()
+  const { openNftPutOnSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement, cancelNftSale } =
+    useNftActions()
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
-  const { openRemoveFromSale } = useNftActions()
   const { loading, video, error } = useFullVideo(
     id ?? '',
     {
@@ -239,7 +239,7 @@ export const VideoView: FC = () => {
         <NftWidget
           {...nftWidgetProps}
           onNftPutOnSale={() => id && openNftPutOnSale(id)}
-          onNftCancelSale={() => id && nftWidgetProps.saleType && openRemoveFromSale(id, nftWidgetProps.saleType)}
+          onNftCancelSale={() => id && nftWidgetProps.saleType && cancelNftSale(id, nftWidgetProps.saleType)}
           onNftAcceptBid={() => id && openNftAcceptBid(id)}
           onNftChangePrice={() => id && openNftChangePrice(id)}
           onNftPurchase={() => id && openNftPurchase(id)}

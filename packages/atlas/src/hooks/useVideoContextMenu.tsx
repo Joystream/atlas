@@ -192,8 +192,7 @@ export const useVideoContextMenu = ({
             ? [
                 {
                   nodeStart: <SvgActionNotForSale />,
-                  onClick: () =>
-                    nftState?.saleType && nftActions?.openRemoveFromSale(videoId || '', nftState?.saleType),
+                  onClick: () => nftState?.saleType && nftActions?.cancelNftSale(videoId || '', nftState?.saleType),
                   label: 'Remove from sale',
                   destructive: true,
                 },

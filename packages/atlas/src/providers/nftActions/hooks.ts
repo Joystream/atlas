@@ -2,7 +2,6 @@ import BN from 'bn.js'
 import { useCallback, useContext } from 'react'
 
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
-import { NftSaleType } from '@/joystream-lib'
 
 import { NftActionsContext } from './provider'
 
@@ -30,7 +29,6 @@ export const useNftActions = () => {
     closeNftAction,
     cancelNftSale,
     changeNftPrice,
-    setCurrentSaleType,
     setWithdrawData,
   } = ctx
 
@@ -91,15 +89,6 @@ export const useNftActions = () => {
     [setCurrentAction, setCurrentNftId]
   )
 
-  const openRemoveFromSale = useCallback(
-    (nftId: string, saleType: NftSaleType) => {
-      setCurrentNftId(nftId)
-      setCurrentAction('cancel-sale')
-      setCurrentSaleType(saleType)
-    },
-    [setCurrentAction, setCurrentNftId, setCurrentSaleType]
-  )
-
   const openWithdrawBid = useCallback(
     (nftId: string, bid?: BN, createdAt?: Date) => {
       setCurrentNftId(nftId)
@@ -119,7 +108,6 @@ export const useNftActions = () => {
     closeNftAction,
     openNftAcceptBid,
     openNftChangePrice,
-    openRemoveFromSale,
     cancelNftSale,
     changeNftPrice,
     openWithdrawBid,
