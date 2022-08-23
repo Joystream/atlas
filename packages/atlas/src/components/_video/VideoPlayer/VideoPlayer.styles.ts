@@ -32,9 +32,10 @@ const HOVERED_SUBTITLES_POSITION = '5.25em'
 const HOVERED_CONTROLS_INDICATOR_POSITION = '-5em'
 
 type ContainerProps = {
-  isFullScreen?: boolean
+  isFullScreen: boolean
   isSettingsPopoverOpened?: boolean
   elevated?: boolean
+  captionsEnabled: boolean
 }
 type CustomControlsProps = {
   elevated?: boolean
@@ -476,9 +477,7 @@ export const Container = styled.div<ContainerProps>`
     /* stylelint-disable no-descending-specificity */
 
     ${ControlsIndicatorWrapper} {
-      transform: translateY(
-        ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? HOVERED_CONTROLS_INDICATOR_POSITION : '0')}
-      );
+      transform: translateY(${({ captionsEnabled }) => (captionsEnabled ? HOVERED_CONTROLS_INDICATOR_POSITION : '0')});
     }
 
     .vjs-text-track-display {
@@ -527,7 +526,7 @@ export const Container = styled.div<ContainerProps>`
 
       ${ControlsIndicatorWrapper} {
         transform: translateY(
-          ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? HOVERED_CONTROLS_INDICATOR_POSITION : 0)}
+          ${({ captionsEnabled }) => (captionsEnabled ? HOVERED_CONTROLS_INDICATOR_POSITION : '0')}
         );
       }
 
@@ -575,7 +574,7 @@ export const Container = styled.div<ContainerProps>`
 
       ${ControlsIndicatorWrapper} {
         transform: translateY(
-          ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? HOVERED_CONTROLS_INDICATOR_POSITION : 0)}
+          ${({ captionsEnabled }) => (captionsEnabled ? HOVERED_CONTROLS_INDICATOR_POSITION : '0')}
         );
       }
 

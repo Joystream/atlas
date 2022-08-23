@@ -65,13 +65,7 @@ export const ControlsIndicator: FC<ControlsIndicatorProps> = ({ player, isLoadin
       // This setTimeout is needed to get current value from `player.volume()`
       // if we omit this we'll get stale results
       timeout = window.setTimeout(() => {
-        const indicator = createIndicator(
-          e.type as VideoEvent,
-          player.volume(),
-          player.muted(),
-          selectedLanguage,
-          player.playbackRate()
-        )
+        const indicator = createIndicator(e.type as VideoEvent, player, selectedLanguage)
         if (indicator) {
           setIndicator({ ...indicator, isVisible: true })
         }
@@ -120,13 +114,13 @@ export const ControlsIndicator: FC<ControlsIndicatorProps> = ({ player, isLoadin
   )
 }
 
-const createIndicator = (
-  type: VideoEvent | null,
-  playerVolume: number,
-  playerMuted: boolean,
-  captionsLanguage: string | null,
-  playbackRate: number
-) => {
+const createIndicator = (type: VideoEvent | null, player: VideoJsPlayer | null, captionsLanguage: string | null) => {
+  if (!player) {
+    return
+  }
+  const playerVolume = player.volume()
+  const playerMuted = player.muted()
+  const playbackRate = player.playbackRate()
   const formattedVolume = Math.floor(playerVolume * 100) + '%'
   const isMuted = playerMuted || !Number(playerVolume.toFixed(2))
 

@@ -677,7 +677,12 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   const playNextDisabled = isPlayNextDisabled || !autoPlayNext || isShareDialogOpen || isSharingOverlayOpen
 
   return (
-    <Container isFullScreen={isFullScreen} className={className} isSettingsPopoverOpened={isSettingsPopoverOpened}>
+    <Container
+      isFullScreen={isFullScreen}
+      captionsEnabled={captionsEnabled}
+      className={className}
+      isSettingsPopoverOpened={isSettingsPopoverOpened}
+    >
       <div data-vjs-player onClick={() => handlePlayPause()}>
         {needsManualPlay && (
           <BigPlayButtonContainer
