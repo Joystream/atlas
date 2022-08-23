@@ -6,7 +6,7 @@ const SvgActionAddImage = forwardRef((props: SVGProps<SVGSVGElement>, ref: Ref<S
     <path
       fillRule="evenodd"
       clipRule="evenodd"
-      d="M2 3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3Zm5 1h2v3h3v2H9v3H7V9H4V7h3V4Z"
+      d="M11.667 4 11 2H5l-.667 2H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-2.333ZM7 5h2v3h3v2H9v3H7v-3H4V8h3V5Z"
       fill="#F4F6F8"
     />
   </svg>
