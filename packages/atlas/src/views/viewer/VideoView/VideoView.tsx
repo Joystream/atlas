@@ -14,7 +14,7 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { CallToActionButton } from '@/components/_buttons/CallToActionButton'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
-import { SvgActionMore, SvgActionReplay, SvgActionShare } from '@/components/_icons'
+import { SvgActionFlag, SvgActionMore, SvgActionShare } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NftWidget, useNftWidget } from '@/components/_nft/NftWidget'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
@@ -297,16 +297,16 @@ export const VideoView: FC = () => {
                 {
                   onClick: () => setShowReportDialog(true),
                   label: 'Report video',
-                  nodeStart: <SvgActionReplay />,
+                  nodeStart: <SvgActionFlag />,
                 },
               ]}
-              trigger={<Button icon={<SvgActionMore />} variant="tertiary" size="small" />}
+              trigger={<Button icon={<SvgActionMore />} variant="tertiary" size="medium" />}
             />
             {video?.id && (
               <ReportModal
                 show={showReportDialog}
                 onClose={() => setShowReportDialog(false)}
-                id={video?.id}
+                entityId={video?.id}
                 type="video"
               />
             )}

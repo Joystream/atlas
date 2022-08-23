@@ -15,7 +15,9 @@ import { ViewWrapper } from '@/components/ViewWrapper'
 import { Button } from '@/components/_buttons/Button'
 import { ChannelCover } from '@/components/_channel/ChannelCover'
 import { CollectorsBox } from '@/components/_channel/CollectorsBox'
-import { SvgActionCheck, SvgActionFilters, SvgActionPlus } from '@/components/_icons'
+import { SvgActionCheck, SvgActionFilters, SvgActionFlag, SvgActionMore, SvgActionPlus } from '@/components/_icons'
+import { ContextMenu } from '@/components/_overlays/ContextMenu'
+import { ReportModal } from '@/components/_overlays/ReportModal'
 import { absoluteRoutes } from '@/config/routes'
 import { NFT_SORT_OPTIONS, VIDEO_SORT_OPTIONS } from '@/config/sorting'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
@@ -56,6 +58,7 @@ export const ChannelView: FC = () => {
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
   const videoRows = useVideoGridRows('main')
   const navigate = useNavigate()
+  const [showReportDialog, setShowReportDialog] = useState(false)
 
   const tilesPerPage = videoRows * tilesPerRow
 
@@ -262,6 +265,25 @@ export const ChannelView: FC = () => {
             >
               {isFollowing ? 'Unfollow' : 'Follow'}
             </StyledButton>
+            <ContextMenu
+              placement="bottom-end"
+              items={[
+                {
+                  onClick: () => setShowReportDialog(true),
+                  label: 'Report channel',
+                  nodeStart: <SvgActionFlag />,
+                },
+              ]}
+              trigger={<Button icon={<SvgActionMore />} variant="tertiary" size="large" />}
+            />
+            {channel?.id && (
+              <ReportModal
+                show={showReportDialog}
+                onClose={() => setShowReportDialog(false)}
+                entityId={channel?.id}
+                type="channel"
+              />
+            )}
           </StyledButtonContainer>
         </TitleSection>
         <TabsWrapper isFiltersOpen={isFiltersOpen}>

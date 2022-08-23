@@ -9,13 +9,16 @@ import { useSnackbar } from '@/providers/snackbars'
 import { DialogModal } from '../DialogModal'
 
 type ReportModalProps = {
-  id: string
+  /**
+   * @param entityId __channel.id__ or __video.id__
+   */
+  entityId: string
   show: boolean
   onClose: () => void
   type: 'video' | 'channel'
 }
 
-export const ReportModal: FC<ReportModalProps> = ({ id, show, onClose, type }) => {
+export const ReportModal: FC<ReportModalProps> = ({ entityId, show, onClose, type }) => {
   const [reportVideo, { loading: reportVideoLoading }] = useReportVideoMutation()
   const { displaySnackbar } = useSnackbar()
   const {
@@ -30,9 +33,12 @@ export const ReportModal: FC<ReportModalProps> = ({ id, show, onClose, type }) =
         await reportVideo({
           variables: {
             rationale: rationale,
-            videoId: id,
+            videoId: entityId,
           },
         })
+      }
+      if (type === 'channel') {
+        // todo handle report channel here
       }
       onClose()
       displaySnackbar({
