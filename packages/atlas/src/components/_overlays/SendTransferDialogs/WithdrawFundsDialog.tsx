@@ -185,10 +185,21 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
           </VerticallyCenteredDiv>
         </SummaryRow>
         <SummaryRow>
-          <Text as="span" variant="t100" color="colorText">
+          <Text
+            as="span"
+            variant="t100"
+            color={errors.amount?.type === 'memberBalance' ? 'colorTextError' : 'colorText'}
+          >
             Destination account balance
           </Text>
-          <NumberFormat as="span" format="short" variant="t100" color="colorText" value={accountBalance} />
+          <NumberFormat
+            as="span"
+            format="short"
+            variant="t100"
+            withToken
+            color={errors.amount?.type === 'memberBalance' ? 'colorTextError' : 'colorText'}
+            value={accountBalance}
+          />
         </SummaryRow>
       </Summary>
     </DialogModal>
