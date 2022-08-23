@@ -25,7 +25,7 @@ const ConfirmationModalContext = createContext<undefined | ConfirmationModalCont
 ConfirmationModalContext.displayName = 'ConfirmationModalContext'
 
 type FeeProps = {
-  fee: {
+  fee?: {
     methodName: TxMethodName
     args?: Parameters<JoystreamLibExtrinsics[TxMethodName]>
   }
