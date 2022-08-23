@@ -91,14 +91,11 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
   const channelBalanceInUsd = convertHapiToUSD(channelBalance)
 
   const handleMaxClick = async () => {
-    if (fullFee.gte(accountBalance)) {
-      return
-    }
     const value = Math.floor(hapiBnToTokenNumber(channelBalance) * 100) / 100
     setValue('amount', value, {
       shouldTouch: true,
       shouldDirty: true,
-      shouldValidate: true,
+      shouldValidate: false,
     })
   }
 
@@ -145,6 +142,9 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
           rules={{
             validate: {
               channelBalance: (value) => {
+                if (!value) {
+                  return 'Enter amount to transfer.'
+                }
                 if (value && tokenNumberToHapiBn(value).gt(channelBalance)) {
                   return 'Not enough tokens in channel balance.'
                 }

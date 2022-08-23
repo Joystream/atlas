@@ -28,7 +28,7 @@ const _TokenInput: ForwardRefRenderFunction<HTMLInputElement, TokenInputProps> =
     const valueStr = value?.toString() || ''
     const sanitizedInternalValue = parseFloat(internalValue).toString()
     if (valueStr !== sanitizedInternalValue) {
-      setInternalValue(value ? value.toString() : '')
+      setInternalValue(value != null ? value.toString() : '')
     }
   }, [internalValue, value])
 

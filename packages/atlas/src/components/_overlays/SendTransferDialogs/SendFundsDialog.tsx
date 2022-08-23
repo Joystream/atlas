@@ -114,14 +114,11 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
   }
 
   const handleMaxClick = async () => {
-    if (fullFee.gte(accountBalance)) {
-      return
-    }
     const value = Math.floor(hapiBnToTokenNumber(accountBalance) * 100) / 100
     setValue('amount', value, {
       shouldTouch: true,
       shouldDirty: true,
-      shouldValidate: true,
+      shouldValidate: false,
     })
   }
   const accountBalanceInUsd = convertHapiToUSD(accountBalance)
