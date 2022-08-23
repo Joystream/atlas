@@ -128,7 +128,9 @@ export class JoystreamLibExtrinsics {
 
       return { events, block: blockHeader.number.toNumber(), getEventData, transactionHash }
     } catch (error) {
-      if (error.name === 'RpcError' && error?.data === 'Inability to pay some fees (e.g. account balance too low)') {
+      // 1010 error.code means invalid transaction, more substrate errors here:
+      // https://github.com/paritytech/substrate/blob/2951d340841523f6897e55e7a613b0fd0e1c7380/primitives/runtime/src/transaction_validity.rs#L100
+      if (error.name === 'RpcError' && error.code === 1010 && error?.data.includes('balance too low')) {
         throw new JoystreamLibError({
           name: 'AccountBalanceTooLow',
           details: error,

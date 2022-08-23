@@ -201,7 +201,17 @@ export const useTransaction = (): HandleTransactionFn => {
         const errorName = error.name as JoystreamLibErrorType
 
         if (errorName === 'AccountBalanceTooLow') {
-          updateStatus(ExtrinsicStatus.Error, ErrorCode.InsufficientBalance)
+          if (minimized) {
+            removeTransaction(transactionId)
+            displaySnackbar({
+              title: 'Insufficient balance to perform this action.',
+              description: minimized.errorMessage,
+              iconType: 'error',
+              timeout: MINIMIZED_SIGN_CANCELLED_SNACKBAR_TIMEOUT,
+            })
+          } else {
+            updateStatus(ExtrinsicStatus.Error, ErrorCode.InsufficientBalance)
+          }
           return false
         }
 
