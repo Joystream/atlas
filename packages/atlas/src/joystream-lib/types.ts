@@ -1,4 +1,4 @@
-import { IChannelMetadata, IMembershipMetadata, IVideoMetadata } from '@joystream/metadata-protobuf'
+import { IChannelMetadata, IMembershipMetadata, ISubtitleMetadata, IVideoMetadata } from '@joystream/metadata-protobuf'
 import { AugmentedEvent, AugmentedEvents } from '@polkadot/api/types/events'
 import { GenericEvent } from '@polkadot/types'
 
@@ -14,19 +14,20 @@ export type VideoId = string
 export type DataObjectMetadata = {
   size: number
   ipfsHash: string
-  replacedDataObjectId?: string
+  id?: string
 }
 
-type VideoAssetsKey = 'thumbnailPhoto' | 'media'
 export type VideoAssets<T> = {
-  [key in VideoAssetsKey]?: T
+  thumbnailPhoto?: T
+  media?: T
+  subtitles?: T[]
 }
 export type VideoInputAssets = VideoAssets<DataObjectMetadata>
 export type VideoAssetsIds = VideoAssets<string>
 
-type ChannelAssetsKey = 'coverPhoto' | 'avatarPhoto'
 export type ChannelAssets<T> = {
-  [key in ChannelAssetsKey]?: T
+  coverPhoto?: T
+  avatarPhoto?: T
 }
 export type ChannelInputAssets = ChannelAssets<DataObjectMetadata>
 export type ChannelInputBuckets = {
@@ -54,14 +55,18 @@ export type ExtrinsicResult<T = undefined> = T extends undefined
   ? { block: number; transactionHash: string; metaprotocol: true } & T
   : { block: number } & T
 
+type VideoInputMetadataSubtitle = Omit<ISubtitleMetadata, 'newAsset'> & {
+  id: string
+}
+
 export type VideoInputMetadata = Omit<
   IVideoMetadata,
-  'thumbnailPhoto' | 'video' | 'personsList' | 'mediaType' | 'publishedBeforeJoystream' | 'category'
+  'thumbnailPhoto' | 'video' | 'personsList' | 'mediaType' | 'publishedBeforeJoystream' | 'subtitles'
 > & {
   publishedBeforeJoystream?: string
   mimeMediaType?: string
-  category?: number
   nft?: NftIssuanceInputMetadata
+  subtitles?: VideoInputMetadataSubtitle[]
 }
 export type ChannelInputMetadata = Omit<IChannelMetadata, 'coverPhoto' | 'avatarPhoto' | 'category'> & {
   ownerAccount: AccountId

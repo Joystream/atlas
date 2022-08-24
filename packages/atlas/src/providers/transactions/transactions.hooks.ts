@@ -286,7 +286,7 @@ const useMetaprotocolTransactionStatus = () => {
     async (txHash: string): Promise<MetaprotocolTransactionSuccessFieldsFragment> => {
       let status = await getTransactionStatus(txHash)
 
-      if (!status || status.__typename === 'MetaprotocolTransactionPending') {
+      if (!status) {
         for (let i = 0; i <= METAPROTOCOL_TX_STATUS_RETRIES; i++) {
           ConsoleLogger.warn(`No transaction status event found - retries: ${i + 1}/${METAPROTOCOL_TX_STATUS_RETRIES}`)
           await wait(METAPROTOCOL_TX_STATUS_RETRIES_TIMEOUT)

@@ -157,6 +157,16 @@ fragment FullVideoFields on Video {
   thumbnailPhoto {
     ...StorageDataObjectFields
   }
+  subtitles {
+    asset {
+      ...StorageDataObjectFields
+    }
+    language {
+      iso
+    }
+    mimeType
+    type
+  }
   channel {
     ...FullChannelFields
   }

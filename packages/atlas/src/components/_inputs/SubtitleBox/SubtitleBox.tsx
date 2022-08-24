@@ -6,6 +6,7 @@ import { Button } from '@/components/_buttons/Button'
 import { SvgActionDownload, SvgActionMore, SvgActionTrash } from '@/components/_icons'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { useConfirmationModal } from '@/providers/confirmationModal'
+import { SubtitleInput } from '@/types/subtitles'
 
 import {
   InvisibleInput,
@@ -15,31 +16,28 @@ import {
   SubtitlesFileName,
 } from './SubtitleBox.styles'
 
-export type Subtitles = {
-  language: string
-  type: 'closed-captions' | 'subtitles'
-  file?: File
-}
-
 export type SubtitleBoxProps = {
   className?: string
   onChange?: ChangeEventHandler<HTMLInputElement>
   onRemove?: () => void
   onDownload?: () => void
-} & Subtitles
+} & SubtitleInput
 
 export const SubtitleBox: FC<SubtitleBoxProps> = ({
   className,
-  language,
+  languageIso,
   type,
   file,
+  assetId,
   onChange,
   onRemove,
   onDownload,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null)
   const [openUnsuportedFileDialog, closeUnsuportedFileDialog] = useConfirmationModal()
+  const hasFile = !!file || !!assetId
   const contexMenuItems: ListItemProps[] = [
+    // TODO: allow downloading already published subtitles
     ...(file
       ? [
           {
@@ -62,7 +60,10 @@ export const SubtitleBox: FC<SubtitleBoxProps> = ({
   ]
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.currentTarget.files?.[0]?.type !== 'text/vtt') {
+    if (!e.currentTarget.files || !e.currentTarget.files.length) {
+      return
+    }
+    if (e.currentTarget.files[0].type !== 'text/vtt') {
       openUnsuportedFileDialog({
         title: 'File format unsupported',
         description:
@@ -90,14 +91,14 @@ export const SubtitleBox: FC<SubtitleBoxProps> = ({
     <SubtitleBoxWrapper className={className}>
       <SubtitleDetails>
         <Text variant="t100-strong" as="p">
-          {language} {type === 'closed-captions' ? '(CC)' : ''}
+          {languageIso} {type === 'closed-captions' ? '(CC)' : ''}
         </Text>
         <SubtitlesFileName variant="t100" as="p" color="colorText">
-          {file ? file.name : 'Add subtitles file'}
+          {!hasFile ? 'Add subtitles file' : file ? file.name : 'subs.vtt'}
         </SubtitlesFileName>
-        {file ? <StyledSvgActionCheck /> : null}
+        {hasFile ? <StyledSvgActionCheck /> : null}
       </SubtitleDetails>
-      <Button size="small" onClick={() => inputRef.current?.click()} variant={file ? 'secondary' : 'primary'}>
+      <Button size="small" onClick={() => inputRef.current?.click()} variant={hasFile ? 'secondary' : 'primary'}>
         Select file
       </Button>
       <InvisibleInput ref={inputRef} type="file" accept=".vtt" onChange={handleChange} />

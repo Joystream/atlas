@@ -6,6 +6,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { CircularProgress } from '@/components/CircularProgress'
 import { Text } from '@/components/Text'
 import {
+  SvgActionClosedCaptions,
   SvgActionImageFile,
   SvgActionUpload,
   SvgActionVideoFile,
@@ -123,7 +124,6 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
     [asset, openDifferentFileDialog, setUploadStatus, startFileUpload]
   )
 
-  const isVideo = asset.type === 'video'
   const {
     getRootProps,
     getInputProps,
@@ -135,11 +135,16 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
     noClick: true,
     noKeyboard: true,
     accept: {
-      [isVideo ? 'video/*' : 'image/*']: [],
+      [asset.type === 'video' ? 'video/*' : asset.type === 'subtitle' ? 'text/vtt' : 'image/*']: [],
     },
   })
 
-  const fileTypeText = isVideo ? 'Video file' : `${asset.type.charAt(0).toUpperCase() + asset.type.slice(1)} image`
+  const fileTypeText =
+    asset.type === 'video'
+      ? 'Video file'
+      : asset.type === 'subtitle'
+      ? 'Subtitle'
+      : `${asset.type.charAt(0).toUpperCase() + asset.type.slice(1)} image`
 
   const handleChangeHost = () => {
     startFileUpload(
@@ -194,7 +199,7 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
     thumbnail: thumbnailDialogRef,
   }
   const reselectFile = () => {
-    if (asset.type === 'video') {
+    if (asset.type === 'video' || asset.type === 'subtitle') {
       openFileSelect()
       return
     }
@@ -271,7 +276,13 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
           </FileStatusContainer>
           <FileInfo size={size}>
             <FileInfoType warning={isReconnecting && size === 'compact'}>
-              {isVideo ? <SvgActionVideoFile /> : <SvgActionImageFile />}
+              {asset.type === 'video' ? (
+                <SvgActionVideoFile />
+              ) : asset.type === 'subtitle' ? (
+                <SvgActionClosedCaptions />
+              ) : (
+                <SvgActionImageFile />
+              )}
               <Text as="span" variant="t200">
                 {fileTypeText}
               </Text>

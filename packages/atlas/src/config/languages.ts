@@ -2,7 +2,7 @@ export const languages = [
   { name: 'English', value: 'en' },
   { name: 'Arabic', value: 'ar' },
   { name: 'Chinese', value: 'zh' },
-  { name: 'Danish', value: 'dk' },
+  { name: 'Danish', value: 'da' },
   { name: 'Dutch', value: 'nl' },
   { name: 'Estonian', value: 'et' },
   { name: 'Finnish', value: 'fi' },

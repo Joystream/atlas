@@ -6,7 +6,7 @@ export default {
   title: 'inputs/SubtitleBox',
   component: SubtitleBox,
   args: {
-    language: 'Spanish',
+    languageIso: 'Spanish',
     subtitles: '[Spanish] How_to_peel_potatoes.srt ',
   },
 } as Meta<SubtitleBoxProps>

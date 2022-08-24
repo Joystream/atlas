@@ -1,9 +1,9 @@
 import BN from 'bn.js'
 
 import { ImageInputMetadata, MediaInputMetadata } from '@/components/_inputs/MultiFileSelect'
-import { Subtitles } from '@/components/_inputs/SubtitleBox'
 import { NftIssuanceInputMetadata, VideoAssets, VideoInputMetadata } from '@/joystream-lib'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
+import { SubtitleInput } from '@/types/subtitles'
 
 export type VideoWorkspaceVideoAssets = {
   video: {
@@ -44,7 +44,7 @@ export type VideoWorkspaceVideoFormFields = {
   nftRoyaltiesPercent?: number
   enableComments?: boolean
   publishedBeforeJoystream: Date | null
-  subtitlesArray: Subtitles[] | null
+  subtitlesArray: SubtitleInput[] | null
   assets: VideoWorkspaceVideoAssets
 }
 

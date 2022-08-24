@@ -1,5 +1,6 @@
 import {
   ChannelMetadata,
+  ContentMetadata,
   IChannelMetadata,
   ILicense,
   IMediaType,
@@ -7,13 +8,11 @@ import {
   IPublishedBeforeJoystream,
   IVideoMetadata,
   MembershipMetadata,
-  VideoMetadata,
 } from '@joystream/metadata-protobuf'
 import { createType } from '@joystream/types'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { Bytes, Option } from '@polkadot/types'
 import { PalletContentStorageAssetsRecord } from '@polkadot/types/lookup'
-import Long from 'long'
 
 import { prepareAssetsForExtrinsic } from './helpers'
 import {
@@ -31,10 +30,46 @@ type ParseExtrinsicInputFn<TMetadata, TAssets> = (
   inputAssets: TAssets
 ) => Promise<[Option<Bytes>, TAssets extends undefined ? undefined : Option<PalletContentStorageAssetsRecord>]>
 
+const VIDEO_ASSETS_ORDER: (keyof VideoInputAssets)[] = ['media', 'thumbnailPhoto', 'subtitles']
+
 export const wrapMetadata = (metadata: Uint8Array): Option<Bytes> => {
   const metadataRaw = createType('Raw', metadata)
   const metadataBytes = createType('Bytes', metadataRaw)
   return createType('Option<Bytes>', metadataBytes)
+}
+
+type VideoAssetIndexMap = {
+  media?: number
+  thumbnailPhoto?: number
+  subtitles: Record<string, number>
+}
+
+const prepareVideoAssets = (inputAssets: VideoInputAssets): [DataObjectMetadata[], VideoAssetIndexMap] => {
+  let assetsCounter = 0
+  const dataObjectsMetadata: DataObjectMetadata[] = []
+  const indexMap = { subtitles: {} } as VideoAssetIndexMap
+
+  VIDEO_ASSETS_ORDER.forEach((assetKey) => {
+    const entry = inputAssets[assetKey]
+    if (!entry) {
+      return
+    }
+
+    if (assetKey === 'subtitles') {
+      const arrayEntry = entry as DataObjectMetadata[]
+      arrayEntry.forEach((asset) => {
+        indexMap[assetKey][asset.id || ''] = assetsCounter
+        dataObjectsMetadata.push(asset)
+        assetsCounter++
+      })
+    } else {
+      const singleEntry = entry as DataObjectMetadata
+      indexMap[assetKey] = assetsCounter
+      dataObjectsMetadata.push(singleEntry)
+      assetsCounter++
+    }
+  })
+  return [dataObjectsMetadata, indexMap]
 }
 
 export const parseVideoExtrinsicInput: ParseExtrinsicInputFn<VideoInputMetadata, VideoInputAssets> = async (
@@ -44,16 +79,20 @@ export const parseVideoExtrinsicInput: ParseExtrinsicInputFn<VideoInputMetadata,
 ) => {
   const properties: IVideoMetadata = {}
 
-  // prepare data objects and assign proper indexes in metadata
-  const videoDataObjectsMetadata: DataObjectMetadata[] = [
-    ...(inputAssets.media ? [inputAssets.media] : []),
-    ...(inputAssets.thumbnailPhoto ? [inputAssets.thumbnailPhoto] : []),
-  ]
-  if (inputAssets.media) {
-    properties.video = 0
+  const [videoDataObjectsMetadata, videoAssetsIndexMap] = prepareVideoAssets(inputAssets)
+
+  if (videoAssetsIndexMap.media != null) {
+    properties.video = videoAssetsIndexMap.media
   }
-  if (inputAssets.thumbnailPhoto) {
-    properties.thumbnailPhoto = inputAssets.media ? 1 : 0
+  if (videoAssetsIndexMap.thumbnailPhoto != null) {
+    properties.thumbnailPhoto = videoAssetsIndexMap.thumbnailPhoto
+  }
+  properties.subtitles = inputMetadata.subtitles?.map((subtitle) => ({
+    ...subtitle,
+    newAsset: videoAssetsIndexMap.subtitles[subtitle.id],
+  }))
+  if (inputMetadata.clearSubtitles) {
+    properties.clearSubtitles = true
   }
 
   if (inputMetadata.title != null) {
@@ -72,7 +111,7 @@ export const parseVideoExtrinsicInput: ParseExtrinsicInputFn<VideoInputMetadata,
     properties.isExplicit = inputMetadata.isExplicit
   }
   if (inputMetadata.category != null) {
-    properties.category = Long.fromInt(inputMetadata.category)
+    properties.category = inputMetadata.category
   }
   if (inputMetadata.duration != null) {
     properties.duration = inputMetadata.duration
@@ -118,7 +157,7 @@ export const parseVideoExtrinsicInput: ParseExtrinsicInputFn<VideoInputMetadata,
     properties.publishedBeforeJoystream = videoPublishedBeforeProperties
   }
 
-  const metadata = wrapMetadata(VideoMetadata.encode(properties).finish())
+  const metadata = wrapMetadata(ContentMetadata.encode({ videoMetadata: properties }).finish())
   const storageAssets = await prepareAssetsForExtrinsic(api, videoDataObjectsMetadata)
 
   return [metadata, storageAssets]

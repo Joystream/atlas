@@ -17,6 +17,7 @@ import { useStartFileUpload } from '@/providers/uploadsManager'
 import { useAuthorizedUser } from '@/providers/user'
 import { VideoFormData, useVideoWorkspace, useVideoWorkspaceData } from '@/providers/videoWorkspace'
 import { writeVideoDataInCache } from '@/utils/cachingAssets'
+import { createLookup } from '@/utils/data'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 export const useHandleVideoWorkspaceSubmit = () => {
@@ -50,13 +51,16 @@ export const useHandleVideoWorkspaceSubmit = () => {
       const isNew = !isEdit
 
       const assets: VideoInputAssets = {}
+      const removedAssetsIds: string[] = []
       const processAssets = async () => {
         if (data.assets.media) {
           const ipfsHash = await data.assets.media.hashPromise
           assets.media = {
             size: data.assets.media.blob.size,
             ipfsHash,
-            replacedDataObjectId: tabData?.assets.video.id ? tabData.assets.video.id : undefined,
+          }
+          if (tabData?.assets.video.id) {
+            removedAssetsIds.push(tabData.assets.video.id)
           }
         }
 
@@ -65,8 +69,29 @@ export const useHandleVideoWorkspaceSubmit = () => {
           assets.thumbnailPhoto = {
             size: data.assets.thumbnailPhoto.blob.size,
             ipfsHash,
-            replacedDataObjectId: tabData?.assets.thumbnail.cropId ? tabData.assets.thumbnail.cropId : undefined,
           }
+          if (tabData?.assets.thumbnail.cropId) {
+            removedAssetsIds.push(tabData.assets.thumbnail.cropId)
+          }
+        }
+
+        if (data.assets.subtitles?.length) {
+          const subtitles = data.assets.subtitles
+          assets.subtitles = await Promise.all(
+            subtitles.map(async (subtitle) => ({
+              id: subtitle.id,
+              size: subtitle.blob.size,
+              ipfsHash: await subtitle.hashPromise,
+            }))
+          )
+        }
+        if (tabData?.subtitlesArray) {
+          const oldAssetsIds = tabData.subtitlesArray.map((subtitle) => subtitle.assetId)
+          const currentSubtitlesIdsLookup = createLookup(data.metadata.subtitles || [])
+          const removedSubtitlesIds = oldAssetsIds.filter(
+            (assetId): assetId is string => !!assetId && !currentSubtitlesIdsLookup[assetId]
+          )
+          removedAssetsIds.push(...removedSubtitlesIds)
         }
       }
 
@@ -100,6 +125,22 @@ export const useHandleVideoWorkspaceSubmit = () => {
           })
           uploadPromises.push(uploadPromise)
         }
+        if (data.assets.subtitles?.length && assetsIds.subtitles?.length) {
+          const subtitlesIds = assetsIds.subtitles
+          const subtitlesUploadPromises = data.assets.subtitles.map(async (subtitle, index) => {
+            return startFileUpload(subtitle.blob, {
+              id: subtitlesIds[index],
+              owner: channelId,
+              parentObject: {
+                type: 'video',
+                id: videoId,
+              },
+              type: 'subtitle',
+            })
+          })
+          uploadPromises.push(...subtitlesUploadPromises)
+        }
+
         Promise.all(uploadPromises).catch((e) => SentryLogger.error('Unexpected upload failure', 'VideoWorkspace', e))
       }
 
@@ -166,6 +207,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
                 data.metadata,
                 data.nftMetadata,
                 assets,
+                removedAssetsIds,
                 dataObjectStateBloatBondValue.toString(),
                 proxyCallback(updateStatus)
               ),
@@ -188,6 +230,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
       handleTransaction,
       tabData?.assets.video.id,
       tabData?.assets.thumbnail.cropId,
+      tabData?.subtitlesArray,
       startFileUpload,
       channelId,
       client,
