@@ -34,7 +34,7 @@ export type EditMemberFormInputs = {
 export const EditMembershipView: FC = () => {
   const navigate = useNavigate()
   const handleInputRef = useRef<HTMLInputElement | null>(null)
-  const [isImageValid, setIsImageValid] = useState(false)
+  const [isImageValid, setIsImageValid] = useState(true)
   const [isHandleValidating, setIsHandleValidating] = useState(false)
   const { accountId, memberId, activeMembership, isLoggedIn, refetchUserMemberships } = useUser()
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
@@ -133,15 +133,14 @@ export const EditMembershipView: FC = () => {
 
     const success = await handleTransaction({
       txFactory: async (updateStatus) => {
-        let fileUrl
-        if (data.avatar.blob) {
+        let fileUrl = ''
+        if (data.avatar?.blob && dirtyFields.avatar) {
           fileUrl = await uploadAvatarImage(data.avatar.blob)
         }
-
         const memberInputMetadata: MemberInputMetadata = {
-          name: data.handle,
-          about: data.about,
-          avatarUri: data.avatar === null ? '' : fileUrl,
+          ...(dirtyFields.handle ? { name: data.handle } : {}),
+          ...(dirtyFields.about ? { about: data.about } : {}),
+          ...(dirtyFields.avatar ? { avatarUri: data.avatar === null ? '' : fileUrl } : {}),
         }
         return (await joystream.extrinsics).updateMember(
           activeMembership.id,

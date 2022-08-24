@@ -1,4 +1,4 @@
-import { FC, MouseEvent, PropsWithChildren, useCallback, useEffect, useState } from 'react'
+import { FC, MouseEvent, PropsWithChildren, useCallback, useEffect } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { SvgActionNewChannel } from '@/components/_icons'
@@ -63,18 +63,15 @@ export const Avatar: FC<AvatarProps> = ({
 }) => {
   const isEditable = !loading && editable && size !== 'default' && size !== 'bid'
 
-  const [validImage, setValidImage] = useState(false)
-
   const checkIfImageIsValid = useCallback(async () => {
     if (!assetUrl) {
+      onImageValidation?.(true)
       return
     }
     try {
       await validateImage(assetUrl)
-      setValidImage(true)
       onImageValidation?.(true)
     } catch (error) {
-      setValidImage(false)
       onImageValidation?.(false)
     }
   }, [assetUrl, onImageValidation])
@@ -139,7 +136,7 @@ export const Avatar: FC<AvatarProps> = ({
             >
               {loading ? (
                 <StyledSkeletonLoader rounded />
-              ) : assetUrl && validImage ? (
+              ) : assetUrl ? (
                 <StyledImage src={assetUrl} onError={onError} />
               ) : (
                 <SilhouetteAvatar />
