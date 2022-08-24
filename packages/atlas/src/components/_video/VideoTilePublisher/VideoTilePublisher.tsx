@@ -18,6 +18,7 @@ import {
   SvgIllustrativeReupload,
 } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
+import { cancelledVideoFilter } from '@/config/videoFilter'
 import { useGetNftSlot } from '@/hooks/useGetNftSlot'
 import { useNftState } from '@/hooks/useNftState'
 import { useVideoContextMenu } from '@/hooks/useVideoContextMenu'
@@ -51,10 +52,7 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
       },
       {
         where: {
-          isPublic_eq: undefined,
-          isCensored_eq: undefined,
-          media: undefined,
-          thumbnailPhoto: undefined,
+          ...cancelledVideoFilter,
         },
       }
     )

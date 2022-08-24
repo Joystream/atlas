@@ -8,6 +8,7 @@ import { Text } from '@/components/Text'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
 import { SvgAlertsError24, SvgAlertsSuccess24 } from '@/components/_icons'
 import { Loader } from '@/components/_loaders/Loader'
+import { cancelledVideoFilter } from '@/config/videoFilter'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { AssetUpload } from '@/providers/uploadsManager/types'
 import { transitions } from '@/styles'
@@ -52,10 +53,7 @@ export const UploadStatusGroup: FC<UploadStatusGroupProps> = ({ uploads, size = 
     { skip: isChannelType },
     {
       where: {
-        isPublic_eq: undefined,
-        isCensored_eq: undefined,
-        media: undefined,
-        thumbnailPhoto: undefined,
+        ...cancelledVideoFilter,
       },
     }
   )

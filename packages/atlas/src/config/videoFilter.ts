@@ -35,3 +35,11 @@ export const videoFilter: VideoWhereInput = {
   },
   ...(NOTfilter.length ? { NOT: NOTfilter } : {}),
 }
+
+export const cancelledVideoFilter: VideoWhereInput = {
+  isCensored_eq: undefined,
+  isPublic_eq: undefined,
+  media: undefined,
+  thumbnailPhoto: undefined,
+  NOT: undefined,
+}

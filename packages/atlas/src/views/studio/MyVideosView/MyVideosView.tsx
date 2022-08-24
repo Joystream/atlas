@@ -15,6 +15,7 @@ import { VideoTileDraft } from '@/components/_video/VideoTileDraft'
 import { VideoTilePublisher } from '@/components/_video/VideoTilePublisher'
 import { absoluteRoutes } from '@/config/routes'
 import { VIDEO_SORT_OPTIONS } from '@/config/sorting'
+import { cancelledVideoFilter } from '@/config/videoFilter'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -88,10 +89,8 @@ export const MyVideosView = () => {
         channel: {
           id_eq: channelId,
         },
+        ...cancelledVideoFilter,
         isPublic_eq,
-        isCensored_eq: undefined,
-        media: undefined,
-        thumbnailPhoto: undefined,
       },
     },
     {

@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { useFullVideo } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
+import { cancelledVideoFilter } from '@/config/videoFilter'
 import { RoutingState } from '@/types/routing'
 import { SubtitlesInput } from '@/types/subtitles'
 import { SentryLogger } from '@/utils/logs'
@@ -38,10 +39,7 @@ export const useVideoWorkspaceData = () => {
     },
     {
       where: {
-        isPublic_eq: undefined,
-        isCensored_eq: undefined,
-        media: undefined,
-        thumbnailPhoto: undefined,
+        ...cancelledVideoFilter,
       },
     }
   )
