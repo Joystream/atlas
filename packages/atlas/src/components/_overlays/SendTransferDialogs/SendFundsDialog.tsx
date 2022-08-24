@@ -114,7 +114,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
   }
 
   const handleMaxClick = async () => {
-    const value = Math.floor(hapiBnToTokenNumber(accountBalance) * 100) / 100
+    const value = Math.round(hapiBnToTokenNumber(accountBalance) * 100) / 100
     setValue('amount', value, {
       shouldTouch: true,
       shouldDirty: true,
@@ -174,7 +174,8 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
                   return true
                 },
                 accountBalance: (value) => {
-                  if (value && tokenNumberToHapiBn(value).gte(accountBalance)) {
+                  const roundedMaxValue = Math.round(hapiBnToTokenNumber(accountBalance) * 100) / 100
+                  if (value && value > roundedMaxValue) {
                     return 'Not enough tokens in your account balance.'
                   }
                   return true
