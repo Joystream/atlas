@@ -42,6 +42,7 @@ import { SubtitlesInput } from '@/types/subtitles'
 import { createId } from '@/utils/createId'
 import { pastDateValidation, requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { converSrtToVtt } from '@/utils/subtitles'
 
 import { useVideoFormAssets, useVideoFormDraft } from './VideoForm.hooks'
 import {
@@ -765,11 +766,16 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                         )
                       )
                     }}
-                    onSubtitlesAdd={({ languageIso, file, type }) => {
+                    onSubtitlesAdd={async ({ languageIso, file, type }) => {
+                      const isSrt = file?.name.split('.').pop() === 'srt'
+                      let newFile = file
+                      if (isSrt) {
+                        newFile = await converSrtToVtt(file)
+                      }
                       onChange(
                         subtitlesArray?.map((subtitles) =>
                           subtitles.languageIso === languageIso && subtitles.type === type
-                            ? { ...subtitles, file }
+                            ? { ...subtitles, file: newFile }
                             : subtitles
                         )
                       )

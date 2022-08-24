@@ -59,15 +59,19 @@ export const SubtitlesBox: FC<SubtitleBoxProps> = ({
     },
   ]
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (!e.currentTarget.files || !e.currentTarget.files.length) {
-      return
-    }
-    if (e.currentTarget.files[0].type !== 'text/vtt') {
+  const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.currentTarget.files?.[0]
+    const isSupported =
+      file?.name
+        .split('.')
+        .pop()
+        ?.match(/srt|vtt/) || file?.type === 'text/vtt'
+
+    if (!isSupported) {
       openUnsuportedFileDialog({
         title: 'File format unsupported',
         description:
-          'It looks like you selected a file format which is not supported. Reselect file and choose .vtt file to proceed.',
+          'It looks like you selected a file format which is not supported. Reselect file and choose .vtt or .srt file to proceed.',
         type: 'informative',
         primaryButton: {
           onClick: () => {
@@ -101,7 +105,7 @@ export const SubtitlesBox: FC<SubtitleBoxProps> = ({
       <Button size="small" onClick={() => inputRef.current?.click()} variant={hasFile ? 'secondary' : 'primary'}>
         Select file
       </Button>
-      <InvisibleInput ref={inputRef} type="file" accept=".vtt" onChange={handleChange} />
+      <InvisibleInput ref={inputRef} type="file" accept=".vtt,.srt" onChange={handleChange} />
       <ContextMenu
         placement="bottom-end"
         items={contexMenuItems}
