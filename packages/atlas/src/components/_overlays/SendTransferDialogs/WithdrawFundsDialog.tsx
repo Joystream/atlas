@@ -91,7 +91,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
   const channelBalanceInUsd = convertHapiToUSD(channelBalance)
 
   const handleMaxClick = async () => {
-    const value = Math.round(hapiBnToTokenNumber(channelBalance) * 100) / 100
+    const value = Math.floor(hapiBnToTokenNumber(channelBalance) * 100) / 100
     setValue('amount', value, {
       shouldTouch: true,
       shouldDirty: true,
@@ -145,8 +145,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
                 if (!value) {
                   return 'Enter amount to transfer.'
                 }
-                const roundedMaxValue = Math.round(hapiBnToTokenNumber(channelBalance) * 100) / 100
-                if (value && value > roundedMaxValue) {
+                if (value && tokenNumberToHapiBn(value).gt(channelBalance)) {
                   return 'Not enough tokens in channel balance.'
                 }
                 return true
