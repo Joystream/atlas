@@ -30,10 +30,21 @@ export const useVideoWorkspaceData = () => {
   const { editedVideoInfo } = useVideoWorkspace()
   const { channelId } = useAuthorizedUser()
   const drafts = useDraftStore(channelDraftsSelector(channelId))
-  const { video, loading, error } = useFullVideo(editedVideoInfo?.id ?? '', {
-    skip: editedVideoInfo?.isDraft,
-    onError: (error) => SentryLogger.error('Failed to fetch video', 'useVideoWorkspaceData', error),
-  })
+  const { video, loading, error } = useFullVideo(
+    editedVideoInfo?.id ?? '',
+    {
+      skip: editedVideoInfo?.isDraft,
+      onError: (error) => SentryLogger.error('Failed to fetch video', 'useVideoWorkspaceData', error),
+    },
+    {
+      where: {
+        isPublic_eq: undefined,
+        isCensored_eq: undefined,
+        media: undefined,
+        thumbnailPhoto: undefined,
+      },
+    }
+  )
 
   const subtitlesArray: SubtitlesInput[] | null = useMemo(
     () =>

@@ -92,7 +92,6 @@ export const MyVideosView = () => {
         isCensored_eq: undefined,
         media: undefined,
         thumbnailPhoto: undefined,
-        NOT: [{ id_in: [] }, { thumbnailPhoto: { id_in: [] } }, { media: { id_in: [] } }, { channel: { id_in: [] } }],
       },
     },
     {
