@@ -248,6 +248,31 @@ export type LicenseFieldsFragment = {
   customText?: string | null
 }
 
+export type SubtitlesFieldsFragment = {
+  __typename?: 'VideoSubtitle'
+  id: string
+  mimeType: string
+  type: string
+  assetId?: string | null
+  language: { __typename?: 'Language'; id: string; iso: string }
+  asset?: {
+    __typename?: 'StorageDataObject'
+    id: string
+    createdAt: Date
+    size: string
+    isAccepted: boolean
+    ipfsHash: string
+    storageBag: { __typename?: 'StorageBag'; id: string }
+    type:
+      | { __typename: 'DataObjectTypeChannelAvatar' }
+      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeUnknown' }
+      | { __typename: 'DataObjectTypeVideoMedia' }
+      | { __typename: 'DataObjectTypeVideoSubtitle' }
+      | { __typename: 'DataObjectTypeVideoThumbnail' }
+  } | null
+}
+
 export type BasicVideoFieldsFragment = {
   __typename?: 'Video'
   id: string
@@ -564,28 +589,6 @@ export type FullVideoFieldsFragment = {
       | { __typename: 'DataObjectTypeVideoSubtitle' }
       | { __typename: 'DataObjectTypeVideoThumbnail' }
   } | null
-  subtitles: Array<{
-    __typename?: 'VideoSubtitle'
-    mimeType: string
-    type: string
-    asset?: {
-      __typename?: 'StorageDataObject'
-      id: string
-      createdAt: Date
-      size: string
-      isAccepted: boolean
-      ipfsHash: string
-      storageBag: { __typename?: 'StorageBag'; id: string }
-      type:
-        | { __typename: 'DataObjectTypeChannelAvatar' }
-        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-        | { __typename: 'DataObjectTypeUnknown' }
-        | { __typename: 'DataObjectTypeVideoMedia' }
-        | { __typename: 'DataObjectTypeVideoSubtitle' }
-        | { __typename: 'DataObjectTypeVideoThumbnail' }
-    } | null
-    language: { __typename?: 'Language'; iso: string }
-  }>
   channel: {
     __typename?: 'Channel'
     views: number
@@ -872,6 +875,30 @@ export type FullVideoFieldsFragment = {
       | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
       | null
   } | null
+  subtitles: Array<{
+    __typename?: 'VideoSubtitle'
+    id: string
+    mimeType: string
+    type: string
+    assetId?: string | null
+    language: { __typename?: 'Language'; id: string; iso: string }
+    asset?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      createdAt: Date
+      size: string
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoSubtitle' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+    } | null
+  }>
 }
 
 export type BasicNftFieldsFragment = {
@@ -2078,6 +2105,22 @@ export const BasicNftFieldsFragmentDoc = gql`
   ${BasicMembershipFieldsFragmentDoc}
   ${BasicBidFieldsFragmentDoc}
 `
+export const SubtitlesFieldsFragmentDoc = gql`
+  fragment SubtitlesFields on VideoSubtitle {
+    id
+    language {
+      id
+      iso
+    }
+    asset {
+      ...StorageDataObjectFields
+    }
+    mimeType
+    type
+    assetId
+  }
+  ${StorageDataObjectFieldsFragmentDoc}
+`
 export const FullVideoFieldsFragmentDoc = gql`
   fragment FullVideoFields on Video {
     id
@@ -2116,16 +2159,6 @@ export const FullVideoFieldsFragmentDoc = gql`
     thumbnailPhoto {
       ...StorageDataObjectFields
     }
-    subtitles {
-      asset {
-        ...StorageDataObjectFields
-      }
-      language {
-        iso
-      }
-      mimeType
-      type
-    }
     channel {
       ...FullChannelFields
     }
@@ -2135,12 +2168,16 @@ export const FullVideoFieldsFragmentDoc = gql`
     nft {
       ...BasicNftFields
     }
+    subtitles {
+      ...SubtitlesFields
+    }
   }
   ${VideoMediaMetadataFieldsFragmentDoc}
   ${StorageDataObjectFieldsFragmentDoc}
   ${FullChannelFieldsFragmentDoc}
   ${LicenseFieldsFragmentDoc}
   ${BasicNftFieldsFragmentDoc}
+  ${SubtitlesFieldsFragmentDoc}
 `
 export const BasicVideoFieldsFragmentDoc = gql`
   fragment BasicVideoFields on Video {

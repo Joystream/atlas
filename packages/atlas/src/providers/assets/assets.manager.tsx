@@ -19,15 +19,15 @@ export const AssetsManager: FC = () => {
   const { tryRefetchDistributionOperators } = useOperatorsContext()
   const { getAllDistributionOperatorsForBag } = useDistributionOperators()
   const pendingAssets = useAssetStore((state) => state.pendingAssets)
+  const immediatePendingAssets = useAssetStore((state) => state.immediatePendingAssets)
   const assetIdsBeingResolved = useAssetStore((state) => state.assetIdsBeingResolved)
-  const { addAsset, addAssetBeingResolved, removeAssetBeingResolved, removePendingAsset } = useAssetStore(
-    (state) => state.actions
-  )
+  const { addAsset, addAssetBeingResolved, removeAssetBeingResolved, removePendingAsset, removeImmediatePendingAsset } =
+    useAssetStore((state) => state.actions)
   const { coordinates } = useUserLocationStore()
 
   // listen to changes in list of assets pending resolution and resolve them
   useEffect(() => {
-    Object.values(pendingAssets).forEach(async (dataObject) => {
+    Object.values({ ...pendingAssets, ...immediatePendingAssets }).forEach(async (dataObject) => {
       // make sure we handle each asset only once
       if (assetIdsBeingResolved.has(dataObject.id)) {
         return
@@ -60,7 +60,12 @@ export const AssetsManager: FC = () => {
 
       for (const distributionOperator of sortedDistributionOperators) {
         const assetUrl = createDistributionOperatorDataObjectUrl(distributionOperator, dataObject)
-
+        if (immediatePendingAssets[dataObject.id]) {
+          addAsset(dataObject.id, { url: assetUrl })
+          removeImmediatePendingAsset(dataObject.id)
+          removeAssetBeingResolved(dataObject.id)
+          return
+        }
         const assetTestPromise = testAssetDownload(assetUrl, dataObject)
         const assetTestPromiseWithTimeout = withTimeout(assetTestPromise, ASSET_RESPONSE_TIMEOUT)
 
@@ -104,8 +109,10 @@ export const AssetsManager: FC = () => {
     assetIdsBeingResolved,
     coordinates,
     getAllDistributionOperatorsForBag,
+    immediatePendingAssets,
     pendingAssets,
     removeAssetBeingResolved,
+    removeImmediatePendingAsset,
     removePendingAsset,
     tryRefetchDistributionOperators,
   ])

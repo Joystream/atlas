@@ -1,8 +1,9 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { BasicMembershipFieldsFragment, StorageDataObjectFieldsFragment } from '@/api/queries'
+import { BasicMembershipFieldsFragment, StorageDataObjectFieldsFragment, SubtitlesFieldsFragment } from '@/api/queries'
+import { LANGUAGES_LOOKUP } from '@/config/languages'
 
-import { useAssetStore } from './assets.store'
+import { ResolvedAsset, useAssetStore } from './assets.store'
 
 export const useAsset = (dataObject?: StorageDataObjectFieldsFragment | null) => {
   const contentId = dataObject?.id ?? null
@@ -38,4 +39,75 @@ export const useMemberAvatar = (member?: BasicMembershipFieldsFragment | null): 
   }
 
   return { url: null, isLoadingAsset: true }
+}
+
+export const useSubtitlesAssets = (subtitles?: SubtitlesFieldsFragment[] | null) => {
+  const addPendingAsset = useAssetStore((state) => state.actions.addPendingAsset)
+  const pendingAssets = useAssetStore((state) => state.pendingAssets)
+  const assets = useAssetStore((state) => state.assets)
+  const [resolvedAssets, setResolvedAssets] = useState<Record<string, ResolvedAsset>>()
+  const dataObjects = useMemo(() => subtitles?.map((item) => item.asset), [subtitles])
+
+  const checkDataObjectsIn = useCallback(
+    (object: Record<string, unknown>) => {
+      if (!dataObjects || !dataObjects.length) {
+        return false
+      }
+      const mappedDataObjectsIds = dataObjects?.map((dataObject) => dataObject?.id) || []
+      return Object.keys(object).some((id) => mappedDataObjectsIds.includes(id))
+    },
+    [dataObjects]
+  )
+
+  useEffect(() => {
+    if (
+      !dataObjects ||
+      !dataObjects.length ||
+      checkDataObjectsIn(pendingAssets) ||
+      (resolvedAssets && checkDataObjectsIn(resolvedAssets))
+    ) {
+      return
+    }
+    dataObjects.forEach((dataObject) => {
+      const contentId = dataObject?.id
+      if (contentId) {
+        addPendingAsset(contentId, dataObject, true)
+      }
+    })
+  }, [addPendingAsset, checkDataObjectsIn, dataObjects, pendingAssets, resolvedAssets])
+
+  useEffect(() => {
+    if (!dataObjects || !dataObjects.length || checkDataObjectsIn(pendingAssets)) {
+      return
+    }
+    const resolvedSubtitles: Record<string, ResolvedAsset> = {}
+
+    dataObjects?.forEach((item) => {
+      if (!item) {
+        return
+      }
+      const resolvedAsset = assets[item.id]
+
+      if (resolvedAsset) {
+        resolvedSubtitles[item.id] = assets[item.id]
+      }
+    })
+
+    setResolvedAssets(Object.keys(resolvedSubtitles).length ? resolvedSubtitles : undefined)
+  }, [assets, checkDataObjectsIn, dataObjects, pendingAssets])
+
+  return useMemo(() => {
+    if (!subtitles || !resolvedAssets) {
+      return
+    }
+    return subtitles.map((item) => {
+      const resolvedLanguageName = LANGUAGES_LOOKUP[item.language.iso]
+      const url = item.assetId && resolvedAssets[item.assetId].url
+      return {
+        label: resolvedLanguageName ? resolvedLanguageName : '',
+        language: item.language.iso,
+        src: url || '',
+      }
+    })
+  }, [resolvedAssets, subtitles])
 }

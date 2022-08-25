@@ -27,7 +27,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { VideoReaction } from '@/joystream-lib'
-import { useAsset } from '@/providers/assets'
+import { useAsset, useSubtitlesAssets } from '@/providers/assets'
 import { useFee } from '@/providers/joystream'
 import { useNftActions } from '@/providers/nftActions'
 import { useOverlayManager } from '@/providers/overlayManager'
@@ -56,30 +56,6 @@ import {
   TitleText,
   VideoUtils,
 } from './VideoView.styles'
-
-// This is temporary, will be removed after integration with QN
-const AVAILABLE_TRACKS = [
-  {
-    src: 'https://dl.dropboxusercontent.com/s/84zyiqw82gtf106/upc-video-subtitles-en.vtt?dl=0',
-    language: 'en',
-    label: 'English',
-  },
-  {
-    src: 'https://dl.dropboxusercontent.com/s/ghnr6iypkpo7axg/upc-video-subtitles-de.vtt?dl=0',
-    language: 'de',
-    label: 'German',
-  },
-  {
-    src: 'https://dl.dropboxusercontent.com/s/eb74k0qub6iiqqq/upc-video-subtitles-fr.vtt?dl=0',
-    language: 'fr',
-    label: 'French',
-  },
-  {
-    src: 'https://dl.dropboxusercontent.com/s/gu1zs9gob85x7e4/upc-video-subtitles-ru.vtt?dl=0',
-    language: 'ru',
-    label: 'Russian',
-  },
-]
 
 export const VideoView: FC = () => {
   const { id } = useParams()
@@ -116,6 +92,7 @@ export const VideoView: FC = () => {
 
   const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset(video?.media)
   const { url: thumbnailUrl } = useAsset(video?.thumbnailPhoto)
+  const availableTracks = useSubtitlesAssets(video?.subtitles)
 
   const videoMetaTags = useMemo(() => {
     if (!video || !thumbnailUrl) return {}
@@ -340,7 +317,7 @@ export const VideoView: FC = () => {
                   startTime={startTimestamp}
                   isPlayNextDisabled={pausePlayNext}
                   ref={playerRef}
-                  availableTextTracks={AVAILABLE_TRACKS}
+                  availableTextTracks={availableTracks}
                 />
               ) : (
                 <PlayerSkeletonLoader />
