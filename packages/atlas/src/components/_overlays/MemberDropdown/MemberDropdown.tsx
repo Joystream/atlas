@@ -67,7 +67,10 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const navigate = useNavigate()
     const { channelId, activeMembership, setActiveUser, memberships, signOut } = useUser()
     const setSignInModalOpen = useUserStore((state) => state.actions.setSignInModalOpen)
+    const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
+
     const { accountBalance } = useSubscribeAccountBalance()
+    const { accountBalance: channelBalance } = useSubscribeAccountBalance(selectedChannel?.rewardAccount) || new BN(0)
 
     const containerRef = useRef<HTMLDivElement>(null)
     const { ref: measureContainerRef, height: containerHeight = 0 } = useResizeObserver({ box: 'border-box' })
@@ -84,6 +87,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
       },
     })
 
+    const { url: channelAvatarUrl, isLoadingAsset: isChannelAvatarLoading } = useAsset(selectedChannel?.avatarPhoto)
     const { url: avatarUrl, isLoadingAsset: avatarLoading } = useMemberAvatar(activeMembership)
 
     const isStudio = pathname.search(absoluteRoutes.studio.index()) !== -1
@@ -127,10 +131,6 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
         document.removeEventListener('click', handleClickOutside, true)
       }
     }, [closeDropdown, isActive])
-
-    const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
-    const { url: channelAvatarUrl, isLoadingAsset: isChannelAvatarLoading } = useAsset(selectedChannel?.avatarPhoto)
-    const { accountBalance: channelBalance } = useSubscribeAccountBalance(selectedChannel?.rewardAccount) || new BN(0)
 
     useEffect(() => {
       transRef.start()
