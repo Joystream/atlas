@@ -143,6 +143,58 @@ export const getExtrinsicStatusDetails = (
               "Your transaction failed because publishing associated assets would exceed your storage quota. Each channel has a dedicated storage limit that's controlled by the DAO storage working group. You can ask for additional storage space in #storage-provider channel on Joystream Discord and then try again.",
             animation: sharedAnimation,
           }
+        case ErrorCode.LiquidityRestrictions:
+          return {
+            title: sharedTitle,
+            description:
+              "You don't have enough tokens in your member account to pay transaction fee. Add tokens to your membership balance and try again.",
+            animation: sharedAnimation,
+          }
+        case ErrorCode.WithdrawFromChannelAmountExceedsBalanceMinusExistentialDeposit:
+          return {
+            title: sharedTitle,
+            description:
+              "You're trying to withdraw too many tokens from your channel account. Please decrease the amount and try again.",
+            animation: sharedAnimation,
+          }
+        case ErrorCode.DataObjectStateBloatBondChanged:
+          return {
+            title: sharedTitle,
+            description: 'Bloat bond for data object state has changed. Please reload the app and try again.',
+            animation: sharedAnimation,
+          }
+        case ErrorCode.VideoStateBloatBondChanged:
+          return {
+            title: sharedTitle,
+            description: 'Bloat bond for video state has changed. Please reload the app and try again.',
+            animation: sharedAnimation,
+          }
+        case ErrorCode.ChannelStateBloatBondChanged:
+          return {
+            title: sharedTitle,
+            description: 'Bloat bond for channel state has changed. Please reload the app and try again.',
+            animation: sharedAnimation,
+          }
+        case ErrorCode.InsufficientBalance:
+          return {
+            title: sharedTitle,
+            description:
+              'Insufficient balance to perform this action. Add tokens to your membership balance and try again.',
+            animation: sharedAnimation,
+          }
+        case ErrorCode.InsufficientBalanceForChannelCreation:
+          return {
+            title: sharedTitle,
+            description:
+              'Insufficient balance to create a channel. Add tokens to your membership balance and try again.',
+            animation: sharedAnimation,
+          }
+        case ErrorCode.InsufficientBalanceForVideoCreation:
+          return {
+            title: sharedTitle,
+            description: 'Insufficient balance to create a video. Add tokens to your membership balance and try again.',
+            animation: sharedAnimation,
+          }
         default:
           return {
             title: sharedTitle,
