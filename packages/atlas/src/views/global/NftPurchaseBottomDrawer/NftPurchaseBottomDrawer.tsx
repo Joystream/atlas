@@ -64,7 +64,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
   const { url: creatorAvatarUrl } = useAsset(nft?.video.channel.avatarPhoto)
   const { url: ownerMemberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
   const mdMatch = useMediaMatch('md')
-  const accountBalance = useSubscribeAccountBalance()
+  const { accountBalance } = useSubscribeAccountBalance()
   const timestamp = useMsTimestamp({ shouldStop: !currentAction })
   const { convertBlockToMsTimestamp, convertBlocksToDuration } = useBlockTimeEstimation()
 

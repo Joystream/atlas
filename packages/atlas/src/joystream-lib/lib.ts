@@ -86,11 +86,24 @@ export class JoystreamLib {
     return number.toNumber()
   }
 
-  async subscribeAccountBalance(accountId: AccountId, callback: (balance: string) => void) {
+  async getAccountBalance(accountId: AccountId) {
     await this.ensureApi()
 
-    const unsubscribe = await this.api.derive.balances.all(accountId, ({ availableBalance }) => {
-      callback(availableBalance.toString())
+    const balances = await this.api.derive.balances.all(accountId)
+    return {
+      availableBalance: balances.freeBalance.toString(),
+      lockedBalance: balances.lockedBalance.toString(),
+    }
+  }
+
+  async subscribeAccountBalance(
+    accountId: AccountId,
+    callback: (balances: { availableBalance: string; lockedBalance: string }) => void
+  ) {
+    await this.ensureApi()
+
+    const unsubscribe = await this.api.derive.balances.all(accountId, ({ availableBalance, lockedBalance }) => {
+      callback({ availableBalance: availableBalance.toString(), lockedBalance: lockedBalance.toString() })
     })
 
     return proxy(unsubscribe)
