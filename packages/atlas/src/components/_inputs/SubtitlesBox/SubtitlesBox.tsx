@@ -6,7 +6,7 @@ import { Button } from '@/components/_buttons/Button'
 import { SvgActionDownload, SvgActionMore, SvgActionTrash } from '@/components/_icons'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { useConfirmationModal } from '@/providers/confirmationModal'
-import { SubtitleInput } from '@/types/subtitles'
+import { SubtitlesInput } from '@/types/subtitles'
 
 import {
   InvisibleInput,
@@ -14,16 +14,16 @@ import {
   SubtitleBoxWrapper,
   SubtitleDetails,
   SubtitlesFileName,
-} from './SubtitleBox.styles'
+} from './SubtitlesBox.styles'
 
 export type SubtitleBoxProps = {
   className?: string
   onChange?: ChangeEventHandler<HTMLInputElement>
   onRemove?: () => void
   onDownload?: () => void
-} & SubtitleInput
+} & SubtitlesInput
 
-export const SubtitleBox: FC<SubtitleBoxProps> = ({
+export const SubtitlesBox: FC<SubtitleBoxProps> = ({
   className,
   languageIso,
   type,

@@ -135,7 +135,8 @@ export const useHandleVideoWorkspaceSubmit = () => {
                 type: 'video',
                 id: videoId,
               },
-              type: 'subtitle',
+              type: 'subtitles',
+              subtitlesLanguageIso: subtitle.subtitlesLanguageIso,
             })
           })
           uploadPromises.push(...subtitlesUploadPromises)

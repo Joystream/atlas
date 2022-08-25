@@ -2,31 +2,26 @@ import styled from '@emotion/styled'
 import { FC, useState } from 'react'
 
 import { Text } from '@/components/Text'
-import { languages } from '@/config/languages'
+import { LANGUAGES_LOOKUP } from '@/config/languages'
 import { sizes } from '@/styles'
-import { SubtitleInput } from '@/types/subtitles'
+import { SubtitlesInput } from '@/types/subtitles'
 
 import { ComboBox } from '../ComboBox'
-import { SubtitleBox } from '../SubtitleBox'
+import { SubtitlesBox } from '../SubtitlesBox'
 
-type AvailableLanguage = SubtitleInput & {
+type AvailableLanguage = SubtitlesInput & {
   disabled: boolean
   displayName: string
 }
 
 type SubtitlesComboboxProps = {
-  subtitlesArray: SubtitleInput[] | null
+  subtitlesArray: SubtitlesInput[] | null
   languagesIso: string[]
-  onLanguageAdd: (language: SubtitleInput) => void
-  onLanguageDelete: (language: SubtitleInput) => void
+  onLanguageAdd: (language: SubtitlesInput) => void
+  onLanguageDelete: (language: SubtitlesInput) => void
   onSubtitlesDownload?: () => void
-  onSubtitlesAdd: (subtitles: SubtitleInput) => void
+  onSubtitlesAdd: (subtitles: SubtitlesInput) => void
 }
-
-const LANGUAGES_LOOKUP = languages.reduce((acc, { name, value }) => {
-  acc[value] = name
-  return acc
-}, {} as Record<string, string>)
 
 export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
   languagesIso,
@@ -45,7 +40,7 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
       .flat()
   )
 
-  const toggleLanguage = (subtitles: SubtitleInput, disabled: boolean) => {
+  const toggleLanguage = (subtitles: SubtitlesInput, disabled: boolean) => {
     setAvailableLanguages((availableLanguages) =>
       availableLanguages.map((availableLanguage) => {
         if (availableLanguage.languageIso === subtitles.languageIso && availableLanguage.type === subtitles.type) {
@@ -81,7 +76,7 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
         }}
       />
       {subtitlesArray?.map(({ languageIso, file, type, assetId }) => (
-        <SubtitleBox
+        <SubtitlesBox
           key={languageIso + type}
           type={type}
           languageIso={LANGUAGES_LOOKUP[languageIso]}

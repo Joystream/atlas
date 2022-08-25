@@ -2,7 +2,7 @@ import { ChannelId, VideoId } from '@/joystream-lib'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { UploadStatus } from '@/types/storage'
 
-type AssetType = 'video' | 'thumbnail' | 'cover' | 'avatar' | 'subtitle'
+type AssetType = 'video' | 'thumbnail' | 'cover' | 'avatar' | 'subtitles'
 export type AssetParent = 'video' | 'channel'
 
 export type AssetUpload = {
@@ -19,6 +19,7 @@ export type AssetUpload = {
   size: string
   dimensions?: AssetDimensions
   imageCropData?: ImageCropData
+  subtitlesLanguageIso?: string
   metadata?: string
 }
 export type InputAssetUpload = Omit<AssetUpload, 'size'>

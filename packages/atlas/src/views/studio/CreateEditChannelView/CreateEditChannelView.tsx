@@ -20,7 +20,7 @@ import {
   ImageCropModalImperativeHandle,
   ImageCropModalProps,
 } from '@/components/_overlays/ImageCropModal'
-import { languages } from '@/config/languages'
+import { LANGUAGES_LIST } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib'
@@ -124,7 +124,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       cover: { contentId: null, assetDimensions: null, imageCropData: null, originalBlob: undefined },
       title: '',
       description: '',
-      language: languages[0].value,
+      language: LANGUAGES_LIST[0].value,
       isPublic: true,
     },
   })
@@ -143,7 +143,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
         cover: { contentId: null },
         title: '',
         description: '',
-        language: languages[0].value,
+        language: LANGUAGES_LIST[0].value,
         isPublic: true,
       })
     }
@@ -233,7 +233,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
 
     const { title, description, isPublic, language } = channel
 
-    const foundLanguage = languages.find(({ value }) => value === language?.iso)
+    const foundLanguage = LANGUAGES_LIST.find(({ value }) => value === language?.iso)
 
     reset({
       avatar: {
@@ -251,7 +251,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       title: title || '',
       description: description || '',
       isPublic: isPublic ?? false,
-      language: foundLanguage?.value || languages[0].value,
+      language: foundLanguage?.value || LANGUAGES_LIST[0].value,
     })
   }, [channel, loading, newChannel, reset])
 
@@ -613,7 +613,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
               rules={requiredValidation('Language')}
               render={({ field: { value, onChange } }) => (
                 <Select
-                  items={languages}
+                  items={LANGUAGES_LIST}
                   disabled={loading}
                   value={value}
                   onChange={onChange}

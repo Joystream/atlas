@@ -15,6 +15,7 @@ import {
 } from '@/components/_icons'
 import { Loader } from '@/components/_loaders/Loader'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
+import { LANGUAGES_LOOKUP } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUploadsStore } from '@/providers/uploadsManager'
@@ -135,15 +136,15 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
     noClick: true,
     noKeyboard: true,
     accept: {
-      [asset.type === 'video' ? 'video/*' : asset.type === 'subtitle' ? 'text/vtt' : 'image/*']: [],
+      [asset.type === 'video' ? 'video/*' : asset.type === 'subtitles' ? 'text/vtt' : 'image/*']: [],
     },
   })
 
   const fileTypeText =
     asset.type === 'video'
       ? 'Video file'
-      : asset.type === 'subtitle'
-      ? 'Subtitle'
+      : asset.type === 'subtitles'
+      ? 'Subtitles'
       : `${asset.type.charAt(0).toUpperCase() + asset.type.slice(1)} image`
 
   const handleChangeHost = () => {
@@ -191,6 +192,7 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
     asset.dimensions?.width && asset.dimensions.height
       ? `${Math.floor(asset.dimensions.width)}x${Math.floor(asset.dimensions.height)}`
       : ''
+  const assetSubtitlesLanguage = asset.type === 'subtitles' && asset.subtitlesLanguageIso
   const assetSize = formatBytes(Number(asset.size))
 
   const assetsDialogs = {
@@ -199,7 +201,7 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
     thumbnail: thumbnailDialogRef,
   }
   const reselectFile = () => {
-    if (asset.type === 'video' || asset.type === 'subtitle') {
+    if (asset.type === 'video' || asset.type === 'subtitles') {
       openFileSelect()
       return
     }
@@ -278,7 +280,7 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
             <FileInfoType warning={isReconnecting && size === 'compact'}>
               {asset.type === 'video' ? (
                 <SvgActionVideoFile />
-              ) : asset.type === 'subtitle' ? (
+              ) : asset.type === 'subtitles' ? (
                 <SvgActionClosedCaptions />
               ) : (
                 <SvgActionImageFile />
@@ -296,6 +298,11 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
                 {assetDimension && (
                   <Text as="span" variant="t200" color="colorText">
                     {assetDimension}
+                  </Text>
+                )}
+                {assetSubtitlesLanguage && (
+                  <Text as="span" variant="t200" color="colorText">
+                    {LANGUAGES_LOOKUP[assetSubtitlesLanguage]}
                   </Text>
                 )}
                 {assetSize && (

@@ -21,7 +21,7 @@ import {
   useVideoWorkspace,
   useVideoWorkspaceData,
 } from '@/providers/videoWorkspace'
-import { SubtitleInput } from '@/types/subtitles'
+import { SubtitlesInput } from '@/types/subtitles'
 import { createId } from '@/utils/createId'
 import { computeFileHash } from '@/utils/hashing'
 
@@ -58,7 +58,7 @@ export const useVideoFormAssets = (
     setThumbnailHashPromise(hashPromise)
   }, [])
 
-  const computeSubtitlesHashes = useCallback((subtitles: SubtitleInput[]) => {
+  const computeSubtitlesHashes = useCallback((subtitles: SubtitlesInput[]) => {
     const subtitlesHashesPromises = subtitles.map((subtitle) => {
       if (!subtitle.file) {
         return null

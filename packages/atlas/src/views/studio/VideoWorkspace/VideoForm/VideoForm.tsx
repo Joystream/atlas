@@ -21,7 +21,7 @@ import { Select, SelectItem } from '@/components/_inputs/Select'
 import { SubtitlesCombobox } from '@/components/_inputs/SubtitlesComboBox'
 import { Switch } from '@/components/_inputs/Switch'
 import { TextArea } from '@/components/_inputs/TextArea'
-import { languages } from '@/config/languages'
+import { LANGUAGES_LIST } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { NftIssuanceInputMetadata, VideoInputAssets, VideoInputMetadata } from '@/joystream-lib'
@@ -29,6 +29,7 @@ import { useRawAssetResolver } from '@/providers/assets'
 import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joystream'
 import { useUser } from '@/providers/user'
 import {
+  VideoFormAssetData,
   VideoFormAssets,
   VideoFormData,
   VideoWorkspaceFormStatus,
@@ -37,7 +38,8 @@ import {
   useVideoWorkspace,
   useVideoWorkspaceData,
 } from '@/providers/videoWorkspace'
-import { SubtitleInput } from '@/types/subtitles'
+import { SubtitlesInput } from '@/types/subtitles'
+import { createId } from '@/utils/createId'
 import { pastDateValidation, requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
@@ -189,7 +191,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   // for fee only
   const createBasicVideoInputAssetsInfo = (
     assets?: VideoWorkspaceVideoAssets,
-    subtitles?: SubtitleInput[]
+    subtitles?: SubtitlesInput[]
   ): VideoInputAssets => {
     if (!assets) {
       return {}
@@ -332,15 +334,17 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
       const videoWidth = videoInputFile?.mediaPixelWidth
       const videoHeight = videoInputFile?.mediaPixelHeight
 
-      const mappedSubtitles = data.subtitlesArray?.length
-        ? (data.subtitlesArray
-            .map((subtitle, idx) => ({
-              id: metadata.subtitles?.[idx].id,
-              blob: subtitle.file,
-              hashPromise: subtitlesHashesPromises[idx] || Promise.resolve(''),
-            }))
-            .filter((s) => !!s.blob) as VideoFormAssets['subtitles'])
-        : null
+      const mappedSubtitles: PartialBy<VideoFormAssetData, 'blob'>[] | undefined = data?.subtitlesArray?.map(
+        (subtitle, idx) => ({
+          id: metadata.subtitles?.[idx].id || createId(),
+          blob: subtitle.file,
+          hashPromise: subtitlesHashesPromises[idx] || Promise.resolve(''),
+          subtitlesLanguageIso: subtitle.languageIso,
+        })
+      )
+      const mappedFilteredSubtitles: VideoFormAssets['subtitles'] = mappedSubtitles?.filter(
+        (subtitle): subtitle is VideoFormAssetData => !!subtitle.blob
+      )
 
       const assets: VideoFormAssets = {
         ...(videoAsset?.blob && videoInputFile.id && videoHashPromise
@@ -367,9 +371,9 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
               },
             }
           : {}),
-        ...(mappedSubtitles?.length
+        ...(mappedFilteredSubtitles?.length
           ? {
-              subtitles: mappedSubtitles,
+              subtitles: mappedFilteredSubtitles,
             }
           : {}),
       }
@@ -551,7 +555,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           render={({ field: { value, onChange } }) => (
             <Select
               value={value}
-              items={languages}
+              items={LANGUAGES_LIST}
               onChange={onChange}
               error={!!errors.language && !value}
               disabled={videoFieldsLocked}
@@ -770,7 +774,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                         )
                       )
                     }}
-                    languagesIso={languages.map(({ value }) => value)}
+                    languagesIso={LANGUAGES_LIST.map(({ value }) => value)}
                     subtitlesArray={subtitlesArray}
                   />
                 </FormField>
