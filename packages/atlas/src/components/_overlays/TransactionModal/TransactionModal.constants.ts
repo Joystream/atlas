@@ -147,32 +147,32 @@ export const getExtrinsicStatusDetails = (
           return {
             title: sharedTitle,
             description:
-              "You can't transfer tokens because you don't have enough tokens to pay transaction fee. Add tokens to your membership balance and try again.",
+              "You don't have enough tokens in your member account to pay transaction fee. Add tokens to your membership balance and try again.",
             animation: sharedAnimation,
           }
         case ErrorCode.WithdrawFromChannelAmountExceedsBalanceMinusExistentialDeposit:
           return {
             title: sharedTitle,
             description:
-              "You can't withdraw tokens from channel because you don't have enough tokens to pay transaction fee. Add tokens to your membership balance and try again.",
+              "You're trying to withdraw too many tokens from your channel account. Please decrease the amount and try again.",
             animation: sharedAnimation,
           }
         case ErrorCode.DataObjectStateBloatBondChanged:
           return {
             title: sharedTitle,
-            description: 'Data object state bloat bond fee changed. Try again.',
+            description: 'Bloat bond for data object state has changed. Please reload the app and try again.',
             animation: sharedAnimation,
           }
         case ErrorCode.VideoStateBloatBondChanged:
           return {
             title: sharedTitle,
-            description: 'Video object state bloat bond fee changed. Try again.',
+            description: 'Bloat bond for video state has changed. Please reload the app and try again.',
             animation: sharedAnimation,
           }
         case ErrorCode.ChannelStateBloatBondChanged:
           return {
             title: sharedTitle,
-            description: 'Channel object state bloat bond fee changed. Try again.',
+            description: 'Bloat bond for channel state has changed. Please reload the app and try again.',
             animation: sharedAnimation,
           }
         case ErrorCode.InsufficientBalance:
