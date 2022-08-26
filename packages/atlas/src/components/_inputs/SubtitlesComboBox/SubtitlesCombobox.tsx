@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { FC, useState } from 'react'
+import { FC, useMemo } from 'react'
 
 import { Text } from '@/components/Text'
 import { LANGUAGES_LOOKUP } from '@/config/languages'
@@ -31,33 +31,34 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
   onLanguageDelete,
   onSubtitlesAdd,
 }) => {
-  const [availableLanguages, setAvailableLanguages] = useState<AvailableLanguage[]>(
-    languagesIso
+  const availableSubtitlesLanguages = useMemo(() => {
+    return languagesIso
       .map((iso) => [
-        { displayName: LANGUAGES_LOOKUP[iso], languageIso: iso, type: 'subtitles' as const, disabled: false },
-        { displayName: LANGUAGES_LOOKUP[iso], languageIso: iso, type: 'closed-captions' as const, disabled: false },
+        {
+          displayName: LANGUAGES_LOOKUP[iso],
+          languageIso: iso,
+          type: 'subtitles' as const,
+          disabled: !!subtitlesArray?.find(
+            (subtitles) => subtitles.languageIso === iso && subtitles.type === 'subtitles'
+          ),
+        },
+        {
+          displayName: LANGUAGES_LOOKUP[iso],
+          languageIso: iso,
+          type: 'closed-captions' as const,
+          disabled: !!subtitlesArray?.find(
+            (subtitles) => subtitles.languageIso === iso && subtitles.type === 'closed-captions'
+          ),
+        },
       ])
       .flat()
-  )
+  }, [languagesIso, subtitlesArray])
 
-  const toggleLanguage = (subtitles: SubtitlesInput, disabled: boolean) => {
-    setAvailableLanguages((availableLanguages) =>
-      availableLanguages.map((availableLanguage) => {
-        if (availableLanguage.languageIso === subtitles.languageIso && availableLanguage.type === subtitles.type) {
-          return {
-            ...availableLanguage,
-            disabled,
-          }
-        }
-        return availableLanguage
-      })
-    )
-  }
   return (
     <Wrapper>
       <ComboBox<AvailableLanguage>
         placeholder="Add language"
-        items={availableLanguages.map((subtitlesLanguage) => ({
+        items={availableSubtitlesLanguages.map((subtitlesLanguage) => ({
           ...subtitlesLanguage,
           label: `${subtitlesLanguage.displayName} ${subtitlesLanguage.type === 'closed-captions' ? '(CC)' : ''}`,
           nodeEnd: subtitlesLanguage.disabled ? (
@@ -71,7 +72,6 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
           if (item?.disabled || !item) {
             return
           }
-          toggleLanguage(item, true)
           onLanguageAdd({ languageIso: item.languageIso, type: item.type })
         }}
       />
@@ -81,7 +81,6 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
           type={type}
           languageIso={LANGUAGES_LOOKUP[languageIso]}
           onRemove={() => {
-            toggleLanguage({ languageIso, type }, false)
             onLanguageDelete({ languageIso, type })
           }}
           onDownload={onSubtitlesDownload}
