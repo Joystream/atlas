@@ -168,7 +168,7 @@ export const useSubscribeAccountBalance = (
             // substract existential deposit from channel balance
             // TODO in future existentialDeposit will be replaced with channel state bloat bond
             const rewardBalance = new BN(availableBalance).sub(chainState.existentialDeposit)
-            setAccountBalance(rewardBalance.gtn(0) ? rewardBalance : undefined)
+            setAccountBalance(rewardBalance.gtn(0) ? rewardBalance : new BN(0))
             return
           }
           setAccountBalance(new BN(availableBalance))
