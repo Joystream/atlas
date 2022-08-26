@@ -61,8 +61,11 @@ export const SubtitlesBox: FC<SubtitleBoxProps> = ({
 
   const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.currentTarget.files?.[0]
+    if (!file) {
+      return
+    }
     const isSupported =
-      file?.name
+      file.name
         .split('.')
         .pop()
         ?.match(/srt|vtt/) || file?.type === 'text/vtt'

@@ -6,6 +6,8 @@ export const converSrtToVtt = async (srtFile: File): Promise<File> => {
       reader.removeEventListener('loadend', onLoadEnd)
       if (typeof result === 'string') {
         resolve(result)
+      } else {
+        reject(new Error('Error during loading subtitles file, event.target.result is not a string'))
       }
     }
 

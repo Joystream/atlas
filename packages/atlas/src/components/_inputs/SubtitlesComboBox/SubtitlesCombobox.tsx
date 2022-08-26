@@ -82,7 +82,7 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
           languageIso={LANGUAGES_LOOKUP[languageIso]}
           onRemove={() => {
             toggleLanguage({ languageIso, type }, false)
-            return onLanguageDelete({ languageIso, type })
+            onLanguageDelete({ languageIso, type })
           }}
           onDownload={onSubtitlesDownload}
           file={file}

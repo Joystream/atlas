@@ -27,6 +27,7 @@ import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { NftIssuanceInputMetadata, VideoInputAssets, VideoInputMetadata } from '@/joystream-lib'
 import { useRawAssetResolver } from '@/providers/assets'
 import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joystream'
+import { useSnackbar } from '@/providers/snackbars'
 import { useUser } from '@/providers/user'
 import {
   VideoFormAssetData,
@@ -89,6 +90,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const [titleTooltipVisible, setTitleTooltipVisible] = useState(true)
   const mintNftFormFieldRef = useRef<HTMLDivElement>(null)
   const { memberId, channelId } = useUser()
+  const { displaySnackbar } = useSnackbar()
 
   const { editedVideoInfo } = useVideoWorkspace()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useVideoWorkspaceData()
@@ -770,7 +772,17 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                       const isSrt = file?.name.split('.').pop() === 'srt'
                       let newFile = file
                       if (isSrt) {
-                        newFile = await converSrtToVtt(file)
+                        try {
+                          newFile = await converSrtToVtt(file)
+                        } catch (error) {
+                          displaySnackbar({
+                            title: 'Something went wrong',
+                            description:
+                              'There was a problem with processing subtitles file. Try again or select different file.',
+                            iconType: 'error',
+                          })
+                          return
+                        }
                       }
                       onChange(
                         subtitlesArray?.map((subtitles) =>
