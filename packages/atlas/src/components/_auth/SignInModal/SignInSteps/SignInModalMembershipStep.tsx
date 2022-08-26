@@ -18,12 +18,12 @@ import { SignInStepProps } from './SignInSteps.types'
 import { MemberFormData } from '../SignInModal.types'
 
 type SignInModalMembershipStepProps = SignInStepProps & {
-  createMember: (data: MemberFormData) => void
+  onSubmit: (data: MemberFormData) => void
 }
 
 export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
   setPrimaryButtonProps,
-  createMember,
+  onSubmit,
   hasNavigatedBack,
 }) => {
   const {
@@ -59,8 +59,8 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
 
   const requestFormSubmit = useCallback(() => {
     setIsHandleValidating(false)
-    createSubmitHandler(createMember)()
-  }, [createMember, createSubmitHandler])
+    createSubmitHandler(onSubmit)()
+  }, [onSubmit, createSubmitHandler])
 
   // send updates to SignInModal on state of primary button
   useEffect(() => {
@@ -123,7 +123,7 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
       }
       hasNavigatedBack={hasNavigatedBack}
       formNode={
-        <StyledForm onSubmit={createSubmitHandler(createMember)}>
+        <StyledForm onSubmit={createSubmitHandler(onSubmit)}>
           <Controller
             control={control}
             name="avatar"

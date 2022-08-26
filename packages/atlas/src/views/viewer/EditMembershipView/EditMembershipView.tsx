@@ -18,6 +18,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { MemberInputMetadata } from '@/joystream-lib'
 import { useFee, useJoystream } from '@/providers/joystream'
+import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions'
 import { useUser } from '@/providers/user'
 import { uploadAvatarImage } from '@/utils/image'
@@ -41,6 +42,7 @@ export const EditMembershipView: FC = () => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
+  const { displaySnackbar } = useSnackbar()
 
   const client = useApolloClient()
 
@@ -69,7 +71,7 @@ export const EditMembershipView: FC = () => {
     reset,
     watch,
     control,
-    formState: { errors, isDirty, dirtyFields },
+    formState: { errors, isDirty, dirtyFields, isSubmitting },
   } = useForm<EditMemberFormInputs>({
     shouldFocusError: true,
     reValidateMode: 'onSubmit',
@@ -130,13 +132,22 @@ export const EditMembershipView: FC = () => {
     if (!joystream || !activeMembership) {
       return
     }
+    let fileUrl = ''
+    if (data.avatar.blob && dirtyFields.avatar) {
+      try {
+        fileUrl = await uploadAvatarImage(data.avatar.blob)
+      } catch (error) {
+        displaySnackbar({
+          title: 'Something went wrong',
+          description: 'Avatar could not be uploaded. Try again later',
+          iconType: 'error',
+        })
+        return
+      }
+    }
 
     const success = await handleTransaction({
       txFactory: async (updateStatus) => {
-        let fileUrl = ''
-        if (data.avatar?.blob && dirtyFields.avatar) {
-          fileUrl = await uploadAvatarImage(data.avatar.blob)
-        }
         const memberInputMetadata: MemberInputMetadata = {
           ...(dirtyFields.handle ? { name: data.handle } : {}),
           ...(dirtyFields.about ? { about: data.about } : {}),
@@ -272,8 +283,8 @@ export const EditMembershipView: FC = () => {
           fee={fee}
           feeLoading={feeLoading}
           primaryButton={{
-            disabled: !isDirty || isHandleValidating,
-            text: 'Publish changes',
+            disabled: !isDirty || isHandleValidating || isSubmitting,
+            text: isSubmitting ? 'Please wait...' : 'Publish changes',
             type: 'submit',
           }}
           secondaryButton={{

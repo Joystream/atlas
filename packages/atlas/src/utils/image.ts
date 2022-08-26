@@ -15,10 +15,21 @@ export const validateImage = async (fileOrUrl: File | string): Promise<File | st
 export const uploadAvatarImage = async (croppedBlob: Blob) => {
   const formData = new FormData()
   formData.append('file', croppedBlob, `upload.${croppedBlob.type === 'image/webp' ? 'webp' : 'jpg'}`)
-  const response = await axios.post<{ fileName: string }>(AVATAR_SERVICE_URL, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  })
-  return AVATAR_SERVICE_URL + '/' + response.data.fileName
+  try {
+    const response = await axios.post<{ fileName: string }>(AVATAR_SERVICE_URL, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    return AVATAR_SERVICE_URL + '/' + response.data.fileName
+  } catch (error) {
+    throw new UploadAvatarServiceError(error?.message)
+  }
+}
+
+export class UploadAvatarServiceError extends Error {
+  constructor(message?: string) {
+    super(message)
+    this.name = 'UploadAvatarServiceError'
+  }
 }
