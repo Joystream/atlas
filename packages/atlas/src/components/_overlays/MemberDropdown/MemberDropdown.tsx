@@ -71,7 +71,8 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
 
     const { accountBalance } = useSubscribeAccountBalance()
-    const { accountBalance: channelBalance } = useSubscribeAccountBalance(selectedChannel?.rewardAccount) || new BN(0)
+    const { accountBalance: channelBalance } =
+      useSubscribeAccountBalance(selectedChannel?.rewardAccount, { isRewardAccount: true }) || new BN(0)
 
     const containerRef = useRef<HTMLDivElement>(null)
     const { ref: measureContainerRef, height: containerHeight = 0 } = useResizeObserver({ box: 'border-box' })
