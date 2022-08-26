@@ -114,7 +114,7 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
           To get the full Atlas experience, you need a free Joystream blockchain membership.
           <Text as="p" variant="t100" color="inherit">
             <Anchor href={JOYSTREAM_URL} target="_blank">
-              Learn about joystream &rarr;
+              Learn about Joystream &rarr;
             </Anchor>
           </Text>
         </>
