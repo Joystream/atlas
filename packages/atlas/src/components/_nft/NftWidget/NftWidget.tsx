@@ -88,6 +88,8 @@ export type NftWidgetProps = {
   onNftCancelSale?: () => void
   onNftChangePrice?: () => void
   onWithdrawBid?: (bid?: BN, createdAt?: Date) => void
+  userBidCreatedAt?: Date
+  userBidAmount?: BN
 }
 
 const SMALL_VARIANT_MAXIMUM_SIZE = 416
@@ -108,6 +110,8 @@ export const NftWidget: FC<NftWidgetProps> = ({
   onNftPurchase,
   onNftSettlement,
   onNftBuyNow,
+  userBidCreatedAt,
+  userBidAmount,
 }) => {
   const timestamp = useMsTimestamp()
   const { ref, width = SMALL_VARIANT_MAXIMUM_SIZE + 1 } = useResizeObserver({
@@ -529,7 +533,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
                               fullWidth
                               size={buttonSize}
                               variant="destructive-secondary"
-                              onClick={() => onWithdrawBid?.()}
+                              onClick={() => onWithdrawBid?.(userBidAmount, userBidCreatedAt)}
                             >
                               Withdraw bid
                             </Button>
@@ -553,7 +557,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
                               fullWidth
                               size={buttonSize}
                               variant="destructive-secondary"
-                              onClick={() => onWithdrawBid?.()}
+                              onClick={() => onWithdrawBid?.(userBidAmount, userBidCreatedAt)}
                             >
                               Withdraw bid
                             </Button>
@@ -585,6 +589,8 @@ export const NftWidget: FC<NftWidgetProps> = ({
     onNftAcceptBid,
     onNftBuyNow,
     ownerHandle,
+    userBidAmount,
+    userBidCreatedAt,
   ])
 
   if (!nftStatus) return null

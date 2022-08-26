@@ -22,7 +22,15 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
   const nftActions = useNftActions()
   const creatorAvatar = useAsset(nft?.video.channel.avatarPhoto)
   const nftState = useNftState(nft)
-  const { auctionPlannedEndDate, needsSettling, startsAtDate, englishTimerState, timerLoading } = nftState
+  const {
+    auctionPlannedEndDate,
+    needsSettling,
+    startsAtDate,
+    englishTimerState,
+    timerLoading,
+    userBidCreatedAt,
+    userBidAmount,
+  } = nftState
   const { withdrawBid } = useNftTransactions()
 
   const { url: ownerMemberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
@@ -30,10 +38,10 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
   const isAuction = nftStatus?.status === 'auction'
 
   const handleWithdrawBid = () => {
-    if (!nftId) {
+    if (!nftId || !userBidCreatedAt || !userBidAmount) {
       return
     }
-    withdrawBid(nftId)
+    withdrawBid(nftId, userBidAmount, userBidCreatedAt)
   }
 
   const contextMenuItems = useVideoContextMenu({

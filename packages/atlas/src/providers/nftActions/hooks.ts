@@ -1,4 +1,3 @@
-import BN from 'bn.js'
 import { useCallback, useContext } from 'react'
 
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
@@ -29,7 +28,6 @@ export const useNftActions = () => {
     closeNftAction,
     cancelNftSale,
     changeNftPrice,
-    setWithdrawData,
   } = ctx
 
   const checkIfSigned = useCallback(() => {
@@ -89,15 +87,6 @@ export const useNftActions = () => {
     [setCurrentAction, setCurrentNftId]
   )
 
-  const openWithdrawBid = useCallback(
-    (nftId: string, bid?: BN, createdAt?: Date) => {
-      setCurrentNftId(nftId)
-      setCurrentAction('withdraw-bid')
-      if (bid && createdAt) setWithdrawData({ bid, createdAt })
-    },
-    [setCurrentAction, setCurrentNftId, setWithdrawData]
-  )
-
   return {
     currentAction,
     isBuyNowClicked,
@@ -110,6 +99,5 @@ export const useNftActions = () => {
     openNftChangePrice,
     cancelNftSale,
     changeNftPrice,
-    openWithdrawBid,
   }
 }

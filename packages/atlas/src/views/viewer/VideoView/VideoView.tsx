@@ -24,6 +24,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { VideoReaction } from '@/joystream-lib'
@@ -75,7 +76,7 @@ export const VideoView: FC = () => {
   const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
   const nftWidgetProps = useNftWidget(video)
   const { likeOrDislikeVideo } = useReactionTransactions()
-  const { openWithdrawBid } = useNftActions()
+  const { withdrawBid } = useNftTransactions()
 
   const mdMatch = useMediaMatch('md')
   const { addVideoView } = useAddVideoView()
@@ -245,7 +246,7 @@ export const VideoView: FC = () => {
           onNftPurchase={() => id && openNftPurchase(id)}
           onNftSettlement={() => id && openNftSettlement(id)}
           onNftBuyNow={() => id && openNftPurchase(id, { fixedPrice: true })}
-          onWithdrawBid={(bid, createdAt) => id && openWithdrawBid(id, bid, createdAt)}
+          onWithdrawBid={(bid, createdAt) => id && createdAt && bid && withdrawBid(id, bid, createdAt)}
         />
       )}
       <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />
