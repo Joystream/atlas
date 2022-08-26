@@ -37,7 +37,8 @@ import {
   BalanceContainer,
   BlurredBG,
   ChannelsSectionTitle,
-  Container, // Divider,
+  Container,
+  Divider,
   Filter,
   InnerContainer,
   MemberHandleText,
@@ -70,7 +71,9 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
 
     const { accountBalance } = useSubscribeAccountBalance()
-    const { accountBalance: channelBalance } = useSubscribeAccountBalance(selectedChannel?.rewardAccount) || new BN(0)
+    const { accountBalance: channelBalance } =
+      useSubscribeAccountBalance(selectedChannel?.rewardAccount, { isRewardAccount: true }) || new BN(0)
+    const balance = publisher ? channelBalance : accountBalance
 
     const containerRef = useRef<HTMLDivElement>(null)
     const { ref: measureContainerRef, height: containerHeight = 0 } = useResizeObserver({ box: 'border-box' })
@@ -197,34 +200,28 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                           <MemberHandleText as="span" variant="h400">
                             {publisher ? selectedChannel?.title : activeMembership?.handle ?? '‌‌ '}
                           </MemberHandleText>
-                          {accountBalance !== undefined && channelBalance !== undefined ? (
-                            <>
-                              <UserBalance>
-                                <JoyTokenIcon size={16} variant="regular" />
-                                <NumberFormat
-                                  as="span"
-                                  variant="t200-strong"
-                                  value={publisher ? channelBalance : accountBalance}
-                                  format="short"
-                                />
-                              </UserBalance>
-                            </>
+                          {balance !== undefined ? (
+                            <UserBalance>
+                              <JoyTokenIcon size={16} variant="regular" />
+                              <NumberFormat as="span" variant="t200-strong" value={balance} format="short" />
+                            </UserBalance>
                           ) : (
                             <SkeletonLoader width={30} height={20} />
                           )}
+
                           <BalanceContainer>
-                            {/*<TextLink*/}
-                            {/*  as="span"*/}
-                            {/*  onClick={() => {*/}
-                            {/*    closeDropdown?.()*/}
-                            {/*    publisher ? setShowWithdrawDialog(true) : setShowSendDialog(true)*/}
-                            {/*  }}*/}
-                            {/*  variant="t100"*/}
-                            {/*  color="colorCoreNeutral200Lighten"*/}
-                            {/*>*/}
-                            {/*  {publisher ? 'Withdraw' : 'Transfer'}*/}
-                            {/*</TextLink>*/}
-                            {/*<Divider />*/}
+                            <TextLink
+                              as="span"
+                              onClick={() => {
+                                closeDropdown?.()
+                                publisher ? setShowWithdrawDialog(true) : setShowSendDialog(true)
+                              }}
+                              variant="t100"
+                              color="colorCoreNeutral200Lighten"
+                            >
+                              {publisher ? 'Withdraw' : 'Transfer'}
+                            </TextLink>
+                            <Divider />
                             <TextLink
                               variant="t100"
                               as="a"

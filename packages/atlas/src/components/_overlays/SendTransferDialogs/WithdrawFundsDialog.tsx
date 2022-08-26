@@ -12,12 +12,12 @@ import { FormField } from '@/components/_inputs/FormField'
 import { TokenInput } from '@/components/_inputs/TokenInput'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { JOY_CURRENCY_TICKER } from '@/config/joystream'
-import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
+import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useFee, useJoystream, useTokenPrice } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions'
 import { formatNumber } from '@/utils/number'
 
-import { PriceWrapper, Summary, SummaryRow, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
+import { PriceWrapper, StyledMaxButton, Summary, SummaryRow, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
 
 type WithdrawFundsDialogProps = {
   onExitClick: () => void
@@ -45,6 +45,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
     watch,
     reset,
     control,
+    setValue,
     formState: { errors },
   } = useForm<{ amount: number | null }>()
   const { convertHapiToUSD } = useTokenPrice()
@@ -89,6 +90,15 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
 
   const channelBalanceInUsd = convertHapiToUSD(channelBalance)
 
+  const handleMaxClick = async () => {
+    const value = Math.floor(hapiBnToTokenNumber(channelBalance) * 100) / 100
+    setValue('amount', value, {
+      shouldTouch: true,
+      shouldDirty: true,
+      shouldValidate: false,
+    })
+  }
+
   return (
     <DialogModal
       show={show}
@@ -117,21 +127,32 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
           />
         )}
       </PriceWrapper>
-      <FormField label="Amount to withdraw" error={errors.amount?.message}>
+      <FormField
+        label="Amount to withdraw"
+        error={errors.amount?.message}
+        headerNode={
+          <StyledMaxButton onClick={handleMaxClick} size="medium" variant="tertiary" _textOnly>
+            Max
+          </StyledMaxButton>
+        }
+      >
         <Controller
           control={control}
           name="amount"
           rules={{
             validate: {
-              valid: (value) => {
-                if (!value || isNaN(value) || value < 0) {
-                  return 'The number of JOY tokens to withdraw has to be an integer and greater than 0 (e.g. 15).'
+              channelBalance: (value) => {
+                if (!value) {
+                  return 'Enter amount to transfer.'
+                }
+                if (value && tokenNumberToHapiBn(value).gt(channelBalance)) {
+                  return 'Not enough tokens in channel balance.'
                 }
                 return true
               },
-              channelBalance: (value) => {
-                if (value && tokenNumberToHapiBn(value).gt(channelBalance)) {
-                  return 'Not enough tokens in channel balance.'
+              memberBalance: () => {
+                if (fullFee.gt(accountBalance)) {
+                  return 'Membership wallet has insufficient balance to cover transaction fees. Top up your membership wallet and try again. '
                 }
                 return true
               },
@@ -164,10 +185,21 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
           </VerticallyCenteredDiv>
         </SummaryRow>
         <SummaryRow>
-          <Text as="span" variant="t100" color="colorText">
+          <Text
+            as="span"
+            variant="t100"
+            color={errors.amount?.type === 'memberBalance' ? 'colorTextError' : 'colorText'}
+          >
             Destination account balance
           </Text>
-          <NumberFormat as="span" format="short" variant="t100" color="colorText" value={accountBalance} />
+          <NumberFormat
+            as="span"
+            format="short"
+            variant="t100"
+            withToken
+            color={errors.amount?.type === 'memberBalance' ? 'colorTextError' : 'colorText'}
+            value={accountBalance}
+          />
         </SummaryRow>
       </Summary>
     </DialogModal>

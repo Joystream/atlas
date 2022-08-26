@@ -10,7 +10,6 @@ import {
   FormFieldHeader,
   FormFieldTitleWrapper,
   FormFieldWrapper,
-  Label,
   StyledInformation,
   StyledSvgActionWarning,
   SwitchLabel,
@@ -29,8 +28,8 @@ type WithSwitchProps =
     }
 
 export type FormFieldProps = PropsWithChildren<{
-  // We use ReactNode only in exceptional circumstances! In most cases you should use regular string.
-  label?: ReactNode
+  headerNode?: ReactNode
+  label?: string
   optional?: boolean
   error?: string
   disableErrorAnimation?: boolean
@@ -50,6 +49,7 @@ export const FormField = memo(
         className,
         optional,
         switchProps,
+        headerNode,
         tooltip,
         error,
         disableErrorAnimation,
@@ -85,7 +85,7 @@ export const FormField = memo(
         <FormFieldWrapper className={className} ref={ref}>
           {(label || description) && (
             <FormFieldHeader switchable={switchable}>
-              {label && (
+              {(label || headerNode) && (
                 <FormFieldTitleWrapper>
                   {switchable ? (
                     <SwitchLabel>
@@ -99,15 +99,11 @@ export const FormField = memo(
                       )}
                     </SwitchLabel>
                   ) : (
-                    <Label onClick={handleFocusOnClick}>
-                      {typeof label === 'string' ? (
-                        <Text as="span" variant="h300">
-                          {label}
-                        </Text>
-                      ) : (
-                        label
-                      )}
-                    </Label>
+                    <label onClick={handleFocusOnClick}>
+                      <Text as="span" variant="h300">
+                        {label}
+                      </Text>
+                    </label>
                   )}
                   {optional && (
                     <Text as="span" variant="t200" color="colorText" margin={{ left: 1 }}>
@@ -115,6 +111,7 @@ export const FormField = memo(
                     </Text>
                   )}
                   {tooltip && <StyledInformation {...tooltip} />}
+                  {headerNode}
                 </FormFieldTitleWrapper>
               )}
               {description &&
