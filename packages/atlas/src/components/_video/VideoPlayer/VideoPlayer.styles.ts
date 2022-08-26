@@ -477,7 +477,7 @@ export const Container = styled.div<ContainerProps>`
     /* stylelint-disable no-descending-specificity */
 
     ${ControlsIndicatorWrapper} {
-      transform: translateY(${({ captionsEnabled }) => (captionsEnabled ? HOVERED_CONTROLS_INDICATOR_POSITION : '0')});
+      transform: translateY(0);
     }
 
     .vjs-text-track-display {
@@ -501,10 +501,6 @@ export const Container = styled.div<ContainerProps>`
       }
     }
 
-    ${ControlsIndicatorWrapper} {
-      transform: translateY(HOVERED_CONTROLS_INDICATOR_POSITION);
-    }
-
     .vjs-text-track-display {
       > div {
         > div {
@@ -524,12 +520,6 @@ export const Container = styled.div<ContainerProps>`
         }
       }
 
-      ${ControlsIndicatorWrapper} {
-        transform: translateY(
-          ${({ captionsEnabled }) => (captionsEnabled ? HOVERED_CONTROLS_INDICATOR_POSITION : '0')}
-        );
-      }
-
       .vjs-text-track-display {
         > div {
           > div {
@@ -537,6 +527,14 @@ export const Container = styled.div<ContainerProps>`
               isSettingsPopoverOpened ? HOVERED_SUBTITLES_POSITION : DEFAULT_SUBTITLES_POSITION} !important;
           }
         }
+      }
+    }
+
+    .vjs-paused:hover {
+      ${ControlsIndicatorWrapper} {
+        transform: translateY(
+          ${({ captionsEnabled }) => (captionsEnabled ? HOVERED_CONTROLS_INDICATOR_POSITION : '0')}
+        );
       }
     }
 
@@ -550,7 +548,9 @@ export const Container = styled.div<ContainerProps>`
       }
 
       ${ControlsIndicatorWrapper} {
-        transform: translateY(HOVERED_CONTROLS_INDICATOR_POSITION);
+        transform: translateY(
+          ${({ captionsEnabled }) => (captionsEnabled ? HOVERED_CONTROLS_INDICATOR_POSITION : '0')}
+        );
       }
 
       .vjs-text-track-display {
@@ -570,12 +570,6 @@ export const Container = styled.div<ContainerProps>`
         ${CustomControls} {
           transform: translateY(${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 0 : 0.5)}em);
         }
-      }
-
-      ${ControlsIndicatorWrapper} {
-        transform: translateY(
-          ${({ captionsEnabled }) => (captionsEnabled ? HOVERED_CONTROLS_INDICATOR_POSITION : '0')}
-        );
       }
 
       .vjs-text-track-display {
