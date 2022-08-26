@@ -5,6 +5,7 @@ export const ORION_GRAPHQL_URL = readEnv('ORION_URL')
 export const ASSET_LOGS_URL = readEnv('ASSET_LOGS_URL', false)
 export const NODE_URL = readEnv('NODE_URL')
 export const FAUCET_URL = readEnv('FAUCET_URL')
+export const AVATAR_SERVICE_URL = readEnv('ASSETS_SERVICE_URL', true, true)
 
 export const SENTRY_DSN = readEnv('SENTRY_DSN', false)
 

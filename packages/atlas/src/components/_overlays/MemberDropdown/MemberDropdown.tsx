@@ -188,7 +188,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                       <Filter />
                       <MemberInfoContainer>
                         <StyledAvatar
-                          size="fill"
+                          size="bid"
                           assetUrl={publisher ? channelAvatarUrl : avatarUrl}
                           loading={publisher ? isChannelAvatarLoading : avatarLoading}
                         />

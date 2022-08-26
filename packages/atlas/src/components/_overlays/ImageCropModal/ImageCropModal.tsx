@@ -82,8 +82,8 @@ const ImageCropModalComponent: ForwardRefRenderFunction<ImageCropModalImperative
         setEditedImageHref(fileUrl)
         setShowModal(true)
       } else {
-        inputRef.current?.click()
         if (cropData) setCropData(cropData)
+        inputRef.current?.click()
       }
     },
   }))

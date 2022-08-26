@@ -1,49 +1,48 @@
 import { useApolloClient } from '@apollo/client'
 import debouncePromise from 'awesome-debounce-promise'
-import { FC, useCallback, useEffect, useRef, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 
 import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
-import { Avatar } from '@/components/Avatar'
+import { Text } from '@/components/Text'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
-import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
-import { imageUrlValidation } from '@/utils/asset'
+import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
+import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
+import { JOYSTREAM_URL } from '@/config/urls'
 
 import { SignInModalStepTemplate } from './SignInModalStepTemplate'
-import { StyledForm } from './SignInSteps.styles'
+import { Anchor, StyledAvatar, StyledForm } from './SignInSteps.styles'
 import { SignInStepProps } from './SignInSteps.types'
 
 import { MemberFormData } from '../SignInModal.types'
 
 type SignInModalMembershipStepProps = SignInStepProps & {
-  createMember: (data: MemberFormData) => void
+  onSubmit: (data: MemberFormData) => void
 }
 
 export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
   setPrimaryButtonProps,
-  createMember,
+  onSubmit,
   hasNavigatedBack,
 }) => {
   const {
     register,
     handleSubmit: createSubmitHandler,
+    trigger,
+    watch,
+    control,
     formState: { errors, isSubmitting },
-  } = useForm<MemberFormData>({ mode: 'onBlur' })
+  } = useForm<MemberFormData>({ reValidateMode: 'onSubmit' })
+  const handleInputRef = useRef<HTMLInputElement | null>(null)
+  const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
 
-  const [displayedAvatarUrl, setDisplayedAvatarUrl] = useState<string | null>(null)
   const [isHandleValidating, setIsHandleValidating] = useState(false)
 
   const client = useApolloClient()
 
-  const debouncedHandleUniqueValidation = useRef(
-    debouncePromise(async (value: string, prevValue?: string) => {
-      if (prevValue != null && value === prevValue) {
-        return true
-      }
-
-      setIsHandleValidating(true)
-
+  const validateUserHandle = useCallback(
+    async (value: string) => {
       const {
         data: { membershipByUniqueInput },
       } = await client.query<GetMembershipQuery, GetMembershipQueryVariables>({
@@ -51,22 +50,15 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
         variables: { where: { handle: value } },
       })
 
-      setIsHandleValidating(false)
-
       return !membershipByUniqueInput
-    }, 500)
-  )
-  const debouncedAvatarValidation = useRef(
-    debouncePromise(async (url: string) => {
-      const isValid = await imageUrlValidation(url)
-      setDisplayedAvatarUrl(isValid ? url : null)
-      return isValid
-    }, 500)
+    },
+    [client]
   )
 
   const requestFormSubmit = useCallback(() => {
-    createSubmitHandler(createMember)()
-  }, [createMember, createSubmitHandler])
+    setIsHandleValidating(false)
+    createSubmitHandler(onSubmit)()
+  }, [onSubmit, createSubmitHandler])
 
   // send updates to SignInModal on state of primary button
   useEffect(() => {
@@ -75,62 +67,116 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
       disabled: isSubmitting,
       onClick: requestFormSubmit,
     })
-  }, [isSubmitting, requestFormSubmit, setPrimaryButtonProps])
+  }, [isHandleValidating, isSubmitting, requestFormSubmit, setPrimaryButtonProps])
+
+  const { ref, ...handleRest } = useMemo(
+    () =>
+      register('handle', {
+        onChange: debouncePromise(
+          async () => {
+            await trigger('handle')
+            setIsHandleValidating(false)
+          },
+          500,
+          {
+            key() {
+              setIsHandleValidating(true)
+              return null
+            },
+          }
+        ),
+        validate: {
+          valid: (value) => (!value ? true : MEMBERSHIP_NAME_PATTERN.test(value) || 'Enter a valid member handle.'),
+          unique: async (value) => {
+            const valid = await validateUserHandle(value)
+            return valid || 'This member handle is already in use.'
+          },
+        },
+        required: { value: true, message: 'Member handle is required.' },
+        minLength: { value: 5, message: 'Member handle must be at least 5 characters long.' },
+      }),
+    [register, trigger, validateUserHandle]
+  )
+
+  useEffect(() => {
+    if (errors.handle) {
+      handleInputRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [errors.handle])
 
   return (
     <SignInModalStepTemplate
+      darkBackground
       title="Create Joystream membership"
-      subtitle="Tell us more about yourself."
+      backgroundImage={watch('avatar')?.url || undefined}
+      subtitle={
+        <>
+          To get the full Atlas experience, you need a free Joystream blockchain membership.
+          <Text as="p" variant="t100" color="inherit">
+            <Anchor href={JOYSTREAM_URL} target="_blank">
+              Learn about Joystream &rarr;
+            </Anchor>
+          </Text>
+        </>
+      }
       hasNavigatedBack={hasNavigatedBack}
-    >
-      <StyledForm onSubmit={createSubmitHandler(createMember)}>
-        <FormField
-          label="Member handle"
-          description="Member handle may contain only lowercase letters, numbers and underscores."
-          error={errors.handle?.message}
-        >
-          <Input
-            {...register('handle', {
-              validate: {
-                valid: (value) =>
-                  !value ? true : MEMBERSHIP_NAME_PATTERN.test(value) || 'Enter a valid member handle.',
-                unique: async (value) => {
-                  const valid = await debouncedHandleUniqueValidation.current(value)
-                  return valid || 'This member handle is already in use.'
-                },
-              },
-              required: { value: true, message: 'Member handle is required.' },
-              minLength: { value: 5, message: 'Member handle must be at least 5 characters long.' },
-            })}
-            placeholder="johnnysmith"
-            error={!!errors.handle}
-            processing={isHandleValidating || isSubmitting}
-            autoComplete="off"
+      formNode={
+        <StyledForm onSubmit={createSubmitHandler(onSubmit)}>
+          <Controller
+            control={control}
+            name="avatar"
+            render={({ field: { value: imageInputFile, onChange } }) => (
+              <>
+                <StyledAvatar
+                  size="cover"
+                  onClick={() =>
+                    avatarDialogRef.current?.open(
+                      imageInputFile?.originalBlob ? imageInputFile.originalBlob : imageInputFile?.blob,
+                      imageInputFile?.imageCropData,
+                      !!imageInputFile?.blob
+                    )
+                  }
+                  assetUrl={imageInputFile?.url}
+                  editable
+                />
+                <ImageCropModal
+                  imageType="avatar"
+                  onConfirm={(blob, url, _, imageCropData, originalBlob) => {
+                    onChange({
+                      blob,
+                      url,
+                      imageCropData,
+                      originalBlob,
+                    })
+                  }}
+                  onDelete={() => {
+                    onChange(undefined)
+                  }}
+                  ref={avatarDialogRef}
+                />
+              </>
+            )}
           />
-        </FormField>
-        <FormField
-          label="Avatar URL"
-          description="You can host your avatar image on external services such as imgbb.com, imgur.com, flickr.com, imgbox.com, and others."
-          optional
-          error={errors.avatar?.message}
-        >
-          <Input
-            {...register('avatar', {
-              validate: {
-                validUrl: (value) => (!value ? true : URL_PATTERN.test(value) || 'Enter a valid URL.'),
-                validImage: async (value) => {
-                  const valid = !value || (await debouncedAvatarValidation.current(value))
-                  return valid || 'Image not found.'
-                },
-              },
-            })}
-            placeholder="https://example.com/avatar.jpeg"
-            error={!!errors.avatar}
-            nodeEnd={displayedAvatarUrl ? <Avatar assetUrl={displayedAvatarUrl} size="bid" /> : null}
-            autoComplete="off"
-          />
-        </FormField>
-      </StyledForm>
-    </SignInModalStepTemplate>
+          <FormField
+            disableErrorAnimation={document.activeElement === handleInputRef.current}
+            label="Member handle"
+            description="Member handle may contain only lowercase letters, numbers and underscores."
+            error={errors.handle?.message}
+          >
+            <Input
+              {...handleRest}
+              ref={(e) => {
+                ref(e)
+                handleInputRef.current = e
+              }}
+              placeholder="johnnysmith"
+              error={!!errors.handle}
+              processing={isHandleValidating || isSubmitting}
+              autoComplete="off"
+            />
+          </FormField>
+        </StyledForm>
+      }
+    />
   )
 }

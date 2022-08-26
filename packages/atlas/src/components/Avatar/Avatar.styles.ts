@@ -2,7 +2,7 @@ import isPropValid from '@emotion/is-prop-valid'
 import { SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SvgIllustrativeFileFailed } from '@/components/_icons'
+import { SvgActionAddImage, SvgActionEdit, SvgIllustrativeFileFailed } from '@/components/_icons'
 import { SvgAvatarSilhouette } from '@/components/_illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, media, square, zIndex } from '@/styles'
@@ -22,14 +22,48 @@ type ContainerProps = {
   size: AvatarSize
   isLoading?: boolean
   isClickable: boolean
-  withoutOutline?: boolean
   // allow passing 'type' prop to Container because it can be rendered as 'button' depending on context
   type?: 'button'
 }
 
-type EditOverlayProps = {
-  size: Omit<AvatarSize, 'default'>
-}
+export const IconAndOverlayWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 100%;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`
+
+export const StyledSvgActionEdit = styled(SvgActionEdit)`
+  position: relative;
+`
+export const StyledSvgActionAddImage = styled(SvgActionAddImage)`
+  position: relative;
+`
+
+export const Overlay = styled.div<{ isEdit?: boolean }>`
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 100%;
+  transition: background-color ${cVar('animationTransitionMedium')};
+  opacity: 0;
+
+  ${({ isEdit }) =>
+    isEdit &&
+    css`
+      background-color: ${cVar('colorBackgroundOverlay')};
+      opacity: 0.5;
+    `};
+`
 
 const previewAvatarCss = css`
   ${square('136px')};
@@ -102,17 +136,32 @@ const getAvatarSizeCss = ({ size }: ContainerProps): SerializedStyles => {
 
 export const sharedAvatarHoverStyles = css`
   ::after {
-    box-shadow: inset 0 0 0 2px ${cVar('colorCoreNeutral200')};
+    box-shadow: inset 0 0 0 1px ${cVar('colorBackgroundAlpha')};
   }
-`
-export const sharedAvatarActiveStyles = css`
-  ::after {
-    box-shadow: inset 0 0 0 2px ${cVar('colorCoreBlue500')};
+  ${IconAndOverlayWrapper} {
+    opacity: 1;
+  }
+  ${Overlay} {
+    opacity: 0.5;
+    background-color: ${cVar('colorBackgroundOverlay')};
   }
 `
 
-const getBorderStyles = ({ isLoading, isClickable, withoutOutline }: Omit<ContainerProps, 'size'>) => {
-  if (withoutOutline || isLoading) {
+export const sharedAvatarActiveStyles = css`
+  ::after {
+    box-shadow: inset 0 0 0 1px ${cVar('colorBackgroundMutedAlpha')};
+  }
+  ${IconAndOverlayWrapper} {
+    opacity: 1;
+  }
+  ${Overlay} {
+    opacity: 1;
+    background-color: ${cVar('colorBackgroundOverlay')};
+  }
+`
+
+const getInteractiveStyles = ({ isLoading }: Omit<ContainerProps, 'size'>) => {
+  if (isLoading) {
     return
   }
 
@@ -125,54 +174,22 @@ const getBorderStyles = ({ isLoading, isClickable, withoutOutline }: Omit<Contai
       border-radius: 50%;
       z-index: ${zIndex.overlay};
       pointer-events: none;
-      box-shadow: inset 0 0 0 1px ${cVar('colorBorderMutedAlpha')};
+      box-shadow: inset 0 0 0 1px ${cVar('colorBackgroundMutedAlpha')};
     }
 
     :hover {
-      ${isClickable && sharedAvatarHoverStyles};
+      ${sharedAvatarHoverStyles};
     }
 
     :active {
-      ${isClickable && sharedAvatarActiveStyles};
+      ${sharedAvatarActiveStyles};
     }
   `
 }
 
-export const EditOverlay = styled.div<EditOverlayProps>`
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: 100%;
-  z-index: 3;
-  color: ${cVar('colorCoreNeutral100')};
-  font: ${cVar('typographyDesktopT200Strong')};
-  letter-spacing: ${cVar('typographyDesktopT200StrongLetterSpacing')};
-  text-transform: ${cVar('typographyDesktopT200StrongTextTransform')};
-
-  ${({ size }) => size === 'cover' && `font-size: var(--typography-font-sizes-1)`};
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  transition: background-color ${cVar('animationTransitionMedium')};
-  opacity: 0;
-
-  :hover {
-    background-color: ${cVar('colorCoreNeutral500Darken')};
-    opacity: 1;
-  }
-
-  span {
-    ${({ size }) => size === 'small' && 'display: none'};
-  }
-`
-
 export const Container = styled('div', { shouldForwardProp: isPropValid })<ContainerProps>`
   ${getAvatarSizeCss};
-  ${getBorderStyles};
+  ${getInteractiveStyles};
 
   border-radius: 100%;
   overflow: hidden;
@@ -209,6 +226,7 @@ export const NewChannelAvatar = styled.div`
   position: absolute;
   display: flex;
   justify-content: center;
+  flex-direction: column;
   align-items: center;
   width: 100%;
   height: 100%;
@@ -224,6 +242,6 @@ export const ChildrenWrapper = styled.div`
 `
 export const StyledSvgIllustrativeFileFailed = styled(SvgIllustrativeFileFailed)`
   path {
-    fill: ${cVar('colorCoreNeutral300')};
+    fill: ${cVar('colorCoreNeutral100')};
   }
 `

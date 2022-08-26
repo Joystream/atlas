@@ -175,7 +175,7 @@ export const useCropper = ({ imageEl, imageType, cropData }: UseCropperOpts) => 
       }
       canvas.toBlob((blob) => {
         if (!blob) {
-          SentryLogger.error('Got an empty blob from cropped canvas', 'ImageCropDialog')
+          SentryLogger.error('Got an empty blob from cropped canvas', 'ImageCropModal')
           return
         }
         const url = URL.createObjectURL(blob)

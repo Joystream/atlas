@@ -13,6 +13,7 @@ import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransactionManagerStore } from '@/providers/transactions'
 import { useUser, useUserStore } from '@/providers/user'
+import { uploadAvatarImage } from '@/utils/image'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { StyledDialogModal } from './SignInModal.styles'
@@ -77,7 +78,23 @@ export const SignInModal: FC = () => {
     setHasNavigatedBack(true)
   }, [])
 
-  const createMember = useCallback(
+  const createNewMember = useCallback(async (address: string, data: MemberFormData) => {
+    let fileUrl
+
+    if (data.avatar?.blob) {
+      fileUrl = await uploadAvatarImage(data.avatar.blob)
+    }
+
+    const body = {
+      account: address,
+      handle: data.handle,
+      avatar: fileUrl,
+    }
+    const response = await axios.post<NewMemberResponse>(FAUCET_URL, body)
+    return response.data
+  }, [])
+
+  const handleSubmit = useCallback(
     async (data: MemberFormData) => {
       if (!selectedAddress) return
 
@@ -111,6 +128,15 @@ export const SignInModal: FC = () => {
         const { block } = await createNewMember(selectedAddress, data)
         addBlockAction({ targetBlock: block, callback })
       } catch (error) {
+        if (error.name === 'UploadAvatarServiceError') {
+          displaySnackbar({
+            title: 'Something went wrong',
+            description: 'Avatar could not be uploaded. Try again later',
+            iconType: 'error',
+          })
+          goToPreviousStep()
+          return
+        }
         SentryLogger.error('Failed to create a membership', 'SignInModal', error)
         const errorCode = error?.isAxiosError && (error as AxiosError<NewMemberResponse>).response?.data?.error
         displaySnackbar({
@@ -125,6 +151,7 @@ export const SignInModal: FC = () => {
     },
     [
       addBlockAction,
+      createNewMember,
       displaySnackbar,
       goToNextStep,
       goToPreviousStep,
@@ -166,7 +193,7 @@ export const SignInModal: FC = () => {
       case 'terms':
         return <SignInModalTermsStep {...commonProps} />
       case 'membership':
-        return <SignInModalMembershipStep createMember={createMember} {...commonProps} />
+        return <SignInModalMembershipStep onSubmit={handleSubmit} {...commonProps} />
       case 'creating':
         return <SignInModalCreatingStep {...commonProps} />
     }
@@ -201,12 +228,4 @@ type NewMemberResponse = {
   memberId: MemberId
   block: number
   error?: string
-}
-const createNewMember = async (address: string, data: MemberFormData) => {
-  const body = {
-    account: address,
-    ...data,
-  }
-  const response = await axios.post<NewMemberResponse>(FAUCET_URL, body)
-  return response.data
 }

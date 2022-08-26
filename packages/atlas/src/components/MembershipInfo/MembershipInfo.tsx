@@ -28,6 +28,7 @@ export type MembershipInfoProps = {
   avatarLoading?: boolean
   hasAvatarUploadFailed?: boolean
   onAvatarEditClick?: (event: MouseEvent<HTMLElement>) => void
+  onImageValidation?: (validImage: boolean) => void
   handle?: string | null
   address?: string | null
   loading?: boolean
@@ -42,6 +43,7 @@ export const MembershipInfo: FC<MembershipInfoProps> = ({
   avatarLoading,
   hasAvatarUploadFailed,
   onAvatarEditClick,
+  onImageValidation,
   handle,
   loading,
   isOwner,
@@ -75,6 +77,7 @@ export const MembershipInfo: FC<MembershipInfoProps> = ({
             <Avatar
               size={smMatch ? 'preview' : 'channel-card'}
               editable={editable}
+              onImageValidation={onImageValidation}
               onClick={onAvatarEditClick}
               assetUrl={avatarUrl}
               loading={avatarLoading}
