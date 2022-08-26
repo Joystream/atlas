@@ -12,6 +12,9 @@ import {
 import { TransitionGroup } from 'react-transition-group'
 
 import { AlertDialogModal, AlertDialogModalProps } from '@/components/_overlays/AlertDialogModal'
+import { AlertDialogModalWithFee } from '@/components/_overlays/AlertDialogModalWithFee'
+import { TxMethodName } from '@/joystream-lib'
+import { JoystreamLibExtrinsics } from '@/joystream-lib/extrinsics'
 import { createId } from '@/utils/createId'
 
 type ConfirmationModalContextValue = {
@@ -20,6 +23,13 @@ type ConfirmationModalContextValue = {
 }
 const ConfirmationModalContext = createContext<undefined | ConfirmationModalContextValue>(undefined)
 ConfirmationModalContext.displayName = 'ConfirmationModalContext'
+
+type FeeProps = {
+  fee?: {
+    methodName: TxMethodName
+    args?: Parameters<JoystreamLibExtrinsics[TxMethodName]>
+  }
+}
 
 export const ConfirmationModalProvider: FC<PropsWithChildren> = ({ children }) => {
   const [modals, setModals] = useState<Record<string, FC>>({})
@@ -57,7 +67,7 @@ export const ConfirmationModalProvider: FC<PropsWithChildren> = ({ children }) =
   )
 }
 
-export const useConfirmationModal = (modalProps?: AlertDialogModalProps) => {
+export const useConfirmationModal = (modalProps?: AlertDialogModalProps & FeeProps) => {
   const ctx = useContext(ConfirmationModalContext)
   if (ctx === undefined) {
     throw new Error('useConfirmationModal must be used within a ConfirmationModalProvider')
@@ -72,7 +82,7 @@ export const useConfirmationModal = (modalProps?: AlertDialogModalProps) => {
   }, [closeModal, modalId])
 
   const _openModal = useCallback(
-    (args?: AlertDialogModalProps) =>
+    (args?: AlertDialogModalProps & FeeProps) =>
       openModal(modalId, ({ in: inAnimation }) => {
         const _args = args || modalProps
         const handleClick = _args?.onExitClick
@@ -81,8 +91,16 @@ export const useConfirmationModal = (modalProps?: AlertDialogModalProps) => {
               _closeModal()
             }
           : undefined
-
-        return <AlertDialogModal {..._args} onExitClick={handleClick} show={inAnimation} />
+        const commonProps = {
+          show: inAnimation,
+          onExitClick: handleClick,
+          ..._args,
+        }
+        return _args?.fee ? (
+          <AlertDialogModalWithFee {...commonProps} fee={_args.fee} />
+        ) : (
+          <AlertDialogModal {...commonProps} />
+        )
       }),
     [openModal, modalId, modalProps, _closeModal]
   )

@@ -35,10 +35,10 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, details
     useVideoTileSharedLogic(video)
 
   const handleWithdrawBid = () => {
-    if (!video?.id) {
+    if (!video?.id || !nftState.userBidAmount || !nftState.userBidCreatedAt) {
       return
     }
-    withdrawBid(video?.id)
+    withdrawBid(video?.id, nftState.userBidAmount, nftState.userBidCreatedAt)
   }
 
   const channelHref = absoluteRoutes.viewer.channel(video?.channel.id)

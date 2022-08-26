@@ -202,7 +202,7 @@ export const useBloatFeesAndPerMbFees = (assets?: VideoInputAssets | ChannelInpu
 }
 
 export const useFee = <TFnName extends TxMethodName, TArgs extends Parameters<JoystreamLibExtrinsics[TFnName]>>(
-  methodName: TFnName,
+  methodName?: TFnName,
   args?: TArgs,
   assets?: ChannelInputAssets | VideoInputAssets
 ) => {
@@ -220,7 +220,7 @@ export const useFee = <TFnName extends TxMethodName, TArgs extends Parameters<Jo
   const getTxFee = useCallback(
     async (args?: TArgs) => {
       const extrinsics = await joystream?.extrinsics
-      if (!args || !accountId || !extrinsics) {
+      if (!args || !accountId || !extrinsics || !methodName) {
         return new BN(0)
       }
 
@@ -266,7 +266,8 @@ export const useFee = <TFnName extends TxMethodName, TArgs extends Parameters<Jo
     ]
   )
 
-  const argsRef = useRef<TArgs | undefined>(args)
+  const argsRef = useRef<TArgs | undefined>()
+
   useEffect(() => {
     if (!args || isEqual(args, argsRef.current)) {
       return

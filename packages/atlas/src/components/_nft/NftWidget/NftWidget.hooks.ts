@@ -34,6 +34,8 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
     isUserWhitelisted,
     plannedEndAtBlock,
     hasTimersLoaded,
+    userBidCreatedAt,
+    userBidAmount,
   } = useNftState(nft)
 
   // poll for NFT changes only if the NFT exists
@@ -115,6 +117,8 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
         },
         nftHistory,
         saleType,
+        userBidCreatedAt,
+        userBidAmount,
       }
     }
     case 'buy-now':
@@ -129,6 +133,8 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
         },
         nftHistory,
         saleType,
+        userBidCreatedAt,
+        userBidAmount,
       }
     case 'idle':
       return {
@@ -142,6 +148,8 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
         },
         nftHistory,
         saleType,
+        userBidCreatedAt,
+        userBidAmount,
       }
   }
 

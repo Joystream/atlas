@@ -4,15 +4,19 @@ import { useCallback } from 'react'
 
 import { GetNftDocument, GetNftQuery, GetNftQueryVariables } from '@/api/queries'
 import { GetBidsDocument } from '@/api/queries/__generated__/bids.generated'
+import { NumberFormat } from '@/components/NumberFormat'
 import { NftSaleType } from '@/joystream-lib'
+import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions'
 import { useUser } from '@/providers/user'
+import { formatDateTime } from '@/utils/time'
 
 export const useNftTransactions = () => {
   const { memberId } = useUser()
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
+  const [openModal, closeModal] = useConfirmationModal()
   const client = useApolloClient()
 
   const refetchNftData = useCallback(
@@ -29,25 +33,56 @@ export const useNftTransactions = () => {
   )
 
   const withdrawBid = useCallback(
-    (id: string) => {
+    (id: string, userBidAmount: BN, userBidCreatedAt: Date) => {
       if (!joystream || !memberId) {
         return
       }
-      return handleTransaction({
-        snackbarSuccessMessage: {
-          title: 'Bid withdrawn successfully',
+      const handleWithdrawTransaction = () =>
+        handleTransaction({
+          snackbarSuccessMessage: {
+            title: 'Bid withdrawn successfully',
+          },
+          txFactory: async (updateStatus) =>
+            (await joystream.extrinsics).cancelNftBid(id, memberId, proxyCallback(updateStatus)),
+          onTxSync: async () => {
+            client.refetchQueries({
+              include: [GetBidsDocument],
+            })
+            return refetchNftData(id)
+          },
+        })
+
+      openModal({
+        title: (
+          <>
+            Withdraw your <NumberFormat value={userBidAmount} as="span" withToken /> bid?
+          </>
+        ),
+        description: (
+          <>
+            Are you sure you want to withdraw your{' '}
+            <NumberFormat value={userBidAmount} as="span" color="colorText" withToken /> bid placed on{' '}
+            {formatDateTime(userBidCreatedAt)}?
+          </>
+        ),
+        primaryButton: {
+          text: 'Withdraw',
+          onClick: () => {
+            handleWithdrawTransaction()
+            closeModal()
+          },
         },
-        txFactory: async (updateStatus) =>
-          (await joystream.extrinsics).cancelNftBid(id, memberId, proxyCallback(updateStatus)),
-        onTxSync: async () => {
-          client.refetchQueries({
-            include: [GetBidsDocument],
-          })
-          return refetchNftData(id)
+        secondaryButton: {
+          text: 'Cancel',
+          onClick: () => closeModal(),
+        },
+        fee: {
+          methodName: 'cancelNftBidTx',
+          args: [id, memberId],
         },
       })
     },
-    [joystream, memberId, handleTransaction, proxyCallback, client, refetchNftData]
+    [joystream, memberId, openModal, handleTransaction, proxyCallback, client, refetchNftData, closeModal]
   )
 
   const cancelNftSale = useCallback(
@@ -55,19 +90,42 @@ export const useNftTransactions = () => {
       if (!joystream || !memberId) {
         return
       }
-      return handleTransaction({
-        txFactory: async (updateStatus) =>
-          (await joystream.extrinsics).cancelNftSale(id, memberId, saleType, proxyCallback(updateStatus)),
-        onTxSync: async () => {
-          return refetchNftData(id)
+      const handleCancelTransaction = () =>
+        handleTransaction({
+          txFactory: async (updateStatus) =>
+            (await joystream.extrinsics).cancelNftSale(id, memberId, saleType, proxyCallback(updateStatus)),
+          onTxSync: async () => {
+            return refetchNftData(id)
+          },
+          snackbarSuccessMessage: {
+            title: 'NFT removed from sale successfully',
+            description: 'You can put it back on sale anytime.',
+          },
+        })
+
+      openModal({
+        title: 'Remove from sale?',
+        description: 'Are you sure you want to remove this NFT from sale? You can put it back on sale anytime.',
+        type: 'warning',
+        primaryButton: {
+          text: 'Remove',
+          onClick: () => {
+            handleCancelTransaction()
+            closeModal()
+          },
         },
-        snackbarSuccessMessage: {
-          title: 'NFT removed from sale successfully',
-          description: 'You can put it back on sale anytime.',
+        secondaryButton: {
+          variant: 'secondary',
+          text: 'Cancel',
+          onClick: () => closeModal(),
+        },
+        fee: {
+          methodName: 'cancelNftSaleTx',
+          args: [id, memberId, saleType],
         },
       })
     },
-    [refetchNftData, memberId, handleTransaction, joystream, proxyCallback]
+    [joystream, memberId, openModal, handleTransaction, proxyCallback, refetchNftData, closeModal]
   )
 
   const changeNftPrice = useCallback(
