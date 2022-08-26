@@ -111,7 +111,7 @@ export const FormField = memo(
                     </Text>
                   )}
                   {tooltip && <StyledInformation {...tooltip} />}
-                  {headerNode && headerNode}
+                  {headerNode}
                 </FormFieldTitleWrapper>
               )}
               {description &&
