@@ -1,6 +1,5 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { animated } from 'react-spring'
 
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
@@ -23,7 +22,13 @@ export const Container = styled.div`
   }
 `
 
-export const InnerContainer = styled.div<{ isActive: boolean; containerHeight: number }>`
+export const DROPDOWN_ANIMATION = 'dropdown-animation'
+
+export const InnerContainer = styled.div<{
+  isActive: boolean
+  containerHeight: number
+  slideDirection: 'left' | 'right'
+}>`
   width: 280px;
   position: relative;
   max-height: calc(100vh - ${sizes(4)} - var(--size-topbar-height));
@@ -39,7 +44,34 @@ export const InnerContainer = styled.div<{ isActive: boolean; containerHeight: n
   background-color: ${cVar('colorBackgroundStrong')};
   overflow-y: auto;
   overflow-x: hidden;
+
+  &.${DROPDOWN_ANIMATION}-enter {
+    ${() => SlideAnimationContainer} {
+      opacity: 0;
+      transform: translateX(${({ slideDirection }) => (slideDirection === 'left' ? '280px' : '-280px')});
+    }
+  }
+
+  &.${DROPDOWN_ANIMATION}-enter-active {
+    ${() => SlideAnimationContainer} {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  &.${DROPDOWN_ANIMATION}-exit {
+    opacity: 1;
+  }
+
+  &.${DROPDOWN_ANIMATION}-exit-active {
+    ${() => SlideAnimationContainer} {
+      opacity: 0;
+      transform: translateX(${({ slideDirection }) => (slideDirection === 'left' ? '280px' : '-280px')});
+    }
+  }
 `
+
+export const StyledAvatarsContainer = styled.div``
 
 export const StyledAvatar = styled(Avatar)`
   width: 48px;
@@ -138,15 +170,11 @@ export const TextLink = styled(Text)`
   }
 `
 
-export const AnimatedContainer = styled(animated.div, {
-  shouldForwardProp: (prop) => prop !== 'isAnimatingSwitchMember',
-})<{
-  isAnimatingSwitchMember: boolean
-}>`
+export const SlideAnimationContainer = styled.div`
   position: absolute;
   height: 100%;
   width: 280px;
   will-change: transform, opacity;
-  overflow-y: ${({ isAnimatingSwitchMember }) => (isAnimatingSwitchMember ? 'hidden' : 'auto')};
   overflow-x: hidden;
+  transition: all 200ms;
 `
