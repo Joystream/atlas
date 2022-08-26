@@ -134,6 +134,32 @@ const getAvatarSizeCss = ({ size }: ContainerProps): SerializedStyles => {
   }
 }
 
+export const sharedAvatarHoverStyles = css`
+  ::after {
+    box-shadow: inset 0 0 0 1px ${cVar('colorBackgroundAlpha')};
+  }
+  ${IconAndOverlayWrapper} {
+    opacity: 1;
+  }
+  ${Overlay} {
+    opacity: 0.5;
+    background-color: ${cVar('colorBackgroundOverlay')};
+  }
+`
+
+export const sharedAvatarActiveStyles = css`
+  ::after {
+    box-shadow: inset 0 0 0 1px ${cVar('colorBackgroundMutedAlpha')};
+  }
+  ${IconAndOverlayWrapper} {
+    opacity: 1;
+  }
+  ${Overlay} {
+    opacity: 1;
+    background-color: ${cVar('colorBackgroundOverlay')};
+  }
+`
+
 const getInteractiveStyles = ({ isLoading }: Omit<ContainerProps, 'size'>) => {
   if (isLoading) {
     return
@@ -152,29 +178,11 @@ const getInteractiveStyles = ({ isLoading }: Omit<ContainerProps, 'size'>) => {
     }
 
     :hover {
-      ::after {
-        box-shadow: inset 0 0 0 1px ${cVar('colorBackgroundAlpha')};
-      }
-      ${IconAndOverlayWrapper} {
-        opacity: 1;
-      }
-      ${Overlay} {
-        opacity: 0.5;
-        background-color: ${cVar('colorBackgroundOverlay')};
-      }
+      ${sharedAvatarHoverStyles};
     }
 
     :active {
-      ::after {
-        box-shadow: inset 0 0 0 1px ${cVar('colorBackgroundMutedAlpha')};
-      }
-      ${IconAndOverlayWrapper} {
-        opacity: 1;
-      }
-      ${Overlay} {
-        opacity: 1;
-        background-color: ${cVar('colorBackgroundOverlay')};
-      }
+      ${sharedAvatarActiveStyles};
     }
   `
 }
