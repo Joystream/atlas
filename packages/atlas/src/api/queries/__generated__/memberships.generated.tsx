@@ -37,6 +37,7 @@ export type GetMembershipQuery = {
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
     }>
@@ -59,6 +60,7 @@ export type GetMembershipQuery = {
                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                 | { __typename: 'DataObjectTypeUnknown' }
                 | { __typename: 'DataObjectTypeVideoMedia' }
+                | { __typename: 'DataObjectTypeVideoSubtitle' }
                 | { __typename: 'DataObjectTypeVideoThumbnail' }
             } | null
           }
@@ -100,6 +102,7 @@ export type GetMembershipsQuery = {
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
     }>
@@ -122,6 +125,7 @@ export type GetMembershipsQuery = {
                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                 | { __typename: 'DataObjectTypeUnknown' }
                 | { __typename: 'DataObjectTypeVideoMedia' }
+                | { __typename: 'DataObjectTypeVideoSubtitle' }
                 | { __typename: 'DataObjectTypeVideoThumbnail' }
             } | null
           }

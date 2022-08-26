@@ -6291,8 +6291,6 @@ export type Channel = BaseGraphQlObject & {
   avatarPhoto?: Maybe<StorageDataObject>
   avatarPhotoId?: Maybe<Scalars['String']>
   bannedMembers: Array<Membership>
-  category?: Maybe<ChannelCategory>
-  categoryId?: Maybe<Scalars['String']>
   channelNftCollectors: Array<ChannelNftCollectors>
   collaborators: Array<Membership>
   commentcreatedeventvideoChannel?: Maybe<Array<CommentCreatedEvent>>
@@ -6491,129 +6489,6 @@ export type ChannelAssetsDeletedByModeratorEventWhereUniqueInput = {
   id: Scalars['ID']
 }
 
-export type ChannelCategoriesByNameFtsOutput = {
-  __typename?: 'ChannelCategoriesByNameFTSOutput'
-  highlight: Scalars['String']
-  isTypeOf: Scalars['String']
-  item: ChannelCategoriesByNameSearchResult
-  rank: Scalars['Float']
-}
-
-export type ChannelCategoriesByNameSearchResult = ChannelCategory
-
-/** Category of media channel */
-export type ChannelCategory = BaseGraphQlObject & {
-  __typename?: 'ChannelCategory'
-  /** Count of channel's videos with an uploaded asset that are public and not censored. */
-  activeVideosCounter: Scalars['Int']
-  channels: Array<Channel>
-  createdAt: Scalars['DateTime']
-  createdById: Scalars['ID']
-  createdInBlock: Scalars['Int']
-  deletedAt?: Maybe<Scalars['DateTime']>
-  deletedById?: Maybe<Scalars['ID']>
-  id: Scalars['ID']
-  /** The name of the category */
-  name?: Maybe<Scalars['String']>
-  updatedAt?: Maybe<Scalars['DateTime']>
-  updatedById?: Maybe<Scalars['ID']>
-  version: Scalars['Int']
-}
-
-export type ChannelCategoryConnection = {
-  __typename?: 'ChannelCategoryConnection'
-  edges: Array<ChannelCategoryEdge>
-  pageInfo: PageInfo
-  totalCount: Scalars['Int']
-}
-
-export type ChannelCategoryCreateInput = {
-  activeVideosCounter: Scalars['Float']
-  createdInBlock: Scalars['Float']
-  name?: InputMaybe<Scalars['String']>
-}
-
-export type ChannelCategoryEdge = {
-  __typename?: 'ChannelCategoryEdge'
-  cursor: Scalars['String']
-  node: ChannelCategory
-}
-
-export enum ChannelCategoryOrderByInput {
-  ActiveVideosCounterAsc = 'activeVideosCounter_ASC',
-  ActiveVideosCounterDesc = 'activeVideosCounter_DESC',
-  CreatedAtAsc = 'createdAt_ASC',
-  CreatedAtDesc = 'createdAt_DESC',
-  CreatedInBlockAsc = 'createdInBlock_ASC',
-  CreatedInBlockDesc = 'createdInBlock_DESC',
-  DeletedAtAsc = 'deletedAt_ASC',
-  DeletedAtDesc = 'deletedAt_DESC',
-  NameAsc = 'name_ASC',
-  NameDesc = 'name_DESC',
-  UpdatedAtAsc = 'updatedAt_ASC',
-  UpdatedAtDesc = 'updatedAt_DESC',
-}
-
-export type ChannelCategoryUpdateInput = {
-  activeVideosCounter?: InputMaybe<Scalars['Float']>
-  createdInBlock?: InputMaybe<Scalars['Float']>
-  name?: InputMaybe<Scalars['String']>
-}
-
-export type ChannelCategoryWhereInput = {
-  AND?: InputMaybe<Array<ChannelCategoryWhereInput>>
-  NOT?: InputMaybe<Array<ChannelCategoryWhereInput>>
-  OR?: InputMaybe<Array<ChannelCategoryWhereInput>>
-  activeVideosCounter_eq?: InputMaybe<Scalars['Int']>
-  activeVideosCounter_gt?: InputMaybe<Scalars['Int']>
-  activeVideosCounter_gte?: InputMaybe<Scalars['Int']>
-  activeVideosCounter_in?: InputMaybe<Array<Scalars['Int']>>
-  activeVideosCounter_lt?: InputMaybe<Scalars['Int']>
-  activeVideosCounter_lte?: InputMaybe<Scalars['Int']>
-  channels_every?: InputMaybe<ChannelWhereInput>
-  channels_none?: InputMaybe<ChannelWhereInput>
-  channels_some?: InputMaybe<ChannelWhereInput>
-  createdAt_eq?: InputMaybe<Scalars['DateTime']>
-  createdAt_gt?: InputMaybe<Scalars['DateTime']>
-  createdAt_gte?: InputMaybe<Scalars['DateTime']>
-  createdAt_lt?: InputMaybe<Scalars['DateTime']>
-  createdAt_lte?: InputMaybe<Scalars['DateTime']>
-  createdById_eq?: InputMaybe<Scalars['ID']>
-  createdById_in?: InputMaybe<Array<Scalars['ID']>>
-  createdInBlock_eq?: InputMaybe<Scalars['Int']>
-  createdInBlock_gt?: InputMaybe<Scalars['Int']>
-  createdInBlock_gte?: InputMaybe<Scalars['Int']>
-  createdInBlock_in?: InputMaybe<Array<Scalars['Int']>>
-  createdInBlock_lt?: InputMaybe<Scalars['Int']>
-  createdInBlock_lte?: InputMaybe<Scalars['Int']>
-  deletedAt_all?: InputMaybe<Scalars['Boolean']>
-  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
-  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
-  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
-  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
-  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
-  deletedById_eq?: InputMaybe<Scalars['ID']>
-  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
-  id_eq?: InputMaybe<Scalars['ID']>
-  id_in?: InputMaybe<Array<Scalars['ID']>>
-  name_contains?: InputMaybe<Scalars['String']>
-  name_endsWith?: InputMaybe<Scalars['String']>
-  name_eq?: InputMaybe<Scalars['String']>
-  name_in?: InputMaybe<Array<Scalars['String']>>
-  name_startsWith?: InputMaybe<Scalars['String']>
-  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
-  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
-  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
-  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
-  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
-  updatedById_eq?: InputMaybe<Scalars['ID']>
-  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
-}
-
-export type ChannelCategoryWhereUniqueInput = {
-  id: Scalars['ID']
-}
-
 export type ChannelConnection = {
   __typename?: 'ChannelConnection'
   edges: Array<ChannelEdge>
@@ -6624,7 +6499,6 @@ export type ChannelConnection = {
 export type ChannelCreateInput = {
   activeVideosCounter: Scalars['Float']
   avatarPhoto?: InputMaybe<Scalars['ID']>
-  category?: InputMaybe<Scalars['ID']>
   coverPhoto?: InputMaybe<Scalars['ID']>
   createdInBlock: Scalars['Float']
   description?: InputMaybe<Scalars['String']>
@@ -6918,8 +6792,6 @@ export enum ChannelOrderByInput {
   ActiveVideosCounterDesc = 'activeVideosCounter_DESC',
   AvatarPhotoAsc = 'avatarPhoto_ASC',
   AvatarPhotoDesc = 'avatarPhoto_DESC',
-  CategoryAsc = 'category_ASC',
-  CategoryDesc = 'category_DESC',
   CoverPhotoAsc = 'coverPhoto_ASC',
   CoverPhotoDesc = 'coverPhoto_DESC',
   CreatedAtAsc = 'createdAt_ASC',
@@ -6953,7 +6825,6 @@ export enum ChannelOrderByInput {
 export type ChannelUpdateInput = {
   activeVideosCounter?: InputMaybe<Scalars['Float']>
   avatarPhoto?: InputMaybe<Scalars['ID']>
-  category?: InputMaybe<Scalars['ID']>
   coverPhoto?: InputMaybe<Scalars['ID']>
   createdInBlock?: InputMaybe<Scalars['Float']>
   description?: InputMaybe<Scalars['String']>
@@ -6981,7 +6852,6 @@ export type ChannelWhereInput = {
   bannedMembers_every?: InputMaybe<MembershipWhereInput>
   bannedMembers_none?: InputMaybe<MembershipWhereInput>
   bannedMembers_some?: InputMaybe<MembershipWhereInput>
-  category?: InputMaybe<ChannelCategoryWhereInput>
   channelNftCollectors_every?: InputMaybe<ChannelNftCollectorsWhereInput>
   channelNftCollectors_none?: InputMaybe<ChannelNftCollectorsWhereInput>
   channelNftCollectors_some?: InputMaybe<ChannelNftCollectorsWhereInput>
@@ -9165,6 +9035,7 @@ export type DataObjectType =
   | DataObjectTypeChannelCoverPhoto
   | DataObjectTypeUnknown
   | DataObjectTypeVideoMedia
+  | DataObjectTypeVideoSubtitle
   | DataObjectTypeVideoThumbnail
 
 export type DataObjectTypeChannelAvatar = {
@@ -9186,6 +9057,14 @@ export type DataObjectTypeUnknown = {
 
 export type DataObjectTypeVideoMedia = {
   __typename?: 'DataObjectTypeVideoMedia'
+  /** Related video entity */
+  video?: Maybe<Video>
+}
+
+export type DataObjectTypeVideoSubtitle = {
+  __typename?: 'DataObjectTypeVideoSubtitle'
+  /** Related subtitle entity */
+  subtitle?: Maybe<VideoSubtitle>
   /** Related video entity */
   video?: Maybe<Video>
 }
@@ -12178,6 +12057,7 @@ export type Language = BaseGraphQlObject & {
   updatedById?: Maybe<Scalars['ID']>
   version: Scalars['Int']
   videolanguage?: Maybe<Array<Video>>
+  videosubtitlelanguage?: Maybe<Array<VideoSubtitle>>
 }
 
 export type LanguageConnection = {
@@ -12261,6 +12141,9 @@ export type LanguageWhereInput = {
   videolanguage_every?: InputMaybe<VideoWhereInput>
   videolanguage_none?: InputMaybe<VideoWhereInput>
   videolanguage_some?: InputMaybe<VideoWhereInput>
+  videosubtitlelanguage_every?: InputMaybe<VideoSubtitleWhereInput>
+  videosubtitlelanguage_none?: InputMaybe<VideoSubtitleWhereInput>
+  videosubtitlelanguage_some?: InputMaybe<VideoSubtitleWhereInput>
 }
 
 export type LanguageWhereUniqueInput = {
@@ -14797,16 +14680,7 @@ export type MetaprotocolTransactionErrored = {
   message: Scalars['String']
 }
 
-export type MetaprotocolTransactionPending = {
-  __typename?: 'MetaprotocolTransactionPending'
-  /** Type needs to have at least one non-relation entity. This value is not used. */
-  dummy?: Maybe<Scalars['Int']>
-}
-
-export type MetaprotocolTransactionStatus =
-  | MetaprotocolTransactionErrored
-  | MetaprotocolTransactionPending
-  | MetaprotocolTransactionSuccessful
+export type MetaprotocolTransactionStatus = MetaprotocolTransactionErrored | MetaprotocolTransactionSuccessful
 
 export type MetaprotocolTransactionStatusEvent = BaseGraphQlObject &
   Event & {
@@ -14945,6 +14819,12 @@ export type MetaprotocolTransactionSuccessful = {
   commentModerated?: Maybe<Comment>
   /** Type needs to have at least one non-relation entity. This value is not used. */
   dummy?: Maybe<Scalars['Int']>
+  /** ID of the created video category (if any) */
+  videoCategoryCreated?: Maybe<Video>
+  /** ID of the delete video category (if any) */
+  videoCategoryDeleted?: Maybe<Video>
+  /** ID of the updated video category (if any) */
+  videoCategoryUpdated?: Maybe<Video>
 }
 
 export type Mutation = {
@@ -20977,10 +20857,6 @@ export type Query = {
   channelAssetsDeletedByModeratorEvents: Array<ChannelAssetsDeletedByModeratorEvent>
   channelAssetsDeletedByModeratorEventsConnection: ChannelAssetsDeletedByModeratorEventConnection
   channelByUniqueInput?: Maybe<Channel>
-  channelCategories: Array<ChannelCategory>
-  channelCategoriesByName: Array<ChannelCategoriesByNameFtsOutput>
-  channelCategoriesConnection: ChannelCategoryConnection
-  channelCategoryByUniqueInput?: Maybe<ChannelCategory>
   channelDeletedByModeratorEventByUniqueInput?: Maybe<ChannelDeletedByModeratorEvent>
   channelDeletedByModeratorEvents: Array<ChannelDeletedByModeratorEvent>
   channelDeletedByModeratorEventsConnection: ChannelDeletedByModeratorEventConnection
@@ -21425,6 +21301,9 @@ export type Query = {
   videoReactionsPreferenceEventByUniqueInput?: Maybe<VideoReactionsPreferenceEvent>
   videoReactionsPreferenceEvents: Array<VideoReactionsPreferenceEvent>
   videoReactionsPreferenceEventsConnection: VideoReactionsPreferenceEventConnection
+  videoSubtitleByUniqueInput?: Maybe<VideoSubtitle>
+  videoSubtitles: Array<VideoSubtitle>
+  videoSubtitlesConnection: VideoSubtitleConnection
   videoVisibilitySetByModeratorEventByUniqueInput?: Maybe<VideoVisibilitySetByModeratorEvent>
   videoVisibilitySetByModeratorEvents: Array<VideoVisibilitySetByModeratorEvent>
   videoVisibilitySetByModeratorEventsConnection: VideoVisibilitySetByModeratorEventConnection
@@ -22379,33 +22258,6 @@ export type QueryChannelAssetsDeletedByModeratorEventsConnectionArgs = {
 
 export type QueryChannelByUniqueInputArgs = {
   where: ChannelWhereUniqueInput
-}
-
-export type QueryChannelCategoriesArgs = {
-  limit?: InputMaybe<Scalars['Int']>
-  offset?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ChannelCategoryOrderByInput>>
-  where?: InputMaybe<ChannelCategoryWhereInput>
-}
-
-export type QueryChannelCategoriesByNameArgs = {
-  limit?: InputMaybe<Scalars['Int']>
-  skip?: InputMaybe<Scalars['Int']>
-  text: Scalars['String']
-  whereChannelCategory?: InputMaybe<ChannelCategoryWhereInput>
-}
-
-export type QueryChannelCategoriesConnectionArgs = {
-  after?: InputMaybe<Scalars['String']>
-  before?: InputMaybe<Scalars['String']>
-  first?: InputMaybe<Scalars['Int']>
-  last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ChannelCategoryOrderByInput>>
-  where?: InputMaybe<ChannelCategoryWhereInput>
-}
-
-export type QueryChannelCategoryByUniqueInputArgs = {
-  where: ChannelCategoryWhereUniqueInput
 }
 
 export type QueryChannelDeletedByModeratorEventByUniqueInputArgs = {
@@ -25276,6 +25128,26 @@ export type QueryVideoReactionsPreferenceEventsConnectionArgs = {
   last?: InputMaybe<Scalars['Int']>
   orderBy?: InputMaybe<Array<VideoReactionsPreferenceEventOrderByInput>>
   where?: InputMaybe<VideoReactionsPreferenceEventWhereInput>
+}
+
+export type QueryVideoSubtitleByUniqueInputArgs = {
+  where: VideoSubtitleWhereUniqueInput
+}
+
+export type QueryVideoSubtitlesArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<VideoSubtitleOrderByInput>>
+  where?: InputMaybe<VideoSubtitleWhereInput>
+}
+
+export type QueryVideoSubtitlesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  before?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  last?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<VideoSubtitleOrderByInput>>
+  where?: InputMaybe<VideoSubtitleWhereInput>
 }
 
 export type QueryVideoVisibilitySetByModeratorEventByUniqueInputArgs = {
@@ -28802,6 +28674,7 @@ export type StorageDataObject = BaseGraphQlObject & {
   updatedById?: Maybe<Scalars['ID']>
   version: Scalars['Int']
   videoMedia?: Maybe<Video>
+  videoSubtitle?: Maybe<VideoSubtitle>
   videoThumbnail?: Maybe<Video>
 }
 
@@ -28920,6 +28793,7 @@ export type StorageDataObjectWhereInput = {
   updatedById_eq?: InputMaybe<Scalars['ID']>
   updatedById_in?: InputMaybe<Array<Scalars['ID']>>
   videoMedia?: InputMaybe<VideoWhereInput>
+  videoSubtitle?: InputMaybe<VideoSubtitleWhereInput>
   videoThumbnail?: InputMaybe<VideoWhereInput>
 }
 
@@ -30533,6 +30407,7 @@ export type Video = BaseGraphQlObject & {
   /** Reactions count */
   reactionsCount: Scalars['Int']
   reactionsCountByReactionId: Array<VideoReactionsCountByReactionType>
+  subtitles: Array<VideoSubtitle>
   thumbnailPhoto?: Maybe<StorageDataObject>
   thumbnailPhotoId?: Maybe<Scalars['String']>
   /** The title of the video */
@@ -30540,6 +30415,8 @@ export type Video = BaseGraphQlObject & {
   updatedAt?: Maybe<Scalars['DateTime']>
   updatedById?: Maybe<Scalars['ID']>
   version: Scalars['Int']
+  /** Video state bloat bond */
+  videoStateBloatBond: Scalars['BigInt']
   videoreactedeventvideo?: Maybe<Array<VideoReactedEvent>>
   videoreactionspreferenceeventvideo?: Maybe<Array<VideoReactionsPreferenceEvent>>
   views: Scalars['Int']
@@ -30717,19 +30594,24 @@ export type VideoCategoriesByNameSearchResult = VideoCategory
 
 export type VideoCategory = BaseGraphQlObject & {
   __typename?: 'VideoCategory'
-  /** Count of channel's videos with an uploaded asset that are public and not censored. */
+  /** Count of category's videos with an uploaded asset that are public and not censored. */
   activeVideosCounter: Scalars['Int']
   createdAt: Scalars['DateTime']
   createdById: Scalars['ID']
   createdInBlock: Scalars['Int']
   deletedAt?: Maybe<Scalars['DateTime']>
   deletedById?: Maybe<Scalars['ID']>
+  /** The description of the category */
+  description?: Maybe<Scalars['String']>
   id: Scalars['ID']
   /** The name of the category */
   name?: Maybe<Scalars['String']>
+  parentCategory?: Maybe<VideoCategory>
+  parentCategoryId?: Maybe<Scalars['String']>
   updatedAt?: Maybe<Scalars['DateTime']>
   updatedById?: Maybe<Scalars['ID']>
   version: Scalars['Int']
+  videocategoryparentCategory?: Maybe<Array<VideoCategory>>
   videos: Array<Video>
 }
 
@@ -30743,7 +30625,9 @@ export type VideoCategoryConnection = {
 export type VideoCategoryCreateInput = {
   activeVideosCounter: Scalars['Float']
   createdInBlock: Scalars['Float']
+  description?: InputMaybe<Scalars['String']>
   name?: InputMaybe<Scalars['String']>
+  parentCategory?: InputMaybe<Scalars['ID']>
 }
 
 export type VideoCategoryEdge = {
@@ -30761,8 +30645,12 @@ export enum VideoCategoryOrderByInput {
   CreatedInBlockDesc = 'createdInBlock_DESC',
   DeletedAtAsc = 'deletedAt_ASC',
   DeletedAtDesc = 'deletedAt_DESC',
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
+  ParentCategoryAsc = 'parentCategory_ASC',
+  ParentCategoryDesc = 'parentCategory_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
   UpdatedAtDesc = 'updatedAt_DESC',
 }
@@ -30770,7 +30658,9 @@ export enum VideoCategoryOrderByInput {
 export type VideoCategoryUpdateInput = {
   activeVideosCounter?: InputMaybe<Scalars['Float']>
   createdInBlock?: InputMaybe<Scalars['Float']>
+  description?: InputMaybe<Scalars['String']>
   name?: InputMaybe<Scalars['String']>
+  parentCategory?: InputMaybe<Scalars['ID']>
 }
 
 export type VideoCategoryWhereInput = {
@@ -30804,6 +30694,11 @@ export type VideoCategoryWhereInput = {
   deletedAt_lte?: InputMaybe<Scalars['DateTime']>
   deletedById_eq?: InputMaybe<Scalars['ID']>
   deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  description_contains?: InputMaybe<Scalars['String']>
+  description_endsWith?: InputMaybe<Scalars['String']>
+  description_eq?: InputMaybe<Scalars['String']>
+  description_in?: InputMaybe<Array<Scalars['String']>>
+  description_startsWith?: InputMaybe<Scalars['String']>
   id_eq?: InputMaybe<Scalars['ID']>
   id_in?: InputMaybe<Array<Scalars['ID']>>
   name_contains?: InputMaybe<Scalars['String']>
@@ -30811,6 +30706,7 @@ export type VideoCategoryWhereInput = {
   name_eq?: InputMaybe<Scalars['String']>
   name_in?: InputMaybe<Array<Scalars['String']>>
   name_startsWith?: InputMaybe<Scalars['String']>
+  parentCategory?: InputMaybe<VideoCategoryWhereInput>
   updatedAt_eq?: InputMaybe<Scalars['DateTime']>
   updatedAt_gt?: InputMaybe<Scalars['DateTime']>
   updatedAt_gte?: InputMaybe<Scalars['DateTime']>
@@ -30818,6 +30714,9 @@ export type VideoCategoryWhereInput = {
   updatedAt_lte?: InputMaybe<Scalars['DateTime']>
   updatedById_eq?: InputMaybe<Scalars['ID']>
   updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+  videocategoryparentCategory_every?: InputMaybe<VideoCategoryWhereInput>
+  videocategoryparentCategory_none?: InputMaybe<VideoCategoryWhereInput>
+  videocategoryparentCategory_some?: InputMaybe<VideoCategoryWhereInput>
   videos_every?: InputMaybe<VideoWhereInput>
   videos_none?: InputMaybe<VideoWhereInput>
   videos_some?: InputMaybe<VideoWhereInput>
@@ -30857,6 +30756,7 @@ export type VideoCreateInput = {
   reactionsCount: Scalars['Float']
   thumbnailPhoto?: InputMaybe<Scalars['ID']>
   title?: InputMaybe<Scalars['String']>
+  videoStateBloatBond: Scalars['String']
 }
 
 export type VideoDeletedByModeratorEvent = BaseGraphQlObject & {
@@ -31452,6 +31352,8 @@ export enum VideoOrderByInput {
   TitleDesc = 'title_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
   UpdatedAtDesc = 'updatedAt_DESC',
+  VideoStateBloatBondAsc = 'videoStateBloatBond_ASC',
+  VideoStateBloatBondDesc = 'videoStateBloatBond_DESC',
 }
 
 export type VideoReactedEvent = BaseGraphQlObject &
@@ -31962,6 +31864,123 @@ export type VideoReportWhereInput = {
   videoId?: InputMaybe<Scalars['ID']>
 }
 
+export type VideoSubtitle = BaseGraphQlObject & {
+  __typename?: 'VideoSubtitle'
+  asset?: Maybe<StorageDataObject>
+  assetId?: Maybe<Scalars['String']>
+  createdAt: Scalars['DateTime']
+  createdById: Scalars['ID']
+  deletedAt?: Maybe<Scalars['DateTime']>
+  deletedById?: Maybe<Scalars['ID']>
+  id: Scalars['ID']
+  language: Language
+  languageId: Scalars['String']
+  /** MIME type description of format used for this subtitle */
+  mimeType: Scalars['String']
+  /** Subtitle's type */
+  type: Scalars['String']
+  updatedAt?: Maybe<Scalars['DateTime']>
+  updatedById?: Maybe<Scalars['ID']>
+  version: Scalars['Int']
+  video: Video
+  videoId: Scalars['String']
+}
+
+export type VideoSubtitleConnection = {
+  __typename?: 'VideoSubtitleConnection'
+  edges: Array<VideoSubtitleEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type VideoSubtitleCreateInput = {
+  asset?: InputMaybe<Scalars['ID']>
+  language: Scalars['ID']
+  mimeType: Scalars['String']
+  type: Scalars['String']
+  video: Scalars['ID']
+}
+
+export type VideoSubtitleEdge = {
+  __typename?: 'VideoSubtitleEdge'
+  cursor: Scalars['String']
+  node: VideoSubtitle
+}
+
+export enum VideoSubtitleOrderByInput {
+  AssetAsc = 'asset_ASC',
+  AssetDesc = 'asset_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  LanguageAsc = 'language_ASC',
+  LanguageDesc = 'language_DESC',
+  MimeTypeAsc = 'mimeType_ASC',
+  MimeTypeDesc = 'mimeType_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+  VideoAsc = 'video_ASC',
+  VideoDesc = 'video_DESC',
+}
+
+export type VideoSubtitleUpdateInput = {
+  asset?: InputMaybe<Scalars['ID']>
+  language?: InputMaybe<Scalars['ID']>
+  mimeType?: InputMaybe<Scalars['String']>
+  type?: InputMaybe<Scalars['String']>
+  video?: InputMaybe<Scalars['ID']>
+}
+
+export type VideoSubtitleWhereInput = {
+  AND?: InputMaybe<Array<VideoSubtitleWhereInput>>
+  NOT?: InputMaybe<Array<VideoSubtitleWhereInput>>
+  OR?: InputMaybe<Array<VideoSubtitleWhereInput>>
+  asset?: InputMaybe<StorageDataObjectWhereInput>
+  createdAt_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>
+  createdById_eq?: InputMaybe<Scalars['ID']>
+  createdById_in?: InputMaybe<Array<Scalars['ID']>>
+  deletedAt_all?: InputMaybe<Scalars['Boolean']>
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
+  deletedById_eq?: InputMaybe<Scalars['ID']>
+  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  id_eq?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  language?: InputMaybe<LanguageWhereInput>
+  mimeType_contains?: InputMaybe<Scalars['String']>
+  mimeType_endsWith?: InputMaybe<Scalars['String']>
+  mimeType_eq?: InputMaybe<Scalars['String']>
+  mimeType_in?: InputMaybe<Array<Scalars['String']>>
+  mimeType_startsWith?: InputMaybe<Scalars['String']>
+  type_contains?: InputMaybe<Scalars['String']>
+  type_endsWith?: InputMaybe<Scalars['String']>
+  type_eq?: InputMaybe<Scalars['String']>
+  type_in?: InputMaybe<Array<Scalars['String']>>
+  type_startsWith?: InputMaybe<Scalars['String']>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedById_eq?: InputMaybe<Scalars['ID']>
+  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+  video?: InputMaybe<VideoWhereInput>
+}
+
+export type VideoSubtitleWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
 export type VideoUpdateInput = {
   category?: InputMaybe<Scalars['ID']>
   channel?: InputMaybe<Scalars['ID']>
@@ -31985,6 +32004,7 @@ export type VideoUpdateInput = {
   reactionsCount?: InputMaybe<Scalars['Float']>
   thumbnailPhoto?: InputMaybe<Scalars['ID']>
   title?: InputMaybe<Scalars['String']>
+  videoStateBloatBond?: InputMaybe<Scalars['String']>
 }
 
 export type VideoVisibilitySetByModeratorEvent = BaseGraphQlObject & {
@@ -32301,6 +32321,9 @@ export type VideoWhereInput = {
   reactions_every?: InputMaybe<VideoReactionWhereInput>
   reactions_none?: InputMaybe<VideoReactionWhereInput>
   reactions_some?: InputMaybe<VideoReactionWhereInput>
+  subtitles_every?: InputMaybe<VideoSubtitleWhereInput>
+  subtitles_none?: InputMaybe<VideoSubtitleWhereInput>
+  subtitles_some?: InputMaybe<VideoSubtitleWhereInput>
   thumbnailPhoto?: InputMaybe<StorageDataObjectWhereInput>
   title_contains?: InputMaybe<Scalars['String']>
   title_endsWith?: InputMaybe<Scalars['String']>
@@ -32314,6 +32337,12 @@ export type VideoWhereInput = {
   updatedAt_lte?: InputMaybe<Scalars['DateTime']>
   updatedById_eq?: InputMaybe<Scalars['ID']>
   updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+  videoStateBloatBond_eq?: InputMaybe<Scalars['BigInt']>
+  videoStateBloatBond_gt?: InputMaybe<Scalars['BigInt']>
+  videoStateBloatBond_gte?: InputMaybe<Scalars['BigInt']>
+  videoStateBloatBond_in?: InputMaybe<Array<Scalars['BigInt']>>
+  videoStateBloatBond_lt?: InputMaybe<Scalars['BigInt']>
+  videoStateBloatBond_lte?: InputMaybe<Scalars['BigInt']>
   videoreactedeventvideo_every?: InputMaybe<VideoReactedEventWhereInput>
   videoreactedeventvideo_none?: InputMaybe<VideoReactedEventWhereInput>
   videoreactedeventvideo_some?: InputMaybe<VideoReactedEventWhereInput>

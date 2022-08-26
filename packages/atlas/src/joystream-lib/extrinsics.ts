@@ -21,7 +21,6 @@ import {
   createNftOpenAuctionParams,
   extractChannelResultAssetsIds,
   extractVideoResultAssetsIds,
-  getReplacedDataObjectsIds,
   sendExtrinsicAndParseEvents,
 } from './helpers'
 import {
@@ -245,16 +244,17 @@ export class JoystreamLibExtrinsics {
     channelId: ChannelId,
     memberId: MemberId,
     inputMetadata: ChannelInputMetadata,
-    inputAssets: ChannelInputAssets,
+    newAssets: ChannelInputAssets,
+    removedAssetsIds: StringifiedNumber[],
     expectedDataObjectStateBloatBond: StringifiedNumber
   ) => {
     await this.ensureApi()
 
-    const [channelMetadata, channelAssets] = await parseChannelExtrinsicInput(this.api, inputMetadata, inputAssets)
+    const [channelMetadata, channelAssets] = await parseChannelExtrinsicInput(this.api, inputMetadata, newAssets)
     const updateParameters = createType('PalletContentChannelUpdateParametersRecord', {
       newMeta: channelMetadata,
       assetsToUpload: channelAssets,
-      assetsToRemove: createType('BTreeSet<u64>', getReplacedDataObjectsIds(inputAssets)),
+      assetsToRemove: removedAssetsIds.map((id) => new BN(id)),
       collaborators: createType('Option<BTreeMap<u64, BTreeSet<PalletContentChannelActionPermission>>>', null),
       expectedDataObjectStateBloatBond: new BN(expectedDataObjectStateBloatBond),
     })
@@ -268,7 +268,8 @@ export class JoystreamLibExtrinsics {
     channelId,
     memberId,
     inputMetadata,
-    inputAssets,
+    newAssets,
+    removedAssetsIds,
     expectedDataObjectStateBloatBond,
     cb
   ) => {
@@ -276,7 +277,8 @@ export class JoystreamLibExtrinsics {
       channelId,
       memberId,
       inputMetadata,
-      inputAssets,
+      newAssets,
+      removedAssetsIds,
       expectedDataObjectStateBloatBond
     )
     const { block, getEventData } = await this.sendExtrinsic(tx, cb)
@@ -284,7 +286,7 @@ export class JoystreamLibExtrinsics {
     return {
       channelId,
       block,
-      assetsIds: extractChannelResultAssetsIds(inputAssets, getEventData, true),
+      assetsIds: extractChannelResultAssetsIds(newAssets, getEventData, true),
     }
   }
 
@@ -355,19 +357,20 @@ export class JoystreamLibExtrinsics {
     memberId: MemberId,
     inputMetadata: VideoInputMetadata,
     nftInputMetadata: NftIssuanceInputMetadata | undefined,
-    inputAssets: VideoInputAssets,
+    newAssets: VideoInputAssets,
+    removedAssetsIds: StringifiedNumber[],
     expectedDataObjectStateBloatBond: StringifiedNumber
   ) => {
     await this.ensureApi()
 
-    const [videoMetadata, videoAssets] = await parseVideoExtrinsicInput(this.api, inputMetadata, inputAssets)
+    const [videoMetadata, videoAssets] = await parseVideoExtrinsicInput(this.api, inputMetadata, newAssets)
 
     const nftIssuanceParameters = createNftIssuanceParameters(nftInputMetadata)
 
     const updateParameters = createType('PalletContentVideoUpdateParametersRecord', {
       newMeta: videoMetadata,
       assetsToUpload: videoAssets,
-      assetsToRemove: getReplacedDataObjectsIds(inputAssets),
+      assetsToRemove: removedAssetsIds.map((id) => new BN(id)),
       autoIssueNft: nftIssuanceParameters,
       expectedDataObjectStateBloatBond: new BN(expectedDataObjectStateBloatBond),
     })
@@ -382,7 +385,8 @@ export class JoystreamLibExtrinsics {
     memberId,
     inputMetadata,
     nftInputMetadata,
-    inputAssets,
+    newAssets,
+    removedAssetsIds,
     expectedDataObjectStateBloatBond,
     cb
   ) => {
@@ -391,7 +395,8 @@ export class JoystreamLibExtrinsics {
       memberId,
       inputMetadata,
       nftInputMetadata,
-      inputAssets,
+      newAssets,
+      removedAssetsIds,
       expectedDataObjectStateBloatBond
     )
 
@@ -400,15 +405,15 @@ export class JoystreamLibExtrinsics {
     return {
       videoId,
       block,
-      assetsIds: extractVideoResultAssetsIds(inputAssets, getEventData, true),
+      assetsIds: extractVideoResultAssetsIds(newAssets, getEventData, true),
     }
   }
 
-  deleteVideoTx = async (videoId: VideoId, memberId: MemberId) => {
+  deleteVideoTx = async (videoId: VideoId, memberId: MemberId, dataObjectsCount: number) => {
     await this.ensureApi()
 
     const actor = createActor(memberId)
-    const tx = this.api.tx.content.deleteVideo(actor, videoId, 2) // all videos should have 2 assets (media + thumbnail)
+    const tx = this.api.tx.content.deleteVideo(actor, videoId, dataObjectsCount)
 
     return tx
   }
@@ -416,9 +421,10 @@ export class JoystreamLibExtrinsics {
   deleteVideo: PublicExtrinsic<typeof this.deleteVideoTx, Omit<VideoExtrinsicResult, 'assetsIds'>> = async (
     videoId,
     memberId,
+    dataObjectsCount,
     cb
   ) => {
-    const tx = await this.deleteVideoTx(videoId, memberId)
+    const tx = await this.deleteVideoTx(videoId, memberId, dataObjectsCount)
     const { block } = await this.sendExtrinsic(tx, cb)
 
     return {

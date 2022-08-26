@@ -4,7 +4,7 @@ import { FullChannelFieldsFragment } from '@/api/queries'
 import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
-import { languages } from '@/config/languages'
+import { LANGUAGES_LIST } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useMemberAvatar } from '@/providers/assets'
 import { formatDate } from '@/utils/time'
@@ -91,7 +91,7 @@ export const ChannelAbout: FC<ChannelAboutProps> = ({ channel }) => {
             Language
           </Text>
           <Text as="span" variant="t300">
-            {channel?.language?.iso ? languages.find(({ value }) => value === channel.language?.iso)?.name : ''}
+            {channel?.language?.iso ? LANGUAGES_LIST.find(({ value }) => value === channel.language?.iso)?.name : ''}
           </Text>
         </Details>
       </GridItem>

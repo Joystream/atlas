@@ -2,32 +2,29 @@ import styled from '@emotion/styled'
 import { FC, useState } from 'react'
 
 import { Text } from '@/components/Text'
+import { LANGUAGES_LOOKUP } from '@/config/languages'
 import { sizes } from '@/styles'
+import { SubtitlesInput } from '@/types/subtitles'
 
 import { ComboBox } from '../ComboBox'
-import { SubtitleBox } from '../SubtitleBox'
+import { SubtitlesBox } from '../SubtitlesBox'
 
-type Subtitles = {
-  language: string
-  file?: File
-  type: 'subtitles' | 'closed-captions'
-}
-
-type AvailableLanguage = Subtitles & {
+type AvailableLanguage = SubtitlesInput & {
   disabled: boolean
+  displayName: string
 }
 
 type SubtitlesComboboxProps = {
-  subtitlesArray: Subtitles[] | null
-  languages: string[]
-  onLanguageAdd: (language: Subtitles) => void
-  onLanguageDelete: (language: Subtitles) => void
+  subtitlesArray: SubtitlesInput[] | null
+  languagesIso: string[]
+  onLanguageAdd: (language: SubtitlesInput) => void
+  onLanguageDelete: (language: SubtitlesInput) => void
   onSubtitlesDownload?: () => void
-  onSubtitlesAdd: (subtitles: Subtitles) => void
+  onSubtitlesAdd: (subtitles: SubtitlesInput) => void
 }
 
 export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
-  languages,
+  languagesIso,
   subtitlesArray,
   onLanguageAdd,
   onSubtitlesDownload,
@@ -35,18 +32,18 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
   onSubtitlesAdd,
 }) => {
   const [availableLanguages, setAvailableLanguages] = useState<AvailableLanguage[]>(
-    languages
-      .map((language) => [
-        { language, type: 'subtitles' as const, disabled: false },
-        { language, type: 'closed-captions' as const, disabled: false },
+    languagesIso
+      .map((iso) => [
+        { displayName: LANGUAGES_LOOKUP[iso], languageIso: iso, type: 'subtitles' as const, disabled: false },
+        { displayName: LANGUAGES_LOOKUP[iso], languageIso: iso, type: 'closed-captions' as const, disabled: false },
       ])
       .flat()
   )
 
-  const toggleLanguage = (subtitles: Subtitles, disabled: boolean) => {
+  const toggleLanguage = (subtitles: SubtitlesInput, disabled: boolean) => {
     setAvailableLanguages((availableLanguages) =>
       availableLanguages.map((availableLanguage) => {
-        if (availableLanguage.language === subtitles.language && availableLanguage.type === subtitles.type) {
+        if (availableLanguage.languageIso === subtitles.languageIso && availableLanguage.type === subtitles.type) {
           return {
             ...availableLanguage,
             disabled,
@@ -62,7 +59,7 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
         placeholder="Add language"
         items={availableLanguages.map((subtitlesLanguage) => ({
           ...subtitlesLanguage,
-          label: `${subtitlesLanguage.language} ${subtitlesLanguage.type === 'closed-captions' ? '(CC)' : ''}`,
+          label: `${subtitlesLanguage.displayName} ${subtitlesLanguage.type === 'closed-captions' ? '(CC)' : ''}`,
           nodeEnd: subtitlesLanguage.disabled ? (
             <Text variant="t200" as="span" color="colorTextMuted">
               Added
@@ -75,22 +72,23 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
             return
           }
           toggleLanguage(item, true)
-          onLanguageAdd({ language: item.language, type: item.type })
+          onLanguageAdd({ languageIso: item.languageIso, type: item.type })
         }}
       />
-      {subtitlesArray?.map(({ language, file, type }) => (
-        <SubtitleBox
-          key={language + type}
+      {subtitlesArray?.map(({ languageIso, file, type, assetId }) => (
+        <SubtitlesBox
+          key={languageIso + type}
           type={type}
-          language={language}
+          languageIso={LANGUAGES_LOOKUP[languageIso]}
           onRemove={() => {
-            toggleLanguage({ language, type }, false)
-            return onLanguageDelete({ language, type })
+            toggleLanguage({ languageIso, type }, false)
+            return onLanguageDelete({ languageIso, type })
           }}
           onDownload={onSubtitlesDownload}
           file={file}
+          assetId={assetId}
           onChange={(e) => {
-            onSubtitlesAdd({ language, file: e.currentTarget.files?.[0], type })
+            onSubtitlesAdd({ languageIso, file: e.currentTarget.files?.[0], type })
           }}
         />
       ))}

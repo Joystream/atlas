@@ -11,7 +11,7 @@ import { ChannelWithVideos } from '@/components/_channel/ChannelWithVideos'
 import { SvgActionChevronR } from '@/components/_icons'
 import { Select } from '@/components/_inputs/Select'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { languages } from '@/config/languages'
+import { LANGUAGES_LIST } from '@/config/languages'
 import { SentryLogger } from '@/utils/logs'
 
 import {
@@ -83,7 +83,7 @@ export const ExpandableChannelsList: FC<ExpandableChannelsListProps> = ({
             )}
             {languageSelector && (
               <LanguageSelectWrapper>
-                <Select items={languages} value={selectedLanguage} size="medium" onChange={handleLanguageSelect} />
+                <Select items={LANGUAGES_LIST} value={selectedLanguage} size="medium" onChange={handleLanguageSelect} />
               </LanguageSelectWrapper>
             )}
             {additionalLink && (

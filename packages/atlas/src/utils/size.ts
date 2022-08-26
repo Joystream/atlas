@@ -1,4 +1,4 @@
-const units = ['bytes', 'KB', 'MB', 'GB']
+const units = [' bytes', 'KB', 'MB', 'GB']
 export const formatBytes = (size: number) => {
   let i = 0
   while (size >= 1024 && ++i) {

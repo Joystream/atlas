@@ -20,7 +20,7 @@ import {
   ImageCropModalImperativeHandle,
   ImageCropModalProps,
 } from '@/components/_overlays/ImageCropModal'
-import { languages } from '@/config/languages'
+import { LANGUAGES_LIST } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib'
@@ -124,7 +124,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       cover: { contentId: null, assetDimensions: null, imageCropData: null, originalBlob: undefined },
       title: '',
       description: '',
-      language: languages[0].value,
+      language: LANGUAGES_LIST[0].value,
       isPublic: true,
     },
   })
@@ -143,7 +143,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
         cover: { contentId: null },
         title: '',
         description: '',
-        language: languages[0].value,
+        language: LANGUAGES_LIST[0].value,
         isPublic: true,
       })
     }
@@ -165,42 +165,50 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   )
 
   const createChannelAssets = useCallback(
-    (avatarHash?: string | null, coverPhotoHash?: string | null): ChannelInputAssets => {
-      return {
-        ...(avatarAsset?.blob?.size
-          ? {
-              avatarPhoto: {
-                size: avatarAsset?.blob.size,
-                ipfsHash: avatarHash || '',
-                replacedDataObjectId: channel?.avatarPhoto?.id ? channel.avatarPhoto.id : undefined,
-              },
-            }
-          : {}),
-        ...(coverAsset?.blob?.size
-          ? {
-              coverPhoto: {
-                size: coverAsset.blob.size,
-                ipfsHash: coverPhotoHash || '',
-                replacedDataObjectId: channel?.coverPhoto?.id ? channel.coverPhoto.id : undefined,
-              },
-            }
-          : {}),
+    (avatarHash?: string | null, coverPhotoHash?: string | null): [ChannelInputAssets, string[]] => {
+      const replacedAssetsIds = []
+      const newAssets: ChannelInputAssets = {}
+      if (avatarAsset?.blob?.size) {
+        newAssets.avatarPhoto = {
+          size: avatarAsset?.blob.size,
+          ipfsHash: avatarHash || '',
+        }
+        if (channel?.avatarPhoto?.id) {
+          replacedAssetsIds.push(channel.avatarPhoto.id)
+        }
       }
+      if (coverAsset?.blob?.size) {
+        newAssets.coverPhoto = {
+          size: coverAsset.blob.size,
+          ipfsHash: coverPhotoHash || '',
+        }
+        if (channel?.coverPhoto?.id) {
+          replacedAssetsIds.push(channel.coverPhoto.id)
+        }
+      }
+      return [newAssets, replacedAssetsIds]
     },
     [avatarAsset?.blob?.size, channel?.avatarPhoto?.id, channel?.coverPhoto?.id, coverAsset?.blob?.size]
   )
 
   const channelMetadata = createChannelMetadata(watch())
-  const channelAssets = createChannelAssets()
+  const [newChannelAssets, removedChannelAssetsIds] = createChannelAssets()
 
   const { channelStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
 
   const { fullFee: updateChannelFee, loading: updateChannelFeeLoading } = useFee(
     'updateChannelTx',
     channelId && memberId && channelMetadata && isDirty && !newChannel
-      ? [channelId, memberId, channelMetadata, channelAssets, dataObjectStateBloatBondValue.toString()]
+      ? [
+          channelId,
+          memberId,
+          channelMetadata,
+          newChannelAssets,
+          removedChannelAssetsIds,
+          dataObjectStateBloatBondValue.toString(),
+        ]
       : undefined,
-    channelAssets
+    newChannelAssets
   )
   const { fullFee: createChannelFee, loading: createChannelFeeLoading } = useFee(
     'createChannelTx',
@@ -208,14 +216,14 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       ? [
           memberId,
           channelMetadata,
-          channelAssets,
+          newChannelAssets,
           // use basic buckets config for fee estimation
           { storage: [0], distribution: [{ distributionBucketFamilyId: 0, distributionBucketIndex: 0 }] },
           dataObjectStateBloatBondValue.toString(),
           channelStateBloatBondValue.toString(),
         ]
       : undefined,
-    channelAssets
+    newChannelAssets
   )
 
   useEffect(() => {
@@ -225,7 +233,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
 
     const { title, description, isPublic, language } = channel
 
-    const foundLanguage = languages.find(({ value }) => value === language?.iso)
+    const foundLanguage = LANGUAGES_LIST.find(({ value }) => value === language?.iso)
 
     reset({
       avatar: {
@@ -243,7 +251,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       title: title || '',
       description: description || '',
       isPublic: isPublic ?? false,
-      language: foundLanguage?.value || languages[0].value,
+      language: foundLanguage?.value || LANGUAGES_LIST[0].value,
     })
   }, [channel, loading, newChannel, reset])
 
@@ -322,7 +330,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     const processAssets = async () => {
       const avatarIpfsHash = await avatarHashPromise
       const coverIpfsHash = await coverHashPromise
-      const createdAssets = createChannelAssets(avatarIpfsHash, coverIpfsHash)
+      const [createdAssets] = createChannelAssets(avatarIpfsHash, coverIpfsHash)
       if (createdAssets.avatarPhoto) {
         assets.avatarPhoto = createdAssets.avatarPhoto
       }
@@ -416,6 +424,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
               memberId,
               metadata,
               assets,
+              removedChannelAssetsIds,
               dataObjectStateBloatBondValue.toString(),
               proxyCallback(updateStatus)
             ),
@@ -604,7 +613,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
               rules={requiredValidation('Language')}
               render={({ field: { value, onChange } }) => (
                 <Select
-                  items={languages}
+                  items={LANGUAGES_LIST}
                   disabled={loading}
                   value={value}
                   onChange={onChange}

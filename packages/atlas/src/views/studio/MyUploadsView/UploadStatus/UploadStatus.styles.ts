@@ -171,7 +171,7 @@ type FileInfoDetailsProps = {
 export const FileInfoDetails = styled.div<FileInfoDetailsProps>`
   display: grid;
   gap: ${sizes(2)};
-  grid-template-columns: ${({ size }) => (size === 'compact' ? 'min-content min-content' : '1fr 1fr')};
+  grid-template-columns: ${({ size }) => (size === 'compact' ? 'min-content max-content' : '1fr 1fr')};
 `
 
 export const ProgressbarContainer = styled.div`

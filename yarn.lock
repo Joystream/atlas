@@ -2902,6 +2902,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@joystream/metadata-protobuf@patch:@joystream/metadata-protobuf@npm:2.2.0#.yarn/patches/@joystream-metadata-protobuf-npm-2.2.0-d51d4ac30c.patch::locator=root-workspace-0b6124%40workspace%3A.":
+  version: 2.2.0
+  resolution: "@joystream/metadata-protobuf@patch:@joystream/metadata-protobuf@npm%3A2.2.0#.yarn/patches/@joystream-metadata-protobuf-npm-2.2.0-d51d4ac30c.patch::version=2.2.0&hash=bac2b5&locator=root-workspace-0b6124%40workspace%3A."
+  dependencies:
+    "@types/iso-3166-2": ^1.0.0
+    "@types/long": ^4.0.1
+    google-protobuf: ^3.14.0
+    i18n-iso-countries: ^6.8.0
+    iso-3166-2: ^1.0.0
+    iso-639-1: ^2.1.9
+    long: ^4.0.0
+    protobufjs: ^6.11.2
+  checksum: 4d9a570b91032ff244af45b423c4536d3a557e25f5de22c0b0a62bf376b8a8f0a6b6ff248582a1ea3269b7b0589af54fb35a07c169770e21186a1e2eab774dc0
+  languageName: node
+  linkType: hard
+
 "@joystream/prettier-config@npm:^1.0.0":
   version: 1.0.0
   resolution: "@joystream/prettier-config@npm:1.0.0"

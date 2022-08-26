@@ -17,7 +17,6 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
     inBlock: number
     status:
       | { __typename: 'MetaprotocolTransactionErrored'; message: string }
-      | { __typename: 'MetaprotocolTransactionPending' }
       | {
           __typename: 'MetaprotocolTransactionSuccessful'
           commentCreated?: {
@@ -52,6 +51,7 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
                           | { __typename: 'DataObjectTypeVideoThumbnail' }
                       } | null
                     }
@@ -98,6 +98,7 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
                           | { __typename: 'DataObjectTypeVideoThumbnail' }
                       } | null
                     }
@@ -144,6 +145,7 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
                           | { __typename: 'DataObjectTypeVideoThumbnail' }
                       } | null
                     }
@@ -190,6 +192,7 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
                           | { __typename: 'DataObjectTypeVideoThumbnail' }
                       } | null
                     }

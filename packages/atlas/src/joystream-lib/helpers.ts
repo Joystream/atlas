@@ -1,7 +1,7 @@
 import { createType } from '@joystream/types'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
-import { BTreeSet, Option, u64 } from '@polkadot/types'
+import { Option, u64 } from '@polkadot/types'
 import { Hash } from '@polkadot/types/interfaces/runtime'
 import { DispatchError, Event, EventRecord } from '@polkadot/types/interfaces/system'
 import {
@@ -21,7 +21,6 @@ import { JoystreamLibError } from './errors'
 import {
   ChannelAssets,
   ChannelAssetsIds,
-  ChannelInputAssets,
   DataObjectMetadata,
   ExtractChannelResultsAssetsIdsFn,
   ExtractVideoResultsAssetsIdsFn,
@@ -34,7 +33,6 @@ import {
   NftOpenAuctionInputMetadata,
   VideoAssets,
   VideoAssetsIds,
-  VideoInputAssets,
 } from './types'
 
 export const prepareAssetsForExtrinsic = async (
@@ -169,14 +167,6 @@ export const sendExtrinsicAndParseEvents = (
       })
   })
 
-export const getReplacedDataObjectsIds = (assets: VideoInputAssets | ChannelInputAssets): BTreeSet<u64> =>
-  createType(
-    'BTreeSet<u64>',
-    Object.values(assets)
-      .filter((asset): asset is Required<DataObjectMetadata> => !!asset.replacedDataObjectId)
-      .map((asset) => new BN(asset.replacedDataObjectId))
-  )
-
 const getResultVideoDataObjectsIds = (assets: VideoAssets<unknown>, dataObjectsIds: u64[]): VideoAssetsIds => {
   const ids = dataObjectsIds.map((dataObjectsId) => dataObjectsId.toString())
 
@@ -186,6 +176,7 @@ const getResultVideoDataObjectsIds = (assets: VideoAssets<unknown>, dataObjectsI
   return {
     ...(hasMedia ? { media: ids[0] } : {}),
     ...(hasThumbnail ? { thumbnailPhoto: ids[hasMedia ? 1 : 0] } : {}),
+    subtitles: ids.slice(hasMedia && hasThumbnail ? 2 : hasMedia || hasThumbnail ? 1 : 0),
   }
 }
 

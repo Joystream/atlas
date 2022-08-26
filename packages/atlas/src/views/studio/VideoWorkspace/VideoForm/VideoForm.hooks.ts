@@ -21,6 +21,7 @@ import {
   useVideoWorkspace,
   useVideoWorkspaceData,
 } from '@/providers/videoWorkspace'
+import { SubtitlesInput } from '@/types/subtitles'
 import { createId } from '@/utils/createId'
 import { computeFileHash } from '@/utils/hashing'
 
@@ -34,11 +35,13 @@ export const useVideoFormAssets = (
 ) => {
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
   const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
+  const [subtitlesHashesPromises, setSubtitlesHashesPromises] = useState<(Promise<string> | null)[]>([])
 
   const { tabData } = useVideoWorkspaceData()
 
   const addAsset = useAssetStore((state) => state.actions.addAsset)
   const assets = watch('assets')
+  const subtitles = watch('subtitlesArray')
   const mediaAsset = useRawAsset(assets?.video.id || tabData?.assets.video.id || null)
   const thumbnailAsset = useRawAsset(assets?.thumbnail.cropId || null)
   const originalThumbnailAsset = useRawAsset(assets?.thumbnail.originalId || null)
@@ -53,6 +56,16 @@ export const useVideoFormAssets = (
   const computeThumbnailHash = useCallback((file: Blob) => {
     const hashPromise = computeFileHash(file)
     setThumbnailHashPromise(hashPromise)
+  }, [])
+
+  const computeSubtitlesHashes = useCallback((subtitles: SubtitlesInput[]) => {
+    const subtitlesHashesPromises = subtitles.map((subtitle) => {
+      if (!subtitle.file) {
+        return null
+      }
+      return computeFileHash(subtitle.file)
+    })
+    setSubtitlesHashesPromises(subtitlesHashesPromises)
   }, [])
 
   useEffect(() => {
@@ -72,6 +85,13 @@ export const useVideoFormAssets = (
       computeMediaHash(mediaAsset.blob)
     }
   }, [computeMediaHash, mediaAsset])
+
+  useEffect(() => {
+    if (!subtitles) {
+      return
+    }
+    computeSubtitlesHashes(subtitles)
+  }, [computeSubtitlesHashes, subtitles])
 
   const handleVideoFileChange = useCallback(
     (video: VideoInputFile | null) => {
@@ -164,6 +184,7 @@ export const useVideoFormAssets = (
     files,
     thumbnailHashPromise,
     videoHashPromise,
+    subtitlesHashesPromises,
     hasUnsavedAssets,
   }
 }

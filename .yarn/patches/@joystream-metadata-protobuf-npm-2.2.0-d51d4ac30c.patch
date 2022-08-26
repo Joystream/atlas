@@ -1,0 +1,2802 @@
+diff --git a/compiled/index.d.ts b/compiled/index.d.ts
+index 17c0792993e3a8e5c4ec355aed03e63d80fb2207..2d0751a5290b59dde38cf9fbb80cd8d67eebc3ab 100644
+--- a/compiled/index.d.ts
++++ b/compiled/index.d.ts
+@@ -224,9 +224,6 @@ export interface IChannelMetadata {
+ 
+     /** ChannelMetadata avatarPhoto */
+     avatarPhoto?: (number|null);
+-
+-    /** ChannelMetadata category */
+-    category?: (Long|null);
+ }
+ 
+ /** Represents a ChannelMetadata. */
+@@ -256,9 +253,6 @@ export class ChannelMetadata implements IChannelMetadata {
+     /** ChannelMetadata avatarPhoto. */
+     public avatarPhoto: number;
+ 
+-    /** ChannelMetadata category. */
+-    public category: Long;
+-
+     /**
+      * Creates a new ChannelMetadata instance using the specified properties.
+      * @param [properties] Properties to set
+@@ -330,96 +324,6 @@ export class ChannelMetadata implements IChannelMetadata {
+     public toJSON(): { [k: string]: any };
+ }
+ 
+-/** Properties of a ChannelCategoryMetadata. */
+-export interface IChannelCategoryMetadata {
+-
+-    /** ChannelCategoryMetadata name */
+-    name?: (string|null);
+-}
+-
+-/** Represents a ChannelCategoryMetadata. */
+-export class ChannelCategoryMetadata implements IChannelCategoryMetadata {
+-
+-    /**
+-     * Constructs a new ChannelCategoryMetadata.
+-     * @param [properties] Properties to set
+-     */
+-    constructor(properties?: IChannelCategoryMetadata);
+-
+-    /** ChannelCategoryMetadata name. */
+-    public name: string;
+-
+-    /**
+-     * Creates a new ChannelCategoryMetadata instance using the specified properties.
+-     * @param [properties] Properties to set
+-     * @returns ChannelCategoryMetadata instance
+-     */
+-    public static create(properties?: IChannelCategoryMetadata): ChannelCategoryMetadata;
+-
+-    /**
+-     * Encodes the specified ChannelCategoryMetadata message. Does not implicitly {@link ChannelCategoryMetadata.verify|verify} messages.
+-     * @param message ChannelCategoryMetadata message or plain object to encode
+-     * @param [writer] Writer to encode to
+-     * @returns Writer
+-     */
+-    public static encode(message: IChannelCategoryMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
+-
+-    /**
+-     * Encodes the specified ChannelCategoryMetadata message, length delimited. Does not implicitly {@link ChannelCategoryMetadata.verify|verify} messages.
+-     * @param message ChannelCategoryMetadata message or plain object to encode
+-     * @param [writer] Writer to encode to
+-     * @returns Writer
+-     */
+-    public static encodeDelimited(message: IChannelCategoryMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
+-
+-    /**
+-     * Decodes a ChannelCategoryMetadata message from the specified reader or buffer.
+-     * @param reader Reader or buffer to decode from
+-     * @param [length] Message length if known beforehand
+-     * @returns ChannelCategoryMetadata
+-     * @throws {Error} If the payload is not a reader or valid buffer
+-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+-     */
+-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): ChannelCategoryMetadata;
+-
+-    /**
+-     * Decodes a ChannelCategoryMetadata message from the specified reader or buffer, length delimited.
+-     * @param reader Reader or buffer to decode from
+-     * @returns ChannelCategoryMetadata
+-     * @throws {Error} If the payload is not a reader or valid buffer
+-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+-     */
+-    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): ChannelCategoryMetadata;
+-
+-    /**
+-     * Verifies a ChannelCategoryMetadata message.
+-     * @param message Plain object to verify
+-     * @returns `null` if valid, otherwise the reason why it is not
+-     */
+-    public static verify(message: { [k: string]: any }): (string|null);
+-
+-    /**
+-     * Creates a ChannelCategoryMetadata message from a plain object. Also converts values to their respective internal types.
+-     * @param object Plain object
+-     * @returns ChannelCategoryMetadata
+-     */
+-    public static fromObject(object: { [k: string]: any }): ChannelCategoryMetadata;
+-
+-    /**
+-     * Creates a plain object from a ChannelCategoryMetadata message. Also converts values to other types if specified.
+-     * @param message ChannelCategoryMetadata
+-     * @param [options] Conversion options
+-     * @returns Plain object
+-     */
+-    public static toObject(message: ChannelCategoryMetadata, options?: $protobuf.IConversionOptions): { [k: string]: any };
+-
+-    /**
+-     * Converts this ChannelCategoryMetadata to JSON.
+-     * @returns JSON object
+-     */
+-    public toJSON(): { [k: string]: any };
+-}
+-
+ /** Properties of a CouncilCandidacyNoteMetadata. */
+ export interface ICouncilCandidacyNoteMetadata {
+ 
+@@ -1830,6 +1734,108 @@ export namespace VideoReactionsPreference {
+     }
+ }
+ 
++/** Properties of a CreateVideoCategory. */
++export interface ICreateVideoCategory {
++
++    /** CreateVideoCategory name */
++    name: string;
++
++    /** CreateVideoCategory description */
++    description?: (string|null);
++
++    /** CreateVideoCategory parentCategoryId */
++    parentCategoryId?: (string|null);
++}
++
++/** Represents a CreateVideoCategory. */
++export class CreateVideoCategory implements ICreateVideoCategory {
++
++    /**
++     * Constructs a new CreateVideoCategory.
++     * @param [properties] Properties to set
++     */
++    constructor(properties?: ICreateVideoCategory);
++
++    /** CreateVideoCategory name. */
++    public name: string;
++
++    /** CreateVideoCategory description. */
++    public description: string;
++
++    /** CreateVideoCategory parentCategoryId. */
++    public parentCategoryId: string;
++
++    /**
++     * Creates a new CreateVideoCategory instance using the specified properties.
++     * @param [properties] Properties to set
++     * @returns CreateVideoCategory instance
++     */
++    public static create(properties?: ICreateVideoCategory): CreateVideoCategory;
++
++    /**
++     * Encodes the specified CreateVideoCategory message. Does not implicitly {@link CreateVideoCategory.verify|verify} messages.
++     * @param message CreateVideoCategory message or plain object to encode
++     * @param [writer] Writer to encode to
++     * @returns Writer
++     */
++    public static encode(message: ICreateVideoCategory, writer?: $protobuf.Writer): $protobuf.Writer;
++
++    /**
++     * Encodes the specified CreateVideoCategory message, length delimited. Does not implicitly {@link CreateVideoCategory.verify|verify} messages.
++     * @param message CreateVideoCategory message or plain object to encode
++     * @param [writer] Writer to encode to
++     * @returns Writer
++     */
++    public static encodeDelimited(message: ICreateVideoCategory, writer?: $protobuf.Writer): $protobuf.Writer;
++
++    /**
++     * Decodes a CreateVideoCategory message from the specified reader or buffer.
++     * @param reader Reader or buffer to decode from
++     * @param [length] Message length if known beforehand
++     * @returns CreateVideoCategory
++     * @throws {Error} If the payload is not a reader or valid buffer
++     * @throws {$protobuf.util.ProtocolError} If required fields are missing
++     */
++    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CreateVideoCategory;
++
++    /**
++     * Decodes a CreateVideoCategory message from the specified reader or buffer, length delimited.
++     * @param reader Reader or buffer to decode from
++     * @returns CreateVideoCategory
++     * @throws {Error} If the payload is not a reader or valid buffer
++     * @throws {$protobuf.util.ProtocolError} If required fields are missing
++     */
++    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): CreateVideoCategory;
++
++    /**
++     * Verifies a CreateVideoCategory message.
++     * @param message Plain object to verify
++     * @returns `null` if valid, otherwise the reason why it is not
++     */
++    public static verify(message: { [k: string]: any }): (string|null);
++
++    /**
++     * Creates a CreateVideoCategory message from a plain object. Also converts values to their respective internal types.
++     * @param object Plain object
++     * @returns CreateVideoCategory
++     */
++    public static fromObject(object: { [k: string]: any }): CreateVideoCategory;
++
++    /**
++     * Creates a plain object from a CreateVideoCategory message. Also converts values to other types if specified.
++     * @param message CreateVideoCategory
++     * @param [options] Conversion options
++     * @returns Plain object
++     */
++    public static toObject(message: CreateVideoCategory, options?: $protobuf.IConversionOptions): { [k: string]: any };
++
++    /**
++     * Converts this CreateVideoCategory to JSON.
++     * @returns JSON object
++     */
++    public toJSON(): { [k: string]: any };
++}
++
+ /** Properties of a MemberRemarked. */
+ export interface IMemberRemarked {
+ 
+@@ -1847,6 +1853,9 @@ export interface IMemberRemarked {
+ 
+     /** MemberRemarked deleteComment */
+     deleteComment?: (IDeleteComment|null);
++
++    /** MemberRemarked createVideoCategory */
++    createVideoCategory?: (ICreateVideoCategory|null);
+ }
+ 
+ /** Represents a MemberRemarked. */
+@@ -1873,8 +1882,11 @@ export class MemberRemarked implements IMemberRemarked {
+     /** MemberRemarked deleteComment. */
+     public deleteComment?: (IDeleteComment|null);
+ 
++    /** MemberRemarked createVideoCategory. */
++    public createVideoCategory?: (ICreateVideoCategory|null);
++
+     /** MemberRemarked memberRemarked. */
+-    public memberRemarked?: ("reactVideo"|"reactComment"|"createComment"|"editComment"|"deleteComment");
++    public memberRemarked?: ("reactVideo"|"reactComment"|"createComment"|"editComment"|"deleteComment"|"createVideoCategory");
+ 
+     /**
+      * Creates a new MemberRemarked instance using the specified properties.
+@@ -2271,102 +2283,6 @@ export class PersonMetadata implements IPersonMetadata {
+     public toJSON(): { [k: string]: any };
+ }
+ 
+-/** Properties of a PlaylistMetadata. */
+-export interface IPlaylistMetadata {
+-
+-    /** PlaylistMetadata title */
+-    title?: (string|null);
+-
+-    /** PlaylistMetadata videos */
+-    videos?: (Long[]|null);
+-}
+-
+-/** Represents a PlaylistMetadata. */
+-export class PlaylistMetadata implements IPlaylistMetadata {
+-
+-    /**
+-     * Constructs a new PlaylistMetadata.
+-     * @param [properties] Properties to set
+-     */
+-    constructor(properties?: IPlaylistMetadata);
+-
+-    /** PlaylistMetadata title. */
+-    public title: string;
+-
+-    /** PlaylistMetadata videos. */
+-    public videos: Long[];
+-
+-    /**
+-     * Creates a new PlaylistMetadata instance using the specified properties.
+-     * @param [properties] Properties to set
+-     * @returns PlaylistMetadata instance
+-     */
+-    public static create(properties?: IPlaylistMetadata): PlaylistMetadata;
+-
+-    /**
+-     * Encodes the specified PlaylistMetadata message. Does not implicitly {@link PlaylistMetadata.verify|verify} messages.
+-     * @param message PlaylistMetadata message or plain object to encode
+-     * @param [writer] Writer to encode to
+-     * @returns Writer
+-     */
+-    public static encode(message: IPlaylistMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
+-
+-    /**
+-     * Encodes the specified PlaylistMetadata message, length delimited. Does not implicitly {@link PlaylistMetadata.verify|verify} messages.
+-     * @param message PlaylistMetadata message or plain object to encode
+-     * @param [writer] Writer to encode to
+-     * @returns Writer
+-     */
+-    public static encodeDelimited(message: IPlaylistMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
+-
+-    /**
+-     * Decodes a PlaylistMetadata message from the specified reader or buffer.
+-     * @param reader Reader or buffer to decode from
+-     * @param [length] Message length if known beforehand
+-     * @returns PlaylistMetadata
+-     * @throws {Error} If the payload is not a reader or valid buffer
+-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+-     */
+-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): PlaylistMetadata;
+-
+-    /**
+-     * Decodes a PlaylistMetadata message from the specified reader or buffer, length delimited.
+-     * @param reader Reader or buffer to decode from
+-     * @returns PlaylistMetadata
+-     * @throws {Error} If the payload is not a reader or valid buffer
+-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+-     */
+-    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): PlaylistMetadata;
+-
+-    /**
+-     * Verifies a PlaylistMetadata message.
+-     * @param message Plain object to verify
+-     * @returns `null` if valid, otherwise the reason why it is not
+-     */
+-    public static verify(message: { [k: string]: any }): (string|null);
+-
+-    /**
+-     * Creates a PlaylistMetadata message from a plain object. Also converts values to their respective internal types.
+-     * @param object Plain object
+-     * @returns PlaylistMetadata
+-     */
+-    public static fromObject(object: { [k: string]: any }): PlaylistMetadata;
+-
+-    /**
+-     * Creates a plain object from a PlaylistMetadata message. Also converts values to other types if specified.
+-     * @param message PlaylistMetadata
+-     * @param [options] Conversion options
+-     * @returns Plain object
+-     */
+-    public static toObject(message: PlaylistMetadata, options?: $protobuf.IConversionOptions): { [k: string]: any };
+-
+-    /**
+-     * Converts this PlaylistMetadata to JSON.
+-     * @returns JSON object
+-     */
+-    public toJSON(): { [k: string]: any };
+-}
+-
+ /** Properties of a ProposalsDiscussionPostMetadata. */
+ export interface IProposalsDiscussionPostMetadata {
+ 
+@@ -3608,6 +3524,114 @@ export class MediaType implements IMediaType {
+     public toJSON(): { [k: string]: any };
+ }
+ 
++/** Properties of a SubtitleMetadata. */
++export interface ISubtitleMetadata {
++
++    /** SubtitleMetadata type */
++    type: string;
++
++    /** SubtitleMetadata newAsset */
++    newAsset?: (number|null);
++
++    /** SubtitleMetadata language */
++    language: string;
++
++    /** SubtitleMetadata mimeType */
++    mimeType: string;
++}
++
++/** Represents a SubtitleMetadata. */
++export class SubtitleMetadata implements ISubtitleMetadata {
++
++    /**
++     * Constructs a new SubtitleMetadata.
++     * @param [properties] Properties to set
++     */
++    constructor(properties?: ISubtitleMetadata);
++
++    /** SubtitleMetadata type. */
++    public type: string;
++
++    /** SubtitleMetadata newAsset. */
++    public newAsset: number;
++
++    /** SubtitleMetadata language. */
++    public language: string;
++
++    /** SubtitleMetadata mimeType. */
++    public mimeType: string;
++
++    /**
++     * Creates a new SubtitleMetadata instance using the specified properties.
++     * @param [properties] Properties to set
++     * @returns SubtitleMetadata instance
++     */
++    public static create(properties?: ISubtitleMetadata): SubtitleMetadata;
++
++    /**
++     * Encodes the specified SubtitleMetadata message. Does not implicitly {@link SubtitleMetadata.verify|verify} messages.
++     * @param message SubtitleMetadata message or plain object to encode
++     * @param [writer] Writer to encode to
++     * @returns Writer
++     */
++    public static encode(message: ISubtitleMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
++
++    /**
++     * Encodes the specified SubtitleMetadata message, length delimited. Does not implicitly {@link SubtitleMetadata.verify|verify} messages.
++     * @param message SubtitleMetadata message or plain object to encode
++     * @param [writer] Writer to encode to
++     * @returns Writer
++     */
++    public static encodeDelimited(message: ISubtitleMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
++
++    /**
++     * Decodes a SubtitleMetadata message from the specified reader or buffer.
++     * @param reader Reader or buffer to decode from
++     * @param [length] Message length if known beforehand
++     * @returns SubtitleMetadata
++     * @throws {Error} If the payload is not a reader or valid buffer
++     * @throws {$protobuf.util.ProtocolError} If required fields are missing
++     */
++    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): SubtitleMetadata;
++
++    /**
++     * Decodes a SubtitleMetadata message from the specified reader or buffer, length delimited.
++     * @param reader Reader or buffer to decode from
++     * @returns SubtitleMetadata
++     * @throws {Error} If the payload is not a reader or valid buffer
++     * @throws {$protobuf.util.ProtocolError} If required fields are missing
++     */
++    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): SubtitleMetadata;
++
++    /**
++     * Verifies a SubtitleMetadata message.
++     * @param message Plain object to verify
++     * @returns `null` if valid, otherwise the reason why it is not
++     */
++    public static verify(message: { [k: string]: any }): (string|null);
++
++    /**
++     * Creates a SubtitleMetadata message from a plain object. Also converts values to their respective internal types.
++     * @param object Plain object
++     * @returns SubtitleMetadata
++     */
++    public static fromObject(object: { [k: string]: any }): SubtitleMetadata;
++
++    /**
++     * Creates a plain object from a SubtitleMetadata message. Also converts values to other types if specified.
++     * @param message SubtitleMetadata
++     * @param [options] Conversion options
++     * @returns Plain object
++     */
++    public static toObject(message: SubtitleMetadata, options?: $protobuf.IConversionOptions): { [k: string]: any };
++
++    /**
++     * Converts this SubtitleMetadata to JSON.
++     * @returns JSON object
++     */
++    public toJSON(): { [k: string]: any };
++}
++
+ /** Properties of a VideoMetadata. */
+ export interface IVideoMetadata {
+ 
+@@ -3657,10 +3681,16 @@ export interface IVideoMetadata {
+     persons?: (Long[]|null);
+ 
+     /** VideoMetadata category */
+-    category?: (Long|null);
++    category?: (string|null);
++
++    /** VideoMetadata subtitles */
++    subtitles?: (ISubtitleMetadata[]|null);
+ 
+     /** VideoMetadata enableComments */
+     enableComments?: (boolean|null);
++
++    /** VideoMetadata clearSubtitles */
++    clearSubtitles?: (boolean|null);
+ }
+ 
+ /** Represents a VideoMetadata. */
+@@ -3718,11 +3748,17 @@ export class VideoMetadata implements IVideoMetadata {
+     public persons: Long[];
+ 
+     /** VideoMetadata category. */
+-    public category: Long;
++    public category: string;
++
++    /** VideoMetadata subtitles. */
++    public subtitles: ISubtitleMetadata[];
+ 
+     /** VideoMetadata enableComments. */
+     public enableComments: boolean;
+ 
++    /** VideoMetadata clearSubtitles. */
++    public clearSubtitles: boolean;
++
+     /**
+      * Creates a new VideoMetadata instance using the specified properties.
+      * @param [properties] Properties to set
+@@ -3794,91 +3830,94 @@ export class VideoMetadata implements IVideoMetadata {
+     public toJSON(): { [k: string]: any };
+ }
+ 
+-/** Properties of a VideoCategoryMetadata. */
+-export interface IVideoCategoryMetadata {
++/** Properties of a ContentMetadata. */
++export interface IContentMetadata {
+ 
+-    /** VideoCategoryMetadata name */
+-    name?: (string|null);
++    /** ContentMetadata videoMetadata */
++    videoMetadata?: (IVideoMetadata|null);
+ }
+ 
+-/** Represents a VideoCategoryMetadata. */
+-export class VideoCategoryMetadata implements IVideoCategoryMetadata {
++/** Represents a ContentMetadata. */
++export class ContentMetadata implements IContentMetadata {
+ 
+     /**
+-     * Constructs a new VideoCategoryMetadata.
++     * Constructs a new ContentMetadata.
+      * @param [properties] Properties to set
+      */
+-    constructor(properties?: IVideoCategoryMetadata);
++    constructor(properties?: IContentMetadata);
+ 
+-    /** VideoCategoryMetadata name. */
+-    public name: string;
++    /** ContentMetadata videoMetadata. */
++    public videoMetadata?: (IVideoMetadata|null);
++
++    /** ContentMetadata contentMetadata. */
++    public contentMetadata?: "videoMetadata";
+ 
+     /**
+-     * Creates a new VideoCategoryMetadata instance using the specified properties.
++     * Creates a new ContentMetadata instance using the specified properties.
+      * @param [properties] Properties to set
+-     * @returns VideoCategoryMetadata instance
++     * @returns ContentMetadata instance
+      */
+-    public static create(properties?: IVideoCategoryMetadata): VideoCategoryMetadata;
++    public static create(properties?: IContentMetadata): ContentMetadata;
+ 
+     /**
+-     * Encodes the specified VideoCategoryMetadata message. Does not implicitly {@link VideoCategoryMetadata.verify|verify} messages.
+-     * @param message VideoCategoryMetadata message or plain object to encode
++     * Encodes the specified ContentMetadata message. Does not implicitly {@link ContentMetadata.verify|verify} messages.
++     * @param message ContentMetadata message or plain object to encode
+      * @param [writer] Writer to encode to
+      * @returns Writer
+      */
+-    public static encode(message: IVideoCategoryMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
++    public static encode(message: IContentMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
+ 
+     /**
+-     * Encodes the specified VideoCategoryMetadata message, length delimited. Does not implicitly {@link VideoCategoryMetadata.verify|verify} messages.
+-     * @param message VideoCategoryMetadata message or plain object to encode
++     * Encodes the specified ContentMetadata message, length delimited. Does not implicitly {@link ContentMetadata.verify|verify} messages.
++     * @param message ContentMetadata message or plain object to encode
+      * @param [writer] Writer to encode to
+      * @returns Writer
+      */
+-    public static encodeDelimited(message: IVideoCategoryMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
++    public static encodeDelimited(message: IContentMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
+ 
+     /**
+-     * Decodes a VideoCategoryMetadata message from the specified reader or buffer.
++     * Decodes a ContentMetadata message from the specified reader or buffer.
+      * @param reader Reader or buffer to decode from
+      * @param [length] Message length if known beforehand
+-     * @returns VideoCategoryMetadata
++     * @returns ContentMetadata
+      * @throws {Error} If the payload is not a reader or valid buffer
+      * @throws {$protobuf.util.ProtocolError} If required fields are missing
+      */
+-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): VideoCategoryMetadata;
++    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): ContentMetadata;
+ 
+     /**
+-     * Decodes a VideoCategoryMetadata message from the specified reader or buffer, length delimited.
++     * Decodes a ContentMetadata message from the specified reader or buffer, length delimited.
+      * @param reader Reader or buffer to decode from
+-     * @returns VideoCategoryMetadata
++     * @returns ContentMetadata
+      * @throws {Error} If the payload is not a reader or valid buffer
+      * @throws {$protobuf.util.ProtocolError} If required fields are missing
+      */
+-    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): VideoCategoryMetadata;
++    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): ContentMetadata;
+ 
+     /**
+-     * Verifies a VideoCategoryMetadata message.
++     * Verifies a ContentMetadata message.
+      * @param message Plain object to verify
+      * @returns `null` if valid, otherwise the reason why it is not
+      */
+     public static verify(message: { [k: string]: any }): (string|null);
+ 
+     /**
+-     * Creates a VideoCategoryMetadata message from a plain object. Also converts values to their respective internal types.
++     * Creates a ContentMetadata message from a plain object. Also converts values to their respective internal types.
+      * @param object Plain object
+-     * @returns VideoCategoryMetadata
++     * @returns ContentMetadata
+      */
+-    public static fromObject(object: { [k: string]: any }): VideoCategoryMetadata;
++    public static fromObject(object: { [k: string]: any }): ContentMetadata;
+ 
+     /**
+-     * Creates a plain object from a VideoCategoryMetadata message. Also converts values to other types if specified.
+-     * @param message VideoCategoryMetadata
++     * Creates a plain object from a ContentMetadata message. Also converts values to other types if specified.
++     * @param message ContentMetadata
+      * @param [options] Conversion options
+      * @returns Plain object
+      */
+-    public static toObject(message: VideoCategoryMetadata, options?: $protobuf.IConversionOptions): { [k: string]: any };
++    public static toObject(message: ContentMetadata, options?: $protobuf.IConversionOptions): { [k: string]: any };
+ 
+     /**
+-     * Converts this VideoCategoryMetadata to JSON.
++     * Converts this ContentMetadata to JSON.
+      * @returns JSON object
+      */
+     public toJSON(): { [k: string]: any };
+diff --git a/compiled/index.js b/compiled/index.js
+index ed0dc6dc0a364e34996d5d9814f06ac893e7d007..a84d0b2061df471226d911fdd5b9591f6a876a6f 100644
+--- a/compiled/index.js
++++ b/compiled/index.js
+@@ -499,7 +499,6 @@ $root.ChannelMetadata = (function() {
+      * @property {string|null} [language] ChannelMetadata language
+      * @property {number|null} [coverPhoto] ChannelMetadata coverPhoto
+      * @property {number|null} [avatarPhoto] ChannelMetadata avatarPhoto
+-     * @property {Long|null} [category] ChannelMetadata category
+      */
+ 
+     /**
+@@ -565,14 +564,6 @@ $root.ChannelMetadata = (function() {
+      */
+     ChannelMetadata.prototype.avatarPhoto = 0;
+ 
+-    /**
+-     * ChannelMetadata category.
+-     * @member {Long} category
+-     * @memberof ChannelMetadata
+-     * @instance
+-     */
+-    ChannelMetadata.prototype.category = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+-
+     /**
+      * Creates a new ChannelMetadata instance using the specified properties.
+      * @function create
+@@ -609,8 +600,6 @@ $root.ChannelMetadata = (function() {
+             writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.coverPhoto);
+         if (message.avatarPhoto != null && Object.hasOwnProperty.call(message, "avatarPhoto"))
+             writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.avatarPhoto);
+-        if (message.category != null && Object.hasOwnProperty.call(message, "category"))
+-            writer.uint32(/* id 7, wireType 0 =*/56).uint64(message.category);
+         return writer;
+     };
+ 
+@@ -663,9 +652,6 @@ $root.ChannelMetadata = (function() {
+             case 6:
+                 message.avatarPhoto = reader.uint32();
+                 break;
+-            case 7:
+-                message.category = reader.uint64();
+-                break;
+             default:
+                 reader.skipType(tag & 7);
+                 break;
+@@ -719,9 +705,6 @@ $root.ChannelMetadata = (function() {
+         if (message.avatarPhoto != null && message.hasOwnProperty("avatarPhoto"))
+             if (!$util.isInteger(message.avatarPhoto))
+                 return "avatarPhoto: integer expected";
+-        if (message.category != null && message.hasOwnProperty("category"))
+-            if (!$util.isInteger(message.category) && !(message.category && $util.isInteger(message.category.low) && $util.isInteger(message.category.high)))
+-                return "category: integer|Long expected";
+         return null;
+     };
+ 
+@@ -749,15 +732,6 @@ $root.ChannelMetadata = (function() {
+             message.coverPhoto = object.coverPhoto >>> 0;
+         if (object.avatarPhoto != null)
+             message.avatarPhoto = object.avatarPhoto >>> 0;
+-        if (object.category != null)
+-            if ($util.Long)
+-                (message.category = $util.Long.fromValue(object.category)).unsigned = true;
+-            else if (typeof object.category === "string")
+-                message.category = parseInt(object.category, 10);
+-            else if (typeof object.category === "number")
+-                message.category = object.category;
+-            else if (typeof object.category === "object")
+-                message.category = new $util.LongBits(object.category.low >>> 0, object.category.high >>> 0).toNumber(true);
+         return message;
+     };
+ 
+@@ -781,11 +755,6 @@ $root.ChannelMetadata = (function() {
+             object.language = "";
+             object.coverPhoto = 0;
+             object.avatarPhoto = 0;
+-            if ($util.Long) {
+-                var long = new $util.Long(0, 0, true);
+-                object.category = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+-            } else
+-                object.category = options.longs === String ? "0" : 0;
+         }
+         if (message.title != null && message.hasOwnProperty("title"))
+             object.title = message.title;
+@@ -799,11 +768,6 @@ $root.ChannelMetadata = (function() {
+             object.coverPhoto = message.coverPhoto;
+         if (message.avatarPhoto != null && message.hasOwnProperty("avatarPhoto"))
+             object.avatarPhoto = message.avatarPhoto;
+-        if (message.category != null && message.hasOwnProperty("category"))
+-            if (typeof message.category === "number")
+-                object.category = options.longs === String ? String(message.category) : message.category;
+-            else
+-                object.category = options.longs === String ? $util.Long.prototype.toString.call(message.category) : options.longs === Number ? new $util.LongBits(message.category.low >>> 0, message.category.high >>> 0).toNumber(true) : message.category;
+         return object;
+     };
+ 
+@@ -821,193 +785,6 @@ $root.ChannelMetadata = (function() {
+     return ChannelMetadata;
+ })();
+ 
+-$root.ChannelCategoryMetadata = (function() {
+-
+-    /**
+-     * Properties of a ChannelCategoryMetadata.
+-     * @exports IChannelCategoryMetadata
+-     * @interface IChannelCategoryMetadata
+-     * @property {string|null} [name] ChannelCategoryMetadata name
+-     */
+-
+-    /**
+-     * Constructs a new ChannelCategoryMetadata.
+-     * @exports ChannelCategoryMetadata
+-     * @classdesc Represents a ChannelCategoryMetadata.
+-     * @implements IChannelCategoryMetadata
+-     * @constructor
+-     * @param {IChannelCategoryMetadata=} [properties] Properties to set
+-     */
+-    function ChannelCategoryMetadata(properties) {
+-        if (properties)
+-            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+-                if (properties[keys[i]] != null)
+-                    this[keys[i]] = properties[keys[i]];
+-    }
+-
+-    /**
+-     * ChannelCategoryMetadata name.
+-     * @member {string} name
+-     * @memberof ChannelCategoryMetadata
+-     * @instance
+-     */
+-    ChannelCategoryMetadata.prototype.name = "";
+-
+-    /**
+-     * Creates a new ChannelCategoryMetadata instance using the specified properties.
+-     * @function create
+-     * @memberof ChannelCategoryMetadata
+-     * @static
+-     * @param {IChannelCategoryMetadata=} [properties] Properties to set
+-     * @returns {ChannelCategoryMetadata} ChannelCategoryMetadata instance
+-     */
+-    ChannelCategoryMetadata.create = function create(properties) {
+-        return new ChannelCategoryMetadata(properties);
+-    };
+-
+-    /**
+-     * Encodes the specified ChannelCategoryMetadata message. Does not implicitly {@link ChannelCategoryMetadata.verify|verify} messages.
+-     * @function encode
+-     * @memberof ChannelCategoryMetadata
+-     * @static
+-     * @param {IChannelCategoryMetadata} message ChannelCategoryMetadata message or plain object to encode
+-     * @param {$protobuf.Writer} [writer] Writer to encode to
+-     * @returns {$protobuf.Writer} Writer
+-     */
+-    ChannelCategoryMetadata.encode = function encode(message, writer) {
+-        if (!writer)
+-            writer = $Writer.create();
+-        if (message.name != null && Object.hasOwnProperty.call(message, "name"))
+-            writer.uint32(/* id 1, wireType 2 =*/10).string(message.name);
+-        return writer;
+-    };
+-
+-    /**
+-     * Encodes the specified ChannelCategoryMetadata message, length delimited. Does not implicitly {@link ChannelCategoryMetadata.verify|verify} messages.
+-     * @function encodeDelimited
+-     * @memberof ChannelCategoryMetadata
+-     * @static
+-     * @param {IChannelCategoryMetadata} message ChannelCategoryMetadata message or plain object to encode
+-     * @param {$protobuf.Writer} [writer] Writer to encode to
+-     * @returns {$protobuf.Writer} Writer
+-     */
+-    ChannelCategoryMetadata.encodeDelimited = function encodeDelimited(message, writer) {
+-        return this.encode(message, writer).ldelim();
+-    };
+-
+-    /**
+-     * Decodes a ChannelCategoryMetadata message from the specified reader or buffer.
+-     * @function decode
+-     * @memberof ChannelCategoryMetadata
+-     * @static
+-     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+-     * @param {number} [length] Message length if known beforehand
+-     * @returns {ChannelCategoryMetadata} ChannelCategoryMetadata
+-     * @throws {Error} If the payload is not a reader or valid buffer
+-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+-     */
+-    ChannelCategoryMetadata.decode = function decode(reader, length) {
+-        if (!(reader instanceof $Reader))
+-            reader = $Reader.create(reader);
+-        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.ChannelCategoryMetadata();
+-        while (reader.pos < end) {
+-            var tag = reader.uint32();
+-            switch (tag >>> 3) {
+-            case 1:
+-                message.name = reader.string();
+-                break;
+-            default:
+-                reader.skipType(tag & 7);
+-                break;
+-            }
+-        }
+-        return message;
+-    };
+-
+-    /**
+-     * Decodes a ChannelCategoryMetadata message from the specified reader or buffer, length delimited.
+-     * @function decodeDelimited
+-     * @memberof ChannelCategoryMetadata
+-     * @static
+-     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+-     * @returns {ChannelCategoryMetadata} ChannelCategoryMetadata
+-     * @throws {Error} If the payload is not a reader or valid buffer
+-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+-     */
+-    ChannelCategoryMetadata.decodeDelimited = function decodeDelimited(reader) {
+-        if (!(reader instanceof $Reader))
+-            reader = new $Reader(reader);
+-        return this.decode(reader, reader.uint32());
+-    };
+-
+-    /**
+-     * Verifies a ChannelCategoryMetadata message.
+-     * @function verify
+-     * @memberof ChannelCategoryMetadata
+-     * @static
+-     * @param {Object.<string,*>} message Plain object to verify
+-     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+-     */
+-    ChannelCategoryMetadata.verify = function verify(message) {
+-        if (typeof message !== "object" || message === null)
+-            return "object expected";
+-        if (message.name != null && message.hasOwnProperty("name"))
+-            if (!$util.isString(message.name))
+-                return "name: string expected";
+-        return null;
+-    };
+-
+-    /**
+-     * Creates a ChannelCategoryMetadata message from a plain object. Also converts values to their respective internal types.
+-     * @function fromObject
+-     * @memberof ChannelCategoryMetadata
+-     * @static
+-     * @param {Object.<string,*>} object Plain object
+-     * @returns {ChannelCategoryMetadata} ChannelCategoryMetadata
+-     */
+-    ChannelCategoryMetadata.fromObject = function fromObject(object) {
+-        if (object instanceof $root.ChannelCategoryMetadata)
+-            return object;
+-        var message = new $root.ChannelCategoryMetadata();
+-        if (object.name != null)
+-            message.name = String(object.name);
+-        return message;
+-    };
+-
+-    /**
+-     * Creates a plain object from a ChannelCategoryMetadata message. Also converts values to other types if specified.
+-     * @function toObject
+-     * @memberof ChannelCategoryMetadata
+-     * @static
+-     * @param {ChannelCategoryMetadata} message ChannelCategoryMetadata
+-     * @param {$protobuf.IConversionOptions} [options] Conversion options
+-     * @returns {Object.<string,*>} Plain object
+-     */
+-    ChannelCategoryMetadata.toObject = function toObject(message, options) {
+-        if (!options)
+-            options = {};
+-        var object = {};
+-        if (options.defaults)
+-            object.name = "";
+-        if (message.name != null && message.hasOwnProperty("name"))
+-            object.name = message.name;
+-        return object;
+-    };
+-
+-    /**
+-     * Converts this ChannelCategoryMetadata to JSON.
+-     * @function toJSON
+-     * @memberof ChannelCategoryMetadata
+-     * @instance
+-     * @returns {Object.<string,*>} JSON object
+-     */
+-    ChannelCategoryMetadata.prototype.toJSON = function toJSON() {
+-        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+-    };
+-
+-    return ChannelCategoryMetadata;
+-})();
+-
+ $root.CouncilCandidacyNoteMetadata = (function() {
+ 
+     /**
+@@ -4257,6 +4034,238 @@ $root.VideoReactionsPreference = (function() {
+     return VideoReactionsPreference;
+ })();
+ 
++$root.CreateVideoCategory = (function() {
++
++    /**
++     * Properties of a CreateVideoCategory.
++     * @exports ICreateVideoCategory
++     * @interface ICreateVideoCategory
++     * @property {string} name CreateVideoCategory name
++     * @property {string|null} [description] CreateVideoCategory description
++     * @property {string|null} [parentCategoryId] CreateVideoCategory parentCategoryId
++     */
++
++    /**
++     * Constructs a new CreateVideoCategory.
++     * @exports CreateVideoCategory
++     * @classdesc Represents a CreateVideoCategory.
++     * @implements ICreateVideoCategory
++     * @constructor
++     * @param {ICreateVideoCategory=} [properties] Properties to set
++     */
++    function CreateVideoCategory(properties) {
++        if (properties)
++            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
++                if (properties[keys[i]] != null)
++                    this[keys[i]] = properties[keys[i]];
++    }
++
++    /**
++     * CreateVideoCategory name.
++     * @member {string} name
++     * @memberof CreateVideoCategory
++     * @instance
++     */
++    CreateVideoCategory.prototype.name = "";
++
++    /**
++     * CreateVideoCategory description.
++     * @member {string} description
++     * @memberof CreateVideoCategory
++     * @instance
++     */
++    CreateVideoCategory.prototype.description = "";
++
++    /**
++     * CreateVideoCategory parentCategoryId.
++     * @member {string} parentCategoryId
++     * @memberof CreateVideoCategory
++     * @instance
++     */
++    CreateVideoCategory.prototype.parentCategoryId = "";
++
++    /**
++     * Creates a new CreateVideoCategory instance using the specified properties.
++     * @function create
++     * @memberof CreateVideoCategory
++     * @static
++     * @param {ICreateVideoCategory=} [properties] Properties to set
++     * @returns {CreateVideoCategory} CreateVideoCategory instance
++     */
++    CreateVideoCategory.create = function create(properties) {
++        return new CreateVideoCategory(properties);
++    };
++
++    /**
++     * Encodes the specified CreateVideoCategory message. Does not implicitly {@link CreateVideoCategory.verify|verify} messages.
++     * @function encode
++     * @memberof CreateVideoCategory
++     * @static
++     * @param {ICreateVideoCategory} message CreateVideoCategory message or plain object to encode
++     * @param {$protobuf.Writer} [writer] Writer to encode to
++     * @returns {$protobuf.Writer} Writer
++     */
++    CreateVideoCategory.encode = function encode(message, writer) {
++        if (!writer)
++            writer = $Writer.create();
++        writer.uint32(/* id 1, wireType 2 =*/10).string(message.name);
++        if (message.description != null && Object.hasOwnProperty.call(message, "description"))
++            writer.uint32(/* id 2, wireType 2 =*/18).string(message.description);
++        if (message.parentCategoryId != null && Object.hasOwnProperty.call(message, "parentCategoryId"))
++            writer.uint32(/* id 3, wireType 2 =*/26).string(message.parentCategoryId);
++        return writer;
++    };
++
++    /**
++     * Encodes the specified CreateVideoCategory message, length delimited. Does not implicitly {@link CreateVideoCategory.verify|verify} messages.
++     * @function encodeDelimited
++     * @memberof CreateVideoCategory
++     * @static
++     * @param {ICreateVideoCategory} message CreateVideoCategory message or plain object to encode
++     * @param {$protobuf.Writer} [writer] Writer to encode to
++     * @returns {$protobuf.Writer} Writer
++     */
++    CreateVideoCategory.encodeDelimited = function encodeDelimited(message, writer) {
++        return this.encode(message, writer).ldelim();
++    };
++
++    /**
++     * Decodes a CreateVideoCategory message from the specified reader or buffer.
++     * @function decode
++     * @memberof CreateVideoCategory
++     * @static
++     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
++     * @param {number} [length] Message length if known beforehand
++     * @returns {CreateVideoCategory} CreateVideoCategory
++     * @throws {Error} If the payload is not a reader or valid buffer
++     * @throws {$protobuf.util.ProtocolError} If required fields are missing
++     */
++    CreateVideoCategory.decode = function decode(reader, length) {
++        if (!(reader instanceof $Reader))
++            reader = $Reader.create(reader);
++        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.CreateVideoCategory();
++        while (reader.pos < end) {
++            var tag = reader.uint32();
++            switch (tag >>> 3) {
++            case 1:
++                message.name = reader.string();
++                break;
++            case 2:
++                message.description = reader.string();
++                break;
++            case 3:
++                message.parentCategoryId = reader.string();
++                break;
++            default:
++                reader.skipType(tag & 7);
++                break;
++            }
++        }
++        if (!message.hasOwnProperty("name"))
++            throw $util.ProtocolError("missing required 'name'", { instance: message });
++        return message;
++    };
++
++    /**
++     * Decodes a CreateVideoCategory message from the specified reader or buffer, length delimited.
++     * @function decodeDelimited
++     * @memberof CreateVideoCategory
++     * @static
++     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
++     * @returns {CreateVideoCategory} CreateVideoCategory
++     * @throws {Error} If the payload is not a reader or valid buffer
++     * @throws {$protobuf.util.ProtocolError} If required fields are missing
++     */
++    CreateVideoCategory.decodeDelimited = function decodeDelimited(reader) {
++        if (!(reader instanceof $Reader))
++            reader = new $Reader(reader);
++        return this.decode(reader, reader.uint32());
++    };
++
++    /**
++     * Verifies a CreateVideoCategory message.
++     * @function verify
++     * @memberof CreateVideoCategory
++     * @static
++     * @param {Object.<string,*>} message Plain object to verify
++     * @returns {string|null} `null` if valid, otherwise the reason why it is not
++     */
++    CreateVideoCategory.verify = function verify(message) {
++        if (typeof message !== "object" || message === null)
++            return "object expected";
++        if (!$util.isString(message.name))
++            return "name: string expected";
++        if (message.description != null && message.hasOwnProperty("description"))
++            if (!$util.isString(message.description))
++                return "description: string expected";
++        if (message.parentCategoryId != null && message.hasOwnProperty("parentCategoryId"))
++            if (!$util.isString(message.parentCategoryId))
++                return "parentCategoryId: string expected";
++        return null;
++    };
++
++    /**
++     * Creates a CreateVideoCategory message from a plain object. Also converts values to their respective internal types.
++     * @function fromObject
++     * @memberof CreateVideoCategory
++     * @static
++     * @param {Object.<string,*>} object Plain object
++     * @returns {CreateVideoCategory} CreateVideoCategory
++     */
++    CreateVideoCategory.fromObject = function fromObject(object) {
++        if (object instanceof $root.CreateVideoCategory)
++            return object;
++        var message = new $root.CreateVideoCategory();
++        if (object.name != null)
++            message.name = String(object.name);
++        if (object.description != null)
++            message.description = String(object.description);
++        if (object.parentCategoryId != null)
++            message.parentCategoryId = String(object.parentCategoryId);
++        return message;
++    };
++
++    /**
++     * Creates a plain object from a CreateVideoCategory message. Also converts values to other types if specified.
++     * @function toObject
++     * @memberof CreateVideoCategory
++     * @static
++     * @param {CreateVideoCategory} message CreateVideoCategory
++     * @param {$protobuf.IConversionOptions} [options] Conversion options
++     * @returns {Object.<string,*>} Plain object
++     */
++    CreateVideoCategory.toObject = function toObject(message, options) {
++        if (!options)
++            options = {};
++        var object = {};
++        if (options.defaults) {
++            object.name = "";
++            object.description = "";
++            object.parentCategoryId = "";
++        }
++        if (message.name != null && message.hasOwnProperty("name"))
++            object.name = message.name;
++        if (message.description != null && message.hasOwnProperty("description"))
++            object.description = message.description;
++        if (message.parentCategoryId != null && message.hasOwnProperty("parentCategoryId"))
++            object.parentCategoryId = message.parentCategoryId;
++        return object;
++    };
++
++    /**
++     * Converts this CreateVideoCategory to JSON.
++     * @function toJSON
++     * @memberof CreateVideoCategory
++     * @instance
++     * @returns {Object.<string,*>} JSON object
++     */
++    CreateVideoCategory.prototype.toJSON = function toJSON() {
++        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
++    };
++
++    return CreateVideoCategory;
++})();
++
+ $root.MemberRemarked = (function() {
+ 
+     /**
+@@ -4268,6 +4277,7 @@ $root.MemberRemarked = (function() {
+      * @property {ICreateComment|null} [createComment] MemberRemarked createComment
+      * @property {IEditComment|null} [editComment] MemberRemarked editComment
+      * @property {IDeleteComment|null} [deleteComment] MemberRemarked deleteComment
++     * @property {ICreateVideoCategory|null} [createVideoCategory] MemberRemarked createVideoCategory
+      */
+ 
+     /**
+@@ -4325,17 +4335,25 @@ $root.MemberRemarked = (function() {
+      */
+     MemberRemarked.prototype.deleteComment = null;
+ 
++    /**
++     * MemberRemarked createVideoCategory.
++     * @member {ICreateVideoCategory|null|undefined} createVideoCategory
++     * @memberof MemberRemarked
++     * @instance
++     */
++    MemberRemarked.prototype.createVideoCategory = null;
++
+     // OneOf field names bound to virtual getters and setters
+     var $oneOfFields;
+ 
+     /**
+      * MemberRemarked memberRemarked.
+-     * @member {"reactVideo"|"reactComment"|"createComment"|"editComment"|"deleteComment"|undefined} memberRemarked
++     * @member {"reactVideo"|"reactComment"|"createComment"|"editComment"|"deleteComment"|"createVideoCategory"|undefined} memberRemarked
+      * @memberof MemberRemarked
+      * @instance
+      */
+     Object.defineProperty(MemberRemarked.prototype, "memberRemarked", {
+-        get: $util.oneOfGetter($oneOfFields = ["reactVideo", "reactComment", "createComment", "editComment", "deleteComment"]),
++        get: $util.oneOfGetter($oneOfFields = ["reactVideo", "reactComment", "createComment", "editComment", "deleteComment", "createVideoCategory"]),
+         set: $util.oneOfSetter($oneOfFields)
+     });
+ 
+@@ -4373,6 +4391,8 @@ $root.MemberRemarked = (function() {
+             $root.EditComment.encode(message.editComment, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+         if (message.deleteComment != null && Object.hasOwnProperty.call(message, "deleteComment"))
+             $root.DeleteComment.encode(message.deleteComment, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
++        if (message.createVideoCategory != null && Object.hasOwnProperty.call(message, "createVideoCategory"))
++            $root.CreateVideoCategory.encode(message.createVideoCategory, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
+         return writer;
+     };
+ 
+@@ -4422,6 +4442,9 @@ $root.MemberRemarked = (function() {
+             case 5:
+                 message.deleteComment = $root.DeleteComment.decode(reader, reader.uint32());
+                 break;
++            case 6:
++                message.createVideoCategory = $root.CreateVideoCategory.decode(reader, reader.uint32());
++                break;
+             default:
+                 reader.skipType(tag & 7);
+                 break;
+@@ -4506,6 +4529,16 @@ $root.MemberRemarked = (function() {
+                     return "deleteComment." + error;
+             }
+         }
++        if (message.createVideoCategory != null && message.hasOwnProperty("createVideoCategory")) {
++            if (properties.memberRemarked === 1)
++                return "memberRemarked: multiple values";
++            properties.memberRemarked = 1;
++            {
++                var error = $root.CreateVideoCategory.verify(message.createVideoCategory);
++                if (error)
++                    return "createVideoCategory." + error;
++            }
++        }
+         return null;
+     };
+ 
+@@ -4546,6 +4579,11 @@ $root.MemberRemarked = (function() {
+                 throw TypeError(".MemberRemarked.deleteComment: object expected");
+             message.deleteComment = $root.DeleteComment.fromObject(object.deleteComment);
+         }
++        if (object.createVideoCategory != null) {
++            if (typeof object.createVideoCategory !== "object")
++                throw TypeError(".MemberRemarked.createVideoCategory: object expected");
++            message.createVideoCategory = $root.CreateVideoCategory.fromObject(object.createVideoCategory);
++        }
+         return message;
+     };
+ 
+@@ -4587,6 +4625,11 @@ $root.MemberRemarked = (function() {
+             if (options.oneofs)
+                 object.memberRemarked = "deleteComment";
+         }
++        if (message.createVideoCategory != null && message.hasOwnProperty("createVideoCategory")) {
++            object.createVideoCategory = $root.CreateVideoCategory.toObject(message.createVideoCategory, options);
++            if (options.oneofs)
++                object.memberRemarked = "createVideoCategory";
++        }
+         return object;
+     };
+ 
+@@ -5355,316 +5398,75 @@ $root.PersonMetadata = (function() {
+      * @memberof PersonMetadata
+      * @static
+      * @param {Object.<string,*>} object Plain object
+-     * @returns {PersonMetadata} PersonMetadata
+-     */
+-    PersonMetadata.fromObject = function fromObject(object) {
+-        if (object instanceof $root.PersonMetadata)
+-            return object;
+-        var message = new $root.PersonMetadata();
+-        if (object.firstName != null)
+-            message.firstName = String(object.firstName);
+-        if (object.middleName != null)
+-            message.middleName = String(object.middleName);
+-        if (object.lastName != null)
+-            message.lastName = String(object.lastName);
+-        if (object.about != null)
+-            message.about = String(object.about);
+-        if (object.coverPhoto != null)
+-            message.coverPhoto = object.coverPhoto >>> 0;
+-        if (object.avatarPhoto != null)
+-            message.avatarPhoto = object.avatarPhoto >>> 0;
+-        return message;
+-    };
+-
+-    /**
+-     * Creates a plain object from a PersonMetadata message. Also converts values to other types if specified.
+-     * @function toObject
+-     * @memberof PersonMetadata
+-     * @static
+-     * @param {PersonMetadata} message PersonMetadata
+-     * @param {$protobuf.IConversionOptions} [options] Conversion options
+-     * @returns {Object.<string,*>} Plain object
+-     */
+-    PersonMetadata.toObject = function toObject(message, options) {
+-        if (!options)
+-            options = {};
+-        var object = {};
+-        if (options.defaults) {
+-            object.firstName = "";
+-            object.middleName = "";
+-            object.lastName = "";
+-            object.about = "";
+-            object.coverPhoto = 0;
+-            object.avatarPhoto = 0;
+-        }
+-        if (message.firstName != null && message.hasOwnProperty("firstName"))
+-            object.firstName = message.firstName;
+-        if (message.middleName != null && message.hasOwnProperty("middleName"))
+-            object.middleName = message.middleName;
+-        if (message.lastName != null && message.hasOwnProperty("lastName"))
+-            object.lastName = message.lastName;
+-        if (message.about != null && message.hasOwnProperty("about"))
+-            object.about = message.about;
+-        if (message.coverPhoto != null && message.hasOwnProperty("coverPhoto"))
+-            object.coverPhoto = message.coverPhoto;
+-        if (message.avatarPhoto != null && message.hasOwnProperty("avatarPhoto"))
+-            object.avatarPhoto = message.avatarPhoto;
+-        return object;
+-    };
+-
+-    /**
+-     * Converts this PersonMetadata to JSON.
+-     * @function toJSON
+-     * @memberof PersonMetadata
+-     * @instance
+-     * @returns {Object.<string,*>} JSON object
+-     */
+-    PersonMetadata.prototype.toJSON = function toJSON() {
+-        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+-    };
+-
+-    return PersonMetadata;
+-})();
+-
+-$root.PlaylistMetadata = (function() {
+-
+-    /**
+-     * Properties of a PlaylistMetadata.
+-     * @exports IPlaylistMetadata
+-     * @interface IPlaylistMetadata
+-     * @property {string|null} [title] PlaylistMetadata title
+-     * @property {Array.<Long>|null} [videos] PlaylistMetadata videos
+-     */
+-
+-    /**
+-     * Constructs a new PlaylistMetadata.
+-     * @exports PlaylistMetadata
+-     * @classdesc Represents a PlaylistMetadata.
+-     * @implements IPlaylistMetadata
+-     * @constructor
+-     * @param {IPlaylistMetadata=} [properties] Properties to set
+-     */
+-    function PlaylistMetadata(properties) {
+-        this.videos = [];
+-        if (properties)
+-            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+-                if (properties[keys[i]] != null)
+-                    this[keys[i]] = properties[keys[i]];
+-    }
+-
+-    /**
+-     * PlaylistMetadata title.
+-     * @member {string} title
+-     * @memberof PlaylistMetadata
+-     * @instance
+-     */
+-    PlaylistMetadata.prototype.title = "";
+-
+-    /**
+-     * PlaylistMetadata videos.
+-     * @member {Array.<Long>} videos
+-     * @memberof PlaylistMetadata
+-     * @instance
+-     */
+-    PlaylistMetadata.prototype.videos = $util.emptyArray;
+-
+-    /**
+-     * Creates a new PlaylistMetadata instance using the specified properties.
+-     * @function create
+-     * @memberof PlaylistMetadata
+-     * @static
+-     * @param {IPlaylistMetadata=} [properties] Properties to set
+-     * @returns {PlaylistMetadata} PlaylistMetadata instance
+-     */
+-    PlaylistMetadata.create = function create(properties) {
+-        return new PlaylistMetadata(properties);
+-    };
+-
+-    /**
+-     * Encodes the specified PlaylistMetadata message. Does not implicitly {@link PlaylistMetadata.verify|verify} messages.
+-     * @function encode
+-     * @memberof PlaylistMetadata
+-     * @static
+-     * @param {IPlaylistMetadata} message PlaylistMetadata message or plain object to encode
+-     * @param {$protobuf.Writer} [writer] Writer to encode to
+-     * @returns {$protobuf.Writer} Writer
+-     */
+-    PlaylistMetadata.encode = function encode(message, writer) {
+-        if (!writer)
+-            writer = $Writer.create();
+-        if (message.title != null && Object.hasOwnProperty.call(message, "title"))
+-            writer.uint32(/* id 1, wireType 2 =*/10).string(message.title);
+-        if (message.videos != null && message.videos.length)
+-            for (var i = 0; i < message.videos.length; ++i)
+-                writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.videos[i]);
+-        return writer;
+-    };
+-
+-    /**
+-     * Encodes the specified PlaylistMetadata message, length delimited. Does not implicitly {@link PlaylistMetadata.verify|verify} messages.
+-     * @function encodeDelimited
+-     * @memberof PlaylistMetadata
+-     * @static
+-     * @param {IPlaylistMetadata} message PlaylistMetadata message or plain object to encode
+-     * @param {$protobuf.Writer} [writer] Writer to encode to
+-     * @returns {$protobuf.Writer} Writer
+-     */
+-    PlaylistMetadata.encodeDelimited = function encodeDelimited(message, writer) {
+-        return this.encode(message, writer).ldelim();
+-    };
+-
+-    /**
+-     * Decodes a PlaylistMetadata message from the specified reader or buffer.
+-     * @function decode
+-     * @memberof PlaylistMetadata
+-     * @static
+-     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+-     * @param {number} [length] Message length if known beforehand
+-     * @returns {PlaylistMetadata} PlaylistMetadata
+-     * @throws {Error} If the payload is not a reader or valid buffer
+-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+-     */
+-    PlaylistMetadata.decode = function decode(reader, length) {
+-        if (!(reader instanceof $Reader))
+-            reader = $Reader.create(reader);
+-        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.PlaylistMetadata();
+-        while (reader.pos < end) {
+-            var tag = reader.uint32();
+-            switch (tag >>> 3) {
+-            case 1:
+-                message.title = reader.string();
+-                break;
+-            case 2:
+-                if (!(message.videos && message.videos.length))
+-                    message.videos = [];
+-                if ((tag & 7) === 2) {
+-                    var end2 = reader.uint32() + reader.pos;
+-                    while (reader.pos < end2)
+-                        message.videos.push(reader.uint64());
+-                } else
+-                    message.videos.push(reader.uint64());
+-                break;
+-            default:
+-                reader.skipType(tag & 7);
+-                break;
+-            }
+-        }
+-        return message;
+-    };
+-
+-    /**
+-     * Decodes a PlaylistMetadata message from the specified reader or buffer, length delimited.
+-     * @function decodeDelimited
+-     * @memberof PlaylistMetadata
+-     * @static
+-     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+-     * @returns {PlaylistMetadata} PlaylistMetadata
+-     * @throws {Error} If the payload is not a reader or valid buffer
+-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+-     */
+-    PlaylistMetadata.decodeDelimited = function decodeDelimited(reader) {
+-        if (!(reader instanceof $Reader))
+-            reader = new $Reader(reader);
+-        return this.decode(reader, reader.uint32());
+-    };
+-
+-    /**
+-     * Verifies a PlaylistMetadata message.
+-     * @function verify
+-     * @memberof PlaylistMetadata
+-     * @static
+-     * @param {Object.<string,*>} message Plain object to verify
+-     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+-     */
+-    PlaylistMetadata.verify = function verify(message) {
+-        if (typeof message !== "object" || message === null)
+-            return "object expected";
+-        if (message.title != null && message.hasOwnProperty("title"))
+-            if (!$util.isString(message.title))
+-                return "title: string expected";
+-        if (message.videos != null && message.hasOwnProperty("videos")) {
+-            if (!Array.isArray(message.videos))
+-                return "videos: array expected";
+-            for (var i = 0; i < message.videos.length; ++i)
+-                if (!$util.isInteger(message.videos[i]) && !(message.videos[i] && $util.isInteger(message.videos[i].low) && $util.isInteger(message.videos[i].high)))
+-                    return "videos: integer|Long[] expected";
+-        }
+-        return null;
+-    };
+-
+-    /**
+-     * Creates a PlaylistMetadata message from a plain object. Also converts values to their respective internal types.
+-     * @function fromObject
+-     * @memberof PlaylistMetadata
+-     * @static
+-     * @param {Object.<string,*>} object Plain object
+-     * @returns {PlaylistMetadata} PlaylistMetadata
++     * @returns {PersonMetadata} PersonMetadata
+      */
+-    PlaylistMetadata.fromObject = function fromObject(object) {
+-        if (object instanceof $root.PlaylistMetadata)
++    PersonMetadata.fromObject = function fromObject(object) {
++        if (object instanceof $root.PersonMetadata)
+             return object;
+-        var message = new $root.PlaylistMetadata();
+-        if (object.title != null)
+-            message.title = String(object.title);
+-        if (object.videos) {
+-            if (!Array.isArray(object.videos))
+-                throw TypeError(".PlaylistMetadata.videos: array expected");
+-            message.videos = [];
+-            for (var i = 0; i < object.videos.length; ++i)
+-                if ($util.Long)
+-                    (message.videos[i] = $util.Long.fromValue(object.videos[i])).unsigned = true;
+-                else if (typeof object.videos[i] === "string")
+-                    message.videos[i] = parseInt(object.videos[i], 10);
+-                else if (typeof object.videos[i] === "number")
+-                    message.videos[i] = object.videos[i];
+-                else if (typeof object.videos[i] === "object")
+-                    message.videos[i] = new $util.LongBits(object.videos[i].low >>> 0, object.videos[i].high >>> 0).toNumber(true);
+-        }
++        var message = new $root.PersonMetadata();
++        if (object.firstName != null)
++            message.firstName = String(object.firstName);
++        if (object.middleName != null)
++            message.middleName = String(object.middleName);
++        if (object.lastName != null)
++            message.lastName = String(object.lastName);
++        if (object.about != null)
++            message.about = String(object.about);
++        if (object.coverPhoto != null)
++            message.coverPhoto = object.coverPhoto >>> 0;
++        if (object.avatarPhoto != null)
++            message.avatarPhoto = object.avatarPhoto >>> 0;
+         return message;
+     };
+ 
+     /**
+-     * Creates a plain object from a PlaylistMetadata message. Also converts values to other types if specified.
++     * Creates a plain object from a PersonMetadata message. Also converts values to other types if specified.
+      * @function toObject
+-     * @memberof PlaylistMetadata
++     * @memberof PersonMetadata
+      * @static
+-     * @param {PlaylistMetadata} message PlaylistMetadata
++     * @param {PersonMetadata} message PersonMetadata
+      * @param {$protobuf.IConversionOptions} [options] Conversion options
+      * @returns {Object.<string,*>} Plain object
+      */
+-    PlaylistMetadata.toObject = function toObject(message, options) {
++    PersonMetadata.toObject = function toObject(message, options) {
+         if (!options)
+             options = {};
+         var object = {};
+-        if (options.arrays || options.defaults)
+-            object.videos = [];
+-        if (options.defaults)
+-            object.title = "";
+-        if (message.title != null && message.hasOwnProperty("title"))
+-            object.title = message.title;
+-        if (message.videos && message.videos.length) {
+-            object.videos = [];
+-            for (var j = 0; j < message.videos.length; ++j)
+-                if (typeof message.videos[j] === "number")
+-                    object.videos[j] = options.longs === String ? String(message.videos[j]) : message.videos[j];
+-                else
+-                    object.videos[j] = options.longs === String ? $util.Long.prototype.toString.call(message.videos[j]) : options.longs === Number ? new $util.LongBits(message.videos[j].low >>> 0, message.videos[j].high >>> 0).toNumber(true) : message.videos[j];
++        if (options.defaults) {
++            object.firstName = "";
++            object.middleName = "";
++            object.lastName = "";
++            object.about = "";
++            object.coverPhoto = 0;
++            object.avatarPhoto = 0;
+         }
++        if (message.firstName != null && message.hasOwnProperty("firstName"))
++            object.firstName = message.firstName;
++        if (message.middleName != null && message.hasOwnProperty("middleName"))
++            object.middleName = message.middleName;
++        if (message.lastName != null && message.hasOwnProperty("lastName"))
++            object.lastName = message.lastName;
++        if (message.about != null && message.hasOwnProperty("about"))
++            object.about = message.about;
++        if (message.coverPhoto != null && message.hasOwnProperty("coverPhoto"))
++            object.coverPhoto = message.coverPhoto;
++        if (message.avatarPhoto != null && message.hasOwnProperty("avatarPhoto"))
++            object.avatarPhoto = message.avatarPhoto;
+         return object;
+     };
+ 
+     /**
+-     * Converts this PlaylistMetadata to JSON.
++     * Converts this PersonMetadata to JSON.
+      * @function toJSON
+-     * @memberof PlaylistMetadata
++     * @memberof PersonMetadata
+      * @instance
+      * @returns {Object.<string,*>} JSON object
+      */
+-    PlaylistMetadata.prototype.toJSON = function toJSON() {
++    PersonMetadata.prototype.toJSON = function toJSON() {
+         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+     };
+ 
+-    return PlaylistMetadata;
++    return PersonMetadata;
+ })();
+ 
+ $root.ProposalsDiscussionPostMetadata = (function() {
+@@ -8666,6 +8468,260 @@ $root.MediaType = (function() {
+     return MediaType;
+ })();
+ 
++$root.SubtitleMetadata = (function() {
++
++    /**
++     * Properties of a SubtitleMetadata.
++     * @exports ISubtitleMetadata
++     * @interface ISubtitleMetadata
++     * @property {string} type SubtitleMetadata type
++     * @property {number|null} [newAsset] SubtitleMetadata newAsset
++     * @property {string} language SubtitleMetadata language
++     * @property {string} mimeType SubtitleMetadata mimeType
++     */
++
++    /**
++     * Constructs a new SubtitleMetadata.
++     * @exports SubtitleMetadata
++     * @classdesc Represents a SubtitleMetadata.
++     * @implements ISubtitleMetadata
++     * @constructor
++     * @param {ISubtitleMetadata=} [properties] Properties to set
++     */
++    function SubtitleMetadata(properties) {
++        if (properties)
++            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
++                if (properties[keys[i]] != null)
++                    this[keys[i]] = properties[keys[i]];
++    }
++
++    /**
++     * SubtitleMetadata type.
++     * @member {string} type
++     * @memberof SubtitleMetadata
++     * @instance
++     */
++    SubtitleMetadata.prototype.type = "";
++
++    /**
++     * SubtitleMetadata newAsset.
++     * @member {number} newAsset
++     * @memberof SubtitleMetadata
++     * @instance
++     */
++    SubtitleMetadata.prototype.newAsset = 0;
++
++    /**
++     * SubtitleMetadata language.
++     * @member {string} language
++     * @memberof SubtitleMetadata
++     * @instance
++     */
++    SubtitleMetadata.prototype.language = "";
++
++    /**
++     * SubtitleMetadata mimeType.
++     * @member {string} mimeType
++     * @memberof SubtitleMetadata
++     * @instance
++     */
++    SubtitleMetadata.prototype.mimeType = "";
++
++    /**
++     * Creates a new SubtitleMetadata instance using the specified properties.
++     * @function create
++     * @memberof SubtitleMetadata
++     * @static
++     * @param {ISubtitleMetadata=} [properties] Properties to set
++     * @returns {SubtitleMetadata} SubtitleMetadata instance
++     */
++    SubtitleMetadata.create = function create(properties) {
++        return new SubtitleMetadata(properties);
++    };
++
++    /**
++     * Encodes the specified SubtitleMetadata message. Does not implicitly {@link SubtitleMetadata.verify|verify} messages.
++     * @function encode
++     * @memberof SubtitleMetadata
++     * @static
++     * @param {ISubtitleMetadata} message SubtitleMetadata message or plain object to encode
++     * @param {$protobuf.Writer} [writer] Writer to encode to
++     * @returns {$protobuf.Writer} Writer
++     */
++    SubtitleMetadata.encode = function encode(message, writer) {
++        if (!writer)
++            writer = $Writer.create();
++        writer.uint32(/* id 1, wireType 2 =*/10).string(message.type);
++        if (message.newAsset != null && Object.hasOwnProperty.call(message, "newAsset"))
++            writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.newAsset);
++        writer.uint32(/* id 3, wireType 2 =*/26).string(message.language);
++        writer.uint32(/* id 4, wireType 2 =*/34).string(message.mimeType);
++        return writer;
++    };
++
++    /**
++     * Encodes the specified SubtitleMetadata message, length delimited. Does not implicitly {@link SubtitleMetadata.verify|verify} messages.
++     * @function encodeDelimited
++     * @memberof SubtitleMetadata
++     * @static
++     * @param {ISubtitleMetadata} message SubtitleMetadata message or plain object to encode
++     * @param {$protobuf.Writer} [writer] Writer to encode to
++     * @returns {$protobuf.Writer} Writer
++     */
++    SubtitleMetadata.encodeDelimited = function encodeDelimited(message, writer) {
++        return this.encode(message, writer).ldelim();
++    };
++
++    /**
++     * Decodes a SubtitleMetadata message from the specified reader or buffer.
++     * @function decode
++     * @memberof SubtitleMetadata
++     * @static
++     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
++     * @param {number} [length] Message length if known beforehand
++     * @returns {SubtitleMetadata} SubtitleMetadata
++     * @throws {Error} If the payload is not a reader or valid buffer
++     * @throws {$protobuf.util.ProtocolError} If required fields are missing
++     */
++    SubtitleMetadata.decode = function decode(reader, length) {
++        if (!(reader instanceof $Reader))
++            reader = $Reader.create(reader);
++        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.SubtitleMetadata();
++        while (reader.pos < end) {
++            var tag = reader.uint32();
++            switch (tag >>> 3) {
++            case 1:
++                message.type = reader.string();
++                break;
++            case 2:
++                message.newAsset = reader.uint32();
++                break;
++            case 3:
++                message.language = reader.string();
++                break;
++            case 4:
++                message.mimeType = reader.string();
++                break;
++            default:
++                reader.skipType(tag & 7);
++                break;
++            }
++        }
++        if (!message.hasOwnProperty("type"))
++            throw $util.ProtocolError("missing required 'type'", { instance: message });
++        if (!message.hasOwnProperty("language"))
++            throw $util.ProtocolError("missing required 'language'", { instance: message });
++        if (!message.hasOwnProperty("mimeType"))
++            throw $util.ProtocolError("missing required 'mimeType'", { instance: message });
++        return message;
++    };
++
++    /**
++     * Decodes a SubtitleMetadata message from the specified reader or buffer, length delimited.
++     * @function decodeDelimited
++     * @memberof SubtitleMetadata
++     * @static
++     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
++     * @returns {SubtitleMetadata} SubtitleMetadata
++     * @throws {Error} If the payload is not a reader or valid buffer
++     * @throws {$protobuf.util.ProtocolError} If required fields are missing
++     */
++    SubtitleMetadata.decodeDelimited = function decodeDelimited(reader) {
++        if (!(reader instanceof $Reader))
++            reader = new $Reader(reader);
++        return this.decode(reader, reader.uint32());
++    };
++
++    /**
++     * Verifies a SubtitleMetadata message.
++     * @function verify
++     * @memberof SubtitleMetadata
++     * @static
++     * @param {Object.<string,*>} message Plain object to verify
++     * @returns {string|null} `null` if valid, otherwise the reason why it is not
++     */
++    SubtitleMetadata.verify = function verify(message) {
++        if (typeof message !== "object" || message === null)
++            return "object expected";
++        if (!$util.isString(message.type))
++            return "type: string expected";
++        if (message.newAsset != null && message.hasOwnProperty("newAsset"))
++            if (!$util.isInteger(message.newAsset))
++                return "newAsset: integer expected";
++        if (!$util.isString(message.language))
++            return "language: string expected";
++        if (!$util.isString(message.mimeType))
++            return "mimeType: string expected";
++        return null;
++    };
++
++    /**
++     * Creates a SubtitleMetadata message from a plain object. Also converts values to their respective internal types.
++     * @function fromObject
++     * @memberof SubtitleMetadata
++     * @static
++     * @param {Object.<string,*>} object Plain object
++     * @returns {SubtitleMetadata} SubtitleMetadata
++     */
++    SubtitleMetadata.fromObject = function fromObject(object) {
++        if (object instanceof $root.SubtitleMetadata)
++            return object;
++        var message = new $root.SubtitleMetadata();
++        if (object.type != null)
++            message.type = String(object.type);
++        if (object.newAsset != null)
++            message.newAsset = object.newAsset >>> 0;
++        if (object.language != null)
++            message.language = String(object.language);
++        if (object.mimeType != null)
++            message.mimeType = String(object.mimeType);
++        return message;
++    };
++
++    /**
++     * Creates a plain object from a SubtitleMetadata message. Also converts values to other types if specified.
++     * @function toObject
++     * @memberof SubtitleMetadata
++     * @static
++     * @param {SubtitleMetadata} message SubtitleMetadata
++     * @param {$protobuf.IConversionOptions} [options] Conversion options
++     * @returns {Object.<string,*>} Plain object
++     */
++    SubtitleMetadata.toObject = function toObject(message, options) {
++        if (!options)
++            options = {};
++        var object = {};
++        if (options.defaults) {
++            object.type = "";
++            object.newAsset = 0;
++            object.language = "";
++            object.mimeType = "";
++        }
++        if (message.type != null && message.hasOwnProperty("type"))
++            object.type = message.type;
++        if (message.newAsset != null && message.hasOwnProperty("newAsset"))
++            object.newAsset = message.newAsset;
++        if (message.language != null && message.hasOwnProperty("language"))
++            object.language = message.language;
++        if (message.mimeType != null && message.hasOwnProperty("mimeType"))
++            object.mimeType = message.mimeType;
++        return object;
++    };
++
++    /**
++     * Converts this SubtitleMetadata to JSON.
++     * @function toJSON
++     * @memberof SubtitleMetadata
++     * @instance
++     * @returns {Object.<string,*>} JSON object
++     */
++    SubtitleMetadata.prototype.toJSON = function toJSON() {
++        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
++    };
++
++    return SubtitleMetadata;
++})();
++
+ $root.VideoMetadata = (function() {
+ 
+     /**
+@@ -8687,8 +8743,10 @@ $root.VideoMetadata = (function() {
+      * @property {boolean|null} [isPublic] VideoMetadata isPublic
+      * @property {boolean|null} [isExplicit] VideoMetadata isExplicit
+      * @property {Array.<Long>|null} [persons] VideoMetadata persons
+-     * @property {Long|null} [category] VideoMetadata category
++     * @property {string|null} [category] VideoMetadata category
++     * @property {Array.<ISubtitleMetadata>|null} [subtitles] VideoMetadata subtitles
+      * @property {boolean|null} [enableComments] VideoMetadata enableComments
++     * @property {boolean|null} [clearSubtitles] VideoMetadata clearSubtitles
+      */
+ 
+     /**
+@@ -8701,6 +8759,7 @@ $root.VideoMetadata = (function() {
+      */
+     function VideoMetadata(properties) {
+         this.persons = [];
++        this.subtitles = [];
+         if (properties)
+             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                 if (properties[keys[i]] != null)
+@@ -8829,11 +8888,19 @@ $root.VideoMetadata = (function() {
+ 
+     /**
+      * VideoMetadata category.
+-     * @member {Long} category
++     * @member {string} category
+      * @memberof VideoMetadata
+      * @instance
+      */
+-    VideoMetadata.prototype.category = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
++    VideoMetadata.prototype.category = "";
++
++    /**
++     * VideoMetadata subtitles.
++     * @member {Array.<ISubtitleMetadata>} subtitles
++     * @memberof VideoMetadata
++     * @instance
++     */
++    VideoMetadata.prototype.subtitles = $util.emptyArray;
+ 
+     /**
+      * VideoMetadata enableComments.
+@@ -8843,6 +8910,14 @@ $root.VideoMetadata = (function() {
+      */
+     VideoMetadata.prototype.enableComments = false;
+ 
++    /**
++     * VideoMetadata clearSubtitles.
++     * @member {boolean} clearSubtitles
++     * @memberof VideoMetadata
++     * @instance
++     */
++    VideoMetadata.prototype.clearSubtitles = false;
++
+     /**
+      * Creates a new VideoMetadata instance using the specified properties.
+      * @function create
+@@ -8902,9 +8977,14 @@ $root.VideoMetadata = (function() {
+             writer.ldelim();
+         }
+         if (message.category != null && Object.hasOwnProperty.call(message, "category"))
+-            writer.uint32(/* id 16, wireType 0 =*/128).uint64(message.category);
++            writer.uint32(/* id 16, wireType 2 =*/130).string(message.category);
++        if (message.subtitles != null && message.subtitles.length)
++            for (var i = 0; i < message.subtitles.length; ++i)
++                $root.SubtitleMetadata.encode(message.subtitles[i], writer.uint32(/* id 17, wireType 2 =*/138).fork()).ldelim();
+         if (message.enableComments != null && Object.hasOwnProperty.call(message, "enableComments"))
+             writer.uint32(/* id 18, wireType 0 =*/144).bool(message.enableComments);
++        if (message.clearSubtitles != null && Object.hasOwnProperty.call(message, "clearSubtitles"))
++            writer.uint32(/* id 19, wireType 0 =*/152).bool(message.clearSubtitles);
+         return writer;
+     };
+ 
+@@ -8992,11 +9072,19 @@ $root.VideoMetadata = (function() {
+                     message.persons.push(reader.uint64());
+                 break;
+             case 16:
+-                message.category = reader.uint64();
++                message.category = reader.string();
++                break;
++            case 17:
++                if (!(message.subtitles && message.subtitles.length))
++                    message.subtitles = [];
++                message.subtitles.push($root.SubtitleMetadata.decode(reader, reader.uint32()));
+                 break;
+             case 18:
+                 message.enableComments = reader.bool();
+                 break;
++            case 19:
++                message.clearSubtitles = reader.bool();
++                break;
+             default:
+                 reader.skipType(tag & 7);
+                 break;
+@@ -9088,11 +9176,23 @@ $root.VideoMetadata = (function() {
+                     return "persons: integer|Long[] expected";
+         }
+         if (message.category != null && message.hasOwnProperty("category"))
+-            if (!$util.isInteger(message.category) && !(message.category && $util.isInteger(message.category.low) && $util.isInteger(message.category.high)))
+-                return "category: integer|Long expected";
++            if (!$util.isString(message.category))
++                return "category: string expected";
++        if (message.subtitles != null && message.hasOwnProperty("subtitles")) {
++            if (!Array.isArray(message.subtitles))
++                return "subtitles: array expected";
++            for (var i = 0; i < message.subtitles.length; ++i) {
++                var error = $root.SubtitleMetadata.verify(message.subtitles[i]);
++                if (error)
++                    return "subtitles." + error;
++            }
++        }
+         if (message.enableComments != null && message.hasOwnProperty("enableComments"))
+             if (typeof message.enableComments !== "boolean")
+                 return "enableComments: boolean expected";
++        if (message.clearSubtitles != null && message.hasOwnProperty("clearSubtitles"))
++            if (typeof message.clearSubtitles !== "boolean")
++                return "clearSubtitles: boolean expected";
+         return null;
+     };
+ 
+@@ -9160,16 +9260,21 @@ $root.VideoMetadata = (function() {
+                     message.persons[i] = new $util.LongBits(object.persons[i].low >>> 0, object.persons[i].high >>> 0).toNumber(true);
+         }
+         if (object.category != null)
+-            if ($util.Long)
+-                (message.category = $util.Long.fromValue(object.category)).unsigned = true;
+-            else if (typeof object.category === "string")
+-                message.category = parseInt(object.category, 10);
+-            else if (typeof object.category === "number")
+-                message.category = object.category;
+-            else if (typeof object.category === "object")
+-                message.category = new $util.LongBits(object.category.low >>> 0, object.category.high >>> 0).toNumber(true);
++            message.category = String(object.category);
++        if (object.subtitles) {
++            if (!Array.isArray(object.subtitles))
++                throw TypeError(".VideoMetadata.subtitles: array expected");
++            message.subtitles = [];
++            for (var i = 0; i < object.subtitles.length; ++i) {
++                if (typeof object.subtitles[i] !== "object")
++                    throw TypeError(".VideoMetadata.subtitles: object expected");
++                message.subtitles[i] = $root.SubtitleMetadata.fromObject(object.subtitles[i]);
++            }
++        }
+         if (object.enableComments != null)
+             message.enableComments = Boolean(object.enableComments);
++        if (object.clearSubtitles != null)
++            message.clearSubtitles = Boolean(object.clearSubtitles);
+         return message;
+     };
+ 
+@@ -9186,8 +9291,10 @@ $root.VideoMetadata = (function() {
+         if (!options)
+             options = {};
+         var object = {};
+-        if (options.arrays || options.defaults)
++        if (options.arrays || options.defaults) {
+             object.persons = [];
++            object.subtitles = [];
++        }
+         if (options.defaults) {
+             object.title = "";
+             object.description = "";
+@@ -9203,12 +9310,9 @@ $root.VideoMetadata = (function() {
+             object.hasMarketing = false;
+             object.isPublic = false;
+             object.isExplicit = false;
+-            if ($util.Long) {
+-                var long = new $util.Long(0, 0, true);
+-                object.category = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+-            } else
+-                object.category = options.longs === String ? "0" : 0;
++            object.category = "";
+             object.enableComments = false;
++            object.clearSubtitles = false;
+         }
+         if (message.title != null && message.hasOwnProperty("title"))
+             object.title = message.title;
+@@ -9247,12 +9351,16 @@ $root.VideoMetadata = (function() {
+                     object.persons[j] = options.longs === String ? $util.Long.prototype.toString.call(message.persons[j]) : options.longs === Number ? new $util.LongBits(message.persons[j].low >>> 0, message.persons[j].high >>> 0).toNumber(true) : message.persons[j];
+         }
+         if (message.category != null && message.hasOwnProperty("category"))
+-            if (typeof message.category === "number")
+-                object.category = options.longs === String ? String(message.category) : message.category;
+-            else
+-                object.category = options.longs === String ? $util.Long.prototype.toString.call(message.category) : options.longs === Number ? new $util.LongBits(message.category.low >>> 0, message.category.high >>> 0).toNumber(true) : message.category;
++            object.category = message.category;
++        if (message.subtitles && message.subtitles.length) {
++            object.subtitles = [];
++            for (var j = 0; j < message.subtitles.length; ++j)
++                object.subtitles[j] = $root.SubtitleMetadata.toObject(message.subtitles[j], options);
++        }
+         if (message.enableComments != null && message.hasOwnProperty("enableComments"))
+             object.enableComments = message.enableComments;
++        if (message.clearSubtitles != null && message.hasOwnProperty("clearSubtitles"))
++            object.clearSubtitles = message.clearSubtitles;
+         return object;
+     };
+ 
+@@ -9270,24 +9378,24 @@ $root.VideoMetadata = (function() {
+     return VideoMetadata;
+ })();
+ 
+-$root.VideoCategoryMetadata = (function() {
++$root.ContentMetadata = (function() {
+ 
+     /**
+-     * Properties of a VideoCategoryMetadata.
+-     * @exports IVideoCategoryMetadata
+-     * @interface IVideoCategoryMetadata
+-     * @property {string|null} [name] VideoCategoryMetadata name
++     * Properties of a ContentMetadata.
++     * @exports IContentMetadata
++     * @interface IContentMetadata
++     * @property {IVideoMetadata|null} [videoMetadata] ContentMetadata videoMetadata
+      */
+ 
+     /**
+-     * Constructs a new VideoCategoryMetadata.
+-     * @exports VideoCategoryMetadata
+-     * @classdesc Represents a VideoCategoryMetadata.
+-     * @implements IVideoCategoryMetadata
++     * Constructs a new ContentMetadata.
++     * @exports ContentMetadata
++     * @classdesc Represents a ContentMetadata.
++     * @implements IContentMetadata
+      * @constructor
+-     * @param {IVideoCategoryMetadata=} [properties] Properties to set
++     * @param {IContentMetadata=} [properties] Properties to set
+      */
+-    function VideoCategoryMetadata(properties) {
++    function ContentMetadata(properties) {
+         if (properties)
+             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                 if (properties[keys[i]] != null)
+@@ -9295,75 +9403,89 @@ $root.VideoCategoryMetadata = (function() {
+     }
+ 
+     /**
+-     * VideoCategoryMetadata name.
+-     * @member {string} name
+-     * @memberof VideoCategoryMetadata
++     * ContentMetadata videoMetadata.
++     * @member {IVideoMetadata|null|undefined} videoMetadata
++     * @memberof ContentMetadata
++     * @instance
++     */
++    ContentMetadata.prototype.videoMetadata = null;
++
++    // OneOf field names bound to virtual getters and setters
++    var $oneOfFields;
++
++    /**
++     * ContentMetadata contentMetadata.
++     * @member {"videoMetadata"|undefined} contentMetadata
++     * @memberof ContentMetadata
+      * @instance
+      */
+-    VideoCategoryMetadata.prototype.name = "";
++    Object.defineProperty(ContentMetadata.prototype, "contentMetadata", {
++        get: $util.oneOfGetter($oneOfFields = ["videoMetadata"]),
++        set: $util.oneOfSetter($oneOfFields)
++    });
+ 
+     /**
+-     * Creates a new VideoCategoryMetadata instance using the specified properties.
++     * Creates a new ContentMetadata instance using the specified properties.
+      * @function create
+-     * @memberof VideoCategoryMetadata
++     * @memberof ContentMetadata
+      * @static
+-     * @param {IVideoCategoryMetadata=} [properties] Properties to set
+-     * @returns {VideoCategoryMetadata} VideoCategoryMetadata instance
++     * @param {IContentMetadata=} [properties] Properties to set
++     * @returns {ContentMetadata} ContentMetadata instance
+      */
+-    VideoCategoryMetadata.create = function create(properties) {
+-        return new VideoCategoryMetadata(properties);
++    ContentMetadata.create = function create(properties) {
++        return new ContentMetadata(properties);
+     };
+ 
+     /**
+-     * Encodes the specified VideoCategoryMetadata message. Does not implicitly {@link VideoCategoryMetadata.verify|verify} messages.
++     * Encodes the specified ContentMetadata message. Does not implicitly {@link ContentMetadata.verify|verify} messages.
+      * @function encode
+-     * @memberof VideoCategoryMetadata
++     * @memberof ContentMetadata
+      * @static
+-     * @param {IVideoCategoryMetadata} message VideoCategoryMetadata message or plain object to encode
++     * @param {IContentMetadata} message ContentMetadata message or plain object to encode
+      * @param {$protobuf.Writer} [writer] Writer to encode to
+      * @returns {$protobuf.Writer} Writer
+      */
+-    VideoCategoryMetadata.encode = function encode(message, writer) {
++    ContentMetadata.encode = function encode(message, writer) {
+         if (!writer)
+             writer = $Writer.create();
+-        if (message.name != null && Object.hasOwnProperty.call(message, "name"))
+-            writer.uint32(/* id 1, wireType 2 =*/10).string(message.name);
++        if (message.videoMetadata != null && Object.hasOwnProperty.call(message, "videoMetadata"))
++            $root.VideoMetadata.encode(message.videoMetadata, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+         return writer;
+     };
+ 
+     /**
+-     * Encodes the specified VideoCategoryMetadata message, length delimited. Does not implicitly {@link VideoCategoryMetadata.verify|verify} messages.
++     * Encodes the specified ContentMetadata message, length delimited. Does not implicitly {@link ContentMetadata.verify|verify} messages.
+      * @function encodeDelimited
+-     * @memberof VideoCategoryMetadata
++     * @memberof ContentMetadata
+      * @static
+-     * @param {IVideoCategoryMetadata} message VideoCategoryMetadata message or plain object to encode
++     * @param {IContentMetadata} message ContentMetadata message or plain object to encode
+      * @param {$protobuf.Writer} [writer] Writer to encode to
+      * @returns {$protobuf.Writer} Writer
+      */
+-    VideoCategoryMetadata.encodeDelimited = function encodeDelimited(message, writer) {
++    ContentMetadata.encodeDelimited = function encodeDelimited(message, writer) {
+         return this.encode(message, writer).ldelim();
+     };
+ 
+     /**
+-     * Decodes a VideoCategoryMetadata message from the specified reader or buffer.
++     * Decodes a ContentMetadata message from the specified reader or buffer.
+      * @function decode
+-     * @memberof VideoCategoryMetadata
++     * @memberof ContentMetadata
+      * @static
+      * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+      * @param {number} [length] Message length if known beforehand
+-     * @returns {VideoCategoryMetadata} VideoCategoryMetadata
++     * @returns {ContentMetadata} ContentMetadata
+      * @throws {Error} If the payload is not a reader or valid buffer
+      * @throws {$protobuf.util.ProtocolError} If required fields are missing
+      */
+-    VideoCategoryMetadata.decode = function decode(reader, length) {
++    ContentMetadata.decode = function decode(reader, length) {
+         if (!(reader instanceof $Reader))
+             reader = $Reader.create(reader);
+-        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.VideoCategoryMetadata();
++        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.ContentMetadata();
+         while (reader.pos < end) {
+             var tag = reader.uint32();
+             switch (tag >>> 3) {
+             case 1:
+-                message.name = reader.string();
++                message.videoMetadata = $root.VideoMetadata.decode(reader, reader.uint32());
+                 break;
+             default:
+                 reader.skipType(tag & 7);
+@@ -9374,87 +9496,97 @@ $root.VideoCategoryMetadata = (function() {
+     };
+ 
+     /**
+-     * Decodes a VideoCategoryMetadata message from the specified reader or buffer, length delimited.
++     * Decodes a ContentMetadata message from the specified reader or buffer, length delimited.
+      * @function decodeDelimited
+-     * @memberof VideoCategoryMetadata
++     * @memberof ContentMetadata
+      * @static
+      * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+-     * @returns {VideoCategoryMetadata} VideoCategoryMetadata
++     * @returns {ContentMetadata} ContentMetadata
+      * @throws {Error} If the payload is not a reader or valid buffer
+      * @throws {$protobuf.util.ProtocolError} If required fields are missing
+      */
+-    VideoCategoryMetadata.decodeDelimited = function decodeDelimited(reader) {
++    ContentMetadata.decodeDelimited = function decodeDelimited(reader) {
+         if (!(reader instanceof $Reader))
+             reader = new $Reader(reader);
+         return this.decode(reader, reader.uint32());
+     };
+ 
+     /**
+-     * Verifies a VideoCategoryMetadata message.
++     * Verifies a ContentMetadata message.
+      * @function verify
+-     * @memberof VideoCategoryMetadata
++     * @memberof ContentMetadata
+      * @static
+      * @param {Object.<string,*>} message Plain object to verify
+      * @returns {string|null} `null` if valid, otherwise the reason why it is not
+      */
+-    VideoCategoryMetadata.verify = function verify(message) {
++    ContentMetadata.verify = function verify(message) {
+         if (typeof message !== "object" || message === null)
+             return "object expected";
+-        if (message.name != null && message.hasOwnProperty("name"))
+-            if (!$util.isString(message.name))
+-                return "name: string expected";
++        var properties = {};
++        if (message.videoMetadata != null && message.hasOwnProperty("videoMetadata")) {
++            properties.contentMetadata = 1;
++            {
++                var error = $root.VideoMetadata.verify(message.videoMetadata);
++                if (error)
++                    return "videoMetadata." + error;
++            }
++        }
+         return null;
+     };
+ 
+     /**
+-     * Creates a VideoCategoryMetadata message from a plain object. Also converts values to their respective internal types.
++     * Creates a ContentMetadata message from a plain object. Also converts values to their respective internal types.
+      * @function fromObject
+-     * @memberof VideoCategoryMetadata
++     * @memberof ContentMetadata
+      * @static
+      * @param {Object.<string,*>} object Plain object
+-     * @returns {VideoCategoryMetadata} VideoCategoryMetadata
++     * @returns {ContentMetadata} ContentMetadata
+      */
+-    VideoCategoryMetadata.fromObject = function fromObject(object) {
+-        if (object instanceof $root.VideoCategoryMetadata)
++    ContentMetadata.fromObject = function fromObject(object) {
++        if (object instanceof $root.ContentMetadata)
+             return object;
+-        var message = new $root.VideoCategoryMetadata();
+-        if (object.name != null)
+-            message.name = String(object.name);
++        var message = new $root.ContentMetadata();
++        if (object.videoMetadata != null) {
++            if (typeof object.videoMetadata !== "object")
++                throw TypeError(".ContentMetadata.videoMetadata: object expected");
++            message.videoMetadata = $root.VideoMetadata.fromObject(object.videoMetadata);
++        }
+         return message;
+     };
+ 
+     /**
+-     * Creates a plain object from a VideoCategoryMetadata message. Also converts values to other types if specified.
++     * Creates a plain object from a ContentMetadata message. Also converts values to other types if specified.
+      * @function toObject
+-     * @memberof VideoCategoryMetadata
++     * @memberof ContentMetadata
+      * @static
+-     * @param {VideoCategoryMetadata} message VideoCategoryMetadata
++     * @param {ContentMetadata} message ContentMetadata
+      * @param {$protobuf.IConversionOptions} [options] Conversion options
+      * @returns {Object.<string,*>} Plain object
+      */
+-    VideoCategoryMetadata.toObject = function toObject(message, options) {
++    ContentMetadata.toObject = function toObject(message, options) {
+         if (!options)
+             options = {};
+         var object = {};
+-        if (options.defaults)
+-            object.name = "";
+-        if (message.name != null && message.hasOwnProperty("name"))
+-            object.name = message.name;
++        if (message.videoMetadata != null && message.hasOwnProperty("videoMetadata")) {
++            object.videoMetadata = $root.VideoMetadata.toObject(message.videoMetadata, options);
++            if (options.oneofs)
++                object.contentMetadata = "videoMetadata";
++        }
+         return object;
+     };
+ 
+     /**
+-     * Converts this VideoCategoryMetadata to JSON.
++     * Converts this ContentMetadata to JSON.
+      * @function toJSON
+-     * @memberof VideoCategoryMetadata
++     * @memberof ContentMetadata
+      * @instance
+      * @returns {Object.<string,*>} JSON object
+      */
+-    VideoCategoryMetadata.prototype.toJSON = function toJSON() {
++    ContentMetadata.prototype.toJSON = function toJSON() {
+         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+     };
+ 
+-    return VideoCategoryMetadata;
++    return ContentMetadata;
+ })();
+ 
+ $root.OpeningMetadata = (function() {
+diff --git a/doc/index.md b/doc/index.md
+index bde98121842487253849af6575ebe08fdf4de3cd..d06281ce65525580c4eee63a4039dd8c211c1938 100644
+--- a/doc/index.md
++++ b/doc/index.md
+@@ -8,7 +8,6 @@
+     - [BountyWorkData](#.BountyWorkData)
+   
+ - [proto/Channel.proto](#proto/Channel.proto)
+-    - [ChannelCategoryMetadata](#.ChannelCategoryMetadata)
+     - [ChannelMetadata](#.ChannelMetadata)
+   
+ - [proto/Council.proto](#proto/Council.proto)
+@@ -28,8 +27,8 @@
+     - [BanOrUnbanMemberFromChannel](#.BanOrUnbanMemberFromChannel)
+     - [ChannelModeratorRemarked](#.ChannelModeratorRemarked)
+     - [ChannelOwnerRemarked](#.ChannelOwnerRemarked)
+-    - [CommentSectionPreference](#.CommentSectionPreference)
+     - [CreateComment](#.CreateComment)
++    - [CreateVideoCategory](#.CreateVideoCategory)
+     - [DeleteComment](#.DeleteComment)
+     - [EditComment](#.EditComment)
+     - [MemberRemarked](#.MemberRemarked)
+@@ -40,7 +39,6 @@
+     - [VideoReactionsPreference](#.VideoReactionsPreference)
+   
+     - [BanOrUnbanMemberFromChannel.Option](#.BanOrUnbanMemberFromChannel.Option)
+-    - [CommentSectionPreference.Option](#.CommentSectionPreference.Option)
+     - [PinOrUnpinComment.Option](#.PinOrUnpinComment.Option)
+     - [ReactVideo.Reaction](#.ReactVideo.Reaction)
+     - [VideoReactionsPreference.Option](#.VideoReactionsPreference.Option)
+@@ -48,9 +46,6 @@
+ - [proto/Person.proto](#proto/Person.proto)
+     - [PersonMetadata](#.PersonMetadata)
+   
+-- [proto/Playlist.proto](#proto/Playlist.proto)
+-    - [PlaylistMetadata](#.PlaylistMetadata)
+-  
+ - [proto/ProposalsDiscussion.proto](#proto/ProposalsDiscussion.proto)
+     - [ProposalsDiscussionPostMetadata](#.ProposalsDiscussionPostMetadata)
+   
+@@ -69,10 +64,11 @@
+     - [GeographicalArea.Continent](#.GeographicalArea.Continent)
+   
+ - [proto/Video.proto](#proto/Video.proto)
++    - [ContentMetadata](#.ContentMetadata)
+     - [License](#.License)
+     - [MediaType](#.MediaType)
+     - [PublishedBeforeJoystream](#.PublishedBeforeJoystream)
+-    - [VideoCategoryMetadata](#.VideoCategoryMetadata)
++    - [SubtitleMetadata](#.SubtitleMetadata)
+     - [VideoMetadata](#.VideoMetadata)
+   
+ - [proto/WorkingGroups.proto](#proto/WorkingGroups.proto)
+@@ -149,21 +145,6 @@
+ 
+ 
+ 
+-<a name=".ChannelCategoryMetadata"></a>
+-
+-### ChannelCategoryMetadata
+-
+-
+-
+-| Field | Type | Label | Description |
+-| ----- | ---- | ----- | ----------- |
+-| name | [string](#string) | optional | Category Name |
+-
+-
+-
+-
+-
+-
+ <a name=".ChannelMetadata"></a>
+ 
+ ### ChannelMetadata
+@@ -178,7 +159,6 @@
+ | language | [string](#string) | optional | ISO_639-1 Language [Code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) |
+ | cover_photo | [uint32](#uint32) | optional | index into external [assets array](#.Assets) |
+ | avatar_photo | [uint32](#uint32) | optional | index into external [assets array](#.Assets) |
+-| category | [uint64](#uint64) | optional | Channel Category Id |
+ 
+ 
+ 
+@@ -381,7 +361,6 @@ The enum must be wrapped inside &#34;message&#34;, otherwide it breaks protobufj
+ | pin_or_unpin_comment | [PinOrUnpinComment](#PinOrUnpinComment) | optional |  |
+ | ban_or_unban_member_from_channel | [BanOrUnbanMemberFromChannel](#BanOrUnbanMemberFromChannel) | optional |  |
+ | video_reactions_preference | [VideoReactionsPreference](#VideoReactionsPreference) | optional |  |
+-| comment_section_preference | [CommentSectionPreference](#CommentSectionPreference) | optional |  |
+ | moderate_comment | [ModerateComment](#ModerateComment) | optional |  |
+ 
+ 
+@@ -389,33 +368,34 @@ The enum must be wrapped inside &#34;message&#34;, otherwide it breaks protobufj
+ 
+ 
+ 
+-<a name=".CommentSectionPreference"></a>
++<a name=".CreateComment"></a>
+ 
+-### CommentSectionPreference
+-Enable or disable comment section for a single video
++### CreateComment
++create comment
+ 
+ 
+ | Field | Type | Label | Description |
+ | ----- | ---- | ----- | ----------- |
+ | video_id | [uint64](#uint64) | required | ID of the video |
+-| option | [CommentSectionPreference.Option](#CommentSectionPreference.Option) | required | Selected option to enable or disable comment section |
++| parent_comment_id | [string](#string) | optional | ID of comment member wants to reply (empty if new comment is parent comment) |
++| body | [string](#string) | required | Comment text |
+ 
+ 
+ 
+ 
+ 
+ 
+-<a name=".CreateComment"></a>
++<a name=".CreateVideoCategory"></a>
++
++### CreateVideoCategory
+ 
+-### CreateComment
+-create comment
+ 
+ 
+ | Field | Type | Label | Description |
+ | ----- | ---- | ----- | ----------- |
+-| video_id | [uint64](#uint64) | required | ID of the video |
+-| parent_comment_id | [string](#string) | optional | ID of comment member wants to reply (empty if new comment is parent comment) |
+-| body | [string](#string) | required | Comment text |
++| name | [string](#string) | required |  |
++| description | [string](#string) | optional |  |
++| parent_category_id | [string](#string) | optional |  |
+ 
+ 
+ 
+@@ -466,6 +446,7 @@ edit comment by author
+ | create_comment | [CreateComment](#CreateComment) | optional |  |
+ | edit_comment | [EditComment](#EditComment) | optional |  |
+ | delete_comment | [DeleteComment](#DeleteComment) | optional |  |
++| create_video_category | [CreateVideoCategory](#CreateVideoCategory) | optional |  |
+ 
+ 
+ 
+@@ -567,18 +548,6 @@ Enable or disable reactions on a single video
+ 
+ 
+ 
+-<a name=".CommentSectionPreference.Option"></a>
+-
+-### CommentSectionPreference.Option
+-
+-
+-| Name | Number | Description |
+-| ---- | ------ | ----------- |
+-| ENABLE | 0 | Enable comment section (nothing happens if it is already enabled) |
+-| DISABLE | 1 | Disable comment section (nothing happens if it is already disabled) |
+-
+-
+-
+ <a name=".PinOrUnpinComment.Option"></a>
+ 
+ ### PinOrUnpinComment.Option
+@@ -659,38 +628,6 @@ Reacting again with the same message option will cancel the previous reaction
+ 
+ 
+ 
+-<a name="proto/Playlist.proto"></a>
+-<p align="right"><a href="#top">Top</a></p>
+-
+-## proto/Playlist.proto
+-
+-
+-
+-<a name=".PlaylistMetadata"></a>
+-
+-### PlaylistMetadata
+-
+-
+-
+-| Field | Type | Label | Description |
+-| ----- | ---- | ----- | ----------- |
+-| title | [string](#string) | optional |  |
+-| videos | [uint64](#uint64) | repeated | Videos in the playlist |
+-
+-
+-
+-
+-
+- 
+-
+- 
+-
+- 
+-
+- 
+-
+-
+-
+ <a name="proto/ProposalsDiscussion.proto"></a>
+ <p align="right"><a href="#top">Top</a></p>
+ 
+@@ -917,6 +854,21 @@ Reacting again with the same message option will cancel the previous reaction
+ 
+ 
+ 
++<a name=".ContentMetadata"></a>
++
++### ContentMetadata
++
++
++
++| Field | Type | Label | Description |
++| ----- | ---- | ----- | ----------- |
++| video_metadata | [VideoMetadata](#VideoMetadata) | optional | ... Other possible metadata standards, e.g. `PlaylistMetadata` |
++
++
++
++
++
++
+ <a name=".License"></a>
+ 
+ ### License
+@@ -967,15 +919,18 @@ Publication status before joystream
+ 
+ 
+ 
+-<a name=".VideoCategoryMetadata"></a>
++<a name=".SubtitleMetadata"></a>
+ 
+-### VideoCategoryMetadata
++### SubtitleMetadata
+ 
+ 
+ 
+ | Field | Type | Label | Description |
+ | ----- | ---- | ----- | ----------- |
+-| name | [string](#string) | optional | Category name |
++| type | [string](#string) | required |  |
++| new_asset | [uint32](#uint32) | optional | index into external [assets array](#.Assets) |
++| language | [string](#string) | required | ISO_639-1 Language [Code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) |
++| mimeType | [string](#string) | required |  |
+ 
+ 
+ 
+@@ -1005,7 +960,10 @@ Publication status before joystream
+ | is_public | [bool](#bool) | optional | Should video be publicy visible yet |
+ | is_explicit | [bool](#bool) | optional | Does Video have explicit language or scenes |
+ | persons | [uint64](#uint64) | repeated | Person(s) referenced by PersonId involved in this video |
+-| category | [uint64](#uint64) | optional | Video Category Id |
++| category | [string](#string) | optional | Video Category Id |
++| subtitles | [SubtitleMetadata](#SubtitleMetadata) | repeated | Video subtitles |
++| enable_comments | [bool](#bool) | optional | Enable/Disable the comment section |
++| clear_subtitles | [bool](#bool) | optional | Remove all subtitles; since protobuf doesn&#39;t distinguish b/w empty array and null field, simply removing all subtitles by overriding list with an empty array wont work |
+ 
+ 
+ 
+diff --git a/lib/index.js b/lib/index.js
+index 641ea09e1f839c40aeb182a5b98c12a54e907d4a..2a96bfcaac8ccb33414a98e4532735cd7b5d68db 100644
+--- a/lib/index.js
++++ b/lib/index.js
+@@ -1,7 +1,11 @@
+ "use strict";
+ var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+     if (k2 === undefined) k2 = k;
+-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
++    var desc = Object.getOwnPropertyDescriptor(m, k);
++    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
++      desc = { enumerable: true, get: function() { return m[k]; } };
++    }
++    Object.defineProperty(o, k2, desc);
+ }) : (function(o, m, k, k2) {
+     if (k2 === undefined) k2 = k;
+     o[k2] = m[k];
+diff --git a/proto/Channel.proto b/proto/Channel.proto
+index e3afa78a30678245e4c2a3c54ba06ce8f5ab3afa..57159b98fbd3b3297b17c24d7ff7e7c1287b6e18 100644
+--- a/proto/Channel.proto
++++ b/proto/Channel.proto
+@@ -17,12 +17,4 @@ message ChannelMetadata {
+     optional uint32 cover_photo = 5;
+     // index into external [assets array](#.Assets)
+     optional uint32 avatar_photo  = 6;
+-
+-    // Channel Category Id
+-    optional uint64 category = 7;
+-}
+-
+-message ChannelCategoryMetadata {
+-    // Category Name
+-    optional string name = 1;
+ }
+diff --git a/proto/Metaprotocol.proto b/proto/Metaprotocol.proto
+index 61d13c875a316d896b16a4ca0dae74d9afa861a9..b79e9644880f4ef027dd8d59d0571d88271cdd75 100644
+--- a/proto/Metaprotocol.proto
++++ b/proto/Metaprotocol.proto
+@@ -46,7 +46,7 @@ message EditComment {
+     required string new_body = 2;
+ }
+ 
+-// delete comment by author 
++// delete comment by author
+ message DeleteComment {
+     // ID of the comment which will be deleted
+     required string comment_id = 1;
+@@ -79,7 +79,7 @@ message ModerateComment {
+     required string rationale = 2;
+ }
+ 
+-message BanOrUnbanMemberFromChannel { 
++message BanOrUnbanMemberFromChannel {
+     // ID of the member that channel owner wants to ban from participating on any video.
+     required uint64 member_id = 1;
+ 
+@@ -107,20 +107,27 @@ message VideoReactionsPreference {
+     required Option option = 2;
+ }
+ 
++message CreateVideoCategory {
++    required string name = 1;
++    optional string description = 2;
++    optional string parent_category_id = 3;
++}
++
+ message MemberRemarked {
+-    // member_remark extrinsic would emit event containing 
++    // member_remark extrinsic would emit event containing
+     // any one of the following serialized messages
+     oneof member_remarked {
+-     ReactVideo react_video = 1;
+-     ReactComment react_comment = 2;
+-     CreateComment create_comment = 3;
+-     EditComment edit_comment = 4;
+-     DeleteComment delete_comment = 5;
++        ReactVideo react_video = 1;
++        ReactComment react_comment = 2;
++        CreateComment create_comment = 3;
++        EditComment edit_comment = 4;
++        DeleteComment delete_comment = 5;
++        CreateVideoCategory create_video_category = 6;
+     }
+ }
+ 
+ message ChannelModeratorRemarked {
+-    // channel_moderator_remark extrinsic would emit event containing 
++    // channel_moderator_remark extrinsic would emit event containing
+     // any one of the following serialized messages
+     oneof channel_moderator_remarked {
+         ModerateComment moderate_comment = 1;
+@@ -128,7 +135,7 @@ message ChannelModeratorRemarked {
+ }
+ 
+ message ChannelOwnerRemarked {
+-    // channel_owner_remark extrinsic would emit event containing 
++    // channel_owner_remark extrinsic would emit event containing
+     // any one of the following serialized messages
+     oneof channel_owner_remarked {
+         PinOrUnpinComment pin_or_unpin_comment = 1;
+diff --git a/proto/Playlist.proto b/proto/Playlist.proto
+deleted file mode 100644
+index 19cb321f3edb264d2487b3e264dc2f60974e8fe5..0000000000000000000000000000000000000000
+--- a/proto/Playlist.proto
++++ /dev/null
+@@ -1,7 +0,0 @@
+-syntax = "proto2";
+-
+-message PlaylistMetadata {
+-    optional string title = 1;
+-    // Videos in the playlist
+-    repeated uint64 videos = 2;
+-}
+diff --git a/proto/Video.proto b/proto/Video.proto
+index bc49033a143f65e510f31791cc0091e13af5d8e9..482ebd1c889a7a68739f7f2e6f34700fe3073e4b 100644
+--- a/proto/Video.proto
++++ b/proto/Video.proto
+@@ -30,6 +30,18 @@ message MediaType {
+     optional string mime_media_type = 3;
+ }
+ 
++message SubtitleMetadata {
++  required string type = 1;
++
++  // index into external [assets array](#.Assets)
++  optional uint32 new_asset = 2;
++
++  // ISO_639-1 Language [Code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)
++  required string language = 3;
++
++  required string mimeType = 4;
++}
++
+ message VideoMetadata {
+     // Video Title
+     optional string title = 1;
+@@ -38,7 +50,7 @@ message VideoMetadata {
+     optional string description = 2;
+ 
+     // Assets
+-    
++
+     // index into external [assets array](#.Assets)
+     optional uint32 video = 3;
+ 
+@@ -50,7 +62,7 @@ message VideoMetadata {
+ 
+     // Resolution of the video (Height)
+     optional uint32 media_pixel_height = 6;
+-    
++
+     // Resolution of the video (Width)
+     optional uint32 media_pixel_width = 7;
+ 
+@@ -79,13 +91,25 @@ message VideoMetadata {
+     repeated uint64 persons = 15 [packed=true];
+ 
+     // Video Category Id
+-    optional uint64 category = 16;
++    optional string category = 16;
+ 
++    // Video subtitles
++    repeated SubtitleMetadata subtitles = 17;
++    
+     // Enable/Disable the comment section
+     optional bool enable_comments = 18;
++
++    // Remove all subtitles; since protobuf doesn't distinguish b/w 
++    // empty array and null field, simply removing all subtitles by 
++    // overriding list with an empty array wont work
++    optional bool clear_subtitles = 19;
++
+ }
+ 
+-message VideoCategoryMetadata {
+-    // Category name
+-    optional string name = 1;
++message ContentMetadata {
++    oneof content_metadata {
++        VideoMetadata video_metadata = 1;
++        // ...
++        // Other possible metadata standards, e.g. `PlaylistMetadata`
++    }
+ }
