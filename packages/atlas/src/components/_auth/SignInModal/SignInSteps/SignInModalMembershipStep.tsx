@@ -41,8 +41,6 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
 
   const client = useApolloClient()
 
-  const debouncePromiseRef = useRef(debouncePromise)
-
   const validateUserHandle = useCallback(
     async (value: string) => {
       const {
@@ -74,7 +72,7 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
   const { ref, ...handleRest } = useMemo(
     () =>
       register('handle', {
-        onChange: debouncePromiseRef.current(
+        onChange: debouncePromise(
           async () => {
             await trigger('handle')
             setIsHandleValidating(false)

@@ -62,7 +62,6 @@ export const EditMembershipView: FC = () => {
     },
     [client]
   )
-  const debouncePromiseRef = useRef(debouncePromise)
 
   const {
     register,
@@ -176,7 +175,7 @@ export const EditMembershipView: FC = () => {
   const { ref, ...handleRest } = useMemo(
     () =>
       register('handle', {
-        onChange: debouncePromiseRef.current(
+        onChange: debouncePromise(
           async () => {
             await trigger('handle')
             setIsHandleValidating(false)
@@ -272,7 +271,6 @@ export const EditMembershipView: FC = () => {
                 {...register('about', {
                   maxLength: { value: 1000, message: 'About cannot be longer than 1000 characters' },
                 })}
-                value={watch('about') || ''}
                 error={!!errors?.about}
               />
             </FormField>
