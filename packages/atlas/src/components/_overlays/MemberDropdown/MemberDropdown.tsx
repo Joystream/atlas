@@ -73,6 +73,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const { accountBalance } = useSubscribeAccountBalance()
     const { accountBalance: channelBalance } =
       useSubscribeAccountBalance(selectedChannel?.rewardAccount, { isRewardAccount: true }) || new BN(0)
+    const balance = publisher ? channelBalance : accountBalance
 
     const containerRef = useRef<HTMLDivElement>(null)
     const { ref: measureContainerRef, height: containerHeight = 0 } = useResizeObserver({ box: 'border-box' })
@@ -199,21 +200,15 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                           <MemberHandleText as="span" variant="h400">
                             {publisher ? selectedChannel?.title : activeMembership?.handle ?? '‌‌ '}
                           </MemberHandleText>
-                          {accountBalance !== undefined && channelBalance !== undefined ? (
-                            <>
-                              <UserBalance>
-                                <JoyTokenIcon size={16} variant="regular" />
-                                <NumberFormat
-                                  as="span"
-                                  variant="t200-strong"
-                                  value={publisher ? channelBalance : accountBalance}
-                                  format="short"
-                                />
-                              </UserBalance>
-                            </>
+                          {balance !== undefined ? (
+                            <UserBalance>
+                              <JoyTokenIcon size={16} variant="regular" />
+                              <NumberFormat as="span" variant="t200-strong" value={balance} format="short" />
+                            </UserBalance>
                           ) : (
                             <SkeletonLoader width={30} height={20} />
                           )}
+
                           <BalanceContainer>
                             <TextLink
                               as="span"
