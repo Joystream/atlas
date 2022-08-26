@@ -86,7 +86,7 @@ const TextAreaComponent: ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaP
                 : 'colorTextMuted'
             }
           >
-            {computedCharactersCount}
+            {computedCharactersCount || 0}
           </Text>{' '}
           / {maxLength}
         </StyledText>

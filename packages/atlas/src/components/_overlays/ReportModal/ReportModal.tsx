@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { useReportVideoMutation } from '@/api/queries'
+import { useReportChannelMutation, useReportVideoMutation } from '@/api/queries'
 import { FormField } from '@/components/_inputs/FormField'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { useSnackbar } from '@/providers/snackbars'
@@ -20,6 +20,7 @@ type ReportModalProps = {
 
 export const ReportModal: FC<ReportModalProps> = ({ entityId, show, onClose, type }) => {
   const [reportVideo, { loading: reportVideoLoading }] = useReportVideoMutation()
+  const [reportChannel, { loading: reportChannelLoading }] = useReportChannelMutation()
   const { displaySnackbar } = useSnackbar()
   const {
     register,
@@ -38,7 +39,12 @@ export const ReportModal: FC<ReportModalProps> = ({ entityId, show, onClose, typ
         })
       }
       if (type === 'channel') {
-        // todo handle report channel here
+        await reportChannel({
+          variables: {
+            rationale: rationale,
+            channelId: entityId,
+          },
+        })
       }
       onClose()
       displaySnackbar({
@@ -66,9 +72,9 @@ export const ReportModal: FC<ReportModalProps> = ({ entityId, show, onClose, typ
         onClick: onClose,
       }}
       primaryButton={{
-        disabled: reportVideoLoading,
+        disabled: reportVideoLoading || reportChannelLoading,
         type: 'submit',
-        text: reportVideoLoading ? 'Please wait...' : 'Send report',
+        text: reportVideoLoading || reportChannelLoading ? 'Please wait...' : 'Send report',
       }}
     >
       <FormField
