@@ -104,8 +104,8 @@ export const useSubtitlesAssets = (subtitles?: SubtitlesFieldsFragment[] | null)
       const resolvedLanguageName = LANGUAGES_LOOKUP[item.language.iso]
       const url = item.assetId && resolvedAssets[item.assetId].url
       return {
-        label: resolvedLanguageName ? resolvedLanguageName : '',
-        language: item.language.iso,
+        label: item.type === 'subtitles' ? resolvedLanguageName : `${resolvedLanguageName} (CC)`,
+        language: item.type === 'subtitles' ? item.language.iso : `${item.language.iso}-cc`,
         src: url || '',
       }
     })
