@@ -28,20 +28,12 @@ This is an example of a subtitle - 2nd subtitle.
   .split('\n')
   .join('\r\n')
 
-let srtBlob: Blob
-let srtFile: File
-let pdfFile: File
-let vttBlob: Blob
-let vttFile: File
+const srtBlob = new Blob([srtTextExample], { type: 'text/plain' })
+const srtFile = new File([srtBlob], 'file.srt')
+const pdfFile = new File([srtBlob], 'file.pdf')
 
-beforeEach(() => {
-  srtBlob = new Blob([srtTextExample], { type: 'text/plain' })
-  srtFile = new File([srtBlob], 'file.srt')
-  pdfFile = new File([srtBlob], 'file.pdf')
-
-  vttBlob = new Blob([vttTextExample])
-  vttFile = new File([vttBlob], 'file.vtt', { type: 'text/vtt' })
-})
+const vttBlob = new Blob([vttTextExample])
+const vttFile = new File([vttBlob], 'file.vtt', { type: 'text/vtt' })
 
 describe('convertSrtFileToString', () => {
   it('should return a promise', () => {
