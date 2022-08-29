@@ -1,5 +1,9 @@
-export const convertSrtToVtt = async (srtFile: File): Promise<File> => {
-  const subtitlesString = await new Promise<string>((resolve, reject) => {
+export const convertSrtFileToString = async (srtFile: File) => {
+  const isSrtFile = srtFile.name.match(/\.srt$/)
+  if (!isSrtFile) {
+    throw new Error('File is not srt file')
+  }
+  return new Promise<string>((resolve, reject) => {
     const reader = new FileReader()
     const onLoadEnd = (event: ProgressEvent<FileReader>) => {
       const result = event.target?.result
@@ -20,7 +24,10 @@ export const convertSrtToVtt = async (srtFile: File): Promise<File> => {
     reader.addEventListener('error', onError)
     reader.readAsText(srtFile)
   })
-  const converted = subtitlesString
+}
+
+export const convertSrtStringToVttString = (srtString: string) => {
+  const converted = srtString
     .replace(/\{\\([ibu])\}/g, '</$1>')
     .replace(/\{\\([ibu])1\}/g, '<$1>')
     .replace(/\{([ibu])\}/g, '<$1>')
@@ -28,8 +35,17 @@ export const convertSrtToVtt = async (srtFile: File): Promise<File> => {
     .replace(/(\d\d:\d\d:\d\d),(\d\d\d)/g, '$1.$2')
     .concat('\r\n\r\n')
   const leadingText = 'WEBVTT\r\n\r\n'
-  const vttText = leadingText.concat(converted)
-  const blob = new Blob([vttText], { type: 'text/vtt' })
+  return leadingText
+    .concat(converted)
+    .split('\n')
+    .map((line) => line.trim())
+    .join('\r\n')
+}
+
+export const convertSrtToVtt = async (srtFile: File): Promise<File> => {
+  const srtString = await convertSrtFileToString(srtFile)
+  const vttString = convertSrtStringToVttString(srtString)
+  const blob = new Blob([vttString], { type: 'text/vtt' })
   const file = new File([blob], srtFile.name.replace('.srt', '.vtt'), { type: 'text/vtt' })
   return file
 }
