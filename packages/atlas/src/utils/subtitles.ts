@@ -1,4 +1,4 @@
-export const converSrtToVtt = async (srtFile: File): Promise<File> => {
+export const convertSrtToVtt = async (srtFile: File): Promise<File> => {
   const subtitlesString = await new Promise<string>((resolve, reject) => {
     const reader = new FileReader()
     const onLoadEnd = (event: ProgressEvent<FileReader>) => {

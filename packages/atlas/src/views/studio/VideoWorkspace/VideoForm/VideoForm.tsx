@@ -43,7 +43,7 @@ import { SubtitlesInput } from '@/types/subtitles'
 import { createId } from '@/utils/createId'
 import { pastDateValidation, requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
-import { converSrtToVtt } from '@/utils/subtitles'
+import { convertSrtToVtt } from '@/utils/subtitles'
 
 import { useVideoFormAssets, useVideoFormDraft } from './VideoForm.hooks'
 import {
@@ -773,7 +773,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                       let newFile = file
                       if (isSrt) {
                         try {
-                          newFile = await converSrtToVtt(file)
+                          newFile = await convertSrtToVtt(file)
                         } catch (error) {
                           displaySnackbar({
                             title: 'Something went wrong',
