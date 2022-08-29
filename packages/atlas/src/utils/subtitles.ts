@@ -34,7 +34,7 @@ export const convertSrtStringToVttString = (srtString: string) => {
     .replace(/\{\/([ibu])\}/g, '</$1>')
     .replace(/(\d\d:\d\d:\d\d),(\d\d\d)/g, '$1.$2')
     .concat('\r\n\r\n')
-  const leadingText = 'WEBVTT\r\n\r\n'
+  const leadingText = 'WEBVTT\n\r\n'
   return leadingText
     .concat(converted)
     .split('\n')
