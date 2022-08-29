@@ -34,7 +34,7 @@ export const useNftState = (nft?: BasicNftFieldsFragment | null) => {
   const userBidUnlockBlock = openAuction && userBid ? userBid?.createdInBlock + openAuction.bidLockDuration : undefined
   const userBidUnlockBlockTimestamp = userBidUnlockBlock && convertBlockToMsTimestamp(userBidUnlockBlock)
   const userBidUnlockDate = userBidUnlockBlockTimestamp ? new Date(userBidUnlockBlockTimestamp) : undefined
-  const userBidAmount = userBid?.amount ? userBid?.amount : undefined
+  const userBidAmount = userBid?.amount
   const userBidCreatedAt = userBid?.createdAt ? new Date(userBid?.createdAt) : undefined
 
   const startsAtDateBlockTimestamp = isAuction && convertBlockToMsTimestamp(auction?.startsAtBlock)
