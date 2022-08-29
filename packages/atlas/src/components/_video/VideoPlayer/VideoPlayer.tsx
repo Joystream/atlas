@@ -648,9 +648,10 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     setCinematicView(!cinematicView)
   }
 
-  const handleToggleCaptions = (event: MouseEvent) => {
+  const handleToggleCaptions = async (event: MouseEvent) => {
     event.stopPropagation()
-    setCaptionsEnabled(!captionsEnabled)
+    await setCaptionsEnabled(!captionsEnabled)
+    player?.trigger(CustomVideojsEvents.CaptionsSet)
   }
 
   const handleTrackChange = (selectedTrack: AvailableTrack) => {

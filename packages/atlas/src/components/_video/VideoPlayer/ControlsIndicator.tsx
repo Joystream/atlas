@@ -69,7 +69,7 @@ export const ControlsIndicator: FC<ControlsIndicatorProps> = ({ player, isLoadin
         if (indicator) {
           setIndicator({ ...indicator, isVisible: true })
         }
-      }, 0)
+      }, 10)
     }
     player.on(indicatorEvents, handler)
 
