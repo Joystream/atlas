@@ -27,7 +27,7 @@ import {
   useGetTop10ChannelsQuery,
   useUnfollowChannelMutation,
 } from '@/api/queries'
-import { channelFilter } from '@/config/channelFilter'
+import { channelFilter } from '@/config/contentFilter'
 
 const CHANNEL_ID_FILTER = channelFilter.NOT?.find((item) => item.id_in)
 
@@ -37,7 +37,7 @@ export const useBasicChannel = (
 ) => {
   const { data, ...rest } = useGetBasicChannelsQuery({
     ...opts,
-    variables: { where: { id_eq: id, NOT: [{ id_in: CHANNEL_ID_FILTER ? CHANNEL_ID_FILTER.id_in : [] }] } },
+    variables: { where: { id_eq: id, ...(CHANNEL_ID_FILTER ? { NOT: [{ id_in: CHANNEL_ID_FILTER.id_in }] } : {}) } },
   })
   return {
     channel: data?.channels[0],
@@ -54,7 +54,11 @@ export const useFullChannel = (
     ...opts,
     variables: {
       ...variables,
-      where: { id_eq: id, NOT: [{ id_in: CHANNEL_ID_FILTER ? CHANNEL_ID_FILTER.id_in : [] }], ...variables?.where },
+      where: {
+        id_eq: id,
+        ...(CHANNEL_ID_FILTER ? { NOT: [{ id_in: CHANNEL_ID_FILTER.id_in }] } : {}),
+        ...variables?.where,
+      },
     },
   })
   return {
@@ -225,7 +229,7 @@ export const useChannelNftCollectors = (
     ...opts,
     variables: {
       ...variables,
-      where: { ...variables?.where, NOT: [{ channel: { id_in: CHANNEL_ID_FILTER ? CHANNEL_ID_FILTER.id_in : [] } }] },
+      where: { ...variables?.where, ...(CHANNEL_ID_FILTER ? { NOT: [{ id_in: CHANNEL_ID_FILTER.id_in }] } : {}) },
     },
   })
 

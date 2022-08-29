@@ -4,6 +4,8 @@ import {
   AddVideoViewMutation,
   GetBasicVideosQuery,
   GetBasicVideosQueryVariables,
+  GetFullVideoQuery,
+  GetFullVideoQueryVariables,
   GetFullVideosQuery,
   GetFullVideosQueryVariables,
   GetTop10VideosThisMonthQuery,
@@ -15,12 +17,13 @@ import {
   VideoOrderByInput,
   useAddVideoViewMutation,
   useGetBasicVideosQuery,
+  useGetFullVideoQuery,
   useGetFullVideosQuery,
   useGetTop10VideosThisMonthQuery,
   useGetTop10VideosThisWeekQuery,
   useGetVideoCountQuery,
 } from '@/api/queries'
-import { videoFilter } from '@/config/videoFilter'
+import { videoFilter } from '@/config/contentFilter'
 
 export const useFullVideo = (
   id: string,
@@ -40,6 +43,20 @@ export const useFullVideo = (
   })
   return {
     video: data?.videos[0],
+    ...queryRest,
+  }
+}
+
+export const useFullVideoByUniqueInput = (
+  id: string,
+  opts?: QueryHookOptions<GetFullVideoQuery, GetFullVideoQueryVariables>
+) => {
+  const { data, ...queryRest } = useGetFullVideoQuery({
+    ...opts,
+    variables: { where: { id } },
+  })
+  return {
+    video: data?.videoByUniqueInput,
     ...queryRest,
   }
 }

@@ -3,12 +3,11 @@ import { useLocation } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import shallow from 'zustand/shallow'
 
-import { useFullVideo } from '@/api/hooks'
+import { useFullVideoByUniqueInput } from '@/api/hooks'
 import { Text } from '@/components/Text'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
 import { SvgAlertsError24, SvgAlertsSuccess24 } from '@/components/_icons'
 import { Loader } from '@/components/_loaders/Loader'
-import { cancelledVideoFilter } from '@/config/videoFilter'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { AssetUpload } from '@/providers/uploadsManager/types'
 import { transitions } from '@/styles'
@@ -56,6 +55,14 @@ export const UploadStatusGroup: FC<UploadStatusGroupProps> = ({ uploads, size = 
         ...cancelledVideoFilter,
       },
     }
+  )
+  const { video, loading: videoLoading } = useFullVideoByUniqueInput(uploads[0].parentObject.id, {
+    skip: isChannelType,
+  })
+  const { channel, loading: channelLoading } = useFullChannel(
+    uploads[0].parentObject.id,
+    { skip: !isChannelType },
+    { where: { isPublic_eq: undefined } }
   )
 
   const isWaiting = uploadsStatuses.every((file) => file?.progress === 0 && file?.lastStatus === 'inProgress')
