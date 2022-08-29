@@ -94,13 +94,13 @@ export const TitleContainer = styled.div`
 export const VideoUtils = styled.div`
   display: grid;
   margin-top: ${sizes(2)};
-  grid-template: 'meta meta' 1fr 'reactions link' / 1fr auto;
+  grid-template: 'meta meta' 1fr 'reactions buttons' / 1fr auto;
   justify-items: baseline;
   gap: ${sizes(4)};
   ${media.md} {
     align-items: center;
     margin-top: ${sizes(4)};
-    grid-template: 'meta reactions link' 1fr / 1fr auto;
+    grid-template: 'meta reactions buttons' 1fr / 1fr auto;
   }
 `
 
@@ -115,8 +115,12 @@ export const StyledReactionStepper = styled(ReactionStepper)`
   margin-bottom: -${titleContainerPadding};
 `
 
-export const CopyLink = styled(Button)`
-  grid-area: link;
+export const ButtonsContainer = styled.div`
+  grid-area: buttons;
+  display: grid;
+  gap: ${sizes(2)};
+  align-items: center;
+  grid-auto-flow: column;
 `
 
 export const TitleText = styled(Text)`

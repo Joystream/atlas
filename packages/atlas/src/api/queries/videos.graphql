@@ -122,3 +122,10 @@ mutation AddVideoView($videoId: ID!, $channelId: ID!, $categoryId: ID) {
     views
   }
 }
+
+mutation ReportVideo($videoId: ID!, $rationale: String!) {
+  reportVideo(videoId: $videoId, rationale: $rationale) {
+    id
+    videoId
+  }
+}

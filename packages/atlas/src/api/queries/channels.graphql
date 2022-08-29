@@ -151,3 +151,10 @@ query GetChannelNftCollectors(
     amount
   }
 }
+
+mutation ReportChannel($channelId: ID!, $rationale: String!) {
+  reportChannel(channelId: $channelId, rationale: $rationale) {
+    id
+    channelId
+  }
+}

@@ -6950,6 +6950,27 @@ export enum ChannelOrderByInput {
   UpdatedAtDesc = 'updatedAt_DESC',
 }
 
+export type ChannelReportInfo = {
+  __typename?: 'ChannelReportInfo'
+  channelId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  id: Scalars['ID']
+  rationale: Scalars['String']
+  reporterIp: Scalars['String']
+}
+
+export enum ChannelReportOrderByInput {
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+}
+
+export type ChannelReportsWhereInput = {
+  channelId?: InputMaybe<Scalars['ID']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  reporterIp?: InputMaybe<Scalars['String']>
+}
+
 export type ChannelUpdateInput = {
   activeVideosCounter?: InputMaybe<Scalars['Float']>
   avatarPhoto?: InputMaybe<Scalars['ID']>
@@ -14953,8 +14974,10 @@ export type Mutation = {
   addVideoView: EntityViewsInfo
   /** Add a single follow to the target channel */
   followChannel: ChannelFollowsInfo
+  /** Report a channel */
+  reportChannel: ChannelReportInfo
   /** Report a video */
-  reportVideo: ReportVideoInfo
+  reportVideo: VideoReportInfo
   setCategoryFeaturedVideos: Array<FeaturedVideo>
   setKillSwitch: Admin
   setVideoHero: VideoHero
@@ -14970,6 +14993,11 @@ export type MutationAddVideoViewArgs = {
 
 export type MutationFollowChannelArgs = {
   channelId: Scalars['ID']
+}
+
+export type MutationReportChannelArgs = {
+  channelId: Scalars['ID']
+  rationale: Scalars['String']
 }
 
 export type MutationReportVideoArgs = {
@@ -21301,7 +21329,8 @@ export type Query = {
   referralCutUpdatedEventByUniqueInput?: Maybe<ReferralCutUpdatedEvent>
   referralCutUpdatedEvents: Array<ReferralCutUpdatedEvent>
   referralCutUpdatedEventsConnection: ReferralCutUpdatedEventConnection
-  reportedVideos: Array<ReportVideoInfo>
+  reportedChannels: Array<ChannelReportInfo>
+  reportedVideos: Array<VideoReportInfo>
   requestFundedEventByUniqueInput?: Maybe<RequestFundedEvent>
   requestFundedEvents: Array<RequestFundedEvent>
   requestFundedEventsConnection: RequestFundedEventConnection
@@ -24493,11 +24522,18 @@ export type QueryReferralCutUpdatedEventsConnectionArgs = {
   where?: InputMaybe<ReferralCutUpdatedEventWhereInput>
 }
 
+export type QueryReportedChannelsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<ChannelReportOrderByInput>
+  skip?: InputMaybe<Scalars['Int']>
+  where?: InputMaybe<ChannelReportsWhereInput>
+}
+
 export type QueryReportedVideosArgs = {
   limit?: InputMaybe<Scalars['Int']>
   orderBy?: InputMaybe<VideoReportOrderByInput>
   skip?: InputMaybe<Scalars['Int']>
-  where?: InputMaybe<VideoReportWhereInput>
+  where?: InputMaybe<VideoReportsWhereInput>
 }
 
 export type QueryRequestFundedEventByUniqueInputArgs = {
@@ -26442,15 +26478,6 @@ export type ReferralCutUpdatedEventWhereInput = {
 
 export type ReferralCutUpdatedEventWhereUniqueInput = {
   id: Scalars['ID']
-}
-
-export type ReportVideoInfo = {
-  __typename?: 'ReportVideoInfo'
-  createdAt: Scalars['DateTime']
-  id: Scalars['ID']
-  rationale: Scalars['String']
-  reporterIp: Scalars['String']
-  videoId: Scalars['ID']
 }
 
 export type RequestFundedEvent = BaseGraphQlObject &
@@ -31950,12 +31977,21 @@ export type VideoReactionsPreferenceEventWhereUniqueInput = {
   id: Scalars['ID']
 }
 
+export type VideoReportInfo = {
+  __typename?: 'VideoReportInfo'
+  createdAt: Scalars['DateTime']
+  id: Scalars['ID']
+  rationale: Scalars['String']
+  reporterIp: Scalars['String']
+  videoId: Scalars['ID']
+}
+
 export enum VideoReportOrderByInput {
   CreatedAtAsc = 'createdAt_ASC',
   CreatedAtDesc = 'createdAt_DESC',
 }
 
-export type VideoReportWhereInput = {
+export type VideoReportsWhereInput = {
   createdAt_gt?: InputMaybe<Scalars['DateTime']>
   createdAt_lt?: InputMaybe<Scalars['DateTime']>
   reporterIp?: InputMaybe<Scalars['String']>

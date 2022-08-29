@@ -565,6 +565,16 @@ export type GetChannelNftCollectorsQuery = {
   }>
 }
 
+export type ReportChannelMutationVariables = Types.Exact<{
+  channelId: Types.Scalars['ID']
+  rationale: Types.Scalars['String']
+}>
+
+export type ReportChannelMutation = {
+  __typename?: 'Mutation'
+  reportChannel: { __typename?: 'ChannelReportInfo'; id: string; channelId: string }
+}
+
 export const GetBasicChannelDocument = gql`
   query GetBasicChannel($where: ChannelWhereUniqueInput!) {
     channelByUniqueInput(where: $where) {
@@ -1326,4 +1336,44 @@ export type GetChannelNftCollectorsLazyQueryHookResult = ReturnType<typeof useGe
 export type GetChannelNftCollectorsQueryResult = Apollo.QueryResult<
   GetChannelNftCollectorsQuery,
   GetChannelNftCollectorsQueryVariables
+>
+export const ReportChannelDocument = gql`
+  mutation ReportChannel($channelId: ID!, $rationale: String!) {
+    reportChannel(channelId: $channelId, rationale: $rationale) {
+      id
+      channelId
+    }
+  }
+`
+export type ReportChannelMutationFn = Apollo.MutationFunction<ReportChannelMutation, ReportChannelMutationVariables>
+
+/**
+ * __useReportChannelMutation__
+ *
+ * To run a mutation, you first call `useReportChannelMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useReportChannelMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [reportChannelMutation, { data, loading, error }] = useReportChannelMutation({
+ *   variables: {
+ *      channelId: // value for 'channelId'
+ *      rationale: // value for 'rationale'
+ *   },
+ * });
+ */
+export function useReportChannelMutation(
+  baseOptions?: Apollo.MutationHookOptions<ReportChannelMutation, ReportChannelMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<ReportChannelMutation, ReportChannelMutationVariables>(ReportChannelDocument, options)
+}
+export type ReportChannelMutationHookResult = ReturnType<typeof useReportChannelMutation>
+export type ReportChannelMutationResult = Apollo.MutationResult<ReportChannelMutation>
+export type ReportChannelMutationOptions = Apollo.BaseMutationOptions<
+  ReportChannelMutation,
+  ReportChannelMutationVariables
 >

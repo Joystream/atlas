@@ -98,15 +98,19 @@ export const SubTitleSkeletonLoader = styled(SkeletonLoader)`
   }
 `
 export const StyledButtonContainer = styled.div`
-  z-index: 2;
   width: 100%;
+  display: grid;
+  gap: ${sizes(2)};
+  align-items: center;
+
+  /* 1fr - follow button, auto - kebab menu */
+  grid-template-columns: 1fr auto;
 
   ${media.sm} {
     width: auto;
     grid-column: initial;
-    margin-top: 0;
-    margin-left: auto;
     align-self: center;
+    grid-template-columns: auto auto;
   }
 `
 
