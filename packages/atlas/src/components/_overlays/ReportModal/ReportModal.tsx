@@ -64,7 +64,7 @@ export const ReportModal: FC<ReportModalProps> = ({ entityId, show, onClose, typ
   return (
     <DialogModal
       onExitClick={onClose}
-      title="Report video"
+      title={`Report ${type}`}
       show={show}
       onSubmit={submit}
       secondaryButton={{
@@ -80,7 +80,9 @@ export const ReportModal: FC<ReportModalProps> = ({ entityId, show, onClose, typ
       <FormField
         error={errors.rationale?.message}
         label="Details"
-        description="Additional information on why you think this video needs to be reviewed. Provide timestamp if applicable."
+        description={`Additional information on why you think this ${type} needs to be reviewed. ${
+          type === 'video' ? 'Provide timestamp if applicable.' : ''
+        }`}
       >
         <TextArea
           {...register('rationale', { required: { value: true, message: 'Provide details for your report.' } })}
