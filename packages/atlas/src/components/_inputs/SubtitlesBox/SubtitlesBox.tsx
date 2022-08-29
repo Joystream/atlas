@@ -64,11 +64,7 @@ export const SubtitlesBox: FC<SubtitleBoxProps> = ({
     if (!file) {
       return
     }
-    const isSupported =
-      file.name
-        .split('.')
-        .pop()
-        ?.match(/srt|vtt/) || file?.type === 'text/vtt'
+    const isSupported = file.name.match(/\.(vtt|srt)$/) || file?.type === 'text/vtt'
 
     if (!isSupported) {
       openUnsuportedFileDialog({

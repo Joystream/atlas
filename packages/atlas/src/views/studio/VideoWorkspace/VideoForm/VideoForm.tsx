@@ -769,7 +769,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                       )
                     }}
                     onSubtitlesAdd={async ({ languageIso, file, type }) => {
-                      const isSrt = file?.name.split('.').pop() === 'srt'
+                      const isSrt = file && file?.name.match(/\.srt$/)
                       let newFile = file
                       if (isSrt) {
                         try {
