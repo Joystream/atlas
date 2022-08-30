@@ -27,6 +27,7 @@ import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { NftIssuanceInputMetadata, VideoInputAssets, VideoInputMetadata } from '@/joystream-lib'
 import { useRawAssetResolver } from '@/providers/assets'
 import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joystream'
+import { useSnackbar } from '@/providers/snackbars'
 import { useUser } from '@/providers/user'
 import {
   VideoFormAssetData,
@@ -42,6 +43,7 @@ import { SubtitlesInput } from '@/types/subtitles'
 import { createId } from '@/utils/createId'
 import { pastDateValidation, requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { convertSrtToVtt } from '@/utils/subtitles'
 
 import { useVideoFormAssets, useVideoFormDraft } from './VideoForm.hooks'
 import {
@@ -88,6 +90,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const [titleTooltipVisible, setTitleTooltipVisible] = useState(true)
   const mintNftFormFieldRef = useRef<HTMLDivElement>(null)
   const { memberId, channelId } = useUser()
+  const { displaySnackbar } = useSnackbar()
 
   const { editedVideoInfo } = useVideoWorkspace()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useVideoWorkspaceData()
@@ -765,11 +768,26 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                         )
                       )
                     }}
-                    onSubtitlesAdd={({ languageIso, file, type }) => {
+                    onSubtitlesAdd={async ({ languageIso, file, type }) => {
+                      const isSrt = file && file?.name.match(/\.srt$/)
+                      let newFile = file
+                      if (isSrt) {
+                        try {
+                          newFile = await convertSrtToVtt(file)
+                        } catch (error) {
+                          displaySnackbar({
+                            title: 'Something went wrong',
+                            description:
+                              'There was a problem with processing subtitles file. Try again or select different file.',
+                            iconType: 'error',
+                          })
+                          return
+                        }
+                      }
                       onChange(
                         subtitlesArray?.map((subtitles) =>
                           subtitles.languageIso === languageIso && subtitles.type === type
-                            ? { ...subtitles, file }
+                            ? { ...subtitles, file: newFile }
                             : subtitles
                         )
                       )
