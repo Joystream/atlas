@@ -1,5 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import { animated } from 'react-spring'
 
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
@@ -23,103 +24,33 @@ export const Container = styled.div`
   }
 `
 
-export const LIST_TRANSITION = 'list-transition'
-
-export const MEMBER_CHANNEL_TRANSITION = 'member-channel-transition'
-
-export const MemberHandleTransitionContainer = styled.div<{ slideDirection: 'right' | 'left' }>`
-  transition: opacity ${cVar('animationTransitionMedium')}, transform ${cVar('animationTransitionMedium')};
-
-  &.${MEMBER_CHANNEL_TRANSITION}-enter {
-    opacity: 0;
-    transform: translateX(${({ slideDirection }) => (slideDirection === 'left' ? '280px' : '-280px')});
-  }
-
-  &.${MEMBER_CHANNEL_TRANSITION}-enter-active {
-    opacity: 1;
-    transform: translateX(20px);
-  }
-
-  &.${MEMBER_CHANNEL_TRANSITION}-exit {
-    opacity: 1;
-  }
-
-  &.${MEMBER_CHANNEL_TRANSITION}-exit-active {
-    opacity: 0;
-    transform: translateX(${({ slideDirection }) => (slideDirection === 'left' ? '280px' : '-280px')});
-  }
+type FixedSizeContainerProps = {
+  height?: number | string
+  width?: number | string
+}
+export const FixedSizeContainer = styled.div<FixedSizeContainerProps>`
+  height: ${({ height }) => (height ? (typeof height === 'number' ? `${height}px` : height) : 'unset')};
+  width: ${({ width }) => (width ? (typeof width === 'number' ? `${width}px` : width) : 'unset')};
 `
+
+export const LIST_TRANSITION = 'list-transition'
 
 export const SectionContainer = styled.div`
   border-top: 1px solid ${cVar('colorBorderMutedAlpha')};
   padding: ${sizes(2)} 0;
 `
 
-export const AnimatedSectionContainer = styled(SectionContainer)<{ slideDirection: 'right' | 'left' }>`
+export const AnimatedSectionContainer = styled(animated(SectionContainer))`
   border-top: unset;
-  transition: opacity ${cVar('animationTransitionMedium')}, transform ${cVar('animationTransitionMedium')};
-
-  &.${MEMBER_CHANNEL_TRANSITION}-enter {
-    opacity: 0;
-    transform: translateX(${({ slideDirection }) => (slideDirection === 'left' ? '280px' : '-280px')});
-  }
-
-  &.${MEMBER_CHANNEL_TRANSITION}-enter-active {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  &.${MEMBER_CHANNEL_TRANSITION}-exit {
-    opacity: 1;
-  }
-
-  &.${MEMBER_CHANNEL_TRANSITION}-exit-active {
-    opacity: 0;
-    transform: translateX(${({ slideDirection }) => (slideDirection === 'left' ? '280px' : '-280px')});
-  }
 `
 
-export const SlideAnimationContainer = styled.div<{ slideDirection?: 'left' | 'right' }>`
+export const SlideAnimationContainer = styled.div`
   position: absolute;
   height: 100%;
   width: 280px;
   will-change: transform, opacity;
   overflow-x: hidden;
   transition: opacity ${cVar('animationTransitionMedium')}, transform ${cVar('animationTransitionMedium')};
-
-  &.${MEMBER_CHANNEL_TRANSITION}-enter {
-    ${() => Filter}::before, ${() => AnimatedTextLink} {
-      opacity: 0;
-    }
-    ${MemberHandleTransitionContainer}, ${AnimatedSectionContainer} {
-      opacity: 0;
-      transform: translateX(${({ slideDirection }) => (slideDirection === 'left' ? '280px' : '-280px')});
-    }
-  }
-
-  &.${MEMBER_CHANNEL_TRANSITION}-enter-active {
-    ${() => Filter}::before, ${() => AnimatedTextLink} {
-      opacity: 1;
-    }
-    ${MemberHandleTransitionContainer}, ${AnimatedSectionContainer} {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  &.${MEMBER_CHANNEL_TRANSITION}-exit {
-    opacity: 1;
-  }
-
-  &.${MEMBER_CHANNEL_TRANSITION}-exit-active {
-    ${() => Filter}::before, ${() => AnimatedTextLink} {
-      opacity: 0;
-    }
-    ${MemberHandleTransitionContainer}, ${AnimatedSectionContainer} {
-      opacity: 0;
-      transform: translateX(${({ slideDirection }) => (slideDirection === 'left' ? '280px' : '-280px')});
-    }
-  }
 `
 
 export const InnerContainer = styled.div<{
@@ -254,6 +185,7 @@ export const UserBalance = styled.div`
 `
 
 export const BalanceContainer = styled.div`
+  clear: both;
   margin-top: ${sizes(1)};
   display: grid;
   grid-auto-flow: column;
@@ -286,22 +218,4 @@ export const TextLink = styled(Text)`
   }
 `
 
-export const AnimatedTextLink = styled(TextLink)`
-  transition: opacity ${cVar('animationTransitionMedium')};
-
-  &.${MEMBER_CHANNEL_TRANSITION}-enter {
-    opacity: 0;
-  }
-
-  &.${MEMBER_CHANNEL_TRANSITION}-enter-active {
-    opacity: 1;
-  }
-
-  &.${MEMBER_CHANNEL_TRANSITION}-exit {
-    opacity: 1;
-  }
-
-  &.${MEMBER_CHANNEL_TRANSITION}-exit-active {
-    opacity: 0;
-  }
-`
+export const AnimatedTextLink = styled(animated(TextLink))``

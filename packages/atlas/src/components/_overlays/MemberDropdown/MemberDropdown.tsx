@@ -2,6 +2,7 @@ import { BN } from 'bn.js'
 import { FC, forwardRef, useEffect, useRef, useState } from 'react'
 import mergeRefs from 'react-merge-refs'
 import { useLocation, useNavigate } from 'react-router'
+import { animated, useTransition } from 'react-spring'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
@@ -46,11 +47,10 @@ import {
   Container,
   Divider,
   Filter,
+  FixedSizeContainer,
   InnerContainer,
   LIST_TRANSITION,
-  MEMBER_CHANNEL_TRANSITION,
   MemberHandleText,
-  MemberHandleTransitionContainer,
   MemberInfoContainer,
   SectionContainer,
   SlideAnimationContainer,
@@ -78,6 +78,15 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const { ref: measureContainerRef, height: containerHeight = 0 } = useResizeObserver<HTMLDivElement>({
       box: 'border-box',
     })
+    const { ref: textLinkRef, width: textLinkWidth } = useResizeObserver<HTMLDivElement>({
+      box: 'border-box',
+    })
+    const { ref: memberContainerRef, height: memberContainerHeight } = useResizeObserver<HTMLDivElement>({
+      box: 'border-box',
+    })
+    const { ref: sectionContainerRef, height: sectionContainerHeight } = useResizeObserver<HTMLDivElement>({
+      box: 'border-box',
+    })
     const containerRef = useRef<HTMLDivElement>(null)
 
     const [dropdownType, setDropDownType] = useState<'member' | 'channel' | 'list-channel' | 'list-member'>('member')
@@ -98,6 +107,12 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const toggleWithdrawDialog = () => setShowWithdrawDialog((prevState) => !prevState)
     const toggleSendDialog = () => setShowSendDialog((prevState) => !prevState)
     const setSignInModalOpen = useUserStore((state) => state.actions.setSignInModalOpen)
+
+    const transitions = useTransition(dropdownType, {
+      from: { opacity: 0, x: dropdownType === 'channel' ? 280 : -280, position: 'absolute' as const },
+      enter: { opacity: 1, x: 0 },
+      leave: { opacity: 0, x: dropdownType === 'channel' ? -280 : 280 },
+    })
 
     const isStudio = pathname.search(absoluteRoutes.studio.index()) !== -1
     useEffect(() => {
@@ -161,7 +176,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                 slideDirection={isList ? 'left' : 'right'}
               >
                 {(dropdownType === 'member' || dropdownType === 'channel') && (
-                  <SlideAnimationContainer slideDirection={dropdownType === 'member' ? 'right' : 'left'}>
+                  <SlideAnimationContainer>
                     <div ref={mergeRefs([measureContainerRef, containerRef])}>
                       <BlurredBG url={dropdownType === 'member' ? memberAvatarUrl : channelAvatarUrl}>
                         <Filter />
@@ -191,15 +206,9 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                             )}
                           </AvatarsGroupContainer>
                           <div>
-                            <SwitchTransition>
-                              <CSSTransition
-                                key={dropdownType}
-                                timeout={parseInt(cVar('animationTimingMedium', true))}
-                                classNames={MEMBER_CHANNEL_TRANSITION}
-                              >
-                                <MemberHandleTransitionContainer
-                                  slideDirection={dropdownType === 'member' ? 'right' : 'left'}
-                                >
+                            <FixedSizeContainer height={memberContainerHeight}>
+                              {transitions((style) => (
+                                <animated.div style={style} ref={memberContainerRef}>
                                   <MemberHandleText as="span" variant="h400">
                                     {dropdownType === 'channel' ? selectedChannel?.title : activeMembership?.handle}
                                   </MemberHandleText>
@@ -211,18 +220,16 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                                   ) : (
                                     <SkeletonLoader width={30} height={20} />
                                   )}
-                                </MemberHandleTransitionContainer>
-                              </CSSTransition>
-                            </SwitchTransition>
+                                </animated.div>
+                              ))}
+                            </FixedSizeContainer>
                             <BalanceContainer>
-                              <SwitchTransition>
-                                <CSSTransition
-                                  key={dropdownType}
-                                  timeout={parseInt(cVar('animationTimingMedium', true))}
-                                  classNames={MEMBER_CHANNEL_TRANSITION}
-                                >
+                              <FixedSizeContainer width={textLinkWidth} height="100%">
+                                {transitions(({ opacity, position }) => (
                                   <AnimatedTextLink
+                                    ref={textLinkRef}
                                     as="span"
+                                    style={{ opacity, position }}
                                     onClick={() => {
                                       closeDropdown?.()
                                       dropdownType === 'channel' ? setShowWithdrawDialog(true) : setShowSendDialog(true)
@@ -232,8 +239,8 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                                   >
                                     {dropdownType === 'channel' ? 'Withdraw' : 'Transfer'}
                                   </AnimatedTextLink>
-                                </CSSTransition>
-                              </SwitchTransition>
+                                ))}
+                              </FixedSizeContainer>
                               <Divider />
                               <TextLink
                                 variant="t100"
@@ -250,13 +257,9 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                           </div>
                         </MemberInfoContainer>
                       </BlurredBG>
-                      <SwitchTransition>
-                        <CSSTransition
-                          key={dropdownType}
-                          timeout={parseInt(cVar('animationTimingMedium', true))}
-                          classNames={MEMBER_CHANNEL_TRANSITION}
-                        >
-                          <AnimatedSectionContainer slideDirection={dropdownType === 'member' ? 'right' : 'left'}>
+                      <FixedSizeContainer height={sectionContainerHeight}>
+                        {transitions((style) => (
+                          <AnimatedSectionContainer ref={sectionContainerRef} style={style}>
                             {publisher ? (
                               <ListItem
                                 onClick={closeDropdown}
@@ -310,8 +313,8 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                               nodeEnd={!hasOneMember && <SvgActionChevronR />}
                             />
                           </AnimatedSectionContainer>
-                        </CSSTransition>
-                      </SwitchTransition>
+                        ))}
+                      </FixedSizeContainer>
                       <SectionContainer>
                         <ListItem
                           label="Disconnect wallet"
