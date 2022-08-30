@@ -56,7 +56,6 @@ export const SlideAnimationContainer = styled(animated.div)`
 export const InnerContainer = styled.div<{
   isActive: boolean
   containerHeight: number
-  slideDirection: 'left' | 'right'
 }>`
   width: 280px;
   position: relative;
