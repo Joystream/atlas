@@ -73,6 +73,7 @@ export const VideoView: FC = () => {
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
   const { loading, video, error } = useFullVideo(
     id ?? '',
+    false,
     {
       onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
     },

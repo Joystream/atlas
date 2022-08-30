@@ -27,11 +27,14 @@ import { videoFilter } from '@/config/contentFilter'
 
 export const useFullVideo = (
   id: string,
-  opts?: QueryHookOptions<GetFullVideosQuery, GetFullVideosQueryVariables>,
+  cached?: boolean,
+  opts?: QueryHookOptions<GetFullVideoQuery, GetFullVideoQueryVariables> &
+    QueryHookOptions<GetFullVideosQuery, GetFullVideosQueryVariables>,
   variables?: GetFullVideosQueryVariables
 ) => {
-  const { data, ...queryRest } = useGetFullVideosQuery({
+  const { data: fullVideosData, ...fullVideosQueryRest } = useGetFullVideosQuery({
     ...opts,
+    skip: !!cached || opts?.skip,
     variables: {
       ...variables,
       where: {
@@ -41,23 +44,19 @@ export const useFullVideo = (
       },
     },
   })
-  return {
-    video: data?.videos[0],
-    ...queryRest,
-  }
-}
 
-export const useFullVideoByUniqueInput = (
-  id: string,
-  opts?: QueryHookOptions<GetFullVideoQuery, GetFullVideoQueryVariables>
-) => {
-  const { data, ...queryRest } = useGetFullVideoQuery({
+  const { data: fullVideoData, ...fullVideoQueryRest } = useGetFullVideoQuery({
+    fetchPolicy: 'cache-only',
     ...opts,
+    skip: !cached || opts?.skip,
     variables: { where: { id } },
   })
+
+  const video = cached ? fullVideoData?.videoByUniqueInput : fullVideosData?.videos[0]
+
   return {
-    video: data?.videoByUniqueInput,
-    ...queryRest,
+    video,
+    ...(cached ? fullVideoQueryRest : fullVideosQueryRest),
   }
 }
 
