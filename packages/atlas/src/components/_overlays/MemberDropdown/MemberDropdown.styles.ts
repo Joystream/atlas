@@ -45,13 +45,12 @@ export const AnimatedSectionContainer = styled(animated(SectionContainer))`
   width: 100%;
 `
 
-export const SlideAnimationContainer = styled.div`
+export const SlideAnimationContainer = styled(animated.div)`
   position: absolute;
   height: 100%;
   width: 280px;
   will-change: transform, opacity;
   overflow-x: hidden;
-  transition: opacity ${cVar('animationTransitionMedium')}, transform ${cVar('animationTransitionMedium')};
 `
 
 export const InnerContainer = styled.div<{
@@ -74,31 +73,6 @@ export const InnerContainer = styled.div<{
   background-color: ${cVar('colorBackgroundStrong')};
   overflow-y: auto;
   overflow-x: hidden;
-
-  &.${LIST_TRANSITION}-enter {
-    ${SlideAnimationContainer} {
-      opacity: 0;
-      transform: translateX(${({ slideDirection }) => (slideDirection === 'left' ? '280px' : '-280px')});
-    }
-  }
-
-  &.${LIST_TRANSITION}-enter-active {
-    ${SlideAnimationContainer} {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  &.${LIST_TRANSITION}-exit {
-    opacity: 1;
-  }
-
-  &.${LIST_TRANSITION}-exit-active {
-    ${SlideAnimationContainer} {
-      opacity: 0;
-      transform: translateX(${({ slideDirection }) => (slideDirection === 'left' ? '280px' : '-280px')});
-    }
-  }
 `
 
 export const AvatarsGroupContainer = styled.div`
