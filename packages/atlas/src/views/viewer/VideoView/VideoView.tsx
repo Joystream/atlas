@@ -20,6 +20,7 @@ import { NftWidget, useNftWidget } from '@/components/_nft/NftWidget'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { videoCategories } from '@/config/categories'
 import { CTA_MAP } from '@/config/cta'
+import { LANGUAGES_LOOKUP } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useHeadTags } from '@/hooks/useHeadTags'
@@ -92,7 +93,22 @@ export const VideoView: FC = () => {
 
   const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset(video?.media)
   const { url: thumbnailUrl } = useAsset(video?.thumbnailPhoto)
-  const availableTracks = useSubtitlesAssets(video?.subtitles)
+  const subtitlesAssets = useSubtitlesAssets(video?.subtitles)
+  const availableTracks = useMemo(() => {
+    if (!video?.subtitles) return []
+
+    return video.subtitles
+      .filter((subtitle) => !!subtitle.asset)
+      .map((subtitle) => {
+        const resolvedLanguageName = LANGUAGES_LOOKUP[subtitle.language.iso]
+        const url = subtitlesAssets[subtitle.id]?.url
+        return {
+          label: subtitle.type === 'subtitles' ? resolvedLanguageName : `${resolvedLanguageName} (CC)`,
+          language: subtitle.type === 'subtitles' ? subtitle.language.iso : `${subtitle.language.iso}-cc`,
+          src: url || '',
+        }
+      })
+  }, [subtitlesAssets, video?.subtitles])
 
   const videoMetaTags = useMemo(() => {
     if (!video || !thumbnailUrl) return {}

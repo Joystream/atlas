@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
+import shallow from 'zustand/shallow'
 
 import { BasicMembershipFieldsFragment, StorageDataObjectFieldsFragment, SubtitlesFieldsFragment } from '@/api/queries'
-import { LANGUAGES_LOOKUP } from '@/config/languages'
+import { createLookup } from '@/utils/data'
 
 import { ResolvedAsset, useAssetStore } from './assets.store'
 
@@ -42,72 +43,47 @@ export const useMemberAvatar = (member?: BasicMembershipFieldsFragment | null): 
 }
 
 export const useSubtitlesAssets = (subtitles?: SubtitlesFieldsFragment[] | null) => {
+  // get mapping from subtitle ID to subtitle (but only for subtitles with asset)
+  const subtitlesWithAssetLookup = useMemo(() => {
+    if (!subtitles || !subtitles.length) return {}
+    const subsWithAsset = subtitles.filter((s) => !!s.asset)
+    return createLookup(subsWithAsset)
+  }, [subtitles])
+
+  // get mapping from subtitle ID to asset
+  const subtitlesAssets = useAssetStore((state) => {
+    const assets = {} as Record<string, ResolvedAsset | null>
+    Object.entries(subtitlesWithAssetLookup).forEach(([id, subtitle]) => {
+      if (!subtitle.asset) return
+      const asset = state.assets[subtitle.asset.id]
+      assets[id] = asset || null
+    })
+    return assets
+  }, shallow)
+
+  // get mapping from subtitle ID to asset pending status
+  const subtitlesPendingAssets = useAssetStore((state) => {
+    const pendingAssets = {} as Record<string, boolean>
+    Object.entries(subtitlesWithAssetLookup).forEach(([id, subtitle]) => {
+      if (!subtitle.asset) return
+      pendingAssets[id] = !!state.immediatePendingAssets[subtitle.asset.id]
+    })
+    return pendingAssets
+  }, shallow)
+
   const addPendingAsset = useAssetStore((state) => state.actions.addPendingAsset)
-  const pendingAssets = useAssetStore((state) => state.pendingAssets)
-  const assets = useAssetStore((state) => state.assets)
-  const [resolvedAssets, setResolvedAssets] = useState<Record<string, ResolvedAsset>>()
-  const dataObjects = useMemo(() => subtitles?.map((item) => item.asset), [subtitles])
 
-  const checkDataObjectsIn = useCallback(
-    (object: Record<string, unknown>) => {
-      if (!dataObjects || !dataObjects.length) {
-        return false
-      }
-      const mappedDataObjectsIds = dataObjects?.map((dataObject) => dataObject?.id) || []
-      return Object.keys(object).some((id) => mappedDataObjectsIds.includes(id))
-    },
-    [dataObjects]
-  )
-
+  // request resolution of subtitle assets that are not pending
   useEffect(() => {
-    if (
-      !dataObjects ||
-      !dataObjects.length ||
-      checkDataObjectsIn(pendingAssets) ||
-      (resolvedAssets && checkDataObjectsIn(resolvedAssets))
-    ) {
-      return
-    }
-    dataObjects.forEach((dataObject) => {
-      const contentId = dataObject?.id
-      if (contentId) {
-        addPendingAsset(contentId, dataObject, true)
+    Object.entries(subtitlesAssets).forEach(([id, resolvedAsset]) => {
+      if (!resolvedAsset && !subtitlesPendingAssets[id]) {
+        const subtitleAsset = subtitlesWithAssetLookup[id].asset
+        if (subtitleAsset) {
+          addPendingAsset(subtitleAsset.id, subtitleAsset, true)
+        }
       }
     })
-  }, [addPendingAsset, checkDataObjectsIn, dataObjects, pendingAssets, resolvedAssets])
+  }, [addPendingAsset, subtitlesAssets, subtitlesPendingAssets, subtitlesWithAssetLookup])
 
-  useEffect(() => {
-    if (!dataObjects || !dataObjects.length || checkDataObjectsIn(pendingAssets)) {
-      return
-    }
-    const resolvedSubtitles: Record<string, ResolvedAsset> = {}
-
-    dataObjects?.forEach((item) => {
-      if (!item) {
-        return
-      }
-      const resolvedAsset = assets[item.id]
-
-      if (resolvedAsset) {
-        resolvedSubtitles[item.id] = assets[item.id]
-      }
-    })
-
-    setResolvedAssets(Object.keys(resolvedSubtitles).length ? resolvedSubtitles : undefined)
-  }, [assets, checkDataObjectsIn, dataObjects, pendingAssets])
-
-  return useMemo(() => {
-    if (!subtitles || !resolvedAssets) {
-      return
-    }
-    return subtitles.map((item) => {
-      const resolvedLanguageName = LANGUAGES_LOOKUP[item.language.iso]
-      const url = item.assetId && resolvedAssets[item.assetId].url
-      return {
-        label: item.type === 'subtitles' ? resolvedLanguageName : `${resolvedLanguageName} (CC)`,
-        language: item.type === 'subtitles' ? item.language.iso : `${item.language.iso}-cc`,
-        src: url || '',
-      }
-    })
-  }, [resolvedAssets, subtitles])
+  return subtitlesAssets
 }
