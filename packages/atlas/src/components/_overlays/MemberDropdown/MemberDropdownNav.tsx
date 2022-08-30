@@ -1,9 +1,11 @@
-import { BN } from 'bn.js'
-import { FC, useRef, useState } from 'react'
+import bezier from 'bezier-easing'
+import BN from 'bn.js'
+import { FC, useRef } from 'react'
 import { useNavigate } from 'react-router'
 import { animated, useTransition } from 'react-spring'
 import useResizeObserver from 'use-resize-observer'
 
+import { FullMembershipFieldsFragment } from '@/api/queries'
 import { ListItem, ListItemProps } from '@/components/ListItem'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Tooltip } from '@/components/Tooltip'
@@ -24,10 +26,11 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { JOY_CURRENCY_TICKER } from '@/config/joystream'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
-import { useSubscribeAccountBalance } from '@/providers/joystream'
-import { useUser, useUserStore } from '@/providers/user'
+import { useUserStore } from '@/providers/user'
+import { cVar } from '@/styles'
 
 import { BalanceTooltip } from './BalanceTooltip'
+import { SectionContainer } from './MemberDropdown.styles'
 import {
   AddAvatar,
   AnimatedSectionContainer,
@@ -41,41 +44,49 @@ import {
   FixedSizeContainer,
   MemberHandleText,
   MemberInfoContainer,
-  SectionContainer,
   StyledAvatar,
   StyledIconWrapper,
   TextLink,
   UserBalance,
-} from './MemberDropdown.styles'
-
-import { SendFundsDialog, WithdrawFundsDialog } from '../SendTransferDialogs'
+} from './MemberDropdownNav.styles'
 
 type DropdownType = 'member' | 'channel'
 
 type MemberDropdownNavProps = {
   type: 'member' | 'channel'
   publisher?: boolean
-  closeDropdown?: () => void
-  switchDropdownType: (type: DropdownType) => void
-  switchToList: (type: DropdownType) => void
+  onCloseDropdown?: () => void
+  onSwitchDropdownType: (type: DropdownType) => void
+  onSwitchToList: (type: DropdownType) => void
+  onSignOut: () => void
+  onShowFundsDialog: () => void
+  activeMembership?: FullMembershipFieldsFragment | null
+  hasOneMember?: boolean
+  channelId: string | null
+  accountBalance?: BN
+  channelBalance?: BN
+  lockedAccountBalance?: BN
 }
 
 export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
   type,
   publisher,
-  closeDropdown,
-  switchDropdownType,
-  switchToList,
+  onCloseDropdown,
+  onSwitchDropdownType,
+  onSwitchToList,
+  onSignOut,
+  onShowFundsDialog,
+  channelId,
+  activeMembership,
+  hasOneMember,
+  accountBalance,
+  lockedAccountBalance,
+  channelBalance,
 }) => {
-  const [showWithdrawDialog, setShowWithdrawDialog] = useState(false)
-  const [showSendDialog, setShowSendDialog] = useState(false)
   const navigate = useNavigate()
-  const { channelId, activeMembership, memberships, signOut } = useUser()
   const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
   const { url: channelAvatarUrl, isLoadingAsset: isChannelAvatarLoading } = useAsset(selectedChannel?.avatarPhoto)
-  const { accountBalance, lockedAccountBalance } = useSubscribeAccountBalance()
-  const { accountBalance: channelBalance } = useSubscribeAccountBalance(selectedChannel?.rewardAccount) || new BN(0)
   const setSignInModalOpen = useUserStore((state) => state.actions.setSignInModalOpen)
 
   const { ref: textLinkRef, width: textLinkWidth } = useResizeObserver<HTMLDivElement>({
@@ -93,40 +104,32 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
     from: { opacity: 0, x: type === 'channel' ? 280 : -280, position: 'absolute' as const },
     enter: { opacity: 1, x: 0 },
     leave: { opacity: 0, x: type === 'channel' ? -280 : 280 },
+
     // this will block initial animation when switching to list
     immediate: !blockAnimationRef.current,
+    config: {
+      duration: parseInt(cVar('animationTimingMedium', true)),
+      // 'animationEasingMedium'
+      easing: bezier(0.03, 0.5, 0.25, 1),
+    },
   })
 
-  const hasOneMember = memberships?.length === 1
   const hasAtLeastOneChannel = activeMembership?.channels.length && activeMembership?.channels.length >= 1
-
-  const toggleWithdrawDialog = () => setShowWithdrawDialog((prevState) => !prevState)
-  const toggleSendDialog = () => setShowSendDialog((prevState) => !prevState)
 
   const handleAddNewMember = () => {
     setSignInModalOpen(true)
-    closeDropdown?.()
+    onCloseDropdown?.()
   }
   return (
     <div ref={blockAnimationRef}>
-      <WithdrawFundsDialog
-        avatarUrl={memberAvatarUrl}
-        activeMembership={activeMembership}
-        show={showWithdrawDialog}
-        onExitClick={toggleWithdrawDialog}
-        accountBalance={accountBalance}
-        channelBalance={channelBalance}
-        channelId={channelId}
-      />
-      <SendFundsDialog show={showSendDialog} onExitClick={toggleSendDialog} accountBalance={accountBalance} />
-      <BlurredBG url={type === 'member' ? memberAvatarUrl : channelAvatarUrl}>
+      <BlurredBG memberUrl={memberAvatarUrl} channelUrl={channelAvatarUrl} isChannel={type === 'channel'}>
         <Filter />
         <MemberInfoContainer>
           <AvatarsGroupContainer>
             <AvatarWrapper>
               <Tooltip text="Member" offsetY={16} placement="bottom">
                 <StyledAvatar
-                  onClick={() => switchDropdownType('member')}
+                  onClick={() => onSwitchDropdownType('member')}
                   isDisabled={type === 'channel'}
                   size="small"
                   assetUrl={memberAvatarUrl}
@@ -139,7 +142,9 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
               <Tooltip text={hasAtLeastOneChannel ? 'Channel' : 'Create channel'} offsetY={16} placement="bottom">
                 <StyledAvatar
                   onClick={() =>
-                    hasAtLeastOneChannel ? switchDropdownType('channel') : navigate(absoluteRoutes.studio.newChannel())
+                    hasAtLeastOneChannel
+                      ? onSwitchDropdownType('channel')
+                      : navigate(absoluteRoutes.studio.newChannel())
                   }
                   isDisabled={type === 'member'}
                   size="small"
@@ -157,39 +162,41 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
             </AvatarWrapper>
           </AvatarsGroupContainer>
           <FixedSizeContainer height={memberContainerHeight}>
-            {memberChanneltransition((style, item) =>
-              item === 'channel' ? (
-                <animated.div style={style} ref={memberContainerRef}>
-                  <MemberHandleText as="span" variant="h400">
-                    {selectedChannel?.title}
-                  </MemberHandleText>
-                  {channelBalance !== undefined ? (
-                    <UserBalance>
-                      <JoyTokenIcon size={16} variant="regular" />
-                      <NumberFormat as="span" variant="t200-strong" value={channelBalance} format="short" />
-                    </UserBalance>
-                  ) : (
-                    <SkeletonLoader width={30} height={20} />
-                  )}
-                </animated.div>
-              ) : (
-                <animated.div style={style} ref={memberContainerRef}>
-                  <BalanceTooltip accountBalance={accountBalance} lockedAccountBalance={lockedAccountBalance}>
+            {memberChanneltransition((style, type) => (
+              <animated.div style={style} ref={memberContainerRef}>
+                {type === 'channel' ? (
+                  <div>
                     <MemberHandleText as="span" variant="h400">
-                      {activeMembership?.handle}
+                      {selectedChannel?.title}
                     </MemberHandleText>
-                    {accountBalance !== undefined ? (
+                    {channelBalance !== undefined ? (
                       <UserBalance>
-                        <JoyTokenIcon size={16} variant="regular" withoutInformationTooltip />
-                        <NumberFormat as="span" variant="t200-strong" value={accountBalance} format="short" />
+                        <JoyTokenIcon size={16} variant="regular" />
+                        <NumberFormat as="span" variant="t200-strong" value={channelBalance} format="short" />
                       </UserBalance>
                     ) : (
                       <SkeletonLoader width={30} height={20} />
                     )}
-                  </BalanceTooltip>
-                </animated.div>
-              )
-            )}
+                  </div>
+                ) : (
+                  <div>
+                    <BalanceTooltip accountBalance={accountBalance} lockedAccountBalance={lockedAccountBalance}>
+                      <MemberHandleText as="span" variant="h400">
+                        {activeMembership?.handle}
+                      </MemberHandleText>
+                      {accountBalance !== undefined ? (
+                        <UserBalance>
+                          <JoyTokenIcon size={16} variant="regular" withoutInformationTooltip />
+                          <NumberFormat as="span" variant="t200-strong" value={accountBalance} format="short" />
+                        </UserBalance>
+                      ) : (
+                        <SkeletonLoader width={30} height={20} />
+                      )}
+                    </BalanceTooltip>
+                  </div>
+                )}
+              </animated.div>
+            ))}
           </FixedSizeContainer>
           <BalanceContainer>
             <FixedSizeContainer width={textLinkWidth} height="100%">
@@ -199,8 +206,8 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                   as="span"
                   style={{ opacity, position }}
                   onClick={() => {
-                    closeDropdown?.()
-                    type === 'channel' ? setShowWithdrawDialog(true) : setShowSendDialog(true)
+                    onCloseDropdown?.()
+                    onShowFundsDialog()
                   }}
                   variant="t100"
                   color="colorCoreNeutral200Lighten"
@@ -230,12 +237,12 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
             {item === 'member' ? (
               <ListItemOptions
                 publisher={publisher}
-                closeDropdown={closeDropdown}
+                closeDropdown={onCloseDropdown}
                 listItems={[
                   {
                     asButton: true,
                     label: 'My profile',
-                    onClick: closeDropdown,
+                    onClick: onCloseDropdown,
                     nodeStart: <IconWrapper icon={<SvgActionMember />} />,
                     to: absoluteRoutes.viewer.member(activeMembership?.handle),
                   },
@@ -244,19 +251,19 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                     label: hasOneMember ? 'Add new member...' : 'Switch member',
                     nodeStart: <IconWrapper icon={hasOneMember ? <SvgActionPlus /> : <SvgActionSwitchMember />} />,
                     nodeEnd: !hasOneMember && <SvgActionChevronR />,
-                    onClick: () => (hasOneMember ? handleAddNewMember() : switchToList(type)),
+                    onClick: () => (hasOneMember ? handleAddNewMember() : onSwitchToList(type)),
                   },
                 ]}
               />
             ) : (
               <ListItemOptions
                 publisher={publisher}
-                closeDropdown={closeDropdown}
+                closeDropdown={onCloseDropdown}
                 listItems={[
                   {
                     asButton: true,
                     label: 'My channel',
-                    onClick: closeDropdown,
+                    onClick: onCloseDropdown,
                     nodeStart: <IconWrapper icon={<SvgActionChannel />} />,
                     to: hasAtLeastOneChannel
                       ? absoluteRoutes.viewer.channel(channelId ?? undefined)
@@ -267,7 +274,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                     label: 'Switch channel',
                     nodeStart: <IconWrapper icon={<SvgActionSwitchMember />} />,
                     nodeEnd: <SvgActionChevronR />,
-                    onClick: () => switchToList(type),
+                    onClick: () => onSwitchToList(type),
                   },
                 ]}
               />
@@ -281,8 +288,8 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
           destructive
           nodeStart={<IconWrapper destructive icon={<SvgActionLogOut />} />}
           onClick={() => {
-            closeDropdown?.()
-            signOut()
+            onCloseDropdown?.()
+            onSignOut()
           }}
         />
       </SectionContainer>

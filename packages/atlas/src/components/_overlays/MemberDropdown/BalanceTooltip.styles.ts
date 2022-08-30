@@ -1,11 +1,17 @@
 import styled from '@emotion/styled'
 
+import { SvgActionLock } from '@/components/_icons'
 import { cVar, sizes } from '@/styles'
 
 export const TooltipWrapper = styled.div`
   width: 224px;
   display: grid;
   grid-gap: ${sizes(3)};
+`
+export const StyledSvgActionLock = styled(SvgActionLock)`
+  path {
+    fill: ${cVar('colorText')};
+  }
 `
 
 export const TooltipDivider = styled.div`

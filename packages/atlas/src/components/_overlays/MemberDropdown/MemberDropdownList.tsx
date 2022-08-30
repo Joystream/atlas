@@ -1,57 +1,47 @@
 import { FC } from 'react'
-import { useNavigate } from 'react-router'
 
-import { BasicChannelFieldsFragment, BasicMembershipFieldsFragment } from '@/api/queries'
+import { BasicChannelFieldsFragment, BasicMembershipFieldsFragment, FullMembershipFieldsFragment } from '@/api/queries'
 import { Avatar } from '@/components/Avatar'
 import { ListItem } from '@/components/ListItem'
 import { SvgActionChannel, SvgActionChevronL, SvgActionNewChannel } from '@/components/_icons'
 import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
-import { useUser } from '@/providers/user'
 
-import { SectionContainer, SwitchMemberItemListContainer } from './MemberDropdown.styles'
+import { SectionContainer } from './MemberDropdown.styles'
+import { SwitchMemberItemListContainer } from './MemberDropdownList.styles'
 
 type DropdownType = 'member' | 'channel'
 
 type MemberDropdownListProps = {
-  closeDropdown?: () => void
   type: DropdownType
+  memberships: FullMembershipFieldsFragment[]
+  activeMembership?: FullMembershipFieldsFragment | null
+  channelId: string | null
+  onCloseDropdown?: () => void
   onChannelChange?: (channelId: string) => void
-  switchToNav: (type: DropdownType) => void
-  publisher?: boolean
+  onSwitchToNav: (type: DropdownType) => void
+  onMemberChange: (memberId: string, accountId: string, channelId: string | null) => void
+  onAddNewMember: () => void
 }
 export const MemberDropdownList: FC<MemberDropdownListProps> = ({
-  closeDropdown,
   type,
-  switchToNav,
-  publisher,
+  channelId,
+  memberships,
+  activeMembership,
+  onCloseDropdown,
+  onSwitchToNav,
   onChannelChange,
+  onMemberChange,
+  onAddNewMember,
 }) => {
-  const { channelId, activeMembership, memberships, setActiveUser } = useUser()
-  const navigate = useNavigate()
-
-  const handleAddNewMember = () => {
-    // setSignInModalOpen(true)
-    closeDropdown?.()
-  }
-
-  const handleMemberChange = (memberId: string, accountId: string, channelId: string | null) => {
-    setActiveUser({ accountId, memberId, channelId })
-
-    closeDropdown?.()
-
-    if (publisher) {
-      navigate(absoluteRoutes.studio.index())
-    }
-  }
   return (
     <>
       <SwitchMemberItemListContainer>
         <ListItem
-          onClick={() => switchToNav(type)}
+          onClick={() => onSwitchToNav(type)}
           nodeStart={<SvgActionChevronL />}
-          label={type ? 'Switch channel' : 'Switch member'}
+          label={type === 'channel' ? 'Switch channel' : 'Switch member'}
         />
       </SwitchMemberItemListContainer>
       <SectionContainer>
@@ -61,7 +51,7 @@ export const MemberDropdownList: FC<MemberDropdownListProps> = ({
                 key={member.id}
                 member={member}
                 selected={member.id === activeMembership?.id}
-                onClick={() => handleMemberChange(member.id, member.controllerAccount, member.channels[0]?.id || null)}
+                onClick={() => onMemberChange(member.id, member.controllerAccount, member.channels[0]?.id || null)}
               />
             ))
           : activeMembership?.channels.map((channel) => (
@@ -80,7 +70,7 @@ export const MemberDropdownList: FC<MemberDropdownListProps> = ({
               <IconWrapper icon={<SvgActionChannel />} />
             )
           }
-          onClick={() => (type === 'member' ? handleAddNewMember() : closeDropdown?.())}
+          onClick={() => (type === 'member' ? onAddNewMember() : onCloseDropdown?.())}
           label={type === 'member' ? 'Add new member...' : 'Add new channel...'}
           to={type === 'channel' ? absoluteRoutes.studio.newChannel() : undefined}
         />

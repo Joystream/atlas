@@ -4,10 +4,11 @@ import { FC, PropsWithChildren } from 'react'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
-import { SvgActionInformative, SvgActionLock } from '@/components/_icons'
+import { SvgActionInformative } from '@/components/_icons'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 
 import {
+  StyledSvgActionLock,
   TextWithIcon,
   TooltipDivider,
   TooltipFooter,
@@ -42,7 +43,7 @@ export const BalanceTooltip: FC<BalanceTooltipProps> = ({ accountBalance, locked
             </TooltipRow>
             <TooltipRow>
               <TextWithIcon>
-                <SvgActionLock />
+                <StyledSvgActionLock />
                 <Text as="span" variant="t100" color="colorText">
                   Invitation lock
                 </Text>
