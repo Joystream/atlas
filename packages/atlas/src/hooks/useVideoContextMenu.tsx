@@ -113,7 +113,7 @@ export const useVideoContextMenu = ({
                       Last:{' '}
                       <NumberFormat
                         color="inherit"
-                        value={Number(nftState.userBid.amount)}
+                        value={nftState.userBid.amount}
                         as="span"
                         format="short"
                         withToken
