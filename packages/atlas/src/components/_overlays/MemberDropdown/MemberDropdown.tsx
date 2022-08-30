@@ -11,7 +11,7 @@ import {
   BasicMembershipFieldsFragment,
 } from '@/api/queries/__generated__/fragments.generated'
 import { Avatar } from '@/components/Avatar'
-import { ListItem } from '@/components/ListItem'
+import { ListItem, ListItemProps } from '@/components/ListItem'
 import { NumberFormat } from '@/components/NumberFormat'
 import {
   SvgActionAddVideo,
@@ -99,8 +99,6 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const { accountBalance } = useSubscribeAccountBalance()
     const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
     const { accountBalance: channelBalance } = useSubscribeAccountBalance(selectedChannel?.rewardAccount) || new BN(0)
-
-    const balance = dropdownType === 'channel' ? channelBalance : accountBalance
 
     const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
     const { url: channelAvatarUrl, isLoadingAsset: isChannelAvatarLoading } = useAsset(selectedChannel?.avatarPhoto)
@@ -192,126 +190,151 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                               />
                               <StyledIconWrapper size="small" icon={<SvgActionMember width={14} height={14} />} />
                             </AvatarWrapper>
-                            {!!hasAtLeastOneChannel && (
-                              <AvatarWrapper>
-                                <StyledAvatar
-                                  onClick={() => setDropDownType('channel')}
-                                  isDisabled={dropdownType === 'member'}
-                                  size="small"
-                                  assetUrl={channelAvatarUrl}
-                                  loading={isChannelAvatarLoading}
-                                />
-                                <StyledIconWrapper icon={<SvgActionChannel width={14} height={14} />} size="small" />
-                              </AvatarWrapper>
-                            )}
+
+                            <AvatarWrapper>
+                              <StyledAvatar
+                                onClick={() =>
+                                  hasAtLeastOneChannel
+                                    ? setDropDownType('channel')
+                                    : navigate(absoluteRoutes.studio.newChannel())
+                                }
+                                isDisabled={dropdownType === 'member'}
+                                size="small"
+                                assetUrl={channelAvatarUrl}
+                                loading={isChannelAvatarLoading}
+                              />
+                              <StyledIconWrapper icon={<SvgActionChannel width={14} height={14} />} size="small" />
+                            </AvatarWrapper>
                           </AvatarsGroupContainer>
-                          <div>
-                            <FixedSizeContainer height={memberContainerHeight}>
-                              {transitions((style) => (
+                          <FixedSizeContainer height={memberContainerHeight}>
+                            {transitions((style, item) =>
+                              item === 'channel' ? (
                                 <animated.div style={style} ref={memberContainerRef}>
                                   <MemberHandleText as="span" variant="h400">
-                                    {dropdownType === 'channel' ? selectedChannel?.title : activeMembership?.handle}
+                                    {selectedChannel?.title}
                                   </MemberHandleText>
-                                  {balance !== undefined ? (
+                                  {channelBalance !== undefined ? (
                                     <UserBalance>
                                       <JoyTokenIcon size={16} variant="regular" />
-                                      <NumberFormat as="span" variant="t200-strong" value={balance} format="short" />
+                                      <NumberFormat
+                                        as="span"
+                                        variant="t200-strong"
+                                        value={channelBalance}
+                                        format="short"
+                                      />
                                     </UserBalance>
                                   ) : (
                                     <SkeletonLoader width={30} height={20} />
                                   )}
                                 </animated.div>
+                              ) : (
+                                <animated.div style={style} ref={memberContainerRef}>
+                                  <MemberHandleText as="span" variant="h400">
+                                    {activeMembership?.handle}
+                                  </MemberHandleText>
+                                  {accountBalance !== undefined ? (
+                                    <UserBalance>
+                                      <JoyTokenIcon size={16} variant="regular" />
+                                      <NumberFormat
+                                        as="span"
+                                        variant="t200-strong"
+                                        value={accountBalance}
+                                        format="short"
+                                      />
+                                    </UserBalance>
+                                  ) : (
+                                    <SkeletonLoader width={30} height={20} />
+                                  )}
+                                </animated.div>
+                              )
+                            )}
+                          </FixedSizeContainer>
+                          <BalanceContainer>
+                            <FixedSizeContainer width={textLinkWidth} height="100%">
+                              {transitions(({ opacity, position }) => (
+                                <AnimatedTextLink
+                                  ref={textLinkRef}
+                                  as="span"
+                                  style={{ opacity, position }}
+                                  onClick={() => {
+                                    closeDropdown?.()
+                                    dropdownType === 'channel' ? setShowWithdrawDialog(true) : setShowSendDialog(true)
+                                  }}
+                                  variant="t100"
+                                  color="colorCoreNeutral200Lighten"
+                                >
+                                  {dropdownType === 'channel' ? 'Withdraw' : 'Transfer'}
+                                </AnimatedTextLink>
                               ))}
                             </FixedSizeContainer>
-                            <BalanceContainer>
-                              <FixedSizeContainer width={textLinkWidth} height="100%">
-                                {transitions(({ opacity, position }) => (
-                                  <AnimatedTextLink
-                                    ref={textLinkRef}
-                                    as="span"
-                                    style={{ opacity, position }}
-                                    onClick={() => {
-                                      closeDropdown?.()
-                                      dropdownType === 'channel' ? setShowWithdrawDialog(true) : setShowSendDialog(true)
-                                    }}
-                                    variant="t100"
-                                    color="colorCoreNeutral200Lighten"
-                                  >
-                                    {dropdownType === 'channel' ? 'Withdraw' : 'Transfer'}
-                                  </AnimatedTextLink>
-                                ))}
-                              </FixedSizeContainer>
-                              <Divider />
-                              <TextLink
-                                variant="t100"
-                                as="a"
-                                // @ts-ignore our types don't allow this but its fine here
-                                href="https://www.joystream.org/token"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                color="colorCoreNeutral200Lighten"
-                              >
-                                Learn about {JOY_CURRENCY_TICKER} <SvgActionNewTab />
-                              </TextLink>
-                            </BalanceContainer>
-                          </div>
+                            <Divider />
+                            <TextLink
+                              variant="t100"
+                              as="a"
+                              // @ts-ignore our types don't allow this but its fine here
+                              href="https://www.joystream.org/token"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              color="colorCoreNeutral200Lighten"
+                            >
+                              Learn about {JOY_CURRENCY_TICKER} <SvgActionNewTab />
+                            </TextLink>
+                          </BalanceContainer>
                         </MemberInfoContainer>
                       </BlurredBG>
                       <FixedSizeContainer height={sectionContainerHeight}>
-                        {transitions((style) => (
+                        {transitions((style, item) => (
                           <AnimatedSectionContainer ref={sectionContainerRef} style={style}>
-                            {publisher ? (
-                              <ListItem
-                                onClick={closeDropdown}
-                                nodeStart={<IconWrapper icon={<SvgActionPlay />} />}
-                                label="Atlas"
-                                to={absoluteRoutes.viewer.index()}
+                            {item === 'member' ? (
+                              <ListItemOptions
+                                publisher={publisher}
+                                closeDropdown={closeDropdown}
+                                listItems={[
+                                  {
+                                    asButton: true,
+                                    label: 'My profile',
+                                    onClick: closeDropdown,
+                                    nodeStart: <IconWrapper icon={<SvgActionMember />} />,
+                                    to: absoluteRoutes.viewer.member(activeMembership?.handle),
+                                  },
+                                  {
+                                    asButton: true,
+                                    label: hasOneMember ? 'Add new member...' : 'Switch member',
+                                    nodeStart: (
+                                      <IconWrapper
+                                        icon={hasOneMember ? <SvgActionPlus /> : <SvgActionSwitchMember />}
+                                      />
+                                    ),
+                                    nodeEnd: !hasOneMember && <SvgActionChevronR />,
+                                    onClick: () =>
+                                      hasOneMember ? handleAddNewMember() : setDropDownType(`list-${dropdownType}`),
+                                  },
+                                ]}
                               />
                             ) : (
-                              <>
-                                <ListItem
-                                  onClick={closeDropdown}
-                                  nodeStart={<IconWrapper icon={<SvgActionAddVideo />} />}
-                                  label="Studio"
-                                  to={absoluteRoutes.studio.index()}
-                                />
-                              </>
+                              <ListItemOptions
+                                publisher={publisher}
+                                closeDropdown={closeDropdown}
+                                listItems={[
+                                  {
+                                    asButton: true,
+                                    label: 'My channel',
+                                    onClick: closeDropdown,
+                                    nodeStart: <IconWrapper icon={<SvgActionChannel />} />,
+                                    to: hasAtLeastOneChannel
+                                      ? absoluteRoutes.viewer.channel(channelId ?? undefined)
+                                      : absoluteRoutes.studio.signIn(),
+                                  },
+                                  {
+                                    asButton: true,
+                                    label: 'Switch channel',
+                                    nodeStart: <IconWrapper icon={<SvgActionSwitchMember />} />,
+                                    nodeEnd: <SvgActionChevronR />,
+                                    onClick: () => setDropDownType(`list-channel`),
+                                  },
+                                ]}
+                              />
                             )}
-                            <ListItem
-                              asButton
-                              onClick={closeDropdown}
-                              nodeStart={
-                                <IconWrapper
-                                  icon={dropdownType === 'member' ? <SvgActionMember /> : <SvgActionChannel />}
-                                />
-                              }
-                              label={dropdownType === 'member' ? 'My profile' : 'My channel'}
-                              to={
-                                dropdownType === 'member'
-                                  ? absoluteRoutes.viewer.member(activeMembership?.handle)
-                                  : activeMembership?.channels.length
-                                  ? absoluteRoutes.viewer.channel(channelId ?? undefined)
-                                  : absoluteRoutes.studio.signIn()
-                              }
-                            />
-                            <ListItem
-                              nodeStart={
-                                <IconWrapper icon={hasOneMember ? <SvgActionPlus /> : <SvgActionSwitchMember />} />
-                              }
-                              onClick={() =>
-                                hasOneMember ? handleAddNewMember() : setDropDownType(`list-${dropdownType}`)
-                              }
-                              label={
-                                dropdownType === 'channel'
-                                  ? hasAtLeastOneChannel
-                                    ? 'Switch channel'
-                                    : 'Add new channel...'
-                                  : hasOneMember
-                                  ? 'Add new member...'
-                                  : 'Switch member'
-                              }
-                              nodeEnd={!hasOneMember && <SvgActionChevronR />}
-                            />
                           </AnimatedSectionContainer>
                         ))}
                       </FixedSizeContainer>
@@ -388,6 +411,38 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
   }
 )
 MemberDropdown.displayName = 'MemberDropdown'
+
+type ListItemOptionsProps = {
+  publisher?: boolean
+  closeDropdown?: () => void
+  listItems: [ListItemProps, ListItemProps]
+}
+const ListItemOptions: FC<ListItemOptionsProps> = ({ publisher, closeDropdown, listItems }) => {
+  return (
+    <>
+      {publisher ? (
+        <ListItem
+          onClick={closeDropdown}
+          nodeStart={<IconWrapper icon={<SvgActionPlay />} />}
+          label="Atlas"
+          to={absoluteRoutes.viewer.index()}
+        />
+      ) : (
+        <>
+          <ListItem
+            onClick={closeDropdown}
+            nodeStart={<IconWrapper icon={<SvgActionAddVideo />} />}
+            label="Studio"
+            to={absoluteRoutes.studio.index()}
+          />
+        </>
+      )}
+      {listItems.map((listItemsProps, idx) => (
+        <ListItem key={idx} {...listItemsProps} />
+      ))}
+    </>
+  )
+}
 
 type ChannelListItemProps = {
   channel: BasicChannelFieldsFragment

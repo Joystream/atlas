@@ -42,6 +42,7 @@ export const SectionContainer = styled.div`
 
 export const AnimatedSectionContainer = styled(animated(SectionContainer))`
   border-top: unset;
+  width: 100%;
 `
 
 export const SlideAnimationContainer = styled.div`
@@ -105,6 +106,7 @@ export const AvatarsGroupContainer = styled.div`
   justify-content: start;
   grid-template-columns: auto auto;
   gap: ${sizes(4)};
+  margin-bottom: ${sizes(6)};
 `
 
 export const AvatarWrapper = styled.div`
@@ -155,8 +157,6 @@ export const Filter = styled.div`
 
 export const MemberInfoContainer = styled.div`
   position: relative;
-  display: grid;
-  gap: ${sizes(4)};
   ${paddingStyles}
 
   border-bottom: 1px solid ${cVar('colorBorderMutedAlpha')};
