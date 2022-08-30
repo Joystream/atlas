@@ -28,6 +28,7 @@ export type JoyTokenIconProps = {
   variant?: JoyTokenIconVariant
   size?: JoyTokenIconSize
   className?: string
+  withoutInformationTooltip?: boolean
 }
 
 const VARIANT_SIZE_COMPONENT_MAPPING: Record<JoyTokenIconVariant, Record<JoyTokenIconSize, ElementType>> = {
@@ -57,11 +58,17 @@ const VARIANT_SIZE_COMPONENT_MAPPING: Record<JoyTokenIconVariant, Record<JoyToke
   },
 }
 
-export const JoyTokenIcon: FC<JoyTokenIconProps> = ({ variant = 'regular', size = 16, className }) => {
+export const JoyTokenIcon: FC<JoyTokenIconProps> = ({
+  variant = 'regular',
+  size = 16,
+  className,
+  withoutInformationTooltip,
+}) => {
   const ref = useRef<HTMLDivElement>(null)
   return (
     <>
       <Tooltip
+        hidden={withoutInformationTooltip}
         text={`Exchanging ${JOY_CURRENCY_TICKER} will be possible shortly after mainnet launch. We're actively working on it.`}
         multiline
         reference={ref.current}

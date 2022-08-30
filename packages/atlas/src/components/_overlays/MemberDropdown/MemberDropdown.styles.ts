@@ -102,6 +102,15 @@ export const StyledAvatar = styled(Avatar)<{ isDisabled: boolean }>`
   transition: opacity ${cVar('animationTransitionMedium')};
 `
 
+export const AddAvatar = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: ${cVar('colorBackgroundAlpha')};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
 export const BlurredBG = styled.div<{ url?: string | null }>`
   position: relative;
   width: 280px;

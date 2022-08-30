@@ -13,7 +13,7 @@ import {
   TooltipText,
 } from './Tooltip.styles'
 
-type Placement = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' | 'top'
+type Placement = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' | 'top' | 'bottom'
 export type TooltipProps = PropsWithChildren<{
   text?: string
   headerText?: string

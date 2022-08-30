@@ -6,6 +6,7 @@ import useResizeObserver from 'use-resize-observer'
 
 import { ListItem, ListItemProps } from '@/components/ListItem'
 import { NumberFormat } from '@/components/NumberFormat'
+import { Tooltip } from '@/components/Tooltip'
 import {
   SvgActionAddVideo,
   SvgActionChannel,
@@ -26,7 +27,9 @@ import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useSubscribeAccountBalance } from '@/providers/joystream'
 import { useUser, useUserStore } from '@/providers/user'
 
+import { BalanceTooltip } from './BalanceTooltip'
 import {
+  AddAvatar,
   AnimatedSectionContainer,
   AnimatedTextLink,
   AvatarWrapper,
@@ -71,7 +74,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
   const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
   const { url: channelAvatarUrl, isLoadingAsset: isChannelAvatarLoading } = useAsset(selectedChannel?.avatarPhoto)
-  const { accountBalance } = useSubscribeAccountBalance()
+  const { accountBalance, lockedAccountBalance } = useSubscribeAccountBalance()
   const { accountBalance: channelBalance } = useSubscribeAccountBalance(selectedChannel?.rewardAccount) || new BN(0)
   const setSignInModalOpen = useUserStore((state) => state.actions.setSignInModalOpen)
 
@@ -121,26 +124,35 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
         <MemberInfoContainer>
           <AvatarsGroupContainer>
             <AvatarWrapper>
-              <StyledAvatar
-                onClick={() => switchDropdownType('member')}
-                isDisabled={type === 'channel'}
-                size="small"
-                assetUrl={memberAvatarUrl}
-                loading={memberAvatarLoading}
-              />
+              <Tooltip text="Member" offsetY={16} placement="bottom">
+                <StyledAvatar
+                  onClick={() => switchDropdownType('member')}
+                  isDisabled={type === 'channel'}
+                  size="small"
+                  assetUrl={memberAvatarUrl}
+                  loading={memberAvatarLoading}
+                />
+              </Tooltip>
               <StyledIconWrapper size="small" icon={<SvgActionMember width={14} height={14} />} />
             </AvatarWrapper>
-
             <AvatarWrapper>
-              <StyledAvatar
-                onClick={() =>
-                  hasAtLeastOneChannel ? switchDropdownType('channel') : navigate(absoluteRoutes.studio.newChannel())
-                }
-                isDisabled={type === 'member'}
-                size="small"
-                assetUrl={channelAvatarUrl}
-                loading={isChannelAvatarLoading}
-              />
+              <Tooltip text={hasAtLeastOneChannel ? 'Channel' : 'Create channel'} offsetY={16} placement="bottom">
+                <StyledAvatar
+                  onClick={() =>
+                    hasAtLeastOneChannel ? switchDropdownType('channel') : navigate(absoluteRoutes.studio.newChannel())
+                  }
+                  isDisabled={type === 'member'}
+                  size="small"
+                  assetUrl={channelAvatarUrl}
+                  loading={isChannelAvatarLoading}
+                >
+                  {!hasAtLeastOneChannel ? (
+                    <AddAvatar>
+                      <SvgActionPlus />
+                    </AddAvatar>
+                  ) : null}
+                </StyledAvatar>
+              </Tooltip>
               <StyledIconWrapper icon={<SvgActionChannel width={14} height={14} />} size="small" />
             </AvatarWrapper>
           </AvatarsGroupContainer>
@@ -162,17 +174,19 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                 </animated.div>
               ) : (
                 <animated.div style={style} ref={memberContainerRef}>
-                  <MemberHandleText as="span" variant="h400">
-                    {activeMembership?.handle}
-                  </MemberHandleText>
-                  {accountBalance !== undefined ? (
-                    <UserBalance>
-                      <JoyTokenIcon size={16} variant="regular" />
-                      <NumberFormat as="span" variant="t200-strong" value={accountBalance} format="short" />
-                    </UserBalance>
-                  ) : (
-                    <SkeletonLoader width={30} height={20} />
-                  )}
+                  <BalanceTooltip accountBalance={accountBalance} lockedAccountBalance={lockedAccountBalance}>
+                    <MemberHandleText as="span" variant="h400">
+                      {activeMembership?.handle}
+                    </MemberHandleText>
+                    {accountBalance !== undefined ? (
+                      <UserBalance>
+                        <JoyTokenIcon size={16} variant="regular" withoutInformationTooltip />
+                        <NumberFormat as="span" variant="t200-strong" value={accountBalance} format="short" />
+                      </UserBalance>
+                    ) : (
+                      <SkeletonLoader width={30} height={20} />
+                    )}
+                  </BalanceTooltip>
                 </animated.div>
               )
             )}

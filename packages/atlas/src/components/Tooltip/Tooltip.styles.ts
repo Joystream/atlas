@@ -59,6 +59,8 @@ export const TooltipContainer = styled.div<TooltipContainerProps>`
   ${TooltipHeader} {
     align-items: ${({ hasHeader }) => (hasHeader ? 'center' : 'flex-start')};
   }
+
+  box-shadow: ${cVar('effectElevation8Layer2')}, ${cVar('effectElevation8Layer1')};
 `
 
 export const TooltipContent = styled.div<{ headerText: boolean }>`
