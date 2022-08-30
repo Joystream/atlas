@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
+import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { cVar, media, sizes, zIndex } from '@/styles'
 
 const paddingStyles = css`
@@ -22,7 +23,104 @@ export const Container = styled.div`
   }
 `
 
-export const DROPDOWN_ANIMATION = 'dropdown-animation'
+export const LIST_TRANSITION = 'list-transition'
+
+export const MEMBER_CHANNEL_TRANSITION = 'member-channel-transition'
+
+export const MemberHandleTransitionContainer = styled.div<{ slideDirection: 'right' | 'left' }>`
+  transition: opacity ${cVar('animationTransitionMedium')}, transform ${cVar('animationTransitionMedium')};
+
+  &.${MEMBER_CHANNEL_TRANSITION}-enter {
+    opacity: 0;
+    transform: translateX(${({ slideDirection }) => (slideDirection === 'left' ? '280px' : '-280px')});
+  }
+
+  &.${MEMBER_CHANNEL_TRANSITION}-enter-active {
+    opacity: 1;
+    transform: translateX(20px);
+  }
+
+  &.${MEMBER_CHANNEL_TRANSITION}-exit {
+    opacity: 1;
+  }
+
+  &.${MEMBER_CHANNEL_TRANSITION}-exit-active {
+    opacity: 0;
+    transform: translateX(${({ slideDirection }) => (slideDirection === 'left' ? '280px' : '-280px')});
+  }
+`
+
+export const SectionContainer = styled.div`
+  border-top: 1px solid ${cVar('colorBorderMutedAlpha')};
+  padding: ${sizes(2)} 0;
+`
+
+export const AnimatedSectionContainer = styled(SectionContainer)<{ slideDirection: 'right' | 'left' }>`
+  border-top: unset;
+  transition: opacity ${cVar('animationTransitionMedium')}, transform ${cVar('animationTransitionMedium')};
+
+  &.${MEMBER_CHANNEL_TRANSITION}-enter {
+    opacity: 0;
+    transform: translateX(${({ slideDirection }) => (slideDirection === 'left' ? '280px' : '-280px')});
+  }
+
+  &.${MEMBER_CHANNEL_TRANSITION}-enter-active {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  &.${MEMBER_CHANNEL_TRANSITION}-exit {
+    opacity: 1;
+  }
+
+  &.${MEMBER_CHANNEL_TRANSITION}-exit-active {
+    opacity: 0;
+    transform: translateX(${({ slideDirection }) => (slideDirection === 'left' ? '280px' : '-280px')});
+  }
+`
+
+export const SlideAnimationContainer = styled.div<{ slideDirection?: 'left' | 'right' }>`
+  position: absolute;
+  height: 100%;
+  width: 280px;
+  will-change: transform, opacity;
+  overflow-x: hidden;
+  transition: opacity ${cVar('animationTransitionMedium')}, transform ${cVar('animationTransitionMedium')};
+
+  &.${MEMBER_CHANNEL_TRANSITION}-enter {
+    ${() => Filter}::before, ${() => AnimatedTextLink} {
+      opacity: 0;
+    }
+    ${MemberHandleTransitionContainer}, ${AnimatedSectionContainer} {
+      opacity: 0;
+      transform: translateX(${({ slideDirection }) => (slideDirection === 'left' ? '280px' : '-280px')});
+    }
+  }
+
+  &.${MEMBER_CHANNEL_TRANSITION}-enter-active {
+    ${() => Filter}::before, ${() => AnimatedTextLink} {
+      opacity: 1;
+    }
+    ${MemberHandleTransitionContainer}, ${AnimatedSectionContainer} {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  &.${MEMBER_CHANNEL_TRANSITION}-exit {
+    opacity: 1;
+  }
+
+  &.${MEMBER_CHANNEL_TRANSITION}-exit-active {
+    ${() => Filter}::before, ${() => AnimatedTextLink} {
+      opacity: 0;
+    }
+    ${MemberHandleTransitionContainer}, ${AnimatedSectionContainer} {
+      opacity: 0;
+      transform: translateX(${({ slideDirection }) => (slideDirection === 'left' ? '280px' : '-280px')});
+    }
+  }
+`
 
 export const InnerContainer = styled.div<{
   isActive: boolean
@@ -45,37 +143,57 @@ export const InnerContainer = styled.div<{
   overflow-y: auto;
   overflow-x: hidden;
 
-  &.${DROPDOWN_ANIMATION}-enter {
-    ${() => SlideAnimationContainer} {
+  &.${LIST_TRANSITION}-enter {
+    ${SlideAnimationContainer} {
       opacity: 0;
       transform: translateX(${({ slideDirection }) => (slideDirection === 'left' ? '280px' : '-280px')});
     }
   }
 
-  &.${DROPDOWN_ANIMATION}-enter-active {
-    ${() => SlideAnimationContainer} {
+  &.${LIST_TRANSITION}-enter-active {
+    ${SlideAnimationContainer} {
       opacity: 1;
       transform: translateX(0);
     }
   }
 
-  &.${DROPDOWN_ANIMATION}-exit {
+  &.${LIST_TRANSITION}-exit {
     opacity: 1;
   }
 
-  &.${DROPDOWN_ANIMATION}-exit-active {
-    ${() => SlideAnimationContainer} {
+  &.${LIST_TRANSITION}-exit-active {
+    ${SlideAnimationContainer} {
       opacity: 0;
       transform: translateX(${({ slideDirection }) => (slideDirection === 'left' ? '280px' : '-280px')});
     }
   }
 `
 
-export const StyledAvatarsContainer = styled.div``
+export const AvatarsGroupContainer = styled.div`
+  display: grid;
+  justify-content: start;
+  grid-template-columns: auto auto;
+  gap: ${sizes(4)};
+`
 
-export const StyledAvatar = styled(Avatar)`
-  width: 48px;
-  height: 48px;
+export const AvatarWrapper = styled.div`
+  position: relative;
+`
+
+export const StyledIconWrapper = styled(IconWrapper)`
+  position: absolute;
+  right: -8px;
+  bottom: -8px;
+`
+
+export const StyledAvatar = styled(Avatar)<{ isDisabled: boolean }>`
+  width: 40px;
+  height: 40px;
+  clip-path: path(
+    'm 40 0 h -40 v 40 h 20.5041 c -0.3291 -1.2785 -0.5041 -2.6188 -0.5041 -4 c 0 -8.8366 7.1634 -16 16 -16 c 1.3812 0 2.7215 0.175 4 0.5041 v -20.5041 z'
+  );
+  opacity: ${({ isDisabled }) => (isDisabled ? 0.25 : 1)};
+  transition: opacity ${cVar('animationTransitionMedium')};
 `
 
 export const BlurredBG = styled.div<{ url?: string | null }>`
@@ -84,6 +202,7 @@ export const BlurredBG = styled.div<{ url?: string | null }>`
   height: 100%;
 
   &::before {
+    transition: opacity ${cVar('animationTransitionMedium')};
     position: absolute;
     width: inherit;
     height: inherit;
@@ -108,15 +227,12 @@ export const MemberInfoContainer = styled.div`
   display: grid;
   gap: ${sizes(4)};
   ${paddingStyles}
+
+  border-bottom: 1px solid ${cVar('colorBorderMutedAlpha')};
 `
 
 export const MemberHandleText = styled(Text)`
   word-break: break-word;
-`
-
-export const SectionContainer = styled.div`
-  border-top: 1px solid ${cVar('colorBorderMutedAlpha')};
-  padding: ${sizes(2)} 0;
 `
 
 export const ChannelsSectionTitle = styled(Text)`
@@ -170,11 +286,22 @@ export const TextLink = styled(Text)`
   }
 `
 
-export const SlideAnimationContainer = styled.div`
-  position: absolute;
-  height: 100%;
-  width: 280px;
-  will-change: transform, opacity;
-  overflow-x: hidden;
-  transition: all 200ms;
+export const AnimatedTextLink = styled(TextLink)`
+  transition: opacity ${cVar('animationTransitionMedium')};
+
+  &.${MEMBER_CHANNEL_TRANSITION}-enter {
+    opacity: 0;
+  }
+
+  &.${MEMBER_CHANNEL_TRANSITION}-enter-active {
+    opacity: 1;
+  }
+
+  &.${MEMBER_CHANNEL_TRANSITION}-exit {
+    opacity: 1;
+  }
+
+  &.${MEMBER_CHANNEL_TRANSITION}-exit-active {
+    opacity: 0;
+  }
 `

@@ -37,19 +37,25 @@ import { useUserStore } from '@/providers/user/user.store'
 import { cVar } from '@/styles'
 
 import {
+  AnimatedSectionContainer,
+  AnimatedTextLink,
+  AvatarWrapper,
+  AvatarsGroupContainer,
   BalanceContainer,
   BlurredBG,
-  ChannelsSectionTitle,
   Container,
-  DROPDOWN_ANIMATION,
   Divider,
   Filter,
   InnerContainer,
+  LIST_TRANSITION,
+  MEMBER_CHANNEL_TRANSITION,
   MemberHandleText,
+  MemberHandleTransitionContainer,
   MemberInfoContainer,
   SectionContainer,
   SlideAnimationContainer,
   StyledAvatar,
+  StyledIconWrapper,
   SwitchMemberItemListContainer,
   TextLink,
   UserBalance,
@@ -74,9 +80,10 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     })
     const containerRef = useRef<HTMLDivElement>(null)
 
-    const [dropdownType, setDropDownType] = useState<'member' | 'channel' | 'list'>('member')
+    const [dropdownType, setDropDownType] = useState<'member' | 'channel' | 'list-channel' | 'list-member'>('member')
 
     const hasOneMember = memberships?.length === 1
+    const hasAtLeastOneChannel = activeMembership?.channels.length && activeMembership?.channels.length >= 1
 
     const [showWithdrawDialog, setShowWithdrawDialog] = useState(false)
     const [showSendDialog, setShowSendDialog] = useState(false)
@@ -84,7 +91,9 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
     const { accountBalance: channelBalance } = useSubscribeAccountBalance(selectedChannel?.rewardAccount) || new BN(0)
 
-    const { url: avatarUrl, isLoadingAsset: avatarLoading } = useMemberAvatar(activeMembership)
+    const balance = dropdownType === 'channel' ? channelBalance : accountBalance
+
+    const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
     const { url: channelAvatarUrl, isLoadingAsset: isChannelAvatarLoading } = useAsset(selectedChannel?.avatarPhoto)
     const toggleWithdrawDialog = () => setShowWithdrawDialog((prevState) => !prevState)
     const toggleSendDialog = () => setShowSendDialog((prevState) => !prevState)
@@ -125,10 +134,12 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
       }
     }
 
+    const isList = dropdownType === 'list-channel' || dropdownType === 'list-member'
+
     return (
       <>
         <WithdrawFundsDialog
-          avatarUrl={avatarUrl}
+          avatarUrl={memberAvatarUrl}
           activeMembership={activeMembership}
           show={showWithdrawDialog}
           onExitClick={toggleWithdrawDialog}
@@ -140,53 +151,89 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
         <Container ref={ref}>
           <SwitchTransition>
             <CSSTransition
-              key={dropdownType}
-              timeout={parseInt(cVar('animationTransitionFast', true))}
-              classNames={DROPDOWN_ANIMATION}
+              key={isList ? 'list' : 'member-or-channel'}
+              timeout={parseInt(cVar('animationTimingMedium', true))}
+              classNames={LIST_TRANSITION}
             >
               <InnerContainer
                 isActive={isActive}
                 containerHeight={containerHeight}
-                slideDirection={dropdownType === 'list' ? 'left' : 'right'}
+                slideDirection={isList ? 'left' : 'right'}
               >
-                {dropdownType === 'member' && (
-                  <SlideAnimationContainer>
+                {(dropdownType === 'member' || dropdownType === 'channel') && (
+                  <SlideAnimationContainer slideDirection={dropdownType === 'member' ? 'right' : 'left'}>
                     <div ref={mergeRefs([measureContainerRef, containerRef])}>
-                      <BlurredBG url={avatarUrl}>
+                      <BlurredBG url={dropdownType === 'member' ? memberAvatarUrl : channelAvatarUrl}>
                         <Filter />
                         <MemberInfoContainer>
-                          <StyledAvatar
-                            size="fill"
-                            assetUrl={dropdownType === 'member' ? avatarUrl : channelAvatarUrl}
-                            loading={dropdownType === 'member' ? avatarLoading : isChannelAvatarLoading}
-                          />
-                          <div>
-                            {/* Using invisible unicode character ZERO WIDTH NON-JOINER (U+200C) to preserve the space while member handle loads */}
-                            <MemberHandleText as="span" variant="h400">
-                              {publisher ? selectedChannel?.title : activeMembership?.handle ?? '‌‌ '}
-                            </MemberHandleText>
-                            {accountBalance !== undefined ? (
-                              <>
-                                <UserBalance>
-                                  <JoyTokenIcon size={16} variant="regular" />
-                                  <NumberFormat as="span" variant="t200-strong" value={accountBalance} format="short" />
-                                </UserBalance>
-                              </>
-                            ) : (
-                              <SkeletonLoader width={30} height={20} />
+                          <AvatarsGroupContainer>
+                            <AvatarWrapper>
+                              <StyledAvatar
+                                onClick={() => setDropDownType('member')}
+                                isDisabled={dropdownType === 'channel'}
+                                size="small"
+                                assetUrl={memberAvatarUrl}
+                                loading={memberAvatarLoading}
+                              />
+                              <StyledIconWrapper size="small" icon={<SvgActionMember width={14} height={14} />} />
+                            </AvatarWrapper>
+                            {!!hasAtLeastOneChannel && (
+                              <AvatarWrapper>
+                                <StyledAvatar
+                                  onClick={() => setDropDownType('channel')}
+                                  isDisabled={dropdownType === 'member'}
+                                  size="small"
+                                  assetUrl={channelAvatarUrl}
+                                  loading={isChannelAvatarLoading}
+                                />
+                                <StyledIconWrapper icon={<SvgActionChannel width={14} height={14} />} size="small" />
+                              </AvatarWrapper>
                             )}
-                            <BalanceContainer>
-                              <TextLink
-                                as="span"
-                                onClick={() => {
-                                  closeDropdown?.()
-                                  publisher ? setShowWithdrawDialog(true) : setShowSendDialog(true)
-                                }}
-                                variant="t100"
-                                color="colorCoreNeutral200Lighten"
+                          </AvatarsGroupContainer>
+                          <div>
+                            <SwitchTransition>
+                              <CSSTransition
+                                key={dropdownType}
+                                timeout={parseInt(cVar('animationTimingMedium', true))}
+                                classNames={MEMBER_CHANNEL_TRANSITION}
                               >
-                                {publisher ? 'Withdraw' : 'Transfer'}
-                              </TextLink>
+                                <MemberHandleTransitionContainer
+                                  slideDirection={dropdownType === 'member' ? 'right' : 'left'}
+                                >
+                                  <MemberHandleText as="span" variant="h400">
+                                    {dropdownType === 'channel' ? selectedChannel?.title : activeMembership?.handle}
+                                  </MemberHandleText>
+                                  {balance !== undefined ? (
+                                    <UserBalance>
+                                      <JoyTokenIcon size={16} variant="regular" />
+                                      <NumberFormat as="span" variant="t200-strong" value={balance} format="short" />
+                                    </UserBalance>
+                                  ) : (
+                                    <SkeletonLoader width={30} height={20} />
+                                  )}
+                                </MemberHandleTransitionContainer>
+                              </CSSTransition>
+                            </SwitchTransition>
+                            <BalanceContainer>
+                              <SwitchTransition>
+                                <CSSTransition
+                                  key={dropdownType}
+                                  timeout={parseInt(cVar('animationTimingMedium', true))}
+                                  classNames={MEMBER_CHANNEL_TRANSITION}
+                                >
+                                  <AnimatedTextLink
+                                    as="span"
+                                    onClick={() => {
+                                      closeDropdown?.()
+                                      dropdownType === 'channel' ? setShowWithdrawDialog(true) : setShowSendDialog(true)
+                                    }}
+                                    variant="t100"
+                                    color="colorCoreNeutral200Lighten"
+                                  >
+                                    {dropdownType === 'channel' ? 'Withdraw' : 'Transfer'}
+                                  </AnimatedTextLink>
+                                </CSSTransition>
+                              </SwitchTransition>
                               <Divider />
                               <TextLink
                                 variant="t100"
@@ -203,50 +250,69 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                           </div>
                         </MemberInfoContainer>
                       </BlurredBG>
+                      <SwitchTransition>
+                        <CSSTransition
+                          key={dropdownType}
+                          timeout={parseInt(cVar('animationTimingMedium', true))}
+                          classNames={MEMBER_CHANNEL_TRANSITION}
+                        >
+                          <AnimatedSectionContainer slideDirection={dropdownType === 'member' ? 'right' : 'left'}>
+                            {publisher ? (
+                              <ListItem
+                                onClick={closeDropdown}
+                                nodeStart={<IconWrapper icon={<SvgActionPlay />} />}
+                                label="Atlas"
+                                to={absoluteRoutes.viewer.index()}
+                              />
+                            ) : (
+                              <>
+                                <ListItem
+                                  onClick={closeDropdown}
+                                  nodeStart={<IconWrapper icon={<SvgActionAddVideo />} />}
+                                  label="Studio"
+                                  to={absoluteRoutes.studio.index()}
+                                />
+                              </>
+                            )}
+                            <ListItem
+                              asButton
+                              onClick={closeDropdown}
+                              nodeStart={
+                                <IconWrapper
+                                  icon={dropdownType === 'member' ? <SvgActionMember /> : <SvgActionChannel />}
+                                />
+                              }
+                              label={dropdownType === 'member' ? 'My profile' : 'My channel'}
+                              to={
+                                dropdownType === 'member'
+                                  ? absoluteRoutes.viewer.member(activeMembership?.handle)
+                                  : activeMembership?.channels.length
+                                  ? absoluteRoutes.viewer.channel(channelId ?? undefined)
+                                  : absoluteRoutes.studio.signIn()
+                              }
+                            />
+                            <ListItem
+                              nodeStart={
+                                <IconWrapper icon={hasOneMember ? <SvgActionPlus /> : <SvgActionSwitchMember />} />
+                              }
+                              onClick={() =>
+                                hasOneMember ? handleAddNewMember() : setDropDownType(`list-${dropdownType}`)
+                              }
+                              label={
+                                dropdownType === 'channel'
+                                  ? hasAtLeastOneChannel
+                                    ? 'Switch channel'
+                                    : 'Add new channel...'
+                                  : hasOneMember
+                                  ? 'Add new member...'
+                                  : 'Switch member'
+                              }
+                              nodeEnd={!hasOneMember && <SvgActionChevronR />}
+                            />
+                          </AnimatedSectionContainer>
+                        </CSSTransition>
+                      </SwitchTransition>
                       <SectionContainer>
-                        {publisher ? (
-                          <ListItem
-                            onClick={closeDropdown}
-                            nodeStart={<IconWrapper icon={<SvgActionPlay />} />}
-                            label="Atlas"
-                            to={absoluteRoutes.viewer.index()}
-                          />
-                        ) : (
-                          <>
-                            <ListItem
-                              onClick={closeDropdown}
-                              nodeStart={<IconWrapper icon={<SvgActionAddVideo />} />}
-                              label="Studio"
-                              to={absoluteRoutes.studio.index()}
-                            />
-                            <ListItem
-                              onClick={closeDropdown}
-                              nodeStart={<IconWrapper icon={<SvgActionMember />} />}
-                              label="My profile"
-                              to={absoluteRoutes.viewer.member(activeMembership?.handle)}
-                            />
-                          </>
-                        )}
-                        <ListItem
-                          asButton
-                          onClick={closeDropdown}
-                          nodeStart={<IconWrapper icon={<SvgActionChannel />} />}
-                          caption={selectedChannel?.title}
-                          label="My channel"
-                          to={
-                            activeMembership?.channels.length
-                              ? absoluteRoutes.viewer.channel(channelId ?? undefined)
-                              : absoluteRoutes.studio.signIn()
-                          }
-                        />
-                        <ListItem
-                          nodeStart={
-                            <IconWrapper icon={hasOneMember ? <SvgActionPlus /> : <SvgActionSwitchMember />} />
-                          }
-                          onClick={() => (hasOneMember ? handleAddNewMember() : setDropDownType('list'))}
-                          label={hasOneMember ? 'Add new member...' : 'Switch member'}
-                          nodeEnd={!hasOneMember && <SvgActionChevronR />}
-                        />
                         <ListItem
                           label="Disconnect wallet"
                           destructive
@@ -257,55 +323,54 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                           }}
                         />
                       </SectionContainer>
-                      {publisher && (
-                        <SectionContainer>
-                          <ChannelsSectionTitle as="span" variant="t100" color="colorText">
-                            Use Joystream as
-                          </ChannelsSectionTitle>
-                          {activeMembership?.channels.map((channel) => (
-                            <ChannelListItem
-                              key={channel.id}
-                              channel={channel}
-                              selected={channel.id === channelId}
-                              onClick={() => onChannelChange?.(channel.id)}
-                            />
-                          ))}
-                          <ListItem
-                            onClick={closeDropdown}
-                            nodeStart={<IconWrapper icon={<SvgActionPlus />} />}
-                            label="Add new channel..."
-                            to={absoluteRoutes.studio.newChannel()}
-                          />
-                        </SectionContainer>
-                      )}
                     </div>
                   </SlideAnimationContainer>
                 )}
-                {dropdownType === 'list' && (
+                {isList && (
                   <SlideAnimationContainer>
                     <div ref={mergeRefs([measureContainerRef, containerRef])}>
                       <SwitchMemberItemListContainer>
                         <ListItem
-                          onClick={() => setDropDownType('member')}
+                          onClick={() => setDropDownType(dropdownType === 'list-channel' ? 'channel' : 'member')}
                           nodeStart={<SvgActionChevronL />}
-                          label="Switch member"
+                          label={dropdownType === 'list-channel' ? 'Switch channel' : 'Switch member'}
                         />
                       </SwitchMemberItemListContainer>
                       <SectionContainer>
-                        {memberships?.map((member) => (
-                          <MemberListItem
-                            key={member.id}
-                            member={member}
-                            selected={member.id === activeMembership?.id}
-                            onClick={() =>
-                              handleMemberChange(member.id, member.controllerAccount, member.channels[0]?.id || null)
-                            }
-                          />
-                        ))}
+                        {dropdownType === 'list-member'
+                          ? memberships?.map((member) => (
+                              <MemberListItem
+                                key={member.id}
+                                member={member}
+                                selected={member.id === activeMembership?.id}
+                                onClick={() =>
+                                  handleMemberChange(
+                                    member.id,
+                                    member.controllerAccount,
+                                    member.channels[0]?.id || null
+                                  )
+                                }
+                              />
+                            ))
+                          : activeMembership?.channels.map((channel) => (
+                              <ChannelListItem
+                                key={channel.id}
+                                channel={channel}
+                                selected={channel.id === channelId}
+                                onClick={() => onChannelChange?.(channel.id)}
+                              />
+                            ))}
                         <ListItem
-                          nodeStart={<IconWrapper icon={<SvgActionNewChannel />} />}
-                          onClick={handleAddNewMember}
-                          label="Add new member..."
+                          nodeStart={
+                            dropdownType === 'list-member' ? (
+                              <IconWrapper icon={<SvgActionNewChannel />} />
+                            ) : (
+                              <IconWrapper icon={<SvgActionChannel />} />
+                            )
+                          }
+                          onClick={() => (dropdownType === 'list-member' ? handleAddNewMember() : closeDropdown?.())}
+                          label={dropdownType === 'list-member' ? 'Add new member...' : 'Add new channel...'}
+                          to={dropdownType === 'list-channel' ? absoluteRoutes.studio.newChannel() : undefined}
                         />
                       </SectionContainer>
                     </div>
