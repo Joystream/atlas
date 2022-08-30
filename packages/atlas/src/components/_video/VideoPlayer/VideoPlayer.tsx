@@ -248,6 +248,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
           playVideo,
           pauseVideo,
           () => setCinematicView(!cinematicView),
+          captionsEnabled,
           () => setCaptionsEnabled(!captionsEnabled)
         )
       }
@@ -647,9 +648,10 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     setCinematicView(!cinematicView)
   }
 
-  const handleToggleCaptions = (event: MouseEvent) => {
+  const handleToggleCaptions = async (event: MouseEvent) => {
     event.stopPropagation()
-    setCaptionsEnabled(!captionsEnabled)
+    await setCaptionsEnabled(!captionsEnabled)
+    player?.trigger(CustomVideojsEvents.CaptionsSet)
   }
 
   const handleTrackChange = (selectedTrack: AvailableTrack) => {
@@ -676,7 +678,12 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   const playNextDisabled = isPlayNextDisabled || !autoPlayNext || isShareDialogOpen || isSharingOverlayOpen
 
   return (
-    <Container isFullScreen={isFullScreen} className={className} isSettingsPopoverOpened={isSettingsPopoverOpened}>
+    <Container
+      isFullScreen={isFullScreen}
+      captionsEnabled={captionsEnabled}
+      className={className}
+      isSettingsPopoverOpened={isSettingsPopoverOpened}
+    >
       <div data-vjs-player onClick={() => handlePlayPause()}>
         {needsManualPlay && (
           <BigPlayButtonContainer
@@ -785,6 +792,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                     availableTracks={availableTextTracks}
                     onTrackChange={handleTrackChange}
                     activeTrack={activeTrack}
+                    player={player}
                   />
                   <PlayerControlButton
                     isDisabled={!isFullScreenEnabled}
