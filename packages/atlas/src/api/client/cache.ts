@@ -92,14 +92,12 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
   mostViewedChannelsConnection: relayStylePagination(getChannelKeyArgs),
   channels: (existing, { toReference, args }) => {
     if (args?.where.id_eq) {
-      return (
-        existing || [
-          toReference({
-            __typename: 'Channel',
-            id: args?.where.id_eq,
-          }),
-        ]
-      )
+      return [
+        toReference({
+          __typename: 'Channel',
+          id: args?.where.id_eq,
+        }),
+      ]
     }
   },
   videosConnection: {
@@ -138,14 +136,12 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
     ...offsetLimitPagination(getVideoKeyArgs),
     read(existing, opts) {
       if (opts?.args?.where.id_eq) {
-        return (
-          existing || [
-            opts.toReference({
-              __typename: 'Video',
-              id: opts?.args?.where.id_eq,
-            }),
-          ]
-        )
+        return [
+          opts.toReference({
+            __typename: 'Video',
+            id: opts?.args?.where.id_eq,
+          }),
+        ]
       }
       const offset = opts.args?.offset ?? 0
       const limit = opts.args?.limit ?? existing?.length
