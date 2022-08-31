@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { Banner } from '@/components/Banner'
 import { cVar, media, sizes } from '@/styles'
 
 export const ScrollableWrapper = styled.div`
@@ -92,4 +93,12 @@ export const StepWrapper = styled.div<{ isLast?: boolean }>`
   grid-template-columns: 1fr ${({ isLast }) => !isLast && 'auto'};
   gap: 16px;
   align-items: center;
+`
+
+export const RevenueBanner = styled(Banner)`
+  margin-bottom: ${sizes(12)};
+
+  path {
+    fill: ${cVar('colorTextStrong')};
+  }
 `

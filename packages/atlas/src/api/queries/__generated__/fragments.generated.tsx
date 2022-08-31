@@ -333,6 +333,7 @@ export type BasicVideoFieldsFragment = {
     creatorRoyalty?: number | null
     lastSaleDate?: Date | null
     lastSalePrice?: string | null
+    isOwnedByChannel: boolean
     ownerMember?: {
       __typename?: 'Membership'
       id: string
@@ -364,6 +365,7 @@ export type BasicVideoFieldsFragment = {
           | null
       }
     } | null
+    transactionalStatusUpdates: Array<{ __typename: 'TransactionalStatusUpdate' }>
     transactionalStatusAuction?: {
       __typename?: 'Auction'
       id: string
@@ -685,6 +687,7 @@ export type FullVideoFieldsFragment = {
     creatorRoyalty?: number | null
     lastSaleDate?: Date | null
     lastSalePrice?: string | null
+    isOwnedByChannel: boolean
     ownerMember?: {
       __typename?: 'Membership'
       id: string
@@ -716,6 +719,7 @@ export type FullVideoFieldsFragment = {
           | null
       }
     } | null
+    transactionalStatusUpdates: Array<{ __typename: 'TransactionalStatusUpdate' }>
     transactionalStatusAuction?: {
       __typename?: 'Auction'
       id: string
@@ -913,6 +917,7 @@ export type BasicNftFieldsFragment = {
   creatorRoyalty?: number | null
   lastSaleDate?: Date | null
   lastSalePrice?: string | null
+  isOwnedByChannel: boolean
   ownerMember?: {
     __typename?: 'Membership'
     id: string
@@ -944,6 +949,7 @@ export type BasicNftFieldsFragment = {
         | null
     }
   } | null
+  transactionalStatusUpdates: Array<{ __typename: 'TransactionalStatusUpdate' }>
   transactionalStatusAuction?: {
     __typename?: 'Auction'
     id: string
@@ -1116,6 +1122,7 @@ export type FullNftFieldsFragment = {
   creatorRoyalty?: number | null
   lastSaleDate?: Date | null
   lastSalePrice?: string | null
+  isOwnedByChannel: boolean
   creatorChannel: {
     __typename?: 'Channel'
     id: string
@@ -1198,6 +1205,7 @@ export type FullNftFieldsFragment = {
       creatorRoyalty?: number | null
       lastSaleDate?: Date | null
       lastSalePrice?: string | null
+      isOwnedByChannel: boolean
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -1229,6 +1237,7 @@ export type FullNftFieldsFragment = {
             | null
         }
       } | null
+      transactionalStatusUpdates: Array<{ __typename: 'TransactionalStatusUpdate' }>
       transactionalStatusAuction?: {
         __typename?: 'Auction'
         id: string
@@ -1425,6 +1434,7 @@ export type FullNftFieldsFragment = {
         | null
     }
   } | null
+  transactionalStatusUpdates: Array<{ __typename: 'TransactionalStatusUpdate' }>
   transactionalStatusAuction?: {
     __typename?: 'Auction'
     id: string
@@ -2065,8 +2075,12 @@ export const BasicNftFieldsFragmentDoc = gql`
     creatorRoyalty
     lastSaleDate
     lastSalePrice
+    isOwnedByChannel
     ownerMember {
       ...BasicMembershipFields
+    }
+    transactionalStatusUpdates {
+      __typename
     }
     transactionalStatusAuction {
       id

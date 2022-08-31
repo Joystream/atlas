@@ -192,8 +192,12 @@ fragment BasicNftFields on OwnedNft {
   creatorRoyalty
   lastSaleDate
   lastSalePrice
+  isOwnedByChannel
   ownerMember {
     ...BasicMembershipFields
+  }
+  transactionalStatusUpdates {
+    __typename
   }
   transactionalStatusAuction {
     id
