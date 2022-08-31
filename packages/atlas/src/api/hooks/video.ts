@@ -17,7 +17,6 @@ import {
   VideoOrderByInput,
   useAddVideoViewMutation,
   useGetBasicVideosQuery,
-  useGetFullVideoQuery,
   useGetFullVideosQuery,
   useGetTop10VideosThisMonthQuery,
   useGetTop10VideosThisWeekQuery,
@@ -27,14 +26,12 @@ import { videoFilter } from '@/config/contentFilter'
 
 export const useFullVideo = (
   id: string,
-  cached?: boolean,
   opts?: QueryHookOptions<GetFullVideoQuery, GetFullVideoQueryVariables> &
     QueryHookOptions<GetFullVideosQuery, GetFullVideosQueryVariables>,
   variables?: GetFullVideosQueryVariables
 ) => {
-  const { data: fullVideosData, ...fullVideosQueryRest } = useGetFullVideosQuery({
+  const { data, ...rest } = useGetFullVideosQuery({
     ...opts,
-    skip: !!cached || opts?.skip,
     variables: {
       ...variables,
       where: {
@@ -45,18 +42,9 @@ export const useFullVideo = (
     },
   })
 
-  const { data: fullVideoData, ...fullVideoQueryRest } = useGetFullVideoQuery({
-    fetchPolicy: 'cache-only',
-    ...opts,
-    skip: !cached || opts?.skip,
-    variables: { where: { id } },
-  })
-
-  const video = cached ? fullVideoData?.videoByUniqueInput : fullVideosData?.videos[0]
-
   return {
-    video,
-    ...(cached ? fullVideoQueryRest : fullVideosQueryRest),
+    video: data?.videos[0],
+    ...rest,
   }
 }
 

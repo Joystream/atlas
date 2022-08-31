@@ -47,7 +47,7 @@ export const UploadStatusGroup: FC<UploadStatusGroupProps> = ({ uploads, size = 
 
   const isChannelType = uploads[0].parentObject.type === 'channel'
 
-  const { video, loading: videoLoading } = useFullVideo(uploads[0].parentObject.id, true, {
+  const { video, loading: videoLoading } = useFullVideo(uploads[0].parentObject.id, {
     skip: isChannelType,
   })
 

@@ -18,7 +18,7 @@ import { NotFoundVideoContainer, PlayerSkeletonLoader } from '../VideoView/Video
 
 export const EmbeddedView: FC = () => {
   const { id } = useParams()
-  const { loading, video, error } = useFullVideo(id ?? '', false, {
+  const { loading, video, error } = useFullVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
   const { addVideoView } = useAddVideoView()
