@@ -6,7 +6,7 @@ import useDraggableScroll from 'use-draggable-scroll'
 import { Text } from '@/components/Text'
 import { transitions } from '@/styles'
 
-import { BackgroundGradient, StyledButton, StyledPill, Tab, TabsGroup, TabsWrapper } from './Tabs.styles'
+import { ButtonWrapper, StyledButton, StyledPill, Tab, TabsGroup, TabsWrapper } from './Tabs.styles'
 
 import { SvgActionChevronL, SvgActionChevronR } from '../_icons'
 
@@ -102,14 +102,14 @@ export const Tabs: FC<TabsProps> = memo(
           classNames={transitions.names.fade}
           unmountOnExit
         >
-          <BackgroundGradient direction="prev">
+          <ButtonWrapper direction="prev">
             <StyledButton
               onClick={handleArrowScroll('left')}
               size="small"
               variant="tertiary"
               icon={<SvgActionChevronL />}
             />
-          </BackgroundGradient>
+          </ButtonWrapper>
         </CSSTransition>
         <CSSTransition
           in={shadowsVisible.right && isContentOverflown}
@@ -117,7 +117,7 @@ export const Tabs: FC<TabsProps> = memo(
           classNames={transitions.names.fade}
           unmountOnExit
         >
-          <BackgroundGradient direction="next">
+          <ButtonWrapper direction="next">
             <StyledButton
               onClick={handleArrowScroll('right')}
               data-right
@@ -125,9 +125,14 @@ export const Tabs: FC<TabsProps> = memo(
               variant="tertiary"
               icon={<SvgActionChevronR />}
             />
-          </BackgroundGradient>
+          </ButtonWrapper>
         </CSSTransition>
-        <TabsGroup data-underline={!!underline} ref={tabsGroupRef} onMouseDown={onMouseDown}>
+        <TabsGroup
+          data-underline={!!underline}
+          ref={tabsGroupRef}
+          onMouseDown={onMouseDown}
+          shadowsVisible={shadowsVisible}
+        >
           {tabs.map((tab, idx) => (
             <Tab
               onClick={createClickHandler(idx)}
