@@ -22,6 +22,7 @@ type ContainerProps = {
   size: AvatarSize
   isLoading?: boolean
   isClickable: boolean
+  disableInteractiveStyles?: boolean
   // allow passing 'type' prop to Container because it can be rendered as 'button' depending on context
   type?: 'button'
 }
@@ -160,8 +161,8 @@ export const sharedAvatarActiveStyles = css`
   }
 `
 
-const getInteractiveStyles = ({ isLoading }: Omit<ContainerProps, 'size'>) => {
-  if (isLoading) {
+const getInteractiveStyles = ({ isLoading, disableInteractiveStyles }: Omit<ContainerProps, 'size'>) => {
+  if (isLoading || disableInteractiveStyles) {
     return
   }
 

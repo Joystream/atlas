@@ -30,6 +30,7 @@ export const BlurredBG = styled.div<{ memberUrl?: string | null; channelUrl?: st
     background-repeat: no-repeat;
     background-position: center;
     content: '';
+    background-color: ${cVar('colorCoreNeutral500')};
   }
 
   &::before {
@@ -46,7 +47,7 @@ export const BlurredBG = styled.div<{ memberUrl?: string | null; channelUrl?: st
 export const Filter = styled.div`
   position: absolute;
   backdrop-filter: blur(32px);
-  background: ${cVar('colorBackgroundOverlay')};
+  background-color: ${cVar('colorBackgroundOverlay')};
   width: 280px;
   height: 100%;
 `
@@ -78,6 +79,14 @@ export const StyledAvatar = styled(Avatar)<{ isDisabled: boolean }>`
   );
   opacity: ${({ isDisabled }) => (isDisabled ? 0.25 : 1)};
   transition: opacity ${cVar('animationTransitionMedium')};
+
+  :hover {
+    opacity: 1;
+  }
+
+  :active {
+    opacity: 0.75;
+  }
 `
 
 export const AddAvatar = styled.div`

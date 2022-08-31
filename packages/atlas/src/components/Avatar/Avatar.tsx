@@ -45,6 +45,8 @@ export type AvatarProps = PropsWithChildren<{
   editable?: boolean
   newChannel?: boolean
   clickable?: boolean
+  // for the purpose of member dropdown
+  disabledInteractiveStyles?: boolean
 }>
 
 export const Avatar: FC<AvatarProps> = ({
@@ -57,6 +59,7 @@ export const Avatar: FC<AvatarProps> = ({
   editable,
   newChannel,
   clickable,
+  disabledInteractiveStyles,
   onError,
   onClick,
   onImageValidation,
@@ -101,6 +104,7 @@ export const Avatar: FC<AvatarProps> = ({
       className={className}
       isLoading={loading}
       isClickable={clickable || !!onClick}
+      disableInteractiveStyles={disabledInteractiveStyles}
     >
       {(clickable || !!onClick) && (
         <IconAndOverlayWrapper>

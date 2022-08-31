@@ -126,21 +126,24 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
         <Filter />
         <MemberInfoContainer>
           <AvatarsGroupContainer>
-            <AvatarWrapper>
-              <Tooltip text="Member" offsetY={16} placement="bottom">
+            <Tooltip text="Member" offsetY={16} placement="bottom">
+              <AvatarWrapper>
                 <StyledAvatar
+                  disabledInteractiveStyles
+                  clickable={false}
                   onClick={() => onSwitchDropdownType('member')}
                   isDisabled={type === 'channel'}
                   size="small"
                   assetUrl={memberAvatarUrl}
                   loading={memberAvatarLoading}
                 />
-              </Tooltip>
-              <StyledIconWrapper size="small" icon={<SvgActionMember width={14} height={14} />} />
-            </AvatarWrapper>
-            <AvatarWrapper>
-              <Tooltip text={hasAtLeastOneChannel ? 'Channel' : 'Create channel'} offsetY={16} placement="bottom">
+                <StyledIconWrapper size="small" icon={<SvgActionMember width={14} height={14} />} />
+              </AvatarWrapper>
+            </Tooltip>
+            <Tooltip text={hasAtLeastOneChannel ? 'Channel' : 'Create channel'} offsetY={16} placement="bottom">
+              <AvatarWrapper>
                 <StyledAvatar
+                  disabledInteractiveStyles
                   onClick={() =>
                     hasAtLeastOneChannel
                       ? onSwitchDropdownType('channel')
@@ -157,9 +160,9 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                     </AddAvatar>
                   ) : null}
                 </StyledAvatar>
-              </Tooltip>
-              <StyledIconWrapper icon={<SvgActionChannel width={14} height={14} />} size="small" />
-            </AvatarWrapper>
+                <StyledIconWrapper icon={<SvgActionChannel width={14} height={14} />} size="small" />
+              </AvatarWrapper>
+            </Tooltip>
           </AvatarsGroupContainer>
           <FixedSizeContainer height={memberContainerHeight}>
             {memberChanneltransition((style, type) => (
