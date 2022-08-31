@@ -22,10 +22,16 @@ type BalanceTooltipProps = PropsWithChildren<{
   lockedAccountBalance: BN | undefined
 }>
 
-export const BalanceTooltip: FC<BalanceTooltipProps> = ({ accountBalance, lockedAccountBalance, children }) => {
+export const BalanceTooltip: FC<BalanceTooltipProps> = ({
+  accountBalance,
+  lockedAccountBalance = new BN(0),
+  children,
+}) => {
+  if (accountBalance === undefined) {
+    return <>{children}</>
+  }
   return (
     <Tooltip
-      hidden={accountBalance === undefined || lockedAccountBalance === undefined}
       multiline
       customContent={
         <TooltipWrapper>
@@ -34,12 +40,10 @@ export const BalanceTooltip: FC<BalanceTooltipProps> = ({ accountBalance, locked
               <Text as="span" variant="t100" color="colorText">
                 Transferable
               </Text>
-              {accountBalance && (
-                <TextWithIcon>
-                  <JoyTokenIcon size={16} variant="gray" />
-                  <NumberFormat as="span" variant="t200" value={accountBalance} format="full" color="colorText" />
-                </TextWithIcon>
-              )}
+              <TextWithIcon>
+                <JoyTokenIcon size={16} variant="gray" />
+                <NumberFormat as="span" variant="t200" value={accountBalance} format="full" color="colorText" />
+              </TextWithIcon>
             </TooltipRow>
             <TooltipRow>
               <TextWithIcon>
@@ -48,31 +52,22 @@ export const BalanceTooltip: FC<BalanceTooltipProps> = ({ accountBalance, locked
                   Invitation lock
                 </Text>
               </TextWithIcon>
-              {lockedAccountBalance && (
-                <TextWithIcon>
-                  <JoyTokenIcon size={16} variant="gray" />
-                  <NumberFormat as="span" variant="t200" value={lockedAccountBalance} format="full" color="colorText" />
-                </TextWithIcon>
-              )}
+              <TextWithIcon>
+                <JoyTokenIcon size={16} variant="gray" />
+                <NumberFormat as="span" variant="t200" value={lockedAccountBalance} format="full" color="colorText" />
+              </TextWithIcon>
             </TooltipRow>
           </UpperRow>
           <TooltipDivider />
-          {accountBalance && lockedAccountBalance && (
-            <TooltipRow>
-              <Text as="span" variant="t100">
-                Total
-              </Text>
-              <TextWithIcon>
-                <JoyTokenIcon size={16} variant="regular" />
-                <NumberFormat
-                  as="span"
-                  variant="t200"
-                  value={lockedAccountBalance?.add(accountBalance)}
-                  format="full"
-                />
-              </TextWithIcon>
-            </TooltipRow>
-          )}
+          <TooltipRow>
+            <Text as="span" variant="t100">
+              Total
+            </Text>
+            <TextWithIcon>
+              <JoyTokenIcon size={16} variant="regular" />
+              <NumberFormat as="span" variant="t200" value={lockedAccountBalance?.add(accountBalance)} format="full" />
+            </TextWithIcon>
+          </TooltipRow>
           <TooltipFooter>
             <SvgActionInformative />
             <Text as="span" variant="t100" color="colorText">
