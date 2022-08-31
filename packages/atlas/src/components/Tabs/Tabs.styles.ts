@@ -23,17 +23,17 @@ type TabsGroupProps = {
 const getMaskImage = ({ shadowsVisible }: TabsGroupProps) => {
   if (shadowsVisible.left && shadowsVisible.right) {
     return css`
-      mask-image: linear-gradient(to left, transparent 0%, black 45%, black 65%, transparent 100%);
+      mask-image: linear-gradient(to left, transparent 5%, black 25%, black 75%, transparent 95%);
     `
   }
   if (shadowsVisible.left) {
     return css`
-      mask-image: linear-gradient(90deg, rgb(0 0 0 / 0) 0%, rgb(0 0 0 / 1) 45%);
+      mask-image: linear-gradient(90deg, rgb(0 0 0 / 0) 5%, rgb(0 0 0 / 1) 25%);
     `
   }
   if (shadowsVisible.right) {
     return css`
-      mask-image: linear-gradient(270deg, rgb(0 0 0 / 0) 0%, rgb(0 0 0 / 1) 45%);
+      mask-image: linear-gradient(270deg, rgb(0 0 0 / 0) 5%, rgb(0 0 0 / 1) 25%);
     `
   }
 }

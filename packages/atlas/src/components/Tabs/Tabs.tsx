@@ -35,7 +35,7 @@ export const Tabs: FC<TabsProps> = memo(
     const tabRef = useRef<HTMLDivElement>(null)
     const [shadowsVisible, setShadowsVisible] = useState({
       left: false,
-      right: true,
+      right: false,
     })
     const { onMouseDown } = useDraggableScroll(tabsGroupRef, { direction: 'horizontal' })
 
@@ -53,6 +53,7 @@ export const Tabs: FC<TabsProps> = memo(
       if (!tabsGroup || !isContentOverflown || !tab) {
         return
       }
+      setShadowsVisible((prev) => ({ ...prev, right: true }))
       const { clientWidth, scrollWidth } = tabsGroup
       const tabWidth = tab.offsetWidth
 
@@ -67,7 +68,7 @@ export const Tabs: FC<TabsProps> = memo(
         })
       }, 100)
 
-      tabsGroup.addEventListener('touchmove', touchHandler)
+      tabsGroup.addEventListener('touchmove', touchHandler, { passive: true })
       tabsGroup.addEventListener('scroll', touchHandler)
       return () => {
         touchHandler.cancel()
