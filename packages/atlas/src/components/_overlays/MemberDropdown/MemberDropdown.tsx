@@ -70,14 +70,30 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
       (memberId: string, accountId: string, channelId: string | null) => {
         setActiveUser({ accountId, memberId, channelId })
         setIsList(false)
-        closeDropdown?.()
 
         if (publisher) {
           navigate(absoluteRoutes.studio.index())
         }
       },
-      [closeDropdown, navigate, publisher, setActiveUser]
+      [navigate, publisher, setActiveUser]
     )
+
+    const handleChannelChange = useCallback(
+      (channelId: string) => {
+        setDropdownType('channel')
+        setIsList(false)
+        onChannelChange?.(channelId)
+      },
+      [onChannelChange]
+    )
+
+    const handleSwitch = useCallback((type: 'channel' | 'member', changeToList: boolean) => {
+      setDropdownType(type)
+      setIsList(changeToList)
+    }, [])
+
+    const toggleWithdrawDialog = () => setShowWithdrawDialog((prevState) => !prevState)
+    const toggleSendDialog = () => setShowSendDialog((prevState) => !prevState)
 
     useEffect(() => {
       if (!isActive) {
@@ -97,8 +113,6 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
         document.removeEventListener('click', handleClickOutside, true)
       }
     }, [closeDropdown, isActive])
-    const toggleWithdrawDialog = () => setShowWithdrawDialog((prevState) => !prevState)
-    const toggleSendDialog = () => setShowSendDialog((prevState) => !prevState)
 
     return (
       <>
@@ -130,10 +144,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                       activeMembership={activeMembership}
                       hasOneMember={hasOneMember}
                       onSwitchDropdownType={setDropdownType}
-                      onSwitchToList={(type) => {
-                        setIsList(true)
-                        setDropdownType(type)
-                      }}
+                      onSwitchToList={(type) => handleSwitch(type, true)}
                       onCloseDropdown={closeDropdown}
                       publisher={publisher}
                       type={dropdownType}
@@ -146,13 +157,10 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                       memberships={memberships}
                       activeMembership={activeMembership}
                       onMemberChange={handleMemberChange}
-                      onChannelChange={onChannelChange}
+                      onChannelChange={handleChannelChange}
                       onCloseDropdown={closeDropdown}
                       onAddNewMember={handleAddNewMember}
-                      onSwitchToNav={(type) => {
-                        setDropdownType(type)
-                        setIsList(false)
-                      }}
+                      onSwitchToNav={(type) => handleSwitch(type, false)}
                       type={dropdownType}
                     />
                   </div>
