@@ -611,28 +611,6 @@ export type GetCategoriesFeaturedVideosQuery = {
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
-      subtitles: Array<{
-        __typename?: 'VideoSubtitle'
-        mimeType: string
-        type: string
-        asset?: {
-          __typename?: 'StorageDataObject'
-          id: string
-          createdAt: Date
-          size: string
-          isAccepted: boolean
-          ipfsHash: string
-          storageBag: { __typename?: 'StorageBag'; id: string }
-          type:
-            | { __typename: 'DataObjectTypeChannelAvatar' }
-            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-            | { __typename: 'DataObjectTypeUnknown' }
-            | { __typename: 'DataObjectTypeVideoMedia' }
-            | { __typename: 'DataObjectTypeVideoSubtitle' }
-            | { __typename: 'DataObjectTypeVideoThumbnail' }
-        } | null
-        language: { __typename?: 'Language'; iso: string }
-      }>
       channel: {
         __typename?: 'Channel'
         views: number
@@ -919,6 +897,30 @@ export type GetCategoriesFeaturedVideosQuery = {
           | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
           | null
       } | null
+      subtitles: Array<{
+        __typename?: 'VideoSubtitle'
+        id: string
+        mimeType: string
+        type: string
+        assetId?: string | null
+        language: { __typename?: 'Language'; id: string; iso: string }
+        asset?: {
+          __typename?: 'StorageDataObject'
+          id: string
+          createdAt: Date
+          size: string
+          isAccepted: boolean
+          ipfsHash: string
+          storageBag: { __typename?: 'StorageBag'; id: string }
+          type:
+            | { __typename: 'DataObjectTypeChannelAvatar' }
+            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeUnknown' }
+            | { __typename: 'DataObjectTypeVideoMedia' }
+            | { __typename: 'DataObjectTypeVideoSubtitle' }
+            | { __typename: 'DataObjectTypeVideoThumbnail' }
+        } | null
+      }>
     }
   }>
 }

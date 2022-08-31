@@ -60,7 +60,12 @@ export const AssetsManager: FC = () => {
 
       for (const distributionOperator of sortedDistributionOperators) {
         const assetUrl = createDistributionOperatorDataObjectUrl(distributionOperator, dataObject)
-
+        if (pendingAssets[dataObject.id].skipAssetTest) {
+          addAsset(dataObject.id, { url: assetUrl })
+          removePendingAsset(dataObject.id)
+          removeAssetBeingResolved(dataObject.id)
+          return
+        }
         const assetTestPromise = testAssetDownload(assetUrl, dataObject)
         const assetTestPromiseWithTimeout = withTimeout(assetTestPromise, ASSET_RESPONSE_TIMEOUT)
 
