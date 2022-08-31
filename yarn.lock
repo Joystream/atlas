@@ -2791,7 +2791,7 @@ __metadata:
     "@graphql-codegen/typescript-react-apollo": ^3.2.16
     "@hcaptcha/react-hcaptcha": ^1.4.4
     "@hookform/resolvers": ^2.9.1
-    "@joystream/metadata-protobuf": 2.2.0
+    "@joystream/metadata-protobuf": 2.4.0
     "@joystream/prettier-config": ^1.0.0
     "@joystream/types": 0.20.1
     "@livesession/sdk": ^1.1.4
@@ -2886,9 +2886,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@joystream/metadata-protobuf@npm:2.2.0":
-  version: 2.2.0
-  resolution: "@joystream/metadata-protobuf@npm:2.2.0"
+"@joystream/metadata-protobuf@npm:2.4.0":
+  version: 2.4.0
+  resolution: "@joystream/metadata-protobuf@npm:2.4.0"
   dependencies:
     "@types/iso-3166-2": ^1.0.0
     "@types/long": ^4.0.1
@@ -2898,23 +2898,7 @@ __metadata:
     iso-639-1: ^2.1.9
     long: ^4.0.0
     protobufjs: ^6.11.2
-  checksum: 521d6e3119e4512b2f68d47f9262ac76d386958382e37e3c6f0274a2afce5ca1df0f9e674b542093f76c082d66ade0c890e9a2d5d9cf79034fef7715a18d4c6d
-  languageName: node
-  linkType: hard
-
-"@joystream/metadata-protobuf@patch:@joystream/metadata-protobuf@npm:2.2.0#.yarn/patches/@joystream-metadata-protobuf-npm-2.2.0-d51d4ac30c.patch::locator=root-workspace-0b6124%40workspace%3A.":
-  version: 2.2.0
-  resolution: "@joystream/metadata-protobuf@patch:@joystream/metadata-protobuf@npm%3A2.2.0#.yarn/patches/@joystream-metadata-protobuf-npm-2.2.0-d51d4ac30c.patch::version=2.2.0&hash=bac2b5&locator=root-workspace-0b6124%40workspace%3A."
-  dependencies:
-    "@types/iso-3166-2": ^1.0.0
-    "@types/long": ^4.0.1
-    google-protobuf: ^3.14.0
-    i18n-iso-countries: ^6.8.0
-    iso-3166-2: ^1.0.0
-    iso-639-1: ^2.1.9
-    long: ^4.0.0
-    protobufjs: ^6.11.2
-  checksum: 4d9a570b91032ff244af45b423c4536d3a557e25f5de22c0b0a62bf376b8a8f0a6b6ff248582a1ea3269b7b0589af54fb35a07c169770e21186a1e2eab774dc0
+  checksum: 2419f064dec6426760ebefc4e547af758e11f446f25f2c9ca8e6029a389c88eda9f494a9e4e44887f96701b2efcfbf534cf279732cb00ca01ba23d3213a68a8e
   languageName: node
   linkType: hard
 
