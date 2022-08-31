@@ -200,21 +200,6 @@ export const useTransaction = (): HandleTransactionFn => {
 
         const errorName = error.name as JoystreamLibErrorType
 
-        if (errorName === 'AccountBalanceTooLow') {
-          if (minimized) {
-            removeTransaction(transactionId)
-            displaySnackbar({
-              title: 'Insufficient balance to perform this action.',
-              description: minimized.errorMessage,
-              iconType: 'error',
-              timeout: MINIMIZED_SIGN_CANCELLED_SNACKBAR_TIMEOUT,
-            })
-          } else {
-            updateStatus(ExtrinsicStatus.Error, ErrorCode.InsufficientBalance)
-          }
-          return false
-        }
-
         if (errorName === 'SignCancelledError') {
           ConsoleLogger.warn('Sign cancelled')
           removeTransaction(transactionId)
@@ -250,10 +235,14 @@ export const useTransaction = (): HandleTransactionFn => {
 
         if (extrinsicFailed) {
           // extract error code from error message
-          const errorCode = Object.keys(ErrorCode).find((key) => error.message.includes(key)) as ErrorCode | undefined
+          const errorCode = Object.keys(ErrorCode).find((key) =>
+            error.message.split(' ').find((word: string) => word === key)
+          ) as ErrorCode | undefined
+
           if (errorCode) {
-            updateTransaction(transactionId, { ...transaction, errorCode })
+            updateStatus(ExtrinsicStatus.Error, errorCode)
           }
+          return false
         }
         SentryLogger.error(
           extrinsicFailed ? 'Extrinsic failed' : 'Unknown sendExtrinsic error',
