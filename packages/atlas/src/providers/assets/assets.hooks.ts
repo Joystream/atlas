@@ -66,7 +66,7 @@ export const useSubtitlesAssets = (subtitles?: SubtitlesFieldsFragment[] | null)
     const pendingAssets = {} as Record<string, boolean>
     Object.entries(subtitlesWithAssetLookup).forEach(([id, subtitle]) => {
       if (!subtitle.asset) return
-      pendingAssets[id] = !!state.immediatePendingAssets[subtitle.asset.id]
+      pendingAssets[id] = !!state.pendingAssets[subtitle.asset.id]
     })
     return pendingAssets
   }, shallow)
