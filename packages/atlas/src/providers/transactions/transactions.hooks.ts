@@ -250,10 +250,14 @@ export const useTransaction = (): HandleTransactionFn => {
 
         if (extrinsicFailed) {
           // extract error code from error message
-          const errorCode = Object.keys(ErrorCode).find((key) => error.message.includes(key)) as ErrorCode | undefined
+          const errorCode = Object.keys(ErrorCode).find((key) =>
+            error.message.split(' ').find((word: string) => word === key)
+          ) as ErrorCode | undefined
+
           if (errorCode) {
-            updateTransaction(transactionId, { ...transaction, errorCode })
+            updateStatus(ExtrinsicStatus.Error, errorCode)
           }
+          return false
         }
         SentryLogger.error(
           extrinsicFailed ? 'Extrinsic failed' : 'Unknown sendExtrinsic error',
