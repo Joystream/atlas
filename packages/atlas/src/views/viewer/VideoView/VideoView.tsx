@@ -98,7 +98,7 @@ export const VideoView: FC = () => {
     if (!video?.subtitles) return []
 
     return video.subtitles
-      .filter((subtitle) => !!subtitle.asset)
+      .filter((subtitle) => !!subtitle.asset && subtitlesAssets[subtitle.id]?.url)
       .map((subtitle) => {
         const resolvedLanguageName = LANGUAGES_LOOKUP[subtitle.language.iso]
         const url = subtitlesAssets[subtitle.id]?.url
