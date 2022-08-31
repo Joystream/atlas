@@ -6,7 +6,7 @@ import useDraggableScroll from 'use-draggable-scroll'
 import { Text } from '@/components/Text'
 import { transitions } from '@/styles'
 
-import { BackgroundGradient, StyledButton, StyledPill, Tab, TabsGroup, TabsWrapper } from './Tabs.styles'
+import { ButtonWrapper, StyledButton, StyledPill, Tab, TabsGroup, TabsWrapper } from './Tabs.styles'
 
 import { SvgActionChevronL, SvgActionChevronR } from '../_icons'
 
@@ -35,7 +35,7 @@ export const Tabs: FC<TabsProps> = memo(
     const tabRef = useRef<HTMLDivElement>(null)
     const [shadowsVisible, setShadowsVisible] = useState({
       left: false,
-      right: true,
+      right: false,
     })
     const { onMouseDown } = useDraggableScroll(tabsGroupRef, { direction: 'horizontal' })
 
@@ -53,6 +53,7 @@ export const Tabs: FC<TabsProps> = memo(
       if (!tabsGroup || !isContentOverflown || !tab) {
         return
       }
+      setShadowsVisible((prev) => ({ ...prev, right: true }))
       const { clientWidth, scrollWidth } = tabsGroup
       const tabWidth = tab.offsetWidth
 
@@ -67,7 +68,7 @@ export const Tabs: FC<TabsProps> = memo(
         })
       }, 100)
 
-      tabsGroup.addEventListener('touchmove', touchHandler)
+      tabsGroup.addEventListener('touchmove', touchHandler, { passive: true })
       tabsGroup.addEventListener('scroll', touchHandler)
       return () => {
         touchHandler.cancel()
@@ -102,14 +103,14 @@ export const Tabs: FC<TabsProps> = memo(
           classNames={transitions.names.fade}
           unmountOnExit
         >
-          <BackgroundGradient direction="prev">
+          <ButtonWrapper direction="prev">
             <StyledButton
               onClick={handleArrowScroll('left')}
               size="small"
               variant="tertiary"
               icon={<SvgActionChevronL />}
             />
-          </BackgroundGradient>
+          </ButtonWrapper>
         </CSSTransition>
         <CSSTransition
           in={shadowsVisible.right && isContentOverflown}
@@ -117,7 +118,7 @@ export const Tabs: FC<TabsProps> = memo(
           classNames={transitions.names.fade}
           unmountOnExit
         >
-          <BackgroundGradient direction="next">
+          <ButtonWrapper direction="next">
             <StyledButton
               onClick={handleArrowScroll('right')}
               data-right
@@ -125,9 +126,14 @@ export const Tabs: FC<TabsProps> = memo(
               variant="tertiary"
               icon={<SvgActionChevronR />}
             />
-          </BackgroundGradient>
+          </ButtonWrapper>
         </CSSTransition>
-        <TabsGroup data-underline={!!underline} ref={tabsGroupRef} onMouseDown={onMouseDown}>
+        <TabsGroup
+          data-underline={!!underline}
+          ref={tabsGroupRef}
+          onMouseDown={onMouseDown}
+          shadowsVisible={shadowsVisible}
+        >
           {tabs.map((tab, idx) => (
             <Tab
               onClick={createClickHandler(idx)}
