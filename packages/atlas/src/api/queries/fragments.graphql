@@ -101,6 +101,20 @@ fragment LicenseFields on License {
   customText
 }
 
+fragment SubtitlesFields on VideoSubtitle {
+  id
+  language {
+    id
+    iso
+  }
+  asset {
+    ...StorageDataObjectFields
+  }
+  mimeType
+  type
+  assetId
+}
+
 fragment BasicVideoFields on Video {
   id
   title
@@ -165,6 +179,9 @@ fragment FullVideoFields on Video {
   }
   nft {
     ...BasicNftFields
+  }
+  subtitles {
+    ...SubtitlesFields
   }
 }
 

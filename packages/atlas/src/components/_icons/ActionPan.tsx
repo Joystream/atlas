@@ -3,10 +3,14 @@ import { Ref, SVGProps, forwardRef, memo } from 'react'
 
 const SvgActionPan = forwardRef((props: SVGProps<SVGSVGElement>, ref: Ref<SVGSVGElement>) => (
   <svg width={16} height={16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" ref={ref} {...props}>
-    <path
-      d="M8 3.414 6.707 4.707 5.293 3.293 8 .586l2.707 2.707-1.414 1.414L8 3.414ZM4.707 9.293 3.414 8l1.293-1.293-1.414-1.414L.586 8l2.707 2.707 1.414-1.414ZM11.293 6.707 12.586 8l-1.293 1.293 1.414 1.414L15.414 8l-2.707-2.707-1.414 1.414ZM9.293 11.293 8 12.586l-1.293-1.293-1.414 1.414L8 15.414l2.707-2.707-1.414-1.414Z"
-      fill="#F4F6F8"
-    />
+    <g clipPath="url(#clip0_603_380)" fill="#F4F6F8">
+      <path d="M8 3.414 6.707 4.707 5.293 3.293 8 .586l2.707 2.707-1.414 1.414L8 3.414ZM4.707 9.293 3.414 8l1.293-1.293-1.414-1.414L.586 8l2.707 2.707 1.414-1.414ZM11.293 6.707 12.586 8l-1.293 1.293 1.414 1.414L15.414 8l-2.707-2.707-1.414 1.414ZM9.293 11.293 8 12.586l-1.293-1.293-1.414 1.414L8 15.414l2.707-2.707-1.414-1.414Z" />
+    </g>
+    <defs>
+      <clipPath id="clip0_603_380">
+        <path fill="#fff" d="M0 0h16v16H0z" />
+      </clipPath>
+    </defs>
   </svg>
 ))
 SvgActionPan.displayName = 'SvgActionPan'

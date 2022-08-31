@@ -29,22 +29,12 @@ const Svg404PatternTopRight = forwardRef((props: SVGProps<SVGSVGElement>, ref: R
       fill="#BBD9F6"
       fillOpacity={0.13}
     />
-    <path
-      d="M144 144.027v8.003c-34.861 1.037-62.933 29.109-63.97 63.97h-8.004c1.043-39.28 32.694-70.931 71.974-71.973Z"
-      fill="#BBD9F6"
-      fillOpacity={0.13}
-    />
-    <path
-      d="M88.034 216c1.031-30.442 25.523-54.934 55.966-55.966v8.005c-26.024 1.024-46.937 21.937-47.96 47.961h-8.006Z"
-      fill="#BBD9F6"
-      fillOpacity={0.13}
-    />
-    <path d="M104 216c0-22.091 17.909-40 40-40v8c-17.673 0-32 14.327-32 32h-8Z" fill="#BBD9F6" fillOpacity={0.13} />
-    <path
-      d="M120 216c0-13.255 10.745-24 24-24v8c-8.837 0-16 7.164-16 16h-8ZM136 216a8 8 0 0 1 8-8v8h-8Z"
-      fill="#BBD9F6"
-      fillOpacity={0.13}
-    />
+    <g clipPath="url(#clip2_1110_4101)" fill="#BBD9F6" fillOpacity={0.13}>
+      <path d="M144 144.027v8.003c-34.861 1.037-62.933 29.109-63.97 63.97h-8.004c1.043-39.28 32.694-70.931 71.974-71.973Z" />
+      <path d="M88.034 216c1.031-30.442 25.523-54.934 55.966-55.966v8.005c-26.024 1.024-46.937 21.937-47.96 47.961h-8.006Z" />
+      <path d="M104 216c0-22.091 17.909-40 40-40v8c-17.673 0-32 14.327-32 32h-8Z" />
+      <path d="M120 216c0-13.255 10.745-24 24-24v8c-8.837 0-16 7.164-16 16h-8ZM136 216a8 8 0 0 1 8-8v8h-8Z" />
+    </g>
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -52,23 +42,13 @@ const Svg404PatternTopRight = forwardRef((props: SVGProps<SVGSVGElement>, ref: R
       fill="#BBD9F6"
       fillOpacity={0.13}
     />
-    <path
-      d="M288 216.027v8.003c34.861 1.037 62.933 29.109 63.97 63.97h8.003c-1.042-39.28-32.693-70.931-71.973-71.973Z"
-      fill="#BBD9F6"
-      fillOpacity={0.13}
-    />
-    <path
-      d="M343.966 288c-1.031-30.442-25.523-54.934-55.966-55.966v8.005c26.024 1.024 46.937 21.937 47.961 47.961h8.005Z"
-      fill="#BBD9F6"
-      fillOpacity={0.13}
-    />
-    <path d="M328 288c0-22.091-17.909-40-40-40v8c17.673 0 32 14.327 32 32h8Z" fill="#BBD9F6" fillOpacity={0.13} />
-    <path
-      d="M312 288c0-13.255-10.745-24-24-24v8c8.837 0 16 7.164 16 16h8ZM296 288a8 8 0 0 0-8-8v8h8Z"
-      fill="#BBD9F6"
-      fillOpacity={0.13}
-    />
-    <g clipPath="url(#clip2_1110_4101)">
+    <g clipPath="url(#clip3_1110_4101)" fill="#BBD9F6" fillOpacity={0.13}>
+      <path d="M288 216.027v8.003c34.861 1.037 62.933 29.109 63.97 63.97h8.003c-1.042-39.28-32.693-70.931-71.973-71.973Z" />
+      <path d="M343.966 288c-1.031-30.442-25.523-54.934-55.966-55.966v8.005c26.024 1.024 46.937 21.937 47.961 47.961h8.005Z" />
+      <path d="M328 288c0-22.091-17.909-40-40-40v8c17.673 0 32 14.327 32 32h8Z" />
+      <path d="M312 288c0-13.255-10.745-24-24-24v8c8.837 0 16 7.164 16 16h8ZM296 288a8 8 0 0 0-8-8v8h8Z" />
+    </g>
+    <g clipPath="url(#clip4_1110_4101)">
       <path d="M215.974 144C214.931 104.72 183.28 73.069 144 72.026V144h71.974Z" fill="#BBD9F6" fillOpacity={0.13} />
     </g>
     <defs>
@@ -79,6 +59,12 @@ const Svg404PatternTopRight = forwardRef((props: SVGProps<SVGSVGElement>, ref: R
         <path fill="#fff" transform="translate(216 144)" d="M0 0h72v72H0z" />
       </clipPath>
       <clipPath id="clip2_1110_4101">
+        <path fill="#fff" transform="matrix(-1 0 0 1 144 144)" d="M0 0h72v72H0z" />
+      </clipPath>
+      <clipPath id="clip3_1110_4101">
+        <path fill="#fff" transform="translate(288 216)" d="M0 0h72v72H0z" />
+      </clipPath>
+      <clipPath id="clip4_1110_4101">
         <path fill="#fff" transform="matrix(0 -1 -1 0 216 144)" d="M0 0h72v72H0z" />
       </clipPath>
     </defs>

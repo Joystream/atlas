@@ -18,16 +18,19 @@ import { Input } from '@/components/_inputs/Input'
 import { OptionCardGroupRadio } from '@/components/_inputs/OptionCardGroup'
 import { RadioButtonGroup } from '@/components/_inputs/RadioButtonGroup'
 import { Select, SelectItem } from '@/components/_inputs/Select'
+import { SubtitlesCombobox } from '@/components/_inputs/SubtitlesComboBox'
 import { Switch } from '@/components/_inputs/Switch'
 import { TextArea } from '@/components/_inputs/TextArea'
-import { languages } from '@/config/languages'
+import { LANGUAGES_LIST } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { NftIssuanceInputMetadata, VideoInputAssets, VideoInputMetadata } from '@/joystream-lib'
 import { useRawAssetResolver } from '@/providers/assets'
 import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joystream'
+import { useSnackbar } from '@/providers/snackbars'
 import { useUser } from '@/providers/user'
 import {
+  VideoFormAssetData,
   VideoFormAssets,
   VideoFormData,
   VideoWorkspaceFormStatus,
@@ -36,8 +39,11 @@ import {
   useVideoWorkspace,
   useVideoWorkspaceData,
 } from '@/providers/videoWorkspace'
+import { SubtitlesInput } from '@/types/subtitles'
+import { createId } from '@/utils/createId'
 import { pastDateValidation, requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { convertSrtToVtt } from '@/utils/subtitles'
 
 import { useVideoFormAssets, useVideoFormDraft } from './VideoForm.hooks'
 import {
@@ -84,6 +90,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const [titleTooltipVisible, setTitleTooltipVisible] = useState(true)
   const mintNftFormFieldRef = useRef<HTMLDivElement>(null)
   const { memberId, channelId } = useUser()
+  const { displaySnackbar } = useSnackbar()
 
   const { editedVideoInfo } = useVideoWorkspace()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useVideoWorkspaceData()
@@ -132,7 +139,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
       const metadata: VideoInputMetadata = {
         ...(isNew || dirtyFields.title ? { title: data.title } : {}),
         ...(isNew || dirtyFields.description ? { description: data.description } : {}),
-        ...(isNew || dirtyFields.category ? { category: Number(data.category) } : {}),
+        ...(isNew || dirtyFields.category ? { category: data.category } : {}),
         ...(isNew || dirtyFields.isPublic ? { isPublic: data.isPublic } : {}),
         ...((isNew || dirtyFields.hasMarketing) && data.hasMarketing != null
           ? { hasMarketing: data.hasMarketing }
@@ -156,6 +163,17 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
         ...(isNew || dirtyFields.assets?.video ? { duration: Math.round(videoInputFile?.duration || 0) } : {}),
         ...(isNew || dirtyFields.assets?.video ? { mediaPixelHeight: videoInputFile?.mediaPixelHeight } : {}),
         ...(isNew || dirtyFields.assets?.video ? { mediaPixelWidth: videoInputFile?.mediaPixelWidth } : {}),
+        ...(isNew || dirtyFields.subtitlesArray
+          ? {
+              subtitles: data.subtitlesArray?.map((subtitle, idx) => ({
+                id: subtitle.assetId || `new-subtitle-${idx}`,
+                language: subtitle.languageIso,
+                type: subtitle.type,
+                mimeType: 'text/vtt',
+              })),
+            }
+          : {}),
+        clearSubtitles: !data.subtitlesArray?.length,
       }
       return metadata
     },
@@ -174,7 +192,10 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   )
 
   // for fee only
-  const createBasicVideoInputAssetsInfo = (assets?: VideoWorkspaceVideoAssets): VideoInputAssets => {
+  const createBasicVideoInputAssetsInfo = (
+    assets?: VideoWorkspaceVideoAssets,
+    subtitles?: SubtitlesInput[]
+  ): VideoInputAssets => {
     if (!assets) {
       return {}
     }
@@ -197,12 +218,17 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
             },
           }
         : {}),
+      ...(subtitles?.length
+        ? { subtitles: subtitles.map((subtitle) => ({ ipfsHash: '', size: subtitle.file?.size || 0 })) }
+        : {}),
     }
   }
 
-  const videoInputMetadata = createVideoInputMetadata(getValues())
-  const nftMetadata = createNftInputMetadata(getValues())
-  const assets = createBasicVideoInputAssetsInfo(getValues('assets'))
+  const formData = getValues()
+
+  const videoInputMetadata = createVideoInputMetadata(formData)
+  const nftMetadata = createNftInputMetadata(formData)
+  const assets = createBasicVideoInputAssetsInfo(formData.assets, formData.subtitlesArray ?? undefined)
 
   const { videoStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
 
@@ -231,6 +257,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           videoInputMetadata,
           nftMetadata,
           assets,
+          [], // provide empty removedAssetsId array to simplify fee calculation
           dataObjectStateBloatBondValue.toString(),
         ]
       : undefined,
@@ -246,6 +273,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
     files,
     mediaAsset,
     thumbnailAsset,
+    subtitlesHashesPromises,
     hasUnsavedAssets,
   } = useVideoFormAssets(watch, getValues, setValue, dirtyFields, trigger, errors)
 
@@ -308,6 +336,19 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
 
       const videoWidth = videoInputFile?.mediaPixelWidth
       const videoHeight = videoInputFile?.mediaPixelHeight
+
+      const mappedSubtitles: PartialBy<VideoFormAssetData, 'blob'>[] | undefined = data?.subtitlesArray?.map(
+        (subtitle, idx) => ({
+          id: metadata.subtitles?.[idx].id || createId(),
+          blob: subtitle.file,
+          hashPromise: subtitlesHashesPromises[idx] || Promise.resolve(''),
+          subtitlesLanguageIso: subtitle.languageIso,
+        })
+      )
+      const mappedFilteredSubtitles: VideoFormAssets['subtitles'] = mappedSubtitles?.filter(
+        (subtitle): subtitle is VideoFormAssetData => !!subtitle.blob
+      )
+
       const assets: VideoFormAssets = {
         ...(videoAsset?.blob && videoInputFile.id && videoHashPromise
           ? {
@@ -333,6 +374,11 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
               },
             }
           : {}),
+        ...(mappedFilteredSubtitles?.length
+          ? {
+              subtitles: mappedFilteredSubtitles,
+            }
+          : {}),
       }
 
       const nftMetadata = createNftInputMetadata(data)
@@ -356,6 +402,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
     createVideoInputMetadata,
     createNftInputMetadata,
     onSubmit,
+    subtitlesHashesPromises,
   ])
 
   const actionBarPrimaryText = watch('mintNft')
@@ -511,7 +558,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           render={({ field: { value, onChange } }) => (
             <Select
               value={value}
-              items={languages}
+              items={LANGUAGES_LIST}
               onChange={onChange}
               error={!!errors.language && !value}
               disabled={videoFieldsLocked}
@@ -596,6 +643,8 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
         control={control}
         rules={{
           validate: (value) => {
+            if (!value) return false
+
             if (!!value.video.id && !!value.thumbnail.cropId) {
               return true
             }
@@ -691,11 +740,66 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           </TextButton>
           <Text as="p" variant="t200" color="colorText" margin={{ top: 2 }}>
             {!videoFieldsLocked
-              ? `License, comments, mature content, paid promotion, published date${isEdit ? ', delete video' : ''}`
-              : 'Royalties, description, category, language, visibility, license, comments, mature content, paid promotion, published date'}
+              ? `Subtitles, license, comments, mature content, paid promotion, published date${
+                  isEdit ? ', delete video' : ''
+                }`
+              : 'Royalties, description, category, language, visibility, subtitles, license, comments, mature content, paid promotion, published date'}
           </Text>
         </div>
         <MoreSettingsSection expanded={moreSettingsVisible}>
+          <Controller
+            control={control}
+            name="subtitlesArray"
+            render={({ field: { onChange, value: subtitlesArray } }) => {
+              return (
+                <FormField label="Subtitles" optional>
+                  <SubtitlesCombobox
+                    onLanguageAdd={(subtitlesLanguage) => {
+                      onChange([...(subtitlesArray ? subtitlesArray : []), { ...subtitlesLanguage }])
+                    }}
+                    onLanguageDelete={(subtitlesLanguage) => {
+                      onChange(
+                        subtitlesArray?.filter(
+                          (prevSubtitles) =>
+                            !(
+                              prevSubtitles.languageIso === subtitlesLanguage.languageIso &&
+                              prevSubtitles.type === subtitlesLanguage.type
+                            )
+                        )
+                      )
+                    }}
+                    onSubtitlesAdd={async ({ languageIso, file, type }) => {
+                      const isSrt = file && file?.name.match(/\.srt$/)
+                      let newFile = file
+                      if (isSrt) {
+                        try {
+                          newFile = await convertSrtToVtt(file)
+                        } catch (error) {
+                          displaySnackbar({
+                            title: 'Something went wrong',
+                            description:
+                              'There was a problem with processing subtitles file. Try again or select different file.',
+                            iconType: 'error',
+                          })
+                          return
+                        }
+                      }
+                      onChange(
+                        subtitlesArray?.map((subtitles) =>
+                          subtitles.languageIso === languageIso && subtitles.type === type
+                            ? { ...subtitles, file: newFile }
+                            : subtitles
+                        )
+                      )
+                    }}
+                    languagesIso={LANGUAGES_LIST.map(({ value }) => value)}
+                    subtitlesArray={subtitlesArray}
+                  />
+                </FormField>
+              )
+            }}
+          />
+
           {videoFieldsLocked && royaltiesField}
           {videoFieldsLocked && videoEditFields}
           <Controller

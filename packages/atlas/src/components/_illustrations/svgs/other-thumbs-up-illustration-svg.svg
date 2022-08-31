@@ -14,12 +14,14 @@
 <path d="M79 107.98C49.54 107.199 25.8015 83.46 25.0199 54L79 54L79 107.98Z" fill="#BBD9F6" fill-opacity="0.13"/>
 </g>
 <path fill-rule="evenodd" clip-rule="evenodd" d="M240.885 58.2298V54H245.115L294.885 103.77V108H290.655L240.885 58.2298ZM294.885 95.04V86.5991L262.285 54H253.845L294.885 95.04ZM294.885 69.8102V78.3L270.585 54H279.075L294.885 69.8102ZM294.885 54H287.325L294.885 61.56V54ZM281.925 108H273.484L240.885 75.4009V66.96L281.925 108ZM256.695 108H265.185L240.885 83.7V92.1898L256.695 108ZM240.885 100.44L248.445 108H240.885V100.44Z" fill="#BBD9F6" fill-opacity="0.13"/>
+<g clip-path="url(#clip1_1310_4365)">
 <path d="M133 54.0198V60.0222C159.146 60.8004 180.2 81.8539 180.978 108H186.98C186.198 78.5399 162.46 54.8015 133 54.0198Z" fill="#BBD9F6" fill-opacity="0.13"/>
 <path d="M174.975 108C174.201 85.168 155.832 66.799 133 66.0253V72.0293C152.518 72.7971 168.203 88.4822 168.971 108H174.975Z" fill="#BBD9F6" fill-opacity="0.13"/>
 <path d="M163 108C163 91.4314 149.569 77.9999 133 77.9999V83.9999C146.255 83.9999 157 94.7451 157 108H163Z" fill="#BBD9F6" fill-opacity="0.13"/>
 <path d="M151 108C151 98.0588 142.941 89.9999 133 89.9999V95.9999C139.627 95.9999 145 101.372 145 108H151Z" fill="#BBD9F6" fill-opacity="0.13"/>
 <path d="M139 108C139 104.686 136.314 102 133 102V108H139Z" fill="#BBD9F6" fill-opacity="0.13"/>
-<g clip-path="url(#clip1_1310_4365)">
+</g>
+<g clip-path="url(#clip2_1310_4365)">
 <path d="M241 6L187 6L187 0L241 0L241 6Z" fill="#BBD9F6" fill-opacity="0.13"/>
 <path d="M241 54L187 54L187 48L241 48L241 54Z" fill="#BBD9F6" fill-opacity="0.13"/>
 <path d="M187 42L241 42L241 36L187 36L187 42Z" fill="#BBD9F6" fill-opacity="0.13"/>
@@ -57,6 +59,9 @@
 <rect width="54" height="54" fill="white" transform="translate(79 108) rotate(-180)"/>
 </clipPath>
 <clipPath id="clip1_1310_4365">
+<rect width="54" height="54" fill="white" transform="translate(133 54)"/>
+</clipPath>
+<clipPath id="clip2_1310_4365">
 <rect width="54" height="54" fill="white" transform="translate(187)"/>
 </clipPath>
 </defs>

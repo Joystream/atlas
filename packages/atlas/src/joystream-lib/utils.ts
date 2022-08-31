@@ -46,9 +46,11 @@ export const calculateAssetsSizeFee = (
     return new BN(0)
   }
 
-  const totalBytes = Object.values(assets).reduce((acc, asset) => {
-    return acc + asset.size
-  }, 0)
+  const totalBytes = Object.values(assets)
+    .flat()
+    .reduce((acc, asset) => {
+      return acc + asset.size
+    }, 0)
 
   const totalMegabytes = new BN(totalBytes).divn(1024 * 1024)
   return dataObjectPerMegabyteFee.mul(totalMegabytes)

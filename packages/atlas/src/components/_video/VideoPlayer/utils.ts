@@ -17,6 +17,8 @@ export enum CustomVideojsEvents {
   VolumeDecrease = 'VOLUME_DECREASE',
   PlayControl = 'PLAY_CONTROL',
   PauseControl = 'PAUSE_CONTROL',
+  CaptionsSet = 'CAPTIONS_SET',
+  PlaybackSpeedSet = 'PLAYBACK_SPEED_SET',
 }
 
 export const isFullScreenEnabled =
@@ -28,12 +30,14 @@ export const isFullScreenEnabled =
   // it looks like we can't fully disable fullscreen on embedded view on iphone with `allowfullscreen` property on iframe, that's why we always return true if device is `iPhone`
   isIphone
 
-export const hotkeysHandler = (
+export const hotkeysHandler = async (
   event: KeyboardEvent,
   playerInstance: VideoJsPlayer,
   playVideo: (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => Promise<void>,
   pauseVideo: (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => void,
-  toggleCinematicView: () => void
+  toggleCinematicView: () => void,
+  captionsEnabled: boolean,
+  toggleCaptions: () => void
 ) => {
   if (!playerInstance) {
     return
@@ -113,6 +117,10 @@ export const hotkeysHandler = (
       }
       return
     case 'KeyC':
+      await toggleCaptions()
+      playerInstance.trigger(CustomVideojsEvents.CaptionsSet)
+      return
+    case 'KeyT':
       !playerInstance.isFullscreen() && toggleCinematicView()
       return
     default:

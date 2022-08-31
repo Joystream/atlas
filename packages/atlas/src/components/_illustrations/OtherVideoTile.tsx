@@ -16,25 +16,27 @@ const SvgOtherVideoTile = forwardRef((props: SVGProps<SVGSVGElement>, ref: Ref<S
       <g clipPath="url(#clip1_1038_9458)">
         <path fill="#272D33" d="M0-136h320V44.005H0z" />
         <g clipPath="url(#clip2_1038_9458)">
-          <g filter="url(#filter0_b_1038_9458)">
-            <rect x={8} y={12} width={37} height={24} rx={2} fill="#101214" fillOpacity={0.75} />
-            <path
-              d="M22.95 19.273V28h-1.21l-4.436-6.4h-.08V28h-1.318v-8.727h1.22l4.44 6.409h.08v-6.41h1.304ZM24.991 28v-8.727h5.412v1.133h-4.095v2.66h3.707v1.129h-3.707V28H24.99Zm6.721-7.594v-1.133h6.754v1.133h-2.723V28h-1.312v-7.594h-2.719Z"
-              fill="#F4F6F8"
-            />
-          </g>
-          <g filter="url(#filter1_b_1038_9458)">
-            <rect x={51} y={12} width={24} height={24} rx={2} fill="#101214" fillOpacity={0.75} />
-            <path
-              d="m56.315 24.762 1.599-1.599 5.923 5.923-1.599 1.599a1.077 1.077 0 0 1-1.523 0l-4.4-4.4a1.077 1.077 0 0 1 0-1.523Z"
-              fill="#F4F6F8"
-            />
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="m65.25 27.672-5.922-5.923.003-.004-3.038-3.038 1.414-1.414 3.038 3.038L64.077 17H70v5.923l-3.332 3.331 3.039 3.039-1.414 1.414-3.039-3.038-.003.003Zm1.519-6.364a1.077 1.077 0 1 0 0-2.155 1.077 1.077 0 0 0 0 2.155Z"
-              fill="#F4F6F8"
-            />
+          <g clipPath="url(#clip3_1038_9458)">
+            <g filter="url(#filter0_b_1038_9458)">
+              <rect x={8} y={12} width={37} height={24} rx={2} fill="#101214" fillOpacity={0.75} />
+              <path
+                d="M22.95 19.273V28h-1.21l-4.436-6.4h-.08V28h-1.318v-8.727h1.22l4.44 6.409h.08v-6.41h1.304ZM24.991 28v-8.727h5.412v1.133h-4.095v2.66h3.707v1.129h-3.707V28H24.99Zm6.721-7.594v-1.133h6.754v1.133h-2.723V28h-1.312v-7.594h-2.719Z"
+                fill="#F4F6F8"
+              />
+            </g>
+            <g filter="url(#filter1_b_1038_9458)">
+              <rect x={51} y={12} width={24} height={24} rx={2} fill="#101214" fillOpacity={0.75} />
+              <path
+                d="m56.315 24.762 1.599-1.599 5.923 5.923-1.599 1.599a1.077 1.077 0 0 1-1.523 0l-4.4-4.4a1.077 1.077 0 0 1 0-1.523Z"
+                fill="#F4F6F8"
+              />
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="m65.25 27.672-5.922-5.923.003-.004-3.038-3.038 1.414-1.414 3.038 3.038L64.077 17H70v5.923l-3.332 3.331 3.039 3.039-1.414 1.414-3.039-3.038-.003.003Zm1.519-6.364a1.077 1.077 0 1 0 0-2.155 1.077 1.077 0 0 0 0 2.155Z"
+                fill="#F4F6F8"
+              />
+            </g>
           </g>
           <g filter="url(#filter2_b_1038_9458)">
             <rect x={275} y={12} width={37} height={24} rx={2} fill="#101214" fillOpacity={0.75} />
@@ -73,6 +75,18 @@ const SvgOtherVideoTile = forwardRef((props: SVGProps<SVGSVGElement>, ref: Ref<S
       </g>
     </g>
     <defs>
+      <clipPath id="clip0_1038_9458">
+        <path fill="#fff" d="M0 0h320v260H0z" />
+      </clipPath>
+      <clipPath id="clip1_1038_9458">
+        <path fill="#fff" transform="translate(0 -136)" d="M0 0h320v180.005H0z" />
+      </clipPath>
+      <clipPath id="clip2_1038_9458">
+        <path fill="#fff" transform="translate(0 -136)" d="M0 0h320v180.005H0z" />
+      </clipPath>
+      <clipPath id="clip3_1038_9458">
+        <path fill="#fff" transform="translate(8 12)" d="M0 0h67v24H0z" />
+      </clipPath>
       <filter
         id="filter0_b_1038_9458"
         x={-24}
@@ -137,15 +151,6 @@ const SvgOtherVideoTile = forwardRef((props: SVGProps<SVGSVGElement>, ref: Ref<S
         <feBlend in2="effect1_dropShadow_1038_9458" result="effect2_dropShadow_1038_9458" />
         <feBlend in="SourceGraphic" in2="effect2_dropShadow_1038_9458" result="shape" />
       </filter>
-      <clipPath id="clip0_1038_9458">
-        <path fill="#fff" d="M0 0h320v260H0z" />
-      </clipPath>
-      <clipPath id="clip1_1038_9458">
-        <path fill="#fff" transform="translate(0 -136)" d="M0 0h320v180.005H0z" />
-      </clipPath>
-      <clipPath id="clip2_1038_9458">
-        <path fill="#fff" transform="translate(0 -136)" d="M0 0h320v180.005H0z" />
-      </clipPath>
     </defs>
   </svg>
 ))

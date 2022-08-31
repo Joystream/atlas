@@ -33,23 +33,13 @@ const SvgOtherThumbsUpIllustrationSvg = forwardRef((props: SVGProps<SVGSVGElemen
       fill="#BBD9F6"
       fillOpacity={0.13}
     />
-    <path
-      d="M133 54.02v6.002c26.146.778 47.2 21.832 47.978 47.978h6.002c-.782-29.46-24.52-53.199-53.98-53.98Z"
-      fill="#BBD9F6"
-      fillOpacity={0.13}
-    />
-    <path
-      d="M174.975 108c-.774-22.832-19.143-41.201-41.975-41.975v6.004c19.518.768 35.203 16.453 35.971 35.971h6.004Z"
-      fill="#BBD9F6"
-      fillOpacity={0.13}
-    />
-    <path d="M163 108c0-16.569-13.431-30-30-30v6c13.255 0 24 10.745 24 24h6Z" fill="#BBD9F6" fillOpacity={0.13} />
-    <path
-      d="M151 108c0-9.941-8.059-18-18-18v6c6.627 0 12 5.372 12 12h6ZM139 108a6 6 0 0 0-6-6v6h6Z"
-      fill="#BBD9F6"
-      fillOpacity={0.13}
-    />
     <g clipPath="url(#clip1_1310_4365)" fill="#BBD9F6" fillOpacity={0.13}>
+      <path d="M133 54.02v6.002c26.146.778 47.2 21.832 47.978 47.978h6.002c-.782-29.46-24.52-53.199-53.98-53.98Z" />
+      <path d="M174.975 108c-.774-22.832-19.143-41.201-41.975-41.975v6.004c19.518.768 35.203 16.453 35.971 35.971h6.004Z" />
+      <path d="M163 108c0-16.569-13.431-30-30-30v6c13.255 0 24 10.745 24 24h6Z" />
+      <path d="M151 108c0-9.941-8.059-18-18-18v6c6.627 0 12 5.372 12 12h6ZM139 108a6 6 0 0 0-6-6v6h6Z" />
+    </g>
+    <g clipPath="url(#clip2_1310_4365)" fill="#BBD9F6" fillOpacity={0.13}>
       <path d="M241 6h-54V0h54v6ZM241 54h-54v-6h54v6ZM187 42h54v-6h-54v6ZM241 18h-54v-6h54v6ZM187 30h54v-6h-54v6Z" />
     </g>
     <path
@@ -105,6 +95,9 @@ const SvgOtherThumbsUpIllustrationSvg = forwardRef((props: SVGProps<SVGSVGElemen
         <path fill="#fff" transform="rotate(-180 39.5 54)" d="M0 0h54v54H0z" />
       </clipPath>
       <clipPath id="clip1_1310_4365">
+        <path fill="#fff" transform="translate(133 54)" d="M0 0h54v54H0z" />
+      </clipPath>
+      <clipPath id="clip2_1310_4365">
         <path fill="#fff" transform="translate(187)" d="M0 0h54v54H0z" />
       </clipPath>
     </defs>

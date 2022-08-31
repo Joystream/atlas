@@ -26,23 +26,13 @@ const Svg404PatternBottomLeft = forwardRef((props: SVGProps<SVGSVGElement>, ref:
       fill="#BBD9F6"
       fillOpacity={0.13}
     />
-    <path
-      d="M144.154 216.027v8.003c-34.862 1.037-62.933 29.109-63.97 63.97H72.18c1.042-39.28 32.694-70.931 71.974-71.973Z"
-      fill="#BBD9F6"
-      fillOpacity={0.13}
-    />
-    <path
-      d="M88.187 288c1.032-30.442 25.524-54.934 55.967-55.966v8.005C118.13 241.063 97.216 261.976 96.193 288h-8.006Z"
-      fill="#BBD9F6"
-      fillOpacity={0.13}
-    />
-    <path d="M104.154 288c0-22.091 17.908-40 40-40v8c-17.674 0-32 14.327-32 32h-8Z" fill="#BBD9F6" fillOpacity={0.13} />
-    <path
-      d="M120.154 288c0-13.255 10.745-24 24-24v8c-8.837 0-16 7.164-16 16h-8ZM136.154 288a8 8 0 0 1 8-8v8h-8Z"
-      fill="#BBD9F6"
-      fillOpacity={0.13}
-    />
-    <g clipPath="url(#clip1_1110_4102)">
+    <g clipPath="url(#clip1_1110_4102)" fill="#BBD9F6" fillOpacity={0.13}>
+      <path d="M144.154 216.027v8.003c-34.862 1.037-62.933 29.109-63.97 63.97H72.18c1.042-39.28 32.694-70.931 71.974-71.973Z" />
+      <path d="M88.187 288c1.032-30.442 25.524-54.934 55.967-55.966v8.005C118.13 241.063 97.216 261.976 96.193 288h-8.006Z" />
+      <path d="M104.154 288c0-22.091 17.908-40 40-40v8c-17.674 0-32 14.327-32 32h-8Z" />
+      <path d="M120.154 288c0-13.255 10.745-24 24-24v8c-8.837 0-16 7.164-16 16h-8ZM136.154 288a8 8 0 0 1 8-8v8h-8Z" />
+    </g>
+    <g clipPath="url(#clip2_1110_4102)">
       <path d="M288.127 288c-1.042-39.28-32.693-70.931-71.973-71.974V288h71.973Z" fill="#BBD9F6" fillOpacity={0.13} />
     </g>
     <defs>
@@ -50,6 +40,9 @@ const Svg404PatternBottomLeft = forwardRef((props: SVGProps<SVGSVGElement>, ref:
         <path fill="#fff" transform="matrix(-1 0 0 1 72.154 144)" d="M0 0h72v72H0z" />
       </clipPath>
       <clipPath id="clip1_1110_4102">
+        <path fill="#fff" transform="matrix(-1 0 0 1 144.154 216)" d="M0 0h72v72H0z" />
+      </clipPath>
+      <clipPath id="clip2_1110_4102">
         <path fill="#fff" transform="matrix(0 -1 -1 0 288.154 288)" d="M0 0h72v72H0z" />
       </clipPath>
     </defs>

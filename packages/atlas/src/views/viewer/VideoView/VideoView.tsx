@@ -22,6 +22,7 @@ import { ReportModal } from '@/components/_overlays/ReportModal'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { videoCategories } from '@/config/categories'
 import { CTA_MAP } from '@/config/cta'
+import { LANGUAGES_LOOKUP } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useHeadTags } from '@/hooks/useHeadTags'
@@ -30,7 +31,7 @@ import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { VideoReaction } from '@/joystream-lib'
-import { useAsset } from '@/providers/assets'
+import { useAsset, useSubtitlesAssets } from '@/providers/assets'
 import { useFee } from '@/providers/joystream'
 import { useNftActions } from '@/providers/nftActions'
 import { useOverlayManager } from '@/providers/overlayManager'
@@ -96,6 +97,22 @@ export const VideoView: FC = () => {
 
   const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset(video?.media)
   const { url: thumbnailUrl } = useAsset(video?.thumbnailPhoto)
+  const subtitlesAssets = useSubtitlesAssets(video?.subtitles)
+  const availableTracks = useMemo(() => {
+    if (!video?.subtitles) return []
+
+    return video.subtitles
+      .filter((subtitle) => !!subtitle.asset && subtitlesAssets[subtitle.id]?.url)
+      .map((subtitle) => {
+        const resolvedLanguageName = LANGUAGES_LOOKUP[subtitle.language.iso]
+        const url = subtitlesAssets[subtitle.id]?.url
+        return {
+          label: subtitle.type === 'subtitles' ? resolvedLanguageName : `${resolvedLanguageName} (CC)`,
+          language: subtitle.type === 'subtitles' ? subtitle.language.iso : `${subtitle.language.iso}-cc`,
+          src: url || '',
+        }
+      })
+  }, [subtitlesAssets, video?.subtitles])
 
   const videoMetaTags = useMemo(() => {
     if (!video || !thumbnailUrl) return {}
@@ -341,6 +358,7 @@ export const VideoView: FC = () => {
                   startTime={startTimestamp}
                   isPlayNextDisabled={pausePlayNext}
                   ref={playerRef}
+                  availableTextTracks={availableTracks}
                 />
               ) : (
                 <PlayerSkeletonLoader />

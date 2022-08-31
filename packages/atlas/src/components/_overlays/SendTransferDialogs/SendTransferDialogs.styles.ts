@@ -23,13 +23,6 @@ export const SummaryRow = styled.div`
   gap: ${sizes(2)};
 `
 
-export const FeeWrapper = styled.div`
-  display: grid;
-  align-items: center;
-  gap: ${sizes(1)};
-  grid-template: auto / auto auto;
-`
-
 export const FormFieldsWrapper = styled.div`
   display: grid;
   grid-template-rows: auto auto;

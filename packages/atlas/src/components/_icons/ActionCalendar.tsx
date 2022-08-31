@@ -3,12 +3,19 @@ import { Ref, SVGProps, forwardRef, memo } from 'react'
 
 const SvgActionCalendar = forwardRef((props: SVGProps<SVGSVGElement>, ref: Ref<SVGSVGElement>) => (
   <svg width={16} height={16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" ref={ref} {...props}>
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M4 1h2v2h4V1h2v2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2V1Zm8 6v6H4V7h8Z"
-      fill="#F4F6F8"
-    />
+    <g clipPath="url(#clip0_1205_4105)">
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M4 1h2v2h4V1h2v2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2V1Zm8 6v6H4V7h8Z"
+        fill="#F4F6F8"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_1205_4105">
+        <path fill="#fff" d="M0 0h16v16H0z" />
+      </clipPath>
+    </defs>
   </svg>
 ))
 SvgActionCalendar.displayName = 'SvgActionCalendar'

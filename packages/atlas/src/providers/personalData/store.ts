@@ -17,6 +17,8 @@ export type PersonalDataStoreState = {
   reactionPopoverDismissed: boolean
   playbackRate: number
   autoPlayNext: boolean
+  captionsEnabled: boolean
+  captionsLanguage: string | null
 }
 
 const WHITELIST = [
@@ -31,6 +33,8 @@ const WHITELIST = [
   'cookiesAccepted',
   'reactionPopoverDismissed',
   'autoPlayNext',
+  'captionsEnabled',
+  'captionsLanguage',
 ] as (keyof PersonalDataStoreState)[]
 
 export type PersonalDataStoreActions = {
@@ -46,6 +50,8 @@ export type PersonalDataStoreActions = {
   setCinematicView: (cinematicView: boolean) => void
   setCookiesAccepted: (accept: boolean) => void
   setReactionPopoverDismission: (reactionPopoverDismissed: boolean) => void
+  setCaptionsEnabled: (captionsEnabled: boolean) => void
+  setCaptionsLanguage: (captionsLanguage: string | null) => void
 
   getIsCookiesPopoverVisible: () => boolean
 }
@@ -62,6 +68,8 @@ const initialState: PersonalDataStoreState = {
   cookiesAccepted: undefined,
   reactionPopoverDismissed: false,
   autoPlayNext: true,
+  captionsEnabled: false,
+  captionsLanguage: null,
 }
 
 export const usePersonalDataStore = createStore<PersonalDataStoreState, PersonalDataStoreActions>(
@@ -138,6 +146,14 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
       setReactionPopoverDismission: (reactionPopoverDismissed) =>
         set((state) => {
           state.reactionPopoverDismissed = reactionPopoverDismissed
+        }),
+      setCaptionsEnabled: (captionsEnabled) =>
+        set((state) => {
+          state.captionsEnabled = captionsEnabled
+        }),
+      setCaptionsLanguage: (captionsLanguage: string | null) =>
+        set((state) => {
+          state.captionsLanguage = captionsLanguage
         }),
       getIsCookiesPopoverVisible: () => {
         const cookiesAccepted = get().cookiesAccepted

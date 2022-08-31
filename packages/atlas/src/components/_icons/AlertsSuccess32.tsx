@@ -3,13 +3,19 @@ import { Ref, SVGProps, forwardRef, memo } from 'react'
 
 const SvgAlertsSuccess32 = forwardRef((props: SVGProps<SVGSVGElement>, ref: Ref<SVGSVGElement>) => (
   <svg width={32} height={32} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" ref={ref} {...props}>
-    <path d="m21.753 12.659-1.506-1.318-6.296 7.196-2.244-2.244-1.414 1.414 3.756 3.756 7.704-8.805Z" fill="#0EB152" />
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M16 0C7.163 0 0 7.163 0 16s7.163 16 16 16 16-7.163 16-16S24.837 0 16 0ZM2 16C2 8.268 8.268 2 16 2s14 6.268 14 14-6.268 14-14 14S2 23.732 2 16Z"
-      fill="#0EB152"
-    />
+    <g clipPath="url(#clip0_603_266)" fill="#0EB152">
+      <path d="m21.753 12.659-1.506-1.318-6.296 7.196-2.244-2.244-1.414 1.414 3.756 3.756 7.704-8.805Z" />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M16 0C7.163 0 0 7.163 0 16s7.163 16 16 16 16-7.163 16-16S24.837 0 16 0ZM2 16C2 8.268 8.268 2 16 2s14 6.268 14 14-6.268 14-14 14S2 23.732 2 16Z"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_603_266">
+        <path fill="#fff" d="M0 0h32v32H0z" />
+      </clipPath>
+    </defs>
   </svg>
 ))
 SvgAlertsSuccess32.displayName = 'SvgAlertsSuccess32'

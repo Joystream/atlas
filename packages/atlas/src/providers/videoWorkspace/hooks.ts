@@ -1,6 +1,6 @@
 import { parseISO } from 'date-fns'
 import { Location } from 'history'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { useLocation, useMatch } from 'react-router'
 import { useNavigate } from 'react-router-dom'
 
@@ -33,6 +33,19 @@ export const useVideoWorkspaceData = () => {
     skip: editedVideoInfo?.isDraft,
     onError: (error) => SentryLogger.error('Failed to fetch video', 'useVideoWorkspaceData', error),
   })
+
+  const subtitlesArray = useMemo(
+    () =>
+      video?.subtitles.map(
+        (s) =>
+          ({
+            languageIso: s.language.iso,
+            type: s.type === 'closed-captions' ? 'closed-captions' : 'subtitles',
+            assetId: s.asset?.id,
+          } as const)
+      ) || null,
+    [video?.subtitles]
+  )
 
   if (!editedVideoInfo) {
     return {
@@ -85,6 +98,7 @@ export const useVideoWorkspaceData = () => {
     assets,
     mintNft: !!video?.nft,
     nftRoyaltiesPercent: video?.nft?.creatorRoyalty || undefined,
+    subtitlesArray,
   }
 
   return {
