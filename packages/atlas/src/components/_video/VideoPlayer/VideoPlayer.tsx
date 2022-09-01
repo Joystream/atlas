@@ -574,7 +574,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   }, [activeTrack, availableTextTracks, captionsEnabled, captionsLanguage, player, storedLanguageExists])
 
   useMountEffect(() => {
-    if (!captionsEnabled || !availableTextTracks) {
+    if (!captionsEnabled) {
       return
     }
     setActiveTrack(findDefaultLanguage)
