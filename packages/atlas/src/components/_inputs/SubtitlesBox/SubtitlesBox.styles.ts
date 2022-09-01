@@ -11,6 +11,7 @@ export const SubtitleBoxWrapper = styled.div`
   gap: ${sizes(2)};
   display: grid;
   grid-template-columns: 1fr auto auto;
+  align-items: center;
 `
 
 export const SubtitlesFileName = styled(Text)`
@@ -41,4 +42,11 @@ export const StyledSvgActionCheck = styled(SvgActionCheck)`
   path {
     fill: ${cVar('colorTextSuccess')};
   }
+`
+
+export const LoaderWrapper = styled.div`
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `

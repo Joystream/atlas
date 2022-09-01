@@ -19,17 +19,17 @@ type SubtitlesComboboxProps = {
   languagesIso: string[]
   onLanguageAdd: (language: SubtitlesInput) => void
   onLanguageDelete: (language: SubtitlesInput) => void
-  onSubtitlesDownload?: () => void
   onSubtitlesAdd: (subtitles: SubtitlesInput) => void
+  error?: boolean
 }
 
 export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
   languagesIso,
   subtitlesArray,
   onLanguageAdd,
-  onSubtitlesDownload,
   onLanguageDelete,
   onSubtitlesAdd,
+  error,
 }) => {
   const availableSubtitlesLanguages = useMemo(() => {
     return languagesIso
@@ -57,6 +57,7 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
   return (
     <Wrapper>
       <ComboBox<AvailableLanguage>
+        error={error}
         placeholder="Add language"
         items={availableSubtitlesLanguages.map((subtitlesLanguage) => ({
           ...subtitlesLanguage,
@@ -75,7 +76,7 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
           onLanguageAdd({ languageIso: item.languageIso, type: item.type })
         }}
       />
-      {subtitlesArray?.map(({ languageIso, file, type, assetId }) => (
+      {subtitlesArray?.map(({ languageIso, file, type, id, url }) => (
         <SubtitlesBox
           key={languageIso + type}
           type={type}
@@ -83,9 +84,9 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
           onRemove={() => {
             onLanguageDelete({ languageIso, type })
           }}
-          onDownload={onSubtitlesDownload}
           file={file}
-          assetId={assetId}
+          url={url}
+          id={id}
           onChange={(e) => {
             onSubtitlesAdd({ languageIso, file: e.currentTarget.files?.[0], type })
           }}

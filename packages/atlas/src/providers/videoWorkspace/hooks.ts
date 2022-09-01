@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { useFullVideo } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
+import { useSubtitlesAssets } from '@/providers/assets'
 import { RoutingState } from '@/types/routing'
 import { SubtitlesInput } from '@/types/subtitles'
 import { SentryLogger } from '@/utils/logs'
@@ -35,16 +36,21 @@ export const useVideoWorkspaceData = () => {
     onError: (error) => SentryLogger.error('Failed to fetch video', 'useVideoWorkspaceData', error),
   })
 
+  const subtitlesAssets = useSubtitlesAssets(video?.subtitles)
+
   const subtitlesArray: SubtitlesInput[] | null = useMemo(
     () =>
-      video?.subtitles
-        .map((s) => ({
-          languageIso: s.language?.iso,
-          type: s.type === 'closed-captions' ? 'closed-captions' : 'subtitles',
-          ...(s.asset?.id ? { assetId: s.asset?.id } : {}),
-        }))
-        .filter((s): s is SubtitlesInput => !!s.languageIso) || null,
-    [video?.subtitles]
+      Object.values(subtitlesAssets).filter((url) => url).length
+        ? video?.subtitles
+            .map((s) => ({
+              languageIso: s.language?.iso,
+              type: s.type === 'closed-captions' ? 'closed-captions' : 'subtitles',
+              ...(subtitlesAssets[s.id]?.url ? { url: subtitlesAssets[s.id]?.url } : {}),
+              ...(s.asset?.id ? { id: s.asset?.id } : {}),
+            }))
+            .filter((s): s is SubtitlesInput => !!s.languageIso) || null
+        : null,
+    [subtitlesAssets, video?.subtitles]
   )
 
   if (!editedVideoInfo) {
@@ -103,7 +109,7 @@ export const useVideoWorkspaceData = () => {
 
   return {
     tabData: normalizedData,
-    loading: editedVideoInfo.isDraft ? false : loading,
+    loading: editedVideoInfo.isDraft ? false : loading || (video?.subtitles && !subtitlesArray),
     error,
   }
 }

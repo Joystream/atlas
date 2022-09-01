@@ -150,7 +150,7 @@ export const MyVideosView = () => {
     minimized?: boolean
     mintNft?: boolean
   }
-  const handleVideoClick = (
+  const handleEditVideoClick = (
     id?: string,
     opts: HandleVideoClickOpts = { draft: false, minimized: false, mintNft: false }
   ) => {
@@ -232,7 +232,7 @@ export const MyVideosView = () => {
           return (
             <VideoTileDraft
               key={`draft-${idx}`}
-              onClick={() => handleVideoClick(draft.id, { draft: true })}
+              onClick={() => handleEditVideoClick(draft.id, { draft: true })}
               id={draft.id}
               onDeleteVideoClick={() => handleDeleteDraft(draft.id)}
             />
@@ -249,12 +249,12 @@ export const MyVideosView = () => {
             onEditClick={(e) => {
               e?.stopPropagation()
               e?.preventDefault()
-              handleVideoClick(video.id)
+              handleEditVideoClick(video.id)
             }}
             onMintNftClick={(e) => {
               e?.stopPropagation()
               e?.preventDefault()
-              handleVideoClick(video.id, { mintNft: true })
+              handleEditVideoClick(video.id, { mintNft: true })
             }}
             onDeleteVideoClick={() => video.id && deleteVideo(video.id)}
             onReuploadVideoClick={() => navigate(absoluteRoutes.studio.uploads(), { state: { highlightFailed: true } })}

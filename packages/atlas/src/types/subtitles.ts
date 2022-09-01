@@ -1,3 +1,5 @@
+import { StorageDataObjectFieldsFragment } from '@/api/queries'
+
 export type SubtitlesInput = {
   languageIso: string
   type: 'closed-captions' | 'subtitles'
@@ -5,5 +7,7 @@ export type SubtitlesInput = {
    * @param file File needs to be provided in .vtt format
    */
   file?: File
-  assetId?: string
+  id?: string
+  asset?: StorageDataObjectFieldsFragment | null
+  url?: string
 }
