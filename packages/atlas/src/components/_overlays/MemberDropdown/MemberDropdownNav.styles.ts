@@ -100,8 +100,8 @@ export const AddAvatar = styled.div`
 
 export const StyledIconWrapper = styled(IconWrapper)`
   position: absolute;
-  right: -8px;
-  bottom: -8px;
+  right: -${sizes(2)};
+  bottom: -${sizes(2)};
 `
 
 type FixedSizeContainerProps = {
@@ -118,7 +118,7 @@ export const UserBalance = styled.div`
   grid-auto-flow: column;
   grid-auto-columns: max-content;
   align-items: center;
-  gap: 5px;
+  gap: ${sizes(1)};
   margin-top: ${sizes(2)};
 `
 

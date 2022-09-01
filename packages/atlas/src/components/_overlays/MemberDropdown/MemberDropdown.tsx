@@ -37,7 +37,10 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
 
     const { accountBalance, lockedAccountBalance } = useSubscribeAccountBalance()
-    const { accountBalance: channelBalance } = useSubscribeAccountBalance(selectedChannel?.rewardAccount) || new BN(0)
+    const { accountBalance: channelBalance } =
+      useSubscribeAccountBalance(selectedChannel?.rewardAccount, {
+        channelStateBloatBond: new BN(selectedChannel?.channelStateBloatBond || 0),
+      }) || new BN(0)
 
     const hasOneMember = memberships?.length === 1
 

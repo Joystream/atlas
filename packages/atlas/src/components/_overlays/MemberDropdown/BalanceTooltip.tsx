@@ -39,7 +39,6 @@ export const BalanceTooltip: FC<BalanceTooltipProps> = ({
       appendTo={containerRefElement || document.body}
       hideOnClick="toggle"
       placement="bottom"
-      offsetY={8}
       customContent={
         <TooltipWrapper>
           <UpperRow>
