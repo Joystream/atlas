@@ -20,6 +20,7 @@ import { NftWidget, useNftWidget } from '@/components/_nft/NftWidget'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { ReportModal } from '@/components/_overlays/ReportModal'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
+import { AvailableTrack } from '@/components/_video/VideoPlayer/SettingsButtonWithPopover'
 import { videoCategories } from '@/config/categories'
 import { CTA_MAP } from '@/config/cta'
 import { LANGUAGES_LOOKUP } from '@/config/languages'
@@ -104,14 +105,15 @@ export const VideoView: FC = () => {
     return video.subtitles
       .filter((subtitle) => !!subtitle.asset && subtitlesAssets[subtitle.id]?.url)
       .map((subtitle) => {
-        const resolvedLanguageName = LANGUAGES_LOOKUP[subtitle.language.iso]
+        const resolvedLanguageName = LANGUAGES_LOOKUP[subtitle.language?.iso || '']
         const url = subtitlesAssets[subtitle.id]?.url
         return {
           label: subtitle.type === 'subtitles' ? resolvedLanguageName : `${resolvedLanguageName} (CC)`,
-          language: subtitle.type === 'subtitles' ? subtitle.language.iso : `${subtitle.language.iso}-cc`,
-          src: url || '',
+          language: subtitle.type === 'subtitles' ? subtitle.language?.iso : `${subtitle.language?.iso}-cc`,
+          src: url,
         }
       })
+      .filter((subtitles): subtitles is AvailableTrack => !!subtitles.language && !!subtitles.label && !!subtitles.src)
   }, [subtitlesAssets, video?.subtitles])
 
   const videoMetaTags = useMemo(() => {
