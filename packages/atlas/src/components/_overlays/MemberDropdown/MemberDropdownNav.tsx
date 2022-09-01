@@ -55,6 +55,7 @@ type DropdownType = 'member' | 'channel'
 type MemberDropdownNavProps = {
   type: 'member' | 'channel'
   publisher?: boolean
+  containerRefElement: Element | null
   onCloseDropdown?: () => void
   onSwitchDropdownType: (type: DropdownType) => void
   onSwitchToList: (type: DropdownType) => void
@@ -71,6 +72,7 @@ type MemberDropdownNavProps = {
 export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
   type,
   publisher,
+  containerRefElement,
   onCloseDropdown,
   onSwitchDropdownType,
   onSwitchToList,
@@ -183,10 +185,14 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                   </div>
                 ) : (
                   <div>
-                    <BalanceTooltip accountBalance={accountBalance} lockedAccountBalance={lockedAccountBalance}>
-                      <MemberHandleText as="span" variant="h400">
-                        {activeMembership?.handle}
-                      </MemberHandleText>
+                    <MemberHandleText as="span" variant="h400">
+                      {activeMembership?.handle}
+                    </MemberHandleText>
+                    <BalanceTooltip
+                      containerRefElement={containerRefElement}
+                      accountBalance={accountBalance}
+                      lockedAccountBalance={lockedAccountBalance}
+                    >
                       {accountBalance !== undefined ? (
                         <UserBalance>
                           <JoyTokenIcon size={16} variant="regular" withoutInformationTooltip />

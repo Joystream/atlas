@@ -133,6 +133,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                 {!isList ? (
                   <div ref={measureContainerRef}>
                     <MemberDropdownNav
+                      containerRefElement={containerRef.current}
                       channelId={channelId}
                       onSignOut={signOut}
                       onShowFundsDialog={() =>

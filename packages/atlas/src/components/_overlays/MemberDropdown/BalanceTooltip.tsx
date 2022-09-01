@@ -20,11 +20,13 @@ import {
 type BalanceTooltipProps = PropsWithChildren<{
   accountBalance: BN | undefined
   lockedAccountBalance: BN | undefined
+  containerRefElement: Element | null
 }>
 
 export const BalanceTooltip: FC<BalanceTooltipProps> = ({
   accountBalance,
   lockedAccountBalance = new BN(0),
+  containerRefElement,
   children,
 }) => {
   if (accountBalance === undefined) {
@@ -34,9 +36,10 @@ export const BalanceTooltip: FC<BalanceTooltipProps> = ({
     <Tooltip
       interactive
       multiline
+      appendTo={containerRefElement || document.body}
+      hideOnClick="toggle"
       placement="bottom"
       offsetY={8}
-      appendTo={document.body}
       customContent={
         <TooltipWrapper>
           <UpperRow>
