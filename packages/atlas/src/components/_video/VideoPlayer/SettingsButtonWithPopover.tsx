@@ -27,7 +27,7 @@ type SettingsPopoverProps = {
   onSettingsPopoverToggle: (isSettingsVisible: boolean) => void
   isSettingsPopoverOpened: boolean
   availableTracks?: AvailableTrack[]
-  onTrackChange: (selectedTrack: AvailableTrack) => void
+  onTrackChange: (selectedTrack: AvailableTrack | undefined) => void
   activeTrack?: AvailableTrack
   player: VideoJsPlayer | null
 }
@@ -74,7 +74,7 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
   const subtitlesSettings: Setting = {
     type: 'multi-value',
     label: 'Subtitles/CC',
-    value: activeTrack?.label || '',
+    value: !captionsEnabled || !activeTrack?.label ? 'Off' : activeTrack?.label,
     options: availableTracks
       ? [
           {
@@ -83,12 +83,7 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
             selected: !activeTrack,
             onOptionClick: () => {
               setCaptionsEnabled(false)
-              onTrackChange({
-                language: 'off',
-                label: 'Off',
-                src: '',
-              })
-              setCaptionsLanguage(null)
+              onTrackChange(undefined)
               player?.trigger(CustomVideojsEvents.CaptionsSet)
               if (mobile) {
                 handleClose()

@@ -7,6 +7,7 @@ import {
   forwardRef,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -19,6 +20,7 @@ import { Avatar } from '@/components/Avatar'
 import { SvgControlsCaptionsOutline, SvgControlsCaptionsSolid } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useMountEffect } from '@/hooks/useMountEffect'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { isMobile } from '@/utils/browser'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
@@ -158,6 +160,16 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   const xsMatch = useMediaMatch('xs')
   const storedLanguageExists =
     captionsLanguage && availableTextTracks?.map((track) => track.language).includes(captionsLanguage)
+  const findDefaultLanguage = useMemo(() => {
+    if (!availableTextTracks) {
+      return
+    }
+    return (
+      availableTextTracks.find((availableTrack) =>
+        storedLanguageExists ? availableTrack.language === captionsLanguage : availableTrack.language === 'en'
+      ) || availableTextTracks[0]
+    )
+  }, [availableTextTracks, captionsLanguage, storedLanguageExists])
 
   const playVideo = useCallback(
     async (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => {
@@ -546,9 +558,6 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
       return
     }
 
-    const findDefaultLanguage = availableTextTracks.find((availableTrack) =>
-      storedLanguageExists ? availableTrack.language === captionsLanguage : availableTrack.language === 'en'
-    )
     for (let i = 0; i < tracks.length; i++) {
       const track = tracks[i]
 
@@ -562,10 +571,14 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
         }
       }
     }
-    if (!activeTrack) {
-      setActiveTrack(findDefaultLanguage || availableTextTracks[0])
-    }
   }, [activeTrack, availableTextTracks, captionsEnabled, captionsLanguage, player, storedLanguageExists])
+
+  useMountEffect(() => {
+    if (!captionsEnabled || !availableTextTracks) {
+      return
+    }
+    setActiveTrack(findDefaultLanguage)
+  })
 
   // button/input handlers
   const handlePlayPause = useCallback(
@@ -650,11 +663,19 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
 
   const handleToggleCaptions = async (event: MouseEvent) => {
     event.stopPropagation()
+    if (!availableTextTracks) {
+      return
+    }
+    if (!activeTrack && !captionsEnabled) {
+      await setActiveTrack(findDefaultLanguage)
+    } else {
+      await setActiveTrack(undefined)
+    }
     await setCaptionsEnabled(!captionsEnabled)
     player?.trigger(CustomVideojsEvents.CaptionsSet)
   }
 
-  const handleTrackChange = (selectedTrack: AvailableTrack) => {
+  const handleTrackChange = (selectedTrack: AvailableTrack | undefined) => {
     const tracks = player?.remoteTextTracks()
     if (!tracks) {
       return
@@ -662,8 +683,8 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     for (let i = 0; i < tracks.length; i++) {
       const track = tracks[i]
 
-      // Find the English captions track and mark it as "showing".
-      if (track.language === selectedTrack.language) {
+      // Find the proper captions track and mark it as "showing".
+      if (selectedTrack && track.language === selectedTrack.language) {
         track.mode = 'showing'
       } else {
         track.mode = 'hidden'
