@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { useFullVideo } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { RoutingState } from '@/types/routing'
+import { SubtitlesInput } from '@/types/subtitles'
 import { SentryLogger } from '@/utils/logs'
 
 import { VideoWorkspaceContext } from './provider'
@@ -34,16 +35,15 @@ export const useVideoWorkspaceData = () => {
     onError: (error) => SentryLogger.error('Failed to fetch video', 'useVideoWorkspaceData', error),
   })
 
-  const subtitlesArray = useMemo(
+  const subtitlesArray: SubtitlesInput[] | null = useMemo(
     () =>
-      video?.subtitles.map(
-        (s) =>
-          ({
-            languageIso: s.language.iso,
-            type: s.type === 'closed-captions' ? 'closed-captions' : 'subtitles',
-            assetId: s.asset?.id,
-          } as const)
-      ) || null,
+      video?.subtitles
+        .map((s) => ({
+          languageIso: s.language?.iso,
+          type: s.type === 'closed-captions' ? 'closed-captions' : 'subtitles',
+          ...(s.asset?.id ? { assetId: s.asset?.id } : {}),
+        }))
+        .filter((s): s is SubtitlesInput => !!s.languageIso) || null,
     [video?.subtitles]
   )
 
