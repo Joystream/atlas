@@ -136,7 +136,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                       channelId={channelId}
                       onSignOut={signOut}
                       onShowFundsDialog={() =>
-                        dropdownType === 'channel' ? setShowWithdrawDialog(true) : setShowWithdrawDialog(true)
+                        dropdownType === 'channel' ? setShowWithdrawDialog(true) : setShowSendDialog(true)
                       }
                       accountBalance={accountBalance}
                       channelBalance={channelBalance}
