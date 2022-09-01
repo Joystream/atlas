@@ -254,9 +254,8 @@ export const useTransaction = (): HandleTransactionFn => {
             error.message.split(' ').find((word: string) => word === key)
           ) as ErrorCode | undefined
 
-          if (errorCode) {
-            updateStatus(ExtrinsicStatus.Error, errorCode)
-          }
+          updateStatus(ExtrinsicStatus.Error, errorCode)
+
           return false
         }
         SentryLogger.error(

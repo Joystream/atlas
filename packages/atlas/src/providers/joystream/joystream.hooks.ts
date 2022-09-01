@@ -165,9 +165,7 @@ export const useSubscribeAccountBalance = (
         proxyCallback(({ availableBalance, lockedBalance }) => {
           setLockedAccountBalance(new BN(lockedBalance))
           if (opts?.isRewardAccount) {
-            // substract existential deposit from channel balance
-            // TODO in future existentialDeposit will be replaced with channel state bloat bond
-            const rewardBalance = new BN(availableBalance).sub(chainState.existentialDeposit)
+            const rewardBalance = new BN(availableBalance).sub(chainState.channelStateBloatBondValue)
             setAccountBalance(rewardBalance.gtn(0) ? rewardBalance : new BN(0))
             return
           }
@@ -182,7 +180,7 @@ export const useSubscribeAccountBalance = (
     }
   }, [
     activeMembership,
-    chainState.existentialDeposit,
+    chainState.channelStateBloatBondValue,
     controllerAccount,
     joystream,
     opts?.isRewardAccount,
