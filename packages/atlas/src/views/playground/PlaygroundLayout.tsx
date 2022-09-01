@@ -19,6 +19,7 @@ import { cVar } from '@/styles'
 import {
   PlaygroundCaptcha,
   PlaygroundEstimatingBlockTime,
+  PlaygroundGoogleAuthentication,
   PlaygroundIframe,
   PlaygroundImageDownsizing,
   PlaygroundIndirectSignInDialog,
@@ -40,6 +41,7 @@ const playgroundRoutes = [
   { path: 'reactions-comments', element: <PlaygroundReactionsComments />, name: 'Reactions & comments' },
   { path: 'iframe', element: <PlaygroundIframe />, name: 'Iframe' },
   { path: 'captcha', element: <PlaygroundCaptcha />, name: 'Captcha' },
+  { path: 'google-authentication', element: <PlaygroundGoogleAuthentication />, name: 'Google authentication' },
 ]
 
 const PlaygroundLayout = () => {
