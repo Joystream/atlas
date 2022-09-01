@@ -38,7 +38,7 @@ export const useMemberAvatar = (member?: BasicMembershipFieldsFragment | null): 
   } else if (avatar?.__typename === 'AvatarObject') {
     return avatarAsset
   }
-  // if avatar is `undefined` it means that avatar is not loaded yes, If it's `null` it means that it's not set
+  // if avatar is `undefined` it means that avatar is not loaded yet, If it's `null` it means that it's not set
   return { url: null, isLoadingAsset: avatar === null ? false : true }
 }
 
