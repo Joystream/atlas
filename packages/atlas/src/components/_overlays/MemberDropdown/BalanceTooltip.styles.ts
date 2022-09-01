@@ -4,7 +4,8 @@ import { SvgActionLock } from '@/components/_icons'
 import { cVar, sizes } from '@/styles'
 
 export const TooltipWrapper = styled.div`
-  width: 224px;
+  /* sizes(6) - tooltip horizonthal padding */
+  width: calc(224px - ${sizes(6)});
   display: grid;
   grid-gap: ${sizes(3)};
 `

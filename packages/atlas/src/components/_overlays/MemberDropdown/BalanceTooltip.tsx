@@ -32,7 +32,11 @@ export const BalanceTooltip: FC<BalanceTooltipProps> = ({
   }
   return (
     <Tooltip
+      interactive
       multiline
+      placement="bottom"
+      offsetY={8}
+      appendTo={document.body}
       customContent={
         <TooltipWrapper>
           <UpperRow>

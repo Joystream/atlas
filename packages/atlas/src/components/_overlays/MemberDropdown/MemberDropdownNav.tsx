@@ -137,7 +137,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                   assetUrl={memberAvatarUrl}
                   loading={memberAvatarLoading}
                 />
-                <StyledIconWrapper size="small" icon={<SvgActionMember width={14} height={14} />} />
+                <StyledIconWrapper size="small" icon={<SvgActionMember />} />
               </AvatarWrapper>
             </Tooltip>
             <Tooltip text={hasAtLeastOneChannel ? 'Channel' : 'Create channel'} offsetY={16} placement="bottom">
@@ -160,7 +160,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                     </AddAvatar>
                   ) : null}
                 </StyledAvatar>
-                <StyledIconWrapper icon={<SvgActionChannel width={14} height={14} />} size="small" />
+                <StyledIconWrapper icon={<SvgActionChannel />} size="small" />
               </AvatarWrapper>
             </Tooltip>
           </AvatarsGroupContainer>

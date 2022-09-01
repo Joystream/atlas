@@ -30,7 +30,7 @@ export type TooltipProps = PropsWithChildren<{
   hidden?: boolean
   className?: string
 }> &
-  Pick<TippyProps, 'delay'>
+  Pick<TippyProps, 'delay' | 'interactive' | 'appendTo'>
 
 export const Tooltip: FC<TooltipProps> = ({
   text,
