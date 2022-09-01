@@ -28,7 +28,7 @@ import { StyledActionBar, TextFieldsWrapper, Wrapper } from './EditMembershipVie
 
 export type EditMemberFormInputs = {
   handle: string | null
-  avatar: ImageInputFile
+  avatar: ImageInputFile | null
   about: string | null
 }
 
@@ -94,7 +94,7 @@ export const EditMembershipView: FC = () => {
                 blob: blob,
                 originalBlob: blob,
               }
-            : {},
+            : null,
         about: activeMembership?.metadata.about || '',
       },
       {
@@ -117,11 +117,11 @@ export const EditMembershipView: FC = () => {
       const metaData = {
         ...(dirtyFields.handle ? { name: data?.handle } : {}),
         ...(dirtyFields.about ? { about: data?.about } : {}),
-        ...(dirtyFields.avatar ? { avatarUri: data?.avatar?.url } : null),
+        ...(dirtyFields.avatar ? { avatarUri: data?.avatar?.url } : {}),
       }
       return Object.keys(metaData).length ? metaData : undefined
     },
-    [dirtyFields]
+    [dirtyFields.about, dirtyFields.avatar, dirtyFields.handle]
   )
 
   const metadata = createMemberInputMetadata(watch())
@@ -240,7 +240,7 @@ export const EditMembershipView: FC = () => {
                   })
                 }}
                 onDelete={() => {
-                  onChange({ url: '', blob: undefined, originalBlob: undefined })
+                  onChange(null)
                 }}
                 ref={avatarDialogRef}
               />
