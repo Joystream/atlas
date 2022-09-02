@@ -48,7 +48,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
 
     const hasOneMember = memberships?.length === 1
 
-    const [dropdownType, setDropdownType] = useState<'channel' | 'member'>('member')
+    const [dropdownType, setDropdownType] = useState<'channel' | 'member'>(publisher ? 'channel' : 'member')
     const [isList, setIsList] = useState(false)
     const { ref: measureContainerRef, height: measureContainerHeight = 0 } = useResizeObserver<HTMLDivElement>({
       box: 'border-box',
@@ -85,13 +85,20 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
       [navigate, publisher, setActiveUser]
     )
 
+    const handleAddNewChannel = useCallback(() => {
+      setDropdownType('channel')
+      setIsList(false)
+      closeDropdown?.()
+    }, [closeDropdown])
+
     const handleChannelChange = useCallback(
       (channelId: string) => {
         setDropdownType('channel')
         setIsList(false)
+        setActiveUser({ channelId })
         onChannelChange?.(channelId)
       },
-      [onChannelChange]
+      [onChannelChange, setActiveUser]
     )
 
     const handleSwitch = useCallback((type: 'channel' | 'member', changeToList: boolean) => {
@@ -170,7 +177,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                       activeMembership={activeMembership}
                       onMemberChange={handleMemberChange}
                       onChannelChange={handleChannelChange}
-                      onCloseDropdown={closeDropdown}
+                      onAddNewChannel={handleAddNewChannel}
                       onAddNewMember={handleAddNewMember}
                       onSwitchToNav={(type) => handleSwitch(type, false)}
                       type={dropdownType}

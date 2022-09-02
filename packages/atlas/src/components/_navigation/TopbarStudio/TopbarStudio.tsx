@@ -22,7 +22,7 @@ type StudioTopbarProps = {
 }
 
 export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
-  const { channelId, activeMembership, setActiveUser } = useUser()
+  const { channelId, activeMembership } = useUser()
   const mdMatch = useMediaMatch('md')
 
   const { isWorkspaceOpen, setEditedVideo, setIsWorkspaceOpen } = useVideoWorkspace()
@@ -44,7 +44,6 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
     if (!channel) {
       return
     }
-    setActiveUser({ channelId })
     setIsWorkspaceOpen(false)
   }
 

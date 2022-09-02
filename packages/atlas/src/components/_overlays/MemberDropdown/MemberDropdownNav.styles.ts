@@ -67,10 +67,6 @@ export const AvatarsGroupContainer = styled.div`
   margin-bottom: ${sizes(6)};
 `
 
-export const AvatarWrapper = styled.div`
-  position: relative;
-`
-
 export const StyledAvatar = styled(Avatar)<{ isDisabled: boolean }>`
   width: 40px;
   height: 40px;
@@ -79,9 +75,16 @@ export const StyledAvatar = styled(Avatar)<{ isDisabled: boolean }>`
   );
   opacity: ${({ isDisabled }) => (isDisabled ? 0.25 : 1)};
   transition: opacity ${cVar('animationTransitionMedium')};
+`
+
+export const AvatarWrapper = styled.div`
+  position: relative;
+  cursor: pointer;
 
   :hover {
-    opacity: 1;
+    ${StyledAvatar} {
+      opacity: 1;
+    }
   }
 
   :active {

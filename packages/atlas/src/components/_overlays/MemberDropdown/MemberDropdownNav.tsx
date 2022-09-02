@@ -106,7 +106,6 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
     from: { opacity: 0, x: type === 'channel' ? 280 : -280, position: 'absolute' as const },
     enter: { opacity: 1, x: 0 },
     leave: { opacity: 0, x: type === 'channel' ? -280 : 280 },
-
     // this will block initial animation when switching to list
     immediate: !blockAnimationRef.current,
     config: {
@@ -117,6 +116,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
   })
 
   const hasAtLeastOneChannel = activeMembership?.channels.length && activeMembership?.channels.length >= 1
+  const hasAtleastTwoChannels = activeMembership?.channels.length && activeMembership?.channels.length >= 2
 
   const handleAddNewMember = () => {
     setSignInModalOpen(true)
@@ -129,11 +129,10 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
         <MemberInfoContainer>
           <AvatarsGroupContainer>
             <Tooltip text="Member" offsetY={16} placement="bottom">
-              <AvatarWrapper>
+              <AvatarWrapper onClick={() => onSwitchDropdownType('member')}>
                 <StyledAvatar
                   disabledInteractiveStyles
                   clickable={false}
-                  onClick={() => onSwitchDropdownType('member')}
                   isDisabled={type === 'channel'}
                   size="small"
                   assetUrl={memberAvatarUrl}
@@ -143,14 +142,13 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
               </AvatarWrapper>
             </Tooltip>
             <Tooltip text={hasAtLeastOneChannel ? 'Channel' : 'Create channel'} offsetY={16} placement="bottom">
-              <AvatarWrapper>
+              <AvatarWrapper
+                onClick={() =>
+                  hasAtLeastOneChannel ? onSwitchDropdownType('channel') : navigate(absoluteRoutes.studio.newChannel())
+                }
+              >
                 <StyledAvatar
                   disabledInteractiveStyles
-                  onClick={() =>
-                    hasAtLeastOneChannel
-                      ? onSwitchDropdownType('channel')
-                      : navigate(absoluteRoutes.studio.newChannel())
-                  }
                   isDisabled={type === 'member'}
                   size="small"
                   assetUrl={channelAvatarUrl}
@@ -280,10 +278,11 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                   },
                   {
                     asButton: true,
-                    label: 'Switch channel',
+                    label: hasAtleastTwoChannels ? 'Switch channel' : 'Add new channel',
                     nodeStart: <IconWrapper icon={<SvgActionSwitchMember />} />,
-                    nodeEnd: <SvgActionChevronR />,
-                    onClick: () => onSwitchToList(type),
+                    nodeEnd: hasAtleastTwoChannels && <SvgActionChevronR />,
+                    onClick: () => (hasAtleastTwoChannels ? onSwitchToList(type) : onCloseDropdown?.()),
+                    to: hasAtleastTwoChannels ? undefined : absoluteRoutes.studio.newChannel(),
                   },
                 ]}
               />

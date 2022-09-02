@@ -18,7 +18,7 @@ type MemberDropdownListProps = {
   memberships: FullMembershipFieldsFragment[]
   activeMembership?: FullMembershipFieldsFragment | null
   channelId: string | null
-  onCloseDropdown?: () => void
+  onAddNewChannel?: () => void
   onChannelChange?: (channelId: string) => void
   onSwitchToNav: (type: DropdownType) => void
   onMemberChange: (memberId: string, accountId: string, channelId: string | null) => void
@@ -29,7 +29,7 @@ export const MemberDropdownList: FC<MemberDropdownListProps> = ({
   channelId,
   memberships,
   activeMembership,
-  onCloseDropdown,
+  onAddNewChannel,
   onSwitchToNav,
   onChannelChange,
   onMemberChange,
@@ -70,7 +70,7 @@ export const MemberDropdownList: FC<MemberDropdownListProps> = ({
               <IconWrapper icon={<SvgActionChannel />} />
             )
           }
-          onClick={() => (type === 'member' ? onAddNewMember() : onCloseDropdown?.())}
+          onClick={() => (type === 'member' ? onAddNewMember() : onAddNewChannel?.())}
           label={type === 'member' ? 'Add new member...' : 'Add new channel...'}
           to={type === 'channel' ? absoluteRoutes.studio.newChannel() : undefined}
         />
