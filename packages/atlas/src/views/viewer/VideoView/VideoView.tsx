@@ -5,7 +5,7 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { useParams } from 'react-router-dom'
 
-import { useAddVideoView, useFullVideosConnection } from '@/api/hooks'
+import { useAddVideoView, useFullVideo } from '@/api/hooks'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
@@ -71,13 +71,14 @@ export const VideoView: FC = () => {
   const { openNftPutOnSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement, cancelNftSale } =
     useNftActions()
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
-  const { loading, videosConnection, error } = useFullVideosConnection(
-    { where: { id_eq: id, isPublic_eq: undefined } },
+  const { loading, video, error } = useFullVideo(
+    id ?? '',
     {
       onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
-    }
+    },
+    // cancel video filters - if video is accessed directly with a link allowed it to be unlisted, censored and have un-uploaded assets
+    { where: { isPublic_eq: undefined, isCensored_eq: undefined, thumbnailPhoto: undefined, media: undefined } }
   )
-  const video = videosConnection?.edges[0].node
   const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
   const nftWidgetProps = useNftWidget(video)
   const { likeOrDislikeVideo } = useReactionTransactions()
