@@ -50,7 +50,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
 
     const [dropdownType, setDropdownType] = useState<'channel' | 'member'>('member')
     const [isList, setIsList] = useState(false)
-    const { ref: measureContainerRef, height: measureContainerHeight } = useResizeObserver<HTMLDivElement>({
+    const { ref: measureContainerRef, height: measureContainerHeight = 0 } = useResizeObserver<HTMLDivElement>({
       box: 'border-box',
     })
     const containerRef = useRef<HTMLDivElement>(null)
@@ -65,7 +65,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
         easing: bezier(0.03, 0.5, 0.25, 1),
       },
       onStart: () => setDisableScrollDuringAnimation(true),
-      onDestroyed: () => setDisableScrollDuringAnimation(false),
+      onRest: () => setDisableScrollDuringAnimation(false),
     })
 
     const handleAddNewMember = useCallback(() => {
@@ -120,6 +120,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
         document.removeEventListener('click', handleClickOutside, true)
       }
     }, [closeDropdown, isActive])
+
     return (
       <>
         <WithdrawFundsDialog
@@ -133,7 +134,11 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
         />
         <SendFundsDialog show={showSendDialog} onExitClick={toggleSendDialog} accountBalance={accountBalance} />
         <Container ref={mergeRefs([ref, containerRef])}>
-          <InnerContainer isActive={isActive} containerHeight={measureContainerHeight}>
+          <InnerContainer
+            isActive={isActive}
+            containerHeight={measureContainerHeight}
+            disableVerticalScroll={disableScrollDuringAnimation}
+          >
             {transition((style, isList) => (
               <SlideAnimationContainer style={style} disableVerticalScroll={disableScrollDuringAnimation}>
                 {!isList ? (

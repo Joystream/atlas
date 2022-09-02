@@ -7,9 +7,9 @@ import { cVar, media, sizes, zIndex } from '@/styles'
 export const Container = styled.div`
   position: fixed;
   right: ${sizes(4)};
+  height: 0;
   top: 0;
   width: 280px;
-  height: 0;
   z-index: ${zIndex.nearTransactionBar};
 
   ${media.md} {
@@ -26,8 +26,8 @@ export const SlideAnimationContainer = styled(animated.div, { shouldForwardProp:
   disableVerticalScroll: boolean
 }>`
   position: absolute;
-  height: 100%;
   width: 280px;
+  height: 100%;
   will-change: transform, opacity;
   overflow-x: hidden;
   overflow-y: ${({ disableVerticalScroll }) => (disableVerticalScroll ? 'hidden' : 'auto')};
@@ -36,6 +36,7 @@ export const SlideAnimationContainer = styled(animated.div, { shouldForwardProp:
 export const InnerContainer = styled.div<{
   isActive: boolean
   containerHeight?: number
+  disableVerticalScroll: boolean
 }>`
   width: 280px;
   position: relative;
@@ -51,4 +52,5 @@ export const InnerContainer = styled.div<{
   border-radius: 0 0 ${cVar('radiusMedium')} ${cVar('radiusMedium')};
   background-color: ${cVar('colorBackgroundStrong')};
   overflow-x: hidden;
+  overflow-y: ${({ disableVerticalScroll }) => (disableVerticalScroll ? 'hidden' : 'auto')};
 `
