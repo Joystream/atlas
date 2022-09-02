@@ -142,7 +142,7 @@ export const useBucketsConfigForNewChannel = () => {
 }
 
 type UseSubscribeAccountBalanceOpts = {
-  isRewardAccount: true
+  channelStateBloatBond?: BN
 }
 export const useSubscribeAccountBalance = (
   controllerAccount?: string | null,
@@ -164,10 +164,8 @@ export const useSubscribeAccountBalance = (
         controllerAccount || activeMembership.controllerAccount,
         proxyCallback(({ availableBalance, lockedBalance }) => {
           setLockedAccountBalance(new BN(lockedBalance))
-          if (opts?.isRewardAccount) {
-            // substract existential deposit from channel balance
-            // TODO in future existentialDeposit will be replaced with channel state bloat bond
-            const rewardBalance = new BN(availableBalance).sub(chainState.existentialDeposit)
+          if (opts?.channelStateBloatBond) {
+            const rewardBalance = new BN(availableBalance).sub(opts.channelStateBloatBond)
             setAccountBalance(rewardBalance.gtn(0) ? rewardBalance : new BN(0))
             return
           }
@@ -182,10 +180,10 @@ export const useSubscribeAccountBalance = (
     }
   }, [
     activeMembership,
-    chainState.existentialDeposit,
+    chainState.channelStateBloatBondValue,
     controllerAccount,
     joystream,
-    opts?.isRewardAccount,
+    opts?.channelStateBloatBond,
     proxyCallback,
   ])
 

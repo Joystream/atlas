@@ -24,6 +24,7 @@ export type GetMembershipQuery = {
       createdAt: Date
       follows: number
       rewardAccount: string
+      channelStateBloatBond: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -89,6 +90,7 @@ export type GetMembershipsQuery = {
       createdAt: Date
       follows: number
       rewardAccount: string
+      channelStateBloatBond: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string

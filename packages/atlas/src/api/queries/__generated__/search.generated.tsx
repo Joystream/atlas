@@ -24,6 +24,7 @@ export type SearchQuery = {
           createdAt: Date
           follows: number
           rewardAccount: string
+          channelStateBloatBond: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -57,6 +58,7 @@ export type SearchQuery = {
             createdAt: Date
             follows: number
             rewardAccount: string
+            channelStateBloatBond: string
             avatarPhoto?: {
               __typename?: 'StorageDataObject'
               id: string

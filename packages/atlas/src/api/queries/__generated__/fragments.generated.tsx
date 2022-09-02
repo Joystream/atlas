@@ -16,6 +16,7 @@ export type BasicChannelFieldsFragment = {
   createdAt: Date
   follows: number
   rewardAccount: string
+  channelStateBloatBond: string
   avatarPhoto?: {
     __typename?: 'StorageDataObject'
     id: string
@@ -46,6 +47,7 @@ export type FullChannelFieldsFragment = {
   createdAt: Date
   follows: number
   rewardAccount: string
+  channelStateBloatBond: string
   language?: { __typename?: 'Language'; id: string; iso: string } | null
   ownerMember?: {
     __typename?: 'Membership'
@@ -157,6 +159,7 @@ export type FullMembershipFieldsFragment = {
     createdAt: Date
     follows: number
     rewardAccount: string
+    channelStateBloatBond: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -289,6 +292,7 @@ export type BasicVideoFieldsFragment = {
     createdAt: Date
     follows: number
     rewardAccount: string
+    channelStateBloatBond: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -601,6 +605,7 @@ export type FullVideoFieldsFragment = {
     createdAt: Date
     follows: number
     rewardAccount: string
+    channelStateBloatBond: string
     language?: { __typename?: 'Language'; id: string; iso: string } | null
     ownerMember?: {
       __typename?: 'Membership'
@@ -1118,6 +1123,7 @@ export type FullNftFieldsFragment = {
     createdAt: Date
     follows: number
     rewardAccount: string
+    channelStateBloatBond: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -1151,6 +1157,7 @@ export type FullNftFieldsFragment = {
       createdAt: Date
       follows: number
       rewardAccount: string
+      channelStateBloatBond: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -1966,6 +1973,7 @@ export const BasicChannelFieldsFragmentDoc = gql`
     createdAt
     follows
     rewardAccount
+    channelStateBloatBond
     avatarPhoto {
       ...StorageDataObjectFields
     }

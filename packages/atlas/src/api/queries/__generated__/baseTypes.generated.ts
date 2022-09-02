@@ -6292,6 +6292,8 @@ export type Channel = BaseGraphQlObject & {
   avatarPhotoId?: Maybe<Scalars['String']>
   bannedMembers: Array<Membership>
   channelNftCollectors: Array<ChannelNftCollectors>
+  /** Value of channel state bloat bond fee paid by channel creator */
+  channelStateBloatBond: Scalars['BigInt']
   collaborators: Array<Membership>
   commentcreatedeventvideoChannel?: Maybe<Array<CommentCreatedEvent>>
   commentdeletedeventvideoChannel?: Maybe<Array<CommentDeletedEvent>>
@@ -6499,6 +6501,7 @@ export type ChannelConnection = {
 export type ChannelCreateInput = {
   activeVideosCounter: Scalars['Float']
   avatarPhoto?: InputMaybe<Scalars['ID']>
+  channelStateBloatBond: Scalars['String']
   coverPhoto?: InputMaybe<Scalars['ID']>
   createdInBlock: Scalars['Float']
   description?: InputMaybe<Scalars['String']>
@@ -6792,6 +6795,8 @@ export enum ChannelOrderByInput {
   ActiveVideosCounterDesc = 'activeVideosCounter_DESC',
   AvatarPhotoAsc = 'avatarPhoto_ASC',
   AvatarPhotoDesc = 'avatarPhoto_DESC',
+  ChannelStateBloatBondAsc = 'channelStateBloatBond_ASC',
+  ChannelStateBloatBondDesc = 'channelStateBloatBond_DESC',
   CoverPhotoAsc = 'coverPhoto_ASC',
   CoverPhotoDesc = 'coverPhoto_DESC',
   CreatedAtAsc = 'createdAt_ASC',
@@ -6846,6 +6851,7 @@ export type ChannelReportsWhereInput = {
 export type ChannelUpdateInput = {
   activeVideosCounter?: InputMaybe<Scalars['Float']>
   avatarPhoto?: InputMaybe<Scalars['ID']>
+  channelStateBloatBond?: InputMaybe<Scalars['String']>
   coverPhoto?: InputMaybe<Scalars['ID']>
   createdInBlock?: InputMaybe<Scalars['Float']>
   description?: InputMaybe<Scalars['String']>
@@ -6876,6 +6882,12 @@ export type ChannelWhereInput = {
   channelNftCollectors_every?: InputMaybe<ChannelNftCollectorsWhereInput>
   channelNftCollectors_none?: InputMaybe<ChannelNftCollectorsWhereInput>
   channelNftCollectors_some?: InputMaybe<ChannelNftCollectorsWhereInput>
+  channelStateBloatBond_eq?: InputMaybe<Scalars['BigInt']>
+  channelStateBloatBond_gt?: InputMaybe<Scalars['BigInt']>
+  channelStateBloatBond_gte?: InputMaybe<Scalars['BigInt']>
+  channelStateBloatBond_in?: InputMaybe<Array<Scalars['BigInt']>>
+  channelStateBloatBond_lt?: InputMaybe<Scalars['BigInt']>
+  channelStateBloatBond_lte?: InputMaybe<Scalars['BigInt']>
   collaborators_every?: InputMaybe<MembershipWhereInput>
   collaborators_none?: InputMaybe<MembershipWhereInput>
   collaborators_some?: InputMaybe<MembershipWhereInput>
@@ -30800,7 +30812,7 @@ export type Video = BaseGraphQlObject & {
   updatedAt?: Maybe<Scalars['DateTime']>
   updatedById?: Maybe<Scalars['ID']>
   version: Scalars['Int']
-  /** Video state bloat bond */
+  /** Value of video state bloat bond fee paid by channel owner */
   videoStateBloatBond: Scalars['BigInt']
   videoreactedeventvideo?: Maybe<Array<VideoReactedEvent>>
   videoreactionspreferenceeventvideo?: Maybe<Array<VideoReactionsPreferenceEvent>>

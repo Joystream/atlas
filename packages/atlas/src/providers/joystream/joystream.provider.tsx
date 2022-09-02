@@ -141,7 +141,6 @@ type JoystreamChainConstants = {
 }
 const useJoystreamChainConstants = (joystream: Remote<JoystreamLib> | undefined) => {
   const [chainConstant, setChainConstant] = useState<JoystreamChainConstants>({
-    existentialDeposit: new BN(0),
     dataObjectPerMegabyteFee: new BN(0),
     dataObjectStateBloatBondValue: new BN(0),
     videoStateBloatBondValue: new BN(0),
@@ -160,7 +159,6 @@ const useJoystreamChainConstants = (joystream: Remote<JoystreamLib> | undefined)
 
     joystream.getChainConstants().then((chainConstants) =>
       setChainConstant({
-        existentialDeposit: new BN(chainConstants.existentialDeposit),
         dataObjectPerMegabyteFee: new BN(chainConstants.dataObjectPerMegabyteFee),
         dataObjectStateBloatBondValue: new BN(chainConstants.dataObjectStateBloatBondValue),
         videoStateBloatBondValue: new BN(chainConstants.videoStateBloatBondValue),

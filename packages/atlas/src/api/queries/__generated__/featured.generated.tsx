@@ -31,6 +31,7 @@ export type GetVideoHeroQuery = {
         createdAt: Date
         follows: number
         rewardAccount: string
+        channelStateBloatBond: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -298,6 +299,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
           createdAt: Date
           follows: number
           rewardAccount: string
+          channelStateBloatBond: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -623,6 +625,7 @@ export type GetCategoriesFeaturedVideosQuery = {
         createdAt: Date
         follows: number
         rewardAccount: string
+        channelStateBloatBond: string
         language?: { __typename?: 'Language'; id: string; iso: string } | null
         ownerMember?: {
           __typename?: 'Membership'
