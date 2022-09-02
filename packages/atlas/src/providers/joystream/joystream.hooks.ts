@@ -142,7 +142,7 @@ export const useBucketsConfigForNewChannel = () => {
 }
 
 type UseSubscribeAccountBalanceOpts = {
-  channelStateBloatBond?: string
+  channelStateBloatBond?: BN
 }
 export const useSubscribeAccountBalance = (
   controllerAccount?: string | null,
@@ -165,7 +165,7 @@ export const useSubscribeAccountBalance = (
         proxyCallback(({ availableBalance, lockedBalance }) => {
           setLockedAccountBalance(new BN(lockedBalance))
           if (opts?.channelStateBloatBond) {
-            const rewardBalance = new BN(availableBalance).sub(new BN(opts.channelStateBloatBond))
+            const rewardBalance = new BN(availableBalance).sub(opts.channelStateBloatBond)
             setAccountBalance(rewardBalance.gtn(0) ? rewardBalance : new BN(0))
             return
           }

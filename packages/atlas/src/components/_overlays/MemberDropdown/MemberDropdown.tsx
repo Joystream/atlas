@@ -73,7 +73,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const { accountBalance } = useSubscribeAccountBalance()
     const { accountBalance: channelBalance } =
       useSubscribeAccountBalance(selectedChannel?.rewardAccount, {
-        channelStateBloatBond: selectedChannel?.channelStateBloatBond,
+        channelStateBloatBond: new BN(selectedChannel?.channelStateBloatBond || 0),
       }) || new BN(0)
     const balance = publisher ? channelBalance : accountBalance
 
