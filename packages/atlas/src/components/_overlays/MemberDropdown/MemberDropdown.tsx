@@ -1,6 +1,6 @@
 import { easings, useSpringRef, useTransition } from '@react-spring/web'
 import BN from 'bn.js'
-import { FC, forwardRef, useEffect, useRef, useState } from 'react'
+import { FC, forwardRef, useEffect, useMemo, useRef, useState } from 'react'
 import mergeRefs from 'react-merge-refs'
 import { useLocation, useNavigate } from 'react-router'
 import useResizeObserver from 'use-resize-observer'
@@ -70,10 +70,14 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const setSignInModalOpen = useUserStore((state) => state.actions.setSignInModalOpen)
     const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
 
+    const memoizedChannelStateBloatBond = useMemo(() => {
+      return new BN(selectedChannel?.channelStateBloatBond || 0)
+    }, [selectedChannel?.channelStateBloatBond])
+
     const { accountBalance } = useSubscribeAccountBalance()
     const { accountBalance: channelBalance } =
       useSubscribeAccountBalance(selectedChannel?.rewardAccount, {
-        channelStateBloatBond: new BN(selectedChannel?.channelStateBloatBond || 0),
+        channelStateBloatBond: memoizedChannelStateBloatBond,
       }) || new BN(0)
     const balance = publisher ? channelBalance : accountBalance
 
