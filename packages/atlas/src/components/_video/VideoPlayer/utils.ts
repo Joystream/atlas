@@ -117,6 +117,9 @@ export const hotkeysHandler = async (
       }
       return
     case 'KeyC':
+      if (!playerInstance?.remoteTextTracks().length) {
+        return
+      }
       await toggleCaptions()
       playerInstance.trigger(CustomVideojsEvents.CaptionsSet)
       return
