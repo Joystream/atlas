@@ -39,6 +39,7 @@ export const BalanceTooltip: FC<BalanceTooltipProps> = ({
       appendTo={containerRefElement || document.body}
       hideOnClick="toggle"
       placement="bottom"
+      delay={[250, 0]}
       customContent={
         <TooltipWrapper>
           <UpperRow>
@@ -71,7 +72,12 @@ export const BalanceTooltip: FC<BalanceTooltipProps> = ({
             </Text>
             <TextWithIcon>
               <JoyTokenIcon size={16} variant="regular" />
-              <NumberFormat as="span" variant="t200" value={lockedAccountBalance?.add(accountBalance)} format="full" />
+              <NumberFormat
+                as="span"
+                variant="t200-strong"
+                value={lockedAccountBalance?.add(accountBalance)}
+                format="full"
+              />
             </TextWithIcon>
           </TooltipRow>
           <TooltipFooter>

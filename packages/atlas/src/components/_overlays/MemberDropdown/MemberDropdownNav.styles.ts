@@ -114,7 +114,7 @@ export const FixedSizeContainer = styled.div<FixedSizeContainerProps>`
 `
 
 export const UserBalance = styled.div`
-  display: grid;
+  display: inline-grid;
   grid-auto-flow: column;
   grid-auto-columns: max-content;
   align-items: center;
@@ -165,6 +165,7 @@ export const AnimatedSectionContainer = styled(animated(SectionContainer))`
 
 export const MemberHandleText = styled(Text)`
   word-break: break-word;
+  display: block;
 `
 
 export const ChannelsSectionTitle = styled(Text)`

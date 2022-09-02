@@ -1,6 +1,6 @@
 import bezier from 'bezier-easing'
 import { BN } from 'bn.js'
-import { forwardRef, useCallback, useEffect, useRef, useState } from 'react'
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import mergeRefs from 'react-merge-refs'
 import { useNavigate } from 'react-router'
 import { useTransition } from 'react-spring'
@@ -36,10 +36,14 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const { url: memberAvatarUrl } = useMemberAvatar(activeMembership)
     const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
 
+    const memoizedChannelStateBloatBond = useMemo(() => {
+      return new BN(selectedChannel?.channelStateBloatBond || 0)
+    }, [selectedChannel?.channelStateBloatBond])
+
     const { accountBalance, lockedAccountBalance } = useSubscribeAccountBalance()
     const { accountBalance: channelBalance } =
       useSubscribeAccountBalance(selectedChannel?.rewardAccount, {
-        channelStateBloatBond: new BN(selectedChannel?.channelStateBloatBond || 0),
+        channelStateBloatBond: memoizedChannelStateBloatBond,
       }) || new BN(0)
 
     const hasOneMember = memberships?.length === 1
@@ -116,7 +120,6 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
         document.removeEventListener('click', handleClickOutside, true)
       }
     }, [closeDropdown, isActive])
-
     return (
       <>
         <WithdrawFundsDialog
