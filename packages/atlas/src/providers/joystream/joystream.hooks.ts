@@ -165,6 +165,8 @@ export const useSubscribeAccountBalance = (
         proxyCallback(({ availableBalance, lockedBalance }) => {
           setLockedAccountBalance(new BN(lockedBalance))
           if (opts?.isRewardAccount) {
+            // TODO we should take channelStateBloatBondValue from the QN once the QN supports it
+            // Read more here https://github.com/Joystream/atlas/pull/3198#discussion_r961310018
             const rewardBalance = new BN(availableBalance).sub(chainState.channelStateBloatBondValue)
             setAccountBalance(rewardBalance.gtn(0) ? rewardBalance : new BN(0))
             return
