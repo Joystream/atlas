@@ -20,7 +20,7 @@ import {
   useGetTop10VideosThisWeekQuery,
   useGetVideoCountQuery,
 } from '@/api/queries'
-import { videoFilter } from '@/config/videoFilter'
+import { videoFilter } from '@/config/contentFilter'
 
 export const useFullVideo = (
   id: string,
@@ -38,6 +38,7 @@ export const useFullVideo = (
       },
     },
   })
+
   return {
     video: data?.videos[0],
     ...queryRest,
@@ -94,7 +95,7 @@ export const useBasicVideos = (
   variables?: GetBasicVideosQueryVariables,
   opts?: QueryHookOptions<GetBasicVideosQuery, GetBasicVideosQueryVariables>
 ) => {
-  const { data, ...rest } = useGetBasicVideosQuery({
+  const { data, ...queryRest } = useGetBasicVideosQuery({
     ...opts,
     variables: {
       ...variables,
@@ -106,7 +107,7 @@ export const useBasicVideos = (
   })
   return {
     videos: data?.videos,
-    ...rest,
+    ...queryRest,
   }
 }
 

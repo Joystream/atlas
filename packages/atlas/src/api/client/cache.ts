@@ -90,6 +90,22 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
   channelsConnection: relayStylePagination(getChannelKeyArgs),
   mostFollowedChannelsConnection: relayStylePagination(getChannelKeyArgs),
   mostViewedChannelsConnection: relayStylePagination(getChannelKeyArgs),
+  channels: (existing, { toReference, args, canRead }) => {
+    if (args?.where.id_eq) {
+      // get single channel
+      const channelRef = toReference({
+        __typename: 'Channel',
+        id: args?.where.id_eq,
+      })
+      if (canRead(channelRef)) {
+        return [channelRef]
+      } else {
+        return undefined
+      }
+    } else {
+      return existing
+    }
+  },
   videosConnection: {
     ...relayStylePagination(getVideoKeyArgs),
     read(
@@ -124,9 +140,21 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
   mostViewedVideosConnection: relayStylePagination(getVideoKeyArgs),
   videos: {
     ...offsetLimitPagination(getVideoKeyArgs),
-    read(existing, opts) {
-      const offset = opts.args?.offset ?? 0
-      const limit = opts.args?.limit ?? existing?.length
+    read(existing, { args, toReference, canRead }) {
+      if (args?.where.id_eq) {
+        // get single video
+        const videoRef = toReference({
+          __typename: 'Video',
+          id: args?.where.id_eq,
+        })
+        if (canRead(videoRef)) {
+          return [videoRef]
+        } else {
+          return undefined
+        }
+      }
+      const offset = args?.offset ?? 0
+      const limit = args?.limit ?? existing?.length
       return existing?.slice(offset, offset + limit)
     },
   },

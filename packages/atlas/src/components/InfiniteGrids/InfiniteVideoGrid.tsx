@@ -17,7 +17,7 @@ import { Text } from '@/components/Text'
 import { LoadMoreButton } from '@/components/_buttons/LoadMoreButton'
 import { SvgActionChevronR } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { videoFilter } from '@/config/videoFilter'
+import { videoFilter } from '@/config/contentFilter'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { SentryLogger } from '@/utils/logs'
 

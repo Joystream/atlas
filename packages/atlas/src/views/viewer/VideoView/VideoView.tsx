@@ -76,7 +76,8 @@ export const VideoView: FC = () => {
     {
       onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
     },
-    { where: { isPublic_eq: undefined } }
+    // cancel video filters - if video is accessed directly with a link allowed it to be unlisted, censored and have un-uploaded assets
+    { where: { isPublic_eq: undefined, isCensored_eq: undefined, thumbnailPhoto: undefined, media: undefined } }
   )
   const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
   const nftWidgetProps = useNftWidget(video)

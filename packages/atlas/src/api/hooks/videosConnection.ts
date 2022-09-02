@@ -8,7 +8,7 @@ import {
   useGetBasicVideosConnectionQuery,
   useGetFullVideosConnectionQuery,
 } from '@/api/queries'
-import { videoFilter } from '@/config/videoFilter'
+import { videoFilter } from '@/config/contentFilter'
 
 export const useBasicVideosConnection = (
   variables?: GetBasicVideosConnectionQueryVariables,

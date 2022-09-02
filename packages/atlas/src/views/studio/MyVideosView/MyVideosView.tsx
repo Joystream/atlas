@@ -13,6 +13,7 @@ import { SvgActionAddVideo, SvgActionUpload, SvgAlertsInformative24 } from '@/co
 import { Select } from '@/components/_inputs/Select'
 import { VideoTileDraft } from '@/components/_video/VideoTileDraft'
 import { VideoTilePublisher } from '@/components/_video/VideoTilePublisher'
+import { cancelledVideoFilter } from '@/config/contentFilter'
 import { absoluteRoutes } from '@/config/routes'
 import { VIDEO_SORT_OPTIONS } from '@/config/sorting'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
@@ -88,11 +89,8 @@ export const MyVideosView = () => {
         channel: {
           id_eq: channelId,
         },
+        ...cancelledVideoFilter,
         isPublic_eq,
-        isCensored_eq: undefined,
-        media: undefined,
-        thumbnailPhoto: undefined,
-        NOT: [{ id_in: [] }, { thumbnailPhoto: { id_in: [] } }, { media: { id_in: [] } }, { channel: { id_in: [] } }],
       },
     },
     {

@@ -5,6 +5,7 @@ import { useLocation, useMatch } from 'react-router'
 import { useNavigate } from 'react-router-dom'
 
 import { useFullVideo } from '@/api/hooks'
+import { cancelledVideoFilter } from '@/config/contentFilter'
 import { absoluteRoutes } from '@/config/routes'
 import { RoutingState } from '@/types/routing'
 import { SubtitlesInput } from '@/types/subtitles'
@@ -30,10 +31,18 @@ export const useVideoWorkspaceData = () => {
   const { editedVideoInfo } = useVideoWorkspace()
   const { channelId } = useAuthorizedUser()
   const drafts = useDraftStore(channelDraftsSelector(channelId))
-  const { video, loading, error } = useFullVideo(editedVideoInfo?.id ?? '', {
-    skip: editedVideoInfo?.isDraft,
-    onError: (error) => SentryLogger.error('Failed to fetch video', 'useVideoWorkspaceData', error),
-  })
+  const { video, loading, error } = useFullVideo(
+    editedVideoInfo?.id ?? '',
+    {
+      skip: editedVideoInfo?.isDraft,
+      onError: (error) => SentryLogger.error('Failed to fetch video', 'useVideoWorkspaceData', error),
+    },
+    {
+      where: {
+        ...cancelledVideoFilter,
+      },
+    }
+  )
 
   const subtitlesArray: SubtitlesInput[] | null = useMemo(
     () =>
