@@ -25,6 +25,7 @@ export type GetNftQuery = {
       createdAt: Date
       follows: number
       rewardAccount: string
+      channelStateBloatBond: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -58,6 +59,7 @@ export type GetNftQuery = {
         createdAt: Date
         follows: number
         rewardAccount: string
+        channelStateBloatBond: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -512,6 +514,7 @@ export type GetNftsQuery = {
       createdAt: Date
       follows: number
       rewardAccount: string
+      channelStateBloatBond: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -545,6 +548,7 @@ export type GetNftsQuery = {
         createdAt: Date
         follows: number
         rewardAccount: string
+        channelStateBloatBond: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -1007,6 +1011,7 @@ export type GetNftsConnectionQuery = {
           createdAt: Date
           follows: number
           rewardAccount: string
+          channelStateBloatBond: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -1040,6 +1045,7 @@ export type GetNftsConnectionQuery = {
             createdAt: Date
             follows: number
             rewardAccount: string
+            channelStateBloatBond: string
             avatarPhoto?: {
               __typename?: 'StorageDataObject'
               id: string

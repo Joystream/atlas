@@ -27,6 +27,7 @@ export type GetBasicVideoQuery = {
       createdAt: Date
       follows: number
       rewardAccount: string
+      channelStateBloatBond: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -346,6 +347,7 @@ export type GetFullVideoQuery = {
       createdAt: Date
       follows: number
       rewardAccount: string
+      channelStateBloatBond: string
       language?: { __typename?: 'Language'; id: string; iso: string } | null
       ownerMember?: {
         __typename?: 'Membership'
@@ -678,6 +680,7 @@ export type GetBasicVideosConnectionQuery = {
           createdAt: Date
           follows: number
           rewardAccount: string
+          channelStateBloatBond: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -1009,6 +1012,7 @@ export type GetFullVideosConnectionQuery = {
           createdAt: Date
           follows: number
           rewardAccount: string
+          channelStateBloatBond: string
           language?: { __typename?: 'Language'; id: string; iso: string } | null
           ownerMember?: {
             __typename?: 'Membership'
@@ -1338,6 +1342,7 @@ export type GetBasicVideosQuery = {
       createdAt: Date
       follows: number
       rewardAccount: string
+      channelStateBloatBond: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -1660,6 +1665,7 @@ export type GetFullVideosQuery = {
       createdAt: Date
       follows: number
       rewardAccount: string
+      channelStateBloatBond: string
       language?: { __typename?: 'Language'; id: string; iso: string } | null
       ownerMember?: {
         __typename?: 'Membership'
@@ -1994,6 +2000,7 @@ export type GetMostViewedVideosConnectionQuery = {
           createdAt: Date
           follows: number
           rewardAccount: string
+          channelStateBloatBond: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -2257,6 +2264,7 @@ export type GetTop10VideosThisWeekQuery = {
       createdAt: Date
       follows: number
       rewardAccount: string
+      channelStateBloatBond: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -2517,6 +2525,7 @@ export type GetTop10VideosThisMonthQuery = {
       createdAt: Date
       follows: number
       rewardAccount: string
+      channelStateBloatBond: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string

@@ -22,6 +22,7 @@ export type GetBasicChannelQuery = {
     createdAt: Date
     follows: number
     rewardAccount: string
+    channelStateBloatBond: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -59,6 +60,7 @@ export type GetFullChannelQuery = {
     createdAt: Date
     follows: number
     rewardAccount: string
+    channelStateBloatBond: string
     language?: { __typename?: 'Language'; id: string; iso: string } | null
     ownerMember?: {
       __typename?: 'Membership'
@@ -150,6 +152,7 @@ export type GetBasicChannelsQuery = {
     createdAt: Date
     follows: number
     rewardAccount: string
+    channelStateBloatBond: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -189,6 +192,7 @@ export type GetFullChannelsQuery = {
     createdAt: Date
     follows: number
     rewardAccount: string
+    channelStateBloatBond: string
     language?: { __typename?: 'Language'; id: string; iso: string } | null
     ownerMember?: {
       __typename?: 'Membership'
@@ -278,6 +282,7 @@ export type GetBasicChannelsConnectionQuery = {
         createdAt: Date
         follows: number
         rewardAccount: string
+        channelStateBloatBond: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -341,6 +346,7 @@ export type GetMostViewedChannelsConnectionQuery = {
         createdAt: Date
         follows: number
         rewardAccount: string
+        channelStateBloatBond: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -386,6 +392,7 @@ export type GetMostFollowedChannelsConnectionQuery = {
         createdAt: Date
         follows: number
         rewardAccount: string
+        channelStateBloatBond: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -421,6 +428,7 @@ export type GetTop10ChannelsQuery = {
     createdAt: Date
     follows: number
     rewardAccount: string
+    channelStateBloatBond: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -453,6 +461,7 @@ export type GetPromisingChannelsQuery = {
     createdAt: Date
     follows: number
     rewardAccount: string
+    channelStateBloatBond: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -485,6 +494,7 @@ export type GetDiscoverChannelsQuery = {
     createdAt: Date
     follows: number
     rewardAccount: string
+    channelStateBloatBond: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -517,6 +527,7 @@ export type GetPopularChannelsQuery = {
     createdAt: Date
     follows: number
     rewardAccount: string
+    channelStateBloatBond: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string

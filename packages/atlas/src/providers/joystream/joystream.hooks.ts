@@ -142,7 +142,7 @@ export const useBucketsConfigForNewChannel = () => {
 }
 
 type UseSubscribeAccountBalanceOpts = {
-  isRewardAccount: true
+  channelStateBloatBond?: string
 }
 export const useSubscribeAccountBalance = (
   controllerAccount?: string | null,
@@ -164,10 +164,8 @@ export const useSubscribeAccountBalance = (
         controllerAccount || activeMembership.controllerAccount,
         proxyCallback(({ availableBalance, lockedBalance }) => {
           setLockedAccountBalance(new BN(lockedBalance))
-          if (opts?.isRewardAccount) {
-            // TODO we should take channelStateBloatBondValue from the QN once the QN supports it
-            // Read more here https://github.com/Joystream/atlas/pull/3198#discussion_r961310018
-            const rewardBalance = new BN(availableBalance).sub(chainState.channelStateBloatBondValue)
+          if (opts?.channelStateBloatBond) {
+            const rewardBalance = new BN(availableBalance).sub(new BN(opts.channelStateBloatBond))
             setAccountBalance(rewardBalance.gtn(0) ? rewardBalance : new BN(0))
             return
           }
@@ -185,7 +183,7 @@ export const useSubscribeAccountBalance = (
     chainState.channelStateBloatBondValue,
     controllerAccount,
     joystream,
-    opts?.isRewardAccount,
+    opts?.channelStateBloatBond,
     proxyCallback,
   ])
 
