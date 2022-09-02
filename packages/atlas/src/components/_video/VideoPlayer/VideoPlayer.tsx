@@ -20,7 +20,6 @@ import { Avatar } from '@/components/Avatar'
 import { SvgControlsCaptionsOutline, SvgControlsCaptionsSolid } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useMountEffect } from '@/hooks/useMountEffect'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { isMobile } from '@/utils/browser'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
@@ -573,12 +572,12 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     }
   }, [activeTrack, availableTextTracks, captionsEnabled, captionsLanguage, player, storedLanguageExists])
 
-  useMountEffect(() => {
-    if (!captionsEnabled) {
+  useEffect(() => {
+    if (!captionsEnabled || !availableTextTracks) {
       return
     }
     setActiveTrack(findDefaultLanguage)
-  })
+  }, [captionsEnabled, findDefaultLanguage, availableTextTracks])
 
   // button/input handlers
   const handlePlayPause = useCallback(
