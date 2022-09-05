@@ -749,8 +749,8 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
             name="subtitlesArray"
             rules={{
               validate: (value) => {
-                const languageWithoutFile = value?.find((language) => !language.file)
-                return !isEdit && value && languageWithoutFile ? 'All selected languages must include a file!' : true
+                const languageWithoutFile = value?.find((language) => !language.file && !language.url)
+                return value && languageWithoutFile ? 'Provide a file for every new subtitles language.' : true
               },
             }}
             render={({ field: { onChange, value: subtitlesArray } }) => {
