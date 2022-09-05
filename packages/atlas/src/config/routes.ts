@@ -34,6 +34,7 @@ export const relativeRoutes = {
     member: (handle = ':handle') => `member/${handle}`,
     notifications: () => 'notifications',
     nfts: () => 'nfts',
+    ypp: () => 'ypp',
   },
   legal: {
     index: () => '',
@@ -52,6 +53,7 @@ export const relativeRoutes = {
     signIn: () => 'signin',
     notifications: () => 'notifications',
     payments: () => 'payments',
+    ypp: () => 'ypp',
   },
   playground: {
     index: () => '',

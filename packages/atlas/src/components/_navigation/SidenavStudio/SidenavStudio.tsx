@@ -8,6 +8,7 @@ import {
   SvgSidebarToken,
   SvgSidebarUpload,
   SvgSidebarVideos,
+  SvgSidebarYpp,
 } from '@/assets/icons'
 import { AppLogo } from '@/components/AppLogo'
 import { Button } from '@/components/_buttons/Button'
@@ -49,6 +50,12 @@ const studioNavbarItems: NavItemType[] = [
     name: 'Token',
     expandedName: 'Creator token',
     to: absoluteRoutes.studio.crt(),
+  },
+  {
+    icon: <SvgSidebarYpp />,
+    name: 'YPP',
+    expandedName: 'YouTube Partner Program',
+    to: absoluteRoutes.studio.ypp(),
   },
 ]
 
