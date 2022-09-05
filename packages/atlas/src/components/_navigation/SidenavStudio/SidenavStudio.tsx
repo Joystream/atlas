@@ -7,6 +7,7 @@ import {
   SvgSidebarChannel,
   SvgSidebarUpload,
   SvgSidebarVideos,
+  SvgSidebarYpp,
 } from '@/components/_icons'
 import { SvgAtlasLogoStudio } from '@/components/_illustrations'
 import { NavItemType } from '@/components/_navigation/NavItem'
@@ -35,6 +36,12 @@ const studioNavbarItems: NavItemType[] = [
     name: 'Uploads',
     expandedName: 'My uploads',
     to: absoluteRoutes.studio.uploads(),
+  },
+  {
+    icon: <SvgSidebarYpp />,
+    name: 'YPP',
+    expandedName: 'YouTube Partner Program',
+    to: absoluteRoutes.studio.ypp(),
   },
 ]
 
