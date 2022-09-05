@@ -1,12 +1,16 @@
 import { FC } from 'react'
 
-import { BasicChannelFieldsFragment, BasicMembershipFieldsFragment, FullMembershipFieldsFragment } from '@/api/queries'
+import {
+  BasicChannelFieldsFragment,
+  BasicMembershipFieldsFragment,
+  FullMembershipFieldsFragment,
+} from '@/api/queries/__generated__/fragments.generated'
 import { Avatar } from '@/components/Avatar'
 import { ListItem } from '@/components/ListItem'
 import { SvgActionChannel, SvgActionChevronL, SvgActionNewChannel } from '@/components/_icons'
 import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset, useMemberAvatar } from '@/providers/assets'
+import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
 
 import { SectionContainer } from './MemberDropdown.styles'
 import { SwitchMemberItemListContainer } from './MemberDropdownList.styles'

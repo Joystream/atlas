@@ -49,7 +49,7 @@ export const BalanceTooltip: FC<BalanceTooltipProps> = ({
               </Text>
               <TextWithIcon>
                 <JoyTokenIcon size={16} variant="gray" />
-                <NumberFormat as="span" variant="t200" value={accountBalance} format="full" color="colorText" />
+                <NumberFormat as="span" variant="t200-strong" value={accountBalance} format="full" color="colorText" />
               </TextWithIcon>
             </TooltipRow>
             <TooltipRow>
@@ -61,7 +61,13 @@ export const BalanceTooltip: FC<BalanceTooltipProps> = ({
               </TextWithIcon>
               <TextWithIcon>
                 <JoyTokenIcon size={16} variant="gray" />
-                <NumberFormat as="span" variant="t200" value={lockedAccountBalance} format="full" color="colorText" />
+                <NumberFormat
+                  as="span"
+                  variant="t200-strong"
+                  value={lockedAccountBalance}
+                  format="full"
+                  color="colorText"
+                />
               </TextWithIcon>
             </TooltipRow>
           </UpperRow>

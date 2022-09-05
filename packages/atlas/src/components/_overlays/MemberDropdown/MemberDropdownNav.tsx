@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router'
 import { animated, useTransition } from 'react-spring'
 import useResizeObserver from 'use-resize-observer'
 
-import { FullMembershipFieldsFragment } from '@/api/queries'
+import { FullMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { ListItem, ListItemProps } from '@/components/ListItem'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Tooltip } from '@/components/Tooltip'
@@ -25,8 +25,8 @@ import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { JOY_CURRENCY_TICKER } from '@/config/joystream'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset, useMemberAvatar } from '@/providers/assets'
-import { useUserStore } from '@/providers/user'
+import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useUserStore } from '@/providers/user/user.store'
 import { cVar } from '@/styles'
 
 import { BalanceTooltip } from './BalanceTooltip'
@@ -194,7 +194,13 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                       {accountBalance !== undefined ? (
                         <UserBalance>
                           <JoyTokenIcon size={16} variant="regular" withoutInformationTooltip />
-                          <NumberFormat as="span" variant="t200-strong" value={accountBalance} format="short" />
+                          <NumberFormat
+                            withTooltip={false}
+                            as="span"
+                            variant="t200-strong"
+                            value={accountBalance}
+                            format="short"
+                          />
                         </UserBalance>
                       ) : (
                         <SkeletonLoader width={30} height={20} />

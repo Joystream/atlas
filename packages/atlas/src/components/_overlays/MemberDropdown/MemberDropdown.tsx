@@ -7,9 +7,9 @@ import { useTransition } from 'react-spring'
 import useResizeObserver from 'use-resize-observer'
 
 import { absoluteRoutes } from '@/config/routes'
-import { useMemberAvatar } from '@/providers/assets'
-import { useSubscribeAccountBalance } from '@/providers/joystream'
-import { useUser } from '@/providers/user'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 import { cVar } from '@/styles'
 
 import { Container, InnerContainer, SlideAnimationContainer } from './MemberDropdown.styles'
@@ -128,6 +128,14 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
       }
     }, [closeDropdown, isActive])
 
+    const resetToDefaultState = useCallback(() => {
+      if (isActive) {
+        return
+      }
+      setIsList(false)
+      setDropdownType(publisher ? 'channel' : 'member')
+    }, [isActive, publisher])
+
     return (
       <>
         <WithdrawFundsDialog
@@ -142,6 +150,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
         <SendFundsDialog show={showSendDialog} onExitClick={toggleSendDialog} accountBalance={accountBalance} />
         <Container ref={mergeRefs([ref, containerRef])}>
           <InnerContainer
+            onTransitionEnd={resetToDefaultState}
             isActive={isActive}
             containerHeight={measureContainerHeight}
             disableVerticalScroll={disableScrollDuringAnimation}
