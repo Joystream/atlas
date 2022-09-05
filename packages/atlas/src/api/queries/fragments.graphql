@@ -196,9 +196,6 @@ fragment BasicNftFields on OwnedNft {
   ownerMember {
     ...BasicMembershipFields
   }
-  transactionalStatusUpdates {
-    __typename
-  }
   transactionalStatusAuction {
     id
     auctionType {

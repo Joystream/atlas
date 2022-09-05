@@ -133,7 +133,6 @@ export type GetNftQuery = {
               | null
           }
         } | null
-        transactionalStatusUpdates: Array<{ __typename: 'TransactionalStatusUpdate' }>
         transactionalStatusAuction?: {
           __typename?: 'Auction'
           id: string
@@ -330,7 +329,6 @@ export type GetNftQuery = {
           | null
       }
     } | null
-    transactionalStatusUpdates: Array<{ __typename: 'TransactionalStatusUpdate' }>
     transactionalStatusAuction?: {
       __typename?: 'Auction'
       id: string
@@ -626,7 +624,6 @@ export type GetNftsQuery = {
               | null
           }
         } | null
-        transactionalStatusUpdates: Array<{ __typename: 'TransactionalStatusUpdate' }>
         transactionalStatusAuction?: {
           __typename?: 'Auction'
           id: string
@@ -823,7 +820,6 @@ export type GetNftsQuery = {
           | null
       }
     } | null
-    transactionalStatusUpdates: Array<{ __typename: 'TransactionalStatusUpdate' }>
     transactionalStatusAuction?: {
       __typename?: 'Auction'
       id: string
@@ -1127,7 +1123,6 @@ export type GetNftsConnectionQuery = {
                   | null
               }
             } | null
-            transactionalStatusUpdates: Array<{ __typename: 'TransactionalStatusUpdate' }>
             transactionalStatusAuction?: {
               __typename?: 'Auction'
               id: string
@@ -1324,7 +1319,6 @@ export type GetNftsConnectionQuery = {
               | null
           }
         } | null
-        transactionalStatusUpdates: Array<{ __typename: 'TransactionalStatusUpdate' }>
         transactionalStatusAuction?: {
           __typename?: 'Auction'
           id: string

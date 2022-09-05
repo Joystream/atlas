@@ -131,7 +131,6 @@ export type SearchQuery = {
                   | null
               }
             } | null
-            transactionalStatusUpdates: Array<{ __typename: 'TransactionalStatusUpdate' }>
             transactionalStatusAuction?: {
               __typename?: 'Auction'
               id: string

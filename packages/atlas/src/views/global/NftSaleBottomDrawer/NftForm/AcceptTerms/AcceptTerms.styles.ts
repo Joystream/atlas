@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { Banner } from '@/components/Banner'
 import { Information } from '@/components/Information'
 import { OutputPill } from '@/components/OutputPill'
 import { cVar, media, sizes } from '@/styles'
@@ -60,4 +61,12 @@ export const Divider = styled.hr`
 
 export const StyledInformation = styled(Information)`
   margin-left: ${sizes(1)};
+`
+
+export const RevenueBanner = styled(Banner)`
+  margin-bottom: ${sizes(12)};
+
+  path {
+    fill: ${cVar('colorTextStrong')};
+  }
 `

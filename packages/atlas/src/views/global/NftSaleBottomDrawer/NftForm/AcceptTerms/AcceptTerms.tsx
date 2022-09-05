@@ -8,12 +8,12 @@ import { Text } from '@/components/Text'
 import { SvgAlertsInformative24 } from '@/components/_icons'
 import { useMemberAvatar } from '@/providers/assets'
 import { formatDateTime } from '@/utils/time'
-import { RevenueBanner } from '@/views/global/NftSaleBottomDrawer/NftForm/NftForm.styles'
 
 import {
   Description,
   Divider,
   MembersList,
+  RevenueBanner,
   Row,
   StyledInformation,
   StyledOutputPill,

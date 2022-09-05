@@ -499,7 +499,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
         },
         disabled: videoFieldsLocked,
       }}
-      description="Disabling the comments section does not allow for posting new comments under this video and hides any existing comments made in the past."
+      description="Royalties let you earn commissions from every sale of this NFT. Sale commissions go out to your channel account."
       label="Royalties"
     >
       <Input

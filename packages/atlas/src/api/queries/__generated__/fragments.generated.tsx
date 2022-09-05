@@ -365,7 +365,6 @@ export type BasicVideoFieldsFragment = {
           | null
       }
     } | null
-    transactionalStatusUpdates: Array<{ __typename: 'TransactionalStatusUpdate' }>
     transactionalStatusAuction?: {
       __typename?: 'Auction'
       id: string
@@ -719,7 +718,6 @@ export type FullVideoFieldsFragment = {
           | null
       }
     } | null
-    transactionalStatusUpdates: Array<{ __typename: 'TransactionalStatusUpdate' }>
     transactionalStatusAuction?: {
       __typename?: 'Auction'
       id: string
@@ -949,7 +947,6 @@ export type BasicNftFieldsFragment = {
         | null
     }
   } | null
-  transactionalStatusUpdates: Array<{ __typename: 'TransactionalStatusUpdate' }>
   transactionalStatusAuction?: {
     __typename?: 'Auction'
     id: string
@@ -1237,7 +1234,6 @@ export type FullNftFieldsFragment = {
             | null
         }
       } | null
-      transactionalStatusUpdates: Array<{ __typename: 'TransactionalStatusUpdate' }>
       transactionalStatusAuction?: {
         __typename?: 'Auction'
         id: string
@@ -1434,7 +1430,6 @@ export type FullNftFieldsFragment = {
         | null
     }
   } | null
-  transactionalStatusUpdates: Array<{ __typename: 'TransactionalStatusUpdate' }>
   transactionalStatusAuction?: {
     __typename?: 'Auction'
     id: string
@@ -2078,9 +2073,6 @@ export const BasicNftFieldsFragmentDoc = gql`
     isOwnedByChannel
     ownerMember {
       ...BasicMembershipFields
-    }
-    transactionalStatusUpdates {
-      __typename
     }
     transactionalStatusAuction {
       id
