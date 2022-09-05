@@ -254,8 +254,6 @@ export const useFee = <TFnName extends TxMethodName, TArgs extends Parameters<Jo
     () =>
       debouncePromise(async (args?: TArgs) => {
         if (!args || !accountId) {
-          setFullFee(new BN(0))
-          setLoading(false)
           return
         }
 
@@ -291,7 +289,7 @@ export const useFee = <TFnName extends TxMethodName, TArgs extends Parameters<Jo
   const argsRef = useRef<TArgs | undefined>()
 
   useEffect(() => {
-    if (isEqual(args, argsRef.current)) {
+    if (!args || isEqual(args, argsRef.current)) {
       return
     }
     argsRef.current = args

@@ -119,7 +119,7 @@ export const EditMembershipView: FC = () => {
         ...(dirtyFields.about ? { about: data?.about } : {}),
         ...(dirtyFields.avatar ? { avatarUri: data?.avatar?.url } : {}),
       }
-      return Object.keys(metaData).length ? metaData : undefined
+      return metaData
     },
     [dirtyFields.about, dirtyFields.avatar, dirtyFields.handle]
   )
@@ -127,7 +127,7 @@ export const EditMembershipView: FC = () => {
   const metadata = createMemberInputMetadata(watch())
   const { fullFee: fee, loading: feeLoading } = useFee(
     'updateMemberTx',
-    memberId && metadata ? [memberId, watch('handle'), metadata] : undefined
+    memberId ? [memberId, watch('handle'), metadata] : undefined
   )
 
   const handleEditMember = handleSubmit(async (data) => {
