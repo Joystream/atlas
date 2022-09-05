@@ -28,7 +28,7 @@ import { StyledActionBar, TextFieldsWrapper, Wrapper } from './EditMembershipVie
 
 export type EditMemberFormInputs = {
   handle: string | null
-  avatar: ImageInputFile
+  avatar: ImageInputFile | null
   about: string | null
 }
 
@@ -94,8 +94,8 @@ export const EditMembershipView: FC = () => {
                 blob: blob,
                 originalBlob: blob,
               }
-            : {},
-        about: activeMembership?.metadata.about,
+            : null,
+        about: activeMembership?.metadata.about || '',
       },
       {
         keepDirty: false,
@@ -114,17 +114,20 @@ export const EditMembershipView: FC = () => {
 
   const createMemberInputMetadata = useCallback(
     (data: EditMemberFormInputs) => {
-      return {
+      const metaData = {
+        ...(dirtyFields.handle ? { name: data?.handle } : {}),
         ...(dirtyFields.about ? { about: data?.about } : {}),
-        ...(dirtyFields.avatar ? { avatarUri: data?.avatar?.url } : null),
+        ...(dirtyFields.avatar ? { avatarUri: data?.avatar?.url } : {}),
       }
+      return metaData
     },
-    [dirtyFields]
+    [dirtyFields.about, dirtyFields.avatar, dirtyFields.handle]
   )
 
+  const metadata = createMemberInputMetadata(watch())
   const { fullFee: fee, loading: feeLoading } = useFee(
     'updateMemberTx',
-    memberId ? [memberId, watch('handle'), createMemberInputMetadata(watch())] : undefined
+    memberId ? [memberId, watch('handle'), metadata] : undefined
   )
 
   const handleEditMember = handleSubmit(async (data) => {
@@ -132,7 +135,7 @@ export const EditMembershipView: FC = () => {
       return
     }
     let fileUrl = ''
-    if (data.avatar.blob && dirtyFields.avatar) {
+    if (data.avatar?.blob && dirtyFields.avatar) {
       try {
         fileUrl = await uploadAvatarImage(data.avatar.blob)
       } catch (error) {

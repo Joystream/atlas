@@ -38,8 +38,8 @@ export const useMemberAvatar = (member?: BasicMembershipFieldsFragment | null): 
   } else if (avatar?.__typename === 'AvatarObject') {
     return avatarAsset
   }
-
-  return { url: null, isLoadingAsset: true }
+  // if avatar is `undefined` it means that avatar is not loaded yet, If it's `null` it means that it's not set
+  return { url: null, isLoadingAsset: avatar === null ? false : true }
 }
 
 export const useSubtitlesAssets = (subtitles?: SubtitlesFieldsFragment[] | null) => {
