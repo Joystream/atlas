@@ -6,6 +6,7 @@ export const ASSET_LOGS_URL = readEnv('ASSET_LOGS_URL', false)
 export const NODE_URL = readEnv('NODE_URL')
 export const FAUCET_URL = readEnv('FAUCET_URL')
 export const AVATAR_SERVICE_URL = readEnv('ASSETS_SERVICE_URL', true, true)
+export const GOOGLE_CONSOLE_CLIENT_ID = readEnv('GOOGLE_CONSOLE_CLIENT_ID', true, true)
 
 export const SENTRY_DSN = readEnv('SENTRY_DSN', false)
 
@@ -19,6 +20,8 @@ export const JOYSTREAM_STORAGE_DISCORD_URL = 'https://discord.gg/WUb7XwW72a'
 export const PIONEER_MEMBER_URL = 'https://dao.joystream.org/#/members'
 export const JOYSTREAM_URL = 'https://www.joystream.org/'
 export const ATLAS_GITHUB_URL = 'https://github.com/Joystream/atlas'
+
+export const GOOGLE_OAUTH_ENDPOINT = 'https://accounts.google.com/o/oauth2/v2/auth'
 
 export const JOY_PRICE_SERVICE_URL = readEnv('PRICE_SERVICE_URL', false, true)
 export const USER_LOCATION_SERVICE_URL = readEnv('GEOLOCATION_SERVICE_URL', true, true)
