@@ -5,6 +5,7 @@ import {
   SvgSidebarNew,
   SvgSidebarNft,
   SvgSidebarPopular,
+  SvgSidebarYpp,
 } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 
@@ -46,5 +47,12 @@ export const viewerNavItems = [
     name: 'Channels',
     to: absoluteRoutes.viewer.channels(),
     bottomNav: true,
+  },
+  {
+    icon: <SvgSidebarYpp />,
+    name: 'YPP',
+    expandedName: 'YouTube Partner Program',
+    to: absoluteRoutes.viewer.ypp(),
+    bottomNav: false,
   },
 ]
