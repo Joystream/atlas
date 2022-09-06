@@ -740,7 +740,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
               ? `Subtitles, license, comments, mature content, paid promotion, published date${
                   isEdit ? ', delete video' : ''
                 }`
-              : 'Royalties, description, category, language, visibility, subtitles, license, comments, mature content, paid promotion, published date'}
+              : 'Subtitles, royalties, description, category, language, visibility, subtitles, license, comments, mature content, paid promotion, published date'}
           </Text>
         </div>
         <MoreSettingsSection expanded={moreSettingsVisible}>
@@ -757,6 +757,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
               return (
                 <FormField label="Subtitles" optional error={(errors?.subtitlesArray as FieldError)?.message}>
                   <SubtitlesCombobox
+                    disabled={videoFieldsLocked}
                     error={!!errors?.subtitlesArray}
                     onLanguageAdd={(subtitlesLanguage) => {
                       onChange([...(subtitlesArray ? subtitlesArray : []), { ...subtitlesLanguage }])

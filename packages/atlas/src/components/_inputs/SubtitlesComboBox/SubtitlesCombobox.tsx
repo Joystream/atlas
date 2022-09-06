@@ -21,6 +21,7 @@ type SubtitlesComboboxProps = {
   onLanguageDelete: (language: SubtitlesInput) => void
   onSubtitlesAdd: (subtitles: SubtitlesInput) => void
   error?: boolean
+  disabled?: boolean
 }
 
 export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
@@ -30,6 +31,7 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
   onLanguageDelete,
   onSubtitlesAdd,
   error,
+  disabled,
 }) => {
   const availableSubtitlesLanguages = useMemo(() => {
     return languagesIso
@@ -57,6 +59,7 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
   return (
     <Wrapper>
       <ComboBox<AvailableLanguage>
+        disabled={disabled}
         error={error}
         placeholder="Add language"
         items={availableSubtitlesLanguages.map((subtitlesLanguage) => ({
