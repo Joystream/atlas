@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { AVATAR_SERVICE_URL } from '@/config/urls'
+import { AVATAR_SERVICE_URL } from '@/config/env'
 
 export const validateImage = async (fileOrUrl: File | string): Promise<File | string> => {
   return new Promise((resolve, reject) => {

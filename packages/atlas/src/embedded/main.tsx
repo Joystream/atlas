@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client'
 
+import { ASSET_LOGS_URL, SENTRY_DSN } from '@/config/env'
 import { BUILD_ENV } from '@/config/envs'
-import { ASSET_LOGS_URL, SENTRY_DSN } from '@/config/urls'
 import { AssetLogger, SentryLogger } from '@/utils/logs'
 
 import { App } from './App'

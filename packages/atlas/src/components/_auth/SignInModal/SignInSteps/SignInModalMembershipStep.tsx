@@ -1,6 +1,7 @@
 import { useApolloClient } from '@apollo/client'
+import HCaptcha from '@hcaptcha/react-hcaptcha'
 import debouncePromise from 'awesome-debounce-promise'
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { FC, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
@@ -8,8 +9,8 @@ import { Text } from '@/components/Text'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
+import { HCAPTCHA_SITE_KEY, JOYSTREAM_URL } from '@/config/env'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
-import { JOYSTREAM_URL } from '@/config/urls'
 
 import { SignInModalStepTemplate } from './SignInModalStepTemplate'
 import { Anchor, StyledAvatar, StyledForm } from './SignInSteps.styles'
@@ -19,12 +20,14 @@ import { MemberFormData } from '../SignInModal.types'
 
 type SignInModalMembershipStepProps = SignInStepProps & {
   onSubmit: (data: MemberFormData) => void
+  dialogContentRef?: RefObject<HTMLDivElement>
 }
 
 export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
   setPrimaryButtonProps,
   onSubmit,
   hasNavigatedBack,
+  dialogContentRef,
 }) => {
   const {
     register,
@@ -38,6 +41,8 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
 
   const [isHandleValidating, setIsHandleValidating] = useState(false)
+  // used to scroll the form to the bottom upon first handle field focus - this is done to let the user see Captcha form field
+  const hasDoneInitialScroll = useRef(false)
 
   const client = useApolloClient()
 
@@ -173,8 +178,33 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
               error={!!errors.handle}
               processing={isHandleValidating || isSubmitting}
               autoComplete="off"
+              onClick={() => {
+                if (hasDoneInitialScroll.current || !dialogContentRef?.current) return
+                hasDoneInitialScroll.current = true
+                dialogContentRef.current.scrollTo({ top: dialogContentRef.current.scrollHeight, behavior: 'smooth' })
+              }}
             />
           </FormField>
+          <Controller
+            control={control}
+            name="captchaToken"
+            render={({ field: { onChange }, fieldState: { error } }) => (
+              <FormField error={error?.message}>
+                <HCaptcha
+                  sitekey={HCAPTCHA_SITE_KEY}
+                  theme="dark"
+                  languageOverride="en"
+                  onVerify={(token) => {
+                    onChange(token)
+                    trigger('captchaToken')
+                  }}
+                />
+              </FormField>
+            )}
+            rules={{
+              required: { value: !!HCAPTCHA_SITE_KEY, message: "Verify that you're not a robot." },
+            }}
+          />
         </StyledForm>
       }
     />

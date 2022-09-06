@@ -4,7 +4,7 @@ import { BaseDotsamaWallet, WalletAccount, getWallets } from '@talisman-connect/
 import { useCallback, useEffect } from 'react'
 import shallow from 'zustand/shallow'
 
-import { WEB3_APP_NAME } from '@/config/urls'
+import { WEB3_APP_NAME } from '@/config/env'
 import { JOYSTREAM_SS58_PREFIX } from '@/joystream-lib/config'
 import { ConsoleLogger } from '@/utils/logs'
 
