@@ -89,6 +89,7 @@ export const SignInModal: FC = () => {
       account: address,
       handle: data.handle,
       avatar: fileUrl,
+      captchaToken: data.captchaToken,
     }
     const response = await axios.post<NewMemberResponse>(FAUCET_URL, body)
     return response.data
@@ -193,7 +194,9 @@ export const SignInModal: FC = () => {
       case 'terms':
         return <SignInModalTermsStep {...commonProps} />
       case 'membership':
-        return <SignInModalMembershipStep onSubmit={handleSubmit} {...commonProps} />
+        return (
+          <SignInModalMembershipStep onSubmit={handleSubmit} dialogContentRef={dialogContentRef} {...commonProps} />
+        )
       case 'creating':
         return <SignInModalCreatingStep {...commonProps} />
     }
