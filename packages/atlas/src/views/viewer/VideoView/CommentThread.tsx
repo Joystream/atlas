@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { FC, memo, useState } from 'react'
 
-import { UserCommentReactions, useComment, useCommentRepliesConnection } from '@/api/hooks'
+import { UserCommentReactions, useComment, useCommentRepliesConnection } from '@/api/hooks/comments'
 import { TextButton } from '@/components/_buttons/Button'
 import { Comment, CommentProps } from '@/components/_comments/Comment'
 import { SvgActionChevronB } from '@/components/_icons'

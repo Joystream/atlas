@@ -1,6 +1,6 @@
 import { FC, useState } from 'react'
 
-import { FullNftFieldsFragment } from '@/api/queries'
+import { FullNftFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Grid } from '@/components/Grid'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'

@@ -1,9 +1,9 @@
 import { FC, useCallback, useMemo } from 'react'
 
-import { BasicChannelFieldsFragment, BasicVideoFieldsFragment } from '@/api/queries'
+import { BasicChannelFieldsFragment, BasicVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { Text } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset } from '@/providers/assets'
+import { useAsset } from '@/providers/assets/assets.hooks'
 
 import { ResultTitle } from './ResultTitle'
 import { ResultWrapper } from './ResultWrapper'

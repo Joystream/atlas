@@ -6,7 +6,7 @@ import { Button } from '@/components/_buttons/Button'
 import { SvgActionNotifications } from '@/components/_icons'
 import { Popover, PopoverImperativeHandle, PopoverProps } from '@/components/_overlays/Popover'
 import { absoluteRoutes } from '@/config/routes'
-import { useNotifications } from '@/providers/notifications'
+import { useNotifications } from '@/providers/notifications/notifications.hooks'
 
 import { Content, Header, StyledButton, Wrapper } from './NotificationsWidget.styles'
 

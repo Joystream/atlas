@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { ComponentProps, FC } from 'react'
 
-import { BasicChannelFieldsFragment } from '@/api/queries'
+import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { Grid } from '@/components/Grid'
 
 import { ChannelCard } from '../ChannelCard'

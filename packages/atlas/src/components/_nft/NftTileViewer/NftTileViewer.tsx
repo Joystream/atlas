@@ -1,13 +1,13 @@
 import { FC } from 'react'
 import { useNavigate } from 'react-router'
 
-import { useNft } from '@/api/hooks'
+import { useNft } from '@/api/hooks/nfts'
 import { absoluteRoutes } from '@/config/routes'
 import { useNftState } from '@/hooks/useNftState'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useVideoContextMenu } from '@/hooks/useVideoContextMenu'
-import { useAsset, useMemberAvatar } from '@/providers/assets'
-import { useNftActions } from '@/providers/nftActions'
+import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
 
 import { NftTile, NftTileProps } from '../NftTile'
 

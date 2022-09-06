@@ -6,7 +6,7 @@ import { SvgAtlasLogoFull } from '@/components/_illustrations'
 import { viewerNavItems } from '@/config/nav'
 import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers/personalData'
-import { useUser } from '@/providers/user'
+import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger } from '@/utils/logs'
 
 import { FollowedChannels } from './FollowedChannels'

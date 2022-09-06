@@ -5,7 +5,7 @@ import { Button } from '@/components/_buttons/Button'
 import { SvgActionChannel, SvgActionInformative, SvgActionMember } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
-import { useUser } from '@/providers/user'
+import { useUser } from '@/providers/user/user.hooks'
 
 import {
   ButtonGroup,

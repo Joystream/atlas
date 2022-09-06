@@ -2,7 +2,7 @@ import { FC, ReactNode, SyntheticEvent, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { VideoHeroData } from '@/api/hooks'
+import { VideoHeroData } from '@/api/hooks/videoHero'
 import { GridItem } from '@/components/LayoutGrid'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionPlayAlt, SvgActionSoundOff, SvgActionSoundOn } from '@/components/_icons'

@@ -6,10 +6,11 @@ import { Maintenance } from '@/Maintenance'
 import { createApolloClient } from '@/api'
 import { useGetKillSwitch } from '@/api/hooks/admin'
 import { AdminModal } from '@/components/_overlays/AdminModal'
-import { AssetsManager, OperatorsContextProvider } from '@/providers/assets'
+import { AssetsManager } from '@/providers/assets/assets.manager'
+import { OperatorsContextProvider } from '@/providers/assets/assets.provider'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
-import { UserProvider } from '@/providers/user'
+import { UserProvider } from '@/providers/user/user.provider'
 import { GlobalStyles } from '@/styles'
 
 export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {

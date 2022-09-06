@@ -1,4 +1,4 @@
-import { ChannelWhereInput, VideoWhereInput } from '@/api/queries'
+import { ChannelWhereInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 
 type ContentFilter = string[]
 

@@ -2,7 +2,7 @@ import BN from 'bn.js'
 import { useState } from 'react'
 
 import { JOY_CURRENCY_TICKER } from '@/config/joystream'
-import { useTokenPrice } from '@/providers/joystream'
+import { useTokenPrice } from '@/providers/joystream/joystream.hooks'
 
 export const PlaygroundTokenPrice = () => {
   const { convertHapiToUSD, convertUSDToHapi } = useTokenPrice()

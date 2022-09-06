@@ -1,20 +1,14 @@
 import { useApolloClient } from '@apollo/client'
 import { useCallback } from 'react'
 
+import { MetaprotocolTransactionSuccessFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import {
   GetMetaprotocolTransactionStatusEventsDocument,
   GetMetaprotocolTransactionStatusEventsQuery,
   GetMetaprotocolTransactionStatusEventsQueryVariables,
-  MetaprotocolTransactionSuccessFieldsFragment,
-} from '@/api/queries'
-import {
-  ErrorCode,
-  ExtrinsicResult,
-  ExtrinsicStatus,
-  ExtrinsicStatusCallbackFn,
-  JoystreamLibError,
-  JoystreamLibErrorType,
-} from '@/joystream-lib'
+} from '@/api/queries/__generated__/transactionEvents.generated'
+import { ErrorCode, JoystreamLibError, JoystreamLibErrorType } from '@/joystream-lib/errors'
+import { ExtrinsicResult, ExtrinsicStatus, ExtrinsicStatusCallbackFn } from '@/joystream-lib/types'
 import { createId } from '@/utils/createId'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { wait } from '@/utils/misc'

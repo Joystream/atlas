@@ -1,7 +1,7 @@
 import { differenceInHours, differenceInSeconds, format } from 'date-fns'
 import { useCallback } from 'react'
 
-import { NftStatus } from '@/api/hooks'
+import { NftStatus } from '@/api/hooks/nfts'
 import { PillGroup } from '@/components/Pill'
 import { PillProps } from '@/components/Pill/types'
 import { SvgActionAuction, SvgActionBuyNow, SvgActionClock, SvgActionNotForSale } from '@/components/_icons'

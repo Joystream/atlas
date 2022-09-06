@@ -1,8 +1,11 @@
 import BN from 'bn.js'
 import { useMemo } from 'react'
 
-import { createAllNotificationArray, useRawActivities } from '@/api/hooks'
-import { BasicMembershipFieldsFragment, StorageDataObjectFieldsFragment } from '@/api/queries'
+import { createAllNotificationArray, useRawActivities } from '@/api/hooks/notifications'
+import {
+  BasicMembershipFieldsFragment,
+  StorageDataObjectFieldsFragment,
+} from '@/api/queries/__generated__/fragments.generated'
 
 export type NftActivitiesRecord = {
   id?: string

@@ -1,7 +1,7 @@
 import BN from 'bn.js'
 import { FC, useRef, useState } from 'react'
 
-import { VideoReaction } from '@/joystream-lib'
+import { VideoReaction } from '@/joystream-lib/types'
 
 import { ReactionButton, ReactionSteppperState } from './ReactionButton'
 import { ReactionBar, ReactionBarProgress, ReactionStepperWrapper, StyledTooltip } from './ReactionStepper.styles'

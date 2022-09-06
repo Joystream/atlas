@@ -8,7 +8,7 @@ import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { RadioInput } from '@/components/_inputs/RadioInput'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
-import { useMemberAvatar } from '@/providers/assets'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { formatDateTime } from '@/utils/time'
 
 import { Bid, SelectedBid } from './AcceptBidDialog.types'

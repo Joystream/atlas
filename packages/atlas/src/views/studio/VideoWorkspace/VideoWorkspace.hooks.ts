@@ -1,20 +1,21 @@
 import { useApolloClient } from '@apollo/client'
 import { useCallback } from 'react'
 
+import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import {
   GetFullVideosConnectionDocument,
   GetFullVideosConnectionQuery,
   GetFullVideosConnectionQueryVariables,
-  VideoOrderByInput,
-} from '@/api/queries'
-import { VideoExtrinsicResult, VideoInputAssets } from '@/joystream-lib'
-import { useAssetStore } from '@/providers/assets'
+} from '@/api/queries/__generated__/videos.generated'
+import { VideoExtrinsicResult, VideoInputAssets } from '@/joystream-lib/types'
+import { useAssetStore } from '@/providers/assets/assets.store'
 import { useDraftStore } from '@/providers/drafts'
-import { useBloatFeesAndPerMbFees, useJoystream } from '@/providers/joystream'
+import { useBloatFeesAndPerMbFees, useJoystream } from '@/providers/joystream/joystream.hooks'
 import { usePersonalDataStore } from '@/providers/personalData'
-import { useTransaction, useTransactionManagerStore } from '@/providers/transactions'
-import { useStartFileUpload } from '@/providers/uploadsManager'
-import { useAuthorizedUser } from '@/providers/user'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
+import { useStartFileUpload } from '@/providers/uploads/uploads.hooks'
+import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { VideoFormData, useVideoWorkspace, useVideoWorkspaceData } from '@/providers/videoWorkspace'
 import { writeVideoDataInCache } from '@/utils/cachingAssets'
 import { createLookup } from '@/utils/data'

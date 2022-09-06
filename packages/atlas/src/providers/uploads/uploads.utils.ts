@@ -1,15 +1,16 @@
 import { ApolloClient } from '@apollo/client'
 
 import {
-  FullChannelFieldsFragment,
-  FullVideoFieldsFragment,
   GetFullChannelDocument,
   GetFullChannelQuery,
   GetFullChannelQueryVariables,
+} from '@/api/queries/__generated__/channels.generated'
+import { FullChannelFieldsFragment, FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import {
   GetFullVideosDocument,
   GetFullVideosQuery,
   GetFullVideosQueryVariables,
-} from '@/api/queries'
+} from '@/api/queries/__generated__/videos.generated'
 import { createLookup } from '@/utils/data'
 
 export const fetchMissingAssets = async (

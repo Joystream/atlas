@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import { useState } from 'react'
 
-import { NotificationRecord } from '@/providers/notifications'
+import { NotificationRecord } from '@/providers/notifications/notifications.types'
 
 import { NotificationTile } from './NotificationTile'
 

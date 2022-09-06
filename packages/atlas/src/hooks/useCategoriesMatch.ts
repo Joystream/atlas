@@ -1,4 +1,4 @@
-import { useCategories } from '@/api/hooks'
+import { useCategories } from '@/api/hooks/categories'
 import { videoCategories } from '@/config/categories'
 
 export const useCategoriesMatch = () => {

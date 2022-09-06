@@ -1,6 +1,7 @@
 import { FC, useMemo } from 'react'
 
-import { useAllCategoriesFeaturedVideos, useCategories } from '@/api/hooks'
+import { useCategories } from '@/api/hooks/categories'
+import { useAllCategoriesFeaturedVideos } from '@/api/hooks/categoriesFeaturedVideos'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { FeaturedVideoCategoryCard, VideoCategoryCard } from '@/components/_video/VideoCategoryCard'

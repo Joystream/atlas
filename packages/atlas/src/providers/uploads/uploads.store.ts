@@ -1,9 +1,9 @@
 import { UPLOAD_PROCESSING_TIMEOUT } from '@/config/assets'
-import { ChannelId, VideoId } from '@/joystream-lib'
+import { ChannelId, VideoId } from '@/joystream-lib/types'
 import { createStore } from '@/store'
 import { UploadStatus } from '@/types/storage'
 
-import { AssetParent, AssetUpload, UploadsStatusRecord } from './types'
+import { AssetParent, AssetUpload, UploadsStatusRecord } from './uploads.types'
 
 type AssetFile = {
   contentId: string

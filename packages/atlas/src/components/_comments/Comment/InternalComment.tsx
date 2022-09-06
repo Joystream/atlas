@@ -3,7 +3,7 @@ import { format } from 'date-fns'
 import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { BasicMembershipFieldsFragment } from '@/api/queries'
+import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
@@ -16,7 +16,7 @@ import { ReactionsOnboardingPopover } from '@/components/_video/ReactionsOnboard
 import { REACTION_TYPE, ReactionId } from '@/config/reactions'
 import { absoluteRoutes } from '@/config/routes'
 import { useTouchDevice } from '@/hooks/useTouchDevice'
-import { useMemberAvatar } from '@/providers/assets'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { cVar, transitions } from '@/styles'
 import { formatDate, formatDateAgo } from '@/utils/time'
 

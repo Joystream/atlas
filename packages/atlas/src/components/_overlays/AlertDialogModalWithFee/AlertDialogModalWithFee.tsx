@@ -3,9 +3,9 @@ import { FC } from 'react'
 
 import { Fee } from '@/components/Fee'
 import { AlertDialogModal, AlertDialogModalProps } from '@/components/_overlays/AlertDialogModal'
-import { TxMethodName } from '@/joystream-lib'
 import { JoystreamLibExtrinsics } from '@/joystream-lib/extrinsics'
-import { useFee } from '@/providers/joystream'
+import { TxMethodName } from '@/joystream-lib/types'
+import { useFee } from '@/providers/joystream/joystream.hooks'
 
 type AlertDialogModalWithFeeProps = AlertDialogModalProps & {
   fee: {

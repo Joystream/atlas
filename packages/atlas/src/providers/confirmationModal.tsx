@@ -13,8 +13,8 @@ import { TransitionGroup } from 'react-transition-group'
 
 import { AlertDialogModal, AlertDialogModalProps } from '@/components/_overlays/AlertDialogModal'
 import { AlertDialogModalWithFee } from '@/components/_overlays/AlertDialogModalWithFee'
-import { TxMethodName } from '@/joystream-lib'
 import { JoystreamLibExtrinsics } from '@/joystream-lib/extrinsics'
+import { TxMethodName } from '@/joystream-lib/types'
 import { createId } from '@/utils/createId'
 
 type ConfirmationModalContextValue = {

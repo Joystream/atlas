@@ -1,4 +1,4 @@
-import { useChannelPreviewVideos } from '@/api/hooks'
+import { useChannelPreviewVideos } from '@/api/hooks/video'
 import { VideoGallery } from '@/components/_video/VideoGallery'
 import { readEnv } from '@/config/envs'
 import { SentryLogger } from '@/utils/logs'

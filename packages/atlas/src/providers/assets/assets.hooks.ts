@@ -1,7 +1,11 @@
 import { useEffect, useMemo } from 'react'
 import shallow from 'zustand/shallow'
 
-import { BasicMembershipFieldsFragment, StorageDataObjectFieldsFragment, SubtitlesFieldsFragment } from '@/api/queries'
+import {
+  BasicMembershipFieldsFragment,
+  StorageDataObjectFieldsFragment,
+  SubtitlesFieldsFragment,
+} from '@/api/queries/__generated__/fragments.generated'
 import { createLookup } from '@/utils/data'
 
 import { ResolvedAsset, useAssetStore } from './assets.store'

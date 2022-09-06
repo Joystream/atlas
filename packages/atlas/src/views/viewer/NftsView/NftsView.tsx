@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 
-import { useNftsConnection } from '@/api/hooks'
-import { OwnedNftOrderByInput } from '@/api/queries'
+import { useNftsConnection } from '@/api/hooks/nfts'
+import { OwnedNftOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { GridItem } from '@/components/LayoutGrid'

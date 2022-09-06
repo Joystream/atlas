@@ -1,6 +1,6 @@
 import { useParams } from 'react-router'
 
-import { useMemberships } from '@/api/hooks'
+import { useMemberships } from '@/api/hooks/membership'
 import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'

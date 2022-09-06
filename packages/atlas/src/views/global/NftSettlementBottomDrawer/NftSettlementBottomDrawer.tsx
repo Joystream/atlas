@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { useNft } from '@/api/hooks'
+import { useNft } from '@/api/hooks/nfts'
 import confetti from '@/assets/animations/confetti.json'
 import { GridItem } from '@/components/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -9,12 +9,12 @@ import { Button } from '@/components/_buttons/Button'
 import { NftCard } from '@/components/_nft/NftCard'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useAsset, useMemberAvatar } from '@/providers/assets'
-import { useFee, useJoystream } from '@/providers/joystream'
-import { useNftActions } from '@/providers/nftActions'
+import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useFee, useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
 import { useSnackbar } from '@/providers/snackbars'
-import { useTransaction } from '@/providers/transactions'
-import { useUser } from '@/providers/user'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 
 import {
   Content,

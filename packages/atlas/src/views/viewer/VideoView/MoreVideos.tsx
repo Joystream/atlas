@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { useBasicVideos } from '@/api/hooks'
+import { useBasicVideos } from '@/api/hooks/video'
 import { CategoryLink } from '@/components/CategoryLink'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Button } from '@/components/_buttons/Button'

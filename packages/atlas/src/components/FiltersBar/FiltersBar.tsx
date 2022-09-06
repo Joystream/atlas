@@ -2,7 +2,7 @@ import { add } from 'date-fns'
 import { FC, ReactNode, useMemo, useRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { useCategories } from '@/api/hooks'
+import { useCategories } from '@/api/hooks/categories'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionClose } from '@/components/_icons'

@@ -4,10 +4,10 @@ import { FC, PropsWithChildren, createContext, useCallback, useEffect, useRef, u
 
 import { JOY_PRICE_SERVICE_URL, NODE_URL } from '@/config/env'
 import { JOY_CURRENCY_TICKER } from '@/config/joystream'
-import { JoystreamLib } from '@/joystream-lib'
 import { HAPI_TO_JOY_RATE } from '@/joystream-lib/config'
+import { JoystreamLib } from '@/joystream-lib/lib'
 import { useEnvironmentStore } from '@/providers/environment/store'
-import { useUserStore } from '@/providers/user'
+import { useUserStore } from '@/providers/user/user.store'
 import { SentryLogger } from '@/utils/logs'
 
 import { useConnectionStatusStore } from '../connectionStatus'

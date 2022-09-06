@@ -1,7 +1,7 @@
 import BN from 'bn.js'
 import { FC, useEffect } from 'react'
 
-import { StorageDataObjectFieldsFragment } from '@/api/queries'
+import { StorageDataObjectFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { ASSET_RESPONSE_TIMEOUT } from '@/config/assets'
 import { DISTRIBUTOR_ASSET_PATH } from '@/config/env'
 import { BUILD_ENV } from '@/config/envs'

@@ -1,10 +1,9 @@
 import { useCallback, useContext } from 'react'
 
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
+import { useUser } from '@/providers/user/user.hooks'
 
-import { NftActionsContext } from './provider'
-
-import { useUser } from '../user'
+import { NftActionsContext } from './nftActions.provider'
 
 type OpenNftPurchaseOpts = {
   fixedPrice?: boolean

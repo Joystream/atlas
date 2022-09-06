@@ -14,8 +14,8 @@ import {
 import useResizeObserver from 'use-resize-observer'
 import { VideoJsPlayer } from 'video.js'
 
-import { useFullVideo } from '@/api/hooks'
-import { FullVideoFieldsFragment } from '@/api/queries'
+import { useFullVideo } from '@/api/hooks/video'
+import { FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { Avatar } from '@/components/Avatar'
 import { SvgControlsCaptionsOutline, SvgControlsCaptionsSolid } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'

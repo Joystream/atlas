@@ -1,9 +1,9 @@
 import { FC, useEffect, useState } from 'react'
 
-import { useQueryNodeStateSubscription } from '@/api/hooks'
+import { useQueryNodeStateSubscription } from '@/api/hooks/queryNode'
 import { MintNftFirstTimeModal } from '@/components/_overlays/MintNftFirstTimeModal'
 import { TransactionModal } from '@/components/_overlays/TransactionModal'
-import { ExtrinsicStatus } from '@/joystream-lib'
+import { ExtrinsicStatus } from '@/joystream-lib/types'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useSnackbar } from '@/providers/snackbars'
 import { SentryLogger } from '@/utils/logs'

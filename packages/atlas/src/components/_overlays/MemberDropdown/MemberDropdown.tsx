@@ -5,7 +5,10 @@ import mergeRefs from 'react-merge-refs'
 import { useLocation, useNavigate } from 'react-router'
 import useResizeObserver from 'use-resize-observer'
 
-import { BasicChannelFieldsFragment, BasicMembershipFieldsFragment } from '@/api/queries'
+import {
+  BasicChannelFieldsFragment,
+  BasicMembershipFieldsFragment,
+} from '@/api/queries/__generated__/fragments.generated'
 import { Avatar } from '@/components/Avatar'
 import { ListItem } from '@/components/ListItem'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -28,9 +31,10 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { SendFundsDialog, WithdrawFundsDialog } from '@/components/_overlays/SendTransferDialogs'
 import { JOY_CURRENCY_TICKER } from '@/config/joystream'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset, useMemberAvatar } from '@/providers/assets'
-import { useSubscribeAccountBalance } from '@/providers/joystream'
-import { useUser, useUserStore } from '@/providers/user'
+import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
+import { useUser } from '@/providers/user/user.hooks'
+import { useUserStore } from '@/providers/user/user.store'
 
 import {
   AnimatedContainer,

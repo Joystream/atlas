@@ -2,15 +2,15 @@ import { useApolloClient } from '@apollo/client'
 import debouncePromise from 'awesome-debounce-promise'
 import { FC, useRef, useState } from 'react'
 
+import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import {
-  BasicMembershipFieldsFragment,
   GetMembershipsDocument,
   GetMembershipsQuery,
   GetMembershipsQueryVariables,
-} from '@/api/queries'
+} from '@/api/queries/__generated__/memberships.generated'
 import { Avatar } from '@/components/Avatar'
 import { SvgActionCancel } from '@/components/_icons'
-import { useMemberAvatar } from '@/providers/assets'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { createLookup } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
 

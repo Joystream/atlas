@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
-import { useMemberships } from '@/api/hooks'
+import { useMemberships } from '@/api/hooks/membership'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { AssetLogger, SentryLogger } from '@/utils/logs'
 

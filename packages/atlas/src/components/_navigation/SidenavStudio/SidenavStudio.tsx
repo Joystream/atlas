@@ -13,8 +13,8 @@ import { NavItemType } from '@/components/_navigation/NavItem'
 import { SidenavBase } from '@/components/_navigation/SidenavBase'
 import { absoluteRoutes } from '@/config/routes'
 import { chanelUnseenDraftsSelector, useDraftStore } from '@/providers/drafts'
-import { useUploadsStore } from '@/providers/uploadsManager'
-import { useUser } from '@/providers/user'
+import { useUploadsStore } from '@/providers/uploads/uploads.store'
+import { useUser } from '@/providers/user/user.hooks'
 
 const studioNavbarItems: NavItemType[] = [
   {

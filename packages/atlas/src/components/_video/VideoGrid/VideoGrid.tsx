@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
 
-import { BasicVideoFieldsFragment } from '@/api/queries'
+import { BasicVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { Grid } from '@/components/Grid'
 
 import { VideoTileViewer } from '../VideoTileViewer'

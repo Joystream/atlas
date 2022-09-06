@@ -1,13 +1,13 @@
 import { FC, MouseEvent, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { BasicChannelFieldsFragment } from '@/api/queries'
+import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { NumberFormat } from '@/components/NumberFormat'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useAsset } from '@/providers/assets'
+import { useAsset } from '@/providers/assets/assets.hooks'
 import { cVar, transitions } from '@/styles'
 
 import {

@@ -10,8 +10,8 @@ import { NotificationsWidget } from '@/components/_notifications/NotificationsWi
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useAsset, useMemberAvatar } from '@/providers/assets'
-import { useUser } from '@/providers/user'
+import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
 

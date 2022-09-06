@@ -12,26 +12,24 @@ import { TopbarViewer } from '@/components/_navigation/TopbarViewer'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSearchStore } from '@/providers/search'
-import { useUser } from '@/providers/user'
+import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
 import { NotificationsView } from '@/views/notifications'
-import {
-  CategoryView,
-  ChannelView,
-  ChannelsView,
-  HomeView,
-  MemberView,
-  NewView,
-  NftsView,
-  PopularView,
-  SearchView,
-  VideoView,
-} from '@/views/viewer'
 
-import { DiscoverView } from './DiscoverView/DiscoverView'
-import { EditMembershipView } from './EditMembershipView/EditMembershipView'
+import { CategoryView } from './CategoryView'
+import { ChannelView } from './ChannelView'
+import { ChannelsView } from './ChannelsView'
+import { DiscoverView } from './DiscoverView'
+import { EditMembershipView } from './EditMembershipView'
+import { HomeView } from './HomeView'
+import { MemberView } from './MemberView'
+import { NewView } from './NewView'
+import { NftsView } from './NftsView'
 import { NotFoundView } from './NotFoundView'
+import { PopularView } from './PopularView'
+import { SearchView } from './SearchView'
+import { VideoView } from './VideoView'
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.search(), element: <SearchView /> },

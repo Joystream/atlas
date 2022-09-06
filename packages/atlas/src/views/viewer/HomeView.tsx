@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
 
-import { useBasicVideosConnection, useVideoHeroData } from '@/api/hooks'
-import { GetMostViewedVideosConnectionDocument } from '@/api/queries'
+import { useVideoHeroData } from '@/api/hooks/videoHero'
+import { useBasicVideosConnection } from '@/api/hooks/videosConnection'
+import { GetMostViewedVideosConnectionDocument } from '@/api/queries/__generated__/videos.generated'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { DiscoverChannels } from '@/components/_content/DiscoverChannels'

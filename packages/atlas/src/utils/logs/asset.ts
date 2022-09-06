@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { debounce } from 'lodash-es'
 
-import { StorageDataObjectFieldsFragment } from '@/api/queries'
+import { StorageDataObjectFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 
 import { ConsoleLogger } from './console'
 import { SentryLogger } from './sentry'

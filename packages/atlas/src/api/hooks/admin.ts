@@ -7,7 +7,7 @@ import {
   SetKillSwitchMutationVariables,
   useGetKillSwitchQuery,
   useSetKillSwitchMutation,
-} from '@/api/queries'
+} from '@/api/queries/__generated__/admin.generated'
 import { useAdminStore } from '@/providers/admin'
 
 export const useSetKillSwitch = (opts?: MutationHookOptions<SetKillSwitchMutation, SetKillSwitchMutationVariables>) => {

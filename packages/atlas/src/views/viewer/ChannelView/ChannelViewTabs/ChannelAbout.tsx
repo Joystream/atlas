@@ -1,12 +1,12 @@
 import { FC } from 'react'
 
-import { FullChannelFieldsFragment } from '@/api/queries'
+import { FullChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { LANGUAGES_LIST } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
-import { useMemberAvatar } from '@/providers/assets'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { formatDate } from '@/utils/time'
 
 import {

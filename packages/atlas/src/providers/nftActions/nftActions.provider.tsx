@@ -1,13 +1,13 @@
 import BN from 'bn.js'
 import { Dispatch, FC, PropsWithChildren, SetStateAction, createContext, useCallback, useMemo, useState } from 'react'
 
-import { useNft } from '@/api/hooks'
+import { useNft } from '@/api/hooks/nfts'
 import { AcceptBidDialog } from '@/components/_overlays/AcceptBidDialog'
 import { ChangePriceDialog } from '@/components/_overlays/ChangePriceDialog'
 import { useNftState } from '@/hooks/useNftState'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
-import { useTokenPrice } from '@/providers/joystream'
-import { useUser } from '@/providers/user'
+import { useTokenPrice } from '@/providers/joystream/joystream.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 
 type NftAction = 'putOnSale' | 'purchase' | 'settle' | 'accept-bid' | 'change-price' | 'cancel-sale' | 'withdraw-bid'
 type ContextValue = {

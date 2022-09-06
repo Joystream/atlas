@@ -1,4 +1,4 @@
-import { ChannelId, VideoId } from '@/joystream-lib'
+import { ChannelId, VideoId } from '@/joystream-lib/types'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { UploadStatus } from '@/types/storage'
 

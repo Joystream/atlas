@@ -1,4 +1,4 @@
-import { StorageDataObjectFieldsFragment } from '@/api/queries'
+import { StorageDataObjectFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { createStore } from '@/store'
 
 type ContentId = string

@@ -15,7 +15,7 @@ import {
   useGetCommentRepliesConnectionQuery,
   useGetUserCommentsAndVideoCommentsConnectionQuery,
   useGetUserCommentsReactionsQuery,
-} from '@/api/queries'
+} from '@/api/queries/__generated__/comments.generated'
 import { createLookup } from '@/utils/data'
 
 export const useComment = (

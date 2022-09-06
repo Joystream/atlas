@@ -1,7 +1,8 @@
 import { FC, useEffect } from 'react'
 
-import { useBasicVideosConnection } from '@/api/hooks'
-import { BasicVideoFieldsFragment, VideoOrderByInput } from '@/api/queries'
+import { useBasicVideosConnection } from '@/api/hooks/videosConnection'
+import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { BasicVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Grid } from '@/components/Grid'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'

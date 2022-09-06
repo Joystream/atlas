@@ -1,7 +1,7 @@
 import BN from 'bn.js'
 import { MouseEvent, useCallback } from 'react'
 
-import { FullNftFieldsFragment } from '@/api/queries'
+import { FullNftFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { ListItemProps } from '@/components/ListItem'
 import { NumberFormat } from '@/components/NumberFormat'
 import {
@@ -17,7 +17,7 @@ import {
 } from '@/components/_icons'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useNftState } from '@/hooks/useNftState'
-import { useNftActions } from '@/providers/nftActions'
+import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
 
 type VideoContextMenuData = {
   publisher: boolean

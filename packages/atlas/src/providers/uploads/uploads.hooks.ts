@@ -7,14 +7,15 @@ import { RetryConfig } from 'retry-axios'
 
 import { ASSET_CHANNEL_BAG_PREFIX } from '@/config/assets'
 import { absoluteRoutes } from '@/config/routes'
+import { useStorageOperators } from '@/providers/assets/assets.provider'
+import { OperatorInfo } from '@/providers/assets/assets.types'
 import { UploadStatus } from '@/types/storage'
 import { createAssetUploadEndpoint } from '@/utils/asset'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
-import { useUploadsStore } from './store'
-import { InputAssetUpload, StartFileUploadOptions } from './types'
+import { useUploadsStore } from './uploads.store'
+import { InputAssetUpload, StartFileUploadOptions } from './uploads.types'
 
-import { OperatorInfo, useStorageOperators } from '../assets'
 import { useSnackbar } from '../snackbars'
 
 const RETRIES_COUNT = 3
@@ -65,12 +66,12 @@ export const useStartFileUpload = () => {
       try {
         const storageOperator = await getRandomStorageOperatorForBag(bagId)
         if (!storageOperator) {
-          SentryLogger.error('No storage operator available for upload', 'useStartFileUpload')
+          SentryLogger.error('No storage operator available for upload', 'uploadsHooks')
           return
         }
         uploadOperator = storageOperator
       } catch (e) {
-        SentryLogger.error('Failed to get storage operator for upload', 'useStartFileUpload', e)
+        SentryLogger.error('Failed to get storage operator for upload', 'uploadsHooks', e)
         return
       }
 
@@ -143,7 +144,7 @@ export const useStartFileUpload = () => {
         assetsNotificationsCount.current.uploaded[assetKey] =
           (assetsNotificationsCount.current.uploaded[assetKey] || 0) + 1
       } catch (e) {
-        SentryLogger.error('Failed to upload asset', 'useStartFileUpload', e, {
+        SentryLogger.error('Failed to upload asset', 'uploadsHooks', e, {
           asset: { dataObjectId: asset.id, uploadOperator },
         })
 

@@ -11,10 +11,10 @@ import { NotificationsWidget } from '@/components/_notifications/NotificationsWi
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useMemberAvatar } from '@/providers/assets'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { useSearchStore } from '@/providers/search'
-import { useUser } from '@/providers/user'
+import { useUser } from '@/providers/user/user.hooks'
 import { cVar, transitions } from '@/styles'
 
 import {

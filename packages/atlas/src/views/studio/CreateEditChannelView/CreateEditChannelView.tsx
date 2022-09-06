@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
-import { useFullChannel } from '@/api/hooks'
+import { useFullChannel } from '@/api/hooks/channel'
 import { ActionBar } from '@/components/ActionBar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -23,15 +23,22 @@ import {
 import { LANGUAGES_LIST } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
-import { ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib'
-import { useAsset, useAssetStore, useOperatorsContext, useRawAsset } from '@/providers/assets'
+import { ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib/types'
+import { useAsset, useRawAsset } from '@/providers/assets/assets.hooks'
+import { useOperatorsContext } from '@/providers/assets/assets.provider'
+import { useAssetStore } from '@/providers/assets/assets.store'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
-import { useBloatFeesAndPerMbFees, useBucketsConfigForNewChannel, useFee, useJoystream } from '@/providers/joystream'
+import {
+  useBloatFeesAndPerMbFees,
+  useBucketsConfigForNewChannel,
+  useFee,
+  useJoystream,
+} from '@/providers/joystream/joystream.hooks'
 import { useSnackbar } from '@/providers/snackbars'
-import { useTransaction } from '@/providers/transactions'
-import { useUploadsStore } from '@/providers/uploadsManager'
-import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
-import { useUser } from '@/providers/user'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { useStartFileUpload } from '@/providers/uploads/uploads.hooks'
+import { useUploadsStore } from '@/providers/uploads/uploads.store'
+import { useUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'

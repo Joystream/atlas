@@ -1,8 +1,8 @@
 import BN from 'bn.js'
 
-import { BasicMembershipFieldsFragment } from '@/api/queries'
+import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { AuctionDatePickerValue } from '@/components/_inputs/AuctionDatePicker'
-import { NftSaleInputMetadata } from '@/joystream-lib'
+import { NftSaleInputMetadata } from '@/joystream-lib/types'
 
 export type Listing = 'Auction' | 'Fixed price' | undefined
 
