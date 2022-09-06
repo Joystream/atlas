@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { ChangeEvent, ChangeEventHandler, FC, useRef } from 'react'
 
 import { ListItemProps } from '@/components/ListItem'
@@ -20,7 +21,6 @@ export type SubtitleBoxProps = {
   className?: string
   onChange?: ChangeEventHandler<HTMLInputElement>
   onRemove?: () => void
-  onDownload?: () => void
 } & SubtitlesInput
 
 export const SubtitlesBox: FC<SubtitleBoxProps> = ({
@@ -28,25 +28,38 @@ export const SubtitlesBox: FC<SubtitleBoxProps> = ({
   languageIso,
   type,
   file,
-  assetId,
+  url,
+  id,
   onChange,
   onRemove,
-  onDownload,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null)
   const [openUnsuportedFileDialog, closeUnsuportedFileDialog] = useConfirmationModal()
-  const hasFile = !!file || !!assetId
+  const hasFile = !!file || !!id
+
+  const handleDownload = async (url = '') => {
+    const response = await axios.get(url, { responseType: 'blob' })
+    const objectURL = window.URL.createObjectURL(new Blob([response.data]))
+    const link = document.createElement('a')
+    link.href = objectURL
+    link.setAttribute('download', `${id}-${languageIso.toLowerCase()}.vtt`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
   const contexMenuItems: ListItemProps[] = [
-    // TODO: allow downloading already published subtitles
-    ...(file
+    ...(file || url
       ? [
           {
             label: 'Download file',
-            onClick: onDownload,
-            externalLink: {
-              href: URL.createObjectURL(file),
-              download: file.name,
-            },
+            onClick: () => url && handleDownload(url),
+            externalLink: file
+              ? {
+                  href: URL.createObjectURL(file),
+                  download: file.name,
+                }
+              : undefined,
             nodeStart: <SvgActionDownload />,
           },
         ]
@@ -96,9 +109,16 @@ export const SubtitlesBox: FC<SubtitleBoxProps> = ({
         <Text variant="t100-strong" as="p">
           {languageIso} {type === 'closed-captions' ? '(CC)' : ''}
         </Text>
-        <SubtitlesFileName variant="t100" as="p" color="colorText">
-          {!hasFile ? 'Add subtitles file' : file ? file.name : 'subs.vtt'}
-        </SubtitlesFileName>
+        {!hasFile && (
+          <SubtitlesFileName variant="t100" as="p" color="colorText">
+            Add subtitles file
+          </SubtitlesFileName>
+        )}
+        {file && (
+          <SubtitlesFileName variant="t100" as="p" color="colorText">
+            {file.name}
+          </SubtitlesFileName>
+        )}
         {hasFile ? <StyledSvgActionCheck /> : null}
       </SubtitleDetails>
       <Button size="small" onClick={() => inputRef.current?.click()} variant={hasFile ? 'secondary' : 'primary'}>

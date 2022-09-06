@@ -122,6 +122,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   } = useForm<VideoWorkspaceVideoFormFields>({
     shouldFocusError: true,
   })
+  const formData = getValues()
 
   const videoFieldsLocked = tabData?.mintNft && isEdit
 
@@ -136,7 +137,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
       const anyLicenseFieldsDirty =
         dirtyFields.licenseCode || dirtyFields.licenseAttribution || dirtyFields.licenseCustomText
 
-      const metadata: VideoInputMetadata = {
+      return {
         ...(isNew || dirtyFields.title ? { title: data.title } : {}),
         ...(isNew || dirtyFields.description ? { description: data.description } : {}),
         ...(isNew || dirtyFields.category ? { category: data.category } : {}),
@@ -166,7 +167,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
         ...(isNew || dirtyFields.subtitlesArray
           ? {
               subtitles: data.subtitlesArray?.map((subtitle, idx) => ({
-                id: subtitle.assetId || `new-subtitle-${idx}`,
+                id: subtitle.id || `new-subtitle-${idx}`,
                 language: subtitle.languageIso,
                 type: subtitle.type,
                 mimeType: 'text/vtt',
@@ -175,7 +176,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           : {}),
         clearSubtitles: !data.subtitlesArray?.length,
       }
-      return metadata
     },
     [dirtyFields, isNew]
   )
@@ -223,8 +223,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
         : {}),
     }
   }
-
-  const formData = getValues()
 
   const videoInputMetadata = createVideoInputMetadata(formData)
   const nftMetadata = createNftInputMetadata(formData)
@@ -286,7 +284,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
       return
     }
     setCachedEditedVideoId(editedVideoInfo.id)
-
     reset(tabData)
   }, [tabData, tabDataLoading, reset, mintNft, editedVideoInfo.id, cachedEditedVideoId, setValue])
 
@@ -743,17 +740,25 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
               ? `Subtitles, license, comments, mature content, paid promotion, published date${
                   isEdit ? ', delete video' : ''
                 }`
-              : 'Royalties, description, category, language, visibility, subtitles, license, comments, mature content, paid promotion, published date'}
+              : 'Subtitles, royalties, description, category, language, visibility, subtitles, license, comments, mature content, paid promotion, published date'}
           </Text>
         </div>
         <MoreSettingsSection expanded={moreSettingsVisible}>
           <Controller
             control={control}
             name="subtitlesArray"
+            rules={{
+              validate: (value) => {
+                const languageWithoutFile = value?.find((language) => !language.file && !language.url)
+                return value && languageWithoutFile ? 'Provide a file for every new subtitles language.' : true
+              },
+            }}
             render={({ field: { onChange, value: subtitlesArray } }) => {
               return (
-                <FormField label="Subtitles" optional>
+                <FormField label="Subtitles" optional error={(errors?.subtitlesArray as FieldError)?.message}>
                   <SubtitlesCombobox
+                    disabled={videoFieldsLocked}
+                    error={!!errors?.subtitlesArray}
                     onLanguageAdd={(subtitlesLanguage) => {
                       onChange([...(subtitlesArray ? subtitlesArray : []), { ...subtitlesLanguage }])
                     }}

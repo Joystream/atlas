@@ -86,7 +86,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
           )
         }
         if (tabData?.subtitlesArray) {
-          const oldAssetsIds = tabData.subtitlesArray.map((subtitle) => subtitle.assetId)
+          const oldAssetsIds = tabData.subtitlesArray.map((subtitle) => subtitle.id)
           const currentSubtitlesIdsLookup = createLookup(data.metadata.subtitles || [])
           const removedSubtitlesIds = oldAssetsIds.filter(
             (assetId): assetId is string => !!assetId && !currentSubtitlesIdsLookup[assetId]
