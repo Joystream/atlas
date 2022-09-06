@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { media, sizes } from '@/styles'
 
@@ -37,4 +38,16 @@ export const BackImage = styled.img`
   display: block;
   left: 0;
   top: 0;
+`
+
+export const YppProgramContanerGrid = styled(LayoutGrid)`
+  margin: ${sizes(16)} 0;
+  text-align: center;
+  ${media.md} {
+    margin: ${sizes(24)} 0;
+  }
+`
+
+export const HeroGridItem = styled(GridItem)`
+  align-self: center;
 `

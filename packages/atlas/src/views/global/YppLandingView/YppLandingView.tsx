@@ -15,7 +15,14 @@ import { Button } from '@/components/_buttons/Button'
 import { SvgActionChevronR } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
-import { BackImage, FrontImage, HeroImageWrapper, StyledLimitedWidthContainer } from './YppLandingView.styles'
+import {
+  BackImage,
+  FrontImage,
+  HeroGridItem,
+  HeroImageWrapper,
+  StyledLimitedWidthContainer,
+  YppProgramContanerGrid,
+} from './YppLandingView.styles'
 
 export const YppLandingView: FC = () => {
   const mdMatch = useMediaMatch('md')
@@ -25,33 +32,51 @@ export const YppLandingView: FC = () => {
     endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
     translateY: [0, -15],
   })
-
   return (
-    <StyledLimitedWidthContainer>
-      <LayoutGrid>
-        <GridItem as="header" colSpan={{ base: 12, sm: 8, lg: 6 }} colStart={{ sm: 3, lg: 4 }}>
-          <Text as="h1" variant={mdMatch ? 'h800' : 'h600'}>
-            Connect your YouTube channel & get paid
+    <>
+      <StyledLimitedWidthContainer>
+        <LayoutGrid>
+          <GridItem as="header" colSpan={{ base: 12, sm: 8, lg: 6 }} colStart={{ sm: 3, lg: 4 }}>
+            <Text as="h1" variant={mdMatch ? 'h800' : 'h600'}>
+              Connect your YouTube channel & get paid
+            </Text>
+            <Text as="p" variant="t300" color="colorText" margin={{ top: 4, bottom: 8 }}>
+              Reupload and backup your YouTube videos to receive a guaranteed payout in the YouTube Partner Program.
+            </Text>
+            <Button size="large" icon={<SvgActionChevronR />} iconPlacement="right">
+              Sign up now
+            </Button>
+            <Text as="p" variant="t100" color="colorText" margin={{ top: 2 }}>
+              It takes 3 minutes and is 100% free.
+            </Text>
+          </GridItem>
+        </LayoutGrid>
+        <HeroImageWrapper>
+          <BackImage srcSet={`${yt576} 576w, ${yt864} 864w, ${yt1152} 1152w, ${yt2304} 2304w`} alt="Hero back" />
+          <FrontImage
+            ref={frontImageRef}
+            srcSet={`${hero576} 576w, ${hero864} 864w, ${hero1152} 1152w, ${hero2304} 2304w`}
+            alt="Hero front"
+          />
+        </HeroImageWrapper>
+      </StyledLimitedWidthContainer>
+      <YppProgramContanerGrid>
+        <HeroGridItem as="header" colStart={{ sm: 3, lg: 4 }} colSpan={{ base: 12, sm: 8, lg: 6 }}>
+          <Text variant={mdMatch ? 'h800' : 'h600'} as="h2">
+            Get started in 3 steps
           </Text>
-          <Text as="p" variant="t300" color="colorText" margin={{ top: 4, bottom: 8 }}>
-            Reupload and backup your YouTube videos to receive a guaranteed payout in the YouTube Partner Program.
+          <Text variant="t300" as="p" margin={{ top: 4, bottom: 8 }} color="colorText">
+            Our fully automated verification process is as simple as 1-2-3. If you don't have an Atlas channel already,
+            you'll be able to create one for free.{' '}
           </Text>
-          <Button size="large" icon={<SvgActionChevronR />} iconPlacement="right">
+          <Button size="large" iconPlacement="right" icon={<SvgActionChevronR />}>
             Sign up now
           </Button>
-          <Text as="p" variant="t100" color="colorText" margin={{ top: 2 }}>
+          <Text variant="t100" as="p" color="colorTextMuted" margin={{ top: 2 }}>
             It takes 3 minutes and is 100% free.
           </Text>
-        </GridItem>
-      </LayoutGrid>
-      <HeroImageWrapper>
-        <BackImage srcSet={`${yt576} 576w, ${yt864} 864w, ${yt1152} 1152w, ${yt2304} 2304w`} alt="Hero back" />
-        <FrontImage
-          ref={frontImageRef}
-          srcSet={`${hero576} 576w, ${hero864} 864w, ${hero1152} 1152w, ${hero2304} 2304w`}
-          alt="Hero front"
-        />
-      </HeroImageWrapper>
-    </StyledLimitedWidthContainer>
+        </HeroGridItem>
+      </YppProgramContanerGrid>
+    </>
   )
 }
