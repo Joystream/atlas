@@ -18,6 +18,7 @@ export type GetNftQuery = {
     creatorRoyalty?: number | null
     lastSaleDate?: Date | null
     lastSalePrice?: string | null
+    isOwnedByChannel: boolean
     creatorChannel: {
       __typename?: 'Channel'
       id: string
@@ -100,6 +101,7 @@ export type GetNftQuery = {
         creatorRoyalty?: number | null
         lastSaleDate?: Date | null
         lastSalePrice?: string | null
+        isOwnedByChannel: boolean
         ownerMember?: {
           __typename?: 'Membership'
           id: string
@@ -507,6 +509,7 @@ export type GetNftsQuery = {
     creatorRoyalty?: number | null
     lastSaleDate?: Date | null
     lastSalePrice?: string | null
+    isOwnedByChannel: boolean
     creatorChannel: {
       __typename?: 'Channel'
       id: string
@@ -589,6 +592,7 @@ export type GetNftsQuery = {
         creatorRoyalty?: number | null
         lastSaleDate?: Date | null
         lastSalePrice?: string | null
+        isOwnedByChannel: boolean
         ownerMember?: {
           __typename?: 'Membership'
           id: string
@@ -1004,6 +1008,7 @@ export type GetNftsConnectionQuery = {
         creatorRoyalty?: number | null
         lastSaleDate?: Date | null
         lastSalePrice?: string | null
+        isOwnedByChannel: boolean
         creatorChannel: {
           __typename?: 'Channel'
           id: string
@@ -1086,6 +1091,7 @@ export type GetNftsConnectionQuery = {
             creatorRoyalty?: number | null
             lastSaleDate?: Date | null
             lastSalePrice?: string | null
+            isOwnedByChannel: boolean
             ownerMember?: {
               __typename?: 'Membership'
               id: string

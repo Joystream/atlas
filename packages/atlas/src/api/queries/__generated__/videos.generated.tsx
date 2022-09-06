@@ -68,6 +68,7 @@ export type GetBasicVideoQuery = {
       creatorRoyalty?: number | null
       lastSaleDate?: Date | null
       lastSalePrice?: string | null
+      isOwnedByChannel: boolean
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -427,6 +428,7 @@ export type GetFullVideoQuery = {
       creatorRoyalty?: number | null
       lastSaleDate?: Date | null
       lastSalePrice?: string | null
+      isOwnedByChannel: boolean
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -721,6 +723,7 @@ export type GetBasicVideosConnectionQuery = {
           creatorRoyalty?: number | null
           lastSaleDate?: Date | null
           lastSalePrice?: string | null
+          isOwnedByChannel: boolean
           ownerMember?: {
             __typename?: 'Membership'
             id: string
@@ -1092,6 +1095,7 @@ export type GetFullVideosConnectionQuery = {
           creatorRoyalty?: number | null
           lastSaleDate?: Date | null
           lastSalePrice?: string | null
+          isOwnedByChannel: boolean
           ownerMember?: {
             __typename?: 'Membership'
             id: string
@@ -1383,6 +1387,7 @@ export type GetBasicVideosQuery = {
       creatorRoyalty?: number | null
       lastSaleDate?: Date | null
       lastSalePrice?: string | null
+      isOwnedByChannel: boolean
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -1745,6 +1750,7 @@ export type GetFullVideosQuery = {
       creatorRoyalty?: number | null
       lastSaleDate?: Date | null
       lastSalePrice?: string | null
+      isOwnedByChannel: boolean
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -2041,6 +2047,7 @@ export type GetMostViewedVideosConnectionQuery = {
           creatorRoyalty?: number | null
           lastSaleDate?: Date | null
           lastSalePrice?: string | null
+          isOwnedByChannel: boolean
           ownerMember?: {
             __typename?: 'Membership'
             id: string
@@ -2305,6 +2312,7 @@ export type GetTop10VideosThisWeekQuery = {
       creatorRoyalty?: number | null
       lastSaleDate?: Date | null
       lastSalePrice?: string | null
+      isOwnedByChannel: boolean
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -2566,6 +2574,7 @@ export type GetTop10VideosThisMonthQuery = {
       creatorRoyalty?: number | null
       lastSaleDate?: Date | null
       lastSalePrice?: string | null
+      isOwnedByChannel: boolean
       ownerMember?: {
         __typename?: 'Membership'
         id: string

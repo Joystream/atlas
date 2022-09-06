@@ -333,6 +333,7 @@ export type BasicVideoFieldsFragment = {
     creatorRoyalty?: number | null
     lastSaleDate?: Date | null
     lastSalePrice?: string | null
+    isOwnedByChannel: boolean
     ownerMember?: {
       __typename?: 'Membership'
       id: string
@@ -685,6 +686,7 @@ export type FullVideoFieldsFragment = {
     creatorRoyalty?: number | null
     lastSaleDate?: Date | null
     lastSalePrice?: string | null
+    isOwnedByChannel: boolean
     ownerMember?: {
       __typename?: 'Membership'
       id: string
@@ -913,6 +915,7 @@ export type BasicNftFieldsFragment = {
   creatorRoyalty?: number | null
   lastSaleDate?: Date | null
   lastSalePrice?: string | null
+  isOwnedByChannel: boolean
   ownerMember?: {
     __typename?: 'Membership'
     id: string
@@ -1116,6 +1119,7 @@ export type FullNftFieldsFragment = {
   creatorRoyalty?: number | null
   lastSaleDate?: Date | null
   lastSalePrice?: string | null
+  isOwnedByChannel: boolean
   creatorChannel: {
     __typename?: 'Channel'
     id: string
@@ -1198,6 +1202,7 @@ export type FullNftFieldsFragment = {
       creatorRoyalty?: number | null
       lastSaleDate?: Date | null
       lastSalePrice?: string | null
+      isOwnedByChannel: boolean
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -2065,6 +2070,7 @@ export const BasicNftFieldsFragmentDoc = gql`
     creatorRoyalty
     lastSaleDate
     lastSalePrice
+    isOwnedByChannel
     ownerMember {
       ...BasicMembershipFields
     }

@@ -5,6 +5,7 @@ import { FC, PropsWithChildren } from 'react'
 import { BasicMembershipFieldsFragment } from '@/api/queries'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
+import { SvgAlertsInformative24 } from '@/components/_icons'
 import { useMemberAvatar } from '@/providers/assets'
 import { formatDateTime } from '@/utils/time'
 
@@ -12,6 +13,7 @@ import {
   Description,
   Divider,
   MembersList,
+  RevenueBanner,
   Row,
   StyledInformation,
   StyledOutputPill,
@@ -28,9 +30,17 @@ type AcceptTermsProps = {
   creatorRoyalty?: number | null
   channelTitle?: string | null
   fee: BN
+  isOwnedByChannel?: boolean
 }
 
-export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData, creatorRoyalty, channelTitle, fee }) => {
+export const AcceptTerms: FC<AcceptTermsProps> = ({
+  selectedType,
+  formData,
+  creatorRoyalty,
+  channelTitle,
+  fee,
+  isOwnedByChannel,
+}) => {
   const { startDate, endDate, type } = formData
 
   const totalDaysAndHours = getTotalDaysAndHours(startDate, endDate)
@@ -49,6 +59,13 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData, crea
       <Text as="h1" variant="h500" margin={{ bottom: 12 }}>
         Review listing terms
       </Text>
+      {isOwnedByChannel && (
+        <RevenueBanner
+          icon={<SvgAlertsInformative24 />}
+          title="Revenue from this sale will go out to your channel account"
+          description="You can withdraw tokens from your channel account by clicking on your avatar in the Atlas Studio in the top right corner or by visiting My Payments tab."
+        />
+      )}
       <Text as="h2" variant="h400">
         Listing terms
       </Text>

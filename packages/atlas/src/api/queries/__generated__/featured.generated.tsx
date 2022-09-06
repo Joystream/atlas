@@ -72,6 +72,7 @@ export type GetVideoHeroQuery = {
         creatorRoyalty?: number | null
         lastSaleDate?: Date | null
         lastSalePrice?: string | null
+        isOwnedByChannel: boolean
         ownerMember?: {
           __typename?: 'Membership'
           id: string
@@ -340,6 +341,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
           creatorRoyalty?: number | null
           lastSaleDate?: Date | null
           lastSalePrice?: string | null
+          isOwnedByChannel: boolean
           ownerMember?: {
             __typename?: 'Membership'
             id: string
@@ -705,6 +707,7 @@ export type GetCategoriesFeaturedVideosQuery = {
         creatorRoyalty?: number | null
         lastSaleDate?: Date | null
         lastSalePrice?: string | null
+        isOwnedByChannel: boolean
         ownerMember?: {
           __typename?: 'Membership'
           id: string

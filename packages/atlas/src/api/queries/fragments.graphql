@@ -192,6 +192,7 @@ fragment BasicNftFields on OwnedNft {
   creatorRoyalty
   lastSaleDate
   lastSalePrice
+  isOwnedByChannel
   ownerMember {
     ...BasicMembershipFields
   }

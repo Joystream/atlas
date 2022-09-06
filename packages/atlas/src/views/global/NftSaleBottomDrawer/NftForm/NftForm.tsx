@@ -338,6 +338,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
       creatorRoyalty={video?.nft?.creatorRoyalty}
       channelTitle={video?.channel.title}
       fee={fee}
+      isOwnedByChannel={video?.nft?.isOwnedByChannel}
     />,
   ]
 
