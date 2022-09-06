@@ -1,29 +1,21 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { media, sizes, zIndex } from '@/styles'
 
-export const Wrapper = styled.div`
-  padding-top: ${sizes(24)};
+export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
+  margin-top: ${sizes(16)};
   text-align: center;
+
+  ${media.md} {
+    margin-top: ${sizes(24)};
+  }
 `
 
-export const HeroWrapper = styled.div`
+export const HeroImageWrapper = styled.div`
   position: relative;
-`
-
-const commonHeroImagesStyles = css`
-  position: absolute;
-  left: 50%;
-`
-
-export const FrontImage = styled.img<{ parallaxPosition: number }>`
-  ${commonHeroImagesStyles};
-
-  z-index: ${zIndex.nearOverlay};
-  transform: translate(-50%, -${({ parallaxPosition }) => parallaxPosition}px);
-  width: 100%;
-  will-change: transform;
+  margin: ${sizes(16)} auto 0 auto;
 
   ${media.md} {
     max-width: 888px;
@@ -34,17 +26,21 @@ export const FrontImage = styled.img<{ parallaxPosition: number }>`
   }
 `
 
-export const BackImage = styled.img`
+const commonHeroImagesStyles = css`
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+`
+
+export const FrontImage = styled.img<{ parallaxPosition: number }>`
   ${commonHeroImagesStyles};
 
-  transform: translateX(-50%);
-  width: 84%;
+  z-index: ${zIndex.nearOverlay};
+  transform: translateY(-${({ parallaxPosition }) => parallaxPosition}px);
+  will-change: transform;
+`
 
-  ${media.md} {
-    max-width: 740px;
-  }
-
-  ${media.lg} {
-    max-width: 960px;
-  }
+export const BackImage = styled.img`
+  ${commonHeroImagesStyles};
 `
