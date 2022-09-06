@@ -1,4 +1,4 @@
-import { STORAGE_UPLOAD_PATH } from '@/config/urls'
+import { STORAGE_UPLOAD_PATH } from '@/config/env'
 
 export const joinUrlFragments = (...fragments: string[]) => {
   // remove trailing/leading slashes

@@ -4,7 +4,7 @@ import { useMemberships } from '@/api/hooks'
 import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
-import { PIONEER_MEMBER_URL } from '@/config/urls'
+import { PIONEER_MEMBER_URL } from '@/config/env'
 import { formatDate } from '@/utils/time'
 
 import {

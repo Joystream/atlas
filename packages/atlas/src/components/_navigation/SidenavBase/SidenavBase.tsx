@@ -3,8 +3,8 @@ import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
 import { NavItem, NavItemType } from '@/components/_navigation/NavItem'
+import { ATLAS_GITHUB_URL, JOYSTREAM_URL } from '@/config/env'
 import { absoluteRoutes } from '@/config/routes'
-import { ATLAS_GITHUB_URL, JOYSTREAM_URL } from '@/config/urls'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { transitions } from '@/styles'
 

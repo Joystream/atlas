@@ -1,7 +1,7 @@
 import { FC } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
-import { JOYSTREAM_DISCORD_URL } from '@/config/urls'
+import { JOYSTREAM_DISCORD_URL } from '@/config/env'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { AnimationWrapper, ButtonGroup, StyledAnimatedError, StyledDiscordButton } from './ErrorOverlay.styles'
