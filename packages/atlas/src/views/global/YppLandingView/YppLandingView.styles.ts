@@ -41,13 +41,57 @@ export const BackImage = styled.img`
 `
 
 export const YppProgramContanerGrid = styled(LayoutGrid)`
-  margin: ${sizes(16)} 0;
   text-align: center;
-  ${media.md} {
-    margin: ${sizes(24)} 0;
-  }
 `
 
 export const HeroGridItem = styled(GridItem)`
+  margin: ${sizes(16)} 0;
   align-self: center;
+  ${media.md} {
+    margin-top: ${sizes(24)} 0;
+  }
+`
+
+export const CardImageRow = styled(GridItem)`
+  display: grid;
+  gap: ${sizes(6)};
+  ${media.md} {
+    grid-template-columns: auto auto;
+    align-items: center;
+    justify-content: center;
+  }
+`
+
+export const ImageContainer = styled.div<{
+  reverseOrderOnDesktop?: boolean
+  positionOnMobile?: 'center' | 'unset' | 'flex-end'
+}>`
+  position: relative;
+  overflow-x: hidden;
+  order: ${({ reverseOrderOnDesktop }) => (reverseOrderOnDesktop ? '-1' : 'unset')};
+  display: flex;
+  justify-content: ${({ positionOnMobile = 'unset' }) => positionOnMobile};
+  ${media.sm} {
+    justify-content: unset;
+  }
+`
+
+export const AbsolutelyPositionedImg = styled.img<{ stickToRightSideOnMobile?: boolean }>`
+  position: absolute;
+  z-index: -1;
+  width: 480px;
+  ${media.sm} {
+    right: unset;
+    width: 100%;
+    max-width: 640px;
+  }
+`
+
+export const RelativelyPositionedImg = styled.img<{ stickToRightSideOnMobile?: boolean }>`
+  width: 480px;
+  ${media.sm} {
+    float: unset;
+    width: 100%;
+    max-width: 640px;
+  }
 `
