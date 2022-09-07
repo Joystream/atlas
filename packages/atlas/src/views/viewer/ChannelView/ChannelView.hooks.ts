@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { BasicVideoFieldsFragment, SearchQuery, useSearchLazyQuery } from '@/api/queries'
+import { BasicVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { SearchQuery, useSearchLazyQuery } from '@/api/queries/__generated__/search.generated'
 
 export const usePagination = (currentTab: number) => {
   const [currentPage, setCurrentPage] = useState(0)

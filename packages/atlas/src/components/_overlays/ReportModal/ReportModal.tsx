@@ -1,7 +1,8 @@
 import { FC } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { useReportChannelMutation, useReportVideoMutation } from '@/api/queries'
+import { useReportChannelMutation } from '@/api/queries/__generated__/channels.generated'
+import { useReportVideoMutation } from '@/api/queries/__generated__/videos.generated'
 import { FormField } from '@/components/_inputs/FormField'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { useSnackbar } from '@/providers/snackbars'

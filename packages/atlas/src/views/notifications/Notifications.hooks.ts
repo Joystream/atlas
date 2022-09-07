@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { NotificationRecord } from '@/providers/notifications'
+import { NotificationRecord } from '@/providers/notifications/notifications.types'
 
 export const useSelectedNotifications = () => {
   const [selectedNotifications, setSelectedNotifications] = useState<NotificationRecord[]>([])

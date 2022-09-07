@@ -1,7 +1,7 @@
 import BN from 'bn.js'
 
-import { useRawNotifications } from '@/api/hooks'
-import { useUser } from '@/providers/user'
+import { useRawNotifications } from '@/api/hooks/notifications'
+import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger } from '@/utils/logs'
 
 import { useNotificationStore } from './notifications.store'

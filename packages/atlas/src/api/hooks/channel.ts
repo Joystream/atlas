@@ -26,7 +26,7 @@ import {
   useGetPromisingChannelsQuery,
   useGetTop10ChannelsQuery,
   useUnfollowChannelMutation,
-} from '@/api/queries'
+} from '@/api/queries/__generated__/channels.generated'
 import { channelFilter } from '@/config/contentFilter'
 
 const CHANNEL_ID_FILTER = channelFilter.NOT?.find((item) => item.id_in)

@@ -2,8 +2,8 @@ import styled from '@emotion/styled'
 import { FC, useEffect, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { useBasicVideos } from '@/api/hooks'
-import { BasicVideoFieldsFragment } from '@/api/queries'
+import { useBasicVideos } from '@/api/hooks/video'
+import { BasicVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { cVar, transitions } from '@/styles'
 import { getRandomIntInclusive } from '@/utils/number'
 

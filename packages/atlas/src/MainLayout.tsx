@@ -12,7 +12,7 @@ import { isBrowserOutdated } from '@/utils/browser'
 
 import { TopbarBase } from './components/_navigation/TopbarBase'
 import { useConfirmationModal } from './providers/confirmationModal'
-import { LegalLayout } from './views/legal'
+import { LegalLayout } from './views/legal/LegalLayout'
 import { ViewerLayout } from './views/viewer/ViewerLayout'
 
 history.scrollRestoration = 'manual'

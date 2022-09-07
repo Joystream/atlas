@@ -24,7 +24,7 @@ import {
   GetStorageBucketsWithBagsDocument,
   GetStorageBucketsWithBagsQuery,
   GetStorageBucketsWithBagsQueryVariables,
-} from '@/api/queries'
+} from '@/api/queries/__generated__/storage.generated'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ASSET_MIN_DISTRIBUTOR_REFETCH_TIME } from '@/config/assets'
 import { USER_LOCATION_SERVICE_URL } from '@/config/env'

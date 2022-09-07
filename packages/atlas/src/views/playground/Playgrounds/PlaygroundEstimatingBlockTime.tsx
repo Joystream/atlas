@@ -6,7 +6,7 @@ import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
-import { useJoystreamStore } from '@/providers/joystream'
+import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 
 export const PlaygroundEstimatingBlockTime = () => {
   const [datetimeLocal, setDatetimeLocal] = useState('')

@@ -3,19 +3,19 @@ import { FC, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import shallow from 'zustand/shallow'
 
-import { useDataObjectsAvailabilityLazy } from '@/api/hooks'
+import { useDataObjectsAvailabilityLazy } from '@/api/hooks/dataObject'
 import { ASSET_POLLING_INTERVAL } from '@/config/assets'
 import { absoluteRoutes } from '@/config/routes'
-import { fetchMissingAssets } from '@/providers/uploadsManager/utils'
+import { fetchMissingAssets } from '@/providers/uploads/uploads.utils'
+import { useUser } from '@/providers/user/user.hooks'
 import { AssetUploadStatus } from '@/types/storage'
 import { openInNewTab } from '@/utils/browser'
 import { createLookup } from '@/utils/data'
 
-import { useUploadsStore } from './store'
-import { AssetUpload } from './types'
+import { useUploadsStore } from './uploads.store'
+import { AssetUpload } from './uploads.types'
 
 import { useSnackbar } from '../snackbars'
-import { useUser } from '../user'
 
 type VideoAssets = AssetUpload & { uploadStatus?: AssetUploadStatus }
 

@@ -12,22 +12,24 @@ import {
   GetCommentRepliesConnectionDocument,
   GetCommentRepliesConnectionQuery,
   GetCommentRepliesConnectionQueryVariables,
-  GetFullVideoDocument,
-  GetFullVideoQuery,
-  GetFullVideoQueryVariables,
   GetUserCommentsAndVideoCommentsConnectionDocument,
   GetUserCommentsAndVideoCommentsConnectionQuery,
   GetUserCommentsAndVideoCommentsConnectionQueryVariables,
   GetUserCommentsReactionsDocument,
   GetUserCommentsReactionsQuery,
   GetUserCommentsReactionsQueryVariables,
-} from '@/api/queries'
+} from '@/api/queries/__generated__/comments.generated'
+import {
+  GetFullVideoDocument,
+  GetFullVideoQuery,
+  GetFullVideoQueryVariables,
+} from '@/api/queries/__generated__/videos.generated'
 import { ReactionId } from '@/config/reactions'
 import { absoluteRoutes } from '@/config/routes'
-import { VideoReaction } from '@/joystream-lib'
-import { useJoystream } from '@/providers/joystream'
-import { useTransaction } from '@/providers/transactions'
-import { useUser } from '@/providers/user'
+import { VideoReaction } from '@/joystream-lib/types'
+import { useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 export const useReactionTransactions = () => {

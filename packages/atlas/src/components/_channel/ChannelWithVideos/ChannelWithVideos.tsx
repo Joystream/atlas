@@ -1,6 +1,7 @@
 import { FC, MouseEvent, memo, useMemo, useState } from 'react'
 
-import { useBasicChannel, useChannelPreviewVideos } from '@/api/hooks'
+import { useBasicChannel } from '@/api/hooks/channel'
+import { useChannelPreviewVideos } from '@/api/hooks/video'
 import { Grid } from '@/components/Grid'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
@@ -9,7 +10,7 @@ import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { absoluteRoutes } from '@/config/routes'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
-import { useAsset } from '@/providers/assets'
+import { useAsset } from '@/providers/assets/assets.hooks'
 import { SentryLogger } from '@/utils/logs'
 
 import { ChannelCardAnchor, ChannelFollows, FollowButton, InfoWrapper, StyledAvatar } from './ChannelWithVideos.styles'

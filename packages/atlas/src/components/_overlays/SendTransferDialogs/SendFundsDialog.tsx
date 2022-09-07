@@ -4,12 +4,12 @@ import BN from 'bn.js'
 import { FC, useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
+import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import {
-  BasicMembershipFieldsFragment,
   GetMembershipsDocument,
   GetMembershipsQuery,
   GetMembershipsQueryVariables,
-} from '@/api/queries'
+} from '@/api/queries/__generated__/memberships.generated'
 import { Avatar, AvatarProps } from '@/components/Avatar'
 import { Fee } from '@/components/Fee'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -21,9 +21,9 @@ import { TokenInput } from '@/components/_inputs/TokenInput'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { JOY_CURRENCY_TICKER } from '@/config/joystream'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
-import { useMemberAvatar } from '@/providers/assets'
-import { useFee, useJoystream, useTokenPrice } from '@/providers/joystream'
-import { useTransaction } from '@/providers/transactions'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useFee, useJoystream, useTokenPrice } from '@/providers/joystream/joystream.hooks'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { SentryLogger } from '@/utils/logs'
 import { formatNumber } from '@/utils/number'
 

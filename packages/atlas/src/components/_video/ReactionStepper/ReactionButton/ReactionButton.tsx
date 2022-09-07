@@ -7,7 +7,7 @@ import { Button } from '@/components/_buttons/Button'
 import { SvgActionDislikeOutline, SvgActionLikeOutline } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
-import { VideoReaction } from '@/joystream-lib'
+import { VideoReaction } from '@/joystream-lib/types'
 import { cVar, transitions } from '@/styles'
 
 import {

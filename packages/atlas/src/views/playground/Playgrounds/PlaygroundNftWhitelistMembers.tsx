@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { BasicMembershipFieldsFragment } from '@/api/queries'
+import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { MemberComboBox } from '@/components/_inputs/MemberComboBox'
 
 export const PlaygroundNftWhitelistMembers = () => {

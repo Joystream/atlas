@@ -1,4 +1,4 @@
-import { StorageDataObjectFieldsFragment } from '@/api/queries'
+import { StorageDataObjectFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 
 export type SubtitlesInput = {
   languageIso: string

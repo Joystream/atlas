@@ -12,9 +12,10 @@ import {
 } from 'react-hook-form'
 
 import { ImageInputFile, VideoInputFile } from '@/components/_inputs/MultiFileSelect'
-import { useAssetStore, useRawAsset } from '@/providers/assets'
+import { useRawAsset } from '@/providers/assets/assets.hooks'
+import { useAssetStore } from '@/providers/assets/assets.store'
 import { RawDraft, useDraftStore } from '@/providers/drafts'
-import { useAuthorizedUser } from '@/providers/user'
+import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import {
   VideoWorkspace,
   VideoWorkspaceVideoFormFields,

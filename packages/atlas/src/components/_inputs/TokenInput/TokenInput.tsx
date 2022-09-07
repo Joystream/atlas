@@ -4,7 +4,7 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { Input, InputProps } from '@/components/_inputs/Input'
 import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
-import { useTokenPrice } from '@/providers/joystream'
+import { useTokenPrice } from '@/providers/joystream/joystream.hooks'
 
 export type TokenInputProps = {
   value: number | null | undefined

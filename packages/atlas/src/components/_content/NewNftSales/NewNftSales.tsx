@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { FC, useState } from 'react'
 
-import { useNftsConnection } from '@/api/hooks'
-import { OwnedNftOrderByInput } from '@/api/queries'
+import { useNftsConnection } from '@/api/hooks/nfts'
+import { OwnedNftOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Grid } from '@/components/Grid'
 import { Text } from '@/components/Text'

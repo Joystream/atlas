@@ -1,7 +1,7 @@
 import { FC, Fragment, PropsWithChildren, useRef, useState } from 'react'
 
-import { BasicMembershipFieldsFragment } from '@/api/queries'
-import { useMemberAvatar } from '@/providers/assets'
+import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 
 import { AvatarProps } from './Avatar'
 import {

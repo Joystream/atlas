@@ -7,7 +7,7 @@ import {
   GetNotificationsQueryVariables,
   useGetNftActivitiesQuery,
   useGetNotificationsQuery,
-} from '@/api/queries'
+} from '@/api/queries/__generated__/notifications.generated'
 
 export const useRawNotifications = (
   channelId: string | null,

@@ -4,7 +4,7 @@ import { DocumentNode } from 'graphql'
 import { debounce, isEqual } from 'lodash-es'
 import { useEffect, useRef } from 'react'
 
-import { ChannelEdge, VideoEdge } from '@/api/queries'
+import { ChannelEdge, VideoEdge } from '@/api/queries/__generated__/baseTypes.generated'
 
 export type PaginatedData<T> = {
   edges: {

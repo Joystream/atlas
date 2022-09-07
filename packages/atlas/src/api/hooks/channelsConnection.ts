@@ -4,7 +4,7 @@ import {
   GetBasicChannelsConnectionQuery,
   GetBasicChannelsConnectionQueryVariables,
   useGetBasicChannelsConnectionQuery,
-} from '@/api/queries'
+} from '@/api/queries/__generated__/channels.generated'
 
 export const useBasicChannelsConnection = (
   variables?: GetBasicChannelsConnectionQueryVariables,

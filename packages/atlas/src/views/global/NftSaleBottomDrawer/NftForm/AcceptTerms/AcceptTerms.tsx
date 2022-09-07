@@ -2,11 +2,11 @@ import BN from 'bn.js'
 import { addHours } from 'date-fns'
 import { FC, PropsWithChildren } from 'react'
 
-import { BasicMembershipFieldsFragment } from '@/api/queries'
+import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { SvgAlertsInformative24 } from '@/components/_icons'
-import { useMemberAvatar } from '@/providers/assets'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { formatDateTime } from '@/utils/time'
 
 import {

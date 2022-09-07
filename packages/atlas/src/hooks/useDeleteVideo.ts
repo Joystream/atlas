@@ -1,12 +1,16 @@
 import { useApolloClient } from '@apollo/client'
 import { useCallback } from 'react'
 
-import { GetFullVideoDocument, GetFullVideoQuery, GetFullVideoQueryVariables } from '@/api/queries'
+import {
+  GetFullVideoDocument,
+  GetFullVideoQuery,
+  GetFullVideoQueryVariables,
+} from '@/api/queries/__generated__/videos.generated'
 import { useConfirmationModal } from '@/providers/confirmationModal'
-import { useJoystream } from '@/providers/joystream'
-import { useTransaction } from '@/providers/transactions'
-import { useUploadsStore } from '@/providers/uploadsManager'
-import { useAuthorizedUser } from '@/providers/user'
+import { useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { useUploadsStore } from '@/providers/uploads/uploads.store'
+import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { removeVideoFromCache } from '@/utils/cachingAssets'
 import { ConsoleLogger } from '@/utils/logs'
 

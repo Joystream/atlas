@@ -7,7 +7,7 @@ import { Button } from '@/components/_buttons/Button'
 import { SvgActionClose, SvgActionRead, SvgActionUnread } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useBottomNavStore } from '@/providers/bottomNav'
-import { useNotifications } from '@/providers/notifications'
+import { useNotifications } from '@/providers/notifications/notifications.hooks'
 
 import { useSelectedNotifications } from './Notifications.hooks'
 import {

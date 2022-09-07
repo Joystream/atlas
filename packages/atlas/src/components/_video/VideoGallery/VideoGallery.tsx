@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
 
-import { FullVideoFieldsFragment } from '@/api/queries'
+import { FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { Gallery } from '@/components/Gallery'
 import { RankingNumberTile } from '@/components/RankingNumberTile'
 import { breakpoints } from '@/styles/breakpoints'

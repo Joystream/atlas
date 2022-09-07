@@ -7,16 +7,20 @@ import {
   BasicMembershipFieldsFragment,
   BasicNftFieldsFragment,
   BasicVideoFieldsFragment,
-  GetNftHistoryQuery,
-  GetNftHistoryQueryVariables,
+} from '@/api/queries/__generated__/fragments.generated'
+import {
   GetNftQuery,
   GetNftQueryVariables,
   GetNftsConnectionQuery,
   GetNftsConnectionQueryVariables,
-  useGetNftHistoryQuery,
   useGetNftQuery,
   useGetNftsConnectionQuery,
-} from '@/api/queries'
+} from '@/api/queries/__generated__/nfts.generated'
+import {
+  GetNftHistoryQuery,
+  GetNftHistoryQueryVariables,
+  useGetNftHistoryQuery,
+} from '@/api/queries/__generated__/notifications.generated'
 import { videoFilter } from '@/config/contentFilter'
 import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
 

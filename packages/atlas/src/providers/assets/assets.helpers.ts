@@ -1,4 +1,5 @@
-import { DataObjectType, StorageDataObjectFieldsFragment } from '@/api/queries'
+import { DataObjectType } from '@/api/queries/__generated__/baseTypes.generated'
+import { StorageDataObjectFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { ConsoleLogger } from '@/utils/logs'
 
 const imageAssetTypes: DataObjectType['__typename'][] = [

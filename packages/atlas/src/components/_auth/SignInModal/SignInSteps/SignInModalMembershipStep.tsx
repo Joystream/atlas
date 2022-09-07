@@ -4,7 +4,11 @@ import debouncePromise from 'awesome-debounce-promise'
 import { FC, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
-import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
+import {
+  GetMembershipDocument,
+  GetMembershipQuery,
+  GetMembershipQueryVariables,
+} from '@/api/queries/__generated__/memberships.generated'
 import { Text } from '@/components/Text'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'

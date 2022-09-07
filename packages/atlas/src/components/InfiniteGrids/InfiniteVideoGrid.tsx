@@ -2,15 +2,14 @@ import { QueryHookOptions } from '@apollo/client'
 import { DocumentNode } from 'graphql'
 import { ReactNode, forwardRef, useCallback, useState } from 'react'
 
+import { VideoOrderByInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import {
   GetBasicVideosConnectionDocument,
   GetBasicVideosConnectionQuery,
   GetBasicVideosConnectionQueryVariables,
   GetMostViewedVideosConnectionQuery,
   GetMostViewedVideosConnectionQueryVariables,
-  VideoOrderByInput,
-  VideoWhereInput,
-} from '@/api/queries'
+} from '@/api/queries/__generated__/videos.generated'
 import { Grid } from '@/components/Grid'
 import { GridHeadingContainer, TitleContainer } from '@/components/GridHeading'
 import { Text } from '@/components/Text'

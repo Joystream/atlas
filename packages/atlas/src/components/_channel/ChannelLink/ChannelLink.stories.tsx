@@ -3,7 +3,8 @@ import { Meta, Story } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { createApolloClient } from '@/api'
-import { AssetsManager, OperatorsContextProvider } from '@/providers/assets'
+import { AssetsManager } from '@/providers/assets/assets.manager'
+import { OperatorsContextProvider } from '@/providers/assets/assets.provider'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 
 import { ChannelLink, ChannelLinkProps } from './ChannelLink'

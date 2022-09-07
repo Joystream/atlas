@@ -1,4 +1,4 @@
-import { CommentReactionsCountByReactionIdFieldsFragment } from '@/api/queries'
+import { CommentReactionsCountByReactionIdFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { ReactionChipProps } from '@/components/_comments/ReactionChip'
 import { REACTION_TYPE, ReactionId } from '@/config/reactions'
 

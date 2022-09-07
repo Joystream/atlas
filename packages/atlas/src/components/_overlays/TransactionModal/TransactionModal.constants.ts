@@ -3,7 +3,8 @@ import processingAssetsAnimation from '@/assets/animations/transaction/processin
 import processingTransactionAnimation from '@/assets/animations/transaction/processing-transaction.json'
 import propagatingChangesAnimation from '@/assets/animations/transaction/propagating-changes.json'
 import signatureAnimation from '@/assets/animations/transaction/signature.json'
-import { ErrorCode, ExtrinsicStatus } from '@/joystream-lib'
+import { ErrorCode } from '@/joystream-lib/errors'
+import { ExtrinsicStatus } from '@/joystream-lib/types'
 
 export const getExtrinsicStatusDetails = (
   status: ExtrinsicStatus,

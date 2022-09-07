@@ -1,16 +1,17 @@
 import { AnalyticsManager } from '@/AnalyticsManager'
 import { CommonProviders } from '@/CommonProviders'
 import { SignInModal } from '@/components/_auth/SignInModal'
-import { NftActionsProvider } from '@/providers/nftActions'
-import { NotificationsManager } from '@/providers/notifications'
+import { JoystreamManager } from '@/providers/joystream/joystream.manager'
+import { JoystreamProvider } from '@/providers/joystream/joystream.provider'
+import { NftActionsProvider } from '@/providers/nftActions/nftActions.provider'
+import { NotificationsManager } from '@/providers/notifications/notifications.manager'
+import { Snackbars } from '@/providers/snackbars'
+import { TransactionsManager } from '@/providers/transactions/transactions.manager'
 import { NftPurchaseBottomDrawer } from '@/views/global/NftPurchaseBottomDrawer'
 import { NftSaleBottomDrawer } from '@/views/global/NftSaleBottomDrawer'
 import { NftSettlementBottomDrawer } from '@/views/global/NftSettlementBottomDrawer'
 
 import { MainLayout } from './MainLayout'
-import { JoystreamManager, JoystreamProvider } from './providers/joystream'
-import { Snackbars } from './providers/snackbars'
-import { TransactionsManager } from './providers/transactions'
 
 export const App = () => {
   return (

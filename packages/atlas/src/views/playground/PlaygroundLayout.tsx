@@ -10,10 +10,11 @@ import { SvgAtlasLogoShort } from '@/components/_illustrations'
 import { TopbarBase } from '@/components/_navigation/TopbarBase'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { absoluteRoutes } from '@/config/routes'
-import { useMemberAvatar } from '@/providers/assets'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
-import { UserProvider, useUser } from '@/providers/user'
+import { useUser } from '@/providers/user/user.hooks'
+import { UserProvider } from '@/providers/user/user.provider'
 import { cVar } from '@/styles'
 
 import {

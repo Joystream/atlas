@@ -1,5 +1,0 @@
-export * from './assets.hooks'
-export * from './assets.manager'
-export * from './assets.store'
-export * from './assets.provider'
-export * from './assets.types'

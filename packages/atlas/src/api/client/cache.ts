@@ -5,16 +5,15 @@ import { offsetLimitPagination, relayStylePagination } from '@apollo/client/util
 import { parseISO } from 'date-fns'
 
 import {
-  FullChannelFieldsFragment,
-  FullVideoFieldsFragment,
-  GetNftsConnectionQueryVariables,
   Query,
   QueryChannelsConnectionArgs,
   QueryCommentsConnectionArgs,
   QueryVideosConnectionArgs,
   VideoConnection,
   VideoOrderByInput,
-} from '../queries'
+} from '../queries/__generated__/baseTypes.generated'
+import { FullChannelFieldsFragment, FullVideoFieldsFragment } from '../queries/__generated__/fragments.generated'
+import { GetNftsConnectionQueryVariables } from '../queries/__generated__/nfts.generated'
 
 const stringifyValue = (value: unknown) => JSON.stringify(value || {})
 

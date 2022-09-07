@@ -1,7 +1,8 @@
 import { FC } from 'react'
 import { useNavigate } from 'react-router'
 
-import { getNftStatus, useBasicVideo } from '@/api/hooks'
+import { getNftStatus } from '@/api/hooks/nfts'
+import { useBasicVideo } from '@/api/hooks/video'
 import { Pill } from '@/components/Pill'
 import { SvgIllustrativePlay } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
@@ -9,7 +10,7 @@ import { useNftState } from '@/hooks/useNftState'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useVideoContextMenu } from '@/hooks/useVideoContextMenu'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
-import { useNftActions } from '@/providers/nftActions'
+import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
 import { SentryLogger } from '@/utils/logs'
 import { formatDurationShort } from '@/utils/time'
 

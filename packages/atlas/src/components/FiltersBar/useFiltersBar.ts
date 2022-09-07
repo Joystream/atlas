@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 
-import { OwnedNftWhereInput, VideoWhereInput } from '@/api/queries'
+import { OwnedNftWhereInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 
 export type VideoLengthOptions = '0-to-4' | '4-to-10' | '10-to-9999'
 

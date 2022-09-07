@@ -11,7 +11,7 @@ import {
   GetBasicStorageBucketsDocument,
   GetBasicStorageBucketsQuery,
   GetBasicStorageBucketsQueryVariables,
-} from '@/api/queries'
+} from '@/api/queries/__generated__/storage.generated'
 import { JoystreamLibExtrinsics } from '@/joystream-lib/extrinsics'
 import { ChannelInputAssets, ChannelInputBuckets, TxMethodName, VideoInputAssets } from '@/joystream-lib/types'
 import {
@@ -20,7 +20,7 @@ import {
   hapiBnToTokenNumber,
   tokenNumberToHapiBn,
 } from '@/joystream-lib/utils'
-import { useUser } from '@/providers/user'
+import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger } from '@/utils/logs'
 
 import { JoystreamContext, JoystreamContextValue } from './joystream.provider'

@@ -7,7 +7,7 @@ import {
   GetMembershipsQueryVariables,
   useGetMembershipQuery,
   useGetMembershipsQuery,
-} from '@/api/queries'
+} from '@/api/queries/__generated__/memberships.generated'
 
 export const useMembership = (
   variables: GetMembershipQueryVariables,

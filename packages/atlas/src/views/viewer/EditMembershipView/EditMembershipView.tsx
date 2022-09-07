@@ -5,7 +5,11 @@ import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import useResizeObserver from 'use-resize-observer'
 
-import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
+import {
+  GetMembershipDocument,
+  GetMembershipQuery,
+  GetMembershipQueryVariables,
+} from '@/api/queries/__generated__/memberships.generated'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { MembershipInfo } from '@/components/MembershipInfo'
 import { FormField } from '@/components/_inputs/FormField'
@@ -16,11 +20,11 @@ import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_ov
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
-import { MemberInputMetadata } from '@/joystream-lib'
-import { useFee, useJoystream } from '@/providers/joystream'
+import { MemberInputMetadata } from '@/joystream-lib/types'
+import { useFee, useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useSnackbar } from '@/providers/snackbars'
-import { useTransaction } from '@/providers/transactions'
-import { useUser } from '@/providers/user'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 import { uploadAvatarImage } from '@/utils/image'
 import { ConsoleLogger } from '@/utils/logs'
 

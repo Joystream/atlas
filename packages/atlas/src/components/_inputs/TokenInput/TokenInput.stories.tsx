@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
-import { JoystreamProvider } from '@/providers/joystream'
+import { JoystreamProvider } from '@/providers/joystream/joystream.provider'
 
 import { TokenInput, TokenInputProps } from './TokenInput'
 

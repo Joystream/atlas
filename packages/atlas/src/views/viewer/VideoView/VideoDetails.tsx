@@ -1,6 +1,6 @@
 import { FC, ReactNode, useState } from 'react'
 
-import { FullVideoFieldsFragment } from '@/api/queries'
+import { FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'

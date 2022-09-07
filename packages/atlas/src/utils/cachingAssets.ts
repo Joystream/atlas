@@ -1,6 +1,7 @@
 import { ApolloClient, Reference } from '@apollo/client'
 
-import { FullVideoFieldsFragment, FullVideoFieldsFragmentDoc, VideoEdge } from '@/api/queries'
+import { VideoEdge } from '@/api/queries/__generated__/baseTypes.generated'
+import { FullVideoFieldsFragment, FullVideoFieldsFragmentDoc } from '@/api/queries/__generated__/fragments.generated'
 
 type WriteVideoDataCacheArg = {
   edge: {

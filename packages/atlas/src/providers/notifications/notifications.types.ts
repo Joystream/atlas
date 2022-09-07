@@ -1,6 +1,6 @@
 import BN from 'bn.js'
 
-import { BasicMembershipFieldsFragment } from '@/api/queries'
+import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 
 export type NftNotificationRecord = {
   id: string

@@ -4,10 +4,11 @@ import { useContext, useEffect, useMemo, useState } from 'react'
 import { useLocation, useMatch } from 'react-router'
 import { useNavigate } from 'react-router-dom'
 
-import { useFullVideo } from '@/api/hooks'
+import { useFullVideo } from '@/api/hooks/video'
 import { cancelledVideoFilter } from '@/config/contentFilter'
 import { absoluteRoutes } from '@/config/routes'
-import { useSubtitlesAssets } from '@/providers/assets'
+import { useSubtitlesAssets } from '@/providers/assets/assets.hooks'
+import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { RoutingState } from '@/types/routing'
 import { SubtitlesInput } from '@/types/subtitles'
 import { SentryLogger } from '@/utils/logs'
@@ -16,7 +17,6 @@ import { VideoWorkspaceContext } from './provider'
 import { VideoWorkspaceVideoAssets, VideoWorkspaceVideoFormFields } from './types'
 
 import { channelDraftsSelector, useDraftStore } from '../drafts'
-import { useAuthorizedUser } from '../user'
 
 export const DEFAULT_LICENSE_ID = 1002
 

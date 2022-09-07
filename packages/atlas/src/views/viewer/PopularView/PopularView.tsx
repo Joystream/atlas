@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { GetMostViewedVideosConnectionDocument } from '@/api/queries'
+import { GetMostViewedVideosConnectionDocument } from '@/api/queries/__generated__/videos.generated'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { ExpandableChannelsList } from '@/components/_channel/ExpandableChannelsList'
 import { TopTenVideos } from '@/components/_content/TopTenVideos'

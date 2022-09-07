@@ -1,5 +1,11 @@
 import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
 
+import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import {
+  GetVideoCountQuery,
+  GetVideoCountQueryVariables,
+  useGetVideoCountQuery,
+} from '@/api/queries/__generated__/channels.generated'
 import {
   AddVideoViewMutation,
   GetBasicVideosQuery,
@@ -10,16 +16,12 @@ import {
   GetTop10VideosThisMonthQueryVariables,
   GetTop10VideosThisWeekQuery,
   GetTop10VideosThisWeekQueryVariables,
-  GetVideoCountQuery,
-  GetVideoCountQueryVariables,
-  VideoOrderByInput,
   useAddVideoViewMutation,
   useGetBasicVideosQuery,
   useGetFullVideosQuery,
   useGetTop10VideosThisMonthQuery,
   useGetTop10VideosThisWeekQuery,
-  useGetVideoCountQuery,
-} from '@/api/queries'
+} from '@/api/queries/__generated__/videos.generated'
 import { videoFilter } from '@/config/contentFilter'
 
 export const useFullVideo = (

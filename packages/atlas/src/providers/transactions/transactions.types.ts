@@ -1,4 +1,5 @@
-import { ErrorCode, ExtrinsicStatus } from '@/joystream-lib'
+import { ErrorCode } from '@/joystream-lib/errors'
+import { ExtrinsicStatus } from '@/joystream-lib/types'
 
 export type Transaction = {
   id: string
