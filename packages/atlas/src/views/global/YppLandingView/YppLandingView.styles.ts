@@ -6,6 +6,7 @@ import { media, sizes } from '@/styles'
 export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
   margin-top: ${sizes(16)};
   text-align: center;
+  height: 3000px;
 
   ${media.md} {
     margin-top: ${sizes(24)};
@@ -25,15 +26,16 @@ export const HeroImageWrapper = styled.div`
   }
 `
 
-export const FrontImage = styled.img<{ parallaxPosition: number }>`
-  transform: translateY(-${({ parallaxPosition }) => parallaxPosition}px);
+export const FrontImage = styled.img`
   will-change: transform;
   width: 100%;
+  display: block;
 `
 
 export const BackImage = styled.img`
   position: absolute;
   width: 100%;
+  display: block;
   left: 0;
   top: 0;
 `
