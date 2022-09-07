@@ -1,8 +1,7 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { media, sizes, zIndex } from '@/styles'
+import { media, sizes } from '@/styles'
 
 export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
   margin-top: ${sizes(16)};
@@ -26,21 +25,15 @@ export const HeroImageWrapper = styled.div`
   }
 `
 
-const commonHeroImagesStyles = css`
-  position: absolute;
-  left: 0;
-  top: 0;
+export const FrontImage = styled.img<{ parallaxPosition: number }>`
+  transform: translateY(-${({ parallaxPosition }) => parallaxPosition}px);
+  will-change: transform;
   width: 100%;
 `
 
-export const FrontImage = styled.img<{ parallaxPosition: number }>`
-  ${commonHeroImagesStyles};
-
-  z-index: ${zIndex.nearOverlay};
-  transform: translateY(-${({ parallaxPosition }) => parallaxPosition}px);
-  will-change: transform;
-`
-
 export const BackImage = styled.img`
-  ${commonHeroImagesStyles};
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
 `
