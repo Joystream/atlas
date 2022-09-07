@@ -6,7 +6,6 @@ import { media, sizes } from '@/styles'
 export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
   margin-top: ${sizes(16)};
   text-align: center;
-  height: 3000px;
 
   ${media.md} {
     margin-top: ${sizes(24)};
