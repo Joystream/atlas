@@ -21,7 +21,10 @@ export type NumberFormatProps = {
 } & Omit<TextProps, 'children' | 'variant'>
 
 export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
-  ({ value, format = 'full', withToken, withTooltip, variant = 'no-variant', displayedValue, ...textProps }, ref) => {
+  (
+    { value, format = 'full', withToken, withTooltip = true, variant = 'no-variant', displayedValue, ...textProps },
+    ref
+  ) => {
     const internalValue = BN.isBN(value) ? hapiBnToTokenNumber(value) : value
     const textRef = useRef<HTMLHeadingElement>(null)
     let formattedValue
@@ -44,9 +47,8 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
 
     const hasDecimals = internalValue - Math.floor(internalValue) !== 0
     const hasTooltip =
-      withTooltip ||
-      (format === 'short' && (internalValue > 999 || hasDecimals)) ||
-      (format === 'dollar' && hasDecimals)
+      withTooltip &&
+      ((format === 'short' && (internalValue > 999 || hasDecimals)) || (format === 'dollar' && hasDecimals))
     const content = (
       <StyledText {...textProps} variant={variant} ref={mergeRefs([ref, textRef])}>
         {displayedValue || formattedValue}
