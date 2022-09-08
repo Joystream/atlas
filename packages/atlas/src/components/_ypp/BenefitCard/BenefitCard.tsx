@@ -32,6 +32,7 @@ export type BenefitCardProps = {
   }
   joyAmount: BN | number
   dollarAmount: number
+  className?: string
 }
 
 export const BenefitCard: FC<BenefitCardProps> = ({
@@ -42,6 +43,7 @@ export const BenefitCard: FC<BenefitCardProps> = ({
   actionButton,
   joyAmount,
   dollarAmount,
+  className,
 }) => {
   const smMatch = useMediaMatch('sm')
   const isFullVariant = variant === 'full'
@@ -86,7 +88,7 @@ export const BenefitCard: FC<BenefitCardProps> = ({
   }
 
   return (
-    <Wrapper variant={variant}>
+    <Wrapper variant={variant} className={className}>
       <Pattern />
       <Content isCompact={!isFullVariant}>
         <div>
