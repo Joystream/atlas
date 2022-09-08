@@ -412,13 +412,13 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const handleSubmit = useCallback(() => {
     flushDraftSave()
 
-    if (!mintConfirmationDismissed) {
+    if (!mintConfirmationDismissed && formData.mintNft) {
       setShowMintConfirmationDialog(true)
       return
     }
 
     return submitHandler()
-  }, [flushDraftSave, mintConfirmationDismissed, submitHandler])
+  }, [flushDraftSave, formData.mintNft, mintConfirmationDismissed, submitHandler])
 
   const actionBarPrimaryText = watch('mintNft')
     ? !isEdit
