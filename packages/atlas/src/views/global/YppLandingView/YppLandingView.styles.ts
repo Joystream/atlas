@@ -10,8 +10,8 @@ import { Button } from '@/components/_buttons/Button'
 import { cVar, media, sizes } from '@/styles'
 
 const imageShadow = css`
-  filter: drop-shadow(0 33px 100px rgb(0 0 0 / 0.22)) drop-shadow(0 7.37098px 22.3363px rgb(0 0 0 / 0.131144))
-    drop-shadow(0 2.19453px 6.6501px rgb(0 0 0 / 0.0888564));
+  filter: drop-shadow(0 33px 100px rgb(0 0 0 / 0.22)) drop-shadow(0 7.371px 22.3363px rgb(0 0 0 / 0.1311))
+    drop-shadow(0 2.1945px 6.6501px rgb(0 0 0 / 0.0889));
 `
 
 export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
@@ -87,10 +87,8 @@ export const CardsWithImagesContainer = styled.div`
 
 export const CardImageRow = styled(LayoutGrid)`
   ${media.sm} {
-    justify-items: center;
-  }
-  ${media.sm} {
     align-items: center;
+    justify-items: center;
   }
 `
 
@@ -108,7 +106,6 @@ export const ImageContainer = styled.div<{
 `
 
 export const StepCard = styled.article`
-  display: inline-block;
   text-align: left;
   padding: ${sizes(4)} ${sizes(4)} 0;
   display: grid;
