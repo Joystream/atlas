@@ -2926,6 +2926,7 @@ __metadata:
     react-number-format: ^4.9.4
     react-router: ^6.3.0
     react-router-dom: ^6.3.0
+    react-scroll-parallax: ^3.3.1
     react-spring: ^9.5.2
     react-textarea-autosize: ^8.3.4
     react-transition-group: ^4.4.5
@@ -17016,6 +17017,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"parallax-controller@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "parallax-controller@npm:1.5.0"
+  dependencies:
+    bezier-easing: ^2.1.0
+  checksum: 21f51143844ff61691595bdc74a26fa5a06eed96e50038b908a918eb0dbceeeb4c5d25b920c3c7421c33029020921125763546e28a6eb7e8bad2a3cecea7772f
+  languageName: node
+  linkType: hard
+
 "parallel-transform@npm:^1.1.0":
   version: 1.2.0
   resolution: "parallel-transform@npm:1.2.0"
@@ -18375,6 +18385,18 @@ __metadata:
   peerDependencies:
     react: ">=16.8"
   checksum: 7be673f5e72104be01e6ab274516bdb932efd93305243170690f6560e3bd1035dd1df3d3c9ce1e0f452638a2529f43a1e77dcf0934fc8031c4783da657be13ca
+  languageName: node
+  linkType: hard
+
+"react-scroll-parallax@npm:^3.3.1":
+  version: 3.3.1
+  resolution: "react-scroll-parallax@npm:3.3.1"
+  dependencies:
+    parallax-controller: ^1.5.0
+  peerDependencies:
+    react: ^16.8.0-0 || >=17.0.1 || ^18.0.0
+    react-dom: ^16.8.0-0 || >=17.0.1 || ^18.0.0
+  checksum: 93473851d7af2eb6c09c4b545e6215b46feb280ba557f5dba78106536aab1da9b42677bb15fcf02ea71f2936caa13d4a8e61fd6cf090f85928396c26ee972fde
   languageName: node
   linkType: hard
 

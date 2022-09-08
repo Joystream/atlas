@@ -1,1 +1,0 @@
-export { YPP } from './YPP'
