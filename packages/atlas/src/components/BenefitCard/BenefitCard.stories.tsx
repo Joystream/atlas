@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
 
 import { Text } from '@/components/Text'
@@ -44,6 +45,16 @@ export default {
   },
 } as Meta<BenefitCardProps>
 
-const Template: Story<BenefitCardProps> = (args) => <BenefitCard {...args} />
+const Template: Story<BenefitCardProps> = (args) => (
+  <Wrapper>
+    <BenefitCard {...args} /> <BenefitCard {...args} /> <BenefitCard {...args} /> <BenefitCard {...args} />{' '}
+    <BenefitCard {...args} />
+  </Wrapper>
+)
+
+const Wrapper = styled.div`
+  display: grid;
+  gap: 24px;
+`
 
 export const Default = Template.bind({})

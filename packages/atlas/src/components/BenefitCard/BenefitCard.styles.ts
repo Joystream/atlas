@@ -3,24 +3,19 @@ import styled from '@emotion/styled'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
-import smPattern from '@/components/_illustrations/svgs/benefit-card-pattern-sm-1.svg'
-import xxsPattern from '@/components/_illustrations/svgs/benefit-card-pattern-xxs-1.svg'
+import smPattern1 from '@/components/_illustrations/svgs/benefit-card-pattern-sm-1.svg'
+import smPattern2 from '@/components/_illustrations/svgs/benefit-card-pattern-sm-2.svg'
+import smPattern3 from '@/components/_illustrations/svgs/benefit-card-pattern-sm-3.svg'
+import xxsPattern1 from '@/components/_illustrations/svgs/benefit-card-pattern-xxs-1.svg'
+import xxsPattern2 from '@/components/_illustrations/svgs/benefit-card-pattern-xxs-2.svg'
+import xxsPattern3 from '@/components/_illustrations/svgs/benefit-card-pattern-xxs-3.svg'
 import { cVar, media, sizes, square } from '@/styles'
 
 export type Variant = 'compact' | 'full'
 
-export const Wrapper = styled.div<{ variant: Variant }>`
-  background-color: ${({ variant }) => cVar(variant === 'full' ? 'colorBackgroundMuted' : 'colorBackground')};
-
-  ${media.sm} {
-    display: flex;
-  }
-`
-
 export const Pattern = styled.div`
   position: relative;
   height: 72px;
-  background-image: url(${xxsPattern});
   background-repeat: repeat-x;
 
   ::after {
@@ -37,7 +32,6 @@ export const Pattern = styled.div`
   ${media.sm} {
     width: 108px;
     height: unset;
-    background-image: url(${smPattern});
     background-repeat: repeat-y;
     align-self: stretch;
 
@@ -49,6 +43,44 @@ export const Pattern = styled.div`
       width: 100%;
       height: 56px;
       background: linear-gradient(180deg, rgb(15 17 20 / 0) 0%, ${cVar('colorCoreNeutral900')} 100%);
+    }
+  }
+`
+
+export const Wrapper = styled.div<{ variant: Variant }>`
+  background-color: ${({ variant }) => cVar(variant === 'full' ? 'colorBackgroundMuted' : 'colorBackground')};
+
+  ${media.sm} {
+    display: flex;
+  }
+
+  &:nth-of-type(3n - 2) {
+    ${Pattern} {
+      background-image: url(${xxsPattern1});
+
+      ${media.sm} {
+        background-image: url(${smPattern1});
+      }
+    }
+  }
+
+  &:nth-of-type(3n - 1) {
+    ${Pattern} {
+      background-image: url(${xxsPattern2});
+
+      ${media.sm} {
+        background-image: url(${smPattern2});
+      }
+    }
+  }
+
+  &:nth-of-type(3n - 3) {
+    ${Pattern} {
+      background-image: url(${xxsPattern3});
+
+      ${media.sm} {
+        background-image: url(${smPattern3});
+      }
     }
   }
 `
