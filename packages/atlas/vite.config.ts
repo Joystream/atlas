@@ -21,6 +21,9 @@ export default defineConfig({
       },
     },
   },
+  server: {
+    port: 3000,
+  },
   test: {
     environment: 'happy-dom',
     setupFiles: ['vitest-setup.ts'],
@@ -36,7 +39,7 @@ export default defineConfig({
       {
         name: 'resolve-import-meta-polkadot',
         resolveImportMeta(_, { chunkId }) {
-          if (chunkId === 'polkadot-worker.js') {
+          if (chunkId.includes('polkadot-worker')) {
             return 'self.location.href'
           }
         },
