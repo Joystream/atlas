@@ -6,7 +6,6 @@ import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { CallToActionButton } from '@/components/_buttons/CallToActionButton'
 import { cVar, media, sizes } from '@/styles'
 
 export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
@@ -47,33 +46,30 @@ export const BackImage = styled.img`
 
 export const CenteredLayoutGrid = styled(LayoutGrid)`
   text-align: center;
-`
-
-export const HeroGridItem = styled(GridItem)`
-  margin: ${sizes(16)} 0;
-  align-self: center;
+  row-gap: 0;
   ${media.md} {
-    margin: ${sizes(24)} 0;
+    row-gap: 0;
   }
 `
 
-export const BackgroundContainer = styled.div`
-  background-color: ${cVar('colorBackgroundMuted')};
+export const HeaderGridItem = styled(GridItem)<{ marginBottom: number }>`
+  margin-bottom: ${({ marginBottom = 0 }) => sizes(marginBottom)};
+  align-self: center;
+`
+
+export const BackgroundContainer = styled.div<{ noBackground?: boolean }>`
+  background-color: ${({ noBackground }) => (noBackground ? 'unset' : cVar('colorBackgroundMuted'))};
   margin-left: calc(-1 * var(--size-global-horizontal-padding));
   margin-right: calc(-1 * var(--size-global-horizontal-padding));
-  padding: 0 var(--size-global-horizontal-padding);
+  padding: ${sizes(16)} var(--size-global-horizontal-padding);
+  ${media.md} {
+    padding: ${sizes(24)} var(--size-global-horizontal-padding);
+  }
 `
 
 export const CardsWithImagesContainer = styled.div`
-  padding-top: ${sizes(16)};
-  padding-bottom: ${sizes(4)};
   display: grid;
   gap: ${sizes(16)};
-
-  ${media.md} {
-    padding-top: ${sizes(24)};
-    padding-bottom: ${sizes(8)};
-  }
 `
 
 export const CardImageRow = styled(LayoutGrid)`
@@ -98,6 +94,80 @@ export const ImageContainer = styled.div<{
   }
 `
 
+export const StepCard = styled.article`
+  display: inline-block;
+  text-align: left;
+  padding: ${sizes(4)} ${sizes(4)} 0;
+  display: grid;
+  gap: ${sizes(4)};
+  width: 280px;
+  height: 360px;
+  overflow-y: hidden;
+  position: relative;
+  background-color: ${cVar('colorBackground')};
+  ${media.md} {
+    gap: ${sizes(6)};
+    padding: ${sizes(6)} ${sizes(6)} 0;
+    width: 100%;
+    height: 400px;
+  }
+  ${media.lg} {
+    height: 480px;
+  }
+`
+export const StepCardsWrapper = styled(GridItem)`
+  display: grid;
+  grid-auto-flow: column;
+  gap: ${sizes(4)};
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  ${media.sm} {
+    justify-content: center;
+  }
+
+  ${media.md} {
+    ${StepCard}:nth-of-type(2) {
+      margin-top: ${sizes(16)};
+    }
+    ${StepCard}:nth-of-type(3) {
+      margin-top: ${sizes(32)};
+    }
+  }
+`
+
+export const StepCardNumber = styled.span`
+  font-family: ${cVar('typographyFontsPrimary')};
+  color: ${cVar('colorBackground')};
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: ${cVar('colorBorder')};
+  font-weight: 600;
+  font-size: 48px;
+  line-height: 100%;
+  ${media.md} {
+    -webkit-text-stroke-width: 3px;
+    font-size: 64px;
+  }
+`
+
+export const StepCardImg = styled.img`
+  display: block;
+  max-width: 100%;
+`
+
+export const StepCardFade = styled.div`
+  position: absolute;
+  z-index: 1;
+  background: linear-gradient(180deg, rgb(24 28 32 / 0) 0%, ${cVar('colorBackground')} 100%);
+  height: 64px;
+  width: 100%;
+  bottom: 0;
+`
 export const AbsolutelyPositionedImg = styled.img`
   position: absolute;
   z-index: 0;
@@ -116,13 +186,6 @@ export const RelativelyPositionedImg = styled.img`
 
 export const StyledLimitedContainerWidth = styled(LimitedWidthContainer)`
   padding-bottom: unset;
-`
-
-export const BannerContainerLayoutGrid = styled(LayoutGrid)`
-  padding: ${sizes(16)} 0;
-  ${media.sm} {
-    padding: ${sizes(24)} 0;
-  }
 `
 
 export const CtaBanner = styled.div`
@@ -165,5 +228,3 @@ export const CtaCardRow = styled.div`
     padding-bottom: ${sizes(24)};
   }
 `
-
-export const StyledCallToActionButton = styled(CallToActionButton)``

@@ -8,10 +8,12 @@ type ReponsivenessObject = Partial<Record<keyof typeof media | 'base', number>>
 export const LayoutGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  grid-gap: 16px;
+  row-gap: 16px;
+  column-gap: 16px;
 
   ${media.md} {
-    grid-gap: 24px;
+    row-gap: 24px;
+    column-gap: 24px;
   }
 `
 
