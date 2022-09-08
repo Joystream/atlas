@@ -1,6 +1,3 @@
-// this is needed because of a bug in Vite - it will not include WASM referenced from workers in the bundle, see https://github.com/vitejs/vite/issues/5699
-import 'blake3/dist/wasm/web/blake3_js_bg.wasm'
-
 import { createId } from '@/utils/createId'
 
 import type { HashingRequest, HashingResponse } from './worker'

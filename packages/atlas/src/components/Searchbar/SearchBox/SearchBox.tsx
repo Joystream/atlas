@@ -50,17 +50,17 @@ export const SearchBox: FC<SearchBoxProps> = memo(
     }))
     const containerRef = useRef<HTMLDivElement>(null)
     const topRef = useRef(0)
-    const [visualViewportHeight, setVisualViewportHeight] = useState(window.visualViewport.height)
+    const [visualViewportHeight, setVisualViewportHeight] = useState(window.visualViewport?.height || 0)
 
     // Calculate searchbox height whether keyboard is open or not
     useEffect(() => {
       const debouncedVisualViewportChange = debounce(() => {
-        setVisualViewportHeight(window.visualViewport.height)
+        setVisualViewportHeight(window.visualViewport?.height ?? 0)
       }, 100)
-      window.visualViewport.addEventListener('resize', debouncedVisualViewportChange)
+      window.visualViewport?.addEventListener('resize', debouncedVisualViewportChange)
 
       return () => {
-        window.visualViewport.removeEventListener('resize', debouncedVisualViewportChange)
+        window.visualViewport?.removeEventListener('resize', debouncedVisualViewportChange)
       }
     }, [])
 
