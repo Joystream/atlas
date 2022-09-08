@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/react'
 import { ContentCard, ContentCardProps } from './ContentCard'
 
 export default {
-  title: 'other/ContentCard',
+  title: 'ypp/ContentCard',
   component: ContentCard,
   args: {
     pill: {
