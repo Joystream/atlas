@@ -119,7 +119,7 @@ export const useStartFileUpload = () => {
         formData.append('dataObjectId', asset.id)
         formData.append('storageBucketId', uploadOperator.id)
         formData.append('bagId', bagId)
-        formData.append('file', fileToUpload, (file as File).name)
+        formData.append('file', fileToUpload)
 
         rax.attach()
         const raxConfig: RetryConfig = {
