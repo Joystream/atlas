@@ -55,6 +55,7 @@ import {
   StyledButton,
   StyledLimitedContainerWidth,
   StyledLimitedWidthContainer,
+  ThreeStepsBackgroundContainer,
 } from './YppLandingView.styles'
 
 export const YppLandingView: FC = () => {
@@ -65,31 +66,31 @@ export const YppLandingView: FC = () => {
     endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
     translateY: [0, -15],
   })
-  const { ref: dashboardRef } = useParallax<HTMLImageElement>({
+  const { ref: dashboardImageRef } = useParallax<HTMLImageElement>({
     endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
     translateY: [0, -15],
   })
-  const { ref: myVideosRef } = useParallax<HTMLImageElement>({
+  const { ref: myVideosImageRef } = useParallax<HTMLImageElement>({
     endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
     translateY: [0, 15],
   })
-  const { ref: youtubeSyncRef } = useParallax<HTMLImageElement>({
+  const { ref: youtubeSyncImageRef } = useParallax<HTMLImageElement>({
     endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
     translateY: [15, -15],
   })
-  const { ref: nftCardRef } = useParallax<HTMLImageElement>({
+  const { ref: nftCardImageRef } = useParallax<HTMLImageElement>({
     endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
     translateY: [0, 10],
   })
-  const { ref: nftContextMenuRef } = useParallax<HTMLImageElement>({
+  const { ref: nftContextMenuImageRef } = useParallax<HTMLImageElement>({
     endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
     translateY: [0, -40],
   })
-  const { ref: nftCursorRef } = useParallax<HTMLImageElement>({
+  const { ref: nftCursorImageRef } = useParallax<HTMLImageElement>({
     endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
     translateY: [0, -30],
   })
-  const { ref: cartTokenRef } = useParallax<HTMLImageElement>({
+  const { ref: cartTokenImageRef } = useParallax<HTMLImageElement>({
     endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
     translateY: [0, 50],
   })
@@ -122,7 +123,7 @@ export const YppLandingView: FC = () => {
           />
         </HeroImageWrapper>
       </StyledLimitedWidthContainer>
-      <BackgroundContainer>
+      <ThreeStepsBackgroundContainer>
         <StyledLimitedContainerWidth as="section">
           {/* TODO add reward section above */}
           <CenteredLayoutGrid>
@@ -152,7 +153,7 @@ export const YppLandingView: FC = () => {
                 <Text variant={mdMatch ? 'h500' : 'h400'} as="h2">
                   Create membership & channel
                 </Text>
-                <StepCardImg src={createMember} alt="" />
+                <StepCardImg src={createMember} alt="Create member dialog step" />
                 <StepCardFade />
               </StepCard>
               <StepCard>
@@ -160,7 +161,7 @@ export const YppLandingView: FC = () => {
                 <Text variant={mdMatch ? 'h500' : 'h400'} as="h2">
                   Authorize your YouTube channel
                 </Text>
-                <StepCardImg src={selectChannel} alt="" />
+                <StepCardImg src={selectChannel} alt="Select channel dialog step" />
                 <StepCardFade />
               </StepCard>
               <StepCard>
@@ -168,13 +169,13 @@ export const YppLandingView: FC = () => {
                 <Text variant={mdMatch ? 'h500' : 'h400'} as="h2">
                   Collect JOY and earn even more
                 </Text>
-                <StepCardImg src={memberDropdown} alt="" />
+                <StepCardImg src={memberDropdown} alt="Member dropdown" />
                 <StepCardFade />
               </StepCard>
             </StepCardsWrapper>
           </CenteredLayoutGrid>
         </StyledLimitedContainerWidth>
-      </BackgroundContainer>
+      </ThreeStepsBackgroundContainer>
       {/* ypp benefits */}
       <BackgroundContainer noBackground>
         <StyledLimitedContainerWidth as="section">
@@ -199,8 +200,8 @@ export const YppLandingView: FC = () => {
             <CardImageRow>
               <GridItem colStart={{ sm: 2, md: 1, lg: 2 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
                 <ImageContainer>
-                  <CardImage dropShadow absolute src={dashboardImgBack} />
-                  <CardImage dropShadow src={dashboardImgFront} ref={dashboardRef} />
+                  <CardImage dropShadow absolute src={dashboardImgBack} alt="Dashboard" />
+                  <CardImage dropShadow src={dashboardImgFront} ref={dashboardImageRef} alt="Reward card" />
                 </ImageContainer>
               </GridItem>
               <GridItem colStart={{ sm: 3, md: 8 }} colSpan={{ base: 12, sm: 8, md: 5, lg: 4 }}>
@@ -215,8 +216,8 @@ export const YppLandingView: FC = () => {
             <CardImageRow>
               <GridItem colStart={{ sm: 2, md: 6, lg: 6 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
                 <ImageContainer positionOnMobile="flex-end">
-                  <CardImage absolute dropShadow src={myVideosBack} />
-                  <CardImage dropShadow src={myVideosFront} ref={myVideosRef} />
+                  <CardImage absolute dropShadow src={myVideosBack} alt="My videos" />
+                  <CardImage dropShadow src={myVideosFront} ref={myVideosImageRef} alt="Button" />
                 </ImageContainer>
               </GridItem>
               <GridItem
@@ -235,8 +236,8 @@ export const YppLandingView: FC = () => {
             <CardImageRow>
               <GridItem colStart={{ sm: 2, md: 1, lg: 2 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
                 <ImageContainer positionOnMobile="center">
-                  <CardImage absolute src={youtubeSyncBack} />
-                  <CardImage src={youtubeSyncFront} ref={youtubeSyncRef} />
+                  <CardImage absolute src={youtubeSyncBack} alt="Video tiles" />
+                  <CardImage src={youtubeSyncFront} ref={youtubeSyncImageRef} alt="Video tile" />
                 </ImageContainer>
               </GridItem>
               <GridItem colStart={{ sm: 3, md: 8 }} colSpan={{ base: 12, sm: 8, md: 5, lg: 4 }}>
@@ -261,10 +262,16 @@ export const YppLandingView: FC = () => {
             <CardImageRow>
               <GridItem colStart={{ sm: 2, md: 1, lg: 2 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
                 <ImageContainer positionOnMobile="center">
-                  <CardImage absolute src={videoNfts1} />
-                  <CardImage dropShadow absolute src={videoNfts2} ref={nftCardRef} />
-                  <CardImage dropShadow absolute src={videoNfts3} ref={nftContextMenuRef} />
-                  <CardImage src={videoNfts4} ref={nftCursorRef} />
+                  <CardImage absolute src={videoNfts1} alt="Nft tiles" />
+                  <CardImage dropShadow absolute src={videoNfts2} ref={nftCardImageRef} alt="Single nft tile" />
+                  <CardImage
+                    dropShadow
+                    absolute
+                    src={videoNfts3}
+                    ref={nftContextMenuImageRef}
+                    alt="Context menu of nft tile"
+                  />
+                  <CardImage src={videoNfts4} ref={nftCursorImageRef} alt="Cursor" />
                 </ImageContainer>
               </GridItem>
               <GridItem colStart={{ sm: 3, md: 8 }} colSpan={{ base: 12, sm: 8, md: 5, lg: 4 }}>
@@ -279,8 +286,8 @@ export const YppLandingView: FC = () => {
             <CardImageRow>
               <GridItem colStart={{ sm: 2, md: 6, lg: 6 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
                 <ImageContainer>
-                  <CardImage dropShadow absolute src={crt1} />
-                  <CardImage dropShadow absolute src={crt2} ref={cartTokenRef} />
+                  <CardImage dropShadow absolute src={crt1} alt="Creator token dashboard" />
+                  <CardImage dropShadow absolute src={crt2} ref={cartTokenImageRef} alt="Creator token holders" />
                   <CardImage src={crt3} />
                 </ImageContainer>
               </GridItem>
@@ -325,9 +332,9 @@ export const YppLandingView: FC = () => {
         </StyledLimitedContainerWidth>
       </BackgroundContainer>
       <CtaCardRow>
-        <CallToActionButton colorVariant="lightBlue" icon={<SvgActionInfo />} label="Program details" />
-        <CallToActionButton colorVariant="lightBlue" icon={<SvgActionSpeech />} label="Discord" />
-        <CallToActionButton colorVariant="lightBlue" icon={<SvgActionTokensStack />} label="Payments" />
+        <CallToActionButton external colorVariant="lightBlue" icon={<SvgActionInfo />} label="Program details" />
+        <CallToActionButton external colorVariant="lightBlue" icon={<SvgActionSpeech />} label="Discord" />
+        <CallToActionButton external colorVariant="lightBlue" icon={<SvgActionTokensStack />} label="Payments" />
       </CtaCardRow>
     </>
   )

@@ -72,6 +72,13 @@ export const BackgroundContainer = styled.div<{ noBackground?: boolean }>`
     padding: ${sizes(24)} var(--size-global-horizontal-padding);
   }
 `
+export const ThreeStepsBackgroundContainer = styled(BackgroundContainer)`
+  ${media.md} {
+    background-image: url(${bottomLeftPattern});
+    background-position: bottom left;
+    background-repeat: no-repeat;
+  }
+`
 
 export const CardsWithImagesContainer = styled.div`
   display: grid;
