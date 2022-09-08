@@ -54,6 +54,8 @@ export const Wrapper = styled.div<{ variant: Variant }>`
     display: flex;
   }
 
+  /* the following nth-of-type pseudo classes sets different patterns depending on the BenefitCard order */
+
   &:nth-of-type(3n - 2) {
     ${Pattern} {
       background-image: url(${xxsPattern1});

@@ -6,7 +6,7 @@ import { Text } from '@/components/Text'
 import { BenefitCard, BenefitCardProps } from './BenefitCard'
 
 export default {
-  title: 'other/BenefitCard',
+  title: 'ypp/BenefitCard',
   component: BenefitCard,
   argTypes: {
     variant: { control: { type: 'radio', options: ['full', 'compact'] } },
