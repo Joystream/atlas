@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import bottomLeftPattern from '@/assets/images/ypp-background-pattern.svg'
@@ -7,6 +8,11 @@ import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { cVar, media, sizes } from '@/styles'
+
+const imageShadow = css`
+  filter: drop-shadow(0 33px 100px rgb(0 0 0 / 0.22)) drop-shadow(0 7.37098px 22.3363px rgb(0 0 0 / 0.131144))
+    drop-shadow(0 2.19453px 6.6501px rgb(0 0 0 / 0.0888564));
+`
 
 export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
   margin-top: ${sizes(16)};
@@ -31,9 +37,9 @@ export const HeroImageWrapper = styled.div`
 `
 
 export const FrontImage = styled.img`
-  will-change: transform;
   width: 100%;
   display: block;
+  ${imageShadow}
 `
 
 export const BackImage = styled.img`
@@ -86,7 +92,7 @@ export const ImageContainer = styled.div<{
   positionOnMobile?: 'center' | 'unset' | 'flex-end'
 }>`
   position: relative;
-  overflow-x: hidden;
+  overflow: hidden;
   display: flex;
   justify-content: ${({ positionOnMobile = 'unset' }) => positionOnMobile};
   ${media.sm} {
@@ -158,6 +164,7 @@ export const StepCardNumber = styled.span`
 export const StepCardImg = styled.img`
   display: block;
   max-width: 100%;
+  ${imageShadow};
 `
 
 export const StepCardFade = styled.div`
@@ -168,20 +175,14 @@ export const StepCardFade = styled.div`
   width: 100%;
   bottom: 0;
 `
-export const AbsolutelyPositionedImg = styled.img`
-  position: absolute;
-  z-index: 0;
+export const CardImage = styled.img<{ absolute?: boolean; dropShadow?: boolean }>`
   width: 100%;
   min-width: 480px;
   max-width: 640px;
-`
+  position: ${({ absolute }) => (absolute ? 'absolute' : 'relative')};
+  z-index: ${({ absolute }) => (absolute ? 0 : 1)};
 
-export const RelativelyPositionedImg = styled.img`
-  position: relative;
-  z-index: 1;
-  min-width: 480px;
-  width: 100%;
-  max-width: 640px;
+  ${({ dropShadow }) => dropShadow && imageShadow};
 `
 
 export const StyledLimitedContainerWidth = styled(LimitedWidthContainer)`

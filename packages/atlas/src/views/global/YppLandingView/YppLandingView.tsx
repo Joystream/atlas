@@ -34,9 +34,9 @@ import { SvgActionChevronR, SvgActionInfo, SvgActionSpeech, SvgActionTokensStack
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import {
-  AbsolutelyPositionedImg,
   BackImage,
   BackgroundContainer,
+  CardImage,
   CardImageRow,
   CardsWithImagesContainer,
   CenteredLayoutGrid,
@@ -46,7 +46,6 @@ import {
   HeaderGridItem,
   HeroImageWrapper,
   ImageContainer,
-  RelativelyPositionedImg,
   StepCard,
   StepCardFade,
   StepCardImg,
@@ -66,6 +65,35 @@ export const YppLandingView: FC = () => {
     endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
     translateY: [0, -15],
   })
+  const { ref: dashboardRef } = useParallax<HTMLImageElement>({
+    endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
+    translateY: [0, -15],
+  })
+  const { ref: myVideosRef } = useParallax<HTMLImageElement>({
+    endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
+    translateY: [0, 15],
+  })
+  const { ref: youtubeSyncRef } = useParallax<HTMLImageElement>({
+    endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
+    translateY: [15, -15],
+  })
+  const { ref: nftCardRef } = useParallax<HTMLImageElement>({
+    endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
+    translateY: [0, 10],
+  })
+  const { ref: nftContextMenuRef } = useParallax<HTMLImageElement>({
+    endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
+    translateY: [0, -40],
+  })
+  const { ref: nftCursorRef } = useParallax<HTMLImageElement>({
+    endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
+    translateY: [0, -30],
+  })
+  const { ref: cartTokenRef } = useParallax<HTMLImageElement>({
+    endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
+    translateY: [0, 50],
+  })
+
   return (
     <>
       <StyledLimitedWidthContainer>
@@ -171,8 +199,8 @@ export const YppLandingView: FC = () => {
             <CardImageRow>
               <GridItem colStart={{ sm: 2, md: 1, lg: 2 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
                 <ImageContainer>
-                  <AbsolutelyPositionedImg src={dashboardImgBack} />
-                  <RelativelyPositionedImg src={dashboardImgFront} />
+                  <CardImage dropShadow absolute src={dashboardImgBack} />
+                  <CardImage dropShadow src={dashboardImgFront} ref={dashboardRef} />
                 </ImageContainer>
               </GridItem>
               <GridItem colStart={{ sm: 3, md: 8 }} colSpan={{ base: 12, sm: 8, md: 5, lg: 4 }}>
@@ -187,8 +215,8 @@ export const YppLandingView: FC = () => {
             <CardImageRow>
               <GridItem colStart={{ sm: 2, md: 6, lg: 6 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
                 <ImageContainer positionOnMobile="flex-end">
-                  <AbsolutelyPositionedImg src={myVideosBack} />
-                  <RelativelyPositionedImg src={myVideosFront} />
+                  <CardImage absolute dropShadow src={myVideosBack} />
+                  <CardImage dropShadow src={myVideosFront} ref={myVideosRef} />
                 </ImageContainer>
               </GridItem>
               <GridItem
@@ -207,8 +235,8 @@ export const YppLandingView: FC = () => {
             <CardImageRow>
               <GridItem colStart={{ sm: 2, md: 1, lg: 2 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
                 <ImageContainer positionOnMobile="center">
-                  <AbsolutelyPositionedImg src={youtubeSyncBack} />
-                  <RelativelyPositionedImg src={youtubeSyncFront} />
+                  <CardImage absolute src={youtubeSyncBack} />
+                  <CardImage src={youtubeSyncFront} ref={youtubeSyncRef} />
                 </ImageContainer>
               </GridItem>
               <GridItem colStart={{ sm: 3, md: 8 }} colSpan={{ base: 12, sm: 8, md: 5, lg: 4 }}>
@@ -233,10 +261,10 @@ export const YppLandingView: FC = () => {
             <CardImageRow>
               <GridItem colStart={{ sm: 2, md: 1, lg: 2 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
                 <ImageContainer positionOnMobile="center">
-                  <AbsolutelyPositionedImg src={videoNfts1} />
-                  <AbsolutelyPositionedImg src={videoNfts2} />
-                  <AbsolutelyPositionedImg src={videoNfts3} />
-                  <RelativelyPositionedImg src={videoNfts4} />
+                  <CardImage absolute src={videoNfts1} />
+                  <CardImage dropShadow absolute src={videoNfts2} ref={nftCardRef} />
+                  <CardImage dropShadow absolute src={videoNfts3} ref={nftContextMenuRef} />
+                  <CardImage src={videoNfts4} ref={nftCursorRef} />
                 </ImageContainer>
               </GridItem>
               <GridItem colStart={{ sm: 3, md: 8 }} colSpan={{ base: 12, sm: 8, md: 5, lg: 4 }}>
@@ -251,9 +279,9 @@ export const YppLandingView: FC = () => {
             <CardImageRow>
               <GridItem colStart={{ sm: 2, md: 6, lg: 6 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
                 <ImageContainer>
-                  <AbsolutelyPositionedImg src={crt1} />
-                  <AbsolutelyPositionedImg src={crt2} />
-                  <RelativelyPositionedImg src={crt3} />
+                  <CardImage dropShadow absolute src={crt1} />
+                  <CardImage dropShadow absolute src={crt2} ref={cartTokenRef} />
+                  <CardImage src={crt3} />
                 </ImageContainer>
               </GridItem>
               <GridItem
@@ -271,7 +299,7 @@ export const YppLandingView: FC = () => {
           </CardsWithImagesContainer>
         </StyledLimitedContainerWidth>
       </BackgroundContainer>
-      <BackgroundContainer noBackground>
+      <BackgroundContainer as="footer" noBackground>
         <StyledLimitedContainerWidth>
           <LayoutGrid>
             <GridItem colStart={{ lg: 2 }} colSpan={{ base: 12, lg: 10 }}>
