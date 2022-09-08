@@ -39,7 +39,7 @@ export default defineConfig({
       {
         name: 'resolve-import-meta-polkadot',
         resolveImportMeta(_, { chunkId }) {
-          if (chunkId === 'polkadot-worker.js') {
+          if (chunkId.includes('polkadot-worker')) {
             return 'self.location.href'
           }
         },
