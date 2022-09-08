@@ -25,12 +25,12 @@ import yt576 from '@/assets/images/ypp-hero/yt-576.webp'
 import yt864 from '@/assets/images/ypp-hero/yt-864.webp'
 import yt1152 from '@/assets/images/ypp-hero/yt-1152.webp'
 import yt2304 from '@/assets/images/ypp-hero/yt-2304.webp'
-import { ContentCard } from '@/components/ContentCard'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { CallToActionButton } from '@/components/_buttons/CallToActionButton'
 import { SvgActionChevronR, SvgActionInfo, SvgActionSpeech, SvgActionTokensStack } from '@/components/_icons'
+import { ContentCard } from '@/components/_ypp/ContentCard'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import {

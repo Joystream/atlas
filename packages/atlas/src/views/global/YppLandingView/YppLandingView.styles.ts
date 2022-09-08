@@ -93,7 +93,6 @@ export const CardImageRow = styled(LayoutGrid)`
 `
 
 export const ImageContainer = styled.div<{
-  reverseOrderOnDesktop?: boolean
   positionOnMobile?: 'center' | 'unset' | 'flex-end'
 }>`
   position: relative;
