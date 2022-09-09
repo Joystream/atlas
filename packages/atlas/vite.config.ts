@@ -29,6 +29,9 @@ export default defineConfig({
     setupFiles: ['vitest-setup.ts'],
     globals: true,
   },
+  esbuild: {
+    logOverride: { 'this-is-undefined-in-esm': 'silent' }, // workaround for vite, esbuild and babel integration bug: https://github.com/vitejs/vite/issues/8644
+  },
   worker: {
     plugins: [
       // This plugin fixes:
