@@ -5,7 +5,7 @@ import parseHtml from 'node-html-parser'
 import * as path from 'path'
 
 import { getChannel, getVideo } from './api'
-import { PORT } from './config'
+import { APP_NAME, PORT } from './config'
 import {
   generateChannelMetaTags,
   generateChannelSchemaTagsHtml,
@@ -39,7 +39,7 @@ app.get('/video/:id', async (req, res) => {
     const title = html.querySelector('title')
 
     if (title) {
-      title.innerHTML = `${video.title} - Atlas`
+      title.innerHTML = `${video.title} - ${APP_NAME}`
     }
 
     const thumbnailUrl = video.thumbnailPhoto ? generateAssetUrl(video.thumbnailPhoto) : ''
@@ -72,7 +72,7 @@ app.get('/channel/:id', async (req, res) => {
     const title = html.querySelector('title')
 
     if (title) {
-      title.innerHTML = `${channel.title} - Atlas`
+      title.innerHTML = `${channel.title} - ${APP_NAME}`
     }
 
     const avatarUrl = channel.avatarPhoto ? generateAssetUrl(channel.avatarPhoto) : ''

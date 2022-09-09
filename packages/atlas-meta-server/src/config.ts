@@ -9,6 +9,13 @@ if (!GRAPHQL_URL) {
   process.exit(1)
 }
 
+const APP_NAME = process.env.APP_NAME as string
+if (!APP_NAME) {
+  // eslint-disable-next-line no-console
+  console.error('Missing required APP_NAME env variable')
+  process.exit(1)
+}
+
 const PORT = 80
 
-export { GRAPHQL_URL, PORT }
+export { GRAPHQL_URL, PORT, APP_NAME }
