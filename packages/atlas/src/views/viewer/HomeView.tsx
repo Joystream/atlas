@@ -12,6 +12,7 @@ import { OfficialJoystreamUpdate } from '@/components/_content/OfficialJoystream
 import { TopTenVideos } from '@/components/_content/TopTenVideos'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 import { VideoHero } from '@/components/_video/VideoHero'
+import { APP_NAME } from '@/config/env'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { sizes, transitions } from '@/styles'
@@ -65,7 +66,7 @@ export const HomeView: FC = () => {
         <InfiniteVideoGrid
           periodDays={7}
           query={GetMostViewedVideosConnectionDocument}
-          title="Popular on Atlas"
+          title={`Popular on ${APP_NAME}`}
           onDemand
           titleLoader
         />

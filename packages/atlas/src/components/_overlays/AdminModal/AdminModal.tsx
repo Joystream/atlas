@@ -12,7 +12,7 @@ import { Select } from '@/components/_inputs/Select'
 import { Switch } from '@/components/_inputs/Switch'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { availableNodes } from '@/config/availableNodes'
-import { NODE_URL } from '@/config/env'
+import { APP_NAME, NODE_URL } from '@/config/env'
 import { BUILD_ENV, availableEnvs } from '@/config/envs'
 import { absoluteRoutes } from '@/config/routes'
 import { useConfirmationModal } from '@/providers/confirmationModal'
@@ -27,8 +27,8 @@ import { CustomNodeUrlWrapper, HorizontalSpacedContainer, VerticalSpacedContaine
 
 const ENVIRONMENT_NAMES: Record<string, string> = {
   production: 'Main Testnet',
-  development: 'Atlas Dev Testnet',
-  next: 'Atlas Next Testnet',
+  development: `${APP_NAME} Dev Testnet`,
+  next: `${APP_NAME} Next Testnet`,
   local: 'Local chain',
 }
 const environmentsItems = availableEnvs()
@@ -200,7 +200,7 @@ const StateTab: FC = () => {
 
     const linkElement = document.createElement('a')
     linkElement.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonStorage))
-    linkElement.setAttribute('download', `atlas-export-${new Date().toISOString()}.json`)
+    linkElement.setAttribute('download', `${APP_NAME.toLowerCase()}-export-${new Date().toISOString()}.json`)
     linkElement.click()
   }
 

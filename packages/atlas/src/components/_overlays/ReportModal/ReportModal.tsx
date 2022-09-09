@@ -5,6 +5,7 @@ import { useReportChannelMutation } from '@/api/queries/__generated__/channels.g
 import { useReportVideoMutation } from '@/api/queries/__generated__/videos.generated'
 import { FormField } from '@/components/_inputs/FormField'
 import { TextArea } from '@/components/_inputs/TextArea'
+import { APP_NAME } from '@/config/env'
 import { useSnackbar } from '@/providers/snackbars'
 
 import { DialogModal } from '../DialogModal'
@@ -50,8 +51,7 @@ export const ReportModal: FC<ReportModalProps> = ({ entityId, show, onClose, typ
       onClose()
       displaySnackbar({
         title: 'Thank you for your report',
-        description:
-          'Your report helps make Atlas a better place. Our team will be reviewing it shortly and taking action if necessary.',
+        description: `Your report helps make ${APP_NAME} a better place. Our team will be reviewing it shortly and taking action if necessary.`,
         iconType: 'success',
       })
     } catch (error) {

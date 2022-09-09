@@ -4,6 +4,8 @@ import { FC } from 'react'
 import { Text } from '@/components/Text'
 import { SvgEmptyStateIllustration, SvgJoystreamLogoFull } from '@/components/_illustrations'
 
+import { APP_NAME } from './config/env'
+
 export const Maintenance: FC = () => (
   <Container>
     <SvgEmptyStateIllustration width={240} height={152} />
@@ -11,8 +13,8 @@ export const Maintenance: FC = () => (
       We’ll be right back!
     </Header>
     <Text as="p" variant="t200" color="colorText">
-      Atlas is currently undergoing maintenance work <br /> in order to ensure the best features <br /> and performance
-      for our users. <br /> <br />
+      ${APP_NAME} is currently undergoing maintenance work <br /> in order to ensure the best features <br /> and
+      performance for our users. <br /> <br />
       We should be back shortly. <br /> See you soon!
     </Text>
     <SvgJoystreamLogoFull />
