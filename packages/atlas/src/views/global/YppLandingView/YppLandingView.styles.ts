@@ -14,12 +14,12 @@ const imageShadow = css`
     drop-shadow(0 2.1945px 6.6501px rgb(0 0 0 / 0.0889));
 `
 
-export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
-  margin-top: ${sizes(16)};
+export const HeroLimitedWidthContainer = styled(LimitedWidthContainer)`
+  padding: ${sizes(16)} 0;
   text-align: center;
 
   ${media.md} {
-    margin-top: ${sizes(24)};
+    padding: ${sizes(24)} 0;
   }
 `
 
@@ -83,6 +83,9 @@ export const ThreeStepsBackgroundContainer = styled(BackgroundContainer)`
 export const CardsWithImagesContainer = styled.div`
   display: grid;
   gap: ${sizes(16)};
+  ${media.md} {
+    gap: ${sizes(24)};
+  }
 `
 
 export const CardImageRow = styled(LayoutGrid)`
@@ -185,8 +188,15 @@ export const CardImage = styled.img<{ absolute?: boolean; dropShadow?: boolean }
   ${({ dropShadow }) => dropShadow && imageShadow};
 `
 
-export const StyledLimitedContainerWidth = styled(LimitedWidthContainer)`
-  padding-bottom: unset;
+export const CardsLimitedWidtContainer = styled(LimitedWidthContainer)`
+  padding: unset;
+`
+
+export const CtaLimitedWidthContainer = styled(LimitedWidthContainer)`
+  padding: ${sizes(16)} 0;
+  ${media.sm} {
+    padding: ${sizes(24)} 0;
+  }
 `
 
 export const CtaBanner = styled.div`
@@ -200,6 +210,9 @@ export const CtaBanner = styled.div`
     background-image: url(${bottomLeftPattern}), url(${topLeftBannerPattern});
     background-position: bottom left, top right;
     background-repeat: no-repeat, no-repeat;
+  }
+  ${media.md} {
+    padding: ${sizes(24)} ${sizes(12)};
   }
 `
 

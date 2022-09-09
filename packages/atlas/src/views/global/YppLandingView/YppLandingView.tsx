@@ -38,13 +38,16 @@ import {
   BackgroundContainer,
   CardImage,
   CardImageRow,
+  CardsLimitedWidtContainer,
   CardsWithImagesContainer,
   CenteredLayoutGrid,
   CtaBanner,
   CtaCardRow,
+  CtaLimitedWidthContainer,
   FrontImage,
   HeaderGridItem,
   HeroImageWrapper,
+  HeroLimitedWidthContainer,
   ImageContainer,
   StepCard,
   StepCardFade,
@@ -53,8 +56,6 @@ import {
   StepCardsWrapper,
   StyledBannerText,
   StyledButton,
-  StyledLimitedContainerWidth,
-  StyledLimitedWidthContainer,
   ThreeStepsBackgroundContainer,
 } from './YppLandingView.styles'
 
@@ -97,7 +98,7 @@ export const YppLandingView: FC = () => {
 
   return (
     <>
-      <StyledLimitedWidthContainer>
+      <HeroLimitedWidthContainer>
         <LayoutGrid>
           <GridItem as="header" colSpan={{ base: 12, sm: 8, lg: 6 }} colStart={{ sm: 3, lg: 4 }}>
             <Text as="h1" variant={mdMatch ? 'h800' : 'h600'}>
@@ -122,9 +123,9 @@ export const YppLandingView: FC = () => {
             alt="Hero front"
           />
         </HeroImageWrapper>
-      </StyledLimitedWidthContainer>
+      </HeroLimitedWidthContainer>
       <ThreeStepsBackgroundContainer>
-        <StyledLimitedContainerWidth as="section">
+        <CardsLimitedWidtContainer as="section">
           {/* TODO add reward section above */}
           <CenteredLayoutGrid>
             <HeaderGridItem
@@ -174,11 +175,11 @@ export const YppLandingView: FC = () => {
               </StepCard>
             </StepCardsWrapper>
           </CenteredLayoutGrid>
-        </StyledLimitedContainerWidth>
+        </CardsLimitedWidtContainer>
       </ThreeStepsBackgroundContainer>
       {/* ypp benefits */}
       <BackgroundContainer noBackground>
-        <StyledLimitedContainerWidth as="section">
+        <CardsLimitedWidtContainer as="section">
           <CardsWithImagesContainer>
             <CenteredLayoutGrid>
               <HeaderGridItem
@@ -252,12 +253,12 @@ export const YppLandingView: FC = () => {
               </GridItem>
             </CardImageRow>
           </CardsWithImagesContainer>
-        </StyledLimitedContainerWidth>
+        </CardsLimitedWidtContainer>
       </BackgroundContainer>
 
       {/* nfts */}
       <BackgroundContainer>
-        <StyledLimitedContainerWidth>
+        <CardsLimitedWidtContainer>
           <CardsWithImagesContainer>
             <CardImageRow>
               <GridItem colStart={{ sm: 2, md: 1, lg: 2 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
@@ -305,33 +306,31 @@ export const YppLandingView: FC = () => {
               </GridItem>
             </CardImageRow>
           </CardsWithImagesContainer>
-        </StyledLimitedContainerWidth>
+        </CardsLimitedWidtContainer>
       </BackgroundContainer>
-      <BackgroundContainer as="footer" noBackground>
-        <StyledLimitedContainerWidth>
-          <LayoutGrid>
-            <GridItem colStart={{ lg: 2 }} colSpan={{ base: 12, lg: 10 }}>
-              <CtaBanner>
-                <Text variant="h100" as="p" color="colorText">
-                  Get started now
-                </Text>
-                <StyledBannerText
-                  variant={mdMatch ? 'h700' : 'h600'}
-                  as="h2"
-                  color="colorCoreBaseWhite"
-                  margin={{ top: 1 }}
-                >
-                  Get the most out of your YouTube channel
-                </StyledBannerText>
+      <CtaLimitedWidthContainer>
+        <LayoutGrid>
+          <GridItem colStart={{ lg: 2 }} colSpan={{ base: 12, lg: 10 }}>
+            <CtaBanner>
+              <Text variant="h100" as="p" color="colorText">
+                Get started now
+              </Text>
+              <StyledBannerText
+                variant={mdMatch ? 'h700' : 'h600'}
+                as="h2"
+                color="colorCoreBaseWhite"
+                margin={{ top: 1 }}
+              >
+                Get the most out of your YouTube channel
+              </StyledBannerText>
 
-                <StyledButton size="large" icon={<SvgActionChevronR />} iconPlacement="right">
-                  Authorize with YouTube
-                </StyledButton>
-              </CtaBanner>
-            </GridItem>
-          </LayoutGrid>
-        </StyledLimitedContainerWidth>
-      </BackgroundContainer>
+              <StyledButton size="large" icon={<SvgActionChevronR />} iconPlacement="right">
+                Authorize with YouTube
+              </StyledButton>
+            </CtaBanner>
+          </GridItem>
+        </LayoutGrid>
+      </CtaLimitedWidthContainer>
       <CtaCardRow>
         <CallToActionButton external colorVariant="lightBlue" icon={<SvgActionInfo />} label="Program details" />
         <CallToActionButton external colorVariant="lightBlue" icon={<SvgActionSpeech />} label="Discord" />
