@@ -62,38 +62,40 @@ import {
 export const YppLandingView: FC = () => {
   const mdMatch = useMediaMatch('md')
   const smMatch = useMediaMatch('sm')
-  const { ref: frontImageRef } = useParallax<HTMLImageElement>({
+  const endScroll = smMatch ? window.innerHeight / 3 : window.innerHeight
+  const { ref: heroImageRef } = useParallax<HTMLImageElement>({
     startScroll: 0,
-    endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
+    endScroll,
     translateY: [0, -15],
   })
   const { ref: dashboardImageRef } = useParallax<HTMLImageElement>({
-    endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
-    translateY: [0, -15],
+    endScroll,
+    translateY: [0, -20],
   })
-  const { ref: myVideosImageRef } = useParallax<HTMLImageElement>({
-    endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
-    translateY: [0, 15],
+  const { ref: myVideosFloatingButtonRef } = useParallax<HTMLImageElement>({
+    endScroll,
+    translateY: [-5, 5],
+    translateX: [0, -10],
   })
-  const { ref: youtubeSyncImageRef } = useParallax<HTMLImageElement>({
-    endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
-    translateY: [15, -15],
+  const { ref: uploadVideoImageRef } = useParallax<HTMLImageElement>({
+    endScroll,
+    translateY: [10, -10],
   })
   const { ref: nftCardImageRef } = useParallax<HTMLImageElement>({
-    endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
-    translateY: [0, 10],
+    endScroll,
+    translateY: [20, -20],
   })
   const { ref: nftContextMenuImageRef } = useParallax<HTMLImageElement>({
-    endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
-    translateY: [0, -40],
+    endScroll,
+    translateY: [20, -15],
   })
   const { ref: nftCursorImageRef } = useParallax<HTMLImageElement>({
-    endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
-    translateY: [0, -30],
+    endScroll,
+    translateY: [-40, -5],
   })
   const { ref: cartTokenImageRef } = useParallax<HTMLImageElement>({
-    endScroll: smMatch ? window.innerHeight / 3 : window.innerHeight,
-    translateY: [0, 50],
+    endScroll,
+    translateY: [0, 35],
   })
 
   return (
@@ -118,7 +120,7 @@ export const YppLandingView: FC = () => {
         <HeroImageWrapper>
           <BackImage srcSet={`${yt576} 576w, ${yt864} 864w, ${yt1152} 1152w, ${yt2304} 2304w`} alt="Hero back" />
           <FrontImage
-            ref={frontImageRef}
+            ref={heroImageRef}
             srcSet={`${hero576} 576w, ${hero864} 864w, ${hero1152} 1152w, ${hero2304} 2304w`}
             alt="Hero front"
           />
@@ -218,7 +220,7 @@ export const YppLandingView: FC = () => {
               <GridItem colStart={{ sm: 2, md: 6, lg: 6 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
                 <ImageContainer positionOnMobile="flex-end">
                   <CardImage absolute dropShadow src={myVideosBack} alt="My videos" />
-                  <CardImage dropShadow src={myVideosFront} ref={myVideosImageRef} alt="Button" />
+                  <CardImage dropShadow src={myVideosFront} ref={myVideosFloatingButtonRef} alt="Button" />
                 </ImageContainer>
               </GridItem>
               <GridItem
@@ -238,7 +240,7 @@ export const YppLandingView: FC = () => {
               <GridItem colStart={{ sm: 2, md: 1, lg: 2 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
                 <ImageContainer positionOnMobile="center">
                   <CardImage absolute src={youtubeSyncBack} alt="Video tiles" />
-                  <CardImage src={youtubeSyncFront} ref={youtubeSyncImageRef} alt="Video tile" />
+                  <CardImage src={youtubeSyncFront} ref={uploadVideoImageRef} alt="Video tile" />
                 </ImageContainer>
               </GridItem>
               <GridItem colStart={{ sm: 3, md: 8 }} colSpan={{ base: 12, sm: 8, md: 5, lg: 4 }}>
@@ -286,7 +288,7 @@ export const YppLandingView: FC = () => {
 
             <CardImageRow>
               <GridItem colStart={{ sm: 2, md: 6, lg: 6 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
-                <ImageContainer>
+                <ImageContainer hiddenOverflow>
                   <CardImage dropShadow absolute src={crt1} alt="Creator token dashboard" />
                   <CardImage dropShadow absolute src={crt2} ref={cartTokenImageRef} alt="Creator token holders" />
                   <CardImage src={crt3} />

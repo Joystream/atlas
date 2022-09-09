@@ -58,12 +58,15 @@ export const CenteredLayoutGrid = styled(LayoutGrid)`
   }
 `
 
-export const HeaderGridItem = styled(GridItem)<{ marginBottom: number }>`
+export const HeaderGridItem = styled(GridItem, { shouldForwardProp: (prop) => prop !== 'marginBottom' })<{
+  marginBottom: number
+}>`
   margin-bottom: ${({ marginBottom = 0 }) => sizes(marginBottom)};
   align-self: center;
 `
 
 export const BackgroundContainer = styled.div<{ noBackground?: boolean }>`
+  overflow: hidden;
   background-color: ${({ noBackground }) => (noBackground ? 'unset' : cVar('colorBackgroundMuted'))};
   margin-left: calc(-1 * var(--size-global-horizontal-padding));
   margin-right: calc(-1 * var(--size-global-horizontal-padding));
@@ -97,9 +100,10 @@ export const CardImageRow = styled(LayoutGrid)`
 
 export const ImageContainer = styled.div<{
   positionOnMobile?: 'center' | 'unset' | 'flex-end'
+  hiddenOverflow?: boolean
 }>`
+  overflow: ${({ hiddenOverflow }) => (hiddenOverflow ? 'hidden' : 'unset')};
   position: relative;
-  overflow: hidden;
   display: flex;
   justify-content: ${({ positionOnMobile = 'unset' }) => positionOnMobile};
   ${media.sm} {
