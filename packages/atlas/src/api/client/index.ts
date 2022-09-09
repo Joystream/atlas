@@ -7,6 +7,8 @@ import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config
 
 import cache from './cache'
 
+const BATCHED_QUERIES = ['GetBasicVideos', 'GetDistributionBucketsWithBags', 'GetStorageBucketsWithBags']
+
 const delayLink = new ApolloLink((operation, forward) => {
   const ctx = operation.getContext()
   if (!ctx.delay) {
@@ -39,7 +41,7 @@ const createApolloClient = () => {
 
   const orionSplitLink = split(
     ({ operationName }) => {
-      return operationName === 'GetBasicVideos'
+      return BATCHED_QUERIES.includes(operationName)
     },
     batchedOrionLink,
     orionLink
