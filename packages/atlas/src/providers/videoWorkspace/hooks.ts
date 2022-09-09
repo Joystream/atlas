@@ -118,7 +118,7 @@ export const useVideoWorkspaceData = () => {
 
   return {
     tabData: normalizedData,
-    loading: editedVideoInfo.isDraft ? false : loading || (video?.subtitles && !subtitlesArray),
+    loading: editedVideoInfo.isDraft ? false : loading || (video?.subtitles.length && !subtitlesArray),
     error,
   }
 }
