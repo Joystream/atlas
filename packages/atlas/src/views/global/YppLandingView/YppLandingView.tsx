@@ -133,12 +133,12 @@ export const YppLandingView: FC = () => {
               colStart={{ sm: 3, lg: 4 }}
               colSpan={{ base: 12, sm: 8, lg: 6 }}
             >
-              <Text variant={mdMatch ? 'h800' : 'h600'} as="h2">
+              <Text variant={mdMatch ? 'h700' : 'h600'} as="h2">
                 Get started in 3 steps
               </Text>
               <Text variant="t300" as="p" margin={{ top: 4, bottom: 8 }} color="colorText">
                 Our fully automated verification process is as simple as 1-2-3. If you don't have an Atlas channel
-                already, you'll be able to create one for free.{' '}
+                already, you'll be able to create one for free.
               </Text>
               <Button size="large" iconPlacement="right" icon={<SvgActionChevronR />}>
                 Sign up now
@@ -167,7 +167,7 @@ export const YppLandingView: FC = () => {
               <StepCard>
                 <StepCardNumber>3</StepCardNumber>
                 <Text variant={mdMatch ? 'h500' : 'h400'} as="h2">
-                  Collect JOY and earn even more
+                  Collect JOY tokens and access all Atlas features
                 </Text>
                 <StepCardImg src={memberDropdown} alt="Member dropdown" />
                 <StepCardFade />
@@ -187,8 +187,8 @@ export const YppLandingView: FC = () => {
                 colStart={{ sm: 3, lg: 4 }}
                 colSpan={{ base: 12, sm: 8, lg: 6 }}
               >
-                <Text variant={mdMatch ? 'h800' : 'h600'} as="h2">
-                  There is a lot more to YouTube Partner Program
+                <Text variant={mdMatch ? 'h700' : 'h600'} as="h2">
+                  There is more to YouTube Partner Program
                 </Text>
                 <Text variant="t300" as="p" margin={{ top: 4 }} color="colorText">
                   New to Atlas? Joining our YouTube Partner Program is an exciting opportunity to try out the future of
@@ -207,8 +207,8 @@ export const YppLandingView: FC = () => {
               <GridItem colStart={{ sm: 3, md: 8 }} colSpan={{ base: 12, sm: 8, md: 5, lg: 4 }}>
                 <ContentCard
                   title="Manage your channel on a simple dashboard"
-                  subtitle="YPP dashboard"
-                  body="There you can check your channel status and get instructions on completing all actions to get rewards"
+                  subtitle="Dashboard"
+                  body="YouTube Partner Program dashboard in Atlas Studio allows you to see the list of rewardable tasks alongside other information about the program. "
                 />
               </GridItem>
             </CardImageRow>
@@ -226,9 +226,9 @@ export const YppLandingView: FC = () => {
                 colSpan={{ base: 12, sm: 8, md: 5, lg: 4 }}
               >
                 <ContentCard
-                  title="Backup your videos and own them forever"
-                  subtitle="YouTube backup"
-                  body="You can sleep peacefully knowing that your conent is safe and forever stored on blockchain. You can even sell it as NFTs — you own it forever."
+                  title="Upload your videos and own them like you mean it"
+                  subtitle="Joystream"
+                  body="All the information about your videos is securely stored on the Joystream blockchain, which is owned and operated by the community."
                 />
               </GridItem>
             </CardImageRow>
@@ -247,7 +247,7 @@ export const YppLandingView: FC = () => {
                   }}
                   title="Automatic YouTube video sync"
                   subtitle="YouTube sync"
-                  body="Set up once and do nothing. Your videos will be automaticly synced from youtube to Atlas and you will still earn for it passively."
+                  body="All the videos you upload to your YouTube channel will appear in Atlas automatically, allowing you to reach a greater audience."
                 />
               </GridItem>
             </CardImageRow>
@@ -276,9 +276,9 @@ export const YppLandingView: FC = () => {
               </GridItem>
               <GridItem colStart={{ sm: 3, md: 8 }} colSpan={{ base: 12, sm: 8, md: 5, lg: 4 }}>
                 <ContentCard
-                  title="Monetise your videos with NFT sales and royalties"
+                  title="Monetize your videos with NFT sales and royalties"
                   subtitle="Video NFTs"
-                  body="Turn your videos into NFTs and put them up for sale.  Choose between fixed price, open auction, and timed auction. Define royalties to get a cut every time your NFT gets sold again.There you can check your channel status and get instructions on completing all actions to get rewards"
+                  body="Turn your videos into NFTs and put them up for sale. Choose between fixed price, open auction, and timed auction. Define royalties to get a cut every time your NFT gets sold again."
                 />
               </GridItem>
             </CardImageRow>
@@ -297,9 +297,10 @@ export const YppLandingView: FC = () => {
                 colSpan={{ base: 12, sm: 8, md: 5, lg: 4 }}
               >
                 <ContentCard
+                  pill={{ label: 'Coming early 2023' }}
                   title="New ways to engage and get support from your audience"
-                  subtitle="CREATOR TOKENS"
-                  body="Turn viewers into evengelists [?] by letting them hold a share in your channel when they buy your own channel token."
+                  subtitle="Creator tokens"
+                  body="Turn viewers into evangelists by letting them hold a share in your channel when they buy your own channel token."
                 />
               </GridItem>
             </CardImageRow>

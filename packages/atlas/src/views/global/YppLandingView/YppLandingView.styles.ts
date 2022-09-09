@@ -113,6 +113,7 @@ export const StepCard = styled.article`
   height: 360px;
   overflow-y: hidden;
   position: relative;
+  margin: 0 auto;
   background-color: ${cVar('colorBackground')};
   ${media.md} {
     gap: ${sizes(6)};
@@ -134,10 +135,6 @@ export const StepCardsWrapper = styled(GridItem)`
 
   ::-webkit-scrollbar {
     display: none;
-  }
-
-  ${media.sm} {
-    justify-content: center;
   }
 
   ${media.md} {
