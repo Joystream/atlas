@@ -26,7 +26,7 @@ export const normalize = css`
   }
 
   pre {
-    font-family: monospace, monospace;
+    font-family: monospace;
     font-size: 1em;
   }
 
@@ -37,7 +37,6 @@ export const normalize = css`
   abbr[title] {
     border-bottom: none;
     text-decoration: underline;
-    text-decoration: underline dotted;
   }
 
   b,
@@ -48,7 +47,7 @@ export const normalize = css`
   code,
   kbd,
   samp {
-    font-family: monospace, monospace;
+    font-family: monospace;
     font-size: 1em;
   }
 
