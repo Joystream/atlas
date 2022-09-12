@@ -184,12 +184,7 @@ export const YppLandingView: FC = () => {
         <CardsLimitedWidtContainer as="section">
           <CardsWithImagesContainer>
             <CenteredLayoutGrid>
-              <HeaderGridItem
-                marginBottom={mdMatch ? 24 : 16}
-                as="header"
-                colStart={{ sm: 3, lg: 4 }}
-                colSpan={{ base: 12, sm: 8, lg: 6 }}
-              >
+              <HeaderGridItem as="header" colStart={{ sm: 3, lg: 4 }} colSpan={{ base: 12, sm: 8, lg: 6 }}>
                 <Text variant={mdMatch ? 'h700' : 'h600'} as="h2">
                   There is more to YouTube Partner Program
                 </Text>

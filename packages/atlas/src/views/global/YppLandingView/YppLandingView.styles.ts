@@ -53,13 +53,10 @@ export const BackImage = styled.img`
 export const CenteredLayoutGrid = styled(LayoutGrid)`
   text-align: center;
   row-gap: 0;
-  ${media.md} {
-    row-gap: 0;
-  }
 `
 
 export const HeaderGridItem = styled(GridItem, { shouldForwardProp: (prop) => prop !== 'marginBottom' })<{
-  marginBottom: number
+  marginBottom?: number
 }>`
   margin-bottom: ${({ marginBottom = 0 }) => sizes(marginBottom)};
   align-self: center;
