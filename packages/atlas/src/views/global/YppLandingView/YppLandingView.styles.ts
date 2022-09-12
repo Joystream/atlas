@@ -31,6 +31,7 @@ export const CenteredLayoutGrid = styled(LayoutGrid)`
 type HeaderGridItemProps = {
   marginBottom?: number
 }
+
 export const HeaderGridItem = styled(GridItem, {
   shouldForwardProp: (prop) => prop !== 'marginBottom',
 })<HeaderGridItemProps>`
@@ -64,4 +65,13 @@ export const BackgroundContainer = styled.div<BackgroundContainerProps>`
     padding: ${sizes(24)} var(--size-global-horizontal-padding);
     ${backgroundPattern};
   }
+`
+
+export const BenefitsCardsContainerGridItem = styled(GridItem)`
+  display: grid;
+  gap: ${sizes(4)};
+`
+
+export const CardsLimitedWidtContainer = styled(LimitedWidthContainer)`
+  padding: unset;
 `
