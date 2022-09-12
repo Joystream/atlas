@@ -44,7 +44,7 @@ import {
 import { SubtitlesInput } from '@/types/subtitles'
 import { createId } from '@/utils/createId'
 import { pastDateValidation, requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
-import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { ConsoleLogger } from '@/utils/logs'
 import { convertSrtToVtt } from '@/utils/subtitles'
 
 import { useVideoFormAssets, useVideoFormDraft } from './VideoForm.hooks'
@@ -115,9 +115,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const isNew = !isEdit
   const mintNft = editedVideoInfo?.mintNft
 
-  const { error: categoriesError } = useCategories(undefined, {
-    onError: (error) => SentryLogger.error('Failed to fetch categories', 'VideoWorkspace', error),
-  })
+  const { categories, error: categoriesError } = useCategories()
 
   const {
     register,
@@ -462,12 +460,12 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const handleDeleteVideo = () => {
     editedVideoInfo && deleteVideo(editedVideoInfo.id)
   }
-  // TODO uncomment once we have categories available
-  // const categoriesSelectItems: SelectItem[] =
-  //   categories?.map((c) => ({
-  //     name: c.name || 'Unknown category',
-  //     value: c.id,
-  //   })) || []
+
+  const categoriesSelectItems: SelectItem[] =
+    categories?.map((c) => ({
+      name: c.name || 'Unknown category',
+      value: c.id,
+    })) || []
 
   const getHiddenSectionLabel = () => {
     if (videoFieldsLocked) {
@@ -542,8 +540,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           disabled={videoFieldsLocked}
         />
       </FormField>
-      {/* TODO uncomment once we have categories available */}
-      {/* <FormField label="Category" error={errors.category?.message}>
+      <FormField label="Category" error={errors.category?.message}>
         <Controller
           name="category"
           control={control}
@@ -564,7 +561,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
             />
           )}
         />
-      </FormField> */}
+      </FormField>
       <FormField label="Language">
         <Controller
           name="language"

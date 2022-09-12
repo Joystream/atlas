@@ -4,6 +4,7 @@ import { useContext, useEffect, useMemo, useState } from 'react'
 import { useLocation, useMatch } from 'react-router'
 import { useNavigate } from 'react-router-dom'
 
+import { useCategories } from '@/api/hooks/categories'
 import { useFullVideo } from '@/api/hooks/video'
 import { cancelledVideoFilter } from '@/config/contentFilter'
 import { absoluteRoutes } from '@/config/routes'
@@ -44,6 +45,7 @@ export const useVideoWorkspaceData = () => {
       },
     }
   )
+  const { categories } = useCategories()
 
   const subtitlesAssets = useSubtitlesAssets(video?.subtitles)
 
@@ -95,11 +97,11 @@ export const useVideoWorkspaceData = () => {
   const normalizedData: VideoWorkspaceVideoFormFields = {
     title: editedVideoInfo.isDraft ? draft?.title ?? '' : video?.title ?? '',
     description: (editedVideoInfo.isDraft ? draft?.description : video?.description) ?? '',
-    category: (editedVideoInfo.isDraft ? draft?.category : video?.category?.id) ?? null,
+    category: (editedVideoInfo.isDraft ? draft?.category ?? categories?.[0]?.id : video?.category?.id) ?? null,
     licenseCode: (editedVideoInfo.isDraft ? draft?.licenseCode : video?.license?.code) ?? DEFAULT_LICENSE_ID,
     licenseCustomText: (editedVideoInfo.isDraft ? draft?.licenseCustomText : video?.license?.customText) ?? null,
     licenseAttribution: (editedVideoInfo.isDraft ? draft?.licenseAttribution : video?.license?.attribution) ?? null,
-    language: (editedVideoInfo.isDraft ? draft?.language : video?.language?.iso) ?? 'en',
+    language: (editedVideoInfo.isDraft ? draft?.language ?? 'en' : video?.language?.iso) ?? null,
     isPublic: (editedVideoInfo.isDraft ? draft?.isPublic : video?.isPublic) ?? true,
     isExplicit: (editedVideoInfo.isDraft ? draft?.isExplicit : video?.isExplicit) ?? false,
     hasMarketing: (editedVideoInfo.isDraft ? draft?.hasMarketing : video?.hasMarketing) ?? false,
