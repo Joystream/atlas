@@ -42,7 +42,7 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
 }
 
 const MaintenanceWrapper: FC<PropsWithChildren> = ({ children }) => {
-  const { isKilled, wasKilledLastTime, error, loading } = useGetKillSwitch({ context: { delay: 2000 } })
+  const { isKilled, wasKilledLastTime, error, loading } = useGetKillSwitch({ context: { delay: 1000 } })
 
   if (isKilled || (error && wasKilledLastTime) || (loading && wasKilledLastTime)) {
     return <Maintenance />
