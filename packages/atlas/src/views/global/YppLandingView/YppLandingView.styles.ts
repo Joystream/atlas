@@ -5,6 +5,7 @@ import topRightPattern from '@/assets/images/ypp-background-pattern-2.svg'
 import bottomLeftPattern from '@/assets/images/ypp-background-pattern.svg'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { Button } from '@/components/_buttons/Button'
 import { cVar, media, sizes } from '@/styles'
 
 export const imageShadow = css`
@@ -64,6 +65,24 @@ export const BackgroundContainer = styled.div<BackgroundContainerProps>`
   ${media.md} {
     padding: ${sizes(24)} var(--size-global-horizontal-padding);
     ${backgroundPattern};
+  }
+`
+export const BenefitsCardButton = styled(Button)`
+  border-radius: 999px;
+`
+
+export const BenefitsCardsButtonsGroup = styled.div`
+  text-align: center;
+  overflow-x: auto;
+  white-space: nowrap;
+  margin: ${sizes(16)} 0 ${sizes(8)} 0;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  ${BenefitsCardButton}:not(:last-child) {
+    margin-right: ${sizes(2)};
   }
 `
 
