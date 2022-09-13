@@ -1,6 +1,7 @@
 import { FC } from 'react'
 
 import { Text } from '@/components/Text'
+import { SvgTierIcon1, SvgTierIcon2, SvgTierIcon3 } from '@/components/_icons'
 
 import { TierItem } from './TermsAndConditionsDialog.styles'
 
@@ -14,6 +15,7 @@ export const TermsAndConditionsDialog: FC = () => {
         The more subscribers you have on YouTube, the higher the payouts in the program.{' '}
       </Text>
       <TierItem>
+        <SvgTierIcon1 />
         <Text variant="t200-strong" as="span">
           Tier 1:
         </Text>{' '}
@@ -23,6 +25,7 @@ export const TermsAndConditionsDialog: FC = () => {
         <Text variant="t200" as="span">
           1x
         </Text>
+        <SvgTierIcon2 />
         <Text variant="t200-strong" as="span">
           Tier 2:
         </Text>{' '}
@@ -32,6 +35,7 @@ export const TermsAndConditionsDialog: FC = () => {
         <Text variant="t200" as="span">
           1.5x
         </Text>
+        <SvgTierIcon3 />
         <Text variant="t200-strong" as="span">
           Tier 3:
         </Text>{' '}
