@@ -6,7 +6,7 @@ dotenv.config()
 
 const GRAPHQL_URL = getEnvVariable('GRAPHQL_URL', true)
 const APP_NAME = getEnvVariable('APP_NAME', true)
-const TWITTER_ID = getEnvVariable('TWIITER_ID')
+const TWITTER_ID = getEnvVariable('TWITTER_ID')
 
 const PORT = 80
 
