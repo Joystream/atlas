@@ -48,7 +48,7 @@
     "bezier-easing": "^2.1.0",
     "blake3": "2.1.7",
     "bn.js": "^5.2.1",
-    "buffer": "^5.7.1",
+    "buffer": "^6.0.3",
     "comlink": "^4.3.1",
     "cropperjs": "^1.5.12",
     "date-fns": "^2.29.2",
@@ -89,7 +89,6 @@
     "zustand": "^3.7.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.0",
     "@emotion/babel-plugin": "^11.10.2",
     "@graphql-codegen/cli": "^2.12.0",
     "@graphql-codegen/introspection": "^2.2.1",
@@ -99,7 +98,6 @@
     "@graphql-codegen/typescript-react-apollo": "^3.3.3",
     "@joystream/prettier-config": "^1.0.0",
     "@rollup/plugin-babel": "^5.3.1",
-    "@rollup/plugin-inject": "^4.0.4",
     "@storybook/addon-actions": "6.4.18",
     "@storybook/addon-docs": "6.4.18",
     "@storybook/addon-essentials": "6.4.18",
@@ -123,7 +121,6 @@
     "@types/scroll-lock": "^2.1.0",
     "@types/video.js": "^7.3.46",
     "@vitejs/plugin-react": "^2.1.0",
-    "babel-loader": "^8.2.5",
     "esbuild-register": "^3.3.3",
     "happy-dom": "^4.1.0",
     "madge": "^5.0.1",

@@ -1,6 +1,5 @@
 /// <reference types="vitest" />
-import { babel } from '@rollup/plugin-babel'
-import inject from '@rollup/plugin-inject'
+import babel from '@rollup/plugin-babel'
 import react from '@vitejs/plugin-react'
 import * as path from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
@@ -79,18 +78,8 @@ export default defineConfig({
       extensions: ['.tsx', '.ts'],
       include: ['**/*.style.*', '**/*.styles.*'],
       plugins: ['@emotion'],
-      compact: false,
       babelHelpers: 'bundled',
     }),
-    {
-      ...inject({
-        include: ['node_modules/**/*.js*'],
-        modules: {
-          Buffer: ['buffer', 'Buffer'],
-        },
-      }),
-      enforce: 'post',
-    },
     {
       ...visualizer({
         filename: 'dist/stats.html',
@@ -104,6 +93,11 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ['buffer', 'blake3/browser-async', 'multihashes', '@emotion/styled/base'],
+    include: ['blake3/browser-async', 'multihashes'],
+    esbuildOptions: {
+      define: {
+        global: 'globalThis',
+      },
+    },
   },
 })
