@@ -1,12 +1,10 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import topRightPattern from '@/assets/images/ypp-background-pattern-2.svg'
 import bottomLeftPattern from '@/assets/images/ypp-background-pattern.svg'
-import topLeftBannerPattern from '@/assets/images/ypp-banner-pattern.svg'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
 import { cVar, media, sizes } from '@/styles'
 
 export const imageShadow = css`
@@ -15,12 +13,8 @@ export const imageShadow = css`
 `
 
 export const CenteredLimidtedWidthContainer = styled(LimitedWidthContainer)`
-  padding: ${sizes(16)} 0;
   text-align: center;
-
-  ${media.md} {
-    padding: ${sizes(24)} 0;
-  }
+  padding-bottom: unset;
 `
 
 export const CenteredLayoutGrid = styled(LayoutGrid)`
@@ -28,14 +22,33 @@ export const CenteredLayoutGrid = styled(LayoutGrid)`
   row-gap: 0;
 `
 
-export const HeaderGridItem = styled(GridItem, { shouldForwardProp: (prop) => prop !== 'marginBottom' })<{
+type HeaderGridItemProps = {
   marginBottom?: number
-}>`
+}
+export const HeaderGridItem = styled(GridItem, {
+  shouldForwardProp: (prop) => prop !== 'marginBottom',
+})<HeaderGridItemProps>`
   margin-bottom: ${({ marginBottom = 0 }) => sizes(marginBottom)};
   align-self: center;
 `
 
-export const BackgroundContainer = styled.div<{ noBackground?: boolean }>`
+type BackgroundContainerProps = {
+  noBackground?: boolean
+  pattern?: 'top' | 'bottom'
+}
+
+const backgroundPattern = ({ pattern }: BackgroundContainerProps) => {
+  if (!pattern) {
+    return
+  }
+  return css`
+    background-image: ${pattern === 'top' ? `url(${topRightPattern}) ` : `url(${bottomLeftPattern}) `};
+    background-position: ${pattern === 'top' ? 'top right' : 'bottom left'};
+    background-repeat: no-repeat;
+  `
+}
+
+export const BackgroundContainer = styled.div<BackgroundContainerProps>`
   overflow: hidden;
   background-color: ${({ noBackground }) => (noBackground ? 'unset' : cVar('colorBackgroundMuted'))};
   margin-left: calc(-1 * var(--size-global-horizontal-padding));
@@ -43,169 +56,10 @@ export const BackgroundContainer = styled.div<{ noBackground?: boolean }>`
   padding: ${sizes(16)} var(--size-global-horizontal-padding);
   ${media.md} {
     padding: ${sizes(24)} var(--size-global-horizontal-padding);
+    ${backgroundPattern};
   }
-`
-export const ThreeStepsBackgroundContainer = styled(BackgroundContainer)`
-  ${media.md} {
-    background-image: url(${bottomLeftPattern});
-    background-position: bottom left;
-    background-repeat: no-repeat;
-  }
-`
-
-export const CardsWithImagesContainer = styled.div`
-  display: grid;
-  gap: ${sizes(16)};
-  ${media.md} {
-    gap: ${sizes(24)};
-  }
-`
-
-export const CardImageRow = styled(LayoutGrid)`
-  ${media.sm} {
-    align-items: center;
-    justify-items: center;
-  }
-`
-
-export const ImageContainer = styled.div<{
-  positionOnMobile?: 'center' | 'unset' | 'flex-end'
-  hiddenOverflow?: boolean
-}>`
-  overflow: ${({ hiddenOverflow }) => (hiddenOverflow ? 'hidden' : 'unset')};
-  position: relative;
-  display: flex;
-  justify-content: ${({ positionOnMobile = 'unset' }) => positionOnMobile};
-  ${media.sm} {
-    justify-content: unset;
-  }
-`
-
-export const StepCard = styled.article`
-  text-align: left;
-  padding: ${sizes(4)} ${sizes(4)} 0;
-  display: grid;
-  gap: ${sizes(4)};
-  width: 280px;
-  height: 360px;
-  overflow-y: hidden;
-  position: relative;
-  margin: 0 auto;
-  background-color: ${cVar('colorBackground')};
-  ${media.md} {
-    gap: ${sizes(6)};
-    padding: ${sizes(6)} ${sizes(6)} 0;
-    width: 100%;
-    height: 400px;
-  }
-  ${media.lg} {
-    height: 480px;
-  }
-`
-export const StepCardsWrapper = styled(GridItem)`
-  display: grid;
-  grid-auto-flow: column;
-  gap: ${sizes(4)};
-  min-width: 0;
-  overflow-x: auto;
-  scrollbar-width: none;
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
-
-  ${media.md} {
-    ${StepCard}:nth-of-type(2) {
-      margin-top: ${sizes(16)};
-    }
-    ${StepCard}:nth-of-type(3) {
-      margin-top: ${sizes(32)};
-    }
-  }
-`
-
-export const StepCardNumber = styled.span`
-  font-family: ${cVar('typographyFontsPrimary')};
-  color: ${cVar('colorBackground')};
-  -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: ${cVar('colorBorder')};
-  font-weight: 600;
-  font-size: 48px;
-  line-height: 100%;
-  ${media.md} {
-    -webkit-text-stroke-width: 3px;
-    font-size: 64px;
-  }
-`
-
-export const StepCardImg = styled.img`
-  display: block;
-  max-width: 100%;
-  ${imageShadow};
-`
-
-export const StepCardFade = styled.div`
-  position: absolute;
-  z-index: 1;
-  background: linear-gradient(180deg, rgb(24 28 32 / 0) 0%, ${cVar('colorBackground')} 100%);
-  height: 64px;
-  width: 100%;
-  bottom: 0;
-`
-export const CardImage = styled.img<{ absolute?: boolean; dropShadow?: boolean }>`
-  width: 100%;
-  min-width: 480px;
-  max-width: 640px;
-  position: ${({ absolute }) => (absolute ? 'absolute' : 'relative')};
-  z-index: ${({ absolute }) => (absolute ? 0 : 1)};
-
-  ${({ dropShadow }) => dropShadow && imageShadow};
 `
 
 export const CardsLimitedWidtContainer = styled(LimitedWidthContainer)`
   padding: unset;
-`
-
-export const CtaBanner = styled.div`
-  padding: ${sizes(16)} ${sizes(8)};
-  background: ${cVar('colorBackgroundPrimary')};
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  ${media.sm} {
-    background-image: url(${bottomLeftPattern}), url(${topLeftBannerPattern});
-    background-position: bottom left, top right;
-    background-repeat: no-repeat, no-repeat;
-  }
-  ${media.md} {
-    padding: ${sizes(24)} ${sizes(12)};
-  }
-`
-
-export const StyledBannerText = styled(Text)`
-  max-width: 400px;
-  ${media.md} {
-    max-width: 500px;
-  }
-  ${media.lg} {
-    max-width: unset;
-  }
-`
-
-export const StyledButton = styled(Button)`
-  margin-top: ${sizes(8)};
-  background-color: ${cVar('colorCoreBaseBlack')};
-`
-
-export const CtaCardRow = styled.div`
-  display: grid;
-  gap: ${sizes(4)};
-  padding-bottom: ${sizes(16)};
-
-  ${media.md} {
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: ${sizes(6)};
-    padding-bottom: ${sizes(24)};
-  }
 `
