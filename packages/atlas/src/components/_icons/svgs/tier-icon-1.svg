@@ -1,0 +1,35 @@
+<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g clip-path="url(#clip0_1532_4284)">
+        <path d="M18 0.00662231V2.00743C26.7153 2.26682 33.7332 9.28467 33.9926 18H35.9934C35.7328 8.18 27.82 0.267181 18 0.00662231Z" fill="#D92E61"/>
+        <path d="M31.9915 18C31.7336 10.3894 25.6106 4.26635 18 4.00846V6.00981C24.5059 6.26574 29.7343 11.4941 29.9902 18H31.9915Z" fill="#D92E61"/>
+        <path d="M28 18C28 12.4771 23.5228 8 18 8V10C22.4183 10 26 13.5817 26 18H28Z" fill="#D92E61"/>
+        <path d="M24 18C24 14.6863 21.3137 12 18 12V14C20.2091 14 22 15.7909 22 18H24Z" fill="#D92E61"/>
+        <path d="M20 18C20 16.8954 19.1046 16 18 16V18H20Z" fill="#D92E61"/>
+    </g>
+    <g clip-path="url(#clip1_1532_4284)">
+        <path d="M36 20L18 20L18 18L36 18L36 20Z" fill="#D92E61"/>
+        <path d="M36 36L18 36L18 34L36 34L36 36Z" fill="#D92E61"/>
+        <path d="M18 32L36 32L36 30L18 30L18 32Z" fill="#D92E61"/>
+        <path d="M36 24L18 24L18 22L36 22L36 24Z" fill="#D92E61"/>
+        <path d="M18 28L36 28L36 26L18 26L18 28Z" fill="#D92E61"/>
+    </g>
+    <path d="M18 36H0V18H18V36Z" fill="#D92E61"/>
+    <g clip-path="url(#clip2_1532_4284)">
+        <path d="M0.00662231 18L2.00743 18C2.26682 9.28467 9.28467 2.26682 18 2.00743L18 0.00662534C8.18 0.267185 0.267181 8.18001 0.00662231 18Z" fill="#D92E61"/>
+        <path d="M18 4.00846C10.3894 4.26636 4.26635 10.3894 4.00846 18L6.00981 18C6.26574 11.4941 11.4941 6.26574 18 6.00982L18 4.00846Z" fill="#D92E61"/>
+        <path d="M18 8C12.4771 8 8 12.4772 8 18L10 18C10 13.5817 13.5817 10 18 10L18 8Z" fill="#D92E61"/>
+        <path d="M18 12C14.6863 12 12 14.6863 12 18L14 18C14 15.7909 15.7909 14 18 14L18 12Z" fill="#D92E61"/>
+        <path d="M18 16C16.8954 16 16 16.8954 16 18L18 18L18 16Z" fill="#D92E61"/>
+    </g>
+    <defs>
+        <clipPath id="clip0_1532_4284">
+            <rect width="18" height="18" fill="white" transform="translate(18)"/>
+        </clipPath>
+        <clipPath id="clip1_1532_4284">
+            <rect width="18" height="18" fill="white" transform="translate(18 18)"/>
+        </clipPath>
+        <clipPath id="clip2_1532_4284">
+            <rect width="18" height="18" fill="white" transform="translate(0 18) rotate(-90)"/>
+        </clipPath>
+    </defs>
+</svg>

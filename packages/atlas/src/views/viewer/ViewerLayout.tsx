@@ -15,6 +15,7 @@ import { useSearchStore } from '@/providers/search'
 import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
+import { YppDashboard } from '@/views/global/YppDashboard'
 import { YppLandingView } from '@/views/global/YppLandingView'
 import { NotificationsView } from '@/views/notifications'
 
@@ -45,6 +46,7 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.member(), element: <MemberView /> },
   { path: relativeRoutes.viewer.nfts(), element: <NftsView /> },
   { path: relativeRoutes.viewer.ypp(), element: <YppLandingView /> },
+  { path: relativeRoutes.viewer.yppDashboard(), element: <YppDashboard /> },
 ]
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.viewer.index()

@@ -31,7 +31,7 @@ export type BenefitCardProps = {
     onClick?: () => void
   }
   joyAmount: BN | number
-  dollarAmount: number
+  dollarAmount?: number
   className?: string
 }
 

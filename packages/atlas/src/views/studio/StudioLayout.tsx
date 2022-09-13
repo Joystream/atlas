@@ -20,6 +20,7 @@ import { useUser } from '@/providers/user/user.hooks'
 import { VideoWorkspaceProvider, useVideoWorkspaceRouting } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
 import { isAllowedBrowser } from '@/utils/browser'
+import { YppDashboard } from '@/views/global/YppDashboard'
 import { YppLandingView } from '@/views/global/YppLandingView'
 import { NotificationsView } from '@/views/notifications'
 
@@ -139,6 +140,10 @@ const StudioLayout = () => {
                 element={
                   <PrivateRoute element={<YppLandingView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
                 }
+              />
+              <Route
+                path={relativeRoutes.studio.yppDashboard()}
+                element={<PrivateRoute element={<YppDashboard />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />}
               />
               <Route path="*" element={<NotFoundView />} />
             </Routes>
