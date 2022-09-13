@@ -9,7 +9,7 @@ export const AVATAR_SERVICE_URL = readEnv('ASSETS_SERVICE_URL', true, true)
 
 export const SENTRY_DSN = readEnv('SENTRY_DSN', false)
 
-export const TWIITER_ID = readEnv('TWITTER_ID', false, true)
+export const TWITTER_ID = readEnv('TWITTER_ID', false, true)
 export const APP_NAME = readEnv('APP_NAME', true, true)
 export const WEB3_APP_NAME = 'Joystream Atlas'
 export const STORAGE_UPLOAD_PATH = 'api/v1/files'

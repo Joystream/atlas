@@ -23,7 +23,7 @@ import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { AvailableTrack } from '@/components/_video/VideoPlayer/SettingsButtonWithPopover'
 import { videoCategories } from '@/config/categories'
 import { CTA_MAP } from '@/config/cta'
-import { APP_NAME, TWIITER_ID } from '@/config/env'
+import { APP_NAME, TWITTER_ID } from '@/config/env'
 import { LANGUAGES_LOOKUP } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
@@ -120,7 +120,7 @@ export const VideoView: FC = () => {
 
   const videoMetaTags = useMemo(() => {
     if (!video || !thumbnailUrl) return {}
-    return generateVideoMetaTags(video, thumbnailUrl, APP_NAME, TWIITER_ID)
+    return generateVideoMetaTags(video, thumbnailUrl, APP_NAME, TWITTER_ID)
   }, [video, thumbnailUrl])
   const headTags = useHeadTags(video?.title, videoMetaTags)
 

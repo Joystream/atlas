@@ -18,7 +18,7 @@ import { CollectorsBox } from '@/components/_channel/CollectorsBox'
 import { SvgActionCheck, SvgActionFilters, SvgActionFlag, SvgActionMore, SvgActionPlus } from '@/components/_icons'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { ReportModal } from '@/components/_overlays/ReportModal'
-import { APP_NAME, TWIITER_ID } from '@/config/env'
+import { APP_NAME, TWITTER_ID } from '@/config/env'
 import { absoluteRoutes } from '@/config/routes'
 import { NFT_SORT_OPTIONS, VIDEO_SORT_OPTIONS } from '@/config/sorting'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
@@ -137,7 +137,7 @@ export const ChannelView: FC = () => {
 
   const channelMetaTags = useMemo(() => {
     if (!channel || !avatarPhotoUrl) return {}
-    return generateChannelMetaTags(channel, avatarPhotoUrl, APP_NAME, TWIITER_ID)
+    return generateChannelMetaTags(channel, avatarPhotoUrl, APP_NAME, TWITTER_ID)
   }, [channel, avatarPhotoUrl])
   const headTags = useHeadTags(channel?.title, channelMetaTags)
 
