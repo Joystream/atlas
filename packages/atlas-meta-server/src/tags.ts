@@ -3,7 +3,6 @@ import { formatISODuration } from 'date-fns'
 import { BasicChannelFieldsFragment, BasicVideoFieldsFragment } from './api/__generated__/sdk'
 import { joinUrlFragments } from './utils'
 
-const BASE_APP_URL = 'https://play.joystream.org'
 const THUMBNAIL_WIDTH = 640
 const THUMBNAIL_HEIGHT = 360
 const VIDEO_WIDTH = 1280
@@ -35,10 +34,11 @@ export const generateVideoMetaTags = (
   video: BasicVideoFieldsFragment,
   thumbnailUrl: string,
   appName: string,
+  baseAppUrl: string,
   twitterId?: string
 ): MetaTags => {
-  const videoUrl = joinUrlFragments(BASE_APP_URL, 'video', video.id)
-  const videoEmbedUrl = joinUrlFragments(BASE_APP_URL, 'embedded', 'video', video.id)
+  const videoUrl = joinUrlFragments(baseAppUrl, 'video', video.id)
+  const videoEmbedUrl = joinUrlFragments(baseAppUrl, 'embedded', 'video', video.id)
   const sanitizedDescription = sanitizeDescription(appName, video.description, video.title)
 
   return {
@@ -69,9 +69,10 @@ export const generateChannelMetaTags = (
   channel: BasicChannelFieldsFragment,
   avatarUrl: string,
   appName: string,
+  baseAppUrl: string,
   twitterId?: string
 ): MetaTags => {
-  const channelUrl = joinUrlFragments(BASE_APP_URL, 'channel', channel.id)
+  const channelUrl = joinUrlFragments(baseAppUrl, 'channel', channel.id)
   const sanitizedDescription = sanitizeDescription(appName, channel.description, channel.title)
 
   return {
@@ -90,10 +91,15 @@ export const generateChannelMetaTags = (
   }
 }
 
-export const generateVideoSchemaTagsHtml = (video: BasicVideoFieldsFragment, thumbnailUrl: string, appName: string) => {
-  const videoUrl = joinUrlFragments(BASE_APP_URL, 'video', video.id)
-  const channelUrl = joinUrlFragments(BASE_APP_URL, 'channel', video.channel.id)
-  const videoEmbedUrl = joinUrlFragments(BASE_APP_URL, 'embedded', 'video', video.id)
+export const generateVideoSchemaTagsHtml = (
+  video: BasicVideoFieldsFragment,
+  thumbnailUrl: string,
+  appName: string,
+  baseAppUrl: string
+) => {
+  const videoUrl = joinUrlFragments(baseAppUrl, 'video', video.id)
+  const channelUrl = joinUrlFragments(baseAppUrl, 'channel', video.channel.id)
+  const videoEmbedUrl = joinUrlFragments(baseAppUrl, 'embedded', 'video', video.id)
   const sanitizedDescription = sanitizeDescription(appName, video.description, video.title)
 
   const schemaOrgTags: SchemaOrgTag[] = [
@@ -201,8 +207,12 @@ export const generateVideoSchemaTagsHtml = (video: BasicVideoFieldsFragment, thu
   return htmlTags.join('\n')
 }
 
-export const generateChannelSchemaTagsHtml = (channel: BasicChannelFieldsFragment, avatarUrl: string) => {
-  const channelUrl = joinUrlFragments(BASE_APP_URL, 'channel', channel.id)
+export const generateChannelSchemaTagsHtml = (
+  channel: BasicChannelFieldsFragment,
+  avatarUrl: string,
+  baseAppUrl: string
+) => {
+  const channelUrl = joinUrlFragments(baseAppUrl, 'channel', channel.id)
 
   const schemaOrgTags: SchemaOrgTag[] = [
     {
