@@ -1,21 +1,13 @@
 import dotenv from 'dotenv'
 
+import { getEnvVariable } from './utils'
+
 dotenv.config()
 
-const GRAPHQL_URL = process.env.GRAPHQL_URL as string
-if (!GRAPHQL_URL) {
-  // eslint-disable-next-line no-console
-  console.error('Missing required GRAPHQL_URL env variable')
-  process.exit(1)
-}
-
-const APP_NAME = process.env.APP_NAME as string
-if (!APP_NAME) {
-  // eslint-disable-next-line no-console
-  console.error('Missing required APP_NAME env variable')
-  process.exit(1)
-}
+const GRAPHQL_URL = getEnvVariable('GRAPHQL_URL', true)
+const APP_NAME = getEnvVariable('APP_NAME', true)
+const TWITTER_ID = getEnvVariable('TWIITER_ID')
 
 const PORT = 80
 
-export { GRAPHQL_URL, PORT, APP_NAME }
+export { PORT, APP_NAME, TWITTER_ID, GRAPHQL_URL }

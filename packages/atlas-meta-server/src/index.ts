@@ -5,7 +5,7 @@ import parseHtml from 'node-html-parser'
 import * as path from 'path'
 
 import { getChannel, getVideo } from './api'
-import { APP_NAME, PORT } from './config'
+import { APP_NAME, PORT, TWITTER_ID } from './config'
 import {
   generateChannelMetaTags,
   generateChannelSchemaTagsHtml,
@@ -44,9 +44,9 @@ app.get('/video/:id', async (req, res) => {
 
     const thumbnailUrl = video.thumbnailPhoto ? generateAssetUrl(video.thumbnailPhoto) : ''
 
-    const videoMetaTags = generateVideoMetaTags(video, thumbnailUrl)
+    const videoMetaTags = generateVideoMetaTags(video, thumbnailUrl, APP_NAME, TWITTER_ID)
     const videoMetaTagsHtml = generateMetaHtml(videoMetaTags)
-    const videoSchemaTagsHtml = generateVideoSchemaTagsHtml(video, thumbnailUrl)
+    const videoSchemaTagsHtml = generateVideoSchemaTagsHtml(video, thumbnailUrl, APP_NAME)
 
     head?.insertAdjacentHTML('beforeend', videoMetaTagsHtml)
     head?.insertAdjacentHTML('beforeend', videoSchemaTagsHtml)
@@ -77,7 +77,7 @@ app.get('/channel/:id', async (req, res) => {
 
     const avatarUrl = channel.avatarPhoto ? generateAssetUrl(channel.avatarPhoto) : ''
 
-    const channelMetaTags = generateChannelMetaTags(channel, avatarUrl)
+    const channelMetaTags = generateChannelMetaTags(channel, avatarUrl, APP_NAME, TWITTER_ID)
     const channelMetaTagsHtml = generateMetaHtml(channelMetaTags)
     const channelSchemaTagsHtml = generateChannelSchemaTagsHtml(channel, avatarUrl)
 

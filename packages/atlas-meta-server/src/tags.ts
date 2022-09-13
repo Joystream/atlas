@@ -4,7 +4,6 @@ import { BasicChannelFieldsFragment, BasicVideoFieldsFragment } from './api/__ge
 import { joinUrlFragments } from './utils'
 
 const BASE_APP_URL = 'https://play.joystream.org'
-const APP_NAME = 'Atlas'
 const THUMBNAIL_WIDTH = 640
 const THUMBNAIL_HEIGHT = 360
 const VIDEO_WIDTH = 1280
@@ -18,14 +17,9 @@ type SchemaOrgTag = {
 }
 export type MetaTags = Record<string, string | number>
 
-const commonMetaTags = {
-  'twitter:site': '@JoystreamDAO',
-  'og:site_name': APP_NAME,
-}
-
-const sanitizeDescription = (fullDescription?: string | null, title?: string | null) => {
+const sanitizeDescription = (appName: string, fullDescription?: string | null, title?: string | null) => {
   if (!fullDescription) {
-    return `${title || ''} on ${APP_NAME}`
+    return `${title || ''} on ${appName}`
   }
 
   const oneLineDescription = fullDescription
@@ -37,19 +31,25 @@ const sanitizeDescription = (fullDescription?: string | null, title?: string | n
   return needsTrimming ? oneLineDescription.slice(0, 157) + '...' : oneLineDescription
 }
 
-export const generateVideoMetaTags = (video: BasicVideoFieldsFragment, thumbnailUrl: string): MetaTags => {
+export const generateVideoMetaTags = (
+  video: BasicVideoFieldsFragment,
+  thumbnailUrl: string,
+  appName: string,
+  twitterId?: string
+): MetaTags => {
   const videoUrl = joinUrlFragments(BASE_APP_URL, 'video', video.id)
   const videoEmbedUrl = joinUrlFragments(BASE_APP_URL, 'embedded', 'video', video.id)
-  const sanitizedDescription = sanitizeDescription(video.description, video.title)
+  const sanitizedDescription = sanitizeDescription(appName, video.description, video.title)
 
   return {
-    ...commonMetaTags,
+    ...(twitterId ? { 'twitter:site': twitterId } : {}),
+    'og:site_name': appName,
     'og:title': video.title || '',
     'og:description': sanitizedDescription,
     'og:type': 'video.other',
     'og:url': videoUrl,
     'og:image': thumbnailUrl,
-    'og:image:alt': `Thumbnail for ${APP_NAME} video '${video.title}'`,
+    'og:image:alt': `Thumbnail for ${appName} video '${video.title}'`,
     'og:image:width': THUMBNAIL_WIDTH,
     'og:image:height': THUMBNAIL_HEIGHT,
     'og:image:type': 'image/webp',
@@ -65,18 +65,24 @@ export const generateVideoMetaTags = (video: BasicVideoFieldsFragment, thumbnail
   }
 }
 
-export const generateChannelMetaTags = (channel: BasicChannelFieldsFragment, avatarUrl: string): MetaTags => {
+export const generateChannelMetaTags = (
+  channel: BasicChannelFieldsFragment,
+  avatarUrl: string,
+  appName: string,
+  twitterId?: string
+): MetaTags => {
   const channelUrl = joinUrlFragments(BASE_APP_URL, 'channel', channel.id)
-  const sanitizedDescription = sanitizeDescription(channel.description, channel.title)
+  const sanitizedDescription = sanitizeDescription(appName, channel.description, channel.title)
 
   return {
-    ...commonMetaTags,
+    ...(twitterId ? { 'twitter:site': twitterId } : {}),
+    'og:site_name': appName,
     'og:title': channel.title || '',
     'og:description': sanitizedDescription,
     'og:type': 'profile',
     'og:url': channelUrl,
     'og:image': avatarUrl,
-    'og:image:alt': `Avatar photo for ${APP_NAME} channel '${channel.title}'`,
+    'og:image:alt': `Avatar photo for ${appName} channel '${channel.title}'`,
     'og:image:width': AVATAR_SIZE,
     'og:image:height': AVATAR_SIZE,
     'og:image:type': 'image/webp',
@@ -84,11 +90,11 @@ export const generateChannelMetaTags = (channel: BasicChannelFieldsFragment, ava
   }
 }
 
-export const generateVideoSchemaTagsHtml = (video: BasicVideoFieldsFragment, thumbnailUrl: string) => {
+export const generateVideoSchemaTagsHtml = (video: BasicVideoFieldsFragment, thumbnailUrl: string, appName: string) => {
   const videoUrl = joinUrlFragments(BASE_APP_URL, 'video', video.id)
   const channelUrl = joinUrlFragments(BASE_APP_URL, 'channel', video.channel.id)
   const videoEmbedUrl = joinUrlFragments(BASE_APP_URL, 'embedded', 'video', video.id)
-  const sanitizedDescription = sanitizeDescription(video.description, video.title)
+  const sanitizedDescription = sanitizeDescription(appName, video.description, video.title)
 
   const schemaOrgTags: SchemaOrgTag[] = [
     {
