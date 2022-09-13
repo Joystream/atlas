@@ -1,1 +1,1 @@
-export * from './YppActionDialog'
+export * from './YppAuthorizationStepModal'
