@@ -9,45 +9,18 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { cVar, media, sizes } from '@/styles'
 
-const imageShadow = css`
+export const imageShadow = css`
   filter: drop-shadow(0 33px 100px rgb(0 0 0 / 0.22)) drop-shadow(0 7.371px 22.3363px rgb(0 0 0 / 0.1311))
     drop-shadow(0 2.1945px 6.6501px rgb(0 0 0 / 0.0889));
 `
 
-export const HeroLimitedWidthContainer = styled(LimitedWidthContainer)`
+export const CenteredLimidtedWidthContainer = styled(LimitedWidthContainer)`
   padding: ${sizes(16)} 0;
   text-align: center;
 
   ${media.md} {
     padding: ${sizes(24)} 0;
   }
-`
-
-export const HeroImageWrapper = styled.div`
-  position: relative;
-  margin: ${sizes(16)} auto 0 auto;
-
-  ${media.md} {
-    max-width: 888px;
-  }
-
-  ${media.lg} {
-    max-width: 1152px;
-  }
-`
-
-export const FrontImage = styled.img`
-  width: 100%;
-  display: block;
-  ${imageShadow}
-`
-
-export const BackImage = styled.img`
-  position: absolute;
-  width: 100%;
-  display: block;
-  left: 0;
-  top: 0;
 `
 
 export const CenteredLayoutGrid = styled(LayoutGrid)`
@@ -191,13 +164,6 @@ export const CardImage = styled.img<{ absolute?: boolean; dropShadow?: boolean }
 
 export const CardsLimitedWidtContainer = styled(LimitedWidthContainer)`
   padding: unset;
-`
-
-export const CtaLimitedWidthContainer = styled(LimitedWidthContainer)`
-  padding: ${sizes(16)} 0;
-  ${media.sm} {
-    padding: ${sizes(24)} 0;
-  }
 `
 
 export const CtaBanner = styled.div`
