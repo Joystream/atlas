@@ -1,4 +1,4 @@
-import { useParallax } from 'react-scroll-parallax'
+import { useParallax, useParallaxController } from 'react-scroll-parallax'
 
 import crt1 from '@/assets/images/illustration-crt-l1.webp'
 import crt2 from '@/assets/images/illustration-crt-l2.webp'
@@ -30,10 +30,10 @@ export const YppCardsSections = () => {
   const mdMatch = useMediaMatch('md')
   const smMatch = useMediaMatch('sm')
   const endScroll = smMatch ? window.innerHeight / 3 : window.innerHeight
-  const { ref: dashboardImageRef } = useParallax<HTMLImageElement>({
-    endScroll,
-    translateY: [0, -20],
-  })
+  // const { ref: dashboardImageRef } = useParallax<HTMLImageElement>({
+  //   endScroll,
+  //   translateY: [0, -20],
+  // })
   const { ref: myVideosFloatingButtonRef } = useParallax<HTMLImageElement>({
     endScroll,
     translateY: [-5, 5],
@@ -80,7 +80,7 @@ export const YppCardsSections = () => {
               <GridItem colStart={{ sm: 2, md: 1, lg: 2 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
                 <ImageContainer>
                   <CardImage dropShadow absolute src={dashboardImgBack} alt="Dashboard" />
-                  <CardImage dropShadow src={dashboardImgFront} ref={dashboardImageRef} alt="Reward card" />
+                  <ImageWithParallaxEffect />
                 </ImageContainer>
               </GridItem>
               <GridItem colStart={{ sm: 3, md: 8 }} colSpan={{ base: 12, sm: 8, md: 5, lg: 4 }}>
@@ -188,4 +188,19 @@ export const YppCardsSections = () => {
       </BackgroundContainer>
     </>
   )
+}
+
+const ImageWithParallaxEffect = () => {
+  const parallaxController = useParallaxController()
+  const smMatch = useMediaMatch('sm')
+
+  const endScroll = smMatch ? window.innerHeight / 3 : window.innerHeight
+  const { ref: dashboardImageRef } = useParallax<HTMLImageElement>({
+    endScroll,
+    translateY: [0, -20],
+  })
+
+  // updates cached values after image dimensions have loaded
+  const handleLoad = () => parallaxController?.update()
+  return <CardImage dropShadow src={dashboardImgFront} ref={dashboardImageRef} alt="Reward card" onLoad={handleLoad} />
 }
