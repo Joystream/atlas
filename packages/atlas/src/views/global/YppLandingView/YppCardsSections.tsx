@@ -1,4 +1,6 @@
+import { FC } from 'react'
 import { useParallax, useParallaxController } from 'react-scroll-parallax'
+import { ParallaxProps } from 'react-scroll-parallax/dist/components/Parallax/types'
 
 import crt1 from '@/assets/images/illustration-crt-l1.webp'
 import crt2 from '@/assets/images/illustration-crt-l2.webp'
@@ -26,39 +28,16 @@ import {
   HeaderGridItem,
 } from './YppLandingView.styles'
 
-export const YppCardsSections = () => {
+export const YppCardsSections: FC = () => {
   const mdMatch = useMediaMatch('md')
   const smMatch = useMediaMatch('sm')
   const endScroll = smMatch ? window.innerHeight / 3 : window.innerHeight
-  // const { ref: dashboardImageRef } = useParallax<HTMLImageElement>({
-  //   endScroll,
-  //   translateY: [0, -20],
-  // })
-  const { ref: myVideosFloatingButtonRef } = useParallax<HTMLImageElement>({
+
+  const commonParallaxOpts: ParallaxProps = {
+    disabled: !smMatch,
     endScroll,
-    translateY: [-5, 5],
-    translateX: [0, -10],
-  })
-  const { ref: uploadVideoImageRef } = useParallax<HTMLImageElement>({
-    endScroll,
-    translateY: [10, -10],
-  })
-  const { ref: nftCardImageRef } = useParallax<HTMLImageElement>({
-    endScroll,
-    translateY: [20, -20],
-  })
-  const { ref: nftContextMenuImageRef } = useParallax<HTMLImageElement>({
-    endScroll,
-    translateY: [20, -15],
-  })
-  const { ref: nftCursorImageRef } = useParallax<HTMLImageElement>({
-    endScroll,
-    translateY: [-40, -5],
-  })
-  const { ref: cartTokenImageRef } = useParallax<HTMLImageElement>({
-    endScroll,
-    translateY: [0, 35],
-  })
+  }
+
   return (
     <>
       <BackgroundContainer noBackground>
@@ -80,7 +59,15 @@ export const YppCardsSections = () => {
               <GridItem colStart={{ sm: 2, md: 1, lg: 2 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
                 <ImageContainer>
                   <CardImage dropShadow absolute src={dashboardImgBack} alt="Dashboard" />
-                  <ImageWithParallaxEffect />
+                  <CardImageWithParallaxEffect
+                    dropShadow
+                    src={dashboardImgFront}
+                    alt="Reward card"
+                    parallaxProps={{
+                      ...commonParallaxOpts,
+                      translateY: [30, -20],
+                    }}
+                  />
                 </ImageContainer>
               </GridItem>
               <GridItem colStart={{ sm: 3, md: 8 }} colSpan={{ base: 12, sm: 8, md: 5, lg: 4 }}>
@@ -96,7 +83,16 @@ export const YppCardsSections = () => {
               <GridItem colStart={{ sm: 2, md: 6, lg: 6 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
                 <ImageContainer positionOnMobile="flex-end">
                   <CardImage absolute dropShadow src={myVideosBack} alt="My videos" />
-                  <CardImage dropShadow src={myVideosFront} ref={myVideosFloatingButtonRef} alt="Button" />
+                  <CardImageWithParallaxEffect
+                    dropShadow
+                    src={myVideosFront}
+                    parallaxProps={{
+                      ...commonParallaxOpts,
+                      translateY: [-5, 5],
+                      translateX: [0, -10],
+                    }}
+                    alt="Button"
+                  />
                 </ImageContainer>
               </GridItem>
               <GridItem
@@ -116,7 +112,14 @@ export const YppCardsSections = () => {
               <GridItem colStart={{ sm: 2, md: 1, lg: 2 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
                 <ImageContainer positionOnMobile="center">
                   <CardImage absolute src={youtubeSyncBack} alt="Video tiles" />
-                  <CardImage src={youtubeSyncFront} ref={uploadVideoImageRef} alt="Video tile" />
+                  <CardImageWithParallaxEffect
+                    src={youtubeSyncFront}
+                    parallaxProps={{
+                      ...commonParallaxOpts,
+                      translateY: [20, -20],
+                    }}
+                    alt="Video tile"
+                  />
                 </ImageContainer>
               </GridItem>
               <GridItem colStart={{ sm: 3, md: 8 }} colSpan={{ base: 12, sm: 8, md: 5, lg: 4 }}>
@@ -142,15 +145,34 @@ export const YppCardsSections = () => {
               <GridItem colStart={{ sm: 2, md: 1, lg: 2 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
                 <ImageContainer positionOnMobile="center">
                   <CardImage absolute src={videoNfts1} alt="Nft tiles" />
-                  <CardImage dropShadow absolute src={videoNfts2} ref={nftCardImageRef} alt="Single nft tile" />
-                  <CardImage
+                  <CardImageWithParallaxEffect
+                    dropShadow
+                    absolute
+                    src={videoNfts2}
+                    parallaxProps={{
+                      ...commonParallaxOpts,
+                      translateY: [35, -20],
+                    }}
+                    alt="Single nft tile"
+                  />
+                  <CardImageWithParallaxEffect
                     dropShadow
                     absolute
                     src={videoNfts3}
-                    ref={nftContextMenuImageRef}
+                    parallaxProps={{
+                      ...commonParallaxOpts,
+                      translateY: [35, -15],
+                    }}
                     alt="Context menu of nft tile"
                   />
-                  <CardImage src={videoNfts4} ref={nftCursorImageRef} alt="Cursor" />
+                  <CardImageWithParallaxEffect
+                    src={videoNfts4}
+                    parallaxProps={{
+                      ...commonParallaxOpts,
+                      translateY: [-40, -5],
+                    }}
+                    alt="Cursor"
+                  />
                 </ImageContainer>
               </GridItem>
               <GridItem colStart={{ sm: 3, md: 8 }} colSpan={{ base: 12, sm: 8, md: 5, lg: 4 }}>
@@ -166,7 +188,16 @@ export const YppCardsSections = () => {
               <GridItem colStart={{ sm: 2, md: 6, lg: 6 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
                 <ImageContainer hiddenOverflow>
                   <CardImage dropShadow absolute src={crt1} alt="Creator token dashboard" />
-                  <CardImage dropShadow absolute src={crt2} ref={cartTokenImageRef} alt="Creator token holders" />
+                  <CardImageWithParallaxEffect
+                    dropShadow
+                    absolute
+                    src={crt2}
+                    parallaxProps={{
+                      ...commonParallaxOpts,
+                      translateY: [15, 55],
+                    }}
+                    alt="Creator token holders"
+                  />
                   <CardImage src={crt3} />
                 </ImageContainer>
               </GridItem>
@@ -190,17 +221,28 @@ export const YppCardsSections = () => {
   )
 }
 
-const ImageWithParallaxEffect = () => {
-  const parallaxController = useParallaxController()
-  const smMatch = useMediaMatch('sm')
+type CardImageWithParallaxEffectProps = {
+  src: string
+  alt: string
+  dropShadow?: boolean
+  absolute?: boolean
+  parallaxProps: ParallaxProps
+}
 
-  const endScroll = smMatch ? window.innerHeight / 3 : window.innerHeight
-  const { ref: dashboardImageRef } = useParallax<HTMLImageElement>({
-    endScroll,
-    translateY: [0, -20],
-  })
+const CardImageWithParallaxEffect: FC<CardImageWithParallaxEffectProps> = ({
+  src,
+  alt,
+  dropShadow,
+  parallaxProps,
+  absolute,
+}) => {
+  const parallaxController = useParallaxController()
+
+  const { ref: imageRef } = useParallax<HTMLImageElement>(parallaxProps)
 
   // updates cached values after image dimensions have loaded
   const handleLoad = () => parallaxController?.update()
-  return <CardImage dropShadow src={dashboardImgFront} ref={dashboardImageRef} alt="Reward card" onLoad={handleLoad} />
+  return (
+    <CardImage absolute={absolute} dropShadow={dropShadow} src={src} ref={imageRef} alt={alt} onLoad={handleLoad} />
+  )
 }
