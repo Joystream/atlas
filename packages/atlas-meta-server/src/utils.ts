@@ -24,3 +24,12 @@ export const generateAssetUrl = (asset: DataObjectFieldsFragment) => {
   const endpoint = distributorsEndpoints[distributorIndex]
   return joinUrlFragments(endpoint, DISTRIBUTOR_ASSET_PATH, asset.id)
 }
+
+export const getEnvVariable = (varName: string, required?: boolean) => {
+  if (!process.env[varName] && required) {
+    // eslint-disable-next-line no-console
+    console.error(`Missing required ${varName} env variable`)
+    process.exit(1)
+  }
+  return process.env[varName] || ''
+}

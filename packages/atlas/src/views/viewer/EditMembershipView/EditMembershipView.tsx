@@ -17,6 +17,7 @@ import { Input } from '@/components/_inputs/Input'
 import { ImageInputFile } from '@/components/_inputs/MultiFileSelect'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
+import { APP_NAME } from '@/config/env'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
@@ -273,7 +274,7 @@ export const EditMembershipView: FC = () => {
             </FormField>
             <FormField label="About" error={errors?.about?.message}>
               <TextArea
-                placeholder="Anything you'd like to share about yourself with the Atlas community"
+                placeholder={`Anything you'd like to share about yourself with the ${APP_NAME} community`}
                 maxLength={1000}
                 {...register('about', {
                   maxLength: { value: 1000, message: 'About cannot be longer than 1000 characters' },

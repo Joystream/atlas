@@ -23,6 +23,7 @@ import {
 import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { APP_NAME } from '@/config/env'
 import { JOY_CURRENCY_TICKER } from '@/config/joystream'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
@@ -323,7 +324,7 @@ const ListItemOptions: FC<ListItemOptionsProps> = ({ publisher, closeDropdown, l
         <ListItem
           onClick={closeDropdown}
           nodeStart={<IconWrapper icon={<SvgActionPlay />} />}
-          label="Atlas"
+          label={APP_NAME}
           to={absoluteRoutes.viewer.index()}
         />
       ) : (

@@ -3,7 +3,7 @@ import babel from '@rollup/plugin-babel'
 import react from '@vitejs/plugin-react'
 import * as path from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import checker from 'vite-plugin-checker'
 
 // https://vitejs.dev/config/
@@ -49,6 +49,13 @@ export default defineConfig({
     ],
   },
   plugins: [
+    {
+      name: 'html-env-transform',
+      transformIndexHtml: {
+        enforce: 'pre',
+        transform: (html: string) => html.replace(/%(.*?)%/g, (match, p1) => loadEnv('', './src')[p1] ?? match),
+      },
+    },
     {
       name: 'embedded-fallback',
       configureServer(server) {

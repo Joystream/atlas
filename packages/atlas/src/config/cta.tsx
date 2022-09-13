@@ -8,6 +8,8 @@ import {
 } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 
+import { APP_NAME } from './env'
+
 export const CTA_MAP: Record<string, CallToActionButtonProps> = {
   home: {
     label: 'Home',
@@ -29,7 +31,7 @@ export const CTA_MAP: Record<string, CallToActionButtonProps> = {
     icon: <SvgSidebarChannels />,
   },
   popular: {
-    label: 'Popular on Atlas',
+    label: `Popular on ${APP_NAME}`,
     to: absoluteRoutes.viewer.popular(),
     colorVariant: 'red',
     icon: <SvgSidebarPopular />,
