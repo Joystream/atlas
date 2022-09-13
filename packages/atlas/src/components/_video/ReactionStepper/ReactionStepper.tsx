@@ -50,7 +50,7 @@ export const ReactionStepper: FC<ReactionStepperProps> = ({
             reactionPopoverDismissed={reactionPopoverDismissed}
             onReact={onReact}
             type={reaction}
-            reactionsNumber={likes}
+            reactionsNumber={reaction === 'like' ? likes : dislikes}
             onPopoverShow={async () => {
               setIsPopoverOpen(true)
               await onCalculateFee?.(reaction)
