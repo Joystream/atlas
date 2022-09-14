@@ -98,7 +98,7 @@ export const AssetsManager: FC = () => {
           }
         }
       }
-      // once asset couldn't be resolved set url to null and set default placeholder
+      // once the asset couldn't be resolved, set URL to null, which means that only the default image placeholder will be shown
       addAsset(dataObject.id, { url: null })
       removePendingAsset(dataObject.id)
       removeAssetBeingResolved(dataObject.id)
