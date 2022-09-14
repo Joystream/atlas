@@ -32,6 +32,11 @@ export const AssetsManager: FC = () => {
       if (assetIdsBeingResolved.has(dataObject.id)) {
         return
       }
+      if (!dataObject.isAccepted) {
+        addAsset(dataObject.id, { url: null })
+        removePendingAsset(dataObject.id)
+        return
+      }
       addAssetBeingResolved(dataObject.id)
 
       const distributionOperators = await getAllDistributionOperatorsForBag(dataObject.storageBag.id)
@@ -93,7 +98,10 @@ export const AssetsManager: FC = () => {
           }
         }
       }
-
+      // once asset couldn't be resolved set url to null and set default placeholder
+      addAsset(dataObject.id, { url: null })
+      removePendingAsset(dataObject.id)
+      removeAssetBeingResolved(dataObject.id)
       SentryLogger.error('None of the distributors provided the asset', 'AssetsManager', null, {
         asset: { dataObject, sortedDistributionOperators },
       })
