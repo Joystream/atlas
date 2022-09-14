@@ -8,8 +8,8 @@ import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { cVar, media, sizes } from '@/styles'
 
 export const imageShadow = css`
-  filter: drop-shadow(0 33px 100px rgb(0 0 0 / 0.22)) drop-shadow(0 7.371px 22.3363px rgb(0 0 0 / 0.1311))
-    drop-shadow(0 2.1945px 6.6501px rgb(0 0 0 / 0.0889));
+  /* filter: drop-shadow(0 33px 100px rgb(0 0 0 / 0.22)) drop-shadow(0 7.371px 22.3363px rgb(0 0 0 / 0.1311))
+    drop-shadow(0 2.1945px 6.6501px rgb(0 0 0 / 0.0889)); */
 `
 
 export const CenteredLimidtedWidthContainer = styled(LimitedWidthContainer)`

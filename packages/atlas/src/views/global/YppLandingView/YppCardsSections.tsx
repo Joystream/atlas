@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { useParallax, useParallaxController } from 'react-scroll-parallax'
+import { useParallax } from 'react-scroll-parallax'
 import { ParallaxProps } from 'react-scroll-parallax/dist/components/Parallax/types'
 
 import crt1 from '@/assets/images/illustration-crt-l1.webp'
@@ -236,12 +236,10 @@ const CardImageWithParallaxEffect: FC<CardImageWithParallaxEffectProps> = ({
   parallaxProps,
   absolute,
 }) => {
-  const parallaxController = useParallaxController()
-
-  const { ref: imageRef } = useParallax<HTMLImageElement>(parallaxProps)
+  const { ref: imageRef, controller } = useParallax<HTMLImageElement>(parallaxProps)
 
   // updates cached values after image dimensions have loaded
-  const handleLoad = () => parallaxController?.update()
+  const handleLoad = () => controller?.update()
   return (
     <CardImage absolute={absolute} dropShadow={dropShadow} src={src} ref={imageRef} alt={alt} onLoad={handleLoad} />
   )
