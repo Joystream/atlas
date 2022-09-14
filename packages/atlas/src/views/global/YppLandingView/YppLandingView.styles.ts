@@ -8,6 +8,12 @@ import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { cVar, media, sizes } from '@/styles'
 
 export const imageShadow = css`
+  /* https://www.figma.com/file/oQqFqdAiPu16eeE2aA5AD5/YouTube-Partner-Program?node-id=1819%3A79839 */
+
+  /* TODO this filter was requested by designers. Unfortunately it cause big performance issues, especially on smaller devices */
+
+  /* Reconsider using drop-shadow or remove this css block entirely */
+
   /* filter: drop-shadow(0 33px 100px rgb(0 0 0 / 0.22)) drop-shadow(0 7.371px 22.3363px rgb(0 0 0 / 0.1311))
     drop-shadow(0 2.1945px 6.6501px rgb(0 0 0 / 0.0889)); */
 `
