@@ -1,7 +1,8 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { media, sizes } from '@/styles'
+import { SvgAlertsInformative24 } from '@/components/_icons'
+import { cVar, media, sizes } from '@/styles'
 
 export const Header = styled.header`
   display: grid;
@@ -68,8 +69,15 @@ export const TierDescription = styled.div`
 `
 
 export const TierCount = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: auto auto;
   align-items: center;
   gap: ${sizes(1)};
   justify-content: flex-end;
+`
+
+export const StyledSvgAlertsInformative24 = styled(SvgAlertsInformative24)`
+  path {
+    fill: ${cVar('colorTextStrong')};
+  }
 `

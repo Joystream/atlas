@@ -20,11 +20,12 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import {
   Header,
   RewardsWrapper,
+  StyledSvgAlertsInformative24,
   TierCount,
   TierDescription,
   TierWrapper,
   WidgetsWrapper,
-} from '@/views/global/YppDashboard/YppDashboard.styled'
+} from '@/views/global/YppDashboard/YppDashboard.styles'
 
 const REWARDS = [
   {
@@ -72,23 +73,23 @@ const REWARDS = [
   },
 ]
 
-const TIERS = {
-  1: {
+const TIERS = [
+  {
     rules: '<5K subscribers',
     icon: <SvgTierIcon1 />,
   },
-  2: {
+  {
     rules: '5K-25K subscribers',
     icon: <SvgTierIcon2 />,
   },
-  3: {
+  {
     rules: '>25K subscribers',
     icon: <SvgTierIcon3 />,
   },
-}
+]
 
 // TODO: this needs to be taken from backend
-const currentTier = 1
+const currentTier = 0
 
 export const YppDashboard: FC = () => {
   const mdMatch = useMediaMatch('md')
@@ -107,7 +108,7 @@ export const YppDashboard: FC = () => {
                   Tier {currentTier}{' '}
                 </Text>
                 <Text variant="t100" as="span" color="colorText">
-                  out of {Object.keys(TIERS).length}
+                  out of {TIERS.length}
                 </Text>
               </TierCount>
               <Text variant="t100" as="p" color="colorText">
@@ -161,8 +162,8 @@ export const YppDashboard: FC = () => {
           <BenefitCard key={reward.title} {...reward} joyAmount={new BN(1200000000000)} />
         ))}
       </RewardsWrapper>
-      {/* TODO: add tooltip once it will show up on design */}
       <Banner
+        icon={<StyledSvgAlertsInformative24 />}
         title="Have more than one YouTube channel?"
         description={
           'You can apply to the YouTube Partner Program with as many YouTube & Atlas channels as you want. Each YouTube channel can be assigned to only one Atlas channel. \nYou can create a new channel from the top right menu.'

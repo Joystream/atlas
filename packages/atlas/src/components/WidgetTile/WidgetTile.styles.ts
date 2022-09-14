@@ -31,11 +31,12 @@ export const Content = styled.div`
 export const Title = styled.div<{ hasTooltip: boolean }>`
   grid-template-columns: 1fr auto;
   gap: ${({ hasTooltip }) => (hasTooltip ? sizes(2) : 'unset')};
-  margin-bottom: ${sizes(2)};
+  margin-bottom: ${({ hasTooltip }) => sizes(hasTooltip ? 0 : 2)};
+  margin-top: ${({ hasTooltip }) => (hasTooltip ? sizes(-2) : 'unset')};
   ${commonGridStyles};
 
   ${media.md} {
-    margin-bottom: ${sizes(4)};
+    margin-bottom: ${({ hasTooltip }) => sizes(hasTooltip ? 2 : 4)};
   }
 `
 

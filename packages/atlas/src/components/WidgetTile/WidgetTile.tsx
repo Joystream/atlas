@@ -13,7 +13,7 @@ export type WidgetTileProps = {
   loading?: boolean
   title: string | number
   text: string | number
-  caption?: string | number
+  caption?: ReactNode
   icon?: ReactNode
   button: { text: string } & Omit<ButtonProps, 'children'>
   tooltip?: TooltipProps
