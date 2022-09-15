@@ -8,13 +8,13 @@ import { JOYSTREAM_DISCORD_URL } from '@/config/env'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { CtaBanner, CtaCardRow, StyledBannerText, StyledButton } from './YppFooter.styles'
-import { CenteredLimidtedWidthContainer } from './YppLandingView.styles'
+import { StyledLimitedWidthContainer } from './YppLandingView.styles'
 
 export const YppFooter: FC = () => {
   const mdMatch = useMediaMatch('md')
   return (
     <>
-      <CenteredLimidtedWidthContainer>
+      <StyledLimitedWidthContainer centerText>
         <LayoutGrid>
           <GridItem colStart={{ lg: 2 }} colSpan={{ base: 12, lg: 10 }}>
             <CtaBanner>
@@ -36,7 +36,7 @@ export const YppFooter: FC = () => {
             </CtaBanner>
           </GridItem>
         </LayoutGrid>
-      </CenteredLimidtedWidthContainer>
+      </StyledLimitedWidthContainer>
       <CtaCardRow>
         <CallToActionButton external colorVariant="lightBlue" icon={<SvgActionInfo />} label="Program details" />
         <CallToActionButton

@@ -22,15 +22,16 @@ export const CardImageRow = styled(LayoutGrid)`
 
 type ImageContainerProps = {
   positionOnMobile?: 'center' | 'unset' | 'flex-end'
+  /* will prevent overflowing when parallax is applied */
   hiddenOverflow?: boolean
 }
 
-export const ImageContainer = styled.div<ImageContainerProps>`
-  overflow: ${({ hiddenOverflow }) => (hiddenOverflow ? 'hidden' : 'unset')};
+export const ImageContainer = styled.figure<ImageContainerProps>`
   position: relative;
   display: flex;
   justify-content: ${({ positionOnMobile = 'unset' }) => positionOnMobile};
   ${media.sm} {
+    overflow: ${({ hiddenOverflow }) => (hiddenOverflow ? 'hidden' : 'unset')};
     justify-content: unset;
   }
 `

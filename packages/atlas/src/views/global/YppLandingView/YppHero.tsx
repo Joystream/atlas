@@ -16,7 +16,7 @@ import { SvgActionChevronR } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { BackImage, FrontImage, HeroImageWrapper } from './YppHero.styles'
-import { BackgroundContainer, CenteredLimidtedWidthContainer } from './YppLandingView.styles'
+import { BackgroundContainer, StyledLimitedWidthContainer } from './YppLandingView.styles'
 
 export const YppHero: FC = () => {
   const mdMatch = useMediaMatch('md')
@@ -29,7 +29,7 @@ export const YppHero: FC = () => {
   })
   return (
     <BackgroundContainer noBackground>
-      <CenteredLimidtedWidthContainer>
+      <StyledLimitedWidthContainer centerText>
         <LayoutGrid>
           <GridItem as="header" colSpan={{ base: 12, sm: 8, lg: 6 }} colStart={{ sm: 3, lg: 4 }}>
             <Text as="h1" variant={mdMatch ? 'h800' : 'h600'}>
@@ -54,7 +54,7 @@ export const YppHero: FC = () => {
             alt="Hero front"
           />
         </HeroImageWrapper>
-      </CenteredLimidtedWidthContainer>
+      </StyledLimitedWidthContainer>
     </BackgroundContainer>
   )
 }

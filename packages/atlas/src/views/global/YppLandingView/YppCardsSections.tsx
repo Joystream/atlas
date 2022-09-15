@@ -23,9 +23,9 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { CardImage, CardImageRow, CardsWithImagesContainer, ImageContainer } from './YppCardsSection.styles'
 import {
   BackgroundContainer,
-  CardsLimitedWidtContainer,
   CenteredLayoutGrid,
   HeaderGridItem,
+  StyledLimitedWidthContainer,
 } from './YppLandingView.styles'
 
 export const YppCardsSections: FC = () => {
@@ -41,7 +41,7 @@ export const YppCardsSections: FC = () => {
   return (
     <>
       <BackgroundContainer noBackground>
-        <CardsLimitedWidtContainer as="section">
+        <StyledLimitedWidthContainer as="section">
           <CardsWithImagesContainer>
             <CenteredLayoutGrid>
               <HeaderGridItem as="header" colStart={{ sm: 3, lg: 4 }} colSpan={{ base: 12, sm: 8, lg: 6 }}>
@@ -55,7 +55,7 @@ export const YppCardsSections: FC = () => {
               </HeaderGridItem>
             </CenteredLayoutGrid>
 
-            <CardImageRow>
+            <CardImageRow as="article">
               <GridItem colStart={{ sm: 2, md: 1, lg: 2 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
                 <ImageContainer>
                   <CardImage dropShadow absolute src={dashboardImgBack} alt="Dashboard" />
@@ -79,7 +79,7 @@ export const YppCardsSections: FC = () => {
               </GridItem>
             </CardImageRow>
 
-            <CardImageRow>
+            <CardImageRow as="article">
               <GridItem colStart={{ sm: 2, md: 6, lg: 6 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
                 <ImageContainer positionOnMobile="flex-end">
                   <CardImage absolute dropShadow src={myVideosBack} alt="My videos" />
@@ -108,7 +108,7 @@ export const YppCardsSections: FC = () => {
               </GridItem>
             </CardImageRow>
 
-            <CardImageRow>
+            <CardImageRow as="article">
               <GridItem colStart={{ sm: 2, md: 1, lg: 2 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
                 <ImageContainer positionOnMobile="center">
                   <CardImage absolute src={youtubeSyncBack} alt="Video tiles" />
@@ -134,14 +134,14 @@ export const YppCardsSections: FC = () => {
               </GridItem>
             </CardImageRow>
           </CardsWithImagesContainer>
-        </CardsLimitedWidtContainer>
+        </StyledLimitedWidthContainer>
       </BackgroundContainer>
 
       {/* nfts */}
       <BackgroundContainer>
-        <CardsLimitedWidtContainer>
+        <StyledLimitedWidthContainer>
           <CardsWithImagesContainer>
-            <CardImageRow>
+            <CardImageRow as="article">
               <GridItem colStart={{ sm: 2, md: 1, lg: 2 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
                 <ImageContainer positionOnMobile="center">
                   <CardImage absolute src={videoNfts1} alt="Nft tiles" />
@@ -184,7 +184,7 @@ export const YppCardsSections: FC = () => {
               </GridItem>
             </CardImageRow>
 
-            <CardImageRow>
+            <CardImageRow as="article">
               <GridItem colStart={{ sm: 2, md: 6, lg: 6 }} colSpan={{ base: 12, sm: 10, md: 7, lg: 6 }}>
                 <ImageContainer hiddenOverflow>
                   <CardImage dropShadow absolute src={crt1} alt="Creator token dashboard" />
@@ -215,7 +215,7 @@ export const YppCardsSections: FC = () => {
               </GridItem>
             </CardImageRow>
           </CardsWithImagesContainer>
-        </CardsLimitedWidtContainer>
+        </StyledLimitedWidthContainer>
       </BackgroundContainer>
     </>
   )

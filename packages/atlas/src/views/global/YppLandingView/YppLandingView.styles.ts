@@ -18,8 +18,8 @@ export const imageShadow = css`
     drop-shadow(0 2.1945px 6.6501px rgb(0 0 0 / 0.0889)); */
 `
 
-export const CenteredLimidtedWidthContainer = styled(LimitedWidthContainer)`
-  text-align: center;
+export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)<{ centerText?: boolean }>`
+  text-align: ${({ centerText }) => (centerText ? 'center' : 'unset')};
   padding-bottom: unset;
 `
 
@@ -64,8 +64,4 @@ export const BackgroundContainer = styled.div<BackgroundContainerProps>`
     padding: ${sizes(24)} var(--size-global-horizontal-padding);
     ${backgroundPattern};
   }
-`
-
-export const CardsLimitedWidtContainer = styled(LimitedWidthContainer)`
-  padding: unset;
 `

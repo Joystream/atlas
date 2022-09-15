@@ -8,9 +8,9 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import {
   BackgroundContainer,
-  CardsLimitedWidtContainer,
   CenteredLayoutGrid,
   HeaderGridItem,
+  StyledLimitedWidthContainer,
 } from './YppLandingView.styles'
 import { StepCard, StepCardFade, StepCardImg, StepCardNumber, StepCardsWrapper } from './YppThreeStepsSection.styles'
 
@@ -18,8 +18,7 @@ export const YppThreeStepsSection = () => {
   const mdMatch = useMediaMatch('md')
   return (
     <BackgroundContainer pattern="bottom">
-      <CardsLimitedWidtContainer as="section">
-        {/* TODO add reward section above */}
+      <StyledLimitedWidthContainer as="section">
         <CenteredLayoutGrid>
           <HeaderGridItem marginBottom={8} as="header" colStart={{ sm: 3, lg: 4 }} colSpan={{ base: 12, sm: 8, lg: 6 }}>
             <Text variant={mdMatch ? 'h700' : 'h600'} as="h2">
@@ -63,7 +62,7 @@ export const YppThreeStepsSection = () => {
             </StepCard>
           </StepCardsWrapper>
         </CenteredLayoutGrid>
-      </CardsLimitedWidtContainer>
+      </StyledLimitedWidthContainer>
     </BackgroundContainer>
   )
 }

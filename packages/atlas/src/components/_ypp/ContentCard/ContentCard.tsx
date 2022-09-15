@@ -24,7 +24,7 @@ export const ContentCard: FC<ContentCardProps> = ({ title, subtitle, body, pill,
         <Text as="p" variant="h100" margin={{ top: pill && 4 }} color="colorTextPrimary">
           {subtitle}
         </Text>
-        <Text as="h2" variant={mdMatch ? 'h600' : 'h500'} margin={{ top: 2 }}>
+        <Text as="h3" variant={mdMatch ? 'h600' : 'h500'} margin={{ top: 2 }}>
           {title}
         </Text>
       </header>
