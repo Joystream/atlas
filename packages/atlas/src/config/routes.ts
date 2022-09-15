@@ -35,6 +35,7 @@ export const relativeRoutes = {
     notifications: () => 'notifications',
     nfts: () => 'nfts',
     ypp: () => 'ypp',
+    yppDashboard: () => 'ypp-dashboard',
   },
   legal: {
     index: () => '',
@@ -54,6 +55,7 @@ export const relativeRoutes = {
     notifications: () => 'notifications',
     payments: () => 'payments',
     ypp: () => 'ypp',
+    yppDashboard: () => 'ypp-dashboard',
   },
   playground: {
     index: () => '',
