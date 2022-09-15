@@ -17,7 +17,6 @@ import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
 import { YppLandingView } from '@/views/global/YppLandingView'
 import { NotificationsView } from '@/views/notifications'
-import { YppDashboard } from '@/views/studio/YppDashboard'
 
 import { CategoryView } from './CategoryView'
 import { ChannelView } from './ChannelView'
@@ -46,7 +45,6 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.member(), element: <MemberView /> },
   { path: relativeRoutes.viewer.nfts(), element: <NftsView /> },
   { path: relativeRoutes.viewer.ypp(), element: <YppLandingView /> },
-  { path: relativeRoutes.viewer.yppDashboard(), element: <YppDashboard /> },
 ]
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.viewer.index()
