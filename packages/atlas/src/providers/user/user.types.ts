@@ -15,6 +15,7 @@ export type SignerWalletStatus = 'unknown' | 'connected' | 'disconnected' | 'pen
 export type SignerWalletAccount = WalletAccount
 export type UserContextValue = {
   memberships: Membership[]
+  membershipsLoading: boolean
   activeMembership: Membership | null
 
   isAuthLoading: boolean

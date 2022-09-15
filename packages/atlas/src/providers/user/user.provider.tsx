@@ -25,6 +25,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   const {
     memberships: currentMemberships,
     previousData,
+    loading: membershipsLoading,
     refetch,
     error,
   } = useMemberships(
@@ -48,7 +49,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const signIn = useCallback(
     async (walletName?: string): Promise<boolean> => {
-      let accounts = walletAccounts
+      let accounts = []
 
       if (!walletName) {
         setSignInModalOpen(true)
@@ -95,7 +96,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
 
       return true
     },
-    [initSignerWallet, memberId, refetch, setActiveUser, setSignInModalOpen, walletAccounts]
+    [initSignerWallet, memberId, refetch, setActiveUser, setSignInModalOpen]
   )
 
   // keep user used by loggers in sync
@@ -132,12 +133,13 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   const contextValue: UserContextValue = useMemo(
     () => ({
       memberships: memberships || [],
+      membershipsLoading,
       activeMembership,
       isAuthLoading,
       signIn,
       refetchUserMemberships,
     }),
-    [memberships, activeMembership, isAuthLoading, signIn, refetchUserMemberships]
+    [memberships, activeMembership, isAuthLoading, signIn, refetchUserMemberships, membershipsLoading]
   )
 
   if (error) {
