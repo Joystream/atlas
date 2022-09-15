@@ -4,9 +4,17 @@ import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/fragment
 import appScreenshot from '@/assets/images/ypp-authorization/app-screenshot.webp'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
+import { SvgLogoYoutube } from '@/components/_icons'
 import { DialogModal, DialogModalProps } from '@/components/_overlays/DialogModal'
 
-import { AdditionalSubtitle, Content, Img, StyledSvgAtlasLogoShort } from './YppAuthorizationStepModal.styles'
+import {
+  AdditionalSubtitle,
+  Content,
+  HeaderIconsWrapper,
+  Img,
+  StyledSvgAtlasLogoShort,
+  StyledSvgControlsConnect,
+} from './YppAuthorizationStepModal.styles'
 
 import { DetailsFormDialog } from '../DetailsFormDialog'
 import { RequirementsDialog } from '../RequirementsDialog'
@@ -32,6 +40,7 @@ export const YppAuthorizationStepModal: FC<YppAuthorizationStepModalProps> = ({
 }) => {
   const isSummary = step === 'summary'
   const isConnectWithYt = step === 'connect-with-yt'
+  const isSelectChannel = step === 'select-channel'
   const authorizationStep = useMemo(() => {
     switch (step) {
       case 'select-channel':
@@ -71,7 +80,7 @@ export const YppAuthorizationStepModal: FC<YppAuthorizationStepModalProps> = ({
               <Text variant="h400" as="span">
                 Automatic YouTube sync
               </Text>{' '}
-              <Text variant="t100" as="span" color="colorText">
+              <Text variant="t100" as="span" color="colorTextMuted">
                 Coming later this year
               </Text>
             </AdditionalSubtitle>
@@ -113,7 +122,9 @@ export const YppAuthorizationStepModal: FC<YppAuthorizationStepModalProps> = ({
       show={show}
       dividers
       primaryButton={authorizationStep?.primaryButton}
-      secondaryButton={{ text: !isSummary ? 'Back' : 'Close', onClick: onBackClick }}
+      secondaryButton={
+        !isSelectChannel ? { text: !isSummary && !isConnectWithYt ? 'Back' : 'Close', onClick: onBackClick } : undefined
+      }
       additionalActionsNode={
         isConnectWithYt ? (
           <Button variant="tertiary">Learn more</Button>
@@ -126,7 +137,15 @@ export const YppAuthorizationStepModal: FC<YppAuthorizationStepModalProps> = ({
         )
       }
     >
-      <StyledSvgAtlasLogoShort />
+      <HeaderIconsWrapper>
+        {isConnectWithYt && (
+          <>
+            <SvgLogoYoutube />
+            <StyledSvgControlsConnect fill="yellow" />
+          </>
+        )}
+        <StyledSvgAtlasLogoShort />
+      </HeaderIconsWrapper>
       <Text variant="h500" as="h2" margin={{ top: 6, bottom: 2 }}>
         {authorizationStep?.title}
       </Text>
@@ -134,7 +153,7 @@ export const YppAuthorizationStepModal: FC<YppAuthorizationStepModalProps> = ({
       <Text variant="t200" as="p" color="colorText">
         {authorizationStep?.description}
       </Text>
-      <Content>{authorizationStep?.component}</Content>
+      {authorizationStep?.component && <Content>{authorizationStep?.component}</Content>}
     </DialogModal>
   )
 }

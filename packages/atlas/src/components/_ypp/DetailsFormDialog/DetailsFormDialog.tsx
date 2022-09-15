@@ -22,14 +22,14 @@ export const DetailsFormDialog: FC = () => {
   const client = useApolloClient()
   const {
     setValue,
-    register,
     control,
     formState: { errors },
-  } = useForm<{ email: string | undefined; channel: string | undefined }>({ mode: 'onChange' })
+  } = useForm<{ email: string | undefined; channel: string | undefined }>()
 
+  // TODO: make sure it's working properly when implementing in app
   const debounceFetchChannels = useRef(
     debouncePromise(async (value?: string) => {
-      if (!value) {
+      if (!value || !value.length) {
         return
       }
       try {
@@ -47,6 +47,7 @@ export const DetailsFormDialog: FC = () => {
       }
     }, 500)
   )
+
   return (
     <FormFieldsWrapper>
       <FormField
@@ -83,33 +84,38 @@ export const DetailsFormDialog: FC = () => {
         description="Enter the handle of the Joystream channel which recommended the program to you."
         error={errors.channel?.message}
       >
-        <Input
-          {...register('channel', {
-            validate: {
-              required: (value) => {
-                if (value && value.length && !foundChannel && !loading) {
-                  return 'No member with this handle has been found.'
-                }
-                return true
-              },
-            },
-            onChange: (event) => {
-              const { value } = event.target
-              setLoading(true)
-              setValue('channel', event.target.value, { shouldTouch: true, shouldDirty: true })
-              if (value.length) {
-                debounceFetchChannels.current(value)
-              } else {
-                setLoading(false)
-                setFoundChannel(null)
+        <Controller
+          control={control}
+          name="channel"
+          rules={{
+            // TODO: add validation when implementing, for now it would be impossible to walidate it
+            validate: {},
+          }}
+          render={({ field: { value, onChange } }) => (
+            <Input
+              nodeEnd={
+                foundChannel ? (
+                  <ResolvedAvatar channel={foundChannel} size="bid" />
+                ) : (
+                  loading && <Loader variant="xsmall" />
+                )
               }
-            },
-          })}
-          nodeEnd={
-            foundChannel ? <ResolvedAvatar channel={foundChannel} size="bid" /> : loading && <Loader variant="xsmall" />
-          }
-          placeholder="Channel handle"
-          error={!!errors.channel}
+              onChange={(event) => {
+                const { value } = event.target
+                setLoading(true)
+                setValue('channel', event.target.value, { shouldTouch: true, shouldDirty: true })
+                debounceFetchChannels.current(value)
+                if (!value.length) {
+                  setLoading(false)
+                  setFoundChannel(null)
+                }
+                onChange()
+              }}
+              value={value}
+              placeholder="Channel handle"
+              error={!!errors.channel}
+            />
+          )}
         />
       </FormField>
     </FormFieldsWrapper>

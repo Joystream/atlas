@@ -13,6 +13,7 @@ export const TierItem = styled.div`
 
   svg {
     width: 18px;
+    max-height: 18px;
   }
 
   * {
