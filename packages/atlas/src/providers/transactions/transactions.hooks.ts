@@ -9,6 +9,7 @@ import {
 } from '@/api/queries/__generated__/transactionEvents.generated'
 import { ErrorCode, JoystreamLibError, JoystreamLibErrorType } from '@/joystream-lib/errors'
 import { ExtrinsicResult, ExtrinsicStatus, ExtrinsicStatusCallbackFn } from '@/joystream-lib/types'
+import { useUserStore } from '@/providers/user/user.store'
 import { createId } from '@/utils/createId'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { wait } from '@/utils/misc'
@@ -47,6 +48,7 @@ export const useTransaction = (): HandleTransactionFn => {
   const { addBlockAction, addTransaction, updateTransaction, removeTransaction } = useTransactionManagerStore(
     (state) => state.actions
   )
+  const userWalletName = useUserStore((state) => state.wallet?.title)
 
   const [openOngoingTransactionModal, closeOngoingTransactionModal] = useConfirmationModal()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
@@ -85,7 +87,7 @@ export const useTransaction = (): HandleTransactionFn => {
           title: anyUnsignedTransaction ? 'Sign outstanding transactions' : 'Wait for other transactions',
           type: 'informative',
           description: anyUnsignedTransaction
-            ? 'You have outstanding blockchain transactions waiting for you to sign them in Polkadot. Please, sign or cancel previous transactions in Polkadot to continue.'
+            ? `You have outstanding blockchain transactions waiting for you to sign them in ${userWalletName}. Please, sign or cancel previous transactions in ${userWalletName} to continue.`
             : 'You have other blockchain transactions which are still being processed. Please, try again in about a minute.',
           primaryButton: {
             text: 'Got it',
@@ -271,6 +273,7 @@ export const useTransaction = (): HandleTransactionFn => {
       openOngoingTransactionModal,
       removeTransaction,
       updateTransaction,
+      userWalletName,
     ]
   )
 }

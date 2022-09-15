@@ -6,6 +6,7 @@ import { TransactionModal } from '@/components/_overlays/TransactionModal'
 import { ExtrinsicStatus } from '@/joystream-lib/types'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useSnackbar } from '@/providers/snackbars'
+import { useUserStore } from '@/providers/user/user.store'
 import { SentryLogger } from '@/utils/logs'
 
 import { METAPROTOCOL_SNACKBAR_ID } from './transactions.config'
@@ -20,6 +21,7 @@ export const TransactionsManager: FC = () => {
   } = useTransactionManagerStore((state) => state)
 
   const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
+  const userWalletName = useUserStore((state) => state.wallet?.title)
 
   const [lastIndexedBlock, setLastIndexedBlock] = useState(0)
   const { displaySnackbar, closeSnackbar } = useSnackbar()
@@ -43,8 +45,8 @@ export const TransactionsManager: FC = () => {
     if (anyMinimizedTransactionsPendingSignature) {
       displaySnackbar({
         customId: METAPROTOCOL_SNACKBAR_ID,
-        title: 'Continue in Polkadot',
-        description: `${anyMinimizedTransactionsPendingSignature.unsignedMessage} you need to sign the transaction in Polkadot extension.`,
+        title: `Continue in ${userWalletName}`,
+        description: `${anyMinimizedTransactionsPendingSignature.unsignedMessage} you need to sign the transaction in ${userWalletName} extension.`,
         iconType: 'loading',
         sticked: true,
       })
@@ -56,6 +58,7 @@ export const TransactionsManager: FC = () => {
     cachedAnyMinimizedTransactionPendingSignature,
     closeSnackbar,
     displaySnackbar,
+    userWalletName,
   ])
 
   useQueryNodeStateSubscription({
