@@ -41,7 +41,7 @@ export const YppHero: FC = () => {
             <Button size="large" icon={<SvgActionChevronR />} iconPlacement="right">
               Sign up now
             </Button>
-            <Text as="p" variant="t100" color="colorText" margin={{ top: 2 }}>
+            <Text as="p" variant="t100" color="colorTextMuted" margin={{ top: 2 }}>
               It takes 3 minutes and is 100% free.
             </Text>
           </GridItem>

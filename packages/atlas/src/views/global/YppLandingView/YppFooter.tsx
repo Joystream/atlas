@@ -4,6 +4,7 @@ import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { CallToActionButton } from '@/components/_buttons/CallToActionButton'
 import { SvgActionChevronR, SvgActionInfo, SvgActionSpeech, SvgActionTokensStack } from '@/components/_icons'
+import { JOYSTREAM_DISCORD_URL } from '@/config/env'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { CtaBanner, CtaCardRow, StyledBannerText, StyledButton } from './YppFooter.styles'
@@ -38,7 +39,13 @@ export const YppFooter: FC = () => {
       </CenteredLimidtedWidthContainer>
       <CtaCardRow>
         <CallToActionButton external colorVariant="lightBlue" icon={<SvgActionInfo />} label="Program details" />
-        <CallToActionButton external colorVariant="lightBlue" icon={<SvgActionSpeech />} label="Discord" />
+        <CallToActionButton
+          to={JOYSTREAM_DISCORD_URL}
+          external
+          colorVariant="lightBlue"
+          icon={<SvgActionSpeech />}
+          label="Discord"
+        />
         <CallToActionButton external colorVariant="lightBlue" icon={<SvgActionTokensStack />} label="Payments" />
       </CtaCardRow>
     </>
