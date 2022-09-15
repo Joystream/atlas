@@ -4,22 +4,22 @@ with the Joystream network" src="https://user-images.githubusercontent.com/35307
 </div>
 
 <p align="center">
-  <a alt="Join the Discord server" href="https://discord.gg/nuQeWXfSvq">
+  <a title="Join the Discord server" href="https://discord.gg/nuQeWXfSvq">
     <img alt="Discord badge" src="https://img.shields.io/discord/811216481340751934?label=discord&logo=discord" />
   </a>
-  <a alt="Contributors" href="https://github.com/Joystream/atlas/graphs/contributors">
+  <a title="Contributors" href="https://github.com/Joystream/atlas/graphs/contributors">
     <img alt="Contributors badge" src="https://img.shields.io/github/contributors/joystream/atlas?label=%F0%9F%91%A5%20contributors">
   </a>
-  <a alt="Styleguide" href="https://github.com/Joystream/atlas/blob/master/docs/styleguide.md">
+  <a title="Styleguide" href="https://github.com/Joystream/atlas/blob/master/docs/styleguide.md">
     <img alt="Styleguide badge" src="https://img.shields.io/badge/%F0%9F%92%85%20style-prettier-brightgreen">
   </a>
-  <a alt="Vercel production deployment" href="https://play.joystream.org">
+  <a title="Vercel production deployment" href="https://play.joystream.org">
     <img alt="Vercel production badge" src="https://img.shields.io/badge/vercel%20prod-live-brightgreen?logo=vercel">
   </a>
-  <a alt="Vercel development deployment" href="https://atlas-git-dev-joystream.vercel.app/">
+  <a title="Vercel development deployment" href="https://atlas-git-dev-joystream.vercel.app/">
     <img alt="Vercel development badge" src="https://img.shields.io/badge/%F0%9F%9B%A0%20vercel%20dev-live-brightgreen">
   </a>
-  <a alt="Storybook deployment" href="https://atlas-storybook.vercel.app/">
+  <a title="Storybook deployment" href="https://atlas-storybook.vercel.app/">
     <img alt="Storybook badge" src="https://img.shields.io/badge/storybook-live-brightgreen?logo=storybook">
   </a>
 </p>
@@ -65,7 +65,7 @@ This will start the development server on `localhost:3000`.
 
 To get started working with Atlas designs in Figma, visit [Joystream's official Figma Community profile](https://figma.com/@joystream) (available early 2022) and duplicate files you're interested in remixing or using as a base for your work.
 
-While most of the Atlas design documentation is kept within Figma files, for meta documentation visit [Atlas Design Space on Notion](https://grizzled-corleggy-af8.notion.site/Design-Space-487ed84966fa495a8c037935639ca681).
+While most of the Atlas design documentation is kept within Figma files, for meta documentation visit [Atlas Design Space on Notion](https://joystream.notion.site/Design-Space-487ed84966fa495a8c037935639ca681).
 
 ## License
 
