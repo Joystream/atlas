@@ -1,5 +1,3 @@
-import { ParallaxProvider } from 'react-scroll-parallax'
-
 import { AnalyticsManager } from '@/AnalyticsManager'
 import { CommonProviders } from '@/CommonProviders'
 import { SignInModal } from '@/components/_auth/SignInModal'
@@ -19,20 +17,18 @@ export const App = () => {
   return (
     <JoystreamProvider>
       <CommonProviders>
-        <ParallaxProvider>
-          <AnalyticsManager />
-          <NftActionsProvider>
-            <MainLayout />
-            <Snackbars />
-            <TransactionsManager />
-            <JoystreamManager />
-            <NotificationsManager />
-            <SignInModal />
-            <NftSettlementBottomDrawer />
-            <NftPurchaseBottomDrawer />
-            <NftSaleBottomDrawer />
-          </NftActionsProvider>
-        </ParallaxProvider>
+        <AnalyticsManager />
+        <NftActionsProvider>
+          <MainLayout />
+          <Snackbars />
+          <TransactionsManager />
+          <JoystreamManager />
+          <NotificationsManager />
+          <SignInModal />
+          <NftSettlementBottomDrawer />
+          <NftPurchaseBottomDrawer />
+          <NftSaleBottomDrawer />
+        </NftActionsProvider>
       </CommonProviders>
     </JoystreamProvider>
   )
