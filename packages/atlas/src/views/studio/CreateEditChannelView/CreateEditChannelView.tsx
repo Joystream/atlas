@@ -24,7 +24,7 @@ import { LANGUAGES_LIST } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib/types'
-import { useAsset, useRawAsset } from '@/providers/assets/assets.hooks'
+import { useAsset, useChannelsStorageBucketsCount, useRawAsset } from '@/providers/assets/assets.hooks'
 import { useOperatorsContext } from '@/providers/assets/assets.provider'
 import { useAssetStore } from '@/providers/assets/assets.store'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
@@ -109,6 +109,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     { where: { isPublic_eq: undefined, isCensored_eq: undefined } }
   )
   const startFileUpload = useStartFileUpload()
+  const channelBucketsCount = useChannelsStorageBucketsCount(channelId)
 
   // trigger use asset to make sure the channel assets get resolved
   useAsset(channel?.avatarPhoto)
@@ -213,6 +214,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
           newChannelAssets,
           removedChannelAssetsIds,
           dataObjectStateBloatBondValue.toString(),
+          channelBucketsCount.toString(),
         ]
       : undefined,
     newChannelAssets
@@ -320,6 +322,11 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
 
   const submit = async (data: Inputs) => {
     if (!joystream || !memberId || !accountId) {
+      return
+    }
+
+    if (!channelBucketsCount && !newChannel) {
+      SentryLogger.error('Channel buckets count is not set', 'CreateEditChannelView')
       return
     }
 
@@ -433,6 +440,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
               assets,
               removedChannelAssetsIds,
               dataObjectStateBloatBondValue.toString(),
+              channelBucketsCount.toString(),
               proxyCallback(updateStatus)
             ),
       onTxSync: refetchDataAndUploadAssets,

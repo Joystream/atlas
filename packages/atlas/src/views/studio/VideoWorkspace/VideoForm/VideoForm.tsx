@@ -26,7 +26,7 @@ import { LANGUAGES_LIST } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { NftIssuanceInputMetadata, VideoInputAssets, VideoInputMetadata } from '@/joystream-lib/types'
-import { useRawAssetResolver } from '@/providers/assets/assets.hooks'
+import { useChannelsStorageBucketsCount, useRawAssetResolver } from '@/providers/assets/assets.hooks'
 import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joystream/joystream.hooks'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useSnackbar } from '@/providers/snackbars'
@@ -133,6 +133,8 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const formData = getValues()
 
   const videoFieldsLocked = tabData?.mintNft && isEdit
+
+  const channelBucketsCount = useChannelsStorageBucketsCount(channelId)
 
   const createVideoInputMetadata = useCallback(
     (data: VideoWorkspaceVideoFormFields): VideoInputMetadata => {
@@ -250,6 +252,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           assets,
           dataObjectStateBloatBondValue.toString(),
           videoStateBloatBondValue.toString(),
+          channelBucketsCount.toString(),
         ]
       : undefined,
     assets
@@ -265,6 +268,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           assets,
           [], // provide empty removedAssetsId array to simplify fee calculation
           dataObjectStateBloatBondValue.toString(),
+          channelBucketsCount.toString(),
         ]
       : undefined,
     assets

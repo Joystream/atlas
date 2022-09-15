@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import shallow from 'zustand/shallow'
 
 import {
@@ -6,6 +6,9 @@ import {
   StorageDataObjectFieldsFragment,
   SubtitlesFieldsFragment,
 } from '@/api/queries/__generated__/fragments.generated'
+import { ChannelId } from '@/joystream-lib/types'
+import { useStorageOperators } from '@/providers/assets/assets.provider'
+import { createChannelBagId } from '@/utils/asset'
 import { createLookup } from '@/utils/data'
 
 import { ResolvedAsset, useAssetStore } from './assets.store'
@@ -90,4 +93,25 @@ export const useSubtitlesAssets = (subtitles?: SubtitlesFieldsFragment[] | null)
   }, [addPendingAsset, subtitlesAssets, subtitlesPendingAssets, subtitlesWithAssetLookup])
 
   return subtitlesAssets
+}
+
+export const useChannelsStorageBucketsCount = (channelId: ChannelId | null): number => {
+  const [bucketsCount, setBucketsCount] = useState<number | null>(null)
+  const { getAllStorageOperatorsForBag } = useStorageOperators()
+
+  // update bucketsCount whenever channel changes
+  useEffect(() => {
+    // if the channel changed, set the value to null to not return stale result
+    setBucketsCount(null)
+
+    if (!channelId) return
+
+    const bagId = createChannelBagId(channelId)
+
+    getAllStorageOperatorsForBag(bagId, true).then((operators) => {
+      setBucketsCount(operators?.length ?? null)
+    })
+  }, [channelId, getAllStorageOperatorsForBag])
+
+  return bucketsCount ?? 0
 }

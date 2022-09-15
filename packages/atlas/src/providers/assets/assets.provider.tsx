@@ -273,10 +273,13 @@ export const useStorageOperators = () => {
     useOperatorsContext()
 
   const getAllStorageOperatorsForBag = useCallback(
-    async (storageBagId: string) => {
+    async (storageBagId: string, includeFailed = false) => {
       try {
         const storageOperatorsMapping = (await storageOperatorsMappingPromiseRef.current) || {}
         const bagOperators = storageOperatorsMapping[storageBagId]
+        if (includeFailed) {
+          return bagOperators
+        }
         const workingBagOperators = bagOperators.filter((operator) => !failedStorageOperatorIds.includes(operator.id))
         if (!workingBagOperators || !workingBagOperators.length) {
           ConsoleLogger.warn('Missing storage operators for storage bag', { storageBagId })
