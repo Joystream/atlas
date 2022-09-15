@@ -29,6 +29,7 @@ export type BenefitCardProps = {
   actionButton?: {
     text: string
     onClick?: () => void
+    to?: string
   }
   joyAmount: BN | number
   dollarAmount?: number
@@ -116,7 +117,7 @@ export const BenefitCard: FC<BenefitCardProps> = ({
         <ActionWrapper>
           {(smMatch || !isFullVariant) && <RewardAmount />}
           {actionButton && isFullVariant && (
-            <StyledButton fullWidth={!smMatch} onClick={actionButton.onClick}>
+            <StyledButton fullWidth={!smMatch} onClick={actionButton.onClick} to={actionButton.to}>
               {actionButton.text}
             </StyledButton>
           )}
