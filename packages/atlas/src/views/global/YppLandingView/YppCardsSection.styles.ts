@@ -26,7 +26,7 @@ type ImageContainerProps = {
   hiddenOverflow?: boolean
 }
 
-export const ImageContainer = styled.figure<ImageContainerProps>`
+export const ImageContainer = styled.div<ImageContainerProps>`
   position: relative;
   display: flex;
   justify-content: ${({ positionOnMobile = 'unset' }) => positionOnMobile};
