@@ -1,16 +1,25 @@
 import { Meta, Story } from '@storybook/react'
+import BN from 'bn.js'
 import { BrowserRouter } from 'react-router-dom'
 
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 
-import { NftTile, NftTileProps } from '.'
+import { NftTile, NftTileProps } from './NftTile'
 
 export default {
-  title: 'NFT/Tile',
+  title: 'NFT/NftTile',
   component: NftTile,
   argTypes: {
     title: {
       type: 'string',
+    },
+    status: {
+      options: ['idle', 'buy-now', 'auction'],
+      control: { type: 'select' },
+    },
+    englishTimerState: {
+      options: ['expired', 'running', 'upcoming', null],
+      control: { type: 'select' },
     },
     thumbnail: {
       thumbnailUrl: {
@@ -20,14 +29,15 @@ export default {
     creator: { table: { disable: true } },
     supporters: { table: { disable: true } },
     owner: { table: { disable: true } },
+    startsAtDate: { control: { type: 'date' } },
+    auctionPlannedEndDate: { control: { type: 'date' } },
   },
   args: {
-    role: 'owner',
     title: 'Did An Alternate Reality Game Gone Wrong Predict QAnon?',
-    nftStatus: 'none',
-    startingPrice: 1234,
-    buyNowPrice: 0,
-    topBid: 123,
+    status: 'idle',
+    startingPrice: 1234000,
+    buyNowPrice: 1234000,
+    topBidAmount: 123000,
     thumbnail: { thumbnailUrl: 'https://placedog.net/360/203' },
     creator: { assetUrl: 'https://placedog.net/100/100?random=1', name: 'Jane' },
     owner: { assetUrl: 'https://placedog.net/100/100?random=2', name: 'Kate' },
@@ -39,6 +49,7 @@ export default {
     canCancelSale: false,
     canBuyNow: false,
     canMakeBid: false,
+    englishTimerState: null,
   },
   decorators: [
     (Story) => {
@@ -53,6 +64,13 @@ export default {
   ],
 } as Meta
 
-const Template: Story<NftTileProps> = (args) => <NftTile {...args} />
+const Template: Story<NftTileProps> = (args) => (
+  <NftTile
+    {...args}
+    startingPrice={new BN(Number(args.startingPrice))}
+    buyNowPrice={new BN(Number(args.buyNowPrice))}
+    topBidAmount={new BN(Number(args.topBidAmount))}
+  />
+)
 
 export const Default = Template.bind({})
