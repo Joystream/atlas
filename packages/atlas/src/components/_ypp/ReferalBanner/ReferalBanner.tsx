@@ -18,7 +18,7 @@ type ReferalBannerProps = {
   channelAvatarUrl?: string | null
   channelLoading?: boolean
 }
-export const RefferalBanner: FC<ReferalBannerProps> = ({
+export const ReferalBanner: FC<ReferalBannerProps> = ({
   className,
   channelTitle,
   channelId,
