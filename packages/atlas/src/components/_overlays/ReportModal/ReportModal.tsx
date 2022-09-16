@@ -70,7 +70,7 @@ export const ReportModal: FC<ReportModalProps> = ({ entityId, show, onClose, typ
   })
   return (
     <DialogModal
-      onExitClick={handleClose}
+      onClickOutside={handleClose}
       title={`Report ${type}`}
       show={show}
       onSubmit={submit}
