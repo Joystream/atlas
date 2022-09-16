@@ -31,6 +31,7 @@ export const CenteredLayoutGrid = styled(LayoutGrid)`
 type HeaderGridItemProps = {
   marginBottom?: number
 }
+
 export const HeaderGridItem = styled(GridItem, {
   shouldForwardProp: (prop) => prop !== 'marginBottom',
 })<HeaderGridItemProps>`
