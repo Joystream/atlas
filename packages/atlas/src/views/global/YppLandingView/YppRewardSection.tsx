@@ -7,9 +7,9 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import {
   BackgroundContainer,
-  CardsLimitedWidtContainer,
   CenteredLayoutGrid,
   HeaderGridItem,
+  StyledLimitedWidthContainer,
 } from './YppLandingView.styles'
 import {
   BenefitsCardButton,
@@ -22,7 +22,7 @@ export const YppRewardSection: FC = () => {
   const [rewardMultiplier, setRewardMultiplier] = useState<1 | 1.5 | 3>(1)
   return (
     <BackgroundContainer pattern="top">
-      <CardsLimitedWidtContainer as="section">
+      <StyledLimitedWidthContainer as="section">
         <CenteredLayoutGrid>
           <HeaderGridItem as="header" colStart={{ sm: 3, lg: 4 }} colSpan={{ base: 12, sm: 8, lg: 6 }}>
             <Text variant={mdMatch ? 'h700' : 'h600'} as="h2">
@@ -87,7 +87,7 @@ export const YppRewardSection: FC = () => {
             />
           </BenefitsCardsContainerGridItem>
         </LayoutGrid>
-      </CardsLimitedWidtContainer>
+      </StyledLimitedWidthContainer>
     </BackgroundContainer>
   )
 }

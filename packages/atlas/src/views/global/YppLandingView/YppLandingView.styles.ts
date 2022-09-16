@@ -66,7 +66,3 @@ export const BackgroundContainer = styled.div<BackgroundContainerProps>`
     ${backgroundPattern};
   }
 `
-
-export const CardsLimitedWidtContainer = styled(LimitedWidthContainer)`
-  padding: unset;
-`
