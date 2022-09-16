@@ -59,8 +59,8 @@ export const SignInModalAccountStep: FC<SignInModalAccountStepProps> = ({
   return (
     <SignInModalStepTemplate
       title="Select account"
-      subtitle="Select which account you want your Joystream membership to be connected with."
-      tooltipText="To create a Joystream membership, you need to select a wallet account to connect it with first. It's 100% free."
+      subtitle="Select which account you want your membership to be connected with."
+      tooltipText="To create a membership, you need to select a wallet account to connect it with first. This is 100% free."
       hasNavigatedBack={hasNavigatedBack}
     >
       {accountsWithNoMembership.length !== 0 ? (

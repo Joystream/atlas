@@ -9,6 +9,7 @@ import {
   SvgAlertsInformative24,
   SvgAlertsSuccess24,
   SvgAlertsWarning24,
+  SvgJoyTokenMonochrome24,
 } from '@/components/_icons'
 import { Spinner } from '@/components/_loaders/Spinner'
 import { useBottomNavStore } from '@/providers/bottomNav'
@@ -24,6 +25,7 @@ const StyledSpinner = styled(Spinner)`
 
 const ICON_TYPE_TO_ICON: Record<SnackbarIconType, ReactNode> = {
   info: <SvgAlertsInformative24 />,
+  token: <SvgJoyTokenMonochrome24 />,
   success: <SvgAlertsSuccess24 />,
   error: <SvgAlertsError24 />,
   warning: <SvgAlertsWarning24 />,
