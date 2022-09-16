@@ -6,6 +6,7 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgLogoYoutube } from '@/components/_icons'
 import { DialogModal, DialogModalProps } from '@/components/_overlays/DialogModal'
+import { absoluteRoutes } from '@/config/routes'
 
 import {
   AdditionalSubtitle,
@@ -14,16 +15,16 @@ import {
   Img,
   StyledSvgAtlasLogoShort,
   StyledSvgControlsConnect,
-} from './YppAuthorizationStepModal.styles'
+} from './YppAuthorizationModal.styles'
 
-import { DetailsFormDialog } from '../DetailsFormDialog'
-import { RequirementsDialog } from '../RequirementsDialog'
-import { SelectChannelDialog } from '../SelectChannelDialog'
-import { TermsAndConditionsDialog } from '../TermsAndConditionsDialog'
+import { YppAuthorizationDetailsFormStep } from '../YppAuthorizationDetailsFormStep'
+import { YppAuthorizationRequirementsStep } from '../YppAuthorizationRequirementsStep'
+import { YppAuthorizationSelectChannelStep } from '../YppAuthorizationSelectChannelStep'
+import { YppAuthorizationTermsAndConditionsStep } from '../YppAuthorizationTermsAndConditionsStep'
 
 type Step = 'select-channel' | 'requirements' | 'details' | 'terms-and-conditions' | 'summary' | 'connect-with-yt'
 
-export type YppAuthorizationStepModalProps = {
+export type YppAuthorizationModalProps = {
   onPrimaryClick?: () => void
   onBackClick?: () => void
   onCancelClick?: () => void
@@ -31,7 +32,7 @@ export type YppAuthorizationStepModalProps = {
   channels: BasicChannelFieldsFragment[]
 } & Pick<DialogModalProps, 'show'>
 
-export const YppAuthorizationStepModal: FC<YppAuthorizationStepModalProps> = ({
+export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   show,
   onBackClick,
   onCancelClick,
@@ -48,7 +49,7 @@ export const YppAuthorizationStepModal: FC<YppAuthorizationStepModalProps> = ({
           title: 'Select channel',
           description: 'Select the Atlas channel you want your YouTube channel to be connected with.',
           primaryButton: { text: 'Select channel' },
-          component: <SelectChannelDialog channels={channels} />,
+          component: <YppAuthorizationSelectChannelStep channels={channels} />,
         }
       case 'requirements':
         return {
@@ -58,7 +59,7 @@ export const YppAuthorizationStepModal: FC<YppAuthorizationStepModalProps> = ({
           primaryButton: {
             text: 'Authorize with YouTube',
           },
-          component: <RequirementsDialog />,
+          component: <YppAuthorizationRequirementsStep />,
         }
       case 'details':
         return {
@@ -67,11 +68,12 @@ export const YppAuthorizationStepModal: FC<YppAuthorizationStepModalProps> = ({
           primaryButton: {
             text: 'Continue',
           },
-          component: <DetailsFormDialog />,
+          component: <YppAuthorizationDetailsFormStep />,
         }
       case 'terms-and-conditions':
         return {
           title: 'Terms & conditions',
+          // TODO: add proper copy once it's available in figma https://www.figma.com/file/oQqFqdAiPu16eeE2aA5AD5?node-id=1637:118716#267556722
           description:
             'Once automatic YouTube videos sync is available, in order for it to work, your Atlas channel [NEEDS TO DO WHAT?]. This is purely a technical measure and does not affect ownership and rights to the content uploaded to you Atlas channel.',
           primaryButton: { text: 'Accept terms & sign' },
@@ -85,7 +87,7 @@ export const YppAuthorizationStepModal: FC<YppAuthorizationStepModalProps> = ({
               </Text>
             </AdditionalSubtitle>
           ),
-          component: <TermsAndConditionsDialog />,
+          component: <YppAuthorizationTermsAndConditionsStep />,
         }
       case 'summary':
         return {
@@ -96,7 +98,7 @@ export const YppAuthorizationStepModal: FC<YppAuthorizationStepModalProps> = ({
               Partner Program and tied with a YouTube channel.{' '}
               <Text variant="t200" as="p" margin={{ top: 2 }} color="colorText">
                 All information around your activity in the program can be found in the{' '}
-                <Button variant="primary" _textOnly>
+                <Button variant="primary" _textOnly to={absoluteRoutes.studio.yppDashboard()}>
                   YPP page in Studio
                 </Button>
                 .

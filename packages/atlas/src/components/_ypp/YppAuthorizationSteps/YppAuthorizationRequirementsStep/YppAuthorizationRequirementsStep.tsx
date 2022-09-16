@@ -2,7 +2,7 @@ import { FC } from 'react'
 
 import { SvgActionCheck, SvgActionClose } from '@/components/_icons'
 
-import { ListItem, StyledList, TickWrapper } from './RequiremenetsDialog.styles'
+import { ListItem, StyledList, TickWrapper } from './YppAuthorizationRequirementsStep.styles'
 
 const REQUIREMENTS = [
   { text: 'Your Atlas channel avatar, cover image, and description are set', fulfilled: false },
@@ -12,7 +12,7 @@ const REQUIREMENTS = [
   { text: 'Your YouTube channel has at least 50 subscribers', fulfilled: true },
 ]
 
-export const RequirementsDialog: FC = () => {
+export const YppAuthorizationRequirementsStep: FC = () => {
   return (
     <StyledList>
       {REQUIREMENTS.map((item) => (

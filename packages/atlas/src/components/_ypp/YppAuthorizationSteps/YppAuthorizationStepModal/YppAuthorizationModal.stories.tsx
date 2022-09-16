@@ -4,12 +4,12 @@ import { Meta, Story } from '@storybook/react'
 import { createApolloClient } from '@/api'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 
-import { YppAuthorizationStepModal, YppAuthorizationStepModalProps } from './YppAuthorizationStepModal'
+import { YppAuthorizationModal, YppAuthorizationModalProps } from './YppAuthorizationModal'
 
 export default {
-  title: 'ypp/YppAuthorizationStepModal',
+  title: 'ypp/YppAuthorizationModal',
 
-  component: YppAuthorizationStepModal,
+  component: YppAuthorizationModal,
   argTypes: {
     step: {
       options: ['select-channel', 'requirements', 'details', 'terms-and-conditions', 'summary', 'connect-with-yt'],
@@ -39,14 +39,14 @@ export default {
       },
     ],
   },
-} as Meta<YppAuthorizationStepModalProps>
+} as Meta<YppAuthorizationModalProps>
 
-const Template: Story<YppAuthorizationStepModalProps> = (args) => {
+const Template: Story<YppAuthorizationModalProps> = (args) => {
   const apolloClient = createApolloClient()
   return (
     <ApolloProvider client={apolloClient}>
       <OverlayManagerProvider>
-        <YppAuthorizationStepModal {...args} />
+        <YppAuthorizationModal {...args} />
       </OverlayManagerProvider>
     </ApolloProvider>
   )

@@ -3,9 +3,9 @@ import { FC } from 'react'
 import { Text } from '@/components/Text'
 import { SvgTierIcon1, SvgTierIcon2, SvgTierIcon3 } from '@/components/_icons'
 
-import { TierItem } from './TermsAndConditionsDialog.styles'
+import { TierItem } from './YppAuthorizationTermsAndConditionsStep.styles'
 
-export const TermsAndConditionsDialog: FC = () => {
+export const YppAuthorizationTermsAndConditionsStep: FC = () => {
   return (
     <div>
       <Text variant="h400" as="h3" margin={{ bottom: 4 }}>

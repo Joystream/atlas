@@ -2,16 +2,15 @@ import { FC, useState } from 'react'
 
 import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { Avatar } from '@/components/Avatar'
-import { ListItem } from '@/components/ListItem'
 import { useAsset } from '@/providers/assets/assets.hooks'
 
-import { ListItemsWrapper } from './SelectChannelDialog.styles'
+import { ListItemsWrapper, StyledListItem } from './YppAuthorizationSelectChannelStep.styles'
 
-type SelectChannelDialogProps = {
+type YppAuthorizationSelectChannelStepProps = {
   channels: BasicChannelFieldsFragment[]
 }
 
-export const SelectChannelDialog: FC<SelectChannelDialogProps> = ({ channels }) => {
+export const YppAuthorizationSelectChannelStep: FC<YppAuthorizationSelectChannelStepProps> = ({ channels }) => {
   const [selectedChannel, setSelectedChannel] = useState<string | null>(null)
   return (
     <ListItemsWrapper>
@@ -35,7 +34,7 @@ type ChannelListItemProps = {
 const ChannelListItem: FC<ChannelListItemProps> = ({ channel, selected, onClick }) => {
   const { url, isLoadingAsset } = useAsset(channel?.avatarPhoto)
   return (
-    <ListItem
+    <StyledListItem
       onClick={onClick}
       nodeStart={<Avatar size="small" assetUrl={url} loading={isLoadingAsset} />}
       label={channel?.title ?? ''}

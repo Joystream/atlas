@@ -14,9 +14,9 @@ import { EMAIL_PATTERN } from '@/config/regex'
 import { useAsset } from '@/providers/assets/assets.hooks'
 import { SentryLogger } from '@/utils/logs'
 
-import { FormFieldsWrapper } from './DetailsFormDialog.styles'
+import { FormFieldsWrapper } from './YppAuthorizationDetailsFormStep.styles'
 
-export const DetailsFormDialog: FC = () => {
+export const YppAuthorizationDetailsFormStep: FC = () => {
   const [foundChannel, setFoundChannel] = useState<BasicChannelFieldsFragment | null>()
   const [loading, setLoading] = useState(false)
   const client = useApolloClient()
