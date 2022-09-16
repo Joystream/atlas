@@ -160,7 +160,15 @@ export const CommentInput = forwardRef<HTMLTextAreaElement, CommentInputProps>(
 
           <ButtonsContainer>
             <Flex>
-              <Fee amount={fee} color="colorText" variant="t100" hideOnMobile loading={feeLoading} />
+              <Fee
+                amount={fee}
+                color="colorText"
+                variant="t100"
+                hideOnMobile
+                loading={feeLoading}
+                tooltipHeaderText="Comments on blockchain"
+                tooltipText="Publishing a comment requires a blockchain transaction, which comes with a fee based on its length. Transaction fees are covered from your membership account balance."
+              />
             </Flex>
             {onCancel && (
               <Button

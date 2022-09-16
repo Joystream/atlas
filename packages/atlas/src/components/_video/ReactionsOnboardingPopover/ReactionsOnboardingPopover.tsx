@@ -67,7 +67,7 @@ export const ReactionsOnboardingPopover = forwardRef<PopoverImperativeHandle, Re
           <Text as="p" variant="t200" color="colorText" margin={{ top: 2 }}>
             <NumberFormat value={fee} withToken as="span" color="colorText" variant="t200" format="short" /> is the
             transaction fee for each reaction you leave under a video or comment, while the fee for posting a comment
-            depends on its length.
+            depends on its length. Transaction fees are covered from your membership account balance.
           </Text>
         </PopoverContentWrapper>
       </DialogPopover>

@@ -15,7 +15,6 @@ import {
   FooterButtonsContainer,
   Header,
   HeaderContent,
-  StyledPrimaryButton,
 } from './Dialog.styles'
 
 export type DialogButtonProps = {
@@ -108,9 +107,9 @@ export const Dialog: FC<DialogProps> = ({
               </Button>
             )}
             {primaryButton && (
-              <StyledPrimaryButton variant={primaryButton.variant || 'primary'} size={buttonSize} {...primaryButton}>
+              <Button variant={primaryButton.variant || 'primary'} size={buttonSize} {...primaryButton}>
                 {primaryButton.text}
-              </StyledPrimaryButton>
+              </Button>
             )}
           </FooterButtonsContainer>
         </Footer>
