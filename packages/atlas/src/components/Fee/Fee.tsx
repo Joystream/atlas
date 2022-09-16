@@ -15,6 +15,8 @@ export type FeeProps = {
   variant: TextVariant
   color?: Color
   hideOnMobile?: boolean
+  tooltipHeaderText?: string
+  tooltipText?: string
   className?: string
   loading?: boolean
 }
@@ -24,6 +26,8 @@ export const Fee: FC<FeeProps> = ({
   withToken = true,
   variant = 't100',
   color = 'colorTextStrong',
+  tooltipHeaderText = 'Blockchain transaction',
+  tooltipText = 'This action requires a blockchain transaction, which comes with a fee. Transaction fees are covered from your membership account balance',
   hideOnMobile,
   className,
   loading,
@@ -50,13 +54,7 @@ export const Fee: FC<FeeProps> = ({
           />
         </>
       )}
-      <Information
-        placement="top-start"
-        text="This action requires a blockchain transaction, which comes with a fee."
-        headerText="Blockchain transaction"
-        multiline
-        icon
-      />
+      <Information placement="top-start" text={tooltipText} headerText={tooltipHeaderText} multiline icon />
     </Wrapper>
   )
 }
