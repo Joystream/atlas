@@ -34,7 +34,7 @@ export const relativeRoutes = {
     member: (handle = ':handle') => `member/${handle}`,
     notifications: () => 'notifications',
     nfts: () => 'nfts',
-    ypp: () => 'ypp',
+    ypp: (query?: { ref?: string }) => withQueryParameters('ypp', query),
     yppDashboard: () => 'ypp-dashboard',
   },
   legal: {
@@ -81,4 +81,5 @@ export const absoluteRoutes = Object.entries(BASE_PATHS).reduce((absoluteRoutesA
 export const QUERY_PARAMS = {
   SEARCH: 'query',
   COMMENT_ID: 'commentId',
+  REF: 'ref',
 }

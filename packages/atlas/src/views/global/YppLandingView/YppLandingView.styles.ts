@@ -7,6 +7,11 @@ import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { cVar, media, sizes } from '@/styles'
 
+export const BannerContainer = styled.div`
+  margin-left: calc(-1 * var(--size-global-horizontal-padding));
+  margin-right: calc(-1 * var(--size-global-horizontal-padding));
+`
+
 export const imageShadow = css`
   /* https://www.figma.com/file/oQqFqdAiPu16eeE2aA5AD5/YouTube-Partner-Program?node-id=1819%3A79839 */
 
