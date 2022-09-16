@@ -16,11 +16,12 @@ import {
   StyledSvgAtlasLogoShort,
   StyledSvgControlsConnect,
 } from './YppAuthorizationModal.styles'
-
-import { YppAuthorizationDetailsFormStep } from '../YppAuthorizationDetailsFormStep'
-import { YppAuthorizationRequirementsStep } from '../YppAuthorizationRequirementsStep'
-import { YppAuthorizationSelectChannelStep } from '../YppAuthorizationSelectChannelStep'
-import { YppAuthorizationTermsAndConditionsStep } from '../YppAuthorizationTermsAndConditionsStep'
+import {
+  YppAuthorizationDetailsFormStep,
+  YppAuthorizationRequirementsStep,
+  YppAuthorizationSelectChannelStep,
+  YppAuthorizationTermsAndConditionsStep,
+} from './YppAuthorizationSteps'
 
 type Step = 'select-channel' | 'requirements' | 'details' | 'terms-and-conditions' | 'summary' | 'connect-with-yt'
 
