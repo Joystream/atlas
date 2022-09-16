@@ -28,7 +28,6 @@ export type AvatarProps = PropsWithChildren<{
   onError?: () => void
   assetUrl?: string | null
   hasAvatarUploadFailed?: boolean
-  withoutOutline?: boolean
   loading?: boolean
   className?: string
   /**

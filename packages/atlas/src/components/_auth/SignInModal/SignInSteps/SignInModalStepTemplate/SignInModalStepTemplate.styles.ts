@@ -61,6 +61,7 @@ export const BackgroundImageOverlay = styled.div`
   height: 100%;
   background-color: ${cVar('colorBackgroundOverlay')};
   z-index: -1;
+  backdrop-filter: blur(${sizes(8)});
 `
 
 export const BackgroundImage = styled.img`
@@ -70,7 +71,6 @@ export const BackgroundImage = styled.img`
   object-fit: cover;
   width: 100%;
   height: 100%;
-  filter: blur(${sizes(8)});
   z-index: -1;
 `
 

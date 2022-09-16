@@ -40,7 +40,6 @@ export const CollectorsBox: FC<CollectorsBoxProps> = ({ collectors, maxShowedCol
         </PlusIconBackground>
       ),
       tooltipText: `${mappedCollectors.length} collectors`,
-      withoutOutline: true,
     },
   ]
 

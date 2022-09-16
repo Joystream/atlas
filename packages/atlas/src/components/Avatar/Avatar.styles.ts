@@ -137,7 +137,7 @@ const getAvatarSizeCss = ({ size }: ContainerProps): SerializedStyles => {
 
 export const sharedAvatarHoverStyles = css`
   ::after {
-    box-shadow: inset 0 0 0 1px ${cVar('colorBackgroundAlpha')};
+    border: 1px solid ${cVar('colorBackgroundAlpha')};
   }
   ${IconAndOverlayWrapper} {
     opacity: 1;
@@ -150,7 +150,7 @@ export const sharedAvatarHoverStyles = css`
 
 export const sharedAvatarActiveStyles = css`
   ::after {
-    box-shadow: inset 0 0 0 1px ${cVar('colorBackgroundMutedAlpha')};
+    border: 1px solid ${cVar('colorBackgroundMutedAlpha')};
   }
   ${IconAndOverlayWrapper} {
     opacity: 1;
@@ -175,7 +175,7 @@ const getInteractiveStyles = ({ isLoading, disableInteractiveStyles }: Omit<Cont
       border-radius: 50%;
       z-index: ${zIndex.overlay};
       pointer-events: none;
-      box-shadow: inset 0 0 0 1px ${cVar('colorBackgroundMutedAlpha')};
+      border: 1px solid ${cVar('colorBackgroundMutedAlpha')};
     }
 
     :hover {
