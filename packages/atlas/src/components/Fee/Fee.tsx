@@ -27,7 +27,7 @@ export const Fee: FC<FeeProps> = ({
   variant = 't100',
   color = 'colorTextStrong',
   tooltipHeaderText = 'Blockchain transaction',
-  tooltipText = 'This action requires a blockchain transaction, which comes with a fee. Transaction fees are covered from your membership account balance',
+  tooltipText = 'This action requires a blockchain transaction, which comes with a fee. Transaction fees are covered from your membership account balance.',
   hideOnMobile,
   className,
   loading,
