@@ -117,16 +117,15 @@ export const FooterButtonsContainer = styled.div<{ additionalActionsNodeMobilePo
     additionalActionsNodeMobilePosition === 'bottom' ? 0 : sizes(2)};
   margin-bottom: ${({ additionalActionsNodeMobilePosition = 'top' }) =>
     additionalActionsNodeMobilePosition === 'top' ? 0 : sizes(2)};
-  display: flex;
-  flex-direction: column-reverse;
+  display: grid;
+  grid-auto-flow: column;
+  gap: ${sizes(2)};
 
   ${media.sm} {
     margin-bottom: 0;
     margin-top: 0;
     margin-left: ${sizes(2)};
     display: grid;
-    gap: ${sizes(2)};
-    grid-auto-flow: column;
     justify-content: flex-end;
     grid-auto-columns: auto;
   }
