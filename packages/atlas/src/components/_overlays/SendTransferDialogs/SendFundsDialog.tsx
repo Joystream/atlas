@@ -94,6 +94,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
         return
       }
       handleTransaction({
+        disableQNSync: true,
         snackbarSuccessMessage: {
           title: `${formatNumber(data.amount)} ${JOY_CURRENCY_TICKER} ${
             convertedAmount === null ? '' : `$(${formatNumber(convertedAmount || 0)})`
@@ -206,7 +207,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
                 },
                 wrongAddress: (value) => {
                   if (value && value.length < ADDRESS_LENGTH) {
-                    return 'Invalid destination account format.'
+                    return 'Enter a valid Polkadot wallet address.'
                   }
                   return true
                 },
