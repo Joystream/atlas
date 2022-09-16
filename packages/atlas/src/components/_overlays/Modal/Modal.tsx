@@ -23,7 +23,6 @@ export const Modal: FC<ModalProps> = ({
   children,
   size = 'small',
   show,
-  onExitClick,
   onClickOutside,
   onEscPress,
   className,
@@ -61,7 +60,7 @@ export const Modal: FC<ModalProps> = ({
         unmountOnExit
         appear
       >
-        <ModalBackdrop onClick={onExitClick || onClickOutside} />
+        <ModalBackdrop onClick={onClickOutside} />
       </CSSTransition>
       <CSSTransition
         in={show}
