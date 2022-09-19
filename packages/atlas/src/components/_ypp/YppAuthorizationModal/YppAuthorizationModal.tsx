@@ -23,34 +23,61 @@ import {
   YppAuthorizationTermsAndConditionsStep,
 } from './YppAuthorizationSteps'
 
-type Step = 'select-channel' | 'requirements' | 'details' | 'terms-and-conditions' | 'summary' | 'connect-with-yt'
+export type Step =
+  | 'select-channel'
+  | 'requirements'
+  | 'details'
+  | 'terms-and-conditions'
+  | 'summary'
+  | 'connect-with-yt'
 
 export type YppAuthorizationModalProps = {
+  step: Step | null
+  channels?: BasicChannelFieldsFragment[]
+  selectedChannel: string | null
+  authorizationUrl: string
+  isChannelValid?: boolean
+  onSelectChannel: (channel: string) => void
+  onSelectStep: (step: Step) => void
   onPrimaryClick?: () => void
   onBackClick?: () => void
   onCancelClick?: () => void
-  step: Step
-  channels: BasicChannelFieldsFragment[]
 } & Pick<DialogModalProps, 'show'>
 
 export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   show,
-  onBackClick,
-  onCancelClick,
   channels,
   step,
+  selectedChannel,
+  authorizationUrl,
+  isChannelValid,
+  onSelectChannel,
+  onSelectStep,
+  onBackClick,
+  onCancelClick,
 }) => {
   const isSummary = step === 'summary'
   const isConnectWithYt = step === 'connect-with-yt'
   const isSelectChannel = step === 'select-channel'
+
   const authorizationStep = useMemo(() => {
     switch (step) {
       case 'select-channel':
         return {
           title: 'Select channel',
           description: 'Select the Atlas channel you want your YouTube channel to be connected with.',
-          primaryButton: { text: 'Select channel' },
-          component: <YppAuthorizationSelectChannelStep channels={channels} />,
+          primaryButton: {
+            text: 'Select channel',
+            onClick: () => onSelectStep('requirements'),
+            disabled: !selectedChannel,
+          },
+          component: (
+            <YppAuthorizationSelectChannelStep
+              channels={channels}
+              selectedChannel={selectedChannel}
+              onSelectChannel={onSelectChannel}
+            />
+          ),
         }
       case 'requirements':
         return {
@@ -59,8 +86,11 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
             'Before you can apply to the program, make sure both your Atlas and YouTube channels meet the below conditions.',
           primaryButton: {
             text: 'Authorize with YouTube',
+            to: authorizationUrl,
+            target: '_self',
+            disabled: !isChannelValid,
           },
-          component: <YppAuthorizationRequirementsStep />,
+          component: <YppAuthorizationRequirementsStep isChannelValid={isChannelValid} />,
         }
       case 'details':
         return {
@@ -119,7 +149,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           },
         }
     }
-  }, [channels, step])
+  }, [authorizationUrl, channels, isChannelValid, onSelectChannel, onSelectStep, selectedChannel, step])
   return (
     <DialogModal
       show={show}

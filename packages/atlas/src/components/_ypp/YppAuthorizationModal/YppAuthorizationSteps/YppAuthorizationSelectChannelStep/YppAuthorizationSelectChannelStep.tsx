@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 
 import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { Avatar } from '@/components/Avatar'
@@ -7,11 +7,16 @@ import { useAsset } from '@/providers/assets/assets.hooks'
 import { ListItemsWrapper, StyledListItem } from './YppAuthorizationSelectChannelStep.styles'
 
 type YppAuthorizationSelectChannelStepProps = {
-  channels: BasicChannelFieldsFragment[]
+  channels?: BasicChannelFieldsFragment[]
+  selectedChannel: string | null
+  onSelectChannel: (channel: string) => void
 }
 
-export const YppAuthorizationSelectChannelStep: FC<YppAuthorizationSelectChannelStepProps> = ({ channels }) => {
-  const [selectedChannel, setSelectedChannel] = useState<string | null>(null)
+export const YppAuthorizationSelectChannelStep: FC<YppAuthorizationSelectChannelStepProps> = ({
+  channels,
+  selectedChannel,
+  onSelectChannel,
+}) => {
   return (
     <ListItemsWrapper>
       {channels?.map((channel) => (
@@ -19,7 +24,7 @@ export const YppAuthorizationSelectChannelStep: FC<YppAuthorizationSelectChannel
           key={channel.id}
           channel={channel}
           selected={selectedChannel === channel.id}
-          onClick={() => setSelectedChannel(channel.id)}
+          onClick={() => onSelectChannel(channel.id)}
         />
       ))}
     </ListItemsWrapper>

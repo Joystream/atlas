@@ -4,15 +4,18 @@ import { SvgActionCheck, SvgActionClose } from '@/components/_icons'
 
 import { ListItem, StyledList, TickWrapper } from './YppAuthorizationRequirementsStep.styles'
 
-const REQUIREMENTS = [
-  { text: 'Your Atlas channel avatar, cover image, and description are set', fulfilled: false },
-  { text: 'Your Atlas channel avatar, cover image, and description are set', fulfilled: false },
-  { text: 'Your YouTube channel is at least 3 months old', fulfilled: true },
-  { text: 'Your YouTube channel has at least 10 videos, all published at least 1 month ago', fulfilled: true },
-  { text: 'Your YouTube channel has at least 50 subscribers', fulfilled: true },
-]
+type YppAuthorizationRequirementsStepProps = {
+  isChannelValid?: boolean
+}
 
-export const YppAuthorizationRequirementsStep: FC = () => {
+export const YppAuthorizationRequirementsStep: FC<YppAuthorizationRequirementsStepProps> = ({ isChannelValid }) => {
+  const REQUIREMENTS = [
+    { text: 'Your Atlas channel avatar, cover image, and description are set', fulfilled: !!isChannelValid },
+    { text: 'Your YouTube channel is at least 3 months old', fulfilled: true },
+    { text: 'Your YouTube channel has at least 10 videos, all published at least 1 month ago', fulfilled: true },
+    { text: 'Your YouTube channel has at least 50 subscribers', fulfilled: true },
+  ]
+
   return (
     <StyledList>
       {REQUIREMENTS.map((item) => (
