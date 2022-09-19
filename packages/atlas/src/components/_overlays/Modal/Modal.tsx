@@ -14,33 +14,23 @@ export type ModalProps = PropsWithChildren<{
   noBoxShadow?: boolean
   size?: ModalSize
   onClickOutside?: (event?: MouseEvent) => void
-  onEscPress?: () => void
   className?: string
 }> &
   Pick<DialogProps, 'onExitClick' | 'additionalActionsNode'>
 
-export const Modal: FC<ModalProps> = ({
-  children,
-  size = 'small',
-  show,
-  onExitClick,
-  onClickOutside,
-  onEscPress,
-  className,
-  noBoxShadow,
-}) => {
+export const Modal: FC<ModalProps> = ({ children, size = 'small', show, onClickOutside, className, noBoxShadow }) => {
   const { modalContainerRef, incrementOverlaysOpenCount, decrementOverlaysOpenCount, lastOverlayId } =
     useOverlayManager()
   const [overlayId, setOverlayId] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!onEscPress) {
+    if (!onClickOutside) {
       return
     }
     const handleEscPress = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         if (lastOverlayId === overlayId) {
-          onEscPress?.()
+          onClickOutside?.()
         }
       }
     }
@@ -49,7 +39,7 @@ export const Modal: FC<ModalProps> = ({
     return () => {
       document.removeEventListener('keydown', handleEscPress)
     }
-  }, [lastOverlayId, onEscPress, overlayId])
+  }, [lastOverlayId, onClickOutside, overlayId])
 
   return (
     <Portal containerRef={modalContainerRef}>
@@ -61,7 +51,7 @@ export const Modal: FC<ModalProps> = ({
         unmountOnExit
         appear
       >
-        <ModalBackdrop onClick={onExitClick || onClickOutside} />
+        <ModalBackdrop onClick={onClickOutside} />
       </CSSTransition>
       <CSSTransition
         in={show}

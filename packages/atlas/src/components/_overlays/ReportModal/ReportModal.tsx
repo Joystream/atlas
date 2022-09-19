@@ -27,8 +27,14 @@ export const ReportModal: FC<ReportModalProps> = ({ entityId, show, onClose, typ
   const {
     register,
     handleSubmit,
+    resetField,
     formState: { errors },
   } = useForm<{ rationale: string }>()
+
+  const handleClose = () => {
+    resetField('rationale')
+    onClose()
+  }
 
   const submit = handleSubmit(async ({ rationale }) => {
     try {
@@ -48,7 +54,7 @@ export const ReportModal: FC<ReportModalProps> = ({ entityId, show, onClose, typ
           },
         })
       }
-      onClose()
+      handleClose()
       displaySnackbar({
         title: 'Thank you for your report',
         description: `Your report helps make ${APP_NAME} a better place. Our team will be reviewing it shortly and taking action if necessary.`,
@@ -64,13 +70,12 @@ export const ReportModal: FC<ReportModalProps> = ({ entityId, show, onClose, typ
   })
   return (
     <DialogModal
-      onExitClick={onClose}
       title={`Report ${type}`}
       show={show}
       onSubmit={submit}
       secondaryButton={{
         text: 'Cancel',
-        onClick: onClose,
+        onClick: handleClose,
       }}
       primaryButton={{
         disabled: reportVideoLoading || reportChannelLoading,
@@ -86,7 +91,10 @@ export const ReportModal: FC<ReportModalProps> = ({ entityId, show, onClose, typ
         }`}
       >
         <TextArea
-          {...register('rationale', { required: { value: true, message: 'Provide details for your report.' } })}
+          {...register('rationale', {
+            required: { value: true, message: 'Provide details for your report.' },
+            maxLength: { value: 400, message: 'Your report is too long.' },
+          })}
           counter
           error={!!errors.rationale}
           maxLength={400}

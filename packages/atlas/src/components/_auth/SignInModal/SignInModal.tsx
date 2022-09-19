@@ -212,7 +212,7 @@ export const SignInModal: FC = () => {
       dividers={currentStep !== 'creating'}
       primaryButton={primaryButtonProps}
       secondaryButton={backButtonVisible ? { text: 'Back', onClick: goToPreviousStep } : undefined}
-      onEscPress={() => setSignInModalOpen(false)}
+      onClickOutside={() => setSignInModalOpen(false)}
       additionalActionsNode={
         currentStep !== 'creating' ? (
           <Button variant="tertiary" onClick={() => setSignInModalOpen(false)}>
