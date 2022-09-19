@@ -120,7 +120,7 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
       backgroundImage={watch('avatar')?.url || undefined}
       subtitle={
         <>
-          To get the full ${APP_NAME} experience, you need a free Joystream blockchain membership.
+          To get the full {APP_NAME} experience, you need a free Joystream blockchain membership.
           <Text as="p" variant="t100" color="inherit">
             <Anchor href={JOYSTREAM_URL} target="_blank">
               Learn about Joystream &rarr;
