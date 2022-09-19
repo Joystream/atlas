@@ -13,7 +13,7 @@ export const Maintenance: FC = () => (
       We’ll be right back!
     </Header>
     <Text as="p" variant="t200" color="colorText">
-      ${APP_NAME} is currently undergoing maintenance work <br /> in order to ensure the best features <br /> and
+      {APP_NAME} is currently undergoing maintenance work <br /> in order to ensure the best features <br /> and
       performance for our users. <br /> <br />
       We should be back shortly. <br /> See you soon!
     </Text>
