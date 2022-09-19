@@ -107,7 +107,7 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
     <SignInModalStepTemplate
       title="Select wallet"
       subtitle="Select which wallet you want to connect with."
-      tooltipText="To create a Joystream membership, you need to select a wallet account to connect it with first. It's 100% free."
+      tooltipText="To create a membership, you need to select a wallet account to connect it with first. This is 100% free."
       hasNavigatedBack={hasNavigatedBack}
     >
       {hasError ? (

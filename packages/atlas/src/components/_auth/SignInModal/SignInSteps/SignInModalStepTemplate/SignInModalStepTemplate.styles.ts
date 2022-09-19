@@ -24,7 +24,7 @@ export const StyledAtlasLogoShort = styled(SvgAtlasLogoShort)`
   height: 36px;
   width: auto;
 
-  > path {
+  path {
     fill: ${cVar('colorTextMuted')};
   }
 `
@@ -50,6 +50,7 @@ const backAnimation = keyframes`
 type CustomBackgroundContainerProps = {
   darkBackground?: boolean
   hasDivider?: boolean
+  bottomPadding?: boolean
 }
 
 export const BackgroundImageOverlay = styled.div`
@@ -82,7 +83,10 @@ export const CustomBackgroundContainer = styled.div<CustomBackgroundContainerPro
 
   margin: calc(-1 * var(--local-size-dialog-padding)) calc(-1 * var(--local-size-dialog-padding)) 0
     calc(-1 * var(--local-size-dialog-padding));
-  padding: var(--local-size-dialog-padding);
+  padding: ${({ bottomPadding }) =>
+    bottomPadding
+      ? 'var(--local-size-dialog-padding)'
+      : 'var(--local-size-dialog-padding) var(--local-size-dialog-padding) 0 var(--local-size-dialog-padding)'};
   background-color: ${({ darkBackground }) => (darkBackground ? cVar('colorBackground') : 'unset')};
   box-shadow: ${({ hasDivider }) => (hasDivider ? cVar('effectDividersBottom') : 'unset')};
 `

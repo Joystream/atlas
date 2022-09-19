@@ -124,7 +124,7 @@ export const SignInModal: FC = () => {
           displaySnackbar({
             title: `You received ${amountOfTokens}`,
             description: `Enjoy your ${amountOfTokens} tokens to help you cover transaction fees. These tokens are non-transferable and can't be spent on NFTs or other purchases.`,
-            iconType: 'info',
+            iconType: 'token',
           })
         }
         const { block } = await createNewMember(selectedAddress, data)

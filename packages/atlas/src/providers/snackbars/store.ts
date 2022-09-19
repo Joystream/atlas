@@ -3,7 +3,7 @@ import { ReactNode } from 'react'
 import { createStore } from '@/store'
 import { createId } from '@/utils/createId'
 
-export type SnackbarIconType = 'success' | 'error' | 'info' | 'warning' | 'uploading' | 'loading'
+export type SnackbarIconType = 'success' | 'error' | 'info' | 'warning' | 'uploading' | 'loading' | 'token'
 
 export type DisplaySnackbarArgs = {
   customId?: string

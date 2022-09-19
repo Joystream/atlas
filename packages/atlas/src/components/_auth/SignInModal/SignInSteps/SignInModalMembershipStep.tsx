@@ -116,7 +116,7 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
   return (
     <SignInModalStepTemplate
       darkBackground
-      title="Create Joystream membership"
+      title="Create membership"
       backgroundImage={watch('avatar')?.url || undefined}
       subtitle={
         <>
