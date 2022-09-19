@@ -37,7 +37,7 @@ const _TokenInput: ForwardRefRenderFunction<HTMLInputElement, TokenInputProps> =
       {...rest}
       ref={ref}
       type="number"
-      nodeStart={<JoyTokenIcon variant="gray" size={24} />}
+      nodeStart={<JoyTokenIcon variant="gray" size={16} />}
       nodeEnd={
         !!valueInUSD && (
           <NumberFormat as="span" variant="t300" format="dollar" color="colorTextMuted" value={valueInUSD} />
