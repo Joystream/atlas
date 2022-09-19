@@ -54,7 +54,7 @@ export const ReportModal: FC<ReportModalProps> = ({ entityId, show, onClose, typ
           },
         })
       }
-      onClose()
+      handleClose()
       displaySnackbar({
         title: 'Thank you for your report',
         description: `Your report helps make ${APP_NAME} a better place. Our team will be reviewing it shortly and taking action if necessary.`,
@@ -70,7 +70,6 @@ export const ReportModal: FC<ReportModalProps> = ({ entityId, show, onClose, typ
   })
   return (
     <DialogModal
-      onClickOutside={handleClose}
       title={`Report ${type}`}
       show={show}
       onSubmit={submit}
