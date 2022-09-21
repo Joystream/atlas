@@ -1,7 +1,7 @@
 import { Language, License, VideoCategory } from '@/api/queries/__generated__/baseTypes.generated'
-import { CommonStore, createStore } from '@/store'
 import { createId } from '@/utils/createId'
 import { readFromLocalStorage } from '@/utils/localStorage'
+import { CommonStore, createStore } from '@/utils/store'
 
 export type CommonDraftProps = {
   id: string
