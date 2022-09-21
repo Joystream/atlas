@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 
-import { createStore } from '@/store'
 import { createId } from '@/utils/createId'
+import { createStore } from '@/utils/store'
 
 export type SnackbarIconType = 'success' | 'error' | 'info' | 'warning' | 'uploading' | 'loading' | 'token'
 
