@@ -6,6 +6,11 @@ import bottomLeftPattern from '@/assets/images/ypp-background-pattern.svg'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { cVar, media, sizes } from '@/styles'
+import { ignoreGlobalPadding } from '@/styles/utils'
+
+export const BannerContainer = styled.div`
+  ${ignoreGlobalPadding};
+`
 
 export const imageShadow = css`
   /* https://www.figma.com/file/oQqFqdAiPu16eeE2aA5AD5/YouTube-Partner-Program?node-id=1819%3A79839 */
