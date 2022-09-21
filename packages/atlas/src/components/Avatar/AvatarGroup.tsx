@@ -113,7 +113,7 @@ const SingleAvatar: FC<SingleAvatarProps> = ({ avatar, loading: loadingProp, siz
       loading={loading}
       assetUrl={url}
       size={size}
-      disabledInteractiveStyles
+      clickable={false}
       onClick={(e) => {
         e.stopPropagation()
         e.preventDefault()
