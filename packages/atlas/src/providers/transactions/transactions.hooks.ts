@@ -41,6 +41,7 @@ type HandleTransactionOpts<T extends ExtrinsicResult> = {
   }
   allowMultiple?: boolean // whether to allow sending a transaction when one is still processing
   unsignedMessage?: string
+  disableQNSync?: boolean
 }
 type HandleTransactionFn = <T extends ExtrinsicResult>(opts: HandleTransactionOpts<T>) => Promise<boolean>
 
@@ -67,6 +68,7 @@ export const useTransaction = (): HandleTransactionFn => {
       minimized = null,
       allowMultiple,
       unsignedMessage,
+      disableQNSync,
     }) => {
       /* === check whether new transaction can be started === */
       if (nodeConnectionStatus !== 'connected') {
@@ -170,7 +172,12 @@ export const useTransaction = (): HandleTransactionFn => {
             }
             resolve()
           }
-          addBlockAction({ callback: syncCallback, targetBlock: result.block })
+
+          if (disableQNSync) {
+            syncCallback()
+          } else {
+            addBlockAction({ callback: syncCallback, targetBlock: result.block })
+          }
         })
         await queryNodeSyncPromise
 

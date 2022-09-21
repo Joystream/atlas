@@ -14,6 +14,7 @@ import { Avatar, AvatarProps } from '@/components/Avatar'
 import { Fee } from '@/components/Fee'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
+import { Tooltip } from '@/components/Tooltip'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
@@ -93,6 +94,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
         return
       }
       handleTransaction({
+        disableQNSync: true,
         snackbarSuccessMessage: {
           title: `${formatNumber(data.amount)} ${JOY_CURRENCY_TICKER} ${
             convertedAmount === null ? '' : `$(${formatNumber(convertedAmount || 0)})`
@@ -205,7 +207,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
                 },
                 wrongAddress: (value) => {
                   if (value && value.length < ADDRESS_LENGTH) {
-                    return 'Invalid destination account format.'
+                    return 'Enter a valid Polkadot wallet address.'
                   }
                   return true
                 },
@@ -231,9 +233,13 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
 }
 
 type ResolvedAvatarProps = {
-  member?: BasicMembershipFieldsFragment
+  member: BasicMembershipFieldsFragment
 } & AvatarProps
 const ResolvedAvatar: FC<ResolvedAvatarProps> = ({ member }) => {
   const { url, isLoadingAsset } = useMemberAvatar(member)
-  return <Avatar assetUrl={url} loading={isLoadingAsset} size="bid" />
+  return (
+    <Tooltip text={member?.handle} placement="top">
+      <Avatar assetUrl={url} loading={isLoadingAsset} size="bid" />
+    </Tooltip>
+  )
 }
