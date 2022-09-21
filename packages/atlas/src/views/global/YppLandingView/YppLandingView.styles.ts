@@ -6,10 +6,10 @@ import bottomLeftPattern from '@/assets/images/ypp-background-pattern.svg'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { cVar, media, sizes } from '@/styles'
+import { ignoreGlobalPadding } from '@/styles/utils'
 
 export const BannerContainer = styled.div`
-  margin-left: calc(-1 * var(--size-global-horizontal-padding));
-  margin-right: calc(-1 * var(--size-global-horizontal-padding));
+  ${ignoreGlobalPadding};
 `
 
 export const imageShadow = css`
