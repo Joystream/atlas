@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
-import { cVar, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 export const InformationWrapper = styled.div`
   display: inline-grid;
@@ -13,12 +13,15 @@ export const InformationWrapper = styled.div`
 
 export const ReferralBannerContainer = styled.div`
   width: 100%;
-  padding: ${sizes(4)} ${sizes(8)};
   display: grid;
   grid-template-columns: auto max-content;
   justify-content: space-between;
   column-gap: ${sizes(2)};
   background-color: ${cVar('colorBackgroundMuted')};
+  padding: ${sizes(4)} ${sizes(4)};
+  ${media.md} {
+    padding: ${sizes(4)} ${sizes(8)};
+  }
 `
 
 export const ChannelInfoContainer = styled.div`
