@@ -18,7 +18,7 @@ import { Tooltip } from '../Tooltip'
 type SharedAvatarGroupAvatarProps = PropsWithChildren<{
   tooltipText?: string
 }> &
-  Pick<AvatarProps, 'onClick' | 'withoutOutline' | 'loading'>
+  Pick<AvatarProps, 'onClick' | 'loading'>
 
 export type AvatarGroupUrlAvatar = {
   __typename?: 'AvatarGroupUrlAvatar'
@@ -113,7 +113,7 @@ const SingleAvatar: FC<SingleAvatarProps> = ({ avatar, loading: loadingProp, siz
       loading={loading}
       assetUrl={url}
       size={size}
-      withoutOutline={avatar.withoutOutline}
+      clickable={false}
       onClick={(e) => {
         e.stopPropagation()
         e.preventDefault()

@@ -28,7 +28,6 @@ export type AvatarProps = PropsWithChildren<{
   onError?: () => void
   assetUrl?: string | null
   hasAvatarUploadFailed?: boolean
-  withoutOutline?: boolean
   loading?: boolean
   className?: string
   /**
@@ -42,11 +41,9 @@ export type AvatarProps = PropsWithChildren<{
    * @description channel-card - default: 88px x 88px, md: 104px x 104px
    */
   size?: AvatarSize
-  editable?: boolean
   newChannel?: boolean
+  editable?: boolean
   clickable?: boolean
-  // for the purpose of member dropdown
-  disabledInteractiveStyles?: boolean
 }>
 
 export const Avatar: FC<AvatarProps> = ({
@@ -59,7 +56,6 @@ export const Avatar: FC<AvatarProps> = ({
   editable,
   newChannel,
   clickable,
-  disabledInteractiveStyles,
   onError,
   onClick,
   onImageValidation,
@@ -103,8 +99,7 @@ export const Avatar: FC<AvatarProps> = ({
       size={size}
       className={className}
       isLoading={loading}
-      isClickable={clickable || !!onClick}
-      disableInteractiveStyles={disabledInteractiveStyles}
+      isClickable={clickable || (clickable == null && !!onClick)} // default to true if onClick is provided
     >
       {(clickable || !!onClick) && (
         <IconAndOverlayWrapper>

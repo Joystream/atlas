@@ -132,7 +132,6 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
             <Tooltip text="Member" offsetY={16} placement="bottom">
               <AvatarWrapper onClick={() => onSwitchDropdownType('member')}>
                 <StyledAvatar
-                  disabledInteractiveStyles
                   clickable={false}
                   isDisabled={type === 'channel'}
                   size="small"
@@ -149,7 +148,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                 }
               >
                 <StyledAvatar
-                  disabledInteractiveStyles
+                  clickable={false}
                   isDisabled={type === 'member'}
                   size="small"
                   assetUrl={channelAvatarUrl}
