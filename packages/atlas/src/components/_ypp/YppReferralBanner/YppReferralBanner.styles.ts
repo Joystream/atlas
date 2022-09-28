@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
 import { cVar, media, sizes } from '@/styles'
+import { ignoreGlobalPadding } from '@/styles/utils'
 
 export const InformationWrapper = styled.div`
   display: inline-grid;
@@ -46,4 +47,8 @@ export const StyledLink = styled(Link)`
   text-decoration: none;
   color: unset;
   overflow: hidden;
+`
+
+export const ReferralBannerPaddingWrapper = styled.div`
+  ${ignoreGlobalPadding};
 `

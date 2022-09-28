@@ -1,8 +1,11 @@
 import { ApolloProvider } from '@apollo/client'
 import { Meta, Story } from '@storybook/react'
+import { MemoryRouter } from 'react-router-dom'
 
 import { createApolloClient } from '@/api'
+import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
+import { UserProvider } from '@/providers/user/user.provider'
 
 import { YppAuthorizationModal, YppAuthorizationModalProps } from './YppAuthorizationModal'
 
@@ -11,34 +14,29 @@ export default {
 
   component: YppAuthorizationModal,
   argTypes: {
-    step: {
-      options: ['select-channel', 'requirements', 'details', 'terms-and-conditions', 'summary', 'connect-with-yt'],
-      control: { type: 'select' },
+    currentStepIdx: {
+      type: 'number',
     },
-    channels: { table: { disable: true } },
   },
   args: {
-    show: true,
-    step: 'requirements',
-    channels: [
-      {
-        id: '1',
-        title: 'The Joystreamers',
-        createdAt: new Date(),
-        follows: 12332,
-        rewardAccount: '',
-        channelStateBloatBond: '',
-      },
-      {
-        id: '2',
-        title: 'Joystream',
-        createdAt: new Date(),
-        follows: 987,
-        rewardAccount: '',
-        channelStateBloatBond: '',
-      },
-    ],
+    currentStepIdx: null,
   },
+  decorators: [
+    (Story) => {
+      const apolloClient = createApolloClient()
+      return (
+        <MemoryRouter>
+          <ApolloProvider client={apolloClient}>
+            <UserProvider>
+              <ConfirmationModalProvider>
+                <Story />
+              </ConfirmationModalProvider>
+            </UserProvider>
+          </ApolloProvider>
+        </MemoryRouter>
+      )
+    },
+  ],
 } as Meta<YppAuthorizationModalProps>
 
 const Template: Story<YppAuthorizationModalProps> = (args) => {

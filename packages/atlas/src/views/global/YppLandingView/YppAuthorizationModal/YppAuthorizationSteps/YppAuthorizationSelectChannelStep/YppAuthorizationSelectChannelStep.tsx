@@ -6,15 +6,17 @@ import { useAsset } from '@/providers/assets/assets.hooks'
 
 import { ListItemsWrapper, StyledListItem } from './YppAuthorizationSelectChannelStep.styles'
 
+import { MemberChannel } from '../../YppAuthorizationModal.types'
+
 type YppAuthorizationSelectChannelStepProps = {
-  channels?: BasicChannelFieldsFragment[]
-  selectedChannel: string | null
-  onSelectChannel: (channel: string) => void
+  channels?: MemberChannel[]
+  selectedChannelId: string | null
+  onSelectChannel: (channelId: string) => void
 }
 
 export const YppAuthorizationSelectChannelStep: FC<YppAuthorizationSelectChannelStepProps> = ({
   channels,
-  selectedChannel,
+  selectedChannelId,
   onSelectChannel,
 }) => {
   return (
@@ -23,7 +25,7 @@ export const YppAuthorizationSelectChannelStep: FC<YppAuthorizationSelectChannel
         <ChannelListItem
           key={channel.id}
           channel={channel}
-          selected={selectedChannel === channel.id}
+          selected={selectedChannelId === channel.id}
           onClick={() => onSelectChannel(channel.id)}
         />
       ))}
