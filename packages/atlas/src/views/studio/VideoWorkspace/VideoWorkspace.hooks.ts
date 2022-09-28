@@ -8,6 +8,7 @@ import {
   GetFullVideosConnectionQueryVariables,
 } from '@/api/queries/__generated__/videos.generated'
 import { VideoExtrinsicResult, VideoInputAssets } from '@/joystream-lib/types'
+import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useAssetStore } from '@/providers/assets/assets.store'
 import { useDraftStore } from '@/providers/drafts'
 import { useBloatFeesAndPerMbFees, useJoystream } from '@/providers/joystream/joystream.hooks'
@@ -37,6 +38,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
   const addAsset = useAssetStore((state) => state.actions.addAsset)
   const removeDrafts = useDraftStore((state) => state.actions.removeDrafts)
   const { tabData } = useVideoWorkspaceData()
+  const channelBucketsCount = useChannelsStorageBucketsCount(channelId)
 
   const { videoStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
 
@@ -46,6 +48,11 @@ export const useHandleVideoWorkspaceSubmit = () => {
     async (data: VideoFormData) => {
       if (!joystream) {
         ConsoleLogger.error('No Joystream instance! Has webworker been initialized?')
+        return
+      }
+
+      if (!channelBucketsCount) {
+        SentryLogger.error('Channel buckets count is not set', 'VideoWorkspace.hooks')
         return
       }
 
@@ -199,6 +206,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
                 assets,
                 dataObjectStateBloatBondValue.toString(),
                 videoStateBloatBondValue.toString(),
+                channelBucketsCount.toString(),
                 proxyCallback(updateStatus)
               )
             : (
@@ -211,6 +219,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
                 assets,
                 removedAssetsIds,
                 dataObjectStateBloatBondValue.toString(),
+                channelBucketsCount.toString(),
                 proxyCallback(updateStatus)
               ),
         onTxSync: refetchDataAndUploadAssets,
@@ -228,6 +237,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
     },
     [
       joystream,
+      channelBucketsCount,
       isEdit,
       handleTransaction,
       tabData?.assets.video.id,

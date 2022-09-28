@@ -254,7 +254,8 @@ export class JoystreamLibExtrinsics {
     inputMetadata: ChannelInputMetadata,
     newAssets: ChannelInputAssets,
     removedAssetsIds: StringifiedNumber[],
-    expectedDataObjectStateBloatBond: StringifiedNumber
+    expectedDataObjectStateBloatBond: StringifiedNumber,
+    expectedStorageBucketsCount: StringifiedNumber
   ) => {
     await this.ensureApi()
 
@@ -265,6 +266,7 @@ export class JoystreamLibExtrinsics {
       assetsToRemove: removedAssetsIds.map((id) => new BN(id)),
       collaborators: createType('Option<BTreeMap<u64, BTreeSet<PalletContentChannelActionPermission>>>', null),
       expectedDataObjectStateBloatBond: new BN(expectedDataObjectStateBloatBond),
+      storageBucketsNumWitness: createType('Option<u32>', new BN(expectedStorageBucketsCount)),
     })
 
     const actor = createActor(memberId)
@@ -279,6 +281,7 @@ export class JoystreamLibExtrinsics {
     newAssets,
     removedAssetsIds,
     expectedDataObjectStateBloatBond,
+    expectedStorageBucketsCount,
     cb
   ) => {
     const tx = await this.updateChannelTx(
@@ -287,7 +290,8 @@ export class JoystreamLibExtrinsics {
       inputMetadata,
       newAssets,
       removedAssetsIds,
-      expectedDataObjectStateBloatBond
+      expectedDataObjectStateBloatBond,
+      expectedStorageBucketsCount
     )
     const { block, getEventData } = await this.sendExtrinsic(tx, cb)
 
@@ -309,7 +313,8 @@ export class JoystreamLibExtrinsics {
     nftInputMetadata: NftIssuanceInputMetadata | undefined,
     inputAssets: VideoInputAssets,
     expectedDataObjectStateBloatBond: StringifiedNumber,
-    expectedVideoStateBloatBond: StringifiedNumber
+    expectedVideoStateBloatBond: StringifiedNumber,
+    expectedStorageBucketsCount: StringifiedNumber
   ) => {
     await this.ensureApi()
 
@@ -322,6 +327,7 @@ export class JoystreamLibExtrinsics {
       autoIssueNft: nftIssuanceParameters,
       expectedDataObjectStateBloatBond: new BN(expectedDataObjectStateBloatBond),
       expectedVideoStateBloatBond: new BN(expectedVideoStateBloatBond),
+      storageBucketsNumWitness: new BN(expectedStorageBucketsCount),
     })
 
     const actor = createActor(memberId)
@@ -338,6 +344,7 @@ export class JoystreamLibExtrinsics {
     inputAssets,
     expectedDataObjectStateBloatBond,
     expectedVideoStateBloatBond,
+    expectedStorageBucketsCount,
     cb
   ) => {
     const tx = await this.createVideoTx(
@@ -347,7 +354,8 @@ export class JoystreamLibExtrinsics {
       nftInputMetadata,
       inputAssets,
       expectedDataObjectStateBloatBond,
-      expectedVideoStateBloatBond
+      expectedVideoStateBloatBond,
+      expectedStorageBucketsCount
     )
     const { block, getEventData } = await this.sendExtrinsic(tx, cb)
 
@@ -367,7 +375,8 @@ export class JoystreamLibExtrinsics {
     nftInputMetadata: NftIssuanceInputMetadata | undefined,
     newAssets: VideoInputAssets,
     removedAssetsIds: StringifiedNumber[],
-    expectedDataObjectStateBloatBond: StringifiedNumber
+    expectedDataObjectStateBloatBond: StringifiedNumber,
+    expectedStorageBucketsCount: StringifiedNumber
   ) => {
     await this.ensureApi()
 
@@ -381,6 +390,7 @@ export class JoystreamLibExtrinsics {
       assetsToRemove: removedAssetsIds.map((id) => new BN(id)),
       autoIssueNft: nftIssuanceParameters,
       expectedDataObjectStateBloatBond: new BN(expectedDataObjectStateBloatBond),
+      storageBucketsNumWitness: createType('Option<u32>', new BN(expectedStorageBucketsCount)),
     })
 
     const actor = createActor(memberId)
@@ -396,6 +406,7 @@ export class JoystreamLibExtrinsics {
     newAssets,
     removedAssetsIds,
     expectedDataObjectStateBloatBond,
+    expectedStorageBucketsCount,
     cb
   ) => {
     const tx = await this.updateVideoTx(
@@ -405,7 +416,8 @@ export class JoystreamLibExtrinsics {
       nftInputMetadata,
       newAssets,
       removedAssetsIds,
-      expectedDataObjectStateBloatBond
+      expectedDataObjectStateBloatBond,
+      expectedStorageBucketsCount
     )
 
     const { block, getEventData } = await this.sendExtrinsic(tx, cb)
@@ -417,11 +429,21 @@ export class JoystreamLibExtrinsics {
     }
   }
 
-  deleteVideoTx = async (videoId: VideoId, memberId: MemberId, dataObjectsCount: number) => {
+  deleteVideoTx = async (
+    videoId: VideoId,
+    memberId: MemberId,
+    dataObjectsCount: number,
+    expectedStorageBucketsCount: StringifiedNumber
+  ) => {
     await this.ensureApi()
 
     const actor = createActor(memberId)
-    const tx = this.api.tx.content.deleteVideo(actor, videoId, dataObjectsCount)
+    const tx = this.api.tx.content.deleteVideo(
+      actor,
+      videoId,
+      dataObjectsCount,
+      createType('Option<u32>', new BN(expectedStorageBucketsCount))
+    )
 
     return tx
   }
@@ -430,9 +452,10 @@ export class JoystreamLibExtrinsics {
     videoId,
     memberId,
     dataObjectsCount,
+    expectedStorageBucketsCount,
     cb
   ) => {
-    const tx = await this.deleteVideoTx(videoId, memberId, dataObjectsCount)
+    const tx = await this.deleteVideoTx(videoId, memberId, dataObjectsCount, expectedStorageBucketsCount)
     const { block } = await this.sendExtrinsic(tx, cb)
 
     return {

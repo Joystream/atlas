@@ -1,3 +1,4 @@
+import { ASSET_CHANNEL_BAG_PREFIX } from '@/config/assets'
 import { STORAGE_UPLOAD_PATH } from '@/config/env'
 
 export const joinUrlFragments = (...fragments: string[]) => {
@@ -18,3 +19,5 @@ export const imageUrlValidation = async (imageUrl: string): Promise<boolean> =>
     image.src = imageUrl
     image.onerror = () => resolve(false)
   })
+
+export const createChannelBagId = (channelId: string) => ASSET_CHANNEL_BAG_PREFIX + channelId

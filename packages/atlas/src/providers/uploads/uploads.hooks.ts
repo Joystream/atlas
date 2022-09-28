@@ -5,12 +5,11 @@ import { useNavigate } from 'react-router'
 import * as rax from 'retry-axios'
 import { RetryConfig } from 'retry-axios'
 
-import { ASSET_CHANNEL_BAG_PREFIX } from '@/config/assets'
 import { absoluteRoutes } from '@/config/routes'
 import { useStorageOperators } from '@/providers/assets/assets.provider'
 import { OperatorInfo } from '@/providers/assets/assets.types'
 import { UploadStatus } from '@/types/storage'
-import { createAssetUploadEndpoint } from '@/utils/asset'
+import { createAssetUploadEndpoint, createChannelBagId } from '@/utils/asset'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { useUploadsStore } from './uploads.store'
@@ -62,7 +61,7 @@ export const useStartFileUpload = () => {
   const startFileUpload = useCallback(
     async (file: File | Blob | null, asset: InputAssetUpload, opts?: StartFileUploadOptions) => {
       let uploadOperator: OperatorInfo
-      const bagId = ASSET_CHANNEL_BAG_PREFIX + asset.owner
+      const bagId = createChannelBagId(asset.owner)
       try {
         const storageOperator = await getRandomStorageOperatorForBag(bagId)
         if (!storageOperator) {
