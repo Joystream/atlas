@@ -161,7 +161,7 @@ export const variables = css`
       var(--typography-fonts-primary);
     --typography-desktop-h800: var(--typography-font-weights-semibold) var(--typography-font-sizes-12) / 4rem
       var(--typography-fonts-primary);
-    --typography-desktop-h700: var(--typography-font-weights-semibold) var(--typography-font-sizes-10) / 3.5rem
+    --typography-desktop-h700: var(--typography-font-weights-semibold) var(--typography-font-sizes-10) / 3rem
       var(--typography-fonts-primary);
     --typography-desktop-h600: var(--typography-font-weights-semibold) var(--typography-font-sizes-8) / 2.5rem
       var(--typography-fonts-primary);
@@ -463,7 +463,7 @@ export const theme = {
   typographyDesktopH700: {
     variable: 'var(--typography-desktop-h700)',
     value:
-      '600 2.625rem/3.5rem IBM Plex Sans,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+      '600 2.625rem/3rem IBM Plex Sans,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
   },
   typographyDesktopH600: {
     variable: 'var(--typography-desktop-h600)',
