@@ -157,7 +157,7 @@
               "fontFamily": "{typography.fonts.primary}",
               "fontSize": "{typography.fontSizes.10}",
               "fontWeight": "{typography.fontWeights.semibold}",
-              "lineHeight": "3.5rem"
+              "lineHeight": "3rem"
             }
           },
           "H600": {
