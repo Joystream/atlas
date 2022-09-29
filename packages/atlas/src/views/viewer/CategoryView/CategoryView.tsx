@@ -1,4 +1,4 @@
-import { sampleSize } from 'lodash-es'
+import { sample, sampleSize } from 'lodash-es'
 import { useMemo } from 'react'
 import { useParams } from 'react-router'
 
@@ -15,7 +15,7 @@ import { VideoContentTemplate } from '@/components/_templates/VideoContentTempla
 import { VideoCategoryCard } from '@/components/_video/VideoCategoryCard'
 import { VideoCategoryHero } from '@/components/_video/VideoCategoryHero'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
-import { VideoCategoryData, videoCategories } from '@/config/categories'
+import { VideoCategoryData, displayCategories, findDisplayCategory } from '@/config/categories'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -30,9 +30,16 @@ export const CategoryView = () => {
 
   const { categories, totalVideosCount, loading } = useCategories()
 
-  const mappedVideoCategories = categories?.map((category) => ({
-    ...videoCategories[category.id],
+  const mappedVideoCategories = displayCategories.map((category) => ({
     ...category,
+    activeVideosCounter: categories
+      ? categories.reduce((previousValue, currentValue) => {
+          if (category.videoCategories.includes(currentValue.id)) {
+            return previousValue + currentValue.activeVideosCounter
+          }
+          return previousValue
+        }, 0)
+      : 0,
   }))
   const otherCategory: Array<VideoCategoryData & VideoCategoryFieldsFragment> = useMemo(
     () =>
@@ -42,11 +49,11 @@ export const CategoryView = () => {
       ),
     [id, mappedVideoCategories]
   )
-  const currentCategory = mappedVideoCategories?.find((category) => category.id === id)
+  const currentCategory = findDisplayCategory(id)
 
   const headTags = useHeadTags(currentCategory?.name)
 
-  const { categoriesFeaturedVideos } = useCategoriesFeaturedVideos(id)
+  const { categoriesFeaturedVideos } = useCategoriesFeaturedVideos(sample(currentCategory?.videoCategories) || '')
   const videoHeroVideos = useVideoHeroVideos(categoriesFeaturedVideos)
 
   return (
@@ -75,7 +82,7 @@ export const CategoryView = () => {
         </>
       )}
 
-      <CategoryVideos categoryId={id} />
+      <CategoryVideos categoriesId={currentCategory?.videoCategories} />
 
       <TitleContainer>
         <Text as="h2" variant="h500">

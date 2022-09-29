@@ -29,7 +29,7 @@ const SELECT_LANGUAGE_ITEMS = [
   ...atlasConfig.derived.languagesSelectValues,
 ]
 
-export const CategoryVideos: FC<{ categoryId: string }> = ({ categoryId }) => {
+export const CategoryVideos: FC<{ categoriesId?: string[] }> = ({ categoriesId }) => {
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
   const containerRef = useRef<HTMLDivElement>(null)
@@ -46,7 +46,7 @@ export const CategoryVideos: FC<{ categoryId: string }> = ({ categoryId }) => {
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
 
   const { videoCount } = useVideoCount({
-    where: { ...videoWhereInput, category: { id_eq: categoryId } },
+    where: { ...videoWhereInput, category: { id_in: categoriesId } },
   })
 
   useEffect(() => {
@@ -147,7 +147,7 @@ export const CategoryVideos: FC<{ categoryId: string }> = ({ categoryId }) => {
               />
             </FallbackWrapper>
           }
-          videoWhereInput={{ ...videoWhereInput, category: { id_eq: categoryId } }}
+          videoWhereInput={{ ...videoWhereInput, category: { id_in: categoriesId } }}
           orderBy={sortVideosBy}
           onDemandInfinite
         />

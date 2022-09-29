@@ -66,6 +66,8 @@ export const ExpandButton = styled(TextButton)`
 
 export const CategoryWrapper = styled.div`
   text-align: left;
+  display: grid;
+  gap: ${sizes(2)};
 
   path {
     fill: ${cVar('colorText')};

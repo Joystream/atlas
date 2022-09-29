@@ -5,7 +5,7 @@ import { useAllCategoriesFeaturedVideos } from '@/api/hooks/categoriesFeaturedVi
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { FeaturedVideoCategoryCard, VideoCategoryCard } from '@/components/_video/VideoCategoryCard'
-import { useCategoriesMatch } from '@/hooks/useCategoriesMatch'
+import { displayCategories } from '@/config/categories'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { cVar } from '@/styles'
@@ -19,7 +19,16 @@ import {
 
 export const DiscoverView: FC = () => {
   const { categories, totalVideosCount, loading } = useCategories()
-  const mappedVideoCategories = useCategoriesMatch()
+
+  const mappedVideoCategories = displayCategories.map((category) => ({
+    ...category,
+    activeVideosCounter: categories?.reduce((previousValue, currentValue) => {
+      if (category.videoCategories.includes(currentValue.id)) {
+        return previousValue + currentValue.activeVideosCounter
+      }
+      return previousValue
+    }, 0),
+  }))
 
   const { allCategoriesFeaturedVideos } = useAllCategoriesFeaturedVideos()
 
@@ -28,19 +37,29 @@ export const DiscoverView: FC = () => {
     : null
 
   const featuredVideoCategoryCardsData = useMemo(() => {
+    if (!categories) {
+      return [null, null, null]
+    }
+    const usedCategories: string[] = []
     const _featuredVideoCategoryCardsData =
       categories
-        ?.map((category) => {
+        .map(function (category) {
           const video = categoriesFeaturedVideos?.[category.id]?.categoryFeaturedVideos.find(
             (video) => !!video.videoCutUrl
           )
+          const _usedCategories = [...usedCategories]
 
           if (!video) return null
 
           return {
             videoTitle: video?.video.title ?? '',
             videoUrl: video?.videoCutUrl ?? '',
-            ...mappedVideoCategories?.find((cat) => cat.id === category.id),
+            ...mappedVideoCategories?.find((displayCategory) => {
+              usedCategories.push(displayCategory.id)
+              return (
+                displayCategory.videoCategories.includes(category.id) && !_usedCategories.includes(displayCategory.id)
+              )
+            }),
           }
         })
         .filter((cat) => !!cat)
@@ -48,10 +67,6 @@ export const DiscoverView: FC = () => {
 
     if (_featuredVideoCategoryCardsData.length > 0) {
       return _featuredVideoCategoryCardsData
-    }
-
-    if (!categories) {
-      return [null, null, null]
     }
 
     return null

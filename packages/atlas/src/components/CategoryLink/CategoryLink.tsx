@@ -4,7 +4,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { Text, TextVariant } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { CircleDefaultBackground } from '@/components/_video/VideoCategoryCard/VideoCategoryCard.style'
-import { videoCategories } from '@/config/categories'
+import { findDisplayCategory } from '@/config/categories'
 import { absoluteRoutes } from '@/config/routes'
 import { transitions } from '@/styles'
 
@@ -35,6 +35,7 @@ export const CategoryLink: FC<CategoryLinkProps> = ({
   textSecondary,
 }) => {
   const _textVariant = textVariant || 't200-strong'
+  const category = findDisplayCategory(id)
   return (
     <Container
       onClick={onClick}
@@ -43,9 +44,9 @@ export const CategoryLink: FC<CategoryLinkProps> = ({
       className={className}
     >
       {!hideIcon && id ? (
-        <IconWrapper withHandle={!hideHandle} color={videoCategories[id].color}>
-          <CircleDefaultBackground color={videoCategories[id].color} />
-          {videoCategories[id].icon}
+        <IconWrapper withHandle={!hideHandle} color={category?.color}>
+          <CircleDefaultBackground color={category?.color} />
+          {category?.icon}
         </IconWrapper>
       ) : (
         <StyledSkeletonLoader width={40} height={40} rounded withHandle={!hideHandle} />

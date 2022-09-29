@@ -1,6 +1,8 @@
 import { ChannelWhereInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { atlasConfig } from '@/config/config'
 
+import { allUniqueVideoCategories } from './categories'
+
 type ContentFilter = string[]
 
 const filteredAssetsFilter: ContentFilter = atlasConfig.content.blockedDataObjectIds
@@ -45,6 +47,7 @@ export const videoFilter: VideoWhereInput = {
   media: {
     isAccepted_eq: true,
   },
+  category: { id_in: allUniqueVideoCategories },
   ...(NOTvideoFilter.length ? { NOT: NOTvideoFilter } : {}),
 }
 export const cancelledVideoFilter: VideoWhereInput = {
@@ -53,4 +56,5 @@ export const cancelledVideoFilter: VideoWhereInput = {
   media: undefined,
   thumbnailPhoto: undefined,
   NOT: undefined,
+  category: undefined,
 }
