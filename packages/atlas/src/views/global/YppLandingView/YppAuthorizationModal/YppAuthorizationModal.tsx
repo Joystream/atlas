@@ -30,7 +30,7 @@ export type YppAuthorizationModalProps = {
 }
 
 export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentStepIdx, setCurrentStepIdx }) => {
-  const { activeMembership } = useUser()
+  const { activeMembership, setActiveUser } = useUser()
   const channels = activeMembership?.channels
   const channelsLoaded = !!channels
   const hasMoreThanOneChannel = channels && channels.length > 1
@@ -46,11 +46,12 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
   }, [authorizationSteps, setCurrentStepIdx])
 
   const { handleAuthorizeClick } = useYppGoogleAuth({
-    closeModal: () => setCurrentStepIdx(null),
+    closeModal: useCallback(() => setCurrentStepIdx(null), [setCurrentStepIdx]),
     channelsLoaded,
     goToLoadingStep,
     selectedChannelId,
     setSelectedChannelId,
+    setCurrentStepIdx,
   })
 
   const selectedChannel = useMemo(() => {
@@ -115,7 +116,12 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
             onClick: handleAuthorizeClick,
             disabled: !isSelectedChannelValid,
           },
-          component: <YppAuthorizationRequirementsStep isChannelValid={isSelectedChannelValid} />,
+          component: (
+            <YppAuthorizationRequirementsStep
+              onChangeChannel={() => selectedChannel && setActiveUser({ channelId: selectedChannel?.id })}
+              isChannelValid={isSelectedChannelValid}
+            />
+          ),
         }
       case 'fetching-data':
         return {
@@ -180,9 +186,9 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
     selectedChannel,
     channels,
     selectedChannelId,
-    setSelectedChannelId,
     handleAuthorizeClick,
     isSelectedChannelValid,
+    setActiveUser,
   ])
 
   return (

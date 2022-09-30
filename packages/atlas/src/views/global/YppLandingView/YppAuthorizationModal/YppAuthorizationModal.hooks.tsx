@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { Dispatch, SetStateAction, useCallback, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { GOOGLE_CONSOLE_CLIENT_ID, GOOGLE_OAUTH_ENDPOINT } from '@/config/env'
@@ -22,12 +22,14 @@ export const useYppGoogleAuth = ({
   selectedChannelId,
   setSelectedChannelId,
   channelsLoaded,
+  setCurrentStepIdx,
 }: {
   closeModal: () => void
   goToLoadingStep: () => void
   selectedChannelId: string | null
   setSelectedChannelId: (channelId: string | null) => void
   channelsLoaded: boolean
+  setCurrentStepIdx: Dispatch<SetStateAction<number | null>>
 }) => {
   const oldAuthState = useYppStore((state) => state.authState)
   const setAuthState = useYppStore((state) => state.actions.setAuthState)
@@ -74,19 +76,20 @@ export const useYppGoogleAuth = ({
           onClick: () => {
             closeConfirmationModal()
             resetSearchParams()
-            closeModal()
+            setCurrentStepIdx(0)
           },
         },
         secondaryButton: {
           text: 'Cancel',
           onClick: () => {
             closeConfirmationModal()
+            resetSearchParams()
             closeModal()
           },
         },
       })
     },
-    [closeConfirmationModal, openConfirmationModal, resetSearchParams, closeModal]
+    [openConfirmationModal, closeConfirmationModal, resetSearchParams, setCurrentStepIdx, closeModal]
   )
 
   const handleGoogleAuthSuccess = useCallback(
@@ -139,12 +142,18 @@ export const useYppGoogleAuth = ({
     const code = searchParams.get('code')
     const state = searchParams.get('state')
 
-    if (error) {
-      handleGoogleAuthError(error)
-    } else if (code) {
+    if (code && !error) {
       handleGoogleAuthSuccess(code, state)
     }
   }, [handleGoogleAuthError, handleGoogleAuthSuccess, searchParams])
+
+  // after returning from Google with error, open confirmation modal
+  useEffect(() => {
+    const error = searchParams.get('error')
+    if (error) {
+      handleGoogleAuthError(error)
+    }
+  }, [handleGoogleAuthError, searchParams])
 
   return { handleAuthorizeClick }
 }

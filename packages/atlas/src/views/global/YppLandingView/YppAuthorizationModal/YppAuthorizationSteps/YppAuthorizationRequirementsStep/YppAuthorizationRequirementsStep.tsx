@@ -9,9 +9,13 @@ import { ListItem, StyledList, TickWrapper } from './YppAuthorizationRequirement
 
 type YppAuthorizationRequirementsStepProps = {
   isChannelValid: boolean
+  onChangeChannel?: () => void
 }
 
-export const YppAuthorizationRequirementsStep: FC<YppAuthorizationRequirementsStepProps> = ({ isChannelValid }) => {
+export const YppAuthorizationRequirementsStep: FC<YppAuthorizationRequirementsStepProps> = ({
+  isChannelValid,
+  onChangeChannel,
+}) => {
   const { displaySnackbar } = useSnackbar()
   const navigate = useNavigate()
 
@@ -33,10 +37,13 @@ export const YppAuthorizationRequirementsStep: FC<YppAuthorizationRequirementsSt
         actionText: 'Edit channel',
         actionIcon: <SvgActionNewTab />,
         actionIconPlacement: 'right',
-        onActionClick: () => navigate(absoluteRoutes.studio.editChannel()),
+        onActionClick: () => {
+          onChangeChannel?.()
+          navigate(absoluteRoutes.studio.editChannel())
+        },
       })
     }
-  }, [displaySnackbar, isChannelValid, navigate])
+  }, [displaySnackbar, isChannelValid, navigate, onChangeChannel])
 
   return (
     <StyledList>
