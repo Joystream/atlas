@@ -9,6 +9,7 @@ import { FeaturedVideoCategoryCard, VideoCategoryCard } from '@/components/_vide
 import { displayCategories } from '@/config/categories'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useVideosInCategories } from '@/hooks/useVideosInCategories'
 import { cVar } from '@/styles'
 import { createLookup } from '@/utils/data'
 
@@ -20,15 +21,11 @@ import {
 
 export const DiscoverView: FC = () => {
   const { categories, totalVideosCount, loading } = useCategories()
+  const videosInCategories = useVideosInCategories()
 
   const mappedVideoCategories = displayCategories.map((category) => ({
     ...category,
-    activeVideosCounter: categories?.reduce((previousValue, currentValue) => {
-      if (category.videoCategories.includes(currentValue.id)) {
-        return previousValue + currentValue.activeVideosCounter
-      }
-      return previousValue
-    }, 0),
+    activeVideosCounter: videosInCategories(category),
   }))
 
   const { allCategoriesFeaturedVideos } = useAllCategoriesFeaturedVideos()
