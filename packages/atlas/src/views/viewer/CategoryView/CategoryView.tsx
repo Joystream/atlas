@@ -11,6 +11,7 @@ import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionChevronR } from '@/components/_icons'
+import { SvgFromUrl } from '@/components/_icons/SvgFromUrl'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 import { VideoCategoryCard } from '@/components/_video/VideoCategoryCard'
 import { VideoCategoryHero } from '@/components/_video/VideoCategoryHero'
@@ -62,7 +63,7 @@ export const CategoryView = () => {
       <VideoCategoryHero
         header={{
           title: currentCategory?.name ?? undefined,
-          icon: currentCategory?.icon,
+          icon: <SvgFromUrl path={currentCategory?.icon} />,
         }}
         videos={videoHeroVideos}
       />
@@ -106,7 +107,7 @@ export const CategoryView = () => {
               coverImg={category.coverImg}
               color={category.color}
               categoryVideosCount={category.activeVideosCounter}
-              icon={category.icon}
+              icon={<SvgFromUrl path={category.icon} />}
               videosTotalCount={totalVideosCount}
               variant={mdBreakpointMatch ? 'default' : 'compact'}
               id={category.id}

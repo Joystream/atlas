@@ -4,6 +4,7 @@ import { useCategories } from '@/api/hooks/categories'
 import { useAllCategoriesFeaturedVideos } from '@/api/hooks/categoriesFeaturedVideos'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
+import { SvgFromUrl } from '@/components/_icons/SvgFromUrl'
 import { FeaturedVideoCategoryCard, VideoCategoryCard } from '@/components/_video/VideoCategoryCard'
 import { displayCategories } from '@/config/categories'
 import { useHeadTags } from '@/hooks/useHeadTags'
@@ -92,7 +93,7 @@ export const DiscoverView: FC = () => {
                 videoTitle={category?.videoTitle ?? ''}
                 videoUrl={category?.videoUrl ?? ''}
                 color={category?.color ?? cVar('colorCoreBaseWhite')}
-                icon={category?.icon}
+                icon={<SvgFromUrl path={category?.icon} />}
                 id={category?.id}
               />
             </GridItem>
@@ -113,7 +114,7 @@ export const DiscoverView: FC = () => {
               categoryVideosCount={category?.activeVideosCounter}
               coverImg={category?.coverImg ?? ''}
               color={category?.color ?? cVar('colorCoreBaseWhite')}
-              icon={category?.icon}
+              icon={<SvgFromUrl path={category?.icon} />}
               videosTotalCount={totalVideosCount}
               variant={isMdBreakpoint ? 'default' : 'compact'}
               id={category?.id}

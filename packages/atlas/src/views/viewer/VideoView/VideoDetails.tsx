@@ -4,6 +4,7 @@ import { FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.g
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
+import { SvgFromUrl } from '@/components/_icons/SvgFromUrl'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { VideoCategoryData } from '@/config/categories'
 import { absoluteRoutes } from '@/config/routes'
@@ -90,7 +91,7 @@ export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => 
               </Text>
               {categoryData?.map((category) => (
                 <Category key={category.id} to={absoluteRoutes.viewer.category(category.id)}>
-                  {category.icon}
+                  <SvgFromUrl path={category.icon} />
                   <Text as="p" variant="t300" color="colorText">
                     {category.name}
                   </Text>
