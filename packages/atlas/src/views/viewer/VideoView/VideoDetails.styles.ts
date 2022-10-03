@@ -37,13 +37,11 @@ export const DescriptionCopyWrapper = styled(Text)`
 `
 
 export const Category = styled(Link)`
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr;
   align-items: center;
   text-decoration: none;
-
-  svg {
-    margin-right: ${sizes(2)};
-  }
+  gap: ${sizes(2)};
 `
 
 export const LicenceCategoryWrapper = styled.div<{ detailsExpanded: boolean }>`

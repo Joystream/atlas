@@ -2,7 +2,7 @@ import { add } from 'date-fns'
 import { FC, ReactNode, useMemo, useRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { useCategories } from '@/api/hooks/categories'
+import { useQnCategories } from '@/api/hooks/categories'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionClose } from '@/components/_icons'
@@ -96,7 +96,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
   const datePopoverRef = useRef<PopoverImperativeHandle>(null)
   const lengthPopoverRef = useRef<PopoverImperativeHandle>(null)
   const othersPopoverRef = useRef<PopoverImperativeHandle>(null)
-  const { categories } = useCategories()
+  const { categories } = useQnCategories()
   const nftStatusInputs = useMemo(
     () => (
       <FilterContentContainer>

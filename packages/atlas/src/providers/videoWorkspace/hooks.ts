@@ -4,7 +4,7 @@ import { useContext, useEffect, useMemo, useState } from 'react'
 import { useLocation, useMatch } from 'react-router'
 import { useNavigate } from 'react-router-dom'
 
-import { useCategories } from '@/api/hooks/categories'
+import { useQnCategories } from '@/api/hooks/categories'
 import { useFullVideo } from '@/api/hooks/video'
 import { cancelledVideoFilter } from '@/config/contentFilter'
 import { absoluteRoutes } from '@/config/routes'
@@ -45,7 +45,7 @@ export const useVideoWorkspaceData = () => {
       },
     }
   )
-  const { categories } = useCategories()
+  const { categories } = useQnCategories()
 
   const subtitlesAssets = useSubtitlesAssets(video?.subtitles)
 

@@ -10,6 +10,7 @@ export type AccountId = string
 export type MemberId = string
 export type ChannelId = string
 export type VideoId = string
+export type CategoryId = string
 
 export type DataObjectMetadata = {
   size: number

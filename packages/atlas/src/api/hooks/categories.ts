@@ -6,7 +6,7 @@ import {
   useGetVideoCategoriesQuery,
 } from '@/api/queries/__generated__/categories.generated'
 
-export const useCategories = (
+export const useQnCategories = (
   variables?: GetVideoCategoriesQueryVariables,
   opts?: QueryHookOptions<GetVideoCategoriesQuery, GetVideoCategoriesQueryVariables>
 ) => {

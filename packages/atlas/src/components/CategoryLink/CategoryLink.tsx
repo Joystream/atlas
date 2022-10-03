@@ -2,6 +2,7 @@ import { FC, MouseEvent } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Text, TextVariant } from '@/components/Text'
+import { CategoryIcon } from '@/components/_icons/CategoryIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { CircleDefaultBackground } from '@/components/_video/VideoCategoryCard/VideoCategoryCard.style'
 import { findDisplayCategory } from '@/config/categories'
@@ -46,7 +47,7 @@ export const CategoryLink: FC<CategoryLinkProps> = ({
       {!hideIcon && id ? (
         <IconWrapper withHandle={!hideHandle} color={category?.color}>
           <CircleDefaultBackground color={category?.color} />
-          {category?.icon}
+          <CategoryIcon url={category?.iconUrl} color={category?.color} />
         </IconWrapper>
       ) : (
         <StyledSkeletonLoader width={40} height={40} rounded withHandle={!hideHandle} />

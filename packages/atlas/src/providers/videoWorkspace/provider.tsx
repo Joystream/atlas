@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren, createContext, useCallback, useMemo, useState } from 'react'
 
-import { useCategories } from '@/api/hooks/categories'
+import { useQnCategories } from '@/api/hooks/categories'
 import { createId } from '@/utils/createId'
 import { SentryLogger } from '@/utils/logs'
 
@@ -24,7 +24,7 @@ export const VideoWorkspaceProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [])
 
   // trigger categories fetch so that they are available once the video workspace is opened
-  useCategories(undefined, {
+  useQnCategories(undefined, {
     context: { delay: 1500 },
     onError: (error) => SentryLogger.error('Failed to fetch video categories', 'VideoWorkspaceProvider', error),
   })

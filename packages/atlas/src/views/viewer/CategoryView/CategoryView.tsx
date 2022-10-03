@@ -2,7 +2,7 @@ import { sample, sampleSize } from 'lodash-es'
 import { useMemo } from 'react'
 import { useParams } from 'react-router'
 
-import { useCategories } from '@/api/hooks/categories'
+import { useQnCategories } from '@/api/hooks/categories'
 import { useCategoriesFeaturedVideos } from '@/api/hooks/categoriesFeaturedVideos'
 import { GetCategoriesFeaturedVideosQuery } from '@/api/queries/__generated__/featured.generated'
 import { VideoCategoryFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
@@ -11,17 +11,18 @@ import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionChevronR } from '@/components/_icons'
-import { SvgFromUrl } from '@/components/_icons/SvgFromUrl'
+import { CategoryIcon } from '@/components/_icons/CategoryIcon'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 import { VideoCategoryCard } from '@/components/_video/VideoCategoryCard'
 import { VideoCategoryHero } from '@/components/_video/VideoCategoryHero'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
-import { VideoCategoryData, displayCategories, findDisplayCategory } from '@/config/categories'
+import { DisplayCategory, findDisplayCategory } from '@/config/categories'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useVideosInCategories } from '@/hooks/useVideosInCategories'
+import { useVideoCategoriesWithCounter } from '@/hooks/useVideoCategoriesWithCounter'
 import { useAsset } from '@/providers/assets/assets.hooks'
+import { cVar } from '@/styles'
 
 import { CategoryVideos } from './CategoryVideos'
 import { CategoriesContainer, TitleContainer } from './CategoryView.styles'
@@ -30,20 +31,16 @@ export const CategoryView = () => {
   const mdBreakpointMatch = useMediaMatch('md')
   const { id = '' } = useParams()
 
-  const { totalVideosCount, loading } = useCategories()
-  const videosInCategories = useVideosInCategories()
+  const { totalVideosCount, loading } = useQnCategories()
+  const videoCategories = useVideoCategoriesWithCounter()
 
-  const mappedVideoCategories = displayCategories.map((category) => ({
-    ...category,
-    activeVideosCounter: videosInCategories(category),
-  }))
-  const otherCategory: Array<VideoCategoryData & VideoCategoryFieldsFragment> = useMemo(
+  const otherCategory: Array<DisplayCategory & VideoCategoryFieldsFragment> = useMemo(
     () =>
       sampleSize(
-        mappedVideoCategories?.filter((category) => category.id !== id),
+        videoCategories?.filter((category) => category.id !== id),
         3
       ),
-    [id, mappedVideoCategories]
+    [id, videoCategories]
   )
   const currentCategory = findDisplayCategory(id)
 
@@ -58,7 +55,7 @@ export const CategoryView = () => {
       <VideoCategoryHero
         header={{
           title: currentCategory?.name ?? undefined,
-          icon: <SvgFromUrl path={currentCategory?.icon} />,
+          icon: <CategoryIcon url={currentCategory?.iconUrl} color={cVar('colorTextStrong')} />,
         }}
         videos={videoHeroVideos}
       />
@@ -99,10 +96,10 @@ export const CategoryView = () => {
             <VideoCategoryCard
               title={category.name ?? ''}
               isLoading={loading}
-              coverImg={category.coverImg}
+              coverImg={category.coverImgUrl}
               color={category.color}
               categoryVideosCount={category.activeVideosCounter}
-              icon={<SvgFromUrl path={category.icon} />}
+              icon={<CategoryIcon url={category.iconUrl} color={category.color} />}
               videosTotalCount={totalVideosCount}
               variant={mdBreakpointMatch ? 'default' : 'compact'}
               id={category.id}

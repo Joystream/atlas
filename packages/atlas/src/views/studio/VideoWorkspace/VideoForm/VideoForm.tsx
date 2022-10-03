@@ -2,7 +2,7 @@ import { formatISO } from 'date-fns'
 import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 
-import { useCategories } from '@/api/hooks/categories'
+import { useQnCategories } from '@/api/hooks/categories'
 import { License } from '@/api/queries/__generated__/baseTypes.generated'
 import { Banner } from '@/components/Banner'
 import { Information } from '@/components/Information'
@@ -115,7 +115,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const isNew = !isEdit
   const mintNft = editedVideoInfo?.mintNft
 
-  const { categories, error: categoriesError } = useCategories()
+  const { categories, error: categoriesError } = useQnCategories()
 
   const {
     register,
