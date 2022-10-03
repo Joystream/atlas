@@ -18,7 +18,11 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { BackImage, FrontImage, HeroImageWrapper } from './YppHero.styles'
 import { BackgroundContainer, StyledLimitedWidthContainer } from './YppLandingView.styles'
 
-export const YppHero: FC = () => {
+type YppHeroProps = {
+  onSignUpClick: () => void
+}
+
+export const YppHero: FC<YppHeroProps> = ({ onSignUpClick }) => {
   const mdMatch = useMediaMatch('md')
   const smMatch = useMediaMatch('sm')
   const endScroll = smMatch ? window.innerHeight / 3 : window.innerHeight
@@ -38,7 +42,7 @@ export const YppHero: FC = () => {
             <Text as="p" variant="t300" color="colorText" margin={{ top: 4, bottom: 8 }}>
               Reupload and backup your YouTube videos to receive a guaranteed payout in the YouTube Partner Program.
             </Text>
-            <Button size="large" icon={<SvgActionChevronR />} iconPlacement="right">
+            <Button size="large" icon={<SvgActionChevronR />} iconPlacement="right" onClick={onSignUpClick}>
               Sign up now
             </Button>
             <Text as="p" variant="t100" color="colorTextMuted" margin={{ top: 2 }}>
