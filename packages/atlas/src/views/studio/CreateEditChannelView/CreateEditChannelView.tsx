@@ -3,6 +3,7 @@ import { Controller, FieldError, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
+import shallow from 'zustand/shallow'
 
 import { useFullChannel } from '@/api/hooks/channel'
 import { ActionBar } from '@/components/ActionBar'
@@ -119,7 +120,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     register,
     handleSubmit: createSubmitHandler,
     control,
-    formState: { isDirty, dirtyFields, errors },
+    formState: { isDirty, dirtyFields, errors, isSubmitSuccessful, isSubmitting, isSubmitted },
     watch,
     setFocus,
     setValue,
@@ -140,6 +141,27 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const addAsset = useAssetStore((state) => state.actions.addAsset)
   const avatarAsset = useRawAsset(watch('avatar').contentId)
   const coverAsset = useRawAsset(watch('cover').contentId)
+
+  const avatarContentId = watch('avatar').contentId
+  const isAvatarUploading = useUploadsStore(
+    (state) =>
+      avatarContentId
+        ? state.uploadsStatus[avatarContentId]?.lastStatus === 'processing' ||
+          state.uploadsStatus[avatarContentId]?.lastStatus === 'inProgress' ||
+          state.uploadsStatus[avatarContentId]?.lastStatus === 'reconnecting'
+        : null,
+    shallow
+  )
+  const coverContentId = watch('cover').contentId
+  const isCoverUploading = useUploadsStore(
+    (state) =>
+      coverContentId
+        ? state.uploadsStatus[coverContentId]?.lastStatus === 'processing' ||
+          state.uploadsStatus[coverContentId]?.lastStatus === 'inProgress' ||
+          state.uploadsStatus[coverContentId]?.lastStatus === 'reconnecting'
+        : null,
+    shallow
+  )
 
   const { isWorkspaceOpen, setIsWorkspaceOpen } = useVideoWorkspace()
   const { fetchOperators } = useOperatorsContext()
@@ -445,6 +467,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
             ),
       onTxSync: refetchDataAndUploadAssets,
     })
+    reset()
 
     if (completed && newChannel) {
       navigate(absoluteRoutes.studio.videos())
@@ -486,8 +509,12 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     },
   ]
 
-  const hasAvatarUploadFailed = (channel?.avatarPhoto && !channel.avatarPhoto.isAccepted) || false
-  const hasCoverUploadFailed = (channel?.coverPhoto && !channel.coverPhoto.isAccepted) || false
+  const hasAvatarUploadFailed = isAvatarUploading
+    ? false
+    : (channel?.avatarPhoto && !channel.avatarPhoto.isAccepted) || false
+  const hasCoverUploadFailed = isCoverUploading
+    ? false
+    : (channel?.coverPhoto && !channel.coverPhoto.isAccepted) || false
   const isDisabled = !isDirty || nodeConnectionStatus !== 'connected'
 
   return (
