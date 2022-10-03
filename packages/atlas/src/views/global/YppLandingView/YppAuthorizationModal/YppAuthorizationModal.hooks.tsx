@@ -69,7 +69,7 @@ export const useYppGoogleAuth = ({
       // TODO: use proper copy
       openConfirmationModal({
         title: 'Authorization failed',
-        description: <>Google Auth failed</>,
+        description: 'Google Auth failed',
         type: 'destructive',
         primaryButton: {
           text: 'Try again',

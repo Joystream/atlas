@@ -8,18 +8,20 @@ import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { UserProvider } from '@/providers/user/user.provider'
 
 import { YppAuthorizationModal, YppAuthorizationModalProps } from './YppAuthorizationModal'
+import { YPP_AUTHORIZATION_STEPS_WITHOUT_CHANNEL_SELECT } from './YppAuthorizationModal.types'
 
 export default {
   title: 'ypp/YppAuthorizationModal',
 
   component: YppAuthorizationModal,
-  argTypes: {
-    currentStepIdx: {
-      type: 'number',
-    },
-  },
   args: {
-    currentStepIdx: null,
+    step: 'requirements',
+  },
+  argTypes: {
+    currentStepIdx: { table: { disable: true } },
+    step: {
+      control: { type: 'select', options: YPP_AUTHORIZATION_STEPS_WITHOUT_CHANNEL_SELECT },
+    },
   },
   decorators: [
     (Story) => {
@@ -39,12 +41,15 @@ export default {
   ],
 } as Meta<YppAuthorizationModalProps>
 
-const Template: Story<YppAuthorizationModalProps> = (args) => {
+const Template: Story<
+  YppAuthorizationModalProps & { step: typeof YPP_AUTHORIZATION_STEPS_WITHOUT_CHANNEL_SELECT[0] }
+> = (args) => {
   const apolloClient = createApolloClient()
+  const stepIdx = args.step ? YPP_AUTHORIZATION_STEPS_WITHOUT_CHANNEL_SELECT.indexOf(args.step) : null
   return (
     <ApolloProvider client={apolloClient}>
       <OverlayManagerProvider>
-        <YppAuthorizationModal {...args} />
+        <YppAuthorizationModal {...args} currentStepIdx={stepIdx} />
       </OverlayManagerProvider>
     </ApolloProvider>
   )

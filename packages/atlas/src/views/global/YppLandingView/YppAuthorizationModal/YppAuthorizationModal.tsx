@@ -118,7 +118,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
           },
           component: (
             <YppAuthorizationRequirementsStep
-              onChangeChannel={() => selectedChannel && setActiveUser({ channelId: selectedChannel?.id })}
+              onChangeChannel={() => selectedChannel && setActiveUser({ channelId: selectedChannel.id })}
               isChannelValid={isSelectedChannelValid}
             />
           ),
