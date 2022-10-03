@@ -3,7 +3,7 @@ import { FC } from 'react'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionChannel, SvgActionInformative, SvgActionMember } from '@/components/_icons'
-import { APP_NAME } from '@/config/env'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useUser } from '@/providers/user/user.hooks'
@@ -34,11 +34,11 @@ export const StudioWelcomeView: FC = () => {
       <StyledContainer>
         <Header>
           <Text as="h1" variant="h800" margin={{ top: 8 }}>
-            Welcome to {APP_NAME} Studio
+            Welcome to {atlasConfig.general.appName} Studio
           </Text>
           <SubTitle as="p" variant="t300" color="colorText">
-            Start your journey as a {APP_NAME} content creator. Manage your channels, publish video content, issue NFTs,
-            and more!
+            Start your journey as a {atlasConfig.general.appName} content creator. Manage your channels, publish video
+            content, issue NFTs, and more!
           </SubTitle>
           <ButtonGroup>
             {isLoggedIn ? (

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router'
 import shallow from 'zustand/shallow'
 
 import { useDataObjectsAvailabilityLazy } from '@/api/hooks/dataObject'
-import { ASSET_POLLING_INTERVAL } from '@/config/assets'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { fetchMissingAssets } from '@/providers/uploads/uploads.utils'
 import { useUser } from '@/providers/user/user.hooks'
@@ -50,7 +50,7 @@ export const UploadsManager: FC = () => {
   const { getDataObjectsAvailability, dataObjects, startPolling, stopPolling } = useDataObjectsAvailabilityLazy({
     fetchPolicy: 'network-only',
     onCompleted: () => {
-      startPolling?.(ASSET_POLLING_INTERVAL)
+      startPolling?.(atlasConfig.storage.assetUploadStatusPollingInterval)
     },
   })
 

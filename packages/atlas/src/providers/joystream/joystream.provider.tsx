@@ -2,8 +2,8 @@ import BN from 'bn.js'
 import { ProxyMarked, Remote, proxy, wrap } from 'comlink'
 import { FC, PropsWithChildren, createContext, useCallback, useEffect, useRef, useState } from 'react'
 
+import { atlasConfig } from '@/config'
 import { JOY_PRICE_SERVICE_URL, NODE_URL } from '@/config/env'
-import { JOY_CURRENCY_TICKER } from '@/config/joystream'
 import { HAPI_TO_JOY_RATE } from '@/joystream-lib/config'
 import { JoystreamLib } from '@/joystream-lib/lib'
 import { useEnvironmentStore } from '@/providers/environment/store'
@@ -122,7 +122,7 @@ const useJoystreamUtilFns = () => {
         const json = await data.json()
         setTokenPrice(json.price)
       } catch (e) {
-        SentryLogger.error(`Failed to fetch ${JOY_CURRENCY_TICKER} price`, e)
+        SentryLogger.error(`Failed to fetch ${atlasConfig.joystream.tokenTicker} price`, e)
       }
     }
     getPrice()

@@ -11,7 +11,7 @@ import {
 import { SvgAtlasLogoStudio } from '@/components/_illustrations'
 import { NavItemType } from '@/components/_navigation/NavItem'
 import { SidenavBase } from '@/components/_navigation/SidenavBase'
-import { APP_NAME } from '@/config/env'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { chanelUnseenDraftsSelector, useDraftStore } from '@/providers/drafts'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
@@ -78,7 +78,7 @@ export const SidenavStudio: FC<SidenavStudioProps> = ({ className }) => {
         onClick={() => setExpanded(false)}
         icon={<SvgActionPlay />}
       >
-        Go to {APP_NAME}
+        Go to {atlasConfig.general.appName}
       </Button>
     </>
   )

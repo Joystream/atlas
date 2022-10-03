@@ -1,4 +1,4 @@
-import { UPLOAD_PROCESSING_TIMEOUT } from '@/config/assets'
+import { atlasConfig } from '@/config'
 import { ChannelId, VideoId } from '@/joystream-lib/types'
 import { createStore } from '@/store'
 import { UploadStatus } from '@/types/storage'
@@ -77,7 +77,10 @@ export const useUploadsStore = createStore<UploadStoreState, UploadStoreActions>
       },
       addProcessingAsset: (contentId) => {
         set((state) => {
-          state.processingAssets.push({ id: contentId, expiresAt: Date.now() + UPLOAD_PROCESSING_TIMEOUT })
+          state.processingAssets.push({
+            id: contentId,
+            expiresAt: Date.now() + atlasConfig.storage.uploadProcessingTimeout,
+          })
         })
       },
       removeProcessingAsset: (contentId) => {

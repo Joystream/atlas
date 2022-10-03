@@ -1,14 +1,16 @@
-type HasId = {
-  id: string
+type HasId<KeyType = string> = {
+  id: KeyType
 }
 
-export const createLookup = <T extends HasId>(data: T[]): Record<string, T> => {
+export const createLookup = <KeyType extends number | string, T extends HasId<KeyType>>(
+  data: T[]
+): Record<KeyType, T> => {
   return data.reduce((acc, item) => {
     if (item) {
       acc[item.id] = item
     }
     return acc
-  }, {} as Record<string, T>)
+  }, {} as Record<KeyType, T>)
 }
 
 export const promisify =

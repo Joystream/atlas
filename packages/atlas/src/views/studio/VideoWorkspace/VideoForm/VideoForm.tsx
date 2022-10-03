@@ -22,7 +22,7 @@ import { SubtitlesCombobox } from '@/components/_inputs/SubtitlesComboBox'
 import { Switch } from '@/components/_inputs/Switch'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { AlertDialogModal } from '@/components/_overlays/AlertDialogModal'
-import { LANGUAGES_LIST } from '@/config/languages'
+import { atlasConfig } from '@/config'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { NftIssuanceInputMetadata, VideoInputAssets, VideoInputMetadata } from '@/joystream-lib/types'
@@ -574,7 +574,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           render={({ field: { value, onChange } }) => (
             <Select
               value={value}
-              items={LANGUAGES_LIST}
+              items={atlasConfig.derived.languagesSelectValues}
               onChange={onChange}
               error={!!errors.language && !value}
               disabled={videoFieldsLocked}
@@ -838,7 +838,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                         )
                       )
                     }}
-                    languagesIso={LANGUAGES_LIST.map(({ value }) => value)}
+                    languagesIso={atlasConfig.content.languages.map(({ isoCode }) => isoCode)}
                     subtitlesArray={subtitlesArray}
                   />
                 </FormField>

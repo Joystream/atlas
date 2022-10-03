@@ -26,7 +26,7 @@ import {
   GetStorageBucketsWithBagsQueryVariables,
 } from '@/api/queries/__generated__/storage.generated'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
-import { ASSET_MIN_DISTRIBUTOR_REFETCH_TIME } from '@/config/assets'
+import { atlasConfig } from '@/config'
 import { USER_LOCATION_SERVICE_URL } from '@/config/env'
 import { absoluteRoutes } from '@/config/routes'
 import { useMountEffect } from '@/hooks/useMountEffect'
@@ -189,7 +189,10 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
       return true
     }
 
-    if (currentTime - lastDistributionOperatorsFetchTimeRef.current < ASSET_MIN_DISTRIBUTOR_REFETCH_TIME) {
+    if (
+      currentTime - lastDistributionOperatorsFetchTimeRef.current <
+      atlasConfig.storage.minimumDistributorRefetchTime
+    ) {
       return false
     }
 

@@ -4,7 +4,7 @@ import { BaseDotsamaWallet, WalletAccount, getWallets } from '@talisman-connect/
 import { useCallback, useEffect } from 'react'
 import shallow from 'zustand/shallow'
 
-import { WEB3_APP_NAME } from '@/config/env'
+import { atlasConfig } from '@/config'
 import { JOYSTREAM_SS58_PREFIX } from '@/joystream-lib/config'
 import { ConsoleLogger } from '@/utils/logs'
 
@@ -91,7 +91,7 @@ export const useSignerWallet = () => {
           return null
         }
 
-        await selectedWallet.enable(WEB3_APP_NAME)
+        await selectedWallet.enable(atlasConfig.general.appName)
 
         // taken from https://github.com/TalismanSociety/talisman-connect/blob/47cfefee9f1333326c0605c159d6ee8ebfba3e84/libs/wallets/src/lib/base-dotsama-wallet/index.ts#L98-L107
         // should be part of future talisman-connect release

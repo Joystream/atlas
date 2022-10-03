@@ -15,7 +15,7 @@ import {
 } from '@/components/_icons'
 import { Loader } from '@/components/_loaders/Loader'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
-import { LANGUAGES_LOOKUP } from '@/config/languages'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useStartFileUpload } from '@/providers/uploads/uploads.hooks'
@@ -302,7 +302,7 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
                 )}
                 {assetSubtitlesLanguage && (
                   <Text as="span" variant="t200" color="colorText">
-                    {LANGUAGES_LOOKUP[assetSubtitlesLanguage]}
+                    {atlasConfig.derived.languagesLookup[assetSubtitlesLanguage]}
                   </Text>
                 )}
                 {assetSize && (

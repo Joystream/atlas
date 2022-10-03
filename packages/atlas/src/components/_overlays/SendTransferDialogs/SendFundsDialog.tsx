@@ -20,7 +20,7 @@ import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { TokenInput } from '@/components/_inputs/TokenInput'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { JOY_CURRENCY_TICKER } from '@/config/joystream'
+import { atlasConfig } from '@/config'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useFee, useJoystream, useTokenPrice } from '@/providers/joystream/joystream.hooks'
@@ -96,7 +96,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
       handleTransaction({
         disableQNSync: true,
         snackbarSuccessMessage: {
-          title: `${formatNumber(data.amount)} ${JOY_CURRENCY_TICKER} ${
+          title: `${formatNumber(data.amount)} ${atlasConfig.joystream.tokenTicker} ${
             convertedAmount === null ? '' : `$(${formatNumber(convertedAmount || 0)})`
           } tokens have been sent over to ${data.account.slice(0, ADDRESS_CHARACTERS_LIMIT)}...
           ${data.account.slice(-ADDRESS_CHARACTERS_LIMIT)} wallet address`,
@@ -188,7 +188,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
                 <TokenInput
                   value={value}
                   onChange={onChange}
-                  placeholder={`${JOY_CURRENCY_TICKER} amount`}
+                  placeholder={`${atlasConfig.joystream.tokenTicker} amount`}
                   error={!!errors.amount}
                 />
               )

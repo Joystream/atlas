@@ -20,7 +20,7 @@ import {
   ImageCropModalImperativeHandle,
   ImageCropModalProps,
 } from '@/components/_overlays/ImageCropModal'
-import { LANGUAGES_LIST } from '@/config/languages'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib/types'
@@ -132,7 +132,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       cover: { contentId: null, assetDimensions: null, imageCropData: null, originalBlob: undefined },
       title: '',
       description: '',
-      language: LANGUAGES_LIST[0].value,
+      language: atlasConfig.derived.languagesSelectValues[0].value,
       isPublic: true,
     },
   })
@@ -151,7 +151,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
         cover: { contentId: null },
         title: '',
         description: '',
-        language: LANGUAGES_LIST[0].value,
+        language: atlasConfig.derived.languagesSelectValues[0].value,
         isPublic: true,
       })
     }
@@ -242,7 +242,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
 
     const { title, description, isPublic, language } = channel
 
-    const foundLanguage = LANGUAGES_LIST.find(({ value }) => value === language?.iso)
+    const foundLanguage = atlasConfig.derived.languagesSelectValues.find(({ value }) => value === language?.iso)
 
     reset({
       avatar: {
@@ -260,7 +260,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       title: title || '',
       description: description || '',
       isPublic: isPublic ?? false,
-      language: foundLanguage?.value || LANGUAGES_LIST[0].value,
+      language: foundLanguage?.value || atlasConfig.derived.languagesSelectValues[0].value,
     })
   }, [channel, loading, newChannel, reset])
 
@@ -628,7 +628,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
               rules={requiredValidation('Language')}
               render={({ field: { value, onChange } }) => (
                 <Select
-                  items={LANGUAGES_LIST}
+                  items={atlasConfig.derived.languagesSelectValues}
                   disabled={loading}
                   value={value}
                   onChange={onChange}

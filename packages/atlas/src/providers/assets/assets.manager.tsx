@@ -2,9 +2,8 @@ import BN from 'bn.js'
 import { FC, useEffect } from 'react'
 
 import { StorageDataObjectFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { ASSET_RESPONSE_TIMEOUT } from '@/config/assets'
-import { DISTRIBUTOR_ASSET_PATH } from '@/config/env'
-import { BUILD_ENV } from '@/config/envs'
+import { atlasConfig } from '@/config'
+import { BUILD_ENV } from '@/config/env'
 import { useUserLocationStore } from '@/providers/userLocation'
 import { joinUrlFragments } from '@/utils/asset'
 import { AssetLogger, ConsoleLogger, DataObjectResponseMetric, DistributorEventEntry, SentryLogger } from '@/utils/logs'
@@ -67,7 +66,7 @@ export const AssetsManager: FC = () => {
           return
         }
         const assetTestPromise = testAssetDownload(assetUrl, dataObject)
-        const assetTestPromiseWithTimeout = withTimeout(assetTestPromise, ASSET_RESPONSE_TIMEOUT)
+        const assetTestPromiseWithTimeout = withTimeout(assetTestPromise, atlasConfig.storage.assetResponseTimeout)
 
         const eventEntry: DistributorEventEntry = {
           distributorId: distributionOperator.id,
@@ -86,7 +85,7 @@ export const AssetsManager: FC = () => {
         } catch (err) {
           if (err instanceof TimeoutError) {
             AssetLogger.logDistributorResponseTimeout(eventEntry)
-            ConsoleLogger.warn(`Distributor didn't respond in ${ASSET_RESPONSE_TIMEOUT} seconds`, {
+            ConsoleLogger.warn(`Distributor didn't respond in ${atlasConfig.storage.assetResponseTimeout} seconds`, {
               dataObject,
               distributionOperator,
             })
@@ -148,7 +147,7 @@ const createDistributionOperatorDataObjectUrl = (
   distributionOperator: OperatorInfo,
   dataObject: StorageDataObjectFieldsFragment
 ) => {
-  return joinUrlFragments(distributionOperator.endpoint, DISTRIBUTOR_ASSET_PATH, dataObject.id)
+  return joinUrlFragments(distributionOperator.endpoint, atlasConfig.storage.assetPath, dataObject.id)
 }
 
 const logDistributorPerformance = async (assetUrl: string, eventEntry: DistributorEventEntry) => {

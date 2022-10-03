@@ -11,7 +11,7 @@ import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { NumberFormat } from '@/components/NumberFormat'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
-import { CallToActionButton } from '@/components/_buttons/CallToActionButton'
+import { CTA_MAP, CallToActionButton } from '@/components/_buttons/CallToActionButton'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
 import { SvgActionFlag, SvgActionMore, SvgActionShare } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
@@ -20,10 +20,8 @@ import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { ReportModal } from '@/components/_overlays/ReportModal'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { AvailableTrack } from '@/components/_video/VideoPlayer/SettingsButtonWithPopover'
+import { atlasConfig } from '@/config'
 import { videoCategories } from '@/config/categories'
-import { CTA_MAP } from '@/config/cta'
-import { APP_NAME, BASE_APP_URL, TWITTER_ID } from '@/config/env'
-import { LANGUAGES_LOOKUP } from '@/config/languages'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -107,7 +105,7 @@ export const VideoView: FC = () => {
     return video.subtitles
       .filter((subtitle) => !!subtitle.asset && subtitlesAssets[subtitle.id]?.url)
       .map((subtitle) => {
-        const resolvedLanguageName = LANGUAGES_LOOKUP[subtitle.language?.iso || '']
+        const resolvedLanguageName = atlasConfig.derived.languagesLookup[subtitle.language?.iso || '']
         const url = subtitlesAssets[subtitle.id]?.url
         return {
           label: subtitle.type === 'subtitles' ? resolvedLanguageName : `${resolvedLanguageName} (CC)`,
@@ -120,7 +118,13 @@ export const VideoView: FC = () => {
 
   const videoMetaTags = useMemo(() => {
     if (!video || !thumbnailUrl) return {}
-    return generateVideoMetaTags(video, thumbnailUrl, APP_NAME, BASE_APP_URL, TWITTER_ID)
+    return generateVideoMetaTags(
+      video,
+      thumbnailUrl,
+      atlasConfig.general.appName,
+      window.location.origin,
+      atlasConfig.general.appTwitterId
+    )
   }, [video, thumbnailUrl])
   const headTags = useHeadTags(video?.title, videoMetaTags)
 

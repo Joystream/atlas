@@ -1,6 +1,6 @@
 import { round } from 'lodash-es'
 
-import { BUILD_ENV } from '@/config/envs'
+import { BUILD_ENV } from '@/config/env'
 import { createStore } from '@/store'
 
 import { DismissedMessage, FollowedChannel, RecentSearch, WatchedVideo, WatchedVideoStatus } from './types'

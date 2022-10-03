@@ -16,7 +16,6 @@ type JoystreamLibErrorArgs = {
 }
 
 export enum ErrorCode {
-  VoucherSizeLimitExceeded = 'VoucherSizeLimitExceeded',
   NftAuctionIsAlreadyExpired = 'NftAuctionIsAlreadyExpired', // English auction already expired
   BidStepConstraintViolated = 'BidStepConstraintViolated', //  Somebody placed a higher bid in english auction already
   IsNotOpenAuctionType = 'IsNotOpenAuctionType', // Auction is not open, open auction winner has been picked before your bid has been processed

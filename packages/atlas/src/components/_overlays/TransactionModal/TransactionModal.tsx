@@ -4,11 +4,9 @@ import { CSSTransition } from 'react-transition-group'
 import { LottiePlayer } from '@/components/LottiePlayer'
 import { Text } from '@/components/Text'
 import { SvgActionCheck, SvgLogoPolkadot } from '@/components/_icons'
-import { JOYSTREAM_STORAGE_DISCORD_URL } from '@/config/env'
 import { ErrorCode } from '@/joystream-lib/errors'
 import { ExtrinsicStatus } from '@/joystream-lib/types'
 import { useOverlayManager } from '@/providers/overlayManager'
-import { useUser } from '@/providers/user/user.hooks'
 import { useUserStore } from '@/providers/user/user.store'
 import { transitions } from '@/styles'
 
@@ -49,7 +47,6 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
           wallet?.title
         )
       : null
-  const { channelId } = useUser()
 
   useEffect(() => {
     if (status !== null && initialStatus === null) {
@@ -149,14 +146,6 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
       </StyledTransactionIllustration>
       <StyledDialog
         title={stepDetails?.title}
-        primaryButton={
-          status === ExtrinsicStatus.Error && errorCode === ErrorCode.VoucherSizeLimitExceeded
-            ? {
-                text: 'Open Discord',
-                to: JOYSTREAM_STORAGE_DISCORD_URL,
-              }
-            : undefined
-        }
         secondaryButton={{
           text: status && [ExtrinsicStatus.Error, ExtrinsicStatus.Completed].includes(status) ? 'Close' : 'Cancel',
           onClick: onClose,
@@ -164,9 +153,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
         }}
       >
         <Text as="span" variant="t200" color="colorText">
-          {status === ExtrinsicStatus.Error && errorCode === ErrorCode.VoucherSizeLimitExceeded && channelId
-            ? `${stepDetails?.description} Channel ID: ${channelId}`
-            : stepDetails?.description}
+          {stepDetails?.description}
         </Text>
       </StyledDialog>
     </StyledModal>

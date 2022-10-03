@@ -11,9 +11,8 @@ import { Input } from '@/components/_inputs/Input'
 import { Select } from '@/components/_inputs/Select'
 import { Switch } from '@/components/_inputs/Switch'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { availableNodes } from '@/config/availableNodes'
-import { APP_NAME, NODE_URL } from '@/config/env'
-import { BUILD_ENV, availableEnvs } from '@/config/envs'
+import { atlasConfig } from '@/config'
+import { BUILD_ENV, NODE_URL, availableEnvs } from '@/config/env'
 import { absoluteRoutes } from '@/config/routes'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useEnvironmentStore } from '@/providers/environment'
@@ -27,10 +26,27 @@ import { CustomNodeUrlWrapper, HorizontalSpacedContainer, VerticalSpacedContaine
 
 const ENVIRONMENT_NAMES: Record<string, string> = {
   production: 'Main Testnet',
-  development: `${APP_NAME} Dev Testnet`,
-  next: `${APP_NAME} Next Testnet`,
+  development: `${atlasConfig.general.appName} Dev Testnet`,
+  next: `${atlasConfig.general.appName} Next Testnet`,
   local: 'Local chain',
 }
+
+const AVAILABLE_NODES = [
+  {
+    name: 'Jsgenesis (Europe/Germany - High Availability)',
+    value: import.meta.env.VITE_PRODUCTION_NODE_URL as string,
+  },
+  ...atlasConfig.joystream.alternativeNodes.map((node) => ({ name: node.name, value: node.url })),
+  {
+    name: 'Atlas Dev',
+    value: import.meta.env.VITE_DEVELOPMENT_NODE_URL as string,
+  },
+  {
+    name: 'Atlas Next',
+    value: import.meta.env.VITE_NEXT_NODE_URL as string,
+  },
+]
+
 const environmentsItems = availableEnvs()
   .filter((item) => ENVIRONMENT_NAMES[item])
   .map((item) => ({ name: ENVIRONMENT_NAMES[item], value: item }))
@@ -111,7 +127,7 @@ const EnvTab: FC = () => {
   } = useEnvironmentStore()
 
   const determinedNode = nodeOverride || NODE_URL
-  const determinedNodeFound = availableNodes.find((node) => node.value === determinedNode)
+  const determinedNodeFound = AVAILABLE_NODES.find((node) => node.value === determinedNode)
   const [usingCustomNodeUrl, setUsingCustomNodeUrl] = useState(!determinedNodeFound)
   const [customNodeUrl, setCustomNodeUrl] = useState(determinedNode)
   const resetActiveUser = useUserStore((state) => state.actions.resetActiveUser)
@@ -164,7 +180,7 @@ const EnvTab: FC = () => {
       <FormField label="Node">
         <Checkbox label="Custom node URL" value={usingCustomNodeUrl} onChange={handleCustomNodeCheckboxChange} />
         {!usingCustomNodeUrl ? (
-          <Select items={availableNodes} onChange={handleNodeChange} value={determinedNode} />
+          <Select items={AVAILABLE_NODES} onChange={handleNodeChange} value={determinedNode} />
         ) : (
           <CustomNodeUrlWrapper>
             <Input value={customNodeUrl} onChange={handleCustomNodeUrlChange} />
@@ -200,7 +216,10 @@ const StateTab: FC = () => {
 
     const linkElement = document.createElement('a')
     linkElement.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonStorage))
-    linkElement.setAttribute('download', `${APP_NAME.toLowerCase()}-export-${new Date().toISOString()}.json`)
+    linkElement.setAttribute(
+      'download',
+      `${atlasConfig.general.appName.toLowerCase()}-export-${new Date().toISOString()}.json`
+    )
     linkElement.click()
   }
 

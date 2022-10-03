@@ -13,7 +13,8 @@ import { Text } from '@/components/Text'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
-import { APP_NAME, HCAPTCHA_SITE_KEY, JOYSTREAM_URL } from '@/config/env'
+import { atlasConfig } from '@/config'
+import { HCAPTCHA_SITE_KEY } from '@/config/env'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
 
 import { SignInModalStepTemplate } from './SignInModalStepTemplate'
@@ -120,9 +121,9 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
       backgroundImage={watch('avatar')?.url || undefined}
       subtitle={
         <>
-          To get the full {APP_NAME} experience, you need a free Joystream blockchain membership.
+          To get the full {atlasConfig.general.appName} experience, you need a free Joystream blockchain membership.
           <Text as="p" variant="t100" color="inherit">
-            <Anchor href={JOYSTREAM_URL} target="_blank">
+            <Anchor href={atlasConfig.general.joystreamLandingPageUrl} target="_blank">
               Learn about Joystream &rarr;
             </Anchor>
           </Text>

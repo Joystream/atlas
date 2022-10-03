@@ -2,7 +2,8 @@ import { FC } from 'react'
 
 import { NumberFormat } from '@/components/NumberFormat'
 import { Loader } from '@/components/_loaders/Loader'
-import { REACTION_TYPE, ReactionId } from '@/config/reactions'
+import { atlasConfig } from '@/config'
+import { CommentReaction } from '@/joystream-lib/types'
 import { pluralizeNoun } from '@/utils/misc'
 
 import { ReactionChipButton, StyledEmojiWrapper } from './ReactionChip.styles'
@@ -11,9 +12,9 @@ export type ReactionChipProps = {
   customId?: string
   active?: boolean
   count?: number
-  reactionId: ReactionId
+  reactionId: CommentReaction
   state?: 'default' | 'disabled' | 'processing' | 'read-only'
-  onReactionClick?: (type: ReactionId) => void
+  onReactionClick?: (type: CommentReaction) => void
 }
 
 export const ReactionChip: FC<ReactionChipProps> = ({
@@ -29,16 +30,18 @@ export const ReactionChip: FC<ReactionChipProps> = ({
     return null
   }
 
+  const reactionInfo = atlasConfig.derived.commentReactionsLookup[reactionId]
+
   return (
     <div>
       <ReactionChipButton
         state={isProcessing ? 'processing' : state}
         active={active}
-        title={`${pluralizeNoun(count || 0, 'user')} reacted with ${REACTION_TYPE[reactionId].name}`}
+        title={`${pluralizeNoun(count || 0, 'user')} reacted with ${reactionInfo.name}`}
         onClick={() => state === 'default' && onReactionClick?.(reactionId)}
       >
         <StyledEmojiWrapper readOnly={state === 'read-only'} block>
-          {REACTION_TYPE[reactionId].emoji}{' '}
+          {reactionInfo.emoji}{' '}
         </StyledEmojiWrapper>
         {isProcessing ? (
           <Loader variant="xsmall" />

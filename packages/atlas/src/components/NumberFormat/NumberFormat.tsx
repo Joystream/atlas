@@ -4,7 +4,7 @@ import { forwardRef, useRef } from 'react'
 import mergeRefs from 'react-merge-refs'
 
 import { Text, TextProps, TextVariant } from '@/components/Text'
-import { JOY_CURRENCY_TICKER } from '@/config/joystream'
+import { atlasConfig } from '@/config'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { formatNumber } from '@/utils/number'
 
@@ -52,7 +52,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
     const content = (
       <StyledText {...textProps} variant={variant} ref={mergeRefs([ref, textRef])}>
         {displayedValue || formattedValue}
-        {withToken && ` ${JOY_CURRENCY_TICKER}`}
+        {withToken && ` ${atlasConfig.joystream.tokenTicker}`}
       </StyledText>
     )
 

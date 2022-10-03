@@ -5,7 +5,7 @@ import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { ExpandableChannelsList } from '@/components/_channel/ExpandableChannelsList'
 import { TopTenVideos } from '@/components/_content/TopTenVideos'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
-import { APP_NAME } from '@/config/env'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { CtaData } from '@/types/cta'
@@ -17,7 +17,7 @@ export const PopularView: FC = () => {
   const headTags = useHeadTags('Popular')
 
   return (
-    <VideoContentTemplate title={`Popular on ${APP_NAME}`} cta={CTA}>
+    <VideoContentTemplate title={`Popular on ${atlasConfig.general.appName}`} cta={CTA}>
       {headTags}
       <TopTenVideos period="month" />
       <InfiniteVideoGrid title="Popular videos" query={GetMostViewedVideosConnectionDocument} limit={50} onDemand />

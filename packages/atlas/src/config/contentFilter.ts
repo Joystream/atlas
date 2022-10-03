@@ -1,10 +1,11 @@
 import { ChannelWhereInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { atlasConfig } from '@/config/config'
 
 type ContentFilter = string[]
 
-const filteredAssetsFilter: ContentFilter = []
-export const filteredVideoIds: ContentFilter = []
-const filteredChannelIds: ContentFilter = []
+const filteredAssetsFilter: ContentFilter = atlasConfig.content.blockedDataObjectIds
+const filteredVideoIds: ContentFilter = atlasConfig.content.blockedVideoIds
+const filteredChannelIds: ContentFilter = atlasConfig.content.blockedChannelIds
 
 const NOTvideoFilter = []
 const NOTchannelFilters = []

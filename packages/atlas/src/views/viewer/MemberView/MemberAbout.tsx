@@ -4,7 +4,7 @@ import { useMemberships } from '@/api/hooks/membership'
 import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
-import { PIONEER_MEMBER_URL } from '@/config/env'
+import { atlasConfig } from '@/config'
 import { formatDate } from '@/utils/time'
 
 import {
@@ -78,7 +78,7 @@ export const MemberAbout = () => {
         <Anchor
           as="a"
           variant="t300-strong"
-          href={`${PIONEER_MEMBER_URL}/${member?.id}`}
+          href={`${atlasConfig.general.pioneerMemberUrlPrefix}/${member?.id}`}
           target="_blank"
           color="colorTextPrimary"
         >
