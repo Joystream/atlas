@@ -21,6 +21,7 @@ export type SearchQuery = {
           __typename?: 'Channel'
           id: string
           title?: string | null
+          description?: string | null
           createdAt: Date
           follows: number
           rewardAccount: string
@@ -55,6 +56,7 @@ export type SearchQuery = {
             __typename?: 'Channel'
             id: string
             title?: string | null
+            description?: string | null
             createdAt: Date
             follows: number
             rewardAccount: string

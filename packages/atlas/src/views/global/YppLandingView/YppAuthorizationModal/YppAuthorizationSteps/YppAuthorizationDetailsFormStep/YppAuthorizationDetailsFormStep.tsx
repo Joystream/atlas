@@ -3,9 +3,12 @@ import debouncePromise from 'awesome-debounce-promise'
 import { FC, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
-import { GetBasicChannelsQuery, GetBasicChannelsQueryVariables } from '@/api/queries/__generated__/channels.generated'
+import {
+  GetBasicChannelsConnectionDocument,
+  GetBasicChannelsConnectionQuery,
+  GetBasicChannelsConnectionQueryVariables,
+} from '@/api/queries/__generated__/channels.generated'
 import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { GetMembershipsDocument } from '@/api/queries/__generated__/memberships.generated'
 import { Avatar, AvatarProps } from '@/components/Avatar'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
@@ -34,12 +37,12 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
       }
       try {
         const {
-          data: { channels },
-        } = await client.query<GetBasicChannelsQuery, GetBasicChannelsQueryVariables>({
-          query: GetMembershipsDocument,
-          variables: { where: { title_eq: value } },
+          data: { channelsConnection },
+        } = await client.query<GetBasicChannelsConnectionQuery, GetBasicChannelsConnectionQueryVariables>({
+          query: GetBasicChannelsConnectionDocument,
+          variables: { where: { title_contains: value } },
         })
-        setFoundChannel(channels.length ? channels[0] : undefined)
+        setFoundChannel(channelsConnection.edges.length ? channelsConnection.edges[0].node : undefined)
       } catch (error) {
         SentryLogger.error('Failed to fetch memberships', 'WhiteListTextField', error)
       } finally {
