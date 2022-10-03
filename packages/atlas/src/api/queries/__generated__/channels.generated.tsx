@@ -19,6 +19,7 @@ export type GetBasicChannelQuery = {
     __typename?: 'Channel'
     id: string
     title?: string | null
+    description?: string | null
     createdAt: Date
     follows: number
     rewardAccount: string
@@ -149,6 +150,7 @@ export type GetBasicChannelsQuery = {
     __typename?: 'Channel'
     id: string
     title?: string | null
+    description?: string | null
     createdAt: Date
     follows: number
     rewardAccount: string
@@ -279,6 +281,7 @@ export type GetBasicChannelsConnectionQuery = {
         __typename?: 'Channel'
         id: string
         title?: string | null
+        description?: string | null
         createdAt: Date
         follows: number
         rewardAccount: string
@@ -343,6 +346,7 @@ export type GetMostViewedChannelsConnectionQuery = {
         __typename?: 'Channel'
         id: string
         title?: string | null
+        description?: string | null
         createdAt: Date
         follows: number
         rewardAccount: string
@@ -389,6 +393,7 @@ export type GetMostFollowedChannelsConnectionQuery = {
         __typename?: 'Channel'
         id: string
         title?: string | null
+        description?: string | null
         createdAt: Date
         follows: number
         rewardAccount: string
@@ -425,6 +430,7 @@ export type GetTop10ChannelsQuery = {
     __typename?: 'Channel'
     id: string
     title?: string | null
+    description?: string | null
     createdAt: Date
     follows: number
     rewardAccount: string
@@ -458,6 +464,7 @@ export type GetPromisingChannelsQuery = {
     __typename?: 'Channel'
     id: string
     title?: string | null
+    description?: string | null
     createdAt: Date
     follows: number
     rewardAccount: string
@@ -491,6 +498,7 @@ export type GetDiscoverChannelsQuery = {
     __typename?: 'Channel'
     id: string
     title?: string | null
+    description?: string | null
     createdAt: Date
     follows: number
     rewardAccount: string
@@ -524,6 +532,7 @@ export type GetPopularChannelsQuery = {
     __typename?: 'Channel'
     id: string
     title?: string | null
+    description?: string | null
     createdAt: Date
     follows: number
     rewardAccount: string

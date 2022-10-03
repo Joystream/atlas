@@ -23,6 +23,7 @@ export type GetNftQuery = {
       __typename?: 'Channel'
       id: string
       title?: string | null
+      description?: string | null
       createdAt: Date
       follows: number
       rewardAccount: string
@@ -57,6 +58,7 @@ export type GetNftQuery = {
         __typename?: 'Channel'
         id: string
         title?: string | null
+        description?: string | null
         createdAt: Date
         follows: number
         rewardAccount: string
@@ -514,6 +516,7 @@ export type GetNftsQuery = {
       __typename?: 'Channel'
       id: string
       title?: string | null
+      description?: string | null
       createdAt: Date
       follows: number
       rewardAccount: string
@@ -548,6 +551,7 @@ export type GetNftsQuery = {
         __typename?: 'Channel'
         id: string
         title?: string | null
+        description?: string | null
         createdAt: Date
         follows: number
         rewardAccount: string
@@ -1013,6 +1017,7 @@ export type GetNftsConnectionQuery = {
           __typename?: 'Channel'
           id: string
           title?: string | null
+          description?: string | null
           createdAt: Date
           follows: number
           rewardAccount: string
@@ -1047,6 +1052,7 @@ export type GetNftsConnectionQuery = {
             __typename?: 'Channel'
             id: string
             title?: string | null
+            description?: string | null
             createdAt: Date
             follows: number
             rewardAccount: string
