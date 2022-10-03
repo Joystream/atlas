@@ -69,7 +69,7 @@ export const JoyTokenIcon: FC<JoyTokenIconProps> = ({
     <>
       <Tooltip
         hidden={withoutInformationTooltip}
-        text={`Exchanging ${JOY_CURRENCY_TICKER} will be possible shortly after mainnet launch. We're actively working on it.`}
+        text={`${JOY_CURRENCY_TICKER} token is a native crypto asset of Joystream blockchain. It is used for platform governance, purchasing NFTs, trading creator tokens, and covering blockchain processing fees.`}
         multiline
         reference={ref.current}
         delay={1000}
