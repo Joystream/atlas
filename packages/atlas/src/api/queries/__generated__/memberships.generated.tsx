@@ -19,12 +19,29 @@ export type GetMembershipQuery = {
     handle: string
     channels: Array<{
       __typename?: 'Channel'
+      description?: string | null
       id: string
       title?: string | null
       createdAt: Date
       follows: number
       rewardAccount: string
       channelStateBloatBond: string
+      coverPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeUnknown' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+      } | null
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -85,12 +102,29 @@ export type GetMembershipsQuery = {
     handle: string
     channels: Array<{
       __typename?: 'Channel'
+      description?: string | null
       id: string
       title?: string | null
       createdAt: Date
       follows: number
       rewardAccount: string
       channelStateBloatBond: string
+      coverPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeUnknown' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+      } | null
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string

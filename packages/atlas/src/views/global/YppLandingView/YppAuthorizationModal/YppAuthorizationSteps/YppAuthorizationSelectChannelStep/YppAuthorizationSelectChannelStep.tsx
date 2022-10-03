@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 
 import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { Avatar } from '@/components/Avatar'
@@ -6,20 +6,27 @@ import { useAsset } from '@/providers/assets/assets.hooks'
 
 import { ListItemsWrapper, StyledListItem } from './YppAuthorizationSelectChannelStep.styles'
 
+import { MemberChannel } from '../../YppAuthorizationModal.types'
+
 type YppAuthorizationSelectChannelStepProps = {
-  channels: BasicChannelFieldsFragment[]
+  channels?: MemberChannel[]
+  selectedChannelId: string | null
+  onSelectChannel: (channelId: string) => void
 }
 
-export const YppAuthorizationSelectChannelStep: FC<YppAuthorizationSelectChannelStepProps> = ({ channels }) => {
-  const [selectedChannel, setSelectedChannel] = useState<string | null>(null)
+export const YppAuthorizationSelectChannelStep: FC<YppAuthorizationSelectChannelStepProps> = ({
+  channels,
+  selectedChannelId,
+  onSelectChannel,
+}) => {
   return (
     <ListItemsWrapper>
       {channels?.map((channel) => (
         <ChannelListItem
           key={channel.id}
           channel={channel}
-          selected={selectedChannel === channel.id}
-          onClick={() => setSelectedChannel(channel.id)}
+          selected={selectedChannelId === channel.id}
+          onClick={() => onSelectChannel(channel.id)}
         />
       ))}
     </ListItemsWrapper>

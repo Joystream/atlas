@@ -1,5 +1,6 @@
 import { ReactNode } from 'react'
 
+import { ButtonProps } from '@/components/_buttons/Button'
 import { createId } from '@/utils/createId'
 import { createStore } from '@/utils/store'
 
@@ -15,6 +16,7 @@ export type DisplaySnackbarArgs = {
   actionText?: string
   onActionClick?: () => void
   actionIcon?: ReactNode
+  actionIconPlacement?: ButtonProps['iconPlacement']
   sticked?: boolean
 }
 
