@@ -31,9 +31,9 @@ joystream:
 
 features:
   nft:
-    auctionMinimumBidStepMultiplier: 0.02 # Multiplier for the auction's starting price used to determine auction's minimum bid step. See more:
-    openAuctionBidLockDuration: 300 # Number of blocks for which bids on open auctions are locked from withdrawal. See more:
-    englishAuctionExtensionPeriod: 5 # Number of blocks from the auction's end during which auction will be extended if a bid is placed. See more:
+    auctionMinimumBidStepMultiplier: 0.02 # Multiplier for the auction's starting price used to determine auction's minimum bid step. See more: https://joystream.gitbook.io/testnet-workspace/system/content-directory/nft#auction
+    openAuctionBidLockDuration: 300 # Number of blocks for which bids on open auctions are locked from withdrawal. See more: https://joystream.gitbook.io/testnet-workspace/system/content-directory/nft#auction-type
+    englishAuctionExtensionPeriod: 5 # Number of blocks from the auction's end during which auction will be extended if a bid is placed. See more: https://joystream.gitbook.io/testnet-workspace/system/content-directory/nft#auction-type
     statusPollingInterval: 20000 # Interval for polling NFT status on VideoView in ms
   notifications:
     pollingInterval: 30000 # Interval for polling notifications in ms

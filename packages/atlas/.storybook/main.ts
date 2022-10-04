@@ -1,3 +1,4 @@
+import ViteYaml from '@modyfi/vite-plugin-yaml'
 import { Options, StorybookConfig } from '@storybook/core-common'
 import { UserConfig, mergeConfig } from 'vite'
 
@@ -26,9 +27,12 @@ const config: CustomizedStorybookConfig = {
       resolve: viteConfig.resolve,
       build: {
         target: viteConfig.build?.target,
+        // https://github.com/storybookjs/builder-vite/issues/409
+        minify: false,
+        sourcemap: false,
       },
       // eslint-disable-next-line
-      plugins: [viteConfig.plugins?.find((p) => (p as any).name === 'babel')],
+      plugins: [viteConfig.plugins?.find((p) => (p as any).name === 'babel'), ViteYaml()],
     })
   },
 }
