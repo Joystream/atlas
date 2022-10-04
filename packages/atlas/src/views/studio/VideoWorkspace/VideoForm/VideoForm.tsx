@@ -833,7 +833,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                       onChange(
                         subtitlesArray?.map((subtitles) =>
                           subtitles.languageIso === languageIso && subtitles.type === type
-                            ? { ...subtitles, file: newFile }
+                            ? { ...subtitles, file: newFile, isUploadedAsSrt: isSrt }
                             : subtitles
                         )
                       )
