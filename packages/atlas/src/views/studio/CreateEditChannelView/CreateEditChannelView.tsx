@@ -266,7 +266,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
 
   // set default values for editing channel
   useEffect(() => {
-    if (loading || newChannel || !channel) {
+    if (loading || newChannel || !channel || isDirty) {
       return
     }
 
@@ -292,7 +292,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       isPublic: isPublic ?? false,
       language: foundLanguage?.value || atlasConfig.derived.languagesSelectValues[0].value,
     })
-  }, [channel, loading, newChannel, reset])
+  }, [channel, isDirty, loading, newChannel, reset])
 
   useEffect(() => {
     if (!dirtyFields.avatar || !avatarAsset?.blob) {
