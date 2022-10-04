@@ -89,6 +89,8 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
 
   const { memberId, accountId, channelId, setActiveUser, refetchUserMemberships } = useUser()
+  const cachedChannelId = useRef(channelId)
+  const firstRender = useRef(true)
   const { joystream, proxyCallback } = useJoystream()
   const getBucketsConfigForNewChannel = useBucketsConfigForNewChannel()
   const handleTransaction = useTransaction()
@@ -273,25 +275,31 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     const { title, description, isPublic, language, avatarPhoto, coverPhoto } = channel
 
     const foundLanguage = atlasConfig.derived.languagesSelectValues.find(({ value }) => value === language?.iso)
+    const isChannelChanged = cachedChannelId.current !== channel.id
 
-    reset({
-      avatar: {
-        contentId: avatarPhoto?.id,
-        assetDimensions: null,
-        imageCropData: null,
-        originalBlob: undefined,
-      },
-      cover: {
-        contentId: coverPhoto?.id,
-        assetDimensions: null,
-        imageCropData: null,
-        originalBlob: undefined,
-      },
-      title: title || '',
-      description: description || '',
-      isPublic: isPublic ?? false,
-      language: foundLanguage?.value || atlasConfig.derived.languagesSelectValues[0].value,
-    })
+    // This condition should prevent from updating cover/avatar when the upload is done
+    if (isChannelChanged || firstRender.current) {
+      reset({
+        avatar: {
+          contentId: avatarPhoto?.id,
+          assetDimensions: null,
+          imageCropData: null,
+          originalBlob: undefined,
+        },
+        cover: {
+          contentId: coverPhoto?.id,
+          assetDimensions: null,
+          imageCropData: null,
+          originalBlob: undefined,
+        },
+        title: title || '',
+        description: description || '',
+        isPublic: isPublic ?? false,
+        language: foundLanguage?.value || atlasConfig.derived.languagesSelectValues[0].value,
+      })
+      firstRender.current = false
+      cachedChannelId.current = channel.id
+    }
   }, [channel, loading, newChannel, reset])
 
   useEffect(() => {
