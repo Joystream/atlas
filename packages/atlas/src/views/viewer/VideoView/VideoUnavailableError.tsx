@@ -21,12 +21,7 @@ export const VideoUnavailableError: FC<VideoUnavailableErrorProps> = ({ isCinema
         <Text variant={mdMatch ? 'h600' : 'h400'} as="h1" margin={{ top: mdMatch ? 8 : 6 }}>
           Video unavailable
         </Text>
-        <Text
-          variant={mdMatch ? 't300' : 't200'}
-          as="p"
-          margin={{ top: 2, bottom: mdMatch ? 8 : 6 }}
-          color="colorCoreNeutral300"
-        >
+        <Text variant={mdMatch ? 't300' : 't200'} as="p" margin={{ top: 2, bottom: mdMatch ? 8 : 6 }} color="colorText">
           This video was deleted by creator, moderated by the content curation team or not included by the application
           operator.
         </Text>
@@ -53,19 +48,16 @@ const Container = styled.div<{ isCinematic: boolean }>`
   padding: ${sizes(6)};
   display: flex;
   align-items: center;
-  overflow: hidden;
 
   ${media.sm} {
     height: 55.7vw;
   }
 
   ${media.md} {
-    padding: 0 ${sizes(3)};
+    padding: ${sizes(6)} 0;
+    min-height: 360px;
+    max-height: 512px;
     height: ${({ isCinematic }) => (isCinematic ? '52.6vw' : '33.3vw')};
-  }
-
-  ${media.lg} {
-    padding: 0 ${sizes(3)};
   }
 `
 

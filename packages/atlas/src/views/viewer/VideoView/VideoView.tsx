@@ -267,10 +267,10 @@ export const VideoView: FC = () => {
     <GridItem colSpan={{ xxs: 12, md: 4 }}>
       {videoIsBlocked
         ? mdMatch && (
-            <div>
+            <>
               {!cinematicView && <BlockedVideoPlaceholder />}
               <BlockedVideoGradientPlaceholder />
-            </div>
+            </>
           )
         : !!nftWidgetProps && (
             <NftWidget

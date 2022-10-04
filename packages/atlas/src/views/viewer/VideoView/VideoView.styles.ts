@@ -216,7 +216,7 @@ export const LoadMoreCommentsWrapper = styled.div`
 
 export const BlockedVideoPlaceholder = styled.div`
   background-color: ${cVar('colorBackgroundMuted')};
-  height: 34.6vw;
+  height: calc(100% - 160px);
 `
 
 export const BlockedVideoGradientPlaceholder = styled.div`
