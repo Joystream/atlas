@@ -50,11 +50,14 @@ const StyledAnimatedError = styled(AnimatedError)`
 
 const Container = styled.div<{ isCinematic: boolean }>`
   background-color: ${cVar('colorCoreNeutral900')};
-  padding: 0 ${sizes(6)};
-  height: 55.7vw;
+  padding: ${sizes(6)};
   display: flex;
   align-items: center;
   overflow: hidden;
+
+  ${media.sm} {
+    height: 55.7vw;
+  }
 
   ${media.md} {
     padding: 0 ${sizes(3)};
