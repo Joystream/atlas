@@ -120,7 +120,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     register,
     handleSubmit: createSubmitHandler,
     control,
-    formState: { isDirty, dirtyFields, errors, isSubmitSuccessful, isSubmitting, isSubmitted },
+    formState: { isDirty, dirtyFields, errors, isSubmitted },
     watch,
     setFocus,
     setValue,
@@ -137,12 +137,13 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       isPublic: true,
     },
   })
+  const avatarContentId = watch('avatar').contentId
+  const coverContentId = watch('cover').contentId
 
   const addAsset = useAssetStore((state) => state.actions.addAsset)
-  const avatarAsset = useRawAsset(watch('avatar').contentId)
-  const coverAsset = useRawAsset(watch('cover').contentId)
+  const avatarAsset = useRawAsset(avatarContentId)
+  const coverAsset = useRawAsset(coverContentId)
 
-  const avatarContentId = watch('avatar').contentId
   const isAvatarUploading = useUploadsStore(
     (state) =>
       avatarContentId
@@ -152,7 +153,6 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
         : null,
     shallow
   )
-  const coverContentId = watch('cover').contentId
   const isCoverUploading = useUploadsStore(
     (state) =>
       coverContentId
@@ -257,24 +257,32 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     newChannelAssets
   )
 
+  // set isDirty to false, once the form is submitted
+  useEffect(() => {
+    if (isSubmitted) {
+      reset(getValues())
+    }
+  }, [isSubmitted, getValues, reset])
+
+  // set default values for editing channel
   useEffect(() => {
     if (loading || newChannel || !channel) {
       return
     }
 
-    const { title, description, isPublic, language } = channel
+    const { title, description, isPublic, language, avatarPhoto, coverPhoto } = channel
 
     const foundLanguage = atlasConfig.derived.languagesSelectValues.find(({ value }) => value === language?.iso)
 
     reset({
       avatar: {
-        contentId: channel.avatarPhoto?.id,
+        contentId: avatarPhoto?.id,
         assetDimensions: null,
         imageCropData: null,
         originalBlob: undefined,
       },
       cover: {
-        contentId: channel.coverPhoto?.id,
+        contentId: coverPhoto?.id,
         assetDimensions: null,
         imageCropData: null,
         originalBlob: undefined,
@@ -414,9 +422,11 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       const { channelId, assetsIds } = result
       if (assetsIds.avatarPhoto && avatarAsset?.url) {
         addAsset(assetsIds.avatarPhoto, { url: avatarAsset.url })
+        setValue('avatar.contentId', assetsIds.avatarPhoto)
       }
       if (assetsIds.coverPhoto && coverAsset?.url) {
         addAsset(assetsIds.coverPhoto, { url: coverAsset.url })
+        setValue('cover.contentId', assetsIds.coverPhoto)
       }
 
       if (newChannel) {
@@ -467,7 +477,6 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
             ),
       onTxSync: refetchDataAndUploadAssets,
     })
-    reset()
 
     if (completed && newChannel) {
       navigate(absoluteRoutes.studio.videos())
