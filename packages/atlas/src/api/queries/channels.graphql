@@ -149,6 +149,9 @@ query GetChannelNftCollectors(
       ...BasicMembershipFields
     }
     amount
+    channel {
+      id
+    }
   }
 }
 

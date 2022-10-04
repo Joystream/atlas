@@ -589,6 +589,7 @@ export type GetChannelNftCollectorsQuery = {
           | null
       }
     } | null
+    channel: { __typename?: 'Channel'; id: string }
   }>
 }
 
@@ -1318,6 +1319,9 @@ export const GetChannelNftCollectorsDocument = gql`
         ...BasicMembershipFields
       }
       amount
+      channel {
+        id
+      }
     }
   }
   ${BasicMembershipFieldsFragmentDoc}

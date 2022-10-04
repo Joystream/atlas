@@ -44,6 +44,22 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
     withdrawBid(nftId, userBidAmount, userBidCreatedAt)
   }
 
+  const owner = nft?.isOwnedByChannel
+    ? {
+        name: nft.creatorChannel.title || undefined,
+        assetUrl: creatorAvatar.url || undefined,
+        loading,
+        onClick: () => navigate(absoluteRoutes.viewer.channel(nft.creatorChannel.id)),
+      }
+    : nft?.ownerMember?.id
+    ? {
+        name: nft?.ownerMember?.handle,
+        assetUrl: ownerMemberAvatarUrl,
+        loading,
+        onClick: () => navigate(absoluteRoutes.viewer.member(nft?.ownerMember?.handle)),
+      }
+    : undefined
+
   const contextMenuItems = useVideoContextMenu({
     publisher: false,
     nftState,
@@ -69,14 +85,7 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
       thumbnailAlt: `${nft?.video?.title} video thumbnail`,
       type: 'video',
     },
-    owner: nft?.ownerMember?.id
-      ? {
-          name: nft?.ownerMember?.handle,
-          assetUrl: ownerMemberAvatarUrl,
-          loading,
-          onClick: () => navigate(absoluteRoutes.viewer.member(nft?.ownerMember?.handle)),
-        }
-      : undefined,
+    owner,
     creator: {
       name: nft?.video.channel.title || undefined,
       loading: creatorAvatar.isLoadingAsset || loading,
