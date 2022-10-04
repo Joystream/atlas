@@ -22,6 +22,7 @@ import { ReportModal } from '@/components/_overlays/ReportModal'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { AvailableTrack } from '@/components/_video/VideoPlayer/SettingsButtonWithPopover'
 import { videoCategories } from '@/config/categories'
+import { filteredVideoIds } from '@/config/contentFilter'
 import { CTA_MAP } from '@/config/cta'
 import { APP_NAME, BASE_APP_URL, TWITTER_ID } from '@/config/env'
 import { LANGUAGES_LOOKUP } from '@/config/languages'
@@ -46,7 +47,10 @@ import { formatVideoDate } from '@/utils/video'
 import { CommentsSection } from './CommentsSection'
 import { MoreVideos } from './MoreVideos'
 import { VideoDetails } from './VideoDetails'
+import { VideoUnavailableError } from './VideoUnavailableError'
 import {
+  BlockedVideoGradientPlaceholder,
+  BlockedVideoPlaceholder,
   ButtonsContainer,
   ChannelContainer,
   Meta,
@@ -135,6 +139,7 @@ export const VideoView: FC = () => {
   const categoryId = video?.category?.id
   const numberOfLikes = video?.reactions.filter(({ reaction }) => reaction === 'LIKE').length
   const numberOfDislikes = video?.reactions.filter(({ reaction }) => reaction === 'UNLIKE').length
+  const videoIsBlocked = !!(id && filteredVideoIds.includes(id))
 
   const reactionStepperState = useMemo(() => {
     if (!video) {
@@ -242,7 +247,7 @@ export const VideoView: FC = () => {
     return <ViewErrorFallback />
   }
 
-  if (!loading && !video) {
+  if (!loading && !video && !videoIsBlocked) {
     return (
       <NotFoundVideoContainer>
         <EmptyFallback
@@ -260,27 +265,35 @@ export const VideoView: FC = () => {
   const isCinematic = cinematicView || !mdMatch
   const sideItems = (
     <GridItem colSpan={{ xxs: 12, md: 4 }}>
-      {!!nftWidgetProps && (
-        <NftWidget
-          {...nftWidgetProps}
-          onNftPutOnSale={() => id && openNftPutOnSale(id)}
-          onNftCancelSale={() => id && nftWidgetProps.saleType && cancelNftSale(id, nftWidgetProps.saleType)}
-          onNftAcceptBid={() => id && openNftAcceptBid(id)}
-          onNftChangePrice={() => id && openNftChangePrice(id)}
-          onNftPurchase={() => id && openNftPurchase(id)}
-          onNftSettlement={() => id && openNftSettlement(id)}
-          onNftBuyNow={() => id && openNftPurchase(id, { fixedPrice: true })}
-          onWithdrawBid={(bid, createdAt) => id && createdAt && bid && withdrawBid(id, bid, createdAt)}
-        />
-      )}
+      {videoIsBlocked
+        ? mdMatch && (
+            <div>
+              {!cinematicView && <BlockedVideoPlaceholder />}
+              <BlockedVideoGradientPlaceholder />
+            </div>
+          )
+        : !!nftWidgetProps && (
+            <NftWidget
+              {...nftWidgetProps}
+              onNftPutOnSale={() => id && openNftPutOnSale(id)}
+              onNftCancelSale={() => id && nftWidgetProps.saleType && cancelNftSale(id, nftWidgetProps.saleType)}
+              onNftAcceptBid={() => id && openNftAcceptBid(id)}
+              onNftChangePrice={() => id && openNftChangePrice(id)}
+              onNftPurchase={() => id && openNftPurchase(id)}
+              onNftSettlement={() => id && openNftSettlement(id)}
+              onNftBuyNow={() => id && openNftPurchase(id, { fixedPrice: true })}
+              onWithdrawBid={(bid, createdAt) => id && createdAt && bid && withdrawBid(id, bid, createdAt)}
+            />
+          )}
       <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />
       <MoreVideos categoryId={category?.id} categoryName={video?.category?.name} videoId={id} type="category" />
     </GridItem>
   )
 
-  const detailsItems = (
+  const detailsItems = videoIsBlocked ? (
+    mdMatch && <BlockedVideoGradientPlaceholder />
+  ) : (
     <>
-      {headTags}
       <TitleContainer>
         {video ? (
           <TitleText as="h1" variant={mdMatch ? 'h500' : 'h400'}>
@@ -344,11 +357,14 @@ export const VideoView: FC = () => {
 
   return (
     <>
+      {headTags}
       <PlayerGridWrapper cinematicView={isCinematic}>
         <PlayerWrapper cinematicView={isCinematic}>
           <PlayerGridItem colSpan={{ xxs: 12, md: cinematicView ? 12 : 8 }}>
-            <PlayerContainer className={transitions.names.slide} cinematicView={cinematicView}>
-              {!isMediaLoading && video ? (
+            <PlayerContainer className={transitions.names.slide} cinematicView={cinematicView} noVideo={videoIsBlocked}>
+              {videoIsBlocked ? (
+                <VideoUnavailableError isCinematic={isCinematic} />
+              ) : !isMediaLoading && video ? (
                 <VideoPlayer
                   onCloseShareDialog={() => setShareDialogOpen(false)}
                   onAddVideoView={handleAddVideoView}
@@ -371,11 +387,13 @@ export const VideoView: FC = () => {
             {!isCinematic && (
               <>
                 {detailsItems}
-                <CommentsSection
-                  video={video}
-                  videoLoading={loading}
-                  disabled={video ? !video?.isCommentSectionEnabled : undefined}
-                />
+                {!videoIsBlocked && (
+                  <CommentsSection
+                    video={video}
+                    videoLoading={loading}
+                    disabled={video ? !video?.isCommentSectionEnabled : undefined}
+                  />
+                )}
               </>
             )}
           </PlayerGridItem>
@@ -383,15 +401,17 @@ export const VideoView: FC = () => {
         </PlayerWrapper>
       </PlayerGridWrapper>
       <LimitedWidthContainer>
-        {isCinematic && (
+        {isCinematic && !(!mdMatch && videoIsBlocked) && (
           <LayoutGrid>
             <GridItem className={transitions.names.slide} colSpan={{ xxs: 12, md: cinematicView ? 8 : 12 }}>
               {detailsItems}
-              <CommentsSection
-                video={video}
-                videoLoading={loading}
-                disabled={video ? !video?.isCommentSectionEnabled : undefined}
-              />
+              {!videoIsBlocked && (
+                <CommentsSection
+                  video={video}
+                  videoLoading={loading}
+                  disabled={video ? !video?.isCommentSectionEnabled : undefined}
+                />
+              )}
             </GridItem>
             {sideItems}
           </LayoutGrid>
