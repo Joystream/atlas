@@ -8,7 +8,7 @@ import { FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.g
 import { NftWidgetProps } from '@/components/_nft/NftWidget/NftWidget'
 import { NFT_STATUS_POLLING_INTERVAL } from '@/config/nft'
 import { useNftState } from '@/hooks/useNftState'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
 
@@ -81,6 +81,7 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
   const owner = nft?.ownerMember
 
   const { url: ownerAvatarUri } = useMemberAvatar(owner)
+  const { url: creatorAvatarUri } = useAsset(nft?.creatorChannel.avatarPhoto)
   const { url: topBidderAvatarUri } = useMemberAvatar(nftStatus?.status === 'auction' ? nftStatus.topBidder : undefined)
 
   const { entries: nftHistory } = useNftHistoryEntries(video?.id ?? '', {
@@ -88,11 +89,17 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
     pollInterval: NFT_STATUS_POLLING_INTERVAL,
   })
 
+  const isOwnedByChannel = nft?.isOwnedByChannel
+  const ownerHandle = isOwnedByChannel ? nft?.creatorChannel.title : owner?.handle
+  const ownerAvatar = isOwnedByChannel ? creatorAvatarUri : ownerAvatarUri
+  const creatorId = nft?.creatorChannel.id
+
   switch (nftStatus?.status) {
     case 'auction': {
       return {
-        ownerHandle: owner?.handle,
-        ownerAvatarUri,
+        ownerHandle,
+        ownerAvatar,
+        creatorId,
         isOwner,
         needsSettling,
         bidFromPreviousAuction,
@@ -119,12 +126,14 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
         saleType,
         userBidCreatedAt,
         userBidAmount,
+        isOwnedByChannel,
       }
     }
     case 'buy-now':
       return {
-        ownerHandle: owner?.handle,
-        ownerAvatarUri,
+        ownerHandle,
+        ownerAvatar,
+        creatorId,
         isOwner,
         needsSettling,
         bidFromPreviousAuction,
@@ -135,11 +144,13 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
         saleType,
         userBidCreatedAt,
         userBidAmount,
+        isOwnedByChannel: nft?.isOwnedByChannel,
       }
     case 'idle':
       return {
-        ownerHandle: owner?.handle,
-        ownerAvatarUri,
+        ownerHandle,
+        ownerAvatar,
+        creatorId,
         isOwner,
         needsSettling,
         bidFromPreviousAuction,
@@ -150,6 +161,7 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
         saleType,
         userBidCreatedAt,
         userBidAmount,
+        isOwnedByChannel,
       }
   }
 

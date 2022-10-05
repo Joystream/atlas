@@ -61,8 +61,9 @@ export type Auction = {
 }
 
 export type NftWidgetProps = {
-  ownerHandle: string | undefined
-  ownerAvatarUri: string | null | undefined
+  ownerHandle: string | null | undefined
+  ownerAvatar: string | null | undefined
+  creatorId?: string
   isOwner: boolean | undefined
   needsSettling: boolean | undefined
   bidFromPreviousAuction: FullBidFieldsFragment | undefined
@@ -90,17 +91,19 @@ export type NftWidgetProps = {
   onWithdrawBid?: (bid?: BN, createdAt?: Date) => void
   userBidCreatedAt?: Date
   userBidAmount?: BN
+  isOwnedByChannel?: boolean
 }
 
 const SMALL_VARIANT_MAXIMUM_SIZE = 416
 
 export const NftWidget: FC<NftWidgetProps> = ({
   ownerHandle,
+  creatorId,
   isOwner,
   nftStatus,
   nftHistory,
   needsSettling,
-  ownerAvatarUri,
+  ownerAvatar,
   onNftPutOnSale,
   onNftAcceptBid,
   onWithdrawBid,
@@ -112,6 +115,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
   onNftBuyNow,
   userBidCreatedAt,
   userBidAmount,
+  isOwnedByChannel,
 }) => {
   const timestamp = useMsTimestamp()
   const { ref, width = SMALL_VARIANT_MAXIMUM_SIZE + 1 } = useResizeObserver({
@@ -598,11 +602,19 @@ export const NftWidget: FC<NftWidgetProps> = ({
   return (
     <Container ref={ref}>
       <NftOwnerContainer data-size={size}>
-        <OwnerAvatar assetUrl={ownerAvatarUri} size="small" />
+        <OwnerAvatar assetUrl={ownerAvatar} size="small" />
         <OwnerLabel as="span" variant="t100" color="colorText">
           This NFT is owned by
         </OwnerLabel>
-        <OwnerHandle to={ownerHandle ? absoluteRoutes.viewer.member(ownerHandle) : ''}>
+        <OwnerHandle
+          to={
+            isOwnedByChannel
+              ? absoluteRoutes.viewer.channel(creatorId)
+              : ownerHandle
+              ? absoluteRoutes.viewer.member(ownerHandle)
+              : ''
+          }
+        >
           <Text as="span" variant="h300">
             {ownerHandle}
           </Text>
