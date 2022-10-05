@@ -21,7 +21,6 @@ import { ReportModal } from '@/components/_overlays/ReportModal'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { AvailableTrack } from '@/components/_video/VideoPlayer/SettingsButtonWithPopover'
 import { videoCategories } from '@/config/categories'
-import { filteredVideoIds } from '@/config/contentFilter'
 import { CTA_MAP } from '@/config/cta'
 import { APP_NAME, BASE_APP_URL, TWITTER_ID } from '@/config/env'
 import { LANGUAGES_LOOKUP } from '@/config/languages'
@@ -136,7 +135,7 @@ export const VideoView: FC = () => {
   const categoryId = video?.category?.id
   const numberOfLikes = video?.reactions.filter(({ reaction }) => reaction === 'LIKE').length
   const numberOfDislikes = video?.reactions.filter(({ reaction }) => reaction === 'UNLIKE').length
-  const videoNotAvailable = !!(id && filteredVideoIds.includes(id)) || (!loading && !video)
+  const videoNotAvailable = !loading && !video
 
   const reactionStepperState = useMemo(() => {
     if (!video) {
