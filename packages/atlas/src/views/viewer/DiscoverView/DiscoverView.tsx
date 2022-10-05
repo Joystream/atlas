@@ -1,6 +1,5 @@
 import { FC, useMemo } from 'react'
 
-import { useQnCategories } from '@/api/hooks/categories'
 import { useAllCategoriesFeaturedVideos } from '@/api/hooks/categoriesFeaturedVideos'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
@@ -8,7 +7,7 @@ import { CategoryIcon } from '@/components/_icons/CategoryIcon'
 import { FeaturedVideoCategoryCard, VideoCategoryCard } from '@/components/_video/VideoCategoryCard'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useVideoCategoriesWithCounter } from '@/hooks/useVideoCategoriesWithCounter'
+import { useVideoDisplayCategoriesWithCounter } from '@/hooks/useVideoDisplayCategoriesWithCounter'
 import { cVar } from '@/styles'
 import { createLookup } from '@/utils/data'
 
@@ -19,9 +18,7 @@ import {
 } from './DiscoverView.styles'
 
 export const DiscoverView: FC = () => {
-  const { categories, totalVideosCount, loading } = useQnCategories()
-  const videoCategories = useVideoCategoriesWithCounter()
-
+  const { loading, displayCategoriesWithCounter, totalVideosCount } = useVideoDisplayCategoriesWithCounter()
   const { allCategoriesFeaturedVideos } = useAllCategoriesFeaturedVideos()
 
   const categoriesFeaturedVideos = allCategoriesFeaturedVideos
@@ -29,29 +26,19 @@ export const DiscoverView: FC = () => {
     : null
 
   const featuredVideoCategoryCardsData = useMemo(() => {
-    if (!categories) {
-      return [null, null, null]
-    }
-    const usedCategories: string[] = []
     const _featuredVideoCategoryCardsData =
-      categories
-        .map(function (category) {
-          const video = categoriesFeaturedVideos?.[category.id]?.categoryFeaturedVideos.find(
+      displayCategoriesWithCounter
+        .map((category) => {
+          const video = categoriesFeaturedVideos?.[category.defaultVideoCategory]?.categoryFeaturedVideos.find(
             (video) => !!video.videoCutUrl
           )
-          const _usedCategories = [...usedCategories]
 
           if (!video) return null
 
           return {
             videoTitle: video?.video.title ?? '',
             videoUrl: video?.videoCutUrl ?? '',
-            ...videoCategories?.find((displayCategory) => {
-              usedCategories.push(displayCategory.id)
-              return (
-                displayCategory.videoCategories.includes(category.id) && !_usedCategories.includes(displayCategory.id)
-              )
-            }),
+            ...category,
           }
         })
         .filter((cat) => !!cat)
@@ -62,7 +49,7 @@ export const DiscoverView: FC = () => {
     }
 
     return null
-  }, [categories, videoCategories, categoriesFeaturedVideos])
+  }, [displayCategoriesWithCounter, categoriesFeaturedVideos])
 
   const isMdBreakpoint = useMediaMatch('md')
 
@@ -97,7 +84,7 @@ export const DiscoverView: FC = () => {
         </Text>
       </StyledGridHeadingContainer>
       <LayoutGrid>
-        {(videoCategories ?? new Array(15).fill(null))?.map((category, i) => (
+        {(displayCategoriesWithCounter ?? new Array(15).fill(null))?.map((category, i) => (
           <GridItem key={i} colSpan={{ base: 6, lg: 4, xl: 3 }}>
             <VideoCategoryCard
               isLoading={category === null || loading}

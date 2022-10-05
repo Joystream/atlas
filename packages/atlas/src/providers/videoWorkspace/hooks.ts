@@ -4,8 +4,8 @@ import { useContext, useEffect, useMemo, useState } from 'react'
 import { useLocation, useMatch } from 'react-router'
 import { useNavigate } from 'react-router-dom'
 
-import { useQnCategories } from '@/api/hooks/categories'
 import { useFullVideo } from '@/api/hooks/video'
+import { displayCategories } from '@/config/categories'
 import { cancelledVideoFilter } from '@/config/contentFilter'
 import { absoluteRoutes } from '@/config/routes'
 import { useSubtitlesAssets } from '@/providers/assets/assets.hooks'
@@ -45,7 +45,6 @@ export const useVideoWorkspaceData = () => {
       },
     }
   )
-  const { categories } = useQnCategories()
 
   const subtitlesAssets = useSubtitlesAssets(video?.subtitles)
 
@@ -97,7 +96,10 @@ export const useVideoWorkspaceData = () => {
   const normalizedData: VideoWorkspaceVideoFormFields = {
     title: editedVideoInfo.isDraft ? draft?.title ?? '' : video?.title ?? '',
     description: (editedVideoInfo.isDraft ? draft?.description : video?.description) ?? '',
-    category: (editedVideoInfo.isDraft ? draft?.category ?? categories?.[0]?.id : video?.category?.id) ?? null,
+    category:
+      (editedVideoInfo.isDraft
+        ? draft?.category ?? displayCategories?.[0]?.defaultVideoCategory
+        : video?.category?.id) ?? null,
     licenseCode: (editedVideoInfo.isDraft ? draft?.licenseCode : video?.license?.code) ?? DEFAULT_LICENSE_ID,
     licenseCustomText: (editedVideoInfo.isDraft ? draft?.licenseCustomText : video?.license?.customText) ?? null,
     licenseAttribution: (editedVideoInfo.isDraft ? draft?.licenseAttribution : video?.license?.attribution) ?? null,

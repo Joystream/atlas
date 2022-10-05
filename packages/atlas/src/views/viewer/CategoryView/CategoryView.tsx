@@ -2,7 +2,6 @@ import { sample, sampleSize } from 'lodash-es'
 import { useMemo } from 'react'
 import { useParams } from 'react-router'
 
-import { useQnCategories } from '@/api/hooks/categories'
 import { useCategoriesFeaturedVideos } from '@/api/hooks/categoriesFeaturedVideos'
 import { GetCategoriesFeaturedVideosQuery } from '@/api/queries/__generated__/featured.generated'
 import { VideoCategoryFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
@@ -20,7 +19,7 @@ import { DisplayCategory, findDisplayCategory } from '@/config/categories'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useVideoCategoriesWithCounter } from '@/hooks/useVideoCategoriesWithCounter'
+import { useVideoDisplayCategoriesWithCounter } from '@/hooks/useVideoDisplayCategoriesWithCounter'
 import { useAsset } from '@/providers/assets/assets.hooks'
 import { cVar } from '@/styles'
 
@@ -31,16 +30,15 @@ export const CategoryView = () => {
   const mdBreakpointMatch = useMediaMatch('md')
   const { id = '' } = useParams()
 
-  const { totalVideosCount, loading } = useQnCategories()
-  const videoCategories = useVideoCategoriesWithCounter()
+  const { displayCategoriesWithCounter, loading, totalVideosCount } = useVideoDisplayCategoriesWithCounter()
 
   const otherCategory: Array<DisplayCategory & VideoCategoryFieldsFragment> = useMemo(
     () =>
       sampleSize(
-        videoCategories?.filter((category) => category.id !== id),
+        displayCategoriesWithCounter?.filter((category) => category.id !== id),
         3
       ),
-    [id, videoCategories]
+    [id, displayCategoriesWithCounter]
   )
   const currentCategory = findDisplayCategory(id)
 

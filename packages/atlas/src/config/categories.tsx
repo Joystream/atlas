@@ -10,6 +10,7 @@ export type DisplayCategory = {
   coverImgUrl: string
   name: string
   videoCategories: CategoryId[]
+  defaultVideoCategory: CategoryId
 }
 
 export const displayCategories: DisplayCategory[] = [
@@ -20,6 +21,7 @@ export const displayCategories: DisplayCategory[] = [
     color: '#D92E61',
     coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/science-and-technology.webp',
     videoCategories: ['63-2', '65-2'],
+    defaultVideoCategory: '63-2',
   },
   {
     id: '1',
@@ -28,6 +30,7 @@ export const displayCategories: DisplayCategory[] = [
     color: '#E7BE2D',
     coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/pets-and-animals.webp',
     videoCategories: ['59-2', '61-2'],
+    defaultVideoCategory: '59-2',
   },
   {
     id: '2',
@@ -36,6 +39,7 @@ export const displayCategories: DisplayCategory[] = [
     color: '#BD4BE4',
     coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/film-and-animation.webp',
     videoCategories: ['63-2'],
+    defaultVideoCategory: '63-2',
   },
   {
     id: '3',
@@ -44,6 +48,7 @@ export const displayCategories: DisplayCategory[] = [
     color: '#BDE933',
     coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/people-and-blogs.webp',
     videoCategories: ['65-2'],
+    defaultVideoCategory: '65-2',
   },
   {
     id: '4',
@@ -52,6 +57,7 @@ export const displayCategories: DisplayCategory[] = [
     color: '#54A7F0',
     coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/entertainment.webp',
     videoCategories: ['59-2'],
+    defaultVideoCategory: '59-2',
   },
   {
     id: '5',
@@ -60,6 +66,7 @@ export const displayCategories: DisplayCategory[] = [
     color: '#DD379D',
     coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/education.webp',
     videoCategories: ['61-2'],
+    defaultVideoCategory: '61-2',
   },
   {
     id: '6',
@@ -68,6 +75,7 @@ export const displayCategories: DisplayCategory[] = [
     color: '#5A7AEE',
     coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/travel-and-events.webp',
     videoCategories: ['65-2', '59-2'],
+    defaultVideoCategory: '65-2',
   },
   {
     id: '7',
@@ -76,6 +84,7 @@ export const displayCategories: DisplayCategory[] = [
     color: '#41EE5A',
     coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/sports.webp',
     videoCategories: ['59-2', '61-2'],
+    defaultVideoCategory: '59-2',
   },
   {
     id: '8',
@@ -84,6 +93,7 @@ export const displayCategories: DisplayCategory[] = [
     color: '#9455E8',
     coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/gaming.webp',
     videoCategories: ['61-2'],
+    defaultVideoCategory: '61-2',
   },
   {
     id: '9',
@@ -92,6 +102,7 @@ export const displayCategories: DisplayCategory[] = [
     color: '#4FE1F2',
     coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/comedy.webp',
     videoCategories: ['59-2'],
+    defaultVideoCategory: '59-2',
   },
   {
     id: '10',
@@ -100,6 +111,7 @@ export const displayCategories: DisplayCategory[] = [
     color: '#6E5FEC',
     coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/autos-and-vehicles.webp',
     videoCategories: ['61-2', '59-2', '63-2'],
+    defaultVideoCategory: '61-2',
   },
   {
     id: '11',
@@ -108,6 +120,7 @@ export const displayCategories: DisplayCategory[] = [
     color: '#E57827',
     coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/howto-and-style.webp',
     videoCategories: ['61-2', '63-2'],
+    defaultVideoCategory: '61-2',
   },
   {
     id: '12',
@@ -116,6 +129,7 @@ export const displayCategories: DisplayCategory[] = [
     color: '#6EEC3A',
     coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/music.webp',
     videoCategories: ['59-2', '65-2'],
+    defaultVideoCategory: '59-2',
   },
   {
     id: '13',
@@ -124,6 +138,7 @@ export const displayCategories: DisplayCategory[] = [
     color: '#E141D6',
     coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/nonprofit-and-activism.webp',
     videoCategories: ['63-2', '65-2', '59-2', '61-2'],
+    defaultVideoCategory: '63-2',
   },
   {
     id: '14',
@@ -132,11 +147,13 @@ export const displayCategories: DisplayCategory[] = [
     color: '#48F0B3',
     coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/news-and-politics.webp',
     videoCategories: ['63-2'],
+    defaultVideoCategory: '63-2',
   },
 ]
 
+export const displayCategoriesLookup = createLookup(displayCategories)
+
 export const findDisplayCategory = (id?: string | null) => {
-  const displayCategoriesLookup = createLookup(displayCategories)
   if (!id) return null
   return displayCategoriesLookup[id]
 }
