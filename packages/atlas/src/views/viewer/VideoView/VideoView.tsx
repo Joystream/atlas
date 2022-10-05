@@ -6,7 +6,6 @@ import { useInView } from 'react-intersection-observer'
 import { useParams } from 'react-router-dom'
 
 import { useAddVideoView, useFullVideo } from '@/api/hooks/video'
-import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -26,7 +25,6 @@ import { filteredVideoIds } from '@/config/contentFilter'
 import { CTA_MAP } from '@/config/cta'
 import { APP_NAME, BASE_APP_URL, TWITTER_ID } from '@/config/env'
 import { LANGUAGES_LOOKUP } from '@/config/languages'
-import { absoluteRoutes } from '@/config/routes'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -54,7 +52,6 @@ import {
   ButtonsContainer,
   ChannelContainer,
   Meta,
-  NotFoundVideoContainer,
   PlayerContainer,
   PlayerGridItem,
   PlayerGridWrapper,
@@ -139,7 +136,7 @@ export const VideoView: FC = () => {
   const categoryId = video?.category?.id
   const numberOfLikes = video?.reactions.filter(({ reaction }) => reaction === 'LIKE').length
   const numberOfDislikes = video?.reactions.filter(({ reaction }) => reaction === 'UNLIKE').length
-  const videoIsBlocked = !!(id && filteredVideoIds.includes(id))
+  const videoNotAvailable = !!(id && filteredVideoIds.includes(id)) || (!loading && !video)
 
   const reactionStepperState = useMemo(() => {
     if (!video) {
@@ -247,25 +244,10 @@ export const VideoView: FC = () => {
     return <ViewErrorFallback />
   }
 
-  if (!loading && !video && !videoIsBlocked) {
-    return (
-      <NotFoundVideoContainer>
-        <EmptyFallback
-          title="Video not found"
-          button={
-            <Button variant="secondary" size="large" to={absoluteRoutes.viewer.index()}>
-              Go back to home page
-            </Button>
-          }
-        />
-      </NotFoundVideoContainer>
-    )
-  }
-
   const isCinematic = cinematicView || !mdMatch
   const sideItems = (
     <GridItem colSpan={{ xxs: 12, md: 4 }}>
-      {videoIsBlocked
+      {videoNotAvailable
         ? mdMatch && (
             <>
               {!cinematicView && <BlockedVideoPlaceholder />}
@@ -290,7 +272,7 @@ export const VideoView: FC = () => {
     </GridItem>
   )
 
-  const detailsItems = videoIsBlocked ? (
+  const detailsItems = videoNotAvailable ? (
     mdMatch && <BlockedVideoGradientPlaceholder />
   ) : (
     <>
@@ -361,8 +343,12 @@ export const VideoView: FC = () => {
       <PlayerGridWrapper cinematicView={isCinematic}>
         <PlayerWrapper cinematicView={isCinematic}>
           <PlayerGridItem colSpan={{ xxs: 12, md: cinematicView ? 12 : 8 }}>
-            <PlayerContainer className={transitions.names.slide} cinematicView={cinematicView} noVideo={videoIsBlocked}>
-              {videoIsBlocked ? (
+            <PlayerContainer
+              className={transitions.names.slide}
+              cinematicView={cinematicView}
+              noVideo={videoNotAvailable}
+            >
+              {videoNotAvailable ? (
                 <VideoUnavailableError isCinematic={isCinematic} />
               ) : !isMediaLoading && video ? (
                 <VideoPlayer
@@ -387,7 +373,7 @@ export const VideoView: FC = () => {
             {!isCinematic && (
               <>
                 {detailsItems}
-                {!videoIsBlocked && (
+                {!videoNotAvailable && (
                   <CommentsSection
                     video={video}
                     videoLoading={loading}
@@ -401,11 +387,11 @@ export const VideoView: FC = () => {
         </PlayerWrapper>
       </PlayerGridWrapper>
       <LimitedWidthContainer>
-        {isCinematic && !(!mdMatch && videoIsBlocked) && (
+        {isCinematic && !(!mdMatch && videoNotAvailable) && (
           <LayoutGrid>
             <GridItem className={transitions.names.slide} colSpan={{ xxs: 12, md: cinematicView ? 8 : 12 }}>
               {detailsItems}
-              {!videoIsBlocked && (
+              {!videoNotAvailable && (
                 <CommentsSection
                   video={video}
                   videoLoading={loading}

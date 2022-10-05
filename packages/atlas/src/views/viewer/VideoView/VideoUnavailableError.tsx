@@ -22,8 +22,8 @@ export const VideoUnavailableError: FC<VideoUnavailableErrorProps> = ({ isCinema
           Video unavailable
         </Text>
         <Text variant={mdMatch ? 't300' : 't200'} as="p" margin={{ top: 2, bottom: mdMatch ? 8 : 6 }} color="colorText">
-          This video was deleted by creator, moderated by the content curation team or not included by the application
-          operator.
+          This video was deleted by creator, moderated by the DAO content curation team or not included to be viewed by
+          the application operators.
         </Text>
         <Button to={absoluteRoutes.viewer.index()} size={mdMatch ? 'medium' : 'small'}>
           Return to homepage
