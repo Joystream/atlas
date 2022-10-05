@@ -3,7 +3,7 @@ import { ChannelWhereInput, VideoWhereInput } from '@/api/queries/__generated__/
 type ContentFilter = string[]
 
 const filteredAssetsFilter: ContentFilter = []
-const filteredVideoIds: ContentFilter = []
+export const filteredVideoIds: ContentFilter = []
 const filteredChannelIds: ContentFilter = []
 
 const NOTvideoFilter = []

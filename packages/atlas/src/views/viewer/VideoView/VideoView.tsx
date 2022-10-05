@@ -6,7 +6,6 @@ import { useInView } from 'react-intersection-observer'
 import { useParams } from 'react-router-dom'
 
 import { useAddVideoView, useFullVideo } from '@/api/hooks/video'
-import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -25,7 +24,6 @@ import { videoCategories } from '@/config/categories'
 import { CTA_MAP } from '@/config/cta'
 import { APP_NAME, BASE_APP_URL, TWITTER_ID } from '@/config/env'
 import { LANGUAGES_LOOKUP } from '@/config/languages'
-import { absoluteRoutes } from '@/config/routes'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -46,11 +44,13 @@ import { formatVideoDate } from '@/utils/video'
 import { CommentsSection } from './CommentsSection'
 import { MoreVideos } from './MoreVideos'
 import { VideoDetails } from './VideoDetails'
+import { VideoUnavailableError } from './VideoUnavailableError'
 import {
+  BlockedVideoGradientPlaceholder,
+  BlockedVideoPlaceholder,
   ButtonsContainer,
   ChannelContainer,
   Meta,
-  NotFoundVideoContainer,
   PlayerContainer,
   PlayerGridItem,
   PlayerGridWrapper,
@@ -135,6 +135,7 @@ export const VideoView: FC = () => {
   const categoryId = video?.category?.id
   const numberOfLikes = video?.reactions.filter(({ reaction }) => reaction === 'LIKE').length
   const numberOfDislikes = video?.reactions.filter(({ reaction }) => reaction === 'UNLIKE').length
+  const videoNotAvailable = !loading && !video
 
   const reactionStepperState = useMemo(() => {
     if (!video) {
@@ -242,45 +243,38 @@ export const VideoView: FC = () => {
     return <ViewErrorFallback />
   }
 
-  if (!loading && !video) {
-    return (
-      <NotFoundVideoContainer>
-        <EmptyFallback
-          title="Video not found"
-          button={
-            <Button variant="secondary" size="large" to={absoluteRoutes.viewer.index()}>
-              Go back to home page
-            </Button>
-          }
-        />
-      </NotFoundVideoContainer>
-    )
-  }
-
   const isCinematic = cinematicView || !mdMatch
   const sideItems = (
     <GridItem colSpan={{ xxs: 12, md: 4 }}>
-      {!!nftWidgetProps && (
-        <NftWidget
-          {...nftWidgetProps}
-          onNftPutOnSale={() => id && openNftPutOnSale(id)}
-          onNftCancelSale={() => id && nftWidgetProps.saleType && cancelNftSale(id, nftWidgetProps.saleType)}
-          onNftAcceptBid={() => id && openNftAcceptBid(id)}
-          onNftChangePrice={() => id && openNftChangePrice(id)}
-          onNftPurchase={() => id && openNftPurchase(id)}
-          onNftSettlement={() => id && openNftSettlement(id)}
-          onNftBuyNow={() => id && openNftPurchase(id, { fixedPrice: true })}
-          onWithdrawBid={(bid, createdAt) => id && createdAt && bid && withdrawBid(id, bid, createdAt)}
-        />
-      )}
+      {videoNotAvailable
+        ? mdMatch && (
+            <>
+              {!cinematicView && <BlockedVideoPlaceholder />}
+              <BlockedVideoGradientPlaceholder />
+            </>
+          )
+        : !!nftWidgetProps && (
+            <NftWidget
+              {...nftWidgetProps}
+              onNftPutOnSale={() => id && openNftPutOnSale(id)}
+              onNftCancelSale={() => id && nftWidgetProps.saleType && cancelNftSale(id, nftWidgetProps.saleType)}
+              onNftAcceptBid={() => id && openNftAcceptBid(id)}
+              onNftChangePrice={() => id && openNftChangePrice(id)}
+              onNftPurchase={() => id && openNftPurchase(id)}
+              onNftSettlement={() => id && openNftSettlement(id)}
+              onNftBuyNow={() => id && openNftPurchase(id, { fixedPrice: true })}
+              onWithdrawBid={(bid, createdAt) => id && createdAt && bid && withdrawBid(id, bid, createdAt)}
+            />
+          )}
       <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />
       <MoreVideos categoryId={category?.id} categoryName={video?.category?.name} videoId={id} type="category" />
     </GridItem>
   )
 
-  const detailsItems = (
+  const detailsItems = videoNotAvailable ? (
+    mdMatch && <BlockedVideoGradientPlaceholder />
+  ) : (
     <>
-      {headTags}
       <TitleContainer>
         {video ? (
           <TitleText as="h1" variant={mdMatch ? 'h500' : 'h400'}>
@@ -344,11 +338,18 @@ export const VideoView: FC = () => {
 
   return (
     <>
+      {headTags}
       <PlayerGridWrapper cinematicView={isCinematic}>
         <PlayerWrapper cinematicView={isCinematic}>
           <PlayerGridItem colSpan={{ xxs: 12, md: cinematicView ? 12 : 8 }}>
-            <PlayerContainer className={transitions.names.slide} cinematicView={cinematicView}>
-              {!isMediaLoading && video ? (
+            <PlayerContainer
+              className={transitions.names.slide}
+              cinematicView={cinematicView}
+              noVideo={videoNotAvailable}
+            >
+              {videoNotAvailable ? (
+                <VideoUnavailableError isCinematic={isCinematic} />
+              ) : !isMediaLoading && video ? (
                 <VideoPlayer
                   onCloseShareDialog={() => setShareDialogOpen(false)}
                   onAddVideoView={handleAddVideoView}
@@ -371,11 +372,13 @@ export const VideoView: FC = () => {
             {!isCinematic && (
               <>
                 {detailsItems}
-                <CommentsSection
-                  video={video}
-                  videoLoading={loading}
-                  disabled={video ? !video?.isCommentSectionEnabled : undefined}
-                />
+                {!videoNotAvailable && (
+                  <CommentsSection
+                    video={video}
+                    videoLoading={loading}
+                    disabled={video ? !video?.isCommentSectionEnabled : undefined}
+                  />
+                )}
               </>
             )}
           </PlayerGridItem>
@@ -383,15 +386,17 @@ export const VideoView: FC = () => {
         </PlayerWrapper>
       </PlayerGridWrapper>
       <LimitedWidthContainer>
-        {isCinematic && (
+        {isCinematic && !(!mdMatch && videoNotAvailable) && (
           <LayoutGrid>
             <GridItem className={transitions.names.slide} colSpan={{ xxs: 12, md: cinematicView ? 8 : 12 }}>
               {detailsItems}
-              <CommentsSection
-                video={video}
-                videoLoading={loading}
-                disabled={video ? !video?.isCommentSectionEnabled : undefined}
-              />
+              {!videoNotAvailable && (
+                <CommentsSection
+                  video={video}
+                  videoLoading={loading}
+                  disabled={video ? !video?.isCommentSectionEnabled : undefined}
+                />
+              )}
             </GridItem>
             {sideItems}
           </LayoutGrid>
