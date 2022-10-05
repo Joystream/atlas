@@ -71,44 +71,45 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
     actions: { setPlaybackRate, setAutoPlayNext, setCaptionsLanguage, setCaptionsEnabled },
   } = usePersonalDataStore((state) => state)
 
-  const subtitlesSettings: Setting = {
-    type: 'multi-value',
-    label: 'Subtitles/CC',
-    value: !captionsEnabled || !activeTrack?.label ? 'Off' : activeTrack?.label,
-    options: availableTracks
-      ? [
-          {
-            label: 'Off',
-            value: 'off',
-            selected: !activeTrack,
-            onOptionClick: () => {
-              setCaptionsEnabled(false)
-              onTrackChange(undefined)
-              player?.trigger(CustomVideojsEvents.CaptionsSet)
-              if (mobile) {
-                handleClose()
-              }
+  const subtitlesSettings: Setting | null =
+    availableTracks && availableTracks?.length > 0
+      ? {
+          type: 'multi-value',
+          label: 'Subtitles/CC',
+          value: !captionsEnabled || !activeTrack?.label ? 'Off' : activeTrack?.label,
+          options: [
+            {
+              label: 'Off',
+              value: 'off',
+              selected: !activeTrack,
+              onOptionClick: () => {
+                setCaptionsEnabled(false)
+                onTrackChange(undefined)
+                player?.trigger(CustomVideojsEvents.CaptionsSet)
+                if (mobile) {
+                  handleClose()
+                }
+              },
             },
-          },
-          ...availableTracks.map((track) => ({
-            label: track.label,
-            value: track.language,
-            selected: activeTrack?.language === track.language,
-            onOptionClick: () => {
-              onTrackChange(track)
-              setCaptionsLanguage(track.language)
-              player?.trigger(CustomVideojsEvents.CaptionsSet)
-              if (!captionsEnabled) {
-                setCaptionsEnabled(true)
-              }
-              if (mobile) {
-                handleClose()
-              }
-            },
-          })),
-        ]
-      : [],
-  }
+            ...availableTracks.map((track) => ({
+              label: track.label,
+              value: track.language,
+              selected: activeTrack?.language === track.language,
+              onOptionClick: () => {
+                onTrackChange(track)
+                setCaptionsLanguage(track.language)
+                player?.trigger(CustomVideojsEvents.CaptionsSet)
+                if (!captionsEnabled) {
+                  setCaptionsEnabled(true)
+                }
+                if (mobile) {
+                  handleClose()
+                }
+              },
+            })),
+          ],
+        }
+      : null
 
   const speedSettings: Setting = {
     type: 'multi-value',
@@ -143,11 +144,7 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
     },
   }
 
-  let settings: Setting[] = [speedSettings, autoPlaySettings]
-
-  if (availableTracks) {
-    settings = [speedSettings, subtitlesSettings, autoPlaySettings]
-  }
+  const settings: Setting[] = [speedSettings, ...(subtitlesSettings ? [subtitlesSettings] : []), autoPlaySettings]
 
   return (
     <span>

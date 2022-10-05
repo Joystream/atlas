@@ -79,9 +79,10 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
           onLanguageAdd({ languageIso: item.languageIso, type: item.type })
         }}
       />
-      {subtitlesArray?.map(({ languageIso, file, type, id, url }) => (
+      {subtitlesArray?.map(({ languageIso, file, type, id, url, isUploadedAsSrt }) => (
         <SubtitlesBox
           key={languageIso + type}
+          isUploadedAsSrt={isUploadedAsSrt}
           type={type}
           languageIso={LANGUAGES_LOOKUP[languageIso]}
           onRemove={() => {

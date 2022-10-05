@@ -28,6 +28,7 @@ export const SubtitlesBox: FC<SubtitleBoxProps> = ({
   languageIso,
   type,
   file,
+  isUploadedAsSrt,
   url,
   id,
   onChange,
@@ -116,7 +117,7 @@ export const SubtitlesBox: FC<SubtitleBoxProps> = ({
         )}
         {file && (
           <SubtitlesFileName variant="t100" as="p" color="colorText">
-            {file.name}
+            {isUploadedAsSrt ? file.name.replace('.vtt', '.srt') : file.name}
           </SubtitlesFileName>
         )}
         {hasFile ? <StyledSvgActionCheck /> : null}

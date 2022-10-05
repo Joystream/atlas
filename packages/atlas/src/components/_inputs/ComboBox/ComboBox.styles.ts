@@ -11,6 +11,7 @@ export const ComboBoxWrapper = styled.div`
 export const ListWrapper = styled.ul<{ topPosition?: number }>`
   max-height: 188px;
   overflow-y: auto;
+  box-shadow: ${cVar('effectElevation16Layer1')}, ${cVar('effectElevation16Layer2')};
   background: ${cVar('colorBackgroundStrong')};
   padding: 0;
   position: absolute;
