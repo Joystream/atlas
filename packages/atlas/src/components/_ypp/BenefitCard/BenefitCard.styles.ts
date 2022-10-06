@@ -3,12 +3,9 @@ import styled from '@emotion/styled'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
-import smPattern1 from '@/components/_illustrations/svgs/benefit-card-pattern-sm-1.svg'
-import smPattern2 from '@/components/_illustrations/svgs/benefit-card-pattern-sm-2.svg'
-import smPattern3 from '@/components/_illustrations/svgs/benefit-card-pattern-sm-3.svg'
-import xxsPattern1 from '@/components/_illustrations/svgs/benefit-card-pattern-xxs-1.svg'
-import xxsPattern2 from '@/components/_illustrations/svgs/benefit-card-pattern-xxs-2.svg'
-import xxsPattern3 from '@/components/_illustrations/svgs/benefit-card-pattern-xxs-3.svg'
+import pattern1 from '@/components/_illustrations/svgs/other-benefit-card-pattern-1.svg'
+import pattern2 from '@/components/_illustrations/svgs/other-benefit-card-pattern-2.svg'
+import pattern3 from '@/components/_illustrations/svgs/other-benefit-card-pattern-3.svg'
 import { cVar, media, sizes, square } from '@/styles'
 
 export type Variant = 'compact' | 'full'
@@ -54,35 +51,31 @@ export const Wrapper = styled.div<{ variant: Variant }>`
     display: flex;
   }
 
+  ${Pattern} {
+    background-size: 144px;
+
+    ${media.sm} {
+      background-size: unset;
+    }
+  }
+
   /* the following nth-of-type pseudo classes sets different patterns depending on the BenefitCard order */
 
   &:nth-of-type(3n - 2) {
     ${Pattern} {
-      background-image: url(${xxsPattern1});
-
-      ${media.sm} {
-        background-image: url(${smPattern1});
-      }
+      background-image: url(${pattern1});
     }
   }
 
   &:nth-of-type(3n - 1) {
     ${Pattern} {
-      background-image: url(${xxsPattern2});
-
-      ${media.sm} {
-        background-image: url(${smPattern2});
-      }
+      background-image: url(${pattern2});
     }
   }
 
   &:nth-of-type(3n - 3) {
     ${Pattern} {
-      background-image: url(${xxsPattern3});
-
-      ${media.sm} {
-        background-image: url(${smPattern3});
-      }
+      background-image: url(${pattern3});
     }
   }
 `
