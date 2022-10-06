@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { FC, useMemo } from 'react'
 
 import { Text } from '@/components/Text'
-import { LANGUAGES_LOOKUP } from '@/config/languages'
+import { atlasConfig } from '@/config'
 import { sizes } from '@/styles'
 import { SubtitlesInput } from '@/types/subtitles'
 
@@ -37,7 +37,7 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
     return languagesIso
       .map((iso) => [
         {
-          displayName: LANGUAGES_LOOKUP[iso],
+          displayName: atlasConfig.derived.languagesLookup[iso],
           languageIso: iso,
           type: 'subtitles' as const,
           disabled: !!subtitlesArray?.find(
@@ -45,7 +45,7 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
           ),
         },
         {
-          displayName: LANGUAGES_LOOKUP[iso],
+          displayName: atlasConfig.derived.languagesLookup[iso],
           languageIso: iso,
           type: 'closed-captions' as const,
           disabled: !!subtitlesArray?.find(
@@ -84,7 +84,7 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
           key={languageIso + type}
           isUploadedAsSrt={isUploadedAsSrt}
           type={type}
-          languageIso={LANGUAGES_LOOKUP[languageIso]}
+          languageIso={atlasConfig.derived.languagesLookup[languageIso]}
           onRemove={() => {
             onLanguageDelete({ languageIso, type })
           }}

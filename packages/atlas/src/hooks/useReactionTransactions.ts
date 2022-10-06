@@ -24,9 +24,8 @@ import {
   GetFullVideoQuery,
   GetFullVideoQueryVariables,
 } from '@/api/queries/__generated__/videos.generated'
-import { ReactionId } from '@/config/reactions'
 import { absoluteRoutes } from '@/config/routes'
-import { VideoReaction } from '@/joystream-lib/types'
+import { CommentReaction, VideoReaction } from '@/joystream-lib/types'
 import { useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -189,7 +188,7 @@ export const useReactionTransactions = () => {
   )
 
   const reactToComment = useCallback(
-    async (commentId: string, videoId: string, reactionId: ReactionId, commentAuthorHandle: string) => {
+    async (commentId: string, videoId: string, reactionId: CommentReaction, commentAuthorHandle: string) => {
       if (!joystream || !memberId) {
         ConsoleLogger.error('No joystream instance')
         return

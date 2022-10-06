@@ -6,7 +6,7 @@ import { useBids } from '@/api/hooks/bids'
 import { useNft, useNftHistory } from '@/api/hooks/nfts'
 import { FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { NftWidgetProps } from '@/components/_nft/NftWidget/NftWidget'
-import { NFT_STATUS_POLLING_INTERVAL } from '@/config/nft'
+import { atlasConfig } from '@/config'
 import { useNftState } from '@/hooks/useNftState'
 import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -42,7 +42,7 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
   const hasNft = !!nft
   useEffect(() => {
     if (!called || !hasNft) return
-    startPolling(NFT_STATUS_POLLING_INTERVAL)
+    startPolling(atlasConfig.features.nft.statusPollingInterval)
 
     return () => {
       stopPolling()
@@ -86,7 +86,7 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
 
   const { entries: nftHistory } = useNftHistoryEntries(video?.id ?? '', {
     skip: !nft,
-    pollInterval: NFT_STATUS_POLLING_INTERVAL,
+    pollInterval: atlasConfig.features.nft.statusPollingInterval,
   })
 
   const isOwnedByChannel = nft?.isOwnedByChannel

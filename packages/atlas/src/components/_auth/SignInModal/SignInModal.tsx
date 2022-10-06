@@ -5,8 +5,8 @@ import shallow from 'zustand/shallow'
 
 import { Button } from '@/components/_buttons/Button'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
+import { atlasConfig } from '@/config'
 import { FAUCET_URL } from '@/config/env'
-import { JOY_CURRENCY_TICKER } from '@/config/joystream'
 import { MemberId } from '@/joystream-lib/types'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useJoystream } from '@/providers/joystream/joystream.hooks'
@@ -120,7 +120,7 @@ export const SignInModal: FC = () => {
             return
           }
           const { lockedBalance } = await joystream.getAccountBalance(selectedAddress)
-          const amountOfTokens = `${hapiBnToTokenNumber(new BN(lockedBalance))} ${JOY_CURRENCY_TICKER}`
+          const amountOfTokens = `${hapiBnToTokenNumber(new BN(lockedBalance))} ${atlasConfig.joystream.tokenTicker}`
           displaySnackbar({
             title: `You received ${amountOfTokens}`,
             description: `Enjoy your ${amountOfTokens} tokens to help you cover transaction fees. These tokens are non-transferable and can't be spent on NFTs or other purchases.`,

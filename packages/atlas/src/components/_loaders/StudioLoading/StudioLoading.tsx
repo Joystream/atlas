@@ -3,7 +3,7 @@ import { FC } from 'react'
 
 import { Text } from '@/components/Text'
 import { Spinner } from '@/components/_loaders/Spinner'
-import { APP_NAME } from '@/config/env'
+import { atlasConfig } from '@/config'
 import { sizes } from '@/styles'
 
 export const StudioLoading: FC = () => {
@@ -11,7 +11,7 @@ export const StudioLoading: FC = () => {
     <LoadingStudioContainer>
       <Spinner size="large" />
       <Text as="span" variant="h700">
-        Loading {APP_NAME} Studio...
+        Loading {atlasConfig.general.appName} Studio...
       </Text>
     </LoadingStudioContainer>
   )

@@ -23,8 +23,7 @@ import {
 import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { APP_NAME } from '@/config/env'
-import { JOY_CURRENCY_TICKER } from '@/config/joystream'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useUserStore } from '@/providers/user/user.store'
@@ -239,7 +238,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
               rel="noopener noreferrer"
               color="colorCoreNeutral200Lighten"
             >
-              Learn about {JOY_CURRENCY_TICKER} <SvgActionNewTab />
+              Learn about {atlasConfig.joystream.tokenTicker} <SvgActionNewTab />
             </TextLink>
           </BalanceContainer>
         </MemberInfoContainer>
@@ -323,7 +322,7 @@ const ListItemOptions: FC<ListItemOptionsProps> = ({ publisher, closeDropdown, l
         <ListItem
           onClick={closeDropdown}
           nodeStart={<IconWrapper icon={<SvgActionPlay />} />}
-          label={APP_NAME}
+          label={atlasConfig.general.appName}
           to={absoluteRoutes.viewer.index()}
         />
       ) : (

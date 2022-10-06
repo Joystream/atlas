@@ -3,7 +3,7 @@ import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
 import { NavItem, NavItemType } from '@/components/_navigation/NavItem'
-import { ATLAS_GITHUB_URL, JOYSTREAM_URL } from '@/config/env'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { transitions } from '@/styles'
@@ -120,7 +120,7 @@ const SidenavBase: FC<SidenavProps> = ({
                 </LegalLink>
               </LinksRow>
               <LinksRow>
-                <StyledAnchor href={JOYSTREAM_URL} target="_blank">
+                <StyledAnchor href={atlasConfig.general.joystreamLandingPageUrl} target="_blank">
                   <Text as="span" variant="t100" color="inherit">
                     Powered by
                   </Text>
@@ -129,7 +129,7 @@ const SidenavBase: FC<SidenavProps> = ({
                 <Text as="span" variant="t100" color="inherit">
                   •
                 </Text>
-                <StyledAnchor href={ATLAS_GITHUB_URL} target="_blank">
+                <StyledAnchor href={atlasConfig.general.appGithubUrl} target="_blank">
                   <StyledGhLogo />
                 </StyledAnchor>
                 <StyledAnchor />

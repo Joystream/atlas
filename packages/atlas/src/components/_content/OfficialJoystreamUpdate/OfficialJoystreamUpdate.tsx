@@ -1,6 +1,6 @@
 import { useChannelPreviewVideos } from '@/api/hooks/video'
 import { VideoGallery } from '@/components/_video/VideoGallery'
-import { readEnv } from '@/config/envs'
+import { readEnv } from '@/config/env'
 import { SentryLogger } from '@/utils/logs'
 
 const channelId = readEnv('OFFICIAL_JOYSTREAM_CHANNEL_ID')

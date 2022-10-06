@@ -11,7 +11,7 @@ import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { FormField } from '@/components/_inputs/FormField'
 import { TokenInput } from '@/components/_inputs/TokenInput'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { JOY_CURRENCY_TICKER } from '@/config/joystream'
+import { atlasConfig } from '@/config'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useFee, useJoystream, useTokenPrice } from '@/providers/joystream/joystream.hooks'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
@@ -73,7 +73,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
       handleTransaction({
         snackbarSuccessMessage: {
           title: 'Tokens withdrawn successfully',
-          description: `You have withdrawn ${formatNumber(data.amount)} ${JOY_CURRENCY_TICKER}!`,
+          description: `You have withdrawn ${formatNumber(data.amount)} ${atlasConfig.joystream.tokenTicker}!`,
         },
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).withdrawFromChannelBalance(
@@ -162,7 +162,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
             <TokenInput
               value={value}
               onChange={onChange}
-              placeholder={`${JOY_CURRENCY_TICKER} amount`}
+              placeholder={`${atlasConfig.joystream.tokenTicker} amount`}
               error={!!errors.amount}
             />
           )}

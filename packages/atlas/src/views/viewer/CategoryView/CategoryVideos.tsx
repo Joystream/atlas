@@ -10,7 +10,7 @@ import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionFilters } from '@/components/_icons'
-import { LANGUAGES_LIST } from '@/config/languages'
+import { atlasConfig } from '@/config'
 import { VIDEO_SORT_OPTIONS } from '@/config/sorting'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
@@ -24,7 +24,10 @@ import {
 } from './CategoryVideos.styles'
 import { FallbackWrapper } from './CategoryView.styles'
 
-const SELECT_LANGUAGE_ITEMS = [{ name: 'All languages', value: 'undefined' }, ...LANGUAGES_LIST]
+const SELECT_LANGUAGE_ITEMS = [
+  { name: 'All languages', value: 'undefined' },
+  ...atlasConfig.derived.languagesSelectValues,
+]
 
 export const CategoryVideos: FC<{ categoryId: string }> = ({ categoryId }) => {
   const smMatch = useMediaMatch('sm')

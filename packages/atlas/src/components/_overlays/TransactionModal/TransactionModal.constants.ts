@@ -3,8 +3,11 @@ import processingAssetsAnimation from '@/assets/animations/transaction/processin
 import processingTransactionAnimation from '@/assets/animations/transaction/processing-transaction.json'
 import propagatingChangesAnimation from '@/assets/animations/transaction/propagating-changes.json'
 import signatureAnimation from '@/assets/animations/transaction/signature.json'
+import '@/config/config'
 import { ErrorCode } from '@/joystream-lib/errors'
 import { ExtrinsicStatus } from '@/joystream-lib/types'
+
+// load and parse app config
 
 export const getExtrinsicStatusDetails = (
   status: ExtrinsicStatus,
@@ -135,13 +138,6 @@ export const getExtrinsicStatusDetails = (
             title: sharedTitle,
             description:
               'You cannot perform this action. This could mean that this NFT has been bought already or the sale was canceled.',
-            animation: sharedAnimation,
-          }
-        case ErrorCode.VoucherSizeLimitExceeded:
-          return {
-            title: 'Storage limit exceeded',
-            description:
-              "Your transaction failed because publishing associated assets would exceed your storage quota. Each channel has a dedicated storage limit that's controlled by the DAO storage working group. You can ask for additional storage space in #storage-provider channel on Joystream Discord and then try again.",
             animation: sharedAnimation,
           }
         case ErrorCode.LiquidityRestrictions:

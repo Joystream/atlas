@@ -4,7 +4,7 @@ import { VideoJsPlayer } from 'video.js'
 
 import { Popover, PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { CustomVideojsEvents } from '@/components/_video/VideoPlayer/utils'
-import { AVAILABLE_PLAYBACK_RATE } from '@/config/player'
+import { atlasConfig } from '@/config'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { sizes } from '@/styles'
 import { isMobile } from '@/utils/browser'
@@ -115,7 +115,7 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
     type: 'multi-value',
     label: 'Speed',
     value: playbackRate === 1 ? `Normal (${playbackRate}x)` : `${playbackRate}x`,
-    options: AVAILABLE_PLAYBACK_RATE.map((availablePlaybackRate) => ({
+    options: atlasConfig.features.playback.playbackRates.map((availablePlaybackRate) => ({
       value: availablePlaybackRate,
       selected: availablePlaybackRate === playbackRate,
       onOptionClick: async (val) => {

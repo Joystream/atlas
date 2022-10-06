@@ -1,0 +1,160 @@
+general:
+  appName: 'Atlas' # Application name - used in the copy throughout the app, in index.html, open graph meta tags, etc
+  appTwitterId: '@JoystreamDAO' # Twitter handle for the app - used in open graph meta tags in HTML
+  appUrl: 'https://play.joystream.org' # URL at which the app is hosted - used in open graph meta tags in HTML
+  appGithubUrl: 'https://github.com/Joystream/atlas' # URL for Atlas GitHub repository - used in the footer
+  pioneerMemberUrlPrefix: 'https://dao.joystream.org/#/members' # URL prefix for Pioneer member profile page - used to link to member details
+  joystreamLandingPageUrl: 'https://www.joystream.org' # URL for Joystream landing page - used in the footer and in "Learn more" links
+  joystreamDiscordUrl: 'https://discord.gg/DE9UN3YpRP' # URL for Joystream Discord - used for support when errors occur
+
+storage:
+  assetResponseTimeout: 20000 # Timeout for asset response in ms - after this timeout, different distributor will be tried
+  assetUploadStatusPollingInterval: 2000 # Interval for polling asset upload status in ms - polling begins once asset is uploaded and is finished once QN reports the asset as accepted
+  uploadProcessingTimeout: 60000 # Timeout for processing uploaded asset in ms - after this timeout, upload will be considered failed
+  minimumDistributorRefetchTime: 1000 # Minimum time before refetching distributors list in ms - refetching is done if certain bag is not found on any distributor
+
+  channelBagPrefix: 'dynamic:channel:' # Prefix for channel bag ID - used to create a unique bag ID for each channel
+  uploadPath: 'api/v1/files' # Path to Storage Node upload endpoint
+  assetPath: 'api/v1/assets' # Path to Distributor Node asset endpoint
+
+joystream:
+  tokenTicker: 'tJOY' # Ticker for the token used in the app
+  alternativeNodes:
+    - name: 'Jsgenesis (Europe/UK)'
+      url: 'wss://testnet-rpc-3-uk.joystream.org'
+    - name: 'Jsgenesis (US/East)'
+      url: 'wss://testnet-rpc-1-us.joystream.org'
+    - name: 'JoystreamStats.Live'
+      url: 'wss://pl.joystreamstats.live/rpc'
+    - name: 'Local'
+      url: 'ws://localhost:9944'
+
+features:
+  nft:
+    auctionMinimumBidStepMultiplier: 0.02 # Multiplier for the auction's starting price used to determine auction's minimum bid step. See more: https://joystream.gitbook.io/testnet-workspace/system/content-directory/nft#auction
+    openAuctionBidLockDuration: 300 # Number of blocks for which bids on open auctions are locked from withdrawal. See more: https://joystream.gitbook.io/testnet-workspace/system/content-directory/nft#auction-type
+    englishAuctionExtensionPeriod: 5 # Number of blocks from the auction's end during which auction will be extended if a bid is placed. See more: https://joystream.gitbook.io/testnet-workspace/system/content-directory/nft#auction-type
+    statusPollingInterval: 20000 # Interval for polling NFT status on VideoView in ms
+  notifications:
+    pollingInterval: 30000 # Interval for polling notifications in ms
+  playback:
+    playbackRates: [2, 1.5, 1.25, 1, 0.5, 0.25] # Playback rates available in the player
+  comments:
+    reactions: # List of allowed comment reactions
+      - id: 1
+        emoji: '👍'
+        name: 'like'
+      - id: 2
+        emoji: '❤️'
+        name: 'love'
+      - id: 3
+        emoji: '😂'
+        name: 'laugh'
+      - id: 4
+        emoji: '🤯'
+        name: 'shock'
+      - id: 5
+        emoji: '😠'
+        name: 'anger'
+content:
+  blockedDataObjectIds: [] # Array of data object IDs that should be blocked from being displayed in the app
+  blockedVideoIds: [] # Array of video IDs that should be blocked from being displayed in the app
+  blockedChannelIds: [] # Array of channel IDs that should be blocked from being displayed in the app
+
+  categories: # List of display categories to be used in the app. Those are local to the application and are related to metaprotocol categories via 'videoCategories' array.
+    - id: '1' # Local category ID
+      name: 'Music' # Display name of the category
+      color: '#D92E61' # Color used in the UI for this category
+      iconUrl: '...' # URL for category icon SVG
+      coverImgUrl: '...' # URL for category cover image
+      videoCategories: ['1', '2'] # List of metaprotocol category IDs that should be included in this display category
+
+  languages: # List of languages to be used in the app. Those will be used when setting video's language, for adding subtitles, etc.
+    - isoCode: ar
+      name: Arabic
+    - isoCode: zh
+      name: Chinese
+    - isoCode: en
+      name: English
+    - isoCode: fr
+      name: French
+    - isoCode: de
+      name: German
+    - isoCode: ja
+      name: Japanese
+    - isoCode: ms
+      name: Malay
+    - isoCode: pt
+      name: Portuguese
+    - isoCode: ru
+      name: Russian
+    - isoCode: st
+      name: Spanish
+    - isoCode: am
+      name: Amharic
+    - isoCode: bn
+      name: Bengali
+    - isoCode: bg
+      name: Bulgarian
+    - isoCode: hr
+      name: Croatian
+    - isoCode: cs
+      name: Czech
+    - isoCode: da
+      name: Danish
+    - isoCode: dv
+      name: Dutch
+    - isoCode: et
+      name: Estonian
+    - isoCode: fj
+      name: Filipino
+    - isoCode: fi
+      name: Finnish
+    - isoCode: de
+      name: Greek
+    - isoCode: ha
+      name: Hausa
+    - isoCode: he
+      name: Hebrew
+    - isoCode: hu
+      name: Hungarian
+    - isoCode: ga
+      name: Irish
+    - isoCode: it
+      name: Italian
+    - isoCode: ko
+      name: Korean
+    - isoCode: lo
+      name: Lao
+    - isoCode: lv
+      name: Latvian
+    - isoCode: lt
+      name: Lithuanian
+    - isoCode: mt
+      name: Maltese
+    - isoCode: pl
+      name: Polish
+    - isoCode: pt
+      name: Punjabi
+    - isoCode: qu
+      name: Romanian
+    - isoCode: sk
+      name: Slovak
+    - isoCode: sl
+      name: Slovenian
+    - isoCode: sw
+      name: Swahili
+    - isoCode: sv
+      name: Swedish
+    - isoCode: ta
+      name: Tamil
+    - isoCode: th
+      name: Thai
+    - isoCode: tr
+      name: Turkish
+    - isoCode: ur
+      name: Urdu
+    - isoCode: vi
+      name: Vietnamese
+    - isoCode: yo
+      name: Yoruba

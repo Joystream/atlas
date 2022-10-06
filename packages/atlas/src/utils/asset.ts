@@ -1,5 +1,4 @@
-import { ASSET_CHANNEL_BAG_PREFIX } from '@/config/assets'
-import { STORAGE_UPLOAD_PATH } from '@/config/env'
+import { atlasConfig } from '@/config'
 
 export const joinUrlFragments = (...fragments: string[]) => {
   // remove trailing/leading slashes
@@ -8,7 +7,7 @@ export const joinUrlFragments = (...fragments: string[]) => {
 }
 
 export const createAssetUploadEndpoint = (operatorEndpoint: string) =>
-  joinUrlFragments(operatorEndpoint, STORAGE_UPLOAD_PATH)
+  joinUrlFragments(operatorEndpoint, atlasConfig.storage.uploadPath)
 
 export const imageUrlValidation = async (imageUrl: string): Promise<boolean> =>
   new Promise((resolve) => {
@@ -20,4 +19,4 @@ export const imageUrlValidation = async (imageUrl: string): Promise<boolean> =>
     image.onerror = () => resolve(false)
   })
 
-export const createChannelBagId = (channelId: string) => ASSET_CHANNEL_BAG_PREFIX + channelId
+export const createChannelBagId = (channelId: string) => atlasConfig.storage.channelBagPrefix + channelId

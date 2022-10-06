@@ -2863,13 +2863,14 @@ __metadata:
     "@livesession/sdk": ^1.1.4
     "@loadable/component": ^5.15.2
     "@lottiefiles/react-lottie-player": ^3.4.7
+    "@modyfi/vite-plugin-yaml": ^1.0.3
     "@rollup/plugin-babel": ^5.3.1
     "@sentry/react": ^7.12.1
     "@storybook/addon-actions": 6.4.18
     "@storybook/addon-docs": 6.4.18
     "@storybook/addon-essentials": 6.4.18
     "@storybook/addon-links": 6.4.18
-    "@storybook/builder-vite": 0.2.2
+    "@storybook/builder-vite": 0.2.3
     "@storybook/react": 6.4.18
     "@storybook/theming": 6.4.18
     "@svgr/cli": ^6.3.1
@@ -2880,6 +2881,7 @@ __metadata:
     "@tippyjs/react": ^4.2.6
     "@types/bn.js": ^5.1.1
     "@types/glider-js": ^1.7.6
+    "@types/js-yaml": ^4
     "@types/loadable__component": ^5.13.4
     "@types/lodash-es": ^4.17.6
     "@types/react": ^18.0.18
@@ -2908,6 +2910,7 @@ __metadata:
     haversine-distance: ^1.2.1
     history: ^5.3.0
     immer: ^9.0.15
+    js-yaml: ^4.1.0
     localforage: ^1.10.0
     lodash-es: ^4.17.21
     madge: ^5.0.1
@@ -3165,6 +3168,19 @@ __metadata:
   version: 1.6.22
   resolution: "@mdx-js/util@npm:1.6.22"
   checksum: 4b393907e39a1a75214f0314bf72a0adfa5e5adffd050dd5efe9c055b8549481a3cfc9f308c16dfb33311daf3ff63added7d5fd1fe52db614c004f886e0e559a
+  languageName: node
+  linkType: hard
+
+"@modyfi/vite-plugin-yaml@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@modyfi/vite-plugin-yaml@npm:1.0.3"
+  dependencies:
+    "@rollup/pluginutils": 4.2.1
+    js-yaml: 4.1.0
+    tosource: 2.0.0-alpha.3
+  peerDependencies:
+    vite: ^2.6.0 || ^3.0.0
+  checksum: 90af6d04409aa1f20ba652f5bbf957136ba6bce36bec927c265a707d2a87ea5d1140d99443481ace930a61816d799b8ec2bb115c6e6767d62e1eead1fafac535
   languageName: node
   linkType: hard
 
@@ -4402,6 +4418,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@rollup/pluginutils@npm:4.2.1, @rollup/pluginutils@npm:^4.2.1":
+  version: 4.2.1
+  resolution: "@rollup/pluginutils@npm:4.2.1"
+  dependencies:
+    estree-walker: ^2.0.1
+    picomatch: ^2.2.2
+  checksum: 6bc41f22b1a0f1efec3043899e4d3b6b1497b3dea4d94292d8f83b4cf07a1073ecbaedd562a22d11913ff7659f459677b01b09e9598a98936e746780ecc93a12
+  languageName: node
+  linkType: hard
+
 "@rollup/pluginutils@npm:^3.1.0":
   version: 3.1.0
   resolution: "@rollup/pluginutils@npm:3.1.0"
@@ -4412,16 +4438,6 @@ __metadata:
   peerDependencies:
     rollup: ^1.20.0||^2.0.0
   checksum: 8be16e27863c219edbb25a4e6ec2fe0e1e451d9e917b6a43cf2ae5bc025a6b8faaa40f82a6e53b66d0de37b58ff472c6c3d57a83037ae635041f8df959d6d9aa
-  languageName: node
-  linkType: hard
-
-"@rollup/pluginutils@npm:^4.2.1":
-  version: 4.2.1
-  resolution: "@rollup/pluginutils@npm:4.2.1"
-  dependencies:
-    estree-walker: ^2.0.1
-    picomatch: ^2.2.2
-  checksum: 6bc41f22b1a0f1efec3043899e4d3b6b1497b3dea4d94292d8f83b4cf07a1073ecbaedd562a22d11913ff7659f459677b01b09e9598a98936e746780ecc93a12
   languageName: node
   linkType: hard
 
@@ -4966,15 +4982,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/builder-vite@npm:0.2.2":
-  version: 0.2.2
-  resolution: "@storybook/builder-vite@npm:0.2.2"
+"@storybook/builder-vite@npm:0.2.3":
+  version: 0.2.3
+  resolution: "@storybook/builder-vite@npm:0.2.3"
   dependencies:
     "@joshwooding/vite-plugin-react-docgen-typescript": 0.0.5
-    "@rollup/pluginutils": ^4.2.1
     "@storybook/core-common": ^6.4.3
     "@storybook/mdx1-csf": ^0.0.4
     "@storybook/node-logger": ^6.4.3
+    "@storybook/semver": ^7.3.2
     "@storybook/source-loader": ^6.4.3
     "@vitejs/plugin-react": ^2.0.0
     ast-types: ^0.14.2
@@ -4987,11 +5003,20 @@ __metadata:
     sveltedoc-parser: ^4.2.1
   peerDependencies:
     "@storybook/mdx2-csf": ^0.0.3
+    "@sveltejs/vite-plugin-svelte": ^1.0.0
+    "@vitejs/plugin-vue": ^3.0.0
     vite: ">= 3.0.0"
+    vue-docgen-api: ^4.40.0
   peerDependenciesMeta:
     "@storybook/mdx2-csf":
       optional: true
-  checksum: e06559251a95d9ad2daf8b222387787b10c2956acfe12cb2eb91791411790a28188e6681dc5910f62b30444704721f8ee77fd1a76ae550409781dda139f3884d
+    "@sveltejs/vite-plugin-svelte":
+      optional: true
+    "@vitejs/plugin-vue":
+      optional: true
+    vue-docgen-api:
+      optional: true
+  checksum: 32a4f2790b8ee72354ff1180463dfbb45a64f11f18378e554f6e968dbf3c828cf39a1231f35349adac1fca71196d8ba7dcaa1236cbc5065e1d0364aac9550b27
   languageName: node
   linkType: hard
 
@@ -6538,7 +6563,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/js-yaml@npm:^4.0.0":
+"@types/js-yaml@npm:^4, @types/js-yaml@npm:^4.0.0":
   version: 4.0.5
   resolution: "@types/js-yaml@npm:4.0.5"
   checksum: 7dcac8c50fec31643cc9d6444b5503239a861414cdfaa7ae9a38bc22597c4d850c4b8cec3d82d73b3fbca408348ce223b0408d598b32e094470dfffc6d486b4d
@@ -14772,6 +14797,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"js-yaml@npm:4.1.0, js-yaml@npm:^4.0.0, js-yaml@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "js-yaml@npm:4.1.0"
+  dependencies:
+    argparse: ^2.0.1
+  bin:
+    js-yaml: bin/js-yaml.js
+  checksum: c7830dfd456c3ef2c6e355cc5a92e6700ceafa1d14bba54497b34a99f0376cecbb3e9ac14d3e5849b426d5a5140709a66237a8c991c675431271c4ce5504151a
+  languageName: node
+  linkType: hard
+
 "js-yaml@npm:^3.13.1":
   version: 3.14.1
   resolution: "js-yaml@npm:3.14.1"
@@ -14781,17 +14817,6 @@ __metadata:
   bin:
     js-yaml: bin/js-yaml.js
   checksum: bef146085f472d44dee30ec34e5cf36bf89164f5d585435a3d3da89e52622dff0b188a580e4ad091c3341889e14cb88cac6e4deb16dc5b1e9623bb0601fc255c
-  languageName: node
-  linkType: hard
-
-"js-yaml@npm:^4.0.0, js-yaml@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "js-yaml@npm:4.1.0"
-  dependencies:
-    argparse: ^2.0.1
-  bin:
-    js-yaml: bin/js-yaml.js
-  checksum: c7830dfd456c3ef2c6e355cc5a92e6700ceafa1d14bba54497b34a99f0376cecbb3e9ac14d3e5849b426d5a5140709a66237a8c991c675431271c4ce5504151a
   languageName: node
   linkType: hard
 
@@ -20773,6 +20798,13 @@ __metadata:
   version: 1.0.1
   resolution: "toidentifier@npm:1.0.1"
   checksum: 952c29e2a85d7123239b5cfdd889a0dde47ab0497f0913d70588f19c53f7e0b5327c95f4651e413c74b785147f9637b17410ac8c846d5d4a20a5a33eb6dc3a45
+  languageName: node
+  linkType: hard
+
+"tosource@npm:2.0.0-alpha.3":
+  version: 2.0.0-alpha.3
+  resolution: "tosource@npm:2.0.0-alpha.3"
+  checksum: bc03a7571de8ed4306e6721283fa891f2adcab9dd80c46f6f177d4259b34bb192fe3a2cb3e1e2ce16f9db0bc7e534acfcb5478ab094b0ba255f98abfce6dab46
   languageName: node
   linkType: hard
 

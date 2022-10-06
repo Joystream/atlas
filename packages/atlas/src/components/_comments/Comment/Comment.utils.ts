@@ -1,11 +1,12 @@
 import { CommentReactionsCountByReactionIdFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { ReactionChipProps } from '@/components/_comments/ReactionChip'
-import { REACTION_TYPE, ReactionId } from '@/config/reactions'
+import { atlasConfig } from '@/config'
+import { CommentReaction } from '@/joystream-lib/types'
 
 type GetCommentReactionsArgs = {
   userReactionsIds?: number[]
   reactionsCount: CommentReactionsCountByReactionIdFieldsFragment[]
-  processingReactionsIds: ReactionId[]
+  processingReactionsIds: CommentReaction[]
   deleted?: boolean
 }
 
@@ -15,8 +16,8 @@ export const getCommentReactions = ({
   processingReactionsIds,
   deleted,
 }: GetCommentReactionsArgs): ReactionChipProps[] => {
-  const defaultReactions: ReactionChipProps[] = Object.keys(REACTION_TYPE).map((reactionId) => ({
-    reactionId: Number(reactionId) as ReactionId,
+  const defaultReactions: ReactionChipProps[] = atlasConfig.features.comments.reactions.map(({ id }) => ({
+    reactionId: id,
     state: 'processing' as const,
     count: 0,
   }))

@@ -11,7 +11,7 @@ import { ChannelGrid } from '@/components/_channel/ChannelGrid'
 import { SvgActionFilters } from '@/components/_icons'
 import { SkeletonLoaderVideoGrid } from '@/components/_loaders/SkeletonLoaderVideoGrid'
 import { VideoGrid } from '@/components/_video/VideoGrid'
-import { LANGUAGES_LIST } from '@/config/languages'
+import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSearchResults } from '@/hooks/useSearchResults'
 import { useSearchStore } from '@/providers/search'
@@ -144,7 +144,7 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
                 onChange={handleSelectLanguage}
                 size="medium"
                 value={language}
-                items={[{ name: 'All languages', value: 'undefined' }, ...LANGUAGES_LIST]}
+                items={[{ name: 'All languages', value: 'undefined' }, ...atlasConfig.derived.languagesSelectValues]}
               />
             )}
             {selectedTabIndex === 0 && (

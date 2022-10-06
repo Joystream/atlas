@@ -1,7 +1,7 @@
 import ls from '@livesession/sdk'
 import { FC, useCallback, useEffect } from 'react'
 
-import { BUILD_ENV, readEnv } from '@/config/envs'
+import { BUILD_ENV, readEnv } from '@/config/env'
 import { usePersonalDataStore } from '@/providers/personalData'
 
 export const AnalyticsManager: FC = () => {

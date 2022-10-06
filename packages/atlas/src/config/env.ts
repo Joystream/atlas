@@ -1,5 +1,45 @@
-import { readEnv } from './envs'
+import { useEnvironmentStore } from '@/providers/environment'
 
+type BuildEnv = 'production' | 'development'
+
+export const ENV_PREFIX = 'VITE'
+
+const getEnvName = (name: string) => {
+  return `${ENV_PREFIX}_${name}`
+}
+
+export const BUILD_ENV = (import.meta.env[getEnvName('ENV')] || 'production') as BuildEnv
+
+export const availableEnvs = () => {
+  return Array.from(
+    new Set(
+      Object.keys(import.meta.env)
+        .filter(
+          (key) =>
+            key.startsWith(ENV_PREFIX) &&
+            !key.startsWith(`${ENV_PREFIX}_ENV`) &&
+            !key.startsWith(`${ENV_PREFIX}_VERCEL`)
+        )
+        .map((key) => {
+          return key.replace(ENV_PREFIX, '').split('_')[1].toLowerCase()
+        })
+    )
+  )
+}
+export const readEnv = (name: string, required = true, direct = false): string => {
+  const fullName = direct
+    ? getEnvName(name)
+    : BUILD_ENV === 'production'
+    ? getEnvName(`PRODUCTION_${name}`)
+    : getEnvName(`${useEnvironmentStore.getState().targetDevEnv.toUpperCase()}_${name}`)
+  const value = import.meta.env[fullName]
+  if (!value && required) {
+    throw new Error(`Missing required env variable "${name}", tried access via "${fullName}"`)
+  } else if (!value) {
+    return ''
+  }
+  return value.toString()
+}
 export const QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL = readEnv('QUERY_NODE_SUBSCRIPTION_URL')
 export const ORION_GRAPHQL_URL = readEnv('ORION_URL')
 export const ASSET_LOGS_URL = readEnv('ASSET_LOGS_URL', false)
@@ -8,20 +48,6 @@ export const FAUCET_URL = readEnv('FAUCET_URL')
 export const AVATAR_SERVICE_URL = readEnv('ASSETS_SERVICE_URL', true, true)
 
 export const SENTRY_DSN = readEnv('SENTRY_DSN', false)
-
-export const TWITTER_ID = readEnv('TWITTER_ID', false, true)
-export const APP_NAME = readEnv('APP_NAME', true, true)
-export const BASE_APP_URL = readEnv('BASE_APP_URL', true, true)
-export const WEB3_APP_NAME = 'Joystream Atlas'
-export const STORAGE_UPLOAD_PATH = 'api/v1/files'
-export const DISTRIBUTOR_ASSET_PATH = 'api/v1/assets'
-
-export const JOYSTREAM_DISCORD_URL = 'https://discord.gg/DE9UN3YpRP'
-export const JOYSTREAM_STORAGE_DISCORD_URL = 'https://discord.gg/WUb7XwW72a'
-
-export const PIONEER_MEMBER_URL = 'https://dao.joystream.org/#/members'
-export const JOYSTREAM_URL = 'https://www.joystream.org/'
-export const ATLAS_GITHUB_URL = 'https://github.com/Joystream/atlas'
 
 export const JOY_PRICE_SERVICE_URL = readEnv('PRICE_SERVICE_URL', false, true)
 export const USER_LOCATION_SERVICE_URL = readEnv('GEOLOCATION_SERVICE_URL', true, true)

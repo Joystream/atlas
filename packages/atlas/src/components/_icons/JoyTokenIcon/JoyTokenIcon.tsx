@@ -18,7 +18,7 @@ import {
   SvgJoyTokenSilver32,
   SvgJoyTokenSilver48,
 } from '@/components/_icons'
-import { JOY_CURRENCY_TICKER } from '@/config/joystream'
+import { atlasConfig } from '@/config'
 import { cVar } from '@/styles'
 
 type JoyTokenIconVariant = 'primary' | 'silver' | 'regular' | 'gray'
@@ -69,7 +69,7 @@ export const JoyTokenIcon: FC<JoyTokenIconProps> = ({
     <>
       <Tooltip
         hidden={withoutInformationTooltip}
-        text={`${JOY_CURRENCY_TICKER} token is a native crypto asset of Joystream blockchain. It is used for platform governance, purchasing NFTs, trading creator tokens, and covering blockchain processing fees.`}
+        text={`${atlasConfig.joystream.tokenTicker} token is a native crypto asset of Joystream blockchain. It is used for platform governance, purchasing NFTs, trading creator tokens, and covering blockchain processing fees.`}
         multiline
         reference={ref.current}
         delay={1000}

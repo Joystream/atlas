@@ -3,8 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { AssetLogger, SentryLogger } from '@/utils/logs'
 
 import { App } from './App'
-import { ASSET_LOGS_URL, SENTRY_DSN } from './config/env'
-import { BUILD_ENV } from './config/envs'
+import { ASSET_LOGS_URL, BUILD_ENV, SENTRY_DSN } from './config/env'
 
 const initApp = async () => {
   if (BUILD_ENV === 'production') {

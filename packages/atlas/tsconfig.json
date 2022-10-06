@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext", "webworker"],
-    "types": ["vite/client", "vitest/globals"],
+    "types": ["vite/client", "vitest/globals", "@modyfi/vite-plugin-yaml/modules"],
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": false,
@@ -20,7 +20,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
   },
   "include": ["src", "vitest-setup.ts"]
 }

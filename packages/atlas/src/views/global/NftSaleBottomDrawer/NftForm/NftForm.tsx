@@ -8,7 +8,7 @@ import { Step, StepProps, getStepVariant } from '@/components/Step'
 import { Text } from '@/components/Text'
 import { SvgActionChevronR } from '@/components/_icons'
 import { NftTile, NftTileProps } from '@/components/_nft/NftTile'
-import { NFT_MIN_BID_STEP_MULTIPLIER } from '@/config/nft'
+import { atlasConfig } from '@/config'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { NftBuyNowInputMetadata, NftSaleInputMetadata } from '@/joystream-lib/types'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
@@ -125,7 +125,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
       const startingPrice = data.startingPrice
         ? tokenNumberToHapiBn(data.startingPrice)
         : chainState.nftMinStartingPrice
-      const minimalBidStep = startingPrice.muln(NFT_MIN_BID_STEP_MULTIPLIER)
+      const minimalBidStep = startingPrice.muln(atlasConfig.features.nft.auctionMinimumBidStepMultiplier)
       const buyNowPrice = data.buyNowPrice ? tokenNumberToHapiBn(data.buyNowPrice) : undefined
 
       const sharedMetadata = {

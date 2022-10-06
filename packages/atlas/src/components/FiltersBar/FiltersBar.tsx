@@ -12,7 +12,7 @@ import { Select } from '@/components/_inputs/Select'
 import { DialogModal, DialogModalProps } from '@/components/_overlays/DialogModal'
 import { DialogPopover } from '@/components/_overlays/DialogPopover'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
-import { LANGUAGES_LIST } from '@/config/languages'
+import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { transitions } from '@/styles'
 
@@ -258,7 +258,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
                   Language
                 </Text>
                 <Select
-                  items={[{ name: 'All languages', value: 'undefined' }, ...LANGUAGES_LIST]}
+                  items={[{ name: 'All languages', value: 'undefined' }, ...atlasConfig.derived.languagesSelectValues]}
                   placeholder="Any language"
                   size="medium"
                   value={language}

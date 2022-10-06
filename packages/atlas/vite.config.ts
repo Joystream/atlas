@@ -1,10 +1,18 @@
 /// <reference types="vitest" />
+import ViteYaml from '@modyfi/vite-plugin-yaml'
 import babel from '@rollup/plugin-babel'
 import react from '@vitejs/plugin-react'
-import * as path from 'path'
+import { load as loadYaml } from 'js-yaml'
+import * as fs from 'node:fs'
+import * as path from 'node:path'
 import { visualizer } from 'rollup-plugin-visualizer'
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig } from 'vite'
 import checker from 'vite-plugin-checker'
+
+// read config file - we cannot use `@/config` since it relies on YAML plugin being already loaded and that's not done in this context
+const rawConfigPath = path.resolve(__dirname, 'atlas.config.yml')
+const rawConfig = fs.readFileSync(rawConfigPath, 'utf-8')
+const parsedConfig = loadYaml(rawConfig) as { general: unknown }
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -50,10 +58,10 @@ export default defineConfig({
   },
   plugins: [
     {
-      name: 'html-env-transform',
+      name: 'html-config-transform',
       transformIndexHtml: {
         enforce: 'pre',
-        transform: (html: string) => html.replace(/%(.*?)%/g, (match, p1) => loadEnv('', './src')[p1] ?? match),
+        transform: (html: string) => html.replace(/%(.*?)%/g, (match, p1) => parsedConfig.general[p1] ?? match),
       },
     },
     {
@@ -70,6 +78,7 @@ export default defineConfig({
         })
       },
     },
+    ViteYaml(),
     react({
       exclude: /\.stories\.[tj]sx?$/,
     }),

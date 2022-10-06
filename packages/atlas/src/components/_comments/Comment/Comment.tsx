@@ -5,11 +5,11 @@ import { useComment } from '@/api/hooks/comments'
 import { CommentStatus } from '@/api/queries/__generated__/baseTypes.generated'
 import { CommentFieldsFragment, FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { ReactionId } from '@/config/reactions'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
+import { CommentReaction } from '@/joystream-lib/types'
 import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useFee } from '@/providers/joystream/joystream.hooks'
@@ -56,7 +56,7 @@ export const Comment: FC<CommentProps> = memo(
     const [replyCommentInputText, setReplyCommentInputText] = useState('')
     const [isCommentProcessing, setIsCommentProcessing] = useState(false)
     const [isEditingComment, setIsEditingComment] = useState(false)
-    const [processingReactionsIds, setProcessingReactionsIds] = useState<ReactionId[]>([])
+    const [processingReactionsIds, setProcessingReactionsIds] = useState<CommentReaction[]>([])
 
     const { memberId, activeMembership, isLoggedIn, signIn } = useUser()
     const { comment } = useComment(
@@ -167,7 +167,7 @@ export const Comment: FC<CommentProps> = memo(
         setIsEditingComment(false)
       }
     }
-    const handleCommentReaction = async (commentId: string, reactionId: ReactionId) => {
+    const handleCommentReaction = async (commentId: string, reactionId: CommentReaction) => {
       if (isLoggedIn) {
         setProcessingReactionsIds((previous) => [...previous, reactionId])
         await reactToComment(commentId, video?.id || '', reactionId, comment?.author.handle || '')
