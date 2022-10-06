@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { template, camelCase } = require('lodash')
+const { template, camelCase, cloneDeep } = require('lodash')
 
 const variablesTemplate = template(`import { css } from '@emotion/react'
 export const variables = css\`
@@ -26,6 +26,19 @@ module.exports = {
         // we could remove this when they do something about it https://github.com/amzn/style-dictionary/issues/721
         const parsed = contents.replace(/}"|\.value}"/g, `.value}"`)
         return JSON.parse(parsed)
+      },
+    },
+    // creates filterEffects design tokens, which are needed to use for `filter: drop-shadow()`
+    {
+      pattern: /\.json$/,
+      parse: ({ contents }) => {
+        const obj = JSON.parse(contents)
+        if (obj.effect) {
+          const deepCopy = cloneDeep(obj)
+          deepCopy.filterEffect = deepCopy.effect
+          delete deepCopy.effect
+          return { ...obj, ...deepCopy }
+        }
       },
     },
   ],
@@ -68,6 +81,12 @@ module.exports = {
           token.value.spread
         } ${token.value.color}`
       },
+    },
+    filterEffectsTransform: {
+      type: 'value',
+      transitive: true,
+      matcher: (token) => token.attributes.category === 'filterEffect',
+      transformer: (token) => `${token.value.x} ${token.value.y} ${token.value.blur} ${token.value.color}`,
     },
   },
   format: {
@@ -125,6 +144,7 @@ module.exports = {
         'easingTransform',
         'transitionTransform',
         'effectsTransform',
+        'filterEffectsTransform',
       ],
       buildPath: 'src/styles/generated/',
       files: [
