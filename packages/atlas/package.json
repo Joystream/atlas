@@ -37,6 +37,7 @@
     "@hookform/resolvers": "^2.9.7",
     "@joystream/metadata-protobuf": "2.5.0",
     "@joystream/types": "0.20.3",
+    "@joystreamjs": "file:/Users/bartoszdryl/programming/apps/joystream/joystreamjs",
     "@livesession/sdk": "^1.1.4",
     "@loadable/component": "^5.15.2",
     "@lottiefiles/react-lottie-player": "^3.4.7",

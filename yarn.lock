@@ -2860,6 +2860,7 @@ __metadata:
     "@joystream/metadata-protobuf": 2.5.0
     "@joystream/prettier-config": ^1.0.0
     "@joystream/types": 0.20.3
+    "@joystreamjs": "file:/Users/bartoszdryl/programming/apps/joystream/joystreamjs"
     "@livesession/sdk": ^1.1.4
     "@loadable/component": ^5.15.2
     "@lottiefiles/react-lottie-player": ^3.4.7
@@ -3006,6 +3007,13 @@ __metadata:
     lodash: ^4.17.15
     moment: ^2.24.0
   checksum: 753805a7ae5c7d7d5dfd13de0095daa2984414b714740b8ca4c3b3bbf7de2e0f0e39dd543c8107ff66aeb8f7c584c473c16e71d1730a63bdcbbef77125688560
+  languageName: node
+  linkType: hard
+
+"@joystreamjs@file:/Users/bartoszdryl/programming/apps/joystream/joystreamjs::locator=%40joystream%2Fatlas%40workspace%3Apackages%2Fatlas":
+  version: 1.0.0
+  resolution: "@joystreamjs@file:/Users/bartoszdryl/programming/apps/joystream/joystreamjs#/Users/bartoszdryl/programming/apps/joystream/joystreamjs::hash=15d7b0&locator=%40joystream%2Fatlas%40workspace%3Apackages%2Fatlas"
+  checksum: 253f83d3cc95a5d2105ef5d1b7eb4feb90c1ba8faf0e5482afeb7fa33c89cf2d46e78d132a3e5d3c3a4bb7a93c222ff46080aacdddd8afef60b5ede636bebf33
   languageName: node
   linkType: hard
 
