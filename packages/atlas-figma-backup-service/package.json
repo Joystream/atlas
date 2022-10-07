@@ -1,0 +1,18 @@
+{
+  "name": "@joystream/atlas-figma-backkup-service",
+  "description": "Service for backuping figma files",
+  "license": "GPL-3.0",
+  "type": "module",
+  "engines": {
+    "node": "^16"
+  },
+  "dependencies": {
+    "date-fns": "^2.29.3",
+    "dotenv": "^16.0.3",
+    "figma-backup": "^2.0.0",
+    "node-schedule": "^2.1.0"
+  },
+  "devDependencies": {
+    "@types/node-schedule": "^2"
+  }
+}
