@@ -86,7 +86,7 @@ module.exports = {
       type: 'value',
       transitive: true,
       matcher: (token) => token.attributes.category === 'filterEffect',
-      transformer: (token) => `${token.value.x} ${token.value.y} ${token.value.blur} ${token.value.color}`,
+      transformer: (token) => `drop-shadow(${token.value.x} ${token.value.y} ${token.value.blur} ${token.value.color})`,
     },
   },
   format: {
