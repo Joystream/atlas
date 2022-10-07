@@ -131,6 +131,17 @@ export const variables = css`
     --effect-elevation-16-layer2: 0 4px 8px 0 #0000001a;
     --effect-elevation-24-layer1: 0 24px 40px 0 #00000029;
     --effect-elevation-24-layer2: 0 8px 8px 0 #0000001f;
+    --filter-effect-dividers-top: drop-shadow(0 1px 0 var(--color-border-muted-alpha));
+    --filter-effect-dividers-bottom: drop-shadow(0 -1px 0 var(--color-border-muted-alpha));
+    --filter-effect-dividers-left: drop-shadow(1px 0 0 var(--color-border-muted-alpha));
+    --filter-effect-dividers-right: drop-shadow(-1px 0 0 var(--color-border-muted-alpha));
+    --filter-effect-elevation-1-layer1: drop-shadow(0 1px 2px #00000052);
+    --filter-effect-elevation-8-layer1: drop-shadow(0 8px 16px #0000001f);
+    --filter-effect-elevation-8-layer2: drop-shadow(0 4px 4px #0000001a);
+    --filter-effect-elevation-16-layer1: drop-shadow(0 16px 32px #00000029);
+    --filter-effect-elevation-16-layer2: drop-shadow(0 4px 8px #0000001a);
+    --filter-effect-elevation-24-layer1: drop-shadow(0 24px 40px #00000029);
+    --filter-effect-elevation-24-layer2: drop-shadow(0 8px 8px #0000001f);
     --radius-small: 2px;
     --radius-medium: 4px;
     --radius-large: 8px;
@@ -418,6 +429,44 @@ export const theme = {
   effectElevation16Layer2: { variable: 'var(--effect-elevation-16-layer2)', value: ' 0 4px 8px 0 #0000001A' },
   effectElevation24Layer1: { variable: 'var(--effect-elevation-24-layer1)', value: ' 0 24px 40px 0 #00000029' },
   effectElevation24Layer2: { variable: 'var(--effect-elevation-24-layer2)', value: ' 0 8px 8px 0 #0000001F' },
+  filterEffectDividersTop: { variable: 'var(--filter-effect-dividers-top)', value: 'drop-shadow(0 1px 0 #BBD9F621)' },
+  filterEffectDividersBottom: {
+    variable: 'var(--filter-effect-dividers-bottom)',
+    value: 'drop-shadow(0 -1px 0 #BBD9F621)',
+  },
+  filterEffectDividersLeft: { variable: 'var(--filter-effect-dividers-left)', value: 'drop-shadow(1px 0 0 #BBD9F621)' },
+  filterEffectDividersRight: {
+    variable: 'var(--filter-effect-dividers-right)',
+    value: 'drop-shadow(-1px 0 0 #BBD9F621)',
+  },
+  filterEffectElevation1Layer1: {
+    variable: 'var(--filter-effect-elevation-1-layer1)',
+    value: 'drop-shadow(0 1px 2px #00000052)',
+  },
+  filterEffectElevation8Layer1: {
+    variable: 'var(--filter-effect-elevation-8-layer1)',
+    value: 'drop-shadow(0 8px 16px #0000001F)',
+  },
+  filterEffectElevation8Layer2: {
+    variable: 'var(--filter-effect-elevation-8-layer2)',
+    value: 'drop-shadow(0 4px 4px #0000001A)',
+  },
+  filterEffectElevation16Layer1: {
+    variable: 'var(--filter-effect-elevation-16-layer1)',
+    value: 'drop-shadow(0 16px 32px #00000029)',
+  },
+  filterEffectElevation16Layer2: {
+    variable: 'var(--filter-effect-elevation-16-layer2)',
+    value: 'drop-shadow(0 4px 8px #0000001A)',
+  },
+  filterEffectElevation24Layer1: {
+    variable: 'var(--filter-effect-elevation-24-layer1)',
+    value: 'drop-shadow(0 24px 40px #00000029)',
+  },
+  filterEffectElevation24Layer2: {
+    variable: 'var(--filter-effect-elevation-24-layer2)',
+    value: 'drop-shadow(0 8px 8px #0000001F)',
+  },
   radiusSmall: { variable: 'var(--radius-small)', value: '2px' },
   radiusMedium: { variable: 'var(--radius-medium)', value: '4px' },
   radiusLarge: { variable: 'var(--radius-large)', value: '8px' },

@@ -367,7 +367,7 @@ export const StyledAtlasLogo = styled(SvgAtlasLogoFull)<{ embedded?: boolean }>`
   padding: ${({ embedded }) => (embedded ? 0 : '0.5em')};
   max-height: ${({ embedded }) => (embedded ? '2em' : '2.5em')};
   height: 100%;
-  filter: drop-shadow(${cVar('effectElevation1Layer1')});
+  filter: ${cVar('filterEffectElevation1Layer1')};
 
   ${defaultIconColor};
 `
