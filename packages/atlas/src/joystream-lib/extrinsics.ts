@@ -473,24 +473,19 @@ export class JoystreamLibExtrinsics {
   claimReward = async (channelId: string) => {
     const commitment = (await this.api.query.content.commitment()).toString()
     console.log(commitment)
-    const nodeEndpoint = 'http://192.168.1.31:3335'
+    const nodeEndpoint = 'http://192.168.1.31:3333'
     const payloadDataObjectId = '0'
     try {
       console.log(channelPayoutProof)
-      // const payoutProof = await channelPayoutProof(
-      //   'URL',
-      //   `${nodeEndpoint}/files/${payloadDataObjectId}`,
-      //   Number(channelId)
-      // )
+      const payoutProof = await channelPayoutProof(
+        'URL',
+        `${nodeEndpoint}/files/${payloadDataObjectId}`,
+        Number(channelId)
+      )
+      console.log(payoutProof)
     } catch (error) {
       console.log(error)
     }
-    // const aaa = this.api.tx.content.claimChannelReward(
-    //   '1',
-    //   createType()
-    //   '0xe25408fe2c5aed6b29b035864c3ca31a92261831000b462d6f73a8bcbdae1477',
-    //   'asdsd'
-    // )
   }
   /*
     === NFT extrinsics ===
