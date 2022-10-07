@@ -1,4 +1,4 @@
-import { sample, sampleSize } from 'lodash-es'
+import { sampleSize } from 'lodash-es'
 import { useMemo } from 'react'
 import { useParams } from 'react-router'
 
@@ -44,7 +44,7 @@ export const CategoryView = () => {
 
   const headTags = useHeadTags(currentCategory?.name)
 
-  const { categoriesFeaturedVideos } = useCategoriesFeaturedVideos(sample(currentCategory?.videoCategories) || '')
+  const { categoriesFeaturedVideos } = useCategoriesFeaturedVideos(currentCategory?.id || '')
   const videoHeroVideos = useVideoHeroVideos(categoriesFeaturedVideos)
 
   return (
