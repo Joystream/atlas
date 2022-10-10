@@ -14,7 +14,7 @@ import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
 import { atlasConfig } from '@/config'
-import { HCAPTCHA_SITE_KEY } from '@/config/env'
+import { BUILD_ENV, HCAPTCHA_SITE_KEY } from '@/config/env'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
 
 import { SignInModalStepTemplate } from './SignInModalStepTemplate'
@@ -190,7 +190,7 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
               }}
             />
           </FormField>
-          {HCAPTCHA_SITE_KEY && !!HCAPTCHA_SITE_KEY.length && (
+          {HCAPTCHA_SITE_KEY && BUILD_ENV === 'production' && (
             <Controller
               control={control}
               name="captchaToken"
