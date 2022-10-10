@@ -1,8 +1,8 @@
 import { add } from 'date-fns'
+import { concat, intersection } from 'lodash-es'
 import { FC, ReactNode, useMemo, useRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { useCategories } from '@/api/hooks/categories'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionClose } from '@/components/_icons'
@@ -13,6 +13,7 @@ import { DialogModal, DialogModalProps } from '@/components/_overlays/DialogModa
 import { DialogPopover } from '@/components/_overlays/DialogPopover'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { atlasConfig } from '@/config'
+import { displayCategories } from '@/config/categories'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { transitions } from '@/styles'
 
@@ -96,7 +97,6 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
   const datePopoverRef = useRef<PopoverImperativeHandle>(null)
   const lengthPopoverRef = useRef<PopoverImperativeHandle>(null)
   const othersPopoverRef = useRef<PopoverImperativeHandle>(null)
-  const { categories } = useCategories()
   const nftStatusInputs = useMemo(
     () => (
       <FilterContentContainer>
@@ -121,8 +121,8 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
   const categoriesInputs = useMemo(
     () => (
       <FilterContentContainer>
-        {categories &&
-          categories.map((category) => (
+        {displayCategories &&
+          displayCategories.map((category) => (
             <Checkbox
               name="category-filter"
               label={category.name as string}
@@ -137,7 +137,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
           ))}
       </FilterContentContainer>
     ),
-    [categories, categoriesFilter, setCategoriesFilter]
+    [categoriesFilter, setCategoriesFilter]
   )
 
   const dateUploadedInputs = useMemo(
@@ -226,13 +226,13 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
           onChange={setExcludePaidPromotionalMaterialFilter}
           name="other-filters"
           label="Paid promotional material"
-          value={!!excludePaidPromotionalMaterialFilter}
+          value={excludePaidPromotionalMaterialFilter}
         />
         <Checkbox
           onChange={setExcludeMatureContentRatingFilter}
           name="other-filters"
           label="Mature content rating"
-          value={!!excludeMatureContentRatingFilter}
+          value={excludeMatureContentRatingFilter}
         />
       </FilterContentContainer>
     ),
@@ -243,6 +243,50 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
       setExcludePaidPromotionalMaterialFilter,
     ]
   )
+
+  const handleSetOwnedNftWhereInput = () => {
+    setOwnedNftWhereInput((value) => {
+      return {
+        ...value,
+        OR: [
+          nftStatusFilter?.includes('AuctionTypeEnglish')
+            ? {
+                transactionalStatusAuction: {
+                  auctionType_json: { isTypeOf_eq: 'AuctionTypeEnglish' },
+                },
+              }
+            : {},
+          nftStatusFilter?.includes('AuctionTypeOpen')
+            ? {
+                transactionalStatusAuction: {
+                  auctionType_json: { isTypeOf_eq: 'AuctionTypeOpen' },
+                },
+              }
+            : {},
+          nftStatusFilter?.includes('TransactionalStatusBuyNow')
+            ? {
+                transactionalStatus_json: { isTypeOf_eq: 'TransactionalStatusBuyNow' },
+              }
+            : {},
+          nftStatusFilter?.includes('TransactionalStatusIdle')
+            ? {
+                transactionalStatus_json: { isTypeOf_eq: 'TransactionalStatusIdle' },
+              }
+            : {},
+        ],
+      }
+    })
+  }
+
+  const mappedUniqueCategories = categoriesFilter
+    ? intersection(
+        concat(
+          ...displayCategories
+            .filter(({ id }) => categoriesFilter.includes(id))
+            .map((category) => category.videoCategories)
+        )
+      )
+    : undefined
 
   if (betweenBaseAndSMMatch) {
     return (
@@ -274,7 +318,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
                 {nftStatusInputs}
               </MobileFilterContainer>
             )}
-            {categories && activeFilters.includes('categories') && (
+            {activeFilters.includes('categories') && (
               <MobileFilterContainer>
                 <Text as="span" color="colorText" variant="h100">
                   Categories
@@ -331,7 +375,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
               isExplicit_eq: excludeMatureContentRatingFilter ? !excludeMatureContentRatingFilter : undefined,
               category: categoriesFilter
                 ? {
-                    id_in: categoriesFilter,
+                    id_in: mappedUniqueCategories,
                   }
                 : undefined,
               language:
@@ -342,37 +386,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
                   : undefined,
               ...getDurationRules(),
             }))
-            setOwnedNftWhereInput((value) => {
-              return {
-                ...value,
-                OR: [
-                  nftStatusFilter?.includes('AuctionTypeEnglish')
-                    ? {
-                        transactionalStatusAuction: {
-                          auctionType_json: { isTypeOf_eq: 'AuctionTypeEnglish' },
-                        },
-                      }
-                    : {},
-                  nftStatusFilter?.includes('AuctionTypeOpen')
-                    ? {
-                        transactionalStatusAuction: {
-                          auctionType_json: { isTypeOf_eq: 'AuctionTypeOpen' },
-                        },
-                      }
-                    : {},
-                  nftStatusFilter?.includes('TransactionalStatusBuyNow')
-                    ? {
-                        transactionalStatus_json: { isTypeOf_eq: 'TransactionalStatusBuyNow' },
-                      }
-                    : {},
-                  nftStatusFilter?.includes('TransactionalStatusIdle')
-                    ? {
-                        transactionalStatus_json: { isTypeOf_eq: 'TransactionalStatusIdle' },
-                      }
-                    : {},
-                ],
-              }
-            })
+            handleSetOwnedNftWhereInput()
             setIsFiltersOpen(false)
           },
         }}
@@ -411,37 +425,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
                 disabled: !nftStatusFilter && !canClearNftStatusFilter,
                 onClick: () => {
                   categoriesPopoverRef.current?.hide()
-                  setOwnedNftWhereInput((value) => {
-                    return {
-                      ...value,
-                      OR: [
-                        nftStatusFilter?.includes('AuctionTypeEnglish')
-                          ? {
-                              transactionalStatusAuction: {
-                                auctionType_json: { isTypeOf_eq: 'AuctionTypeEnglish' },
-                              },
-                            }
-                          : {},
-                        nftStatusFilter?.includes('AuctionTypeOpen')
-                          ? {
-                              transactionalStatusAuction: {
-                                auctionType_json: { isTypeOf_eq: 'AuctionTypeOpen' },
-                              },
-                            }
-                          : {},
-                        nftStatusFilter?.includes('TransactionalStatusBuyNow')
-                          ? {
-                              transactionalStatus_json: { isTypeOf_eq: 'TransactionalStatusBuyNow' },
-                            }
-                          : {},
-                        nftStatusFilter?.includes('TransactionalStatusIdle')
-                          ? {
-                              transactionalStatus_json: { isTypeOf_eq: 'TransactionalStatusIdle' },
-                            }
-                          : {},
-                      ],
-                    }
-                  })
+                  handleSetOwnedNftWhereInput()
                 },
               }}
               secondaryButton={{
@@ -453,7 +437,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
               {nftStatusInputs}
             </DialogPopover>
           )}
-          {categories && activeFilters.includes('categories') && (
+          {activeFilters.includes('categories') && (
             <DialogPopover
               ref={categoriesPopoverRef}
               trigger={
@@ -470,7 +454,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
                   setVideoWhereInput((value) => ({
                     ...value,
                     category: {
-                      id_in: categoriesFilter,
+                      id_in: mappedUniqueCategories,
                     },
                   }))
                 },

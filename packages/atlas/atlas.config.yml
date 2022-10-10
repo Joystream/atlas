@@ -64,10 +64,18 @@ content:
   categories: # List of display categories to be used in the app. Those are local to the application and are related to metaprotocol categories via 'videoCategories' array.
     - id: '1' # Local category ID
       name: 'Music' # Display name of the category
-      color: '#D92E61' # Color used in the UI for this category
-      iconUrl: '...' # URL for category icon SVG
-      coverImgUrl: '...' # URL for category cover image
-      videoCategories: ['1', '2'] # List of metaprotocol category IDs that should be included in this display category
+      color: '#6EEC3A' # Color used in the UI for this category
+      iconUrl: 'https://dl.dropboxusercontent.com/s/07058sh62h9wsf8/categories-music.svg?dl=0' # URL for category icon SVG
+      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/music.webp' # URL for category cover image
+      videoCategories: ['59-2', '65-2'] # List of metaprotocol category IDs that should be included in this display category
+      defaultVideoCategory: '59-2'
+    - id: '2'
+      name: 'Science and technology'
+      color: '#D92E61'
+      iconUrl: 'https://dl.dropboxusercontent.com/s/zsnpkq0uyjz4s49/categories-science-and-technology.svg?dl=0'
+      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/science-and-technology.webp'
+      videoCategories: ['63-2', '65-2']
+      defaultVideoCategory: '63-2'
 
   languages: # List of languages to be used in the app. Those will be used when setting video's language, for adding subtitles, etc.
     - isoCode: ar

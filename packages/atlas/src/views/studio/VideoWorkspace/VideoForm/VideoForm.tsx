@@ -2,7 +2,6 @@ import { formatISO } from 'date-fns'
 import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 
-import { useCategories } from '@/api/hooks/categories'
 import { License } from '@/api/queries/__generated__/baseTypes.generated'
 import { Banner } from '@/components/Banner'
 import { Information } from '@/components/Information'
@@ -23,6 +22,7 @@ import { Switch } from '@/components/_inputs/Switch'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { AlertDialogModal } from '@/components/_overlays/AlertDialogModal'
 import { atlasConfig } from '@/config'
+import { displayCategories } from '@/config/categories'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { NftIssuanceInputMetadata, VideoInputAssets, VideoInputMetadata } from '@/joystream-lib/types'
@@ -114,8 +114,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const isEdit = !editedVideoInfo?.isDraft
   const isNew = !isEdit
   const mintNft = editedVideoInfo?.mintNft
-
-  const { categories, error: categoriesError } = useCategories()
 
   const {
     register,
@@ -466,9 +464,9 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   }
 
   const categoriesSelectItems: SelectItem[] =
-    categories?.map((c) => ({
+    displayCategories?.map((c) => ({
       name: c.name || 'Unknown category',
-      value: c.id,
+      value: c.defaultVideoCategory,
     })) || []
 
   const getHiddenSectionLabel = () => {
@@ -478,7 +476,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
     return `Show ${moreSettingsVisible ? 'less' : 'more'} options`
   }
 
-  if (tabDataError || categoriesError) {
+  if (tabDataError) {
     return <ViewErrorFallback />
   }
 

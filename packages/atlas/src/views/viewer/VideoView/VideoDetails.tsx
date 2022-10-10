@@ -4,11 +4,13 @@ import { FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.g
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
+import { CategoryIcon } from '@/components/_icons/CategoryIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { VideoCategoryData } from '@/config/categories'
+import { DisplayCategory } from '@/config/categories'
 import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { cVar } from '@/styles'
 
 import {
   Category,
@@ -25,7 +27,7 @@ import {
 
 type VideoDetailsProps = {
   video?: FullVideoFieldsFragment | null
-  categoryData?: VideoCategoryData | null
+  categoryData?: DisplayCategory[] | null
 }
 export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => {
   const mdMatch = useMediaMatch('md')
@@ -85,15 +87,17 @@ export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => 
         <CategoryWrapper>
           {video ? (
             <>
-              <Text as="h2" variant="h100" margin={{ bottom: 2 }}>
+              <Text as="h2" variant="h100">
                 Category
               </Text>
-              <Category to={absoluteRoutes.viewer.category(categoryData?.id)}>
-                {categoryData?.icon}
-                <Text as="p" variant={mdMatch ? 't300' : 't200'} color="colorText">
-                  {video?.category?.name}
-                </Text>
-              </Category>
+              {categoryData?.map((category) => (
+                <Category key={category.id} to={absoluteRoutes.viewer.category(category.id)}>
+                  <CategoryIcon url={category.iconUrl} color={cVar('colorText')} />
+                  <Text as="p" variant="t300" color="colorText">
+                    {category.name}
+                  </Text>
+                </Category>
+              ))}
             </>
           ) : (
             <SkeletonLoader height={12} width={200} />

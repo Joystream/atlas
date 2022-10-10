@@ -21,7 +21,7 @@ import { ReportModal } from '@/components/_overlays/ReportModal'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { AvailableTrack } from '@/components/_video/VideoPlayer/SettingsButtonWithPopover'
 import { atlasConfig } from '@/config'
-import { videoCategories } from '@/config/categories'
+import { displayCategories } from '@/config/categories'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -90,7 +90,10 @@ export const VideoView: FC = () => {
     cinematicView,
     actions: { updateWatchedVideos },
   } = usePersonalDataStore((state) => state)
-  const category = video?.category ? videoCategories[video.category.id] : null
+  const videoCategory = video?.category ? video.category.id : null
+  const belongsToCategories = videoCategory
+    ? displayCategories.filter((category) => category.videoCategories.includes(videoCategory))
+    : null
 
   const { anyOverlaysOpen } = useOverlayManager()
   const { ref: playerRef, inView: isPlayerInView } = useInView()
@@ -271,7 +274,15 @@ export const VideoView: FC = () => {
             />
           )}
       <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />
-      <MoreVideos categoryId={category?.id} categoryName={video?.category?.name} videoId={id} type="category" />
+      {belongsToCategories?.map((category) => (
+        <MoreVideos
+          key={category.id}
+          categoryId={category?.id}
+          categoryName={category.name}
+          videoId={id}
+          type="category"
+        />
+      ))}
     </GridItem>
   )
 
@@ -336,7 +347,7 @@ export const VideoView: FC = () => {
       <ChannelContainer>
         <ChannelLink followButton id={channelId} textVariant="h300" avatarSize="small" />
       </ChannelContainer>
-      <VideoDetails video={video} categoryData={category} />
+      <VideoDetails video={video} categoryData={belongsToCategories} />
     </>
   )
 

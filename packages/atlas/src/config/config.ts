@@ -54,12 +54,13 @@ export const configSchema = z.object({
         iconUrl: z.string(),
         coverImgUrl: z.string(),
         videoCategories: z.array(z.string()),
+        defaultVideoCategory: z.string(),
       })
     ),
     languages: z.array(z.object({ isoCode: z.string(), name: z.string() })),
   }),
 })
-type RawConfig = z.infer<typeof configSchema>
+export type RawConfig = z.infer<typeof configSchema>
 type Config = RawConfig & {
   derived: {
     languagesLookup: Record<string, string>
