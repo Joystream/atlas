@@ -5,7 +5,7 @@ import { Text, TextVariant } from '@/components/Text'
 import { CategoryIcon } from '@/components/_icons/CategoryIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { CircleDefaultBackground } from '@/components/_video/VideoCategoryCard/VideoCategoryCard.style'
-import { findDisplayCategory } from '@/config/categories'
+import { displayCategoriesLookup } from '@/config/categories'
 import { absoluteRoutes } from '@/config/routes'
 import { transitions } from '@/styles'
 
@@ -36,7 +36,7 @@ export const CategoryLink: FC<CategoryLinkProps> = ({
   textSecondary,
 }) => {
   const _textVariant = textVariant || 't200-strong'
-  const category = findDisplayCategory(id)
+  const category = id ? displayCategoriesLookup[id] : null
   return (
     <Container
       onClick={onClick}

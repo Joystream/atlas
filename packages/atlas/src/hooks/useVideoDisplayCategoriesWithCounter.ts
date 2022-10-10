@@ -16,11 +16,11 @@ export const useVideoDisplayCategoriesWithCounter = () => {
 
   const displayCategoriesWithCounter = useMemo(
     () =>
-      displayCategories.map((category) => ({
-        ...category,
+      displayCategories.map((displayCategory) => ({
+        ...displayCategory,
         activeVideosCounter:
           categories?.reduce((previousValue, currentValue) => {
-            if (category.videoCategories.includes(currentValue.id)) {
+            if (displayCategory.videoCategories.includes(currentValue.id)) {
               return previousValue + currentValue.activeVideosCounter
             }
             return previousValue

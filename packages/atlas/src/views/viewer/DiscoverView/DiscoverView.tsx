@@ -28,8 +28,8 @@ export const DiscoverView: FC = () => {
   const featuredVideoCategoryCardsData = useMemo(() => {
     const _featuredVideoCategoryCardsData =
       displayCategoriesWithCounter
-        .map((category) => {
-          const video = categoriesFeaturedVideos?.[category.defaultVideoCategory]?.categoryFeaturedVideos.find(
+        .map((displayCategory) => {
+          const video = categoriesFeaturedVideos?.[displayCategory.id]?.categoryFeaturedVideos.find(
             (video) => !!video.videoCutUrl
           )
 
@@ -38,7 +38,7 @@ export const DiscoverView: FC = () => {
           return {
             videoTitle: video?.video.title ?? '',
             videoUrl: video?.videoCutUrl ?? '',
-            ...category,
+            ...displayCategory,
           }
         })
         .filter((cat) => !!cat)

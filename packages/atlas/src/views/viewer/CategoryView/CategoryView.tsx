@@ -15,7 +15,7 @@ import { VideoContentTemplate } from '@/components/_templates/VideoContentTempla
 import { VideoCategoryCard } from '@/components/_video/VideoCategoryCard'
 import { VideoCategoryHero } from '@/components/_video/VideoCategoryHero'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
-import { DisplayCategory, findDisplayCategory } from '@/config/categories'
+import { DisplayCategory, displayCategoriesLookup } from '@/config/categories'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -40,7 +40,7 @@ export const CategoryView = () => {
       ),
     [id, displayCategoriesWithCounter]
   )
-  const currentCategory = findDisplayCategory(id)
+  const currentCategory = displayCategoriesLookup[id]
 
   const headTags = useHeadTags(currentCategory?.name)
 

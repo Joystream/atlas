@@ -7,7 +7,7 @@ import { Button } from '@/components/_buttons/Button'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
 import { SvgActionChevronR } from '@/components/_icons'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
-import { displayCategories } from '@/config/categories'
+import { displayCategoriesLookup } from '@/config/categories'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
@@ -32,7 +32,7 @@ export const MoreVideos: FC<MoreVideosProps> = ({
   videoId,
   type,
 }) => {
-  const videoCategories = displayCategories?.find((category) => category.id === categoryId)?.videoCategories
+  const videoCategories = categoryId ? displayCategoriesLookup[categoryId].videoCategories : undefined
   const where =
     type === 'channel'
       ? { channel: { id_eq: channelId } }
