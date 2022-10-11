@@ -1,10 +1,10 @@
 import { ChangeEvent, FC, useEffect, useState } from 'react'
 
 import { useGetKillSwitch, useSetKillSwitch } from '@/api/hooks/admin'
+import { SvgActionNewTab, SvgAlertsError24, SvgAlertsWarning24 } from '@/assets/icons'
 import { Information } from '@/components/Information'
 import { TabItem, Tabs } from '@/components/Tabs'
 import { Button, TextButton } from '@/components/_buttons/Button'
-import { SvgActionNewTab, SvgAlertsError24, SvgAlertsWarning24 } from '@/components/_icons'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'

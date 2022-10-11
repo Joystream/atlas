@@ -2,8 +2,8 @@ import isPropValid from '@emotion/is-prop-valid'
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { SvgActionDislikeSolid, SvgActionLikeSolid } from '@/assets/icons'
 import { Text } from '@/components/Text'
-import { SvgActionDislikeSolid, SvgActionLikeSolid } from '@/components/_icons'
 import { cVar, sizes } from '@/styles'
 
 export const LoadingWrapper = styled.div`

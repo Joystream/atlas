@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef, useState } from 'react'
 
+import { SvgActionChevronB, SvgActionChevronT } from '@/assets/icons'
 import { EmojiWrapper } from '@/components/EmojiWrapper'
-import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
 
 import { ExpandButton, StyledCommentText } from './CommentBody.styles'
 

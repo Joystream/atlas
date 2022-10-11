@@ -1,7 +1,7 @@
 import { FC } from 'react'
 
+import { SvgActionAuction, SvgActionBuyNow } from '@/assets/icons'
 import { Text } from '@/components/Text'
-import { SvgActionAuction, SvgActionBuyNow } from '@/components/_icons'
 import { OptionCardGroupRadio } from '@/components/_inputs/OptionCardGroup'
 
 import { OptionsWrapper } from './ListingTypes.styles'

@@ -2,10 +2,10 @@ import { ChangeEvent, FC, MouseEvent, useCallback, useEffect, useState } from 'r
 import { useLocation } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { SvgActionMember } from '@/assets/icons'
+import { SvgAppLogoFull } from '@/assets/logos'
 import { Searchbar } from '@/components/Searchbar'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionMember } from '@/components/_icons'
-import { SvgAtlasLogoFull } from '@/components/_illustrations'
 import { NotificationsButton } from '@/components/_navigation/NotificationsButton'
 import { NotificationsWidget } from '@/components/_notifications/NotificationsWidget'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
@@ -91,7 +91,7 @@ export const TopbarViewer: FC = () => {
       <StyledTopbarBase
         hasFocus={searchOpen}
         noLogo={!mdMatch && !!searchQuery}
-        fullLogoNode={<SvgAtlasLogoFull />}
+        fullLogoNode={<SvgAppLogoFull />}
         logoLinkUrl={absoluteRoutes.viewer.index()}
       >
         <SearchbarContainer>

@@ -2,8 +2,8 @@ import { FC, MouseEvent, useCallback, useEffect, useMemo, useState } from 'react
 import { useNavigate } from 'react-router'
 
 import { BasicVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { SvgControlsPause, SvgControlsPlay, SvgControlsReplay } from '@/assets/icons'
 import { Text } from '@/components/Text'
-import { SvgControlsPause, SvgControlsPlay, SvgControlsReplay } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useAsset } from '@/providers/assets/assets.hooks'

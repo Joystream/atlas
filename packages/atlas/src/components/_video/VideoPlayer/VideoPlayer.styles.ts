@@ -2,7 +2,6 @@ import isPropValid from '@emotion/is-prop-valid'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { Text } from '@/components/Text'
 import {
   SvgControlsFullScreen,
   SvgControlsPause,
@@ -19,8 +18,9 @@ import {
   SvgControlsSoundOn,
   SvgControlsVideoModeCinemaView,
   SvgControlsVideoModeCompactView,
-} from '@/components/_icons'
-import { SvgAtlasLogoFull, SvgAtlasLogoShort } from '@/components/_illustrations'
+} from '@/assets/icons'
+import { SvgAppLogoFull, SvgAppLogoShort } from '@/assets/logos'
+import { Text } from '@/components/Text'
 import { ControlsIndicatorWrapper } from '@/components/_video/VideoPlayer/ControlsIndicator.styles'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
@@ -363,7 +363,7 @@ export const StyledEmbeddedLogoLink = styled.a`
   }
 `
 
-export const StyledAtlasLogo = styled(SvgAtlasLogoFull)<{ embedded?: boolean }>`
+export const StyledAtlasLogo = styled(SvgAppLogoFull)<{ embedded?: boolean }>`
   padding: ${({ embedded }) => (embedded ? 0 : '0.5em')};
   max-height: ${({ embedded }) => (embedded ? '2em' : '2.5em')};
   height: 100%;
@@ -372,7 +372,7 @@ export const StyledAtlasLogo = styled(SvgAtlasLogoFull)<{ embedded?: boolean }>`
   ${defaultIconColor};
 `
 
-export const StyledAtlasLogoShort = styled(SvgAtlasLogoShort)`
+export const StyledAtlasLogoShort = styled(SvgAppLogoShort)`
   padding: 0.5em;
   max-height: 2.5em;
   height: 100%;

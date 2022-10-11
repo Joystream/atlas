@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
 
+import { SvgEmptyStateIllustration } from '@/assets/illustrations'
+import { SvgAppLogoFull } from '@/assets/logos'
 import { Text } from '@/components/Text'
-import { SvgEmptyStateIllustration, SvgJoystreamLogoFull } from '@/components/_illustrations'
 import { atlasConfig } from '@/config'
 
 export const Maintenance: FC = () => (
@@ -16,7 +17,7 @@ export const Maintenance: FC = () => (
       <br /> and performance for our users. <br /> <br />
       We should be back shortly. <br /> See you soon!
     </Text>
-    <SvgJoystreamLogoFull />
+    <SvgAppLogoFull />
   </Container>
 )
 

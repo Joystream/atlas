@@ -2,11 +2,11 @@ import { FC } from 'react'
 import { useNavigate } from 'react-router'
 
 import { StorageDataObjectFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { SvgActionBid, SvgActionBuyNow, SvgActionMint, SvgActionSell } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
-import { SvgActionBid, SvgActionBuyNow, SvgActionMint, SvgActionSell } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset } from '@/providers/assets/assets.hooks'
 

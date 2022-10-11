@@ -2,9 +2,9 @@ import styled from '@emotion/styled'
 
 import { cVar, sizes } from '@/styles'
 
+import { SvgActionClose } from '../../assets/icons'
 import { Avatar } from '../Avatar'
 import { Button } from '../_buttons/Button'
-import { SvgActionClose } from '../_icons'
 
 export const OutputPillWrapper = styled.div<{ withoutButton?: boolean }>`
   background-color: ${cVar('colorBackgroundStrong')};

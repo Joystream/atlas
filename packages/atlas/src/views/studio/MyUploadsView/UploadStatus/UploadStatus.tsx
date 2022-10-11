@@ -3,8 +3,6 @@ import { DropzoneOptions, useDropzone } from 'react-dropzone'
 import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { CircularProgress } from '@/components/CircularProgress'
-import { Text } from '@/components/Text'
 import {
   SvgActionClosedCaptions,
   SvgActionImageFile,
@@ -12,7 +10,9 @@ import {
   SvgActionVideoFile,
   SvgAlertsSuccess24,
   SvgAlertsWarning24,
-} from '@/components/_icons'
+} from '@/assets/icons'
+import { CircularProgress } from '@/components/CircularProgress'
+import { Text } from '@/components/Text'
 import { Loader } from '@/components/_loaders/Loader'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
 import { atlasConfig } from '@/config'

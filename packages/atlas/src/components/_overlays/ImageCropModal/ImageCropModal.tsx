@@ -8,9 +8,9 @@ import {
   useState,
 } from 'react'
 
+import { SvgActionPan, SvgActionTrash, SvgActionZoomIn, SvgActionZoomOut } from '@/assets/icons'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionPan, SvgActionTrash, SvgActionZoomIn, SvgActionZoomOut } from '@/components/_icons'
 import { DialogModalProps } from '@/components/_overlays/DialogModal'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { validateImage } from '@/utils/image'

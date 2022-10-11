@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 
+import { SvgSigninIllustration } from '@/assets/illustrations'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgSigninIllustration } from '@/components/_illustrations'
 import { media, sizes } from '@/styles'
 
 export const StyledContainer = styled(LimitedWidthContainer)`

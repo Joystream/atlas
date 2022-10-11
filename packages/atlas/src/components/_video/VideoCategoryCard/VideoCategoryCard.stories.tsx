@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
-import { SvgCategoriesAutosAndVehicles } from '@/components/_icons'
+import { SvgCategoriesAutosAndVehicles } from '@/assets/icons'
 
 import { VideoCategoryCard, VideoCategoryCardProps } from './VideoCategoryCard'
 

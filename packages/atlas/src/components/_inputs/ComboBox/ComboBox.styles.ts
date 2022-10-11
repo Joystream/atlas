@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { SvgActionPlus } from '@/components/_icons'
+import { SvgActionPlus } from '@/assets/icons'
 import { cVar, zIndex } from '@/styles'
 
 export const ComboBoxWrapper = styled.div`

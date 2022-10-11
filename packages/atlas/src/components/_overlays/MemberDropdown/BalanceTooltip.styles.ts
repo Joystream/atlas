@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { SvgActionLock } from '@/components/_icons'
+import { SvgActionLock } from '@/assets/icons'
 import { cVar, sizes } from '@/styles'
 
 export const TooltipWrapper = styled.div`

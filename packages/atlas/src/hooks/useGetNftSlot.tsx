@@ -2,9 +2,9 @@ import { differenceInHours, differenceInSeconds, format } from 'date-fns'
 import { useCallback } from 'react'
 
 import { NftStatus } from '@/api/hooks/nfts'
+import { SvgActionAuction, SvgActionBuyNow, SvgActionClock, SvgActionNotForSale } from '@/assets/icons'
 import { PillGroup } from '@/components/Pill'
 import { PillProps } from '@/components/Pill/types'
-import { SvgActionAuction, SvgActionBuyNow, SvgActionClock, SvgActionNotForSale } from '@/components/_icons'
 import { SlotsObject } from '@/components/_video/VideoThumbnail'
 import { formatDurationShort } from '@/utils/time'
 

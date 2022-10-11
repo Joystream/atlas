@@ -1,4 +1,4 @@
-import { SvgActionNotifications } from '@/components/_icons'
+import { SvgActionNotifications } from '@/assets/icons'
 import { useNotifications } from '@/providers/notifications/notifications.hooks'
 
 import { StyledButton } from './NotificationsButton.styles'

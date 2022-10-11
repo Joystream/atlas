@@ -6,9 +6,6 @@ import { animated, useTransition } from 'react-spring'
 import useResizeObserver from 'use-resize-observer'
 
 import { FullMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { ListItem, ListItemProps } from '@/components/ListItem'
-import { NumberFormat } from '@/components/NumberFormat'
-import { Tooltip } from '@/components/Tooltip'
 import {
   SvgActionAddVideo,
   SvgActionChannel,
@@ -19,9 +16,12 @@ import {
   SvgActionPlay,
   SvgActionPlus,
   SvgActionSwitchMember,
-} from '@/components/_icons'
-import { IconWrapper } from '@/components/_icons/IconWrapper'
-import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
+} from '@/assets/icons'
+import { IconWrapper } from '@/components/IconWrapper'
+import { JoyTokenIcon } from '@/components/JoyTokenIcon'
+import { ListItem, ListItemProps } from '@/components/ListItem'
+import { NumberFormat } from '@/components/NumberFormat'
+import { Tooltip } from '@/components/Tooltip'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'

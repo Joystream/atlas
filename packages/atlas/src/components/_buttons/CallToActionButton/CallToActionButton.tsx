@@ -8,7 +8,7 @@ import {
   SvgSidebarHome,
   SvgSidebarNew,
   SvgSidebarPopular,
-} from '@/components/_icons'
+} from '@/assets/icons'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'

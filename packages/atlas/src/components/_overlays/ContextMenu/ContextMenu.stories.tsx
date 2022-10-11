@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Meta, Story } from '@storybook/react'
 
+import { SvgActionCopy } from '@/assets/icons'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionCopy } from '@/components/_icons'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 
 import { ContextMenu } from './ContextMenu'

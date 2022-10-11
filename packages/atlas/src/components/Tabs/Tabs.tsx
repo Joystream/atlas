@@ -8,7 +8,7 @@ import { transitions } from '@/styles'
 
 import { ButtonWrapper, StyledButton, StyledPill, Tab, TabsGroup, TabsWrapper } from './Tabs.styles'
 
-import { SvgActionChevronL, SvgActionChevronR } from '../_icons'
+import { SvgActionChevronL, SvgActionChevronR } from '../../assets/icons'
 
 export type TabItem = {
   name: string

@@ -1,7 +1,7 @@
 import { Dispatch, FC, FormEvent, SetStateAction, useCallback, useEffect, useRef } from 'react'
 
+import { SvgActionClose, SvgActionSearch } from '@/assets/icons'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionClose, SvgActionSearch } from '@/components/_icons'
 import { isMobile } from '@/utils/browser'
 
 import { SearchContainerForm, StyledInput } from './ChannelSearch.styles'

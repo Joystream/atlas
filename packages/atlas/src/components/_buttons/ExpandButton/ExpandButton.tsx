@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
 
-import { SvgActionChevronB } from '@/components/_icons'
+import { SvgActionChevronB } from '@/assets/icons'
 import { transitions } from '@/styles'
 
 import { Button, ButtonProps } from '../Button'

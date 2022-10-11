@@ -1,10 +1,10 @@
 import axios from 'axios'
 import { ChangeEvent, ChangeEventHandler, FC, useRef } from 'react'
 
+import { SvgActionDownload, SvgActionMore, SvgActionTrash } from '@/assets/icons'
 import { ListItemProps } from '@/components/ListItem'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionDownload, SvgActionMore, SvgActionTrash } from '@/components/_icons'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { SubtitlesInput } from '@/types/subtitles'

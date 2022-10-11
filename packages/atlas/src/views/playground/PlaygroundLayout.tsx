@@ -3,10 +3,10 @@ import { useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { Link } from 'react-router-dom'
 
+import { SvgAppLogoShort } from '@/assets/logos'
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgAtlasLogoShort } from '@/components/_illustrations'
 import { TopbarBase } from '@/components/_navigation/TopbarBase'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { absoluteRoutes } from '@/config/routes'
@@ -52,7 +52,7 @@ const PlaygroundLayout = () => {
       <TopbarBase
         fullLogoNode={
           <LogoWrapper>
-            <SvgAtlasLogoShort />
+            <SvgAppLogoShort />
             <Text as="p" variant="h500" margin={{ left: 2 }}>
               Playground
             </Text>

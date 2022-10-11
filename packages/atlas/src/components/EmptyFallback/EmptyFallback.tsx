@@ -1,6 +1,6 @@
 import { FC, ReactNode } from 'react'
 
-import { SvgEmptyStateIllustration } from '@/components/_illustrations'
+import { SvgEmptyStateIllustration } from '@/assets/illustrations'
 
 import { ButtonWrapper, Container, EmptyFallbackSizes, Message, Subtitle, Title } from './EmptyFallback.styles'
 

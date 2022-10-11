@@ -1,10 +1,10 @@
 import BN from 'bn.js'
 import { FC, useState } from 'react'
 
+import { SvgActionShow } from '@/assets/icons'
 import { ListItemProps } from '@/components/ListItem'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Pill } from '@/components/Pill'
-import { SvgActionShow } from '@/components/_icons'
 import { VideoThumbnail, VideoThumbnailProps } from '@/components/_video/VideoThumbnail'
 import { useGetNftSlot } from '@/hooks/useGetNftSlot'
 import { EnglishTimerState } from '@/hooks/useNftState'

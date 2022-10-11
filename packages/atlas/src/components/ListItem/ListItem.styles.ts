@@ -5,7 +5,7 @@ import styled from '@emotion/styled'
 import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 
-import { SvgActionCheck } from '../_icons'
+import { SvgActionCheck } from '../../assets/icons'
 
 export type ListItemSizes = 'small' | 'medium' | 'large'
 

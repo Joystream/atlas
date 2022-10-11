@@ -1,10 +1,10 @@
 import { FC, PropsWithChildren, useRef } from 'react'
 
+import { SvgActionChevronL, SvgActionChevronR, SvgControlsPlay } from '@/assets/icons'
 import { Carousel, CarouselProps, CarouselRef } from '@/components/Carousel'
 import { Arrow } from '@/components/Carousel/Carousel.styles'
 import { GridHeadingContainer, TitleContainer } from '@/components/GridHeading'
 import { Text } from '@/components/Text'
-import { SvgActionChevronL, SvgActionChevronR, SvgControlsPlay } from '@/components/_icons'
 
 import { CarouselArrowsContainer, Container, SeeAllLink } from './Gallery.styles'
 

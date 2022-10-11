@@ -1,6 +1,6 @@
 import { FC, memo, useCallback } from 'react'
 
-import { SvgActionClock } from '@/components/_icons'
+import { SvgActionClock } from '@/assets/icons'
 import { absoluteRoutes } from '@/config/routes'
 
 import { ResultTitle } from './ResultTitle'

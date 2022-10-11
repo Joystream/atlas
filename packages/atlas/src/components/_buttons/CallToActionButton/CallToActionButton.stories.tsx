@@ -1,6 +1,6 @@
 import { Meta, Story } from '@storybook/react'
 
-import { SvgSidebarPopular } from '@/components/_icons'
+import { SvgSidebarPopular } from '@/assets/icons'
 
 import { CallToActionButton, CallToActionButtonProps, CallToActionWrapper } from '.'
 

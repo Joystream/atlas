@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
+import { SvgActionCheck } from '@/assets/icons'
 import { ListItem } from '@/components/ListItem'
-import { SvgActionCheck } from '@/components/_icons'
 import { cVar, sizes } from '@/styles'
 
 export const SettingsContainer = styled.div<{ isFullScreen?: boolean; isModal?: boolean }>`

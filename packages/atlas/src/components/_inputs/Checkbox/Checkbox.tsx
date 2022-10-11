@@ -1,6 +1,6 @@
 import { ChangeEvent, DetailedHTMLProps, InputHTMLAttributes, forwardRef } from 'react'
 
-import { SvgActionMinus } from '@/components/_icons'
+import { SvgActionMinus } from '@/assets/icons'
 
 import { CheckboxInput, Checkmark, Container, StyledGlyphCheck } from './Checkbox.styles'
 

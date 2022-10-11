@@ -8,8 +8,8 @@ import {
   GetMembershipsQuery,
   GetMembershipsQueryVariables,
 } from '@/api/queries/__generated__/memberships.generated'
+import { SvgActionCancel } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
-import { SvgActionCancel } from '@/components/_icons'
 import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { createLookup } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'

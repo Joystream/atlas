@@ -1,9 +1,9 @@
 import { FC, useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
+import { SvgActionCheck, SvgLogoPolkadot } from '@/assets/icons'
 import { LottiePlayer } from '@/components/LottiePlayer'
 import { Text } from '@/components/Text'
-import { SvgActionCheck, SvgLogoPolkadot } from '@/components/_icons'
 import { ErrorCode } from '@/joystream-lib/errors'
 import { ExtrinsicStatus } from '@/joystream-lib/types'
 import { useOverlayManager } from '@/providers/overlayManager'

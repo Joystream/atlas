@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import { useState } from 'react'
 
-import { SvgActionAddImage } from '@/components/_icons'
+import { SvgActionAddImage } from '@/assets/icons'
 
 import { Select, SelectItem, SelectProps } from '.'
 

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
+import { SvgActionCheck } from '@/assets/icons'
 import { Text } from '@/components/Text'
-import { SvgActionCheck } from '@/components/_icons'
 import { cVar, media, sizes } from '@/styles'
 
 export const SubtitleBoxWrapper = styled.div`

@@ -1,8 +1,8 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { SvgAlertsInformative24 } from '@/assets/icons'
 import { Text } from '@/components/Text'
-import { SvgAlertsInformative24 } from '@/components/_icons'
 import { cVar, sizes } from '@/styles'
 
 export const IconWrapper = styled.div`

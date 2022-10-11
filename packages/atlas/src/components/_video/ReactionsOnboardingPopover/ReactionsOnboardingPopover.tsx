@@ -1,10 +1,10 @@
 import BN from 'bn.js'
 import { ReactNode, forwardRef } from 'react'
 
+import { SvgOtherThumbsUpIllustrationSvg } from '@/assets/illustrations'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgOtherThumbsUpIllustrationSvg } from '@/components/_illustrations'
 import { DialogPopover } from '@/components/_overlays/DialogPopover'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { usePersonalDataStore } from '@/providers/personalData'

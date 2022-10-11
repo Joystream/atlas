@@ -1,10 +1,10 @@
 import { FC, MouseEvent, useState } from 'react'
 
+import { SvgActionPlus } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { AvatarGroup, AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
 import { ListItem } from '@/components/ListItem'
 import { Text } from '@/components/Text'
-import { SvgActionPlus } from '@/components/_icons'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { cVar } from '@/styles'
 

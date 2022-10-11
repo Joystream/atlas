@@ -1,10 +1,6 @@
 import { Meta, Story } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
-import { Pill, PillGroup } from '@/components/Pill'
-import { Text } from '@/components/Text'
-import { UploadProgressBar } from '@/components/UploadProgressBar'
-import { Button } from '@/components/_buttons/Button'
 import {
   SvgActionBid,
   SvgActionEdit,
@@ -12,8 +8,12 @@ import {
   SvgAlertsWarning24,
   SvgIllustrativePlay,
   SvgIllustrativeReupload,
-} from '@/components/_icons'
-import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
+} from '@/assets/icons'
+import { JoyTokenIcon } from '@/components/JoyTokenIcon'
+import { Pill, PillGroup } from '@/components/Pill'
+import { Text } from '@/components/Text'
+import { UploadProgressBar } from '@/components/UploadProgressBar'
+import { Button } from '@/components/_buttons/Button'
 import { atlasConfig } from '@/config'
 import { cVar } from '@/styles'
 
