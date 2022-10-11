@@ -25,12 +25,14 @@ import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useFee, useJoystream, useTokenPrice } from '@/providers/joystream/joystream.hooks'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { formatJoystreamAddress, shortenAddress } from '@/utils/address'
 import { SentryLogger } from '@/utils/logs'
 import { formatNumber } from '@/utils/number'
 
 import { FormFieldsWrapper, PriceWrapper, StyledMaxButton, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
 
-const ADDRESS_LENGTH = 49
+const POLKADOT_ADDRESS_LENGTH = 48
+const JOYSTREAM_FIRST_CHAR = 'j4'
 const ADDRESS_CHARACTERS_LIMIT = 4
 
 type SendFundsDialogProps = {
@@ -88,6 +90,9 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
     }, 500)
   )
 
+  const formatAddress = (address: string) =>
+    address.toLowerCase().slice(0, 2) === JOYSTREAM_FIRST_CHAR ? address : formatJoystreamAddress(address)
+
   const handleSendFounds = async () => {
     const handler = await handleSubmit((data) => {
       if (!joystream || !data.account || !data.amount) {
@@ -98,13 +103,12 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
         snackbarSuccessMessage: {
           title: `${formatNumber(data.amount)} ${atlasConfig.joystream.tokenTicker} ${
             convertedAmount === null ? '' : `$(${formatNumber(convertedAmount || 0)})`
-          } tokens have been sent over to ${data.account.slice(0, ADDRESS_CHARACTERS_LIMIT)}...
-          ${data.account.slice(-ADDRESS_CHARACTERS_LIMIT)} wallet address`,
+          } tokens have been sent over to ${shortenAddress(data.account, ADDRESS_CHARACTERS_LIMIT)} wallet address`,
         },
         txFactory: async (updateStatus) => {
           const amount = amountBN.add(fullFee).gte(accountBalance) ? amountBN.sub(fullFee) : amountBN
           return (await joystream.extrinsics).sendFunds(
-            data.account || '',
+            formatAddress(data.account || ''),
             amount.toString(),
             proxyCallback(updateStatus)
           )
@@ -195,7 +199,14 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
             }}
           />
         </FormField>
-        <FormField label="Destination account" error={errors.account?.message}>
+        <FormField
+          label="Destination account"
+          error={errors.account?.message}
+          tooltip={{
+            text: 'Any Polkadot wallet address format is supported, but if you’re transferring tokens over to another Joystream member, we recommend using the Joystream wallet address format, which starts with “J4”.',
+            placement: 'top',
+          }}
+        >
           <Input
             {...register('account', {
               validate: {
@@ -206,7 +217,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
                   return true
                 },
                 wrongAddress: (value) => {
-                  if (value && value.length < ADDRESS_LENGTH) {
+                  if (value && value.length < POLKADOT_ADDRESS_LENGTH) {
                     return 'Enter a valid Polkadot wallet address.'
                   }
                   return true
@@ -214,16 +225,17 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
               },
               onChange: (event) => {
                 const { value } = event.target
-                setValue('account', event.target.value, { shouldTouch: true, shouldDirty: true })
-                if (value.length === ADDRESS_LENGTH) {
-                  debounceFetchMembers.current(value)
+                const valueLength = value.length
+                setValue('account', value, { shouldTouch: true, shouldDirty: true })
+                if (!!valueLength && valueLength >= POLKADOT_ADDRESS_LENGTH) {
+                  debounceFetchMembers.current(formatAddress(value))
                 } else {
                   setDestinationAccount(undefined)
                 }
               },
             })}
             nodeEnd={destinationAccount && <ResolvedAvatar member={destinationAccount} size="bid" />}
-            placeholder="Joystream wallet address"
+            placeholder="Polkadot wallet address"
             error={!!errors.account}
           />
         </FormField>
