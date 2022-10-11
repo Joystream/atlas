@@ -21,11 +21,15 @@ import {
   HeaderGridItem,
   IllustrationWrapper,
   ImageLayoutGrid,
+  LeftStep,
   LinksGroup,
+  RightStep,
   SignInButton,
+  StepsContainer,
   StyledAnchor,
   StyledContainer,
   StyledIllustration,
+  StyledSvgActionChevronR,
   StyledSvgJoystreamLogoFull,
   SubTitle,
 } from './StudioWelcomeView.styles'
@@ -58,6 +62,11 @@ export const StudioWelcomeView: FC = () => {
             <SubTitle as="p" variant="t300" color="colorText">
               To create a channel, first set up a free Joystream membership with our simple step-by-step wizard.
             </SubTitle>
+            <StepsContainer>
+              <LeftStep title="Set up membership" number={1} variant="current" showOtherStepsOnMobile />
+              <StyledSvgActionChevronR />
+              <RightStep title="Create channel" number={2} variant="future" showOtherStepsOnMobile />
+            </StepsContainer>
             <ButtonGroup>
               {isLoggedIn ? (
                 <SignInButton icon={<SvgActionChannel />} size="large" to={absoluteRoutes.studio.newChannel()}>
@@ -76,18 +85,18 @@ export const StudioWelcomeView: FC = () => {
                 Go to {atlasConfig.general.appName}
               </TextButton>
             </ButtonGroup>
-            <LinksGroup>
-              <StyledAnchor href={atlasConfig.general.joystreamLandingPageUrl} target="_blank">
-                <Text as="span" variant="t100" color="inherit">
-                  Powered by
-                </Text>
-                <StyledSvgJoystreamLogoFull />
-              </StyledAnchor>
-              <Text as="span" variant="t100" color="inherit">
-                •
-              </Text>
-            </LinksGroup>
           </HeaderGridItem>
+          <LinksGroup colSpan={{ xxs: 12, sm: 8 }} colStart={{ sm: 3 }}>
+            <StyledAnchor href={atlasConfig.general.joystreamLandingPageUrl} target="_blank">
+              <Text as="span" variant="t100" color="inherit">
+                Powered by
+              </Text>
+              <StyledSvgJoystreamLogoFull />
+            </StyledAnchor>
+            <Text as="span" variant="t100" color="inherit">
+              •
+            </Text>
+          </LinksGroup>
         </ContentLayoutGrid>
         <ImageLayoutGrid>
           <GridItem rowStart={1} colSpan={{ xxs: 12, sm: 8 }} colStart={{ sm: 3 }}>

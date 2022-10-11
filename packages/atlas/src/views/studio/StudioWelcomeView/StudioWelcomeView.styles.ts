@@ -2,10 +2,12 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
+import { SvgActionChevronR } from '@/assets/icons'
 import { SvgSigninIllustration } from '@/assets/illustrations'
 import { SvgJoystreamLogoFull } from '@/assets/logos'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { Step } from '@/components/Step'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { cVar, media, sizes } from '@/styles'
@@ -24,7 +26,10 @@ export const StyledContainer = styled(LimitedWidthContainer)`
   /* negative margin for the purpose of overflowing images */
   margin: 0 calc(-1 * var(--size-global-horizontal-padding)) 0;
 `
-export const ContentLayoutGrid = styled(LayoutGrid)``
+export const ContentLayoutGrid = styled(LayoutGrid)`
+  row-gap: ${sizes(12)};
+  justify-content: center;
+`
 
 export const HeaderGridItem = styled(GridItem)`
   ${media.sm} {
@@ -47,6 +52,40 @@ export const StyledSignInIllustrationSVG = styled(SvgSigninIllustration)`
   ${media.xxl} {
     max-width: unset;
   }
+`
+
+export const StepsContainer = styled.div`
+  display: flex;
+  width: 100%;
+  padding: ${sizes(1)} 0;
+  align-items: center;
+  margin: ${sizes(6)} 0;
+  box-shadow: inset 0 1px 0 0 ${cVar('colorBorderMutedAlpha')}, inset 0 -1px 0 0 ${cVar('colorBorderMutedAlpha')};
+`
+
+export const stepStyles = css`
+  overflow: unset;
+  width: unset;
+`
+
+export const LeftStep = styled(Step)`
+  ${stepStyles};
+
+  /* we're setting auto margins instead of "justify-content: center" because of this flex/grid behavior:
+   https://stackoverflow.com/questions/33454533/cant-scroll-to-top-of-flex-item-that-is-overflowing-container */
+
+  margin-left: auto;
+`
+export const RightStep = styled(Step)`
+  ${stepStyles};
+
+  margin-right: auto;
+`
+
+export const StyledSvgActionChevronR = styled(SvgActionChevronR)`
+  display: block;
+  margin: 0 ${sizes(2)};
+  flex-shrink: 0;
 `
 
 export const ButtonGroup = styled.div`
@@ -81,7 +120,7 @@ const linkStyles = css`
   }
 `
 
-export const LinksGroup = styled.div`
+export const LinksGroup = styled(GridItem)`
   justify-content: start;
   display: grid;
   color: ${cVar('colorTextMuted')};
