@@ -36,26 +36,67 @@ export const YppHero: FC<YppHeroProps> = ({ onSignUpClick }) => {
       <StyledLimitedWidthContainer centerText>
         <LayoutGrid>
           <GridItem as="header" colSpan={{ base: 12, sm: 8, lg: 6 }} colStart={{ sm: 3, lg: 4 }}>
-            <Text as="h1" variant={mdMatch ? 'h800' : 'h600'}>
+            <Text
+              as="h1"
+              variant={mdMatch ? 'h800' : 'h600'}
+              data-aos="fade-up"
+              data-aos-delay="250"
+              data-aos-offset="80"
+              data-aos-easing="atlas-easing"
+            >
               Connect your YouTube channel & get paid
             </Text>
-            <Text as="p" variant="t300" color="colorText" margin={{ top: 4, bottom: 8 }}>
+            <Text
+              as="p"
+              variant="t300"
+              color="colorText"
+              margin={{ top: 4, bottom: 8 }}
+              data-aos="fade-up"
+              data-aos-delay="350"
+              data-aos-offset="40"
+              data-aos-easing="atlas-easing"
+            >
               Reupload and backup your YouTube videos to receive a guaranteed payout in the YouTube Partner Program.
             </Text>
-            <Button size="large" icon={<SvgActionChevronR />} iconPlacement="right" onClick={onSignUpClick}>
+            <Button
+              size="large"
+              icon={<SvgActionChevronR />}
+              iconPlacement="right"
+              onClick={onSignUpClick}
+              data-aos="fade-up"
+              data-aos-delay="450"
+              data-aos-offset="40"
+              data-aos-easing="atlas-easing"
+            >
               Sign up now
             </Button>
-            <Text as="p" variant="t100" color="colorTextMuted" margin={{ top: 2 }}>
+            <Text
+              as="p"
+              variant="t100"
+              color="colorTextMuted"
+              margin={{ top: 2 }}
+              data-aos="fade-up"
+              data-aos-delay="450"
+              data-aos-offset="40"
+              data-aos-easing="atlas-easing"
+            >
               It takes 3 minutes and is 100% free.
             </Text>
           </GridItem>
         </LayoutGrid>
-        <HeroImageWrapper>
-          <BackImage srcSet={`${yt576} 576w, ${yt864} 864w, ${yt1152} 1152w, ${yt2304} 2304w`} alt="Hero back" />
+        <HeroImageWrapper data-aos="fade-up" data-aos-delay="550" data-aos-offset="80" data-aos-easing="atlas-easing">
+          <BackImage
+            srcSet={`${yt576} 576w, ${yt864} 864w, ${yt1152} 1152w, ${yt2304} 2304w`}
+            alt="Hero back"
+            width="1152"
+            height="824"
+          />
           <FrontImage
             ref={heroImageRef}
             srcSet={`${hero576} 576w, ${hero864} 864w, ${hero1152} 1152w, ${hero2304} 2304w`}
             alt="Hero front"
+            width="1152"
+            height="824"
           />
         </HeroImageWrapper>
       </StyledLimitedWidthContainer>

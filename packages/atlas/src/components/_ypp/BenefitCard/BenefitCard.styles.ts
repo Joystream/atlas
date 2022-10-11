@@ -39,7 +39,7 @@ export const Pattern = styled.div`
       right: unset;
       width: 100%;
       height: 56px;
-      background: linear-gradient(180deg, rgb(15 17 20 / 0) 0%, ${cVar('colorCoreNeutral900')} 100%);
+      background: linear-gradient(180deg, rgb(15 17 20 / 0) 0%, ${cVar('colorCoreNeutral800')} 100%);
     }
   }
 `

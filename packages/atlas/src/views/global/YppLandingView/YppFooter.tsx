@@ -14,7 +14,13 @@ export const YppFooter: FC = () => {
   const mdMatch = useMediaMatch('md')
   return (
     <>
-      <StyledLimitedWidthContainer centerText>
+      <StyledLimitedWidthContainer
+        centerText
+        data-aos="fade-up"
+        data-aos-delay="250"
+        data-aos-offset="80"
+        data-aos-easing="atlas-easing"
+      >
         <LayoutGrid>
           <GridItem colStart={{ lg: 2 }} colSpan={{ base: 12, lg: 10 }}>
             <CtaBanner>

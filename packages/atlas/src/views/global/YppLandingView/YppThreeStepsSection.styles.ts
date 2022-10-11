@@ -3,7 +3,11 @@ import styled from '@emotion/styled'
 import { GridItem } from '@/components/LayoutGrid'
 import { cVar, media, sizes } from '@/styles'
 
-import { imageShadow } from './YppLandingView.styles'
+import {
+  BackgroundContainer,
+  StyledLimitedWidthContainer as _StyledLimitedWidthContainer,
+  imageShadow,
+} from './YppLandingView.styles'
 
 export const StepCard = styled.article`
   text-align: left;
@@ -33,12 +37,14 @@ export const StepCardsWrapper = styled(GridItem)`
   min-width: 0;
   overflow-x: auto;
   scrollbar-width: none;
+  margin-right: calc(-1 * var(--size-global-horizontal-padding));
 
   ::-webkit-scrollbar {
     display: none;
   }
 
   ${media.md} {
+    margin-right: 0;
     ${StepCard}:nth-of-type(2) {
       margin-top: ${sizes(16)};
     }
@@ -65,6 +71,7 @@ export const StepCardNumber = styled.span`
 export const StepCardImg = styled.img`
   display: block;
   max-width: 100%;
+  height: auto;
   ${imageShadow};
 `
 
@@ -75,4 +82,15 @@ export const StepCardFade = styled.div`
   height: 64px;
   width: 100%;
   bottom: 0;
+`
+
+export const StyledBackgroundContainer = styled(BackgroundContainer)`
+  padding: 0;
+`
+
+export const StyledLimitedWidthContainer = styled(_StyledLimitedWidthContainer)`
+  padding: ${sizes(16)} var(--size-global-horizontal-padding);
+  ${media.md} {
+    padding: ${sizes(24)} var(--size-global-horizontal-padding);
+  }
 `
