@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useMemo } from 'react'
 
 import {
   BasicChannelFieldsFragment,
@@ -39,6 +39,13 @@ export const MemberDropdownList: FC<MemberDropdownListProps> = ({
   onMemberChange,
   onAddNewMember,
 }) => {
+  const sortedMemberChannels = useMemo(() => {
+    if (!activeMembership) {
+      return []
+    }
+    return activeMembership.channels.slice().sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+  }, [activeMembership])
+
   return (
     <>
       <SwitchMemberItemListContainer>
@@ -58,7 +65,7 @@ export const MemberDropdownList: FC<MemberDropdownListProps> = ({
                 onClick={() => onMemberChange(member.id, member.controllerAccount, member.channels[0]?.id || null)}
               />
             ))
-          : activeMembership?.channels.map((channel) => (
+          : sortedMemberChannels.map((channel) => (
               <ChannelListItem
                 key={channel.id}
                 channel={channel}

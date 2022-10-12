@@ -86,10 +86,17 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
 
       if (!memberId && memberships.length) {
         const firstMembership = memberships[0]
+        const sortedMemberChannels = firstMembership.channels.slice().sort((a, b) => {
+          // for some reason createdAt are sometimes not yet parsed into Date objects at this point
+          const aCreatedAtStr = typeof a.createdAt === 'string' ? a.createdAt : a.createdAt.toISOString()
+          const bCreatedAtStr = typeof b.createdAt === 'string' ? b.createdAt : b.createdAt.toISOString()
+
+          return aCreatedAtStr.localeCompare(bCreatedAtStr)
+        })
         setActiveUser({
           memberId: firstMembership.id,
           accountId: firstMembership.controllerAccount,
-          channelId: firstMembership.channels[0]?.id || null,
+          channelId: sortedMemberChannels[0]?.id || null,
         })
         return true
       }
