@@ -476,11 +476,10 @@ export class JoystreamLibExtrinsics {
     const nodeEndpoint = 'http://192.168.1.31:3333'
     const payloadDataObjectId = '0'
     try {
-      console.log(channelPayoutProof)
       const payoutProof = await channelPayoutProof(
         'URL',
-        `${nodeEndpoint}/files/${payloadDataObjectId}`,
-        Number(channelId)
+        `${nodeEndpoint}/api/v1/files/${payloadDataObjectId}`,
+        Number('1')
       )
       console.log(payoutProof)
     } catch (error) {
