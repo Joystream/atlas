@@ -246,6 +246,8 @@ export const YppCardsSections: FC = () => {
                       speed: 15,
                     }}
                     alt="Cursor"
+                    width="640"
+                    height="413"
                   />
                 </ImageContainer>
               </GridItem>
