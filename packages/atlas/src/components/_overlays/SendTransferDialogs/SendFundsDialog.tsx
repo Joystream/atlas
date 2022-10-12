@@ -25,15 +25,16 @@ import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useFee, useJoystream, useTokenPrice } from '@/providers/joystream/joystream.hooks'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
-import { formatJoystreamAddress, shortenAddress } from '@/utils/address'
+import { formatJoystreamAddress, isValidAddressPolkadotAddress, shortenAddress } from '@/utils/address'
 import { SentryLogger } from '@/utils/logs'
 import { formatNumber } from '@/utils/number'
 
 import { FormFieldsWrapper, PriceWrapper, StyledMaxButton, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
 
-const POLKADOT_ADDRESS_LENGTH = 48
-const JOYSTREAM_FIRST_CHAR = 'j4'
 const ADDRESS_CHARACTERS_LIMIT = 4
+const EXAMPLE_ADDRESS = '5Dbstm8wPgrKAwHeMe8xxqxDXyFmP3jyzYdmsiiwTdCdt9iU'
+const formattedExampleAddress = formatJoystreamAddress(EXAMPLE_ADDRESS)
+const joystreamAddressPrefix = formattedExampleAddress.slice(0, 2)
 
 type SendFundsDialogProps = {
   onExitClick: () => void
@@ -57,11 +58,11 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
     formState: { errors },
   } = useForm<{ amount: number | null; account: string | null }>()
   const convertedAmount = convertHapiToUSD(tokenNumberToHapiBn(watch('amount') || 0))
-  const account = watch('account')
+  const account = watch('account') || ''
   const amountBN = tokenNumberToHapiBn(watch('amount') || 0)
   const { fullFee, loading: feeLoading } = useFee(
     'sendFundsTx',
-    show && amountBN ? [account || '', amountBN.toString()] : undefined
+    show && amountBN ? [isValidAddressPolkadotAddress(account) ? account : '', amountBN.toString()] : undefined
   )
 
   useEffect(() => {
@@ -90,9 +91,6 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
     }, 500)
   )
 
-  const formatAddress = (address: string) =>
-    address.toLowerCase().slice(0, 2) === JOYSTREAM_FIRST_CHAR ? address : formatJoystreamAddress(address)
-
   const handleSendFounds = async () => {
     const handler = await handleSubmit((data) => {
       if (!joystream || !data.account || !data.amount) {
@@ -108,7 +106,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
         txFactory: async (updateStatus) => {
           const amount = amountBN.add(fullFee).gte(accountBalance) ? amountBN.sub(fullFee) : amountBN
           return (await joystream.extrinsics).sendFunds(
-            formatAddress(data.account || ''),
+            formatJoystreamAddress(data.account || ''),
             amount.toString(),
             proxyCallback(updateStatus)
           )
@@ -203,7 +201,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
           label="Destination account"
           error={errors.account?.message}
           tooltip={{
-            text: 'Any Polkadot wallet address format is supported, but if you’re transferring tokens over to another Joystream member, we recommend using the Joystream wallet address format, which starts with “J4”.',
+            text: `Any Polkadot wallet address format is supported, but if you’re transferring tokens over to another Joystream member, we recommend using the Joystream wallet address format, which starts with "${joystreamAddressPrefix}".`,
             placement: 'top',
           }}
         >
@@ -217,7 +215,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
                   return true
                 },
                 wrongAddress: (value) => {
-                  if (value && value.length < POLKADOT_ADDRESS_LENGTH) {
+                  if (value && !isValidAddressPolkadotAddress(value)) {
                     return 'Enter a valid Polkadot wallet address.'
                   }
                   return true
@@ -227,8 +225,8 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
                 const { value } = event.target
                 const valueLength = value.length
                 setValue('account', value, { shouldTouch: true, shouldDirty: true })
-                if (!!valueLength && valueLength >= POLKADOT_ADDRESS_LENGTH) {
-                  debounceFetchMembers.current(formatAddress(value))
+                if (!!valueLength && isValidAddressPolkadotAddress(value)) {
+                  debounceFetchMembers.current(formatJoystreamAddress(value))
                 } else {
                   setDestinationAccount(undefined)
                 }
