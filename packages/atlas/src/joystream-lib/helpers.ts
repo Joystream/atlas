@@ -72,7 +72,7 @@ export const parseExtrinsicEvents = (registry: Registry, eventRecords: EventReco
         name: 'FailedError',
         message: errorMsg,
       })
-    } else if (event.method === 'ExtrinsicSuccess') {
+    } else if (event.method === 'ExtrinsicSuccess' || event.method === 'NewAccount') {
       return events
     } else {
       SentryLogger.message('Unknown extrinsic event', 'JoystreamJs', 'warning', {

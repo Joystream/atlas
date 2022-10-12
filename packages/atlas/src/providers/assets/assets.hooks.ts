@@ -29,9 +29,7 @@ export const useAsset = (dataObject?: StorageDataObjectFieldsFragment | null) =>
 }
 
 export const useRawAsset = (contentId: string | null) => {
-  return useAssetStore((state) => {
-    return contentId ? state.assets[contentId] : null
-  })
+  return useAssetStore((state) => (contentId ? state.assets[contentId] : null))
 }
 
 export const useRawAssetResolver = () => {
