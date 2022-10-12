@@ -3,11 +3,7 @@ import styled from '@emotion/styled'
 import { GridItem } from '@/components/LayoutGrid'
 import { cVar, media, sizes } from '@/styles'
 
-import {
-  BackgroundContainer,
-  StyledLimitedWidthContainer as _StyledLimitedWidthContainer,
-  imageShadow,
-} from './YppLandingView.styles'
+import { imageShadow } from './YppLandingView.styles'
 
 export const StepCard = styled.article`
   text-align: left;
@@ -82,15 +78,4 @@ export const StepCardFade = styled.div`
   height: 64px;
   width: 100%;
   bottom: 0;
-`
-
-export const StyledBackgroundContainer = styled(BackgroundContainer)`
-  padding: 0;
-`
-
-export const StyledLimitedWidthContainer = styled(_StyledLimitedWidthContainer)`
-  padding: ${sizes(16)} var(--size-global-horizontal-padding);
-  ${media.md} {
-    padding: ${sizes(24)} var(--size-global-horizontal-padding);
-  }
 `
