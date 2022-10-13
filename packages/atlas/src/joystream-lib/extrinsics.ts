@@ -6,10 +6,12 @@ import {
   ReactVideo,
 } from '@joystream/metadata-protobuf'
 import { createType } from '@joystream/types'
-import { channelPayoutProof } from '@joystreamjs/content'
+import { channelPayoutProof, verifyChannelPayoutProof } from '@joystreamjs/content'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
+import { u8aToHex } from '@polkadot/util'
 import BN from 'bn.js'
+import { Buffer } from 'buffer'
 import Long from 'long'
 
 import { SentryLogger } from '@/utils/logs'
@@ -472,7 +474,6 @@ export class JoystreamLibExtrinsics {
 
   claimReward = async (channelId: string) => {
     const commitment = (await this.api.query.content.commitment()).toString()
-    console.log(commitment)
     const nodeEndpoint = 'http://192.168.1.31:3333'
     const payloadDataObjectId = '0'
     try {
@@ -481,7 +482,17 @@ export class JoystreamLibExtrinsics {
         `${nodeEndpoint}/api/v1/files/${payloadDataObjectId}`,
         Number('1')
       )
-      console.log(payoutProof)
+
+      const isPayoutProofVerified = verifyChannelPayoutProof(payoutProof) === commitment
+      const maxCashoutAllowed = await this.api.query.content.maxCashoutAllowed()
+      const minCashoutAllowed = await this.api.query.content.minCashoutAllowed()
+      const cashout = new BN(payoutProof.cumulativeRewardEarned).sub(new BN(0))
+
+      const pullPayment = createType('PalletContentPullPaymentElement', {
+        channelId: new BN('1'),
+        cumulativeRewardEarned: new BN(payoutProof.cumulativeRewardEarned),
+        reason: u8aToHex(Buffer.from(payoutProof.reason, 'hex')),
+      })
     } catch (error) {
       console.log(error)
     }
