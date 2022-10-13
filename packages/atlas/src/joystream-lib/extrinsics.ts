@@ -472,7 +472,7 @@ export class JoystreamLibExtrinsics {
     === Channel payouts ===
   */
 
-  claimReward = async (channelId: string) => {
+  claimReward = async (channelId: string, memberId: MemberId) => {
     const commitment = (await this.api.query.content.commitment()).toString()
     const nodeEndpoint = 'http://192.168.1.31:3333'
     const payloadDataObjectId = '0'
@@ -489,10 +489,21 @@ export class JoystreamLibExtrinsics {
       const cashout = new BN(payoutProof.cumulativeRewardEarned).sub(new BN(0))
 
       const pullPayment = createType('PalletContentPullPaymentElement', {
-        channelId: new BN('1'),
+        channelId: new BN('2'),
         cumulativeRewardEarned: new BN(payoutProof.cumulativeRewardEarned),
         reason: u8aToHex(Buffer.from(payoutProof.reason, 'hex')),
       })
+      const merkleBranch: any[] = []
+      payoutProof.merkleBranch.forEach((m) => {
+        const proofElement = createType('PalletCommonMerkleTreeProofElementRecord', {
+          hash_: u8aToHex(Buffer.from(m.hash, 'hex')),
+          side: m.side ? { Right: null } : { Left: null },
+        })
+        merkleBranch.push(proofElement)
+      })
+      const actor = createActor('2')
+      console.log(actor)
+      this.api.tx.content.claimChannelReward(actor, merkleBranch, pullPayment)
     } catch (error) {
       console.log(error)
     }

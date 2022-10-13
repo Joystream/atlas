@@ -9,7 +9,7 @@ export const PlaygroundChannelPayouts = () => {
     if (!joystream) {
       return
     }
-    ;(await joystream.extrinsics).claimReward('1')
+    ;(await joystream.extrinsics).claimReward('1', '74')
   }
   return (
     <Button variant="primary" onClick={handleClick}>
