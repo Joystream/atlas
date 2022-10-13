@@ -2866,6 +2866,7 @@ __metadata:
     "@lottiefiles/react-lottie-player": ^3.4.7
     "@modyfi/vite-plugin-yaml": ^1.0.3
     "@rollup/plugin-babel": ^5.3.1
+    "@rollup/plugin-inject": ^5.0.0
     "@sentry/react": ^7.12.1
     "@storybook/addon-actions": 6.4.18
     "@storybook/addon-docs": 6.4.18
@@ -3013,8 +3014,8 @@ __metadata:
 
 "@joystreamjs@file:/Users/bartoszdryl/programming/apps/joystream/joystreamjs::locator=%40joystream%2Fatlas%40workspace%3Apackages%2Fatlas":
   version: 1.0.0
-  resolution: "@joystreamjs@file:/Users/bartoszdryl/programming/apps/joystream/joystreamjs#/Users/bartoszdryl/programming/apps/joystream/joystreamjs::hash=011649&locator=%40joystream%2Fatlas%40workspace%3Apackages%2Fatlas"
-  checksum: 6208c03c02458461b487bd448f4e783ade06c86b7c182f2246841daa1cef64125c2c2577cb06db7c972da6ee9405b9ca694e259d8c999cc9c47d4ac6642d6f44
+  resolution: "@joystreamjs@file:/Users/bartoszdryl/programming/apps/joystream/joystreamjs#/Users/bartoszdryl/programming/apps/joystream/joystreamjs::hash=226039&locator=%40joystream%2Fatlas%40workspace%3Apackages%2Fatlas"
+  checksum: e0206ca1469d010b096fd2f71075304c1d1cdf0a979b4306b781b988bf31f94504568fd5897b0d4e14f2081ba13890c380a85aa831c9127ea69d1efeb3362c87
   languageName: node
   linkType: hard
 
@@ -4129,6 +4130,22 @@ __metadata:
     "@types/babel__core":
       optional: true
   checksum: 220d71e4647330f252ef33d5f29700aef2e8284a0b61acfcceb47617a7f96208aa1ed16eae75619424bf08811ede5241e271a6d031f07026dee6b3a2bdcdc638
+  languageName: node
+  linkType: hard
+
+"@rollup/plugin-inject@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "@rollup/plugin-inject@npm:5.0.0"
+  dependencies:
+    "@rollup/pluginutils": ^4.2.1
+    estree-walker: ^2.0.2
+    magic-string: ^0.26.4
+  peerDependencies:
+    rollup: ^1.20.0||^2.0.0||^3.0.0
+  peerDependenciesMeta:
+    rollup:
+      optional: true
+  checksum: 62c3eaa578c9c0219dd0748dd6a092e308aaddabe34970611f765c998b5bc55361c44f9bd9976cfaaf646ef1c849e6e71d8b4062286ce42d70be7869dd80712b
   languageName: node
   linkType: hard
 
@@ -11617,7 +11634,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"estree-walker@npm:^2.0.1":
+"estree-walker@npm:^2.0.1, estree-walker@npm:^2.0.2":
   version: 2.0.2
   resolution: "estree-walker@npm:2.0.2"
   checksum: 6151e6f9828abe2259e57f5fd3761335bb0d2ebd76dc1a01048ccee22fabcfef3c0859300f6d83ff0d1927849368775ec5a6d265dde2f6de5a1be1721cd94efc
@@ -15415,6 +15432,15 @@ __metadata:
   dependencies:
     sourcemap-codec: ^1.4.8
   checksum: e72c9b3d90ccbde088acc5937109f73fa4be8b6a2c2ea9bf9c3c01974f1ebf09842259a74ff2ba4081008a7d49941d883cfef8c460e6c33a6eb564b58482b750
+  languageName: node
+  linkType: hard
+
+"magic-string@npm:^0.26.4":
+  version: 0.26.7
+  resolution: "magic-string@npm:0.26.7"
+  dependencies:
+    sourcemap-codec: ^1.4.8
+  checksum: 89b0d60cbb32bbf3d1e23c46ea93db082d18a8230b972027aecb10a40bba51be519ecce0674f995571e3affe917b76b09f59d8dbc9a1b2c9c4102a2b6e8a2b01
   languageName: node
   linkType: hard
 
