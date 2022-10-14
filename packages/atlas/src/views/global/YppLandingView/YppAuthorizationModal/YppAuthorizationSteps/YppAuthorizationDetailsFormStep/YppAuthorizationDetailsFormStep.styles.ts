@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 
-import { SvgAtlasLogoShort } from '@/components/_illustrations'
+import { SvgAppLogoShort } from '@/assets/logos'
 import { cVar, sizes } from '@/styles'
 
-export const StyledSvgAtlasLogoShort = styled(SvgAtlasLogoShort)`
+export const StyledSvgAppLogoShort = styled(SvgAppLogoShort)`
   margin: ${sizes(6)} 0;
 
   path {

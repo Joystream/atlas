@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
 
+import pattern1 from '@/assets/illustrations/svgs/other-benefit-card-pattern-1.svg'
+import pattern2 from '@/assets/illustrations/svgs/other-benefit-card-pattern-2.svg'
+import pattern3 from '@/assets/illustrations/svgs/other-benefit-card-pattern-3.svg'
+import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
-import pattern1 from '@/components/_illustrations/svgs/other-benefit-card-pattern-1.svg'
-import pattern2 from '@/components/_illustrations/svgs/other-benefit-card-pattern-2.svg'
-import pattern3 from '@/components/_illustrations/svgs/other-benefit-card-pattern-3.svg'
 import { cVar, media, sizes, square } from '@/styles'
 
 export type Variant = 'compact' | 'full'
@@ -39,7 +39,7 @@ export const Pattern = styled.div`
       right: unset;
       width: 100%;
       height: 56px;
-      background: linear-gradient(180deg, rgb(15 17 20 / 0) 0%, ${cVar('colorCoreNeutral900')} 100%);
+      background: linear-gradient(180deg, rgb(15 17 20 / 0) 0%, ${cVar('colorCoreNeutral800')} 100%);
     }
   }
 `

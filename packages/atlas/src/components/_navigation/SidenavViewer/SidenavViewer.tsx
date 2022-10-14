@@ -9,6 +9,7 @@ import {
   SvgSidebarNew,
   SvgSidebarNft,
   SvgSidebarPopular,
+  SvgSidebarYpp,
 } from '@/assets/icons'
 import { AppLogo } from '@/components/AppLogo'
 import { Button } from '@/components/_buttons/Button'
@@ -60,6 +61,13 @@ export const viewerNavItems = [
     name: 'Channels',
     to: absoluteRoutes.viewer.channels(),
     bottomNav: true,
+  },
+  {
+    icon: <SvgSidebarYpp />,
+    name: 'YPP',
+    expandedName: 'YouTube Partner Program',
+    to: absoluteRoutes.viewer.ypp(),
+    bottomNav: false,
   },
 ]
 export const SidenavViewer: FC = () => {

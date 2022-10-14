@@ -1,7 +1,7 @@
 import { FC } from 'react'
 
+import { SvgTierIcon1, SvgTierIcon2, SvgTierIcon3 } from '@/assets/icons'
 import { Text } from '@/components/Text'
-import { SvgTierIcon1, SvgTierIcon2, SvgTierIcon3 } from '@/components/_icons'
 
 import { TierItem } from './YppAuthorizationTermsAndConditionsStep.styles'
 
