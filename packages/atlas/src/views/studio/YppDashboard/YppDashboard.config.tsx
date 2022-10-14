@@ -1,5 +1,5 @@
+import { SvgTierIcon1, SvgTierIcon2, SvgTierIcon3 } from '@/assets/icons'
 import { Text } from '@/components/Text'
-import { SvgTierIcon1, SvgTierIcon2, SvgTierIcon3 } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 
 export const TIERS = [

@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
 
-import { SvgControlsConnect } from '@/components/_icons'
-import { SvgAtlasLogoShort } from '@/components/_illustrations'
+import { SvgControlsConnect } from '@/assets/icons'
+import { SvgAppLogoShort } from '@/assets/logos'
 import { cVar, sizes } from '@/styles'
 
-export const StyledSvgAtlasLogoShort = styled(SvgAtlasLogoShort)`
+export const StyledSvgAppLogoShort = styled(SvgAppLogoShort)`
   path {
     fill: ${cVar('colorTextMuted')};
   }

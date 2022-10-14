@@ -41,8 +41,6 @@ export const readEnv = (name: string, required = true, direct = false): string =
   return value.toString()
 }
 
-export const ASSET_LOGS_URL = readEnv('ASSET_LOGS_URL', false)
-export const AVATAR_SERVICE_URL = readEnv('ASSETS_SERVICE_URL', true, true)
 export const GOOGLE_CONSOLE_CLIENT_ID = readEnv('GOOGLE_CONSOLE_CLIENT_ID', true, true)
 
 export const ORION_GRAPHQL_URL = readEnv('ORION_URL')

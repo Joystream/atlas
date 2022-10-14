@@ -15,6 +15,8 @@ export const HeroImageWrapper = styled.div`
 
 export const FrontImage = styled.img`
   width: 100%;
+  max-width: 100%;
+  height: auto;
   display: block;
   ${imageShadow}
 `
@@ -22,6 +24,8 @@ export const FrontImage = styled.img`
 export const BackImage = styled.img`
   position: absolute;
   width: 100%;
+  max-width: 100%;
+  height: auto;
   display: block;
   left: 0;
   top: 0;

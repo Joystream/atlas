@@ -1,10 +1,10 @@
 import { FC } from 'react'
 
+import { SvgActionChevronR } from '@/assets/icons'
 import { Pill } from '@/components/Pill'
 import { PillProps } from '@/components/Pill/types'
 import { Text } from '@/components/Text'
 import { ButtonProps, TextButton } from '@/components/_buttons/Button'
-import { SvgActionChevronR } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 export type ContentCardProps = {

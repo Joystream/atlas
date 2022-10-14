@@ -1,7 +1,7 @@
 import { FC, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { SvgActionCheck, SvgActionClose, SvgActionNewTab } from '@/components/_icons'
+import { SvgActionCheck, SvgActionClose, SvgActionNewTab } from '@/assets/icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useSnackbar } from '@/providers/snackbars'
 

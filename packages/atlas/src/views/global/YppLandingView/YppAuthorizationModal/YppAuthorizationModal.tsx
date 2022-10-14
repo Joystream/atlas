@@ -14,7 +14,7 @@ import {
   Content,
   HeaderIconsWrapper,
   Img,
-  StyledSvgAtlasLogoShort,
+  StyledSvgAppLogoShort,
 } from './YppAuthorizationModal.styles'
 import { YPP_AUTHORIZATION_STEPS, YPP_AUTHORIZATION_STEPS_WITHOUT_CHANNEL_SELECT } from './YppAuthorizationModal.types'
 import {
@@ -213,7 +213,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
       }
     >
       <HeaderIconsWrapper>
-        {currentStep === 'fetching-data' ? <Loader variant="medium" /> : <StyledSvgAtlasLogoShort />}
+        {currentStep === 'fetching-data' ? <Loader variant="medium" /> : <StyledSvgAppLogoShort />}
       </HeaderIconsWrapper>
       <Text variant="h500" as="h2" margin={{ top: 6, bottom: 2 }}>
         {authorizationStep?.title}

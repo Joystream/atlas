@@ -1,10 +1,10 @@
 import { FC } from 'react'
 
+import { SvgActionChevronR, SvgActionInfo, SvgActionSpeech, SvgActionTokensStack } from '@/assets/icons'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { CallToActionButton } from '@/components/_buttons/CallToActionButton'
-import { SvgActionChevronR, SvgActionInfo, SvgActionSpeech, SvgActionTokensStack } from '@/components/_icons'
-import { JOYSTREAM_DISCORD_URL } from '@/config/env'
+import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { CtaBanner, CtaCardRow, StyledBannerText, StyledButton } from './YppFooter.styles'
@@ -14,7 +14,13 @@ export const YppFooter: FC = () => {
   const mdMatch = useMediaMatch('md')
   return (
     <>
-      <StyledLimitedWidthContainer centerText>
+      <StyledLimitedWidthContainer
+        centerText
+        data-aos="fade-up"
+        data-aos-delay="250"
+        data-aos-offset="80"
+        data-aos-easing="atlas-easing"
+      >
         <LayoutGrid>
           <GridItem colStart={{ lg: 2 }} colSpan={{ base: 12, lg: 10 }}>
             <CtaBanner>
@@ -40,7 +46,7 @@ export const YppFooter: FC = () => {
       <CtaCardRow>
         <CallToActionButton external colorVariant="lightBlue" icon={<SvgActionInfo />} label="Program details" />
         <CallToActionButton
-          to={JOYSTREAM_DISCORD_URL}
+          to={atlasConfig.general.joystreamDiscordUrl}
           external
           colorVariant="lightBlue"
           icon={<SvgActionSpeech />}

@@ -25,16 +25,37 @@ export const YppRewardSection: FC = () => {
       <StyledLimitedWidthContainer as="section">
         <CenteredLayoutGrid>
           <HeaderGridItem as="header" colStart={{ sm: 3, lg: 4 }} colSpan={{ base: 12, sm: 8, lg: 6 }}>
-            <Text variant={mdMatch ? 'h700' : 'h600'} as="h2">
+            <Text
+              variant={mdMatch ? 'h700' : 'h600'}
+              as="h2"
+              data-aos="fade-up"
+              data-aos-delay="0"
+              data-aos-offset="80"
+              data-aos-easing="atlas-easing"
+            >
               Get rewarded for performing simple tasks
             </Text>
-            <Text variant="t300" as="p" margin={{ top: 4 }} color="colorText">
+            <Text
+              variant="t300"
+              as="p"
+              margin={{ top: 4 }}
+              color="colorText"
+              data-aos="fade-up"
+              data-aos-delay="100"
+              data-aos-offset="40"
+              data-aos-easing="atlas-easing"
+            >
               Simple tasks, guaranteed payouts. The more popular your channel is, the higher the rewards.
             </Text>
           </HeaderGridItem>
         </CenteredLayoutGrid>
 
-        <BenefitsCardsButtonsGroup>
+        <BenefitsCardsButtonsGroup
+          data-aos="fade-up"
+          data-aos-delay="200"
+          data-aos-offset="80"
+          data-aos-easing="atlas-easing"
+        >
           <BenefitsCardButton
             variant={rewardMultiplier === 1 ? 'primary' : 'tertiary'}
             onClick={() => setRewardMultiplier(1)}
@@ -55,7 +76,7 @@ export const YppRewardSection: FC = () => {
           </BenefitsCardButton>
         </BenefitsCardsButtonsGroup>
 
-        <LayoutGrid>
+        <LayoutGrid data-aos="fade-up" data-aos-delay="200" data-aos-offset="80" data-aos-easing="atlas-easing">
           <BenefitsCardsContainerGridItem colStart={{ lg: 2 }} colSpan={{ base: 12, lg: 10 }}>
             <BenefitCard
               title="Authorize your YouTube channel"

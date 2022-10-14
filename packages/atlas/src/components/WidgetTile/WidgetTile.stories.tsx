@@ -1,6 +1,6 @@
 import { Meta, Story } from '@storybook/react'
 
-import { SvgJoyTokenMonochrome24 } from '@/components/_icons'
+import { SvgJoyTokenMonochrome24 } from '@/assets/icons'
 
 import { WidgetTile, WidgetTileProps } from './WidgetTile'
 

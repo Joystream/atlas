@@ -18,6 +18,14 @@ export const imageShadow = css`
     drop-shadow(0 2.1945px 6.6501px rgb(0 0 0 / 0.0889)); */
 `
 
+export const Wrapper = styled.div`
+  [data-aos] {
+    &[data-aos][data-aos-easing='atlas-easing'] {
+      transition-timing-function: cubic-bezier(0.09, 0.43, 0.3, 0.99);
+    }
+  }
+`
+
 export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)<{ centerText?: boolean }>`
   text-align: ${({ centerText }) => (centerText ? 'center' : 'unset')};
   padding-bottom: unset;
