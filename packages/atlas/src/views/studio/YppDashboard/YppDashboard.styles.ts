@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SvgAlertsInformative24 } from '@/components/_icons'
+import { SvgAlertsInformative24 } from '@/assets/icons'
 import { cVar, media, sizes } from '@/styles'
 
 export const Header = styled.header`

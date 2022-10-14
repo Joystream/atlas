@@ -33,12 +33,14 @@ export const StepCardsWrapper = styled(GridItem)`
   min-width: 0;
   overflow-x: auto;
   scrollbar-width: none;
+  margin-right: calc(-1 * var(--size-global-horizontal-padding));
 
   ::-webkit-scrollbar {
     display: none;
   }
 
   ${media.md} {
+    margin-right: 0;
     ${StepCard}:nth-of-type(2) {
       margin-top: ${sizes(16)};
     }
@@ -65,6 +67,7 @@ export const StepCardNumber = styled.span`
 export const StepCardImg = styled.img`
   display: block;
   max-width: 100%;
+  height: auto;
   ${imageShadow};
 `
 

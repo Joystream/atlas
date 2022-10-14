@@ -3,7 +3,7 @@ import { FC, ReactNode } from 'react'
 
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
-import { JOY_CURRENCY_TICKER } from '@/config/joystream'
+import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import {
@@ -80,7 +80,7 @@ export const BenefitCard: FC<BenefitCardProps> = ({
           />
           {!dollarAmount && !isFullVariant && (
             <Text as="span" variant={smMatch ? 'h400' : 'h300'} color="colorText" margin={{ left: 1 }}>
-              {JOY_CURRENCY_TICKER}
+              {atlasConfig.joystream.tokenTicker}
             </Text>
           )}
         </TokenRewardWrapper>

@@ -1,14 +1,14 @@
 import BN from 'bn.js'
 import { FC } from 'react'
 
+import { SvgActionInfo, SvgActionNewTab, SvgActionSpeech, SvgActionTokensStack } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { Information } from '@/components/Information'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
-import { SvgActionInfo, SvgActionNewTab, SvgActionSpeech, SvgActionTokensStack } from '@/components/_icons'
 import { BenefitCard } from '@/components/_ypp/BenefitCard'
-import { JOYSTREAM_DISCORD_URL } from '@/config/env'
+import { atlasConfig } from '@/config'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
@@ -92,7 +92,7 @@ export const YppDashboard: FC = () => {
               _textOnly: true,
               icon: <SvgActionNewTab />,
               iconPlacement: 'right',
-              to: JOYSTREAM_DISCORD_URL,
+              to: atlasConfig.general.joystreamDiscordUrl,
             }}
           />
         </WidgetsWrapper>

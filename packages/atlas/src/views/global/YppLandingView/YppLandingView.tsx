@@ -1,4 +1,6 @@
-import { FC, useState } from 'react'
+import AOS from 'aos'
+import 'aos/dist/aos.css'
+import { FC, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ParallaxProvider } from 'react-scroll-parallax'
 
@@ -11,6 +13,7 @@ import { YppAuthorizationModal } from './YppAuthorizationModal'
 import { YppCardsSections } from './YppCardsSections'
 import { YppFooter } from './YppFooter'
 import { YppHero } from './YppHero'
+import { Wrapper } from './YppLandingView.styles'
 import { YppRewardSection } from './YppRewardSection'
 import { YppThreeStepsSection } from './YppThreeStepsSection'
 
@@ -23,6 +26,13 @@ export const YppLandingView: FC = () => {
 
   const { activeMembership } = useUser()
   const channels = activeMembership?.channels
+
+  useEffect(() => {
+    AOS.init({
+      duration: 750,
+      once: true,
+    })
+  }, [])
 
   const handleSignUpClick = () => {
     if (!isLoggedIn) {
@@ -39,7 +49,7 @@ export const YppLandingView: FC = () => {
   }
 
   return (
-    <>
+    <Wrapper>
       {headTags}
       <YppAuthorizationModal currentStepIdx={currentAuthStepIdx} setCurrentStepIdx={setCurrentAuthStepIdx} />
       <ParallaxProvider>
@@ -50,6 +60,6 @@ export const YppLandingView: FC = () => {
         <YppCardsSections />
         <YppFooter />
       </ParallaxProvider>
-    </>
+    </Wrapper>
   )
 }
