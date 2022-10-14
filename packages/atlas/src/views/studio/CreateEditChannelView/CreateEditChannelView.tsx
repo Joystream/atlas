@@ -3,6 +3,7 @@ import { Controller, FieldError, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
+import shallow from 'zustand/shallow'
 
 import { useFullChannel } from '@/api/hooks/channel'
 import { ActionBar } from '@/components/ActionBar'
@@ -88,6 +89,8 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
 
   const { memberId, accountId, channelId, setActiveUser, refetchUserMemberships } = useUser()
+  const cachedChannelId = useRef(channelId)
+  const firstRender = useRef(true)
   const { joystream, proxyCallback } = useJoystream()
   const getBucketsConfigForNewChannel = useBucketsConfigForNewChannel()
   const handleTransaction = useTransaction()
@@ -119,7 +122,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     register,
     handleSubmit: createSubmitHandler,
     control,
-    formState: { isDirty, dirtyFields, errors },
+    formState: { isDirty, dirtyFields, errors, isSubmitted },
     watch,
     setFocus,
     setValue,
@@ -136,10 +139,31 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       isPublic: true,
     },
   })
+  const avatarContentId = watch('avatar').contentId
+  const coverContentId = watch('cover').contentId
 
   const addAsset = useAssetStore((state) => state.actions.addAsset)
-  const avatarAsset = useRawAsset(watch('avatar').contentId)
-  const coverAsset = useRawAsset(watch('cover').contentId)
+  const avatarAsset = useRawAsset(avatarContentId)
+  const coverAsset = useRawAsset(coverContentId)
+
+  const isAvatarUploading = useUploadsStore(
+    (state) =>
+      avatarContentId
+        ? state.uploadsStatus[avatarContentId]?.lastStatus === 'processing' ||
+          state.uploadsStatus[avatarContentId]?.lastStatus === 'inProgress' ||
+          state.uploadsStatus[avatarContentId]?.lastStatus === 'reconnecting'
+        : null,
+    shallow
+  )
+  const isCoverUploading = useUploadsStore(
+    (state) =>
+      coverContentId
+        ? state.uploadsStatus[coverContentId]?.lastStatus === 'processing' ||
+          state.uploadsStatus[coverContentId]?.lastStatus === 'inProgress' ||
+          state.uploadsStatus[coverContentId]?.lastStatus === 'reconnecting'
+        : null,
+    shallow
+  )
 
   const { isWorkspaceOpen, setIsWorkspaceOpen } = useVideoWorkspace()
   const { fetchOperators } = useOperatorsContext()
@@ -235,33 +259,47 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     newChannelAssets
   )
 
+  // set isDirty to false, once the form is submitted
+  useEffect(() => {
+    if (isSubmitted) {
+      reset(getValues())
+    }
+  }, [isSubmitted, getValues, reset])
+
+  // set default values for editing channel
   useEffect(() => {
     if (loading || newChannel || !channel) {
       return
     }
 
-    const { title, description, isPublic, language } = channel
+    const { title, description, isPublic, language, avatarPhoto, coverPhoto } = channel
 
     const foundLanguage = atlasConfig.derived.languagesSelectValues.find(({ value }) => value === language?.iso)
+    const isChannelChanged = cachedChannelId.current !== channel.id
 
-    reset({
-      avatar: {
-        contentId: channel.avatarPhoto?.id,
-        assetDimensions: null,
-        imageCropData: null,
-        originalBlob: undefined,
-      },
-      cover: {
-        contentId: channel.coverPhoto?.id,
-        assetDimensions: null,
-        imageCropData: null,
-        originalBlob: undefined,
-      },
-      title: title || '',
-      description: description || '',
-      isPublic: isPublic ?? false,
-      language: foundLanguage?.value || atlasConfig.derived.languagesSelectValues[0].value,
-    })
+    // This condition should prevent from updating cover/avatar when the upload is done
+    if (isChannelChanged || firstRender.current) {
+      reset({
+        avatar: {
+          contentId: avatarPhoto?.id,
+          assetDimensions: null,
+          imageCropData: null,
+          originalBlob: undefined,
+        },
+        cover: {
+          contentId: coverPhoto?.id,
+          assetDimensions: null,
+          imageCropData: null,
+          originalBlob: undefined,
+        },
+        title: title || '',
+        description: description || '',
+        isPublic: isPublic ?? false,
+        language: foundLanguage?.value || atlasConfig.derived.languagesSelectValues[0].value,
+      })
+      firstRender.current = false
+      cachedChannelId.current = channel.id
+    }
   }, [channel, loading, newChannel, reset])
 
   useEffect(() => {
@@ -392,9 +430,11 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       const { channelId, assetsIds } = result
       if (assetsIds.avatarPhoto && avatarAsset?.url) {
         addAsset(assetsIds.avatarPhoto, { url: avatarAsset.url })
+        setValue('avatar.contentId', assetsIds.avatarPhoto)
       }
       if (assetsIds.coverPhoto && coverAsset?.url) {
         addAsset(assetsIds.coverPhoto, { url: coverAsset.url })
+        setValue('cover.contentId', assetsIds.coverPhoto)
       }
 
       if (newChannel) {
@@ -486,8 +526,12 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     },
   ]
 
-  const hasAvatarUploadFailed = (channel?.avatarPhoto && !channel.avatarPhoto.isAccepted) || false
-  const hasCoverUploadFailed = (channel?.coverPhoto && !channel.coverPhoto.isAccepted) || false
+  const hasAvatarUploadFailed = isAvatarUploading
+    ? false
+    : (channel?.avatarPhoto && !channel.avatarPhoto.isAccepted) || false
+  const hasCoverUploadFailed = isCoverUploading
+    ? false
+    : (channel?.coverPhoto && !channel.coverPhoto.isAccepted) || false
   const isDisabled = !isDirty || nodeConnectionStatus !== 'connected'
 
   return (
