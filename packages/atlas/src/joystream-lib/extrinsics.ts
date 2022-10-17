@@ -9,6 +9,7 @@ import { createType } from '@joystream/types'
 import { channelPayoutProof, verifyChannelPayoutProof } from '@joystreamjs/content'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
+import { PalletCommonMerkleTreeProofElementRecord as ProofElement } from '@polkadot/types/lookup'
 import { u8aToHex } from '@polkadot/util'
 import BN from 'bn.js'
 import { Buffer } from 'buffer'
@@ -480,20 +481,19 @@ export class JoystreamLibExtrinsics {
       const payoutProof = await channelPayoutProof(
         'URL',
         `${nodeEndpoint}/api/v1/files/${payloadDataObjectId}`,
-        Number('1')
+        Number('2')
       )
 
       const isPayoutProofVerified = verifyChannelPayoutProof(payoutProof) === commitment
       const maxCashoutAllowed = await this.api.query.content.maxCashoutAllowed()
       const minCashoutAllowed = await this.api.query.content.minCashoutAllowed()
       const cashout = new BN(payoutProof.cumulativeRewardEarned).sub(new BN(0))
-
       const pullPayment = createType('PalletContentPullPaymentElement', {
         channelId: new BN('2'),
         cumulativeRewardEarned: new BN(payoutProof.cumulativeRewardEarned),
         reason: u8aToHex(Buffer.from(payoutProof.reason, 'hex')),
       })
-      const merkleBranch: any[] = []
+      const merkleBranch: ProofElement[] = []
       payoutProof.merkleBranch.forEach((m) => {
         const proofElement = createType('PalletCommonMerkleTreeProofElementRecord', {
           hash_: u8aToHex(Buffer.from(m.hash, 'hex')),
@@ -501,8 +501,7 @@ export class JoystreamLibExtrinsics {
         })
         merkleBranch.push(proofElement)
       })
-      const actor = createActor('2')
-      console.log(actor)
+      const actor = createActor('74')
       this.api.tx.content.claimChannelReward(actor, merkleBranch, pullPayment)
     } catch (error) {
       console.log(error)
