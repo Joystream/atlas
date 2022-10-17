@@ -1,4 +1,4 @@
-import { Wallet, WalletAccount } from '@talisman-connect/wallets'
+import { Wallet, WalletAccount } from '@talismn/connect-wallets'
 
 import { useMemberships } from '@/api/hooks/membership'
 import { FullMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
