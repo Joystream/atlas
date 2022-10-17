@@ -190,26 +190,28 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
               }}
             />
           </FormField>
-          <Controller
-            control={control}
-            name="captchaToken"
-            render={({ field: { onChange }, fieldState: { error } }) => (
-              <FormField error={error?.message}>
-                <HCaptcha
-                  sitekey={HCAPTCHA_SITE_KEY}
-                  theme="dark"
-                  languageOverride="en"
-                  onVerify={(token) => {
-                    onChange(token)
-                    trigger('captchaToken')
-                  }}
-                />
-              </FormField>
-            )}
-            rules={{
-              required: { value: !!HCAPTCHA_SITE_KEY, message: "Verify that you're not a robot." },
-            }}
-          />
+          {HCAPTCHA_SITE_KEY && (
+            <Controller
+              control={control}
+              name="captchaToken"
+              render={({ field: { onChange }, fieldState: { error } }) => (
+                <FormField error={error?.message}>
+                  <HCaptcha
+                    sitekey={HCAPTCHA_SITE_KEY}
+                    theme="dark"
+                    languageOverride="en"
+                    onVerify={(token) => {
+                      onChange(token)
+                      trigger('captchaToken')
+                    }}
+                  />
+                </FormField>
+              )}
+              rules={{
+                required: { value: !!HCAPTCHA_SITE_KEY, message: "Verify that you're not a robot." },
+              }}
+            />
+          )}
         </StyledForm>
       }
     />
