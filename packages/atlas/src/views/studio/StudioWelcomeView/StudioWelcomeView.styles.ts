@@ -83,7 +83,8 @@ export const StepsContainer = styled.div`
     overflow: hidden;
     padding: ${sizes(3)};
 
-    ::before {
+    ::before,
+    ::after {
       position: absolute;
       content: '';
       background: linear-gradient(
@@ -108,36 +109,15 @@ export const StepsContainer = styled.div`
       width: 24px;
       z-index: 1;
       height: 100%;
+    }
+
+    ::before {
       left: 0;
     }
 
     ::after {
-      width: 24px;
-      background: linear-gradient(
-        90deg,
-        #000 0%,
-        #000 0.75%,
-        rgb(0 0 0 / 0.99763) 2.92%,
-        rgb(0 0 0 / 0.992) 6.37%,
-        rgb(0 0 0 / 0.981037) 10.97%,
-        rgb(0 0 0 / 0.962963) 16.59%,
-        rgb(0 0 0 / 0.936) 23.1%,
-        rgb(0 0 0 / 0.89837) 30.37%,
-        rgb(0 0 0 / 0.848296) 38.27%,
-        rgb(0 0 0 / 0.784) 46.66%,
-        rgb(0 0 0 / 0.703704) 55.41%,
-        rgb(0 0 0 / 0.60563) 64.39%,
-        rgb(0 0 0 / 0.488) 73.47%,
-        rgb(0 0 0 / 0.349037) 82.52%,
-        rgb(0 0 0 / 0.186963) 91.41%,
-        rgb(0 0 0 / 0) 100%
-      );
       transform: matrix(-1, 0, 0, 1, 0, 0);
-      height: 100%;
-      position: absolute;
-      z-index: 1;
       right: 0;
-      content: '';
     }
   }
 `
