@@ -8,12 +8,13 @@ import { scheduleJob } from 'node-schedule'
 config()
 const BACKUPS_PATH = './figma-backup-root/backups'
 const DOWNLOAD_TIMEOUT = 15
+const BACKUP_LIFETIME = 30
 
 const init = () => {
   fs.readdir(BACKUPS_PATH, (err, files) => {
     if (files && files.length) {
       files.forEach((file) => {
-        if (differenceInDays(new Date(), new Date(file)) > 30) {
+        if (differenceInDays(new Date(), new Date(file)) > BACKUP_LIFETIME) {
           fs.rm(`${BACKUPS_PATH}/${file}`, { force: true, recursive: true }, (error) => {
             if (error) {
               console.error(error)
@@ -43,7 +44,7 @@ const init = () => {
   })
 }
 
-scheduleJob({ hour: '00', minute: '00' }, () => {
+scheduleJob({ dayOfWeek: 2, hour: '00', minute: '00' }, () => {
   console.info(`[${new Date()}] Starting figma backup`)
   init()
 })
