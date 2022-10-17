@@ -2,7 +2,6 @@ import styled from '@emotion/styled'
 import { FC, ReactNode, useEffect } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
-import { Snackbar } from '@/components/Snackbar'
 import {
   SvgActionUpload,
   SvgAlertsError24,
@@ -10,7 +9,8 @@ import {
   SvgAlertsSuccess24,
   SvgAlertsWarning24,
   SvgJoyTokenMonochrome24,
-} from '@/components/_icons'
+} from '@/assets/icons'
+import { Snackbar } from '@/components/Snackbar'
 import { Spinner } from '@/components/_loaders/Spinner'
 import { useBottomNavStore } from '@/providers/bottomNav'
 import { usePersonalDataStore } from '@/providers/personalData'

@@ -5,10 +5,10 @@ import {
   BasicMembershipFieldsFragment,
   FullMembershipFieldsFragment,
 } from '@/api/queries/__generated__/fragments.generated'
+import { SvgActionChannel, SvgActionChevronL, SvgActionNewChannel } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
+import { IconWrapper } from '@/components/IconWrapper'
 import { ListItem } from '@/components/ListItem'
-import { SvgActionChannel, SvgActionChevronL, SvgActionNewChannel } from '@/components/_icons'
-import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
 

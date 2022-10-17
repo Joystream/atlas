@@ -1,8 +1,8 @@
 import { FC, MouseEvent } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
+import { SvgActionImage, SvgActionImageFile } from '@/assets/icons'
 import { Text } from '@/components/Text'
-import { SvgActionImage, SvgActionImageFile } from '@/components/_icons'
 import { transitions } from '@/styles'
 
 import {

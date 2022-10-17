@@ -1,7 +1,6 @@
 import { FC, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { Tooltip } from '@/components/Tooltip'
 import {
   SvgActionClose,
   SvgActionCopy,
@@ -14,7 +13,8 @@ import {
   SvgLogoTwitterOnLight,
   SvgLogoVkMonochrome,
   SvgLogoVkOnLight,
-} from '@/components/_icons'
+} from '@/assets/icons'
+import { Tooltip } from '@/components/Tooltip'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { Input } from '@/components/_inputs/Input'
 import { DialogModal } from '@/components/_overlays/DialogModal'

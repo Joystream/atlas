@@ -1,9 +1,9 @@
 import { forwardRef, useEffect, useState } from 'react'
 
+import { SvgActionCheck, SvgActionLock, SvgActionTrash } from '@/assets/icons'
 import { CircularProgress } from '@/components/CircularProgress'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionCheck, SvgActionLock, SvgActionTrash } from '@/components/_icons'
 
 import {
   Overhead,

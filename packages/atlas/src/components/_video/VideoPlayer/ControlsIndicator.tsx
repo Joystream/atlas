@@ -2,7 +2,6 @@ import { FC, ReactNode, useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { VideoJsPlayer } from 'video.js'
 
-import { Text } from '@/components/Text'
 import {
   SvgActionSettings,
   SvgControlsCaptionsOutline,
@@ -15,7 +14,8 @@ import {
   SvgControlsSoundLowVolume,
   SvgControlsSoundOff,
   SvgControlsSoundOn,
-} from '@/components/_icons'
+} from '@/assets/icons'
+import { Text } from '@/components/Text'
 
 import {
   ControlsIndicatorIconWrapper,

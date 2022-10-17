@@ -1,13 +1,8 @@
 import { FC, FormEvent, PropsWithChildren, ReactNode } from 'react'
 
+import { SvgAlertsInformative24, SvgAlertsInformative32, SvgAlertsWarning24, SvgAlertsWarning32 } from '@/assets/icons'
 import { Text } from '@/components/Text'
 import { ButtonProps } from '@/components/_buttons/Button'
-import {
-  SvgAlertsInformative24,
-  SvgAlertsInformative32,
-  SvgAlertsWarning24,
-  SvgAlertsWarning32,
-} from '@/components/_icons'
 import { Dialog } from '@/components/_overlays/Dialog'
 import { Modal, ModalProps } from '@/components/_overlays/Modal'
 import { useMediaMatch } from '@/hooks/useMediaMatch'

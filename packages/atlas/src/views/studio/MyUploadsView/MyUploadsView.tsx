@@ -1,10 +1,10 @@
 import { FC } from 'react'
 import shallow from 'zustand/shallow'
 
+import { SvgActionUpload } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionUpload } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'

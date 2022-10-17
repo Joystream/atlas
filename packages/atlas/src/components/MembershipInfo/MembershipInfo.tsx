@@ -17,10 +17,10 @@ import {
   StyledText,
 } from './MembershipInfo.style'
 
+import { SvgActionEdit } from '../../assets/icons'
 import { Avatar } from '../Avatar'
 import { Tooltip } from '../Tooltip'
 import { Button } from '../_buttons/Button'
-import { SvgActionEdit } from '../_icons'
 import { SkeletonLoader } from '../_loaders/SkeletonLoader'
 
 export type MembershipInfoProps = {

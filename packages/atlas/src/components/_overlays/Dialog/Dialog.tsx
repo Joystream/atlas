@@ -1,10 +1,10 @@
 import BN from 'bn.js'
 import { FC, FormEvent, PropsWithChildren, ReactNode, Ref } from 'react'
 
+import { SvgActionClose } from '@/assets/icons'
 import { Fee } from '@/components/Fee'
 import { Text } from '@/components/Text'
 import { Button, ButtonProps } from '@/components/_buttons/Button'
-import { SvgActionClose } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import {

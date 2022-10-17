@@ -7,7 +7,7 @@ const { kebabCase } = require('lodash')
 const { getImageContent, getNodeChildren, getSvgImageUrl } = require('./utils/api')
 
 const type = process.argv.slice(2)[0] === '--icons' ? 'icons' : 'illustrations'
-const filesDir = path.resolve(`src/components/_${type}/svgs`)
+const filesDir = path.resolve(`src/assets/${type}/svgs`)
 
 let counter = 0
 

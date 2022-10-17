@@ -3,8 +3,8 @@ import styled from '@emotion/styled'
 import { animated } from 'react-spring'
 
 import { Avatar } from '@/components/Avatar'
+import { IconWrapper } from '@/components/IconWrapper'
 import { Text } from '@/components/Text'
-import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { cVar, sizes } from '@/styles'
 
 import { SectionContainer } from './MemberDropdown.styles'

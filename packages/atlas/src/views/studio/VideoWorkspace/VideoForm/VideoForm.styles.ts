@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
+import { SvgAlertsInformative24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { SvgAlertsInformative24 } from '@/components/_icons'
 import { MultiFileSelect } from '@/components/_inputs/MultiFileSelect'
 import { TitleInput } from '@/components/_inputs/TitleInput'
 import { cVar, media, sizes } from '@/styles'

@@ -2,8 +2,6 @@ import BN from 'bn.js'
 import { MouseEvent, useCallback } from 'react'
 
 import { FullNftFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { ListItemProps } from '@/components/ListItem'
-import { NumberFormat } from '@/components/NumberFormat'
 import {
   SvgActionBid,
   SvgActionBidCancel,
@@ -14,7 +12,9 @@ import {
   SvgActionSell,
   SvgActionShoppingCart,
   SvgActionTrash,
-} from '@/components/_icons'
+} from '@/assets/icons'
+import { ListItemProps } from '@/components/ListItem'
+import { NumberFormat } from '@/components/NumberFormat'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useNftState } from '@/hooks/useNftState'
 import { useNftActions } from '@/providers/nftActions/nftActions.hooks'

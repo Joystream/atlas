@@ -2,8 +2,8 @@ import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
 import { useState } from 'react'
 
+import { SvgActionCancel } from '@/assets/icons'
 import { OutputPill } from '@/components/OutputPill'
-import { SvgActionCancel } from '@/components/_icons'
 import { sizes } from '@/styles'
 import { createLookup } from '@/utils/data'
 

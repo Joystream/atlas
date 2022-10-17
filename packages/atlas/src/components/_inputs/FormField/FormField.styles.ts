@@ -1,9 +1,9 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { SvgActionWarning } from '@/assets/icons'
 import { Information } from '@/components/Information'
 import { Text } from '@/components/Text'
-import { SvgActionWarning } from '@/components/_icons'
 import { cVar, sizes } from '@/styles'
 
 export const SwitchLabel = styled.label`

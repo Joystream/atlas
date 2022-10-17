@@ -1,11 +1,11 @@
 import { FC, ReactNode, memo, useMemo, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
+import { SvgActionMore, SvgActionNotForSale } from '@/assets/icons'
+import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { ListItemProps } from '@/components/ListItem'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
-import { SvgActionMore, SvgActionNotForSale } from '@/components/_icons'
-import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { cVar } from '@/styles'

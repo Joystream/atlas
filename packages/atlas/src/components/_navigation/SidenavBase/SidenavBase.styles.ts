@@ -2,8 +2,9 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
+import { SvgLogoGithubMonochrome } from '@/assets/icons'
+import { SvgJoystreamLogoFull } from '@/assets/logos'
 import { HamburgerButton } from '@/components/_buttons/HamburgerButton'
-import { SvgGithubLogo, SvgJoystreamLogoFull } from '@/components/_illustrations'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 type ExpandableElementProps = {
@@ -127,7 +128,10 @@ export const StyledSvgJoystreamLogoFull = styled(SvgJoystreamLogoFull)`
   }
 `
 
-export const StyledGhLogo = styled(SvgGithubLogo)`
+export const StyledGhLogo = styled(SvgLogoGithubMonochrome)`
+  width: 20px;
+  height: 20px;
+
   path {
     fill: ${cVar('colorTextMuted')};
   }

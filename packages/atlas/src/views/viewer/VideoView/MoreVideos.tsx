@@ -1,11 +1,11 @@
 import { FC } from 'react'
 
 import { useBasicVideos } from '@/api/hooks/video'
+import { SvgActionChevronR } from '@/assets/icons'
 import { CategoryLink } from '@/components/CategoryLink'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Button } from '@/components/_buttons/Button'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
-import { SvgActionChevronR } from '@/components/_icons'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { displayCategoriesLookup } from '@/config/categories'
 import { absoluteRoutes } from '@/config/routes'

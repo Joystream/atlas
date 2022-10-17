@@ -1,8 +1,8 @@
 import { Meta, Story } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
+import { SvgActionTrash } from '@/assets/icons'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionTrash } from '@/components/_icons'
 import { Snackbars, useSnackbar } from '@/providers/snackbars'
 import { DisplaySnackbarArgs } from '@/providers/snackbars/store'
 

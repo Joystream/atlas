@@ -1,10 +1,10 @@
 import { FC, ReactNode, useState } from 'react'
 
 import { FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { SvgActionChevronB, SvgActionChevronT } from '@/assets/icons'
+import { CategoryIcon } from '@/components/CategoryIcon'
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
-import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
-import { CategoryIcon } from '@/components/_icons/CategoryIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { DisplayCategory } from '@/config/categories'
 import { absoluteRoutes } from '@/config/routes'

@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { useCallback } from 'react'
 
+import { SvgLargeWall, SvgOtherSignInDialogPatterns } from '@/assets/illustrations'
 import { Text } from '@/components/Text'
-import { SvgLargeWall, SvgOtherSignInDialogPatterns } from '@/components/_illustrations'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { cVar, media, sizes } from '@/styles'
 

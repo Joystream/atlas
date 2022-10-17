@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { IconWrapper } from '@/components/_icons/IconWrapper'
+import { IconWrapper } from '@/components/IconWrapper'
 import { cVar, media, sizes } from '@/styles'
 
 export const GridRowWrapper = styled.div`

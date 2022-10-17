@@ -1,10 +1,10 @@
 import { FC, MouseEvent, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
+import { SvgActionAddVideo } from '@/assets/icons'
+import { SvgAppLogoStudio } from '@/assets/logos'
 import { AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionAddVideo } from '@/components/_icons'
-import { SvgAtlasLogoStudio } from '@/components/_illustrations'
 import { NotificationsButton } from '@/components/_navigation/NotificationsButton'
 import { NotificationsWidget } from '@/components/_notifications/NotificationsWidget'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
@@ -60,7 +60,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
 
   return (
     <>
-      <StyledTopbarBase fullLogoNode={<SvgAtlasLogoStudio />} logoLinkUrl={absoluteRoutes.studio.index()}>
+      <StyledTopbarBase fullLogoNode={<SvgAppLogoStudio />} logoLinkUrl={absoluteRoutes.studio.index()}>
         {!hideChannelInfo && (
           <StudioTopbarContainer>
             <CSSTransition

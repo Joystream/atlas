@@ -1,9 +1,9 @@
 import { FC, useMemo } from 'react'
 
 import { useAllCategoriesFeaturedVideos } from '@/api/hooks/categoriesFeaturedVideos'
+import { CategoryIcon } from '@/components/CategoryIcon'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
-import { CategoryIcon } from '@/components/_icons/CategoryIcon'
 import { FeaturedVideoCategoryCard, VideoCategoryCard } from '@/components/_video/VideoCategoryCard'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'

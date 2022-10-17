@@ -3,8 +3,8 @@ import { MouseEvent, ReactNode, forwardRef, useState } from 'react'
 import { LinkProps } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { SvgControlsPlaylist } from '@/assets/icons'
 import { Text } from '@/components/Text'
-import { SvgControlsPlaylist } from '@/components/_icons'
 import { cVar, transitions } from '@/styles'
 
 import {

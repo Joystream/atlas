@@ -2,8 +2,8 @@ import styled from '@emotion/styled'
 
 import { cVar, media, sizes } from '@/styles'
 
+import { SvgActionCheck, SvgActionCopy } from '../../assets/icons'
 import { Text } from '../Text'
-import { SvgActionCheck, SvgActionCopy } from '../_icons'
 
 export const MembershipHeader = styled.header`
   display: grid;

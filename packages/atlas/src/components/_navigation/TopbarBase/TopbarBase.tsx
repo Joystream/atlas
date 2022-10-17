@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren, ReactNode } from 'react'
 
-import { SvgAtlasLogoShort } from '@/components/_illustrations'
+import { SvgAppLogoShort } from '@/assets/logos'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { Header, LogoLink } from './TopbarBase.styles'
@@ -17,7 +17,7 @@ export const TopbarBase: FC<TopbarBaseProps> = ({ children, fullLogoNode, logoLi
 
   return (
     <Header className={className} data-scroll-lock-fill-gap>
-      {!noLogo && <LogoLink to={logoLinkUrl}>{mdMatch ? fullLogoNode : <SvgAtlasLogoShort />}</LogoLink>}
+      {!noLogo && <LogoLink to={logoLinkUrl}>{mdMatch ? fullLogoNode : <SvgAppLogoShort />}</LogoLink>}
       {children}
     </Header>
   )

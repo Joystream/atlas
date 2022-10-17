@@ -1,6 +1,6 @@
 import { Meta, Story } from '@storybook/react'
 
-import { SvgActionReupload, SvgActionTrash } from '@/components/_icons'
+import { SvgActionReupload, SvgActionTrash } from '@/assets/icons'
 
 import { VideoDetailsVariant, VideoTileDetails, VideoTileDetailsProps } from '.'
 

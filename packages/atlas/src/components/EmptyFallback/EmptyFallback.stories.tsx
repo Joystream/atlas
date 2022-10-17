@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 
+import { SvgActionUpload } from '@/assets/icons'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionUpload } from '@/components/_icons'
 
 import { EmptyFallback, EmptyFallbackProps } from './EmptyFallback'
 

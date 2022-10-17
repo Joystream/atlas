@@ -1,14 +1,8 @@
 import { FC, useState } from 'react'
 
+import { SvgActionAddVideo, SvgActionPlay, SvgSidebarChannel, SvgSidebarUpload, SvgSidebarVideos } from '@/assets/icons'
+import { SvgAppLogoStudio } from '@/assets/logos'
 import { Button } from '@/components/_buttons/Button'
-import {
-  SvgActionAddVideo,
-  SvgActionPlay,
-  SvgSidebarChannel,
-  SvgSidebarUpload,
-  SvgSidebarVideos,
-} from '@/components/_icons'
-import { SvgAtlasLogoStudio } from '@/components/_illustrations'
 import { NavItemType } from '@/components/_navigation/NavItem'
 import { SidenavBase } from '@/components/_navigation/SidenavBase'
 import { atlasConfig } from '@/config'
@@ -87,7 +81,7 @@ export const SidenavStudio: FC<SidenavStudioProps> = ({ className }) => {
     <SidenavBase
       expanded={expanded}
       toggleSideNav={setExpanded}
-      logoNode={<SvgAtlasLogoStudio />}
+      logoNode={<SvgAppLogoStudio />}
       logoLinkUrl={absoluteRoutes.studio.index()}
       items={studioNavbarItemsWithBadge}
       buttonsContent={buttons}

@@ -1,6 +1,5 @@
 import { FC, useState } from 'react'
 
-import { Button } from '@/components/_buttons/Button'
 import {
   SvgActionMember,
   SvgActionNewTab,
@@ -10,8 +9,9 @@ import {
   SvgSidebarNew,
   SvgSidebarNft,
   SvgSidebarPopular,
-} from '@/components/_icons'
-import { SvgAtlasLogoFull } from '@/components/_illustrations'
+} from '@/assets/icons'
+import { SvgAppLogoFull } from '@/assets/logos'
+import { Button } from '@/components/_buttons/Button'
 import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user/user.hooks'
@@ -96,7 +96,7 @@ export const SidenavViewer: FC = () => {
     <SidenavBase
       expanded={expanded}
       toggleSideNav={setExpanded}
-      logoNode={<SvgAtlasLogoFull />}
+      logoNode={<SvgAppLogoFull />}
       logoLinkUrl={absoluteRoutes.viewer.index()}
       items={viewerNavItems}
       additionalContent={

@@ -2,8 +2,8 @@ import isPropValid from '@emotion/is-prop-valid'
 import { SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SvgActionAddImage, SvgActionEdit, SvgIllustrativeFileFailed } from '@/components/_icons'
-import { SvgAvatarSilhouette } from '@/components/_illustrations'
+import { SvgActionAddImage, SvgActionEdit, SvgIllustrativeFileFailed } from '@/assets/icons'
+import { SvgAvatarSilhouette } from '@/assets/illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, media, square, zIndex } from '@/styles'
 

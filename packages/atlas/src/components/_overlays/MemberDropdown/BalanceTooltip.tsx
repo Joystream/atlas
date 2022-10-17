@@ -1,11 +1,11 @@
 import BN from 'bn.js'
 import { FC, PropsWithChildren } from 'react'
 
+import { SvgActionInformative } from '@/assets/icons'
+import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
-import { SvgActionInformative } from '@/components/_icons'
-import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 
 import {
   StyledSvgActionLock,

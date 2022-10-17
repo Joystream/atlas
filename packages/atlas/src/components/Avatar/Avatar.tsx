@@ -1,7 +1,7 @@
 import { FC, MouseEvent, PropsWithChildren, useCallback, useEffect } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { SvgActionNewChannel } from '@/components/_icons'
+import { SvgActionNewChannel } from '@/assets/icons'
 import { cVar, transitions } from '@/styles'
 import { validateImage } from '@/utils/image'
 

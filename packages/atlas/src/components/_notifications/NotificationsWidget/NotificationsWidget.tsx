@@ -1,9 +1,9 @@
 import { FC, useEffect, useRef, useState } from 'react'
 
+import { SvgActionNotifications } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionNotifications } from '@/components/_icons'
 import { Popover, PopoverImperativeHandle, PopoverProps } from '@/components/_overlays/Popover'
 import { absoluteRoutes } from '@/config/routes'
 import { useNotifications } from '@/providers/notifications/notifications.hooks'

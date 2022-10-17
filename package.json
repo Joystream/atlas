@@ -27,6 +27,7 @@
     "atlas:svgs": "yarn workspace @joystream/atlas svgs",
     "atlas:svgs:illustrations": "yarn workspace @joystream/atlas svgs:illustrations",
     "atlas:svgs:icons": "yarn workspace @joystream/atlas svgs:icons",
+    "atlas:svgs:logos": "yarn workspace @joystream/atlas svgs:logos",
     "meta-server:build": "yarn workspace @joystream/atlas-meta-server build",
     "avatar-service:build": "yarn workspace @joystream/atlas-avatar-service build",
     "docker:atlas": "ci/build-docker-atlas.sh",

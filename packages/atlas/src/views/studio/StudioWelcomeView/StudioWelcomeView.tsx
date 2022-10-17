@@ -1,8 +1,8 @@
 import { FC } from 'react'
 
+import { SvgActionChannel, SvgActionInformative, SvgActionMember } from '@/assets/icons'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionChannel, SvgActionInformative, SvgActionMember } from '@/components/_icons'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'

@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
 
+import { SvgActionInformative } from '@/assets/icons'
 import { Text } from '@/components/Text'
-import { SvgActionInformative } from '@/components/_icons'
 
 export const PlaceHolder: FC = () => {
   return (

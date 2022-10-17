@@ -1,7 +1,7 @@
 import { ChangeEvent, ForwardRefRenderFunction, forwardRef, useEffect, useState } from 'react'
 
+import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { NumberFormat } from '@/components/NumberFormat'
-import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { Input, InputProps } from '@/components/_inputs/Input'
 import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useTokenPrice } from '@/providers/joystream/joystream.hooks'

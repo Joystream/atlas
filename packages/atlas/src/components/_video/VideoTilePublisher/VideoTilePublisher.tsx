@@ -5,10 +5,6 @@ import { CSSTransition } from 'react-transition-group'
 
 import { getNftStatus } from '@/api/hooks/nfts'
 import { useFullVideo } from '@/api/hooks/video'
-import { OwnerPill } from '@/components/OwnerPill'
-import { Pill } from '@/components/Pill'
-import { UploadProgressBar } from '@/components/UploadProgressBar'
-import { Button } from '@/components/_buttons/Button'
 import {
   SvgActionEdit,
   SvgActionHide,
@@ -17,7 +13,11 @@ import {
   SvgActionWarning,
   SvgIllustrativePlay,
   SvgIllustrativeReupload,
-} from '@/components/_icons'
+} from '@/assets/icons'
+import { OwnerPill } from '@/components/OwnerPill'
+import { Pill } from '@/components/Pill'
+import { UploadProgressBar } from '@/components/UploadProgressBar'
+import { Button } from '@/components/_buttons/Button'
 import { absoluteRoutes } from '@/config/routes'
 import { useGetNftSlot } from '@/hooks/useGetNftSlot'
 import { useNftState } from '@/hooks/useNftState'

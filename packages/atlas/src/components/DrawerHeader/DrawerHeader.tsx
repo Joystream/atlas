@@ -1,8 +1,8 @@
 import { FC, memo } from 'react'
 
+import { SvgActionClose } from '@/assets/icons'
 import { Pill } from '@/components/Pill'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionClose } from '@/components/_icons'
 
 import { Tab, TabContainer, TabTitle, Tabbar } from './DrawerHeader.styles'
 
