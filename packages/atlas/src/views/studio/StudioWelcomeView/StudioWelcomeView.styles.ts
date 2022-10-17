@@ -91,19 +91,19 @@ export const StepsContainer = styled.div`
         90deg,
         #000 0%,
         #000 0.75%,
-        rgb(0 0 0 / 0.99763) 2.92%,
+        rgb(0 0 0 / 0.9976) 2.92%,
         rgb(0 0 0 / 0.992) 6.37%,
-        rgb(0 0 0 / 0.981037) 10.97%,
-        rgb(0 0 0 / 0.962963) 16.59%,
+        rgb(0 0 0 / 0.981) 10.97%,
+        rgb(0 0 0 / 0.963) 16.59%,
         rgb(0 0 0 / 0.936) 23.1%,
-        rgb(0 0 0 / 0.89837) 30.37%,
-        rgb(0 0 0 / 0.848296) 38.27%,
+        rgb(0 0 0 / 0.8984) 30.37%,
+        rgb(0 0 0 / 0.8483) 38.27%,
         rgb(0 0 0 / 0.784) 46.66%,
-        rgb(0 0 0 / 0.703704) 55.41%,
-        rgb(0 0 0 / 0.60563) 64.39%,
+        rgb(0 0 0 / 0.7037) 55.41%,
+        rgb(0 0 0 / 0.6056) 64.39%,
         rgb(0 0 0 / 0.488) 73.47%,
-        rgb(0 0 0 / 0.349037) 82.52%,
-        rgb(0 0 0 / 0.186963) 91.41%,
+        rgb(0 0 0 / 0.349) 82.52%,
+        rgb(0 0 0 / 0.187) 91.41%,
         rgb(0 0 0 / 0) 100%
       );
       width: 24px;
@@ -188,8 +188,6 @@ export const LinksGroupHeaderItem = styled(GridItem)`
   justify-content: start;
   display: flex;
   flex-wrap: wrap;
-  grid-column-start: 1;
-  grid-column-end: span 12;
   color: ${cVar('colorTextMuted')};
   grid-auto-flow: column;
   align-items: center;
