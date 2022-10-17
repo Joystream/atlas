@@ -1,0 +1,198 @@
+diff --git a/augment/augment-api-consts.js b/augment/augment-api-consts.js
+index c60e7efae22fec89b226cf35ae0a509eda081cbc..ff6fef04a2b798bc3a4fa8f4438e18ee1c5786c0 100644
+--- a/augment/augment-api-consts.js
++++ b/augment/augment-api-consts.js
+@@ -1,4 +1,3 @@
+-"use strict";
+ // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
+ /* eslint-disable */
+-Object.defineProperty(exports, "__esModule", { value: true });
++export {};
+diff --git a/augment/augment-api-errors.js b/augment/augment-api-errors.js
+index c60e7efae22fec89b226cf35ae0a509eda081cbc..ff6fef04a2b798bc3a4fa8f4438e18ee1c5786c0 100644
+--- a/augment/augment-api-errors.js
++++ b/augment/augment-api-errors.js
+@@ -1,4 +1,3 @@
+-"use strict";
+ // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
+ /* eslint-disable */
+-Object.defineProperty(exports, "__esModule", { value: true });
++export {};
+diff --git a/augment/augment-api-events.js b/augment/augment-api-events.js
+index c60e7efae22fec89b226cf35ae0a509eda081cbc..ff6fef04a2b798bc3a4fa8f4438e18ee1c5786c0 100644
+--- a/augment/augment-api-events.js
++++ b/augment/augment-api-events.js
+@@ -1,4 +1,3 @@
+-"use strict";
+ // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
+ /* eslint-disable */
+-Object.defineProperty(exports, "__esModule", { value: true });
++export {};
+diff --git a/augment/augment-api-query.js b/augment/augment-api-query.js
+index c60e7efae22fec89b226cf35ae0a509eda081cbc..ff6fef04a2b798bc3a4fa8f4438e18ee1c5786c0 100644
+--- a/augment/augment-api-query.js
++++ b/augment/augment-api-query.js
+@@ -1,4 +1,3 @@
+-"use strict";
+ // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
+ /* eslint-disable */
+-Object.defineProperty(exports, "__esModule", { value: true });
++export {};
+diff --git a/augment/augment-api-rpc.js b/augment/augment-api-rpc.js
+index c60e7efae22fec89b226cf35ae0a509eda081cbc..ff6fef04a2b798bc3a4fa8f4438e18ee1c5786c0 100644
+--- a/augment/augment-api-rpc.js
++++ b/augment/augment-api-rpc.js
+@@ -1,4 +1,3 @@
+-"use strict";
+ // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
+ /* eslint-disable */
+-Object.defineProperty(exports, "__esModule", { value: true });
++export {};
+diff --git a/augment/augment-api-tx.js b/augment/augment-api-tx.js
+index c60e7efae22fec89b226cf35ae0a509eda081cbc..ff6fef04a2b798bc3a4fa8f4438e18ee1c5786c0 100644
+--- a/augment/augment-api-tx.js
++++ b/augment/augment-api-tx.js
+@@ -1,4 +1,3 @@
+-"use strict";
+ // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
+ /* eslint-disable */
+-Object.defineProperty(exports, "__esModule", { value: true });
++export {};
+diff --git a/augment/augment-api.js b/augment/augment-api.js
+index e18ffa2c8be55d7a2694cabdd90be23bfd52d14b..1109edb05f107b9c9916599f376efb57cf81c91b 100644
+--- a/augment/augment-api.js
++++ b/augment/augment-api.js
+@@ -1,10 +1,8 @@
+-"use strict";
+ // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
+ /* eslint-disable */
+-Object.defineProperty(exports, "__esModule", { value: true });
+-require("./augment-api-consts");
+-require("./augment-api-errors");
+-require("./augment-api-events");
+-require("./augment-api-query");
+-require("./augment-api-tx");
+-require("./augment-api-rpc");
++import './augment-api-consts';
++import './augment-api-errors';
++import './augment-api-events';
++import './augment-api-query';
++import './augment-api-tx';
++import './augment-api-rpc';
+diff --git a/augment/augment-types.js b/augment/augment-types.js
+index c56161d96a47321e024185a89aca087b6af4585f..e27d37b2ff1bfd30fa2bbc0cbb38eed6013870cc 100644
+--- a/augment/augment-types.js
++++ b/augment/augment-types.js
+@@ -1,4 +1,3 @@
+-"use strict";
+ // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
+ /* eslint-disable */
+-Object.defineProperty(exports, "__esModule", { value: true });
++export {};
+diff --git a/augment/lookup.js b/augment/lookup.js
+index 03ad45da993264ebafbfab870595b9cf27c831b0..4af3eab3584c1f49b1a0870d799155be5dd4db30 100644
+--- a/augment/lookup.js
++++ b/augment/lookup.js
+@@ -1,9 +1,7 @@
+-"use strict";
+ // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
+ /* eslint-disable */
+-Object.defineProperty(exports, "__esModule", { value: true });
+ /* eslint-disable sort-keys */
+-exports.default = {
++export default {
+     /**
+      * Lookup3: frame_system::AccountInfo<Index, pallet_balances::AccountData<Balance>>
+      **/
+diff --git a/augment/registry.js b/augment/registry.js
+index c56161d96a47321e024185a89aca087b6af4585f..e27d37b2ff1bfd30fa2bbc0cbb38eed6013870cc 100644
+--- a/augment/registry.js
++++ b/augment/registry.js
+@@ -1,4 +1,3 @@
+-"use strict";
+ // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
+ /* eslint-disable */
+-Object.defineProperty(exports, "__esModule", { value: true });
++export {};
+diff --git a/index.js b/index.js
+index 58f95495c7507fcecd4207eddeb60e9dea8c3052..15487b2f5a4c777f4f1d3530ed69449952087a01 100644
+--- a/index.js
++++ b/index.js
+@@ -1,30 +1,21 @@
+-"use strict";
+-var __importDefault = (this && this.__importDefault) || function (mod) {
+-    return (mod && mod.__esModule) ? mod : { "default": mod };
+-};
+-Object.defineProperty(exports, "__esModule", { value: true });
+-exports.JOYSTREAM_ADDRESS_PREFIX = exports.entriesByIds = exports.keysOf = exports.createType = exports.registry = void 0;
+-require("./augment/types-lookup");
+-require("./augment/registry");
+-require("./augment/augment-api");
+-const types_1 = require("@polkadot/types");
+-const lookup_1 = __importDefault(require("./augment/lookup"));
+-exports.registry = new types_1.TypeRegistry();
+-exports.registry.register(lookup_1.default);
+-function createType(typeName, value) {
+-    return exports.registry.createType(typeName, value);
++import './augment/types-lookup';
++import './augment/registry';
++import './augment/augment-api';
++import { TypeRegistry, } from '@polkadot/types';
++import defs from './augment/lookup';
++export const registry = new TypeRegistry();
++registry.register(defs);
++export function createType(typeName, value) {
++    return registry.createType(typeName, value);
+ }
+-exports.createType = createType;
+-function keysOf(typeName) {
+-    return exports.registry.createType(typeName).defKeys;
++export function keysOf(typeName) {
++    return registry.createType(typeName).defKeys;
+ }
+-exports.keysOf = keysOf;
+-async function entriesByIds(apiMethod) {
++export async function entriesByIds(apiMethod) {
+     const entries = (await apiMethod.entries()).map(([storageKey, value]) => [
+         storageKey.args[0],
+         value,
+     ]);
+     return entries.sort((a, b) => a[0].toNumber() - b[0].toNumber());
+ }
+-exports.entriesByIds = entriesByIds;
+-exports.JOYSTREAM_ADDRESS_PREFIX = 126;
++export const JOYSTREAM_ADDRESS_PREFIX = 126;
+diff --git a/package.json b/package.json
+index 950b776801e8c8233bb9d44e908425cbe01d2e75..3f779ea56a465a06a94ce9f30b899268be835a46 100644
+--- a/package.json
++++ b/package.json
+@@ -4,6 +4,8 @@
+   "description": "Types for Joystream Substrate Runtime - Carthage release",
+   "main": "index.js",
+   "types": "index.d.ts",
++  "type": "module",
++  "module": "index.js",
+   "scripts": {
+     "prepublishOnly": "yarn clean && yarn build",
+     "prepack": "yarn clean && yarn build",
+diff --git a/primitives.js b/primitives.js
+index c8ad2e549bdc6801e0d1c80b0308d4b9bd4985ce..cb0ff5c3b541f646105198ee23ac0fc3d805023e 100644
+--- a/primitives.js
++++ b/primitives.js
+@@ -1,2 +1 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++export {};
+diff --git a/tsconfig.json b/tsconfig.json
+index 1326b8ddabb2269ea1a5475274adf65ab21c6acd..9a3b92a9ecde87dd59451a47cd076460aa2b7842 100644
+--- a/tsconfig.json
++++ b/tsconfig.json
+@@ -1,7 +1,7 @@
+ {
+   "compilerOptions": {
+     "target": "es2017",
+-    "module": "commonjs",
++    "module": "esnext",
+     "strict": true,
+     "noImplicitAny": true,
+     "noUnusedLocals": true,
