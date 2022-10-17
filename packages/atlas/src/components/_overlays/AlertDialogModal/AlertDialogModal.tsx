@@ -80,10 +80,13 @@ export const AlertDialogModal: FC<AlertDialogModalProps> = ({
               {title}
             </Text>
           )}
-          <Text as="p" variant="t200" color="colorText">
-            {description}
-          </Text>
+          {description && (
+            <Text as="p" variant="t200" color="colorText">
+              {description}
+            </Text>
+          )}
         </>
+        {children}
       </Dialog>
     </Modal>
   )

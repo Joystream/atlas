@@ -120,6 +120,7 @@ export const FooterButtonsContainer = styled.div<{ additionalActionsNodeMobilePo
   display: grid;
   grid-auto-flow: column;
   gap: ${sizes(2)};
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
 
   ${media.sm} {
     margin-bottom: 0;
@@ -128,6 +129,7 @@ export const FooterButtonsContainer = styled.div<{ additionalActionsNodeMobilePo
     display: grid;
     justify-content: flex-end;
     grid-auto-columns: auto;
+    grid-template-columns: unset;
   }
 `
 

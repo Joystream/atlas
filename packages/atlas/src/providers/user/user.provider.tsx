@@ -2,6 +2,8 @@ import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffec
 
 import { useMemberships } from '@/api/hooks/membership'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
+import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
+import { isMobile } from '@/utils/browser'
 import { AssetLogger, SentryLogger } from '@/utils/logs'
 
 import { useSignerWallet } from './user.helpers'
@@ -11,12 +13,15 @@ import { UserContextValue } from './user.types'
 const UserContext = createContext<undefined | UserContextValue>(undefined)
 UserContext.displayName = 'UserContext'
 
+const isMobileDevice = isMobile()
+
 export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   const { accountId, memberId, channelId, walletAccounts, walletStatus, lastUsedWalletName } = useUserStore(
     (state) => state
   )
   const { setActiveUser, setSignInModalOpen } = useUserStore((state) => state.actions)
   const { initSignerWallet } = useSignerWallet()
+  const { openSignInDialog } = useDisplaySignInDialog()
 
   const [isAuthLoading, setIsAuthLoading] = useState(true)
 
@@ -52,6 +57,10 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       let accounts = []
 
       if (!walletName) {
+        if (isMobileDevice) {
+          openSignInDialog({ onConfirm: () => setSignInModalOpen(true) })
+          return true
+        }
         setSignInModalOpen(true)
         return true
       }
@@ -103,7 +112,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
 
       return true
     },
-    [initSignerWallet, memberId, refetch, setActiveUser, setSignInModalOpen]
+    [initSignerWallet, memberId, openSignInDialog, refetch, setActiveUser, setSignInModalOpen]
   )
 
   // keep user used by loggers in sync
