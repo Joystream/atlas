@@ -1,22 +1,16 @@
 import { InjectedWindowProvider } from '@polkadot/extension-inject/types'
-import { decodeAddress, encodeAddress } from '@polkadot/util-crypto'
 import { BaseDotsamaWallet, WalletAccount, getWallets } from '@talisman-connect/wallets'
 import { useCallback, useEffect } from 'react'
 import shallow from 'zustand/shallow'
 
 import { atlasConfig } from '@/config'
-import { JOYSTREAM_SS58_PREFIX } from '@/joystream-lib/config'
+import { formatJoystreamAddress } from '@/utils/address'
 import { ConsoleLogger } from '@/utils/logs'
 
 import { useUserStore } from './user.store'
 import { SignerWalletAccount } from './user.types'
 
 type InjectedWeb3 = Record<string, InjectedWindowProvider>
-
-const formatJoystreamAddress = (address: string) => {
-  const publicKey = decodeAddress(address)
-  return encodeAddress(publicKey, JOYSTREAM_SS58_PREFIX)
-}
 
 export const useSignerWallet = () => {
   const { walletStatus, walletAccounts, wallet, accountId } = useUserStore(
