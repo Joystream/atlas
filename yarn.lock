@@ -2857,9 +2857,9 @@ __metadata:
     "@graphql-codegen/typescript-react-apollo": ^3.3.3
     "@hcaptcha/react-hcaptcha": ^1.4.4
     "@hookform/resolvers": ^2.9.7
-    "@joystream/metadata-protobuf": 2.4.0
+    "@joystream/metadata-protobuf": 2.5.0
     "@joystream/prettier-config": ^1.0.0
-    "@joystream/types": 0.20.2
+    "@joystream/types": 0.20.3
     "@livesession/sdk": ^1.1.4
     "@loadable/component": ^5.15.2
     "@lottiefiles/react-lottie-player": ^3.4.7
@@ -2950,9 +2950,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@joystream/metadata-protobuf@npm:2.4.0":
-  version: 2.4.0
-  resolution: "@joystream/metadata-protobuf@npm:2.4.0"
+"@joystream/metadata-protobuf@npm:2.5.0":
+  version: 2.5.0
+  resolution: "@joystream/metadata-protobuf@npm:2.5.0"
   dependencies:
     "@types/iso-3166-2": ^1.0.0
     "@types/long": ^4.0.1
@@ -2962,7 +2962,7 @@ __metadata:
     iso-639-1: ^2.1.9
     long: ^4.0.0
     protobufjs: ^6.11.2
-  checksum: 2419f064dec6426760ebefc4e547af758e11f446f25f2c9ca8e6029a389c88eda9f494a9e4e44887f96701b2efcfbf534cf279732cb00ca01ba23d3213a68a8e
+  checksum: 53de3dc620f5062441cb8c409a3b469d066663a40cf372dddb8ea9a6628e7f789bfea73d9cd53d9aa54035481ef66af9520e3761d54a10877c0d8f7543fdec8e
   languageName: node
   linkType: hard
 
@@ -2975,9 +2975,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@joystream/types@npm:0.20.2":
-  version: 0.20.2
-  resolution: "@joystream/types@npm:0.20.2"
+"@joystream/types@npm:0.20.3":
+  version: 0.20.3
+  resolution: "@joystream/types@npm:0.20.3"
   dependencies:
     "@polkadot/api": 8.9.1
     "@polkadot/keyring": 9.5.1
@@ -2987,13 +2987,13 @@ __metadata:
     ajv: ^6.11.0
     lodash: ^4.17.15
     moment: ^2.24.0
-  checksum: e306a74cccacd7056d90952152d5dff11a0917180b7591a7cd8eaadbab441871d5e4ccf4bc24994fd5f8c9dbfbe9dad32c451f60e6bdb69aeb955d98682aec59
+  checksum: 3e41b6923b0b1a1caf34eb35ca781b1d44c688151b06626b6a900e9eee1561e4d8cdbbb0a69078e8208e7891c4a96a6a8e2d11b026b20c1e3c6029a3fd938b6a
   languageName: node
   linkType: hard
 
-"@joystream/types@patch:@joystream/types@npm:0.20.2#.yarn/patches/@joystream-types-npm-0.20.2-e5fef8d2bf.patch::locator=root-workspace-0b6124%40workspace%3A.":
-  version: 0.20.2
-  resolution: "@joystream/types@patch:@joystream/types@npm%3A0.20.2#.yarn/patches/@joystream-types-npm-0.20.2-e5fef8d2bf.patch::version=0.20.2&hash=5d579e&locator=root-workspace-0b6124%40workspace%3A."
+"@joystream/types@patch:@joystream/types@npm:0.20.3#.yarn/patches/@joystream-types-npm-0.20.3-e6a6abb769.patch::locator=root-workspace-0b6124%40workspace%3A.":
+  version: 0.20.3
+  resolution: "@joystream/types@patch:@joystream/types@npm%3A0.20.3#.yarn/patches/@joystream-types-npm-0.20.3-e6a6abb769.patch::version=0.20.3&hash=4ac756&locator=root-workspace-0b6124%40workspace%3A."
   dependencies:
     "@polkadot/api": 8.9.1
     "@polkadot/keyring": 9.5.1
@@ -3003,7 +3003,7 @@ __metadata:
     ajv: ^6.11.0
     lodash: ^4.17.15
     moment: ^2.24.0
-  checksum: f0c3948e1a09afeb167984b0dd454193a6b25b79b7e53cb1393e687013b4b80eab36fac7ebbb541295547d28c167911e534e51ce1c52660259c9820bee8e284b
+  checksum: 753805a7ae5c7d7d5dfd13de0095daa2984414b714740b8ca4c3b3bbf7de2e0f0e39dd543c8107ff66aeb8f7c584c473c16e71d1730a63bdcbbef77125688560
   languageName: node
   linkType: hard
 

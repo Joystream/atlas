@@ -201,7 +201,7 @@ export class JoystreamLibExtrinsics {
     const creationParameters = createType('PalletContentChannelCreationParametersRecord', {
       meta: channelMetadata,
       assets: channelAssets,
-      collaborators: createType('BTreeMap<u64, BTreeSet<PalletContentChannelActionPermission>>', {}),
+      collaborators: createType('BTreeMap<u64, BTreeSet<PalletContentIterableEnumsChannelActionPermission>>', {}),
       storageBuckets: createType('BTreeSet<u64>', inputBuckets.storage),
       distributionBuckets: createType('BTreeSet<PalletStorageDistributionBucketIdRecord>', inputBuckets.distribution),
       expectedDataObjectStateBloatBond: new BN(expectedDataObjectStateBloatBond),
@@ -263,7 +263,10 @@ export class JoystreamLibExtrinsics {
       newMeta: channelMetadata,
       assetsToUpload: channelAssets,
       assetsToRemove: removedAssetsIds.map((id) => new BN(id)),
-      collaborators: createType('Option<BTreeMap<u64, BTreeSet<PalletContentChannelActionPermission>>>', null),
+      collaborators: createType(
+        'Option<BTreeMap<u64, BTreeSet<PalletContentIterableEnumsChannelActionPermission>>>',
+        null
+      ),
       expectedDataObjectStateBloatBond: new BN(expectedDataObjectStateBloatBond),
       storageBucketsNumWitness: createType('Option<u32>', new BN(expectedStorageBucketsCount)),
     })
