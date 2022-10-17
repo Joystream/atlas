@@ -21,9 +21,9 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
     <>
       <GlobalStyles />
       <ApolloProvider client={apolloClient}>
-        <OverlayManagerProvider>
-          <ConfirmationModalProvider>
-            <UserProvider>
+        <UserProvider>
+          <OverlayManagerProvider>
+            <ConfirmationModalProvider>
               <BrowserRouter>
                 <AdminModal />
                 <MaintenanceWrapper>
@@ -33,9 +33,9 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
                   </OperatorsContextProvider>
                 </MaintenanceWrapper>
               </BrowserRouter>
-            </UserProvider>
-          </ConfirmationModalProvider>
-        </OverlayManagerProvider>
+            </ConfirmationModalProvider>
+          </OverlayManagerProvider>
+        </UserProvider>
       </ApolloProvider>
     </>
   )

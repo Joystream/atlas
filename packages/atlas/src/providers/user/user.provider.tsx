@@ -2,7 +2,6 @@ import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffec
 
 import { useMemberships } from '@/api/hooks/membership'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
-import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { isMobile } from '@/utils/browser'
 import { AssetLogger, SentryLogger } from '@/utils/logs'
 
@@ -21,7 +20,6 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   )
   const { setActiveUser, setSignInModalOpen } = useUserStore((state) => state.actions)
   const { initSignerWallet } = useSignerWallet()
-  const { openSignInDialog } = useDisplaySignInDialog()
 
   const [isAuthLoading, setIsAuthLoading] = useState(true)
 
@@ -53,12 +51,15 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [refetch])
 
   const signIn = useCallback(
-    async (walletName?: string): Promise<boolean> => {
+    async (
+      walletName?: string,
+      mobileCallback?: ({ onConfirm }: { onConfirm: () => void }) => void
+    ): Promise<boolean> => {
       let accounts = []
 
       if (!walletName) {
         if (isMobileDevice) {
-          openSignInDialog({ onConfirm: () => setSignInModalOpen(true) })
+          mobileCallback?.({ onConfirm: () => setSignInModalOpen(true) })
           return true
         }
         setSignInModalOpen(true)
@@ -112,7 +113,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
 
       return true
     },
-    [initSignerWallet, memberId, openSignInDialog, refetch, setActiveUser, setSignInModalOpen]
+    [initSignerWallet, memberId, refetch, setActiveUser, setSignInModalOpen]
   )
 
   // keep user used by loggers in sync

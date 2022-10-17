@@ -10,6 +10,7 @@ import { Button } from '@/components/_buttons/Button'
 import { TopbarBase } from '@/components/_navigation/TopbarBase'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { absoluteRoutes } from '@/config/routes'
+import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
@@ -47,6 +48,7 @@ const PlaygroundLayout = () => {
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
   const { activeMembership, isLoggedIn, signIn } = useUser()
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
+  const { openSignInDialog } = useDisplaySignInDialog()
   return (
     <UserProvider>
       <TopbarBase
@@ -75,7 +77,7 @@ const PlaygroundLayout = () => {
               onClick={() => setIsMemberDropdownActive(true)}
             />
           ) : (
-            <Button onClick={() => signIn()}>Sign in</Button>
+            <Button onClick={() => signIn(undefined, openSignInDialog)}>Sign in</Button>
           )}
         </ButtonContainer>
       </TopbarBase>

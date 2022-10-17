@@ -20,6 +20,6 @@ export type UserContextValue = {
 
   isAuthLoading: boolean
 
-  signIn: (walletName?: string) => Promise<boolean>
+  signIn: (walletName?: string, mobileCallback?: ({ onConfirm }: { onConfirm: () => void }) => void) => Promise<boolean>
   refetchUserMemberships: ReturnType<typeof useMemberships>['refetch']
 }
