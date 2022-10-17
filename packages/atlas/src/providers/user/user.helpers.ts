@@ -1,5 +1,4 @@
-import { InjectedWindowProvider } from '@polkadot/extension-inject/types'
-import { BaseDotsamaWallet, WalletAccount, getWallets } from '@talisman-connect/wallets'
+import { BaseDotsamaWallet, WalletAccount, getWallets } from '@talismn/connect-wallets'
 import { useCallback, useEffect } from 'react'
 import shallow from 'zustand/shallow'
 
@@ -9,8 +8,6 @@ import { ConsoleLogger } from '@/utils/logs'
 
 import { useUserStore } from './user.store'
 import { SignerWalletAccount } from './user.types'
-
-type InjectedWeb3 = Record<string, InjectedWindowProvider>
 
 export const useSignerWallet = () => {
   const { walletStatus, walletAccounts, wallet, accountId } = useUserStore(
@@ -58,17 +55,14 @@ export const useSignerWallet = () => {
     const supportedWalletsNames = supportedWallets.map((wallet) => wallet.extensionName)
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const unknownWallets = Object.keys(((window as any).injectedWeb3 as InjectedWeb3) || {}).reduce(
-      (acc, walletName) => {
-        if (supportedWalletsNames.includes(walletName)) {
-          // wallet is already in supportedWallets list
-          return acc
-        }
+    const unknownWallets = Object.keys((window as any).injectedWeb3 || {}).reduce((acc, walletName) => {
+      if (supportedWalletsNames.includes(walletName)) {
+        // wallet is already in supportedWallets list
+        return acc
+      }
 
-        return [...acc, new UnknownWallet(walletName)]
-      },
-      [] as UnknownWallet[]
-    )
+      return [...acc, new UnknownWallet(walletName)]
+    }, [] as UnknownWallet[])
 
     return [...supportedWallets, ...unknownWallets]
   }, [])
