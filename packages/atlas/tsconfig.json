@@ -22,5 +22,5 @@
       "@/*": ["src/*"]
     },
   },
-  "include": ["src", "vitest-setup.ts"]
+  "include": ["src", "plugins", "vitest-setup.ts"]
 }

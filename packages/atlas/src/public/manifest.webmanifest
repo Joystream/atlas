@@ -1,5 +1,6 @@
 {
-  "name": "Joystream Atlas",
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "name": "this_will_be_replaced_via_plugin",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -12,7 +13,7 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#fff",
-  "background_color": "#fff",
+  "theme_color": "#000",
+  "background_color": "#7174FF",
   "display": "standalone"
 }
