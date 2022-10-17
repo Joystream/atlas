@@ -6,7 +6,6 @@ import { SvgActionChevronR } from '@/assets/icons'
 import { SvgSigninIllustration } from '@/assets/illustrations'
 import { SvgJoystreamLogoFull } from '@/assets/logos'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
-import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Step } from '@/components/Step'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
@@ -19,21 +18,39 @@ const XS_IMAGE_HEIGHT = 300
 const SM_IMAGE_WIDTH = 720
 const SM_IMAGE_HEIGHT = 450
 
-export const StyledContainer = styled(LimitedWidthContainer)`
-  overflow-x: hidden;
-  padding: ${sizes(12)} var(--size-global-horizontal-padding);
-
-  /* negative margin for the purpose of overflowing images */
+export const OverflowHiddenContainer = styled.div`
   margin: 0 calc(-1 * var(--size-global-horizontal-padding)) 0;
+  overflow: hidden;
+`
+
+export const StyledContainer = styled.div`
+  max-width: 1440px;
+  ${media.md} {
+    margin: 0 auto;
+    padding: 0;
+  }
 `
 export const ContentLayoutGrid = styled(LayoutGrid)`
-  row-gap: ${sizes(12)};
-  justify-content: center;
+  align-items: center;
+  grid-row-gap: 0;
 `
 
 export const HeaderGridItem = styled(GridItem)`
-  ${media.sm} {
-    max-width: 550px;
+  margin: 0 var(--size-global-horizontal-padding);
+  ${media.md} {
+    margin: 0;
+    padding: ${sizes(8)};
+  }
+`
+
+export const ContentWrapper = styled.div`
+  margin-top: ${sizes(12)};
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-self: center;
+  ${media.md} {
+    margin-top: unset;
   }
 `
 
@@ -57,10 +74,72 @@ export const StyledSignInIllustrationSVG = styled(SvgSigninIllustration)`
 export const StepsContainer = styled.div`
   display: flex;
   width: 100%;
+  position: relative;
   padding: ${sizes(1)} 0;
   align-items: center;
   margin: ${sizes(6)} 0;
   box-shadow: inset 0 1px 0 0 ${cVar('colorBorderMutedAlpha')}, inset 0 -1px 0 0 ${cVar('colorBorderMutedAlpha')};
+  ${media.md} {
+    overflow: hidden;
+    padding: ${sizes(3)};
+
+    ::before {
+      position: absolute;
+      content: '';
+      background: linear-gradient(
+        90deg,
+        #000 0%,
+        #000 0.75%,
+        rgb(0 0 0 / 0.99763) 2.92%,
+        rgb(0 0 0 / 0.992) 6.37%,
+        rgb(0 0 0 / 0.981037) 10.97%,
+        rgb(0 0 0 / 0.962963) 16.59%,
+        rgb(0 0 0 / 0.936) 23.1%,
+        rgb(0 0 0 / 0.89837) 30.37%,
+        rgb(0 0 0 / 0.848296) 38.27%,
+        rgb(0 0 0 / 0.784) 46.66%,
+        rgb(0 0 0 / 0.703704) 55.41%,
+        rgb(0 0 0 / 0.60563) 64.39%,
+        rgb(0 0 0 / 0.488) 73.47%,
+        rgb(0 0 0 / 0.349037) 82.52%,
+        rgb(0 0 0 / 0.186963) 91.41%,
+        rgb(0 0 0 / 0) 100%
+      );
+      width: 24px;
+      z-index: 1;
+      height: 100%;
+      left: 0;
+    }
+
+    ::after {
+      width: 24px;
+      background: linear-gradient(
+        90deg,
+        #000 0%,
+        #000 0.75%,
+        rgb(0 0 0 / 0.99763) 2.92%,
+        rgb(0 0 0 / 0.992) 6.37%,
+        rgb(0 0 0 / 0.981037) 10.97%,
+        rgb(0 0 0 / 0.962963) 16.59%,
+        rgb(0 0 0 / 0.936) 23.1%,
+        rgb(0 0 0 / 0.89837) 30.37%,
+        rgb(0 0 0 / 0.848296) 38.27%,
+        rgb(0 0 0 / 0.784) 46.66%,
+        rgb(0 0 0 / 0.703704) 55.41%,
+        rgb(0 0 0 / 0.60563) 64.39%,
+        rgb(0 0 0 / 0.488) 73.47%,
+        rgb(0 0 0 / 0.349037) 82.52%,
+        rgb(0 0 0 / 0.186963) 91.41%,
+        rgb(0 0 0 / 0) 100%
+      );
+      transform: matrix(-1, 0, 0, 1, 0, 0);
+      height: 100%;
+      position: absolute;
+      z-index: 1;
+      right: 0;
+      content: '';
+    }
+  }
 `
 
 export const stepStyles = css`
@@ -86,12 +165,16 @@ export const StyledSvgActionChevronR = styled(SvgActionChevronR)`
   display: block;
   margin: 0 ${sizes(2)};
   flex-shrink: 0;
+  ${media.md} {
+    margin: 0 ${sizes(4)};
+  }
 `
 
 export const ButtonGroup = styled.div`
   margin-top: ${sizes(12)};
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
 `
 
 export const SignInButton = styled(Button)`
@@ -120,13 +203,17 @@ const linkStyles = css`
   }
 `
 
-export const LinksGroup = styled(GridItem)`
+export const LinksGroupHeaderItem = styled(GridItem)`
+  align-self: end;
   justify-content: start;
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
+  grid-column-start: 1;
+  grid-column-end: span 12;
   color: ${cVar('colorTextMuted')};
   grid-auto-flow: column;
   align-items: center;
-  gap: ${sizes(2)};
+  margin: ${sizes(10)} 0 ${sizes(12)} 0;
 `
 
 export const StyledAnchor = styled.a`
@@ -147,18 +234,33 @@ export const StyledLink = styled(Link)`
   ${linkStyles}
 `
 
-export const ImageLayoutGrid = styled(LayoutGrid)`
-  margin-top: ${sizes(12)};
+export const ImageGridItem = styled(GridItem)`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  ${media.md} {
+    flex-direction: column-reverse;
+    height: calc(100vh - 80px);
+  }
 `
 
-export const IllustrationWrapper = styled.div`
+type IllustrationWrapperProps = {
+  moveToTheLeftOnMd?: boolean
+  topMargin?: number
+}
+
+export const IllustrationWrapper = styled.div<IllustrationWrapperProps>`
   position: relative;
   height: ${XXS_IMAGE_HEIGHT}px;
+  margin-top: ${({ topMargin }) => (topMargin ? sizes(topMargin) : 'unset')};
   ${media.xs} {
     height: ${XS_IMAGE_HEIGHT}px;
   }
   ${media.sm} {
     height: ${SM_IMAGE_HEIGHT}px;
+  }
+  ${media.md} {
+    transform: translateX(${({ moveToTheLeftOnMd }) => (moveToTheLeftOnMd ? '117px' : '0px')});
   }
 `
 
@@ -168,7 +270,6 @@ type StyledIllustrationProps = {
 
 export const StyledIllustration = styled.img<StyledIllustrationProps>`
   position: absolute;
-  top: 0;
   right: ${({ stickToTheRightEdge }) => (stickToTheRightEdge ? '0' : 'unset')};
   width: ${XXS_IMAGE_WIDTH}px;
   height: ${XXS_IMAGE_HEIGHT}px;
@@ -179,5 +280,8 @@ export const StyledIllustration = styled.img<StyledIllustrationProps>`
   ${media.sm} {
     height: ${SM_IMAGE_HEIGHT}px;
     width: ${SM_IMAGE_WIDTH}px;
+  }
+  ${media.md} {
+    position: static;
   }
 `

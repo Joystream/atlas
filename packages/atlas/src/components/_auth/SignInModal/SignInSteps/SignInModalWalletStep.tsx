@@ -138,7 +138,6 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
           ? 'Setting up Joystream blockchain membership requires a wallet that can be installed as an app on your phone or as a free browser extension on a desktop.'
           : 'Select which wallet you want to connect with.'
       }
-      tooltipText="To create a membership, you need to select a wallet account to connect it with first. This is 100% free."
       hasNavigatedBack={hasNavigatedBack}
     >
       {hasError ? (
