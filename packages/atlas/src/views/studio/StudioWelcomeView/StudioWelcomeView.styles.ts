@@ -33,13 +33,19 @@ export const StyledContainer = styled.div`
 export const ContentLayoutGrid = styled(LayoutGrid)`
   align-items: center;
   grid-row-gap: 0;
+  margin: 0 ${sizes(4)};
+  ${media.md} {
+    margin: 0 ${sizes(8)};
+  }
 `
 
 export const HeaderGridItem = styled(GridItem)`
-  margin: 0 var(--size-global-horizontal-padding);
   ${media.md} {
     margin: 0;
     padding: ${sizes(8)};
+  }
+  ${media.lg} {
+    padding: ${sizes(8)} ${sizes(20)};
   }
 `
 
@@ -80,6 +86,7 @@ export const StepsContainer = styled.div`
   margin: ${sizes(6)} 0;
   box-shadow: inset 0 1px 0 0 ${cVar('colorBorderMutedAlpha')}, inset 0 -1px 0 0 ${cVar('colorBorderMutedAlpha')};
   ${media.md} {
+    margin: ${sizes(8)} 0;
     overflow: hidden;
     padding: ${sizes(3)};
 
@@ -151,7 +158,6 @@ export const StyledSvgActionChevronR = styled(SvgActionChevronR)`
 `
 
 export const ButtonGroup = styled.div`
-  margin-top: ${sizes(12)};
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -191,7 +197,14 @@ export const LinksGroupHeaderItem = styled(GridItem)`
   color: ${cVar('colorTextMuted')};
   grid-auto-flow: column;
   align-items: center;
-  margin: ${sizes(10)} 0 ${sizes(12)} 0;
+  margin: ${sizes(10)} 0 ${sizes(12)};
+  ${media.md} {
+    margin: 0;
+    padding: ${sizes(8)};
+  }
+  ${media.lg} {
+    padding: ${sizes(8)} ${sizes(20)};
+  }
 `
 
 export const StyledAnchor = styled.a`
