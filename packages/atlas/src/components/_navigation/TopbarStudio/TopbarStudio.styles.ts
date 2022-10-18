@@ -18,7 +18,7 @@ export const StyledTopbarBase = styled(TopbarBase)<{ withoutHamburgerButton?: bo
     display: flex;
     justify-content: space-between;
   }
-  ${({ withoutHamburgerButton }) => withoutHamburgerButton && withoutHamburgerButton};
+  ${({ withoutHamburgerButton }) => withoutHamburgerButton && withoutHamburgerButtonStyles};
 `
 
 export const StyledAvatarGroup = styled(AvatarGroup)`
