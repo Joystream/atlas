@@ -1,5 +1,36 @@
 # Atlas operator guide
 
+## Table of contents
+
+- [Basics](#basics)
+  - [Introduction](#introduction)
+  - [Prerequisites](#prerequisites)
+  - [Running Atlas](#running-atlas)
+  - [Configuring Atlas](#configuring-atlas)
+    - [App name](#app-name)
+    - [App logo](#app-logo)
+    - [App favicon](#app-favicon)
+    - [Categories](#categories)
+  - [Operating Atlas](#operating-atlas)
+    - [Content blocking](#content-blocking)
+    - [Kill switch](#kill-switch)
+- [Required services](#required-services)
+  - [Orion](#orion)
+  - [Query Node](#query-node)
+  - [RPC Node](#rpc-node)
+  - [Member faucet](#member-faucet)
+  - [Avatar service](#avatar-service)
+- [Optional services](#optional-services)
+  - [Social previews generation](#social-previews-generation)
+  - [Price feed](#price-feed)
+  - [Geolocation service](#geolocation-service)
+  - [Captcha](#captcha)
+- [Analytics](#analytics)
+  - [Sentry](#sentry)
+  - [Livesession](#livesession)
+  - [Usersnap](#usersnap)
+  - [Distribution logs](#distribution-logs)
+
 ## Basics
 
 ### Introduction
@@ -81,11 +112,11 @@ Atlas uses list of categories defined in `content.categories` config entry to de
 
 Atlas will, by default, only display content belonging to one of the defined display categories in the app. That means that video with a category that doesn't belong to any local category will not be available in the app. If you want to change that behavior, you can set `content.showAllContent` to `true` in the config file. That will make the app display all the content, regardless of the category.
 
+### Operating Atlas
+
 #### Content blocking
 
 Atlas will not display any content censored by the Joystream DAO (i.e. content marked with `isCensored: true`). However, you can also block additional content as the app operator. To do so, you can use `blockedDataObjectIds`, `blockedVideoIds` and `blockedChannelIds` config entries under `content.` group. Adding an ID to any of those will block respective content from being displayed in the app.
-
-### Operating Atlas
 
 #### Kill switch
 
