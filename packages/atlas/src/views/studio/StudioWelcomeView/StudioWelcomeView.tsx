@@ -2,7 +2,8 @@ import { FC } from 'react'
 
 import { SvgActionChannel, SvgActionMember, SvgActionPlay } from '@/assets/icons'
 import downloadsMockup from '@/assets/images/downloads-mockup.webp'
-import myVideosMockup from '@/assets/images/my-videos-mockup.webp'
+import myVideos1x from '@/assets/images/my-videos-view-1x.webp'
+import myVideos2x from '@/assets/images/my-videos-view-2x.webp'
 import nftWorkspaceMockup from '@/assets/images/nft-workspace-mockup.webp'
 import videoWorkspaceMockup from '@/assets/images/video-workspace-mockup.webp'
 import { Text } from '@/components/Text'
@@ -147,7 +148,9 @@ export const StudioWelcomeView: FC = () => {
               {/* be aware that we reverse the order of image on md */}
               <IllustrationWrapper topMargin={!mdMatch ? undefined : 6}>
                 <StyledIllustration
-                  src={isLoggedIn ? downloadsMockup : myVideosMockup}
+                  srcSet={isLoggedIn ? downloadsMockup : `${myVideos1x} 1x, ${myVideos2x} 2x`}
+                  width="720"
+                  height="450"
                   alt={
                     isLoggedIn
                       ? `${atlasConfig.general.appName} studio downloads dashboard`
