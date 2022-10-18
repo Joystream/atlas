@@ -1,3 +1,4 @@
+import { cloneDeepWith } from 'lodash-es'
 import { z } from 'zod'
 
 import { SelectItem } from '@/components/_inputs/Select'
@@ -21,12 +22,14 @@ export const configSchema = z.object({
     assetUploadStatusPollingInterval: z.number(),
     uploadProcessingTimeout: z.number(),
     minimumDistributorRefetchTime: z.number(),
+    geolocationServiceUrl: z.string(), // TODO: make optional
     channelBagPrefix: z.string(),
     uploadPath: z.string(),
     assetPath: z.string(),
   }),
   joystream: z.object({
     tokenTicker: z.string(),
+    tokenPriceFeedUrl: z.string().nullable(),
     alternativeNodes: z.array(z.object({ url: z.string(), name: z.string() })),
   }),
   features: z.object({
@@ -37,6 +40,10 @@ export const configSchema = z.object({
       statusPollingInterval: z.number(),
     }),
     notifications: z.object({ pollingInterval: z.number() }),
+    members: z.object({
+      avatarServiceUrl: z.string(),
+      hcaptchaSiteKey: z.string().nullable(),
+    }),
     playback: z.object({ playbackRates: z.array(z.number()) }),
     comments: z.object({
       reactions: z.array(z.object({ id: z.number(), emoji: z.string(), name: z.string() })),
@@ -46,6 +53,7 @@ export const configSchema = z.object({
     blockedDataObjectIds: z.array(z.string()),
     blockedVideoIds: z.array(z.string()),
     blockedChannelIds: z.array(z.string()),
+    officialJoystreamChannelId: z.string().nullable(),
     categories: z.array(
       z.object({
         id: z.string(),
@@ -60,6 +68,29 @@ export const configSchema = z.object({
     showAllContent: z.boolean(),
     languages: z.array(z.object({ isoCode: z.string(), name: z.string() })),
   }),
+  analytics: z.object({
+    assetLogs: z
+      .object({
+        url: z.string().nullable(),
+      })
+      .nullable(),
+    sentry: z
+      .object({
+        dsn: z.string().nullable(),
+      })
+      .nullable(),
+    livesession: z
+      .object({
+        id: z.string().nullable(),
+        rootHostname: z.string().nullable(),
+      })
+      .nullable(),
+    usersnap: z
+      .object({
+        id: z.string().nullable(),
+      })
+      .nullable(),
+  }),
 })
 export type RawConfig = z.infer<typeof configSchema>
 type Config = RawConfig & {
@@ -73,7 +104,16 @@ type Config = RawConfig & {
 let parsedConfig: RawConfig
 
 try {
-  parsedConfig = configSchema.parse(rawConfig)
+  const configWithEnv = cloneDeepWith(rawConfig, (value) => {
+    if (typeof value === 'string') {
+      const match = value.match(/^\$(.*)$/)
+      if (!match) return
+      const envVar = match[1]
+      const envValue = import.meta.env[envVar]
+      return envValue ?? null
+    }
+  })
+  parsedConfig = configSchema.parse(configWithEnv)
 } catch (e) {
   ConsoleLogger.error('Failed to parse app config', e)
   throw e

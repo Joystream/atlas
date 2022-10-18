@@ -2,7 +2,7 @@ import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { useState } from 'react'
 
 import { Text } from '@/components/Text'
-import { HCAPTCHA_SITE_KEY } from '@/config/env'
+import { atlasConfig } from '@/config'
 import { ConsoleLogger } from '@/utils/logs'
 
 export const PlaygroundCaptcha = () => {
@@ -12,10 +12,19 @@ export const PlaygroundCaptcha = () => {
     setResponse(response)
   }
 
+  if (!atlasConfig.features.members.hcaptchaSiteKey) {
+    return null
+  }
+
   return (
     <div>
       {!response ? (
-        <HCaptcha sitekey={HCAPTCHA_SITE_KEY} theme="dark" languageOverride="en" onVerify={handleVerify} />
+        <HCaptcha
+          sitekey={atlasConfig.features.members.hcaptchaSiteKey}
+          theme="dark"
+          languageOverride="en"
+          onVerify={handleVerify}
+        />
       ) : (
         <Text variant="h500" as="p" margin={{ bottom: 10 }}>
           Captcha solved!

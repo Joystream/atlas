@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { AVATAR_SERVICE_URL } from '@/config/env'
+import { atlasConfig } from '@/config'
 
 export const validateImage = async (fileOrUrl: File | string): Promise<File | string> => {
   return new Promise((resolve, reject) => {
@@ -16,12 +16,12 @@ export const uploadAvatarImage = async (croppedBlob: Blob) => {
   const formData = new FormData()
   formData.append('file', croppedBlob, `upload.${croppedBlob.type === 'image/webp' ? 'webp' : 'jpg'}`)
   try {
-    const response = await axios.post<{ fileName: string }>(AVATAR_SERVICE_URL, formData, {
+    const response = await axios.post<{ fileName: string }>(atlasConfig.features.members.avatarServiceUrl, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     })
-    return AVATAR_SERVICE_URL + '/' + response.data.fileName
+    return atlasConfig.features.members.avatarServiceUrl + '/' + response.data.fileName
   } catch (error) {
     throw new UploadAvatarServiceError(error?.message)
   }
