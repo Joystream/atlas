@@ -2,7 +2,7 @@ import AOS from 'aos'
 import 'aos/dist/aos.css'
 import { FC, useEffect } from 'react'
 
-import { SvgActionChannel, SvgActionMember, SvgActionPlay } from '@/assets/icons'
+import { SvgActionChannel, SvgActionPlay } from '@/assets/icons'
 import myUploads1x from '@/assets/images/my-uploads-1x.webp'
 import myUploads2x from '@/assets/images/my-uploads-2x.webp'
 import myVideos1x from '@/assets/images/my-videos-view-1x.webp'
@@ -108,11 +108,7 @@ export const StudioWelcomeView: FC = () => {
                       Create first channel
                     </SignInButton>
                   ) : (
-                    <SignInButton
-                      icon={<SvgActionMember />}
-                      size="large"
-                      onClick={() => signIn(undefined, openSignInDialog)}
-                    >
+                    <SignInButton size="large" onClick={() => signIn(undefined, openSignInDialog)}>
                       Set up membership
                     </SignInButton>
                   )}
