@@ -47,7 +47,7 @@ export const videoFilter: VideoWhereInput = {
   media: {
     isAccepted_eq: true,
   },
-  category: { id_in: allUniqueVideoCategories },
+  ...(!atlasConfig.content.showAllContent ? { category: { id_in: allUniqueVideoCategories } } : {}),
   ...(NOTvideoFilter.length ? { NOT: NOTvideoFilter } : {}),
 }
 export const cancelledVideoFilter: VideoWhereInput = {

@@ -57,6 +57,7 @@ export const configSchema = z.object({
         defaultVideoCategory: z.string(),
       })
     ),
+    showAllContent: z.boolean(),
     languages: z.array(z.object({ isoCode: z.string(), name: z.string() })),
   }),
 })
