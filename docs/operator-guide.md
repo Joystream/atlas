@@ -85,6 +85,12 @@ Atlas will, by default, only display content belonging to one of the defined dis
 
 Atlas will not display any content censored by the Joystream DAO (i.e. content marked with `isCensored: true`). However, you can also block additional content as the app operator. To do so, you can use `blockedDataObjectIds`, `blockedVideoIds` and `blockedChannelIds` config entries under `content.` group. Adding an ID to any of those will block respective content from being displayed in the app.
 
+### Operating Atlas
+
+#### Kill switch
+
+In case you need to take the app down for maintenance or any other reason, Atlas provides a "kill switch" mechanism that can be triggered by its operator. Enabling it will make all the users that visit the app see a "maintenance" page instead of the actual app. To enable/disable kill switch, you can use Atlas admin tools (opened with Ctrl+Shift+D in app) and navigating to "Kill switch" tab. There you can enable/disable the kill switch by providing Orion's admin secret.
+
 ## Required services
 
 Going through the previous section, your Atlas app should be configured and running. However, there are some services that the app relies on and won't be able to operate without them. In this section we will go through all of those required services.
