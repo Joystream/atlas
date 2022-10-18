@@ -6,6 +6,8 @@
 
 This guide will help you get started with running your own instance of Atlas (a "gateway"). Atlas is a frontend single page application that allows users to interact with the Joystream network - basic functionalities include watching and publishing content, managing channels, issuing and trading NFTs, and more. For a brief introduction on how Atlas works and what services it interacts with, you may want to start with the [architecture overview](./architecture.md). To run a gateway, you will need to host a publicly available deployment of the frontend app, but you will also need to run a few other services that Atlas depends on. We will walk you through the process of setting up all of these services.
 
+**Tip:** Atlas provides built-in "admin tools" panel that can be useful when running your own instance. You can access it in the app by pressing Ctrl+Shift+D.
+
 ### Prerequisites
 
 - Basic knowledge of how to use the command line, how to operate Docker, and how to host a web application
@@ -89,37 +91,7 @@ Going through the previous section, your Atlas app should be configured and runn
 
 ### Orion
 
-Orion is the main backend service for Atlas - providing indexed blockchain data and sprinkling some additional information on top. It can be seen as a "Gateway node", providing everything needed for the end user and app operator. You can find more info about Orion in [architecture overview](./architecture.md#orion). Each gateway should run its own instance of Orion, and it should be publicly available. You can find the source code for Orion in [its repo](https://github.com/Joystream/orion). The README file in the repository also provides basic instructions on how to run Orion. URL to your Orion's instance `/graphql` endpoint should be passed to the `VITE_PRODUCTION_ORION_URL` environment variable.
-
-#### Content reporting
-
-Orion also enables content reporting which may be useful to you as an operator. When the app users see something that shouldn't be there (e.g. illegal content or copyright infringement), they can report it via Orion. You can then review the reports and take appropriate actions. You can use this GraphQL query to get all the content reports:
-
-```graphql
-query {
-  reportedVideos {
-    id
-    videoId
-    reporterIp
-    rationale
-  }
-
-  reportedChannels {
-    id
-    channelId
-    reporterIp
-    rationale
-  }
-}
-```
-
-**Note:** To access this data you will need to authenticate using admin secret you've set with `ORION_ADMIN_SECRET` env variable. It needs to be passed in the `Authorization` header like so: `Authorization: <ORION_ADMIN_SECRET>`.
-
-#### Content featuring
-
-Orion also keeps information about content that should be featured in Atlas. Currently, that's the video hero section on the homepage and videos featured in specific categories' views. You can find more info about featuring in [featured content guide](community/featured-content.md).
-
-**Note:** "Secret credential" mentioned in the above guide is equal to `ORION_FEATURED_CONTENT_SECRET` env variable.
+Orion is the main backend service for Atlas - providing indexed blockchain data and sprinkling some additional information on top. It can be seen as a "Gateway node", providing everything needed for the end user and app operator. You can find more info about Orion in [architecture overview](./architecture.md#orion). Each gateway should run its own instance of Orion, and it should be publicly available. You can find the source code for Orion in [its repo](https://github.com/Joystream/orion). The README file in the repository provides an overview of Orion's features and basic instructions on how to run it. URL to your Orion's instance `/graphql` endpoint should be passed to the `VITE_PRODUCTION_ORION_URL` environment variable.
 
 ### Query Node
 
