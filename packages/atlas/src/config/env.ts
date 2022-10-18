@@ -40,15 +40,8 @@ export const readEnv = (name: string, required = true, direct = false): string =
   }
   return value.toString()
 }
-export const QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL = readEnv('QUERY_NODE_SUBSCRIPTION_URL')
+
 export const ORION_GRAPHQL_URL = readEnv('ORION_URL')
-export const ASSET_LOGS_URL = readEnv('ASSET_LOGS_URL', false)
+export const QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL = readEnv('QUERY_NODE_SUBSCRIPTION_URL')
 export const NODE_URL = readEnv('NODE_URL')
 export const FAUCET_URL = readEnv('FAUCET_URL')
-export const AVATAR_SERVICE_URL = readEnv('ASSETS_SERVICE_URL', true, true)
-
-export const SENTRY_DSN = readEnv('SENTRY_DSN', false)
-
-export const JOY_PRICE_SERVICE_URL = readEnv('PRICE_SERVICE_URL', false, true)
-export const USER_LOCATION_SERVICE_URL = readEnv('GEOLOCATION_SERVICE_URL', true, true)
-export const HCAPTCHA_SITE_KEY = readEnv('HCAPTCHA_SITE_KEY', false, true)

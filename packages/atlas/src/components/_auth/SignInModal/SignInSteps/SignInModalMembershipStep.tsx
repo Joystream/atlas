@@ -14,7 +14,6 @@ import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
 import { atlasConfig } from '@/config'
-import { HCAPTCHA_SITE_KEY } from '@/config/env'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
 
 import { SignInModalStepTemplate } from './SignInModalStepTemplate'
@@ -190,14 +189,15 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
               }}
             />
           </FormField>
-          {HCAPTCHA_SITE_KEY && (
+          {atlasConfig.features.members.hcaptchaSiteKey && (
             <Controller
               control={control}
               name="captchaToken"
               render={({ field: { onChange }, fieldState: { error } }) => (
                 <FormField error={error?.message}>
                   <HCaptcha
-                    sitekey={HCAPTCHA_SITE_KEY}
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    sitekey={atlasConfig.features.members.hcaptchaSiteKey!}
                     theme="dark"
                     languageOverride="en"
                     onVerify={(token) => {
@@ -208,7 +208,10 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
                 </FormField>
               )}
               rules={{
-                required: { value: !!HCAPTCHA_SITE_KEY, message: "Verify that you're not a robot." },
+                required: {
+                  value: !!atlasConfig.features.members.hcaptchaSiteKey,
+                  message: "Verify that you're not a robot.",
+                },
               }}
             />
           )}

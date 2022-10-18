@@ -13,12 +13,14 @@ storage:
   uploadProcessingTimeout: 60000 # Timeout for processing uploaded asset in ms - after this timeout, upload will be considered failed
   minimumDistributorRefetchTime: 1000 # Minimum time before refetching distributors list in ms - refetching is done if certain bag is not found on any distributor
 
+  geolocationServiceUrl: '$VITE_GEOLOCATION_SERVICE_URL' # URL for geolocation service - used to determine user's location to find the closest distributor
   channelBagPrefix: 'dynamic:channel:' # Prefix for channel bag ID - used to create a unique bag ID for each channel
   uploadPath: 'api/v1/files' # Path to Storage Node upload endpoint
   assetPath: 'api/v1/assets' # Path to Distributor Node asset endpoint
 
 joystream:
   tokenTicker: 'tJOY' # Ticker for the token used in the app
+  tokenPriceFeedUrl: null # URL for the token price feed - used to display token price in the app
   alternativeNodes:
     - name: 'Jsgenesis (Europe/UK)'
       url: 'wss://testnet-rpc-3-uk.joystream.org'
@@ -37,6 +39,9 @@ features:
     statusPollingInterval: 20000 # Interval for polling NFT status on VideoView in ms
   notifications:
     pollingInterval: 30000 # Interval for polling notifications in ms
+  members:
+    avatarServiceUrl: '$VITE_AVATAR_SERVICE_URL' # URL for avatar service - used to upload member's avatar
+    hcaptchaSiteKey: '$VITE_HCAPTCHA_SITE_KEY' # Site key for hCaptcha - used to verify users are not bots when creating memberships - depends on hCaptcha being enabled in the faucet
   playback:
     playbackRates: [2, 1.5, 1.25, 1, 0.5, 0.25] # Playback rates available in the player
   comments:
@@ -60,6 +65,8 @@ content:
   blockedDataObjectIds: [] # Array of data object IDs that should be blocked from being displayed in the app
   blockedVideoIds: [] # Array of video IDs that should be blocked from being displayed in the app
   blockedChannelIds: [] # Array of channel IDs that should be blocked from being displayed in the app
+
+  officialJoystreamChannelId: null # ID of the official Joystream channel to display "Official Joystream updates" section on the homepage - can be set to null to disable this section
 
   categories: # List of display categories to be used in the app. Those are local to the application and are related to metaprotocol categories via 'videoCategories' array.
     - id: '1' # Local category ID
@@ -166,3 +173,14 @@ content:
       name: Vietnamese
     - isoCode: yo
       name: Yoruba
+
+analytics:
+  assetLogs: # Asset logs are used to track distributors performance
+    url: '$VITE_ASSET_LOGS_URL'
+  sentry: # Sentry can be used for capturing errors and logs from the app
+    dsn: '$VITE_SENTRY_DSN' # Sentry DSN
+  livesession: # Livesession can be used for user session recording
+    id: '$VITE_LIVESESSION_ID'
+    rootHostname: '$VITE_LIVESESSION_ROOT_HOSTNAME'
+  usersnap: # Usersnap can be used to capture user feedback
+    id: '$VITE_USERSNAP_ID'

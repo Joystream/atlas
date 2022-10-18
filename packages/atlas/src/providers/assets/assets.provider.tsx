@@ -27,7 +27,6 @@ import {
 } from '@/api/queries/__generated__/storage.generated'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { atlasConfig } from '@/config'
-import { USER_LOCATION_SERVICE_URL } from '@/config/env'
 import { absoluteRoutes } from '@/config/routes'
 import { useMountEffect } from '@/hooks/useMountEffect'
 import { UserCoordinates, useUserLocationStore } from '@/providers/userLocation'
@@ -78,12 +77,12 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
     })
     if ((!coordinates || !expiry || now.getTime() > expiry) && !disableUserLocation) {
       try {
-        const userCoordinatesResponse = await axios.get<UserCoordinates>(USER_LOCATION_SERVICE_URL)
+        const userCoordinatesResponse = await axios.get<UserCoordinates>(atlasConfig.storage.geolocationServiceUrl)
         userCoordinates = userCoordinatesResponse.data
         setUserLocation(userCoordinates)
       } catch (error) {
         SentryLogger.error('Failed to get user coordinates', 'operatorsProvider', error, {
-          request: { url: USER_LOCATION_SERVICE_URL },
+          request: { url: atlasConfig.storage.geolocationServiceUrl },
         })
       }
     } else {

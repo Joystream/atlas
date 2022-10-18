@@ -3,7 +3,7 @@ import { ProxyMarked, Remote, proxy, wrap } from 'comlink'
 import { FC, PropsWithChildren, createContext, useCallback, useEffect, useRef, useState } from 'react'
 
 import { atlasConfig } from '@/config'
-import { JOY_PRICE_SERVICE_URL, NODE_URL } from '@/config/env'
+import { NODE_URL } from '@/config/env'
 import { HAPI_TO_JOY_RATE } from '@/joystream-lib/config'
 import { JoystreamLib } from '@/joystream-lib/lib'
 import { useEnvironmentStore } from '@/providers/environment/store'
@@ -114,11 +114,11 @@ const useJoystreamUtilFns = () => {
   // fetch token price from the status server
   useEffect(() => {
     const getPrice = async () => {
-      if (!JOY_PRICE_SERVICE_URL) {
+      if (!atlasConfig.joystream.tokenPriceFeedUrl) {
         return
       }
       try {
-        const data = await fetch(JOY_PRICE_SERVICE_URL)
+        const data = await fetch(atlasConfig.joystream.tokenPriceFeedUrl)
         const json = await data.json()
         setTokenPrice(json.price)
       } catch (e) {
