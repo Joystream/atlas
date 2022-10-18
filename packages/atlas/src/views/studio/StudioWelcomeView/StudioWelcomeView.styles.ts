@@ -18,9 +18,27 @@ const XS_IMAGE_HEIGHT = 300
 const SM_IMAGE_WIDTH = 720
 const SM_IMAGE_HEIGHT = 450
 
+export const LEFT_ANIMATION_MD = 'left-animation-md'
+
 export const OverflowHiddenContainer = styled.div`
   margin: 0 calc(-1 * var(--size-global-horizontal-padding)) 0;
   overflow: hidden;
+
+  [data-aos] {
+    &[data-aos][data-aos-easing='atlas-easing'] {
+      transition-timing-function: cubic-bezier(0.09, 0.43, 0.3, 0.99);
+    }
+  }
+  [data-aos=${LEFT_ANIMATION_MD}] {
+    opacity: 0;
+    transform: translateX(0);
+    transition-property: transform, opacity;
+
+    &.aos-animate {
+      opacity: 1;
+      transform: translateX(117px);
+    }
+  }
 `
 
 export const StyledContainer = styled.div`
@@ -236,7 +254,7 @@ export const ImageGridItem = styled(GridItem)`
 `
 
 type IllustrationWrapperProps = {
-  moveToTheLeftOnMd?: boolean
+  moveToTheLeft?: boolean
   topMargin?: number
 }
 
@@ -244,14 +262,12 @@ export const IllustrationWrapper = styled.div<IllustrationWrapperProps>`
   position: relative;
   height: ${XXS_IMAGE_HEIGHT}px;
   margin-top: ${({ topMargin }) => (topMargin ? sizes(topMargin) : 'unset')};
+
   ${media.xs} {
     height: ${XS_IMAGE_HEIGHT}px;
   }
   ${media.sm} {
     height: ${SM_IMAGE_HEIGHT}px;
-  }
-  ${media.md} {
-    transform: translateX(${({ moveToTheLeftOnMd }) => (moveToTheLeftOnMd ? '117px' : '0px')});
   }
 `
 

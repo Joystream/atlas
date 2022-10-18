@@ -43,6 +43,8 @@
     "@sentry/react": "^7.12.1",
     "@talismn/connect-wallets": "^1.2.1",
     "@tippyjs/react": "^4.2.6",
+    "@types/aos": "^3.0.4",
+    "aos": "^2.3.4",
     "awesome-debounce-promise": "^2.1.0",
     "axios": "^0.27.2",
     "bezier-easing": "^2.1.0",

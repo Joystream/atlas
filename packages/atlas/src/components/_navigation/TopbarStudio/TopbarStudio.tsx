@@ -22,7 +22,7 @@ type StudioTopbarProps = {
 }
 
 export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
-  const { channelId, activeMembership } = useUser()
+  const { channelId, activeMembership, signIn } = useUser()
   const mdMatch = useMediaMatch('md')
 
   const { isWorkspaceOpen, setEditedVideo, setIsWorkspaceOpen } = useVideoWorkspace()
@@ -60,8 +60,12 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
 
   return (
     <>
-      <StyledTopbarBase fullLogoNode={<SvgAppLogoStudio />} logoLinkUrl={absoluteRoutes.studio.index()}>
-        {!hideChannelInfo && (
+      <StyledTopbarBase
+        fullLogoNode={<SvgAppLogoStudio />}
+        withoutHamburgerButton={hideChannelInfo}
+        logoLinkUrl={absoluteRoutes.studio.index()}
+      >
+        {!hideChannelInfo ? (
           <StudioTopbarContainer>
             <CSSTransition
               in={!isWorkspaceOpen && !!channelId}
@@ -83,6 +87,10 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
             <NotificationsWidget trigger={<NotificationsButton />} />
             <StyledAvatarGroup size="large" shouldHighlightEveryAvatar reverse avatars={avatars} clickable={false} />
           </StudioTopbarContainer>
+        ) : (
+          <Button size="medium" onClick={() => signIn()}>
+            Set up membership
+          </Button>
         )}
       </StyledTopbarBase>
       <MemberDropdown

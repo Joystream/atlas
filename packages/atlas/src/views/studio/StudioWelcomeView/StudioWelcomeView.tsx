@@ -1,4 +1,6 @@
-import { FC } from 'react'
+import AOS from 'aos'
+import 'aos/dist/aos.css'
+import { FC, useEffect } from 'react'
 
 import { SvgActionChannel, SvgActionMember, SvgActionPlay } from '@/assets/icons'
 import myUploads1x from '@/assets/images/my-uploads-1x.webp'
@@ -25,6 +27,7 @@ import {
   HeaderGridItem,
   IllustrationWrapper,
   ImageGridItem,
+  LEFT_ANIMATION_MD,
   LeftStep,
   LinksGroupHeaderItem,
   OverflowHiddenContainer,
@@ -52,6 +55,13 @@ export const StudioWelcomeView: FC = () => {
   const headTags = useHeadTags('Studio')
   const { openSignInDialog } = useDisplaySignInDialog()
   const mdMatch = useMediaMatch('md')
+
+  useEffect(() => {
+    AOS.init({
+      duration: 750,
+      once: true,
+    })
+  }, [])
 
   return (
     <>
@@ -103,7 +113,7 @@ export const StudioWelcomeView: FC = () => {
                       size="large"
                       onClick={() => signIn(undefined, openSignInDialog)}
                     >
-                      Connect wallet
+                      Set up membership
                     </SignInButton>
                   )}
                   <TextButton
@@ -149,7 +159,13 @@ export const StudioWelcomeView: FC = () => {
               rowSpan={{ md: 2 }}
             >
               {/* be aware that we reverse the order of image on md */}
-              <IllustrationWrapper topMargin={!mdMatch ? undefined : 6}>
+              <IllustrationWrapper
+                topMargin={!mdMatch ? undefined : 6}
+                data-aos="fade-left"
+                data-aos-delay="200"
+                data-aos-offset="80"
+                data-aos-easing="atlas-easing"
+              >
                 <StyledIllustration
                   srcSet={isLoggedIn ? `${myUploads1x} 1x, ${myUploads2x} 2x` : `${myVideos1x} 1x, ${myVideos2x} 2x`}
                   width="720"
@@ -161,7 +177,14 @@ export const StudioWelcomeView: FC = () => {
                   }
                 />
               </IllustrationWrapper>
-              <IllustrationWrapper moveToTheLeftOnMd topMargin={mdMatch ? undefined : 6}>
+              <IllustrationWrapper
+                moveToTheLeft
+                topMargin={mdMatch ? undefined : 6}
+                data-aos={mdMatch ? LEFT_ANIMATION_MD : 'fade-right'}
+                data-aos-delay="200"
+                data-aos-offset="80"
+                data-aos-easing="atlas-easing"
+              >
                 <StyledIllustration
                   srcSet={
                     isLoggedIn
