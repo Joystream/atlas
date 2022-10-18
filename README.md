@@ -30,7 +30,7 @@ with the Joystream network" src="https://user-images.githubusercontent.com/35307
 - Explore most popular content and channels
 - Sign up for your Joystream membership
 - Create a channel and publish content
-- (coming soon) Issue and trade NFTs for the content you've published
+- Issue and trade NFTs for the content you've published
 
 #### Screenshots
 
@@ -49,6 +49,8 @@ All community contributions to the project are welcome. Before starting any work
 If you are looking for a good place to start, check out the [good first issue label](https://github.com/Joystream/atlas/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) or [bug label](https://github.com/Joystream/atlas/issues?q=is%3Aissue+is%3Aopen+label%3Abug).
 
 ### Quickstart
+
+If you are interested in running your own instance of Atlas, please take a look at our [operator guide](docs/operator-guide.md).
 
 To get started working with Atlas codebase, first clone the repo, install all dependencies and run the development server.
 

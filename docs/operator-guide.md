@@ -1,0 +1,182 @@
+# Atlas operator guide
+
+## Basics
+
+### Introduction
+
+This guide will help you get started with running your own instance of Atlas (a "gateway"). Atlas is a frontend single page application that allows users to interact with the Joystream network - basic functionalities include watching and publishing content, managing channels, issuing and trading NFTs, and more. For a brief introduction on how Atlas works and what services it interacts with, you may want to start with the [architecture overview](./architecture.md). To run a gateway, you will need to host a publicly available deployment of the frontend app, but you will also need to run a few other services that Atlas depends on. We will walk you through the process of setting up all of these services.
+
+### Prerequisites
+
+- Basic knowledge of how to use the command line, how to operate Docker, and how to host a web application
+- Domain name (e.g. `example.com`) to make your gateway publicly available
+- Server to deploy required services (e.g. VPS, dedicated server, or cloud instance)
+- Some kind of web server (e.g. Nginx) or PaaS (e.g. Vercel) to host the frontend app
+
+### Running Atlas
+
+To begin with, let's ignore any customization and just run pre-configured version of Atlas. As explained in the [overview](./overview.md), Atlas repo has a monorepo structure, with multiple packages in the `packages/` directory. The main package is `atlas`, which contains the frontend application.
+
+Once you have cloned the repo, you can run the app in development mode by running the following commands:
+
+```bash
+yarn install
+yarn atlas:dev
+```
+
+While the dev mode is useful for development, it is not optimized for production. To run the app in production mode, you will need to build it first:
+
+```bash
+yarn atlas:build
+```
+
+This will create a production build of the app in the `packages/atlas/dist/` directory. You can then serve this directory using any web server, for demo purposes we will use the `serve` package:
+
+```bash
+yarn global add serve
+serve -s -p 4200 packages/atlas/dist/
+```
+
+For production, you will want to use a more robust web server, such as Nginx. You can also use a PaaS such as Vercel, which will take care of building and hosting the app for you. You may find these resources useful:
+
+- https://www.digitalocean.com/community/tutorials/how-to-deploy-a-react-application-with-nginx-on-ubuntu-20-04
+- https://vercel.com/docs
+
+### Configuring Atlas
+
+Now that you know how to run a basic version of Atlas, let's take a look at how you can make your gateway unique and tune it to your needs. The first thing you will want to take a look at is the `atlas.config.yml` file located in `packages/atlas` directory. This is the main configuration file for the app, and it will allow you to change basic setting like app name. All the configuration options have a description, so should be fairly self-explanatory. This config file also supports environment variables, so you can provide values via env like so `appName: '$VITE_APP_NAME'` instead of hard-coding values into the config.
+
+Second part of the configuration is passed via environment variables. You can find a list of all the available variables in the `packages/atlas/src/.env` file. You can either provide those via environment or just modify the `.env` file. If you take a look at the file, you will notice there's a couple of different section. Sections like `DEVELOPMENT_`, `NEXT_` and `LOCAL_` are useful only for Atlas development, so if you only want to run a production instance, you should be fine ignoring those additional sections and leaving values as they are.
+
+#### App name
+
+The most basic customization is changing the app branding. That includes app name and logo. Changing the name is as simple as changing the `general.appName` field in the config file. This will replace all the usage of "Atlas" in the app with your name.
+
+#### App logo
+
+Changing the logo is a bit more involved and itself consists of two steps. You will need to update the logo used in the app itself, but also the logo used in the browser favicon. To update the logo used in the app, you will need to prepare 3 versions of your logo in SVG format:
+
+1. `app-logo-short.svg` - Just the logo of your app, without any text, in a square(ish) aspect ratio
+2. `app-logo-full.svg` - The logo of your app, with the app name next to it. It should be 32 pixels high, width can vary
+3. `app-logo-studio.svg` - Same as above, but instead of the app name, it should say "Studio" (or whatever else you desire). This is used in the Studio views.
+
+Once you have those prepared, you should replace files with the same names located in `packages/atlas/src/assets/logos/svgs/` directory. You will also need to generate React components from those SVG files. To do that, run the following command:
+
+```bash
+yarn atlas:svgs:logos
+```
+
+After that, all the instances of Atlas logo in the app should be replaced.
+
+#### App favicon
+
+Once you update the logo used in the app, you should also update the favicon that browsers will use in the address bar. For that purpose, you will need to generate a couple of different versions of your logo. You can take a look at the `packages/atlas/src/public` directory to see what assets base version of Atlas uses. Our entrypoint is the `icon.svg` file which also contains built-in media query for light and dark themes. There are some tools online that can help with generating the favicons set, like this one: https://realfavicongenerator.net/ although they can generate a bunch of legacy stuff that's not really needed. You can also use this article as a reference: https://evilmartians.com/chronicles/how-to-favicon-in-2021-six-files-that-fit-most-needs
+
+#### Categories
+
+Atlas uses list of categories defined in `content.categories` config entry to determine which content categories should be handled by the app. Categories defined in that list are local to the app - they will be used in the
+`Discover` screen and when the user is publishing new content. Each local (or "display") category also has a list of associated Query Node video categories that should be displayed inside it.
+
+Atlas will, by default, only display content belonging to one of the defined display categories in the app. That means that video with a category that doesn't belong to any local category will not be available in the app. If you want to change that behavior, you can set `content.showAllContent` to `true` in the config file. That will make the app display all the content, regardless of the category.
+
+#### Content blocking
+
+Atlas will not display any content censored by the Joystream DAO (i.e. content marked with `isCensored: true`). However, you can also block additional content as the app operator. To do so, you can use `blockedDataObjectIds`, `blockedVideoIds` and `blockedChannelIds` config entries under `content.` group. Adding an ID to any of those will block respective content from being displayed in the app.
+
+## Required services
+
+Going through the previous section, your Atlas app should be configured and running. However, there are some services that the app relies on and won't be able to operate without them. In this section we will go through all of those required services.
+
+### Orion
+
+Orion is the main backend service for Atlas - providing indexed blockchain data and sprinkling some additional information on top. It can be seen as a "Gateway node", providing everything needed for the end user and app operator. You can find more info about Orion in [architecture overview](./architecture.md#orion). Each gateway should run its own instance of Orion, and it should be publicly available. You can find the source code for Orion in [its repo](https://github.com/Joystream/orion). The README file in the repository also provides basic instructions on how to run Orion. URL to your Orion's instance `/graphql` endpoint should be passed to the `VITE_PRODUCTION_ORION_URL` environment variable.
+
+#### Content reporting
+
+Orion also enables content reporting which may be useful to you as an operator. When the app users see something that shouldn't be there (e.g. illegal content or copyright infringement), they can report it via Orion. You can then review the reports and take appropriate actions. You can use this GraphQL query to get all the content reports:
+
+```graphql
+query {
+  reportedVideos {
+    id
+    videoId
+    reporterIp
+    rationale
+  }
+
+  reportedChannels {
+    id
+    channelId
+    reporterIp
+    rationale
+  }
+}
+```
+
+**Note:** To access this data you will need to authenticate using admin secret you've set with `ORION_ADMIN_SECRET` env variable. It needs to be passed in the `Authorization` header like so: `Authorization: <ORION_ADMIN_SECRET>`.
+
+#### Content featuring
+
+Orion also keeps information about content that should be featured in Atlas. Currently, that's the video hero section on the homepage and videos featured in specific categories' views. You can find more info about featuring in [featured content guide](community/featured-content.md).
+
+**Note:** "Secret credential" mentioned in the above guide is equal to `ORION_FEATURED_CONTENT_SECRET` env variable.
+
+### Query Node
+
+Query Node (QN) is a service that processes blockchain events and stores them in a database. Orion proxies requests from Atlas to QN, so it will need a QN URL provided for it to work. You can find more info about QN in [its repo](https://github.com/Joystream/joystream/tree/master/query-node). As a gateway operator you probably want to run your own QN, but it also should be fine to rely on a publicly available instance, like `https://query.joystream.org/graphql`.
+
+Atlas uses Websocket connection to QN to receive real-time updates about QN state and to properly update the UI. Endpoint for this connection must be passed as the `VITE_PRODUCTION_QUERY_NODE_SUBSCRIPTION_URL` environment variable.
+
+### RPC Node
+
+RPC nodes are Joystream blockchain nodes that are responsible for running the network. Whether you need your own instance of RPC node depends on your setup. If you are running your own QN, you probably also want to run RPC node alongside for speed of synching and indexing. If you make that RPC endpoint public, you can pass it as `VITE_PRODUCTION_NODE_URL` environment variable, meaning that all user-initiated transactions would be sent to your RPC node. However, you can also use a publicly available node, like `wss://rpc.joystream.org:9944`.
+
+### Member faucet
+
+Member faucet is a service that creates free memberships for Atlas users when they sign up. You can find more information about this service in [its repo](https://github.com/Joystream/membership-faucet/tree/carthage). Instructions in README should be enough to configure and run your own instance. You will need to provide the URL to the faucet's `/register` endpoint as `VITE_PRODUCTION_FAUCET_URL` environment variable.
+
+### Avatar service
+
+Avatar service is used for uploading avatars of members registered via Atlas instance. Joystream membership system is currently not connected with the storage system, meaning that only avatar URLs are accepted. To make user lives easier, Atlas will use Avatar service to upload those avatars and access them later. Code for that service is available in `packages/atlas-avatar-service` directory. It is also available in Dockerhub as `joystream/atlas-avatar-service`. You should most likely run your own instance, but it's also possible to use default one operated by Jsgenesis. Upload endpoint for that service should be passed as `features.members.avatarServiceUrl` config entry.
+
+## Optional services
+
+Apart from above required services, there are a couple of optional ones that you may want to use to improve user's experience.
+
+### Social previews generation
+
+Social previews are images that are generated when a user shares a link to a video or a channel. They are used by social media platforms to display a preview of the content. However, generating rich previews with an SPA like Atlas it not trivial. You can find more info about this issue and possible solutions in [overview](./overview.md#meta-tags-pre-rendering).
+
+### Price feed
+
+One of optional features of the Atlas interface is showing estimated values in USD wherever JOY prices are used. To do that, you need to provide a price feed endpoint that returns a JSON with a single `price` field that contains the current price of JOY in USD. There is currently no service that provides such a feed, so you will need to run your own solution. The URL for that endpoint can be passed via `joystream.tokenPriceFeedUrl` config entry.
+
+### Geolocation service
+
+To ensure the best possible user experience, Atlas will try to determine the user's location and use it to select content distributors physically close to the user. To do that, it uses a geolocation service that returns a JSON with `latitude` and `longitude` fields. While this is optional, it's highly recommended to enable this functionality as it will have big impact on the user experience. One of the possible solutions for this kind of service has been described in [the overview](./overview.md#selecting-distributors). If you don't want to run your own instance, you can use Jsgenesis-operated service at `https://geolocation.joystream.org`. The URL for that endpoint can be passed via `storage.geolocationServiceUrl` config entry.
+
+### Captcha
+
+To prevent draining the faucet, Atlas can use a captcha service to verify that the user is a human when they are creating their membership. Whether you need captcha, depends on the configuration of the faucet you are using. If the faucet requires captcha (as defined in Faucet's config), you will need to provide HCaptcha site key for Atlas to use. This should be passed as `features.members.hcaptchaSiteKey` environment variable. You can read more about HCaptcha in [their docs](https://docs.hcaptcha.com/).
+
+## Analytics
+
+Atlas integrates a couple of services for product/user analytics. Those can be very helpful in understanding how your users are using the app and what they are interested in. All of those services are optional and can be disabled.
+
+### Sentry
+
+Sentry is a service that collects errors and exceptions that happen in the app. It will keep track of what's going on in your app and notify you when something goes wrong. You can find more info about Sentry in [their docs](https://docs.sentry.io/). To enable Sentry, you need to provide a DSN (identifier) which can be found in your Sentry project settings. This should be passed as `analytics.sentry.dsn` config entry. To disable Sentry, you can set `analytics.sentry.dsn` to `null` or remove `analytics.sentry` section from the config entirely.
+
+### Livesession
+
+Livesession is a service that collects information about user sessions. It's a good way to keep track of how many users are using your app and what they are doing. You can find more info about Livesession in [their docs](https://developers.livesession.io/). To enable Livesession, you need to provide an ID, which you can find in your Livesession project settings. This should be passed as `analytics.livesession.id` config entry. To disable Livesession, you can set `analytics.livesession.id` to `null` or remove `analytics.livesession` section from the config entirely.
+
+Also, if you want to enable cross-subdomain tracking, you can provide `analytics.livesession.rootHostname` config entry with the root domain name. You can find more info about it [here](https://livesession.io/help/how-to-track-users-across-multiple-subdomains/).
+
+### Usersnap
+
+Usersnap is a service that allows users to report bugs and issues directly from the app. It's a good way to get feedback from your users and to improve your app. You can find more info about Usersnap on [their website](https://usersnap.com). To enable Usersnap, you need to provide an ID, which you can find in your Usersnap project settings. This should be passed as `analytics.usersnap.id` config entry. To disable Usersnap, you can set `analytics.usersnap.id` to `null` or remove `analytics.usersnap` section from the config entirely.
+
+### Distribution logs
+
+Atlas also has a built-in mechanism for collecting end-user statistics on distributors' performance. Various response times will be collected for each asset and can then be uploaded to an assets logs service. The service should accept a JSON with a single `events` field that contains an array of events. Each event will contain a `type` field used to determine different type of events. If you want to use asset logs, you need to pass the URL of the service as `analytics.assetLogs.url` config entry.
