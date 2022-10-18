@@ -1,11 +1,14 @@
 import { FC } from 'react'
 
 import { SvgActionChannel, SvgActionMember, SvgActionPlay } from '@/assets/icons'
-import downloadsMockup from '@/assets/images/downloads-mockup.webp'
+import myUploads1x from '@/assets/images/my-uploads-1x.webp'
+import myUploads2x from '@/assets/images/my-uploads-2x.webp'
 import myVideos1x from '@/assets/images/my-videos-view-1x.webp'
 import myVideos2x from '@/assets/images/my-videos-view-2x.webp'
-import nftWorkspaceMockup from '@/assets/images/nft-workspace-mockup.webp'
-import videoWorkspaceMockup from '@/assets/images/video-workspace-mockup.webp'
+import nftWorkspace1x from '@/assets/images/nft-workspace-1x.webp'
+import nftWorkspace2x from '@/assets/images/nft-workspace-2x.webp'
+import videoWorkspace1x from '@/assets/images/video-workspace-1x.webp'
+import videoWorkspace2x from '@/assets/images/video-workspace-2x.webp'
 import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
 import { atlasConfig } from '@/config'
@@ -148,7 +151,7 @@ export const StudioWelcomeView: FC = () => {
               {/* be aware that we reverse the order of image on md */}
               <IllustrationWrapper topMargin={!mdMatch ? undefined : 6}>
                 <StyledIllustration
-                  srcSet={isLoggedIn ? downloadsMockup : `${myVideos1x} 1x, ${myVideos2x} 2x`}
+                  srcSet={isLoggedIn ? `${myUploads1x} 1x, ${myUploads2x} 2x` : `${myVideos1x} 1x, ${myVideos2x} 2x`}
                   width="720"
                   height="450"
                   alt={
@@ -160,7 +163,13 @@ export const StudioWelcomeView: FC = () => {
               </IllustrationWrapper>
               <IllustrationWrapper moveToTheLeftOnMd topMargin={mdMatch ? undefined : 6}>
                 <StyledIllustration
-                  src={isLoggedIn ? nftWorkspaceMockup : videoWorkspaceMockup}
+                  srcSet={
+                    isLoggedIn
+                      ? `${nftWorkspace1x} 1x, ${nftWorkspace2x} 2x`
+                      : `${videoWorkspace1x} 1x, ${videoWorkspace2x} 2x`
+                  }
+                  width="720"
+                  height="450"
                   alt={
                     isLoggedIn
                       ? `${atlasConfig.general.appName} studio nft workspace form`
