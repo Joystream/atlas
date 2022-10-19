@@ -30,7 +30,11 @@ export type AlertDialogProps = PropsWithChildren<{
   dividers?: boolean
 }>
 
-export type AlertDialogModalProps = Pick<ModalProps, 'show' | 'additionalActionsNode'> & AlertDialogProps
+export type AlertDialogModalProps = Pick<
+  ModalProps,
+  'show' | 'additionalActionsNode' | 'additionalActionsNodeMobilePosition'
+> &
+  AlertDialogProps
 
 export const AlertDialogModal: FC<AlertDialogModalProps> = ({
   show,

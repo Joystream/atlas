@@ -15,9 +15,10 @@ import {
 
 type SignInDialogContentProps = {
   isMobileDevice: boolean
+  interaction?: boolean
 }
 
-export const SignInDialogContent: FC<SignInDialogContentProps> = ({ isMobileDevice }) => {
+export const SignInDialogContent: FC<SignInDialogContentProps> = ({ isMobileDevice, interaction }) => {
   const smMatch = useMediaMatch('sm')
   return (
     <>
@@ -38,8 +39,9 @@ export const SignInDialogContent: FC<SignInDialogContentProps> = ({ isMobileDevi
         ) : (
           <>
             <Text as="p" variant="t200" color="colorText">
-              To continue, you'll need to connect a wallet and set up a free Joystream membership, which is best done on
-              a desktop.
+              {interaction
+                ? "To continue, you'll need to connect a wallet and set up a free Joystream membership, which is best done on a desktop."
+                : 'While we work on a full mobile experience, we encourage you to visit Atlas on your desktop to create a free Joystream membership today.'}
             </Text>
             <Text as="p" variant="t200" color="colorText">
               If you have a wallet app on your phone, tap “Connect anyway” to create your membership.

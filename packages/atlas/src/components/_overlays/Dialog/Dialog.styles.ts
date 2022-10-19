@@ -1,7 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { Button } from '@/components/_buttons/Button'
 import { cVar, media, sizes } from '@/styles'
 
 export type DialogSize = 'default' | 'compact'
@@ -130,12 +129,5 @@ export const FooterButtonsContainer = styled.div<{ additionalActionsNodeMobilePo
     justify-content: flex-end;
     grid-auto-columns: auto;
     grid-template-columns: unset;
-  }
-`
-
-export const StyledPrimaryButton = styled(Button)`
-  margin-bottom: ${sizes(2)};
-  ${media.sm} {
-    margin-bottom: unset;
   }
 `

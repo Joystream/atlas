@@ -1,7 +1,7 @@
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 
 import { SvgActionNewTab, SvgAlertsError24, SvgAlertsInformative24, SvgLogoPolkadot } from '@/assets/icons'
-import polkaWalletLogo from '@/assets/icons/svgs/logo-polkawallet.svg'
+import polkaWalletLogo from '@/assets/images/polkawallet-logo.webp'
 import { IconWrapper } from '@/components/IconWrapper'
 import { Loader } from '@/components/_loaders/Loader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -9,6 +9,7 @@ import { useMountEffect } from '@/hooks/useMountEffect'
 import { useUser } from '@/providers/user/user.hooks'
 import { useUserStore } from '@/providers/user/user.store'
 import { isMobile } from '@/utils/browser'
+import { capitalizeFirstLetter } from '@/utils/misc'
 
 import { SignInModalStepTemplate } from './SignInModalStepTemplate'
 import { ListItemsWrapper, StyledBottomBanner, StyledListItem, StyledTopBanner, WalletLogo } from './SignInSteps.styles'
@@ -41,6 +42,7 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
           .filter((wallet) => wallet.extensionName === POLKAWALLET)
           .map((wallet) => ({
             ...wallet,
+            title: capitalizeFirstLetter(wallet.title),
             installed: wallet.installed,
             logo: { src: polkaWalletLogo, alt: 'Polkawallet logo' },
           }))
@@ -130,7 +132,7 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
 
   return (
     <SignInModalStepTemplate
-      title={`Select wallet ${isMobileDevice && 'app'}`}
+      title={`Select wallet ${isMobileDevice ? 'app' : ''}`}
       subtitle={
         isMobileDevice
           ? 'Setting up Joystream blockchain membership requires a wallet that can be installed as an app on your phone or as a free browser extension on a desktop.'
@@ -164,6 +166,7 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
             }
             nodeEnd={selectedWalletIdx === idx && isConnecting ? <Loader variant="small" /> : undefined}
             onClick={() => handleSelectWallet(idx)}
+            highlightWhenActive
           />
         ))}
       </ListItemsWrapper>

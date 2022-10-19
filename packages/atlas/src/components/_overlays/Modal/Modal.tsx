@@ -16,7 +16,7 @@ export type ModalProps = PropsWithChildren<{
   onClickOutside?: (event?: MouseEvent) => void
   className?: string
 }> &
-  Pick<DialogProps, 'onExitClick' | 'additionalActionsNode'>
+  Pick<DialogProps, 'onExitClick' | 'additionalActionsNode' | 'additionalActionsNodeMobilePosition'>
 
 export const Modal: FC<ModalProps> = ({ children, size = 'small', show, onClickOutside, className, noBoxShadow }) => {
   const { modalContainerRef, incrementOverlaysOpenCount, decrementOverlaysOpenCount, lastOverlayId } =

@@ -58,7 +58,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       let accounts = []
 
       if (!walletName) {
-        if (isMobileDevice) {
+        if (isMobileDevice && mobileCallback) {
           mobileCallback?.({ onConfirm: () => setSignInModalOpen(true) })
           return true
         }

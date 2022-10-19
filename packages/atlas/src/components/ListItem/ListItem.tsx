@@ -31,6 +31,7 @@ export type ListItemProps = {
   onClick?: (e: MouseEvent) => void
   className?: string
   highlight?: boolean
+  highlightWhenActive?: boolean
   to?: To
   externalLink?: {
     href: string
@@ -54,6 +55,7 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
       onClick,
       className,
       highlight,
+      highlightWhenActive,
       to,
       externalLink,
     },
@@ -71,6 +73,7 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
         hasNodeStart={!!nodeStart}
         size={size}
         ref={mergeRefs([hoverRef, ref])}
+        highlightWhenActive={highlightWhenActive && selected}
         {...linkProps}
         {...externalLink}
       >

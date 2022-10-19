@@ -51,7 +51,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
   const mdMatch = useMediaMatch('md')
   const { id: videoId } = useParams()
   const { memberId, signIn, activeMembership, isLoggedIn } = useUser()
-  const { openSignInDialog } = useDisplaySignInDialog()
+  const { openSignInDialog } = useDisplaySignInDialog({ interaction: true })
   const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)
 
   const { fullFee: fee, loading: feeLoading } = useFee(

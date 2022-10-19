@@ -39,7 +39,13 @@ const interactiveStyles = css`
     background-color: ${cVar('colorBackgroundMutedAlpha')};
   }
 `
-type ContainerProps = { size: ListItemSizes; hasNodeStart: boolean; disabled?: boolean; highlight?: boolean }
+type ContainerProps = {
+  size: ListItemSizes
+  hasNodeStart: boolean
+  disabled?: boolean
+  highlight?: boolean
+  highlightWhenActive?: boolean
+}
 export const Container = styled('div', { shouldForwardProp: isPropValid })<ContainerProps>`
   border: none;
   width: 100%;
@@ -51,7 +57,8 @@ export const Container = styled('div', { shouldForwardProp: isPropValid })<Conta
   align-items: center;
   user-select: none;
   cursor: pointer;
-  background-color: ${({ highlight }) => (highlight ? cVar('colorBackgroundMutedAlpha') : 'unset')};
+  background-color: ${({ highlight, highlightWhenActive }) =>
+    highlight || highlightWhenActive ? cVar('colorBackgroundMutedAlpha') : 'unset'};
   text-decoration: none;
 
   ${({ disabled }) => disabled && disabledStyles};

@@ -29,6 +29,11 @@ export const SignInDialogTextWrapper = styled.div`
   display: grid;
   grid-auto-rows: auto;
   grid-gap: ${sizes(2)};
+  padding: ${sizes(2)};
+
+  ${media.sm} {
+    padding: 0;
+  }
 `
 
 export const StyledSvgLargeWall = styled(SvgLargeWall)`
