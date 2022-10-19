@@ -81,6 +81,8 @@ Now that you know how to run a basic version of Atlas, let's take a look at how 
 
 Second part of the configuration is passed via environment variables. You can find a list of all the available variables in the `packages/atlas/src/.env` file. You can either provide those via environment or just modify the `.env` file. If you take a look at the file, you will notice there's a couple of different section. Sections like `DEVELOPMENT_`, `NEXT_` and `LOCAL_` are useful only for Atlas development, so if you only want to run a production instance, you should be fine ignoring those additional sections and leaving values as they are.
 
+**Note:** Whenever you change the config, you will need to rebuild the app and redeploy (see [Running Atlas](#running-atlas)).
+
 #### App name
 
 The most basic customization is changing the app branding. That includes app name and logo. Changing the name is as simple as changing the `general.appName` field in the config file. This will replace all the usage of "Atlas" in the app with your name.
