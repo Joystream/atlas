@@ -185,3 +185,104 @@ analytics:
     rootHostname: '$VITE_LIVESESSION_ROOT_HOSTNAME'
   usersnap: # Usersnap can be used to capture user feedback
     id: '$VITE_USERSNAP_ID'
+
+legal:
+  termsOfService: |
+    Terms of Service
+
+    Last updated on the 4th of May 2021
+
+    This Terms of Service ("Agreement") is a binding obligation between you ("User") and Jsgenesis AS ("Company", "We", "Us", "Our") for use of our Joystream Player interface ("Atlas") hosted at play.joystream.org and all other products (collectively "Software") developed and published by Us.
+
+    1. Agreement to Terms
+
+    By using Our Software, the User is agreeing to be bound by this Agreement. If you are acting on behalf of another company or an employer, you must have the rights to act on their behalf.
+
+    2. Changes to Terms
+
+    This Agreement may be modified or updated at the sole discretion of Company without notice. Your continued use of our Software is confirmation of your acceptance of the latest Agreement.
+
+    3. Privacy Policy
+
+    Please see our Privacy Policy (https://www.joystream.org/privacy-policy/) for information regarding privacy.
+
+    4. Membership
+
+    By generating private/public cryptographic keys ("Keys") or applying for a membership account ("Membership"), you accept the risk of losing access to your Keys and Membership. Reasons include, but are not limited to:
+    - Losing passwords
+    - Losing recovery seeds or mnemonics
+    - Deleting accounts and backups
+    - Security breaches
+
+    Under no circumstance will Company take any responsibility for loss resulting from losing access to Membership or Keys.
+
+    5. User Conduct
+
+    By using Our Software, you agree to not state, write, link to, download, distribute, share or encourage other users to state, write, link to, download, distribute, share or encourage anything that:
+    - breach or infringe any copyright or intellectual property of any third party.
+    - is abusive, malicious, threatening or unlawful in any way.
+
+    Company has not reviewed all content published on our services, and is not responsible for content submitted or provided by individuals or groups not directly tied to them.
+
+    6. Responsibilities and Risks
+
+    In no event shall Company, its contractors, employees or owners be liable for any damage or loss of any kind to User arising out of the use or inability to use any Software made by Company. In no event shall Company, its contractors, employees or owners be liable for any damage or loss of any kind to User resulting of clicking links, following guides, using software or doing anything else recommended by Company.
+
+    7. Content Takedown Policy
+
+    Jsgenesis has established a policy for content takedowns in accordance with the Digital Millennium Copyright Act (DMCA) which can be viewed at https://play.joystream.org/legal/copyright.
+
+    8. Governing Law
+
+    These terms and conditions are governed by and construed in accordance with the laws of Norway.
+  copyrightPolicy: |
+    DMCA Policy For Content Takedown
+
+    Jsgenesis AS, the developers of the Joystream protocol, have established a copyright infringement policy in accordance with the Digital Millennium Copyright Act.
+
+    Copyright owners and their agents may notify us in cases where content hosted on our testnets (available publicly at https://play.joystream.org and https://testnet.joystream.org) infringes on their copyrights by sending a DMCA notice to us using the contact information below.
+
+    Upon receipt of a valid and complete notice, we will remove the content from our public-facing applications as quickly as possible. We may also suspend the ability of the uploader to participate further on our testnet.
+
+    Where possible, we will attempt to notify the alleged infringer of the takedown, with a copy of your DMCA Notice, using the contact information provided to us.
+
+    You can be held liable for damages, including costs and attorney fees, if you materially misrepresent that material or activity infringes on your copyright.
+
+    Requirements for DMCA Notices
+
+    Your DMCA Notice must include all of the following information:
+    - A physical or electronic signature of the copyright owner, or a person authorized to act on behalf of the copyright owner;
+    - Identification (URL) of the copyrighted work or material being infringed upon;
+    - Description of the work or material that you claim to be infringing and would like to be removed, including information regarding its location (URL) with enough detail so that we can and verify it;
+    - Your full legal name, mailing address, telephone number, and email address where we can contact you;
+    - A statement that you have a good faith belief that use of the material in the manner complained of is not authorized by the copyright owner, its agent, or the law; and
+    - A statement that the information in your DMCA Notice is accurate, and under penalty of perjury, that you are the copyright owner or are authorized to act on behalf of the copyright owner.
+
+    DMCA Agent Information
+
+    Our dedicated email address for DMCA notifications is: abuse@jsgenesis.com.
+
+    Alternatively you can contact us by post:
+
+      Designated DMCA Agent Jsgenesis AS
+      CO UMA Workspace Stenersgata 8
+      Oslo, 0184 Norway
+
+    Or by telephone: +44789553019
+
+    DMCA Counter Notification
+
+    If your content has been mistakenly removed from our testnet, you can submit a DMCA Counter Notification using
+    the same contact information shown above.
+
+    Your DMCA Counter Notification must include all of the following information:
+    - Your physical or electronic signature;
+    - Identification (URL) of the material that has been removed or to which access has been disabled and the location at which the material appeared before it was removed or access to it was disabled (the description from the DMCA Notice is acceptable);
+    - A statement under penalty of perjury that you have a good faith belief that the material was removed or disabled as a result of mistake or misidentification of the material to be removed or disabled;
+    - Your full legal name, mailing address, telephone number, and email address where we can contact you; and
+    - A statement that you consent to the jurisdiction of Federal District Court for the judicial district in which your address is located, or if your address is outside of the United States, for any judicial district in which Jsgenesis may be found, and that you will accept service of process from the person who provided the DMCA Notice or an agent of such person.
+
+    If we receive valid DMCA Counter Notification that meets the above requirements, we will forward a copy to the
+    person who filed the original DMCA Notice. If we do not receive notice within 10 business days that the person
+    who submitted the DMCA Notice is seeking a court order to prevent the infringement of the content at issue, we
+    will replace or re-enable access to the content that was removed.

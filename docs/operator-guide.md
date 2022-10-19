@@ -11,6 +11,7 @@
     - [App logo](#app-logo)
     - [App favicon](#app-favicon)
     - [Categories](#categories)
+    - [Terms of Service and Copyright Policy](#terms-of-service-and-copyright-policy)
   - [Operating Atlas](#operating-atlas)
     - [Content blocking](#content-blocking)
     - [Kill switch](#kill-switch)
@@ -113,6 +114,10 @@ Atlas uses list of categories defined in `content.categories` config entry to de
 `Discover` screen and when the user is publishing new content. Each local (or "display") category also has a list of associated Query Node video categories that should be displayed inside it.
 
 Atlas will, by default, only display content belonging to one of the defined display categories in the app. That means that video with a category that doesn't belong to any local category will not be available in the app. If you want to change that behavior, you can set `content.showAllContent` to `true` in the config file. That will make the app display all the content, regardless of the category.
+
+#### Terms of Service and Copyright Policy
+
+You can provide your own Terms of Service and Copyright Policy by updating the `legal.termsOfService` and `legal.copyrightPolicy` config entries. Those are plain strings and don't support any formatting other than line breaks.
 
 ### Operating Atlas
 

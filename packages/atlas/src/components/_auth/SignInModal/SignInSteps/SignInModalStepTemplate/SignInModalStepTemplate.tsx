@@ -17,7 +17,7 @@ import {
 
 type SignInModalStepTemplateProps = PropsWithChildren<{
   title: string
-  subtitle: ReactNode
+  subtitle?: ReactNode
   loader?: boolean
   hasNavigatedBack: boolean
   darkBackground?: boolean
@@ -57,9 +57,11 @@ export const SignInModalStepTemplate: FC<SignInModalStepTemplateProps> = ({
               {title}
             </Text>
           </HeaderContainer>
-          <Text variant="t200" as="span" color="colorText">
-            {subtitle}
-          </Text>
+          {subtitle && (
+            <Text variant="t200" as="span" color="colorText">
+              {subtitle}
+            </Text>
+          )}
           {children && <ContentContainer>{children}</ContentContainer>}
         </AnimatedContainer>
       </CustomBackgroundContainer>

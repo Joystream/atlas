@@ -91,6 +91,10 @@ export const configSchema = z.object({
       })
       .nullable(),
   }),
+  legal: z.object({
+    termsOfService: z.string(),
+    copyrightPolicy: z.string(),
+  }),
 })
 export type RawConfig = z.infer<typeof configSchema>
 type Config = RawConfig & {

@@ -1,1 +1,1 @@
-export * from './LegalTextComponents'
+export * from './LegalText'
