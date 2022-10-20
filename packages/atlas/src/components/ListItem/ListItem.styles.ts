@@ -44,7 +44,6 @@ type ContainerProps = {
   hasNodeStart: boolean
   disabled?: boolean
   highlight?: boolean
-  highlightWhenActive?: boolean
 }
 export const Container = styled('div', { shouldForwardProp: isPropValid })<ContainerProps>`
   border: none;
@@ -57,8 +56,7 @@ export const Container = styled('div', { shouldForwardProp: isPropValid })<Conta
   align-items: center;
   user-select: none;
   cursor: pointer;
-  background-color: ${({ highlight, highlightWhenActive }) =>
-    highlight || highlightWhenActive ? cVar('colorBackgroundMutedAlpha') : 'unset'};
+  background-color: ${({ highlight }) => (highlight ? cVar('colorBackgroundMutedAlpha') : 'unset')};
   text-decoration: none;
 
   ${({ disabled }) => disabled && disabledStyles};

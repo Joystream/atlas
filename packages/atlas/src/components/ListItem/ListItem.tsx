@@ -65,7 +65,7 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
     const linkProps = getLinkPropsFromTo(to)
     return (
       <Container
-        highlight={highlight}
+        highlight={highlight || (highlightWhenActive && selected)}
         as={externalLink ? 'a' : asButton ? 'button' : undefined}
         className={className}
         onClick={onClick}
@@ -73,7 +73,6 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
         hasNodeStart={!!nodeStart}
         size={size}
         ref={mergeRefs([hoverRef, ref])}
-        highlightWhenActive={highlightWhenActive && selected}
         {...linkProps}
         {...externalLink}
       >
