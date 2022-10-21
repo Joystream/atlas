@@ -24,6 +24,7 @@ type StudioTopbarProps = {
 export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
   const { channelId, activeMembership, signIn } = useUser()
   const mdMatch = useMediaMatch('md')
+  const hasAtLeastOneChannel = !!activeMembership?.channels.length && activeMembership?.channels.length >= 1
 
   const { isWorkspaceOpen, setEditedVideo, setIsWorkspaceOpen } = useVideoWorkspace()
 
@@ -96,7 +97,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
       <MemberDropdown
         onChannelChange={handleChannelChange}
         isActive={isMemberDropdownActive}
-        publisher
+        publisher={!!hasAtLeastOneChannel}
         closeDropdown={() => setIsMemberDropdownActive(false)}
       />
     </>

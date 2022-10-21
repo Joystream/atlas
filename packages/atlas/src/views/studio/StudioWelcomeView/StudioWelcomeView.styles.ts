@@ -24,11 +24,6 @@ export const OverflowHiddenContainer = styled.div`
   margin: 0 calc(-1 * var(--size-global-horizontal-padding)) 0;
   overflow: hidden;
 
-  [data-aos] {
-    &[data-aos][data-aos-easing='atlas-easing'] {
-      transition-timing-function: cubic-bezier(0.09, 0.43, 0.3, 0.99);
-    }
-  }
   [data-aos=${LEFT_ANIMATION_MD}] {
     opacity: 0;
     transform: translateX(0);
@@ -112,25 +107,7 @@ export const StepsContainer = styled.div`
     ::after {
       position: absolute;
       content: '';
-      background: linear-gradient(
-        90deg,
-        #000 0%,
-        #000 0.75%,
-        rgb(0 0 0 / 0.9976) 2.92%,
-        rgb(0 0 0 / 0.992) 6.37%,
-        rgb(0 0 0 / 0.981) 10.97%,
-        rgb(0 0 0 / 0.963) 16.59%,
-        rgb(0 0 0 / 0.936) 23.1%,
-        rgb(0 0 0 / 0.8984) 30.37%,
-        rgb(0 0 0 / 0.8483) 38.27%,
-        rgb(0 0 0 / 0.784) 46.66%,
-        rgb(0 0 0 / 0.7037) 55.41%,
-        rgb(0 0 0 / 0.6056) 64.39%,
-        rgb(0 0 0 / 0.488) 73.47%,
-        rgb(0 0 0 / 0.349) 82.52%,
-        rgb(0 0 0 / 0.187) 91.41%,
-        rgb(0 0 0 / 0) 100%
-      );
+      background: linear-gradient(90deg, #000 0%, rgb(0 0 0 / 0) 100%);
       width: 24px;
       z-index: 1;
       height: 100%;

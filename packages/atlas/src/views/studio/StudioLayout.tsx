@@ -66,7 +66,7 @@ const StudioLayout = () => {
   }, [closeUnsupportedBrowserDialog, openUnsupportedBrowserDialog])
   return (
     <>
-      <TopbarStudio hideChannelInfo={!channelSet} />
+      <TopbarStudio hideChannelInfo={!hasMembership} />
       <NoConnectionIndicator
         hasSidebar={channelSet}
         nodeConnectionStatus={nodeConnectionStatus}

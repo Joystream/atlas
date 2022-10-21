@@ -2,7 +2,7 @@ import AOS from 'aos'
 import 'aos/dist/aos.css'
 import { FC, useEffect } from 'react'
 
-import { SvgActionChannel, SvgActionPlay } from '@/assets/icons'
+import { SvgActionPlay } from '@/assets/icons'
 import myUploads1x from '@/assets/images/my-uploads-1x.webp'
 import myUploads2x from '@/assets/images/my-uploads-2x.webp'
 import myVideos1x from '@/assets/images/my-videos-view-1x.webp'
@@ -104,8 +104,8 @@ export const StudioWelcomeView: FC = () => {
                 </StepsContainer>
                 <ButtonGroup>
                   {isLoggedIn ? (
-                    <SignInButton icon={<SvgActionChannel />} size="large" to={absoluteRoutes.studio.newChannel()}>
-                      Create first channel
+                    <SignInButton size="large" to={absoluteRoutes.studio.newChannel()}>
+                      Create channel
                     </SignInButton>
                   ) : (
                     <SignInButton size="large" onClick={() => signIn(undefined, openSignInDialog)}>
@@ -158,8 +158,6 @@ export const StudioWelcomeView: FC = () => {
               <IllustrationWrapper
                 topMargin={!mdMatch ? undefined : 6}
                 data-aos="fade-left"
-                data-aos-delay="200"
-                data-aos-offset="80"
                 data-aos-easing="atlas-easing"
               >
                 <StyledIllustration
@@ -177,8 +175,6 @@ export const StudioWelcomeView: FC = () => {
                 moveToTheLeft
                 topMargin={mdMatch ? undefined : 6}
                 data-aos={mdMatch ? LEFT_ANIMATION_MD : 'fade-right'}
-                data-aos-delay="200"
-                data-aos-offset="80"
                 data-aos-easing="atlas-easing"
               >
                 <StyledIllustration
