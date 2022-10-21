@@ -3014,8 +3014,8 @@ __metadata:
 
 "@joystreamjs@file://Users/bartoszdryl/programming/apps/joystream/joystreamjs::locator=%40joystream%2Fatlas%40workspace%3Apackages%2Fatlas":
   version: 1.0.0
-  resolution: "@joystreamjs@file://Users/bartoszdryl/programming/apps/joystream/joystreamjs#//Users/bartoszdryl/programming/apps/joystream/joystreamjs::hash=883274&locator=%40joystream%2Fatlas%40workspace%3Apackages%2Fatlas"
-  checksum: 8377424084674654ceddec5b5e4efb82226f65fe4a57396703cbd5cc02cd0fb96566f83880df874ca6aaba2d4b572d8132aa776cae8f0917b364678f30ab04b0
+  resolution: "@joystreamjs@file://Users/bartoszdryl/programming/apps/joystream/joystreamjs#//Users/bartoszdryl/programming/apps/joystream/joystreamjs::hash=aa607f&locator=%40joystream%2Fatlas%40workspace%3Apackages%2Fatlas"
+  checksum: e694f528fc258abceb3f3a58853623d9017cd5bb90b813ec0a99fdd15e2b74c7b8e025215b534b0abee1d0f3d0c73cc6e0bbb66b124c25aa0fa5afb3f0cd6f3c
   languageName: node
   linkType: hard
 
