@@ -20,6 +20,7 @@ import { Select, SelectItem } from '@/components/_inputs/Select'
 import { SubtitlesCombobox } from '@/components/_inputs/SubtitlesComboBox'
 import { Switch } from '@/components/_inputs/Switch'
 import { TextArea } from '@/components/_inputs/TextArea'
+import { VideoLanguageCombobox } from '@/components/_inputs/VideoLanguageCombobox/VideoLanguageCombobox'
 import { AlertDialogModal } from '@/components/_overlays/AlertDialogModal'
 import { atlasConfig } from '@/config'
 import { displayCategories } from '@/config/categories'
@@ -177,7 +178,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
               subtitles: data.subtitlesArray?.map((subtitle, idx) => ({
                 id: subtitle.id || `new-subtitle-${idx}`,
                 language: subtitle.languageIso,
-                type: subtitle.type,
+                type: subtitle?.type,
                 mimeType: 'text/vtt',
               })),
             }
@@ -564,19 +565,13 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           )}
         />
       </FormField>
-      <FormField label="Language">
+      <FormField label="Language" error={errors.language?.message}>
         <Controller
           name="language"
           control={control}
           rules={requiredValidation('Video language')}
           render={({ field: { value, onChange } }) => (
-            <Select
-              value={value}
-              items={atlasConfig.derived.languagesSelectValues}
-              onChange={onChange}
-              error={!!errors.language && !value}
-              disabled={videoFieldsLocked}
-            />
+            <VideoLanguageCombobox error={!!errors.language && !value} value={value} onSelectedItemChange={onChange} />
           )}
         />
       </FormField>
@@ -837,6 +832,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                       )
                     }}
                     languagesIso={atlasConfig.content.languages.map(({ isoCode }) => isoCode)}
+                    popularLanguagesIso={atlasConfig.content.popularLanguages}
                     subtitlesArray={subtitlesArray}
                   />
                 </FormField>

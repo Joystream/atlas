@@ -67,6 +67,7 @@ export const configSchema = z.object({
     ),
     showAllContent: z.boolean(),
     languages: z.array(z.object({ isoCode: z.string(), name: z.string() })),
+    popularLanguages: z.array(z.string()),
   }),
   analytics: z.object({
     assetLogs: z
@@ -92,11 +93,13 @@ export const configSchema = z.object({
       .nullable(),
   }),
 })
+type SelectValue = Pick<SelectItem, 'value' | 'name'>
 export type RawConfig = z.infer<typeof configSchema>
-type Config = RawConfig & {
+export type Config = RawConfig & {
   derived: {
     languagesLookup: Record<string, string>
-    languagesSelectValues: SelectItem[]
+    languagesSelectValues: SelectValue[]
+    popularLanguagesSelectValues: SelectValue[]
     commentReactionsLookup: Record<number, RawConfig['features']['comments']['reactions'][number]>
   }
 }
@@ -130,6 +133,12 @@ const extendedConfig: Config = {
       name: name,
       value: isoCode,
     })),
+    popularLanguagesSelectValues: parsedConfig.content.languages
+      .filter((language) => parsedConfig.content.popularLanguages.includes(language.isoCode))
+      .map(({ isoCode, name }) => ({
+        name: name,
+        value: isoCode,
+      })),
     commentReactionsLookup: createLookup(parsedConfig.features.comments.reactions),
   },
 }

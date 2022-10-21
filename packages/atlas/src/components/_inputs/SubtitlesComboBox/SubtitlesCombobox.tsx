@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { FC, useMemo } from 'react'
+import { FC, useCallback } from 'react'
 
 import { Text } from '@/components/Text'
 import { atlasConfig } from '@/config'
@@ -11,12 +11,13 @@ import { SubtitlesBox } from '../SubtitlesBox'
 
 type AvailableLanguage = SubtitlesInput & {
   disabled: boolean
-  displayName: string
+  separator?: boolean
 }
 
 type SubtitlesComboboxProps = {
   subtitlesArray: SubtitlesInput[] | null
   languagesIso: string[]
+  popularLanguagesIso: string[]
   onLanguageAdd: (language: SubtitlesInput) => void
   onLanguageDelete: (language: SubtitlesInput) => void
   onSubtitlesAdd: (subtitles: SubtitlesInput) => void
@@ -26,6 +27,7 @@ type SubtitlesComboboxProps = {
 
 export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
   languagesIso,
+  popularLanguagesIso,
   subtitlesArray,
   onLanguageAdd,
   onLanguageDelete,
@@ -33,28 +35,53 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
   error,
   disabled,
 }) => {
-  const availableSubtitlesLanguages = useMemo(() => {
-    return languagesIso
-      .map((iso) => [
-        {
-          displayName: atlasConfig.derived.languagesLookup[iso],
-          languageIso: iso,
-          type: 'subtitles' as const,
-          disabled: !!subtitlesArray?.find(
-            (subtitles) => subtitles.languageIso === iso && subtitles.type === 'subtitles'
-          ),
-        },
-        {
-          displayName: atlasConfig.derived.languagesLookup[iso],
-          languageIso: iso,
-          type: 'closed-captions' as const,
-          disabled: !!subtitlesArray?.find(
-            (subtitles) => subtitles.languageIso === iso && subtitles.type === 'closed-captions'
-          ),
-        },
-      ])
-      .flat()
-  }, [languagesIso, subtitlesArray])
+  const getAvailableSubtitlesLanguages = useCallback(
+    (languagesIso: string[]) =>
+      languagesIso
+        .map((iso) => [
+          {
+            label: `${atlasConfig.derived.languagesLookup[iso]}`,
+            languageIso: iso,
+            type: 'subtitles' as const,
+            disabled: !!subtitlesArray?.find(
+              (subtitles) => subtitles.languageIso === iso && subtitles.type === 'subtitles'
+            ),
+            separator: false,
+          },
+          {
+            label: `${atlasConfig.derived.languagesLookup[iso]} (CC)`,
+            languageIso: iso,
+            type: 'closed-captions' as const,
+            disabled: !!subtitlesArray?.find(
+              (subtitles) => subtitles.languageIso === iso && subtitles.type === 'closed-captions'
+            ),
+            separator: false,
+          },
+        ])
+        .flat(),
+    [subtitlesArray]
+  )
+
+  const mappedLanguages = [
+    {
+      label: 'TOP LANGUAGES',
+      type: 'separator' as const,
+      languageIso: '',
+      value: '',
+      separator: true,
+      disabled: false,
+    },
+    ...getAvailableSubtitlesLanguages(popularLanguagesIso),
+    {
+      label: 'ALL LANGUAGES',
+      type: 'separator' as const,
+      languageIso: '',
+      value: '',
+      separator: true,
+      disabled: false,
+    },
+    ...getAvailableSubtitlesLanguages(languagesIso),
+  ]
 
   return (
     <Wrapper>
@@ -62,15 +89,18 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
         disabled={disabled}
         error={error}
         placeholder="Add language"
-        items={availableSubtitlesLanguages.map((subtitlesLanguage) => ({
-          ...subtitlesLanguage,
-          label: `${subtitlesLanguage.displayName} ${subtitlesLanguage.type === 'closed-captions' ? '(CC)' : ''}`,
-          nodeEnd: subtitlesLanguage.disabled ? (
-            <Text variant="t200" as="span" color="colorTextMuted">
-              Added
-            </Text>
-          ) : null,
-        }))}
+        items={mappedLanguages.map((subtitlesLanguage) =>
+          !subtitlesLanguage.separator
+            ? {
+                ...subtitlesLanguage,
+                nodeEnd: subtitlesLanguage.disabled ? (
+                  <Text variant="t200" as="span" color="colorTextMuted">
+                    Added
+                  </Text>
+                ) : null,
+              }
+            : subtitlesLanguage
+        )}
         resetOnSelect
         onSelectedItemChange={(item) => {
           if (item?.disabled || !item) {

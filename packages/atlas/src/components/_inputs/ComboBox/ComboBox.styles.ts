@@ -1,19 +1,19 @@
 import styled from '@emotion/styled'
 
 import { SvgActionPlus } from '@/assets/icons'
-import { cVar, zIndex } from '@/styles'
+import { cVar, sizes, zIndex } from '@/styles'
 
 export const ComboBoxWrapper = styled.div`
   position: relative;
   width: 100%;
 `
 
-export const ListWrapper = styled.ul<{ topPosition?: number }>`
+export const ListWrapper = styled.ul<{ topPosition?: number; isOpen: boolean }>`
   max-height: 188px;
   overflow-y: auto;
   box-shadow: ${cVar('effectElevation16Layer1')}, ${cVar('effectElevation16Layer2')};
   background: ${cVar('colorBackgroundStrong')};
-  padding: 0;
+  padding: ${({ isOpen }) => sizes(+isOpen)} 0;
   position: absolute;
   top: ${({ topPosition }) => (topPosition ? `${topPosition}px` : 'unset')};
   left: 0;

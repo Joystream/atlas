@@ -39,11 +39,16 @@ const interactiveStyles = css`
     background-color: ${cVar('colorBackgroundMutedAlpha')};
   }
 `
+
+const separatorStyles = css`
+  cursor: unset;
+`
 type ContainerProps = {
   size: ListItemSizes
   hasNodeStart: boolean
   disabled?: boolean
   highlight?: boolean
+  isSeparator?: boolean
 }
 export const Container = styled('div', { shouldForwardProp: isPropValid })<ContainerProps>`
   border: none;
@@ -58,10 +63,12 @@ export const Container = styled('div', { shouldForwardProp: isPropValid })<Conta
   cursor: pointer;
   background-color: ${({ highlight }) => (highlight ? cVar('colorBackgroundMutedAlpha') : 'unset')};
   text-decoration: none;
+  position: relative;
 
-  ${({ disabled }) => disabled && disabledStyles};
+  ${({ disabled, isSeparator }) => disabled && !isSeparator && disabledStyles};
   ${({ size }) => getContainerPadding(size)};
-  ${({ disabled }) => !disabled && interactiveStyles};
+  ${({ disabled, isSeparator }) => !disabled && !isSeparator && interactiveStyles};
+  ${({ isSeparator }) => isSeparator && separatorStyles};
 `
 
 export const LabelCaptionContainer = styled.div<{ captionBottom: boolean }>`
@@ -91,10 +98,10 @@ export const Caption = styled(Text)<CaptionPosition>`
   ${captionRightStyles};
 `
 
-export const LabelContainer = styled.div`
+export const LabelContainer = styled.div<{ isSeparator?: boolean }>`
   display: flex;
   align-items: center;
-  min-height: 24px;
+  min-height: ${({ isSeparator }) => (!isSeparator ? '24px' : 'unset')};
 `
 
 export const LabelText = styled(Text)`
@@ -121,4 +128,26 @@ type NodeContainerProps = {
 }
 export const NodeContainer = styled.div<NodeContainerProps>`
   ${iconStyles};
+`
+
+export const SeparatorWrapper = styled.div`
+  width: 100%;
+  bottom: 0;
+  left: 0;
+
+  :first-of-type {
+    display: none;
+  }
+
+  div {
+    height: 1px;
+
+    :nth-of-type(1) {
+      background-color: ${cVar('colorCoreNeutral400Darken')};
+    }
+
+    :nth-of-type(2) {
+      background-color: ${cVar('colorCoreNeutral900Lighten')};
+    }
+  }
 `
