@@ -60,6 +60,18 @@ export type GetBasicStorageBucketsQuery = {
   storageBuckets: Array<{ __typename?: 'StorageBucket'; id: string }>
 }
 
+export type GetStorageBucketsNodeEndpointForBagQueryVariables = Types.Exact<{
+  bagId?: Types.InputMaybe<Types.Scalars['ID']>
+}>
+
+export type GetStorageBucketsNodeEndpointForBagQuery = {
+  __typename?: 'Query'
+  storageBuckets: Array<{
+    __typename?: 'StorageBucket'
+    operatorMetadata?: { __typename?: 'StorageBucketOperatorMetadata'; nodeEndpoint?: string | null } | null
+  }>
+}
+
 export const GetDistributionBucketsWithBagsDocument = gql`
   query GetDistributionBucketsWithBags {
     distributionBuckets(limit: 500, where: { distributing_eq: true }) {
@@ -278,4 +290,70 @@ export type GetBasicStorageBucketsLazyQueryHookResult = ReturnType<typeof useGet
 export type GetBasicStorageBucketsQueryResult = Apollo.QueryResult<
   GetBasicStorageBucketsQuery,
   GetBasicStorageBucketsQueryVariables
+>
+export const GetStorageBucketsNodeEndpointForBagDocument = gql`
+  query GetStorageBucketsNodeEndpointForBag($bagId: ID) {
+    storageBuckets(
+      where: {
+        operatorStatus_json: { isTypeOf_eq: "StorageBucketOperatorStatusActive" }
+        bags_some: { id_eq: $bagId }
+        operatorMetadata: { nodeEndpoint_contains: "http" }
+      }
+    ) {
+      operatorMetadata {
+        nodeEndpoint
+      }
+    }
+  }
+`
+
+/**
+ * __useGetStorageBucketsNodeEndpointForBagQuery__
+ *
+ * To run a query within a React component, call `useGetStorageBucketsNodeEndpointForBagQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetStorageBucketsNodeEndpointForBagQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetStorageBucketsNodeEndpointForBagQuery({
+ *   variables: {
+ *      bagId: // value for 'bagId'
+ *   },
+ * });
+ */
+export function useGetStorageBucketsNodeEndpointForBagQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetStorageBucketsNodeEndpointForBagQuery,
+    GetStorageBucketsNodeEndpointForBagQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetStorageBucketsNodeEndpointForBagQuery, GetStorageBucketsNodeEndpointForBagQueryVariables>(
+    GetStorageBucketsNodeEndpointForBagDocument,
+    options
+  )
+}
+export function useGetStorageBucketsNodeEndpointForBagLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetStorageBucketsNodeEndpointForBagQuery,
+    GetStorageBucketsNodeEndpointForBagQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetStorageBucketsNodeEndpointForBagQuery,
+    GetStorageBucketsNodeEndpointForBagQueryVariables
+  >(GetStorageBucketsNodeEndpointForBagDocument, options)
+}
+export type GetStorageBucketsNodeEndpointForBagQueryHookResult = ReturnType<
+  typeof useGetStorageBucketsNodeEndpointForBagQuery
+>
+export type GetStorageBucketsNodeEndpointForBagLazyQueryHookResult = ReturnType<
+  typeof useGetStorageBucketsNodeEndpointForBagLazyQuery
+>
+export type GetStorageBucketsNodeEndpointForBagQueryResult = Apollo.QueryResult<
+  GetStorageBucketsNodeEndpointForBagQuery,
+  GetStorageBucketsNodeEndpointForBagQueryVariables
 >

@@ -10,6 +10,7 @@ fragment BasicChannelFields on Channel {
   follows
   rewardAccount
   channelStateBloatBond
+  cumulativeRewardClaimed
 
   avatarPhoto {
     ...StorageDataObjectFields

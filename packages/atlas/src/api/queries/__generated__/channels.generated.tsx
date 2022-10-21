@@ -23,6 +23,7 @@ export type GetBasicChannelQuery = {
     follows: number
     rewardAccount: string
     channelStateBloatBond: string
+    cumulativeRewardClaimed?: string | null
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -34,6 +35,7 @@ export type GetBasicChannelQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -61,6 +63,7 @@ export type GetFullChannelQuery = {
     follows: number
     rewardAccount: string
     channelStateBloatBond: string
+    cumulativeRewardClaimed?: string | null
     language?: { __typename?: 'Language'; id: string; iso: string } | null
     ownerMember?: {
       __typename?: 'Membership'
@@ -83,6 +86,7 @@ export type GetFullChannelQuery = {
                 type:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -104,6 +108,7 @@ export type GetFullChannelQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -120,6 +125,7 @@ export type GetFullChannelQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -153,6 +159,7 @@ export type GetBasicChannelsQuery = {
     follows: number
     rewardAccount: string
     channelStateBloatBond: string
+    cumulativeRewardClaimed?: string | null
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -164,6 +171,7 @@ export type GetBasicChannelsQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -193,6 +201,7 @@ export type GetFullChannelsQuery = {
     follows: number
     rewardAccount: string
     channelStateBloatBond: string
+    cumulativeRewardClaimed?: string | null
     language?: { __typename?: 'Language'; id: string; iso: string } | null
     ownerMember?: {
       __typename?: 'Membership'
@@ -215,6 +224,7 @@ export type GetFullChannelsQuery = {
                 type:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -236,6 +246,7 @@ export type GetFullChannelsQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -252,6 +263,7 @@ export type GetFullChannelsQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -283,6 +295,7 @@ export type GetBasicChannelsConnectionQuery = {
         follows: number
         rewardAccount: string
         channelStateBloatBond: string
+        cumulativeRewardClaimed?: string | null
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -294,6 +307,7 @@ export type GetBasicChannelsConnectionQuery = {
           type:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
             | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -347,6 +361,7 @@ export type GetMostViewedChannelsConnectionQuery = {
         follows: number
         rewardAccount: string
         channelStateBloatBond: string
+        cumulativeRewardClaimed?: string | null
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -358,6 +373,7 @@ export type GetMostViewedChannelsConnectionQuery = {
           type:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
             | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -393,6 +409,7 @@ export type GetMostFollowedChannelsConnectionQuery = {
         follows: number
         rewardAccount: string
         channelStateBloatBond: string
+        cumulativeRewardClaimed?: string | null
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -404,6 +421,7 @@ export type GetMostFollowedChannelsConnectionQuery = {
           type:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
             | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -429,6 +447,7 @@ export type GetTop10ChannelsQuery = {
     follows: number
     rewardAccount: string
     channelStateBloatBond: string
+    cumulativeRewardClaimed?: string | null
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -440,6 +459,7 @@ export type GetTop10ChannelsQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -462,6 +482,7 @@ export type GetPromisingChannelsQuery = {
     follows: number
     rewardAccount: string
     channelStateBloatBond: string
+    cumulativeRewardClaimed?: string | null
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -473,6 +494,7 @@ export type GetPromisingChannelsQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -495,6 +517,7 @@ export type GetDiscoverChannelsQuery = {
     follows: number
     rewardAccount: string
     channelStateBloatBond: string
+    cumulativeRewardClaimed?: string | null
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -506,6 +529,7 @@ export type GetDiscoverChannelsQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -528,6 +552,7 @@ export type GetPopularChannelsQuery = {
     follows: number
     rewardAccount: string
     channelStateBloatBond: string
+    cumulativeRewardClaimed?: string | null
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -539,6 +564,7 @@ export type GetPopularChannelsQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -579,6 +605,7 @@ export type GetChannelNftCollectorsQuery = {
                 type:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -589,6 +616,18 @@ export type GetChannelNftCollectorsQuery = {
           | null
       }
     } | null
+  }>
+}
+
+export type GetPayloadDataObjectIdByCommitmentQueryVariables = Types.Exact<{
+  commitment: Types.Scalars['String']
+}>
+
+export type GetPayloadDataObjectIdByCommitmentQuery = {
+  __typename?: 'Query'
+  channelPayoutsUpdatedEvents: Array<{
+    __typename?: 'ChannelPayoutsUpdatedEvent'
+    payloadDataObject: { __typename?: 'StorageDataObject'; id: string; storageBagId: string }
   }>
 }
 
@@ -1363,6 +1402,67 @@ export type GetChannelNftCollectorsLazyQueryHookResult = ReturnType<typeof useGe
 export type GetChannelNftCollectorsQueryResult = Apollo.QueryResult<
   GetChannelNftCollectorsQuery,
   GetChannelNftCollectorsQueryVariables
+>
+export const GetPayloadDataObjectIdByCommitmentDocument = gql`
+  query GetPayloadDataObjectIdByCommitment($commitment: String!) {
+    channelPayoutsUpdatedEvents(where: { commitment_eq: $commitment }, limit: 1) {
+      payloadDataObject {
+        id
+        storageBagId
+      }
+    }
+  }
+`
+
+/**
+ * __useGetPayloadDataObjectIdByCommitmentQuery__
+ *
+ * To run a query within a React component, call `useGetPayloadDataObjectIdByCommitmentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPayloadDataObjectIdByCommitmentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPayloadDataObjectIdByCommitmentQuery({
+ *   variables: {
+ *      commitment: // value for 'commitment'
+ *   },
+ * });
+ */
+export function useGetPayloadDataObjectIdByCommitmentQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetPayloadDataObjectIdByCommitmentQuery,
+    GetPayloadDataObjectIdByCommitmentQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetPayloadDataObjectIdByCommitmentQuery, GetPayloadDataObjectIdByCommitmentQueryVariables>(
+    GetPayloadDataObjectIdByCommitmentDocument,
+    options
+  )
+}
+export function useGetPayloadDataObjectIdByCommitmentLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetPayloadDataObjectIdByCommitmentQuery,
+    GetPayloadDataObjectIdByCommitmentQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetPayloadDataObjectIdByCommitmentQuery, GetPayloadDataObjectIdByCommitmentQueryVariables>(
+    GetPayloadDataObjectIdByCommitmentDocument,
+    options
+  )
+}
+export type GetPayloadDataObjectIdByCommitmentQueryHookResult = ReturnType<
+  typeof useGetPayloadDataObjectIdByCommitmentQuery
+>
+export type GetPayloadDataObjectIdByCommitmentLazyQueryHookResult = ReturnType<
+  typeof useGetPayloadDataObjectIdByCommitmentLazyQuery
+>
+export type GetPayloadDataObjectIdByCommitmentQueryResult = Apollo.QueryResult<
+  GetPayloadDataObjectIdByCommitmentQuery,
+  GetPayloadDataObjectIdByCommitmentQueryVariables
 >
 export const ReportChannelDocument = gql`
   mutation ReportChannel($channelId: ID!, $rationale: String!) {

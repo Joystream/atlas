@@ -116,6 +116,12 @@ export class JoystreamLib {
     return proxy(unsubscribe)
   }
 
+  async getContentCommitment() {
+    await this.ensureApi()
+
+    return (await this.api.query.content.commitment()).toString()
+  }
+
   async getChainConstants() {
     await this.ensureApi()
 

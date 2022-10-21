@@ -43,3 +43,17 @@ query GetBasicStorageBuckets {
     id
   }
 }
+
+query GetStorageBucketsNodeEndpointForBag($bagId: ID) {
+  storageBuckets(
+    where: {
+      operatorStatus_json: { isTypeOf_eq: "StorageBucketOperatorStatusActive" }
+      bags_some: { id_eq: $bagId }
+      operatorMetadata: { nodeEndpoint_contains: "http" }
+    }
+  ) {
+    operatorMetadata {
+      nodeEndpoint
+    }
+  }
+}

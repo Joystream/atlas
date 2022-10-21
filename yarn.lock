@@ -2857,10 +2857,10 @@ __metadata:
     "@graphql-codegen/typescript-react-apollo": ^3.3.3
     "@hcaptcha/react-hcaptcha": ^1.4.4
     "@hookform/resolvers": ^2.9.7
-    "@joystream/metadata-protobuf": 2.5.0
+    "@joystream/metadata-protobuf": "file://Users/bartoszdryl/programming/apps/joystream/metadata-protobuf/joystream-metadata-protobuf-v2.6.0.tgz"
     "@joystream/prettier-config": ^1.0.0
     "@joystream/types": 0.20.3
-    "@joystreamjs": "file:/Users/bartoszdryl/programming/apps/joystream/joystreamjs"
+    "@joystreamjs": "file://Users/bartoszdryl/programming/apps/joystream/joystreamjs"
     "@livesession/sdk": ^1.1.4
     "@loadable/component": ^5.15.2
     "@lottiefiles/react-lottie-player": ^3.4.7
@@ -2955,9 +2955,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@joystream/metadata-protobuf@npm:2.5.0":
-  version: 2.5.0
-  resolution: "@joystream/metadata-protobuf@npm:2.5.0"
+"@joystream/metadata-protobuf@file://Users/bartoszdryl/programming/apps/joystream/metadata-protobuf/joystream-metadata-protobuf-v2.6.0.tgz::locator=%40joystream%2Fatlas%40workspace%3Apackages%2Fatlas":
+  version: 2.6.0
+  resolution: "@joystream/metadata-protobuf@file://Users/bartoszdryl/programming/apps/joystream/metadata-protobuf/joystream-metadata-protobuf-v2.6.0.tgz::locator=%40joystream%2Fatlas%40workspace%3Apackages%2Fatlas"
   dependencies:
     "@types/iso-3166-2": ^1.0.0
     "@types/long": ^4.0.1
@@ -2967,7 +2967,7 @@ __metadata:
     iso-639-1: ^2.1.9
     long: ^4.0.0
     protobufjs: ^6.11.2
-  checksum: 53de3dc620f5062441cb8c409a3b469d066663a40cf372dddb8ea9a6628e7f789bfea73d9cd53d9aa54035481ef66af9520e3761d54a10877c0d8f7543fdec8e
+  checksum: c5ee3b2183e34829c8ad4846b5f0fa9e74f5bd200b03b04632ac72c430aec0c5d3fb56a872c2dbe6d92d57826ba4235e16a6ff2d771446c437c48715301586c5
   languageName: node
   linkType: hard
 
@@ -3012,10 +3012,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@joystreamjs@file:/Users/bartoszdryl/programming/apps/joystream/joystreamjs::locator=%40joystream%2Fatlas%40workspace%3Apackages%2Fatlas":
+"@joystreamjs@file://Users/bartoszdryl/programming/apps/joystream/joystreamjs::locator=%40joystream%2Fatlas%40workspace%3Apackages%2Fatlas":
   version: 1.0.0
-  resolution: "@joystreamjs@file:/Users/bartoszdryl/programming/apps/joystream/joystreamjs#/Users/bartoszdryl/programming/apps/joystream/joystreamjs::hash=a71ed2&locator=%40joystream%2Fatlas%40workspace%3Apackages%2Fatlas"
-  checksum: b2dcb3e18fdd0c03849861dd3235c553744003f07d0ddc53598ae277aa5ed97c429c51a7cd8cc80b729f92fe10b5a87b6c235543961a696d95f4a5593d133a00
+  resolution: "@joystreamjs@file://Users/bartoszdryl/programming/apps/joystream/joystreamjs#//Users/bartoszdryl/programming/apps/joystream/joystreamjs::hash=883274&locator=%40joystream%2Fatlas%40workspace%3Apackages%2Fatlas"
+  checksum: 8377424084674654ceddec5b5e4efb82226f65fe4a57396703cbd5cc02cd0fb96566f83880df874ca6aaba2d4b572d8132aa776cae8f0917b364678f30ab04b0
   languageName: node
   linkType: hard
 
