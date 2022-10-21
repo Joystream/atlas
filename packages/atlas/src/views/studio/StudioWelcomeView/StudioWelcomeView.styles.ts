@@ -38,6 +38,7 @@ export const OverflowHiddenContainer = styled.div`
 
 export const StyledContainer = styled.div`
   max-width: 1440px;
+  padding-bottom: ${sizes(12)};
   ${media.md} {
     margin: 0 auto;
     padding: 0;
