@@ -3,7 +3,7 @@ import { FC } from 'react'
 import { ComboBox } from '@/components/_inputs/ComboBox'
 import { atlasConfig } from '@/config'
 
-type VideoLanguageComboboxProps = {
+export type VideoLanguageComboboxProps = {
   value: string | null
   error?: boolean
   onSelectedItemChange: (value?: string) => void
