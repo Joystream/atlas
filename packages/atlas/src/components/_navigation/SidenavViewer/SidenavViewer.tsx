@@ -13,6 +13,7 @@ import {
 } from '@/assets/icons'
 import { SvgAppLogoFull } from '@/assets/logos'
 import { Button } from '@/components/_buttons/Button'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -62,13 +63,17 @@ export const viewerNavItems = [
     to: absoluteRoutes.viewer.channels(),
     bottomNav: true,
   },
-  {
-    icon: <SvgSidebarYpp />,
-    name: 'YPP',
-    expandedName: 'YouTube Partner Program',
-    to: absoluteRoutes.viewer.ypp(),
-    bottomNav: false,
-  },
+  ...(atlasConfig.features.ypp.googleConsoleClientId
+    ? [
+        {
+          icon: <SvgSidebarYpp />,
+          name: 'YPP',
+          expandedName: 'YouTube Partner Program',
+          to: absoluteRoutes.viewer.ypp(),
+          bottomNav: false,
+        },
+      ]
+    : []),
 ]
 export const SidenavViewer: FC = () => {
   const [expanded, setExpanded] = useState(false)

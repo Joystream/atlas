@@ -37,12 +37,16 @@ const studioNavbarItems: NavItemType[] = [
     expandedName: 'My uploads',
     to: absoluteRoutes.studio.uploads(),
   },
-  {
-    icon: <SvgSidebarYpp />,
-    name: 'YPP',
-    expandedName: 'YouTube Partner Program',
-    to: absoluteRoutes.studio.ypp(),
-  },
+  ...(atlasConfig.features.ypp.googleConsoleClientId
+    ? [
+        {
+          icon: <SvgSidebarYpp />,
+          name: 'YPP',
+          expandedName: 'YouTube Partner Program',
+          to: absoluteRoutes.studio.ypp(),
+        },
+      ]
+    : []),
 ]
 
 type SidenavStudioProps = {

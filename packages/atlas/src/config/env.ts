@@ -41,8 +41,6 @@ export const readEnv = (name: string, required = true, direct = false): string =
   return value.toString()
 }
 
-export const GOOGLE_CONSOLE_CLIENT_ID = readEnv('GOOGLE_CONSOLE_CLIENT_ID', true, true)
-
 export const ORION_GRAPHQL_URL = readEnv('ORION_URL')
 export const QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL = readEnv('QUERY_NODE_SUBSCRIPTION_URL')
 export const NODE_URL = readEnv('NODE_URL')
