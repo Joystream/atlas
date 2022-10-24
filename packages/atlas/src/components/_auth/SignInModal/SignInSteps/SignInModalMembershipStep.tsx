@@ -1,8 +1,8 @@
 import { useApolloClient } from '@apollo/client'
+import HCaptcha from '@hcaptcha/react-hcaptcha'
 import debouncePromise from 'awesome-debounce-promise'
 import { FC, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import HCaptcha from '@hcaptcha/react-hcaptcha'
 
 import {
   GetMembershipDocument,
@@ -21,7 +21,6 @@ import { Anchor, StyledAvatar, StyledForm } from './SignInSteps.styles'
 import { SignInStepProps } from './SignInSteps.types'
 
 import { MemberFormData } from '../SignInModal.types'
-import { HCAPTCHA_SITE_KEY } from '@/config/env'
 
 type SignInModalMembershipStepProps = SignInStepProps & {
   onSubmit: (data: MemberFormData) => void
@@ -224,4 +223,3 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
     />
   )
 }
-
