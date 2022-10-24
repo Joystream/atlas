@@ -15,7 +15,7 @@ export const useNftActions = () => {
     throw new Error('useNftActions must be used within NftActionsProvider')
   }
   const { signIn, isLoggedIn } = useUser()
-  const { openSignInDialog } = useDisplaySignInDialog()
+  const { openSignInDialog } = useDisplaySignInDialog({ interaction: true })
 
   const {
     currentAction,

@@ -23,6 +23,7 @@ import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { AssetUpload } from '@/providers/uploads/uploads.types'
 import { transitions } from '@/styles'
 import { computeFileHash } from '@/utils/hashing'
+import { capitalizeFirstLetter } from '@/utils/misc'
 import { formatBytes } from '@/utils/size'
 
 import {
@@ -145,7 +146,7 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
       ? 'Video file'
       : asset.type === 'subtitles'
       ? 'Subtitles'
-      : `${asset.type.charAt(0).toUpperCase() + asset.type.slice(1)} image`
+      : `${capitalizeFirstLetter(asset.type)} image`
 
   const handleChangeHost = () => {
     startFileUpload(

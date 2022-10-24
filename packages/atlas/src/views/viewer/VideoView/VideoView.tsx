@@ -66,7 +66,7 @@ export const VideoView: FC = () => {
   const { memberId, signIn, isLoggedIn } = useUser()
   const [showReportDialog, setShowReportDialog] = useState(false)
   const [reactionFee, setReactionFee] = useState<BN | undefined>()
-  const { openSignInDialog } = useDisplaySignInDialog()
+  const { openSignInDialog } = useDisplaySignInDialog({ interaction: true })
   const { openNftPutOnSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement, cancelNftSale } =
     useNftActions()
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)

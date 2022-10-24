@@ -95,19 +95,19 @@ export const Dialog: FC<DialogProps> = ({
       {hasFooter && (
         <Footer
           dividers={dividers || actionDivider}
-          data-has-additional-actions={!!hasAdditionalActionsNode}
+          data-has-additional-actions={hasAdditionalActionsNode}
           additionalActionsNodeMobilePosition={additionalActionsNodeMobilePosition}
         >
           {fee !== undefined && <Fee amount={fee} variant="h200" color="colorTextStrong" />}
           {additionalActionsNode}
           <FooterButtonsContainer additionalActionsNodeMobilePosition={additionalActionsNodeMobilePosition}>
             {secondaryButton && (
-              <Button variant={secondaryButton.variant || 'secondary'} size={buttonSize} {...secondaryButton}>
+              <Button variant={secondaryButton.variant || 'secondary'} size={buttonSize} fullWidth {...secondaryButton}>
                 {secondaryButton.text}
               </Button>
             )}
             {primaryButton && (
-              <Button variant={primaryButton.variant || 'primary'} size={buttonSize} {...primaryButton}>
+              <Button variant={primaryButton.variant || 'primary'} size={buttonSize} fullWidth {...primaryButton}>
                 {primaryButton.text}
               </Button>
             )}

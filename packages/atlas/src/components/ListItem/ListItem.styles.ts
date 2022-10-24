@@ -39,7 +39,12 @@ const interactiveStyles = css`
     background-color: ${cVar('colorBackgroundMutedAlpha')};
   }
 `
-type ContainerProps = { size: ListItemSizes; hasNodeStart: boolean; disabled?: boolean; highlight?: boolean }
+type ContainerProps = {
+  size: ListItemSizes
+  hasNodeStart: boolean
+  disabled?: boolean
+  highlight?: boolean
+}
 export const Container = styled('div', { shouldForwardProp: isPropValid })<ContainerProps>`
   border: none;
   width: 100%;

@@ -5,6 +5,7 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
+import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useUser } from '@/providers/user/user.hooks'
 
@@ -27,6 +28,7 @@ export type Membership = {
 export const StudioWelcomeView: FC = () => {
   const { signIn, isLoggedIn } = useUser()
   const headTags = useHeadTags('Studio')
+  const { openSignInDialog } = useDisplaySignInDialog()
 
   return (
     <>
@@ -46,7 +48,7 @@ export const StudioWelcomeView: FC = () => {
                 Create first channel
               </SignInButton>
             ) : (
-              <SignInButton icon={<SvgActionMember />} size="large" onClick={() => signIn()}>
+              <SignInButton icon={<SvgActionMember />} size="large" onClick={() => signIn(undefined, openSignInDialog)}>
                 Connect wallet
               </SignInButton>
             )}

@@ -2,6 +2,7 @@ import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffec
 
 import { useMemberships } from '@/api/hooks/membership'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
+import { isMobile } from '@/utils/browser'
 import { AssetLogger, SentryLogger } from '@/utils/logs'
 
 import { useSignerWallet } from './user.helpers'
@@ -10,6 +11,8 @@ import { UserContextValue } from './user.types'
 
 const UserContext = createContext<undefined | UserContextValue>(undefined)
 UserContext.displayName = 'UserContext'
+
+const isMobileDevice = isMobile()
 
 export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   const { accountId, memberId, channelId, walletAccounts, walletStatus, lastUsedWalletName } = useUserStore(
@@ -48,10 +51,17 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [refetch])
 
   const signIn = useCallback(
-    async (walletName?: string): Promise<boolean> => {
+    async (
+      walletName?: string,
+      mobileCallback?: ({ onConfirm }: { onConfirm: () => void }) => void
+    ): Promise<boolean> => {
       let accounts = []
 
       if (!walletName) {
+        if (isMobileDevice && mobileCallback) {
+          mobileCallback?.({ onConfirm: () => setSignInModalOpen(true) })
+          return true
+        }
         setSignInModalOpen(true)
         return true
       }

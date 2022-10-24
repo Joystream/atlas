@@ -31,6 +31,7 @@ export type ListItemProps = {
   onClick?: (e: MouseEvent) => void
   className?: string
   highlight?: boolean
+  highlightWhenActive?: boolean
   to?: To
   externalLink?: {
     href: string
@@ -54,6 +55,7 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
       onClick,
       className,
       highlight,
+      highlightWhenActive,
       to,
       externalLink,
     },
@@ -63,7 +65,7 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
     const linkProps = getLinkPropsFromTo(to)
     return (
       <Container
-        highlight={highlight}
+        highlight={highlight || (highlightWhenActive && selected)}
         as={externalLink ? 'a' : asButton ? 'button' : undefined}
         className={className}
         onClick={onClick}

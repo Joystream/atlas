@@ -25,6 +25,7 @@ import {
 import { SubtitlesInput } from '@/types/subtitles'
 import { createId } from '@/utils/createId'
 import { computeFileHash } from '@/utils/hashing'
+import { capitalizeFirstLetter } from '@/utils/misc'
 
 export const useVideoFormAssets = (
   watch: UseFormWatch<VideoWorkspaceVideoFormFields>,
@@ -117,13 +118,9 @@ export const useVideoFormAssets = (
       setValue('assets', updatedAssets, { shouldDirty: true })
       if (!dirtyFields.title && video?.title) {
         const removedUnnecessaryCharacters = video.title.replace(/\.[^.]+$/, '').replace(/_/g, ' ')
-        setValue(
-          'title',
-          removedUnnecessaryCharacters.charAt(0).toUpperCase() + removedUnnecessaryCharacters.slice(1),
-          {
-            shouldDirty: true,
-          }
-        )
+        setValue('title', capitalizeFirstLetter(removedUnnecessaryCharacters), {
+          shouldDirty: true,
+        })
       }
 
       if (errors.assets) {
