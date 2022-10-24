@@ -38,6 +38,10 @@ with the Joystream network" src="https://user-images.githubusercontent.com/35307
 ![image](https://user-images.githubusercontent.com/35307309/147930535-9082f52b-6b34-45e1-b627-4d8372b0163b.png)
 ![image](https://user-images.githubusercontent.com/35307309/147930541-c2f75fe5-ddba-48de-9536-eac228961757.png)
 
+## Running your instance
+
+If you are interested in running your own instance of Atlas, please take a look at our [operator guide](docs/operator-guide.md). It should give you a proper overview of all the setup you will have to do.
+
 ## Contributing
 
 All community contributions to the project are welcome. Before starting any work, it's a good idea to get familiar with the following additional documents:
@@ -49,8 +53,6 @@ All community contributions to the project are welcome. Before starting any work
 If you are looking for a good place to start, check out the [good first issue label](https://github.com/Joystream/atlas/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) or [bug label](https://github.com/Joystream/atlas/issues?q=is%3Aissue+is%3Aopen+label%3Abug).
 
 ### Quickstart
-
-If you are interested in running your own instance of Atlas, please take a look at our [operator guide](docs/operator-guide.md).
 
 To get started working with Atlas codebase, first clone the repo, install all dependencies and run the development server.
 
