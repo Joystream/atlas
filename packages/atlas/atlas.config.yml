@@ -38,6 +38,7 @@ features:
     landingPageOgTitle: null # Open graph title for YPP landing page - used in open graph meta tags in HTML
     landingPageOgDescription: null # Open graph description for YPP landing page - used in open graph meta tags in HTML
     landingPageOgImgPath: null # Path to the open graph image for the YPP landing page - if not set, the default image will be used
+    googleConsoleClientId: '$VITE_GOOGLE_CONSOLE_CLIENT_ID'
   nft:
     auctionMinimumBidStepMultiplier: 0.02 # Multiplier for the auction's starting price used to determine auction's minimum bid step. See more: https://joystream.gitbook.io/testnet-workspace/system/content-directory/nft#auction
     openAuctionBidLockDuration: 300 # Number of blocks for which bids on open auctions are locked from withdrawal. See more: https://joystream.gitbook.io/testnet-workspace/system/content-directory/nft#auction-type

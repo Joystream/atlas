@@ -2,13 +2,14 @@ import { FC, useEffect, useState } from 'react'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { GOOGLE_CONSOLE_CLIENT_ID, GOOGLE_OAUTH_ENDPOINT } from '@/config/env'
+import { atlasConfig } from '@/config'
+import { GOOGLE_OAUTH_ENDPOINT } from '@/config/env'
 
 export const PlaygroundGoogleAuthentication: FC = () => {
   const [code, setCode] = useState<string | null>(null)
 
   const params = {
-    client_id: GOOGLE_CONSOLE_CLIENT_ID,
+    client_id: atlasConfig.features.ypp.googleConsoleClientId || '',
     response_type: 'code',
     scope: 'https://www.googleapis.com/auth/youtube.force-ssl',
     include_granted_scopes: 'true',
