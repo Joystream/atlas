@@ -1,6 +1,5 @@
 import { FC, PropsWithChildren, ReactNode } from 'react'
 
-import { Information } from '@/components/Information'
 import { Text } from '@/components/Text'
 import { Loader } from '@/components/_loaders/Loader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -19,7 +18,6 @@ import {
 type SignInModalStepTemplateProps = PropsWithChildren<{
   title: string
   subtitle: ReactNode
-  tooltipText?: string
   loader?: boolean
   hasNavigatedBack: boolean
   darkBackground?: boolean
@@ -30,7 +28,6 @@ type SignInModalStepTemplateProps = PropsWithChildren<{
 export const SignInModalStepTemplate: FC<SignInModalStepTemplateProps> = ({
   title,
   subtitle,
-  tooltipText,
   children,
   loader,
   hasNavigatedBack,
@@ -59,7 +56,6 @@ export const SignInModalStepTemplate: FC<SignInModalStepTemplateProps> = ({
             <Text as="h3" variant={smMatch ? 'h500' : 'h400'}>
               {title}
             </Text>
-            {tooltipText ? <Information text={tooltipText} placement="top" multiline /> : null}
           </HeaderContainer>
           <Text variant="t200" as="span" color="colorText">
             {subtitle}

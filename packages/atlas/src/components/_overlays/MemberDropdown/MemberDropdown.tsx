@@ -110,6 +110,10 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const toggleSendDialog = () => setShowSendDialog((prevState) => !prevState)
 
     useEffect(() => {
+      setDropdownType(publisher ? 'channel' : 'member')
+    }, [publisher])
+
+    useEffect(() => {
       if (!isActive) {
         return
       }

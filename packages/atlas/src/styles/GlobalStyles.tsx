@@ -78,6 +78,14 @@ const globalStyles = css`
     scrollbar-width: thin;
     scrollbar-color: ${scrollbarThumbColor} ${scrollbarBackgroundColor};
   }
+
+  /* global easing settings for aos library */
+
+  [data-aos] {
+    &[data-aos][data-aos-easing='atlas-easing'] {
+      transition-timing-function: cubic-bezier(0.09, 0.43, 0.3, 0.99);
+    }
+  }
 `
 
 type GlobalStyleProps = {
