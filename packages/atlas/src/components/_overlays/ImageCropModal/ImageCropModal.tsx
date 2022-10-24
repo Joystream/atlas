@@ -168,7 +168,8 @@ const ImageCropModalComponent: ForwardRefRenderFunction<ImageCropModalImperative
         secondaryButton={{ text: 'Cancel', onClick: resetModal }}
         additionalActionsNodeMobilePosition="bottom"
         additionalActionsNode={
-          editMode && (
+          editMode &&
+          onDelete && (
             <Button onClick={handleDeleteClick} variant="destructive-secondary" icon={<SvgActionTrash />}>
               Delete
             </Button>

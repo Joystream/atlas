@@ -499,6 +499,14 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     )
   }
 
+  const handleDeleteCover = () => {
+    setValue(
+      'cover',
+      { contentId: null, assetDimensions: null, imageCropData: null, originalBlob: undefined },
+      { shouldDirty: true }
+    )
+  }
+
   if (error) {
     return <ViewErrorFallback />
   }
@@ -555,6 +563,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
             <ImageCropModal
               imageType="cover"
               onConfirm={handleCoverChange}
+              onDelete={handleDeleteCover}
               onError={() =>
                 displaySnackbar({
                   title: 'Cannot load the image. Choose another.',
