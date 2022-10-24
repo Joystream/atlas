@@ -24,6 +24,7 @@ import { MemberFormData } from '../SignInModal.types'
 
 type SignInModalMembershipStepProps = SignInStepProps & {
   onSubmit: (data: MemberFormData) => void
+  previouslyFailedData?: MemberFormData | null
   dialogContentRef?: RefObject<HTMLDivElement>
 }
 
@@ -32,6 +33,7 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
   onSubmit,
   hasNavigatedBack,
   dialogContentRef,
+  previouslyFailedData,
 }) => {
   const {
     register,
@@ -40,7 +42,8 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
     watch,
     control,
     formState: { errors, isSubmitting },
-  } = useForm<MemberFormData>({ reValidateMode: 'onSubmit' })
+  } = useForm<MemberFormData>({ reValidateMode: 'onSubmit', defaultValues: previouslyFailedData || undefined })
+
   const handleInputRef = useRef<HTMLInputElement | null>(null)
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
 
