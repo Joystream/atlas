@@ -12,6 +12,7 @@ import { StudioLoading } from '@/components/_loaders/StudioLoading'
 import { PrivateRoute } from '@/components/_navigation/PrivateRoute'
 import { SidenavStudio } from '@/components/_navigation/SidenavStudio'
 import { TopbarStudio } from '@/components/_navigation/TopbarStudio'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { ConnectionStatusManager, useConnectionStatusStore } from '@/providers/connectionStatus'
@@ -146,10 +147,14 @@ const StudioLayout = () => {
                   <PrivateRoute element={<NotificationsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
                 }
               />
-              <Route
-                path={relativeRoutes.studio.ypp()}
-                element={<PrivateRoute element={<YppDashboard />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />}
-              />
+              {atlasConfig.features.ypp.googleConsoleClientId && (
+                <Route
+                  path={relativeRoutes.studio.ypp()}
+                  element={
+                    <PrivateRoute element={<YppDashboard />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                  }
+                />
+              )}
               <Route path="*" element={<NotFoundView />} />
             </Routes>
           </MainContainer>

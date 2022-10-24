@@ -33,6 +33,9 @@ export const configSchema = z.object({
     alternativeNodes: z.array(z.object({ url: z.string(), name: z.string() })),
   }),
   features: z.object({
+    ypp: z.object({
+      googleConsoleClientId: z.string().nullable(),
+    }),
     nft: z.object({
       auctionMinimumBidStepMultiplier: z.number(),
       openAuctionBidLockDuration: z.number(),

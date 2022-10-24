@@ -1,15 +1,18 @@
 import { Dispatch, SetStateAction, useCallback, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-import { GOOGLE_CONSOLE_CLIENT_ID, GOOGLE_OAUTH_ENDPOINT } from '@/config/env'
+import { atlasConfig } from '@/config'
+import { GOOGLE_OAUTH_ENDPOINT } from '@/config/env'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useSnackbar } from '@/providers/snackbars'
 import { useYppStore } from '@/providers/ypp/ypp.store'
 import { createId } from '@/utils/createId'
 import { SentryLogger } from '@/utils/logs'
 
+const GOOGLE_CONSOLE_CLIENT_ID = atlasConfig.features.ypp.googleConsoleClientId
+
 const GOOGLE_AUTH_PARAMS = {
-  client_id: GOOGLE_CONSOLE_CLIENT_ID,
+  client_id: GOOGLE_CONSOLE_CLIENT_ID || '',
   response_type: 'code',
   scope: 'https://www.googleapis.com/auth/youtube.force-ssl',
   include_granted_scopes: 'true',
@@ -41,6 +44,9 @@ export const useYppGoogleAuth = ({
   const resetSearchParams = useCallback(() => setSearchParams(new URLSearchParams()), [setSearchParams])
 
   const handleAuthorizeClick = useCallback(() => {
+    if (!GOOGLE_CONSOLE_CLIENT_ID) {
+      return
+    }
     const authUrl = new URL(GOOGLE_OAUTH_ENDPOINT)
     const randomCode = createId()
 

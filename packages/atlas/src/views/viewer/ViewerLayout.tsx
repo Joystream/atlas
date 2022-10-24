@@ -9,6 +9,7 @@ import { BottomNav } from '@/components/_navigation/BottomNav'
 import { PrivateRoute } from '@/components/_navigation/PrivateRoute'
 import { SidenavViewer } from '@/components/_navigation/SidenavViewer'
 import { TopbarViewer } from '@/components/_navigation/TopbarViewer'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSearchStore } from '@/providers/search'
@@ -44,7 +45,9 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.category(), element: <CategoryView /> },
   { path: relativeRoutes.viewer.member(), element: <MemberView /> },
   { path: relativeRoutes.viewer.nfts(), element: <NftsView /> },
-  { path: relativeRoutes.viewer.ypp(), element: <YppLandingView /> },
+  ...(atlasConfig.features.ypp.googleConsoleClientId
+    ? [{ path: relativeRoutes.viewer.ypp(), element: <YppLandingView /> }]
+    : []),
 ]
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.viewer.index()
