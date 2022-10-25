@@ -72,7 +72,7 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
         return 'colorTextError'
       }
       if (isSeparator) {
-        return 'colorText'
+        return 'colorTextMuted'
       }
       if (isHovering || selected || highlight || !isSeparator) {
         return

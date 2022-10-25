@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { FC, useCallback } from 'react'
 
+import { SvgActionCancel } from '@/assets/icons'
 import { Text } from '@/components/Text'
 import { atlasConfig } from '@/config'
 import { sizes } from '@/styles'
@@ -83,6 +84,11 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
     ...getAvailableSubtitlesLanguages(languagesIso),
   ]
 
+  const notFoundNode = {
+    label: 'Language not found',
+    nodeStart: <SvgActionCancel />,
+  }
+
   return (
     <Wrapper>
       <ComboBox<AvailableLanguage>
@@ -108,6 +114,7 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
           }
           onLanguageAdd({ languageIso: item.languageIso, type: item.type })
         }}
+        notFoundNode={notFoundNode}
       />
       {subtitlesArray?.map(({ languageIso, file, type, id, url, isUploadedAsSrt }) => (
         <SubtitlesBox

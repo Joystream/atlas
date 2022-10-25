@@ -1,10 +1,12 @@
-import { SeparatorWrapper } from '@/components/ListItem/ListItem.styles'
+import { FC } from 'react'
 
-export const ListItemSeparator = () => {
+import { BottomLine, SeparatorWrapper, TopLine } from '@/components/ListItem/ListItem.styles'
+
+export const ListItemSeparator: FC = () => {
   return (
     <SeparatorWrapper>
-      <div />
-      <div />
+      <TopLine />
+      <BottomLine />
     </SeparatorWrapper>
   )
 }

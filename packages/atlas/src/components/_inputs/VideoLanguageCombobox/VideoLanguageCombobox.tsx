@@ -1,5 +1,6 @@
 import { FC } from 'react'
 
+import { SvgActionCancel } from '@/assets/icons'
 import { ComboBox } from '@/components/_inputs/ComboBox'
 import { atlasConfig } from '@/config'
 
@@ -25,12 +26,18 @@ export const VideoLanguageCombobox: FC<VideoLanguageComboboxProps> = ({ value, e
     ...allLanguages,
   ]
 
+  const notFoundNode = {
+    label: 'Language not found',
+    nodeStart: <SvgActionCancel />,
+  }
+
   return (
     <ComboBox
       items={mappedLanguages}
       onSelectedItemChange={(item) => onSelectedItemChange(item?.value)}
       value={atlasConfig.derived.languagesLookup[value || '']}
       error={error}
+      notFoundNode={notFoundNode}
     />
   )
 }

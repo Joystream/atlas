@@ -138,16 +138,20 @@ export const SeparatorWrapper = styled.div`
   :first-of-type {
     display: none;
   }
+`
 
-  div {
-    height: 1px;
+const lineStyles = css`
+  height: 1px;
+`
 
-    :nth-of-type(1) {
-      background-color: ${cVar('colorCoreNeutral400Darken')};
-    }
+export const TopLine = styled.div`
+  ${lineStyles};
 
-    :nth-of-type(2) {
-      background-color: ${cVar('colorCoreNeutral900Lighten')};
-    }
-  }
+  background-color: ${cVar('colorCoreNeutral400Darken')};
+`
+
+export const BottomLine = styled.div`
+  ${lineStyles};
+
+  background-color: ${cVar('colorCoreNeutral900Lighten')};
 `

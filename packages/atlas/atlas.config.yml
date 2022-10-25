@@ -174,7 +174,7 @@ content:
       name: Vietnamese
     - isoCode: yo
       name: Yoruba
-  popularLanguages: ['ar', 'zh', 'en', 'fr', 'de', 'ja', 'ms', 'pt', 'ru', 'st']
+  popularLanguages: ['en', 'ar', 'zh', 'fr', 'de', 'ja', 'ms', 'pt', 'ru', 'st']
 
 analytics:
   assetLogs: # Asset logs are used to track distributors performance
