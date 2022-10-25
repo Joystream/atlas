@@ -279,12 +279,14 @@ export const SignInModal: FC = () => {
     </StyledDialogModal>
   )
 }
-type FaucetErrorType = 'TooManyRequestsPerIp' | 'TooManyRequests' | 'OnlyNewAccountsCanBeUsedForScreenedMembers'
 
 type NewMemberResponse = {
   memberId: MemberId
   block: number
-  error?: FaucetErrorType
 }
 
-type NewMemberErrorResponse = Pick<NewMemberResponse, 'error'>
+type FaucetErrorType = 'TooManyRequestsPerIp' | 'TooManyRequests' | 'OnlyNewAccountsCanBeUsedForScreenedMembers'
+
+type NewMemberErrorResponse = {
+  error?: FaucetErrorType
+}
