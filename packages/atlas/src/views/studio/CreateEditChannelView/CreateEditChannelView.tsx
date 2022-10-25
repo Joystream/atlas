@@ -538,10 +538,10 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
 
   const hasAvatarUploadFailed = isAvatarUploading
     ? false
-    : (channel?.avatarPhoto && !channel.avatarPhoto.isAccepted) || false
+    : (channel?.avatarPhoto && !channel.avatarPhoto.isAccepted && !dirtyFields.avatar) || false
   const hasCoverUploadFailed = isCoverUploading
     ? false
-    : (channel?.coverPhoto && !channel.coverPhoto.isAccepted) || false
+    : (channel?.coverPhoto && !channel.coverPhoto.isAccepted && !dirtyFields.cover) || false
   const isDisabled = !isDirty || nodeConnectionStatus !== 'connected'
 
   return (
