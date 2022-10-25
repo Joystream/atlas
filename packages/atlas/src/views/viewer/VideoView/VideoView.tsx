@@ -1,5 +1,6 @@
 import { generateVideoMetaTags } from '@joystream/atlas-meta-server/src/tags'
 import BN from 'bn.js'
+import { format } from 'date-fns'
 import { throttle } from 'lodash-es'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
@@ -10,6 +11,7 @@ import { SvgActionFlag, SvgActionMore, SvgActionShare } from '@/assets/icons'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { NumberFormat } from '@/components/NumberFormat'
+import { Tooltip } from '@/components/Tooltip'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { CTA_MAP, CallToActionButton } from '@/components/_buttons/CallToActionButton'
@@ -37,7 +39,7 @@ import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
-import { formatVideoDate } from '@/utils/video'
+import { formatDate } from '@/utils/time'
 
 import { CommentsSection } from './CommentsSection'
 import { MoreVideos } from './MoreVideos'
@@ -302,8 +304,15 @@ export const VideoView: FC = () => {
           <Meta as="span" variant={mdMatch ? 't300' : 't100'} color="colorText">
             {video ? (
               <>
-                {formatVideoDate(video.createdAt)} •{' '}
-                <NumberFormat as="span" format="full" value={video.views} color="colorText" /> views
+                <Tooltip
+                  placement="top-start"
+                  offsetY={8}
+                  delay={[1000, null]}
+                  text={`${formatDate(video.createdAt)} at ${format(video.createdAt, 'HH:mm')}`}
+                >
+                  {formatDate(video.createdAt)}
+                </Tooltip>{' '}
+                • <NumberFormat as="span" format="full" value={video.views} color="colorText" /> views
               </>
             ) : (
               <SkeletonLoader height={24} width={200} />
