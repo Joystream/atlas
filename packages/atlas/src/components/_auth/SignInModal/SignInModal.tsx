@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import { BN } from 'bn.js'
 import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import shallow from 'zustand/shallow'
@@ -14,6 +14,7 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
 import { useUser } from '@/providers/user/user.hooks'
 import { useUserStore } from '@/providers/user/user.store'
+import { isAxiosError } from '@/utils/error'
 import { uploadAvatarImage } from '@/utils/image'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
@@ -37,6 +38,7 @@ export const SignInModal: FC = () => {
   const [hasNavigatedBack, setHasNavigatedBack] = useState(false)
   const { joystream } = useJoystream()
   const dialogContentRef = useRef<HTMLDivElement>(null)
+  const [previouslyFailedData, setPreviouslyFailedData] = useState<MemberFormData | null>(null)
 
   const { displaySnackbar } = useSnackbar()
   const { walletStatus, refetchUserMemberships, setActiveUser, isLoggedIn } = useUser()
@@ -74,7 +76,10 @@ export const SignInModal: FC = () => {
     setCurrentStepIdx((previousIdx) => (previousIdx ?? -1) + 1)
     setHasNavigatedBack(false)
   }, [])
-  const goToPreviousStep = useCallback(() => {
+  const goToPreviousStep = useCallback((data?: MemberFormData) => {
+    if (data !== undefined) {
+      setPreviouslyFailedData(data)
+    }
     setCurrentStepIdx((previousIdx) => (previousIdx ?? 1) - 1)
     setHasNavigatedBack(true)
   }, [])
@@ -129,6 +134,7 @@ export const SignInModal: FC = () => {
         }
         const { block } = await createNewMember(selectedAddress, data)
         addBlockAction({ targetBlock: block, callback })
+        setPreviouslyFailedData(null)
       } catch (error) {
         if (error.name === 'UploadAvatarServiceError') {
           displaySnackbar({
@@ -136,19 +142,54 @@ export const SignInModal: FC = () => {
             description: 'Avatar could not be uploaded. Try again later',
             iconType: 'error',
           })
-          goToPreviousStep()
+          goToPreviousStep(data)
+          SentryLogger.error('Failed to upload member avatar', 'SignInModal', error)
           return
         }
-        SentryLogger.error('Failed to create a membership', 'SignInModal', error)
-        const errorCode = error?.isAxiosError && (error as AxiosError<NewMemberResponse>).response?.data?.error
-        displaySnackbar({
-          title: 'Something went wrong',
-          description: `There was a problem with creating your membership. Please try again later.${
-            errorCode ? ` Error code: ${errorCode}` : ''
-          }`,
-          iconType: 'error',
-        })
-        goToPreviousStep() // go back to member form
+
+        const errorCode = isAxiosError<NewMemberErrorResponse>(error) ? error.response?.data?.error : null
+
+        SentryLogger.error('Failed to create a membership', 'SignInModal', error, { error: { errorCode } })
+
+        switch (errorCode) {
+          case 'TooManyRequestsPerIp':
+            displaySnackbar({
+              title: 'You reached a membership limit',
+              description:
+                'Your membership could not be created as you already created one recently from the same IP address. Try again in 2 days.',
+              iconType: 'error',
+            })
+            break
+          case 'TooManyRequests':
+            displaySnackbar({
+              title: 'Our system is overloaded',
+              description:
+                'Your membership could not be created as our system is undergoing a heavy traffic. Please, try again in a little while.',
+              iconType: 'error',
+            })
+            break
+          case 'OnlyNewAccountsCanBeUsedForScreenedMembers':
+            displaySnackbar({
+              title: 'This account is not new',
+              description:
+                'Your membership could not be created as the selected wallet account has either made some transactions in the past or has some funds already on it. Please, try again using a fresh wallet account. ',
+              iconType: 'error',
+            })
+            break
+
+          default:
+            displaySnackbar({
+              title: 'Something went wrong',
+              description: `There was a problem with creating your membership. Please try again later.${
+                errorCode ? ` Error code: ${errorCode}` : ''
+              }`,
+              iconType: 'error',
+            })
+            break
+        }
+
+        goToPreviousStep()
+        return
       }
     },
     [
@@ -161,6 +202,7 @@ export const SignInModal: FC = () => {
       refetchUserMemberships,
       selectedAddress,
       setActiveUser,
+      setPreviouslyFailedData,
       setSignInModalOpen,
     ]
   )
@@ -196,7 +238,12 @@ export const SignInModal: FC = () => {
         return <SignInModalTermsStep {...commonProps} />
       case 'membership':
         return (
-          <SignInModalMembershipStep onSubmit={handleSubmit} dialogContentRef={dialogContentRef} {...commonProps} />
+          <SignInModalMembershipStep
+            onSubmit={handleSubmit}
+            previouslyFailedData={previouslyFailedData}
+            dialogContentRef={dialogContentRef}
+            {...commonProps}
+          />
         )
       case 'creating':
         return <SignInModalCreatingStep {...commonProps} />
@@ -211,11 +258,16 @@ export const SignInModal: FC = () => {
       show={!!currentStep}
       dividers={currentStep !== 'creating'}
       primaryButton={primaryButtonProps}
-      secondaryButton={backButtonVisible ? { text: 'Back', onClick: goToPreviousStep } : undefined}
-      onClickOutside={() => setSignInModalOpen(false)}
+      secondaryButton={backButtonVisible ? { text: 'Back', onClick: () => goToPreviousStep() } : undefined}
       additionalActionsNode={
         currentStep !== 'creating' ? (
-          <Button variant="tertiary" onClick={() => setSignInModalOpen(false)}>
+          <Button
+            variant="tertiary"
+            onClick={() => {
+              setPreviouslyFailedData(null)
+              setSignInModalOpen(false)
+            }}
+          >
             Cancel
           </Button>
         ) : null
@@ -231,5 +283,10 @@ export const SignInModal: FC = () => {
 type NewMemberResponse = {
   memberId: MemberId
   block: number
-  error?: string
+}
+
+type FaucetErrorType = 'TooManyRequestsPerIp' | 'TooManyRequests' | 'OnlyNewAccountsCanBeUsedForScreenedMembers'
+
+type NewMemberErrorResponse = {
+  error?: FaucetErrorType
 }
