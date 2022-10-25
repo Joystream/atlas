@@ -30,13 +30,17 @@ with the Joystream network" src="https://user-images.githubusercontent.com/35307
 - Explore most popular content and channels
 - Sign up for your Joystream membership
 - Create a channel and publish content
-- (coming soon) Issue and trade NFTs for the content you've published
+- Issue and trade NFTs for the content you've published
 
 #### Screenshots
 
 ![image](https://user-images.githubusercontent.com/35307309/147930525-8bb61647-d908-47d1-96c0-494080a2aad6.png)
 ![image](https://user-images.githubusercontent.com/35307309/147930535-9082f52b-6b34-45e1-b627-4d8372b0163b.png)
 ![image](https://user-images.githubusercontent.com/35307309/147930541-c2f75fe5-ddba-48de-9536-eac228961757.png)
+
+## Running your instance
+
+If you are interested in running your own instance of Atlas, please take a look at our [operator guide](docs/operator-guide.md). It should give you a proper overview of all the setup you will have to do.
 
 ## Contributing
 
