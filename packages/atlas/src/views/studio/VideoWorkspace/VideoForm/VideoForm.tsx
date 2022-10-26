@@ -177,7 +177,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
               subtitles: data.subtitlesArray?.map((subtitle, idx) => ({
                 id: subtitle.id || `new-subtitle-${idx}`,
                 language: subtitle.languageIso,
-                type: subtitle.type,
+                type: subtitle?.type,
                 mimeType: 'text/vtt',
               })),
             }
@@ -524,7 +524,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
       />
     </FormField>
   )
-
   const videoEditFields = (
     <>
       <FormField optional label="Description" error={errors.description?.message}>
@@ -564,7 +563,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           )}
         />
       </FormField>
-      <FormField label="Language">
+      <FormField label="Language" error={errors.language?.message}>
         <Controller
           name="language"
           control={control}
@@ -572,7 +571,12 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           render={({ field: { value, onChange } }) => (
             <Select
               value={value}
-              items={atlasConfig.derived.languagesSelectValues}
+              items={[
+                { name: 'TOP LANGUAGES', value: '', isSeparator: true },
+                ...atlasConfig.derived.popularLanguagesSelectValues,
+                { name: 'ALL LANGUAGES', value: '', isSeparator: true },
+                ...atlasConfig.derived.languagesSelectValues,
+              ]}
               onChange={onChange}
               error={!!errors.language && !value}
               disabled={videoFieldsLocked}
@@ -837,6 +841,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                       )
                     }}
                     languagesIso={atlasConfig.content.languages.map(({ isoCode }) => isoCode)}
+                    popularLanguagesIso={atlasConfig.content.popularLanguages}
                     subtitlesArray={subtitlesArray}
                   />
                 </FormField>

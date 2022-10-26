@@ -130,7 +130,7 @@ export const _Select = <T extends unknown>(
                   highlight: highlightedIndex === index,
                   label: item.name,
                   ...item,
-                  ...getItemProps({ item: item.value, index, onClick: item.onClick }),
+                  ...getItemProps({ item: item.value, index, onClick: item.onClick, disabled: item.isSeparator }),
                 }))}
               size={size === 'medium' ? 'small' : 'medium'}
             />

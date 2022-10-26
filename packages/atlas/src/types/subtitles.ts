@@ -2,7 +2,7 @@ import { StorageDataObjectFieldsFragment } from '@/api/queries/__generated__/fra
 
 export type SubtitlesInput = {
   languageIso: string
-  type: 'closed-captions' | 'subtitles'
+  type: 'closed-captions' | 'subtitles' | 'separator'
   /**
    * @param file File needs to be provided in .vtt format
    */
