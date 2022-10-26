@@ -117,6 +117,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
             },
             type: 'video',
             dimensions: data.assets.media.dimensions,
+            ipfsHash: await data.assets.media.hashPromise,
           })
           uploadPromises.push(uploadPromise)
         }
@@ -131,6 +132,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
             type: 'thumbnail',
             dimensions: data.assets.thumbnailPhoto.dimensions,
             imageCropData: data.assets.thumbnailPhoto.cropData,
+            ipfsHash: await data.assets.thumbnailPhoto.hashPromise,
           })
           uploadPromises.push(uploadPromise)
         }
@@ -146,6 +148,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
               },
               type: 'subtitles',
               subtitlesLanguageIso: subtitle.subtitlesLanguageIso,
+              ipfsHash: await subtitle.hashPromise,
             })
           })
           uploadPromises.push(...subtitlesUploadPromises)
