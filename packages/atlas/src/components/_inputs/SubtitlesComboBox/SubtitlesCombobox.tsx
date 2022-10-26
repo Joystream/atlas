@@ -12,7 +12,7 @@ import { SubtitlesBox } from '../SubtitlesBox'
 
 type AvailableLanguage = SubtitlesInput & {
   disabled: boolean
-  separator?: boolean
+  isSeparator?: boolean
 }
 
 type SubtitlesComboboxProps = {
@@ -47,7 +47,7 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
             disabled: !!subtitlesArray?.find(
               (subtitles) => subtitles.languageIso === iso && subtitles.type === 'subtitles'
             ),
-            separator: false,
+            isSeparator: false,
           },
           {
             label: `${atlasConfig.derived.languagesLookup[iso]} (CC)`,
@@ -56,7 +56,7 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
             disabled: !!subtitlesArray?.find(
               (subtitles) => subtitles.languageIso === iso && subtitles.type === 'closed-captions'
             ),
-            separator: false,
+            isSeparator: false,
           },
         ])
         .flat(),
@@ -69,7 +69,7 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
       type: 'separator' as const,
       languageIso: '',
       value: '',
-      separator: true,
+      isSeparator: true,
       disabled: false,
     },
     ...getAvailableSubtitlesLanguages(popularLanguagesIso),
@@ -78,7 +78,7 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
       type: 'separator' as const,
       languageIso: '',
       value: '',
-      separator: true,
+      isSeparator: true,
       disabled: false,
     },
     ...getAvailableSubtitlesLanguages(languagesIso),
@@ -96,7 +96,7 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
         error={error}
         placeholder="Add language"
         items={mappedLanguages.map((subtitlesLanguage) =>
-          !subtitlesLanguage.separator
+          !subtitlesLanguage.isSeparator
             ? {
                 ...subtitlesLanguage,
                 nodeEnd: subtitlesLanguage.disabled ? (

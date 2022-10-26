@@ -12,7 +12,7 @@ import { Input, InputProps } from '../Input'
 type ModifiedListItemProps = ListItemProps & {
   label: string
   thumbnailUrl?: string
-  separator?: boolean
+  isSeparator?: boolean
 }
 
 export type ComboBoxProps<T = unknown> = {
@@ -75,7 +75,7 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
     },
     onInputValueChange: ({ inputValue }) => {
       const filteredItems = items.filter(
-        (item) => (item.label as string)?.toLowerCase().startsWith(inputValue?.toLowerCase() || '') && !item.separator
+        (item) => (item.label as string)?.toLowerCase().startsWith(inputValue?.toLowerCase() || '') && !item.isSeparator
       )
       setInputItems(inputValue?.length ? uniqBy(filteredItems, 'label') : items)
       onInputValueChange?.(inputValue)
@@ -125,12 +125,12 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
                 {...getItemProps({
                   item,
                   index,
-                  disabled: item.separator,
+                  disabled: item.isSeparator,
                 })}
                 size="large"
                 highlight={highlightedIndex === index}
                 nodeStart={item.nodeStart || (item.thumbnailUrl && <StyledThumbnail src={item.thumbnailUrl} />)}
-                isSeparator={item.separator}
+                isSeparator={item.isSeparator}
               />
             ))}
           </>

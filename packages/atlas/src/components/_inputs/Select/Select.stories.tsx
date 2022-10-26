@@ -45,6 +45,20 @@ export const WithControlledInput = TemplateWithControlledInput.bind({})
 
 export const WithIcon = TemplateWithControlledInput.bind({})
 
+const TemplateWithSeparator: Story<SelectProps> = (args) => (
+  <Select
+    {...args}
+    items={[
+      { name: 'TOP ITEMS', value: '', isSeparator: true },
+      ...args.items.slice(0, 2),
+      { name: 'ALL ITEMS', value: '', isSeparator: true },
+      ...args.items,
+    ]}
+  />
+)
+
+export const WithSeparators = TemplateWithSeparator.bind({})
+
 WithIcon.args = {
   icon: <SvgActionAddImage />,
 }

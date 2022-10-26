@@ -192,9 +192,9 @@ export const WithMembers = TemplateWithMembers.bind({})
 
 const TemplateWithSeparators: Story<ComboBoxProps> = (args) => {
   const mappedItems = [
-    { label: 'TOP MEMBERS', value: '', separator: true },
+    { label: 'TOP MEMBERS', value: '', isSeparator: true },
     ...MEMBERS.slice(0, 3),
-    { label: 'ALL MEMBERS', value: '', separator: true },
+    { label: 'ALL MEMBERS', value: '', isSeparator: true },
     ...MEMBERS,
   ]
 
