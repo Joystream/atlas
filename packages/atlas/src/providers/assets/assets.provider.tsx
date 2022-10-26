@@ -75,7 +75,11 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
       query: GetDistributionBucketsWithBagsDocument,
       fetchPolicy: 'network-only',
     })
-    if ((!coordinates || !expiry || now.getTime() > expiry) && !disableUserLocation) {
+    if (
+      (!coordinates || !expiry || now.getTime() > expiry) &&
+      !disableUserLocation &&
+      atlasConfig.storage.geolocationServiceUrl
+    ) {
       try {
         const userCoordinatesResponse = await axios.get<UserCoordinates>(atlasConfig.storage.geolocationServiceUrl)
         userCoordinates = userCoordinatesResponse.data
