@@ -5,7 +5,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { cVar, transitions } from '@/styles'
-import { shortenAddress } from '@/utils/address'
+import { shortenString } from '@/utils/misc'
 
 import {
   MembershipDetails,
@@ -95,7 +95,7 @@ export const MembershipInfo: FC<MembershipInfoProps> = ({
                 <SkeletonLoader width={140} height={24} />
               ) : (
                 <StyledText as="p" variant="t300" color="colorText" onClick={handleCopyAddress}>
-                  {shortenAddress(address, 6, 4)}
+                  {shortenString(address, 6, 4)}
                   <Tooltip text="Copy account address" placement="top">
                     {copyButtonClicked ? <StyledSvgActionCheck /> : <StyledSvgActionCopy />}
                   </Tooltip>

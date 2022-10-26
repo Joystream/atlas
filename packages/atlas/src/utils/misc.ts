@@ -13,3 +13,10 @@ export const wait = (milliseconds: number): Promise<void> =>
   })
 
 export const capitalizeFirstLetter = (string: string) => string.charAt(0).toUpperCase() + string.slice(1)
+
+export const shortenString = (text: string, firstLettersAmount: number, lastLettersAmount = firstLettersAmount) => {
+  const arrayFromString = text.split('')
+  const firstLetters = arrayFromString.slice(0, firstLettersAmount).join('')
+  const lastLetters = arrayFromString.slice(arrayFromString.length - 1 - lastLettersAmount).join('')
+  return `${firstLetters}...${lastLetters}`
+}
