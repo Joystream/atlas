@@ -1,10 +1,10 @@
 general:
-  appName: 'Atlas' # Application name - used in the copy throughout the app, in index.html, open graph meta tags, etc
+  appName: 'Gleev' # Application name - used in the copy throughout the app, in index.html, open graph meta tags, etc
   appDescription: 'The streaming platform empowering viewers, creators, and builders. Built on and operated by the Joystream blockchain and DAO.' # Application description - used in index.html meta tags
-  appTagline: 'The streaming platform empowering viewers, creators, and builders. Built on and operated by the Joystream blockchain and DAO.'
-  appTwitterId: '@JoystreamDAO' # Twitter handle for the app - used in open graph meta tags in HTML
-  appUrl: 'https://play.joystream.org' # URL at which the app is hosted - used in open graph meta tags in HTML
-  appGithubUrl: 'https://github.com/Joystream/atlas' # URL for Atlas GitHub repository - used in the footer
+  appTwitterId: '@Gleevapp' # Twitter handle for the app - used in open graph meta tags in HTML
+  appTagline: 'Gleev brings together the like-minded creators and viewers around the shared passion of the present and the future of Crypto affairs.'
+  appUrl: 'https://gleev.xyz' # URL at which the app is hosted - used in open graph meta tags in HTML
+  appGithubUrl: 'https://github.com/Joystream/gleev' # URL for Atlas GitHub repository - used in the footer
   appOgImgPath: '/og-image.webp' # Path to the open graph image - used in open graph meta tags in HTML
   pioneerMemberUrlPrefix: 'https://dao.joystream.org/#/members' # URL prefix for Pioneer member profile page - used to link to member details
   joystreamLandingPageUrl: 'https://www.joystream.org' # URL for Joystream landing page - used in the footer and in "Learn more" links
