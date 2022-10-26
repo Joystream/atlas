@@ -1,6 +1,13 @@
 import { FC, useState } from 'react'
 
-import { SvgActionAddVideo, SvgActionPlay, SvgSidebarChannel, SvgSidebarUpload, SvgSidebarVideos } from '@/assets/icons'
+import {
+  SvgActionAddVideo,
+  SvgActionPlay,
+  SvgSidebarChannel,
+  SvgSidebarPayments,
+  SvgSidebarUpload,
+  SvgSidebarVideos,
+} from '@/assets/icons'
 import { SvgAppLogoStudio } from '@/assets/logos'
 import { Button } from '@/components/_buttons/Button'
 import { NavItemType } from '@/components/_navigation/NavItem'
@@ -29,6 +36,12 @@ const studioNavbarItems: NavItemType[] = [
     name: 'Uploads',
     expandedName: 'My uploads',
     to: absoluteRoutes.studio.uploads(),
+  },
+  {
+    icon: <SvgSidebarPayments />,
+    name: 'Payments',
+    expandedName: 'Payments',
+    to: absoluteRoutes.studio.payments(),
   },
 ]
 
