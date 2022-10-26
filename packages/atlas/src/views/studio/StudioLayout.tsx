@@ -23,9 +23,9 @@ import { isAllowedBrowser } from '@/utils/browser'
 import { NotificationsView } from '@/views/notifications'
 
 import { CreateEditChannelView } from './CreateEditChannelView'
+import { CrtView } from './CrtView'
 import { MyUploadsView } from './MyUploadsView'
 import { MyVideosView } from './MyVideosView'
-import { PaymentsView } from './PaymentsView'
 import { StudioWelcomeView } from './StudioWelcomeView'
 import { VideoWorkspace } from './VideoWorkspace'
 
@@ -129,8 +129,8 @@ const StudioLayout = () => {
                 element={<PrivateRoute element={<MyVideosView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />}
               />
               <Route
-                path={relativeRoutes.studio.payments()}
-                element={<PrivateRoute element={<PaymentsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />}
+                path={relativeRoutes.studio.crt()}
+                element={<PrivateRoute element={<CrtView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />}
               />
               <Route
                 path={relativeRoutes.studio.notifications()}
