@@ -122,7 +122,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     register,
     handleSubmit: createSubmitHandler,
     control,
-    formState: { isDirty, dirtyFields, errors, isSubmitted },
+    formState: { isDirty, dirtyFields, errors },
     watch,
     setFocus,
     setValue,
@@ -258,13 +258,6 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       : undefined,
     newChannelAssets
   )
-
-  // set isDirty to false, once the form is submitted
-  useEffect(() => {
-    if (isSubmitted) {
-      reset(getValues())
-    }
-  }, [isSubmitted, getValues, reset])
 
   // set default values for editing channel
   useEffect(() => {
@@ -485,7 +478,10 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
               channelBucketsCount.toString(),
               proxyCallback(updateStatus)
             ),
-      onTxSync: refetchDataAndUploadAssets,
+      onTxSync: (result) => {
+        reset(getValues())
+        return refetchDataAndUploadAssets(result)
+      },
     })
 
     if (completed && newChannel) {
@@ -686,8 +682,8 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
                   items={atlasConfig.derived.languagesSelectValues}
                   disabled={loading}
                   value={value}
-                  onChange={onChange}
                   error={!!errors.language && !value}
+                  onChange={onChange}
                 />
               )}
             />
