@@ -205,18 +205,18 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
           size: avatarAsset?.blob.size,
           ipfsHash: avatarHash || '',
         }
-        if (channel?.avatarPhoto?.id) {
-          replacedAssetsIds.push(channel.avatarPhoto.id)
-        }
+      }
+      if (channel?.avatarPhoto?.id && avatarHash) {
+        replacedAssetsIds.push(channel.avatarPhoto.id)
       }
       if (coverAsset?.blob?.size) {
         newAssets.coverPhoto = {
           size: coverAsset.blob.size,
           ipfsHash: coverPhotoHash || '',
         }
-        if (channel?.coverPhoto?.id) {
-          replacedAssetsIds.push(channel.coverPhoto.id)
-        }
+      }
+      if (channel?.coverPhoto?.id && coverPhotoHash) {
+        replacedAssetsIds.push(channel.coverPhoto.id)
       }
       return [newAssets, replacedAssetsIds]
     },
@@ -379,16 +379,18 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     }
 
     const assets: ChannelInputAssets = {}
+    let removedAssetsIds: string[] = []
     const processAssets = async () => {
       const avatarIpfsHash = await avatarHashPromise
       const coverIpfsHash = await coverHashPromise
-      const [createdAssets] = createChannelAssets(avatarIpfsHash, coverIpfsHash)
+      const [createdAssets, assetIdsToRemove] = createChannelAssets(avatarIpfsHash, coverIpfsHash)
       if (createdAssets.avatarPhoto) {
         assets.avatarPhoto = createdAssets.avatarPhoto
       }
       if (createdAssets.coverPhoto) {
         assets.coverPhoto = createdAssets.coverPhoto
       }
+      removedAssetsIds = assetIdsToRemove
     }
 
     const uploadAssets = async ({ channelId, assetsIds }: ChannelExtrinsicResult) => {
@@ -478,7 +480,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
               memberId,
               metadata,
               assets,
-              removedChannelAssetsIds,
+              removedAssetsIds,
               dataObjectStateBloatBondValue.toString(),
               channelBucketsCount.toString(),
               proxyCallback(updateStatus)
@@ -536,10 +538,10 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
 
   const hasAvatarUploadFailed = isAvatarUploading
     ? false
-    : (channel?.avatarPhoto && !channel.avatarPhoto.isAccepted) || false
+    : (channel?.avatarPhoto && !channel.avatarPhoto.isAccepted && !dirtyFields.avatar) || false
   const hasCoverUploadFailed = isCoverUploading
     ? false
-    : (channel?.coverPhoto && !channel.coverPhoto.isAccepted) || false
+    : (channel?.coverPhoto && !channel.coverPhoto.isAccepted && !dirtyFields.cover) || false
   const isDisabled = !isDirty || nodeConnectionStatus !== 'connected'
 
   return (
