@@ -188,7 +188,7 @@ export const SignInModal: FC = () => {
             break
         }
 
-        goToPreviousStep()
+        goToPreviousStep(data)
         return
       }
     },
