@@ -102,8 +102,11 @@ export class JoystreamLib {
   ) {
     await this.ensureApi()
 
-    const unsubscribe = await this.api.derive.balances.all(accountId, ({ availableBalance, lockedBalance }) => {
-      callback({ availableBalance: availableBalance.toString(), lockedBalance: lockedBalance.toString() })
+    const unsubscribe = await this.api.derive.balances.all(accountId, ({ availableBalance, freeBalance }) => {
+      callback({
+        availableBalance: availableBalance.toString(),
+        lockedBalance: freeBalance.sub(availableBalance).toString(),
+      })
     })
 
     return proxy(unsubscribe)
