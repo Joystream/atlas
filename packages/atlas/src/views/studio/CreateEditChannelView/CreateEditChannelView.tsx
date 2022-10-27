@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useRef, useState } from 'react'
+import { FC, useCallback, useEffect, useRef } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
@@ -85,8 +85,6 @@ type CreateEditChannelViewProps = {
 export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChannel }) => {
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropModalImperativeHandle>(null)
-  const [avatarHashPromise, setAvatarHashPromise] = useState<Promise<string> | null>(null)
-  const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
 
   const { memberId, accountId, channelId, setActiveUser, refetchUserMemberships } = useUser()
   const cachedChannelId = useRef(channelId)
@@ -295,24 +293,6 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     }
   }, [channel, loading, newChannel, reset])
 
-  useEffect(() => {
-    if (!dirtyFields.avatar || !avatarAsset?.blob) {
-      return
-    }
-
-    const hashPromise = computeFileHash(avatarAsset.blob)
-    setAvatarHashPromise(hashPromise)
-  }, [dirtyFields.avatar, avatarAsset])
-
-  useEffect(() => {
-    if (!dirtyFields.cover || !coverAsset?.blob) {
-      return
-    }
-
-    const hashPromise = computeFileHash(coverAsset.blob)
-    setCoverHashPromise(hashPromise)
-  }, [dirtyFields.cover, coverAsset])
-
   const headTags = useHeadTags(newChannel ? 'New channel' : 'Edit channel')
 
   const handleSubmit = createSubmitHandler(async (data) => {
@@ -374,8 +354,9 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     const assets: ChannelInputAssets = {}
     let removedAssetsIds: string[] = []
     const processAssets = async () => {
-      const avatarIpfsHash = await avatarHashPromise
-      const coverIpfsHash = await coverHashPromise
+      const avatarIpfsHash = avatarAsset?.blob && dirtyFields.avatar && (await computeFileHash(avatarAsset.blob))
+      const coverIpfsHash = coverAsset?.blob && dirtyFields.cover && (await computeFileHash(coverAsset.blob))
+
       const [createdAssets, assetIdsToRemove] = createChannelAssets(avatarIpfsHash, coverIpfsHash)
       if (createdAssets.avatarPhoto) {
         assets.avatarPhoto = createdAssets.avatarPhoto
