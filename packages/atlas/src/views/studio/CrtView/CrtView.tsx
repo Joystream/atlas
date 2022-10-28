@@ -23,7 +23,7 @@ export const CrtView: FC = () => {
       <ContainerLayoutGrid>
         <StyledGridItem colSpan={{ base: 12, sm: 10, md: 8, lg: 6, xxl: 4 }} colStart={{ sm: 2, md: 3, lg: 4, xxl: 5 }}>
           <StyledSvgSmallMoneroModified />
-          <Text variant={smMatch ? 'h600' : 'h500'} as="h1" margin={{ bottom: 4, top: 8 }}>
+          <Text variant={smMatch ? 'h600' : 'h500'} as="h1" margin={{ top: 8 }}>
             Creator tokens are coming later this year
           </Text>
           <Text as="p" margin={{ top: 4, bottom: 16 }} align="center" variant="t300" color="colorText">
