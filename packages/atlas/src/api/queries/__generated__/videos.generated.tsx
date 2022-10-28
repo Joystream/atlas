@@ -44,6 +44,22 @@ export type GetBasicVideoQuery = {
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
+      coverPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeUnknown' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+      } | null
     }
     thumbnailPhoto?: {
       __typename?: 'StorageDataObject'
@@ -381,7 +397,7 @@ export type GetFullVideoQuery = {
             | null
         }
       } | null
-      coverPhoto?: {
+      avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
@@ -397,7 +413,7 @@ export type GetFullVideoQuery = {
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
-      avatarPhoto?: {
+      coverPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
@@ -684,6 +700,22 @@ export type GetBasicVideosConnectionQuery = {
           rewardAccount: string
           channelStateBloatBond: string
           avatarPhoto?: {
+            __typename?: 'StorageDataObject'
+            id: string
+            createdAt: Date
+            size: string
+            isAccepted: boolean
+            ipfsHash: string
+            storageBag: { __typename?: 'StorageBag'; id: string }
+            type:
+              | { __typename: 'DataObjectTypeChannelAvatar' }
+              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeUnknown' }
+              | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoSubtitle' }
+              | { __typename: 'DataObjectTypeVideoThumbnail' }
+          } | null
+          coverPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
             createdAt: Date
@@ -1048,7 +1080,7 @@ export type GetFullVideosConnectionQuery = {
                 | null
             }
           } | null
-          coverPhoto?: {
+          avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
             createdAt: Date
@@ -1064,7 +1096,7 @@ export type GetFullVideosConnectionQuery = {
               | { __typename: 'DataObjectTypeVideoSubtitle' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
           } | null
-          avatarPhoto?: {
+          coverPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
             createdAt: Date
@@ -1348,6 +1380,22 @@ export type GetBasicVideosQuery = {
       rewardAccount: string
       channelStateBloatBond: string
       avatarPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeUnknown' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+      } | null
+      coverPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
@@ -1703,7 +1751,7 @@ export type GetFullVideosQuery = {
             | null
         }
       } | null
-      coverPhoto?: {
+      avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
@@ -1719,7 +1767,7 @@ export type GetFullVideosQuery = {
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
-      avatarPhoto?: {
+      coverPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
@@ -2023,6 +2071,22 @@ export type GetMostViewedVideosConnectionQuery = {
               | { __typename: 'DataObjectTypeVideoSubtitle' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
           } | null
+          coverPhoto?: {
+            __typename?: 'StorageDataObject'
+            id: string
+            createdAt: Date
+            size: string
+            isAccepted: boolean
+            ipfsHash: string
+            storageBag: { __typename?: 'StorageBag'; id: string }
+            type:
+              | { __typename: 'DataObjectTypeChannelAvatar' }
+              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeUnknown' }
+              | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoSubtitle' }
+              | { __typename: 'DataObjectTypeVideoThumbnail' }
+          } | null
         }
         thumbnailPhoto?: {
           __typename?: 'StorageDataObject'
@@ -2288,6 +2352,22 @@ export type GetTop10VideosThisWeekQuery = {
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
+      coverPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeUnknown' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+      } | null
     }
     thumbnailPhoto?: {
       __typename?: 'StorageDataObject'
@@ -2535,6 +2615,22 @@ export type GetTop10VideosThisMonthQuery = {
       rewardAccount: string
       channelStateBloatBond: string
       avatarPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeUnknown' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+      } | null
+      coverPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date

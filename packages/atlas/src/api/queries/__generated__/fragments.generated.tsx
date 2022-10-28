@@ -33,6 +33,22 @@ export type BasicChannelFieldsFragment = {
       | { __typename: 'DataObjectTypeVideoSubtitle' }
       | { __typename: 'DataObjectTypeVideoThumbnail' }
   } | null
+  coverPhoto?: {
+    __typename?: 'StorageDataObject'
+    id: string
+    createdAt: Date
+    size: string
+    isAccepted: boolean
+    ipfsHash: string
+    storageBag: { __typename?: 'StorageBag'; id: string }
+    type:
+      | { __typename: 'DataObjectTypeChannelAvatar' }
+      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeUnknown' }
+      | { __typename: 'DataObjectTypeVideoMedia' }
+      | { __typename: 'DataObjectTypeVideoSubtitle' }
+      | { __typename: 'DataObjectTypeVideoThumbnail' }
+  } | null
 }
 
 export type FullChannelFieldsFragment = {
@@ -80,7 +96,7 @@ export type FullChannelFieldsFragment = {
         | null
     }
   } | null
-  coverPhoto?: {
+  avatarPhoto?: {
     __typename?: 'StorageDataObject'
     id: string
     createdAt: Date
@@ -96,7 +112,7 @@ export type FullChannelFieldsFragment = {
       | { __typename: 'DataObjectTypeVideoSubtitle' }
       | { __typename: 'DataObjectTypeVideoThumbnail' }
   } | null
-  avatarPhoto?: {
+  coverPhoto?: {
     __typename?: 'StorageDataObject'
     id: string
     createdAt: Date
@@ -161,6 +177,22 @@ export type FullMembershipFieldsFragment = {
     rewardAccount: string
     channelStateBloatBond: string
     avatarPhoto?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      createdAt: Date
+      size: string
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoSubtitle' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+    } | null
+    coverPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -294,6 +326,22 @@ export type BasicVideoFieldsFragment = {
     rewardAccount: string
     channelStateBloatBond: string
     avatarPhoto?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      createdAt: Date
+      size: string
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoSubtitle' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+    } | null
+    coverPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -639,7 +687,7 @@ export type FullVideoFieldsFragment = {
           | null
       }
     } | null
-    coverPhoto?: {
+    avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -655,7 +703,7 @@ export type FullVideoFieldsFragment = {
         | { __typename: 'DataObjectTypeVideoSubtitle' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
-    avatarPhoto?: {
+    coverPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -1144,6 +1192,22 @@ export type FullNftFieldsFragment = {
         | { __typename: 'DataObjectTypeVideoSubtitle' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
+    coverPhoto?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      createdAt: Date
+      size: string
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoSubtitle' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+    } | null
   }
   video: {
     __typename?: 'Video'
@@ -1163,6 +1227,22 @@ export type FullNftFieldsFragment = {
       rewardAccount: string
       channelStateBloatBond: string
       avatarPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeUnknown' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+      } | null
+      coverPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
@@ -1982,6 +2062,9 @@ export const BasicChannelFieldsFragmentDoc = gql`
     avatarPhoto {
       ...StorageDataObjectFields
     }
+    coverPhoto {
+      ...StorageDataObjectFields
+    }
   }
   ${StorageDataObjectFieldsFragmentDoc}
 `
@@ -2034,13 +2117,9 @@ export const FullChannelFieldsFragmentDoc = gql`
     ownerMember {
       ...BasicMembershipFields
     }
-    coverPhoto {
-      ...StorageDataObjectFields
-    }
   }
   ${BasicChannelFieldsFragmentDoc}
   ${BasicMembershipFieldsFragmentDoc}
-  ${StorageDataObjectFieldsFragmentDoc}
 `
 export const LicenseFieldsFragmentDoc = gql`
   fragment LicenseFields on License {

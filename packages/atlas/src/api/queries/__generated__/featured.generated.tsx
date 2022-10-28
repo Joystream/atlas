@@ -48,6 +48,22 @@ export type GetVideoHeroQuery = {
             | { __typename: 'DataObjectTypeVideoSubtitle' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
         } | null
+        coverPhoto?: {
+          __typename?: 'StorageDataObject'
+          id: string
+          createdAt: Date
+          size: string
+          isAccepted: boolean
+          ipfsHash: string
+          storageBag: { __typename?: 'StorageBag'; id: string }
+          type:
+            | { __typename: 'DataObjectTypeChannelAvatar' }
+            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeUnknown' }
+            | { __typename: 'DataObjectTypeVideoMedia' }
+            | { __typename: 'DataObjectTypeVideoSubtitle' }
+            | { __typename: 'DataObjectTypeVideoThumbnail' }
+        } | null
       }
       thumbnailPhoto?: {
         __typename?: 'StorageDataObject'
@@ -302,6 +318,22 @@ export type GetAllCategoriesFeaturedVideosQuery = {
           rewardAccount: string
           channelStateBloatBond: string
           avatarPhoto?: {
+            __typename?: 'StorageDataObject'
+            id: string
+            createdAt: Date
+            size: string
+            isAccepted: boolean
+            ipfsHash: string
+            storageBag: { __typename?: 'StorageBag'; id: string }
+            type:
+              | { __typename: 'DataObjectTypeChannelAvatar' }
+              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeUnknown' }
+              | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoSubtitle' }
+              | { __typename: 'DataObjectTypeVideoThumbnail' }
+          } | null
+          coverPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
             createdAt: Date
@@ -660,7 +692,7 @@ export type GetCategoriesFeaturedVideosQuery = {
               | null
           }
         } | null
-        coverPhoto?: {
+        avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
@@ -676,7 +708,7 @@ export type GetCategoriesFeaturedVideosQuery = {
             | { __typename: 'DataObjectTypeVideoSubtitle' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
         } | null
-        avatarPhoto?: {
+        coverPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
