@@ -32,7 +32,7 @@ import {
   StepperInnerWrapper,
   StepperWrapper,
 } from './NftForm.styles'
-import { NftFormData, NftFormFields, NftFormStatus } from './NftForm.types'
+import { Listing, NftFormData, NftFormFields, NftFormStatus } from './NftForm.types'
 import { createValidationSchema } from './NftForm.utils'
 import { SetUp } from './SetUp'
 
@@ -285,17 +285,6 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
     setFormStatus(formStatus)
   }, [formStatus, setFormStatus])
 
-  // Clear form on listing type change
-  useEffect(() => {
-    reset()
-    if (listingType === 'Fixed price') {
-      setTimeout(() => {
-        setValue('buyNowPrice', 1)
-      })
-    }
-    setActiveInputs(['startingPrice'])
-  }, [listingType, reset, setActiveInputs, setValue])
-
   const getNftStatus = () => {
     switch (listingType) {
       case 'Fixed price':
@@ -320,8 +309,21 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
     startingPrice: tokenNumberToHapiBn(watch('startingPrice') || 0),
   }
 
+  const handleSelectType = (selectedType: Listing) => {
+    // Clear form on listing type change
+    reset()
+    if (selectedType === 'Fixed price') {
+      setTimeout(() => {
+        setValue('buyNowPrice', 1)
+      })
+    }
+    setActiveInputs(['startingPrice'])
+
+    setListingType(selectedType)
+  }
+
   const stepsContent = [
-    <ListingType key="step-content-1" selectedType={listingType} onSelectType={setListingType} />,
+    <ListingType key="step-content-1" selectedType={listingType} onSelectType={handleSelectType} />,
     <SetUp
       maxStartDate={maxStartDate}
       maxEndDate={maxEndDate}
