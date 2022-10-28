@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useRef, useState } from 'react'
+import { FC, useCallback, useEffect, useRef } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
@@ -85,8 +85,6 @@ type CreateEditChannelViewProps = {
 export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChannel }) => {
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropModalImperativeHandle>(null)
-  const [avatarHashPromise, setAvatarHashPromise] = useState<Promise<string> | null>(null)
-  const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
 
   const { memberId, accountId, channelId, setActiveUser, refetchUserMemberships } = useUser()
   const cachedChannelId = useRef(channelId)
@@ -122,7 +120,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     register,
     handleSubmit: createSubmitHandler,
     control,
-    formState: { isDirty, dirtyFields, errors, isSubmitted },
+    formState: { isDirty, dirtyFields, errors },
     watch,
     setFocus,
     setValue,
@@ -259,13 +257,6 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     newChannelAssets
   )
 
-  // set isDirty to false, once the form is submitted
-  useEffect(() => {
-    if (isSubmitted) {
-      reset(getValues())
-    }
-  }, [isSubmitted, getValues, reset])
-
   // set default values for editing channel
   useEffect(() => {
     if (loading || newChannel || !channel) {
@@ -301,24 +292,6 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       cachedChannelId.current = channel.id
     }
   }, [channel, loading, newChannel, reset])
-
-  useEffect(() => {
-    if (!dirtyFields.avatar || !avatarAsset?.blob) {
-      return
-    }
-
-    const hashPromise = computeFileHash(avatarAsset.blob)
-    setAvatarHashPromise(hashPromise)
-  }, [dirtyFields.avatar, avatarAsset])
-
-  useEffect(() => {
-    if (!dirtyFields.cover || !coverAsset?.blob) {
-      return
-    }
-
-    const hashPromise = computeFileHash(coverAsset.blob)
-    setCoverHashPromise(hashPromise)
-  }, [dirtyFields.cover, coverAsset])
 
   const headTags = useHeadTags(newChannel ? 'New channel' : 'Edit channel')
 
@@ -381,8 +354,9 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     const assets: ChannelInputAssets = {}
     let removedAssetsIds: string[] = []
     const processAssets = async () => {
-      const avatarIpfsHash = await avatarHashPromise
-      const coverIpfsHash = await coverHashPromise
+      const avatarIpfsHash = avatarAsset?.blob && dirtyFields.avatar && (await computeFileHash(avatarAsset.blob))
+      const coverIpfsHash = coverAsset?.blob && dirtyFields.cover && (await computeFileHash(coverAsset.blob))
+
       const [createdAssets, assetIdsToRemove] = createChannelAssets(avatarIpfsHash, coverIpfsHash)
       if (createdAssets.avatarPhoto) {
         assets.avatarPhoto = createdAssets.avatarPhoto
@@ -485,7 +459,10 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
               channelBucketsCount.toString(),
               proxyCallback(updateStatus)
             ),
-      onTxSync: refetchDataAndUploadAssets,
+      onTxSync: (result) => {
+        reset(getValues())
+        return refetchDataAndUploadAssets(result)
+      },
     })
 
     if (completed && newChannel) {
@@ -686,8 +663,8 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
                   items={atlasConfig.derived.languagesSelectValues}
                   disabled={loading}
                   value={value}
-                  onChange={onChange}
                   error={!!errors.language && !value}
+                  onChange={onChange}
                 />
               )}
             />
