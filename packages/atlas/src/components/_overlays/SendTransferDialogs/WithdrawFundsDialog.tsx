@@ -71,6 +71,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
         return
       }
       handleTransaction({
+        disableQNSync: true,
         snackbarSuccessMessage: {
           title: 'Tokens withdrawn successfully',
           description: `You have withdrawn ${formatNumber(data.amount)} ${atlasConfig.joystream.tokenTicker}!`,
