@@ -8,6 +8,7 @@ import BN from 'bn.js'
 import { proxy } from 'comlink'
 
 import { PERBILL_ONE_PERCENT } from '@/joystream-lib/config'
+import { parseAccountBalance } from '@/joystream-lib/utils'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { JoystreamLibError } from './errors'
@@ -90,10 +91,7 @@ export class JoystreamLib {
     await this.ensureApi()
 
     const balances = await this.api.derive.balances.all(accountId)
-    return {
-      availableBalance: balances.freeBalance.toString(),
-      lockedBalance: balances.lockedBalance.toString(),
-    }
+    return parseAccountBalance(balances)
   }
 
   async subscribeAccountBalance(
@@ -102,8 +100,8 @@ export class JoystreamLib {
   ) {
     await this.ensureApi()
 
-    const unsubscribe = await this.api.derive.balances.all(accountId, ({ availableBalance, lockedBalance }) => {
-      callback({ availableBalance: availableBalance.toString(), lockedBalance: lockedBalance.toString() })
+    const unsubscribe = await this.api.derive.balances.all(accountId, (balances) => {
+      callback(parseAccountBalance(balances))
     })
 
     return proxy(unsubscribe)

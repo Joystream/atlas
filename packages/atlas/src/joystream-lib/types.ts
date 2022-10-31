@@ -12,6 +12,13 @@ export type ChannelId = string
 export type VideoId = string
 export type CategoryId = string
 
+export type AccountBalanceInfo = {
+  // transferable balance account
+  availableBalance: StringifiedNumber
+  // locked balance (e.g. invitation lock) on top of `availableBalance`
+  lockedBalance: StringifiedNumber
+}
+
 export type DataObjectMetadata = {
   size: number
   ipfsHash: string

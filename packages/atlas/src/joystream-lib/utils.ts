@@ -1,7 +1,8 @@
+import { DeriveBalancesAll } from '@polkadot/api-derive/balances/types'
 import BN from 'bn.js'
 
 import { HAPI_TO_JOY_RATE } from '@/joystream-lib/config'
-import { ChannelInputAssets, VideoInputAssets } from '@/joystream-lib/types'
+import { AccountBalanceInfo, ChannelInputAssets, VideoInputAssets } from '@/joystream-lib/types'
 import { ConsoleLogger } from '@/utils/logs'
 
 const MAX_SAFE_NUMBER_BN = new BN(Number.MAX_SAFE_INTEGER)
@@ -64,4 +65,17 @@ export const calculateAssetsBloatFee = (
     return new BN(0)
   }
   return dataObjectStateBloatBondValue.muln(Object.values(assets).length)
+}
+
+export const parseAccountBalance = (balances: DeriveBalancesAll): AccountBalanceInfo => {
+  /*
+    balances.freeBalance = all the tokens in the account
+    balances.availableBalance = "transferable balance" (freeBalance - any locks)
+  */
+
+  const lockedBalance = BN.max(new BN(0), balances.freeBalance.sub(balances.availableBalance))
+  return {
+    availableBalance: balances.availableBalance.toString(),
+    lockedBalance: lockedBalance.toString(),
+  }
 }
