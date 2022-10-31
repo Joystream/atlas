@@ -41,7 +41,7 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
   position: relative;
   align-items: center;
 
-  > svg > path {
+  > svg path {
     fill: ${cVar('colorText')};
   }
 
@@ -82,7 +82,7 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
     color: ${cVar('colorTextStrong')} !important;
     background-color: ${cVar('colorBackgroundAlpha')};
 
-    > svg > path {
+    > svg path {
       fill: ${cVar('colorTextStrong')};
     }
 
@@ -102,7 +102,7 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
     color: ${cVar('colorTextStrong')};
     background-color: ${cVar('colorBackgroundStrongAlpha')};
 
-    > svg > path {
+    > svg path {
       fill: ${cVar('colorTextStrong')};
     }
 
