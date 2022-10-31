@@ -45,6 +45,7 @@ export const relativeRoutes = {
     newChannel: () => 'channel/new',
     editChannel: () => 'channel',
     videos: () => 'videos',
+    crt: () => 'crt',
     videoWorkspace: () => 'video-workspace',
     uploads: () => 'uploads',
     signIn: () => 'signin',
