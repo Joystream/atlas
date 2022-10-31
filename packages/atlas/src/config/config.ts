@@ -22,7 +22,7 @@ export const configSchema = z.object({
     assetUploadStatusPollingInterval: z.number(),
     uploadProcessingTimeout: z.number(),
     minimumDistributorRefetchTime: z.number(),
-    geolocationServiceUrl: z.string(), // TODO: make optional
+    geolocationServiceUrl: z.string().nullable(),
     channelBagPrefix: z.string(),
     uploadPath: z.string(),
     assetPath: z.string(),

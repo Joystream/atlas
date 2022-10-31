@@ -4,6 +4,7 @@ import { useGetKillSwitch, useSetKillSwitch } from '@/api/hooks/admin'
 import { SvgActionNewTab, SvgAlertsError24, SvgAlertsWarning24 } from '@/assets/icons'
 import { Information } from '@/components/Information'
 import { TabItem, Tabs } from '@/components/Tabs'
+import { Text } from '@/components/Text'
 import { Button, TextButton } from '@/components/_buttons/Button'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { FormField } from '@/components/_inputs/FormField'
@@ -419,23 +420,45 @@ const LocationTab: FC = () => {
     setLatValue(null)
   }
 
+  const isGeolocationServiceUrlProvided = !!atlasConfig.storage.geolocationServiceUrl
+
   return (
     <VerticalSpacedContainer>
+      {!isGeolocationServiceUrlProvided && (
+        <Text color="colorTextError" variant="t100" as="p">
+          Warning! Setting up location data is unavailable, because geolocation service url wasn't provided.
+        </Text>
+      )}
       <FormField description="User location is used to determine nearest storage operators to ensure best user experience. This data is never sent outside of your browser and not used for any additional purposes. We highly recommend leaving this enabled.">
-        <Switch label="Use location data" value={!disableUserLocation} onChange={handleDisableChange} />
+        <Switch
+          label="Use location data"
+          value={isGeolocationServiceUrlProvided ? !disableUserLocation : false}
+          onChange={handleDisableChange}
+          disabled={!isGeolocationServiceUrlProvided}
+        />
       </FormField>
       <HorizontalSpacedContainer>
         <FormField label="Latitude">
-          <Input value={latValue || ''} onChange={handleLatChange} type="number" />
+          <Input
+            value={latValue || ''}
+            onChange={handleLatChange}
+            type="number"
+            disabled={!isGeolocationServiceUrlProvided}
+          />
         </FormField>
         <FormField label="Longitude">
-          <Input value={longValue || ''} onChange={handleLongChange} type="number" />
+          <Input
+            value={longValue || ''}
+            onChange={handleLongChange}
+            type="number"
+            disabled={!isGeolocationServiceUrlProvided}
+          />
         </FormField>
       </HorizontalSpacedContainer>
-      <Button onClick={handleSaveClick} size="large" variant="secondary">
+      <Button onClick={handleSaveClick} size="large" variant="secondary" disabled={!isGeolocationServiceUrlProvided}>
         Save changes
       </Button>
-      <Button onClick={handleResetClick} size="large" variant="secondary">
+      <Button onClick={handleResetClick} size="large" variant="secondary" disabled={!isGeolocationServiceUrlProvided}>
         Reset location data{' '}
         <Information text="Resetting will cause the app to fetch your location again on next startup" />
       </Button>
