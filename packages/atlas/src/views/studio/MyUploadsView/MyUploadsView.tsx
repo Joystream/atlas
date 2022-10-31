@@ -7,7 +7,6 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
-import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { AssetUpload } from '@/providers/uploads/uploads.types'
 import { useUser } from '@/providers/user/user.hooks'
@@ -21,7 +20,6 @@ type GroupByParentObjectIdAcc = {
 }
 
 export const MyUploadsView: FC = () => {
-  const lgMatch = useMediaMatch('lg')
   const { channelId } = useUser()
 
   const headTags = useHeadTags('My uploads')
@@ -56,9 +54,7 @@ export const MyUploadsView: FC = () => {
       {isSyncing ? (
         placeholderItems
       ) : hasUploads ? (
-        groupedUploadsState.map((files) => (
-          <UploadStatusGroup size={lgMatch ? 'large' : 'compact'} key={files[0].parentObject.id} uploads={files} />
-        ))
+        groupedUploadsState.map((files) => <UploadStatusGroup key={files[0].parentObject.id} uploads={files} />)
       ) : (
         <EmptyFallback
           verticalCentered

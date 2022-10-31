@@ -1,12 +1,12 @@
-import { FC, useCallback, useRef } from 'react'
-import { DropzoneOptions, useDropzone } from 'react-dropzone'
-import { useNavigate } from 'react-router'
+import { FC, useCallback, useMemo, useRef } from 'react'
+import { useDropzone } from 'react-dropzone'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { useFullChannel } from '@/api/hooks/channel'
 import {
   SvgActionClosedCaptions,
   SvgActionImageFile,
-  SvgActionUpload,
+  SvgActionReupload,
   SvgActionVideoFile,
   SvgAlertsSuccess24,
   SvgAlertsWarning24,
@@ -16,18 +16,28 @@ import { Text } from '@/components/Text'
 import { Loader } from '@/components/_loaders/Loader'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
 import { atlasConfig } from '@/config'
-import { absoluteRoutes } from '@/config/routes'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useConfirmationModal } from '@/providers/confirmationModal'
+import { useBloatFeesAndPerMbFees } from '@/providers/joystream/joystream.hooks'
 import { useStartFileUpload } from '@/providers/uploads/uploads.hooks'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { AssetUpload } from '@/providers/uploads/uploads.types'
+import { useUser } from '@/providers/user/user.hooks'
+import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
+import { AssetDimensions, ImageCropData } from '@/types/cropper'
+import { createId } from '@/utils/createId'
 import { computeFileHash } from '@/utils/hashing'
-import { capitalizeFirstLetter } from '@/utils/misc'
+import { SentryLogger } from '@/utils/logs'
+import { capitalizeFirstLetter, shortenString } from '@/utils/misc'
 import { formatBytes } from '@/utils/size'
+import { useCreateEditChannelSubmit } from '@/views/studio/CreateEditChannelView/CreateEditChannelView.hooks'
+import { useHandleVideoWorkspaceSubmit } from '@/views/studio/VideoWorkspace/VideoWorkspace.hooks'
 
 import {
   FailedStatusWrapper,
+  FileDimension,
   FileInfo,
   FileInfoContainer,
   FileInfoDetails,
@@ -38,73 +48,218 @@ import {
   FileStatusContainer,
   ProgressbarContainer,
   RetryButton,
-  StatusText,
-  UploadStatusGroupSize,
 } from './UploadStatus.styles'
 
 type UploadStatusProps = {
   isLast?: boolean
   asset: AssetUpload
-  size?: UploadStatusGroupSize
+  size?: 'compact' | 'large'
 }
 
+const FILE_NAME_LENGTH_LIMIT = 24
+
 export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, size }) => {
-  const navigate = useNavigate()
   const startFileUpload = useStartFileUpload()
   const uploadStatus = useUploadsStore((state) => state.uploadsStatus[asset.id])
-  const { setUploadStatus } = useUploadsStore((state) => state.actions)
+  const { setUploadStatus, removeAssetFromUploads } = useUploadsStore((state) => state.actions)
+
+  const { channelId, memberId, accountId } = useUser()
+  const { dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
+  const channelBucketsCount = useChannelsStorageBucketsCount(channelId)
+  const mdMatch = useMediaMatch('md')
+  const handleVideoWorkspaceSubmit = useHandleVideoWorkspaceSubmit()
+  const handleEditChannelSubmit = useCreateEditChannelSubmit()
+  const { setEditedVideo } = useVideoWorkspace()
 
   const thumbnailDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropModalImperativeHandle>(null)
 
-  const [openDifferentFileDialog, closeDifferentFileDialog] = useConfirmationModal({
-    title: 'Different file was selected!',
-    description: `We detected that you selected a different file than the one you uploaded previously. Select the same file to continue the upload or edit ${
-      asset.parentObject.type === 'channel' ? 'your channel' : 'the video'
-    } to use the new file.`,
-    type: 'warning',
-    primaryButton: {
-      text: 'Reselect file',
-      onClick: () => {
-        reselectFile()
-        closeDifferentFileDialog()
-      },
-    },
-    secondaryButton: {
-      text: `Edit ${asset.parentObject.type === 'channel' ? 'channel' : 'video'}`,
-      onClick: () => {
-        if (asset.parentObject.type === 'video') {
-          navigate(absoluteRoutes.studio.videoWorkspace())
-        }
-        if (asset.parentObject.type === 'channel') {
-          navigate(absoluteRoutes.studio.editChannel())
-        }
-        closeDifferentFileDialog()
-      },
-    },
-  })
-  const [openMissingCropDataDialog, closeMissingCropDataDialog] = useConfirmationModal({
-    title: 'Missing asset details',
-    description:
-      "It seems you've published this asset from a different device or you've cleared your browser history. All image assets require crop data to reconstruct, otherwise they end up being different files. Please try re-uploading from the original device or overwrite this asset.",
-    type: 'warning',
-    secondaryButton: {
-      text: 'Close',
-      onClick: () => {
-        closeMissingCropDataDialog()
-      },
-    },
-  })
+  const [openConfirmationModal, closeConfirmationModal] = useConfirmationModal()
 
-  const onDrop = useCallback<NonNullable<DropzoneOptions['onDrop']>>(
-    async (acceptedFiles) => {
+  const { channel } = useFullChannel(
+    channelId || '',
+    {
+      skip: !channelId,
+      onError: (error) =>
+        SentryLogger.error('Failed to fetch channel', 'UploadStatus', error, {
+          channel: { id: channelId },
+        }),
+    },
+    { where: { isPublic_eq: undefined, isCensored_eq: undefined } }
+  )
+
+  const assetsDialogs = useMemo(
+    () => ({
+      avatar: avatarDialogRef,
+      cover: coverDialogRef,
+      thumbnail: thumbnailDialogRef,
+    }),
+    []
+  )
+
+  const reselectFile = useCallback(
+    (openFileSelect: () => void) => {
+      if (asset.type === 'video' || asset.type === 'subtitles') {
+        openFileSelect()
+        return
+      }
+      if (!asset.imageCropData) {
+        const isChannelUpload = asset.parentObject.type === 'channel'
+        openConfirmationModal({
+          title: 'You need to sign a blockchain transaction to continue',
+          description:
+            "It seems you've initially selected this image from a different device, or that you've cleared your browser's history. Because of this, selecting a new image will require signing a blockchain transaction, as a confirmation of your edit. Are you sure you want to continue?",
+          primaryButton: {
+            text: 'Continue',
+            onClick: () => {
+              if (asset.type === 'video' || asset.type === 'subtitles') {
+                return
+              }
+              closeConfirmationModal()
+              assetsDialogs[asset.type].current?.open()
+              assetsDialogs[asset.type].current?.setFee(
+                isChannelUpload
+                  ? {
+                      methodName: 'updateChannelTx',
+                      args: [
+                        asset.parentObject.id,
+                        memberId ?? '',
+                        { ownerAccount: accountId ?? '' },
+                        {},
+                        [asset.id],
+                        dataObjectStateBloatBondValue.toString(),
+                        channelBucketsCount.toString(),
+                      ],
+                    }
+                  : {
+                      methodName: 'updateVideoTx',
+                      args: [
+                        asset.parentObject.id,
+                        memberId ?? '',
+                        { clearSubtitles: true },
+                        undefined,
+                        {},
+                        [asset.id],
+                        dataObjectStateBloatBondValue.toString(),
+                        channelBucketsCount.toString(),
+                      ],
+                    }
+              )
+            },
+          },
+          secondaryButton: {
+            text: 'Cancel',
+            onClick: () => closeConfirmationModal(),
+          },
+        })
+        return
+      }
+      assetsDialogs[asset.type].current?.open()
+    },
+    [
+      accountId,
+      asset.id,
+      asset.imageCropData,
+      asset.parentObject.id,
+      asset.parentObject.type,
+      asset.type,
+      assetsDialogs,
+      channelBucketsCount,
+      closeConfirmationModal,
+      dataObjectStateBloatBondValue,
+      memberId,
+      openConfirmationModal,
+    ]
+  )
+
+  const {
+    getRootProps,
+    getInputProps,
+    open: openFileSelect,
+  } = useDropzone({
+    onDrop: async (acceptedFiles) => {
       const [file] = acceptedFiles
       setUploadStatus(asset.id, { lastStatus: 'inProgress', progress: 0 })
       const fileHash = await computeFileHash(file)
       if (fileHash !== asset.ipfsHash) {
+        if (asset.hasNft) {
+          openConfirmationModal({
+            title: 'Select the exact same file',
+            description: `This file (${
+              file.name.length > FILE_NAME_LENGTH_LIMIT ? shortenString(file.name, 16, 8) : file.name
+            }) is different from the one you selected before. Since you minted an NFT for this video, in order to continue, you must select the exact same file.`,
+            primaryButton: {
+              text: 'Select file',
+              onClick: () => {
+                reselectFile(openFileSelect)
+                closeConfirmationModal()
+              },
+            },
+            secondaryButton: {
+              text: 'Cancel',
+              onClick: () => closeConfirmationModal(),
+            },
+          })
+          return
+        }
+        const newAssetId = `local-video-${createId()}`
+        setEditedVideo({
+          id: asset.parentObject.id,
+          isDraft: false,
+          isNew: false,
+        })
         setUploadStatus(asset.id, { lastStatus: undefined })
-        openDifferentFileDialog()
+        openConfirmationModal({
+          fee: {
+            methodName: 'updateVideoTx',
+            args: [
+              asset.parentObject.id,
+              memberId ?? '',
+              {},
+              undefined,
+              {
+                [asset.type === 'video' ? 'media' : 'subtitles']: {
+                  ...file,
+                  id: newAssetId,
+                  ipfsHash: fileHash,
+                },
+              },
+              [],
+              dataObjectStateBloatBondValue.toString(),
+              channelBucketsCount.toString(),
+            ],
+          },
+          title: 'Upload different file?',
+          description: `This file (${
+            file.name.length > FILE_NAME_LENGTH_LIMIT ? shortenString(file.name, 16, 8) : file.name
+          }) is different from the one you selected before. To upload it, you’ll need to sign a blockchain transaction to confirm editing your video. Are you sure you want to continue?`,
+          type: 'warning',
+          primaryButton: {
+            text: 'Upload file',
+            onClick: async () => {
+              closeConfirmationModal()
+              await handleVideoWorkspaceSubmit({
+                assets: {
+                  media: {
+                    ...file,
+                    hashPromise: computeFileHash(file),
+                    id: newAssetId,
+                    blob: file,
+                    size: file.size,
+                  },
+                },
+                metadata: { clearSubtitles: true },
+                nftMetadata: undefined,
+              })
+              removeAssetFromUploads(asset.id)
+            },
+          },
+          secondaryButton: {
+            text: 'Cancel',
+            onClick: () => closeConfirmationModal(),
+          },
+        })
       } else {
         startFileUpload(
           file,
@@ -123,15 +278,6 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
         )
       }
     },
-    [asset, openDifferentFileDialog, setUploadStatus, startFileUpload]
-  )
-
-  const {
-    getRootProps,
-    getInputProps,
-    open: openFileSelect,
-  } = useDropzone({
-    onDrop,
     maxFiles: 1,
     multiple: false,
     noClick: true,
@@ -166,10 +312,128 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
     )
   }
 
-  const handleCropConfirm = async (croppedBlob: Blob) => {
+  const handleCropConfirm = async (
+    croppedBlob: Blob,
+    croppedUrl?: string,
+    assetDimensions?: AssetDimensions,
+    imageCropData?: ImageCropData,
+    originalBlob?: File | Blob | null
+  ) => {
     const fileHash = await computeFileHash(croppedBlob)
     if (fileHash !== asset.ipfsHash) {
-      openDifferentFileDialog()
+      const blob = originalBlob as File
+      const newAssetId = `local-video-${createId()}`
+      const isChannelUpload = asset.parentObject.type === 'channel'
+      const newAssset = {
+        ...blob,
+        contentId: newAssetId,
+        id: newAssetId,
+        size: croppedBlob?.size,
+        imageCropData: imageCropData !== undefined ? imageCropData : null,
+        assetDimensions: assetDimensions !== undefined ? assetDimensions : null,
+      }
+      const handleUpdate = async () => {
+        if (isChannelUpload) {
+          await handleEditChannelSubmit({
+            metadata: { ownerAccount: accountId ?? '' },
+            channel,
+            newChannel: false,
+            assets:
+              asset.type === 'avatar'
+                ? {
+                    avatarPhoto: { ...newAssset, originalBlob },
+                    coverPhoto: {
+                      assetDimensions: null,
+                      contentId: null,
+                      imageCropData: null,
+                      originalBlob: undefined,
+                    },
+                  }
+                : {
+                    coverPhoto: { ...newAssset, originalBlob },
+                    avatarPhoto: {
+                      assetDimensions: null,
+                      contentId: null,
+                      imageCropData: null,
+                      originalBlob: undefined,
+                    },
+                  },
+            avatarAsset:
+              asset.type === 'avatar'
+                ? {
+                    blob: croppedBlob,
+                    url: croppedUrl,
+                  }
+                : null,
+            coverAsset:
+              asset.type === 'cover'
+                ? {
+                    blob: croppedBlob,
+                    url: croppedUrl,
+                  }
+                : null,
+          })
+        } else {
+          await handleVideoWorkspaceSubmit({
+            assets: {
+              thumbnailPhoto: { ...newAssset, blob, hashPromise: computeFileHash(croppedBlob) },
+            },
+            metadata: { clearSubtitles: true },
+            nftMetadata: undefined,
+          })
+        }
+        removeAssetFromUploads(asset.id)
+      }
+      if (asset.imageCropData) {
+        openConfirmationModal({
+          fee: isChannelUpload
+            ? {
+                methodName: 'updateChannelTx',
+                args: [
+                  asset.parentObject.id,
+                  memberId ?? '',
+                  { ownerAccount: accountId ?? '' },
+                  asset.type === 'avatar'
+                    ? { avatarPhoto: { ...newAssset, ipfsHash: fileHash } }
+                    : { coverPhoto: { ...newAssset, ipfsHash: fileHash } },
+                  [asset.id],
+                  dataObjectStateBloatBondValue.toString(),
+                  channelBucketsCount.toString(),
+                ],
+              }
+            : {
+                methodName: 'updateVideoTx',
+                args: [
+                  asset.parentObject.id,
+                  memberId ?? '',
+                  { clearSubtitles: true },
+                  undefined,
+                  { thumbnailPhoto: { ...newAssset, ipfsHash: fileHash } },
+                  [asset.id],
+                  dataObjectStateBloatBondValue.toString(),
+                  channelBucketsCount.toString(),
+                ],
+              },
+          title: 'Continue with a different file?',
+          description: `This file (${
+            blob.name.length > FILE_NAME_LENGTH_LIMIT ? shortenString(blob.name, 16, 8) : blob.name
+          }) is different from the one you selected before. To upload it, you’ll need to sign a blockchain transaction to confirm editing your video. Are you sure you want to continue?`,
+          type: 'warning',
+          primaryButton: {
+            text: 'Continue',
+            onClick: async () => {
+              closeConfirmationModal()
+              await handleUpdate()
+            },
+          },
+          secondaryButton: {
+            text: 'Cancel',
+            onClick: () => closeConfirmationModal(),
+          },
+        })
+      } else {
+        await handleUpdate()
+      }
     } else {
       startFileUpload(
         croppedBlob,
@@ -196,32 +460,17 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
   const assetSubtitlesLanguage = asset.type === 'subtitles' && asset.subtitlesLanguageIso
   const assetSize = formatBytes(Number(asset.size))
 
-  const assetsDialogs = {
-    avatar: avatarDialogRef,
-    cover: coverDialogRef,
-    thumbnail: thumbnailDialogRef,
-  }
-  const reselectFile = () => {
-    if (asset.type === 'video' || asset.type === 'subtitles') {
-      openFileSelect()
-      return
-    }
-    if (!asset.imageCropData) {
-      openMissingCropDataDialog()
-      return
-    }
-    assetsDialogs[asset.type].current?.open(undefined, asset.imageCropData)
-  }
-
   const renderStatusMessage = () => {
-    const failedStatusText = size === 'compact' ? 'Upload failed' : 'Asset upload failed'
+    const failedStatusText = (
+      <Text as="span" variant={mdMatch ? 't200' : 't100'} color="colorText">
+        Asset upload failed
+      </Text>
+    )
     if (uploadStatus?.lastStatus === 'error') {
       return (
         <FailedStatusWrapper>
-          <StatusText as="span" variant="t200" color="colorText" size={size}>
-            {failedStatusText}
-          </StatusText>
-          <RetryButton size="small" variant="secondary" icon={<SvgActionUpload />} onClick={handleChangeHost}>
+          {failedStatusText}
+          <RetryButton size="small" icon={<SvgActionReupload />} onClick={handleChangeHost}>
             Try again
           </RetryButton>
         </FailedStatusWrapper>
@@ -230,13 +479,11 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
     if (!uploadStatus?.lastStatus) {
       return (
         <FailedStatusWrapper>
-          <StatusText as="span" variant="t200" color="colorText" size={size}>
-            {failedStatusText}
-          </StatusText>
+          {failedStatusText}
           <div {...getRootProps()}>
             <input {...getInputProps()} />
-            <RetryButton size="small" variant="secondary" icon={<SvgActionUpload />} onClick={reselectFile}>
-              Reconnect file
+            <RetryButton size="small" onClick={() => reselectFile(openFileSelect)}>
+              Select file
             </RetryButton>
           </div>
         </FailedStatusWrapper>
@@ -265,7 +512,7 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
     <>
       <FileLineContainer isLast={isLast} size={size}>
         <FileInfoContainer>
-          {isLast ? <FileLineLastPoint size={size} /> : <FileLinePoint size={size} />}
+          {isLast ? <FileLineLastPoint /> : <FileLinePoint />}
           <FileStatusContainer>
             <SwitchTransition>
               <CSSTransition
@@ -287,7 +534,7 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
                 <SvgActionImageFile />
               )}
               <Text as="span" variant="t200">
-                {fileTypeText}
+                {asset.name || fileTypeText}
               </Text>
             </FileInfoType>
             {size === 'compact' && isReconnecting ? (
@@ -297,9 +544,9 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
             ) : (
               <FileInfoDetails size={size}>
                 {assetDimension && (
-                  <Text as="span" variant="t200" color="colorText">
+                  <FileDimension as="span" variant="t200" color="colorText">
                     {assetDimension}
-                  </Text>
+                  </FileDimension>
                 )}
                 {assetSubtitlesLanguage && (
                   <Text as="span" variant="t200" color="colorText">
@@ -314,8 +561,9 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
               </FileInfoDetails>
             )}
           </FileInfo>
+          {mdMatch && renderStatusMessage()}
         </FileInfoContainer>
-        {renderStatusMessage()}
+        {!mdMatch && renderStatusMessage()}
       </FileLineContainer>
       <ImageCropModal ref={thumbnailDialogRef} imageType="videoThumbnail" onConfirm={handleCropConfirm} />
       <ImageCropModal ref={avatarDialogRef} imageType="avatar" onConfirm={handleCropConfirm} />

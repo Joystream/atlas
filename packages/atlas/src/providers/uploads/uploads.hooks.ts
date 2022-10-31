@@ -96,7 +96,12 @@ export const useStartFileUpload = () => {
         }
 
         if (!opts?.isReUpload && !opts?.changeHost && file) {
-          addAssetToUploads({ ...asset, size: file.size.toString() })
+          addAssetToUploads({
+            ...asset,
+            name: asset.name,
+            size: file.size.toString(),
+            hasNft: opts?.hasNft,
+          })
         }
 
         setAssetStatus({ lastStatus: 'inProgress', progress: 0 })

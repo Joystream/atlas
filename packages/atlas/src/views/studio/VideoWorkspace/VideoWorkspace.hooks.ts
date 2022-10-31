@@ -107,20 +107,26 @@ export const useHandleVideoWorkspaceSubmit = () => {
       const uploadAssets = async ({ videoId, assetsIds }: VideoExtrinsicResult) => {
         const uploadPromises: Promise<unknown>[] = []
         if (data.assets.media && assetsIds.media) {
-          const uploadPromise = startFileUpload(data.assets.media.blob, {
-            id: assetsIds.media,
-            owner: channelId,
-            parentObject: {
+          const uploadPromise = startFileUpload(
+            data.assets.media.blob,
+            {
+              id: assetsIds.media,
+              owner: channelId,
+              parentObject: {
+                type: 'video',
+                id: videoId,
+                title: data.metadata.title,
+              },
               type: 'video',
-              id: videoId,
-              title: data.metadata.title,
+              dimensions: data.assets.media.dimensions,
+              ipfsHash: await data.assets.media.hashPromise,
+              name: (data.assets.media.blob as File).name,
             },
-            type: 'video',
-            dimensions: data.assets.media.dimensions,
-            ipfsHash: await data.assets.media.hashPromise,
-          })
+            { hasNft: !!data.nftMetadata }
+          )
           uploadPromises.push(uploadPromise)
         }
+
         if (data.assets.thumbnailPhoto && assetsIds.thumbnailPhoto) {
           const uploadPromise = startFileUpload(data.assets.thumbnailPhoto.blob, {
             id: assetsIds.thumbnailPhoto,
@@ -133,6 +139,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
             dimensions: data.assets.thumbnailPhoto.dimensions,
             imageCropData: data.assets.thumbnailPhoto.cropData,
             ipfsHash: await data.assets.thumbnailPhoto.hashPromise,
+            name: data.assets.thumbnailPhoto.name,
           })
           uploadPromises.push(uploadPromise)
         }
@@ -149,6 +156,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
               type: 'subtitles',
               subtitlesLanguageIso: subtitle.subtitlesLanguageIso,
               ipfsHash: await subtitle.hashPromise,
+              name: (subtitle.blob as File).name,
             })
           })
           uploadPromises.push(...subtitlesUploadPromises)

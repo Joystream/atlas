@@ -29,56 +29,63 @@ export const FileLineContainer = styled.div<FileLineContainerProps>`
 `
 
 export const FileInfoContainer = styled.div`
-  padding: ${sizes(3)} 0;
-  height: 62px;
+  height: 64px;
   display: flex;
   align-items: center;
+  position: relative;
+
+  ${media.md} {
+    height: 56px;
+  }
 `
 
-type FileLineProps = {
-  size?: UploadStatusGroupSize
-}
-
-export const FileLinePoint = styled.div<FileLineProps>`
+export const FileLinePoint = styled.div`
   display: block;
   width: 35px;
-  height: 32px;
-  border-left: 2px solid ${cVar('colorCoreNeutral500')};
+  height: 100%;
+  border-left: 2px solid ${cVar('colorBorder')};
   flex-shrink: 0;
-  margin-left: ${({ size }) => (size === 'compact' ? sizes(6) : sizes(13))};
+  margin-left: ${sizes(9.5)};
 
   &::after {
     content: '';
     position: absolute;
-    border-top: 2px solid ${cVar('colorCoreNeutral500')};
+    border-top: 2px solid ${cVar('colorBorder')};
     width: 33px;
-    height: 32px;
-    transform: translateY(calc(50% - 1px));
+    top: 50%;
+    transform: translateY(-50%);
   }
 `
 
-export const FileLineLastPoint = styled.div<FileLineProps>`
+export const FileLineLastPoint = styled.div`
   display: block;
-  width: 35px;
-  height: 17px;
+  width: 16px;
+  height: 50%;
   flex-shrink: 0;
-  border-left: 2px solid ${cVar('colorCoreNeutral500')};
-  border-bottom: 2px solid ${cVar('colorCoreNeutral500')};
-  transform: translateY(calc(-50% + 1px));
-  margin-left: ${({ size }) => (size === 'compact' ? sizes(6) : sizes(13))};
+  border-left: 2px solid ${cVar('colorBorder')};
+  border-bottom: 2px solid ${cVar('colorBorder')};
+  margin-left: ${sizes(9.5)};
+  align-self: flex-start;
+
+  ${media.md} {
+    width: 32px;
+  }
 `
 
-type StatusMessageWrapperProps = {
-  error?: boolean
-}
-export const FailedStatusWrapper = styled.div<StatusMessageWrapperProps>`
+export const FailedStatusWrapper = styled.div`
   width: 100%;
-  height: 48px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 ${sizes(6)};
-  background-color: ${cVar('colorCoreYellow200')};
+  padding: ${sizes(3)} ${sizes(6)};
+  background-color: ${cVar('colorBackgroundStrong')};
+
+  ${media.md} {
+    padding: 0 ${sizes(6)};
+    justify-content: flex-end;
+    background-color: transparent;
+  }
+
   ${media.lg} {
     justify-content: flex-end;
     background-color: unset;
@@ -87,25 +94,6 @@ export const FailedStatusWrapper = styled.div<StatusMessageWrapperProps>`
 
 export const RetryButton = styled(Button)`
   margin-left: ${sizes(4)};
-  color: ${cVar('colorCoreNeutral900')};
-
-  path {
-    stroke: ${cVar('colorCoreNeutral900')};
-  }
-  ${media.lg} {
-    color: ${cVar('colorCoreNeutral50')};
-
-    path {
-      stroke: ${cVar('colorCoreNeutral50')};
-    }
-  }
-`
-
-type StatusTextProps = {
-  size?: UploadStatusGroupSize
-}
-export const StatusText = styled(Text)<StatusTextProps>`
-  ${({ size }) => size === 'compact' && `color: ${cVar('colorCoreNeutral900')}`};
 `
 
 export const FileStatusContainer = styled.div`
@@ -123,24 +111,16 @@ type FileInfoProps = {
 }
 
 export const FileInfo = styled.div<FileInfoProps>`
-  display: grid;
   align-items: center;
   width: 100%;
   max-width: 600px;
-  margin-left: ${sizes(2)};
+  margin-left: ${sizes(4)};
   color: ${cVar('colorCoreNeutral300')};
+  row-gap: ${sizes(1)};
 
-  ${({ size }) =>
-    size === 'compact'
-      ? css`
-          grid-template-columns: 1fr;
-          grid-template-rows: 1fr;
-          margin-left: ${sizes(2)};
-        `
-      : css`
-          margin-left: ${sizes(6)};
-          grid-template-columns: 1fr 2fr;
-        `};
+  ${media.md} {
+    display: flex;
+  }
 `
 
 type FileInfoTypeProps = {
@@ -152,8 +132,13 @@ export const FileInfoType = styled.div<FileInfoTypeProps>`
   align-items: center;
   height: ${sizes(6)};
 
+  ${media.md} {
+    width: 280px;
+    margin-right: ${sizes(6)};
+  }
+
   svg {
-    margin-right: 10px;
+    margin-right: ${sizes(2)};
 
     path {
       ${({ warning }) => warning && `fill: ${cVar('colorCoreRed400')}`};
@@ -170,8 +155,14 @@ type FileInfoDetailsProps = {
 }
 export const FileInfoDetails = styled.div<FileInfoDetailsProps>`
   display: grid;
-  gap: ${sizes(2)};
+  gap: ${sizes(6)};
   grid-template-columns: ${({ size }) => (size === 'compact' ? 'min-content max-content' : '1fr 1fr')};
+`
+
+export const FileDimension = styled(Text)`
+  ${media.md} {
+    width: 96px;
+  }
 `
 
 export const ProgressbarContainer = styled.div`

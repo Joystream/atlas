@@ -1,6 +1,5 @@
 import { FC, useCallback, useEffect, useRef } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 import shallow from 'zustand/shallow'
@@ -22,33 +21,23 @@ import {
   ImageCropModalProps,
 } from '@/components/_overlays/ImageCropModal'
 import { atlasConfig } from '@/config'
-import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
-import { ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib/types'
+import { ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib/types'
 import { useAsset, useChannelsStorageBucketsCount, useRawAsset } from '@/providers/assets/assets.hooks'
-import { useOperatorsContext } from '@/providers/assets/assets.provider'
 import { useAssetStore } from '@/providers/assets/assets.store'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
-import {
-  useBloatFeesAndPerMbFees,
-  useBucketsConfigForNewChannel,
-  useFee,
-  useJoystream,
-} from '@/providers/joystream/joystream.hooks'
+import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useSnackbar } from '@/providers/snackbars'
-import { useTransaction } from '@/providers/transactions/transactions.hooks'
-import { useStartFileUpload } from '@/providers/uploads/uploads.hooks'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { useUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
-import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { createId } from '@/utils/createId'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
-import { computeFileHash } from '@/utils/hashing'
 import { SentryLogger } from '@/utils/logs'
 import { SubTitle, SubTitleSkeletonLoader, TitleSkeletonLoader } from '@/views/viewer/ChannelView/ChannelView.styles'
 
+import { Inputs, useCreateEditChannelSubmit } from './CreateEditChannelView.hooks'
 import {
   ActionBarTransactionWrapper,
   InnerFormContainer,
@@ -63,21 +52,6 @@ const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Unlisted (channel will not appear in feeds and search)', value: false },
 ]
 
-type ImageAsset = {
-  contentId: string | null
-  assetDimensions: AssetDimensions | null
-  imageCropData: ImageCropData | null
-  originalBlob?: File | Blob | null
-}
-type Inputs = {
-  title?: string
-  description?: string
-  isPublic: boolean
-  language: string
-  avatar: ImageAsset
-  cover: ImageAsset
-}
-
 type CreateEditChannelViewProps = {
   newChannel?: boolean
 }
@@ -88,17 +62,14 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropModalImperativeHandle>(null)
 
-  const { memberId, accountId, channelId, setActiveUser, refetchUserMemberships } = useUser()
+  const { memberId, accountId, channelId } = useUser()
   const cachedChannelId = useRef(channelId)
   const firstRender = useRef(true)
-  const { joystream, proxyCallback } = useJoystream()
-  const getBucketsConfigForNewChannel = useBucketsConfigForNewChannel()
-  const handleTransaction = useTransaction()
+  const { joystream } = useJoystream()
   const { displaySnackbar } = useSnackbar()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-  const addNewChannelIdToUploadsStore = useUploadsStore((state) => state.actions.addNewChannelId)
-  const navigate = useNavigate()
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
+  const handleChannelSubmit = useCreateEditChannelSubmit()
 
   const {
     channel,
@@ -116,7 +87,6 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     },
     { where: { isPublic_eq: undefined, isCensored_eq: undefined } }
   )
-  const startFileUpload = useStartFileUpload()
   const channelBucketsCount = useChannelsStorageBucketsCount(channelId)
 
   // trigger use asset to make sure the channel assets get resolved
@@ -171,7 +141,6 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   )
 
   const { isWorkspaceOpen, setIsWorkspaceOpen } = useVideoWorkspace()
-  const { fetchOperators } = useOperatorsContext()
 
   useEffect(() => {
     if (newChannel) {
@@ -303,7 +272,42 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const headTags = useHeadTags(newChannel ? 'New channel' : 'Edit channel')
 
   const handleSubmit = createSubmitHandler(async (data) => {
-    await submit(data)
+    if (!joystream || !memberId || !accountId) {
+      return
+    }
+
+    if (!channelBucketsCount && !newChannel) {
+      SentryLogger.error('Channel buckets count is not set', 'CreateEditChannelView')
+      return
+    }
+
+    setIsWorkspaceOpen(false)
+    const metadata: ChannelInputMetadata = {
+      ...(dirtyFields.title ? { title: data.title?.trim() ?? '' } : {}),
+      ...(dirtyFields.description ? { description: data.description?.trim() ?? '' } : {}),
+      ...(dirtyFields.language || newChannel ? { language: data.language } : {}),
+      ...(dirtyFields.isPublic || newChannel ? { isPublic: data.isPublic } : {}),
+      ownerAccount: accountId ?? '',
+    }
+
+    await handleChannelSubmit(
+      {
+        metadata,
+        channel,
+        newChannel: !!newChannel,
+        assets: {
+          avatarPhoto: data.avatar,
+          coverPhoto: data.cover,
+        },
+        avatarAsset,
+        coverAsset,
+      },
+      {
+        setValue,
+        reset,
+        getValues,
+      }
+    )
   })
 
   const handleCoverChange: ImageCropModalProps['onConfirm'] = (

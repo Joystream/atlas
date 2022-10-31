@@ -4,10 +4,11 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import shallow from 'zustand/shallow'
 
 import { useFullVideo } from '@/api/hooks/video'
-import { SvgAlertsError24, SvgAlertsSuccess24 } from '@/assets/icons'
+import { SvgAlertsSuccess24, SvgAlertsWarning24 } from '@/assets/icons'
 import { Text } from '@/components/Text'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
 import { Loader } from '@/components/_loaders/Loader'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { AssetUpload } from '@/providers/uploads/uploads.types'
 import { transitions } from '@/styles'
@@ -22,7 +23,6 @@ import {
   Thumbnail,
   UploadInfoContainer,
   UploadStatusGroupContainer,
-  UploadStatusGroupSize,
 } from './UploadStatusGroup.styles'
 import { UploadStatusGroupSkeletonLoader } from './UploadStatusGroupSkeletonLoader'
 
@@ -32,16 +32,16 @@ type UploadGroupState = 'error' | 'completed' | 'inProgress' | 'processing' | nu
 
 export type UploadStatusGroupProps = {
   uploads: AssetUpload[]
-  size?: UploadStatusGroupSize
 }
 
-export const UploadStatusGroup: FC<UploadStatusGroupProps> = ({ uploads, size = 'compact' }) => {
+export const UploadStatusGroup: FC<UploadStatusGroupProps> = ({ uploads }) => {
   const [isAssetsDrawerActive, setAssetsDrawerActive] = useState(false)
   const [runCompletedAnimation, setRunCompletedAnimation] = useState(false)
   const [uploadGroupState, setUploadGroupState] = useState<UploadGroupState>(null)
   const drawer = useRef<HTMLDivElement>(null)
   const uploadsStatuses = useUploadsStore((state) => uploads.map((u) => state.uploadsStatus[u.id], shallow))
   const location = useLocation()
+  const mdMatch = useMediaMatch('md')
 
   const locationState = location.state as RoutingState
 
@@ -120,7 +120,7 @@ export const UploadStatusGroup: FC<UploadStatusGroupProps> = ({ uploads, size = 
       case 'completed':
         return <SvgAlertsSuccess24 />
       case 'error':
-        return <SvgAlertsError24 />
+        return <SvgAlertsWarning24 />
       case 'inProgress':
       case 'processing':
         return <Loader variant="small" />
@@ -140,7 +140,7 @@ export const UploadStatusGroup: FC<UploadStatusGroupProps> = ({ uploads, size = 
           lastStatus={uploadGroupState || undefined}
           progress={masterProgress}
         />
-        <Thumbnail size={size}>
+        <Thumbnail>
           {uploadGroupState && (
             <SwitchTransition>
               <CSSTransition
@@ -155,15 +155,19 @@ export const UploadStatusGroup: FC<UploadStatusGroupProps> = ({ uploads, size = 
           )}
         </Thumbnail>
         <AssetsInfoContainer>
-          <AssetGroupTitleText as="span" variant="t300-strong">
+          <AssetGroupTitleText
+            as="span"
+            variant={mdMatch ? 't300-strong' : 't200-strong'}
+            margin={{ bottom: mdMatch ? 0.5 : 1 }}
+          >
             {assetsGroupTitleText}
           </AssetGroupTitleText>
-          <Text as="span" variant="t200" color="colorText">
+          <Text as="span" variant={mdMatch ? 't200' : 't100'} color="colorText">
             {assetsGroupNumberText}
           </Text>
         </AssetsInfoContainer>
         <UploadInfoContainer>
-          {size === 'large' && (
+          {mdMatch && (
             <Text as="span" variant="t200" color="colorText">
               {renderAssetsGroupInfo()}
             </Text>
@@ -171,13 +175,18 @@ export const UploadStatusGroup: FC<UploadStatusGroupProps> = ({ uploads, size = 
           <StyledExpandButton
             expanded={isAssetsDrawerActive}
             onClick={() => setAssetsDrawerActive(!isAssetsDrawerActive)}
-            size="large"
+            size={mdMatch ? 'large' : 'medium'}
           />
         </UploadInfoContainer>
       </UploadStatusGroupContainer>
       <AssetsDrawerContainer isActive={isAssetsDrawerActive} ref={drawer} maxHeight={drawer?.current?.scrollHeight}>
         {uploads.map((file, idx) => (
-          <UploadStatus size={size} key={file.id} asset={file} isLast={uploads.length === idx + 1} />
+          <UploadStatus
+            size={mdMatch ? 'large' : 'compact'}
+            key={file.id}
+            asset={file}
+            isLast={uploads.length === idx + 1}
+          />
         ))}
       </AssetsDrawerContainer>
     </Container>
