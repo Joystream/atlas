@@ -116,18 +116,18 @@ export const SubtitlesCombobox: FC<SubtitlesComboboxProps> = ({
         }}
         notFoundNode={notFoundNode}
       />
-      {subtitlesArray?.map(({ languageIso, file, type, id, url, isUploadedAsSrt }) => (
+      {subtitlesArray?.map(({ languageIso, file, type, id, asset, isUploadedAsSrt }) => (
         <SubtitlesBox
           key={languageIso + type}
           isUploadedAsSrt={isUploadedAsSrt}
           type={type}
-          languageIso={atlasConfig.derived.languagesLookup[languageIso]}
+          languageIso={languageIso}
           onRemove={() => {
             onLanguageDelete({ languageIso, type })
           }}
           file={file}
-          url={url}
           id={id}
+          asset={asset}
           onChange={(e) => {
             onSubtitlesAdd({ languageIso, file: e.currentTarget.files?.[0], type })
           }}

@@ -208,6 +208,9 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
 const videoCacheFields: CachePolicyFields<keyof FullVideoFieldsFragment> = {
   createdAt: createDateHandler(),
   publishedBeforeJoystream: createDateHandler(),
+  subtitles: {
+    merge: (existing, incoming) => incoming,
+  },
 }
 
 const channelCacheFields: CachePolicyFields<keyof FullChannelFieldsFragment> = {

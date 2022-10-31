@@ -46,21 +46,23 @@ export const useVideoWorkspaceData = () => {
     }
   )
 
-  const subtitlesAssets = useSubtitlesAssets(video?.subtitles)
+  const hasAnyAvailableSubtitles = video?.subtitles?.some((s) => !!s.asset?.isAccepted)
+
+  // only trigger subtitles assets resolution - components will get resolution data directly from the store to not force re-renders of the entire form
+  useSubtitlesAssets(video?.subtitles)
 
   const subtitlesArray: SubtitlesInput[] | null = useMemo(
     () =>
-      Object.values(subtitlesAssets).filter((url) => url).length
-        ? video?.subtitles
-            .map((s) => ({
-              languageIso: s.language?.iso,
-              type: s.type === 'closed-captions' ? 'closed-captions' : 'subtitles',
-              ...(subtitlesAssets[s.id]?.url ? { url: subtitlesAssets[s.id]?.url } : {}),
-              ...(s.asset?.id ? { id: s.asset?.id } : {}),
-            }))
-            .filter((s): s is SubtitlesInput => !!s.languageIso) || null
-        : null,
-    [subtitlesAssets, video?.subtitles]
+      video?.subtitles
+        .filter((s) => !!s.language?.iso)
+        .map((s) => ({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          languageIso: s.language!.iso,
+          type: s.type === 'closed-captions' ? 'closed-captions' : 'subtitles',
+          asset: s.asset,
+          id: s.asset?.id,
+        })) ?? null,
+    [video?.subtitles]
   )
 
   if (!editedVideoInfo) {
@@ -122,7 +124,7 @@ export const useVideoWorkspaceData = () => {
 
   return {
     tabData: normalizedData,
-    loading: editedVideoInfo.isDraft ? false : loading || (video?.subtitles.length && !subtitlesArray),
+    loading: editedVideoInfo.isDraft ? false : loading || (hasAnyAvailableSubtitles && !subtitlesArray),
     error,
   }
 }

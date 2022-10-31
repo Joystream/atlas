@@ -93,7 +93,8 @@ export const useHandleVideoWorkspaceSubmit = () => {
             }))
           )
         }
-        if (tabData?.subtitlesArray) {
+        // if data.metadata.subtitles is not set, that means that subtitles weren't changed
+        if (tabData?.subtitlesArray && data.metadata.subtitles) {
           const oldAssetsIds = tabData.subtitlesArray.map((subtitle) => subtitle.id)
           const currentSubtitlesIdsLookup = createLookup(data.metadata.subtitles || [])
           const removedSubtitlesIds = oldAssetsIds.filter(
