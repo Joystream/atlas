@@ -74,7 +74,7 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
       if (isSeparator) {
         return 'colorTextMuted'
       }
-      if (isHovering || selected || highlight || !isSeparator) {
+      if (isHovering || selected || highlight) {
         return
       }
       return 'colorText'
