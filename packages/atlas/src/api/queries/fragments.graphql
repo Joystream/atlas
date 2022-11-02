@@ -13,9 +13,6 @@ fragment BasicChannelFields on Channel {
   avatarPhoto {
     ...StorageDataObjectFields
   }
-  coverPhoto {
-    ...StorageDataObjectFields
-  }
 }
 
 fragment FullChannelFields on Channel {
@@ -28,6 +25,9 @@ fragment FullChannelFields on Channel {
   language {
     id
     iso
+  }
+  coverPhoto {
+    ...StorageDataObjectFields
   }
   ownerMember {
     ...BasicMembershipFields

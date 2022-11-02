@@ -98,7 +98,12 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const navigate = useNavigate()
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
 
-  const { channel, loading, error } = useFullChannel(
+  const {
+    channel,
+    loading,
+    error,
+    refetch: refetchChannel,
+  } = useFullChannel(
     channelId || '',
     {
       skip: newChannel || !channelId,
@@ -416,10 +421,11 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       if (newChannel) {
         // add channel to new channels list before refetching membership to make sure UploadsManager doesn't complain about missing assets
         addNewChannelIdToUploadsStore(channelId)
+        // membership includes full list of channels so the channel update will be fetched too
+        await refetchUserMemberships()
+      } else {
+        await refetchChannel()
       }
-
-      // membership includes full list of channels so the channel update will be fetched too
-      await refetchUserMemberships()
 
       if (newChannel) {
         // when creating a channel, refetch operators before uploading so that storage bag assignments gets populated for a new channel

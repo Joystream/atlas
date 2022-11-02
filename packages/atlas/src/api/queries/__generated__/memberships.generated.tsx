@@ -41,22 +41,6 @@ export type GetMembershipQuery = {
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
-      coverPhoto?: {
-        __typename?: 'StorageDataObject'
-        id: string
-        createdAt: Date
-        size: string
-        isAccepted: boolean
-        ipfsHash: string
-        storageBag: { __typename?: 'StorageBag'; id: string }
-        type:
-          | { __typename: 'DataObjectTypeChannelAvatar' }
-          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-          | { __typename: 'DataObjectTypeUnknown' }
-          | { __typename: 'DataObjectTypeVideoMedia' }
-          | { __typename: 'DataObjectTypeVideoSubtitle' }
-          | { __typename: 'DataObjectTypeVideoThumbnail' }
-      } | null
     }>
     metadata: {
       __typename?: 'MemberMetadata'
@@ -108,22 +92,6 @@ export type GetMembershipsQuery = {
       rewardAccount: string
       channelStateBloatBond: string
       avatarPhoto?: {
-        __typename?: 'StorageDataObject'
-        id: string
-        createdAt: Date
-        size: string
-        isAccepted: boolean
-        ipfsHash: string
-        storageBag: { __typename?: 'StorageBag'; id: string }
-        type:
-          | { __typename: 'DataObjectTypeChannelAvatar' }
-          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-          | { __typename: 'DataObjectTypeUnknown' }
-          | { __typename: 'DataObjectTypeVideoMedia' }
-          | { __typename: 'DataObjectTypeVideoSubtitle' }
-          | { __typename: 'DataObjectTypeVideoThumbnail' }
-      } | null
-      coverPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date

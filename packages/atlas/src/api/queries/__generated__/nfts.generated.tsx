@@ -43,22 +43,6 @@ export type GetNftQuery = {
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
-      coverPhoto?: {
-        __typename?: 'StorageDataObject'
-        id: string
-        createdAt: Date
-        size: string
-        isAccepted: boolean
-        ipfsHash: string
-        storageBag: { __typename?: 'StorageBag'; id: string }
-        type:
-          | { __typename: 'DataObjectTypeChannelAvatar' }
-          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-          | { __typename: 'DataObjectTypeUnknown' }
-          | { __typename: 'DataObjectTypeVideoMedia' }
-          | { __typename: 'DataObjectTypeVideoSubtitle' }
-          | { __typename: 'DataObjectTypeVideoThumbnail' }
-      } | null
     }
     video: {
       __typename?: 'Video'
@@ -78,22 +62,6 @@ export type GetNftQuery = {
         rewardAccount: string
         channelStateBloatBond: string
         avatarPhoto?: {
-          __typename?: 'StorageDataObject'
-          id: string
-          createdAt: Date
-          size: string
-          isAccepted: boolean
-          ipfsHash: string
-          storageBag: { __typename?: 'StorageBag'; id: string }
-          type:
-            | { __typename: 'DataObjectTypeChannelAvatar' }
-            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-            | { __typename: 'DataObjectTypeUnknown' }
-            | { __typename: 'DataObjectTypeVideoMedia' }
-            | { __typename: 'DataObjectTypeVideoSubtitle' }
-            | { __typename: 'DataObjectTypeVideoThumbnail' }
-        } | null
-        coverPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
@@ -566,22 +534,6 @@ export type GetNftsQuery = {
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
-      coverPhoto?: {
-        __typename?: 'StorageDataObject'
-        id: string
-        createdAt: Date
-        size: string
-        isAccepted: boolean
-        ipfsHash: string
-        storageBag: { __typename?: 'StorageBag'; id: string }
-        type:
-          | { __typename: 'DataObjectTypeChannelAvatar' }
-          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-          | { __typename: 'DataObjectTypeUnknown' }
-          | { __typename: 'DataObjectTypeVideoMedia' }
-          | { __typename: 'DataObjectTypeVideoSubtitle' }
-          | { __typename: 'DataObjectTypeVideoThumbnail' }
-      } | null
     }
     video: {
       __typename?: 'Video'
@@ -601,22 +553,6 @@ export type GetNftsQuery = {
         rewardAccount: string
         channelStateBloatBond: string
         avatarPhoto?: {
-          __typename?: 'StorageDataObject'
-          id: string
-          createdAt: Date
-          size: string
-          isAccepted: boolean
-          ipfsHash: string
-          storageBag: { __typename?: 'StorageBag'; id: string }
-          type:
-            | { __typename: 'DataObjectTypeChannelAvatar' }
-            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-            | { __typename: 'DataObjectTypeUnknown' }
-            | { __typename: 'DataObjectTypeVideoMedia' }
-            | { __typename: 'DataObjectTypeVideoSubtitle' }
-            | { __typename: 'DataObjectTypeVideoThumbnail' }
-        } | null
-        coverPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
@@ -1097,22 +1033,6 @@ export type GetNftsConnectionQuery = {
               | { __typename: 'DataObjectTypeVideoSubtitle' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
           } | null
-          coverPhoto?: {
-            __typename?: 'StorageDataObject'
-            id: string
-            createdAt: Date
-            size: string
-            isAccepted: boolean
-            ipfsHash: string
-            storageBag: { __typename?: 'StorageBag'; id: string }
-            type:
-              | { __typename: 'DataObjectTypeChannelAvatar' }
-              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-              | { __typename: 'DataObjectTypeUnknown' }
-              | { __typename: 'DataObjectTypeVideoMedia' }
-              | { __typename: 'DataObjectTypeVideoSubtitle' }
-              | { __typename: 'DataObjectTypeVideoThumbnail' }
-          } | null
         }
         video: {
           __typename?: 'Video'
@@ -1132,22 +1052,6 @@ export type GetNftsConnectionQuery = {
             rewardAccount: string
             channelStateBloatBond: string
             avatarPhoto?: {
-              __typename?: 'StorageDataObject'
-              id: string
-              createdAt: Date
-              size: string
-              isAccepted: boolean
-              ipfsHash: string
-              storageBag: { __typename?: 'StorageBag'; id: string }
-              type:
-                | { __typename: 'DataObjectTypeChannelAvatar' }
-                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                | { __typename: 'DataObjectTypeUnknown' }
-                | { __typename: 'DataObjectTypeVideoMedia' }
-                | { __typename: 'DataObjectTypeVideoSubtitle' }
-                | { __typename: 'DataObjectTypeVideoThumbnail' }
-            } | null
-            coverPhoto?: {
               __typename?: 'StorageDataObject'
               id: string
               createdAt: Date
