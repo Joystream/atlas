@@ -9,6 +9,5 @@ export type SubtitlesInput = {
   file?: File
   id?: string
   asset?: StorageDataObjectFieldsFragment | null
-  url?: string
   isUploadedAsSrt?: boolean
 }

@@ -6,6 +6,8 @@ import { ListItemProps } from '@/components/ListItem'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
+import { atlasConfig } from '@/config'
+import { useAsset } from '@/providers/assets/assets.hooks'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { SubtitlesInput } from '@/types/subtitles'
 
@@ -29,14 +31,16 @@ export const SubtitlesBox: FC<SubtitleBoxProps> = ({
   type,
   file,
   isUploadedAsSrt,
-  url,
   id,
   onChange,
   onRemove,
+  asset,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null)
   const [openUnsuportedFileDialog, closeUnsuportedFileDialog] = useConfirmationModal()
   const hasFile = !!file || !!id
+
+  const { url } = useAsset(asset)
 
   const handleDownload = async (url = '') => {
     const response = await axios.get(url, { responseType: 'blob' })
@@ -108,7 +112,7 @@ export const SubtitlesBox: FC<SubtitleBoxProps> = ({
     <SubtitleBoxWrapper className={className}>
       <SubtitleDetails>
         <Text variant="t100-strong" as="p">
-          {languageIso} {type === 'closed-captions' ? '(CC)' : ''}
+          {atlasConfig.derived.languagesLookup[languageIso]} {type === 'closed-captions' ? '(CC)' : ''}
         </Text>
         {!hasFile && (
           <SubtitlesFileName variant="t100" as="p" color="colorText">

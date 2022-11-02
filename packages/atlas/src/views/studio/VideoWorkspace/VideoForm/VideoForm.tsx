@@ -792,7 +792,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
             name="subtitlesArray"
             rules={{
               validate: (value) => {
-                const languageWithoutFile = value?.find((language) => !language.file && !language.url)
+                const languageWithoutFile = value?.find((language) => !language.file && !language.asset)
                 return value && languageWithoutFile ? 'Provide a file for every new subtitles language.' : true
               },
             }}
