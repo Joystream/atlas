@@ -49,22 +49,6 @@ export type FullChannelFieldsFragment = {
   rewardAccount: string
   channelStateBloatBond: string
   language?: { __typename?: 'Language'; id: string; iso: string } | null
-  coverPhoto?: {
-    __typename?: 'StorageDataObject'
-    id: string
-    createdAt: Date
-    size: string
-    isAccepted: boolean
-    ipfsHash: string
-    storageBag: { __typename?: 'StorageBag'; id: string }
-    type:
-      | { __typename: 'DataObjectTypeChannelAvatar' }
-      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-      | { __typename: 'DataObjectTypeUnknown' }
-      | { __typename: 'DataObjectTypeVideoMedia' }
-      | { __typename: 'DataObjectTypeVideoSubtitle' }
-      | { __typename: 'DataObjectTypeVideoThumbnail' }
-  } | null
   ownerMember?: {
     __typename?: 'Membership'
     id: string
@@ -95,6 +79,22 @@ export type FullChannelFieldsFragment = {
         | { __typename?: 'AvatarUri'; avatarUri: string }
         | null
     }
+  } | null
+  coverPhoto?: {
+    __typename?: 'StorageDataObject'
+    id: string
+    createdAt: Date
+    size: string
+    isAccepted: boolean
+    ipfsHash: string
+    storageBag: { __typename?: 'StorageBag'; id: string }
+    type:
+      | { __typename: 'DataObjectTypeChannelAvatar' }
+      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeUnknown' }
+      | { __typename: 'DataObjectTypeVideoMedia' }
+      | { __typename: 'DataObjectTypeVideoSubtitle' }
+      | { __typename: 'DataObjectTypeVideoThumbnail' }
   } | null
   avatarPhoto?: {
     __typename?: 'StorageDataObject'
@@ -608,22 +608,6 @@ export type FullVideoFieldsFragment = {
     rewardAccount: string
     channelStateBloatBond: string
     language?: { __typename?: 'Language'; id: string; iso: string } | null
-    coverPhoto?: {
-      __typename?: 'StorageDataObject'
-      id: string
-      createdAt: Date
-      size: string
-      isAccepted: boolean
-      ipfsHash: string
-      storageBag: { __typename?: 'StorageBag'; id: string }
-      type:
-        | { __typename: 'DataObjectTypeChannelAvatar' }
-        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-        | { __typename: 'DataObjectTypeUnknown' }
-        | { __typename: 'DataObjectTypeVideoMedia' }
-        | { __typename: 'DataObjectTypeVideoSubtitle' }
-        | { __typename: 'DataObjectTypeVideoThumbnail' }
-    } | null
     ownerMember?: {
       __typename?: 'Membership'
       id: string
@@ -654,6 +638,22 @@ export type FullVideoFieldsFragment = {
           | { __typename?: 'AvatarUri'; avatarUri: string }
           | null
       }
+    } | null
+    coverPhoto?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      createdAt: Date
+      size: string
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoSubtitle' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
@@ -2031,16 +2031,16 @@ export const FullChannelFieldsFragmentDoc = gql`
       id
       iso
     }
-    coverPhoto {
-      ...StorageDataObjectFields
-    }
     ownerMember {
       ...BasicMembershipFields
     }
+    coverPhoto {
+      ...StorageDataObjectFields
+    }
   }
   ${BasicChannelFieldsFragmentDoc}
-  ${StorageDataObjectFieldsFragmentDoc}
   ${BasicMembershipFieldsFragmentDoc}
+  ${StorageDataObjectFieldsFragmentDoc}
 `
 export const LicenseFieldsFragmentDoc = gql`
   fragment LicenseFields on License {

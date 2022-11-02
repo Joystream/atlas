@@ -10,6 +10,7 @@ fragment BasicChannelFields on Channel {
   follows
   rewardAccount
   channelStateBloatBond
+
   avatarPhoto {
     ...StorageDataObjectFields
   }
@@ -26,11 +27,11 @@ fragment FullChannelFields on Channel {
     id
     iso
   }
-  coverPhoto {
-    ...StorageDataObjectFields
-  }
   ownerMember {
     ...BasicMembershipFields
+  }
+  coverPhoto {
+    ...StorageDataObjectFields
   }
 }
 
