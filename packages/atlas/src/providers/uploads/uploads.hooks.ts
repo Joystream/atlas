@@ -122,6 +122,7 @@ export const useStartFileUpload = () => {
 
         const formData = new FormData()
         formData.append('file', fileToUpload)
+        formData.append('file', fileToUpload, asset.name)
 
         rax.attach()
         const raxConfig: RetryConfig = {

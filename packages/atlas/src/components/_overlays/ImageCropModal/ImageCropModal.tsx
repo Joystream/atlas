@@ -184,14 +184,16 @@ const ImageCropModalComponent: ForwardRefRenderFunction<ImageCropModalImperative
         secondaryButton={{ text: 'Cancel', onClick: resetModal }}
         additionalActionsNodeMobilePosition="bottom"
         additionalActionsNode={
-          <>
-            {fee && <Fee loading={loading} variant="h200" amount={fullFee || new BN(0)} />}
-            {editMode && onDelete && (
+          fee ? (
+            <Fee loading={loading} variant="h200" amount={fullFee || new BN(0)} />
+          ) : (
+            editMode &&
+            onDelete && (
               <Button onClick={handleDeleteClick} variant="destructive-secondary" icon={<SvgActionTrash />}>
                 Delete
               </Button>
-            )}
-          </>
+            )
+          )
         }
         onExitClick={resetModal}
         dividers

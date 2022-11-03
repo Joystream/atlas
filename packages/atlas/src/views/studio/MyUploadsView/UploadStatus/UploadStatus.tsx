@@ -100,6 +100,11 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
 
   const reselectFile = useCallback(
     (openFileSelect: () => void) => {
+      setEditedVideo({
+        id: asset.parentObject.id,
+        isDraft: false,
+        isNew: false,
+      })
       if (asset.type === 'video' || asset.type === 'subtitles') {
         openFileSelect()
         return
@@ -170,6 +175,7 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
       dataObjectStateBloatBondValue,
       memberId,
       openConfirmationModal,
+      setEditedVideo,
     ]
   )
 
@@ -271,6 +277,7 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
               id: asset.parentObject.id,
             },
             type: asset.type,
+            name: asset.name,
           },
           {
             isReUpload: true,
@@ -305,6 +312,7 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
           id: asset.parentObject.id,
         },
         type: asset.type,
+        name: asset.name,
       },
       {
         changeHost: true,
@@ -315,25 +323,26 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
   const handleCropConfirm = async (
     croppedBlob: Blob,
     croppedUrl?: string,
-    assetDimensions?: AssetDimensions,
-    imageCropData?: ImageCropData,
+    dimensions?: AssetDimensions,
+    cropData?: ImageCropData,
     originalBlob?: File | Blob | null
   ) => {
+    if (!originalBlob) {
+      return
+    }
     const fileHash = await computeFileHash(croppedBlob)
     if (fileHash !== asset.ipfsHash) {
-      const blob = originalBlob as File
-      const newAssetId = `local-video-${createId()}`
+      const blob = croppedBlob as File
       const isChannelUpload = asset.parentObject.type === 'channel'
       const newAssset = {
         ...blob,
-        contentId: newAssetId,
-        id: newAssetId,
         size: croppedBlob?.size,
-        imageCropData: imageCropData !== undefined ? imageCropData : null,
-        assetDimensions: assetDimensions !== undefined ? assetDimensions : null,
+        url: croppedUrl,
       }
       const handleUpdate = async () => {
         if (isChannelUpload) {
+          const assetDimensions = dimensions !== undefined ? dimensions : null
+          const imageCropData = cropData !== undefined ? cropData : null
           await handleEditChannelSubmit({
             metadata: { ownerAccount: accountId ?? '' },
             channel,
@@ -341,7 +350,13 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
             assets:
               asset.type === 'avatar'
                 ? {
-                    avatarPhoto: { ...newAssset, originalBlob },
+                    avatarPhoto: {
+                      ...newAssset,
+                      contentId: `local-avatar-${createId()}`,
+                      originalBlob,
+                      imageCropData,
+                      assetDimensions,
+                    },
                     coverPhoto: {
                       assetDimensions: null,
                       contentId: null,
@@ -350,7 +365,13 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
                     },
                   }
                 : {
-                    coverPhoto: { ...newAssset, originalBlob },
+                    coverPhoto: {
+                      ...newAssset,
+                      contentId: `local-cover-${createId()}`,
+                      originalBlob,
+                      imageCropData,
+                      assetDimensions,
+                    },
                     avatarPhoto: {
                       assetDimensions: null,
                       contentId: null,
@@ -374,9 +395,19 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
                 : null,
           })
         } else {
+          const newCropAssetId = `local-thumbnail-crop-${createId()}`
+          const newOriginalAssetId = `local-thumbnail-original-${createId()}`
           await handleVideoWorkspaceSubmit({
             assets: {
-              thumbnailPhoto: { ...newAssset, blob, hashPromise: computeFileHash(croppedBlob) },
+              thumbnailPhoto: {
+                ...newAssset,
+                blob,
+                id: newCropAssetId,
+                originalId: newOriginalAssetId,
+                hashPromise: computeFileHash(croppedBlob),
+                cropData,
+                dimensions,
+              },
             },
             metadata: { clearSubtitles: true },
             nftMetadata: undefined,
@@ -416,7 +447,9 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
               },
           title: 'Continue with a different file?',
           description: `This file (${
-            blob.name.length > FILE_NAME_LENGTH_LIMIT ? shortenString(blob.name, 16, 8) : blob.name
+            (originalBlob as File).name.length > FILE_NAME_LENGTH_LIMIT
+              ? shortenString(blob.name, 16, 8)
+              : (originalBlob as File).name
           }) is different from the one you selected before. To upload it, you’ll need to sign a blockchain transaction to confirm editing your video. Are you sure you want to continue?`,
           type: 'warning',
           primaryButton: {
@@ -445,6 +478,7 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
             id: asset.parentObject.id,
           },
           type: asset.type,
+          name: asset.name,
         },
         {
           isReUpload: true,
