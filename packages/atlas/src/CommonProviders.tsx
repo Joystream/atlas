@@ -13,8 +13,6 @@ import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { UserProvider } from '@/providers/user/user.provider'
 import { GlobalStyles } from '@/styles'
 
-import { UploadsManager } from './providers/uploads/uploads.manager'
-
 export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
   // App doesn't accept props and doesn't contain state so should never rerender
   const apolloClient = createApolloClient()
@@ -31,7 +29,6 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
                 <MaintenanceWrapper>
                   <OperatorsContextProvider>
                     <AssetsManager />
-                    <UploadsManager />
                     {children}
                   </OperatorsContextProvider>
                 </MaintenanceWrapper>

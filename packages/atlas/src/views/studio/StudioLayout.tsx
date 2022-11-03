@@ -15,6 +15,7 @@ import { TopbarStudio } from '@/components/_navigation/TopbarStudio'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { ConnectionStatusManager, useConnectionStatusStore } from '@/providers/connectionStatus'
+import { UploadsManager } from '@/providers/uploads/uploads.manager'
 import { useUser } from '@/providers/user/user.hooks'
 import { VideoWorkspaceProvider, useVideoWorkspaceRouting } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
@@ -191,6 +192,7 @@ const StudioLayoutWrapper: FC = () => {
     >
       <VideoWorkspaceProvider>
         <ConnectionStatusManager />
+        <UploadsManager />
         <StudioLayout />
       </VideoWorkspaceProvider>
     </ErrorBoundary>
