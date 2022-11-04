@@ -21,7 +21,10 @@ const ROUTING_ANIMATION_OFFSET = 100
 const LoadableStudioLayout = loadable(() => import('./views/studio/StudioLayout'), {
   fallback: (
     <>
-      <TopbarBase fullLogoNode={<SvgAppLogoStudio />} logoLinkUrl={absoluteRoutes.studio.index()} />
+      <TopbarBase
+        fullLogoNode={<SvgAppLogoStudio height={32} width={undefined} />}
+        logoLinkUrl={absoluteRoutes.studio.index()}
+      />
       <StudioLoading />
     </>
   ),
