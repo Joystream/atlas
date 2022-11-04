@@ -41,19 +41,27 @@ export const FileInfoContainer = styled.div`
 
 export const FileLinePoint = styled.div`
   display: block;
-  width: 35px;
   height: 100%;
   border-left: 2px solid ${cVar('colorBorder')};
   flex-shrink: 0;
   margin-left: ${sizes(9.5)};
+  width: 16px;
+
+  ${media.md} {
+    width: 33px;
+  }
 
   &::after {
     content: '';
     position: absolute;
     border-top: 2px solid ${cVar('colorBorder')};
-    width: 33px;
+    width: 16px;
     top: 50%;
     transform: translateY(-50%);
+
+    ${media.md} {
+      width: 33px;
+    }
   }
 `
 

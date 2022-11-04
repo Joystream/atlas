@@ -77,7 +77,7 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
 
   const [openConfirmationModal, closeConfirmationModal] = useConfirmationModal()
 
-  const { channel } = useFullChannel(
+  const { channel, refetch: refetchChannel } = useFullChannel(
     channelId || '',
     {
       skip: !channelId,
@@ -393,6 +393,7 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
                     url: croppedUrl,
                   }
                 : null,
+            refetchChannel,
           })
         } else {
           const newCropAssetId = `local-thumbnail-crop-${createId()}`

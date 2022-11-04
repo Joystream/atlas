@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { useCallback } from 'react'
 import { UseFormGetValues, UseFormReset, UseFormSetValue } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
@@ -44,6 +45,8 @@ type CreateEditChannelData = {
   avatarAsset: ResolvedAsset | null
   coverAsset: ResolvedAsset | null
   channel?: FullChannelFieldsFragment
+  refetchChannel: () => void
+  fee?: BN
 }
 
 type FormMethods = {
@@ -170,10 +173,12 @@ export const useCreateEditChannelSubmit = () => {
         if (data.newChannel) {
           // add channel to new channels list before refetching membership to make sure UploadsManager doesn't complain about missing assets
           addNewChannelIdToUploadsStore(channelId)
+          // membership includes full list of channels so the channel update will be fetched too
+          await refetchUserMemberships()
+        } else {
+          await data?.refetchChannel()
         }
 
-        // membership includes full list of channels so the channel update will be fetched too
-        await refetchUserMemberships()
         if (data.newChannel) {
           // when creating a channel, refetch operators before uploading so that storage bag assignments gets populated for a new channel
           setActiveUser({ channelId })
@@ -186,6 +191,7 @@ export const useCreateEditChannelSubmit = () => {
       }
 
       const completed = await handleTransaction({
+        fee: data.fee,
         preProcess: processAssets,
         txFactory: async (updateStatus) =>
           data.newChannel

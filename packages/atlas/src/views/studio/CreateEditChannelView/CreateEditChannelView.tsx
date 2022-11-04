@@ -301,6 +301,8 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
         },
         avatarAsset,
         coverAsset,
+        refetchChannel,
+        fee: newChannel ? createChannelFee : updateChannelFee,
       },
       {
         setValue,
@@ -340,147 +342,6 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       { contentId: newAvatarAssetId, assetDimensions, imageCropData, originalBlob },
       { shouldDirty: true }
     )
-  }
-
-  const submit = async (data: Inputs) => {
-    if (!joystream || !memberId || !accountId) {
-      return
-    }
-
-    if (!channelBucketsCount && !newChannel) {
-      SentryLogger.error('Channel buckets count is not set', 'CreateEditChannelView')
-      return
-    }
-
-    setIsWorkspaceOpen(false)
-
-    const metadata: ChannelInputMetadata = {
-      ...(dirtyFields.title ? { title: data.title?.trim() ?? '' } : {}),
-      ...(dirtyFields.description ? { description: data.description?.trim() ?? '' } : {}),
-      ...(dirtyFields.language || newChannel ? { language: data.language } : {}),
-      ...(dirtyFields.isPublic || newChannel ? { isPublic: data.isPublic } : {}),
-      ownerAccount: accountId,
-    }
-
-    const assets: ChannelInputAssets = {}
-    let removedAssetsIds: string[] = []
-    const processAssets = async () => {
-      const avatarIpfsHash = avatarAsset?.blob && dirtyFields.avatar && (await computeFileHash(avatarAsset.blob))
-      const coverIpfsHash = coverAsset?.blob && dirtyFields.cover && (await computeFileHash(coverAsset.blob))
-
-      const [createdAssets, assetIdsToRemove] = createChannelAssets(avatarIpfsHash, coverIpfsHash)
-      if (createdAssets.avatarPhoto) {
-        assets.avatarPhoto = createdAssets.avatarPhoto
-      }
-      if (createdAssets.coverPhoto) {
-        assets.coverPhoto = createdAssets.coverPhoto
-      }
-      removedAssetsIds = assetIdsToRemove
-    }
-
-    const uploadAssets = async ({ channelId, assetsIds }: ChannelExtrinsicResult) => {
-      const uploadPromises: Promise<unknown>[] = []
-      if (avatarAsset?.blob && assetsIds.avatarPhoto) {
-        const uploadPromise = startFileUpload(avatarAsset.blob, {
-          id: assetsIds.avatarPhoto,
-          owner: channelId,
-          parentObject: {
-            type: 'channel',
-            id: channelId,
-          },
-          dimensions: data.avatar.assetDimensions ?? undefined,
-          imageCropData: data.avatar.imageCropData ?? undefined,
-          type: 'avatar',
-        })
-        uploadPromises.push(uploadPromise)
-      }
-      if (coverAsset?.blob && assetsIds.coverPhoto) {
-        const uploadPromise = startFileUpload(coverAsset.blob, {
-          id: assetsIds.coverPhoto,
-          owner: channelId,
-          parentObject: {
-            type: 'channel',
-            id: channelId,
-          },
-          dimensions: data.cover.assetDimensions ?? undefined,
-          imageCropData: data.cover.imageCropData ?? undefined,
-          type: 'cover',
-        })
-        uploadPromises.push(uploadPromise)
-      }
-      Promise.all(uploadPromises).catch((e) =>
-        SentryLogger.error('Unexpected upload failure', 'CreateEditChannelView', e)
-      )
-    }
-
-    const refetchDataAndUploadAssets = async (result: ChannelExtrinsicResult) => {
-      const { channelId, assetsIds } = result
-      if (assetsIds.avatarPhoto && avatarAsset?.url) {
-        addAsset(assetsIds.avatarPhoto, { url: avatarAsset.url })
-        setValue('avatar.contentId', assetsIds.avatarPhoto)
-      }
-      if (assetsIds.coverPhoto && coverAsset?.url) {
-        addAsset(assetsIds.coverPhoto, { url: coverAsset.url })
-        setValue('cover.contentId', assetsIds.coverPhoto)
-      }
-
-      if (newChannel) {
-        // add channel to new channels list before refetching membership to make sure UploadsManager doesn't complain about missing assets
-        addNewChannelIdToUploadsStore(channelId)
-        // membership includes full list of channels so the channel update will be fetched too
-        await refetchUserMemberships()
-      } else {
-        await refetchChannel()
-      }
-
-      if (newChannel) {
-        // when creating a channel, refetch operators before uploading so that storage bag assignments gets populated for a new channel
-        setActiveUser({ channelId })
-        fetchOperators().then(() => {
-          uploadAssets(result)
-        })
-      } else {
-        uploadAssets(result)
-      }
-    }
-
-    const completed = await handleTransaction({
-      fee: newChannel ? createChannelFee : updateChannelFee,
-      preProcess: processAssets,
-      txFactory: async (updateStatus) =>
-        newChannel
-          ? (
-              await joystream.extrinsics
-            ).createChannel(
-              memberId,
-              metadata,
-              assets,
-              await getBucketsConfigForNewChannel(),
-              dataObjectStateBloatBondValue.toString(),
-              channelStateBloatBondValue.toString(),
-              proxyCallback(updateStatus)
-            )
-          : (
-              await joystream.extrinsics
-            ).updateChannel(
-              channelId ?? '',
-              memberId,
-              metadata,
-              assets,
-              removedAssetsIds,
-              dataObjectStateBloatBondValue.toString(),
-              channelBucketsCount.toString(),
-              proxyCallback(updateStatus)
-            ),
-      onTxSync: (result) => {
-        reset(getValues())
-        return refetchDataAndUploadAssets(result)
-      },
-    })
-
-    if (completed && newChannel) {
-      navigate(absoluteRoutes.studio.videos())
-    }
   }
 
   const handleDeleteAvatar = () => {
