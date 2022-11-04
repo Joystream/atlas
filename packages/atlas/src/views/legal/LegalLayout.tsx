@@ -18,7 +18,10 @@ const legalRoutes = [
 export const LegalLayout: FC = () => {
   return (
     <div>
-      <StyledTopbarBase fullLogoNode={<SvgAppLogoFull />} logoLinkUrl={absoluteRoutes.viewer.index()} />
+      <StyledTopbarBase
+        fullLogoNode={<SvgAppLogoFull height={32} width={undefined} />}
+        logoLinkUrl={absoluteRoutes.viewer.index()}
+      />
       <Container>
         <Routes>
           {legalRoutes.map((route) => (

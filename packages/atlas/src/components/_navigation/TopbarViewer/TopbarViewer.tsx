@@ -93,7 +93,7 @@ export const TopbarViewer: FC = () => {
       <StyledTopbarBase
         hasFocus={searchOpen}
         noLogo={!mdMatch && !!searchQuery}
-        fullLogoNode={<SvgAppLogoFull />}
+        fullLogoNode={<SvgAppLogoFull height={32} width={undefined} />}
         logoLinkUrl={absoluteRoutes.viewer.index()}
       >
         <SearchbarContainer>

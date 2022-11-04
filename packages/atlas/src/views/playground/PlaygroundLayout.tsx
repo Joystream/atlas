@@ -54,7 +54,7 @@ const PlaygroundLayout = () => {
       <TopbarBase
         fullLogoNode={
           <LogoWrapper>
-            <SvgAppLogoShort />
+            <SvgAppLogoShort height={32} width={undefined} />
             <Text as="p" variant="h500" margin={{ left: 2 }}>
               Playground
             </Text>

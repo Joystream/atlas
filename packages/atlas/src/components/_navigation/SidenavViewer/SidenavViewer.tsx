@@ -98,7 +98,7 @@ export const SidenavViewer: FC = () => {
     <SidenavBase
       expanded={expanded}
       toggleSideNav={setExpanded}
-      logoNode={<SvgAppLogoFull />}
+      logoNode={<SvgAppLogoFull height={32} width={undefined} />}
       logoLinkUrl={absoluteRoutes.viewer.index()}
       items={viewerNavItems}
       additionalContent={

@@ -17,7 +17,11 @@ export const TopbarBase: FC<TopbarBaseProps> = ({ children, fullLogoNode, logoLi
 
   return (
     <Header className={className} data-scroll-lock-fill-gap>
-      {!noLogo && <LogoLink to={logoLinkUrl}>{mdMatch ? fullLogoNode : <SvgAppLogoShort />}</LogoLink>}
+      {!noLogo && (
+        <LogoLink to={logoLinkUrl}>
+          {mdMatch ? fullLogoNode : <SvgAppLogoShort height={32} width={undefined} />}
+        </LogoLink>
+      )}
       {children}
     </Header>
   )
