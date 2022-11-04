@@ -62,7 +62,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
   return (
     <>
       <StyledTopbarBase
-        fullLogoNode={<SvgAppLogoStudio />}
+        fullLogoNode={<SvgAppLogoStudio height={32} width={undefined} />}
         withoutHamburgerButton={hideChannelInfo}
         logoLinkUrl={absoluteRoutes.studio.index()}
       >
