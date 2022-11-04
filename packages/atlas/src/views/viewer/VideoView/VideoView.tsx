@@ -199,13 +199,19 @@ export const VideoView: FC = () => {
         return false
       } else if (video?.id) {
         setVideoReactionProcessing(true)
-        const reacted = await likeOrDislikeVideo(video.id, reaction, video.title)
+        let fee
+        if (!reactionFee) {
+          fee = await getReactionFee([memberId || '', video?.id, reaction])
+        } else {
+          fee = reactionFee
+        }
+        const reacted = await likeOrDislikeVideo(video.id, reaction, video.title, fee)
         setVideoReactionProcessing(false)
         return reacted
       }
       return false
     },
-    [isLoggedIn, likeOrDislikeVideo, openSignInDialog, signIn, video]
+    [getReactionFee, isLoggedIn, likeOrDislikeVideo, memberId, openSignInDialog, reactionFee, signIn, video]
   )
 
   // use Media Session API to provide rich metadata to the browser

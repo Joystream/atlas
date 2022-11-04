@@ -6,6 +6,7 @@ import useResizeObserver from 'use-resize-observer'
 import { Fee } from '@/components/Fee'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
+import { useWaitForFee } from '@/hooks/useWaitForFee'
 import { useSnackbar } from '@/providers/snackbars'
 import { formatNumber } from '@/utils/number'
 
@@ -110,6 +111,7 @@ export const CommentInput = forwardRef<HTMLTextAreaElement, CommentInputProps>(
       }
       onComment?.()
     }
+    const { loadingState, actionHandler } = useWaitForFee(!!feeLoading, fee, validateLengthAndProcess)
 
     const show = !!value || active || !!processing
     const canComment = !!value && hasInitialValueChanged
@@ -182,8 +184,8 @@ export const CommentInput = forwardRef<HTMLTextAreaElement, CommentInputProps>(
                 Cancel
               </Button>
             )}
-            <Button onClick={validateLengthAndProcess} disabled={processing || !canComment}>
-              {processing ? 'Processing' : 'Comment'}
+            <Button onClick={actionHandler} disabled={processing || !canComment || loadingState}>
+              {processing ? 'Processing' : loadingState ? 'Please wait...' : 'Comment'}
             </Button>
           </ButtonsContainer>
         </Container>

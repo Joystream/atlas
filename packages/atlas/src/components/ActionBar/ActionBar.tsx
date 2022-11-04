@@ -1,5 +1,5 @@
 import BN from 'bn.js'
-import { forwardRef } from 'react'
+import { MouseEvent, forwardRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Fee } from '@/components/Fee'
@@ -7,6 +7,7 @@ import { Text } from '@/components/Text'
 import { TooltipProps } from '@/components/Tooltip'
 import { ButtonProps } from '@/components/_buttons/Button'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useWaitForFee } from '@/hooks/useWaitForFee'
 import { transitions } from '@/styles'
 
 import {
@@ -20,6 +21,7 @@ import {
 
 export type ActionDialogButtonProps = {
   text?: string
+  onClick?: (e?: MouseEvent<HTMLButtonElement>) => void
 } & Omit<ButtonProps, 'children'>
 
 type ActionDialogInfoBadge = {
@@ -40,6 +42,7 @@ export type ActionBarProps = {
 export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
   ({ fee, feeLoading, isActive = true, className, primaryButton, secondaryButton, infoBadge }, ref) => {
     const smMatch = useMediaMatch('sm')
+    const { actionHandler, loadingState } = useWaitForFee(!!feeLoading, fee, primaryButton.onClick)
 
     return (
       <ActionBarContainer ref={ref} className={className} isActive={isActive}>
@@ -67,11 +70,13 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
         </CSSTransition>
         <ActionButtonPrimary
           {...primaryButton}
+          disabled={primaryButton.disabled || loadingState}
+          onClick={actionHandler}
           secondaryButtonExists={!!secondaryButton}
           size={smMatch ? 'large' : 'medium'}
           type="submit"
         >
-          {primaryButton.text}
+          {loadingState ? 'Please wait...' : primaryButton.text}
         </ActionButtonPrimary>
       </ActionBarContainer>
     )
