@@ -42,9 +42,9 @@ import {
   PlayButton,
   PlayControl,
   ScreenControls,
-  StyledAtlasLogo,
-  StyledAtlasLogoShort,
+  StyledAppLogoShortMonochrome,
   StyledEmbeddedLogoLink,
+  StyledSvgAppLogoFullMonochrome,
   StyledSvgControlsFullScreen,
   StyledSvgControlsPause,
   StyledSvgControlsPipOff,
@@ -830,7 +830,11 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                       rel="noopener noreferrer"
                       target="_blank"
                     >
-                      {xsMatch ? <StyledAtlasLogo width={undefined} /> : <StyledAtlasLogoShort width={undefined} />}
+                      {xsMatch ? (
+                        <StyledSvgAppLogoFullMonochrome width={undefined} />
+                      ) : (
+                        <StyledAppLogoShortMonochrome width={undefined} />
+                      )}
                     </a>
                   )}
                 </ScreenControls>
@@ -893,7 +897,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                 target="_blank"
                 onClick={(e) => e.stopPropagation()}
               >
-                <StyledAtlasLogo embedded />
+                <StyledSvgAppLogoFullMonochrome embedded />
               </StyledEmbeddedLogoLink>
             )}
           </>
