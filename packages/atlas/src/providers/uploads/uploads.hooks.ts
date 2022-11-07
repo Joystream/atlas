@@ -116,9 +116,6 @@ export const useStartFileUpload = () => {
           (assetsNotificationsCount.current.uploads[assetKey] || 0) + 1
 
         const formData = new FormData()
-        formData.append('dataObjectId', asset.id)
-        formData.append('storageBucketId', uploadOperator.id)
-        formData.append('bagId', bagId)
         formData.append('file', fileToUpload, (file as File).name)
 
         rax.attach()
@@ -135,10 +132,18 @@ export const useStartFileUpload = () => {
           },
         }
 
-        await axios.post(createAssetUploadEndpoint(uploadOperator.endpoint), formData, {
-          raxConfig,
-          onUploadProgress: setUploadProgress,
-        })
+        await axios.post(
+          createAssetUploadEndpoint(uploadOperator.endpoint, {
+            dataObjectId: asset.id,
+            storageBucketId: uploadOperator.id,
+            bagId,
+          }),
+          formData,
+          {
+            raxConfig,
+            onUploadProgress: setUploadProgress,
+          }
+        )
 
         assetsNotificationsCount.current.uploaded[assetKey] =
           (assetsNotificationsCount.current.uploaded[assetKey] || 0) + 1

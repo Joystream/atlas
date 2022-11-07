@@ -6,8 +6,18 @@ export const joinUrlFragments = (...fragments: string[]) => {
   return strippedFragments.join('/')
 }
 
-export const createAssetUploadEndpoint = (operatorEndpoint: string) =>
-  joinUrlFragments(operatorEndpoint, atlasConfig.storage.uploadPath)
+type UploadRequestParams = {
+  dataObjectId: string
+  storageBucketId: string
+  bagId: string
+}
+export const createAssetUploadEndpoint = (operatorEndpoint: string, uploadParams: UploadRequestParams) => {
+  const uploadEndpoint = new URL(atlasConfig.storage.uploadPath, operatorEndpoint)
+  Object.entries(uploadParams).forEach(([key, value]) => {
+    uploadEndpoint.searchParams.set(key, value)
+  })
+  return uploadEndpoint.toString()
+}
 
 export const imageUrlValidation = async (imageUrl: string): Promise<boolean> =>
   new Promise((resolve) => {
