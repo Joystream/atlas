@@ -158,7 +158,7 @@ export const UploadsManager: FC = () => {
           return
         }
 
-        if (!pendingAssetsLookup[asset.id]) {
+        if (!missingLocalAssetsLookup[asset.id] && !uploadStatuses[asset.id]) {
           removeAssetFromUploads(asset.id)
         } else {
           // mark asset as not missing from local state
@@ -264,6 +264,7 @@ export const UploadsManager: FC = () => {
     processingAssets,
     processingAssetsLookup,
     newChannelsIds,
+    uploadStatuses,
   ])
 
   return null
