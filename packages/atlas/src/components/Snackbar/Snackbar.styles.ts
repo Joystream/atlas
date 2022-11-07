@@ -16,6 +16,7 @@ export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
   overflow: hidden;
   transform: translateY(500px) translateX(0);
   border-radius: ${cVar('radiusSmall')};
+  box-shadow: ${cVar('effectElevation24Layer1')}, ${cVar('effectElevation24Layer2')};
 
   &.snackbar-enter {
     transform: translateY(500px) translateX(0);
@@ -57,6 +58,7 @@ export const SnackbarContent = styled.div`
   flex-direction: column;
   padding: ${sizes(1.5)} 0 ${sizes(1.5)} ${sizes(1.5)};
   width: 100%;
+  word-break: break-word;
   align-items: flex-start;
 `
 
