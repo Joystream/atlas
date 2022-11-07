@@ -17,6 +17,7 @@ import { useUserStore } from '@/providers/user/user.store'
 import { isAxiosError } from '@/utils/error'
 import { uploadAvatarImage } from '@/utils/image'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { formatNumber } from '@/utils/number'
 
 import { StyledDialogModal } from './SignInModal.styles'
 import { MemberFormData, SIGN_IN_MODAL_STEPS } from './SignInModal.types'
@@ -125,7 +126,9 @@ export const SignInModal: FC = () => {
             return
           }
           const { lockedBalance } = await joystream.getAccountBalance(selectedAddress)
-          const amountOfTokens = `${hapiBnToTokenNumber(new BN(lockedBalance))} ${atlasConfig.joystream.tokenTicker}`
+          const amountOfTokens = `${formatNumber(hapiBnToTokenNumber(new BN(lockedBalance)))} ${
+            atlasConfig.joystream.tokenTicker
+          }`
           displaySnackbar({
             title: `You received ${amountOfTokens}`,
             description: `Enjoy your ${amountOfTokens} tokens to help you cover transaction fees. These tokens are non-transferable and can't be spent on NFTs or other purchases.`,
