@@ -1,5 +1,5 @@
 import beazierEasing from 'bezier-easing'
-import { FC, MouseEvent, useCallback, useEffect } from 'react'
+import { FC, MouseEvent, useCallback, useEffect, useRef } from 'react'
 import { DropzoneOptions, FileRejection, useDropzone } from 'react-dropzone'
 import { useTransition } from 'react-spring'
 
@@ -13,7 +13,6 @@ import {
 import { Text } from '@/components/Text'
 import { Button, ButtonVariant } from '@/components/_buttons/Button'
 import { useConfirmationModal } from '@/providers/confirmationModal'
-import { FileType } from '@/types/files'
 
 import {
   ButtonsGroup,
@@ -37,9 +36,9 @@ export type FileSelectProps = {
   isFileLoading?: boolean
   onReAdjustThumbnail?: () => void
   onDropRejected?: (fileRejections: FileRejection[]) => void
-  onError?: (error: string | null, fileType: FileType) => void
   error?: string | null
   maxSize?: number
+  onError: (error: string | null) => void
 }
 
 export const FileSelect: FC<FileSelectProps> = ({
@@ -49,11 +48,11 @@ export const FileSelect: FC<FileSelectProps> = ({
   thumbnailEditable,
   onReAdjustThumbnail,
   onDropRejected,
-  onError,
   error,
   isFileLoading,
   type,
   file,
+  onError,
 }) => {
   const fileType = type === 'video-file' ? 'video' : 'image'
 
@@ -98,6 +97,7 @@ export const FileSelect: FC<FileSelectProps> = ({
     noClick: true,
     noKeyboard: true,
   })
+  const openRef = useRef(open)
 
   const [openErrorDialog, closeErrorDialog] = useConfirmationModal()
 
@@ -112,20 +112,20 @@ export const FileSelect: FC<FileSelectProps> = ({
       primaryButton: {
         onClick: () => {
           closeErrorDialog()
-          onError?.(null, fileType)
-          open()
+          onError(null)
+          openRef.current()
         },
         text: 'Reselect file',
       },
       secondaryButton: {
         text: 'Cancel',
         onClick: () => {
-          onError?.(null, fileType)
+          onError(null)
           closeErrorDialog()
         },
       },
     })
-  }, [closeErrorDialog, error, fileType, onError, open, openErrorDialog])
+  }, [closeErrorDialog, error, fileType, openErrorDialog, onError])
 
   const handleReAdjustThumbnail = (e: MouseEvent<HTMLImageElement>) => {
     e.stopPropagation()

@@ -116,7 +116,7 @@ export const useStartFileUpload = () => {
           (assetsNotificationsCount.current.uploads[assetKey] || 0) + 1
 
         const formData = new FormData()
-        formData.append('file', fileToUpload, (file as File).name)
+        formData.append('file', fileToUpload)
 
         rax.attach()
         const raxConfig: RetryConfig = {

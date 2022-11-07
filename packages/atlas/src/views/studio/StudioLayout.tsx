@@ -24,6 +24,7 @@ import { NotificationsView } from '@/views/notifications'
 
 import { CreateEditChannelView } from './CreateEditChannelView'
 import { CrtView } from './CrtView'
+import { MyPaymentsView } from './MyPaymentsView'
 import { MyUploadsView } from './MyUploadsView'
 import { MyVideosView } from './MyVideosView'
 import { StudioWelcomeView } from './StudioWelcomeView'
@@ -122,6 +123,12 @@ const StudioLayout = () => {
                 path={relativeRoutes.studio.uploads()}
                 element={
                   <PrivateRoute element={<MyUploadsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                }
+              />
+              <Route
+                path={relativeRoutes.studio.payments()}
+                element={
+                  <PrivateRoute element={<MyPaymentsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
                 }
               />
               <Route

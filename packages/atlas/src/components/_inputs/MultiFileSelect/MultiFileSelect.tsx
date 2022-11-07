@@ -258,6 +258,7 @@ export const MultiFileSelect: FC<MultiFileSelectProps> = memo(
           type={step === 'video' ? 'video-file' : 'video-thumbnail'}
           thumbnailUrl={files.thumbnail?.url}
           error={error}
+          onError={setError}
           onDropRejected={handleFileRejections}
         />
         <StepsContainer>

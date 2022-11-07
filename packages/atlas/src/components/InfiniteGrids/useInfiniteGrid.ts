@@ -121,6 +121,8 @@ export const useInfiniteGrid = <
 
     fetchMore({
       variables: { ...queryVariables, first: missingItemsCount + PREFETCHED_ITEMS_COUNT, after: endCursor },
+      // remove delay if it's set. Setting delay could cause issues with fetching more items.
+      context: { ...(queryOpts?.context ? queryOpts.context : {}), delay: 0 },
     })
   }, [
     loading,
@@ -132,6 +134,7 @@ export const useInfiniteGrid = <
     loadedItemsCount,
     endCursor,
     isReady,
+    queryOpts?.context,
   ])
 
   useEffect(() => {
