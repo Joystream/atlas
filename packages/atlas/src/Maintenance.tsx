@@ -15,7 +15,7 @@ export const Maintenance: FC = () => (
       We will be up & running soon
     </Header>
     <Text as="p" variant="t200" color="colorText">
-      ${atlasConfig.general.appName} is currently unavailable due to the network upgrade, new infrastructure release
+      {atlasConfig.general.appName} is currently unavailable due to the network upgrade, new infrastructure release
       rollout or operational update which required a temporary downtime.
       <br />
       We should be back shortly. In the meantime,{' '}
