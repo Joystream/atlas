@@ -6,8 +6,8 @@ import { Fee } from '@/components/Fee'
 import { Text } from '@/components/Text'
 import { TooltipProps } from '@/components/Tooltip'
 import { ButtonProps } from '@/components/_buttons/Button'
+import { useFeeLoadingState } from '@/hooks/useFeeLoadingState'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useWaitForFee } from '@/hooks/useWaitForFee'
 import { transitions } from '@/styles'
 
 import {
@@ -42,7 +42,7 @@ export type ActionBarProps = {
 export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
   ({ fee, feeLoading, isActive = true, className, primaryButton, secondaryButton, infoBadge }, ref) => {
     const smMatch = useMediaMatch('sm')
-    const { actionHandler, loadingState } = useWaitForFee(!!feeLoading, fee, primaryButton.onClick)
+    const { signTransactionHandler, loadingState } = useFeeLoadingState(!!feeLoading, fee, primaryButton.onClick)
 
     return (
       <ActionBarContainer ref={ref} className={className} isActive={isActive}>
@@ -71,7 +71,7 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
         <ActionButtonPrimary
           {...primaryButton}
           disabled={primaryButton.disabled || loadingState}
-          onClick={actionHandler}
+          onClick={signTransactionHandler}
           secondaryButtonExists={!!secondaryButton}
           size={smMatch ? 'large' : 'medium'}
           type="submit"

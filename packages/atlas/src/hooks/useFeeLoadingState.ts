@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 
-export const useWaitForFee = (feeLoading: boolean, fee?: BN, callback?: () => void) => {
+export const useFeeLoadingState = (feeLoading: boolean, fee?: BN, callback?: () => void) => {
   const [loadingState, setLoadingState] = useState(false)
   const { totalBalanceLoaded, totalBalance } = useSubscribeAccountBalance()
   const { displaySnackbar } = useSnackbar()
@@ -32,7 +32,7 @@ export const useWaitForFee = (feeLoading: boolean, fee?: BN, callback?: () => vo
     }
   }, [callback, loadingState, feeLoading, totalBalanceLoaded, totalBalance, displaySnackbar, callbackHandler])
 
-  const actionHandler = useCallback(() => {
+  const signTransactionHandler = useCallback(() => {
     if (feeLoading || totalBalanceLoaded) {
       setLoadingState(true)
       return
@@ -42,6 +42,6 @@ export const useWaitForFee = (feeLoading: boolean, fee?: BN, callback?: () => vo
 
   return {
     loadingState,
-    actionHandler,
+    signTransactionHandler,
   }
 }

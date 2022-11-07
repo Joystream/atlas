@@ -174,14 +174,9 @@ export const Comment: FC<CommentProps> = memo(
     const handleCommentReaction = async (commentId: string, reactionId: CommentReaction) => {
       if (isLoggedIn) {
         setProcessingReactionsIds((previous) => [...previous, reactionId])
-        let fee
-        if (!reactionFee) {
-          fee = await getReactToVideoCommentFee(
-            memberId && comment?.id ? [memberId, comment.id, reactionId] : undefined
-          )
-        } else {
-          fee = reactionFee
-        }
+        const fee =
+          reactionFee ||
+          (await getReactToVideoCommentFee(memberId && comment?.id ? [memberId, comment.id, reactionId] : undefined))
         await reactToComment(commentId, video?.id || '', reactionId, comment?.author.handle || '', fee)
         setProcessingReactionsIds((previous) => previous.filter((r) => r !== reactionId))
       } else {

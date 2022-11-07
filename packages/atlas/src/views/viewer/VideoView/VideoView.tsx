@@ -199,12 +199,7 @@ export const VideoView: FC = () => {
         return false
       } else if (video?.id) {
         setVideoReactionProcessing(true)
-        let fee
-        if (!reactionFee) {
-          fee = await getReactionFee([memberId || '', video?.id, reaction])
-        } else {
-          fee = reactionFee
-        }
+        const fee = reactionFee || (await getReactionFee([memberId || '', video?.id, reaction]))
         const reacted = await likeOrDislikeVideo(video.id, reaction, video.title, fee)
         setVideoReactionProcessing(false)
         return reacted
