@@ -1,6 +1,6 @@
 import { FC, useMemo } from 'react'
 
-import { BasicChannelFieldsFragment } from '@/api/queries'
+import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { Gallery } from '@/components/Gallery'
 import { breakpointsOfGrid } from '@/components/Grid'
 import { RankingNumberTile } from '@/components/RankingNumberTile'

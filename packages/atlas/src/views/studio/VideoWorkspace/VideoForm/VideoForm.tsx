@@ -2,15 +2,14 @@ import { formatISO } from 'date-fns'
 import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 
-import { useCategories } from '@/api/hooks'
-import { License } from '@/api/queries'
+import { License } from '@/api/queries/__generated__/baseTypes.generated'
+import { SvgActionChevronB, SvgActionChevronT, SvgActionTrash, SvgAlertsWarning24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { Information } from '@/components/Information'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button, TextButton } from '@/components/_buttons/Button'
-import { SvgActionChevronB, SvgActionChevronT, SvgActionTrash, SvgAlertsWarning24 } from '@/components/_icons'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { Datepicker } from '@/components/_inputs/Datepicker'
 import { FormField } from '@/components/_inputs/FormField'
@@ -18,24 +17,35 @@ import { Input } from '@/components/_inputs/Input'
 import { OptionCardGroupRadio } from '@/components/_inputs/OptionCardGroup'
 import { RadioButtonGroup } from '@/components/_inputs/RadioButtonGroup'
 import { Select, SelectItem } from '@/components/_inputs/Select'
+import { SubtitlesCombobox } from '@/components/_inputs/SubtitlesComboBox'
 import { Switch } from '@/components/_inputs/Switch'
 import { TextArea } from '@/components/_inputs/TextArea'
-import { languages } from '@/config/languages'
+import { AlertDialogModal } from '@/components/_overlays/AlertDialogModal'
+import { atlasConfig } from '@/config'
+import { displayCategories } from '@/config/categories'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
-import { NftIssuanceInputMetadata, VideoInputMetadata } from '@/joystream-lib'
-import { useRawAssetResolver } from '@/providers/assets'
-import { useJoystream } from '@/providers/joystream'
+import { NftIssuanceInputMetadata, VideoInputAssets, VideoInputMetadata } from '@/joystream-lib/types'
+import { useChannelsStorageBucketsCount, useRawAssetResolver } from '@/providers/assets/assets.hooks'
+import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joystream/joystream.hooks'
+import { usePersonalDataStore } from '@/providers/personalData'
+import { useSnackbar } from '@/providers/snackbars'
+import { useUser } from '@/providers/user/user.hooks'
 import {
+  VideoFormAssetData,
   VideoFormAssets,
   VideoFormData,
   VideoWorkspaceFormStatus,
+  VideoWorkspaceVideoAssets,
   VideoWorkspaceVideoFormFields,
   useVideoWorkspace,
   useVideoWorkspaceData,
 } from '@/providers/videoWorkspace'
+import { SubtitlesInput } from '@/types/subtitles'
+import { createId } from '@/utils/createId'
 import { pastDateValidation, requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
-import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { ConsoleLogger } from '@/utils/logs'
+import { convertSrtToVtt } from '@/utils/subtitles'
 
 import { useVideoFormAssets, useVideoFormDraft } from './VideoForm.hooks'
 import {
@@ -69,6 +79,7 @@ const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((l
     />
   ),
 }))
+const MINTING_CONFIRMATION_ID = 'minting-confirmation'
 
 type VideoFormProps = {
   onSubmit: (data: VideoFormData) => void
@@ -80,7 +91,16 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const [cachedEditedVideoId, setCachedEditedVideoId] = useState('')
   const [royaltiesFieldEnabled, setRoyaltiesFieldEnabled] = useState(false)
   const [titleTooltipVisible, setTitleTooltipVisible] = useState(true)
+  const [showMintConfirmationDialog, setShowMintConfirmationDialog] = useState(false)
+  const [dismissMintConfirmation, setDismissMintConfirmation] = useState(false)
   const mintNftFormFieldRef = useRef<HTMLDivElement>(null)
+  const { memberId, channelId } = useUser()
+  const { displaySnackbar } = useSnackbar()
+
+  const updateMintConfirmationDismiss = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
+  const mintConfirmationDismissed = usePersonalDataStore((state) =>
+    state.dismissedMessages.some((message) => message.id === MINTING_CONFIRMATION_ID)
+  )
 
   const { editedVideoInfo } = useVideoWorkspace()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useVideoWorkspaceData()
@@ -95,10 +115,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const isNew = !isEdit
   const mintNft = editedVideoInfo?.mintNft
 
-  const { categories, error: categoriesError } = useCategories(undefined, {
-    onError: (error) => SentryLogger.error('Failed to fetch categories', 'VideoWorkspace', error),
-  })
-
   const {
     register,
     control,
@@ -112,76 +128,15 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   } = useForm<VideoWorkspaceVideoFormFields>({
     shouldFocusError: true,
   })
+  const formData = getValues()
 
   const videoFieldsLocked = tabData?.mintNft && isEdit
 
-  // manage assets used by the form
-  const {
-    handleVideoFileChange,
-    handleThumbnailFileChange,
-    videoHashPromise,
-    thumbnailHashPromise,
-    files,
-    mediaAsset,
-    thumbnailAsset,
-    hasUnsavedAssets,
-  } = useVideoFormAssets(watch, getValues, setValue, dirtyFields, trigger, errors)
+  const channelBucketsCount = useChannelsStorageBucketsCount(channelId)
 
-  // manage draft saving
-  const { flushDraftSave } = useVideoFormDraft(watch, dirtyFields)
-
-  // reset form whenever edited video gets updated
-  useEffect(() => {
-    if (editedVideoInfo.id === cachedEditedVideoId || !tabData || tabDataLoading) {
-      return
-    }
-    setCachedEditedVideoId(editedVideoInfo.id)
-
-    reset(tabData)
-  }, [tabData, tabDataLoading, reset, mintNft, editedVideoInfo.id, cachedEditedVideoId, setValue])
-
-  // animate scroll to Mint an NFT switch and toggle it, if user selected it from video tile context menu
-  useEffect(() => {
-    if (!mintNft || !mintNftFormFieldRef.current || !tabData || getValues('mintNft') || touchedFields.mintNft) {
-      return
-    }
-    const scrollTimeout = setTimeout(
-      () => mintNftFormFieldRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }),
-      SCROLL_TIMEOUT
-    )
-    const setMintNftTimeout = setTimeout(
-      () => setValue('mintNft', tabData.mintNft || mintNft, { shouldTouch: true }),
-      MINT_NFT_TIMEOUT
-    )
-
-    return () => {
-      clearTimeout(scrollTimeout)
-      clearTimeout(setMintNftTimeout)
-    }
-  }, [touchedFields, mintNft, setValue, tabData, getValues])
-
-  const handleSubmit = useCallback(() => {
-    flushDraftSave()
-
-    const handler = createSubmitHandler(async (data) => {
-      if (!editedVideoInfo) {
-        return
-      }
-
-      const { video: videoInputFile, thumbnail: thumbnailInputFile } = data.assets
-      const videoAsset = resolveAsset(videoInputFile.id)
-      const thumbnailAsset = resolveAsset(thumbnailInputFile.cropId)
-
-      if (isNew && (!videoAsset || !videoHashPromise)) {
-        ConsoleLogger.error('Video file cannot be empty')
-        return
-      }
-
-      if (isNew && (!thumbnailAsset || !thumbnailHashPromise)) {
-        ConsoleLogger.error('Thumbnail cannot be empty')
-        return
-      }
-
+  const createVideoInputMetadata = useCallback(
+    (data: VideoWorkspaceVideoFormFields): VideoInputMetadata => {
+      const videoInputFile = data?.assets?.video
       const license = {
         code: data.licenseCode ?? undefined,
         attribution: data.licenseAttribution ?? undefined,
@@ -190,10 +145,10 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
       const anyLicenseFieldsDirty =
         dirtyFields.licenseCode || dirtyFields.licenseAttribution || dirtyFields.licenseCustomText
 
-      const metadata: VideoInputMetadata = {
+      return {
         ...(isNew || dirtyFields.title ? { title: data.title } : {}),
         ...(isNew || dirtyFields.description ? { description: data.description } : {}),
-        ...(isNew || dirtyFields.category ? { category: Number(data.category) } : {}),
+        ...(isNew || dirtyFields.category ? { category: data.category } : {}),
         ...(isNew || dirtyFields.isPublic ? { isPublic: data.isPublic } : {}),
         ...((isNew || dirtyFields.hasMarketing) && data.hasMarketing != null
           ? { hasMarketing: data.hasMarketing }
@@ -217,64 +172,253 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
         ...(isNew || dirtyFields.assets?.video ? { duration: Math.round(videoInputFile?.duration || 0) } : {}),
         ...(isNew || dirtyFields.assets?.video ? { mediaPixelHeight: videoInputFile?.mediaPixelHeight } : {}),
         ...(isNew || dirtyFields.assets?.video ? { mediaPixelWidth: videoInputFile?.mediaPixelWidth } : {}),
-      }
-
-      const videoWidth = videoInputFile?.mediaPixelWidth
-      const videoHeight = videoInputFile?.mediaPixelHeight
-      const assets: VideoFormAssets = {
-        ...(videoAsset?.blob && videoInputFile.id && videoHashPromise
+        ...(isNew || dirtyFields.subtitlesArray
           ? {
-              media: {
-                id: videoInputFile.id,
-                blob: videoAsset.blob,
-                url: videoAsset.url || undefined,
-                hashPromise: videoHashPromise,
-                dimensions: videoWidth && videoHeight ? { height: videoHeight, width: videoWidth } : undefined,
-              },
+              subtitles: data.subtitlesArray?.map((subtitle, idx) => ({
+                id: subtitle.id || `new-subtitle-${idx}`,
+                language: subtitle.languageIso,
+                type: subtitle?.type,
+                mimeType: 'text/vtt',
+              })),
             }
           : {}),
-        ...(thumbnailAsset?.blob && thumbnailInputFile.cropId && thumbnailInputFile.originalId && thumbnailHashPromise
-          ? {
-              thumbnailPhoto: {
-                id: thumbnailInputFile.cropId,
-                originalId: thumbnailInputFile.originalId,
-                blob: thumbnailAsset.blob,
-                url: thumbnailAsset.url || undefined,
-                hashPromise: thumbnailHashPromise,
-                dimensions: thumbnailInputFile?.assetDimensions,
-                cropData: thumbnailInputFile?.imageCropData,
-              },
-            }
-          : {}),
+        clearSubtitles: !data.subtitlesArray?.length,
       }
+    },
+    [dirtyFields, isNew]
+  )
 
-      const nftMetadata: NftIssuanceInputMetadata | undefined =
-        data.mintNft && !videoFieldsLocked
-          ? {
-              royalty: data.nftRoyaltiesPercent || undefined,
-            }
-          : undefined
+  const createNftInputMetadata = useCallback(
+    (data: VideoWorkspaceVideoFormFields): NftIssuanceInputMetadata | undefined => {
+      return data.mintNft && !videoFieldsLocked
+        ? {
+            royalty: data.nftRoyaltiesPercent || undefined,
+          }
+        : undefined
+    },
+    [videoFieldsLocked]
+  )
 
-      onSubmit({
-        metadata,
-        assets,
-        nftMetadata,
-      })
-    })
+  // for fee only
+  const createBasicVideoInputAssetsInfo = (
+    assets?: VideoWorkspaceVideoAssets,
+    subtitles?: SubtitlesInput[]
+  ): VideoInputAssets => {
+    if (!assets) {
+      return {}
+    }
+    const videoAsset = resolveAsset(assets?.video.id)
+    const thumbnailAsset = resolveAsset(assets?.thumbnail.cropId)
+    return {
+      ...(videoAsset?.blob?.size
+        ? {
+            media: {
+              ipfsHash: '',
+              size: videoAsset.blob.size,
+            },
+          }
+        : {}),
+      ...(thumbnailAsset?.blob?.size
+        ? {
+            thumbnailPhoto: {
+              ipfsHash: '',
+              size: thumbnailAsset.blob.size,
+            },
+          }
+        : {}),
+      ...(subtitles?.length
+        ? { subtitles: subtitles.map((subtitle) => ({ ipfsHash: '', size: subtitle.file?.size || 0 })) }
+        : {}),
+    }
+  }
 
-    return handler()
-  }, [
-    createSubmitHandler,
-    dirtyFields,
-    editedVideoInfo,
-    videoFieldsLocked,
-    flushDraftSave,
-    isNew,
-    onSubmit,
-    resolveAsset,
-    thumbnailHashPromise,
+  const videoInputMetadata = createVideoInputMetadata(formData)
+  const nftMetadata = createNftInputMetadata(formData)
+  const assets = createBasicVideoInputAssetsInfo(formData.assets, formData.subtitlesArray ?? undefined)
+
+  const { videoStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
+
+  const isSigned = memberId && channelId
+  const { fullFee: createVideoFee, loading: createVideoFeeLoading } = useFee(
+    'createVideoTx',
+    isSigned && isNew
+      ? [
+          memberId,
+          channelId,
+          videoInputMetadata,
+          nftMetadata,
+          assets,
+          dataObjectStateBloatBondValue.toString(),
+          videoStateBloatBondValue.toString(),
+          channelBucketsCount.toString(),
+        ]
+      : undefined,
+    assets
+  )
+  const { fullFee: updateVideoFee, loading: updateVideoFeeLoading } = useFee(
+    'updateVideoTx',
+    isSigned && isEdit && editedVideoInfo.id
+      ? [
+          editedVideoInfo.id,
+          memberId,
+          videoInputMetadata,
+          nftMetadata,
+          assets,
+          [], // provide empty removedAssetsId array to simplify fee calculation
+          dataObjectStateBloatBondValue.toString(),
+          channelBucketsCount.toString(),
+        ]
+      : undefined,
+    assets
+  )
+
+  // manage assets used by the form
+  const {
+    handleVideoFileChange,
+    handleThumbnailFileChange,
     videoHashPromise,
-  ])
+    thumbnailHashPromise,
+    files,
+    mediaAsset,
+    thumbnailAsset,
+    subtitlesHashesPromises,
+    hasUnsavedAssets,
+  } = useVideoFormAssets(watch, getValues, setValue, dirtyFields, trigger, errors)
+
+  // manage draft saving
+  const { flushDraftSave } = useVideoFormDraft(watch, dirtyFields)
+
+  // reset form whenever edited video gets updated
+  useEffect(() => {
+    if (editedVideoInfo.id === cachedEditedVideoId || !tabData || tabDataLoading) {
+      return
+    }
+    setCachedEditedVideoId(editedVideoInfo.id)
+    reset(tabData)
+  }, [tabData, tabDataLoading, reset, mintNft, editedVideoInfo.id, cachedEditedVideoId, setValue])
+
+  // animate scroll to Mint an NFT switch and toggle it, if user selected it from video tile context menu
+  useEffect(() => {
+    if (!mintNft || !mintNftFormFieldRef.current || !tabData || getValues('mintNft') || touchedFields.mintNft) {
+      return
+    }
+    const scrollTimeout = setTimeout(
+      () => mintNftFormFieldRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }),
+      SCROLL_TIMEOUT
+    )
+    const setMintNftTimeout = setTimeout(
+      () => setValue('mintNft', tabData.mintNft || mintNft, { shouldTouch: true }),
+      MINT_NFT_TIMEOUT
+    )
+
+    return () => {
+      clearTimeout(scrollTimeout)
+      clearTimeout(setMintNftTimeout)
+    }
+  }, [touchedFields, mintNft, setValue, tabData, getValues])
+
+  const submitHandler = useMemo(
+    () =>
+      createSubmitHandler(async (data) => {
+        if (!editedVideoInfo) {
+          return
+        }
+
+        const { video: videoInputFile, thumbnail: thumbnailInputFile } = data.assets
+        const videoAsset = resolveAsset(videoInputFile.id)
+        const thumbnailAsset = resolveAsset(thumbnailInputFile.cropId)
+
+        if (isNew && (!videoAsset || !videoHashPromise)) {
+          ConsoleLogger.error('Video file cannot be empty')
+          return
+        }
+
+        if (isNew && (!thumbnailAsset || !thumbnailHashPromise)) {
+          ConsoleLogger.error('Thumbnail cannot be empty')
+          return
+        }
+
+        const metadata = createVideoInputMetadata(data)
+
+        const videoWidth = videoInputFile?.mediaPixelWidth
+        const videoHeight = videoInputFile?.mediaPixelHeight
+
+        const mappedSubtitles: PartialBy<VideoFormAssetData, 'blob'>[] | undefined = data?.subtitlesArray?.map(
+          (subtitle, idx) => ({
+            id: metadata.subtitles?.[idx].id || createId(),
+            blob: subtitle.file,
+            hashPromise: subtitlesHashesPromises[idx] || Promise.resolve(''),
+            subtitlesLanguageIso: subtitle.languageIso,
+          })
+        )
+        const mappedFilteredSubtitles: VideoFormAssets['subtitles'] = mappedSubtitles?.filter(
+          (subtitle): subtitle is VideoFormAssetData => !!subtitle.blob
+        )
+
+        const assets: VideoFormAssets = {
+          ...(videoAsset?.blob && videoInputFile.id && videoHashPromise
+            ? {
+                media: {
+                  id: videoInputFile.id,
+                  blob: videoAsset.blob,
+                  url: videoAsset.url || undefined,
+                  hashPromise: videoHashPromise,
+                  dimensions: videoWidth && videoHeight ? { height: videoHeight, width: videoWidth } : undefined,
+                },
+              }
+            : {}),
+          ...(thumbnailAsset?.blob && thumbnailInputFile.cropId && thumbnailInputFile.originalId && thumbnailHashPromise
+            ? {
+                thumbnailPhoto: {
+                  id: thumbnailInputFile.cropId,
+                  originalId: thumbnailInputFile.originalId,
+                  blob: thumbnailAsset.blob,
+                  url: thumbnailAsset.url || undefined,
+                  hashPromise: thumbnailHashPromise,
+                  dimensions: thumbnailInputFile?.assetDimensions,
+                  cropData: thumbnailInputFile?.imageCropData,
+                },
+              }
+            : {}),
+          ...(mappedFilteredSubtitles?.length
+            ? {
+                subtitles: mappedFilteredSubtitles,
+              }
+            : {}),
+        }
+
+        const nftMetadata = createNftInputMetadata(data)
+
+        onSubmit({
+          metadata,
+          assets,
+          nftMetadata,
+        })
+      }),
+    [
+      createNftInputMetadata,
+      createSubmitHandler,
+      createVideoInputMetadata,
+      editedVideoInfo,
+      isNew,
+      onSubmit,
+      resolveAsset,
+      subtitlesHashesPromises,
+      thumbnailHashPromise,
+      videoHashPromise,
+    ]
+  )
+
+  const handleSubmit = useCallback(() => {
+    flushDraftSave()
+
+    if (!mintConfirmationDismissed && formData.mintNft) {
+      setShowMintConfirmationDialog(true)
+      return
+    }
+
+    return submitHandler()
+  }, [flushDraftSave, formData.mintNft, mintConfirmationDismissed, submitHandler])
 
   const actionBarPrimaryText = watch('mintNft')
     ? !isEdit
@@ -291,10 +435,23 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
       isDirty,
       isDisabled: isEdit ? !isDirty : false,
       actionBarPrimaryText,
+      actionBarFee: isEdit ? updateVideoFee : createVideoFee,
+      actionBarFeeLoading: isEdit ? updateVideoFeeLoading : createVideoFeeLoading,
       isValid: isFormValid,
       triggerFormSubmit: handleSubmit,
     }),
-    [actionBarPrimaryText, handleSubmit, hasUnsavedAssets, isDirty, isEdit, isFormValid]
+    [
+      actionBarPrimaryText,
+      createVideoFee,
+      createVideoFeeLoading,
+      handleSubmit,
+      hasUnsavedAssets,
+      isDirty,
+      isEdit,
+      isFormValid,
+      updateVideoFee,
+      updateVideoFeeLoading,
+    ]
   )
 
   // sent updates on form status to VideoWorkspace
@@ -307,9 +464,9 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   }
 
   const categoriesSelectItems: SelectItem[] =
-    categories?.map((c) => ({
+    displayCategories?.map((c) => ({
       name: c.name || 'Unknown category',
-      value: c.id,
+      value: c.defaultVideoCategory,
     })) || []
 
   const getHiddenSectionLabel = () => {
@@ -319,7 +476,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
     return `Show ${moreSettingsVisible ? 'less' : 'more'} options`
   }
 
-  if (tabDataError || categoriesError) {
+  if (tabDataError) {
     return <ViewErrorFallback />
   }
 
@@ -340,7 +497,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
         },
         disabled: videoFieldsLocked,
       }}
-      description="Royalties lets you earn commission from every sale of this NFT."
+      description="Royalties let you earn commissions from every sale of this NFT. Sale commissions go out to your channel account."
       label="Royalties"
     >
       <Input
@@ -367,7 +524,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
       />
     </FormField>
   )
-
   const videoEditFields = (
     <>
       <FormField optional label="Description" error={errors.description?.message}>
@@ -407,7 +563,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           )}
         />
       </FormField>
-      <FormField label="Language">
+      <FormField label="Language" error={errors.language?.message}>
         <Controller
           name="language"
           control={control}
@@ -415,7 +571,12 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           render={({ field: { value, onChange } }) => (
             <Select
               value={value}
-              items={languages}
+              items={[
+                { name: 'TOP LANGUAGES', value: '', isSeparator: true },
+                ...atlasConfig.derived.popularLanguagesSelectValues,
+                { name: 'ALL LANGUAGES', value: '', isSeparator: true },
+                ...atlasConfig.derived.languagesSelectValues,
+              ]}
               onChange={onChange}
               error={!!errors.language && !value}
               disabled={videoFieldsLocked}
@@ -484,7 +645,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
             <Banner
               icon={<StyledSvgAlertsInformative24 />}
               title="Heads up!"
-              description="You won't be able to edit this video once you mint an NFT for it."
+              description="You won’t be able to edit this video once you mint an NFT for it. Sale revenue and potential commissions will go out to your channel account, from where they can be withdrawn to your membership account."
             />
           )}{' '}
           {watch('mintNft') && royaltiesField}
@@ -493,41 +654,37 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
     </>
   )
 
-  const alwaysEditableFormFields = (
-    <FormField
-      label="Comments"
-      description="Disabling the comments section does not allow for posting new comments under this video and hides any existing comments made in the past."
-    >
-      <Controller
-        name="enableComments"
-        control={control}
-        defaultValue={true}
-        rules={{
-          validate: (value) => value !== null,
-        }}
-        render={({ field: { value, onChange, ref } }) => (
-          <RadioButtonGroup
-            ref={ref}
-            options={[
-              { label: 'Enable comments', value: true },
-              { label: 'Disable comments', value: false },
-            ]}
-            error={!!errors.isExplicit}
-            onChange={(event) => onChange(event.target.value)}
-            value={value}
-          />
-        )}
-      />
-    </FormField>
-  )
-
   return (
     <FormWrapper as="form">
+      <AlertDialogModal
+        show={showMintConfirmationDialog}
+        title="Mint NFT for this video?"
+        description="Minting NFT for this video means you won’t be able to edit in the future. Are you sure you want to continue?"
+        additionalActionsNode={
+          <Checkbox value={dismissMintConfirmation} onChange={setDismissMintConfirmation} label="Don't ask me again" />
+        }
+        primaryButton={{
+          text: 'Publish & mint',
+          onClick: () => {
+            setShowMintConfirmationDialog(false)
+            if (dismissMintConfirmation) {
+              updateMintConfirmationDismiss(MINTING_CONFIRMATION_ID, true)
+            }
+            submitHandler()
+          },
+        }}
+        secondaryButton={{
+          text: 'Cancel',
+          onClick: () => setShowMintConfirmationDialog(false),
+        }}
+      />
       <Controller
         name="assets"
         control={control}
         rules={{
           validate: (value) => {
+            if (!value) return false
+
             if (!!value.video.id && !!value.thumbnail.cropId) {
               return true
             }
@@ -584,7 +741,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           }}
           render={({ field: { value, onChange, ref }, fieldState: { error } }) => {
             return (
-              <Tooltip text="Click to edit" placement="top-start" hidden={!titleTooltipVisible}>
+              <Tooltip text="Click to edit" placement="top-start" hidden={!titleTooltipVisible || videoFieldsLocked}>
                 <FormField error={error?.message}>
                   <StyledTitleArea
                     ref={ref}
@@ -607,10 +764,9 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           <Banner
             icon={<StyledSvgAlertsInformative24 />}
             title="There's an NFT for this video"
-            description="Only selected options can be changed since there's an NFT minted for this video."
+            description="You can't edit or delete this video, having minted an NFT for it."
           />
         )}
-        {videoFieldsLocked && alwaysEditableFormFields}
         {!videoFieldsLocked && videoEditFields}
         <Divider />
         <div>
@@ -624,11 +780,75 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           </TextButton>
           <Text as="p" variant="t200" color="colorText" margin={{ top: 2 }}>
             {!videoFieldsLocked
-              ? `License, comments, mature content, paid promotion, published date${isEdit ? ', delete video' : ''}`
-              : 'Royalties, description, category, language, visibility, license, mature content, paid promotion, published date'}
+              ? `Subtitles, license, comments, mature content, paid promotion, published date${
+                  isEdit ? ', delete video' : ''
+                }`
+              : 'Subtitles, royalties, description, category, language, visibility, subtitles, license, comments, mature content, paid promotion, published date'}
           </Text>
         </div>
         <MoreSettingsSection expanded={moreSettingsVisible}>
+          <Controller
+            control={control}
+            name="subtitlesArray"
+            rules={{
+              validate: (value) => {
+                const languageWithoutFile = value?.find((language) => !language.file && !language.asset)
+                return value && languageWithoutFile ? 'Provide a file for every new subtitles language.' : true
+              },
+            }}
+            render={({ field: { onChange, value: subtitlesArray } }) => {
+              return (
+                <FormField label="Subtitles" optional error={(errors?.subtitlesArray as FieldError)?.message}>
+                  <SubtitlesCombobox
+                    disabled={videoFieldsLocked}
+                    error={!!errors?.subtitlesArray}
+                    onLanguageAdd={(subtitlesLanguage) => {
+                      onChange([...(subtitlesArray ? subtitlesArray : []), { ...subtitlesLanguage }])
+                    }}
+                    onLanguageDelete={(subtitlesLanguage) => {
+                      onChange(
+                        subtitlesArray?.filter(
+                          (prevSubtitles) =>
+                            !(
+                              prevSubtitles.languageIso === subtitlesLanguage.languageIso &&
+                              prevSubtitles.type === subtitlesLanguage.type
+                            )
+                        )
+                      )
+                    }}
+                    onSubtitlesAdd={async ({ languageIso, file, type }) => {
+                      const isSrt = file && file?.name.match(/\.srt$/)
+                      let newFile = file
+                      if (isSrt) {
+                        try {
+                          newFile = await convertSrtToVtt(file)
+                        } catch (error) {
+                          displaySnackbar({
+                            title: 'Something went wrong',
+                            description:
+                              'There was a problem with processing subtitles file. Try again or select different file.',
+                            iconType: 'error',
+                          })
+                          return
+                        }
+                      }
+                      onChange(
+                        subtitlesArray?.map((subtitles) =>
+                          subtitles.languageIso === languageIso && subtitles.type === type
+                            ? { ...subtitles, file: newFile, isUploadedAsSrt: isSrt }
+                            : subtitles
+                        )
+                      )
+                    }}
+                    languagesIso={atlasConfig.content.languages.map(({ isoCode }) => isoCode)}
+                    popularLanguagesIso={atlasConfig.content.popularLanguages}
+                    subtitlesArray={subtitlesArray}
+                  />
+                </FormField>
+              )
+            }}
+          />
+
           {videoFieldsLocked && royaltiesField}
           {videoFieldsLocked && videoEditFields}
           <Controller
@@ -682,7 +902,32 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
               />
             </FormField>
           )}
-          {!videoFieldsLocked && alwaysEditableFormFields}
+          <FormField
+            label="Comments"
+            description="Disabling the comments section does not allow for posting new comments under this video and hides any existing comments made in the past."
+          >
+            <Controller
+              name="enableComments"
+              control={control}
+              defaultValue={true}
+              rules={{
+                validate: (value) => value !== null,
+              }}
+              render={({ field: { value, onChange, ref } }) => (
+                <RadioButtonGroup
+                  ref={ref}
+                  options={[
+                    { label: 'Enable comments', value: true },
+                    { label: 'Disable comments', value: false },
+                  ]}
+                  error={!!errors.isExplicit}
+                  onChange={(event) => onChange(event.target.value)}
+                  value={value}
+                  disabled={videoFieldsLocked}
+                />
+              )}
+            />
+          </FormField>
           <FormField label="Mature content">
             <Controller
               name="isExplicit"

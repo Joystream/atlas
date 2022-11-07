@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { useNft } from '@/api/hooks'
+import { useNft } from '@/api/hooks/nfts'
 import confetti from '@/assets/animations/confetti.json'
 import { GridItem } from '@/components/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -9,12 +9,12 @@ import { Button } from '@/components/_buttons/Button'
 import { NftCard } from '@/components/_nft/NftCard'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useAsset, useMemberAvatar } from '@/providers/assets'
-import { useJoystream } from '@/providers/joystream'
-import { useNftActions } from '@/providers/nftActions'
+import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useFee, useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
 import { useSnackbar } from '@/providers/snackbars'
-import { useTransaction } from '@/providers/transactions'
-import { useUser } from '@/providers/user'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 
 import {
   Content,
@@ -61,6 +61,8 @@ export const NftSettlementBottomDrawer: FC = () => {
     })
   }
   const isOpen = currentAction === 'settle'
+
+  const { fullFee: fee } = useFee('settleEnglishAuctionTx', currentNftId ? [currentNftId] : undefined)
   return (
     <BottomDrawer isOpen={isOpen} onClose={closeNftAction}>
       <StyledLottie play={isOpen} data={confetti} />
@@ -96,7 +98,7 @@ export const NftSettlementBottomDrawer: FC = () => {
                 Settle auction
               </Button>
               <Text as="span" variant="t100" color="colorText" margin={{ top: 4 }}>
-                Transaction fee: <NumberFormat as="span" format="short" withToken variant="t100" value={0} />
+                Transaction fee: <NumberFormat as="span" format="short" withToken variant="t100" value={fee} />
               </Text>
             </Content>
           </StyledGridItem>

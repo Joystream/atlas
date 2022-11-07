@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
-import { useNftActions } from '@/providers/nftActions'
+import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
 
 export const PlaygroundNftSettleAuction = () => {
   const { openNftSettlement } = useNftActions()

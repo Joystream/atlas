@@ -1,8 +1,8 @@
 import { FC } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
+import { SvgAlertsWarning24 } from '@/assets/icons'
 import { Text } from '@/components/Text'
-import { SvgAlertsWarning24 } from '@/components/_icons'
 import { ConnectionStatus } from '@/providers/connectionStatus'
 import { cVar } from '@/styles'
 

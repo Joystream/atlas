@@ -5,9 +5,8 @@ import {
   GetVideoHeroQueryVariables,
   useGetVideoHeroQuery,
 } from '@/api/queries/__generated__/featured.generated'
+import { BasicVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SentryLogger } from '@/utils/logs'
-
-import { BasicVideoFieldsFragment } from '../queries'
 
 export type VideoHeroData = {
   video?: BasicVideoFieldsFragment | null

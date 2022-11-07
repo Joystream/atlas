@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/react'
 
 import { ListItem, ListItemProps } from './ListItem'
 
-import { SvgActionChevronR, SvgActionExclamation } from '../_icons'
+import { SvgActionChevronR, SvgActionExclamation } from '../../assets/icons'
 
 export default {
   title: 'Other/ListItem',

@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
+import { SvgActionAddVideo } from '@/assets/icons'
 import { Text } from '@/components/Text'
-import { SvgActionAddVideo } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, transitions } from '@/styles'
 

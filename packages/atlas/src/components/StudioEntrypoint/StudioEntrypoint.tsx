@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom'
 
 import { StudioLoading } from '@/components/_loaders/StudioLoading'
 import { absoluteRoutes } from '@/config/routes'
-import { useUser } from '@/providers/user'
+import { useUser } from '@/providers/user/user.hooks'
 
 const DEFAULT_ROUTE = absoluteRoutes.studio.videos()
 

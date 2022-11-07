@@ -2,14 +2,15 @@ import styled from '@emotion/styled'
 import { FC, ReactNode, useEffect } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
-import { Snackbar } from '@/components/Snackbar'
 import {
   SvgActionUpload,
   SvgAlertsError24,
   SvgAlertsInformative24,
   SvgAlertsSuccess24,
   SvgAlertsWarning24,
-} from '@/components/_icons'
+  SvgJoyTokenMonochrome24,
+} from '@/assets/icons'
+import { Snackbar } from '@/components/Snackbar'
 import { Spinner } from '@/components/_loaders/Spinner'
 import { useBottomNavStore } from '@/providers/bottomNav'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -24,6 +25,7 @@ const StyledSpinner = styled(Spinner)`
 
 const ICON_TYPE_TO_ICON: Record<SnackbarIconType, ReactNode> = {
   info: <SvgAlertsInformative24 />,
+  token: <SvgJoyTokenMonochrome24 />,
   success: <SvgAlertsSuccess24 />,
   error: <SvgAlertsError24 />,
   warning: <SvgAlertsWarning24 />,
@@ -38,8 +40,8 @@ export const useSnackbar = () => useSnackbarStore((state) => state.actions)
 export const Snackbars: FC = () => {
   const { closeSnackbar, cancelSnackbarTimeout, restartSnackbarTimeout } = useSnackbar()
   const snackbars = useSnackbarStore((state) => state.snackbars)
-  const { cookiesAccepted } = usePersonalDataStore((state) => ({
-    cookiesAccepted: state.cookiesAccepted,
+  const { isCookiesPopoverVisible } = usePersonalDataStore((state) => ({
+    isCookiesPopoverVisible: state.actions.getIsCookiesPopoverVisible(),
   }))
   const bottomNavOpen = useBottomNavStore((state) => state.open)
   const nonStickedSnackbars = snackbars.filter((snackbar) => !snackbar.sticked)
@@ -53,7 +55,7 @@ export const Snackbars: FC = () => {
   }, [nonStickedSnackbars, closeSnackbar])
 
   return (
-    <SnackbarsContainer cookiesBannerOpen={cookiesAccepted === undefined} bottomNavOpen={bottomNavOpen}>
+    <SnackbarsContainer cookiesBannerOpen={isCookiesPopoverVisible} bottomNavOpen={bottomNavOpen}>
       <TransitionGroup>
         {snackbars.map(({ id, iconType, onActionClick, onExit, ...snackbarProps }) => (
           <CSSTransition key={id} timeout={parseInt(cVar('animationTimingMedium', true)) * 2} classNames="snackbar">

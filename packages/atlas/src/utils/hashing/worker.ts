@@ -1,5 +1,5 @@
 import loadBlake3 from 'blake3/browser-async'
-import loadBlake3Wasm from 'blake3/dist/wasm/web/blake3_js_bg.wasm'
+import loadBlake3Wasm from 'blake3/dist/wasm/web/blake3_js_bg.wasm?init'
 import { encode as encodeHash, toB58String } from 'multihashes'
 
 type Blake3 = Awaited<ReturnType<typeof loadBlake3>>
@@ -41,7 +41,7 @@ const getBlake3 = async (): Promise<Blake3> => {
 
   const blake3Init = async (imports: unknown) => {
     // @ts-ignore library provides typing for the wasm module but Vite WASM helper returns something else
-    const exports = await loadBlake3Wasm(imports)
+    const { exports } = await loadBlake3Wasm(imports)
     return {
       instance: { exports },
       module: {},

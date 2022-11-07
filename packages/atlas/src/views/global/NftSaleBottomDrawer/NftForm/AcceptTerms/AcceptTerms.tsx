@@ -1,16 +1,20 @@
+import BN from 'bn.js'
 import { addHours } from 'date-fns'
 import { FC, PropsWithChildren } from 'react'
 
-import { BasicMembershipFieldsFragment } from '@/api/queries'
+import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { SvgAlertsInformative24 } from '@/assets/icons'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
-import { useMemberAvatar } from '@/providers/assets'
+import { atlasConfig } from '@/config'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { formatDateTime } from '@/utils/time'
 
 import {
   Description,
   Divider,
   MembersList,
+  RevenueBanner,
   Row,
   StyledInformation,
   StyledOutputPill,
@@ -26,9 +30,18 @@ type AcceptTermsProps = {
   formData: NftFormFields
   creatorRoyalty?: number | null
   channelTitle?: string | null
+  fee: BN
+  isOwnedByChannel?: boolean
 }
 
-export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData, creatorRoyalty, channelTitle }) => {
+export const AcceptTerms: FC<AcceptTermsProps> = ({
+  selectedType,
+  formData,
+  creatorRoyalty,
+  channelTitle,
+  fee,
+  isOwnedByChannel,
+}) => {
   const { startDate, endDate, type } = formData
 
   const totalDaysAndHours = getTotalDaysAndHours(startDate, endDate)
@@ -47,6 +60,13 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData, crea
       <Text as="h1" variant="h500" margin={{ bottom: 12 }}>
         Review listing terms
       </Text>
+      {isOwnedByChannel && (
+        <RevenueBanner
+          icon={<SvgAlertsInformative24 />}
+          title="Revenue from this sale will go out to your channel account"
+          description={`You can withdraw tokens from your channel account by clicking on your avatar in the ${atlasConfig.general.appName} Studio in the top right corner or by visiting My Payments tab.`}
+        />
+      )}
       <Text as="h2" variant="h400">
         Listing terms
       </Text>
@@ -202,7 +222,7 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData, crea
           />
         </Title>
         <Description>
-          <NumberFormat as="span" value={0} format="short" withToken variant="h400" />
+          <NumberFormat as="span" value={fee} format="full" withToken variant="h400" />
         </Description>
       </Row>
     </>

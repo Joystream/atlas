@@ -1,17 +1,17 @@
 import { FC, MouseEvent, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
+import { SvgActionAddVideo } from '@/assets/icons'
+import { SvgAppLogoStudio } from '@/assets/logos'
 import { AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionAddVideo } from '@/components/_icons'
-import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
 import { NotificationsButton } from '@/components/_navigation/NotificationsButton'
 import { NotificationsWidget } from '@/components/_notifications/NotificationsWidget'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useAsset, useMemberAvatar } from '@/providers/assets'
-import { useUser } from '@/providers/user'
+import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
 
@@ -22,8 +22,9 @@ type StudioTopbarProps = {
 }
 
 export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
-  const { channelId, activeMembership, setActiveUser } = useUser()
+  const { channelId, activeMembership, signIn } = useUser()
   const mdMatch = useMediaMatch('md')
+  const hasAtLeastOneChannel = !!activeMembership?.channels.length && activeMembership?.channels.length >= 1
 
   const { isWorkspaceOpen, setEditedVideo, setIsWorkspaceOpen } = useVideoWorkspace()
 
@@ -44,7 +45,6 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
     if (!channel) {
       return
     }
-    setActiveUser({ channelId })
     setIsWorkspaceOpen(false)
   }
 
@@ -61,8 +61,12 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
 
   return (
     <>
-      <StyledTopbarBase fullLogoNode={<SvgJoystreamLogoStudio />} logoLinkUrl={absoluteRoutes.studio.index()}>
-        {!hideChannelInfo && (
+      <StyledTopbarBase
+        fullLogoNode={<SvgAppLogoStudio height={32} width={undefined} />}
+        withoutHamburgerButton={hideChannelInfo}
+        logoLinkUrl={absoluteRoutes.studio.index()}
+      >
+        {!hideChannelInfo ? (
           <StudioTopbarContainer>
             <CSSTransition
               in={!isWorkspaceOpen && !!channelId}
@@ -84,12 +88,16 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
             <NotificationsWidget trigger={<NotificationsButton />} />
             <StyledAvatarGroup size="large" shouldHighlightEveryAvatar reverse avatars={avatars} clickable={false} />
           </StudioTopbarContainer>
+        ) : (
+          <Button size="medium" onClick={() => signIn()}>
+            Set up membership
+          </Button>
         )}
       </StyledTopbarBase>
       <MemberDropdown
         onChannelChange={handleChannelChange}
         isActive={isMemberDropdownActive}
-        publisher
+        publisher={!!hasAtLeastOneChannel}
         closeDropdown={() => setIsMemberDropdownActive(false)}
       />
     </>

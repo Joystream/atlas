@@ -1,20 +1,15 @@
 import { useApolloClient } from '@apollo/client'
 import { useCallback } from 'react'
 
+import { MetaprotocolTransactionSuccessFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import {
   GetMetaprotocolTransactionStatusEventsDocument,
   GetMetaprotocolTransactionStatusEventsQuery,
   GetMetaprotocolTransactionStatusEventsQueryVariables,
-  MetaprotocolTransactionSuccessFieldsFragment,
-} from '@/api/queries'
-import {
-  ErrorCode,
-  ExtrinsicResult,
-  ExtrinsicStatus,
-  ExtrinsicStatusCallbackFn,
-  JoystreamLibError,
-  JoystreamLibErrorType,
-} from '@/joystream-lib'
+} from '@/api/queries/__generated__/transactionEvents.generated'
+import { ErrorCode, JoystreamLibError, JoystreamLibErrorType } from '@/joystream-lib/errors'
+import { ExtrinsicResult, ExtrinsicStatus, ExtrinsicStatusCallbackFn } from '@/joystream-lib/types'
+import { useUserStore } from '@/providers/user/user.store'
 import { createId } from '@/utils/createId'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { wait } from '@/utils/misc'
@@ -46,6 +41,7 @@ type HandleTransactionOpts<T extends ExtrinsicResult> = {
   }
   allowMultiple?: boolean // whether to allow sending a transaction when one is still processing
   unsignedMessage?: string
+  disableQNSync?: boolean
 }
 type HandleTransactionFn = <T extends ExtrinsicResult>(opts: HandleTransactionOpts<T>) => Promise<boolean>
 
@@ -53,6 +49,7 @@ export const useTransaction = (): HandleTransactionFn => {
   const { addBlockAction, addTransaction, updateTransaction, removeTransaction } = useTransactionManagerStore(
     (state) => state.actions
   )
+  const userWalletName = useUserStore((state) => state.wallet?.title)
 
   const [openOngoingTransactionModal, closeOngoingTransactionModal] = useConfirmationModal()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
@@ -71,6 +68,7 @@ export const useTransaction = (): HandleTransactionFn => {
       minimized = null,
       allowMultiple,
       unsignedMessage,
+      disableQNSync,
     }) => {
       /* === check whether new transaction can be started === */
       if (nodeConnectionStatus !== 'connected') {
@@ -91,7 +89,7 @@ export const useTransaction = (): HandleTransactionFn => {
           title: anyUnsignedTransaction ? 'Sign outstanding transactions' : 'Wait for other transactions',
           type: 'informative',
           description: anyUnsignedTransaction
-            ? 'You have outstanding blockchain transactions waiting for you to sign them in Polkadot. Please, sign or cancel previous transactions in Polkadot to continue.'
+            ? `You have outstanding blockchain transactions waiting for you to sign them in ${userWalletName}. Please, sign or cancel previous transactions in ${userWalletName} to continue.`
             : 'You have other blockchain transactions which are still being processed. Please, try again in about a minute.',
           primaryButton: {
             text: 'Got it',
@@ -114,8 +112,8 @@ export const useTransaction = (): HandleTransactionFn => {
       }
       addTransaction(transaction)
 
-      const updateStatus = (status: ExtrinsicStatus) => {
-        updateTransaction(transactionId, { ...transaction, status })
+      const updateStatus = (status: ExtrinsicStatus, errorCode?: ErrorCode) => {
+        updateTransaction(transactionId, { ...transaction, status, errorCode: errorCode || null })
       }
 
       try {
@@ -157,7 +155,7 @@ export const useTransaction = (): HandleTransactionFn => {
           const syncCallback = async () => {
             let status: MetaprotocolTransactionSuccessFieldsFragment | undefined = undefined
             try {
-              if (result.transactionHash) {
+              if (result.metaprotocol && result.transactionHash) {
                 status = await getMetaprotocolTxStatus(result.transactionHash)
               }
             } catch (e) {
@@ -174,7 +172,12 @@ export const useTransaction = (): HandleTransactionFn => {
             }
             resolve()
           }
-          addBlockAction({ callback: syncCallback, targetBlock: result.block })
+
+          if (disableQNSync) {
+            syncCallback()
+          } else {
+            addBlockAction({ callback: syncCallback, targetBlock: result.block })
+          }
         })
         await queryNodeSyncPromise
 
@@ -199,6 +202,21 @@ export const useTransaction = (): HandleTransactionFn => {
         onError?.()
 
         const errorName = error.name as JoystreamLibErrorType
+
+        if (errorName === 'AccountBalanceTooLow') {
+          if (minimized) {
+            removeTransaction(transactionId)
+            displaySnackbar({
+              title: 'Insufficient balance to perform this action.',
+              description: minimized.errorMessage,
+              iconType: 'error',
+              timeout: MINIMIZED_SIGN_CANCELLED_SNACKBAR_TIMEOUT,
+            })
+          } else {
+            updateStatus(ExtrinsicStatus.Error, ErrorCode.InsufficientBalance)
+          }
+          return false
+        }
 
         if (errorName === 'SignCancelledError') {
           ConsoleLogger.warn('Sign cancelled')
@@ -235,10 +253,13 @@ export const useTransaction = (): HandleTransactionFn => {
 
         if (extrinsicFailed) {
           // extract error code from error message
-          const errorCode = Object.keys(ErrorCode).find((key) => error.message.includes(key)) as ErrorCode | undefined
-          if (errorCode) {
-            updateTransaction(transactionId, { ...transaction, errorCode })
-          }
+          const errorCode = Object.keys(ErrorCode).find((key) =>
+            error.message.split(' ').find((word: string) => word === key)
+          ) as ErrorCode | undefined
+
+          updateStatus(ExtrinsicStatus.Error, errorCode)
+
+          return false
         }
         SentryLogger.error(
           extrinsicFailed ? 'Extrinsic failed' : 'Unknown sendExtrinsic error',
@@ -259,6 +280,7 @@ export const useTransaction = (): HandleTransactionFn => {
       openOngoingTransactionModal,
       removeTransaction,
       updateTransaction,
+      userWalletName,
     ]
   )
 }
@@ -277,7 +299,6 @@ const useMetaprotocolTransactionStatus = () => {
           transactionHash: txHash,
         },
       })
-
       return data?.metaprotocolTransactionStatusEvents[0]?.status || null
     },
     [client]
@@ -287,7 +308,7 @@ const useMetaprotocolTransactionStatus = () => {
     async (txHash: string): Promise<MetaprotocolTransactionSuccessFieldsFragment> => {
       let status = await getTransactionStatus(txHash)
 
-      if (!status || status.__typename === 'MetaprotocolTransactionPending') {
+      if (!status) {
         for (let i = 0; i <= METAPROTOCOL_TX_STATUS_RETRIES; i++) {
           ConsoleLogger.warn(`No transaction status event found - retries: ${i + 1}/${METAPROTOCOL_TX_STATUS_RETRIES}`)
           await wait(METAPROTOCOL_TX_STATUS_RETRIES_TIMEOUT)

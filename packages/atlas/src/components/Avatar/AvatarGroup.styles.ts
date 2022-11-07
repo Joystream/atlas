@@ -42,6 +42,8 @@ type AvatarGroupContainerProps = {
 export const AvatarGroupContainer = styled.div<AvatarGroupContainerProps>`
   display: inline-grid;
   grid-row: auto;
+  ${getSizeOfGridColumn};
+
   ${({ shouldHighlightEveryAvatar }) =>
     shouldHighlightEveryAvatar &&
     css`
@@ -52,7 +54,6 @@ export const AvatarGroupContainer = styled.div<AvatarGroupContainerProps>`
         ${sharedAvatarActiveStyles};
       }
     `};
-  ${getSizeOfGridColumn};
 `
 
 type AvatatBackgroundProps = {

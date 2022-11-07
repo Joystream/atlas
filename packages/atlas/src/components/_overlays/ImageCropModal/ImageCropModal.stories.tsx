@@ -1,4 +1,4 @@
-import styled from '@emotion/styled/'
+import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
 import { useRef, useState } from 'react'
 

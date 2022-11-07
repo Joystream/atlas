@@ -1,9 +1,9 @@
 import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 
+import { SvgControlsSearchAlt } from '@/assets/icons'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgControlsSearchAlt } from '@/components/_icons'
 import { cVar, media, sizes, square } from '@/styles'
 
 export const Input = styled.input`

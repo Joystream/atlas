@@ -1,19 +1,23 @@
 import { parseISO } from 'date-fns'
 import { Location } from 'history'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { useLocation, useMatch } from 'react-router'
 import { useNavigate } from 'react-router-dom'
 
-import { useFullVideo } from '@/api/hooks'
+import { useFullVideo } from '@/api/hooks/video'
+import { displayCategories } from '@/config/categories'
+import { cancelledVideoFilter } from '@/config/contentFilter'
 import { absoluteRoutes } from '@/config/routes'
+import { useSubtitlesAssets } from '@/providers/assets/assets.hooks'
+import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { RoutingState } from '@/types/routing'
+import { SubtitlesInput } from '@/types/subtitles'
 import { SentryLogger } from '@/utils/logs'
 
 import { VideoWorkspaceContext } from './provider'
 import { VideoWorkspaceVideoAssets, VideoWorkspaceVideoFormFields } from './types'
 
 import { channelDraftsSelector, useDraftStore } from '../drafts'
-import { useAuthorizedUser } from '../user'
 
 export const DEFAULT_LICENSE_ID = 1002
 
@@ -29,10 +33,37 @@ export const useVideoWorkspaceData = () => {
   const { editedVideoInfo } = useVideoWorkspace()
   const { channelId } = useAuthorizedUser()
   const drafts = useDraftStore(channelDraftsSelector(channelId))
-  const { video, loading, error } = useFullVideo(editedVideoInfo?.id ?? '', {
-    skip: editedVideoInfo?.isDraft,
-    onError: (error) => SentryLogger.error('Failed to fetch video', 'useVideoWorkspaceData', error),
-  })
+  const { video, loading, error } = useFullVideo(
+    editedVideoInfo?.id ?? '',
+    {
+      skip: editedVideoInfo?.isDraft,
+      onError: (error) => SentryLogger.error('Failed to fetch video', 'useVideoWorkspaceData', error),
+    },
+    {
+      where: {
+        ...cancelledVideoFilter,
+      },
+    }
+  )
+
+  const hasAnyAvailableSubtitles = video?.subtitles?.some((s) => !!s.asset?.isAccepted)
+
+  // only trigger subtitles assets resolution - components will get resolution data directly from the store to not force re-renders of the entire form
+  useSubtitlesAssets(video?.subtitles)
+
+  const subtitlesArray: SubtitlesInput[] | null = useMemo(
+    () =>
+      video?.subtitles
+        .filter((s) => !!s.language?.iso)
+        .map((s) => ({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          languageIso: s.language!.iso,
+          type: s.type === 'closed-captions' ? 'closed-captions' : 'subtitles',
+          asset: s.asset,
+          id: s.asset?.id,
+        })) ?? null,
+    [video?.subtitles]
+  )
 
   if (!editedVideoInfo) {
     return {
@@ -67,11 +98,14 @@ export const useVideoWorkspaceData = () => {
   const normalizedData: VideoWorkspaceVideoFormFields = {
     title: editedVideoInfo.isDraft ? draft?.title ?? '' : video?.title ?? '',
     description: (editedVideoInfo.isDraft ? draft?.description : video?.description) ?? '',
-    category: (editedVideoInfo.isDraft ? draft?.category : video?.category?.id) ?? null,
+    category:
+      (editedVideoInfo.isDraft
+        ? draft?.category ?? displayCategories?.[0]?.defaultVideoCategory
+        : video?.category?.id) ?? null,
     licenseCode: (editedVideoInfo.isDraft ? draft?.licenseCode : video?.license?.code) ?? DEFAULT_LICENSE_ID,
     licenseCustomText: (editedVideoInfo.isDraft ? draft?.licenseCustomText : video?.license?.customText) ?? null,
     licenseAttribution: (editedVideoInfo.isDraft ? draft?.licenseAttribution : video?.license?.attribution) ?? null,
-    language: (editedVideoInfo.isDraft ? draft?.language : video?.language?.iso) ?? 'en',
+    language: (editedVideoInfo.isDraft ? draft?.language ?? 'en' : video?.language?.iso) ?? null,
     isPublic: (editedVideoInfo.isDraft ? draft?.isPublic : video?.isPublic) ?? true,
     isExplicit: (editedVideoInfo.isDraft ? draft?.isExplicit : video?.isExplicit) ?? false,
     hasMarketing: (editedVideoInfo.isDraft ? draft?.hasMarketing : video?.hasMarketing) ?? false,
@@ -85,11 +119,12 @@ export const useVideoWorkspaceData = () => {
     assets,
     mintNft: !!video?.nft,
     nftRoyaltiesPercent: video?.nft?.creatorRoyalty || undefined,
+    subtitlesArray,
   }
 
   return {
     tabData: normalizedData,
-    loading: editedVideoInfo.isDraft ? false : loading,
+    loading: editedVideoInfo.isDraft ? false : loading || (hasAnyAvailableSubtitles && !subtitlesArray),
     error,
   }
 }

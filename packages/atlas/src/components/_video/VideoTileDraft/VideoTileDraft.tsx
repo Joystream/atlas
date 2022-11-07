@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { FC, memo } from 'react'
 
+import { SvgActionDraft, SvgActionEdit, SvgActionTrash, SvgIllustrativeEdit } from '@/assets/icons'
 import { Pill } from '@/components/Pill'
-import { SvgActionDraft, SvgActionEdit, SvgActionTrash, SvgIllustrativeEdit } from '@/components/_icons'
 import { singleDraftSelector, useDraftStore } from '@/providers/drafts'
 import { square } from '@/styles'
 import { formatDateAgo } from '@/utils/time'

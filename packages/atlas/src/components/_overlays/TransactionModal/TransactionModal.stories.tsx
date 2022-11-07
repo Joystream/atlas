@@ -3,10 +3,10 @@ import { Meta, Story } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { createApolloClient } from '@/api'
-import { ExtrinsicStatus } from '@/joystream-lib'
+import { ExtrinsicStatus } from '@/joystream-lib/types'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
-import { UserProvider } from '@/providers/user'
+import { UserProvider } from '@/providers/user/user.provider'
 
 import { TransactionModal, TransactionModalProps } from './TransactionModal'
 

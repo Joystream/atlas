@@ -1,18 +1,21 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { addMilliseconds } from 'date-fns'
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { FC, useCallback, useEffect, useMemo, useRef } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
-import { useBasicVideo } from '@/api/hooks'
+import { useBasicVideo } from '@/api/hooks/video'
+import { SvgActionChevronR } from '@/assets/icons'
 import { Step, StepProps, getStepVariant } from '@/components/Step'
 import { Text } from '@/components/Text'
-import { SvgActionChevronR } from '@/components/_icons'
 import { NftTile, NftTileProps } from '@/components/_nft/NftTile'
-import { NFT_MIN_BID_STEP_MULTIPLIER } from '@/config/nft'
+import { atlasConfig } from '@/config'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
-import { useAsset, useMemberAvatar } from '@/providers/assets'
+import { NftBuyNowInputMetadata, NftSaleInputMetadata } from '@/joystream-lib/types'
+import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
+import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useConfirmationModal } from '@/providers/confirmationModal'
-import { useUser } from '@/providers/user'
+import { useFee } from '@/providers/joystream/joystream.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
 import { formatDateTime } from '@/utils/time'
 
@@ -29,7 +32,7 @@ import {
   StepperInnerWrapper,
   StepperWrapper,
 } from './NftForm.styles'
-import { NftFormData, NftFormFields, NftFormStatus } from './NftForm.types'
+import { Listing, NftFormData, NftFormFields, NftFormStatus } from './NftForm.types'
 import { createValidationSchema } from './NftForm.utils'
 import { SetUp } from './SetUp'
 
@@ -55,9 +58,8 @@ type NftFormProps = {
 }
 
 export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) => {
-  const { activeMembership } = useUser()
+  const { activeMembership, memberId } = useUser()
   const scrollableWrapperRef = useRef<HTMLDivElement>(null)
-  const [shouldValidateOnchange, setShouldValidateOnChange] = useState(false)
   const {
     state: { activeInputs, setActiveInputs, listingType, setListingType, currentStep, previousStep, nextStep },
   } = useNftForm()
@@ -72,15 +74,22 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
   const formMethods = useForm<NftFormFields>({
     resolver: (data, ctx, options) => {
       const resolver = zodResolver(
-        createValidationSchema(data, maxStartDate, maxEndDate, listingType, chainState.nftMinStartingPrice)
+        createValidationSchema(
+          data,
+          maxStartDate,
+          maxEndDate,
+          listingType,
+          chainState.nftMinStartingPrice,
+          chainState.nftMaxStartingPrice
+        )
       )
       return resolver(data, ctx, options)
     },
-    reValidateMode: 'onChange',
+    mode: 'onBlur',
     defaultValues: {
       startDate: null,
       endDate: null,
-      startingPrice: chainState.nftMinStartingPrice || undefined,
+      startingPrice: hapiBnToTokenNumber(chainState.nftMinStartingPrice),
     },
   })
   const {
@@ -101,8 +110,71 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
 
   const [openModal, closeModal] = useConfirmationModal()
 
+  const createBuyNowPriceMetadata = (data: NftFormFields): NftBuyNowInputMetadata | undefined => {
+    return {
+      type: 'buyNow',
+      buyNowPrice: data.buyNowPrice ? tokenNumberToHapiBn(data.buyNowPrice).toString() : '0',
+    }
+  }
+
+  const createAuctionMetadata = useCallback(
+    (data: NftFormFields): NftSaleInputMetadata | undefined => {
+      const startDateValue = getValues('startDate')
+      const startDate = startDateValue?.type === 'date' && startDateValue.date
+      const startsAtBlock = startDate ? convertMsTimestampToBlock(startDate.getTime()) : undefined
+      const startingPrice = data.startingPrice
+        ? tokenNumberToHapiBn(data.startingPrice)
+        : chainState.nftMinStartingPrice
+      const minimalBidStep = startingPrice.muln(atlasConfig.features.nft.auctionMinimumBidStepMultiplier)
+      const buyNowPrice = data.buyNowPrice ? tokenNumberToHapiBn(data.buyNowPrice) : undefined
+
+      const sharedMetadata = {
+        startsAtBlock,
+        startingPrice: startingPrice.toString(),
+        minimalBidStep: minimalBidStep.toString(),
+        buyNowPrice: buyNowPrice?.toString(),
+        whitelistedMembersIds: data.whitelistedMembers?.map((member) => member.id),
+      }
+
+      if (data.auctionDurationBlocks) {
+        // auction has duration, assume english
+        return {
+          type: 'english',
+          auctionDurationBlocks: data.auctionDurationBlocks,
+          ...sharedMetadata,
+        }
+      } else {
+        // auction has no duration, assume open
+        return {
+          type: 'open',
+          ...sharedMetadata,
+        }
+      }
+    },
+    [chainState.nftMinStartingPrice, convertMsTimestampToBlock, getValues]
+  )
+
+  const getInputMetadataData = useCallback(
+    (data: NftFormFields) => {
+      if (listingType === 'Auction') {
+        return createAuctionMetadata(data)
+      }
+      if (listingType === 'Fixed price') {
+        return createBuyNowPriceMetadata(data)
+      }
+      return
+    },
+    [createAuctionMetadata, listingType]
+  )
+
+  const inputMetadata = getInputMetadataData(getValues())
+  const { fullFee: fee, loading: feeLoading } = useFee(
+    'putNftOnSaleTx',
+    memberId && inputMetadata ? [videoId, memberId, inputMetadata] : undefined
+  )
+
   const handleSubmit = useCallback(() => {
-    const startDateValue = getValues('startDate')
+    const startDateValue = watch('startDate')
     const startDate = startDateValue?.type === 'date' && startDateValue.date
     if (startDate && new Date() > startDate) {
       trigger('startDate')
@@ -149,37 +221,14 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
           })
           return
         }
-
         onSubmit({
           type: 'buyNow',
-          buyNowPrice: data.buyNowPrice,
+          buyNowPrice: tokenNumberToHapiBn(data.buyNowPrice).toString(),
         })
       } else if (listingType === 'Auction') {
-        const startsAtBlock = startDate ? convertMsTimestampToBlock(startDate.getTime()) : undefined
-        const startingPrice = data.startingPrice || chainState.nftMinStartingPrice
-        const minimalBidStep = Math.ceil(startingPrice * NFT_MIN_BID_STEP_MULTIPLIER)
-
-        if (data.auctionDurationBlocks) {
-          // auction has duration, assume english
-          onSubmit({
-            type: 'english',
-            startsAtBlock,
-            startingPrice,
-            minimalBidStep,
-            buyNowPrice: data.buyNowPrice || undefined,
-            auctionDurationBlocks: data.auctionDurationBlocks,
-            whitelistedMembersIds: data.whitelistedMembers?.map((member) => member.id),
-          })
-        } else {
-          // auction has no duration, assume open
-          onSubmit({
-            type: 'open',
-            startsAtBlock,
-            startingPrice,
-            minimalBidStep,
-            buyNowPrice: data.buyNowPrice || undefined,
-            whitelistedMembersIds: data.whitelistedMembers?.map((member) => member.id),
-          })
+        const inputMetadata = createAuctionMetadata(data)
+        if (inputMetadata) {
+          onSubmit(inputMetadata)
         }
       } else {
         SentryLogger.error('Unknown listing type', 'NftForm', null, {
@@ -189,23 +238,21 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
     })
     return handler()
   }, [
-    chainState.nftMinStartingPrice,
     closeModal,
-    convertMsTimestampToBlock,
+    createAuctionMetadata,
     createSubmitHandler,
-    getValues,
     listingType,
     onSubmit,
     openModal,
     previousStep,
     setValue,
     trigger,
+    watch,
   ])
 
   const handleGoForward = useCallback(async () => {
     const triggerResult = await trigger()
     if (!triggerResult) {
-      setShouldValidateOnChange(true)
       return
     }
     scrollableWrapperRef.current?.scrollIntoView()
@@ -215,7 +262,6 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
 
   const handleGoBack = useCallback(() => {
     if (isOnFirstStep) return
-    setShouldValidateOnChange(false)
     scrollableWrapperRef.current?.scrollIntoView()
     previousStep()
   }, [isOnFirstStep, previousStep])
@@ -225,28 +271,19 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
       isValid,
       canGoBack: !isOnFirstStep,
       canGoForward: !isOnLastStep,
+      actionBarFee: fee,
+      actionBarLoading: feeLoading,
       triggerGoBack: handleGoBack,
       triggerGoForward: handleGoForward,
       triggerSubmit: handleSubmit,
     }),
-    [isValid, isOnFirstStep, isOnLastStep, handleGoBack, handleGoForward, handleSubmit]
+    [isValid, isOnFirstStep, isOnLastStep, fee, feeLoading, handleGoBack, handleGoForward, handleSubmit]
   )
 
   // sent updates on form status to VideoWorkspace
   useEffect(() => {
     setFormStatus(formStatus)
   }, [formStatus, setFormStatus])
-
-  // Clear form on listing type change
-  useEffect(() => {
-    reset()
-    if (listingType === 'Fixed price') {
-      setTimeout(() => {
-        setValue('buyNowPrice', 1)
-      })
-    }
-    setActiveInputs(['startingPrice'])
-  }, [listingType, reset, setActiveInputs, setValue])
 
   const getNftStatus = () => {
     switch (listingType) {
@@ -268,17 +305,29 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
     loading: loadingVideo,
     duration: video?.duration,
     views: video?.views,
-    buyNowPrice: watch('buyNowPrice') || 0,
-    startingPrice: watch('startingPrice') || 0,
+    buyNowPrice: tokenNumberToHapiBn(watch('buyNowPrice') || 0),
+    startingPrice: tokenNumberToHapiBn(watch('startingPrice') || 0),
+  }
+
+  const handleSelectType = (selectedType: Listing) => {
+    // Clear form on listing type change
+    reset()
+    if (selectedType === 'Fixed price') {
+      setTimeout(() => {
+        setValue('buyNowPrice', 1)
+      })
+    }
+    setActiveInputs(['startingPrice'])
+
+    setListingType(selectedType)
   }
 
   const stepsContent = [
-    <ListingType key="step-content-1" selectedType={listingType} onSelectType={setListingType} />,
+    <ListingType key="step-content-1" selectedType={listingType} onSelectType={handleSelectType} />,
     <SetUp
       maxStartDate={maxStartDate}
       maxEndDate={maxEndDate}
       key="step-content-2"
-      shouldValidateOnChange={shouldValidateOnchange}
       selectedType={listingType}
       activeInputs={activeInputs}
       setActiveInputs={setActiveInputs}
@@ -290,6 +339,8 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
       formData={getValues()}
       creatorRoyalty={video?.nft?.creatorRoyalty}
       channelTitle={video?.channel.title}
+      fee={fee}
+      isOwnedByChannel={video?.nft?.isOwnedByChannel}
     />,
   ]
 

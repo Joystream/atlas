@@ -1,14 +1,14 @@
 import { FC } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { useBasicChannel } from '@/api/hooks'
+import { useBasicChannel } from '@/api/hooks/channel'
+import { SvgActionNewChannel } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
+import { IconWrapper } from '@/components/IconWrapper'
 import { Text } from '@/components/Text'
-import { SvgActionNewChannel } from '@/components/_icons'
-import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { NavItem, NavItemProps } from '@/components/_navigation/NavItem'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset } from '@/providers/assets'
+import { useAsset } from '@/providers/assets/assets.hooks'
 import { FollowedChannel } from '@/providers/personalData/types'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
@@ -39,7 +39,7 @@ export const ChannelNavItem: FC<NavItemProps & ChannelNavItemProps> = ({
 }) => {
   const { channel } = useBasicChannel(id ?? '', {
     skip: !id,
-    onCompleted: (data) => !data.channelByUniqueInput && onChannelNotFound?.(id),
+    onCompleted: (data) => !data.channels.length && onChannelNotFound?.(id),
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelLink', error, { channel: { id } }),
   })
   const { url: avatarPhotoUrl } = useAsset(channel?.avatarPhoto)

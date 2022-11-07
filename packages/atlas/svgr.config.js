@@ -6,6 +6,7 @@ module.exports = {
   indexTemplate: indexTemplate,
   typescript: true,
   memo: true,
+  ref: true,
   prettier: true,
   jsxRuntime: 'automatic',
   svgoConfig: {
@@ -33,10 +34,11 @@ ${variables.imports}
 
 ${variables.interfaces}
 
-const ${variables.componentName} = (${variables.props}) => (
+const ${variables.componentName} = forwardRef((${variables.props}) => (
   ${variables.jsx}
-)
+))
 
+${variables.componentName}.displayName = '${variables.componentName}'
 const Memo = memo(${variables.componentName})
 export { Memo as ${variables.componentName} }
 `

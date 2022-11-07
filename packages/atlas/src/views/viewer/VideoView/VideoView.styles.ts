@@ -12,6 +12,7 @@ import { cVar, media, sizes } from '@/styles'
 
 type CinematicView = {
   cinematicView: boolean
+  noVideo?: boolean
 }
 
 const getPlayerGridWrapperCinematicStyles = ({ cinematicView }: CinematicView) =>
@@ -50,19 +51,19 @@ export const PlayerWrapper = styled(LayoutGrid)<CinematicView>`
   ${getPlayerWrapperCinematicStyles};
 `
 
-const getPlayerContainerCinematicStyles = ({ cinematicView }: CinematicView) =>
+const getPlayerContainerCinematicStyles = ({ cinematicView, noVideo }: CinematicView) =>
   cinematicView
     ? css`
-        height: calc(100vw * 0.5625);
+        height: ${noVideo ? 'unset' : 'calc(100vw * 0.5625)'};
         ${media.md} {
-          max-height: 70vh;
+          max-height: ${noVideo ? 'unset' : '70vh'};
         }
       `
     : css`
-        padding-top: 56.25%;
+        padding-top: ${noVideo ? 'unset' : '56.25%'};
 
         ${media.md} {
-          margin-bottom: ${sizes(8)};
+          margin-bottom: ${sizes(noVideo ? 6 : 8)};
         }
       `
 
@@ -94,13 +95,13 @@ export const TitleContainer = styled.div`
 export const VideoUtils = styled.div`
   display: grid;
   margin-top: ${sizes(2)};
-  grid-template: 'meta meta' 1fr 'reactions link' / 1fr auto;
+  grid-template: 'meta meta' 1fr 'reactions buttons' / 1fr auto;
   justify-items: baseline;
   gap: ${sizes(4)};
   ${media.md} {
     align-items: center;
     margin-top: ${sizes(4)};
-    grid-template: 'meta reactions link' 1fr / 1fr auto;
+    grid-template: 'meta reactions buttons' 1fr / 1fr auto;
   }
 `
 
@@ -115,8 +116,12 @@ export const StyledReactionStepper = styled(ReactionStepper)`
   margin-bottom: -${titleContainerPadding};
 `
 
-export const CopyLink = styled(Button)`
-  grid-area: link;
+export const ButtonsContainer = styled.div`
+  grid-area: buttons;
+  display: grid;
+  gap: ${sizes(2)};
+  align-items: center;
+  grid-auto-flow: column;
 `
 
 export const TitleText = styled(Text)`
@@ -163,7 +168,11 @@ export const SeeMoreButton = styled(Button)`
 `
 
 export const StyledCallToActionWrapper = styled(CallToActionWrapper)`
-  margin-top: ${sizes(16)};
+  margin-top: ${sizes(8)};
+
+  ${media.md} {
+    margin-top: ${sizes(16)};
+  }
 `
 
 export const DescriptionLink = styled(Button)`
@@ -203,4 +212,14 @@ export const LoadMoreCommentsWrapper = styled.div`
   margin-bottom: ${sizes(8)};
   padding-bottom: ${sizes(8)};
   box-shadow: ${cVar('effectDividersBottom')};
+`
+
+export const BlockedVideoPlaceholder = styled.div`
+  background-color: ${cVar('colorBackgroundMuted')};
+  height: calc(100% - 160px);
+`
+
+export const BlockedVideoGradientPlaceholder = styled.div`
+  background: linear-gradient(180deg, ${cVar('colorBackgroundMuted')}, rgb(0 0 0 / 0) 100%);
+  height: 160px;
 `

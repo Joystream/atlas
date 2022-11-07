@@ -1,24 +1,25 @@
 import { ChangeEvent, FC, useEffect, useState } from 'react'
 
 import { useGetKillSwitch, useSetKillSwitch } from '@/api/hooks/admin'
+import { SvgActionNewTab, SvgAlertsError24, SvgAlertsWarning24 } from '@/assets/icons'
 import { Information } from '@/components/Information'
 import { TabItem, Tabs } from '@/components/Tabs'
+import { Text } from '@/components/Text'
 import { Button, TextButton } from '@/components/_buttons/Button'
-import { SvgActionNewTab, SvgAlertsError24, SvgAlertsWarning24 } from '@/components/_icons'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { Select } from '@/components/_inputs/Select'
 import { Switch } from '@/components/_inputs/Switch'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { availableNodes } from '@/config/availableNodes'
-import { BUILD_ENV, availableEnvs } from '@/config/envs'
+import { atlasConfig } from '@/config'
+import { BUILD_ENV, NODE_URL, availableEnvs } from '@/config/env'
 import { absoluteRoutes } from '@/config/routes'
-import { NODE_URL } from '@/config/urls'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useEnvironmentStore } from '@/providers/environment'
 import { useSnackbar } from '@/providers/snackbars'
-import { ActiveUserState, useUserStore } from '@/providers/user'
+import { useUserStore } from '@/providers/user/user.store'
+import { ActiveUserState } from '@/providers/user/user.types'
 import { useUserLocationStore } from '@/providers/userLocation'
 import { SentryLogger } from '@/utils/logs'
 
@@ -26,10 +27,27 @@ import { CustomNodeUrlWrapper, HorizontalSpacedContainer, VerticalSpacedContaine
 
 const ENVIRONMENT_NAMES: Record<string, string> = {
   production: 'Main Testnet',
-  development: 'Atlas Dev Testnet',
-  next: 'Atlas Next Testnet',
+  development: `${atlasConfig.general.appName} Dev Testnet`,
+  next: `${atlasConfig.general.appName} Next Testnet`,
   local: 'Local chain',
 }
+
+const AVAILABLE_NODES = [
+  {
+    name: 'Jsgenesis (Europe/Germany - High Availability)',
+    value: import.meta.env.VITE_PRODUCTION_NODE_URL as string,
+  },
+  ...atlasConfig.joystream.alternativeNodes.map((node) => ({ name: node.name, value: node.url })),
+  {
+    name: 'Atlas Dev',
+    value: import.meta.env.VITE_DEVELOPMENT_NODE_URL as string,
+  },
+  {
+    name: 'Atlas Next',
+    value: import.meta.env.VITE_NEXT_NODE_URL as string,
+  },
+]
+
 const environmentsItems = availableEnvs()
   .filter((item) => ENVIRONMENT_NAMES[item])
   .map((item) => ({ name: ENVIRONMENT_NAMES[item], value: item }))
@@ -110,7 +128,7 @@ const EnvTab: FC = () => {
   } = useEnvironmentStore()
 
   const determinedNode = nodeOverride || NODE_URL
-  const determinedNodeFound = availableNodes.find((node) => node.value === determinedNode)
+  const determinedNodeFound = AVAILABLE_NODES.find((node) => node.value === determinedNode)
   const [usingCustomNodeUrl, setUsingCustomNodeUrl] = useState(!determinedNodeFound)
   const [customNodeUrl, setCustomNodeUrl] = useState(determinedNode)
   const resetActiveUser = useUserStore((state) => state.actions.resetActiveUser)
@@ -163,7 +181,7 @@ const EnvTab: FC = () => {
       <FormField label="Node">
         <Checkbox label="Custom node URL" value={usingCustomNodeUrl} onChange={handleCustomNodeCheckboxChange} />
         {!usingCustomNodeUrl ? (
-          <Select items={availableNodes} onChange={handleNodeChange} value={determinedNode} />
+          <Select items={AVAILABLE_NODES} onChange={handleNodeChange} value={determinedNode} />
         ) : (
           <CustomNodeUrlWrapper>
             <Input value={customNodeUrl} onChange={handleCustomNodeUrlChange} />
@@ -199,7 +217,10 @@ const StateTab: FC = () => {
 
     const linkElement = document.createElement('a')
     linkElement.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonStorage))
-    linkElement.setAttribute('download', `atlas-export-${new Date().toISOString()}.json`)
+    linkElement.setAttribute(
+      'download',
+      `${atlasConfig.general.appName.toLowerCase()}-export-${new Date().toISOString()}.json`
+    )
     linkElement.click()
   }
 
@@ -399,23 +420,45 @@ const LocationTab: FC = () => {
     setLatValue(null)
   }
 
+  const isGeolocationServiceUrlProvided = !!atlasConfig.storage.geolocationServiceUrl
+
   return (
     <VerticalSpacedContainer>
+      {!isGeolocationServiceUrlProvided && (
+        <Text color="colorTextError" variant="t100" as="p">
+          Warning! Setting up location data is unavailable, because geolocation service url wasn't provided.
+        </Text>
+      )}
       <FormField description="User location is used to determine nearest storage operators to ensure best user experience. This data is never sent outside of your browser and not used for any additional purposes. We highly recommend leaving this enabled.">
-        <Switch label="Use location data" value={!disableUserLocation} onChange={handleDisableChange} />
+        <Switch
+          label="Use location data"
+          value={isGeolocationServiceUrlProvided ? !disableUserLocation : false}
+          onChange={handleDisableChange}
+          disabled={!isGeolocationServiceUrlProvided}
+        />
       </FormField>
       <HorizontalSpacedContainer>
         <FormField label="Latitude">
-          <Input value={latValue || ''} onChange={handleLatChange} type="number" />
+          <Input
+            value={latValue || ''}
+            onChange={handleLatChange}
+            type="number"
+            disabled={!isGeolocationServiceUrlProvided}
+          />
         </FormField>
         <FormField label="Longitude">
-          <Input value={longValue || ''} onChange={handleLongChange} type="number" />
+          <Input
+            value={longValue || ''}
+            onChange={handleLongChange}
+            type="number"
+            disabled={!isGeolocationServiceUrlProvided}
+          />
         </FormField>
       </HorizontalSpacedContainer>
-      <Button onClick={handleSaveClick} size="large" variant="secondary">
+      <Button onClick={handleSaveClick} size="large" variant="secondary" disabled={!isGeolocationServiceUrlProvided}>
         Save changes
       </Button>
-      <Button onClick={handleResetClick} size="large" variant="secondary">
+      <Button onClick={handleResetClick} size="large" variant="secondary" disabled={!isGeolocationServiceUrlProvided}>
         Reset location data{' '}
         <Information text="Resetting will cause the app to fetch your location again on next startup" />
       </Button>

@@ -26,7 +26,8 @@ export type GetBasicVideoQuery = {
       title?: string | null
       createdAt: Date
       follows: number
-      rewardAccount?: string | null
+      rewardAccount: string
+      channelStateBloatBond: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -40,6 +41,7 @@ export type GetBasicVideoQuery = {
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
     }
@@ -56,6 +58,7 @@ export type GetBasicVideoQuery = {
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoSubtitle' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
     nft?: {
@@ -65,6 +68,7 @@ export type GetBasicVideoQuery = {
       creatorRoyalty?: number | null
       lastSaleDate?: Date | null
       lastSalePrice?: string | null
+      isOwnedByChannel: boolean
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -88,6 +92,7 @@ export type GetBasicVideoQuery = {
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                     | { __typename: 'DataObjectTypeUnknown' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoSubtitle' }
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
                 } | null
               }
@@ -135,6 +140,7 @@ export type GetBasicVideoQuery = {
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                   } | null
                 }
@@ -172,6 +178,7 @@ export type GetBasicVideoQuery = {
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
                     } | null
                   }
@@ -210,6 +217,7 @@ export type GetBasicVideoQuery = {
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
                     } | null
                   }
@@ -241,6 +249,7 @@ export type GetBasicVideoQuery = {
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                   } | null
                 }
@@ -308,6 +317,7 @@ export type GetFullVideoQuery = {
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoSubtitle' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
     thumbnailPhoto?: {
@@ -323,6 +333,7 @@ export type GetFullVideoQuery = {
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoSubtitle' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
     channel: {
@@ -336,7 +347,8 @@ export type GetFullVideoQuery = {
       title?: string | null
       createdAt: Date
       follows: number
-      rewardAccount?: string | null
+      rewardAccount: string
+      channelStateBloatBond: string
       language?: { __typename?: 'Language'; id: string; iso: string } | null
       ownerMember?: {
         __typename?: 'Membership'
@@ -361,6 +373,7 @@ export type GetFullVideoQuery = {
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                     | { __typename: 'DataObjectTypeUnknown' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoSubtitle' }
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
                 } | null
               }
@@ -381,6 +394,7 @@ export type GetFullVideoQuery = {
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
       avatarPhoto?: {
@@ -396,6 +410,7 @@ export type GetFullVideoQuery = {
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
     }
@@ -413,6 +428,7 @@ export type GetFullVideoQuery = {
       creatorRoyalty?: number | null
       lastSaleDate?: Date | null
       lastSalePrice?: string | null
+      isOwnedByChannel: boolean
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -436,6 +452,7 @@ export type GetFullVideoQuery = {
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                     | { __typename: 'DataObjectTypeUnknown' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoSubtitle' }
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
                 } | null
               }
@@ -483,6 +500,7 @@ export type GetFullVideoQuery = {
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                   } | null
                 }
@@ -520,6 +538,7 @@ export type GetFullVideoQuery = {
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
                     } | null
                   }
@@ -558,6 +577,7 @@ export type GetFullVideoQuery = {
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
                     } | null
                   }
@@ -589,6 +609,7 @@ export type GetFullVideoQuery = {
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                   } | null
                 }
@@ -603,6 +624,30 @@ export type GetFullVideoQuery = {
         | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
         | null
     } | null
+    subtitles: Array<{
+      __typename?: 'VideoSubtitle'
+      id: string
+      mimeType: string
+      type: string
+      assetId?: string | null
+      language?: { __typename?: 'Language'; id: string; iso: string } | null
+      asset?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeUnknown' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+      } | null
+    }>
   } | null
 }
 
@@ -636,7 +681,8 @@ export type GetBasicVideosConnectionQuery = {
           title?: string | null
           createdAt: Date
           follows: number
-          rewardAccount?: string | null
+          rewardAccount: string
+          channelStateBloatBond: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -650,6 +696,7 @@ export type GetBasicVideosConnectionQuery = {
               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
               | { __typename: 'DataObjectTypeUnknown' }
               | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoSubtitle' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
           } | null
         }
@@ -666,6 +713,7 @@ export type GetBasicVideosConnectionQuery = {
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
             | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
+            | { __typename: 'DataObjectTypeVideoSubtitle' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
         } | null
         nft?: {
@@ -675,6 +723,7 @@ export type GetBasicVideosConnectionQuery = {
           creatorRoyalty?: number | null
           lastSaleDate?: Date | null
           lastSalePrice?: string | null
+          isOwnedByChannel: boolean
           ownerMember?: {
             __typename?: 'Membership'
             id: string
@@ -698,6 +747,7 @@ export type GetBasicVideosConnectionQuery = {
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
                     } | null
                   }
@@ -745,6 +795,7 @@ export type GetBasicVideosConnectionQuery = {
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
                           | { __typename: 'DataObjectTypeVideoThumbnail' }
                       } | null
                     }
@@ -782,6 +833,7 @@ export type GetBasicVideosConnectionQuery = {
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                             | { __typename: 'DataObjectTypeUnknown' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
+                            | { __typename: 'DataObjectTypeVideoSubtitle' }
                             | { __typename: 'DataObjectTypeVideoThumbnail' }
                         } | null
                       }
@@ -820,6 +872,7 @@ export type GetBasicVideosConnectionQuery = {
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                             | { __typename: 'DataObjectTypeUnknown' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
+                            | { __typename: 'DataObjectTypeVideoSubtitle' }
                             | { __typename: 'DataObjectTypeVideoThumbnail' }
                         } | null
                       }
@@ -851,6 +904,7 @@ export type GetBasicVideosConnectionQuery = {
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
                           | { __typename: 'DataObjectTypeVideoThumbnail' }
                       } | null
                     }
@@ -874,7 +928,7 @@ export type GetBasicVideosConnectionQuery = {
 export type GetFullVideosConnectionQueryVariables = Types.Exact<{
   first?: Types.InputMaybe<Types.Scalars['Int']>
   after?: Types.InputMaybe<Types.Scalars['String']>
-  orderBy?: Types.VideoOrderByInput
+  orderBy?: Types.InputMaybe<Array<Types.VideoOrderByInput> | Types.VideoOrderByInput>
   where?: Types.InputMaybe<Types.VideoWhereInput>
 }>
 
@@ -930,6 +984,7 @@ export type GetFullVideosConnectionQuery = {
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
             | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
+            | { __typename: 'DataObjectTypeVideoSubtitle' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
         } | null
         thumbnailPhoto?: {
@@ -945,6 +1000,7 @@ export type GetFullVideosConnectionQuery = {
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
             | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
+            | { __typename: 'DataObjectTypeVideoSubtitle' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
         } | null
         channel: {
@@ -958,7 +1014,8 @@ export type GetFullVideosConnectionQuery = {
           title?: string | null
           createdAt: Date
           follows: number
-          rewardAccount?: string | null
+          rewardAccount: string
+          channelStateBloatBond: string
           language?: { __typename?: 'Language'; id: string; iso: string } | null
           ownerMember?: {
             __typename?: 'Membership'
@@ -983,6 +1040,7 @@ export type GetFullVideosConnectionQuery = {
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
                     } | null
                   }
@@ -1003,6 +1061,7 @@ export type GetFullVideosConnectionQuery = {
               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
               | { __typename: 'DataObjectTypeUnknown' }
               | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoSubtitle' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
           } | null
           avatarPhoto?: {
@@ -1018,6 +1077,7 @@ export type GetFullVideosConnectionQuery = {
               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
               | { __typename: 'DataObjectTypeUnknown' }
               | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoSubtitle' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
           } | null
         }
@@ -1035,6 +1095,7 @@ export type GetFullVideosConnectionQuery = {
           creatorRoyalty?: number | null
           lastSaleDate?: Date | null
           lastSalePrice?: string | null
+          isOwnedByChannel: boolean
           ownerMember?: {
             __typename?: 'Membership'
             id: string
@@ -1058,6 +1119,7 @@ export type GetFullVideosConnectionQuery = {
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
                     } | null
                   }
@@ -1105,6 +1167,7 @@ export type GetFullVideosConnectionQuery = {
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
                           | { __typename: 'DataObjectTypeVideoThumbnail' }
                       } | null
                     }
@@ -1142,6 +1205,7 @@ export type GetFullVideosConnectionQuery = {
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                             | { __typename: 'DataObjectTypeUnknown' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
+                            | { __typename: 'DataObjectTypeVideoSubtitle' }
                             | { __typename: 'DataObjectTypeVideoThumbnail' }
                         } | null
                       }
@@ -1180,6 +1244,7 @@ export type GetFullVideosConnectionQuery = {
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                             | { __typename: 'DataObjectTypeUnknown' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
+                            | { __typename: 'DataObjectTypeVideoSubtitle' }
                             | { __typename: 'DataObjectTypeVideoThumbnail' }
                         } | null
                       }
@@ -1211,6 +1276,7 @@ export type GetFullVideosConnectionQuery = {
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
                           | { __typename: 'DataObjectTypeVideoThumbnail' }
                       } | null
                     }
@@ -1225,6 +1291,30 @@ export type GetFullVideosConnectionQuery = {
             | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
             | null
         } | null
+        subtitles: Array<{
+          __typename?: 'VideoSubtitle'
+          id: string
+          mimeType: string
+          type: string
+          assetId?: string | null
+          language?: { __typename?: 'Language'; id: string; iso: string } | null
+          asset?: {
+            __typename?: 'StorageDataObject'
+            id: string
+            createdAt: Date
+            size: string
+            isAccepted: boolean
+            ipfsHash: string
+            storageBag: { __typename?: 'StorageBag'; id: string }
+            type:
+              | { __typename: 'DataObjectTypeChannelAvatar' }
+              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeUnknown' }
+              | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoSubtitle' }
+              | { __typename: 'DataObjectTypeVideoThumbnail' }
+          } | null
+        }>
       }
     }>
     pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: string | null }
@@ -1235,7 +1325,7 @@ export type GetBasicVideosQueryVariables = Types.Exact<{
   offset?: Types.InputMaybe<Types.Scalars['Int']>
   limit?: Types.InputMaybe<Types.Scalars['Int']>
   where?: Types.InputMaybe<Types.VideoWhereInput>
-  orderBy?: Types.VideoOrderByInput
+  orderBy?: Types.InputMaybe<Array<Types.VideoOrderByInput> | Types.VideoOrderByInput>
 }>
 
 export type GetBasicVideosQuery = {
@@ -1255,7 +1345,8 @@ export type GetBasicVideosQuery = {
       title?: string | null
       createdAt: Date
       follows: number
-      rewardAccount?: string | null
+      rewardAccount: string
+      channelStateBloatBond: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -1269,6 +1360,7 @@ export type GetBasicVideosQuery = {
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
     }
@@ -1285,6 +1377,7 @@ export type GetBasicVideosQuery = {
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoSubtitle' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
     nft?: {
@@ -1294,6 +1387,7 @@ export type GetBasicVideosQuery = {
       creatorRoyalty?: number | null
       lastSaleDate?: Date | null
       lastSalePrice?: string | null
+      isOwnedByChannel: boolean
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -1317,6 +1411,7 @@ export type GetBasicVideosQuery = {
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                     | { __typename: 'DataObjectTypeUnknown' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoSubtitle' }
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
                 } | null
               }
@@ -1364,6 +1459,7 @@ export type GetBasicVideosQuery = {
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                   } | null
                 }
@@ -1401,6 +1497,7 @@ export type GetBasicVideosQuery = {
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
                     } | null
                   }
@@ -1439,6 +1536,7 @@ export type GetBasicVideosQuery = {
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
                     } | null
                   }
@@ -1470,6 +1568,7 @@ export type GetBasicVideosQuery = {
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                   } | null
                 }
@@ -1491,7 +1590,7 @@ export type GetFullVideosQueryVariables = Types.Exact<{
   offset?: Types.InputMaybe<Types.Scalars['Int']>
   limit?: Types.InputMaybe<Types.Scalars['Int']>
   where?: Types.InputMaybe<Types.VideoWhereInput>
-  orderBy?: Types.VideoOrderByInput
+  orderBy?: Types.InputMaybe<Array<Types.VideoOrderByInput> | Types.VideoOrderByInput>
 }>
 
 export type GetFullVideosQuery = {
@@ -1540,6 +1639,7 @@ export type GetFullVideosQuery = {
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoSubtitle' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
     thumbnailPhoto?: {
@@ -1555,6 +1655,7 @@ export type GetFullVideosQuery = {
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoSubtitle' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
     channel: {
@@ -1568,7 +1669,8 @@ export type GetFullVideosQuery = {
       title?: string | null
       createdAt: Date
       follows: number
-      rewardAccount?: string | null
+      rewardAccount: string
+      channelStateBloatBond: string
       language?: { __typename?: 'Language'; id: string; iso: string } | null
       ownerMember?: {
         __typename?: 'Membership'
@@ -1593,6 +1695,7 @@ export type GetFullVideosQuery = {
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                     | { __typename: 'DataObjectTypeUnknown' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoSubtitle' }
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
                 } | null
               }
@@ -1613,6 +1716,7 @@ export type GetFullVideosQuery = {
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
       avatarPhoto?: {
@@ -1628,6 +1732,7 @@ export type GetFullVideosQuery = {
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
     }
@@ -1645,6 +1750,7 @@ export type GetFullVideosQuery = {
       creatorRoyalty?: number | null
       lastSaleDate?: Date | null
       lastSalePrice?: string | null
+      isOwnedByChannel: boolean
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -1668,6 +1774,7 @@ export type GetFullVideosQuery = {
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                     | { __typename: 'DataObjectTypeUnknown' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoSubtitle' }
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
                 } | null
               }
@@ -1715,6 +1822,7 @@ export type GetFullVideosQuery = {
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                   } | null
                 }
@@ -1752,6 +1860,7 @@ export type GetFullVideosQuery = {
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
                     } | null
                   }
@@ -1790,6 +1899,7 @@ export type GetFullVideosQuery = {
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
                     } | null
                   }
@@ -1821,6 +1931,7 @@ export type GetFullVideosQuery = {
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                   } | null
                 }
@@ -1835,6 +1946,30 @@ export type GetFullVideosQuery = {
         | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
         | null
     } | null
+    subtitles: Array<{
+      __typename?: 'VideoSubtitle'
+      id: string
+      mimeType: string
+      type: string
+      assetId?: string | null
+      language?: { __typename?: 'Language'; id: string; iso: string } | null
+      asset?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeUnknown' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+      } | null
+    }>
   }>
 }
 
@@ -1843,7 +1978,7 @@ export type GetMostViewedVideosConnectionQueryVariables = Types.Exact<{
   periodDays?: Types.InputMaybe<Types.Scalars['Int']>
   first?: Types.InputMaybe<Types.Scalars['Int']>
   after?: Types.InputMaybe<Types.Scalars['String']>
-  orderBy?: Types.VideoOrderByInput
+  orderBy?: Types.InputMaybe<Array<Types.VideoOrderByInput> | Types.VideoOrderByInput>
   where?: Types.InputMaybe<Types.VideoWhereInput>
 }>
 
@@ -1870,7 +2005,8 @@ export type GetMostViewedVideosConnectionQuery = {
           title?: string | null
           createdAt: Date
           follows: number
-          rewardAccount?: string | null
+          rewardAccount: string
+          channelStateBloatBond: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -1884,6 +2020,7 @@ export type GetMostViewedVideosConnectionQuery = {
               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
               | { __typename: 'DataObjectTypeUnknown' }
               | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoSubtitle' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
           } | null
         }
@@ -1900,6 +2037,7 @@ export type GetMostViewedVideosConnectionQuery = {
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
             | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
+            | { __typename: 'DataObjectTypeVideoSubtitle' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
         } | null
         nft?: {
@@ -1909,6 +2047,7 @@ export type GetMostViewedVideosConnectionQuery = {
           creatorRoyalty?: number | null
           lastSaleDate?: Date | null
           lastSalePrice?: string | null
+          isOwnedByChannel: boolean
           ownerMember?: {
             __typename?: 'Membership'
             id: string
@@ -1932,6 +2071,7 @@ export type GetMostViewedVideosConnectionQuery = {
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
                     } | null
                   }
@@ -1979,6 +2119,7 @@ export type GetMostViewedVideosConnectionQuery = {
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
                           | { __typename: 'DataObjectTypeVideoThumbnail' }
                       } | null
                     }
@@ -2016,6 +2157,7 @@ export type GetMostViewedVideosConnectionQuery = {
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                             | { __typename: 'DataObjectTypeUnknown' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
+                            | { __typename: 'DataObjectTypeVideoSubtitle' }
                             | { __typename: 'DataObjectTypeVideoThumbnail' }
                         } | null
                       }
@@ -2054,6 +2196,7 @@ export type GetMostViewedVideosConnectionQuery = {
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                             | { __typename: 'DataObjectTypeUnknown' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
+                            | { __typename: 'DataObjectTypeVideoSubtitle' }
                             | { __typename: 'DataObjectTypeVideoThumbnail' }
                         } | null
                       }
@@ -2085,6 +2228,7 @@ export type GetMostViewedVideosConnectionQuery = {
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
                           | { __typename: 'DataObjectTypeVideoThumbnail' }
                       } | null
                     }
@@ -2126,7 +2270,8 @@ export type GetTop10VideosThisWeekQuery = {
       title?: string | null
       createdAt: Date
       follows: number
-      rewardAccount?: string | null
+      rewardAccount: string
+      channelStateBloatBond: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -2140,6 +2285,7 @@ export type GetTop10VideosThisWeekQuery = {
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
     }
@@ -2156,6 +2302,7 @@ export type GetTop10VideosThisWeekQuery = {
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoSubtitle' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
     nft?: {
@@ -2165,6 +2312,7 @@ export type GetTop10VideosThisWeekQuery = {
       creatorRoyalty?: number | null
       lastSaleDate?: Date | null
       lastSalePrice?: string | null
+      isOwnedByChannel: boolean
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -2188,6 +2336,7 @@ export type GetTop10VideosThisWeekQuery = {
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                     | { __typename: 'DataObjectTypeUnknown' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoSubtitle' }
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
                 } | null
               }
@@ -2235,6 +2384,7 @@ export type GetTop10VideosThisWeekQuery = {
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                   } | null
                 }
@@ -2272,6 +2422,7 @@ export type GetTop10VideosThisWeekQuery = {
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
                     } | null
                   }
@@ -2310,6 +2461,7 @@ export type GetTop10VideosThisWeekQuery = {
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
                     } | null
                   }
@@ -2341,6 +2493,7 @@ export type GetTop10VideosThisWeekQuery = {
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                   } | null
                 }
@@ -2379,7 +2532,8 @@ export type GetTop10VideosThisMonthQuery = {
       title?: string | null
       createdAt: Date
       follows: number
-      rewardAccount?: string | null
+      rewardAccount: string
+      channelStateBloatBond: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -2393,6 +2547,7 @@ export type GetTop10VideosThisMonthQuery = {
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
     }
@@ -2409,6 +2564,7 @@ export type GetTop10VideosThisMonthQuery = {
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoSubtitle' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
     nft?: {
@@ -2418,6 +2574,7 @@ export type GetTop10VideosThisMonthQuery = {
       creatorRoyalty?: number | null
       lastSaleDate?: Date | null
       lastSalePrice?: string | null
+      isOwnedByChannel: boolean
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -2441,6 +2598,7 @@ export type GetTop10VideosThisMonthQuery = {
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                     | { __typename: 'DataObjectTypeUnknown' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoSubtitle' }
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
                 } | null
               }
@@ -2488,6 +2646,7 @@ export type GetTop10VideosThisMonthQuery = {
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                   } | null
                 }
@@ -2525,6 +2684,7 @@ export type GetTop10VideosThisMonthQuery = {
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
                     } | null
                   }
@@ -2563,6 +2723,7 @@ export type GetTop10VideosThisMonthQuery = {
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
                     } | null
                   }
@@ -2594,6 +2755,7 @@ export type GetTop10VideosThisMonthQuery = {
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                   } | null
                 }
@@ -2620,6 +2782,16 @@ export type AddVideoViewMutationVariables = Types.Exact<{
 export type AddVideoViewMutation = {
   __typename?: 'Mutation'
   addVideoView: { __typename?: 'EntityViewsInfo'; id: string; views: number }
+}
+
+export type ReportVideoMutationVariables = Types.Exact<{
+  videoId: Types.Scalars['ID']
+  rationale: Types.Scalars['String']
+}>
+
+export type ReportVideoMutation = {
+  __typename?: 'Mutation'
+  reportVideo: { __typename?: 'VideoReportInfo'; id: string; videoId: string }
 }
 
 export const GetBasicVideoDocument = gql`
@@ -2773,10 +2945,10 @@ export const GetFullVideosConnectionDocument = gql`
   query GetFullVideosConnection(
     $first: Int
     $after: String
-    $orderBy: VideoOrderByInput! = createdAt_DESC
+    $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
     $where: VideoWhereInput
   ) {
-    videosConnection(first: $first, after: $after, where: $where, orderBy: [$orderBy]) {
+    videosConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
       edges {
         cursor
         node {
@@ -2841,9 +3013,9 @@ export const GetBasicVideosDocument = gql`
     $offset: Int
     $limit: Int
     $where: VideoWhereInput
-    $orderBy: VideoOrderByInput! = createdAt_DESC
+    $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
   ) {
-    videos(offset: $offset, limit: $limit, where: $where, orderBy: [$orderBy]) {
+    videos(offset: $offset, limit: $limit, where: $where, orderBy: $orderBy) {
       ...BasicVideoFields
     }
   }
@@ -2889,9 +3061,9 @@ export const GetFullVideosDocument = gql`
     $offset: Int
     $limit: Int
     $where: VideoWhereInput
-    $orderBy: VideoOrderByInput! = createdAt_DESC
+    $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
   ) {
-    videos(offset: $offset, limit: $limit, where: $where, orderBy: [$orderBy]) {
+    videos(offset: $offset, limit: $limit, where: $where, orderBy: $orderBy) {
       ...FullVideoFields
     }
   }
@@ -2938,7 +3110,7 @@ export const GetMostViewedVideosConnectionDocument = gql`
     $periodDays: Int
     $first: Int
     $after: String
-    $orderBy: VideoOrderByInput! = createdAt_DESC
+    $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
     $where: VideoWhereInput
   ) {
     mostViewedVideosConnection(
@@ -2946,7 +3118,7 @@ export const GetMostViewedVideosConnectionDocument = gql`
       first: $first
       after: $after
       periodDays: $periodDays
-      orderBy: [$orderBy]
+      orderBy: $orderBy
       where: $where
     ) {
       edges {
@@ -3154,3 +3326,40 @@ export type AddVideoViewMutationOptions = Apollo.BaseMutationOptions<
   AddVideoViewMutation,
   AddVideoViewMutationVariables
 >
+export const ReportVideoDocument = gql`
+  mutation ReportVideo($videoId: ID!, $rationale: String!) {
+    reportVideo(videoId: $videoId, rationale: $rationale) {
+      id
+      videoId
+    }
+  }
+`
+export type ReportVideoMutationFn = Apollo.MutationFunction<ReportVideoMutation, ReportVideoMutationVariables>
+
+/**
+ * __useReportVideoMutation__
+ *
+ * To run a mutation, you first call `useReportVideoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useReportVideoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [reportVideoMutation, { data, loading, error }] = useReportVideoMutation({
+ *   variables: {
+ *      videoId: // value for 'videoId'
+ *      rationale: // value for 'rationale'
+ *   },
+ * });
+ */
+export function useReportVideoMutation(
+  baseOptions?: Apollo.MutationHookOptions<ReportVideoMutation, ReportVideoMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<ReportVideoMutation, ReportVideoMutationVariables>(ReportVideoDocument, options)
+}
+export type ReportVideoMutationHookResult = ReturnType<typeof useReportVideoMutation>
+export type ReportVideoMutationResult = Apollo.MutationResult<ReportVideoMutation>
+export type ReportVideoMutationOptions = Apollo.BaseMutationOptions<ReportVideoMutation, ReportVideoMutationVariables>

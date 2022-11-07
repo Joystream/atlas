@@ -1,30 +1,47 @@
-import { IChannelMetadata, IMembershipMetadata, IVideoMetadata } from '@joystream/metadata-protobuf'
+import { IChannelMetadata, IMembershipMetadata, ISubtitleMetadata, IVideoMetadata } from '@joystream/metadata-protobuf'
 import { AugmentedEvent, AugmentedEvents } from '@polkadot/api/types/events'
 import { GenericEvent } from '@polkadot/types'
+
+import { JoystreamLibExtrinsics } from './extrinsics'
+
+export type StringifiedNumber = string
 
 export type AccountId = string
 export type MemberId = string
 export type ChannelId = string
 export type VideoId = string
+export type CategoryId = string
+
+export type AccountBalanceInfo = {
+  // transferable balance account
+  availableBalance: StringifiedNumber
+  // locked balance (e.g. invitation lock) on top of `availableBalance`
+  lockedBalance: StringifiedNumber
+}
 
 export type DataObjectMetadata = {
   size: number
   ipfsHash: string
-  replacedDataObjectId?: string
+  id?: string
 }
 
-type VideoAssetsKey = 'thumbnailPhoto' | 'media'
 export type VideoAssets<T> = {
-  [key in VideoAssetsKey]?: T
+  thumbnailPhoto?: T
+  media?: T
+  subtitles?: T[]
 }
 export type VideoInputAssets = VideoAssets<DataObjectMetadata>
 export type VideoAssetsIds = VideoAssets<string>
 
-type ChannelAssetsKey = 'coverPhoto' | 'avatarPhoto'
 export type ChannelAssets<T> = {
-  [key in ChannelAssetsKey]?: T
+  coverPhoto?: T
+  avatarPhoto?: T
 }
 export type ChannelInputAssets = ChannelAssets<DataObjectMetadata>
+export type ChannelInputBuckets = {
+  storage: number[]
+  distribution: { distributionBucketFamilyId: number; distributionBucketIndex: number }[]
+}
 export type ChannelAssetsIds = ChannelAssets<string>
 
 export enum ExtrinsicStatus {
@@ -40,33 +57,38 @@ export type ExtrinsicResult<T = undefined> = T extends undefined
   ? {
       block: number
       transactionHash?: string
+      metaprotocol?: true
     }
-  : T extends { transactionHash: string }
-  ? { block: number; transactionHash: string } & T
+  : T extends { transactionHash: string; metaprotocol: true }
+  ? { block: number; transactionHash: string; metaprotocol: true } & T
   : { block: number } & T
+
+type VideoInputMetadataSubtitle = Omit<ISubtitleMetadata, 'newAsset'> & {
+  id: string
+}
 
 export type VideoInputMetadata = Omit<
   IVideoMetadata,
-  'thumbnailPhoto' | 'video' | 'personsList' | 'mediaType' | 'publishedBeforeJoystream' | 'category'
+  'thumbnailPhoto' | 'video' | 'personsList' | 'mediaType' | 'publishedBeforeJoystream' | 'subtitles'
 > & {
   publishedBeforeJoystream?: string
   mimeMediaType?: string
-  category?: number
   nft?: NftIssuanceInputMetadata
+  subtitles?: VideoInputMetadataSubtitle[]
 }
 export type ChannelInputMetadata = Omit<IChannelMetadata, 'coverPhoto' | 'avatarPhoto' | 'category'> & {
   ownerAccount: AccountId
 }
 export type MemberInputMetadata = Omit<IMembershipMetadata, 'avatarObject'>
 
-type NftBuyNowInputMetadata = {
+export type NftBuyNowInputMetadata = {
   type: 'buyNow'
-  buyNowPrice: number
+  buyNowPrice: StringifiedNumber
 }
 type NftCommonAuctionInputMetadata = {
-  startingPrice: number
-  minimalBidStep: number
-  buyNowPrice?: number
+  startingPrice: StringifiedNumber
+  minimalBidStep: StringifiedNumber
+  buyNowPrice?: StringifiedNumber
   // if startsAtBlock is empty, current block (in which extrinsic is processed) will be used
   startsAtBlock?: number
   whitelistedMembersIds?: string[]
@@ -100,11 +122,13 @@ export type GetEventDataFn = <TSection extends keyof JoystreamEvents, TMethod ex
 ) => JoystreamEventData<JoystreamEvents[TSection][TMethod]>
 export type ExtractChannelResultsAssetsIdsFn = (
   inputAssets: ChannelInputAssets,
-  getEventData: GetEventDataFn
+  getEventData: GetEventDataFn,
+  update?: boolean
 ) => ChannelAssetsIds
 export type ExtractVideoResultsAssetsIdsFn = (
   inputAssets: VideoInputAssets,
-  getEventData: GetEventDataFn
+  getEventData: GetEventDataFn,
+  update?: boolean
 ) => VideoAssetsIds
 export type SendExtrinsicResult = ExtrinsicResult<{
   events: GenericEvent[]
@@ -121,4 +145,8 @@ export type VideoExtrinsicResult = ExtrinsicResult<{
 }>
 export type MemberExtrinsicResult = ExtrinsicResult<{ memberId: MemberId }>
 export type NftExtrinsicResult = ExtrinsicResult
-export type MetaprotcolExtrinsicResult = ExtrinsicResult<{ transactionHash: string }>
+export type MetaprotcolExtrinsicResult = ExtrinsicResult<{ metaprotocol: true; transactionHash: string }>
+
+type TxMethodsFromClass<T> = T extends `${infer _}Tx` ? T : never
+
+export type TxMethodName = TxMethodsFromClass<keyof JoystreamLibExtrinsics>

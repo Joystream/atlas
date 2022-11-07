@@ -27,11 +27,12 @@ export const BidRowWrapper = styled.div<{ selected: boolean }>`
 
 export const Price = styled.div`
   text-align: right;
+  display: grid;
+  gap: ${sizes(1)};
 `
 
 export const TokenPrice = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  margin-bottom: ${sizes(1)};
 `

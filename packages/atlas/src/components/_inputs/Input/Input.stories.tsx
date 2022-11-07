@@ -2,10 +2,10 @@ import { useRef } from '@storybook/addons'
 import { Meta, Story } from '@storybook/react'
 import { useState } from 'react'
 
+import { SvgActionBid, SvgActionClose, SvgActionSearch, SvgJoyTokenMonochrome16 } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { Pill } from '@/components/Pill'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionBid, SvgActionClose, SvgActionSearch, SvgJoyTokenMonochrome16 } from '@/components/_icons'
 import { formatNumber } from '@/utils/number'
 
 import { Input, InputProps } from '.'

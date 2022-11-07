@@ -1,7 +1,7 @@
-import { Wallet, WalletAccount } from '@talisman-connect/wallets'
+import { Wallet, WalletAccount } from '@talismn/connect-wallets'
 
-import { useMemberships } from '@/api/hooks'
-import { FullMembershipFieldsFragment } from '@/api/queries'
+import { useMemberships } from '@/api/hooks/membership'
+import { FullMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 
 export type Membership = FullMembershipFieldsFragment
 export type ActiveUserState = {
@@ -15,10 +15,11 @@ export type SignerWalletStatus = 'unknown' | 'connected' | 'disconnected' | 'pen
 export type SignerWalletAccount = WalletAccount
 export type UserContextValue = {
   memberships: Membership[]
+  membershipsLoading: boolean
   activeMembership: Membership | null
 
   isAuthLoading: boolean
 
-  signIn: (walletName?: string) => Promise<boolean>
+  signIn: (walletName?: string, mobileCallback?: ({ onConfirm }: { onConfirm: () => void }) => void) => Promise<boolean>
   refetchUserMemberships: ReturnType<typeof useMemberships>['refetch']
 }

@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { smallBadgeStyles } from '@/components/Badge'
@@ -6,24 +7,42 @@ import { cVar, sizes, zIndex } from '@/styles'
 import { Pill } from '../Pill'
 import { Button } from '../_buttons/Button'
 
-type TabProps = {
-  selected: boolean
-}
-
-type BackgroundGradientProps = {
-  direction: 'prev' | 'next'
-}
-
 export const TabsWrapper = styled.div`
   position: relative;
   width: 100%;
 `
 
-export const TabsGroup = styled.div<{ 'data-underline': boolean }>`
+type TabsGroupProps = {
+  'data-underline': boolean
+  shadowsVisible: {
+    left: boolean
+    right: boolean
+  }
+}
+
+const getMaskImage = ({ shadowsVisible }: TabsGroupProps) => {
+  if (shadowsVisible.left && shadowsVisible.right) {
+    return css`
+      mask-image: linear-gradient(to left, transparent 5%, black 25%, black 75%, transparent 95%);
+    `
+  }
+  if (shadowsVisible.left) {
+    return css`
+      mask-image: linear-gradient(90deg, rgb(0 0 0 / 0) 5%, rgb(0 0 0 / 1) 25%);
+    `
+  }
+  if (shadowsVisible.right) {
+    return css`
+      mask-image: linear-gradient(270deg, rgb(0 0 0 / 0) 5%, rgb(0 0 0 / 1) 25%);
+    `
+  }
+}
+export const TabsGroup = styled.div<TabsGroupProps>`
   display: flex;
   position: relative;
   scroll-behavior: smooth;
   overflow: auto;
+  ${getMaskImage}
 
   ::-webkit-scrollbar {
     display: none;
@@ -35,6 +54,10 @@ export const TabsGroup = styled.div<{ 'data-underline': boolean }>`
     box-shadow: ${cVar('effectDividersBottom')};
   }
 `
+
+type TabProps = {
+  selected: boolean
+}
 
 export const Tab = styled.div<TabProps>`
   transition: box-shadow ${cVar('animationTransitionFast')}, color ${cVar('animationTransitionFast')};
@@ -59,7 +82,11 @@ export const Tab = styled.div<TabProps>`
   }
 `
 
-export const BackgroundGradient = styled.div<BackgroundGradientProps>`
+type ButtonWrapperProps = {
+  direction: 'prev' | 'next'
+}
+
+export const ButtonWrapper = styled.div<ButtonWrapperProps>`
   position: absolute;
   top: 0;
   bottom: 0;
@@ -67,11 +94,6 @@ export const BackgroundGradient = styled.div<BackgroundGradientProps>`
   right: ${(props) => (props.direction === 'next' ? 0 : 'auto')};
   width: 20%;
   z-index: ${zIndex.overlay};
-  background-image: linear-gradient(
-    ${(props) => (props.direction === 'prev' ? 270 : 90)}deg,
-    rgb(0 0 0 / 0) 0%,
-    rgb(0 0 0 / 1) 45%
-  );
   pointer-events: none;
 `
 

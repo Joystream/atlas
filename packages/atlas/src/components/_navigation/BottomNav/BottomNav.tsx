@@ -2,7 +2,7 @@ import { FC, useCallback, useEffect, useRef } from 'react'
 import { useMatch } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
-import { viewerNavItems } from '@/config/nav'
+import { viewerNavItems } from '@/components/_navigation/SidenavViewer'
 import { useBottomNavStore } from '@/providers/bottomNav'
 import { transitions } from '@/styles'
 

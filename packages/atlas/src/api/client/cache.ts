@@ -5,16 +5,15 @@ import { offsetLimitPagination, relayStylePagination } from '@apollo/client/util
 import { parseISO } from 'date-fns'
 
 import {
-  FullChannelFieldsFragment,
-  FullVideoFieldsFragment,
-  GetNftsConnectionQueryVariables,
   Query,
   QueryChannelsConnectionArgs,
   QueryCommentsConnectionArgs,
   QueryVideosConnectionArgs,
   VideoConnection,
   VideoOrderByInput,
-} from '../queries'
+} from '../queries/__generated__/baseTypes.generated'
+import { FullChannelFieldsFragment, FullVideoFieldsFragment } from '../queries/__generated__/fragments.generated'
+import { GetNftsConnectionQueryVariables } from '../queries/__generated__/nfts.generated'
 
 const stringifyValue = (value: unknown) => JSON.stringify(value || {})
 
@@ -90,6 +89,22 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
   channelsConnection: relayStylePagination(getChannelKeyArgs),
   mostFollowedChannelsConnection: relayStylePagination(getChannelKeyArgs),
   mostViewedChannelsConnection: relayStylePagination(getChannelKeyArgs),
+  channels: (existing, { toReference, args, canRead }) => {
+    if (args?.where.id_eq) {
+      // get single channel
+      const channelRef = toReference({
+        __typename: 'Channel',
+        id: args?.where.id_eq,
+      })
+      if (canRead(channelRef)) {
+        return [channelRef]
+      } else {
+        return undefined
+      }
+    } else {
+      return existing
+    }
+  },
   videosConnection: {
     ...relayStylePagination(getVideoKeyArgs),
     read(
@@ -124,9 +139,21 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
   mostViewedVideosConnection: relayStylePagination(getVideoKeyArgs),
   videos: {
     ...offsetLimitPagination(getVideoKeyArgs),
-    read(existing, opts) {
-      const offset = opts.args?.offset ?? 0
-      const limit = opts.args?.limit ?? existing?.length
+    read(existing, { args, toReference, canRead }) {
+      if (args?.where.id_eq) {
+        // get single video
+        const videoRef = toReference({
+          __typename: 'Video',
+          id: args?.where.id_eq,
+        })
+        if (canRead(videoRef)) {
+          return [videoRef]
+        } else {
+          return undefined
+        }
+      }
+      const offset = args?.offset ?? 0
+      const limit = args?.limit ?? existing?.length
       return existing?.slice(offset, offset + limit)
     },
   },
@@ -181,6 +208,9 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
 const videoCacheFields: CachePolicyFields<keyof FullVideoFieldsFragment> = {
   createdAt: createDateHandler(),
   publishedBeforeJoystream: createDateHandler(),
+  subtitles: {
+    merge: (existing, incoming) => incoming,
+  },
 }
 
 const channelCacheFields: CachePolicyFields<keyof FullChannelFieldsFragment> = {

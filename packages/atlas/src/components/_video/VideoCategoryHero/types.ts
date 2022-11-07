@@ -1,4 +1,4 @@
-import { FullVideoFieldsFragment } from '@/api/queries'
+import { FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 
 export type VideoHeroFeaturedVideo = {
   video: FullVideoFieldsFragment

@@ -1,7 +1,7 @@
 import { FC } from 'react'
 
+import { SvgOtherVideoTile } from '@/assets/illustrations'
 import { Text } from '@/components/Text'
-import { SvgOtherVideoTile } from '@/components/_illustrations'
 import { Dialog } from '@/components/_overlays/Dialog'
 
 import { IllustrationWrapper, StyledModal } from './MintNftFirstTimeModal.styles'

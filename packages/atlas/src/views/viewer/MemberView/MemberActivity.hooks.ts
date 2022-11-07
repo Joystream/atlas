@@ -1,7 +1,11 @@
+import BN from 'bn.js'
 import { useMemo } from 'react'
 
-import { createAllNotificationArray, useRawActivities } from '@/api/hooks'
-import { BasicMembershipFieldsFragment, StorageDataObjectFieldsFragment } from '@/api/queries'
+import { createAllNotificationArray, useRawActivities } from '@/api/hooks/notifications'
+import {
+  BasicMembershipFieldsFragment,
+  StorageDataObjectFieldsFragment,
+} from '@/api/queries/__generated__/fragments.generated'
 
 export type NftActivitiesRecord = {
   id?: string
@@ -16,13 +20,13 @@ export type NftActivitiesRecord = {
 export type ActivitiesRecord =
   | ({
       type: 'Bid'
-      bidAmount: number
+      bidAmount: BN
       from: BasicMembershipFieldsFragment
     } & NftActivitiesRecord)
   | ({
       type: 'Purchase'
       from: BasicMembershipFieldsFragment | null
-      price: number
+      price: BN
       to: BasicMembershipFieldsFragment | null
     } & NftActivitiesRecord)
   | ({
@@ -32,7 +36,7 @@ export type ActivitiesRecord =
   | ({
       type: 'Sale'
       from: BasicMembershipFieldsFragment | null
-      price: number
+      price: BN
       to: BasicMembershipFieldsFragment | null
     } & NftActivitiesRecord)
   | ({
@@ -47,7 +51,7 @@ export type ActivitiesRecord =
       type: 'Listing'
       typeName: 'EnglishAuctionStartedEvent' | 'OpenAuctionStartedEvent' | 'NftSellOrderMadeEvent'
       from: BasicMembershipFieldsFragment | null
-      price?: number
+      price?: BN
     } & NftActivitiesRecord)
   | ({
       type: 'Mint'
@@ -56,7 +60,7 @@ export type ActivitiesRecord =
   | ({
       type: 'Price change'
       from: BasicMembershipFieldsFragment | null
-      price: number
+      price: BN
     } & NftActivitiesRecord)
 
 const parseActivities = (
@@ -79,7 +83,7 @@ const parseActivities = (
         return {
           type: 'Purchase',
           ...commonFields,
-          price: Number(event.winningBid?.amount),
+          price: new BN(event.winningBid.amount),
           to: event.winner || null,
           from: event.ownerMember || null,
         }
@@ -87,7 +91,7 @@ const parseActivities = (
         return {
           ...commonFields,
           type: 'Sale',
-          price: Number(event.winningBid?.amount),
+          price: new BN(event.winningBid.amount),
           from: event.winner || null,
           to: event.ownerMember || null,
         }
@@ -96,7 +100,7 @@ const parseActivities = (
       return {
         ...commonFields,
         type: 'Bid',
-        bidAmount: Number(event.bidAmount),
+        bidAmount: new BN(event.bidAmount),
         from: event.member,
       }
     case 'NftBoughtEvent':
@@ -105,7 +109,7 @@ const parseActivities = (
         return {
           ...commonFields,
           type: 'Sale',
-          price: Number(event.price),
+          price: new BN(event.price),
           from: event.ownerMember || null,
           to: event.member,
         }
@@ -113,7 +117,7 @@ const parseActivities = (
         return {
           ...commonFields,
           type: 'Purchase',
-          price: Number(event.price),
+          price: new BN(event.price),
           from: event.member,
           to: event.ownerMember || null,
         }
@@ -126,7 +130,7 @@ const parseActivities = (
         type: 'Listing',
         typeName: event.__typename,
         from: event.ownerMember || null,
-        price: event.__typename === 'NftSellOrderMadeEvent' ? Number(event.price) : undefined,
+        price: event.__typename === 'NftSellOrderMadeEvent' ? new BN(event.price) : undefined,
       }
     case 'AuctionCanceledEvent':
     case 'BuyNowCanceledEvent':
@@ -152,14 +156,14 @@ const parseActivities = (
         ...commonFields,
         type: 'Price change',
         from: event.ownerMember || null,
-        price: Number(event.newPrice),
+        price: new BN(event.newPrice),
       }
     case 'OpenAuctionBidAcceptedEvent':
       if (memberId === event.ownerMember?.id) {
         return {
           ...commonFields,
           type: 'Sale',
-          price: Number(event.winningBid?.amount),
+          price: new BN(event.winningBid?.amount ?? 0),
           to: event.winningBid?.bidder || null,
           from: event.ownerMember || null,
         }
@@ -167,7 +171,7 @@ const parseActivities = (
         return {
           ...commonFields,
           type: 'Purchase',
-          price: Number(event.winningBid?.amount),
+          price: new BN(event.winningBid?.amount ?? 0),
           from: event.winningBid?.bidder || null,
           to: event.ownerMember || null,
         }

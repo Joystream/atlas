@@ -1,9 +1,10 @@
+import BN from 'bn.js'
 import { ReactNode, forwardRef } from 'react'
 
+import { SvgOtherThumbsUpIllustrationSvg } from '@/assets/illustrations'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgOtherThumbsUpIllustrationSvg } from '@/components/_illustrations'
 import { DialogPopover } from '@/components/_overlays/DialogPopover'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -15,7 +16,7 @@ type ReactionsOnboardingPopoverProps = {
   onConfirm?: () => void
   disabled?: boolean
   trigger: ReactNode
-  fee?: number
+  fee?: BN
 }
 
 export const ReactionsOnboardingPopover = forwardRef<PopoverImperativeHandle, ReactionsOnboardingPopoverProps>(
@@ -32,6 +33,7 @@ export const ReactionsOnboardingPopover = forwardRef<PopoverImperativeHandle, Re
         onHide={onDecline}
         disabled={disabled}
         popoverWidth="wide"
+        flipEnabled
         primaryButton={{
           text: 'Got it',
           onClick: () => {
@@ -63,9 +65,9 @@ export const ReactionsOnboardingPopover = forwardRef<PopoverImperativeHandle, Re
             Comments and reactions are stored on blockchain and come with a fee
           </Text>
           <Text as="p" variant="t200" color="colorText" margin={{ top: 2 }}>
-            <NumberFormat value={fee} as="span" color="colorText" variant="t200" format="short" withToken /> is the
+            <NumberFormat value={fee} withToken as="span" color="colorText" variant="t200" format="short" /> is the
             transaction fee for each reaction you leave under a video or comment, while the fee for posting a comment
-            depends on its length.
+            depends on its length. Transaction fees are covered from your membership account balance.
           </Text>
         </PopoverContentWrapper>
       </DialogPopover>

@@ -1,4 +1,8 @@
-import { CommentOrderByInput, OwnedNftOrderByInput, VideoOrderByInput } from '@/api/queries'
+import {
+  CommentOrderByInput,
+  OwnedNftOrderByInput,
+  VideoOrderByInput,
+} from '@/api/queries/__generated__/baseTypes.generated'
 
 export const VIDEO_SORT_OPTIONS = [
   { name: 'Newest', value: VideoOrderByInput.CreatedAtDesc },

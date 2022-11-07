@@ -1,15 +1,15 @@
 import { createRoot } from 'react-dom/client'
 
-import { BUILD_ENV } from '@/config/envs'
-import { ASSET_LOGS_URL, SENTRY_DSN } from '@/config/urls'
+import { atlasConfig } from '@/config'
+import { BUILD_ENV } from '@/config/env'
 import { AssetLogger, SentryLogger } from '@/utils/logs'
 
 import { App } from './App'
 
 const initApp = async () => {
   if (BUILD_ENV === 'production') {
-    SentryLogger.initialize(SENTRY_DSN)
-    AssetLogger.initialize(ASSET_LOGS_URL)
+    SentryLogger.initialize(atlasConfig.analytics.sentry?.dsn)
+    AssetLogger.initialize(atlasConfig.analytics.assetLogs?.url)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

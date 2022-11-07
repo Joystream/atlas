@@ -1,21 +1,23 @@
+import BN from 'bn.js'
 import { format } from 'date-fns'
 import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { BasicMembershipFieldsFragment } from '@/api/queries'
+import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { SvgActionChevronB, SvgActionChevronT, SvgActionEdit, SvgActionMore, SvgActionTrash } from '@/assets/icons'
 import { AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 import { TextButton } from '@/components/_buttons/Button'
-import { SvgActionChevronB, SvgActionChevronT, SvgActionEdit, SvgActionMore, SvgActionTrash } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { ReactionsOnboardingPopover } from '@/components/_video/ReactionsOnboardingPopover'
-import { REACTION_TYPE, ReactionId } from '@/config/reactions'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useTouchDevice } from '@/hooks/useTouchDevice'
-import { useMemberAvatar } from '@/providers/assets'
+import { CommentReaction } from '@/joystream-lib/types'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { cVar, transitions } from '@/styles'
 import { formatDate, formatDateAgo } from '@/utils/time'
 
@@ -61,12 +63,14 @@ export type InternalCommentProps = {
   isCommentFromUrl: boolean | undefined
   videoId: string | undefined
   commentId: string | undefined
+  reactionFee: BN | undefined
   onEditedLabelClick: (() => void) | undefined
   onEditClick: (() => void) | undefined
   onDeleteClick: (() => void) | undefined
   onReplyClick: (() => void) | undefined
   onToggleReplies: (() => void) | undefined
-  onReactionClick: ((reaction: ReactionId) => void) | undefined
+  onReactionClick: ((reaction: CommentReaction) => void) | undefined
+  onOnBoardingPopoverOpen: ((reaction: CommentReaction) => Promise<void>) | undefined
 } & Pick<CommentRowProps, 'highlighted' | 'indented' | 'memberUrl'>
 
 export const InternalComment: FC<InternalCommentProps> = ({
@@ -83,10 +87,12 @@ export const InternalComment: FC<InternalCommentProps> = ({
   isModerated,
   isAbleToEdit,
   reactionPopoverDismissed,
+  reactionFee,
   onEditedLabelClick,
   onEditClick,
   onDeleteClick,
   onReactionClick,
+  onOnBoardingPopoverOpen,
   reactions,
   onReplyClick,
   replyAvatars,
@@ -99,7 +105,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
 }) => {
   const [commentHover, setCommentHover] = useState(false)
   // tempReactionId is used to show processing state on the reaction when the onboarding popover is opened for it
-  const [tempReactionId, setTempReactionId] = useState<ReactionId | null>(null)
+  const [tempReactionId, setTempReactionId] = useState<CommentReaction | null>(null)
   const isDeleted = type === 'deleted'
   const isProcessing = type === 'processing'
   const shouldShowKebabButton = type === 'options' && !loading && !isDeleted
@@ -147,7 +153,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
   const isSomeReactionDisabled = reactions?.some(({ state }) => state === 'disabled')
 
   const allReactionsApplied =
-    reactions && reactions.filter((r) => r.count).length >= Object.values(REACTION_TYPE).length
+    reactions && reactions.filter((r) => r.count).length >= atlasConfig.features.comments.reactions.length
 
   const handleOnboardingPopoverHide = useCallback(() => {
     popoverRef.current?.hide()
@@ -155,15 +161,16 @@ export const InternalComment: FC<InternalCommentProps> = ({
   }, [])
 
   const handleCommentReactionClick = useCallback(
-    (reactionId: ReactionId) => {
+    async (reactionId: CommentReaction) => {
       if (!reactionPopoverDismissed) {
         setTempReactionId(reactionId)
+        await onOnBoardingPopoverOpen?.(reactionId)
         popoverRef.current?.show()
       } else {
         onReactionClick?.(reactionId)
       }
     },
-    [onReactionClick, reactionPopoverDismissed]
+    [onOnBoardingPopoverOpen, onReactionClick, reactionPopoverDismissed]
   )
 
   const sortedReactions = reactions && [...reactions].sort((a, b) => (b.count || 0) - (a.count || 0))
@@ -246,6 +253,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
                 ) : (
                   <ReactionsOnboardingPopover
                     ref={popoverRef}
+                    fee={reactionFee}
                     onConfirm={() => {
                       tempReactionId && onReactionClick?.(tempReactionId)
                       handleOnboardingPopoverHide()

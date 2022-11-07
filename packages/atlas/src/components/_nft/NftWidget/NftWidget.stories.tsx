@@ -6,8 +6,8 @@ import { BrowserRouter } from 'react-router-dom'
 
 import { createApolloClient } from '@/api'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
-import { JoystreamProvider } from '@/providers/joystream'
-import { UserProvider } from '@/providers/user'
+import { JoystreamProvider } from '@/providers/joystream/joystream.provider'
+import { UserProvider } from '@/providers/user/user.provider'
 
 import { NftWidget, NftWidgetProps } from '.'
 

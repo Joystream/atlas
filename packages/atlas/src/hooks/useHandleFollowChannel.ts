@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import { useFollowChannel, useUnfollowChannel } from '@/api/hooks'
+import { useFollowChannel, useUnfollowChannel } from '@/api/hooks/channel'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { SentryLogger } from '@/utils/logs'

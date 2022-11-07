@@ -1,18 +1,17 @@
+import BN from 'bn.js'
 import { FC } from 'react'
 import { useNavigate } from 'react-router'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { BasicMembershipFieldsFragment } from '@/api/queries'
+import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { SvgActionChevronB } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
+import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
-import { SvgActionChevronB } from '@/components/_icons'
-import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { absoluteRoutes } from '@/config/routes'
 import { useToggle } from '@/hooks/useToggle'
-import { useMemberAvatar } from '@/providers/assets'
-import { useTokenPrice } from '@/providers/joystream'
-import { cVar, transitions } from '@/styles'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useTokenPrice } from '@/providers/joystream/joystream.hooks'
 import { formatDateTime } from '@/utils/time'
 
 import {
@@ -59,7 +58,7 @@ export const NftHistory: FC<NftHistoryProps> = ({ size, width, historyItems }) =
 export type NftHistoryEntry = {
   member: BasicMembershipFieldsFragment | undefined | null
   date: Date
-  joyAmount?: number
+  joyAmount?: BN
   text: string
 }
 type HistoryItemProps = {
@@ -68,9 +67,9 @@ type HistoryItemProps = {
 export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmount, text }) => {
   const navigate = useNavigate()
   const { url, isLoadingAsset } = useMemberAvatar(member)
-  const { convertToUSD } = useTokenPrice()
+  const { convertHapiToUSD } = useTokenPrice()
 
-  const dollarValue = joyAmount ? convertToUSD(joyAmount) : null
+  const dollarValue = joyAmount ? convertHapiToUSD(joyAmount) : null
 
   return (
     <HistoryItemContainer data-size={size}>
@@ -102,26 +101,16 @@ export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmoun
             <JoyTokenIcon size={16} variant="silver" />
             <NumberFormat as="span" format="short" value={joyAmount} variant={size === 'medium' ? 'h300' : 'h200'} />
           </JoyPlusIcon>
-          <SwitchTransition>
-            <CSSTransition
-              key={dollarValue ? 'placeholder' : 'content'}
-              timeout={parseInt(cVar('animationTransitionFast', true))}
-              classNames={transitions.names.fade}
-            >
-              {dollarValue ? (
-                <NumberFormat
-                  as="span"
-                  format="dollar"
-                  variant="t100"
-                  color="colorText"
-                  value={dollarValue}
-                  align="end"
-                />
-              ) : (
-                '‌'
-              )}
-            </CSSTransition>
-          </SwitchTransition>
+          {dollarValue !== null && (
+            <NumberFormat
+              as="span"
+              format="dollar"
+              variant="t100"
+              color="colorText"
+              value={dollarValue || 0}
+              align="end"
+            />
+          )}
         </ValueContainer>
       )}
     </HistoryItemContainer>

@@ -12,22 +12,23 @@ import {
   GetCommentRepliesConnectionDocument,
   GetCommentRepliesConnectionQuery,
   GetCommentRepliesConnectionQueryVariables,
-  GetFullVideoDocument,
-  GetFullVideoQuery,
-  GetFullVideoQueryVariables,
   GetUserCommentsAndVideoCommentsConnectionDocument,
   GetUserCommentsAndVideoCommentsConnectionQuery,
   GetUserCommentsAndVideoCommentsConnectionQueryVariables,
   GetUserCommentsReactionsDocument,
   GetUserCommentsReactionsQuery,
   GetUserCommentsReactionsQueryVariables,
-} from '@/api/queries'
-import { ReactionId } from '@/config/reactions'
+} from '@/api/queries/__generated__/comments.generated'
+import {
+  GetFullVideoDocument,
+  GetFullVideoQuery,
+  GetFullVideoQueryVariables,
+} from '@/api/queries/__generated__/videos.generated'
 import { absoluteRoutes } from '@/config/routes'
-import { VideoReaction } from '@/joystream-lib'
-import { useJoystream } from '@/providers/joystream'
-import { useTransaction } from '@/providers/transactions'
-import { useUser } from '@/providers/user'
+import { CommentReaction, VideoReaction } from '@/joystream-lib/types'
+import { useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 export const useReactionTransactions = () => {
@@ -187,7 +188,7 @@ export const useReactionTransactions = () => {
   )
 
   const reactToComment = useCallback(
-    async (commentId: string, videoId: string, reactionId: ReactionId, commentAuthorHandle: string) => {
+    async (commentId: string, videoId: string, reactionId: CommentReaction, commentAuthorHandle: string) => {
       if (!joystream || !memberId) {
         ConsoleLogger.error('No joystream instance')
         return
@@ -276,7 +277,7 @@ export const useReactionTransactions = () => {
 
       return handleTransaction({
         txFactory: async (updateStatus) =>
-          (await joystream.extrinsics).moderateComment(memberId, channelId, commentId, proxyCallback(updateStatus)),
+          (await joystream.extrinsics).moderateComment(channelId, commentId, proxyCallback(updateStatus)),
         snackbarSuccessMessage: {
           title: 'Comment deleted',
           description: `Comment from "${commentAuthorHandle}" to your video has been deleted.`,

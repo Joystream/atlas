@@ -1,22 +1,25 @@
 import { useApolloClient } from '@apollo/client'
 import { useCallback } from 'react'
 
+import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import {
   GetFullVideosConnectionDocument,
   GetFullVideosConnectionQuery,
   GetFullVideosConnectionQueryVariables,
-  VideoOrderByInput,
-} from '@/api/queries'
-import { VideoExtrinsicResult, VideoInputAssets } from '@/joystream-lib'
-import { useAssetStore } from '@/providers/assets'
+} from '@/api/queries/__generated__/videos.generated'
+import { VideoExtrinsicResult, VideoInputAssets } from '@/joystream-lib/types'
+import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
+import { useAssetStore } from '@/providers/assets/assets.store'
 import { useDraftStore } from '@/providers/drafts'
-import { useJoystream } from '@/providers/joystream'
+import { useBloatFeesAndPerMbFees, useJoystream } from '@/providers/joystream/joystream.hooks'
 import { usePersonalDataStore } from '@/providers/personalData'
-import { useTransaction, useTransactionManagerStore } from '@/providers/transactions'
-import { useStartFileUpload } from '@/providers/uploadsManager'
-import { useAuthorizedUser } from '@/providers/user'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
+import { useStartFileUpload } from '@/providers/uploads/uploads.hooks'
+import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { VideoFormData, useVideoWorkspace, useVideoWorkspaceData } from '@/providers/videoWorkspace'
 import { writeVideoDataInCache } from '@/utils/cachingAssets'
+import { createLookup } from '@/utils/data'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 export const useHandleVideoWorkspaceSubmit = () => {
@@ -35,6 +38,9 @@ export const useHandleVideoWorkspaceSubmit = () => {
   const addAsset = useAssetStore((state) => state.actions.addAsset)
   const removeDrafts = useDraftStore((state) => state.actions.removeDrafts)
   const { tabData } = useVideoWorkspaceData()
+  const channelBucketsCount = useChannelsStorageBucketsCount(channelId)
+
+  const { videoStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
 
   const isEdit = !editedVideoInfo?.isDraft
 
@@ -45,16 +51,24 @@ export const useHandleVideoWorkspaceSubmit = () => {
         return
       }
 
+      if (!channelBucketsCount) {
+        SentryLogger.error('Channel buckets count is not set', 'VideoWorkspace.hooks')
+        return
+      }
+
       const isNew = !isEdit
 
       const assets: VideoInputAssets = {}
+      const removedAssetsIds: string[] = []
       const processAssets = async () => {
         if (data.assets.media) {
           const ipfsHash = await data.assets.media.hashPromise
           assets.media = {
             size: data.assets.media.blob.size,
             ipfsHash,
-            replacedDataObjectId: tabData?.assets.video.id || undefined,
+          }
+          if (tabData?.assets.video.id) {
+            removedAssetsIds.push(tabData.assets.video.id)
           }
         }
 
@@ -63,8 +77,30 @@ export const useHandleVideoWorkspaceSubmit = () => {
           assets.thumbnailPhoto = {
             size: data.assets.thumbnailPhoto.blob.size,
             ipfsHash,
-            replacedDataObjectId: tabData?.assets.thumbnail.cropId || undefined,
           }
+          if (tabData?.assets.thumbnail.cropId) {
+            removedAssetsIds.push(tabData.assets.thumbnail.cropId)
+          }
+        }
+
+        if (data.assets.subtitles?.length) {
+          const subtitles = data.assets.subtitles
+          assets.subtitles = await Promise.all(
+            subtitles.map(async (subtitle) => ({
+              id: subtitle.id,
+              size: subtitle.blob.size,
+              ipfsHash: await subtitle.hashPromise,
+            }))
+          )
+        }
+        // if data.metadata.subtitles is not set, that means that subtitles weren't changed
+        if (tabData?.subtitlesArray && data.metadata.subtitles) {
+          const oldAssetsIds = tabData.subtitlesArray.map((subtitle) => subtitle.id)
+          const currentSubtitlesIdsLookup = createLookup(data.metadata.subtitles || [])
+          const removedSubtitlesIds = oldAssetsIds.filter(
+            (assetId): assetId is string => !!assetId && !currentSubtitlesIdsLookup[assetId]
+          )
+          removedAssetsIds.push(...removedSubtitlesIds)
         }
       }
 
@@ -98,6 +134,23 @@ export const useHandleVideoWorkspaceSubmit = () => {
           })
           uploadPromises.push(uploadPromise)
         }
+        if (data.assets.subtitles?.length && assetsIds.subtitles?.length) {
+          const subtitlesIds = assetsIds.subtitles
+          const subtitlesUploadPromises = data.assets.subtitles.map(async (subtitle, index) => {
+            return startFileUpload(subtitle.blob, {
+              id: subtitlesIds[index],
+              owner: channelId,
+              parentObject: {
+                type: 'video',
+                id: videoId,
+              },
+              type: 'subtitles',
+              subtitlesLanguageIso: subtitle.subtitlesLanguageIso,
+            })
+          })
+          uploadPromises.push(...subtitlesUploadPromises)
+        }
+
         Promise.all(uploadPromises).catch((e) => SentryLogger.error('Unexpected upload failure', 'VideoWorkspace', e))
       }
 
@@ -146,7 +199,17 @@ export const useHandleVideoWorkspaceSubmit = () => {
           isNew
             ? (
                 await joystream.extrinsics
-              ).createVideo(memberId, channelId, data.metadata, data.nftMetadata, assets, proxyCallback(updateStatus))
+              ).createVideo(
+                memberId,
+                channelId,
+                data.metadata,
+                data.nftMetadata,
+                assets,
+                dataObjectStateBloatBondValue.toString(),
+                videoStateBloatBondValue.toString(),
+                channelBucketsCount.toString(),
+                proxyCallback(updateStatus)
+              )
             : (
                 await joystream.extrinsics
               ).updateVideo(
@@ -155,6 +218,9 @@ export const useHandleVideoWorkspaceSubmit = () => {
                 data.metadata,
                 data.nftMetadata,
                 assets,
+                removedAssetsIds,
+                dataObjectStateBloatBondValue.toString(),
+                channelBucketsCount.toString(),
                 proxyCallback(updateStatus)
               ),
         onTxSync: refetchDataAndUploadAssets,
@@ -171,23 +237,27 @@ export const useHandleVideoWorkspaceSubmit = () => {
       }
     },
     [
-      channelId,
-      memberId,
-      addAsset,
-      client,
-      editedVideoInfo.id,
-      handleTransaction,
-      isEdit,
-      isNftMintDismissed,
       joystream,
-      proxyCallback,
-      removeDrafts,
-      setEditedVideo,
-      setIsWorkspaceOpen,
-      setShowFistMintDialog,
-      startFileUpload,
-      tabData?.assets.thumbnail.cropId,
+      channelBucketsCount,
+      isEdit,
+      handleTransaction,
       tabData?.assets.video.id,
+      tabData?.assets.thumbnail.cropId,
+      tabData?.subtitlesArray,
+      startFileUpload,
+      channelId,
+      client,
+      addAsset,
+      setEditedVideo,
+      removeDrafts,
+      editedVideoInfo.id,
+      memberId,
+      dataObjectStateBloatBondValue,
+      videoStateBloatBondValue,
+      proxyCallback,
+      setIsWorkspaceOpen,
+      isNftMintDismissed,
+      setShowFistMintDialog,
     ]
   )
 

@@ -1,8 +1,7 @@
+import BN from 'bn.js'
 import { MouseEvent, useCallback } from 'react'
 
-import { FullNftFieldsFragment } from '@/api/queries'
-import { ListItemProps } from '@/components/ListItem'
-import { NumberFormat } from '@/components/NumberFormat'
+import { FullNftFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import {
   SvgActionBid,
   SvgActionBidCancel,
@@ -13,10 +12,12 @@ import {
   SvgActionSell,
   SvgActionShoppingCart,
   SvgActionTrash,
-} from '@/components/_icons'
+} from '@/assets/icons'
+import { ListItemProps } from '@/components/ListItem'
+import { NumberFormat } from '@/components/NumberFormat'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useNftState } from '@/hooks/useNftState'
-import { useNftActions } from '@/providers/nftActions'
+import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
 
 type VideoContextMenuData = {
   publisher: boolean
@@ -25,14 +26,13 @@ type VideoContextMenuData = {
   onEditClick?: (event?: MouseEvent<Element>) => void
   onMintNftClick?: (event?: MouseEvent<Element>) => void
   onDeleteVideoClick?: () => void
-  onChangePrice?: () => void
   hasNft: boolean
   nft?: FullNftFieldsFragment | null
   nftState?: ReturnType<typeof useNftState>
   nftActions?: ReturnType<typeof useNftActions>
-  buyNowPrice?: number
-  startingPrice?: number
-  topBid?: number
+  buyNowPrice?: BN
+  startingPrice?: BN
+  topBid?: BN
   onWithdrawBid?: () => void
   hasBids?: boolean
 }
@@ -43,7 +43,6 @@ export const useVideoContextMenu = ({
   onEditClick,
   onDeleteVideoClick,
   onMintNftClick,
-  onChangePrice,
   hasNft,
   nftState,
   nftActions,
@@ -114,7 +113,7 @@ export const useVideoContextMenu = ({
                       Last:{' '}
                       <NumberFormat
                         color="inherit"
-                        value={Number(nftState.userBid.amount)}
+                        value={nftState.userBid.amount}
                         as="span"
                         format="short"
                         withToken
@@ -160,7 +159,7 @@ export const useVideoContextMenu = ({
                 {
                   nodeStart: <SvgActionSell />,
                   label: 'Change price',
-                  onClick: onChangePrice,
+                  onClick: () => videoId && nftActions?.openNftChangePrice(videoId),
                   caption: (
                     <>
                       Currently:{' '}

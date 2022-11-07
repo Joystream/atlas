@@ -1,17 +1,17 @@
 import { QueryHookOptions } from '@apollo/client'
 import { FC, Fragment, useState } from 'react'
 
-import { useBasicChannels, useDiscoverChannels, usePopularChannels, usePromisingChannels } from '@/api/hooks'
-import { ChannelOrderByInput } from '@/api/queries'
+import { useBasicChannels, useDiscoverChannels, usePopularChannels, usePromisingChannels } from '@/api/hooks/channel'
+import { ChannelOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { SvgActionChevronR } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridHeadingContainer, TitleContainer } from '@/components/GridHeading'
 import { Text } from '@/components/Text'
 import { LoadMoreButton } from '@/components/_buttons/LoadMoreButton'
 import { ChannelWithVideos } from '@/components/_channel/ChannelWithVideos'
-import { SvgActionChevronR } from '@/components/_icons'
 import { Select } from '@/components/_inputs/Select'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { languages } from '@/config/languages'
+import { atlasConfig } from '@/config'
 import { SentryLogger } from '@/utils/logs'
 
 import {
@@ -83,7 +83,12 @@ export const ExpandableChannelsList: FC<ExpandableChannelsListProps> = ({
             )}
             {languageSelector && (
               <LanguageSelectWrapper>
-                <Select items={languages} value={selectedLanguage} size="medium" onChange={handleLanguageSelect} />
+                <Select
+                  items={atlasConfig.derived.languagesSelectValues}
+                  value={selectedLanguage}
+                  size="medium"
+                  onChange={handleLanguageSelect}
+                />
               </LanguageSelectWrapper>
             )}
             {additionalLink && (

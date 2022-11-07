@@ -1,48 +1,63 @@
+import BN from 'bn.js'
 import { FC, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 
-import { FullMembershipFieldsFragment } from '@/api/queries'
+import { FullMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { Avatar } from '@/components/Avatar'
+import { Fee } from '@/components/Fee'
+import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
-import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { FormField } from '@/components/_inputs/FormField'
-import { Input } from '@/components/_inputs/Input'
+import { TokenInput } from '@/components/_inputs/TokenInput'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { JOY_CURRENCY_TICKER } from '@/config/token'
-import { useTokenPrice } from '@/providers/joystream'
+import { atlasConfig } from '@/config'
+import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
+import { useFee, useJoystream, useTokenPrice } from '@/providers/joystream/joystream.hooks'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { formatNumber } from '@/utils/number'
 
-import { Fee } from './Fee'
-import { Summary, SummaryRow, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
+import { PriceWrapper, StyledMaxButton, Summary, SummaryRow, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
 
 type WithdrawFundsDialogProps = {
   onExitClick: () => void
-  accountBalance?: number
   activeMembership?: FullMembershipFieldsFragment | null
   show: boolean
+  accountBalance?: BN
+  channelBalance?: BN
   avatarUrl?: string | null
-  channelBalance?: number
+  channelId?: string | null
 }
 
 const ADDRESS_CHARACTERS_LIMIT = 4
 
 export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
   onExitClick,
-  accountBalance = 0,
   activeMembership,
   show,
   avatarUrl,
-  channelBalance = 0,
+  accountBalance = new BN(0),
+  channelBalance = new BN(0),
+  channelId,
 }) => {
   const {
     handleSubmit,
     watch,
     reset,
-    register,
+    control,
+    setValue,
     formState: { errors },
   } = useForm<{ amount: number | null }>()
-  const { convertToUSD } = useTokenPrice()
-  const convertedAmount = convertToUSD(watch('amount') || 0)
+  const { convertHapiToUSD } = useTokenPrice()
+  const amountBn = tokenNumberToHapiBn(watch('amount') || 0)
+  const { joystream, proxyCallback } = useJoystream()
+  const handleTransaction = useTransaction()
+  const { fullFee, loading: feeLoading } = useFee(
+    'withdrawFromChannelBalanceTx',
+    show && channelId && activeMembership && amountBn
+      ? [activeMembership.id, channelId, amountBn.toString()]
+      : undefined
+  )
 
   useEffect(() => {
     if (!show) {
@@ -51,8 +66,38 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
   }, [show, reset])
 
   const handleWithdraw = async () => {
-    const handler = await handleSubmit(() => null)
+    const handler = await handleSubmit((data) => {
+      if (!joystream || !activeMembership || !data.amount || !channelId) {
+        return
+      }
+      handleTransaction({
+        disableQNSync: true,
+        snackbarSuccessMessage: {
+          title: 'Tokens withdrawn successfully',
+          description: `You have withdrawn ${formatNumber(data.amount)} ${atlasConfig.joystream.tokenTicker}!`,
+        },
+        txFactory: async (updateStatus) =>
+          (await joystream.extrinsics).withdrawFromChannelBalance(
+            activeMembership.id,
+            channelId,
+            amountBn.toString(),
+            proxyCallback(updateStatus)
+          ),
+        onTxSync: async () => onExitClick(),
+      })
+    })
     return handler()
+  }
+
+  const channelBalanceInUsd = convertHapiToUSD(channelBalance)
+
+  const handleMaxClick = async () => {
+    const value = Math.floor(hapiBnToTokenNumber(channelBalance) * 100) / 100
+    setValue('amount', value, {
+      shouldTouch: true,
+      shouldDirty: true,
+      shouldValidate: false,
+    })
   }
 
   return (
@@ -62,63 +107,66 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
       onExitClick={onExitClick}
       primaryButton={{ text: 'Withdraw', onClick: handleWithdraw }}
       secondaryButton={{ text: 'Cancel', onClick: onExitClick }}
-      additionalActionsNode={<Fee />}
+      additionalActionsNode={<Fee loading={feeLoading} variant="h200" amount={fullFee} />}
     >
       <Text as="h4" variant="h300" margin={{ bottom: 4 }}>
         Your channel balance
       </Text>
-      <VerticallyCenteredDiv>
-        <JoyTokenIcon variant="gray" />
-        <Text as="p" variant="h400" margin={{ left: 1 }}>
-          {channelBalance || 0}
-        </Text>
-      </VerticallyCenteredDiv>
-      <NumberFormat
-        as="p"
-        color="colorText"
-        format="dollar"
-        variant="t100"
-        value={convertToUSD(channelBalance) || 0}
-        margin={{ top: 1, bottom: 6 }}
-      />
-      <FormField label="Amount to withdraw" error={errors.amount?.message}>
-        <Input
-          {...register('amount', {
-            valueAsNumber: true,
+      <PriceWrapper>
+        <VerticallyCenteredDiv>
+          <JoyTokenIcon variant="gray" />
+          <NumberFormat value={channelBalance || 0} as="p" variant="h400" margin={{ left: 1 }} format="short" />
+        </VerticallyCenteredDiv>
+        {channelBalanceInUsd !== null && (
+          <NumberFormat
+            as="p"
+            color="colorText"
+            format="dollar"
+            variant="t100"
+            value={channelBalanceInUsd}
+            margin={{ top: 1 }}
+          />
+        )}
+      </PriceWrapper>
+      <FormField
+        label="Amount to withdraw"
+        error={errors.amount?.message}
+        headerNode={
+          <StyledMaxButton onClick={handleMaxClick} size="medium" variant="tertiary" _textOnly>
+            Max
+          </StyledMaxButton>
+        }
+      >
+        <Controller
+          control={control}
+          name="amount"
+          rules={{
             validate: {
-              valid: (value) => {
-                if (!value || isNaN(value) || value < 0) {
-                  return 'The number of JOY tokens to withdraw has to be an integer and greater than 0 (e.g. 15).'
-                }
-                return true
-              },
               channelBalance: (value) => {
-                if (value && value > channelBalance) {
-                  return 'Membership wallet has insufficient balance to cover transaction fees. Top up your channel wallet and try again.'
+                if (!value) {
+                  return 'Enter amount to transfer.'
+                }
+                if (value && tokenNumberToHapiBn(value).gt(channelBalance)) {
+                  return 'Not enough tokens in channel balance.'
                 }
                 return true
               },
-              accountBalance: (value) => {
-                if (value && value > accountBalance) {
-                  return 'Not enough tokens in your account balance.'
+              memberBalance: () => {
+                if (fullFee.gt(accountBalance)) {
+                  return 'Membership wallet has insufficient balance to cover transaction fees. Top up your membership wallet and try again. '
                 }
                 return true
               },
             },
-          })}
-          type="number"
-          nodeStart={<JoyTokenIcon variant="regular" />}
-          nodeEnd={
-            <NumberFormat
-              variant="t300"
-              color="colorTextMuted"
-              format="dollar"
-              value={convertedAmount || 0}
-              as="span"
+          }}
+          render={({ field: { value, onChange } }) => (
+            <TokenInput
+              value={value}
+              onChange={onChange}
+              placeholder={`${atlasConfig.joystream.tokenTicker} amount`}
+              error={!!errors.amount}
             />
-          }
-          placeholder={`${JOY_CURRENCY_TICKER} amount`}
-          error={!!errors.amount}
+          )}
         />
       </FormField>
       <Summary>
@@ -138,10 +186,21 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
           </VerticallyCenteredDiv>
         </SummaryRow>
         <SummaryRow>
-          <Text as="span" variant="t100" color="colorText">
+          <Text
+            as="span"
+            variant="t100"
+            color={errors.amount?.type === 'memberBalance' ? 'colorTextError' : 'colorText'}
+          >
             Destination account balance
           </Text>
-          <NumberFormat as="span" format="short" variant="t100" color="colorText" value={accountBalance} />
+          <NumberFormat
+            as="span"
+            format="short"
+            variant="t100"
+            withToken
+            color={errors.amount?.type === 'memberBalance' ? 'colorTextError' : 'colorText'}
+            value={accountBalance}
+          />
         </SummaryRow>
       </Summary>
     </DialogModal>

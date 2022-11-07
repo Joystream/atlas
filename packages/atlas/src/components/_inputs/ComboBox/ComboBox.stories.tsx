@@ -2,8 +2,8 @@ import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
 import { useState } from 'react'
 
+import { SvgActionCancel } from '@/assets/icons'
 import { OutputPill } from '@/components/OutputPill'
-import { SvgActionCancel } from '@/components/_icons'
 import { sizes } from '@/styles'
 import { createLookup } from '@/utils/data'
 
@@ -100,6 +100,7 @@ export default {
     onBlur: { table: { disable: true } },
     onFocus: { table: { disable: true } },
     onKeyDown: { table: { disable: true } },
+    onClick: { table: { disable: true } },
     onSelectedItemChange: { table: { disable: true } },
     onInputValueChange: { table: { disable: true } },
     notFoundNode: { table: { disable: true } },
@@ -187,11 +188,24 @@ const TemplateWithMembers: Story<ComboBoxProps> = (args) => {
   )
 }
 
+export const WithMembers = TemplateWithMembers.bind({})
+
+const TemplateWithSeparators: Story<ComboBoxProps> = (args) => {
+  const mappedItems = [
+    { label: 'TOP MEMBERS', value: '', isSeparator: true },
+    ...MEMBERS.slice(0, 3),
+    { label: 'ALL MEMBERS', value: '', isSeparator: true },
+    ...MEMBERS,
+  ]
+
+  return <ComboBox items={mappedItems} {...args} />
+}
+
+export const WithSeparators = TemplateWithSeparators.bind({})
+
 const MemberBadgesWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin-top: ${sizes(4)};
   gap: ${sizes(3)};
 `
-
-export const WithMembers = TemplateWithMembers.bind({})

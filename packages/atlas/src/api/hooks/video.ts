@@ -1,36 +1,48 @@
 import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
 
+import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import {
+  GetVideoCountQuery,
+  GetVideoCountQueryVariables,
+  useGetVideoCountQuery,
+} from '@/api/queries/__generated__/channels.generated'
 import {
   AddVideoViewMutation,
-  GetBasicVideoQuery,
-  GetBasicVideoQueryVariables,
   GetBasicVideosQuery,
   GetBasicVideosQueryVariables,
-  GetFullVideoQuery,
-  GetFullVideoQueryVariables,
+  GetFullVideosQuery,
+  GetFullVideosQueryVariables,
   GetTop10VideosThisMonthQuery,
   GetTop10VideosThisMonthQueryVariables,
   GetTop10VideosThisWeekQuery,
   GetTop10VideosThisWeekQueryVariables,
-  GetVideoCountQuery,
-  GetVideoCountQueryVariables,
-  VideoOrderByInput,
   useAddVideoViewMutation,
-  useGetBasicVideoQuery,
   useGetBasicVideosQuery,
-  useGetFullVideoQuery,
+  useGetFullVideosQuery,
   useGetTop10VideosThisMonthQuery,
   useGetTop10VideosThisWeekQuery,
-  useGetVideoCountQuery,
-} from '@/api/queries'
+} from '@/api/queries/__generated__/videos.generated'
+import { videoFilter } from '@/config/contentFilter'
 
-export const useFullVideo = (id: string, opts?: QueryHookOptions<GetFullVideoQuery, GetFullVideoQueryVariables>) => {
-  const { data, ...queryRest } = useGetFullVideoQuery({
+export const useFullVideo = (
+  id: string,
+  opts?: QueryHookOptions<GetFullVideosQuery, GetFullVideosQueryVariables>,
+  variables?: GetFullVideosQueryVariables
+) => {
+  const { data, ...queryRest } = useGetFullVideosQuery({
     ...opts,
-    variables: { where: { id } },
+    variables: {
+      ...variables,
+      where: {
+        id_eq: id,
+        ...videoFilter,
+        ...variables?.where,
+      },
+    },
   })
+
   return {
-    video: data?.videoByUniqueInput,
+    video: data?.videos[0],
     ...queryRest,
   }
 }
@@ -46,14 +58,7 @@ export const useChannelPreviewVideos = (
         channel: {
           id_eq: channelId,
         },
-        isPublic_eq: true,
-        isCensored_eq: false,
-        thumbnailPhoto: {
-          isAccepted_eq: true,
-        },
-        media: {
-          isAccepted_eq: true,
-        },
+        ...videoFilter,
       },
       orderBy: VideoOrderByInput.CreatedAtDesc,
       offset: 0,
@@ -92,36 +97,32 @@ export const useBasicVideos = (
   variables?: GetBasicVideosQueryVariables,
   opts?: QueryHookOptions<GetBasicVideosQuery, GetBasicVideosQueryVariables>
 ) => {
-  const { data, ...rest } = useGetBasicVideosQuery({
+  const { data, ...queryRest } = useGetBasicVideosQuery({
     ...opts,
     variables: {
       ...variables,
       where: {
+        ...videoFilter,
         ...variables?.where,
-        isPublic_eq: true,
-        isCensored_eq: false,
-        thumbnailPhoto: {
-          isAccepted_eq: true,
-        },
-        media: {
-          isAccepted_eq: true,
-        },
       },
     },
   })
   return {
     videos: data?.videos,
-    ...rest,
+    ...queryRest,
   }
 }
 
-export const useBasicVideo = (id: string, opts?: QueryHookOptions<GetBasicVideoQuery, GetBasicVideoQueryVariables>) => {
-  const { data, ...rest } = useGetBasicVideoQuery({
+export const useBasicVideo = (
+  id: string,
+  opts?: QueryHookOptions<GetBasicVideosQuery, GetBasicVideosQueryVariables>
+) => {
+  const { data, ...rest } = useGetBasicVideosQuery({
     ...opts,
-    variables: { where: { id } },
+    variables: { where: { id_eq: id, ...videoFilter } },
   })
   return {
-    video: data?.videoByUniqueInput,
+    video: data?.videos[0],
     ...rest,
   }
 }
@@ -135,15 +136,8 @@ export const useTop10VideosThisWeek = (
     variables: {
       ...variables,
       where: {
+        ...videoFilter,
         ...variables?.where,
-        isPublic_eq: true,
-        isCensored_eq: false,
-        thumbnailPhoto: {
-          isAccepted_eq: true,
-        },
-        media: {
-          isAccepted_eq: true,
-        },
       },
     },
   })
@@ -162,15 +156,8 @@ export const useTop10VideosThisMonth = (
     variables: {
       ...variables,
       where: {
+        ...videoFilter,
         ...variables?.where,
-        isPublic_eq: true,
-        isCensored_eq: false,
-        thumbnailPhoto: {
-          isAccepted_eq: true,
-        },
-        media: {
-          isAccepted_eq: true,
-        },
       },
     },
   })
@@ -189,14 +176,7 @@ export const useVideoCount = (
     variables: {
       ...variables,
       where: {
-        isPublic_eq: true,
-        isCensored_eq: false,
-        thumbnailPhoto: {
-          isAccepted_eq: true,
-        },
-        media: {
-          isAccepted_eq: true,
-        },
+        ...videoFilter,
         ...variables?.where,
       },
     },

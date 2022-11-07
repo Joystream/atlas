@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { Svg404PatternBottomLeft, Svg404PatternTopRight, SvgSmallTokens } from '@/components/_illustrations'
+import { Svg404PatternBottomLeft, Svg404PatternTopRight, SvgSmallTokens } from '@/assets/illustrations'
 import { media, square } from '@/styles'
 
 export const Wrapper = styled.div`

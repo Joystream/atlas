@@ -2,8 +2,9 @@ import { FetchPolicy, NetworkStatus, QueryHookOptions } from '@apollo/client'
 import { debounce } from 'lodash-es'
 import { useEffect, useRef, useState } from 'react'
 
-import { useBasicChannelsConnection, useBasicVideosConnection } from '@/api/hooks'
-import { VideoOrderByInput, VideoWhereInput } from '@/api/queries'
+import { useBasicChannelsConnection } from '@/api/hooks/channelsConnection'
+import { useBasicVideosConnection } from '@/api/hooks/videosConnection'
+import { VideoOrderByInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SentryLogger } from '@/utils/logs'
 
 type SearchResultData = {

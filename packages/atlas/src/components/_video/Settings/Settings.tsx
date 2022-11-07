@@ -1,8 +1,8 @@
 import { FC, forwardRef } from 'react'
 
+import { SvgActionChevronL, SvgActionChevronR } from '@/assets/icons'
 import { ListItem, ListItemProps } from '@/components/ListItem'
 import { Text } from '@/components/Text'
-import { SvgActionChevronL, SvgActionChevronR } from '@/components/_icons'
 import { Switch } from '@/components/_inputs/Switch'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 
@@ -30,7 +30,7 @@ type MultiValueOption = {
   onOptionClick?: (value: string | number) => void
 } & ListItemProps
 
-type MulitValueSetting = {
+type MultiValueSetting = {
   type: 'multi-value'
   value: string | number
   options: MultiValueOption[]
@@ -43,7 +43,7 @@ type BooleanSetting = {
   onSwitchClick?: (value: boolean) => void
 } & ListItemProps
 
-export type Setting = MulitValueSetting | BooleanSetting
+export type Setting = MultiValueSetting | BooleanSetting
 
 const LIST_ITEM_HEIGHT = 48
 

@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import { MouseEvent, useState } from 'react'
 
-import { SvgActionTrash } from '@/components/_icons'
+import { SvgActionTrash } from '@/assets/icons'
 
 import { OptionCardBase, OptionCardProps, OptionCardRadio } from './OptionCard'
 

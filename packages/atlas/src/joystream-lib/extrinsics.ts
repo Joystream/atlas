@@ -5,41 +5,39 @@ import {
   MemberRemarked,
   ReactVideo,
 } from '@joystream/metadata-protobuf'
-import { MemberId as RuntimeMemberId } from '@joystream/types/common'
-import {
-  ChannelCreationParameters,
-  ChannelUpdateParameters,
-  ContentActor,
-  NftIssuanceParameters,
-  VideoCreationParameters,
-  VideoUpdateParameters,
-} from '@joystream/types/content'
-import { DataObjectId } from '@joystream/types/storage'
+import { createType } from '@joystream/types'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
-import { BTreeSet, Bytes, Option, Raw, GenericAccountId as RuntimeAccountId, bool } from '@polkadot/types'
+import BN from 'bn.js'
 import Long from 'long'
 
 import { SentryLogger } from '@/utils/logs'
 
 import { JoystreamLibError } from './errors'
 import {
+  createActor,
   createNftEnglishAuctionParams,
   createNftIssuanceParameters,
   createNftOpenAuctionParams,
   extractChannelResultAssetsIds,
   extractVideoResultAssetsIds,
-  getInputDataObjectsIds,
   sendExtrinsicAndParseEvents,
 } from './helpers'
-import { parseChannelExtrinsicInput, parseMemberExtrinsicInput, parseVideoExtrinsicInput } from './metadata'
+import {
+  parseChannelExtrinsicInput,
+  parseMemberExtrinsicInput,
+  parseVideoExtrinsicInput,
+  wrapMetadata,
+} from './metadata'
 import {
   AccountId,
   ChannelExtrinsicResult,
   ChannelId,
   ChannelInputAssets,
+  ChannelInputBuckets,
   ChannelInputMetadata,
   CommentReaction,
+  ExtrinsicResult,
   ExtrinsicStatus,
   ExtrinsicStatusCallbackFn,
   GetEventDataFn,
@@ -53,6 +51,8 @@ import {
   NftSaleInputMetadata,
   NftSaleType,
   SendExtrinsicResult,
+  StringifiedNumber,
+  TxMethodName,
   VideoExtrinsicResult,
   VideoId,
   VideoInputAssets,
@@ -61,6 +61,9 @@ import {
 } from './types'
 
 type AccountIdAccessor = () => AccountId | null
+type PublicExtrinsic<TxFunction, ReturnValue> = TxFunction extends (...a: infer U) => unknown
+  ? (...a: [...U, ExtrinsicStatusCallbackFn | undefined]) => Promise<ReturnValue>
+  : never
 
 export class JoystreamLibExtrinsics {
   readonly api: PolkadotApi
@@ -71,6 +74,19 @@ export class JoystreamLibExtrinsics {
     this.api = api
     this.getAccount = getAccount
     this.endpoint = endpoint
+  }
+
+  /*
+    ===== Helper methods =====
+  */
+
+  private async ensureApi() {
+    try {
+      await this.api.isReady
+    } catch (e) {
+      SentryLogger.error('Failed to initialize Polkadot API', 'JoystreamLib', e)
+      throw new JoystreamLibError({ name: 'ApiNotConnectedError' })
+    }
   }
 
   private async sendExtrinsic(
@@ -94,9 +110,10 @@ export class JoystreamLibExtrinsics {
       )
 
       const blockHeader = await this.api.rpc.chain.getHeader(blockHash)
-
       const getEventData: GetEventDataFn = (section, method) => {
-        const event = events.find((event) => event.section === section && event.method === method)
+        const event = events.find((event) => {
+          return event.section === section && event.method === method
+        })
 
         if (!event) {
           throw new JoystreamLibError({
@@ -110,6 +127,14 @@ export class JoystreamLibExtrinsics {
 
       return { events, block: blockHeader.number.toNumber(), getEventData, transactionHash }
     } catch (error) {
+      // 1010 error.code means invalid transaction, more substrate errors here:
+      // https://github.com/paritytech/substrate/blob/2951d340841523f6897e55e7a613b0fd0e1c7380/primitives/runtime/src/transaction_validity.rs#L100
+      if (error.name === 'RpcError' && error.code === 1010 && error?.data.includes('balance too low')) {
+        throw new JoystreamLibError({
+          name: 'AccountBalanceTooLow',
+          details: error,
+        })
+      }
       if (error?.message === 'Cancelled') {
         throw new JoystreamLibError({ name: 'SignCancelledError' })
       }
@@ -117,40 +142,104 @@ export class JoystreamLibExtrinsics {
     }
   }
 
-  private async ensureApi() {
-    try {
-      await this.api.isReady
-    } catch (e) {
-      SentryLogger.error('Failed to initialize Polkadot API', 'JoystreamLib', e)
-      throw new JoystreamLibError({ name: 'ApiNotConnectedError' })
+  private async sendMetaprotocolExtrinsic(
+    tx: SubmittableExtrinsic<'promise'>,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<MetaprotcolExtrinsicResult> {
+    const { block, transactionHash } = await this.sendExtrinsic(tx, cb)
+
+    return {
+      block,
+      metaprotocol: true,
+      transactionHash,
     }
   }
 
-  async createChannel(
+  async metaprotocolMemberExtrinsicTx(memberId: MemberId, msg: IMemberRemarked) {
+    await this.ensureApi()
+
+    const metadata = wrapMetadata(MemberRemarked.encode(msg).finish()).unwrap()
+    const tx = this.api.tx.members.memberRemark(memberId, metadata)
+    return tx
+  }
+
+  async metaprotocolChannelExtrinsicTx(channelId: MemberId, msg: IChannelOwnerRemarked) {
+    await this.ensureApi()
+
+    const metadata = wrapMetadata(ChannelOwnerRemarked.encode(msg).finish()).unwrap()
+    const tx = this.api.tx.content.channelOwnerRemark(channelId, metadata)
+    return tx
+  }
+
+  async getFee<TFnName extends TxMethodName, TArgs extends Parameters<JoystreamLibExtrinsics[TFnName]>>(
+    address: string,
+    method: keyof this,
+    args: TArgs
+  ): Promise<StringifiedNumber> {
+    // @ts-ignore Warning about not having spread argument as a tuple. We can ignore this
+    const tx = await this[method](...args)
+    const info = await tx.paymentInfo(address)
+    return info.partialFee.toString()
+  }
+
+  /*
+    ===== Channel extrinsics =====
+  */
+
+  createChannelTx = async (
     memberId: MemberId,
     inputMetadata: ChannelInputMetadata,
     inputAssets: ChannelInputAssets,
-    cb?: ExtrinsicStatusCallbackFn
-  ): Promise<ChannelExtrinsicResult> {
+    inputBuckets: ChannelInputBuckets,
+    expectedDataObjectStateBloatBond: StringifiedNumber,
+    expectedChannelStateBloatBond: StringifiedNumber
+  ) => {
     await this.ensureApi()
 
     const [channelMetadata, channelAssets] = await parseChannelExtrinsicInput(this.api, inputMetadata, inputAssets)
-    const creationParameters = new ChannelCreationParameters(this.api.registry, {
+
+    const creationParameters = createType('PalletContentChannelCreationParametersRecord', {
       meta: channelMetadata,
       assets: channelAssets,
-      collaborators: new BTreeSet(this.api.registry, RuntimeMemberId, [memberId]),
-      moderators: new BTreeSet(this.api.registry, RuntimeMemberId, [memberId]),
-      reward_account: new Option<RuntimeAccountId>(this.api.registry, RuntimeAccountId, inputMetadata.ownerAccount),
+      collaborators: createType('BTreeMap<u64, BTreeSet<PalletContentIterableEnumsChannelActionPermission>>', {}),
+      storageBuckets: createType('BTreeSet<u64>', inputBuckets.storage),
+      distributionBuckets: createType('BTreeSet<PalletStorageDistributionBucketIdRecord>', inputBuckets.distribution),
+      expectedDataObjectStateBloatBond: new BN(expectedDataObjectStateBloatBond),
+      expectedChannelStateBloatBond: new BN(expectedChannelStateBloatBond),
     })
 
-    const contentActor = new ContentActor(this.api.registry, {
-      member: memberId,
-    })
-    const tx = this.api.tx.content.createChannel(contentActor, creationParameters)
+    const channelOwner = createType('PalletContentChannelOwner', { Member: parseInt(memberId) })
+    const tx = this.api.tx.content.createChannel(channelOwner, creationParameters)
+    return tx
+  }
+
+  createChannel: PublicExtrinsic<typeof this.createChannelTx, ChannelExtrinsicResult> = async (
+    memberId,
+    inputMetadata,
+    inputAssets,
+    inputBuckets,
+    expectedDataObjectStateBloatBond,
+    expectedChannelStateBloatBond,
+    cb
+  ) => {
+    const tx = await this.createChannelTx(
+      memberId,
+      inputMetadata,
+      inputAssets,
+      inputBuckets,
+      expectedDataObjectStateBloatBond,
+      expectedChannelStateBloatBond
+    )
+
     const { block, getEventData } = await this.sendExtrinsic(tx, cb)
 
-    const channelId = getEventData('content', 'ChannelCreated')[1]
-
+    const channelId = getEventData('content', 'ChannelCreated')[0]
+    if (!channelId) {
+      throw new JoystreamLibError({
+        name: 'FailedError',
+        message: `Channel id was not returned from event data`,
+      })
+    }
     return {
       channelId: channelId.toString(),
       block,
@@ -158,62 +247,118 @@ export class JoystreamLibExtrinsics {
     }
   }
 
-  async updateChannel(
+  updateChannelTx = async (
     channelId: ChannelId,
     memberId: MemberId,
     inputMetadata: ChannelInputMetadata,
-    inputAssets: ChannelInputAssets,
-    cb?: ExtrinsicStatusCallbackFn
-  ): Promise<ChannelExtrinsicResult> {
+    newAssets: ChannelInputAssets,
+    removedAssetsIds: StringifiedNumber[],
+    expectedDataObjectStateBloatBond: StringifiedNumber,
+    expectedStorageBucketsCount: StringifiedNumber
+  ) => {
     await this.ensureApi()
 
-    const [channelMetadata, channelAssets] = await parseChannelExtrinsicInput(this.api, inputMetadata, inputAssets)
-    const updateParameters = new ChannelUpdateParameters(this.api.registry, {
-      new_meta: channelMetadata,
-      assets_to_upload: channelAssets,
-      assets_to_remove: new BTreeSet(this.api.registry, DataObjectId, getInputDataObjectsIds(inputAssets)),
-      collaborators: new Option<BTreeSet<RuntimeMemberId>>(this.api.registry, BTreeSet),
-      reward_account: new Option<Option<RuntimeAccountId>>(this.api.registry, Option),
+    const [channelMetadata, channelAssets] = await parseChannelExtrinsicInput(this.api, inputMetadata, newAssets)
+    const updateParameters = createType('PalletContentChannelUpdateParametersRecord', {
+      newMeta: channelMetadata,
+      assetsToUpload: channelAssets,
+      assetsToRemove: removedAssetsIds.map((id) => new BN(id)),
+      collaborators: createType(
+        'Option<BTreeMap<u64, BTreeSet<PalletContentIterableEnumsChannelActionPermission>>>',
+        null
+      ),
+      expectedDataObjectStateBloatBond: new BN(expectedDataObjectStateBloatBond),
+      storageBucketsNumWitness: createType('Option<u32>', new BN(expectedStorageBucketsCount)),
     })
 
-    const contentActor = new ContentActor(this.api.registry, {
-      member: memberId,
-    })
-    const tx = this.api.tx.content.updateChannel(contentActor, channelId, updateParameters)
+    const actor = createActor(memberId)
+    const tx = this.api.tx.content.updateChannel(actor, channelId, updateParameters)
+    return tx
+  }
+
+  updateChannel: PublicExtrinsic<typeof this.updateChannelTx, ChannelExtrinsicResult> = async (
+    channelId,
+    memberId,
+    inputMetadata,
+    newAssets,
+    removedAssetsIds,
+    expectedDataObjectStateBloatBond,
+    expectedStorageBucketsCount,
+    cb
+  ) => {
+    const tx = await this.updateChannelTx(
+      channelId,
+      memberId,
+      inputMetadata,
+      newAssets,
+      removedAssetsIds,
+      expectedDataObjectStateBloatBond,
+      expectedStorageBucketsCount
+    )
     const { block, getEventData } = await this.sendExtrinsic(tx, cb)
 
     return {
       channelId,
       block,
-      assetsIds: extractChannelResultAssetsIds(inputAssets, getEventData),
+      assetsIds: extractChannelResultAssetsIds(newAssets, getEventData, true),
     }
   }
 
-  async createVideo(
+  /*
+    ===== Video extrinsics =====
+  */
+
+  createVideoTx = async (
     memberId: MemberId,
     channelId: ChannelId,
     inputMetadata: VideoInputMetadata,
     nftInputMetadata: NftIssuanceInputMetadata | undefined,
     inputAssets: VideoInputAssets,
-    cb?: ExtrinsicStatusCallbackFn
-  ): Promise<VideoExtrinsicResult> {
+    expectedDataObjectStateBloatBond: StringifiedNumber,
+    expectedVideoStateBloatBond: StringifiedNumber,
+    expectedStorageBucketsCount: StringifiedNumber
+  ) => {
     await this.ensureApi()
 
     const [videoMetadata, videoAssets] = await parseVideoExtrinsicInput(this.api, inputMetadata, inputAssets)
 
-    const nftIssuanceParameters = createNftIssuanceParameters(this.api.registry, nftInputMetadata)
-
-    const creationParameters = new VideoCreationParameters(this.api.registry, {
+    const nftIssuanceParameters = createNftIssuanceParameters(nftInputMetadata)
+    const creationParameters = createType('PalletContentVideoCreationParametersRecord', {
       meta: videoMetadata,
       assets: videoAssets,
-      enable_comments: new bool(this.api.registry, false),
-      auto_issue_nft: new Option(this.api.registry, NftIssuanceParameters, nftIssuanceParameters),
+      autoIssueNft: nftIssuanceParameters,
+      expectedDataObjectStateBloatBond: new BN(expectedDataObjectStateBloatBond),
+      expectedVideoStateBloatBond: new BN(expectedVideoStateBloatBond),
+      storageBucketsNumWitness: new BN(expectedStorageBucketsCount),
     })
 
-    const contentActor = new ContentActor(this.api.registry, {
-      member: memberId,
-    })
-    const tx = this.api.tx.content.createVideo(contentActor, channelId, creationParameters)
+    const actor = createActor(memberId)
+    const tx = this.api.tx.content.createVideo(actor, channelId, creationParameters)
+
+    return tx
+  }
+
+  createVideo: PublicExtrinsic<typeof this.createVideoTx, VideoExtrinsicResult> = async (
+    memberId,
+    channelId,
+    inputMetadata,
+    nftInputMetadata,
+    inputAssets,
+    expectedDataObjectStateBloatBond,
+    expectedVideoStateBloatBond,
+    expectedStorageBucketsCount,
+    cb
+  ) => {
+    const tx = await this.createVideoTx(
+      memberId,
+      channelId,
+      inputMetadata,
+      nftInputMetadata,
+      inputAssets,
+      expectedDataObjectStateBloatBond,
+      expectedVideoStateBloatBond,
+      expectedStorageBucketsCount
+    )
     const { block, getEventData } = await this.sendExtrinsic(tx, cb)
 
     const videoId = getEventData('content', 'VideoCreated')[2]
@@ -225,54 +370,94 @@ export class JoystreamLibExtrinsics {
     }
   }
 
-  async updateVideo(
+  updateVideoTx = async (
     videoId: VideoId,
     memberId: MemberId,
     inputMetadata: VideoInputMetadata,
     nftInputMetadata: NftIssuanceInputMetadata | undefined,
-    inputAssets: VideoInputAssets,
-    cb?: ExtrinsicStatusCallbackFn
-  ): Promise<VideoExtrinsicResult> {
+    newAssets: VideoInputAssets,
+    removedAssetsIds: StringifiedNumber[],
+    expectedDataObjectStateBloatBond: StringifiedNumber,
+    expectedStorageBucketsCount: StringifiedNumber
+  ) => {
     await this.ensureApi()
 
-    const [videoMetadata, videoAssets] = await parseVideoExtrinsicInput(this.api, inputMetadata, inputAssets)
+    const [videoMetadata, videoAssets] = await parseVideoExtrinsicInput(this.api, inputMetadata, newAssets)
 
-    const nftIssuanceParameters = createNftIssuanceParameters(this.api.registry, nftInputMetadata)
+    const nftIssuanceParameters = createNftIssuanceParameters(nftInputMetadata)
 
-    const updateParameters = new VideoUpdateParameters(this.api.registry, {
-      new_meta: videoMetadata,
-      assets_to_upload: videoAssets,
-      assets_to_remove: new BTreeSet(this.api.registry, DataObjectId, getInputDataObjectsIds(inputAssets)),
-      enable_comments: new Option(this.api.registry, bool),
-      auto_issue_nft: new Option(this.api.registry, NftIssuanceParameters, nftIssuanceParameters),
+    const updateParameters = createType('PalletContentVideoUpdateParametersRecord', {
+      newMeta: videoMetadata,
+      assetsToUpload: videoAssets,
+      assetsToRemove: removedAssetsIds.map((id) => new BN(id)),
+      autoIssueNft: nftIssuanceParameters,
+      expectedDataObjectStateBloatBond: new BN(expectedDataObjectStateBloatBond),
+      storageBucketsNumWitness: createType('Option<u32>', new BN(expectedStorageBucketsCount)),
     })
 
-    const contentActor = new ContentActor(this.api.registry, {
-      member: memberId,
-    })
+    const actor = createActor(memberId)
+    const tx = this.api.tx.content.updateVideo(actor, videoId, updateParameters)
+    return tx
+  }
 
-    const tx = this.api.tx.content.updateVideo(contentActor, videoId, updateParameters)
+  updateVideo: PublicExtrinsic<typeof this.updateVideoTx, VideoExtrinsicResult> = async (
+    videoId,
+    memberId,
+    inputMetadata,
+    nftInputMetadata,
+    newAssets,
+    removedAssetsIds,
+    expectedDataObjectStateBloatBond,
+    expectedStorageBucketsCount,
+    cb
+  ) => {
+    const tx = await this.updateVideoTx(
+      videoId,
+      memberId,
+      inputMetadata,
+      nftInputMetadata,
+      newAssets,
+      removedAssetsIds,
+      expectedDataObjectStateBloatBond,
+      expectedStorageBucketsCount
+    )
 
     const { block, getEventData } = await this.sendExtrinsic(tx, cb)
 
     return {
       videoId,
       block,
-      assetsIds: extractVideoResultAssetsIds(inputAssets, getEventData),
+      assetsIds: extractVideoResultAssetsIds(newAssets, getEventData, true),
     }
   }
 
-  async deleteVideo(
+  deleteVideoTx = async (
     videoId: VideoId,
     memberId: MemberId,
-    cb?: ExtrinsicStatusCallbackFn
-  ): Promise<Omit<VideoExtrinsicResult, 'assetsIds'>> {
+    dataObjectsCount: number,
+    expectedStorageBucketsCount: StringifiedNumber
+  ) => {
     await this.ensureApi()
 
-    const contentActor = new ContentActor(this.api.registry, {
-      member: memberId,
-    })
-    const tx = this.api.tx.content.deleteVideo(contentActor, videoId, new BTreeSet(this.api.registry, DataObjectId))
+    const actor = createActor(memberId)
+    const tx = this.api.tx.content.deleteVideo(
+      actor,
+      videoId,
+      dataObjectsCount,
+      createType('Option<u32>', new BN(expectedStorageBucketsCount))
+    )
+
+    return tx
+  }
+
+  deleteVideo: PublicExtrinsic<typeof this.deleteVideoTx, Omit<VideoExtrinsicResult, 'assetsIds'>> = async (
+    videoId,
+    memberId,
+    dataObjectsCount,
+    expectedStorageBucketsCount,
+    cb
+  ) => {
+    const tx = await this.deleteVideoTx(videoId, memberId, dataObjectsCount, expectedStorageBucketsCount)
     const { block } = await this.sendExtrinsic(tx, cb)
 
     return {
@@ -281,185 +466,231 @@ export class JoystreamLibExtrinsics {
     }
   }
 
-  async issueNft(
-    videoId: VideoId,
-    memberId: MemberId,
-    inputMetadata: NftIssuanceInputMetadata,
-    cb?: ExtrinsicStatusCallbackFn
-  ): Promise<NftExtrinsicResult> {
+  /*
+    === NFT extrinsics ===
+  */
+
+  issueNftTx = async (videoId: VideoId, memberId: MemberId, inputMetadata: NftIssuanceInputMetadata) => {
     await this.ensureApi()
 
-    const nftIssuanceParameters = createNftIssuanceParameters(this.api.registry, inputMetadata)
+    const nftIssuanceParameters = createNftIssuanceParameters(inputMetadata).unwrap()
 
-    if (!nftIssuanceParameters) {
-      throw new JoystreamLibError({
-        name: 'FailedError',
-        message: 'Failed to construct NftIssuanceParameters',
-      })
-    }
+    const actor = createActor(memberId)
+    const tx = this.api.tx.content.issueNft(actor, videoId, nftIssuanceParameters)
 
-    const contentActor = new ContentActor(this.api.registry, {
-      member: memberId,
-    })
-    const tx = this.api.tx.content.issueNft(contentActor, videoId, nftIssuanceParameters)
+    return tx
+  }
+
+  issueNft: PublicExtrinsic<typeof this.issueNftTx, NftExtrinsicResult> = async (
+    videoId,
+    memberId,
+    inputMetadata,
+    cb
+  ) => {
+    const tx = await this.issueNftTx(videoId, memberId, inputMetadata)
 
     const { block } = await this.sendExtrinsic(tx, cb)
 
     return { block }
   }
 
-  async putNftOnSale(
-    videoId: VideoId,
-    memberId: MemberId,
-    inputMetadata: NftSaleInputMetadata,
-    cb?: ExtrinsicStatusCallbackFn
-  ): Promise<NftExtrinsicResult> {
+  putNftOnSaleTx = async (videoId: VideoId, memberId: MemberId, inputMetadata: NftSaleInputMetadata) => {
     await this.ensureApi()
 
-    const contentActor = new ContentActor(this.api.registry, {
-      member: memberId,
-    })
+    const actor = createActor(memberId)
     const tx =
       inputMetadata.type === 'buyNow'
-        ? this.api.tx.content.sellNft(videoId, contentActor, inputMetadata.buyNowPrice)
+        ? this.api.tx.content.sellNft(videoId, actor, inputMetadata.buyNowPrice)
         : inputMetadata.type === 'open'
-        ? this.api.tx.content.startOpenAuction(
-            contentActor,
-            videoId,
-            createNftOpenAuctionParams(this.api.registry, inputMetadata)
-          )
-        : this.api.tx.content.startEnglishAuction(
-            contentActor,
-            videoId,
-            createNftEnglishAuctionParams(this.api.registry, inputMetadata)
-          )
+        ? this.api.tx.content.startOpenAuction(actor, videoId, createNftOpenAuctionParams(inputMetadata))
+        : this.api.tx.content.startEnglishAuction(actor, videoId, createNftEnglishAuctionParams(inputMetadata))
+
+    return tx
+  }
+
+  putNftOnSale: PublicExtrinsic<typeof this.putNftOnSaleTx, NftExtrinsicResult> = async (
+    videoId,
+    memberId,
+    inputMetadata,
+    cb
+  ) => {
+    const tx = await this.putNftOnSaleTx(videoId, memberId, inputMetadata)
 
     const { block } = await this.sendExtrinsic(tx, cb)
 
     return { block }
   }
 
-  async changeNftPrice(
-    memberId: MemberId,
-    videoId: VideoId,
-    price: number,
-    cb?: ExtrinsicStatusCallbackFn
-  ): Promise<NftExtrinsicResult> {
-    const contentActor = new ContentActor(this.api.registry, {
-      member: memberId,
-    })
-    const tx = this.api.tx.content.updateBuyNowPrice(contentActor, videoId, price)
+  changeNftPriceTx = async (memberId: MemberId, videoId: VideoId, price: StringifiedNumber) => {
+    await this.ensureApi()
+    const actor = createActor(memberId)
+    const tx = this.api.tx.content.updateBuyNowPrice(actor, videoId, price)
+
+    return tx
+  }
+
+  changeNftPrice: PublicExtrinsic<typeof this.changeNftPriceTx, NftExtrinsicResult> = async (
+    memberId,
+    videoId,
+    price,
+    cb
+  ) => {
+    const tx = await this.changeNftPriceTx(memberId, videoId, price)
 
     const { block } = await this.sendExtrinsic(tx, cb)
 
     return { block }
   }
 
-  async cancelNftSale(
-    videoId: VideoId,
-    memberId: MemberId,
-    saleType: NftSaleType,
-    cb?: ExtrinsicStatusCallbackFn
-  ): Promise<NftExtrinsicResult> {
+  cancelNftSaleTx = async (videoId: VideoId, memberId: MemberId, saleType: NftSaleType) => {
     await this.ensureApi()
 
-    const contentActor = new ContentActor(this.api.registry, {
-      member: memberId,
-    })
+    const actor = createActor(memberId)
     const tx =
       saleType === 'buyNow'
-        ? this.api.tx.content.cancelBuyNow(contentActor, videoId)
+        ? this.api.tx.content.cancelBuyNow(actor, videoId)
         : saleType === 'open'
-        ? this.api.tx.content.cancelOpenAuction(contentActor, videoId)
-        : this.api.tx.content.cancelEnglishAuction(contentActor, videoId)
+        ? this.api.tx.content.cancelOpenAuction(actor, videoId)
+        : this.api.tx.content.cancelEnglishAuction(actor, videoId)
+
+    return tx
+  }
+
+  cancelNftSale: PublicExtrinsic<typeof this.cancelNftSaleTx, NftExtrinsicResult> = async (
+    videoId,
+    memberId,
+    saleType,
+    cb
+  ) => {
+    const tx = await this.cancelNftSaleTx(videoId, memberId, saleType)
 
     const { block } = await this.sendExtrinsic(tx, cb)
 
     return { block }
   }
 
-  async buyNftNow(
-    videoId: VideoId,
-    memberId: MemberId,
-    priceCommitment: number,
-    cb?: ExtrinsicStatusCallbackFn
-  ): Promise<NftExtrinsicResult> {
+  buyNftNowTx = async (videoId: VideoId, memberId: MemberId, priceCommitment: StringifiedNumber) => {
     await this.ensureApi()
 
-    const tx = this.api.tx.content.buyNft(videoId, new RuntimeMemberId(this.api.registry, memberId), priceCommitment)
+    const tx = this.api.tx.content.buyNft(videoId, memberId, priceCommitment)
+    return tx
+  }
+
+  buyNftNow: PublicExtrinsic<typeof this.buyNftNowTx, NftExtrinsicResult> = async (
+    videoId,
+    memberId,
+    priceCommitment,
+    cb
+  ) => {
+    const tx = await this.buyNftNowTx(videoId, memberId, priceCommitment)
 
     const { block } = await this.sendExtrinsic(tx, cb)
 
     return { block }
   }
 
-  async makeNftBid(
+  makeNftBidTx = async (
     videoId: VideoId,
     memberId: MemberId,
-    bidPrice: number,
-    auctionType: NftAuctionType,
-    cb?: ExtrinsicStatusCallbackFn
-  ): Promise<NftExtrinsicResult> {
+    bidPrice: StringifiedNumber,
+    auctionType: NftAuctionType
+  ) => {
     await this.ensureApi()
 
     const tx =
       auctionType === 'open'
-        ? this.api.tx.content.makeOpenAuctionBid(new RuntimeMemberId(this.api.registry, memberId), videoId, bidPrice)
-        : this.api.tx.content.makeEnglishAuctionBid(new RuntimeMemberId(this.api.registry, memberId), videoId, bidPrice)
+        ? this.api.tx.content.makeOpenAuctionBid(memberId, videoId, bidPrice)
+        : this.api.tx.content.makeEnglishAuctionBid(memberId, videoId, bidPrice)
+
+    return tx
+  }
+
+  makeNftBid: PublicExtrinsic<typeof this.makeNftBidTx, NftExtrinsicResult> = async (
+    videoId,
+    memberId,
+    bidPrice,
+    auctionType,
+    cb
+  ) => {
+    const tx = await this.makeNftBidTx(videoId, memberId, bidPrice, auctionType)
 
     const { block } = await this.sendExtrinsic(tx, cb)
 
     return { block }
   }
 
-  async cancelNftBid(
-    videoId: VideoId,
-    memberId: MemberId,
-    cb?: ExtrinsicStatusCallbackFn
-  ): Promise<NftExtrinsicResult> {
+  cancelNftBidTx = async (videoId: VideoId, memberId: MemberId) => {
     await this.ensureApi()
 
-    const tx = this.api.tx.content.cancelOpenAuctionBid(new RuntimeMemberId(this.api.registry, memberId), videoId)
+    const tx = this.api.tx.content.cancelOpenAuctionBid(memberId, videoId)
+    return tx
+  }
 
+  cancelNftBid: PublicExtrinsic<typeof this.cancelNftBidTx, NftExtrinsicResult> = async (videoId, memberId, cb) => {
+    const tx = await this.cancelNftBidTx(videoId, memberId)
     const { block } = await this.sendExtrinsic(tx, cb)
 
     return { block }
   }
 
-  async acceptNftBid(
-    ownerId: MemberId,
-    videoId: VideoId,
-    bidderId: MemberId,
-    price: string,
-    cb?: ExtrinsicStatusCallbackFn
-  ): Promise<NftExtrinsicResult> {
+  acceptNftBidTx = async (ownerId: MemberId, videoId: VideoId, bidderId: MemberId, price: StringifiedNumber) => {
     await this.ensureApi()
-    const contentActor = new ContentActor(this.api.registry, {
-      member: ownerId,
-    })
-    const tx = this.api.tx.content.pickOpenAuctionWinner(contentActor, videoId, bidderId, price)
+    const actor = createActor(ownerId)
+    const tx = this.api.tx.content.pickOpenAuctionWinner(actor, videoId, bidderId, price)
+    return tx
+  }
+
+  acceptNftBid: PublicExtrinsic<typeof this.acceptNftBidTx, NftExtrinsicResult> = async (
+    ownerId,
+    videoId,
+    bidderId,
+    price,
+    cb
+  ) => {
+    const tx = await this.acceptNftBidTx(ownerId, videoId, bidderId, price)
 
     const { block } = await this.sendExtrinsic(tx, cb)
 
     return { block }
   }
 
-  async settleEnglishAuction(videoId: VideoId, cb?: ExtrinsicStatusCallbackFn): Promise<NftExtrinsicResult> {
+  settleEnglishAuctionTx = async (videoId: VideoId) => {
     await this.ensureApi()
 
     const tx = this.api.tx.content.settleEnglishAuction(videoId)
+    return tx
+  }
+
+  settleEnglishAuction: PublicExtrinsic<typeof this.settleEnglishAuctionTx, NftExtrinsicResult> = async (
+    videoId,
+    cb
+  ) => {
+    const tx = await this.settleEnglishAuctionTx(videoId)
 
     const { block } = await this.sendExtrinsic(tx, cb)
 
     return { block }
   }
 
-  async updateMember(
-    memberId: MemberId,
-    handle: string | null,
-    inputMetadata: MemberInputMetadata,
-    cb?: ExtrinsicStatusCallbackFn
-  ): Promise<MemberExtrinsicResult> {
+  /*
+    === Misc extrinsics ===
+  */
+
+  updateMemberTx = async (memberId: MemberId, handle: string | null, inputMetadata: MemberInputMetadata) => {
+    await this.ensureApi()
+
+    const [memberMetadata] = await parseMemberExtrinsicInput(this.api, inputMetadata, undefined)
+
+    const tx = this.api.tx.members.updateProfile(memberId, handle, memberMetadata)
+    return tx
+  }
+
+  updateMember: PublicExtrinsic<typeof this.updateMemberTx, MemberExtrinsicResult> = async (
+    memberId,
+    handle,
+    inputMetadata,
+    cb
+  ) => {
     await this.ensureApi()
 
     const [memberMetadata] = await parseMemberExtrinsicInput(this.api, inputMetadata, undefined)
@@ -474,66 +705,69 @@ export class JoystreamLibExtrinsics {
     }
   }
 
-  private async sendMetaprotocolMemberExtrinsic(
-    memberId: MemberId,
-    msg: IMemberRemarked,
-    cb?: ExtrinsicStatusCallbackFn
-  ): Promise<MetaprotcolExtrinsicResult> {
+  sendFundsTx = async (destinationAccount: MemberId, value: StringifiedNumber) => {
     await this.ensureApi()
 
-    const serializedMetadata = MemberRemarked.encode(msg).finish()
-    const metadataRaw = new Raw(this.api.registry, serializedMetadata)
-    const metadataBytes = new Bytes(this.api.registry, metadataRaw)
-
-    const tx = this.api.tx.members.memberRemark(memberId, metadataBytes)
-    const { block, transactionHash } = await this.sendExtrinsic(tx, cb)
-
-    return {
-      block,
-      transactionHash,
-    }
+    return this.api.tx.balances.transfer(destinationAccount, value)
   }
 
-  private async sendMetaprotocolChannelExtrinsic(
-    memberId: MemberId,
-    channelId: ChannelId,
-    msg: IChannelOwnerRemarked,
-    cb?: ExtrinsicStatusCallbackFn
-  ): Promise<MetaprotcolExtrinsicResult> {
-    await this.ensureApi()
+  sendFunds: PublicExtrinsic<typeof this.sendFundsTx, ExtrinsicResult> = async (destinationAccount, value, cb) => {
+    const tx = await this.sendFundsTx(destinationAccount, value)
 
-    const serializedMetadata = ChannelOwnerRemarked.encode(msg).finish()
-    const metadataRaw = new Raw(this.api.registry, serializedMetadata)
-    const metadataBytes = new Bytes(this.api.registry, metadataRaw)
-
-    const tx = this.api.tx.content.channelOwnerRemark({ Member: memberId }, channelId, metadataBytes)
-    const { block, transactionHash } = await this.sendExtrinsic(tx, cb)
-
-    return {
-      block,
-      transactionHash,
-    }
+    const { block } = await this.sendExtrinsic(tx, cb)
+    return { block }
   }
 
-  async reactToVideo(memberId: MemberId, videoId: VideoId, reaction: VideoReaction, cb?: ExtrinsicStatusCallbackFn) {
+  withdrawFromChannelBalanceTx = async (memberId: MemberId, channelId: ChannelId, amount: StringifiedNumber) => {
     await this.ensureApi()
+    const actor = createActor(memberId)
 
+    return this.api.tx.content.withdrawFromChannelBalance(actor, channelId, amount)
+  }
+
+  withdrawFromChannelBalance: PublicExtrinsic<typeof this.withdrawFromChannelBalanceTx, ExtrinsicResult> = async (
+    memberId,
+    channelId,
+    amount,
+    cb
+  ) => {
+    const tx = await this.withdrawFromChannelBalanceTx(memberId, channelId, amount)
+
+    const { block } = await this.sendExtrinsic(tx, cb)
+    return { block }
+  }
+
+  /*
+    === Metaprotocol extrinsics ===
+  */
+
+  reactToVideoTx = async (memberId: MemberId, videoId: VideoId, reaction: VideoReaction) => {
+    await this.ensureApi()
     const msg: IMemberRemarked = {
       reactVideo: {
         videoId: Long.fromString(videoId),
         reaction: reaction === 'like' ? ReactVideo.Reaction.LIKE : ReactVideo.Reaction.UNLIKE,
       },
     }
-    return this.sendMetaprotocolMemberExtrinsic(memberId, msg, cb)
+    return this.metaprotocolMemberExtrinsicTx(memberId, msg)
   }
 
-  async createVideoComment(
+  reactToVideo: PublicExtrinsic<typeof this.reactToVideoTx, MetaprotcolExtrinsicResult> = async (
+    memberId,
+    videoId,
+    reaction,
+    cb
+  ) => {
+    const tx = await this.reactToVideoTx(memberId, videoId, reaction)
+    return this.sendMetaprotocolExtrinsic(tx, cb)
+  }
+
+  createVideoCommentTx = async (
     memberId: MemberId,
     videoId: VideoId,
     commentBody: string,
-    parentCommentId: string | null,
-    cb?: ExtrinsicStatusCallbackFn
-  ) {
+    parentCommentId: string | null
+  ) => {
     await this.ensureApi()
 
     const msg: IMemberRemarked = {
@@ -543,10 +777,21 @@ export class JoystreamLibExtrinsics {
         parentCommentId,
       },
     }
-    return this.sendMetaprotocolMemberExtrinsic(memberId, msg, cb)
+    return this.metaprotocolMemberExtrinsicTx(memberId, msg)
   }
 
-  async editVideoComment(memberId: MemberId, commentId: string, newBody: string, cb?: ExtrinsicStatusCallbackFn) {
+  createVideoComment: PublicExtrinsic<typeof this.createVideoCommentTx, MetaprotcolExtrinsicResult> = async (
+    memberId,
+    videoId,
+    commentBody,
+    parentCommentId,
+    cb
+  ) => {
+    const tx = await this.createVideoCommentTx(memberId, videoId, commentBody, parentCommentId)
+    return this.sendMetaprotocolExtrinsic(tx, cb)
+  }
+
+  editVideoCommentTx = async (memberId: MemberId, commentId: string, newBody: string) => {
     await this.ensureApi()
 
     const msg: IMemberRemarked = {
@@ -556,10 +801,20 @@ export class JoystreamLibExtrinsics {
       },
     }
 
-    return this.sendMetaprotocolMemberExtrinsic(memberId, msg, cb)
+    return this.metaprotocolMemberExtrinsicTx(memberId, msg)
   }
 
-  async deleteVideoComment(memberId: MemberId, commentId: string, cb?: ExtrinsicStatusCallbackFn) {
+  editVideoComment: PublicExtrinsic<typeof this.editVideoCommentTx, MetaprotcolExtrinsicResult> = async (
+    memberId,
+    commentId,
+    newBody,
+    cb
+  ) => {
+    const tx = await this.editVideoCommentTx(memberId, commentId, newBody)
+    return this.sendMetaprotocolExtrinsic(tx, cb)
+  }
+
+  deleteVideoCommentTx = async (memberId: MemberId, commentId: string) => {
     await this.ensureApi()
 
     const msg: IMemberRemarked = {
@@ -567,10 +822,19 @@ export class JoystreamLibExtrinsics {
         commentId,
       },
     }
-    return this.sendMetaprotocolMemberExtrinsic(memberId, msg, cb)
+    return this.metaprotocolMemberExtrinsicTx(memberId, msg)
   }
 
-  async moderateComment(memberId: MemberId, channelId: MemberId, commentId: string, cb?: ExtrinsicStatusCallbackFn) {
+  deleteVideoComment: PublicExtrinsic<typeof this.deleteVideoCommentTx, MetaprotcolExtrinsicResult> = async (
+    memberId,
+    commentId,
+    cb
+  ) => {
+    const tx = await this.deleteVideoCommentTx(memberId, commentId)
+    return this.sendMetaprotocolExtrinsic(tx, cb)
+  }
+
+  moderateCommentTx = async (channelId: ChannelId, commentId: string) => {
     await this.ensureApi()
 
     const msg: IChannelOwnerRemarked = {
@@ -579,15 +843,19 @@ export class JoystreamLibExtrinsics {
         rationale: '',
       },
     }
-    return this.sendMetaprotocolChannelExtrinsic(memberId, channelId, msg, cb)
+    return this.metaprotocolChannelExtrinsicTx(channelId, msg)
   }
 
-  async reactToVideoComment(
-    memberId: MemberId,
-    commentId: string,
-    reactionId: CommentReaction,
-    cb?: ExtrinsicStatusCallbackFn
-  ) {
+  moderateComment: PublicExtrinsic<typeof this.moderateCommentTx, MetaprotcolExtrinsicResult> = async (
+    channelId,
+    commentId,
+    cb
+  ) => {
+    const tx = await this.moderateCommentTx(channelId, commentId)
+    return this.sendMetaprotocolExtrinsic(tx, cb)
+  }
+
+  reactToVideoCommentTx = async (memberId: MemberId, commentId: string, reactionId: CommentReaction) => {
     await this.ensureApi()
 
     const msg: IMemberRemarked = {
@@ -596,6 +864,16 @@ export class JoystreamLibExtrinsics {
         reactionId,
       },
     }
-    return this.sendMetaprotocolMemberExtrinsic(memberId, msg, cb)
+    return this.metaprotocolMemberExtrinsicTx(memberId, msg)
+  }
+
+  reactToVideoComment: PublicExtrinsic<typeof this.reactToVideoCommentTx, MetaprotcolExtrinsicResult> = async (
+    memberId,
+    commentId,
+    reactionId,
+    cb
+  ) => {
+    const tx = await this.reactToVideoCommentTx(memberId, commentId, reactionId)
+    return this.sendMetaprotocolExtrinsic(tx, cb)
   }
 }

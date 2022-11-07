@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SvgActionCheck } from '@/components/_icons'
+import { SvgActionCheck } from '@/assets/icons'
 import { cVar, sizes, square, zIndex } from '@/styles'
 
 export const Container = styled.div`

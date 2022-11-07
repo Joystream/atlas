@@ -20,9 +20,11 @@ class _SentryLogger {
   private initialized = false
   private user?: Record<string, unknown>
 
-  initialize(DSN: string) {
+  initialize(dsn: string | undefined | null) {
+    if (!dsn) return
+
     Sentry.init({
-      dsn: DSN,
+      dsn,
       ignoreErrors: [
         'ResizeObserver loop limit exceeded',
         'ResizeObserver loop completed with undelivered notifications',

@@ -23,7 +23,8 @@ export type SearchQuery = {
           title?: string | null
           createdAt: Date
           follows: number
-          rewardAccount?: string | null
+          rewardAccount: string
+          channelStateBloatBond: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -37,6 +38,7 @@ export type SearchQuery = {
               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
               | { __typename: 'DataObjectTypeUnknown' }
               | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoSubtitle' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
           } | null
         }
@@ -55,7 +57,8 @@ export type SearchQuery = {
             title?: string | null
             createdAt: Date
             follows: number
-            rewardAccount?: string | null
+            rewardAccount: string
+            channelStateBloatBond: string
             avatarPhoto?: {
               __typename?: 'StorageDataObject'
               id: string
@@ -69,6 +72,7 @@ export type SearchQuery = {
                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                 | { __typename: 'DataObjectTypeUnknown' }
                 | { __typename: 'DataObjectTypeVideoMedia' }
+                | { __typename: 'DataObjectTypeVideoSubtitle' }
                 | { __typename: 'DataObjectTypeVideoThumbnail' }
             } | null
           }
@@ -85,6 +89,7 @@ export type SearchQuery = {
               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
               | { __typename: 'DataObjectTypeUnknown' }
               | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoSubtitle' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
           } | null
           nft?: {
@@ -94,6 +99,7 @@ export type SearchQuery = {
             creatorRoyalty?: number | null
             lastSaleDate?: Date | null
             lastSalePrice?: string | null
+            isOwnedByChannel: boolean
             ownerMember?: {
               __typename?: 'Membership'
               id: string
@@ -117,6 +123,7 @@ export type SearchQuery = {
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
                           | { __typename: 'DataObjectTypeVideoThumbnail' }
                       } | null
                     }
@@ -164,6 +171,7 @@ export type SearchQuery = {
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                             | { __typename: 'DataObjectTypeUnknown' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
+                            | { __typename: 'DataObjectTypeVideoSubtitle' }
                             | { __typename: 'DataObjectTypeVideoThumbnail' }
                         } | null
                       }
@@ -201,6 +209,7 @@ export type SearchQuery = {
                               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                               | { __typename: 'DataObjectTypeUnknown' }
                               | { __typename: 'DataObjectTypeVideoMedia' }
+                              | { __typename: 'DataObjectTypeVideoSubtitle' }
                               | { __typename: 'DataObjectTypeVideoThumbnail' }
                           } | null
                         }
@@ -239,6 +248,7 @@ export type SearchQuery = {
                               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                               | { __typename: 'DataObjectTypeUnknown' }
                               | { __typename: 'DataObjectTypeVideoMedia' }
+                              | { __typename: 'DataObjectTypeVideoSubtitle' }
                               | { __typename: 'DataObjectTypeVideoThumbnail' }
                           } | null
                         }
@@ -270,6 +280,7 @@ export type SearchQuery = {
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                             | { __typename: 'DataObjectTypeUnknown' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
+                            | { __typename: 'DataObjectTypeVideoSubtitle' }
                             | { __typename: 'DataObjectTypeVideoThumbnail' }
                         } | null
                       }

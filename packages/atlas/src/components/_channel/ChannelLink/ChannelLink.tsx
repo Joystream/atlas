@@ -1,14 +1,14 @@
 import { FC, MouseEvent } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { useBasicChannel } from '@/api/hooks'
-import { BasicChannelFieldsFragment } from '@/api/queries'
+import { useBasicChannel } from '@/api/hooks/channel'
+import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { AvatarSize } from '@/components/Avatar'
 import { Text, TextVariant } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
-import { useAsset } from '@/providers/assets'
+import { useAsset } from '@/providers/assets/assets.hooks'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 

@@ -3,24 +3,27 @@ import { DropzoneOptions, useDropzone } from 'react-dropzone'
 import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { CircularProgress } from '@/components/CircularProgress'
-import { Text } from '@/components/Text'
 import {
+  SvgActionClosedCaptions,
   SvgActionImageFile,
   SvgActionUpload,
   SvgActionVideoFile,
   SvgAlertsSuccess24,
   SvgAlertsWarning24,
-} from '@/components/_icons'
+} from '@/assets/icons'
+import { CircularProgress } from '@/components/CircularProgress'
+import { Text } from '@/components/Text'
 import { Loader } from '@/components/_loaders/Loader'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useConfirmationModal } from '@/providers/confirmationModal'
-import { useUploadsStore } from '@/providers/uploadsManager'
-import { AssetUpload } from '@/providers/uploadsManager/types'
-import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
+import { useStartFileUpload } from '@/providers/uploads/uploads.hooks'
+import { useUploadsStore } from '@/providers/uploads/uploads.store'
+import { AssetUpload } from '@/providers/uploads/uploads.types'
 import { transitions } from '@/styles'
 import { computeFileHash } from '@/utils/hashing'
+import { capitalizeFirstLetter } from '@/utils/misc'
 import { formatBytes } from '@/utils/size'
 
 import {
@@ -123,7 +126,6 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
     [asset, openDifferentFileDialog, setUploadStatus, startFileUpload]
   )
 
-  const isVideo = asset.type === 'video'
   const {
     getRootProps,
     getInputProps,
@@ -135,11 +137,16 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
     noClick: true,
     noKeyboard: true,
     accept: {
-      [isVideo ? 'video/*' : 'image/*']: [],
+      [asset.type === 'video' ? 'video/*' : asset.type === 'subtitles' ? 'text/vtt' : 'image/*']: [],
     },
   })
 
-  const fileTypeText = isVideo ? 'Video file' : `${asset.type.charAt(0).toUpperCase() + asset.type.slice(1)} image`
+  const fileTypeText =
+    asset.type === 'video'
+      ? 'Video file'
+      : asset.type === 'subtitles'
+      ? 'Subtitles'
+      : `${capitalizeFirstLetter(asset.type)} image`
 
   const handleChangeHost = () => {
     startFileUpload(
@@ -186,6 +193,7 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
     asset.dimensions?.width && asset.dimensions.height
       ? `${Math.floor(asset.dimensions.width)}x${Math.floor(asset.dimensions.height)}`
       : ''
+  const assetSubtitlesLanguage = asset.type === 'subtitles' && asset.subtitlesLanguageIso
   const assetSize = formatBytes(Number(asset.size))
 
   const assetsDialogs = {
@@ -194,7 +202,7 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
     thumbnail: thumbnailDialogRef,
   }
   const reselectFile = () => {
-    if (asset.type === 'video') {
+    if (asset.type === 'video' || asset.type === 'subtitles') {
       openFileSelect()
       return
     }
@@ -271,7 +279,13 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
           </FileStatusContainer>
           <FileInfo size={size}>
             <FileInfoType warning={isReconnecting && size === 'compact'}>
-              {isVideo ? <SvgActionVideoFile /> : <SvgActionImageFile />}
+              {asset.type === 'video' ? (
+                <SvgActionVideoFile />
+              ) : asset.type === 'subtitles' ? (
+                <SvgActionClosedCaptions />
+              ) : (
+                <SvgActionImageFile />
+              )}
               <Text as="span" variant="t200">
                 {fileTypeText}
               </Text>
@@ -285,6 +299,11 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
                 {assetDimension && (
                   <Text as="span" variant="t200" color="colorText">
                     {assetDimension}
+                  </Text>
+                )}
+                {assetSubtitlesLanguage && (
+                  <Text as="span" variant="t200" color="colorText">
+                    {atlasConfig.derived.languagesLookup[assetSubtitlesLanguage]}
                   </Text>
                 )}
                 {assetSize && (

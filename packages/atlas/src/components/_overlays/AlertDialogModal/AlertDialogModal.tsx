@@ -1,13 +1,8 @@
 import { FC, FormEvent, PropsWithChildren, ReactNode } from 'react'
 
+import { SvgAlertsInformative24, SvgAlertsInformative32, SvgAlertsWarning24, SvgAlertsWarning32 } from '@/assets/icons'
 import { Text } from '@/components/Text'
 import { ButtonProps } from '@/components/_buttons/Button'
-import {
-  SvgAlertsInformative24,
-  SvgAlertsInformative32,
-  SvgAlertsWarning24,
-  SvgAlertsWarning32,
-} from '@/components/_icons'
 import { Dialog } from '@/components/_overlays/Dialog'
 import { Modal, ModalProps } from '@/components/_overlays/Modal'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -35,7 +30,11 @@ export type AlertDialogProps = PropsWithChildren<{
   dividers?: boolean
 }>
 
-export type AlertDialogModalProps = Pick<ModalProps, 'show'> & AlertDialogProps
+export type AlertDialogModalProps = Pick<
+  ModalProps,
+  'show' | 'additionalActionsNode' | 'additionalActionsNodeMobilePosition'
+> &
+  AlertDialogProps
 
 export const AlertDialogModal: FC<AlertDialogModalProps> = ({
   show,
@@ -55,7 +54,7 @@ export const AlertDialogModal: FC<AlertDialogModalProps> = ({
   const primaryButtonColor = isInformative ? 'primary' : type
 
   return (
-    <Modal show={show} onEscPress={secondaryButton?.onClick || onExitClick} onExitClick={onExitClick}>
+    <Modal show={show} onClickOutside={() => secondaryButton?.onClick?.() || onExitClick?.()} onExitClick={onExitClick}>
       <Dialog
         {...dialogProps}
         primaryButton={primaryButton ? { ...primaryButton, variant: primaryButtonColor } : undefined}
@@ -85,10 +84,13 @@ export const AlertDialogModal: FC<AlertDialogModalProps> = ({
               {title}
             </Text>
           )}
-          <Text as="p" variant="t200" color="colorText">
-            {description}
-          </Text>
+          {description && (
+            <Text as="p" variant="t200" color="colorText">
+              {description}
+            </Text>
+          )}
         </>
+        {children}
       </Dialog>
     </Modal>
   )

@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SvgActionInformative } from '@/components/_icons'
+import { SvgActionInformative } from '@/assets/icons'
 import { cVar, sizes } from '@/styles'
 
 export const StyledSvgActionInformative = styled(SvgActionInformative)`

@@ -1,6 +1,6 @@
 import { round } from 'lodash-es'
 
-import { channelIdsMapEntries, videoIdsMapEntries } from '@/data/migratedContentIdMappings.json'
+import { BUILD_ENV } from '@/config/env'
 import { createStore } from '@/store'
 
 import { DismissedMessage, FollowedChannel, RecentSearch, WatchedVideo, WatchedVideoStatus } from './types'
@@ -17,6 +17,8 @@ export type PersonalDataStoreState = {
   reactionPopoverDismissed: boolean
   playbackRate: number
   autoPlayNext: boolean
+  captionsEnabled: boolean
+  captionsLanguage: string | null
 }
 
 const WHITELIST = [
@@ -31,6 +33,8 @@ const WHITELIST = [
   'cookiesAccepted',
   'reactionPopoverDismissed',
   'autoPlayNext',
+  'captionsEnabled',
+  'captionsLanguage',
 ] as (keyof PersonalDataStoreState)[]
 
 export type PersonalDataStoreActions = {
@@ -46,6 +50,10 @@ export type PersonalDataStoreActions = {
   setCinematicView: (cinematicView: boolean) => void
   setCookiesAccepted: (accept: boolean) => void
   setReactionPopoverDismission: (reactionPopoverDismissed: boolean) => void
+  setCaptionsEnabled: (captionsEnabled: boolean) => void
+  setCaptionsLanguage: (captionsLanguage: string | null) => void
+
+  getIsCookiesPopoverVisible: () => boolean
 }
 
 const initialState: PersonalDataStoreState = {
@@ -60,12 +68,14 @@ const initialState: PersonalDataStoreState = {
   cookiesAccepted: undefined,
   reactionPopoverDismissed: false,
   autoPlayNext: true,
+  captionsEnabled: false,
+  captionsLanguage: null,
 }
 
 export const usePersonalDataStore = createStore<PersonalDataStoreState, PersonalDataStoreActions>(
   {
     state: initialState,
-    actionsFactory: (set) => ({
+    actionsFactory: (set, get) => ({
       updateWatchedVideos: (__typename, id, timestamp) => {
         set((state) => {
           const currentVideo = state.watchedVideos.find((v) => v.id === id)
@@ -137,6 +147,18 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
         set((state) => {
           state.reactionPopoverDismissed = reactionPopoverDismissed
         }),
+      setCaptionsEnabled: (captionsEnabled) =>
+        set((state) => {
+          state.captionsEnabled = captionsEnabled
+        }),
+      setCaptionsLanguage: (captionsLanguage: string | null) =>
+        set((state) => {
+          state.captionsLanguage = captionsLanguage
+        }),
+      getIsCookiesPopoverVisible: () => {
+        const cookiesAccepted = get().cookiesAccepted
+        return cookiesAccepted === undefined && BUILD_ENV === 'production'
+      },
     }),
   },
   {
@@ -145,30 +167,7 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
       whitelist: WHITELIST,
       version: 2,
       migrate: (oldState) => {
-        const typedOldState = oldState as PersonalDataStoreState
-
-        const migratedWatchedVideos = typedOldState.watchedVideos.reduce((acc, cur) => {
-          const migratedId = (videoIdsMapEntries as Record<string, string>)[cur.id]
-          if (migratedId) {
-            return [...acc, { ...cur, id: migratedId }]
-          }
-          return acc
-        }, [] as WatchedVideo[])
-
-        const migratedFollowedChannels = typedOldState.followedChannels.reduce((acc, cur) => {
-          const migratedId = (channelIdsMapEntries as Record<string, string>)[cur.id]
-          if (migratedId) {
-            return [...acc, { ...cur, id: migratedId }]
-          }
-          return acc
-        }, [] as FollowedChannel[])
-
-        const migratedState: PersonalDataStoreState = {
-          ...typedOldState,
-          watchedVideos: migratedWatchedVideos,
-          followedChannels: migratedFollowedChannels,
-        }
-        return migratedState
+        return oldState
       },
     },
   }

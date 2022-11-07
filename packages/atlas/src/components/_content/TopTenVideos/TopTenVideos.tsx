@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { useTop10VideosThisMonth, useTop10VideosThisWeek } from '@/api/hooks'
+import { useTop10VideosThisMonth, useTop10VideosThisWeek } from '@/api/hooks/video'
 import { VideoGallery } from '@/components/_video/VideoGallery'
 import { SentryLogger } from '@/utils/logs'
 

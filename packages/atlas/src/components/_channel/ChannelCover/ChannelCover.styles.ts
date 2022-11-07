@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 
+import { SvgIllustrativeFileFailed } from '@/assets/icons'
+import { SvgBgPattern } from '@/assets/illustrations'
 import { Button } from '@/components/_buttons/Button'
-import { SvgIllustrativeFileFailed } from '@/components/_icons'
-import { SvgBgPattern } from '@/components/_illustrations'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 export const MediaWrapper = styled.div`

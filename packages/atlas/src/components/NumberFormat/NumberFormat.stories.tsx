@@ -1,5 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 
+import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
+
 import { NumberFormat, NumberFormatProps } from './NumberFormat'
 
 export default {
@@ -9,7 +11,6 @@ export default {
     value: 102930,
     format: 'dollar',
     variant: 't100-strong',
-    withToken: false,
   },
   argTypes: {
     format: {
@@ -23,7 +24,8 @@ export default {
 
 const Template: Story<Omit<NumberFormatProps, 'ref'>> = (args) => (
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '12px', padding: '200px' }}>
-    <NumberFormat {...args} />
+    <NumberFormat {...args} value={tokenNumberToHapiBn(args.value as number)} withToken />
+    <NumberFormat {...args} value={args.value as number} withToken={false} />
   </div>
 )
 

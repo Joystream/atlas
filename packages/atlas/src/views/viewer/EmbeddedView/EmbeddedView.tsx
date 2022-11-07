@@ -4,21 +4,19 @@ import { throttle } from 'lodash-es'
 import { FC, useCallback, useRef } from 'react'
 import { useParams } from 'react-router'
 
-import { useAddVideoView, useFullVideo } from '@/api/hooks'
+import { useAddVideoView, useFullVideo } from '@/api/hooks/video'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { absoluteRoutes } from '@/config/routes'
-import { useRedirectMigratedContent } from '@/hooks/useRedirectMigratedContent'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
-import { useAsset } from '@/providers/assets'
+import { useAsset } from '@/providers/assets/assets.hooks'
 import { SentryLogger } from '@/utils/logs'
 
 import { NotFoundVideoContainer, PlayerSkeletonLoader } from '../VideoView/VideoView.styles'
 
 export const EmbeddedView: FC = () => {
-  useRedirectMigratedContent({ type: 'embedded-video' })
   const { id } = useParams()
   const { loading, video, error } = useFullVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),

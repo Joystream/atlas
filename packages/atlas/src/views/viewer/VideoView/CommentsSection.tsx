@@ -3,8 +3,9 @@ import { debounce } from 'lodash-es'
 import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { useComment, useCommentSectionComments, useUserCommentsReactions } from '@/api/hooks'
-import { CommentOrderByInput, FullVideoFieldsFragment } from '@/api/queries'
+import { useComment, useCommentSectionComments, useUserCommentsReactions } from '@/api/hooks/comments'
+import { CommentOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Text } from '@/components/Text'
 import { LoadMoreButton } from '@/components/_buttons/LoadMoreButton'
@@ -17,8 +18,9 @@ import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
-import { useMemberAvatar } from '@/providers/assets'
-import { useUser } from '@/providers/user'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useFee } from '@/providers/joystream/joystream.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 
 import { CommentThread } from './CommentThread'
 import {
@@ -44,12 +46,18 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
   const [highlightedCommentId, setHighlightedCommentId] = useState<string | null>(null)
   const [sortCommentsBy, setSortCommentsBy] = useState(COMMENTS_SORT_OPTIONS[0].value)
   const [commentsOpen, setCommentsOpen] = useState(false)
+  const [commentInputActive, setCommentInputActive] = useState(false)
   const commentIdQueryParam = useRouterQuery(QUERY_PARAMS.COMMENT_ID)
   const mdMatch = useMediaMatch('md')
   const { id: videoId } = useParams()
   const { memberId, signIn, activeMembership, isLoggedIn } = useUser()
-  const { openSignInDialog } = useDisplaySignInDialog()
+  const { openSignInDialog } = useDisplaySignInDialog({ interaction: true })
   const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)
+
+  const { fullFee: fee, loading: feeLoading } = useFee(
+    'createVideoCommentTx',
+    memberId && video?.id && commentInputActive ? [memberId, video?.id, commentInputText || '', null] : undefined
+  )
 
   const queryVariables = useMemo(
     () => ({
@@ -217,10 +225,13 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
         readOnly={!memberId}
         memberHandle={activeMembership?.handle}
         value={commentInputText}
+        fee={fee}
+        feeLoading={feeLoading}
         hasInitialValueChanged={!!commentInputText}
         onFocus={() => !memberId && openSignInDialog({ onConfirm: signIn })}
         onComment={() => handleComment()}
         onChange={(e) => setCommentInputText(e.target.value)}
+        onCommentInputActive={setCommentInputActive}
       />
       {comments && !comments.length && !commentsLoading && (
         <EmptyFallback title="Be the first to comment" subtitle="Nobody has left a comment under this video yet." />

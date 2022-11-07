@@ -1,7 +1,7 @@
 import { FC, useLayoutEffect, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
-import { SvgActionChevronL, SvgActionChevronR } from '@/components/_icons'
+import { SvgActionChevronL, SvgActionChevronR } from '@/assets/icons'
 
 import { ChevronButton, PaginationButton, PaginationWrapper, ThreeDotsWrapper } from './Pagination.styles'
 import { PAGINATION_BUTTON_WIDTH } from './constants'

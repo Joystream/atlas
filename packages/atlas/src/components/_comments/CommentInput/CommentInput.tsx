@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { ChangeEvent, forwardRef, useEffect, useRef, useState } from 'react'
 import mergeRefs from 'react-merge-refs'
 import useResizeObserver from 'use-resize-observer'
@@ -30,10 +31,12 @@ export type CommentInputProps = {
   onCancel?: () => void
   onChange?: (e: ChangeEvent<HTMLTextAreaElement>) => void
   onFocus?: () => void
+  onCommentInputActive?: (active: boolean) => void
   initialFocus?: boolean
   reply?: boolean
   className?: string
-  fee?: number
+  fee?: BN
+  feeLoading?: boolean
 } & Omit<CommentRowProps, 'isInput'>
 
 const COMMENT_LIMIT = 50000
@@ -49,12 +52,14 @@ export const CommentInput = forwardRef<HTMLTextAreaElement, CommentInputProps>(
       onComment,
       onChange,
       onFocus,
+      onCommentInputActive,
       value,
       hasInitialValueChanged,
       initialFocus,
       reply,
       className,
-      fee = 0,
+      fee = new BN(0),
+      feeLoading,
       ...rest
     },
     ref
@@ -65,6 +70,10 @@ export const CommentInput = forwardRef<HTMLTextAreaElement, CommentInputProps>(
     const { displaySnackbar } = useSnackbar()
 
     const { ref: measureRef, height: textAreaHeight = 40 } = useResizeObserver({ box: 'border-box' })
+
+    useEffect(() => {
+      onCommentInputActive?.(active)
+    }, [onCommentInputActive, active])
 
     // focus textarea on first render
     useEffect(() => {
@@ -151,7 +160,15 @@ export const CommentInput = forwardRef<HTMLTextAreaElement, CommentInputProps>(
 
           <ButtonsContainer>
             <Flex>
-              <Fee amount={fee} color="colorText" variant="t100" hideOnMobile />
+              <Fee
+                amount={fee}
+                color="colorText"
+                variant="t100"
+                hideOnMobile
+                loading={feeLoading}
+                tooltipHeaderText="Comments on blockchain"
+                tooltipText="Publishing a comment requires a blockchain transaction, which comes with a fee based on its length. Transaction fees are covered from your membership account balance."
+              />
             </Flex>
             {onCancel && (
               <Button

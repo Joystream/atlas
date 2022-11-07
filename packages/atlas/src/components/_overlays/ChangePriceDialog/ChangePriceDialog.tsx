@@ -1,25 +1,36 @@
 import styled from '@emotion/styled'
-import { FC, useState } from 'react'
+import BN from 'bn.js'
+import { FC, useEffect, useState } from 'react'
 
-import { NumberFormat } from '@/components/NumberFormat'
-import { Pill } from '@/components/Pill'
+import { Fee } from '@/components/Fee'
 import { Text } from '@/components/Text'
-import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
-import { Input } from '@/components/_inputs/Input'
+import { TokenInput } from '@/components/_inputs/TokenInput'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { useTokenPrice } from '@/providers/joystream'
+import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
+import { useFee } from '@/providers/joystream/joystream.hooks'
 import { sizes } from '@/styles'
 
 type ChangePriceDialogProps = {
   onModalClose: () => void
   isOpen: boolean
-  onChangePrice: (id: string, price: number) => void
+  onChangePrice: (id: string, price: BN) => void
   nftId: string | null
+  memberId: string | null
 }
 
-export const ChangePriceDialog: FC<ChangePriceDialogProps> = ({ onModalClose, isOpen, onChangePrice, nftId }) => {
+export const ChangePriceDialog: FC<ChangePriceDialogProps> = ({
+  onModalClose,
+  isOpen,
+  onChangePrice,
+  nftId,
+  memberId,
+}) => {
   const [price, setPrice] = useState<number | null>(null)
-  const { convertToUSD } = useTokenPrice()
+  const amountBn = tokenNumberToHapiBn(price || 0)
+  const { fullFee, loading: feeLoading } = useFee(
+    'changeNftPriceTx',
+    isOpen && memberId && nftId ? [memberId, nftId, amountBn.toString()] : undefined
+  )
 
   const handleSubmitPriceChange = () => {
     if (!nftId || !price) {
@@ -27,8 +38,14 @@ export const ChangePriceDialog: FC<ChangePriceDialogProps> = ({ onModalClose, is
     }
     setPrice(null)
     onModalClose()
-    onChangePrice(nftId, price)
+    onChangePrice(nftId, tokenNumberToHapiBn(price))
   }
+
+  useEffect(() => {
+    if (!isOpen) {
+      setPrice(null)
+    }
+  }, [isOpen])
 
   return (
     <DialogModal
@@ -43,22 +60,19 @@ export const ChangePriceDialog: FC<ChangePriceDialogProps> = ({ onModalClose, is
         text: 'Cancel',
         onClick: onModalClose,
       }}
+      onExitClick={onModalClose}
+      additionalActionsNode={<Fee amount={fullFee} loading={feeLoading} variant="h200" />}
     >
       <>
         <Text as="p" variant="t200" color="colorText">
           You can update the price of this NFT anytime.
         </Text>
-        <StyledTextField
-          type="text"
-          onChange={(event) => setPrice(Number(event.target.value))}
-          nodeStart={<JoyTokenIcon size={24} variant="gray" />}
-          nodeEnd={<Pill label={<NumberFormat as="span" format="dollar" value={convertToUSD(price ?? 0) ?? 0} />} />}
-        />
+        <StyledTokenInput value={price} onChange={(value) => setPrice(value)} />
       </>
     </DialogModal>
   )
 }
 
-export const StyledTextField = styled(Input)`
+export const StyledTokenInput = styled(TokenInput)`
   margin-top: ${sizes(6)};
 `

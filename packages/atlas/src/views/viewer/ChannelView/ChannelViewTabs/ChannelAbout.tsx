@@ -1,12 +1,12 @@
 import { FC } from 'react'
 
-import { FullChannelFieldsFragment } from '@/api/queries'
+import { FullChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
-import { languages } from '@/config/languages'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
-import { useMemberAvatar } from '@/providers/assets'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { formatDate } from '@/utils/time'
 
 import {
@@ -91,7 +91,9 @@ export const ChannelAbout: FC<ChannelAboutProps> = ({ channel }) => {
             Language
           </Text>
           <Text as="span" variant="t300">
-            {channel?.language?.iso ? languages.find(({ value }) => value === channel.language?.iso)?.name : ''}
+            {channel?.language?.iso
+              ? atlasConfig.derived.languagesSelectValues.find(({ value }) => value === channel.language?.iso)?.name
+              : ''}
           </Text>
         </Details>
       </GridItem>

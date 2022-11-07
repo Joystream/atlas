@@ -3,7 +3,11 @@ import processingAssetsAnimation from '@/assets/animations/transaction/processin
 import processingTransactionAnimation from '@/assets/animations/transaction/processing-transaction.json'
 import propagatingChangesAnimation from '@/assets/animations/transaction/propagating-changes.json'
 import signatureAnimation from '@/assets/animations/transaction/signature.json'
-import { ErrorCode, ExtrinsicStatus } from '@/joystream-lib'
+import '@/config/config'
+import { ErrorCode } from '@/joystream-lib/errors'
+import { ExtrinsicStatus } from '@/joystream-lib/types'
+
+// load and parse app config
 
 export const getExtrinsicStatusDetails = (
   status: ExtrinsicStatus,
@@ -136,11 +140,56 @@ export const getExtrinsicStatusDetails = (
               'You cannot perform this action. This could mean that this NFT has been bought already or the sale was canceled.',
             animation: sharedAnimation,
           }
-        case ErrorCode.VoucherSizeLimitExceeded:
+        case ErrorCode.LiquidityRestrictions:
           return {
-            title: 'Storage limit exceeded',
+            title: sharedTitle,
             description:
-              "Your transaction failed because publishing associated assets would exceed your storage quota. Each channel has a dedicated storage limit that's controlled by the DAO storage working group. You can ask for additional storage space in #storage-provider channel on Joystream Discord and then try again.",
+              "You don't have enough tokens in your member account to pay transaction fee. Add tokens to your membership balance and try again.",
+            animation: sharedAnimation,
+          }
+        case ErrorCode.WithdrawFromChannelAmountExceedsBalanceMinusExistentialDeposit:
+          return {
+            title: sharedTitle,
+            description:
+              "You're trying to withdraw too many tokens from your channel account. Please decrease the amount and try again.",
+            animation: sharedAnimation,
+          }
+        case ErrorCode.DataObjectStateBloatBondChanged:
+          return {
+            title: sharedTitle,
+            description: 'Bloat bond for data object state has changed. Please reload the app and try again.',
+            animation: sharedAnimation,
+          }
+        case ErrorCode.VideoStateBloatBondChanged:
+          return {
+            title: sharedTitle,
+            description: 'Bloat bond for video state has changed. Please reload the app and try again.',
+            animation: sharedAnimation,
+          }
+        case ErrorCode.ChannelStateBloatBondChanged:
+          return {
+            title: sharedTitle,
+            description: 'Bloat bond for channel state has changed. Please reload the app and try again.',
+            animation: sharedAnimation,
+          }
+        case ErrorCode.InsufficientBalance:
+          return {
+            title: sharedTitle,
+            description:
+              'Insufficient balance to perform this action. Add tokens to your membership balance and try again.',
+            animation: sharedAnimation,
+          }
+        case ErrorCode.InsufficientBalanceForChannelCreation:
+          return {
+            title: sharedTitle,
+            description:
+              'Insufficient balance to create a channel. Add tokens to your membership balance and try again.',
+            animation: sharedAnimation,
+          }
+        case ErrorCode.InsufficientBalanceForVideoCreation:
+          return {
+            title: sharedTitle,
+            description: 'Insufficient balance to create a video. Add tokens to your membership balance and try again.',
             animation: sharedAnimation,
           }
         default:

@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
+import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
@@ -16,8 +16,16 @@ type NftInfoItemProps = {
   content: ReactNode
   secondaryText?: ReactNode | null
   loading?: boolean
+  disableSecondary?: boolean
 }
-export const NftInfoItem: FC<NftInfoItemProps> = ({ size, label, content, secondaryText, loading }) => {
+export const NftInfoItem: FC<NftInfoItemProps> = ({
+  size,
+  label,
+  content,
+  secondaryText,
+  disableSecondary,
+  loading,
+}) => {
   if (loading) {
     return (
       <InfoItemContainer data-size={size}>
@@ -28,14 +36,14 @@ export const NftInfoItem: FC<NftInfoItemProps> = ({ size, label, content, second
     )
   }
   return (
-    <InfoItemContainer data-size={size}>
+    <InfoItemContainer data-size={size} disableSecondary={disableSecondary}>
       <Label as="span" variant="h100" color="colorText">
         {label}
       </Label>
       <InfoItemContent data-size={size}>{content}</InfoItemContent>
-      <SwitchTransition>
+      {!disableSecondary && (
         <CSSTransition
-          key={secondaryText ? 'placeholder' : 'content'}
+          in={!!secondaryText}
           timeout={parseInt(cVar('animationTransitionFast', true))}
           classNames={transitions.names.fade}
         >
@@ -45,7 +53,7 @@ export const NftInfoItem: FC<NftInfoItemProps> = ({ size, label, content, second
             </Text>
           </SecondaryText>
         </CSSTransition>
-      </SwitchTransition>
+      )}
     </InfoItemContainer>
   )
 }
