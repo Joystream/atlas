@@ -3,7 +3,7 @@ import { FC } from 'react'
 
 import { Fee } from '@/components/Fee'
 import { AlertDialogModal, AlertDialogModalProps } from '@/components/_overlays/AlertDialogModal'
-import { useWaitForFee } from '@/hooks/useWaitForFee'
+import { useFeeLoadingState } from '@/hooks/useFeeLoadingState'
 import { JoystreamLibExtrinsics } from '@/joystream-lib/extrinsics'
 import { TxMethodName } from '@/joystream-lib/types'
 import { useFee } from '@/providers/joystream/joystream.hooks'
@@ -17,7 +17,7 @@ type AlertDialogModalWithFeeProps = AlertDialogModalProps & {
 
 export const AlertDialogModalWithFee: FC<AlertDialogModalWithFeeProps> = ({ fee, ...args }) => {
   const { fullFee, loading: feeLoading } = useFee(fee.methodName, fee.args && args.show ? fee.args : undefined)
-  const { loadingState, actionHandler } = useWaitForFee(feeLoading, fullFee, args.primaryButton?.onClick)
+  const { loadingState, signTransactionHandler } = useFeeLoadingState(feeLoading, fullFee, args.primaryButton?.onClick)
 
   return (
     <AlertDialogModal
@@ -27,7 +27,7 @@ export const AlertDialogModalWithFee: FC<AlertDialogModalWithFeeProps> = ({ fee,
           ...args.primaryButton,
           text: loadingState ? 'Please wait...' : args.primaryButton.text,
           disabled: loadingState,
-          onClick: actionHandler,
+          onClick: signTransactionHandler,
         }
       }
       additionalActionsNode={<Fee loading={feeLoading} variant="h200" amount={fullFee || new BN(0)} />}
