@@ -830,11 +830,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                       rel="noopener noreferrer"
                       target="_blank"
                     >
-                      {xsMatch ? (
-                        <StyledSvgAppLogoFullMonochrome width={undefined} />
-                      ) : (
-                        <StyledAppLogoShortMonochrome width={undefined} />
-                      )}
+                      {xsMatch ? <StyledSvgAppLogoFullMonochrome /> : <StyledAppLogoShortMonochrome />}
                     </a>
                   )}
                 </ScreenControls>
