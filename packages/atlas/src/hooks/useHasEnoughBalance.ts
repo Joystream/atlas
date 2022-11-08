@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 
-export const useFeeLoadingState = (feeLoading: boolean, fee?: BN, callback?: () => void) => {
+export const useHasEnoughBalance = (feeLoading: boolean, fee?: BN, callback?: () => void) => {
   const [loadingState, setLoadingState] = useState(false)
   const { totalBalanceLoaded, totalBalance } = useSubscribeAccountBalance()
   const { displaySnackbar } = useSnackbar()

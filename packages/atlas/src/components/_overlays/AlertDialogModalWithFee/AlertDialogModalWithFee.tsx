@@ -3,7 +3,7 @@ import { FC } from 'react'
 
 import { Fee } from '@/components/Fee'
 import { AlertDialogModal, AlertDialogModalProps } from '@/components/_overlays/AlertDialogModal'
-import { useFeeLoadingState } from '@/hooks/useFeeLoadingState'
+import { useHasEnoughBalance } from '@/hooks/useHasEnoughBalance'
 import { JoystreamLibExtrinsics } from '@/joystream-lib/extrinsics'
 import { TxMethodName } from '@/joystream-lib/types'
 import { useFee } from '@/providers/joystream/joystream.hooks'
@@ -17,7 +17,7 @@ type AlertDialogModalWithFeeProps = AlertDialogModalProps & {
 
 export const AlertDialogModalWithFee: FC<AlertDialogModalWithFeeProps> = ({ fee, ...args }) => {
   const { fullFee, loading: feeLoading } = useFee(fee.methodName, fee.args && args.show ? fee.args : undefined)
-  const { loadingState, signTransactionHandler } = useFeeLoadingState(feeLoading, fullFee, args.primaryButton?.onClick)
+  const { loadingState, signTransactionHandler } = useHasEnoughBalance(feeLoading, fullFee, args.primaryButton?.onClick)
 
   return (
     <AlertDialogModal

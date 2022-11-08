@@ -232,7 +232,6 @@ export const useFee = <TFnName extends TxMethodName, TArgs extends Parameters<Jo
   const { totalAssetSizeFee, totalAssetBloatFee, channelStateBloatBondValue, videoStateBloatBondValue } =
     useBloatFeesAndPerMbFees(assets)
 
-  const { accountBalance } = useSubscribeAccountBalance()
   const [fullFee, setFullFee] = useState(new BN(0))
   const [loading, setLoading] = useState(false)
 
@@ -301,7 +300,6 @@ export const useFee = <TFnName extends TxMethodName, TArgs extends Parameters<Jo
   return {
     fullFee,
     getTxFee,
-    hasEnoughFunds: !accountBalance || accountBalance.gt(fullFee),
     loading,
   }
 }
