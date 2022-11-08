@@ -19,9 +19,10 @@ import { StudioTopbarContainer, StyledAvatarGroup, StyledTopbarBase } from './To
 
 type StudioTopbarProps = {
   hideChannelInfo?: boolean
+  isMembershipLoaded?: boolean
 }
 
-export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
+export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembershipLoaded }) => {
   const { channelId, activeMembership, signIn } = useUser()
   const mdMatch = useMediaMatch('md')
   const hasAtLeastOneChannel = !!activeMembership?.channels.length && activeMembership?.channels.length >= 1
@@ -66,33 +67,34 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
         withoutHamburgerButton={hideChannelInfo}
         logoLinkUrl={absoluteRoutes.studio.index()}
       >
-        {!hideChannelInfo ? (
-          <StudioTopbarContainer>
-            <CSSTransition
-              in={!isWorkspaceOpen && !!channelId}
-              unmountOnExit
-              mountOnEnter
-              timeout={parseInt(transitions.timings.loading)}
-              classNames={transitions.names.fade}
-            >
-              <Button
-                to={absoluteRoutes.studio.videoWorkspace()}
-                onClick={() => setEditedVideo()}
-                variant="secondary"
-                icon={<SvgActionAddVideo />}
-                iconPlacement="left"
+        {isMembershipLoaded &&
+          (!hideChannelInfo ? (
+            <StudioTopbarContainer>
+              <CSSTransition
+                in={!isWorkspaceOpen && !!channelId}
+                unmountOnExit
+                mountOnEnter
+                timeout={parseInt(transitions.timings.loading)}
+                classNames={transitions.names.fade}
               >
-                {mdMatch && 'Upload video'}
-              </Button>
-            </CSSTransition>
-            <NotificationsWidget trigger={<NotificationsButton />} />
-            <StyledAvatarGroup size="large" shouldHighlightEveryAvatar reverse avatars={avatars} clickable={false} />
-          </StudioTopbarContainer>
-        ) : (
-          <Button size="medium" onClick={() => signIn()}>
-            Set up membership
-          </Button>
-        )}
+                <Button
+                  to={absoluteRoutes.studio.videoWorkspace()}
+                  onClick={() => setEditedVideo()}
+                  variant="secondary"
+                  icon={<SvgActionAddVideo />}
+                  iconPlacement="left"
+                >
+                  {mdMatch && 'Upload video'}
+                </Button>
+              </CSSTransition>
+              <NotificationsWidget trigger={<NotificationsButton />} />
+              <StyledAvatarGroup size="large" shouldHighlightEveryAvatar reverse avatars={avatars} clickable={false} />
+            </StudioTopbarContainer>
+          ) : (
+            <Button size="medium" onClick={() => signIn()}>
+              Set up membership
+            </Button>
+          ))}
       </StyledTopbarBase>
       <MemberDropdown
         onChannelChange={handleChannelChange}

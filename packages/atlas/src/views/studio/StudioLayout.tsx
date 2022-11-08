@@ -43,6 +43,7 @@ const StudioLayout = () => {
 
   const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useConfirmationModal()
   const [enterLocation] = useState(location.pathname)
+  const isMembershipLoaded = !membershipsLoading && !isAuthLoading && !isWalletLoading
   const hasMembership = !!memberships?.length
 
   const channelSet = !!channelId && hasMembership
@@ -68,7 +69,7 @@ const StudioLayout = () => {
   }, [closeUnsupportedBrowserDialog, openUnsupportedBrowserDialog])
   return (
     <>
-      <TopbarStudio hideChannelInfo={!hasMembership} />
+      <TopbarStudio hideChannelInfo={!hasMembership} isMembershipLoaded={isMembershipLoaded} />
       <NoConnectionIndicator
         hasSidebar={channelSet}
         nodeConnectionStatus={nodeConnectionStatus}
