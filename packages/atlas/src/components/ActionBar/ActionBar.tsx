@@ -6,7 +6,7 @@ import { Fee } from '@/components/Fee'
 import { Text } from '@/components/Text'
 import { TooltipProps } from '@/components/Tooltip'
 import { ButtonProps } from '@/components/_buttons/Button'
-import { useFeeLoadingState } from '@/hooks/useFeeLoadingState'
+import { useHasEnoughBalance } from '@/hooks/useHasEnoughBalance'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { transitions } from '@/styles'
 
@@ -42,7 +42,7 @@ export type ActionBarProps = {
 export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
   ({ fee, feeLoading, isActive = true, className, primaryButton, secondaryButton, infoBadge }, ref) => {
     const smMatch = useMediaMatch('sm')
-    const { signTransactionHandler, loadingState } = useFeeLoadingState(!!feeLoading, fee, primaryButton.onClick)
+    const { signTransactionHandler, loadingState } = useHasEnoughBalance(!!feeLoading, fee, primaryButton.onClick)
 
     return (
       <ActionBarContainer ref={ref} className={className} isActive={isActive}>
