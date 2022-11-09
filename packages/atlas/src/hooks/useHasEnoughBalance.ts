@@ -33,7 +33,7 @@ export const useHasEnoughBalance = (feeLoading: boolean, fee?: BN, callback?: ()
   }, [callback, loadingState, feeLoading, totalBalanceLoaded, totalBalance, displaySnackbar, callbackHandler])
 
   const signTransactionHandler = useCallback(() => {
-    if (feeLoading || totalBalanceLoaded) {
+    if (feeLoading || !totalBalanceLoaded) {
       setLoadingState(true)
       return
     }

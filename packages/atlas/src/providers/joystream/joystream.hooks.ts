@@ -153,8 +153,14 @@ export const useSubscribeAccountBalance = (
   const { activeMembership } = useUser()
   const { joystream, proxyCallback, chainState } = useJoystream()
 
-  const totalBalanceLoaded = accountBalance && lockedAccountBalance
-  const totalBalance = totalBalanceLoaded ? accountBalance.add(lockedAccountBalance) : null
+  const totalBalanceLoaded = useMemo(
+    () => accountBalance && lockedAccountBalance,
+    [accountBalance, lockedAccountBalance]
+  )
+  const totalBalance = useMemo(
+    () => (totalBalanceLoaded ? accountBalance?.add(lockedAccountBalance || new BN(0)) : null),
+    [accountBalance, lockedAccountBalance, totalBalanceLoaded]
+  )
 
   useEffect(() => {
     if (!activeMembership?.controllerAccount || !joystream) {
