@@ -36,13 +36,19 @@ export type ActionBarProps = {
   primaryButton: ActionDialogButtonProps
   secondaryButton?: ActionDialogButtonProps
   isActive?: boolean
+  skipFeeCheck?: boolean
   className?: string
 }
 
 export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
-  ({ fee, feeLoading, isActive = true, className, primaryButton, secondaryButton, infoBadge }, ref) => {
+  ({ fee, feeLoading, isActive = true, className, primaryButton, secondaryButton, infoBadge, skipFeeCheck }, ref) => {
     const smMatch = useMediaMatch('sm')
-    const { signTransactionHandler, loadingState } = useHasEnoughBalance(!!feeLoading, fee, primaryButton.onClick)
+    const { signTransactionHandler, loadingState } = useHasEnoughBalance(
+      !!feeLoading,
+      fee,
+      primaryButton.onClick,
+      skipFeeCheck
+    )
 
     return (
       <ActionBarContainer ref={ref} className={className} isActive={isActive}>

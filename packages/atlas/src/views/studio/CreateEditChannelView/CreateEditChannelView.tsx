@@ -439,6 +439,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     }
 
     const completed = await handleTransaction({
+      fee: newChannel ? createChannelFee : updateChannelFee,
       preProcess: processAssets,
       txFactory: async (updateStatus) =>
         newChannel
@@ -528,7 +529,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const isDisabled = !isDirty || nodeConnectionStatus !== 'connected'
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={(event) => event.preventDefault()}>
       {headTags}
       <Controller
         name="cover"
@@ -719,6 +720,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
                       }
                     : undefined
                 }
+                skipFeeCheck
               />
             </ActionBarTransactionWrapper>
           </CSSTransition>

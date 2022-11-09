@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 
-export const useHasEnoughBalance = (feeLoading: boolean, fee?: BN, callback?: () => void) => {
+export const useHasEnoughBalance = (feeLoading: boolean, fee?: BN, callback?: () => void, skipFeeCheck?: boolean) => {
   const [loadingState, setLoadingState] = useState(false)
   const { totalBalanceLoaded, totalBalance } = useSubscribeAccountBalance()
   const { displaySnackbar } = useSnackbar()
@@ -13,7 +13,7 @@ export const useHasEnoughBalance = (feeLoading: boolean, fee?: BN, callback?: ()
     if (!fee) {
       return
     }
-    if (totalBalance?.lt(fee)) {
+    if (totalBalance?.lt(fee) && !skipFeeCheck) {
       displaySnackbar({
         title: 'Not enough funds',
         description:
@@ -23,14 +23,14 @@ export const useHasEnoughBalance = (feeLoading: boolean, fee?: BN, callback?: ()
       return
     }
     callback?.()
-  }, [callback, displaySnackbar, fee, totalBalance])
+  }, [callback, displaySnackbar, fee, skipFeeCheck, totalBalance])
 
   useEffect(() => {
     if (loadingState && !feeLoading && totalBalanceLoaded) {
       callbackHandler?.()
       setLoadingState(false)
     }
-  }, [callback, loadingState, feeLoading, totalBalanceLoaded, totalBalance, displaySnackbar, callbackHandler])
+  }, [callbackHandler, feeLoading, loadingState, totalBalanceLoaded])
 
   const signTransactionHandler = useCallback(() => {
     if (feeLoading || !totalBalanceLoaded) {
