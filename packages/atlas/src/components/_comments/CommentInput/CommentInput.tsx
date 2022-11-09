@@ -6,7 +6,6 @@ import useResizeObserver from 'use-resize-observer'
 import { Fee } from '@/components/Fee'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { useHasEnoughBalance } from '@/hooks/useHasEnoughBalance'
 import { useSnackbar } from '@/providers/snackbars'
 import { formatNumber } from '@/utils/number'
 
@@ -111,7 +110,6 @@ export const CommentInput = forwardRef<HTMLTextAreaElement, CommentInputProps>(
       }
       onComment?.()
     }
-    const { loadingState, signTransactionHandler } = useHasEnoughBalance(!!feeLoading, fee, validateLengthAndProcess)
 
     const show = !!value || active || !!processing
     const canComment = !!value && hasInitialValueChanged
@@ -184,8 +182,8 @@ export const CommentInput = forwardRef<HTMLTextAreaElement, CommentInputProps>(
                 Cancel
               </Button>
             )}
-            <Button onClick={signTransactionHandler} disabled={processing || !canComment || loadingState}>
-              {processing ? 'Processing' : loadingState ? 'Please wait...' : 'Comment'}
+            <Button onClick={validateLengthAndProcess} disabled={processing || !canComment}>
+              {processing ? 'Processing' : 'Comment'}
             </Button>
           </ButtonsContainer>
         </Container>
