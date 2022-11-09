@@ -1,5 +1,4 @@
 import { useApolloClient } from '@apollo/client'
-import BN from 'bn.js'
 import { useCallback } from 'react'
 
 import { MetaprotocolTransactionSuccessFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
@@ -10,7 +9,6 @@ import {
 } from '@/api/queries/__generated__/transactionEvents.generated'
 import { ErrorCode, JoystreamLibError, JoystreamLibErrorType } from '@/joystream-lib/errors'
 import { ExtrinsicResult, ExtrinsicStatus, ExtrinsicStatusCallbackFn } from '@/joystream-lib/types'
-import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
 import { useUserStore } from '@/providers/user/user.store'
 import { createId } from '@/utils/createId'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
@@ -44,7 +42,6 @@ type HandleTransactionOpts<T extends ExtrinsicResult> = {
   allowMultiple?: boolean // whether to allow sending a transaction when one is still processing
   unsignedMessage?: string
   disableQNSync?: boolean
-  fee?: BN
 }
 type HandleTransactionFn = <T extends ExtrinsicResult>(opts: HandleTransactionOpts<T>) => Promise<boolean>
 
@@ -58,7 +55,6 @@ export const useTransaction = (): HandleTransactionFn => {
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const { displaySnackbar } = useSnackbar()
   const getMetaprotocolTxStatus = useMetaprotocolTransactionStatus()
-  const { totalBalance } = useSubscribeAccountBalance()
 
   return useCallback(
     async ({
@@ -73,21 +69,10 @@ export const useTransaction = (): HandleTransactionFn => {
       allowMultiple,
       unsignedMessage,
       disableQNSync,
-      fee,
     }) => {
       /* === check whether new transaction can be started === */
       if (nodeConnectionStatus !== 'connected') {
         ConsoleLogger.error('Tried submitting transaction when not connected to Joystream node')
-        return false
-      }
-
-      if (fee && totalBalance?.lt(fee)) {
-        displaySnackbar({
-          title: 'Not enough funds',
-          description:
-            "You don't have enough funds to cover blockchain transaction fee for this operation. Please, top up your account balance and try again.",
-          iconType: 'error',
-        })
         return false
       }
 
@@ -294,7 +279,6 @@ export const useTransaction = (): HandleTransactionFn => {
       nodeConnectionStatus,
       openOngoingTransactionModal,
       removeTransaction,
-      totalBalance,
       updateTransaction,
       userWalletName,
     ]

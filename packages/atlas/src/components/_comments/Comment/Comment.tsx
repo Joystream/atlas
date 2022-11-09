@@ -90,10 +90,6 @@ export const Comment: FC<CommentProps> = memo(
     const handleDeleteComment = (comment: CommentFieldsFragment) => {
       const isChannelOwner = video?.channel.ownerMember?.id === memberId && comment.author.id !== memberId
       openModal({
-        fee: {
-          methodName: isChannelOwner ? 'moderateCommentTx' : 'deleteVideoCommentTx',
-          args: isChannelOwner ? [video?.channel.id || '', comment.id] : [memberId || '', comment.id],
-        },
         type: 'destructive',
         title: 'Delete this comment?',
         description: 'Are you sure you want to delete this comment? This cannot be undone.',
@@ -174,10 +170,7 @@ export const Comment: FC<CommentProps> = memo(
     const handleCommentReaction = async (commentId: string, reactionId: CommentReaction) => {
       if (isLoggedIn) {
         setProcessingReactionsIds((previous) => [...previous, reactionId])
-        const fee =
-          reactionFee ||
-          (await getReactToVideoCommentFee(memberId && comment?.id ? [memberId, comment.id, reactionId] : undefined))
-        await reactToComment(commentId, video?.id || '', reactionId, comment?.author.handle || '', fee)
+        await reactToComment(commentId, video?.id || '', reactionId, comment?.author.handle || '')
         setProcessingReactionsIds((previous) => previous.filter((r) => r !== reactionId))
       } else {
         openSignInDialog({ onConfirm: signIn })

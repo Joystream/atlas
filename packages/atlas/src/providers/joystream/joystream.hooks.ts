@@ -153,9 +153,6 @@ export const useSubscribeAccountBalance = (
   const { activeMembership } = useUser()
   const { joystream, proxyCallback, chainState } = useJoystream()
 
-  const totalBalanceLoaded = accountBalance && lockedAccountBalance
-  const totalBalance = totalBalanceLoaded ? accountBalance.add(lockedAccountBalance) : null
-
   useEffect(() => {
     if (!activeMembership?.controllerAccount || !joystream) {
       return
@@ -190,7 +187,7 @@ export const useSubscribeAccountBalance = (
     proxyCallback,
   ])
 
-  return { accountBalance, lockedAccountBalance, totalBalanceLoaded, totalBalance }
+  return { accountBalance, lockedAccountBalance }
 }
 
 export const useBloatFeesAndPerMbFees = (assets?: VideoInputAssets | ChannelInputAssets) => {
@@ -232,6 +229,7 @@ export const useFee = <TFnName extends TxMethodName, TArgs extends Parameters<Jo
   const { totalAssetSizeFee, totalAssetBloatFee, channelStateBloatBondValue, videoStateBloatBondValue } =
     useBloatFeesAndPerMbFees(assets)
 
+  const { accountBalance } = useSubscribeAccountBalance()
   const [fullFee, setFullFee] = useState(new BN(0))
   const [loading, setLoading] = useState(false)
 
@@ -300,6 +298,7 @@ export const useFee = <TFnName extends TxMethodName, TArgs extends Parameters<Jo
   return {
     fullFee,
     getTxFee,
+    hasEnoughFunds: !accountBalance || accountBalance.gt(fullFee),
     loading,
   }
 }
