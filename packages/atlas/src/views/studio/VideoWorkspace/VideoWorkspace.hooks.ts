@@ -17,7 +17,7 @@ import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
 import { useStartFileUpload } from '@/providers/uploads/uploads.hooks'
 import { useAuthorizedUser } from '@/providers/user/user.hooks'
-import { VideoFormData, useVideoWorkspace, useVideoWorkspaceData } from '@/providers/videoWorkspace'
+import { VideoFormData, VideoWorkspace, useVideoWorkspace, useVideoWorkspaceData } from '@/providers/videoWorkspace'
 import { writeVideoDataInCache } from '@/utils/cachingAssets'
 import { createLookup } from '@/utils/data'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
@@ -42,10 +42,8 @@ export const useHandleVideoWorkspaceSubmit = () => {
 
   const { videoStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
 
-  const isEdit = !editedVideoInfo?.isDraft
-
-  const handleSubmit = useCallback(
-    async (data: VideoFormData) => {
+  return useCallback(
+    async (data: VideoFormData, videoInfo?: VideoWorkspace, assetsToBeRemoved?: string[]) => {
       if (!joystream) {
         ConsoleLogger.error('No Joystream instance! Has webworker been initialized?')
         return
@@ -56,10 +54,13 @@ export const useHandleVideoWorkspaceSubmit = () => {
         return
       }
 
+      const editedInfo = videoInfo || editedVideoInfo
+      const isEdit = !editedInfo?.isDraft
       const isNew = !isEdit
 
       const assets: VideoInputAssets = {}
       const removedAssetsIds: string[] = []
+
       const processAssets = async () => {
         if (data.assets.media) {
           const ipfsHash = await data.assets.media.hashPromise
@@ -200,7 +201,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
             isDraft: false,
             isNew: false,
           })
-          removeDrafts([editedVideoInfo?.id])
+          removeDrafts([editedInfo?.id])
         }
       }
 
@@ -224,12 +225,12 @@ export const useHandleVideoWorkspaceSubmit = () => {
             : (
                 await joystream.extrinsics
               ).updateVideo(
-                editedVideoInfo.id,
+                editedInfo.id,
                 memberId,
                 data.metadata,
                 data.nftMetadata,
                 assets,
-                removedAssetsIds,
+                assetsToBeRemoved || removedAssetsIds,
                 dataObjectStateBloatBondValue.toString(),
                 channelBucketsCount.toString(),
                 proxyCallback(updateStatus)
@@ -250,7 +251,6 @@ export const useHandleVideoWorkspaceSubmit = () => {
     [
       joystream,
       channelBucketsCount,
-      isEdit,
       handleTransaction,
       tabData?.assets.video.id,
       tabData?.assets.thumbnail.cropId,
@@ -261,7 +261,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
       addAsset,
       setEditedVideo,
       removeDrafts,
-      editedVideoInfo.id,
+      editedVideoInfo,
       memberId,
       dataObjectStateBloatBondValue,
       videoStateBloatBondValue,
@@ -271,6 +271,4 @@ export const useHandleVideoWorkspaceSubmit = () => {
       setShowFistMintDialog,
     ]
   )
-
-  return handleSubmit
 }

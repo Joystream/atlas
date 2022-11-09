@@ -304,11 +304,8 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
         refetchChannel,
         fee: newChannel ? createChannelFee : updateChannelFee,
       },
-      {
-        setValue,
-        reset,
-        getValues,
-      }
+      () => reset(getValues()),
+      setValue
     )
   })
 

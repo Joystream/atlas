@@ -1,6 +1,5 @@
 import BN from 'bn.js'
 import { useCallback } from 'react'
-import { UseFormGetValues, UseFormReset, UseFormSetValue } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
 import { FullChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
@@ -49,12 +48,6 @@ type CreateEditChannelData = {
   fee?: BN
 }
 
-type FormMethods = {
-  getValues?: UseFormGetValues<Inputs>
-  reset?: UseFormReset<Inputs>
-  setValue?: UseFormSetValue<Inputs>
-}
-
 export const useCreateEditChannelSubmit = () => {
   const { joystream, proxyCallback } = useJoystream()
   const { channelId, memberId, setActiveUser, refetchUserMemberships } = useUser()
@@ -70,7 +63,11 @@ export const useCreateEditChannelSubmit = () => {
   const addAsset = useAssetStore((state) => state.actions.addAsset)
 
   return useCallback(
-    async (data: CreateEditChannelData, hookFormMethods?: FormMethods) => {
+    async (
+      data: CreateEditChannelData,
+      onTxSync?: () => void,
+      onUploadAssets?: (field: 'avatar.contentId' | 'cover.contentId', data: string) => void
+    ) => {
       if (!joystream) {
         ConsoleLogger.error('No Joystream instance! Has webworker been initialized?')
         return
@@ -163,11 +160,11 @@ export const useCreateEditChannelSubmit = () => {
         const { channelId, assetsIds } = result
         if (assetsIds.avatarPhoto && data.avatarAsset?.url) {
           addAsset(assetsIds.avatarPhoto, { url: data.avatarAsset.url })
-          hookFormMethods?.setValue?.('avatar.contentId', assetsIds.avatarPhoto)
+          onUploadAssets?.('avatar.contentId', assetsIds.avatarPhoto)
         }
         if (assetsIds.coverPhoto && data.coverAsset?.url) {
           addAsset(assetsIds.coverPhoto, { url: data.coverAsset.url })
-          hookFormMethods?.setValue?.('cover.contentId', assetsIds.coverPhoto)
+          onUploadAssets?.('cover.contentId', assetsIds.coverPhoto)
         }
 
         if (data.newChannel) {
@@ -219,7 +216,7 @@ export const useCreateEditChannelSubmit = () => {
                 proxyCallback(updateStatus)
               ),
         onTxSync: (result) => {
-          hookFormMethods?.reset?.(hookFormMethods?.getValues?.())
+          onTxSync?.()
           return refetchDataAndUploadAssets(result)
         },
       })

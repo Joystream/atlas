@@ -32,6 +32,11 @@ import {
 } from './ImageCropModal.styles'
 import { CropperImageType, useCropper } from './cropper'
 
+type FeeData = {
+  methodName: TxMethodName
+  args?: Parameters<JoystreamLibExtrinsics[TxMethodName]>
+}
+
 export type ImageCropModalProps = {
   imageType: CropperImageType
   onConfirm: (
@@ -43,20 +48,15 @@ export type ImageCropModalProps = {
   ) => void
   onDelete?: () => void
   onError?: (error: Error) => void
+  fee?: FeeData
 } & Pick<DialogModalProps, 'onExitClick'>
-
-type FeeData = {
-  methodName: TxMethodName
-  args?: Parameters<JoystreamLibExtrinsics[TxMethodName]>
-}
 
 export type ImageCropModalImperativeHandle = {
   open: (file?: File | Blob | null, cropData?: ImageCropData, edit?: boolean) => void
-  setFee: (fee?: FeeData) => void
 }
 
 const ImageCropModalComponent: ForwardRefRenderFunction<ImageCropModalImperativeHandle, ImageCropModalProps> = (
-  { imageType, onConfirm, onDelete, onError },
+  { imageType, onConfirm, onDelete, onError, fee },
   ref
 ) => {
   const [showModal, setShowModal] = useState(false)
@@ -65,7 +65,6 @@ const ImageCropModalComponent: ForwardRefRenderFunction<ImageCropModalImperative
   const [editedImageHref, setEditedImageHref] = useState<string | null>(null)
   const [cropData, setCropData] = useState<ImageCropData | null>(null)
   const [editMode, setEditMode] = useState(false)
-  const [fee, setFee] = useState<FeeData>()
   const [originalBlob, setOriginalBlob] = useState<File | Blob | null>(null)
   const { fullFee, loading } = useFee(fee?.methodName, fee?.args && showModal ? fee.args : undefined)
   const { currentZoom, zoomRange, zoomStep, handleZoomChange, cropImage } = useCropper({
@@ -98,9 +97,6 @@ const ImageCropModalComponent: ForwardRefRenderFunction<ImageCropModalImperative
         if (cropData) setCropData(cropData)
         inputRef.current?.click()
       }
-    },
-    setFee: (fee?: FeeData) => {
-      setFee(fee)
     },
   }))
 
