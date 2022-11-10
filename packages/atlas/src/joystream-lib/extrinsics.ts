@@ -1,3 +1,4 @@
+import { channelPayoutProof, verifyChannelPayoutProof } from '@joystream/js/content'
 import {
   ChannelOwnerRemarked,
   IChannelOwnerRemarked,
@@ -6,7 +7,6 @@ import {
   ReactVideo,
 } from '@joystream/metadata-protobuf'
 import { createType } from '@joystream/types'
-import { channelPayoutProof, verifyChannelPayoutProof } from '@joystreamjs/content'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
 import { PalletCommonMerkleTreeProofElementRecord } from '@polkadot/types/lookup'
