@@ -1,4 +1,5 @@
 import { QueryHookOptions } from '@apollo/client'
+import BN from 'bn.js'
 import { useMemo } from 'react'
 
 import {
@@ -6,16 +7,22 @@ import {
   BasicMembershipFieldsFragment,
   BasicNftFieldsFragment,
   BasicVideoFieldsFragment,
-  GetNftHistoryQuery,
-  GetNftHistoryQueryVariables,
+} from '@/api/queries/__generated__/fragments.generated'
+import {
   GetNftQuery,
   GetNftQueryVariables,
   GetNftsConnectionQuery,
   GetNftsConnectionQueryVariables,
-  useGetNftHistoryQuery,
   useGetNftQuery,
   useGetNftsConnectionQuery,
-} from '@/api/queries'
+} from '@/api/queries/__generated__/nfts.generated'
+import {
+  GetNftHistoryQuery,
+  GetNftHistoryQueryVariables,
+  useGetNftHistoryQuery,
+} from '@/api/queries/__generated__/notifications.generated'
+import { videoFilter } from '@/config/contentFilter'
+import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
 
 type CommonNftProperties = {
   title: string | null | undefined
@@ -23,29 +30,31 @@ type CommonNftProperties = {
   views: number | undefined
 }
 
+const VIDEO_ID_FILTER = videoFilter.NOT?.find((item) => item.id_in)
+
 export type NftStatus = (
   | {
       status: 'auction'
       auctionId: string
       type: 'open' | 'english'
-      startingPrice: number
-      buyNowPrice: number | undefined
+      startingPrice: BN
+      buyNowPrice: BN | undefined
       topBid: BasicBidFieldsFragment | undefined
-      topBidAmount: number | undefined
+      topBidAmount: BN | undefined
       topBidder: BasicMembershipFieldsFragment | undefined
       auctionPlannedEndBlock: number | undefined
       bidLockingTime: number | undefined
-      minimalBidStep: number | undefined
+      minimalBidStep: BN | undefined
       whitelistedMembers: BasicMembershipFieldsFragment[] | undefined
     }
   | {
       status: 'idle'
-      lastSalePrice: number | undefined
+      lastSalePrice: BN | undefined
       lastSaleDate: Date | undefined
     }
   | {
       status: 'buy-now'
-      buyNowPrice: number
+      buyNowPrice: BN
     }
 ) &
   CommonNftProperties
@@ -70,14 +79,14 @@ export const getNftStatus = (
       status: 'auction',
       auctionId: auction.id,
       type: openAuction ? 'open' : 'english',
-      startingPrice: Number(auction.startingPrice) || 0,
-      buyNowPrice: Number(auction.buyNowPrice) || undefined,
+      startingPrice: new BN(auction.startingPrice || 0),
+      buyNowPrice: auction.buyNowPrice ? new BN(auction.buyNowPrice) : undefined,
       topBid: auction.topBid || undefined,
-      topBidAmount: Number(auction.topBid?.amount) || undefined,
+      topBidAmount: auction.topBid?.amount ? new BN(auction.topBid?.amount) : undefined,
       topBidder: auction.topBid?.bidder,
       auctionPlannedEndBlock: englishAuction ? englishAuction.plannedEndAtBlock : undefined,
       bidLockingTime: openAuction ? openAuction.bidLockDuration : undefined,
-      minimalBidStep: englishAuction ? englishAuction.minimalBidStep : undefined,
+      minimalBidStep: englishAuction ? tokenNumberToHapiBn(englishAuction.minimalBidStep) : undefined,
       whitelistedMembers: auction.whitelistedMembers,
     }
   }
@@ -90,13 +99,13 @@ export const getNftStatus = (
       return {
         ...commonProperties,
         status: 'buy-now',
-        buyNowPrice: Number(nft.transactionalStatus.price),
+        buyNowPrice: new BN(nft.transactionalStatus.price),
       }
     case 'TransactionalStatusIdle':
       return {
         ...commonProperties,
         status: 'idle',
-        lastSalePrice: Number(nft.lastSalePrice) || undefined,
+        lastSalePrice: nft.lastSalePrice ? new BN(nft.lastSalePrice) : undefined,
         lastSaleDate: nft.lastSaleDate ? new Date(nft.lastSaleDate) : undefined,
       }
     default:
@@ -119,7 +128,13 @@ export const useNftsConnection = (
   variables?: GetNftsConnectionQueryVariables,
   opts?: QueryHookOptions<GetNftsConnectionQuery, GetNftsConnectionQueryVariables>
 ) => {
-  const { data, ...rest } = useGetNftsConnectionQuery({ variables, ...opts })
+  const { data, ...rest } = useGetNftsConnectionQuery({
+    variables: {
+      ...variables,
+      where: { ...variables?.where, ...(VIDEO_ID_FILTER ? { NOT: [{ id_in: VIDEO_ID_FILTER.id_in }] } : {}) },
+    },
+    ...opts,
+  })
 
   return {
     nfts: data?.ownedNftsConnection.edges.map(({ node }) => node),

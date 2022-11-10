@@ -1,6 +1,6 @@
 import { Meta, Story } from '@storybook/react'
 
-import { SvgActionAddVideo } from '@/components/_icons'
+import { SvgActionAddVideo } from '@/assets/icons'
 
 import { Button, ButtonProps, TextButton, TextButtonProps } from './Button'
 

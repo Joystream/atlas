@@ -4,7 +4,8 @@ import { Banner } from '@/components/Banner'
 import { PolkadotIdenticon } from '@/components/PolkadotIdenticon'
 import { Loader } from '@/components/_loaders/Loader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useUser, useUserStore } from '@/providers/user'
+import { useUser } from '@/providers/user/user.hooks'
+import { useUserStore } from '@/providers/user/user.store'
 import { shortenAddress } from '@/utils/address'
 
 import { SignInModalStepTemplate } from './SignInModalStepTemplate'
@@ -58,8 +59,7 @@ export const SignInModalAccountStep: FC<SignInModalAccountStepProps> = ({
   return (
     <SignInModalStepTemplate
       title="Select account"
-      subtitle="Select which account you want your Joystream membership to be connected with."
-      tooltipText="To create a Joystream membership, you need to select a wallet account to connect it with first. It's 100% free."
+      subtitle="Select a wallet account you want your Joystream blockchain membership to be connected with."
       hasNavigatedBack={hasNavigatedBack}
     >
       {accountsWithNoMembership.length !== 0 ? (
@@ -77,7 +77,11 @@ export const SignInModalAccountStep: FC<SignInModalAccountStepProps> = ({
           ))}
         </ListItemsWrapper>
       ) : (
-        <Banner description={`Waiting for new ${wallet?.title} accounts...`} icon={<Loader variant="small" />} />
+        <Banner
+          title={`Waiting for new ${wallet?.title} accounts...`}
+          description="Open your wallet extension and follow the on-screen prompts to create an account. Once you do, your account will appear here."
+          icon={<Loader variant="small" />}
+        />
       )}
     </SignInModalStepTemplate>
   )

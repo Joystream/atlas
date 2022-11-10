@@ -1,7 +1,7 @@
 import { FC, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
 
+import { SvgActionClose } from '@/assets/icons'
 import { Text } from '@/components/Text'
-import { SvgActionClose } from '@/components/_icons'
 
 import {
   SnackbarActionButton,

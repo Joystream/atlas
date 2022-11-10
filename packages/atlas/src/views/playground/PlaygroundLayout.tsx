@@ -3,17 +3,19 @@ import { useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { Link } from 'react-router-dom'
 
+import { SvgAppLogoShort } from '@/assets/logos'
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgJoystreamLogoShort } from '@/components/_illustrations'
 import { TopbarBase } from '@/components/_navigation/TopbarBase'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { absoluteRoutes } from '@/config/routes'
-import { useMemberAvatar } from '@/providers/assets'
+import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
-import { UserProvider, useUser } from '@/providers/user'
+import { useUser } from '@/providers/user/user.hooks'
+import { UserProvider } from '@/providers/user/user.provider'
 import { cVar } from '@/styles'
 
 import {
@@ -22,8 +24,6 @@ import {
   PlaygroundIframe,
   PlaygroundImageDownsizing,
   PlaygroundIndirectSignInDialog,
-  PlaygroundMinimizedTransaction,
-  PlaygroundNftExtrinsics,
   PlaygroundNftPurchase,
   PlaygroundNftSettleAuction,
   PlaygroundNftWhitelistMembers,
@@ -32,7 +32,6 @@ import {
 } from './Playgrounds'
 
 const playgroundRoutes = [
-  { path: 'nft-extrinsics', element: <PlaygroundNftExtrinsics />, name: 'NFT extrinsics' },
   { path: 'nft-purchase', element: <PlaygroundNftPurchase />, name: 'NFT Purchase' },
   { path: 'settling-auction', element: <PlaygroundNftSettleAuction />, name: 'NFT Settling an auction' },
   { path: 'whitelisting-members', element: <PlaygroundNftWhitelistMembers />, name: 'NFT Whitelisting members' },
@@ -40,11 +39,6 @@ const playgroundRoutes = [
   { path: 'token-price', element: <PlaygroundTokenPrice />, name: 'Token price' },
   { path: 'indirect-signin-dialog', element: <PlaygroundIndirectSignInDialog />, name: 'Indirect sign in dialog' },
   { path: 'image-downsizing', element: <PlaygroundImageDownsizing />, name: 'Image downsizing' },
-  {
-    path: 'minimized-transaction',
-    element: <PlaygroundMinimizedTransaction />,
-    name: 'Minimized transaction snackbar',
-  },
   { path: 'reactions-comments', element: <PlaygroundReactionsComments />, name: 'Reactions & comments' },
   { path: 'iframe', element: <PlaygroundIframe />, name: 'Iframe' },
   { path: 'captcha', element: <PlaygroundCaptcha />, name: 'Captcha' },
@@ -54,12 +48,13 @@ const PlaygroundLayout = () => {
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
   const { activeMembership, isLoggedIn, signIn } = useUser()
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
+  const { openSignInDialog } = useDisplaySignInDialog()
   return (
     <UserProvider>
       <TopbarBase
         fullLogoNode={
           <LogoWrapper>
-            <SvgJoystreamLogoShort />
+            <SvgAppLogoShort height={32} width={undefined} />
             <Text as="p" variant="h500" margin={{ left: 2 }}>
               Playground
             </Text>
@@ -82,7 +77,7 @@ const PlaygroundLayout = () => {
               onClick={() => setIsMemberDropdownActive(true)}
             />
           ) : (
-            <Button onClick={() => signIn()}>Sign in</Button>
+            <Button onClick={() => signIn(undefined, openSignInDialog)}>Sign in</Button>
           )}
         </ButtonContainer>
       </TopbarBase>

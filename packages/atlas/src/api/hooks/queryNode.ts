@@ -4,7 +4,7 @@ import {
   GetQueryNodeStateSubscription,
   GetQueryNodeStateSubscriptionVariables,
   useGetQueryNodeStateSubscription,
-} from '@/api/queries'
+} from '@/api/queries/__generated__/queryNode.generated'
 
 export const useQueryNodeStateSubscription = (
   opts?: SubscriptionHookOptions<GetQueryNodeStateSubscription, GetQueryNodeStateSubscriptionVariables>

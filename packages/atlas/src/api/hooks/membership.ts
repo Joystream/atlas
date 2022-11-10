@@ -1,27 +1,10 @@
 import { QueryHookOptions } from '@apollo/client'
 
 import {
-  GetMembershipQuery,
-  GetMembershipQueryVariables,
   GetMembershipsQuery,
   GetMembershipsQueryVariables,
-  useGetMembershipQuery,
   useGetMembershipsQuery,
-} from '@/api/queries'
-
-export const useMembership = (
-  variables: GetMembershipQueryVariables,
-  opts?: QueryHookOptions<GetMembershipQuery, GetMembershipQueryVariables>
-) => {
-  const { data, ...rest } = useGetMembershipQuery({
-    ...opts,
-    variables,
-  })
-  return {
-    membership: data?.membershipByUniqueInput,
-    ...rest,
-  }
-}
+} from '@/api/queries/__generated__/memberships.generated'
 
 export const useMemberships = (
   variables: GetMembershipsQueryVariables,

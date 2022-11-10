@@ -1,9 +1,9 @@
 import { Global, SerializedStyles, css } from '@emotion/react'
-import emotionNormalize from 'emotion-normalize'
 import { FC } from 'react'
 
 import { cVar, variables } from './generated/variables'
 import { media } from './media'
+import { normalize } from './normalize'
 import { sizes } from './sizes'
 import { transitionStyles } from './transitions'
 
@@ -11,7 +11,7 @@ const scrollbarBackgroundColor = cVar('colorCoreNeutral800Lighten')
 const scrollbarThumbColor = cVar('colorCoreNeutral700Lighten')
 
 const globalStyles = css`
-  ${emotionNormalize};
+  ${normalize};
   ${variables};
 
   html,
@@ -77,6 +77,14 @@ const globalStyles = css`
 
     scrollbar-width: thin;
     scrollbar-color: ${scrollbarThumbColor} ${scrollbarBackgroundColor};
+  }
+
+  /* global easing settings for aos library */
+
+  [data-aos] {
+    &[data-aos][data-aos-easing='atlas-easing'] {
+      transition-timing-function: cubic-bezier(0.09, 0.43, 0.3, 0.99);
+    }
   }
 `
 

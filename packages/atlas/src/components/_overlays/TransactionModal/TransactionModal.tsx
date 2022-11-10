@@ -1,13 +1,13 @@
 import { FC, useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
+import { SvgActionCheck, SvgLogoPolkadot } from '@/assets/icons'
 import { LottiePlayer } from '@/components/LottiePlayer'
 import { Text } from '@/components/Text'
-import { SvgActionCheck, SvgLogoPolkadot } from '@/components/_icons'
-import { JOYSTREAM_STORAGE_DISCORD_URL } from '@/config/urls'
-import { ErrorCode, ExtrinsicStatus } from '@/joystream-lib'
+import { ErrorCode } from '@/joystream-lib/errors'
+import { ExtrinsicStatus } from '@/joystream-lib/types'
 import { useOverlayManager } from '@/providers/overlayManager'
-import { useUser, useUserStore } from '@/providers/user'
+import { useUserStore } from '@/providers/user/user.store'
 import { transitions } from '@/styles'
 
 import { getExtrinsicStatusDetails } from './TransactionModal.constants'
@@ -33,10 +33,10 @@ export type TransactionModalProps = {
 }
 
 export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, className, errorCode }) => {
-  const [polkadotLogoVisible, setPolkadotLogoVisible] = useState(false)
+  const [walletLogoVisible, setWalletLogoVisible] = useState(false)
   const { decrementOverlaysOpenCount } = useOverlayManager()
   const [initialStatus, setInitialStatus] = useState<number | null>(null)
-  const userWalletName = useUserStore((state) => state.wallet?.title)
+  const wallet = useUserStore((state) => state.wallet)
   const nonUploadTransaction = initialStatus === ExtrinsicStatus.Unsigned
   const error = status === ExtrinsicStatus.Error
   const stepDetails =
@@ -44,11 +44,9 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
       ? getExtrinsicStatusDetails(
           status === ExtrinsicStatus.Completed ? ExtrinsicStatus.Syncing : status,
           errorCode,
-          userWalletName
+          wallet?.title
         )
       : null
-  const { channelId } = useUser()
-  const wallet = useUserStore((state) => state.wallet)
 
   useEffect(() => {
     if (status !== null && initialStatus === null) {
@@ -58,7 +56,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
       setInitialStatus(null)
     }
     if (status) {
-      setPolkadotLogoVisible(false)
+      setWalletLogoVisible(false)
     }
   }, [initialStatus, status])
 
@@ -106,7 +104,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
       </StepsBar>
       <StyledTransactionIllustration>
         <CSSTransition
-          in={polkadotLogoVisible}
+          in={walletLogoVisible}
           timeout={200}
           classNames={transitions.names.fade}
           mountOnEnter
@@ -121,13 +119,13 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
             </Text>
           </WalletInfoWrapper>
         </CSSTransition>
-        {!polkadotLogoVisible && status !== ExtrinsicStatus.Completed && stepDetails && (
+        {!walletLogoVisible && status !== ExtrinsicStatus.Completed && stepDetails && (
           <LottiePlayer
             loop={stepDetails.animation.loop}
             data={stepDetails.animation.data}
             size={stepDetails.animation.size}
             onComplete={() =>
-              !stepDetails?.animation?.loop && status === ExtrinsicStatus.Unsigned && setPolkadotLogoVisible(true)
+              !stepDetails?.animation?.loop && status === ExtrinsicStatus.Unsigned && setWalletLogoVisible(true)
             }
           />
         )}
@@ -148,14 +146,6 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
       </StyledTransactionIllustration>
       <StyledDialog
         title={stepDetails?.title}
-        primaryButton={
-          status === ExtrinsicStatus.Error && errorCode === ErrorCode.VoucherSizeLimitExceeded
-            ? {
-                text: 'Open Discord',
-                to: JOYSTREAM_STORAGE_DISCORD_URL,
-              }
-            : undefined
-        }
         secondaryButton={{
           text: status && [ExtrinsicStatus.Error, ExtrinsicStatus.Completed].includes(status) ? 'Close' : 'Cancel',
           onClick: onClose,
@@ -163,9 +153,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
         }}
       >
         <Text as="span" variant="t200" color="colorText">
-          {status === ExtrinsicStatus.Error && errorCode === ErrorCode.VoucherSizeLimitExceeded && channelId
-            ? `${stepDetails?.description} Channel ID: ${channelId}`
-            : stepDetails?.description}
+          {stepDetails?.description}
         </Text>
       </StyledDialog>
     </StyledModal>

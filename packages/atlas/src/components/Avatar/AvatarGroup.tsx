@@ -1,7 +1,7 @@
 import { FC, Fragment, PropsWithChildren, useRef, useState } from 'react'
 
-import { BasicMembershipFieldsFragment } from '@/api/queries'
-import { useMemberAvatar } from '@/providers/assets'
+import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 
 import { AvatarProps } from './Avatar'
 import {
@@ -18,7 +18,7 @@ import { Tooltip } from '../Tooltip'
 type SharedAvatarGroupAvatarProps = PropsWithChildren<{
   tooltipText?: string
 }> &
-  Pick<AvatarProps, 'onClick' | 'withoutOutline' | 'loading'>
+  Pick<AvatarProps, 'onClick' | 'loading'>
 
 export type AvatarGroupUrlAvatar = {
   __typename?: 'AvatarGroupUrlAvatar'
@@ -113,7 +113,6 @@ const SingleAvatar: FC<SingleAvatarProps> = ({ avatar, loading: loadingProp, siz
       loading={loading}
       assetUrl={url}
       size={size}
-      withoutOutline={avatar.withoutOutline}
       onClick={(e) => {
         e.stopPropagation()
         e.preventDefault()

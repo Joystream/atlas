@@ -1,7 +1,8 @@
 import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
-import { useMemberships } from '@/api/hooks'
+import { useMemberships } from '@/api/hooks/membership'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
+import { isMobile } from '@/utils/browser'
 import { AssetLogger, SentryLogger } from '@/utils/logs'
 
 import { useSignerWallet } from './user.helpers'
@@ -10,6 +11,8 @@ import { UserContextValue } from './user.types'
 
 const UserContext = createContext<undefined | UserContextValue>(undefined)
 UserContext.displayName = 'UserContext'
+
+const isMobileDevice = isMobile()
 
 export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   const { accountId, memberId, channelId, walletAccounts, walletStatus, lastUsedWalletName } = useUserStore(
@@ -25,6 +28,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   const {
     memberships: currentMemberships,
     previousData,
+    loading: membershipsLoading,
     refetch,
     error,
   } = useMemberships(
@@ -47,10 +51,17 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [refetch])
 
   const signIn = useCallback(
-    async (walletName?: string): Promise<boolean> => {
-      let accounts = walletAccounts
+    async (
+      walletName?: string,
+      mobileCallback?: ({ onConfirm }: { onConfirm: () => void }) => void
+    ): Promise<boolean> => {
+      let accounts = []
 
       if (!walletName) {
+        if (isMobileDevice && mobileCallback) {
+          mobileCallback?.({ onConfirm: () => setSignInModalOpen(true) })
+          return true
+        }
         setSignInModalOpen(true)
         return true
       }
@@ -85,17 +96,24 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
 
       if (!memberId && memberships.length) {
         const firstMembership = memberships[0]
+        const sortedMemberChannels = firstMembership.channels.slice().sort((a, b) => {
+          // for some reason createdAt are sometimes not yet parsed into Date objects at this point
+          const aCreatedAtStr = typeof a.createdAt === 'string' ? a.createdAt : a.createdAt.toISOString()
+          const bCreatedAtStr = typeof b.createdAt === 'string' ? b.createdAt : b.createdAt.toISOString()
+
+          return aCreatedAtStr.localeCompare(bCreatedAtStr)
+        })
         setActiveUser({
           memberId: firstMembership.id,
           accountId: firstMembership.controllerAccount,
-          channelId: firstMembership.channels[0]?.id || null,
+          channelId: sortedMemberChannels[0]?.id || null,
         })
         return true
       }
 
       return true
     },
-    [initSignerWallet, memberId, refetch, setActiveUser, setSignInModalOpen, walletAccounts]
+    [initSignerWallet, memberId, refetch, setActiveUser, setSignInModalOpen]
   )
 
   // keep user used by loggers in sync
@@ -132,12 +150,13 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   const contextValue: UserContextValue = useMemo(
     () => ({
       memberships: memberships || [],
+      membershipsLoading,
       activeMembership,
       isAuthLoading,
       signIn,
       refetchUserMemberships,
     }),
-    [memberships, activeMembership, isAuthLoading, signIn, refetchUserMemberships]
+    [memberships, activeMembership, isAuthLoading, signIn, refetchUserMemberships, membershipsLoading]
   )
 
   if (error) {

@@ -1,9 +1,9 @@
 import { FC, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
+import { SvgActionCheck, SvgActionChevronR } from '@/assets/icons'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionCheck, SvgActionChevronR } from '@/components/_icons'
 import { transitions } from '@/styles'
 
 import {

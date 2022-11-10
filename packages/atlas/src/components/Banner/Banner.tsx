@@ -1,6 +1,6 @@
 import { FC, ReactNode } from 'react'
 
-import { SvgActionClose } from '@/components/_icons'
+import { SvgActionClose } from '@/assets/icons'
 import { usePersonalDataStore } from '@/providers/personalData'
 
 import { BannerDescription, BannerHeader, BannerText, BannerWrapper, CloseButton, IconWrapper } from './Banner.styles'

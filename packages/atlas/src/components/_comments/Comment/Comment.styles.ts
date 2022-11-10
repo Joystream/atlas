@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
+import { SvgActionTrash } from '@/assets/icons'
 import { AvatarGroup } from '@/components/Avatar/AvatarGroup'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionTrash } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, media, sizes, square } from '@/styles'
 

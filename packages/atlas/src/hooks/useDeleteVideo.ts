@@ -1,12 +1,20 @@
 import { useApolloClient } from '@apollo/client'
 import { useCallback } from 'react'
 
+import {
+  GetFullVideoDocument,
+  GetFullVideoQuery,
+  GetFullVideoQueryVariables,
+} from '@/api/queries/__generated__/videos.generated'
+import { useStorageOperators } from '@/providers/assets/assets.provider'
 import { useConfirmationModal } from '@/providers/confirmationModal'
-import { useJoystream } from '@/providers/joystream'
-import { useTransaction } from '@/providers/transactions'
-import { useUploadsStore } from '@/providers/uploadsManager'
-import { useAuthorizedUser } from '@/providers/user'
+import { useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { useUploadsStore } from '@/providers/uploads/uploads.store'
+import { useAuthorizedUser } from '@/providers/user/user.hooks'
+import { createChannelBagId } from '@/utils/asset'
 import { removeVideoFromCache } from '@/utils/cachingAssets'
+import { ConsoleLogger } from '@/utils/logs'
 
 export const useDeleteVideo = () => {
   const { joystream, proxyCallback } = useJoystream()
@@ -16,6 +24,7 @@ export const useDeleteVideo = () => {
   const [openDeleteVideoDialog, closeDeleteVideoDialog] = useConfirmationModal()
 
   const client = useApolloClient()
+  const { getAllStorageOperatorsForBag } = useStorageOperators()
 
   const confirmDeleteVideo = useCallback(
     async (videoId: string, onTxSync?: () => void) => {
@@ -23,17 +32,53 @@ export const useDeleteVideo = () => {
         return
       }
 
+      const {
+        data: { videoByUniqueInput: video },
+      } = await client.query<GetFullVideoQuery, GetFullVideoQueryVariables>({
+        query: GetFullVideoDocument,
+        variables: { where: { id: videoId } },
+      })
+      if (!video) {
+        ConsoleLogger.error('No video found when deleting', { videoId })
+        return
+      }
+      const channelBagId = createChannelBagId(video.channel.id)
+      const channelStorageBuckets = await getAllStorageOperatorsForBag(channelBagId, true)
+      const channelStorageBucketsCount = channelStorageBuckets?.length ?? 0
+
+      let dataObjectsCount = 0
+      if (video.media) dataObjectsCount++
+      if (video.thumbnailPhoto) dataObjectsCount++
+      if (video.subtitles?.length) {
+        const subtitlesWithAsset = video.subtitles.filter((subtitle) => subtitle.asset)
+        dataObjectsCount += subtitlesWithAsset.length
+      }
+
       handleTransaction({
         txFactory: async (updateStatus) =>
-          (await joystream.extrinsics).deleteVideo(videoId, memberId, proxyCallback(updateStatus)),
+          (await joystream.extrinsics).deleteVideo(
+            videoId,
+            memberId,
+            dataObjectsCount,
+            channelStorageBucketsCount.toString(),
+            proxyCallback(updateStatus)
+          ),
         onTxSync: async () => {
-          removeVideoFromCache(videoId, client)
+          removeVideoFromCache(video.id, client)
           removeAssetsWithParentFromUploads('video', videoId)
           onTxSync?.()
         },
       })
     },
-    [memberId, client, handleTransaction, joystream, proxyCallback, removeAssetsWithParentFromUploads]
+    [
+      joystream,
+      client,
+      getAllStorageOperatorsForBag,
+      handleTransaction,
+      memberId,
+      proxyCallback,
+      removeAssetsWithParentFromUploads,
+    ]
   )
 
   return useCallback(
@@ -56,8 +101,12 @@ export const useDeleteVideo = () => {
           },
         },
         type: 'destructive',
+        fee: {
+          methodName: 'deleteVideoTx',
+          args: [videoId, memberId],
+        },
       })
     },
-    [closeDeleteVideoDialog, confirmDeleteVideo, openDeleteVideoDialog]
+    [closeDeleteVideoDialog, confirmDeleteVideo, memberId, openDeleteVideoDialog]
   )
 }

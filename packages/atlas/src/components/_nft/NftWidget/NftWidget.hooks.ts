@@ -1,14 +1,15 @@
+import BN from 'bn.js'
 import { differenceInCalendarDays, differenceInSeconds } from 'date-fns'
 import { useEffect } from 'react'
 
-import { useNft, useNftHistory } from '@/api/hooks'
 import { useBids } from '@/api/hooks/bids'
-import { FullVideoFieldsFragment } from '@/api/queries'
+import { useNft, useNftHistory } from '@/api/hooks/nfts'
+import { FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { NftWidgetProps } from '@/components/_nft/NftWidget/NftWidget'
-import { NFT_STATUS_POLLING_INTERVAL } from '@/config/nft'
+import { atlasConfig } from '@/config'
 import { useNftState } from '@/hooks/useNftState'
-import { useMemberAvatar } from '@/providers/assets'
-import { useUser } from '@/providers/user'
+import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
 
 import { NftHistoryEntry } from './NftHistory'
@@ -33,13 +34,15 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
     isUserWhitelisted,
     plannedEndAtBlock,
     hasTimersLoaded,
+    userBidCreatedAt,
+    userBidAmount,
   } = useNftState(nft)
 
   // poll for NFT changes only if the NFT exists
   const hasNft = !!nft
   useEffect(() => {
     if (!called || !hasNft) return
-    startPolling(NFT_STATUS_POLLING_INTERVAL)
+    startPolling(atlasConfig.features.nft.statusPollingInterval)
 
     return () => {
       stopPolling()
@@ -78,18 +81,25 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
   const owner = nft?.ownerMember
 
   const { url: ownerAvatarUri } = useMemberAvatar(owner)
+  const { url: creatorAvatarUri } = useAsset(nft?.creatorChannel.avatarPhoto)
   const { url: topBidderAvatarUri } = useMemberAvatar(nftStatus?.status === 'auction' ? nftStatus.topBidder : undefined)
 
   const { entries: nftHistory } = useNftHistoryEntries(video?.id ?? '', {
     skip: !nft,
-    pollInterval: NFT_STATUS_POLLING_INTERVAL,
+    pollInterval: atlasConfig.features.nft.statusPollingInterval,
   })
+
+  const isOwnedByChannel = nft?.isOwnedByChannel
+  const ownerHandle = isOwnedByChannel ? nft?.creatorChannel.title : owner?.handle
+  const ownerAvatar = isOwnedByChannel ? creatorAvatarUri : ownerAvatarUri
+  const creatorId = nft?.creatorChannel.id
 
   switch (nftStatus?.status) {
     case 'auction': {
       return {
-        ownerHandle: owner?.handle,
-        ownerAvatarUri,
+        ownerHandle,
+        ownerAvatar,
+        creatorId,
         isOwner,
         needsSettling,
         bidFromPreviousAuction,
@@ -109,17 +119,21 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
           auctionBeginsInDays: startsAtDate ? differenceInCalendarDays(startsAtDate, new Date()) : 0,
           auctionBeginsInSeconds: startsAtDate ? differenceInSeconds(startsAtDate, new Date()) : 0,
           topBidderHandle: nftStatus.topBidder?.handle,
-          userBidAmount: Number(userBid?.amount) || undefined,
+          userBidAmount: userBid?.amount ? new BN(userBid?.amount) : undefined,
           isUserWhitelisted,
         },
         nftHistory,
         saleType,
+        userBidCreatedAt,
+        userBidAmount,
+        isOwnedByChannel,
       }
     }
     case 'buy-now':
       return {
-        ownerHandle: owner?.handle,
-        ownerAvatarUri,
+        ownerHandle,
+        ownerAvatar,
+        creatorId,
         isOwner,
         needsSettling,
         bidFromPreviousAuction,
@@ -128,11 +142,15 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
         },
         nftHistory,
         saleType,
+        userBidCreatedAt,
+        userBidAmount,
+        isOwnedByChannel: nft?.isOwnedByChannel,
       }
     case 'idle':
       return {
-        ownerHandle: owner?.handle,
-        ownerAvatarUri,
+        ownerHandle,
+        ownerAvatar,
+        creatorId,
         isOwner,
         needsSettling,
         bidFromPreviousAuction,
@@ -141,6 +159,9 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
         },
         nftHistory,
         saleType,
+        userBidCreatedAt,
+        userBidAmount,
+        isOwnedByChannel,
       }
   }
 
@@ -169,28 +190,28 @@ export const useNftHistoryEntries = (videoId: string | null, opts?: Parameters<t
             date: e.createdAt,
             member: e.ownerMember,
             text: 'Put on sale',
-            joyAmount: Number(e.price),
+            joyAmount: new BN(e.price),
           }
         } else if (e.__typename === 'AuctionBidMadeEvent') {
           return {
             date: e.createdAt,
             member: e.member,
             text: 'Bid placed',
-            joyAmount: Number(e.bidAmount),
+            joyAmount: new BN(e.bidAmount),
           }
         } else if (e.__typename === 'BidMadeCompletingAuctionEvent') {
           return {
             date: e.createdAt,
             member: e.member,
             text: 'Auction won',
-            joyAmount: Number(e.price),
+            joyAmount: new BN(e.price),
           }
         } else if (e.__typename === 'NftBoughtEvent') {
           return {
             date: e.createdAt,
             member: e.member,
             text: 'Bought',
-            joyAmount: Number(e.price),
+            joyAmount: new BN(e.price),
           }
         } else if (e.__typename === 'EnglishAuctionSettledEvent') {
           return {
@@ -203,7 +224,7 @@ export const useNftHistoryEntries = (videoId: string | null, opts?: Parameters<t
             date: e.createdAt,
             member: e.winningBid?.bidder,
             text: 'Auction won',
-            joyAmount: Number(e.winningBid?.amount) || undefined,
+            joyAmount: e.winningBid?.amount ? new BN(e.winningBid?.amount) : undefined,
           }
         } else if (e.__typename === 'AuctionBidCanceledEvent') {
           return {
@@ -228,7 +249,7 @@ export const useNftHistoryEntries = (videoId: string | null, opts?: Parameters<t
             date: e.createdAt,
             member: e.ownerMember,
             text: 'Price changed',
-            joyAmount: Number(e.newPrice),
+            joyAmount: new BN(e.newPrice),
           }
         } else {
           throw 'Unknown history event type'

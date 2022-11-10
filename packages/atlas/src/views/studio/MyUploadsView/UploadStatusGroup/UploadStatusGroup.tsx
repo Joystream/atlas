@@ -3,16 +3,15 @@ import { useLocation } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import shallow from 'zustand/shallow'
 
-import { useFullChannel, useFullVideo } from '@/api/hooks'
+import { useFullVideo } from '@/api/hooks/video'
+import { SvgAlertsError24, SvgAlertsSuccess24 } from '@/assets/icons'
 import { Text } from '@/components/Text'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
-import { SvgAlertsError24, SvgAlertsSuccess24 } from '@/components/_icons'
 import { Loader } from '@/components/_loaders/Loader'
-import { useUploadsStore } from '@/providers/uploadsManager'
-import { AssetUpload } from '@/providers/uploadsManager/types'
+import { useUploadsStore } from '@/providers/uploads/uploads.store'
+import { AssetUpload } from '@/providers/uploads/uploads.types'
 import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
-import { UploadStatusGroupSkeletonLoader } from '@/views/studio/MyUploadsView/UploadStatusGroup/UploadStatusGroupSkeletonLoader'
 
 import {
   AssetGroupTitleText,
@@ -25,6 +24,7 @@ import {
   UploadStatusGroupContainer,
   UploadStatusGroupSize,
 } from './UploadStatusGroup.styles'
+import { UploadStatusGroupSkeletonLoader } from './UploadStatusGroupSkeletonLoader'
 
 import { UploadStatus } from '../UploadStatus'
 
@@ -47,8 +47,9 @@ export const UploadStatusGroup: FC<UploadStatusGroupProps> = ({ uploads, size = 
 
   const isChannelType = uploads[0].parentObject.type === 'channel'
 
-  const { video, loading: videoLoading } = useFullVideo(uploads[0].parentObject.id, { skip: isChannelType })
-  const { channel, loading: channelLoading } = useFullChannel(uploads[0].parentObject.id, { skip: !isChannelType })
+  const { video, loading: videoLoading } = useFullVideo(uploads[0].parentObject.id, {
+    skip: isChannelType,
+  })
 
   const isWaiting = uploadsStatuses.every((file) => file?.progress === 0 && file?.lastStatus === 'inProgress')
   const isCompleted = uploadsStatuses.every((file) => file?.lastStatus === 'completed')
@@ -110,22 +111,7 @@ export const UploadStatusGroup: FC<UploadStatusGroupProps> = ({ uploads, size = 
     }
   }
 
-  const enrichedUploadData =
-    (isChannelType && (channelLoading || !channel)) || (!isChannelType && (videoLoading || !video))
-      ? uploads
-      : uploads.map((asset) => {
-          const typeToAsset = {
-            'video': video?.media,
-            'thumbnail': video?.thumbnailPhoto,
-            'avatar': channel?.avatarPhoto,
-            'cover': channel?.coverPhoto,
-          }
-          const fetchedAsset = typeToAsset[asset.type]
-          const enrichedAsset: AssetUpload = { ...asset, ipfsHash: fetchedAsset?.ipfsHash }
-          return enrichedAsset
-        })
-
-  if (videoLoading || channelLoading) {
+  if (videoLoading) {
     return <UploadStatusGroupSkeletonLoader />
   }
 
@@ -190,7 +176,7 @@ export const UploadStatusGroup: FC<UploadStatusGroupProps> = ({ uploads, size = 
         </UploadInfoContainer>
       </UploadStatusGroupContainer>
       <AssetsDrawerContainer isActive={isAssetsDrawerActive} ref={drawer} maxHeight={drawer?.current?.scrollHeight}>
-        {enrichedUploadData.map((file, idx) => (
+        {uploads.map((file, idx) => (
           <UploadStatus size={size} key={file.id} asset={file} isLast={uploads.length === idx + 1} />
         ))}
       </AssetsDrawerContainer>

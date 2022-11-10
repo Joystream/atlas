@@ -1,22 +1,23 @@
+import BN from 'bn.js'
 import { differenceInSeconds } from 'date-fns'
 import { FC, memo } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
-import { BasicBidFieldsFragment, FullBidFieldsFragment } from '@/api/queries'
+import { BasicBidFieldsFragment, FullBidFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { SvgAlertsInformative24 } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { Banner } from '@/components/Banner'
+import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { GridItem } from '@/components/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgAlertsInformative24 } from '@/components/_icons'
-import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { absoluteRoutes } from '@/config/routes'
 import { useDeepMemo } from '@/hooks/useDeepMemo'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { EnglishTimerState } from '@/hooks/useNftState'
-import { NftSaleType } from '@/joystream-lib'
-import { useTokenPrice } from '@/providers/joystream'
+import { NftSaleType } from '@/joystream-lib/types'
+import { useTokenPrice } from '@/providers/joystream/joystream.hooks'
 import { formatDateTime, formatDurationShort, formatTime } from '@/utils/time'
 
 import { NftHistory, NftHistoryEntry } from './NftHistory'
@@ -37,14 +38,14 @@ import {
 export type Auction = {
   status: 'auction'
   type: 'open' | 'english'
-  startingPrice: number
-  buyNowPrice: number | undefined
+  startingPrice: BN
+  buyNowPrice: BN | undefined
   topBid: BasicBidFieldsFragment | undefined
-  topBidAmount: number | undefined
+  topBidAmount: BN | undefined
   topBidderHandle: string | undefined
   topBidderAvatarUri: string | null | undefined
   isUserTopBidder: boolean | undefined
-  userBidAmount: number | undefined
+  userBidAmount: BN | undefined
   userBidUnlockDate: Date | undefined
   canWithdrawBid: boolean | undefined
   canChangeBid: boolean | undefined
@@ -60,8 +61,9 @@ export type Auction = {
 }
 
 export type NftWidgetProps = {
-  ownerHandle: string | undefined
-  ownerAvatarUri: string | null | undefined
+  ownerHandle: string | null | undefined
+  ownerAvatar: string | null | undefined
+  creatorId?: string
   isOwner: boolean | undefined
   needsSettling: boolean | undefined
   bidFromPreviousAuction: FullBidFieldsFragment | undefined
@@ -69,12 +71,12 @@ export type NftWidgetProps = {
   nftStatus?:
     | {
         status: 'idle'
-        lastSalePrice: number | undefined
+        lastSalePrice: BN | undefined
         lastSaleDate: Date | undefined
       }
     | {
         status: 'buy-now'
-        buyNowPrice: number
+        buyNowPrice: BN
       }
     | Auction
     | undefined
@@ -86,18 +88,22 @@ export type NftWidgetProps = {
   onNftAcceptBid?: () => void
   onNftCancelSale?: () => void
   onNftChangePrice?: () => void
-  onWithdrawBid?: () => void
+  onWithdrawBid?: (bid?: BN, createdAt?: Date) => void
+  userBidCreatedAt?: Date
+  userBidAmount?: BN
+  isOwnedByChannel?: boolean
 }
 
 const SMALL_VARIANT_MAXIMUM_SIZE = 416
 
 export const NftWidget: FC<NftWidgetProps> = ({
   ownerHandle,
+  creatorId,
   isOwner,
   nftStatus,
   nftHistory,
   needsSettling,
-  ownerAvatarUri,
+  ownerAvatar,
   onNftPutOnSale,
   onNftAcceptBid,
   onWithdrawBid,
@@ -107,6 +113,9 @@ export const NftWidget: FC<NftWidgetProps> = ({
   onNftPurchase,
   onNftSettlement,
   onNftBuyNow,
+  userBidCreatedAt,
+  userBidAmount,
+  isOwnedByChannel,
 }) => {
   const timestamp = useMsTimestamp()
   const { ref, width = SMALL_VARIANT_MAXIMUM_SIZE + 1 } = useResizeObserver({
@@ -114,7 +123,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
   })
 
   const size: Size = width > SMALL_VARIANT_MAXIMUM_SIZE ? 'medium' : 'small'
-  const { convertToUSD, isLoadingPrice } = useTokenPrice()
+  const { convertHapiToUSD, isLoadingPrice } = useTokenPrice()
 
   const content = useDeepMemo(() => {
     if (!nftStatus) {
@@ -124,11 +133,14 @@ export const NftWidget: FC<NftWidgetProps> = ({
     const buttonSize = size === 'small' ? 'medium' : 'large'
     const buttonColumnSpan = size === 'small' ? 1 : 2
     const timerColumnSpan = size === 'small' ? 1 : 2
-    const BuyNow = memo(({ buyNowPrice }: { buyNowPrice?: number }) =>
-      buyNowPrice ? (
+
+    const BuyNow = memo(({ buyNowPrice }: { buyNowPrice?: BN }) => {
+      const buyNowPriceInUsd = buyNowPrice && convertHapiToUSD(buyNowPrice)
+      return buyNowPrice?.gtn(0) ? (
         <NftInfoItem
           size={size}
           label="Buy now"
+          disableSecondary={buyNowPriceInUsd === null}
           content={
             <>
               <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
@@ -136,31 +148,37 @@ export const NftWidget: FC<NftWidgetProps> = ({
             </>
           }
           secondaryText={
-            convertToUSD(buyNowPrice) ? (
-              <NumberFormat as="span" color="colorText" format="dollar" value={convertToUSD(buyNowPrice) ?? 0} />
-            ) : undefined
+            buyNowPriceInUsd && <NumberFormat as="span" color="colorText" format="dollar" value={buyNowPriceInUsd} />
           }
         />
       ) : null
-    )
+    })
     BuyNow.displayName = 'BuyNow'
     const InfoBanner = ({ title, description }: { title: string; description: string }) => (
       <GridItem colSpan={buttonColumnSpan}>
         <Banner icon={<SvgAlertsInformative24 />} {...{ title, description }} />
       </GridItem>
     )
+
     const WithdrawBidFromPreviousAuction = ({ secondary }: { secondary?: boolean }) =>
       bidFromPreviousAuction ? (
         <>
           <GridItem colSpan={buttonColumnSpan}>
-            <Button variant={secondary ? 'secondary' : undefined} fullWidth size={buttonSize} onClick={onWithdrawBid}>
+            <Button
+              variant={secondary ? 'secondary' : undefined}
+              fullWidth
+              size={buttonSize}
+              onClick={() =>
+                onWithdrawBid?.(new BN(bidFromPreviousAuction.amount), new Date(bidFromPreviousAuction.createdAt))
+              }
+            >
               Withdraw last bid
             </Button>
             <Text as="p" margin={{ top: 2 }} variant="t100" color="colorText" align="center">
               You bid{' '}
               <NumberFormat
                 as="span"
-                value={Number(bidFromPreviousAuction?.amount)}
+                value={new BN(bidFromPreviousAuction?.amount)}
                 format="short"
                 variant="t100"
                 color="colorText"
@@ -267,7 +285,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
         )
       case 'auction': {
         const getInfoBannerProps = () => {
-          const hasBids = !nftStatus.topBid?.isCanceled && nftStatus.topBidAmount
+          const hasBids = !nftStatus.topBid?.isCanceled && nftStatus.topBidAmount?.gtn(0)
           if (nftStatus.type === 'open' && bidFromPreviousAuction) {
             return {
               title: 'Withdraw your bid to participate',
@@ -336,7 +354,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
         }
         const infoBannerProps = getInfoBannerProps()
 
-        const infoTextNode = !!nftStatus.userBidAmount && nftStatus.userBidUnlockDate && (
+        const infoTextNode = !!nftStatus.userBidAmount?.gtn(0) && nftStatus.userBidUnlockDate && (
           <GridItem colSpan={buttonColumnSpan}>
             {nftStatus.type === 'english' ? (
               <BidPlacingInfoText />
@@ -352,9 +370,12 @@ export const NftWidget: FC<NftWidgetProps> = ({
           </GridItem>
         )
 
+        const topBidAmountInUsd = nftStatus.topBidAmount && convertHapiToUSD(nftStatus.topBidAmount)
+        const startingPriceInUsd = convertHapiToUSD(nftStatus.startingPrice)
+
         return (
           <>
-            {nftStatus.topBidAmount && !nftStatus.topBid?.isCanceled ? (
+            {nftStatus.topBidAmount?.gtn(0) && !nftStatus.topBid?.isCanceled ? (
               <NftInfoItem
                 size={size}
                 label="Top bid"
@@ -375,14 +396,11 @@ export const NftWidget: FC<NftWidgetProps> = ({
                   </>
                 }
                 secondaryText={
-                  !isLoadingPrice && nftStatus.topBidAmount ? (
+                  !isLoadingPrice && nftStatus.topBidderHandle ? (
                     <>
-                      <NumberFormat
-                        as="span"
-                        color="colorText"
-                        format="dollar"
-                        value={convertToUSD(nftStatus.topBidAmount) ?? 0}
-                      />{' '}
+                      {topBidAmountInUsd ? (
+                        <NumberFormat as="span" color="colorText" format="dollar" value={topBidAmountInUsd} />
+                      ) : null}{' '}
                       from{' '}
                       <OwnerHandle to={absoluteRoutes.viewer.member(nftStatus.topBidderHandle)}>
                         <Text as="span" variant="t100">
@@ -408,15 +426,11 @@ export const NftWidget: FC<NftWidgetProps> = ({
                     />
                   </>
                 }
+                disableSecondary={startingPriceInUsd === null}
                 secondaryText={
-                  convertToUSD(nftStatus.startingPrice) ? (
-                    <NumberFormat
-                      as="span"
-                      color="colorText"
-                      format="dollar"
-                      value={convertToUSD(nftStatus.startingPrice) ?? 0}
-                    />
-                  ) : undefined
+                  startingPriceInUsd && (
+                    <NumberFormat as="span" color="colorText" format="dollar" value={startingPriceInUsd ?? 0} />
+                  )
                 }
               />
             )}
@@ -507,7 +521,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
                   )
                 : nftStatus.englishTimerState === 'running' &&
                   nftStatus.isUserWhitelisted !== false &&
-                  (nftStatus.buyNowPrice ? (
+                  (nftStatus.buyNowPrice?.gtn(0) ? (
                     <GridItem colSpan={buttonColumnSpan}>
                       <ButtonGrid data-size={size} data-two-columns={size === 'medium'}>
                         <Button fullWidth variant="secondary" size={buttonSize} onClick={onNftPurchase}>
@@ -519,7 +533,12 @@ export const NftWidget: FC<NftWidgetProps> = ({
                         {/* second row button */}
                         {nftStatus.canWithdrawBid && (
                           <GridItem colSpan={buttonColumnSpan}>
-                            <Button fullWidth size={buttonSize} variant="destructive-secondary" onClick={onWithdrawBid}>
+                            <Button
+                              fullWidth
+                              size={buttonSize}
+                              variant="destructive-secondary"
+                              onClick={() => onWithdrawBid?.(userBidAmount, userBidCreatedAt)}
+                            >
                               Withdraw bid
                             </Button>
                           </GridItem>
@@ -538,7 +557,12 @@ export const NftWidget: FC<NftWidgetProps> = ({
                         </GridItem>
                         {nftStatus.canWithdrawBid && (
                           <GridItem colSpan={buttonColumnSpan}>
-                            <Button fullWidth size={buttonSize} variant="destructive-secondary" onClick={onWithdrawBid}>
+                            <Button
+                              fullWidth
+                              size={buttonSize}
+                              variant="destructive-secondary"
+                              onClick={() => onWithdrawBid?.(userBidAmount, userBidCreatedAt)}
+                            >
                               Withdraw bid
                             </Button>
                           </GridItem>
@@ -554,7 +578,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
   }, [
     nftStatus,
     size,
-    convertToUSD,
+    convertHapiToUSD,
     bidFromPreviousAuction,
     onWithdrawBid,
     isOwner,
@@ -569,6 +593,8 @@ export const NftWidget: FC<NftWidgetProps> = ({
     onNftAcceptBid,
     onNftBuyNow,
     ownerHandle,
+    userBidAmount,
+    userBidCreatedAt,
   ])
 
   if (!nftStatus) return null
@@ -576,11 +602,19 @@ export const NftWidget: FC<NftWidgetProps> = ({
   return (
     <Container ref={ref}>
       <NftOwnerContainer data-size={size}>
-        <OwnerAvatar assetUrl={ownerAvatarUri} size="small" />
+        <OwnerAvatar assetUrl={ownerAvatar} size="small" />
         <OwnerLabel as="span" variant="t100" color="colorText">
           This NFT is owned by
         </OwnerLabel>
-        <OwnerHandle to={ownerHandle ? absoluteRoutes.viewer.member(ownerHandle) : ''}>
+        <OwnerHandle
+          to={
+            isOwnedByChannel
+              ? absoluteRoutes.viewer.channel(creatorId)
+              : ownerHandle
+              ? absoluteRoutes.viewer.member(ownerHandle)
+              : ''
+          }
+        >
           <Text as="span" variant="h300">
             {ownerHandle}
           </Text>

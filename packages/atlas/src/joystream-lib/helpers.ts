@@ -1,62 +1,63 @@
-import { DataObjectId } from '@joystream/types/augment-codec/all'
-import { Balance, BlockNumber, Hash, MemberId as RuntimeMemberId } from '@joystream/types/common'
-import {
-  EnglishAuctionParams,
-  InitTransactionalStatus,
-  NftIssuanceParameters,
-  OpenAuctionParams,
-  Royalty,
-  StorageAssets,
-} from '@joystream/types/content'
-import { DataObjectCreationParameters } from '@joystream/types/storage'
+import { createType } from '@joystream/types'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
-import { BTreeSet, Bytes, GenericEvent, Option, Vec, u128 } from '@polkadot/types'
+import { Option, u64 } from '@polkadot/types'
+import { Hash } from '@polkadot/types/interfaces/runtime'
 import { DispatchError, Event, EventRecord } from '@polkadot/types/interfaces/system'
+import {
+  PalletContentNftTypesEnglishAuctionParamsRecord,
+  PalletContentNftTypesInitTransactionalStatusRecord,
+  PalletContentNftTypesNftIssuanceParametersRecord,
+  PalletContentNftTypesOpenAuctionParamsRecord,
+  PalletContentStorageAssetsRecord,
+} from '@polkadot/types/lookup'
 import { Registry } from '@polkadot/types/types'
+import { BN } from 'bn.js'
 
 import { SentryLogger } from '@/utils/logs'
 
-import { NFT_DEFAULT_BID_LOCK_DURATION, NFT_DEFAULT_EXTENSION_PERIOD } from './config'
+import { NFT_DEFAULT_BID_LOCK_DURATION, NFT_DEFAULT_EXTENSION_PERIOD, PERBILL_ONE_PERCENT } from './config'
 import { JoystreamLibError } from './errors'
 import {
   ChannelAssets,
   ChannelAssetsIds,
-  ChannelInputAssets,
   DataObjectMetadata,
   ExtractChannelResultsAssetsIdsFn,
   ExtractVideoResultsAssetsIdsFn,
   ExtrinsicStatus,
   ExtrinsicStatusCallbackFn,
+  MemberId,
   NftAuctionInputMetadata,
   NftEnglishAuctionInputMetadata,
   NftIssuanceInputMetadata,
   NftOpenAuctionInputMetadata,
   VideoAssets,
   VideoAssetsIds,
-  VideoInputAssets,
 } from './types'
 
-export const NFT_PERBILL_PERCENT = 10_000_000
-
-export const prepareAssetsForExtrinsic = async (api: PolkadotApi, dataObjectsMetadata: DataObjectMetadata[]) => {
+export const prepareAssetsForExtrinsic = async (
+  api: PolkadotApi,
+  dataObjectsMetadata: DataObjectMetadata[]
+): Promise<Option<PalletContentStorageAssetsRecord>> => {
   if (!dataObjectsMetadata.length) {
-    return null
+    return createType('Option<PalletContentStorageAssetsRecord>', null)
   }
 
   const feePerMB = await api.query.storage.dataObjectPerMegabyteFee()
-  const feePerMBUint = new u128(api.registry, feePerMB)
 
-  const mappedDataObjectMetadata = dataObjectsMetadata.map((metadata) => ({
-    size: metadata.size,
-    ipfsContentId: new Bytes(api.registry, metadata.ipfsHash),
-  }))
-  const dataObjectsVec = new Vec(api.registry, DataObjectCreationParameters, mappedDataObjectMetadata)
+  const mappedDataObjectMetadata = dataObjectsMetadata.map((metadata) =>
+    createType('PalletStorageDataObjectCreationParameters', {
+      size_: metadata.size,
+      ipfsContentId: createType('Bytes', metadata.ipfsHash),
+    })
+  )
+  const dataObjectsVec = createType('Vec<PalletStorageDataObjectCreationParameters>', mappedDataObjectMetadata)
 
-  return new StorageAssets(api.registry, {
-    expected_data_size_fee: feePerMBUint,
-    object_creation_list: dataObjectsVec,
+  const storageAssets = createType('PalletContentStorageAssetsRecord', {
+    objectCreationList: dataObjectsVec,
+    expectedDataSizeFee: feePerMB,
   })
+  return createType('Option<PalletContentStorageAssetsRecord>', storageAssets)
 }
 
 export const parseExtrinsicEvents = (registry: Registry, eventRecords: EventRecord[]): Event[] => {
@@ -71,7 +72,7 @@ export const parseExtrinsicEvents = (registry: Registry, eventRecords: EventReco
         name: 'FailedError',
         message: errorMsg,
       })
-    } else if (event.method === 'ExtrinsicSuccess') {
+    } else if (event.method === 'ExtrinsicSuccess' || event.method === 'NewAccount') {
       return events
     } else {
       SentryLogger.message('Unknown extrinsic event', 'JoystreamJs', 'warning', {
@@ -103,7 +104,7 @@ const extractExtrinsicErrorMsg = (registry: Registry, event: Event) => {
 }
 
 type RawExtrinsicResult = {
-  events: GenericEvent[]
+  events: Event[]
   blockHash: Hash
   transactionHash: string
 }
@@ -166,15 +167,7 @@ export const sendExtrinsicAndParseEvents = (
       })
   })
 
-export const getInputDataObjectsIds = (assets: VideoInputAssets | ChannelInputAssets): string[] =>
-  Object.values(assets)
-    .filter((asset): asset is Required<DataObjectMetadata> => !!asset.replacedDataObjectId)
-    .map((asset) => asset.replacedDataObjectId)
-
-const getResultVideoDataObjectsIds = (
-  assets: VideoAssets<unknown>,
-  dataObjectsIds: Vec<DataObjectId>
-): VideoAssetsIds => {
+const getResultVideoDataObjectsIds = (assets: VideoAssets<unknown>, dataObjectsIds: u64[]): VideoAssetsIds => {
   const ids = dataObjectsIds.map((dataObjectsId) => dataObjectsId.toString())
 
   const hasMedia = !!assets.media
@@ -183,13 +176,11 @@ const getResultVideoDataObjectsIds = (
   return {
     ...(hasMedia ? { media: ids[0] } : {}),
     ...(hasThumbnail ? { thumbnailPhoto: ids[hasMedia ? 1 : 0] } : {}),
+    subtitles: ids.slice(hasMedia && hasThumbnail ? 2 : hasMedia || hasThumbnail ? 1 : 0),
   }
 }
 
-const getResultChannelDataObjectsIds = (
-  assets: ChannelAssets<unknown>,
-  dataObjectsIds: Vec<DataObjectId>
-): ChannelAssetsIds => {
+const getResultChannelDataObjectsIds = (assets: ChannelAssets<unknown>, dataObjectsIds: u64[]): ChannelAssetsIds => {
   const ids = dataObjectsIds.map((dataObjectsId) => dataObjectsId.toString())
 
   const hasAvatar = !!assets.avatarPhoto
@@ -201,11 +192,20 @@ const getResultChannelDataObjectsIds = (
   }
 }
 
-export const extractChannelResultAssetsIds: ExtractChannelResultsAssetsIdsFn = (inputAssets, getEventData) => {
+export const extractChannelResultAssetsIds: ExtractChannelResultsAssetsIdsFn = (
+  inputAssets,
+  getEventData,
+  update = false
+) => {
   const anyAssetsChanged = !!Object.values(inputAssets).find((asset) => !!asset)
   try {
-    const [dataObjectsIds] = getEventData('storage', 'DataObjectsUploaded')
-    return getResultChannelDataObjectsIds(inputAssets, dataObjectsIds)
+    if (update) {
+      const dataObjects = getEventData('content', 'ChannelUpdated')[3]
+      return getResultChannelDataObjectsIds(inputAssets, [...dataObjects])
+    } else {
+      const [_, channelRecord] = getEventData('content', 'ChannelCreated')
+      return getResultChannelDataObjectsIds(inputAssets, [...channelRecord.dataObjects])
+    }
   } catch (error) {
     // If no assets were changed as part of this extrinsic, let's catch the missing error and ignore it. In any other case, we re-throw
     if ((error as JoystreamLibError).name === 'MissingRequiredEventError' && !anyAssetsChanged) {
@@ -215,11 +215,20 @@ export const extractChannelResultAssetsIds: ExtractChannelResultsAssetsIdsFn = (
   }
 }
 
-export const extractVideoResultAssetsIds: ExtractVideoResultsAssetsIdsFn = (inputAssets, getEventData) => {
+export const extractVideoResultAssetsIds: ExtractVideoResultsAssetsIdsFn = (
+  inputAssets,
+  getEventData,
+  update = false
+) => {
   const anyAssetsChanged = !!Object.values(inputAssets).find((asset) => !!asset)
   try {
-    const [dataObjectsIds] = getEventData('storage', 'DataObjectsUploaded')
-    return getResultVideoDataObjectsIds(inputAssets, dataObjectsIds)
+    if (update) {
+      const dataObjects = getEventData('content', 'VideoUpdated')[3]
+      return getResultVideoDataObjectsIds(inputAssets, [...dataObjects])
+    } else {
+      const dataObjects = getEventData('content', 'VideoCreated')[4]
+      return getResultVideoDataObjectsIds(inputAssets, [...dataObjects])
+    }
   } catch (error) {
     // If no assets were changed as part of this extrinsic, let's catch the missing error and ignore it. In any other case, we re-throw
     if ((error as JoystreamLibError).name === 'MissingRequiredEventError' && !anyAssetsChanged) {
@@ -229,54 +238,53 @@ export const extractVideoResultAssetsIds: ExtractVideoResultsAssetsIdsFn = (inpu
   }
 }
 
-const createCommonAuctionParams = (registry: Registry, inputMetadata: NftAuctionInputMetadata) => {
+const createCommonAuctionParams = (inputMetadata: NftAuctionInputMetadata) => {
   return {
-    starting_price: new Balance(registry, inputMetadata.startingPrice),
-    buy_now_price: new Option(registry, Balance, inputMetadata.buyNowPrice),
-    starts_at: new Option(registry, BlockNumber, inputMetadata.startsAtBlock),
-    whitelist: new BTreeSet(registry, RuntimeMemberId, inputMetadata.whitelistedMembersIds || []),
+    startingPrice: createType('u128', new BN(inputMetadata.startingPrice)),
+    buyNowPrice: createType('Option<u128>', inputMetadata.buyNowPrice ? new BN(inputMetadata.buyNowPrice) : undefined),
+    startsAt: createType('Option<u32>', inputMetadata.startsAtBlock ? new BN(inputMetadata.startsAtBlock) : undefined),
+    whitelist: createType('BTreeSet<u64>', inputMetadata.whitelistedMembersIds?.map((id) => new BN(id)) || []),
   }
 }
 
 export const createNftOpenAuctionParams = (
-  registry: Registry,
   inputMetadata: NftOpenAuctionInputMetadata
-): OpenAuctionParams => {
-  return new OpenAuctionParams(registry, {
-    ...createCommonAuctionParams(registry, inputMetadata),
-    bid_lock_duration: new BlockNumber(registry, inputMetadata.bidLockDuration ?? NFT_DEFAULT_BID_LOCK_DURATION),
+): PalletContentNftTypesOpenAuctionParamsRecord => {
+  return createType('PalletContentNftTypesOpenAuctionParamsRecord', {
+    ...createCommonAuctionParams(inputMetadata),
+    bidLockDuration: createType('u32', new BN(inputMetadata.bidLockDuration ?? NFT_DEFAULT_BID_LOCK_DURATION)),
   })
 }
 
 export const createNftEnglishAuctionParams = (
-  registry: Registry,
   inputMetadata: NftEnglishAuctionInputMetadata
-): EnglishAuctionParams => {
-  return new EnglishAuctionParams(registry, {
-    ...createCommonAuctionParams(registry, inputMetadata),
-    duration: new BlockNumber(registry, inputMetadata.auctionDurationBlocks),
-    min_bid_step: new Balance(registry, inputMetadata.minimalBidStep),
-    extension_period: new BlockNumber(registry, inputMetadata.extensionPeriodBlocks ?? NFT_DEFAULT_EXTENSION_PERIOD),
+): PalletContentNftTypesEnglishAuctionParamsRecord => {
+  return createType('PalletContentNftTypesEnglishAuctionParamsRecord', {
+    ...createCommonAuctionParams(inputMetadata),
+    duration: createType('u32', new BN(inputMetadata.auctionDurationBlocks)),
+    extensionPeriod: createType('u32', new BN(inputMetadata.extensionPeriodBlocks ?? NFT_DEFAULT_EXTENSION_PERIOD)),
+    minBidStep: createType('u128', new BN(inputMetadata.minimalBidStep)),
   })
 }
 
 const createNftIssuanceTransactionalStatus = (
-  registry: Registry,
   inputMetadata: NftIssuanceInputMetadata
-): InitTransactionalStatus => {
+): PalletContentNftTypesInitTransactionalStatusRecord => {
   if (!inputMetadata.sale) {
-    return new InitTransactionalStatus(registry, { idle: null })
+    return createType('PalletContentNftTypesInitTransactionalStatusRecord', { Idle: null })
   }
 
   if (inputMetadata.sale.type === 'buyNow') {
-    return new InitTransactionalStatus(registry, { buyNow: new Balance(registry, inputMetadata.sale.buyNowPrice) })
+    return createType('PalletContentNftTypesInitTransactionalStatusRecord', {
+      BuyNow: createType('u128', new BN(inputMetadata.sale.buyNowPrice)),
+    })
   } else if (inputMetadata.sale.type === 'open') {
-    return new InitTransactionalStatus(registry, {
-      OpenAuction: createNftOpenAuctionParams(registry, inputMetadata.sale),
+    return createType('PalletContentNftTypesInitTransactionalStatusRecord', {
+      OpenAuction: createNftOpenAuctionParams(inputMetadata.sale),
     })
   } else if (inputMetadata.sale.type === 'english') {
-    return new InitTransactionalStatus(registry, {
-      EnglishAuction: createNftEnglishAuctionParams(registry, inputMetadata.sale),
+    return createType('PalletContentNftTypesInitTransactionalStatusRecord', {
+      EnglishAuction: createNftEnglishAuctionParams(inputMetadata.sale),
     })
   } else {
     throw new JoystreamLibError({ name: 'UnknownError', message: `Unknown sale type`, details: { inputMetadata } })
@@ -284,23 +292,26 @@ const createNftIssuanceTransactionalStatus = (
 }
 
 export const createNftIssuanceParameters = (
-  registry: Registry,
   inputMetadata?: NftIssuanceInputMetadata
-): NftIssuanceParameters | null => {
+): Option<PalletContentNftTypesNftIssuanceParametersRecord> => {
   if (!inputMetadata) {
-    return null
+    return createType('Option<PalletContentNftTypesNftIssuanceParametersRecord>', null)
   }
 
-  const initTransactionalStatus = createNftIssuanceTransactionalStatus(registry, inputMetadata)
+  const initTransactionalStatus = createNftIssuanceTransactionalStatus(inputMetadata)
 
-  return new NftIssuanceParameters(registry, {
-    nft_metadata: new Bytes(registry, '0x0'),
-    royalty: new Option(
-      registry,
-      Royalty,
-      inputMetadata.royalty ? inputMetadata.royalty * NFT_PERBILL_PERCENT : undefined
+  return createType('Option<PalletContentNftTypesNftIssuanceParametersRecord>', {
+    nftMetadata: createType('Bytes', '0x0'),
+    royalty: createType(
+      'Option<u64>',
+      inputMetadata.royalty ? createType('u64', inputMetadata.royalty * PERBILL_ONE_PERCENT) : null
     ),
-    init_transactional_status: initTransactionalStatus,
-    non_channel_owner: new Option(registry, RuntimeMemberId),
+    nonChannelOwner: createType('Option<u64>', null),
+    initTransactionalStatus: initTransactionalStatus,
   })
 }
+
+export const createActor = (memberId: MemberId) =>
+  createType('PalletContentPermissionsContentActor', {
+    Member: parseInt(memberId),
+  })

@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { useTop10Channels } from '@/api/hooks'
+import { useTop10Channels } from '@/api/hooks/channel'
 import { ChannelGallery } from '@/components/_channel/ChannelGallery'
 import { ExpandableChannelsList } from '@/components/_channel/ExpandableChannelsList'
 import { DiscoverChannels } from '@/components/_content/DiscoverChannels'

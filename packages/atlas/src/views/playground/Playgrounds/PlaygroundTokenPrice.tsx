@@ -1,29 +1,32 @@
+import BN from 'bn.js'
 import { useState } from 'react'
 
-import { JOY_CURRENCY_TICKER } from '@/config/token'
-import { useTokenPrice } from '@/providers/joystream'
+import { atlasConfig } from '@/config'
+import { useTokenPrice } from '@/providers/joystream/joystream.hooks'
 
 export const PlaygroundTokenPrice = () => {
-  const { convertToUSD, convertToTokenPrice } = useTokenPrice()
-  const [toConvert, setToConvert] = useState(0)
-  const [unit, setUnit] = useState(JOY_CURRENCY_TICKER)
-  const [converted, setConverted] = useState<number | string | null>(0)
+  const { convertHapiToUSD, convertUSDToHapi } = useTokenPrice()
+  const [toConvert, setToConvert] = useState(new BN(0))
+  const [converted, setConverted] = useState<number>(0)
+  const [unit, setUnit] = useState(atlasConfig.joystream.tokenTicker)
   const [showConverted, setShowConverted] = useState(false)
   const convert = () => {
     setShowConverted(true)
-    unit === JOY_CURRENCY_TICKER ? setConverted(convertToUSD(toConvert)) : setConverted(convertToTokenPrice(toConvert))
+    unit === atlasConfig.joystream.tokenTicker
+      ? setConverted(convertHapiToUSD(toConvert) ?? 0)
+      : setToConvert(convertUSDToHapi(converted))
   }
-  const convertedUnit = unit === 'usd' ? JOY_CURRENCY_TICKER : 'usd'
+  const convertedUnit = unit === 'usd' ? atlasConfig.joystream.tokenTicker : 'usd'
   return (
     <div>
       <div>
         Converter:
         <input
           type="number"
-          value={toConvert}
+          value={toConvert.toString()}
           onChange={(v) => {
             setShowConverted(false)
-            setToConvert(parseInt(v.target.value))
+            setToConvert(new BN(v.target.value))
           }}
         />
         <select
@@ -34,7 +37,7 @@ export const PlaygroundTokenPrice = () => {
           value={unit}
         >
           <option value="usd">USD</option>
-          <option value={JOY_CURRENCY_TICKER}>{JOY_CURRENCY_TICKER}</option>
+          <option value={atlasConfig.joystream.tokenTicker}>{atlasConfig.joystream.tokenTicker}</option>
         </select>
       </div>
       <div>
@@ -43,7 +46,7 @@ export const PlaygroundTokenPrice = () => {
       </div>
       {showConverted ? (
         <div>
-          {toConvert} {unit} = {converted} {convertedUnit}
+          {toConvert.toString()} {unit} = {converted} {convertedUnit}
         </div>
       ) : null}
     </div>

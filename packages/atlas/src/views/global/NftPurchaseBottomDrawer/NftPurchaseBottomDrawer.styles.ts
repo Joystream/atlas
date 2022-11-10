@@ -1,9 +1,9 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
-import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { cVar, media, sizes, zIndex } from '@/styles'
 
 const flexStyles = css`

@@ -43,6 +43,7 @@ export type GetCommentQuery = {
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoSubtitle' }
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
               } | null
             }
@@ -106,6 +107,7 @@ export type GetCommentRepliesConnectionQuery = {
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                   } | null
                 }
@@ -167,6 +169,7 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoSubtitle' }
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
               } | null
             }
@@ -219,6 +222,7 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                   } | null
                 }

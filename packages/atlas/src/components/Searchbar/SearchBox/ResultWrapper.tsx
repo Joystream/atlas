@@ -1,9 +1,9 @@
 import { FC, PropsWithChildren, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router'
 
+import { SvgActionClose } from '@/assets/icons'
 import { ShortcutIndicator } from '@/components/ShortcutIndicator'
 import { Text } from '@/components/Text'
-import { SvgActionClose } from '@/components/_icons'
 
 import { DeleteButton, SearchItemContent, SearchItemWrapper, Shortcut } from './SearchBox.styles'
 

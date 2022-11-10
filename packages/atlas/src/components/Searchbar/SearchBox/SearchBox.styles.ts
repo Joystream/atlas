@@ -2,10 +2,10 @@ import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
+import { SvgAvatarSilhouette } from '@/assets/illustrations'
 import { ShortcutIndicator } from '@/components/ShortcutIndicator'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgAvatarSilhouette } from '@/components/_illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, media, sizes, square } from '@/styles'
 

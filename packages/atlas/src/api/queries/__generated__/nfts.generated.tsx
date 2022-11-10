@@ -18,13 +18,15 @@ export type GetNftQuery = {
     creatorRoyalty?: number | null
     lastSaleDate?: Date | null
     lastSalePrice?: string | null
+    isOwnedByChannel: boolean
     creatorChannel: {
       __typename?: 'Channel'
       id: string
       title?: string | null
       createdAt: Date
       follows: number
-      rewardAccount?: string | null
+      rewardAccount: string
+      channelStateBloatBond: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -38,6 +40,7 @@ export type GetNftQuery = {
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
     }
@@ -56,7 +59,8 @@ export type GetNftQuery = {
         title?: string | null
         createdAt: Date
         follows: number
-        rewardAccount?: string | null
+        rewardAccount: string
+        channelStateBloatBond: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -70,6 +74,7 @@ export type GetNftQuery = {
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
             | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
+            | { __typename: 'DataObjectTypeVideoSubtitle' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
         } | null
       }
@@ -86,6 +91,7 @@ export type GetNftQuery = {
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
       nft?: {
@@ -95,6 +101,7 @@ export type GetNftQuery = {
         creatorRoyalty?: number | null
         lastSaleDate?: Date | null
         lastSalePrice?: string | null
+        isOwnedByChannel: boolean
         ownerMember?: {
           __typename?: 'Membership'
           id: string
@@ -118,6 +125,7 @@ export type GetNftQuery = {
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                   } | null
                 }
@@ -165,6 +173,7 @@ export type GetNftQuery = {
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
                     } | null
                   }
@@ -202,6 +211,7 @@ export type GetNftQuery = {
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
                           | { __typename: 'DataObjectTypeVideoThumbnail' }
                       } | null
                     }
@@ -240,6 +250,7 @@ export type GetNftQuery = {
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
                           | { __typename: 'DataObjectTypeVideoThumbnail' }
                       } | null
                     }
@@ -271,6 +282,7 @@ export type GetNftQuery = {
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
                     } | null
                   }
@@ -309,6 +321,7 @@ export type GetNftQuery = {
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoSubtitle' }
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
               } | null
             }
@@ -356,6 +369,7 @@ export type GetNftQuery = {
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                     | { __typename: 'DataObjectTypeUnknown' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoSubtitle' }
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
                 } | null
               }
@@ -393,6 +407,7 @@ export type GetNftQuery = {
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                   } | null
                 }
@@ -431,6 +446,7 @@ export type GetNftQuery = {
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                   } | null
                 }
@@ -462,6 +478,7 @@ export type GetNftQuery = {
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                     | { __typename: 'DataObjectTypeUnknown' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoSubtitle' }
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
                 } | null
               }
@@ -480,7 +497,7 @@ export type GetNftQuery = {
 
 export type GetNftsQueryVariables = Types.Exact<{
   where?: Types.InputMaybe<Types.OwnedNftWhereInput>
-  orderBy?: Types.OwnedNftOrderByInput
+  orderBy?: Types.InputMaybe<Array<Types.OwnedNftOrderByInput> | Types.OwnedNftOrderByInput>
 }>
 
 export type GetNftsQuery = {
@@ -492,13 +509,15 @@ export type GetNftsQuery = {
     creatorRoyalty?: number | null
     lastSaleDate?: Date | null
     lastSalePrice?: string | null
+    isOwnedByChannel: boolean
     creatorChannel: {
       __typename?: 'Channel'
       id: string
       title?: string | null
       createdAt: Date
       follows: number
-      rewardAccount?: string | null
+      rewardAccount: string
+      channelStateBloatBond: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -512,6 +531,7 @@ export type GetNftsQuery = {
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
     }
@@ -530,7 +550,8 @@ export type GetNftsQuery = {
         title?: string | null
         createdAt: Date
         follows: number
-        rewardAccount?: string | null
+        rewardAccount: string
+        channelStateBloatBond: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -544,6 +565,7 @@ export type GetNftsQuery = {
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
             | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
+            | { __typename: 'DataObjectTypeVideoSubtitle' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
         } | null
       }
@@ -560,6 +582,7 @@ export type GetNftsQuery = {
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
       nft?: {
@@ -569,6 +592,7 @@ export type GetNftsQuery = {
         creatorRoyalty?: number | null
         lastSaleDate?: Date | null
         lastSalePrice?: string | null
+        isOwnedByChannel: boolean
         ownerMember?: {
           __typename?: 'Membership'
           id: string
@@ -592,6 +616,7 @@ export type GetNftsQuery = {
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                   } | null
                 }
@@ -639,6 +664,7 @@ export type GetNftsQuery = {
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
                     } | null
                   }
@@ -676,6 +702,7 @@ export type GetNftsQuery = {
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
                           | { __typename: 'DataObjectTypeVideoThumbnail' }
                       } | null
                     }
@@ -714,6 +741,7 @@ export type GetNftsQuery = {
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
                           | { __typename: 'DataObjectTypeVideoThumbnail' }
                       } | null
                     }
@@ -745,6 +773,7 @@ export type GetNftsQuery = {
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
                     } | null
                   }
@@ -783,6 +812,7 @@ export type GetNftsQuery = {
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoSubtitle' }
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
               } | null
             }
@@ -830,6 +860,7 @@ export type GetNftsQuery = {
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                     | { __typename: 'DataObjectTypeUnknown' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoSubtitle' }
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
                 } | null
               }
@@ -867,6 +898,7 @@ export type GetNftsQuery = {
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                   } | null
                 }
@@ -905,6 +937,7 @@ export type GetNftsQuery = {
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                   } | null
                 }
@@ -936,6 +969,7 @@ export type GetNftsQuery = {
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                     | { __typename: 'DataObjectTypeUnknown' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoSubtitle' }
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
                 } | null
               }
@@ -954,7 +988,7 @@ export type GetNftsQuery = {
 
 export type GetNftsConnectionQueryVariables = Types.Exact<{
   where?: Types.InputMaybe<Types.OwnedNftWhereInput>
-  orderBy?: Types.OwnedNftOrderByInput
+  orderBy?: Types.InputMaybe<Array<Types.OwnedNftOrderByInput> | Types.OwnedNftOrderByInput>
   first?: Types.InputMaybe<Types.Scalars['Int']>
   after?: Types.InputMaybe<Types.Scalars['String']>
 }>
@@ -974,13 +1008,15 @@ export type GetNftsConnectionQuery = {
         creatorRoyalty?: number | null
         lastSaleDate?: Date | null
         lastSalePrice?: string | null
+        isOwnedByChannel: boolean
         creatorChannel: {
           __typename?: 'Channel'
           id: string
           title?: string | null
           createdAt: Date
           follows: number
-          rewardAccount?: string | null
+          rewardAccount: string
+          channelStateBloatBond: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -994,6 +1030,7 @@ export type GetNftsConnectionQuery = {
               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
               | { __typename: 'DataObjectTypeUnknown' }
               | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoSubtitle' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
           } | null
         }
@@ -1012,7 +1049,8 @@ export type GetNftsConnectionQuery = {
             title?: string | null
             createdAt: Date
             follows: number
-            rewardAccount?: string | null
+            rewardAccount: string
+            channelStateBloatBond: string
             avatarPhoto?: {
               __typename?: 'StorageDataObject'
               id: string
@@ -1026,6 +1064,7 @@ export type GetNftsConnectionQuery = {
                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                 | { __typename: 'DataObjectTypeUnknown' }
                 | { __typename: 'DataObjectTypeVideoMedia' }
+                | { __typename: 'DataObjectTypeVideoSubtitle' }
                 | { __typename: 'DataObjectTypeVideoThumbnail' }
             } | null
           }
@@ -1042,6 +1081,7 @@ export type GetNftsConnectionQuery = {
               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
               | { __typename: 'DataObjectTypeUnknown' }
               | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoSubtitle' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
           } | null
           nft?: {
@@ -1051,6 +1091,7 @@ export type GetNftsConnectionQuery = {
             creatorRoyalty?: number | null
             lastSaleDate?: Date | null
             lastSalePrice?: string | null
+            isOwnedByChannel: boolean
             ownerMember?: {
               __typename?: 'Membership'
               id: string
@@ -1074,6 +1115,7 @@ export type GetNftsConnectionQuery = {
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
                           | { __typename: 'DataObjectTypeVideoThumbnail' }
                       } | null
                     }
@@ -1121,6 +1163,7 @@ export type GetNftsConnectionQuery = {
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                             | { __typename: 'DataObjectTypeUnknown' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
+                            | { __typename: 'DataObjectTypeVideoSubtitle' }
                             | { __typename: 'DataObjectTypeVideoThumbnail' }
                         } | null
                       }
@@ -1158,6 +1201,7 @@ export type GetNftsConnectionQuery = {
                               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                               | { __typename: 'DataObjectTypeUnknown' }
                               | { __typename: 'DataObjectTypeVideoMedia' }
+                              | { __typename: 'DataObjectTypeVideoSubtitle' }
                               | { __typename: 'DataObjectTypeVideoThumbnail' }
                           } | null
                         }
@@ -1196,6 +1240,7 @@ export type GetNftsConnectionQuery = {
                               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                               | { __typename: 'DataObjectTypeUnknown' }
                               | { __typename: 'DataObjectTypeVideoMedia' }
+                              | { __typename: 'DataObjectTypeVideoSubtitle' }
                               | { __typename: 'DataObjectTypeVideoThumbnail' }
                           } | null
                         }
@@ -1227,6 +1272,7 @@ export type GetNftsConnectionQuery = {
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                             | { __typename: 'DataObjectTypeUnknown' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
+                            | { __typename: 'DataObjectTypeVideoSubtitle' }
                             | { __typename: 'DataObjectTypeVideoThumbnail' }
                         } | null
                       }
@@ -1265,6 +1311,7 @@ export type GetNftsConnectionQuery = {
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
                   } | null
                 }
@@ -1312,6 +1359,7 @@ export type GetNftsConnectionQuery = {
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
                     } | null
                   }
@@ -1349,6 +1397,7 @@ export type GetNftsConnectionQuery = {
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
                           | { __typename: 'DataObjectTypeVideoThumbnail' }
                       } | null
                     }
@@ -1387,6 +1436,7 @@ export type GetNftsConnectionQuery = {
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
                           | { __typename: 'DataObjectTypeVideoThumbnail' }
                       } | null
                     }
@@ -1418,6 +1468,7 @@ export type GetNftsConnectionQuery = {
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
                     } | null
                   }
@@ -1474,8 +1525,8 @@ export type GetNftQueryHookResult = ReturnType<typeof useGetNftQuery>
 export type GetNftLazyQueryHookResult = ReturnType<typeof useGetNftLazyQuery>
 export type GetNftQueryResult = Apollo.QueryResult<GetNftQuery, GetNftQueryVariables>
 export const GetNftsDocument = gql`
-  query GetNfts($where: OwnedNftWhereInput, $orderBy: OwnedNftOrderByInput! = createdAt_DESC) {
-    ownedNfts(where: $where, orderBy: [$orderBy]) {
+  query GetNfts($where: OwnedNftWhereInput, $orderBy: [OwnedNftOrderByInput!] = [createdAt_DESC]) {
+    ownedNfts(where: $where, orderBy: $orderBy) {
       ...FullNftFields
     }
   }
@@ -1513,11 +1564,11 @@ export type GetNftsQueryResult = Apollo.QueryResult<GetNftsQuery, GetNftsQueryVa
 export const GetNftsConnectionDocument = gql`
   query GetNftsConnection(
     $where: OwnedNftWhereInput
-    $orderBy: OwnedNftOrderByInput! = createdAt_DESC
+    $orderBy: [OwnedNftOrderByInput!] = [createdAt_DESC]
     $first: Int
     $after: String
   ) {
-    ownedNftsConnection(where: $where, orderBy: [$orderBy], first: $first, after: $after) {
+    ownedNftsConnection(where: $where, orderBy: $orderBy, first: $first, after: $after) {
       edges {
         cursor
         node {

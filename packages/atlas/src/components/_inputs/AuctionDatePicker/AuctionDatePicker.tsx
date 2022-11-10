@@ -4,7 +4,7 @@ import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
-import { SvgControlsCalendar } from '@/components/_icons'
+import { SvgControlsCalendar } from '@/assets/icons'
 import { Popover, PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 

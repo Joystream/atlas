@@ -3,7 +3,6 @@ import { formatISODuration } from 'date-fns'
 import { BasicChannelFieldsFragment, BasicVideoFieldsFragment } from './api/__generated__/sdk'
 import { joinUrlFragments } from './utils'
 
-const BASE_ATLAS_URL = 'https://play.joystream.org'
 const THUMBNAIL_WIDTH = 640
 const THUMBNAIL_HEIGHT = 360
 const VIDEO_WIDTH = 1280
@@ -17,14 +16,9 @@ type SchemaOrgTag = {
 }
 export type MetaTags = Record<string, string | number>
 
-const commonMetaTags = {
-  'twitter:site': '@JoystreamDAO',
-  'og:site_name': 'Joystream',
-}
-
-const sanitizeDescription = (fullDescription?: string | null, title?: string | null) => {
+const sanitizeDescription = (appName: string, fullDescription?: string | null, title?: string | null) => {
   if (!fullDescription) {
-    return `${title || ''} on Joystream`
+    return `${title || ''} on ${appName}`
   }
 
   const oneLineDescription = fullDescription
@@ -36,19 +30,26 @@ const sanitizeDescription = (fullDescription?: string | null, title?: string | n
   return needsTrimming ? oneLineDescription.slice(0, 157) + '...' : oneLineDescription
 }
 
-export const generateVideoMetaTags = (video: BasicVideoFieldsFragment, thumbnailUrl: string): MetaTags => {
-  const videoUrl = joinUrlFragments(BASE_ATLAS_URL, 'video', video.id)
-  const videoEmbedUrl = joinUrlFragments(BASE_ATLAS_URL, 'embedded', 'video', video.id)
-  const sanitizedDescription = sanitizeDescription(video.description, video.title)
+export const generateVideoMetaTags = (
+  video: BasicVideoFieldsFragment,
+  thumbnailUrl: string,
+  appName: string,
+  baseAppUrl: string,
+  twitterId?: string
+): MetaTags => {
+  const videoUrl = joinUrlFragments(baseAppUrl, 'video', video.id)
+  const videoEmbedUrl = joinUrlFragments(baseAppUrl, 'embedded', 'video', video.id)
+  const sanitizedDescription = sanitizeDescription(appName, video.description, video.title)
 
   return {
-    ...commonMetaTags,
+    ...(twitterId ? { 'twitter:site': twitterId } : {}),
+    'og:site_name': appName,
     'og:title': video.title || '',
     'og:description': sanitizedDescription,
     'og:type': 'video.other',
     'og:url': videoUrl,
     'og:image': thumbnailUrl,
-    'og:image:alt': `Thumbnail for Joystream video '${video.title}'`,
+    'og:image:alt': `Thumbnail for ${appName} video '${video.title}'`,
     'og:image:width': THUMBNAIL_WIDTH,
     'og:image:height': THUMBNAIL_HEIGHT,
     'og:image:type': 'image/webp',
@@ -64,18 +65,25 @@ export const generateVideoMetaTags = (video: BasicVideoFieldsFragment, thumbnail
   }
 }
 
-export const generateChannelMetaTags = (channel: BasicChannelFieldsFragment, avatarUrl: string): MetaTags => {
-  const channelUrl = joinUrlFragments(BASE_ATLAS_URL, 'channel', channel.id)
-  const sanitizedDescription = sanitizeDescription(channel.description, channel.title)
+export const generateChannelMetaTags = (
+  channel: BasicChannelFieldsFragment,
+  avatarUrl: string,
+  appName: string,
+  baseAppUrl: string,
+  twitterId?: string
+): MetaTags => {
+  const channelUrl = joinUrlFragments(baseAppUrl, 'channel', channel.id)
+  const sanitizedDescription = sanitizeDescription(appName, channel.description, channel.title)
 
   return {
-    ...commonMetaTags,
+    ...(twitterId ? { 'twitter:site': twitterId } : {}),
+    'og:site_name': appName,
     'og:title': channel.title || '',
     'og:description': sanitizedDescription,
     'og:type': 'profile',
     'og:url': channelUrl,
     'og:image': avatarUrl,
-    'og:image:alt': `Avatar photo for Joystream channel '${channel.title}'`,
+    'og:image:alt': `Avatar photo for ${appName} channel '${channel.title}'`,
     'og:image:width': AVATAR_SIZE,
     'og:image:height': AVATAR_SIZE,
     'og:image:type': 'image/webp',
@@ -83,11 +91,16 @@ export const generateChannelMetaTags = (channel: BasicChannelFieldsFragment, ava
   }
 }
 
-export const generateVideoSchemaTagsHtml = (video: BasicVideoFieldsFragment, thumbnailUrl: string) => {
-  const videoUrl = joinUrlFragments(BASE_ATLAS_URL, 'video', video.id)
-  const channelUrl = joinUrlFragments(BASE_ATLAS_URL, 'channel', video.channel.id)
-  const videoEmbedUrl = joinUrlFragments(BASE_ATLAS_URL, 'embedded', 'video', video.id)
-  const sanitizedDescription = sanitizeDescription(video.description, video.title)
+export const generateVideoSchemaTagsHtml = (
+  video: BasicVideoFieldsFragment,
+  thumbnailUrl: string,
+  appName: string,
+  baseAppUrl: string
+) => {
+  const videoUrl = joinUrlFragments(baseAppUrl, 'video', video.id)
+  const channelUrl = joinUrlFragments(baseAppUrl, 'channel', video.channel.id)
+  const videoEmbedUrl = joinUrlFragments(baseAppUrl, 'embedded', 'video', video.id)
+  const sanitizedDescription = sanitizeDescription(appName, video.description, video.title)
 
   const schemaOrgTags: SchemaOrgTag[] = [
     {
@@ -194,8 +207,12 @@ export const generateVideoSchemaTagsHtml = (video: BasicVideoFieldsFragment, thu
   return htmlTags.join('\n')
 }
 
-export const generateChannelSchemaTagsHtml = (channel: BasicChannelFieldsFragment, avatarUrl: string) => {
-  const channelUrl = joinUrlFragments(BASE_ATLAS_URL, 'channel', channel.id)
+export const generateChannelSchemaTagsHtml = (
+  channel: BasicChannelFieldsFragment,
+  avatarUrl: string,
+  baseAppUrl: string
+) => {
+  const channelUrl = joinUrlFragments(baseAppUrl, 'channel', channel.id)
 
   const schemaOrgTags: SchemaOrgTag[] = [
     {

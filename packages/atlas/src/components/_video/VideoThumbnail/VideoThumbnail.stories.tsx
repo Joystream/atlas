@@ -1,10 +1,6 @@
 import { Meta, Story } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
-import { Pill, PillGroup } from '@/components/Pill'
-import { Text } from '@/components/Text'
-import { UploadProgressBar } from '@/components/UploadProgressBar'
-import { Button } from '@/components/_buttons/Button'
 import {
   SvgActionBid,
   SvgActionEdit,
@@ -12,9 +8,13 @@ import {
   SvgAlertsWarning24,
   SvgIllustrativePlay,
   SvgIllustrativeReupload,
-} from '@/components/_icons'
-import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
-import { JOY_CURRENCY_TICKER } from '@/config/token'
+} from '@/assets/icons'
+import { JoyTokenIcon } from '@/components/JoyTokenIcon'
+import { Pill, PillGroup } from '@/components/Pill'
+import { Text } from '@/components/Text'
+import { UploadProgressBar } from '@/components/UploadProgressBar'
+import { Button } from '@/components/_buttons/Button'
+import { atlasConfig } from '@/config'
 import { cVar } from '@/styles'
 
 import { VideoThumbnail, VideoThumbnailProps } from './VideoThumbnail'
@@ -40,7 +40,7 @@ export default {
               },
               {
                 icon: <JoyTokenIcon size={16} variant="regular" />,
-                label: `24K ${JOY_CURRENCY_TICKER}`,
+                label: `24K ${atlasConfig.joystream.tokenTicker}`,
                 variant: 'overlay',
               },
             ]}
@@ -99,7 +99,7 @@ Playlist.args = {
             },
             {
               icon: <JoyTokenIcon size={16} variant="regular" />,
-              label: `24K ${JOY_CURRENCY_TICKER}`,
+              label: `24K ${atlasConfig.joystream.tokenTicker}`,
               variant: 'overlay',
             },
           ]}

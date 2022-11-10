@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import { useJoystreamStore } from '@/providers/joystream'
+import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 
 const ESTIMATED_BLOCK_TIME_MS = 6000
 

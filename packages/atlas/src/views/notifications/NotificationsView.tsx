@@ -1,13 +1,13 @@
 import { useEffect } from 'react'
 
+import { SvgActionClose, SvgActionRead, SvgActionUnread } from '@/assets/icons'
 import { GridItem } from '@/components/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionClose, SvgActionRead, SvgActionUnread } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useBottomNavStore } from '@/providers/bottomNav'
-import { useNotifications } from '@/providers/notifications'
+import { useNotifications } from '@/providers/notifications/notifications.hooks'
 
 import { useSelectedNotifications } from './Notifications.hooks'
 import {

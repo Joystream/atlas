@@ -1,9 +1,9 @@
 import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 
+import { SvgActionChevronB } from '@/assets/icons'
 import { CircularProgress } from '@/components/CircularProgress'
 import { Text } from '@/components/Text'
-import { SvgActionChevronB } from '@/components/_icons'
 import { cVar, sizes, transitions } from '@/styles'
 
 export const Container = styled.div`

@@ -2,15 +2,15 @@ import { Global } from '@emotion/react'
 import { isEqual } from 'lodash-es'
 import { FC, useCallback, useEffect, useRef, useState } from 'react'
 
-import { useVideoCount } from '@/api/hooks'
-import { VideoOrderByInput } from '@/api/queries'
+import { useVideoCount } from '@/api/hooks/video'
+import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { SvgActionFilters } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionFilters } from '@/components/_icons'
-import { languages } from '@/config/languages'
+import { atlasConfig } from '@/config'
 import { VIDEO_SORT_OPTIONS } from '@/config/sorting'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
@@ -24,9 +24,12 @@ import {
 } from './CategoryVideos.styles'
 import { FallbackWrapper } from './CategoryView.styles'
 
-const SELECT_LANGUAGE_ITEMS = [{ name: 'All languages', value: 'undefined' }, ...languages]
+const SELECT_LANGUAGE_ITEMS = [
+  { name: 'All languages', value: 'undefined' },
+  ...atlasConfig.derived.languagesSelectValues,
+]
 
-export const CategoryVideos: FC<{ categoryId: string }> = ({ categoryId }) => {
+export const CategoryVideos: FC<{ categoriesId?: string[] }> = ({ categoriesId }) => {
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
   const containerRef = useRef<HTMLDivElement>(null)
@@ -43,7 +46,7 @@ export const CategoryVideos: FC<{ categoryId: string }> = ({ categoryId }) => {
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
 
   const { videoCount } = useVideoCount({
-    where: { ...videoWhereInput, category: { id_eq: categoryId } },
+    where: { ...videoWhereInput, category: { id_in: categoriesId } },
   })
 
   useEffect(() => {
@@ -144,7 +147,7 @@ export const CategoryVideos: FC<{ categoryId: string }> = ({ categoryId }) => {
               />
             </FallbackWrapper>
           }
-          videoWhereInput={{ ...videoWhereInput, category: { id_eq: categoryId } }}
+          videoWhereInput={{ ...videoWhereInput, category: { id_in: categoriesId } }}
           orderBy={sortVideosBy}
           onDemandInfinite
         />

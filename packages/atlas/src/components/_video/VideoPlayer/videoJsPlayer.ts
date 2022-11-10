@@ -45,9 +45,7 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
     }
     const videoJsOptions: VideoJsPlayerOptions = {
       controls: true,
-      // @ts-ignore @types/video.js is outdated and doesn't provide types for some newer video.js features
       playsinline: true,
-      loadingSpinner: false,
       bigPlayButton: false,
       controlBar: false,
       preload: 'metadata',

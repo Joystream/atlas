@@ -2,8 +2,9 @@ import { FC, ReactNode, useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { VideoJsPlayer } from 'video.js'
 
-import { Text } from '@/components/Text'
 import {
+  SvgActionSettings,
+  SvgControlsCaptionsOutline,
   SvgControlsPause,
   SvgControlsPlay,
   SvgControlsSeekBackward5,
@@ -13,7 +14,8 @@ import {
   SvgControlsSoundLowVolume,
   SvgControlsSoundOff,
   SvgControlsSoundOn,
-} from '@/components/_icons'
+} from '@/assets/icons'
+import { Text } from '@/components/Text'
 
 import {
   ControlsIndicatorIconWrapper,
@@ -43,6 +45,7 @@ type ControlsIndicatorProps = {
 
 export const ControlsIndicator: FC<ControlsIndicatorProps> = ({ player, isLoading }) => {
   const [indicator, setIndicator] = useState<EventState | null>(null)
+
   useEffect(() => {
     if (!player) {
       return
@@ -51,14 +54,22 @@ export const ControlsIndicator: FC<ControlsIndicatorProps> = ({ player, isLoadin
     const indicatorEvents = Object.values(CustomVideojsEvents)
 
     const handler = (e: Event) => {
+      let selectedLanguage = 'Off'
+      const tracks = player?.remoteTextTracks()
+      for (let i = 0; i < tracks.length; i++) {
+        const track = tracks[i]
+        if (track.mode === 'showing') {
+          selectedLanguage = track.label
+        }
+      }
       // This setTimeout is needed to get current value from `player.volume()`
       // if we omit this we'll get stale results
       timeout = window.setTimeout(() => {
-        const indicator = createIndicator(e.type as VideoEvent, player.volume(), player.muted())
+        const indicator = createIndicator(e.type as VideoEvent, player, selectedLanguage)
         if (indicator) {
           setIndicator({ ...indicator, isVisible: true })
         }
-      }, 0)
+      }, 10)
     }
     player.on(indicatorEvents, handler)
 
@@ -103,7 +114,13 @@ export const ControlsIndicator: FC<ControlsIndicatorProps> = ({ player, isLoadin
   )
 }
 
-const createIndicator = (type: VideoEvent | null, playerVolume: number, playerMuted: boolean) => {
+const createIndicator = (type: VideoEvent | null, player: VideoJsPlayer | null, captionsLanguage: string | null) => {
+  if (!player) {
+    return
+  }
+  const playerVolume = player.volume()
+  const playerMuted = player.muted()
+  const playbackRate = player.playbackRate()
   const formattedVolume = Math.floor(playerVolume * 100) + '%'
   const isMuted = playerMuted || !Number(playerVolume.toFixed(2))
 
@@ -166,6 +183,18 @@ const createIndicator = (type: VideoEvent | null, playerVolume: number, playerMu
       return {
         icon: isMuted ? <SvgControlsSoundOff /> : <SvgControlsSoundLowVolume />,
         description: isMuted ? 'Mute' : formattedVolume,
+        type,
+      }
+    case CustomVideojsEvents.CaptionsSet:
+      return {
+        icon: <SvgControlsCaptionsOutline />,
+        description: `Subtitles/CC set to ${captionsLanguage}`,
+        type,
+      }
+    case CustomVideojsEvents.PlaybackSpeedSet:
+      return {
+        icon: <SvgActionSettings />,
+        description: `Speed set to ${playbackRate}x`,
         type,
       }
     default:

@@ -37,13 +37,11 @@ export const DescriptionCopyWrapper = styled(Text)`
 `
 
 export const Category = styled(Link)`
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr;
   align-items: center;
   text-decoration: none;
-
-  svg {
-    margin-right: ${sizes(2)};
-  }
+  gap: ${sizes(2)};
 `
 
 export const LicenceCategoryWrapper = styled.div<{ detailsExpanded: boolean }>`
@@ -66,6 +64,8 @@ export const ExpandButton = styled(TextButton)`
 
 export const CategoryWrapper = styled.div`
   text-align: left;
+  display: grid;
+  gap: ${sizes(2)};
 
   path {
     fill: ${cVar('colorText')};

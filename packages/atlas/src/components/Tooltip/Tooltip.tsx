@@ -13,7 +13,7 @@ import {
   TooltipText,
 } from './Tooltip.styles'
 
-type Placement = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' | 'top'
+type Placement = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' | 'top' | 'bottom'
 export type TooltipProps = PropsWithChildren<{
   text?: string
   headerText?: string
@@ -30,7 +30,7 @@ export type TooltipProps = PropsWithChildren<{
   hidden?: boolean
   className?: string
 }> &
-  Pick<TippyProps, 'delay'>
+  Pick<TippyProps, 'delay' | 'interactive' | 'appendTo'>
 
 export const Tooltip: FC<TooltipProps> = ({
   text,

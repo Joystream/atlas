@@ -35,7 +35,7 @@ export const VideoCategoryCard: FC<VideoCategoryCardProps> = ({
   variant = 'default',
   isLoading,
   title,
-  categoryVideosCount,
+  categoryVideosCount = 0,
   icon,
   videosTotalCount,
   coverImg,
@@ -90,7 +90,7 @@ export const VideoCategoryCard: FC<VideoCategoryCardProps> = ({
                     <PieSegment value={pieChartValue} />
                   </PieChart>
                   <Text as="span" variant={variant === 'default' ? 't200' : 't100'} color="colorText">
-                    {categoryVideosCount} videos
+                    {categoryVideosCount} {categoryVideosCount === 1 ? 'video' : 'videos'}
                   </Text>
                 </>
               )}

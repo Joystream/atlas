@@ -8,9 +8,9 @@ import {
   useState,
 } from 'react'
 
+import { SvgActionPan, SvgActionTrash, SvgActionZoomIn, SvgActionZoomOut } from '@/assets/icons'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionPan, SvgActionTrash, SvgActionZoomIn, SvgActionZoomOut } from '@/components/_icons'
 import { DialogModalProps } from '@/components/_overlays/DialogModal'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { validateImage } from '@/utils/image'
@@ -82,8 +82,8 @@ const ImageCropModalComponent: ForwardRefRenderFunction<ImageCropModalImperative
         setEditedImageHref(fileUrl)
         setShowModal(true)
       } else {
-        inputRef.current?.click()
         if (cropData) setCropData(cropData)
+        inputRef.current?.click()
       }
     },
   }))
@@ -168,7 +168,8 @@ const ImageCropModalComponent: ForwardRefRenderFunction<ImageCropModalImperative
         secondaryButton={{ text: 'Cancel', onClick: resetModal }}
         additionalActionsNodeMobilePosition="bottom"
         additionalActionsNode={
-          editMode && (
+          editMode &&
+          onDelete && (
             <Button onClick={handleDeleteClick} variant="destructive-secondary" icon={<SvgActionTrash />}>
               Delete
             </Button>

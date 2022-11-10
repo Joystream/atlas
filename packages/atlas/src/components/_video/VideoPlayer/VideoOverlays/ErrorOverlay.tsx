@@ -1,7 +1,7 @@
 import { FC } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
-import { JOYSTREAM_DISCORD_URL } from '@/config/urls'
+import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { AnimationWrapper, ButtonGroup, StyledAnimatedError, StyledDiscordButton } from './ErrorOverlay.styles'
@@ -23,7 +23,11 @@ export const ErrorOverlay: FC = () => {
           been logged. If you need support, reach out to our community on Discord.
         </OverlayContent>
         <ButtonGroup>
-          <StyledDiscordButton size={smMatch ? 'medium' : 'small'} variant="secondary" to={JOYSTREAM_DISCORD_URL}>
+          <StyledDiscordButton
+            size={smMatch ? 'medium' : 'small'}
+            variant="secondary"
+            to={atlasConfig.general.joystreamDiscordUrl}
+          >
             Open Discord
           </StyledDiscordButton>
           <Button size={smMatch ? 'medium' : 'small'} onClick={() => window.location.reload()}>

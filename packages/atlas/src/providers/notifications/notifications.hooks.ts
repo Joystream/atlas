@@ -1,5 +1,7 @@
-import { useRawNotifications } from '@/api/hooks'
-import { useUser } from '@/providers/user'
+import BN from 'bn.js'
+
+import { useRawNotifications } from '@/api/hooks/notifications'
+import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger } from '@/utils/logs'
 
 import { useNotificationStore } from './notifications.store'
@@ -54,14 +56,14 @@ const parseNotification = (
       type: event.ownerMember?.id === memberId ? 'bid-made' : 'got-outbid',
       ...commonFields,
       member: event.member,
-      bidAmount: Number(event.bidAmount),
+      bidAmount: new BN(event.bidAmount),
     }
   } else if (event.__typename === 'NftBoughtEvent') {
     return {
       type: 'bought',
       ...commonFields,
       member: event.member,
-      price: Number(event.price),
+      price: new BN(event.price),
     }
   } else if (event.__typename === 'BidMadeCompletingAuctionEvent') {
     if (event.ownerMember?.id === memberId) {
@@ -70,7 +72,7 @@ const parseNotification = (
         type: 'bought',
         ...commonFields,
         member: event.member,
-        price: Number(event.price),
+        price: new BN(event.price),
       }
     } else if (event.member.id === memberId) {
       // member is the winner, skip the notification
@@ -89,7 +91,7 @@ const parseNotification = (
         type: 'bid-accepted',
         ...commonFields,
         member: event.ownerMember || null,
-        bidAmount: Number(event.winningBid?.amount || 0),
+        bidAmount: new BN(event.winningBid?.amount || 0),
       }
     } else {
       // member is not the winner, the participated in the auction

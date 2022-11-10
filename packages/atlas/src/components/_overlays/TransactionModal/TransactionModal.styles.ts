@@ -1,7 +1,7 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { IconWrapper } from '@/components/_icons/IconWrapper'
+import { IconWrapper } from '@/components/IconWrapper'
 import { Dialog } from '@/components/_overlays/Dialog'
 import { Modal } from '@/components/_overlays/Modal'
 import { cVar, sizes, square, transitions } from '@/styles'

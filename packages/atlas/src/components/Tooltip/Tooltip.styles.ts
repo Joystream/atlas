@@ -1,8 +1,8 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { SvgAlertsInformative24 } from '@/assets/icons'
 import { Text } from '@/components/Text'
-import { SvgAlertsInformative24 } from '@/components/_icons'
 import { cVar, sizes } from '@/styles'
 
 export const IconWrapper = styled.div`
@@ -59,6 +59,8 @@ export const TooltipContainer = styled.div<TooltipContainerProps>`
   ${TooltipHeader} {
     align-items: ${({ hasHeader }) => (hasHeader ? 'center' : 'flex-start')};
   }
+
+  box-shadow: ${cVar('effectElevation8Layer2')}, ${cVar('effectElevation8Layer1')};
 `
 
 export const TooltipContent = styled.div<{ headerText: boolean }>`

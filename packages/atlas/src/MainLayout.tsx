@@ -2,7 +2,7 @@ import loadable from '@loadable/component'
 import { FC, useEffect, useRef, useState } from 'react'
 import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 
-import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
+import { SvgAppLogoStudio } from '@/assets/logos'
 import { StudioLoading } from '@/components/_loaders/StudioLoading'
 import { CookiePopover } from '@/components/_overlays/CookiePopover'
 import { BASE_PATHS, absoluteRoutes } from '@/config/routes'
@@ -12,7 +12,7 @@ import { isBrowserOutdated } from '@/utils/browser'
 
 import { TopbarBase } from './components/_navigation/TopbarBase'
 import { useConfirmationModal } from './providers/confirmationModal'
-import { LegalLayout } from './views/legal'
+import { LegalLayout } from './views/legal/LegalLayout'
 import { ViewerLayout } from './views/viewer/ViewerLayout'
 
 history.scrollRestoration = 'manual'
@@ -21,7 +21,10 @@ const ROUTING_ANIMATION_OFFSET = 100
 const LoadableStudioLayout = loadable(() => import('./views/studio/StudioLayout'), {
   fallback: (
     <>
-      <TopbarBase fullLogoNode={<SvgJoystreamLogoStudio />} logoLinkUrl={absoluteRoutes.studio.index()} />
+      <TopbarBase
+        fullLogoNode={<SvgAppLogoStudio height={32} width={undefined} />}
+        logoLinkUrl={absoluteRoutes.studio.index()}
+      />
       <StudioLoading />
     </>
   ),

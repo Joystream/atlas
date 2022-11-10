@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import { useState } from 'react'
 
-import { SvgActionAddImage } from '@/components/_icons'
+import { SvgActionAddImage } from '@/assets/icons'
 
 import { Select, SelectItem, SelectProps } from '.'
 
@@ -44,6 +44,20 @@ export const Default = Template.bind({})
 export const WithControlledInput = TemplateWithControlledInput.bind({})
 
 export const WithIcon = TemplateWithControlledInput.bind({})
+
+const TemplateWithSeparator: Story<SelectProps> = (args) => (
+  <Select
+    {...args}
+    items={[
+      { name: 'TOP ITEMS', value: '', isSeparator: true },
+      ...args.items.slice(0, 2),
+      { name: 'ALL ITEMS', value: '', isSeparator: true },
+      ...args.items,
+    ]}
+  />
+)
+
+export const WithSeparators = TemplateWithSeparator.bind({})
 
 WithIcon.args = {
   icon: <SvgActionAddImage />,

@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
@@ -5,13 +6,27 @@ import { sizes } from '@/styles'
 
 import { SizeProps, sizeObj } from './NftWidget.styles'
 
-export const InfoItemContainer = styled.div<SizeProps>`
+const getInfoItemContainerTemplate = ({ disableSecondary }: { disableSecondary?: boolean }) => {
+  if (disableSecondary) {
+    return css`
+      grid-template:
+        'label' min-content
+        'content' min-content / 1fr;
+    `
+  }
+  return css`
+    grid-template:
+      'label' min-content
+      'content' min-content
+      'secondary' min-content / 1fr;
+  `
+}
+
+export const InfoItemContainer = styled.div<SizeProps & { disableSecondary?: boolean }>`
   display: grid;
   gap: ${sizes(1)};
-  grid-template:
-    'label' min-content
-    'content' min-content
-    'secondary' min-content / 1fr;
+
+  ${getInfoItemContainerTemplate}
 
   &[data-size=${sizeObj.small}] {
     gap: ${sizes(2)};

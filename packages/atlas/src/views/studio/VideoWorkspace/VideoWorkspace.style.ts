@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { SvgActionWarning } from '@/components/_icons'
+import { SvgActionWarning } from '@/assets/icons'
 import { cVar } from '@/styles'
 
 export const StyledSvgWarning = styled(SvgActionWarning)`

@@ -2,10 +2,10 @@ import styled from '@emotion/styled'
 import { FC } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { useCommentEdits } from '@/api/hooks'
-import { CommentFieldsFragment } from '@/api/queries'
+import { useCommentEdits } from '@/api/hooks/comments'
+import { CommentFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { absoluteRoutes } from '@/config/routes'
-import { useMemberAvatar } from '@/providers/assets'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { cVar, transitions } from '@/styles'
 
 import { CommentSnapshot } from '../CommentSnapshot'

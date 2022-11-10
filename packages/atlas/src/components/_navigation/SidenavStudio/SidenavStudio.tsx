@@ -1,21 +1,23 @@
 import { FC, useState } from 'react'
 
-import { Button } from '@/components/_buttons/Button'
 import {
   SvgActionAddVideo,
   SvgActionPlay,
   SvgSidebarChannel,
   SvgSidebarPayments,
+  SvgSidebarToken,
   SvgSidebarUpload,
   SvgSidebarVideos,
-} from '@/components/_icons'
-import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
+} from '@/assets/icons'
+import { SvgAppLogoStudio } from '@/assets/logos'
+import { Button } from '@/components/_buttons/Button'
 import { NavItemType } from '@/components/_navigation/NavItem'
 import { SidenavBase } from '@/components/_navigation/SidenavBase'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { chanelUnseenDraftsSelector, useDraftStore } from '@/providers/drafts'
-import { useUploadsStore } from '@/providers/uploadsManager'
-import { useUser } from '@/providers/user'
+import { useUploadsStore } from '@/providers/uploads/uploads.store'
+import { useUser } from '@/providers/user/user.hooks'
 
 const studioNavbarItems: NavItemType[] = [
   {
@@ -41,6 +43,12 @@ const studioNavbarItems: NavItemType[] = [
     name: 'Payments',
     expandedName: 'My payments',
     to: absoluteRoutes.studio.payments(),
+  },
+  {
+    icon: <SvgSidebarToken />,
+    name: 'Token',
+    expandedName: 'Creator token',
+    to: absoluteRoutes.studio.crt(),
   },
 ]
 
@@ -84,7 +92,7 @@ export const SidenavStudio: FC<SidenavStudioProps> = ({ className }) => {
         onClick={() => setExpanded(false)}
         icon={<SvgActionPlay />}
       >
-        Go to Joystream
+        Go to {atlasConfig.general.appName}
       </Button>
     </>
   )
@@ -93,7 +101,7 @@ export const SidenavStudio: FC<SidenavStudioProps> = ({ className }) => {
     <SidenavBase
       expanded={expanded}
       toggleSideNav={setExpanded}
-      logoNode={<SvgJoystreamLogoStudio />}
+      logoNode={<SvgAppLogoStudio height={32} width={undefined} />}
       logoLinkUrl={absoluteRoutes.studio.index()}
       items={studioNavbarItemsWithBadge}
       buttonsContent={buttons}

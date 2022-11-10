@@ -4,7 +4,7 @@ import { Button } from '@/components/_buttons/Button'
 import { usePersonalDataStore } from '@/providers/personalData'
 
 import { Banner, BannerProps } from '.'
-import { SvgActionWarning, SvgAlertsInformative24 } from '../_icons'
+import { SvgActionWarning, SvgAlertsInformative24 } from '../../assets/icons'
 
 export default {
   title: 'other/Banner',

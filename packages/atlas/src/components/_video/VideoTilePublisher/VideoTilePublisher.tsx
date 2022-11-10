@@ -3,11 +3,8 @@ import { FC, MouseEvent, memo, useCallback } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 
-import { getNftStatus, useFullVideo } from '@/api/hooks'
-import { OwnerPill } from '@/components/OwnerPill'
-import { Pill } from '@/components/Pill'
-import { UploadProgressBar } from '@/components/UploadProgressBar'
-import { Button } from '@/components/_buttons/Button'
+import { getNftStatus } from '@/api/hooks/nfts'
+import { useFullVideo } from '@/api/hooks/video'
 import {
   SvgActionEdit,
   SvgActionHide,
@@ -16,16 +13,19 @@ import {
   SvgActionWarning,
   SvgIllustrativePlay,
   SvgIllustrativeReupload,
-} from '@/components/_icons'
+} from '@/assets/icons'
+import { OwnerPill } from '@/components/OwnerPill'
+import { Pill } from '@/components/Pill'
+import { UploadProgressBar } from '@/components/UploadProgressBar'
+import { Button } from '@/components/_buttons/Button'
 import { absoluteRoutes } from '@/config/routes'
 import { useGetNftSlot } from '@/hooks/useGetNftSlot'
 import { useNftState } from '@/hooks/useNftState'
-import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useVideoContextMenu } from '@/hooks/useVideoContextMenu'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
-import { useMemberAvatar } from '@/providers/assets'
-import { useNftActions } from '@/providers/nftActions'
-import { useUploadsStore } from '@/providers/uploadsManager'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
+import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { SentryLogger } from '@/utils/logs'
 import { formatDurationShort } from '@/utils/time'
 
@@ -60,7 +60,6 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
 
     const nftStatus = getNftStatus(video?.nft, video)
 
-    const { withdrawBid } = useNftTransactions()
     const nftState = useNftState(video?.nft)
     const { auctionPlannedEndDate, englishTimerState, needsSettling, startsAtDate, timerLoading } = nftState
     const nftTilePublisher = useGetNftSlot({
@@ -86,7 +85,6 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
       onDeleteVideoClick,
       onEditClick,
       onMintNftClick,
-      onWithdrawBid: () => video?.id && withdrawBid(video?.id),
       hasBids:
         isAuction && !!nftStatus.topBidder && !!(isAuction && !nftStatus.topBid?.isCanceled && nftStatus.topBidAmount),
     })

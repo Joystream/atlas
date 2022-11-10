@@ -1,8 +1,10 @@
-import { BasicNftFieldsFragment } from '@/api/queries'
+import BN from 'bn.js'
+
+import { BasicNftFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
-import { NftSaleType } from '@/joystream-lib'
-import { useJoystreamStore } from '@/providers/joystream'
-import { useUser } from '@/providers/user'
+import { NftSaleType } from '@/joystream-lib/types'
+import { useJoystreamStore } from '@/providers/joystream/joystream.store'
+import { useUser } from '@/providers/user/user.hooks'
 
 export type EnglishTimerState = 'expired' | 'running' | 'upcoming' | null
 
@@ -23,12 +25,17 @@ export const useNftState = (nft?: BasicNftFieldsFragment | null) => {
   const isUserTopBidder = auction?.topBid?.bidder.id === activeMembership?.id
   const saleType: NftSaleType | null = isIdle ? null : isBuyNow ? 'buyNow' : englishAuction ? 'english' : 'open'
 
-  const userBid = [...(auction?.bids ?? [])]
-    .reverse()
-    .find((bid) => !bid.isCanceled && bid.bidder.id === activeMembership?.id)
+  const rawUserBid = (auction?.bids || []).find((bid) => !bid.isCanceled && bid.bidder.id === activeMembership?.id)
+  const userBid = rawUserBid && {
+    ...rawUserBid,
+    amount: new BN(rawUserBid.amount),
+  }
+
   const userBidUnlockBlock = openAuction && userBid ? userBid?.createdInBlock + openAuction.bidLockDuration : undefined
   const userBidUnlockBlockTimestamp = userBidUnlockBlock && convertBlockToMsTimestamp(userBidUnlockBlock)
   const userBidUnlockDate = userBidUnlockBlockTimestamp ? new Date(userBidUnlockBlockTimestamp) : undefined
+  const userBidAmount = userBid?.amount
+  const userBidCreatedAt = userBid?.createdAt ? new Date(userBid?.createdAt) : undefined
 
   const startsAtDateBlockTimestamp = isAuction && convertBlockToMsTimestamp(auction?.startsAtBlock)
   const startsAtDate = startsAtDateBlockTimestamp ? new Date(startsAtDateBlockTimestamp) : undefined
@@ -95,6 +102,8 @@ export const useNftState = (nft?: BasicNftFieldsFragment | null) => {
     videoId: nft?.id,
     userBid,
     userBidUnlockDate,
+    userBidCreatedAt,
+    userBidAmount,
     bids: auction?.bids,
     auction,
     startsAtDate,

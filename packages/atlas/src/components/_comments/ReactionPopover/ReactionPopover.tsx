@@ -3,8 +3,9 @@ import { FC, useState } from 'react'
 
 import { EmojiWrapper } from '@/components/EmojiWrapper'
 import { Button } from '@/components/_buttons/Button'
-import { REACTION_TYPE, ReactionId } from '@/config/reactions'
+import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { CommentReaction } from '@/joystream-lib/types'
 import { usePersonalDataStore } from '@/providers/personalData'
 
 import {
@@ -15,7 +16,7 @@ import {
 } from './ReactionPopover.styles'
 
 export type ReactionPopoverProps = {
-  onReactionClick?: (reaction: ReactionId, reactionPopoverDismissed: boolean) => void
+  onReactionClick?: (reaction: CommentReaction, reactionPopoverDismissed: boolean) => void
   disabled?: boolean
 }
 
@@ -41,12 +42,12 @@ export const ReactionPopover: FC<ReactionPopoverProps> = ({ onReactionClick, dis
   const [isOpen, setIsOpen] = useState(false)
   const smMatch = useMediaMatch('sm')
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
-  const reactions = Object.entries(REACTION_TYPE).map(([key, value]) => ({
-    reactionId: Number(key) as ReactionId,
-    value: value.emoji,
+  const reactions = atlasConfig.features.comments.reactions.map(({ id, emoji }) => ({
+    reactionId: id,
+    value: emoji,
   }))
 
-  const handleReactionClick = (reaction: ReactionId) => {
+  const handleReactionClick = (reaction: CommentReaction) => {
     onReactionClick?.(reaction, reactionPopoverDismissed)
     setIsOpen(false)
   }

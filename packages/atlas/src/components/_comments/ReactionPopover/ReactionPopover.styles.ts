@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
+import { SvgActionPlaceholder } from '@/assets/icons'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionPlaceholder } from '@/components/_icons'
 import { cVar, media, sizes } from '@/styles'
 
 export const ReactionPopoverWrapper = styled.div`

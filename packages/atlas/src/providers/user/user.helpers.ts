@@ -1,15 +1,13 @@
-import { InjectedWindowProvider } from '@polkadot/extension-inject/types'
-import { BaseDotsamaWallet, WalletAccount, getWallets } from '@talisman-connect/wallets'
+import { BaseDotsamaWallet, WalletAccount, getWallets } from '@talismn/connect-wallets'
 import { useCallback, useEffect } from 'react'
 import shallow from 'zustand/shallow'
 
-import { WEB3_APP_NAME } from '@/config/urls'
+import { atlasConfig } from '@/config'
+import { formatJoystreamAddress } from '@/utils/address'
 import { ConsoleLogger } from '@/utils/logs'
 
 import { useUserStore } from './user.store'
 import { SignerWalletAccount } from './user.types'
-
-type InjectedWeb3 = Record<string, InjectedWindowProvider>
 
 export const useSignerWallet = () => {
   const { walletStatus, walletAccounts, wallet, accountId } = useUserStore(
@@ -21,7 +19,25 @@ export const useSignerWallet = () => {
     }),
     shallow
   )
-  const { setWalletAccounts, setWalletStatus, resetActiveUser, setWallet } = useUserStore((state) => state.actions)
+  const {
+    setWalletAccounts: _setWalletAccount,
+    setWalletStatus,
+    resetActiveUser,
+    setWallet,
+  } = useUserStore((state) => state.actions)
+
+  const setWalletAccounts = useCallback(
+    async (accounts: WalletAccount[]) => {
+      const mappedAccounts = accounts.map((account) => {
+        return {
+          ...account,
+          address: formatJoystreamAddress(account.address),
+        }
+      })
+      _setWalletAccount(mappedAccounts)
+    },
+    [_setWalletAccount]
+  )
 
   const handleAccountsChange = useCallback(
     (accounts?: WalletAccount[]) => {
@@ -39,17 +55,14 @@ export const useSignerWallet = () => {
     const supportedWalletsNames = supportedWallets.map((wallet) => wallet.extensionName)
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const unknownWallets = Object.keys(((window as any).injectedWeb3 as InjectedWeb3) || {}).reduce(
-      (acc, walletName) => {
-        if (supportedWalletsNames.includes(walletName)) {
-          // wallet is already in supportedWallets list
-          return acc
-        }
+    const unknownWallets = Object.keys((window as any).injectedWeb3 || {}).reduce((acc, walletName) => {
+      if (supportedWalletsNames.includes(walletName)) {
+        // wallet is already in supportedWallets list
+        return acc
+      }
 
-        return [...acc, new UnknownWallet(walletName)]
-      },
-      [] as UnknownWallet[]
-    )
+      return [...acc, new UnknownWallet(walletName)]
+    }, [] as UnknownWallet[])
 
     return [...supportedWallets, ...unknownWallets]
   }, [])
@@ -66,7 +79,7 @@ export const useSignerWallet = () => {
           return null
         }
 
-        await selectedWallet.enable(WEB3_APP_NAME)
+        await selectedWallet.enable(atlasConfig.general.appName)
 
         // taken from https://github.com/TalismanSociety/talisman-connect/blob/47cfefee9f1333326c0605c159d6ee8ebfba3e84/libs/wallets/src/lib/base-dotsama-wallet/index.ts#L98-L107
         // should be part of future talisman-connect release
@@ -75,6 +88,7 @@ export const useSignerWallet = () => {
         const accountsWithWallet = accounts.map((account: any) => {
           return {
             ...account,
+            address: formatJoystreamAddress(account.address),
             source: selectedWallet.extension?.name as string,
             wallet: selectedWallet,
             signer: selectedWallet.extension?.signer,

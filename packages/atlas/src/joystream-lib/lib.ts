@@ -1,14 +1,18 @@
-import { types } from '@joystream/types'
+// load type augments
+import '@joystream/types'
 import { ApiPromise, WsProvider } from '@polkadot/api'
-import '@polkadot/api/augment'
+import { QueryableStorageMultiArg } from '@polkadot/api-base/types/storage'
 import { Signer } from '@polkadot/api/types'
+import { Codec } from '@polkadot/types/types'
+import BN from 'bn.js'
 import { proxy } from 'comlink'
 
-import { JoystreamLibError } from '@/joystream-lib/errors'
+import { PERBILL_ONE_PERCENT } from '@/joystream-lib/config'
+import { parseAccountBalance } from '@/joystream-lib/utils'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
+import { JoystreamLibError } from './errors'
 import { JoystreamLibExtrinsics } from './extrinsics'
-import { NFT_PERBILL_PERCENT } from './helpers'
 import { AccountId } from './types'
 
 export class JoystreamLib {
@@ -36,7 +40,7 @@ export class JoystreamLib {
       onNodeConnectionUpdate?.(false)
     })
 
-    this.api = new ApiPromise({ provider, types })
+    this.api = new ApiPromise({ provider })
     const extrinsics = new JoystreamLibExtrinsics(this.api, () => this.selectedAccountId, endpoint)
     this.extrinsics = proxy(extrinsics)
   }
@@ -76,14 +80,6 @@ export class JoystreamLib {
     this.api.setSigner(signer)
   }
 
-  async getAccountBalance(accountId: AccountId): Promise<number> {
-    await this.ensureApi()
-
-    const { availableBalance } = await this.api.derive.balances.all(accountId)
-
-    return availableBalance.toNumber()
-  }
-
   async getCurrentBlock(): Promise<number> {
     await this.ensureApi()
     const header = await this.api.rpc.chain.getHeader()
@@ -91,11 +87,21 @@ export class JoystreamLib {
     return number.toNumber()
   }
 
-  async subscribeAccountBalance(accountId: AccountId, callback: (balance: number) => void) {
+  async getAccountBalance(accountId: AccountId) {
     await this.ensureApi()
 
-    const unsubscribe = await this.api.derive.balances.all(accountId, ({ availableBalance }) => {
-      callback(availableBalance.toNumber())
+    const balances = await this.api.derive.balances.all(accountId)
+    return parseAccountBalance(balances)
+  }
+
+  async subscribeAccountBalance(
+    accountId: AccountId,
+    callback: (balances: { availableBalance: string; lockedBalance: string }) => void
+  ) {
+    await this.ensureApi()
+
+    const unsubscribe = await this.api.derive.balances.all(accountId, (balances) => {
+      callback(parseAccountBalance(balances))
     })
 
     return proxy(unsubscribe)
@@ -110,32 +116,79 @@ export class JoystreamLib {
     return proxy(unsubscribe)
   }
 
-  async getNftChainState() {
+  async getChainConstants() {
     await this.ensureApi()
 
+    // use queryMulti for better performance
+    // there are some type mismatches so we need to assert type of each query
+    const results = await this.api.queryMulti([
+      this.api.query.storage.dataObjectPerMegabyteFee as QueryableStorageMultiArg<'promise'>,
+      this.api.query.storage.dataObjectStateBloatBondValue as QueryableStorageMultiArg<'promise'>,
+      this.api.query.content.videoStateBloatBondValue as QueryableStorageMultiArg<'promise'>,
+      this.api.query.content.channelStateBloatBondValue as QueryableStorageMultiArg<'promise'>,
+      this.api.query.content.maxAuctionDuration as QueryableStorageMultiArg<'promise'>,
+      this.api.query.content.minStartingPrice as QueryableStorageMultiArg<'promise'>,
+      this.api.query.content.maxStartingPrice as QueryableStorageMultiArg<'promise'>,
+      this.api.query.content.auctionStartsAtMaxDelta as QueryableStorageMultiArg<'promise'>,
+      this.api.query.content.maxCreatorRoyalty as QueryableStorageMultiArg<'promise'>,
+      this.api.query.content.minCreatorRoyalty as QueryableStorageMultiArg<'promise'>,
+      this.api.query.content.platfromFeePercentage as QueryableStorageMultiArg<'promise'>,
+    ])
+
     const [
+      dataObjectPerMegabyteFee,
+      dataObjectStateBloatBondValue,
+      videoStateBloatBondValue,
+      channelStateBloatBondValue,
       maxAuctionDuration,
       minStartingPrice,
+      maxStartingPrice,
       auctionStartsAtMaxDelta,
       maxCreatorRoyalty,
       minCreatorRoyalty,
       platformFeePercentage,
-    ] = await Promise.all([
-      this.api.query.content.maxAuctionDuration(),
-      this.api.query.content.minStartingPrice(),
-      this.api.query.content.auctionStartsAtMaxDelta(),
-      this.api.query.content.maxCreatorRoyalty(),
-      this.api.query.content.minCreatorRoyalty(),
-      this.api.query.content.platfromFeePercentage(),
-    ])
+    ] = results
+
+    const asStringifiedBN = (raw: Codec) => {
+      const bn = new BN(raw.toString())
+      return bn.toString()
+    }
+
+    const asNumber = (raw: Codec) => {
+      return parseInt(raw.toString())
+    }
+
+    const asPercentage = (raw: Codec) => {
+      return asNumber(raw) / PERBILL_ONE_PERCENT
+    }
 
     return {
-      maxAuctionDuration: maxAuctionDuration.toNumber(),
-      minStartingPrice: minStartingPrice.toNumber(),
-      auctionStartsAtMaxDelta: auctionStartsAtMaxDelta.toNumber(),
-      maxCreatorRoyalty: maxCreatorRoyalty.toNumber() / NFT_PERBILL_PERCENT,
-      minCreatorRoyalty: minCreatorRoyalty.toNumber() / NFT_PERBILL_PERCENT,
-      platformFeePercentage: platformFeePercentage.toNumber() / NFT_PERBILL_PERCENT,
+      dataObjectPerMegabyteFee: asStringifiedBN(dataObjectPerMegabyteFee),
+      dataObjectStateBloatBondValue: asStringifiedBN(dataObjectStateBloatBondValue),
+      videoStateBloatBondValue: asStringifiedBN(videoStateBloatBondValue),
+      channelStateBloatBondValue: asStringifiedBN(channelStateBloatBondValue),
+      nftMinStartingPrice: asStringifiedBN(minStartingPrice),
+      nftMaxStartingPrice: asStringifiedBN(maxStartingPrice),
+      nftMaxAuctionDuration: asNumber(maxAuctionDuration),
+      nftAuctionStartsAtMaxDelta: asNumber(auctionStartsAtMaxDelta),
+      nftMaxCreatorRoyaltyPercentage: asPercentage(maxCreatorRoyalty),
+      nftMinCreatorRoyaltyPercentage: asPercentage(minCreatorRoyalty),
+      nftPlatformFeePercentage: asPercentage(platformFeePercentage),
+    } as const
+  }
+
+  async getDynamicBagCreationPolicies() {
+    await this.ensureApi()
+
+    const { numberOfStorageBuckets, families } = await this.api.query.storage.dynamicBagCreationPolicies('Channel')
+    const transformedFamilies = Object.fromEntries(families)
+    Object.keys(transformedFamilies).forEach((key) => {
+      transformedFamilies[key] = transformedFamilies[key].toNumber()
+    })
+
+    return {
+      storageBucketsCount: numberOfStorageBuckets.toNumber(),
+      distributionBucketsCountPerFamily: transformedFamilies,
     }
   }
 }

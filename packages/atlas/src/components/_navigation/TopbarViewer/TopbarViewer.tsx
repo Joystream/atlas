@@ -2,19 +2,20 @@ import { ChangeEvent, FC, MouseEvent, useCallback, useEffect, useState } from 'r
 import { useLocation } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { SvgActionMember } from '@/assets/icons'
+import { SvgAppLogoFull } from '@/assets/logos'
 import { Searchbar } from '@/components/Searchbar'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionMember } from '@/components/_icons'
-import { SvgJoystreamLogoFull } from '@/components/_illustrations'
 import { NotificationsButton } from '@/components/_navigation/NotificationsButton'
 import { NotificationsWidget } from '@/components/_notifications/NotificationsWidget'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
+import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useMemberAvatar } from '@/providers/assets'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { useSearchStore } from '@/providers/search'
-import { useUser } from '@/providers/user'
+import { useUser } from '@/providers/user/user.hooks'
 import { cVar, transitions } from '@/styles'
 
 import {
@@ -42,6 +43,7 @@ export const TopbarViewer: FC = () => {
     searchQuery,
     actions: { setSearchOpen, setSearchQuery },
   } = useSearchStore()
+  const { openSignInDialog } = useDisplaySignInDialog()
 
   useEffect(() => {
     if (searchOpen) {
@@ -91,7 +93,7 @@ export const TopbarViewer: FC = () => {
       <StyledTopbarBase
         hasFocus={searchOpen}
         noLogo={!mdMatch && !!searchQuery}
-        fullLogoNode={<SvgJoystreamLogoFull />}
+        fullLogoNode={<SvgAppLogoFull height={32} width={undefined} />}
         logoLinkUrl={absoluteRoutes.viewer.index()}
       >
         <SearchbarContainer>
@@ -139,7 +141,12 @@ export const TopbarViewer: FC = () => {
                   </SignedButtonsWrapper>
                 ) : (
                   mdMatch && (
-                    <Button icon={<SvgActionMember />} iconPlacement="left" size="medium" onClick={() => signIn()}>
+                    <Button
+                      icon={<SvgActionMember />}
+                      iconPlacement="left"
+                      size="medium"
+                      onClick={() => signIn(undefined, openSignInDialog)}
+                    >
                       Connect wallet
                     </Button>
                   )
@@ -150,7 +157,7 @@ export const TopbarViewer: FC = () => {
                 </SignedButtonsWrapper>
               )}
               {!searchQuery && !mdMatch && !isLoggedIn && topbarButtonLoaded && (
-                <StyledIconButton onClick={() => signIn()}>Connect wallet</StyledIconButton>
+                <StyledIconButton onClick={() => signIn(undefined, openSignInDialog)}>Connect wallet</StyledIconButton>
               )}
             </ButtonWrapper>
           </CSSTransition>

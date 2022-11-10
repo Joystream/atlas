@@ -23,7 +23,8 @@ export type GetMembershipQuery = {
       title?: string | null
       createdAt: Date
       follows: number
-      rewardAccount?: string | null
+      rewardAccount: string
+      channelStateBloatBond: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -37,6 +38,7 @@ export type GetMembershipQuery = {
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
     }>
@@ -59,6 +61,7 @@ export type GetMembershipQuery = {
                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                 | { __typename: 'DataObjectTypeUnknown' }
                 | { __typename: 'DataObjectTypeVideoMedia' }
+                | { __typename: 'DataObjectTypeVideoSubtitle' }
                 | { __typename: 'DataObjectTypeVideoThumbnail' }
             } | null
           }
@@ -86,7 +89,8 @@ export type GetMembershipsQuery = {
       title?: string | null
       createdAt: Date
       follows: number
-      rewardAccount?: string | null
+      rewardAccount: string
+      channelStateBloatBond: string
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -100,6 +104,7 @@ export type GetMembershipsQuery = {
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
     }>
@@ -122,6 +127,7 @@ export type GetMembershipsQuery = {
                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
                 | { __typename: 'DataObjectTypeUnknown' }
                 | { __typename: 'DataObjectTypeVideoMedia' }
+                | { __typename: 'DataObjectTypeVideoSubtitle' }
                 | { __typename: 'DataObjectTypeVideoThumbnail' }
             } | null
           }

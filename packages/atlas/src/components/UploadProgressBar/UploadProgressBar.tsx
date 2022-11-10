@@ -6,7 +6,7 @@ import { AssetUploadStatus } from '@/types/storage'
 
 import { BottomProgressBar, LoaderWrapper, ProgressBar, UploadProgressBarContainer } from './UploadProgressBar.styles'
 
-import { SvgAlertsSuccess24 } from '../_icons'
+import { SvgAlertsSuccess24 } from '../../assets/icons'
 import { Loader } from '../_loaders/Loader'
 
 export type UploadProgressBarProps = {

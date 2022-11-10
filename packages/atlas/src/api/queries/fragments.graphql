@@ -9,6 +9,7 @@ fragment BasicChannelFields on Channel {
   createdAt
   follows
   rewardAccount
+  channelStateBloatBond
 
   avatarPhoto {
     ...StorageDataObjectFields
@@ -101,6 +102,20 @@ fragment LicenseFields on License {
   customText
 }
 
+fragment SubtitlesFields on VideoSubtitle {
+  id
+  language {
+    id
+    iso
+  }
+  asset {
+    ...StorageDataObjectFields
+  }
+  mimeType
+  type
+  assetId
+}
+
 fragment BasicVideoFields on Video {
   id
   title
@@ -166,6 +181,9 @@ fragment FullVideoFields on Video {
   nft {
     ...BasicNftFields
   }
+  subtitles {
+    ...SubtitlesFields
+  }
 }
 
 fragment BasicNftFields on OwnedNft {
@@ -174,6 +192,7 @@ fragment BasicNftFields on OwnedNft {
   creatorRoyalty
   lastSaleDate
   lastSalePrice
+  isOwnedByChannel
   ownerMember {
     ...BasicMembershipFields
   }

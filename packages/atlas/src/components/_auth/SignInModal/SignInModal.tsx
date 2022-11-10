@@ -1,15 +1,23 @@
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
+import { BN } from 'bn.js'
 import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import shallow from 'zustand/shallow'
 
 import { Button } from '@/components/_buttons/Button'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
-import { FAUCET_URL } from '@/config/urls'
-import { MemberId } from '@/joystream-lib'
+import { atlasConfig } from '@/config'
+import { FAUCET_URL } from '@/config/env'
+import { MemberId } from '@/joystream-lib/types'
+import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
+import { useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useSnackbar } from '@/providers/snackbars'
-import { useTransactionManagerStore } from '@/providers/transactions'
-import { useUser, useUserStore } from '@/providers/user'
-import { SentryLogger } from '@/utils/logs'
+import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
+import { useUser } from '@/providers/user/user.hooks'
+import { useUserStore } from '@/providers/user/user.store'
+import { isAxiosError } from '@/utils/error'
+import { uploadAvatarImage } from '@/utils/image'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { formatNumber } from '@/utils/number'
 
 import { StyledDialogModal } from './SignInModal.styles'
 import { MemberFormData, SIGN_IN_MODAL_STEPS } from './SignInModal.types'
@@ -29,8 +37,9 @@ export const SignInModal: FC = () => {
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Select wallet' }) // start with sensible default so that there are no jumps after first effect runs
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null)
   const [hasNavigatedBack, setHasNavigatedBack] = useState(false)
-
+  const { joystream } = useJoystream()
   const dialogContentRef = useRef<HTMLDivElement>(null)
+  const [previouslyFailedData, setPreviouslyFailedData] = useState<MemberFormData | null>(null)
 
   const { displaySnackbar } = useSnackbar()
   const { walletStatus, refetchUserMemberships, setActiveUser, isLoggedIn } = useUser()
@@ -68,55 +77,135 @@ export const SignInModal: FC = () => {
     setCurrentStepIdx((previousIdx) => (previousIdx ?? -1) + 1)
     setHasNavigatedBack(false)
   }, [])
-  const goToPreviousStep = useCallback(() => {
+  const goToPreviousStep = useCallback((data?: MemberFormData) => {
+    if (data !== undefined) {
+      setPreviouslyFailedData(data)
+    }
     setCurrentStepIdx((previousIdx) => (previousIdx ?? 1) - 1)
     setHasNavigatedBack(true)
   }, [])
 
-  const createMember = useCallback(
+  const createNewMember = useCallback(async (address: string, data: MemberFormData) => {
+    let fileUrl
+
+    if (data.avatar?.blob) {
+      fileUrl = await uploadAvatarImage(data.avatar.blob)
+    }
+
+    const body = {
+      account: address,
+      handle: data.handle,
+      avatar: fileUrl,
+      captchaToken: data.captchaToken,
+    }
+    const response = await axios.post<NewMemberResponse>(FAUCET_URL, body)
+    return response.data
+  }, [])
+
+  const handleSubmit = useCallback(
     async (data: MemberFormData) => {
       if (!selectedAddress) return
 
       goToNextStep() // createMember will be called in member step, go to creating
 
       try {
-        const callback = () => {
-          refetchUserMemberships().then(({ data }) => {
-            const lastCreatedMembership = data.memberships[data.memberships.length - 1]
-            if (lastCreatedMembership) {
-              setActiveUser({ accountId: selectedAddress, memberId: lastCreatedMembership.id, channelId: null })
-              displaySnackbar({
-                title: 'Your membership has been created',
-                description: 'Browse, watch, create, collect videos across the platform and have fun!',
-                iconType: 'success',
-              })
-              setSignInModalOpen(false)
-            }
+        const callback = async () => {
+          const { data } = await refetchUserMemberships()
+          const lastCreatedMembership = data.memberships[data.memberships.length - 1]
+          if (lastCreatedMembership) {
+            setActiveUser({ accountId: selectedAddress, memberId: lastCreatedMembership.id, channelId: null })
+            displaySnackbar({
+              title: 'Your membership has been created',
+              description: 'Browse, watch, create, collect videos across the platform and have fun!',
+              iconType: 'success',
+            })
+            setSignInModalOpen(false)
+          }
+          if (!joystream) {
+            ConsoleLogger.error('No joystream instance')
+            return
+          }
+          const { lockedBalance } = await joystream.getAccountBalance(selectedAddress)
+          const amountOfTokens = `${formatNumber(hapiBnToTokenNumber(new BN(lockedBalance)))} ${
+            atlasConfig.joystream.tokenTicker
+          }`
+          displaySnackbar({
+            title: `You received ${amountOfTokens}`,
+            description: `Enjoy your ${amountOfTokens} tokens to help you cover transaction fees. These tokens are non-transferable and can't be spent on NFTs or other purchases.`,
+            iconType: 'token',
           })
         }
         const { block } = await createNewMember(selectedAddress, data)
         addBlockAction({ targetBlock: block, callback })
+        setPreviouslyFailedData(null)
       } catch (error) {
-        SentryLogger.error('Failed to create a membership', 'SignInModal', error)
-        const errorCode = error?.isAxiosError && (error as AxiosError<NewMemberResponse>).response?.data?.error
-        displaySnackbar({
-          title: 'Something went wrong',
-          description: `There was a problem with creating your membership. Please try again later.${
-            errorCode ? ` Error code: ${errorCode}` : ''
-          }`,
-          iconType: 'error',
-        })
-        goToPreviousStep() // go back to member form
+        if (error.name === 'UploadAvatarServiceError') {
+          displaySnackbar({
+            title: 'Something went wrong',
+            description: 'Avatar could not be uploaded. Try again later',
+            iconType: 'error',
+          })
+          goToPreviousStep(data)
+          SentryLogger.error('Failed to upload member avatar', 'SignInModal', error)
+          return
+        }
+
+        const errorCode = isAxiosError<NewMemberErrorResponse>(error) ? error.response?.data?.error : null
+
+        SentryLogger.error('Failed to create a membership', 'SignInModal', error, { error: { errorCode } })
+
+        switch (errorCode) {
+          case 'TooManyRequestsPerIp':
+            displaySnackbar({
+              title: 'You reached a membership limit',
+              description:
+                'Your membership could not be created as you already created one recently from the same IP address. Try again in 2 days.',
+              iconType: 'error',
+            })
+            break
+          case 'TooManyRequests':
+            displaySnackbar({
+              title: 'Our system is overloaded',
+              description:
+                'Your membership could not be created as our system is undergoing a heavy traffic. Please, try again in a little while.',
+              iconType: 'error',
+            })
+            break
+          case 'OnlyNewAccountsCanBeUsedForScreenedMembers':
+            displaySnackbar({
+              title: 'This account is not new',
+              description:
+                'Your membership could not be created as the selected wallet account has either made some transactions in the past or has some funds already on it. Please, try again using a fresh wallet account. ',
+              iconType: 'error',
+            })
+            break
+
+          default:
+            displaySnackbar({
+              title: 'Something went wrong',
+              description: `There was a problem with creating your membership. Please try again later.${
+                errorCode ? ` Error code: ${errorCode}` : ''
+              }`,
+              iconType: 'error',
+            })
+            break
+        }
+
+        goToPreviousStep(data)
+        return
       }
     },
     [
       addBlockAction,
+      createNewMember,
       displaySnackbar,
       goToNextStep,
       goToPreviousStep,
+      joystream,
       refetchUserMemberships,
       selectedAddress,
       setActiveUser,
+      setPreviouslyFailedData,
       setSignInModalOpen,
     ]
   )
@@ -151,7 +240,14 @@ export const SignInModal: FC = () => {
       case 'terms':
         return <SignInModalTermsStep {...commonProps} />
       case 'membership':
-        return <SignInModalMembershipStep createMember={createMember} {...commonProps} />
+        return (
+          <SignInModalMembershipStep
+            onSubmit={handleSubmit}
+            previouslyFailedData={previouslyFailedData}
+            dialogContentRef={dialogContentRef}
+            {...commonProps}
+          />
+        )
       case 'creating':
         return <SignInModalCreatingStep {...commonProps} />
     }
@@ -165,11 +261,16 @@ export const SignInModal: FC = () => {
       show={!!currentStep}
       dividers={currentStep !== 'creating'}
       primaryButton={primaryButtonProps}
-      secondaryButton={backButtonVisible ? { text: 'Back', onClick: goToPreviousStep } : undefined}
-      onEscPress={() => setSignInModalOpen(false)}
+      secondaryButton={backButtonVisible ? { text: 'Back', onClick: () => goToPreviousStep() } : undefined}
       additionalActionsNode={
         currentStep !== 'creating' ? (
-          <Button variant="tertiary" onClick={() => setSignInModalOpen(false)}>
+          <Button
+            variant="tertiary"
+            onClick={() => {
+              setPreviouslyFailedData(null)
+              setSignInModalOpen(false)
+            }}
+          >
             Cancel
           </Button>
         ) : null
@@ -185,13 +286,10 @@ export const SignInModal: FC = () => {
 type NewMemberResponse = {
   memberId: MemberId
   block: number
-  error?: string
 }
-const createNewMember = async (address: string, data: MemberFormData) => {
-  const body = {
-    account: address,
-    ...data,
-  }
-  const response = await axios.post<NewMemberResponse>(FAUCET_URL, body)
-  return response.data
+
+type FaucetErrorType = 'TooManyRequestsPerIp' | 'TooManyRequests' | 'OnlyNewAccountsCanBeUsedForScreenedMembers'
+
+type NewMemberErrorResponse = {
+  error?: FaucetErrorType
 }

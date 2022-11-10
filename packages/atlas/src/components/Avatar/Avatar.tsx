@@ -1,26 +1,33 @@
-import { FC, MouseEvent, PropsWithChildren } from 'react'
+import { FC, MouseEvent, PropsWithChildren, useCallback, useEffect } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { SvgActionImage, SvgActionNewChannel } from '@/components/_icons'
+import { SvgActionNewChannel } from '@/assets/icons'
 import { cVar, transitions } from '@/styles'
+import { validateImage } from '@/utils/image'
 
 import {
   AvatarSize,
   ChildrenWrapper,
   Container,
-  EditOverlay,
+  IconAndOverlayWrapper,
   NewChannelAvatar,
+  Overlay,
   SilhouetteAvatar,
   StyledImage,
   StyledSkeletonLoader,
+  StyledSvgActionAddImage,
+  StyledSvgActionEdit,
   StyledSvgIllustrativeFileFailed,
 } from './Avatar.styles'
 
+import { Text } from '../Text'
+
 export type AvatarProps = PropsWithChildren<{
   onClick?: (event: MouseEvent<HTMLElement>) => void
+  onImageValidation?: (validImage: boolean) => void
+  onError?: () => void
   assetUrl?: string | null
   hasAvatarUploadFailed?: boolean
-  withoutOutline?: boolean
   loading?: boolean
   className?: string
   /**
@@ -34,27 +41,55 @@ export type AvatarProps = PropsWithChildren<{
    * @description channel-card - default: 88px x 88px, md: 104px x 104px
    */
   size?: AvatarSize
-  editable?: boolean
   newChannel?: boolean
+  editable?: boolean
   clickable?: boolean
-  onError?: () => void
 }>
 
 export const Avatar: FC<AvatarProps> = ({
   assetUrl,
   hasAvatarUploadFailed,
-  withoutOutline,
   loading = false,
   size = 'default',
   children,
-  onClick,
   className,
   editable,
   newChannel,
   clickable,
   onError,
+  onClick,
+  onImageValidation,
 }) => {
   const isEditable = !loading && editable && size !== 'default' && size !== 'bid'
+
+  const checkIfImageIsValid = useCallback(async () => {
+    if (!assetUrl) {
+      onImageValidation?.(true)
+      return
+    }
+    try {
+      await validateImage(assetUrl)
+      onImageValidation?.(true)
+    } catch (error) {
+      onImageValidation?.(false)
+    }
+  }, [assetUrl, onImageValidation])
+
+  useEffect(() => {
+    if (!assetUrl) {
+      return
+    }
+    checkIfImageIsValid()
+  }, [assetUrl, checkIfImageIsValid])
+
+  const getEditableIconSize = useCallback(() => {
+    const smallIconSizes = ['bid', 'default', 'small']
+    if (smallIconSizes.includes(size)) {
+      return
+    } else {
+      return 24
+    }
+  }, [size])
 
   return (
     <Container
@@ -64,19 +99,32 @@ export const Avatar: FC<AvatarProps> = ({
       size={size}
       className={className}
       isLoading={loading}
-      withoutOutline={withoutOutline}
-      isClickable={clickable || !!onClick}
+      isClickable={clickable || (clickable == null && !!onClick)} // default to true if onClick is provided
     >
-      {isEditable && (
-        <EditOverlay size={size}>
-          <SvgActionImage />
-          <span>{assetUrl ? 'Edit avatar' : 'Add avatar'}</span>
-        </EditOverlay>
+      {(clickable || !!onClick) && (
+        <IconAndOverlayWrapper>
+          <Overlay isEdit={isEditable && !!assetUrl} />
+          {isEditable &&
+            (assetUrl ? (
+              <StyledSvgActionEdit width={getEditableIconSize()} height={getEditableIconSize()} />
+            ) : (
+              <StyledSvgActionAddImage width={getEditableIconSize()} height={getEditableIconSize()} />
+            ))}
+        </IconAndOverlayWrapper>
       )}
       {!children &&
         (newChannel && !isEditable ? (
           <NewChannelAvatar>
             <SvgActionNewChannel />
+          </NewChannelAvatar>
+        ) : hasAvatarUploadFailed ? (
+          <NewChannelAvatar>
+            <StyledSvgIllustrativeFileFailed />
+            {size === 'preview' && (
+              <Text variant="t100" as="span" margin={{ top: 2 }}>
+                Failed upload
+              </Text>
+            )}
           </NewChannelAvatar>
         ) : (
           <SwitchTransition>
@@ -89,10 +137,6 @@ export const Avatar: FC<AvatarProps> = ({
                 <StyledSkeletonLoader rounded />
               ) : assetUrl ? (
                 <StyledImage src={assetUrl} onError={onError} />
-              ) : hasAvatarUploadFailed ? (
-                <NewChannelAvatar>
-                  <StyledSvgIllustrativeFileFailed />
-                </NewChannelAvatar>
               ) : (
                 <SilhouetteAvatar />
               )}

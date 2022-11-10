@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { debounce } from 'lodash-es'
 
-import { StorageDataObjectFieldsFragment } from '@/api/queries'
+import { StorageDataObjectFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 
 import { ConsoleLogger } from './console'
 import { SentryLogger } from './sentry'
@@ -35,11 +35,11 @@ class _AssetLogger {
   private logUrl = ''
   private user?: Record<string, unknown>
 
-  initialize(logUrl: string | null) {
+  initialize(logUrl: string | undefined | null) {
+    if (!logUrl) return
+
     // increase the size of performance entry buffer, so we don't skip any assets
     window.performance.setResourceTimingBufferSize(1000)
-
-    if (!logUrl) return
 
     this.logUrl = logUrl
   }

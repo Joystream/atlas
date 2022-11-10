@@ -1,7 +1,8 @@
 import { To } from 'history'
-import { MouseEvent, ReactNode, forwardRef } from 'react'
+import { MouseEvent, ReactNode, forwardRef, useMemo } from 'react'
 import mergeRefs from 'react-merge-refs'
 
+import { ListItemSeparator } from '@/components/ListItem/ListItemSeparator'
 import { useHover } from '@/hooks/useHover'
 import { getLinkPropsFromTo } from '@/utils/button'
 
@@ -31,7 +32,13 @@ export type ListItemProps = {
   onClick?: (e: MouseEvent) => void
   className?: string
   highlight?: boolean
+  highlightWhenActive?: boolean
   to?: To
+  externalLink?: {
+    href: string
+    download?: string
+  }
+  isSeparator?: boolean
 }
 
 export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
@@ -50,50 +57,68 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
       onClick,
       className,
       highlight,
+      highlightWhenActive,
       to,
+      externalLink,
+      isSeparator,
     },
     ref
   ) => {
     const [hoverRef, isHovering] = useHover<HTMLDivElement>()
     const linkProps = getLinkPropsFromTo(to)
+
+    const labelColor = useMemo(() => {
+      if (destructive) {
+        return 'colorTextError'
+      }
+      if (isSeparator) {
+        return 'colorTextMuted'
+      }
+      if (isHovering || selected || highlight) {
+        return
+      }
+      return 'colorText'
+    }, [destructive, highlight, isHovering, isSeparator, selected])
+
     return (
-      <Container
-        highlight={highlight}
-        as={asButton ? 'button' : undefined}
-        className={className}
-        onClick={onClick}
-        disabled={disabled}
-        hasNodeStart={!!nodeStart}
-        size={size}
-        ref={mergeRefs([hoverRef, ref])}
-        {...linkProps}
-      >
-        {!!nodeStart && (
-          <NodeContainer isSelected={selected} isHovering={isHovering} destructive={destructive}>
-            {nodeStart}
-          </NodeContainer>
-        )}
-        <LabelCaptionContainer captionBottom={captionPosition === 'bottom'}>
-          <LabelContainer>
-            <LabelText
-              as="span"
-              variant="t200-strong"
-              color={destructive ? 'colorTextError' : isHovering || selected || highlight ? undefined : 'colorText'}
-            >
-              {label}
-            </LabelText>
-          </LabelContainer>
-          <Caption as="span" captionPosition={captionPosition} color="colorText" variant="t100">
-            {caption}
-          </Caption>
-        </LabelCaptionContainer>
-        {selected && <SelectedIcon />}
-        {!!nodeEnd && (
-          <NodeContainer isSelected={selected} isHovering={isHovering} destructive={destructive}>
-            {nodeEnd}
-          </NodeContainer>
-        )}
-      </Container>
+      <>
+        {isSeparator && <ListItemSeparator />}
+        <Container
+          highlight={highlight || (highlightWhenActive && selected)}
+          as={externalLink ? 'a' : asButton ? 'button' : undefined}
+          className={className}
+          onClick={onClick}
+          disabled={disabled}
+          hasNodeStart={!!nodeStart}
+          size={size}
+          isSeparator={isSeparator}
+          ref={mergeRefs([hoverRef, ref])}
+          {...linkProps}
+          {...externalLink}
+        >
+          {!!nodeStart && (
+            <NodeContainer isSelected={selected} isHovering={isHovering} destructive={destructive}>
+              {nodeStart}
+            </NodeContainer>
+          )}
+          <LabelCaptionContainer captionBottom={captionPosition === 'bottom'}>
+            <LabelContainer>
+              <LabelText as="span" variant={isSeparator ? 'h100' : 't200-strong'} color={labelColor}>
+                {label}
+              </LabelText>
+            </LabelContainer>
+            <Caption as="span" captionPosition={captionPosition} color="colorText" variant="t100">
+              {caption}
+            </Caption>
+          </LabelCaptionContainer>
+          {selected && <SelectedIcon />}
+          {!!nodeEnd && (
+            <NodeContainer isSelected={selected} isHovering={isHovering} destructive={destructive}>
+              {nodeEnd}
+            </NodeContainer>
+          )}
+        </Container>
+      </>
     )
   }
 )

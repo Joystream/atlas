@@ -5,7 +5,7 @@ import parseHtml from 'node-html-parser'
 import * as path from 'path'
 
 import { getChannel, getVideo } from './api'
-import { PORT } from './config'
+import { APP_NAME, BASE_APP_URL, PORT, TWITTER_ID } from './config'
 import {
   generateChannelMetaTags,
   generateChannelSchemaTagsHtml,
@@ -39,14 +39,14 @@ app.get('/video/:id', async (req, res) => {
     const title = html.querySelector('title')
 
     if (title) {
-      title.innerHTML = `${video.title} - Joystream`
+      title.innerHTML = `${video.title} - ${APP_NAME}`
     }
 
     const thumbnailUrl = video.thumbnailPhoto ? generateAssetUrl(video.thumbnailPhoto) : ''
 
-    const videoMetaTags = generateVideoMetaTags(video, thumbnailUrl)
+    const videoMetaTags = generateVideoMetaTags(video, thumbnailUrl, APP_NAME, BASE_APP_URL, TWITTER_ID)
     const videoMetaTagsHtml = generateMetaHtml(videoMetaTags)
-    const videoSchemaTagsHtml = generateVideoSchemaTagsHtml(video, thumbnailUrl)
+    const videoSchemaTagsHtml = generateVideoSchemaTagsHtml(video, thumbnailUrl, APP_NAME, BASE_APP_URL)
 
     head?.insertAdjacentHTML('beforeend', videoMetaTagsHtml)
     head?.insertAdjacentHTML('beforeend', videoSchemaTagsHtml)
@@ -72,14 +72,14 @@ app.get('/channel/:id', async (req, res) => {
     const title = html.querySelector('title')
 
     if (title) {
-      title.innerHTML = `${channel.title} - Joystream`
+      title.innerHTML = `${channel.title} - ${APP_NAME}`
     }
 
     const avatarUrl = channel.avatarPhoto ? generateAssetUrl(channel.avatarPhoto) : ''
 
-    const channelMetaTags = generateChannelMetaTags(channel, avatarUrl)
+    const channelMetaTags = generateChannelMetaTags(channel, avatarUrl, APP_NAME, TWITTER_ID)
     const channelMetaTagsHtml = generateMetaHtml(channelMetaTags)
-    const channelSchemaTagsHtml = generateChannelSchemaTagsHtml(channel, avatarUrl)
+    const channelSchemaTagsHtml = generateChannelSchemaTagsHtml(channel, avatarUrl, BASE_APP_URL)
 
     head?.insertAdjacentHTML('beforeend', channelMetaTagsHtml)
     head?.insertAdjacentHTML('beforeend', channelSchemaTagsHtml)

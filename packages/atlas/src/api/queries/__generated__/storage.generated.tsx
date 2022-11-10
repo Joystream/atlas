@@ -5,9 +5,9 @@ import * as Types from './baseTypes.generated'
 import { DistributionBucketOperatorFieldFragmentDoc } from './fragments.generated'
 
 const defaultOptions = {} as const
-export type GetDistributionBucketsWithOperatorsQueryVariables = Types.Exact<{ [key: string]: never }>
+export type GetDistributionBucketsWithBagsQueryVariables = Types.Exact<{ [key: string]: never }>
 
-export type GetDistributionBucketsWithOperatorsQuery = {
+export type GetDistributionBucketsWithBagsQuery = {
   __typename?: 'Query'
   distributionBuckets: Array<{
     __typename?: 'DistributionBucket'
@@ -29,9 +29,9 @@ export type GetDistributionBucketsWithOperatorsQuery = {
   }>
 }
 
-export type GetStorageBucketsQueryVariables = Types.Exact<{ [key: string]: never }>
+export type GetStorageBucketsWithBagsQueryVariables = Types.Exact<{ [key: string]: never }>
 
-export type GetStorageBucketsQuery = {
+export type GetStorageBucketsWithBagsQuery = {
   __typename?: 'Query'
   storageBuckets: Array<{
     __typename?: 'StorageBucket'
@@ -41,9 +41,28 @@ export type GetStorageBucketsQuery = {
   }>
 }
 
-export const GetDistributionBucketsWithOperatorsDocument = gql`
-  query GetDistributionBucketsWithOperators {
-    distributionBuckets(limit: 50, where: { distributing_eq: true }) {
+export type GetBasicDistributionBucketsQueryVariables = Types.Exact<{ [key: string]: never }>
+
+export type GetBasicDistributionBucketsQuery = {
+  __typename?: 'Query'
+  distributionBuckets: Array<{
+    __typename?: 'DistributionBucket'
+    id: string
+    bucketIndex: number
+    family: { __typename?: 'DistributionBucketFamily'; id: string }
+  }>
+}
+
+export type GetBasicStorageBucketsQueryVariables = Types.Exact<{ [key: string]: never }>
+
+export type GetBasicStorageBucketsQuery = {
+  __typename?: 'Query'
+  storageBuckets: Array<{ __typename?: 'StorageBucket'; id: string }>
+}
+
+export const GetDistributionBucketsWithBagsDocument = gql`
+  query GetDistributionBucketsWithBags {
+    distributionBuckets(limit: 500, where: { distributing_eq: true }) {
       id
       bags {
         id
@@ -57,58 +76,56 @@ export const GetDistributionBucketsWithOperatorsDocument = gql`
 `
 
 /**
- * __useGetDistributionBucketsWithOperatorsQuery__
+ * __useGetDistributionBucketsWithBagsQuery__
  *
- * To run a query within a React component, call `useGetDistributionBucketsWithOperatorsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetDistributionBucketsWithOperatorsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetDistributionBucketsWithBagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDistributionBucketsWithBagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetDistributionBucketsWithOperatorsQuery({
+ * const { data, loading, error } = useGetDistributionBucketsWithBagsQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetDistributionBucketsWithOperatorsQuery(
+export function useGetDistributionBucketsWithBagsQuery(
   baseOptions?: Apollo.QueryHookOptions<
-    GetDistributionBucketsWithOperatorsQuery,
-    GetDistributionBucketsWithOperatorsQueryVariables
+    GetDistributionBucketsWithBagsQuery,
+    GetDistributionBucketsWithBagsQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetDistributionBucketsWithOperatorsQuery, GetDistributionBucketsWithOperatorsQueryVariables>(
-    GetDistributionBucketsWithOperatorsDocument,
+  return Apollo.useQuery<GetDistributionBucketsWithBagsQuery, GetDistributionBucketsWithBagsQueryVariables>(
+    GetDistributionBucketsWithBagsDocument,
     options
   )
 }
-export function useGetDistributionBucketsWithOperatorsLazyQuery(
+export function useGetDistributionBucketsWithBagsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    GetDistributionBucketsWithOperatorsQuery,
-    GetDistributionBucketsWithOperatorsQueryVariables
+    GetDistributionBucketsWithBagsQuery,
+    GetDistributionBucketsWithBagsQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<
-    GetDistributionBucketsWithOperatorsQuery,
-    GetDistributionBucketsWithOperatorsQueryVariables
-  >(GetDistributionBucketsWithOperatorsDocument, options)
+  return Apollo.useLazyQuery<GetDistributionBucketsWithBagsQuery, GetDistributionBucketsWithBagsQueryVariables>(
+    GetDistributionBucketsWithBagsDocument,
+    options
+  )
 }
-export type GetDistributionBucketsWithOperatorsQueryHookResult = ReturnType<
-  typeof useGetDistributionBucketsWithOperatorsQuery
+export type GetDistributionBucketsWithBagsQueryHookResult = ReturnType<typeof useGetDistributionBucketsWithBagsQuery>
+export type GetDistributionBucketsWithBagsLazyQueryHookResult = ReturnType<
+  typeof useGetDistributionBucketsWithBagsLazyQuery
 >
-export type GetDistributionBucketsWithOperatorsLazyQueryHookResult = ReturnType<
-  typeof useGetDistributionBucketsWithOperatorsLazyQuery
+export type GetDistributionBucketsWithBagsQueryResult = Apollo.QueryResult<
+  GetDistributionBucketsWithBagsQuery,
+  GetDistributionBucketsWithBagsQueryVariables
 >
-export type GetDistributionBucketsWithOperatorsQueryResult = Apollo.QueryResult<
-  GetDistributionBucketsWithOperatorsQuery,
-  GetDistributionBucketsWithOperatorsQueryVariables
->
-export const GetStorageBucketsDocument = gql`
-  query GetStorageBuckets {
+export const GetStorageBucketsWithBagsDocument = gql`
+  query GetStorageBucketsWithBags {
     storageBuckets(
-      limit: 50
+      limit: 500
       where: {
         operatorStatus_json: { isTypeOf_eq: "StorageBucketOperatorStatusActive" }
         operatorMetadata: { nodeEndpoint_contains: "http" }
@@ -126,35 +143,139 @@ export const GetStorageBucketsDocument = gql`
 `
 
 /**
- * __useGetStorageBucketsQuery__
+ * __useGetStorageBucketsWithBagsQuery__
  *
- * To run a query within a React component, call `useGetStorageBucketsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetStorageBucketsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetStorageBucketsWithBagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetStorageBucketsWithBagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetStorageBucketsQuery({
+ * const { data, loading, error } = useGetStorageBucketsWithBagsQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetStorageBucketsQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetStorageBucketsQuery, GetStorageBucketsQueryVariables>
+export function useGetStorageBucketsWithBagsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetStorageBucketsWithBagsQuery, GetStorageBucketsWithBagsQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetStorageBucketsQuery, GetStorageBucketsQueryVariables>(GetStorageBucketsDocument, options)
-}
-export function useGetStorageBucketsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetStorageBucketsQuery, GetStorageBucketsQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetStorageBucketsQuery, GetStorageBucketsQueryVariables>(
-    GetStorageBucketsDocument,
+  return Apollo.useQuery<GetStorageBucketsWithBagsQuery, GetStorageBucketsWithBagsQueryVariables>(
+    GetStorageBucketsWithBagsDocument,
     options
   )
 }
-export type GetStorageBucketsQueryHookResult = ReturnType<typeof useGetStorageBucketsQuery>
-export type GetStorageBucketsLazyQueryHookResult = ReturnType<typeof useGetStorageBucketsLazyQuery>
-export type GetStorageBucketsQueryResult = Apollo.QueryResult<GetStorageBucketsQuery, GetStorageBucketsQueryVariables>
+export function useGetStorageBucketsWithBagsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetStorageBucketsWithBagsQuery, GetStorageBucketsWithBagsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetStorageBucketsWithBagsQuery, GetStorageBucketsWithBagsQueryVariables>(
+    GetStorageBucketsWithBagsDocument,
+    options
+  )
+}
+export type GetStorageBucketsWithBagsQueryHookResult = ReturnType<typeof useGetStorageBucketsWithBagsQuery>
+export type GetStorageBucketsWithBagsLazyQueryHookResult = ReturnType<typeof useGetStorageBucketsWithBagsLazyQuery>
+export type GetStorageBucketsWithBagsQueryResult = Apollo.QueryResult<
+  GetStorageBucketsWithBagsQuery,
+  GetStorageBucketsWithBagsQueryVariables
+>
+export const GetBasicDistributionBucketsDocument = gql`
+  query GetBasicDistributionBuckets {
+    distributionBuckets(limit: 500, where: { acceptingNewBags_eq: true }) {
+      id
+      bucketIndex
+      family {
+        id
+      }
+    }
+  }
+`
+
+/**
+ * __useGetBasicDistributionBucketsQuery__
+ *
+ * To run a query within a React component, call `useGetBasicDistributionBucketsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBasicDistributionBucketsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBasicDistributionBucketsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetBasicDistributionBucketsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetBasicDistributionBucketsQuery, GetBasicDistributionBucketsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetBasicDistributionBucketsQuery, GetBasicDistributionBucketsQueryVariables>(
+    GetBasicDistributionBucketsDocument,
+    options
+  )
+}
+export function useGetBasicDistributionBucketsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetBasicDistributionBucketsQuery, GetBasicDistributionBucketsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetBasicDistributionBucketsQuery, GetBasicDistributionBucketsQueryVariables>(
+    GetBasicDistributionBucketsDocument,
+    options
+  )
+}
+export type GetBasicDistributionBucketsQueryHookResult = ReturnType<typeof useGetBasicDistributionBucketsQuery>
+export type GetBasicDistributionBucketsLazyQueryHookResult = ReturnType<typeof useGetBasicDistributionBucketsLazyQuery>
+export type GetBasicDistributionBucketsQueryResult = Apollo.QueryResult<
+  GetBasicDistributionBucketsQuery,
+  GetBasicDistributionBucketsQueryVariables
+>
+export const GetBasicStorageBucketsDocument = gql`
+  query GetBasicStorageBuckets {
+    storageBuckets(limit: 500, where: { acceptingNewBags_eq: true }) {
+      id
+    }
+  }
+`
+
+/**
+ * __useGetBasicStorageBucketsQuery__
+ *
+ * To run a query within a React component, call `useGetBasicStorageBucketsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBasicStorageBucketsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBasicStorageBucketsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetBasicStorageBucketsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetBasicStorageBucketsQuery, GetBasicStorageBucketsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetBasicStorageBucketsQuery, GetBasicStorageBucketsQueryVariables>(
+    GetBasicStorageBucketsDocument,
+    options
+  )
+}
+export function useGetBasicStorageBucketsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetBasicStorageBucketsQuery, GetBasicStorageBucketsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetBasicStorageBucketsQuery, GetBasicStorageBucketsQueryVariables>(
+    GetBasicStorageBucketsDocument,
+    options
+  )
+}
+export type GetBasicStorageBucketsQueryHookResult = ReturnType<typeof useGetBasicStorageBucketsQuery>
+export type GetBasicStorageBucketsLazyQueryHookResult = ReturnType<typeof useGetBasicStorageBucketsLazyQuery>
+export type GetBasicStorageBucketsQueryResult = Apollo.QueryResult<
+  GetBasicStorageBucketsQuery,
+  GetBasicStorageBucketsQueryVariables
+>

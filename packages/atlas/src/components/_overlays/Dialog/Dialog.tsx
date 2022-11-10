@@ -1,9 +1,10 @@
+import BN from 'bn.js'
 import { FC, FormEvent, PropsWithChildren, ReactNode, Ref } from 'react'
 
+import { SvgActionClose } from '@/assets/icons'
 import { Fee } from '@/components/Fee'
 import { Text } from '@/components/Text'
 import { Button, ButtonProps } from '@/components/_buttons/Button'
-import { SvgActionClose } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import {
@@ -14,7 +15,6 @@ import {
   FooterButtonsContainer,
   Header,
   HeaderContent,
-  StyledPrimaryButton,
 } from './Dialog.styles'
 
 export type DialogButtonProps = {
@@ -37,7 +37,7 @@ export type DialogProps = PropsWithChildren<{
   className?: string
   contentClassName?: string
   contentRef?: Ref<HTMLDivElement>
-  fee?: number
+  fee?: BN
 }>
 
 export const Dialog: FC<DialogProps> = ({
@@ -65,7 +65,13 @@ export const Dialog: FC<DialogProps> = ({
   const buttonSize = isCompact ? 'small' : 'medium'
 
   return (
-    <DialogContainer onSubmit={onSubmit} size={size} className={className} onClick={(e) => e.stopPropagation()}>
+    <DialogContainer
+      onSubmit={onSubmit}
+      as={onSubmit ? 'form' : undefined}
+      size={size}
+      className={className}
+      onClick={(e) => e.stopPropagation()}
+    >
       {(title || onExitClick) && (
         <Header dividers={dividers}>
           <HeaderContent>
@@ -89,21 +95,21 @@ export const Dialog: FC<DialogProps> = ({
       {hasFooter && (
         <Footer
           dividers={dividers || actionDivider}
-          data-has-additional-actions={!!hasAdditionalActionsNode}
+          data-has-additional-actions={hasAdditionalActionsNode}
           additionalActionsNodeMobilePosition={additionalActionsNodeMobilePosition}
         >
           {fee !== undefined && <Fee amount={fee} variant="h200" color="colorTextStrong" />}
           {additionalActionsNode}
           <FooterButtonsContainer additionalActionsNodeMobilePosition={additionalActionsNodeMobilePosition}>
             {secondaryButton && (
-              <Button variant={secondaryButton.variant || 'secondary'} size={buttonSize} {...secondaryButton}>
+              <Button variant={secondaryButton.variant || 'secondary'} size={buttonSize} fullWidth {...secondaryButton}>
                 {secondaryButton.text}
               </Button>
             )}
             {primaryButton && (
-              <StyledPrimaryButton variant={primaryButton.variant || 'primary'} size={buttonSize} {...primaryButton}>
+              <Button variant={primaryButton.variant || 'primary'} size={buttonSize} fullWidth {...primaryButton}>
                 {primaryButton.text}
-              </StyledPrimaryButton>
+              </Button>
             )}
           </FooterButtonsContainer>
         </Footer>

@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
 import { FC } from 'react'
 
-import { useBasicVideosConnection, useVideoHeroData } from '@/api/hooks'
-import { GetMostViewedVideosConnectionDocument } from '@/api/queries'
+import { useVideoHeroData } from '@/api/hooks/videoHero'
+import { useBasicVideosConnection } from '@/api/hooks/videosConnection'
+import { GetMostViewedVideosConnectionDocument } from '@/api/queries/__generated__/videos.generated'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { DiscoverChannels } from '@/components/_content/DiscoverChannels'
@@ -11,6 +12,7 @@ import { OfficialJoystreamUpdate } from '@/components/_content/OfficialJoystream
 import { TopTenVideos } from '@/components/_content/TopTenVideos'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 import { VideoHero } from '@/components/_video/VideoHero'
+import { atlasConfig } from '@/config'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { sizes, transitions } from '@/styles'
@@ -64,7 +66,7 @@ export const HomeView: FC = () => {
         <InfiniteVideoGrid
           periodDays={7}
           query={GetMostViewedVideosConnectionDocument}
-          title="Popular on Joystream"
+          title={`Popular on ${atlasConfig.general.appName}`}
           onDemand
           titleLoader
         />

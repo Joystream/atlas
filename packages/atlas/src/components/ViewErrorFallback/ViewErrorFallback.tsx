@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom'
 import { AnimatedError } from '@/components/AnimatedError'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
-import { JOYSTREAM_DISCORD_URL } from '@/config/urls'
 import { media, sizes } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
@@ -45,7 +45,7 @@ export const ViewErrorFallback: FC<ViewErrorFallbackProps> = ({ onResetClick }) 
         </Text>
       </Message>
       <ButtonsContainer>
-        <Button to={JOYSTREAM_DISCORD_URL} variant="secondary">
+        <Button to={atlasConfig.general.joystreamDiscordUrl} variant="secondary">
           Open Discord
         </Button>
         <Button onClick={handleResetClick}>Return to home page</Button>

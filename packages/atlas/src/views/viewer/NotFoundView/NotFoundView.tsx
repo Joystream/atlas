@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 
+import { Svg404PatternBottomLeft, Svg404PatternTopRight, SvgSmallCursor } from '@/assets/illustrations'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { Svg404PatternBottomLeft, Svg404PatternTopRight, SvgSmallCursor } from '@/components/_illustrations'
 
 export const NotFoundView = () => {
   return (

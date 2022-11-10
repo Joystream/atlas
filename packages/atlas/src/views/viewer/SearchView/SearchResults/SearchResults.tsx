@@ -1,5 +1,6 @@
 import { FC, memo, useEffect, useMemo, useState } from 'react'
 
+import { SvgActionFilters } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
@@ -8,10 +9,9 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { Button } from '@/components/_buttons/Button'
 import { ChannelGrid } from '@/components/_channel/ChannelGrid'
-import { SvgActionFilters } from '@/components/_icons'
 import { SkeletonLoaderVideoGrid } from '@/components/_loaders/SkeletonLoaderVideoGrid'
 import { VideoGrid } from '@/components/_video/VideoGrid'
-import { languages } from '@/config/languages'
+import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSearchResults } from '@/hooks/useSearchResults'
 import { useSearchStore } from '@/providers/search'
@@ -144,7 +144,7 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
                 onChange={handleSelectLanguage}
                 size="medium"
                 value={language}
-                items={[{ name: 'All languages', value: 'undefined' }, ...languages]}
+                items={[{ name: 'All languages', value: 'undefined' }, ...atlasConfig.derived.languagesSelectValues]}
               />
             )}
             {selectedTabIndex === 0 && (

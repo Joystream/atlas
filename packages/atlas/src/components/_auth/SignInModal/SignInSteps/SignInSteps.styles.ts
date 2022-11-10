@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
 
+import { Avatar } from '@/components/Avatar'
 import { Banner } from '@/components/Banner'
 import { ListItem } from '@/components/ListItem'
-import { sizes } from '@/styles'
+import { cVar, sizes } from '@/styles'
 
 export const ListItemsWrapper = styled.div`
   margin: 0 calc(-1 * var(--local-size-dialog-padding));
@@ -26,8 +27,24 @@ export const StyledBottomBanner = styled(Banner)`
   margin-top: ${sizes(6)};
 `
 
+export const StyledAvatar = styled(Avatar)`
+  position: absolute;
+  transform: translateY(-50%);
+  top: 0;
+`
+
 export const StyledForm = styled.form`
+  position: relative;
+  padding-top: ${sizes(17)};
   display: grid;
-  grid-template-rows: auto auto;
   gap: ${sizes(6)};
+`
+
+export const Anchor = styled.a`
+  display: inline-block;
+  text-decoration: none;
+  margin-top: ${sizes(2)};
+  margin-bottom: ${sizes(11)};
+  cursor: pointer;
+  color: ${cVar('colorTextPrimary')};
 `

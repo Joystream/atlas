@@ -1,17 +1,20 @@
+import BN from 'bn.js'
 import { Dispatch, FC, SetStateAction, memo, useRef, useState } from 'react'
 
-import { useComment } from '@/api/hooks'
-import { CommentFieldsFragment, CommentStatus, FullVideoFieldsFragment } from '@/api/queries'
+import { useComment } from '@/api/hooks/comments'
+import { CommentStatus } from '@/api/queries/__generated__/baseTypes.generated'
+import { CommentFieldsFragment, FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { ReactionId } from '@/config/reactions'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
-import { useMemberAvatar } from '@/providers/assets'
+import { CommentReaction } from '@/joystream-lib/types'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useConfirmationModal } from '@/providers/confirmationModal'
+import { useFee } from '@/providers/joystream/joystream.hooks'
 import { usePersonalDataStore } from '@/providers/personalData'
-import { useUser } from '@/providers/user'
+import { useUser } from '@/providers/user/user.hooks'
 
 import { getCommentReactions } from './Comment.utils'
 import { InternalComment } from './InternalComment'
@@ -53,7 +56,7 @@ export const Comment: FC<CommentProps> = memo(
     const [replyCommentInputText, setReplyCommentInputText] = useState('')
     const [isCommentProcessing, setIsCommentProcessing] = useState(false)
     const [isEditingComment, setIsEditingComment] = useState(false)
-    const [processingReactionsIds, setProcessingReactionsIds] = useState<ReactionId[]>([])
+    const [processingReactionsIds, setProcessingReactionsIds] = useState<CommentReaction[]>([])
 
     const { memberId, activeMembership, isLoggedIn, signIn } = useUser()
     const { comment } = useComment(
@@ -67,8 +70,22 @@ export const Comment: FC<CommentProps> = memo(
     const commentIdQueryParam = useRouterQuery(QUERY_PARAMS.COMMENT_ID)
     const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
     const { openSignInDialog } = useDisplaySignInDialog()
+    const [reactionFee, setReactionFee] = useState<undefined | BN>(undefined)
+    const [replyCommentInputActive, setCommentInputActive] = useState(false)
     const [openModal, closeModal] = useConfirmationModal()
     const { reactToComment, deleteComment, moderateComment, updateComment, addComment } = useReactionTransactions()
+    const { fullFee: replyCommentFee, loading: replyCommentFeeLoading } = useFee(
+      'createVideoCommentTx',
+      memberId && video?.id && comment?.id !== undefined && replyCommentInputActive
+        ? [memberId, video?.id, replyCommentInputText || '', comment?.id || null]
+        : undefined
+    )
+
+    const { fullFee: editVideoFee, loading: editVideoFeeLoading } = useFee(
+      'editVideoCommentTx',
+      memberId && comment?.id ? [memberId, comment?.id, editCommentInputText] : undefined
+    )
+    const { getTxFee: getReactToVideoCommentFee } = useFee('reactToVideoCommentTx')
 
     const handleDeleteComment = (comment: CommentFieldsFragment) => {
       const isChannelOwner = video?.channel.ownerMember?.id === memberId && comment.author.id !== memberId
@@ -150,7 +167,7 @@ export const Comment: FC<CommentProps> = memo(
         setIsEditingComment(false)
       }
     }
-    const handleCommentReaction = async (commentId: string, reactionId: ReactionId) => {
+    const handleCommentReaction = async (commentId: string, reactionId: CommentReaction) => {
       if (isLoggedIn) {
         setProcessingReactionsIds((previous) => [...previous, reactionId])
         await reactToComment(commentId, video?.id || '', reactionId, comment?.author.handle || '')
@@ -158,6 +175,13 @@ export const Comment: FC<CommentProps> = memo(
       } else {
         openSignInDialog({ onConfirm: signIn })
       }
+    }
+
+    const handleOnBoardingPopoverOpen = async (reactionId: number) => {
+      const reactionFee = await getReactToVideoCommentFee(
+        memberId && comment?.id ? [memberId, comment.id, reactionId] : undefined
+      )
+      setReactionFee(reactionFee)
     }
     const handleComment = async () => {
       if (!video || !replyCommentInputText || !comment) {
@@ -198,7 +222,9 @@ export const Comment: FC<CommentProps> = memo(
       }
     }
 
-    const handleOpenSignInDialog = () => !memberId && openSignInDialog({ onConfirm: signIn })
+    const handleOpenSignInDialog = () => {
+      !memberId && openSignInDialog({ onConfirm: signIn })
+    }
 
     const handleOnEditLabelClick = () => {
       setShowEditHistory?.(true)
@@ -229,6 +255,8 @@ export const Comment: FC<CommentProps> = memo(
       return (
         <CommentInput
           indented={!isReplyable}
+          fee={editVideoFee}
+          feeLoading={editVideoFeeLoading}
           processing={editCommentInputIsProcessing}
           readOnly={!memberId}
           memberHandle={activeMembership?.handle}
@@ -237,13 +265,14 @@ export const Comment: FC<CommentProps> = memo(
           value={editCommentInputText}
           hasInitialValueChanged={comment?.text !== editCommentInputText}
           onFocus={handleOpenSignInDialog}
-          onComment={() => handleUpdateComment()}
+          onComment={handleUpdateComment}
           onChange={(e) => setEditCommentInputText(e.target.value)}
           onCancel={() =>
             comment?.text !== editCommentInputText
               ? handleCancelConfirmation(handleCancelEditComment)
               : handleCancelEditComment()
           }
+          onCommentInputActive={setCommentInputActive}
           initialFocus
         />
       )
@@ -270,17 +299,21 @@ export const Comment: FC<CommentProps> = memo(
             memberHandle={comment?.author.handle}
             isEdited={comment?.isEdited}
             reactions={reactions}
+            reactionFee={reactionFee}
             memberUrl={comment ? absoluteRoutes.viewer.member(comment.author.handle) : undefined}
             type={commentType}
             onEditClick={handleOnEditClick}
             onDeleteClick={() => video && comment && handleDeleteComment(comment)}
             onEditedLabelClick={handleOnEditLabelClick}
             onReactionClick={(reactionId) => comment && handleCommentReaction(comment.id, reactionId)}
+            onOnBoardingPopoverOpen={handleOnBoardingPopoverOpen}
             {...rest}
           />
           {isReplyable && replyInputOpen && (
             <CommentInput
               ref={replyCommentInputRef}
+              fee={replyCommentFee}
+              feeLoading={replyCommentFeeLoading}
               memberAvatarUrl={memberAvatarUrl}
               isMemberAvatarLoading={isMemberAvatarLoading}
               processing={replyCommentInputIsProcessing}
@@ -297,6 +330,7 @@ export const Comment: FC<CommentProps> = memo(
               }}
               initialFocus
               reply
+              onCommentInputActive={setCommentInputActive}
             />
           )}
           <DialogModal

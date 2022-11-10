@@ -1,9 +1,9 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { SvgActionWarning } from '@/assets/icons'
 import { Information } from '@/components/Information'
 import { Text } from '@/components/Text'
-import { SvgActionWarning } from '@/components/_icons'
 import { cVar, sizes } from '@/styles'
 
 export const SwitchLabel = styled.label`
@@ -66,8 +66,4 @@ export const StyledSvgActionWarning = styled(SvgActionWarning)`
 
 export const FormFieldFooter = styled.footer`
   display: flex;
-`
-
-export const Label = styled.label`
-  width: 100%;
 `

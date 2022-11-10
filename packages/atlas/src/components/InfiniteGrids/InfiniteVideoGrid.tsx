@@ -2,21 +2,21 @@ import { QueryHookOptions } from '@apollo/client'
 import { DocumentNode } from 'graphql'
 import { ReactNode, forwardRef, useCallback, useState } from 'react'
 
+import { VideoOrderByInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import {
   GetBasicVideosConnectionDocument,
   GetBasicVideosConnectionQuery,
   GetBasicVideosConnectionQueryVariables,
   GetMostViewedVideosConnectionQuery,
   GetMostViewedVideosConnectionQueryVariables,
-  VideoOrderByInput,
-  VideoWhereInput,
-} from '@/api/queries'
+} from '@/api/queries/__generated__/videos.generated'
+import { SvgActionChevronR } from '@/assets/icons'
 import { Grid } from '@/components/Grid'
 import { GridHeadingContainer, TitleContainer } from '@/components/GridHeading'
 import { Text } from '@/components/Text'
 import { LoadMoreButton } from '@/components/_buttons/LoadMoreButton'
-import { SvgActionChevronR } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { videoFilter } from '@/config/contentFilter'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { SentryLogger } from '@/utils/logs'
 
@@ -89,14 +89,7 @@ export const InfiniteVideoGrid = forwardRef<HTMLElement, InfiniteVideoGridProps>
       limit,
       orderBy,
       where: {
-        isPublic_eq: true,
-        isCensored_eq: false,
-        thumbnailPhoto: {
-          isAccepted_eq: true,
-        },
-        media: {
-          isAccepted_eq: true,
-        },
+        ...videoFilter,
         ...(videoWhereInput ? videoWhereInput : {}),
       },
     }

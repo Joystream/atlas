@@ -2,7 +2,6 @@ import isPropValid from '@emotion/is-prop-valid'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { Text } from '@/components/Text'
 import {
   SvgControlsFullScreen,
   SvgControlsPause,
@@ -19,16 +18,24 @@ import {
   SvgControlsSoundOn,
   SvgControlsVideoModeCinemaView,
   SvgControlsVideoModeCompactView,
-} from '@/components/_icons'
-import { SvgJoystreamLogoFull, SvgJoystreamLogoShort } from '@/components/_illustrations'
+} from '@/assets/icons'
+import { SvgAppLogoFullMonochrome, SvgAppLogoShortMonochrome } from '@/assets/logos'
+import { Text } from '@/components/Text'
+import { ControlsIndicatorWrapper } from '@/components/_video/VideoPlayer/ControlsIndicator.styles'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 import { PlayerControlButton } from './PlayerControlButton'
 import { ControlButton } from './PlayerControlButton.styles'
 
+const DEFAULT_SUBTITLES_POSITION = '0.8em'
+const HOVERED_SUBTITLES_POSITION = '5.25em'
+const HOVERED_CONTROLS_INDICATOR_POSITION = '-5em'
+
 type ContainerProps = {
-  isFullScreen?: boolean
+  isFullScreen: boolean
   isSettingsPopoverOpened?: boolean
+  elevated?: boolean
+  captionsEnabled: boolean
 }
 type CustomControlsProps = {
   elevated?: boolean
@@ -356,19 +363,21 @@ export const StyledEmbeddedLogoLink = styled.a`
   }
 `
 
-export const StyledJoystreamLogo = styled(SvgJoystreamLogoFull)<{ embedded?: boolean }>`
+export const StyledSvgAppLogoFullMonochrome = styled(SvgAppLogoFullMonochrome)<{ embedded?: boolean }>`
   padding: ${({ embedded }) => (embedded ? 0 : '0.5em')};
   max-height: ${({ embedded }) => (embedded ? '2em' : '2.5em')};
   height: 100%;
-  filter: drop-shadow(${cVar('effectElevation1Layer1')});
+  width: unset;
+  filter: ${cVar('filterEffectElevation1Layer1')};
 
   ${defaultIconColor};
 `
 
-export const StyledJoystreamLogoShort = styled(SvgJoystreamLogoShort)`
+export const StyledAppLogoShortMonochrome = styled(SvgAppLogoShortMonochrome)`
   padding: 0.5em;
   max-height: 2.5em;
   height: 100%;
+  width: unset;
 
   ${defaultIconColor};
 `
@@ -394,6 +403,52 @@ export const Container = styled.div<ContainerProps>`
     }
   }
 
+  ${ControlsIndicatorWrapper} {
+    transition: transform;
+    transition-delay: ${TRANSITION_DELAY};
+    transition-duration: 200ms;
+    transition-timing-function: ${transitions.easing};
+  }
+
+  .vjs-text-track-display {
+    > div {
+      margin: 0 !important;
+      font-size: 16px;
+
+      > div {
+        inset: unset !important;
+        transition: bottom;
+        transition-delay: ${TRANSITION_DELAY};
+        transition-duration: 200ms;
+        transition-timing-function: ${transitions.easing};
+        padding: 0 ${sizes(3)};
+
+        > div {
+          display: inline-block !important;
+          background-color: ${cVar('colorBackgroundOverlay')} !important;
+          font: ${cVar('typographyDesktopT300Strong')} !important;
+          font-size: 12px !important;
+          letter-spacing: ${cVar('typographyDesktopT300StrongLetterSpacing')} !important;
+          text-transform: ${cVar('typographyDesktopT300StrongTextTransform')} !important;
+          padding: ${sizes(1)} ${sizes(2)};
+          word-break: break-all;
+          line-height: 16px !important;
+
+          ${media.sm} {
+            font-size: ${({ isFullScreen }) => (isFullScreen ? '32px' : '16px')} !important;
+            padding: ${({ isFullScreen }) =>
+              isFullScreen ? `${sizes(2)} ${sizes(4)}` : `${sizes(1)} ${sizes(2)}`} !important;
+            line-height: ${({ isFullScreen }) => (isFullScreen ? '48px' : '24px')} !important;
+          }
+        }
+      }
+    }
+  }
+
+  .vjs-text-track-settings {
+    display: block;
+  }
+
   .vjs-tech {
     position: relative;
     top: 0;
@@ -403,7 +458,6 @@ export const Container = styled.div<ContainerProps>`
   }
 
   .vjs-error-display,
-  .vjs-text-track-display,
   .vjs-modal-dialog,
   .vjs-loading-spinner,
   .vjs-control-bar {
@@ -420,6 +474,22 @@ export const Container = styled.div<ContainerProps>`
         transform: translateY(${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 0 : 0.5)}em);
       }
     }
+
+    /* Need to disable this rule because fixing it would break functionality */
+    /* stylelint-disable no-descending-specificity */
+
+    ${ControlsIndicatorWrapper} {
+      transform: translateY(0);
+    }
+
+    .vjs-text-track-display {
+      > div {
+        > div {
+          bottom: ${({ isSettingsPopoverOpened }) =>
+            isSettingsPopoverOpened ? HOVERED_SUBTITLES_POSITION : DEFAULT_SUBTITLES_POSITION} !important;
+        }
+      }
+    }
   }
 
   .vjs-ended,
@@ -430,6 +500,14 @@ export const Container = styled.div<ContainerProps>`
       visibility: visible;
       ${CustomControls} {
         transform: translateY(0);
+      }
+    }
+
+    .vjs-text-track-display {
+      > div {
+        > div {
+          bottom: ${HOVERED_SUBTITLES_POSITION} !important;
+        }
       }
     }
   }
@@ -443,6 +521,23 @@ export const Container = styled.div<ContainerProps>`
           transform: translateY(${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 0 : 0.5)}em);
         }
       }
+
+      .vjs-text-track-display {
+        > div {
+          > div {
+            bottom: ${({ isSettingsPopoverOpened }) =>
+              isSettingsPopoverOpened ? HOVERED_SUBTITLES_POSITION : DEFAULT_SUBTITLES_POSITION} !important;
+          }
+        }
+      }
+    }
+
+    .vjs-paused:hover {
+      ${ControlsIndicatorWrapper} {
+        transform: translateY(
+          ${({ captionsEnabled }) => (captionsEnabled ? HOVERED_CONTROLS_INDICATOR_POSITION : '0')}
+        );
+      }
     }
 
     .vjs-playing:hover {
@@ -451,6 +546,20 @@ export const Container = styled.div<ContainerProps>`
         visibility: visible;
         ${CustomControls} {
           transform: translateY(0);
+        }
+      }
+
+      ${ControlsIndicatorWrapper} {
+        transform: translateY(
+          ${({ captionsEnabled }) => (captionsEnabled ? HOVERED_CONTROLS_INDICATOR_POSITION : '0')}
+        );
+      }
+
+      .vjs-text-track-display {
+        > div {
+          > div {
+            bottom: ${HOVERED_SUBTITLES_POSITION} !important;
+          }
         }
       }
     }
@@ -462,6 +571,15 @@ export const Container = styled.div<ContainerProps>`
         visibility: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 'visible' : 'hidden')};
         ${CustomControls} {
           transform: translateY(${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 0 : 0.5)}em);
+        }
+      }
+
+      .vjs-text-track-display {
+        > div {
+          > div {
+            bottom: ${({ isSettingsPopoverOpened }) =>
+              isSettingsPopoverOpened ? HOVERED_SUBTITLES_POSITION : DEFAULT_SUBTITLES_POSITION} !important;
+          }
         }
       }
     }

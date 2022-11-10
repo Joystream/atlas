@@ -7,14 +7,16 @@ import {
   forwardRef,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
 import useResizeObserver from 'use-resize-observer'
 import { VideoJsPlayer } from 'video.js'
 
-import { useFullVideo } from '@/api/hooks'
-import { FullVideoFieldsFragment } from '@/api/queries'
+import { useFullVideo } from '@/api/hooks/video'
+import { FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { SvgControlsCaptionsOutline, SvgControlsCaptionsSolid } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -26,7 +28,7 @@ import { formatDurationShort } from '@/utils/time'
 import { ControlsIndicator } from './ControlsIndicator'
 import { CustomTimeline } from './CustomTimeline'
 import { PlayerControlButton } from './PlayerControlButton'
-import { SettingsButtonWithPopover } from './SettingsButtonWithPopover'
+import { AvailableTrack, SettingsButtonWithPopover } from './SettingsButtonWithPopover'
 import { VideoOverlay } from './VideoOverlay'
 import {
   BigPlayButton,
@@ -40,9 +42,9 @@ import {
   PlayButton,
   PlayControl,
   ScreenControls,
+  StyledAppLogoShortMonochrome,
   StyledEmbeddedLogoLink,
-  StyledJoystreamLogo,
-  StyledJoystreamLogoShort,
+  StyledSvgAppLogoFullMonochrome,
   StyledSvgControlsFullScreen,
   StyledSvgControlsPause,
   StyledSvgControlsPipOff,
@@ -82,6 +84,7 @@ export type VideoPlayerProps = {
   videoId?: string
   isEmbedded?: boolean
   isPlayNextDisabled?: boolean
+  availableTextTracks?: AvailableTrack[]
 } & VideoJsConfig
 
 declare global {
@@ -112,12 +115,14 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     videoStyle,
     isEmbedded,
     isPlayNextDisabled,
+    availableTextTracks,
     ...videoJsConfig
   },
   externalRef
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [activeTrack, setActiveTrack] = useState<AvailableTrack>()
   const [isSharingOverlayOpen, setIsSharingOverlayOpen] = useState(false)
   const { height: playerHeight = 0 } = useResizeObserver({ box: 'border-box', ref: playerRef })
   const customControlsRef = useRef<HTMLDivElement>(null)
@@ -135,7 +140,9 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     cinematicView,
     playbackRate,
     autoPlayNext,
-    actions: { setCurrentVolume, setCachedVolume, setCinematicView },
+    captionsEnabled,
+    captionsLanguage,
+    actions: { setCurrentVolume, setCachedVolume, setCinematicView, setCaptionsEnabled, setCaptionsLanguage },
   } = usePersonalDataStore((state) => state)
   const [volumeToSave, setVolumeToSave] = useState(0)
   const { video } = useFullVideo(videoId || '')
@@ -150,6 +157,18 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   const [needsManualPlay, setNeedsManualPlay] = useState(!autoplay)
   const mdMatch = useMediaMatch('md')
   const xsMatch = useMediaMatch('xs')
+  const storedLanguageExists =
+    captionsLanguage && availableTextTracks?.map((track) => track.language).includes(captionsLanguage)
+  const findDefaultLanguage = useMemo(() => {
+    if (!availableTextTracks) {
+      return
+    }
+    return (
+      availableTextTracks.find((availableTrack) =>
+        storedLanguageExists ? availableTrack.language === captionsLanguage : availableTrack.language === 'en'
+      ) || availableTextTracks[0]
+    )
+  }, [availableTextTracks, captionsLanguage, storedLanguageExists])
 
   const playVideo = useCallback(
     async (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => {
@@ -212,7 +231,20 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
         return
       }
 
-      const playerReservedKeys = ['k', ' ', 'ArrowLeft', 'ArrowRight', 'j', 'l', 'ArrowUp', 'ArrowDown', 'm', 'f', 'c']
+      const playerReservedKeys = [
+        'k',
+        ' ',
+        'ArrowLeft',
+        'ArrowRight',
+        'j',
+        'l',
+        'ArrowUp',
+        'ArrowDown',
+        'm',
+        'f',
+        't',
+        'c',
+      ]
       if (
         !event.altKey &&
         !event.ctrlKey &&
@@ -221,13 +253,21 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
         playerReservedKeys.includes(event.key)
       ) {
         event.preventDefault()
-        hotkeysHandler(event, player, playVideo, pauseVideo, () => setCinematicView(!cinematicView))
+        hotkeysHandler(
+          event,
+          player,
+          playVideo,
+          pauseVideo,
+          () => setCinematicView(!cinematicView),
+          captionsEnabled,
+          () => setCaptionsEnabled(!captionsEnabled)
+        )
       }
     }
     document.addEventListener('keydown', handler)
 
     return () => document.removeEventListener('keydown', handler)
-  }, [cinematicView, pauseVideo, playVideo, player, playerState, setCinematicView])
+  }, [captionsEnabled, cinematicView, pauseVideo, playVideo, player, playerState, setCaptionsEnabled, setCinematicView])
 
   // handle error
   useEffect(() => {
@@ -483,6 +523,62 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     }
   }, [currentVolume, volumeToSave, player, setCachedVolume])
 
+  // add available subtitles
+  useEffect(() => {
+    if (!player || !availableTextTracks || !availableTextTracks.length) {
+      return
+    }
+    availableTextTracks.forEach((track) => {
+      player.addRemoteTextTrack({ ...track, mode: 'hidden' }, false)
+    })
+  }, [availableTextTracks, player])
+
+  useEffect(() => {
+    if (!captionsEnabled || !captionsLanguage) {
+      return
+    }
+    if (!storedLanguageExists) {
+      setCaptionsEnabled(false)
+      setCaptionsLanguage(null)
+    }
+  }, [
+    availableTextTracks,
+    captionsEnabled,
+    storedLanguageExists,
+    setCaptionsEnabled,
+    setCaptionsLanguage,
+    captionsLanguage,
+  ])
+
+  // handle toggling subtitles
+  useEffect(() => {
+    const tracks = player?.remoteTextTracks()
+    if (!tracks || !availableTextTracks) {
+      return
+    }
+
+    for (let i = 0; i < tracks.length; i++) {
+      const track = tracks[i]
+
+      if (!captionsEnabled) {
+        track.mode = 'hidden'
+      } else {
+        if (activeTrack && activeTrack.language === track.language) {
+          track.mode = 'showing'
+        } else {
+          track.mode = 'hidden'
+        }
+      }
+    }
+  }, [activeTrack, availableTextTracks, captionsEnabled, captionsLanguage, player, storedLanguageExists])
+
+  useEffect(() => {
+    if (!captionsEnabled || !availableTextTracks) {
+      return
+    }
+    setActiveTrack(findDefaultLanguage)
+  }, [captionsEnabled, findDefaultLanguage, availableTextTracks])
+
   // button/input handlers
   const handlePlayPause = useCallback(
     (shouldAddView?: boolean) => {
@@ -564,13 +660,50 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     setCinematicView(!cinematicView)
   }
 
+  const handleToggleCaptions = async (event: MouseEvent) => {
+    event.stopPropagation()
+    if (!availableTextTracks) {
+      return
+    }
+    if (!activeTrack && !captionsEnabled) {
+      await setActiveTrack(findDefaultLanguage)
+    } else {
+      await setActiveTrack(undefined)
+    }
+    await setCaptionsEnabled(!captionsEnabled)
+    player?.trigger(CustomVideojsEvents.CaptionsSet)
+  }
+
+  const handleTrackChange = (selectedTrack: AvailableTrack | undefined) => {
+    const tracks = player?.remoteTextTracks()
+    if (!tracks) {
+      return
+    }
+    for (let i = 0; i < tracks.length; i++) {
+      const track = tracks[i]
+
+      // Find the proper captions track and mark it as "showing".
+      if (selectedTrack && track.language === selectedTrack.language) {
+        track.mode = 'showing'
+      } else {
+        track.mode = 'hidden'
+      }
+    }
+    setActiveTrack(selectedTrack)
+  }
+
   const showPlayerControls = isEmbedded ? !needsManualPlay : isLoaded && playerState && !isSharingOverlayOpen
   const showControlsIndicator = playerState !== 'ended'
 
   const playNextDisabled = isPlayNextDisabled || !autoPlayNext || isShareDialogOpen || isSharingOverlayOpen
 
   return (
-    <Container isFullScreen={isFullScreen} className={className} isSettingsPopoverOpened={isSettingsPopoverOpened}>
+    <Container
+      isFullScreen={isFullScreen}
+      captionsEnabled={captionsEnabled}
+      className={className}
+      isSettingsPopoverOpened={isSettingsPopoverOpened}
+    >
       <div data-vjs-player onClick={() => handlePlayPause()}>
         {needsManualPlay && (
           <BigPlayButtonContainer
@@ -640,11 +773,19 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                   </CurrentTime>
                 </CurrentTimeWrapper>
                 <ScreenControls>
+                  {availableTextTracks && !!availableTextTracks.length && (
+                    <PlayerControlButton
+                      tooltipText={captionsEnabled ? 'Turn off subtitles / CC (c)' : 'Subtitles / CC (c)'}
+                      onClick={handleToggleCaptions}
+                    >
+                      {captionsEnabled ? <SvgControlsCaptionsSolid /> : <SvgControlsCaptionsOutline />}
+                    </PlayerControlButton>
+                  )}
                   {mdMatch && !isEmbedded && !player?.isFullscreen() && (
                     <PlayerControlButton
                       tooltipEnabled={!isSettingsPopoverOpened}
                       onClick={toggleCinematicView}
-                      tooltipText={cinematicView ? 'Exit cinematic mode (c)' : 'Cinematic view (c)'}
+                      tooltipText={cinematicView ? 'Exit cinematic mode (t)' : 'Cinematic view (t)'}
                     >
                       {cinematicView ? (
                         <StyledSvgControlsVideoModeCompactView />
@@ -668,6 +809,10 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                     playerHeightWithoutCustomControls={playerHeightWithoutCustomControls}
                     boundariesElement={playerRef.current}
                     isFullScreen={isFullScreen}
+                    availableTracks={availableTextTracks}
+                    onTrackChange={handleTrackChange}
+                    activeTrack={activeTrack}
+                    player={player}
                   />
                   <PlayerControlButton
                     isDisabled={!isFullScreenEnabled}
@@ -685,11 +830,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                       rel="noopener noreferrer"
                       target="_blank"
                     >
-                      {xsMatch ? (
-                        <StyledJoystreamLogo width={undefined} />
-                      ) : (
-                        <StyledJoystreamLogoShort width={undefined} />
-                      )}
+                      {xsMatch ? <StyledSvgAppLogoFullMonochrome /> : <StyledAppLogoShortMonochrome />}
                     </a>
                   )}
                 </ScreenControls>
@@ -752,7 +893,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                 target="_blank"
                 onClick={(e) => e.stopPropagation()}
               >
-                <StyledJoystreamLogo embedded />
+                <StyledSvgAppLogoFullMonochrome embedded />
               </StyledEmbeddedLogoLink>
             )}
           </>

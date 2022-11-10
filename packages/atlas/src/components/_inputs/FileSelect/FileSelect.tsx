@@ -3,15 +3,15 @@ import { FC, MouseEvent, useCallback, useEffect, useRef } from 'react'
 import { DropzoneOptions, FileRejection, useDropzone } from 'react-dropzone'
 import { useTransition } from 'react-spring'
 
-import { Text } from '@/components/Text'
-import { Button, ButtonVariant } from '@/components/_buttons/Button'
 import {
   SvgActionUpload,
   SvgIllustrativeEdit,
   SvgIllustrativeFileSelected,
   SvgIllustrativeImage,
   SvgIllustrativeVideo,
-} from '@/components/_icons'
+} from '@/assets/icons'
+import { Text } from '@/components/Text'
+import { Button, ButtonVariant } from '@/components/_buttons/Button'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 
 import {

@@ -1,18 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useFullVideosConnection } from '@/api/hooks'
-import { VideoOrderByInput } from '@/api/queries'
+import { useFullVideosConnection } from '@/api/hooks/videosConnection'
+import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { SvgActionAddVideo, SvgActionUpload, SvgAlertsInformative24 } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Tabs } from '@/components/Tabs'
 import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionAddVideo, SvgActionUpload, SvgAlertsInformative24 } from '@/components/_icons'
 import { Select } from '@/components/_inputs/Select'
 import { VideoTileDraft } from '@/components/_video/VideoTileDraft'
 import { VideoTilePublisher } from '@/components/_video/VideoTilePublisher'
+import { cancelledVideoFilter } from '@/config/contentFilter'
 import { absoluteRoutes } from '@/config/routes'
 import { VIDEO_SORT_OPTIONS } from '@/config/sorting'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
@@ -21,7 +22,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { chanelUnseenDraftsSelector, channelDraftsSelector, useDraftStore } from '@/providers/drafts'
 import { useSnackbar } from '@/providers/snackbars'
-import { useAuthorizedUser } from '@/providers/user'
+import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { sizes } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
@@ -88,6 +89,7 @@ export const MyVideosView = () => {
         channel: {
           id_eq: channelId,
         },
+        ...cancelledVideoFilter,
         isPublic_eq,
       },
     },
@@ -146,7 +148,7 @@ export const MyVideosView = () => {
     minimized?: boolean
     mintNft?: boolean
   }
-  const handleVideoClick = (
+  const handleEditVideoClick = (
     id?: string,
     opts: HandleVideoClickOpts = { draft: false, minimized: false, mintNft: false }
   ) => {
@@ -228,7 +230,7 @@ export const MyVideosView = () => {
           return (
             <VideoTileDraft
               key={`draft-${idx}`}
-              onClick={() => handleVideoClick(draft.id, { draft: true })}
+              onClick={() => handleEditVideoClick(draft.id, { draft: true })}
               id={draft.id}
               onDeleteVideoClick={() => handleDeleteDraft(draft.id)}
             />
@@ -245,12 +247,12 @@ export const MyVideosView = () => {
             onEditClick={(e) => {
               e?.stopPropagation()
               e?.preventDefault()
-              handleVideoClick(video.id)
+              handleEditVideoClick(video.id)
             }}
             onMintNftClick={(e) => {
               e?.stopPropagation()
               e?.preventDefault()
-              handleVideoClick(video.id, { mintNft: true })
+              handleEditVideoClick(video.id, { mintNft: true })
             }}
             onDeleteVideoClick={() => video.id && deleteVideo(video.id)}
             onReuploadVideoClick={() => navigate(absoluteRoutes.studio.uploads(), { state: { highlightFailed: true } })}

@@ -1,9 +1,6 @@
 import { Meta, Story } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
-import { OwnerPill } from '@/components/OwnerPill'
-import { Pill, PillGroup } from '@/components/Pill'
-import { Button } from '@/components/_buttons/Button'
 import {
   SvgActionCopy,
   SvgActionDraft,
@@ -12,9 +9,12 @@ import {
   SvgActionTrash,
   SvgIllustrativeEdit,
   SvgIllustrativePlay,
-} from '@/components/_icons'
-import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
-import { JOY_CURRENCY_TICKER } from '@/config/token'
+} from '@/assets/icons'
+import { JoyTokenIcon } from '@/components/JoyTokenIcon'
+import { OwnerPill } from '@/components/OwnerPill'
+import { Pill, PillGroup } from '@/components/Pill'
+import { Button } from '@/components/_buttons/Button'
+import { atlasConfig } from '@/config'
 import { formatDateAgo } from '@/utils/time'
 
 import { VideoTile, VideoTileProps } from '.'
@@ -61,7 +61,7 @@ export default {
               },
               {
                 icon: <JoyTokenIcon size={16} variant="regular" />,
-                label: `24K ${JOY_CURRENCY_TICKER}`,
+                label: `24K ${atlasConfig.joystream.tokenTicker}`,
                 variant: 'overlay',
               },
             ]}

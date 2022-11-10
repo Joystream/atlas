@@ -1,16 +1,16 @@
 import { useApolloClient } from '@apollo/client'
 import { FC, useCallback, useState } from 'react'
 
-import { GetNftDocument, GetNftQuery, GetNftQueryVariables } from '@/api/queries'
+import { GetNftDocument, GetNftQuery, GetNftQueryVariables } from '@/api/queries/__generated__/nfts.generated'
 import { ActionBarProps } from '@/components/ActionBar'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
 import { absoluteRoutes } from '@/config/routes'
 import { useConfirmationModal } from '@/providers/confirmationModal'
-import { useJoystream } from '@/providers/joystream'
-import { useNftActions } from '@/providers/nftActions'
+import { useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
 import { useSnackbar } from '@/providers/snackbars'
-import { useTransaction } from '@/providers/transactions'
-import { useUser } from '@/providers/user'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 import { openInNewTab } from '@/utils/browser'
 import { ConsoleLogger } from '@/utils/logs'
 
@@ -93,6 +93,8 @@ export const NftSaleBottomDrawer: FC = () => {
   }, [closeNftAction])
 
   const actionBarProps: ActionBarProps = {
+    fee: formStatus?.actionBarFee,
+    feeLoading: formStatus?.actionBarLoading,
     primaryButton: {
       text: !formStatus?.canGoForward ? 'Start sale' : 'Next step',
       onClick: !formStatus?.canGoForward ? formStatus?.triggerSubmit : formStatus?.triggerGoForward,

@@ -2,8 +2,8 @@ import { UseSelectStateChange, useSelect } from 'downshift'
 import { isEqual } from 'lodash-es'
 import { ForwardedRef, ReactNode, Ref, forwardRef, useMemo } from 'react'
 
+import { SvgActionChevronB, SvgActionChevronT } from '@/assets/icons'
 import { ListItemProps } from '@/components/ListItem'
-import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
 import { ConsoleLogger } from '@/utils/logs'
 
 import {
@@ -130,7 +130,7 @@ export const _Select = <T extends unknown>(
                   highlight: highlightedIndex === index,
                   label: item.name,
                   ...item,
-                  ...getItemProps({ item: item.value, index, onClick: item.onClick }),
+                  ...getItemProps({ item: item.value, index, onClick: item.onClick, disabled: item.isSeparator }),
                 }))}
               size={size === 'medium' ? 'small' : 'medium'}
             />

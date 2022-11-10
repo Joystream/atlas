@@ -1,37 +1,35 @@
 import { AnalyticsManager } from '@/AnalyticsManager'
 import { CommonProviders } from '@/CommonProviders'
 import { SignInModal } from '@/components/_auth/SignInModal'
-import { NftActionsProvider } from '@/providers/nftActions'
-import { NotificationsManager } from '@/providers/notifications'
+import { JoystreamManager } from '@/providers/joystream/joystream.manager'
+import { JoystreamProvider } from '@/providers/joystream/joystream.provider'
+import { NftActionsProvider } from '@/providers/nftActions/nftActions.provider'
+import { NotificationsManager } from '@/providers/notifications/notifications.manager'
+import { Snackbars } from '@/providers/snackbars'
+import { TransactionsManager } from '@/providers/transactions/transactions.manager'
 import { NftPurchaseBottomDrawer } from '@/views/global/NftPurchaseBottomDrawer'
 import { NftSaleBottomDrawer } from '@/views/global/NftSaleBottomDrawer'
 import { NftSettlementBottomDrawer } from '@/views/global/NftSettlementBottomDrawer'
 
 import { MainLayout } from './MainLayout'
-import { JoystreamManager, JoystreamProvider } from './providers/joystream'
-import { Snackbars } from './providers/snackbars'
-import { TransactionsManager } from './providers/transactions'
-import { UserProvider } from './providers/user'
 
 export const App = () => {
   return (
-    <CommonProviders>
-      <AnalyticsManager />
-      <UserProvider>
-        <JoystreamProvider>
-          <NftActionsProvider>
-            <MainLayout />
-            <Snackbars />
-            <TransactionsManager />
-            <JoystreamManager />
-            <NotificationsManager />
-            <SignInModal />
-            <NftSettlementBottomDrawer />
-            <NftPurchaseBottomDrawer />
-            <NftSaleBottomDrawer />
-          </NftActionsProvider>
-        </JoystreamProvider>
-      </UserProvider>
-    </CommonProviders>
+    <JoystreamProvider>
+      <CommonProviders>
+        <AnalyticsManager />
+        <NftActionsProvider>
+          <MainLayout />
+          <Snackbars />
+          <TransactionsManager />
+          <JoystreamManager />
+          <NotificationsManager />
+          <SignInModal />
+          <NftSettlementBottomDrawer />
+          <NftPurchaseBottomDrawer />
+          <NftSaleBottomDrawer />
+        </NftActionsProvider>
+      </CommonProviders>
+    </JoystreamProvider>
   )
 }

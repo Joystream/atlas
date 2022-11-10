@@ -3,8 +3,9 @@ import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useParams, useSearchParams } from 'react-router-dom'
 
-import { useChannelNftCollectors, useFullChannel } from '@/api/hooks'
-import { OwnedNftOrderByInput, VideoOrderByInput } from '@/api/queries'
+import { useChannelNftCollectors, useFullChannel } from '@/api/hooks/channel'
+import { OwnedNftOrderByInput, VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { SvgActionCheck, SvgActionFilters, SvgActionFlag, SvgActionMore, SvgActionPlus } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
@@ -15,15 +16,16 @@ import { ViewWrapper } from '@/components/ViewWrapper'
 import { Button } from '@/components/_buttons/Button'
 import { ChannelCover } from '@/components/_channel/ChannelCover'
 import { CollectorsBox } from '@/components/_channel/CollectorsBox'
-import { SvgActionCheck, SvgActionFilters, SvgActionPlus } from '@/components/_icons'
+import { ContextMenu } from '@/components/_overlays/ContextMenu'
+import { ReportModal } from '@/components/_overlays/ReportModal'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { NFT_SORT_OPTIONS, VIDEO_SORT_OPTIONS } from '@/config/sorting'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useRedirectMigratedContent } from '@/hooks/useRedirectMigratedContent'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
-import { useAsset } from '@/providers/assets'
+import { useAsset } from '@/providers/assets/assets.hooks'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
@@ -57,6 +59,7 @@ export const ChannelView: FC = () => {
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
   const videoRows = useVideoGridRows('main')
   const navigate = useNavigate()
+  const [showReportDialog, setShowReportDialog] = useState(false)
 
   const tilesPerPage = videoRows * tilesPerRow
 
@@ -71,7 +74,6 @@ export const ChannelView: FC = () => {
     }
   })
 
-  useRedirectMigratedContent({ type: 'channel' })
   const smMatch = useMediaMatch('sm')
   const { id } = useParams()
   const {
@@ -135,7 +137,13 @@ export const ChannelView: FC = () => {
 
   const channelMetaTags = useMemo(() => {
     if (!channel || !avatarPhotoUrl) return {}
-    return generateChannelMetaTags(channel, avatarPhotoUrl)
+    return generateChannelMetaTags(
+      channel,
+      avatarPhotoUrl,
+      atlasConfig.general.appName,
+      window.location.origin,
+      atlasConfig.general.appTwitterId
+    )
   }, [channel, avatarPhotoUrl])
   const headTags = useHeadTags(channel?.title, channelMetaTags)
 
@@ -264,6 +272,25 @@ export const ChannelView: FC = () => {
             >
               {isFollowing ? 'Unfollow' : 'Follow'}
             </StyledButton>
+            <ContextMenu
+              placement="bottom-end"
+              items={[
+                {
+                  onClick: () => setShowReportDialog(true),
+                  label: 'Report channel',
+                  nodeStart: <SvgActionFlag />,
+                },
+              ]}
+              trigger={<Button icon={<SvgActionMore />} variant="tertiary" size="large" />}
+            />
+            {channel?.id && (
+              <ReportModal
+                show={showReportDialog}
+                onClose={() => setShowReportDialog(false)}
+                entityId={channel?.id}
+                type="channel"
+              />
+            )}
           </StyledButtonContainer>
         </TitleSection>
         <TabsWrapper isFiltersOpen={isFiltersOpen}>

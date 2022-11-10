@@ -1,10 +1,11 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useCallback, useEffect, useRef } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
+import shallow from 'zustand/shallow'
 
-import { useFullChannel } from '@/api/hooks'
+import { useFullChannel } from '@/api/hooks/channel'
 import { ActionBar } from '@/components/ActionBar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -20,18 +21,25 @@ import {
   ImageCropModalImperativeHandle,
   ImageCropModalProps,
 } from '@/components/_overlays/ImageCropModal'
-import { languages } from '@/config/languages'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
-import { ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib'
-import { useAsset, useAssetStore, useOperatorsContext, useRawAsset } from '@/providers/assets'
+import { ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib/types'
+import { useAsset, useChannelsStorageBucketsCount, useRawAsset } from '@/providers/assets/assets.hooks'
+import { useOperatorsContext } from '@/providers/assets/assets.provider'
+import { useAssetStore } from '@/providers/assets/assets.store'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
-import { useJoystream } from '@/providers/joystream'
+import {
+  useBloatFeesAndPerMbFees,
+  useBucketsConfigForNewChannel,
+  useFee,
+  useJoystream,
+} from '@/providers/joystream/joystream.hooks'
 import { useSnackbar } from '@/providers/snackbars'
-import { useTransaction } from '@/providers/transactions'
-import { useUploadsStore } from '@/providers/uploadsManager'
-import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
-import { useUser } from '@/providers/user'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { useStartFileUpload } from '@/providers/uploads/uploads.hooks'
+import { useUploadsStore } from '@/providers/uploads/uploads.store'
+import { useUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
@@ -74,14 +82,17 @@ type CreateEditChannelViewProps = {
   newChannel?: boolean
 }
 
+const DEFAULT_LANGUAGE = atlasConfig.derived.popularLanguagesSelectValues[0].value
+
 export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChannel }) => {
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropModalImperativeHandle>(null)
-  const [avatarHashPromise, setAvatarHashPromise] = useState<Promise<string> | null>(null)
-  const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
 
   const { memberId, accountId, channelId, setActiveUser, refetchUserMemberships } = useUser()
+  const cachedChannelId = useRef(channelId)
+  const firstRender = useRef(true)
   const { joystream, proxyCallback } = useJoystream()
+  const getBucketsConfigForNewChannel = useBucketsConfigForNewChannel()
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
@@ -89,14 +100,24 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const navigate = useNavigate()
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
 
-  const { channel, loading, error } = useFullChannel(channelId || '', {
-    skip: newChannel || !channelId,
-    onError: (error) =>
-      SentryLogger.error('Failed to fetch channel', 'CreateEditChannelView', error, {
-        channel: { id: channelId },
-      }),
-  })
+  const {
+    channel,
+    loading,
+    error,
+    refetch: refetchChannel,
+  } = useFullChannel(
+    channelId || '',
+    {
+      skip: newChannel || !channelId,
+      onError: (error) =>
+        SentryLogger.error('Failed to fetch channel', 'CreateEditChannelView', error, {
+          channel: { id: channelId },
+        }),
+    },
+    { where: { isPublic_eq: undefined, isCensored_eq: undefined } }
+  )
   const startFileUpload = useStartFileUpload()
+  const channelBucketsCount = useChannelsStorageBucketsCount(channelId)
 
   // trigger use asset to make sure the channel assets get resolved
   useAsset(channel?.avatarPhoto)
@@ -119,14 +140,35 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       cover: { contentId: null, assetDimensions: null, imageCropData: null, originalBlob: undefined },
       title: '',
       description: '',
-      language: languages[0].value,
+      language: DEFAULT_LANGUAGE,
       isPublic: true,
     },
   })
+  const avatarContentId = watch('avatar').contentId
+  const coverContentId = watch('cover').contentId
 
   const addAsset = useAssetStore((state) => state.actions.addAsset)
-  const avatarAsset = useRawAsset(watch('avatar').contentId)
-  const coverAsset = useRawAsset(watch('cover').contentId)
+  const avatarAsset = useRawAsset(avatarContentId)
+  const coverAsset = useRawAsset(coverContentId)
+
+  const isAvatarUploading = useUploadsStore(
+    (state) =>
+      avatarContentId
+        ? state.uploadsStatus[avatarContentId]?.lastStatus === 'processing' ||
+          state.uploadsStatus[avatarContentId]?.lastStatus === 'inProgress' ||
+          state.uploadsStatus[avatarContentId]?.lastStatus === 'reconnecting'
+        : null,
+    shallow
+  )
+  const isCoverUploading = useUploadsStore(
+    (state) =>
+      coverContentId
+        ? state.uploadsStatus[coverContentId]?.lastStatus === 'processing' ||
+          state.uploadsStatus[coverContentId]?.lastStatus === 'inProgress' ||
+          state.uploadsStatus[coverContentId]?.lastStatus === 'reconnecting'
+        : null,
+    shallow
+  )
 
   const { isWorkspaceOpen, setIsWorkspaceOpen } = useVideoWorkspace()
   const { fetchOperators } = useOperatorsContext()
@@ -138,58 +180,125 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
         cover: { contentId: null },
         title: '',
         description: '',
-        language: languages[0].value,
+        language: DEFAULT_LANGUAGE,
         isPublic: true,
       })
     }
   }, [newChannel, reset])
 
+  const createChannelMetadata = useCallback(
+    (data: Inputs) => {
+      return isDirty
+        ? {
+            ...(dirtyFields.title ? { title: data.title?.trim() ?? '' } : {}),
+            ...(dirtyFields.description ? { description: data.description?.trim() ?? '' } : {}),
+            ...(dirtyFields.language || newChannel ? { language: data.language } : {}),
+            ...(dirtyFields.isPublic || newChannel ? { isPublic: data.isPublic } : {}),
+            ownerAccount: accountId || '',
+          }
+        : null
+    },
+    [accountId, dirtyFields, isDirty, newChannel]
+  )
+
+  const createChannelAssets = useCallback(
+    (avatarHash?: string | null, coverPhotoHash?: string | null): [ChannelInputAssets, string[]] => {
+      const replacedAssetsIds = []
+      const newAssets: ChannelInputAssets = {}
+      if (avatarAsset?.blob?.size) {
+        newAssets.avatarPhoto = {
+          size: avatarAsset?.blob.size,
+          ipfsHash: avatarHash || '',
+        }
+      }
+      if (channel?.avatarPhoto?.id && avatarHash) {
+        replacedAssetsIds.push(channel.avatarPhoto.id)
+      }
+      if (coverAsset?.blob?.size) {
+        newAssets.coverPhoto = {
+          size: coverAsset.blob.size,
+          ipfsHash: coverPhotoHash || '',
+        }
+      }
+      if (channel?.coverPhoto?.id && coverPhotoHash) {
+        replacedAssetsIds.push(channel.coverPhoto.id)
+      }
+      return [newAssets, replacedAssetsIds]
+    },
+    [avatarAsset?.blob?.size, channel?.avatarPhoto?.id, channel?.coverPhoto?.id, coverAsset?.blob?.size]
+  )
+
+  const channelMetadata = createChannelMetadata(watch())
+  const [newChannelAssets, removedChannelAssetsIds] = createChannelAssets()
+
+  const { channelStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
+
+  const { fullFee: updateChannelFee, loading: updateChannelFeeLoading } = useFee(
+    'updateChannelTx',
+    channelId && memberId && channelMetadata && isDirty && !newChannel
+      ? [
+          channelId,
+          memberId,
+          channelMetadata,
+          newChannelAssets,
+          removedChannelAssetsIds,
+          dataObjectStateBloatBondValue.toString(),
+          channelBucketsCount.toString(),
+        ]
+      : undefined,
+    newChannelAssets
+  )
+  const { fullFee: createChannelFee, loading: createChannelFeeLoading } = useFee(
+    'createChannelTx',
+    memberId && channelMetadata && newChannel
+      ? [
+          memberId,
+          channelMetadata,
+          newChannelAssets,
+          // use basic buckets config for fee estimation
+          { storage: [0], distribution: [{ distributionBucketFamilyId: 0, distributionBucketIndex: 0 }] },
+          dataObjectStateBloatBondValue.toString(),
+          channelStateBloatBondValue.toString(),
+        ]
+      : undefined,
+    newChannelAssets
+  )
+
+  // set default values for editing channel
   useEffect(() => {
     if (loading || newChannel || !channel) {
       return
     }
 
-    const { title, description, isPublic, language } = channel
+    const { title, description, isPublic, language, avatarPhoto, coverPhoto } = channel
 
-    const foundLanguage = languages.find(({ value }) => value === language?.iso)
+    const foundLanguage = atlasConfig.derived.languagesSelectValues.find(({ value }) => value === language?.iso)
+    const isChannelChanged = cachedChannelId.current !== channel.id
 
-    reset({
-      avatar: {
-        contentId: channel.avatarPhoto?.id,
-        assetDimensions: null,
-        imageCropData: null,
-        originalBlob: undefined,
-      },
-      cover: {
-        contentId: channel.coverPhoto?.id,
-        assetDimensions: null,
-        imageCropData: null,
-        originalBlob: undefined,
-      },
-      title: title || '',
-      description: description || '',
-      isPublic: isPublic ?? false,
-      language: foundLanguage?.value || languages[0].value,
-    })
+    // This condition should prevent from updating cover/avatar when the upload is done
+    if (isChannelChanged || firstRender.current) {
+      reset({
+        avatar: {
+          contentId: avatarPhoto?.id,
+          assetDimensions: null,
+          imageCropData: null,
+          originalBlob: undefined,
+        },
+        cover: {
+          contentId: coverPhoto?.id,
+          assetDimensions: null,
+          imageCropData: null,
+          originalBlob: undefined,
+        },
+        title: title || '',
+        description: description || '',
+        isPublic: isPublic ?? false,
+        language: foundLanguage?.value || DEFAULT_LANGUAGE,
+      })
+      firstRender.current = false
+      cachedChannelId.current = channel.id
+    }
   }, [channel, loading, newChannel, reset])
-
-  useEffect(() => {
-    if (!dirtyFields.avatar || !avatarAsset?.blob) {
-      return
-    }
-
-    const hashPromise = computeFileHash(avatarAsset.blob)
-    setAvatarHashPromise(hashPromise)
-  }, [dirtyFields.avatar, avatarAsset])
-
-  useEffect(() => {
-    if (!dirtyFields.cover || !coverAsset?.blob) {
-      return
-    }
-
-    const hashPromise = computeFileHash(coverAsset.blob)
-    setCoverHashPromise(hashPromise)
-  }, [dirtyFields.cover, coverAsset])
 
   const headTags = useHeadTags(newChannel ? 'New channel' : 'Edit channel')
 
@@ -234,6 +343,11 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       return
     }
 
+    if (!channelBucketsCount && !newChannel) {
+      SentryLogger.error('Channel buckets count is not set', 'CreateEditChannelView')
+      return
+    }
+
     setIsWorkspaceOpen(false)
 
     const metadata: ChannelInputMetadata = {
@@ -245,25 +359,19 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     }
 
     const assets: ChannelInputAssets = {}
-
+    let removedAssetsIds: string[] = []
     const processAssets = async () => {
-      if (dirtyFields.avatar && avatarAsset?.blob && avatarHashPromise) {
-        const ipfsHash = await avatarHashPromise
-        assets.avatarPhoto = {
-          size: avatarAsset.blob.size,
-          ipfsHash,
-          replacedDataObjectId: channel?.avatarPhoto?.id,
-        }
-      }
+      const avatarIpfsHash = avatarAsset?.blob && dirtyFields.avatar && (await computeFileHash(avatarAsset.blob))
+      const coverIpfsHash = coverAsset?.blob && dirtyFields.cover && (await computeFileHash(coverAsset.blob))
 
-      if (dirtyFields.cover && coverAsset?.blob && coverHashPromise) {
-        const ipfsHash = await coverHashPromise
-        assets.coverPhoto = {
-          size: coverAsset.blob.size,
-          ipfsHash,
-          replacedDataObjectId: channel?.coverPhoto?.id,
-        }
+      const [createdAssets, assetIdsToRemove] = createChannelAssets(avatarIpfsHash, coverIpfsHash)
+      if (createdAssets.avatarPhoto) {
+        assets.avatarPhoto = createdAssets.avatarPhoto
       }
+      if (createdAssets.coverPhoto) {
+        assets.coverPhoto = createdAssets.coverPhoto
+      }
+      removedAssetsIds = assetIdsToRemove
     }
 
     const uploadAssets = async ({ channelId, assetsIds }: ChannelExtrinsicResult) => {
@@ -305,18 +413,21 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       const { channelId, assetsIds } = result
       if (assetsIds.avatarPhoto && avatarAsset?.url) {
         addAsset(assetsIds.avatarPhoto, { url: avatarAsset.url })
+        setValue('avatar.contentId', assetsIds.avatarPhoto)
       }
       if (assetsIds.coverPhoto && coverAsset?.url) {
         addAsset(assetsIds.coverPhoto, { url: coverAsset.url })
+        setValue('cover.contentId', assetsIds.coverPhoto)
       }
 
       if (newChannel) {
         // add channel to new channels list before refetching membership to make sure UploadsManager doesn't complain about missing assets
         addNewChannelIdToUploadsStore(channelId)
+        // membership includes full list of channels so the channel update will be fetched too
+        await refetchUserMemberships()
+      } else {
+        await refetchChannel()
       }
-
-      // membership includes full list of channels so the channel update will be fetched too
-      await refetchUserMemberships()
 
       if (newChannel) {
         // when creating a channel, refetch operators before uploading so that storage bag assignments gets populated for a new channel
@@ -333,11 +444,33 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       preProcess: processAssets,
       txFactory: async (updateStatus) =>
         newChannel
-          ? (await joystream.extrinsics).createChannel(memberId, metadata, assets, proxyCallback(updateStatus))
+          ? (
+              await joystream.extrinsics
+            ).createChannel(
+              memberId,
+              metadata,
+              assets,
+              await getBucketsConfigForNewChannel(),
+              dataObjectStateBloatBondValue.toString(),
+              channelStateBloatBondValue.toString(),
+              proxyCallback(updateStatus)
+            )
           : (
               await joystream.extrinsics
-            ).updateChannel(channelId ?? '', memberId, metadata, assets, proxyCallback(updateStatus)),
-      onTxSync: refetchDataAndUploadAssets,
+            ).updateChannel(
+              channelId ?? '',
+              memberId,
+              metadata,
+              assets,
+              removedAssetsIds,
+              dataObjectStateBloatBondValue.toString(),
+              channelBucketsCount.toString(),
+              proxyCallback(updateStatus)
+            ),
+      onTxSync: (result) => {
+        reset(getValues())
+        return refetchDataAndUploadAssets(result)
+      },
     })
 
     if (completed && newChannel) {
@@ -348,6 +481,14 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const handleDeleteAvatar = () => {
     setValue(
       'avatar',
+      { contentId: null, assetDimensions: null, imageCropData: null, originalBlob: undefined },
+      { shouldDirty: true }
+    )
+  }
+
+  const handleDeleteCover = () => {
+    setValue(
+      'cover',
       { contentId: null, assetDimensions: null, imageCropData: null, originalBlob: undefined },
       { shouldDirty: true }
     )
@@ -380,8 +521,12 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     },
   ]
 
-  const hasAvatarUploadFailed = (channel?.avatarPhoto && !channel.avatarPhoto.isAccepted) || false
-  const hasCoverUploadFailed = (channel?.coverPhoto && !channel.coverPhoto.isAccepted) || false
+  const hasAvatarUploadFailed = isAvatarUploading
+    ? false
+    : (channel?.avatarPhoto && !channel.avatarPhoto.isAccepted && !dirtyFields.avatar) || false
+  const hasCoverUploadFailed = isCoverUploading
+    ? false
+    : (channel?.coverPhoto && !channel.coverPhoto.isAccepted && !dirtyFields.cover) || false
   const isDisabled = !isDirty || nodeConnectionStatus !== 'connected'
 
   return (
@@ -405,6 +550,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
             <ImageCropModal
               imageType="cover"
               onConfirm={handleCoverChange}
+              onDelete={handleDeleteCover}
               onError={() =>
                 displaySnackbar({
                   title: 'Cannot load the image. Choose another.',
@@ -522,11 +668,16 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
               rules={requiredValidation('Language')}
               render={({ field: { value, onChange } }) => (
                 <Select
-                  items={languages}
+                  items={[
+                    { name: 'TOP LANGUAGES', value: '', isSeparator: true },
+                    ...atlasConfig.derived.popularLanguagesSelectValues,
+                    { name: 'ALL LANGUAGES', value: '', isSeparator: true },
+                    ...atlasConfig.derived.languagesSelectValues,
+                  ]}
                   disabled={loading}
                   value={value}
-                  onChange={onChange}
                   error={!!errors.language && !value}
+                  onChange={onChange}
                 />
               )}
             />
@@ -560,7 +711,8 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
             <ActionBarTransactionWrapper ref={actionBarRef}>
               {!channelId && progressDrawerSteps?.length ? <StyledProgressDrawer steps={progressDrawerSteps} /> : null}
               <ActionBar
-                fee={0}
+                fee={newChannel ? createChannelFee : updateChannelFee}
+                feeLoading={newChannel ? createChannelFeeLoading : updateChannelFeeLoading}
                 primaryButton={{
                   text: newChannel ? 'Create channel' : 'Publish changes',
                   disabled: isDisabled,

@@ -15,16 +15,20 @@ import { TopbarStudio } from '@/components/_navigation/TopbarStudio'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { ConnectionStatusManager, useConnectionStatusStore } from '@/providers/connectionStatus'
-import { UploadsManager } from '@/providers/uploadsManager'
-import { useUser } from '@/providers/user'
+import { UploadsManager } from '@/providers/uploads/uploads.manager'
+import { useUser } from '@/providers/user/user.hooks'
 import { VideoWorkspaceProvider, useVideoWorkspaceRouting } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
 import { isAllowedBrowser } from '@/utils/browser'
 import { NotificationsView } from '@/views/notifications'
-import { CreateEditChannelView, MyUploadsView, MyVideosView, VideoWorkspace } from '@/views/studio'
-import { MyPaymentsView } from '@/views/studio/MyPaymentsView'
 
+import { CreateEditChannelView } from './CreateEditChannelView'
+import { CrtView } from './CrtView'
+import { MyPaymentsView } from './MyPaymentsView'
+import { MyUploadsView } from './MyUploadsView'
+import { MyVideosView } from './MyVideosView'
 import { StudioWelcomeView } from './StudioWelcomeView'
+import { VideoWorkspace } from './VideoWorkspace'
 
 import { NotFoundView } from '../viewer/NotFoundView'
 
@@ -35,10 +39,11 @@ const StudioLayout = () => {
   const displayedLocation = useVideoWorkspaceRouting()
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-  const { channelId, memberships, isLoggedIn, isAuthLoading } = useUser()
+  const { channelId, memberships, isLoggedIn, isAuthLoading, membershipsLoading, isWalletLoading } = useUser()
 
   const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useConfirmationModal()
   const [enterLocation] = useState(location.pathname)
+  const isMembershipLoaded = !membershipsLoading && !isAuthLoading && !isWalletLoading
   const hasMembership = !!memberships?.length
 
   const channelSet = !!channelId && hasMembership
@@ -64,13 +69,13 @@ const StudioLayout = () => {
   }, [closeUnsupportedBrowserDialog, openUnsupportedBrowserDialog])
   return (
     <>
-      <TopbarStudio hideChannelInfo={!channelSet} />
+      <TopbarStudio hideChannelInfo={!hasMembership} isMembershipLoaded={isMembershipLoaded} />
       <NoConnectionIndicator
         hasSidebar={channelSet}
         nodeConnectionStatus={nodeConnectionStatus}
         isConnectedToInternet={internetConnectionStatus === 'connected'}
       />
-      {isAuthLoading ? (
+      {isAuthLoading || membershipsLoading || isWalletLoading ? (
         <StudioLoading />
       ) : (
         <>
@@ -130,6 +135,10 @@ const StudioLayout = () => {
               <Route
                 path={relativeRoutes.studio.videos()}
                 element={<PrivateRoute element={<MyVideosView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />}
+              />
+              <Route
+                path={relativeRoutes.studio.crt()}
+                element={<PrivateRoute element={<CrtView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />}
               />
               <Route
                 path={relativeRoutes.studio.notifications()}

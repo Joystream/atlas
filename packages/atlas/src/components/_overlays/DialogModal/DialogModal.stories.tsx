@@ -85,3 +85,18 @@ WithLink.args = {
     to: 'https://google.com',
   },
 }
+
+export const WithAdditionalNode = OpenTemplate.bind({})
+WithAdditionalNode.args = {
+  additionalActionsNodeMobilePosition: 'bottom',
+  additionalActionsNode: (
+    <Button
+      size="medium"
+      variant="tertiary"
+      to="https://joystream.gitbook.io/testnet-workspace/system/fees"
+      openLinkInNewTab
+    >
+      Learn more
+    </Button>
+  ),
+}

@@ -1,12 +1,13 @@
 import { FC } from 'react'
 
-import { useBasicVideos } from '@/api/hooks'
+import { useBasicVideos } from '@/api/hooks/video'
+import { SvgActionChevronR } from '@/assets/icons'
 import { CategoryLink } from '@/components/CategoryLink'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Button } from '@/components/_buttons/Button'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
-import { SvgActionChevronR } from '@/components/_icons'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
+import { displayCategoriesLookup } from '@/config/categories'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
@@ -31,14 +32,22 @@ export const MoreVideos: FC<MoreVideosProps> = ({
   videoId,
   type,
 }) => {
-  const where = type === 'channel' ? { channel: { id_eq: channelId } } : { category: { id_eq: categoryId } }
+  const videoCategories = categoryId ? displayCategoriesLookup[categoryId].videoCategories : undefined
+  const where =
+    type === 'channel'
+      ? { channel: { id_eq: channelId } }
+      : {
+          category: {
+            id_in: videoCategories,
+          },
+        }
   // we fetch +1 because we need to filter duplicated video
   const { videos = [], loading } = useBasicVideos(
     {
       where,
       limit: NUMBER_OF_VIDEOS + 1,
     },
-    { skip: !where.category?.id_eq && !where.channel?.id_eq }
+    { skip: !where.category?.id_in && !where.channel?.id_eq }
   )
   const displayedItems = loading ? [] : videos.filter((video) => video.id !== videoId).slice(0, NUMBER_OF_VIDEOS)
   const placeholderItems =

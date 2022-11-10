@@ -1,76 +1,60 @@
+import styled from '@emotion/styled'
+import BN from 'bn.js'
 import { forwardRef, useRef } from 'react'
 import mergeRefs from 'react-merge-refs'
 
 import { Text, TextProps, TextVariant } from '@/components/Text'
-import { JOY_CURRENCY_TICKER } from '@/config/token'
+import { atlasConfig } from '@/config'
+import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { formatNumber } from '@/utils/number'
 
 import { Tooltip } from '../Tooltip'
 
 export type NumberFormatProps = {
-  value: number
+  value: BN | number
   format?: 'full' | 'short' | 'dollar'
-  withToken?: boolean
   withTooltip?: boolean
+  withToken?: boolean
   children?: never
   variant?: TextVariant
   displayedValue?: string | number
-  tooltipAsWrapper?: boolean
 } & Omit<TextProps, 'children' | 'variant'>
 
 export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
   (
-    {
-      value,
-      format = 'full',
-      withToken,
-      withTooltip,
-      variant = 'no-variant',
-      displayedValue,
-      tooltipAsWrapper,
-      ...textProps
-    },
+    { value, format = 'full', withToken, withTooltip = true, variant = 'no-variant', displayedValue, ...textProps },
     ref
   ) => {
+    const internalValue = BN.isBN(value) ? hapiBnToTokenNumber(value) : value
     const textRef = useRef<HTMLHeadingElement>(null)
     let formattedValue
     let tooltipText
     switch (format) {
       case 'short':
-        formattedValue = formatNumberShort(value)
-        tooltipText = formatNumber(value)
+        formattedValue = internalValue ? (internalValue > 0.01 ? formatNumberShort(internalValue) : `< 0.01`) : 0
+        tooltipText = formatNumber(internalValue)
         break
       case 'full':
-        formattedValue = tooltipText = formatNumber(value)
+        formattedValue = tooltipText = formatNumber(internalValue)
         break
       case 'dollar':
-        formattedValue = formatDollars(value)
+        formattedValue = formatDollars(internalValue)
         tooltipText = new Intl.NumberFormat('en-US', { maximumSignificantDigits, ...currencyFormatOptions })
-          .format(value)
+          .format(internalValue)
           .replaceAll(',', ' ')
         break
     }
 
-    const hasDecimals = value - Math.floor(value) !== 0
+    const hasDecimals = internalValue - Math.floor(internalValue) !== 0
     const hasTooltip =
-      withTooltip || (format === 'short' && (value > 999 || hasDecimals)) || (format === 'dollar' && hasDecimals)
+      withTooltip &&
+      ((format === 'short' && (internalValue > 999 || hasDecimals)) || (format === 'dollar' && hasDecimals))
     const content = (
-      <Text {...textProps} variant={variant} ref={mergeRefs([ref, textRef])}>
+      <StyledText {...textProps} variant={variant} ref={mergeRefs([ref, textRef])}>
         {displayedValue || formattedValue}
-        {withToken && ` ${JOY_CURRENCY_TICKER}`}
-      </Text>
+        {withToken && ` ${atlasConfig.joystream.tokenTicker}`}
+      </StyledText>
     )
-
-    // TODO: This is workaround. For some reason this tooltip doesn't work properly.
-    //  Dear developer, if you find a solution, the project will thank you, otherwise we should consider
-    //  using Floating UI (https://github.com/floating-ui/floating-ui)
-    if (tooltipAsWrapper) {
-      return (
-        <Tooltip placement="top" delay={[500, null]} text={hasTooltip ? tooltipText : undefined}>
-          {content}
-        </Tooltip>
-      )
-    }
 
     return (
       <>
@@ -81,6 +65,10 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
   }
 )
 NumberFormat.displayName = 'Number'
+
+const StyledText = styled(Text)`
+  display: inline-block;
+`
 
 const maximumSignificantDigits = 21
 
