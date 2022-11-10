@@ -121,7 +121,6 @@ export const useStartFileUpload = () => {
           (assetsNotificationsCount.current.uploads[assetKey] || 0) + 1
 
         const formData = new FormData()
-        formData.append('file', fileToUpload)
         formData.append('file', fileToUpload, asset.name)
 
         rax.attach()
