@@ -216,7 +216,7 @@ export const useUploadStatus = (asset: AssetUpload) => {
         await handleVideoWorkspaceSubmit({
           assets: {
             thumbnailPhoto: {
-              blob: newAsset,
+              blob: croppedBlob,
               id: newCropAssetId,
               originalId: newOriginalAssetId,
               hashPromise: computeFileHash(croppedBlob),
