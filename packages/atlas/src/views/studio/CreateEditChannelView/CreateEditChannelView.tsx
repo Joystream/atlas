@@ -82,6 +82,8 @@ type CreateEditChannelViewProps = {
   newChannel?: boolean
 }
 
+const DEFAULT_LANGUAGE = atlasConfig.derived.popularLanguagesSelectValues[0].value
+
 export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChannel }) => {
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropModalImperativeHandle>(null)
@@ -138,7 +140,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       cover: { contentId: null, assetDimensions: null, imageCropData: null, originalBlob: undefined },
       title: '',
       description: '',
-      language: atlasConfig.derived.languagesSelectValues[0].value,
+      language: DEFAULT_LANGUAGE,
       isPublic: true,
     },
   })
@@ -178,7 +180,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
         cover: { contentId: null },
         title: '',
         description: '',
-        language: atlasConfig.derived.languagesSelectValues[0].value,
+        language: DEFAULT_LANGUAGE,
         isPublic: true,
       })
     }
@@ -291,7 +293,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
         title: title || '',
         description: description || '',
         isPublic: isPublic ?? false,
-        language: foundLanguage?.value || atlasConfig.derived.languagesSelectValues[0].value,
+        language: foundLanguage?.value || DEFAULT_LANGUAGE,
       })
       firstRender.current = false
       cachedChannelId.current = channel.id
@@ -666,7 +668,12 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
               rules={requiredValidation('Language')}
               render={({ field: { value, onChange } }) => (
                 <Select
-                  items={atlasConfig.derived.languagesSelectValues}
+                  items={[
+                    { name: 'TOP LANGUAGES', value: '', isSeparator: true },
+                    ...atlasConfig.derived.popularLanguagesSelectValues,
+                    { name: 'ALL LANGUAGES', value: '', isSeparator: true },
+                    ...atlasConfig.derived.languagesSelectValues,
+                  ]}
                   disabled={loading}
                   value={value}
                   error={!!errors.language && !value}

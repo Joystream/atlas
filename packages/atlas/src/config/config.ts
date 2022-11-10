@@ -142,7 +142,12 @@ const extendedConfig: Config = {
       .map(({ isoCode, name }) => ({
         name: name,
         value: isoCode,
-      })),
+      }))
+      .sort(
+        (a, b) =>
+          parsedConfig.content.popularLanguages.indexOf(a.value) -
+          parsedConfig.content.popularLanguages.indexOf(b.value)
+      ),
     commentReactionsLookup: createLookup(parsedConfig.features.comments.reactions),
   },
 }
