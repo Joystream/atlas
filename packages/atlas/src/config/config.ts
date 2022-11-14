@@ -35,6 +35,7 @@ export const configSchema = z.object({
   features: z.object({
     ypp: z.object({
       googleConsoleClientId: z.string().nullable(),
+      youtubeSyncApiUrl: z.string().nullable(),
     }),
     nft: z.object({
       auctionMinimumBidStepMultiplier: z.number(),
