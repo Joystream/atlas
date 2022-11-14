@@ -497,6 +497,8 @@ export class JoystreamLibExtrinsics {
     payloadDataObjectId: string,
     commitment: string
   ) => {
+    await this.ensureApi()
+
     const payoutProof = await channelPayoutProof(
       'URL',
       `${nodeEndpoint}/api/v1/files/${payloadDataObjectId}`,

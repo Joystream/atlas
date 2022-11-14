@@ -2857,7 +2857,7 @@ __metadata:
     "@graphql-codegen/typescript-react-apollo": ^3.3.3
     "@hcaptcha/react-hcaptcha": ^1.4.4
     "@hookform/resolvers": ^2.9.7
-    "@joystream/js": ../../../joystream/joystreamjs
+    "@joystream/js": ^1.0.0
     "@joystream/metadata-protobuf": ^2.6.0
     "@joystream/prettier-config": ^1.0.0
     "@joystream/types": 0.20.3
@@ -2955,9 +2955,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@joystream/js@file:../../../joystream/joystreamjs::locator=%40joystream%2Fatlas%40workspace%3Apackages%2Fatlas":
+"@joystream/js@npm:^1.0.0":
   version: 1.0.0
-  resolution: "@joystream/js@file:../../../joystream/joystreamjs#../../../joystream/joystreamjs::hash=f2a546&locator=%40joystream%2Fatlas%40workspace%3Apackages%2Fatlas"
+  resolution: "@joystream/js@npm:1.0.0"
   dependencies:
     "@joystream/metadata-protobuf": 2.6.0
     "@joystream/types": 0.20.3
@@ -2968,7 +2968,7 @@ __metadata:
     long: ^4.0.0
     merkletreejs: ^0.2.31
     protobufjs: ^6.11.2
-  checksum: 951d419b427c5469adafb4672cadefbd549014afb0599ebccd2dfefb2dc3cac25dc13a79b0a7c982302aeee4de497b349109464b195ff22eeea1c67bfcf76500
+  checksum: 3441ddcff69f0cd358b248ff7fb67778da5a7c7d3d19458cfec2d6a18c0d9f2eb5ba8c1eb70760da498244ccf107eebd9dbd5e8a2678a3c109210a94bde11c2e
   languageName: node
   linkType: hard
 
