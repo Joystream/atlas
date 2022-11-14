@@ -2858,7 +2858,7 @@ __metadata:
     "@hcaptcha/react-hcaptcha": ^1.4.4
     "@hookform/resolvers": ^2.9.7
     "@joystream/js": ../../../joystream/joystreamjs
-    "@joystream/metadata-protobuf": ../../../joystream/metadata-protobuf
+    "@joystream/metadata-protobuf": ^2.6.0
     "@joystream/prettier-config": ^1.0.0
     "@joystream/types": 0.20.3
     "@livesession/sdk": ^1.1.4
@@ -2972,9 +2972,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@joystream/metadata-protobuf@file:../joystream/metadata-protobuf::locator=root-workspace-0b6124%40workspace%3A.":
+"@joystream/metadata-protobuf@npm:2.6.0, @joystream/metadata-protobuf@npm:^2.6.0":
   version: 2.6.0
-  resolution: "@joystream/metadata-protobuf@file:../joystream/metadata-protobuf#../joystream/metadata-protobuf::hash=af0fbc&locator=root-workspace-0b6124%40workspace%3A."
+  resolution: "@joystream/metadata-protobuf@npm:2.6.0"
   dependencies:
     "@types/iso-3166-2": ^1.0.0
     "@types/long": ^4.0.1
@@ -2984,7 +2984,7 @@ __metadata:
     iso-639-1: ^2.1.9
     long: ^4.0.0
     protobufjs: ^6.11.2
-  checksum: 4dd82083dd770cb1c5ff152aea5225b4233cfe58f2c3a4320762a2112a57d137c41b5ed28ff8f23ea44e51179a7e97798a5f1de40f75a339402ae3b9032d3394
+  checksum: 96410a3da39765342b191997b8e0c047b94bb6061be5f1e9b1db736582e741d37ea5e9f307ac094797d92cba07ee09db94dc50a25919fdd09d1a7f92accefde9
   languageName: node
   linkType: hard
 

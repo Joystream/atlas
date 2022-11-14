@@ -69,7 +69,6 @@
     "@polkadot/api": "8.9.1",
     "bn.js": "5.2.1",
     "blake3": "patch:blake3@npm:2.1.7#.yarn/patches/blake3-npm-2.1.7-7bf40c44b4",
-    "@joystream/metadata-protobuf": "../joystream/metadata-protobuf",
     "@polkadot/keyring": "9.5.1",
     "@polkadot/types": "8.9.1",
     "@polkadot/util": "9.5.1",
