@@ -124,7 +124,6 @@ export const FileInfo = styled.div<FileInfoProps>`
   max-width: 600px;
   margin-left: ${sizes(4)};
   color: ${cVar('colorCoreNeutral300')};
-  row-gap: ${sizes(1)};
 
   ${media.md} {
     display: flex;
@@ -139,6 +138,7 @@ export const FileInfoType = styled.div<FileInfoTypeProps>`
   display: flex;
   align-items: center;
   height: ${sizes(6)};
+  flex: 0 0 auto;
 
   ${media.md} {
     width: 280px;

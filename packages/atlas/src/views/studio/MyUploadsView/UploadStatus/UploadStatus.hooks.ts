@@ -4,7 +4,6 @@ import { useFullChannel } from '@/api/hooks/channel'
 import { JoystreamLibExtrinsics } from '@/joystream-lib/extrinsics'
 import { TxMethodName } from '@/joystream-lib/types'
 import { useConfirmationModal } from '@/providers/confirmationModal'
-import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { AssetUpload } from '@/providers/uploads/uploads.types'
 import { useUser } from '@/providers/user/user.hooks'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
@@ -66,9 +65,9 @@ export const useUploadStatusModals = () => {
         type: 'warning',
         primaryButton: {
           text: 'Continue',
-          onClick: async () => {
+          onClick: () => {
             closeConfirmationModal()
-            await cb()
+            cb()
           },
         },
         secondaryButton: {
@@ -91,7 +90,7 @@ export const useUploadStatusModals = () => {
         type: 'warning',
         primaryButton: {
           text: 'Upload file',
-          onClick: async () => {
+          onClick: () => {
             closeConfirmationModal()
             cb()
           },
@@ -131,7 +130,6 @@ export const useUploadStatusModals = () => {
 }
 
 export const useUploadStatus = (asset: AssetUpload) => {
-  const { removeAssetFromUploads } = useUploadsStore((state) => state.actions)
   const { channelId, accountId } = useUser()
 
   const handleVideoWorkspaceSubmit = useHandleVideoWorkspaceSubmit()
@@ -213,32 +211,32 @@ export const useUploadStatus = (asset: AssetUpload) => {
       } else {
         const newCropAssetId = `local-thumbnail-crop-${createId()}`
         const newOriginalAssetId = `local-thumbnail-original-${createId()}`
-        await handleVideoWorkspaceSubmit({
-          assets: {
-            thumbnailPhoto: {
-              blob: croppedBlob,
-              id: newCropAssetId,
-              originalId: newOriginalAssetId,
-              hashPromise: computeFileHash(croppedBlob),
-              cropData,
-              dimensions,
+        const videoInfo = {
+          id: asset.parentObject.id,
+          isNew: false,
+          isDraft: false,
+        }
+        await handleVideoWorkspaceSubmit(
+          {
+            assets: {
+              thumbnailPhoto: {
+                blob: croppedBlob,
+                id: newCropAssetId,
+                originalId: newOriginalAssetId,
+                hashPromise: computeFileHash(croppedBlob),
+                cropData,
+                dimensions,
+              },
             },
+            metadata: { clearSubtitles: true },
+            nftMetadata: undefined,
           },
-          metadata: { clearSubtitles: true },
-          nftMetadata: undefined,
-        })
+          videoInfo,
+          [asset.id]
+        )
       }
-      removeAssetFromUploads(asset.id)
     },
-    [
-      accountId,
-      asset,
-      channel,
-      handleEditChannelSubmit,
-      handleVideoWorkspaceSubmit,
-      refetchChannel,
-      removeAssetFromUploads,
-    ]
+    [accountId, asset, channel, handleEditChannelSubmit, handleVideoWorkspaceSubmit, refetchChannel]
   )
 
   const handleVideoUpdate = useCallback(
@@ -272,9 +270,8 @@ export const useUploadStatus = (asset: AssetUpload) => {
         videoInfo,
         [asset.id]
       )
-      removeAssetFromUploads(asset.id)
     },
-    [asset, handleVideoWorkspaceSubmit, removeAssetFromUploads]
+    [asset, handleVideoWorkspaceSubmit]
   )
   return { handleAvatarUpdate, handleVideoUpdate }
 }

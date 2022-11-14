@@ -16,6 +16,7 @@ import { usePersonalDataStore } from '@/providers/personalData'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
 import { useStartFileUpload } from '@/providers/uploads/uploads.hooks'
+import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { VideoFormData, VideoWorkspace, useVideoWorkspace, useVideoWorkspaceData } from '@/providers/videoWorkspace'
 import { writeVideoDataInCache } from '@/utils/cachingAssets'
@@ -28,6 +29,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
     state.dismissedMessages.some((message) => message.id === 'first-mint')
   )
   const { setShowFistMintDialog } = useTransactionManagerStore((state) => state.actions)
+  const { removeAssetFromUploads } = useUploadsStore((state) => state.actions)
 
   const { joystream, proxyCallback } = useJoystream()
   const startFileUpload = useStartFileUpload()
@@ -240,6 +242,9 @@ export const useHandleVideoWorkspaceSubmit = () => {
       })
 
       if (completed) {
+        assetsToBeRemoved?.forEach((asset) => {
+          removeAssetFromUploads(asset)
+        })
         setIsWorkspaceOpen(false)
         if (!isNftMintDismissed && data.nftMetadata) {
           setTimeout(() => {
@@ -251,6 +256,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
     [
       joystream,
       channelBucketsCount,
+      editedVideoInfo,
       handleTransaction,
       tabData?.assets.video.id,
       tabData?.assets.thumbnail.cropId,
@@ -261,13 +267,13 @@ export const useHandleVideoWorkspaceSubmit = () => {
       addAsset,
       setEditedVideo,
       removeDrafts,
-      editedVideoInfo,
       memberId,
       dataObjectStateBloatBondValue,
       videoStateBloatBondValue,
       proxyCallback,
       setIsWorkspaceOpen,
       isNftMintDismissed,
+      removeAssetFromUploads,
       setShowFistMintDialog,
     ]
   )
