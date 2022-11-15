@@ -254,7 +254,8 @@ export class JoystreamLibExtrinsics {
     newAssets: ChannelInputAssets,
     removedAssetsIds: StringifiedNumber[],
     expectedDataObjectStateBloatBond: StringifiedNumber,
-    expectedStorageBucketsCount: StringifiedNumber
+    expectedStorageBucketsCount: StringifiedNumber,
+    collaboratorMemberId?: MemberId
   ) => {
     await this.ensureApi()
 
@@ -265,7 +266,13 @@ export class JoystreamLibExtrinsics {
       assetsToRemove: removedAssetsIds.map((id) => new BN(id)),
       collaborators: createType(
         'Option<BTreeMap<u64, BTreeSet<PalletContentIterableEnumsChannelActionPermission>>>',
-        null
+        collaboratorMemberId
+          ? {
+              [collaboratorMemberId]: createType('BTreeSet<PalletContentIterableEnumsChannelActionPermission>', [
+                'AddVideo',
+              ]),
+            }
+          : null
       ),
       expectedDataObjectStateBloatBond: new BN(expectedDataObjectStateBloatBond),
       storageBucketsNumWitness: createType('Option<u32>', new BN(expectedStorageBucketsCount)),
@@ -284,6 +291,7 @@ export class JoystreamLibExtrinsics {
     removedAssetsIds,
     expectedDataObjectStateBloatBond,
     expectedStorageBucketsCount,
+    collaboratorMemberId,
     cb
   ) => {
     const tx = await this.updateChannelTx(
@@ -293,7 +301,8 @@ export class JoystreamLibExtrinsics {
       newAssets,
       removedAssetsIds,
       expectedDataObjectStateBloatBond,
-      expectedStorageBucketsCount
+      expectedStorageBucketsCount,
+      collaboratorMemberId
     )
     const { block, getEventData } = await this.sendExtrinsic(tx, cb)
 
