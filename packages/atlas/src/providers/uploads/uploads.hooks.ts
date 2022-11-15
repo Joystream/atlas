@@ -65,6 +65,12 @@ export const useStartFileUpload = () => {
       try {
         const storageOperator = await getRandomStorageOperatorForBag(bagId)
         if (!storageOperator) {
+          displaySnackbar({
+            title: 'Failed to upload asset',
+            description:
+              'None of the storage operators are available at this time. Please reload the app and try again later.',
+            iconType: 'error',
+          })
           SentryLogger.error('No storage operator available for upload', 'uploadsHooks')
           return
         }
@@ -96,7 +102,12 @@ export const useStartFileUpload = () => {
         }
 
         if (!opts?.isReUpload && !opts?.changeHost && file) {
-          addAssetToUploads({ ...asset, size: file.size.toString() })
+          addAssetToUploads({
+            ...asset,
+            name: asset.name,
+            size: file.size.toString(),
+            hasNft: opts?.hasNft,
+          })
         }
 
         setAssetStatus({ lastStatus: 'inProgress', progress: 0 })
@@ -116,7 +127,7 @@ export const useStartFileUpload = () => {
           (assetsNotificationsCount.current.uploads[assetKey] || 0) + 1
 
         const formData = new FormData()
-        formData.append('file', fileToUpload)
+        formData.append('file', fileToUpload, asset.name)
 
         rax.attach()
         const raxConfig: RetryConfig = {

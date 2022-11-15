@@ -9,7 +9,7 @@ export const UploadProgressBarContainer = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: ${cVar('colorCoreNeutral900')};
+  background-color: ${cVar('colorBackgroundMuted')};
 `
 
 const greenBarAnimation = keyframes`
@@ -66,7 +66,7 @@ export const ProgressBar = styled.div<ProgressbarProps>`
   left: 0;
   height: 100%;
   width: 100%;
-  background-color: ${cVar('colorCoreNeutral800')};
+  background-color: ${cVar('colorBackground')};
   transform-origin: 0 0;
   transform: scaleX(${({ progress }) => `${progress / 100}`});
   transition: transform 1s linear;
@@ -83,7 +83,7 @@ export const BottomProgressBar = styled.div<ProgressbarProps>`
   transform-origin: 0 0;
   transform: scaleX(${({ progress }) => `${progress / 100}`});
   transition: transform 1s linear;
-  background-color: ${cVar('colorCoreBlue500')};
+  background-color: ${cVar('colorBackgroundPrimary')};
   height: 4px;
 `
 

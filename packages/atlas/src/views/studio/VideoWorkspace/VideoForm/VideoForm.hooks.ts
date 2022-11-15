@@ -152,6 +152,7 @@ export const useVideoFormAssets = (
         ...thumbnail,
         cropId: newCropAssetId,
         originalId: newOriginalAssetId,
+        name: (thumbnail.originalBlob as File).name,
       }
       const updatedAssets = {
         ...currentAssetsValue,
