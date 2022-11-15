@@ -1,11 +1,12 @@
 import BN from 'bn.js'
-import { forwardRef } from 'react'
+import { MouseEvent, forwardRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Fee } from '@/components/Fee'
 import { Text } from '@/components/Text'
 import { TooltipProps } from '@/components/Tooltip'
 import { ButtonProps } from '@/components/_buttons/Button'
+import { useHasEnoughBalance } from '@/hooks/useHasEnoughBalance'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { transitions } from '@/styles'
 
@@ -20,6 +21,7 @@ import {
 
 export type ActionDialogButtonProps = {
   text?: string
+  onClick?: (e?: MouseEvent<HTMLButtonElement>) => void
 } & Omit<ButtonProps, 'children'>
 
 type ActionDialogInfoBadge = {
@@ -34,12 +36,19 @@ export type ActionBarProps = {
   primaryButton: ActionDialogButtonProps
   secondaryButton?: ActionDialogButtonProps
   isActive?: boolean
+  skipFeeCheck?: boolean
   className?: string
 }
 
 export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
-  ({ fee, feeLoading, isActive = true, className, primaryButton, secondaryButton, infoBadge }, ref) => {
+  ({ fee, feeLoading, isActive = true, className, primaryButton, secondaryButton, infoBadge, skipFeeCheck }, ref) => {
     const smMatch = useMediaMatch('sm')
+    const { signTransactionHandler, loadingState } = useHasEnoughBalance(
+      !!feeLoading,
+      fee,
+      primaryButton.onClick,
+      skipFeeCheck
+    )
 
     return (
       <ActionBarContainer ref={ref} className={className} isActive={isActive}>
@@ -67,11 +76,13 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
         </CSSTransition>
         <ActionButtonPrimary
           {...primaryButton}
+          disabled={primaryButton.disabled || loadingState}
+          onClick={signTransactionHandler}
           secondaryButtonExists={!!secondaryButton}
           size={smMatch ? 'large' : 'medium'}
           type="submit"
         >
-          {primaryButton.text}
+          {loadingState ? 'Please wait...' : primaryButton.text}
         </ActionButtonPrimary>
       </ActionBarContainer>
     )
