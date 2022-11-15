@@ -1,13 +1,19 @@
+import axios from 'axios'
 import { Dispatch, FC, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
 import appScreenshot from '@/assets/images/ypp-authorization/app-screenshot.webp'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { Loader } from '@/components/_loaders/Loader'
 import { DialogModal } from '@/components/_overlays/DialogModal'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
+import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 
 import { RequirmentError, useYppGoogleAuth } from './YppAuthorizationModal.hooks'
@@ -36,12 +42,12 @@ type FinalFormData = {
   authorizationCode?: string
   userId?: string
   email?: string
-  joystreamChannelId?: string
-  referrerChannelId?: string
+  joystreamChannelId?: number
+  referrerChannelId?: number
 }
 
 export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentStepIdx, setCurrentStepIdx }) => {
-  const { activeMembership, setActiveUser } = useUser()
+  const { activeMembership, setActiveUser, memberId } = useUser()
   const channels = activeMembership?.channels
   const channelsLoaded = !!channels
   const hasMoreThanOneChannel = channels && channels.length > 1
@@ -57,6 +63,29 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
       email: '',
     },
   })
+  const { dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
+  const channelBucketsCount = useChannelsStorageBucketsCount(selectedChannelId)
+
+  const { joystream, proxyCallback } = useJoystream()
+  const youtubeCollaboratorMemberId = atlasConfig.features.ypp.youtubeCollaboratorMemberId || ''
+
+  const { fullFee: updateChannelFee } = useFee(
+    'updateChannelTx',
+    selectedChannelId && memberId
+      ? [
+          selectedChannelId,
+          memberId,
+          { ownerAccount: memberId },
+          {},
+          [],
+          dataObjectStateBloatBondValue.toString(),
+          channelBucketsCount.toString(),
+          youtubeCollaboratorMemberId,
+        ]
+      : undefined
+  )
+
+  const handleTransaction = useTransaction()
 
   const authorizationSteps = hasMoreThanOneChannel
     ? YPP_AUTHORIZATION_STEPS
@@ -136,14 +165,47 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
 
   const addDetailsToFinalForm = detailsFormMethods.handleSubmit((data) => {
     setFinalFormData(() => ({
-      ...(selectedChannelId ? { joystreamChannelId: selectedChannelId } : {}),
+      ...(selectedChannelId ? { joystreamChannelId: parseInt(selectedChannelId) } : {}),
       authorizationCode: ytResponseData?.authorizationCode,
       userId: ytResponseData?.userId,
       email: data.email,
-      ...(data.referrerChannelId ? { referrerChannelId: data.referrerChannelId } : {}),
+      ...(data.referrerChannelId ? { referrerChannelId: parseInt(data.referrerChannelId) } : {}),
     }))
     setCurrentStepIdx(3)
   })
+
+  const handleAcceptTermsAndSubmit = useCallback(async () => {
+    if (!joystream || !selectedChannelId || !memberId) {
+      return
+    }
+    handleTransaction({
+      preProcess: async () => {
+        await axios.post(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels`, finalFormData)
+      },
+      txFactory: async (updateStatus) =>
+        (await joystream.extrinsics).updateChannel(
+          selectedChannelId,
+          memberId,
+          { ownerAccount: memberId },
+          {},
+          [],
+          dataObjectStateBloatBondValue.toString(),
+          channelBucketsCount.toString(),
+          youtubeCollaboratorMemberId,
+          proxyCallback(updateStatus)
+        ),
+    })
+  }, [
+    channelBucketsCount,
+    dataObjectStateBloatBondValue,
+    finalFormData,
+    handleTransaction,
+    joystream,
+    memberId,
+    proxyCallback,
+    selectedChannelId,
+    youtubeCollaboratorMemberId,
+  ])
 
   const authorizationStep = useMemo(() => {
     switch (currentStep) {
@@ -209,15 +271,19 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
           // TODO: add proper copy once it's available in figma https://www.figma.com/file/oQqFqdAiPu16eeE2aA5AD5?node-id=1637:118716#267556722
           description:
             'Once automatic YouTube videos sync is available, in order for it to work, your Atlas channel [NEEDS TO DO WHAT?]. This is purely a technical measure and does not affect ownership and rights to the content uploaded to you Atlas channel.',
-          primaryButton: { text: 'Accept terms & sign', onClick: () => {} },
+          primaryButton: {
+            text: 'Accept terms & sign',
+            onClick: handleAcceptTermsAndSubmit,
+          },
           additionalSubtitleNode: (
             <AdditionalSubtitle>
               <Text variant={smMatch ? 'h400' : 'h300'} as="h3" margin={{ bottom: 4 }}>
                 Transaction fee
               </Text>
               <Text variant="t200" as="p" color="colorText" margin={{ bottom: 6 }}>
-                Applying for the program requires requires a blockchain transaction, which comes with a fee of XXX JOY.
-                Transaction fees are covered from your membership account balance.
+                Applying for the program requires requires a blockchain transaction, which comes with a fee of{' '}
+                <NumberFormat as="span" variant="t200" value={updateChannelFee} withToken /> . Transaction fees are
+                covered from your membership account balance.
               </Text>
               <Text variant={smMatch ? 'h400' : 'h300'} as="span">
                 Automatic YouTube sync
@@ -258,7 +324,9 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
     handleAuthorizeClick,
     isSelectedChannelValid,
     requirments,
+    handleAcceptTermsAndSubmit,
     smMatch,
+    updateChannelFee,
     setActiveUser,
     addDetailsToFinalForm,
   ])
