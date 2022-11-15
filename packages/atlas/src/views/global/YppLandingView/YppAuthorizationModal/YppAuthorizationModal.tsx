@@ -2,6 +2,7 @@ import axios from 'axios'
 import { Dispatch, FC, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
+import { useBasicChannel } from '@/api/hooks/channel'
 import appScreenshot from '@/assets/images/ypp-authorization/app-screenshot.webp'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
@@ -15,6 +16,7 @@ import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
+import { useYppStore } from '@/providers/ypp/ypp.store'
 
 import { RequirmentError, useYppGoogleAuth } from './YppAuthorizationModal.hooks'
 import {
@@ -69,6 +71,13 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
   const { joystream, proxyCallback } = useJoystream()
   const youtubeCollaboratorMemberId = atlasConfig.features.ypp.youtubeCollaboratorMemberId || ''
 
+  const referrerId = useYppStore((store) => store.referrerId)
+  const setReferrerId = useYppStore((store) => store.actions.setReferrerId)
+
+  const { channel: channel } = useBasicChannel(referrerId || '', {
+    skip: !referrerId,
+  })
+
   const { fullFee: updateChannelFee } = useFee(
     'updateChannelTx',
     selectedChannelId && memberId
@@ -104,6 +113,13 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
     setSelectedChannelId,
     setCurrentStepIdx,
   })
+
+  useEffect(() => {
+    if (channel?.title && referrerId) {
+      detailsFormMethods.setValue('referrerChannelId', referrerId)
+      detailsFormMethods.setValue('referrerChannelTitle', channel.title)
+    }
+  }, [channel, detailsFormMethods, referrerId])
 
   useEffect(() => {
     if (ytResponseData?.email) {
@@ -178,12 +194,12 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
     if (!joystream || !selectedChannelId || !memberId) {
       return
     }
-    handleTransaction({
+    const completed = await handleTransaction({
       preProcess: async () => {
         await axios.post(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels`, finalFormData)
       },
-      txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).updateChannel(
+      txFactory: async (updateStatus) => {
+        return (await joystream.extrinsics).updateChannel(
           selectedChannelId,
           memberId,
           { ownerAccount: memberId },
@@ -193,8 +209,14 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
           channelBucketsCount.toString(),
           youtubeCollaboratorMemberId,
           proxyCallback(updateStatus)
-        ),
+        )
+      },
     })
+    if (completed) {
+      setTimeout(() => {
+        setCurrentStepIdx(4)
+      }, 2000)
+    }
   }, [
     channelBucketsCount,
     dataObjectStateBloatBondValue,
@@ -204,6 +226,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
     memberId,
     proxyCallback,
     selectedChannelId,
+    setCurrentStepIdx,
     youtubeCollaboratorMemberId,
   ])
 
@@ -348,7 +371,13 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
         additionalActionsNode={
           currentStep !== 'summary' &&
           currentStep !== 'fetching-data' && (
-            <Button variant="tertiary" onClick={() => setCurrentStepIdx(null)}>
+            <Button
+              variant="tertiary"
+              onClick={() => {
+                setReferrerId(null)
+                setCurrentStepIdx(null)
+              }}
+            >
               Cancel
             </Button>
           )

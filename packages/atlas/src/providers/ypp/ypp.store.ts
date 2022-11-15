@@ -6,7 +6,7 @@ type YppStoreState = {
 }
 
 type YppStoreActions = {
-  setReferrerId: (referrerId: string) => void
+  setReferrerId: (referrerId: string | null) => void
   setAuthState: (authState: string | null) => void
 }
 

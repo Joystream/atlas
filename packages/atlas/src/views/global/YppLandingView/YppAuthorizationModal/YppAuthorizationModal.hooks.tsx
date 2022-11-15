@@ -99,7 +99,7 @@ export const useYppGoogleAuth = ({
 
     const authParams = {
       ...GOOGLE_AUTH_PARAMS,
-      redirect_uri: window.location.href,
+      redirect_uri: window.location.origin + window.location.pathname,
       state: authState,
     }
     Object.entries(authParams).forEach(([key, value]) => authUrl.searchParams.set(key, value))
