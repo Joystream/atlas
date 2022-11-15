@@ -65,6 +65,12 @@ export const useStartFileUpload = () => {
       try {
         const storageOperator = await getRandomStorageOperatorForBag(bagId)
         if (!storageOperator) {
+          displaySnackbar({
+            title: 'Failed to upload asset',
+            description:
+              'None of the storage operators are available at this time. Please reload the app and try again later.',
+            iconType: 'error',
+          })
           SentryLogger.error('No storage operator available for upload', 'uploadsHooks')
           return
         }
