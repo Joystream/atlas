@@ -12,43 +12,15 @@ import { createId } from '@/utils/createId'
 import { isAxiosError } from '@/utils/error'
 import { SentryLogger } from '@/utils/logs'
 
+import {
+  ChannelVerificationErrorResponse,
+  ChannelVerificationSuccessResponse,
+  RequirmentError,
+  YoutubeResponseData,
+  YppAuthorizationStepsType,
+} from './YppAuthorizationModal.types'
+
 const GOOGLE_CONSOLE_CLIENT_ID = atlasConfig.features.ypp.googleConsoleClientId
-
-export enum RequirmentError {
-  CHANNEL_CRITERIA_UNMET_SUBSCRIBERS = 'CHANNEL_CRITERIA_UNMET_SUBSCRIBERS',
-  CHANNEL_CRITERIA_UNMET_VIDEOS = 'CHANNEL_CRITERIA_UNMET_VIDEOS',
-  CHANNEL_CRITERIA_UNMET_CREATION_DATE = 'CHANNEL_CRITERIA_UNMET_CREATION_DATE',
-}
-
-type ChannelVerificationSuccessResponse = {
-  email: string
-  userId: string
-}
-
-type ChannelVerificationFailedError = {
-  errorCode: RequirmentError
-  message: string
-  result: number | string | Date
-  expected: number | string | Date
-}
-
-type ChannelNotFoundError = {
-  errorCode: 'CHANNEL_NOT_FOUND'
-  message: string
-}
-
-type ChannelVerificationErrorResponse =
-  | {
-      message: ChannelVerificationFailedError[]
-    }
-  | ChannelNotFoundError
-
-type YoutubeResponseData = {
-  email: string
-  userId: string
-  authorizationCode: string
-}
-
 const GOOGLE_AUTH_PARAMS = {
   client_id: GOOGLE_CONSOLE_CLIENT_ID || '',
   response_type: 'code',
@@ -59,18 +31,16 @@ const GOOGLE_AUTH_PARAMS = {
 
 export const useYppGoogleAuth = ({
   closeModal,
-  goToLoadingStep,
   selectedChannelId,
   setSelectedChannelId,
   channelsLoaded,
-  setCurrentStepIdx,
+  goToStep,
 }: {
   closeModal: () => void
-  goToLoadingStep: () => void
   selectedChannelId: string | null
   setSelectedChannelId: (channelId: string | null) => void
   channelsLoaded: boolean
-  setCurrentStepIdx: (stepIdx: number | null) => void
+  goToStep: (particularStep: YppAuthorizationStepsType) => void
 }) => {
   const oldAuthState = useYppStore((state) => state.authState)
   const setAuthState = useYppStore((state) => state.actions.setAuthState)
@@ -122,7 +92,7 @@ export const useYppGoogleAuth = ({
           onClick: () => {
             closeConfirmationModal()
             resetSearchParams()
-            setCurrentStepIdx(0)
+            goToStep('requirements')
           },
         },
         secondaryButton: {
@@ -135,7 +105,7 @@ export const useYppGoogleAuth = ({
         },
       })
     },
-    [openConfirmationModal, closeConfirmationModal, resetSearchParams, setCurrentStepIdx, closeModal]
+    [openConfirmationModal, closeConfirmationModal, resetSearchParams, goToStep, closeModal]
   )
 
   const handleGoogleAuthSuccess = useCallback(
@@ -168,7 +138,7 @@ export const useYppGoogleAuth = ({
 
         setSelectedChannelId(channelId)
         setAuthState(null)
-        goToLoadingStep()
+        goToStep('fetching-data')
 
         resetSearchParams()
 
@@ -180,7 +150,7 @@ export const useYppGoogleAuth = ({
         )
 
         setYtResponseData({ ...response.data, authorizationCode: code })
-        setCurrentStepIdx(2)
+        goToStep('details')
       } catch (error) {
         if (isAxiosError<ChannelVerificationErrorResponse>(error)) {
           const errorResponseData = error.response?.data
@@ -203,7 +173,7 @@ export const useYppGoogleAuth = ({
             setYtRequirmentsErrors(Object.values(RequirmentError))
           }
         }
-        setCurrentStepIdx(0)
+        goToStep('requirements')
       }
     },
     [
@@ -211,12 +181,10 @@ export const useYppGoogleAuth = ({
       channelsLoaded,
       setSelectedChannelId,
       setAuthState,
-      goToLoadingStep,
+      goToStep,
       resetSearchParams,
-      setCurrentStepIdx,
       displaySnackbar,
       closeModal,
-      setYtRequirmentsErrors,
     ]
   )
 
@@ -239,5 +207,5 @@ export const useYppGoogleAuth = ({
     }
   }, [handleGoogleAuthError, searchParams])
 
-  return { handleAuthorizeClick, ytRequirmentsErrors, ytResponseData }
+  return { handleAuthorizeClick, ytRequirmentsErrors, ytResponseData, setYtRequirmentsErrors }
 }

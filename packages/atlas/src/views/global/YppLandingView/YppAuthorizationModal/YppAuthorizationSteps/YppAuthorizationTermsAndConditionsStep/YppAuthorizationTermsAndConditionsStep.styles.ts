@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { Text } from '@/components/Text'
 import { sizes } from '@/styles'
 
 export const TierItem = styled.div`
@@ -15,10 +16,8 @@ export const TierItem = styled.div`
     width: 18px;
     max-height: 18px;
   }
+`
 
-  * {
-    :nth-child(4n) {
-      text-align: right;
-    }
-  }
+export const MultiplierText = styled(Text)`
+  text-align: right;
 `

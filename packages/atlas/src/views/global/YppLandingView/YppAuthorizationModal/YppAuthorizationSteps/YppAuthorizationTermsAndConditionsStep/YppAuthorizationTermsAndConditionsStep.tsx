@@ -4,7 +4,7 @@ import { SvgTierIcon1, SvgTierIcon2, SvgTierIcon3 } from '@/assets/icons'
 import { Text } from '@/components/Text'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
-import { TierItem } from './YppAuthorizationTermsAndConditionsStep.styles'
+import { MultiplierText, TierItem } from './YppAuthorizationTermsAndConditionsStep.styles'
 
 export const YppAuthorizationTermsAndConditionsStep: FC = () => {
   const smMatch = useMediaMatch('sm')
@@ -25,9 +25,9 @@ export const YppAuthorizationTermsAndConditionsStep: FC = () => {
         <Text variant="t200" as="span" color="colorText">
           {'<'}5K subscribers
         </Text>
-        <Text variant="t200" as="span">
+        <MultiplierText variant="t200" as="span">
           1x
-        </Text>
+        </MultiplierText>
         <SvgTierIcon2 />
         <Text variant="t200-strong" as="span">
           Tier 2:
@@ -35,9 +35,9 @@ export const YppAuthorizationTermsAndConditionsStep: FC = () => {
         <Text variant="t200" as="span" color="colorText">
           5K-25K subscribers
         </Text>
-        <Text variant="t200" as="span">
+        <MultiplierText variant="t200" as="span">
           1.5x
-        </Text>
+        </MultiplierText>
         <SvgTierIcon3 />
         <Text variant="t200-strong" as="span">
           Tier 3:
@@ -45,9 +45,9 @@ export const YppAuthorizationTermsAndConditionsStep: FC = () => {
         <Text variant="t200" as="span" color="colorText">
           {'>'}25K subscribers
         </Text>
-        <Text variant="t200" as="span">
+        <MultiplierText variant="t200" as="span">
           3x
-        </Text>
+        </MultiplierText>
       </TierItem>
       <Text variant={smMatch ? 'h400' : 'h300'} as="h2" margin={{ bottom: 4 }}>
         Terms

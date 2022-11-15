@@ -14,11 +14,13 @@ import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { useYppStore } from '@/providers/ypp/ypp.store'
+import { SentryLogger } from '@/utils/logs'
 
-import { RequirmentError, useYppGoogleAuth } from './YppAuthorizationModal.hooks'
+import { useYppGoogleAuth } from './YppAuthorizationModal.hooks'
 import {
   AdditionalSubtitle,
   Content,
@@ -26,7 +28,12 @@ import {
   Img,
   StyledSvgAppLogoShort,
 } from './YppAuthorizationModal.styles'
-import { YPP_AUTHORIZATION_STEPS, YPP_AUTHORIZATION_STEPS_WITHOUT_CHANNEL_SELECT } from './YppAuthorizationModal.types'
+import {
+  RequirmentError,
+  YPP_AUTHORIZATION_STEPS,
+  YPP_AUTHORIZATION_STEPS_WITHOUT_CHANNEL_SELECT,
+  YppAuthorizationStepsType,
+} from './YppAuthorizationModal.types'
 import {
   DetailsFormData,
   YppAuthorizationDetailsFormStep,
@@ -95,24 +102,105 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
   )
 
   const handleTransaction = useTransaction()
+  const { displaySnackbar } = useSnackbar()
 
   const authorizationSteps = hasMoreThanOneChannel
     ? YPP_AUTHORIZATION_STEPS
     : YPP_AUTHORIZATION_STEPS_WITHOUT_CHANNEL_SELECT // if the user has only a single channel, skip "Select channel" step
   const currentStep = currentStepIdx != null ? authorizationSteps[currentStepIdx] : null
 
-  const goToLoadingStep = useCallback(() => {
-    setCurrentStepIdx(authorizationSteps.findIndex((step) => step === 'fetching-data'))
-  }, [authorizationSteps, setCurrentStepIdx])
+  const goToStep = useCallback(
+    (particularStep: YppAuthorizationStepsType) => {
+      setCurrentStepIdx(authorizationSteps.findIndex((step) => step === particularStep))
+    },
+    [authorizationSteps, setCurrentStepIdx]
+  )
 
-  const { handleAuthorizeClick, ytRequirmentsErrors, ytResponseData } = useYppGoogleAuth({
+  const goToNextStep = useCallback(
+    () => setCurrentStepIdx((prev) => (prev != null ? prev + 1 : null)),
+    [setCurrentStepIdx]
+  )
+  const goToPreviousStep = useCallback(
+    () => setCurrentStepIdx((prev) => (prev != null ? prev - 1 : null)),
+    [setCurrentStepIdx]
+  )
+
+  const { handleAuthorizeClick, ytRequirmentsErrors, ytResponseData, setYtRequirmentsErrors } = useYppGoogleAuth({
     closeModal: useCallback(() => setCurrentStepIdx(null), [setCurrentStepIdx]),
     channelsLoaded,
-    goToLoadingStep,
+    goToStep,
     selectedChannelId,
     setSelectedChannelId,
-    setCurrentStepIdx,
   })
+
+  const handleClose = useCallback(() => {
+    setYtRequirmentsErrors([])
+    setReferrerId(null)
+    setCurrentStepIdx(null)
+  }, [setCurrentStepIdx, setReferrerId, setYtRequirmentsErrors])
+
+  const handleSubmitDetailsForm = detailsFormMethods.handleSubmit((data) => {
+    setFinalFormData(() => ({
+      ...(selectedChannelId ? { joystreamChannelId: parseInt(selectedChannelId) } : {}),
+      authorizationCode: ytResponseData?.authorizationCode,
+      userId: ytResponseData?.userId,
+      email: data.email,
+      ...(data.referrerChannelId ? { referrerChannelId: parseInt(data.referrerChannelId) } : {}),
+    }))
+    goToStep('terms-and-conditions')
+  })
+
+  const handleAcceptTermsAndSubmit = useCallback(async () => {
+    if (!joystream || !selectedChannelId || !memberId) {
+      return
+    }
+    try {
+      await axios.post(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels`, finalFormData)
+      const completed = await handleTransaction({
+        txFactory: async (updateStatus) => {
+          return (await joystream.extrinsics).updateChannel(
+            selectedChannelId,
+            memberId,
+            { ownerAccount: memberId },
+            {},
+            [],
+            dataObjectStateBloatBondValue.toString(),
+            channelBucketsCount.toString(),
+            youtubeCollaboratorMemberId,
+            proxyCallback(updateStatus)
+          )
+        },
+      })
+      if (completed) {
+        setTimeout(() => {
+          goToNextStep()
+        }, 2000)
+      }
+    } catch (error) {
+      displaySnackbar({
+        title: 'Authorization failed',
+        description: 'An unexpected error occurred. Please try again.',
+        iconType: 'error',
+      })
+      SentryLogger.error('Failed to submit form data', 'YppAuthorizationModal', error, {
+        ypp: {
+          formData: finalFormData,
+        },
+      })
+    }
+  }, [
+    channelBucketsCount,
+    dataObjectStateBloatBondValue,
+    displaySnackbar,
+    finalFormData,
+    goToNextStep,
+    handleTransaction,
+    joystream,
+    memberId,
+    proxyCallback,
+    selectedChannelId,
+    youtubeCollaboratorMemberId,
+  ])
 
   useEffect(() => {
     if (channel?.title && referrerId) {
@@ -127,12 +215,21 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
     }
   }, [detailsFormMethods, ytResponseData?.email])
 
+  // if selected channel is not set, default to the first one
+  useEffect(() => {
+    if (!channels || !channels.length || selectedChannelId) {
+      return
+    }
+    setSelectedChannelId(channels[0].id)
+  }, [channels, selectedChannelId, setSelectedChannelId])
+
   const selectedChannel = useMemo(() => {
     if (!channels || !selectedChannelId) {
       return null
     }
     return channels.find((channel) => channel.id === selectedChannelId)
   }, [channels, selectedChannelId])
+
   const isSelectedChannelValid = useMemo(
     () =>
       (selectedChannel &&
@@ -142,23 +239,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
       false,
     [selectedChannel]
   )
-
-  const goToNextStep = useCallback(
-    () => setCurrentStepIdx((prev) => (prev != null ? prev + 1 : null)),
-    [setCurrentStepIdx]
-  )
-  const goToPreviousStep = useCallback(
-    () => setCurrentStepIdx((prev) => (prev != null ? prev - 1 : null)),
-    [setCurrentStepIdx]
-  )
-
-  // if selected channel is not set, default to the first one
-  useEffect(() => {
-    if (!channels || !channels.length || selectedChannelId) {
-      return
-    }
-    setSelectedChannelId(channels[0].id)
-  }, [channels, selectedChannelId, setSelectedChannelId])
 
   const requirments = useMemo(
     () => [
@@ -179,56 +259,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
     [isSelectedChannelValid, ytRequirmentsErrors]
   )
 
-  const addDetailsToFinalForm = detailsFormMethods.handleSubmit((data) => {
-    setFinalFormData(() => ({
-      ...(selectedChannelId ? { joystreamChannelId: parseInt(selectedChannelId) } : {}),
-      authorizationCode: ytResponseData?.authorizationCode,
-      userId: ytResponseData?.userId,
-      email: data.email,
-      ...(data.referrerChannelId ? { referrerChannelId: parseInt(data.referrerChannelId) } : {}),
-    }))
-    setCurrentStepIdx(3)
-  })
-
-  const handleAcceptTermsAndSubmit = useCallback(async () => {
-    if (!joystream || !selectedChannelId || !memberId) {
-      return
-    }
-    const completed = await handleTransaction({
-      preProcess: async () => {
-        await axios.post(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels`, finalFormData)
-      },
-      txFactory: async (updateStatus) => {
-        return (await joystream.extrinsics).updateChannel(
-          selectedChannelId,
-          memberId,
-          { ownerAccount: memberId },
-          {},
-          [],
-          dataObjectStateBloatBondValue.toString(),
-          channelBucketsCount.toString(),
-          youtubeCollaboratorMemberId,
-          proxyCallback(updateStatus)
-        )
-      },
-    })
-    if (completed) {
-      setTimeout(() => {
-        setCurrentStepIdx(4)
-      }, 2000)
-    }
-  }, [
-    channelBucketsCount,
-    dataObjectStateBloatBondValue,
-    finalFormData,
-    handleTransaction,
-    joystream,
-    memberId,
-    proxyCallback,
-    selectedChannelId,
-    setCurrentStepIdx,
-    youtubeCollaboratorMemberId,
-  ])
+  const isChannelFulfillRequirements = requirments.every((req) => req.fulfilled)
 
   const authorizationStep = useMemo(() => {
     switch (currentStep) {
@@ -255,8 +286,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
           description:
             'Before you can apply to the program, make sure both your Atlas and YouTube channels meet the below conditions.',
           primaryButton: {
-            text: 'Authorize with YouTube',
-            onClick: handleAuthorizeClick,
+            text: isChannelFulfillRequirements ? 'Authorize with YouTube' : 'Close',
+            onClick: isChannelFulfillRequirements ? handleAuthorizeClick : handleClose,
             disabled: !isSelectedChannelValid,
           },
           component: (
@@ -282,7 +313,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
           description: 'We need your email address to send you payment information. No spam or marketing materials.',
           primaryButton: {
             onClick: () => {
-              addDetailsToFinalForm()
+              handleSubmitDetailsForm()
             },
             text: 'Continue',
           },
@@ -344,14 +375,16 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
     selectedChannel,
     channels,
     selectedChannelId,
+    isChannelFulfillRequirements,
     handleAuthorizeClick,
+    handleClose,
     isSelectedChannelValid,
     requirments,
     handleAcceptTermsAndSubmit,
     smMatch,
     updateChannelFee,
     setActiveUser,
-    addDetailsToFinalForm,
+    handleSubmitDetailsForm,
   ])
 
   return (
@@ -364,20 +397,14 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
         secondaryButton={
           currentStepIdx !== 0 && currentStep !== 'fetching-data'
             ? currentStep === 'summary'
-              ? { text: 'Close', onClick: () => setCurrentStepIdx(null) }
+              ? { text: 'Close', onClick: handleClose }
               : { text: 'Back', onClick: goToPreviousStep }
             : undefined
         }
         additionalActionsNode={
           currentStep !== 'summary' &&
           currentStep !== 'fetching-data' && (
-            <Button
-              variant="tertiary"
-              onClick={() => {
-                setReferrerId(null)
-                setCurrentStepIdx(null)
-              }}
-            >
+            <Button variant="tertiary" onClick={handleClose}>
               Cancel
             </Button>
           )
