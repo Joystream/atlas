@@ -2,13 +2,16 @@ import { FC } from 'react'
 
 import { SvgTierIcon1, SvgTierIcon2, SvgTierIcon3 } from '@/assets/icons'
 import { Text } from '@/components/Text'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { TierItem } from './YppAuthorizationTermsAndConditionsStep.styles'
 
 export const YppAuthorizationTermsAndConditionsStep: FC = () => {
+  const smMatch = useMediaMatch('sm')
+
   return (
     <div>
-      <Text variant="h400" as="h3" margin={{ bottom: 4 }}>
+      <Text variant={smMatch ? 'h400' : 'h300'} as="h3" margin={{ bottom: 4 }}>
         Payout tiers
       </Text>
       <Text variant="t200" as="p" color="colorText">
@@ -46,7 +49,7 @@ export const YppAuthorizationTermsAndConditionsStep: FC = () => {
           3x
         </Text>
       </TierItem>
-      <Text variant="h400" as="h2" margin={{ bottom: 4 }}>
+      <Text variant={smMatch ? 'h400' : 'h300'} as="h2" margin={{ bottom: 4 }}>
         Terms
       </Text>
       <Text variant="t200-strong" as="p" margin={{ bottom: 2 }}>

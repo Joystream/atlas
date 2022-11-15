@@ -7,6 +7,7 @@ import { Button } from '@/components/_buttons/Button'
 import { Loader } from '@/components/_loaders/Loader'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useUser } from '@/providers/user/user.hooks'
 
 import { RequirmentError, useYppGoogleAuth } from './YppAuthorizationModal.hooks'
@@ -31,12 +32,23 @@ export type YppAuthorizationModalProps = {
   setCurrentStepIdx: Dispatch<SetStateAction<number | null>>
 }
 
+type FinalFormData = {
+  authorizationCode?: string
+  userId?: string
+  email?: string
+  joystreamChannelId?: string
+  referrerChannelId?: string
+}
+
 export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentStepIdx, setCurrentStepIdx }) => {
   const { activeMembership, setActiveUser } = useUser()
   const channels = activeMembership?.channels
   const channelsLoaded = !!channels
   const hasMoreThanOneChannel = channels && channels.length > 1
   const [selectedChannelId, setSelectedChannelId] = useState<string | null>(null)
+  const [finalFormData, setFinalFormData] = useState<FinalFormData | null>(null)
+
+  const smMatch = useMediaMatch('sm')
 
   const detailsFormMethods = useForm<DetailsFormData>({
     defaultValues: {
@@ -122,8 +134,15 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
     [isSelectedChannelValid, ytRequirmentsErrors]
   )
 
-  const submit = detailsFormMethods.handleSubmit(() => {
-    // todo handle
+  const addDetailsToFinalForm = detailsFormMethods.handleSubmit((data) => {
+    setFinalFormData(() => ({
+      ...(selectedChannelId ? { joystreamChannelId: selectedChannelId } : {}),
+      authorizationCode: ytResponseData?.authorizationCode,
+      userId: ytResponseData?.userId,
+      email: data.email,
+      ...(data.referrerChannelId ? { referrerChannelId: data.referrerChannelId } : {}),
+    }))
+    setCurrentStepIdx(3)
   })
 
   const authorizationStep = useMemo(() => {
@@ -178,7 +197,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
           description: 'We need your email address to send you payment information. No spam or marketing materials.',
           primaryButton: {
             onClick: () => {
-              submit()
+              addDetailsToFinalForm()
             },
             text: 'Continue',
           },
@@ -190,10 +209,17 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
           // TODO: add proper copy once it's available in figma https://www.figma.com/file/oQqFqdAiPu16eeE2aA5AD5?node-id=1637:118716#267556722
           description:
             'Once automatic YouTube videos sync is available, in order for it to work, your Atlas channel [NEEDS TO DO WHAT?]. This is purely a technical measure and does not affect ownership and rights to the content uploaded to you Atlas channel.',
-          primaryButton: { text: 'Accept terms & sign' },
+          primaryButton: { text: 'Accept terms & sign', onClick: () => {} },
           additionalSubtitleNode: (
             <AdditionalSubtitle>
-              <Text variant="h400" as="span">
+              <Text variant={smMatch ? 'h400' : 'h300'} as="h3" margin={{ bottom: 4 }}>
+                Transaction fee
+              </Text>
+              <Text variant="t200" as="p" color="colorText" margin={{ bottom: 6 }}>
+                Applying for the program requires requires a blockchain transaction, which comes with a fee of XXX JOY.
+                Transaction fees are covered from your membership account balance.
+              </Text>
+              <Text variant={smMatch ? 'h400' : 'h300'} as="span">
                 Automatic YouTube sync
               </Text>{' '}
               <Text variant="t100" as="span" color="colorTextMuted">
@@ -232,8 +258,9 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
     handleAuthorizeClick,
     isSelectedChannelValid,
     requirments,
+    smMatch,
     setActiveUser,
-    submit,
+    addDetailsToFinalForm,
   ])
 
   return (
@@ -241,6 +268,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
       <DialogModal
         show={currentStepIdx != null}
         dividers
+        additionalActionsNodeMobilePosition="bottom"
         primaryButton={authorizationStep?.primaryButton}
         secondaryButton={
           currentStepIdx !== 0 && currentStep !== 'fetching-data'
@@ -261,7 +289,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
         <HeaderIconsWrapper>
           {currentStep === 'fetching-data' ? <Loader variant="medium" /> : <StyledSvgAppLogoShort />}
         </HeaderIconsWrapper>
-        <Text variant="h500" as="h2" margin={{ top: 6, bottom: 2 }}>
+        <Text variant={smMatch ? 'h500' : 'h400'} as="h2" margin={{ top: 6, bottom: 2 }}>
           {authorizationStep?.title}
         </Text>
         {authorizationStep?.additionalSubtitleNode}

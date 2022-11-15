@@ -46,6 +46,7 @@ type ChannelVerificationErrorResponse =
 type YoutubeResponseData = {
   email: string
   userId: string
+  authorizationCode: string
 }
 
 const GOOGLE_AUTH_PARAMS = {
@@ -178,7 +179,7 @@ export const useYppGoogleAuth = ({
           }
         )
 
-        setYtResponseData(response.data)
+        setYtResponseData({ ...response.data, authorizationCode: code })
         setCurrentStepIdx(2)
       } catch (error) {
         if (isAxiosError<ChannelVerificationErrorResponse>(error)) {

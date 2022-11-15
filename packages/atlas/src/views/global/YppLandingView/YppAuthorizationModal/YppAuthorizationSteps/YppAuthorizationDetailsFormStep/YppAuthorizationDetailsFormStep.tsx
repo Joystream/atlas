@@ -78,7 +78,7 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
         validate: {
           unique: async (value) => {
             const valid = await validateChannel(value || '')
-            return valid || "Channel with this title doesn't exists."
+            return valid || 'No channel with this title has been found.'
           },
         },
       }),
