@@ -1,12 +1,12 @@
 import { useApolloClient } from '@apollo/client'
 import debouncePromise from 'awesome-debounce-promise'
-import { FC, useRef, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { FC, useCallback, useMemo, useRef, useState } from 'react'
+import { useFormContext } from 'react-hook-form'
 
 import {
-  GetBasicChannelsConnectionDocument,
-  GetBasicChannelsConnectionQuery,
-  GetBasicChannelsConnectionQueryVariables,
+  GetBasicChannelsDocument,
+  GetBasicChannelsQuery,
+  GetBasicChannelsQueryVariables,
 } from '@/api/queries/__generated__/channels.generated'
 import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { Avatar, AvatarProps } from '@/components/Avatar'
@@ -15,40 +15,74 @@ import { Input } from '@/components/_inputs/Input'
 import { Loader } from '@/components/_loaders/Loader'
 import { EMAIL_PATTERN } from '@/config/regex'
 import { useAsset } from '@/providers/assets/assets.hooks'
-import { SentryLogger } from '@/utils/logs'
 
 import { FormFieldsWrapper } from './YppAuthorizationDetailsFormStep.styles'
 
+export type DetailsFormData = {
+  email: string | undefined
+  referrerChannelTitle: string | undefined
+  referrerChannelId: string | undefined
+}
+
 export const YppAuthorizationDetailsFormStep: FC = () => {
   const [foundChannel, setFoundChannel] = useState<BasicChannelFieldsFragment | null>()
-  const [loading, setLoading] = useState(false)
+  const [isChannelValidating, setIsChannelValidating] = useState(false)
   const client = useApolloClient()
   const {
+    trigger,
+    register,
     setValue,
-    control,
     formState: { errors },
-  } = useForm<{ email: string | undefined; channel: string | undefined }>()
+  } = useFormContext<DetailsFormData>()
 
-  // TODO: make sure it's working properly when implementing in app
-  const debounceFetchChannels = useRef(
-    debouncePromise(async (value?: string) => {
-      if (!value || !value.length) {
-        return
+  const validateChannel = useCallback(
+    async (value: string) => {
+      const {
+        data: { channels },
+      } = await client.query<GetBasicChannelsQuery, GetBasicChannelsQueryVariables>({
+        query: GetBasicChannelsDocument,
+        variables: { where: { title_eq: value } },
+      })
+      if (!value) {
+        return true
       }
-      try {
-        const {
-          data: { channelsConnection },
-        } = await client.query<GetBasicChannelsConnectionQuery, GetBasicChannelsConnectionQueryVariables>({
-          query: GetBasicChannelsConnectionDocument,
-          variables: { where: { title_contains: value } },
-        })
-        setFoundChannel(channelsConnection.edges.length ? channelsConnection.edges[0].node : undefined)
-      } catch (error) {
-        SentryLogger.error('Failed to fetch memberships', 'WhiteListTextField', error)
-      } finally {
-        setLoading(false)
+      if (channels?.length) {
+        setFoundChannel(channels[0])
+        setValue('referrerChannelId', channels[0].id)
+      } else {
+        setFoundChannel(null)
       }
-    }, 500)
+      return !!channels.length
+    },
+    [client, setValue]
+  )
+
+  const titleInputRef = useRef<HTMLInputElement | null>(null)
+
+  const { ref, ...titleRegisterRest } = useMemo(
+    () =>
+      register('referrerChannelTitle', {
+        onChange: debouncePromise(
+          async () => {
+            await trigger('referrerChannelTitle')
+            setIsChannelValidating(false)
+          },
+          500,
+          {
+            key() {
+              setIsChannelValidating(true)
+              return null
+            },
+          }
+        ),
+        validate: {
+          unique: async (value) => {
+            const valid = await validateChannel(value || '')
+            return valid || "Channel with this title doesn't exists."
+          },
+        },
+      }),
+    [register, trigger, validateChannel]
   )
 
   return (
@@ -58,10 +92,11 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
         description="We need your email address to send you payment information. No spam or marketing materials."
         error={errors.email?.message}
       >
-        <Controller
-          control={control}
-          name="email"
-          rules={{
+        <Input
+          placeholder="Email address"
+          type="email"
+          error={!!errors.email}
+          {...register('email', {
             validate: {
               required: (value) => {
                 if (!value || !value.length) {
@@ -75,50 +110,31 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
                 return true
               },
             },
-          }}
-          render={({ field: { value, onChange } }) => (
-            <Input placeholder="Email address" type="email" value={value} onChange={onChange} error={!!errors.email} />
-          )}
+          })}
         />
       </FormField>
       <FormField
         optional
+        disableErrorAnimation={document.activeElement === titleInputRef.current}
         label="Referrer"
-        description="Enter the handle of the Joystream channel which recommended the program to you."
-        error={errors.channel?.message}
+        description="Enter the title of the Joystream channel which recommended the program to you."
+        error={errors.referrerChannelTitle?.message}
       >
-        <Controller
-          control={control}
-          name="channel"
-          rules={{
-            // TODO: add validation when implementing, for now it would be impossible to walidate it
-            validate: {},
+        <Input
+          nodeEnd={
+            foundChannel ? (
+              <ResolvedAvatar channel={foundChannel} size="bid" />
+            ) : (
+              isChannelValidating && <Loader variant="xsmall" />
+            )
+          }
+          {...titleRegisterRest}
+          placeholder="Channel handle"
+          error={!!errors.referrerChannelTitle}
+          ref={(e) => {
+            ref(e)
+            titleInputRef.current = e
           }}
-          render={({ field: { value, onChange } }) => (
-            <Input
-              nodeEnd={
-                foundChannel ? (
-                  <ResolvedAvatar channel={foundChannel} size="bid" />
-                ) : (
-                  loading && <Loader variant="xsmall" />
-                )
-              }
-              onChange={(event) => {
-                const { value } = event.target
-                setLoading(true)
-                setValue('channel', event.target.value, { shouldTouch: true, shouldDirty: true })
-                debounceFetchChannels.current(value)
-                if (!value.length) {
-                  setLoading(false)
-                  setFoundChannel(null)
-                }
-                onChange()
-              }}
-              value={value}
-              placeholder="Channel handle"
-              error={!!errors.channel}
-            />
-          )}
         />
       </FormField>
     </FormFieldsWrapper>

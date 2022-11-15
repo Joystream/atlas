@@ -1,4 +1,5 @@
 import { Dispatch, FC, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
 
 import appScreenshot from '@/assets/images/ypp-authorization/app-screenshot.webp'
 import { Text } from '@/components/Text'
@@ -8,7 +9,7 @@ import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
 import { useUser } from '@/providers/user/user.hooks'
 
-import { useYppGoogleAuth } from './YppAuthorizationModal.hooks'
+import { RequirmentError, useYppGoogleAuth } from './YppAuthorizationModal.hooks'
 import {
   AdditionalSubtitle,
   Content,
@@ -18,6 +19,7 @@ import {
 } from './YppAuthorizationModal.styles'
 import { YPP_AUTHORIZATION_STEPS, YPP_AUTHORIZATION_STEPS_WITHOUT_CHANNEL_SELECT } from './YppAuthorizationModal.types'
 import {
+  DetailsFormData,
   YppAuthorizationDetailsFormStep,
   YppAuthorizationRequirementsStep,
   YppAuthorizationSelectChannelStep,
@@ -36,6 +38,14 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
   const hasMoreThanOneChannel = channels && channels.length > 1
   const [selectedChannelId, setSelectedChannelId] = useState<string | null>(null)
 
+  const detailsFormMethods = useForm<DetailsFormData>({
+    defaultValues: {
+      referrerChannelId: '',
+      referrerChannelTitle: '',
+      email: '',
+    },
+  })
+
   const authorizationSteps = hasMoreThanOneChannel
     ? YPP_AUTHORIZATION_STEPS
     : YPP_AUTHORIZATION_STEPS_WITHOUT_CHANNEL_SELECT // if the user has only a single channel, skip "Select channel" step
@@ -45,7 +55,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
     setCurrentStepIdx(authorizationSteps.findIndex((step) => step === 'fetching-data'))
   }, [authorizationSteps, setCurrentStepIdx])
 
-  const { handleAuthorizeClick } = useYppGoogleAuth({
+  const { handleAuthorizeClick, ytRequirmentsErrors, ytResponseData } = useYppGoogleAuth({
     closeModal: useCallback(() => setCurrentStepIdx(null), [setCurrentStepIdx]),
     channelsLoaded,
     goToLoadingStep,
@@ -53,6 +63,12 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
     setSelectedChannelId,
     setCurrentStepIdx,
   })
+
+  useEffect(() => {
+    if (ytResponseData?.email) {
+      detailsFormMethods.setValue('email', ytResponseData.email)
+    }
+  }, [detailsFormMethods, ytResponseData?.email])
 
   const selectedChannel = useMemo(() => {
     if (!channels || !selectedChannelId) {
@@ -87,6 +103,29 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
     setSelectedChannelId(channels[0].id)
   }, [channels, selectedChannelId, setSelectedChannelId])
 
+  const requirments = useMemo(
+    () => [
+      { text: 'Your Atlas channel avatar, cover image, and description are set', fulfilled: isSelectedChannelValid },
+      {
+        text: 'Your YouTube channel is at least 3 months old',
+        fulfilled: !ytRequirmentsErrors.some((error) => error === RequirmentError.CHANNEL_CRITERIA_UNMET_CREATION_DATE),
+      },
+      {
+        text: 'Your YouTube channel has at least 10 videos, all published at least 1 month ago',
+        fulfilled: !ytRequirmentsErrors.some((error) => error === RequirmentError.CHANNEL_CRITERIA_UNMET_VIDEOS),
+      },
+      {
+        text: 'Your YouTube channel has at least 50 subscribers',
+        fulfilled: !ytRequirmentsErrors.some((error) => error === RequirmentError.CHANNEL_CRITERIA_UNMET_SUBSCRIBERS),
+      },
+    ],
+    [isSelectedChannelValid, ytRequirmentsErrors]
+  )
+
+  const submit = detailsFormMethods.handleSubmit(() => {
+    // todo handle
+  })
+
   const authorizationStep = useMemo(() => {
     switch (currentStep) {
       case 'select-channel':
@@ -118,6 +157,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
           },
           component: (
             <YppAuthorizationRequirementsStep
+              requirments={requirments}
               onChangeChannel={() => selectedChannel && setActiveUser({ channelId: selectedChannel.id })}
               isChannelValid={isSelectedChannelValid}
             />
@@ -137,6 +177,9 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
           title: 'Details',
           description: 'We need your email address to send you payment information. No spam or marketing materials.',
           primaryButton: {
+            onClick: () => {
+              submit()
+            },
             text: 'Continue',
           },
           component: <YppAuthorizationDetailsFormStep />,
@@ -188,41 +231,45 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
     selectedChannelId,
     handleAuthorizeClick,
     isSelectedChannelValid,
+    requirments,
     setActiveUser,
+    submit,
   ])
 
   return (
-    <DialogModal
-      show={currentStepIdx != null}
-      dividers
-      primaryButton={authorizationStep?.primaryButton}
-      secondaryButton={
-        currentStepIdx !== 0 && currentStep !== 'fetching-data'
-          ? currentStep === 'summary'
-            ? { text: 'Close', onClick: () => setCurrentStepIdx(null) }
-            : { text: 'Back', onClick: goToPreviousStep }
-          : undefined
-      }
-      additionalActionsNode={
-        currentStep !== 'summary' &&
-        currentStep !== 'fetching-data' && (
-          <Button variant="tertiary" onClick={() => setCurrentStepIdx(null)}>
-            Cancel
-          </Button>
-        )
-      }
-    >
-      <HeaderIconsWrapper>
-        {currentStep === 'fetching-data' ? <Loader variant="medium" /> : <StyledSvgAppLogoShort />}
-      </HeaderIconsWrapper>
-      <Text variant="h500" as="h2" margin={{ top: 6, bottom: 2 }}>
-        {authorizationStep?.title}
-      </Text>
-      {authorizationStep?.additionalSubtitleNode}
-      <Text variant="t200" as="p" color="colorText">
-        {authorizationStep?.description}
-      </Text>
-      {authorizationStep?.component ? <Content>{authorizationStep.component}</Content> : null}
-    </DialogModal>
+    <FormProvider {...detailsFormMethods}>
+      <DialogModal
+        show={currentStepIdx != null}
+        dividers
+        primaryButton={authorizationStep?.primaryButton}
+        secondaryButton={
+          currentStepIdx !== 0 && currentStep !== 'fetching-data'
+            ? currentStep === 'summary'
+              ? { text: 'Close', onClick: () => setCurrentStepIdx(null) }
+              : { text: 'Back', onClick: goToPreviousStep }
+            : undefined
+        }
+        additionalActionsNode={
+          currentStep !== 'summary' &&
+          currentStep !== 'fetching-data' && (
+            <Button variant="tertiary" onClick={() => setCurrentStepIdx(null)}>
+              Cancel
+            </Button>
+          )
+        }
+      >
+        <HeaderIconsWrapper>
+          {currentStep === 'fetching-data' ? <Loader variant="medium" /> : <StyledSvgAppLogoShort />}
+        </HeaderIconsWrapper>
+        <Text variant="h500" as="h2" margin={{ top: 6, bottom: 2 }}>
+          {authorizationStep?.title}
+        </Text>
+        {authorizationStep?.additionalSubtitleNode}
+        <Text variant="t200" as="p" color="colorText">
+          {authorizationStep?.description}
+        </Text>
+        {authorizationStep?.component ? <Content>{authorizationStep.component}</Content> : null}
+      </DialogModal>
+    </FormProvider>
   )
 }

@@ -1,4 +1,6 @@
-import { Dispatch, SetStateAction, useCallback, useEffect } from 'react'
+import axios from 'axios'
+import { isArray } from 'lodash-es'
+import { useCallback, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { atlasConfig } from '@/config'
@@ -7,9 +9,44 @@ import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useSnackbar } from '@/providers/snackbars'
 import { useYppStore } from '@/providers/ypp/ypp.store'
 import { createId } from '@/utils/createId'
+import { isAxiosError } from '@/utils/error'
 import { SentryLogger } from '@/utils/logs'
 
 const GOOGLE_CONSOLE_CLIENT_ID = atlasConfig.features.ypp.googleConsoleClientId
+
+export enum RequirmentError {
+  CHANNEL_CRITERIA_UNMET_SUBSCRIBERS = 'CHANNEL_CRITERIA_UNMET_SUBSCRIBERS',
+  CHANNEL_CRITERIA_UNMET_VIDEOS = 'CHANNEL_CRITERIA_UNMET_VIDEOS',
+  CHANNEL_CRITERIA_UNMET_CREATION_DATE = 'CHANNEL_CRITERIA_UNMET_CREATION_DATE',
+}
+
+type ChannelVerificationSuccessResponse = {
+  email: string
+  userId: string
+}
+
+type ChannelVerificationFailedError = {
+  errorCode: RequirmentError
+  message: string
+  result: number | string | Date
+  expected: number | string | Date
+}
+
+type ChannelNotFoundError = {
+  errorCode: 'CHANNEL_NOT_FOUND'
+  message: string
+}
+
+type ChannelVerificationErrorResponse =
+  | {
+      message: ChannelVerificationFailedError[]
+    }
+  | ChannelNotFoundError
+
+type YoutubeResponseData = {
+  email: string
+  userId: string
+}
 
 const GOOGLE_AUTH_PARAMS = {
   client_id: GOOGLE_CONSOLE_CLIENT_ID || '',
@@ -32,10 +69,12 @@ export const useYppGoogleAuth = ({
   selectedChannelId: string | null
   setSelectedChannelId: (channelId: string | null) => void
   channelsLoaded: boolean
-  setCurrentStepIdx: Dispatch<SetStateAction<number | null>>
+  setCurrentStepIdx: (stepIdx: number | null) => void
 }) => {
   const oldAuthState = useYppStore((state) => state.authState)
   const setAuthState = useYppStore((state) => state.actions.setAuthState)
+  const [ytRequirmentsErrors, setYtRequirmentsErrors] = useState<RequirmentError[]>([])
+  const [ytResponseData, setYtResponseData] = useState<YoutubeResponseData | null>(null)
 
   const [openConfirmationModal, closeConfirmationModal] = useConfirmationModal()
   const { displaySnackbar } = useSnackbar()
@@ -99,36 +138,72 @@ export const useYppGoogleAuth = ({
   )
 
   const handleGoogleAuthSuccess = useCallback(
-    (code: string, state: string | null) => {
-      // extract channel ID from state
-      const stateParams = new URLSearchParams(state || '')
-      const channelId = stateParams.get('channelId')
-
-      // check if the state matches the one we set
-      if (state !== oldAuthState || !channelId) {
-        displaySnackbar({
-          title: 'Authorization failed',
-          description: 'An unexpected error occurred. Please try again.',
-          iconType: 'error',
-        })
-        SentryLogger.error('Unexpected state returned from Google Auth', 'YppAuthorizationModal', null, {
-          ypp: { appState: oldAuthState, googleState: state },
-        })
-        closeModal()
+    async (code: string, state: string | null) => {
+      if (!atlasConfig.features.ypp.youtubeSyncApiUrl) {
         return
       }
+      try {
+        // extract channel ID from state
+        const stateParams = new URLSearchParams(state || '')
+        const channelId = stateParams.get('channelId')
 
-      if (!channelsLoaded) {
-        return
+        // check if the state matches the one we set
+        if (state !== oldAuthState || !channelId) {
+          displaySnackbar({
+            title: 'Authorization failed',
+            description: 'An unexpected error occurred. Please try again.',
+            iconType: 'error',
+          })
+          SentryLogger.error('Unexpected state returned from Google Auth', 'YppAuthorizationModal', null, {
+            ypp: { appState: oldAuthState, googleState: state },
+          })
+          closeModal()
+          return
+        }
+
+        if (!channelsLoaded) {
+          return
+        }
+
+        setSelectedChannelId(channelId)
+        setAuthState(null)
+        goToLoadingStep()
+
+        resetSearchParams()
+
+        const response = await axios.post<ChannelVerificationSuccessResponse>(
+          `${atlasConfig.features.ypp.youtubeSyncApiUrl}/users`,
+          {
+            authorizationCode: code,
+          }
+        )
+
+        setYtResponseData(response.data)
+        setCurrentStepIdx(2)
+      } catch (error) {
+        if (isAxiosError<ChannelVerificationErrorResponse>(error)) {
+          const errorResponseData = error.response?.data
+          const errorMessages = error.response?.data.message
+          if (isArray(errorMessages)) {
+            const errorCodes = isArray(errorMessages) ? errorMessages?.map((message) => message.errorCode) : undefined
+
+            errorCodes && setYtRequirmentsErrors(errorCodes)
+          }
+          if (
+            errorResponseData &&
+            'errorCode' in errorResponseData &&
+            errorResponseData.errorCode === 'CHANNEL_NOT_FOUND'
+          ) {
+            displaySnackbar({
+              title: 'Authorization failed',
+              description: `You don't have youtube channel.`,
+              iconType: 'error',
+            })
+            setYtRequirmentsErrors(Object.values(RequirmentError))
+          }
+        }
+        setCurrentStepIdx(0)
       }
-
-      setSelectedChannelId(channelId)
-      setAuthState(null)
-
-      // Google Auth succeeded, show "Fetching data" modal and communicate with YPP backend
-      // TODO: communicate with YPP backend
-      goToLoadingStep()
-      resetSearchParams()
     },
     [
       oldAuthState,
@@ -137,8 +212,10 @@ export const useYppGoogleAuth = ({
       setAuthState,
       goToLoadingStep,
       resetSearchParams,
+      setCurrentStepIdx,
       displaySnackbar,
       closeModal,
+      setYtRequirmentsErrors,
     ]
   )
 
@@ -161,5 +238,5 @@ export const useYppGoogleAuth = ({
     }
   }, [handleGoogleAuthError, searchParams])
 
-  return { handleAuthorizeClick }
+  return { handleAuthorizeClick, ytRequirmentsErrors, ytResponseData }
 }
