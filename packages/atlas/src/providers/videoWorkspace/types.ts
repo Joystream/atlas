@@ -12,6 +12,9 @@ export type VideoWorkspaceVideoAssets = {
   thumbnail: {
     cropId: string | null
     originalId: string | null
+    originalBlob?: {
+      name?: string
+    } | null
   } & ImageInputMetadata
 }
 
@@ -57,6 +60,7 @@ export type VideoFormAssetData = {
   dimensions?: AssetDimensions
   cropData?: ImageCropData
   subtitlesLanguageIso?: string
+  name?: string
 }
 
 export type VideoFormAssets = VideoAssets<VideoFormAssetData>
