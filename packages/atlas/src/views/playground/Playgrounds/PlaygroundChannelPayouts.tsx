@@ -7,16 +7,12 @@ import {
   GetPayloadDataObjectIdByCommitmentQuery,
   GetPayloadDataObjectIdByCommitmentQueryVariables,
 } from '@/api/queries/__generated__/channels.generated'
-import {
-  GetStorageBucketsNodeEndpointForBagDocument,
-  GetStorageBucketsNodeEndpointForBagQuery,
-  GetStorageBucketsNodeEndpointForBagQueryVariables,
-} from '@/api/queries/__generated__/storage.generated'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { getClaimableReward } from '@/joystream-lib/channelPayouts'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
+import { useDistributionOperators } from '@/providers/assets/assets.provider'
 import { useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -31,32 +27,7 @@ export const PlaygroundChannelPayouts = () => {
   const handleTransaction = useTransaction()
   const client = useApolloClient()
 
-  // TODO this is probably wrong way to do it
-  // we need to test the endpoint and try again with different one if it fails
-  const getRandomStorageBucketOperatorMetadataNodeEndpointForBag = useCallback(
-    async (bagId: string) => {
-      const {
-        data: { storageBuckets },
-      } = await client.query<
-        GetStorageBucketsNodeEndpointForBagQuery,
-        GetStorageBucketsNodeEndpointForBagQueryVariables
-      >({
-        query: GetStorageBucketsNodeEndpointForBagDocument,
-        variables: {
-          bagId,
-        },
-        fetchPolicy: 'network-only',
-      })
-      if (!storageBuckets || !storageBuckets.length) {
-        return null
-      }
-      const randomStorageBucketIdx = getRandomIntInclusive(0, storageBuckets.length - 1)
-
-      return storageBuckets[randomStorageBucketIdx].operatorMetadata?.nodeEndpoint
-    },
-
-    [client]
-  )
+  const { getAllDistributionOperatorsForBag } = useDistributionOperators()
 
   const getPayloadDataObjectIdAndNodeEndpoint = useCallback(
     async (commitment: string) => {
@@ -71,16 +42,17 @@ export const PlaygroundChannelPayouts = () => {
         }
       )
 
-      const nodeEndpoint = await getRandomStorageBucketOperatorMetadataNodeEndpointForBag(
+      const operators = await getAllDistributionOperatorsForBag(
         channelPayoutsUpdatedEvents[0]?.payloadDataObject.storageBagId
       )
+      const randomOperatorIdx = getRandomIntInclusive(0, operators?.length ? operators.length - 1 : 0)
 
       return {
-        nodeEndpoint,
+        nodeEndpoint: operators?.[randomOperatorIdx].endpoint,
         payloadDataObjectId: channelPayoutsUpdatedEvents?.[0].payloadDataObject.id,
       }
     },
-    [client, getRandomStorageBucketOperatorMetadataNodeEndpointForBag]
+    [client, getAllDistributionOperatorsForBag]
   )
 
   const handleFetchReward = useCallback(async () => {

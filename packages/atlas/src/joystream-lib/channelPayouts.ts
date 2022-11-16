@@ -11,7 +11,7 @@ export const getClaimableReward = async (
 ) => {
   const payoutProof = await channelPayoutProof(
     'URL',
-    `${nodeEndpoint}/api/v1/files/${payloadDataObjectId}`,
+    `${nodeEndpoint}/api/v1/assets/${payloadDataObjectId}`,
     Number(channelId)
   )
 
