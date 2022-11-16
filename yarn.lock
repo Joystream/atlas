@@ -9881,10 +9881,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"crypto-js@npm:4.1.1":
-  version: 4.1.1
-  resolution: "crypto-js@npm:4.1.1"
-  checksum: b3747c12ee3a7632fab3b3e171ea50f78b182545f0714f6d3e7e2858385f0f4101a15f2517e033802ce9d12ba50a391575ff4638c9de3dd9b2c4bc47768d5425
+"crypto-js@npm:^3.1.9-1":
+  version: 3.3.0
+  resolution: "crypto-js@npm:3.3.0"
+  checksum: 193923143a4784b2f974366068d96fe8280168fd3fef2bfea9551a5c3e32096f5a8fa49ff4eeb5bd0b9716d325618d38cfbe6125e359a4ef488fbca93e600824
   languageName: node
   linkType: hard
 
@@ -15877,16 +15877,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"merkletreejs@npm:0.3.3":
-  version: 0.3.3
-  resolution: "merkletreejs@npm:0.3.3"
+"merkletreejs@npm:0.2.32":
+  version: 0.2.32
+  resolution: "merkletreejs@npm:0.2.32"
   dependencies:
     bignumber.js: ^9.0.1
     buffer-reverse: ^1.0.1
     crypto-js: ^3.1.9-1
     treeify: ^1.1.0
     web3-utils: ^1.3.4
-  checksum: 12eee33549dcdbbd81def089c1edada4b42524f0702dac65a31d3a9894c7f9b58928252f477576d9c5c96aa23c3ed9262fbfb8da3f7915daa070066dc80b61c8
+  checksum: 041b235adde94de584fdf5ef60138baca8d6f16bb48b3b7f714b607eaa76e4207ed5fef501ee5967371c56c5876804c4ff6da4705707f8cc0362d5c1e0358425
+  languageName: node
+  linkType: hard
+
+"merkletreejs@patch:merkletreejs@npm:0.2.32#.yarn/patches/merkletreejs-npm-0.2.32-79a2b236fc.patch::locator=root-workspace-0b6124%40workspace%3A.":
+  version: 0.2.32
+  resolution: "merkletreejs@patch:merkletreejs@npm%3A0.2.32#.yarn/patches/merkletreejs-npm-0.2.32-79a2b236fc.patch::version=0.2.32&hash=743526&locator=root-workspace-0b6124%40workspace%3A."
+  dependencies:
+    bignumber.js: ^9.0.1
+    buffer-reverse: ^1.0.1
+    crypto-js: ^3.1.9-1
+    treeify: ^1.1.0
+    web3-utils: ^1.3.4
+  checksum: 0bdbe90916574637bb0269778e3ed19ffa4602b849c55820ab08fed2945f5efbc6692ff4515ba370eff88c48e2ffca6dcdb6e4cbfa26a48bbe1297cbb7a8e171
   languageName: node
   linkType: hard
 
