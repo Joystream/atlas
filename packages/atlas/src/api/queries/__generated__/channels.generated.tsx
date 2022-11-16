@@ -23,7 +23,6 @@ export type GetBasicChannelQuery = {
     follows: number
     rewardAccount: string
     channelStateBloatBond: string
-    cumulativeRewardClaimed?: string | null
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -57,13 +56,13 @@ export type GetFullChannelQuery = {
     description?: string | null
     isPublic?: boolean | null
     isCensored: boolean
+    cumulativeRewardClaimed?: string | null
     id: string
     title?: string | null
     createdAt: Date
     follows: number
     rewardAccount: string
     channelStateBloatBond: string
-    cumulativeRewardClaimed?: string | null
     language?: { __typename?: 'Language'; id: string; iso: string } | null
     ownerMember?: {
       __typename?: 'Membership'
@@ -159,7 +158,6 @@ export type GetBasicChannelsQuery = {
     follows: number
     rewardAccount: string
     channelStateBloatBond: string
-    cumulativeRewardClaimed?: string | null
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -195,13 +193,13 @@ export type GetFullChannelsQuery = {
     description?: string | null
     isPublic?: boolean | null
     isCensored: boolean
+    cumulativeRewardClaimed?: string | null
     id: string
     title?: string | null
     createdAt: Date
     follows: number
     rewardAccount: string
     channelStateBloatBond: string
-    cumulativeRewardClaimed?: string | null
     language?: { __typename?: 'Language'; id: string; iso: string } | null
     ownerMember?: {
       __typename?: 'Membership'
@@ -295,7 +293,6 @@ export type GetBasicChannelsConnectionQuery = {
         follows: number
         rewardAccount: string
         channelStateBloatBond: string
-        cumulativeRewardClaimed?: string | null
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -361,7 +358,6 @@ export type GetMostViewedChannelsConnectionQuery = {
         follows: number
         rewardAccount: string
         channelStateBloatBond: string
-        cumulativeRewardClaimed?: string | null
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -409,7 +405,6 @@ export type GetMostFollowedChannelsConnectionQuery = {
         follows: number
         rewardAccount: string
         channelStateBloatBond: string
-        cumulativeRewardClaimed?: string | null
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -447,7 +442,6 @@ export type GetTop10ChannelsQuery = {
     follows: number
     rewardAccount: string
     channelStateBloatBond: string
-    cumulativeRewardClaimed?: string | null
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -482,7 +476,6 @@ export type GetPromisingChannelsQuery = {
     follows: number
     rewardAccount: string
     channelStateBloatBond: string
-    cumulativeRewardClaimed?: string | null
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -517,7 +510,6 @@ export type GetDiscoverChannelsQuery = {
     follows: number
     rewardAccount: string
     channelStateBloatBond: string
-    cumulativeRewardClaimed?: string | null
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -552,7 +544,6 @@ export type GetPopularChannelsQuery = {
     follows: number
     rewardAccount: string
     channelStateBloatBond: string
-    cumulativeRewardClaimed?: string | null
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string

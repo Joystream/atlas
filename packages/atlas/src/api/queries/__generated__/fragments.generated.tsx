@@ -17,7 +17,6 @@ export type BasicChannelFieldsFragment = {
   follows: number
   rewardAccount: string
   channelStateBloatBond: string
-  cumulativeRewardClaimed?: string | null
   avatarPhoto?: {
     __typename?: 'StorageDataObject'
     id: string
@@ -44,13 +43,13 @@ export type FullChannelFieldsFragment = {
   description?: string | null
   isPublic?: boolean | null
   isCensored: boolean
+  cumulativeRewardClaimed?: string | null
   id: string
   title?: string | null
   createdAt: Date
   follows: number
   rewardAccount: string
   channelStateBloatBond: string
-  cumulativeRewardClaimed?: string | null
   language?: { __typename?: 'Language'; id: string; iso: string } | null
   ownerMember?: {
     __typename?: 'Membership'
@@ -167,7 +166,6 @@ export type FullMembershipFieldsFragment = {
     follows: number
     rewardAccount: string
     channelStateBloatBond: string
-    cumulativeRewardClaimed?: string | null
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -305,7 +303,6 @@ export type BasicVideoFieldsFragment = {
     follows: number
     rewardAccount: string
     channelStateBloatBond: string
-    cumulativeRewardClaimed?: string | null
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -623,13 +620,13 @@ export type FullVideoFieldsFragment = {
     description?: string | null
     isPublic?: boolean | null
     isCensored: boolean
+    cumulativeRewardClaimed?: string | null
     id: string
     title?: string | null
     createdAt: Date
     follows: number
     rewardAccount: string
     channelStateBloatBond: string
-    cumulativeRewardClaimed?: string | null
     language?: { __typename?: 'Language'; id: string; iso: string } | null
     ownerMember?: {
       __typename?: 'Membership'
@@ -1165,7 +1162,6 @@ export type FullNftFieldsFragment = {
     follows: number
     rewardAccount: string
     channelStateBloatBond: string
-    cumulativeRewardClaimed?: string | null
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -1201,7 +1197,6 @@ export type FullNftFieldsFragment = {
       follows: number
       rewardAccount: string
       channelStateBloatBond: string
-      cumulativeRewardClaimed?: string | null
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -2038,7 +2033,6 @@ export const BasicChannelFieldsFragmentDoc = gql`
     follows
     rewardAccount
     channelStateBloatBond
-    cumulativeRewardClaimed
     avatarPhoto {
       ...StorageDataObjectFields
     }
@@ -2087,6 +2081,7 @@ export const FullChannelFieldsFragmentDoc = gql`
     description
     isPublic
     isCensored
+    cumulativeRewardClaimed
     language {
       id
       iso

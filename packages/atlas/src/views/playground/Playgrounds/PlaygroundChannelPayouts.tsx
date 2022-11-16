@@ -1,7 +1,7 @@
 import { useApolloClient } from '@apollo/client'
 import { useCallback, useEffect, useState } from 'react'
 
-import { useBasicChannel } from '@/api/hooks/channel'
+import { useFullChannel } from '@/api/hooks/channel'
 import {
   GetPayloadDataObjectIdByCommitmentDocument,
   GetPayloadDataObjectIdByCommitmentQuery,
@@ -27,7 +27,7 @@ export const PlaygroundChannelPayouts = () => {
   const { channelId, memberId } = useUser()
   const [availableAward, setAvailableAward] = useState<number | undefined>()
   const [isAwardLoading, setAwardLoading] = useState(true)
-  const { channel, loading, refetch } = useBasicChannel(channelId || '')
+  const { channel, loading, refetch } = useFullChannel(channelId || '')
   const handleTransaction = useTransaction()
   const client = useApolloClient()
 

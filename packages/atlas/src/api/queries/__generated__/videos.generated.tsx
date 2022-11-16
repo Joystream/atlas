@@ -28,7 +28,6 @@ export type GetBasicVideoQuery = {
       follows: number
       rewardAccount: string
       channelStateBloatBond: string
-      cumulativeRewardClaimed?: string | null
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -353,13 +352,13 @@ export type GetFullVideoQuery = {
       description?: string | null
       isPublic?: boolean | null
       isCensored: boolean
+      cumulativeRewardClaimed?: string | null
       id: string
       title?: string | null
       createdAt: Date
       follows: number
       rewardAccount: string
       channelStateBloatBond: string
-      cumulativeRewardClaimed?: string | null
       language?: { __typename?: 'Language'; id: string; iso: string } | null
       ownerMember?: {
         __typename?: 'Membership'
@@ -703,7 +702,6 @@ export type GetBasicVideosConnectionQuery = {
           follows: number
           rewardAccount: string
           channelStateBloatBond: string
-          cumulativeRewardClaimed?: string | null
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -1040,13 +1038,13 @@ export type GetFullVideosConnectionQuery = {
           description?: string | null
           isPublic?: boolean | null
           isCensored: boolean
+          cumulativeRewardClaimed?: string | null
           id: string
           title?: string | null
           createdAt: Date
           follows: number
           rewardAccount: string
           channelStateBloatBond: string
-          cumulativeRewardClaimed?: string | null
           language?: { __typename?: 'Language'; id: string; iso: string } | null
           ownerMember?: {
             __typename?: 'Membership'
@@ -1387,7 +1385,6 @@ export type GetBasicVideosQuery = {
       follows: number
       rewardAccount: string
       channelStateBloatBond: string
-      cumulativeRewardClaimed?: string | null
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -1715,13 +1712,13 @@ export type GetFullVideosQuery = {
       description?: string | null
       isPublic?: boolean | null
       isCensored: boolean
+      cumulativeRewardClaimed?: string | null
       id: string
       title?: string | null
       createdAt: Date
       follows: number
       rewardAccount: string
       channelStateBloatBond: string
-      cumulativeRewardClaimed?: string | null
       language?: { __typename?: 'Language'; id: string; iso: string } | null
       ownerMember?: {
         __typename?: 'Membership'
@@ -2067,7 +2064,6 @@ export type GetMostViewedVideosConnectionQuery = {
           follows: number
           rewardAccount: string
           channelStateBloatBond: string
-          cumulativeRewardClaimed?: string | null
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -2340,7 +2336,6 @@ export type GetTop10VideosThisWeekQuery = {
       follows: number
       rewardAccount: string
       channelStateBloatBond: string
-      cumulativeRewardClaimed?: string | null
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -2610,7 +2605,6 @@ export type GetTop10VideosThisMonthQuery = {
       follows: number
       rewardAccount: string
       channelStateBloatBond: string
-      cumulativeRewardClaimed?: string | null
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string

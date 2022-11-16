@@ -10,7 +10,6 @@ fragment BasicChannelFields on Channel {
   follows
   rewardAccount
   channelStateBloatBond
-  cumulativeRewardClaimed
 
   avatarPhoto {
     ...StorageDataObjectFields
@@ -24,6 +23,7 @@ fragment FullChannelFields on Channel {
   description
   isPublic
   isCensored
+  cumulativeRewardClaimed
   language {
     id
     iso

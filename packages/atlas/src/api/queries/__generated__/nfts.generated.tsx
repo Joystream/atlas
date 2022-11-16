@@ -27,7 +27,6 @@ export type GetNftQuery = {
       follows: number
       rewardAccount: string
       channelStateBloatBond: string
-      cumulativeRewardClaimed?: string | null
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -63,7 +62,6 @@ export type GetNftQuery = {
         follows: number
         rewardAccount: string
         channelStateBloatBond: string
-        cumulativeRewardClaimed?: string | null
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -533,7 +531,6 @@ export type GetNftsQuery = {
       follows: number
       rewardAccount: string
       channelStateBloatBond: string
-      cumulativeRewardClaimed?: string | null
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -569,7 +566,6 @@ export type GetNftsQuery = {
         follows: number
         rewardAccount: string
         channelStateBloatBond: string
-        cumulativeRewardClaimed?: string | null
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -1047,7 +1043,6 @@ export type GetNftsConnectionQuery = {
           follows: number
           rewardAccount: string
           channelStateBloatBond: string
-          cumulativeRewardClaimed?: string | null
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -1083,7 +1078,6 @@ export type GetNftsConnectionQuery = {
             follows: number
             rewardAccount: string
             channelStateBloatBond: string
-            cumulativeRewardClaimed?: string | null
             avatarPhoto?: {
               __typename?: 'StorageDataObject'
               id: string

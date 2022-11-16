@@ -25,7 +25,6 @@ export type SearchQuery = {
           follows: number
           rewardAccount: string
           channelStateBloatBond: string
-          cumulativeRewardClaimed?: string | null
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -61,7 +60,6 @@ export type SearchQuery = {
             follows: number
             rewardAccount: string
             channelStateBloatBond: string
-            cumulativeRewardClaimed?: string | null
             avatarPhoto?: {
               __typename?: 'StorageDataObject'
               id: string
