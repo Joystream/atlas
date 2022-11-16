@@ -489,7 +489,7 @@ export class JoystreamLibExtrinsics {
     )
 
     const maxCashoutAllowed = await this.api.query.content.maxCashoutAllowed()
-    if (verifyChannelPayoutProof(payoutProof) === commitment) {
+    if (verifyChannelPayoutProof(payoutProof) !== commitment) {
       throw new JoystreamLibError({
         name: 'FailedError',
         message: `Incorrect payout proof`,
