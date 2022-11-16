@@ -1,4 +1,4 @@
-import { channelPayoutProof, verifyChannelPayoutProof } from '@joystream/js/content'
+import { prepareClaimChannelRewardExtrinsicArgs, verifyChannelPayoutProof } from '@joystream/js/content'
 import {
   ChannelOwnerRemarked,
   IChannelOwnerRemarked,
@@ -9,10 +9,7 @@ import {
 import { createType } from '@joystream/types'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
-import { PalletCommonMerkleTreeProofElementRecord } from '@polkadot/types/lookup'
-import { u8aToHex } from '@polkadot/util'
 import BN from 'bn.js'
-import { Buffer } from 'buffer'
 import Long from 'long'
 
 import { SentryLogger } from '@/utils/logs'
@@ -63,6 +60,7 @@ import {
   VideoInputMetadata,
   VideoReaction,
 } from './types'
+import { getClaimableReward } from './utils'
 
 type AccountIdAccessor = () => AccountId | null
 type PublicExtrinsic<TxFunction, ReturnValue> = TxFunction extends (...a: infer U) => unknown
@@ -473,22 +471,6 @@ export class JoystreamLibExtrinsics {
     === Channel payouts ===
   */
 
-  getClaimableReward = async (
-    channelId: string,
-    cumulativeRewardEarned: StringifiedNumber | null,
-    nodeEndpoint: string,
-    payloadDataObjectId: string
-  ) => {
-    const payoutProof = await channelPayoutProof(
-      'URL',
-      `${nodeEndpoint}/api/v1/files/${payloadDataObjectId}`,
-      Number(channelId)
-    )
-
-    const cashout = new BN(payoutProof.cumulativeRewardEarned).sub(new BN(cumulativeRewardEarned || 0))
-    return cashout.toString()
-  }
-
   claimRewardTx = async (
     channelId: string,
     memberId: MemberId,
@@ -499,50 +481,38 @@ export class JoystreamLibExtrinsics {
   ) => {
     await this.ensureApi()
 
-    const payoutProof = await channelPayoutProof(
-      'URL',
-      `${nodeEndpoint}/api/v1/files/${payloadDataObjectId}`,
-      Number(channelId)
+    const { payoutProof, reward } = await getClaimableReward(
+      channelId,
+      cumulativeRewardEarned,
+      nodeEndpoint,
+      payloadDataObjectId
     )
 
     const maxCashoutAllowed = await this.api.query.content.maxCashoutAllowed()
-    const minCashoutAllowed = await this.api.query.content.minCashoutAllowed()
-    const cashout = new BN(payoutProof.cumulativeRewardEarned).sub(new BN(cumulativeRewardEarned || 0))
-    const isPayoutProofVerified = verifyChannelPayoutProof(payoutProof) === commitment
-
-    if (maxCashoutAllowed.lt(cashout)) {
-      throw new JoystreamLibError({
-        name: 'FailedError',
-        message: `Channel cashout amount is too low to be claimed`,
-      })
-    }
-    if (minCashoutAllowed.gt(cashout)) {
-      throw new JoystreamLibError({
-        name: 'FailedError',
-        message: `Channel cashout amount is too low to be claimed`,
-      })
-    }
-    if (!isPayoutProofVerified) {
+    if (verifyChannelPayoutProof(payoutProof) === commitment) {
       throw new JoystreamLibError({
         name: 'FailedError',
         message: `Incorrect payout proof`,
       })
     }
-    const pullPayment = createType('PalletContentPullPaymentElement', {
-      channelId: new BN(channelId),
-      cumulativeRewardEarned: new BN(payoutProof.cumulativeRewardEarned),
-      reason: u8aToHex(Buffer.from(payoutProof.reason, 'hex')),
-    })
-    const merkleBranch: PalletCommonMerkleTreeProofElementRecord[] = []
-    payoutProof.merkleBranch.forEach((m) => {
-      const proofElement = createType('PalletCommonMerkleTreeProofElementRecord', {
-        hash_: u8aToHex(Buffer.from(m.hash, 'hex')),
-        side: m.side ? { Right: null } : { Left: null },
+    const minCashoutAllowed = await this.api.query.content.minCashoutAllowed()
+
+    if (reward.gt(maxCashoutAllowed)) {
+      throw new JoystreamLibError({
+        name: 'FailedError',
+        message: `Channel cashout amount is too high to be claimed`,
       })
-      merkleBranch.push(proofElement)
-    })
+    }
+    if (reward.lt(minCashoutAllowed)) {
+      throw new JoystreamLibError({
+        name: 'FailedError',
+        message: `Channel cashout amount is too low to be claimed`,
+      })
+    }
+
+    const { pullPayment, proofElements } = prepareClaimChannelRewardExtrinsicArgs(payoutProof)
     const actor = createActor(memberId)
-    const tx = this.api.tx.content.claimChannelReward(actor, merkleBranch, pullPayment)
+    const tx = this.api.tx.content.claimChannelReward(actor, proofElements, pullPayment)
     return tx
   }
 

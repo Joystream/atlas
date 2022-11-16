@@ -1,5 +1,4 @@
 import { useApolloClient } from '@apollo/client'
-import { BN } from 'bn.js'
 import { useCallback, useEffect, useState } from 'react'
 
 import { useBasicChannel } from '@/api/hooks/channel'
@@ -16,7 +15,7 @@ import {
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
+import { getClaimableReward, hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -95,11 +94,14 @@ export const PlaygroundChannelPayouts = () => {
       return
     }
 
-    const reward = await (
-      await joystream.extrinsics
-    ).getClaimableReward(channelId, channel?.cumulativeRewardClaimed, nodeEndpoint, payloadDataObjectId)
+    const { reward } = await getClaimableReward(
+      channelId,
+      channel?.cumulativeRewardClaimed,
+      nodeEndpoint,
+      payloadDataObjectId
+    )
 
-    setAvailableAward(hapiBnToTokenNumber(new BN(reward)))
+    setAvailableAward(hapiBnToTokenNumber(reward))
     setAwardLoading(false)
   }, [channel?.cumulativeRewardClaimed, channelId, getPayloadDataObjectIdAndNodeEndpoint, joystream, memberId])
 
