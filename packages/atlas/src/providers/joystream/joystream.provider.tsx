@@ -1,5 +1,5 @@
 import BN from 'bn.js'
-import { ProxyMarked, Remote, proxy, wrap } from 'comlink'
+import { ProxyMarked, proxy } from 'comlink'
 import { FC, PropsWithChildren, createContext, useCallback, useEffect, useRef, useState } from 'react'
 
 import { atlasConfig } from '@/config'
@@ -15,7 +15,7 @@ import { useConnectionStatusStore } from '../connectionStatus'
 type ProxyCallbackFn = <T extends object>(callback: T) => T & ProxyMarked
 
 export type JoystreamContextValue = {
-  joystream: Remote<JoystreamLib> | undefined
+  joystream: JoystreamLib | undefined
   proxyCallback: ProxyCallbackFn
   chainState: ReturnType<typeof useJoystreamChainConstants>
 } & ReturnType<typeof useJoystreamUtilFns>
@@ -23,10 +23,10 @@ export type JoystreamContextValue = {
 export const JoystreamContext = createContext<JoystreamContextValue | undefined>(undefined)
 JoystreamContext.displayName = 'JoystreamContext'
 
-const worker = new Worker(new URL('../../utils/polkadot-worker', import.meta.url), {
-  type: 'module',
-})
-const api = wrap<typeof JoystreamLib>(worker)
+// const worker = new Worker(new URL('../../utils/polkadot-worker', import.meta.url), {
+//   type: 'module',
+// })
+const api = JoystreamLib
 
 export const JoystreamProvider: FC<PropsWithChildren> = ({ children }) => {
   const { accountId, walletAccounts, wallet } = useUserStore()
@@ -39,7 +39,7 @@ export const JoystreamProvider: FC<PropsWithChildren> = ({ children }) => {
     },
     [setNodeConnection]
   )
-  const joystream = useRef<Remote<JoystreamLib> | undefined>()
+  const joystream = useRef<JoystreamLib | undefined>()
 
   const proxyCallback = useCallback(<T extends object>(callback: T) => proxy(callback), [])
 
@@ -139,7 +139,7 @@ type JoystreamChainConstants = {
     ? BN
     : RawJoystreamChainConstants[p]
 }
-const useJoystreamChainConstants = (joystream: Remote<JoystreamLib> | undefined) => {
+const useJoystreamChainConstants = (joystream: JoystreamLib | undefined) => {
   const [chainConstant, setChainConstant] = useState<JoystreamChainConstants>({
     dataObjectPerMegabyteFee: new BN(0),
     dataObjectStateBloatBondValue: new BN(0),
