@@ -14,6 +14,7 @@ import Long from 'long'
 
 import { SentryLogger } from '@/utils/logs'
 
+import { getClaimableReward } from './channelPayouts'
 import { JoystreamLibError } from './errors'
 import {
   createActor,
@@ -60,7 +61,6 @@ import {
   VideoInputMetadata,
   VideoReaction,
 } from './types'
-import { getClaimableReward } from './utils'
 
 type AccountIdAccessor = () => AccountId | null
 type PublicExtrinsic<TxFunction, ReturnValue> = TxFunction extends (...a: infer U) => unknown

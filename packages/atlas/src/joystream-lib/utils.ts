@@ -1,9 +1,8 @@
-import { channelPayoutProof } from '@joystream/js/content'
 import { DeriveBalancesAll } from '@polkadot/api-derive/balances/types'
 import BN from 'bn.js'
 
 import { HAPI_TO_JOY_RATE } from '@/joystream-lib/config'
-import { AccountBalanceInfo, ChannelInputAssets, StringifiedNumber, VideoInputAssets } from '@/joystream-lib/types'
+import { AccountBalanceInfo, ChannelInputAssets, VideoInputAssets } from '@/joystream-lib/types'
 import { ConsoleLogger } from '@/utils/logs'
 
 const MAX_SAFE_NUMBER_BN = new BN(Number.MAX_SAFE_INTEGER)
@@ -66,25 +65,6 @@ export const calculateAssetsBloatFee = (
     return new BN(0)
   }
   return dataObjectStateBloatBondValue.muln(Object.values(assets).length)
-}
-
-export const getClaimableReward = async (
-  channelId: string,
-  cumulativeRewardEarned: StringifiedNumber | null,
-  nodeEndpoint: string,
-  payloadDataObjectId: string
-) => {
-  const payoutProof = await channelPayoutProof(
-    'URL',
-    `${nodeEndpoint}/api/v1/files/${payloadDataObjectId}`,
-    Number(channelId)
-  )
-
-  const reward = new BN(payoutProof.cumulativeRewardEarned).sub(new BN(cumulativeRewardEarned || 0))
-  return {
-    reward,
-    payoutProof,
-  }
 }
 
 export const parseAccountBalance = (balances: DeriveBalancesAll): AccountBalanceInfo => {
