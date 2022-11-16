@@ -81,7 +81,7 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ['blake3/browser-async', 'multihashes', 'buffer'],
+    include: ['blake3/browser-async', 'multihashes', 'buffer', 'crypto-js'],
     esbuildOptions: {
       define: {
         global: 'globalThis',
