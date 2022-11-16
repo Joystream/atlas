@@ -10,7 +10,6 @@ import { useEnvironmentStore } from '@/providers/environment/store'
 import { useUserStore } from '@/providers/user/user.store'
 import { SentryLogger } from '@/utils/logs'
 
-import JoystreamWorker from '../../utils/polkadot-worker?worker'
 import { useConnectionStatusStore } from '../connectionStatus'
 
 type ProxyCallbackFn = <T extends object>(callback: T) => T & ProxyMarked
@@ -24,10 +23,9 @@ export type JoystreamContextValue = {
 export const JoystreamContext = createContext<JoystreamContextValue | undefined>(undefined)
 JoystreamContext.displayName = 'JoystreamContext'
 
-const worker = new JoystreamWorker()
-// const worker = new Worker(new URL('../../utils/polkadot-worker', import.meta.url), {
-//   type: 'module',
-// })
+const worker = new Worker(new URL('../../utils/polkadot-worker', import.meta.url), {
+  type: 'module',
+})
 const api = wrap<typeof JoystreamLib>(worker)
 
 export const JoystreamProvider: FC<PropsWithChildren> = ({ children }) => {
