@@ -41,7 +41,6 @@
     "@livesession/sdk": "^1.1.4",
     "@loadable/component": "^5.15.2",
     "@lottiefiles/react-lottie-player": "^3.4.7",
-    "@rollup/plugin-inject": "^5.0.0",
     "@sentry/react": "^7.12.1",
     "@talismn/connect-wallets": "^1.2.1",
     "@tippyjs/react": "^4.2.6",
