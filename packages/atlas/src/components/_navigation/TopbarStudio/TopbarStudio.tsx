@@ -2,7 +2,7 @@ import { FC, MouseEvent, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { SvgActionAddVideo } from '@/assets/icons'
-import { SvgAppLogoStudio } from '@/assets/logos'
+import { AppLogo } from '@/components/AppLogo'
 import { AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
 import { Button } from '@/components/_buttons/Button'
 import { NotificationsButton } from '@/components/_navigation/NotificationsButton'
@@ -63,7 +63,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
   return (
     <>
       <StyledTopbarBase
-        fullLogoNode={<SvgAppLogoStudio height={32} width={undefined} />}
+        fullLogoNode={<AppLogo variant="studio" height={32} width={undefined} />}
         withoutHamburgerButton={hideChannelInfo}
         logoLinkUrl={absoluteRoutes.studio.index()}
       >

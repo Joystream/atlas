@@ -2,10 +2,11 @@ import styled from '@emotion/styled'
 import { FC } from 'react'
 
 import { SvgEmptyStateIllustration } from '@/assets/illustrations'
-import { SvgAppLogoFull, SvgJoystreamLogoFull } from '@/assets/logos'
+import { SvgJoystreamLogoFull } from '@/assets/logos'
 import { Text } from '@/components/Text'
 import { atlasConfig } from '@/config'
 
+import { AppLogo } from './components/AppLogo'
 import { cVar, sizes } from './styles'
 
 export const Maintenance: FC = () => (
@@ -26,7 +27,7 @@ export const Maintenance: FC = () => (
       </StyledAnchor>
     </Text>
     <Divider />
-    <StyledSvgAppLogoFull width={undefined} height={40} />
+    <StyledSvgAppLogoFull variant="full" width={undefined} height={40} />
     <StyledJoystreamAnchor href={atlasConfig.general.joystreamLandingPageUrl} target="_blank">
       <Text as="span" variant="t100" color="colorTextMuted" margin={{ right: 2 }}>
         Powered by
@@ -45,7 +46,7 @@ const Container = styled.div`
   transform: translateY(-50%);
 `
 
-const StyledSvgAppLogoFull = styled(SvgAppLogoFull)`
+const StyledSvgAppLogoFull = styled(AppLogo)`
   margin: 40px auto;
 `
 

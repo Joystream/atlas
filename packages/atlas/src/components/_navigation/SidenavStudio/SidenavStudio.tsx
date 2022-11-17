@@ -9,7 +9,7 @@ import {
   SvgSidebarUpload,
   SvgSidebarVideos,
 } from '@/assets/icons'
-import { SvgAppLogoStudio } from '@/assets/logos'
+import { AppLogo } from '@/components/AppLogo'
 import { Button } from '@/components/_buttons/Button'
 import { NavItemType } from '@/components/_navigation/NavItem'
 import { SidenavBase } from '@/components/_navigation/SidenavBase'
@@ -101,7 +101,7 @@ export const SidenavStudio: FC<SidenavStudioProps> = ({ className }) => {
     <SidenavBase
       expanded={expanded}
       toggleSideNav={setExpanded}
-      logoNode={<SvgAppLogoStudio height={32} width={undefined} />}
+      logoNode={<AppLogo variant="studio" height={32} width={undefined} />}
       logoLinkUrl={absoluteRoutes.studio.index()}
       items={studioNavbarItemsWithBadge}
       buttonsContent={buttons}

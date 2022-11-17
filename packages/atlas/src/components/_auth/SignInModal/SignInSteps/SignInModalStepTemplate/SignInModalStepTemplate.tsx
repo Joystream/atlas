@@ -12,7 +12,7 @@ import {
   CustomBackgroundContainer,
   HeaderContainer,
   LogoContainer,
-  StyledSvgAppLogoShortMonochrome,
+  StyledAppLogo,
 } from './SignInModalStepTemplate.styles'
 
 type SignInModalStepTemplateProps = PropsWithChildren<{
@@ -51,7 +51,9 @@ export const SignInModalStepTemplate: FC<SignInModalStepTemplateProps> = ({
           </>
         )}
         <AnimatedContainer hasNavigatedBack={hasNavigatedBack}>
-          <LogoContainer>{loader ? <Loader variant="medium" /> : <StyledSvgAppLogoShortMonochrome />}</LogoContainer>
+          <LogoContainer>
+            {loader ? <Loader variant="medium" /> : <StyledAppLogo variant="short-monochrome" />}
+          </LogoContainer>
           <HeaderContainer>
             <Text as="h3" variant={smMatch ? 'h500' : 'h400'}>
               {title}
