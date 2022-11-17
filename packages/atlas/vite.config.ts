@@ -18,6 +18,7 @@ export default defineConfig({
     emptyOutDir: true,
     outDir: path.resolve(__dirname, 'dist'),
     rollupOptions: {
+      plugins: [inject({ Buffer: ['buffer', 'Buffer'] })],
       input: {
         main: path.resolve(__dirname, 'src/index.html'),
         embedded: path.resolve(__dirname, 'src/embedded/index.html'),
