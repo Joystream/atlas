@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import { useParallax } from 'react-scroll-parallax'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { SvgActionChevronR } from '@/assets/icons'
 import hero576 from '@/assets/images/ypp-hero/hero-576.webp'
@@ -13,16 +14,45 @@ import yt2304 from '@/assets/images/ypp-hero/yt-2304.webp'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { cVar, transitions } from '@/styles'
 
-import { BackImage, FrontImage, HeroImageWrapper } from './YppHero.styles'
+import { BackImage, ButtonWrapper, FrontImage, HeroImageWrapper, SelectDifferentChannelButton } from './YppHero.styles'
 import { BackgroundContainer, StyledLimitedWidthContainer } from './YppLandingView.styles'
+
+type YppStatus = 'have-channel' | 'no-channel' | 'ypp-signed' | null
 
 type YppHeroProps = {
   onSignUpClick: () => void
+  onSelectChannel: () => void
+  yppStatus: YppStatus
+  hasAnotherUnsyncedChannel?: boolean
+  selectedChannelTitle?: string | null
 }
 
-export const YppHero: FC<YppHeroProps> = ({ onSignUpClick }) => {
+const getButtonText = (variant: YppStatus) => {
+  switch (variant) {
+    case 'have-channel':
+      return 'Sign up now'
+    case 'no-channel':
+      return 'Create channel & sign up'
+    case 'ypp-signed':
+      return 'Go to dashboard'
+  }
+}
+
+// fix html errors in last steps
+
+// show landing instead of dashboard in studio
+
+export const YppHero: FC<YppHeroProps> = ({
+  onSignUpClick,
+  onSelectChannel,
+  yppStatus,
+  hasAnotherUnsyncedChannel,
+  selectedChannelTitle,
+}) => {
   const mdMatch = useMediaMatch('md')
   const smMatch = useMediaMatch('sm')
   const endScroll = smMatch ? window.innerHeight / 3 : window.innerHeight
@@ -31,11 +61,12 @@ export const YppHero: FC<YppHeroProps> = ({ onSignUpClick }) => {
     endScroll,
     translateY: [0, -15],
   })
+
   return (
     <BackgroundContainer noBackground>
       <StyledLimitedWidthContainer centerText>
-        <LayoutGrid>
-          <GridItem as="header" colSpan={{ base: 12, sm: 8, lg: 6 }} colStart={{ sm: 3, lg: 4 }}>
+        <LayoutGrid as="header">
+          <GridItem colSpan={{ base: 12, sm: 8, lg: 6 }} colStart={{ sm: 3, lg: 4 }}>
             <Text
               as="h1"
               variant={mdMatch ? 'h800' : 'h600'}
@@ -58,29 +89,50 @@ export const YppHero: FC<YppHeroProps> = ({ onSignUpClick }) => {
             >
               Reupload and backup your YouTube videos to receive a guaranteed payout in the YouTube Partner Program.
             </Text>
-            <Button
-              size="large"
-              icon={<SvgActionChevronR />}
-              iconPlacement="right"
-              onClick={onSignUpClick}
-              data-aos="fade-up"
-              data-aos-delay="450"
-              data-aos-offset="40"
-              data-aos-easing="atlas-easing"
-            >
-              Sign up now
-            </Button>
+            <ButtonWrapper data-aos="fade-up" data-aos-delay="450" data-aos-offset="40" data-aos-easing="atlas-easing">
+              <SwitchTransition>
+                <CSSTransition
+                  timeout={parseInt(cVar('animationTimingFast', true))}
+                  key={yppStatus ? 'status-set' : 'loading'}
+                  classNames={transitions.names.fade}
+                >
+                  {yppStatus ? (
+                    <Button
+                      size="large"
+                      variant={yppStatus === 'ypp-signed' ? 'secondary' : 'primary'}
+                      icon={<SvgActionChevronR />}
+                      iconPlacement="right"
+                      onClick={onSignUpClick}
+                    >
+                      {getButtonText(yppStatus)}
+                    </Button>
+                  ) : (
+                    <SkeletonLoader width={190} height={48} />
+                  )}
+                </CSSTransition>
+              </SwitchTransition>
+            </ButtonWrapper>
+          </GridItem>
+        </LayoutGrid>
+        <LayoutGrid data-aos="fade-up" data-aos-delay="450" data-aos-offset="40" data-aos-easing="atlas-easing">
+          <GridItem colStart={{ sm: 3, md: 4, lg: 5 }} colSpan={{ sm: 8, md: 6, lg: 4 }}>
             <Text
               as="p"
               variant="t100"
               color="colorTextMuted"
-              margin={{ top: 2 }}
-              data-aos="fade-up"
-              data-aos-delay="450"
-              data-aos-offset="40"
-              data-aos-easing="atlas-easing"
+              margin={{ top: hasAnotherUnsyncedChannel && selectedChannelTitle ? 4 : 2 }}
             >
-              It takes 3 minutes and is 100% free.
+              {hasAnotherUnsyncedChannel && selectedChannelTitle ? (
+                <>
+                  Your channel "{selectedChannelTitle}" is already part of the YouTube Partner Program.{' '}
+                  <SelectDifferentChannelButton onClick={onSelectChannel} color="colorTextPrimary">
+                    Select a different channel
+                  </SelectDifferentChannelButton>{' '}
+                  to apply again.
+                </>
+              ) : (
+                'It takes 3 minutes and is 100% free.'
+              )}
             </Text>
           </GridItem>
         </LayoutGrid>

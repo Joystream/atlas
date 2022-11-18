@@ -1,8 +1,11 @@
 import axios from 'axios'
-import { Dispatch, FC, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
+import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router'
 
 import { useBasicChannel } from '@/api/hooks/channel'
+import { FullMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { SvgActionNewTab } from '@/assets/icons'
 import appScreenshot from '@/assets/images/ypp-authorization/app-screenshot.webp'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
@@ -28,12 +31,7 @@ import {
   Img,
   StyledSvgAppLogoShort,
 } from './YppAuthorizationModal.styles'
-import {
-  RequirmentError,
-  YPP_AUTHORIZATION_STEPS,
-  YPP_AUTHORIZATION_STEPS_WITHOUT_CHANNEL_SELECT,
-  YppAuthorizationStepsType,
-} from './YppAuthorizationModal.types'
+import { RequirmentError, YppAuthorizationStepsType } from './YppAuthorizationModal.types'
 import {
   DetailsFormData,
   YppAuthorizationDetailsFormStep,
@@ -41,11 +39,6 @@ import {
   YppAuthorizationSelectChannelStep,
   YppAuthorizationTermsAndConditionsStep,
 } from './YppAuthorizationSteps'
-
-export type YppAuthorizationModalProps = {
-  currentStepIdx: number | null
-  setCurrentStepIdx: Dispatch<SetStateAction<number | null>>
-}
 
 type FinalFormData = {
   authorizationCode?: string
@@ -55,13 +48,24 @@ type FinalFormData = {
   referrerChannelId?: number
 }
 
-export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentStepIdx, setCurrentStepIdx }) => {
-  const { activeMembership, setActiveUser, memberId } = useUser()
-  const channels = activeMembership?.channels
-  const channelsLoaded = !!channels
-  const hasMoreThanOneChannel = channels && channels.length > 1
-  const [selectedChannelId, setSelectedChannelId] = useState<string | null>(null)
+export type YppAuthorizationModalProps = {
+  currentStep: YppAuthorizationStepsType
+  onChangeStep: (step: YppAuthorizationStepsType) => void
+  unSyncedChannels?: FullMembershipFieldsFragment['channels']
+}
+
+export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
+  currentStep,
+  onChangeStep,
+  unSyncedChannels,
+}) => {
+  const { setActiveUser, memberId } = useUser()
+  const navigate = useNavigate()
+  const channelsLoaded = !!unSyncedChannels
+  const hasMoreThanOneChannel = unSyncedChannels && unSyncedChannels.length > 1
   const [finalFormData, setFinalFormData] = useState<FinalFormData | null>(null)
+  const selectedChannelId = useYppStore((store) => store.selectedChannelId)
+  const setSelectedChannelId = useYppStore((store) => store.actions.setSelectedChannelId)
 
   const smMatch = useMediaMatch('sm')
 
@@ -104,40 +108,30 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
 
-  const authorizationSteps = hasMoreThanOneChannel
-    ? YPP_AUTHORIZATION_STEPS
-    : YPP_AUTHORIZATION_STEPS_WITHOUT_CHANNEL_SELECT // if the user has only a single channel, skip "Select channel" step
-  const currentStep = currentStepIdx != null ? authorizationSteps[currentStepIdx] : null
-
-  const goToStep = useCallback(
-    (particularStep: YppAuthorizationStepsType) => {
-      setCurrentStepIdx(authorizationSteps.findIndex((step) => step === particularStep))
-    },
-    [authorizationSteps, setCurrentStepIdx]
-  )
-
-  const goToNextStep = useCallback(
-    () => setCurrentStepIdx((prev) => (prev != null ? prev + 1 : null)),
-    [setCurrentStepIdx]
-  )
-  const goToPreviousStep = useCallback(
-    () => setCurrentStepIdx((prev) => (prev != null ? prev - 1 : null)),
-    [setCurrentStepIdx]
-  )
-
   const { handleAuthorizeClick, ytRequirmentsErrors, ytResponseData, setYtRequirmentsErrors } = useYppGoogleAuth({
-    closeModal: useCallback(() => setCurrentStepIdx(null), [setCurrentStepIdx]),
+    closeModal: useCallback(() => onChangeStep(null), [onChangeStep]),
     channelsLoaded,
-    goToStep,
-    selectedChannelId,
-    setSelectedChannelId,
+    onChangeStep: onChangeStep,
   })
 
   const handleClose = useCallback(() => {
     setYtRequirmentsErrors([])
     setReferrerId(null)
-    setCurrentStepIdx(null)
-  }, [setCurrentStepIdx, setReferrerId, setYtRequirmentsErrors])
+    onChangeStep(null)
+    setSelectedChannelId(null)
+  }, [onChangeStep, setReferrerId, setSelectedChannelId, setYtRequirmentsErrors])
+
+  const handleGoBack = useCallback(() => {
+    if (currentStep === 'terms-and-conditions') {
+      onChangeStep('details')
+    }
+    if (currentStep === 'details') {
+      onChangeStep('requirements')
+    }
+    if (currentStep === 'requirements' && hasMoreThanOneChannel) {
+      onChangeStep('select-channel')
+    }
+  }, [currentStep, hasMoreThanOneChannel, onChangeStep])
 
   const handleSubmitDetailsForm = detailsFormMethods.handleSubmit((data) => {
     setFinalFormData(() => ({
@@ -147,7 +141,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
       email: data.email,
       ...(data.referrerChannelId ? { referrerChannelId: parseInt(data.referrerChannelId) } : {}),
     }))
-    goToStep('terms-and-conditions')
+    onChangeStep('terms-and-conditions')
   })
 
   const handleAcceptTermsAndSubmit = useCallback(async () => {
@@ -173,7 +167,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
       })
       if (completed) {
         setTimeout(() => {
-          goToNextStep()
+          onChangeStep('summary')
         }, 2000)
       }
     } catch (error) {
@@ -193,12 +187,12 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
     dataObjectStateBloatBondValue,
     displaySnackbar,
     finalFormData,
-    goToNextStep,
     handleTransaction,
     joystream,
     memberId,
     proxyCallback,
     selectedChannelId,
+    onChangeStep,
     youtubeCollaboratorMemberId,
   ])
 
@@ -215,20 +209,12 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
     }
   }, [detailsFormMethods, ytResponseData?.email])
 
-  // if selected channel is not set, default to the first one
-  useEffect(() => {
-    if (!channels || !channels.length || selectedChannelId) {
-      return
-    }
-    setSelectedChannelId(channels[0].id)
-  }, [channels, selectedChannelId, setSelectedChannelId])
-
   const selectedChannel = useMemo(() => {
-    if (!channels || !selectedChannelId) {
+    if (!unSyncedChannels || !selectedChannelId) {
       return null
     }
-    return channels.find((channel) => channel.id === selectedChannelId)
-  }, [channels, selectedChannelId])
+    return unSyncedChannels.find((channel) => channel.id === selectedChannelId)
+  }, [unSyncedChannels, selectedChannelId])
 
   const isSelectedChannelValid = useMemo(
     () =>
@@ -239,6 +225,23 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
       false,
     [selectedChannel]
   )
+
+  useEffect(() => {
+    if (!isSelectedChannelValid && currentStep === 'requirements') {
+      displaySnackbar({
+        title: `Your ${atlasConfig.general.appName} channel doesn't meet conditions`,
+        description: `Your ${atlasConfig.general.appName} channel must have a custom avatar, cover image, and description set in order to be enrolled in the program.`,
+        iconType: 'error',
+        actionText: 'Edit channel',
+        actionIcon: <SvgActionNewTab />,
+        actionIconPlacement: 'right',
+        onActionClick: () => {
+          selectedChannel && setActiveUser({ channelId: selectedChannel.id })
+          navigate(absoluteRoutes.studio.editChannel())
+        },
+      })
+    }
+  }, [currentStep, displaySnackbar, isSelectedChannelValid, navigate, selectedChannel, setActiveUser])
 
   const requirments = useMemo(
     () => [
@@ -266,15 +269,15 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
       case 'select-channel':
         return {
           title: 'Select channel',
-          description: 'Select the Atlas channel you want your YouTube channel to be connected with.',
+          description: `Select the ${atlasConfig.general.appName} channel you want your YouTube channel to be connected with.`,
           primaryButton: {
             text: 'Select channel',
-            onClick: goToNextStep,
+            onClick: () => onChangeStep('requirements'),
             disabled: !selectedChannel,
           },
           component: (
             <YppAuthorizationSelectChannelStep
-              channels={channels}
+              channels={unSyncedChannels}
               selectedChannelId={selectedChannelId}
               onSelectChannel={setSelectedChannelId}
             />
@@ -283,20 +286,13 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
       case 'requirements':
         return {
           title: 'Requirements',
-          description:
-            'Before you can apply to the program, make sure both your Atlas and YouTube channels meet the below conditions.',
+          description: `Before you can apply to the program, make sure both your ${atlasConfig.general.appName} and YouTube channels meet the below conditions.`,
           primaryButton: {
             text: isChannelFulfillRequirements ? 'Authorize with YouTube' : 'Close',
             onClick: isChannelFulfillRequirements ? handleAuthorizeClick : handleClose,
             disabled: !isSelectedChannelValid,
           },
-          component: (
-            <YppAuthorizationRequirementsStep
-              requirments={requirments}
-              onChangeChannel={() => selectedChannel && setActiveUser({ channelId: selectedChannel.id })}
-              isChannelValid={isSelectedChannelValid}
-            />
-          ),
+          component: <YppAuthorizationRequirementsStep requirments={requirments} />,
         }
       case 'fetching-data':
         return {
@@ -371,10 +367,10 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
     }
   }, [
     currentStep,
-    goToNextStep,
     selectedChannel,
-    channels,
+    unSyncedChannels,
     selectedChannelId,
+    setSelectedChannelId,
     isChannelFulfillRequirements,
     handleAuthorizeClick,
     handleClose,
@@ -383,22 +379,22 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({ currentS
     handleAcceptTermsAndSubmit,
     smMatch,
     updateChannelFee,
-    setActiveUser,
+    onChangeStep,
     handleSubmitDetailsForm,
   ])
 
   return (
     <FormProvider {...detailsFormMethods}>
       <DialogModal
-        show={currentStepIdx != null}
+        show={currentStep != null}
         dividers
         additionalActionsNodeMobilePosition="bottom"
         primaryButton={authorizationStep?.primaryButton}
         secondaryButton={
-          currentStepIdx !== 0 && currentStep !== 'fetching-data'
+          currentStep !== 'fetching-data' && currentStep != null
             ? currentStep === 'summary'
               ? { text: 'Close', onClick: handleClose }
-              : { text: 'Back', onClick: goToPreviousStep }
+              : { text: 'Back', onClick: handleGoBack }
             : undefined
         }
         additionalActionsNode={

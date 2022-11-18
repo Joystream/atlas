@@ -3,12 +3,14 @@ import { Meta, Story } from '@storybook/react'
 import { MemoryRouter } from 'react-router-dom'
 
 import { createApolloClient } from '@/api'
+import { OperatorsContextProvider } from '@/providers/assets/assets.provider'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
+import { JoystreamProvider } from '@/providers/joystream/joystream.provider'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { UserProvider } from '@/providers/user/user.provider'
 
 import { YppAuthorizationModal, YppAuthorizationModalProps } from './YppAuthorizationModal'
-import { YPP_AUTHORIZATION_STEPS_WITHOUT_CHANNEL_SELECT } from './YppAuthorizationModal.types'
+import { YppAuthorizationStepsType } from './YppAuthorizationModal.types'
 
 export default {
   title: 'ypp/YppAuthorizationModal',
@@ -18,9 +20,19 @@ export default {
     step: 'requirements',
   },
   argTypes: {
-    currentStepIdx: { table: { disable: true } },
+    currentStep: { table: { disable: true } },
     step: {
-      control: { type: 'select', options: YPP_AUTHORIZATION_STEPS_WITHOUT_CHANNEL_SELECT },
+      control: {
+        type: 'select',
+        options: [
+          'requirements',
+          'details',
+          'fetching-data',
+          'select-channel',
+          'summary',
+          'terms-and-conditions',
+        ] as YppAuthorizationStepsType[],
+      },
     },
   },
   decorators: [
@@ -29,11 +41,15 @@ export default {
       return (
         <MemoryRouter>
           <ApolloProvider client={apolloClient}>
-            <UserProvider>
-              <ConfirmationModalProvider>
-                <Story />
-              </ConfirmationModalProvider>
-            </UserProvider>
+            <OperatorsContextProvider>
+              <JoystreamProvider>
+                <UserProvider>
+                  <ConfirmationModalProvider>
+                    <Story />
+                  </ConfirmationModalProvider>
+                </UserProvider>
+              </JoystreamProvider>
+            </OperatorsContextProvider>
           </ApolloProvider>
         </MemoryRouter>
       )
@@ -41,15 +57,12 @@ export default {
   ],
 } as Meta<YppAuthorizationModalProps>
 
-const Template: Story<
-  YppAuthorizationModalProps & { step: typeof YPP_AUTHORIZATION_STEPS_WITHOUT_CHANNEL_SELECT[0] }
-> = (args) => {
+const Template: Story<YppAuthorizationModalProps & { step: YppAuthorizationStepsType }> = (args) => {
   const apolloClient = createApolloClient()
-  const stepIdx = args.step ? YPP_AUTHORIZATION_STEPS_WITHOUT_CHANNEL_SELECT.indexOf(args.step) : null
   return (
     <ApolloProvider client={apolloClient}>
       <OverlayManagerProvider>
-        <YppAuthorizationModal {...args} currentStepIdx={stepIdx} />
+        <YppAuthorizationModal {...args} currentStep={args.step} />
       </OverlayManagerProvider>
     </ApolloProvider>
   )

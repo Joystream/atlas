@@ -31,19 +31,15 @@ const GOOGLE_AUTH_PARAMS = {
 
 export const useYppGoogleAuth = ({
   closeModal,
-  selectedChannelId,
-  setSelectedChannelId,
   channelsLoaded,
-  goToStep,
+  onChangeStep,
 }: {
   closeModal: () => void
-  selectedChannelId: string | null
-  setSelectedChannelId: (channelId: string | null) => void
   channelsLoaded: boolean
-  goToStep: (particularStep: YppAuthorizationStepsType) => void
+  onChangeStep: (step: YppAuthorizationStepsType) => void
 }) => {
-  const oldAuthState = useYppStore((state) => state.authState)
-  const setAuthState = useYppStore((state) => state.actions.setAuthState)
+  const { authState: oldAuthState, selectedChannelId } = useYppStore((state) => state)
+  const { setAuthState, setSelectedChannelId } = useYppStore((state) => state.actions)
   const [ytRequirmentsErrors, setYtRequirmentsErrors] = useState<RequirmentError[]>([])
   const [ytResponseData, setYtResponseData] = useState<YoutubeResponseData | null>(null)
 
@@ -92,7 +88,7 @@ export const useYppGoogleAuth = ({
           onClick: () => {
             closeConfirmationModal()
             resetSearchParams()
-            goToStep('requirements')
+            onChangeStep('requirements')
           },
         },
         secondaryButton: {
@@ -105,7 +101,7 @@ export const useYppGoogleAuth = ({
         },
       })
     },
-    [openConfirmationModal, closeConfirmationModal, resetSearchParams, goToStep, closeModal]
+    [openConfirmationModal, closeConfirmationModal, resetSearchParams, onChangeStep, closeModal]
   )
 
   const handleGoogleAuthSuccess = useCallback(
@@ -138,7 +134,7 @@ export const useYppGoogleAuth = ({
 
         setSelectedChannelId(channelId)
         setAuthState(null)
-        goToStep('fetching-data')
+        onChangeStep('fetching-data')
 
         resetSearchParams()
 
@@ -150,7 +146,7 @@ export const useYppGoogleAuth = ({
         )
 
         setYtResponseData({ ...response.data, authorizationCode: code })
-        goToStep('details')
+        onChangeStep('details')
       } catch (error) {
         if (isAxiosError<ChannelVerificationErrorResponse>(error)) {
           const errorResponseData = error.response?.data
@@ -173,7 +169,7 @@ export const useYppGoogleAuth = ({
             setYtRequirmentsErrors(Object.values(RequirmentError))
           }
         }
-        goToStep('requirements')
+        onChangeStep('requirements')
       }
     },
     [
@@ -181,7 +177,7 @@ export const useYppGoogleAuth = ({
       channelsLoaded,
       setSelectedChannelId,
       setAuthState,
-      goToStep,
+      onChangeStep,
       resetSearchParams,
       displaySnackbar,
       closeModal,

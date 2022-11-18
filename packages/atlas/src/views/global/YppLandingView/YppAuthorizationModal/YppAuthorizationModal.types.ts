@@ -2,19 +2,14 @@ import { FullMembershipFieldsFragment } from '@/api/queries/__generated__/fragme
 
 export type MemberChannel = FullMembershipFieldsFragment['channels'][0]
 
-export const YPP_AUTHORIZATION_STEPS = [
-  'select-channel',
-  'requirements',
-  'fetching-data',
-  'details',
-  'terms-and-conditions',
-  'summary',
-] as const
-export const YPP_AUTHORIZATION_STEPS_WITHOUT_CHANNEL_SELECT = YPP_AUTHORIZATION_STEPS.slice(1)
-
 export type YppAuthorizationStepsType =
-  | typeof YPP_AUTHORIZATION_STEPS[number]
-  | typeof YPP_AUTHORIZATION_STEPS_WITHOUT_CHANNEL_SELECT[number]
+  | 'select-channel'
+  | 'requirements'
+  | 'fetching-data'
+  | 'details'
+  | 'terms-and-conditions'
+  | 'summary'
+  | null
 
 export enum RequirmentError {
   CHANNEL_CRITERIA_UNMET_SUBSCRIBERS = 'CHANNEL_CRITERIA_UNMET_SUBSCRIBERS',
