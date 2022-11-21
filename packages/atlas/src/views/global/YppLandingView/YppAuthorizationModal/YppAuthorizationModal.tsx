@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router'
 
 import { useBasicChannel } from '@/api/hooks/channel'
 import { FullMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { SvgActionNewTab } from '@/assets/icons'
+import { SvgActionNewTab, SvgAlertsError32 } from '@/assets/icons'
 import appScreenshot from '@/assets/images/ypp-authorization/app-screenshot.webp'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
@@ -27,13 +27,14 @@ import { useYppGoogleAuth } from './YppAuthorizationModal.hooks'
 import {
   AdditionalSubtitle,
   AdditionalSubtitleWrapper,
+  Anchor,
   Content,
   DescriptionText,
   HeaderIconsWrapper,
   Img,
   StyledSvgAppLogoShort,
 } from './YppAuthorizationModal.styles'
-import { RequirmentError, YppAuthorizationStepsType } from './YppAuthorizationModal.types'
+import { YppAuthorizationErrorCode, YppAuthorizationStepsType } from './YppAuthorizationModal.types'
 import {
   DetailsFormData,
   YppAuthorizationDetailsFormStep,
@@ -55,6 +56,8 @@ export type YppAuthorizationModalProps = {
   onChangeStep: (step: YppAuthorizationStepsType) => void
   unSyncedChannels?: FullMembershipFieldsFragment['channels']
 }
+
+const APP_NAME = atlasConfig.general.appName
 
 export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   currentStep,
@@ -110,7 +113,13 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
 
-  const { handleAuthorizeClick, ytRequirmentsErrors, ytResponseData, setYtRequirmentsErrors } = useYppGoogleAuth({
+  const {
+    handleAuthorizeClick,
+    ytRequirmentsErrors,
+    ytResponseData,
+    setYtRequirmentsErrors,
+    alreadyRegisteredChannel,
+  } = useYppGoogleAuth({
     closeModal: useCallback(() => onChangeStep(null), [onChangeStep]),
     channelsLoaded,
     onChangeStep: onChangeStep,
@@ -127,7 +136,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     if (currentStep === 'terms-and-conditions') {
       onChangeStep('details')
     }
-    if (currentStep === 'details') {
+    if (currentStep === 'details' || currentStep === 'channel-already-registered') {
       onChangeStep('requirements')
     }
     if (currentStep === 'requirements' && hasMoreThanOneChannel) {
@@ -231,8 +240,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   useEffect(() => {
     if (!isSelectedChannelValid && currentStep === 'requirements') {
       displaySnackbar({
-        title: `Your ${atlasConfig.general.appName} channel doesn't meet conditions`,
-        description: `Your ${atlasConfig.general.appName} channel must have a custom avatar, cover image, and description set in order to be enrolled in the program.`,
+        title: `Your ${APP_NAME} channel doesn't meet conditions`,
+        description: `Your ${APP_NAME} channel must have a custom avatar, cover image, and description set in order to be enrolled in the program.`,
         iconType: 'error',
         actionText: 'Edit channel',
         actionIcon: <SvgActionNewTab />,
@@ -247,18 +256,27 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
 
   const requirments = useMemo(
     () => [
-      { text: 'Your Atlas channel avatar, cover image, and description are set', fulfilled: isSelectedChannelValid },
+      {
+        text: `Your ${APP_NAME} channel avatar, cover image, and description are set`,
+        fulfilled: isSelectedChannelValid,
+      },
       {
         text: 'Your YouTube channel is at least 3 months old',
-        fulfilled: !ytRequirmentsErrors.some((error) => error === RequirmentError.CHANNEL_CRITERIA_UNMET_CREATION_DATE),
+        fulfilled: !ytRequirmentsErrors.some(
+          (error) => error === YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_CREATION_DATE
+        ),
       },
       {
         text: 'Your YouTube channel has at least 10 videos, all published at least 1 month ago',
-        fulfilled: !ytRequirmentsErrors.some((error) => error === RequirmentError.CHANNEL_CRITERIA_UNMET_VIDEOS),
+        fulfilled: !ytRequirmentsErrors.some(
+          (error) => error === YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_VIDEOS
+        ),
       },
       {
         text: 'Your YouTube channel has at least 50 subscribers',
-        fulfilled: !ytRequirmentsErrors.some((error) => error === RequirmentError.CHANNEL_CRITERIA_UNMET_SUBSCRIBERS),
+        fulfilled: !ytRequirmentsErrors.some(
+          (error) => error === YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_SUBSCRIBERS
+        ),
       },
     ],
     [isSelectedChannelValid, ytRequirmentsErrors]
@@ -271,7 +289,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       case 'select-channel':
         return {
           title: 'Select channel',
-          description: `Select the ${atlasConfig.general.appName} channel you want your YouTube channel to be connected with.`,
+          description: `Select the ${APP_NAME} channel you want your YouTube channel to be connected with.`,
           primaryButton: {
             text: 'Select channel',
             onClick: () => onChangeStep('requirements'),
@@ -288,7 +306,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       case 'requirements':
         return {
           title: 'Requirements',
-          description: `Before you can apply to the program, make sure both your ${atlasConfig.general.appName} and YouTube channels meet the below conditions.`,
+          description: `Before you can apply to the program, make sure both your ${APP_NAME} and YouTube channels meet the below conditions.`,
           primaryButton: {
             text: isChannelFulfillRequirements ? 'Authorize with YouTube' : 'Close',
             onClick: isChannelFulfillRequirements ? handleAuthorizeClick : handleClose,
@@ -321,8 +339,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         return {
           title: 'Terms & conditions',
           // TODO: add proper copy once it's available in figma https://www.figma.com/file/oQqFqdAiPu16eeE2aA5AD5?node-id=1637:118716#267556722
-          description:
-            'Once automatic YouTube videos sync is available, in order for it to work, your Atlas channel [NEEDS TO DO WHAT?]. This is purely a technical measure and does not affect ownership and rights to the content uploaded to you Atlas channel.',
+          description: `Once automatic YouTube videos sync is available, in order for it to work, your ${APP_NAME} channel [NEEDS TO DO WHAT?]. This is purely a technical measure and does not affect ownership and rights to the content uploaded to you ${APP_NAME} channel.`,
           primaryButton: {
             text: 'Accept terms & sign',
             onClick: handleAcceptTermsAndSubmit,
@@ -353,7 +370,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           description: (
             <>
               <DescriptionText variant="t200" as="span" color="inherit">
-                Congratulations! You just received 200 JOY as your Atlas channel is now officially enrolled in the
+                Congratulations! You just received 200 JOY as your {APP_NAME} channel is now officially enrolled in the
                 YouTube Partner Program and tied with a YouTube channel.{' '}
               </DescriptionText>
               <DescriptionText variant="t200" as="span" margin={{ top: 2 }} color="inherit">
@@ -367,6 +384,26 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           ),
           primaryButton: { text: 'Go to dashboard' },
           component: <Img src={appScreenshot} />,
+        }
+      case 'channel-already-registered':
+        return {
+          title: 'Authorization failed',
+          primaryButton: {
+            text: 'Select another channel',
+            onClick: handleAuthorizeClick,
+          },
+          description: (
+            <>
+              The YouTube channel you selected is already enrolled in the YouTube Partner Program and is tied to the{' '}
+              {alreadyRegisteredChannel?.channelTitle} {APP_NAME} channel which belongs to{' '}
+              {alreadyRegisteredChannel?.ownerMemberHandle}. If you believe this is a mistake, try again or reach out{' '}
+              <Text variant="t200" as="span" color="colorTextPrimary">
+                <Anchor href={atlasConfig.general.joystreamDiscordUrl} target="_blank">
+                  our Discord server.
+                </Anchor>
+              </Text>
+            </>
+          ),
         }
     }
   }, [
@@ -383,6 +420,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     handleAcceptTermsAndSubmit,
     smMatch,
     updateChannelFee,
+    alreadyRegisteredChannel?.channelTitle,
+    alreadyRegisteredChannel?.ownerMemberHandle,
     onChangeStep,
     handleSubmitDetailsForm,
   ])
@@ -411,7 +450,13 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         }
       >
         <HeaderIconsWrapper>
-          {currentStep === 'fetching-data' ? <Loader variant="medium" /> : <StyledSvgAppLogoShort />}
+          {currentStep === 'fetching-data' ? (
+            <Loader variant="medium" />
+          ) : currentStep === 'channel-already-registered' ? (
+            <SvgAlertsError32 />
+          ) : (
+            <StyledSvgAppLogoShort />
+          )}
         </HeaderIconsWrapper>
         <Text variant={smMatch ? 'h500' : 'h400'} as="h2" margin={{ top: 6, bottom: 2 }}>
           {authorizationStep?.title}

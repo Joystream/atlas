@@ -31,6 +31,7 @@ export default {
           'select-channel',
           'summary',
           'terms-and-conditions',
+          'channel-already-registered',
         ] as YppAuthorizationStepsType[],
       },
     },

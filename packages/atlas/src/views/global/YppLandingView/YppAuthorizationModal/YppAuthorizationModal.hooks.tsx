@@ -1,8 +1,14 @@
+import { useApolloClient } from '@apollo/client'
 import axios from 'axios'
 import { isArray } from 'lodash-es'
 import { useCallback, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
+import {
+  GetFullChannelDocument,
+  GetFullChannelQuery,
+  GetFullChannelQueryVariables,
+} from '@/api/queries/__generated__/channels.generated'
 import { atlasConfig } from '@/config'
 import { GOOGLE_OAUTH_ENDPOINT } from '@/config/env'
 import { useConfirmationModal } from '@/providers/confirmationModal'
@@ -15,9 +21,10 @@ import { SentryLogger } from '@/utils/logs'
 import {
   ChannelVerificationErrorResponse,
   ChannelVerificationSuccessResponse,
-  RequirmentError,
   YoutubeResponseData,
+  YppAuthorizationErrorCode,
   YppAuthorizationStepsType,
+  YppRequirementsErrorCode,
 } from './YppAuthorizationModal.types'
 
 const GOOGLE_CONSOLE_CLIENT_ID = atlasConfig.features.ypp.googleConsoleClientId
@@ -27,6 +34,11 @@ const GOOGLE_AUTH_PARAMS = {
   scope: 'https://www.googleapis.com/auth/youtube.force-ssl',
   include_granted_scopes: 'true',
   prompt: 'consent',
+}
+
+type AlreadyRegisteredChannel = {
+  channelTitle: string
+  ownerMemberHandle: string
 }
 
 export const useYppGoogleAuth = ({
@@ -40,8 +52,11 @@ export const useYppGoogleAuth = ({
 }) => {
   const { authState: oldAuthState, selectedChannelId } = useYppStore((state) => state)
   const { setAuthState, setSelectedChannelId } = useYppStore((state) => state.actions)
-  const [ytRequirmentsErrors, setYtRequirmentsErrors] = useState<RequirmentError[]>([])
+  const [ytRequirmentsErrors, setYtRequirmentsErrors] = useState<YppRequirementsErrorCode[]>([])
   const [ytResponseData, setYtResponseData] = useState<YoutubeResponseData | null>(null)
+  const [alreadyRegisteredChannel, setAlreadyRegisteredChannel] = useState<AlreadyRegisteredChannel | null>(null)
+
+  const client = useApolloClient()
 
   const [openConfirmationModal, closeConfirmationModal] = useConfirmationModal()
   const { displaySnackbar } = useSnackbar()
@@ -156,19 +171,40 @@ export const useYppGoogleAuth = ({
 
             errorCodes && setYtRequirmentsErrors(errorCodes)
           }
-          if (
+          const isChannelNotFoundError =
             errorResponseData &&
             'errorCode' in errorResponseData &&
-            errorResponseData.errorCode === 'CHANNEL_NOT_FOUND'
-          ) {
+            errorResponseData.errorCode === YppAuthorizationErrorCode.CHANNEL_NOT_FOUND
+
+          if (isChannelNotFoundError) {
             displaySnackbar({
               title: 'Authorization failed',
               description: `You don't have youtube channel.`,
               iconType: 'error',
             })
-            setYtRequirmentsErrors(Object.values(RequirmentError))
+            setYtRequirmentsErrors(Object.values(YppAuthorizationErrorCode))
+          }
+
+          const isChannelAlreadyRegistered =
+            errorResponseData &&
+            'errorCode' in errorResponseData &&
+            errorResponseData.errorCode === YppAuthorizationErrorCode.CHANNEL_ALREADY_REGISTERED
+
+          if (isChannelAlreadyRegistered) {
+            const { data } = await client.query<GetFullChannelQuery, GetFullChannelQueryVariables>({
+              query: GetFullChannelDocument,
+              variables: { where: { id: errorResponseData.result.toString() } },
+            })
+            setAlreadyRegisteredChannel({
+              channelTitle: data.channelByUniqueInput?.title || '',
+              ownerMemberHandle: data.channelByUniqueInput?.ownerMember?.handle || '',
+            })
+
+            onChangeStep('channel-already-registered')
+            return
           }
         }
+
         onChangeStep('requirements')
       }
     },
@@ -181,6 +217,7 @@ export const useYppGoogleAuth = ({
       resetSearchParams,
       displaySnackbar,
       closeModal,
+      client,
     ]
   )
 
@@ -203,5 +240,5 @@ export const useYppGoogleAuth = ({
     }
   }, [handleGoogleAuthError, searchParams])
 
-  return { handleAuthorizeClick, ytRequirmentsErrors, ytResponseData, setYtRequirmentsErrors }
+  return { handleAuthorizeClick, ytRequirmentsErrors, ytResponseData, setYtRequirmentsErrors, alreadyRegisteredChannel }
 }

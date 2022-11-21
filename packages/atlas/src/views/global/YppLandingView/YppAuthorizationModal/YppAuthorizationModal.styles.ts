@@ -26,6 +26,12 @@ export const DescriptionText = styled(Text)`
   display: block;
 `
 
+export const Anchor = styled.a`
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+`
+
 export const Img = styled.img`
   width: 100%;
 `
