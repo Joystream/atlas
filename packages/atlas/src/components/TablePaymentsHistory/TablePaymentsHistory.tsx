@@ -48,7 +48,7 @@ export type TablePaymentsHistoryProps = {
 }
 
 export const TablePaymentsHistory: FC<TablePaymentsHistoryProps> = ({ data }) => {
-  const mappedData = useMemo(
+  const mappedData: TableProps['data'] = useMemo(
     () =>
       data.map((data) => ({
         date: <Date date={data.date} />,
