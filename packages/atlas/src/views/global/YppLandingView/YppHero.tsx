@@ -42,10 +42,6 @@ const getButtonText = (variant: YppStatus) => {
   }
 }
 
-// fix html errors in last steps
-
-// show landing instead of dashboard in studio
-
 export const YppHero: FC<YppHeroProps> = ({
   onSignUpClick,
   onSelectChannel,

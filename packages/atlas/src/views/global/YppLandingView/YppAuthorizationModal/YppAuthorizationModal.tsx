@@ -26,7 +26,9 @@ import { SentryLogger } from '@/utils/logs'
 import { useYppGoogleAuth } from './YppAuthorizationModal.hooks'
 import {
   AdditionalSubtitle,
+  AdditionalSubtitleWrapper,
   Content,
+  DescriptionText,
   HeaderIconsWrapper,
   Img,
   StyledSvgAppLogoShort,
@@ -326,7 +328,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
             onClick: handleAcceptTermsAndSubmit,
           },
           additionalSubtitleNode: (
-            <AdditionalSubtitle>
+            <AdditionalSubtitleWrapper>
               <Text variant={smMatch ? 'h400' : 'h300'} as="h3" margin={{ bottom: 4 }}>
                 Transaction fee
               </Text>
@@ -335,13 +337,13 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
                 <NumberFormat as="span" variant="t200" value={updateChannelFee} withToken /> . Transaction fees are
                 covered from your membership account balance.
               </Text>
-              <Text variant={smMatch ? 'h400' : 'h300'} as="span">
+              <AdditionalSubtitle variant={smMatch ? 'h400' : 'h300'} as="h3">
                 Automatic YouTube sync
-              </Text>{' '}
+              </AdditionalSubtitle>{' '}
               <Text variant="t100" as="span" color="colorTextMuted">
                 Coming later this year
               </Text>
-            </AdditionalSubtitle>
+            </AdditionalSubtitleWrapper>
           ),
           component: <YppAuthorizationTermsAndConditionsStep />,
         }
@@ -350,15 +352,17 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           title: 'Congratulations!',
           description: (
             <>
-              Congratulations! You just received 200 JOY as your Atlas channel is now officially enrolled in the YouTube
-              Partner Program and tied with a YouTube channel.{' '}
-              <Text variant="t200" as="p" margin={{ top: 2 }} color="colorText">
+              <DescriptionText variant="t200" as="span" color="inherit">
+                Congratulations! You just received 200 JOY as your Atlas channel is now officially enrolled in the
+                YouTube Partner Program and tied with a YouTube channel.{' '}
+              </DescriptionText>
+              <DescriptionText variant="t200" as="span" margin={{ top: 2 }} color="inherit">
                 All information around your activity in the program can be found in the{' '}
                 <Button variant="primary" _textOnly to={absoluteRoutes.studio.yppDashboard()}>
                   YPP page in Studio
                 </Button>
                 .
-              </Text>
+              </DescriptionText>
             </>
           ),
           primaryButton: { text: 'Go to dashboard' },

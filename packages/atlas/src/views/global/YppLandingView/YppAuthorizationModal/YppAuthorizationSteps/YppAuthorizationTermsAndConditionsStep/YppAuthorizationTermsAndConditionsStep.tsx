@@ -49,17 +49,17 @@ export const YppAuthorizationTermsAndConditionsStep: FC = () => {
           3x
         </MultiplierText>
       </TierItem>
-      <Text variant={smMatch ? 'h400' : 'h300'} as="h2" margin={{ bottom: 4 }}>
+      <Text variant={smMatch ? 'h400' : 'h300'} as="h3" margin={{ bottom: 4 }}>
         Terms
       </Text>
-      <Text variant="t200-strong" as="p" margin={{ bottom: 2 }}>
+      <Text variant="t200-strong" as="h4" margin={{ bottom: 2 }}>
         1. You can opt out at any time
       </Text>
       <Text variant="t200" color="colorText" as="p" margin={{ bottom: 4 }}>
         To do this contact us on discord or by email and you will be opted out from the program. Your information will
         be deleted. You won’t have to return any tokens that you have already earn.
       </Text>
-      <Text variant="t200-strong" as="p" margin={{ bottom: 2 }}>
+      <Text variant="t200-strong" as="h4" margin={{ bottom: 2 }}>
         2. Lorem ipsum et dolores
       </Text>
       <Text variant="t200" color="colorText" as="p">

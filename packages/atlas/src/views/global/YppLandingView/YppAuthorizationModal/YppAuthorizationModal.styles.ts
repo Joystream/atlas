@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 
 import { SvgControlsConnect } from '@/assets/icons'
 import { SvgAppLogoShort } from '@/assets/logos'
+import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 
 export const StyledSvgAppLogoShort = styled(SvgAppLogoShort)`
@@ -13,9 +14,16 @@ export const StyledSvgAppLogoShort = styled(SvgAppLogoShort)`
 export const Content = styled.div`
   margin-top: ${sizes(6)};
 `
-export const AdditionalSubtitle = styled.div`
+export const AdditionalSubtitleWrapper = styled.div`
   margin-top: ${sizes(6)};
   margin-bottom: ${sizes(4)};
+`
+export const AdditionalSubtitle = styled(Text)`
+  display: inline;
+`
+
+export const DescriptionText = styled(Text)`
+  display: block;
 `
 
 export const Img = styled.img`
