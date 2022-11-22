@@ -1,7 +1,7 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SvgAppLogoShortMonochrome } from '@/assets/logos'
+import { AppLogo } from '@/components/AppLogo'
 import { cVar, media, sizes } from '@/styles'
 
 export const HeaderContainer = styled.div`
@@ -20,7 +20,7 @@ export const LogoContainer = styled.div`
   }
 `
 
-export const StyledSvgAppLogoShortMonochrome = styled(SvgAppLogoShortMonochrome)`
+export const StyledAppLogo = styled(AppLogo)`
   height: 36px;
   width: auto;
 

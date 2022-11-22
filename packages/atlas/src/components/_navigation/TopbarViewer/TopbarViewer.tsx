@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { SvgActionMember } from '@/assets/icons'
-import { SvgAppLogoFull } from '@/assets/logos'
+import { AppLogo } from '@/components/AppLogo'
 import { Searchbar } from '@/components/Searchbar'
 import { Button } from '@/components/_buttons/Button'
 import { NotificationsButton } from '@/components/_navigation/NotificationsButton'
@@ -93,7 +93,7 @@ export const TopbarViewer: FC = () => {
       <StyledTopbarBase
         hasFocus={searchOpen}
         noLogo={!mdMatch && !!searchQuery}
-        fullLogoNode={<SvgAppLogoFull height={32} width={undefined} />}
+        fullLogoNode={<AppLogo variant="full" height={32} width={undefined} />}
         logoLinkUrl={absoluteRoutes.viewer.index()}
       >
         <SearchbarContainer>

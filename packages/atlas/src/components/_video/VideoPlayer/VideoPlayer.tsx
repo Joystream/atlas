@@ -42,9 +42,9 @@ import {
   PlayButton,
   PlayControl,
   ScreenControls,
+  StyledAppLogoFullMonochrome,
   StyledAppLogoShortMonochrome,
   StyledEmbeddedLogoLink,
-  StyledSvgAppLogoFullMonochrome,
   StyledSvgControlsFullScreen,
   StyledSvgControlsPause,
   StyledSvgControlsPipOff,
@@ -830,7 +830,11 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                       rel="noopener noreferrer"
                       target="_blank"
                     >
-                      {xsMatch ? <StyledSvgAppLogoFullMonochrome /> : <StyledAppLogoShortMonochrome />}
+                      {xsMatch ? (
+                        <StyledAppLogoFullMonochrome variant="full-monochrome" />
+                      ) : (
+                        <StyledAppLogoShortMonochrome variant="short-monochrome" />
+                      )}
                     </a>
                   )}
                 </ScreenControls>
@@ -893,7 +897,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                 target="_blank"
                 onClick={(e) => e.stopPropagation()}
               >
-                <StyledSvgAppLogoFullMonochrome embedded />
+                <StyledAppLogoFullMonochrome variant="full-monochrome" embedded />
               </StyledEmbeddedLogoLink>
             )}
           </>
