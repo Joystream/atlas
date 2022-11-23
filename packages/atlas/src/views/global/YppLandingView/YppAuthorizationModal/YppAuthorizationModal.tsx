@@ -70,7 +70,9 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   const hasMoreThanOneChannel = unSyncedChannels && unSyncedChannels.length > 1
   const [finalFormData, setFinalFormData] = useState<FinalFormData | null>(null)
   const selectedChannelId = useYppStore((store) => store.selectedChannelId)
+  const referrerId = useYppStore((store) => store.referrerId)
   const setSelectedChannelId = useYppStore((store) => store.actions.setSelectedChannelId)
+  const setReferrerId = useYppStore((store) => store.actions.setReferrerId)
 
   const smMatch = useMediaMatch('sm')
 
@@ -86,9 +88,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
 
   const { joystream, proxyCallback } = useJoystream()
   const youtubeCollaboratorMemberId = atlasConfig.features.ypp.youtubeCollaboratorMemberId || ''
-
-  const referrerId = useYppStore((store) => store.referrerId)
-  const setReferrerId = useYppStore((store) => store.actions.setReferrerId)
 
   const { channel: channel } = useBasicChannel(referrerId || '', {
     skip: !referrerId,
@@ -140,9 +139,18 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       onChangeStep('requirements')
     }
     if (currentStep === 'requirements' && hasMoreThanOneChannel) {
+      setYtRequirmentsErrors([])
       onChangeStep('select-channel')
     }
-  }, [currentStep, hasMoreThanOneChannel, onChangeStep])
+  }, [currentStep, hasMoreThanOneChannel, onChangeStep, setYtRequirmentsErrors])
+
+  const handleSelectChannel = useCallback(
+    (selectedChannelId: string) => {
+      setYtRequirmentsErrors([])
+      setSelectedChannelId(selectedChannelId)
+    },
+    [setSelectedChannelId, setYtRequirmentsErrors]
+  )
 
   const handleSubmitDetailsForm = detailsFormMethods.handleSubmit((data) => {
     setFinalFormData(() => ({
@@ -299,7 +307,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
             <YppAuthorizationSelectChannelStep
               channels={unSyncedChannels}
               selectedChannelId={selectedChannelId}
-              onSelectChannel={setSelectedChannelId}
+              onSelectChannel={handleSelectChannel}
             />
           ),
         }
@@ -351,7 +359,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
               </Text>
               <Text variant="t200" as="p" color="colorText" margin={{ bottom: 6 }}>
                 Applying for the program requires requires a blockchain transaction, which comes with a fee of{' '}
-                <NumberFormat as="span" variant="t200" value={updateChannelFee} withToken /> . Transaction fees are
+                <NumberFormat as="span" variant="t200" value={updateChannelFee} withToken />. Transaction fees are
                 covered from your membership account balance.
               </Text>
               <AdditionalSubtitle variant={smMatch ? 'h400' : 'h300'} as="h3">
@@ -411,7 +419,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     selectedChannel,
     unSyncedChannels,
     selectedChannelId,
-    setSelectedChannelId,
+    handleSelectChannel,
     isChannelFulfillRequirements,
     handleAuthorizeClick,
     handleClose,

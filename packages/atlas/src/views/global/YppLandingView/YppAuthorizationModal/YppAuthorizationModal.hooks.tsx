@@ -119,6 +119,25 @@ export const useYppGoogleAuth = ({
     [openConfirmationModal, closeConfirmationModal, resetSearchParams, onChangeStep, closeModal]
   )
 
+  const displayUnknownErrorSnackbar = useCallback(
+    (error: unknown, code: string, state: string | null) => {
+      // other unknown axios errors
+      displaySnackbar({
+        title: 'Authorization failed',
+        description: 'An unexpected error occurred. Please try again.',
+        iconType: 'error',
+      })
+      SentryLogger.error('Failed to handle google auth success', 'YppAuthorizationModal', error, {
+        ypp: {
+          code,
+          state,
+        },
+      })
+      onChangeStep('requirements')
+    },
+    [displaySnackbar, onChangeStep]
+  )
+
   const handleGoogleAuthSuccess = useCallback(
     async (code: string, state: string | null) => {
       if (!atlasConfig.features.ypp.youtubeSyncApiUrl) {
@@ -166,11 +185,16 @@ export const useYppGoogleAuth = ({
         if (isAxiosError<ChannelVerificationErrorResponse>(error)) {
           const errorResponseData = error.response?.data
           const errorMessages = error.response?.data.message
-          if (isArray(errorMessages)) {
-            const errorCodes = isArray(errorMessages) ? errorMessages?.map((message) => message.errorCode) : undefined
+
+          const isRequirmentsError = isArray(errorMessages)
+          if (isRequirmentsError) {
+            const errorCodes = isRequirmentsError ? errorMessages?.map((message) => message.errorCode) : undefined
 
             errorCodes && setYtRequirmentsErrors(errorCodes)
+            onChangeStep('requirements')
+            return
           }
+
           const isChannelNotFoundError =
             errorResponseData &&
             'errorCode' in errorResponseData &&
@@ -183,6 +207,8 @@ export const useYppGoogleAuth = ({
               iconType: 'error',
             })
             setYtRequirmentsErrors(Object.values(YppAuthorizationErrorCode))
+            onChangeStep('requirements')
+            return
           }
 
           const isChannelAlreadyRegistered =
@@ -203,9 +229,10 @@ export const useYppGoogleAuth = ({
             onChangeStep('channel-already-registered')
             return
           }
+          displayUnknownErrorSnackbar(error, code, state)
+          return
         }
-
-        onChangeStep('requirements')
+        displayUnknownErrorSnackbar(error, code, state)
       }
     },
     [
@@ -217,6 +244,7 @@ export const useYppGoogleAuth = ({
       resetSearchParams,
       displaySnackbar,
       closeModal,
+      displayUnknownErrorSnackbar,
       client,
     ]
   )
