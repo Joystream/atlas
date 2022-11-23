@@ -475,18 +475,12 @@ export class JoystreamLibExtrinsics {
     channelId: string,
     memberId: MemberId,
     cumulativeRewardEarned: StringifiedNumber | null,
-    nodeEndpoint: string,
-    payloadDataObjectId: string,
+    payloadUrl: string,
     commitment: string
   ) => {
     await this.ensureApi()
 
-    const { payoutProof, reward } = await getClaimableReward(
-      channelId,
-      cumulativeRewardEarned,
-      nodeEndpoint,
-      payloadDataObjectId
-    )
+    const { payoutProof, reward } = await getClaimableReward(channelId, cumulativeRewardEarned, payloadUrl)
 
     const maxCashoutAllowed = await this.api.query.content.maxCashoutAllowed()
     if (verifyChannelPayoutProof(payoutProof) !== commitment) {
@@ -520,19 +514,11 @@ export class JoystreamLibExtrinsics {
     channelId,
     memberId,
     cumulativeRewardEarned,
-    nodeEndpoint: string,
-    payloadDataObjectId: string,
+    payloadUrl: string,
     commitment: string,
     cb
   ) => {
-    const tx = await this.claimRewardTx(
-      channelId,
-      memberId,
-      cumulativeRewardEarned,
-      nodeEndpoint,
-      payloadDataObjectId,
-      commitment
-    )
+    const tx = await this.claimRewardTx(channelId, memberId, cumulativeRewardEarned, payloadUrl, commitment)
 
     const { block } = await this.sendExtrinsic(tx, cb)
 

@@ -16,6 +16,7 @@ import { useDistributionOperators } from '@/providers/assets/assets.provider'
 import { useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
+import { createAssetDownloadEndpoint } from '@/utils/asset'
 import { getRandomIntInclusive } from '@/utils/number'
 
 export const PlaygroundChannelPayouts = () => {
@@ -66,13 +67,9 @@ export const PlaygroundChannelPayouts = () => {
     if (!payloadDataObjectId || !nodeEndpoint) {
       return
     }
+    const payloadUrl = createAssetDownloadEndpoint(nodeEndpoint, payloadDataObjectId)
 
-    const { reward } = await getClaimableReward(
-      channelId,
-      channel?.cumulativeRewardClaimed,
-      nodeEndpoint,
-      payloadDataObjectId
-    )
+    const { reward } = await getClaimableReward(channelId, channel?.cumulativeRewardClaimed, payloadUrl)
 
     setAvailableAward(hapiBnToTokenNumber(reward))
     setAwardLoading(false)
@@ -90,14 +87,15 @@ export const PlaygroundChannelPayouts = () => {
       return
     }
 
+    const payloadUrl = createAssetDownloadEndpoint(nodeEndpoint, payloadDataObjectId)
+
     handleTransaction({
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).claimReward(
           channelId,
           memberId,
           cumulativeRewardClaimed,
-          nodeEndpoint,
-          payloadDataObjectId,
+          payloadUrl,
           commitment,
           proxyCallback(updateStatus)
         ),
