@@ -1,3 +1,4 @@
+import { prepareClaimChannelRewardExtrinsicArgs, verifyChannelPayoutProof } from '@joystream/js/content'
 import {
   ChannelOwnerRemarked,
   IChannelOwnerRemarked,
@@ -13,6 +14,7 @@ import Long from 'long'
 
 import { SentryLogger } from '@/utils/logs'
 
+import { getClaimableReward } from './channelPayouts'
 import { JoystreamLibError } from './errors'
 import {
   createActor,
@@ -465,7 +467,63 @@ export class JoystreamLibExtrinsics {
       block,
     }
   }
+  /*
+    === Channel payouts ===
+  */
 
+  claimRewardTx = async (
+    channelId: string,
+    memberId: MemberId,
+    cumulativeRewardEarned: StringifiedNumber | null,
+    payloadUrl: string,
+    commitment: string
+  ) => {
+    await this.ensureApi()
+
+    const { payoutProof, reward } = await getClaimableReward(channelId, cumulativeRewardEarned, payloadUrl)
+
+    const maxCashoutAllowed = await this.api.query.content.maxCashoutAllowed()
+    if (verifyChannelPayoutProof(payoutProof) !== commitment) {
+      throw new JoystreamLibError({
+        name: 'FailedError',
+        message: `Incorrect payout proof`,
+      })
+    }
+    const minCashoutAllowed = await this.api.query.content.minCashoutAllowed()
+
+    if (reward.gt(maxCashoutAllowed)) {
+      throw new JoystreamLibError({
+        name: 'FailedError',
+        message: `Channel cashout amount is too high to be claimed`,
+      })
+    }
+    if (reward.lt(minCashoutAllowed)) {
+      throw new JoystreamLibError({
+        name: 'FailedError',
+        message: `Channel cashout amount is too low to be claimed`,
+      })
+    }
+
+    const { pullPayment, proofElements } = prepareClaimChannelRewardExtrinsicArgs(payoutProof)
+    const actor = createActor(memberId)
+    const tx = this.api.tx.content.claimChannelReward(actor, proofElements, pullPayment)
+    return tx
+  }
+
+  claimReward: PublicExtrinsic<typeof this.claimRewardTx, NftExtrinsicResult> = async (
+    channelId,
+    memberId,
+    cumulativeRewardEarned,
+    payloadUrl: string,
+    commitment: string,
+    cb
+  ) => {
+    const tx = await this.claimRewardTx(channelId, memberId, cumulativeRewardEarned, payloadUrl, commitment)
+
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return { block }
+  }
   /*
     === NFT extrinsics ===
   */

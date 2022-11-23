@@ -19,6 +19,10 @@ export const createAssetUploadEndpoint = (operatorEndpoint: string, uploadParams
   return uploadEndpoint.toString()
 }
 
+export const createAssetDownloadEndpoint = (distributionOperatorEndpoint: string, dataObjectId: string) => {
+  return joinUrlFragments(distributionOperatorEndpoint, atlasConfig.storage.assetPath, dataObjectId)
+}
+
 export const imageUrlValidation = async (imageUrl: string): Promise<boolean> =>
   new Promise((resolve) => {
     const image = new Image()

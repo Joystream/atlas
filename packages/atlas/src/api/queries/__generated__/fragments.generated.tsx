@@ -29,6 +29,7 @@ export type BasicChannelFieldsFragment = {
     type:
       | { __typename: 'DataObjectTypeChannelAvatar' }
       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
       | { __typename: 'DataObjectTypeUnknown' }
       | { __typename: 'DataObjectTypeVideoMedia' }
       | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -43,6 +44,7 @@ export type FullChannelFieldsFragment = {
   description?: string | null
   isPublic?: boolean | null
   isCensored: boolean
+  cumulativeRewardClaimed?: string | null
   id: string
   title?: string | null
   createdAt: Date
@@ -71,6 +73,7 @@ export type FullChannelFieldsFragment = {
               type:
                 | { __typename: 'DataObjectTypeChannelAvatar' }
                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                 | { __typename: 'DataObjectTypeUnknown' }
                 | { __typename: 'DataObjectTypeVideoMedia' }
                 | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -92,6 +95,7 @@ export type FullChannelFieldsFragment = {
     type:
       | { __typename: 'DataObjectTypeChannelAvatar' }
       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
       | { __typename: 'DataObjectTypeUnknown' }
       | { __typename: 'DataObjectTypeVideoMedia' }
       | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -108,6 +112,7 @@ export type FullChannelFieldsFragment = {
     type:
       | { __typename: 'DataObjectTypeChannelAvatar' }
       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
       | { __typename: 'DataObjectTypeUnknown' }
       | { __typename: 'DataObjectTypeVideoMedia' }
       | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -136,6 +141,7 @@ export type BasicMembershipFieldsFragment = {
             type:
               | { __typename: 'DataObjectTypeChannelAvatar' }
               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
               | { __typename: 'DataObjectTypeUnknown' }
               | { __typename: 'DataObjectTypeVideoMedia' }
               | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -189,6 +195,7 @@ export type FullMembershipFieldsFragment = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -212,6 +219,7 @@ export type FullMembershipFieldsFragment = {
             type:
               | { __typename: 'DataObjectTypeChannelAvatar' }
               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
               | { __typename: 'DataObjectTypeUnknown' }
               | { __typename: 'DataObjectTypeVideoMedia' }
               | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -234,6 +242,7 @@ export type StorageDataObjectFieldsFragment = {
   type:
     | { __typename: 'DataObjectTypeChannelAvatar' }
     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
     | { __typename: 'DataObjectTypeUnknown' }
     | { __typename: 'DataObjectTypeVideoMedia' }
     | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -287,6 +296,7 @@ export type SubtitlesFieldsFragment = {
     type:
       | { __typename: 'DataObjectTypeChannelAvatar' }
       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
       | { __typename: 'DataObjectTypeUnknown' }
       | { __typename: 'DataObjectTypeVideoMedia' }
       | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -323,6 +333,7 @@ export type BasicVideoFieldsFragment = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -340,6 +351,7 @@ export type BasicVideoFieldsFragment = {
     type:
       | { __typename: 'DataObjectTypeChannelAvatar' }
       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
       | { __typename: 'DataObjectTypeUnknown' }
       | { __typename: 'DataObjectTypeVideoMedia' }
       | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -374,6 +386,7 @@ export type BasicVideoFieldsFragment = {
                 type:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -422,6 +435,7 @@ export type BasicVideoFieldsFragment = {
                   type:
                     | { __typename: 'DataObjectTypeChannelAvatar' }
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                     | { __typename: 'DataObjectTypeUnknown' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
                     | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -460,6 +474,7 @@ export type BasicVideoFieldsFragment = {
                     type:
                       | { __typename: 'DataObjectTypeChannelAvatar' }
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
                       | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -499,6 +514,7 @@ export type BasicVideoFieldsFragment = {
                     type:
                       | { __typename: 'DataObjectTypeChannelAvatar' }
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
                       | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -531,6 +547,7 @@ export type BasicVideoFieldsFragment = {
                   type:
                     | { __typename: 'DataObjectTypeChannelAvatar' }
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                     | { __typename: 'DataObjectTypeUnknown' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
                     | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -592,6 +609,7 @@ export type FullVideoFieldsFragment = {
     type:
       | { __typename: 'DataObjectTypeChannelAvatar' }
       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
       | { __typename: 'DataObjectTypeUnknown' }
       | { __typename: 'DataObjectTypeVideoMedia' }
       | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -608,6 +626,7 @@ export type FullVideoFieldsFragment = {
     type:
       | { __typename: 'DataObjectTypeChannelAvatar' }
       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
       | { __typename: 'DataObjectTypeUnknown' }
       | { __typename: 'DataObjectTypeVideoMedia' }
       | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -620,6 +639,7 @@ export type FullVideoFieldsFragment = {
     description?: string | null
     isPublic?: boolean | null
     isCensored: boolean
+    cumulativeRewardClaimed?: string | null
     id: string
     title?: string | null
     createdAt: Date
@@ -648,6 +668,7 @@ export type FullVideoFieldsFragment = {
                 type:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -669,6 +690,7 @@ export type FullVideoFieldsFragment = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -685,6 +707,7 @@ export type FullVideoFieldsFragment = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -727,6 +750,7 @@ export type FullVideoFieldsFragment = {
                 type:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -775,6 +799,7 @@ export type FullVideoFieldsFragment = {
                   type:
                     | { __typename: 'DataObjectTypeChannelAvatar' }
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                     | { __typename: 'DataObjectTypeUnknown' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
                     | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -813,6 +838,7 @@ export type FullVideoFieldsFragment = {
                     type:
                       | { __typename: 'DataObjectTypeChannelAvatar' }
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
                       | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -852,6 +878,7 @@ export type FullVideoFieldsFragment = {
                     type:
                       | { __typename: 'DataObjectTypeChannelAvatar' }
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
                       | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -884,6 +911,7 @@ export type FullVideoFieldsFragment = {
                   type:
                     | { __typename: 'DataObjectTypeChannelAvatar' }
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                     | { __typename: 'DataObjectTypeUnknown' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
                     | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -919,6 +947,7 @@ export type FullVideoFieldsFragment = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -956,6 +985,7 @@ export type BasicNftFieldsFragment = {
               type:
                 | { __typename: 'DataObjectTypeChannelAvatar' }
                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                 | { __typename: 'DataObjectTypeUnknown' }
                 | { __typename: 'DataObjectTypeVideoMedia' }
                 | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1004,6 +1034,7 @@ export type BasicNftFieldsFragment = {
                 type:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1042,6 +1073,7 @@ export type BasicNftFieldsFragment = {
                   type:
                     | { __typename: 'DataObjectTypeChannelAvatar' }
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                     | { __typename: 'DataObjectTypeUnknown' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
                     | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1081,6 +1113,7 @@ export type BasicNftFieldsFragment = {
                   type:
                     | { __typename: 'DataObjectTypeChannelAvatar' }
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                     | { __typename: 'DataObjectTypeUnknown' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
                     | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1113,6 +1146,7 @@ export type BasicNftFieldsFragment = {
                 type:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1159,6 +1193,7 @@ export type FullNftFieldsFragment = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1194,6 +1229,7 @@ export type FullNftFieldsFragment = {
         type:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1211,6 +1247,7 @@ export type FullNftFieldsFragment = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1245,6 +1282,7 @@ export type FullNftFieldsFragment = {
                   type:
                     | { __typename: 'DataObjectTypeChannelAvatar' }
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                     | { __typename: 'DataObjectTypeUnknown' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
                     | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1293,6 +1331,7 @@ export type FullNftFieldsFragment = {
                     type:
                       | { __typename: 'DataObjectTypeChannelAvatar' }
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
                       | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1331,6 +1370,7 @@ export type FullNftFieldsFragment = {
                       type:
                         | { __typename: 'DataObjectTypeChannelAvatar' }
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
                         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1370,6 +1410,7 @@ export type FullNftFieldsFragment = {
                       type:
                         | { __typename: 'DataObjectTypeChannelAvatar' }
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
                         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1402,6 +1443,7 @@ export type FullNftFieldsFragment = {
                     type:
                       | { __typename: 'DataObjectTypeChannelAvatar' }
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
                       | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1441,6 +1483,7 @@ export type FullNftFieldsFragment = {
               type:
                 | { __typename: 'DataObjectTypeChannelAvatar' }
                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                 | { __typename: 'DataObjectTypeUnknown' }
                 | { __typename: 'DataObjectTypeVideoMedia' }
                 | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1489,6 +1532,7 @@ export type FullNftFieldsFragment = {
                 type:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1527,6 +1571,7 @@ export type FullNftFieldsFragment = {
                   type:
                     | { __typename: 'DataObjectTypeChannelAvatar' }
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                     | { __typename: 'DataObjectTypeUnknown' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
                     | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1566,6 +1611,7 @@ export type FullNftFieldsFragment = {
                   type:
                     | { __typename: 'DataObjectTypeChannelAvatar' }
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                     | { __typename: 'DataObjectTypeUnknown' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
                     | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1598,6 +1644,7 @@ export type FullNftFieldsFragment = {
                 type:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1644,6 +1691,7 @@ export type BasicBidFieldsFragment = {
               type:
                 | { __typename: 'DataObjectTypeChannelAvatar' }
                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                 | { __typename: 'DataObjectTypeUnknown' }
                 | { __typename: 'DataObjectTypeVideoMedia' }
                 | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1691,6 +1739,7 @@ export type FullBidFieldsFragment = {
               type:
                 | { __typename: 'DataObjectTypeChannelAvatar' }
                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                 | { __typename: 'DataObjectTypeUnknown' }
                 | { __typename: 'DataObjectTypeVideoMedia' }
                 | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1740,6 +1789,7 @@ export type CommentFieldsFragment = {
               type:
                 | { __typename: 'DataObjectTypeChannelAvatar' }
                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                 | { __typename: 'DataObjectTypeUnknown' }
                 | { __typename: 'DataObjectTypeVideoMedia' }
                 | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1790,6 +1840,7 @@ export type MetaprotocolTransactionSuccessFieldsFragment = {
                 type:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1837,6 +1888,7 @@ export type MetaprotocolTransactionSuccessFieldsFragment = {
                 type:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1884,6 +1936,7 @@ export type MetaprotocolTransactionSuccessFieldsFragment = {
                 type:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -1931,6 +1984,7 @@ export type MetaprotocolTransactionSuccessFieldsFragment = {
                 type:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -2054,6 +2108,7 @@ export const FullChannelFieldsFragmentDoc = gql`
     description
     isPublic
     isCensored
+    cumulativeRewardClaimed
     language {
       id
       iso

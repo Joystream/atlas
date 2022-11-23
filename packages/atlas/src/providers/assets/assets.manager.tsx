@@ -5,7 +5,7 @@ import { StorageDataObjectFieldsFragment } from '@/api/queries/__generated__/fra
 import { atlasConfig } from '@/config'
 import { BUILD_ENV } from '@/config/env'
 import { useUserLocationStore } from '@/providers/userLocation'
-import { joinUrlFragments } from '@/utils/asset'
+import { createAssetDownloadEndpoint } from '@/utils/asset'
 import { AssetLogger, ConsoleLogger, DataObjectResponseMetric, DistributorEventEntry, SentryLogger } from '@/utils/logs'
 import { TimeoutError, withTimeout } from '@/utils/misc'
 
@@ -63,7 +63,7 @@ export const AssetsManager: FC = () => {
       )
 
       for (const distributionOperator of sortedDistributionOperators) {
-        const assetUrl = createDistributionOperatorDataObjectUrl(distributionOperator, dataObject)
+        const assetUrl = createAssetDownloadEndpoint(distributionOperator.endpoint, dataObject.id)
         if (pendingAssets[dataObject.id].skipAssetTest) {
           addAsset(dataObject.id, { url: assetUrl })
           removePendingAsset(dataObject.id)
@@ -149,13 +149,6 @@ const sortDistributionOperators = (
     }
     return a.distance - b.distance
   })
-}
-
-const createDistributionOperatorDataObjectUrl = (
-  distributionOperator: OperatorInfo,
-  dataObject: StorageDataObjectFieldsFragment
-) => {
-  return joinUrlFragments(distributionOperator.endpoint, atlasConfig.storage.assetPath, dataObject.id)
 }
 
 const logDistributorPerformance = async (assetUrl: string, eventEntry: DistributorEventEntry) => {

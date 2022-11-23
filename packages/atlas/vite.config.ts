@@ -1,6 +1,7 @@
 /// <reference types="vitest" />
 import ViteYaml from '@modyfi/vite-plugin-yaml'
 import babel from '@rollup/plugin-babel'
+import inject from '@rollup/plugin-inject'
 import react from '@vitejs/plugin-react'
 import * as path from 'node:path'
 import { visualizer } from 'rollup-plugin-visualizer'
@@ -17,6 +18,7 @@ export default defineConfig({
     emptyOutDir: true,
     outDir: path.resolve(__dirname, 'dist'),
     rollupOptions: {
+      plugins: [inject({ Buffer: ['buffer', 'Buffer'] })],
       input: {
         main: path.resolve(__dirname, 'src/index.html'),
         embedded: path.resolve(__dirname, 'src/embedded/index.html'),
@@ -52,6 +54,15 @@ export default defineConfig({
       },
       overlay: false,
     }),
+    {
+      ...inject({
+        include: ['node_modules/**/*.js*'],
+        modules: {
+          Buffer: ['buffer', 'Buffer'],
+        },
+      }),
+      enforce: 'post',
+    },
     babel({
       extensions: ['.tsx', '.ts'],
       include: ['**/*.style.*', '**/*.styles.*'],
@@ -71,7 +82,7 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ['blake3/browser-async', 'multihashes'],
+    include: ['blake3/browser-async', 'multihashes', 'buffer'],
     esbuildOptions: {
       define: {
         global: 'globalThis',
