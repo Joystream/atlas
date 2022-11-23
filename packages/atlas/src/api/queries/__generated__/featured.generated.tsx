@@ -44,6 +44,7 @@ export type GetVideoHeroQuery = {
           type:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
             | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -61,6 +62,7 @@ export type GetVideoHeroQuery = {
         type:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -95,6 +97,7 @@ export type GetVideoHeroQuery = {
                     type:
                       | { __typename: 'DataObjectTypeChannelAvatar' }
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
                       | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -143,6 +146,7 @@ export type GetVideoHeroQuery = {
                       type:
                         | { __typename: 'DataObjectTypeChannelAvatar' }
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
                         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -181,6 +185,7 @@ export type GetVideoHeroQuery = {
                         type:
                           | { __typename: 'DataObjectTypeChannelAvatar' }
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
                           | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -220,6 +225,7 @@ export type GetVideoHeroQuery = {
                         type:
                           | { __typename: 'DataObjectTypeChannelAvatar' }
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
                           | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -252,6 +258,7 @@ export type GetVideoHeroQuery = {
                       type:
                         | { __typename: 'DataObjectTypeChannelAvatar' }
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
                         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -314,6 +321,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
             type:
               | { __typename: 'DataObjectTypeChannelAvatar' }
               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
               | { __typename: 'DataObjectTypeUnknown' }
               | { __typename: 'DataObjectTypeVideoMedia' }
               | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -331,6 +339,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
           type:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
             | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -365,6 +374,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
                       type:
                         | { __typename: 'DataObjectTypeChannelAvatar' }
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
                         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -413,6 +423,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
                         type:
                           | { __typename: 'DataObjectTypeChannelAvatar' }
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
                           | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -451,6 +462,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
                           type:
                             | { __typename: 'DataObjectTypeChannelAvatar' }
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                             | { __typename: 'DataObjectTypeUnknown' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
                             | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -490,6 +502,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
                           type:
                             | { __typename: 'DataObjectTypeChannelAvatar' }
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                             | { __typename: 'DataObjectTypeUnknown' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
                             | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -522,6 +535,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
                         type:
                           | { __typename: 'DataObjectTypeChannelAvatar' }
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
                           | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -596,6 +610,7 @@ export type GetCategoriesFeaturedVideosQuery = {
         type:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -612,6 +627,7 @@ export type GetCategoriesFeaturedVideosQuery = {
         type:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -624,6 +640,7 @@ export type GetCategoriesFeaturedVideosQuery = {
         description?: string | null
         isPublic?: boolean | null
         isCensored: boolean
+        cumulativeRewardClaimed?: string | null
         id: string
         title?: string | null
         createdAt: Date
@@ -652,6 +669,7 @@ export type GetCategoriesFeaturedVideosQuery = {
                     type:
                       | { __typename: 'DataObjectTypeChannelAvatar' }
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
                       | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -673,6 +691,7 @@ export type GetCategoriesFeaturedVideosQuery = {
           type:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
             | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -689,6 +708,7 @@ export type GetCategoriesFeaturedVideosQuery = {
           type:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
             | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -731,6 +751,7 @@ export type GetCategoriesFeaturedVideosQuery = {
                     type:
                       | { __typename: 'DataObjectTypeChannelAvatar' }
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                       | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
                       | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -779,6 +800,7 @@ export type GetCategoriesFeaturedVideosQuery = {
                       type:
                         | { __typename: 'DataObjectTypeChannelAvatar' }
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
                         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -817,6 +839,7 @@ export type GetCategoriesFeaturedVideosQuery = {
                         type:
                           | { __typename: 'DataObjectTypeChannelAvatar' }
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
                           | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -856,6 +879,7 @@ export type GetCategoriesFeaturedVideosQuery = {
                         type:
                           | { __typename: 'DataObjectTypeChannelAvatar' }
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
                           | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -888,6 +912,7 @@ export type GetCategoriesFeaturedVideosQuery = {
                       type:
                         | { __typename: 'DataObjectTypeChannelAvatar' }
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
                         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -923,6 +948,7 @@ export type GetCategoriesFeaturedVideosQuery = {
           type:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
             | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoSubtitle' }

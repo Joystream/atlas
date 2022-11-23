@@ -20,6 +20,7 @@ import { cVar } from '@/styles'
 
 import {
   PlaygroundCaptcha,
+  PlaygroundChannelPayouts,
   PlaygroundEstimatingBlockTime,
   PlaygroundGoogleAuthentication,
   PlaygroundIframe,
@@ -44,6 +45,7 @@ const playgroundRoutes = [
   { path: 'iframe', element: <PlaygroundIframe />, name: 'Iframe' },
   { path: 'captcha', element: <PlaygroundCaptcha />, name: 'Captcha' },
   { path: 'google-authentication', element: <PlaygroundGoogleAuthentication />, name: 'Google authentication' },
+  { path: 'channel-payouts', element: <PlaygroundChannelPayouts />, name: 'Channel Payouts' },
 ]
 
 const PlaygroundLayout = () => {
