@@ -9,6 +9,23 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { Content, StyledButton, TextWrapper, Title, Wrapper } from './WidgetTile.styles'
 
+type TopRightElement =
+  | {
+      type: 'custom'
+      node: ReactNode
+    }
+  | {
+      type: 'tooltip'
+      tooltipProps: TooltipProps
+    }
+
+type ContentElement =
+  | {
+      type: 'custom'
+      node: ReactNode
+    }
+  | { type: 'text'; text: string; caption?: ReactNode }
+
 export type WidgetTileProps = {
   loading?: boolean
   title: string | number
@@ -18,6 +35,8 @@ export type WidgetTileProps = {
   button: { text: string } & Omit<ButtonProps, 'children'>
   tooltip?: TooltipProps
   customNode?: ReactNode
+  topRightElement?: TopRightElement
+  contentElement?: ContentElement
 }
 
 export const WidgetTile: FC<WidgetTileProps> = ({
@@ -29,6 +48,8 @@ export const WidgetTile: FC<WidgetTileProps> = ({
   button,
   tooltip,
   customNode,
+  topRightElement,
+  contentElement,
 }) => {
   const mdMatch = useMediaMatch('md')
   const lgMatch = useMediaMatch('lg')
