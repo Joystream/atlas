@@ -3579,6 +3579,7 @@ __metadata:
     "@types/react-datepicker": ^4.8.0
     "@types/react-dom": ^18.0.9
     "@types/react-helmet": ^6.1.6
+    "@types/react-table": ^7
     "@types/react-transition-group": ^4.4.5
     "@types/scroll-lock": ^2.1.0
     "@types/video.js": ^7.3.50
@@ -3624,6 +3625,7 @@ __metadata:
     react-router-dom: ^6.4.5
     react-scroll-parallax: ^3.3.2
     react-spring: ^9.6.0
+    react-table: ^7.8.0
     react-textarea-autosize: ^8.4.0
     react-transition-group: ^4.4.5
     retry-axios: ^3.0.0
@@ -6489,6 +6491,15 @@ __metadata:
   dependencies:
     "@types/react": "*"
   checksum: 81560c56bfe854b6a43aee31360862588ac875d1177b975da5ce049ac9aa2f7c98dcde65d4397bfaa04e468f40cf3ab2975a2ef966a69d64a60493422898698d
+  languageName: node
+  linkType: hard
+
+"@types/react-table@npm:^7":
+  version: 7.7.12
+  resolution: "@types/react-table@npm:7.7.12"
+  dependencies:
+    "@types/react": "*"
+  checksum: 287ea68e75b56c2e70e6d6491cd172348c7302b032789047eb2dca1b25b240684e48a60f58140575828b790f95724b9f3ec4d3adce82fc1c05d994def1449009
   languageName: node
   linkType: hard
 
@@ -16926,6 +16937,15 @@ __metadata:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
   checksum: e14cc08a12380716244b5d4a38dd53f0edc588aa9a04a0989fc82dd73019c1f63b06cfc32aa3c616156b6a740b5c29f6685e5844c8171d8cb4351658cca8e8ec
+  languageName: node
+  linkType: hard
+
+"react-table@npm:^7.8.0":
+  version: 7.8.0
+  resolution: "react-table@npm:7.8.0"
+  peerDependencies:
+    react: ^16.8.3 || ^17.0.0-0 || ^18.0.0
+  checksum: 44ca0fb848c6869cd793cede8dc33072b38ebb8f8d2833565afe7cf3eac5d1fa455ac5fb9d06838b16fab0523d5d03e3e82f7645032f71245096e67b892313b9
   languageName: node
   linkType: hard
 
