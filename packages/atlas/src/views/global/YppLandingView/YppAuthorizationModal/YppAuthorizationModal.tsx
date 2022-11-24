@@ -390,7 +390,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
               </DescriptionText>
             </>
           ),
-          primaryButton: { text: 'Go to dashboard', onClick: () => navigate(absoluteRoutes.studio.ypp()) },
+          primaryButton: { text: 'Go to dashboard', to: absoluteRoutes.studio.ypp() },
           component: <Img src={appScreenshot} />,
         }
       case 'channel-already-registered':
