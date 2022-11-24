@@ -5,7 +5,7 @@ import { StorageDataObjectFieldsFragment } from '@/api/queries/__generated__/fra
 import { atlasConfig } from '@/config'
 import { BUILD_ENV } from '@/config/env'
 import { useUserLocationStore } from '@/providers/userLocation'
-import { joinUrlFragments } from '@/utils/asset'
+import { createAssetDownloadEndpoint } from '@/utils/asset'
 import { AssetLogger, ConsoleLogger, DataObjectResponseMetric, DistributorEventEntry, SentryLogger } from '@/utils/logs'
 import { TimeoutError, withTimeout } from '@/utils/misc'
 
@@ -123,10 +123,6 @@ export const AssetsManager: FC = () => {
   ])
 
   return null
-}
-
-export const createAssetDownloadEndpoint = (distributionOperatorEndpoint: string, dataObjectId: string) => {
-  return joinUrlFragments(distributionOperatorEndpoint, atlasConfig.storage.assetPath, dataObjectId)
 }
 
 // if user coordinates are known, sort distributors by geographical distance
