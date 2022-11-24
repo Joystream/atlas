@@ -10,32 +10,17 @@ import { ConsoleLogger } from '@/utils/logs'
 
 import { Content, StyledButton, TextWrapper, Title, Wrapper } from './WidgetTile.styles'
 
-type TopRightElement =
-  | {
-      customTopRightNode: ReactNode
-      tooltip?: never
-    }
-  | {
-      customTopRightNode?: never
-      tooltip?: TooltipProps
-    }
-
-type ContentElement =
-  | {
-      customNode: ReactNode
-      caption?: never
-      icon?: never
-      text?: never
-    }
-  | { customNode?: never; text: string | number; caption?: ReactNode; icon?: ReactNode }
-
 export type WidgetTileProps = {
   loading?: boolean
   title: string | number
-  button: { text: string } & Omit<ButtonProps, 'children'>
+  button?: { text: string } & Omit<ButtonProps, 'children'>
+  text?: string | number
   customNode?: ReactNode
-} & TopRightElement &
-  ContentElement
+  caption?: ReactNode
+  icon?: ReactNode
+  customTopRightNode?: ReactNode
+  tooltip?: TooltipProps
+}
 
 export const WidgetTile: FC<WidgetTileProps> = ({
   loading,
@@ -50,8 +35,8 @@ export const WidgetTile: FC<WidgetTileProps> = ({
 }) => {
   const mdMatch = useMediaMatch('md')
   const lgMatch = useMediaMatch('lg')
-  const withCustomNode = customNode && !text
-  const withText = !customNode && text
+  const withCustomNode = customNode && !text && !loading
+  const withText = !customNode && text !== undefined && !loading
   const withCustomTopRightNode = customTopRightNode && !tooltip
   const withTooltip = !customTopRightNode && tooltip
 
@@ -76,31 +61,31 @@ export const WidgetTile: FC<WidgetTileProps> = ({
       </Title>
       <Content>
         {withCustomNode && customNode}
-        {withText &&
-          (loading ? (
-            <>
-              <div>
-                <SkeletonLoader height={mdMatch ? 32 : 24} width={128} bottomSpace={caption ? 4 : 0} />
-                {caption && <SkeletonLoader width={56} height={16} />}
-              </div>
-              <SkeletonLoader height={40} width={lgMatch ? 120 : '100%'} />
-            </>
-          ) : (
+        {loading && (
+          <>
             <div>
-              <TextWrapper>
-                {icon}
-                <Text variant={mdMatch ? 'h500' : 'h400'} as="p">
-                  {text}
-                </Text>
-              </TextWrapper>
-              {caption && (
-                <Text variant="t100" as="p" color="colorText" margin={{ top: 1 }}>
-                  {caption}
-                </Text>
-              )}
+              <SkeletonLoader height={mdMatch ? 32 : 24} width={128} bottomSpace={caption ? 4 : 0} />
+              {caption && <SkeletonLoader width={56} height={16} />}
             </div>
-          ))}
-        {!loading && <StyledButton {...button}>{button.text}</StyledButton>}
+            <SkeletonLoader height={40} width={lgMatch ? 120 : '100%'} />
+          </>
+        )}
+        {withText && (
+          <div>
+            <TextWrapper>
+              {icon}
+              <Text variant={mdMatch ? 'h500' : 'h400'} as="p">
+                {text}
+              </Text>
+            </TextWrapper>
+            {caption && (
+              <Text variant="t100" as="p" color="colorText" margin={{ top: 1 }}>
+                {caption}
+              </Text>
+            )}
+          </div>
+        )}
+        {!loading && button && <StyledButton {...button}>{button.text}</StyledButton>}
       </Content>
     </Wrapper>
   )
