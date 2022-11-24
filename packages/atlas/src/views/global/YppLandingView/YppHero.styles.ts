@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { media, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 import { imageShadow } from './YppLandingView.styles'
 
@@ -10,6 +10,26 @@ export const HeroImageWrapper = styled.div`
 
   ${media.lg} {
     max-width: 1152px;
+  }
+`
+
+export const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`
+
+export const SelectDifferentChannelButton = styled.button`
+  white-space: normal;
+  border: none;
+  background: none;
+  color: ${cVar('colorTextPrimary')};
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+
+  :hover,
+  :focus-visible {
+    text-decoration: underline;
   }
 `
 

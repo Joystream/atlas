@@ -463,6 +463,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
               removedAssetsIds,
               dataObjectStateBloatBondValue.toString(),
               channelBucketsCount.toString(),
+              undefined,
               proxyCallback(updateStatus)
             ),
       onTxSync: (result) => {

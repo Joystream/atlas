@@ -34,6 +34,8 @@ joystream:
 features:
   ypp:
     googleConsoleClientId: '$VITE_GOOGLE_CONSOLE_CLIENT_ID'
+    youtubeSyncApiUrl: '$VITE_YOUTUBE_SYNC_API_URL'
+    youtubeCollaboratorMemberId: '$VITE_YOUTUBE_COLLABORATOR_MEMBER_ID'
   nft:
     auctionMinimumBidStepMultiplier: 0.02 # Multiplier for the auction's starting price used to determine auction's minimum bid step. See more: https://joystream.gitbook.io/testnet-workspace/system/content-directory/nft#auction
     openAuctionBidLockDuration: 300 # Number of blocks for which bids on open auctions are locked from withdrawal. See more: https://joystream.gitbook.io/testnet-workspace/system/content-directory/nft#auction-type

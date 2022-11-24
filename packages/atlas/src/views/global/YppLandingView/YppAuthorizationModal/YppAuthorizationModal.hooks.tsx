@@ -1,16 +1,33 @@
-import { Dispatch, SetStateAction, useCallback, useEffect } from 'react'
+import { useApolloClient } from '@apollo/client'
+import axios from 'axios'
+import { isArray } from 'lodash-es'
+import { useCallback, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
+import {
+  GetFullChannelDocument,
+  GetFullChannelQuery,
+  GetFullChannelQueryVariables,
+} from '@/api/queries/__generated__/channels.generated'
 import { atlasConfig } from '@/config'
 import { GOOGLE_OAUTH_ENDPOINT } from '@/config/env'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useSnackbar } from '@/providers/snackbars'
 import { useYppStore } from '@/providers/ypp/ypp.store'
 import { createId } from '@/utils/createId'
+import { isAxiosError } from '@/utils/error'
 import { SentryLogger } from '@/utils/logs'
 
-const GOOGLE_CONSOLE_CLIENT_ID = atlasConfig.features.ypp.googleConsoleClientId
+import {
+  ChannelVerificationErrorResponse,
+  ChannelVerificationSuccessResponse,
+  YoutubeResponseData,
+  YppAuthorizationErrorCode,
+  YppAuthorizationStepsType,
+  YppRequirementsErrorCode,
+} from './YppAuthorizationModal.types'
 
+const GOOGLE_CONSOLE_CLIENT_ID = atlasConfig.features.ypp.googleConsoleClientId
 const GOOGLE_AUTH_PARAMS = {
   client_id: GOOGLE_CONSOLE_CLIENT_ID || '',
   response_type: 'code',
@@ -19,23 +36,27 @@ const GOOGLE_AUTH_PARAMS = {
   prompt: 'consent',
 }
 
+type AlreadyRegisteredChannel = {
+  channelTitle: string
+  ownerMemberHandle: string
+}
+
 export const useYppGoogleAuth = ({
   closeModal,
-  goToLoadingStep,
-  selectedChannelId,
-  setSelectedChannelId,
   channelsLoaded,
-  setCurrentStepIdx,
+  onChangeStep,
 }: {
   closeModal: () => void
-  goToLoadingStep: () => void
-  selectedChannelId: string | null
-  setSelectedChannelId: (channelId: string | null) => void
   channelsLoaded: boolean
-  setCurrentStepIdx: Dispatch<SetStateAction<number | null>>
+  onChangeStep: (step: YppAuthorizationStepsType) => void
 }) => {
-  const oldAuthState = useYppStore((state) => state.authState)
-  const setAuthState = useYppStore((state) => state.actions.setAuthState)
+  const { authState: oldAuthState, selectedChannelId } = useYppStore((state) => state)
+  const { setAuthState, setSelectedChannelId } = useYppStore((state) => state.actions)
+  const [ytRequirmentsErrors, setYtRequirmentsErrors] = useState<YppRequirementsErrorCode[]>([])
+  const [ytResponseData, setYtResponseData] = useState<YoutubeResponseData | null>(null)
+  const [alreadyRegisteredChannel, setAlreadyRegisteredChannel] = useState<AlreadyRegisteredChannel | null>(null)
+
+  const client = useApolloClient()
 
   const [openConfirmationModal, closeConfirmationModal] = useConfirmationModal()
   const { displaySnackbar } = useSnackbar()
@@ -59,7 +80,7 @@ export const useYppGoogleAuth = ({
 
     const authParams = {
       ...GOOGLE_AUTH_PARAMS,
-      redirect_uri: window.location.href,
+      redirect_uri: window.location.origin + window.location.pathname,
       state: authState,
     }
     Object.entries(authParams).forEach(([key, value]) => authUrl.searchParams.set(key, value))
@@ -82,7 +103,7 @@ export const useYppGoogleAuth = ({
           onClick: () => {
             closeConfirmationModal()
             resetSearchParams()
-            setCurrentStepIdx(0)
+            onChangeStep('requirements')
           },
         },
         secondaryButton: {
@@ -95,50 +116,136 @@ export const useYppGoogleAuth = ({
         },
       })
     },
-    [openConfirmationModal, closeConfirmationModal, resetSearchParams, setCurrentStepIdx, closeModal]
+    [openConfirmationModal, closeConfirmationModal, resetSearchParams, onChangeStep, closeModal]
+  )
+
+  const displayUnknownErrorSnackbar = useCallback(
+    (error: unknown, code: string, state: string | null) => {
+      // other unknown axios errors
+      displaySnackbar({
+        title: 'Authorization failed',
+        description: 'An unexpected error occurred. Please try again.',
+        iconType: 'error',
+      })
+      SentryLogger.error('Failed to handle google auth success', 'YppAuthorizationModal', error, {
+        ypp: {
+          code,
+          state,
+        },
+      })
+      onChangeStep('requirements')
+    },
+    [displaySnackbar, onChangeStep]
   )
 
   const handleGoogleAuthSuccess = useCallback(
-    (code: string, state: string | null) => {
-      // extract channel ID from state
-      const stateParams = new URLSearchParams(state || '')
-      const channelId = stateParams.get('channelId')
-
-      // check if the state matches the one we set
-      if (state !== oldAuthState || !channelId) {
-        displaySnackbar({
-          title: 'Authorization failed',
-          description: 'An unexpected error occurred. Please try again.',
-          iconType: 'error',
-        })
-        SentryLogger.error('Unexpected state returned from Google Auth', 'YppAuthorizationModal', null, {
-          ypp: { appState: oldAuthState, googleState: state },
-        })
-        closeModal()
+    async (code: string, state: string | null) => {
+      if (!atlasConfig.features.ypp.youtubeSyncApiUrl) {
         return
       }
+      try {
+        // extract channel ID from state
+        const stateParams = new URLSearchParams(state || '')
+        const channelId = stateParams.get('channelId')
 
-      if (!channelsLoaded) {
-        return
+        // check if the state matches the one we set
+        if (state !== oldAuthState || !channelId) {
+          displaySnackbar({
+            title: 'Authorization failed',
+            description: 'An unexpected error occurred. Please try again.',
+            iconType: 'error',
+          })
+          SentryLogger.error('Unexpected state returned from Google Auth', 'YppAuthorizationModal', null, {
+            ypp: { appState: oldAuthState, googleState: state },
+          })
+          closeModal()
+          return
+        }
+
+        if (!channelsLoaded) {
+          return
+        }
+
+        setSelectedChannelId(channelId)
+        setAuthState(null)
+        onChangeStep('fetching-data')
+
+        resetSearchParams()
+
+        const response = await axios.post<ChannelVerificationSuccessResponse>(
+          `${atlasConfig.features.ypp.youtubeSyncApiUrl}/users`,
+          {
+            authorizationCode: code,
+          }
+        )
+
+        setYtResponseData({ ...response.data, authorizationCode: code })
+        onChangeStep('details')
+      } catch (error) {
+        if (isAxiosError<ChannelVerificationErrorResponse>(error)) {
+          const errorResponseData = error.response?.data
+          const errorMessages = error.response?.data.message
+
+          const isRequirmentsError = isArray(errorMessages)
+          if (isRequirmentsError) {
+            const errorCodes = isRequirmentsError ? errorMessages?.map((message) => message.errorCode) : undefined
+
+            errorCodes && setYtRequirmentsErrors(errorCodes)
+            onChangeStep('requirements')
+            return
+          }
+
+          const isChannelNotFoundError =
+            errorResponseData &&
+            'errorCode' in errorResponseData &&
+            errorResponseData.errorCode === YppAuthorizationErrorCode.CHANNEL_NOT_FOUND
+
+          if (isChannelNotFoundError) {
+            displaySnackbar({
+              title: 'Authorization failed',
+              description: `You don't have youtube channel.`,
+              iconType: 'error',
+            })
+            setYtRequirmentsErrors(Object.values(YppAuthorizationErrorCode))
+            onChangeStep('requirements')
+            return
+          }
+
+          const isChannelAlreadyRegistered =
+            errorResponseData &&
+            'errorCode' in errorResponseData &&
+            errorResponseData.errorCode === YppAuthorizationErrorCode.CHANNEL_ALREADY_REGISTERED
+
+          if (isChannelAlreadyRegistered) {
+            const { data } = await client.query<GetFullChannelQuery, GetFullChannelQueryVariables>({
+              query: GetFullChannelDocument,
+              variables: { where: { id: errorResponseData.result.toString() } },
+            })
+            setAlreadyRegisteredChannel({
+              channelTitle: data.channelByUniqueInput?.title || '',
+              ownerMemberHandle: data.channelByUniqueInput?.ownerMember?.handle || '',
+            })
+
+            onChangeStep('channel-already-registered')
+            return
+          }
+          displayUnknownErrorSnackbar(error, code, state)
+          return
+        }
+        displayUnknownErrorSnackbar(error, code, state)
       }
-
-      setSelectedChannelId(channelId)
-      setAuthState(null)
-
-      // Google Auth succeeded, show "Fetching data" modal and communicate with YPP backend
-      // TODO: communicate with YPP backend
-      goToLoadingStep()
-      resetSearchParams()
     },
     [
       oldAuthState,
       channelsLoaded,
       setSelectedChannelId,
       setAuthState,
-      goToLoadingStep,
+      onChangeStep,
       resetSearchParams,
       displaySnackbar,
       closeModal,
+      displayUnknownErrorSnackbar,
+      client,
     ]
   )
 
@@ -161,5 +268,5 @@ export const useYppGoogleAuth = ({
     }
   }, [handleGoogleAuthError, searchParams])
 
-  return { handleAuthorizeClick }
+  return { handleAuthorizeClick, ytRequirmentsErrors, ytResponseData, setYtRequirmentsErrors, alreadyRegisteredChannel }
 }
