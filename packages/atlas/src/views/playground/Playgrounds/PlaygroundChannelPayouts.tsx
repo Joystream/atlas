@@ -18,12 +18,12 @@ import { CopyAddressButton } from '@/components/_buttons/CopyAddressButton/CopyA
 import { getClaimableReward } from '@/joystream-lib/channelPayouts'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { createAssetDownloadEndpoint } from '@/providers/assets/assets.manager'
 import { useDistributionOperators } from '@/providers/assets/assets.provider'
 import { useJoystream, useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { cVar, media, sizes, zIndex } from '@/styles'
-import { createAssetDownloadEndpoint } from '@/utils/asset'
 import { formatNumber, getRandomIntInclusive } from '@/utils/number'
 
 export const PlaygroundChannelPayouts = () => {

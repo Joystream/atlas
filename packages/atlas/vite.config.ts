@@ -38,7 +38,6 @@ export default defineConfig({
   },
   worker: {
     plugins: [PolkadotWorkerMetaFixPlugin],
-    format: 'es',
   },
   plugins: [
     AtlasConfigTransformPlugin,
