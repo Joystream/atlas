@@ -213,6 +213,7 @@ export const useCreateEditChannelSubmit = () => {
                 removedAssetsIds,
                 dataObjectStateBloatBondValue.toString(),
                 channelBucketsCount.toString(),
+                undefined,
                 proxyCallback(updateStatus)
               ),
         onTxSync: (result) => {
