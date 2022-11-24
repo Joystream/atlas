@@ -1,6 +1,5 @@
 import { FC, ReactNode } from 'react'
 
-import { Information } from '@/components/Information'
 import { Text } from '@/components/Text'
 import { TooltipProps } from '@/components/Tooltip'
 import { ButtonProps } from '@/components/_buttons/Button'
@@ -9,6 +8,8 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { ConsoleLogger } from '@/utils/logs'
 
 import { Content, StyledButton, TextWrapper, Title, Wrapper } from './WidgetTile.styles'
+
+import { Information } from '../Information'
 
 export type WidgetTileProps = {
   loading?: boolean
@@ -52,7 +53,7 @@ export const WidgetTile: FC<WidgetTileProps> = ({
 
   return (
     <Wrapper>
-      <Title hasTooltip={!!tooltip || !!customTopRightNode}>
+      <Title hasTooltip={!!tooltip}>
         <Text variant="h100" as="p" color="colorText">
           {title}
         </Text>

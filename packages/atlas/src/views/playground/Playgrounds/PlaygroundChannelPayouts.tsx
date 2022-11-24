@@ -1,5 +1,7 @@
 import { useApolloClient } from '@apollo/client'
-import { useCallback, useEffect, useState } from 'react'
+import styled from '@emotion/styled'
+import { BN } from 'bn.js'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useFullChannel } from '@/api/hooks/channel'
 import {
@@ -7,21 +9,26 @@ import {
   GetPayloadDataObjectIdByCommitmentQuery,
   GetPayloadDataObjectIdByCommitmentQueryVariables,
 } from '@/api/queries/__generated__/channels.generated'
-import { NumberFormat } from '@/components/NumberFormat'
+import { SvgAlertsInformative24, SvgJoyTokenMonochrome24 } from '@/assets/icons'
+import { Avatar } from '@/components/Avatar'
+import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
+import { WidgetTile } from '@/components/WidgetTile'
+import { CopyAddressButton } from '@/components/_buttons/CopyAddressButton/CopyAddressButton'
 import { getClaimableReward } from '@/joystream-lib/channelPayouts'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useDistributionOperators } from '@/providers/assets/assets.provider'
-import { useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useJoystream, useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
+import { cVar, media, sizes, zIndex } from '@/styles'
 import { createAssetDownloadEndpoint } from '@/utils/asset'
-import { getRandomIntInclusive } from '@/utils/number'
+import { formatNumber, getRandomIntInclusive } from '@/utils/number'
 
 export const PlaygroundChannelPayouts = () => {
   const { joystream, proxyCallback } = useJoystream()
-  const { channelId, memberId } = useUser()
+  const { channelId, memberId, accountId, activeMembership } = useUser()
   const [availableAward, setAvailableAward] = useState<number | undefined>()
   const [isAwardLoading, setAwardLoading] = useState(true)
   const { channel, loading, refetch } = useFullChannel(channelId || '')
@@ -29,6 +36,22 @@ export const PlaygroundChannelPayouts = () => {
   const client = useApolloClient()
 
   const { getAllDistributionOperatorsForBag } = useDistributionOperators()
+
+  const memoizedChannelStateBloatBond = useMemo(() => {
+    return new BN(channel?.channelStateBloatBond || 0)
+  }, [channel?.channelStateBloatBond])
+
+  const { accountBalance: memberBalance } = useSubscribeAccountBalance()
+  const { accountBalance: channelBalance } =
+    useSubscribeAccountBalance(channel?.rewardAccount, {
+      channelStateBloatBond: memoizedChannelStateBloatBond,
+    }) || new BN(0)
+
+  const formattedChannelBalance = formatNumber(hapiBnToTokenNumber(channelBalance || new BN(0)))
+  const formattedMemberBalance = formatNumber(hapiBnToTokenNumber(memberBalance || new BN(0)))
+  const formattedReward = formatNumber(availableAward || 0)
+
+  const { url, isLoadingAsset } = useMemberAvatar(activeMembership)
 
   const getPayloadDataObjectIdAndNodeEndpoint = useCallback(
     async (commitment: string) => {
@@ -112,20 +135,106 @@ export const PlaygroundChannelPayouts = () => {
 
   return (
     <>
-      <Text as="p" variant="h400" margin={{ bottom: 4 }}>
-        Award to claim:{' '}
-        {isAwardLoading || loading ? (
-          <Text as="span" variant="t300">
-            {' '}
-            Loading...
-          </Text>
-        ) : (
-          <NumberFormat as="span" variant="t300" value={availableAward || 0} withToken />
-        )}
-      </Text>
-      <Button variant="primary" onClick={handleClaimReward}>
-        Claim Reward
-      </Button>
+      <TilesWrapper>
+        <WidgetTile
+          title="Claimable Rewards"
+          loading={isAwardLoading || loading}
+          text={availableAward ? formattedReward : undefined}
+          button={
+            availableAward
+              ? {
+                  text: 'Claim',
+                  onClick: handleClaimReward,
+                }
+              : undefined
+          }
+          customNode={
+            availableAward ? undefined : (
+              <CustomNodeWrapper>
+                <SvgAlertsInformative24 />
+                <Text variant="t100" as="p" color="colorText">
+                  High-quality content is occasionally rewarded through JOY tokens by the Joystream council. When you
+                  receive a reward, it'll appear here for you to claim. Learn more
+                </Text>
+              </CustomNodeWrapper>
+            )
+          }
+        />
+        <WidgetTile
+          title="Channel balance"
+          icon={<SvgJoyTokenMonochrome24 />}
+          text={formattedChannelBalance}
+          loading={loading || channelBalance === undefined}
+          button={{
+            text: 'Withdraw',
+            variant: 'secondary',
+          }}
+        />
+        <WidgetTile
+          title="Membership wallet balance"
+          loading={loading || memberBalance === undefined}
+          icon={
+            <AvatarAndTokenWrapper>
+              <Avatar size="bid" assetUrl={url} loading={isLoadingAsset} />
+              <TokenWrapper>
+                <StyledJoyTokenIcon variant="gray" size={24} />
+              </TokenWrapper>
+            </AvatarAndTokenWrapper>
+          }
+          text={formattedMemberBalance}
+          customTopRightNode={accountId ? <CopyAddressButton size="small" address={accountId} /> : undefined}
+        />
+      </TilesWrapper>
     </>
   )
 }
+
+const CustomNodeWrapper = styled.div`
+  display: grid;
+  justify-content: start;
+  grid-template-columns: auto auto;
+  gap: ${sizes(2)};
+`
+
+export const AvatarAndTokenWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+export const TokenWrapper = styled.div`
+  position: relative;
+  left: -4px;
+  z-index: ${zIndex.overlay};
+  margin-right: ${sizes(2)};
+
+  /* token background */
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    background-color: ${cVar('colorBackgroundMuted')};
+    border-radius: 100%;
+    left: -2px;
+    top: -2px;
+  }
+`
+export const StyledJoyTokenIcon = styled(JoyTokenIcon)`
+  position: relative;
+`
+
+const TilesWrapper = styled.div`
+  display: grid;
+  gap: ${sizes(6)};
+  margin-bottom: ${sizes(4)};
+  grid-template-rows: repeat(3, 1fr);
+
+  ${media.sm} {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  ${media.md} {
+    margin-bottom: ${sizes(6)};
+  }
+`
