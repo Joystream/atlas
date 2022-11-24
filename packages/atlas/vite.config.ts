@@ -10,6 +10,7 @@ import checker from 'vite-plugin-checker'
 
 import { AtlasConfigTransformPlugin, EmbeddedFallbackPlugin, PolkadotWorkerMetaFixPlugin } from './plugins'
 
+// test change
 // https://vitejs.dev/config/
 export default defineConfig({
   root: './src',
