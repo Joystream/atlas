@@ -1,10 +1,10 @@
 import { create } from '@storybook/theming'
 
+import logo from '../src/assets/logos/svgs/joystream-logo-full.svg'
+
 export default create({
   base: 'dark',
-
   brandTitle: '@joystream/atlas',
   brandUrl: 'https://joystream.org',
-  brandImage:
-    'https://raw.githubusercontent.com/Joystream/design/master/logo/logo/PNG/Logo-horisontal-basic-white-1x.png',
+  brandImage: logo,
 })
