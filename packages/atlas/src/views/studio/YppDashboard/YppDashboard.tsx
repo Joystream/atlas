@@ -9,8 +9,10 @@ import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
 import { BenefitCard } from '@/components/_ypp/BenefitCard'
 import { atlasConfig } from '@/config'
+import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
 
 import { REWARDS, TIERS } from './YppDashboard.config'
 import {
@@ -23,12 +25,16 @@ import {
   WidgetsWrapper,
 } from './YppDashboard.styles'
 
-// TODO: this needs to be taken from backend
-const currentTier = 0
-
 export const YppDashboard: FC = () => {
   const headTags = useHeadTags('Youtube Partner Program')
   const mdMatch = useMediaMatch('md')
+  const { currentChannel } = useGetYppSyncedChannels()
+
+  const currentTier = currentChannel?.tier
+  if (!currentTier) {
+    return null
+  }
+
   return (
     <>
       {headTags}
@@ -67,6 +73,7 @@ export const YppDashboard: FC = () => {
               variant: 'primary',
               _textOnly: true,
               icon: <SvgActionNewTab />,
+              // todo add correct url here
               iconPlacement: 'right',
             }}
           />
@@ -77,6 +84,7 @@ export const YppDashboard: FC = () => {
             button={{
               text: 'Go to payments',
               variant: 'primary',
+              to: absoluteRoutes.studio.payments(),
               _textOnly: true,
               icon: <SvgActionNewTab />,
               iconPlacement: 'right',

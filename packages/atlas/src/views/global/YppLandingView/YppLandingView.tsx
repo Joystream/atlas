@@ -1,6 +1,6 @@
 import AOS from 'aos'
 import 'aos/dist/aos.css'
-import { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import { FC, useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ParallaxProvider } from 'react-scroll-parallax'
 
@@ -24,7 +24,6 @@ export const YppLandingView: FC = () => {
   const headTags = useHeadTags('Youtube Partner Program')
   const [currentStep, setCurrentStep] = useState<YppAuthorizationStepsType>(null)
   const { isLoggedIn, signIn, activeMembership, channelId } = useUser()
-  const { unsyncedChannels, syncedChannels, isLoading } = useGetYppSyncedChannels()
   const setSelectedChannelId = useYppStore((store) => store.actions.setSelectedChannelId)
 
   const selectedChannelTitle = activeMembership?.channels.find((channel) => channel.id === channelId)?.title
@@ -33,10 +32,8 @@ export const YppLandingView: FC = () => {
 
   const channels = activeMembership?.channels
 
-  const isYppSigned = useMemo(
-    () => !!syncedChannels?.find((syncedChannels) => syncedChannels.joystreamChannelId.toString() === channelId),
-    [channelId, syncedChannels]
-  )
+  const { unsyncedChannels, isLoading, currentChannel } = useGetYppSyncedChannels()
+  const isYppSigned = !!currentChannel
 
   const hasAnotherUnsyncedChannel = isYppSigned && !!unsyncedChannels?.length
 

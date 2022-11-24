@@ -32,6 +32,8 @@ import { StudioWelcomeView } from './StudioWelcomeView'
 import { VideoWorkspace } from './VideoWorkspace'
 import { YppDashboard } from './YppDashboard'
 
+import { YppLandingView } from '../global/YppLandingView'
+import { useGetYppSyncedChannels } from '../global/YppLandingView/YppLandingView.hooks'
 import { NotFoundView } from '../viewer/NotFoundView'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
@@ -48,6 +50,9 @@ const StudioLayout = () => {
   const hasMembership = !!memberships?.length
 
   const channelSet = !!channelId && hasMembership
+
+  const { currentChannel } = useGetYppSyncedChannels()
+  const isYppSigned = !!currentChannel
 
   useEffect(() => {
     if (!isAllowedBrowser()) {
@@ -148,12 +153,28 @@ const StudioLayout = () => {
                 }
               />
               {atlasConfig.features.ypp.googleConsoleClientId && (
-                <Route
-                  path={relativeRoutes.studio.ypp()}
-                  element={
-                    <PrivateRoute element={<YppDashboard />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
-                  }
-                />
+                <>
+                  <Route
+                    path={relativeRoutes.studio.ypp()}
+                    element={
+                      <PrivateRoute
+                        element={<YppLandingView />}
+                        isAuth={channelSet && !isYppSigned}
+                        redirectTo={absoluteRoutes.studio.yppDashboard()}
+                      />
+                    }
+                  />
+                  <Route
+                    path={relativeRoutes.studio.yppDashboard()}
+                    element={
+                      <PrivateRoute
+                        element={<YppDashboard />}
+                        isAuth={channelSet && isYppSigned}
+                        redirectTo={absoluteRoutes.studio.ypp()}
+                      />
+                    }
+                  />
+                </>
               )}
               <Route path="*" element={<NotFoundView />} />
             </Routes>
