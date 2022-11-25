@@ -158,7 +158,7 @@ export const useSubscribeAccountBalance = (
     [accountBalance, lockedAccountBalance]
   )
   const totalBalance = useMemo(
-    () => (totalBalanceLoaded ? accountBalance?.add(lockedAccountBalance || new BN(0)) : null),
+    () => (totalBalanceLoaded ? accountBalance?.add(lockedAccountBalance || new BN(0)) : undefined),
     [accountBalance, lockedAccountBalance, totalBalanceLoaded]
   )
 
