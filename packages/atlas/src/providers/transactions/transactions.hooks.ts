@@ -273,8 +273,6 @@ export const useTransaction = (): HandleTransactionFn => {
           ) as ErrorCode | undefined
 
           updateStatus(ExtrinsicStatus.Error, errorCode)
-
-          return false
         }
         SentryLogger.error(
           extrinsicFailed ? 'Extrinsic failed' : 'Unknown sendExtrinsic error',
