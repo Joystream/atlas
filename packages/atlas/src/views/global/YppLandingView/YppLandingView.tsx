@@ -25,6 +25,7 @@ export const YppLandingView: FC = () => {
   const [currentStep, setCurrentStep] = useState<YppAuthorizationStepsType>(null)
   const { isLoggedIn, signIn, activeMembership, channelId } = useUser()
   const setSelectedChannelId = useYppStore((store) => store.actions.setSelectedChannelId)
+  const setShouldContinueYppFlow = useYppStore((store) => store.actions.setShouldContinueYppFlow)
 
   const selectedChannelTitle = activeMembership?.channels.find((channel) => channel.id === channelId)?.title
 
@@ -46,13 +47,13 @@ export const YppLandingView: FC = () => {
 
   const handleSignUpClick = useCallback(() => {
     if (!isLoggedIn) {
+      setShouldContinueYppFlow(true)
       signIn()
-      // TODO: somehow continue the flow automatically once user is logged in
       return
     }
     if (!channels?.length) {
+      setShouldContinueYppFlow(true)
       navigate(absoluteRoutes.studio.signIn())
-      // TODO: trigger "Already YouTube creator?" modal after user creates a channel
       return
     }
     if (isYppSigned) {
@@ -67,7 +68,16 @@ export const YppLandingView: FC = () => {
     } else {
       setCurrentStep('requirements')
     }
-  }, [channels?.length, isLoggedIn, isYppSigned, navigate, setSelectedChannelId, signIn, unsyncedChannels])
+  }, [
+    channels?.length,
+    isLoggedIn,
+    isYppSigned,
+    navigate,
+    setSelectedChannelId,
+    setShouldContinueYppFlow,
+    signIn,
+    unsyncedChannels,
+  ])
 
   const getYppStatus = () => {
     if (isLoading) {
