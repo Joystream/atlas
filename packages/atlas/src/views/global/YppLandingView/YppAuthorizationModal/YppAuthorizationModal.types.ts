@@ -10,6 +10,7 @@ export type YppAuthorizationStepsType =
   | 'terms-and-conditions'
   | 'summary'
   | 'channel-already-registered'
+  | 'connect-with-youtube'
   | null
 
 export enum YppAuthorizationErrorCode {
