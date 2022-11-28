@@ -40,7 +40,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
       return new BN(selectedChannel?.channelStateBloatBond || 0)
     }, [selectedChannel?.channelStateBloatBond])
 
-    const { accountBalance, lockedAccountBalance } = useSubscribeAccountBalance()
+    const { accountBalance, lockedAccountBalance, totalBalance } = useSubscribeAccountBalance()
     const { accountBalance: channelBalance } =
       useSubscribeAccountBalance(selectedChannel?.rewardAccount, {
         channelStateBloatBond: memoizedChannelStateBloatBond,
@@ -147,7 +147,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
           activeMembership={activeMembership}
           show={showWithdrawDialog}
           onExitClick={toggleWithdrawDialog}
-          accountBalance={accountBalance}
+          totalBalance={totalBalance}
           channelBalance={channelBalance}
           channelId={channelId}
         />
