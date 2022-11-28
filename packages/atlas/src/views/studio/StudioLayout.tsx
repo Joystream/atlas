@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
-import { FC, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
@@ -73,6 +73,16 @@ const StudioLayout = () => {
       })
     }
   }, [closeUnsupportedBrowserDialog, openUnsupportedBrowserDialog])
+
+  const yppRedirect = useCallback(() => {
+    if (!channelSet) {
+      return ENTRY_POINT_ROUTE
+    }
+    if (!isYppSigned) {
+      return absoluteRoutes.studio.ypp()
+    }
+  }, [channelSet, isYppSigned])
+
   return (
     <>
       <TopbarStudio hideChannelInfo={!hasMembership} />
@@ -170,7 +180,7 @@ const StudioLayout = () => {
                       <PrivateRoute
                         element={<YppDashboard />}
                         isAuth={channelSet && isYppSigned}
-                        redirectTo={absoluteRoutes.studio.ypp()}
+                        redirectTo={yppRedirect()}
                       />
                     }
                   />
