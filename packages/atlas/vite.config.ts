@@ -56,15 +56,6 @@ export default defineConfig({
       },
       overlay: false,
     }),
-    {
-      ...inject({
-        include: ['node_modules/**/*.js*'],
-        modules: {
-          Buffer: ['buffer', 'Buffer'],
-        },
-      }),
-      enforce: 'post',
-    },
     babel({
       extensions: ['.tsx', '.ts'],
       include: ['**/*.style.*', '**/*.styles.*'],
