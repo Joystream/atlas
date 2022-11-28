@@ -77,6 +77,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   const referrerId = useYppStore((store) => store.referrerId)
   const setSelectedChannelId = useYppStore((store) => store.actions.setSelectedChannelId)
   const setReferrerId = useYppStore((store) => store.actions.setReferrerId)
+  const setShouldContinueYppFlow = useYppStore((store) => store.actions.setShouldContinueYppFlow)
 
   const smMatch = useMediaMatch('sm')
 
@@ -133,7 +134,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     setReferrerId(null)
     onChangeStep(null)
     setSelectedChannelId(null)
-  }, [onChangeStep, setReferrerId, setSelectedChannelId, setYtRequirmentsErrors])
+    setShouldContinueYppFlow(false)
+  }, [onChangeStep, setReferrerId, setSelectedChannelId, setShouldContinueYppFlow, setYtRequirmentsErrors])
 
   const handleGoBack = useCallback(() => {
     if (currentStep === 'terms-and-conditions') {
@@ -313,6 +315,10 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
             'Reupload and backup your YouTube videos to receive to receive a guaranteed payout in the YouTube Partner Program.',
           primaryButton: {
             text: 'Sign up now',
+            onClick: () => {
+              setShouldContinueYppFlow(false)
+              onChangeStep('requirements')
+            },
           },
         }
       case 'select-channel':
@@ -453,6 +459,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     updateChannelFee,
     alreadyRegisteredChannel?.channelTitle,
     alreadyRegisteredChannel?.ownerMemberHandle,
+    setShouldContinueYppFlow,
     onChangeStep,
     handleSubmitDetailsForm,
   ])
@@ -466,7 +473,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         primaryButton={authorizationStep?.primaryButton}
         secondaryButton={
           currentStep !== 'fetching-data' && currentStep != null
-            ? currentStep === 'summary'
+            ? currentStep === 'summary' || currentStep === 'connect-with-youtube'
               ? { text: 'Close', onClick: handleClose }
               : { text: 'Back', onClick: handleGoBack }
             : undefined

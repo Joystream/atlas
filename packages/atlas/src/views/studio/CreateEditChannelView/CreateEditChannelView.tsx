@@ -41,6 +41,7 @@ import { useStartFileUpload } from '@/providers/uploads/uploads.hooks'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { useUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
+import { useYppStore } from '@/providers/ypp/ypp.store'
 import { transitions } from '@/styles'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { createId } from '@/utils/createId'
@@ -92,6 +93,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const { joystream, proxyCallback } = useJoystream()
   const getBucketsConfigForNewChannel = useBucketsConfigForNewChannel()
   const handleTransaction = useTransaction()
+  const shouldContinueYppFlow = useYppStore((state) => state.shouldContinueYppFlow)
   const { displaySnackbar } = useSnackbar()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const addNewChannelIdToUploadsStore = useUploadsStore((state) => state.actions.addNewChannelId)
@@ -473,7 +475,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     })
 
     if (completed && newChannel) {
-      navigate(absoluteRoutes.studio.videos())
+      navigate(shouldContinueYppFlow ? absoluteRoutes.studio.ypp() : absoluteRoutes.studio.videos())
     }
   }
 
