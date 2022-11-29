@@ -76,7 +76,7 @@ type Query {
 
 Other than the metadata mentioned above, some featured content will also require additional assets, for example short preview cut of video hero or poster image specifically for video hero section. To enable hosting those, JSG have prepared an object storage on Linode (S3-compatible). _Content admin_ should have access to this storage and upload any assets prepared by _content curators_ to it. Any URLs in the [metadata structure above](#metadata-structure) should link to this Linode storage.
 
-To access the storage, any S3-compatible client can be used, some good choices are [Cyberduck](https://cyberduck.io/) (UI-based) and [s3cmd](https://s3tools.org/s3cmd-howto]).
+To access the storage, any S3-compatible client can be used, some good choices are [Cyberduck](https://cyberduck.io/) (UI-based) and [s3cmd](https://s3tools.org/s3cmd-howto).
 
 When configuring the above tools, you may need to provide the following data:
 
