@@ -69,7 +69,7 @@ export const TransactionsManager: FC = () => {
       lastIndexerHeadRef.current = indexerHead
 
       const blockActions = useTransactionManagerStore.getState().blockActions
-      const syncedActions = blockActions.filter((action) => indexerHead >= action.targetBlock)
+      const syncedActions = blockActions.filter((action) => indexerHead > action.targetBlock)
 
       if (!syncedActions.length) {
         return
