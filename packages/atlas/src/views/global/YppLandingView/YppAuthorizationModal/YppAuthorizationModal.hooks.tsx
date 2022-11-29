@@ -176,6 +176,7 @@ export const useYppGoogleAuth = ({
           `${atlasConfig.features.ypp.youtubeSyncApiUrl}/users`,
           {
             authorizationCode: code,
+            youtubeRedirectUri: window.location.href,
           }
         )
 
