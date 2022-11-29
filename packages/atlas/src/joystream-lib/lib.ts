@@ -177,7 +177,10 @@ export class JoystreamLib {
     } as const
   }
 
-  async getDynamicBagCreationPolicies() {
+  async getDynamicBagCreationPolicies(): Promise<{
+    storageBucketsCount: number
+    distributionBucketsCountPerFamily: Record<string, number>
+  }> {
     await this.ensureApi()
 
     const { numberOfStorageBuckets, families } = await this.api.query.storage.dynamicBagCreationPolicies('Channel')

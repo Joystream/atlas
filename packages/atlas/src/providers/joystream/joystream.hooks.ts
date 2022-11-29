@@ -110,25 +110,33 @@ export const useBucketsConfigForNewChannel = () => {
     const dynamicBagCreationPolicies = await joystream?.getDynamicBagCreationPolicies()
     const storageBuckets = allStorageBuckets.current
     const distributionFamiliesToBucketsMapping = allDistributionFamiliesToBucketsMapping.current
+
     const storage =
       storageBuckets && dynamicBagCreationPolicies?.storageBucketsCount
         ? sampleSize(storageBuckets, dynamicBagCreationPolicies.storageBucketsCount)
         : []
-    const distribution = distributionFamiliesToBucketsMapping
-      ? Object.entries(distributionFamiliesToBucketsMapping).reduce((acc, [familyIdStr, buckets]) => {
-          const familyId = parseInt(familyIdStr)
-          const familyBuckets: ChannelInputBuckets['distribution'] =
-            dynamicBagCreationPolicies?.distributionBucketsCountPerFamily
-              ? sampleSize(buckets, dynamicBagCreationPolicies.distributionBucketsCountPerFamily[familyId]).map(
-                  (bucketIndex) => ({
-                    distributionBucketIndex: bucketIndex,
-                    distributionBucketFamilyId: familyId,
-                  })
-                )
-              : []
-          return [...acc, ...familyBuckets]
-        }, [] as ChannelInputBuckets['distribution'])
-      : []
+
+    const distribution =
+      dynamicBagCreationPolicies?.distributionBucketsCountPerFamily && distributionFamiliesToBucketsMapping
+        ? Object.entries(dynamicBagCreationPolicies.distributionBucketsCountPerFamily).reduce(
+            (acc, [familyIdStr, bucketsCount]) => {
+              if (!bucketsCount) {
+                return acc
+              }
+              const familyId = parseInt(familyIdStr)
+              const familyBuckets: ChannelInputBuckets['distribution'] = sampleSize(
+                distributionFamiliesToBucketsMapping[familyId],
+                bucketsCount
+              ).map((bucketIndex) => ({
+                distributionBucketIndex: bucketIndex,
+                distributionBucketFamilyId: familyId,
+              }))
+
+              return [...acc, ...familyBuckets]
+            },
+            [] as ChannelInputBuckets['distribution']
+          )
+        : []
 
     return {
       storage: storage.length ? storage : [0],
