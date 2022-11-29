@@ -1,4 +1,5 @@
-import { FC, useEffect, useState } from 'react'
+import { throttle } from 'lodash-es'
+import { FC, useEffect, useRef, useState } from 'react'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks/queryNode'
 import { MintNftFirstTimeModal } from '@/components/_overlays/MintNftFirstTimeModal'
@@ -14,7 +15,6 @@ import { useTransactionManagerStore } from './transactions.store'
 
 export const TransactionsManager: FC = () => {
   const {
-    blockActions,
     transactions,
     showFirstMintDialog,
     actions: { removeOldBlockActions, setShowFistMintDialog, removeTransaction },
@@ -23,7 +23,7 @@ export const TransactionsManager: FC = () => {
   const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
   const userWalletName = useUserStore((state) => state.wallet?.title)
 
-  const [lastIndexedBlock, setLastIndexedBlock] = useState(0)
+  const lastIndexerHeadRef = useRef(0)
   const { displaySnackbar, closeSnackbar } = useSnackbar()
 
   const anyMinimizedTransactionsPendingSignature = Object.values(transactions).find(
@@ -61,6 +61,32 @@ export const TransactionsManager: FC = () => {
     userWalletName,
   ])
 
+  const throttledHandleNewIndexerHeadRef = useRef(
+    throttle((indexerHead: number) => {
+      if (indexerHead === lastIndexerHeadRef.current) {
+        return
+      }
+      lastIndexerHeadRef.current = indexerHead
+
+      const blockActions = useTransactionManagerStore.getState().blockActions
+      const syncedActions = blockActions.filter((action) => indexerHead >= action.targetBlock)
+
+      if (!syncedActions.length) {
+        return
+      }
+
+      syncedActions.forEach((action) => {
+        try {
+          action.callback()
+        } catch (e) {
+          SentryLogger.error('Failed to execute tx sync callback', 'TransactionsManager', e)
+        }
+      })
+
+      removeOldBlockActions(indexerHead)
+    }, 1000)
+  )
+
   useQueryNodeStateSubscription({
     onSubscriptionData: ({ subscriptionData }) => {
       if (!subscriptionData.data) {
@@ -68,29 +94,9 @@ export const TransactionsManager: FC = () => {
       }
 
       const indexerHead = subscriptionData.data.stateSubscription.indexerHead
-
-      setLastIndexedBlock(indexerHead)
+      throttledHandleNewIndexerHeadRef.current(indexerHead)
     },
   })
-
-  // run block actions based on QN synced block height
-  useEffect(() => {
-    const syncedActions = blockActions.filter((action) => lastIndexedBlock >= action.targetBlock)
-
-    if (!syncedActions.length) {
-      return
-    }
-
-    syncedActions.forEach((action) => {
-      try {
-        action.callback()
-      } catch (e) {
-        SentryLogger.error('Failed to execute tx sync callback', 'TransactionsManager', e)
-      }
-    })
-
-    removeOldBlockActions(lastIndexedBlock)
-  }, [blockActions, lastIndexedBlock, removeOldBlockActions])
 
   const handleFirstMintDialogClose = () => {
     updateDismissedMessages('first-mint')
