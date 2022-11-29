@@ -18,6 +18,7 @@ import { RawDraft, useDraftStore } from '@/providers/drafts'
 import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import {
   VideoWorkspace,
+  VideoWorkspaceVideoAssets,
   VideoWorkspaceVideoFormFields,
   useVideoWorkspace,
   useVideoWorkspaceData,
@@ -152,9 +153,11 @@ export const useVideoFormAssets = (
         ...thumbnail,
         cropId: newCropAssetId,
         originalId: newOriginalAssetId,
-        name: (thumbnail.originalBlob as File).name,
+        originalBlob: {
+          name: (thumbnail.originalBlob as File).name,
+        },
       }
-      const updatedAssets = {
+      const updatedAssets: VideoWorkspaceVideoAssets = {
         ...currentAssetsValue,
         thumbnail: updatedThumbnail,
       }
