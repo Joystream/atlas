@@ -24,10 +24,8 @@ export const YppLandingView: FC = () => {
   const headTags = useHeadTags('Youtube Partner Program')
   const [currentStep, setCurrentStep] = useState<YppAuthorizationStepsType>(null)
   const { isLoggedIn, signIn, activeMembership, channelId } = useUser()
-  const { setSelectedChannelId, setShouldContinueYppFlow, setShowConnectToYoutubeDialog } = useYppStore(
-    (store) => store.actions
-  )
-  const showConnectToYoutubeDialog = useYppStore((store) => store.showConnectToYoutubeDialog)
+  const { setSelectedChannelId, setShouldContinueYppFlow } = useYppStore((store) => store.actions)
+  const shouldContinueYppFlow = useYppStore((store) => store.shouldContinueYppFlow)
 
   const selectedChannelTitle = activeMembership?.channels.find((channel) => channel.id === channelId)?.title
 
@@ -39,14 +37,6 @@ export const YppLandingView: FC = () => {
   const isYppSigned = !!currentChannel
 
   const hasAnotherUnsyncedChannel = isYppSigned && !!unsyncedChannels?.length
-
-  useEffect(() => {
-    if (showConnectToYoutubeDialog) {
-      setSelectedChannelId(channelId)
-      setCurrentStep('connect-with-youtube')
-      setShowConnectToYoutubeDialog(false)
-    }
-  }, [channelId, setSelectedChannelId, setShowConnectToYoutubeDialog, showConnectToYoutubeDialog])
 
   useEffect(() => {
     AOS.init({
@@ -88,6 +78,14 @@ export const YppLandingView: FC = () => {
     signIn,
     unsyncedChannels,
   ])
+
+  useEffect(() => {
+    if (shouldContinueYppFlow) {
+      setSelectedChannelId(channelId)
+      setShouldContinueYppFlow(false)
+      setCurrentStep('requirements')
+    }
+  }, [channelId, handleSignUpClick, setSelectedChannelId, setShouldContinueYppFlow, shouldContinueYppFlow])
 
   const getYppStatus = () => {
     if (isLoading) {

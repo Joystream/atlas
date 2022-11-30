@@ -7,7 +7,6 @@ import { ExtrinsicStatus } from '@/joystream-lib/types'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useSnackbar } from '@/providers/snackbars'
 import { useUserStore } from '@/providers/user/user.store'
-import { useYppStore } from '@/providers/ypp/ypp.store'
 import { SentryLogger } from '@/utils/logs'
 
 import { METAPROTOCOL_SNACKBAR_ID } from './transactions.config'
@@ -20,8 +19,6 @@ export const TransactionsManager: FC = () => {
     showFirstMintDialog,
     actions: { removeOldBlockActions, setShowFistMintDialog, removeTransaction },
   } = useTransactionManagerStore((state) => state)
-  const shouldContinueYppFlow = useYppStore((state) => state.shouldContinueYppFlow)
-  const { setShouldContinueYppFlow, setShowConnectToYoutubeDialog } = useYppStore((state) => state.actions)
 
   const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
   const userWalletName = useUserStore((state) => state.wallet?.title)
@@ -103,10 +100,6 @@ export const TransactionsManager: FC = () => {
   const handleTransactionModalClose = () => {
     if (firstNonMinimizedTransaction) {
       removeTransaction(firstNonMinimizedTransaction.id)
-    }
-    if (shouldContinueYppFlow) {
-      setShouldContinueYppFlow(false)
-      setShowConnectToYoutubeDialog(true)
     }
   }
 

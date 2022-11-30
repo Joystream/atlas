@@ -5,7 +5,6 @@ type YppStoreState = {
   selectedChannelId: string | null
   authState: string | null // 'state' param passed to Google auth URL
   shouldContinueYppFlow: boolean
-  showConnectToYoutubeDialog: boolean
 }
 
 type YppStoreActions = {
@@ -13,7 +12,6 @@ type YppStoreActions = {
   setSelectedChannelId: (selectedChannelId: string | null) => void
   setAuthState: (authState: string | null) => void
   setShouldContinueYppFlow: (shouldContinueYppFlow: boolean) => void
-  setShowConnectToYoutubeDialog: (showConnectToYoutubeDialog: boolean) => void
 }
 
 export const useYppStore = createStore<YppStoreState, YppStoreActions>(
@@ -23,7 +21,6 @@ export const useYppStore = createStore<YppStoreState, YppStoreActions>(
       selectedChannelId: null,
       authState: null,
       shouldContinueYppFlow: false,
-      showConnectToYoutubeDialog: false,
     },
     actionsFactory: (set) => ({
       setReferrerId: (referrerId) => {
@@ -44,11 +41,6 @@ export const useYppStore = createStore<YppStoreState, YppStoreActions>(
       setShouldContinueYppFlow: (shouldContinueYppFlow) => {
         set((state) => {
           state.shouldContinueYppFlow = shouldContinueYppFlow
-        })
-      },
-      setShowConnectToYoutubeDialog: (showConnectToYoutubeDialog) => {
-        set((state) => {
-          state.showConnectToYoutubeDialog = showConnectToYoutubeDialog
         })
       },
     }),

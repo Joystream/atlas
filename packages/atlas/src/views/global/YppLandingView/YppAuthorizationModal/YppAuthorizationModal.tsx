@@ -32,11 +32,7 @@ import {
   DescriptionText,
   HeaderIconsWrapper,
   Img,
-  LogosWrapper,
-  StyledAppLogo,
   StyledSvgAppLogoShort,
-  StyledSvgControlsConnect,
-  StyledSvgLogoYoutube,
 } from './YppAuthorizationModal.styles'
 import { YppAuthorizationErrorCode, YppAuthorizationStepsType } from './YppAuthorizationModal.types'
 import {
@@ -300,27 +296,27 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
 
   const authorizationStep = useMemo(() => {
     switch (currentStep) {
-      case 'connect-with-youtube':
-        return {
-          headerIcon: (
-            <LogosWrapper>
-              <StyledSvgLogoYoutube />
-              <StyledSvgControlsConnect />
-              {/* todo use AppLogo component here */}
-              <StyledAppLogo height={36} width={undefined} />
-            </LogosWrapper>
-          ),
-          title: 'Connect with youtube?',
-          description:
-            'Reupload and backup your YouTube videos to receive to receive a guaranteed payout in the YouTube Partner Program.',
-          primaryButton: {
-            text: 'Sign up now',
-            onClick: () => {
-              setShouldContinueYppFlow(false)
-              onChangeStep('requirements')
-            },
-          },
-        }
+      // case 'connect-with-youtube':
+      //   return {
+      //     headerIcon: (
+      //       <LogosWrapper>
+      //         <StyledSvgLogoYoutube />
+      //         <StyledSvgControlsConnect />
+      //         {/* todo use AppLogo component here */}
+      //         <StyledAppLogo height={36} width={undefined} />
+      //       </LogosWrapper>
+      //     ),
+      //     title: 'Connect with youtube?',
+      //     description:
+      //       'Reupload and backup your YouTube videos to receive to receive a guaranteed payout in the YouTube Partner Program.',
+      //     primaryButton: {
+      //       text: 'Sign up now',
+      //       onClick: () => {
+      //         setShouldContinueYppFlow(false)
+      //         onChangeStep('requirements')
+      //       },
+      //     },
+      //   }
       case 'select-channel':
         return {
           title: 'Select channel',
@@ -459,7 +455,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     updateChannelFee,
     alreadyRegisteredChannel?.channelTitle,
     alreadyRegisteredChannel?.ownerMemberHandle,
-    setShouldContinueYppFlow,
     onChangeStep,
     handleSubmitDetailsForm,
   ])
@@ -473,7 +468,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         primaryButton={authorizationStep?.primaryButton}
         secondaryButton={
           currentStep !== 'fetching-data' && currentStep != null
-            ? currentStep === 'summary' || currentStep === 'connect-with-youtube'
+            ? currentStep === 'summary'
               ? { text: 'Close', onClick: handleClose }
               : { text: 'Back', onClick: handleGoBack }
             : undefined
