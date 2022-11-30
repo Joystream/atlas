@@ -52,10 +52,6 @@ const tileSizeVariants = ({ tileSize }: ContentProps) => `
     margin-bottom: ${sizes(tileSize === 'medium' ? 4 : 3)};
   }
   
-  ${Title} {
-    -webkit-line-clamp: ${tileSize === 'medium' ? 2 : 3};
-  }
-  
   ${Details} {
     margin-top: ${sizes(tileSize === 'medium' ? 4 : 3)};
   }
@@ -79,10 +75,11 @@ export const StyledAvatarGroup = styled(AvatarGroup)`
 `
 
 export const Title = styled(Text)`
-  min-height: 48px;
+  height: 48px;
   overflow: hidden;
   text-overflow: ellipsis;
   word-break: break-word;
+  -webkit-line-clamp: 2;
   /* stylelint-disable-next-line value-no-vendor-prefix */
   display: -webkit-box;
   -webkit-box-orient: vertical;
