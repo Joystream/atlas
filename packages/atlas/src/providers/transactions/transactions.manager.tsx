@@ -1,4 +1,3 @@
-import { throttle } from 'lodash-es'
 import { FC, useEffect, useRef, useState } from 'react'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks/queryNode'
@@ -23,7 +22,7 @@ export const TransactionsManager: FC = () => {
   const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
   const userWalletName = useUserStore((state) => state.wallet?.title)
 
-  const lastIndexerHeadRef = useRef(0)
+  const lastProcessedQnBlockRef = useRef(0)
   const { displaySnackbar, closeSnackbar } = useSnackbar()
 
   const anyMinimizedTransactionsPendingSignature = Object.values(transactions).find(
@@ -61,40 +60,38 @@ export const TransactionsManager: FC = () => {
     userWalletName,
   ])
 
-  const throttledHandleNewIndexerHeadRef = useRef(
-    throttle((indexerHead: number) => {
-      if (indexerHead === lastIndexerHeadRef.current) {
-        return
+  const handleNewLastProcessedBlockRef = useRef(async (lastProcessedBlock: number) => {
+    if (lastProcessedBlock === lastProcessedQnBlockRef.current) {
+      return
+    }
+    lastProcessedQnBlockRef.current = lastProcessedBlock
+
+    const blockActions = useTransactionManagerStore.getState().blockActions
+    const syncedActions = blockActions.filter((action) => lastProcessedBlock >= action.targetBlock)
+
+    if (!syncedActions.length) {
+      return
+    }
+
+    syncedActions.forEach((action) => {
+      try {
+        action.callback()
+      } catch (e) {
+        SentryLogger.error('Failed to execute tx sync callback', 'TransactionsManager', e)
       }
-      lastIndexerHeadRef.current = indexerHead
+    })
 
-      const blockActions = useTransactionManagerStore.getState().blockActions
-      const syncedActions = blockActions.filter((action) => indexerHead > action.targetBlock)
-
-      if (!syncedActions.length) {
-        return
-      }
-
-      syncedActions.forEach((action) => {
-        try {
-          action.callback()
-        } catch (e) {
-          SentryLogger.error('Failed to execute tx sync callback', 'TransactionsManager', e)
-        }
-      })
-
-      removeOldBlockActions(indexerHead)
-    }, 1000)
-  )
+    removeOldBlockActions(lastProcessedBlock)
+  })
 
   useQueryNodeStateSubscription({
-    onSubscriptionData: ({ subscriptionData }) => {
+    onData: ({ data: subscriptionData }) => {
       if (!subscriptionData.data) {
         return
       }
 
-      const indexerHead = subscriptionData.data.stateSubscription.indexerHead
-      throttledHandleNewIndexerHeadRef.current(indexerHead)
+      const lastProcessedBlock = subscriptionData.data.stateSubscription.lastCompleteBlock
+      handleNewLastProcessedBlockRef.current(lastProcessedBlock)
     },
   })
 
