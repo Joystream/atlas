@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useRef } from 'react'
+import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
@@ -16,6 +16,7 @@ import { FormField } from '@/components/_inputs/FormField'
 import { Select, SelectItem } from '@/components/_inputs/Select'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { TitleInput } from '@/components/_inputs/TitleInput'
+import { ConnectWithYtModal } from '@/components/_overlays/ConnectWithYtModal'
 import {
   ImageCropModal,
   ImageCropModalImperativeHandle,
@@ -93,13 +94,13 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const { joystream, proxyCallback } = useJoystream()
   const getBucketsConfigForNewChannel = useBucketsConfigForNewChannel()
   const handleTransaction = useTransaction()
-  const shouldContinueYppFlow = useYppStore((state) => state.shouldContinueYppFlow)
   const { displaySnackbar } = useSnackbar()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const addNewChannelIdToUploadsStore = useUploadsStore((state) => state.actions.addNewChannelId)
   const navigate = useNavigate()
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
-
+  const [showConnnectToYtDialog, setShowConnectToYtDialog] = useState(false)
+  const setShouldContinueYppFlow = useYppStore((store) => store.actions.setShouldContinueYppFlow)
   const {
     channel,
     loading,
@@ -475,7 +476,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     })
 
     if (completed && newChannel) {
-      navigate(shouldContinueYppFlow ? absoluteRoutes.studio.ypp() : absoluteRoutes.studio.videos())
+      setTimeout(() => setShowConnectToYtDialog(true), 2000)
     }
   }
 
@@ -531,202 +532,218 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const isDisabled = !isDirty || nodeConnectionStatus !== 'connected'
 
   return (
-    <form onSubmit={handleSubmit}>
-      {headTags}
-      <Controller
-        name="cover"
-        control={control}
-        render={() => (
-          <>
-            <ChannelCover
-              assetUrl={loading ? null : coverAsset?.url}
-              hasCoverUploadFailed={hasCoverUploadFailed}
-              onCoverEditClick={() => {
-                const cover = getValues('cover')
-                coverDialogRef.current?.open(cover.originalBlob, cover.imageCropData || undefined, !!cover.originalBlob)
-              }}
-              editable
-              disabled={loading}
-            />
-            <ImageCropModal
-              imageType="cover"
-              onConfirm={handleCoverChange}
-              onDelete={handleDeleteCover}
-              onError={() =>
-                displaySnackbar({
-                  title: 'Cannot load the image. Choose another.',
-                  iconType: 'error',
-                })
-              }
-              ref={coverDialogRef}
-            />
-          </>
-        )}
+    <>
+      <ConnectWithYtModal
+        show={showConnnectToYtDialog}
+        onSignUp={() => {
+          setShouldContinueYppFlow(true)
+          navigate(absoluteRoutes.studio.ypp())
+        }}
+        onClose={() => navigate(absoluteRoutes.studio.videos())}
       />
-
-      <StyledTitleSection className={transitions.names.slide}>
+      <form onSubmit={handleSubmit}>
+        {headTags}
         <Controller
-          name="avatar"
+          name="cover"
           control={control}
           render={() => (
             <>
-              <StyledAvatar
-                assetUrl={avatarAsset?.url}
-                hasAvatarUploadFailed={hasAvatarUploadFailed}
-                size="fill"
-                onClick={() => {
-                  const avatar = getValues('avatar')
-                  avatarDialogRef.current?.open(
-                    avatar.originalBlob,
-                    avatar.imageCropData || undefined,
-                    !!avatar.originalBlob
+              <ChannelCover
+                assetUrl={loading ? null : coverAsset?.url}
+                hasCoverUploadFailed={hasCoverUploadFailed}
+                onCoverEditClick={() => {
+                  const cover = getValues('cover')
+                  coverDialogRef.current?.open(
+                    cover.originalBlob,
+                    cover.imageCropData || undefined,
+                    !!cover.originalBlob
                   )
                 }}
                 editable
-                loading={loading}
+                disabled={loading}
               />
               <ImageCropModal
-                imageType="avatar"
-                onConfirm={handleAvatarChange}
+                imageType="cover"
+                onConfirm={handleCoverChange}
+                onDelete={handleDeleteCover}
                 onError={() =>
                   displaySnackbar({
                     title: 'Cannot load the image. Choose another.',
                     iconType: 'error',
                   })
                 }
-                ref={avatarDialogRef}
-                onDelete={handleDeleteAvatar}
+                ref={coverDialogRef}
               />
             </>
           )}
         />
 
-        <TitleContainer>
-          {!loading || newChannel ? (
-            <>
-              <Controller
-                name="title"
-                control={control}
-                rules={textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 40, required: true })}
-                render={({ field: { value, onChange } }) => (
-                  <FormField error={errors.title?.message}>
-                    <Tooltip text="Click to edit channel title" placement="top-start">
-                      <TitleInput
-                        min={3}
-                        max={40}
-                        placeholder="Channel title"
-                        value={value}
-                        onChange={onChange}
-                        error={!!errors.title}
-                      />
-                    </Tooltip>
-                  </FormField>
-                )}
-              />
-              {!newChannel && (
-                <SubTitle as="span" variant="t200">
-                  {channel?.follows ? (
-                    <NumberFormat as="span" value={channel.follows} format="short" variant="t200" />
-                  ) : (
-                    0
-                  )}{' '}
-                  Followers
-                </SubTitle>
-              )}
-            </>
-          ) : (
-            <>
-              <TitleSkeletonLoader />
-              <SubTitleSkeletonLoader />
-            </>
-          )}
-        </TitleContainer>
-      </StyledTitleSection>
-      <LimitedWidthContainer>
-        <InnerFormContainer actionBarHeight={actionBarBoundsHeight}>
-          <FormField label="Description" error={errors.description?.message}>
-            <Tooltip text="Click to edit channel description">
-              <TextArea
-                placeholder="Description of your channel to share with your audience"
-                rows={8}
-                {...register(
-                  'description',
-                  textFieldValidation({ name: 'Description', minLength: 3, maxLength: 1000 })
-                )}
-                maxLength={1000}
-                error={!!errors.description}
-              />
-            </Tooltip>
-          </FormField>
-          <FormField
-            label="Language"
-            description="Main language of the content you publish on your channel"
-            error={(errors.language as FieldError)?.message}
-          >
-            <Controller
-              name="language"
-              control={control}
-              rules={requiredValidation('Language')}
-              render={({ field: { value, onChange } }) => (
-                <Select
-                  items={atlasConfig.derived.languagesSelectValues}
-                  disabled={loading}
-                  value={value}
-                  error={!!errors.language && !value}
-                  onChange={onChange}
+        <StyledTitleSection className={transitions.names.slide}>
+          <Controller
+            name="avatar"
+            control={control}
+            render={() => (
+              <>
+                <StyledAvatar
+                  assetUrl={avatarAsset?.url}
+                  hasAvatarUploadFailed={hasAvatarUploadFailed}
+                  size="fill"
+                  onClick={() => {
+                    const avatar = getValues('avatar')
+                    avatarDialogRef.current?.open(
+                      avatar.originalBlob,
+                      avatar.imageCropData || undefined,
+                      !!avatar.originalBlob
+                    )
+                  }}
+                  editable
+                  loading={loading}
                 />
-              )}
-            />
-          </FormField>
+                <ImageCropModal
+                  imageType="avatar"
+                  onConfirm={handleAvatarChange}
+                  onError={() =>
+                    displaySnackbar({
+                      title: 'Cannot load the image. Choose another.',
+                      iconType: 'error',
+                    })
+                  }
+                  ref={avatarDialogRef}
+                  onDelete={handleDeleteAvatar}
+                />
+              </>
+            )}
+          />
 
-          <FormField
-            label="Privacy"
-            description="Privacy of your channel. Please note that because of nature of the blockchain, even unlisted channels can be publicly visible by querying the blockchain data."
-            error={(errors.isPublic as FieldError)?.message}
-          >
-            <Controller
-              name="isPublic"
-              control={control}
-              render={({ field: { value, onChange } }) => (
-                <Select
-                  items={PUBLIC_SELECT_ITEMS}
-                  disabled={loading}
-                  value={value}
-                  onChange={onChange}
-                  error={!!errors.isPublic && !value}
+          <TitleContainer>
+            {!loading || newChannel ? (
+              <>
+                <Controller
+                  name="title"
+                  control={control}
+                  rules={textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 40, required: true })}
+                  render={({ field: { value, onChange } }) => (
+                    <FormField error={errors.title?.message}>
+                      <Tooltip text="Click to edit channel title" placement="top-start">
+                        <TitleInput
+                          min={3}
+                          max={40}
+                          placeholder="Channel title"
+                          value={value}
+                          onChange={onChange}
+                          error={!!errors.title}
+                        />
+                      </Tooltip>
+                    </FormField>
+                  )}
                 />
-              )}
-            />
-          </FormField>
-          <CSSTransition
-            in={!isWorkspaceOpen}
-            timeout={2 * parseInt(transitions.timings.loading)}
-            classNames={transitions.names.fade}
-            unmountOnExit
-          >
-            <ActionBarTransactionWrapper ref={actionBarRef}>
-              {!channelId && progressDrawerSteps?.length ? <StyledProgressDrawer steps={progressDrawerSteps} /> : null}
-              <ActionBar
-                fee={newChannel ? createChannelFee : updateChannelFee}
-                feeLoading={newChannel ? createChannelFeeLoading : updateChannelFeeLoading}
-                primaryButton={{
-                  text: newChannel ? 'Create channel' : 'Publish changes',
-                  disabled: isDisabled,
-                  onClick: handleSubmit,
-                }}
-                secondaryButton={
-                  !newChannel && isDirty && nodeConnectionStatus === 'connected'
-                    ? {
-                        text: 'Cancel',
-                        onClick: () => reset(),
-                      }
-                    : undefined
-                }
+                {!newChannel && (
+                  <SubTitle as="span" variant="t200">
+                    {channel?.follows ? (
+                      <NumberFormat as="span" value={channel.follows} format="short" variant="t200" />
+                    ) : (
+                      0
+                    )}{' '}
+                    Followers
+                  </SubTitle>
+                )}
+              </>
+            ) : (
+              <>
+                <TitleSkeletonLoader />
+                <SubTitleSkeletonLoader />
+              </>
+            )}
+          </TitleContainer>
+        </StyledTitleSection>
+        <LimitedWidthContainer>
+          <InnerFormContainer actionBarHeight={actionBarBoundsHeight}>
+            <FormField label="Description" error={errors.description?.message}>
+              <Tooltip text="Click to edit channel description">
+                <TextArea
+                  placeholder="Description of your channel to share with your audience"
+                  rows={8}
+                  {...register(
+                    'description',
+                    textFieldValidation({ name: 'Description', minLength: 3, maxLength: 1000 })
+                  )}
+                  maxLength={1000}
+                  error={!!errors.description}
+                />
+              </Tooltip>
+            </FormField>
+            <FormField
+              label="Language"
+              description="Main language of the content you publish on your channel"
+              error={(errors.language as FieldError)?.message}
+            >
+              <Controller
+                name="language"
+                control={control}
+                rules={requiredValidation('Language')}
+                render={({ field: { value, onChange } }) => (
+                  <Select
+                    items={atlasConfig.derived.languagesSelectValues}
+                    disabled={loading}
+                    value={value}
+                    error={!!errors.language && !value}
+                    onChange={onChange}
+                  />
+                )}
               />
-            </ActionBarTransactionWrapper>
-          </CSSTransition>
-        </InnerFormContainer>
-      </LimitedWidthContainer>
-    </form>
+            </FormField>
+
+            <FormField
+              label="Privacy"
+              description="Privacy of your channel. Please note that because of nature of the blockchain, even unlisted channels can be publicly visible by querying the blockchain data."
+              error={(errors.isPublic as FieldError)?.message}
+            >
+              <Controller
+                name="isPublic"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <Select
+                    items={PUBLIC_SELECT_ITEMS}
+                    disabled={loading}
+                    value={value}
+                    onChange={onChange}
+                    error={!!errors.isPublic && !value}
+                  />
+                )}
+              />
+            </FormField>
+            <CSSTransition
+              in={!isWorkspaceOpen}
+              timeout={2 * parseInt(transitions.timings.loading)}
+              classNames={transitions.names.fade}
+              unmountOnExit
+            >
+              <ActionBarTransactionWrapper ref={actionBarRef}>
+                {!channelId && progressDrawerSteps?.length ? (
+                  <StyledProgressDrawer steps={progressDrawerSteps} />
+                ) : null}
+                <ActionBar
+                  fee={newChannel ? createChannelFee : updateChannelFee}
+                  feeLoading={newChannel ? createChannelFeeLoading : updateChannelFeeLoading}
+                  primaryButton={{
+                    text: newChannel ? 'Create channel' : 'Publish changes',
+                    disabled: isDisabled,
+                    onClick: handleSubmit,
+                  }}
+                  secondaryButton={
+                    !newChannel && isDirty && nodeConnectionStatus === 'connected'
+                      ? {
+                          text: 'Cancel',
+                          onClick: () => reset(),
+                        }
+                      : undefined
+                  }
+                />
+              </ActionBarTransactionWrapper>
+            </CSSTransition>
+          </InnerFormContainer>
+        </LimitedWidthContainer>
+      </form>
+    </>
   )
 }

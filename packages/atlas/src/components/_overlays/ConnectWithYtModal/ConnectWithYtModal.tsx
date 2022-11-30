@@ -14,13 +14,12 @@ import {
 import { DialogModal } from '../DialogModal'
 
 export type ConnectWithYtModalProps = {
-  entityId: string
   show: boolean
   onClose: () => void
   onSignUp: () => void
 }
 
-export const ConnectWithYtModal: FC<ConnectWithYtModalProps> = ({ show, onClose }) => {
+export const ConnectWithYtModal: FC<ConnectWithYtModalProps> = ({ show, onClose, onSignUp }) => {
   const smMatch = useMediaMatch('sm')
   return (
     <DialogModal
@@ -32,6 +31,7 @@ export const ConnectWithYtModal: FC<ConnectWithYtModalProps> = ({ show, onClose 
       }}
       primaryButton={{
         text: 'Sign up now',
+        onClick: onSignUp,
       }}
       additionalActionsNode={
         <Button size="medium" variant="tertiary">
@@ -42,7 +42,6 @@ export const ConnectWithYtModal: FC<ConnectWithYtModalProps> = ({ show, onClose 
       <LogosWrapper>
         <StyledSvgLogoYoutube />
         <StyledSvgControlsConnect />
-        {/* todo use AppLogo component here */}
         <StyledAppLogo height={36} width={undefined} />
       </LogosWrapper>
       <Text variant={smMatch ? 'h500' : 'h400'} as="h2" margin={{ bottom: 2 }}>

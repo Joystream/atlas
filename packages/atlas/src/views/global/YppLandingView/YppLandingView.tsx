@@ -25,9 +25,10 @@ export const YppLandingView: FC = () => {
   const [currentStep, setCurrentStep] = useState<YppAuthorizationStepsType>(null)
   const { isLoggedIn, signIn, activeMembership, channelId } = useUser()
   const { setSelectedChannelId, setShouldContinueYppFlow } = useYppStore((store) => store.actions)
-  const shouldContinueYppFlow = useYppStore((store) => store.shouldContinueYppFlow)
 
   const selectedChannelTitle = activeMembership?.channels.find((channel) => channel.id === channelId)?.title
+
+  const shouldContinueYppFlow = useYppStore((store) => store.shouldContinueYppFlow)
 
   const navigate = useNavigate()
 
@@ -47,12 +48,10 @@ export const YppLandingView: FC = () => {
 
   const handleSignUpClick = useCallback(() => {
     if (!isLoggedIn) {
-      setShouldContinueYppFlow(true)
       signIn()
       return
     }
     if (!channels?.length) {
-      setShouldContinueYppFlow(true)
       navigate(absoluteRoutes.studio.signIn())
       return
     }
@@ -68,16 +67,7 @@ export const YppLandingView: FC = () => {
     } else {
       setCurrentStep('requirements')
     }
-  }, [
-    channels?.length,
-    isLoggedIn,
-    isYppSigned,
-    navigate,
-    setSelectedChannelId,
-    setShouldContinueYppFlow,
-    signIn,
-    unsyncedChannels,
-  ])
+  }, [channels?.length, isLoggedIn, isYppSigned, navigate, setSelectedChannelId, signIn, unsyncedChannels])
 
   useEffect(() => {
     if (shouldContinueYppFlow) {

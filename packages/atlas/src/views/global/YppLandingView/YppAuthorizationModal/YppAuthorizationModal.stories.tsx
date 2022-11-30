@@ -25,7 +25,6 @@ export default {
       control: {
         type: 'select',
         options: [
-          'connect-with-youtube',
           'requirements',
           'details',
           'fetching-data',
