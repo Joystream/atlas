@@ -97,19 +97,13 @@ export const TransactionsManager: FC = () => {
     setShowFistMintDialog(false)
   }
 
-  const handleTransactionModalClose = () => {
-    if (firstNonMinimizedTransaction) {
-      removeTransaction(firstNonMinimizedTransaction.id)
-    }
-  }
-
   return (
     <>
       <MintNftFirstTimeModal show={showFirstMintDialog} onClose={handleFirstMintDialogClose} />
       {firstNonMinimizedTransaction && (
         <TransactionModal
           status={firstNonMinimizedTransaction.status}
-          onClose={handleTransactionModalClose}
+          onClose={() => removeTransaction(firstNonMinimizedTransaction.id)}
           errorCode={firstNonMinimizedTransaction.errorCode}
         />
       )}
