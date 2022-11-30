@@ -23,7 +23,7 @@ type WithdrawFundsDialogProps = {
   onExitClick: () => void
   activeMembership?: FullMembershipFieldsFragment | null
   show: boolean
-  accountBalance?: BN
+  totalBalance?: BN
   channelBalance?: BN
   avatarUrl?: string | null
   channelId?: string | null
@@ -36,7 +36,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
   activeMembership,
   show,
   avatarUrl,
-  accountBalance = new BN(0),
+  totalBalance = new BN(0),
   channelBalance = new BN(0),
   channelId,
 }) => {
@@ -152,7 +152,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
                 return true
               },
               memberBalance: () => {
-                if (fullFee.gt(accountBalance)) {
+                if (fullFee.gt(totalBalance)) {
                   return 'Membership wallet has insufficient balance to cover transaction fees. Top up your membership wallet and try again. '
                 }
                 return true
@@ -191,7 +191,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
             variant="t100"
             color={errors.amount?.type === 'memberBalance' ? 'colorTextError' : 'colorText'}
           >
-            Destination account balance
+            Destination total account balance
           </Text>
           <NumberFormat
             as="span"
@@ -199,7 +199,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
             variant="t100"
             withToken
             color={errors.amount?.type === 'memberBalance' ? 'colorTextError' : 'colorText'}
-            value={accountBalance}
+            value={totalBalance}
           />
         </SummaryRow>
       </Summary>

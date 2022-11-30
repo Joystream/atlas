@@ -377,6 +377,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                   hashPromise: thumbnailHashPromise,
                   dimensions: thumbnailInputFile?.assetDimensions,
                   cropData: thumbnailInputFile?.imageCropData,
+                  name: thumbnailInputFile.originalBlob?.name,
                 },
               }
             : {}),

@@ -1,11 +1,8 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { ExpandButton } from '@/components/_buttons/ExpandButton'
-import { cVar, sizes, transitions } from '@/styles'
-
-export type UploadStatusGroupSize = 'large' | 'compact'
+import { cVar, media, sizes, square, transitions } from '@/styles'
 
 type UploadStatusGroupProps = {
   isActive?: boolean
@@ -31,32 +28,19 @@ export const UploadStatusGroupContainer = styled.div<UploadStatusGroupProps>`
   transition: background-color ${transitions.timings.sharp} ${transitions.easing};
 `
 
-type ThumbnailProps = {
-  size?: UploadStatusGroupSize
-}
+export const Thumbnail = styled.div`
+  ${square(40)};
 
-export const Thumbnail = styled.div<ThumbnailProps>`
   position: relative;
   z-index: 1;
   display: flex;
   flex-shrink: 0;
   justify-content: center;
   align-items: center;
-  background-color: ${cVar('colorCoreNeutral700')};
-  height: ${sizes(12)};
 
-  ${({ size }) => {
-    if (size === 'compact') {
-      return css`
-        width: ${sizes(12)};
-      `
-    }
-    if (size === 'large') {
-      return css`
-        width: ${sizes(18)};
-      `
-    }
-  }};
+  ${media.md} {
+    ${square(48)};
+  }
 `
 export const AssetsInfoContainer = styled.div`
   position: relative;
@@ -65,7 +49,6 @@ export const AssetsInfoContainer = styled.div`
   flex-direction: column;
   justify-content: space-around;
   margin-left: ${sizes(4)};
-  color: ${cVar('colorCoreNeutral300')};
   flex: 0 1 auto;
   overflow: hidden;
 `

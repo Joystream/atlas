@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added validation for enough funds to pay tx fee
+- Atlas logo component for easy customization
+
+### Fixed
+
+- Greatly improved handling of failed uploads
+- Fixed issue with unhandled transaction promise rejection
+- Fixed issue with channel withdraw dialog validation
+- Fixed transaction callbacks sometimes being called before QN had processed the data
+- Fixed wrong bucket config for new channels
+
 ## [1.0.0] - 2022-11-28
 
 ### Added

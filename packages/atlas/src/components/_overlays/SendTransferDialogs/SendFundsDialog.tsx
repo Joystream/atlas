@@ -25,8 +25,9 @@ import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useFee, useJoystream, useTokenPrice } from '@/providers/joystream/joystream.hooks'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
-import { formatJoystreamAddress, isValidAddressPolkadotAddress, shortenAddress } from '@/utils/address'
+import { formatJoystreamAddress, isValidAddressPolkadotAddress } from '@/utils/address'
 import { SentryLogger } from '@/utils/logs'
+import { shortenString } from '@/utils/misc'
 import { formatNumber } from '@/utils/number'
 
 import { FormFieldsWrapper, PriceWrapper, StyledMaxButton, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
@@ -101,7 +102,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
         snackbarSuccessMessage: {
           title: `${formatNumber(data.amount)} ${atlasConfig.joystream.tokenTicker} ${
             convertedAmount === null ? '' : `$(${formatNumber(convertedAmount || 0)})`
-          } tokens have been sent over to ${shortenAddress(data.account, ADDRESS_CHARACTERS_LIMIT)} wallet address`,
+          } tokens have been sent over to ${shortenString(data.account, ADDRESS_CHARACTERS_LIMIT)} wallet address`,
         },
         txFactory: async (updateStatus) => {
           const amount = amountBN.add(fullFee).gte(accountBalance) ? amountBN.sub(fullFee) : amountBN

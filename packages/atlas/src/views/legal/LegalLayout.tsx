@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { FC } from 'react'
 import { Route, Routes } from 'react-router-dom'
 
-import { SvgAppLogoFull } from '@/assets/logos'
+import { AppLogo } from '@/components/AppLogo'
 import { TopbarBase } from '@/components/_navigation/TopbarBase'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { cVar, sizes } from '@/styles'
@@ -19,7 +19,7 @@ export const LegalLayout: FC = () => {
   return (
     <div>
       <StyledTopbarBase
-        fullLogoNode={<SvgAppLogoFull height={32} width={undefined} />}
+        fullLogoNode={<AppLogo variant="full" height={32} width={undefined} />}
         logoLinkUrl={absoluteRoutes.viewer.index()}
       />
       <Container>
