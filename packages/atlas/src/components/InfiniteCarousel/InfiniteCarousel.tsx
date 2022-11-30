@@ -1,4 +1,4 @@
-import { FC, ReactNode, useRef } from 'react'
+import { FC, ReactNode } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import {
@@ -14,32 +14,37 @@ export type InfiniteCarouselProps = {
   itemWidth: number
 }
 
-const isHorizontallyOverflow = (element: HTMLElement) => {
-  return element.scrollWidth > element.clientWidth
-}
-
 export const InfiniteCarousel: FC<InfiniteCarouselProps> = ({ items, itemWidth }) => {
-  const { width: overflowWrapperWidth, ref: overflowWrapperRef } = useResizeObserver({ box: 'border-box' })
-  const ref = useRef<HTMLDivElement>(null)
+  const { width: itemsWrapperWidth = 0, ref: itemsWrapperRef } = useResizeObserver({ box: 'border-box' })
+  const { width: overflowHiddenWrapperWidth = 0, ref: overflowHiddenWrapper } = useResizeObserver({ box: 'border-box' })
+
+  const isOverflowing = itemsWrapperWidth > overflowHiddenWrapperWidth
+  const animationTime = items.length * 2
 
   return (
     <InfiniteCarouselWrapper>
-      <OverFlowHiddenWrapper ref={overflowWrapperRef}>
-        <InnerContainer>
-          <ItemsWrapper>
+      <OverFlowHiddenWrapper ref={overflowHiddenWrapper}>
+        <InnerContainer
+          itemsWrapperWidth={itemsWrapperWidth}
+          shouldRunAnimation={isOverflowing}
+          animationTime={animationTime}
+        >
+          <ItemsWrapper ref={itemsWrapperRef}>
             {items.map((number, idx) => (
               <ItemContainer itemWidth={itemWidth} key={idx}>
                 {number}
               </ItemContainer>
             ))}
           </ItemsWrapper>
-          <ItemsWrapper>
-            {items.map((number, idx) => (
-              <ItemContainer itemWidth={itemWidth} key={idx}>
-                {number}
-              </ItemContainer>
-            ))}
-          </ItemsWrapper>
+          {isOverflowing && (
+            <ItemsWrapper>
+              {items.map((number, idx) => (
+                <ItemContainer itemWidth={itemWidth} key={idx}>
+                  {number}
+                </ItemContainer>
+              ))}
+            </ItemsWrapper>
+          )}
         </InnerContainer>
       </OverFlowHiddenWrapper>
     </InfiniteCarouselWrapper>

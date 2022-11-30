@@ -1,110 +1,25 @@
 import { ApolloProvider } from '@apollo/client'
+import { useState } from '@storybook/addons'
 import { Meta, Story } from '@storybook/react'
 import { MemoryRouter } from 'react-router'
 
 import { createApolloClient } from '@/api'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
+import { getRandomIntInclusive } from '@/utils/number'
 
 import { InfiniteCarousel, InfiniteCarouselProps } from './InfiniteCarousel'
 
 import { ChannelCard } from '../_channel/ChannelCard'
-
-const channelCards = [
-  <ChannelCard
-    key={0}
-    channel={{
-      title: 'jane0',
-      id: '0',
-      follows: 10,
-      createdAt: new Date(),
-      channelStateBloatBond: '',
-      rewardAccount: 'dummy',
-    }}
-  />,
-  <ChannelCard
-    key={1}
-    channel={{
-      title: 'john1',
-      id: '1',
-      follows: 11,
-      createdAt: new Date(),
-      channelStateBloatBond: '',
-      rewardAccount: 'dummy',
-    }}
-  />,
-  <ChannelCard
-    key={2}
-    channel={{
-      title: 'jack2',
-      id: '2',
-      follows: 12,
-      createdAt: new Date(),
-      channelStateBloatBond: '',
-      rewardAccount: 'dummy',
-    }}
-  />,
-  <ChannelCard
-    key={3}
-    channel={{
-      title: 'bill3',
-      id: '3',
-      follows: 13,
-      createdAt: new Date(),
-      channelStateBloatBond: '',
-      rewardAccount: 'dummy',
-    }}
-  />,
-  <ChannelCard
-    key={0}
-    channel={{
-      title: 'jane0',
-      id: '0',
-      follows: 10,
-      createdAt: new Date(),
-      channelStateBloatBond: '',
-      rewardAccount: 'dummy',
-    }}
-  />,
-  <ChannelCard
-    key={1}
-    channel={{
-      title: 'john1',
-      id: '1',
-      follows: 11,
-      createdAt: new Date(),
-      channelStateBloatBond: '',
-      rewardAccount: 'dummy',
-    }}
-  />,
-  <ChannelCard
-    key={2}
-    channel={{
-      title: 'jack2',
-      id: '2',
-      follows: 12,
-      createdAt: new Date(),
-      channelStateBloatBond: '',
-      rewardAccount: 'dummy',
-    }}
-  />,
-  <ChannelCard
-    key={3}
-    channel={{
-      title: 'bill3',
-      id: '3',
-      follows: 13,
-      createdAt: new Date(),
-      channelStateBloatBond: '',
-      rewardAccount: 'dummy',
-    }}
-  />,
-]
+import { FormField } from '../_inputs/FormField'
+import { Select } from '../_inputs/Select'
 
 export default {
   title: 'other/InfiniteCarousel',
   args: {
-    items: channelCards,
     itemWidth: 200,
+  },
+  argTypes: {
+    items: { table: { disable: true } },
   },
   component: InfiniteCarousel,
   decorators: [
@@ -123,6 +38,33 @@ export default {
   ],
 } as Meta<InfiniteCarouselProps>
 
-const Template: Story<InfiniteCarouselProps> = (args) => <InfiniteCarousel {...args} />
-
-export const Default = Template.bind({})
+const ChangeableTemplate: Story<InfiniteCarouselProps> = (args) => {
+  const [itemsLength, setItemsLength] = useState(15)
+  const items = Array.from({ length: itemsLength }).map((_, idx) => (
+    <ChannelCard
+      withFollowButton={false}
+      key={idx}
+      channel={{
+        title: idx.toString(),
+        id: idx.toString(),
+        follows: getRandomIntInclusive(0, 100),
+        rewardAccount: 'dummy',
+        createdAt: new Date(),
+        channelStateBloatBond: '',
+      }}
+    />
+  ))
+  return (
+    <>
+      <InfiniteCarousel {...args} items={items} />
+      <FormField label="Number of items">
+        <Select
+          value={itemsLength}
+          items={Array.from({ length: 30 }).map((_, idx) => ({ value: idx + 1, name: (idx + 1).toString() }))}
+          onChange={(value) => setItemsLength(value || 0)}
+        />
+      </FormField>
+    </>
+  )
+}
+export const Default = ChangeableTemplate.bind({})
