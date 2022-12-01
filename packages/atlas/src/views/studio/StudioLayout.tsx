@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
-import { FC, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
@@ -32,6 +32,8 @@ import { StudioWelcomeView } from './StudioWelcomeView'
 import { VideoWorkspace } from './VideoWorkspace'
 import { YppDashboard } from './YppDashboard'
 
+import { YppLandingView } from '../global/YppLandingView'
+import { useGetYppSyncedChannels } from '../global/YppLandingView/YppLandingView.hooks'
 import { NotFoundView } from '../viewer/NotFoundView'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
@@ -48,6 +50,9 @@ const StudioLayout = () => {
   const hasMembership = !!memberships?.length
 
   const channelSet = !!channelId && hasMembership
+
+  const { currentChannel } = useGetYppSyncedChannels()
+  const isYppSigned = !!currentChannel
 
   useEffect(() => {
     if (!isAllowedBrowser()) {
@@ -68,6 +73,16 @@ const StudioLayout = () => {
       })
     }
   }, [closeUnsupportedBrowserDialog, openUnsupportedBrowserDialog])
+
+  const yppRedirect = useCallback(() => {
+    if (!channelSet) {
+      return ENTRY_POINT_ROUTE
+    }
+    if (!isYppSigned) {
+      return absoluteRoutes.studio.ypp()
+    }
+  }, [channelSet, isYppSigned])
+
   return (
     <>
       <TopbarStudio hideChannelInfo={!hasMembership} />
@@ -148,12 +163,28 @@ const StudioLayout = () => {
                 }
               />
               {atlasConfig.features.ypp.googleConsoleClientId && (
-                <Route
-                  path={relativeRoutes.studio.ypp()}
-                  element={
-                    <PrivateRoute element={<YppDashboard />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
-                  }
-                />
+                <>
+                  <Route
+                    path={relativeRoutes.studio.ypp()}
+                    element={
+                      <PrivateRoute
+                        element={<YppLandingView />}
+                        isAuth={channelSet && !isYppSigned}
+                        redirectTo={absoluteRoutes.studio.yppDashboard()}
+                      />
+                    }
+                  />
+                  <Route
+                    path={relativeRoutes.studio.yppDashboard()}
+                    element={
+                      <PrivateRoute
+                        element={<YppDashboard />}
+                        isAuth={channelSet && isYppSigned}
+                        redirectTo={yppRedirect()}
+                      />
+                    }
+                  />
+                </>
               )}
               <Route path="*" element={<NotFoundView />} />
             </Routes>

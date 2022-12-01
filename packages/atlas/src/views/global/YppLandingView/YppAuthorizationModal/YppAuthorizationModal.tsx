@@ -73,6 +73,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   const referrerId = useYppStore((store) => store.referrerId)
   const setSelectedChannelId = useYppStore((store) => store.actions.setSelectedChannelId)
   const setReferrerId = useYppStore((store) => store.actions.setReferrerId)
+  const setShouldContinueYppFlow = useYppStore((store) => store.actions.setShouldContinueYppFlow)
 
   const smMatch = useMediaMatch('sm')
 
@@ -129,7 +130,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     setReferrerId(null)
     onChangeStep(null)
     setSelectedChannelId(null)
-  }, [onChangeStep, setReferrerId, setSelectedChannelId, setYtRequirmentsErrors])
+    setShouldContinueYppFlow(false)
+  }, [onChangeStep, setReferrerId, setSelectedChannelId, setShouldContinueYppFlow, setYtRequirmentsErrors])
 
   const handleGoBack = useCallback(() => {
     if (currentStep === 'terms-and-conditions') {
@@ -324,6 +326,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         }
       case 'fetching-data':
         return {
+          headerIcon: <Loader variant="medium" />,
           title: 'Waiting for YouTube...',
           description: "Please wait and don't close this tab as we're pulling your channel information from YouTube.",
           primaryButton: {
@@ -390,11 +393,12 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
               </DescriptionText>
             </>
           ),
-          primaryButton: { text: 'Go to dashboard' },
+          primaryButton: { text: 'Go to dashboard', to: absoluteRoutes.studio.ypp() },
           component: <Img src={appScreenshot} />,
         }
       case 'channel-already-registered':
         return {
+          headerIcon: <SvgAlertsError32 />,
           title: 'Authorization failed',
           primaryButton: {
             text: 'Select another channel',
@@ -458,13 +462,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         }
       >
         <HeaderIconsWrapper>
-          {currentStep === 'fetching-data' ? (
-            <Loader variant="medium" />
-          ) : currentStep === 'channel-already-registered' ? (
-            <SvgAlertsError32 />
-          ) : (
-            <StyledSvgAppLogoShort />
-          )}
+          {authorizationStep?.headerIcon ? authorizationStep.headerIcon : <StyledSvgAppLogoShort />}
         </HeaderIconsWrapper>
         <Text variant={smMatch ? 'h500' : 'h400'} as="h2" margin={{ top: 6, bottom: 2 }}>
           {authorizationStep?.title}

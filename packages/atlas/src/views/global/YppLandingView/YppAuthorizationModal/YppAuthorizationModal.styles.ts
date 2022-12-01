@@ -1,7 +1,8 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SvgControlsConnect } from '@/assets/icons'
-import { SvgAppLogoShort } from '@/assets/logos'
+import { SvgControlsConnect, SvgLogoYoutube } from '@/assets/icons'
+import { SvgAppLogoShort, SvgAppLogoShortMonochrome } from '@/assets/logos'
 import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 
@@ -42,10 +43,29 @@ export const HeaderIconsWrapper = styled.div`
   margin: ${sizes(6)} 0;
 `
 
-export const StyledSvgControlsConnect = styled(SvgControlsConnect)`
-  margin: 0 ${sizes(4)};
+export const LogosWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: start;
+  align-items: center;
+  gap: ${sizes(4)};
+`
 
+const logoStyles = css`
+  path {
+    fill: ${cVar('colorTextMuted')};
+  }
+`
+
+export const StyledSvgLogoYoutube = styled(SvgLogoYoutube)`
+  ${logoStyles};
+`
+export const StyledSvgControlsConnect = styled(SvgControlsConnect)`
   path {
     fill: ${cVar('colorCoreNeutral500')};
   }
+`
+// todo replace with AppLogo
+export const StyledAppLogo = styled(SvgAppLogoShortMonochrome)`
+  ${logoStyles};
 `
