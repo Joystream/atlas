@@ -21,6 +21,7 @@ export type WidgetTileProps = {
   icon?: ReactNode
   customTopRightNode?: ReactNode
   tooltip?: TooltipProps
+  className?: string
 }
 
 export const WidgetTile: FC<WidgetTileProps> = ({
@@ -33,6 +34,7 @@ export const WidgetTile: FC<WidgetTileProps> = ({
   text,
   caption,
   icon,
+  className,
 }) => {
   const mdMatch = useMediaMatch('md')
   const lgMatch = useMediaMatch('lg')
@@ -52,7 +54,7 @@ export const WidgetTile: FC<WidgetTileProps> = ({
   }
 
   return (
-    <Wrapper>
+    <Wrapper className={className}>
       <Title hasTooltip={!!tooltip}>
         <Text variant="h100" as="p" color="colorText">
           {title}
