@@ -167,3 +167,45 @@ mutation ReportChannel($channelId: ID!, $rationale: String!) {
     channelId
   }
 }
+
+query GetChannelPaymentEvents($ownerMemberId: ID!, $channelId: ID!) {
+  nftBoughtEvents(where: {ownerMember: { id_eq: $ownerMemberId }}) {
+    inBlock
+    createdAt
+    price
+  }
+
+  bidMadeCompletingAuctionEvents(where: {ownerMember: { id_eq: $ownerMemberId }}) {
+    inBlock
+    createdAt
+    price
+  }
+
+  englishAuctionSettledEvents(where: {ownerMember: { id_eq: $ownerMemberId }}) {
+    createdAt
+    inBlock
+    winningBid {
+      amount
+    }
+  }
+
+  openAuctionBidAcceptedEvents(where: {ownerMember: { id_eq: $ownerMemberId }}) {
+    inBlock
+    createdAt
+    winningBid {
+      amount
+    }
+  }
+
+  channelRewardClaimedEvents(where: {channel: { id_eq: $channelId }}) {
+    amount
+    createdAt
+    inBlock
+  }
+
+  channelFundsWithdrawnEvents(where: { channel: { id_eq: $channelId }}) {
+    amount
+    createdAt
+    inBlock
+  }
+}
