@@ -10,9 +10,10 @@ export type TableProps<T = object> = {
   data: T[]
   title?: string
   pageSize?: number
+  minWidth?: string
 }
 
-export const Table = <T extends object>({ columns, data, title, pageSize = 20 }: TableProps<T>) => {
+export const Table = <T extends object>({ columns, data, title, pageSize = 20, minWidth }: TableProps<T>) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -34,7 +35,7 @@ export const Table = <T extends object>({ columns, data, title, pageSize = 20 }:
           {title}
         </Text>
       )}
-      <TableBase {...getTableProps()}>
+      <TableBase minWidth={minWidth} {...getTableProps()}>
         <Thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.getHeaderGroupProps().key}>

@@ -61,7 +61,7 @@ export const TablePaymentsHistory: FC<TablePaymentsHistoryProps> = ({ data }) =>
       })),
     [data]
   )
-  return <Table title="History" columns={COLUMNS} data={mappedData} />
+  return <Table title="History" columns={COLUMNS} data={mappedData} minWidth="750px" />
 }
 
 const Date = ({ date }: { date: Date }) => {

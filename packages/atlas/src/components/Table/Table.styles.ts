@@ -10,10 +10,11 @@ export const Wrapper = styled.div`
   overflow: auto;
 `
 
-export const TableBase = styled.table`
+export const TableBase = styled.table<{ minWidth?: string }>`
   border-spacing: 0;
   width: 100%;
   table-layout: fixed;
+  min-width: ${({ minWidth }) => minWidth ?? null};
 `
 
 export const Thead = styled.thead`
