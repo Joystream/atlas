@@ -27,6 +27,10 @@ export default defineConfig({
       input: {
         main: path.resolve(__dirname, 'src/index.html'),
         embedded: path.resolve(__dirname, 'src/embedded/index.html'),
+        'polkadot-worker': path.resolve(__dirname, 'src/utils/polkadot-worker.ts'),
+      },
+      output: {
+        entryFileNames: 'entry-[name].js',
       },
     },
   },
@@ -52,14 +56,6 @@ export default defineConfig({
     react({
       exclude: /\.stories\.[tj]sx?$/,
     }),
-    checker({
-      typescript: true,
-      eslint: {
-        lintCommand: 'eslint "./**/*.{js,jsx,ts,tsx}"',
-        dev: { overrideConfig: { ignorePath: '../.eslintignore' } },
-      },
-      overlay: false,
-    }),
     {
       ...inject({
         include: ['node_modules/**/*.js*'],
@@ -69,6 +65,14 @@ export default defineConfig({
       }),
       enforce: 'post',
     },
+    checker({
+      typescript: true,
+      eslint: {
+        lintCommand: 'eslint "./**/*.{js,jsx,ts,tsx}"',
+        dev: { overrideConfig: { ignorePath: '../.eslintignore' } },
+      },
+      overlay: false,
+    }),
     babel({
       extensions: ['.tsx', '.ts'],
       include: ['**/*.style.*', '**/*.styles.*'],
@@ -88,7 +92,7 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ['blake3/browser-async', 'multihashes', 'buffer'],
+    include: ['buffer'],
     esbuildOptions: {
       define: {
         global: 'globalThis',
