@@ -98,7 +98,6 @@ export class JoystreamLib {
     await this.ensureApi()
 
     const blockHash = await this.api.rpc.chain.getBlockHash(block)
-    console.log(block, blockHash.toString())
     return (await this.api.query.system.account.at(blockHash, accountId)).data.free.toString()
   }
 
