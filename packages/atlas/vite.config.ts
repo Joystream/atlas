@@ -47,6 +47,15 @@ export default defineConfig({
     react({
       exclude: /\.stories\.[tj]sx?$/,
     }),
+    {
+      ...inject({
+        include: ['node_modules/**/*.js*'],
+        modules: {
+          Buffer: ['buffer', 'Buffer'],
+        },
+      }),
+      enforce: 'post',
+    },
     checker({
       typescript: true,
       eslint: {
