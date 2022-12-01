@@ -60,7 +60,7 @@ export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channe
     }
 
     init()
-  }, [!joystream, !data, channel?.rewardAccount])
+  }, [joystream, data, channel])
 
   return {
     ...rest,

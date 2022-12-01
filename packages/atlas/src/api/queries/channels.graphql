@@ -169,19 +169,19 @@ mutation ReportChannel($channelId: ID!, $rationale: String!) {
 }
 
 query GetChannelPaymentEvents($ownerMemberId: ID!, $channelId: ID!) {
-  nftBoughtEvents(where: {ownerMember: { id_eq: $ownerMemberId }}) {
+  nftBoughtEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
     inBlock
     createdAt
     price
   }
 
-  bidMadeCompletingAuctionEvents(where: {ownerMember: { id_eq: $ownerMemberId }}) {
+  bidMadeCompletingAuctionEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
     inBlock
     createdAt
     price
   }
 
-  englishAuctionSettledEvents(where: {ownerMember: { id_eq: $ownerMemberId }}) {
+  englishAuctionSettledEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
     createdAt
     inBlock
     winningBid {
@@ -189,7 +189,7 @@ query GetChannelPaymentEvents($ownerMemberId: ID!, $channelId: ID!) {
     }
   }
 
-  openAuctionBidAcceptedEvents(where: {ownerMember: { id_eq: $ownerMemberId }}) {
+  openAuctionBidAcceptedEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
     inBlock
     createdAt
     winningBid {
@@ -197,13 +197,13 @@ query GetChannelPaymentEvents($ownerMemberId: ID!, $channelId: ID!) {
     }
   }
 
-  channelRewardClaimedEvents(where: {channel: { id_eq: $channelId }}) {
+  channelRewardClaimedEvents(where: { channel: { id_eq: $channelId } }) {
     amount
     createdAt
     inBlock
   }
 
-  channelFundsWithdrawnEvents(where: { channel: { id_eq: $channelId }}) {
+  channelFundsWithdrawnEvents(where: { channel: { id_eq: $channelId } }) {
     amount
     createdAt
     inBlock

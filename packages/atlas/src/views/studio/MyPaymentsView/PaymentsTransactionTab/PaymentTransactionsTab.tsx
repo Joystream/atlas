@@ -20,7 +20,7 @@ export const PaymentTransactionsTab = () => {
   const { channel } = useFullChannel(channelId ?? '')
 
   const { paymentData, loading } = useChannelPaymentsHistory(channel)
-  const paymentHistoryOverview = useMemo(() => aggregatePaymentHistory(paymentData), [paymentData.length])
+  const paymentHistoryOverview = useMemo(() => aggregatePaymentHistory(paymentData), [paymentData])
 
   return (
     <>
