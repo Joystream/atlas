@@ -94,6 +94,14 @@ export class JoystreamLib {
     return parseAccountBalance(balances)
   }
 
+  async getAccountBalanceAtBlock(block: number | BN | string, accountId: AccountId) {
+    await this.ensureApi()
+
+    const blockHash = await this.api.rpc.chain.getBlockHash(block)
+    console.log(block, blockHash.toString())
+    return (await this.api.query.system.account.at(blockHash, accountId)).data.free.toString()
+  }
+
   async subscribeAccountBalance(
     accountId: AccountId,
     callback: (balances: { availableBalance: string; lockedBalance: string }) => void

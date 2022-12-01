@@ -38,13 +38,16 @@ const COLUMNS: TableProps['columns'] = [
 
 type PaymentType = 'nft-sale' | 'nft-royalty' | 'claimed-reward' | 'withdrawal' | 'ypp-reward'
 
+export interface PaymentHistory {
+  type: PaymentType
+  block: number
+  date: Date
+  channelBalance: BN
+  amount: BN
+}
+
 export type TablePaymentsHistoryProps = {
-  data: {
-    date: Date
-    type: PaymentType
-    amount: BN
-    channelBalance: BN
-  }[]
+  data: PaymentHistory[]
 }
 
 export const TablePaymentsHistory: FC<TablePaymentsHistoryProps> = ({ data }) => {

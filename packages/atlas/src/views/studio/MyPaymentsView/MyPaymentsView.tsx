@@ -13,6 +13,10 @@ const PAYOUTS_WELCOME_MESSAGE = 'payouts-welcome'
 export const MyPaymentsView = () => {
   const headTags = useHeadTags('My payments')
   const smMatch = useMediaMatch('sm')
+  // const { channelId } = useUser()
+  // const { channel } = useFullChannel(channelId ?? '')
+  // const { paymentData } = useChannelPaymentsHistory(channel)
+
   const isDismissedMessage = usePersonalDataStore((state) =>
     state.dismissedMessages.some((message) => message.id === PAYOUTS_WELCOME_MESSAGE)
   )
@@ -50,6 +54,7 @@ export const MyPaymentsView = () => {
           from the council, and withdraw tokens to your personal Joystream membership.
         </Text>
       </TextContainer>
+      {/*<TablePaymentsHistory data={paymentData} />*/}
     </Wrapper>
   )
 }
