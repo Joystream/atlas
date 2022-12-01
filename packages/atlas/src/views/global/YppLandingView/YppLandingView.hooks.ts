@@ -24,7 +24,7 @@ type YppSyncedChannel = {
 }
 
 export const useGetYppSyncedChannels = () => {
-  const { activeMembership, membershipsLoading, isAuthLoading } = useUser()
+  const { activeMembership, membershipsLoading, isAuthLoading, channelId } = useUser()
   const [isLoading, setIsLoading] = useState(true)
 
   const [syncedChannels, setSyncedChannels] = useState<YppSyncedChannel[]>([])
@@ -69,5 +69,8 @@ export const useGetYppSyncedChannels = () => {
     syncedChannels,
     unsyncedChannels,
     isLoading: isLoading || membershipsLoading || isAuthLoading,
+    currentChannel: syncedChannels?.find(
+      (syncedChannels) => syncedChannels.joystreamChannelId.toString() === channelId
+    ),
   }
 }

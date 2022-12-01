@@ -1,6 +1,6 @@
 import AOS from 'aos'
 import 'aos/dist/aos.css'
-import { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import { FC, useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ParallaxProvider } from 'react-scroll-parallax'
 
@@ -24,19 +24,18 @@ export const YppLandingView: FC = () => {
   const headTags = useHeadTags('Youtube Partner Program')
   const [currentStep, setCurrentStep] = useState<YppAuthorizationStepsType>(null)
   const { isLoggedIn, signIn, activeMembership, channelId } = useUser()
-  const { unsyncedChannels, syncedChannels, isLoading } = useGetYppSyncedChannels()
-  const setSelectedChannelId = useYppStore((store) => store.actions.setSelectedChannelId)
+  const { setSelectedChannelId, setShouldContinueYppFlow } = useYppStore((store) => store.actions)
 
   const selectedChannelTitle = activeMembership?.channels.find((channel) => channel.id === channelId)?.title
+
+  const shouldContinueYppFlow = useYppStore((store) => store.shouldContinueYppFlow)
 
   const navigate = useNavigate()
 
   const channels = activeMembership?.channels
 
-  const isYppSigned = useMemo(
-    () => !!syncedChannels?.find((syncedChannels) => syncedChannels.joystreamChannelId.toString() === channelId),
-    [channelId, syncedChannels]
-  )
+  const { unsyncedChannels, isLoading, currentChannel } = useGetYppSyncedChannels()
+  const isYppSigned = !!currentChannel
 
   const hasAnotherUnsyncedChannel = isYppSigned && !!unsyncedChannels?.length
 
@@ -50,12 +49,10 @@ export const YppLandingView: FC = () => {
   const handleSignUpClick = useCallback(() => {
     if (!isLoggedIn) {
       signIn()
-      // TODO: somehow continue the flow automatically once user is logged in
       return
     }
     if (!channels?.length) {
       navigate(absoluteRoutes.studio.signIn())
-      // TODO: trigger "Already YouTube creator?" modal after user creates a channel
       return
     }
     if (isYppSigned) {
@@ -71,6 +68,14 @@ export const YppLandingView: FC = () => {
       setCurrentStep('requirements')
     }
   }, [channels?.length, isLoggedIn, isYppSigned, navigate, setSelectedChannelId, signIn, unsyncedChannels])
+
+  useEffect(() => {
+    if (shouldContinueYppFlow) {
+      setSelectedChannelId(channelId)
+      setShouldContinueYppFlow(false)
+      setCurrentStep('requirements')
+    }
+  }, [channelId, handleSignUpClick, setSelectedChannelId, setShouldContinueYppFlow, shouldContinueYppFlow])
 
   const getYppStatus = () => {
     if (isLoading) {
