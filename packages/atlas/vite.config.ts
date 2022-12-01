@@ -10,7 +10,6 @@ import checker from 'vite-plugin-checker'
 
 import { AtlasConfigTransformPlugin, EmbeddedFallbackPlugin, PolkadotWorkerMetaFixPlugin } from './plugins'
 
-// test change
 // https://vitejs.dev/config/
 export default defineConfig({
   root: './src',
@@ -23,6 +22,7 @@ export default defineConfig({
       input: {
         main: path.resolve(__dirname, 'src/index.html'),
         embedded: path.resolve(__dirname, 'src/embedded/index.html'),
+        'polkadot-worker': path.resolve(__dirname, 'src/utils/polkadot-worker.ts'),
       },
     },
   },
@@ -39,7 +39,6 @@ export default defineConfig({
   },
   worker: {
     plugins: [PolkadotWorkerMetaFixPlugin],
-    format: 'es',
   },
   plugins: [
     AtlasConfigTransformPlugin,
