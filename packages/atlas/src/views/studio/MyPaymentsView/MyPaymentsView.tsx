@@ -1,18 +1,25 @@
+import { useState } from 'react'
+
+import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { Tabs } from '@/components/Tabs'
 import { Text } from '@/components/Text'
 import { PayoutsWelcomeDialogContent } from '@/components/_overlays/PayoutsWelcomeDialogContent'
 import { useHeadTags } from '@/hooks/useHeadTags'
-import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMountEffect } from '@/hooks/useMountEffect'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { usePersonalDataStore } from '@/providers/personalData'
 
-import { BottomPattern, StyledSvgSmallTokens, TextContainer, TopPattern, Wrapper } from './MyPayments.styles'
+import { TabsContainer } from './MyPayments.styles'
+import { PaymentsOverViewTab } from './PaymentsOverviewTab'
 
 const PAYOUTS_WELCOME_MESSAGE = 'payouts-welcome'
 
+const TABS = ['Overview', 'Transactions'] as const
+
 export const MyPaymentsView = () => {
   const headTags = useHeadTags('My payments')
-  const smMatch = useMediaMatch('sm')
+  const mappedTabs = TABS.map((tab) => ({ name: tab }))
+  const [selectedTab, setSelectedTab] = useState<typeof TABS[number]>('Overview')
   // const { channelId } = useUser()
   // const { channel } = useFullChannel(channelId ?? '')
   // const { paymentData } = useChannelPaymentsHistory(channel)
@@ -40,21 +47,18 @@ export const MyPaymentsView = () => {
   })
 
   return (
-    <Wrapper>
-      <BottomPattern />
-      <TopPattern />
+    <LimitedWidthContainer>
       {headTags}
-      <StyledSvgSmallTokens />
-      <TextContainer>
-        <Text variant={smMatch ? 'h600' : 'h500'} as="h1" margin={{ bottom: 4, top: 8 }}>
-          My Payments are coming {!smMatch && <br />} later this year
-        </Text>
-        <Text variant="t300" as="p" color="colorText">
-          My Payments will give you an overview of incomes and outcomes of your channel balance, let you claim rewards
-          from the council, and withdraw tokens to your personal Joystream membership.
-        </Text>
-      </TextContainer>
+      <Text as="h1" variant="h700" margin={{ top: 12, bottom: 12 }}>
+        My payments
+      </Text>
+      <TabsContainer>
+        <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={(tabIdx) => setSelectedTab(TABS[tabIdx])} />
+      </TabsContainer>
+      {selectedTab === 'Overview' && <PaymentsOverViewTab />}
+      {/* Todo add table here */}
+      {selectedTab === 'Transactions' && null}
       {/*<TablePaymentsHistory data={paymentData} />*/}
-    </Wrapper>
+    </LimitedWidthContainer>
   )
 }

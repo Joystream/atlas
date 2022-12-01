@@ -77,8 +77,7 @@
     "@polkadot/x-fetch": "9.5.1",
     "@polkadot/x-global": "9.5.1",
     "@polkadot/x-ws": "9.5.1",
-    "@joystream/types@0.20.3": "patch:@joystream/types@npm:0.20.3#.yarn/patches/@joystream-types-npm-0.20.3-e6a6abb769.patch",
-    "merkletreejs": "patch:merkletreejs@npm:0.3.3#.yarn/patches/merkletreejs-npm-0.3.3-88816fe6fe.patch"
+    "@joystream/types@0.20.3": "patch:@joystream/types@npm:0.20.3#.yarn/patches/@joystream-types-npm-0.20.3-e6a6abb769.patch"
   },
   "engines": {
     "node": "^16"
