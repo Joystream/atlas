@@ -8,6 +8,7 @@ import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMountEffect } from '@/hooks/useMountEffect'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { usePersonalDataStore } from '@/providers/personalData'
+import { PaymentTransactionsTab } from '@/views/studio/MyPaymentsView/PaymentsTransactionTab'
 
 import { TabsContainer } from './MyPayments.styles'
 import { PaymentsOverViewTab } from './PaymentsOverviewTab'
@@ -20,10 +21,6 @@ export const MyPaymentsView = () => {
   const headTags = useHeadTags('My payments')
   const mappedTabs = TABS.map((tab) => ({ name: tab }))
   const [selectedTab, setSelectedTab] = useState<typeof TABS[number]>('Overview')
-  // const { channelId } = useUser()
-  // const { channel } = useFullChannel(channelId ?? '')
-  // const { paymentData } = useChannelPaymentsHistory(channel)
-
   const isDismissedMessage = usePersonalDataStore((state) =>
     state.dismissedMessages.some((message) => message.id === PAYOUTS_WELCOME_MESSAGE)
   )
@@ -56,9 +53,7 @@ export const MyPaymentsView = () => {
         <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={(tabIdx) => setSelectedTab(TABS[tabIdx])} />
       </TabsContainer>
       {selectedTab === 'Overview' && <PaymentsOverViewTab />}
-      {/* Todo add table here */}
-      {selectedTab === 'Transactions' && null}
-      {/*<TablePaymentsHistory data={paymentData} />*/}
+      {selectedTab === 'Transactions' && <PaymentTransactionsTab />}
     </LimitedWidthContainer>
   )
 }
