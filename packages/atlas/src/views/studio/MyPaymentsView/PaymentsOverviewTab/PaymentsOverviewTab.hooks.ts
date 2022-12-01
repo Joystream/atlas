@@ -7,9 +7,6 @@ import {
   GetPayloadDataObjectIdByCommitmentQuery,
   GetPayloadDataObjectIdByCommitmentQueryVariables,
 } from '@/api/queries/__generated__/channels.generated'
-import { NumberFormat } from '@/components/NumberFormat'
-import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
 import { getClaimableReward } from '@/joystream-lib/channelPayouts'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useDistributionOperators } from '@/providers/assets/assets.provider'
@@ -19,7 +16,7 @@ import { useUser } from '@/providers/user/user.hooks'
 import { createAssetDownloadEndpoint } from '@/utils/asset'
 import { getRandomIntInclusive } from '@/utils/number'
 
-export const PlaygroundChannelPayouts = () => {
+export const useChannelPayout = () => {
   const { joystream, proxyCallback } = useJoystream()
   const { channelId, memberId } = useUser()
   const [availableAward, setAvailableAward] = useState<number | undefined>()
@@ -75,7 +72,7 @@ export const PlaygroundChannelPayouts = () => {
     setAwardLoading(false)
   }, [channel?.cumulativeRewardClaimed, channelId, getPayloadDataObjectIdAndNodeEndpoint, joystream, memberId])
 
-  const handleClaimReward = async () => {
+  const claimReward = async () => {
     const cumulativeRewardClaimed = channel?.cumulativeRewardClaimed
     if (!channelId || !joystream || !memberId || cumulativeRewardClaimed === undefined) {
       return
@@ -110,22 +107,9 @@ export const PlaygroundChannelPayouts = () => {
     handleFetchReward()
   }, [channel?.cumulativeRewardClaimed, channelId, handleFetchReward, memberId])
 
-  return (
-    <>
-      <Text as="p" variant="h400" margin={{ bottom: 4 }}>
-        Award to claim:{' '}
-        {isAwardLoading || loading ? (
-          <Text as="span" variant="t300">
-            {' '}
-            Loading...
-          </Text>
-        ) : (
-          <NumberFormat as="span" variant="t300" value={availableAward || 0} withToken />
-        )}
-      </Text>
-      <Button variant="primary" onClick={handleClaimReward}>
-        Claim Reward
-      </Button>
-    </>
-  )
+  return {
+    availableAward,
+    isAwardLoading: loading || isAwardLoading,
+    claimReward,
+  }
 }
