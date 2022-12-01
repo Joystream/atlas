@@ -23,9 +23,7 @@ export type JoystreamContextValue = {
 export const JoystreamContext = createContext<JoystreamContextValue | undefined>(undefined)
 JoystreamContext.displayName = 'JoystreamContext'
 
-// ! important - workerUrl needs to be stored in variable. Otherwise build may fail
-const workerURL = '../../utils/polkadot-worker'
-const worker = new Worker(new URL(workerURL, import.meta.url), {
+const worker = new Worker(new URL('../../utils/polkadot-worker', import.meta.url), {
   type: 'module',
 })
 const api = wrap<typeof JoystreamLib>(worker)
