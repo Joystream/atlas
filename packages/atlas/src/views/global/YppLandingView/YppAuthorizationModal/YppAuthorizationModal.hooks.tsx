@@ -31,8 +31,7 @@ const GOOGLE_CONSOLE_CLIENT_ID = atlasConfig.features.ypp.googleConsoleClientId
 const GOOGLE_AUTH_PARAMS = {
   client_id: GOOGLE_CONSOLE_CLIENT_ID || '',
   response_type: 'code',
-  scope: 'https://www.googleapis.com/auth/youtube.force-ssl',
-  include_granted_scopes: 'true',
+  scope: 'https://www.googleapis.com/auth/youtube.readonly',
   prompt: 'consent',
 }
 
