@@ -49,7 +49,7 @@ const clampStyles = ({ clampAfterLine }: TextBaseProps) => css`
 
 const baseStyles = ({ color = 'colorTextStrong', clampAfterLine, margin, align }: TextBaseProps) => css`
   color: ${color === 'inherit' ? color : cVar(color)};
-  white-space: pre;
+  white-space: pre-wrap;
 
   ${clampAfterLine && clampStyles({ clampAfterLine })}
   ${marginStyles({ margin })}
