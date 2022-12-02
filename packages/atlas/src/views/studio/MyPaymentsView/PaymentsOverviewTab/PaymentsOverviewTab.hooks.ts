@@ -1,4 +1,5 @@
 import { useApolloClient } from '@apollo/client'
+import BN from 'bn.js'
 import { useCallback, useEffect, useState } from 'react'
 
 import { useFullChannel } from '@/api/hooks/channel'
@@ -8,6 +9,7 @@ import {
   GetPayloadDataObjectIdByCommitmentQueryVariables,
 } from '@/api/queries/__generated__/channels.generated'
 import { getClaimableReward } from '@/joystream-lib/channelPayouts'
+import { JoystreamLibExtrinsics } from '@/joystream-lib/extrinsics'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useDistributionOperators } from '@/providers/assets/assets.provider'
 import { useJoystream } from '@/providers/joystream/joystream.hooks'
@@ -16,11 +18,12 @@ import { useUser } from '@/providers/user/user.hooks'
 import { createAssetDownloadEndpoint } from '@/utils/asset'
 import { getRandomIntInclusive } from '@/utils/number'
 
-export const useChannelPayout = () => {
+export const useChannelPayout = (txCallback?: () => void) => {
   const { joystream, proxyCallback } = useJoystream()
   const { channelId, memberId } = useUser()
-  const [availableAward, setAvailableAward] = useState<number | undefined>()
+  const [availableAward, setAvailableAward] = useState<BN | undefined>()
   const [isAwardLoading, setAwardLoading] = useState(true)
+  const [txParams, setTxParams] = useState<Parameters<JoystreamLibExtrinsics['claimRewardTx']> | undefined>(undefined)
   const { channel, loading, refetch } = useFullChannel(channelId || '')
   const handleTransaction = useTransaction()
   const client = useApolloClient()
@@ -68,7 +71,7 @@ export const useChannelPayout = () => {
 
     const { reward } = await getClaimableReward(channelId, channel?.cumulativeRewardClaimed, payloadUrl)
 
-    setAvailableAward(hapiBnToTokenNumber(reward))
+    setAvailableAward(reward)
     setAwardLoading(false)
   }, [channel?.cumulativeRewardClaimed, channelId, getPayloadDataObjectIdAndNodeEndpoint, joystream, memberId])
 
@@ -85,7 +88,7 @@ export const useChannelPayout = () => {
     }
 
     const payloadUrl = createAssetDownloadEndpoint(nodeEndpoint, payloadDataObjectId)
-
+    setTxParams([channelId, memberId, cumulativeRewardClaimed, payloadUrl, commitment])
     handleTransaction({
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).claimReward(
@@ -96,7 +99,10 @@ export const useChannelPayout = () => {
           commitment,
           proxyCallback(updateStatus)
         ),
-      onTxSync: () => refetch(),
+      onTxSync: () => {
+        txCallback?.()
+        return refetch()
+      },
     })
   }
 
@@ -108,8 +114,10 @@ export const useChannelPayout = () => {
   }, [channel?.cumulativeRewardClaimed, channelId, handleFetchReward, memberId])
 
   return {
-    availableAward,
+    availableAward: hapiBnToTokenNumber(availableAward ?? new BN(0)),
+    rawHapiAward: availableAward,
     isAwardLoading: loading || isAwardLoading,
     claimReward,
+    txParams,
   }
 }

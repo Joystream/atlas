@@ -1,5 +1,5 @@
 import { BN } from 'bn.js'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 
 import { useFullChannel } from '@/api/hooks/channel'
 import { SvgAlertsInformative24, SvgJoyTokenMonochrome24 } from '@/assets/icons'
@@ -7,6 +7,7 @@ import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
 import { CopyAddressButton } from '@/components/_buttons/CopyAddressButton/CopyAddressButton'
+import { ClaimChannelPaymentsDialog } from '@/components/_overlays/ClaimChannelPaymentsDialog'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useMemberAvatar } from '@/providers/assets/assets.hooks'
@@ -25,9 +26,10 @@ import {
 } from './PaymentsOverviewTab.styles'
 
 export const PaymentsOverViewTab = () => {
+  const [showClaimDialog, setShowClaimDialog] = useState<boolean>(false)
   const { channelId, accountId, activeMembership } = useUser()
   const { channel, loading } = useFullChannel(channelId || '')
-  const { availableAward, claimReward, isAwardLoading } = useChannelPayout()
+  const { availableAward, isAwardLoading } = useChannelPayout()
 
   const memoizedChannelStateBloatBond = useMemo(() => {
     return new BN(channel?.channelStateBloatBond || 0)
@@ -49,6 +51,7 @@ export const PaymentsOverViewTab = () => {
 
   return (
     <>
+      <ClaimChannelPaymentsDialog show={showClaimDialog} onExit={() => setShowClaimDialog(false)} />
       <TilesWrapper>
         <StyledWidgetTile
           title="Claimable Rewards"
@@ -58,8 +61,8 @@ export const PaymentsOverViewTab = () => {
             availableAward
               ? {
                   text: 'Claim',
-                  onClick: claimReward,
-                  fullWidth: mdMatch ? false : true,
+                  onClick: () => setShowClaimDialog(true),
+                  fullWidth: !mdMatch,
                 }
               : undefined
           }
@@ -83,7 +86,7 @@ export const PaymentsOverViewTab = () => {
           button={{
             text: 'Withdraw',
             variant: 'secondary',
-            fullWidth: mdMatch ? false : true,
+            fullWidth: !mdMatch,
             // todo handle withdraw
           }}
         />
