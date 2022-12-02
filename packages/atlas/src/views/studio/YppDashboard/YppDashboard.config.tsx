@@ -1,19 +1,28 @@
 import { SvgTierIcon1, SvgTierIcon2, SvgTierIcon3 } from '@/assets/icons'
 import { Text } from '@/components/Text'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
+import { formatNumber } from '@/utils/number'
+
+const configTiers = atlasConfig.features.ypp.tiersDefinition?.tiers
 
 export const TIERS = [
   {
-    rules: '<5K subscribers',
+    rules: `<${formatNumber(configTiers?.[0].subscribers || 0)} subscribers`,
     icon: <SvgTierIcon1 />,
+    subscribers: configTiers?.[0].subscribers,
   },
   {
-    rules: '5K-25K subscribers',
+    rules: `${formatNumber(configTiers?.[1].subscribers || 0)}-${formatNumber(
+      configTiers?.[2].subscribers || 0
+    )} subscribers`,
     icon: <SvgTierIcon2 />,
+    subscribers: configTiers?.[1].subscribers,
   },
   {
-    rules: '>25K subscribers',
+    rules: `>${formatNumber(configTiers?.[2].subscribers || 0)} subscribers`,
     icon: <SvgTierIcon3 />,
+    subscribers: configTiers?.[2].subscribers,
   },
 ]
 
