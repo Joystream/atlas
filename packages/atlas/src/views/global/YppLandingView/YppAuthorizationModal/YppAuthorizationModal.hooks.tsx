@@ -273,7 +273,7 @@ export const useYppGoogleAuth = ({
   return { handleAuthorizeClick, ytRequirmentsErrors, ytResponseData, setYtRequirmentsErrors, alreadyRegisteredChannel }
 }
 
-export const useGetRequirments = () => {
+export const useGetYppChannelRequirments = () => {
   const [requirements, setRequirements] = useState<ChannelRequirments | null>(null)
   useEffect(() => {
     if (!atlasConfig.features.ypp.youtubeSyncApiUrl) {

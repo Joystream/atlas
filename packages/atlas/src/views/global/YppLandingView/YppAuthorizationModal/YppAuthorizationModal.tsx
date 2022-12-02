@@ -25,7 +25,7 @@ import { useYppStore } from '@/providers/ypp/ypp.store'
 import { SentryLogger } from '@/utils/logs'
 import { formatNumber } from '@/utils/number'
 
-import { useGetRequirments, useYppGoogleAuth } from './YppAuthorizationModal.hooks'
+import { useGetYppChannelRequirments, useYppGoogleAuth } from './YppAuthorizationModal.hooks'
 import {
   AdditionalSubtitle,
   AdditionalSubtitleWrapper,
@@ -76,7 +76,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   const setSelectedChannelId = useYppStore((store) => store.actions.setSelectedChannelId)
   const setReferrerId = useYppStore((store) => store.actions.setReferrerId)
   const setShouldContinueYppFlow = useYppStore((store) => store.actions.setShouldContinueYppFlow)
-  const fetchedChannelRequirements = useGetRequirments()
+  const fetchedChannelRequirements = useGetYppChannelRequirments()
 
   const smMatch = useMediaMatch('sm')
 
@@ -292,9 +292,9 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         ),
       },
       {
-        text: `Your YouTube channel has at least ${
-          fetchedChannelRequirements?.MINIMUM_VIDEO_COUNT
-        } videos, all published at least ${convertHoursRequirementTime(
+        text: `Your YouTube channel has at least ${formatNumber(
+          fetchedChannelRequirements?.MINIMUM_VIDEO_COUNT || 0
+        )} videos, all published at least ${convertHoursRequirementTime(
           fetchedChannelRequirements?.MINIMUM_VIDEO_AGE_HOURS || 0
         )} ago`,
         fulfilled: !ytRequirmentsErrors.some(
