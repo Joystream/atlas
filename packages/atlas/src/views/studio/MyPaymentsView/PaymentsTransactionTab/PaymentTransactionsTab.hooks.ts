@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { GetFullChannelsQuery, useGetChannelPaymentEventsQuery } from '@/api/queries/__generated__/channels.generated'
 import { PaymentHistory } from '@/components/TablePaymentsHistory'
 import { useJoystream } from '@/providers/joystream/joystream.hooks'
-import { mapEventToPaymentHistoryFactory } from '@/views/studio/MyPaymentsView/PaymentsTransactionTab/utils'
+import { mapEventToPaymentHistoryFactory } from '@/views/studio/MyPaymentsView/PaymentsTransactionTab/PaymentTransactionsTab.utils'
 
 export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channels'][number]) => {
   const { joystream } = useJoystream()

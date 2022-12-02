@@ -4,8 +4,8 @@ import { media, sizes } from '@/styles'
 
 export const TilesWrapper = styled.div`
   display: grid;
-  gap: ${sizes(4)};
-  margin-bottom: ${sizes(4)};
+  gap: ${sizes(6)};
+  margin-bottom: ${sizes(6)};
 
   ${media.sm} {
     grid-template-columns: repeat(2, 1fr);

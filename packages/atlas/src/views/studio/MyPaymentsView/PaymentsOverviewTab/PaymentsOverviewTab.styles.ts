@@ -41,8 +41,8 @@ export const StyledJoyTokenIcon = styled(JoyTokenIcon)`
 
 export const TilesWrapper = styled.div`
   display: grid;
-  gap: ${sizes(4)};
-  margin-bottom: ${sizes(4)};
+  gap: ${sizes(6)};
+  margin-bottom: ${sizes(6)};
   grid-template-rows: repeat(3, 1fr);
 
   ${media.sm} {
