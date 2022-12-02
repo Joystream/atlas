@@ -1,6 +1,6 @@
 import { FC } from 'react'
+import ReactMarkdown from 'react-markdown'
 
-import { LegalText } from '@/components/LegalText'
 import { atlasConfig } from '@/config'
 import { useHeadTags } from '@/hooks/useHeadTags'
 
@@ -9,7 +9,7 @@ export const PrivacyPolicyView: FC = () => {
   return (
     <>
       {headTags}
-      <LegalText>{atlasConfig.legal.privacyPolicy}</LegalText>
+      <ReactMarkdown>{atlasConfig.legal.privacyPolicy}</ReactMarkdown>
     </>
   )
 }

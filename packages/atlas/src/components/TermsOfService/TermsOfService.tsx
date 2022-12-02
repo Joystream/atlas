@@ -1,8 +1,8 @@
 import { FC } from 'react'
+import ReactMarkdown from 'react-markdown'
 
-import { LegalText } from '@/components/LegalText'
 import { atlasConfig } from '@/config'
 
 export const TermsOfService: FC = () => {
-  return <LegalText>{atlasConfig.legal.termsOfService}</LegalText>
+  return <ReactMarkdown>{atlasConfig.legal.termsOfService}</ReactMarkdown>
 }
