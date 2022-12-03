@@ -35,12 +35,13 @@ type CommentsSectionProps = {
   video?: FullVideoFieldsFragment | null
   videoLoading: boolean
   videoAuthorId?: string
+  onCommentInputFocus?: (arg: boolean) => void
 }
 
 const SCROLL_TO_COMMENT_TIMEOUT = 300
 const INITIAL_COMMENTS = 10
 
-export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, videoLoading }) => {
+export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, videoLoading, onCommentInputFocus }) => {
   const [commentInputText, setCommentInputText] = useState('')
   const [commentInputIsProcessing, setCommentInputIsProcessing] = useState(false)
   const [highlightedCommentId, setHighlightedCommentId] = useState<string | null>(null)
@@ -231,7 +232,10 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
         onFocus={() => !memberId && openSignInDialog({ onConfirm: signIn })}
         onComment={() => handleComment()}
         onChange={(e) => setCommentInputText(e.target.value)}
-        onCommentInputActive={setCommentInputActive}
+        onCommentInputActive={(value) => {
+          onCommentInputFocus?.(value)
+          setCommentInputActive(value)
+        }}
       />
       {comments && !comments.length && !commentsLoading && (
         <EmptyFallback title="Be the first to comment" subtitle="Nobody has left a comment under this video yet." />
