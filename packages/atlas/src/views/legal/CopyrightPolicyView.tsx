@@ -1,6 +1,6 @@
 import { FC } from 'react'
-import ReactMarkdown from 'react-markdown'
 
+import { MarkdownPreview } from '@/components/MarkdownPreview'
 import { atlasConfig } from '@/config'
 import { useHeadTags } from '@/hooks/useHeadTags'
 
@@ -9,7 +9,7 @@ export const CopyrightPolicyView: FC = () => {
   return (
     <>
       {headTags}
-      <ReactMarkdown>{atlasConfig.legal.copyrightPolicy}</ReactMarkdown>
+      <MarkdownPreview markdown={atlasConfig.legal.copyrightPolicy} />
     </>
   )
 }
