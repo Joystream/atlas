@@ -40,7 +40,10 @@ export const configSchema = z.object({
       tiersDefinition: z
         .object({
           tiersTooltip: z.string().nullable(),
-          tiers: z.array(z.object({ subscribers: z.number() })).nullable(),
+          tiers: z
+            .array(z.object({ minimumSubscribers: z.number(), multiplier: z.number().default(1) }))
+            .max(3)
+            .nullable(),
         })
         .nullable(),
     }),

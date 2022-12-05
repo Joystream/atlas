@@ -67,9 +67,7 @@ export const YppDashboard: FC = () => {
                     {TIERS[currentTier].rules}
                   </Text>
                 </div>
-                {tiersTooltip ? (
-                  <Information text="The more subscribers you have on YouTube, the higher the payouts in the program. For 5-25K subscribers, payouts are multiplied by 1.5, for more than 25K subscribers, payouts are 3x as high. Below displayed rewards are calculated for your channel." />
-                ) : null}
+                {tiersTooltip ? <Information text={tiersTooltip} /> : null}
               </TierDescription>
             </TierWrapper>
           )}

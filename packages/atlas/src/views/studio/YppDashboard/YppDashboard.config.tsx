@@ -6,25 +6,27 @@ import { formatNumber } from '@/utils/number'
 
 const configTiers = atlasConfig.features.ypp.tiersDefinition?.tiers
 
-export const TIERS = [
-  {
-    rules: `<${formatNumber(configTiers?.[0].subscribers || 0)} subscribers`,
-    icon: <SvgTierIcon1 />,
-    subscribers: configTiers?.[0].subscribers,
-  },
-  {
-    rules: `${formatNumber(configTiers?.[1].subscribers || 0)}-${formatNumber(
-      configTiers?.[2].subscribers || 0
-    )} subscribers`,
-    icon: <SvgTierIcon2 />,
-    subscribers: configTiers?.[1].subscribers,
-  },
-  {
-    rules: `>${formatNumber(configTiers?.[2].subscribers || 0)} subscribers`,
-    icon: <SvgTierIcon3 />,
-    subscribers: configTiers?.[2].subscribers,
-  },
-]
+export const TIERS = configTiers
+  ? [
+      {
+        rules: `<${formatNumber(configTiers?.[1].minimumSubscribers - 1)} subscribers`,
+        icon: <SvgTierIcon1 />,
+        subscribers: configTiers?.[0].minimumSubscribers,
+      },
+      {
+        rules: `${formatNumber(configTiers?.[1].minimumSubscribers)}-${formatNumber(
+          configTiers?.[2].minimumSubscribers
+        )} subscribers`,
+        icon: <SvgTierIcon2 />,
+        subscribers: configTiers?.[1].minimumSubscribers,
+      },
+      {
+        rules: `>${formatNumber(configTiers?.[2].minimumSubscribers)} subscribers`,
+        icon: <SvgTierIcon3 />,
+        subscribers: configTiers?.[2].minimumSubscribers,
+      },
+    ]
+  : []
 
 export const REWARDS = [
   {

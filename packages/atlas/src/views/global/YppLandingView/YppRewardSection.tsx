@@ -3,7 +3,9 @@ import { FC, useState } from 'react'
 import { LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { BenefitCard } from '@/components/_ypp/BenefitCard'
+import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { formatNumber } from '@/utils/number'
 
 import {
   BackgroundContainer,
@@ -19,7 +21,13 @@ import {
 
 export const YppRewardSection: FC = () => {
   const mdMatch = useMediaMatch('md')
-  const [rewardMultiplier, setRewardMultiplier] = useState<1 | 1.5 | 3>(1)
+  const tiers = atlasConfig.features.ypp.tiersDefinition?.tiers
+  const [rewardMultiplier, setRewardMultiplier] = useState<number>(tiers ? tiers[0].multiplier : 1)
+
+  if (!tiers) {
+    return null
+  }
+
   return (
     <BackgroundContainer pattern="top">
       <StyledLimitedWidthContainer as="section">
@@ -56,24 +64,42 @@ export const YppRewardSection: FC = () => {
           data-aos-offset="80"
           data-aos-easing="atlas-easing"
         >
-          <BenefitsCardButton
-            variant={rewardMultiplier === 1 ? 'primary' : 'tertiary'}
-            onClick={() => setRewardMultiplier(1)}
-          >
-            &lt;5K subscribers
-          </BenefitsCardButton>
-          <BenefitsCardButton
-            variant={rewardMultiplier === 1.5 ? 'primary' : 'tertiary'}
-            onClick={() => setRewardMultiplier(1.5)}
-          >
-            &lt;5-25K subscribers (1.5x)
-          </BenefitsCardButton>
-          <BenefitsCardButton
-            variant={rewardMultiplier === 3 ? 'primary' : 'tertiary'}
-            onClick={() => setRewardMultiplier(3)}
-          >
-            &gt;25K subscribers (3x)
-          </BenefitsCardButton>
+          {tiers.map((tier, idx, tierArray) => {
+            const isFirstTier = idx === 0
+            const isLastTier = idx === tierArray.length - 1
+            if (isFirstTier) {
+              return (
+                <BenefitsCardButton
+                  variant={rewardMultiplier === tier.multiplier ? 'primary' : 'tertiary'}
+                  key={tier.minimumSubscribers}
+                  onClick={() => setRewardMultiplier(tier.multiplier)}
+                >
+                  &lt;{formatNumber(tierArray[idx + 1].minimumSubscribers)} subscribers
+                </BenefitsCardButton>
+              )
+            }
+            if (isLastTier) {
+              return (
+                <BenefitsCardButton
+                  variant={rewardMultiplier === tier.multiplier ? 'primary' : 'tertiary'}
+                  key={tier.minimumSubscribers}
+                  onClick={() => setRewardMultiplier(tier.multiplier)}
+                >
+                  &gt;{formatNumber(tier.minimumSubscribers)} subscribers
+                </BenefitsCardButton>
+              )
+            }
+            return (
+              <BenefitsCardButton
+                variant={rewardMultiplier === tier.multiplier ? 'primary' : 'tertiary'}
+                key={tier.minimumSubscribers}
+                onClick={() => setRewardMultiplier(tier.multiplier)}
+              >
+                &lt;{formatNumber(tier.minimumSubscribers)}-{formatNumber(tierArray[idx + 1].minimumSubscribers)}{' '}
+                subscribers
+              </BenefitsCardButton>
+            )
+          })}
         </BenefitsCardsButtonsGroup>
 
         <LayoutGrid data-aos="fade-up" data-aos-delay="200" data-aos-offset="80" data-aos-easing="atlas-easing">
