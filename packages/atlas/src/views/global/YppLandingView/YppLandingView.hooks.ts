@@ -24,6 +24,8 @@ export type YppSyncedChannel = {
   }
   subscribersCount: number
   createdAt: string
+  // TODO remove once https://github.com/Joystream/atlas/pull/3473 is done
+  tier: number
 }
 
 export const useGetYppSyncedChannels = () => {
