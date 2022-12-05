@@ -18,7 +18,16 @@ import { SignInStepProps } from './SignInSteps.types'
 const PRIORITY_WALLETS = ['talisman']
 const DEFAULT_PRIORITY = 100000
 const isMobileDevice = isMobile()
-const POLKAWALLET = 'polkawallet'
+const MOBILE_SUPPORTED_WALLETS = {
+  polkawallet: {
+    installUrl: 'https://polkawallet.io/',
+    logo: {
+      src: polkaWalletLogo,
+      alt: 'Polkawallet logo',
+    },
+  },
+  'subwallet-js': {},
+}
 
 export const SignInModalWalletStep: FC<SignInStepProps> = ({
   setPrimaryButtonProps,
@@ -35,27 +44,27 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
 
   const wallets = useMemo(() => {
     const unsortedWallets = getWalletsList()
-    const hasPolkaWallet = unsortedWallets.some((wallet) => wallet.extensionName === POLKAWALLET)
     if (isMobileDevice) {
-      if (hasPolkaWallet) {
-        return unsortedWallets
-          .filter((wallet) => wallet.extensionName === POLKAWALLET)
-          .map((wallet) => ({
-            ...wallet,
-            title: capitalizeFirstLetter(wallet.title),
-            installed: wallet.installed,
-            logo: { src: polkaWalletLogo, alt: 'Polkawallet logo' },
-          }))
-      }
-      return [
-        {
-          title: 'Polkawallet',
-          extensionName: POLKAWALLET,
+      const supportedWalletsNames = Object.keys(MOBILE_SUPPORTED_WALLETS)
+
+      return supportedWalletsNames.map((walletName) => {
+        const possiblyInstalledWallet = unsortedWallets.find((wallet) => wallet.extensionName === walletName)
+        if (possiblyInstalledWallet) {
+          return {
+            ...possiblyInstalledWallet,
+            ...MOBILE_SUPPORTED_WALLETS[walletName as keyof typeof MOBILE_SUPPORTED_WALLETS],
+            installed: possiblyInstalledWallet.installed,
+            title: capitalizeFirstLetter(possiblyInstalledWallet.title),
+          }
+        }
+
+        return {
+          title: capitalizeFirstLetter(walletName),
+          extensionName: walletName,
           installed: false,
-          logo: { src: polkaWalletLogo, alt: 'Polkawallet logo' },
-          installUrl: 'https://polkawallet.io/',
-        },
-      ]
+          ...MOBILE_SUPPORTED_WALLETS[walletName as keyof typeof MOBILE_SUPPORTED_WALLETS],
+        }
+      })
     }
     return unsortedWallets.sort((w1, w2) => {
       // known wallets on top (wallets with logo)
@@ -159,7 +168,7 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
             nodeStart={
               <IconWrapper
                 icon={
-                  wallet.logo.src ? <WalletLogo src={wallet.logo.src} alt={wallet.logo.alt} /> : <SvgLogoPolkadot />
+                  wallet.logo?.src ? <WalletLogo src={wallet.logo.src} alt={wallet.logo.alt} /> : <SvgLogoPolkadot />
                 }
               />
             }
