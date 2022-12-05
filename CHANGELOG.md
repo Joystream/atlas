@@ -7,13 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Expose Privacy Policy in config and introduce basic Markdown support
+
 ## [1.1.0] - 2022-11-30
 
 ### Added
 
 - Added validation for enough funds to pay tx fee
 - Atlas logo component for easy customization
-- Expose Privacy Policy in config and introduce basic Markdown support
 
 ### Fixed
 
