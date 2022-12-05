@@ -37,7 +37,7 @@ const COLUMNS: TableProps['columns'] = [
 
 type PaymentType = 'nft-sale' | 'nft-royalty' | 'claimed-reward' | 'withdrawal' | 'ypp-reward'
 
-export interface PaymentHistory {
+export type PaymentHistory = {
   type: PaymentType
   block: number
   date: Date
@@ -60,7 +60,7 @@ export const TablePaymentsHistory: FC<TablePaymentsHistoryProps> = ({ data }) =>
       })),
     [data]
   )
-  return <Table title="History" columns={COLUMNS} data={mappedData} minWidth="750px" />
+  return <Table title="History" columns={COLUMNS} data={mappedData} />
 }
 
 const Date = ({ date }: { date: Date }) => {
