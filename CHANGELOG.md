@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added validation for enough funds to pay tx fee
 - Atlas logo component for easy customization
+- Autoplay stop when user starts commenting
 
 ### Fixed
 
