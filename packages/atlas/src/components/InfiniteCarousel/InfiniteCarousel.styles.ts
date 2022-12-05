@@ -1,19 +1,32 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { sizes } from '@/styles'
+import { media, sizes } from '@/styles'
 
 export const InfiniteCarouselWrapper = styled.div`
+  overflow-x: hidden;
+  overflow-y: visible;
+`
+
+export const InfiniteCarouselHeader = styled.header`
+  margin-bottom: ${sizes(6)};
+  ${media.md} {
+    margin-bottom: ${sizes(10)};
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+`
+
+export const SubtitleWrapper = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 100%;
 `
 
 export const OverFlowHiddenWrapper = styled.div`
+  margin-top: -${sizes(2)};
+  padding-top: ${sizes(2)};
   width: 100%;
-  position: relative;
-  overflow: hidden;
 `
 
 const scroll = (itemsWrapperWidth: number) => keyframes`
@@ -31,7 +44,6 @@ type InnerContainerProps = {
 }
 
 export const InnerContainer = styled.div<InnerContainerProps>`
-  overflow: hidden;
   display: flex;
   justify-content: space-around;
   width: ${({ itemsWrapperWidth, shouldRunAnimation }) =>

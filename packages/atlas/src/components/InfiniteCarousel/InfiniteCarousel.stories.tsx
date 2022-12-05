@@ -17,9 +17,16 @@ export default {
   title: 'other/InfiniteCarousel',
   args: {
     itemWidth: 200,
+    title: 'Recently verified channels',
+    subTitle: 'This is subtitle',
+    informationProps: {
+      multiline: true,
+      text: 'This is tooltip',
+    },
   },
   argTypes: {
     items: { table: { disable: true } },
+    informationProps: { table: { disable: true } },
   },
   component: InfiniteCarousel,
   decorators: [
