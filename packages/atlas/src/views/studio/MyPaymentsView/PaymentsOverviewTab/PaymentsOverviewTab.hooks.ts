@@ -75,20 +75,33 @@ export const useChannelPayout = (txCallback?: () => void) => {
     setAwardLoading(false)
   }, [channel?.cumulativeRewardClaimed, channelId, getPayloadDataObjectIdAndNodeEndpoint, joystream, memberId])
 
+  useEffect(() => {
+    const calcTxParams = async () => {
+      const cumulativeRewardClaimed = channel?.cumulativeRewardClaimed
+      if (!channelId || !joystream || !memberId || cumulativeRewardClaimed === undefined) {
+        return
+      }
+      const commitment = await joystream.getContentCommitment()
+
+      const { payloadDataObjectId, nodeEndpoint } = await getPayloadDataObjectIdAndNodeEndpoint(commitment)
+      if (!payloadDataObjectId || !nodeEndpoint) {
+        return
+      }
+
+      const payloadUrl = createAssetDownloadEndpoint(nodeEndpoint, payloadDataObjectId)
+      setTxParams([channelId, memberId, cumulativeRewardClaimed, payloadUrl, commitment])
+    }
+
+    calcTxParams()
+  }, [channel, channelId, getPayloadDataObjectIdAndNodeEndpoint, joystream, memberId])
+
   const claimReward = async () => {
-    const cumulativeRewardClaimed = channel?.cumulativeRewardClaimed
-    if (!channelId || !joystream || !memberId || cumulativeRewardClaimed === undefined) {
-      return
-    }
-    const commitment = await joystream.getContentCommitment()
-
-    const { payloadDataObjectId, nodeEndpoint } = await getPayloadDataObjectIdAndNodeEndpoint(commitment)
-    if (!payloadDataObjectId || !nodeEndpoint) {
+    if (!channelId || !memberId || !txParams || !joystream) {
       return
     }
 
-    const payloadUrl = createAssetDownloadEndpoint(nodeEndpoint, payloadDataObjectId)
-    setTxParams([channelId, memberId, cumulativeRewardClaimed, payloadUrl, commitment])
+    const [, , cumulativeRewardClaimed, payloadUrl, commitment] = txParams
+
     handleTransaction({
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).claimReward(
