@@ -16,3 +16,11 @@ export const TilesWrapper = styled.div`
     margin-bottom: ${sizes(6)};
   }
 `
+
+export const TableWrapper = styled.div`
+  overflow-x: auto;
+
+  > * {
+    min-width: 750px;
+  }
+`

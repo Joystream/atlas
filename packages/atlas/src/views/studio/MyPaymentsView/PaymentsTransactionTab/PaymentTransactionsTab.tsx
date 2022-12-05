@@ -10,7 +10,7 @@ import { formatNumber } from '@/utils/number'
 import { useChannelPaymentsHistory } from '@/views/studio/MyPaymentsView/PaymentsTransactionTab/PaymentTransactionsTab.hooks'
 import { aggregatePaymentHistory } from '@/views/studio/MyPaymentsView/PaymentsTransactionTab/PaymentTransactionsTab.utils'
 
-import { TilesWrapper } from './PaymentTransactionsTab.styles'
+import { TableWrapper, TilesWrapper } from './PaymentTransactionsTab.styles'
 
 export const PaymentTransactionsTab = () => {
   const { channelId } = useUser()
@@ -35,7 +35,9 @@ export const PaymentTransactionsTab = () => {
           icon={<SvgJoyTokenMonochrome24 />}
         />
       </TilesWrapper>
-      <TablePaymentsHistory data={paymentData} />
+      <TableWrapper>
+        <TablePaymentsHistory data={paymentData} />
+      </TableWrapper>
     </>
   )
 }
