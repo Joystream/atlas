@@ -8,10 +8,10 @@ import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMountEffect } from '@/hooks/useMountEffect'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { usePersonalDataStore } from '@/providers/personalData'
-import { PaymentTransactionsTab } from '@/views/studio/MyPaymentsView/PaymentsTransactionTab'
 
 import { TabsContainer } from './MyPayments.styles'
 import { PaymentsOverViewTab } from './PaymentsOverviewTab'
+import { PaymentTransactionsTab } from './PaymentsTransactionTab'
 
 const PAYOUTS_WELCOME_MESSAGE = 'payouts-welcome'
 
