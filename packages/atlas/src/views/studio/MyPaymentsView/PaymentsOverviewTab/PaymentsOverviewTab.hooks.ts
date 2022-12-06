@@ -8,6 +8,7 @@ import {
   GetPayloadDataObjectIdByCommitmentQuery,
   GetPayloadDataObjectIdByCommitmentQueryVariables,
 } from '@/api/queries/__generated__/channels.generated'
+import { atlasConfig } from '@/config'
 import { getClaimableReward } from '@/joystream-lib/channelPayouts'
 import { JoystreamLibExtrinsics } from '@/joystream-lib/extrinsics'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
@@ -16,7 +17,7 @@ import { useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { createAssetDownloadEndpoint } from '@/utils/asset'
-import { getRandomIntInclusive } from '@/utils/number'
+import { formatNumber, getRandomIntInclusive } from '@/utils/number'
 
 export const useChannelPayout = (txCallback?: () => void) => {
   const { joystream, proxyCallback } = useJoystream()
@@ -77,8 +78,7 @@ export const useChannelPayout = (txCallback?: () => void) => {
 
   useEffect(() => {
     const calcTxParams = async () => {
-      const cumulativeRewardClaimed = channel?.cumulativeRewardClaimed
-      if (!channelId || !joystream || !memberId || cumulativeRewardClaimed === undefined) {
+      if (!channelId || !joystream || !memberId || !availableAward) {
         return
       }
       const commitment = await joystream.getContentCommitment()
@@ -89,25 +89,31 @@ export const useChannelPayout = (txCallback?: () => void) => {
       }
 
       const payloadUrl = createAssetDownloadEndpoint(nodeEndpoint, payloadDataObjectId)
-      setTxParams([channelId, memberId, cumulativeRewardClaimed, payloadUrl, commitment])
+      setTxParams([channelId, memberId, availableAward.toString(), payloadUrl, commitment])
     }
 
     calcTxParams()
-  }, [channel, channelId, getPayloadDataObjectIdAndNodeEndpoint, joystream, memberId])
+  }, [channel, channelId, getPayloadDataObjectIdAndNodeEndpoint, joystream, memberId, availableAward])
 
   const claimReward = async () => {
     if (!channelId || !memberId || !txParams || !joystream) {
       return
     }
 
-    const [, , cumulativeRewardClaimed, payloadUrl, commitment] = txParams
+    const [, , cumulativeRewardEarned, payloadUrl, commitment] = txParams
 
     handleTransaction({
+      snackbarSuccessMessage: {
+        title: 'Reward claimed successfully',
+        description: `You have claimed ${formatNumber(hapiBnToTokenNumber(new BN(cumulativeRewardEarned ?? 0)))} ${
+          atlasConfig.joystream.tokenTicker
+        }!`,
+      },
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).claimReward(
           channelId,
           memberId,
-          cumulativeRewardClaimed,
+          cumulativeRewardEarned,
           payloadUrl,
           commitment,
           proxyCallback(updateStatus)
