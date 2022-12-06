@@ -318,8 +318,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           title: 'Requirements',
           description: `Before you can apply to the program, make sure both your ${APP_NAME} and YouTube channels meet the below conditions.`,
           primaryButton: {
-            text: isChannelFulfillRequirements ? 'Authorize with YouTube' : 'Close',
-            onClick: isChannelFulfillRequirements ? handleAuthorizeClick : handleClose,
+            text: 'Authorize with YouTube',
+            onClick: handleAuthorizeClick,
             disabled: !isSelectedChannelValid,
           },
           component: <YppAuthorizationRequirementsStep requirments={requirments} />,
@@ -438,6 +438,21 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     handleSubmitDetailsForm,
   ])
 
+  const secondaryButton = useMemo(() => {
+    if (currentStep === 'select-channel' || (currentStep === 'requirements' && !hasMoreThanOneChannel)) return undefined
+    if (currentStep === 'summary') {
+      return {
+        text: 'Close',
+        onClick: handleClose,
+      }
+    }
+
+    return {
+      text: 'Back',
+      onClick: handleGoBack,
+    }
+  }, [currentStep, handleGoBack, hasMoreThanOneChannel])
+
   return (
     <FormProvider {...detailsFormMethods}>
       <DialogModal
@@ -445,13 +460,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         dividers
         additionalActionsNodeMobilePosition="bottom"
         primaryButton={authorizationStep?.primaryButton}
-        secondaryButton={
-          currentStep !== 'fetching-data' && currentStep != null
-            ? currentStep === 'summary'
-              ? { text: 'Close', onClick: handleClose }
-              : { text: 'Back', onClick: handleGoBack }
-            : undefined
-        }
+        secondaryButton={secondaryButton}
         additionalActionsNode={
           currentStep !== 'summary' &&
           currentStep !== 'fetching-data' && (
