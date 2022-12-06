@@ -1,7 +1,9 @@
 import { concat, intersection } from 'lodash-es'
 
-import { RawConfig, atlasConfig } from '@/config'
 import { createLookup } from '@/utils/data'
+
+import { atlasConfig } from './config'
+import { RawConfig } from './configSchema'
 
 export type DisplayCategory = RawConfig['content']['categories'][0]
 

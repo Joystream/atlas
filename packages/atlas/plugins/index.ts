@@ -3,11 +3,15 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { PluginOption } from 'vite'
 
+// we need to use relative import from atlas-meta-server because of an issue in Vite: https://github.com/vitejs/vite/issues/5370
+import { generateCommonMetaTags, generateMetaHtml } from '../../atlas-meta-server/src/tags'
+import { configSchema } from '../src/config/configSchema'
+
 // read config file - we cannot use `@/config` since it relies on YAML plugin being already loaded and that's not done in this context
 const rawConfigPath = path.resolve(__dirname, '..', 'atlas.config.yml')
-const rawConfig = fs.readFileSync(rawConfigPath, 'utf-8')
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const parsedConfig = loadYaml(rawConfig) as { general: any }
+const rawConfigText = fs.readFileSync(rawConfigPath, 'utf-8')
+const rawConfig = loadYaml(rawConfigText)
+const parsedConfig = configSchema.parse(rawConfig)
 
 // This plugin fixes https://github.com/Joystream/atlas/issues/3005
 // By default vite was transpiling `import.meta.url` (that you can find in `node_modules/@polkadot/api/packageInfo.js`)
@@ -22,10 +26,9 @@ export const PolkadotWorkerMetaFixPlugin: PluginOption = {
   },
 }
 
-// This plugin replaces references to atlasConfig in HTML files with actual values from atlas.config.yml
-// It also overrides the name property in manifest.webmanifest file
-export const AtlasConfigTransformPlugin: PluginOption = {
-  name: 'atlas-config-transform',
+// This plugin overrides the name property in manifest.webmanifest file
+export const AtlasWebmanifestPlugin: PluginOption = {
+  name: 'atlas-webmanifest',
   buildStart() {
     const inputManifestPath = path.resolve('src/public/manifest.webmanifest')
     const manifestData = JSON.parse(fs.readFileSync(inputManifestPath, `utf-8`))
@@ -44,9 +47,27 @@ export const AtlasConfigTransformPlugin: PluginOption = {
       throw new Error('Failed to emit asset file, possibly a naming conflict?')
     }
   },
+}
+
+// This plugin replaces <meta-tags /> in index.html with the actual meta tags
+export const AtlasHtmlMetaTagsPlugin: PluginOption = {
+  name: 'atlas-html-meta-tags',
   transformIndexHtml: {
     enforce: 'pre',
-    transform: (html: string) => html.replace(/%(.*?)%/g, (match, p1) => parsedConfig.general[p1] ?? match),
+    transform: (html: string) => {
+      const metaTags = generateCommonMetaTags(
+        parsedConfig.general.appName,
+        parsedConfig.general.appUrl,
+        parsedConfig.general.appName,
+        parsedConfig.general.appDescription,
+        parsedConfig.general.appOgImgPath,
+        parsedConfig.general.appTwitterId
+      )
+      const titleHtml = `<title>${parsedConfig.general.appName}</title>`
+      const metaHtml = generateMetaHtml(metaTags, true)
+      const finalMetaHtml = [titleHtml, metaHtml].join('\n')
+      return html.replace('<meta-tags />', finalMetaHtml)
+    },
   },
 }
 
