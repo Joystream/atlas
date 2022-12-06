@@ -102,7 +102,7 @@
     "@graphql-codegen/typescript-react-apollo": "^3.3.6",
     "@joystream/prettier-config": "^1.0.0",
     "@modyfi/vite-plugin-yaml": "^1.0.3",
-    "@rollup/plugin-babel": "^5.3.1",
+    "@rollup/plugin-babel": "^6.0.3",
     "@storybook/addon-actions": "6.4.18",
     "@storybook/addon-docs": "6.4.18",
     "@storybook/addon-essentials": "6.4.18",
@@ -136,9 +136,9 @@
     "rimraf": "^3.0.2",
     "rollup-plugin-visualizer": "^5.8.3",
     "style-dictionary": "^3.7.1",
-    "vite": "^3.2.4",
+    "vite": "^3.2.5",
     "vite-plugin-checker": "^0.5.1",
-    "vitest": "^0.23.4"
+    "vitest": "^0.25.4"
   },
   "engines": {
     "node": "^16"
