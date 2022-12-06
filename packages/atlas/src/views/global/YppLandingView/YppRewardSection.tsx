@@ -95,7 +95,7 @@ export const YppRewardSection: FC = () => {
                 key={tier.minimumSubscribers}
                 onClick={() => setRewardMultiplier(tier.multiplier)}
               >
-                &lt;{formatNumber(tier.minimumSubscribers)}-{formatNumber(tierArray[idx + 1].minimumSubscribers)}{' '}
+                {formatNumber(tier.minimumSubscribers)}-{formatNumber(tierArray[idx + 1].minimumSubscribers)}{' '}
                 subscribers
               </BenefitsCardButton>
             )

@@ -9,7 +9,7 @@ const configTiers = atlasConfig.features.ypp.tiersDefinition?.tiers
 export const TIERS = configTiers
   ? [
       {
-        rules: `<${formatNumber(configTiers?.[1].minimumSubscribers - 1)} subscribers`,
+        rules: `<${formatNumber(configTiers?.[1].minimumSubscribers)} subscribers`,
         icon: <SvgTierIcon1 />,
         subscribers: configTiers?.[0].minimumSubscribers,
       },
@@ -21,7 +21,7 @@ export const TIERS = configTiers
         subscribers: configTiers?.[1].minimumSubscribers,
       },
       {
-        rules: `>${formatNumber(configTiers?.[2].minimumSubscribers)} subscribers`,
+        rules: `>=${formatNumber(configTiers?.[2].minimumSubscribers)} subscribers`,
         icon: <SvgTierIcon3 />,
         subscribers: configTiers?.[2].minimumSubscribers,
       },
