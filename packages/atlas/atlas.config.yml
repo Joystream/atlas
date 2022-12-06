@@ -45,6 +45,38 @@ features:
         - minimumSubscribers: 200
           multiplier: 3
       tiersTooltip: The more subscribers you have on YouTube, the higher the payouts in the program. For 5-25K subscribers, payouts are multiplied by 1.5, for more than 25K subscribers, payouts are 3x as high. Below displayed rewards are calculated for your channel.
+    rewards:
+      - title: Publish video on Atlas
+        shortDescription: You can use your existing content and publish it on Atlas to earn.
+        description: |
+          Publishing your existing content on Atlas is the fastest way to earn more JOY tokens. Simply follow those steps:
+          1. Click “Publish new video” button and proceed to video workspace
+          2. While publishing your new video make sure that all assets like thumbnail, video file, title, description are the same as used previously on YouTube
+          3. Your uploads will be periodically reviewed for quality and completeness. Videos that match the criteria of programme participation listed above will score towards overall rewards
+        baseAmount: 100 # Base amount that will be multiplied by tier multiplier
+        actionButtonText: Publish new video
+        actionButtonAction: /studio/video-workspace # Provide relative url, that's starts with forward slash or `isRefer`
+      - title: Share Atlas video on YouTube
+        shortDescription: Tell your YouTube subscribers about your video on Atlas.
+        description: |
+          To share Atlas video you need to first upload your own video to the platform.
+          1. Publish new video or select one that you already uploaded to Atlas.
+          2. Go to your new video and copy the link to it
+          3. Upload a video to your YouTube channel mentioning your channel on Atlas
+          4. Place the link in the video description
+        baseAmount: 100
+        actionButtonText: Go to my videos
+        actionButtonAction: /studio/my-videos
+      - title: Refer another YouTube creator
+        shortDescription: Tell your YouTube subscribers about your video on Atlas.
+        description: |
+          Earn when another YouTube creator sign up for the program by using your link. 
+          1. Copy your link with get referral link button
+          2. Send it to the person who you want to recommend
+          3. You will be rewarded for every new successful sign up, that uses your referral link to land on the YPP page before signing up
+        baseAmount: 100
+        actionButtonText: Get referral link
+        actionButtonAction: isRefer
   nft:
     auctionMinimumBidStepMultiplier: 0.02 # Multiplier for the auction's starting price used to determine auction's minimum bid step. See more: https://joystream.gitbook.io/testnet-workspace/system/content-directory/nft#auction
     openAuctionBidLockDuration: 300 # Number of blocks for which bids on open auctions are locked from withdrawal. See more: https://joystream.gitbook.io/testnet-workspace/system/content-directory/nft#auction-type

@@ -46,6 +46,16 @@ export const configSchema = z.object({
             .nullable(),
         })
         .nullable(),
+      rewards: z.array(
+        z.object({
+          title: z.string(),
+          shortDescription: z.string(),
+          description: z.string().nullable(),
+          baseAmount: z.number(),
+          actionButtonText: z.string().nullable(),
+          actionButtonAction: z.string().refine((value) => value.match(/^\//gi) || value === 'isRefer'),
+        })
+      ),
     }),
     nft: z.object({
       auctionMinimumBidStepMultiplier: z.number(),
