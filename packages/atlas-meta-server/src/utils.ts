@@ -3,15 +3,9 @@ import fetch from 'cross-fetch'
 import parseHtml, { HTMLElement } from 'node-html-parser'
 
 import { DataObjectFieldsFragment } from './api/__generated__/sdk'
-import { MetaTags, generateMetaHtml } from './tags'
+import { AppData, MetaTags } from './types'
 
 const DISTRIBUTOR_ASSET_PATH = 'api/v1/assets'
-
-export type AppData = {
-  name: string
-  orionUrl: string
-  twitterId?: string
-}
 
 export const joinUrlFragments = (...fragments: string[]) => {
   const strippedFragments = fragments.map((f) => f.replace(/^\/|\/$/, ''))
@@ -41,6 +35,17 @@ export const getEnvVariable = (varName: string, required?: boolean) => {
     process.exit(1)
   }
   return process.env[varName] || ''
+}
+
+export const generateMetaHtml = (tags: MetaTags, addHelmetAttr = false) => {
+  return Object.entries(tags)
+    .map(
+      ([name, content]) =>
+        `<meta name="${name}" property="${name}" content="${content}" ${
+          addHelmetAttr ? 'data-react-helmet="true"' : ''
+        }>`
+    )
+    .join('\n')
 }
 
 export const applyMetaAndSchemaTagsToHtml = (html: HTMLElement, metaTags: MetaTags, schemaTags: string) => {

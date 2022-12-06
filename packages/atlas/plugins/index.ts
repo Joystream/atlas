@@ -1,10 +1,11 @@
+import { generateMetaHtml } from '@joystream/atlas-meta-server/src/utils'
 import { load as loadYaml } from 'js-yaml'
 import fs from 'node:fs'
 import path from 'node:path'
 import { PluginOption, loadEnv } from 'vite'
 
 // we need to use relative import from atlas-meta-server because of an issue in Vite: https://github.com/vitejs/vite/issues/5370
-import { generateCommonMetaTags, generateMetaHtml } from '../../atlas-meta-server/src/tags'
+import { generateCommonMetaTags } from '../../atlas-meta-server/src/tags'
 import { configSchema } from '../src/config/configSchema'
 
 // read config file - we cannot use `@/config` since it relies on YAML plugin being already loaded and that's not done in this context

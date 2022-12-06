@@ -1,4 +1,5 @@
-import { MetaTags, generateCommonMetaTags } from '@joystream/atlas-meta-server/src/tags'
+import { generateCommonMetaTags } from '@joystream/atlas-meta-server/src/tags'
+import { MetaTags } from '@joystream/atlas-meta-server/src/types'
 import { useMemo } from 'react'
 import { Helmet } from 'react-helmet'
 
