@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix mobile touch scroll on bottom drawers
 - Expose Privacy Policy in config and introduce basic Markdown support
 
+### Changed
+
+- Greatly improved OpenGraph metadata support
+
 ## [1.1.0] - 2022-11-30
 
 ### Added
