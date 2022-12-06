@@ -292,8 +292,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     [isSelectedChannelValid, ytRequirmentsErrors]
   )
 
-  const isChannelFulfillRequirements = requirments.every((req) => req.fulfilled)
-
   const authorizationStep = useMemo(() => {
     switch (currentStep) {
       case 'select-channel':
@@ -424,9 +422,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     unSyncedChannels,
     selectedChannelId,
     handleSelectChannel,
-    isChannelFulfillRequirements,
     handleAuthorizeClick,
-    handleClose,
     isSelectedChannelValid,
     requirments,
     handleAcceptTermsAndSubmit,
@@ -451,7 +447,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       text: 'Back',
       onClick: handleGoBack,
     }
-  }, [currentStep, handleGoBack, hasMoreThanOneChannel])
+  }, [currentStep, handleGoBack, hasMoreThanOneChannel, handleClose])
 
   return (
     <FormProvider {...detailsFormMethods}>
