@@ -28,12 +28,19 @@ import {
 export const YppDashboard: FC = () => {
   const headTags = useHeadTags('Youtube Partner Program')
   const mdMatch = useMediaMatch('md')
-  const { currentChannel } = useGetYppSyncedChannels()
 
-  const currentTier = currentChannel?.tier
-  if (!currentTier) {
-    return null
-  }
+  const { currentChannel, isLoading } = useGetYppSyncedChannels()
+  const subscribersCount = currentChannel?.subscribersCount || 0
+
+  const currentTier = TIERS.reduce((prev, current, idx) => {
+    if (subscribersCount >= (current?.subscribers || 0)) {
+      return idx
+    } else {
+      return prev
+    }
+  }, 0)
+
+  const tiersTooltip = atlasConfig.features.ypp.tiersDefinition?.tiersTooltip
 
   return (
     <>
@@ -43,25 +50,27 @@ export const YppDashboard: FC = () => {
           <Text variant={mdMatch ? 'h700' : 'h600'} as="h1">
             YouTube Partner Program
           </Text>
-          <TierWrapper>
-            {TIERS[currentTier].icon}
-            <TierDescription>
-              <div>
-                <TierCount>
-                  <Text variant="h300" as="span">
-                    Tier {currentTier}{' '}
+          {TIERS.length && !isLoading && (
+            <TierWrapper>
+              {TIERS[currentTier].icon}
+              <TierDescription>
+                <div>
+                  <TierCount>
+                    <Text variant="h300" as="span">
+                      Tier {currentTier + 1}{' '}
+                    </Text>
+                    <Text variant="t100" as="span" color="colorText">
+                      out of {TIERS.length}
+                    </Text>
+                  </TierCount>
+                  <Text variant="t100" as="p" color="colorText">
+                    {TIERS[currentTier].rules}
                   </Text>
-                  <Text variant="t100" as="span" color="colorText">
-                    out of {TIERS.length}
-                  </Text>
-                </TierCount>
-                <Text variant="t100" as="p" color="colorText">
-                  {TIERS[currentTier].rules}
-                </Text>
-              </div>
-              <Information text="The more subscribers you have on YouTube, the higher the payouts in the program. For 5-25K subscribers, payouts are multiplied by 1.5, for more than 25K subscribers, payouts are 3x as high. Below displayed rewards are calculated for your channel." />
-            </TierDescription>
-          </TierWrapper>
+                </div>
+                {tiersTooltip ? <Information text={tiersTooltip} /> : null}
+              </TierDescription>
+            </TierWrapper>
+          )}
         </Header>
         <WidgetsWrapper>
           <WidgetTile

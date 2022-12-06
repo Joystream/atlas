@@ -12,6 +12,7 @@ type YppSyncedChannel = {
   description: string
   aggregatedStats: number
   shouldBeIngested: boolean
+  isSuspended: boolean
   joystreamChannelId: number
   thumbnails: {
     default: string
@@ -20,7 +21,8 @@ type YppSyncedChannel = {
     maxRes: string
     standard: string
   }
-  tier: number
+  subscribersCount: number
+  createdAt: string
 }
 
 export const useGetYppSyncedChannels = () => {

@@ -37,6 +37,15 @@ export const configSchema = z.object({
       googleConsoleClientId: z.string().nullable(),
       youtubeSyncApiUrl: z.string().nullable(),
       youtubeCollaboratorMemberId: z.string().nullable(),
+      tiersDefinition: z
+        .object({
+          tiersTooltip: z.string().nullable(),
+          tiers: z
+            .array(z.object({ minimumSubscribers: z.number(), multiplier: z.number().default(1) }))
+            .max(3)
+            .nullable(),
+        })
+        .nullable(),
     }),
     nft: z.object({
       auctionMinimumBidStepMultiplier: z.number(),
