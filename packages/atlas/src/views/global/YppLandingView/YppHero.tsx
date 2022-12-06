@@ -111,7 +111,7 @@ export const YppHero: FC<YppHeroProps> = ({
           </GridItem>
         </LayoutGrid>
         <LayoutGrid data-aos="fade-up" data-aos-delay="450" data-aos-offset="40" data-aos-easing="atlas-easing">
-          <GridItem colStart={{ sm: 3, md: 4, lg: 5 }} colSpan={{ sm: 8, md: 6, lg: 4 }}>
+          <GridItem colStart={{ base: 1, sm: 3, md: 4, lg: 5 }} colSpan={{ base: 12, sm: 8, md: 6, lg: 4 }}>
             <Text
               as="p"
               variant="t100"
