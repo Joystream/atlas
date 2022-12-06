@@ -41,6 +41,15 @@ features:
     googleConsoleClientId: '$VITE_GOOGLE_CONSOLE_CLIENT_ID'
     youtubeSyncApiUrl: '$VITE_YOUTUBE_SYNC_API_URL'
     youtubeCollaboratorMemberId: '$VITE_YOUTUBE_COLLABORATOR_MEMBER_ID'
+    tiersDefinition: # Tiers for youtube partner program rewards. You can provide maximum three tiers. Each tier should has own multiplier.
+      tiers:
+        - minimumSubscribers: 0
+          multiplier: 1
+        - minimumSubscribers: 100
+          multiplier: 1.5
+        - minimumSubscribers: 200
+          multiplier: 3
+      tiersTooltip: The more subscribers you have on YouTube, the higher the payouts in the program. For 5-25K subscribers, payouts are multiplied by 1.5, for more than 25K subscribers, payouts are 3x as high. Below displayed rewards are calculated for your channel.
   nft:
     auctionMinimumBidStepMultiplier: 0.02 # Multiplier for the auction's starting price used to determine auction's minimum bid step. See more: https://joystream.gitbook.io/testnet-workspace/system/content-directory/nft#auction
     openAuctionBidLockDuration: 300 # Number of blocks for which bids on open auctions are locked from withdrawal. See more: https://joystream.gitbook.io/testnet-workspace/system/content-directory/nft#auction-type
