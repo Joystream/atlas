@@ -47,36 +47,37 @@ features:
       tiersTooltip: The more subscribers you have on YouTube, the higher the payouts in the program. For 5-25K subscribers, payouts are multiplied by 1.5, for more than 25K subscribers, payouts are 3x as high. Below displayed rewards are calculated for your channel.
     rewards:
       - title: Authorize your YouTube channel
+        showInDashboard: false # Optional. If false the reward will be shown only on youtube partner program landing page. Default true
         shortDescription: Sign up for the program, connect your Atlas and YouTube channels via a simple step-by-step flow and get your first reward.
         baseAmount: 250
       - title: Publish video on Atlas
         shortDescription: You can use your existing content and publish it on Atlas to earn.
-        description: |
-          Publishing your existing content on Atlas is the fastest way to earn more JOY tokens. Simply follow those steps:
-          1. Click “Publish new video” button and proceed to video workspace
-          2. While publishing your new video make sure that all assets like thumbnail, video file, title, description are the same as used previously on YouTube
-          3. Your uploads will be periodically reviewed for quality and completeness. Videos that match the criteria of programme participation listed above will score towards overall rewards
+        stepsDescription: Publishing your existing content on Atlas is the fastest way to earn more JOY tokens. Simply follow those steps
+        steps:
+          - Click “Publish new video” button and proceed to video workspace
+          - While publishing your new video make sure that all assets like thumbnail, video file, title, description are the same as used previously on YouTube
+          - Your uploads will be periodically reviewed for quality and completeness. Videos that match the criteria of programme participation listed above will score towards overall rewards
         baseAmount: 120 # Base amount that will be multiplied by tier multiplier
         actionButtonText: Publish new video
-        actionButtonAction: /studio/video-workspace # Provide relative url, that's starts with forward slash or `isRefer`
+        actionButtonAction: /studio/video-workspace # Provide relative url, that's starts with forward slash or `isRefer`. If `isRefer` is provided, action button will copy referral link to clipboard once clicked
       - title: Share Atlas video on YouTube
         shortDescription: Tell your YouTube subscribers about your video on Atlas.
-        description: |
-          To share Atlas video you need to first upload your own video to the platform.
-          1. Publish new video or select one that you already uploaded to Atlas.
-          2. Go to your new video and copy the link to it
-          3. Upload a video to your YouTube channel mentioning your channel on Atlas
-          4. Place the link in the video description
+        stepsDescription: To share Atlas video you need to first upload your own video to the platform.
+        steps:
+          - Publish new video or select one that you already uploaded to Atlas.
+          - Go to your new video and copy the link to it
+          - Upload a video to your YouTube channel mentioning your channel on Atlas
+          - Place the link in the video description
         baseAmount: 190
         actionButtonText: Go to my videos
-        actionButtonAction: /studio/my-videos
+        actionButtonAction: /studio/videos
       - title: Refer another YouTube creator
         shortDescription: Get JOY for recomendation of creator who signs up by your referal link
-        description: |
-          Earn when another YouTube creator sign up for the program by using your link. 
-          1. Copy your link with get referral link button
-          2. Send it to the person who you want to recommend
-          3. You will be rewarded for every new successful sign up, that uses your referral link to land on the YPP page before signing up
+        stepsDescription: Earn when another YouTube creator sign up for the program by using your link.
+        steps:
+          - Copy your link with get referral link button
+          - Send it to the person who you want to recommend
+          - You will be rewarded for every new successful sign up, that uses your referral link to land on the YPP page before signing up
         baseAmount: 250
         actionButtonText: Get referral link
         actionButtonAction: isRefer

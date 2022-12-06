@@ -1,4 +1,3 @@
-import BN from 'bn.js'
 import { FC } from 'react'
 
 import { SvgActionInfo, SvgActionNewTab, SvgActionSpeech, SvgActionTokensStack } from '@/assets/icons'
@@ -10,8 +9,10 @@ import { WidgetTile } from '@/components/WidgetTile'
 import { BenefitCard } from '@/components/_ypp/BenefitCard'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
+import { useClipboard } from '@/hooks/useClipboard'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useUser } from '@/providers/user/user.hooks'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
 
 import { REWARDS, TIERS } from './YppDashboard.config'
@@ -28,6 +29,9 @@ import {
 export const YppDashboard: FC = () => {
   const headTags = useHeadTags('Youtube Partner Program')
   const mdMatch = useMediaMatch('md')
+  const { channelId } = useUser()
+
+  const { copyToClipboard } = useClipboard()
 
   const { currentChannel, isLoading } = useGetYppSyncedChannels()
   const subscribersCount = currentChannel?.subscribersCount || 0
@@ -114,8 +118,25 @@ export const YppDashboard: FC = () => {
           />
         </WidgetsWrapper>
         <RewardsWrapper>
-          {REWARDS.map((reward) => (
-            <BenefitCard key={reward.title} {...reward} joyAmount={new BN(1200000000000)} />
+          {REWARDS?.map((reward) => (
+            <BenefitCard
+              key={reward.title}
+              title={reward.title}
+              description={reward.description}
+              steps={reward.steps}
+              actionButton={{
+                ...reward.actionButton,
+                onClick: () => {
+                  if ('isRefer' in reward.actionButton && reward.actionButton.isRefer === true) {
+                    copyToClipboard(
+                      `${window.location.host}/ypp?referrerId=${channelId}`,
+                      'Referral link copied to clipboard'
+                    )
+                  }
+                },
+              }}
+              joyAmount={reward.joyAmount}
+            />
           ))}
         </RewardsWrapper>
         <Banner

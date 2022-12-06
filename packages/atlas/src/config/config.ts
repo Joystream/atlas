@@ -50,8 +50,10 @@ export const configSchema = z.object({
         .array(
           z.object({
             title: z.string(),
+            showInDashboard: z.boolean().optional().default(true),
             shortDescription: z.string(),
-            description: z.string().optional(),
+            stepsDescription: z.string().optional(),
+            steps: z.array(z.string()).optional(),
             baseAmount: z.number(),
             actionButtonText: z.string().optional(),
             actionButtonAction: z
