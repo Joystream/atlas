@@ -6,6 +6,7 @@ import { AppLogo } from '@/components/AppLogo'
 import { TopbarBase } from '@/components/_navigation/TopbarBase'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { cVar, sizes } from '@/styles'
+import { PrivacyPolicyView } from '@/views/legal/PrivacyPolicy'
 
 import { CopyrightPolicyView } from './CopyrightPolicyView'
 import { TermsOfServiceView } from './TermsOfServiceView'
@@ -13,6 +14,7 @@ import { TermsOfServiceView } from './TermsOfServiceView'
 const legalRoutes = [
   { path: relativeRoutes.legal.termsOfService(), element: <TermsOfServiceView /> },
   { path: relativeRoutes.legal.copyright(), element: <CopyrightPolicyView /> },
+  { path: relativeRoutes.legal.privacyPolicy(), element: <PrivacyPolicyView /> },
 ]
 
 export const LegalLayout: FC = () => {

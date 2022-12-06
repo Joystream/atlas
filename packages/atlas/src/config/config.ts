@@ -95,6 +95,7 @@ export const configSchema = z.object({
   legal: z.object({
     termsOfService: z.string(),
     copyrightPolicy: z.string(),
+    privacyPolicy: z.string(),
   }),
 })
 type SelectValue = Pick<SelectItem, 'value' | 'name'>

@@ -39,6 +39,7 @@ export const relativeRoutes = {
     index: () => '',
     copyright: () => 'copyright',
     termsOfService: () => 'tos',
+    privacyPolicy: () => 'privacyPolicy',
   },
   studio: {
     index: () => '',

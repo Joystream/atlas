@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 import { Dialog } from '@/components/_overlays/Dialog'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
@@ -22,7 +23,7 @@ export const StyledDialog = styled(Dialog)<{ bottomNavOpen: boolean }>`
   }
 `
 
-export const StyledAnchor = styled.a`
+export const StyledAnchor = styled(Link)`
   text-decoration: none;
   color: ${cVar('colorTextPrimary')};
   display: block;

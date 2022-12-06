@@ -2,6 +2,7 @@ import { FC } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
+import { absoluteRoutes } from '@/config/routes'
 import { useBottomNavStore } from '@/providers/bottomNav'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { transitions } from '@/styles'
@@ -44,7 +45,9 @@ export const CookiePopover: FC = () => {
       >
         <Text as="p" variant="t200" color="colorText">
           We use cookies and other tracking technologies to improve your experience and provide analytics.{' '}
-          <StyledAnchor href="https://www.joystream.org/privacy-policy/">You can read more about it here.</StyledAnchor>
+          <StyledAnchor to={absoluteRoutes.legal.privacyPolicy()} target="_blank">
+            You can read more about it here.
+          </StyledAnchor>
         </Text>
       </StyledDialog>
     </CSSTransition>
