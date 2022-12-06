@@ -3106,6 +3106,7 @@ __metadata:
     graphql-request: ^3.7.0
     node-html-parser: ^5.4.2
     ts-node: ^10.9.1
+    ts-node-dev: ^2.0.0
   languageName: unknown
   linkType: soft
 
