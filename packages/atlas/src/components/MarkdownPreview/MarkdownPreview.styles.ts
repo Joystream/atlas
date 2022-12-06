@@ -1,35 +1,14 @@
-import { css } from '@emotion/react'
+import styled from '@emotion/styled'
 
-import { cVar } from '@/styles'
+import { cVar, sizes } from '@/styles'
 
-export const MarkdownGlobalStyles = css`
-  color: ${cVar('colorCoreNeutral50')};
+export const MarkdownLink = styled.a`
+  font: ${cVar('typographyDesktopT300')};
+  color: ${cVar('colorTextPrimary')}!important;
+  text-decoration: underline !important;
+`
 
-  .markdown-preview h1 {
-    font: ${cVar('typographyDesktopH400')};
-  }
-
-  .markdown-preview h2 {
-    font: ${cVar('typographyDesktopH300')};
-  }
-
-  .markdown-preview h3 {
-    font: ${cVar('typographyDesktopH100')};
-  }
-
-  .markdown-preview p,
-  li {
-    font: ${cVar('typographyDesktopT300')};
-    color: ${cVar('colorCoreNeutral200')};
-  }
-
-  .markdown-preview a {
-    font: ${cVar('typographyDesktopT300')};
-    color: ${cVar('colorTextPrimary')}!important;
-    text-decoration: underline !important;
-  }
-
-  .markdown-preview hr {
-    border: 1px solid ${cVar('colorCoreNeutral600')};
-  }
+export const MarkdownHr = styled.hr`
+  margin: ${sizes(4)} 0;
+  border: 1px solid ${cVar('colorCoreNeutral600')};
 `
