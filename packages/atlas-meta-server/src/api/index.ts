@@ -2,17 +2,28 @@ import { GraphQLClient } from 'graphql-request'
 
 import { getSdk } from './__generated__/sdk'
 
-import { GRAPHQL_URL } from '../config'
+export class OrionClient {
+  private sdk: ReturnType<typeof getSdk>
 
-const client = new GraphQLClient(GRAPHQL_URL)
-const sdk = getSdk(client)
+  constructor(graphqlUrl: string) {
+    const client = new GraphQLClient(graphqlUrl)
+    this.sdk = getSdk(client)
+  }
 
-export const getVideo = async (id: string) => {
-  const { videoByUniqueInput } = await sdk.GetVideo({ id })
-  return videoByUniqueInput
-}
+  async testConnection() {
+    const { videos } = await this.sdk.TestQuery()
+    if (!videos) {
+      throw new Error('Could not connect to Orion')
+    }
+  }
 
-export const getChannel = async (id: string) => {
-  const { channelByUniqueInput } = await sdk.GetChannel({ id })
-  return channelByUniqueInput
+  async getVideo(id: string) {
+    const { videoByUniqueInput } = await this.sdk.GetVideo({ id })
+    return videoByUniqueInput
+  }
+
+  async getChannel(id: string) {
+    const { channelByUniqueInput } = await this.sdk.GetChannel({ id })
+    return channelByUniqueInput
+  }
 }

@@ -1,7 +1,7 @@
 import { load as loadYaml } from 'js-yaml'
 import fs from 'node:fs'
 import path from 'node:path'
-import { PluginOption } from 'vite'
+import { PluginOption, loadEnv } from 'vite'
 
 // we need to use relative import from atlas-meta-server because of an issue in Vite: https://github.com/vitejs/vite/issues/5370
 import { generateCommonMetaTags, generateMetaHtml } from '../../atlas-meta-server/src/tags'
@@ -65,7 +65,15 @@ export const AtlasHtmlMetaTagsPlugin: PluginOption = {
       )
       const titleHtml = `<title>${parsedConfig.general.appName}</title>`
       const metaHtml = generateMetaHtml(metaTags, true)
-      const finalMetaHtml = [titleHtml, metaHtml].join('\n')
+
+      // include link to Orion GraphQL API so that atlas-meta-server can use it to fetch data for content previews
+      const orionUrlEnvKey = 'VITE_PRODUCTION_ORION_URL'
+      const orionUrl =
+        process.env[orionUrlEnvKey] || loadEnv('production', path.join(process.cwd(), 'src'))[orionUrlEnvKey]
+
+      const orionMetaHtml = `<meta name="atlas:orion_url" property="atlas:orion_url" content="${orionUrl}" />`
+
+      const finalMetaHtml = [titleHtml, metaHtml, orionMetaHtml].join('\n')
       return html.replace('<meta-tags />', finalMetaHtml)
     },
   },
