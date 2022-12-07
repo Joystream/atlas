@@ -648,33 +648,24 @@ export type GetChannelPaymentEventsQueryVariables = Types.Exact<{
 
 export type GetChannelPaymentEventsQuery = {
   __typename?: 'Query'
-  nftBoughtEvents: Array<{
-    __typename?: 'NftBoughtEvent'
-    inBlock: number
-    createdAt: Date
-    price: string
-    video: { __typename?: 'Video'; channelId: string }
-  }>
+  nftBoughtEvents: Array<{ __typename?: 'NftBoughtEvent'; inBlock: number; createdAt: Date; price: string }>
   bidMadeCompletingAuctionEvents: Array<{
     __typename?: 'BidMadeCompletingAuctionEvent'
     inBlock: number
     createdAt: Date
     price: string
-    video: { __typename?: 'Video'; channelId: string }
   }>
   englishAuctionSettledEvents: Array<{
     __typename?: 'EnglishAuctionSettledEvent'
     createdAt: Date
     inBlock: number
     winningBid: { __typename?: 'Bid'; amount: string }
-    video: { __typename?: 'Video'; channelId: string }
   }>
   openAuctionBidAcceptedEvents: Array<{
     __typename?: 'OpenAuctionBidAcceptedEvent'
     inBlock: number
     createdAt: Date
     winningBid?: { __typename?: 'Bid'; amount: string } | null
-    video: { __typename?: 'Video'; channelId: string }
   }>
   channelRewardClaimedEvents: Array<{
     __typename?: 'ChannelRewardClaimedEvent'
@@ -1559,17 +1550,11 @@ export const GetChannelPaymentEventsDocument = gql`
       inBlock
       createdAt
       price
-      video {
-        channelId
-      }
     }
     bidMadeCompletingAuctionEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
       inBlock
       createdAt
       price
-      video {
-        channelId
-      }
     }
     englishAuctionSettledEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
       createdAt
@@ -1577,18 +1562,12 @@ export const GetChannelPaymentEventsDocument = gql`
       winningBid {
         amount
       }
-      video {
-        channelId
-      }
     }
     openAuctionBidAcceptedEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
       inBlock
       createdAt
       winningBid {
         amount
-      }
-      video {
-        channelId
       }
     }
     channelRewardClaimedEvents(where: { channel: { id_eq: $channelId } }) {

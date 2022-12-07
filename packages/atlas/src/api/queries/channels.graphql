@@ -173,18 +173,12 @@ query GetChannelPaymentEvents($ownerMemberId: ID!, $channelId: ID!) {
     inBlock
     createdAt
     price
-    video {
-      channelId
-    }
   }
 
   bidMadeCompletingAuctionEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
     inBlock
     createdAt
     price
-    video {
-      channelId
-    }
   }
 
   englishAuctionSettledEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
@@ -193,9 +187,6 @@ query GetChannelPaymentEvents($ownerMemberId: ID!, $channelId: ID!) {
     winningBid {
       amount
     }
-    video {
-      channelId
-    }
   }
 
   openAuctionBidAcceptedEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
@@ -203,9 +194,6 @@ query GetChannelPaymentEvents($ownerMemberId: ID!, $channelId: ID!) {
     createdAt
     winningBid {
       amount
-    }
-    video {
-      channelId
     }
   }
 
