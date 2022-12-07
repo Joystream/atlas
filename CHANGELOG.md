@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Stop video autoplay if user starts commenting
 - Expose Privacy Policy in config and introduce basic Markdown support
 
+### Changed
+
+- Greatly improved OpenGraph metadata support
+
 ### Fixed
 
 - Fixed mobile touch scroll on bottom drawers

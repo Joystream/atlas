@@ -1,6 +1,7 @@
 import { formatISODuration } from 'date-fns'
 
 import { BasicChannelFieldsFragment, BasicVideoFieldsFragment } from './api/__generated__/sdk'
+import { MetaTags, SchemaOrgTag } from './types'
 import { joinUrlFragments } from './utils'
 
 const THUMBNAIL_WIDTH = 640
@@ -8,13 +9,6 @@ const THUMBNAIL_HEIGHT = 360
 const VIDEO_WIDTH = 1280
 const VIDEO_HEIGHT = 720
 const AVATAR_SIZE = 192
-
-type SchemaOrgTag = {
-  type: 'link' | 'regular'
-  prop: string
-  value: unknown
-}
-export type MetaTags = Record<string, string | number>
 
 const sanitizeDescription = (appName: string, fullDescription?: string | null, title?: string | null) => {
   if (!fullDescription) {
@@ -275,15 +269,4 @@ export const generateChannelSchemaTagsHtml = (
   ]
 
   return htmlTags.join('\n')
-}
-
-export const generateMetaHtml = (tags: MetaTags, addHelmetAttr = false) => {
-  return Object.entries(tags)
-    .map(
-      ([name, content]) =>
-        `<meta name="${name}" property="${name}" content="${content}" ${
-          addHelmetAttr ? 'data-react-helmet="true"' : ''
-        }>`
-    )
-    .join('\n')
 }
