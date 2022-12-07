@@ -78,7 +78,7 @@ export const useChannelPayout = (txCallback?: () => void) => {
 
   useEffect(() => {
     const calcTxParams = async () => {
-      if (!channelId || !joystream || !memberId || !availableAward) {
+      if (!joystream || !memberId || !channel) {
         return
       }
       const commitment = await joystream.getContentCommitment()
@@ -89,11 +89,11 @@ export const useChannelPayout = (txCallback?: () => void) => {
       }
 
       const payloadUrl = createAssetDownloadEndpoint(nodeEndpoint, payloadDataObjectId)
-      setTxParams([channelId, memberId, availableAward.toString(), payloadUrl, commitment])
+      setTxParams([channel.id, memberId, channel.cumulativeRewardClaimed ?? null, payloadUrl, commitment])
     }
 
     calcTxParams()
-  }, [channel, channelId, getPayloadDataObjectIdAndNodeEndpoint, joystream, memberId, availableAward])
+  }, [channel, channelId, getPayloadDataObjectIdAndNodeEndpoint, joystream, memberId])
 
   const claimReward = async () => {
     if (!channelId || !memberId || !txParams || !joystream) {
@@ -105,7 +105,7 @@ export const useChannelPayout = (txCallback?: () => void) => {
     handleTransaction({
       snackbarSuccessMessage: {
         title: 'Reward claimed successfully',
-        description: `You have claimed ${formatNumber(hapiBnToTokenNumber(new BN(cumulativeRewardEarned ?? 0)))} ${
+        description: `You have claimed ${formatNumber(hapiBnToTokenNumber(new BN(availableAward ?? 0)))} ${
           atlasConfig.joystream.tokenTicker
         }!`,
       },
