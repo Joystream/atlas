@@ -6,6 +6,7 @@ import { IconWrapper } from '@/components/IconWrapper'
 import { Loader } from '@/components/_loaders/Loader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMountEffect } from '@/hooks/useMountEffect'
+import { UnknownWallet } from '@/providers/user/user.helpers'
 import { useUser } from '@/providers/user/user.hooks'
 import { useUserStore } from '@/providers/user/user.store'
 import { isMobile } from '@/utils/browser'
@@ -26,7 +27,6 @@ const MOBILE_SUPPORTED_WALLETS = {
       alt: 'Polkawallet logo',
     },
   },
-  'subwallet-js': {},
 }
 
 export const SignInModalWalletStep: FC<SignInStepProps> = ({
@@ -45,7 +45,12 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
   const wallets = useMemo(() => {
     const unsortedWallets = getWalletsList()
     if (isMobileDevice) {
-      const supportedWalletsNames = Object.keys(MOBILE_SUPPORTED_WALLETS)
+      const supportedWalletsNames = [
+        'polkawallet',
+        ...unsortedWallets
+          .filter((wallet) => wallet instanceof UnknownWallet || wallet.extensionName === 'subwallet-js')
+          .map((wallet) => wallet.extensionName),
+      ]
 
       return supportedWalletsNames.map((walletName) => {
         const possiblyInstalledWallet = unsortedWallets.find((wallet) => wallet.extensionName === walletName)
