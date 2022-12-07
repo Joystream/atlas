@@ -6,7 +6,6 @@ import { IconWrapper } from '@/components/IconWrapper'
 import { Loader } from '@/components/_loaders/Loader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMountEffect } from '@/hooks/useMountEffect'
-import { UnknownWallet } from '@/providers/user/user.helpers'
 import { useUser } from '@/providers/user/user.hooks'
 import { useUserStore } from '@/providers/user/user.store'
 import { isMobile } from '@/utils/browser'
@@ -45,14 +44,15 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
   const wallets = useMemo(() => {
     const unsortedWallets = getWalletsList()
     if (isMobileDevice) {
-      const supportedWalletsNames = [
+      const allMoblieWallets = new Set([
         'polkawallet',
+        ...Object.keys((window as any).injectedWeb3 || {}),
         ...unsortedWallets
-          .filter((wallet) => wallet instanceof UnknownWallet || wallet.extensionName === 'subwallet-js')
+          .filter((wallet) => wallet.extensionName !== 'talisman')
           .map((wallet) => wallet.extensionName),
-      ]
+      ])
 
-      return supportedWalletsNames.map((walletName) => {
+      return Array.from(allMoblieWallets).map((walletName) => {
         const possiblyInstalledWallet = unsortedWallets.find((wallet) => wallet.extensionName === walletName)
         if (possiblyInstalledWallet) {
           return {
@@ -161,6 +161,7 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
           icon={<SvgAlertsError24 />}
         />
       ) : null}
+      {Object.keys((window as any).injectedWeb3 || {}).join(', ')}
       <ListItemsWrapper>
         {wallets.map((wallet, idx) => (
           <StyledListItem
