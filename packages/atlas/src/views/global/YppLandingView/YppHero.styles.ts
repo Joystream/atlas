@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { InfiniteCarousel } from '@/components/InfiniteCarousel/InfiniteCarousel'
 import { cVar, media, sizes } from '@/styles'
 
 import { imageShadow } from './YppLandingView.styles'
@@ -49,4 +50,13 @@ export const BackImage = styled.img`
   display: block;
   left: 0;
   top: 0;
+`
+
+export const StyledInfiniteCarousel = styled(InfiniteCarousel)`
+  margin-top: ${sizes(16)};
+  text-align: left;
+  overflow: unset;
+  ${media.md} {
+    margin-top: ${sizes(24)};
+  }
 `
