@@ -14,11 +14,21 @@ import yt2304 from '@/assets/images/ypp-hero/yt-2304.webp'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
+import { ChannelCard } from '@/components/_channel/ChannelCard'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { cVar, transitions } from '@/styles'
 
-import { BackImage, ButtonWrapper, FrontImage, HeroImageWrapper, SelectDifferentChannelButton } from './YppHero.styles'
+import {
+  BackImage,
+  ButtonWrapper,
+  FrontImage,
+  HeroImageWrapper,
+  SelectDifferentChannelButton,
+  StyledInfiniteCarousel,
+} from './YppHero.styles'
+import { useGetYppLastVerifiedChannels } from './YppLandingView.hooks'
 import { BackgroundContainer, StyledLimitedWidthContainer } from './YppLandingView.styles'
 
 type YppStatus = 'have-channel' | 'no-channel' | 'ypp-signed' | null
@@ -51,12 +61,19 @@ export const YppHero: FC<YppHeroProps> = ({
 }) => {
   const mdMatch = useMediaMatch('md')
   const smMatch = useMediaMatch('sm')
+
   const endScroll = smMatch ? window.innerHeight / 3 : window.innerHeight
   const { ref: heroImageRef } = useParallax<HTMLImageElement>({
     startScroll: 0,
     endScroll,
     translateY: [0, -15],
   })
+
+  const { channels, loading } = useGetYppLastVerifiedChannels()
+  const items =
+    channels?.length && !loading
+      ? channels.map((channel) => <ChannelCard key={channel.id} channel={channel} withFollowButton={false} />)
+      : Array.from({ length: 30 }).map((_, idx) => <ChannelCard key={idx} loading withFollowButton={false} />)
 
   return (
     <BackgroundContainer noBackground>
@@ -147,6 +164,21 @@ export const YppHero: FC<YppHeroProps> = ({
             height="824"
           />
         </HeroImageWrapper>
+        <LayoutGrid>
+          <GridItem colStart={{ base: 1, sm: 2 }} colSpan={{ base: 12, sm: 10 }}>
+            <StyledInfiniteCarousel
+              title="Recent verified channels"
+              itemWidth={200}
+              items={items}
+              subTitle="What is a verified channel?"
+              informationProps={{
+                multiline: true,
+                placement: 'top-end',
+                text: `These ${atlasConfig.general.appName} channels applied to the YouTube Partner Program and got through the verification process successfully.`,
+              }}
+            />
+          </GridItem>
+        </LayoutGrid>
       </StyledLimitedWidthContainer>
     </BackgroundContainer>
   )
