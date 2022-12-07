@@ -435,7 +435,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   ])
 
   const secondaryButton = useMemo(() => {
-    if (currentStep === 'select-channel' || (currentStep === 'requirements' && !hasMoreThanOneChannel)) return undefined
+    if (currentStep === 'select-channel' || (currentStep === 'requirements' && !hasMoreThanOneChannel)) return
     if (currentStep === 'summary') {
       return {
         text: 'Close',
