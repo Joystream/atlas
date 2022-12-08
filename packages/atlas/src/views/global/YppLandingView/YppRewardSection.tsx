@@ -22,9 +22,10 @@ import {
 export const YppRewardSection: FC = () => {
   const mdMatch = useMediaMatch('md')
   const tiers = atlasConfig.features.ypp.tiersDefinition?.tiers
+  const rewards = atlasConfig.features.ypp.rewards
   const [rewardMultiplier, setRewardMultiplier] = useState<number>(tiers ? tiers[0].multiplier : 1)
 
-  if (!tiers) {
+  if (!rewards?.length) {
     return null
   }
 
@@ -58,80 +59,62 @@ export const YppRewardSection: FC = () => {
           </HeaderGridItem>
         </CenteredLayoutGrid>
 
-        <BenefitsCardsButtonsGroup
-          data-aos="fade-up"
-          data-aos-delay="200"
-          data-aos-offset="80"
-          data-aos-easing="atlas-easing"
-        >
-          {tiers.map((tier, idx, tierArray) => {
-            const isFirstTier = idx === 0
-            const isLastTier = idx === tierArray.length - 1
-            if (isFirstTier) {
+        {tiers && (
+          <BenefitsCardsButtonsGroup
+            data-aos="fade-up"
+            data-aos-delay="200"
+            data-aos-offset="80"
+            data-aos-easing="atlas-easing"
+          >
+            {tiers.map((tier, idx, tierArray) => {
+              const isFirstTier = idx === 0
+              const isLastTier = idx === tierArray.length - 1
+              if (isFirstTier) {
+                return (
+                  <BenefitsCardButton
+                    variant={rewardMultiplier === tier.multiplier ? 'primary' : 'tertiary'}
+                    key={tier.minimumSubscribers}
+                    onClick={() => setRewardMultiplier(tier.multiplier)}
+                  >
+                    &lt;{formatNumber(tierArray[idx + 1].minimumSubscribers)} subscribers
+                  </BenefitsCardButton>
+                )
+              }
+              if (isLastTier) {
+                return (
+                  <BenefitsCardButton
+                    variant={rewardMultiplier === tier.multiplier ? 'primary' : 'tertiary'}
+                    key={tier.minimumSubscribers}
+                    onClick={() => setRewardMultiplier(tier.multiplier)}
+                  >
+                    &gt;{formatNumber(tier.minimumSubscribers)} subscribers
+                  </BenefitsCardButton>
+                )
+              }
               return (
                 <BenefitsCardButton
                   variant={rewardMultiplier === tier.multiplier ? 'primary' : 'tertiary'}
                   key={tier.minimumSubscribers}
                   onClick={() => setRewardMultiplier(tier.multiplier)}
                 >
-                  &lt;{formatNumber(tierArray[idx + 1].minimumSubscribers)} subscribers
+                  {formatNumber(tier.minimumSubscribers)}-{formatNumber(tierArray[idx + 1].minimumSubscribers)}{' '}
+                  subscribers
                 </BenefitsCardButton>
               )
-            }
-            if (isLastTier) {
-              return (
-                <BenefitsCardButton
-                  variant={rewardMultiplier === tier.multiplier ? 'primary' : 'tertiary'}
-                  key={tier.minimumSubscribers}
-                  onClick={() => setRewardMultiplier(tier.multiplier)}
-                >
-                  &gt;{formatNumber(tier.minimumSubscribers)} subscribers
-                </BenefitsCardButton>
-              )
-            }
-            return (
-              <BenefitsCardButton
-                variant={rewardMultiplier === tier.multiplier ? 'primary' : 'tertiary'}
-                key={tier.minimumSubscribers}
-                onClick={() => setRewardMultiplier(tier.multiplier)}
-              >
-                {formatNumber(tier.minimumSubscribers)}-{formatNumber(tierArray[idx + 1].minimumSubscribers)}{' '}
-                subscribers
-              </BenefitsCardButton>
-            )
-          })}
-        </BenefitsCardsButtonsGroup>
-
+            })}
+          </BenefitsCardsButtonsGroup>
+        )}
         <LayoutGrid data-aos="fade-up" data-aos-delay="200" data-aos-offset="80" data-aos-easing="atlas-easing">
           <BenefitsCardsContainerGridItem colStart={{ lg: 2 }} colSpan={{ base: 12, lg: 10 }}>
-            <BenefitCard
-              title="Authorize your YouTube channel"
-              joyAmount={250 * rewardMultiplier}
-              dollarAmount={0}
-              variant="compact"
-              description="Sign up for the program, connect your Atlas and YouTube channels via a simple step-by-step flow and get your first reward."
-            />
-            <BenefitCard
-              title="Publish video on Atlas"
-              joyAmount={120 * rewardMultiplier}
-              dollarAmount={0}
-              variant="compact"
-              description="You can use your existing content and publish it on Atlas to earn."
-            />
-            <BenefitCard
-              title="Share Atlas video on YouTube"
-              joyAmount={190 * rewardMultiplier}
-              dollarAmount={0}
-              variant="compact"
-              description="Tell your YouTube subscribers about your video on Atlas."
-            />
-            <BenefitCard
-              title="Refer another YouTube creator"
-              joyAmount={250 * rewardMultiplier}
-              dollarAmount={0}
-              variant="compact"
-              description="Get JOY for recomendation of creator who signs up by your referal link"
-            />
+            {rewards.map((reward) => (
+              <BenefitCard
+                key={reward.title}
+                title={reward.title}
+                joyAmount={reward.baseAmount * rewardMultiplier}
+                variant="compact"
+                description={reward.shortDescription}
+              />
+            ))}
           </BenefitsCardsContainerGridItem>
         </LayoutGrid>
       </StyledLimitedWidthContainer>
