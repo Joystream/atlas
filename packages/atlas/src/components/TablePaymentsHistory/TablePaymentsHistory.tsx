@@ -5,7 +5,6 @@ import { SvgActionBuyNow } from '@/assets/icons'
 import { Table, TableProps } from '@/components/Table'
 import { Text } from '@/components/Text'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
-import { useTokenPrice } from '@/providers/joystream/joystream.hooks'
 import { formatNumber } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 
@@ -38,13 +37,16 @@ const COLUMNS: TableProps['columns'] = [
 
 type PaymentType = 'nft-sale' | 'nft-royalty' | 'claimed-reward' | 'withdrawal' | 'ypp-reward'
 
+export type PaymentHistory = {
+  type: PaymentType
+  block: number
+  date: Date
+  channelBalance: BN
+  amount: BN
+}
+
 export type TablePaymentsHistoryProps = {
-  data: {
-    date: Date
-    type: PaymentType
-    amount: BN
-    channelBalance: BN
-  }[]
+  data: PaymentHistory[]
 }
 
 export const TablePaymentsHistory: FC<TablePaymentsHistoryProps> = ({ data }) => {
@@ -96,28 +98,17 @@ const Type = ({ type }: { type: PaymentType }) => {
 }
 
 const TokenAmount = ({ tokenAmount }: { tokenAmount: BN }) => {
-  const { convertHapiToUSD } = useTokenPrice()
   const isNegative = tokenAmount.isNeg()
   return (
-    <>
-      <JoyAmountWrapper>
-        <StyledJoyTokenIcon variant="gray" error={isNegative} />
-        <StyledNumberFormat
-          variant="t200-strong"
-          as="p"
-          value={tokenAmount}
-          margin={{ left: 1 }}
-          color={isNegative ? 'colorTextError' : 'colorTextStrong'}
-        />
-      </JoyAmountWrapper>
+    <JoyAmountWrapper>
+      <StyledJoyTokenIcon variant="gray" error={isNegative} />
       <StyledNumberFormat
-        variant="t100"
+        variant="t200-strong"
         as="p"
-        format="dollar"
-        value={convertHapiToUSD(tokenAmount) ?? 0}
-        color={isNegative ? 'colorTextError' : 'colorText'}
-        margin={{ top: 1 }}
+        value={tokenAmount}
+        margin={{ left: 1 }}
+        color={isNegative ? 'colorTextError' : 'colorTextStrong'}
       />
-    </>
+    </JoyAmountWrapper>
   )
 }
