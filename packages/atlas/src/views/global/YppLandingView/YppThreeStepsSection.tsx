@@ -1,3 +1,5 @@
+import { FC } from 'react'
+
 import { SvgActionChevronR } from '@/assets/icons'
 import createMember from '@/assets/images/create-membership.webp'
 import memberDropdown from '@/assets/images/member-dropdown.webp'
@@ -14,7 +16,11 @@ import {
 } from './YppLandingView.styles'
 import { StepCard, StepCardFade, StepCardImg, StepCardNumber, StepCardsWrapper } from './YppThreeStepsSection.styles'
 
-export const YppThreeStepsSection = () => {
+type YppThreeStepsSectionProps = {
+  onSignUpClick: () => void
+}
+
+export const YppThreeStepsSection: FC<YppThreeStepsSectionProps> = ({ onSignUpClick }) => {
   const mdMatch = useMediaMatch('md')
   return (
     <BackgroundContainer pattern="bottom">
@@ -52,6 +58,7 @@ export const YppThreeStepsSection = () => {
               data-aos-delay="200"
               data-aos-offset="40"
               data-aos-easing="atlas-easing"
+              onClick={onSignUpClick}
             >
               Sign up now
             </Button>
