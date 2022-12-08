@@ -17,6 +17,7 @@ import { useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { createAssetDownloadEndpoint } from '@/utils/asset'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { formatNumber, getRandomIntInclusive } from '@/utils/number'
 
 export const useChannelPayout = (txCallback?: () => void) => {
@@ -57,43 +58,54 @@ export const useChannelPayout = (txCallback?: () => void) => {
     [client, getAllDistributionOperatorsForBag]
   )
 
+  const getRewardData = useCallback(
+    async (channelId: string, cumulativeRewardClaimed: string | null) => {
+      if (!joystream) {
+        ConsoleLogger.warn('No joystream instance')
+        return
+      }
+      try {
+        const commitment = await joystream.getContentCommitment()
+
+        const { payloadDataObjectId, nodeEndpoint } = await getPayloadDataObjectIdAndNodeEndpoint(commitment)
+        if (!payloadDataObjectId || !nodeEndpoint) {
+          return
+        }
+        const payloadUrl = createAssetDownloadEndpoint(nodeEndpoint, payloadDataObjectId)
+
+        const { reward } = await getClaimableReward(channelId, cumulativeRewardClaimed, payloadUrl)
+
+        return { reward, payloadUrl, commitment }
+      } catch (error) {
+        SentryLogger.error("Couldn't get reward data", 'PaymentOverviewTab.hooks', error)
+      }
+    },
+    [getPayloadDataObjectIdAndNodeEndpoint, joystream]
+  )
+
   const handleFetchReward = useCallback(async () => {
     setAwardLoading(true)
-    if (!channelId || !joystream || !memberId || channel?.cumulativeRewardClaimed === undefined) {
+    if (!channelId || !memberId || channel?.cumulativeRewardClaimed === undefined) {
       return
     }
-    const commitment = await joystream.getContentCommitment()
+    const rewardData = await getRewardData(channelId, channel.cumulativeRewardClaimed)
 
-    const { payloadDataObjectId, nodeEndpoint } = await getPayloadDataObjectIdAndNodeEndpoint(commitment)
-    if (!payloadDataObjectId || !nodeEndpoint) {
-      return
+    setAvailableAward(rewardData?.reward)
+
+    if (!rewardData || rewardData?.reward?.isZero()) {
+      setTxParams(undefined)
+    } else {
+      setTxParams([
+        channelId,
+        memberId,
+        channel.cumulativeRewardClaimed ?? null,
+        rewardData.payloadUrl,
+        rewardData.commitment,
+      ])
     }
-    const payloadUrl = createAssetDownloadEndpoint(nodeEndpoint, payloadDataObjectId)
 
-    const { reward } = await getClaimableReward(channelId, channel?.cumulativeRewardClaimed, payloadUrl)
-
-    setAvailableAward(reward)
     setAwardLoading(false)
-  }, [channel?.cumulativeRewardClaimed, channelId, getPayloadDataObjectIdAndNodeEndpoint, joystream, memberId])
-
-  useEffect(() => {
-    const calcTxParams = async () => {
-      if (!channelId || !joystream || !memberId || !availableAward) {
-        return
-      }
-      const commitment = await joystream.getContentCommitment()
-
-      const { payloadDataObjectId, nodeEndpoint } = await getPayloadDataObjectIdAndNodeEndpoint(commitment)
-      if (!payloadDataObjectId || !nodeEndpoint) {
-        return
-      }
-
-      const payloadUrl = createAssetDownloadEndpoint(nodeEndpoint, payloadDataObjectId)
-      setTxParams([channelId, memberId, availableAward.toString(), payloadUrl, commitment])
-    }
-
-    calcTxParams()
-  }, [channel, channelId, getPayloadDataObjectIdAndNodeEndpoint, joystream, memberId, availableAward])
+  }, [channel?.cumulativeRewardClaimed, channelId, getRewardData, memberId])
 
   const claimReward = async () => {
     if (!channelId || !memberId || !txParams || !joystream) {
@@ -105,7 +117,7 @@ export const useChannelPayout = (txCallback?: () => void) => {
     handleTransaction({
       snackbarSuccessMessage: {
         title: 'Reward claimed successfully',
-        description: `You have claimed ${formatNumber(hapiBnToTokenNumber(new BN(cumulativeRewardEarned ?? 0)))} ${
+        description: `You have claimed ${formatNumber(hapiBnToTokenNumber(new BN(availableAward ?? 0)))} ${
           atlasConfig.joystream.tokenTicker
         }!`,
       },
