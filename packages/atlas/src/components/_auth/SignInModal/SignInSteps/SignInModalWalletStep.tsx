@@ -46,6 +46,7 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
     if (isMobileDevice) {
       const allMoblieWallets = new Set([
         'polkawallet',
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ...Object.keys((window as any).injectedWeb3 || {}),
         ...unsortedWallets
           .filter((wallet) => wallet.extensionName !== 'talisman')
@@ -161,7 +162,6 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
           icon={<SvgAlertsError24 />}
         />
       ) : null}
-      {Object.keys((window as any).injectedWeb3 || {}).join(', ')}
       <ListItemsWrapper>
         {wallets.map((wallet, idx) => (
           <StyledListItem
