@@ -11,6 +11,7 @@ import { usePersonalDataStore } from '@/providers/personalData'
 
 import { TabsContainer } from './MyPayments.styles'
 import { PaymentsOverViewTab } from './PaymentsOverviewTab'
+import { PaymentTransactionsTab } from './PaymentsTransactionTab'
 
 const PAYOUTS_WELCOME_MESSAGE = 'payouts-welcome'
 
@@ -52,8 +53,7 @@ export const MyPaymentsView = () => {
         <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={(tabIdx) => setSelectedTab(TABS[tabIdx])} />
       </TabsContainer>
       {selectedTab === 'Overview' && <PaymentsOverViewTab />}
-      {/* Todo add table here */}
-      {selectedTab === 'Transactions' && null}
+      {selectedTab === 'Transactions' && <PaymentTransactionsTab />}
     </LimitedWidthContainer>
   )
 }

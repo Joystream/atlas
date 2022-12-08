@@ -53,6 +53,8 @@ export const TilesWrapper = styled.div`
   ${media.md} {
     grid-template-rows: unset;
     grid-template-columns: repeat(3, 1fr);
+    gap: ${sizes(6)};
+    margin-bottom: ${sizes(6)};
   }
 `
 
