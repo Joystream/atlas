@@ -10,7 +10,11 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { CtaBanner, CtaCardRow, StyledBannerText, StyledButton } from './YppFooter.styles'
 import { StyledLimitedWidthContainer } from './YppLandingView.styles'
 
-export const YppFooter: FC = () => {
+type YppFooterSectionProps = {
+  onSignUpClick: () => void
+}
+
+export const YppFooter: FC<YppFooterSectionProps> = ({ onSignUpClick }) => {
   const mdMatch = useMediaMatch('md')
   return (
     <>
@@ -36,7 +40,7 @@ export const YppFooter: FC = () => {
                 Get the most out of your YouTube channel
               </StyledBannerText>
 
-              <StyledButton size="large" icon={<SvgActionChevronR />} iconPlacement="right">
+              <StyledButton size="large" icon={<SvgActionChevronR />} onClick={onSignUpClick} iconPlacement="right">
                 Authorize with YouTube
               </StyledButton>
             </CtaBanner>

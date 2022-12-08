@@ -108,9 +108,9 @@ export const YppLandingView: FC = () => {
           selectedChannelTitle={selectedChannelTitle}
         />
         <YppRewardSection />
-        <YppThreeStepsSection />
+        <YppThreeStepsSection onSignUpClick={handleSignUpClick} />
         <YppCardsSections />
-        <YppFooter />
+        <YppFooter onSignUpClick={handleSignUpClick} />
       </ParallaxProvider>
     </Wrapper>
   )
