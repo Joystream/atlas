@@ -43,9 +43,26 @@ export const configSchema = z.object({
           tiers: z
             .array(z.object({ minimumSubscribers: z.number(), multiplier: z.number().default(1) }))
             .max(3)
-            .nullable(),
+            .optional(),
         })
-        .nullable(),
+        .optional(),
+      rewards: z
+        .array(
+          z.object({
+            title: z.string(),
+            showInDashboard: z.boolean().optional().default(true),
+            shortDescription: z.string(),
+            stepsDescription: z.string().optional(),
+            steps: z.array(z.string()).optional(),
+            baseAmount: z.number(),
+            actionButtonText: z.string().optional(),
+            actionButtonAction: z
+              .string()
+              .refine((value) => value.match(/^\//gi) || value === 'copyReferral')
+              .optional(),
+          })
+        )
+        .optional(),
     }),
     nft: z.object({
       auctionMinimumBidStepMultiplier: z.number(),
