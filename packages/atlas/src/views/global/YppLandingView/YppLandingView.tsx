@@ -23,7 +23,7 @@ import { YppThreeStepsSection } from './YppThreeStepsSection'
 export const YppLandingView: FC = () => {
   const headTags = useHeadTags('Youtube Partner Program')
   const [currentStep, setCurrentStep] = useState<YppAuthorizationStepsType>(null)
-  const { isLoggedIn, signIn, activeMembership, channelId } = useUser()
+  const { isLoggedIn, signIn, activeMembership, channelId, walletStatus } = useUser()
   const { setSelectedChannelId, setShouldContinueYppFlow } = useYppStore((store) => store.actions)
 
   const selectedChannelTitle = activeMembership?.channels.find((channel) => channel.id === channelId)?.title
@@ -81,6 +81,11 @@ export const YppLandingView: FC = () => {
     if (isLoading) {
       return null
     }
+
+    if (walletStatus !== 'connected') {
+      return 'connect-wallet'
+    }
+
     if (!activeMembership?.channels.length) {
       return 'no-channel'
     }

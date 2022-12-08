@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { useParallax } from 'react-scroll-parallax'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { SvgActionChevronR } from '@/assets/icons'
+import { SvgActionChevronR, SvgActionMember } from '@/assets/icons'
 import hero576 from '@/assets/images/ypp-hero/hero-576.webp'
 import hero864 from '@/assets/images/ypp-hero/hero-864.webp'
 import hero1152 from '@/assets/images/ypp-hero/hero-1152.webp'
@@ -31,7 +31,7 @@ import {
 import { useGetYppLastVerifiedChannels } from './YppLandingView.hooks'
 import { BackgroundContainer, StyledLimitedWidthContainer } from './YppLandingView.styles'
 
-type YppStatus = 'have-channel' | 'no-channel' | 'ypp-signed' | null
+type YppStatus = 'have-channel' | 'no-channel' | 'ypp-signed' | 'connect-wallet' | null
 
 type YppHeroProps = {
   onSignUpClick: () => void
@@ -47,6 +47,8 @@ const getButtonText = (variant: YppStatus) => {
       return 'Sign up now'
     case 'no-channel':
       return 'Create channel & sign up'
+    case 'connect-wallet':
+      return 'Connect wallet'
     case 'ypp-signed':
       return 'Go to dashboard'
   }
@@ -113,8 +115,8 @@ export const YppHero: FC<YppHeroProps> = ({
                     <Button
                       size="large"
                       variant={yppStatus === 'ypp-signed' ? 'secondary' : 'primary'}
-                      icon={<SvgActionChevronR />}
-                      iconPlacement="right"
+                      icon={yppStatus === 'connect-wallet' ? <SvgActionMember /> : <SvgActionChevronR />}
+                      iconPlacement={yppStatus === 'connect-wallet' ? 'left' : 'right'}
                       onClick={onSignUpClick}
                     >
                       {getButtonText(yppStatus)}
