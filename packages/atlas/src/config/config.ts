@@ -58,7 +58,7 @@ export const configSchema = z.object({
             actionButtonText: z.string().optional(),
             actionButtonAction: z
               .string()
-              .refine((value) => value.match(/^\//gi) || value === 'isRefer')
+              .refine((value) => value.match(/^\//gi) || value === 'copyReferral')
               .optional(),
           })
         )

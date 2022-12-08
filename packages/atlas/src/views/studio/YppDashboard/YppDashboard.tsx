@@ -127,7 +127,7 @@ export const YppDashboard: FC = () => {
               actionButton={{
                 ...reward.actionButton,
                 onClick: () => {
-                  if ('isRefer' in reward.actionButton && reward.actionButton.isRefer === true) {
+                  if ('copyReferral' in reward.actionButton && reward.actionButton.copyReferral === true) {
                     copyToClipboard(
                       `${window.location.host}/ypp?referrerId=${channelId}`,
                       'Referral link copied to clipboard'

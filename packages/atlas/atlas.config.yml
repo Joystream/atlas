@@ -49,7 +49,7 @@ features:
       - title: Authorize your YouTube channel
         showInDashboard: false # Optional. If false the reward will be shown only on youtube partner program landing page. Default true
         shortDescription: Sign up for the program, connect your Atlas and YouTube channels via a simple step-by-step flow and get your first reward.
-        baseAmount: 250
+        baseAmount: 250 # Base amount that will be multiplied by tier multiplier
       - title: Publish video on Atlas
         shortDescription: You can use your existing content and publish it on Atlas to earn.
         stepsDescription: Publishing your existing content on Atlas is the fastest way to earn more JOY tokens. Simply follow those steps
@@ -57,9 +57,9 @@ features:
           - Click “Publish new video” button and proceed to video workspace
           - While publishing your new video make sure that all assets like thumbnail, video file, title, description are the same as used previously on YouTube
           - Your uploads will be periodically reviewed for quality and completeness. Videos that match the criteria of programme participation listed above will score towards overall rewards
-        baseAmount: 120 # Base amount that will be multiplied by tier multiplier
+        baseAmount: 120
         actionButtonText: Publish new video
-        actionButtonAction: /studio/video-workspace # Provide relative url, that's starts with forward slash or `isRefer`. If `isRefer` is provided, action button will copy referral link to clipboard once clicked
+        actionButtonAction: /studio/video-workspace # Provide relative url, that's starts with forward slash or `copyReferral`. If `copyReferral` is provided, action button will copy referral link to clipboard once clicked
       - title: Share Atlas video on YouTube
         shortDescription: Tell your YouTube subscribers about your video on Atlas.
         stepsDescription: To share Atlas video you need to first upload your own video to the platform.
@@ -80,7 +80,7 @@ features:
           - You will be rewarded for every new successful sign up, that uses your referral link to land on the YPP page before signing up
         baseAmount: 250
         actionButtonText: Get referral link
-        actionButtonAction: isRefer
+        actionButtonAction: copyReferral
   nft:
     auctionMinimumBidStepMultiplier: 0.02 # Multiplier for the auction's starting price used to determine auction's minimum bid step. See more: https://joystream.gitbook.io/testnet-workspace/system/content-directory/nft#auction
     openAuctionBidLockDuration: 300 # Number of blocks for which bids on open auctions are locked from withdrawal. See more: https://joystream.gitbook.io/testnet-workspace/system/content-directory/nft#auction-type

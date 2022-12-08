@@ -47,6 +47,6 @@ export const REWARDS =
       joyAmount: reward.baseAmount,
       actionButton: {
         text: reward.actionButtonText,
-        ...(reward.actionButtonAction === 'isRefer' ? { isRefer: true } : { to: reward.actionButtonAction }),
+        ...(reward.actionButtonAction === 'copyReferral' ? { copyReferral: true } : { to: reward.actionButtonAction }),
       },
     })) || []
