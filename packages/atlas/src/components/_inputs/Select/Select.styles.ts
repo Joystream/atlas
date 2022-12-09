@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { List } from '@/components/List'
 import { Text } from '@/components/Text'
-import { cVar, sizes } from '@/styles'
+import { cVar, sizes, zIndex } from '@/styles'
 
 import { InputSize, getBaseInputStyles, getInputPadding, getSharedInputStyles } from '../inputs.utils'
 
@@ -13,7 +13,6 @@ export const SelectWrapper = styled.div`
 
 export const SelectMenuWrapper = styled.div`
   position: relative;
-  width: 100%;
 `
 
 export const InlineLabel = styled(Text)`
@@ -78,12 +77,12 @@ export const SelectChevronWrapper = styled.div`
   margin-left: auto;
 `
 
-export const SelectMenu = styled.div`
-  width: 100%;
-  position: relative;
+export const SelectMenu = styled.div<{ y?: number; left?: number; width?: number }>`
+  position: absolute;
+  top: ${({ y }) => (y ? `${y}px` : 'unset')};
+  left: ${({ left }) => (left ? `${left}px` : 'unset')};
+  width: ${({ width }) => (width ? `${width}px` : 'unset')};
+  z-index: ${zIndex.snackbars};
 `
 
-export const StyledList = styled(List)`
-  position: absolute;
-  top: 0;
-`
+export const StyledList = styled(List)``
