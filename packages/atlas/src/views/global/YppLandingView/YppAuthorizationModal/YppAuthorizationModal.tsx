@@ -156,7 +156,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   )
 
   const handleSubmitDetailsForm = detailsFormMethods.handleSubmit((data) => {
-    console.log(data)
     setFinalFormData(() => ({
       ...(selectedChannelId ? { joystreamChannelId: parseInt(selectedChannelId) } : {}),
       authorizationCode: ytResponseData?.authorizationCode,
