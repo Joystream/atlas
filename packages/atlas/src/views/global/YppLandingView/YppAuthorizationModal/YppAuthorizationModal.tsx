@@ -49,6 +49,7 @@ type FinalFormData = {
   email?: string
   joystreamChannelId?: number
   referrerChannelId?: number
+  videoCategoryId?: string
 }
 
 export type YppAuthorizationModalProps = {
@@ -155,6 +156,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   )
 
   const handleSubmitDetailsForm = detailsFormMethods.handleSubmit((data) => {
+    console.log(data)
     setFinalFormData(() => ({
       ...(selectedChannelId ? { joystreamChannelId: parseInt(selectedChannelId) } : {}),
       authorizationCode: ytResponseData?.authorizationCode,
