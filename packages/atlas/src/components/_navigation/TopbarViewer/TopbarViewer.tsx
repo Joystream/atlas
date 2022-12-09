@@ -10,6 +10,7 @@ import { NotificationsButton } from '@/components/_navigation/NotificationsButto
 import { NotificationsWidget } from '@/components/_notifications/NotificationsWidget'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
+import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useOverlayManager } from '@/providers/overlayManager'
@@ -29,7 +30,7 @@ import {
 } from './TopbarViewer.styles'
 
 export const TopbarViewer: FC = () => {
-  const { isLoggedIn, activeMembership, isAuthLoading } = useUser()
+  const { isLoggedIn, activeMembership, signIn, isAuthLoading } = useUser()
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
 
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
@@ -42,7 +43,7 @@ export const TopbarViewer: FC = () => {
     searchQuery,
     actions: { setSearchOpen, setSearchQuery },
   } = useSearchStore()
-  // const { openSignInDialog } = useDisplaySignInDialog()
+  const { openSignInDialog } = useDisplaySignInDialog()
 
   useEffect(() => {
     if (searchOpen) {
@@ -144,7 +145,7 @@ export const TopbarViewer: FC = () => {
                       icon={<SvgActionMember />}
                       iconPlacement="left"
                       size="medium"
-                      onClick={() => setIsMemberDropdownActive(!isMemberDropdownActive)}
+                      onClick={() => signIn(undefined, openSignInDialog)}
                     >
                       Connect wallet
                     </Button>
@@ -156,9 +157,7 @@ export const TopbarViewer: FC = () => {
                 </SignedButtonsWrapper>
               )}
               {!searchQuery && !mdMatch && !isLoggedIn && topbarButtonLoaded && (
-                <StyledIconButton onClick={() => setIsMemberDropdownActive(!isMemberDropdownActive)}>
-                  Connect wallet
-                </StyledIconButton>
+                <StyledIconButton onClick={() => signIn(undefined, openSignInDialog)}>Connect wallet</StyledIconButton>
               )}
             </ButtonWrapper>
           </CSSTransition>
