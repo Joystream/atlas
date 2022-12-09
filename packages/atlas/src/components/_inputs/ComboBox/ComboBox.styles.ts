@@ -8,17 +8,17 @@ export const ComboBoxWrapper = styled.div`
   width: 100%;
 `
 
-export const ListWrapper = styled.ul<{ topPosition?: number; isOpen: boolean }>`
+export const ListWrapper = styled.ul<{ y?: number; left?: number; width?: number; isOpen: boolean }>`
   max-height: 188px;
   overflow-y: auto;
   box-shadow: ${cVar('effectElevation16Layer1')}, ${cVar('effectElevation16Layer2')};
   background: ${cVar('colorBackgroundStrong')};
   padding: ${({ isOpen }) => sizes(+isOpen)} 0;
   position: absolute;
-  top: ${({ topPosition }) => (topPosition ? `${topPosition}px` : 'unset')};
-  left: 0;
-  width: 100%;
-  z-index: ${zIndex.globalOverlay};
+  top: ${({ y }) => (y ? `${y}px` : 'unset')};
+  left: ${({ left }) => (left ? `${left}px` : 'unset')};
+  width: ${({ width }) => (width ? `${width}px` : 'unset')};
+  z-index: ${zIndex.snackbars};
   margin: 0;
 `
 

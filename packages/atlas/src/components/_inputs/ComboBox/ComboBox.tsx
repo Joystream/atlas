@@ -1,6 +1,7 @@
 import { useCombobox } from 'downshift'
 import { uniqBy } from 'lodash-es'
 import { useEffect, useRef, useState } from 'react'
+import ReactDOM from 'react-dom'
 
 import { ListItem, ListItemProps } from '@/components/ListItem'
 import { Loader } from '@/components/_loaders/Loader'
@@ -95,9 +96,12 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
     if (!textFieldRef.current || !comboBoxWrapperRef.current) {
       return
     }
-    const { y: wrapperY } = comboBoxWrapperRef.current.getBoundingClientRect()
-    const { y: inputY, height: inputHeight } = textFieldRef.current.getBoundingClientRect()
-    return inputY - wrapperY + inputHeight
+    const { y: inputY, height: inputHeight, left, width } = textFieldRef.current.getBoundingClientRect()
+    return {
+      y: inputY + inputHeight,
+      left,
+      width,
+    }
   }
 
   return (
@@ -117,28 +121,31 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
           onClick={toggleMenu}
         />
       </div>
-      <ListWrapper {...getMenuProps()} topPosition={getTextFieldBottomEdgePosition()} isOpen={isOpen}>
-        {isOpen && (
-          <>
-            {inputItems.map((item, index) => (
-              <ListItem
-                key={`${item}${index}`}
-                {...item}
-                {...getItemProps({
-                  item,
-                  index,
-                  disabled: item.isSeparator,
-                })}
-                size="large"
-                highlight={highlightedIndex === index}
-                nodeStart={item.nodeStart || (item.thumbnailUrl && <StyledThumbnail src={item.thumbnailUrl} />)}
-                isSeparator={item.isSeparator}
-              />
-            ))}
-          </>
-        )}
-        {noItemsFound && <ListItem {...notFoundNode} size="large" onClick={reset} />}
-      </ListWrapper>
+      {ReactDOM.createPortal(
+        <ListWrapper {...getMenuProps()} {...getTextFieldBottomEdgePosition()} isOpen={isOpen}>
+          {isOpen && (
+            <>
+              {inputItems.map((item, index) => (
+                <ListItem
+                  key={`${item}${index}`}
+                  {...item}
+                  {...getItemProps({
+                    item,
+                    index,
+                    disabled: item.isSeparator,
+                  })}
+                  size="large"
+                  highlight={highlightedIndex === index}
+                  nodeStart={item.nodeStart || (item.thumbnailUrl && <StyledThumbnail src={item.thumbnailUrl} />)}
+                  isSeparator={item.isSeparator}
+                />
+              ))}
+            </>
+          )}
+          {noItemsFound && <ListItem {...notFoundNode} size="large" onClick={reset} />}
+        </ListWrapper>,
+        document.body
+      )}
     </ComboBoxWrapper>
   )
 }
