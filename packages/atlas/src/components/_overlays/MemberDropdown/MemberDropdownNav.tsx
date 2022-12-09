@@ -1,7 +1,6 @@
 import bezier from 'bezier-easing'
 import BN from 'bn.js'
 import { FC, useRef } from 'react'
-import { useNavigate } from 'react-router'
 import { animated, useTransition } from 'react-spring'
 import useResizeObserver from 'use-resize-observer'
 
@@ -25,9 +24,9 @@ import { Tooltip } from '@/components/Tooltip'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useUserStore } from '@/providers/user/user.store'
 import { cVar } from '@/styles'
+import { isMobile } from '@/utils/browser'
 
 import { BalanceTooltip } from './BalanceTooltip'
 import { SectionContainer } from './MemberDropdown.styles'
@@ -35,7 +34,7 @@ import {
   AddAvatar,
   AnimatedSectionContainer,
   AnimatedTextLink,
-  AvatarWrapper,
+  AvatarButton,
   AvatarsGroupContainer,
   BalanceContainer,
   BlurredBG,
@@ -43,6 +42,7 @@ import {
   Filter,
   FixedSizeContainer,
   MemberHandleText,
+  MemberInfoAndBgWrapper,
   MemberInfoContainer,
   StyledAvatar,
   StyledIconWrapper,
@@ -85,11 +85,18 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
   lockedAccountBalance,
   channelBalance,
 }) => {
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
-  const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
-  const { url: channelAvatarUrl, isLoadingAsset: isChannelAvatarLoading } = useAsset(selectedChannel?.avatarPhoto)
+  // const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
+  // const { url: channelAvatarUrl, isLoadingAsset: isChannelAvatarLoading } = useAsset(selectedChannel?.avatarPhoto)
   const setSignInModalOpen = useUserStore((state) => state.actions.setSignInModalOpen)
+  const memberAvatarWrapperRef = useRef<HTMLButtonElement>(null)
+  const channelAvatarWrapperRef = useRef<HTMLButtonElement>(null)
+
+  const memberAvatarUrl = 'https://place.dog/300/200'
+  const channelAvatarUrl = 'http://placekitten.com/200/300'
+  const memberAvatarLoading = false
+  const isChannelAvatarLoading = false
 
   const { ref: textLinkRef, width: textLinkWidth } = useResizeObserver<HTMLDivElement>({
     box: 'border-box',
@@ -122,46 +129,57 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
     setSignInModalOpen(true)
     onCloseDropdown?.()
   }
+
   return (
     <div ref={blockAnimationRef}>
-      <BlurredBG memberUrl={memberAvatarUrl} channelUrl={channelAvatarUrl} isChannel={type === 'channel'}>
-        <Filter />
+      <MemberInfoAndBgWrapper>
         <MemberInfoContainer>
           <AvatarsGroupContainer>
-            <Tooltip text="Member" offsetY={16} placement="bottom">
-              <AvatarWrapper onClick={() => onSwitchDropdownType('member')}>
-                <StyledAvatar
-                  clickable={false}
-                  isDisabled={type === 'channel'}
-                  size="small"
-                  assetUrl={memberAvatarUrl}
-                  loading={memberAvatarLoading}
-                />
-                <StyledIconWrapper size="small" icon={<SvgActionMember />} />
-              </AvatarWrapper>
-            </Tooltip>
-            <Tooltip text={hasAtLeastOneChannel ? 'Channel' : 'Create channel'} offsetY={16} placement="bottom">
-              <AvatarWrapper
-                onClick={() =>
-                  hasAtLeastOneChannel ? onSwitchDropdownType('channel') : navigate(absoluteRoutes.studio.newChannel())
-                }
+            {!isMobile() && (
+              <Tooltip reference={memberAvatarWrapperRef.current} text="Member" offsetY={16} placement="bottom" />
+            )}
+            <AvatarButton
+              onClick={() => onSwitchDropdownType('member')}
+              ref={memberAvatarWrapperRef}
+              aria-label="Show member details"
+            >
+              <StyledAvatar
+                clickable={false}
+                isDisabled={type === 'channel'}
+                size="small"
+                assetUrl={memberAvatarUrl}
+                loading={memberAvatarLoading}
+              />
+              <StyledIconWrapper size="small" icon={<SvgActionMember />} />
+            </AvatarButton>
+            {!isMobile() && (
+              <Tooltip
+                reference={channelAvatarWrapperRef.current}
+                text={hasAtLeastOneChannel ? 'Channel' : 'Create channel'}
+                offsetY={16}
+                placement="bottom"
+              />
+            )}
+            <AvatarButton
+              onClick={() => onSwitchDropdownType('channel')}
+              ref={channelAvatarWrapperRef}
+              aria-label="Show channel details"
+            >
+              <StyledAvatar
+                clickable={false}
+                isDisabled={type === 'member'}
+                size="small"
+                assetUrl={channelAvatarUrl}
+                loading={isChannelAvatarLoading}
               >
-                <StyledAvatar
-                  clickable={false}
-                  isDisabled={type === 'member'}
-                  size="small"
-                  assetUrl={channelAvatarUrl}
-                  loading={isChannelAvatarLoading}
-                >
-                  {!hasAtLeastOneChannel ? (
-                    <AddAvatar>
-                      <SvgActionPlus />
-                    </AddAvatar>
-                  ) : null}
-                </StyledAvatar>
-                <StyledIconWrapper icon={<SvgActionChannel />} size="small" />
-              </AvatarWrapper>
-            </Tooltip>
+                {!hasAtLeastOneChannel ? (
+                  <AddAvatar>
+                    <SvgActionPlus />
+                  </AddAvatar>
+                ) : null}
+              </StyledAvatar>
+              <StyledIconWrapper icon={<SvgActionChannel />} size="small" />
+            </AvatarButton>
           </AvatarsGroupContainer>
           <FixedSizeContainer height={memberContainerHeight}>
             {memberChanneltransition((style, type) => (
@@ -242,7 +260,11 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
             </TextLink>
           </BalanceContainer>
         </MemberInfoContainer>
-      </BlurredBG>
+        <BlurredBG memberUrl={memberAvatarUrl} channelUrl={channelAvatarUrl} isChannel={type === 'channel'}>
+          <Filter />
+        </BlurredBG>
+      </MemberInfoAndBgWrapper>
+
       <FixedSizeContainer height={sectionContainerHeight}>
         {memberChanneltransition((style, item) => (
           <AnimatedSectionContainer ref={sectionContainerRef} style={style}>

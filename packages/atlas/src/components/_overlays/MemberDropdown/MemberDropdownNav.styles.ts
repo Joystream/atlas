@@ -13,9 +13,16 @@ const paddingStyles = css`
   padding: ${sizes(6)} ${sizes(4)};
 `
 
-export const BlurredBG = styled.div<{ memberUrl?: string | null; channelUrl?: string | null; isChannel?: boolean }>`
+export const MemberInfoAndBgWrapper = styled.div`
   position: relative;
   width: 280px;
+`
+
+export const BlurredBG = styled.div<{ memberUrl?: string | null; channelUrl?: string | null; isChannel?: boolean }>`
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  width: 100%;
   height: 100%;
 
   &::before,
@@ -77,9 +84,12 @@ export const StyledAvatar = styled(Avatar)<{ isDisabled: boolean }>`
   transition: opacity ${cVar('animationTransitionMedium')};
 `
 
-export const AvatarWrapper = styled.div`
+export const AvatarButton = styled.button`
   position: relative;
   cursor: pointer;
+  border: none;
+  padding: 0;
+  background: none;
 
   :hover {
     ${StyledAvatar} {
