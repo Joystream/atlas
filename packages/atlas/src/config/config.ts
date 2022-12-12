@@ -63,6 +63,16 @@ export const configSchema = z.object({
           })
         )
         .optional(),
+      widgets: z
+        .array(
+          z.object({
+            title: z.string(),
+            link: z.string(),
+            linkText: z.string().optional(),
+            vendor: z.string().optional(),
+          })
+        )
+        .optional(),
     }),
     nft: z.object({
       auctionMinimumBidStepMultiplier: z.number(),
