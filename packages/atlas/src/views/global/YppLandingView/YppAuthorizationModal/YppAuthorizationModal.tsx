@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { formatDuration } from 'date-fns'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
@@ -22,8 +23,9 @@ import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { useYppStore } from '@/providers/ypp/ypp.store'
 import { SentryLogger } from '@/utils/logs'
+import { formatNumber } from '@/utils/number'
 
-import { useYppGoogleAuth } from './YppAuthorizationModal.hooks'
+import { useGetYppChannelRequirments, useYppGoogleAuth } from './YppAuthorizationModal.hooks'
 import {
   AdditionalSubtitle,
   AdditionalSubtitleWrapper,
@@ -75,6 +77,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   const setSelectedChannelId = useYppStore((store) => store.actions.setSelectedChannelId)
   const setReferrerId = useYppStore((store) => store.actions.setReferrerId)
   const setShouldContinueYppFlow = useYppStore((store) => store.actions.setShouldContinueYppFlow)
+  const fetchedChannelRequirements = useGetYppChannelRequirments()
 
   const smMatch = useMediaMatch('sm')
 
@@ -265,6 +268,16 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     }
   }, [currentStep, displaySnackbar, isSelectedChannelValid, navigate, selectedChannel, setActiveUser])
 
+  const convertHoursRequirementTime = (hours: number) => {
+    if (hours > 24 * 30) {
+      return formatDuration({ months: Math.round(hours / (24 * 30)) })
+    }
+    if (hours > 24) {
+      return formatDuration({ days: Math.round(hours / 24) })
+    }
+    return formatDuration({ hours: hours })
+  }
+
   const requirments = useMemo(
     () => [
       {
@@ -272,25 +285,33 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         fulfilled: isSelectedChannelValid,
       },
       {
-        text: 'Your YouTube channel is at least 3 months old',
+        text: `Your YouTube channel is at least ${convertHoursRequirementTime(
+          fetchedChannelRequirements?.MINIMUM_CHANNEL_AGE_HOURS || 0
+        )} old`,
         fulfilled: !ytRequirmentsErrors.some(
           (error) => error === YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_CREATION_DATE
         ),
       },
       {
-        text: 'Your YouTube channel has at least 10 videos, all published at least 1 month ago',
+        text: `Your YouTube channel has at least ${formatNumber(
+          fetchedChannelRequirements?.MINIMUM_VIDEO_COUNT || 0
+        )} videos, all published at least ${convertHoursRequirementTime(
+          fetchedChannelRequirements?.MINIMUM_VIDEO_AGE_HOURS || 0
+        )} ago`,
         fulfilled: !ytRequirmentsErrors.some(
           (error) => error === YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_VIDEOS
         ),
       },
       {
-        text: 'Your YouTube channel has at least 50 subscribers',
+        text: `Your YouTube channel has at least ${formatNumber(
+          fetchedChannelRequirements?.MINIMUM_SUBSCRIBERS_COUNT || 0
+        )} subscribers`,
         fulfilled: !ytRequirmentsErrors.some(
           (error) => error === YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_SUBSCRIBERS
         ),
       },
     ],
-    [isSelectedChannelValid, ytRequirmentsErrors]
+    [fetchedChannelRequirements, isSelectedChannelValid, ytRequirmentsErrors]
   )
 
   const authorizationStep = useMemo(() => {

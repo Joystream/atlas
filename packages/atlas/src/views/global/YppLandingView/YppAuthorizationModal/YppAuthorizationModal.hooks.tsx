@@ -19,6 +19,7 @@ import { isAxiosError } from '@/utils/error'
 import { SentryLogger } from '@/utils/logs'
 
 import {
+  ChannelRequirments,
   ChannelVerificationErrorResponse,
   ChannelVerificationSuccessResponse,
   YoutubeResponseData,
@@ -270,4 +271,19 @@ export const useYppGoogleAuth = ({
   }, [handleGoogleAuthError, searchParams])
 
   return { handleAuthorizeClick, ytRequirmentsErrors, ytResponseData, setYtRequirmentsErrors, alreadyRegisteredChannel }
+}
+
+export const useGetYppChannelRequirments = () => {
+  const [requirements, setRequirements] = useState<ChannelRequirments | null>(null)
+  useEffect(() => {
+    if (!atlasConfig.features.ypp.youtubeSyncApiUrl) {
+      return
+    }
+    axios
+      .get(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/induction/requirements`)
+      .then((response) => setRequirements(response.data))
+      .catch((error) => SentryLogger.error("Couldn't fetch requirments", 'YppAuthorizationModal.hooks', error))
+  }, [])
+
+  return requirements
 }
