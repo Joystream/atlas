@@ -1,7 +1,7 @@
 import { useApolloClient } from '@apollo/client'
 import debouncePromise from 'awesome-debounce-promise'
 import { FC, useCallback, useMemo, useRef, useState } from 'react'
-import { useFormContext } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 
 import {
   GetBasicChannelsDocument,
@@ -12,7 +12,9 @@ import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/fragment
 import { Avatar, AvatarProps } from '@/components/Avatar'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
+import { Select, SelectItem } from '@/components/_inputs/Select'
 import { Loader } from '@/components/_loaders/Loader'
+import { displayCategories } from '@/config/categories'
 import { EMAIL_PATTERN } from '@/config/regex'
 import { useAsset } from '@/providers/assets/assets.hooks'
 
@@ -22,6 +24,7 @@ export type DetailsFormData = {
   email: string | undefined
   referrerChannelTitle: string | undefined
   referrerChannelId: string | undefined
+  videoCategoryId: string | undefined
 }
 
 export const YppAuthorizationDetailsFormStep: FC = () => {
@@ -31,6 +34,7 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
   const {
     trigger,
     register,
+    control,
     setValue,
     formState: { errors },
   } = useFormContext<DetailsFormData>()
@@ -85,6 +89,12 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
     [register, trigger, validateChannel]
   )
 
+  const categoriesSelectItems: SelectItem[] =
+    displayCategories?.map((c) => ({
+      name: c.name || 'Unknown category',
+      value: c.defaultVideoCategory,
+    })) || []
+
   return (
     <FormFieldsWrapper>
       <FormField
@@ -111,6 +121,26 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
               },
             },
           })}
+        />
+      </FormField>
+      <FormField
+        disableErrorAnimation={document.activeElement === titleInputRef.current}
+        label="Category for videos"
+        description="We need to assign your videos to one of categories below. You can change the category for each video later."
+        error={errors.videoCategoryId?.message}
+      >
+        <Controller
+          control={control}
+          name="videoCategoryId"
+          rules={{
+            required: {
+              value: true,
+              message: 'Select a video category.',
+            },
+          }}
+          render={({ field: { value, onChange, ref } }) => (
+            <Select items={categoriesSelectItems} onChange={onChange} value={value} ref={ref} />
+          )}
         />
       </FormField>
       <FormField

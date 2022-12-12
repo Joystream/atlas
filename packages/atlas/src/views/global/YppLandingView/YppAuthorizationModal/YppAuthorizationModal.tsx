@@ -49,6 +49,7 @@ type FinalFormData = {
   email?: string
   joystreamChannelId?: number
   referrerChannelId?: number
+  videoCategoryId?: string
 }
 
 export type YppAuthorizationModalProps = {
