@@ -1,5 +1,5 @@
 import { ApolloProvider } from '@apollo/client'
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { createApolloClient } from '@/api'
@@ -86,7 +86,7 @@ const video = {
   },
 }
 
-const Template: Story<{ hasRanking: boolean }> = ({ hasRanking }) => {
+const Template: StoryFn<{ hasRanking: boolean }> = ({ hasRanking }) => {
   return <VideoGallery hasRanking={hasRanking} videos={Array(10).fill(video)} />
 }
 

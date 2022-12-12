@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
@@ -19,7 +19,7 @@ export default {
   },
 } as Meta
 
-const Template: Story = (args) => {
+const Template: StoryFn = (args) => {
   return (
     <div>
       <DialogPopover

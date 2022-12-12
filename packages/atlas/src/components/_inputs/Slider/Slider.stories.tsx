@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { WithValue } from '@/components/../../.storybook/WithValue'
 
@@ -18,7 +18,7 @@ export default {
   },
 } as Meta
 
-const Template: Story<SliderProps> = (args) => (
+const Template: StoryFn<SliderProps> = (args) => (
   <WithValue initial={50} actionName="onChange">
     {(value, setValue) => <StyledSlider {...args} value={value} onChange={setValue} />}
   </WithValue>

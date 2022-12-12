@@ -1,5 +1,5 @@
 import { ApolloProvider } from '@apollo/client'
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { createApolloClient } from '@/api'
@@ -48,7 +48,7 @@ export default {
   ],
 } as Meta
 
-const Template: Story<ChannelCardProps> = (args) => (
+const Template: StoryFn<ChannelCardProps> = (args) => (
   <div style={{ maxWidth: 400 }}>
     <ChannelCard {...args} />
   </div>
@@ -56,7 +56,7 @@ const Template: Story<ChannelCardProps> = (args) => (
 
 export const Default = Template.bind({})
 
-const WithinGrid: Story<ChannelCardProps> = (args) => (
+const WithinGrid: StoryFn<ChannelCardProps> = (args) => (
   <Grid>
     <ChannelCard {...args} />
     <ChannelCard {...args} />

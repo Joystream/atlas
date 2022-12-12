@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { SvgActionAddVideo } from '@/assets/icons'
 
@@ -27,8 +27,8 @@ export default {
   },
 } as Meta
 
-const Template: Story<PillProps> = (args) => <Pill {...args} />
-const TemplateGroup: Story<PillProps> = (args) => (
+const Template: StoryFn<PillProps> = (args) => <Pill {...args} />
+const TemplateGroup: StoryFn<PillProps> = (args) => (
   <PillGroup items={Array.from({ length: 6 }).map(() => args)} size={args.size} />
 )
 

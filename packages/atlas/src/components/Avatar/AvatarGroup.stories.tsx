@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { AvatarGroup, AvatarGroupProps } from './AvatarGroup'
 
@@ -26,7 +26,7 @@ export default {
   },
 } as Meta
 
-const Template: Story<AvatarGroupProps> = (args) => (
+const Template: StoryFn<AvatarGroupProps> = (args) => (
   <div style={{ width: '500px', height: '500px', background: args.avatarStrokeColor, paddingTop: '30px' }}>
     <AvatarGroup {...args} />
   </div>

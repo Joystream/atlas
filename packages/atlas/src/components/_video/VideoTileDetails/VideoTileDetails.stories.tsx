@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { SvgActionReupload, SvgActionTrash } from '@/assets/icons'
 
@@ -53,7 +53,7 @@ export default {
   },
 } as Meta<VideoTileDetailsProps>
 
-const Template: Story<VideoTileDetailsProps> = (args) => (
+const Template: StoryFn<VideoTileDetailsProps> = (args) => (
   <div style={{ maxWidth: '320px' }}>
     <VideoTileDetails {...args} />
   </div>

@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { TopbarBase, TopbarBaseProps } from './TopbarBase'
@@ -27,7 +27,7 @@ export default {
   ],
 } as Meta
 
-const RegularTemplate: Story<TopbarBaseProps> = (args) => {
+const RegularTemplate: StoryFn<TopbarBaseProps> = (args) => {
   return <TopbarBase {...args} fullLogoNode={<>logo</>} />
 }
 

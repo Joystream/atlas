@@ -1,6 +1,6 @@
 import { ApolloProvider } from '@apollo/client'
 import styled from '@emotion/styled'
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { add } from 'date-fns'
 import { BrowserRouter } from 'react-router-dom'
 
@@ -83,7 +83,7 @@ export default {
 } as Meta
 
 // worth typing?
-const Template: Story<NftWidgetProps & { size: 'medium' | 'small' } & { [key: string]: never }> = ({
+const Template: StoryFn<NftWidgetProps & { size: 'medium' | 'small' } & { [key: string]: never }> = ({
   size,
   hasBidFromPreviousAuction,
   ...others

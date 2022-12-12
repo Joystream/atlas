@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { sizes } from '@/styles'
@@ -23,7 +23,7 @@ export default {
   },
 } as Meta<FeeProps>
 
-const Template: Story<FeeProps & { amountToken: number }> = (args) => (
+const Template: StoryFn<FeeProps & { amountToken: number }> = (args) => (
   <Wrapper>
     <Fee {...args} amount={tokenNumberToHapiBn(args.amountToken)} />
   </Wrapper>

@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { Information, InformationProps } from '.'
 
@@ -17,7 +17,7 @@ export default {
   },
 } as Meta
 
-const Template: Story<InformationProps> = (args) => (
+const Template: StoryFn<InformationProps> = (args) => (
   <div style={{ marginTop: '90px' }}>
     <Information {...args} />
   </div>

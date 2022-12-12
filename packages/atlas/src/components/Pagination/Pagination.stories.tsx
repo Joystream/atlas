@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 
 import { Pagination, PaginationProps } from './Pagination'
@@ -16,7 +16,7 @@ export default {
   },
 } as Meta
 
-const Template: Story<PaginationProps> = (args) => {
+const Template: StoryFn<PaginationProps> = (args) => {
   const [currentPage, setCurrentPage] = useState(0)
 
   const handleChangePage = (page: number) => {

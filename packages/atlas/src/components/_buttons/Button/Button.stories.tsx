@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { SvgActionAddVideo } from '@/assets/icons'
 
@@ -27,7 +27,7 @@ export default {
   },
 } as Meta
 
-const Template: Story<ButtonProps> = (args) => (
+const Template: StoryFn<ButtonProps> = (args) => (
   <>
     <Button {...args} size="large">
       Large
@@ -70,7 +70,7 @@ export const WithIcon = Template.bind({})
 WithIcon.args = {
   icon: <SvgActionAddVideo />,
 }
-const TextOnlyTemplate: Story<TextButtonProps> = (args) => (
+const TextOnlyTemplate: StoryFn<TextButtonProps> = (args) => (
   <div>
     <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', alignItems: 'end' }}>
       <TextButton {...args} size="large">
@@ -130,7 +130,7 @@ const TextOnlyTemplate: Story<TextButtonProps> = (args) => (
   </div>
 )
 
-const IconOnlyTemplate: Story<ButtonProps> = (args) => (
+const IconOnlyTemplate: StoryFn<ButtonProps> = (args) => (
   <>
     <Button {...args} size="large" />
     <Button {...args} size="medium" />

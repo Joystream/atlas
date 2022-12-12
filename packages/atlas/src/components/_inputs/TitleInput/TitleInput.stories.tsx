@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 
 import { TitleInput, TitleInputProps } from './TitleInput'
@@ -21,7 +21,7 @@ export default {
   },
 } as Meta
 
-const Template: Story<TitleInputProps> = (args) => {
+const Template: StoryFn<TitleInputProps> = (args) => {
   const [text, setText] = useState('')
   return (
     <div style={{ maxWidth: '400px' }}>

@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { MouseEvent, useState } from 'react'
 
 import { RadioInput, RadioInputProps } from './RadioInput'
@@ -12,7 +12,7 @@ export default {
   },
 } as Meta
 
-const Template: Story<RadioInputProps> = (args) => {
+const Template: StoryFn<RadioInputProps> = (args) => {
   const [selected, setSelected] = useState<string | number>('1')
   const handleClick: (e: MouseEvent<HTMLElement>) => void = (e) => {
     const element = e.currentTarget as HTMLInputElement

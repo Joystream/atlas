@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
 import { Snackbars } from '@/providers/snackbars'
@@ -22,7 +22,7 @@ export default {
   ],
 } as Meta
 
-const Default: Story<NoConnectionIndicatorProps> = ({ ...args }) => {
+const Default: StoryFn<NoConnectionIndicatorProps> = ({ ...args }) => {
   return <NoConnectionIndicator {...args} />
 }
 export const Regular = Default.bind({})

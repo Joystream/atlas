@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { Avatar } from './Avatar'
 
@@ -24,7 +24,7 @@ export default {
 } as Meta
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Template: Story<any> = (args) => (
+const Template: StoryFn<any> = (args) => (
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   <Avatar {...args} onClick={args.editable || args.clickable ? () => {} : undefined} />
 )

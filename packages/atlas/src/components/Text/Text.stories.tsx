@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { Text, TextProps } from './Text'
 
@@ -7,7 +7,7 @@ export default {
   component: Text,
 } as Meta
 
-const Template: Story<Omit<TextProps, 'ref' | 'variant'>> = (args) => (
+const Template: StoryFn<Omit<TextProps, 'ref' | 'variant'>> = (args) => (
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '12px' }}>
     <Text {...args} variant="h900">
       Hero

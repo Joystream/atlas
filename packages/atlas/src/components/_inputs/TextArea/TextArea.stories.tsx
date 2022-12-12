@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useRef, useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
@@ -25,14 +25,14 @@ export default {
   },
 } as Meta<TextAreaProps>
 
-const Template: Story<TextAreaProps> = (args) => <TextArea {...args} />
+const Template: StoryFn<TextAreaProps> = (args) => <TextArea {...args} />
 
-const TemplateWithControlledInput: Story<TextAreaProps> = (args) => {
+const TemplateWithControlledInput: StoryFn<TextAreaProps> = (args) => {
   const [value, setValue] = useState('')
   return <TextArea {...args} onChange={(e) => setValue(e.target.value)} value={value} />
 }
 
-const TemplateWithUncontrolledInput: Story<TextAreaProps> = (args) => {
+const TemplateWithUncontrolledInput: StoryFn<TextAreaProps> = (args) => {
   const ref = useRef<HTMLTextAreaElement | null>(null)
   return (
     <>

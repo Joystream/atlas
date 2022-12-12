@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { SvgActionCopy } from '@/assets/icons'
 import { Button } from '@/components/_buttons/Button'
@@ -30,7 +30,7 @@ export default {
   ],
 } as Meta
 
-const Template: Story = (args) => {
+const Template: StoryFn = (args) => {
   return (
     <>
       <div>

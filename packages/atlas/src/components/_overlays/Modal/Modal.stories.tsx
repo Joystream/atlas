@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 
@@ -16,7 +16,7 @@ export default {
   ],
 } as Meta
 
-const RegularTemplate: Story<ModalProps> = () => {
+const RegularTemplate: StoryFn<ModalProps> = () => {
   return <Modal show={true}>Modal content</Modal>
 }
 

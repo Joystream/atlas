@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 import {
@@ -109,7 +109,7 @@ export default {
   ],
 } as Meta
 
-const Template: Story<VideoTileProps> = (args) => {
+const Template: StoryFn<VideoTileProps> = (args) => {
   return (
     <div style={{ maxWidth: args.direction === 'horizontal' ? 'unset' : '320px' }}>
       <VideoTile {...args} />

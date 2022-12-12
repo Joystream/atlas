@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { SvgActionTrash } from '@/assets/icons'
@@ -44,7 +44,7 @@ export default {
   ],
 } as Meta
 
-const ClickableTemplate: Story<DisplaySnackbarArgs> = ({ ...args }) => {
+const ClickableTemplate: StoryFn<DisplaySnackbarArgs> = ({ ...args }) => {
   const { displaySnackbar } = useSnackbar()
   return (
     <Button

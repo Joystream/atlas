@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 
 import { OptionCardGroupCheckbox, OptionCardGroupProps, OptionCardGroupRadio } from '.'
@@ -13,7 +13,7 @@ export default {
   },
 } as Meta<OptionCardGroupProps>
 
-const Template: Story<OptionCardGroupProps> = (args) => {
+const Template: StoryFn<OptionCardGroupProps> = (args) => {
   const [selected, setSelected] = useState<string | number | boolean>()
 
   const [checkedValues, setCheckedValues] = useState<number[]>([])

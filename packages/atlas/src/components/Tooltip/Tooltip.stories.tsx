@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
@@ -31,7 +31,7 @@ export default {
   },
 } as Meta<TooltipProps>
 
-const DefaultTooltip: Story<TooltipProps> = (args) => (
+const DefaultTooltip: StoryFn<TooltipProps> = (args) => (
   <Tooltip
     {...args}
     showOnCreate
@@ -43,7 +43,7 @@ const DefaultTooltip: Story<TooltipProps> = (args) => (
 
 export const Default = DefaultTooltip.bind({})
 
-const TextTooltip: Story<TooltipProps> = (args) => (
+const TextTooltip: StoryFn<TooltipProps> = (args) => (
   <Tooltip
     {...args}
     customContent={
@@ -62,7 +62,7 @@ const TextTooltip: Story<TooltipProps> = (args) => (
 
 export const WithText = TextTooltip.bind({})
 
-const HeadingTooltip: Story<TooltipProps> = (args) => (
+const HeadingTooltip: StoryFn<TooltipProps> = (args) => (
   <Tooltip
     {...args}
     customContent={
@@ -81,7 +81,7 @@ const HeadingTooltip: Story<TooltipProps> = (args) => (
 
 export const WithHeading = HeadingTooltip.bind({})
 
-const ButtonTooltip: Story<TooltipProps> = (args) => (
+const ButtonTooltip: StoryFn<TooltipProps> = (args) => (
   <div style={{ width: '100%', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
     <Tooltip
       {...args}

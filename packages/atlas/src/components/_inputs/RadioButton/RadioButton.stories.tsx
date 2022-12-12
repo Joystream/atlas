@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { RadioButton, RadioButtonProps } from './RadioButton'
 
@@ -19,7 +19,7 @@ export default {
   },
 } as Meta<RadioButtonProps>
 
-const Template: Story = (args) => {
+const Template: StoryFn = (args) => {
   return <RadioButton {...args} name="radio-group" value="1" selectedValue={args.selected ? '1' : undefined} />
 }
 

@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { WithValue } from '@/components/../../.storybook/WithValue'
 
@@ -29,13 +29,13 @@ export default {
   },
 } as Meta
 
-const SingleTemplate: Story<CheckboxProps> = (args) => (
+const SingleTemplate: StoryFn<CheckboxProps> = (args) => (
   <WithValue initial={true} actionName="onChange">
     {(value, setValue) => <Checkbox {...args} value={value} onChange={setValue} />}
   </WithValue>
 )
 
-const Template: Story<CheckboxProps> = (args) => (
+const Template: StoryFn<CheckboxProps> = (args) => (
   <div style={{ display: 'grid', gridTemplateColumns: '1fr', gridGap: '12px' }}>
     <WithValue initial={false} actionName="onChange">
       {(value, setValue) => <Checkbox {...args} value={value} onChange={setValue} />}

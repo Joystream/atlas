@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 import {
@@ -66,7 +66,9 @@ export default {
     onClick: { action: 'clicked' },
   },
   decorators: [
-    (Story) => {
+    // TODO: remove any once SB fixes conditional types support
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (Story: any) => {
       return (
         <BrowserRouter>
           <Story />
@@ -76,7 +78,9 @@ export default {
   ],
 } as Meta<VideoThumbnailProps>
 
-const Template: Story<VideoThumbnailProps> = (args) => (
+// TODO: remove any once SB fixes conditional types support
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const Template: StoryFn<VideoThumbnailProps> = (args: any) => (
   <div style={{ maxWidth: '320px' }}>
     <VideoThumbnail {...args} />
   </div>

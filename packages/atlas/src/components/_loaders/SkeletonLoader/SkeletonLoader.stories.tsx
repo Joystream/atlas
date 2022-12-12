@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { SkeletonLoader, SkeletonLoaderProps } from './SkeletonLoader'
 
@@ -25,6 +25,6 @@ export default {
   },
 } as Meta
 
-const Template: Story<SkeletonLoaderProps> = (args) => <SkeletonLoader {...args} />
+const Template: StoryFn<SkeletonLoaderProps> = (args) => <SkeletonLoader {...args} />
 
 export const Default = Template.bind({})

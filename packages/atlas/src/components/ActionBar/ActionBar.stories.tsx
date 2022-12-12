@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import BN from 'bn.js'
 
 import { ActionBar, ActionBarProps } from './ActionBar'
@@ -28,6 +28,6 @@ export default {
   },
 } as Meta<ActionBarProps>
 
-const Template: Story<ActionBarProps> = (args) => <ActionBar {...args} fee={new BN(10000000000)} />
+const Template: StoryFn<ActionBarProps> = (args) => <ActionBar {...args} fee={new BN(10000000000)} />
 
 export const Default = Template.bind({})

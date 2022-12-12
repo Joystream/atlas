@@ -1,4 +1,4 @@
-import addons from '@storybook/addons'
+import { addons } from '@storybook/addons'
 
 import joystreamTheme from './theme'
 

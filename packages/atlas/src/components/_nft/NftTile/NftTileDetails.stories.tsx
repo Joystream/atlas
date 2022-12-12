@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { NftTileDetails, NftTileDetailsProps } from '.'
@@ -32,7 +32,7 @@ export default {
   },
 } as Meta
 
-const Template: Story<NftTileDetailsProps> = (args) => (
+const Template: StoryFn<NftTileDetailsProps> = (args) => (
   <BrowserRouter>
     <div style={{ width: '320px' }}>
       <NftTileDetails {...args} />

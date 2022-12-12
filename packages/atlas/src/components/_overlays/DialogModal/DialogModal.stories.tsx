@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
@@ -36,7 +36,7 @@ export default {
   ],
 } as Meta<DialogModalProps>
 
-const OpenTemplate: Story<DialogModalProps> = ({ ...args }) => {
+const OpenTemplate: StoryFn<DialogModalProps> = ({ ...args }) => {
   return (
     <DialogModal {...args} show={true} onExitClick={() => null}>
       <p>Content spanning multiple lines</p>
@@ -47,7 +47,7 @@ const OpenTemplate: Story<DialogModalProps> = ({ ...args }) => {
 }
 export const Open = OpenTemplate.bind({})
 
-const ToggleableTemplate: Story<DialogModalProps> = ({ ...args }) => {
+const ToggleableTemplate: StoryFn<DialogModalProps> = ({ ...args }) => {
   const [open, setOpen] = useState(false)
 
   return (

@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 
 import { NotificationRecord } from '@/providers/notifications/notifications.types'
@@ -29,7 +29,7 @@ export default {
 } as Meta
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Template: Story<any> = (args) => {
+const Template: StoryFn<any> = (args) => {
   const [selected, setSelected] = useState(false)
   const notification: NotificationRecord = {
     id: 'id',

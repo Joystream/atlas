@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { ChannelCover, ChannelCoverProps } from './ChannelCover'
 
@@ -19,7 +19,7 @@ export default {
   },
 } as Meta
 
-const Template: Story<ChannelCoverProps> = (args) => {
+const Template: StoryFn<ChannelCoverProps> = (args) => {
   return (
     <>
       <ChannelCover {...args} />

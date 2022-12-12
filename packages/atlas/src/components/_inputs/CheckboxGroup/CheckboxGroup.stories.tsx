@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { ChangeEvent, useState } from 'react'
 
 import { CheckboxGroup, CheckboxGroupProps } from './CheckboxGroup'
@@ -22,7 +22,7 @@ export default {
   },
 } as Meta<CheckboxGroupProps>
 
-const Template: Story = (args) => {
+const Template: StoryFn = (args) => {
   const [selected, setSelected] = useState<number[]>([])
   const handleChange: (id: number, e?: ChangeEvent<HTMLInputElement>) => void = (id) => {
     setSelected((prevState) => {

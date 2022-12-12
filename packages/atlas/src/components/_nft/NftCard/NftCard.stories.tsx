@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { NftCard, NftCardProps } from './NftCard'
@@ -45,7 +45,7 @@ export default {
   ],
 } as Meta
 
-const Template: Story<NftCardProps> = (args) => <NftCard {...args} />
+const Template: StoryFn<NftCardProps> = (args) => <NftCard {...args} />
 
 export const Default = Template.bind({})
 export const NoSupporters = Template.bind({})

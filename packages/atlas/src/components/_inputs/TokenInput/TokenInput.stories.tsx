@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
@@ -44,7 +44,7 @@ export default {
   ],
 } as Meta
 
-const Template: Story<TokenInputProps> = (args) => {
+const Template: StoryFn<TokenInputProps> = (args) => {
   const [value, setValue] = useState<number | null>(0)
 
   const setRandomValue = () => {

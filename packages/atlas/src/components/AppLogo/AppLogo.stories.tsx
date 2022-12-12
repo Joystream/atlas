@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { AppLogo, AppLogoProps } from './AppLogo'
 
@@ -16,6 +16,6 @@ export default {
   },
 } as Meta<AppLogoProps>
 
-const Template: Story<AppLogoProps> = (args) => <AppLogo height={32} width={undefined} {...args} />
+const Template: StoryFn<AppLogoProps> = (args) => <AppLogo height={32} width={undefined} {...args} />
 
 export const Default = Template.bind({})

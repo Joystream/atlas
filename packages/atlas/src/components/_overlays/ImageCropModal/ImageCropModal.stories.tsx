@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useRef, useState } from 'react'
 
 import { Avatar } from '@/components/Avatar'
@@ -32,7 +32,7 @@ type ImageData = {
   originalBlob: File | Blob | null
 }
 
-const RegularTemplate: Story<ImageCropModalProps> = () => {
+const RegularTemplate: StoryFn<ImageCropModalProps> = () => {
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const thumbnailDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropModalImperativeHandle>(null)

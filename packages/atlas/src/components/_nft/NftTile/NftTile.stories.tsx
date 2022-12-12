@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
@@ -53,6 +53,6 @@ export default {
   ],
 } as Meta
 
-const Template: Story<NftTileProps> = (args) => <NftTile {...args} />
+const Template: StoryFn<NftTileProps> = (args) => <NftTile {...args} />
 
 export const Default = Template.bind({})

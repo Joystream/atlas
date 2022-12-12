@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { SvgActionUpload } from '@/assets/icons'
 import { Button } from '@/components/_buttons/Button'
@@ -22,7 +22,7 @@ export default {
   },
 } as Meta<EmptyFallbackProps>
 
-const Template: Story<EmptyFallbackProps> = (args) => (
+const Template: StoryFn<EmptyFallbackProps> = (args) => (
   <EmptyFallback
     {...args}
     button={

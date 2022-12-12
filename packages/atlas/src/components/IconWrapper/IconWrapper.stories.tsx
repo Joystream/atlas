@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { SvgActionTrash, SvgControlsSettingsOutline } from '@/assets/icons'
 
@@ -15,7 +15,7 @@ export default {
   },
 } as Meta
 
-const TemplateSingle: Story<IconWrapperProps> = (args) => <IconWrapper {...args} />
+const TemplateSingle: StoryFn<IconWrapperProps> = (args) => <IconWrapper {...args} />
 
 export const ActionIcon = TemplateSingle.bind({})
 ActionIcon.args = {

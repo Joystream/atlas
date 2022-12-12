@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { OutputPill, OutputPillProps } from '.'
 
@@ -17,5 +17,5 @@ export default {
   },
 } as Meta<OutputPillProps>
 
-const Template: Story<OutputPillProps & { hasOnDeleteClick: boolean }> = (args) => <OutputPill {...args} />
+const Template: StoryFn<OutputPillProps & { hasOnDeleteClick: boolean }> = (args) => <OutputPill {...args} />
 export const Default = Template.bind({})

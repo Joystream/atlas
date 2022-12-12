@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { cVar } from '@/styles'
 
@@ -13,7 +13,7 @@ export default {
   },
 } as Meta
 
-const Template: Story<OwnerPillProps> = (args) => (
+const Template: StoryFn<OwnerPillProps> = (args) => (
   <>
     <div
       style={{

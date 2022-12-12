@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { JoyTokenIcon, JoyTokenIconProps } from './JoyTokenIcon'
 
@@ -18,7 +18,7 @@ export default {
   },
 } as Meta
 
-const Template: Story<JoyTokenIconProps> = (args) => {
+const Template: StoryFn<JoyTokenIconProps> = (args) => {
   return (
     <Container>
       <WrapperLight>

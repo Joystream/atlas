@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
@@ -28,7 +28,7 @@ export default {
   ],
 } as Meta
 
-const Template: Story<FileSelectProps> = (args) => {
+const Template: StoryFn<FileSelectProps> = (args) => {
   const [file, setFile] = useState<File>()
   return (
     <>
