@@ -1,7 +1,6 @@
 import { UseSelectStateChange, useSelect } from 'downshift'
 import { isEqual } from 'lodash-es'
-import { ForwardedRef, ReactNode, Ref, forwardRef, useMemo, useRef } from 'react'
-import ReactDOM from 'react-dom'
+import { ForwardedRef, ReactNode, Ref, forwardRef, useMemo } from 'react'
 
 import { SvgActionChevronB, SvgActionChevronT } from '@/assets/icons'
 import { ListItemProps } from '@/components/ListItem'
@@ -65,7 +64,7 @@ export const _Select = <T extends unknown>(
   ref: ForwardedRef<HTMLDivElement>
 ) => {
   const itemsValues = items.map((item) => item.value)
-  const wrapperRef = useRef<HTMLDivElement | null>(null)
+
   const handleItemSelect = (changes: UseSelectStateChange<T>) => {
     onChange?.(changes.selectedItem)
   }
@@ -91,22 +90,9 @@ export const _Select = <T extends unknown>(
     () => items.find((item) => isEqual(item.value, selectedItemValue)),
     [items, selectedItemValue]
   )
-
-  const getRefEdgePosition = () => {
-    if (!wrapperRef.current) {
-      return
-    }
-    const box = wrapperRef.current.getBoundingClientRect()
-
-    return {
-      y: box.y + box.height,
-      left: box.left,
-      width: box.width,
-    }
-  }
   return (
     <SelectWrapper ref={containerRef} className={className}>
-      <SelectMenuWrapper ref={wrapperRef}>
+      <SelectMenuWrapper>
         <SelectButton
           ref={ref}
           disabled={disabled}
@@ -133,26 +119,23 @@ export const _Select = <T extends unknown>(
           </ValueAndPlaceholderText>
           <SelectChevronWrapper>{isOpen ? <SvgActionChevronT /> : <SvgActionChevronB />}</SelectChevronWrapper>
         </SelectButton>
-        {ReactDOM.createPortal(
-          <SelectMenu {...getMenuProps()} {...getRefEdgePosition()}>
-            {isOpen && (
-              <StyledList
-                scrollable
-                items={items
-                  .filter((item) => !item.hideInMenu)
-                  .map((item, index) => ({
-                    selected: item.value === selectedItemValue,
-                    highlight: highlightedIndex === index,
-                    label: item.name,
-                    ...item,
-                    ...getItemProps({ item: item.value, index, onClick: item.onClick, disabled: item.isSeparator }),
-                  }))}
-                size={size === 'medium' ? 'small' : 'medium'}
-              />
-            )}
-          </SelectMenu>,
-          document.body
-        )}
+        <SelectMenu {...getMenuProps()}>
+          {isOpen && (
+            <StyledList
+              scrollable
+              items={items
+                .filter((item) => !item.hideInMenu)
+                .map((item, index) => ({
+                  selected: item.value === selectedItemValue,
+                  highlight: highlightedIndex === index,
+                  label: item.name,
+                  ...item,
+                  ...getItemProps({ item: item.value, index, onClick: item.onClick, disabled: item.isSeparator }),
+                }))}
+              size={size === 'medium' ? 'small' : 'medium'}
+            />
+          )}
+        </SelectMenu>
       </SelectMenuWrapper>
     </SelectWrapper>
   )
