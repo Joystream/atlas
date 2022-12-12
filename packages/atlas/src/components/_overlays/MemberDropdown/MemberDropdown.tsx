@@ -1,7 +1,7 @@
 import bezier from 'bezier-easing'
 import { BN } from 'bn.js'
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import mergeRefs from 'react-merge-refs'
+import { mergeRefs } from 'react-merge-refs'
 import { useNavigate } from 'react-router'
 import { useTransition } from 'react-spring'
 import useResizeObserver from 'use-resize-observer'

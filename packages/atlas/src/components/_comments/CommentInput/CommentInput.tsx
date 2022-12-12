@@ -1,6 +1,6 @@
 import BN from 'bn.js'
 import { ChangeEvent, forwardRef, useEffect, useRef, useState } from 'react'
-import mergeRefs from 'react-merge-refs'
+import { mergeRefs } from 'react-merge-refs'
 import useResizeObserver from 'use-resize-observer'
 
 import { Fee } from '@/components/Fee'

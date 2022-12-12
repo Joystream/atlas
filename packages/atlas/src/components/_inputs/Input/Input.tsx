@@ -9,7 +9,7 @@ import {
   forwardRef,
   useRef,
 } from 'react'
-import mergeRefs from 'react-merge-refs'
+import { mergeRefs } from 'react-merge-refs'
 import useResizeObserver from 'use-resize-observer'
 
 import { Text } from '@/components/Text'

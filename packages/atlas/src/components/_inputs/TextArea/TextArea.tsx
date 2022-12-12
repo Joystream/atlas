@@ -1,5 +1,5 @@
 import { ChangeEvent, ForwardRefRenderFunction, forwardRef, useRef, useState } from 'react'
-import mergeRefs from 'react-merge-refs'
+import { mergeRefs } from 'react-merge-refs'
 
 import { Text } from '@/components/Text'
 

@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios'
+import axios, { AxiosError, AxiosProgressEvent } from 'axios'
 import { debounce } from 'lodash-es'
 import { useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router'
@@ -112,12 +112,13 @@ export const useStartFileUpload = () => {
 
         setAssetStatus({ lastStatus: 'inProgress', progress: 0 })
 
-        const setUploadProgress = ({ loaded, total }: ProgressEvent) => {
-          setAssetStatus({ progress: (loaded / total) * 100 })
+        const setUploadProgress = ({ loaded, total }: AxiosProgressEvent) => {
+          const progress = (total ? loaded / total : 0) * 100
+          setAssetStatus({ progress })
 
-          if ((loaded / total) * 100 === 100) {
+          if (progress === 100) {
             addProcessingAsset(asset.id)
-            setAssetStatus({ lastStatus: 'processing', progress: (loaded / total) * 100 })
+            setAssetStatus({ lastStatus: 'processing', progress })
           }
         }
 
