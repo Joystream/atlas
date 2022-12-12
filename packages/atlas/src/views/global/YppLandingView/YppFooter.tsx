@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { SvgActionChevronR, SvgActionInfo, SvgActionSpeech, SvgActionTokensStack } from '@/assets/icons'
+import { SvgActionChevronR } from '@/assets/icons'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { CallToActionButton } from '@/components/_buttons/CallToActionButton'
@@ -47,17 +47,19 @@ export const YppFooter: FC<YppFooterSectionProps> = ({ onSignUpClick }) => {
           </GridItem>
         </LayoutGrid>
       </StyledLimitedWidthContainer>
-      <CtaCardRow>
-        <CallToActionButton external colorVariant="lightBlue" icon={<SvgActionInfo />} label="Program details" />
-        <CallToActionButton
-          to={atlasConfig.general.joystreamDiscordUrl}
-          external
-          colorVariant="lightBlue"
-          icon={<SvgActionSpeech />}
-          label="Discord"
-        />
-        <CallToActionButton external colorVariant="lightBlue" icon={<SvgActionTokensStack />} label="Payments" />
-      </CtaCardRow>
+      {atlasConfig.features.ypp.widgets && (
+        <CtaCardRow itemsCount={atlasConfig.features.ypp.widgets.length}>
+          {atlasConfig.features.ypp.widgets.map((widget) => (
+            <CallToActionButton
+              key={widget.title}
+              external
+              colorVariant="lightBlue"
+              label={widget.title}
+              to={widget.link}
+            />
+          ))}
+        </CtaCardRow>
+      )}
     </>
   )
 }

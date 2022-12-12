@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { SvgActionInfo, SvgActionNewTab, SvgActionSpeech, SvgActionTokensStack } from '@/assets/icons'
+import { SvgActionNewTab } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { Information } from '@/components/Information'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
@@ -8,7 +8,6 @@ import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
 import { BenefitCard } from '@/components/_ypp/BenefitCard'
 import { atlasConfig } from '@/config'
-import { absoluteRoutes } from '@/config/routes'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -76,47 +75,25 @@ export const YppDashboard: FC = () => {
             </TierWrapper>
           )}
         </Header>
-        <WidgetsWrapper>
-          <WidgetTile
-            title="Notion"
-            text="Program details"
-            icon={<SvgActionInfo />}
-            button={{
-              text: 'Go to Notion',
-              variant: 'primary',
-              _textOnly: true,
-              icon: <SvgActionNewTab />,
-              // todo add correct url here
-              iconPlacement: 'right',
-            }}
-          />
-          <WidgetTile
-            title="Airtable"
-            text="Payments"
-            icon={<SvgActionTokensStack />}
-            button={{
-              text: 'Go to payments',
-              variant: 'primary',
-              to: absoluteRoutes.studio.payments(),
-              _textOnly: true,
-              icon: <SvgActionNewTab />,
-              iconPlacement: 'right',
-            }}
-          />
-          <WidgetTile
-            title="Discord"
-            text="Support"
-            icon={<SvgActionSpeech />}
-            button={{
-              text: 'Go to Discord',
-              variant: 'primary',
-              _textOnly: true,
-              icon: <SvgActionNewTab />,
-              iconPlacement: 'right',
-              to: atlasConfig.general.joystreamDiscordUrl,
-            }}
-          />
-        </WidgetsWrapper>
+        {atlasConfig.features.ypp.widgets && (
+          <WidgetsWrapper>
+            {atlasConfig.features.ypp.widgets.map((widget) => (
+              <WidgetTile
+                key={widget.title}
+                title={widget.vendor ?? widget.title}
+                text={widget.title}
+                button={{
+                  text: widget.linkText ?? `Go to ${widget.title}`,
+                  variant: 'primary',
+                  _textOnly: true,
+                  icon: <SvgActionNewTab />,
+                  to: widget.link,
+                  iconPlacement: 'right',
+                }}
+              />
+            ))}
+          </WidgetsWrapper>
+        )}
         <RewardsWrapper>
           {REWARDS?.map((reward) => (
             <BenefitCard
