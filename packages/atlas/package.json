@@ -37,7 +37,7 @@
     "@hcaptcha/react-hcaptcha": "^1.4.4",
     "@hookform/resolvers": "^2.9.10",
     "@joystream/metadata-protobuf": "2.5.0",
-    "@joystream/types": "0.20.4",
+    "@joystream/types": "0.20.5",
     "@livesession/sdk": "^1.1.4",
     "@loadable/component": "^5.15.2",
     "@lottiefiles/react-lottie-player": "^3.4.9",
@@ -107,7 +107,7 @@
     "@storybook/addon-docs": "6.4.18",
     "@storybook/addon-essentials": "6.4.18",
     "@storybook/addon-links": "6.4.18",
-    "@storybook/builder-vite": "0.2.3",
+    "@storybook/builder-vite": "0.2.5",
     "@storybook/react": "6.4.18",
     "@storybook/theming": "6.4.18",
     "@svgr/cli": "^6.5.1",
@@ -126,7 +126,7 @@
     "@types/react-transition-group": "^4.4.5",
     "@types/scroll-lock": "^2.1.0",
     "@types/video.js": "^7.3.49",
-    "@vitejs/plugin-react": "^2.2.0",
+    "@vitejs/plugin-react": "^3.0.0",
     "esbuild-register": "^3.4.1",
     "happy-dom": "^4.1.0",
     "js-yaml": "^4.1.0",
@@ -136,9 +136,9 @@
     "rimraf": "^3.0.2",
     "rollup-plugin-visualizer": "^5.8.3",
     "style-dictionary": "^3.7.1",
-    "vite": "^3.2.5",
-    "vite-plugin-checker": "^0.5.1",
-    "vitest": "^0.25.4"
+    "vite": "^4.0.0",
+    "vite-plugin-checker": "^0.5.2",
+    "vitest": "^0.25.7"
   },
   "engines": {
     "node": "^16"

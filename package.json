@@ -67,6 +67,14 @@
   },
   "resolutions": {
     "@polkadot/api": "8.9.1",
+    "@polkadot/keyring": "9.5.1",
+    "@polkadot/types": "8.9.1",
+    "@polkadot/util": "9.5.1",
+    "@polkadot/util-crypto": "9.5.1",
+    "@polkadot/networks": "9.5.1",
+    "@polkadot/x-fetch": "9.5.1",
+    "@polkadot/x-global": "9.5.1",
+    "@polkadot/x-ws": "9.5.1",
     "bn.js": "5.2.1",
     "blake3": "patch:blake3@npm:2.1.7#.yarn/patches/blake3-npm-2.1.7-7bf40c44b4"
   },
