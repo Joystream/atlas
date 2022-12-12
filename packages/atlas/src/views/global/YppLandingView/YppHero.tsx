@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { useParallax } from 'react-scroll-parallax'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { SvgActionChevronR, SvgActionMember } from '@/assets/icons'
+import { SvgActionChevronR } from '@/assets/icons'
 import hero576 from '@/assets/images/ypp-hero/hero-576.webp'
 import hero864 from '@/assets/images/ypp-hero/hero-864.webp'
 import hero1152 from '@/assets/images/ypp-hero/hero-1152.webp'
@@ -44,11 +44,10 @@ type YppHeroProps = {
 const getButtonText = (variant: YppStatus) => {
   switch (variant) {
     case 'have-channel':
+    case 'connect-wallet':
       return 'Sign up now'
     case 'no-channel':
       return 'Create channel & sign up'
-    case 'connect-wallet':
-      return 'Connect wallet'
     case 'ypp-signed':
       return 'Go to dashboard'
   }
@@ -115,8 +114,8 @@ export const YppHero: FC<YppHeroProps> = ({
                     <Button
                       size="large"
                       variant={yppStatus === 'ypp-signed' ? 'secondary' : 'primary'}
-                      icon={yppStatus === 'connect-wallet' ? <SvgActionMember /> : <SvgActionChevronR />}
-                      iconPlacement={yppStatus === 'connect-wallet' ? 'left' : 'right'}
+                      icon={<SvgActionChevronR />}
+                      iconPlacement="right"
                       onClick={onSignUpClick}
                     >
                       {getButtonText(yppStatus)}
