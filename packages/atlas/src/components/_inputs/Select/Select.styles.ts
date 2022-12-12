@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 
-import { List } from '@/components/List'
 import { Text } from '@/components/Text'
 import { cVar, sizes, zIndex } from '@/styles'
 
@@ -80,9 +79,4 @@ export const SelectChevronWrapper = styled.div`
 
 export const SelectMenu = styled.div`
   z-index: ${zIndex.snackbars};
-`
-
-export const StyledList = styled(List)`
-  //position: absolute;
-  //top: 0;
 `
