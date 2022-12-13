@@ -7,6 +7,8 @@ import { ConsoleLogger } from '@/utils/logs'
 
 import rawConfig from '../../atlas.config.yml'
 
+const YppWidgetIconEnum = z.enum(['info', 'message', 'tokenStack'])
+
 export const configSchema = z.object({
   general: z.object({
     appName: z.string(),
@@ -70,6 +72,7 @@ export const configSchema = z.object({
             link: z.string(),
             linkText: z.string().optional(),
             vendor: z.string().optional(),
+            icon: YppWidgetIconEnum.optional(),
           })
         )
         .optional(),
@@ -138,6 +141,7 @@ export const configSchema = z.object({
     copyrightPolicy: z.string(),
   }),
 })
+
 type SelectValue = Pick<SelectItem, 'value' | 'name'>
 export type RawConfig = z.infer<typeof configSchema>
 export type Config = RawConfig & {
@@ -148,6 +152,7 @@ export type Config = RawConfig & {
     commentReactionsLookup: Record<number, RawConfig['features']['comments']['reactions'][number]>
   }
 }
+export type YppWidgetIcons = z.infer<typeof YppWidgetIconEnum>
 
 let parsedConfig: RawConfig
 

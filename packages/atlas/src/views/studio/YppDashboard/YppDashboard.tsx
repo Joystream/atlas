@@ -12,6 +12,7 @@ import { useClipboard } from '@/hooks/useClipboard'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useUser } from '@/providers/user/user.hooks'
+import { configYppIconMapper } from '@/views/global/YppLandingView/YppFooter'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
 
 import { REWARDS, TIERS } from './YppDashboard.config'
@@ -79,6 +80,7 @@ export const YppDashboard: FC = () => {
           <WidgetsWrapper>
             {atlasConfig.features.ypp.widgets.map((widget) => (
               <WidgetTile
+                icon={widget.icon && configYppIconMapper[widget.icon]}
                 key={widget.title}
                 title={widget.vendor ?? widget.title}
                 text={widget.title}
