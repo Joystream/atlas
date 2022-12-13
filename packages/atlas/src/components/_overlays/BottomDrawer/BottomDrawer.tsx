@@ -86,9 +86,6 @@ export const BottomDrawer: FC<BottomDrawerProps> = ({
         in={isOpen}
         appear
         mountOnEnter
-        // it's required to fire scroll event after animation is done
-        // so popper.js can recalculate every dropdown position
-        onEntered={() => window.dispatchEvent(new Event('scroll'))}
         unmountOnExit
         timeout={parseInt(cVar('animationTimingSlow', true))}
         classNames="bottom-drawer"

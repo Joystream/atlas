@@ -46,7 +46,7 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
   const comboBoxWrapperRef = useRef<HTMLDivElement>(null)
   const textFieldRef = useRef<HTMLInputElement>(null)
   const [dropdownRef, setDropdownRef] = useState<HTMLDivElement | null>(null)
-  const { styles, attributes } = usePopper(comboBoxWrapperRef.current, dropdownRef, {
+  const { styles, attributes, update } = usePopper(comboBoxWrapperRef.current, dropdownRef, {
     placement: 'bottom',
     strategy: 'fixed',
     modifiers: [sameWidthModifier, flipModifier, popperIndexModifier],
@@ -111,7 +111,10 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
           onFocus={(event) => {
             textFieldProps?.onFocus?.(event)
           }}
-          onClick={toggleMenu}
+          onClick={() => {
+            update?.()
+            toggleMenu()
+          }}
         />
       </div>
       {ReactDOM.createPortal(

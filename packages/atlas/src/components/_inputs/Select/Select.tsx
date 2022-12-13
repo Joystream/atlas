@@ -69,7 +69,7 @@ export const _Select = <T extends unknown>(
   const itemsValues = items.map((item) => item.value)
   const [wrapperRef, setWrapperRef] = useState<HTMLDivElement | null>(null)
   const [dropdownRef, setDropdownRef] = useState<HTMLDivElement | null>(null)
-  const { styles, attributes } = usePopper(wrapperRef, dropdownRef, {
+  const { styles, attributes, update } = usePopper(wrapperRef, dropdownRef, {
     placement: 'bottom',
     strategy: 'fixed',
     modifiers: dropdownModifiers,
@@ -113,7 +113,7 @@ export const _Select = <T extends unknown>(
           tabIndex={disabled ? -1 : 0}
           inputSize={size}
           data-select
-          {...getToggleButtonProps()}
+          {...getToggleButtonProps({ onClick: () => update?.() })}
         >
           {icon && !inlineLabel && <NodeContainer isOpen={isOpen}>{icon}</NodeContainer>}
           {inlineLabel && (

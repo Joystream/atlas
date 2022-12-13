@@ -1,30 +1,30 @@
-import { ModifierArguments, ModifierPhases } from '@popperjs/core'
+import { Modifier } from 'react-popper'
 
 import { zIndex } from '@/styles'
 
-export const sameWidthModifier = {
+export const sameWidthModifier: Partial<Modifier<string, object>> = {
   name: 'sameWidth',
   enabled: true,
-  phase: 'beforeWrite' as ModifierPhases,
+  phase: 'beforeWrite' as Modifier<string, object>['phase'],
   requires: ['computeStyles'],
-  fn: ({ state }: ModifierArguments<Record<string, unknown>>) => {
+  fn: ({ state }) => {
     state.styles.popper.width = `${state.rects.reference.width}px`
   },
-  effect: ({ state }: ModifierArguments<Record<string, unknown>>) => {
+  effect: ({ state }) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     state.elements.popper.style.width = `${(state.elements.reference as any).offsetWidth}px`
   },
 }
 
-export const popperIndexModifier = {
+export const popperIndexModifier: Partial<Modifier<string, object>> = {
   name: 'popperIndex',
   enabled: true,
-  phase: 'beforeWrite' as ModifierPhases,
+  phase: 'beforeWrite' as Modifier<string, object>['phase'],
   requires: ['computeStyles'],
-  fn: ({ state }: ModifierArguments<Record<string, unknown>>) => {
+  fn: ({ state }) => {
     state.styles.popper.zIndex = String(zIndex.snackbars)
   },
-  effect: ({ state }: ModifierArguments<Record<string, unknown>>) => {
+  effect: ({ state }) => {
     state.elements.popper.style.zIndex = String(zIndex.snackbars)
   },
 }
