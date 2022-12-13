@@ -56,7 +56,7 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
     if (items) {
       setInputItems(items)
     }
-  }, [items.length, value])
+  }, [items, value])
 
   const {
     isOpen,

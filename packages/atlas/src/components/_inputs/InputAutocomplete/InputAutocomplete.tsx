@@ -72,7 +72,7 @@ export const InputAutocomplete = <Q extends object, V extends OperationVariables
     <ComboBox
       nodeStart={null}
       {...comboBoxProps}
-      items={result ? renderItem(result) : undefined}
+      items={result ? renderItem(result) : []}
       placeholder={placeholder}
       notFoundNode={notFoundNode}
       processing={isLoading}
