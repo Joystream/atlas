@@ -2864,7 +2864,6 @@ __metadata:
     "@loadable/component": ^5.15.2
     "@lottiefiles/react-lottie-player": ^3.4.7
     "@modyfi/vite-plugin-yaml": ^1.0.3
-    "@popperjs/core": ^2.11.6
     "@rollup/plugin-babel": ^5.3.1
     "@sentry/react": ^7.12.1
     "@storybook/addon-actions": 6.4.18
@@ -3895,13 +3894,6 @@ __metadata:
     "@types/websocket": ^1.0.5
     websocket: ^1.0.34
   checksum: 0825ab6cbae499f6a92c43b8701b6b0265eeb284d5debc34b64b2ea5185124194d8e6bbdfd94221d47e46c870c7f4bc9e9961cc19660bad8df4355bae6e5960c
-  languageName: node
-  linkType: hard
-
-"@popperjs/core@npm:^2.11.6":
-  version: 2.11.6
-  resolution: "@popperjs/core@npm:2.11.6"
-  checksum: 47fb328cec1924559d759b48235c78574f2d71a8a6c4c03edb6de5d7074078371633b91e39bbf3f901b32aa8af9b9d8f82834856d2f5737a23475036b16817f0
   languageName: node
   linkType: hard
 
