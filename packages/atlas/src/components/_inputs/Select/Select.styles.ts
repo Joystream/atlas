@@ -1,8 +1,7 @@
 import styled from '@emotion/styled'
 
-import { List } from '@/components/List'
 import { Text } from '@/components/Text'
-import { cVar, sizes } from '@/styles'
+import { cVar, sizes, zIndex } from '@/styles'
 
 import { InputSize, getBaseInputStyles, getInputPadding, getSharedInputStyles } from '../inputs.utils'
 
@@ -79,11 +78,5 @@ export const SelectChevronWrapper = styled.div`
 `
 
 export const SelectMenu = styled.div`
-  width: 100%;
-  position: relative;
-`
-
-export const StyledList = styled(List)`
-  position: absolute;
-  top: 0;
+  z-index: ${zIndex.snackbars};
 `

@@ -30,6 +30,13 @@ export type ChannelVerificationSuccessResponse = {
   userId: string
 }
 
+export type ChannelRequirments = {
+  MINIMUM_SUBSCRIBERS_COUNT: number
+  MINIMUM_VIDEO_COUNT: number
+  MINIMUM_VIDEO_AGE_HOURS: number
+  MINIMUM_CHANNEL_AGE_HOURS: number
+}
+
 type ChannelRequirmentsFailedError = {
   errorCode: YppRequirementsErrorCode
   message: string

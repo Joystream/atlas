@@ -50,8 +50,8 @@ const StudioLayout = () => {
   const hasMembership = !!memberships?.length
 
   const channelSet = !!channelId && hasMembership
-
-  const { currentChannel } = useGetYppSyncedChannels()
+  const { currentChannel, isLoading } = useGetYppSyncedChannels()
+  const isLoadingYPPData = isLoading || isAuthLoading || membershipsLoading
   const isYppSigned = !!currentChannel
 
   useEffect(() => {
@@ -168,6 +168,7 @@ const StudioLayout = () => {
                     path={relativeRoutes.studio.ypp()}
                     element={
                       <PrivateRoute
+                        isLoadingAuthData={isLoadingYPPData}
                         element={<YppLandingView />}
                         isAuth={channelSet && !isYppSigned}
                         redirectTo={absoluteRoutes.studio.yppDashboard()}
@@ -178,6 +179,7 @@ const StudioLayout = () => {
                     path={relativeRoutes.studio.yppDashboard()}
                     element={
                       <PrivateRoute
+                        isLoadingAuthData={isLoadingYPPData}
                         element={<YppDashboard />}
                         isAuth={channelSet && isYppSigned}
                         redirectTo={yppRedirect()}

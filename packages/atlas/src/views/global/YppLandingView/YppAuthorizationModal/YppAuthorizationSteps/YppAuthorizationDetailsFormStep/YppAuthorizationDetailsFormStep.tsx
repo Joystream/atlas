@@ -11,6 +11,8 @@ import { Avatar, AvatarProps } from '@/components/Avatar'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { InputAutocomplete } from '@/components/_inputs/InputAutocomplete'
+import { Select, SelectItem } from '@/components/_inputs/Select'
+import { displayCategories } from '@/config/categories'
 import { EMAIL_PATTERN } from '@/config/regex'
 import { useAsset } from '@/providers/assets/assets.hooks'
 
@@ -20,6 +22,7 @@ export type DetailsFormData = {
   email: string | undefined
   referrerChannelTitle: string | undefined
   referrerChannelId: string | undefined
+  videoCategoryId: string | undefined
 }
 
 export const YppAuthorizationDetailsFormStep: FC = () => {
@@ -29,6 +32,12 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
     control,
     formState: { errors },
   } = useFormContext<DetailsFormData>()
+
+  const categoriesSelectItems: SelectItem[] =
+    displayCategories?.map((c) => ({
+      name: c.name || 'Unknown category',
+      value: c.defaultVideoCategory,
+    })) || []
 
   return (
     <FormFieldsWrapper>
@@ -56,6 +65,25 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
               },
             },
           })}
+        />
+      </FormField>
+      <FormField
+        label="Category for videos"
+        description="We need to assign your videos to one of categories below. You can change the category for each video later."
+        error={errors.videoCategoryId?.message}
+      >
+        <Controller
+          control={control}
+          name="videoCategoryId"
+          rules={{
+            required: {
+              value: true,
+              message: 'Select a video category.',
+            },
+          }}
+          render={({ field: { value, onChange, ref } }) => (
+            <Select items={categoriesSelectItems} onChange={onChange} value={value} ref={ref} />
+          )}
         />
       </FormField>
       <Controller
