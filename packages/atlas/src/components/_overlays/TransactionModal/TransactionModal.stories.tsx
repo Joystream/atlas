@@ -13,6 +13,23 @@ import { TransactionModal, TransactionModalProps } from './TransactionModal'
 export default {
   title: 'overlays/TransactionModal',
   component: TransactionModal,
+  argTypes: {
+    status: {
+      defaultValue: ExtrinsicStatus.ProcessingAssets,
+      control: {
+        options: Object.values(ExtrinsicStatus),
+        type: 'select',
+        labels: {
+          [ExtrinsicStatus.ProcessingAssets]: 'ProcessingAssets',
+          [ExtrinsicStatus.Unsigned]: 'Unsigned',
+          [ExtrinsicStatus.Syncing]: 'Syncing',
+          [ExtrinsicStatus.Signed]: 'Signed',
+          [ExtrinsicStatus.Error]: 'Error',
+          [ExtrinsicStatus.Completed]: 'Completed',
+        },
+      },
+    },
+  },
   decorators: [
     (Story) => {
       const apolloClient = createApolloClient()
@@ -31,9 +48,9 @@ export default {
       )
     },
   ],
-} as Meta
+} as Meta<TransactionModalProps>
 
 const RegularTemplate: Story<TransactionModalProps> = ({ ...args }) => {
-  return <TransactionModal {...args} status={ExtrinsicStatus.Unsigned} />
+  return <TransactionModal {...args} />
 }
 export const Regular = RegularTemplate.bind({})
