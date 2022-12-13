@@ -76,6 +76,7 @@
     "react-markdown": "^8.0.4",
     "react-merge-refs": "^2.0.1",
     "react-number-format": "^5.1.2",
+    "react-popper": "^2.3.0",
     "react-router": "^6.4.5",
     "react-router-dom": "^6.4.5",
     "react-scroll-parallax": "^3.3.1",

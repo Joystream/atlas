@@ -1,10 +1,14 @@
 import { UseSelectStateChange, useSelect } from 'downshift'
 import { isEqual } from 'lodash-es'
-import { ForwardedRef, ReactNode, Ref, forwardRef, useMemo } from 'react'
+import { ForwardedRef, ReactNode, Ref, forwardRef, useMemo, useState } from 'react'
+import ReactDOM from 'react-dom'
+import { usePopper } from 'react-popper'
 
 import { SvgActionChevronB, SvgActionChevronT } from '@/assets/icons'
+import { List } from '@/components/List'
 import { ListItemProps } from '@/components/ListItem'
 import { ConsoleLogger } from '@/utils/logs'
+import { dropdownModifiers } from '@/utils/popperModifiers'
 
 import {
   InlineLabel,
@@ -14,7 +18,6 @@ import {
   SelectMenu,
   SelectMenuWrapper,
   SelectWrapper,
-  StyledList,
   ValueAndPlaceholderText,
 } from './Select.styles'
 
@@ -64,6 +67,13 @@ export const _Select = <T extends unknown>(
   ref: ForwardedRef<HTMLDivElement>
 ) => {
   const itemsValues = items.map((item) => item.value)
+  const [wrapperRef, setWrapperRef] = useState<HTMLDivElement | null>(null)
+  const [dropdownRef, setDropdownRef] = useState<HTMLDivElement | null>(null)
+  const { styles, attributes, update } = usePopper(wrapperRef, dropdownRef, {
+    placement: 'bottom',
+    strategy: 'fixed',
+    modifiers: dropdownModifiers,
+  })
 
   const handleItemSelect = (changes: UseSelectStateChange<T>) => {
     onChange?.(changes.selectedItem)
@@ -90,9 +100,10 @@ export const _Select = <T extends unknown>(
     () => items.find((item) => isEqual(item.value, selectedItemValue)),
     [items, selectedItemValue]
   )
+
   return (
     <SelectWrapper ref={containerRef} className={className}>
-      <SelectMenuWrapper>
+      <SelectMenuWrapper ref={setWrapperRef}>
         <SelectButton
           ref={ref}
           disabled={disabled}
@@ -102,7 +113,7 @@ export const _Select = <T extends unknown>(
           tabIndex={disabled ? -1 : 0}
           inputSize={size}
           data-select
-          {...getToggleButtonProps()}
+          {...getToggleButtonProps({ onClick: () => update?.() })}
         >
           {icon && !inlineLabel && <NodeContainer isOpen={isOpen}>{icon}</NodeContainer>}
           {inlineLabel && (
@@ -119,23 +130,28 @@ export const _Select = <T extends unknown>(
           </ValueAndPlaceholderText>
           <SelectChevronWrapper>{isOpen ? <SvgActionChevronT /> : <SvgActionChevronB />}</SelectChevronWrapper>
         </SelectButton>
-        <SelectMenu {...getMenuProps()}>
-          {isOpen && (
-            <StyledList
-              scrollable
-              items={items
-                .filter((item) => !item.hideInMenu)
-                .map((item, index) => ({
-                  selected: item.value === selectedItemValue,
-                  highlight: highlightedIndex === index,
-                  label: item.name,
-                  ...item,
-                  ...getItemProps({ item: item.value, index, onClick: item.onClick, disabled: item.isSeparator }),
-                }))}
-              size={size === 'medium' ? 'small' : 'medium'}
-            />
-          )}
-        </SelectMenu>
+        {ReactDOM.createPortal(
+          <div ref={setDropdownRef} style={{ ...styles.popper }} {...attributes.popper}>
+            <SelectMenu {...getMenuProps()}>
+              {isOpen && (
+                <List
+                  scrollable
+                  items={items
+                    .filter((item) => !item.hideInMenu)
+                    .map((item, index) => ({
+                      selected: item.value === selectedItemValue,
+                      highlight: highlightedIndex === index,
+                      label: item.name,
+                      ...item,
+                      ...getItemProps({ item: item.value, index, onClick: item.onClick, disabled: item.isSeparator }),
+                    }))}
+                  size={size === 'medium' ? 'small' : 'medium'}
+                />
+              )}
+            </SelectMenu>
+          </div>,
+          document.body
+        )}
       </SelectMenuWrapper>
     </SelectWrapper>
   )

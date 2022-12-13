@@ -1,9 +1,12 @@
 import { useCombobox } from 'downshift'
 import { uniqBy } from 'lodash-es'
 import { useEffect, useRef, useState } from 'react'
+import ReactDOM from 'react-dom'
+import { usePopper } from 'react-popper'
 
 import { ListItem, ListItemProps } from '@/components/ListItem'
 import { Loader } from '@/components/_loaders/Loader'
+import { flipModifier, popperIndexModifier, sameWidthModifier } from '@/utils/popperModifiers'
 
 import { ComboBoxWrapper, ListWrapper, StyledSvgActionPlus, StyledThumbnail } from './ComboBox.styles'
 
@@ -42,6 +45,12 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
   const [inputItems, setInputItems] = useState<(ModifiedListItemProps & T)[]>([])
   const comboBoxWrapperRef = useRef<HTMLDivElement>(null)
   const textFieldRef = useRef<HTMLInputElement>(null)
+  const [dropdownRef, setDropdownRef] = useState<HTMLDivElement | null>(null)
+  const { styles, attributes, update } = usePopper(comboBoxWrapperRef.current, dropdownRef, {
+    placement: 'bottom',
+    strategy: 'fixed',
+    modifiers: [sameWidthModifier, flipModifier, popperIndexModifier],
+  })
 
   useEffect(() => {
     if (items) {
@@ -89,51 +98,51 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
 
   const noItemsFound = isOpen && !error && inputItems.length === 0 && !processing && notFoundNode && inputValue
 
-  // This function will calculate the position of dropdown when TextField's helper text is present
-  const getTextFieldBottomEdgePosition = () => {
-    if (!textFieldRef.current || !comboBoxWrapperRef.current) {
-      return
-    }
-    const { y: wrapperY } = comboBoxWrapperRef.current.getBoundingClientRect()
-    const { y: inputY, height: inputHeight } = textFieldRef.current.getBoundingClientRect()
-    return inputY - wrapperY + inputHeight
-  }
-
   return (
     <ComboBoxWrapper ref={comboBoxWrapperRef}>
-      <Input
-        {...textFieldProps}
-        error={error || !!noItemsFound}
-        {...getInputProps({ ref: textFieldRef })}
-        nodeEnd={processing && inputValue && <Loader variant="small" />}
-        nodeStart={<StyledSvgActionPlus />}
-        onFocus={(event) => {
-          textFieldProps?.onFocus?.(event)
-        }}
-        onClick={toggleMenu}
-      />
-      <ListWrapper {...getMenuProps()} topPosition={getTextFieldBottomEdgePosition()} isOpen={isOpen}>
-        {isOpen && (
-          <>
-            {inputItems.map((item, index) => (
-              <ListItem
-                key={`${item}${index}`}
-                {...item}
-                {...getItemProps({
-                  item,
-                  index,
-                  disabled: item.isSeparator,
-                })}
-                size="large"
-                highlight={highlightedIndex === index}
-                nodeStart={item.nodeStart || (item.thumbnailUrl && <StyledThumbnail src={item.thumbnailUrl} />)}
-                isSeparator={item.isSeparator}
-              />
-            ))}
-          </>
-        )}
-        {noItemsFound && <ListItem {...notFoundNode} size="large" onClick={reset} />}
-      </ListWrapper>
+      <div>
+        <Input
+          {...textFieldProps}
+          error={error || !!noItemsFound}
+          {...getInputProps({ ref: textFieldRef })}
+          nodeEnd={processing && inputValue && <Loader variant="small" />}
+          nodeStart={<StyledSvgActionPlus />}
+          onFocus={(event) => {
+            textFieldProps?.onFocus?.(event)
+          }}
+          onClick={() => {
+            update?.()
+            toggleMenu()
+          }}
+        />
+      </div>
+      {ReactDOM.createPortal(
+        <div ref={setDropdownRef} style={{ ...styles.popper }} {...attributes.popper}>
+          <ListWrapper {...getMenuProps()} isOpen={isOpen}>
+            {isOpen && (
+              <>
+                {inputItems.map((item, index) => (
+                  <ListItem
+                    key={`${item}${index}`}
+                    {...item}
+                    {...getItemProps({
+                      item,
+                      index,
+                      disabled: item.isSeparator,
+                    })}
+                    size="large"
+                    highlight={highlightedIndex === index}
+                    nodeStart={item.nodeStart || (item.thumbnailUrl && <StyledThumbnail src={item.thumbnailUrl} />)}
+                    isSeparator={item.isSeparator}
+                  />
+                ))}
+              </>
+            )}
+            {noItemsFound && <ListItem {...notFoundNode} size="large" onClick={reset} />}
+          </ListWrapper>
+        </div>,
+        document.body
+      )}
     </ComboBoxWrapper>
   )
 }
