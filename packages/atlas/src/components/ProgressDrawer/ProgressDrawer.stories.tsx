@@ -6,7 +6,6 @@ import { ProgressDrawer, ProgressDrawerProps } from './ProgressDrawer'
 export default {
   title: 'other/ProgressDrawer',
   component: ProgressDrawer,
-  argTypes: {},
 } as Meta
 
 const SingleTemplate: StoryFn<ProgressDrawerProps> = (args) => {

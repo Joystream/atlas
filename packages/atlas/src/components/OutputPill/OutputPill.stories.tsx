@@ -12,7 +12,6 @@ export default {
     readonly: false,
   },
   argTypes: {
-    className: { table: { disable: true } },
     onDeleteClick: { table: { disable: true } },
   },
 } as Meta<OutputPillProps>

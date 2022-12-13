@@ -5,7 +5,6 @@ import { CircularProgress, CircularProgressProps } from './CircularProgress'
 export default {
   title: 'other/CircularProgress',
   component: CircularProgress,
-  argTypes: {},
 } as Meta
 
 const SingleTemplate: StoryFn<CircularProgressProps> = (args) => (

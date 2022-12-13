@@ -10,9 +10,6 @@ export default {
     title: 'Step title',
     variant: 'current',
   },
-  argTypes: {
-    variant: { controls: { type: 'select', options: ['current', 'future', 'completed'] } },
-  },
 } as Meta
 
 const Template: StoryFn<StepProps> = (args) => <Step {...args} />

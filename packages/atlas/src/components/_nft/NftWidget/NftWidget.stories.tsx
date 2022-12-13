@@ -33,7 +33,6 @@ export default {
   args: {
     ownerHandle: 'ye 🖤',
     ownerAvatarUri: 'https://picsum.photos/40/40',
-    size: 'medium',
     status: 'idle',
     startingPrice: 15800,
     buyNowPrice: 36900,

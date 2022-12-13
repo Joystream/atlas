@@ -7,9 +7,7 @@ export default {
   title: 'inputs/TitleInput',
   component: TitleInput,
   argTypes: {
-    onChange: { table: { disable: true } },
     onBlur: { table: { disable: true } },
-    className: { table: { disable: true } },
     value: { table: { disable: true } },
     name: { table: { disable: true } },
   },

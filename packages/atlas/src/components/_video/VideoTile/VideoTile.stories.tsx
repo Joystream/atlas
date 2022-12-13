@@ -23,23 +23,7 @@ export default {
   title: 'video/VideoTile',
   component: VideoTile,
   argTypes: {
-    direction: {
-      options: ['vertical', 'horizontal'],
-      control: {
-        type: 'radio',
-      },
-    },
-    detailsVariant: {
-      options: ['withoutChannel', 'withChannelName', 'withChannelNameAndAvatar'],
-      control: {
-        type: 'radio',
-      },
-    },
-    videoHref: { type: 'string' },
-    videoSubTitle: { type: 'string' },
-    className: { table: { disable: true } },
     onChannelAvatarClick: { table: { disable: true } },
-    onClick: { table: { disable: true } },
     onMouseEnter: { table: { disable: true } },
     onMouseLeave: { table: { disable: true } },
     slots: { table: { disable: true } },
@@ -93,8 +77,8 @@ export default {
       'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Provident distinctio omnis, voluptates molestias temporibus, incidunt tenetur totam impedit sed sunt atque veritatis ratione quisquam cum sapiente molestiae in voluptatibus iusto',
     kebabMenuItems: [
       {
-        icon: <SvgActionCopy />,
-        title: 'Copy video URL',
+        nodeStart: <SvgActionCopy />,
+        label: 'Copy video URL',
       },
     ],
   },
@@ -107,7 +91,7 @@ export default {
       )
     },
   ],
-} as Meta
+} as Meta<VideoTileProps>
 
 const Template: StoryFn<VideoTileProps> = (args) => {
   return (

@@ -35,3 +35,13 @@ export const parameters = {
     storySort: (a, b) => (a.title === b.title ? 0 : a.id.localeCompare(b.id, undefined, { numeric: true })),
   },
 }
+
+export const argTypes = {
+  to: { table: { disable: true } },
+  className: { table: { disable: true } },
+  onClick: { table: { disable: true } },
+  onChange: { table: { disable: true } },
+  as: { table: { disable: true } },
+  icon: { table: { disable: true } },
+  children: { table: { disable: true } },
+}

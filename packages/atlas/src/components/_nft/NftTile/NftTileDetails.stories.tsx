@@ -7,9 +7,6 @@ export default {
   title: 'NFT/Tile Details',
   component: NftTileDetails,
   argTypes: {
-    title: {
-      type: 'string',
-    },
     creator: { table: { disable: true } },
     supporters: { table: { disable: true } },
     owner: { table: { disable: true } },
@@ -30,7 +27,7 @@ export default {
     canMakeBid: false,
     videoHref: '',
   },
-} as Meta
+} as Meta<NftTileDetailsProps>
 
 const Template: StoryFn<NftTileDetailsProps> = (args) => (
   <BrowserRouter>

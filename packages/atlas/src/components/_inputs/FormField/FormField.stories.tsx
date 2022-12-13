@@ -20,17 +20,9 @@ export default {
     optional: false,
   },
   argTypes: {
-    // for some reason if we don't add storybook set the argTypes for description as json.
-    description: { type: 'string' },
-    className: { table: { disable: true } },
     switchable: { table: { disable: true } },
     switchProps: { table: { disable: true } },
     tooltip: { table: { disable: true } },
-    children: {
-      table: {
-        disable: true,
-      },
-    },
   },
 } as Meta<FormFieldProps>
 

@@ -14,10 +14,8 @@ export default {
     onExitClick: { table: { disable: true } },
     contentClassName: { table: { disable: true } },
     additionalActionsNode: { table: { disable: true } },
-    className: { table: { disable: true } },
     show: { table: { disable: true } },
     headerIcon: { table: { disable: true } },
-    fee: { type: 'number' },
   },
   args: {
     title: 'There is an information of the utmost importance!',

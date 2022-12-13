@@ -7,12 +7,6 @@ import { IconWrapper, IconWrapperProps } from './IconWrapper'
 export default {
   title: 'Icons/IconWrapper',
   component: IconWrapper,
-  argTypes: {
-    size: {
-      control: { type: 'select', options: ['small', 'medium', 'large'] },
-      defaultValue: 'medium',
-    },
-  },
 } as Meta
 
 const TemplateSingle: StoryFn<IconWrapperProps> = (args) => <IconWrapper {...args} />

@@ -8,8 +8,8 @@ import { NoConnectionIndicator, NoConnectionIndicatorProps } from './NoConnectio
 export default {
   title: 'overlays/NoConnectionIndicator',
   component: NoConnectionIndicator,
-  argTypes: {
-    connectionStatus: { defaultValue: 'disconnected' },
+  args: {
+    nodeConnectionStatus: 'disconnected',
   },
   decorators: [
     (Story) => (
@@ -20,7 +20,7 @@ export default {
       </>
     ),
   ],
-} as Meta
+} as Meta<NoConnectionIndicatorProps>
 
 const Default: StoryFn<NoConnectionIndicatorProps> = ({ ...args }) => {
   return <NoConnectionIndicator {...args} />

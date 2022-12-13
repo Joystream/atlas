@@ -63,7 +63,6 @@ export default {
     slots: { table: { disable: true } },
     type: { table: { disable: true } },
     contentSlot: { table: { disable: true } },
-    onClick: { action: 'clicked' },
   },
   decorators: [
     // TODO: remove any once SB fixes conditional types support

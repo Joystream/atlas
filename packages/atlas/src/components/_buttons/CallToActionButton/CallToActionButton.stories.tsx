@@ -7,12 +7,6 @@ import { CallToActionButton, CallToActionButtonProps, CallToActionWrapper } from
 export default {
   title: 'button/CallToActionButton',
   component: CallToActionButton,
-  argTypes: {
-    colorVariant: {
-      control: { type: 'select', options: ['blue', 'green', 'red', 'yellow'] },
-      defaultValue: 'blue',
-    },
-  },
 } as Meta
 
 const Template: StoryFn<CallToActionButtonProps> = (args) => {

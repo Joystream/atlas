@@ -6,9 +6,7 @@ export default {
   title: 'inputs/RadioButton',
   component: RadioButton,
   argTypes: {
-    className: { table: { disable: true } },
     selectedValue: { table: { disable: true } },
-    selected: { controls: { type: 'boolean' } },
   },
   args: {
     label: 'Hello there',

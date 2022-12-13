@@ -8,18 +8,6 @@ import { SvgActionChevronR, SvgActionExclamation } from '../../assets/icons'
 export default {
   title: 'Other/ListItem',
   component: ListItem,
-  argTypes: {
-    size: {
-      control: { type: 'select', options: ['small', 'medium', 'large'] },
-      defaultValue: 'medium',
-    },
-    captionPosition: {
-      control: { type: 'select', options: ['bottom', 'right'] },
-      defaultValue: 'bottom',
-    },
-    onClick: { table: { disable: true } },
-    className: { table: { disable: true } },
-  },
   args: {
     label: 'ListItem label',
     caption: 'This is a caption',

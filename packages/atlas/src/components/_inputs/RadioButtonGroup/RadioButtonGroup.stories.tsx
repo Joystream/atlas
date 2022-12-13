@@ -7,7 +7,6 @@ export default {
   title: 'inputs/RadioButtonGroup',
   component: RadioButtonGroup,
   argTypes: {
-    className: { table: { disable: true } },
     selectedValue: { table: { disable: true } },
     options: { table: { disable: true } },
     onChange: { table: { disable: true } },

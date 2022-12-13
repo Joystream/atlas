@@ -21,10 +21,7 @@ export default {
     disabled: false,
   },
   argTypes: {
-    size: { control: { type: 'select', options: ['medium', 'large'] } },
-    type: { control: { type: 'select', options: ['text', 'password', 'number'] } },
     value: { table: { disable: true } },
-    onChange: { table: { disable: true } },
     onBlur: { table: { disable: true } },
     onFocus: { table: { disable: true } },
     onKeyDown: { table: { disable: true } },
@@ -32,11 +29,10 @@ export default {
     autoComplete: { table: { disable: true } },
     nodeEnd: { table: { disable: true } },
     nodeStart: { table: { disable: true } },
-    className: { table: { disable: true } },
     defaultValue: { table: { disable: true } },
     actionButton: { table: { disable: true } },
   },
-} as Meta
+} as Meta<InputProps>
 
 const TemplateWithUncontrolledInput: StoryFn<InputProps> = (args) => {
   const ref = useRef<HTMLInputElement | null>(null)

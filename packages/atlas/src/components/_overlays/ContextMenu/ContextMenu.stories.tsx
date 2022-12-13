@@ -12,11 +12,9 @@ export default {
   component: ContextMenu,
   argTypes: {
     onHide: { table: { disable: true } },
-    className: { table: { disable: true } },
     items: { table: { disable: true } },
     triggerTarget: { table: { disable: true } },
     trigger: { table: { disable: true } },
-    size: { control: { type: 'select', options: ['small', 'medium', 'large'] } },
   },
   args: {
     scrollable: false,

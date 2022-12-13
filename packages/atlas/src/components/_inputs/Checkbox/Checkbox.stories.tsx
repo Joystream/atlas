@@ -8,21 +8,17 @@ export default {
   title: 'inputs/Checkbox',
   component: Checkbox,
   argTypes: {
-    label: {
-      defaultValue: 'Checkbox label',
-    },
     value: { table: { disable: true } },
     name: { table: { disable: true } },
     indeterminate: { table: { disable: true } },
     disabled: { table: { disable: true } },
     error: { table: { disable: true } },
     multiple: { table: { disable: true } },
-    className: { table: { disable: true } },
-    onChange: { table: { disable: true } },
     onFocus: { table: { disable: true } },
     onBlur: { table: { disable: true } },
   },
   args: {
+    label: 'Checkbox label',
     disabled: false,
     error: false,
     indeterminate: false,

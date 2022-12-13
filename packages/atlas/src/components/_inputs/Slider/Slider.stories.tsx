@@ -14,7 +14,6 @@ export default {
   },
   argTypes: {
     value: { table: { disable: true } },
-    onChange: { table: { disable: true } },
   },
 } as Meta
 

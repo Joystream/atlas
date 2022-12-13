@@ -7,7 +7,6 @@ export default {
   title: 'inputs/CheckboxGroup',
   component: CheckboxGroup,
   argTypes: {
-    className: { table: { disable: true } },
     selectedValue: { table: { disable: true } },
     options: { table: { disable: true } },
     checkedIds: { table: { disable: true } },

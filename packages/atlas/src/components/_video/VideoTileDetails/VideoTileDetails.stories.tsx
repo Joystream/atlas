@@ -2,7 +2,7 @@ import { Meta, StoryFn } from '@storybook/react'
 
 import { SvgActionReupload, SvgActionTrash } from '@/assets/icons'
 
-import { VideoDetailsVariant, VideoTileDetails, VideoTileDetailsProps } from '.'
+import { VideoTileDetails, VideoTileDetailsProps } from '.'
 
 export default {
   title: 'video/VideoTileDetails',
@@ -36,20 +36,6 @@ export default {
     kebabMenuItems: { table: { disable: true } },
     video: { table: { disable: true } },
     onPlaylistDetailsClick: { table: { disable: true } },
-    variant: {
-      options: ['withChannelNameAndAvatar', 'withChannelName', 'withoutChannel'] as VideoDetailsVariant[],
-      control: {
-        type: 'radio',
-      },
-    },
-    videoHref: { type: 'string' },
-    videoSubTitle: { type: 'string' },
-    size: {
-      options: ['medium', 'small'],
-      control: {
-        type: 'radio',
-      },
-    },
   },
 } as Meta<VideoTileDetailsProps>
 

@@ -16,10 +16,7 @@ export default {
     size: 'medium',
   },
   argTypes: {
-    size: { control: { type: 'select', options: ['medium', 'large'] } },
     value: { table: { disable: true } },
-    className: { table: { disable: true } },
-    onChange: { table: { disable: true } },
     onBlur: { table: { disable: true } },
     spellcheck: { table: { disable: true } },
   },

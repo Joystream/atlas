@@ -21,14 +21,11 @@ export default {
     error: false,
   },
   argTypes: {
-    size: { control: { type: 'select', options: ['medium', 'large'] } },
     items: { table: { disable: true } },
     value: { table: { disable: true } },
     icon: { table: { disable: true } },
-    className: { table: { disable: true } },
     containerRef: { table: { disable: true } },
     ref: { table: { disable: true } },
-    onChange: { table: { disable: true } },
   },
 } as Meta<SelectProps>
 

@@ -12,14 +12,6 @@ export default {
     subtitle: 'Each unfinished project will be saved here as a draft. Start publishing to see something here.',
     variant: 'large',
   },
-  argTypes: {
-    variant: {
-      control: { type: 'select', options: ['small', 'large'] },
-    },
-    className: {
-      table: { disable: true },
-    },
-  },
 } as Meta<EmptyFallbackProps>
 
 const Template: StoryFn<EmptyFallbackProps> = (args) => (

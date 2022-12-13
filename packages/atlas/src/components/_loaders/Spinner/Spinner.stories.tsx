@@ -5,12 +5,7 @@ import { Spinner, SpinnerProps } from './Spinner'
 export default {
   title: 'loaders/Spinner',
   component: Spinner,
-  argTypes: {
-    size: {
-      control: { type: 'select', options: ['small', 'medium', 'large'] },
-    },
-  },
-} as Meta
+} as Meta<SpinnerProps>
 
 const Template: StoryFn<SpinnerProps> = (args) => <Spinner {...args} />
 

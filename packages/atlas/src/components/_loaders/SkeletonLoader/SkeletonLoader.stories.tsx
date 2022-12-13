@@ -7,7 +7,6 @@ export default {
   component: SkeletonLoader,
   argTypes: {
     width: {
-      defaultValue: 500,
       control: {
         type: 'range',
         min: 200,
@@ -15,7 +14,6 @@ export default {
       },
     },
     height: {
-      defaultValue: 200,
       control: {
         type: 'range',
         min: 200,
@@ -23,7 +21,11 @@ export default {
       },
     },
   },
-} as Meta
+  args: {
+    width: 500,
+    height: 200,
+  },
+} as Meta<SkeletonLoaderProps>
 
 const Template: StoryFn<SkeletonLoaderProps> = (args) => <SkeletonLoader {...args} />
 

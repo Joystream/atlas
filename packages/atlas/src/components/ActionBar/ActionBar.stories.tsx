@@ -22,10 +22,6 @@ export default {
     },
     fee: 100,
   } as Omit<ActionBarProps, 'fee'>,
-  argTypes: {
-    onClick: { table: { disable: true } },
-    className: { table: { disable: true } },
-  },
 } as Meta<ActionBarProps>
 
 const Template: StoryFn<ActionBarProps> = (args) => <ActionBar {...args} fee={new BN(10000000000)} />

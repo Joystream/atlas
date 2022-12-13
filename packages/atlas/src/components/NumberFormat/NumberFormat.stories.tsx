@@ -12,14 +12,6 @@ export default {
     format: 'dollar',
     variant: 't100-strong',
   },
-  argTypes: {
-    format: {
-      control: { type: 'radio', options: ['dollar', 'full', 'short'] },
-    },
-    withToken: {
-      control: { type: 'boolean' },
-    },
-  },
 } as Meta<NumberFormatProps>
 
 const Template: StoryFn<Omit<NumberFormatProps, 'ref'>> = (args) => (

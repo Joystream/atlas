@@ -9,16 +9,10 @@ export default {
   title: 'other/Tooltip',
   component: Tooltip,
   argTypes: {
-    placement: {
-      control: { type: 'select', options: ['top-start', 'top-end', 'bottom-start', 'bottom-end'] },
-    },
-    icon: { defaultValue: false },
-    className: { table: { disable: true } },
     reference: { table: { disable: true } },
     hideOnClick: { table: { disable: true } },
     delay: { table: { disable: true } },
     showOnCreate: { table: { disable: true } },
-    customContent: { type: 'boolean' },
   },
   args: {
     customContent: false,

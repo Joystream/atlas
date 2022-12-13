@@ -8,11 +8,6 @@ import { DialogPopover } from './DialogPopover'
 export default {
   title: 'overlays/DialogPopover',
   component: DialogPopover,
-  argTypes: {
-    dividers: {
-      type: { name: 'boolean', required: false },
-    },
-  },
   args: {
     title: "I'm a title",
     dividers: false,

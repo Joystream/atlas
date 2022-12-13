@@ -6,17 +6,7 @@ import { JoyTokenIcon, JoyTokenIconProps } from './JoyTokenIcon'
 export default {
   title: 'Icons/JoyTokenIcon',
   component: JoyTokenIcon,
-  argTypes: {
-    variant: {
-      control: { type: 'select', options: ['primary', 'silver', 'regular'] },
-      defaultValue: 'primary',
-    },
-    size: {
-      control: { type: 'select', options: [16, 24, 32, 48] },
-      defaultValue: 48,
-    },
-  },
-} as Meta
+} as Meta<JoyTokenIconProps>
 
 const Template: StoryFn<JoyTokenIconProps> = (args) => {
   return (

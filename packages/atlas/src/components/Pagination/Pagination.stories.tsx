@@ -6,15 +6,11 @@ import { Pagination, PaginationProps } from './Pagination'
 export default {
   title: 'other/Pagination',
   component: Pagination,
-  argTypes: {
-    itemsPerPage: {
-      defaultValue: 10,
-    },
-    totalCount: {
-      defaultValue: 90,
-    },
+  args: {
+    itemsPerPage: 10,
+    totalCount: 90,
   },
-} as Meta
+} as Meta<PaginationProps>
 
 const Template: StoryFn<PaginationProps> = (args) => {
   const [currentPage, setCurrentPage] = useState(0)

@@ -3,28 +3,42 @@ import { Meta, StoryFn } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { createApolloClient } from '@/api'
-import { VideoGallery } from '@/components/_video/VideoGallery'
+import { VideoGallery, VideoGalleryProps } from '@/components/_video/VideoGallery'
+import { ConfirmationModalProvider } from '@/providers/confirmationModal'
+import { JoystreamProvider } from '@/providers/joystream/joystream.provider'
+import { NftActionsProvider } from '@/providers/nftActions/nftActions.provider'
+import { OverlayManagerProvider } from '@/providers/overlayManager'
+import { UserProvider } from '@/providers/user/user.provider'
 
 export default {
   title: 'video/VideoGallery',
   component: VideoGallery,
   argTypes: {
-    hasRanking: { type: 'boolean' },
+    videos: { table: { disable: true } },
   },
-  args: { hasRanking: true },
   decorators: [
     (Story) => {
       const apolloClient = createApolloClient()
       return (
         <ApolloProvider client={apolloClient}>
-          <BrowserRouter>
-            <Story />
-          </BrowserRouter>
+          <UserProvider>
+            <OverlayManagerProvider>
+              <ConfirmationModalProvider>
+                <JoystreamProvider>
+                  <NftActionsProvider>
+                    <BrowserRouter>
+                      <Story />
+                    </BrowserRouter>
+                  </NftActionsProvider>
+                </JoystreamProvider>
+              </ConfirmationModalProvider>
+            </OverlayManagerProvider>
+          </UserProvider>
         </ApolloProvider>
       )
     },
   ],
-} as Meta
+} as Meta<VideoGalleryProps>
 
 const video = {
   '__typename': 'Video',
@@ -86,8 +100,8 @@ const video = {
   },
 }
 
-const Template: StoryFn<{ hasRanking: boolean }> = ({ hasRanking }) => {
-  return <VideoGallery hasRanking={hasRanking} videos={Array(10).fill(video)} />
+const Template: StoryFn<VideoGalleryProps> = (props) => {
+  return <VideoGallery {...props} videos={Array(10).fill(video)} />
 }
 
 export const Default = Template.bind({})
