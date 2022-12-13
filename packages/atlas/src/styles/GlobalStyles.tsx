@@ -87,7 +87,8 @@ const globalStyles = css`
     }
   }
 
-  [data-popper-escaped='true'] {
+  [data-popper-escaped='true'],
+  [data-popper-reference-hidden='true'] {
     visibility: hidden;
     pointer-events: none;
   }

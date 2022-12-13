@@ -35,3 +35,13 @@ export const flipModifier = {
     fallbackPlacements: ['top', 'right'],
   },
 }
+
+export const offsetModifier = {
+  name: 'offset',
+  enabled: true,
+  options: {
+    offset: ({ placement }: { placement: 'top' | 'bottom' }) => (placement === 'top' ? [0, -15] : [0, 0]),
+  },
+}
+
+export const dropdownModifiers = [sameWidthModifier, flipModifier, popperIndexModifier, offsetModifier]

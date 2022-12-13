@@ -8,7 +8,7 @@ import { SvgActionChevronB, SvgActionChevronT } from '@/assets/icons'
 import { List } from '@/components/List'
 import { ListItemProps } from '@/components/ListItem'
 import { ConsoleLogger } from '@/utils/logs'
-import { flipModifier, popperIndexModifier, sameWidthModifier } from '@/utils/popperModifiers'
+import { dropdownModifiers } from '@/utils/popperModifiers'
 
 import {
   InlineLabel,
@@ -72,8 +72,9 @@ export const _Select = <T extends unknown>(
   const { styles, attributes } = usePopper(wrapperRef, dropdownRef, {
     placement: 'bottom',
     strategy: 'fixed',
-    modifiers: [sameWidthModifier, flipModifier, popperIndexModifier],
+    modifiers: dropdownModifiers,
   })
+
   const handleItemSelect = (changes: UseSelectStateChange<T>) => {
     onChange?.(changes.selectedItem)
   }
