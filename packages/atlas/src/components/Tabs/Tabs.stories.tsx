@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 
 import { Tabs, TabsProps } from './Tabs'
@@ -32,25 +32,14 @@ export default {
     underline: true,
   },
   argTypes: {
-    onSelectTab: {
-      table: { disable: true },
-    },
-    tabs: {
-      table: { disable: true },
-    },
-    initialIndex: {
-      table: { disable: true },
-    },
-    selected: {
-      table: { disable: true },
-    },
-    className: {
-      table: { disable: true },
-    },
+    onSelectTab: { table: { disable: true } },
+    tabs: { table: { disable: true } },
+    initialIndex: { table: { disable: true } },
+    selected: { table: { disable: true } },
   },
-} as Meta
+} as Meta<TabsProps>
 
-const Template: Story<TabsProps> = (args) => {
+const Template: StoryFn<TabsProps> = (args) => {
   const [selectedTabIdx, setSelectedTabIdx] = useState(0)
 
   return (

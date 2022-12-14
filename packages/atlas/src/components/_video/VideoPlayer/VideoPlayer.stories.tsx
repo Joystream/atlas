@@ -1,6 +1,6 @@
 import { ApolloProvider } from '@apollo/client'
 import styled from '@emotion/styled'
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { createApolloClient } from '@/api'
 import { cVar } from '@/styles'
@@ -23,7 +23,7 @@ export default {
   ],
 } as Meta
 
-const Template: Story<VideoPlayerProps> = (args) => (
+const Template: StoryFn<VideoPlayerProps> = (args) => (
   <Wrapper>
     <VideoPlayer {...args} />
   </Wrapper>

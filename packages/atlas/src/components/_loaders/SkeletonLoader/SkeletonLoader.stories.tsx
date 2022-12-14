@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { SkeletonLoader, SkeletonLoaderProps } from './SkeletonLoader'
 
@@ -7,7 +7,6 @@ export default {
   component: SkeletonLoader,
   argTypes: {
     width: {
-      defaultValue: 500,
       control: {
         type: 'range',
         min: 200,
@@ -15,7 +14,6 @@ export default {
       },
     },
     height: {
-      defaultValue: 200,
       control: {
         type: 'range',
         min: 200,
@@ -23,8 +21,12 @@ export default {
       },
     },
   },
-} as Meta
+  args: {
+    width: 500,
+    height: 200,
+  },
+} as Meta<SkeletonLoaderProps>
 
-const Template: Story<SkeletonLoaderProps> = (args) => <SkeletonLoader {...args} />
+const Template: StoryFn<SkeletonLoaderProps> = (args) => <SkeletonLoader {...args} />
 
 export const Default = Template.bind({})

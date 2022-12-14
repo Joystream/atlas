@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { AvatarGroup, AvatarGroupProps } from './AvatarGroup'
 
@@ -6,12 +6,6 @@ export default {
   title: 'other/AvatarGroup',
   component: AvatarGroup,
   argTypes: {
-    size: {
-      control: {
-        type: 'select',
-        options: ['small', 'medium', 'large'],
-      },
-    },
     avatarStrokeColor: {
       control: {
         type: 'color',
@@ -20,13 +14,11 @@ export default {
     avatars: { table: { disable: true } },
   },
   args: {
-    loading: false,
-    clickable: true,
     size: 'medium',
   },
 } as Meta
 
-const Template: Story<AvatarGroupProps> = (args) => (
+const Template: StoryFn<AvatarGroupProps> = (args) => (
   <div style={{ width: '500px', height: '500px', background: args.avatarStrokeColor, paddingTop: '30px' }}>
     <AvatarGroup {...args} />
   </div>

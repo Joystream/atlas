@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 
 import { pluralizeNoun } from '@/utils/misc'
@@ -11,7 +11,7 @@ export default {
   args: {},
 } as Meta
 
-const Template: Story<AuctionDatePickerProps> = (args) => {
+const Template: StoryFn<AuctionDatePickerProps> = (args) => {
   const [startDate, setStartDate] = useState<AuctionDatePickerValue>(null)
   const [expirationDate, setExpirationDate] = useState<AuctionDatePickerValue>(null)
 
@@ -44,7 +44,7 @@ const Template: Story<AuctionDatePickerProps> = (args) => {
       <AuctionDatePicker
         {...args}
         items={expirationDateItems}
-        minDate={startDate instanceof Date ? startDate : null}
+        minDate={startDate?.type === 'date' ? startDate.date : null}
         onChange={setExpirationDate}
         value={expirationDate}
         inlineLabel="expiration date"

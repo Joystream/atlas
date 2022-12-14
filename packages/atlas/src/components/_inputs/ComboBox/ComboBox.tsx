@@ -55,7 +55,6 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
     getInputProps,
     highlightedIndex,
     getItemProps,
-    getComboboxProps,
     reset,
     toggleMenu,
     inputValue,
@@ -102,19 +101,17 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
 
   return (
     <ComboBoxWrapper ref={comboBoxWrapperRef}>
-      <div {...getComboboxProps()}>
-        <Input
-          {...textFieldProps}
-          error={error || !!noItemsFound}
-          {...getInputProps({ ref: textFieldRef })}
-          nodeEnd={processing && inputValue && <Loader variant="small" />}
-          nodeStart={<StyledSvgActionPlus />}
-          onFocus={(event) => {
-            textFieldProps?.onFocus?.(event)
-          }}
-          onClick={toggleMenu}
-        />
-      </div>
+      <Input
+        {...textFieldProps}
+        error={error || !!noItemsFound}
+        {...getInputProps({ ref: textFieldRef })}
+        nodeEnd={processing && inputValue && <Loader variant="small" />}
+        nodeStart={<StyledSvgActionPlus />}
+        onFocus={(event) => {
+          textFieldProps?.onFocus?.(event)
+        }}
+        onClick={toggleMenu}
+      />
       <ListWrapper {...getMenuProps()} topPosition={getTextFieldBottomEdgePosition()} isOpen={isOpen}>
         {isOpen && (
           <>

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 
 import { cVar } from '@/styles'
@@ -15,7 +15,7 @@ export default {
   },
 } as Meta
 
-const Template: Story<HamburgerButtonProps> = (args) => {
+const Template: StoryFn<HamburgerButtonProps> = (args) => {
   const [active, setActive] = useState(args.active)
 
   return (

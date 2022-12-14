@@ -1,8 +1,8 @@
-import { ApolloProvider } from '@apollo/client'
-import { Meta, Story } from '@storybook/react'
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
+import { Meta, StoryFn } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
-import { createApolloClient } from '@/api'
+// import { createApolloClient } from '@/api'
 import { Grid } from '@/components/Grid'
 import { AssetsManager } from '@/providers/assets/assets.manager'
 import { OperatorsContextProvider } from '@/providers/assets/assets.provider'
@@ -29,7 +29,7 @@ export default {
   },
   decorators: [
     (Story) => {
-      const apolloClient = createApolloClient()
+      const apolloClient = new ApolloClient({ cache: new InMemoryCache() })
       return (
         <BrowserRouter>
           <ApolloProvider client={apolloClient}>
@@ -48,7 +48,7 @@ export default {
   ],
 } as Meta
 
-const Template: Story<ChannelCardProps> = (args) => (
+const Template: StoryFn<ChannelCardProps> = (args) => (
   <div style={{ maxWidth: 400 }}>
     <ChannelCard {...args} />
   </div>
@@ -56,7 +56,7 @@ const Template: Story<ChannelCardProps> = (args) => (
 
 export const Default = Template.bind({})
 
-const WithinGrid: Story<ChannelCardProps> = (args) => (
+const WithinGrid: StoryFn<ChannelCardProps> = (args) => (
   <Grid>
     <ChannelCard {...args} />
     <ChannelCard {...args} />

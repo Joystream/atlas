@@ -1,6 +1,6 @@
 import { format, isValid, parse } from 'date-fns'
 import { ChangeEvent, FocusEvent, ForwardRefRenderFunction, forwardRef, useEffect, useState } from 'react'
-import NumberFormat from 'react-number-format'
+import { PatternFormat } from 'react-number-format'
 
 import { Input } from '@/components/_inputs/Input'
 
@@ -39,7 +39,7 @@ const DatepickerComponent: ForwardRefRenderFunction<HTMLInputElement, Datepicker
   }
 
   return (
-    <NumberFormat
+    <PatternFormat
       value={rawValue}
       getInputRef={ref}
       customInput={Input}

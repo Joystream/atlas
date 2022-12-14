@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { NftCard, NftCardProps } from './NftCard'
@@ -7,21 +7,12 @@ export default {
   title: 'NFT/NftCard',
   component: NftCard,
   argTypes: {
-    title: {
-      type: 'string',
-      defaultValue: 'Did An Alternate Reality Game Gone Wrong Predict QAnon?',
-    },
-    thumbnail: {
-      thumbnailUrl: {
-        type: 'string',
-      },
-    },
     creator: { table: { disable: true } },
     supporters: { table: { disable: true } },
     owner: { table: { disable: true } },
-    fullWidth: { type: 'boolean', defaultValue: false },
   },
   args: {
+    title: 'Did An Alternate Reality Game Gone Wrong Predict QAnon?',
     thumbnail: { thumbnailUrl: 'https://placedog.net/360/203' },
     creator: { assetUrl: 'https://placedog.net/100/100?random=1', name: 'Jane' },
     supporters: [
@@ -45,7 +36,7 @@ export default {
   ],
 } as Meta
 
-const Template: Story<NftCardProps> = (args) => <NftCard {...args} />
+const Template: StoryFn<NftCardProps> = (args) => <NftCard {...args} />
 
 export const Default = Template.bind({})
 export const NoSupporters = Template.bind({})

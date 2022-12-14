@@ -1,5 +1,5 @@
 import { ApolloProvider } from '@apollo/client'
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { createApolloClient } from '@/api'
@@ -15,9 +15,8 @@ export default {
   component: TransactionModal,
   argTypes: {
     status: {
-      defaultValue: ExtrinsicStatus.ProcessingAssets,
+      options: Object.values(ExtrinsicStatus),
       control: {
-        options: Object.values(ExtrinsicStatus),
         type: 'select',
         labels: {
           [ExtrinsicStatus.ProcessingAssets]: 'ProcessingAssets',
@@ -29,6 +28,9 @@ export default {
         },
       },
     },
+  },
+  args: {
+    status: ExtrinsicStatus.ProcessingAssets,
   },
   decorators: [
     (Story) => {
@@ -50,7 +52,7 @@ export default {
   ],
 } as Meta<TransactionModalProps>
 
-const RegularTemplate: Story<TransactionModalProps> = ({ ...args }) => {
+const RegularTemplate: StoryFn<TransactionModalProps> = ({ ...args }) => {
   return <TransactionModal {...args} />
 }
 export const Regular = RegularTemplate.bind({})
