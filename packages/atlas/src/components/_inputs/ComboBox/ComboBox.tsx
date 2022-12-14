@@ -89,6 +89,9 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
       setInputItems(inputValue?.length ? uniqBy(filteredItems, 'label') : items)
       onInputValueChange?.(inputValue)
     },
+    onIsOpenChange: () => {
+      update?.()
+    },
   })
 
   useEffect(() => {
