@@ -89,6 +89,14 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
       <Controller
         name="referrerChannelTitle"
         control={control}
+        rules={{
+          validate: (value) => {
+            if (value && !foundChannel) {
+              return 'No channel with this title has been found.'
+            }
+            return true
+          },
+        }}
         render={({ field: { onChange, value } }) => (
           <FormField
             optional
@@ -107,7 +115,8 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
                 }))
               }
               placeholder="Enter channel name"
-              selectedItem={value ?? ''}
+              value={value ?? ''}
+              onChange={onChange}
               onItemSelect={(item) => {
                 if (item) {
                   setFoundChannel(item)
@@ -116,7 +125,6 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
               }}
               nodeEnd={foundChannel && <ResolvedAvatar channel={foundChannel} size="bid" />}
               clearSelection={() => {
-                onChange(undefined)
                 setFoundChannel(undefined)
               }}
             />
