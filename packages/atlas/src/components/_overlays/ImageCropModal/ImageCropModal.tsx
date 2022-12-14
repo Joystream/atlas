@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import {
   ForwardRefRenderFunction,
   forwardRef,
@@ -9,9 +10,13 @@ import {
 } from 'react'
 
 import { SvgActionPan, SvgActionTrash, SvgActionZoomIn, SvgActionZoomOut } from '@/assets/icons'
+import { Fee } from '@/components/Fee'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { DialogModalProps } from '@/components/_overlays/DialogModal'
+import { JoystreamLibExtrinsics } from '@/joystream-lib/extrinsics'
+import { TxMethodName } from '@/joystream-lib/types'
+import { useFee } from '@/providers/joystream/joystream.hooks'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { validateImage } from '@/utils/image'
 import { SentryLogger } from '@/utils/logs'
@@ -27,6 +32,11 @@ import {
 } from './ImageCropModal.styles'
 import { CropperImageType, useCropper } from './cropper'
 
+type FeeData = {
+  methodName: TxMethodName
+  args?: Parameters<JoystreamLibExtrinsics[TxMethodName]>
+}
+
 export type ImageCropModalProps = {
   imageType: CropperImageType
   onConfirm: (
@@ -38,6 +48,7 @@ export type ImageCropModalProps = {
   ) => void
   onDelete?: () => void
   onError?: (error: Error) => void
+  fee?: FeeData
 } & Pick<DialogModalProps, 'onExitClick'>
 
 export type ImageCropModalImperativeHandle = {
@@ -45,7 +56,7 @@ export type ImageCropModalImperativeHandle = {
 }
 
 const ImageCropModalComponent: ForwardRefRenderFunction<ImageCropModalImperativeHandle, ImageCropModalProps> = (
-  { imageType, onConfirm, onDelete, onError },
+  { imageType, onConfirm, onDelete, onError, fee },
   ref
 ) => {
   const [showModal, setShowModal] = useState(false)
@@ -55,6 +66,7 @@ const ImageCropModalComponent: ForwardRefRenderFunction<ImageCropModalImperative
   const [cropData, setCropData] = useState<ImageCropData | null>(null)
   const [editMode, setEditMode] = useState(false)
   const [originalBlob, setOriginalBlob] = useState<File | Blob | null>(null)
+  const { fullFee, loading } = useFee(fee?.methodName, fee?.args && showModal ? fee.args : undefined)
   const { currentZoom, zoomRange, zoomStep, handleZoomChange, cropImage } = useCropper({
     imageEl,
     imageType,
@@ -168,11 +180,15 @@ const ImageCropModalComponent: ForwardRefRenderFunction<ImageCropModalImperative
         secondaryButton={{ text: 'Cancel', onClick: resetModal }}
         additionalActionsNodeMobilePosition="bottom"
         additionalActionsNode={
-          editMode &&
-          onDelete && (
-            <Button onClick={handleDeleteClick} variant="destructive-secondary" icon={<SvgActionTrash />}>
-              Delete
-            </Button>
+          fee ? (
+            <Fee loading={loading} variant="h200" amount={fullFee || new BN(0)} />
+          ) : (
+            editMode &&
+            onDelete && (
+              <Button onClick={handleDeleteClick} variant="destructive-secondary" icon={<SvgActionTrash />}>
+                Delete
+              </Button>
+            )
           )
         }
         onExitClick={resetModal}

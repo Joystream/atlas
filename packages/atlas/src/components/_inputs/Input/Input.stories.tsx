@@ -1,5 +1,5 @@
 import { useRef } from '@storybook/addons'
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 
 import { SvgActionBid, SvgActionClose, SvgActionSearch, SvgJoyTokenMonochrome16 } from '@/assets/icons'
@@ -21,10 +21,7 @@ export default {
     disabled: false,
   },
   argTypes: {
-    size: { control: { type: 'select', options: ['medium', 'large'] } },
-    type: { control: { type: 'select', options: ['text', 'password', 'number'] } },
     value: { table: { disable: true } },
-    onChange: { table: { disable: true } },
     onBlur: { table: { disable: true } },
     onFocus: { table: { disable: true } },
     onKeyDown: { table: { disable: true } },
@@ -32,13 +29,12 @@ export default {
     autoComplete: { table: { disable: true } },
     nodeEnd: { table: { disable: true } },
     nodeStart: { table: { disable: true } },
-    className: { table: { disable: true } },
     defaultValue: { table: { disable: true } },
     actionButton: { table: { disable: true } },
   },
-} as Meta
+} as Meta<InputProps>
 
-const TemplateWithUncontrolledInput: Story<InputProps> = (args) => {
+const TemplateWithUncontrolledInput: StoryFn<InputProps> = (args) => {
   const ref = useRef<HTMLInputElement | null>(null)
   return (
     <>
@@ -50,14 +46,14 @@ const TemplateWithUncontrolledInput: Story<InputProps> = (args) => {
   )
 }
 
-const Template: Story<InputProps> = (args) => <Input {...args} />
+const Template: StoryFn<InputProps> = (args) => <Input {...args} />
 
-const TemplateWithControlledInput: Story<InputProps> = (args) => {
+const TemplateWithControlledInput: StoryFn<InputProps> = (args) => {
   const [value, setValue] = useState('')
   return <Input {...args} onChange={(e) => setValue(e.currentTarget.value)} value={value} />
 }
 
-const TemplateWithPreffixAndSuffix: Story<InputProps> = (args) => {
+const TemplateWithPreffixAndSuffix: StoryFn<InputProps> = (args) => {
   const [dollars, setDollars] = useState<number>()
   return (
     <div style={{ display: 'grid', gap: 24 }}>

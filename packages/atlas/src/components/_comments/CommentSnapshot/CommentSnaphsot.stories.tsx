@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { CommentSnapshot, CommentSnapshotProps } from './CommentSnaphsot'
@@ -26,11 +26,11 @@ export default {
   ],
 } as Meta<CommentSnapshotProps>
 
-const SingleTemplate: Story<CommentSnapshotProps> = (args) => {
+const SingleTemplate: StoryFn<CommentSnapshotProps> = (args) => {
   return <CommentSnapshot {...args} />
 }
 
-const ManyTemplate: Story<CommentSnapshotProps> = (args) => {
+const ManyTemplate: StoryFn<CommentSnapshotProps> = (args) => {
   return (
     <div style={{ display: 'grid', gap: 32 }}>
       <CommentSnapshot {...args} />

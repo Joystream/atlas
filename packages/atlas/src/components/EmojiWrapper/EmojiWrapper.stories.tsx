@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 import { MemoryRouter } from 'react-router-dom'
 
@@ -20,7 +20,7 @@ export default {
   ],
 } as Meta
 
-const Template: Story<EmojiWrapperProps> = () => {
+const Template: StoryFn<EmojiWrapperProps> = () => {
   const [text, setText] = useState('I 🤡 love 😍 emojis 🐥')
 
   return (

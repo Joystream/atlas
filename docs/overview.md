@@ -56,6 +56,17 @@ We currently use GitHub actions and Vercel for all our DevOps needs. On every PR
 
 The deployed version of Atlas (at https://play.joystream.org) is also hosted by Vercel. This one gets redeployed on every push/merge to master.
 
+### Releasing
+
+Atlas is versioned using [Semantic Versioning](https://semver.org/). The version is stored in `package.json` in the `packages/atlas` package. There is also a `CHANGELOG.md` file in the root of the repo that contains all the changes between versions. Every PR that contains non-trivial change should add entry to the `CHANGELOG.md` file in the `Unreleased` section, explaining what was changed.
+
+Whenever we merge to `master`, we should create a new release. This is done by:
+
+1. Creating a `release: X.Y.Z` (where `X.Y.Z` is the version number) commit that bumps version in `packages/atlas/package.json` and replaces the `Unreleased` section in `CHANGELOG.md` with appropriate version number.
+2. Creating a Git tag in the format `vX.Y.Z`.
+3. Pushing the commit and the tag to `master`.
+4. Creating a new GitHub release with the same version number as the tag, and supplying it with the `CHANGELOG.md` entries.
+
 ## Meta tags pre-rendering
 
 Because social media crawling bots can't handle SPA apps, we decided to pre-render HTML meta tags for social media previews purposes. Whenever a request from a social media crawler (detected via `User-Agent` header), we redirect it to the `atlas-meta-server` which returns pre-rendered HTML, in any other case regular application is served.

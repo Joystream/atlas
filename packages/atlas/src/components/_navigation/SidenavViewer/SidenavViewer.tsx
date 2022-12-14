@@ -11,7 +11,7 @@ import {
   SvgSidebarPopular,
   SvgSidebarYpp,
 } from '@/assets/icons'
-import { SvgAppLogoFull } from '@/assets/logos'
+import { AppLogo } from '@/components/AppLogo'
 import { Button } from '@/components/_buttons/Button'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
@@ -111,7 +111,7 @@ export const SidenavViewer: FC = () => {
     <SidenavBase
       expanded={expanded}
       toggleSideNav={setExpanded}
-      logoNode={<SvgAppLogoFull height={32} width={undefined} />}
+      logoNode={<AppLogo variant="full" height={32} width={undefined} />}
       logoLinkUrl={absoluteRoutes.viewer.index()}
       items={viewerNavItems}
       additionalContent={

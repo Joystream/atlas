@@ -7,7 +7,12 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
 import checker from 'vite-plugin-checker'
 
-import { AtlasConfigTransformPlugin, EmbeddedFallbackPlugin, PolkadotWorkerMetaFixPlugin } from './plugins'
+import {
+  AtlasHtmlMetaTagsPlugin,
+  AtlasWebmanifestPlugin,
+  EmbeddedFallbackPlugin,
+  PolkadotWorkerMetaFixPlugin,
+} from './plugins'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -38,7 +43,8 @@ export default defineConfig({
     plugins: [PolkadotWorkerMetaFixPlugin],
   },
   plugins: [
-    AtlasConfigTransformPlugin,
+    AtlasHtmlMetaTagsPlugin,
+    AtlasWebmanifestPlugin,
     EmbeddedFallbackPlugin,
     ViteYaml(),
     react({

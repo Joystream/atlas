@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
@@ -8,18 +8,13 @@ import { DialogPopover } from './DialogPopover'
 export default {
   title: 'overlays/DialogPopover',
   component: DialogPopover,
-  argTypes: {
-    dividers: {
-      type: { name: 'boolean', required: false },
-    },
-  },
   args: {
     title: "I'm a title",
     dividers: false,
   },
 } as Meta
 
-const Template: Story = (args) => {
+const Template: StoryFn = (args) => {
   return (
     <div>
       <DialogPopover

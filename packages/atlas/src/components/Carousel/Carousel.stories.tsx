@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useRef } from 'react'
 
 import { cVar } from '@/styles'
@@ -11,7 +11,7 @@ export default {
   component: Carousel,
 } as Meta
 
-const Template: Story<CarouselProps> = (args) => {
+const Template: StoryFn<CarouselProps> = (args) => {
   const prevArrowRef = useRef<HTMLButtonElement>(null)
   const nextArrowRef = useRef<HTMLButtonElement>(null)
   return (

@@ -377,6 +377,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                   hashPromise: thumbnailHashPromise,
                   dimensions: thumbnailInputFile?.assetDimensions,
                   cropData: thumbnailInputFile?.imageCropData,
+                  name: thumbnailInputFile.originalBlob?.name,
                 },
               }
             : {}),
@@ -482,7 +483,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
 
   const royaltiesField = (
     <FormField
-      switchable
       error={errors.nftRoyaltiesPercent?.message}
       switchProps={{
         value: videoFieldsLocked ? !!watch('nftRoyaltiesPercent') : royaltiesFieldEnabled,

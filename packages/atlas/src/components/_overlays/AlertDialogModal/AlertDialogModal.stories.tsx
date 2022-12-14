@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
@@ -11,10 +11,8 @@ export default {
   component: AlertDialogModal,
   argTypes: {
     onSubmit: { table: { disable: true } },
-    className: { table: { disable: true } },
     show: { table: { disable: true } },
     onExitClick: { table: { disable: true } },
-    fee: { type: 'number' },
   },
   args: {
     title: 'There is an information of the utmost importance!',
@@ -32,12 +30,12 @@ export default {
   ],
 } as Meta<AlertDialogModalProps>
 
-const OpenTemplate: Story<AlertDialogModalProps> = ({ ...args }) => {
+const OpenTemplate: StoryFn<AlertDialogModalProps> = ({ ...args }) => {
   return <AlertDialogModal {...args} show={true} />
 }
 export const Open = OpenTemplate.bind({})
 
-const ToggleableTemplate: Story<AlertDialogModalProps> = ({ ...args }) => {
+const ToggleableTemplate: StoryFn<AlertDialogModalProps> = ({ ...args }) => {
   const [open, setOpen] = useState(false)
 
   return (

@@ -6,7 +6,7 @@ import { Loader } from '@/components/_loaders/Loader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useUser } from '@/providers/user/user.hooks'
 import { useUserStore } from '@/providers/user/user.store'
-import { shortenAddress } from '@/utils/address'
+import { shortenString } from '@/utils/misc'
 
 import { SignInModalStepTemplate } from './SignInModalStepTemplate'
 import { ListItemsWrapper, StyledListItem } from './SignInSteps.styles'
@@ -68,7 +68,7 @@ export const SignInModalAccountStep: FC<SignInModalAccountStepProps> = ({
             <StyledListItem
               key={account.address}
               label={account.name || 'Account'}
-              caption={shortenAddress(account.address, 5, 5)}
+              caption={shortenString(account.address, 5)}
               size={smMatch ? 'large' : 'medium'}
               selected={localSelectedAddress === account.address}
               nodeStart={<PolkadotIdenticon id={account.address} />}

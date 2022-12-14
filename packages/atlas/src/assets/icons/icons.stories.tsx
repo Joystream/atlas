@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { Text } from '@/components/Text'
 import { cVar } from '@/styles'
@@ -10,7 +10,7 @@ export default {
   title: 'Icons/Icons',
 } as Meta
 
-const Template: Story = () => (
+const Template: StoryFn = () => (
   <Container>
     {Object.entries(icons).map(([iconName, Component]) => {
       return (

@@ -43,7 +43,7 @@ export const VideoCategoryCard: FC<VideoCategoryCardProps> = ({
   id,
 }) => {
   // value from 1 to 100 percentage
-  const pieChartValue = ((categoryVideosCount ?? 0) / (videosTotalCount ?? 1)) * 100
+  const pieChartValue = ((categoryVideosCount ?? 0) / (videosTotalCount || 1)) * 100
 
   const categoryUrl = id ? absoluteRoutes.viewer.category(id) : ''
   return (

@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { Button } from '@/components/_buttons/Button'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -18,7 +18,7 @@ export default {
   },
 } as Meta
 
-const Template: Story<BannerProps> = (args) => {
+const Template: StoryFn<BannerProps> = (args) => {
   const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
   return (
     <>

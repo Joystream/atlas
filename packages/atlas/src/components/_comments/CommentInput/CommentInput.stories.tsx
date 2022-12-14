@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { MemoryRouter } from 'react-router-dom'
 
 import { CommentInput, CommentInputProps } from './CommentInput'
@@ -27,7 +27,7 @@ export default {
   ],
 } as Meta<CommentInputProps>
 
-const Template: Story<CommentInputProps & { cancelButton: boolean }> = (args) => (
+const Template: StoryFn<CommentInputProps & { cancelButton: boolean }> = (args) => (
   <Container>
     <CommentInput {...args} onCancel={args.cancelButton ? () => ({}) : undefined} />
   </Container>
