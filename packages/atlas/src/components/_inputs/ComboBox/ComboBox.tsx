@@ -101,7 +101,6 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
 
   return (
     <ComboBoxWrapper ref={comboBoxWrapperRef}>
-      {/*<div {...getComboboxProps()}>*/}
       <Input
         {...textFieldProps}
         error={error || !!noItemsFound}
@@ -113,7 +112,6 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
         }}
         onClick={toggleMenu}
       />
-      {/*</div>*/}
       <ListWrapper {...getMenuProps()} topPosition={getTextFieldBottomEdgePosition()} isOpen={isOpen}>
         {isOpen && (
           <>
