@@ -14,9 +14,10 @@ const notFoundNode = {
 }
 
 type InputAutocompleteProps<Q extends object, V extends OperationVariables, R = object> = {
-  selectedItem: string
-  onItemSelect: (channel: R | undefined) => void
+  value: string
+  onChange: (value: string) => void
   clearSelection: () => void
+  onItemSelect: (channel: R | undefined) => void
   queryVariablesFactory: (value: string) => V
   documentQuery: TypedDocumentNode<Q, V>
   renderItem: (value: Q) => ComboBoxProps<R>['items']
@@ -30,19 +31,19 @@ export const InputAutocomplete = <Q extends object, V extends OperationVariables
   queryVariablesFactory,
   documentQuery,
   renderItem,
+  clearSelection,
   placeholder,
   nodeEnd,
-  clearSelection,
-  selectedItem,
+  onChange,
+  value,
   perfectMatcher,
   ...comboBoxProps
 }: InputAutocompleteProps<Q, V, R>) => {
   const [result, setResult] = useState<Q | null>(null)
-  const [inputValue, setInputValue] = useState<string>('')
   const [isLoading, setLoading] = useState(false)
   const client = useApolloClient()
 
-  const debouncedFetchChannels = useRef(
+  const debouncedFetch = useRef(
     debouncePromise(async (val) => {
       if (!val) return setResult(null)
 
@@ -54,7 +55,7 @@ export const InputAutocomplete = <Q extends object, V extends OperationVariables
         })
         setResult(data.data)
       } catch (e) {
-        SentryLogger.error('Failed to fetch channels', 'InputAutocomplete', e)
+        SentryLogger.error('Failed to fetch autocomplete items', 'InputAutocomplete', e)
       } finally {
         setLoading(false)
       }
@@ -63,10 +64,10 @@ export const InputAutocomplete = <Q extends object, V extends OperationVariables
 
   useEffect(() => {
     if (result && perfectMatcher) {
-      const matched = perfectMatcher(result, inputValue)
+      const matched = perfectMatcher(result, value)
       matched && onItemSelect(matched)
     }
-  }, [onItemSelect, perfectMatcher, result, inputValue])
+  }, [onItemSelect, perfectMatcher, result, value])
 
   return (
     <ComboBox
@@ -80,9 +81,9 @@ export const InputAutocomplete = <Q extends object, V extends OperationVariables
       onSelectedItemChange={onItemSelect}
       onInputValueChange={(value) => {
         setLoading(true)
-        setInputValue(value ?? '')
-        selectedItem && clearSelection()
-        debouncedFetchChannels.current(value)
+        clearSelection()
+        onChange(value ?? '')
+        debouncedFetch.current(value)
       }}
     />
   )
