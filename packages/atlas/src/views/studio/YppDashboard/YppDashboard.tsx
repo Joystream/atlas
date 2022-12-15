@@ -27,7 +27,7 @@ import {
 } from './YppDashboard.styles'
 
 export const YppDashboard: FC = () => {
-  const headTags = useHeadTags('Youtube Partner Program')
+  const headTags = useHeadTags('YouTube Partner Program')
   const mdMatch = useMediaMatch('md')
   const { channelId } = useUser()
 

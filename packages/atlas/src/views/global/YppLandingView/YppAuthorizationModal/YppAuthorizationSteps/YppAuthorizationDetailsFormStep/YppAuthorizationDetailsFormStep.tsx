@@ -126,7 +126,7 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
       <FormField
         disableErrorAnimation={document.activeElement === titleInputRef.current}
         label="Category for videos"
-        description="We need to assign your videos to one of categories below. You can change the category for each video later."
+        description="Choose one of the categories to be assigned to the imported videos by default. You can change it for each video later."
         error={errors.videoCategoryId?.message}
       >
         <Controller
@@ -139,7 +139,13 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
             },
           }}
           render={({ field: { value, onChange, ref } }) => (
-            <Select items={categoriesSelectItems} onChange={onChange} value={value} ref={ref} />
+            <Select
+              items={categoriesSelectItems}
+              error={!!errors.videoCategoryId}
+              onChange={onChange}
+              value={value}
+              ref={ref}
+            />
           )}
         />
       </FormField>
@@ -159,7 +165,7 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
             )
           }
           {...titleRegisterRest}
-          placeholder="Channel handle"
+          placeholder="Channel Name"
           error={!!errors.referrerChannelTitle}
           ref={(e) => {
             ref(e)

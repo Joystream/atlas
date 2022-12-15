@@ -296,7 +296,9 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       {
         text: `Your YouTube channel has at least ${formatNumber(
           fetchedChannelRequirements?.MINIMUM_VIDEO_COUNT || 0
-        )} videos, all published at least ${convertHoursRequirementTime(
+        )} video${
+          fetchedChannelRequirements?.MINIMUM_VIDEO_COUNT !== 1 ? 's' : ''
+        }, all published at least ${convertHoursRequirementTime(
           fetchedChannelRequirements?.MINIMUM_VIDEO_AGE_HOURS || 0
         )} ago`,
         fulfilled: !ytRequirmentsErrors.some(
@@ -306,7 +308,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       {
         text: `Your YouTube channel has at least ${formatNumber(
           fetchedChannelRequirements?.MINIMUM_SUBSCRIBERS_COUNT || 0
-        )} subscribers`,
+        )} subscriber${fetchedChannelRequirements?.MINIMUM_SUBSCRIBERS_COUNT !== 1 ? 's' : ''}`,
         fulfilled: !ytRequirmentsErrors.some(
           (error) => error === YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_SUBSCRIBERS
         ),
@@ -358,7 +360,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       case 'details':
         return {
           title: 'Details',
-          description: 'We need your email address to send you payment information. No spam or marketing materials.',
+          description: 'Provide additional information to set up your program membership.',
           primaryButton: {
             onClick: () => {
               handleSubmitDetailsForm()
