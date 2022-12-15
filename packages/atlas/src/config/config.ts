@@ -8,8 +8,6 @@ import { RawConfig, configSchema } from './configSchema'
 
 import rawConfig from '../../atlas.config.yml'
 
-const YppWidgetIconEnum = z.enum(['info', 'message', 'tokenStack'])
-
 type SelectValue = Pick<SelectItem, 'value' | 'name'>
 export type Config = RawConfig & {
   derived: {
@@ -19,7 +17,6 @@ export type Config = RawConfig & {
     commentReactionsLookup: Record<number, RawConfig['features']['comments']['reactions'][number]>
   }
 }
-export type YppWidgetIcons = z.infer<typeof YppWidgetIconEnum>
 
 let parsedConfig: RawConfig
 

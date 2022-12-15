@@ -4,7 +4,8 @@ import { SvgActionChevronR, SvgActionInfo, SvgActionSpeech, SvgActionTokensStack
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { CallToActionButton } from '@/components/_buttons/CallToActionButton'
-import { YppWidgetIcons, atlasConfig } from '@/config'
+import { atlasConfig } from '@/config'
+import { YppWidgetIcons } from '@/config/configSchema'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { CtaBanner, CtaCardRow, StyledBannerText, StyledButton } from './YppFooter.styles'
