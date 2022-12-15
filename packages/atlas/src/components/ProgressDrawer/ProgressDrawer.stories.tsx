@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 
 import { ProgressDrawer, ProgressDrawerProps } from './ProgressDrawer'
@@ -6,10 +6,9 @@ import { ProgressDrawer, ProgressDrawerProps } from './ProgressDrawer'
 export default {
   title: 'other/ProgressDrawer',
   component: ProgressDrawer,
-  argTypes: {},
 } as Meta
 
-const SingleTemplate: Story<ProgressDrawerProps> = (args) => {
+const SingleTemplate: StoryFn<ProgressDrawerProps> = (args) => {
   const [addChannel, setaddChannel] = useState(true)
   const [addDescription, setaddDescription] = useState(false)
   const [addAvatar, setaddAvatar] = useState(false)

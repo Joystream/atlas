@@ -92,7 +92,11 @@ export const BottomDrawer: FC<BottomDrawerProps> = ({
       >
         <Container role="dialog">
           <DrawerHeader title={title} label={titleLabel} onCloseClick={onClose} />
-          <ScrollContainer actionBarHeight={actionBarHeight} fixedScrollbar={fixedScrollbar}>
+          <ScrollContainer
+            data-scroll-lock-scrollable
+            actionBarHeight={actionBarHeight}
+            fixedScrollbar={fixedScrollbar}
+          >
             {children}
           </ScrollContainer>
           {actionBar ? <StyledActionBar ref={actionBarRef} {...actionBar} /> : null}

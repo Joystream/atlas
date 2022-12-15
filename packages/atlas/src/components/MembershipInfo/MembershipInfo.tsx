@@ -1,26 +1,16 @@
-import { FC, MouseEvent, useState } from 'react'
+import { FC, MouseEvent } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
-import { useClipboard } from '@/hooks/useClipboard'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { cVar, transitions } from '@/styles'
-import { shortenAddress } from '@/utils/address'
 
-import {
-  MembershipDetails,
-  MembershipHeader,
-  MembershipInfoContainer,
-  StyledHandle,
-  StyledSvgActionCheck,
-  StyledSvgActionCopy,
-  StyledText,
-} from './MembershipInfo.style'
+import { MembershipDetails, MembershipHeader, MembershipInfoContainer, StyledHandle } from './MembershipInfo.style'
 
 import { SvgActionEdit } from '../../assets/icons'
 import { Avatar } from '../Avatar'
-import { Tooltip } from '../Tooltip'
 import { Button } from '../_buttons/Button'
+import { CopyAddressButton } from '../_buttons/CopyAddressButton/CopyAddressButton'
 import { SkeletonLoader } from '../_loaders/SkeletonLoader'
 
 export type MembershipInfoProps = {
@@ -50,20 +40,7 @@ export const MembershipInfo: FC<MembershipInfoProps> = ({
   editable,
   className,
 }) => {
-  const { copyToClipboard } = useClipboard()
-  const [copyButtonClicked, setCopyButtonClicked] = useState(false)
   const smMatch = useMediaMatch('sm')
-
-  const handleCopyAddress = () => {
-    if (!address) {
-      return
-    }
-    copyToClipboard(address, 'Account address copied to clipboard')
-    setCopyButtonClicked(true)
-    setTimeout(() => {
-      setCopyButtonClicked(false)
-    }, 3000)
-  }
 
   return (
     <SwitchTransition>
@@ -87,19 +64,14 @@ export const MembershipInfo: FC<MembershipInfoProps> = ({
               {loading ? (
                 <SkeletonLoader width={200} height={smMatch ? 56 : 40} bottomSpace={8} />
               ) : (
-                <StyledHandle as="h1" variant={smMatch ? 'h700' : 'h600'}>
+                <StyledHandle as="h1" variant={smMatch ? 'h700' : 'h600'} margin={{ bottom: 2 }}>
                   {handle || '\xa0'}
                 </StyledHandle>
               )}
               {loading || !address ? (
                 <SkeletonLoader width={140} height={24} />
               ) : (
-                <StyledText as="p" variant="t300" color="colorText" onClick={handleCopyAddress}>
-                  {shortenAddress(address, 6, 4)}
-                  <Tooltip text="Copy account address" placement="top">
-                    {copyButtonClicked ? <StyledSvgActionCheck /> : <StyledSvgActionCopy />}
-                  </Tooltip>
-                </StyledText>
+                <CopyAddressButton address={address} />
               )}
             </MembershipDetails>
           </MembershipInfoContainer>

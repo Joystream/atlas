@@ -1,6 +1,6 @@
 import { ApolloProvider } from '@apollo/client'
 import styled from '@emotion/styled'
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useEffect, useState } from 'react'
 
 import { createApolloClient } from '@/api'
@@ -31,7 +31,7 @@ export default {
   ],
 } as Meta
 
-const RegularTemplate: Story<FiltersBarProps> = (args) => {
+const RegularTemplate: StoryFn<FiltersBarProps> = (args) => {
   const filtersBarLogic = useFiltersBar()
 
   const {

@@ -64,7 +64,6 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
     getInputProps,
     highlightedIndex,
     getItemProps,
-    getComboboxProps,
     reset,
     toggleMenu,
     inputValue,
@@ -104,24 +103,20 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
 
   return (
     <ComboBoxWrapper ref={comboBoxWrapperRef}>
-      <div {...getComboboxProps()}>
-        <Input
-          {...textFieldProps}
-          error={error || !!noItemsFound}
-          {...getInputProps({ ref: textFieldRef })}
-          nodeEnd={processing && inputValue ? <Loader variant="small" /> : textFieldProps.nodeEnd}
-          nodeStart={
-            typeof textFieldProps.nodeStart === 'undefined' ? <StyledSvgActionPlus /> : textFieldProps.nodeStart
-          }
-          onFocus={(event) => {
-            textFieldProps?.onFocus?.(event)
-          }}
-          onClick={() => {
-            update?.()
-            toggleMenu()
-          }}
-        />
-      </div>
+      <Input
+        {...textFieldProps}
+        error={error || !!noItemsFound}
+        {...getInputProps({ ref: textFieldRef })}
+        nodeEnd={processing && inputValue ? <Loader variant="small" /> : textFieldProps.nodeEnd}
+        nodeStart={typeof textFieldProps.nodeStart === 'undefined' ? <StyledSvgActionPlus /> : textFieldProps.nodeStart}
+        onFocus={(event) => {
+          textFieldProps?.onFocus?.(event)
+        }}
+        onClick={() => {
+          update?.()
+          toggleMenu()
+        }}
+      />
       {ReactDOM.createPortal(
         <div ref={setDropdownRef} style={{ ...styles.popper }} {...attributes.popper}>
           <ListWrapper {...getMenuProps()} isOpen={isOpen}>

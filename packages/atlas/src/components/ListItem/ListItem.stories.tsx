@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { ListItem, ListItemProps } from './ListItem'
 
@@ -8,18 +8,6 @@ import { SvgActionChevronR, SvgActionExclamation } from '../../assets/icons'
 export default {
   title: 'Other/ListItem',
   component: ListItem,
-  argTypes: {
-    size: {
-      control: { type: 'select', options: ['small', 'medium', 'large'] },
-      defaultValue: 'medium',
-    },
-    captionPosition: {
-      control: { type: 'select', options: ['bottom', 'right'] },
-      defaultValue: 'bottom',
-    },
-    onClick: { table: { disable: true } },
-    className: { table: { disable: true } },
-  },
   args: {
     label: 'ListItem label',
     caption: 'This is a caption',
@@ -29,7 +17,7 @@ export default {
   },
 } as Meta
 
-const Template: Story<ListItemProps> = (args) => (
+const Template: StoryFn<ListItemProps> = (args) => (
   <Container>
     <ListItem {...args} />
     <ListItem {...args} />
@@ -37,7 +25,7 @@ const Template: Story<ListItemProps> = (args) => (
   </Container>
 )
 
-const TemplateSingle: Story<ListItemProps> = (args) => (
+const TemplateSingle: StoryFn<ListItemProps> = (args) => (
   <Container>
     <ListItem {...args} />
   </Container>

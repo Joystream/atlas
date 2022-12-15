@@ -1,5 +1,5 @@
-import { Meta, Story } from '@storybook/react'
-import { PropsWithChildren, useState } from 'react'
+import { Meta, StoryFn } from '@storybook/react'
+import { useState } from 'react'
 
 import { PlaceHolder } from '@/components/../../.storybook/PlaceHolder'
 import { Select } from '@/components/_inputs/Select'
@@ -20,23 +20,13 @@ export default {
     optional: false,
   },
   argTypes: {
-    // for some reason if we don't add storybook set the argTypes for description as json.
-    description: { type: 'string' },
-    className: { table: { disable: true } },
     switchable: { table: { disable: true } },
     switchProps: { table: { disable: true } },
     tooltip: { table: { disable: true } },
-    children: {
-      table: {
-        disable: true,
-      },
-    },
   },
 } as Meta<FormFieldProps>
 
-type WithChildren = PropsWithChildren<FormFieldProps>
-
-const Template: Story<WithChildren> = (args) => <FormField {...args} />
+const Template: StoryFn<FormFieldProps> = (args) => <FormField {...args} />
 
 export const Default = Template.bind({})
 
@@ -87,7 +77,7 @@ WithTooltip.args = {
   },
 }
 
-const SwitchableTemplate: Story<FormFieldProps> = ({ ...args }) => {
+const SwitchableTemplate: StoryFn<FormFieldProps> = ({ ...args }) => {
   const [fieldEnabled, setFieldEnabled] = useState(false)
   const [anotherFieldEnabled, setAnotherFieldEnabled] = useState(false)
   const [textAreaEnabled, setTextAreaEnabled] = useState(false)
@@ -95,7 +85,6 @@ const SwitchableTemplate: Story<FormFieldProps> = ({ ...args }) => {
     <div style={{ display: 'grid', gap: 32 }}>
       <FormField
         {...args}
-        switchable
         switchProps={{
           ...args.switchProps,
           onChange: () => setFieldEnabled(!fieldEnabled),
@@ -106,7 +95,6 @@ const SwitchableTemplate: Story<FormFieldProps> = ({ ...args }) => {
       </FormField>
       <FormField
         {...args}
-        switchable
         switchProps={{
           ...args.switchProps,
           onChange: () => setAnotherFieldEnabled(!anotherFieldEnabled),
@@ -117,7 +105,6 @@ const SwitchableTemplate: Story<FormFieldProps> = ({ ...args }) => {
       </FormField>
       <FormField
         {...args}
-        switchable
         switchProps={{
           ...args.switchProps,
           onChange: () => setTextAreaEnabled(!textAreaEnabled),
@@ -135,7 +122,6 @@ export const SwitchableFormField = SwitchableTemplate.bind({})
 SwitchableFormField.args = {
   label: 'Switchable form field',
   description: '',
-  switchable: true,
   tooltip: {
     placement: 'top',
     headerText: 'Some important information',

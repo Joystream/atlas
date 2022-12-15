@@ -16,8 +16,9 @@ import { usePersonalDataStore } from '@/providers/personalData'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
 import { useStartFileUpload } from '@/providers/uploads/uploads.hooks'
+import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { useAuthorizedUser } from '@/providers/user/user.hooks'
-import { VideoFormData, useVideoWorkspace, useVideoWorkspaceData } from '@/providers/videoWorkspace'
+import { VideoFormData, VideoWorkspace, useVideoWorkspace, useVideoWorkspaceData } from '@/providers/videoWorkspace'
 import { writeVideoDataInCache } from '@/utils/cachingAssets'
 import { createLookup } from '@/utils/data'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
@@ -28,6 +29,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
     state.dismissedMessages.some((message) => message.id === 'first-mint')
   )
   const { setShowFistMintDialog } = useTransactionManagerStore((state) => state.actions)
+  const { removeAssetFromUploads } = useUploadsStore((state) => state.actions)
 
   const { joystream, proxyCallback } = useJoystream()
   const startFileUpload = useStartFileUpload()
@@ -42,10 +44,8 @@ export const useHandleVideoWorkspaceSubmit = () => {
 
   const { videoStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
 
-  const isEdit = !editedVideoInfo?.isDraft
-
-  const handleSubmit = useCallback(
-    async (data: VideoFormData) => {
+  return useCallback(
+    async (data: VideoFormData, videoInfo?: VideoWorkspace, assetsToBeRemoved?: string[]) => {
       if (!joystream) {
         ConsoleLogger.error('No Joystream instance! Has webworker been initialized?')
         return
@@ -56,10 +56,13 @@ export const useHandleVideoWorkspaceSubmit = () => {
         return
       }
 
+      const editedInfo = videoInfo || editedVideoInfo
+      const isEdit = !editedInfo?.isDraft
       const isNew = !isEdit
 
       const assets: VideoInputAssets = {}
       const removedAssetsIds: string[] = []
+
       const processAssets = async () => {
         if (data.assets.media) {
           const ipfsHash = await data.assets.media.hashPromise
@@ -107,19 +110,26 @@ export const useHandleVideoWorkspaceSubmit = () => {
       const uploadAssets = async ({ videoId, assetsIds }: VideoExtrinsicResult) => {
         const uploadPromises: Promise<unknown>[] = []
         if (data.assets.media && assetsIds.media) {
-          const uploadPromise = startFileUpload(data.assets.media.blob, {
-            id: assetsIds.media,
-            owner: channelId,
-            parentObject: {
+          const uploadPromise = startFileUpload(
+            data.assets.media.blob,
+            {
+              id: assetsIds.media,
+              owner: channelId,
+              parentObject: {
+                type: 'video',
+                id: videoId,
+                title: data.metadata.title,
+              },
               type: 'video',
-              id: videoId,
-              title: data.metadata.title,
+              dimensions: data.assets.media.dimensions,
+              ipfsHash: await data.assets.media.hashPromise,
+              name: (data.assets.media.blob as File).name,
             },
-            type: 'video',
-            dimensions: data.assets.media.dimensions,
-          })
+            { hasNft: !!data.nftMetadata }
+          )
           uploadPromises.push(uploadPromise)
         }
+
         if (data.assets.thumbnailPhoto && assetsIds.thumbnailPhoto) {
           const uploadPromise = startFileUpload(data.assets.thumbnailPhoto.blob, {
             id: assetsIds.thumbnailPhoto,
@@ -131,6 +141,8 @@ export const useHandleVideoWorkspaceSubmit = () => {
             type: 'thumbnail',
             dimensions: data.assets.thumbnailPhoto.dimensions,
             imageCropData: data.assets.thumbnailPhoto.cropData,
+            ipfsHash: await data.assets.thumbnailPhoto.hashPromise,
+            name: data.assets.thumbnailPhoto.name,
           })
           uploadPromises.push(uploadPromise)
         }
@@ -146,6 +158,8 @@ export const useHandleVideoWorkspaceSubmit = () => {
               },
               type: 'subtitles',
               subtitlesLanguageIso: subtitle.subtitlesLanguageIso,
+              ipfsHash: await subtitle.hashPromise,
+              name: (subtitle.blob as File).name,
             })
           })
           uploadPromises.push(...subtitlesUploadPromises)
@@ -189,7 +203,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
             isDraft: false,
             isNew: false,
           })
-          removeDrafts([editedVideoInfo?.id])
+          removeDrafts([editedInfo?.id])
         }
       }
 
@@ -213,12 +227,12 @@ export const useHandleVideoWorkspaceSubmit = () => {
             : (
                 await joystream.extrinsics
               ).updateVideo(
-                editedVideoInfo.id,
+                editedInfo.id,
                 memberId,
                 data.metadata,
                 data.nftMetadata,
                 assets,
-                removedAssetsIds,
+                assetsToBeRemoved || removedAssetsIds,
                 dataObjectStateBloatBondValue.toString(),
                 channelBucketsCount.toString(),
                 proxyCallback(updateStatus)
@@ -228,6 +242,9 @@ export const useHandleVideoWorkspaceSubmit = () => {
       })
 
       if (completed) {
+        assetsToBeRemoved?.forEach((asset) => {
+          removeAssetFromUploads(asset)
+        })
         setIsWorkspaceOpen(false)
         if (!isNftMintDismissed && data.nftMetadata) {
           setTimeout(() => {
@@ -239,7 +256,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
     [
       joystream,
       channelBucketsCount,
-      isEdit,
+      editedVideoInfo,
       handleTransaction,
       tabData?.assets.video.id,
       tabData?.assets.thumbnail.cropId,
@@ -250,16 +267,14 @@ export const useHandleVideoWorkspaceSubmit = () => {
       addAsset,
       setEditedVideo,
       removeDrafts,
-      editedVideoInfo.id,
       memberId,
       dataObjectStateBloatBondValue,
       videoStateBloatBondValue,
       proxyCallback,
       setIsWorkspaceOpen,
       isNftMintDismissed,
+      removeAssetFromUploads,
       setShowFistMintDialog,
     ]
   )
-
-  return handleSubmit
 }

@@ -30,15 +30,14 @@ export type SlotsObject = {
   }
 }
 
-export type Playlist = {
+type PlaylistVideoThumbnailProps = {
   type: 'playlist'
   slots?: Pick<SlotsObject, 'bottomLeft' | 'topLeft' | 'center'>
 }
-export type Video = {
+type RegularVideoThumbnailProps = {
   type: 'video'
   slots?: SlotsObject
 }
-export type ThumbnailType = Playlist | Video
 
 export type VideoThumbnailProps = {
   loading?: boolean
@@ -52,7 +51,7 @@ export type VideoThumbnailProps = {
   onClick?: () => void
   onMouseEnter?: (event: MouseEvent<HTMLAnchorElement>) => void
   onMouseLeave?: (event: MouseEvent<HTMLAnchorElement>) => void
-} & ThumbnailType
+} & (PlaylistVideoThumbnailProps | RegularVideoThumbnailProps)
 
 export const VideoThumbnail = forwardRef<HTMLAnchorElement, VideoThumbnailProps>(
   (

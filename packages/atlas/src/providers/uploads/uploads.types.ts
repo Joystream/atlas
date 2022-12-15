@@ -21,12 +21,15 @@ export type AssetUpload = {
   imageCropData?: ImageCropData
   subtitlesLanguageIso?: string
   metadata?: string
+  name?: string
+  hasNft?: boolean
 }
 export type InputAssetUpload = Omit<AssetUpload, 'size'>
 
 export type StartFileUploadOptions = {
   isReUpload?: boolean
   changeHost?: boolean
+  hasNft?: boolean
 }
 
 export type UploadsStatusRecord = Record<string, UploadStatus | undefined>

@@ -1,5 +1,5 @@
 import { ApolloProvider } from '@apollo/client'
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { createApolloClient } from '@/api'
@@ -13,6 +13,25 @@ import { TransactionModal, TransactionModalProps } from './TransactionModal'
 export default {
   title: 'overlays/TransactionModal',
   component: TransactionModal,
+  argTypes: {
+    status: {
+      options: Object.values(ExtrinsicStatus),
+      control: {
+        type: 'select',
+        labels: {
+          [ExtrinsicStatus.ProcessingAssets]: 'ProcessingAssets',
+          [ExtrinsicStatus.Unsigned]: 'Unsigned',
+          [ExtrinsicStatus.Syncing]: 'Syncing',
+          [ExtrinsicStatus.Signed]: 'Signed',
+          [ExtrinsicStatus.Error]: 'Error',
+          [ExtrinsicStatus.Completed]: 'Completed',
+        },
+      },
+    },
+  },
+  args: {
+    status: ExtrinsicStatus.ProcessingAssets,
+  },
   decorators: [
     (Story) => {
       const apolloClient = createApolloClient()
@@ -31,9 +50,9 @@ export default {
       )
     },
   ],
-} as Meta
+} as Meta<TransactionModalProps>
 
-const RegularTemplate: Story<TransactionModalProps> = ({ ...args }) => {
-  return <TransactionModal {...args} status={ExtrinsicStatus.Unsigned} />
+const RegularTemplate: StoryFn<TransactionModalProps> = ({ ...args }) => {
+  return <TransactionModal {...args} />
 }
 export const Regular = RegularTemplate.bind({})

@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks/queryNode'
 import { MintNftFirstTimeModal } from '@/components/_overlays/MintNftFirstTimeModal'
@@ -14,7 +14,6 @@ import { useTransactionManagerStore } from './transactions.store'
 
 export const TransactionsManager: FC = () => {
   const {
-    blockActions,
     transactions,
     showFirstMintDialog,
     actions: { removeOldBlockActions, setShowFistMintDialog, removeTransaction },
@@ -23,7 +22,7 @@ export const TransactionsManager: FC = () => {
   const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
   const userWalletName = useUserStore((state) => state.wallet?.title)
 
-  const [lastIndexedBlock, setLastIndexedBlock] = useState(0)
+  const lastProcessedQnBlockRef = useRef(0)
   const { displaySnackbar, closeSnackbar } = useSnackbar()
 
   const anyMinimizedTransactionsPendingSignature = Object.values(transactions).find(
@@ -61,21 +60,14 @@ export const TransactionsManager: FC = () => {
     userWalletName,
   ])
 
-  useQueryNodeStateSubscription({
-    onSubscriptionData: ({ subscriptionData }) => {
-      if (!subscriptionData.data) {
-        return
-      }
+  const handleNewLastProcessedBlockRef = useRef(async (lastProcessedBlock: number) => {
+    if (lastProcessedBlock === lastProcessedQnBlockRef.current) {
+      return
+    }
+    lastProcessedQnBlockRef.current = lastProcessedBlock
 
-      const indexerHead = subscriptionData.data.stateSubscription.indexerHead
-
-      setLastIndexedBlock(indexerHead)
-    },
-  })
-
-  // run block actions based on QN synced block height
-  useEffect(() => {
-    const syncedActions = blockActions.filter((action) => lastIndexedBlock >= action.targetBlock)
+    const blockActions = useTransactionManagerStore.getState().blockActions
+    const syncedActions = blockActions.filter((action) => lastProcessedBlock >= action.targetBlock)
 
     if (!syncedActions.length) {
       return
@@ -89,8 +81,19 @@ export const TransactionsManager: FC = () => {
       }
     })
 
-    removeOldBlockActions(lastIndexedBlock)
-  }, [blockActions, lastIndexedBlock, removeOldBlockActions])
+    removeOldBlockActions(lastProcessedBlock)
+  })
+
+  useQueryNodeStateSubscription({
+    onData: ({ data: subscriptionData }) => {
+      if (!subscriptionData.data) {
+        return
+      }
+
+      const lastProcessedBlock = subscriptionData.data.stateSubscription.lastCompleteBlock
+      handleNewLastProcessedBlockRef.current(lastProcessedBlock)
+    },
+  })
 
   const handleFirstMintDialogClose = () => {
     updateDismissedMessages('first-mint')

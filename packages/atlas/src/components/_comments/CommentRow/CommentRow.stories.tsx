@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
@@ -26,7 +26,7 @@ export default {
   ],
 } as Meta<CommentRowProps>
 
-const Template: Story<CommentRowProps> = (args) => (
+const Template: StoryFn<CommentRowProps> = (args) => (
   <CommentRow {...args}>
     {/* children */}
     <div

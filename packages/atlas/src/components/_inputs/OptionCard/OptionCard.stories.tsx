@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { MouseEvent, useState } from 'react'
 
 import { SvgActionTrash } from '@/assets/icons'
@@ -18,7 +18,7 @@ export default {
   },
 } as Meta
 
-const Template: Story<OptionCardProps> = (args) => {
+const Template: StoryFn<OptionCardProps> = (args) => {
   const [selected, setSelected] = useState<string | number>('1')
   const handleClick: (e: MouseEvent<HTMLElement>) => void = (e) => {
     const element = e.currentTarget as HTMLInputElement

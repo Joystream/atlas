@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
@@ -30,7 +30,7 @@ export default {
   ],
 } as Meta
 
-const Template: Story<BottomDrawerProps> = (args) => {
+const Template: StoryFn<BottomDrawerProps> = (args) => {
   const [isOpen, setIsOpen] = useState(false)
   const [actionBarOpen, setActionBarOpen] = useState(false)
   return (

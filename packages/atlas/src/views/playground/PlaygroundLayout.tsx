@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { Link } from 'react-router-dom'
 
-import { SvgAppLogoShort } from '@/assets/logos'
+import { AppLogo } from '@/components/AppLogo'
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
@@ -58,7 +58,7 @@ const PlaygroundLayout = () => {
       <TopbarBase
         fullLogoNode={
           <LogoWrapper>
-            <SvgAppLogoShort height={32} width={undefined} />
+            <AppLogo variant="short" height={32} width={undefined} />
             <Text as="p" variant="h500" margin={{ left: 2 }}>
               Playground
             </Text>

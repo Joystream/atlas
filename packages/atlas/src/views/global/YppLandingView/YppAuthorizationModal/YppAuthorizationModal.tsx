@@ -163,6 +163,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       ...(selectedChannelId ? { joystreamChannelId: parseInt(selectedChannelId) } : {}),
       authorizationCode: ytResponseData?.authorizationCode,
       userId: ytResponseData?.userId,
+      videoCategoryId: data.videoCategoryId,
       email: data.email,
       ...(data.referrerChannelId ? { referrerChannelId: parseInt(data.referrerChannelId) } : {}),
     }))

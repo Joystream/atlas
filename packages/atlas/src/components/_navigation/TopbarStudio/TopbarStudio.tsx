@@ -2,7 +2,7 @@ import { FC, MouseEvent, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { SvgActionAddVideo } from '@/assets/icons'
-import { SvgAppLogoStudio } from '@/assets/logos'
+import { AppLogo } from '@/components/AppLogo'
 import { AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
 import { Button } from '@/components/_buttons/Button'
 import { NotificationsButton } from '@/components/_navigation/NotificationsButton'
@@ -19,9 +19,10 @@ import { StudioTopbarContainer, StyledAvatarGroup, StyledTopbarBase } from './To
 
 type StudioTopbarProps = {
   hideChannelInfo?: boolean
+  isMembershipLoaded?: boolean
 }
 
-export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
+export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembershipLoaded }) => {
   const { channelId, activeMembership, signIn } = useUser()
   const mdMatch = useMediaMatch('md')
   const hasAtLeastOneChannel = !!activeMembership?.channels.length && activeMembership?.channels.length >= 1
@@ -62,37 +63,38 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
   return (
     <>
       <StyledTopbarBase
-        fullLogoNode={<SvgAppLogoStudio height={32} width={undefined} />}
+        fullLogoNode={<AppLogo variant="studio" height={32} width={undefined} />}
         withoutHamburgerButton={hideChannelInfo}
         logoLinkUrl={absoluteRoutes.studio.index()}
       >
-        {!hideChannelInfo ? (
-          <StudioTopbarContainer>
-            <CSSTransition
-              in={!isWorkspaceOpen && !!channelId}
-              unmountOnExit
-              mountOnEnter
-              timeout={parseInt(transitions.timings.loading)}
-              classNames={transitions.names.fade}
-            >
-              <Button
-                to={absoluteRoutes.studio.videoWorkspace()}
-                onClick={() => setEditedVideo()}
-                variant="secondary"
-                icon={<SvgActionAddVideo />}
-                iconPlacement="left"
+        {isMembershipLoaded &&
+          (!hideChannelInfo ? (
+            <StudioTopbarContainer>
+              <CSSTransition
+                in={!isWorkspaceOpen && !!channelId}
+                unmountOnExit
+                mountOnEnter
+                timeout={parseInt(transitions.timings.loading)}
+                classNames={transitions.names.fade}
               >
-                {mdMatch && 'Upload video'}
-              </Button>
-            </CSSTransition>
-            <NotificationsWidget trigger={<NotificationsButton />} />
-            <StyledAvatarGroup size="large" shouldHighlightEveryAvatar reverse avatars={avatars} clickable={false} />
-          </StudioTopbarContainer>
-        ) : (
-          <Button size="medium" onClick={() => signIn()}>
-            Set up membership
-          </Button>
-        )}
+                <Button
+                  to={absoluteRoutes.studio.videoWorkspace()}
+                  onClick={() => setEditedVideo()}
+                  variant="secondary"
+                  icon={<SvgActionAddVideo />}
+                  iconPlacement="left"
+                >
+                  {mdMatch && 'Upload video'}
+                </Button>
+              </CSSTransition>
+              <NotificationsWidget trigger={<NotificationsButton />} />
+              <StyledAvatarGroup size="large" shouldHighlightEveryAvatar reverse avatars={avatars} clickable={false} />
+            </StudioTopbarContainer>
+          ) : (
+            <Button size="medium" onClick={() => signIn()}>
+              Set up membership
+            </Button>
+          ))}
       </StyledTopbarBase>
       <MemberDropdown
         onChannelChange={handleChannelChange}

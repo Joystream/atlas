@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { SubtitleBoxProps, SubtitlesBox } from './SubtitlesBox'
 
@@ -11,6 +11,6 @@ export default {
   },
 } as Meta<SubtitleBoxProps>
 
-const Template: Story<SubtitleBoxProps> = (args) => <SubtitlesBox {...args} />
+const Template: StoryFn<SubtitleBoxProps> = (args) => <SubtitlesBox {...args} />
 
 export const Default = Template.bind({})

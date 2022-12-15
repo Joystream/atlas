@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { PropsWithChildren, forwardRef, useEffect, useRef } from 'react'
-import mergeRefs from 'react-merge-refs'
+import { mergeRefs } from 'react-merge-refs'
 import twemoji from 'twemoji'
 
 export type EmojiWrapperProps = PropsWithChildren<{

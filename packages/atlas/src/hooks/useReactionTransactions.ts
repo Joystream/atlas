@@ -1,4 +1,5 @@
 import { useApolloClient } from '@apollo/client'
+import BN from 'bn.js'
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router'
 
@@ -188,13 +189,14 @@ export const useReactionTransactions = () => {
   )
 
   const reactToComment = useCallback(
-    async (commentId: string, videoId: string, reactionId: CommentReaction, commentAuthorHandle: string) => {
+    async (commentId: string, videoId: string, reactionId: CommentReaction, commentAuthorHandle: string, fee?: BN) => {
       if (!joystream || !memberId) {
         ConsoleLogger.error('No joystream instance')
         return
       }
 
       return handleTransaction({
+        fee,
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).reactToVideoComment(
             memberId,
@@ -294,13 +296,14 @@ export const useReactionTransactions = () => {
   )
 
   const likeOrDislikeVideo = useCallback(
-    (videoId: string, reaction: VideoReaction, videoTitle?: string | null) => {
+    (videoId: string, reaction: VideoReaction, videoTitle?: string | null, fee?: BN) => {
       if (!joystream || !memberId) {
         ConsoleLogger.error('No joystream instance')
         return Promise.reject(false)
       }
 
       return handleTransaction({
+        fee,
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).reactToVideo(memberId, videoId, reaction, proxyCallback(updateStatus)),
         minimized: {

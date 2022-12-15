@@ -94,6 +94,13 @@ export class JoystreamLib {
     return parseAccountBalance(balances)
   }
 
+  async getAccountBalanceAtBlock(block: number | BN | string, accountId: AccountId) {
+    await this.ensureApi()
+
+    const blockHash = await this.api.rpc.chain.getBlockHash(block)
+    return (await this.api.query.system.account.at(blockHash, accountId)).data.free.toString()
+  }
+
   async subscribeAccountBalance(
     accountId: AccountId,
     callback: (balances: { availableBalance: string; lockedBalance: string }) => void
@@ -114,6 +121,12 @@ export class JoystreamLib {
       callback(number.toNumber())
     })
     return proxy(unsubscribe)
+  }
+
+  async getContentCommitment() {
+    await this.ensureApi()
+
+    return (await this.api.query.content.commitment()).toString()
   }
 
   async getChainConstants() {
@@ -177,7 +190,10 @@ export class JoystreamLib {
     } as const
   }
 
-  async getDynamicBagCreationPolicies() {
+  async getDynamicBagCreationPolicies(): Promise<{
+    storageBucketsCount: number
+    distributionBucketsCountPerFamily: Record<string, number>
+  }> {
     await this.ensureApi()
 
     const { numberOfStorageBuckets, families } = await this.api.query.storage.dynamicBagCreationPolicies('Channel')

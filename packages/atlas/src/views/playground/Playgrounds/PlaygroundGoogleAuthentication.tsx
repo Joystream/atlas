@@ -3,7 +3,6 @@ import { FC, useEffect, useState } from 'react'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { atlasConfig } from '@/config'
-import { GOOGLE_OAUTH_ENDPOINT } from '@/config/env'
 
 export const PlaygroundGoogleAuthentication: FC = () => {
   const [code, setCode] = useState<string | null>(null)
@@ -20,7 +19,7 @@ export const PlaygroundGoogleAuthentication: FC = () => {
   const oauthSignIn = () => {
     const pars = new URLSearchParams(params)
 
-    window.open(`${GOOGLE_OAUTH_ENDPOINT}?${pars.toString()}`, '_self')
+    window.open(`${atlasConfig.features.ypp.googleOauthEndpoint}?${pars.toString()}`, '_self')
   }
 
   useEffect(() => {

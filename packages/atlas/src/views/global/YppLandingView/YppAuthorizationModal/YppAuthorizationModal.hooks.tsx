@@ -10,7 +10,6 @@ import {
   GetFullChannelQueryVariables,
 } from '@/api/queries/__generated__/channels.generated'
 import { atlasConfig } from '@/config'
-import { GOOGLE_OAUTH_ENDPOINT } from '@/config/env'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useSnackbar } from '@/providers/snackbars'
 import { useYppStore } from '@/providers/ypp/ypp.store'
@@ -29,6 +28,7 @@ import {
 } from './YppAuthorizationModal.types'
 
 const GOOGLE_CONSOLE_CLIENT_ID = atlasConfig.features.ypp.googleConsoleClientId
+const GOOGLE_OAUTH_ENDPOINT = atlasConfig.features.ypp.googleOauthEndpoint
 const GOOGLE_AUTH_PARAMS = {
   client_id: GOOGLE_CONSOLE_CLIENT_ID || '',
   response_type: 'code',
@@ -66,7 +66,7 @@ export const useYppGoogleAuth = ({
   const resetSearchParams = useCallback(() => setSearchParams(new URLSearchParams()), [setSearchParams])
 
   const handleAuthorizeClick = useCallback(() => {
-    if (!GOOGLE_CONSOLE_CLIENT_ID) {
+    if (!GOOGLE_CONSOLE_CLIENT_ID || !GOOGLE_OAUTH_ENDPOINT) {
       return
     }
     const authUrl = new URL(GOOGLE_OAUTH_ENDPOINT)

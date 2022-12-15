@@ -1,5 +1,5 @@
 import { ApolloProvider } from '@apollo/client'
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { createApolloClient } from '@/api'
@@ -28,7 +28,7 @@ export default {
   },
 } as Meta
 
-const Template: Story<ChannelLinkProps> = (args) => {
+const Template: StoryFn<ChannelLinkProps> = (args) => {
   const apolloClient = createApolloClient()
   return (
     <BrowserRouter>

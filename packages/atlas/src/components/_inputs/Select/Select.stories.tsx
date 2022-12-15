@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 
 import { SvgActionAddImage } from '@/assets/icons'
@@ -21,20 +21,17 @@ export default {
     error: false,
   },
   argTypes: {
-    size: { control: { type: 'select', options: ['medium', 'large'] } },
     items: { table: { disable: true } },
     value: { table: { disable: true } },
     icon: { table: { disable: true } },
-    className: { table: { disable: true } },
     containerRef: { table: { disable: true } },
     ref: { table: { disable: true } },
-    onChange: { table: { disable: true } },
   },
 } as Meta<SelectProps>
 
-const Template: Story<SelectProps> = (args) => <Select {...args} />
+const Template: StoryFn<SelectProps> = (args) => <Select {...args} />
 
-const TemplateWithControlledInput: Story<SelectProps> = (args) => {
+const TemplateWithControlledInput: StoryFn<SelectProps> = (args) => {
   const [value, setValue] = useState<string | null>(null)
   return <Select {...args} onChange={(value) => setValue(value ?? null)} value={value} />
 }
@@ -45,7 +42,7 @@ export const WithControlledInput = TemplateWithControlledInput.bind({})
 
 export const WithIcon = TemplateWithControlledInput.bind({})
 
-const TemplateWithSeparator: Story<SelectProps> = (args) => (
+const TemplateWithSeparator: StoryFn<SelectProps> = (args) => (
   <Select
     {...args}
     items={[

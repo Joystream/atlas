@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { isValid } from 'date-fns'
 import { useRef, useState } from 'react'
 
@@ -12,7 +12,7 @@ export default {
   },
 } as Meta
 
-const Template: Story<DatepickerProps> = (args) => {
+const Template: StoryFn<DatepickerProps> = (args) => {
   const ref = useRef<HTMLInputElement | null>(null)
   const [date, setDate] = useState<Date | null>()
   const [validationError, setValidationError] = useState(false)

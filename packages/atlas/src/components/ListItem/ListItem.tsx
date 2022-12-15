@@ -1,6 +1,6 @@
 import { To } from 'history'
 import { MouseEvent, ReactNode, forwardRef, useMemo } from 'react'
-import mergeRefs from 'react-merge-refs'
+import { mergeRefs } from 'react-merge-refs'
 
 import { ListItemSeparator } from '@/components/ListItem/ListItemSeparator'
 import { useHover } from '@/hooks/useHover'
