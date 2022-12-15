@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
@@ -18,10 +18,7 @@ export default {
     disabled: false,
   },
   argTypes: {
-    size: { control: { type: 'select', options: ['medium', 'large'] } },
-    type: { control: { type: 'select', options: ['text', 'password', 'number'] } },
     value: { table: { disable: true } },
-    onChange: { table: { disable: true } },
     onBlur: { table: { disable: true } },
     onFocus: { table: { disable: true } },
     onKeyDown: { table: { disable: true } },
@@ -29,7 +26,6 @@ export default {
     autoComplete: { table: { disable: true } },
     nodeEnd: { table: { disable: true } },
     nodeStart: { table: { disable: true } },
-    className: { table: { disable: true } },
     defaultValue: { table: { disable: true } },
     actionButton: { table: { disable: true } },
   },
@@ -44,7 +40,7 @@ export default {
   ],
 } as Meta
 
-const Template: Story<TokenInputProps> = (args) => {
+const Template: StoryFn<TokenInputProps> = (args) => {
   const [value, setValue] = useState<number | null>(0)
 
   const setRandomValue = () => {

@@ -1,14 +1,13 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { CircularProgress, CircularProgressProps } from './CircularProgress'
 
 export default {
   title: 'other/CircularProgress',
   component: CircularProgress,
-  argTypes: {},
 } as Meta
 
-const SingleTemplate: Story<CircularProgressProps> = (args) => (
+const SingleTemplate: StoryFn<CircularProgressProps> = (args) => (
   <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
     <div style={{ width: '24px', height: '24px' }}>
       <CircularProgress {...args} />

@@ -1,27 +1,59 @@
-import { Text } from '@/components/Text'
-import { useHeadTags } from '@/hooks/useHeadTags'
-import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useState } from 'react'
 
-import { BottomPattern, StyledSvgSmallTokens, TextContainer, TopPattern, Wrapper } from './MyPayments.styles'
+import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { Tabs } from '@/components/Tabs'
+import { Text } from '@/components/Text'
+import { PayoutsWelcomeDialogContent } from '@/components/_overlays/PayoutsWelcomeDialogContent'
+import { useHeadTags } from '@/hooks/useHeadTags'
+import { useMountEffect } from '@/hooks/useMountEffect'
+import { useConfirmationModal } from '@/providers/confirmationModal'
+import { usePersonalDataStore } from '@/providers/personalData'
+
+import { TabsContainer } from './MyPayments.styles'
+import { PaymentsOverViewTab } from './PaymentsOverviewTab'
+import { PaymentTransactionsTab } from './PaymentsTransactionTab'
+
+const PAYOUTS_WELCOME_MESSAGE = 'payouts-welcome'
+
+const TABS = ['Overview', 'Transactions'] as const
 
 export const MyPaymentsView = () => {
   const headTags = useHeadTags('My payments')
-  const smMatch = useMediaMatch('sm')
+  const mappedTabs = TABS.map((tab) => ({ name: tab }))
+  const [selectedTab, setSelectedTab] = useState<typeof TABS[number]>('Overview')
+  const isDismissedMessage = usePersonalDataStore((state) =>
+    state.dismissedMessages.some((message) => message.id === PAYOUTS_WELCOME_MESSAGE)
+  )
+  const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
+  const [openPayoutsWelcomeModal, closePayoutsWelcomeModal] = useConfirmationModal({
+    noIcon: true,
+    children: <PayoutsWelcomeDialogContent />,
+    primaryButton: {
+      text: 'Continue',
+      onClick: () => {
+        updateDismissedMessages(PAYOUTS_WELCOME_MESSAGE)
+        closePayoutsWelcomeModal()
+      },
+    },
+  })
+
+  useMountEffect(() => {
+    if (!isDismissedMessage) {
+      openPayoutsWelcomeModal()
+    }
+  })
+
   return (
-    <Wrapper>
-      <BottomPattern />
-      <TopPattern />
+    <LimitedWidthContainer>
       {headTags}
-      <StyledSvgSmallTokens />
-      <TextContainer>
-        <Text variant={smMatch ? 'h600' : 'h500'} as="h1" margin={{ bottom: 4, top: 8 }}>
-          My Payments are coming {!smMatch && <br />} later this year
-        </Text>
-        <Text variant="t300" as="p" color="colorText">
-          My Payments will give you an overview of incomes and outcomes of your channel balance, let you claim rewards
-          from the council, and withdraw tokens to your personal Joystream membership.
-        </Text>
-      </TextContainer>
-    </Wrapper>
+      <Text as="h1" variant="h700" margin={{ top: 12, bottom: 12 }}>
+        My payments
+      </Text>
+      <TabsContainer>
+        <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={(tabIdx) => setSelectedTab(TABS[tabIdx])} />
+      </TabsContainer>
+      {selectedTab === 'Overview' && <PaymentsOverViewTab />}
+      {selectedTab === 'Transactions' && <PaymentTransactionsTab />}
+    </LimitedWidthContainer>
   )
 }

@@ -12,13 +12,16 @@ const commonGridStyles = css`
 export const Wrapper = styled.div`
   padding: ${sizes(4)};
   background-color: ${cVar('colorBackgroundMuted')};
+  display: grid;
 
   ${media.md} {
+    grid-template-rows: auto 1fr;
     padding: ${sizes(6)};
   }
 `
 export const Content = styled.div`
   display: grid;
+  align-self: flex-end;
   gap: ${sizes(4)};
 
   ${media.lg} {
@@ -45,7 +48,7 @@ export const TextWrapper = styled.div`
   gap: ${sizes(2)};
   ${commonGridStyles}
 
-  svg {
+  > svg {
     width: 16px;
 
     path {
@@ -54,7 +57,7 @@ export const TextWrapper = styled.div`
   }
 
   ${media.md} {
-    svg {
+    > svg {
       width: 24px;
     }
   }

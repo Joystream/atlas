@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import BN from 'bn.js'
 import { BrowserRouter } from 'react-router-dom'
 
@@ -6,39 +6,32 @@ import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 
 import { NftTile, NftTileProps } from './NftTile'
 
+type StoryProps = Omit<NftTileProps, 'startingPrice' | 'buyNowPrice' | 'topBidAmount'> & {
+  startingPrice: number
+  buyNowPrice: number
+  topBidAmount: number
+}
+
 export default {
   title: 'NFT/NftTile',
   component: NftTile,
   argTypes: {
-    title: {
-      type: 'string',
-    },
-    status: {
-      options: ['idle', 'buy-now', 'auction'],
-      control: { type: 'select' },
-    },
-    englishTimerState: {
-      options: ['expired', 'running', 'upcoming', null],
-      control: { type: 'select' },
-    },
-    thumbnail: {
-      thumbnailUrl: {
-        type: 'string',
-      },
-    },
     creator: { table: { disable: true } },
     supporters: { table: { disable: true } },
     owner: { table: { disable: true } },
     startsAtDate: { control: { type: 'date' } },
     auctionPlannedEndDate: { control: { type: 'date' } },
+    startingPrice: { control: { type: 'number' } },
+    buyNowPrice: { control: { type: 'number' } },
+    topBidAmount: { control: { type: 'number' } },
   },
   args: {
     title: 'Did An Alternate Reality Game Gone Wrong Predict QAnon?',
     status: 'idle',
-    startingPrice: 1234000,
-    buyNowPrice: 1234000,
-    topBidAmount: 123000,
-    thumbnail: { thumbnailUrl: 'https://placedog.net/360/203' },
+    startingPrice: 12340000000,
+    buyNowPrice: 123400000000,
+    topBidAmount: 1600000000,
+    thumbnail: { type: 'video', thumbnailUrl: 'https://placedog.net/360/203' },
     creator: { assetUrl: 'https://placedog.net/100/100?random=1', name: 'Jane' },
     owner: { assetUrl: 'https://placedog.net/100/100?random=2', name: 'Kate' },
     duration: 120,
@@ -64,12 +57,12 @@ export default {
   ],
 } as Meta
 
-const Template: Story<NftTileProps> = (args) => (
+const Template: StoryFn<StoryProps> = ({ startingPrice, buyNowPrice, topBidAmount, ...args }) => (
   <NftTile
     {...args}
-    startingPrice={new BN(Number(args.startingPrice))}
-    buyNowPrice={new BN(Number(args.buyNowPrice))}
-    topBidAmount={new BN(Number(args.topBidAmount))}
+    startingPrice={new BN(startingPrice)}
+    buyNowPrice={new BN(buyNowPrice)}
+    topBidAmount={new BN(topBidAmount)}
   />
 )
 

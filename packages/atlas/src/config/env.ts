@@ -46,7 +46,3 @@ export const QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL = readEnv('QUERY_NODE_SUBSCRIPT
 export const NODE_URL = readEnv('NODE_URL')
 export const FAUCET_URL = readEnv('FAUCET_URL')
 export const GOOGLE_OAUTH_ENDPOINT = 'https://accounts.google.com/o/oauth2/v2/auth'
-
-export const JOY_PRICE_SERVICE_URL = readEnv('PRICE_SERVICE_URL', false, true)
-export const USER_LOCATION_SERVICE_URL = readEnv('GEOLOCATION_SERVICE_URL', true, true)
-export const HCAPTCHA_SITE_KEY = readEnv('HCAPTCHA_SITE_KEY', false, true)

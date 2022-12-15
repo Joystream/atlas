@@ -1,6 +1,6 @@
 import { ApolloProvider } from '@apollo/client'
 import styled from '@emotion/styled'
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { createApolloClient } from '@/api'
@@ -86,7 +86,7 @@ const video = {
   'license': { '__typename': 'License', 'id': '83655-5', 'code': 1002, 'attribution': null, 'customText': null },
 }
 
-const RankingNumberTemplate: Story<RankingNumberTileProps> = (props) => {
+const RankingNumberTemplate: StoryFn<RankingNumberTileProps> = (props) => {
   return (
     <StyledRankingNumberTile {...props}>
       <VideoTileViewer id={video.id} />

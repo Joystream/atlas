@@ -17,16 +17,6 @@ import {
 
 import { Switch, SwitchProps } from '../Switch'
 
-type WithSwitchProps =
-  | {
-      switchable: true
-      switchProps: Omit<SwitchProps, 'label'>
-    }
-  | {
-      switchable?: false
-      switchProps?: never
-    }
-
 export type FormFieldProps = PropsWithChildren<{
   headerNode?: ReactNode
   label?: string
@@ -36,8 +26,8 @@ export type FormFieldProps = PropsWithChildren<{
   description?: string | string[]
   className?: string
   tooltip?: TooltipProps
-}> &
-  WithSwitchProps
+  switchProps?: Omit<SwitchProps, 'label'>
+}>
 
 export const FormField = memo(
   forwardRef<HTMLDivElement, FormFieldProps>(
@@ -53,7 +43,6 @@ export const FormField = memo(
         tooltip,
         error,
         disableErrorAnimation,
-        switchable,
       },
       ref
     ) => {
@@ -80,6 +69,7 @@ export const FormField = memo(
         }
       }
 
+      const switchable = !!switchProps
       const isInputOpen = switchable ? switchProps?.value : true
       return (
         <FormFieldWrapper className={className} ref={ref}>

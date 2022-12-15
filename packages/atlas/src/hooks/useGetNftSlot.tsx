@@ -2,7 +2,7 @@ import { differenceInHours, differenceInSeconds, format } from 'date-fns'
 import { useCallback } from 'react'
 
 import { NftStatus } from '@/api/hooks/nfts'
-import { SvgActionAuction, SvgActionBuyNow, SvgActionClock, SvgActionNotForSale } from '@/assets/icons'
+import { SvgActionAuction, SvgActionBuyNow, SvgActionClock } from '@/assets/icons'
 import { PillGroup } from '@/components/Pill'
 import { PillProps } from '@/components/Pill/types'
 import { SlotsObject } from '@/components/_video/VideoThumbnail'
@@ -37,10 +37,8 @@ export const useGetNftSlot = ({
   })
 
   const generatePills: () => PillProps[] = useCallback(() => {
-    const buyNowPill: PillProps = { icon: <SvgActionBuyNow />, variant: 'overlay', title: 'Buy now' }
+    const buyNowPill: PillProps = { icon: <SvgActionBuyNow />, variant: 'overlay', title: 'Buy now', withTooltip: true }
     switch (status) {
-      case 'idle':
-        return [{ icon: <SvgActionNotForSale />, variant: 'overlay', title: 'Not for sale' }]
       case 'buy-now':
         return [buyNowPill]
       case 'auction': {

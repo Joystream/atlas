@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { SvgSidebarPopular } from '@/assets/icons'
 
@@ -7,15 +7,9 @@ import { CallToActionButton, CallToActionButtonProps, CallToActionWrapper } from
 export default {
   title: 'button/CallToActionButton',
   component: CallToActionButton,
-  argTypes: {
-    colorVariant: {
-      control: { type: 'select', options: ['blue', 'green', 'red', 'yellow'] },
-      defaultValue: 'blue',
-    },
-  },
 } as Meta
 
-const Template: Story<CallToActionButtonProps> = (args) => {
+const Template: StoryFn<CallToActionButtonProps> = (args) => {
   return (
     <CallToActionWrapper>
       <CallToActionButton {...args} />

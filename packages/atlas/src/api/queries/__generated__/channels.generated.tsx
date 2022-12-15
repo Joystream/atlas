@@ -35,6 +35,7 @@ export type GetBasicChannelQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -56,6 +57,7 @@ export type GetFullChannelQuery = {
     description?: string | null
     isPublic?: boolean | null
     isCensored: boolean
+    cumulativeRewardClaimed?: string | null
     id: string
     title?: string | null
     createdAt: Date
@@ -84,6 +86,7 @@ export type GetFullChannelQuery = {
                 type:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -105,6 +108,7 @@ export type GetFullChannelQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -121,6 +125,7 @@ export type GetFullChannelQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -166,6 +171,7 @@ export type GetBasicChannelsQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -189,6 +195,7 @@ export type GetFullChannelsQuery = {
     description?: string | null
     isPublic?: boolean | null
     isCensored: boolean
+    cumulativeRewardClaimed?: string | null
     id: string
     title?: string | null
     createdAt: Date
@@ -217,6 +224,7 @@ export type GetFullChannelsQuery = {
                 type:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -238,6 +246,7 @@ export type GetFullChannelsQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -254,6 +263,7 @@ export type GetFullChannelsQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -297,6 +307,7 @@ export type GetBasicChannelsConnectionQuery = {
           type:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
             | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -362,6 +373,7 @@ export type GetMostViewedChannelsConnectionQuery = {
           type:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
             | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -409,6 +421,7 @@ export type GetMostFollowedChannelsConnectionQuery = {
           type:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
             | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -446,6 +459,7 @@ export type GetTop10ChannelsQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -480,6 +494,7 @@ export type GetPromisingChannelsQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -514,6 +529,7 @@ export type GetDiscoverChannelsQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -548,6 +564,7 @@ export type GetPopularChannelsQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -588,6 +605,7 @@ export type GetChannelNftCollectorsQuery = {
                 type:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
@@ -601,6 +619,18 @@ export type GetChannelNftCollectorsQuery = {
   }>
 }
 
+export type GetPayloadDataObjectIdByCommitmentQueryVariables = Types.Exact<{
+  commitment: Types.Scalars['String']
+}>
+
+export type GetPayloadDataObjectIdByCommitmentQuery = {
+  __typename?: 'Query'
+  channelPayoutsUpdatedEvents: Array<{
+    __typename?: 'ChannelPayoutsUpdatedEvent'
+    payloadDataObject: { __typename?: 'StorageDataObject'; id: string; storageBagId: string }
+  }>
+}
+
 export type ReportChannelMutationVariables = Types.Exact<{
   channelId: Types.Scalars['ID']
   rationale: Types.Scalars['String']
@@ -609,6 +639,46 @@ export type ReportChannelMutationVariables = Types.Exact<{
 export type ReportChannelMutation = {
   __typename?: 'Mutation'
   reportChannel: { __typename?: 'ChannelReportInfo'; id: string; channelId: string }
+}
+
+export type GetChannelPaymentEventsQueryVariables = Types.Exact<{
+  ownerMemberId: Types.Scalars['ID']
+  channelId: Types.Scalars['ID']
+}>
+
+export type GetChannelPaymentEventsQuery = {
+  __typename?: 'Query'
+  nftBoughtEvents: Array<{ __typename?: 'NftBoughtEvent'; inBlock: number; createdAt: Date; price: string }>
+  bidMadeCompletingAuctionEvents: Array<{
+    __typename?: 'BidMadeCompletingAuctionEvent'
+    inBlock: number
+    createdAt: Date
+    price: string
+  }>
+  englishAuctionSettledEvents: Array<{
+    __typename?: 'EnglishAuctionSettledEvent'
+    createdAt: Date
+    inBlock: number
+    winningBid: { __typename?: 'Bid'; amount: string }
+  }>
+  openAuctionBidAcceptedEvents: Array<{
+    __typename?: 'OpenAuctionBidAcceptedEvent'
+    inBlock: number
+    createdAt: Date
+    winningBid?: { __typename?: 'Bid'; amount: string } | null
+  }>
+  channelRewardClaimedEvents: Array<{
+    __typename?: 'ChannelRewardClaimedEvent'
+    amount: string
+    createdAt: Date
+    inBlock: number
+  }>
+  channelFundsWithdrawnEvents: Array<{
+    __typename?: 'ChannelFundsWithdrawnEvent'
+    amount: string
+    createdAt: Date
+    inBlock: number
+  }>
 }
 
 export const GetBasicChannelDocument = gql`
@@ -1373,6 +1443,67 @@ export type GetChannelNftCollectorsQueryResult = Apollo.QueryResult<
   GetChannelNftCollectorsQuery,
   GetChannelNftCollectorsQueryVariables
 >
+export const GetPayloadDataObjectIdByCommitmentDocument = gql`
+  query GetPayloadDataObjectIdByCommitment($commitment: String!) {
+    channelPayoutsUpdatedEvents(where: { commitment_eq: $commitment }, limit: 1) {
+      payloadDataObject {
+        id
+        storageBagId
+      }
+    }
+  }
+`
+
+/**
+ * __useGetPayloadDataObjectIdByCommitmentQuery__
+ *
+ * To run a query within a React component, call `useGetPayloadDataObjectIdByCommitmentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPayloadDataObjectIdByCommitmentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPayloadDataObjectIdByCommitmentQuery({
+ *   variables: {
+ *      commitment: // value for 'commitment'
+ *   },
+ * });
+ */
+export function useGetPayloadDataObjectIdByCommitmentQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetPayloadDataObjectIdByCommitmentQuery,
+    GetPayloadDataObjectIdByCommitmentQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetPayloadDataObjectIdByCommitmentQuery, GetPayloadDataObjectIdByCommitmentQueryVariables>(
+    GetPayloadDataObjectIdByCommitmentDocument,
+    options
+  )
+}
+export function useGetPayloadDataObjectIdByCommitmentLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetPayloadDataObjectIdByCommitmentQuery,
+    GetPayloadDataObjectIdByCommitmentQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetPayloadDataObjectIdByCommitmentQuery, GetPayloadDataObjectIdByCommitmentQueryVariables>(
+    GetPayloadDataObjectIdByCommitmentDocument,
+    options
+  )
+}
+export type GetPayloadDataObjectIdByCommitmentQueryHookResult = ReturnType<
+  typeof useGetPayloadDataObjectIdByCommitmentQuery
+>
+export type GetPayloadDataObjectIdByCommitmentLazyQueryHookResult = ReturnType<
+  typeof useGetPayloadDataObjectIdByCommitmentLazyQuery
+>
+export type GetPayloadDataObjectIdByCommitmentQueryResult = Apollo.QueryResult<
+  GetPayloadDataObjectIdByCommitmentQuery,
+  GetPayloadDataObjectIdByCommitmentQueryVariables
+>
 export const ReportChannelDocument = gql`
   mutation ReportChannel($channelId: ID!, $rationale: String!) {
     reportChannel(channelId: $channelId, rationale: $rationale) {
@@ -1412,4 +1543,84 @@ export type ReportChannelMutationResult = Apollo.MutationResult<ReportChannelMut
 export type ReportChannelMutationOptions = Apollo.BaseMutationOptions<
   ReportChannelMutation,
   ReportChannelMutationVariables
+>
+export const GetChannelPaymentEventsDocument = gql`
+  query GetChannelPaymentEvents($ownerMemberId: ID!, $channelId: ID!) {
+    nftBoughtEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
+      inBlock
+      createdAt
+      price
+    }
+    bidMadeCompletingAuctionEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
+      inBlock
+      createdAt
+      price
+    }
+    englishAuctionSettledEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
+      createdAt
+      inBlock
+      winningBid {
+        amount
+      }
+    }
+    openAuctionBidAcceptedEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
+      inBlock
+      createdAt
+      winningBid {
+        amount
+      }
+    }
+    channelRewardClaimedEvents(where: { channel: { id_eq: $channelId } }) {
+      amount
+      createdAt
+      inBlock
+    }
+    channelFundsWithdrawnEvents(where: { channel: { id_eq: $channelId } }) {
+      amount
+      createdAt
+      inBlock
+    }
+  }
+`
+
+/**
+ * __useGetChannelPaymentEventsQuery__
+ *
+ * To run a query within a React component, call `useGetChannelPaymentEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChannelPaymentEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChannelPaymentEventsQuery({
+ *   variables: {
+ *      ownerMemberId: // value for 'ownerMemberId'
+ *      channelId: // value for 'channelId'
+ *   },
+ * });
+ */
+export function useGetChannelPaymentEventsQuery(
+  baseOptions: Apollo.QueryHookOptions<GetChannelPaymentEventsQuery, GetChannelPaymentEventsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetChannelPaymentEventsQuery, GetChannelPaymentEventsQueryVariables>(
+    GetChannelPaymentEventsDocument,
+    options
+  )
+}
+export function useGetChannelPaymentEventsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetChannelPaymentEventsQuery, GetChannelPaymentEventsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetChannelPaymentEventsQuery, GetChannelPaymentEventsQueryVariables>(
+    GetChannelPaymentEventsDocument,
+    options
+  )
+}
+export type GetChannelPaymentEventsQueryHookResult = ReturnType<typeof useGetChannelPaymentEventsQuery>
+export type GetChannelPaymentEventsLazyQueryHookResult = ReturnType<typeof useGetChannelPaymentEventsLazyQuery>
+export type GetChannelPaymentEventsQueryResult = Apollo.QueryResult<
+  GetChannelPaymentEventsQuery,
+  GetChannelPaymentEventsQueryVariables
 >

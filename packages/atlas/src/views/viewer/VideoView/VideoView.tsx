@@ -81,6 +81,7 @@ export const VideoView: FC = () => {
     { where: { isPublic_eq: undefined, isCensored_eq: undefined, thumbnailPhoto: undefined, media: undefined } }
   )
   const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
+  const [isCommenting, setIsCommenting] = useState<boolean>(false)
   const nftWidgetProps = useNftWidget(video)
   const { likeOrDislikeVideo } = useReactionTransactions()
   const { withdrawBid } = useNftTransactions()
@@ -99,7 +100,7 @@ export const VideoView: FC = () => {
 
   const { anyOverlaysOpen } = useOverlayManager()
   const { ref: playerRef, inView: isPlayerInView } = useInView()
-  const pausePlayNext = anyOverlaysOpen || !isPlayerInView
+  const pausePlayNext = anyOverlaysOpen || !isPlayerInView || isCommenting
 
   const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset(video?.media)
   const { url: thumbnailUrl } = useAsset(video?.thumbnailPhoto)
@@ -199,13 +200,14 @@ export const VideoView: FC = () => {
         return false
       } else if (video?.id) {
         setVideoReactionProcessing(true)
-        const reacted = await likeOrDislikeVideo(video.id, reaction, video.title)
+        const fee = reactionFee || (await getReactionFee([memberId || '', video?.id, reaction]))
+        const reacted = await likeOrDislikeVideo(video.id, reaction, video.title, fee)
         setVideoReactionProcessing(false)
         return reacted
       }
       return false
     },
-    [isLoggedIn, likeOrDislikeVideo, openSignInDialog, signIn, video]
+    [getReactionFee, isLoggedIn, likeOrDislikeVideo, memberId, openSignInDialog, reactionFee, signIn, video]
   )
 
   // use Media Session API to provide rich metadata to the browser
@@ -401,6 +403,7 @@ export const VideoView: FC = () => {
                     video={video}
                     videoLoading={loading}
                     disabled={video ? !video?.isCommentSectionEnabled : undefined}
+                    onCommentInputFocus={setIsCommenting}
                   />
                 )}
               </>
@@ -419,6 +422,7 @@ export const VideoView: FC = () => {
                   video={video}
                   videoLoading={loading}
                   disabled={video ? !video?.isCommentSectionEnabled : undefined}
+                  onCommentInputFocus={setIsCommenting}
                 />
               )}
             </GridItem>

@@ -1,6 +1,7 @@
 import { formatISODuration } from 'date-fns'
 
 import { BasicChannelFieldsFragment, BasicVideoFieldsFragment } from './api/__generated__/sdk'
+import { MetaTags, SchemaOrgTag } from './types'
 import { joinUrlFragments } from './utils'
 
 const THUMBNAIL_WIDTH = 640
@@ -8,13 +9,6 @@ const THUMBNAIL_HEIGHT = 360
 const VIDEO_WIDTH = 1280
 const VIDEO_HEIGHT = 720
 const AVATAR_SIZE = 192
-
-type SchemaOrgTag = {
-  type: 'link' | 'regular'
-  prop: string
-  value: unknown
-}
-export type MetaTags = Record<string, string | number>
 
 const sanitizeDescription = (appName: string, fullDescription?: string | null, title?: string | null) => {
   if (!fullDescription) {
@@ -30,6 +24,34 @@ const sanitizeDescription = (appName: string, fullDescription?: string | null, t
   return needsTrimming ? oneLineDescription.slice(0, 157) + '...' : oneLineDescription
 }
 
+export const generateCommonMetaTags = (
+  appName: string,
+  appUrl: string,
+  title: string,
+  description: string,
+  image: string,
+  twitterId?: string | null
+): MetaTags => {
+  const sanitizedDescription = sanitizeDescription(appName, description, title)
+  return {
+    'og:title': title,
+    'twitter:title': title,
+    'description': sanitizedDescription,
+    'og:description': sanitizedDescription,
+    'twitter:description': sanitizedDescription,
+    'og:image': image,
+    'twitter:image': image,
+    'og:image:alt': title,
+    'twitter:image:alt': title,
+    'og:image:type': 'image/webp',
+    'og:site_name': appName,
+    'og:url': appUrl,
+    'og:type': 'website',
+    'twitter:card': 'summary_large_image',
+    ...(twitterId ? { 'twitter:site': twitterId } : {}),
+  }
+}
+
 export const generateVideoMetaTags = (
   video: BasicVideoFieldsFragment,
   thumbnailUrl: string,
@@ -39,20 +61,21 @@ export const generateVideoMetaTags = (
 ): MetaTags => {
   const videoUrl = joinUrlFragments(baseAppUrl, 'video', video.id)
   const videoEmbedUrl = joinUrlFragments(baseAppUrl, 'embedded', 'video', video.id)
-  const sanitizedDescription = sanitizeDescription(appName, video.description, video.title)
+  const commonTags = generateCommonMetaTags(
+    appName,
+    videoUrl,
+    video.title || 'Unnamed video',
+    video.description || '',
+    thumbnailUrl,
+    twitterId
+  )
 
   return {
-    ...(twitterId ? { 'twitter:site': twitterId } : {}),
-    'og:site_name': appName,
-    'og:title': video.title || '',
-    'og:description': sanitizedDescription,
+    ...commonTags,
     'og:type': 'video.other',
     'og:url': videoUrl,
-    'og:image': thumbnailUrl,
-    'og:image:alt': `Thumbnail for ${appName} video '${video.title}'`,
     'og:image:width': THUMBNAIL_WIDTH,
     'og:image:height': THUMBNAIL_HEIGHT,
-    'og:image:type': 'image/webp',
     'og:video': videoEmbedUrl,
     'og:video:secure_url': videoEmbedUrl,
     'og:video:width': video.mediaMetadata?.pixelWidth || VIDEO_WIDTH,
@@ -62,7 +85,7 @@ export const generateVideoMetaTags = (
     'twitter:player': videoEmbedUrl,
     'twitter:player:width': VIDEO_WIDTH,
     'twitter:player:height': VIDEO_HEIGHT,
-  }
+  } as const
 }
 
 export const generateChannelMetaTags = (
@@ -73,20 +96,20 @@ export const generateChannelMetaTags = (
   twitterId?: string
 ): MetaTags => {
   const channelUrl = joinUrlFragments(baseAppUrl, 'channel', channel.id)
-  const sanitizedDescription = sanitizeDescription(appName, channel.description, channel.title)
+  const commonTags = generateCommonMetaTags(
+    appName,
+    channelUrl,
+    channel.title || 'Unnamed channel',
+    channel.description || '',
+    avatarUrl,
+    twitterId
+  )
 
   return {
-    ...(twitterId ? { 'twitter:site': twitterId } : {}),
-    'og:site_name': appName,
-    'og:title': channel.title || '',
-    'og:description': sanitizedDescription,
+    ...commonTags,
     'og:type': 'profile',
-    'og:url': channelUrl,
-    'og:image': avatarUrl,
-    'og:image:alt': `Avatar photo for ${appName} channel '${channel.title}'`,
     'og:image:width': AVATAR_SIZE,
     'og:image:height': AVATAR_SIZE,
-    'og:image:type': 'image/webp',
     'twitter:card': 'summary',
   }
 }
@@ -246,10 +269,4 @@ export const generateChannelSchemaTagsHtml = (
   ]
 
   return htmlTags.join('\n')
-}
-
-export const generateMetaHtml = (tags: MetaTags) => {
-  return Object.entries(tags)
-    .map(([name, content]) => `<meta name="${name}" content="${content}">`)
-    .join('\n')
 }

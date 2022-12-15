@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { SvgActionAddVideo } from '@/assets/icons'
 
@@ -9,25 +9,10 @@ export default {
   component: Button,
   argTypes: {
     size: { table: { disable: true } },
-    onClick: { table: { disable: true } },
-    className: { table: { disable: true } },
-    to: { table: { disable: true } },
-    type: { table: { disable: true } },
-    variant: { table: { disable: true } },
-    fullWidth: {
-      table: { disable: false, type: { summary: 'boolean' }, defaultValue: { summary: false } },
-      type: { name: 'boolean', required: false },
-      defaultValue: false,
-    },
-    _textOnly: { table: { disable: true } },
-    iconPlacement: {
-      control: { type: 'select', options: ['left', 'right'] },
-      defaultValue: 'left',
-    },
   },
 } as Meta
 
-const Template: Story<ButtonProps> = (args) => (
+const Template: StoryFn<ButtonProps> = (args) => (
   <>
     <Button {...args} size="large">
       Large
@@ -70,7 +55,7 @@ export const WithIcon = Template.bind({})
 WithIcon.args = {
   icon: <SvgActionAddVideo />,
 }
-const TextOnlyTemplate: Story<TextButtonProps> = (args) => (
+const TextOnlyTemplate: StoryFn<TextButtonProps> = (args) => (
   <div>
     <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', alignItems: 'end' }}>
       <TextButton {...args} size="large">
@@ -130,7 +115,7 @@ const TextOnlyTemplate: Story<TextButtonProps> = (args) => (
   </div>
 )
 
-const IconOnlyTemplate: Story<ButtonProps> = (args) => (
+const IconOnlyTemplate: StoryFn<ButtonProps> = (args) => (
   <>
     <Button {...args} size="large" />
     <Button {...args} size="medium" />

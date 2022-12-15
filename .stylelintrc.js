@@ -10,6 +10,7 @@ module.exports = {
     'value-keyword-case': null,
     'font-family-name-quotes': null,
     'function-no-unknown': null,
+    'annotation-no-unknown': null,
     'declaration-block-no-duplicate-properties': true,
     'selector-not-notation': 'simple',
     'alpha-value-notation': 'number',

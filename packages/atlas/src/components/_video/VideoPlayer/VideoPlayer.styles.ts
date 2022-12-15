@@ -19,7 +19,7 @@ import {
   SvgControlsVideoModeCinemaView,
   SvgControlsVideoModeCompactView,
 } from '@/assets/icons'
-import { SvgAppLogoFullMonochrome, SvgAppLogoShortMonochrome } from '@/assets/logos'
+import { AppLogo } from '@/components/AppLogo'
 import { Text } from '@/components/Text'
 import { ControlsIndicatorWrapper } from '@/components/_video/VideoPlayer/ControlsIndicator.styles'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
@@ -363,7 +363,7 @@ export const StyledEmbeddedLogoLink = styled.a`
   }
 `
 
-export const StyledSvgAppLogoFullMonochrome = styled(SvgAppLogoFullMonochrome)<{ embedded?: boolean }>`
+export const StyledAppLogoFullMonochrome = styled(AppLogo)<{ embedded?: boolean }>`
   padding: ${({ embedded }) => (embedded ? 0 : '0.5em')};
   max-height: ${({ embedded }) => (embedded ? '2em' : '2.5em')};
   height: 100%;
@@ -373,7 +373,7 @@ export const StyledSvgAppLogoFullMonochrome = styled(SvgAppLogoFullMonochrome)<{
   ${defaultIconColor};
 `
 
-export const StyledAppLogoShortMonochrome = styled(SvgAppLogoShortMonochrome)`
+export const StyledAppLogoShortMonochrome = styled(AppLogo)`
   padding: 0.5em;
   max-height: 2.5em;
   height: 100%;

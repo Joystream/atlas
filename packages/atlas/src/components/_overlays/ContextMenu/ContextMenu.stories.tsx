@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { SvgActionCopy } from '@/assets/icons'
 import { Button } from '@/components/_buttons/Button'
@@ -12,11 +12,9 @@ export default {
   component: ContextMenu,
   argTypes: {
     onHide: { table: { disable: true } },
-    className: { table: { disable: true } },
     items: { table: { disable: true } },
     triggerTarget: { table: { disable: true } },
     trigger: { table: { disable: true } },
-    size: { control: { type: 'select', options: ['small', 'medium', 'large'] } },
   },
   args: {
     scrollable: false,
@@ -30,7 +28,7 @@ export default {
   ],
 } as Meta
 
-const Template: Story = (args) => {
+const Template: StoryFn = (args) => {
   return (
     <>
       <div>

@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { Text } from '@/components/Text'
 
@@ -12,7 +12,7 @@ export default {
   },
 } as Meta<ReactionPopoverProps>
 
-const Template: Story<ReactionPopoverProps> = (args) => (
+const Template: StoryFn<ReactionPopoverProps> = (args) => (
   <div
     style={{
       border: '1px solid silver',
@@ -26,7 +26,7 @@ const Template: Story<ReactionPopoverProps> = (args) => (
     <ReactionPopover {...args} />
   </div>
 )
-const EdgeOfTheScreenTemplate: Story<ReactionPopoverProps> = (args) => (
+const EdgeOfTheScreenTemplate: StoryFn<ReactionPopoverProps> = (args) => (
   <div style={{ marginLeft: '-15px' }}>
     <ReactionPopover {...args} />
     <Text as="p" variant="t100" color="colorText">

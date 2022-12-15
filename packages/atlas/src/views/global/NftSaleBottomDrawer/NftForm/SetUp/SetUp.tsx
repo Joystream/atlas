@@ -270,7 +270,6 @@ export const SetUp: FC<SetUpProps> = ({
               label="Minimum bid"
               error={errors.startingPrice?.message}
               description="Only bids higher than this value will be accepted."
-              switchable
               switchProps={{
                 name: 'startingPrice',
                 onChange: toggleActiveInput,
@@ -295,7 +294,6 @@ export const SetUp: FC<SetUpProps> = ({
               label="Buy now price"
               description="Bid matching this value will automatically end your auction."
               error={errors.buyNowPrice?.message}
-              switchable
               switchProps={{
                 name: 'buyNowPrice',
                 onChange: toggleActiveInput,
@@ -325,7 +323,6 @@ export const SetUp: FC<SetUpProps> = ({
                   <FormField
                     label="Whitelist"
                     description="Only members included in the whitelist will be able to bid on your auction(provide at least two members)."
-                    switchable
                     switchProps={{
                       name: 'whitelistedMembers',
                       onChange: toggleActiveInput,

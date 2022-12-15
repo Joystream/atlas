@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 
 import { TitleInput, TitleInputProps } from './TitleInput'
@@ -7,9 +7,7 @@ export default {
   title: 'inputs/TitleInput',
   component: TitleInput,
   argTypes: {
-    onChange: { table: { disable: true } },
     onBlur: { table: { disable: true } },
-    className: { table: { disable: true } },
     value: { table: { disable: true } },
     name: { table: { disable: true } },
   },
@@ -21,7 +19,7 @@ export default {
   },
 } as Meta
 
-const Template: Story<TitleInputProps> = (args) => {
+const Template: StoryFn<TitleInputProps> = (args) => {
   const [text, setText] = useState('')
   return (
     <div style={{ maxWidth: '400px' }}>

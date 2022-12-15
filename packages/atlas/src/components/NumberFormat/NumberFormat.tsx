@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import BN from 'bn.js'
 import { forwardRef, useRef } from 'react'
-import mergeRefs from 'react-merge-refs'
+import { mergeRefs } from 'react-merge-refs'
 
 import { Text, TextProps, TextVariant } from '@/components/Text'
 import { atlasConfig } from '@/config'

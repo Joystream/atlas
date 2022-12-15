@@ -1,7 +1,7 @@
 import bezier from 'bezier-easing'
 import { BN } from 'bn.js'
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import mergeRefs from 'react-merge-refs'
+import { mergeRefs } from 'react-merge-refs'
 import { useNavigate } from 'react-router'
 import { useTransition } from 'react-spring'
 import useResizeObserver from 'use-resize-observer'
@@ -40,7 +40,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
       return new BN(selectedChannel?.channelStateBloatBond || 0)
     }, [selectedChannel?.channelStateBloatBond])
 
-    const { accountBalance, lockedAccountBalance } = useSubscribeAccountBalance()
+    const { accountBalance, lockedAccountBalance, totalBalance } = useSubscribeAccountBalance()
     const { accountBalance: channelBalance } =
       useSubscribeAccountBalance(selectedChannel?.rewardAccount, {
         channelStateBloatBond: memoizedChannelStateBloatBond,
@@ -147,7 +147,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
           activeMembership={activeMembership}
           show={showWithdrawDialog}
           onExitClick={toggleWithdrawDialog}
-          accountBalance={accountBalance}
+          totalBalance={totalBalance}
           channelBalance={channelBalance}
           channelId={channelId}
         />

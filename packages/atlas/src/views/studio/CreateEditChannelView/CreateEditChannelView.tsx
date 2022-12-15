@@ -1,6 +1,6 @@
-import { FC, useCallback, useEffect, useRef, useState } from 'react'
+import { FC, useCallback, useEffect, useRef } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 import shallow from 'zustand/shallow'
@@ -25,32 +25,23 @@ import {
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
-import { ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib/types'
+import { ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib/types'
 import { useAsset, useChannelsStorageBucketsCount, useRawAsset } from '@/providers/assets/assets.hooks'
-import { useOperatorsContext } from '@/providers/assets/assets.provider'
 import { useAssetStore } from '@/providers/assets/assets.store'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
-import {
-  useBloatFeesAndPerMbFees,
-  useBucketsConfigForNewChannel,
-  useFee,
-  useJoystream,
-} from '@/providers/joystream/joystream.hooks'
+import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useSnackbar } from '@/providers/snackbars'
-import { useTransaction } from '@/providers/transactions/transactions.hooks'
-import { useStartFileUpload } from '@/providers/uploads/uploads.hooks'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { useUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { useYppStore } from '@/providers/ypp/ypp.store'
 import { transitions } from '@/styles'
-import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { createId } from '@/utils/createId'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
-import { computeFileHash } from '@/utils/hashing'
 import { SentryLogger } from '@/utils/logs'
 import { SubTitle, SubTitleSkeletonLoader, TitleSkeletonLoader } from '@/views/viewer/ChannelView/ChannelView.styles'
 
+import { Inputs, useCreateEditChannelSubmit } from './CreateEditChannelView.hooks'
 import {
   ActionBarTransactionWrapper,
   InnerFormContainer,
@@ -65,42 +56,27 @@ const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Unlisted (channel will not appear in feeds and search)', value: false },
 ]
 
-type ImageAsset = {
-  contentId: string | null
-  assetDimensions: AssetDimensions | null
-  imageCropData: ImageCropData | null
-  originalBlob?: File | Blob | null
-}
-type Inputs = {
-  title?: string
-  description?: string
-  isPublic: boolean
-  language: string
-  avatar: ImageAsset
-  cover: ImageAsset
-}
-
 type CreateEditChannelViewProps = {
   newChannel?: boolean
 }
+
+const DEFAULT_LANGUAGE = atlasConfig.derived.popularLanguagesSelectValues[0].value
 
 export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChannel }) => {
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropModalImperativeHandle>(null)
 
-  const { memberId, accountId, channelId, setActiveUser, refetchUserMemberships } = useUser()
+  const { memberId, accountId, channelId } = useUser()
   const cachedChannelId = useRef(channelId)
   const firstRender = useRef(true)
-  const { joystream, proxyCallback } = useJoystream()
-  const getBucketsConfigForNewChannel = useBucketsConfigForNewChannel()
-  const handleTransaction = useTransaction()
+  const { joystream } = useJoystream()
   const { displaySnackbar } = useSnackbar()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-  const addNewChannelIdToUploadsStore = useUploadsStore((state) => state.actions.addNewChannelId)
   const navigate = useNavigate()
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
-  const [showConnnectToYtDialog, setShowConnectToYtDialog] = useState(false)
+  const { handleSubmit: handleChannelSubmit, showConnectToYtDialog } = useCreateEditChannelSubmit()
   const setShouldContinueYppFlow = useYppStore((store) => store.actions.setShouldContinueYppFlow)
+
   const {
     channel,
     loading,
@@ -117,7 +93,6 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     },
     { where: { isPublic_eq: undefined, isCensored_eq: undefined } }
   )
-  const startFileUpload = useStartFileUpload()
   const channelBucketsCount = useChannelsStorageBucketsCount(channelId)
 
   // trigger use asset to make sure the channel assets get resolved
@@ -141,7 +116,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       cover: { contentId: null, assetDimensions: null, imageCropData: null, originalBlob: undefined },
       title: '',
       description: '',
-      language: atlasConfig.derived.languagesSelectValues[0].value,
+      language: DEFAULT_LANGUAGE,
       isPublic: true,
     },
   })
@@ -172,7 +147,6 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   )
 
   const { isWorkspaceOpen, setIsWorkspaceOpen } = useVideoWorkspace()
-  const { fetchOperators } = useOperatorsContext()
 
   useEffect(() => {
     if (newChannel) {
@@ -181,7 +155,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
         cover: { contentId: null },
         title: '',
         description: '',
-        language: atlasConfig.derived.languagesSelectValues[0].value,
+        language: DEFAULT_LANGUAGE,
         isPublic: true,
       })
     }
@@ -294,7 +268,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
         title: title || '',
         description: description || '',
         isPublic: isPublic ?? false,
-        language: foundLanguage?.value || atlasConfig.derived.languagesSelectValues[0].value,
+        language: foundLanguage?.value || DEFAULT_LANGUAGE,
       })
       firstRender.current = false
       cachedChannelId.current = channel.id
@@ -304,7 +278,41 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const headTags = useHeadTags(newChannel ? 'New channel' : 'Edit channel')
 
   const handleSubmit = createSubmitHandler(async (data) => {
-    await submit(data)
+    if (!joystream || !memberId || !accountId) {
+      return
+    }
+
+    if (!channelBucketsCount && !newChannel) {
+      SentryLogger.error('Channel buckets count is not set', 'CreateEditChannelView')
+      return
+    }
+
+    setIsWorkspaceOpen(false)
+    const metadata: ChannelInputMetadata = {
+      ...(dirtyFields.title ? { title: data.title?.trim() ?? '' } : {}),
+      ...(dirtyFields.description ? { description: data.description?.trim() ?? '' } : {}),
+      ...(dirtyFields.language || newChannel ? { language: data.language } : {}),
+      ...(dirtyFields.isPublic || newChannel ? { isPublic: data.isPublic } : {}),
+      ownerAccount: accountId ?? '',
+    }
+
+    await handleChannelSubmit(
+      {
+        metadata,
+        channel,
+        newChannel: !!newChannel,
+        assets: {
+          avatarPhoto: data.avatar,
+          coverPhoto: data.cover,
+        },
+        avatarAsset,
+        coverAsset,
+        refetchChannel,
+        fee: newChannel ? createChannelFee : updateChannelFee,
+      },
+      () => reset(getValues()),
+      setValue
+    )
   })
 
   const handleCoverChange: ImageCropModalProps['onConfirm'] = (
@@ -337,147 +345,6 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       { contentId: newAvatarAssetId, assetDimensions, imageCropData, originalBlob },
       { shouldDirty: true }
     )
-  }
-
-  const submit = async (data: Inputs) => {
-    if (!joystream || !memberId || !accountId) {
-      return
-    }
-
-    if (!channelBucketsCount && !newChannel) {
-      SentryLogger.error('Channel buckets count is not set', 'CreateEditChannelView')
-      return
-    }
-
-    setIsWorkspaceOpen(false)
-
-    const metadata: ChannelInputMetadata = {
-      ...(dirtyFields.title ? { title: data.title?.trim() ?? '' } : {}),
-      ...(dirtyFields.description ? { description: data.description?.trim() ?? '' } : {}),
-      ...(dirtyFields.language || newChannel ? { language: data.language } : {}),
-      ...(dirtyFields.isPublic || newChannel ? { isPublic: data.isPublic } : {}),
-      ownerAccount: accountId,
-    }
-
-    const assets: ChannelInputAssets = {}
-    let removedAssetsIds: string[] = []
-    const processAssets = async () => {
-      const avatarIpfsHash = avatarAsset?.blob && dirtyFields.avatar && (await computeFileHash(avatarAsset.blob))
-      const coverIpfsHash = coverAsset?.blob && dirtyFields.cover && (await computeFileHash(coverAsset.blob))
-
-      const [createdAssets, assetIdsToRemove] = createChannelAssets(avatarIpfsHash, coverIpfsHash)
-      if (createdAssets.avatarPhoto) {
-        assets.avatarPhoto = createdAssets.avatarPhoto
-      }
-      if (createdAssets.coverPhoto) {
-        assets.coverPhoto = createdAssets.coverPhoto
-      }
-      removedAssetsIds = assetIdsToRemove
-    }
-
-    const uploadAssets = async ({ channelId, assetsIds }: ChannelExtrinsicResult) => {
-      const uploadPromises: Promise<unknown>[] = []
-      if (avatarAsset?.blob && assetsIds.avatarPhoto) {
-        const uploadPromise = startFileUpload(avatarAsset.blob, {
-          id: assetsIds.avatarPhoto,
-          owner: channelId,
-          parentObject: {
-            type: 'channel',
-            id: channelId,
-          },
-          dimensions: data.avatar.assetDimensions ?? undefined,
-          imageCropData: data.avatar.imageCropData ?? undefined,
-          type: 'avatar',
-        })
-        uploadPromises.push(uploadPromise)
-      }
-      if (coverAsset?.blob && assetsIds.coverPhoto) {
-        const uploadPromise = startFileUpload(coverAsset.blob, {
-          id: assetsIds.coverPhoto,
-          owner: channelId,
-          parentObject: {
-            type: 'channel',
-            id: channelId,
-          },
-          dimensions: data.cover.assetDimensions ?? undefined,
-          imageCropData: data.cover.imageCropData ?? undefined,
-          type: 'cover',
-        })
-        uploadPromises.push(uploadPromise)
-      }
-      Promise.all(uploadPromises).catch((e) =>
-        SentryLogger.error('Unexpected upload failure', 'CreateEditChannelView', e)
-      )
-    }
-
-    const refetchDataAndUploadAssets = async (result: ChannelExtrinsicResult) => {
-      const { channelId, assetsIds } = result
-      if (assetsIds.avatarPhoto && avatarAsset?.url) {
-        addAsset(assetsIds.avatarPhoto, { url: avatarAsset.url })
-        setValue('avatar.contentId', assetsIds.avatarPhoto)
-      }
-      if (assetsIds.coverPhoto && coverAsset?.url) {
-        addAsset(assetsIds.coverPhoto, { url: coverAsset.url })
-        setValue('cover.contentId', assetsIds.coverPhoto)
-      }
-
-      if (newChannel) {
-        // add channel to new channels list before refetching membership to make sure UploadsManager doesn't complain about missing assets
-        addNewChannelIdToUploadsStore(channelId)
-        // membership includes full list of channels so the channel update will be fetched too
-        await refetchUserMemberships()
-      } else {
-        await refetchChannel()
-      }
-
-      if (newChannel) {
-        // when creating a channel, refetch operators before uploading so that storage bag assignments gets populated for a new channel
-        setActiveUser({ channelId })
-        fetchOperators().then(() => {
-          uploadAssets(result)
-        })
-      } else {
-        uploadAssets(result)
-      }
-    }
-
-    const completed = await handleTransaction({
-      preProcess: processAssets,
-      txFactory: async (updateStatus) =>
-        newChannel
-          ? (
-              await joystream.extrinsics
-            ).createChannel(
-              memberId,
-              metadata,
-              assets,
-              await getBucketsConfigForNewChannel(),
-              dataObjectStateBloatBondValue.toString(),
-              channelStateBloatBondValue.toString(),
-              proxyCallback(updateStatus)
-            )
-          : (
-              await joystream.extrinsics
-            ).updateChannel(
-              channelId ?? '',
-              memberId,
-              metadata,
-              assets,
-              removedAssetsIds,
-              dataObjectStateBloatBondValue.toString(),
-              channelBucketsCount.toString(),
-              undefined,
-              proxyCallback(updateStatus)
-            ),
-      onTxSync: (result) => {
-        reset(getValues())
-        return refetchDataAndUploadAssets(result)
-      },
-    })
-
-    if (completed && newChannel) {
-      setTimeout(() => setShowConnectToYtDialog(true), 2000)
-    }
   }
 
   const handleDeleteAvatar = () => {
@@ -533,16 +400,16 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
 
   return (
     <>
+      {headTags}
       <ConnectWithYtModal
-        show={showConnnectToYtDialog}
+        show={showConnectToYtDialog}
         onSignUp={() => {
           setShouldContinueYppFlow(true)
           navigate(absoluteRoutes.studio.ypp())
         }}
         onClose={() => navigate(absoluteRoutes.studio.videos())}
       />
-      <form onSubmit={handleSubmit}>
-        {headTags}
+      <form onSubmit={(event) => event.preventDefault()}>
         <Controller
           name="cover"
           control={control}
@@ -683,7 +550,12 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
                 rules={requiredValidation('Language')}
                 render={({ field: { value, onChange } }) => (
                   <Select
-                    items={atlasConfig.derived.languagesSelectValues}
+                    items={[
+                      { name: 'TOP LANGUAGES', value: '', isSeparator: true },
+                      ...atlasConfig.derived.popularLanguagesSelectValues,
+                      { name: 'ALL LANGUAGES', value: '', isSeparator: true },
+                      ...atlasConfig.derived.languagesSelectValues,
+                    ]}
                     disabled={loading}
                     value={value}
                     error={!!errors.language && !value}
@@ -738,6 +610,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
                         }
                       : undefined
                   }
+                  skipFeeCheck
                 />
               </ActionBarTransactionWrapper>
             </CSSTransition>

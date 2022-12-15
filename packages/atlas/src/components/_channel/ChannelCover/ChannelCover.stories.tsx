@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { ChannelCover, ChannelCoverProps } from './ChannelCover'
 
@@ -6,20 +6,14 @@ export default {
   title: 'channel/ChannelCover',
   component: ChannelCover,
   argTypes: {
-    editable: {
-      table: {
-        required: false,
-      },
-    },
-    onCoverEditClick: { action: 'edit/add cover' },
-    onCoverRemoveClick: { action: 'remove cover' },
-    assetUrl: {
-      defaultValue: 'https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg',
-    },
+    editable: { table: { required: false } },
   },
-} as Meta
+  args: {
+    assetUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg',
+  },
+} as Meta<ChannelCoverProps>
 
-const Template: Story<ChannelCoverProps> = (args) => {
+const Template: StoryFn<ChannelCoverProps> = (args) => {
   return (
     <>
       <ChannelCover {...args} />

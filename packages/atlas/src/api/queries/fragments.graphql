@@ -24,6 +24,7 @@ fragment FullChannelFields on Channel {
   description
   isPublic
   isCensored
+  cumulativeRewardClaimed
   language {
     id
     iso

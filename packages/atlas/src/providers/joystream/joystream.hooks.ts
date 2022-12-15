@@ -110,25 +110,33 @@ export const useBucketsConfigForNewChannel = () => {
     const dynamicBagCreationPolicies = await joystream?.getDynamicBagCreationPolicies()
     const storageBuckets = allStorageBuckets.current
     const distributionFamiliesToBucketsMapping = allDistributionFamiliesToBucketsMapping.current
+
     const storage =
       storageBuckets && dynamicBagCreationPolicies?.storageBucketsCount
         ? sampleSize(storageBuckets, dynamicBagCreationPolicies.storageBucketsCount)
         : []
-    const distribution = distributionFamiliesToBucketsMapping
-      ? Object.entries(distributionFamiliesToBucketsMapping).reduce((acc, [familyIdStr, buckets]) => {
-          const familyId = parseInt(familyIdStr)
-          const familyBuckets: ChannelInputBuckets['distribution'] =
-            dynamicBagCreationPolicies?.distributionBucketsCountPerFamily
-              ? sampleSize(buckets, dynamicBagCreationPolicies.distributionBucketsCountPerFamily[familyId]).map(
-                  (bucketIndex) => ({
-                    distributionBucketIndex: bucketIndex,
-                    distributionBucketFamilyId: familyId,
-                  })
-                )
-              : []
-          return [...acc, ...familyBuckets]
-        }, [] as ChannelInputBuckets['distribution'])
-      : []
+
+    const distribution =
+      dynamicBagCreationPolicies?.distributionBucketsCountPerFamily && distributionFamiliesToBucketsMapping
+        ? Object.entries(dynamicBagCreationPolicies.distributionBucketsCountPerFamily).reduce(
+            (acc, [familyIdStr, bucketsCount]) => {
+              if (!bucketsCount) {
+                return acc
+              }
+              const familyId = parseInt(familyIdStr)
+              const familyBuckets: ChannelInputBuckets['distribution'] = sampleSize(
+                distributionFamiliesToBucketsMapping[familyId],
+                bucketsCount
+              ).map((bucketIndex) => ({
+                distributionBucketIndex: bucketIndex,
+                distributionBucketFamilyId: familyId,
+              }))
+
+              return [...acc, ...familyBuckets]
+            },
+            [] as ChannelInputBuckets['distribution']
+          )
+        : []
 
     return {
       storage: storage.length ? storage : [0],
@@ -152,6 +160,15 @@ export const useSubscribeAccountBalance = (
   const [lockedAccountBalance, setLockedAccountBalance] = useState<BN | undefined>()
   const { activeMembership } = useUser()
   const { joystream, proxyCallback, chainState } = useJoystream()
+
+  const totalBalanceLoaded = useMemo(
+    () => accountBalance && lockedAccountBalance,
+    [accountBalance, lockedAccountBalance]
+  )
+  const totalBalance = useMemo(
+    () => (totalBalanceLoaded ? accountBalance?.add(lockedAccountBalance || new BN(0)) : undefined),
+    [accountBalance, lockedAccountBalance, totalBalanceLoaded]
+  )
 
   useEffect(() => {
     if (!activeMembership?.controllerAccount || !joystream) {
@@ -187,7 +204,7 @@ export const useSubscribeAccountBalance = (
     proxyCallback,
   ])
 
-  return { accountBalance, lockedAccountBalance }
+  return { accountBalance, lockedAccountBalance, totalBalanceLoaded, totalBalance }
 }
 
 export const useBloatFeesAndPerMbFees = (assets?: VideoInputAssets | ChannelInputAssets) => {
@@ -229,7 +246,6 @@ export const useFee = <TFnName extends TxMethodName, TArgs extends Parameters<Jo
   const { totalAssetSizeFee, totalAssetBloatFee, channelStateBloatBondValue, videoStateBloatBondValue } =
     useBloatFeesAndPerMbFees(assets)
 
-  const { accountBalance } = useSubscribeAccountBalance()
   const [fullFee, setFullFee] = useState(new BN(0))
   const [loading, setLoading] = useState(false)
 
@@ -298,7 +314,6 @@ export const useFee = <TFnName extends TxMethodName, TArgs extends Parameters<Jo
   return {
     fullFee,
     getTxFee,
-    hasEnoughFunds: !accountBalance || accountBalance.gt(fullFee),
     loading,
   }
 }

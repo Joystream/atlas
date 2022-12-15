@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { WithValue } from '@/components/../../.storybook/WithValue'
 
@@ -8,34 +8,30 @@ export default {
   title: 'inputs/Checkbox',
   component: Checkbox,
   argTypes: {
-    label: {
-      defaultValue: 'Checkbox label',
-    },
     value: { table: { disable: true } },
     name: { table: { disable: true } },
     indeterminate: { table: { disable: true } },
     disabled: { table: { disable: true } },
     error: { table: { disable: true } },
     multiple: { table: { disable: true } },
-    className: { table: { disable: true } },
-    onChange: { table: { disable: true } },
     onFocus: { table: { disable: true } },
     onBlur: { table: { disable: true } },
   },
   args: {
+    label: 'Checkbox label',
     disabled: false,
     error: false,
     indeterminate: false,
   },
 } as Meta
 
-const SingleTemplate: Story<CheckboxProps> = (args) => (
+const SingleTemplate: StoryFn<CheckboxProps> = (args) => (
   <WithValue initial={true} actionName="onChange">
     {(value, setValue) => <Checkbox {...args} value={value} onChange={setValue} />}
   </WithValue>
 )
 
-const Template: Story<CheckboxProps> = (args) => (
+const Template: StoryFn<CheckboxProps> = (args) => (
   <div style={{ display: 'grid', gridTemplateColumns: '1fr', gridGap: '12px' }}>
     <WithValue initial={false} actionName="onChange">
       {(value, setValue) => <Checkbox {...args} value={value} onChange={setValue} />}
