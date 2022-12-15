@@ -27,10 +27,6 @@ export default defineConfig({
       input: {
         main: path.resolve(__dirname, 'src/index.html'),
         embedded: path.resolve(__dirname, 'src/embedded/index.html'),
-        'polkadot-worker': path.resolve(__dirname, 'src/utils/polkadot-worker.ts'),
-      },
-      output: {
-        entryFileNames: 'entry-[name].js',
       },
     },
   },
