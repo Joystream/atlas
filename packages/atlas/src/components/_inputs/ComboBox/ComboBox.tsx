@@ -119,7 +119,7 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
       />
       {ReactDOM.createPortal(
         <div ref={setDropdownRef} style={{ ...styles.popper }} {...attributes.popper}>
-          <ListWrapper {...getMenuProps()} isOpen={isOpen}>
+          <ListWrapper {...getMenuProps()} isOpen={inputValue && isOpen}>
             {isOpen && (
               <>
                 {inputItems.map((item, index) => (
