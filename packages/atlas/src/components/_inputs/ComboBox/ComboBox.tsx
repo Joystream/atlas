@@ -88,6 +88,9 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
       setInputItems(inputValue?.length ? uniqBy(filteredItems, 'label') : items)
       onInputValueChange?.(inputValue)
     },
+    onIsOpenChange: () => {
+      update?.()
+    },
   })
 
   useEffect(() => {
@@ -104,8 +107,8 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
         {...textFieldProps}
         error={error || !!noItemsFound}
         {...getInputProps({ ref: textFieldRef })}
-        nodeEnd={processing && inputValue && <Loader variant="small" />}
-        nodeStart={<StyledSvgActionPlus />}
+        nodeEnd={processing && inputValue ? <Loader variant="small" /> : textFieldProps.nodeEnd}
+        nodeStart={typeof textFieldProps.nodeStart === 'undefined' ? <StyledSvgActionPlus /> : textFieldProps.nodeStart}
         onFocus={(event) => {
           textFieldProps?.onFocus?.(event)
         }}
@@ -116,7 +119,7 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
       />
       {ReactDOM.createPortal(
         <div ref={setDropdownRef} style={{ ...styles.popper }} {...attributes.popper}>
-          <ListWrapper {...getMenuProps()} isOpen={isOpen}>
+          <ListWrapper {...getMenuProps()} isOpen={items.length && isOpen}>
             {isOpen && (
               <>
                 {inputItems.map((item, index) => (

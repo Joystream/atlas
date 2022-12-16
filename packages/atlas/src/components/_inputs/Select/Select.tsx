@@ -90,6 +90,9 @@ export const _Select = <T extends unknown>(
     items: itemsValues,
     selectedItem: value !== undefined ? value : null,
     onSelectedItemChange: handleItemSelect,
+    onIsOpenChange: () => {
+      update?.()
+    },
   })
 
   if (inlineLabel && icon) {
