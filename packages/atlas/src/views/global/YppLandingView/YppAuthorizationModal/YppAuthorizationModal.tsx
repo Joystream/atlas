@@ -61,6 +61,8 @@ export type YppAuthorizationModalProps = {
 }
 
 const APP_NAME = atlasConfig.general.appName
+const TOKEN = atlasConfig.joystream.tokenTicker
+const YPP_REWARD = atlasConfig.features.ypp.enrollmentReward
 
 export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   currentStep,
@@ -402,8 +404,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           description: (
             <>
               <DescriptionText variant="t200" as="span" color="inherit">
-                Congratulations! You just received 200 JOY as your {APP_NAME} channel is now officially enrolled in the
-                YouTube Partner Program and tied with a YouTube channel.{' '}
+                You've successfully enrolled to {APP_NAME} Youtube Partnership Programme! You already qualified for the
+                new sign up reward of {YPP_REWARD} {TOKEN} tokens.
               </DescriptionText>
               <DescriptionText variant="t200" as="span" margin={{ top: 2 }} color="inherit">
                 All information around your activity in the program can be found in the{' '}
