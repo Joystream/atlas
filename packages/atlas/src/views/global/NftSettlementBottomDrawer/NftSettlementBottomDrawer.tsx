@@ -33,9 +33,11 @@ export const NftSettlementBottomDrawer: FC = () => {
   const { displaySnackbar } = useSnackbar()
   const { isLoadingAsset: thumbnailLoading, url: thumbnailUrl } = useAsset(nft?.video.thumbnailPhoto)
   const { url: avatarUrl } = useAsset(nft?.video.channel.avatarPhoto)
-  const { url: memberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
+  const { url: memberAvatarUrl } = useMemberAvatar(
+    nft?.owner.__typename === 'NftOwnerMember' && nft.owner.member ? nft.owner.member : null
+  )
 
-  const isUserSeller = memberId === nft?.ownerMember?.id
+  const isUserSeller = memberId === (nft?.owner.__typename === 'NftOwnerMember' && nft.owner.member.id)
 
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
@@ -77,7 +79,10 @@ export const NftSettlementBottomDrawer: FC = () => {
                 type: 'video',
               }}
               creator={{ name: nft?.video.channel.title, assetUrl: avatarUrl }}
-              owner={{ name: nft?.ownerMember?.handle, assetUrl: memberAvatarUrl }}
+              owner={{
+                name: (nft?.owner.__typename === 'NftOwnerMember' && nft.owner.member?.handle) || '',
+                assetUrl: memberAvatarUrl,
+              }}
               fullWidth
               loading={loading}
             />

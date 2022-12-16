@@ -77,7 +77,7 @@ export const ChannelView: FC = () => {
   const smMatch = useMediaMatch('sm')
   const { id } = useParams()
   const {
-    channel,
+    extendedChannel,
     loading,
     error: channelError,
   } = useFullChannel(id ?? '', {
@@ -102,13 +102,13 @@ export const ChannelView: FC = () => {
         search: { channelId: id, query: searchQuery },
       }),
   })
-  const { channelNftCollectors } = useChannelNftCollectors({ where: { channel: { id_eq: id } } })
+  const { channelNftCollectors } = useChannelNftCollectors({ channelId: id || '' })
 
-  const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, channel?.title)
+  const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, extendedChannel?.title)
   const [currentTab, setCurrentTab] = useState<typeof TABS[number]>(TABS[0])
 
-  const { url: avatarPhotoUrl } = useAsset(channel?.avatarPhoto)
-  const { url: coverPhotoUrl } = useAsset(channel?.coverPhoto)
+  const { url: avatarPhotoUrl } = useAsset(extendedChannel?.avatarPhoto)
+  const { url: coverPhotoUrl } = useAsset(extendedChannel?.coverPhoto)
 
   const [sortNftsBy, setSortNftsBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
@@ -136,16 +136,16 @@ export const ChannelView: FC = () => {
   }
 
   const channelMetaTags = useMemo(() => {
-    if (!channel || !avatarPhotoUrl) return {}
+    if (!extendedChannel || !avatarPhotoUrl) return {}
     return generateChannelMetaTags(
-      channel,
+      extendedChannel,
       avatarPhotoUrl,
       atlasConfig.general.appName,
       window.location.origin,
       atlasConfig.general.appTwitterId
     )
-  }, [channel, avatarPhotoUrl])
-  const headTags = useHeadTags(channel?.title, channelMetaTags)
+  }, [extendedChannel, avatarPhotoUrl])
+  const headTags = useHeadTags(extendedChannel?.title, channelMetaTags)
 
   const handleSetCurrentTab = async (tab: number) => {
     if (TABS[tab] === 'Videos' && isSearching) {
@@ -187,7 +187,7 @@ export const ChannelView: FC = () => {
           />
         )
       case 'Information':
-        return <ChannelAbout channel={channel} />
+        return <ChannelAbout channel={extendedChannel} />
     }
   }
 
@@ -201,13 +201,13 @@ export const ChannelView: FC = () => {
   const mappedChannelNftCollectors =
     channelNftCollectors?.map(({ amount, member }) => ({
       nftsAmount: amount,
-      url: member?.metadata.avatar?.__typename === 'AvatarUri' ? member?.metadata.avatar?.avatarUri : '',
+      url: member?.metadata?.avatar?.__typename === 'AvatarUri' ? member?.metadata.avatar?.avatarUri : '',
       tooltipText: member?.handle,
       onClick: () => navigate(absoluteRoutes.viewer.member(member?.handle)),
       memberUrl: absoluteRoutes.viewer.member(member?.handle),
     })) || []
 
-  if (!loading && !channel) {
+  if (!loading && !extendedChannel) {
     return (
       <NotFoundChannelContainer>
         <EmptyFallback
@@ -237,16 +237,16 @@ export const ChannelView: FC = () => {
           </CollectorsBoxContainer>
         ) : null}
         <TitleSection className={transitions.names.slide}>
-          <StyledChannelLink id={channel?.id} avatarSize="channel" hideHandle noLink />
+          <StyledChannelLink id={extendedChannel?.id} avatarSize="channel" hideHandle noLink />
           <TitleContainer>
-            {channel ? (
+            {extendedChannel ? (
               <>
                 <Text as="h1" variant={smMatch ? 'h700' : 'h600'}>
-                  {channel.title}
+                  {extendedChannel.title}
                 </Text>
                 <SubTitle as="p" variant="t300" color="colorText">
-                  {channel.follows ? (
-                    <NumberFormat as="span" value={channel.follows} format="short" variant="t300" />
+                  {extendedChannel.followsNum ? (
+                    <NumberFormat as="span" value={extendedChannel.followsNum} format="short" variant="t300" />
                   ) : (
                     0
                   )}{' '}
@@ -283,11 +283,11 @@ export const ChannelView: FC = () => {
               ]}
               trigger={<Button icon={<SvgActionMore />} variant="tertiary" size="large" />}
             />
-            {channel?.id && (
+            {extendedChannel?.id && (
               <ReportModal
                 show={showReportDialog}
                 onClose={() => setShowReportDialog(false)}
-                entityId={channel?.id}
+                entityId={extendedChannel?.id}
                 type="channel"
               />
             )}

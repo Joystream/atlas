@@ -1,6 +1,6 @@
 overwrite: true
 
-schema: ${VITE_PRODUCTION_ORION_URL}
+schema: http://localhost:4350/graphql
 
 documents:
   - './src/api/queries/**/*.graphql'

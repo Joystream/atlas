@@ -1,5 +1,6 @@
 query GetKillSwitch {
-  admin {
+  # CHANGE: Renamed from `admin`
+  getKillSwitch {
     isKilled
   }
 }

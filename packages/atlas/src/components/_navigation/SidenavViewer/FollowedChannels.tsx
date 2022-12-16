@@ -37,19 +37,19 @@ export const ChannelNavItem: FC<NavItemProps & ChannelNavItemProps> = ({
   onChannelNotFound,
   onClick,
 }) => {
-  const { channel } = useBasicChannel(id ?? '', {
+  const { extendedChannel: channel } = useBasicChannel(id ?? '', {
     skip: !id,
-    onCompleted: (data) => !data.channels.length && onChannelNotFound?.(id),
+    onCompleted: (data) => !data.extendedChannels.length && onChannelNotFound?.(id),
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelLink', error, { channel: { id } }),
   })
-  const { url: avatarPhotoUrl } = useAsset(channel?.avatarPhoto)
+  const { url: avatarPhotoUrl } = useAsset(channel?.channel.avatarPhoto)
 
   return (
     <NavItem to={to} expanded={expanded} itemName={itemName} onClick={onClick} isSecondary={isSecondary}>
       <Avatar loading={!channel} size="default" assetUrl={avatarPhotoUrl} />
       {channel ? (
         <ChannelTitle as="p" variant="h300" color="colorText">
-          {channel.title}
+          {channel.channel.title}
         </ChannelTitle>
       ) : (
         <StyledSkeletonLoader height={16} width={150} />

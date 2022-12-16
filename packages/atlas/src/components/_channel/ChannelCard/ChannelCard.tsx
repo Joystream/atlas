@@ -69,7 +69,8 @@ export const ChannelCard: FC<ChannelCardProps> = ({
                     {channel.title}
                   </ChannelTitle>
                   <ChannelFollows as="p" variant={mdMatch ? 't200' : 't100'} color="colorText">
-                    <NumberFormat as="span" format="short" value={channel.follows || 0} color="colorText" /> followers
+                    <NumberFormat as="span" format="short" value={channel.followsNum || 0} color="colorText" />{' '}
+                    followers
                   </ChannelFollows>
                   {withFollowButton && (
                     <FollowButton

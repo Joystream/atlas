@@ -55,6 +55,6 @@ export const cancelledVideoFilter: VideoWhereInput = {
   isPublic_eq: undefined,
   media: undefined,
   thumbnailPhoto: undefined,
-  NOT: undefined,
+  // NOT: undefined,
   category: undefined,
 }

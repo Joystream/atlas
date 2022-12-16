@@ -60,7 +60,7 @@ export const ExpandableChannelsList: FC<ExpandableChannelsListProps> = ({
 
   const totalCount = channels?.length || 0
 
-  const placeholderItems = Array.from({ length: INITIAL_ROWS }, () => ({ id: undefined }))
+  const placeholderItems = Array.from({ length: INITIAL_ROWS }, () => ({ channel: { id: undefined } }))
   const shouldShowLoadMoreButton = !loading && totalCount >= displayedRowsCount
 
   const itemsToShow = [...(channels || []), ...(loading ? placeholderItems : [])].slice(0, displayedRowsCount)
@@ -106,9 +106,9 @@ export const ExpandableChannelsList: FC<ExpandableChannelsListProps> = ({
         )}
       </GridHeadingContainer>
       {itemsToShow.length ? (
-        itemsToShow.map((channel, idx) => (
+        itemsToShow.map(({ channel }, idx) => (
           <Fragment key={`channels-with-videos-${idx}`}>
-            <ChannelWithVideos channelId={channel.id} />
+            <ChannelWithVideos channelId={channel?.id} />
             {idx + 1 < itemsToShow.length && <Separator />}
           </Fragment>
         ))
@@ -139,7 +139,7 @@ const useChannelsListData = (queryType: ChannelsQueryType, selectedLanguage: str
   }
   const commonWhere = {
     where: {
-      activeVideosCounter_gt: 4,
+      activeVideosCount_gt: 4,
     },
   }
 
@@ -151,7 +151,12 @@ const useChannelsListData = (queryType: ChannelsQueryType, selectedLanguage: str
     {
       limit: 15,
       orderBy: ChannelOrderByInput.CreatedAtAsc,
-      where: { activeVideosCounter_gt: 1, language: { iso_contains: selectedLanguage } },
+      where: {
+        activeVideosCount_gt: 1,
+        channel: {
+          language_contains: selectedLanguage,
+        },
+      },
     },
     { ...commonOpts, skip: queryType !== 'regular' }
   )

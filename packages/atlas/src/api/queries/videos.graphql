@@ -1,15 +1,14 @@
-query GetBasicVideo($where: VideoWhereUniqueInput!) {
-  videoByUniqueInput(where: $where) {
-    ...BasicVideoFields
-  }
-}
+# CHANGE: Removed because unused
+# query GetBasicVideo(...) { ... }
 
-query GetFullVideo($where: VideoWhereUniqueInput!) {
-  videoByUniqueInput(where: $where) {
+query GetFullVideo($id: String!) {
+  # CHANGE: Replacement for `videoByUniqueInput`, which is no longer available
+  videoById(id: $id) {
     ...FullVideoFields
   }
 }
 
+# No changes
 query GetBasicVideosConnection(
   $first: Int
   $after: String
@@ -31,6 +30,7 @@ query GetBasicVideosConnection(
   }
 }
 
+# No changes
 query GetFullVideosConnection(
   $first: Int
   $after: String
@@ -52,6 +52,7 @@ query GetFullVideosConnection(
   }
 }
 
+# No changes
 query GetBasicVideos(
   $offset: Int
   $limit: Int
@@ -63,6 +64,7 @@ query GetBasicVideos(
   }
 }
 
+# No changes
 query GetFullVideos(
   $offset: Int
   $limit: Int
@@ -74,6 +76,7 @@ query GetFullVideos(
   }
 }
 
+# No changes
 query GetMostViewedVideosConnection(
   $limit: Int = 50
   $periodDays: Int
@@ -105,25 +108,37 @@ query GetMostViewedVideosConnection(
 }
 
 query GetTop10VideosThisWeek($where: VideoWhereInput) {
-  top10VideosThisWeek(where: $where) {
-    ...BasicVideoFields
+  # CHANGE: Replaced overly-specific `top10VideosThisWeek` with more generic `mostViewedVideosConnection` query
+  mostViewedVideosConnection(limit: 10, where: $where, periodDays: 7, orderBy: createdAt_DESC) {
+    edges {
+      node {
+        ...BasicVideoFields
+      }
+    }
   }
 }
 
 query GetTop10VideosThisMonth($where: VideoWhereInput) {
-  top10VideosThisMonth(where: $where) {
-    ...BasicVideoFields
+  # CHANGE: Replaced overly-specific `top10VideosThisMonth` with more generic `mostViewedVideosConnection` query
+  mostViewedVideosConnection(limit: 10, where: $where, periodDays: 30, orderBy: createdAt_DESC) {
+    edges {
+      node {
+        ...BasicVideoFields
+      }
+    }
   }
 }
 
-mutation AddVideoView($videoId: ID!, $channelId: ID!, $categoryId: ID) {
-  addVideoView(videoId: $videoId, channelId: $channelId, categoryId: $categoryId) {
+# CHANGE: `channelId` and `categoryId` args were removed, ID is now `String`
+mutation AddVideoView($videoId: String!) {
+  addVideoView(videoId: $videoId) {
     id
-    views
+    viewsNum
   }
 }
 
-mutation ReportVideo($videoId: ID!, $rationale: String!) {
+# CHANGE: ID is now `String`
+mutation ReportVideo($videoId: String!, $rationale: String!) {
   reportVideo(videoId: $videoId, rationale: $rationale) {
     id
     videoId

@@ -8,22 +8,14 @@ export type GetQueryNodeStateSubscriptionVariables = Types.Exact<{ [key: string]
 
 export type GetQueryNodeStateSubscription = {
   __typename?: 'Subscription'
-  stateSubscription: {
-    __typename?: 'ProcessorState'
-    chainHead: number
-    indexerHead: number
-    lastCompleteBlock: number
-    lastProcessedEvent: string
-  }
+  processorState: { __typename?: 'ProcessorState'; lastProcessedBlock: number; chainHead: number }
 }
 
 export const GetQueryNodeStateDocument = gql`
   subscription GetQueryNodeState {
-    stateSubscription {
+    processorState {
+      lastProcessedBlock
       chainHead
-      indexerHead
-      lastCompleteBlock
-      lastProcessedEvent
     }
   }
 `

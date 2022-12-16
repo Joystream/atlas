@@ -135,7 +135,7 @@ export const useUploadStatus = (asset: AssetUpload) => {
   const handleVideoWorkspaceSubmit = useHandleVideoWorkspaceSubmit()
   const handleEditChannelSubmit = useCreateEditChannelSubmit()
 
-  const { channel, refetch: refetchChannel } = useFullChannel(
+  const { extendedChannel: channel, refetch: refetchChannel } = useFullChannel(
     channelId || '',
     {
       skip: !channelId,
@@ -144,7 +144,7 @@ export const useUploadStatus = (asset: AssetUpload) => {
           channel: { id: channelId },
         }),
     },
-    { where: { isPublic_eq: undefined, isCensored_eq: undefined } }
+    { where: { channel: { isPublic_eq: undefined, isCensored_eq: undefined } } }
   )
 
   const handleAvatarUpdate = useCallback(

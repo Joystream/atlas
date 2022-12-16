@@ -6,9 +6,9 @@ import { useNavigate } from 'react-router'
 import useResizeObserver from 'use-resize-observer'
 
 import {
-  GetMembershipDocument,
-  GetMembershipQuery,
-  GetMembershipQueryVariables,
+  GetMembershipsDocument,
+  GetMembershipsQuery,
+  GetMembershipsQueryVariables,
 } from '@/api/queries/__generated__/memberships.generated'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { MembershipInfo } from '@/components/MembershipInfo'
@@ -57,13 +57,13 @@ export const EditMembershipView: FC = () => {
         return true
       }
       const {
-        data: { membershipByUniqueInput },
-      } = await client.query<GetMembershipQuery, GetMembershipQueryVariables>({
-        query: GetMembershipDocument,
-        variables: { where: { handle: value } },
+        data: { memberships },
+      } = await client.query<GetMembershipsQuery, GetMembershipsQueryVariables>({
+        query: GetMembershipsDocument,
+        variables: { where: { handle_eq: value } },
       })
 
-      return !membershipByUniqueInput
+      return !memberships[0]
     },
     [client]
   )
@@ -83,7 +83,7 @@ export const EditMembershipView: FC = () => {
 
   const resetForm = useCallback(async () => {
     let blob
-    if (activeMembership?.metadata.avatar?.__typename === 'AvatarUri' && activeMembership.metadata.avatar.avatarUri) {
+    if (activeMembership?.metadata?.avatar?.__typename === 'AvatarUri' && activeMembership.metadata.avatar.avatarUri) {
       await fetch(activeMembership.metadata.avatar.avatarUri)
         .then((r) => r.blob())
         .then((createdBlob) => (blob = createdBlob))
@@ -93,14 +93,14 @@ export const EditMembershipView: FC = () => {
       {
         handle: activeMembership?.handle,
         avatar:
-          activeMembership?.metadata.avatar?.__typename === 'AvatarUri'
+          activeMembership?.metadata?.avatar?.__typename === 'AvatarUri'
             ? {
                 url: activeMembership.metadata.avatar.avatarUri,
                 blob: blob,
                 originalBlob: blob,
               }
             : null,
-        about: activeMembership?.metadata.about || '',
+        about: activeMembership?.metadata?.about || '',
       },
       {
         keepDirty: false,

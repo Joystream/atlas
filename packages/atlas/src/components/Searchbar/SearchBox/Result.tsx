@@ -64,7 +64,9 @@ export const Result: FC<ResultProps> = ({ video, channel, query, selected, handl
             <ResultTitle title={title} query={query} />
           </Title>
           <Text as="span" color="colorText" variant="t100">
-            {video ? video.channel?.title : `${channel?.follows} ${channel?.follows === 1 ? 'Follower' : 'Followers'}`}
+            {video
+              ? video.channel?.title
+              : `${channel?.followsNum} ${channel?.followsNum === 1 ? 'Follower' : 'Followers'}`}
           </Text>
         </div>
       </ResultContent>

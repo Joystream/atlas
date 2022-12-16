@@ -252,7 +252,8 @@ export const Comment: FC<CommentProps> = memo(
       (comment &&
         getCommentReactions({
           userReactionsIds: userReactions,
-          reactionsCount: comment?.reactionsCountByReactionId,
+          // todo make sure that's working
+          reactionsCount: comment.reactionsCountByReactionId || [],
           processingReactionsIds,
           deleted: commentType === 'deleted',
         })) ||
@@ -287,7 +288,7 @@ export const Comment: FC<CommentProps> = memo(
       return (
         <>
           <InternalComment
-            indented={!!comment?.parentCommentId}
+            indented={!!comment?.parentComment?.id}
             isCommentFromUrl={commentId === commentIdQueryParam}
             videoId={video?.id}
             commentId={commentId}

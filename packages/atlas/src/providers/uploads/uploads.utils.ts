@@ -39,7 +39,7 @@ export const fetchMissingAssets = async (
 
   const channelPromise = client.query<GetFullChannelQuery, GetFullChannelQueryVariables>({
     query: GetFullChannelDocument,
-    variables: { where: { id: channelId } },
+    variables: { id: channelId },
   })
 
   const [videosMediaResponse, videosThumbnailResponse, channelResponse] = await Promise.all([
@@ -50,7 +50,7 @@ export const fetchMissingAssets = async (
 
   const fetchedVideosMedia = videosMediaResponse.data.videos
   const fetchedVideosThumbnail = videosThumbnailResponse.data.videos
-  const fetchedChannel = channelResponse.data.channelByUniqueInput
+  const fetchedChannel = channelResponse.data.channelById
 
   // to remove any duplicates
   const fetchedVideosMediaLookup = createLookup(fetchedVideosMedia || [])

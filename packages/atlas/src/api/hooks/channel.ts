@@ -2,14 +2,14 @@ import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
 
 import {
   FollowChannelMutation,
-  GetBasicChannelsQuery,
-  GetBasicChannelsQueryVariables,
   GetChannelNftCollectorsQuery,
   GetChannelNftCollectorsQueryVariables,
   GetDiscoverChannelsQuery,
   GetDiscoverChannelsQueryVariables,
-  GetFullChannelsQuery,
-  GetFullChannelsQueryVariables,
+  GetExtendedBasicChannelsQuery,
+  GetExtendedBasicChannelsQueryVariables,
+  GetExtendedFullChannelsQuery,
+  GetExtendedFullChannelsQueryVariables,
   GetPopularChannelsQuery,
   GetPopularChannelsQueryVariables,
   GetPromisingChannelsQuery,
@@ -18,10 +18,10 @@ import {
   GetTop10ChannelsQueryVariables,
   UnfollowChannelMutation,
   useFollowChannelMutation,
-  useGetBasicChannelsQuery,
   useGetChannelNftCollectorsQuery,
   useGetDiscoverChannelsQuery,
-  useGetFullChannelsQuery,
+  useGetExtendedBasicChannelsQuery,
+  useGetExtendedFullChannelsQuery,
   useGetPopularChannelsQuery,
   useGetPromisingChannelsQuery,
   useGetTop10ChannelsQuery,
@@ -29,60 +29,63 @@ import {
 } from '@/api/queries/__generated__/channels.generated'
 import { channelFilter } from '@/config/contentFilter'
 
-const CHANNEL_ID_FILTER = channelFilter.NOT?.find((item) => item.id_in)
+const CHANNEL_ID_FILTER = channelFilter.id_not_contains
 
 export const useBasicChannel = (
   id: string,
-  opts?: QueryHookOptions<GetBasicChannelsQuery, GetBasicChannelsQueryVariables>
+  opts?: QueryHookOptions<GetExtendedBasicChannelsQuery, GetExtendedBasicChannelsQueryVariables>
 ) => {
-  const { data, ...rest } = useGetBasicChannelsQuery({
+  const { data, ...rest } = useGetExtendedBasicChannelsQuery({
     ...opts,
-    variables: { where: { id_eq: id, ...(CHANNEL_ID_FILTER ? { NOT: [{ id_in: CHANNEL_ID_FILTER.id_in }] } : {}) } },
+    variables: {
+      where: { channel: { id_eq: id, id_not_contains: CHANNEL_ID_FILTER } },
+    },
   })
   return {
-    channel: data?.channels[0],
+    extendedChannel: data?.extendedChannels[0],
     ...rest,
   }
 }
 
 export const useFullChannel = (
   id: string,
-  opts?: QueryHookOptions<GetFullChannelsQuery, GetFullChannelsQueryVariables>,
-  variables?: GetFullChannelsQueryVariables
+  opts?: QueryHookOptions<GetExtendedFullChannelsQuery, GetExtendedFullChannelsQueryVariables>,
+  variables?: GetExtendedFullChannelsQueryVariables
 ) => {
-  const { data, ...rest } = useGetFullChannelsQuery({
+  const { data, ...rest } = useGetExtendedFullChannelsQuery({
     ...opts,
     variables: {
       ...variables,
       where: {
-        id_eq: id,
-        ...(CHANNEL_ID_FILTER ? { NOT: [{ id_in: CHANNEL_ID_FILTER.id_in }] } : {}),
+        channel: {
+          id_not_contains: CHANNEL_ID_FILTER,
+          id_eq: id,
+        },
         ...variables?.where,
       },
     },
   })
   return {
-    channel: data?.channels[0],
+    extendedChannel: data?.extendedChannels[0].channel,
     ...rest,
   }
 }
 
 export const useBasicChannels = (
-  variables?: GetBasicChannelsQueryVariables,
-  opts?: QueryHookOptions<GetBasicChannelsQuery, GetBasicChannelsQueryVariables>
+  variables?: GetExtendedBasicChannelsQueryVariables,
+  opts?: QueryHookOptions<GetExtendedBasicChannelsQuery, GetExtendedBasicChannelsQueryVariables>
 ) => {
-  const { data, ...rest } = useGetBasicChannelsQuery({
+  const { data, ...rest } = useGetExtendedBasicChannelsQuery({
     ...opts,
     variables: {
       ...variables,
       where: {
-        ...channelFilter,
         ...variables?.where,
       },
     },
   })
   return {
-    channels: data?.channels,
+    channels: data?.extendedChannels.map((extendedChannel) => extendedChannel),
     ...rest,
   }
 }
@@ -147,13 +150,13 @@ export const useTop10Channels = (
       ...variables,
       where: {
         ...channelFilter,
-        activeVideosCounter_gt: 0,
+        activeVideosCount_gt: 0,
         ...variables?.where,
       },
     },
   })
   return {
-    channels: data?.top10Channels,
+    channels: data?.extendedChannels.map((extended) => extended.channel),
     ...rest,
   }
 }
@@ -168,13 +171,13 @@ export const useDiscoverChannels = (
       ...variables,
       where: {
         ...channelFilter,
-        activeVideosCounter_gt: 0,
+        activeVideosCount_gt: 0,
         ...variables?.where,
       },
     },
   })
   return {
-    channels: data?.discoverChannels,
+    channels: data?.mostRecentChannels,
     ...rest,
   }
 }
@@ -189,13 +192,13 @@ export const usePromisingChannels = (
       ...variables,
       where: {
         ...channelFilter,
-        activeVideosCounter_gt: 0,
+        activeVideosCount_gt: 0,
         ...variables?.where,
       },
     },
   })
   return {
-    channels: data?.promisingChannels,
+    channels: data?.mostRecentChannels,
     ...rest,
   }
 }
@@ -210,13 +213,13 @@ export const usePopularChannels = (
       ...variables,
       where: {
         ...channelFilter,
-        activeVideosCounter_gt: 0,
+        activeVideosCount_gt: 0,
         ...variables?.where,
       },
     },
   })
   return {
-    channels: data?.popularChannels,
+    channels: data?.extendedChannels,
     ...rest,
   }
 }
@@ -228,8 +231,9 @@ export const useChannelNftCollectors = (
   const { data, ...rest } = useGetChannelNftCollectorsQuery({
     ...opts,
     variables: {
-      ...variables,
-      where: { ...variables?.where, ...(CHANNEL_ID_FILTER ? { NOT: [{ id_in: CHANNEL_ID_FILTER.id_in }] } : {}) },
+      // Todo change later?
+      channelId: variables?.channelId || '',
+      orderBy: variables?.orderBy,
     },
   })
 

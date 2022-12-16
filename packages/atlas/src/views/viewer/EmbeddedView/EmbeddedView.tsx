@@ -31,7 +31,6 @@ export const EmbeddedView: FC = () => {
 
   const channelId = video?.channel?.id
   const videoId = video?.id
-  const categoryId = video?.category?.id
 
   const handleAddVideoView = useCallback(() => {
     if (!videoId || !channelId) {
@@ -40,13 +39,11 @@ export const EmbeddedView: FC = () => {
     addVideoView({
       variables: {
         videoId,
-        channelId,
-        categoryId,
       },
     }).catch((error) => {
       SentryLogger.error('Failed to increase video views', 'VideoView', error)
     })
-  }, [addVideoView, categoryId, channelId, videoId])
+  }, [addVideoView, channelId, videoId])
 
   const handleVideoEnded = () => {
     if (window.top) {

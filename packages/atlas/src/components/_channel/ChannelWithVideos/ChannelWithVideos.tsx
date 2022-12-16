@@ -25,7 +25,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = memo(({ channelId }
   const videoRows = useVideoGridRows('compact')
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const {
-    channel,
+    extendedChannel: extendedChannel,
     loading: channelLoading,
     error: channelError,
   } = useBasicChannel(channelId || '', {
@@ -40,8 +40,8 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = memo(({ channelId }
     onError: (error) => SentryLogger.error('Failed to fetch videos', 'ChannelWithVideos', error),
   })
 
-  const { url: avatarUrl, isLoadingAsset: isLoadingAvatar } = useAsset(channel?.avatarPhoto)
-  const { toggleFollowing, isFollowing } = useHandleFollowChannel(channelId, channel?.title)
+  const { url: avatarUrl, isLoadingAsset: isLoadingAvatar } = useAsset(extendedChannel?.channel.avatarPhoto)
+  const { toggleFollowing, isFollowing } = useHandleFollowChannel(channelId, extendedChannel?.channel?.title)
 
   const targetItemsCount = videosPerRow * videoRows
   const displayedVideos = (videos || []).slice(0, targetItemsCount)
@@ -78,14 +78,14 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = memo(({ channelId }
             <SkeletonLoader width="120px" height="20px" bottomSpace="4px" />
           ) : (
             <Text as="h3" variant="h300">
-              {channel?.title}
+              {extendedChannel?.channel?.title}
             </Text>
           )}
           {isLoading ? (
             <SkeletonLoader width="80px" height="20px" bottomSpace="8px" />
           ) : (
             <ChannelFollows as="span" variant="t200" color="colorText">
-              <NumberFormat as="span" color="colorText" value={channel?.follows || 0} /> followers
+              <NumberFormat as="span" color="colorText" value={extendedChannel?.channel?.followsNum || 0} /> followers
             </ChannelFollows>
           )}
           {isLoading ? (

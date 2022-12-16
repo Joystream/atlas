@@ -51,7 +51,11 @@ export const MemberView: FC = () => {
   const { nfts, loading } = useNftsConnection(
     {
       where: {
-        ownerMember: { handle_eq: handle },
+        owner: {
+          member: {
+            handle_eq: handle,
+          },
+        },
         ...ownedNftWhereInput,
         video: {
           isPublic_eq: handle !== activeMembership?.handle || undefined,

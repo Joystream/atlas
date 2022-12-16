@@ -21,21 +21,21 @@ export type GetBidsQuery = {
     auction: {
       __typename?: 'Auction'
       isCompleted: boolean
-      winningMemberId?: string | null
       id: string
       auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
+      winningMember?: { __typename?: 'Membership'; id: string } | null
     }
     bidder: {
       __typename?: 'Membership'
       id: string
       handle: string
-      metadata: {
+      metadata?: {
         __typename?: 'MemberMetadata'
         about?: string | null
         avatar?:
           | {
               __typename?: 'AvatarObject'
-              avatarObject?: {
+              avatarObject: {
                 __typename?: 'StorageDataObject'
                 id: string
                 createdAt: Date
@@ -43,18 +43,18 @@ export type GetBidsQuery = {
                 isAccepted: boolean
                 ipfsHash: string
                 storageBag: { __typename?: 'StorageBag'; id: string }
-                type:
+                type?:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                  | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
-              } | null
+                  | null
+              }
             }
           | { __typename?: 'AvatarUri'; avatarUri: string }
           | null
-      }
+      } | null
     }
   }>
 }

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { BasicVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { SearchQuery, useSearchLazyQuery } from '@/api/queries/__generated__/search.generated'
+import { SearchVideosQuery, useSearchVideosLazyQuery } from '@/api/queries/__generated__/search.generated'
 
 export const usePagination = (currentTab: number) => {
   const [currentPage, setCurrentPage] = useState(0)
@@ -14,12 +14,12 @@ export const usePagination = (currentTab: number) => {
   return { currentPage, setCurrentPage, currentSearchPage, setCurrentSearchPage }
 }
 
-const getVideosFromSearch = (loading: boolean, data: SearchQuery['search'] | undefined) => {
+const getVideosFromSearch = (loading: boolean, data: SearchVideosQuery['searchVideos'] | undefined | null) => {
   if (loading || !data) {
     return { channels: [], videos: [] }
   }
   const foundVideos: Array<{ __typename?: 'Video' } & BasicVideoFieldsFragment> = data.flatMap((result) =>
-    result.item.__typename === 'Video' ? [result.item] : []
+    result.video.__typename === 'Video' ? [result.video] : []
   )
   return { foundVideos }
 }
@@ -33,18 +33,17 @@ export const useSearchVideos = ({ id, onError }: UseSearchVideosParams) => {
   const [isSearching, setIsSearching] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   // TODO: we should use useVideosLazyQuery here, it's more reliable.
-  const [searchVideo, { loading: loadingSearch, data: searchData, error: searchError, variables }] = useSearchLazyQuery(
-    {
+  const [searchVideo, { loading: loadingSearch, data: searchData, error: searchError, variables }] =
+    useSearchVideosLazyQuery({
       onError,
-    }
-  )
+    })
 
   const submitSearch = useCallback(
     (searchQuery: string) => {
       searchVideo({
         variables: {
-          text: searchQuery,
-          whereVideo: {
+          query: searchQuery,
+          where: {
             channel: {
               id_eq: id,
             },
@@ -65,7 +64,7 @@ export const useSearchVideos = ({ id, onError }: UseSearchVideosParams) => {
   )
 
   const { foundVideos } = useMemo(
-    () => getVideosFromSearch(loadingSearch, searchData?.search),
+    () => getVideosFromSearch(loadingSearch, searchData?.searchVideos),
     [loadingSearch, searchData]
   )
 
@@ -78,7 +77,7 @@ export const useSearchVideos = ({ id, onError }: UseSearchVideosParams) => {
     searchError,
     isSearching,
     setIsSearching,
-    searchedText: isSearching ? variables?.text : undefined,
+    searchedText: isSearching ? variables?.query : undefined,
     searchQuery,
     setSearchQuery,
   }

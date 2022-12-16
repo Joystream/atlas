@@ -21,19 +21,31 @@ import {
   StyledLink,
 } from './MemberActivity.styles'
 
+const getFromHandle = (activity: ActivitiesRecord) => {
+  if (activity.type === 'Bid' || activity.type === 'Withdrawal') {
+    return activity.from.handle
+  } else {
+    return activity.from?.__typename === 'NftOwnerChannel'
+      ? activity.from.channel.ownerMember?.handle
+      : activity.from?.member.handle
+  }
+}
+
 const getDescription = (activity: ActivitiesRecord) => {
+  const handle = getFromHandle(activity)
+
   switch (activity.type) {
     case 'Bid':
       return (
         <>
-          {activity.from.handle} placed a bid for{' '}
+          {handle} placed a bid for{' '}
           <NumberFormat as="span" color="inherit" format="short" value={activity.bidAmount} withToken />
         </>
       )
     case 'Sale':
       return (
         <>
-          {activity.from?.handle} sold NFT to{' '}
+          {handle} sold NFT to{' '}
           <StyledLink to={absoluteRoutes.viewer.member(activity.to?.handle)} onClick={(e) => e.stopPropagation()}>
             {activity.to?.handle}
           </StyledLink>{' '}
@@ -43,7 +55,7 @@ const getDescription = (activity: ActivitiesRecord) => {
     case 'Purchase':
       return (
         <>
-          {activity.from?.handle} purchased NFT for{' '}
+          {handle} purchased NFT for{' '}
           <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken /> from{' '}
           <StyledLink to={absoluteRoutes.viewer.member(activity.to?.handle)} onClick={(e) => e.stopPropagation()}>
             {activity.to?.handle}{' '}
@@ -53,8 +65,8 @@ const getDescription = (activity: ActivitiesRecord) => {
     case 'Listing':
       return (
         <>
-          {activity.from?.handle} listed NFT{' '}
-          {activity.typeName === 'NftSellOrderMadeEvent' && activity.price && (
+          {handle} listed NFT{' '}
+          {activity.typeName === 'NftSellOrderMadeEventData' && activity.price && (
             <>
               for <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken />
             </>
@@ -62,15 +74,15 @@ const getDescription = (activity: ActivitiesRecord) => {
         </>
       )
     case 'Removal':
-      return <>{activity.from?.handle} removed NFT from sale</>
+      return <>{handle} removed NFT from sale</>
     case 'Mint':
-      return <>{activity.from?.handle} minted new NFT</>
+      return <>{handle} minted new NFT</>
     case 'Withdrawal':
-      return <>{activity.from.handle} withdrew a bid</>
+      return <>{handle} withdrew a bid</>
     case 'Price change':
       return (
         <>
-          {activity.from?.handle} changed price to{' '}
+          {handle} changed price to{' '}
           <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken />
         </>
       )

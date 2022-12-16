@@ -1,5 +1,7 @@
-query GetComment($commentId: ID!) {
-  commentByUniqueInput(where: { id: $commentId }) {
+# CHANGE: ID is now `String`
+query GetComment($commentId: String!) {
+  # CHANGE: `commentByUniqueInput` no longer exists, replaced w/ `commentById`
+  commentById(id: $commentId) {
     ...CommentFields
   }
 }
@@ -7,7 +9,7 @@ query GetComment($commentId: ID!) {
 query GetCommentRepliesConnection(
   $first: Int
   $after: String
-  $parentCommentId: ID!
+  $parentCommentId: String! # CHANGE: ID is now `String`
   $orderBy: [CommentOrderByInput!] = [createdAt_ASC]
 ) {
   commentsConnection(
@@ -33,8 +35,8 @@ query GetCommentRepliesConnection(
 query GetUserCommentsAndVideoCommentsConnection(
   $first: Int
   $after: String
-  $memberId: ID
-  $videoId: ID
+  $memberId: String # CHANGE: ID is now `String`
+  $videoId: String # CHANGE: ID is now `String`
   $orderBy: [CommentOrderByInput!] = [createdAt_DESC]
 ) {
   userComments: comments(
@@ -75,23 +77,40 @@ query GetUserCommentsAndVideoCommentsConnection(
   }
 }
 
-query GetUserCommentsReactions($memberId: ID!, $videoId: ID!) {
-  commentReactions(where: { member: { id_eq: $memberId }, video: { id_eq: $videoId } }, limit: 1000) {
+# CHANGE: ID is now `String`
+query GetUserCommentsReactions($memberId: String!, $videoId: String!) {
+  commentReactions(
+    where: { member: { id_eq: $memberId }, video: { id_eq: $videoId } }
+    limit: 1000
+  ) {
     reactionId
-    commentId
+    comment {
+      # CHANGE: `commentId` no longer exists, use `comment.id`
+      id
+    }
   }
 }
 
-query GetCommentEdits($commentId: ID!) {
-  commentTextUpdatedEvents(where: { comment: { id_eq: $commentId } }) {
+# CHANGE: ID is now `String`
+query GetCommentEdits($commentId: String!) {
+  # CHANGE: Use a single `events` query instead of separately querying `commentTextUpdatedEvents` and `commentCreatedEvents`
+  events(
+    where: {
+      data: {
+        isTypeOf_in: ["CommentCreatedEventData", "CommentTextUpdatedEventData"]
+        comment: { id_eq: $commentId }
+      }
+    }
+  ) {
     id
-    createdAt
-    newText
-  }
-
-  commentCreatedEvents(where: { comment: { id_eq: $commentId } }) {
-    id
-    createdAt
-    text
+    timestamp # CHANGE: `timestamp` instead of `createdAt`, which no longer exists
+    data {
+      ... on CommentCreatedEventData {
+        text
+      }
+      ... on CommentTextUpdatedEventData {
+        newText
+      }
+    }
   }
 }

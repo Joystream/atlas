@@ -30,7 +30,7 @@ type CommonNftProperties = {
   views: number | undefined
 }
 
-const VIDEO_ID_FILTER = videoFilter.NOT?.find((item) => item.id_in)
+const VIDEO_ID_FILTER = videoFilter.id_not_contains
 
 export type NftStatus = (
   | {
@@ -67,11 +67,11 @@ export const getNftStatus = (
   const commonProperties = {
     title: video?.title,
     duration: video?.duration,
-    views: video?.views,
+    views: video?.viewsNum,
   }
 
-  if (nft?.transactionalStatusAuction) {
-    const auction = nft.transactionalStatusAuction
+  if (nft?.transactionalStatus && nft.transactionalStatus.__typename === 'TransactionalStatusAuction') {
+    const auction = nft.transactionalStatus.auction
     const englishAuction = auction.auctionType.__typename === 'AuctionTypeEnglish' && auction.auctionType
     const openAuction = auction.auctionType.__typename === 'AuctionTypeOpen' && auction.auctionType
     return {
@@ -86,8 +86,8 @@ export const getNftStatus = (
       topBidder: auction.topBid?.bidder,
       auctionPlannedEndBlock: englishAuction ? englishAuction.plannedEndAtBlock : undefined,
       bidLockingTime: openAuction ? openAuction.bidLockDuration : undefined,
-      minimalBidStep: englishAuction ? tokenNumberToHapiBn(englishAuction.minimalBidStep) : undefined,
-      whitelistedMembers: auction.whitelistedMembers,
+      minimalBidStep: englishAuction ? tokenNumberToHapiBn(parseInt(englishAuction?.minimalBidStep)) : undefined,
+      whitelistedMembers: auction.whitelistedMembers.map((whiteListed) => whiteListed.member),
     }
   }
 
@@ -115,7 +115,7 @@ export const getNftStatus = (
 
 export const useNft = (id: string, opts?: QueryHookOptions<GetNftQuery, GetNftQueryVariables>) => {
   const { data, ...rest } = useGetNftQuery({ variables: { id }, skip: !id, ...opts })
-  const nft = data?.ownedNftByUniqueInput
+  const nft = data?.ownedNftById
 
   return {
     nft,
@@ -131,7 +131,7 @@ export const useNftsConnection = (
   const { data, ...rest } = useGetNftsConnectionQuery({
     variables: {
       ...variables,
-      where: { ...variables?.where, ...(VIDEO_ID_FILTER ? { NOT: [{ id_in: VIDEO_ID_FILTER.id_in }] } : {}) },
+      where: { ...variables?.where, ...(VIDEO_ID_FILTER ? { NOT: [{ id_in: VIDEO_ID_FILTER }] } : {}) },
     },
     ...opts,
   })
@@ -151,25 +151,9 @@ export const useNftHistory = (
   const { data, ...rest } = useGetNftHistoryQuery({ variables: { nftId: id || '' }, skip: !id, ...opts })
 
   const sortedEvents = useMemo(() => {
-    const allEvents = data
-      ? [
-          ...data.nftIssuedEvents,
-          ...data.openAuctionStartedEvents,
-          ...data.englishAuctionStartedEvents,
-          ...data.nftSellOrderMadeEvents,
-          ...data.auctionBidMadeEvents,
-          ...data.bidMadeCompletingAuctionEvents,
-          ...data.nftBoughtEvents,
-          ...data.englishAuctionSettledEvents,
-          ...data.openAuctionBidAcceptedEvents,
-          ...data.auctionBidCanceledEvents,
-          ...data.auctionCanceledEvents,
-          ...data.buyNowCanceledEvents,
-          ...data.buyNowPriceUpdatedEvents,
-        ]
-      : []
+    const allEvents = data?.events || []
 
-    return allEvents.sort((e1, e2) => e2.createdAt.getTime() - e1.createdAt.getTime())
+    return allEvents.sort((e1, e2) => e2.timestamp.getTime() - e1.timestamp.getTime())
   }, [data])
 
   return {

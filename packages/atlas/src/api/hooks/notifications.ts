@@ -1,5 +1,4 @@
 import { QueryHookOptions } from '@apollo/client'
-import { useMemo } from 'react'
 
 import {
   GetNftActivitiesQuery,
@@ -8,6 +7,25 @@ import {
   useGetNftActivitiesQuery,
   useGetNotificationsQuery,
 } from '@/api/queries/__generated__/notifications.generated'
+
+import {
+  AuctionBidMadeEventData,
+  BidMadeCompletingAuctionEventData,
+  CommentCreatedEventData,
+  EnglishAuctionSettledEventData,
+  NftBoughtEventData,
+  OpenAuctionBidAcceptedEventData,
+} from '../queries/__generated__/baseTypes.generated'
+
+type NotificationEvent = Omit<GetNotificationsQuery['events'][number], 'data'> & {
+  data:
+    | AuctionBidMadeEventData
+    | NftBoughtEventData
+    | BidMadeCompletingAuctionEventData
+    | OpenAuctionBidAcceptedEventData
+    | EnglishAuctionSettledEventData
+    | CommentCreatedEventData
+}
 
 export const useRawNotifications = (
   channelId: string | null,
@@ -24,35 +42,30 @@ export const useRawNotifications = (
     ...opts,
   })
 
-  const sortedNotifications = useMemo(() => {
-    const allNotifications = data
-      ? [
-          ...data.openAuctionBidAcceptedEvents,
-          ...data.bidMadeCompletingAuctionEvents,
-          ...data.nftBoughtEvents,
-          ...data.auctionBidMadeEvents,
-          ...data.englishAuctionSettledEvents,
-          ...data.commentCreatedEvents.filter(({ comment }) => comment.author.id !== memberId),
-        ]
-      : []
+  // todo make sure that everything works
+  // const sortedNotifications = useMemo(() => {
+  //   const allNotifications = data
+  //     ? [
+  //         ...data.openAuctionBidAcceptedEvents,
+  //         ...data.bidMadeCompletingAuctionEvents,
+  //         ...data.nftBoughtEvents,
+  //         ...data.auctionBidMadeEvents,
+  //         ...data.englishAuctionSettledEvents,
+  //         ...data.commentCreatedEvents.filter(({ comment }) => comment.author.id !== memberId),
+  //       ]
+  //     : []
 
-    return allNotifications.sort((n1, n2) => n2.createdAt.getTime() - n1.createdAt.getTime())
-  }, [data, memberId])
+  //   return allNotifications.sort((n1, n2) => n2.createdAt.getTime() - n1.createdAt.getTime())
+  // }, [data, memberId])
 
   return {
-    notifications: sortedNotifications,
+    notifications: (data?.events || []) as NotificationEvent[],
     ...rest,
   }
 }
 
 export const createAllNotificationArray = (data: GetNftActivitiesQuery) => {
-  return Object.values(data).flatMap((d) => {
-    if (d !== 'Query') {
-      return d.edges.map((e) => e.node)
-    } else {
-      return []
-    }
-  })
+  return data.events
 }
 
 export const useRawActivities = (memberId?: string, sort?: 'createdAt_ASC' | 'createdAt_DESC') => {
@@ -64,19 +77,13 @@ export const useRawActivities = (memberId?: string, sort?: 'createdAt_ASC' | 'cr
     skip: !memberId,
   })
 
-  const sortedActivities = useMemo(() => {
-    return data
-      ? createAllNotificationArray(data).sort((n1, n2) =>
-          sort === 'createdAt_DESC'
-            ? n2.createdAt.getTime() - n1.createdAt.getTime()
-            : n1.createdAt.getTime() - n2.createdAt.getTime()
-        )
-      : undefined
-  }, [data, sort])
-
   return {
-    activities: sortedActivities,
-    rawData: data,
+    nftsBiddedTotalCount: data?.nftsBidded.totalCount,
+    nftsBoughtTotalCount: data?.nftsBought.totalCount,
+    nftsSoldTotalCount: data?.nftsSold.totalCount,
+    nftsIssuedTotalCount: data?.nftsIssued.totalCount,
+    nftsBidded: data?.nftsBidded,
+    activities: data?.events,
     ...rest,
   }
 }

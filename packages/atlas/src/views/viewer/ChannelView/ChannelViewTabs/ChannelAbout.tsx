@@ -24,7 +24,8 @@ type ChannelAboutProps = {
 }
 
 export const ChannelAbout: FC<ChannelAboutProps> = ({ channel }) => {
-  const videoCount = channel?.activeVideosCounter
+  // todo. Previously active videos counter? Check if this working
+  const videoCount = channel?.videoViewsNum
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(channel?.ownerMember)
   return (
     <StyledLayoutGrid>
@@ -70,8 +71,8 @@ export const ChannelAbout: FC<ChannelAboutProps> = ({ channel }) => {
           <Text as="span" variant="t100" color="colorText">
             Num. of views
           </Text>
-          {typeof channel?.views === 'number' ? (
-            <NumberFormat as="span" variant="t300" value={channel.views} format="short" />
+          {typeof channel?.videoViewsNum === 'number' ? (
+            <NumberFormat as="span" variant="t300" value={channel.videoViewsNum} format="short" />
           ) : (
             ''
           )}
@@ -91,8 +92,8 @@ export const ChannelAbout: FC<ChannelAboutProps> = ({ channel }) => {
             Language
           </Text>
           <Text as="span" variant="t300">
-            {channel?.language?.iso
-              ? atlasConfig.derived.languagesSelectValues.find(({ value }) => value === channel.language?.iso)?.name
+            {channel?.language
+              ? atlasConfig.derived.languagesSelectValues.find(({ value }) => value === channel.language)?.name
               : ''}
           </Text>
         </Details>

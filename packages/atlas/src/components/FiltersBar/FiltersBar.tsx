@@ -248,32 +248,33 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
     setOwnedNftWhereInput((value) => {
       return {
         ...value,
-        OR: [
-          nftStatusFilter?.includes('AuctionTypeEnglish')
-            ? {
-                transactionalStatusAuction: {
-                  auctionType_json: { isTypeOf_eq: 'AuctionTypeEnglish' },
-                },
-              }
-            : {},
-          nftStatusFilter?.includes('AuctionTypeOpen')
-            ? {
-                transactionalStatusAuction: {
-                  auctionType_json: { isTypeOf_eq: 'AuctionTypeOpen' },
-                },
-              }
-            : {},
-          nftStatusFilter?.includes('TransactionalStatusBuyNow')
-            ? {
-                transactionalStatus_json: { isTypeOf_eq: 'TransactionalStatusBuyNow' },
-              }
-            : {},
-          nftStatusFilter?.includes('TransactionalStatusIdle')
-            ? {
-                transactionalStatus_json: { isTypeOf_eq: 'TransactionalStatusIdle' },
-              }
-            : {},
-        ],
+        // todo fix this
+        // OR: [
+        //   nftStatusFilter?.includes('AuctionTypeEnglish')
+        //     ? {
+        //         transactionalStatusAuction: {
+        //           auctionType_json: { isTypeOf_eq: 'AuctionTypeEnglish' },
+        //         },
+        //       }
+        //     : {},
+        //   nftStatusFilter?.includes('AuctionTypeOpen')
+        //     ? {
+        //         transactionalStatusAuction: {
+        //           auctionType_json: { isTypeOf_eq: 'AuctionTypeOpen' },
+        //         },
+        //       }
+        //     : {},
+        //   nftStatusFilter?.includes('TransactionalStatusBuyNow')
+        //     ? {
+        //         transactionalStatus_json: { isTypeOf_eq: 'TransactionalStatusBuyNow' },
+        //       }
+        //     : {},
+        //   nftStatusFilter?.includes('TransactionalStatusIdle')
+        //     ? {
+        //         transactionalStatus_json: { isTypeOf_eq: 'TransactionalStatusIdle' },
+        //       }
+        //     : {},
+        // ],
       }
     })
   }

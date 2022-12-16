@@ -6,7 +6,10 @@ import * as Types from './baseTypes.generated'
 const defaultOptions = {} as const
 export type GetKillSwitchQueryVariables = Types.Exact<{ [key: string]: never }>
 
-export type GetKillSwitchQuery = { __typename?: 'Query'; admin: { __typename?: 'Admin'; isKilled: boolean } }
+export type GetKillSwitchQuery = {
+  __typename?: 'Query'
+  getKillSwitch: { __typename?: 'KillSwitch'; isKilled: boolean }
+}
 
 export type SetKillSwitchMutationVariables = Types.Exact<{
   isKilled: Types.Scalars['Boolean']
@@ -14,12 +17,12 @@ export type SetKillSwitchMutationVariables = Types.Exact<{
 
 export type SetKillSwitchMutation = {
   __typename?: 'Mutation'
-  setKillSwitch: { __typename?: 'Admin'; isKilled: boolean }
+  setKillSwitch: { __typename?: 'KillSwitch'; isKilled: boolean }
 }
 
 export const GetKillSwitchDocument = gql`
   query GetKillSwitch {
-    admin {
+    getKillSwitch {
       isKilled
     }
   }

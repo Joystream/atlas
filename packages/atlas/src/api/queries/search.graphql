@@ -1,12 +1,19 @@
-query Search($text: String!, $whereVideo: VideoWhereInput, $whereChannel: ChannelWhereInput, $limit: Int) {
-  search(text: $text, whereVideo: $whereVideo, whereChannel: $whereChannel, limit: $limit) {
-    item {
-      ... on Video {
-        ...BasicVideoFields
-      }
-      ... on Channel {
-        ...BasicChannelFields
-      }
+# CHANGE: New search queries (to be implemented)
+
+query SearchChannels($query: String!, $where: ChannelWhereInput, $limit: Int) {
+  searchChannels(query: $query, where: $where, limit: $limit) {
+    channel {
+      ...BasicChannelFields
     }
+    relevance
+  }
+}
+
+query SearchVideos($query: String!, $where: VideoWhereInput, $limit: Int) {
+  searchVideos(query: $query, where: $where, limit: $limit) {
+    video {
+      ...BasicVideoFields
+    }
+    relevance
   }
 }

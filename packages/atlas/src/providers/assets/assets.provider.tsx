@@ -98,7 +98,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
       const mapping: BagOperatorsMapping = {}
       const buckets = result.data.distributionBuckets
       buckets.forEach((bucket) => {
-        const bagIds = bucket.bags.map((bag) => bag.id)
+        const bagIds = bucket.bags.map((distributionBucketBag) => distributionBucketBag.bag.id)
 
         // we need to filter operators manually as query node doesn't support filtering this deep
         const operatorsInfos: OperatorInfo[] = bucket.operators
@@ -152,7 +152,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
       const mapping: BagOperatorsMapping = {}
       const buckets = result.data.storageBuckets
       buckets.forEach((bucket) => {
-        const bagIds = bucket.bags.map((bag) => bag.id)
+        const bagIds = bucket.bags.map((distributionBucketBag) => distributionBucketBag.bag.id)
 
         const endpoint = bucket.operatorMetadata?.nodeEndpoint
         if (!endpoint) {

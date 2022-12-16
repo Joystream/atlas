@@ -81,7 +81,7 @@ export const useAddVideoView = (opts?: Omit<MutationHookOptions<AddVideoViewMuta
           id: mutationResult.data?.addVideoView.id,
         }),
         fields: {
-          views: () => mutationResult.data?.addVideoView.views,
+          views: () => mutationResult.data?.addVideoView.viewsNum,
         },
       })
     },
@@ -142,7 +142,7 @@ export const useTop10VideosThisWeek = (
     },
   })
   return {
-    videos: data?.top10VideosThisWeek,
+    videos: data?.mostViewedVideosConnection.edges.map((video) => video.node),
     ...rest,
   }
 }
@@ -162,7 +162,7 @@ export const useTop10VideosThisMonth = (
     },
   })
   return {
-    videos: data?.top10VideosThisMonth,
+    videos: data?.mostViewedVideosConnection.edges.map((video) => video.node),
     ...rest,
   }
 }

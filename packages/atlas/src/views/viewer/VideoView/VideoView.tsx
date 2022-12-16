@@ -111,11 +111,11 @@ export const VideoView: FC = () => {
     return video.subtitles
       .filter((subtitle) => !!subtitle.asset && subtitlesAssets[subtitle.id]?.url)
       .map((subtitle) => {
-        const resolvedLanguageName = atlasConfig.derived.languagesLookup[subtitle.language?.iso || '']
+        const resolvedLanguageName = atlasConfig.derived.languagesLookup[subtitle.language || '']
         const url = subtitlesAssets[subtitle.id]?.url
         return {
           label: subtitle.type === 'subtitles' ? resolvedLanguageName : `${resolvedLanguageName} (CC)`,
-          language: subtitle.type === 'subtitles' ? subtitle.language?.iso : `${subtitle.language?.iso}-cc`,
+          language: subtitle.type === 'subtitles' ? subtitle.language : `${subtitle.language}-cc`,
           src: url,
         }
       })
@@ -142,7 +142,6 @@ export const VideoView: FC = () => {
   const channelId = video?.channel?.id
   const channelName = video?.channel?.title
   const videoId = video?.id
-  const categoryId = video?.category?.id
   const numberOfLikes = video?.reactions.filter(({ reaction }) => reaction === 'LIKE').length
   const numberOfDislikes = video?.reactions.filter(({ reaction }) => reaction === 'UNLIKE').length
   const videoNotAvailable = !loading && !video
@@ -154,7 +153,7 @@ export const VideoView: FC = () => {
     if (videoReactionProcessing) {
       return 'processing'
     }
-    const myReaction = video?.reactions.find(({ memberId: reactionMemberId }) => reactionMemberId === memberId)
+    const myReaction = video?.reactions.find(({ member: { id } }) => id === memberId)
     if (myReaction) {
       if (myReaction.reaction === 'LIKE') {
         return 'liked'
@@ -242,13 +241,11 @@ export const VideoView: FC = () => {
     addVideoView({
       variables: {
         videoId,
-        channelId,
-        categoryId,
       },
     }).catch((error) => {
       SentryLogger.error('Failed to increase video views', 'VideoView', error)
     })
-  }, [addVideoView, categoryId, channelId, videoId])
+  }, [addVideoView, channelId, videoId])
 
   if (error) {
     return <ViewErrorFallback />
@@ -314,7 +311,7 @@ export const VideoView: FC = () => {
                 >
                   {formatDate(video.createdAt)}
                 </Tooltip>{' '}
-                • <NumberFormat as="span" format="full" value={video.views} color="colorText" /> views
+                • <NumberFormat as="span" format="full" value={video.viewsNum} color="colorText" /> views
               </>
             ) : (
               <SkeletonLoader height={24} width={200} />

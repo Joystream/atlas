@@ -304,7 +304,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
     creator: { assetUrl: channelAvatarUrl, name: video?.channel.title ?? '' },
     loading: loadingVideo,
     duration: video?.duration,
-    views: video?.views,
+    views: video?.viewsNum,
     buyNowPrice: tokenNumberToHapiBn(watch('buyNowPrice') || 0),
     startingPrice: tokenNumberToHapiBn(watch('startingPrice') || 0),
   }
@@ -340,7 +340,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
       creatorRoyalty={video?.nft?.creatorRoyalty}
       channelTitle={video?.channel.title}
       fee={fee}
-      isOwnedByChannel={video?.nft?.isOwnedByChannel}
+      isOwnedByChannel={video?.nft?.owner.__typename === 'NftOwnerChannel'}
     />,
   ]
 

@@ -12,7 +12,7 @@ import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
 
-import { NftHistoryEntry } from './NftHistory'
+// import { NftHistoryEntry } from './NftHistory'
 
 type UseNftWidgetReturn = NftWidgetProps | null
 export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null): UseNftWidgetReturn => {
@@ -74,25 +74,27 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
     (bid) =>
       bid.auction.auctionType.__typename === 'AuctionTypeOpen' &&
       (nftStatus?.status !== 'auction' || bid.auction.id !== nftStatus.auctionId) &&
-      bid.auction.winningMemberId !== memberId
+      bid.auction.winningMember?.id !== memberId
   )
   const bidFromPreviousAuction = unwithdrawnUserBids?.[0]
+  const nftOwner = nft?.owner
 
-  const owner = nft?.ownerMember
+  const ownerMember = nftOwner?.__typename === 'NftOwnerMember' ? nftOwner.member : null
+  const ownerChannel = nftOwner?.__typename === 'NftOwnerChannel' ? nftOwner.channel : null
 
-  const { url: ownerAvatarUri } = useMemberAvatar(owner)
-  const { url: creatorAvatarUri } = useAsset(nft?.creatorChannel.avatarPhoto)
+  const { url: ownerAvatarUri } = useMemberAvatar(ownerMember)
+  const { url: creatorAvatarUri } = useAsset(ownerChannel?.avatarPhoto)
   const { url: topBidderAvatarUri } = useMemberAvatar(nftStatus?.status === 'auction' ? nftStatus.topBidder : undefined)
 
   const { entries: nftHistory } = useNftHistoryEntries(video?.id ?? '', {
     skip: !nft,
     pollInterval: atlasConfig.features.nft.statusPollingInterval,
   })
-
-  const isOwnedByChannel = nft?.isOwnedByChannel
-  const ownerHandle = isOwnedByChannel ? nft?.creatorChannel.title : owner?.handle
+  const isOwnedByChannel = nftOwner?.__typename === 'NftOwnerChannel'
+  const ownerHandle = ownerMember?.handle || ownerChannel?.title
   const ownerAvatar = isOwnedByChannel ? creatorAvatarUri : ownerAvatarUri
-  const creatorId = nft?.creatorChannel.id
+
+  const creatorId = ownerMember?.id || ownerChannel?.id
 
   switch (nftStatus?.status) {
     case 'auction': {
@@ -144,7 +146,7 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
         saleType,
         userBidCreatedAt,
         userBidAmount,
-        isOwnedByChannel: nft?.isOwnedByChannel,
+        isOwnedByChannel: nft?.owner.__typename === 'NftOwnerChannel',
       }
     case 'idle':
       return {
@@ -170,95 +172,95 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
 
 export const useNftHistoryEntries = (videoId: string | null, opts?: Parameters<typeof useNftHistory>[1]) => {
   const { events, ...rest } = useNftHistory(videoId, opts)
-
-  const mappedEvents = events
-    ? events.map((e): NftHistoryEntry => {
-        if (e.__typename === 'NftIssuedEvent') {
-          return {
-            date: e.createdAt,
-            member: e.ownerMember,
-            text: 'Minted',
-          }
-        } else if (e.__typename === 'OpenAuctionStartedEvent' || e.__typename === 'EnglishAuctionStartedEvent') {
-          return {
-            date: e.createdAt,
-            member: e.ownerMember,
-            text: 'Placed on auction',
-          }
-        } else if (e.__typename === 'NftSellOrderMadeEvent') {
-          return {
-            date: e.createdAt,
-            member: e.ownerMember,
-            text: 'Put on sale',
-            joyAmount: new BN(e.price),
-          }
-        } else if (e.__typename === 'AuctionBidMadeEvent') {
-          return {
-            date: e.createdAt,
-            member: e.member,
-            text: 'Bid placed',
-            joyAmount: new BN(e.bidAmount),
-          }
-        } else if (e.__typename === 'BidMadeCompletingAuctionEvent') {
-          return {
-            date: e.createdAt,
-            member: e.member,
-            text: 'Auction won',
-            joyAmount: new BN(e.price),
-          }
-        } else if (e.__typename === 'NftBoughtEvent') {
-          return {
-            date: e.createdAt,
-            member: e.member,
-            text: 'Bought',
-            joyAmount: new BN(e.price),
-          }
-        } else if (e.__typename === 'EnglishAuctionSettledEvent') {
-          return {
-            date: e.createdAt,
-            member: e.winner,
-            text: 'Auction won',
-          }
-        } else if (e.__typename === 'OpenAuctionBidAcceptedEvent') {
-          return {
-            date: e.createdAt,
-            member: e.winningBid?.bidder,
-            text: 'Auction won',
-            joyAmount: e.winningBid?.amount ? new BN(e.winningBid?.amount) : undefined,
-          }
-        } else if (e.__typename === 'AuctionBidCanceledEvent') {
-          return {
-            date: e.createdAt,
-            member: e.member,
-            text: 'Bid withdrawn',
-          }
-        } else if (e.__typename === 'AuctionCanceledEvent') {
-          return {
-            date: e.createdAt,
-            member: e.ownerMember || null,
-            text: 'Removed from sale',
-          }
-        } else if (e.__typename === 'BuyNowCanceledEvent') {
-          return {
-            date: e.createdAt,
-            member: e.ownerMember,
-            text: 'Removed from sale',
-          }
-        } else if (e.__typename === 'BuyNowPriceUpdatedEvent') {
-          return {
-            date: e.createdAt,
-            member: e.ownerMember,
-            text: 'Price changed',
-            joyAmount: new BN(e.newPrice),
-          }
-        } else {
-          throw 'Unknown history event type'
-        }
-      })
-    : []
+  // todo fix this later
+  // const mappedEvents = events
+  //   ? events.map((e): NftHistoryEntry => {
+  //       if (e.__typename === 'NftIssuedEvent') {
+  //         return {
+  //           date: e.createdAt,
+  //           member: e.ownerMember,
+  //           text: 'Minted',
+  //         }
+  //       } else if (e.__typename === 'OpenAuctionStartedEvent' || e.__typename === 'EnglishAuctionStartedEvent') {
+  //         return {
+  //           date: e.createdAt,
+  //           member: e.ownerMember,
+  //           text: 'Placed on auction',
+  //         }
+  //       } else if (e.__typename === 'NftSellOrderMadeEvent') {
+  //         return {
+  //           date: e.createdAt,
+  //           member: e.ownerMember,
+  //           text: 'Put on sale',
+  //           joyAmount: new BN(e.price),
+  //         }
+  //       } else if (e.__typename === 'AuctionBidMadeEvent') {
+  //         return {
+  //           date: e.createdAt,
+  //           member: e.member,
+  //           text: 'Bid placed',
+  //           joyAmount: new BN(e.bidAmount),
+  //         }
+  //       } else if (e.__typename === 'BidMadeCompletingAuctionEvent') {
+  //         return {
+  //           date: e.createdAt,
+  //           member: e.member,
+  //           text: 'Auction won',
+  //           joyAmount: new BN(e.price),
+  //         }
+  //       } else if (e.__typename === 'NftBoughtEvent') {
+  //         return {
+  //           date: e.createdAt,
+  //           member: e.member,
+  //           text: 'Bought',
+  //           joyAmount: new BN(e.price),
+  //         }
+  //       } else if (e.__typename === 'EnglishAuctionSettledEvent') {
+  //         return {
+  //           date: e.createdAt,
+  //           member: e.winner,
+  //           text: 'Auction won',
+  //         }
+  //       } else if (e.__typename === 'OpenAuctionBidAcceptedEvent') {
+  //         return {
+  //           date: e.createdAt,
+  //           member: e.winningBid?.bidder,
+  //           text: 'Auction won',
+  //           joyAmount: e.winningBid?.amount ? new BN(e.winningBid?.amount) : undefined,
+  //         }
+  //       } else if (e.__typename === 'AuctionBidCanceledEvent') {
+  //         return {
+  //           date: e.createdAt,
+  //           member: e.member,
+  //           text: 'Bid withdrawn',
+  //         }
+  //       } else if (e.__typename === 'AuctionCanceledEvent') {
+  //         return {
+  //           date: e.createdAt,
+  //           member: e.ownerMember || null,
+  //           text: 'Removed from sale',
+  //         }
+  //       } else if (e.__typename === 'BuyNowCanceledEvent') {
+  //         return {
+  //           date: e.createdAt,
+  //           member: e.ownerMember,
+  //           text: 'Removed from sale',
+  //         }
+  //       } else if (e.__typename === 'BuyNowPriceUpdatedEvent') {
+  //         return {
+  //           date: e.createdAt,
+  //           member: e.ownerMember,
+  //           text: 'Price changed',
+  //           joyAmount: new BN(e.newPrice),
+  //         }
+  //       } else {
+  //         throw 'Unknown history event type'
+  //       }
+  //     })
+  //   : []
 
   return {
-    entries: mappedEvents,
+    entries: [],
     ...rest,
   }
 }

@@ -11,7 +11,7 @@ export const useQueryNodeStateSubscription = (
 ) => {
   const { data, ...rest } = useGetQueryNodeStateSubscription(opts)
   return {
-    queryNodeState: data?.stateSubscription,
+    queryNodeState: data?.processorState,
     ...rest,
   }
 }

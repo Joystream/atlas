@@ -1,17 +1,13 @@
-import { FC, useEffect } from 'react'
-
-import { atlasConfig } from '@/config'
-
-import { useNotifications } from './notifications.hooks'
+import { FC } from 'react'
 
 export const NotificationsManager: FC = () => {
-  const { startPolling, stopPolling } = useNotifications()
+  // const { startPolling, stopPolling } = useNotifications()
 
-  useEffect(() => {
-    startPolling(atlasConfig.features.notifications.pollingInterval)
+  // useEffect(() => {
+  //   startPolling(atlasConfig.features.notifications.pollingInterval)
 
-    return stopPolling
-  }, [startPolling, stopPolling])
+  //   return stopPolling
+  // }, [startPolling, stopPolling])
 
   return null
 }

@@ -1,4 +1,4 @@
-import { Language, License, VideoCategory } from '@/api/queries/__generated__/baseTypes.generated'
+import { License, VideoCategory } from '@/api/queries/__generated__/baseTypes.generated'
 import { CommonStore, createStore } from '@/store'
 import { createId } from '@/utils/createId'
 import { readFromLocalStorage } from '@/utils/localStorage'
@@ -20,7 +20,7 @@ export type VideoDraft = {
   publishedBeforeJoystream?: string | null
   hasMarketing?: boolean | null
   isExplicit?: boolean | null
-  language?: Language['iso'] | null
+  language?: string | null
   category?: VideoCategory['id'] | null
   licenseCode?: License['code'] | null
   licenseCustomText?: License['customText'] | null

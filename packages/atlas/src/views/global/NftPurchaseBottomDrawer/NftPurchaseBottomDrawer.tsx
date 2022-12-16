@@ -63,7 +63,9 @@ export const NftPurchaseBottomDrawer: FC = () => {
   const { userBid, canChangeBid, userBidUnlockDate } = useNftState(nft)
   const { isLoadingAsset: thumbnailLoading, url: thumbnailUrl } = useAsset(nft?.video.thumbnailPhoto)
   const { url: creatorAvatarUrl } = useAsset(nft?.video.channel.avatarPhoto)
-  const { url: ownerMemberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
+  const { url: ownerMemberAvatarUrl } = useMemberAvatar(
+    nft?.owner.__typename === 'NftOwnerMember' ? nft.owner.member : null
+  )
   const mdMatch = useMediaMatch('md')
   const { accountBalance } = useSubscribeAccountBalance()
   const timestamp = useMsTimestamp({ shouldStop: !currentAction })
@@ -314,7 +316,10 @@ export const NftPurchaseBottomDrawer: FC = () => {
               type: 'video',
             }}
             creator={{ name: nft?.video.channel.title, assetUrl: creatorAvatarUrl }}
-            owner={{ name: nft?.ownerMember?.handle, assetUrl: ownerMemberAvatarUrl }}
+            owner={{
+              name: (nft?.owner.__typename === 'NftOwnerMember' && nft.owner.member?.handle) || '',
+              assetUrl: ownerMemberAvatarUrl,
+            }}
             loading={loading}
             fullWidth={!mdMatch}
           />

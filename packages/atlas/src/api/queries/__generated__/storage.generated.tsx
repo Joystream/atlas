@@ -12,7 +12,7 @@ export type GetDistributionBucketsWithBagsQuery = {
   distributionBuckets: Array<{
     __typename?: 'DistributionBucket'
     id: string
-    bags: Array<{ __typename?: 'StorageBag'; id: string }>
+    bags: Array<{ __typename?: 'DistributionBucketBag'; bag: { __typename?: 'StorageBag'; id: string } }>
     operators: Array<{
       __typename?: 'DistributionBucketOperator'
       id: string
@@ -37,7 +37,7 @@ export type GetStorageBucketsWithBagsQuery = {
     __typename?: 'StorageBucket'
     id: string
     operatorMetadata?: { __typename?: 'StorageBucketOperatorMetadata'; nodeEndpoint?: string | null } | null
-    bags: Array<{ __typename?: 'StorageBag'; id: string }>
+    bags: Array<{ __typename?: 'StorageBucketBag'; bag: { __typename?: 'StorageBag'; id: string } }>
   }>
 }
 
@@ -65,7 +65,9 @@ export const GetDistributionBucketsWithBagsDocument = gql`
     distributionBuckets(limit: 500, where: { distributing_eq: true }) {
       id
       bags {
-        id
+        bag {
+          id
+        }
       }
       operators {
         ...DistributionBucketOperatorField
@@ -127,7 +129,7 @@ export const GetStorageBucketsWithBagsDocument = gql`
     storageBuckets(
       limit: 500
       where: {
-        operatorStatus_json: { isTypeOf_eq: "StorageBucketOperatorStatusActive" }
+        operatorStatus: { isTypeOf_eq: "StorageBucketOperatorStatusActive" }
         operatorMetadata: { nodeEndpoint_contains: "http" }
       }
     ) {
@@ -136,7 +138,9 @@ export const GetStorageBucketsWithBagsDocument = gql`
         nodeEndpoint
       }
       bags {
-        id
+        bag {
+          id
+        }
       }
     }
   }

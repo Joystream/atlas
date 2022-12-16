@@ -54,10 +54,10 @@ export const useVideoWorkspaceData = () => {
   const subtitlesArray: SubtitlesInput[] | null = useMemo(
     () =>
       video?.subtitles
-        .filter((s) => !!s.language?.iso)
+        .filter((s) => !!s.language)
         .map((s) => ({
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          languageIso: s.language!.iso,
+          languageIso: s.language!,
           type: s.type === 'closed-captions' ? 'closed-captions' : 'subtitles',
           asset: s.asset,
           id: s.asset?.id,
@@ -105,7 +105,7 @@ export const useVideoWorkspaceData = () => {
     licenseCode: (editedVideoInfo.isDraft ? draft?.licenseCode : video?.license?.code) ?? DEFAULT_LICENSE_ID,
     licenseCustomText: (editedVideoInfo.isDraft ? draft?.licenseCustomText : video?.license?.customText) ?? null,
     licenseAttribution: (editedVideoInfo.isDraft ? draft?.licenseAttribution : video?.license?.attribution) ?? null,
-    language: (editedVideoInfo.isDraft ? draft?.language ?? 'en' : video?.language?.iso) ?? null,
+    language: (editedVideoInfo.isDraft ? draft?.language ?? 'en' : video?.language) ?? null,
     isPublic: (editedVideoInfo.isDraft ? draft?.isPublic : video?.isPublic) ?? true,
     isExplicit: (editedVideoInfo.isDraft ? draft?.isExplicit : video?.isExplicit) ?? false,
     hasMarketing: (editedVideoInfo.isDraft ? draft?.hasMarketing : video?.hasMarketing) ?? false,

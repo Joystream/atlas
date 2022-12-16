@@ -10,8 +10,8 @@ export const useVideoDisplayCategoriesWithCounter = () => {
     if (!categories) {
       return
     }
-    const filteredCategories = categories?.filter((category) => allUniqueVideoCategories.includes(category.id))
-    return filteredCategories.reduce((acc, cur) => acc + cur.activeVideosCounter, 0)
+    const filteredCategories = categories?.filter((category) => allUniqueVideoCategories.includes(category.category.id))
+    return filteredCategories.reduce((acc, cur) => acc + cur.activeVideosCount, 0)
   }, [categories])
 
   const displayCategoriesWithCounter = useMemo(
@@ -20,8 +20,8 @@ export const useVideoDisplayCategoriesWithCounter = () => {
         ...displayCategory,
         activeVideosCounter:
           categories?.reduce((previousValue, currentValue) => {
-            if (displayCategory.videoCategories.includes(currentValue.id)) {
-              return previousValue + currentValue.activeVideosCounter
+            if (displayCategory.videoCategories.includes(currentValue.category.id)) {
+              return previousValue + currentValue.activeVideosCount
             }
             return previousValue
           }, 0) || 0,

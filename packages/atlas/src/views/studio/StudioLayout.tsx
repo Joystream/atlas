@@ -20,7 +20,6 @@ import { useUser } from '@/providers/user/user.hooks'
 import { VideoWorkspaceProvider, useVideoWorkspaceRouting } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
 import { isAllowedBrowser } from '@/utils/browser'
-import { NotificationsView } from '@/views/notifications'
 
 import { CreateEditChannelView } from './CreateEditChannelView'
 import { CrtView } from './CrtView'
@@ -140,12 +139,12 @@ const StudioLayout = () => {
                 path={relativeRoutes.studio.crt()}
                 element={<PrivateRoute element={<CrtView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />}
               />
-              <Route
+              {/* <Route
                 path={relativeRoutes.studio.notifications()}
                 element={
                   <PrivateRoute element={<NotificationsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
                 }
-              />
+              /> */}
               <Route path="*" element={<NotFoundView />} />
             </Routes>
           </MainContainer>

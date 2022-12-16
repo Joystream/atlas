@@ -51,7 +51,7 @@ export const AssetsManager: FC = () => {
           asset: {
             id: dataObject.id,
             storageBagId: dataObject.storageBag.id,
-            type: dataObject.type.__typename,
+            type: dataObject.type?.__typename,
           },
         })
         return
@@ -77,7 +77,7 @@ export const AssetsManager: FC = () => {
           distributorId: distributionOperator.id,
           distributorUrl: distributionOperator.endpoint,
           dataObjectId: dataObject.id,
-          dataObjectType: dataObject.type.__typename,
+          dataObjectType: dataObject.type?.__typename,
         }
 
         try {

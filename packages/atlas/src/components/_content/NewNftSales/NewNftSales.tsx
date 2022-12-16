@@ -19,21 +19,25 @@ export const NewNftSales: FC = () => {
   // fetch only NFTs currently on sale
   const { nfts, loading } = useNftsConnection({
     where: {
-      OR: [
-        {
-          transactionalStatusAuction: {
-            auctionType_json: { isTypeOf_eq: 'AuctionTypeEnglish' },
-          },
-        },
-        {
-          transactionalStatusAuction: {
-            auctionType_json: { isTypeOf_eq: 'AuctionTypeOpen' },
-          },
-        },
-        {
-          transactionalStatus_json: { isTypeOf_eq: 'TransactionalStatusBuyNow' },
-        },
-      ],
+      // todo make sure it's working
+      transactionalStatus: {
+        isTypeOf_in: ['AuctionTypeEnglish', 'AuctionTypeOpen', 'TransactionalStatusBuyNow'],
+      },
+      // OR: [
+      //   {
+      //     transactionalStatusAuction: {
+      //       auctionType_json: { isTypeOf_eq: 'AuctionTypeEnglish' },
+      //     },
+      //   },
+      //   {
+      //     transactionalStatusAuction: {
+      //       auctionType_json: { isTypeOf_eq: 'AuctionTypeOpen' },
+      //     },
+      //   },
+      //   {
+      //     transactionalStatus_json: { isTypeOf_eq: 'TransactionalStatusBuyNow' },
+      //   },
+      // ],
     },
     orderBy: OwnedNftOrderByInput.CreatedAtDesc,
     first: 8,

@@ -9,8 +9,8 @@ import {
   QueryChannelsConnectionArgs,
   QueryCommentsConnectionArgs,
   QueryVideosConnectionArgs,
-  VideoConnection,
   VideoOrderByInput,
+  VideosConnection,
 } from '../queries/__generated__/baseTypes.generated'
 import { FullChannelFieldsFragment, FullVideoFieldsFragment } from '../queries/__generated__/fragments.generated'
 import { GetNftsConnectionQueryVariables } from '../queries/__generated__/nfts.generated'
@@ -21,7 +21,7 @@ const getVideoKeyArgs = (args: QueryVideosConnectionArgs | null) => {
   const onlyCount = args?.first === 0
   const channel = stringifyValue(args?.where?.channel)
   const category = stringifyValue(args?.where?.category)
-  const language = stringifyValue(args?.where?.language)
+  const language = stringifyValue(args?.where?.language_eq)
   const nft = stringifyValue(args?.where?.nft)
   const idEq = args?.where?.id_eq || ''
   const idIn = args?.where?.id_in || []
@@ -44,10 +44,11 @@ const getVideoKeyArgs = (args: QueryVideosConnectionArgs | null) => {
 
 const getNftKeyArgs = (args: GetNftsConnectionQueryVariables | null) => {
   const OR = stringifyValue(args?.where?.OR)
-  const ownerMember = stringifyValue(args?.where?.ownerMember)
-  const creatorChannel = stringifyValue(args?.where?.creatorChannel)
-  const status = stringifyValue(args?.where?.transactionalStatus_json)
-  const auctionStatus = stringifyValue(args?.where?.transactionalStatusAuction)
+  // todo make sure that is working
+  const ownerMember = stringifyValue(args?.where?.owner?.member)
+  const creatorChannel = stringifyValue(args?.where?.owner?.channel)
+  const status = stringifyValue(args?.where?.transactionalStatus)
+  const auctionStatus = stringifyValue(args?.where?.transactionalStatus?.auction)
   const sortingArray = args?.orderBy != null ? (Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]) : []
   const sorting = stringifyValue(sortingArray)
   const createdAt_gte = stringifyValue(args?.where?.createdAt_gte)
@@ -58,7 +59,7 @@ const getNftKeyArgs = (args: GetNftsConnectionQueryVariables | null) => {
 
 const getChannelKeyArgs = (args: QueryChannelsConnectionArgs | null) => {
   // make sure queries asking for a specific category are separated in cache
-  const language = stringifyValue(args?.where?.language)
+  const language = stringifyValue(args?.where?.language_eq)
   const idIn = args?.where?.id_in || []
   const sortingArray = args?.orderBy != null ? (Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]) : []
   const sorting = stringifyValue(sortingArray)
@@ -108,7 +109,7 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
   videosConnection: {
     ...relayStylePagination(getVideoKeyArgs),
     read(
-      existing: VideoConnection,
+      existing: VideosConnection,
       { args, readField }: { args: QueryVideosConnectionArgs | null; readField: ReadFieldFunction }
     ) {
       const isPublic = args?.where?.isPublic_eq

@@ -37,7 +37,7 @@ export const useRawAssetResolver = () => {
 }
 
 export const useMemberAvatar = (member?: BasicMembershipFieldsFragment | null): ReturnType<typeof useAsset> => {
-  const avatar = member?.metadata.avatar
+  const avatar = member?.metadata?.avatar
   const avatarAsset = useAsset(avatar?.__typename === 'AvatarObject' ? avatar.avatarObject : null)
 
   if (avatar?.__typename === 'AvatarUri') {

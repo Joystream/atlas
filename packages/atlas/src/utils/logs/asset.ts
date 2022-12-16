@@ -23,6 +23,7 @@ type StorageEvent = {
 
 export type DistributorEventEntry = {
   dataObjectId: string
+  // @ts-ignore todo fix this later
   dataObjectType: StorageDataObjectFieldsFragment['type']['__typename']
 } & DistributorEventDetails
 

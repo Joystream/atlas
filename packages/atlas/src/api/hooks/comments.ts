@@ -25,7 +25,7 @@ export const useComment = (
   const { data, ...rest } = useGetCommentQuery({ ...opts, variables })
 
   return {
-    comment: data?.commentByUniqueInput,
+    comment: data?.commentById,
     ...rest,
   }
 }
@@ -44,7 +44,7 @@ export const useUserCommentsReactions = (videoId?: string | null, memberId?: str
     () => ({
       userReactions: data?.commentReactions.reduce<Record<string, number[]>>((acc, item) => {
         if (item) {
-          acc[item.commentId] = [...(acc[item.commentId] ? acc[item.commentId] : []), item.reactionId]
+          acc[item.comment.id] = [...(acc[item.comment.id] ? acc[item.comment.id] : []), item.reactionId]
         }
         return acc
       }, {}),
@@ -95,6 +95,14 @@ export const useCommentSectionComments = (
   }
 }
 
+type OriginalCommentEvent = Omit<GetCommentEditsQuery['events'][number], 'data'> & {
+  data: { __typename?: 'CommentCreatedEventData'; text: string }
+}
+
+type EditedCommentEvent = Omit<GetCommentEditsQuery['events'][number], 'data'> & {
+  data: { __typename?: 'CommentTextUpdatedEventData'; newText: string }
+}
+
 export const useCommentEdits = (
   commentId?: string,
   opts?: QueryHookOptions<GetCommentEditsQuery, GetCommentEditsQueryVariables>
@@ -104,14 +112,17 @@ export const useCommentEdits = (
     variables: { commentId: commentId || '' },
   })
 
-  const originalComment = data?.commentCreatedEvents.map((comment) => ({
-    ...comment,
-    newText: comment.text,
-  }))[0]
+  // todo make sure that everything works.
+  const originalComment = data?.events
+    .filter((event): event is OriginalCommentEvent => event.data.__typename === 'CommentCreatedEventData')
+    .map((event) => ({ ...event, data: { ...event.data, text: event.data.text } }))[0]
+
+  const commentEdits = data?.events
+    .filter((event): event is EditedCommentEvent => event.data.__typename === 'CommentTextUpdatedEventData')
+    .map((event) => ({ ...event, data: { ...event.data, text: event.data.newText } }))
 
   return {
-    commentEdits: data?.commentTextUpdatedEvents &&
-      originalComment && [originalComment, ...data.commentTextUpdatedEvents],
+    commentEdits: commentEdits && originalComment && [originalComment, ...commentEdits],
     ...rest,
   }
 }
