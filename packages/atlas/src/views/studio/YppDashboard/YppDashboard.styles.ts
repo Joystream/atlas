@@ -81,3 +81,17 @@ export const StyledSvgAlertsInformative24 = styled(SvgAlertsInformative24)`
     fill: ${cVar('colorTextStrong')};
   }
 `
+
+export const SuspendedInfoWrapper = styled.div`
+  width: 100%;
+  padding: ${sizes(6)};
+  border: 1px solid ${cVar('colorCoreNeutral600')};
+  margin-bottom: ${sizes(6)};
+`
+
+export const SuspendedTitle = styled.div`
+  display: grid;
+  grid-template-columns: 24px auto;
+  column-gap: 10px;
+  padding-bottom: ${sizes(2)};
+`

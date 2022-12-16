@@ -1,11 +1,12 @@
 import { FC } from 'react'
 
-import { SvgActionInfo, SvgActionNewTab, SvgActionSpeech, SvgActionTokensStack } from '@/assets/icons'
+import { SvgActionInfo, SvgActionNewTab, SvgActionSpeech, SvgActionTokensStack, SvgAlertsError24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { Information } from '@/components/Information'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
+import { Button } from '@/components/_buttons/Button'
 import { BenefitCard } from '@/components/_ypp/BenefitCard'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
@@ -20,6 +21,8 @@ import {
   Header,
   RewardsWrapper,
   StyledSvgAlertsInformative24,
+  SuspendedInfoWrapper,
+  SuspendedTitle,
   TierCount,
   TierDescription,
   TierWrapper,
@@ -76,6 +79,23 @@ export const YppDashboard: FC = () => {
             </TierWrapper>
           )}
         </Header>
+        {currentChannel?.isSuspended && (
+          <SuspendedInfoWrapper>
+            <SuspendedTitle>
+              <SvgAlertsError24 />
+              <Text variant="h300" as="p">
+                This channel has been suspended in the YouTube Partner Program
+              </Text>
+            </SuspendedTitle>
+            <Text variant="t200" as="p" color="colorCoreNeutral200">
+              To learn more about the reason behind the suspension, please reach out on the{' '}
+              <Button variant="primary" _textOnly>
+                #XYZ channel on our Discord server
+              </Button>
+              . You won't be rewarded for doing tasks during the time this channel is suspended.
+            </Text>
+          </SuspendedInfoWrapper>
+        )}
         <WidgetsWrapper>
           <WidgetTile
             title="Notion"
