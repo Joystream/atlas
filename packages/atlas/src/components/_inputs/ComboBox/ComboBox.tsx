@@ -112,6 +112,7 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
         onFocus={(event) => {
           textFieldProps?.onFocus?.(event)
         }}
+        value={inputValue ?? value}
         onClick={() => {
           update?.()
           toggleMenu()
