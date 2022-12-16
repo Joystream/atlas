@@ -34,6 +34,8 @@ export const configSchema = z.object({
       googleConsoleClientId: z.string().nullable(),
       googleOauthEndpoint: z.string().nullable(),
       youtubeSyncApiUrl: z.string().nullable(),
+      suspendedSupportLink: z.string().nullable(),
+      suspendedLinkText: z.string().nullable(),
       youtubeCollaboratorMemberId: z.string().nullable(),
       tiersDefinition: z
         .object({

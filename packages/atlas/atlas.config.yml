@@ -38,6 +38,8 @@ features:
     googleConsoleClientId: '$VITE_GOOGLE_CONSOLE_CLIENT_ID'
     googleOauthEndpoint: 'https://accounts.google.com/o/oauth2/v2/auth'
     youtubeSyncApiUrl: '$VITE_YOUTUBE_SYNC_API_URL'
+    suspendedSupportLink: https://discord.gg/er4Jz7mA # Link that will be displayed for users suspended in YPP
+    suspendedLinkText: '#ypp-support channel on our Discord server'
     youtubeCollaboratorMemberId: '$VITE_YOUTUBE_COLLABORATOR_MEMBER_ID'
     tiersDefinition: # Tiers for youtube partner program rewards. You can provide maximum three tiers. Each tier should has own multiplier.
       tiers:

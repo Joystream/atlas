@@ -89,8 +89,8 @@ export const YppDashboard: FC = () => {
             </SuspendedTitle>
             <Text variant="t200" as="p" color="colorCoreNeutral200">
               To learn more about the reason behind the suspension, please reach out on the{' '}
-              <Button variant="primary" _textOnly>
-                #XYZ channel on our Discord server
+              <Button variant="primary" _textOnly to={atlasConfig.features.ypp.suspendedSupportLink ?? ''}>
+                {atlasConfig.features.ypp.suspendedLinkText ?? 'link destination'}
               </Button>
               . You won't be rewarded for doing tasks during the time this channel is suspended.
             </Text>
