@@ -6,6 +6,7 @@ import { CSSTransition } from 'react-transition-group'
 import { getNftStatus } from '@/api/hooks/nfts'
 import { useFullVideo } from '@/api/hooks/video'
 import {
+  SvgActionDownload,
   SvgActionEdit,
   SvgActionHide,
   SvgActionReupload,
@@ -18,6 +19,7 @@ import { OwnerPill } from '@/components/OwnerPill'
 import { Pill } from '@/components/Pill'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
 import { Button } from '@/components/_buttons/Button'
+import { Loader } from '@/components/_loaders/Loader'
 import { absoluteRoutes } from '@/config/routes'
 import { useGetNftSlot } from '@/hooks/useGetNftSlot'
 import { useNftState } from '@/hooks/useNftState'
@@ -92,6 +94,8 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
     const uploadVideoStatus = useUploadsStore((state) => state.uploadsStatus[video?.media?.id || ''])
     const uploadThumbnailStatus = useUploadsStore((state) => state.uploadsStatus[video?.thumbnailPhoto?.id || ''])
 
+    const isSyncingWithYoutube = uploadVideoStatus?.lastStatus === 'yt-sync'
+
     const isVideoUploading =
       uploadVideoStatus?.lastStatus === 'inProgress' ||
       uploadVideoStatus?.lastStatus === 'processing' ||
@@ -111,7 +115,8 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
     const hasVideoUploadFailed =
       (video?.media && !video.media.isAccepted && uploadVideoStatus?.lastStatus !== 'completed') || false
 
-    const hasAssetUploadFailed = (hasThumbnailUploadFailed || hasVideoUploadFailed) && !isUploading
+    const hasAssetUploadFailed =
+      (hasThumbnailUploadFailed || hasVideoUploadFailed) && !isUploading && !isSyncingWithYoutube
 
     const isUnlisted = video?.isPublic === false
 
@@ -151,6 +156,14 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
           type: 'hover',
         },
       }
+      if (isSyncingWithYoutube) {
+        slots.bottomRight = {
+          element: <Pill variant="overlay" label="Auto-sync" icon={<SvgActionDownload />} />,
+        }
+        slots.topRight = {
+          element: <Loader variant="small" />,
+        }
+      }
       if (hasAssetUploadFailed) {
         slots.bottomRight = {
           element: <Pill variant="danger" label="Failed upload" icon={<SvgActionWarning />} />,
@@ -170,6 +183,7 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
       return slots
     }, [
       hasAssetUploadFailed,
+      isSyncingWithYoutube,
       isUnlisted,
       isUploading,
       loading,
@@ -184,7 +198,7 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
     ])
 
     const getPublisherKebabMenuItems = useCallback(() => {
-      if (isUploading && !hasAssetUploadFailed) {
+      if ((isUploading && !hasAssetUploadFailed) || isSyncingWithYoutube) {
         return
       }
       const assetFailedKebabItems = [
@@ -206,9 +220,20 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
       ]
 
       return hasAssetUploadFailed ? assetFailedKebabItems : contextMenuItems
-    }, [isUploading, hasAssetUploadFailed, onReuploadVideoClick, hasNft, onDeleteVideoClick, contextMenuItems])
+    }, [
+      isUploading,
+      hasAssetUploadFailed,
+      isSyncingWithYoutube,
+      onReuploadVideoClick,
+      hasNft,
+      onDeleteVideoClick,
+      contextMenuItems,
+    ])
 
     const getVideoSubtitle = useCallback(() => {
+      if (isSyncingWithYoutube) {
+        return 'Syncing from YouTube...'
+      }
       if (hasAssetUploadFailed) {
         return 'Upload failed...'
       }
@@ -219,7 +244,7 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
         return 'Processing...'
       }
       return
-    }, [hasAssetUploadFailed, uploadThumbnailStatus?.lastStatus, uploadVideoStatus?.lastStatus])
+    }, [hasAssetUploadFailed, isSyncingWithYoutube, uploadThumbnailStatus?.lastStatus, uploadVideoStatus?.lastStatus])
 
     const getAllFilesLasStatus = useCallback(() => {
       if (uploadVideoStatus?.lastStatus === 'inProgress' || uploadThumbnailStatus?.lastStatus === 'inProgress') {
@@ -234,6 +259,9 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
     }, [uploadThumbnailStatus?.lastStatus, uploadVideoStatus?.lastStatus])
 
     const getContentSlot = () => {
+      if (isSyncingWithYoutube) {
+        return
+      }
       return (
         <CSSTransition
           in={isUploading && !hasAssetUploadFailed}
@@ -252,19 +280,28 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
         </CSSTransition>
       )
     }
+    const getVideoHref = useCallback(() => {
+      if (isSyncingWithYoutube) {
+        return
+      }
+      if (hasVideoUploadFailed || isUploading) {
+        return absoluteRoutes.studio.uploads()
+      }
+      return videoHref
+    }, [hasVideoUploadFailed, isSyncingWithYoutube, isUploading, videoHref])
 
     return (
       <VideoTile
-        clickable={!isUploading || hasAssetUploadFailed}
+        clickable={(!isUploading || hasAssetUploadFailed) && !isSyncingWithYoutube}
         slots={getSlots()}
         contentSlot={getContentSlot()}
-        videoHref={hasVideoUploadFailed || isUploading ? absoluteRoutes.studio.uploads() : videoHref}
+        videoHref={getVideoHref()}
         linkState={hasAssetUploadFailed ? { highlightFailed: true } : undefined}
         videoSubTitle={getVideoSubtitle()}
         detailsVariant="withoutChannel"
         loadingDetails={loading || !video}
         loadingThumbnail={isLoadingThumbnail && !hasThumbnailUploadFailed}
-        thumbnailUrl={thumbnailPhotoUrl}
+        thumbnailUrl={isSyncingWithYoutube ? null : thumbnailPhotoUrl}
         createdAt={video?.createdAt}
         videoTitle={video?.title}
         views={video?.views}
