@@ -85,10 +85,10 @@ features:
         actionButtonText: Get referral link
         actionButtonAction: copyReferral
     widgets: # Widgets on Ypp landing page
-      - title: Discord
+      - title: Support
         link: https://discord.gg/DE9UN3YpRP
         linkText: Go to Discord # Used only on YPP Dashboard - if empty defaults to "Go to {title}"
-        vendor: Discord # Used for YPP Dashboard to inform user which vendor given feature uses - if empty defaults to title
+        label: Discord # Used for YPP Dashboard to inform user which vendor given feature uses - if empty defaults to title
         icon: message # Optional icon to be displayed. Possible icons: message, info, tokenStack
   nft:
     auctionMinimumBidStepMultiplier: 0.02 # Multiplier for the auction's starting price used to determine auction's minimum bid step. See more: https://joystream.gitbook.io/testnet-workspace/system/content-directory/nft#auction

@@ -69,7 +69,7 @@ export const configSchema = z.object({
             title: z.string(),
             link: z.string(),
             linkText: z.string().optional(),
-            vendor: z.string().optional(),
+            label: z.string().optional(),
             icon: YppWidgetIconEnum.optional(),
           })
         )

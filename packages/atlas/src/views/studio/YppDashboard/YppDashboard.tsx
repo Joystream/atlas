@@ -82,7 +82,7 @@ export const YppDashboard: FC = () => {
               <WidgetTile
                 icon={widget.icon && configYppIconMapper[widget.icon]}
                 key={widget.title}
-                title={widget.vendor ?? widget.title}
+                title={widget.label ?? widget.title}
                 text={widget.title}
                 button={{
                   text: widget.linkText ?? `Go to ${widget.title}`,
