@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 
 import { useBasicChannels } from '@/api/hooks/channel'
 import { atlasConfig } from '@/config'
@@ -29,7 +30,7 @@ export type YppSyncedChannel = {
 export const useGetYppSyncedChannels = () => {
   const { activeMembership, membershipsLoading, isAuthLoading, channelId } = useUser()
   const [isLoading, setIsLoading] = useState(true)
-
+  const location = useLocation()
   const [syncedChannels, setSyncedChannels] = useState<YppSyncedChannel[]>([])
 
   const channels = useMemo(() => activeMembership?.channels || [], [activeMembership?.channels])
@@ -61,12 +62,13 @@ export const useGetYppSyncedChannels = () => {
   }, [channels])
 
   useEffect(() => {
+    if (location.pathname.includes('studio') && !channels.length) return
     setIsLoading(true)
     getSyncedChannels().then((channels) => {
       channels && setSyncedChannels(channels)
       setIsLoading(false)
     })
-  }, [getSyncedChannels])
+  }, [channels.length, getSyncedChannels, location.pathname])
 
   return {
     syncedChannels,
