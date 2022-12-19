@@ -71,6 +71,8 @@ export const SubTitle = styled(Text)`
 
 export const StyledChannelLink = styled(ChannelLink)`
   position: relative;
+  width: fit-content;
+  justify-self: start;
   border: solid 8px ${cVar('colorCoreBaseBlack')};
   border-radius: 100%;
   ${media.sm} {
