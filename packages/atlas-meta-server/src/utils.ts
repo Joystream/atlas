@@ -48,7 +48,7 @@ export const generateMetaHtml = (tags: MetaTags, addHelmetAttr = false) => {
     .join('\n')
 }
 
-export const applyMetaAndSchemaTagsToHtml = (html: HTMLElement, metaTags: MetaTags, schemaTags: string) => {
+export const applyMetaTagsToHtml = (html: HTMLElement, metaTags: MetaTags) => {
   // remove already present meta tags
   const metaTagsLookup = Object.keys(metaTags).reduce<Record<string, boolean>>((acc, key) => {
     acc[key.toLowerCase()] = true
@@ -64,6 +64,10 @@ export const applyMetaAndSchemaTagsToHtml = (html: HTMLElement, metaTags: MetaTa
   const head = html.querySelector('head')
   const metaTagsHtml = generateMetaHtml(metaTags)
   head?.insertAdjacentHTML('beforeend', metaTagsHtml)
+}
+
+export const applySchemaTagsToHtml = (html: HTMLElement, schemaTags: string) => {
+  const head = html.querySelector('head')
   head?.insertAdjacentHTML('beforeend', schemaTags)
 }
 
@@ -73,20 +77,28 @@ export const fetchHtmlAndAppData = async (url: string): Promise<[HTMLElement, Ap
   const html = await response.text()
   const parsedHtml = parseHtml(html)
 
+  const getMetaTagContent = (name: string) => {
+    const metaTag = parsedHtml.querySelector(`meta[name="${name}"]`)
+    return metaTag?.getAttribute('content')
+  }
+
   // extract app data from the HTML
-  const siteName = parsedHtml.querySelector('meta[name="og:site_name"]')?.getAttribute('content')
+  const siteName = getMetaTagContent('og:site_name')
 
   if (!siteName) {
     throw new Error('Missing site name')
   }
-  const orionUrl = parsedHtml.querySelector('meta[name="atlas:orion_url"]')?.getAttribute('content')
+  const orionUrl = getMetaTagContent('atlas:orion_url')
   if (!orionUrl) {
     throw new Error('Missing Orion URL in fetched HTML')
   }
   const appData: AppData = {
     name: siteName,
     orionUrl: orionUrl,
-    twitterId: parsedHtml.querySelector('meta[name="twitter:site"]')?.getAttribute('content') || undefined,
+    twitterId: getMetaTagContent('twitter:site'),
+    yppOgTitle: getMetaTagContent('atlas:ypp_og_title'),
+    yppOgDescription: getMetaTagContent('atlas:ypp_og_description'),
+    yppOgImage: getMetaTagContent('atlas:ypp_og_image'),
   }
 
   return [parsedHtml, appData]

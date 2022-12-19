@@ -30,6 +30,11 @@ export const configSchema = z.object({
     alternativeNodes: z.array(z.object({ url: z.string(), name: z.string() })),
   }),
   features: z.object({
+    ypp: z.object({
+      landingPageOgTitle: z.string().nullable(),
+      landingPageOgDescription: z.string().nullable(),
+      landingPageOgImgPath: z.string().nullable(),
+    }),
     nft: z.object({
       auctionMinimumBidStepMultiplier: z.number(),
       openAuctionBidLockDuration: z.number(),

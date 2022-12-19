@@ -2,7 +2,7 @@ name = "atlas-proxy-worker"
 type = "javascript"
 account_id = ""
 route = ""
-compatibility_date = "2022-06-15"
+compatibility_date = "2022-12-19"
 workers_dev = true
 
 [vars]
@@ -16,7 +16,7 @@ format = "service-worker"
 
 [env.production]
 zone_id = "9b5baa89abf2e9aecd90951a5d561f04"
-routes = ["play.joystream.org/channel/*", "play.joystream.org/video/*"]
+routes = ["play.joystream.org/channel/*", "play.joystream.org/video/*", "play.joystream.org/ypp"]
 
 [env.production.vars]
 ATLAS_URL = "https://atlas-js.vercel.app"

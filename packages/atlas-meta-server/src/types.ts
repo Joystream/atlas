@@ -10,4 +10,7 @@ export type AppData = {
   name: string
   orionUrl: string
   twitterId?: string
+  yppOgTitle?: string
+  yppOgDescription?: string
+  yppOgImage?: string
 }

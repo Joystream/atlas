@@ -6,10 +6,11 @@ import { APP_URL, PORT } from './config'
 import {
   generateChannelMetaTags,
   generateChannelSchemaTagsHtml,
+  generateCommonMetaTags,
   generateVideoMetaTags,
   generateVideoSchemaTagsHtml,
 } from './tags'
-import { applyMetaAndSchemaTagsToHtml, fetchHtmlAndAppData, generateAssetUrl } from './utils'
+import { applyMetaTagsToHtml, applySchemaTagsToHtml, fetchHtmlAndAppData, generateAssetUrl } from './utils'
 
 const app = express()
 let orionClient: OrionClient
@@ -34,7 +35,8 @@ app.get('/video/:id', async (req, res) => {
     const videoMetaTags = generateVideoMetaTags(video, thumbnailUrl, appData.name, APP_URL, appData.twitterId)
     const videoSchemaTagsHtml = generateVideoSchemaTagsHtml(video, thumbnailUrl, appData.name, APP_URL)
 
-    applyMetaAndSchemaTagsToHtml(html, videoMetaTags, videoSchemaTagsHtml)
+    applyMetaTagsToHtml(html, videoMetaTags)
+    applySchemaTagsToHtml(html, videoSchemaTagsHtml)
 
     return res.send(html.toString())
   } catch (err) {
@@ -63,7 +65,34 @@ app.get('/channel/:id', async (req, res) => {
     const channelMetaTags = generateChannelMetaTags(channel, avatarUrl, appData.name, APP_URL, appData.twitterId)
     const channelSchemaTagsHtml = generateChannelSchemaTagsHtml(channel, avatarUrl, APP_URL)
 
-    applyMetaAndSchemaTagsToHtml(html, channelMetaTags, channelSchemaTagsHtml)
+    applyMetaTagsToHtml(html, channelMetaTags)
+    applySchemaTagsToHtml(html, channelSchemaTagsHtml)
+
+    return res.send(html.toString())
+  } catch (err) {
+    console.error(err)
+    return res.status(500).send()
+  }
+})
+
+app.get('/ypp', async (req, res) => {
+  try {
+    const [html, appData] = await fetchHtmlAndAppData(APP_URL)
+    const titleNode = html.querySelector('title')
+
+    if (titleNode && appData.yppOgTitle) {
+      titleNode.innerHTML = appData.yppOgTitle
+    }
+
+    const metaTags = generateCommonMetaTags(
+      appData.name,
+      APP_URL,
+      appData.yppOgTitle || appData.name,
+      appData.yppOgDescription,
+      appData.yppOgImage,
+      appData.twitterId
+    )
+    applyMetaTagsToHtml(html, metaTags)
 
     return res.send(html.toString())
   } catch (err) {
