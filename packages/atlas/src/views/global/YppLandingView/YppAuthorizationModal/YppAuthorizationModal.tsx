@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { formatDuration } from 'date-fns'
-import { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 
@@ -69,6 +69,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
 }) => {
   const { setActiveUser, memberId } = useUser()
   const navigate = useNavigate()
+  const contentRef = useRef<HTMLDivElement | null>(null)
   const channelsLoaded = !!unSyncedChannels
   const hasMoreThanOneChannel = unSyncedChannels && unSyncedChannels.length > 1
   const [finalFormData, setFinalFormData] = useState<FinalFormData | null>(null)
@@ -128,6 +129,10 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     channelsLoaded,
     onChangeStep: onChangeStep,
   })
+
+  useEffect(() => {
+    contentRef.current?.scrollTo({ top: 0 })
+  }, [currentStep])
 
   const handleClose = useCallback(() => {
     setYtRequirmentsErrors([])
@@ -475,6 +480,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   return (
     <FormProvider {...detailsFormMethods}>
       <DialogModal
+        contentRef={contentRef}
         show={currentStep != null}
         dividers
         additionalActionsNodeMobilePosition="bottom"
