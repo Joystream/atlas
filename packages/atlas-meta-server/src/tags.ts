@@ -10,11 +10,7 @@ const VIDEO_WIDTH = 1280
 const VIDEO_HEIGHT = 720
 const AVATAR_SIZE = 192
 
-const sanitizeDescription = (appName: string, fullDescription?: string | null, title?: string | null) => {
-  if (!fullDescription) {
-    return `${title || ''} on ${appName}`
-  }
-
+const sanitizeDescription = (appName: string, fullDescription: string) => {
   const oneLineDescription = fullDescription
     .split('\n')
     .map((line) => line.trim())
@@ -28,27 +24,31 @@ export const generateCommonMetaTags = (
   appName: string,
   appUrl: string,
   title: string,
-  description: string,
-  image: string,
+  description?: string,
+  image?: string,
   twitterId?: string | null
 ): MetaTags => {
-  const sanitizedDescription = sanitizeDescription(appName, description, title)
+  const sanitizedDescription = description && sanitizeDescription(appName, description)
   return {
     'og:title': title,
     'twitter:title': title,
-    'description': sanitizedDescription,
-    'og:description': sanitizedDescription,
-    'twitter:description': sanitizedDescription,
-    'og:image': image,
-    'twitter:image': image,
-    'og:image:alt': title,
-    'twitter:image:alt': title,
-    'og:image:type': 'image/webp',
+    ...(sanitizedDescription && {
+      description: sanitizedDescription,
+      'og:description': sanitizedDescription,
+      'twitter:description': sanitizedDescription,
+    }),
+    ...(image && {
+      'og:image': image,
+      'twitter:image': image,
+      'og:image:alt': title,
+      'twitter:image:alt': title,
+      'og:image:type': 'image/webp',
+    }),
     'og:site_name': appName,
     'og:url': appUrl,
     'og:type': 'website',
     'twitter:card': 'summary_large_image',
-    ...(twitterId ? { 'twitter:site': twitterId } : {}),
+    ...(twitterId && { 'twitter:site': twitterId }),
   }
 }
 
@@ -61,11 +61,12 @@ export const generateVideoMetaTags = (
 ): MetaTags => {
   const videoUrl = joinUrlFragments(baseAppUrl, 'video', video.id)
   const videoEmbedUrl = joinUrlFragments(baseAppUrl, 'embedded', 'video', video.id)
+  const videoTitle = video.title || 'Untitled'
   const commonTags = generateCommonMetaTags(
     appName,
     videoUrl,
-    video.title || 'Unnamed video',
-    video.description || '',
+    videoTitle,
+    video.description || videoTitle,
     thumbnailUrl,
     twitterId
   )
@@ -123,7 +124,7 @@ export const generateVideoSchemaTagsHtml = (
   const videoUrl = joinUrlFragments(baseAppUrl, 'video', video.id)
   const channelUrl = joinUrlFragments(baseAppUrl, 'channel', video.channel.id)
   const videoEmbedUrl = joinUrlFragments(baseAppUrl, 'embedded', 'video', video.id)
-  const sanitizedDescription = sanitizeDescription(appName, video.description, video.title)
+  const sanitizedDescription = sanitizeDescription(appName, video.description || '')
 
   const schemaOrgTags: SchemaOrgTag[] = [
     {
