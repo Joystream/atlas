@@ -2,6 +2,8 @@ import { z } from 'zod'
 
 // keep config schema in separate file so it can be imported without relying on YAML plugin
 
+const YppWidgetIconEnum = z.enum(['info', 'message', 'tokenStack'])
+
 export const configSchema = z.object({
   general: z.object({
     appName: z.string(),
@@ -60,6 +62,17 @@ export const configSchema = z.object({
               .string()
               .refine((value) => value.match(/^\//gi) || value === 'copyReferral')
               .optional(),
+          })
+        )
+        .optional(),
+      widgets: z
+        .array(
+          z.object({
+            title: z.string(),
+            link: z.string(),
+            linkText: z.string().optional(),
+            label: z.string().optional(),
+            icon: YppWidgetIconEnum.optional(),
           })
         )
         .optional(),
@@ -129,4 +142,6 @@ export const configSchema = z.object({
     privacyPolicy: z.string(),
   }),
 })
+
 export type RawConfig = z.infer<typeof configSchema>
+export type YppWidgetIcons = z.infer<typeof YppWidgetIconEnum>
