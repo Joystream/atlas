@@ -10,7 +10,6 @@ import {
   GetFullChannelQueryVariables,
 } from '@/api/queries/__generated__/channels.generated'
 import { atlasConfig } from '@/config'
-import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useSnackbar } from '@/providers/snackbars'
 import { useYppStore } from '@/providers/ypp/ypp.store'
 import { createId } from '@/utils/createId'
@@ -59,7 +58,6 @@ export const useYppGoogleAuth = ({
 
   const client = useApolloClient()
 
-  const [openConfirmationModal, closeConfirmationModal] = useConfirmationModal()
   const { displaySnackbar } = useSnackbar()
 
   const [searchParams, setSearchParams] = useSearchParams()
@@ -90,34 +88,22 @@ export const useYppGoogleAuth = ({
   }, [selectedChannelId, setAuthState])
 
   const handleGoogleAuthError = useCallback(
-    (error: string) => {
+    (error: string, state: string | null) => {
       // Google auth failed, show error modal
       SentryLogger.error('Google Auth failed', 'YppAuthorizationModal', error)
+      const stateParams = new URLSearchParams(state || '')
 
-      // TODO: use proper copy
-      openConfirmationModal({
+      const channelId = stateParams.get('channelId')
+      resetSearchParams()
+      onChangeStep('requirements')
+      setSelectedChannelId(channelId)
+      displaySnackbar({
         title: 'Authorization failed',
-        description: 'Google Auth failed',
-        type: 'destructive',
-        primaryButton: {
-          text: 'Try again',
-          onClick: () => {
-            closeConfirmationModal()
-            resetSearchParams()
-            onChangeStep('requirements')
-          },
-        },
-        secondaryButton: {
-          text: 'Cancel',
-          onClick: () => {
-            closeConfirmationModal()
-            resetSearchParams()
-            closeModal()
-          },
-        },
+        description: 'Authorisation was cancelled on the external page. Please try again to complete enrolment.',
+        iconType: 'error',
       })
     },
-    [openConfirmationModal, closeConfirmationModal, resetSearchParams, onChangeStep, closeModal]
+    [resetSearchParams, onChangeStep, setSelectedChannelId, displaySnackbar]
   )
 
   const displayUnknownErrorSnackbar = useCallback(
@@ -265,8 +251,10 @@ export const useYppGoogleAuth = ({
   // after returning from Google with error, open confirmation modal
   useEffect(() => {
     const error = searchParams.get('error')
+    const state = searchParams.get('state')
+
     if (error) {
-      handleGoogleAuthError(error)
+      handleGoogleAuthError(error, state)
     }
   }, [handleGoogleAuthError, searchParams])
 
