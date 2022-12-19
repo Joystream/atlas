@@ -3,10 +3,6 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 
 import { SvgActionNewTab, SvgAlertsError24, SvgAlertsInformative24, SvgLogoPolkadot } from '@/assets/icons'
 import { IconWrapper } from '@/components/IconWrapper'
-import {
-  MOBILE_SUPPORTED_WALLETS,
-  walletSort,
-} from '@/components/_auth/SignInModal/SignInSteps/SignInModalWalletStep/SignInModalWalletStep.utils'
 import { Loader } from '@/components/_loaders/Loader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMountEffect } from '@/hooks/useMountEffect'
@@ -15,6 +11,8 @@ import { useUser } from '@/providers/user/user.hooks'
 import { useUserStore } from '@/providers/user/user.store'
 import { isMobile } from '@/utils/browser'
 import { capitalizeFirstLetter } from '@/utils/misc'
+
+import { MOBILE_SUPPORTED_WALLETS, walletSort } from './SignInModalWalletStep.utils'
 
 import { SignInModalStepTemplate } from '../SignInModalStepTemplate'
 import {
