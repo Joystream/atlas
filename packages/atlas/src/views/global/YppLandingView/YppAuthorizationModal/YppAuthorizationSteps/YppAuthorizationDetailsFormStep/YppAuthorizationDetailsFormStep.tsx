@@ -1,6 +1,4 @@
-import { useApolloClient } from '@apollo/client'
-import debouncePromise from 'awesome-debounce-promise'
-import { FC, useCallback, useMemo, useRef, useState } from 'react'
+import { FC, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 
 import {
@@ -12,8 +10,8 @@ import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/fragment
 import { Avatar, AvatarProps } from '@/components/Avatar'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
+import { InputAutocomplete } from '@/components/_inputs/InputAutocomplete'
 import { Select, SelectItem } from '@/components/_inputs/Select'
-import { Loader } from '@/components/_loaders/Loader'
 import { atlasConfig } from '@/config'
 import { displayCategories } from '@/config/categories'
 import { EMAIL_PATTERN } from '@/config/regex'
@@ -30,65 +28,11 @@ export type DetailsFormData = {
 
 export const YppAuthorizationDetailsFormStep: FC = () => {
   const [foundChannel, setFoundChannel] = useState<BasicChannelFieldsFragment | null>()
-  const [isChannelValidating, setIsChannelValidating] = useState(false)
-  const client = useApolloClient()
   const {
-    trigger,
     register,
     control,
-    setValue,
     formState: { errors },
   } = useFormContext<DetailsFormData>()
-
-  const validateChannel = useCallback(
-    async (value: string) => {
-      const {
-        data: { channels },
-      } = await client.query<GetBasicChannelsQuery, GetBasicChannelsQueryVariables>({
-        query: GetBasicChannelsDocument,
-        variables: { where: { title_eq: value } },
-      })
-      if (!value) {
-        return true
-      }
-      if (channels?.length) {
-        setFoundChannel(channels[0])
-        setValue('referrerChannelId', channels[0].id)
-      } else {
-        setFoundChannel(null)
-      }
-      return !!channels.length
-    },
-    [client, setValue]
-  )
-
-  const titleInputRef = useRef<HTMLInputElement | null>(null)
-
-  const { ref, ...titleRegisterRest } = useMemo(
-    () =>
-      register('referrerChannelTitle', {
-        onChange: debouncePromise(
-          async () => {
-            await trigger('referrerChannelTitle')
-            setIsChannelValidating(false)
-          },
-          500,
-          {
-            key() {
-              setIsChannelValidating(true)
-              return null
-            },
-          }
-        ),
-        validate: {
-          unique: async (value) => {
-            const valid = await validateChannel(value || '')
-            return valid || 'No channel with this title has been found.'
-          },
-        },
-      }),
-    [register, trigger, validateChannel]
-  )
 
   const categoriesSelectItems: SelectItem[] =
     displayCategories?.map((c) => ({
@@ -125,7 +69,6 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
         />
       </FormField>
       <FormField
-        disableErrorAnimation={document.activeElement === titleInputRef.current}
         label="Category for videos"
         description="Choose one of the categories to be assigned to the imported videos by default. You can change it for each video later."
         error={errors.videoCategoryId?.message}
@@ -150,30 +93,51 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
           )}
         />
       </FormField>
-      <FormField
-        optional
-        disableErrorAnimation={document.activeElement === titleInputRef.current}
-        label="Referrer"
-        description={`Enter the title of the ${atlasConfig.general.appName} channel which recommended the program to you.`}
-        error={errors.referrerChannelTitle?.message}
-      >
-        <Input
-          nodeEnd={
-            foundChannel ? (
-              <ResolvedAvatar channel={foundChannel} size="bid" />
-            ) : (
-              isChannelValidating && <Loader variant="xsmall" />
-            )
-          }
-          {...titleRegisterRest}
-          placeholder="Channel Name"
-          error={!!errors.referrerChannelTitle}
-          ref={(e) => {
-            ref(e)
-            titleInputRef.current = e
-          }}
-        />
-      </FormField>
+      <Controller
+        name="referrerChannelTitle"
+        control={control}
+        rules={{
+          validate: (value) => {
+            if (value && !foundChannel) {
+              return 'No channel with this title has been found.'
+            }
+            return true
+          },
+        }}
+        render={({ field: { onChange, value } }) => (
+          <FormField
+            optional
+            label="Referrer"
+            description={`Enter the title of the ${atlasConfig.general.appName} channel which recommended the program to you.`}
+            error={errors.referrerChannelTitle?.message}
+          >
+            <InputAutocomplete<GetBasicChannelsQuery, GetBasicChannelsQueryVariables, BasicChannelFieldsFragment>
+              documentQuery={GetBasicChannelsDocument}
+              queryVariablesFactory={(value) => ({ where: { title_startsWith: value } })}
+              perfectMatcher={(res, val) => res.channels.find((channel) => channel.title === val)}
+              renderItem={(result) =>
+                result.channels.map((channel) => ({
+                  ...channel,
+                  label: channel.title ?? '',
+                }))
+              }
+              placeholder="Channel Name"
+              value={value ?? ''}
+              onChange={onChange}
+              onItemSelect={(item) => {
+                if (item) {
+                  setFoundChannel(item)
+                  onChange({ target: { value: item?.title } })
+                }
+              }}
+              nodeEnd={foundChannel && <ResolvedAvatar channel={foundChannel} size="bid" />}
+              clearSelection={() => {
+                setFoundChannel(undefined)
+              }}
+            />
+          </FormField>
+        )}
+      />
     </FormFieldsWrapper>
   )
 }
@@ -181,7 +145,7 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
 type ResolvedAvatarProps = {
   channel?: BasicChannelFieldsFragment
 } & AvatarProps
-const ResolvedAvatar: FC<ResolvedAvatarProps> = ({ channel }) => {
+export const ResolvedAvatar: FC<ResolvedAvatarProps> = ({ channel }) => {
   const { url, isLoadingAsset } = useAsset(channel?.avatarPhoto)
   return <Avatar assetUrl={url} loading={isLoadingAsset} size="bid" />
 }
