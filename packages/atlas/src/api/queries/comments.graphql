@@ -79,10 +79,7 @@ query GetUserCommentsAndVideoCommentsConnection(
 
 # CHANGE: ID is now `String`
 query GetUserCommentsReactions($memberId: String!, $videoId: String!) {
-  commentReactions(
-    where: { member: { id_eq: $memberId }, video: { id_eq: $videoId } }
-    limit: 1000
-  ) {
+  commentReactions(where: { member: { id_eq: $memberId }, video: { id_eq: $videoId } }, limit: 1000) {
     reactionId
     comment {
       # CHANGE: `commentId` no longer exists, use `comment.id`
@@ -96,10 +93,7 @@ query GetCommentEdits($commentId: String!) {
   # CHANGE: Use a single `events` query instead of separately querying `commentTextUpdatedEvents` and `commentCreatedEvents`
   events(
     where: {
-      data: {
-        isTypeOf_in: ["CommentCreatedEventData", "CommentTextUpdatedEventData"]
-        comment: { id_eq: $commentId }
-      }
+      data: { isTypeOf_in: ["CommentCreatedEventData", "CommentTextUpdatedEventData"], comment: { id_eq: $commentId } }
     }
   ) {
     id
