@@ -306,7 +306,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       {
         text: `Your YouTube channel has at least ${formatNumber(
           fetchedChannelRequirements?.MINIMUM_SUBSCRIBERS_COUNT || 0
-        )} subscribers`,
+        )} subscribers and subscriptions are made public.`,
         fulfilled: !ytRequirmentsErrors.some(
           (error) => error === YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_SUBSCRIBERS
         ),
