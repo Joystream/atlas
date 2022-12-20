@@ -58,6 +58,7 @@ query GetNotifications($channelId: String!, $memberId: String!, $limit: Int!) {
     data {
       ... on AuctionBidMadeEventData {
         bid {
+          amount
           bidder {
             ...BasicMembershipFields
           }
@@ -71,12 +72,6 @@ query GetNotifications($channelId: String!, $memberId: String!, $limit: Int!) {
               video {
                 id
                 title
-                # do we actually need ownerMember?
-                channel {
-                  ownerMember {
-                    id
-                  }
-                }
               }
             }
           }
@@ -95,12 +90,6 @@ query GetNotifications($channelId: String!, $memberId: String!, $limit: Int!) {
           video {
             id
             title
-            # do we actually need ownerMember?
-            channel {
-              ownerMember {
-                id
-              }
-            }
           }
         }
       }
@@ -140,12 +129,6 @@ query GetNotifications($channelId: String!, $memberId: String!, $limit: Int!) {
               video {
                 id
                 title
-                # do we actually need ownerMember?
-                channel {
-                  ownerMember {
-                    id
-                  }
-                }
               }
             }
           }
@@ -165,12 +148,6 @@ query GetNotifications($channelId: String!, $memberId: String!, $limit: Int!) {
               video {
                 id
                 title
-                # do we actually need ownerMember?
-                channel {
-                  ownerMember {
-                    id
-                  }
-                }
               }
             }
           }
@@ -186,12 +163,6 @@ query GetNotifications($channelId: String!, $memberId: String!, $limit: Int!) {
           video {
             id
             title
-            # do we actually need ownerMember?
-            channel {
-              ownerMember {
-                id
-              }
-            }
           }
           parentComment {
             id
@@ -563,12 +534,6 @@ query GetNftActivities($memberId: String!, $limit: Int!) {
           auction {
             nft {
               video {
-                # do we actually need ownerMember?
-                channel {
-                  ownerMember {
-                    id
-                  }
-                }
                 id
                 title
                 thumbnailPhoto {
@@ -591,12 +556,6 @@ query GetNftActivities($memberId: String!, $limit: Int!) {
           auction {
             nft {
               video {
-                # do we actually need ownerMember?
-                channel {
-                  ownerMember {
-                    id
-                  }
-                }
                 id
                 title
                 thumbnailPhoto {
@@ -616,12 +575,6 @@ query GetNftActivities($memberId: String!, $limit: Int!) {
         }
         nft {
           video {
-            # do we actually need ownerMember?
-            channel {
-              ownerMember {
-                id
-              }
-            }
             id
             title
             thumbnailPhoto {
@@ -642,12 +595,6 @@ query GetNftActivities($memberId: String!, $limit: Int!) {
           auction {
             nft {
               video {
-                # do we actually need ownerMember?
-                channel {
-                  ownerMember {
-                    id
-                  }
-                }
                 id
                 title
                 thumbnailPhoto {
@@ -668,12 +615,6 @@ query GetNftActivities($memberId: String!, $limit: Int!) {
           auction {
             nft {
               video {
-                # do we actually need ownerMember?
-                channel {
-                  ownerMember {
-                    id
-                  }
-                }
                 id
                 title
                 thumbnailPhoto {
@@ -735,12 +676,6 @@ query GetNftActivities($memberId: String!, $limit: Int!) {
         price
         nft {
           video {
-            # do we actually need ownerMember?
-            channel {
-              ownerMember {
-                id
-              }
-            }
             id
             title
             thumbnailPhoto {
@@ -760,12 +695,6 @@ query GetNftActivities($memberId: String!, $limit: Int!) {
           auction {
             nft {
               video {
-                # do we actually need ownerMember?
-                channel {
-                  ownerMember {
-                    id
-                  }
-                }
                 id
                 title
                 thumbnailPhoto {
@@ -779,12 +708,6 @@ query GetNftActivities($memberId: String!, $limit: Int!) {
       ... on BuyNowCanceledEventData {
         nft {
           video {
-            # do we actually need ownerMember?
-            channel {
-              ownerMember {
-                id
-              }
-            }
             id
             title
             thumbnailPhoto {
@@ -822,12 +745,6 @@ query GetNftActivities($memberId: String!, $limit: Int!) {
         newPrice
         nft {
           video {
-            # do we actually need ownerMember?
-            channel {
-              ownerMember {
-                id
-              }
-            }
             id
             title
             thumbnailPhoto {
@@ -842,12 +759,6 @@ query GetNftActivities($memberId: String!, $limit: Int!) {
       ... on NftIssuedEventData {
         nft {
           video {
-            # do we actually need ownerMember?
-            channel {
-              ownerMember {
-                id
-              }
-            }
             id
             title
             thumbnailPhoto {

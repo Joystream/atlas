@@ -29,6 +29,7 @@ import { MyVideosView } from './MyVideosView'
 import { StudioWelcomeView } from './StudioWelcomeView'
 import { VideoWorkspace } from './VideoWorkspace'
 
+import { NotificationsView } from '../notifications'
 import { NotFoundView } from '../viewer/NotFoundView'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
@@ -139,12 +140,12 @@ const StudioLayout = () => {
                 path={relativeRoutes.studio.crt()}
                 element={<PrivateRoute element={<CrtView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />}
               />
-              {/* <Route
+              <Route
                 path={relativeRoutes.studio.notifications()}
                 element={
                   <PrivateRoute element={<NotificationsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
                 }
-              /> */}
+              />
               <Route path="*" element={<NotFoundView />} />
             </Routes>
           </MainContainer>

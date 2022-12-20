@@ -149,7 +149,9 @@ export const useTop10Channels = (
     variables: {
       ...variables,
       where: {
-        ...channelFilter,
+        channel: {
+          ...channelFilter,
+        },
         activeVideosCount_gt: 0,
         ...variables?.where,
       },
@@ -170,7 +172,9 @@ export const useDiscoverChannels = (
     variables: {
       ...variables,
       where: {
-        ...channelFilter,
+        channel: {
+          ...channelFilter,
+        },
         activeVideosCount_gt: 0,
         ...variables?.where,
       },
@@ -191,7 +195,9 @@ export const usePromisingChannels = (
     variables: {
       ...variables,
       where: {
-        ...channelFilter,
+        channel: {
+          ...channelFilter,
+        },
         activeVideosCount_gt: 0,
         ...variables?.where,
       },
@@ -212,7 +218,9 @@ export const usePopularChannels = (
     variables: {
       ...variables,
       where: {
-        ...channelFilter,
+        channel: {
+          ...channelFilter,
+        },
         activeVideosCount_gt: 0,
         ...variables?.where,
       },

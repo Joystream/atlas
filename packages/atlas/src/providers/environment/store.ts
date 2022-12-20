@@ -8,7 +8,8 @@ export type EnvironmentState = {
 }
 
 const INITIAL_STATE: EnvironmentState = {
-  targetDevEnv: 'development',
+  // todo temporary - bring back development or next
+  targetDevEnv: 'local',
   nodeOverride: null,
 }
 

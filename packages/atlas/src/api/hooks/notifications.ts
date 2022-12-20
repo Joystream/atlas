@@ -8,25 +8,6 @@ import {
   useGetNotificationsQuery,
 } from '@/api/queries/__generated__/notifications.generated'
 
-import {
-  AuctionBidMadeEventData,
-  BidMadeCompletingAuctionEventData,
-  CommentCreatedEventData,
-  EnglishAuctionSettledEventData,
-  NftBoughtEventData,
-  OpenAuctionBidAcceptedEventData,
-} from '../queries/__generated__/baseTypes.generated'
-
-type NotificationEvent = Omit<GetNotificationsQuery['events'][number], 'data'> & {
-  data:
-    | AuctionBidMadeEventData
-    | NftBoughtEventData
-    | BidMadeCompletingAuctionEventData
-    | OpenAuctionBidAcceptedEventData
-    | EnglishAuctionSettledEventData
-    | CommentCreatedEventData
-}
-
 export const useRawNotifications = (
   channelId: string | null,
   memberId: string | null,
@@ -42,24 +23,8 @@ export const useRawNotifications = (
     ...opts,
   })
 
-  // todo make sure that everything works
-  // const sortedNotifications = useMemo(() => {
-  //   const allNotifications = data
-  //     ? [
-  //         ...data.openAuctionBidAcceptedEvents,
-  //         ...data.bidMadeCompletingAuctionEvents,
-  //         ...data.nftBoughtEvents,
-  //         ...data.auctionBidMadeEvents,
-  //         ...data.englishAuctionSettledEvents,
-  //         ...data.commentCreatedEvents.filter(({ comment }) => comment.author.id !== memberId),
-  //       ]
-  //     : []
-
-  //   return allNotifications.sort((n1, n2) => n2.createdAt.getTime() - n1.createdAt.getTime())
-  // }, [data, memberId])
-
   return {
-    notifications: (data?.events || []) as NotificationEvent[],
+    notifications: data?.events || [],
     ...rest,
   }
 }

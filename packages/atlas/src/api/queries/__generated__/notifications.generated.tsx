@@ -28,6 +28,7 @@ export type GetNotificationsQuery = {
           __typename?: 'AuctionBidMadeEventData'
           bid: {
             __typename?: 'Bid'
+            amount: string
             bidder: {
               __typename?: 'Membership'
               id: string
@@ -95,15 +96,7 @@ export type GetNotificationsQuery = {
             } | null
             auction: {
               __typename?: 'Auction'
-              nft: {
-                __typename?: 'OwnedNft'
-                video: {
-                  __typename?: 'Video'
-                  id: string
-                  title?: string | null
-                  channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-                }
-              }
+              nft: { __typename?: 'OwnedNft'; video: { __typename?: 'Video'; id: string; title?: string | null } }
             }
           }
           nftOwner:
@@ -339,12 +332,7 @@ export type GetNotificationsQuery = {
           comment: {
             __typename?: 'Comment'
             id: string
-            video: {
-              __typename?: 'Video'
-              id: string
-              title?: string | null
-              channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-            }
+            video: { __typename?: 'Video'; id: string; title?: string | null }
             parentComment?: { __typename?: 'Comment'; id: string } | null
             author: {
               __typename?: 'Membership'
@@ -417,15 +405,7 @@ export type GetNotificationsQuery = {
             }
             auction: {
               __typename?: 'Auction'
-              nft: {
-                __typename?: 'OwnedNft'
-                video: {
-                  __typename?: 'Video'
-                  id: string
-                  title?: string | null
-                  channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-                }
-              }
+              nft: { __typename?: 'OwnedNft'; video: { __typename?: 'Video'; id: string; title?: string | null } }
             }
           }
           previousNftOwner:
@@ -537,15 +517,7 @@ export type GetNotificationsQuery = {
                 | null
             } | null
           }
-          nft: {
-            __typename?: 'OwnedNft'
-            video: {
-              __typename?: 'Video'
-              id: string
-              title?: string | null
-              channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-            }
-          }
+          nft: { __typename?: 'OwnedNft'; video: { __typename?: 'Video'; id: string; title?: string | null } }
         }
       | { __typename?: 'NftIssuedEventData' }
       | { __typename?: 'NftSellOrderMadeEventData' }
@@ -587,15 +559,7 @@ export type GetNotificationsQuery = {
             }
             auction: {
               __typename?: 'Auction'
-              nft: {
-                __typename?: 'OwnedNft'
-                video: {
-                  __typename?: 'Video'
-                  id: string
-                  title?: string | null
-                  channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-                }
-              }
+              nft: { __typename?: 'OwnedNft'; video: { __typename?: 'Video'; id: string; title?: string | null } }
             }
           }
           previousNftOwner:
@@ -1815,7 +1779,6 @@ export type GetNftActivitiesQuery = {
                   __typename?: 'Video'
                   id: string
                   title?: string | null
-                  channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
                   thumbnailPhoto?: {
                     __typename?: 'StorageDataObject'
                     id: string
@@ -1987,7 +1950,6 @@ export type GetNftActivitiesQuery = {
                   __typename?: 'Video'
                   id: string
                   title?: string | null
-                  channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
                   thumbnailPhoto?: {
                     __typename?: 'StorageDataObject'
                     id: string
@@ -2261,7 +2223,6 @@ export type GetNftActivitiesQuery = {
                   __typename?: 'Video'
                   id: string
                   title?: string | null
-                  channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
                   thumbnailPhoto?: {
                     __typename?: 'StorageDataObject'
                     id: string
@@ -2291,7 +2252,6 @@ export type GetNftActivitiesQuery = {
               __typename?: 'Video'
               id: string
               title?: string | null
-              channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
               thumbnailPhoto?: {
                 __typename?: 'StorageDataObject'
                 id: string
@@ -2392,7 +2352,6 @@ export type GetNftActivitiesQuery = {
               __typename?: 'Video'
               id: string
               title?: string | null
-              channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
               thumbnailPhoto?: {
                 __typename?: 'StorageDataObject'
                 id: string
@@ -2602,7 +2561,6 @@ export type GetNftActivitiesQuery = {
                   __typename?: 'Video'
                   id: string
                   title?: string | null
-                  channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
                   thumbnailPhoto?: {
                     __typename?: 'StorageDataObject'
                     id: string
@@ -2873,7 +2831,6 @@ export type GetNftActivitiesQuery = {
               __typename?: 'Video'
               id: string
               title?: string | null
-              channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
               thumbnailPhoto?: {
                 __typename?: 'StorageDataObject'
                 id: string
@@ -2901,7 +2858,6 @@ export type GetNftActivitiesQuery = {
               __typename?: 'Video'
               id: string
               title?: string | null
-              channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
               thumbnailPhoto?: {
                 __typename?: 'StorageDataObject'
                 id: string
@@ -3002,7 +2958,6 @@ export type GetNftActivitiesQuery = {
               __typename?: 'Video'
               id: string
               title?: string | null
-              channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
               thumbnailPhoto?: {
                 __typename?: 'StorageDataObject'
                 id: string
@@ -3138,7 +3093,6 @@ export type GetNftActivitiesQuery = {
                   __typename?: 'Video'
                   id: string
                   title?: string | null
-                  channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
                   thumbnailPhoto?: { __typename?: 'StorageDataObject'; id: string } | null
                 }
               }
@@ -3411,6 +3365,7 @@ export const GetNotificationsDocument = gql`
       data {
         ... on AuctionBidMadeEventData {
           bid {
+            amount
             bidder {
               ...BasicMembershipFields
             }
@@ -3424,11 +3379,6 @@ export const GetNotificationsDocument = gql`
                 video {
                   id
                   title
-                  channel {
-                    ownerMember {
-                      id
-                    }
-                  }
                 }
               }
             }
@@ -3446,11 +3396,6 @@ export const GetNotificationsDocument = gql`
             video {
               id
               title
-              channel {
-                ownerMember {
-                  id
-                }
-              }
             }
           }
         }
@@ -3487,11 +3432,6 @@ export const GetNotificationsDocument = gql`
                 video {
                   id
                   title
-                  channel {
-                    ownerMember {
-                      id
-                    }
-                  }
                 }
               }
             }
@@ -3510,11 +3450,6 @@ export const GetNotificationsDocument = gql`
                 video {
                   id
                   title
-                  channel {
-                    ownerMember {
-                      id
-                    }
-                  }
                 }
               }
             }
@@ -3529,11 +3464,6 @@ export const GetNotificationsDocument = gql`
             video {
               id
               title
-              channel {
-                ownerMember {
-                  id
-                }
-              }
             }
             parentComment {
               id
@@ -3949,11 +3879,6 @@ export const GetNftActivitiesDocument = gql`
             auction {
               nft {
                 video {
-                  channel {
-                    ownerMember {
-                      id
-                    }
-                  }
                   id
                   title
                   thumbnailPhoto {
@@ -3976,11 +3901,6 @@ export const GetNftActivitiesDocument = gql`
             auction {
               nft {
                 video {
-                  channel {
-                    ownerMember {
-                      id
-                    }
-                  }
                   id
                   title
                   thumbnailPhoto {
@@ -4000,11 +3920,6 @@ export const GetNftActivitiesDocument = gql`
           }
           nft {
             video {
-              channel {
-                ownerMember {
-                  id
-                }
-              }
               id
               title
               thumbnailPhoto {
@@ -4025,11 +3940,6 @@ export const GetNftActivitiesDocument = gql`
             auction {
               nft {
                 video {
-                  channel {
-                    ownerMember {
-                      id
-                    }
-                  }
                   id
                   title
                   thumbnailPhoto {
@@ -4050,11 +3960,6 @@ export const GetNftActivitiesDocument = gql`
             auction {
               nft {
                 video {
-                  channel {
-                    ownerMember {
-                      id
-                    }
-                  }
                   id
                   title
                   thumbnailPhoto {
@@ -4114,11 +4019,6 @@ export const GetNftActivitiesDocument = gql`
           price
           nft {
             video {
-              channel {
-                ownerMember {
-                  id
-                }
-              }
               id
               title
               thumbnailPhoto {
@@ -4138,11 +4038,6 @@ export const GetNftActivitiesDocument = gql`
             auction {
               nft {
                 video {
-                  channel {
-                    ownerMember {
-                      id
-                    }
-                  }
                   id
                   title
                   thumbnailPhoto {
@@ -4156,11 +4051,6 @@ export const GetNftActivitiesDocument = gql`
         ... on BuyNowCanceledEventData {
           nft {
             video {
-              channel {
-                ownerMember {
-                  id
-                }
-              }
               id
               title
               thumbnailPhoto {
@@ -4197,11 +4087,6 @@ export const GetNftActivitiesDocument = gql`
           newPrice
           nft {
             video {
-              channel {
-                ownerMember {
-                  id
-                }
-              }
               id
               title
               thumbnailPhoto {
@@ -4216,11 +4101,6 @@ export const GetNftActivitiesDocument = gql`
         ... on NftIssuedEventData {
           nft {
             video {
-              channel {
-                ownerMember {
-                  id
-                }
-              }
               id
               title
               thumbnailPhoto {

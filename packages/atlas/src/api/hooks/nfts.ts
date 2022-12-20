@@ -1,6 +1,5 @@
 import { QueryHookOptions } from '@apollo/client'
 import BN from 'bn.js'
-import { useMemo } from 'react'
 
 import {
   BasicBidFieldsFragment,
@@ -150,14 +149,9 @@ export const useNftHistory = (
 ) => {
   const { data, ...rest } = useGetNftHistoryQuery({ variables: { nftId: id || '' }, skip: !id, ...opts })
 
-  const sortedEvents = useMemo(() => {
-    const allEvents = data?.events || []
-
-    return allEvents.sort((e1, e2) => e2.timestamp.getTime() - e1.timestamp.getTime())
-  }, [data])
-
   return {
-    events: sortedEvents,
+    // todo make sure it's working and it's properly sorted
+    events: data?.events,
     ...rest,
   }
 }
