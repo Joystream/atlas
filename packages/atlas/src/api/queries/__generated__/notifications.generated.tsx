@@ -13,6 +13,7 @@ export type GetNotificationsQueryVariables = Types.Exact<{
   channelId: Types.Scalars['String']
   memberId: Types.Scalars['String']
   limit: Types.Scalars['Int']
+  orderBy?: Types.InputMaybe<Array<Types.EventOrderByInput> | Types.EventOrderByInput>
 }>
 
 export type GetNotificationsQuery = {
@@ -641,6 +642,7 @@ export type GetNotificationsQuery = {
 
 export type GetNftHistoryQueryVariables = Types.Exact<{
   nftId: Types.Scalars['String']
+  orderBy?: Types.InputMaybe<Array<Types.EventOrderByInput> | Types.EventOrderByInput>
 }>
 
 export type GetNftHistoryQuery = {
@@ -1722,6 +1724,7 @@ export type GetNftHistoryQuery = {
 export type GetNftActivitiesQueryVariables = Types.Exact<{
   memberId: Types.Scalars['String']
   limit: Types.Scalars['Int']
+  orderBy?: Types.InputMaybe<Array<Types.EventOrderByInput> | Types.EventOrderByInput>
 }>
 
 export type GetNftActivitiesQuery = {
@@ -3311,10 +3314,15 @@ export type GetNftActivitiesQuery = {
 }
 
 export const GetNotificationsDocument = gql`
-  query GetNotifications($channelId: String!, $memberId: String!, $limit: Int!) {
+  query GetNotifications(
+    $channelId: String!
+    $memberId: String!
+    $limit: Int!
+    $orderBy: [EventOrderByInput!] = [timestamp_DESC]
+  ) {
     events(
       limit: $limit
-      orderBy: timestamp_DESC
+      orderBy: $orderBy
       where: {
         OR: [
           { data: { isTypeOf_eq: "AuctionBidMadeEventData", nftOwner: { member: { id_eq: $memberId } } } }
@@ -3495,6 +3503,7 @@ export const GetNotificationsDocument = gql`
  *      channelId: // value for 'channelId'
  *      memberId: // value for 'memberId'
  *      limit: // value for 'limit'
+ *      orderBy: // value for 'orderBy'
  *   },
  * });
  */
@@ -3514,9 +3523,9 @@ export type GetNotificationsQueryHookResult = ReturnType<typeof useGetNotificati
 export type GetNotificationsLazyQueryHookResult = ReturnType<typeof useGetNotificationsLazyQuery>
 export type GetNotificationsQueryResult = Apollo.QueryResult<GetNotificationsQuery, GetNotificationsQueryVariables>
 export const GetNftHistoryDocument = gql`
-  query GetNftHistory($nftId: String!) {
+  query GetNftHistory($nftId: String!, $orderBy: [EventOrderByInput!] = [timestamp_DESC]) {
     events(
-      orderBy: timestamp_DESC
+      orderBy: $orderBy
       where: {
         OR: [
           {
@@ -3707,6 +3716,7 @@ export const GetNftHistoryDocument = gql`
  * const { data, loading, error } = useGetNftHistoryQuery({
  *   variables: {
  *      nftId: // value for 'nftId'
+ *      orderBy: // value for 'orderBy'
  *   },
  * });
  */
@@ -3726,7 +3736,7 @@ export type GetNftHistoryQueryHookResult = ReturnType<typeof useGetNftHistoryQue
 export type GetNftHistoryLazyQueryHookResult = ReturnType<typeof useGetNftHistoryLazyQuery>
 export type GetNftHistoryQueryResult = Apollo.QueryResult<GetNftHistoryQuery, GetNftHistoryQueryVariables>
 export const GetNftActivitiesDocument = gql`
-  query GetNftActivities($memberId: String!, $limit: Int!) {
+  query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [EventOrderByInput!] = [timestamp_DESC]) {
     nftsBought: eventsConnection(
       where: {
         OR: [
@@ -3743,7 +3753,7 @@ export const GetNftActivitiesDocument = gql`
           { data: { isTypeOf_eq: "NftBoughtEventData", buyer: { id_eq: $memberId } } }
         ]
       }
-      orderBy: timestamp_DESC
+      orderBy: $orderBy
     ) {
       totalCount
     }
@@ -3762,7 +3772,7 @@ export const GetNftActivitiesDocument = gql`
           { data: { previousNftOwner: { channel: { ownerMember: { id_eq: $memberId } } } } }
         ]
       }
-      orderBy: timestamp_DESC
+      orderBy: $orderBy
     ) {
       totalCount
     }
@@ -3774,19 +3784,19 @@ export const GetNftActivitiesDocument = gql`
           { data: { nftOwner: { channel: { ownerMember: { id_eq: $memberId } } } } }
         ]
       }
-      orderBy: timestamp_DESC
+      orderBy: $orderBy
     ) {
       totalCount
     }
     nftsBidded: eventsConnection(
       where: { data: { isTypeOf_eq: "AuctionBidMadeEventData", bid: { bidder: { id_eq: $memberId } } } }
-      orderBy: timestamp_DESC
+      orderBy: $orderBy
     ) {
       totalCount
     }
     events(
       limit: $limit
-      orderBy: timestamp_DESC
+      orderBy: $orderBy
       where: {
         OR: [
           {
@@ -4134,6 +4144,7 @@ export const GetNftActivitiesDocument = gql`
  *   variables: {
  *      memberId: // value for 'memberId'
  *      limit: // value for 'limit'
+ *      orderBy: // value for 'orderBy'
  *   },
  * });
  */

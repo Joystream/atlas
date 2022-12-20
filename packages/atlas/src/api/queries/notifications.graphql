@@ -9,10 +9,15 @@
 # TODO: Check performance?
 
 # CHANGE: ID is now `String`
-query GetNotifications($channelId: String!, $memberId: String!, $limit: Int!) {
+query GetNotifications(
+  $channelId: String!
+  $memberId: String!
+  $limit: Int!
+  $orderBy: [EventOrderByInput!] = [timestamp_DESC]
+) {
   events(
     limit: $limit
-    orderBy: timestamp_DESC # CHANGE: `timestamp` now used instead of `createdAt` (which is no longer available)
+    orderBy: $orderBy # CHANGE: `timestamp` now used instead of `createdAt` (which is no longer available)
     where: {
       OR: [
         { data: { isTypeOf_eq: "AuctionBidMadeEventData", nftOwner: { member: { id_eq: $memberId } } } }
@@ -177,10 +182,10 @@ query GetNotifications($channelId: String!, $memberId: String!, $limit: Int!) {
 }
 
 # CHANGE: ID is now `String`
-query GetNftHistory($nftId: String!) {
+query GetNftHistory($nftId: String!, $orderBy: [EventOrderByInput!] = [timestamp_DESC]) {
   # Note that `orderBy` and `limit` now applies to all events together, not on per-type basis
   events(
-    orderBy: timestamp_DESC # CHANGE: `timestamp` now used instead of `createdAt` (which is no longer available)
+    orderBy: $orderBy # CHANGE: `timestamp` now used instead of `createdAt` (which is no longer available)
     where: {
       OR: [
         {
@@ -372,7 +377,7 @@ query GetNftHistory($nftId: String!) {
 }
 
 # CHANGE: ID is now `String`
-query GetNftActivities($memberId: String!, $limit: Int!) {
+query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [EventOrderByInput!] = [timestamp_DESC]) {
   # COUNT QUERIES:
   nftsBought: eventsConnection(
     where: {
@@ -390,7 +395,7 @@ query GetNftActivities($memberId: String!, $limit: Int!) {
         { data: { isTypeOf_eq: "NftBoughtEventData", buyer: { id_eq: $memberId } } }
       ]
     }
-    orderBy: timestamp_DESC
+    orderBy: $orderBy
   ) {
     totalCount
   }
@@ -410,7 +415,7 @@ query GetNftActivities($memberId: String!, $limit: Int!) {
         { data: { previousNftOwner: { channel: { ownerMember: { id_eq: $memberId } } } } }
       ]
     }
-    orderBy: timestamp_DESC
+    orderBy: $orderBy
   ) {
     totalCount
   }
@@ -423,14 +428,14 @@ query GetNftActivities($memberId: String!, $limit: Int!) {
         { data: { nftOwner: { channel: { ownerMember: { id_eq: $memberId } } } } }
       ]
     }
-    orderBy: timestamp_DESC
+    orderBy: $orderBy
   ) {
     totalCount
   }
 
   nftsBidded: eventsConnection(
     where: { data: { isTypeOf_eq: "AuctionBidMadeEventData", bid: { bidder: { id_eq: $memberId } } } }
-    orderBy: timestamp_DESC
+    orderBy: $orderBy
   ) {
     totalCount
   }
@@ -438,7 +443,7 @@ query GetNftActivities($memberId: String!, $limit: Int!) {
   # DATA QUERY
   events(
     limit: $limit
-    orderBy: timestamp_DESC # CHANGE: `timestamp` now used instead of `createdAt` (which is no longer available)
+    orderBy: $orderBy # CHANGE: `timestamp` now used instead of `createdAt` (which is no longer available)
     where: {
       OR: [
         # Nfts bought
