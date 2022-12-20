@@ -404,8 +404,11 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           description: (
             <>
               <DescriptionText variant="t200" as="span" color="inherit">
-                You've successfully enrolled to {APP_NAME} Youtube Partnership Programme! You already qualified for the
-                new sign up reward of {YPP_REWARD} {TOKEN} tokens.
+                You've successfully enrolled to {APP_NAME} YouTube Partnership Programme! You already qualified for the
+                new sign up reward of {YPP_REWARD} {TOKEN} tokens. Your YouTube Videos will now be synced to your{' '}
+                {APP_NAME}
+                Channel, and you will partake in qualifying for other rewards of the programme for content upload and
+                referrals.
               </DescriptionText>
               <DescriptionText variant="t200" as="span" margin={{ top: 2 }} color="inherit">
                 All information around your activity in the program can be found in the{' '}
