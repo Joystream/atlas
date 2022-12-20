@@ -14,6 +14,7 @@ import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { Select, SelectItem } from '@/components/_inputs/Select'
 import { Loader } from '@/components/_loaders/Loader'
+import { atlasConfig } from '@/config'
 import { displayCategories } from '@/config/categories'
 import { EMAIL_PATTERN } from '@/config/regex'
 import { useAsset } from '@/providers/assets/assets.hooks'
@@ -153,7 +154,7 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
         optional
         disableErrorAnimation={document.activeElement === titleInputRef.current}
         label="Referrer"
-        description="Enter the title of the Joystream channel which recommended the program to you."
+        description={`Enter the title of the ${atlasConfig.general.appName} channel which recommended the program to you.`}
         error={errors.referrerChannelTitle?.message}
       >
         <Input

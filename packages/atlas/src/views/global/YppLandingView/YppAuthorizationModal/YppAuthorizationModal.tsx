@@ -23,7 +23,7 @@ import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { useYppStore } from '@/providers/ypp/ypp.store'
 import { SentryLogger } from '@/utils/logs'
-import { formatNumber } from '@/utils/number'
+import { pluralizeNoun } from '@/utils/misc'
 
 import { useGetYppChannelRequirments, useYppGoogleAuth } from './YppAuthorizationModal.hooks'
 import {
@@ -294,11 +294,11 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         ),
       },
       {
-        text: `Your YouTube channel has at least ${formatNumber(
-          fetchedChannelRequirements?.MINIMUM_VIDEO_COUNT || 0
-        )} video${
-          fetchedChannelRequirements?.MINIMUM_VIDEO_COUNT !== 1 ? 's' : ''
-        }, all published at least ${convertHoursRequirementTime(
+        text: `Your YouTube channel has at least ${pluralizeNoun(
+          fetchedChannelRequirements?.MINIMUM_VIDEO_COUNT ?? 0,
+          'video',
+          { formatCount: true }
+        )}, all published at least ${convertHoursRequirementTime(
           fetchedChannelRequirements?.MINIMUM_VIDEO_AGE_HOURS || 0
         )} ago`,
         fulfilled: !ytRequirmentsErrors.some(
@@ -306,9 +306,11 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         ),
       },
       {
-        text: `Your YouTube channel has at least ${formatNumber(
-          fetchedChannelRequirements?.MINIMUM_SUBSCRIBERS_COUNT || 0
-        )} subscriber${fetchedChannelRequirements?.MINIMUM_SUBSCRIBERS_COUNT !== 1 ? 's' : ''}`,
+        text: `Your YouTube channel has at least ${pluralizeNoun(
+          fetchedChannelRequirements?.MINIMUM_SUBSCRIBERS_COUNT ?? 0,
+          'subscriber',
+          { formatCount: true }
+        )}`,
         fulfilled: !ytRequirmentsErrors.some(
           (error) => error === YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_SUBSCRIBERS
         ),
