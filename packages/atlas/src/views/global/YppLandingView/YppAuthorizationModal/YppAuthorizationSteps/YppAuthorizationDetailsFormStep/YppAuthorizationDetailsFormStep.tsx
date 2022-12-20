@@ -11,9 +11,7 @@ import { Avatar, AvatarProps } from '@/components/Avatar'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { InputAutocomplete } from '@/components/_inputs/InputAutocomplete'
-import { Select, SelectItem } from '@/components/_inputs/Select'
 import { atlasConfig } from '@/config'
-import { displayCategories } from '@/config/categories'
 import { EMAIL_PATTERN } from '@/config/regex'
 import { useAsset } from '@/providers/assets/assets.hooks'
 
@@ -23,7 +21,6 @@ export type DetailsFormData = {
   email: string | undefined
   referrerChannelTitle: string | undefined
   referrerChannelId: string | undefined
-  videoCategoryId: string | undefined
 }
 
 export const YppAuthorizationDetailsFormStep: FC = () => {
@@ -34,12 +31,6 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
     formState: { errors },
     setValue,
   } = useFormContext<DetailsFormData>()
-
-  const categoriesSelectItems: SelectItem[] =
-    displayCategories?.map((c) => ({
-      name: c.name || 'Unknown category',
-      value: c.defaultVideoCategory,
-    })) || []
 
   return (
     <FormFieldsWrapper>
@@ -67,31 +58,6 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
               },
             },
           })}
-        />
-      </FormField>
-      <FormField
-        label="Category for videos"
-        description="Choose one of the categories to be assigned to the imported videos by default. You can change it for each video later."
-        error={errors.videoCategoryId?.message}
-      >
-        <Controller
-          control={control}
-          name="videoCategoryId"
-          rules={{
-            required: {
-              value: true,
-              message: 'Select a video category.',
-            },
-          }}
-          render={({ field: { value, onChange, ref } }) => (
-            <Select
-              items={categoriesSelectItems}
-              error={!!errors.videoCategoryId}
-              onChange={onChange}
-              value={value}
-              ref={ref}
-            />
-          )}
         />
       </FormField>
       <Controller
