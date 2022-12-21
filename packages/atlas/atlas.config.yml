@@ -41,6 +41,7 @@ features:
     googleConsoleClientId: '$VITE_GOOGLE_CONSOLE_CLIENT_ID'
     youtubeSyncApiUrl: '$VITE_YOUTUBE_SYNC_API_URL'
     youtubeCollaboratorMemberId: '$VITE_YOUTUBE_COLLABORATOR_MEMBER_ID'
+    enrollmentReward: 200 # Amount for successful enrollment in YPP in joystream.tokenTicker units.
     tiersDefinition: # Tiers for youtube partner program rewards. You can provide maximum three tiers. Each tier should has own multiplier.
       tiers:
         - minimumSubscribers: 0
