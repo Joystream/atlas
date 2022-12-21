@@ -2,6 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { SvgAlertsInformative24 } from '@/assets/icons'
+import { Banner } from '@/components/Banner'
 import { cVar, media, sizes } from '@/styles'
 
 export const Header = styled.header`
@@ -82,16 +83,6 @@ export const StyledSvgAlertsInformative24 = styled(SvgAlertsInformative24)`
   }
 `
 
-export const SuspendedInfoWrapper = styled.div`
-  width: 100%;
-  padding: ${sizes(6)};
-  border: 1px solid ${cVar('colorCoreNeutral600')};
+export const StyledBanner = styled(Banner)`
   margin-bottom: ${sizes(6)};
-`
-
-export const SuspendedTitle = styled.div`
-  display: grid;
-  grid-template-columns: 24px auto;
-  column-gap: 10px;
-  padding-bottom: ${sizes(2)};
 `
