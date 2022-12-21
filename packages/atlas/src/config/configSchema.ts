@@ -35,7 +35,7 @@ export const configSchema = z.object({
       googleOauthEndpoint: z.string().nullable(),
       youtubeSyncApiUrl: z.string().nullable(),
       youtubeCollaboratorMemberId: z.string().nullable(),
-      enrollmentReward: z.number(),
+      enrollmentReward: z.number().nullable(),
       tiersDefinition: z
         .object({
           tiersTooltip: z.string().nullable(),
