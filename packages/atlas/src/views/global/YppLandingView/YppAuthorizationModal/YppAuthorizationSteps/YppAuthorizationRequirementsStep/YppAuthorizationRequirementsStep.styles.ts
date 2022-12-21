@@ -8,6 +8,7 @@ export const StyledList = styled.ul`
   padding-left: 0;
   display: grid;
   gap: ${sizes(4)};
+  padding-right: 64px;
 `
 
 export const ListItem = styled(Text)`
