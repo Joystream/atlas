@@ -12,6 +12,7 @@ import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { InputAutocomplete } from '@/components/_inputs/InputAutocomplete'
 import { Select, SelectItem } from '@/components/_inputs/Select'
+import { atlasConfig } from '@/config'
 import { displayCategories } from '@/config/categories'
 import { EMAIL_PATTERN } from '@/config/regex'
 import { useAsset } from '@/providers/assets/assets.hooks'
@@ -69,7 +70,7 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
       </FormField>
       <FormField
         label="Category for videos"
-        description="We need to assign your videos to one of categories below. You can change the category for each video later."
+        description="Choose one of the categories to be assigned to the imported videos by default. You can change it for each video later."
         error={errors.videoCategoryId?.message}
       >
         <Controller
@@ -82,7 +83,13 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
             },
           }}
           render={({ field: { value, onChange, ref } }) => (
-            <Select items={categoriesSelectItems} onChange={onChange} value={value} ref={ref} />
+            <Select
+              items={categoriesSelectItems}
+              error={!!errors.videoCategoryId}
+              onChange={onChange}
+              value={value}
+              ref={ref}
+            />
           )}
         />
       </FormField>
@@ -101,7 +108,7 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
           <FormField
             optional
             label="Referrer"
-            description="Enter the title of the Joystream channel which recommended the program to you."
+            description={`Enter the title of the ${atlasConfig.general.appName} channel which recommended the program to you.`}
             error={errors.referrerChannelTitle?.message}
           >
             <InputAutocomplete<GetBasicChannelsQuery, GetBasicChannelsQueryVariables, BasicChannelFieldsFragment>
@@ -114,7 +121,7 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
                   label: channel.title ?? '',
                 }))
               }
-              placeholder="Enter channel name"
+              placeholder="Channel Name"
               value={value ?? ''}
               onChange={onChange}
               onItemSelect={(item) => {

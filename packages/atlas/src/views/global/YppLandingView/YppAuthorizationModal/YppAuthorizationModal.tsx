@@ -23,7 +23,7 @@ import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { useYppStore } from '@/providers/ypp/ypp.store'
 import { SentryLogger } from '@/utils/logs'
-import { formatNumber } from '@/utils/number'
+import { pluralizeNoun } from '@/utils/misc'
 
 import { useGetYppChannelRequirments, useYppGoogleAuth } from './YppAuthorizationModal.hooks'
 import {
@@ -297,9 +297,11 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         ),
       },
       {
-        text: `Your YouTube channel has at least ${formatNumber(
-          fetchedChannelRequirements?.MINIMUM_VIDEO_COUNT || 0
-        )} videos, all published at least ${convertHoursRequirementTime(
+        text: `Your YouTube channel has at least ${pluralizeNoun(
+          fetchedChannelRequirements?.MINIMUM_VIDEO_COUNT ?? 0,
+          'video',
+          { formatCount: true }
+        )}, all published at least ${convertHoursRequirementTime(
           fetchedChannelRequirements?.MINIMUM_VIDEO_AGE_HOURS || 0
         )} ago`,
         fulfilled: !ytRequirmentsErrors.some(
@@ -307,9 +309,11 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         ),
       },
       {
-        text: `Your YouTube channel has at least ${formatNumber(
-          fetchedChannelRequirements?.MINIMUM_SUBSCRIBERS_COUNT || 0
-        )} subscribers and subscriptions are made public.`,
+        text: `Your YouTube channel has at least ${pluralizeNoun(
+          fetchedChannelRequirements?.MINIMUM_SUBSCRIBERS_COUNT ?? 0,
+          'subscriber',
+          { formatCount: true }
+        )} and subscriptions are made public.`,
         fulfilled: !ytRequirmentsErrors.some(
           (error) => error === YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_SUBSCRIBERS
         ),
@@ -360,7 +364,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       case 'details':
         return {
           title: 'Details',
-          description: 'We need your email address to send you payment information. No spam or marketing materials.',
+          description: 'Provide additional information to set up your program membership.',
           primaryButton: {
             onClick: () => {
               handleSubmitDetailsForm()
