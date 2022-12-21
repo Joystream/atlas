@@ -403,7 +403,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           title: 'Congratulations!',
           description: (
             <DescriptionText variant="t200" as="span" color="inherit">
-              Your channel is now successfully enrolled to {APP_NAME} YouTube Partnership Programme!{' '}
+              Your channel is now successfully enrolled to {APP_NAME} YouTube Partnership Program!{' '}
               {YPP_REWARD
                 ? `You already qualified for the new sign up reward of ${YPP_REWARD} ${TOKEN} tokens. Go to Dashboard for more information.`
                 : 'Go to Dashboard for more information.'}
