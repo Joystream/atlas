@@ -63,7 +63,7 @@ const CUSTOM_LICENSE_CODE = 1000
 const SCROLL_TIMEOUT = 700
 const MINT_NFT_TIMEOUT = 1200
 const MIN_TITLE_LENGTH = 3
-const MAX_TITLE_LENGTH = 60
+const MAX_TITLE_LENGTH = 84
 const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((license) => ({
   name: license.name,
   value: license.code,
