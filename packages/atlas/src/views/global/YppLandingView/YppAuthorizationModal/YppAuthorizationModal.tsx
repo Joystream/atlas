@@ -118,7 +118,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   const { displaySnackbar } = useSnackbar()
 
   const {
-    handleAuthorizeClick,
+    handleAuthorizeClick: _handleAuthorizeClick,
     ytRequirmentsErrors,
     ytResponseData,
     setYtRequirmentsErrors,
@@ -252,8 +252,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     [selectedChannel]
   )
 
-  useEffect(() => {
-    if (!isSelectedChannelValid && currentStep === 'requirements') {
+  const handleAuthorizeClick = useCallback(() => {
+    if (!isSelectedChannelValid) {
       displaySnackbar({
         title: `Your ${APP_NAME} channel doesn't meet conditions`,
         description: `Your ${APP_NAME} channel must have a custom avatar, cover image, and description set in order to be enrolled in the program.`,
@@ -266,8 +266,11 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           navigate(absoluteRoutes.studio.editChannel())
         },
       })
+      return
     }
-  }, [currentStep, displaySnackbar, isSelectedChannelValid, navigate, selectedChannel, setActiveUser])
+
+    _handleAuthorizeClick()
+  }, [_handleAuthorizeClick, displaySnackbar, isSelectedChannelValid, navigate, selectedChannel, setActiveUser])
 
   const convertHoursRequirementTime = (hours: number) => {
     if (hours > 24 * 30) {
@@ -310,7 +313,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           fetchedChannelRequirements?.MINIMUM_SUBSCRIBERS_COUNT ?? 0,
           'subscriber',
           { formatCount: true }
-        )}`,
+        )} and subscriptions are made public.`,
         fulfilled: !ytRequirmentsErrors.some(
           (error) => error === YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_SUBSCRIBERS
         ),
@@ -345,7 +348,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           primaryButton: {
             text: 'Authorize with YouTube',
             onClick: handleAuthorizeClick,
-            disabled: !isSelectedChannelValid,
           },
           component: <YppAuthorizationRequirementsStep requirments={requirments} />,
         }
@@ -450,7 +452,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     selectedChannelId,
     handleSelectChannel,
     handleAuthorizeClick,
-    isSelectedChannelValid,
     requirments,
     handleAcceptTermsAndSubmit,
     smMatch,
