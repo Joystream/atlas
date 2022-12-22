@@ -16,6 +16,7 @@ export type YppSyncedChannel = {
   shouldBeIngested: boolean
   isSuspended: boolean
   joystreamChannelId: number
+  videoCategoryId: string
   thumbnails: {
     default: string
     medium: string
@@ -73,6 +74,7 @@ export const useGetYppSyncedChannels = () => {
   return {
     syncedChannels,
     unsyncedChannels,
+    refetchSyncedChannels: getSyncedChannels,
     isLoading: isLoading || membershipsLoading || isAuthLoading,
     currentChannel: syncedChannels?.find(
       (syncedChannels) => syncedChannels.joystreamChannelId.toString() === channelId

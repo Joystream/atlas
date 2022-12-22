@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SvgActionArrowRight, SvgAlertsInformative24 } from '@/assets/icons'
+import { SvgActionArrowRight, SvgAlertsInformative24, SvgAlertsWarning32 } from '@/assets/icons'
 import { Tabs } from '@/components/Tabs'
 import { Banner } from '@/components/Banner'
 import { cVar, media, sizes } from '@/styles'
@@ -111,6 +111,14 @@ export const StyledSvgActionArrowRight = styled(SvgActionArrowRight)`
 
   > *:last-child {
     margin-left: 2px;
+  }
+`
+
+export const StyledSvgAlertsWarning32 = styled(SvgAlertsWarning32)`
+  margin-bottom: 24px;
+
+  > * {
+    fill: ${cVar('colorTextError')};
   }
 `
 

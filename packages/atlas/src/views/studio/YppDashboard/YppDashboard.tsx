@@ -1,4 +1,5 @@
-import { FC, useMemo, useState } from 'react'
+import axios from 'axios'
+import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 
 import { SvgActionNewTab, SvgAlertsError24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
@@ -16,9 +17,13 @@ import { displayCategories } from '@/config/categories'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useConfirmationModal } from '@/providers/confirmationModal'
+import { useSnackbar } from '@/providers/snackbars'
 import { useUser } from '@/providers/user/user.hooks'
+import { SentryLogger } from '@/utils/logs'
 import { configYppIconMapper } from '@/views/global/YppLandingView/YppFooter'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
+import { StyledActionBar } from '@/views/viewer/EditMembershipView/EditMembershipView.styles'
 
 import { REWARDS, TIERS } from './YppDashboard.config'
 import {
@@ -28,6 +33,7 @@ import {
   SettingsInputsWrapper,
   StyledSvgActionArrowRight,
   StyledSvgAlertsInformative24,
+  StyledSvgAlertsWarning32,
   StyledTab,
   TierCount,
   TierDescription,
@@ -49,12 +55,16 @@ export const YppDashboard: FC = () => {
   const { channelId } = useUser()
   const [currentVideosTab, setCurrentVideosTab] = useState(0)
   const { copyToClipboard } = useClipboard()
-  const [category, setCategory] = useState<string | null | undefined>('')
+  const { currentChannel, isLoading, refetchSyncedChannels } = useGetYppSyncedChannels()
+  const { displaySnackbar } = useSnackbar()
+
+  const [category, setCategory] = useState<string | null | undefined>(currentChannel?.videoCategoryId)
   const [isSync, setIsSync] = useState<boolean>(true)
+  // todo: add check for isSync when spported by backend
+  const areSettingsChanged = currentChannel ? currentChannel.videoCategoryId !== category : false
 
-  const { currentChannel, isLoading } = useGetYppSyncedChannels()
   const subscribersCount = currentChannel?.subscribersCount || 0
-
+  console.log(currentChannel, 'sss', areSettingsChanged, currentChannel?.videoCategoryId, category)
   const currentTier = TIERS.reduce((prev, current, idx) => {
     if (subscribersCount >= (current?.subscribers || 0)) {
       return idx
@@ -66,6 +76,63 @@ export const YppDashboard: FC = () => {
   const tiersTooltip = atlasConfig.features.ypp.tiersDefinition?.tiersTooltip
 
   const mappedTabs = TABS.map((tab) => ({ name: tab }))
+
+  const [openModal, closeModal] = useConfirmationModal({
+    title: 'Leave the program?',
+    headerIcon: <StyledSvgAlertsWarning32 />,
+    secondaryButton: {
+      text: 'Cancel',
+      variant: 'secondary',
+      onClick: () => closeModal(),
+    },
+    description:
+      'Are you sure you want to leave the program? You will no longer receive rewards for performing the tasks, and your future YouTube videos will not be imported automatically to Joystream. ',
+  })
+
+  // todo
+  const handleLeaveTx = () => undefined
+
+  const openModalOptions = {
+    title: 'Leave the program?',
+    headerIcon: <StyledSvgAlertsWarning32 />,
+    primaryButton: {
+      text: 'Leave the program',
+      variant: 'destructive' as const,
+      onClick: () => handleLeaveTx(),
+    },
+    secondaryButton: {
+      text: 'Cancel',
+      variant: 'secondary' as const,
+      onClick: () => closeModal(),
+    },
+    description:
+      'Are you sure you want to leave the program? You will no longer receive rewards for performing the tasks, and your future YouTube videos will not be imported automatically to Joystream. ',
+  }
+
+  const handleChangeSettings = useCallback(async () => {
+    console.log('hmmm')
+    if (!currentChannel) return
+    try {
+      const data = await axios.put(
+        `${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${currentChannel.joystreamChannelId}`,
+        {
+          category,
+          isSync,
+        }
+      )
+
+      if (data.status === 200) {
+        displaySnackbar({
+          title: 'Settings updated successfully',
+          description: 'Your videos will no longer be synced with your YouTube channel.',
+          iconType: 'success',
+        })
+        refetchSyncedChannels()
+      }
+    } catch (e) {
+      SentryLogger.error('Error while updating YPP setting: ', e)
+    }
+  }, [currentChannel?.joystreamChannelId, closeModal, refetchSyncedChannels, displaySnackbar])
 
   const content = useMemo(() => {
     switch (TABS[currentVideosTab]) {
@@ -125,49 +192,94 @@ export const YppDashboard: FC = () => {
         )
       case 'Settings':
         return (
-          <SettingsInputsWrapper>
-            <FormField
-              label="YouTube Sync"
-              description={
-                <>
-                  {`With YouTube Sync enabled, ${atlasConfig.general.appName} will import videos from your YouTube channel over to Joystream.`}
-                  <Button _textOnly iconPlacement="right" icon={<StyledSvgActionArrowRight />}>
-                    Learn more
-                  </Button>
-                </>
-              }
-            >
-              <OptionCardGroupRadio
-                options={[
-                  { value: true, label: 'Sync YouTube videos', caption: 'Imports past and future videos' },
-                  { value: false, label: "Don't sync YouTube videos", caption: 'Pauses importing of future videos' },
-                ]}
-                selectedValue={isSync}
-                onChange={setIsSync as any}
-                direction={!mdMatch ? 'vertical' : 'horizontal'}
+          <>
+            <SettingsInputsWrapper>
+              <FormField
+                label="YouTube Sync"
+                description={
+                  <>
+                    {`With YouTube Sync enabled, ${atlasConfig.general.appName} will import videos from your YouTube channel over to Joystream. `}
+                    <Button _textOnly iconPlacement="right" icon={<StyledSvgActionArrowRight />}>
+                      Learn more
+                    </Button>
+                  </>
+                }
+              >
+                <OptionCardGroupRadio
+                  options={[
+                    { value: true, label: 'Sync YouTube videos', caption: 'Imports past and future videos' },
+                    { value: false, label: "Don't sync YouTube videos", caption: 'Pauses importing of future videos' },
+                  ]}
+                  selectedValue={isSync}
+                  onChange={setIsSync as (value: string | number | boolean) => void}
+                  direction={!mdMatch ? 'vertical' : 'horizontal'}
+                />
+              </FormField>
+              {isSync && (
+                <FormField
+                  label="Category of imported videos"
+                  description="Choose a category to be assigned to the imported videos by default. You can change it for each video later once it’s imported."
+                >
+                  <Select
+                    //todo: uncomment when isSync is supported by backend
+                    // disabled={currentChannel?.isSyncActive}
+                    items={categoriesSelectItems}
+                    onChange={setCategory}
+                    value={category}
+                  />
+                </FormField>
+              )}
+
+              <Divider />
+
+              <FormField
+                label="Danger zone"
+                description="By leaving the program you will no longer receive rewards for performing the tasks, and your future YouTube videos will not be imported automatically to Joystream. You will be able to connect your YouTube channel with another Joystream channel."
+              >
+                <Button
+                  variant="destructive-secondary"
+                  fullWidth
+                  size="large"
+                  onClick={() => openModal(openModalOptions)}
+                >
+                  Leave the program
+                </Button>
+              </FormField>
+            </SettingsInputsWrapper>
+            {areSettingsChanged && (
+              <StyledActionBar
+                isNoneCrypto
+                primaryButton={{
+                  text: 'Publish changes',
+                  onClick: () => handleChangeSettings(),
+                }}
+                secondaryButton={{
+                  text: 'Cancel',
+                  onClick: () => {
+                    setCategory(currentChannel?.videoCategoryId)
+                  },
+                }}
               />
-            </FormField>
-            <FormField
-              label="Category of imported videos"
-              description="Choose a category to be assigned to the imported videos by default. You can change it for each video later once it’s imported."
-            >
-              <Select items={categoriesSelectItems} onChange={setCategory} value={category} />
-            </FormField>
-
-            <Divider />
-
-            <FormField
-              label="Danger zone"
-              description="By leaving the program you will no longer receive rewards for performing the tasks, and your future YouTube videos will not be imported automatically to Joystream. You will be able to connect your YouTube channel with another Joystream channel."
-            >
-              <Button variant="destructive-secondary" fullWidth size="large">
-                Leave the program
-              </Button>
-            </FormField>
-          </SettingsInputsWrapper>
+            )}
+          </>
         )
     }
-  }, [category, channelId, copyToClipboard, currentVideosTab, isSync, mdMatch])
+  }, [
+    category,
+    channelId,
+    copyToClipboard,
+    currentVideosTab,
+    isSync,
+    mdMatch,
+    areSettingsChanged,
+    handleChangeSettings,
+  ])
+
+  useEffect(() => {
+    if (currentChannel) {
+      setCategory(currentChannel.videoCategoryId)
+    }
+  }, [currentChannel])
 
   return (
     <>
