@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { SvgActionInfo, SvgActionNewTab, SvgActionSpeech, SvgActionTokensStack, SvgAlertsError24 } from '@/assets/icons'
+import { SvgActionNewTab, SvgAlertsError24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { Information } from '@/components/Information'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
@@ -9,11 +9,11 @@ import { WidgetTile } from '@/components/WidgetTile'
 import { Button } from '@/components/_buttons/Button'
 import { BenefitCard } from '@/components/_ypp/BenefitCard'
 import { atlasConfig } from '@/config'
-import { absoluteRoutes } from '@/config/routes'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useUser } from '@/providers/user/user.hooks'
+import { configYppIconMapper } from '@/views/global/YppLandingView/YppFooter'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
 
 import { REWARDS, TIERS } from './YppDashboard.config'
@@ -29,7 +29,7 @@ import {
 } from './YppDashboard.styles'
 
 export const YppDashboard: FC = () => {
-  const headTags = useHeadTags('Youtube Partner Program')
+  const headTags = useHeadTags('YouTube Partner Program')
   const mdMatch = useMediaMatch('md')
   const { channelId } = useUser()
 
@@ -93,48 +93,26 @@ export const YppDashboard: FC = () => {
             }
           />
         )}
-
-        <WidgetsWrapper>
-          <WidgetTile
-            title="Notion"
-            text="Program details"
-            icon={<SvgActionInfo />}
-            button={{
-              text: 'Go to Notion',
-              variant: 'primary',
-              _textOnly: true,
-              icon: <SvgActionNewTab />,
-              // todo add correct url here
-              iconPlacement: 'right',
-            }}
-          />
-          <WidgetTile
-            title="Airtable"
-            text="Payments"
-            icon={<SvgActionTokensStack />}
-            button={{
-              text: 'Go to payments',
-              variant: 'primary',
-              to: absoluteRoutes.studio.payments(),
-              _textOnly: true,
-              icon: <SvgActionNewTab />,
-              iconPlacement: 'right',
-            }}
-          />
-          <WidgetTile
-            title="Discord"
-            text="Support"
-            icon={<SvgActionSpeech />}
-            button={{
-              text: 'Go to Discord',
-              variant: 'primary',
-              _textOnly: true,
-              icon: <SvgActionNewTab />,
-              iconPlacement: 'right',
-              to: atlasConfig.general.joystreamDiscordUrl,
-            }}
-          />
-        </WidgetsWrapper>
+        {atlasConfig.features.ypp.widgets && (
+          <WidgetsWrapper>
+            {atlasConfig.features.ypp.widgets.map((widget) => (
+              <WidgetTile
+                icon={widget.icon && configYppIconMapper[widget.icon]}
+                key={widget.title}
+                title={widget.label ?? widget.title}
+                text={widget.title}
+                button={{
+                  text: widget.linkText ?? `Go to ${widget.title}`,
+                  variant: 'primary',
+                  _textOnly: true,
+                  icon: <SvgActionNewTab />,
+                  to: widget.link,
+                  iconPlacement: 'right',
+                }}
+              />
+            ))}
+          </WidgetsWrapper>
+        )}
         <RewardsWrapper>
           {REWARDS?.map((reward) => (
             <BenefitCard

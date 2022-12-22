@@ -21,7 +21,7 @@ import { YppRewardSection } from './YppRewardSection'
 import { YppThreeStepsSection } from './YppThreeStepsSection'
 
 export const YppLandingView: FC = () => {
-  const headTags = useHeadTags('Youtube Partner Program')
+  const headTags = useHeadTags('YouTube Partner Program')
   const [currentStep, setCurrentStep] = useState<YppAuthorizationStepsType>(null)
   const { isLoggedIn, signIn, activeMembership, channelId, walletStatus } = useUser()
   const { setSelectedChannelId, setShouldContinueYppFlow } = useYppStore((store) => store.actions)
