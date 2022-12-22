@@ -79,7 +79,15 @@ export const YppDashboard: FC = () => {
   const [openModal, closeModal] = useConfirmationModal()
 
   // todo
-  const handleLeaveTx = useCallback(() => undefined, [])
+  const handleLeaveTx = useCallback(() => {
+    displaySnackbar({
+      title: 'You left the progam',
+      description:
+        'You are no longer member of the YouTube Partner Program. You can now connect your YouTube channel with another Joystream channel.',
+      iconType: 'success',
+    })
+    closeModal()
+  }, [closeModal, displaySnackbar])
 
   const handleChangeSettings = useCallback(async () => {
     if (!currentChannel) return
