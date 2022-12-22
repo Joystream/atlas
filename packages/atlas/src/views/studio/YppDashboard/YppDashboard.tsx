@@ -64,7 +64,6 @@ export const YppDashboard: FC = () => {
   const areSettingsChanged = currentChannel ? currentChannel.videoCategoryId !== category : false
 
   const subscribersCount = currentChannel?.subscribersCount || 0
-  console.log(currentChannel, 'sss', areSettingsChanged, currentChannel?.videoCategoryId, category)
   const currentTier = TIERS.reduce((prev, current, idx) => {
     if (subscribersCount >= (current?.subscribers || 0)) {
       return idx
@@ -77,40 +76,12 @@ export const YppDashboard: FC = () => {
 
   const mappedTabs = TABS.map((tab) => ({ name: tab }))
 
-  const [openModal, closeModal] = useConfirmationModal({
-    title: 'Leave the program?',
-    headerIcon: <StyledSvgAlertsWarning32 />,
-    secondaryButton: {
-      text: 'Cancel',
-      variant: 'secondary',
-      onClick: () => closeModal(),
-    },
-    description:
-      'Are you sure you want to leave the program? You will no longer receive rewards for performing the tasks, and your future YouTube videos will not be imported automatically to Joystream. ',
-  })
+  const [openModal, closeModal] = useConfirmationModal()
 
   // todo
-  const handleLeaveTx = () => undefined
-
-  const openModalOptions = {
-    title: 'Leave the program?',
-    headerIcon: <StyledSvgAlertsWarning32 />,
-    primaryButton: {
-      text: 'Leave the program',
-      variant: 'destructive' as const,
-      onClick: () => handleLeaveTx(),
-    },
-    secondaryButton: {
-      text: 'Cancel',
-      variant: 'secondary' as const,
-      onClick: () => closeModal(),
-    },
-    description:
-      'Are you sure you want to leave the program? You will no longer receive rewards for performing the tasks, and your future YouTube videos will not be imported automatically to Joystream. ',
-  }
+  const handleLeaveTx = useCallback(() => undefined, [])
 
   const handleChangeSettings = useCallback(async () => {
-    console.log('hmmm')
     if (!currentChannel) return
     try {
       const data = await axios.put(
@@ -132,9 +103,26 @@ export const YppDashboard: FC = () => {
     } catch (e) {
       SentryLogger.error('Error while updating YPP setting: ', e)
     }
-  }, [currentChannel?.joystreamChannelId, closeModal, refetchSyncedChannels, displaySnackbar])
+  }, [currentChannel, category, isSync, displaySnackbar, refetchSyncedChannels])
 
   const content = useMemo(() => {
+    const openModalOptions = {
+      title: 'Leave the program?',
+      headerIcon: <StyledSvgAlertsWarning32 />,
+      primaryButton: {
+        text: 'Leave the program',
+        variant: 'destructive' as const,
+        onClick: () => handleLeaveTx(),
+      },
+      secondaryButton: {
+        text: 'Cancel',
+        variant: 'secondary' as const,
+        onClick: () => closeModal(),
+      },
+      description:
+        'Are you sure you want to leave the program? You will no longer receive rewards for performing the tasks, and your future YouTube videos will not be imported automatically to Joystream. ',
+    }
+
     switch (TABS[currentVideosTab]) {
       case 'Dashboard':
         return (
@@ -265,14 +253,18 @@ export const YppDashboard: FC = () => {
         )
     }
   }, [
-    category,
-    channelId,
-    copyToClipboard,
     currentVideosTab,
+    handleLeaveTx,
+    closeModal,
     isSync,
     mdMatch,
+    category,
     areSettingsChanged,
+    copyToClipboard,
+    channelId,
+    openModal,
     handleChangeSettings,
+    currentChannel?.videoCategoryId,
   ])
 
   useEffect(() => {
