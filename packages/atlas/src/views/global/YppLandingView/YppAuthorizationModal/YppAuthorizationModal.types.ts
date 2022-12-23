@@ -18,6 +18,7 @@ export enum YppAuthorizationErrorCode {
   CHANNEL_CRITERIA_UNMET_SUBSCRIBERS = 'CHANNEL_CRITERIA_UNMET_SUBSCRIBERS',
   CHANNEL_CRITERIA_UNMET_VIDEOS = 'CHANNEL_CRITERIA_UNMET_VIDEOS',
   CHANNEL_CRITERIA_UNMET_CREATION_DATE = 'CHANNEL_CRITERIA_UNMET_CREATION_DATE',
+  YOUTUBE_QUOTA_LIMIT_EXCEEDED = 'YOUTUBE_QUOTA_LIMIT_EXCEEDED',
 }
 
 export type YppRequirementsErrorCode = Omit<
@@ -56,12 +57,18 @@ export type ChannelAleadryRegisteredError = {
   result: number
 }
 
+export type YoutubeQuotaReachedError = {
+  errorCode: YppAuthorizationErrorCode.YOUTUBE_QUOTA_LIMIT_EXCEEDED
+  message: string
+}
+
 export type ChannelVerificationErrorResponse =
   | {
       message: ChannelRequirmentsFailedError[]
     }
   | ChannelNotFoundError
   | ChannelAleadryRegisteredError
+  | YoutubeQuotaReachedError
 
 export type YoutubeResponseData = {
   email: string
