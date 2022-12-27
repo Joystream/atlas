@@ -333,7 +333,7 @@ export const MyVideosView = () => {
               dismissibleId="yppSyncInfo"
               title="YouTube Sync is enabled"
               icon={<SvgAlertsInformative24 />}
-              description={`Whenever you upload video to ${currentChannel.title} YouTube channel, it will automatically appear here after a ashort while. You can change this setting in your YouTube Partner Program dashboard.`}
+              description={`Whenever you upload video to ${currentChannel.title} YouTube channel, it will automatically appear here after a short while. You can change this setting in your YouTube Partner Program dashboard.`}
             />
           )}
           {isDraftTab && (
