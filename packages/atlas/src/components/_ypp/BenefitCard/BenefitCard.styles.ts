@@ -23,7 +23,7 @@ export const Pattern = styled.div`
     right: 0;
     width: 108px;
     height: 100%;
-    background: linear-gradient(90deg, rgb(15 17 20 / 0) 0%, ${cVar('colorCoreNeutral900')} 100%);
+    background: linear-gradient(180deg, rgb(15 17 20 / 0) 0%, ${cVar('colorCoreNeutral900')} 100%);
   }
 
   ${media.sm} {

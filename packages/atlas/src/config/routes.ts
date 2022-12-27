@@ -55,7 +55,7 @@ export const relativeRoutes = {
     notifications: () => 'notifications',
     payments: () => 'payments',
     ypp: () => 'ypp',
-    yppDashboard: () => 'ypp-dashboard',
+    yppDashboard: () => 'ypp/dashboard',
   },
   playground: {
     index: () => '',

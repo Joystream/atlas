@@ -7,6 +7,8 @@ import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 
 export const StyledSvgAppLogoShort = styled(SvgAppLogoShort)`
+  height: 36px;
+
   path {
     fill: ${cVar('colorTextMuted')};
   }
