@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { Banner } from '@/components/Banner'
 import { cVar, media, sizes } from '@/styles'
 
 export const Header = styled.header`
@@ -59,4 +60,8 @@ export const Divider = styled.div<{ withMargin?: boolean }>`
   background-color: ${cVar('colorBackgroundMutedAlpha')};
   height: 1px;
   width: 100%;
+`
+
+export const StyledBanner = styled(Banner)`
+  margin-bottom: ${sizes(6)};
 `
