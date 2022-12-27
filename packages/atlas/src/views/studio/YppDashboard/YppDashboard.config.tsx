@@ -19,9 +19,9 @@ export const TIERS = configTiers
         subscribers: configTiers?.[1].minimumSubscribers,
       },
       {
-        rules: `>=${formatNumber(configTiers?.[2].minimumSubscribers)} subscribers`,
+        rules: `>${formatNumber(configTiers?.[2].minimumSubscribers)} subscribers`,
         icon: <SvgTierIcon3 />,
-        subscribers: configTiers?.[2].minimumSubscribers,
+        subscribers: configTiers?.[2].minimumSubscribers - 1,
       },
     ]
   : []
