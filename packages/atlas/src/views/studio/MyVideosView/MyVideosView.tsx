@@ -26,6 +26,7 @@ import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { sizes } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
+import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
 
 import {
   MobileButton,
@@ -53,6 +54,7 @@ export const MyVideosView = () => {
   const { displaySnackbar, updateSnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
+  const { currentChannel } = useGetYppSyncedChannels()
   const videosPerPage = ROWS_AMOUNT * videosPerRow
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
@@ -326,6 +328,14 @@ export const MyVideosView = () => {
               </Button>
             )}
           </TabsContainer>
+          {currentChannel && (
+            <StyledBanner
+              dismissibleId="yppSyncInfo"
+              title="YouTube Sync is enabled"
+              icon={<SvgAlertsInformative24 />}
+              description={`Whenever you upload video to ${currentChannel.title} YouTube channel, it will automatically appear here after a short while. You can change this setting in your YouTube Partner Program dashboard.`}
+            />
+          )}
           {isDraftTab && (
             <StyledBanner
               dismissibleId="video-draft-saved-locally-warning"
