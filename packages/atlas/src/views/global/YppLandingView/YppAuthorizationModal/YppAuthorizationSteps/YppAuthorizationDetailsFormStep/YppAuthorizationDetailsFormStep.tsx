@@ -32,6 +32,7 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
     register,
     control,
     formState: { errors },
+    setValue,
   } = useFormContext<DetailsFormData>()
 
   const categoriesSelectItems: SelectItem[] =
@@ -128,6 +129,7 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
                 if (item) {
                   setFoundChannel(item)
                   onChange({ target: { value: item?.title } })
+                  setValue('referrerChannelId', item.id)
                 }
               }}
               nodeEnd={foundChannel && <ResolvedAvatar channel={foundChannel} size="bid" />}

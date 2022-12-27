@@ -54,6 +54,7 @@ export const InputAutocomplete = <Q extends object, V extends OperationVariables
           variables: queryVariablesFactory(val),
         })
         setResult(data.data)
+        return data.data
       } catch (e) {
         SentryLogger.error('Failed to fetch autocomplete items', 'InputAutocomplete', e)
       } finally {
@@ -66,6 +67,16 @@ export const InputAutocomplete = <Q extends object, V extends OperationVariables
     if (result && perfectMatcher) {
       const matched = perfectMatcher(result, value)
       matched && onItemSelect(matched)
+    } else if (perfectMatcher) {
+      const tryToMatch = async () => {
+        const data = await debouncedFetch.current(value)
+        if (data) {
+          const matched = perfectMatcher(data, value)
+          matched && onItemSelect(matched)
+        }
+      }
+
+      tryToMatch()
     }
   }, [onItemSelect, perfectMatcher, result, value])
 
@@ -78,6 +89,7 @@ export const InputAutocomplete = <Q extends object, V extends OperationVariables
       notFoundNode={notFoundNode}
       processing={isLoading}
       nodeEnd={nodeEnd}
+      value={value}
       onSelectedItemChange={onItemSelect}
       onInputValueChange={(value) => {
         setLoading(true)
