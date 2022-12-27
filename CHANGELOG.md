@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Greatly improved OpenGraph metadata support
 - Upgraded all the dependencies, including Vite v4 and Storybook v7
+- Adapted the app for Mainnet:
+  - updated categories IDs
+  - updated the default environment name
+  - updated the token ticker
 
 ### Fixed
 
