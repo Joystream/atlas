@@ -35,6 +35,8 @@ export const configSchema = z.object({
     ypp: z.object({
       googleConsoleClientId: z.string().nullable(),
       youtubeSyncApiUrl: z.string().nullable(),
+      suspendedSupportLink: z.string().nullable(),
+      suspendedLinkText: z.string().nullable(),
       youtubeCollaboratorMemberId: z.string().nullable(),
       landingPageOgTitle: z.string().nullable(),
       landingPageOgDescription: z.string().nullable(),

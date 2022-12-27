@@ -40,6 +40,8 @@ features:
     landingPageOgImgPath: null # Path to the open graph image for the YPP landing page - if not set, the default image will be used
     googleConsoleClientId: '$VITE_GOOGLE_CONSOLE_CLIENT_ID'
     youtubeSyncApiUrl: '$VITE_YOUTUBE_SYNC_API_URL'
+    suspendedSupportLink: https://discord.gg/er4Jz7mA # Link that will be displayed for users suspended in YPP
+    suspendedLinkText: '#ypp-support channel on our Discord server'
     youtubeCollaboratorMemberId: '$VITE_YOUTUBE_COLLABORATOR_MEMBER_ID'
     enrollmentReward: 200 # Amount for successful enrollment in YPP in joystream.tokenTicker units.
     tiersDefinition: # Tiers for youtube partner program rewards. You can provide maximum three tiers. Each tier should has own multiplier.

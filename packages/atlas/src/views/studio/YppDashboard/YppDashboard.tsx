@@ -1,11 +1,12 @@
 import { FC } from 'react'
 
-import { SvgActionNewTab } from '@/assets/icons'
+import { SvgActionNewTab, SvgAlertsError24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { Information } from '@/components/Information'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
+import { Button } from '@/components/_buttons/Button'
 import { BenefitCard } from '@/components/_ypp/BenefitCard'
 import { atlasConfig } from '@/config'
 import { useClipboard } from '@/hooks/useClipboard'
@@ -19,6 +20,7 @@ import { REWARDS, TIERS } from './YppDashboard.config'
 import {
   Header,
   RewardsWrapper,
+  StyledBanner,
   StyledSvgAlertsInformative24,
   TierCount,
   TierDescription,
@@ -76,6 +78,21 @@ export const YppDashboard: FC = () => {
             </TierWrapper>
           )}
         </Header>
+        {currentChannel?.isSuspended && (
+          <StyledBanner
+            title="This channel has been suspended in the YouTube Partner Program"
+            icon={<SvgAlertsError24 />}
+            description={
+              <Text variant="t200" as="p" color="colorCoreNeutral200">
+                To learn more about the reason behind the suspension, please reach out on the{' '}
+                <Button variant="primary" _textOnly to={atlasConfig.features.ypp.suspendedSupportLink ?? ''}>
+                  {atlasConfig.features.ypp.suspendedLinkText ?? 'link destination'}
+                </Button>
+                . You won't be rewarded for doing tasks during the time this channel is suspended.
+              </Text>
+            }
+          />
+        )}
         {atlasConfig.features.ypp.widgets && (
           <WidgetsWrapper>
             {atlasConfig.features.ypp.widgets.map((widget) => (

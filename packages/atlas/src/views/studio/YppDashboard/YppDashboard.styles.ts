@@ -2,6 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { SvgAlertsInformative24 } from '@/assets/icons'
+import { Banner } from '@/components/Banner'
 import { cVar, media, sizes } from '@/styles'
 
 export const Header = styled.header`
@@ -80,4 +81,8 @@ export const StyledSvgAlertsInformative24 = styled(SvgAlertsInformative24)`
   path {
     fill: ${cVar('colorTextStrong')};
   }
+`
+
+export const StyledBanner = styled(Banner)`
+  margin-bottom: ${sizes(6)};
 `
