@@ -21,7 +21,7 @@ storage:
   assetPath: 'api/v1/assets' # Path to Distributor Node asset endpoint
 
 joystream:
-  tokenTicker: 'tJOY' # Ticker for the token used in the app
+  tokenTicker: 'JOY' # Ticker for the token used in the app
   tokenPriceFeedUrl: null # URL for the token price feed - used to display token price in the app
   alternativeNodes:
     - name: 'Jsgenesis (Europe/UK)'
