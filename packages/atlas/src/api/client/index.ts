@@ -1,7 +1,8 @@
 import { ApolloClient, ApolloLink, FetchResult, HttpLink, Observable, split } from '@apollo/client'
 // import { BatchHttpLink } from '@apollo/client/link/batch-http'
-import { WebSocketLink } from '@apollo/client/link/ws'
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { getMainDefinition } from '@apollo/client/utilities'
+import { createClient } from 'graphql-ws'
 
 import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config/env'
 
@@ -25,13 +26,12 @@ const delayLink = new ApolloLink((operation, forward) => {
 })
 
 const createApolloClient = () => {
-  const subscriptionLink = new WebSocketLink({
-    uri: QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL,
-    options: {
-      reconnect: true,
-      reconnectionAttempts: 5,
-    },
-  })
+  const subscriptionLink = new GraphQLWsLink(
+    createClient({
+      url: QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL,
+      retryAttempts: 5,
+    })
+  )
 
   const orionLink = ApolloLink.from([delayLink, new HttpLink({ uri: ORION_GRAPHQL_URL })])
   // todo batching not working with new orion?
