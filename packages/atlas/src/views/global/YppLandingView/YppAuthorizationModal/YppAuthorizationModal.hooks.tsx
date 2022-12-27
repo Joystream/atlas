@@ -190,9 +190,10 @@ export const useYppGoogleAuth = ({
 
           if (isQuotaError) {
             displaySnackbar({
-              title: 'Opss, there is a problem',
+              title: 'Something went wrong',
               description:
                 "Due to high demand, we've reached the quota on the daily new sign ups. Please try again tomorrow.",
+              iconType: 'error',
             })
             closeModal()
             return
