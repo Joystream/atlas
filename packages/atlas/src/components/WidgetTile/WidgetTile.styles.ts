@@ -64,6 +64,6 @@ export const TextWrapper = styled.div`
 `
 
 export const StyledButton = styled(Button)`
-  margin-bottom: -8px;
+  margin-bottom: -${sizes(2)};
   justify-self: ${({ fullWidth }) => (fullWidth ? 'unset' : 'flex-start')};
 `
