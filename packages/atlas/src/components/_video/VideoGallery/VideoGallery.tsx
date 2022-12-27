@@ -19,7 +19,7 @@ type VideoWithIdAndProgress = {
 
 type CustomVideosType = VideoFieldsWithProgress[] | VideoWithIdAndProgress[]
 
-type VideoGalleryProps = {
+export type VideoGalleryProps = {
   title?: string
   videos?: CustomVideosType | null
   loading?: boolean

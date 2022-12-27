@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 
 import { Setting, Settings, SettingsProps } from './Settings'
@@ -8,7 +8,7 @@ export default {
   component: Settings,
 } as Meta<SettingsProps>
 
-const Template: Story<SettingsProps> = (args) => {
+const Template: StoryFn<SettingsProps> = (args) => {
   const [quality, setQuality] = useState(320)
   const [speed, setSpeed] = useState(1.5)
   const [autoplay, setAutoplay] = useState(true)

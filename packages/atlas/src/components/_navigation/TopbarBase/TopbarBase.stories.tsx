@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { TopbarBase, TopbarBaseProps } from './TopbarBase'
@@ -6,17 +6,8 @@ import { TopbarBase, TopbarBaseProps } from './TopbarBase'
 export default {
   title: 'navigation/TopbarBase',
   component: TopbarBase,
-  argTypes: {
-    variant: {
-      control: {
-        type: 'select',
-        options: ['default', 'studio'],
-      },
-    },
-    logoLinkUrl: {
-      type: 'string',
-      defaultValue: 'http://localhost:6006',
-    },
+  args: {
+    logoLinkUrl: 'http://localhost:6006',
   },
   decorators: [
     (Story) => (
@@ -25,9 +16,9 @@ export default {
       </BrowserRouter>
     ),
   ],
-} as Meta
+} as Meta<TopbarBaseProps>
 
-const RegularTemplate: Story<TopbarBaseProps> = (args) => {
+const RegularTemplate: StoryFn<TopbarBaseProps> = (args) => {
   return <TopbarBase {...args} fullLogoNode={<>logo</>} />
 }
 

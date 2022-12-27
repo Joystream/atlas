@@ -44,6 +44,12 @@ fragment BasicVideoFields on Video {
   }
 }
 
+query TestQuery {
+  videos(limit: 0) {
+    id
+  }
+}
+
 query GetChannel($id: ID!) {
   channelByUniqueInput(where: { id: $id }) {
     ...BasicChannelFields

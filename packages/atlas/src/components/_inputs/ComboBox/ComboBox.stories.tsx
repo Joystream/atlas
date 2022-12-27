@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 
 import { SvgActionCancel } from '@/assets/icons'
@@ -128,14 +128,14 @@ export default {
   },
 } as Meta<ComboBoxProps>
 
-const Template: Story<ComboBoxProps> = (args) => {
+const Template: StoryFn<ComboBoxProps> = (args) => {
   return <ComboBox items={MEMBERS.map((member) => ({ label: member.label }))} {...args} />
 }
 
 export const Default = Template.bind({})
 
 type Member = { label: string; thumbnailUrl: string; id: string }
-const TemplateWithMembers: Story<ComboBoxProps> = (args) => {
+const TemplateWithMembers: StoryFn<ComboBoxProps> = (args) => {
   const [selectedMembers, setSelectedMembers] = useState<Member[]>([])
   const [focusedElement, setFocusedElement] = useState<number | null>(null)
 
@@ -190,7 +190,7 @@ const TemplateWithMembers: Story<ComboBoxProps> = (args) => {
 
 export const WithMembers = TemplateWithMembers.bind({})
 
-const TemplateWithSeparators: Story<ComboBoxProps> = (args) => {
+const TemplateWithSeparators: StoryFn<ComboBoxProps> = (args) => {
   const mappedItems = [
     { label: 'TOP MEMBERS', value: '', isSeparator: true },
     ...MEMBERS.slice(0, 3),

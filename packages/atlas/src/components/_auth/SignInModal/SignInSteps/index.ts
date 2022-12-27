@@ -1,4 +1,4 @@
-export * from './SignInModalWalletStep'
+export * from './SignInModalWalletStep/SignInModalWalletStep'
 export * from './SignInModalAccountStep'
 export * from './SignInModalTermsStep'
 export * from './SignInModalMembershipStep'

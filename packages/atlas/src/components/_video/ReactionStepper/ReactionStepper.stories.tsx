@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useEffect, useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
@@ -19,7 +19,7 @@ export default {
   },
 } as Meta<ReactionStepperProps>
 
-const Template: Story<ReactionStepperProps> = (args) => {
+const Template: StoryFn<ReactionStepperProps> = (args) => {
   return (
     <>
       <ReactionStepper {...args} />
@@ -28,7 +28,7 @@ const Template: Story<ReactionStepperProps> = (args) => {
     </>
   )
 }
-const InteractableTemplate: Story<ReactionStepperProps> = () => {
+const InteractableTemplate: StoryFn<ReactionStepperProps> = () => {
   const [likes, setLikes] = useState(6)
   const [dislikes, setDislikes] = useState(9)
   const [state, setState] = useState<ReactionStepperProps['state']>('default')

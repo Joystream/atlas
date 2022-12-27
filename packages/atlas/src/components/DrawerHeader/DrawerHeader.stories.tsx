@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { DrawerHeader, DrawerHeaderProps } from './DrawerHeader'
 
@@ -16,6 +16,6 @@ export default {
   },
 } as Meta
 
-const Template: Story<DrawerHeaderProps> = (args) => <DrawerHeader {...args} />
+const Template: StoryFn<DrawerHeaderProps> = (args) => <DrawerHeader {...args} />
 
 export const Default = Template.bind({})

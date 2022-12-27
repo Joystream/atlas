@@ -81,6 +81,7 @@ export const VideoView: FC = () => {
     { where: { isPublic_eq: undefined, isCensored_eq: undefined, thumbnailPhoto: undefined, media: undefined } }
   )
   const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
+  const [isCommenting, setIsCommenting] = useState<boolean>(false)
   const nftWidgetProps = useNftWidget(video)
   const { likeOrDislikeVideo } = useReactionTransactions()
   const { withdrawBid } = useNftTransactions()
@@ -99,7 +100,7 @@ export const VideoView: FC = () => {
 
   const { anyOverlaysOpen } = useOverlayManager()
   const { ref: playerRef, inView: isPlayerInView } = useInView()
-  const pausePlayNext = anyOverlaysOpen || !isPlayerInView
+  const pausePlayNext = anyOverlaysOpen || !isPlayerInView || isCommenting
 
   const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset(video?.media)
   const { url: thumbnailUrl } = useAsset(video?.thumbnailPhoto)
@@ -402,6 +403,7 @@ export const VideoView: FC = () => {
                     video={video}
                     videoLoading={loading}
                     disabled={video ? !video?.isCommentSectionEnabled : undefined}
+                    onCommentInputFocus={setIsCommenting}
                   />
                 )}
               </>
@@ -420,6 +422,7 @@ export const VideoView: FC = () => {
                   video={video}
                   videoLoading={loading}
                   disabled={video ? !video?.isCommentSectionEnabled : undefined}
+                  onCommentInputFocus={setIsCommenting}
                 />
               )}
             </GridItem>

@@ -483,7 +483,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
 
   const royaltiesField = (
     <FormField
-      switchable
       error={errors.nftRoyaltiesPercent?.message}
       switchProps={{
         value: videoFieldsLocked ? !!watch('nftRoyaltiesPercent') : royaltiesFieldEnabled,

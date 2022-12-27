@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { SvgCategoriesAutosAndVehicles } from '@/assets/icons'
@@ -35,7 +35,7 @@ export default {
   ],
 } as Meta<VideoCategoryCardProps>
 
-const Template: Story<VideoCategoryCardProps> = (args) => {
+const Template: StoryFn<VideoCategoryCardProps> = (args) => {
   return (
     <Container>
       <VideoCategoryCard {...args}>VideoCategoryCard</VideoCategoryCard>
@@ -45,7 +45,7 @@ const Template: Story<VideoCategoryCardProps> = (args) => {
 export const Default = Template.bind({})
 Default.args = {}
 
-const TemplateFeatured: Story<VideoCategoryCardProps> = (args) => {
+const TemplateFeatured: StoryFn<VideoCategoryCardProps> = (args) => {
   return (
     <Container2>
       <FeaturedVideoCategoryCard

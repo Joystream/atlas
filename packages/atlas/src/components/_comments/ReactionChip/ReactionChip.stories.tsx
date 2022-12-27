@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { ReactionChip, ReactionChipProps } from './ReactionChip'
 
@@ -12,6 +12,6 @@ export default {
   component: ReactionChip,
 } as Meta<ReactionChipProps>
 
-const Template: Story<ReactionChipProps> = (args) => <ReactionChip {...args} />
+const Template: StoryFn<ReactionChipProps> = (args) => <ReactionChip {...args} />
 
 export const Default = Template.bind({})

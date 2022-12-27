@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 
@@ -39,7 +39,7 @@ export default {
   ],
 } as Meta
 
-const Template: Story<CollectorsBoxProps> = (args) => <CollectorsBox {...args} />
+const Template: StoryFn<CollectorsBoxProps> = (args) => <CollectorsBox {...args} />
 
 export const Default = Template.bind({})
 export const WithLessThan5Collectors = Template.bind({})
@@ -55,7 +55,7 @@ WithLessThan5Collectors.args = {
   ],
 }
 
-const TemplateWithChannelCover: Story<CollectorsBoxProps> = (args) => (
+const TemplateWithChannelCover: StoryFn<CollectorsBoxProps> = (args) => (
   <div style={{ position: 'relative' }}>
     <ChannelCover assetUrl="https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg" />
     <div style={{ position: 'absolute', bottom: -32, right: 0 }}>

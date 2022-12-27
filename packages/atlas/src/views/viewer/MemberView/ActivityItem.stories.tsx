@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 
@@ -48,7 +48,7 @@ export default {
   },
 } as Meta
 
-const Template: Story<{ activity: Array<ActivityItemProps> }> = ({ activity }) => {
+const Template: StoryFn<{ activity: Array<ActivityItemProps> }> = ({ activity }) => {
   return (
     <LayoutGrid>
       <GridItem colSpan={{ base: 12, sm: 8 }} rowStart={{ base: 2, sm: 1 }}>

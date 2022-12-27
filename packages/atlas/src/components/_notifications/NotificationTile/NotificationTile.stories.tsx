@@ -1,9 +1,10 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
+import { BrowserRouter } from 'react-router-dom'
 
 import { NotificationRecord } from '@/providers/notifications/notifications.types'
 
-import { NotificationTile } from './NotificationTile'
+import { NotificationProps, NotificationTile } from './NotificationTile'
 
 export default {
   title: 'Other/NotificationTile',
@@ -11,7 +12,6 @@ export default {
   argTypes: {
     onSelect: { table: { disable: true } },
     id: { table: { disable: true } },
-    className: { table: { disable: true } },
     selected: { table: { disable: true } },
     date: { control: { type: 'date' } },
     type: { options: ['bid-made', 'bought', 'open-auction-ended'], control: { type: 'radio' } },
@@ -26,10 +26,19 @@ export default {
     loading: false,
     variant: 'default',
   },
-} as Meta
+  decorators: [
+    (Story) => (
+      <>
+        <BrowserRouter>
+          <Story />
+        </BrowserRouter>
+      </>
+    ),
+  ],
+} as Meta<NotificationProps>
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Template: Story<any> = (args) => {
+const Template: StoryFn<any> = (args) => {
   const [selected, setSelected] = useState(false)
   const notification: NotificationRecord = {
     id: 'id',

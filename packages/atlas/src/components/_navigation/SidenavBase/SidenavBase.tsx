@@ -120,6 +120,13 @@ const SidenavBase: FC<SidenavProps> = ({
                 </LegalLink>
               </LinksRow>
               <LinksRow>
+                <LegalLink to={absoluteRoutes.legal.privacyPolicy()} target="_blank">
+                  <Text as="span" variant="t100" color="inherit">
+                    Privacy Policy
+                  </Text>
+                </LegalLink>
+              </LinksRow>
+              <LinksRow>
                 <StyledAnchor href={atlasConfig.general.joystreamLandingPageUrl} target="_blank">
                   <Text as="span" variant="t100" color="inherit">
                     Powered by

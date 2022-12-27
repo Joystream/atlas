@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 import { MemoryRouter } from 'react-router-dom'
 
 import { InternalComment, InternalCommentProps } from './InternalComment'
@@ -36,7 +36,7 @@ export default {
   },
 } as Meta<InternalCommentProps>
 
-const Template: Story<InternalCommentProps> = (args) => <InternalComment {...args} />
+const Template: StoryFn<InternalCommentProps> = (args) => <InternalComment {...args} />
 
 export const Default = Template.bind({})
 export const NoReactions = Template.bind({})

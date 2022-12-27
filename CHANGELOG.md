@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Stop video autoplay if user starts commenting
+- Expose Privacy Policy in config and introduce basic Markdown support
+
+### Changed
+
+- Greatly improved OpenGraph metadata support
+- Upgraded all the dependencies, including Vite v4 and Storybook v7
+- Adapted the app for Mainnet:
+  - updated categories IDs
+  - updated the default environment name
+  - updated the token ticker
+
+### Fixed
+
+- Fixed mobile touch scroll on bottom drawers
+- Fixed issue with rendering inputs components differently on ios
+- Fixed issue with membership dropdown component's contents disappearing randomly on mobile
+
 ## [1.1.0] - 2022-11-30
 
 ### Added

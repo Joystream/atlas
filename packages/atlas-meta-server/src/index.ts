@@ -1,55 +1,42 @@
 /* eslint-disable no-console */
 import express from 'express'
-import * as fs from 'fs'
-import parseHtml from 'node-html-parser'
-import * as path from 'path'
 
-import { getChannel, getVideo } from './api'
-import { APP_NAME, BASE_APP_URL, PORT, TWITTER_ID } from './config'
+import { OrionClient } from './api'
+import { APP_URL, PORT } from './config'
 import {
   generateChannelMetaTags,
   generateChannelSchemaTagsHtml,
-  generateMetaHtml,
+  generateCommonMetaTags,
   generateVideoMetaTags,
   generateVideoSchemaTagsHtml,
 } from './tags'
-import { generateAssetUrl } from './utils'
+import { applyMetaTagsToHtml, applySchemaTagsToHtml, fetchHtmlAndAppData, generateAssetUrl } from './utils'
 
 const app = express()
-
-const indexPath = path.resolve(__dirname, 'index.html')
-const indexHtml = fs.readFileSync(indexPath, 'utf8')
-
-if (!indexHtml) {
-  console.error(`index.html not found at "${indexPath}"`)
-  process.exit(1)
-}
+let orionClient: OrionClient
 
 app.get('/video/:id', async (req, res) => {
   try {
     const id = req.params['id']
-    const video = await getVideo(id)
+    const [[html, appData], video] = await Promise.all([fetchHtmlAndAppData(APP_URL), orionClient.getVideo(id)])
 
     if (!video) {
       return res.status(404).send('Video not found')
     }
 
-    const html = parseHtml(indexHtml)
-    const head = html.querySelector('head')
     const title = html.querySelector('title')
 
     if (title) {
-      title.innerHTML = `${video.title} - ${APP_NAME}`
+      title.innerHTML = video.title || appData.name
     }
 
     const thumbnailUrl = video.thumbnailPhoto ? generateAssetUrl(video.thumbnailPhoto) : ''
 
-    const videoMetaTags = generateVideoMetaTags(video, thumbnailUrl, APP_NAME, BASE_APP_URL, TWITTER_ID)
-    const videoMetaTagsHtml = generateMetaHtml(videoMetaTags)
-    const videoSchemaTagsHtml = generateVideoSchemaTagsHtml(video, thumbnailUrl, APP_NAME, BASE_APP_URL)
+    const videoMetaTags = generateVideoMetaTags(video, thumbnailUrl, appData.name, APP_URL, appData.twitterId)
+    const videoSchemaTagsHtml = generateVideoSchemaTagsHtml(video, thumbnailUrl, appData.name, APP_URL)
 
-    head?.insertAdjacentHTML('beforeend', videoMetaTagsHtml)
-    head?.insertAdjacentHTML('beforeend', videoSchemaTagsHtml)
+    applyMetaTagsToHtml(html, videoMetaTags)
+    applySchemaTagsToHtml(html, videoSchemaTagsHtml)
 
     return res.send(html.toString())
   } catch (err) {
@@ -61,28 +48,25 @@ app.get('/video/:id', async (req, res) => {
 app.get('/channel/:id', async (req, res) => {
   try {
     const id = req.params['id']
-    const channel = await getChannel(id)
+    const [[html, appData], channel] = await Promise.all([fetchHtmlAndAppData(APP_URL), orionClient.getChannel(id)])
 
     if (!channel) {
       return res.status(404).send('Channel not found')
     }
 
-    const html = parseHtml(indexHtml)
-    const head = html.querySelector('head')
     const title = html.querySelector('title')
 
     if (title) {
-      title.innerHTML = `${channel.title} - ${APP_NAME}`
+      title.innerHTML = channel.title || appData.name
     }
 
     const avatarUrl = channel.avatarPhoto ? generateAssetUrl(channel.avatarPhoto) : ''
 
-    const channelMetaTags = generateChannelMetaTags(channel, avatarUrl, APP_NAME, TWITTER_ID)
-    const channelMetaTagsHtml = generateMetaHtml(channelMetaTags)
-    const channelSchemaTagsHtml = generateChannelSchemaTagsHtml(channel, avatarUrl, BASE_APP_URL)
+    const channelMetaTags = generateChannelMetaTags(channel, avatarUrl, appData.name, APP_URL, appData.twitterId)
+    const channelSchemaTagsHtml = generateChannelSchemaTagsHtml(channel, avatarUrl, APP_URL)
 
-    head?.insertAdjacentHTML('beforeend', channelMetaTagsHtml)
-    head?.insertAdjacentHTML('beforeend', channelSchemaTagsHtml)
+    applyMetaTagsToHtml(html, channelMetaTags)
+    applySchemaTagsToHtml(html, channelSchemaTagsHtml)
 
     return res.send(html.toString())
   } catch (err) {
@@ -91,10 +75,52 @@ app.get('/channel/:id', async (req, res) => {
   }
 })
 
-app.get('/*', (req, res) => {
-  res.sendFile(indexPath)
+app.get('/ypp', async (req, res) => {
+  try {
+    const [html, appData] = await fetchHtmlAndAppData(APP_URL)
+    const titleNode = html.querySelector('title')
+
+    if (titleNode && appData.yppOgTitle) {
+      titleNode.innerHTML = appData.yppOgTitle
+    }
+
+    const metaTags = generateCommonMetaTags(
+      appData.name,
+      APP_URL,
+      appData.yppOgTitle || appData.name,
+      appData.yppOgDescription,
+      appData.yppOgImage,
+      appData.twitterId
+    )
+    applyMetaTagsToHtml(html, metaTags)
+
+    return res.send(html.toString())
+  } catch (err) {
+    console.error(err)
+    return res.status(500).send()
+  }
 })
 
-app
-  .listen(PORT, () => console.log('listening on ' + PORT + '...'))
-  .on('error', (error) => console.log('Error during app startup', error))
+const init = async () => {
+  console.log('Initializing...')
+
+  console.log(`Fetching app data from ${APP_URL}...`)
+  const [html, appData] = await fetchHtmlAndAppData(APP_URL)
+  console.log('App data fetched')
+  console.log(JSON.stringify(appData, null, 2))
+
+  console.log('Initializing Orion client...')
+  orionClient = new OrionClient(appData.orionUrl)
+  await orionClient.testConnection()
+  console.log('Orion client initialized')
+
+  app.get('/*', (req, res) => {
+    res.send(html.toString())
+  })
+
+  app
+    .listen(PORT, () => console.log('Listening on ' + PORT + '...'))
+    .on('error', (error) => console.log('Error during app startup', error))
+}
+
+init()
