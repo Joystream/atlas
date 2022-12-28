@@ -7,12 +7,12 @@ import { WidgetTile } from '@/components/WidgetTile'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useUser } from '@/providers/user/user.hooks'
 import { formatNumber } from '@/utils/number'
-import { useChannelPaymentsHistory } from '@/views/studio/MyPaymentsView/PaymentsTransactionTab/PaymentTransactionsTab.hooks'
-import { aggregatePaymentHistory } from '@/views/studio/MyPaymentsView/PaymentsTransactionTab/PaymentTransactionsTab.utils'
+import { useChannelPaymentsHistory } from '@/views/studio/MyPaymentsView/PaymentsTransactions/PaymentTransactions.hooks'
+import { aggregatePaymentHistory } from '@/views/studio/MyPaymentsView/PaymentsTransactions/PaymentTransactions.utils'
 
-import { TableWrapper, TilesWrapper } from './PaymentTransactionsTab.styles'
+import { TableWrapper, TilesWrapper } from './PaymentTransactions.styles'
 
-export const PaymentTransactionsTab = () => {
+export const PaymentTransactions = () => {
   const { channelId } = useUser()
   const { channel } = useFullChannel(channelId ?? '')
 

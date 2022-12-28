@@ -15,7 +15,7 @@ import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hook
 import { useUser } from '@/providers/user/user.hooks'
 import { formatNumber } from '@/utils/number'
 
-import { useChannelPayout } from './PaymentsOverviewTab.hooks'
+import { useChannelPayout } from './PaymentsOverview.hooks'
 import {
   AvatarAndTokenWrapper,
   CustomNodeWrapper,
@@ -23,9 +23,9 @@ import {
   StyledWidgetTile,
   TilesWrapper,
   TokenWrapper,
-} from './PaymentsOverviewTab.styles'
+} from './PaymentsOverview.styles'
 
-export const PaymentsOverViewTab = () => {
+export const PaymentsOverView = () => {
   const [showClaimDialog, setShowClaimDialog] = useState<boolean>(false)
   const { channelId, accountId, activeMembership } = useUser()
   const { channel, loading } = useFullChannel(channelId || '')

@@ -12,7 +12,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useFee, useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
 import { useUser } from '@/providers/user/user.hooks'
-import { useChannelPayout } from '@/views/studio/MyPaymentsView/PaymentsOverviewTab/PaymentsOverviewTab.hooks'
+import { useChannelPayout } from '@/views/studio/MyPaymentsView/PaymentsOverview/PaymentsOverview.hooks'
 
 interface ClaimChannelPaymentsDialogProps {
   show?: boolean

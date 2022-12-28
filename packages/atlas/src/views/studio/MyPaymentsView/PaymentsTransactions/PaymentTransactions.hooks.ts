@@ -4,7 +4,7 @@ import { GetFullChannelsQuery, useGetChannelPaymentEventsQuery } from '@/api/que
 import { PaymentHistory } from '@/components/TablePaymentsHistory'
 import { useJoystream } from '@/providers/joystream/joystream.hooks'
 
-import { mapEventToPaymentHistoryFactory } from './PaymentTransactionsTab.utils'
+import { mapEventToPaymentHistoryFactory } from './PaymentTransactions.utils'
 
 export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channels'][number]) => {
   const { joystream } = useJoystream()
