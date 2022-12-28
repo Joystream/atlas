@@ -1,4 +1,4 @@
-name = "atlas-proxy-worker"
+name = "gleev-proxy-worker"
 type = "javascript"
 account_id = ""
 route = ""
@@ -6,7 +6,7 @@ compatibility_date = "2022-12-19"
 workers_dev = true
 
 [vars]
-ATLAS_URL = "https://atlas-js.vercel.app"
+ATLAS_URL = "https://gleev.vercel.app"
 META_SERVER_URL = "https://atlas-services.joystream.org/social-previews"
 
 [build]
@@ -15,9 +15,9 @@ command = "yarn install --immutable && yarn build"
 format = "service-worker"
 
 [env.production]
-zone_id = "9b5baa89abf2e9aecd90951a5d561f04"
-routes = ["play.joystream.org/channel/*", "play.joystream.org/video/*", "play.joystream.org/ypp"]
+zone_id = "2b896d6b020ebdabb8f56a17d864ba18"
+routes = ["gleev.xyz/channel/*", "gleev.xyz/video/*", "gleev.xyz/ypp"]
 
 [env.production.vars]
-ATLAS_URL = "https://atlas-js.vercel.app"
+ATLAS_URL = "https://gleev.vercel.app"
 META_SERVER_URL = "https://atlas-services.joystream.org/social-previews"
