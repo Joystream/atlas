@@ -1,8 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SvgActionArrowRight, SvgAlertsInformative24, SvgAlertsWarning32 } from '@/assets/icons'
-import { Tabs } from '@/components/Tabs'
+import { SvgActionArrowRight, SvgAlertsWarning32 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { cVar, media, sizes } from '@/styles'
 
@@ -15,31 +14,6 @@ export const Header = styled.header`
     grid-template-columns: 1fr auto;
     align-items: center;
     gap: ${sizes(12)};
-  }
-`
-
-export const RewardsWrapper = styled.div`
-  display: grid;
-  gap: ${sizes(4)};
-  margin-bottom: ${sizes(4)};
-
-  ${media.md} {
-    gap: ${sizes(6)};
-    margin-bottom: ${sizes(6)};
-  }
-`
-
-export const WidgetsWrapper = styled.section`
-  display: grid;
-  gap: ${sizes(4)};
-  margin-bottom: ${sizes(4)};
-
-  ${media.sm} {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  ${media.md} {
-    margin-bottom: ${sizes(6)};
   }
 `
 
@@ -78,32 +52,19 @@ export const TierCount = styled.div`
   justify-content: flex-end;
 `
 
-export const StyledSvgAlertsInformative24 = styled(SvgAlertsInformative24)`
-  path {
-    fill: ${cVar('colorTextStrong')};
-  }
-`
-export const StyledTab = styled(Tabs)`
-  margin-bottom: 24px;
+export const TabsWrapper = styled.div`
+  margin-bottom: ${sizes(6)};
 `
 
-export const SettingsInputsWrapper = styled.div`
-  margin: 32px 0;
-  display: grid;
-  gap: ${sizes(8)};
-  width: 100%;
-
-  ${media.md} {
-    max-width: 640px;
-    margin: 56px auto;
-  }
-`
-
-export const Divider = styled.div`
-  margin: ${sizes(2)} 0;
+export const Divider = styled.div<{ withMargin?: boolean }>`
+  margin: ${({ withMargin }) => (withMargin ? `${sizes(2)} 0` : '')};
   background-color: ${cVar('colorBackgroundMutedAlpha')};
   height: 1px;
   width: 100%;
+`
+
+export const StyledBanner = styled(Banner)`
+  margin-bottom: ${sizes(6)};
 `
 
 export const StyledSvgActionArrowRight = styled(SvgActionArrowRight)`
@@ -120,8 +81,4 @@ export const StyledSvgAlertsWarning32 = styled(SvgAlertsWarning32)`
   > * {
     fill: ${cVar('colorTextError')};
   }
-`
-
-export const StyledBanner = styled(Banner)`
-  margin-bottom: ${sizes(6)};
 `
