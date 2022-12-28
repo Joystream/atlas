@@ -54,7 +54,7 @@ export const YppAuthorizationSyncStep = () => {
       {isSyncActive && (
         <FormField
           label="Category for videos"
-          description="We need to assign your videos to one of categories below. You can change the category for each video later."
+          description="Choose one of the categories to be assigned to the imported videos by default. You can change it for each video later."
           error={errors.videoCategoryId?.message}
         >
           <Controller
