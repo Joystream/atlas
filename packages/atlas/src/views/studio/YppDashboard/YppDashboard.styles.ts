@@ -1,8 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SvgActionArrowRight, SvgAlertsWarning32 } from '@/assets/icons'
-import { Banner } from '@/components/Banner'
 import { cVar, media, sizes } from '@/styles'
 
 export const Header = styled.header`
@@ -61,24 +59,4 @@ export const Divider = styled.div<{ withMargin?: boolean }>`
   background-color: ${cVar('colorBackgroundMutedAlpha')};
   height: 1px;
   width: 100%;
-`
-
-export const StyledBanner = styled(Banner)`
-  margin-bottom: ${sizes(6)};
-`
-
-export const StyledSvgActionArrowRight = styled(SvgActionArrowRight)`
-  height: 11px;
-
-  > *:last-child {
-    margin-left: 2px;
-  }
-`
-
-export const StyledSvgAlertsWarning32 = styled(SvgAlertsWarning32)`
-  margin-bottom: 24px;
-
-  > * {
-    fill: ${cVar('colorTextError')};
-  }
 `

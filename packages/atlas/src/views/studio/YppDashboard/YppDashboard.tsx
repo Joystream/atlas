@@ -1,7 +1,5 @@
 import { FC, useMemo, useState } from 'react'
 
-import { SvgActionNewTab, SvgAlertsError24 } from '@/assets/icons'
-import { Banner } from '@/components/Banner'
 import { Information } from '@/components/Information'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Tabs } from '@/components/Tabs'

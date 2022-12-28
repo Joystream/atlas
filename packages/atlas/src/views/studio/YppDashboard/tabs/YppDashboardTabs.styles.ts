@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 
 import { SvgActionArrowRight, SvgAlertsInformative24, SvgAlertsWarning32 } from '@/assets/icons'
+import { Banner } from '@/components/Banner'
 import { cVar, media, sizes } from '@/styles'
 
 export { Divider } from '../YppDashboard.styles'
@@ -54,4 +55,8 @@ export const StyledSvgAlertsWarning32 = styled(SvgAlertsWarning32)`
   > * {
     fill: ${cVar('colorTextError')};
   }
+`
+
+export const StyledBanner = styled(Banner)`
+  margin-bottom: ${sizes(6)};
 `
