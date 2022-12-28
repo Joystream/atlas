@@ -183,6 +183,22 @@ export const useYppGoogleAuth = ({
             return
           }
 
+          const isQuotaError =
+            errorResponseData &&
+            'errorCode' in errorResponseData &&
+            errorResponseData.errorCode === YppAuthorizationErrorCode.YOUTUBE_QUOTA_LIMIT_EXCEEDED
+
+          if (isQuotaError) {
+            displaySnackbar({
+              title: 'Something went wrong',
+              description:
+                "Due to high demand, we've reached the quota on the daily new sign ups. Please try again tomorrow.",
+              iconType: 'error',
+            })
+            closeModal()
+            return
+          }
+
           const isChannelNotFoundError =
             errorResponseData &&
             'errorCode' in errorResponseData &&
