@@ -53,7 +53,7 @@ type FinalFormData = {
   joystreamChannelId?: number
   email?: string
   referrerChannelId?: number
-  isSyncActive?: boolean
+  shouldBeIngested?: boolean
   videoCategoryId?: string
 }
 
@@ -92,7 +92,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       referrerChannelId: '',
       referrerChannelTitle: '',
       email: '',
-      isSyncActive: true,
+      shouldBeIngested: true,
     },
   })
   const { dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
@@ -178,8 +178,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       authorizationCode: ytResponseData?.authorizationCode,
       userId: ytResponseData?.userId,
       email: data.email,
-      // todo: uncomment when https://github.com/Joystream/youtube-synch/issues/105 is done
-      // isSyncActive: data.isSyncActive,
+      shouldBeIngested: data.shouldBeIngested,
       videoCategoryId: data.videoCategoryId,
       ...(data.referrerChannelId ? { referrerChannelId: parseInt(data.referrerChannelId) } : {}),
     }))
@@ -357,8 +356,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
             />
           ),
         }
-      case 'details':
-        // case 'requirements':
+      case 'requirements':
         return {
           title: 'Requirements',
           description: `Before you can apply to the program, make sure both your ${APP_NAME} and YouTube channels meet the below conditions.`,
@@ -378,8 +376,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
             disabled: true,
           },
         }
-      case 'requirements':
-        // case 'details':
+      case 'details':
         return {
           title: 'Details',
           description: 'Provide additional information to set up your program membership.',

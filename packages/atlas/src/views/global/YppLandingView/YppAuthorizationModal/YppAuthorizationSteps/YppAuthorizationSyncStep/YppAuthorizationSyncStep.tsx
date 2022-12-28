@@ -4,10 +4,11 @@ import { FormField } from '@/components/_inputs/FormField'
 import { OptionCardGroupRadio } from '@/components/_inputs/OptionCardGroup'
 import { Select, SelectItem } from '@/components/_inputs/Select'
 import { displayCategories } from '@/config/categories'
-import { FormWrapper } from '@/views/global/YppLandingView/YppAuthorizationModal/YppAuthorizationSteps/YppAuthorizationSyncStep/YppAuthorizationSyncStep.styles'
+
+import { FormWrapper } from './YppAuthorizationSyncStep.styles'
 
 export type YppSyncStepData = {
-  isSyncActive?: boolean
+  shouldBeIngested?: boolean
   videoCategoryId?: string
 }
 
@@ -23,13 +24,13 @@ export const YppAuthorizationSyncStep = () => {
     control,
     formState: { errors },
   } = useFormContext<YppSyncStepData>()
-  const isSyncActive = watch('isSyncActive')
+  const isSyncActive = watch('shouldBeIngested')
 
   return (
     <FormWrapper>
       <Controller
         control={control}
-        name="isSyncActive"
+        name="shouldBeIngested"
         render={({ field: { onChange, value } }) => (
           <OptionCardGroupRadio
             selectedValue={value}
