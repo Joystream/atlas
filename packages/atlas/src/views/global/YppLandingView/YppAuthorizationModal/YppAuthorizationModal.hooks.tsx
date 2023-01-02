@@ -32,7 +32,8 @@ const GOOGLE_AUTH_PARAMS = {
   client_id: GOOGLE_CONSOLE_CLIENT_ID || '',
   response_type: 'code',
   access_type: 'offline',
-  scope: 'https://www.googleapis.com/auth/youtube.readonly  https://www.googleapis.com/auth/userinfo.profile',
+  scope:
+    'https://www.googleapis.com/auth/youtube.readonly  https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
   prompt: 'consent',
 }
 
