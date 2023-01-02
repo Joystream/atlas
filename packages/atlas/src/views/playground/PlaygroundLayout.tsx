@@ -27,6 +27,7 @@ import {
   PlaygroundNftPurchase,
   PlaygroundNftSettleAuction,
   PlaygroundNftWhitelistMembers,
+  PlaygroundPlaylistDetails,
   PlaygroundReactionsComments,
   PlaygroundTokenPrice,
 } from './Playgrounds'
@@ -42,6 +43,7 @@ const playgroundRoutes = [
   { path: 'reactions-comments', element: <PlaygroundReactionsComments />, name: 'Reactions & comments' },
   { path: 'iframe', element: <PlaygroundIframe />, name: 'Iframe' },
   { path: 'captcha', element: <PlaygroundCaptcha />, name: 'Captcha' },
+  { path: 'playlist-details', element: <PlaygroundPlaylistDetails />, name: 'Playlist details' },
 ]
 
 const PlaygroundLayout = () => {
