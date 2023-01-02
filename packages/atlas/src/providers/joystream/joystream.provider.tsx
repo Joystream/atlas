@@ -152,6 +152,8 @@ const useJoystreamChainConstants = (joystream: Remote<JoystreamLib> | undefined)
     nftMaxCreatorRoyaltyPercentage: 50,
     nftMinCreatorRoyaltyPercentage: 1,
     nftPlatformFeePercentage: 1,
+    minCashoutAllowed: new BN(0),
+    maxCashoutAllowed: new BN(0),
   })
 
   useEffect(() => {
@@ -170,6 +172,8 @@ const useJoystreamChainConstants = (joystream: Remote<JoystreamLib> | undefined)
         nftMaxCreatorRoyaltyPercentage: chainConstants.nftMaxCreatorRoyaltyPercentage,
         nftMinCreatorRoyaltyPercentage: chainConstants.nftMinCreatorRoyaltyPercentage,
         nftPlatformFeePercentage: chainConstants.nftPlatformFeePercentage,
+        minCashoutAllowed: new BN(chainConstants.minCashoutAllowed),
+        maxCashoutAllowed: new BN(chainConstants.maxCashoutAllowed),
       })
     )
   }, [joystream])

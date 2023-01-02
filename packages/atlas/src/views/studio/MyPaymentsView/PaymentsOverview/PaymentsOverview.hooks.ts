@@ -24,7 +24,11 @@ import { formatNumber, getRandomIntInclusive } from '@/utils/number'
 const TOKEN_TICKER = atlasConfig.joystream.tokenTicker
 
 export const useChannelPayout = (txCallback?: () => void) => {
-  const { joystream, proxyCallback } = useJoystream()
+  const {
+    joystream,
+    proxyCallback,
+    chainState: { maxCashoutAllowed, minCashoutAllowed },
+  } = useJoystream()
   const { channelId, memberId } = useUser()
   const [availableAward, setAvailableAward] = useState<BN | undefined>()
   const [isAwardLoading, setAwardLoading] = useState(true)
@@ -77,10 +81,8 @@ export const useChannelPayout = (txCallback?: () => void) => {
           return
         }
         const payloadUrl = createAssetDownloadEndpoint(nodeEndpoint, payloadDataObjectId)
-
         const { reward } = await getClaimableReward(channelId, cumulativeRewardClaimed, payloadUrl)
-        const maxCashoutAllowed = await (await joystream.api).query.content.maxCashoutAllowed()
-        const minCashoutAllowed = await (await joystream.api).query.content.minCashoutAllowed()
+
         if (reward.gt(maxCashoutAllowed) || reward.lt(minCashoutAllowed)) {
           setClaimError(
             reward.gt(maxCashoutAllowed)
@@ -95,7 +97,7 @@ export const useChannelPayout = (txCallback?: () => void) => {
         SentryLogger.error("Couldn't get reward data", 'PaymentOverviewTab.hooks', error)
       }
     },
-    [getPayloadDataObjectIdAndNodeEndpoint, joystream]
+    [getPayloadDataObjectIdAndNodeEndpoint, joystream, maxCashoutAllowed, minCashoutAllowed]
   )
 
   const handleFetchReward = useCallback(async () => {
@@ -129,7 +131,7 @@ export const useChannelPayout = (txCallback?: () => void) => {
 
     if (claimError) {
       displaySnackbar({
-        title: 'There was a problem',
+        title: 'Something went wrong',
         description: claimError,
         iconType: 'error',
       })
