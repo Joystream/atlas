@@ -3,11 +3,11 @@ import { useState } from 'react'
 import { useFullVideosConnection } from '@/api/hooks/videosConnection'
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionSearch } from '@/assets/icons'
+import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { Input } from '@/components/_inputs/Input'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { VideoListItem } from '@/components/_video/VideoListItem/VideoListItem'
-import { VideoListItemLoader } from '@/components/_video/VideoListItem/VideoListItemLoader'
+import { VideoListItem, VideoListItemLoader } from '@/components/_video/VideoListItem'
 import { cancelledVideoFilter } from '@/config/contentFilter'
 import { useDebounceValue } from '@/hooks/useDebounceValue'
 import { useAuthorizedUser } from '@/providers/user/user.hooks'
@@ -58,12 +58,19 @@ export const VideoSelectorDialog = ({ onHide, show, onSelect, initialSelected = 
       }}
       secondaryButton={{ text: 'Cancel', onClick: onHide }}
       additionalActionsNode={
-        <Button
-          variant="tertiary"
-          onClick={() => edges?.length && setSelectedVideos(edges.map((edge) => edge.node.id))}
-        >
-          Select all
-        </Button>
+        <>
+          <Button
+            variant="tertiary"
+            onClick={() => edges?.length && setSelectedVideos(edges.map((edge) => edge.node.id))}
+          >
+            Select all
+          </Button>
+          {!!selectedVideos.length && (
+            <Text as="p" variant="t300" color="colorTextMuted">
+              {selectedVideos.length} video(s) selected
+            </Text>
+          )}
+        </>
       }
       actionDivider
     >

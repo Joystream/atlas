@@ -284,6 +284,7 @@ export const PlaylistWorkspace = () => {
             />
           )}
         </WorkspaceWrapper>
+        {/*todo: add footer once logic is in place*/}
       </BottomDrawer>
     </>
   )
