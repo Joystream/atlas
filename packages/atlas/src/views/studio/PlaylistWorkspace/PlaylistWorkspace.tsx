@@ -48,13 +48,18 @@ const formOptions = [
     caption: 'Visible only with link',
   },
 ]
+// todo: should be transfered to the context later on
+export type PlaylistWorkspaceProps = {
+  show: boolean
+  onHide: () => void
+}
 
-export const PlaylistWorkspace = () => {
+export const PlaylistWorkspace = ({ show, onHide }: PlaylistWorkspaceProps) => {
   const [playlistVideos, setPlaylistVideos] = useState<string[]>([])
   const mdMatch = useMediaMatch('md')
   const addAsset = useAssetStore((state) => state.actions.addAsset)
   const [, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
-  const [show, setShow] = useState(true)
+  const [showSelectDialog, setShowSelectDialog] = useState(false)
   const [shouldFallbackThumbnail, setShouldFallbackThumbnail] = useState(true)
 
   const { control, getValues, setValue, trigger, watch } = useForm<PlaylistWorkspaceFormFields>({
@@ -175,18 +180,12 @@ export const PlaylistWorkspace = () => {
   return (
     <>
       <VideoSelectorDialog
-        show={show}
-        onHide={() => setShow(false)}
+        show={showSelectDialog}
+        onHide={() => setShowSelectDialog(false)}
         onSelect={setPlaylistVideos}
         initialSelected={playlistVideos}
       />
-      <BottomDrawer
-        isOpen={true}
-        onClose={() => alert('close')}
-        title="New playlist"
-        pageTitle="New playlist"
-        titleLabel="Playlist"
-      >
+      <BottomDrawer isOpen={show} onClose={onHide} title="New playlist" pageTitle="New playlist" titleLabel="Playlist">
         <WorkspaceWrapper as="form">
           <FormWrapper>
             <ImageUploadAndCrop
@@ -267,7 +266,7 @@ export const PlaylistWorkspace = () => {
                 ))}
               </div>
               <StyledButton
-                onClick={() => setShow(true)}
+                onClick={() => setShowSelectDialog(true)}
                 variant="secondary"
                 size="large"
                 icon={<SvgActionAdd />}
@@ -281,7 +280,12 @@ export const PlaylistWorkspace = () => {
               title="No videos in the playlist yet"
               subtitle="Add your videos to the playlist and let people enjoy your videos!"
               button={
-                <Button onClick={() => setShow(true)} variant="primary" icon={<SvgActionAdd />} iconPlacement="right">
+                <Button
+                  onClick={() => setShowSelectDialog(true)}
+                  variant="primary"
+                  icon={<SvgActionAdd />}
+                  iconPlacement="right"
+                >
                   Add videos
                 </Button>
               }
