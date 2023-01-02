@@ -28,7 +28,7 @@ export const VideoSelectorDialog = ({ onHide, show, onSelect, initialSelected = 
   const [search, setSearch] = useState<string>('')
   const { channelId } = useAuthorizedUser()
   const debouncedSearch = useDebounceValue(search, 200)
-  const { edges, totalCount, loading, error, fetchMore, refetch, variables, pageInfo } = useFullVideosConnection(
+  const { edges, loading } = useFullVideosConnection(
     {
       first: INITIAL_FIRST,
       orderBy: VideoOrderByInput.CreatedAtDesc,
@@ -77,7 +77,7 @@ export const VideoSelectorDialog = ({ onHide, show, onSelect, initialSelected = 
         {loading ? (
           <div style={{ width: '100%' }}>
             {Array.from({ length: 3 }, (_, idx) => (
-              <VideoListItemLoader key={idx} />
+              <VideoListItemLoader key={idx} variant="small" />
             ))}
           </div>
         ) : (

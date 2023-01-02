@@ -3,9 +3,9 @@ import { sizes } from '@/styles'
 
 import { SkeletonTextWrapper, Wrapper } from './VideoListItem.styles'
 
-export const VideoListItemLoader = () => {
+export const VideoListItemLoader = ({ variant }: { variant: 'small' | 'large' }) => {
   return (
-    <Wrapper>
+    <Wrapper variant={variant}>
       <SkeletonLoader height="100%" width={90} />
       <SkeletonTextWrapper>
         <SkeletonLoader height={sizes(4)} width="40%" />
