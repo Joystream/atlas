@@ -86,8 +86,12 @@ export const useChannelPayout = (txCallback?: () => void) => {
         if (reward.gt(maxCashoutAllowed) || reward.lt(minCashoutAllowed)) {
           setClaimError(
             reward.gt(maxCashoutAllowed)
-              ? `Maximum limit on claimable amount of ${maxCashoutAllowed.toString()} ${TOKEN_TICKER} exceeded. Please contact creator support in Discord.`
-              : `Minimum claimable amount must be more than ${minCashoutAllowed.toString()} ${TOKEN_TICKER}. Accumulate more rewards before claiming again.`
+              ? `Maximum limit on claimable amount of ${formatNumber(
+                  hapiBnToTokenNumber(maxCashoutAllowed)
+                )} ${TOKEN_TICKER} exceeded. Please contact creator support in Discord.`
+              : `Minimum claimable amount must be more than ${formatNumber(
+                  hapiBnToTokenNumber(minCashoutAllowed)
+                )} ${TOKEN_TICKER}. Accumulate more rewards before claiming again.`
           )
         } else {
           setClaimError(null)
