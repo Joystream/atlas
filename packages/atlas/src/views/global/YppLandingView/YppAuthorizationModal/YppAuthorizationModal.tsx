@@ -237,7 +237,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   }, [channel, detailsFormMethods, referrerId])
 
   useEffect(() => {
-    if (ytResponseData?.email) {
+    if (ytResponseData?.email && ytResponseData.email.includes('@gmail.com')) {
       detailsFormMethods.setValue('email', ytResponseData.email)
     }
   }, [detailsFormMethods, ytResponseData?.email])
