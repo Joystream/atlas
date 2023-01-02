@@ -23,9 +23,7 @@ export const ClaimChannelPaymentsDialog = ({ onExit, show }: ClaimChannelPayment
   const { activeMembership } = useUser()
   const { availableAward, claimReward, isAwardLoading, txParams } = useChannelPayout(onExit)
   const { fullFee, loading: feeLoading } = useFee('claimRewardTx', txParams)
-  const { accountBalance, lockedAccountBalance } = useSubscribeAccountBalance(activeMembership?.controllerAccount)
-  // todo: replace to totalBalance returned from useSubscribeAccountBalance after merge to dev
-  const totalBalance = accountBalance && lockedAccountBalance ? accountBalance.add(lockedAccountBalance) : new BN(0)
+  const { totalBalance } = useSubscribeAccountBalance(activeMembership?.controllerAccount)
   const mdMatch = useMediaMatch('md')
 
   return (
@@ -56,7 +54,7 @@ export const ClaimChannelPaymentsDialog = ({ onExit, show }: ClaimChannelPayment
           Membership account balance
         </Text>
         <NumberFormat
-          value={hapiBnToTokenNumber(totalBalance)}
+          value={hapiBnToTokenNumber(totalBalance ?? new BN(0))}
           as="p"
           variant="t100"
           color="colorText"

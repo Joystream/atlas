@@ -146,6 +146,8 @@ export class JoystreamLib {
       this.api.query.content.maxCreatorRoyalty as QueryableStorageMultiArg<'promise'>,
       this.api.query.content.minCreatorRoyalty as QueryableStorageMultiArg<'promise'>,
       this.api.query.content.platfromFeePercentage as QueryableStorageMultiArg<'promise'>,
+      this.api.query.content.minCashoutAllowed as QueryableStorageMultiArg<'promise'>,
+      this.api.query.content.maxCashoutAllowed as QueryableStorageMultiArg<'promise'>,
     ])
 
     const [
@@ -160,6 +162,8 @@ export class JoystreamLib {
       maxCreatorRoyalty,
       minCreatorRoyalty,
       platformFeePercentage,
+      minCashoutAllowed,
+      maxCashoutAllowed,
     ] = results
 
     const asStringifiedBN = (raw: Codec) => {
@@ -187,6 +191,8 @@ export class JoystreamLib {
       nftMaxCreatorRoyaltyPercentage: asPercentage(maxCreatorRoyalty),
       nftMinCreatorRoyaltyPercentage: asPercentage(minCreatorRoyalty),
       nftPlatformFeePercentage: asPercentage(platformFeePercentage),
+      minCashoutAllowed: asStringifiedBN(minCashoutAllowed),
+      maxCashoutAllowed: asStringifiedBN(maxCashoutAllowed),
     } as const
   }
 
