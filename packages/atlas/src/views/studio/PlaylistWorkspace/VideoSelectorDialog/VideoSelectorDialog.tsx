@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useFullVideosConnection } from '@/api/hooks/videosConnection'
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
@@ -45,6 +45,15 @@ export const VideoSelectorDialog = ({ onHide, show, onSelect, initialSelected = 
       onError: (error) => SentryLogger.error('Failed to fetch videos', 'MyVideosView', error),
     }
   )
+
+  useEffect(() => {
+    if (show) {
+      setSelectedVideos(initialSelected)
+    }
+    // need to update selected videos when modal opens
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [show])
+
   return (
     <DialogModal
       show={show}

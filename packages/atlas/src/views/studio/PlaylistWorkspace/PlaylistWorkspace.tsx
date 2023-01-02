@@ -53,19 +53,11 @@ export const PlaylistWorkspace = () => {
   const [playlistVideos, setPlaylistVideos] = useState<string[]>([])
   const mdMatch = useMediaMatch('md')
   const addAsset = useAssetStore((state) => state.actions.addAsset)
-  const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
+  const [, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
   const [show, setShow] = useState(true)
   const [shouldFallbackThumbnail, setShouldFallbackThumbnail] = useState(true)
 
-  const {
-    control,
-    handleSubmit: createSubmitHandler,
-    getValues,
-    setValue,
-    trigger,
-    watch,
-    formState: { dirtyFields },
-  } = useForm<PlaylistWorkspaceFormFields>({
+  const { control, getValues, setValue, trigger, watch } = useForm<PlaylistWorkspaceFormFields>({
     shouldFocusError: true,
     defaultValues: {
       isPublic: true,
@@ -168,17 +160,26 @@ export const PlaylistWorkspace = () => {
 
   const moveItem = useCallback((dragIndex: number, hoverIndex: number) => {
     setShouldFallbackThumbnail(true)
-    setPlaylistVideos((prevCards) => {
-      const copy = [...prevCards]
+    setPlaylistVideos((prev) => {
+      const copy = [...prev]
       copy.splice(dragIndex, 1)
-      copy.splice(hoverIndex, 0, prevCards[dragIndex])
+      copy.splice(hoverIndex, 0, prev[dragIndex])
       return copy
     })
   }, [])
 
+  const handleItemRemove = useCallback((videoId: string) => {
+    setPlaylistVideos((prev) => prev.filter((vId) => vId !== videoId))
+  }, [])
+
   return (
     <>
-      <VideoSelectorDialog show={show} onHide={() => setShow(false)} onSelect={setPlaylistVideos} />
+      <VideoSelectorDialog
+        show={show}
+        onHide={() => setShow(false)}
+        onSelect={setPlaylistVideos}
+        initialSelected={playlistVideos}
+      />
       <BottomDrawer
         isOpen={true}
         onClose={() => alert('close')}
@@ -191,7 +192,6 @@ export const PlaylistWorkspace = () => {
             <ImageUploadAndCrop
               editMode
               file={{
-                // url: formValues.thumbnail.
                 ...thumbnailAsset,
                 ...(originalThumbnailAsset?.blob ? { originalBlob: originalThumbnailAsset?.blob } : {}),
               }}
@@ -257,6 +257,10 @@ export const PlaylistWorkspace = () => {
                     itemType="videoListItem"
                     index={index}
                     moveItem={moveItem}
+                    removeOption={{
+                      label: 'Remove from playlist',
+                      onClick: () => handleItemRemove(videoId),
+                    }}
                   >
                     <StyledVideoListItem id={videoId} variant="large" />
                   </DraggableComponent>

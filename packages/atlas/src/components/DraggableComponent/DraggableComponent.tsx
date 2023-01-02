@@ -1,7 +1,9 @@
 import { ReactNode, useRef } from 'react'
 import { XYCoord, useDrag, useDrop } from 'react-dnd'
 
-import { SvgActionDrag } from '@/assets/icons'
+import { SvgActionArrowBottom, SvgActionArrowTop, SvgActionDrag, SvgActionMore, SvgActionTrash } from '@/assets/icons'
+import { Button } from '@/components/_buttons/Button'
+import { ContextMenu } from '@/components/_overlays/ContextMenu'
 
 import { Wrapper } from './DraggableComponent.styles'
 
@@ -10,6 +12,10 @@ type DraggableComponentProps = {
   itemType: string
   index: number
   moveItem: (dragIndex: number, hoverIndex: number) => void
+  removeOption?: {
+    label: string
+    onClick: () => void
+  }
   children: ReactNode
 }
 
@@ -19,7 +25,14 @@ type DragItem = {
   type: string
 }
 
-export const DraggableComponent = ({ itemType, moveItem, index, id, children }: DraggableComponentProps) => {
+export const DraggableComponent = ({
+  itemType,
+  moveItem,
+  index,
+  id,
+  children,
+  removeOption,
+}: DraggableComponentProps) => {
   const ref = useRef<HTMLDivElement>(null)
   const [{ handlerId }, drop] = useDrop<DragItem, void, { handlerId: unknown | null }>({
     accept: itemType,
@@ -73,6 +86,31 @@ export const DraggableComponent = ({ itemType, moveItem, index, id, children }: 
     <Wrapper ref={ref} style={{ opacity }} data-handler-id={handlerId}>
       <SvgActionDrag />
       {children}
+      <ContextMenu
+        placement="bottom-end"
+        appendTo={document.body}
+        items={[
+          {
+            label: 'Move to top',
+            onClick: () => moveItem(index, 0),
+            nodeStart: <SvgActionArrowTop />,
+          },
+          {
+            label: 'Move to bottom',
+            onClick: () => moveItem(index, 1000),
+            nodeStart: <SvgActionArrowBottom />,
+          },
+          ...(removeOption
+            ? [
+                {
+                  ...removeOption,
+                  nodeStart: <SvgActionTrash />,
+                },
+              ]
+            : []),
+        ]}
+        trigger={<Button onClick={() => null} icon={<SvgActionMore />} variant="tertiary" size="small" />}
+      />
     </Wrapper>
   )
 }
