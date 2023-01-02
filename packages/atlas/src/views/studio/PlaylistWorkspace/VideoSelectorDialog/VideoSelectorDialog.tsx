@@ -8,7 +8,6 @@ import { Button } from '@/components/_buttons/Button'
 import { Input } from '@/components/_inputs/Input'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { VideoListItem, VideoListItemLoader } from '@/components/_video/VideoListItem'
-import { cancelledVideoFilter } from '@/config/contentFilter'
 import { useDebounceValue } from '@/hooks/useDebounceValue'
 import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
@@ -37,7 +36,6 @@ export const VideoSelectorDialog = ({ onHide, show, onSelect, initialSelected = 
           id_eq: channelId,
         },
         title_contains: debouncedSearch,
-        ...cancelledVideoFilter,
       },
     },
     {
