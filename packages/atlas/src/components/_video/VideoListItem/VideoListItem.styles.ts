@@ -41,6 +41,10 @@ export const PillContainer = styled.div`
 export const EndNodeWrapper = styled.div`
   align-self: center;
   margin-left: auto;
+
+  path {
+    fill: ${cVar('colorTextPrimary')};
+  }
 `
 
 export const SkeletonTextWrapper = styled.div`

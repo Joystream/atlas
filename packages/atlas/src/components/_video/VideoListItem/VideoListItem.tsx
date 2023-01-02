@@ -1,7 +1,7 @@
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useBasicVideo } from '@/api/hooks/video'
-import { SvgAlertsSuccess24 } from '@/assets/icons'
+import { SvgActionCheck } from '@/assets/icons'
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { VideoListItemLoader } from '@/components/_video/VideoListItem/VideoListItemLoader'
@@ -90,7 +90,7 @@ export const VideoListItem = ({ id, onClick, isActive, className, variant = 'sma
             </DetailsWrapper>
             {isActive && (
               <EndNodeWrapper>
-                <SvgAlertsSuccess24 />
+                <SvgActionCheck />
               </EndNodeWrapper>
             )}
           </Wrapper>
