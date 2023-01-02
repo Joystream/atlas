@@ -3,6 +3,7 @@ import { Controller, useForm } from 'react-hook-form'
 
 import { useBasicVideo } from '@/api/hooks/video'
 import { SvgActionAdd } from '@/assets/icons'
+import { DraggableComponent } from '@/components/DraggableComponent/DraggableComponent'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
@@ -12,7 +13,6 @@ import { OptionCardGroupRadio } from '@/components/_inputs/OptionCardGroup'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { TitleInput } from '@/components/_inputs/TitleInput'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
-import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useAsset, useRawAsset } from '@/providers/assets/assets.hooks'
 import { useAssetStore } from '@/providers/assets/assets.store'
@@ -21,7 +21,7 @@ import { computeFileHash } from '@/utils/hashing'
 import { SentryLogger } from '@/utils/logs'
 import { VideoSelectorDialog } from '@/views/studio/PlaylistWorkspace/VideoSelectorDialog/VideoSelectorDialog'
 
-import { FormWrapper, WorkspaceWrapper } from './PlaylistWorkspace.styles'
+import { FormWrapper, StyledButton, StyledVideoListItem, WorkspaceWrapper } from './PlaylistWorkspace.styles'
 
 type PlaylistWorkspaceFormFields = {
   title: string
@@ -73,34 +73,24 @@ export const PlaylistWorkspace = () => {
   })
   const thumbnail = watch('thumbnail')
   const { video } = useBasicVideo(playlistVideos[0] ?? '', {
-    skip: !playlistVideos[0] || !!thumbnail?.cropId,
-    onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTile', error, { video: { id } }),
+    skip: !playlistVideos[0],
+    onError: (error) =>
+      SentryLogger.error('Failed to fetch video', 'VideoTile', error, { video: { id: playlistVideos[0] } }),
   })
-  const { url: thumbnailPhotoUrl, isLoadingAsset: isLoadingThumbnail } = useAsset(video?.thumbnailPhoto)
+  const { url: thumbnailPhotoUrl } = useAsset(video?.thumbnailPhoto)
 
   // const hasUnsavedAssets = dirtyFields.thumbnail?.cropId || false
   const thumbnailAsset = useRawAsset(thumbnail?.cropId || null)
   const originalThumbnailAsset = useRawAsset(thumbnail?.originalId || null)
-  const firstVideoAsset = useRawAsset(video?.thumbnailPhoto?.id || null)
+  // const firstVideoAsset = useRawAsset(video?.thumbnailPhoto?.id || null)
 
   const computeThumbnailHash = useCallback((file: Blob) => {
     const hashPromise = computeFileHash(file)
     setThumbnailHashPromise(hashPromise)
   }, [])
 
-  useEffect(() => {
-    if (!thumbnailAsset) {
-      return
-    }
-    if (thumbnailAsset?.blob) {
-      computeThumbnailHash(thumbnailAsset.blob)
-    }
-  }, [computeThumbnailHash, thumbnailAsset])
-  console.log(video, !playlistVideos[0] || !!thumbnail?.cropId)
-  useEffect(() => {
-    console.log('check', thumbnail, video)
-    if (!thumbnail?.cropId && video && shouldFallbackThumbnail) {
-      setShouldFallbackThumbnail(false)
+  const updateFallbackThumbnail = useCallback(() => {
+    if (video) {
       const currentThumbnailValue = getValues('thumbnail')
       setValue(
         'thumbnail',
@@ -111,7 +101,36 @@ export const PlaylistWorkspace = () => {
         { shouldDirty: true }
       )
     }
-  }, [video, thumbnail, getValues, setValue, thumbnailPhotoUrl])
+  }, [getValues, setValue, thumbnailPhotoUrl, video])
+
+  useEffect(() => {
+    if (!thumbnailAsset) {
+      return
+    }
+    if (thumbnailAsset?.blob) {
+      computeThumbnailHash(thumbnailAsset.blob)
+    }
+  }, [computeThumbnailHash, thumbnailAsset])
+
+  useEffect(() => {
+    if (
+      video &&
+      (!thumbnail?.cropId || (thumbnail.cropId !== video.thumbnailPhoto?.id && !thumbnail.originalId)) &&
+      shouldFallbackThumbnail
+    ) {
+      setShouldFallbackThumbnail(false)
+      updateFallbackThumbnail()
+    }
+  }, [
+    video,
+    thumbnail,
+    getValues,
+    setValue,
+    thumbnailPhotoUrl,
+    shouldFallbackThumbnail,
+    updateFallbackThumbnail,
+    playlistVideos,
+  ])
 
   const handleThumbnailFileChange = (file: ImageInputFile | null) => {
     const currentThumbnailValue = getValues('thumbnail')
@@ -147,6 +166,16 @@ export const PlaylistWorkspace = () => {
     trigger('thumbnail')
   }
 
+  const moveItem = useCallback((dragIndex: number, hoverIndex: number) => {
+    setShouldFallbackThumbnail(true)
+    setPlaylistVideos((prevCards) => {
+      const copy = [...prevCards]
+      copy.splice(dragIndex, 1)
+      copy.splice(hoverIndex, 0, prevCards[dragIndex])
+      return copy
+    })
+  }, [])
+
   return (
     <>
       <VideoSelectorDialog show={show} onHide={() => setShow(false)} onSelect={setPlaylistVideos} />
@@ -175,7 +204,6 @@ export const PlaylistWorkspace = () => {
               rules={{
                 minLength: {
                   value: 5,
-                  // value: MIN_TITLE_LENGTH,
                   message: 'Enter a valid playlist title.',
                 },
                 required: {
@@ -220,7 +248,30 @@ export const PlaylistWorkspace = () => {
             />
           </FormWrapper>
           {playlistVideos.length ? (
-            playlistVideos.map((videoId) => <VideoTileViewer direction="horizontal" key={videoId} id={videoId} />)
+            <>
+              <div>
+                {playlistVideos.map((videoId, index) => (
+                  <DraggableComponent
+                    key={videoId}
+                    id={videoId}
+                    itemType="videoListItem"
+                    index={index}
+                    moveItem={moveItem}
+                  >
+                    <StyledVideoListItem id={videoId} variant="large" />
+                  </DraggableComponent>
+                ))}
+              </div>
+              <StyledButton
+                onClick={() => setShow(true)}
+                variant="secondary"
+                size="large"
+                icon={<SvgActionAdd />}
+                iconPlacement="right"
+              >
+                Add videos
+              </StyledButton>
+            </>
           ) : (
             <EmptyFallback
               title="No videos in the playlist yet"
