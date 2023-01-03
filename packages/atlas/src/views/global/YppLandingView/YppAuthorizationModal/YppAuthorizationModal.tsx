@@ -307,7 +307,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         text: `Your YouTube channel has at least ${pluralizeNoun(
           fetchedChannelRequirements?.MINIMUM_VIDEO_COUNT ?? 0,
           'video',
-          { formatCount: true }
+          true
         )}, all published at least ${convertHoursRequirementTime(
           fetchedChannelRequirements?.MINIMUM_VIDEO_AGE_HOURS || 0
         )} ago`,
@@ -319,7 +319,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         text: `Your YouTube channel has at least ${pluralizeNoun(
           fetchedChannelRequirements?.MINIMUM_SUBSCRIBERS_COUNT ?? 0,
           'subscriber',
-          { formatCount: true }
+          true
         )} and subscriptions are made public.`,
         fulfilled: !ytRequirmentsErrors.some(
           (error) => error === YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_SUBSCRIBERS
