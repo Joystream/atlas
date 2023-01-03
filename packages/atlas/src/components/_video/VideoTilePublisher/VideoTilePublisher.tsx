@@ -252,14 +252,14 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
         </CSSTransition>
       )
     }
-
+    console.log(video?.title, hasAssetUploadFailed, isUploading)
     return (
       <VideoTile
         clickable={!isUploading || hasAssetUploadFailed}
         slots={getSlots()}
         contentSlot={getContentSlot()}
         videoHref={hasVideoUploadFailed || isUploading ? absoluteRoutes.studio.uploads() : videoHref}
-        linkState={hasAssetUploadFailed ? { highlightFailed: true } : undefined}
+        linkState={hasAssetUploadFailed ? { highlightVideoId: video?.id } : undefined}
         videoSubTitle={getVideoSubtitle()}
         detailsVariant="withoutChannel"
         loadingDetails={loading || !video}

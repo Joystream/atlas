@@ -255,7 +255,9 @@ export const MyVideosView = () => {
               handleEditVideoClick(video.id, { mintNft: true })
             }}
             onDeleteVideoClick={() => video.id && deleteVideo(video.id)}
-            onReuploadVideoClick={() => navigate(absoluteRoutes.studio.uploads(), { state: { highlightFailed: true } })}
+            onReuploadVideoClick={() =>
+              navigate(absoluteRoutes.studio.uploads(), { state: { highlightVideoId: video.id } })
+            }
           />
         )
       })
