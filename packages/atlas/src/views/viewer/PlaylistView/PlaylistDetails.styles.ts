@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { ColumnGapBlock } from '@/components/_layouts'
 import { cVar, media, sizes } from '@/styles'
 
 export const Wrapper = styled(LimitedWidthContainer)`
@@ -13,6 +14,7 @@ export const Wrapper = styled(LimitedWidthContainer)`
   }
 `
 export const InfoContainer = styled.div`
+  height: fit-content;
   background-color: ${cVar('colorCoreNeutral900')};
 
   > *:first-child {
@@ -22,9 +24,18 @@ export const InfoContainer = styled.div`
 
 export const DetailsWrapper = styled.div`
   display: grid;
+  grid-auto-flow: row;
   gap: ${sizes(6)};
   padding: ${sizes(6)};
   padding-bottom: ${sizes(12)};
+
+  ${media.sm} {
+    grid-auto-flow: column;
+  }
+
+  ${media.md} {
+    grid-auto-flow: row;
+  }
 `
 
 export const Thumbnail = styled.img`
@@ -32,4 +43,34 @@ export const Thumbnail = styled.img`
   justify-self: center;
   max-width: 100%;
   max-height: 200px;
+`
+export const DetailsButtonsWrapper = styled(ColumnGapBlock)`
+  padding-top: ${sizes(4)};
+  flex-direction: column;
+
+  ${media.xs} {
+    gap: ${sizes(4)};
+    flex-direction: row;
+  }
+`
+
+export const CustomVideoListItemWrapper = styled.div`
+  display: flex;
+  gap: ${sizes(4)};
+`
+
+export const Counter = styled.div`
+  border-radius: 50%;
+  width: ${sizes(6)};
+  height: ${sizes(6)};
+  display: grid;
+  place-items: center;
+  color: ${cVar('colorTextMuted')};
+  background-color: rgb(187 217 246 / 0.13);
+  margin-top: ${sizes(3)};
+
+  ${media.xs} {
+    margin-top: 0;
+    align-self: center;
+  }
 `

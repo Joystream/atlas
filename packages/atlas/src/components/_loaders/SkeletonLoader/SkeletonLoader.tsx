@@ -6,6 +6,7 @@ import { cVar } from '@/styles/generated/variables'
 
 export type SkeletonLoaderProps = {
   width?: string | number
+  minWidth?: string | number
   height?: string | number
   bottomSpace?: string | number
   rounded?: boolean
@@ -33,6 +34,7 @@ export const SkeletonLoader: FC<SkeletonLoaderProps> = ({ className, ...props })
 
 const SkeletonLoaderContainer = styled.div<SkeletonLoaderProps>`
   width: ${({ width = '100%' }) => getPropValue(width)};
+  min-width: ${({ minWidth = 0 }) => getPropValue(minWidth)};
   height: ${({ height = '100%' }) => getPropValue(height)};
   margin-bottom: ${({ bottomSpace = 0 }) => getPropValue(bottomSpace)};
   border-radius: ${({ rounded = false }) => (rounded ? '100%' : '0')};

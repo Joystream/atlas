@@ -1,17 +1,23 @@
 import styled from '@emotion/styled'
 
 import { Loader } from '@/components/_loaders/Loader'
-import { cVar, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 export const Wrapper = styled.div<{ variant: 'small' | 'large' }>`
   width: 100%;
-  display: flex;
+  display: grid;
   gap: ${sizes(4)};
-  height: ${({ variant }) => (variant === 'small' ? '80px' : '111px')};
+  height: fit-content;
+  grid-template-rows: 140px auto;
   position: relative;
   overflow: hidden;
   cursor: pointer;
-  padding: ${sizes(3)} 0;
+  margin: ${sizes(3)} 0;
+
+  ${media.xs} {
+    grid-template-rows: ${({ variant }) => (variant === 'small' ? '50px' : '111px')};
+    grid-template-columns: auto 1fr;
+  }
 `
 
 export const DetailsWrapper = styled.div<{ variant: 'small' | 'large' }>`
@@ -27,6 +33,7 @@ export const ThumbnailImage = styled.img`
 
 export const ThumbnailBackground = styled.div`
   background: ${cVar('colorBackground')};
+  width: fit-content;
   position: relative;
 `
 
@@ -43,11 +50,11 @@ export const EndNodeWrapper = styled.div`
   margin-left: auto;
 `
 
-export const SkeletonTextWrapper = styled.div`
+export const SkeletonTextWrapper = styled.div<{ variant: 'small' | 'large' }>`
   width: 100%;
   display: grid;
   gap: ${sizes(1)};
-  align-self: center;
+  align-self: ${(props) => (props.variant === 'large' ? 'start' : 'center')};
 `
 
 export const StyledLoader = styled(Loader)`
