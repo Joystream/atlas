@@ -42,15 +42,18 @@ import {
   YppAuthorizationDetailsFormStep,
   YppAuthorizationRequirementsStep,
   YppAuthorizationSelectChannelStep,
+  YppAuthorizationSyncStep,
   YppAuthorizationTermsAndConditionsStep,
+  YppSyncStepData,
 } from './YppAuthorizationSteps'
 
 type FinalFormData = {
   authorizationCode?: string
   userId?: string
-  email?: string
   joystreamChannelId?: number
+  email?: string
   referrerChannelId?: number
+  shouldBeIngested?: boolean
   videoCategoryId?: string
 }
 
@@ -84,11 +87,12 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
 
   const smMatch = useMediaMatch('sm')
 
-  const detailsFormMethods = useForm<DetailsFormData>({
+  const detailsFormMethods = useForm<DetailsFormData & YppSyncStepData>({
     defaultValues: {
       referrerChannelId: '',
       referrerChannelTitle: '',
       email: '',
+      shouldBeIngested: true,
     },
   })
   const { dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
@@ -145,8 +149,11 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   }, [onChangeStep, setReferrerId, setSelectedChannelId, setShouldContinueYppFlow, setYtRequirmentsErrors])
 
   const handleGoBack = useCallback(() => {
-    if (currentStep === 'terms-and-conditions') {
+    if (currentStep === 'ypp-sync') {
       onChangeStep('details')
+    }
+    if (currentStep === 'terms-and-conditions') {
+      onChangeStep('ypp-sync')
     }
     if (currentStep === 'details' || currentStep === 'channel-already-registered') {
       onChangeStep('requirements')
@@ -170,11 +177,12 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       ...(selectedChannelId ? { joystreamChannelId: parseInt(selectedChannelId) } : {}),
       authorizationCode: ytResponseData?.authorizationCode,
       userId: ytResponseData?.userId,
-      videoCategoryId: data.videoCategoryId,
       email: data.email,
+      shouldBeIngested: data.shouldBeIngested,
+      videoCategoryId: data.videoCategoryId,
       ...(data.referrerChannelId ? { referrerChannelId: parseInt(data.referrerChannelId) } : {}),
     }))
-    onChangeStep('terms-and-conditions')
+    onChangeStep(currentStep === 'details' ? 'ypp-sync' : 'terms-and-conditions')
   })
 
   const handleAcceptTermsAndSubmit = useCallback(async () => {
@@ -379,6 +387,18 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
             text: 'Continue',
           },
           component: <YppAuthorizationDetailsFormStep />,
+        }
+      case 'ypp-sync':
+        return {
+          title: 'YouTube Sync',
+          description: `With YouTube Sync enabled, ${APP_NAME} will import videos from your YouTube channel over to Joystream. This can be changed later.`,
+          primaryButton: {
+            onClick: () => {
+              handleSubmitDetailsForm()
+            },
+            text: 'Continue',
+          },
+          component: <YppAuthorizationSyncStep />,
         }
       case 'terms-and-conditions':
         return {

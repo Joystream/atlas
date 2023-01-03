@@ -7,6 +7,7 @@ export type YppAuthorizationStepsType =
   | 'requirements'
   | 'fetching-data'
   | 'details'
+  | 'ypp-sync'
   | 'terms-and-conditions'
   | 'summary'
   | 'channel-already-registered'
