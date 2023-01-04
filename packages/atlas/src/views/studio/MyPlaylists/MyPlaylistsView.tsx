@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { SvgActionAddVideo, SvgActionPlus } from '@/assets/icons'
+import { SvgActionAdd } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Tabs } from '@/components/Tabs'
@@ -32,7 +32,7 @@ export const MyPlaylistsView = () => {
         My playlists
       </Text>
       {!smMatch && (
-        <MobileButton size="large" to={absoluteRoutes.studio.playlist()} icon={<SvgActionAddVideo />} fullWidth>
+        <MobileButton size="large" to={absoluteRoutes.studio.playlist()} icon={<SvgActionAdd />} fullWidth>
           Upload video
         </MobileButton>
       )}
@@ -48,7 +48,7 @@ export const MyPlaylistsView = () => {
           />
         )}
         {smMatch && (
-          <Button to={absoluteRoutes.studio.videoWorkspace()} icon={<SvgActionAddVideo />}>
+          <Button to={absoluteRoutes.studio.videoWorkspace()} icon={<SvgActionAdd />}>
             Create new playlist
           </Button>
         )}
@@ -60,7 +60,7 @@ export const MyPlaylistsView = () => {
           variant="large"
           button={
             <Button
-              icon={<SvgActionPlus />}
+              icon={<SvgActionAdd />}
               // to={absoluteRoutes.studio.videoWorkspace()}
               variant="secondary"
               size="large"
