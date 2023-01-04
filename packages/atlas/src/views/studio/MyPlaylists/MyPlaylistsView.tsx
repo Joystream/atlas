@@ -1,12 +1,13 @@
 import { useState } from 'react'
 
 import { SvgActionAdd } from '@/assets/icons'
-import { EmptyFallback } from '@/components/EmptyFallback'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { ListWrapper } from '@/components/ListWrapper/ListWrapper'
 import { Tabs } from '@/components/Tabs'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { Select } from '@/components/_inputs/Select'
+import { PlaylistListItem } from '@/components/_playlist/PlaylistListItem'
 import { absoluteRoutes } from '@/config/routes'
 import { PLAYLIST_SORT_OPTIONS } from '@/config/sorting'
 import { useHeadTags } from '@/hooks/useHeadTags'
@@ -54,22 +55,28 @@ export const MyPlaylistsView = () => {
         )}
       </TabsContainer>
       {tabName === 'My playlists' && (
-        <EmptyFallback
-          title="Create your first playlist"
-          subtitle="You don’t have any playlist yet. Create one to showcase your videos in a new way."
-          variant="large"
-          button={
-            <Button
-              icon={<SvgActionAdd />}
-              // to={absoluteRoutes.studio.videoWorkspace()}
-              variant="secondary"
-              size="large"
-              // onClick={handleAddVideoTab}
-            >
-              Create new playlist
-            </Button>
-          }
-        />
+        // <EmptyFallback
+        //   title="Create your first playlist"
+        //   subtitle="You don’t have any playlist yet. Create one to showcase your videos in a new way."
+        //   variant="large"
+        //   button={
+        //     <Button
+        //       icon={<SvgActionAdd />}
+        //       // to={absoluteRoutes.studio.videoWorkspace()}
+        //       variant="secondary"
+        //       size="large"
+        //       // onClick={handleAddVideoTab}
+        //     >
+        //       Create new playlist
+        //     </Button>
+        //   }
+        // />a
+        <ListWrapper columns={['playlists', 'visibilty', 'last updated', 'total time', 'num. of videos']}>
+          <PlaylistListItem />
+          <PlaylistListItem />
+          <PlaylistListItem />
+          <PlaylistListItem />
+        </ListWrapper>
       )}
     </LimitedWidthContainer>
   )
