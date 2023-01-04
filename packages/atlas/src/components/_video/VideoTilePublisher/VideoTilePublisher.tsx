@@ -252,7 +252,7 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
         </CSSTransition>
       )
     }
-    console.log(video?.title, hasAssetUploadFailed, isUploading)
+
     return (
       <VideoTile
         clickable={!isUploading || hasAssetUploadFailed}
