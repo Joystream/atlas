@@ -20,7 +20,7 @@ import {
 } from './PlaylistListItem.styles'
 
 export const PlaylistListItem = () => {
-  const lgMatch = useMediaMatch('lg')
+  const mdMatch = useMediaMatch('md')
   const [isHovered, setIsHovered] = useState(false)
 
   const actionButtons = (
@@ -70,7 +70,7 @@ export const PlaylistListItem = () => {
             mountOnEnter
             appear
             unmountOnExit
-            in={!lgMatch || !isHovered}
+            in={!mdMatch || !isHovered}
             classNames="playlist-info"
           >
             <RowGapBlock gap={2}>
@@ -80,16 +80,16 @@ export const PlaylistListItem = () => {
               <PlaylistDescription variant="t100" color="colorTextMuted" as="p">
                 This collection of videos feature best science finding of 2021 that our community achieved
               </PlaylistDescription>
-              {!lgMatch && actionButtons}
+              {!mdMatch && actionButtons}
             </RowGapBlock>
           </CSSTransition>
-          {lgMatch && (
+          {mdMatch && (
             <CSSTransition
               timeout={parseInt(cVar('animationTimingMedium', true))}
               mountOnEnter
               appear
               unmountOnExit
-              in={lgMatch && isHovered}
+              in={mdMatch && isHovered}
               classNames="playlist-buttons"
             >
               {actionButtons}

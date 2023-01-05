@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import { SvgActionTrash } from '@/assets/icons'
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
+import { Select } from '@/components/_inputs/Select'
 import { cVar, sizes } from '@/styles'
 
 export const Wrapper = styled.div`
@@ -10,7 +11,7 @@ export const Wrapper = styled.div`
   grid-template-columns: 6fr 1fr 1fr 1fr 1fr;
   gap: 10px;
   width: 100%;
-  min-width: 1000px;
+  min-width: 960px;
   height: fit-content;
   padding: ${sizes(4)};
   border-top: 1px solid rgb(194 224 255 / 0.2);
@@ -113,4 +114,10 @@ export const PlaylistDescription = styled(Text)`
 
 export const StyledPill = styled(Pill)`
   width: fit-content;
+`
+
+export const StyledSelect = styled(Select)`
+  width: fit-content;
+  margin-left: auto;
+  padding-bottom: ${sizes(8)};
 `

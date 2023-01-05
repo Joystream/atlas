@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import { SvgActionAdd } from '@/assets/icons'
+import { EmptyFallback } from '@/components/EmptyFallback'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { ListWrapper } from '@/components/ListWrapper/ListWrapper'
 import { Tabs } from '@/components/Tabs'
@@ -12,7 +13,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { PLAYLIST_SORT_OPTIONS } from '@/config/sorting'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { MobileButton, TabsContainer } from '@/views/studio/MyVideosView/MyVideos.styles'
+import { MobileButton, StyledSelect, TabsContainer } from '@/views/studio/MyVideosView/MyVideos.styles'
 
 const TABS = ['My playlists', 'Public', 'Unlisted'] as const
 
@@ -22,7 +23,6 @@ export const MyPlaylistsView = () => {
   const mdMatch = useMediaMatch('md')
   const [currentPlaylistsTab, setCurrentPlaylistsTab] = useState(0)
   const [sortPlaylistBy, setSortPlaylist] = useState(0)
-
   const tabName = TABS[currentPlaylistsTab]
 
   const mappedTabs = TABS.map((tab) => ({ name: tab }))
@@ -34,7 +34,7 @@ export const MyPlaylistsView = () => {
       </Text>
       {!smMatch && (
         <MobileButton size="large" to={absoluteRoutes.studio.playlist()} icon={<SvgActionAdd />} fullWidth>
-          Upload video
+          Create new playlist
         </MobileButton>
       )}
       <TabsContainer>
@@ -55,28 +55,41 @@ export const MyPlaylistsView = () => {
         )}
       </TabsContainer>
       {tabName === 'My playlists' && (
-        // <EmptyFallback
-        //   title="Create your first playlist"
-        //   subtitle="You don’t have any playlist yet. Create one to showcase your videos in a new way."
-        //   variant="large"
-        //   button={
-        //     <Button
-        //       icon={<SvgActionAdd />}
-        //       // to={absoluteRoutes.studio.videoWorkspace()}
-        //       variant="secondary"
-        //       size="large"
-        //       // onClick={handleAddVideoTab}
-        //     >
-        //       Create new playlist
-        //     </Button>
-        //   }
-        // />
-        <ListWrapper columns={['playlists', 'visibilty', 'last updated', 'total time', 'num. of videos']}>
-          <PlaylistListItem />
-          <PlaylistListItem />
-          <PlaylistListItem />
-          <PlaylistListItem />
-        </ListWrapper>
+        <>
+          {!mdMatch && (
+            <StyledSelect
+              size="medium"
+              inlineLabel="Sort by"
+              value={sortPlaylistBy}
+              items={PLAYLIST_SORT_OPTIONS}
+              onChange={(val) => val && setSortPlaylist(val as number)}
+            />
+          )}
+          <ListWrapper columns={['playlists', 'visibilty', 'last updated', 'total time', 'num. of videos']}>
+            <PlaylistListItem />
+            <PlaylistListItem />
+            <PlaylistListItem />
+            <PlaylistListItem />
+          </ListWrapper>
+        </>
+      )}
+      {tabName === 'Public' && (
+        <EmptyFallback
+          title="Create your first playlist"
+          subtitle="You don’t have any playlist yet. Create one to showcase your videos in a new way."
+          variant="large"
+          button={
+            <Button
+              icon={<SvgActionAdd />}
+              // to={absoluteRoutes.studio.videoWorkspace()}
+              variant="secondary"
+              size="large"
+              // onClick={handleAddVideoTab}
+            >
+              Create new playlist
+            </Button>
+          }
+        />
       )}
     </LimitedWidthContainer>
   )
