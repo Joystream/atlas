@@ -8,6 +8,7 @@ import { Button } from '@/components/_buttons/Button'
 import { ColumnGapBlock, RowGapBlock } from '@/components/_layouts'
 import { VideoThumbnail } from '@/components/_video/VideoThumbnail'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { cVar } from '@/styles'
 
 import {
   Cell,
@@ -65,7 +66,7 @@ export const PlaylistListItem = () => {
         />
         <HoverContainer>
           <CSSTransition
-            timeout={700}
+            timeout={parseInt(cVar('animationTimingMedium', true))}
             mountOnEnter
             appear
             unmountOnExit
@@ -84,7 +85,7 @@ export const PlaylistListItem = () => {
           </CSSTransition>
           {lgMatch && (
             <CSSTransition
-              timeout={400}
+              timeout={parseInt(cVar('animationTimingMedium', true))}
               mountOnEnter
               appear
               unmountOnExit

@@ -36,7 +36,7 @@ export const Wrapper = styled.div`
     &-enter-active {
       opacity: 1;
       transform: translateY(0);
-      transition: transform ${cVar('animationTransitionSlow')}, opacity ${cVar('animationTransitionSlow')};
+      transition: transform ${cVar('animationTimingMedium')}, opacity ${cVar('animationTimingMedium')};
     }
 
     &-exit,
@@ -48,7 +48,7 @@ export const Wrapper = styled.div`
     &-exit-active {
       opacity: 0;
       transform: translateY(100%);
-      transition: transform ${cVar('animationTransitionSlow')}, opacity ${cVar('animationTransitionSlow')};
+      transition: transform ${cVar('animationTimingMedium')}, opacity ${cVar('animationTimingMedium')};
     }
   }
 
@@ -61,7 +61,7 @@ export const Wrapper = styled.div`
     &-enter-active {
       opacity: 1;
       transform: translateY(0);
-      transition: transform ${cVar('animationTransitionSlow')}, opacity ${cVar('animationTransitionSlow')};
+      transition: transform ${cVar('animationTimingMedium')}, opacity ${cVar('animationTimingMedium')};
     }
 
     &-exit,
@@ -73,7 +73,7 @@ export const Wrapper = styled.div`
     &-exit-active {
       opacity: 0;
       transform: translateY(-100%);
-      transition: transform ${cVar('animationTransitionSlow')}, opacity ${cVar('animationTransitionSlow')};
+      transition: transform ${cVar('animationTimingMedium')}, opacity ${cVar('animationTimingMedium')};
     }
   }
 `
