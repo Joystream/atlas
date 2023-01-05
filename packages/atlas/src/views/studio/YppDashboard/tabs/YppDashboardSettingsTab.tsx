@@ -1,3 +1,4 @@
+import { signatureVerify } from '@polkadot/util-crypto'
 import axios from 'axios'
 import { useCallback, useEffect, useState } from 'react'
 
@@ -9,7 +10,9 @@ import { atlasConfig } from '@/config'
 import { displayCategories } from '@/config/categories'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useConfirmationModal } from '@/providers/confirmationModal'
+import { useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useSnackbar } from '@/providers/snackbars'
+import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
 import { StyledActionBar } from '@/views/viewer/EditMembershipView/EditMembershipView.styles'
@@ -30,7 +33,9 @@ const categoriesSelectItems: SelectItem[] =
 export const YppDashboardSettingsTab = () => {
   const mdMatch = useMediaMatch('md')
   const { displaySnackbar } = useSnackbar()
+  const { accountId } = useUser()
   const { currentChannel, refetchSyncedChannels } = useGetYppSyncedChannels()
+  const { joystream } = useJoystream()
   const [openModal, closeModal] = useConfirmationModal()
 
   const [isSync, setIsSync] = useState(currentChannel?.shouldBeIngested)
@@ -46,14 +51,31 @@ export const YppDashboardSettingsTab = () => {
   }, [currentChannel])
 
   const handleChangeSettings = useCallback(async () => {
+    if (!accountId || !joystream) {
+      SentryLogger.error('No joystream instance', 'YppDashboardSettingsTab')
+      return
+    }
+    const message = {
+      shouldBeIngested: true,
+      timestamp: 1672918623544,
+    }
+    const signature = await joystream.signMessage({
+      data: JSON.stringify(message),
+      type: 'payload',
+    })
+
+    if (signature) {
+      const { isValid } = signatureVerify(JSON.stringify(message), signature, accountId)
+      console.log('arguments:', JSON.stringify(message), signature, accountId)
+      console.log({ signature })
+      // console.log({ isValid })
+    }
+
     if (!currentChannel) return
     try {
       const data = await axios.put(
-        `${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${currentChannel.joystreamChannelId}`,
-        {
-          category,
-          isSync,
-        }
+        `${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${currentChannel.joystreamChannelId}/ingest`,
+        { message, signature }
       )
 
       if (data.status === 200) {
@@ -67,10 +89,14 @@ export const YppDashboardSettingsTab = () => {
     } catch (e) {
       SentryLogger.error('Error while updating YPP setting: ', e)
     }
-  }, [currentChannel, category, isSync, displaySnackbar, refetchSyncedChannels])
+  }, [accountId, currentChannel, displaySnackbar, isSync, joystream, refetchSyncedChannels])
 
   // todo
   const handleLeaveTx = useCallback(() => {
+    if (!accountId) {
+      return
+    }
+
     displaySnackbar({
       title: 'You left the progam',
       description:
@@ -78,7 +104,7 @@ export const YppDashboardSettingsTab = () => {
       iconType: 'success',
     })
     closeModal()
-  }, [closeModal, displaySnackbar])
+  }, [accountId, closeModal, displaySnackbar])
 
   const openModalOptions = {
     title: 'Leave the program?',
