@@ -30,6 +30,7 @@ import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { sizes } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
+import { YppVideoDto } from '@/views/studio/MyVideosView/MyVideosView.types'
 
 import {
   MobileButton,
@@ -64,14 +65,12 @@ export const MyVideosView = () => {
   const mdMatch = useMediaMatch('md')
   const { data } = useQuery(
     'ypp-videos',
-    () => axios.get(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${channelId}/videos`),
+    () => axios.get<YppVideoDto[]>(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${channelId}/videos`),
     {
       enabled: !!channelId,
-      refetchInterval: (data) =>
-        data?.data.some((resource: any) => resource.state === 'UploadStarted') ? 1000 : false,
+      refetchInterval: (data) => (data?.data.some((resource) => resource.state === 'UploadStarted') ? 1000 : false),
     }
   )
-
   const [currentVideosTab, setCurrentVideosTab] = useState(0)
   const currentTabName = TABS[currentVideosTab]
   const isDraftTab = currentTabName === 'Drafts'
@@ -124,9 +123,7 @@ export const MyVideosView = () => {
   }))
 
   const videosTitlesInSync = useMemo((): string[] => {
-    return data?.data
-      .filter((resource: any) => resource.state === 'UploadStarted')
-      .map((resource: any) => resource.title)
+    return data?.data.filter((resource) => resource.state === 'UploadStarted').map((resource) => resource.title) ?? []
   }, [data])
 
   const videosWithSkeletonLoaders = [...(videos || []), ...placeholderItems]
