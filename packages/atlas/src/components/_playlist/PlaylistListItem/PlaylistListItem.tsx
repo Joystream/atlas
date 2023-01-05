@@ -1,20 +1,24 @@
 import { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { SvgActionEdit, SvgActionLinkUrl, SvgActionPlay } from '@/assets/icons'
+import { SvgActionEdit, SvgActionHide, SvgActionLinkUrl, SvgActionPlay, SvgActionShow } from '@/assets/icons'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 import { Button } from '@/components/_buttons/Button'
 import { ColumnGapBlock, RowGapBlock } from '@/components/_layouts'
+import { VideoThumbnail } from '@/components/_video/VideoThumbnail'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
-import { Cell, HoverContainer, StyledSvgActionTrash, Test, Wrapper } from './PlaylistListItem.styles'
+import {
+  Cell,
+  HoverContainer,
+  PlaylistDescription,
+  StyledPill,
+  StyledSvgActionTrash,
+  Wrapper,
+} from './PlaylistListItem.styles'
 
-type PlaylistListItemProps = {
-  columns?: string[]
-}
-
-export const PlaylistListItem = ({ columns }: PlaylistListItemProps) => {
+export const PlaylistListItem = () => {
   const lgMatch = useMediaMatch('lg')
   const [isHovered, setIsHovered] = useState(false)
 
@@ -34,10 +38,31 @@ export const PlaylistListItem = ({ columns }: PlaylistListItemProps) => {
       </Tooltip>
     </ColumnGapBlock>
   )
+
+  const visibilityPillProps = isHovered
+    ? { label: 'Public', icon: <SvgActionShow /> }
+    : { label: 'Unlisted', icon: <SvgActionHide /> }
+
   return (
-    <Wrapper columns={columns} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+    <Wrapper onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
       <ColumnGapBlock gap={4} align="center">
-        <Test />
+        <VideoThumbnail
+          type="playlist"
+          thumbnailUrl="https://picsum.photos/190/106"
+          slots={{
+            center: {
+              element: (
+                <ColumnGapBlock align="center">
+                  <SvgActionPlay />
+                  <Text as="span" margin={{ left: 2 }} variant="t200-strong">
+                    Play all videos
+                  </Text>
+                </ColumnGapBlock>
+              ),
+              type: 'hover',
+            },
+          }}
+        />
         <HoverContainer>
           <CSSTransition
             timeout={700}
@@ -51,9 +76,9 @@ export const PlaylistListItem = ({ columns }: PlaylistListItemProps) => {
               <Text variant="h200" as="p">
                 Best of science findings 2021 • Science talk
               </Text>
-              <Text variant="t100" color="colorTextMuted" as="p">
-                This collection of videos feature best science finding of 2021 that our commu...{' '}
-              </Text>
+              <PlaylistDescription variant="t100" color="colorTextMuted" as="p">
+                This collection of videos feature best science finding of 2021 that our community achieved
+              </PlaylistDescription>
               {!lgMatch && actionButtons}
             </RowGapBlock>
           </CSSTransition>
@@ -72,23 +97,21 @@ export const PlaylistListItem = ({ columns }: PlaylistListItemProps) => {
         </HoverContainer>
       </ColumnGapBlock>
       <Cell>
-        <Text variant="h100" as="p">
+        <StyledPill variant="default" {...visibilityPillProps} />
+      </Cell>
+      <Cell>
+        <Text variant="t100" as="p">
           Right now
         </Text>
       </Cell>
       <Cell>
-        <Text variant="h100" as="p">
-          Right now
+        <Text variant="t100" as="p">
+          345h 12m 20s
         </Text>
       </Cell>
       <Cell>
-        <Text variant="h100" as="p">
-          Right now
-        </Text>
-      </Cell>
-      <Cell>
-        <Text variant="h100" as="p">
-          Right now
+        <Text variant="t100" as="p">
+          100
         </Text>
       </Cell>
     </Wrapper>

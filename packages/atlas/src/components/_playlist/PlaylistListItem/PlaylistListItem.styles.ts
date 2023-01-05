@@ -1,9 +1,11 @@
 import styled from '@emotion/styled'
 
 import { SvgActionTrash } from '@/assets/icons'
+import { Pill } from '@/components/Pill'
+import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 
-export const Wrapper = styled.div<{ columns?: string[] }>`
+export const Wrapper = styled.div`
   display: grid;
   grid-template-columns: 6fr 1fr 1fr 1fr 1fr;
   gap: 10px;
@@ -89,12 +91,6 @@ export const StyledSvgActionTrash = styled(SvgActionTrash)`
   }
 `
 
-export const Test = styled.div`
-  width: 200px;
-  height: 106px;
-  background-color: blueviolet;
-`
-
 export const HoverContainer = styled.div`
   position: relative;
   height: 100%;
@@ -104,6 +100,17 @@ export const HoverContainer = styled.div`
   overflow: hidden;
 
   > * {
+    width: 100%;
     position: absolute;
   }
+`
+
+export const PlaylistDescription = styled(Text)`
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`
+
+export const StyledPill = styled(Pill)`
+  width: fit-content;
 `

@@ -70,7 +70,7 @@ export const MyPlaylistsView = () => {
         //       Create new playlist
         //     </Button>
         //   }
-        // />a
+        // />
         <ListWrapper columns={['playlists', 'visibilty', 'last updated', 'total time', 'num. of videos']}>
           <PlaylistListItem />
           <PlaylistListItem />
