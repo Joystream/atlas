@@ -2,9 +2,9 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
-import { cVar, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
-export const PlaylistWidgetWrapper = styled.div`
+export const PlaylistWidgetWrapper = styled.div<{ maxHeight: number }>`
   background-color: ${cVar('colorBackgroundMuted')};
 `
 
@@ -14,6 +14,7 @@ export const PlaylistHeader = styled.header`
   justify-content: space-between;
   box-shadow: ${cVar('effectDividersBottom')};
   align-items: center;
+  cursor: pointer;
 `
 
 export const StyledLink = styled(Link)`
@@ -29,10 +30,12 @@ type PlaylistBodyProps = {
 }
 
 export const PlaylistBody = styled.div<PlaylistBodyProps>`
-  max-height: ${({ maxHeight, isExpanded }) => (isExpanded ? maxHeight : 0)}px;
+  max-height: 400px;
   overflow: auto;
-  height: auto;
   transition: max-height ${cVar('animationTransitionFast')};
+  ${media.md} {
+    max-height: ${({ maxHeight, isExpanded }) => (isExpanded ? maxHeight : 0)}px;
+  }
 `
 
 export const TileList = styled.ol`
@@ -42,9 +45,15 @@ export const TileList = styled.ol`
 `
 
 export const TileItemWrapper = styled.li`
+  padding: ${sizes(2)};
   display: flex;
   align-items: center;
-  padding: ${sizes(2)};
+  text-decoration: none;
+
+  :hover {
+    background-color: ${cVar('colorBackgroundAlpha')};
+    transition: background-color ${cVar('animationTransitionFast')};
+  }
 `
 
 export const Counter = styled(Text)`

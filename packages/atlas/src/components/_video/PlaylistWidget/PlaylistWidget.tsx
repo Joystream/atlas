@@ -1,10 +1,12 @@
 import { FC, useState } from 'react'
+import useResizeObserver from 'use-resize-observer/polyfilled'
 
 import { BasicVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { SvgActionChevronB } from '@/assets/icons'
+import { SvgActionChevronB, SvgActionChevronT } from '@/assets/icons'
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
+import { useAsset } from '@/providers/assets/assets.hooks'
 import { formatDurationShort } from '@/utils/time'
 
 import {
@@ -27,6 +29,7 @@ export type PlaylistWidgetProps = {
   currentVideoNumber: number
   channelTitle: string
   channelId: string
+  maxHeight?: number
 }
 
 export const PlaylistWidget: FC<PlaylistWidgetProps> = ({
@@ -36,48 +39,70 @@ export const PlaylistWidget: FC<PlaylistWidgetProps> = ({
   playlistVideos,
   channelId,
   channelTitle,
+  maxHeight = 0,
 }) => {
   const [isExpanded, setIsExpanded] = useState(true)
+  const { height: headerHeight = 0, ref } = useResizeObserver({
+    box: 'border-box',
+  })
+
   return (
-    <PlaylistWidgetWrapper>
-      <PlaylistHeader onClick={() => setIsExpanded((expanded) => !expanded)}>
+    <PlaylistWidgetWrapper maxHeight={maxHeight}>
+      <PlaylistHeader ref={ref} onClick={() => setIsExpanded((expanded) => !expanded)}>
         <PlaylistInfoWrapper>
           <Text variant="h300" as="h2" margin={{ bottom: 1 }}>
             {playlistTitle}
           </Text>
-          <Text variant="t300" as="p">
+          <Text variant="t200" as="p">
             <StyledLink to={absoluteRoutes.viewer.channel(channelId)}>{channelTitle} </StyledLink>
-            <Text variant="t300" as="span" margin={{ left: 1 }} color="colorText">
+            <Text variant="t200" as="span" margin={{ left: 1 }} color="colorText">
               &#8226; {currentVideoNumber}/{playlistLength}
             </Text>
           </Text>
         </PlaylistInfoWrapper>
-        <SvgActionChevronB />
+        {isExpanded ? <SvgActionChevronT /> : <SvgActionChevronB />}
       </PlaylistHeader>
-      <PlaylistBody isExpanded={isExpanded} maxHeight={460}>
+      <PlaylistBody isExpanded={isExpanded} maxHeight={maxHeight - headerHeight}>
         <TileList>
           {playlistVideos.map((video, idx) => (
-            <TileItemWrapper key={video.id}>
-              <Counter variant="t300" as="p" color="colorText" margin={{ right: 1 }}>
-                {idx + 1}
-              </Counter>
-              <VideoThumbnail
-                type="video"
-                slots={{
-                  bottomRight: {
-                    element: video?.duration ? (
-                      <Pill variant="overlay" label={formatDurationShort(video?.duration)} title="Video duration" />
-                    ) : null,
-                  },
-                }}
-              />
-              <Text margin={{ left: 3 }} variant="t200" as="p">
-                {video.title}
-              </Text>
-            </TileItemWrapper>
+            <TileItem video={video} key={video.id} idx={idx} />
           ))}
         </TileList>
       </PlaylistBody>
     </PlaylistWidgetWrapper>
+  )
+}
+
+type PlaylistWidgetTilesProps = {
+  video: PlaylistWidgetProps['playlistVideos'][number]
+  idx: number
+}
+
+export const TileItem: FC<PlaylistWidgetTilesProps> = ({ video, idx }) => {
+  const { url: thumbnailUrl, isLoadingAsset: isLoadingThumbnail } = useAsset(video.thumbnailPhoto)
+  return (
+    <TileItemWrapper>
+      <Counter variant="t300" as="p" color="colorText" margin={{ right: 1 }}>
+        {idx + 1}
+      </Counter>
+      <VideoThumbnail
+        videoHref={absoluteRoutes.viewer.video(video.id)}
+        type="video"
+        thumbnailUrl={thumbnailUrl}
+        loading={isLoadingThumbnail}
+        slots={{
+          bottomRight: {
+            element: video?.duration ? (
+              <Pill variant="overlay" label={formatDurationShort(video?.duration)} title="Video duration" />
+            ) : null,
+          },
+        }}
+      />
+      <StyledLink to={absoluteRoutes.viewer.video(video.id)}>
+        <Text margin={{ left: 3 }} variant="t200-strong" as="p">
+          {video.title}
+        </Text>
+      </StyledLink>
+    </TileItemWrapper>
   )
 }

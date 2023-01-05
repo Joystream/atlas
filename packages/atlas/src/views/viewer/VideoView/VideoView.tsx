@@ -5,8 +5,9 @@ import { throttle } from 'lodash-es'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { useParams } from 'react-router-dom'
+import useResizeObserver from 'use-resize-observer/polyfilled'
 
-import { useAddVideoView, useFullVideo } from '@/api/hooks/video'
+import { useAddVideoView, useBasicVideos, useFullVideo } from '@/api/hooks/video'
 import { SvgActionFlag, SvgActionMore, SvgActionShare } from '@/assets/icons'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
@@ -20,6 +21,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NftWidget, useNftWidget } from '@/components/_nft/NftWidget'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { ReportModal } from '@/components/_overlays/ReportModal'
+import { PlaylistWidget } from '@/components/_video/PlaylistWidget/PlaylistWidget'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { AvailableTrack } from '@/components/_video/VideoPlayer/SettingsButtonWithPopover'
 import { atlasConfig } from '@/config'
@@ -29,6 +31,7 @@ import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
+import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { VideoReaction } from '@/joystream-lib/types'
 import { useAsset, useSubtitlesAssets } from '@/providers/assets/assets.hooks'
@@ -69,6 +72,10 @@ export const VideoView: FC = () => {
   const [showReportDialog, setShowReportDialog] = useState(false)
   const [reactionFee, setReactionFee] = useState<BN | undefined>()
   const { openSignInDialog } = useDisplaySignInDialog({ interaction: true })
+  const { height: playerContainerHeight = 0, ref } = useResizeObserver({
+    box: 'border-box',
+  })
+
   const { openNftPutOnSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement, cancelNftSale } =
     useNftActions()
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
@@ -250,6 +257,17 @@ export const VideoView: FC = () => {
     })
   }, [addVideoView, categoryId, channelId, videoId])
 
+  // todo replace once we will able to use actual playlist
+  const playlistQueryParam = useRouterQuery('playlist')
+  const isPlaylist = playlistQueryParam === 'true'
+  const { videos: playlistVideos = [] } = useBasicVideos(
+    {
+      where: { channel: { id_eq: channelId } },
+      limit: 30,
+    },
+    { skip: !isPlaylist }
+  )
+
   if (error) {
     return <ViewErrorFallback />
   }
@@ -257,6 +275,17 @@ export const VideoView: FC = () => {
   const isCinematic = cinematicView || !mdMatch
   const sideItems = (
     <GridItem colSpan={{ xxs: 12, md: 4 }}>
+      {playlistVideos.length > 0 && (
+        <PlaylistWidget
+          maxHeight={playerContainerHeight}
+          channelId={channelId || ''}
+          channelTitle={channelName || ''}
+          playlistLength={playlistVideos.length}
+          currentVideoNumber={1}
+          playlistTitle="Playlist title"
+          playlistVideos={playlistVideos}
+        />
+      )}
       {videoNotAvailable
         ? mdMatch && (
             <>
@@ -368,33 +397,35 @@ export const VideoView: FC = () => {
       <PlayerGridWrapper cinematicView={isCinematic}>
         <PlayerWrapper cinematicView={isCinematic}>
           <PlayerGridItem colSpan={{ xxs: 12, md: cinematicView ? 12 : 8 }}>
-            <PlayerContainer
-              className={transitions.names.slide}
-              cinematicView={cinematicView}
-              noVideo={videoNotAvailable}
-            >
-              {videoNotAvailable ? (
-                <VideoUnavailableError isCinematic={isCinematic} />
-              ) : !isMediaLoading && video ? (
-                <VideoPlayer
-                  onCloseShareDialog={() => setShareDialogOpen(false)}
-                  onAddVideoView={handleAddVideoView}
-                  isShareDialogOpen={isShareDialogOpen}
-                  isVideoPending={!video?.media?.isAccepted}
-                  videoId={video?.id}
-                  autoplay
-                  src={mediaUrl}
-                  onEnd={handleVideoEnd}
-                  onTimeUpdated={handleTimeUpdate}
-                  startTime={startTimestamp}
-                  isPlayNextDisabled={pausePlayNext}
-                  ref={playerRef}
-                  availableTextTracks={availableTracks}
-                />
-              ) : (
-                <PlayerSkeletonLoader />
-              )}
-            </PlayerContainer>
+            <div ref={ref}>
+              <PlayerContainer
+                className={transitions.names.slide}
+                cinematicView={cinematicView}
+                noVideo={videoNotAvailable}
+              >
+                {videoNotAvailable ? (
+                  <VideoUnavailableError isCinematic={isCinematic} />
+                ) : !isMediaLoading && video ? (
+                  <VideoPlayer
+                    onCloseShareDialog={() => setShareDialogOpen(false)}
+                    onAddVideoView={handleAddVideoView}
+                    isShareDialogOpen={isShareDialogOpen}
+                    isVideoPending={!video?.media?.isAccepted}
+                    videoId={video?.id}
+                    autoplay
+                    src={mediaUrl}
+                    onEnd={handleVideoEnd}
+                    onTimeUpdated={handleTimeUpdate}
+                    startTime={startTimestamp}
+                    isPlayNextDisabled={pausePlayNext}
+                    ref={playerRef}
+                    availableTextTracks={availableTracks}
+                  />
+                ) : (
+                  <PlayerSkeletonLoader />
+                )}
+              </PlayerContainer>
+            </div>
             {!isCinematic && (
               <>
                 {detailsItems}
