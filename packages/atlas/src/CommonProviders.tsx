@@ -1,5 +1,6 @@
 import { ApolloProvider } from '@apollo/client'
 import { FC, PropsWithChildren } from 'react'
+import { QueryClient, QueryClientProvider } from 'react-query'
 import { BrowserRouter } from 'react-router-dom'
 
 import { Maintenance } from '@/Maintenance'
@@ -13,6 +14,8 @@ import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { UserProvider } from '@/providers/user/user.provider'
 import { GlobalStyles } from '@/styles'
 
+const queryClient = new QueryClient()
+
 export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
   // App doesn't accept props and doesn't contain state so should never rerender
   const apolloClient = createApolloClient()
@@ -21,21 +24,23 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
     <>
       <GlobalStyles />
       <ApolloProvider client={apolloClient}>
-        <UserProvider>
-          <OverlayManagerProvider>
-            <ConfirmationModalProvider>
-              <BrowserRouter>
-                <AdminModal />
-                <MaintenanceWrapper>
-                  <OperatorsContextProvider>
-                    <AssetsManager />
-                    {children}
-                  </OperatorsContextProvider>
-                </MaintenanceWrapper>
-              </BrowserRouter>
-            </ConfirmationModalProvider>
-          </OverlayManagerProvider>
-        </UserProvider>
+        <QueryClientProvider client={queryClient}>
+          <UserProvider>
+            <OverlayManagerProvider>
+              <ConfirmationModalProvider>
+                <BrowserRouter>
+                  <AdminModal />
+                  <MaintenanceWrapper>
+                    <OperatorsContextProvider>
+                      <AssetsManager />
+                      {children}
+                    </OperatorsContextProvider>
+                  </MaintenanceWrapper>
+                </BrowserRouter>
+              </ConfirmationModalProvider>
+            </OverlayManagerProvider>
+          </UserProvider>
+        </QueryClientProvider>
       </ApolloProvider>
     </>
   )
