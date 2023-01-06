@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import { FileRejection } from 'react-dropzone'
 
 import { FileSelect } from '@/components/_inputs/FileSelect'
@@ -17,14 +17,14 @@ type ImageUploadAndCropProps = {
   maxSize?: number
 }
 
-export const ImageUploadAndCrop = ({
+export const ImageUploadAndCrop: FC<ImageUploadAndCropProps> = ({
   file,
   onImageChange,
   editMode,
   disabled,
   maxSize,
   className,
-}: ImageUploadAndCropProps) => {
+}) => {
   const dialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const [isImgLoading, setIsImgLoading] = useState(false)
   const [rawImageFile, setRawImageFile] = useState<File | null>(null)

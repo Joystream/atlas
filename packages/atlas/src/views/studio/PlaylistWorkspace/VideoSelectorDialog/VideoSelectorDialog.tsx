@@ -1,29 +1,32 @@
-import { useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 
 import { useFullVideosConnection } from '@/api/hooks/videosConnection'
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionSearch } from '@/assets/icons'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { Input } from '@/components/_inputs/Input'
-import { DialogModal } from '@/components/_overlays/DialogModal'
 import { VideoListItem, VideoListItemLoader } from '@/components/_video/VideoListItem'
 import { useDebounceValue } from '@/hooks/useDebounceValue'
 import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
 
-import { Wrapper } from './VideoSelectorDialog.styles'
+import { ListWrapper, StyledDialogModal, StyledInput, Wrapper } from './VideoSelectorDialog.styles'
 
 type VideoSelectorDialogProps = {
   onHide: () => void
   show: boolean
   onSelect: (arg: string[]) => void
-  initialSelected?: string[]
+  initiallySelectedVideoIds?: string[]
 }
 const INITIAL_FIRST = 50
 
-export const VideoSelectorDialog = ({ onHide, show, onSelect, initialSelected = [] }: VideoSelectorDialogProps) => {
-  const [selectedVideos, setSelectedVideos] = useState<string[]>(initialSelected)
+export const VideoSelectorDialog: FC<VideoSelectorDialogProps> = ({
+  onHide,
+  show,
+  onSelect,
+  initiallySelectedVideoIds = [],
+}) => {
+  const [selectedVideoIds, setSelectedVideoIds] = useState<string[]>(initiallySelectedVideoIds)
   const [search, setSearch] = useState<string>('')
   const { channelId } = useAuthorizedUser()
   const debouncedSearch = useDebounceValue(search, 200)
@@ -46,20 +49,22 @@ export const VideoSelectorDialog = ({ onHide, show, onSelect, initialSelected = 
 
   useEffect(() => {
     if (show) {
-      setSelectedVideos(initialSelected)
+      setSelectedVideoIds(initiallySelectedVideoIds)
     }
     // need to update selected videos when modal opens
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [show])
 
   return (
-    <DialogModal
+    <StyledDialogModal
       show={show}
       size="medium"
+      contentClassName="dialog-content"
       primaryButton={{
         text: 'Add videos',
+        disabled: !selectedVideoIds.length,
         onClick: () => {
-          onSelect(selectedVideos)
+          onSelect(selectedVideoIds)
           onHide()
         },
       }}
@@ -68,13 +73,13 @@ export const VideoSelectorDialog = ({ onHide, show, onSelect, initialSelected = 
         <>
           <Button
             variant="tertiary"
-            onClick={() => edges?.length && setSelectedVideos(edges.map((edge) => edge.node.id))}
+            onClick={() => edges?.length && setSelectedVideoIds(edges.map((edge) => edge.node.id))}
           >
             Select all
           </Button>
-          {!!selectedVideos.length && (
+          {!!selectedVideoIds.length && (
             <Text as="p" variant="t300" color="colorTextMuted">
-              {selectedVideos.length} video(s) selected
+              {selectedVideoIds.length} video(s) selected
             </Text>
           )}
         </>
@@ -82,37 +87,37 @@ export const VideoSelectorDialog = ({ onHide, show, onSelect, initialSelected = 
       actionDivider
     >
       <Wrapper>
-        <Input
+        <StyledInput
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           nodeStart={<SvgActionSearch />}
           placeholder="Search videos to add"
         />
         {loading ? (
-          <div style={{ width: '100%' }}>
-            {Array.from({ length: 3 }, (_, idx) => (
+          <ListWrapper>
+            {Array.from({ length: 8 }, (_, idx) => (
               <VideoListItemLoader key={idx} variant="small" />
             ))}
-          </div>
+          </ListWrapper>
         ) : (
-          <div>
+          <ListWrapper>
             {edges?.length
               ? edges.map(({ node: { id } }) => (
                   <VideoListItem
                     key={id}
                     id={id}
-                    isActive={selectedVideos.includes(id)}
+                    isActive={selectedVideoIds.includes(id)}
                     onClick={() =>
-                      setSelectedVideos((prev) =>
+                      setSelectedVideoIds((prev) =>
                         prev.includes(id) ? prev.filter((_id) => _id !== id) : [...prev, id]
                       )
                     }
                   />
                 ))
               : null}
-          </div>
+          </ListWrapper>
         )}
       </Wrapper>
-    </DialogModal>
+    </StyledDialogModal>
   )
 }

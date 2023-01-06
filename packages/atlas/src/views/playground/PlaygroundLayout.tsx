@@ -43,7 +43,7 @@ const playgroundRoutes = [
   { path: 'reactions-comments', element: <PlaygroundReactionsComments />, name: 'Reactions & comments' },
   { path: 'iframe', element: <PlaygroundIframe />, name: 'Iframe' },
   { path: 'captcha', element: <PlaygroundCaptcha />, name: 'Captcha' },
-  { path: 'pl-custom-thumbnail', element: <PlaygroundCustomPLThumbnail />, name: 'PL: Custom thumbnail' },
+  { path: 'pl-workspace', element: <PlaygroundCustomPLThumbnail />, name: 'Playlist workspace' },
 ]
 
 const PlaygroundLayout = () => {

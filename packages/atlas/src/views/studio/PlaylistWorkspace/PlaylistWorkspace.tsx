@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { useBasicVideo } from '@/api/hooks/video'
@@ -7,7 +7,6 @@ import { DraggableComponent } from '@/components/DraggableComponent/DraggableCom
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
-import { ImageUploadAndCrop } from '@/components/_inputs/ImageUploadAndCrop/ImageUploadAndCrop'
 import { ImageInputFile, ImageInputMetadata } from '@/components/_inputs/MultiFileSelect'
 import { OptionCardGroupRadio } from '@/components/_inputs/OptionCardGroup'
 import { TextArea } from '@/components/_inputs/TextArea'
@@ -21,7 +20,16 @@ import { computeFileHash } from '@/utils/hashing'
 import { SentryLogger } from '@/utils/logs'
 import { VideoSelectorDialog } from '@/views/studio/PlaylistWorkspace/VideoSelectorDialog/VideoSelectorDialog'
 
-import { FormWrapper, StyledButton, StyledVideoListItem, WorkspaceWrapper } from './PlaylistWorkspace.styles'
+import {
+  Divider,
+  EmptyFallbackWrapper,
+  FormWrapper,
+  InputsContainer,
+  StyledButton,
+  StyledImageUploadAndCrop,
+  StyledVideoListItem,
+  WorkspaceWrapper,
+} from './PlaylistWorkspace.styles'
 
 type PlaylistWorkspaceFormFields = {
   title: string
@@ -54,9 +62,10 @@ export type PlaylistWorkspaceProps = {
   onHide: () => void
 }
 
-export const PlaylistWorkspace = ({ show, onHide }: PlaylistWorkspaceProps) => {
+export const PlaylistWorkspace: FC<PlaylistWorkspaceProps> = ({ show, onHide }) => {
   const [playlistVideos, setPlaylistVideos] = useState<string[]>([])
-  const mdMatch = useMediaMatch('md')
+  const smMatch = useMediaMatch('sm')
+  const lgMatch = useMediaMatch('lg')
   const addAsset = useAssetStore((state) => state.actions.addAsset)
   const [, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
   const [showSelectDialog, setShowSelectDialog] = useState(false)
@@ -118,30 +127,11 @@ export const PlaylistWorkspace = ({ show, onHide }: PlaylistWorkspaceProps) => {
       setShouldFallbackThumbnail(false)
       updateFallbackThumbnail()
     }
-  }, [
-    video,
-    thumbnail,
-    getValues,
-    setValue,
-    thumbnailPhotoUrl,
-    shouldFallbackThumbnail,
-    updateFallbackThumbnail,
-    playlistVideos,
-  ])
+  }, [video, thumbnail, shouldFallbackThumbnail, updateFallbackThumbnail])
 
   const handleThumbnailFileChange = (file: ImageInputFile | null) => {
     const currentThumbnailValue = getValues('thumbnail')
     if (!file) {
-      if (video) {
-        setValue(
-          'thumbnail',
-          {
-            ...currentThumbnailValue,
-            ...{ cropId: video.thumbnailPhoto?.id ?? null, originalId: null, url: thumbnailPhotoUrl },
-          },
-          { shouldDirty: true }
-        )
-      }
       setValue('thumbnail', { ...currentThumbnailValue, ...{ cropId: null, originalId: null } }, { shouldDirty: true })
       return
     }
@@ -183,12 +173,12 @@ export const PlaylistWorkspace = ({ show, onHide }: PlaylistWorkspaceProps) => {
         show={showSelectDialog}
         onHide={() => setShowSelectDialog(false)}
         onSelect={setPlaylistVideos}
-        initialSelected={playlistVideos}
+        initiallySelectedVideoIds={playlistVideos}
       />
       <BottomDrawer isOpen={show} onClose={onHide} title="New playlist" pageTitle="New playlist" titleLabel="Playlist">
         <WorkspaceWrapper as="form">
           <FormWrapper>
-            <ImageUploadAndCrop
+            <StyledImageUploadAndCrop
               editMode
               file={{
                 ...thumbnailAsset,
@@ -196,56 +186,58 @@ export const PlaylistWorkspace = ({ show, onHide }: PlaylistWorkspaceProps) => {
               }}
               onImageChange={handleThumbnailFileChange}
             />
-
-            <Controller
-              name="title"
-              control={control}
-              rules={{
-                minLength: {
-                  value: 5,
-                  message: 'Enter a valid playlist title.',
-                },
-                required: {
-                  value: true,
-                  message: 'Enter a playlist title.',
-                },
-              }}
-              render={({ field: { value, ref, onChange }, fieldState: { error } }) => (
-                <FormField error={error?.message}>
-                  <TitleInput ref={ref} value={value} onChange={onChange} placeholder="Enter playlist title" />
-                </FormField>
-              )}
-            />
-            <Controller
-              name="description"
-              control={control}
-              rules={{
-                required: {
-                  value: true,
-                  message: 'Enter a playlist description.',
-                },
-              }}
-              render={({ field: { value, ref, onChange }, fieldState: { error } }) => (
-                <FormField error={error?.message}>
-                  <TextArea ref={ref} value={value} onChange={onChange} placeholder="No description" />
-                </FormField>
-              )}
-            />
-            <Controller
-              name="isPublic"
-              control={control}
-              render={({ field: { value, onChange }, fieldState: { error } }) => (
-                <FormField error={error?.message}>
-                  <OptionCardGroupRadio
-                    onChange={onChange}
-                    selectedValue={value}
-                    options={formOptions}
-                    direction={mdMatch ? 'horizontal' : 'vertical'}
-                  />
-                </FormField>
-              )}
-            />
+            <InputsContainer>
+              <Controller
+                name="title"
+                control={control}
+                rules={{
+                  minLength: {
+                    value: 5,
+                    message: 'Enter a valid playlist title.',
+                  },
+                  required: {
+                    value: true,
+                    message: 'Enter a playlist title.',
+                  },
+                }}
+                render={({ field: { value, ref, onChange }, fieldState: { error } }) => (
+                  <FormField error={error?.message}>
+                    <TitleInput ref={ref} value={value} onChange={onChange} placeholder="Enter playlist title" />
+                  </FormField>
+                )}
+              />
+              <Controller
+                name="description"
+                control={control}
+                rules={{
+                  required: {
+                    value: true,
+                    message: 'Enter a playlist description.',
+                  },
+                }}
+                render={({ field: { value, ref, onChange }, fieldState: { error } }) => (
+                  <FormField error={error?.message}>
+                    <TextArea ref={ref} value={value} onChange={onChange} placeholder="No description" />
+                  </FormField>
+                )}
+              />
+              <Controller
+                name="isPublic"
+                control={control}
+                render={({ field: { value, onChange }, fieldState: { error } }) => (
+                  <FormField error={error?.message}>
+                    <OptionCardGroupRadio
+                      onChange={onChange}
+                      selectedValue={value}
+                      options={formOptions}
+                      direction={smMatch ? 'horizontal' : 'vertical'}
+                    />
+                  </FormField>
+                )}
+              />
+            </InputsContainer>
           </FormWrapper>
+          {!lgMatch && <Divider />}
           {playlistVideos.length ? (
             <>
               <div>
@@ -276,20 +268,22 @@ export const PlaylistWorkspace = ({ show, onHide }: PlaylistWorkspaceProps) => {
               </StyledButton>
             </>
           ) : (
-            <EmptyFallback
-              title="No videos in the playlist yet"
-              subtitle="Add your videos to the playlist and let people enjoy your videos!"
-              button={
-                <Button
-                  onClick={() => setShowSelectDialog(true)}
-                  variant="primary"
-                  icon={<SvgActionAdd />}
-                  iconPlacement="right"
-                >
-                  Add videos
-                </Button>
-              }
-            />
+            <EmptyFallbackWrapper>
+              <EmptyFallback
+                title="No videos in the playlist yet"
+                subtitle="Add your videos to the playlist and let people enjoy your videos!"
+                button={
+                  <Button
+                    onClick={() => setShowSelectDialog(true)}
+                    variant="primary"
+                    icon={<SvgActionAdd />}
+                    iconPlacement="right"
+                  >
+                    Add videos
+                  </Button>
+                }
+              />
+            </EmptyFallbackWrapper>
           )}
         </WorkspaceWrapper>
         {/*todo: add footer once logic is in place*/}

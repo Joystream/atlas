@@ -1,14 +1,14 @@
-import { ReactNode, useRef } from 'react'
+import { FC, ReactNode, useRef } from 'react'
 import { XYCoord, useDrag, useDrop } from 'react-dnd'
 
-import { SvgActionArrowBottom, SvgActionArrowTop, SvgActionDrag, SvgActionMore, SvgActionTrash } from '@/assets/icons'
+import { SvgActionArrowBottom, SvgActionArrowTop, SvgActionMore, SvgActionTrash } from '@/assets/icons'
 import { Button } from '@/components/_buttons/Button'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 
-import { Wrapper } from './DraggableComponent.styles'
+import { StyledSvgActionDrag, Wrapper } from './DraggableComponent.styles'
 
 type DraggableComponentProps = {
-  id: unknown
+  id: string
   itemType: string
   index: number
   moveItem: (dragIndex: number, hoverIndex: number) => void
@@ -25,14 +25,14 @@ type DragItem = {
   type: string
 }
 
-export const DraggableComponent = ({
+export const DraggableComponent: FC<DraggableComponentProps> = ({
   itemType,
   moveItem,
   index,
   id,
   children,
   removeOption,
-}: DraggableComponentProps) => {
+}) => {
   const ref = useRef<HTMLDivElement>(null)
   const [{ handlerId }, drop] = useDrop<DragItem, void, { handlerId: unknown | null }>({
     accept: itemType,
@@ -79,12 +79,11 @@ export const DraggableComponent = ({
     }),
   })
 
-  const opacity = isDragging ? 0 : 1
   drag(drop(ref))
 
   return (
-    <Wrapper ref={ref} style={{ opacity }} data-handler-id={handlerId}>
-      <SvgActionDrag />
+    <Wrapper ref={ref} isDragging={isDragging} data-handler-id={handlerId}>
+      <StyledSvgActionDrag />
       {children}
       <ContextMenu
         placement="bottom-end"

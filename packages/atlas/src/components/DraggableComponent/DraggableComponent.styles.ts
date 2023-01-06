@@ -1,13 +1,20 @@
 import styled from '@emotion/styled'
 
-import { sizes } from '@/styles'
+import { SvgActionDrag } from '@/assets/icons'
+import { cVar, sizes } from '@/styles'
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.div<{ isDragging: boolean }>`
   display: flex;
-  gap: ${sizes(3)};
+  gap: ${sizes(1)};
+  opacity: ${(props) => (props.isDragging ? 0 : 1)};
   cursor: grab;
+  padding: 0 ${sizes(4)};
 
-  svg {
-    align-self: center;
+  :hover {
+    background-color: ${cVar('colorBackgroundAlpha')};
   }
+`
+
+export const StyledSvgActionDrag = styled(SvgActionDrag)`
+  align-self: center;
 `
