@@ -1,4 +1,3 @@
-import { signatureVerify } from '@polkadot/util-crypto'
 import axios from 'axios'
 import { useCallback, useEffect, useState } from 'react'
 
@@ -24,6 +23,17 @@ import {
   StyledSvgAlertsWarning32,
 } from './YppDashboardTabs.styles'
 
+type OptoutChannelMessage = {
+  optout: boolean
+  timestamp: number
+}
+
+type IngestChannelMessage = {
+  shouldBeIngested: boolean
+  timestamp: number
+  videoCategoryId?: string
+}
+
 const categoriesSelectItems: SelectItem[] =
   displayCategories?.map((c) => ({
     name: c.name || 'Unknown category',
@@ -39,37 +49,32 @@ export const YppDashboardSettingsTab = () => {
   const [openModal, closeModal] = useConfirmationModal()
 
   const [isSync, setIsSync] = useState(currentChannel?.shouldBeIngested)
-  const [category, setCategory] = useState<string | null | undefined>(currentChannel?.videoCategoryId)
+  const [categoryId, setCategoryId] = useState<string | null | undefined>(currentChannel?.videoCategoryId)
   const areSettingsChanged = currentChannel
-    ? currentChannel.videoCategoryId !== category || currentChannel?.shouldBeIngested !== isSync
+    ? currentChannel.videoCategoryId !== categoryId || currentChannel?.shouldBeIngested !== isSync
     : false
   useEffect(() => {
     if (currentChannel) {
-      setCategory(currentChannel.videoCategoryId)
+      setCategoryId(currentChannel.videoCategoryId)
       setIsSync(currentChannel.shouldBeIngested)
     }
   }, [currentChannel])
 
   const handleChangeSettings = useCallback(async () => {
-    if (!accountId || !joystream) {
+    if (!accountId || !joystream || isSync === undefined) {
       SentryLogger.error('No joystream instance', 'YppDashboardSettingsTab')
       return
     }
-    const message = {
-      shouldBeIngested: true,
-      timestamp: 1672918623544,
+    const message: IngestChannelMessage = {
+      shouldBeIngested: isSync,
+      timestamp: Date.now(),
+      ...(categoryId ? { videoCategoryId: categoryId } : {}),
     }
+
     const signature = await joystream.signMessage({
       data: JSON.stringify(message),
       type: 'payload',
     })
-
-    if (signature) {
-      const { isValid } = signatureVerify(JSON.stringify(message), signature, accountId)
-      console.log('arguments:', JSON.stringify(message), signature, accountId)
-      console.log({ signature })
-      // console.log({ isValid })
-    }
 
     if (!currentChannel) return
     try {
@@ -89,22 +94,36 @@ export const YppDashboardSettingsTab = () => {
     } catch (e) {
       SentryLogger.error('Error while updating YPP setting: ', e)
     }
-  }, [accountId, currentChannel, displaySnackbar, isSync, joystream, refetchSyncedChannels])
+  }, [accountId, categoryId, currentChannel, displaySnackbar, isSync, joystream, refetchSyncedChannels])
 
-  // todo
-  const handleLeaveTx = useCallback(() => {
-    if (!accountId) {
+  const handleLeaveTx = useCallback(async () => {
+    if (!accountId || !joystream || !currentChannel) {
+      SentryLogger.error('No joystream instance', 'YppDashboardSettingsTab')
       return
     }
-
-    displaySnackbar({
-      title: 'You left the progam',
-      description:
-        'You are no longer member of the YouTube Partner Program. You can now connect your YouTube channel with another Joystream channel.',
-      iconType: 'success',
+    const message: OptoutChannelMessage = {
+      optout: true,
+      timestamp: Date.now(),
+    }
+    const signature = await joystream.signMessage({
+      data: JSON.stringify(message),
+      type: 'payload',
     })
+
+    const data = await axios.put(
+      `${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${currentChannel.joystreamChannelId}/optout`,
+      { message, signature }
+    )
+    if (data.status === 200) {
+      displaySnackbar({
+        title: 'You left the progam',
+        description:
+          'You are no longer member of the YouTube Partner Program. You can now connect your YouTube channel with another Joystream channel.',
+        iconType: 'success',
+      })
+    }
     closeModal()
-  }, [accountId, closeModal, displaySnackbar])
+  }, [accountId, closeModal, currentChannel, displaySnackbar, joystream])
 
   const openModalOptions = {
     title: 'Leave the program?',
@@ -152,12 +171,7 @@ export const YppDashboardSettingsTab = () => {
             label="Category of imported videos"
             description="Choose a category to be assigned to the imported videos by default. You can change it for each video later once it’s imported."
           >
-            <Select
-              disabled={currentChannel?.shouldBeIngested}
-              items={categoriesSelectItems}
-              onChange={setCategory}
-              value={category}
-            />
+            <Select items={categoriesSelectItems} onChange={setCategoryId} value={categoryId} />
           </FormField>
         )}
 
@@ -182,7 +196,7 @@ export const YppDashboardSettingsTab = () => {
         secondaryButton={{
           text: 'Cancel',
           onClick: () => {
-            setCategory(currentChannel?.videoCategoryId)
+            setCategoryId(currentChannel?.videoCategoryId)
           },
         }}
       />
