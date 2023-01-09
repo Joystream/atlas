@@ -7,7 +7,7 @@ import { cVar, media, sizes } from '@/styles'
 
 export const WorkspaceWrapper = styled.div`
   display: grid;
-  row-gap: ${sizes(6)};
+  gap: ${sizes(6)};
   margin: ${sizes(10)} ${sizes(8)};
 
   > :nth-child(1) {
@@ -75,7 +75,14 @@ export const InputsContainer = styled.div`
 `
 
 export const StyledVideoListItem = styled(VideoListItem)`
-  cursor: grab;
+  ${media.xs} {
+    flex-direction: column;
+  }
+
+  ${media.sm} {
+    cursor: grab;
+    flex-direction: row;
+  }
 `
 
 export const EmptyFallbackWrapper = styled.div`
