@@ -70,23 +70,27 @@ export const YppDashboardSettingsTab = () => {
   }, [currentChannel])
 
   const handleChangeSettings = useCallback(async () => {
-    if (!accountId || !joystream || isSync === undefined) {
+    if (!accountId || !joystream) {
       SentryLogger.error('No joystream instance', 'YppDashboardSettingsTab')
       return
     }
-    const message: IngestChannelMessage = {
-      shouldBeIngested: isSync,
-      timestamp: Date.now(),
-      ...(categoryId ? { videoCategoryId: categoryId } : {}),
+
+    if (!currentChannel || isSync === undefined) {
+      SentryLogger.error("Couldn't fetch current channel", 'YppDashboardSettingsTab')
+      return
     }
-
-    const signature = await joystream.signMessage({
-      data: JSON.stringify(message),
-      type: 'payload',
-    })
-
-    if (!currentChannel) return
     try {
+      const message: IngestChannelMessage = {
+        shouldBeIngested: isSync,
+        timestamp: Date.now(),
+        ...(categoryId ? { videoCategoryId: categoryId } : {}),
+      }
+
+      const signature = await joystream.signMessage({
+        data: JSON.stringify(message),
+        type: 'payload',
+      })
+
       const data = await axios.put(
         `${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${currentChannel.joystreamChannelId}/ingest`,
         { message, signature }
@@ -102,57 +106,75 @@ export const YppDashboardSettingsTab = () => {
       }
     } catch (e) {
       SentryLogger.error('Error while updating YPP setting: ', e)
+      displaySnackbar({
+        title: 'Something went wrong',
+        description: 'Failed to update settings. Try again later',
+        iconType: 'error',
+      })
     }
   }, [accountId, categoryId, currentChannel, displaySnackbar, isSync, joystream, refetchSyncedChannels])
 
   const handleLeaveTx = useCallback(async () => {
-    if (!accountId || !joystream || !channelId || !currentChannel || !memberId) {
+    if (!accountId || !joystream || !channelId || !memberId) {
       SentryLogger.error('No joystream instance', 'YppDashboardSettingsTab')
       return
     }
 
-    const message: OptoutChannelMessage = {
-      optout: true,
-      timestamp: Date.now(),
+    if (!currentChannel) {
+      SentryLogger.error("Couldn't fetch current channel", 'YppDashboardSettingsTab')
+      return
     }
+    try {
+      const message: OptoutChannelMessage = {
+        optout: true,
+        timestamp: Date.now(),
+      }
 
-    const signaturePromise = joystream.signMessage({
-      data: JSON.stringify(message),
-      type: 'payload',
-    })
+      const signaturePromise = joystream.signMessage({
+        data: JSON.stringify(message),
+        type: 'payload',
+      })
 
-    const completedTransactionPromise = handleTransaction({
-      txFactory: async (updateStatus) => {
-        return (await joystream.extrinsics).updateChannel(
-          channelId,
-          memberId,
-          { ownerAccount: memberId },
-          {},
-          [],
-          dataObjectStateBloatBondValue.toString(),
-          channelBucketsCount.toString(),
-          null,
-          proxyCallback(updateStatus)
-        )
-      },
-    })
+      const completedTransactionPromise = handleTransaction({
+        txFactory: async (updateStatus) => {
+          return (await joystream.extrinsics).updateChannel(
+            channelId,
+            memberId,
+            { ownerAccount: memberId },
+            {},
+            [],
+            dataObjectStateBloatBondValue.toString(),
+            channelBucketsCount.toString(),
+            null,
+            proxyCallback(updateStatus)
+          )
+        },
+      })
 
-    const [completed, signature] = await Promise.all([completedTransactionPromise, signaturePromise])
+      const [completed, signature] = await Promise.all([completedTransactionPromise, signaturePromise])
 
-    const data = await axios.put(
-      `${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${currentChannel.joystreamChannelId}/optout`,
-      { message, signature }
-    )
-    if (data.status === 200 && completed) {
+      const data = await axios.put(
+        `${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${currentChannel.joystreamChannelId}/optout`,
+        { message, signature }
+      )
+      if (data.status === 200 && completed) {
+        displaySnackbar({
+          title: 'You left the progam',
+          description:
+            'You are no longer member of the YouTube Partner Program. You can now connect your YouTube channel with another Joystream channel.',
+          iconType: 'success',
+        })
+      }
+      navigate(absoluteRoutes.studio.ypp())
+      closeModal()
+    } catch (e) {
+      SentryLogger.error('Error while opting out: ', e)
       displaySnackbar({
-        title: 'You left the progam',
-        description:
-          'You are no longer member of the YouTube Partner Program. You can now connect your YouTube channel with another Joystream channel.',
-        iconType: 'success',
+        title: 'Something went wrong',
+        description: 'Failed to leave the program. Try again later',
+        iconType: 'error',
       })
     }
-    navigate(absoluteRoutes.studio.ypp())
-    closeModal()
   }, [
     accountId,
     channelBucketsCount,
