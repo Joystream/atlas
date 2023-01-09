@@ -65,6 +65,7 @@ export type PlaylistWorkspaceProps = {
 export const PlaylistWorkspace: FC<PlaylistWorkspaceProps> = ({ show, onHide }) => {
   const [playlistVideos, setPlaylistVideos] = useState<string[]>([])
   const smMatch = useMediaMatch('sm')
+  const mdMatch = useMediaMatch('md')
   const lgMatch = useMediaMatch('lg')
   const addAsset = useAssetStore((state) => state.actions.addAsset)
   const [, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
@@ -185,6 +186,7 @@ export const PlaylistWorkspace: FC<PlaylistWorkspaceProps> = ({ show, onHide }) 
                 ...(originalThumbnailAsset?.blob ? { originalBlob: originalThumbnailAsset?.blob } : {}),
               }}
               onImageChange={handleThumbnailFileChange}
+              hideIcons={smMatch && !mdMatch}
             />
             <InputsContainer>
               <Controller

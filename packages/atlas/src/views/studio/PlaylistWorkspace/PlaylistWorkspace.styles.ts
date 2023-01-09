@@ -21,11 +21,12 @@ export const WorkspaceWrapper = styled.div`
   ${media.sm} {
     > :nth-child(1),
     > :nth-child(2) {
-      grid-column: 1/3;
+      grid-column: 1/5;
     }
 
     > :nth-child(3) {
       grid-row: 3/4;
+      grid-column: 1/4;
     }
   }
 
@@ -49,6 +50,10 @@ export const FormWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${sizes(4)};
+
+  > * {
+    flex: 1;
+  }
 
   ${media.sm} {
     flex-direction: row;

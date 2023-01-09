@@ -15,6 +15,7 @@ type ImageUploadAndCropProps = {
   className?: string
   file?: ImageInputFile
   maxSize?: number
+  hideIcons?: boolean
 }
 
 export const ImageUploadAndCrop: FC<ImageUploadAndCropProps> = ({
@@ -24,6 +25,7 @@ export const ImageUploadAndCrop: FC<ImageUploadAndCropProps> = ({
   disabled,
   maxSize,
   className,
+  hideIcons,
 }) => {
   const dialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const [isImgLoading, setIsImgLoading] = useState(false)
@@ -131,6 +133,7 @@ export const ImageUploadAndCrop: FC<ImageUploadAndCropProps> = ({
         error={error}
         onError={setError}
         onDropRejected={handleFileRejections}
+        hideIcons={hideIcons}
       />
       <ImageCropModal
         ref={dialogRef}
