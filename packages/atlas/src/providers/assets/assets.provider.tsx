@@ -15,6 +15,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import { useMutation } from 'react-query'
 import { useLocation } from 'react-router'
 
 import {
@@ -62,6 +63,9 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
     disableUserLocation,
     actions: { setUserLocation },
   } = useUserLocationStore()
+  const { mutateAsync: geolocationFetch } = useMutation('geolocation-fetch', () =>
+    axios.get<UserCoordinates>(atlasConfig.storage.geolocationServiceUrl ?? '')
+  )
 
   const client = useApolloClient()
 
@@ -81,7 +85,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
       atlasConfig.storage.geolocationServiceUrl
     ) {
       try {
-        const userCoordinatesResponse = await axios.get<UserCoordinates>(atlasConfig.storage.geolocationServiceUrl)
+        const userCoordinatesResponse = await geolocationFetch()
         userCoordinates = userCoordinatesResponse.data
         setUserLocation(userCoordinates)
       } catch (error) {
@@ -138,7 +142,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
       isFetchingDistributionOperatorsRef.current = false
     })
     return distributionOperatorsMappingPromiseRef.current
-  }, [client, coordinates, disableUserLocation, expiry, setUserLocation])
+  }, [client, coordinates, disableUserLocation, expiry, geolocationFetch, setUserLocation])
 
   const fetchStorageOperators = useCallback(() => {
     const storageOperatorsPromise = client.query<

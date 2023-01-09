@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { BN } from 'bn.js'
 import { FC, useCallback, useEffect, useRef, useState } from 'react'
+import { useMutation } from 'react-query'
 import shallow from 'zustand/shallow'
 
 import { Button } from '@/components/_buttons/Button'
@@ -30,6 +31,13 @@ import {
   SignInStepProps,
 } from './SignInSteps'
 
+interface FaucetParams {
+  account: string
+  handle: string
+  avatar: string | undefined
+  captchaToken: string | undefined
+}
+
 export const SignInModal: FC = () => {
   const [currentStepIdx, setCurrentStepIdx] = useState<number | null>(null)
   const currentStep = currentStepIdx != null ? SIGN_IN_MODAL_STEPS[currentStepIdx] : null
@@ -40,6 +48,12 @@ export const SignInModal: FC = () => {
   const { joystream } = useJoystream()
   const dialogContentRef = useRef<HTMLDivElement>(null)
   const [previouslyFailedData, setPreviouslyFailedData] = useState<MemberFormData | null>(null)
+  const { mutateAsync: faucetMutation } = useMutation('faucet-post', (body: FaucetParams) =>
+    axios.post<NewMemberResponse>(FAUCET_URL, body)
+  )
+  const { mutateAsync: avatarMutation } = useMutation('avatar-post', (croppedBlob: Blob) =>
+    uploadAvatarImage(croppedBlob)
+  )
 
   const { displaySnackbar } = useSnackbar()
   const { walletStatus, refetchUserMemberships, setActiveUser, isLoggedIn } = useUser()
@@ -85,22 +99,25 @@ export const SignInModal: FC = () => {
     setHasNavigatedBack(true)
   }, [])
 
-  const createNewMember = useCallback(async (address: string, data: MemberFormData) => {
-    let fileUrl
+  const createNewMember = useCallback(
+    async (address: string, data: MemberFormData) => {
+      let fileUrl
 
-    if (data.avatar?.blob) {
-      fileUrl = await uploadAvatarImage(data.avatar.blob)
-    }
+      if (data.avatar?.blob) {
+        fileUrl = await avatarMutation(data.avatar.blob)
+      }
 
-    const body = {
-      account: address,
-      handle: data.handle,
-      avatar: fileUrl,
-      captchaToken: data.captchaToken,
-    }
-    const response = await axios.post<NewMemberResponse>(FAUCET_URL, body)
-    return response.data
-  }, [])
+      const body: FaucetParams = {
+        account: address,
+        handle: data.handle,
+        avatar: fileUrl,
+        captchaToken: data.captchaToken,
+      }
+      const response = await faucetMutation(body)
+      return response.data
+    },
+    [avatarMutation, faucetMutation]
+  )
 
   const handleSubmit = useCallback(
     async (data: MemberFormData) => {

@@ -2,6 +2,7 @@ import { useApolloClient } from '@apollo/client'
 import axios from 'axios'
 import { isArray } from 'lodash-es'
 import { useCallback, useEffect, useState } from 'react'
+import { useMutation, useQuery } from 'react-query'
 import { useSearchParams } from 'react-router-dom'
 
 import {
@@ -56,7 +57,12 @@ export const useYppGoogleAuth = ({
   const [ytRequirmentsErrors, setYtRequirmentsErrors] = useState<YppRequirementsErrorCode[]>([])
   const [ytResponseData, setYtResponseData] = useState<YoutubeResponseData | null>(null)
   const [alreadyRegisteredChannel, setAlreadyRegisteredChannel] = useState<AlreadyRegisteredChannel | null>(null)
-
+  const { mutateAsync: authMutation } = useMutation('ypp-auth-post', (authorizationCode: string) =>
+    axios.post<ChannelVerificationSuccessResponse>(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/users`, {
+      authorizationCode,
+      youtubeRedirectUri: window.location.href,
+    })
+  )
   const client = useApolloClient()
 
   const { displaySnackbar } = useSnackbar()
@@ -160,13 +166,7 @@ export const useYppGoogleAuth = ({
 
         resetSearchParams()
 
-        const response = await axios.post<ChannelVerificationSuccessResponse>(
-          `${atlasConfig.features.ypp.youtubeSyncApiUrl}/users`,
-          {
-            authorizationCode: code,
-            youtubeRedirectUri: window.location.href,
-          }
-        )
+        const response = await authMutation(code)
 
         setYtResponseData({ ...response.data, authorizationCode: code })
         onChangeStep('details')
@@ -247,6 +247,7 @@ export const useYppGoogleAuth = ({
       setAuthState,
       onChangeStep,
       resetSearchParams,
+      authMutation,
       displaySnackbar,
       closeModal,
       displayUnknownErrorSnackbar,
@@ -278,17 +279,10 @@ export const useYppGoogleAuth = ({
   return { handleAuthorizeClick, ytRequirmentsErrors, ytResponseData, setYtRequirmentsErrors, alreadyRegisteredChannel }
 }
 
-export const useGetYppChannelRequirments = () => {
-  const [requirements, setRequirements] = useState<ChannelRequirments | null>(null)
-  useEffect(() => {
-    if (!atlasConfig.features.ypp.youtubeSyncApiUrl) {
-      return
-    }
+export const useGetYppChannelRequirments = () =>
+  useQuery('ypp-requirements-fetch', () =>
     axios
-      .get(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/induction/requirements`)
-      .then((response) => setRequirements(response.data))
+      .get<ChannelRequirments>(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/induction/requirements`)
+      .then((res) => res.data)
       .catch((error) => SentryLogger.error("Couldn't fetch requirments", 'YppAuthorizationModal.hooks', error))
-  }, [])
-
-  return requirements
-}
+  )

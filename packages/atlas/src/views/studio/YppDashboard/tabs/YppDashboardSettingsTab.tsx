@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { useCallback, useEffect, useState } from 'react'
+import { useMutation } from 'react-query'
 
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
@@ -27,11 +28,21 @@ const categoriesSelectItems: SelectItem[] =
     value: c.defaultVideoCategory,
   })) || []
 
+type SettingsParams = {
+  isSync?: boolean
+  category?: string | null
+}
+
 export const YppDashboardSettingsTab = () => {
   const mdMatch = useMediaMatch('md')
   const { displaySnackbar } = useSnackbar()
   const { currentChannel, refetchSyncedChannels } = useGetYppSyncedChannels()
   const [openModal, closeModal] = useConfirmationModal()
+  const { mutateAsync: settingsMutation } = useMutation(
+    ['ypp-settings-post', currentChannel],
+    (params: SettingsParams) =>
+      axios.put(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${currentChannel?.joystreamChannelId}`, params)
+  )
 
   const [isSync, setIsSync] = useState(currentChannel?.shouldBeIngested)
   const [category, setCategory] = useState<string | null | undefined>(currentChannel?.videoCategoryId)
@@ -48,13 +59,10 @@ export const YppDashboardSettingsTab = () => {
   const handleChangeSettings = useCallback(async () => {
     if (!currentChannel) return
     try {
-      const data = await axios.put(
-        `${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${currentChannel.joystreamChannelId}`,
-        {
-          category,
-          isSync,
-        }
-      )
+      const data = await settingsMutation({
+        category,
+        isSync,
+      })
 
       if (data.status === 200) {
         displaySnackbar({
@@ -67,7 +75,7 @@ export const YppDashboardSettingsTab = () => {
     } catch (e) {
       SentryLogger.error('Error while updating YPP setting: ', e)
     }
-  }, [currentChannel, category, isSync, displaySnackbar, refetchSyncedChannels])
+  }, [currentChannel, settingsMutation, category, isSync, displaySnackbar, refetchSyncedChannels])
 
   // todo
   const handleLeaveTx = useCallback(() => {

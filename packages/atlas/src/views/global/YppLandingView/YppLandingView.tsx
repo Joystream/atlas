@@ -2,6 +2,7 @@ import AOS from 'aos'
 import 'aos/dist/aos.css'
 import axios from 'axios'
 import { FC, useCallback, useEffect, useState } from 'react'
+import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import { ParallaxProvider } from 'react-scroll-parallax'
 
@@ -29,12 +30,17 @@ const SINGUP_DAILY_QUOTA = 500 // 2% of the total daily quota
 export const YppLandingView: FC = () => {
   const headTags = useHeadTags('YouTube Partner Program')
   const [currentStep, setCurrentStep] = useState<YppAuthorizationStepsType>(null)
-  const [isTodaysQuotaReached, setIsTodaysQuotaReached] = useState<boolean>(false)
   const { isLoggedIn, signIn, activeMembership, channelId, walletStatus } = useUser()
   const { setSelectedChannelId, setShouldContinueYppFlow } = useYppStore((store) => store.actions)
   const { displaySnackbar } = useSnackbar()
   const selectedChannelTitle = activeMembership?.channels.find((channel) => channel.id === channelId)?.title
-
+  const { data } = useQuery('ypp-quota-fetch', () =>
+    axios
+      .get<{ signupQuotaUsed: number }>(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/youtube/quota-usage/today`)
+      .then((res) => res.data)
+      .catch((e) => SentryLogger.error('Quota fetch failed', 'YppLandingView', e))
+  )
+  const isTodaysQuotaReached = data ? data.signupQuotaUsed > SINGUP_DAILY_QUOTA : false
   const shouldContinueYppFlow = useYppStore((store) => store.shouldContinueYppFlow)
 
   const navigate = useNavigate()
@@ -51,21 +57,6 @@ export const YppLandingView: FC = () => {
       duration: 750,
       once: true,
     })
-  }, [])
-
-  useEffect(() => {
-    const fetchQuota = async () => {
-      try {
-        const { data } = await axios.get(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/youtube/quota-usage/today`)
-        if (data.signupQuotaUsed > SINGUP_DAILY_QUOTA) {
-          setIsTodaysQuotaReached(true)
-        }
-      } catch (e) {
-        SentryLogger.error('Quota fetch failed', 'YppLandingView', e)
-      }
-    }
-
-    fetchQuota()
   }, [])
 
   const handleSignUpClick = useCallback(() => {
