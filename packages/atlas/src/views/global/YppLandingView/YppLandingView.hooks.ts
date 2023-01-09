@@ -14,6 +14,7 @@ export type YppSyncedChannel = {
   description: string
   aggregatedStats: number
   shouldBeIngested: boolean
+  yppStatus: 'OptedOut' | 'Active'
   isSuspended: boolean
   joystreamChannelId: number
   videoCategoryId: string
@@ -59,7 +60,7 @@ export const useGetYppSyncedChannels = () => {
         }
       })
     )
-    return syncedChannels.filter((channel): channel is YppSyncedChannel => !!channel)
+    return syncedChannels.filter((channel): channel is YppSyncedChannel => !!channel && channel.yppStatus === 'Active')
   }, [channels])
 
   useEffect(() => {

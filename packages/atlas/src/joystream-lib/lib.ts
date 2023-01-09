@@ -3,7 +3,6 @@ import '@joystream/types'
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { QueryableStorageMultiArg } from '@polkadot/api-base/types/storage'
 import { Signer } from '@polkadot/api/types'
-import { Keyring } from '@polkadot/keyring'
 import { Codec, SignerPayloadRawBase } from '@polkadot/types/types'
 import BN from 'bn.js'
 import { proxy } from 'comlink'
@@ -87,7 +86,6 @@ export class JoystreamLib {
       SentryLogger.error('Missing signer for signMessage', 'JoystreamLib')
       return
     }
-    const keyring = new Keyring({ ss58Format: 126 })
     const signature = await this.api.sign(this.selectedAccountId, signerPayload)
 
     return signature

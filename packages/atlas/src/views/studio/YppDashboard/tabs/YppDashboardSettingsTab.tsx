@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { useCallback, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router'
 
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
@@ -7,10 +8,13 @@ import { OptionCardGroupRadio } from '@/components/_inputs/OptionCardGroup'
 import { Select, SelectItem } from '@/components/_inputs/Select'
 import { atlasConfig } from '@/config'
 import { displayCategories } from '@/config/categories'
+import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useConfirmationModal } from '@/providers/confirmationModal'
-import { useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useBloatFeesAndPerMbFees, useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useSnackbar } from '@/providers/snackbars'
+import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
@@ -42,11 +46,16 @@ const categoriesSelectItems: SelectItem[] =
 
 export const YppDashboardSettingsTab = () => {
   const mdMatch = useMediaMatch('md')
+  const navigate = useNavigate()
   const { displaySnackbar } = useSnackbar()
-  const { accountId } = useUser()
+  const { channelId, memberId, accountId } = useUser()
   const { currentChannel, refetchSyncedChannels } = useGetYppSyncedChannels()
-  const { joystream } = useJoystream()
+  const { joystream, proxyCallback } = useJoystream()
   const [openModal, closeModal] = useConfirmationModal()
+
+  const handleTransaction = useTransaction()
+  const { dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
+  const channelBucketsCount = useChannelsStorageBucketsCount(channelId)
 
   const [isSync, setIsSync] = useState(currentChannel?.shouldBeIngested)
   const [categoryId, setCategoryId] = useState<string | null | undefined>(currentChannel?.videoCategoryId)
@@ -97,24 +106,44 @@ export const YppDashboardSettingsTab = () => {
   }, [accountId, categoryId, currentChannel, displaySnackbar, isSync, joystream, refetchSyncedChannels])
 
   const handleLeaveTx = useCallback(async () => {
-    if (!accountId || !joystream || !currentChannel) {
+    if (!accountId || !joystream || !channelId || !currentChannel || !memberId) {
       SentryLogger.error('No joystream instance', 'YppDashboardSettingsTab')
       return
     }
+
     const message: OptoutChannelMessage = {
       optout: true,
       timestamp: Date.now(),
     }
-    const signature = await joystream.signMessage({
+
+    const signaturePromise = joystream.signMessage({
       data: JSON.stringify(message),
       type: 'payload',
     })
+
+    const completedTransactionPromise = handleTransaction({
+      txFactory: async (updateStatus) => {
+        return (await joystream.extrinsics).updateChannel(
+          channelId,
+          memberId,
+          { ownerAccount: memberId },
+          {},
+          [],
+          dataObjectStateBloatBondValue.toString(),
+          channelBucketsCount.toString(),
+          null,
+          proxyCallback(updateStatus)
+        )
+      },
+    })
+
+    const [completed, signature] = await Promise.all([completedTransactionPromise, signaturePromise])
 
     const data = await axios.put(
       `${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${currentChannel.joystreamChannelId}/optout`,
       { message, signature }
     )
-    if (data.status === 200) {
+    if (data.status === 200 && completed) {
       displaySnackbar({
         title: 'You left the progam',
         description:
@@ -122,8 +151,22 @@ export const YppDashboardSettingsTab = () => {
         iconType: 'success',
       })
     }
+    navigate(absoluteRoutes.studio.ypp())
     closeModal()
-  }, [accountId, closeModal, currentChannel, displaySnackbar, joystream])
+  }, [
+    accountId,
+    channelBucketsCount,
+    channelId,
+    closeModal,
+    currentChannel,
+    dataObjectStateBloatBondValue,
+    displaySnackbar,
+    handleTransaction,
+    joystream,
+    memberId,
+    navigate,
+    proxyCallback,
+  ])
 
   const openModalOptions = {
     title: 'Leave the program?',
