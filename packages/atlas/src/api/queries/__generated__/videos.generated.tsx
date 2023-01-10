@@ -2603,7 +2603,7 @@ export type AddVideoViewMutationVariables = Types.Exact<{
 
 export type AddVideoViewMutation = {
   __typename?: 'Mutation'
-  addVideoView: { __typename?: 'Video'; id: string; viewsNum: number }
+  addVideoView: { __typename?: 'AddVideoViewResult'; videoId: string; viewsNum: number }
 }
 
 export type ReportVideoMutationVariables = Types.Exact<{
@@ -2613,7 +2613,7 @@ export type ReportVideoMutationVariables = Types.Exact<{
 
 export type ReportVideoMutation = {
   __typename?: 'Mutation'
-  reportVideo: { __typename?: 'VideoReportInfo'; id: string; videoId: string }
+  reportVideo: { __typename?: 'VideoReportInfo'; id: number; videoId: string }
 }
 
 export const GetFullVideoDocument = gql`
@@ -3078,7 +3078,7 @@ export type GetTop10VideosThisMonthQueryResult = Apollo.QueryResult<
 export const AddVideoViewDocument = gql`
   mutation AddVideoView($videoId: String!) {
     addVideoView(videoId: $videoId) {
-      id
+      videoId
       viewsNum
     }
   }

@@ -132,7 +132,7 @@ query GetTop10VideosThisMonth($where: VideoWhereInput) {
 # CHANGE: `channelId` and `categoryId` args were removed, ID is now `String`
 mutation AddVideoView($videoId: String!) {
   addVideoView(videoId: $videoId) {
-    id
+    videoId
     viewsNum
   }
 }

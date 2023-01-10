@@ -286,16 +286,17 @@ export type FollowChannelMutationVariables = Types.Exact<{
 
 export type FollowChannelMutation = {
   __typename?: 'Mutation'
-  followChannel: { __typename?: 'ChannelFollowsInfo'; id: string; follows: number }
+  followChannel: { __typename?: 'ChannelFollowResult'; channelId: string; follows: number }
 }
 
 export type UnfollowChannelMutationVariables = Types.Exact<{
   channelId: Types.Scalars['String']
+  token: Types.Scalars['String']
 }>
 
 export type UnfollowChannelMutation = {
   __typename?: 'Mutation'
-  unfollowChannel: { __typename?: 'ChannelFollowsInfo'; id: string; follows: number }
+  unfollowChannel: { __typename?: 'ChannelUnfollowResult'; channelId: string; follows: number }
 }
 
 export type GetTop10ChannelsQueryVariables = Types.Exact<{
@@ -493,7 +494,7 @@ export type ReportChannelMutationVariables = Types.Exact<{
 
 export type ReportChannelMutation = {
   __typename?: 'Mutation'
-  reportChannel: { __typename?: 'ChannelReportInfo'; id: string; channelId: string }
+  reportChannel: { __typename?: 'ChannelReportInfo'; id: number; channelId: string }
 }
 
 export const GetFullChannelDocument = gql`
@@ -755,7 +756,7 @@ export type GetBasicChannelsConnectionQueryResult = Apollo.QueryResult<
 export const FollowChannelDocument = gql`
   mutation FollowChannel($channelId: String!) {
     followChannel(channelId: $channelId) {
-      id
+      channelId
       follows
     }
   }
@@ -792,9 +793,9 @@ export type FollowChannelMutationOptions = Apollo.BaseMutationOptions<
   FollowChannelMutationVariables
 >
 export const UnfollowChannelDocument = gql`
-  mutation UnfollowChannel($channelId: String!) {
-    unfollowChannel(channelId: $channelId) {
-      id
+  mutation UnfollowChannel($channelId: String!, $token: String!) {
+    unfollowChannel(channelId: $channelId, token: $token) {
+      channelId
       follows
     }
   }
@@ -818,6 +819,7 @@ export type UnfollowChannelMutationFn = Apollo.MutationFunction<
  * const [unfollowChannelMutation, { data, loading, error }] = useUnfollowChannelMutation({
  *   variables: {
  *      channelId: // value for 'channelId'
+ *      token: // value for 'token'
  *   },
  * });
  */

@@ -14,6 +14,14 @@ export type Scalars = {
   DateTime: Date
 }
 
+export type AddVideoViewResult = {
+  __typename?: 'AddVideoViewResult'
+  added: Scalars['Boolean']
+  videoId: Scalars['String']
+  viewId: Scalars['Int']
+  viewsNum: Scalars['Int']
+}
+
 /** Represents NFT auction */
 export type Auction = {
   __typename?: 'Auction'
@@ -766,8 +774,6 @@ export type Channel = {
   rewardAccount: Scalars['String']
   /** The title of the Channel */
   title?: Maybe<Scalars['String']>
-  /** Channel's video views */
-  videoViews: Array<VideoViewEvent>
   /** Number of total video views (to speed up orderBy queries by avoiding COUNT aggregation) */
   videoViewsNum: Scalars['Int']
   /** List of videos that belong to the channel */
@@ -779,13 +785,6 @@ export type ChannelBannedMembersArgs = {
   offset?: InputMaybe<Scalars['Int']>
   orderBy?: InputMaybe<Array<BannedMemberOrderByInput>>
   where?: InputMaybe<BannedMemberWhereInput>
-}
-
-export type ChannelVideoViewsArgs = {
-  limit?: InputMaybe<Scalars['Int']>
-  offset?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<VideoViewEventOrderByInput>>
-  where?: InputMaybe<VideoViewEventWhereInput>
 }
 
 export type ChannelVideosArgs = {
@@ -801,10 +800,13 @@ export type ChannelEdge = {
   node: Channel
 }
 
-export type ChannelFollowsInfo = {
-  __typename?: 'ChannelFollowsInfo'
+export type ChannelFollowResult = {
+  __typename?: 'ChannelFollowResult'
+  added: Scalars['Boolean']
+  cancelToken: Scalars['String']
+  channelId: Scalars['String']
+  followId: Scalars['Int']
   follows: Scalars['Int']
-  id: Scalars['String']
 }
 
 export type ChannelNftCollector = {
@@ -885,10 +887,18 @@ export enum ChannelOrderByInput {
 export type ChannelReportInfo = {
   __typename?: 'ChannelReportInfo'
   channelId: Scalars['String']
+  created: Scalars['Boolean']
   createdAt: Scalars['DateTime']
-  id: Scalars['String']
+  id: Scalars['Int']
   rationale: Scalars['String']
   reporterIp: Scalars['String']
+}
+
+export type ChannelUnfollowResult = {
+  __typename?: 'ChannelUnfollowResult'
+  channelId: Scalars['String']
+  follows: Scalars['Int']
+  removed: Scalars['Boolean']
 }
 
 export type ChannelWhereInput = {
@@ -1039,9 +1049,6 @@ export type ChannelWhereInput = {
   videoViewsNum_lte?: InputMaybe<Scalars['Int']>
   videoViewsNum_not_eq?: InputMaybe<Scalars['Int']>
   videoViewsNum_not_in?: InputMaybe<Array<Scalars['Int']>>
-  videoViews_every?: InputMaybe<VideoViewEventWhereInput>
-  videoViews_none?: InputMaybe<VideoViewEventWhereInput>
-  videoViews_some?: InputMaybe<VideoViewEventWhereInput>
   videos_every?: InputMaybe<VideoWhereInput>
   videos_none?: InputMaybe<VideoWhereInput>
   videos_some?: InputMaybe<VideoWhereInput>
@@ -2222,8 +2229,9 @@ export type EnglishAuctionStartedEventData = {
 
 export type EntityReportInfo = {
   __typename?: 'EntityReportInfo'
+  created: Scalars['Boolean']
   createdAt: Scalars['DateTime']
-  id: Scalars['String']
+  id: Scalars['Int']
   rationale: Scalars['String']
   reporterIp: Scalars['String']
 }
@@ -2986,13 +2994,14 @@ export type MetaprotocolTransactionStatusEventData = {
 
 export type Mutation = {
   __typename?: 'Mutation'
-  addVideoView: Video
-  followChannel: ChannelFollowsInfo
+  addVideoView: AddVideoViewResult
+  followChannel: ChannelFollowResult
   reportChannel: ChannelReportInfo
   reportVideo: VideoReportInfo
   setKillSwitch: KillSwitch
+  setSupportedCategories: SetSupportedCategoriesResult
   setVideoHero: VideoHero
-  unfollowChannel: ChannelFollowsInfo
+  unfollowChannel: ChannelUnfollowResult
 }
 
 export type MutationAddVideoViewArgs = {
@@ -3017,6 +3026,12 @@ export type MutationSetKillSwitchArgs = {
   isKilled: Scalars['Boolean']
 }
 
+export type MutationSetSupportedCategoriesArgs = {
+  supportNewCategories?: InputMaybe<Scalars['Boolean']>
+  supportNoCategoryVideos?: InputMaybe<Scalars['Boolean']>
+  supportedCategoriesIds?: InputMaybe<Array<Scalars['String']>>
+}
+
 export type MutationSetVideoHeroArgs = {
   heroPosterUrl: Scalars['String']
   heroTitle: Scalars['String']
@@ -3026,6 +3041,7 @@ export type MutationSetVideoHeroArgs = {
 
 export type MutationUnfollowChannelArgs = {
   channelId: Scalars['String']
+  token: Scalars['String']
 }
 
 export type NftBoughtEventData = {
@@ -3536,11 +3552,6 @@ export type Query = {
   videoSubtitleByUniqueInput?: Maybe<VideoSubtitle>
   videoSubtitles: Array<VideoSubtitle>
   videoSubtitlesConnection: VideoSubtitlesConnection
-  videoViewEventById?: Maybe<VideoViewEvent>
-  /** @deprecated Use videoViewEventById */
-  videoViewEventByUniqueInput?: Maybe<VideoViewEvent>
-  videoViewEvents: Array<VideoViewEvent>
-  videoViewEventsConnection: VideoViewEventsConnection
   videos: Array<Video>
   videosConnection: VideosConnection
 }
@@ -4297,28 +4308,6 @@ export type QueryVideoSubtitlesConnectionArgs = {
   where?: InputMaybe<VideoSubtitleWhereInput>
 }
 
-export type QueryVideoViewEventByIdArgs = {
-  id: Scalars['String']
-}
-
-export type QueryVideoViewEventByUniqueInputArgs = {
-  where: WhereIdInput
-}
-
-export type QueryVideoViewEventsArgs = {
-  limit?: InputMaybe<Scalars['Int']>
-  offset?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<VideoViewEventOrderByInput>>
-  where?: InputMaybe<VideoViewEventWhereInput>
-}
-
-export type QueryVideoViewEventsConnectionArgs = {
-  after?: InputMaybe<Scalars['String']>
-  first?: InputMaybe<Scalars['Int']>
-  orderBy: Array<VideoViewEventOrderByInput>
-  where?: InputMaybe<VideoViewEventWhereInput>
-}
-
 export type QueryVideosArgs = {
   limit?: InputMaybe<Scalars['Int']>
   offset?: InputMaybe<Scalars['Int']>
@@ -4331,6 +4320,16 @@ export type QueryVideosConnectionArgs = {
   first?: InputMaybe<Scalars['Int']>
   orderBy: Array<VideoOrderByInput>
   where?: InputMaybe<VideoWhereInput>
+}
+
+export type SetSupportedCategoriesResult = {
+  __typename?: 'SetSupportedCategoriesResult'
+  /** The updated number of categories that are now explicitly supported by the Gateway */
+  newNumberOfCategoriesSupported?: Maybe<Scalars['Int']>
+  /** Whether or not newly created video categories will be automatically supported */
+  newlyCreatedCategoriesSupported: Scalars['Boolean']
+  /** Whether or not vidoes w/o any category assigned will be supported */
+  noCategoryVideosSupported: Scalars['Boolean']
 }
 
 export type SquidStatus = {
@@ -5156,8 +5155,6 @@ export type Subscription = {
   videoReactions: Array<VideoReaction>
   videoSubtitleById?: Maybe<VideoSubtitle>
   videoSubtitles: Array<VideoSubtitle>
-  videoViewEventById?: Maybe<VideoViewEvent>
-  videoViewEvents: Array<VideoViewEvent>
   videos: Array<Video>
 }
 
@@ -5517,17 +5514,6 @@ export type SubscriptionVideoSubtitlesArgs = {
   where?: InputMaybe<VideoSubtitleWhereInput>
 }
 
-export type SubscriptionVideoViewEventByIdArgs = {
-  id: Scalars['String']
-}
-
-export type SubscriptionVideoViewEventsArgs = {
-  limit?: InputMaybe<Scalars['Int']>
-  offset?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<VideoViewEventOrderByInput>>
-  where?: InputMaybe<VideoViewEventWhereInput>
-}
-
 export type SubscriptionVideosArgs = {
   limit?: InputMaybe<Scalars['Int']>
   offset?: InputMaybe<Scalars['Int']>
@@ -5671,8 +5657,6 @@ export type Video = {
   title?: Maybe<Scalars['String']>
   /** Value of video state bloat bond fee paid by channel owner */
   videoStateBloatBond: Scalars['BigInt']
-  /** Video views */
-  views: Array<VideoViewEvent>
   /** Number of video views (to speed up orderBy queries by avoiding COUNT aggregation) */
   viewsNum: Scalars['Int']
 }
@@ -5698,13 +5682,6 @@ export type VideoSubtitlesArgs = {
   where?: InputMaybe<VideoSubtitleWhereInput>
 }
 
-export type VideoViewsArgs = {
-  limit?: InputMaybe<Scalars['Int']>
-  offset?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<VideoViewEventOrderByInput>>
-  where?: InputMaybe<VideoViewEventWhereInput>
-}
-
 export type VideoCategoriesConnection = {
   __typename?: 'VideoCategoriesConnection'
   edges: Array<VideoCategoryEdge>
@@ -5720,6 +5697,8 @@ export type VideoCategory = {
   featuredVideos: Array<VideoFeaturedInCategory>
   /** Runtime identifier */
   id: Scalars['String']
+  /** Indicates whether the category is supported by the Gateway */
+  isSupported: Scalars['Boolean']
   /** The name of the category */
   name?: Maybe<Scalars['String']>
   /** Parent category if defined */
@@ -5754,6 +5733,8 @@ export enum VideoCategoryOrderByInput {
   DescriptionDesc = 'description_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
+  IsSupportedAsc = 'isSupported_ASC',
+  IsSupportedDesc = 'isSupported_DESC',
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
   ParentCategoryCreatedInBlockAsc = 'parentCategory_createdInBlock_ASC',
@@ -5762,6 +5743,8 @@ export enum VideoCategoryOrderByInput {
   ParentCategoryDescriptionDesc = 'parentCategory_description_DESC',
   ParentCategoryIdAsc = 'parentCategory_id_ASC',
   ParentCategoryIdDesc = 'parentCategory_id_DESC',
+  ParentCategoryIsSupportedAsc = 'parentCategory_isSupported_ASC',
+  ParentCategoryIsSupportedDesc = 'parentCategory_isSupported_DESC',
   ParentCategoryNameAsc = 'parentCategory_name_ASC',
   ParentCategoryNameDesc = 'parentCategory_name_DESC',
 }
@@ -5815,6 +5798,9 @@ export type VideoCategoryWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']>>
   id_not_startsWith?: InputMaybe<Scalars['String']>
   id_startsWith?: InputMaybe<Scalars['String']>
+  isSupported_eq?: InputMaybe<Scalars['Boolean']>
+  isSupported_isNull?: InputMaybe<Scalars['Boolean']>
+  isSupported_not_eq?: InputMaybe<Scalars['Boolean']>
   name_contains?: InputMaybe<Scalars['String']>
   name_containsInsensitive?: InputMaybe<Scalars['String']>
   name_endsWith?: InputMaybe<Scalars['String']>
@@ -5877,6 +5863,8 @@ export enum VideoFeaturedInCategoryOrderByInput {
   CategoryDescriptionDesc = 'category_description_DESC',
   CategoryIdAsc = 'category_id_ASC',
   CategoryIdDesc = 'category_id_DESC',
+  CategoryIsSupportedAsc = 'category_isSupported_ASC',
+  CategoryIsSupportedDesc = 'category_isSupported_DESC',
   CategoryNameAsc = 'category_name_ASC',
   CategoryNameDesc = 'category_name_DESC',
   IdAsc = 'id_ASC',
@@ -6422,6 +6410,8 @@ export enum VideoOrderByInput {
   CategoryDescriptionDesc = 'category_description_DESC',
   CategoryIdAsc = 'category_id_ASC',
   CategoryIdDesc = 'category_id_DESC',
+  CategoryIsSupportedAsc = 'category_isSupported_ASC',
+  CategoryIsSupportedDesc = 'category_isSupported_DESC',
   CategoryNameAsc = 'category_name_ASC',
   CategoryNameDesc = 'category_name_DESC',
   ChannelChannelStateBloatBondAsc = 'channel_channelStateBloatBond_ASC',
@@ -6693,8 +6683,9 @@ export type VideoReactionsCountByReactionType = {
 
 export type VideoReportInfo = {
   __typename?: 'VideoReportInfo'
+  created: Scalars['Boolean']
   createdAt: Scalars['DateTime']
-  id: Scalars['String']
+  id: Scalars['Int']
   rationale: Scalars['String']
   reporterIp: Scalars['String']
   videoId: Scalars['String']
@@ -6863,132 +6854,6 @@ export type VideoSubtitleWhereInput = {
 export type VideoSubtitlesConnection = {
   __typename?: 'VideoSubtitlesConnection'
   edges: Array<VideoSubtitleEdge>
-  pageInfo: PageInfo
-  totalCount: Scalars['Int']
-}
-
-export type VideoViewEvent = {
-  __typename?: 'VideoViewEvent'
-  /** Channel the video belongs to */
-  channel: Channel
-  id: Scalars['String']
-  /** Timestamp */
-  timestamp: Scalars['DateTime']
-  /** Video viewed */
-  video: Video
-}
-
-export type VideoViewEventEdge = {
-  __typename?: 'VideoViewEventEdge'
-  cursor: Scalars['String']
-  node: VideoViewEvent
-}
-
-export enum VideoViewEventOrderByInput {
-  ChannelChannelStateBloatBondAsc = 'channel_channelStateBloatBond_ASC',
-  ChannelChannelStateBloatBondDesc = 'channel_channelStateBloatBond_DESC',
-  ChannelCreatedAtAsc = 'channel_createdAt_ASC',
-  ChannelCreatedAtDesc = 'channel_createdAt_DESC',
-  ChannelCreatedInBlockAsc = 'channel_createdInBlock_ASC',
-  ChannelCreatedInBlockDesc = 'channel_createdInBlock_DESC',
-  ChannelDescriptionAsc = 'channel_description_ASC',
-  ChannelDescriptionDesc = 'channel_description_DESC',
-  ChannelFollowsNumAsc = 'channel_followsNum_ASC',
-  ChannelFollowsNumDesc = 'channel_followsNum_DESC',
-  ChannelIdAsc = 'channel_id_ASC',
-  ChannelIdDesc = 'channel_id_DESC',
-  ChannelIsCensoredAsc = 'channel_isCensored_ASC',
-  ChannelIsCensoredDesc = 'channel_isCensored_DESC',
-  ChannelIsPublicAsc = 'channel_isPublic_ASC',
-  ChannelIsPublicDesc = 'channel_isPublic_DESC',
-  ChannelLanguageAsc = 'channel_language_ASC',
-  ChannelLanguageDesc = 'channel_language_DESC',
-  ChannelRewardAccountAsc = 'channel_rewardAccount_ASC',
-  ChannelRewardAccountDesc = 'channel_rewardAccount_DESC',
-  ChannelTitleAsc = 'channel_title_ASC',
-  ChannelTitleDesc = 'channel_title_DESC',
-  ChannelVideoViewsNumAsc = 'channel_videoViewsNum_ASC',
-  ChannelVideoViewsNumDesc = 'channel_videoViewsNum_DESC',
-  IdAsc = 'id_ASC',
-  IdDesc = 'id_DESC',
-  TimestampAsc = 'timestamp_ASC',
-  TimestampDesc = 'timestamp_DESC',
-  VideoCommentsCountAsc = 'video_commentsCount_ASC',
-  VideoCommentsCountDesc = 'video_commentsCount_DESC',
-  VideoCreatedAtAsc = 'video_createdAt_ASC',
-  VideoCreatedAtDesc = 'video_createdAt_DESC',
-  VideoCreatedInBlockAsc = 'video_createdInBlock_ASC',
-  VideoCreatedInBlockDesc = 'video_createdInBlock_DESC',
-  VideoDescriptionAsc = 'video_description_ASC',
-  VideoDescriptionDesc = 'video_description_DESC',
-  VideoDurationAsc = 'video_duration_ASC',
-  VideoDurationDesc = 'video_duration_DESC',
-  VideoHasMarketingAsc = 'video_hasMarketing_ASC',
-  VideoHasMarketingDesc = 'video_hasMarketing_DESC',
-  VideoIdAsc = 'video_id_ASC',
-  VideoIdDesc = 'video_id_DESC',
-  VideoIsCensoredAsc = 'video_isCensored_ASC',
-  VideoIsCensoredDesc = 'video_isCensored_DESC',
-  VideoIsCommentSectionEnabledAsc = 'video_isCommentSectionEnabled_ASC',
-  VideoIsCommentSectionEnabledDesc = 'video_isCommentSectionEnabled_DESC',
-  VideoIsExplicitAsc = 'video_isExplicit_ASC',
-  VideoIsExplicitDesc = 'video_isExplicit_DESC',
-  VideoIsPublicAsc = 'video_isPublic_ASC',
-  VideoIsPublicDesc = 'video_isPublic_DESC',
-  VideoIsReactionFeatureEnabledAsc = 'video_isReactionFeatureEnabled_ASC',
-  VideoIsReactionFeatureEnabledDesc = 'video_isReactionFeatureEnabled_DESC',
-  VideoLanguageAsc = 'video_language_ASC',
-  VideoLanguageDesc = 'video_language_DESC',
-  VideoPublishedBeforeJoystreamAsc = 'video_publishedBeforeJoystream_ASC',
-  VideoPublishedBeforeJoystreamDesc = 'video_publishedBeforeJoystream_DESC',
-  VideoReactionsCountAsc = 'video_reactionsCount_ASC',
-  VideoReactionsCountDesc = 'video_reactionsCount_DESC',
-  VideoTitleAsc = 'video_title_ASC',
-  VideoTitleDesc = 'video_title_DESC',
-  VideoVideoStateBloatBondAsc = 'video_videoStateBloatBond_ASC',
-  VideoVideoStateBloatBondDesc = 'video_videoStateBloatBond_DESC',
-  VideoViewsNumAsc = 'video_viewsNum_ASC',
-  VideoViewsNumDesc = 'video_viewsNum_DESC',
-}
-
-export type VideoViewEventWhereInput = {
-  AND?: InputMaybe<Array<VideoViewEventWhereInput>>
-  OR?: InputMaybe<Array<VideoViewEventWhereInput>>
-  channel?: InputMaybe<ChannelWhereInput>
-  channel_isNull?: InputMaybe<Scalars['Boolean']>
-  id_contains?: InputMaybe<Scalars['String']>
-  id_containsInsensitive?: InputMaybe<Scalars['String']>
-  id_endsWith?: InputMaybe<Scalars['String']>
-  id_eq?: InputMaybe<Scalars['String']>
-  id_gt?: InputMaybe<Scalars['String']>
-  id_gte?: InputMaybe<Scalars['String']>
-  id_in?: InputMaybe<Array<Scalars['String']>>
-  id_isNull?: InputMaybe<Scalars['Boolean']>
-  id_lt?: InputMaybe<Scalars['String']>
-  id_lte?: InputMaybe<Scalars['String']>
-  id_not_contains?: InputMaybe<Scalars['String']>
-  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
-  id_not_endsWith?: InputMaybe<Scalars['String']>
-  id_not_eq?: InputMaybe<Scalars['String']>
-  id_not_in?: InputMaybe<Array<Scalars['String']>>
-  id_not_startsWith?: InputMaybe<Scalars['String']>
-  id_startsWith?: InputMaybe<Scalars['String']>
-  timestamp_eq?: InputMaybe<Scalars['DateTime']>
-  timestamp_gt?: InputMaybe<Scalars['DateTime']>
-  timestamp_gte?: InputMaybe<Scalars['DateTime']>
-  timestamp_in?: InputMaybe<Array<Scalars['DateTime']>>
-  timestamp_isNull?: InputMaybe<Scalars['Boolean']>
-  timestamp_lt?: InputMaybe<Scalars['DateTime']>
-  timestamp_lte?: InputMaybe<Scalars['DateTime']>
-  timestamp_not_eq?: InputMaybe<Scalars['DateTime']>
-  timestamp_not_in?: InputMaybe<Array<Scalars['DateTime']>>
-  video?: InputMaybe<VideoWhereInput>
-  video_isNull?: InputMaybe<Scalars['Boolean']>
-}
-
-export type VideoViewEventsConnection = {
-  __typename?: 'VideoViewEventsConnection'
-  edges: Array<VideoViewEventEdge>
   pageInfo: PageInfo
   totalCount: Scalars['Int']
 }
@@ -7180,9 +7045,6 @@ export type VideoWhereInput = {
   viewsNum_lte?: InputMaybe<Scalars['Int']>
   viewsNum_not_eq?: InputMaybe<Scalars['Int']>
   viewsNum_not_in?: InputMaybe<Array<Scalars['Int']>>
-  views_every?: InputMaybe<VideoViewEventWhereInput>
-  views_none?: InputMaybe<VideoViewEventWhereInput>
-  views_some?: InputMaybe<VideoViewEventWhereInput>
 }
 
 export type VideosConnection = {
