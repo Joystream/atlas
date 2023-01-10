@@ -78,7 +78,7 @@ export const useAddVideoView = (opts?: Omit<MutationHookOptions<AddVideoViewMuta
       cache.modify({
         id: cache.identify({
           __typename: 'Video',
-          id: mutationResult.data?.addVideoView.id,
+          id: mutationResult.data?.addVideoView.videoId,
         }),
         fields: {
           views: () => mutationResult.data?.addVideoView.viewsNum,

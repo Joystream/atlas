@@ -99,6 +99,7 @@ export const useFollowChannel = (opts?: MutationHookOptions<FollowChannelMutatio
         variables: {
           channelId: id,
         },
+        // todo make sure cache is updated
         update: (cache, mutationResult) => {
           cache.modify({
             id: cache.identify({
@@ -123,7 +124,10 @@ export const useUnfollowChannel = (opts?: MutationHookOptions<UnfollowChannelMut
         ...opts,
         variables: {
           channelId: id,
+          // TODO add token here
+          token: '',
         },
+        // todo make sure cache is updated
         update: (cache, mutationResult) => {
           cache.modify({
             id: cache.identify({
