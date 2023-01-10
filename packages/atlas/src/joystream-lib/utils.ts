@@ -68,12 +68,9 @@ export const calculateAssetsBloatFee = (
 }
 
 export const parseAccountBalance = (balances: DeriveBalancesAll): AccountBalanceInfo => {
-  /*
-    balances.freeBalance = all the tokens in the account
-    balances.availableBalance = "transferable balance" (freeBalance - any locks)
-  */
+  const feeUsable = balances.freeBalance.sub(balances.frozenFee)
 
-  const lockedBalance = BN.max(new BN(0), balances.freeBalance.sub(balances.availableBalance))
+  const lockedBalance = feeUsable.sub(balances.availableBalance)
   return {
     availableBalance: balances.availableBalance.toString(),
     lockedBalance: lockedBalance.toString(),
