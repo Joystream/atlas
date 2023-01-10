@@ -28,12 +28,20 @@ export const Wrapper = styled.div<{ variant: 'small' | 'large'; clickable?: bool
       }
   `}
   }
+
+  :hover {
+    .video-list-item-kebab {
+      opacity: 1;
+    }
+  }
 `
 
 export const DetailsWrapper = styled.div<{ variant: 'small' | 'large' }>`
   align-self: ${({ variant }) => (variant === 'small' ? 'center' : 'start')};
   gap: ${({ variant }) => (variant === 'small' ? 'unset' : sizes(2))};
   display: grid;
+  position: relative;
+  width: 100%;
 `
 
 export const EndNodeWrapper = styled.div`
@@ -55,4 +63,16 @@ export const SkeletonTextWrapper = styled.div`
 export const StyledLoader = styled(Loader)`
   margin: ${sizes(4)};
   justify-self: center;
+`
+
+export const ContextMenuWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 1;
+  transition: opacity ${cVar('animationTransitionFast')};
+
+  ${media.sm} {
+    opacity: 0;
+  }
 `

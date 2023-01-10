@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useState } from 'react'
 
 import { useFullVideosConnection } from '@/api/hooks/videosConnection'
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
@@ -8,6 +8,7 @@ import { Button } from '@/components/_buttons/Button'
 import { VideoListItem, VideoListItemLoader } from '@/components/_video/VideoListItem'
 import { useDebounceValue } from '@/hooks/useDebounceValue'
 import { useAuthorizedUser } from '@/providers/user/user.hooks'
+import { createId } from '@/utils/createId'
 import { SentryLogger } from '@/utils/logs'
 
 import { ListWrapper, StyledDialogModal, StyledInput, Wrapper } from './VideoSelectorDialog.styles'
@@ -15,18 +16,12 @@ import { ListWrapper, StyledDialogModal, StyledInput, Wrapper } from './VideoSel
 type VideoSelectorDialogProps = {
   onHide: () => void
   show: boolean
-  onSelect: (arg: string[]) => void
-  initiallySelectedVideoIds?: string[]
+  onSelect: (arg: [string, string][]) => void
 }
 const INITIAL_FIRST = 50
 
-export const VideoSelectorDialog: FC<VideoSelectorDialogProps> = ({
-  onHide,
-  show,
-  onSelect,
-  initiallySelectedVideoIds = [],
-}) => {
-  const [selectedVideoIds, setSelectedVideoIds] = useState<string[]>(initiallySelectedVideoIds)
+export const VideoSelectorDialog: FC<VideoSelectorDialogProps> = ({ onHide, show, onSelect }) => {
+  const [selectedVideoIds, setSelectedVideoIds] = useState<string[]>([])
   const [search, setSearch] = useState<string>('')
   const { channelId } = useAuthorizedUser()
   const debouncedSearch = useDebounceValue(search, 200)
@@ -47,14 +42,6 @@ export const VideoSelectorDialog: FC<VideoSelectorDialogProps> = ({
     }
   )
 
-  useEffect(() => {
-    if (show) {
-      setSelectedVideoIds(initiallySelectedVideoIds)
-    }
-    // need to update selected videos when modal opens
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [show])
-
   return (
     <StyledDialogModal
       show={show}
@@ -64,7 +51,8 @@ export const VideoSelectorDialog: FC<VideoSelectorDialogProps> = ({
         text: 'Add videos',
         disabled: !selectedVideoIds.length,
         onClick: () => {
-          onSelect(selectedVideoIds)
+          onSelect(selectedVideoIds.map((videoId) => [videoId, createId()]))
+          setSelectedVideoIds([])
           onHide()
         },
       }}

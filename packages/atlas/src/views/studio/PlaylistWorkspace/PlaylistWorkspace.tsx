@@ -1,8 +1,9 @@
 import { FC, useCallback, useEffect, useState } from 'react'
+import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import { Controller, useForm } from 'react-hook-form'
 
 import { useBasicVideo } from '@/api/hooks/video'
-import { SvgActionAdd } from '@/assets/icons'
+import { SvgActionAdd, SvgActionArrowBottom, SvgActionArrowTop, SvgActionTrash } from '@/assets/icons'
 import { DraggableComponent } from '@/components/DraggableComponent/DraggableComponent'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Button } from '@/components/_buttons/Button'
@@ -63,7 +64,7 @@ export type PlaylistWorkspaceProps = {
 }
 
 export const PlaylistWorkspace: FC<PlaylistWorkspaceProps> = ({ show, onHide }) => {
-  const [playlistVideos, setPlaylistVideos] = useState<string[]>([])
+  const [playlistVideos, setPlaylistVideos] = useState<[string, string][]>([])
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
   const lgMatch = useMediaMatch('lg')
@@ -79,7 +80,7 @@ export const PlaylistWorkspace: FC<PlaylistWorkspaceProps> = ({ show, onHide }) 
     },
   })
   const thumbnail = watch('thumbnail')
-  const { video } = useBasicVideo(playlistVideos[0] ?? '', {
+  const { video } = useBasicVideo(playlistVideos[0]?.[0] ?? '', {
     skip: !playlistVideos[0],
     onError: (error) =>
       SentryLogger.error('Failed to fetch video', 'VideoTile', error, { video: { id: playlistVideos[0] } }),
@@ -154,7 +155,8 @@ export const PlaylistWorkspace: FC<PlaylistWorkspaceProps> = ({ show, onHide }) 
     trigger('thumbnail')
   }
 
-  const moveItem = useCallback((dragIndex: number, hoverIndex: number) => {
+  const moveItem = useCallback((dragIndex: number, hoverIndex?: number) => {
+    if (typeof hoverIndex !== 'number') return
     setShouldFallbackThumbnail(true)
     setPlaylistVideos((prev) => {
       const copy = [...prev]
@@ -164,8 +166,8 @@ export const PlaylistWorkspace: FC<PlaylistWorkspaceProps> = ({ show, onHide }) 
     })
   }, [])
 
-  const handleItemRemove = useCallback((videoId: string) => {
-    setPlaylistVideos((prev) => prev.filter((vId) => vId !== videoId))
+  const handleItemRemove = useCallback((id: string) => {
+    setPlaylistVideos((prev) => prev.filter((video) => video[1] !== id))
   }, [])
 
   return (
@@ -173,8 +175,7 @@ export const PlaylistWorkspace: FC<PlaylistWorkspaceProps> = ({ show, onHide }) 
       <VideoSelectorDialog
         show={showSelectDialog}
         onHide={() => setShowSelectDialog(false)}
-        onSelect={setPlaylistVideos}
-        initiallySelectedVideoIds={playlistVideos}
+        onSelect={(newIds) => setPlaylistVideos((prev) => [...prev, ...newIds])}
       />
       <BottomDrawer isOpen={show} onClose={onHide} title="New playlist" pageTitle="New playlist" titleLabel="Playlist">
         <WorkspaceWrapper as="form">
@@ -242,23 +243,62 @@ export const PlaylistWorkspace: FC<PlaylistWorkspaceProps> = ({ show, onHide }) 
           {!lgMatch && <Divider />}
           {playlistVideos.length ? (
             <>
-              <div>
-                {playlistVideos.map((videoId, index) => (
-                  <DraggableComponent
-                    key={videoId}
-                    id={videoId}
-                    itemType="videoListItem"
-                    index={index}
-                    moveItem={moveItem}
-                    removeOption={{
-                      label: 'Remove from playlist',
-                      onClick: () => handleItemRemove(videoId),
-                    }}
-                  >
-                    <StyledVideoListItem id={videoId} variant="large" />
-                  </DraggableComponent>
-                ))}
-              </div>
+              <DragDropContext onDragEnd={(res) => moveItem(res.source.index, res.destination?.index)}>
+                <Droppable
+                  droppableId="droppable"
+                  renderClone={
+                    mdMatch
+                      ? (provided, snapshot, rubric) => (
+                          <DraggableComponent
+                            draggableId="draggable"
+                            index={0}
+                            moveItem={moveItem}
+                            draggableProps={{ provided, snapshot }}
+                          >
+                            <StyledVideoListItem id={playlistVideos[rubric.source.index][0]} variant="large" />
+                          </DraggableComponent>
+                        )
+                      : undefined
+                  }
+                >
+                  {(provided) => (
+                    <div {...provided.droppableProps} ref={provided.innerRef}>
+                      {playlistVideos.map(([videoId, id], index) => {
+                        if (!videoId || !id) {
+                          return null
+                        }
+                        return (
+                          <DraggableComponent key={id} draggableId={id} index={index} moveItem={moveItem}>
+                            <StyledVideoListItem
+                              id={videoId}
+                              variant="large"
+                              menuItems={[
+                                {
+                                  label: 'Move to top',
+                                  onClick: () => moveItem(index, 0),
+                                  nodeStart: <SvgActionArrowTop />,
+                                },
+                                {
+                                  label: 'Move to bottom',
+                                  onClick: () => moveItem(index, 1000),
+                                  nodeStart: <SvgActionArrowBottom />,
+                                },
+                                {
+                                  label: 'Remove video',
+                                  onClick: () => handleItemRemove(id),
+                                  nodeStart: <SvgActionTrash />,
+                                  destructive: true,
+                                },
+                              ]}
+                            />
+                          </DraggableComponent>
+                        )
+                      })}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </DragDropContext>
               <StyledButton
                 onClick={() => setShowSelectDialog(true)}
                 variant="secondary"

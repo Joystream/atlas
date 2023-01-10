@@ -2,9 +2,12 @@ import { FC } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useBasicVideo } from '@/api/hooks/video'
-import { SvgActionCheck } from '@/assets/icons'
+import { SvgActionCheck, SvgActionMore } from '@/assets/icons'
+import { ListItemProps } from '@/components/ListItem'
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
+import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { VideoListItemLoader } from '@/components/_video/VideoListItem/VideoListItemLoader'
 import { VideoThumbnail } from '@/components/_video/VideoThumbnail'
 import { Views } from '@/components/_video/VideoTileDetails/VideoTileDetails.styles'
@@ -14,7 +17,7 @@ import { SentryLogger } from '@/utils/logs'
 import { formatDurationShort } from '@/utils/time'
 import { formatVideoDate } from '@/utils/video'
 
-import { DetailsWrapper, EndNodeWrapper, Wrapper } from './VideoListItem.styles'
+import { ContextMenuWrapper, DetailsWrapper, EndNodeWrapper, Wrapper } from './VideoListItem.styles'
 
 type VideoListItemProps = {
   id?: string
@@ -23,6 +26,7 @@ type VideoListItemProps = {
   variant?: 'small' | 'large'
   className?: string
   clickable?: boolean
+  menuItems?: ListItemProps[]
 }
 
 export const VideoListItem: FC<VideoListItemProps> = ({
@@ -32,6 +36,7 @@ export const VideoListItem: FC<VideoListItemProps> = ({
   className,
   variant = 'small',
   clickable,
+  menuItems,
 }) => {
   const { video, loading } = useBasicVideo(id ?? '', {
     skip: !id,
@@ -94,6 +99,16 @@ export const VideoListItem: FC<VideoListItemProps> = ({
                     &nbsp;views
                   </>{' '}
                 </Text>
+              )}
+              {menuItems && (
+                <ContextMenuWrapper className="video-list-item-kebab">
+                  <ContextMenu
+                    placement="bottom-end"
+                    appendTo={document.body}
+                    items={menuItems}
+                    trigger={<Button onClick={() => null} icon={<SvgActionMore />} variant="tertiary" size="small" />}
+                  />
+                </ContextMenuWrapper>
               )}
             </DetailsWrapper>
             {isActive && (

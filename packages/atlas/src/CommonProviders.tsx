@@ -1,7 +1,5 @@
 import { ApolloProvider } from '@apollo/client'
 import { FC, PropsWithChildren } from 'react'
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
 import { BrowserRouter } from 'react-router-dom'
 
 import { Maintenance } from '@/Maintenance'
@@ -23,23 +21,21 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
     <>
       <GlobalStyles />
       <ApolloProvider client={apolloClient}>
-        <DndProvider backend={HTML5Backend}>
-          <UserProvider>
-            <OverlayManagerProvider>
-              <ConfirmationModalProvider>
-                <BrowserRouter>
-                  <AdminModal />
-                  <MaintenanceWrapper>
-                    <OperatorsContextProvider>
-                      <AssetsManager />
-                      {children}
-                    </OperatorsContextProvider>
-                  </MaintenanceWrapper>
-                </BrowserRouter>
-              </ConfirmationModalProvider>
-            </OverlayManagerProvider>
-          </UserProvider>
-        </DndProvider>
+        <UserProvider>
+          <OverlayManagerProvider>
+            <ConfirmationModalProvider>
+              <BrowserRouter>
+                <AdminModal />
+                <MaintenanceWrapper>
+                  <OperatorsContextProvider>
+                    <AssetsManager />
+                    {children}
+                  </OperatorsContextProvider>
+                </MaintenanceWrapper>
+              </BrowserRouter>
+            </ConfirmationModalProvider>
+          </OverlayManagerProvider>
+        </UserProvider>
       </ApolloProvider>
     </>
   )
