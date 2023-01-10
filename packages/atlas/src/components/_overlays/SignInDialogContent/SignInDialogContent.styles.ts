@@ -6,21 +6,15 @@ import {
   SvgOtherSignInDialogPatterns,
   SvgOtherSignInMobileDialogPatterns,
 } from '@/assets/illustrations'
-import { cVar, media, sizes } from '@/styles'
+import { media, sizes } from '@/styles'
 
 export const IllustrationWrapper = styled.div<{ isMobileDevice: boolean }>`
   position: relative;
-  height: ${({ isMobileDevice }) => (isMobileDevice ? '162px' : '180px')};
-  background-color: ${cVar('colorBackground')};
   margin: calc(var(--local-size-dialog-padding) * -1) calc(var(--local-size-dialog-padding) * -1) ${sizes(6)}
     calc(var(--local-size-dialog-padding) * -1);
   display: flex;
   align-items: center;
   justify-content: center;
-
-  ${media.sm} {
-    height: ${({ isMobileDevice }) => (isMobileDevice ? '216px' : '270px')};
-  }
 `
 
 export const SignInDialogTextWrapper = styled.div`
