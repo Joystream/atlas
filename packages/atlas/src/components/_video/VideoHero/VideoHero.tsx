@@ -5,9 +5,11 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { VideoHeroData } from '@/api/hooks/videoHero'
 import { SvgActionPlayAlt, SvgActionSoundOff, SvgActionSoundOn } from '@/assets/icons'
 import { GridItem } from '@/components/LayoutGrid'
+import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { BackgroundVideoPlayer } from '@/components/_video/BackgroundVideoPlayer'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { transitions } from '@/styles'
@@ -18,6 +20,7 @@ import {
   Container,
   GradientOverlay,
   InfoContainer,
+  PlaceholderContainer,
   StyledChannelLink,
   StyledLayoutGrid,
   TitleContainer,
@@ -25,6 +28,7 @@ import {
 } from './VideoHero.styles'
 
 export type VideoHeroProps = {
+  loading?: boolean
   isCategory?: boolean
   headerNode?: ReactNode
   sliderNode?: ReactNode
@@ -35,7 +39,8 @@ export type VideoHeroProps = {
 }
 
 export const VideoHero: FC<VideoHeroProps> = ({
-  videoHeroData = null,
+  videoHeroData,
+  loading,
   headerNode,
   isCategory,
   sliderNode,
@@ -54,6 +59,32 @@ export const VideoHero: FC<VideoHeroProps> = ({
 
   const handleEnded = (e: SyntheticEvent<HTMLVideoElement, Event>) => {
     onEnded?.(e)
+  }
+  const isVideoLoading = loading && !videoHeroData
+
+  if (!isVideoLoading && !videoHeroData) {
+    return (
+      <PlaceholderContainer>
+        <BackgroundContainer>
+          <GradientOverlay />
+        </BackgroundContainer>
+        {isCategory ? (
+          <>
+            {headerNode}
+            <InfoContainer />
+          </>
+        ) : (
+          <InfoContainer>
+            <Text as="h2" variant="h700">
+              Welcome to {atlasConfig.general.appName}
+            </Text>
+            <Text as="p" variant="t200" margin={{ top: 4 }} color="colorText">
+              Lorem ipsum dolor sit amet consectetur. Vel donec mauris sit placerat at hendrerit fermentum.
+            </Text>
+          </InfoContainer>
+        )}
+      </PlaceholderContainer>
+    )
   }
 
   return (
@@ -81,7 +112,7 @@ export const VideoHero: FC<VideoHeroProps> = ({
             <TitleContainer>
               <SwitchTransition>
                 <CSSTransition
-                  key={videoHeroData ? 'data' : 'placeholder'}
+                  key={!isVideoLoading ? 'data' : 'placeholder'}
                   classNames={transitions.names.fade}
                   timeout={parseInt(transitions.timings.regular)}
                 >
@@ -106,7 +137,7 @@ export const VideoHero: FC<VideoHeroProps> = ({
         </StyledLayoutGrid>
         <SwitchTransition>
           <CSSTransition
-            key={videoHeroData ? 'data' : 'placeholder'}
+            key={!isVideoLoading ? 'data' : 'placeholder'}
             classNames={transitions.names.fade}
             timeout={parseInt(transitions.timings.regular)}
           >

@@ -10,6 +10,12 @@ type IsCategoryProp = {
   isCategory?: boolean
 }
 
+export const PlaceholderContainer = styled.section`
+  position: relative;
+  margin: 0 calc(-1 * var(--size-global-horizontal-padding));
+  padding: 64px var(--size-global-horizontal-padding) 0;
+`
+
 export const Container = styled.section<IsCategoryProp>`
   position: relative;
   margin: 0 calc(-1 * var(--size-global-horizontal-padding));
