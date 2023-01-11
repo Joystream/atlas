@@ -15,6 +15,16 @@ export const IllustrationWrapper = styled.div<{ isMobileDevice: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+
+  > * {
+    width: 100%;
+    height: 208px;
+
+    ${media.sm} {
+      height: 264px;
+    }
+  }
 `
 
 export const SignInDialogTextWrapper = styled.div`

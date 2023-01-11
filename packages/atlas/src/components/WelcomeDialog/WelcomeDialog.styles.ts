@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
-import { cVar, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 import { DialogModal } from '../_overlays/DialogModal'
 
@@ -26,6 +26,12 @@ export const Wrapper = styled.div`
 
   > :nth-child(1) {
     margin: 0;
+    height: 208px;
+    overflow: hidden;
+
+    ${media.sm} {
+      height: 264px;
+    }
   }
 
   > :nth-child(2),
