@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { VideoHeroData } from '@/api/hooks/videoHero'
-import { SvgActionPlayAlt, SvgActionSoundOff, SvgActionSoundOn } from '@/assets/icons'
+import { SvgActionChevronL, SvgActionPlayAlt, SvgActionSoundOff, SvgActionSoundOn } from '@/assets/icons'
+import { IconWrapper } from '@/components/IconWrapper'
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
+import { Button, TextButton } from '@/components/_buttons/Button'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { BackgroundVideoPlayer } from '@/components/_video/BackgroundVideoPlayer'
 import { atlasConfig } from '@/config'
@@ -17,21 +18,31 @@ import { transitions } from '@/styles'
 import {
   BackgroundContainer,
   ButtonsContainer,
+  CategoryTitleWrapper,
   Container,
   GradientOverlay,
   InfoContainer,
   PlaceholderContainer,
+  PlaceholderInfoContainer,
   StyledChannelLink,
   StyledLayoutGrid,
   TitleContainer,
   TitleText,
 } from './VideoHero.styles'
+import { VideoHeroHeader } from './VideoHeroHeader'
+import { VideoHeroSlider, VideoHeroSliderProps } from './VideoHeroSlider'
+
+type VideoHeroCategory = {
+  title?: string
+  icon?: ReactNode
+  color?: string
+}
 
 export type VideoHeroProps = {
   loading?: boolean
-  isCategory?: boolean
+  category?: VideoHeroCategory
+  videoSlider?: VideoHeroSliderProps
   headerNode?: ReactNode
-  sliderNode?: ReactNode
   withMuteButton?: boolean
   videoHeroData?: VideoHeroData | null
   onTimeUpdate?: (e: SyntheticEvent<HTMLVideoElement, Event>) => void
@@ -41,15 +52,15 @@ export type VideoHeroProps = {
 export const VideoHero: FC<VideoHeroProps> = ({
   videoHeroData,
   loading,
-  headerNode,
-  isCategory,
-  sliderNode,
+  videoSlider,
+  category,
   withMuteButton,
   onTimeUpdate,
   onEnded,
 }) => {
   const smMatch = useMediaMatch('sm')
   const xsMatch = useMediaMatch('xs')
+  const isCategory = !!category
 
   const [soundMuted, setSoundMuted] = useState(true)
 
@@ -64,24 +75,36 @@ export const VideoHero: FC<VideoHeroProps> = ({
 
   if (!isVideoLoading && !videoHeroData) {
     return (
-      <PlaceholderContainer>
+      <PlaceholderContainer isCategory={isCategory}>
         <BackgroundContainer>
           <GradientOverlay />
         </BackgroundContainer>
         {isCategory ? (
-          <>
-            {headerNode}
-            <InfoContainer />
-          </>
+          <PlaceholderInfoContainer>
+            <TextButton
+              to={absoluteRoutes.viewer.discover()}
+              size="medium"
+              variant="secondary"
+              icon={<SvgActionChevronL />}
+            >
+              Discover
+            </TextButton>
+            <CategoryTitleWrapper>
+              <IconWrapper size={smMatch ? 'large' : 'medium'} icon={category.icon} backgroundColor={category.color} />
+              <Text as="h2" variant={smMatch ? 'h700' : 'h500'} margin={{ left: smMatch ? 4 : 2 }}>
+                {category.title}
+              </Text>
+            </CategoryTitleWrapper>
+          </PlaceholderInfoContainer>
         ) : (
-          <InfoContainer>
+          <PlaceholderInfoContainer>
             <Text as="h2" variant="h700">
               Welcome to {atlasConfig.general.appName}
             </Text>
             <Text as="p" variant="t200" margin={{ top: 4 }} color="colorText">
               Lorem ipsum dolor sit amet consectetur. Vel donec mauris sit placerat at hendrerit fermentum.
             </Text>
-          </InfoContainer>
+          </PlaceholderInfoContainer>
         )}
       </PlaceholderContainer>
     )
@@ -103,8 +126,14 @@ export const VideoHero: FC<VideoHeroProps> = ({
         )}
         <GradientOverlay />
       </BackgroundContainer>
-      {sliderNode && sliderNode}
-      {headerNode && headerNode}
+      {videoSlider && (
+        <VideoHeroSlider
+          activeVideoIdx={videoSlider.activeVideoIdx}
+          onTileClick={videoSlider.onTileClick}
+          videos={videoSlider.videos}
+        />
+      )}
+      {category?.title && <VideoHeroHeader icon={category.icon} title={category.title} loading={loading} />}
       <InfoContainer isCategory={isCategory}>
         <StyledLayoutGrid>
           <GridItem colSpan={{ xxs: 12, sm: 6 }}>

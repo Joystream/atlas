@@ -10,10 +10,25 @@ type IsCategoryProp = {
   isCategory?: boolean
 }
 
-export const PlaceholderContainer = styled.section`
+export const PlaceholderContainer = styled.section<{ isCategory: boolean }>`
   position: relative;
   margin: 0 calc(-1 * var(--size-global-horizontal-padding));
-  padding: 64px var(--size-global-horizontal-padding) 0;
+  padding: ${({ isCategory }) => (isCategory ? sizes(8) : sizes(16))} var(--size-global-horizontal-padding) 0;
+`
+
+export const PlaceholderInfoContainer = styled.div`
+  position: relative;
+`
+
+export const CategoryTitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: ${sizes(16)};
+
+  ${media.sm} {
+    margin-top: ${sizes(32)};
+    margin-bottom: ${sizes(32)};
+  }
 `
 
 export const Container = styled.section<IsCategoryProp>`

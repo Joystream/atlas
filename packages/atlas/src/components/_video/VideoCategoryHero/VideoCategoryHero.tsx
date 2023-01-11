@@ -1,21 +1,20 @@
 import { round } from 'lodash-es'
 import { FC, ReactNode, SyntheticEvent, useState } from 'react'
 
-import { VideoHeroHeader } from './VideoHereoHeader'
-import { VideoHeroSlider } from './VideoHeroSlider'
-import { VideoHeroFeaturedVideo } from './types'
-
 import { VideoHero } from '../VideoHero'
+import { VideoHeroFeaturedVideo } from '../VideoHero/VideoHero.types'
 
 export type VideoCategoryHeroProps = {
-  header: {
+  category: {
     icon?: ReactNode
     title?: string
+    color?: string
   }
   videos?: (VideoHeroFeaturedVideo | null)[]
+  loading?: boolean
 }
 
-export const VideoCategoryHero: FC<VideoCategoryHeroProps> = ({ header, videos }) => {
+export const VideoCategoryHero: FC<VideoCategoryHeroProps> = ({ category, videos, loading }) => {
   const [activeVideoIdx, setActiveVideoIdx] = useState(0)
   const [videoProgress, setVideoProgress] = useState(0)
 
@@ -47,28 +46,40 @@ export const VideoCategoryHero: FC<VideoCategoryHeroProps> = ({ header, videos }
     video ? { ...video, progress: idx === activeVideoIdx ? videoProgress : 0 } : null
   )
 
-  const shouldShowSlider = videosLength > 1
-  const currentVideoData = videos?.[activeVideoIdx]
+  const videoSlider =
+    videosLength > 1
+      ? {
+          activeVideoIdx,
+          onTileClick: handleVideoClick,
+          videos: videosWithProgress,
+        }
+      : undefined
 
-  return (
-    <VideoHero
-      isCategory
-      onTimeUpdate={handleTimeUpdate}
-      onEnded={handleEnded}
-      videoHeroData={{
+  const currentVideoData = videos?.[activeVideoIdx]
+  const videoHeroData = currentVideoData
+    ? {
         video: currentVideoData?.video,
         heroTitle: currentVideoData?.video.title || '',
         heroVideoCutUrl: currentVideoData?.videoCutUrl || '',
         heroPosterUrl: null,
-      }}
-      headerNode={
-        !!header.title &&
-        !!header.icon && <VideoHeroHeader icon={header.icon} title={header.title} loading={!videos?.[activeVideoIdx]} />
       }
-      sliderNode={
-        shouldShowSlider ? (
-          <VideoHeroSlider activeVideoIdx={activeVideoIdx} videos={videosWithProgress} onTileClick={handleVideoClick} />
-        ) : undefined
+    : null
+
+  return (
+    <VideoHero
+      loading={loading}
+      onTimeUpdate={handleTimeUpdate}
+      onEnded={handleEnded}
+      videoSlider={videoSlider}
+      videoHeroData={videoHeroData}
+      category={
+        category
+          ? {
+              title: category.title,
+              icon: category.icon,
+              color: category.color,
+            }
+          : undefined
       }
     />
   )
