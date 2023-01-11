@@ -51,11 +51,17 @@ export const StyledText = styled(Text)`
   margin: 0 auto;
   text-align: center;
   justify-self: center;
+  display: inline-block;
 
   :first-child {
     margin-bottom: ${sizes(2)};
   }
 `
+
+export const ContentText = styled(Text)`
+  display: inline-block;
+`
+
 export const StyledAnchor = styled(Link)`
   text-decoration: none;
   color: ${cVar('colorTextPrimary')};

@@ -4,7 +4,7 @@ import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers/personalData'
 
-import { Divider, StyledAnchor, StyledDialogModal, StyledText, Wrapper } from './WelcomeDialog.styles'
+import { ContentText, Divider, StyledAnchor, StyledDialogModal, StyledText, Wrapper } from './WelcomeDialog.styles'
 
 export const WelcomeDialog = () => {
   const { isCookiesPopoverVisible, setCookiesAccepted } = usePersonalDataStore((state) => ({
@@ -22,11 +22,14 @@ export const WelcomeDialog = () => {
         <StyledText variant="h500" as="p" color="colorTextStrong">
           Welcome to {atlasConfig.general.appName}
         </StyledText>
-        <StyledText variant="t200" as="p" color="colorCoreNeutral200">
-          {atlasConfig.general.appName} is a {atlasConfig.general.appContentFocus} content-focused video platform that's
-          part of the Joystream ecosystem.
+        <StyledText variant="t200" as="span" color="colorText">
+          {atlasConfig.general.appName} is a{' '}
+          <ContentText as="p" variant="t200-strong" color="colorTextStrong">
+            {atlasConfig.general.appContentFocus}
+          </ContentText>{' '}
+          content-focused video platform that's part of the Joystream ecosystem.
         </StyledText>
-        <StyledText variant="t200" as="span" color="colorCoreNeutral200">
+        <StyledText variant="t200" as="span" color="colorText">
           We use cookies and other tracking technologies to improve your experience and provide analytics.
           <br />{' '}
           <StyledAnchor to={absoluteRoutes.legal.privacyPolicy()} target="_blank">
