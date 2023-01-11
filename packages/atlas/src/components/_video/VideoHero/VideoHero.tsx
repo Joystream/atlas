@@ -4,6 +4,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { VideoHeroData } from '@/api/hooks/videoHero'
 import { SvgActionChevronL, SvgActionPlayAlt, SvgActionSoundOff, SvgActionSoundOn } from '@/assets/icons'
+import appKv from '@/assets/images/app-kv.webp'
 import { IconWrapper } from '@/components/IconWrapper'
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
@@ -23,20 +24,16 @@ import {
   GradientOverlay,
   InfoContainer,
   PlaceholderContainer,
+  PlaceholderImg,
   PlaceholderInfoContainer,
   StyledChannelLink,
   StyledLayoutGrid,
   TitleContainer,
   TitleText,
 } from './VideoHero.styles'
+import { VideoHeroCategory } from './VideoHero.types'
 import { VideoHeroHeader } from './VideoHeroHeader'
 import { VideoHeroSlider, VideoHeroSliderProps } from './VideoHeroSlider'
-
-type VideoHeroCategory = {
-  title?: string
-  icon?: ReactNode
-  color?: string
-}
 
 export type VideoHeroProps = {
   loading?: boolean
@@ -77,7 +74,9 @@ export const VideoHero: FC<VideoHeroProps> = ({
     return (
       <PlaceholderContainer isCategory={isCategory}>
         <BackgroundContainer>
-          <GradientOverlay />
+          {isCategory && category?.coverImgUrl && <PlaceholderImg blurImage src={category.coverImgUrl} />}
+          {!isCategory && <PlaceholderImg src={appKv} />}
+          <GradientOverlay withSolidOverlay={isCategory} />
         </BackgroundContainer>
         {isCategory ? (
           <PlaceholderInfoContainer>
@@ -124,7 +123,7 @@ export const VideoHero: FC<VideoHeroProps> = ({
             src={videoHeroData?.heroVideoCutUrl}
           />
         )}
-        <GradientOverlay />
+        <GradientOverlay withSolidOverlay />
       </BackgroundContainer>
       {videoSlider && (
         <VideoHeroSlider

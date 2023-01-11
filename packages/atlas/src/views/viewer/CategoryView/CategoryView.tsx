@@ -58,6 +58,7 @@ export const CategoryView = () => {
           title: currentCategory?.name ?? undefined,
           icon: <CategoryIcon url={currentCategory?.iconUrl} color={cVar('colorCoreBaseBlack')} />,
           color: currentCategory.color,
+          coverImgUrl: currentCategory.coverImgUrl,
         }}
         videos={videoHeroVideos}
       />

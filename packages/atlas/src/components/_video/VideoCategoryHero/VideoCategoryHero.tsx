@@ -1,15 +1,11 @@
 import { round } from 'lodash-es'
-import { FC, ReactNode, SyntheticEvent, useState } from 'react'
+import { FC, SyntheticEvent, useState } from 'react'
 
 import { VideoHero } from '../VideoHero'
-import { VideoHeroFeaturedVideo } from '../VideoHero/VideoHero.types'
+import { VideoHeroCategory, VideoHeroFeaturedVideo } from '../VideoHero/VideoHero.types'
 
 export type VideoCategoryHeroProps = {
-  category: {
-    icon?: ReactNode
-    title?: string
-    color?: string
-  }
+  category: VideoHeroCategory
   videos?: (VideoHeroFeaturedVideo | null)[]
   loading?: boolean
 }
@@ -72,15 +68,7 @@ export const VideoCategoryHero: FC<VideoCategoryHeroProps> = ({ category, videos
       onEnded={handleEnded}
       videoSlider={videoSlider}
       videoHeroData={videoHeroData}
-      category={
-        category
-          ? {
-              title: category.title,
-              icon: category.icon,
-              color: category.color,
-            }
-          : undefined
-      }
+      category={category ? category : undefined}
     />
   )
 }

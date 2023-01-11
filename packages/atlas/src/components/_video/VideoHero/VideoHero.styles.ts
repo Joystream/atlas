@@ -16,8 +16,22 @@ export const PlaceholderContainer = styled.section<{ isCategory: boolean }>`
   padding: ${({ isCategory }) => (isCategory ? sizes(8) : sizes(16))} var(--size-global-horizontal-padding) 0;
 `
 
+export const PlaceholderImg = styled.img<{ blurImage?: boolean }>`
+  filter: ${({ blurImage }) => (blurImage ? `blur(${sizes(4)}) ` : 'unset')};
+  width: 100%;
+`
+
 export const PlaceholderInfoContainer = styled.div`
   position: relative;
+`
+
+export const PlaceholderOverlay = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 128px;
+  background: linear-gradient(180deg, rgb(0 0 0 / 0) 50%, #000 93.23%, #000 100%);
 `
 
 export const CategoryTitleWrapper = styled.div`
@@ -44,6 +58,7 @@ export const Container = styled.section<IsCategoryProp>`
 `
 
 export const BackgroundContainer = styled.div<IsCategoryProp>`
+  overflow: hidden;
   position: absolute;
   top: 0;
   left: 0;
@@ -56,7 +71,7 @@ export const BackgroundContainer = styled.div<IsCategoryProp>`
   }
 `
 
-export const GradientOverlay = styled.div`
+export const GradientOverlay = styled.div<{ withSolidOverlay?: boolean }>`
   position: absolute;
   top: 0;
   right: 0;
@@ -68,8 +83,8 @@ export const GradientOverlay = styled.div`
       ${cVar('colorCoreBaseBlack')} 93.23%,
       ${cVar('colorCoreBaseBlack')} 100%
     ),
-    radial-gradient(50.66% 101.32% at 50% 50%, transparent 0%, ${cVar('colorCoreNeutral500Darken')} 100%),
-    ${cVar('colorCoreNeutral500Darken')};
+    radial-gradient(50.66% 101.32% at 50% 50%, transparent 0%, ${cVar('colorCoreNeutral500Darken')} 100%)
+      ${({ withSolidOverlay }) => withSolidOverlay && `, ${cVar('colorCoreNeutral500Darken')}`};
 `
 
 export const InfoContainer = styled.div<IsCategoryProp>`
