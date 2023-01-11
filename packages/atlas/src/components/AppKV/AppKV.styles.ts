@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { sizes, zIndex } from '@/styles'
+import { cVar, sizes, zIndex } from '@/styles'
 
 export const Wrapper = styled.div`
   position: relative;
@@ -30,7 +30,7 @@ export const LogoWrapper = styled.div`
 export const Fade = styled.div`
   position: absolute;
   bottom: 0;
-  background: linear-gradient(180deg, rgb(24 28 32 / 0) 0%, #181c20 100%);
+  background: linear-gradient(180deg, transparent 0%, ${cVar('colorBackground')} 100%);
   width: 100%;
   height: 128px;
 `
