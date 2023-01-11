@@ -1,6 +1,7 @@
 general:
   appName: 'Atlas' # Application name - used in the copy throughout the app, in index.html, open graph meta tags, etc
   appDescription: 'The streaming platform empowering viewers, creators, and builders. Built on and operated by the Joystream blockchain and DAO.' # Application description - used in index.html meta tags
+  appTagline: 'The streaming platform empowering viewers, creators, and builders. Built on and operated by the Joystream blockchain and DAO.'
   appTwitterId: '@JoystreamDAO' # Twitter handle for the app - used in open graph meta tags in HTML
   appUrl: 'https://play.joystream.org' # URL at which the app is hosted - used in open graph meta tags in HTML
   appGithubUrl: 'https://github.com/Joystream/atlas' # URL for Atlas GitHub repository - used in the footer

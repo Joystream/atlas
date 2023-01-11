@@ -6,7 +6,7 @@ import { VideoHeroData } from '@/api/hooks/videoHero'
 import { SvgActionChevronL, SvgActionPlayAlt, SvgActionSoundOff, SvgActionSoundOn } from '@/assets/icons'
 import appKv from '@/assets/images/app-kv.webp'
 import { IconWrapper } from '@/components/IconWrapper'
-import { GridItem } from '@/components/LayoutGrid'
+import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { Button, TextButton } from '@/components/_buttons/Button'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
@@ -99,12 +99,18 @@ export const VideoHero: FC<VideoHeroProps> = ({
           </PlaceholderInfoContainer>
         ) : (
           <PlaceholderInfoContainer>
-            <Text as="h2" variant="h700">
-              Welcome to {atlasConfig.general.appName}
-            </Text>
-            <Text as="p" variant="t200" margin={{ top: 4 }} color="colorText">
-              Lorem ipsum dolor sit amet consectetur. Vel donec mauris sit placerat at hendrerit fermentum.
-            </Text>
+            <LayoutGrid>
+              <GridItem colSpan={{ xxs: 12, sm: 6 }}>
+                <Text as="h2" variant="h700">
+                  Welcome to {atlasConfig.general.appName}
+                </Text>
+                {atlasConfig.general.appTagline && (
+                  <Text as="p" variant="t200" margin={{ top: 4 }} color="colorText">
+                    {atlasConfig.general.appTagline}
+                  </Text>
+                )}
+              </GridItem>
+            </LayoutGrid>
           </PlaceholderInfoContainer>
         )}
       </PlaceholderContainer>
