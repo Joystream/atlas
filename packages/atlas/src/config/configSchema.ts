@@ -14,6 +14,7 @@ export const configSchema = z.object({
     pioneerMemberUrlPrefix: z.string(),
     joystreamLandingPageUrl: z.string(),
     joystreamDiscordUrl: z.string(),
+    appContentFocus: z.string().nullable(),
   }),
   storage: z.object({
     assetResponseTimeout: z.number(),

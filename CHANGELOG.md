@@ -9,11 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added fallback state for video hero and video category hero
+- Welcome dialog when content focus is present
+- Fallback state for video hero and video category hero
 
 ### Changed
 
+- Styles on SignIn dialog and Studio welcome view
+
 ### Fixed
+
+- Fixed issue with displaying incorrect locked funds
 
 ## [1.2.1] - 2022-12-27
 

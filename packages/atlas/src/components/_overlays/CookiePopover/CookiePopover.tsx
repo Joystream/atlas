@@ -2,6 +2,7 @@ import { FC } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useBottomNavStore } from '@/providers/bottomNav'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -17,7 +18,7 @@ export const CookiePopover: FC = () => {
   const bottomNavOpen = useBottomNavStore((state) => state.open)
   return (
     <CSSTransition
-      in={isCookiesPopoverVisible}
+      in={isCookiesPopoverVisible && !atlasConfig.general.appContentFocus}
       timeout={200}
       classNames={transitions.names.modal}
       mountOnEnter
