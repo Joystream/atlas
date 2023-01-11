@@ -29,7 +29,6 @@ import {
   StyledChannelLink,
   StyledLayoutGrid,
   TitleContainer,
-  TitleText,
 } from './VideoHero.styles'
 import { VideoHeroCategory } from './VideoHero.types'
 import { VideoHeroHeader } from './VideoHeroHeader'
@@ -101,7 +100,7 @@ export const VideoHero: FC<VideoHeroProps> = ({
           <PlaceholderInfoContainer>
             <LayoutGrid>
               <GridItem colSpan={{ xxs: 12, sm: 6 }}>
-                <Text as="h2" variant="h700">
+                <Text as="h2" variant={smMatch ? 'h700' : 'h500'}>
                   Welcome to {atlasConfig.general.appName}
                 </Text>
                 {atlasConfig.general.appTagline && (
@@ -154,9 +153,9 @@ export const VideoHero: FC<VideoHeroProps> = ({
                 >
                   {videoHeroData ? (
                     <Link to={absoluteRoutes.viewer.video(videoHeroData.video?.id)}>
-                      <TitleText as="h1" isCategory={isCategory} variant={smMatch ? 'h700' : 'h500'}>
+                      <Text as="h1" variant={smMatch ? 'h700' : 'h500'}>
                         {videoHeroData.heroTitle}
-                      </TitleText>
+                      </Text>
                     </Link>
                   ) : smMatch ? (
                     <SkeletonLoader height={48} width={360} />

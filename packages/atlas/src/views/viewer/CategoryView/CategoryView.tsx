@@ -56,7 +56,12 @@ export const CategoryView = () => {
         loading={categoriesFeaturedVideosLoading}
         category={{
           title: currentCategory?.name ?? undefined,
-          icon: <CategoryIcon url={currentCategory?.iconUrl} color={cVar('colorCoreBaseBlack')} />,
+          icon: (
+            <CategoryIcon
+              url={currentCategory?.iconUrl}
+              color={videoHeroVideos.length ? cVar('colorTextStrong') : cVar('colorCoreBaseBlack')}
+            />
+          ),
           color: currentCategory.color,
           coverImgUrl: currentCategory.coverImgUrl,
         }}
