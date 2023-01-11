@@ -10,28 +10,24 @@ type IsCategoryProp = {
   isCategory?: boolean
 }
 
-export const PlaceholderContainer = styled.section<{ isCategory: boolean }>`
+export const PlaceholderContainer = styled.section<IsCategoryProp>`
   position: relative;
   margin: 0 calc(-1 * var(--size-global-horizontal-padding));
   padding: ${({ isCategory }) => (isCategory ? sizes(8) : sizes(16))} var(--size-global-horizontal-padding) 0;
 `
 
-export const PlaceholderImg = styled.img<{ blurImage?: boolean }>`
-  filter: ${({ blurImage }) => (blurImage ? `blur(${sizes(4)}) ` : 'unset')};
+export const CategoryBackgroundImageOverlay = styled.div<{ coverImgUrl?: string; blurImage?: boolean }>`
+  background-image: ${({ coverImgUrl }) => (coverImgUrl ? `url(${coverImgUrl}) ` : 'unset')};
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   width: 100%;
+  height: 100%;
+  filter: ${({ blurImage }) => (blurImage ? `blur(${sizes(4)}) ` : 'unset')};
 `
 
 export const PlaceholderInfoContainer = styled.div`
   position: relative;
-`
-
-export const PlaceholderOverlay = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 128px;
-  background: linear-gradient(180deg, rgb(0 0 0 / 0) 50%, #000 93.23%, #000 100%);
 `
 
 export const CategoryTitleWrapper = styled.div`

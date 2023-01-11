@@ -19,12 +19,12 @@ import { transitions } from '@/styles'
 import {
   BackgroundContainer,
   ButtonsContainer,
+  CategoryBackgroundImageOverlay,
   CategoryTitleWrapper,
   Container,
   GradientOverlay,
   InfoContainer,
   PlaceholderContainer,
-  PlaceholderImg,
   PlaceholderInfoContainer,
   StyledChannelLink,
   StyledLayoutGrid,
@@ -74,8 +74,10 @@ export const VideoHero: FC<VideoHeroProps> = ({
     return (
       <PlaceholderContainer isCategory={isCategory}>
         <BackgroundContainer>
-          {isCategory && category?.coverImgUrl && <PlaceholderImg blurImage src={category.coverImgUrl} />}
-          {!isCategory && <PlaceholderImg src={appKv} />}
+          {isCategory && category.coverImgUrl && (
+            <CategoryBackgroundImageOverlay coverImgUrl={category.coverImgUrl} blurImage />
+          )}
+          {!isCategory && <CategoryBackgroundImageOverlay coverImgUrl={appKv} />}
           <GradientOverlay withSolidOverlay={isCategory} />
         </BackgroundContainer>
         {isCategory ? (
