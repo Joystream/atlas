@@ -6,6 +6,7 @@ export const configSchema = z.object({
   general: z.object({
     appName: z.string(),
     appDescription: z.string(),
+    appTagline: z.string().optional(),
     appTwitterId: z.string(),
     appUrl: z.string(),
     appGithubUrl: z.string(),
