@@ -30,9 +30,9 @@ export const ResultTitle: FC<ResultTitleProps> = ({ title, query }) => {
     <>
       {groups.map((word, idx) => {
         if (match.includes(word)) {
-          return <HighlightedWord key={`${word}-${idx}`}> {word}</HighlightedWord>
+          return <HighlightedWord key={`${word}-${idx}`}>{word} </HighlightedWord>
         }
-        return <Fragment key={`${word}-${idx}`}> {word}</Fragment>
+        return <Fragment key={`${word}-${idx}`}>{word} </Fragment>
       })}
     </>
   )
