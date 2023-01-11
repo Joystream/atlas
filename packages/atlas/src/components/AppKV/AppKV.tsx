@@ -1,8 +1,8 @@
-import appKv from '@/assets/images/app-kv.png'
+import appKv from '@/assets/images/app-kv.webp'
 import { AppLogo } from '@/components/AppLogo'
 import { StyledSvgJoystreamLogoFull } from '@/components/_navigation/SidenavBase'
 
-import { Image, LogoWrapper, StyledText, Wrapper } from './AppKV.styles'
+import { Fade, Image, LogoWrapper, StyledText, Wrapper } from './AppKV.styles'
 
 export const AppKV = () => {
   return (
@@ -15,6 +15,7 @@ export const AppKV = () => {
           <StyledSvgJoystreamLogoFull />
         </StyledText>
       </LogoWrapper>
+      <Fade />
     </Wrapper>
   )
 }

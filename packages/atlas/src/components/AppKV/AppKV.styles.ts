@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { sizes } from '@/styles'
+import { media, sizes } from '@/styles'
 
 export const Wrapper = styled.div`
   position: relative;
@@ -24,4 +24,15 @@ export const LogoWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`
+
+export const Fade = styled.div`
+  position: absolute;
+  inset: 0;
+  top: 40%;
+  background: linear-gradient(180deg, rgb(24 28 32 / 0) 0%, #181c20 100%);
+
+  ${media.sm} {
+    top: 52%;
+  }
 `
