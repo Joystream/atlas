@@ -270,3 +270,7 @@ export const StyledIllustration = styled.img<StyledIllustrationProps>`
     position: static;
   }
 `
+
+export const InlineText = styled(Text)`
+  display: inline-block;
+`

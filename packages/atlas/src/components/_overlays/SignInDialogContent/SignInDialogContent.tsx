@@ -1,17 +1,11 @@
 import { FC } from 'react'
 
+import { AppKV } from '@/components/AppKV'
 import { Text } from '@/components/Text'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
-import {
-  IllustrationWrapper,
-  SignInDialogTextWrapper,
-  StyledLargeComputer,
-  StyledSvgLargeWall,
-  StyledSvgOtherSignInDialogPatterns,
-  StyledSvgOtherSignInMobileDialogPatterns,
-} from './SignInDialogContent.styles'
+import { IllustrationWrapper, SignInDialogTextWrapper } from './SignInDialogContent.styles'
 
 type SignInDialogContentProps = {
   isMobileDevice: boolean
@@ -23,8 +17,7 @@ export const SignInDialogContent: FC<SignInDialogContentProps> = ({ isMobileDevi
   return (
     <>
       <IllustrationWrapper isMobileDevice={isMobileDevice}>
-        {isMobileDevice ? <StyledLargeComputer /> : <StyledSvgLargeWall />}
-        {isMobileDevice ? <StyledSvgOtherSignInMobileDialogPatterns /> : <StyledSvgOtherSignInDialogPatterns />}
+        <AppKV />
       </IllustrationWrapper>
       <SignInDialogTextWrapper>
         <Text as="h1" variant={smMatch ? 'h500' : 'h400'}>

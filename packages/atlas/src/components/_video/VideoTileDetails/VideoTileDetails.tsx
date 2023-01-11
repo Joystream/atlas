@@ -1,5 +1,6 @@
 import { FC, PropsWithChildren } from 'react'
 import { To } from 'react-router'
+import { LinkProps } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { SvgActionMore } from '@/assets/icons'
@@ -30,6 +31,7 @@ export type VideoTileDetailsProps = {
   onVideoTitleClick?: () => void
   videoSubTitle?: string | null
   videoHref?: string
+  linkState?: LinkProps['state']
   views?: number | null
   createdAt?: Date | null
   channelTitle?: string | null
@@ -50,6 +52,7 @@ export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
   onVideoTitleClick,
   videoSubTitle,
   videoHref,
+  linkState,
   views,
   createdAt,
   channelTitle,
@@ -84,7 +87,7 @@ export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
             {loading ? (
               <SkeletonLoader height={24} width="60%" />
             ) : (
-              <LinkWrapper to={videoHref}>
+              <LinkWrapper to={videoHref} state={linkState}>
                 <VideoTitle as="h3" onClick={onVideoTitleClick} variant={size === 'medium' ? 'h400' : 'h300'}>
                   {videoTitle}
                 </VideoTitle>
@@ -150,10 +153,15 @@ export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
 
 type LinkWrapperProps = PropsWithChildren<{
   to?: To
+  state?: LinkProps['state']
 }>
-const LinkWrapper: FC<LinkWrapperProps> = ({ children, to }) => {
+const LinkWrapper: FC<LinkWrapperProps> = ({ children, to, state }) => {
   if (to) {
-    return <StyledLink to={to}>{children}</StyledLink>
+    return (
+      <StyledLink to={to} state={state}>
+        {children}
+      </StyledLink>
+    )
   }
   return <>{children}</>
 }

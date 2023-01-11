@@ -1,6 +1,7 @@
 general:
   appName: 'Atlas' # Application name - used in the copy throughout the app, in index.html, open graph meta tags, etc
   appDescription: 'The streaming platform empowering viewers, creators, and builders. Built on and operated by the Joystream blockchain and DAO.' # Application description - used in index.html meta tags
+  appTagline: 'The streaming platform empowering viewers, creators, and builders. Built on and operated by the Joystream blockchain and DAO.'
   appTwitterId: '@JoystreamDAO' # Twitter handle for the app - used in open graph meta tags in HTML
   appUrl: 'https://play.joystream.org' # URL at which the app is hosted - used in open graph meta tags in HTML
   appGithubUrl: 'https://github.com/Joystream/atlas' # URL for Atlas GitHub repository - used in the footer
@@ -8,7 +9,7 @@ general:
   pioneerMemberUrlPrefix: 'https://dao.joystream.org/#/members' # URL prefix for Pioneer member profile page - used to link to member details
   joystreamLandingPageUrl: 'https://www.joystream.org' # URL for Joystream landing page - used in the footer and in "Learn more" links
   joystreamDiscordUrl: 'https://discord.gg/DE9UN3YpRP' # URL for Joystream Discord - used for support when errors occur
-
+  appContentFocus: null # Content focus of given app
 storage:
   assetResponseTimeout: 20000 # Timeout for asset response in ms - after this timeout, different distributor will be tried
   assetUploadStatusPollingInterval: 2000 # Interval for polling asset upload status in ms - polling begins once asset is uploaded and is finished once QN reports the asset as accepted

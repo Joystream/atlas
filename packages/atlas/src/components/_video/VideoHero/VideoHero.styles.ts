@@ -1,14 +1,43 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { LayoutGrid } from '@/components/LayoutGrid'
-import { Text } from '@/components/Text'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
 import { cVar, media, sizes } from '@/styles'
 
 type IsCategoryProp = {
   isCategory?: boolean
 }
+
+export const PlaceholderContainer = styled.section<IsCategoryProp>`
+  position: relative;
+  margin: 0 calc(-1 * var(--size-global-horizontal-padding));
+  padding: ${({ isCategory }) => (isCategory ? sizes(8) : sizes(16))} var(--size-global-horizontal-padding) 0;
+`
+
+export const CategoryBackgroundImageOverlay = styled.div<{ coverImgUrl?: string; blurImage?: boolean }>`
+  background-image: ${({ coverImgUrl }) => (coverImgUrl ? `url(${coverImgUrl}) ` : 'unset')};
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  filter: ${({ blurImage }) => (blurImage ? `blur(${sizes(4)}) ` : 'unset')};
+`
+
+export const PlaceholderInfoContainer = styled.div`
+  position: relative;
+`
+
+export const CategoryTitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: ${sizes(16)};
+
+  ${media.sm} {
+    margin-top: ${sizes(32)};
+    margin-bottom: ${sizes(32)};
+  }
+`
 
 export const Container = styled.section<IsCategoryProp>`
   position: relative;
@@ -23,6 +52,7 @@ export const Container = styled.section<IsCategoryProp>`
 `
 
 export const BackgroundContainer = styled.div<IsCategoryProp>`
+  overflow: hidden;
   position: absolute;
   top: 0;
   left: 0;
@@ -35,7 +65,7 @@ export const BackgroundContainer = styled.div<IsCategoryProp>`
   }
 `
 
-export const GradientOverlay = styled.div`
+export const GradientOverlay = styled.div<{ withSolidOverlay?: boolean }>`
   position: absolute;
   top: 0;
   right: 0;
@@ -47,8 +77,8 @@ export const GradientOverlay = styled.div`
       ${cVar('colorCoreBaseBlack')} 93.23%,
       ${cVar('colorCoreBaseBlack')} 100%
     ),
-    radial-gradient(50.66% 101.32% at 50% 50%, transparent 0%, ${cVar('colorCoreNeutral500Darken')} 100%),
-    ${cVar('colorCoreNeutral500Darken')};
+    radial-gradient(50.66% 101.32% at 50% 50%, transparent 0%, ${cVar('colorCoreNeutral500Darken')} 100%)
+      ${({ withSolidOverlay }) => withSolidOverlay && `, ${cVar('colorCoreNeutral500Darken')}`};
 `
 
 export const InfoContainer = styled.div<IsCategoryProp>`
@@ -98,12 +128,4 @@ export const ButtonsContainer = styled.div`
     margin-left: ${sizes(4)};
     flex-shrink: 0;
   }
-`
-
-const overFlowAuto = css`
-  overflow-y: auto;
-`
-
-export const TitleText = styled(Text)<IsCategoryProp>`
-  ${({ isCategory }) => !isCategory && overFlowAuto};
 `

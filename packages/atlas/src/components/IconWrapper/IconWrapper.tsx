@@ -9,11 +9,18 @@ export type IconWrapperProps = {
   icon: ReactNode
   destructive?: boolean
   className?: string
+  backgroundColor?: string
 }
 
-export const IconWrapper: FC<IconWrapperProps> = ({ size = 'medium', icon, destructive, className }) => {
+export const IconWrapper: FC<IconWrapperProps> = ({
+  size = 'medium',
+  icon,
+  destructive,
+  className,
+  backgroundColor,
+}) => {
   return (
-    <IconContainer className={className} size={size} destructive={destructive}>
+    <IconContainer className={className} size={size} destructive={destructive} backgroundColor={backgroundColor}>
       {icon}
     </IconContainer>
   )
@@ -49,7 +56,7 @@ const IconContainer = styled.div<IconContainerProps>`
   align-items: center;
   width: min-content;
   border-radius: 100%;
-  background: ${cVar('colorBackgroundAlpha')};
+  background: ${({ backgroundColor }) => (backgroundColor ? backgroundColor : cVar('colorBackgroundAlpha'))};
 
   ${getIconContainerPaddingStyles}
   ${({ destructive }) => destructive && destructiveIconStyles};
