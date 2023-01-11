@@ -1,5 +1,6 @@
 import { AnalyticsManager } from '@/AnalyticsManager'
 import { CommonProviders } from '@/CommonProviders'
+import { WelcomeDialog } from '@/components/WelcomeDialog'
 import { SignInModal } from '@/components/_auth/SignInModal'
 import { JoystreamManager } from '@/providers/joystream/joystream.manager'
 import { JoystreamProvider } from '@/providers/joystream/joystream.provider'
@@ -25,6 +26,7 @@ export const App = () => {
           <JoystreamManager />
           <NotificationsManager />
           <SignInModal />
+          <WelcomeDialog />
           <NftSettlementBottomDrawer />
           <NftPurchaseBottomDrawer />
           <NftSaleBottomDrawer />
