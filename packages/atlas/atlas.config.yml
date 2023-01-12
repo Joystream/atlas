@@ -9,7 +9,7 @@ general:
   pioneerMemberUrlPrefix: 'https://dao.joystream.org/#/members' # URL prefix for Pioneer member profile page - used to link to member details
   joystreamLandingPageUrl: 'https://www.joystream.org' # URL for Joystream landing page - used in the footer and in "Learn more" links
   joystreamDiscordUrl: 'https://discord.gg/DE9UN3YpRP' # URL for Joystream Discord - used for support when errors occur
-  appContentFocus: null # Content focus of given app
+  appContentFocus: 'web3 & crypto' # Content focus of given app
 storage:
   assetResponseTimeout: 20000 # Timeout for asset response in ms - after this timeout, different distributor will be tried
   assetUploadStatusPollingInterval: 2000 # Interval for polling asset upload status in ms - polling begins once asset is uploaded and is finished once QN reports the asset as accepted
