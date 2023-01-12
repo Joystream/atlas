@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { AppLogo } from '@/components/AppLogo'
 import { Text } from '@/components/Text'
 import { cVar, sizes, zIndex } from '@/styles'
 
@@ -25,6 +26,13 @@ export const LogoWrapper = styled.div`
   justify-content: center;
   align-items: center;
   z-index: ${zIndex.overlay};
+`
+
+export const AppLogoContainer = styled.div`
+  max-height: 48px;
+`
+export const StyledAppLogo = styled(AppLogo)`
+  max-height: 100%;
 `
 
 export const Fade = styled.div`
