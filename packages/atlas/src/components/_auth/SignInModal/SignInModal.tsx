@@ -31,7 +31,7 @@ import {
   SignInStepProps,
 } from './SignInSteps'
 
-interface FaucetParams {
+type FaucetParams = {
   account: string
   handle: string
   avatar: string | undefined
