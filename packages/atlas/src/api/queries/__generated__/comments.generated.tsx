@@ -402,10 +402,12 @@ export const GetUserCommentsAndVideoCommentsConnectionDocument = gql`
   ) {
     userComments: comments(
       where: {
-        parentComment: { id_eq: null }
-        video: { id_eq: $videoId }
-        author: { id_eq: $memberId }
-        OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }]
+        AND: [
+          { parentComment: { id_isNull: true } }
+          { video: { id_eq: $videoId } }
+          { author: { id_eq: $memberId } }
+          { OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }] }
+        ]
       }
       orderBy: [createdAt_DESC]
     ) {
@@ -415,9 +417,11 @@ export const GetUserCommentsAndVideoCommentsConnectionDocument = gql`
       first: $first
       after: $after
       where: {
-        video: { id_eq: $videoId }
-        parentComment: { id_eq: null }
-        OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }]
+        AND: [
+          { video: { id_eq: $videoId } }
+          { parentComment: { id_isNull: true } }
+          { OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }] }
+        ]
       }
       orderBy: $orderBy
     ) {

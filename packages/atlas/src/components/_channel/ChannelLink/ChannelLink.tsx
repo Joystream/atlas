@@ -56,7 +56,7 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
   )
   const { url: avatarPhotoUrl } = useAsset(extendedChannel?.channel.avatarPhoto)
 
-  const displayedChannel = overrideChannel ? { channel: overrideChannel } : overrideChannel
+  const displayedChannel = overrideChannel ? { channel: overrideChannel } : extendedChannel
 
   const handleFollowButtonClick = (e: MouseEvent) => {
     e.preventDefault()
