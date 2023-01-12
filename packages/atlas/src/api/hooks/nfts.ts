@@ -22,7 +22,6 @@ import {
   useGetNftHistoryQuery,
 } from '@/api/queries/__generated__/notifications.generated'
 import { videoFilter } from '@/config/contentFilter'
-import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
 
 type CommonNftProperties = {
   title: string | null | undefined
@@ -86,7 +85,7 @@ export const getNftStatus = (
       topBidder: auction.topBid?.bidder,
       auctionPlannedEndBlock: englishAuction ? englishAuction.plannedEndAtBlock : undefined,
       bidLockingTime: openAuction ? openAuction.bidLockDuration : undefined,
-      minimalBidStep: englishAuction ? tokenNumberToHapiBn(englishAuction.minimalBidStep) : undefined,
+      minimalBidStep: englishAuction ? new BN(englishAuction.minimalBidStep) : undefined,
       whitelistedMembers: auction.whitelistedMembers,
     }
   }
