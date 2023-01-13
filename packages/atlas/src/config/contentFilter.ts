@@ -1,4 +1,4 @@
-import { ChannelWhereInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { ChannelWhereInput, OwnedNftWhereInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { atlasConfig } from '@/config/config'
 
 import { allUniqueVideoCategories } from './categories'
@@ -11,6 +11,7 @@ const filteredChannelIds: ContentFilter = atlasConfig.content.blockedChannelIds
 
 const NOTvideoFilter = []
 const NOTchannelFilters = []
+const NOTnftFilters = []
 
 if (filteredChannelIds.length) {
   NOTchannelFilters.push({ id_in: filteredChannelIds })
@@ -31,11 +32,30 @@ if (filteredChannelIds.length) {
 if (filteredAssetsFilter.length) {
   NOTvideoFilter.push({ thumbnailPhoto: { id_in: filteredAssetsFilter } }, { media: { id_in: filteredAssetsFilter } })
 }
+if (filteredChannelIds.length) {
+  NOTnftFilters.push({
+    creatorChannel: {
+      id_in: filteredChannelIds,
+    },
+  })
+}
+if (filteredVideoIds.length) {
+  NOTnftFilters.push({})
+}
 
 export const channelFilter: ChannelWhereInput = {
   isCensored_eq: false,
   isPublic_eq: true,
   ...(NOTchannelFilters.length ? { NOT: NOTchannelFilters } : {}),
+}
+
+export const nftFilter: OwnedNftWhereInput = {
+  ...(!atlasConfig.content.showAllContent ? { videoCategory: { id_in: allUniqueVideoCategories } } : {}),
+  ...(NOTnftFilters.length
+    ? {
+        NOT: NOTnftFilters,
+      }
+    : {}),
 }
 
 export const videoFilter: VideoWhereInput = {
