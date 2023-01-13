@@ -18,7 +18,8 @@ export const EmojiWrapper = forwardRef<HTMLSpanElement, EmojiWrapperProps>(
     useEffect(() => {
       if (!ref.current) return
 
-      twemoji.parse(ref.current)
+      // todo temporary(?) fix for not loading twemoji. Remove url once its resolved https://github.com/twitter/twemoji/issues/580
+      twemoji.parse(ref.current, { base: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/' })
     })
 
     return (
