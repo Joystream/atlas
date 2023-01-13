@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [1.2.3] - 2023-01-13
+
+### Fixed
+
 - Fixed issue with not loading twemoji
 - Fixed issue with not applying filters for NFTs
 - Fixed issue with date validation in video form
@@ -27,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Styles on SignIn dialog and Studio welcome view
+- Added `appContentFocus` field in the `atlas.config.yml` that describes content focus of given app
 
 ### Fixed
 
