@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Styles on SignIn dialog and Studio welcome view
+- Added `appContentFocus` field in the `atlas.config.yml` that describes content focus of given app
 
 ### Fixed
 

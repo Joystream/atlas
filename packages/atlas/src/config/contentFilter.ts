@@ -40,7 +40,11 @@ if (filteredChannelIds.length) {
   })
 }
 if (filteredVideoIds.length) {
-  NOTnftFilters.push({})
+  NOTnftFilters.push({
+    video: {
+      id_in: filteredVideoIds,
+    },
+  })
 }
 
 export const channelFilter: ChannelWhereInput = {
