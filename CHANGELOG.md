@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [1.2.3] - 2023-01-13
+
+### Fixed
+
 - Fixed issue with not loading twemoji
 - Fixed issue with not applying filters for NFTs
 - Fixed issue with date validation in video form
