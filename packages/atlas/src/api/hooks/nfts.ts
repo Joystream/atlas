@@ -21,15 +21,13 @@ import {
   GetNftHistoryQueryVariables,
   useGetNftHistoryQuery,
 } from '@/api/queries/__generated__/notifications.generated'
-import { videoFilter } from '@/config/contentFilter'
+import { nftFilter } from '@/config/contentFilter'
 
 type CommonNftProperties = {
   title: string | null | undefined
   duration: number | null | undefined
   views: number | undefined
 }
-
-const VIDEO_ID_FILTER = videoFilter.NOT?.find((item) => item.id_in)
 
 export type NftStatus = (
   | {
@@ -130,7 +128,7 @@ export const useNftsConnection = (
   const { data, ...rest } = useGetNftsConnectionQuery({
     variables: {
       ...variables,
-      where: { ...variables?.where, ...(VIDEO_ID_FILTER ? { NOT: [{ id_in: VIDEO_ID_FILTER.id_in }] } : {}) },
+      where: { ...variables?.where, ...(nftFilter ? nftFilter : {}) },
     },
     ...opts,
   })
