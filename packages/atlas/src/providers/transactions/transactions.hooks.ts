@@ -171,7 +171,6 @@ export const useTransaction = (): HandleTransactionFn => {
             let status: MetaprotocolTransactionResultFieldsFragment | undefined = undefined
             try {
               if (result.metaprotocol && result.transactionHash) {
-                // @ts-ignore TODO FIX LATER
                 status = await getMetaprotocolTxStatus(result.transactionHash)
               }
             } catch (e) {
@@ -313,8 +312,13 @@ const useMetaprotocolTransactionStatus = () => {
         variables: {
           transactionHash: txHash,
         },
+        // FIXME: Something seems broken with the cache, causes the result to be incomplete
+        fetchPolicy: 'no-cache',
       })
-      return data?.events[0]?.data || null
+      if (data?.events[0] && data.events[0].data.__typename === 'MetaprotocolTransactionStatusEventData') {
+        return data.events[0].data
+      }
+      return null
     },
     [client]
   )
@@ -330,11 +334,7 @@ const useMetaprotocolTransactionStatus = () => {
 
           status = await getTransactionStatus(txHash)
 
-          // todo make sure its working
-          if (
-            status?.__typename === 'MetaprotocolTransactionStatusEventData' &&
-            status.result.__typename === 'MetaprotocolTransactionResultOK'
-          ) {
+          if (status?.result.__typename !== 'MetaprotocolTransactionResultFailed') {
             break
           }
         }
@@ -347,21 +347,14 @@ const useMetaprotocolTransactionStatus = () => {
         }
       }
 
-      if (
-        status?.__typename === 'MetaprotocolTransactionStatusEventData' &&
-        status.result.__typename !== 'MetaprotocolTransactionResultOK'
-      ) {
+      if (status.result.__typename === 'MetaprotocolTransactionResultFailed') {
         throw new JoystreamLibError({
           name: 'MetaprotocolTransactionError',
-          message:
-            status.__typename === 'MetaprotocolTransactionStatusEventData' &&
-            status.result.__typename === 'MetaprotocolTransactionResultFailed'
-              ? status.result.errorMessage
-              : 'Transaction still in pending state after retries',
+          message: status.result.errorMessage,
         })
       }
 
-      return status
+      return status.result
     },
     [getTransactionStatus]
   )

@@ -445,7 +445,7 @@ export type GetPopularChannelsQuery = {
 
 export type GetChannelNftCollectorsQueryVariables = Types.Exact<{
   channelId: Types.Scalars['String']
-  orderBy?: Types.InputMaybe<Array<Types.ChannelNftCollectorsOrderByInput> | Types.ChannelNftCollectorsOrderByInput>
+  orderBy?: Types.InputMaybe<Types.ChannelNftCollectorsOrderByInput>
 }>
 
 export type GetChannelNftCollectorsQuery = {
@@ -1028,7 +1028,7 @@ export type GetPopularChannelsQueryResult = Apollo.QueryResult<
   GetPopularChannelsQueryVariables
 >
 export const GetChannelNftCollectorsDocument = gql`
-  query GetChannelNftCollectors($channelId: String!, $orderBy: [ChannelNftCollectorsOrderByInput!] = [amount_DESC]) {
+  query GetChannelNftCollectors($channelId: String!, $orderBy: ChannelNftCollectorsOrderByInput = amount_DESC) {
     channelNftCollectors(channelId: $channelId, orderBy: $orderBy) {
       member {
         ...BasicMembershipFields

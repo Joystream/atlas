@@ -812,7 +812,6 @@ export type ChannelFollowResult = {
 export type ChannelNftCollector = {
   __typename?: 'ChannelNftCollector'
   amount: Scalars['Int']
-  channel: Channel
   member: Membership
 }
 
@@ -3655,7 +3654,7 @@ export type QueryChannelByUniqueInputArgs = {
 export type QueryChannelNftCollectorsArgs = {
   channelId: Scalars['String']
   limit?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<ChannelNftCollectorsOrderByInput>>
+  orderBy?: InputMaybe<ChannelNftCollectorsOrderByInput>
 }
 
 export type QueryChannelsArgs = {
@@ -3987,7 +3986,7 @@ export type QueryMembershipsConnectionArgs = {
 }
 
 export type QueryMostRecentChannelsArgs = {
-  mostRecentLimit?: InputMaybe<Scalars['Int']>
+  mostRecentLimit: Scalars['Int']
   orderBy?: InputMaybe<Array<ChannelOrderByInput>>
   resultsLimit?: InputMaybe<Scalars['Int']>
   where?: InputMaybe<ExtendedChannelWhereInput>

@@ -115,7 +115,7 @@ query GetPopularChannels($where: ExtendedChannelWhereInput) {
 }
 
 # CHANGE: Replaced with a custom `channelNftCollectors` query taking `channelId` argument (instead of `ChannelNftCollectorsWhereInput`)
-query GetChannelNftCollectors($channelId: String!, $orderBy: [ChannelNftCollectorsOrderByInput!] = [amount_DESC]) {
+query GetChannelNftCollectors($channelId: String!, $orderBy: ChannelNftCollectorsOrderByInput = amount_DESC) {
   channelNftCollectors(channelId: $channelId, orderBy: $orderBy) {
     member {
       ...BasicMembershipFields
