@@ -6,6 +6,7 @@ export const configSchema = z.object({
   general: z.object({
     appName: z.string(),
     appDescription: z.string(),
+    appTagline: z.string().optional(),
     appTwitterId: z.string(),
     appUrl: z.string(),
     appGithubUrl: z.string(),
@@ -13,6 +14,7 @@ export const configSchema = z.object({
     pioneerMemberUrlPrefix: z.string(),
     joystreamLandingPageUrl: z.string(),
     joystreamDiscordUrl: z.string(),
+    appContentFocus: z.string().nullable(),
   }),
   storage: z.object({
     assetResponseTimeout: z.number(),
@@ -30,6 +32,11 @@ export const configSchema = z.object({
     alternativeNodes: z.array(z.object({ url: z.string(), name: z.string() })),
   }),
   features: z.object({
+    ypp: z.object({
+      landingPageOgTitle: z.string().nullable(),
+      landingPageOgDescription: z.string().nullable(),
+      landingPageOgImgPath: z.string().nullable(),
+    }),
     nft: z.object({
       auctionMinimumBidStepMultiplier: z.number(),
       openAuctionBidLockDuration: z.number(),

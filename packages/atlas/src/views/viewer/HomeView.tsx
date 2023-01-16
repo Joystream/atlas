@@ -24,7 +24,7 @@ export const HomeView: FC = () => {
   const channelIdIn = followedChannels.map((channel) => channel.id)
   const anyFollowedChannels = channelIdIn.length > 0
 
-  const { videoHero } = useVideoHeroData()
+  const { videoHero, loading } = useVideoHeroData()
 
   const {
     videosConnection,
@@ -52,7 +52,7 @@ export const HomeView: FC = () => {
   return (
     <VideoContentTemplate cta={['popular', 'new', 'channels']}>
       {headTags}
-      <VideoHero videoHeroData={videoHero} withMuteButton />
+      <VideoHero videoHeroData={videoHero} withMuteButton loading={loading} />
       <Container className={transitions.names.slide}>
         {!followedLoading && followedChannelsVideosCount ? (
           <InfiniteVideoGrid

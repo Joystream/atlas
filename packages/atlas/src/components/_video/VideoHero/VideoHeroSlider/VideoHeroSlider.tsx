@@ -13,7 +13,7 @@ import {
   VideoSliderThumbnail,
 } from './VideoHeroSlider.style'
 
-import { VideoHeroFeaturedVideo } from '../types'
+import { VideoHeroFeaturedVideo } from '../VideoHero.types'
 
 export type VideoHeroSliderProps = {
   activeVideoIdx: number

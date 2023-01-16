@@ -5,7 +5,7 @@ import { cVar, sizes } from '@/styles'
 
 export const TooltipWrapper = styled.div`
   /* sizes(6) - tooltip horizonthal padding */
-  width: calc(224px - ${sizes(6)});
+  width: calc(232px - ${sizes(6)});
   display: grid;
   grid-gap: ${sizes(3)};
 `

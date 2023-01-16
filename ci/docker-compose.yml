@@ -3,7 +3,7 @@ services:
   atlas-meta-server:
     image: joystream/atlas-meta-server
     environment:
-      - GRAPHQL_URL=https://orion.joystream.org/graphql
+      - APP_URL=https://play.joystream.org
     restart: always
   atlas-nginx:
     image: joystream/atlas
@@ -14,5 +14,3 @@ services:
     ports:
       - '80:80'
     restart: always
-
-

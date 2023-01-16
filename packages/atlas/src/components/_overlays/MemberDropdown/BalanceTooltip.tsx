@@ -56,7 +56,7 @@ export const BalanceTooltip: FC<BalanceTooltipProps> = ({
               <TextWithIcon>
                 <StyledSvgActionLock />
                 <Text as="span" variant="t100" color="colorText">
-                  Invitation lock
+                  Locked funds
                 </Text>
               </TextWithIcon>
               <TextWithIcon>

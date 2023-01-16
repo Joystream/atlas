@@ -72,9 +72,31 @@ export const AtlasHtmlMetaTagsPlugin: PluginOption = {
       const orionUrl =
         process.env[orionUrlEnvKey] || loadEnv('production', path.join(process.cwd(), 'src'))[orionUrlEnvKey]
 
-      const orionMetaHtml = `<meta name="atlas:orion_url" property="atlas:orion_url" content="${orionUrl}" />`
+      const generateMetaTagHtml = (name: string, content: string) =>
+        `<meta name="${name}" property="${name}" content="${content}">`
 
-      const finalMetaHtml = [titleHtml, metaHtml, orionMetaHtml].join('\n')
+      const orionMetaHtml = generateMetaTagHtml('atlas:orion_url', orionUrl)
+
+      const yppOgTitleMetaHtml =
+        parsedConfig.features.ypp.landingPageOgTitle &&
+        generateMetaTagHtml('atlas:ypp_og_title', parsedConfig.features.ypp.landingPageOgTitle)
+      const yppOgDescriptionMetaHtml =
+        parsedConfig.features.ypp.landingPageOgDescription &&
+        generateMetaTagHtml('atlas:ypp_og_description', parsedConfig.features.ypp.landingPageOgDescription)
+      const yppOgImageMetaHtml =
+        parsedConfig.features.ypp.landingPageOgImgPath &&
+        generateMetaTagHtml('atlas:ypp_og_image', parsedConfig.features.ypp.landingPageOgImgPath)
+
+      const finalMetaHtml = [
+        titleHtml,
+        metaHtml,
+        orionMetaHtml,
+        yppOgTitleMetaHtml,
+        yppOgDescriptionMetaHtml,
+        yppOgImageMetaHtml,
+      ]
+        .filter((v) => v)
+        .join('\n')
       return html.replace('<meta-tags />', finalMetaHtml)
     },
   },

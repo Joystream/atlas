@@ -9,6 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Welcome dialog when content focus is present
+- Fallback state for video hero and video category hero
+
+### Changed
+
+- Styles on SignIn dialog and Studio welcome view
+
+### Fixed
+
+- Fixed issue with displaying incorrect locked funds
+
+## [1.2.1] - 2022-12-27
+
+### Fixed
+
+- Fix `atlas-meta-server` Dockerfile
+
+## [1.2.0] - 2022-12-27
+
+### Added
+
 - Stop video autoplay if user starts commenting
 - Expose Privacy Policy in config and introduce basic Markdown support
 
@@ -16,6 +37,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Greatly improved OpenGraph metadata support
 - Upgraded all the dependencies, including Vite v4 and Storybook v7
+- Adapted the app for Mainnet:
+  - updated categories IDs
+  - updated the default environment name
+  - updated the token ticker
 
 ### Fixed
 

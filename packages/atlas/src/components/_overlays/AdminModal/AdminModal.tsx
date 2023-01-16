@@ -26,7 +26,7 @@ import { SentryLogger } from '@/utils/logs'
 import { CustomNodeUrlWrapper, HorizontalSpacedContainer, VerticalSpacedContainer } from './AdminModal.styles'
 
 const ENVIRONMENT_NAMES: Record<string, string> = {
-  production: 'Main Testnet',
+  production: 'Joystream Mainnet',
   development: `${atlasConfig.general.appName} Dev Testnet`,
   next: `${atlasConfig.general.appName} Next Testnet`,
   local: 'Local chain',

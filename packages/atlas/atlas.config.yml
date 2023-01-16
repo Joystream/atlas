@@ -1,6 +1,7 @@
 general:
   appName: 'Atlas' # Application name - used in the copy throughout the app, in index.html, open graph meta tags, etc
   appDescription: 'The streaming platform empowering viewers, creators, and builders. Built on and operated by the Joystream blockchain and DAO.' # Application description - used in index.html meta tags
+  appTagline: 'The streaming platform empowering viewers, creators, and builders. Built on and operated by the Joystream blockchain and DAO.'
   appTwitterId: '@JoystreamDAO' # Twitter handle for the app - used in open graph meta tags in HTML
   appUrl: 'https://play.joystream.org' # URL at which the app is hosted - used in open graph meta tags in HTML
   appGithubUrl: 'https://github.com/Joystream/atlas' # URL for Atlas GitHub repository - used in the footer
@@ -8,7 +9,7 @@ general:
   pioneerMemberUrlPrefix: 'https://dao.joystream.org/#/members' # URL prefix for Pioneer member profile page - used to link to member details
   joystreamLandingPageUrl: 'https://www.joystream.org' # URL for Joystream landing page - used in the footer and in "Learn more" links
   joystreamDiscordUrl: 'https://discord.gg/DE9UN3YpRP' # URL for Joystream Discord - used for support when errors occur
-
+  appContentFocus: null # Content focus of given app
 storage:
   assetResponseTimeout: 20000 # Timeout for asset response in ms - after this timeout, different distributor will be tried
   assetUploadStatusPollingInterval: 2000 # Interval for polling asset upload status in ms - polling begins once asset is uploaded and is finished once QN reports the asset as accepted
@@ -21,7 +22,7 @@ storage:
   assetPath: 'api/v1/assets' # Path to Distributor Node asset endpoint
 
 joystream:
-  tokenTicker: 'tJOY' # Ticker for the token used in the app
+  tokenTicker: 'JOY' # Ticker for the token used in the app
   tokenPriceFeedUrl: null # URL for the token price feed - used to display token price in the app
   alternativeNodes:
     - name: 'Jsgenesis (Europe/UK)'
@@ -34,6 +35,10 @@ joystream:
       url: 'ws://localhost:9944'
 
 features:
+  ypp:
+    landingPageOgTitle: null # Open graph title for YPP landing page - used in open graph meta tags in HTML
+    landingPageOgDescription: null # Open graph description for YPP landing page - used in open graph meta tags in HTML
+    landingPageOgImgPath: null # Path to the open graph image for the YPP landing page - if not set, the default image will be used
   nft:
     auctionMinimumBidStepMultiplier: 0.02 # Multiplier for the auction's starting price used to determine auction's minimum bid step. See more: https://joystream.gitbook.io/testnet-workspace/system/content-directory/nft#auction
     openAuctionBidLockDuration: 300 # Number of blocks for which bids on open auctions are locked from withdrawal. See more: https://joystream.gitbook.io/testnet-workspace/system/content-directory/nft#auction-type
@@ -74,108 +79,108 @@ content:
     - id: '1' # Local category ID
       name: 'Science & Technology' # Display name of the category
       color: '#D92E61' # Color used in the UI for this category
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-icons/science-and-technology.svg' # URL for category icon SVG
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/science-and-technology.webp' # URL for category cover image
-      videoCategories: ['275141-2'] # List of metaprotocol category IDs that should be included in this display category
-      defaultVideoCategory: '275141-2'
+      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/science-and-technology.svg' # URL for category icon SVG
+      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/science-and-technology.webp' # URL for category cover image
+      videoCategories: ['254418-2'] # List of metaprotocol category IDs that should be included in this display category
+      defaultVideoCategory: '254418-2'
     - id: '2'
       name: 'Pets & Animals'
       color: '#E7BE2D'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-icons/pets-and-animals.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/pets-and-animals.webp'
-      videoCategories: ['275146-2']
-      defaultVideoCategory: '275146-2'
+      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/pets-and-animals.svg'
+      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/pets-and-animals.webp'
+      videoCategories: ['254419-2']
+      defaultVideoCategory: '254419-2'
     - id: '3'
       name: 'Film & Animation'
       color: '#BD4BE4'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-icons/film-and-animation.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/film-and-animation.webp'
-      videoCategories: ['275153-2']
-      defaultVideoCategory: '275153-2'
+      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/film-and-animation.svg'
+      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/film-and-animation.webp'
+      videoCategories: ['254420-2']
+      defaultVideoCategory: '254420-2'
     - id: '4'
       name: 'People & Blogs'
       color: '#BDE933'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-icons/people-and-blogs.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/people-and-blogs.webp'
-      videoCategories: ['275164-2']
-      defaultVideoCategory: '275164-2'
+      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/people-and-blogs.svg'
+      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/people-and-blogs.webp'
+      videoCategories: ['254421-2']
+      defaultVideoCategory: '254421-2'
     - id: '5'
       name: 'Entertainment'
       color: '#54A7F0'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-icons/entertainment.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/entertainment.webp'
-      videoCategories: ['275174-2']
-      defaultVideoCategory: '275174-2'
+      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/entertainment.svg'
+      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/entertainment.webp'
+      videoCategories: ['254422-2']
+      defaultVideoCategory: '254422-2'
     - id: '6'
       name: 'Education'
       color: '#DD379D'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-icons/education.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/education.webp'
-      videoCategories: ['275189-2']
-      defaultVideoCategory: '275189-2'
+      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/education.svg'
+      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/education.webp'
+      videoCategories: ['254423-2']
+      defaultVideoCategory: '254423-2'
     - id: '7'
       name: 'Travel & Events'
       color: '#5A7AEE'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-icons/travel-and-events.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/travel-and-events.webp'
-      videoCategories: ['275201-2']
-      defaultVideoCategory: '275201-2'
+      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/travel-and-events.svg'
+      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/travel-and-events.webp'
+      videoCategories: ['254424-2']
+      defaultVideoCategory: '254424-2'
     - id: '8'
       name: 'Sports'
       color: '#41EE5A'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-icons/sports.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/sports.webp'
-      videoCategories: ['275212-2']
-      defaultVideoCategory: '275212-2'
+      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/sports.svg'
+      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/sports.webp'
+      videoCategories: ['254425-2']
+      defaultVideoCategory: '254425-2'
     - id: '9'
       name: 'Gaming'
       color: '#9455E8'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-icons/gaming.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/gaming.webp'
-      videoCategories: ['275218-2']
-      defaultVideoCategory: '275218-2'
+      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/gaming.svg'
+      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/gaming.webp'
+      videoCategories: ['254426-2']
+      defaultVideoCategory: '254426-2'
     - id: '10'
       name: 'Comedy'
       color: '#4FE1F2'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-icons/comedy.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/comedy.webp'
-      videoCategories: ['275226-2']
-      defaultVideoCategory: '275226-2'
+      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/comedy.svg'
+      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/comedy.webp'
+      videoCategories: ['254427-2']
+      defaultVideoCategory: '254427-2'
     - id: '11'
       name: 'Autos & Vehicles'
       color: '#6E5FEC'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-icons/autos-and-vehicles.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/autos-and-vehicles.webp'
-      videoCategories: ['275231-2']
-      defaultVideoCategory: '275231-2'
+      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/autos-and-vehicles.svg'
+      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/autos-and-vehicles.webp'
+      videoCategories: ['254428-2']
+      defaultVideoCategory: '254428-2'
     - id: '12'
       name: 'Howto & Style'
       color: '#E57827'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-icons/howto-and-style.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/howto-and-style.webp'
-      videoCategories: ['275234-2']
-      defaultVideoCategory: '275234-2'
+      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/howto-and-style.svg'
+      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/howto-and-style.webp'
+      videoCategories: ['254429-2']
+      defaultVideoCategory: '254429-2'
     - id: '13'
       name: 'Music'
       color: '#6EEC3A'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-icons/music.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/music.webp'
-      videoCategories: ['275237-2']
-      defaultVideoCategory: '275237-2'
+      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/music.svg'
+      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/music.webp'
+      videoCategories: ['254430-2']
+      defaultVideoCategory: '254430-2'
     - id: '14'
       name: 'Nonprofits & Activism'
       color: '#E141D6'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-icons/nonprofits-and-activism.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/nonprofit-and-activism.webp'
-      videoCategories: ['275241-2']
-      defaultVideoCategory: '275241-2'
+      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/nonprofits-and-activism.svg'
+      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/nonprofit-and-activism.webp'
+      videoCategories: ['254431-2']
+      defaultVideoCategory: '254431-2'
     - id: '15'
       name: 'News & Politics'
       color: '#48F0B3'
-      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-icons/news-and-politics.svg'
-      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/news-and-politics.webp'
-      videoCategories: ['275244-2']
-      defaultVideoCategory: '275244-2'
+      iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/news-and-politics.svg'
+      coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/news-and-politics.webp'
+      videoCategories: ['254432-2']
+      defaultVideoCategory: '254432-2'
   showAllContent: true # With this disabled, Atlas will display only content from display categories defined above. If you want your app to display all Joystream content, set this to true.
 
   languages: # List of languages to be used in the app. Those will be used when setting video's language, for adding subtitles, etc.

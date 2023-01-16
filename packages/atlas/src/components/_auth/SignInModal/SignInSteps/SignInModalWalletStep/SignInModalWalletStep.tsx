@@ -1,24 +1,30 @@
+import { Wallet } from '@talismn/connect-wallets'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 
 import { SvgActionNewTab, SvgAlertsError24, SvgAlertsInformative24, SvgLogoPolkadot } from '@/assets/icons'
-import polkaWalletLogo from '@/assets/images/polkawallet-logo.webp'
 import { IconWrapper } from '@/components/IconWrapper'
 import { Loader } from '@/components/_loaders/Loader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMountEffect } from '@/hooks/useMountEffect'
+import { UnknownWallet } from '@/providers/user/user.helpers'
 import { useUser } from '@/providers/user/user.hooks'
 import { useUserStore } from '@/providers/user/user.store'
 import { isMobile } from '@/utils/browser'
 import { capitalizeFirstLetter } from '@/utils/misc'
 
-import { SignInModalStepTemplate } from './SignInModalStepTemplate'
-import { ListItemsWrapper, StyledBottomBanner, StyledListItem, StyledTopBanner, WalletLogo } from './SignInSteps.styles'
-import { SignInStepProps } from './SignInSteps.types'
+import { MOBILE_SUPPORTED_WALLETS, walletSort } from './SignInModalWalletStep.utils'
 
-const PRIORITY_WALLETS = ['talisman']
-const DEFAULT_PRIORITY = 100000
-const isMobileDevice = isMobile()
-const POLKAWALLET = 'polkawallet'
+import { SignInModalStepTemplate } from '../SignInModalStepTemplate'
+import {
+  ListItemsWrapper,
+  StyledBottomBanner,
+  StyledListItem,
+  StyledTopBanner,
+  WalletLogo,
+} from '../SignInSteps.styles'
+import { SignInStepProps } from '../SignInSteps.types'
+
+export const isMobileDevice = isMobile()
 
 export const SignInModalWalletStep: FC<SignInStepProps> = ({
   setPrimaryButtonProps,
@@ -35,48 +41,43 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
 
   const wallets = useMemo(() => {
     const unsortedWallets = getWalletsList()
-    const hasPolkaWallet = unsortedWallets.some((wallet) => wallet.extensionName === POLKAWALLET)
     if (isMobileDevice) {
-      if (hasPolkaWallet) {
-        return unsortedWallets
-          .filter((wallet) => wallet.extensionName === POLKAWALLET)
-          .map((wallet) => ({
-            ...wallet,
-            title: capitalizeFirstLetter(wallet.title),
-            installed: wallet.installed,
-            logo: { src: polkaWalletLogo, alt: 'Polkawallet logo' },
-          }))
-      }
-      return [
-        {
-          title: 'Polkawallet',
-          extensionName: POLKAWALLET,
-          installed: false,
-          logo: { src: polkaWalletLogo, alt: 'Polkawallet logo' },
-          installUrl: 'https://polkawallet.io/',
-        },
-      ]
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const rawWallets = Object.keys((window as any).injectedWeb3 || {})
+
+      const allMoblieWallets = new Set([
+        'polkawallet',
+        ...rawWallets,
+        ...unsortedWallets
+          // talisman and polkadot-js will be returned by getWallets function, but they don't have mobile support
+          .filter((wallet) => wallet.extensionName !== 'talisman' && wallet.extensionName !== 'polkadot-js')
+          .map((wallet) => wallet.extensionName),
+      ])
+
+      return Array.from(allMoblieWallets)
+        .map((walletName) => {
+          const possiblyInstalledWallet = unsortedWallets.find(
+            (wallet) => wallet.extensionName === walletName && wallet.extensionName === 'subwallet-js'
+          )
+          if (possiblyInstalledWallet) {
+            return {
+              ...possiblyInstalledWallet,
+              ...MOBILE_SUPPORTED_WALLETS[walletName as keyof typeof MOBILE_SUPPORTED_WALLETS],
+              installed: possiblyInstalledWallet.installed,
+              title: capitalizeFirstLetter(possiblyInstalledWallet.title),
+            } as Wallet
+          }
+
+          return {
+            title: capitalizeFirstLetter(walletName),
+            extensionName: walletName,
+            installed: rawWallets.some((rawWallet) => rawWallet === walletName),
+            ...(MOBILE_SUPPORTED_WALLETS[walletName as keyof typeof MOBILE_SUPPORTED_WALLETS] ?? { logo: { src: '' } }),
+          } as UnknownWallet
+        })
+        .sort(walletSort)
     }
-    return unsortedWallets.sort((w1, w2) => {
-      // known wallets on top (wallets with logo)
-      if (w1.logo.src && !w2.logo.src) return -1
-      if (!w1.logo.src && w2.logo.src) return 1
-
-      // installed wallets on top
-      if (w1.installed && !w2.installed) return -1
-      if (!w1.installed && w2.installed) return 1
-
-      // priority wallets on top
-      const w1PriorityIndex = PRIORITY_WALLETS.indexOf(w1.extensionName)
-      const w2PriorityIndex = PRIORITY_WALLETS.indexOf(w2.extensionName)
-      const w1Priority = w1PriorityIndex === -1 ? DEFAULT_PRIORITY : w1PriorityIndex
-      const w2Priority = w2PriorityIndex === -1 ? DEFAULT_PRIORITY : w2PriorityIndex
-      if (w1Priority < w2Priority) return -1
-      if (w1Priority > w2Priority) return 1
-
-      // rest sorted alphabetically
-      return w1.title.localeCompare(w2.title)
-    })
+    return unsortedWallets.sort(walletSort)
   }, [getWalletsList])
 
   const selectedWallet = (selectedWalletIdx != null && wallets[selectedWalletIdx]) || null
@@ -152,14 +153,20 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
           <StyledListItem
             key={wallet.title}
             label={wallet.title}
-            caption={wallet.installed ? 'Installed' : isMobileDevice ? 'Recommended' : undefined}
+            caption={
+              wallet.installed
+                ? 'Installed'
+                : isMobileDevice && wallet.extensionName === 'subwallet-js'
+                ? 'Recommended'
+                : undefined
+            }
             size={smMatch ? 'large' : 'medium'}
             selected={selectedWalletIdx === idx}
             destructive={selectedWalletIdx === idx && hasError}
             nodeStart={
               <IconWrapper
                 icon={
-                  wallet.logo.src ? <WalletLogo src={wallet.logo.src} alt={wallet.logo.alt} /> : <SvgLogoPolkadot />
+                  wallet.logo?.src ? <WalletLogo src={wallet.logo.src} alt={wallet.logo.alt} /> : <SvgLogoPolkadot />
                 }
               />
             }

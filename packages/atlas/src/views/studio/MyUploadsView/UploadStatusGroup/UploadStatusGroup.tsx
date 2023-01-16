@@ -44,7 +44,7 @@ export const UploadStatusGroup: FC<UploadStatusGroupProps> = ({ uploads }) => {
   const mdMatch = useMediaMatch('md')
 
   const locationState = location.state as RoutingState
-
+  const shouldBeHighlighted = locationState?.highlightVideoId === uploads[0].parentObject.id
   const isChannelType = uploads[0].parentObject.type === 'channel'
 
   const { video, loading: videoLoading } = useFullVideo(uploads[0].parentObject.id, {
@@ -77,7 +77,7 @@ export const UploadStatusGroup: FC<UploadStatusGroupProps> = ({ uploads }) => {
     }
     if (errorsCount || missingAssetsCount) {
       setUploadGroupState('error')
-      setAssetsDrawerActive(!!locationState?.highlightFailed)
+      setAssetsDrawerActive(shouldBeHighlighted)
     }
     if (hasUploadingAsset) {
       setUploadGroupState('inProgress')
@@ -85,7 +85,7 @@ export const UploadStatusGroup: FC<UploadStatusGroupProps> = ({ uploads }) => {
     if (isProcessing) {
       setUploadGroupState('processing')
     }
-  }, [errorsCount, hasUploadingAsset, locationState?.highlightFailed, isCompleted, isProcessing, missingAssetsCount])
+  }, [errorsCount, hasUploadingAsset, shouldBeHighlighted, isCompleted, isProcessing, missingAssetsCount])
 
   const renderAssetsGroupInfo = () => {
     if (isWaiting) {
