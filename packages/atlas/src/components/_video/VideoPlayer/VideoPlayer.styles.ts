@@ -383,6 +383,7 @@ export const StyledAppLogoShortMonochrome = styled(AppLogo)`
 `
 
 export const Container = styled.div<ContainerProps>`
+  background-color: ${cVar('colorBackgroundMuted')};
   position: absolute;
   top: 0;
   width: 100%;
