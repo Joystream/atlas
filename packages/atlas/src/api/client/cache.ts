@@ -234,79 +234,9 @@ const cache = new InMemoryCache({
         createdAt: createDateHandler(),
       },
     },
-    NftIssuedEvent: {
+    Event: {
       fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    OpenAuctionStartedEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    EnglishAuctionStartedEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    NftSellOrderMadeEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    AuctionBidMadeEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    BidMadeCompletingAuctionEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    NftBoughtEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    EnglishAuctionSettledEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    OpenAuctionBidAcceptedEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    AuctionBidCanceledEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    AuctionCanceledEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    BuyNowCanceledEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    BuyNowPriceUpdatedEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    CommentTextUpdatedEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    CommentCreatedEvent: {
-      fields: {
-        createdAt: createDateHandler(),
+        timestamp: createDateHandler(),
       },
     },
     StorageDataObject: {
