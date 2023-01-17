@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { FC, ReactNode } from 'react'
 
 import { Wrapper } from './ListWrapper.styles'
 
@@ -7,6 +7,6 @@ type ListWrapperProps = {
   columns: string[]
 }
 
-export const ListWrapper = ({ children, columns }: ListWrapperProps) => {
+export const ListWrapper: FC<ListWrapperProps> = ({ children, columns }) => {
   return <Wrapper columns={columns}>{children}</Wrapper>
 }

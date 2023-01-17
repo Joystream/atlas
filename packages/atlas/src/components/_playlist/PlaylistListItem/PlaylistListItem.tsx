@@ -7,6 +7,7 @@ import { Tooltip } from '@/components/Tooltip'
 import { Button } from '@/components/_buttons/Button'
 import { ColumnGapBlock, RowGapBlock } from '@/components/_layouts'
 import { VideoThumbnail } from '@/components/_video/VideoThumbnail'
+import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { cVar } from '@/styles'
 
@@ -16,6 +17,8 @@ import {
   PlaylistDescription,
   StyledPill,
   StyledSvgActionTrash,
+  StyledThumbnailText,
+  VideoThumbnailWrapper,
   Wrapper,
 } from './PlaylistListItem.styles'
 
@@ -28,10 +31,10 @@ export const PlaylistListItem = () => {
       <Tooltip text="Edit playlist" placement="top">
         <Button icon={<SvgActionEdit />} variant="tertiary" />
       </Tooltip>
-      <Tooltip text="Cody link" placement="top">
+      <Tooltip text="Copy link" placement="top">
         <Button icon={<SvgActionLinkUrl />} variant="tertiary" />
       </Tooltip>
-      <Tooltip text="Play in Joystream" placement="top">
+      <Tooltip text={`Play in ${atlasConfig.general.appName}`} placement="top">
         <Button icon={<SvgActionPlay />} variant="tertiary" />
       </Tooltip>
       <Tooltip text="Delete playlist" placement="top">
@@ -47,23 +50,25 @@ export const PlaylistListItem = () => {
   return (
     <Wrapper onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
       <ColumnGapBlock gap={4} align="center">
-        <VideoThumbnail
-          type="playlist"
-          thumbnailUrl="https://picsum.photos/190/106"
-          slots={{
-            center: {
-              element: (
-                <ColumnGapBlock align="center">
-                  <SvgActionPlay />
-                  <Text as="span" margin={{ left: 2 }} variant="t200-strong">
-                    Play all videos
-                  </Text>
-                </ColumnGapBlock>
-              ),
-              type: 'hover',
-            },
-          }}
-        />
+        <VideoThumbnailWrapper>
+          <VideoThumbnail
+            type="playlist"
+            thumbnailUrl="https://picsum.photos/190/106"
+            slots={{
+              center: {
+                element: (
+                  <ColumnGapBlock align="center">
+                    <SvgActionPlay />
+                    <StyledThumbnailText as="span" margin={{ left: 2 }} variant="t200-strong">
+                      Play all videos
+                    </StyledThumbnailText>
+                  </ColumnGapBlock>
+                ),
+                type: 'hover',
+              },
+            }}
+          />
+        </VideoThumbnailWrapper>
         <HoverContainer>
           <CSSTransition
             timeout={parseInt(cVar('animationTimingMedium', true))}

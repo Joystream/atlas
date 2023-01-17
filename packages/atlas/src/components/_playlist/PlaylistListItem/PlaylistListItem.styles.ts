@@ -14,7 +14,7 @@ export const Wrapper = styled.div`
   min-width: 960px;
   height: fit-content;
   padding: ${sizes(4)};
-  border-top: 1px solid rgb(194 224 255 / 0.2);
+  border-top: 1px solid ${cVar('colorBackgroundStrongAlpha')};
 
   > *:last-child {
     justify-content: end;
@@ -25,7 +25,7 @@ export const Wrapper = styled.div`
   }
 
   :hover {
-    background-color: rgb(187 217 246 / 0.13);
+    background-color: ${cVar('colorBackgroundAlpha')};
   }
 
   .playlist-buttons {
@@ -120,4 +120,14 @@ export const StyledSelect = styled(Select)`
   width: fit-content;
   margin-left: auto;
   padding-bottom: ${sizes(8)};
+`
+
+export const VideoThumbnailWrapper = styled.div`
+  > *:first-of-type {
+    width: 189px;
+  }
+`
+
+export const StyledThumbnailText = styled(Text)`
+  white-space: nowrap;
 `

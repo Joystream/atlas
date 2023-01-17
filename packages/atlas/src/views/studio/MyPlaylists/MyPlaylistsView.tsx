@@ -62,7 +62,7 @@ export const MyPlaylistsView = () => {
               inlineLabel="Sort by"
               value={sortPlaylistBy}
               items={PLAYLIST_SORT_OPTIONS}
-              onChange={(val) => val && setSortPlaylist(val as number)}
+              onChange={(val) => typeof val === 'number' && setSortPlaylist(val)}
             />
           )}
           <ListWrapper columns={['playlists', 'visibilty', 'last updated', 'total time', 'num. of videos']}>
@@ -79,13 +79,7 @@ export const MyPlaylistsView = () => {
           subtitle="You don’t have any playlist yet. Create one to showcase your videos in a new way."
           variant="large"
           button={
-            <Button
-              icon={<SvgActionAdd />}
-              // to={absoluteRoutes.studio.videoWorkspace()}
-              variant="secondary"
-              size="large"
-              // onClick={handleAddVideoTab}
-            >
+            <Button icon={<SvgActionAdd />} variant="secondary" size="large">
               Create new playlist
             </Button>
           }

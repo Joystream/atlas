@@ -9,12 +9,12 @@ export const Wrapper = styled.div<{ columns?: string[] }>`
   overflow-x: auto;
   padding-top: ${(props) => (props.columns ? sizes(8) : 0)};
 
-  > :first-child {
+  > :first-of-type {
     ${(props) =>
       props?.columns
         ?.map(
           (column, idx) => css`
-            > :nth-child(${idx + 1}) {
+            > :nth-of-type(${idx + 1}) {
               position: relative;
 
               ::after {
