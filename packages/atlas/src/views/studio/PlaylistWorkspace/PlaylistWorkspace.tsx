@@ -255,7 +255,11 @@ export const PlaylistWorkspace: FC<PlaylistWorkspaceProps> = ({ show, onHide }) 
                             moveItem={moveItem}
                             draggableProps={{ provided, snapshot }}
                           >
-                            <StyledVideoListItem id={playlistVideos[rubric.source.index][0]} variant="large" />
+                            <StyledVideoListItem
+                              id={playlistVideos[rubric.source.index][0]}
+                              isInteractive={false}
+                              variant="large"
+                            />
                           </DraggableComponent>
                         )
                       : undefined
@@ -271,6 +275,7 @@ export const PlaylistWorkspace: FC<PlaylistWorkspaceProps> = ({ show, onHide }) 
                           <DraggableComponent key={id} draggableId={id} index={index} moveItem={moveItem}>
                             <StyledVideoListItem
                               id={videoId}
+                              isInteractive={false}
                               variant="large"
                               menuItems={[
                                 {

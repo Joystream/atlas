@@ -49,6 +49,7 @@ type ContainerProps = {
   disabled?: boolean
   highlight?: boolean
   isSeparator?: boolean
+  isInteractive?: boolean
 }
 export const Container = styled('div', { shouldForwardProp: isPropValid })<ContainerProps>`
   border: none;
@@ -67,7 +68,7 @@ export const Container = styled('div', { shouldForwardProp: isPropValid })<Conta
 
   ${({ disabled, isSeparator }) => disabled && !isSeparator && disabledStyles};
   ${({ size }) => getContainerPadding(size)};
-  ${({ disabled, isSeparator }) => !disabled && !isSeparator && interactiveStyles};
+  ${({ disabled, isSeparator, isInteractive }) => isInteractive && !disabled && !isSeparator && interactiveStyles};
   ${({ isSeparator }) => isSeparator && separatorStyles};
 `
 
@@ -125,9 +126,12 @@ type NodeContainerProps = {
   destructive?: boolean
   isHovering?: boolean
   isSelected?: boolean
+  position?: 'top' | 'bottom'
 }
 export const NodeContainer = styled.div<NodeContainerProps>`
   ${iconStyles};
+
+  align-self: ${(props) => (props.position === 'top' ? 'flex-start' : 'unset')};
 `
 
 export const SeparatorWrapper = styled.div`

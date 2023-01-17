@@ -39,6 +39,8 @@ export type ListItemProps = {
     download?: string
   }
   isSeparator?: boolean
+  isInteractive?: boolean
+  nodeEndPosition?: 'top' | 'bottom'
 }
 
 export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
@@ -61,6 +63,8 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
       to,
       externalLink,
       isSeparator,
+      isInteractive = true,
+      nodeEndPosition,
     },
     ref
   ) => {
@@ -92,6 +96,7 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
           hasNodeStart={!!nodeStart}
           size={size}
           isSeparator={isSeparator}
+          isInteractive={isInteractive}
           ref={mergeRefs([hoverRef, ref])}
           {...linkProps}
           {...externalLink}
@@ -113,7 +118,12 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
           </LabelCaptionContainer>
           {selected && <SelectedIcon />}
           {!!nodeEnd && (
-            <NodeContainer isSelected={selected} isHovering={isHovering} destructive={destructive}>
+            <NodeContainer
+              position={nodeEndPosition}
+              isSelected={selected}
+              isHovering={isHovering}
+              destructive={destructive}
+            >
               {nodeEnd}
             </NodeContainer>
           )}

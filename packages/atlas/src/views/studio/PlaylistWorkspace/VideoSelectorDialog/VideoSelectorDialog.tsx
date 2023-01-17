@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useCallback, useState } from 'react'
 
 import { useFullVideosConnection } from '@/api/hooks/videosConnection'
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
@@ -42,6 +42,12 @@ export const VideoSelectorDialog: FC<VideoSelectorDialogProps> = ({ onHide, show
     }
   )
 
+  const onCancel = useCallback(() => {
+    onHide()
+    setSearch('')
+    setSelectedVideoIds([])
+  }, [onHide])
+
   return (
     <StyledDialogModal
       show={show}
@@ -56,7 +62,7 @@ export const VideoSelectorDialog: FC<VideoSelectorDialogProps> = ({ onHide, show
           onHide()
         },
       }}
-      secondaryButton={{ text: 'Cancel', onClick: onHide }}
+      secondaryButton={{ text: 'Cancel', onClick: onCancel }}
       additionalActionsNode={
         <>
           <Button
@@ -94,7 +100,7 @@ export const VideoSelectorDialog: FC<VideoSelectorDialogProps> = ({ onHide, show
                   <VideoListItem
                     key={id}
                     id={id}
-                    isActive={selectedVideoIds.includes(id)}
+                    isSelected={selectedVideoIds.includes(id)}
                     onClick={() =>
                       setSelectedVideoIds((prev) =>
                         prev.includes(id) ? prev.filter((_id) => _id !== id) : [...prev, id]

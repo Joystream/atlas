@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useBasicVideo } from '@/api/hooks/video'
-import { SvgActionCheck, SvgActionMore } from '@/assets/icons'
+import { SvgActionMore } from '@/assets/icons'
 import { ListItemProps } from '@/components/ListItem'
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
@@ -17,25 +17,25 @@ import { SentryLogger } from '@/utils/logs'
 import { formatDurationShort } from '@/utils/time'
 import { formatVideoDate } from '@/utils/video'
 
-import { ContextMenuWrapper, DetailsWrapper, EndNodeWrapper, Wrapper } from './VideoListItem.styles'
+import { ContextMenuWrapper, DetailsWrapper, StyledListItem, ThumbnailContainer } from './VideoListItem.styles'
 
 type VideoListItemProps = {
   id?: string
   onClick?: () => void
-  isActive?: boolean
+  isSelected?: boolean
   variant?: 'small' | 'large'
   className?: string
-  clickable?: boolean
+  isInteractive?: boolean
   menuItems?: ListItemProps[]
 }
 
 export const VideoListItem: FC<VideoListItemProps> = ({
   id,
   onClick,
-  isActive,
+  isSelected,
   className,
   variant = 'small',
-  clickable,
+  isInteractive = true,
   menuItems,
 }) => {
   const { video, loading } = useBasicVideo(id ?? '', {
@@ -54,27 +54,54 @@ export const VideoListItem: FC<VideoListItemProps> = ({
         {loading || isLoadingAvatar ? (
           <VideoListItemLoader variant={variant} />
         ) : (
-          <Wrapper clickable={clickable} variant={variant} onClick={onClick} className={className}>
-            <VideoThumbnail
-              type="video"
-              clickable={false}
-              thumbnailUrl={thumbnailPhotoUrl || ''}
-              thumbnailAlt={video ? `${video.title} by ${video.channel.title} thumbnail` : ''}
-              slots={
-                variant === 'large' && video?.duration
-                  ? {
-                      bottomRight: {
-                        element: (
-                          <Pill variant="overlay" label={formatDurationShort(video.duration)} title="Video duration" />
-                        ),
-                        type: 'default',
-                      },
-                    }
-                  : undefined
-              }
-            />
-
-            <DetailsWrapper variant={variant}>
+          <StyledListItem
+            ignoreRWD={variant === 'small'}
+            isInteractive={isInteractive}
+            className={className}
+            onClick={onClick}
+            selected={isSelected}
+            nodeEndPosition="top"
+            nodeEnd={
+              <DetailsWrapper variant={variant}>
+                {menuItems && (
+                  <ContextMenuWrapper className="video-list-item-kebab">
+                    <ContextMenu
+                      placement="bottom-end"
+                      appendTo={document.body}
+                      items={menuItems}
+                      trigger={<Button onClick={() => null} icon={<SvgActionMore />} variant="tertiary" size="small" />}
+                    />
+                  </ContextMenuWrapper>
+                )}
+              </DetailsWrapper>
+            }
+            nodeStart={
+              <ThumbnailContainer variant={variant}>
+                <VideoThumbnail
+                  type="video"
+                  clickable={false}
+                  thumbnailUrl={thumbnailPhotoUrl || ''}
+                  thumbnailAlt={video ? `${video.title} by ${video.channel.title} thumbnail` : ''}
+                  slots={
+                    variant === 'large' && video?.duration
+                      ? {
+                          bottomRight: {
+                            element: (
+                              <Pill
+                                variant="overlay"
+                                label={formatDurationShort(video.duration)}
+                                title="Video duration"
+                              />
+                            ),
+                            type: 'default',
+                          },
+                        }
+                      : undefined
+                  }
+                />
+              </ThumbnailContainer>
+            }
+            label={
               <Text
                 variant={variant === 'small' ? 't200-strong' : 'h400'}
                 as="h4"
@@ -82,7 +109,9 @@ export const VideoListItem: FC<VideoListItemProps> = ({
               >
                 {video?.title}
               </Text>
-              {video && (
+            }
+            caption={
+              video && (
                 <Text
                   variant={variant === 'small' ? 't100' : 't200'}
                   as="p"
@@ -99,24 +128,9 @@ export const VideoListItem: FC<VideoListItemProps> = ({
                     &nbsp;views
                   </>{' '}
                 </Text>
-              )}
-              {menuItems && (
-                <ContextMenuWrapper className="video-list-item-kebab">
-                  <ContextMenu
-                    placement="bottom-end"
-                    appendTo={document.body}
-                    items={menuItems}
-                    trigger={<Button onClick={() => null} icon={<SvgActionMore />} variant="tertiary" size="small" />}
-                  />
-                </ContextMenuWrapper>
-              )}
-            </DetailsWrapper>
-            {isActive && (
-              <EndNodeWrapper>
-                <SvgActionCheck />
-              </EndNodeWrapper>
-            )}
-          </Wrapper>
+              )
+            }
+          />
         )}
       </CSSTransition>
     </SwitchTransition>
