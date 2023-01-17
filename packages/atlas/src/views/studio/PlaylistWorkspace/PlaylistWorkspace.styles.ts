@@ -7,24 +7,12 @@ import { cVar, media, sizes } from '@/styles'
 
 export const WorkspaceWrapper = styled.div`
   display: grid;
+  align-items: start;
   gap: ${sizes(6)};
   margin: ${sizes(10)} ${sizes(8)};
 
-  > :nth-child(1) {
-    grid-row: 1/2;
-  }
-
-  > :nth-child(4) {
-    grid-row: 3/4;
-  }
-
   ${media.sm} {
-    > :nth-child(1),
-    > :nth-child(2) {
-      grid-column: 1/5;
-    }
-
-    > :nth-child(3) {
+    > :nth-of-type(3) {
       grid-row: 3/4;
       grid-column: 1/4;
     }
@@ -44,12 +32,14 @@ export const WorkspaceWrapper = styled.div`
 
 export const StyledButton = styled(Button)`
   height: min-content;
+  grid-row: 3/4;
 `
 
 export const FormWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${sizes(4)};
+  grid-row: 1/2;
 
   > * {
     flex: 1;
@@ -57,6 +47,7 @@ export const FormWrapper = styled.div`
 
   ${media.sm} {
     flex-direction: row;
+    grid-column: 1/5;
   }
 
   ${media.lg} {
@@ -87,11 +78,7 @@ export const StyledVideoListItem = styled(VideoListItem)`
 
 export const EmptyFallbackWrapper = styled.div`
   ${media.sm} {
-    grid-column: 1/3;
-  }
-
-  ${media.lg} {
-    grid-column: unset;
+    grid-column: 1/5;
   }
 `
 
@@ -100,4 +87,8 @@ export const Divider = styled.div`
   height: 1px;
   background-color: ${cVar('colorBackgroundAlpha')};
   margin: ${sizes(2)} 0;
+
+  ${media.sm} {
+    grid-column: 1/5;
+  }
 `
