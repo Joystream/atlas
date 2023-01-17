@@ -6,18 +6,18 @@ import { parseISO } from 'date-fns'
 
 import {
   Query,
-  QueryChannelsConnectionArgs,
   QueryCommentsConnectionArgs,
-  QueryVideosConnectionArgs,
   VideoOrderByInput,
   VideosConnection,
 } from '../queries/__generated__/baseTypes.generated'
+import { GetBasicChannelsConnectionQueryVariables } from '../queries/__generated__/channels.generated'
 import { FullChannelFieldsFragment, FullVideoFieldsFragment } from '../queries/__generated__/fragments.generated'
 import { GetNftsConnectionQueryVariables } from '../queries/__generated__/nfts.generated'
+import { GetFullVideosConnectionQueryVariables } from '../queries/__generated__/videos.generated'
 
 const stringifyValue = (value: unknown) => JSON.stringify(value || {})
 
-const getVideoKeyArgs = (args: QueryVideosConnectionArgs | null) => {
+const getVideoKeyArgs = (args: GetFullVideosConnectionQueryVariables | null) => {
   const onlyCount = args?.first === 0
   const channel = stringifyValue(args?.where?.channel)
   const category = stringifyValue(args?.where?.category)
@@ -57,7 +57,7 @@ const getNftKeyArgs = (args: GetNftsConnectionQueryVariables | null) => {
   return `${OR}:${ownerMember}:${creatorChannel}:${status}:${auctionStatus}:${sorting}:${createdAt_gte}:${video}`
 }
 
-const getChannelKeyArgs = (args: QueryChannelsConnectionArgs | null) => {
+const getChannelKeyArgs = (args: GetBasicChannelsConnectionQueryVariables | null) => {
   // make sure queries asking for a specific category are separated in cache
   const language = stringifyValue(args?.where?.language_eq)
   const idIn = args?.where?.id_in || []
@@ -88,9 +88,7 @@ type CachePolicyFields<T extends string> = Partial<Record<T, FieldPolicy | Field
 
 const queryCacheFields: CachePolicyFields<keyof Query> = {
   channelsConnection: relayStylePagination(getChannelKeyArgs),
-  mostFollowedChannelsConnection: relayStylePagination(getChannelKeyArgs),
-  mostViewedChannelsConnection: relayStylePagination(getChannelKeyArgs),
-  channels: (existing, { toReference, args, canRead }) => {
+  extendedChannels: (existing, { toReference, args, canRead }) => {
     if (args?.where.id_eq) {
       // get single channel
       const channelRef = toReference({
@@ -110,7 +108,7 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
     ...relayStylePagination(getVideoKeyArgs),
     read(
       existing: VideosConnection,
-      { args, readField }: { args: QueryVideosConnectionArgs | null; readField: ReadFieldFunction }
+      { args, readField }: { args: GetFullVideosConnectionQueryVariables | null; readField: ReadFieldFunction }
     ) {
       const isPublic = args?.where?.isPublic_eq
       const filteredEdges =
@@ -158,6 +156,7 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
       return existing?.slice(offset, offset + limit)
     },
   },
+  // @ts-ignore // todo typescript error and make sure it's working
   commentsConnection: relayStylePagination(getCommentKeyArgs),
   channelByUniqueInput: (existing, { toReference, args }) => {
     return (

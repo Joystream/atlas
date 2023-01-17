@@ -2484,6 +2484,11 @@ export type ExtendedVideoCategory = {
   category: VideoCategory
 }
 
+export type FeaturedVideoInput = {
+  videoCutUrl?: InputMaybe<Scalars['String']>
+  videoId: Scalars['String']
+}
+
 export type GeoCoordinates = {
   __typename?: 'GeoCoordinates'
   latitude: Scalars['Float']
@@ -2997,9 +3002,10 @@ export type Mutation = {
   followChannel: ChannelFollowResult
   reportChannel: ChannelReportInfo
   reportVideo: VideoReportInfo
+  setCategoryFeaturedVideos: SetCategoryFeaturedVideosResult
   setKillSwitch: KillSwitch
   setSupportedCategories: SetSupportedCategoriesResult
-  setVideoHero: VideoHero
+  setVideoHero: SetVideoHeroResult
   unfollowChannel: ChannelUnfollowResult
 }
 
@@ -3019,6 +3025,11 @@ export type MutationReportChannelArgs = {
 export type MutationReportVideoArgs = {
   rationale: Scalars['String']
   videoId: Scalars['String']
+}
+
+export type MutationSetCategoryFeaturedVideosArgs = {
+  categoryId: Scalars['String']
+  videos: Array<FeaturedVideoInput>
 }
 
 export type MutationSetKillSwitchArgs = {
@@ -4321,6 +4332,13 @@ export type QueryVideosConnectionArgs = {
   where?: InputMaybe<VideoWhereInput>
 }
 
+export type SetCategoryFeaturedVideosResult = {
+  __typename?: 'SetCategoryFeaturedVideosResult'
+  categoryId: Scalars['String']
+  numberOfFeaturedVideosSet: Scalars['Int']
+  numberOfFeaturedVideosUnset: Scalars['Int']
+}
+
 export type SetSupportedCategoriesResult = {
   __typename?: 'SetSupportedCategoriesResult'
   /** The updated number of categories that are now explicitly supported by the Gateway */
@@ -4329,6 +4347,11 @@ export type SetSupportedCategoriesResult = {
   newlyCreatedCategoriesSupported: Scalars['Boolean']
   /** Whether or not vidoes w/o any category assigned will be supported */
   noCategoryVideosSupported: Scalars['Boolean']
+}
+
+export type SetVideoHeroResult = {
+  __typename?: 'SetVideoHeroResult'
+  id: Scalars['String']
 }
 
 export type SquidStatus = {
@@ -5953,14 +5976,8 @@ export type VideoFeaturedInCategoryWhereInput = {
 
 export type VideoHero = {
   __typename?: 'VideoHero'
-  /** Time at which this VideoHero was activated */
+  /** Time at which this VideoHero was created/activated */
   activatedAt?: Maybe<Scalars['DateTime']>
-  /** Whether this video hero is currently active */
-  active: Scalars['Boolean']
-  /** Time at which this VideoHero was created */
-  createdAt?: Maybe<Scalars['DateTime']>
-  /** Time at which this VideoHero was deactivated */
-  deactivatedAt?: Maybe<Scalars['DateTime']>
   /** Url to the poster to be displayed in the Hero section */
   heroPosterUrl: Scalars['String']
   /** Title of the Hero section */
@@ -5982,12 +5999,6 @@ export type VideoHeroEdge = {
 export enum VideoHeroOrderByInput {
   ActivatedAtAsc = 'activatedAt_ASC',
   ActivatedAtDesc = 'activatedAt_DESC',
-  ActiveAsc = 'active_ASC',
-  ActiveDesc = 'active_DESC',
-  CreatedAtAsc = 'createdAt_ASC',
-  CreatedAtDesc = 'createdAt_DESC',
-  DeactivatedAtAsc = 'deactivatedAt_ASC',
-  DeactivatedAtDesc = 'deactivatedAt_DESC',
   HeroPosterUrlAsc = 'heroPosterUrl_ASC',
   HeroPosterUrlDesc = 'heroPosterUrl_DESC',
   HeroTitleAsc = 'heroTitle_ASC',
@@ -6046,27 +6057,6 @@ export type VideoHeroWhereInput = {
   activatedAt_lte?: InputMaybe<Scalars['DateTime']>
   activatedAt_not_eq?: InputMaybe<Scalars['DateTime']>
   activatedAt_not_in?: InputMaybe<Array<Scalars['DateTime']>>
-  active_eq?: InputMaybe<Scalars['Boolean']>
-  active_isNull?: InputMaybe<Scalars['Boolean']>
-  active_not_eq?: InputMaybe<Scalars['Boolean']>
-  createdAt_eq?: InputMaybe<Scalars['DateTime']>
-  createdAt_gt?: InputMaybe<Scalars['DateTime']>
-  createdAt_gte?: InputMaybe<Scalars['DateTime']>
-  createdAt_in?: InputMaybe<Array<Scalars['DateTime']>>
-  createdAt_isNull?: InputMaybe<Scalars['Boolean']>
-  createdAt_lt?: InputMaybe<Scalars['DateTime']>
-  createdAt_lte?: InputMaybe<Scalars['DateTime']>
-  createdAt_not_eq?: InputMaybe<Scalars['DateTime']>
-  createdAt_not_in?: InputMaybe<Array<Scalars['DateTime']>>
-  deactivatedAt_eq?: InputMaybe<Scalars['DateTime']>
-  deactivatedAt_gt?: InputMaybe<Scalars['DateTime']>
-  deactivatedAt_gte?: InputMaybe<Scalars['DateTime']>
-  deactivatedAt_in?: InputMaybe<Array<Scalars['DateTime']>>
-  deactivatedAt_isNull?: InputMaybe<Scalars['Boolean']>
-  deactivatedAt_lt?: InputMaybe<Scalars['DateTime']>
-  deactivatedAt_lte?: InputMaybe<Scalars['DateTime']>
-  deactivatedAt_not_eq?: InputMaybe<Scalars['DateTime']>
-  deactivatedAt_not_in?: InputMaybe<Array<Scalars['DateTime']>>
   heroPosterUrl_contains?: InputMaybe<Scalars['String']>
   heroPosterUrl_containsInsensitive?: InputMaybe<Scalars['String']>
   heroPosterUrl_endsWith?: InputMaybe<Scalars['String']>

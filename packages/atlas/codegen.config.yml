@@ -1,6 +1,6 @@
 overwrite: true
 
-schema: http://localhost:4350/graphql
+schema: http://194.233.167.225:4350/graphql
 
 documents:
   - './src/api/queries/**/*.graphql'
