@@ -49,7 +49,8 @@ export const YppDashboardSettingsTab = () => {
   const navigate = useNavigate()
   const { displaySnackbar } = useSnackbar()
   const { channelId, memberId, accountId } = useUser()
-  const { currentChannel, refetchSyncedChannels } = useGetYppSyncedChannels()
+  const { currentChannel, refetchSyncedChannels, isLoading } = useGetYppSyncedChannels()
+  const [signLoading, setSignLoading] = useState(false)
   const { joystream, proxyCallback } = useJoystream()
   const [openModal, closeModal] = useConfirmationModal()
 
@@ -62,6 +63,7 @@ export const YppDashboardSettingsTab = () => {
   const areSettingsChanged = currentChannel
     ? currentChannel.videoCategoryId !== categoryId || currentChannel?.shouldBeIngested !== isSync
     : false
+
   useEffect(() => {
     if (currentChannel) {
       setCategoryId(currentChannel.videoCategoryId)
@@ -85,7 +87,7 @@ export const YppDashboardSettingsTab = () => {
         timestamp: Date.now(),
         ...(categoryId ? { videoCategoryId: categoryId } : {}),
       }
-
+      setSignLoading(true)
       const signature = await joystream.signMessage({
         data: JSON.stringify(message),
         type: 'payload',
@@ -111,6 +113,8 @@ export const YppDashboardSettingsTab = () => {
         description: 'Failed to update settings. Try again later',
         iconType: 'error',
       })
+    } finally {
+      setSignLoading(false)
     }
   }, [accountId, categoryId, currentChannel, displaySnackbar, isSync, joystream, refetchSyncedChannels])
 
@@ -255,8 +259,9 @@ export const YppDashboardSettingsTab = () => {
         isActive={areSettingsChanged}
         isNoneCrypto
         primaryButton={{
-          text: 'Publish changes',
-          onClick: () => handleChangeSettings(),
+          text: isLoading || signLoading ? 'Please wait...' : 'Publish changes',
+          onClick: handleChangeSettings,
+          disabled: isLoading || signLoading,
         }}
         secondaryButton={{
           text: 'Cancel',
