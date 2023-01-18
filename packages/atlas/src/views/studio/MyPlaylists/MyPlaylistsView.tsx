@@ -45,7 +45,7 @@ export const MyPlaylistsView = () => {
             inlineLabel="Sort by"
             value={sortPlaylistBy}
             items={PLAYLIST_SORT_OPTIONS}
-            onChange={(val) => val && setSortPlaylist(val)}
+            onChange={(val) => typeof val === 'number' && setSortPlaylist(val)}
           />
         )}
         {smMatch && (
