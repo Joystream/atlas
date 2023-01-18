@@ -39,6 +39,7 @@ export type FileSelectProps = {
   error?: string | null
   maxSize?: number
   onError: (error: string | null) => void
+  hideIcons?: boolean
 }
 
 export const FileSelect: FC<FileSelectProps> = ({
@@ -53,6 +54,7 @@ export const FileSelect: FC<FileSelectProps> = ({
   type,
   file,
   onError,
+  hideIcons = false,
 }) => {
   const fileType = type === 'video-file' ? 'video' : 'image'
 
@@ -182,7 +184,7 @@ export const FileSelect: FC<FileSelectProps> = ({
               </>
             ) : (
               <Content key={item} style={style} isLoading={isFileLoading}>
-                {fileType === 'video' ? <SvgIllustrativeVideo /> : <SvgIllustrativeImage />}
+                {hideIcons ? null : fileType === 'video' ? <SvgIllustrativeVideo /> : <SvgIllustrativeImage />}
                 <Title as="span" variant="h400">
                   {title}
                 </Title>
@@ -202,7 +204,7 @@ export const FileSelect: FC<FileSelectProps> = ({
           )}
         </InnerContainer>
         <FileHoverOverlay>
-          {fileType === 'video' ? <SvgIllustrativeVideo /> : <SvgIllustrativeImage />}
+          {hideIcons ? null : fileType === 'video' ? <SvgIllustrativeVideo /> : <SvgIllustrativeImage />}
           <Text as="span" margin={{ top: 1 }} variant="t200-strong">
             Drop file here to upload it
           </Text>
