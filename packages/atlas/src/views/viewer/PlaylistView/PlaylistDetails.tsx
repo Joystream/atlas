@@ -3,7 +3,6 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
 import { ColumnGapBlock, RowGapBlock } from '@/components/_layouts'
-import { VideoListItem } from '@/components/_video/VideoListItem/VideoListItem'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import {
@@ -12,6 +11,7 @@ import {
   DetailsButtonsWrapper,
   DetailsWrapper,
   InfoContainer,
+  StyledVideoListItem,
   Thumbnail,
   Wrapper,
 } from './PlaylistDetails.styles'
@@ -19,7 +19,7 @@ import {
 export const PlaylistDetails = () => {
   const xsMatch = useMediaMatch('xs')
   const smMatch = useMediaMatch('sm')
-  console.log('wtf', xsMatch)
+
   return (
     <Wrapper>
       <InfoContainer>
@@ -57,7 +57,7 @@ export const PlaylistDetails = () => {
           .map((_, index) => (
             <CustomVideoListItemWrapper key={index}>
               <Counter>{index + 1}</Counter>
-              <VideoListItem id={String(index)} variant={xsMatch && !smMatch ? 'small' : 'large'} />
+              <StyledVideoListItem id={String(index)} variant={xsMatch && !smMatch ? 'medium' : 'large'} />
             </CustomVideoListItemWrapper>
           ))}
       </RowGapBlock>

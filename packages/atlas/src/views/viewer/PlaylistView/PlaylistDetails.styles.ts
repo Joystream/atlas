@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { ColumnGapBlock } from '@/components/_layouts'
+import { VideoListItem } from '@/components/_video/VideoListItem'
 import { cVar, media, sizes } from '@/styles'
 
 export const Wrapper = styled(LimitedWidthContainer)`
@@ -17,7 +18,7 @@ export const InfoContainer = styled.div`
   height: fit-content;
   background-color: ${cVar('colorCoreNeutral900')};
 
-  > *:first-child {
+  > *:first-of-type {
     border-bottom: 1px solid ${cVar('colorBackgroundStrongAlpha')};
   }
 `
@@ -31,10 +32,12 @@ export const DetailsWrapper = styled.div`
 
   ${media.sm} {
     grid-auto-flow: column;
+    grid-template-columns: 1fr 1fr;
   }
 
   ${media.md} {
     grid-auto-flow: row;
+    grid-template-columns: 1fr;
   }
 `
 
@@ -57,6 +60,17 @@ export const DetailsButtonsWrapper = styled(ColumnGapBlock)`
 export const CustomVideoListItemWrapper = styled.div`
   display: flex;
   gap: ${sizes(4)};
+`
+
+export const StyledVideoListItem = styled(VideoListItem)`
+  ${media.xs} {
+    flex-direction: column;
+  }
+
+  ${media.sm} {
+    cursor: grab;
+    flex-direction: row;
+  }
 `
 
 export const Counter = styled.div`

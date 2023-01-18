@@ -17,13 +17,19 @@ import { SentryLogger } from '@/utils/logs'
 import { formatDurationShort } from '@/utils/time'
 import { formatVideoDate } from '@/utils/video'
 
-import { ContextMenuWrapper, DetailsWrapper, StyledListItem, ThumbnailContainer } from './VideoListItem.styles'
+import {
+  ContextMenuWrapper,
+  DetailsWrapper,
+  StyledListItem,
+  ThumbnailContainer,
+  VideoListItemVariants,
+} from './VideoListItem.styles'
 
 type VideoListItemProps = {
   id?: string
   onClick?: () => void
   isSelected?: boolean
-  variant?: 'small' | 'large'
+  variant?: VideoListItemVariants
   className?: string
   isInteractive?: boolean
   menuItems?: ListItemProps[]
@@ -55,7 +61,7 @@ export const VideoListItem: FC<VideoListItemProps> = ({
           <VideoListItemLoader variant={variant} />
         ) : (
           <StyledListItem
-            ignoreRWD={variant === 'small'}
+            ignoreRWD={variant !== 'large'}
             isInteractive={isInteractive}
             className={className}
             onClick={onClick}
@@ -83,7 +89,7 @@ export const VideoListItem: FC<VideoListItemProps> = ({
                   thumbnailUrl={thumbnailPhotoUrl || ''}
                   thumbnailAlt={video ? `${video.title} by ${video.channel.title} thumbnail` : ''}
                   slots={
-                    variant === 'large' && video?.duration
+                    variant !== 'small' && video?.duration
                       ? {
                           bottomRight: {
                             element: (
