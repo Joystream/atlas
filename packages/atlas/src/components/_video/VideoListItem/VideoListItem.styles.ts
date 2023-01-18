@@ -48,7 +48,10 @@ export const ContextMenuWrapper = styled.div`
 
 export const ThumbnailContainer = styled.div<{ variant: VideoListItemVariants }>`
   > *:first-of-type {
-    min-width: ${({ variant }) => `${getVideoVaraintDimensions(variant) .width}px`};
+    min-width: ${({ variant }) => {
+      const { width } = getVideoVaraintDimensions(variant)
+      return `${width}px`
+    }};
   }
 `
 
