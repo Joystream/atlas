@@ -1,63 +1,62 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { Loader } from '@/components/_loaders/Loader'
+import { ListItem } from '@/components/ListItem'
 import { cVar, media, sizes } from '@/styles'
-
-export const Wrapper = styled.div<{ variant: 'small' | 'large' }>`
-  width: 100%;
-  display: grid;
-  gap: ${sizes(4)};
-  height: fit-content;
-  grid-template-rows: 140px auto;
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  margin: ${sizes(3)} 0;
-
-  ${media.xs} {
-    grid-template-rows: ${({ variant }) => (variant === 'small' ? '50px' : '111px')};
-    grid-template-columns: auto 1fr;
-  }
-`
 
 export const DetailsWrapper = styled.div<{ variant: 'small' | 'large' }>`
   align-self: ${({ variant }) => (variant === 'small' ? 'center' : 'start')};
   gap: ${({ variant }) => (variant === 'small' ? 'unset' : sizes(2))};
   display: grid;
-`
-
-export const ThumbnailImage = styled.img`
-  height: 100%;
-  object-fit: contain;
-`
-
-export const ThumbnailBackground = styled.div`
-  background: ${cVar('colorBackground')};
-  width: fit-content;
   position: relative;
-`
-
-export const PillContainer = styled.div`
-  position: absolute;
-  display: flex;
-  gap: ${sizes(1)};
-  bottom: ${sizes(1)};
-  right: ${sizes(1)};
-`
-
-export const EndNodeWrapper = styled.div`
-  align-self: center;
-  margin-left: auto;
-`
-
-export const SkeletonTextWrapper = styled.div<{ variant: 'small' | 'large' }>`
   width: 100%;
-  display: grid;
-  gap: ${sizes(1)};
-  align-self: ${(props) => (props.variant === 'large' ? 'start' : 'center')};
 `
 
-export const StyledLoader = styled(Loader)`
-  margin: ${sizes(4)};
-  justify-self: center;
+export const ContextMenuWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 1;
+  transition: opacity ${cVar('animationTransitionFast')};
+
+  ${media.sm} {
+    opacity: 0;
+  }
+`
+
+export const ThumbnailContainer = styled.div<{ variant: 'small' | 'large' }>`
+  > *:first-of-type {
+    min-width: ${({ variant }) => (variant === 'small' ? '80px' : '197px')};
+  }
+`
+
+export const StyledListItem = styled(ListItem)<{ ignoreRWD?: boolean }>`
+  :hover {
+    .video-list-item-kebab {
+      align-self: flex-start;
+      opacity: 1;
+    }
+  }
+
+  ${(props) =>
+    !props.ignoreRWD
+      ? css`
+          > *:first-of-type {
+            grid-column: 1/3;
+            width: 100%;
+          }
+
+          grid-template-columns: 1fr;
+          grid-template-rows: auto auto;
+
+          ${media.sm} {
+            grid-template-columns: auto 1fr;
+            grid-template-rows: auto;
+
+            > *:first-of-type {
+              grid-column: unset;
+            }
+          }
+        `
+      : ''}
 `

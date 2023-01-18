@@ -20,6 +20,7 @@ import { cVar } from '@/styles'
 
 import {
   PlaygroundCaptcha,
+  PlaygroundCustomPLThumbnail,
   PlaygroundEstimatingBlockTime,
   PlaygroundIframe,
   PlaygroundImageDownsizing,
@@ -43,6 +44,7 @@ const playgroundRoutes = [
   { path: 'reactions-comments', element: <PlaygroundReactionsComments />, name: 'Reactions & comments' },
   { path: 'iframe', element: <PlaygroundIframe />, name: 'Iframe' },
   { path: 'captcha', element: <PlaygroundCaptcha />, name: 'Captcha' },
+  { path: 'pl-workspace', element: <PlaygroundCustomPLThumbnail />, name: 'Playlist workspace' },
   { path: 'playlist-details', element: <PlaygroundPlaylistDetails />, name: 'Playlist details' },
 ]
 
