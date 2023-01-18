@@ -24,7 +24,7 @@ const UPLOADING_SNACKBAR_TIMEOUT = 8000
 export const useStartFileUpload = () => {
   const navigate = useNavigate()
   const { displaySnackbar } = useSnackbar()
-  const { getRandomStorageOperatorForBag, markStorageOperatorFailed } = useStorageOperators()
+  const { getClosestStorageOperatorForBag, markStorageOperatorFailed } = useStorageOperators()
 
   const { addAssetFile, addAssetToUploads, setUploadStatus, addProcessingAsset } = useUploadsStore(
     (state) => state.actions
@@ -63,7 +63,7 @@ export const useStartFileUpload = () => {
       let uploadOperator: OperatorInfo
       const bagId = createChannelBagId(asset.owner)
       try {
-        const storageOperator = await getRandomStorageOperatorForBag(bagId)
+        const storageOperator = await getClosestStorageOperatorForBag(bagId)
         if (!storageOperator) {
           displaySnackbar({
             title: 'Failed to upload asset',
@@ -186,7 +186,7 @@ export const useStartFileUpload = () => {
     },
     [
       assetsFiles,
-      getRandomStorageOperatorForBag,
+      getClosestStorageOperatorForBag,
       setUploadStatus,
       addAssetFile,
       addProcessingAsset,
