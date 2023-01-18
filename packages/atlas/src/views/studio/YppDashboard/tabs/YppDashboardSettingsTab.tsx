@@ -14,9 +14,10 @@ import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useBloatFeesAndPerMbFees, useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useSnackbar } from '@/providers/snackbars'
+import { TX_SIGN_CANCELLED_SNACKBAR_TIMEOUT } from '@/providers/transactions/transactions.config'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
-import { SentryLogger } from '@/utils/logs'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
 import { StyledActionBar } from '@/views/viewer/EditMembershipView/EditMembershipView.styles'
 
@@ -50,9 +51,11 @@ export const YppDashboardSettingsTab = () => {
   const { displaySnackbar } = useSnackbar()
   const { channelId, memberId, accountId } = useUser()
   const { currentChannel, refetchSyncedChannels, isLoading } = useGetYppSyncedChannels()
-  const [signLoading, setSignLoading] = useState(false)
   const { joystream, proxyCallback } = useJoystream()
   const [openModal, closeModal] = useConfirmationModal()
+
+  const [signLoading, setSignLoading] = useState(false)
+  const [categoryError, setCategoryErrror] = useState<null | string>(null)
 
   const handleTransaction = useTransaction()
   const { dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
@@ -71,7 +74,7 @@ export const YppDashboardSettingsTab = () => {
     }
   }, [currentChannel])
 
-  const handleChangeSettings = useCallback(async () => {
+  const handleSubmitChangeSettings = useCallback(async () => {
     if (!accountId || !joystream) {
       SentryLogger.error('No joystream instance', 'YppDashboardSettingsTab')
       return
@@ -81,6 +84,12 @@ export const YppDashboardSettingsTab = () => {
       SentryLogger.error("Couldn't fetch current channel", 'YppDashboardSettingsTab')
       return
     }
+
+    if (isSync && !categoryId) {
+      setCategoryErrror('Select category of imported videos')
+      return
+    }
+
     try {
       const message: IngestChannelMessage = {
         shouldBeIngested: isSync,
@@ -107,6 +116,15 @@ export const YppDashboardSettingsTab = () => {
         refetchSyncedChannels()
       }
     } catch (e) {
+      if (e.message === 'Cancelled') {
+        ConsoleLogger.warn('Sign cancelled')
+        displaySnackbar({
+          title: 'Message signing cancelled',
+          iconType: 'warning',
+          timeout: TX_SIGN_CANCELLED_SNACKBAR_TIMEOUT,
+        })
+        return
+      }
       SentryLogger.error('Error while updating YPP setting: ', e)
       displaySnackbar({
         title: 'Something went wrong',
@@ -172,6 +190,16 @@ export const YppDashboardSettingsTab = () => {
       navigate(absoluteRoutes.studio.ypp())
       closeModal()
     } catch (e) {
+      if (e.message === 'Cancelled') {
+        ConsoleLogger.warn('Sign cancelled')
+        displaySnackbar({
+          title: 'Message signing cancelled',
+          iconType: 'warning',
+          timeout: TX_SIGN_CANCELLED_SNACKBAR_TIMEOUT,
+        })
+        return
+      }
+
       SentryLogger.error('Error while opting out: ', e)
       displaySnackbar({
         title: 'Something went wrong',
@@ -193,6 +221,11 @@ export const YppDashboardSettingsTab = () => {
     navigate,
     proxyCallback,
   ])
+
+  const handleCancel = () => {
+    setCategoryId(currentChannel?.videoCategoryId)
+    setIsSync(currentChannel?.shouldBeIngested)
+  }
 
   const openModalOptions = {
     title: 'Leave the program?',
@@ -237,10 +270,19 @@ export const YppDashboardSettingsTab = () => {
         </FormField>
         {isSync && (
           <FormField
+            error={categoryError || undefined}
             label="Category of imported videos"
             description="Choose a category to be assigned to the imported videos by default. You can change it for each video later once it’s imported."
           >
-            <Select items={categoriesSelectItems} onChange={setCategoryId} value={categoryId} />
+            <Select
+              error={!!categoryError}
+              items={categoriesSelectItems}
+              onChange={(category) => {
+                setCategoryErrror(null)
+                setCategoryId(category)
+              }}
+              value={categoryId}
+            />
           </FormField>
         )}
 
@@ -260,14 +302,12 @@ export const YppDashboardSettingsTab = () => {
         isNoneCrypto
         primaryButton={{
           text: isLoading || signLoading ? 'Please wait...' : 'Publish changes',
-          onClick: handleChangeSettings,
+          onClick: handleSubmitChangeSettings,
           disabled: isLoading || signLoading,
         }}
         secondaryButton={{
           text: 'Cancel',
-          onClick: () => {
-            setCategoryId(currentChannel?.videoCategoryId)
-          },
+          onClick: handleCancel,
         }}
       />
     </>
