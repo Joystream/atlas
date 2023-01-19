@@ -125,7 +125,6 @@ export const useUnfollowChannel = (opts?: MutationHookOptions<UnfollowChannelMut
           channelId: id,
           token,
         },
-        // todo make sure cache is updated
         update: (cache, mutationResult) => {
           cache.modify({
             id: cache.identify({
