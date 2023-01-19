@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { BasicVideoFieldsFragmentDoc, FullVideoFieldsFragmentDoc } from './fragments.generated'
+import { BasicVideoFeaturedInCategoryFragmentDoc, BasicVideoFieldsFragmentDoc } from './fragments.generated'
 
 const defaultOptions = {} as const
 export type GetVideoHeroQueryVariables = Types.Exact<{ [key: string]: never }>
@@ -575,125 +575,19 @@ export type GetCategoriesFeaturedVideosQuery = {
         __typename?: 'Video'
         id: string
         title?: string | null
-        description?: string | null
-        reactionsCount: number
         viewsNum: number
-        duration?: number | null
         createdAt: Date
-        isPublic?: boolean | null
-        isExplicit?: boolean | null
-        hasMarketing?: boolean | null
-        isCensored: boolean
-        isCommentSectionEnabled: boolean
+        duration?: number | null
+        reactionsCount: number
         commentsCount: number
-        language?: string | null
-        publishedBeforeJoystream?: Date | null
-        reactions: Array<{
-          __typename?: 'VideoReaction'
-          id: string
-          createdAt: Date
-          reaction: Types.VideoReactionOptions
-          member: { __typename?: 'Membership'; id: string }
-        }>
-        category?: { __typename?: 'VideoCategory'; id: string; name?: string | null } | null
-        mediaMetadata?: {
-          __typename?: 'VideoMediaMetadata'
-          id: string
-          pixelHeight?: number | null
-          pixelWidth?: number | null
-        } | null
-        media?: {
-          __typename?: 'StorageDataObject'
-          id: string
-          createdAt: Date
-          size: string
-          isAccepted: boolean
-          ipfsHash: string
-          storageBag: { __typename?: 'StorageBag'; id: string }
-          type?:
-            | { __typename: 'DataObjectTypeChannelAvatar' }
-            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-            | { __typename: 'DataObjectTypeVideoMedia' }
-            | { __typename: 'DataObjectTypeVideoSubtitle' }
-            | { __typename: 'DataObjectTypeVideoThumbnail' }
-            | null
-        } | null
-        thumbnailPhoto?: {
-          __typename?: 'StorageDataObject'
-          id: string
-          createdAt: Date
-          size: string
-          isAccepted: boolean
-          ipfsHash: string
-          storageBag: { __typename?: 'StorageBag'; id: string }
-          type?:
-            | { __typename: 'DataObjectTypeChannelAvatar' }
-            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-            | { __typename: 'DataObjectTypeVideoMedia' }
-            | { __typename: 'DataObjectTypeVideoSubtitle' }
-            | { __typename: 'DataObjectTypeVideoThumbnail' }
-            | null
-        } | null
         channel: {
           __typename?: 'Channel'
-          videoViewsNum: number
-          description?: string | null
-          isPublic?: boolean | null
-          isCensored: boolean
-          language?: string | null
           id: string
           title?: string | null
           createdAt: Date
           followsNum: number
           rewardAccount: string
           channelStateBloatBond: string
-          ownerMember?: {
-            __typename?: 'Membership'
-            id: string
-            handle: string
-            metadata?: {
-              __typename?: 'MemberMetadata'
-              about?: string | null
-              avatar?:
-                | {
-                    __typename?: 'AvatarObject'
-                    avatarObject: {
-                      __typename?: 'StorageDataObject'
-                      id: string
-                      createdAt: Date
-                      size: string
-                      isAccepted: boolean
-                      ipfsHash: string
-                      storageBag: { __typename?: 'StorageBag'; id: string }
-                      type?:
-                        | { __typename: 'DataObjectTypeChannelAvatar' }
-                        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                        | { __typename: 'DataObjectTypeVideoMedia' }
-                        | { __typename: 'DataObjectTypeVideoSubtitle' }
-                        | { __typename: 'DataObjectTypeVideoThumbnail' }
-                        | null
-                    }
-                  }
-                | { __typename?: 'AvatarUri'; avatarUri: string }
-                | null
-            } | null
-          } | null
-          coverPhoto?: {
-            __typename?: 'StorageDataObject'
-            id: string
-            createdAt: Date
-            size: string
-            isAccepted: boolean
-            ipfsHash: string
-            storageBag: { __typename?: 'StorageBag'; id: string }
-            type?:
-              | { __typename: 'DataObjectTypeChannelAvatar' }
-              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-              | { __typename: 'DataObjectTypeVideoMedia' }
-              | { __typename: 'DataObjectTypeVideoSubtitle' }
-              | { __typename: 'DataObjectTypeVideoThumbnail' }
-              | null
-          } | null
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
@@ -711,12 +605,21 @@ export type GetCategoriesFeaturedVideosQuery = {
               | null
           } | null
         }
-        license?: {
-          __typename?: 'License'
+        thumbnailPhoto?: {
+          __typename?: 'StorageDataObject'
           id: string
-          code?: number | null
-          attribution?: string | null
-          customText?: string | null
+          createdAt: Date
+          size: string
+          isAccepted: boolean
+          ipfsHash: string
+          storageBag: { __typename?: 'StorageBag'; id: string }
+          type?:
+            | { __typename: 'DataObjectTypeChannelAvatar' }
+            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeVideoMedia' }
+            | { __typename: 'DataObjectTypeVideoSubtitle' }
+            | { __typename: 'DataObjectTypeVideoThumbnail' }
+            | null
         } | null
         nft?: {
           __typename?: 'OwnedNft'
@@ -931,29 +834,6 @@ export type GetCategoriesFeaturedVideosQuery = {
             | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
             | null
         } | null
-        subtitles: Array<{
-          __typename?: 'VideoSubtitle'
-          id: string
-          language?: string | null
-          mimeType: string
-          type: string
-          asset?: {
-            __typename?: 'StorageDataObject'
-            id: string
-            createdAt: Date
-            size: string
-            isAccepted: boolean
-            ipfsHash: string
-            storageBag: { __typename?: 'StorageBag'; id: string }
-            type?:
-              | { __typename: 'DataObjectTypeChannelAvatar' }
-              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-              | { __typename: 'DataObjectTypeVideoMedia' }
-              | { __typename: 'DataObjectTypeVideoSubtitle' }
-              | { __typename: 'DataObjectTypeVideoThumbnail' }
-              | null
-          } | null
-        }>
       }
     }>
   } | null
@@ -1009,14 +889,11 @@ export const GetAllCategoriesFeaturedVideosDocument = gql`
       id
       name
       featuredVideos(limit: 3) {
-        videoCutUrl
-        video {
-          ...BasicVideoFields
-        }
+        ...BasicVideoFeaturedInCategory
       }
     }
   }
-  ${BasicVideoFieldsFragmentDoc}
+  ${BasicVideoFeaturedInCategoryFragmentDoc}
 `
 
 /**
@@ -1070,14 +947,11 @@ export const GetCategoriesFeaturedVideosDocument = gql`
   query GetCategoriesFeaturedVideos($categoryId: String!) {
     videoCategoryById(id: $categoryId) {
       featuredVideos {
-        videoCutUrl
-        video {
-          ...FullVideoFields
-        }
+        ...BasicVideoFeaturedInCategory
       }
     }
   }
-  ${FullVideoFieldsFragmentDoc}
+  ${BasicVideoFeaturedInCategoryFragmentDoc}
 `
 
 /**

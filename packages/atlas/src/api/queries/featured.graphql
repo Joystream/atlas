@@ -19,10 +19,7 @@ query GetAllCategoriesFeaturedVideos {
     # (can also add some `orderBy` here if required)
     featuredVideos(limit: 3) {
       # CHANGE: `videoId` no longer exists, use `video.id` instead
-      videoCutUrl
-      video {
-        ...BasicVideoFields
-      }
+      ...BasicVideoFeaturedInCategory
     }
   }
 }
@@ -33,10 +30,7 @@ query GetCategoriesFeaturedVideos($categoryId: String!) {
   videoCategoryById(id: $categoryId) {
     featuredVideos {
       # CHANGE: `videoId` no longer exists, use `video.id` instead
-      videoCutUrl
-      video {
-        ...FullVideoFields
-      }
+      ...BasicVideoFeaturedInCategory
     }
   }
 }

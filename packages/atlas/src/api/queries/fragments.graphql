@@ -386,3 +386,10 @@ fragment BasicNftOwnerFields on NftOwner {
     }
   }
 }
+
+fragment BasicVideoFeaturedInCategory on VideoFeaturedInCategory {
+  videoCutUrl
+  video {
+    ...BasicVideoFields
+  }
+}

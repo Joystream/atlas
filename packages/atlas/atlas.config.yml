@@ -77,12 +77,17 @@ content:
 
   categories: # List of display categories to be used in the app. Those are local to the application and are related to metaprotocol categories via 'videoCategories' array.
     - id: '1' # Local category ID
-      name: 'Science & Technology' # Display name of the category
+      # todo, only for testing purposes - bring back once orion integration is done,
+      # name: 'Science & Technology' # Display name of the category
+      name: 'Action' # Display name of the category
       color: '#D92E61' # Color used in the UI for this category
       iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/science-and-technology.svg' # URL for category icon SVG
       coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/science-and-technology.webp' # URL for category cover image
-      videoCategories: ['254418-2'] # List of metaprotocol category IDs that should be included in this display category
-      defaultVideoCategory: '254418-2'
+      # todo, only for testing purposes - bring back once orion integration is done
+      # videoCategories: ['254418-2'] # List of metaprotocol category IDs that should be included in this display category
+      # defaultVideoCategory: '254418-2'
+      videoCategories: ['71-2'] # List of metaprotocol category IDs that should be included in this display category
+      defaultVideoCategory: '71-2'
     - id: '2'
       name: 'Pets & Animals'
       color: '#E7BE2D'
