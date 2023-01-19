@@ -4,6 +4,7 @@ import { useMemberships } from '@/api/hooks/membership'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { isMobile } from '@/utils/browser'
 import { AssetLogger, SentryLogger } from '@/utils/logs'
+import { retryPromise } from '@/utils/misc'
 
 import { useSignerWallet } from './user.helpers'
 import { useUserStore } from './user.store'
@@ -67,7 +68,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       }
 
       try {
-        const initializedAccounts = await initSignerWallet(walletName)
+        const initializedAccounts = await retryPromise(() => initSignerWallet(walletName), 500, 2000)
         if (initializedAccounts == null) {
           SentryLogger.error('Selected wallet not found or not installed', 'UserProvider')
           setSignInModalOpen(true)
