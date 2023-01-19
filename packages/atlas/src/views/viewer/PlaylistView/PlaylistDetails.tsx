@@ -7,7 +7,6 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import {
   Counter,
-  CustomVideoListItemWrapper,
   DetailsButtonsWrapper,
   DetailsWrapper,
   InfoContainer,
@@ -18,7 +17,6 @@ import {
 
 export const PlaylistDetails = () => {
   const xsMatch = useMediaMatch('xs')
-  const smMatch = useMediaMatch('sm')
 
   return (
     <Wrapper>
@@ -55,10 +53,10 @@ export const PlaylistDetails = () => {
         {Array(10)
           .fill(1)
           .map((_, index) => (
-            <CustomVideoListItemWrapper key={index}>
+            <ColumnGapBlock key={index} gap={0}>
               <Counter>{index + 1}</Counter>
-              <StyledVideoListItem id={String(index)} variant={xsMatch && !smMatch ? 'medium' : 'large'} />
-            </CustomVideoListItemWrapper>
+              <StyledVideoListItem id={String(index)} variant="large" isInteractive={false} />
+            </ColumnGapBlock>
           ))}
       </RowGapBlock>
     </Wrapper>

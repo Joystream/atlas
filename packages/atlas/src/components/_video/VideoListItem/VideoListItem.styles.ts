@@ -6,7 +6,7 @@ import { cVar, media, sizes } from '@/styles'
 
 export type VideoListItemVariants = 'small' | 'medium' | 'large'
 
-export const getVideoVaraintDimensions = (variant: VideoListItemVariants): { width: number; height: number } => {
+export const getVideoVariantDimensions = (variant: VideoListItemVariants): { width: number; height: number } => {
   switch (variant) {
     case 'small':
       return {
@@ -49,7 +49,7 @@ export const ContextMenuWrapper = styled.div`
 export const ThumbnailContainer = styled.div<{ variant: VideoListItemVariants }>`
   > *:first-of-type {
     min-width: ${({ variant }) => {
-      const { width } = getVideoVaraintDimensions(variant)
+      const { width } = getVideoVariantDimensions(variant)
       return `${width}px`
     }};
   }
@@ -61,6 +61,11 @@ export const StyledListItem = styled(ListItem)<{ ignoreRWD?: boolean }>`
       align-self: flex-start;
       opacity: 1;
     }
+  }
+
+  .li-caption {
+    align-self: start;
+    row-gap: ${sizes(1)};
   }
 
   ${(props) =>

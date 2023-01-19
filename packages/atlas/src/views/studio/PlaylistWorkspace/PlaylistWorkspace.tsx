@@ -13,6 +13,7 @@ import { OptionCardGroupRadio } from '@/components/_inputs/OptionCardGroup'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { TitleInput } from '@/components/_inputs/TitleInput'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
+import { VideoListItem } from '@/components/_video/VideoListItem'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useAsset, useRawAsset } from '@/providers/assets/assets.hooks'
 import { useAssetStore } from '@/providers/assets/assets.store'
@@ -28,7 +29,6 @@ import {
   InputsContainer,
   StyledButton,
   StyledImageUploadAndCrop,
-  StyledVideoListItem,
   WorkspaceWrapper,
 } from './PlaylistWorkspace.styles'
 
@@ -255,7 +255,7 @@ export const PlaylistWorkspace: FC<PlaylistWorkspaceProps> = ({ show, onHide }) 
                             moveItem={moveItem}
                             draggableProps={{ provided, snapshot }}
                           >
-                            <StyledVideoListItem
+                            <VideoListItem
                               id={playlistVideos[rubric.source.index][0]}
                               isInteractive={false}
                               variant="large"
@@ -273,7 +273,7 @@ export const PlaylistWorkspace: FC<PlaylistWorkspaceProps> = ({ show, onHide }) 
                         }
                         return (
                           <DraggableComponent key={id} draggableId={id} index={index} moveItem={moveItem}>
-                            <StyledVideoListItem
+                            <VideoListItem
                               id={videoId}
                               isInteractive={false}
                               variant="large"

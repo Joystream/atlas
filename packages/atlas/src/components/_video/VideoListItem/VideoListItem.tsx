@@ -58,12 +58,13 @@ export const VideoListItem: FC<VideoListItemProps> = ({
         classNames={transitions.names.fade}
       >
         {loading || isLoadingAvatar ? (
-          <VideoListItemLoader variant={variant} />
+          <VideoListItemLoader className={className} variant={variant} />
         ) : (
           <StyledListItem
             ignoreRWD={variant !== 'large'}
             isInteractive={isInteractive}
             className={className}
+            captionClassName="li-caption"
             onClick={onClick}
             selected={isSelected}
             nodeEndPosition="top"

@@ -31,6 +31,7 @@ export type ListItemProps = {
   captionPosition?: 'right' | 'bottom'
   onClick?: (e: MouseEvent) => void
   className?: string
+  captionClassName?: string
   highlight?: boolean
   highlightWhenActive?: boolean
   to?: To
@@ -65,6 +66,7 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
       isSeparator,
       isInteractive = true,
       nodeEndPosition,
+      captionClassName,
     },
     ref
   ) => {
@@ -106,7 +108,7 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
               {nodeStart}
             </NodeContainer>
           )}
-          <LabelCaptionContainer captionBottom={captionPosition === 'bottom'}>
+          <LabelCaptionContainer className={captionClassName} captionBottom={captionPosition === 'bottom'}>
             <LabelContainer>
               <LabelText as="span" variant={isSeparator ? 'h100' : 't200-strong'} color={labelColor}>
                 {label}

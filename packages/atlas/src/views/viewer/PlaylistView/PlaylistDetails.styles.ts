@@ -47,6 +47,7 @@ export const Thumbnail = styled.img`
   max-width: 100%;
   max-height: 200px;
 `
+
 export const DetailsButtonsWrapper = styled(ColumnGapBlock)`
   padding-top: ${sizes(4)};
   flex-direction: column;
@@ -57,19 +58,10 @@ export const DetailsButtonsWrapper = styled(ColumnGapBlock)`
   }
 `
 
-export const CustomVideoListItemWrapper = styled.div`
-  display: flex;
-  gap: ${sizes(4)};
-`
-
 export const StyledVideoListItem = styled(VideoListItem)`
   ${media.xs} {
-    flex-direction: column;
-  }
-
-  ${media.sm} {
-    cursor: grab;
-    flex-direction: row;
+    grid-template-rows: auto;
+    grid-template-columns: max-content max-content;
   }
 `
 
@@ -77,10 +69,11 @@ export const Counter = styled.div`
   border-radius: 50%;
   width: ${sizes(6)};
   height: ${sizes(6)};
+  line-height: ${sizes(6)};
   display: grid;
   place-items: center;
   color: ${cVar('colorTextMuted')};
-  background-color: rgb(187 217 246 / 0.13);
+  background-color: ${cVar('colorBorderMutedAlpha')};
   margin-top: ${sizes(3)};
 
   ${media.xs} {
