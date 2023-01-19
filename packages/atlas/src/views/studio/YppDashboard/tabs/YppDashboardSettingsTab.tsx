@@ -263,9 +263,14 @@ export const YppDashboardSettingsTab = () => {
           }
         >
           <OptionCardGroupRadio
+            disabled={isLoading}
             options={[
               { value: true, label: 'Sync YouTube videos', caption: 'Imports past and future videos' },
-              { value: false, label: "Don't sync YouTube videos", caption: 'Pauses importing of future videos' },
+              {
+                value: false,
+                label: "Don't sync YouTube videos",
+                caption: 'Pauses importing of future videos',
+              },
             ]}
             selectedValue={isSync}
             onChange={setIsSync as (value: string | number | boolean) => void}
