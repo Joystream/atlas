@@ -39,7 +39,8 @@ const WHITELIST = [
 
 export type PersonalDataStoreActions = {
   updateWatchedVideos: (__typename: WatchedVideoStatus, id: string, timestamp?: number) => void
-  updateChannelFollowing: (id: string, follow: boolean) => void
+  unfollowChannel: (id: string) => void
+  followChannel: (id: string, cancelToken: string) => void
   addRecentSearch: (title: string) => void
   deleteRecentSearch: (title: string) => void
   updateDismissedMessages: (id: string, add?: boolean) => void
@@ -88,14 +89,19 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
           }
         })
       },
-      updateChannelFollowing: (id, follow) => {
+      followChannel: (id, cancelToken) => {
         set((state) => {
           const isFollowing = state.followedChannels.some((channel) => channel.id === id)
-          if (isFollowing && !follow) {
-            state.followedChannels = state.followedChannels.filter((channel) => channel.id !== id)
+          if (!isFollowing) {
+            state.followedChannels.push({ id, cancelToken })
           }
-          if (!isFollowing && follow) {
-            state.followedChannels.push({ id })
+        })
+      },
+      unfollowChannel: (id) => {
+        set((state) => {
+          const isFollowing = state.followedChannels.some((channel) => channel.id === id)
+          if (isFollowing) {
+            state.followedChannels = state.followedChannels.filter((channel) => channel.id !== id)
           }
         })
       },

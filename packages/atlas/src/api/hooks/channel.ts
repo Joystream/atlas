@@ -99,7 +99,6 @@ export const useFollowChannel = (opts?: MutationHookOptions<FollowChannelMutatio
         variables: {
           channelId: id,
         },
-        // todo make sure cache is updated
         update: (cache, mutationResult) => {
           cache.modify({
             id: cache.identify({
@@ -107,7 +106,7 @@ export const useFollowChannel = (opts?: MutationHookOptions<FollowChannelMutatio
               id,
             }),
             fields: {
-              follows: () => mutationResult.data?.followChannel.follows,
+              followsNum: () => mutationResult.data?.followChannel.follows,
             },
           })
         },
@@ -119,13 +118,12 @@ export const useFollowChannel = (opts?: MutationHookOptions<FollowChannelMutatio
 export const useUnfollowChannel = (opts?: MutationHookOptions<UnfollowChannelMutation>) => {
   const [unfollowChannel, rest] = useUnfollowChannelMutation()
   return {
-    unfollowChannel: (id: string) =>
+    unfollowChannel: (id: string, token: string) =>
       unfollowChannel({
         ...opts,
         variables: {
           channelId: id,
-          // TODO add token here
-          token: '',
+          token,
         },
         // todo make sure cache is updated
         update: (cache, mutationResult) => {
@@ -135,7 +133,7 @@ export const useUnfollowChannel = (opts?: MutationHookOptions<UnfollowChannelMut
               id,
             }),
             fields: {
-              follows: () => mutationResult.data?.unfollowChannel.follows,
+              followsNum: () => mutationResult.data?.unfollowChannel.follows,
             },
           })
         },

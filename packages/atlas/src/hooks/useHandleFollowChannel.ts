@@ -9,15 +9,17 @@ export const useHandleFollowChannel = (id?: string, name?: string | null) => {
   const [openUnfollowDialog, closeUnfollowDialog] = useConfirmationModal()
   const { followChannel } = useFollowChannel()
   const { unfollowChannel } = useUnfollowChannel()
-  const isFollowing = usePersonalDataStore((state) => state.followedChannels.some((channel) => channel.id === id))
-  const updateChannelFollowing = usePersonalDataStore((state) => state.actions.updateChannelFollowing)
+  const follow = usePersonalDataStore((state) => state.followedChannels.find((channel) => channel.id === id))
+  const { followChannel: followChannelInStore, unfollowChannel: unfollowChannelInStore } = usePersonalDataStore(
+    (state) => state.actions
+  )
 
-  const toggleFollowing = useCallback(() => {
+  const toggleFollowing = useCallback(async () => {
     if (!id || !name) {
       return
     }
     try {
-      if (isFollowing) {
+      if (follow && follow.cancelToken) {
         openUnfollowDialog({
           type: 'warning',
           title: 'Do you want to unfollow?',
@@ -25,8 +27,8 @@ export const useHandleFollowChannel = (id?: string, name?: string | null) => {
           primaryButton: {
             text: 'Unfollow',
             onClick: () => {
-              updateChannelFollowing(id, false)
-              unfollowChannel(id)
+              unfollowChannelInStore(id)
+              unfollowChannel(id, follow.cancelToken)
               closeUnfollowDialog()
             },
             variant: 'destructive',
@@ -39,24 +41,28 @@ export const useHandleFollowChannel = (id?: string, name?: string | null) => {
           },
         })
       } else {
-        updateChannelFollowing(id, true)
-        followChannel(id)
+        const followResponse = await followChannel(id)
+        const cancelToken = followResponse.data?.followChannel.cancelToken
+        if (cancelToken) {
+          followChannelInStore(id, cancelToken)
+        }
       }
     } catch (error) {
       SentryLogger.error('Failed to update channel following', 'useHandleFollowChannel', error, { channel: { id } })
     }
   }, [
+    id,
+    name,
+    follow,
+    openUnfollowDialog,
+    unfollowChannelInStore,
+    unfollowChannel,
     closeUnfollowDialog,
     followChannel,
-    id,
-    isFollowing,
-    name,
-    openUnfollowDialog,
-    unfollowChannel,
-    updateChannelFollowing,
+    followChannelInStore,
   ])
   return {
     toggleFollowing,
-    isFollowing,
+    isFollowing: !!follow,
   }
 }

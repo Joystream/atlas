@@ -286,7 +286,7 @@ export type FollowChannelMutationVariables = Types.Exact<{
 
 export type FollowChannelMutation = {
   __typename?: 'Mutation'
-  followChannel: { __typename?: 'ChannelFollowResult'; channelId: string; follows: number }
+  followChannel: { __typename?: 'ChannelFollowResult'; channelId: string; follows: number; cancelToken: string }
 }
 
 export type UnfollowChannelMutationVariables = Types.Exact<{
@@ -758,6 +758,7 @@ export const FollowChannelDocument = gql`
     followChannel(channelId: $channelId) {
       channelId
       follows
+      cancelToken
     }
   }
 `
