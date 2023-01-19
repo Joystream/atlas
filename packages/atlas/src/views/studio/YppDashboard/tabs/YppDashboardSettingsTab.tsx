@@ -110,8 +110,12 @@ export const YppDashboardSettingsTab = () => {
       if (data.status === 200) {
         displaySnackbar({
           title: 'Settings updated successfully',
-          description: 'Your videos will no longer be synced with your YouTube channel.',
+          description: isSync
+            ? 'We started syncing your YouTube videos. Please allow 30 to 60 minutes for your videos to start showing up on the My videos page.'
+            : 'Your videos will no longer be synced with your YouTube channel.',
           iconType: 'success',
+          actionText: isSync ? 'Go to My Videos' : undefined,
+          onActionClick: () => navigate(absoluteRoutes.studio.videos()),
         })
         refetchSyncedChannels()
       }
@@ -134,7 +138,7 @@ export const YppDashboardSettingsTab = () => {
     } finally {
       setSignLoading(false)
     }
-  }, [accountId, categoryId, currentChannel, displaySnackbar, isSync, joystream, refetchSyncedChannels])
+  }, [accountId, categoryId, currentChannel, displaySnackbar, isSync, joystream, navigate, refetchSyncedChannels])
 
   const handleLeaveTx = useCallback(async () => {
     if (!accountId || !joystream || !channelId || !memberId) {
