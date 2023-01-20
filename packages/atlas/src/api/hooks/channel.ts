@@ -57,11 +57,12 @@ export const useFullChannel = (
     variables: {
       ...variables,
       where: {
+        ...variables?.where,
         channel: {
+          ...variables?.where?.channel,
           id_not_contains: CHANNEL_ID_FILTER,
           id_eq: id,
         },
-        ...variables?.where,
       },
     },
   })
