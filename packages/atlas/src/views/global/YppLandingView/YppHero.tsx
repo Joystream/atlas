@@ -145,7 +145,7 @@ export const YppHero: FC<YppHeroProps> = ({
                   to apply again.
                 </>
               ) : (
-                'It takes 3 minutes and is 100% free.'
+                'It takes under 1 minute and is 100% free.'
               )}
             </Text>
           </GridItem>

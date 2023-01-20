@@ -64,8 +64,6 @@ export type YppAuthorizationModalProps = {
 }
 
 const APP_NAME = atlasConfig.general.appName
-const TOKEN = atlasConfig.joystream.tokenTicker
-const YPP_REWARD = atlasConfig.features.ypp.enrollmentReward
 
 export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   currentStep,
@@ -434,10 +432,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           title: 'Congratulations!',
           description: (
             <DescriptionText variant="t200" as="span" color="inherit">
-              Your channel is now successfully enrolled to {APP_NAME} YouTube Partnership Program!{' '}
-              {YPP_REWARD
-                ? `You already qualified for the new sign up reward of ${YPP_REWARD} ${TOKEN} tokens. Go to Dashboard for more information.`
-                : 'Go to Dashboard for more information.'}
+              Your channel is now successfully enrolled to {APP_NAME} YouTube Partnership Program! Go to Dashboard for
+              more information.
             </DescriptionText>
           ),
           primaryButton: { text: 'Go to dashboard', to: absoluteRoutes.studio.yppDashboard() },

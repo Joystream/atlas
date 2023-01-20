@@ -45,8 +45,14 @@ export const REWARDS =
       description: reward.stepsDescription,
       steps: reward.steps,
       joyAmount: reward.baseAmount,
-      actionButton: {
-        text: reward.actionButtonText,
-        ...(reward.actionButtonAction === 'copyReferral' ? { copyReferral: true } : { to: reward.actionButtonAction }),
-      },
+      ...(reward.actionButtonText
+        ? {
+            actionButton: {
+              text: reward.actionButtonText,
+              ...(reward.actionButtonAction === 'copyReferral'
+                ? { copyReferral: true }
+                : { to: reward.actionButtonAction }),
+            },
+          }
+        : {}),
     })) || []

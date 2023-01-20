@@ -72,7 +72,7 @@ export const YppThreeStepsSection: FC<YppThreeStepsSectionProps> = ({ onSignUpCl
               data-aos-offset="40"
               data-aos-easing="atlas-easing"
             >
-              It takes 3 minutes and is 100% free.
+              It takes under 1 minute and is 100% free.
             </Text>
           </HeaderGridItem>
           <StepCardsWrapper

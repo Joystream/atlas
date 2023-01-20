@@ -33,20 +33,20 @@ export const YppAuthorizationTermsAndConditionsStep: FC = () => {
           Tier 2:
         </Text>{' '}
         <Text variant="t200" as="span" color="colorText">
-          5K-25K subscribers
+          5K-50K subscribers
         </Text>
         <MultiplierText variant="t200" as="span">
-          1.5x
+          2.5x
         </MultiplierText>
         <SvgTierIcon3 />
         <Text variant="t200-strong" as="span">
           Tier 3:
         </Text>{' '}
         <Text variant="t200" as="span" color="colorText">
-          {'>'}25K subscribers
+          {'>'}50K subscribers
         </Text>
         <MultiplierText variant="t200" as="span">
-          3x
+          5x
         </MultiplierText>
       </TierItem>
       <Text variant={smMatch ? 'h400' : 'h300'} as="h3" margin={{ bottom: 4 }}>
