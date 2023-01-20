@@ -1,11 +1,11 @@
 import { FC, useState } from 'react'
 
 import { LayoutGrid } from '@/components/LayoutGrid'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { BenefitCard } from '@/components/_ypp/BenefitCard'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { formatNumber } from '@/utils/number'
 
 import {
   BackgroundContainer,
@@ -76,7 +76,15 @@ export const YppRewardSection: FC = () => {
                     key={tier.minimumSubscribers}
                     onClick={() => setRewardMultiplier(tier.multiplier)}
                   >
-                    &lt;{formatNumber(tierArray[idx + 1].minimumSubscribers)} subscribers
+                    &lt;
+                    <NumberFormat
+                      as="span"
+                      format="short"
+                      color="colorTextStrong"
+                      variant="h300"
+                      value={tierArray[idx + 1].minimumSubscribers}
+                    />{' '}
+                    subscribers
                   </BenefitsCardButton>
                 )
               }
@@ -87,7 +95,15 @@ export const YppRewardSection: FC = () => {
                     key={tier.minimumSubscribers}
                     onClick={() => setRewardMultiplier(tier.multiplier)}
                   >
-                    &gt;{formatNumber(tier.minimumSubscribers)} subscribers
+                    &gt;
+                    <NumberFormat
+                      as="span"
+                      format="short"
+                      color="colorTextStrong"
+                      variant="h300"
+                      value={tier.minimumSubscribers}
+                    />{' '}
+                    subscribers
                   </BenefitsCardButton>
                 )
               }
@@ -97,7 +113,21 @@ export const YppRewardSection: FC = () => {
                   key={tier.minimumSubscribers}
                   onClick={() => setRewardMultiplier(tier.multiplier)}
                 >
-                  {formatNumber(tier.minimumSubscribers)}-{formatNumber(tierArray[idx + 1].minimumSubscribers)}{' '}
+                  <NumberFormat
+                    as="span"
+                    format="short"
+                    color="colorTextStrong"
+                    variant="h300"
+                    value={tier.minimumSubscribers}
+                  />
+                  -
+                  <NumberFormat
+                    as="span"
+                    format="short"
+                    color="colorTextStrong"
+                    variant="h300"
+                    value={tierArray[idx + 1].minimumSubscribers}
+                  />{' '}
                   subscribers
                 </BenefitsCardButton>
               )
