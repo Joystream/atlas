@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { FC, MouseEvent, memo, useCallback } from 'react'
+import { FC, MouseEvent, memo, useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 
@@ -47,11 +47,19 @@ export const DELAYED_FADE_CLASSNAME = 'delayed-fade'
 
 export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
   ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onMintNftClick, titlesInSync }) => {
+    const [videoTitleMap, setVideoTitleMap] = useState('')
     const { video, loading } = useFullVideo(id ?? '', {
       skip: !id,
       onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTilePublisher', error, { video: { id } }),
-      pollInterval: titlesInSync?.length ? 1000 : undefined,
+      pollInterval: titlesInSync?.length && titlesInSync.includes(videoTitleMap) ? 1000 : undefined,
     })
+
+    useEffect(() => {
+      if (video?.title && !videoTitleMap) {
+        setVideoTitleMap(video.title)
+      }
+    }, [video?.title, videoTitleMap])
+
     const { isLoadingThumbnail, thumbnailPhotoUrl, videoHref } = useVideoTileSharedLogic(video)
     const navigate = useNavigate()
 

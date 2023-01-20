@@ -68,7 +68,10 @@ export const MyVideosView = () => {
     () => axios.get<YppVideoDto[]>(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${channelId}/videos`),
     {
       enabled: !!channelId,
-      refetchInterval: (data) => (data?.data.some((resource) => resource.state === 'UploadStarted') ? 1000 : false),
+      refetchInterval: (data) =>
+        data?.data.some((resource) => resource.state === 'UploadStarted' && resource.privacyStatus !== 'private')
+          ? 1000
+          : false,
     }
   )
   const [currentVideosTab, setCurrentVideosTab] = useState(0)
@@ -123,7 +126,11 @@ export const MyVideosView = () => {
   }))
 
   const videosTitlesInSync = useMemo((): string[] => {
-    return data?.data.filter((resource) => resource.state === 'UploadStarted').map((resource) => resource.title) ?? []
+    return (
+      data?.data
+        .filter((resource) => resource.state === 'UploadStarted' && resource.privacyStatus !== 'private')
+        .map((resource) => resource.title) ?? []
+    )
   }, [data])
 
   const videosWithSkeletonLoaders = [...(videos || []), ...placeholderItems]
