@@ -69,9 +69,9 @@ features:
         emoji: '😠'
         name: 'anger'
 content:
-  blockedDataObjectIds: ['698','699'] # Array of data object IDs that should be blocked from being displayed in the app
-  blockedVideoIds: ['280'] # Array of video IDs that should be blocked from being displayed in the app
-  blockedChannelIds: [] # Array of channel IDs that should be blocked from being displayed in the app
+  blockedDataObjectIds: ['698','699','735','605','600','597'] # Array of data object IDs that should be blocked from being displayed in the app
+  blockedVideoIds: ['280','235','236','237','294',  ] # Array of video IDs that should be blocked from being displayed in the app
+  blockedChannelIds: ['7742'] # Array of channel IDs that should be blocked from being displayed in the app
 
   officialJoystreamChannelId: null # ID of the official Joystream channel to display "Official Joystream updates" section on the homepage - can be set to null to disable this section
 
