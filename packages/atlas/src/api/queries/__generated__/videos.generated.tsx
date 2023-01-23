@@ -165,10 +165,6 @@ export type GetFullVideoQuery = {
       creatorRoyalty?: number | null
       lastSaleDate?: Date | null
       lastSalePrice?: string | null
-      video: {
-        __typename?: 'Video'
-        channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-      }
       owner:
         | {
             __typename?: 'NftOwnerChannel'
@@ -469,10 +465,6 @@ export type GetBasicVideosConnectionQuery = {
           creatorRoyalty?: number | null
           lastSaleDate?: Date | null
           lastSalePrice?: string | null
-          video: {
-            __typename?: 'Video'
-            channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-          }
           owner:
             | {
                 __typename?: 'NftOwnerChannel'
@@ -850,10 +842,6 @@ export type GetFullVideosConnectionQuery = {
           creatorRoyalty?: number | null
           lastSaleDate?: Date | null
           lastSalePrice?: string | null
-          video: {
-            __typename?: 'Video'
-            channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-          }
           owner:
             | {
                 __typename?: 'NftOwnerChannel'
@@ -1151,10 +1139,6 @@ export type GetBasicVideosQuery = {
       creatorRoyalty?: number | null
       lastSaleDate?: Date | null
       lastSalePrice?: string | null
-      video: {
-        __typename?: 'Video'
-        channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-      }
       owner:
         | {
             __typename?: 'NftOwnerChannel'
@@ -1523,10 +1507,6 @@ export type GetFullVideosQuery = {
       creatorRoyalty?: number | null
       lastSaleDate?: Date | null
       lastSalePrice?: string | null
-      video: {
-        __typename?: 'Video'
-        channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-      }
       owner:
         | {
             __typename?: 'NftOwnerChannel'
@@ -1829,10 +1809,6 @@ export type GetMostViewedVideosConnectionQuery = {
           creatorRoyalty?: number | null
           lastSaleDate?: Date | null
           lastSalePrice?: string | null
-          video: {
-            __typename?: 'Video'
-            channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-          }
           owner:
             | {
                 __typename?: 'NftOwnerChannel'
@@ -2108,10 +2084,6 @@ export type GetTop10VideosThisWeekQuery = {
           creatorRoyalty?: number | null
           lastSaleDate?: Date | null
           lastSalePrice?: string | null
-          video: {
-            __typename?: 'Video'
-            channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-          }
           owner:
             | {
                 __typename?: 'NftOwnerChannel'
@@ -2386,10 +2358,6 @@ export type GetTop10VideosThisMonthQuery = {
           creatorRoyalty?: number | null
           lastSaleDate?: Date | null
           lastSalePrice?: string | null
-          video: {
-            __typename?: 'Video'
-            channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-          }
           owner:
             | {
                 __typename?: 'NftOwnerChannel'

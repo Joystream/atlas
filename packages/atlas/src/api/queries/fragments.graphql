@@ -213,13 +213,6 @@ fragment BasicNftFields on OwnedNft {
   creatorRoyalty
   lastSaleDate
   lastSalePrice
-  video {
-    channel {
-      ownerMember {
-        id
-      }
-    }
-  }
   owner {
     # CHANGE: Replacement for `isOwnedByChannel` and `ownerMember` fields
     ... on NftOwnerChannel {

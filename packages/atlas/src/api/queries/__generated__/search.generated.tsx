@@ -112,10 +112,6 @@ export type SearchVideosQuery = {
         creatorRoyalty?: number | null
         lastSaleDate?: Date | null
         lastSalePrice?: string | null
-        video: {
-          __typename?: 'Video'
-          channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-        }
         owner:
           | {
               __typename?: 'NftOwnerChannel'

@@ -71,10 +71,6 @@ export type GetVideoHeroQuery = {
         creatorRoyalty?: number | null
         lastSaleDate?: Date | null
         lastSalePrice?: string | null
-        video: {
-          __typename?: 'Video'
-          channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-        }
         owner:
           | {
               __typename?: 'NftOwnerChannel'
@@ -349,10 +345,6 @@ export type GetAllCategoriesFeaturedVideosQuery = {
           creatorRoyalty?: number | null
           lastSaleDate?: Date | null
           lastSalePrice?: string | null
-          video: {
-            __typename?: 'Video'
-            channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-          }
           owner:
             | {
                 __typename?: 'NftOwnerChannel'
@@ -628,10 +620,6 @@ export type GetCategoriesFeaturedVideosQuery = {
           creatorRoyalty?: number | null
           lastSaleDate?: Date | null
           lastSalePrice?: string | null
-          video: {
-            __typename?: 'Video'
-            channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-          }
           owner:
             | {
                 __typename?: 'NftOwnerChannel'

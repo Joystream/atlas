@@ -229,68 +229,24 @@ query GetNftHistory($nftId: String!, $orderBy: [EventOrderByInput!] = [timestamp
     timestamp # CHANGE: `timestamp` now used instead of `createdAt` (which is no longer available)
     data {
       ... on NftIssuedEventData {
-        # do we actually need ownerMember?
-        nft {
-          video {
-            channel {
-              ownerMember {
-                id
-              }
-            }
-          }
-        }
         nftOwner {
           ...BasicNftOwnerFields
         }
       }
 
       ... on OpenAuctionStartedEventData {
-        # do we actually need ownerMember?
-        auction {
-          nft {
-            video {
-              channel {
-                ownerMember {
-                  ...BasicMembershipFields
-                }
-              }
-            }
-          }
-        }
         nftOwner {
           ...BasicNftOwnerFields
         }
       }
 
       ... on EnglishAuctionStartedEventData {
-        # do we actually need ownerMember?
-        auction {
-          nft {
-            video {
-              channel {
-                ownerMember {
-                  ...BasicMembershipFields
-                }
-              }
-            }
-          }
-        }
         nftOwner {
           ...BasicNftOwnerFields
         }
       }
 
       ... on NftSellOrderMadeEventData {
-        # do we actually need ownerMember?
-        nft {
-          video {
-            channel {
-              ownerMember {
-                id
-              }
-            }
-          }
-        }
         price
         nftOwner {
           ...BasicNftOwnerFields
@@ -637,12 +593,6 @@ query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [EventOrderBy
         auction {
           nft {
             video {
-              # do we actually need ownerMember?
-              channel {
-                ownerMember {
-                  ...BasicMembershipFields
-                }
-              }
               id
               title
               thumbnailPhoto {
@@ -659,12 +609,6 @@ query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [EventOrderBy
         auction {
           nft {
             video {
-              # do we actually need ownerMember?
-              channel {
-                ownerMember {
-                  ...BasicMembershipFields
-                }
-              }
               id
               title
               thumbnailPhoto {
@@ -728,12 +672,6 @@ query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [EventOrderBy
         auction {
           nft {
             video {
-              # do we actually need ownerMember?
-              channel {
-                ownerMember {
-                  ...BasicMembershipFields
-                }
-              }
               id
               title
               thumbnailPhoto {

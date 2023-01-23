@@ -1173,49 +1173,6 @@ export type GetNftHistoryQuery = {
         }
       | {
           __typename?: 'EnglishAuctionStartedEventData'
-          auction: {
-            __typename?: 'Auction'
-            nft: {
-              __typename?: 'OwnedNft'
-              video: {
-                __typename?: 'Video'
-                channel: {
-                  __typename?: 'Channel'
-                  ownerMember?: {
-                    __typename?: 'Membership'
-                    id: string
-                    handle: string
-                    metadata?: {
-                      __typename?: 'MemberMetadata'
-                      about?: string | null
-                      avatar?:
-                        | {
-                            __typename?: 'AvatarObject'
-                            avatarObject: {
-                              __typename?: 'StorageDataObject'
-                              id: string
-                              createdAt: Date
-                              size: string
-                              isAccepted: boolean
-                              ipfsHash: string
-                              storageBag: { __typename?: 'StorageBag'; id: string }
-                              type?:
-                                | { __typename: 'DataObjectTypeChannelAvatar' }
-                                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                                | { __typename: 'DataObjectTypeVideoMedia' }
-                                | { __typename: 'DataObjectTypeVideoSubtitle' }
-                                | { __typename: 'DataObjectTypeVideoThumbnail' }
-                                | null
-                            }
-                          }
-                        | { __typename?: 'AvatarUri'; avatarUri: string }
-                        | null
-                    } | null
-                  } | null
-                }
-              }
-            }
-          }
           nftOwner:
             | {
                 __typename: 'NftOwnerChannel'
@@ -1327,13 +1284,6 @@ export type GetNftHistoryQuery = {
         }
       | {
           __typename?: 'NftIssuedEventData'
-          nft: {
-            __typename?: 'OwnedNft'
-            video: {
-              __typename?: 'Video'
-              channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-            }
-          }
           nftOwner:
             | {
                 __typename: 'NftOwnerChannel'
@@ -1410,13 +1360,6 @@ export type GetNftHistoryQuery = {
       | {
           __typename?: 'NftSellOrderMadeEventData'
           price: string
-          nft: {
-            __typename?: 'OwnedNft'
-            video: {
-              __typename?: 'Video'
-              channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-            }
-          }
           nftOwner:
             | {
                 __typename: 'NftOwnerChannel'
@@ -1602,49 +1545,6 @@ export type GetNftHistoryQuery = {
         }
       | {
           __typename?: 'OpenAuctionStartedEventData'
-          auction: {
-            __typename?: 'Auction'
-            nft: {
-              __typename?: 'OwnedNft'
-              video: {
-                __typename?: 'Video'
-                channel: {
-                  __typename?: 'Channel'
-                  ownerMember?: {
-                    __typename?: 'Membership'
-                    id: string
-                    handle: string
-                    metadata?: {
-                      __typename?: 'MemberMetadata'
-                      about?: string | null
-                      avatar?:
-                        | {
-                            __typename?: 'AvatarObject'
-                            avatarObject: {
-                              __typename?: 'StorageDataObject'
-                              id: string
-                              createdAt: Date
-                              size: string
-                              isAccepted: boolean
-                              ipfsHash: string
-                              storageBag: { __typename?: 'StorageBag'; id: string }
-                              type?:
-                                | { __typename: 'DataObjectTypeChannelAvatar' }
-                                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                                | { __typename: 'DataObjectTypeVideoMedia' }
-                                | { __typename: 'DataObjectTypeVideoSubtitle' }
-                                | { __typename: 'DataObjectTypeVideoThumbnail' }
-                                | null
-                            }
-                          }
-                        | { __typename?: 'AvatarUri'; avatarUri: string }
-                        | null
-                    } | null
-                  } | null
-                }
-              }
-            }
-          }
           nftOwner:
             | {
                 __typename: 'NftOwnerChannel'
@@ -1984,40 +1884,6 @@ export type GetNftActivitiesQuery = {
                 __typename?: 'Video'
                 id: string
                 title?: string | null
-                channel: {
-                  __typename?: 'Channel'
-                  ownerMember?: {
-                    __typename?: 'Membership'
-                    id: string
-                    handle: string
-                    metadata?: {
-                      __typename?: 'MemberMetadata'
-                      about?: string | null
-                      avatar?:
-                        | {
-                            __typename?: 'AvatarObject'
-                            avatarObject: {
-                              __typename?: 'StorageDataObject'
-                              id: string
-                              createdAt: Date
-                              size: string
-                              isAccepted: boolean
-                              ipfsHash: string
-                              storageBag: { __typename?: 'StorageBag'; id: string }
-                              type?:
-                                | { __typename: 'DataObjectTypeChannelAvatar' }
-                                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                                | { __typename: 'DataObjectTypeVideoMedia' }
-                                | { __typename: 'DataObjectTypeVideoSubtitle' }
-                                | { __typename: 'DataObjectTypeVideoThumbnail' }
-                                | null
-                            }
-                          }
-                        | { __typename?: 'AvatarUri'; avatarUri: string }
-                        | null
-                    } | null
-                  } | null
-                }
                 thumbnailPhoto?: {
                   __typename?: 'StorageDataObject'
                   id: string
@@ -2595,40 +2461,6 @@ export type GetNftActivitiesQuery = {
                 __typename?: 'Video'
                 id: string
                 title?: string | null
-                channel: {
-                  __typename?: 'Channel'
-                  ownerMember?: {
-                    __typename?: 'Membership'
-                    id: string
-                    handle: string
-                    metadata?: {
-                      __typename?: 'MemberMetadata'
-                      about?: string | null
-                      avatar?:
-                        | {
-                            __typename?: 'AvatarObject'
-                            avatarObject: {
-                              __typename?: 'StorageDataObject'
-                              id: string
-                              createdAt: Date
-                              size: string
-                              isAccepted: boolean
-                              ipfsHash: string
-                              storageBag: { __typename?: 'StorageBag'; id: string }
-                              type?:
-                                | { __typename: 'DataObjectTypeChannelAvatar' }
-                                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                                | { __typename: 'DataObjectTypeVideoMedia' }
-                                | { __typename: 'DataObjectTypeVideoSubtitle' }
-                                | { __typename: 'DataObjectTypeVideoThumbnail' }
-                                | null
-                            }
-                          }
-                        | { __typename?: 'AvatarUri'; avatarUri: string }
-                        | null
-                    } | null
-                  } | null
-                }
                 thumbnailPhoto?: {
                   __typename?: 'StorageDataObject'
                   id: string
@@ -3184,40 +3016,6 @@ export type GetNftActivitiesQuery = {
                 __typename?: 'Video'
                 id: string
                 title?: string | null
-                channel: {
-                  __typename?: 'Channel'
-                  ownerMember?: {
-                    __typename?: 'Membership'
-                    id: string
-                    handle: string
-                    metadata?: {
-                      __typename?: 'MemberMetadata'
-                      about?: string | null
-                      avatar?:
-                        | {
-                            __typename?: 'AvatarObject'
-                            avatarObject: {
-                              __typename?: 'StorageDataObject'
-                              id: string
-                              createdAt: Date
-                              size: string
-                              isAccepted: boolean
-                              ipfsHash: string
-                              storageBag: { __typename?: 'StorageBag'; id: string }
-                              type?:
-                                | { __typename: 'DataObjectTypeChannelAvatar' }
-                                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                                | { __typename: 'DataObjectTypeVideoMedia' }
-                                | { __typename: 'DataObjectTypeVideoSubtitle' }
-                                | { __typename: 'DataObjectTypeVideoThumbnail' }
-                                | null
-                            }
-                          }
-                        | { __typename?: 'AvatarUri'; avatarUri: string }
-                        | null
-                    } | null
-                  } | null
-                }
                 thumbnailPhoto?: {
                   __typename?: 'StorageDataObject'
                   id: string
@@ -3569,61 +3367,21 @@ export const GetNftHistoryDocument = gql`
       timestamp
       data {
         ... on NftIssuedEventData {
-          nft {
-            video {
-              channel {
-                ownerMember {
-                  id
-                }
-              }
-            }
-          }
           nftOwner {
             ...BasicNftOwnerFields
           }
         }
         ... on OpenAuctionStartedEventData {
-          auction {
-            nft {
-              video {
-                channel {
-                  ownerMember {
-                    ...BasicMembershipFields
-                  }
-                }
-              }
-            }
-          }
           nftOwner {
             ...BasicNftOwnerFields
           }
         }
         ... on EnglishAuctionStartedEventData {
-          auction {
-            nft {
-              video {
-                channel {
-                  ownerMember {
-                    ...BasicMembershipFields
-                  }
-                }
-              }
-            }
-          }
           nftOwner {
             ...BasicNftOwnerFields
           }
         }
         ... on NftSellOrderMadeEventData {
-          nft {
-            video {
-              channel {
-                ownerMember {
-                  id
-                }
-              }
-            }
-          }
           price
           nftOwner {
             ...BasicNftOwnerFields
@@ -3987,11 +3745,6 @@ export const GetNftActivitiesDocument = gql`
           auction {
             nft {
               video {
-                channel {
-                  ownerMember {
-                    ...BasicMembershipFields
-                  }
-                }
                 id
                 title
                 thumbnailPhoto {
@@ -4008,11 +3761,6 @@ export const GetNftActivitiesDocument = gql`
           auction {
             nft {
               video {
-                channel {
-                  ownerMember {
-                    ...BasicMembershipFields
-                  }
-                }
                 id
                 title
                 thumbnailPhoto {
@@ -4076,11 +3824,6 @@ export const GetNftActivitiesDocument = gql`
           auction {
             nft {
               video {
-                channel {
-                  ownerMember {
-                    ...BasicMembershipFields
-                  }
-                }
                 id
                 title
                 thumbnailPhoto {

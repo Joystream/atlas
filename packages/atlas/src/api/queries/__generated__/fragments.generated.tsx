@@ -442,10 +442,6 @@ export type BasicVideoFieldsFragment = {
     creatorRoyalty?: number | null
     lastSaleDate?: Date | null
     lastSalePrice?: string | null
-    video: {
-      __typename?: 'Video'
-      channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-    }
     owner:
       | {
           __typename?: 'NftOwnerChannel'
@@ -804,10 +800,6 @@ export type FullVideoFieldsFragment = {
     creatorRoyalty?: number | null
     lastSaleDate?: Date | null
     lastSalePrice?: string | null
-    video: {
-      __typename?: 'Video'
-      channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-    }
     owner:
       | {
           __typename?: 'NftOwnerChannel'
@@ -1042,10 +1034,6 @@ export type BasicNftFieldsFragment = {
   creatorRoyalty?: number | null
   lastSaleDate?: Date | null
   lastSalePrice?: string | null
-  video: {
-    __typename?: 'Video'
-    channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-  }
   owner:
     | {
         __typename?: 'NftOwnerChannel'
@@ -1273,7 +1261,6 @@ export type FullNftFieldsFragment = {
       followsNum: number
       rewardAccount: string
       channelStateBloatBond: string
-      ownerMember?: { __typename?: 'Membership'; id: string } | null
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
@@ -1314,10 +1301,6 @@ export type FullNftFieldsFragment = {
       creatorRoyalty?: number | null
       lastSaleDate?: Date | null
       lastSalePrice?: string | null
-      video: {
-        __typename?: 'Video'
-        channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-      }
       owner:
         | {
             __typename?: 'NftOwnerChannel'
@@ -2218,10 +2201,6 @@ export type BasicVideoFeaturedInCategoryFragment = {
       creatorRoyalty?: number | null
       lastSaleDate?: Date | null
       lastSalePrice?: string | null
-      video: {
-        __typename?: 'Video'
-        channel: { __typename?: 'Channel'; ownerMember?: { __typename?: 'Membership'; id: string } | null }
-      }
       owner:
         | {
             __typename?: 'NftOwnerChannel'
@@ -2584,13 +2563,6 @@ export const BasicNftFieldsFragmentDoc = gql`
     creatorRoyalty
     lastSaleDate
     lastSalePrice
-    video {
-      channel {
-        ownerMember {
-          id
-        }
-      }
-    }
     owner {
       ... on NftOwnerChannel {
         channel {
