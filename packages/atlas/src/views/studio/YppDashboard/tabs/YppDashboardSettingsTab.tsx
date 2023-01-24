@@ -156,43 +156,45 @@ export const YppDashboardSettingsTab = () => {
         timestamp: Date.now(),
       }
 
-      const signaturePromise = joystream.signMessage({
+      closeModal()
+      const signature = await joystream.signMessage({
         data: JSON.stringify(message),
         type: 'payload',
       })
 
-      const completedTransactionPromise = handleTransaction({
-        txFactory: async (updateStatus) => {
-          return (await joystream.extrinsics).updateChannel(
-            channelId,
-            memberId,
-            { ownerAccount: memberId },
-            {},
-            [],
-            dataObjectStateBloatBondValue.toString(),
-            channelBucketsCount.toString(),
-            null,
-            proxyCallback(updateStatus)
-          )
-        },
-      })
-
-      const [completed, signature] = await Promise.all([completedTransactionPromise, signaturePromise])
-
-      const data = await axios.put(
-        `${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${currentChannel.joystreamChannelId}/optout`,
-        { message, signature }
-      )
-      if (data.status === 200 && completed) {
-        displaySnackbar({
-          title: 'You left the progam',
-          description:
-            'You are no longer member of the YouTube Partner Program. You can now connect your YouTube channel with another Joystream channel.',
-          iconType: 'success',
+      if (signature) {
+        const completed = await handleTransaction({
+          txFactory: async (updateStatus) => {
+            return (await joystream.extrinsics).updateChannel(
+              channelId,
+              memberId,
+              { ownerAccount: memberId },
+              {},
+              [],
+              dataObjectStateBloatBondValue.toString(),
+              channelBucketsCount.toString(),
+              null,
+              proxyCallback(updateStatus)
+            )
+          },
         })
+
+        if (completed) {
+          const data = await axios.put(
+            `${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${currentChannel.joystreamChannelId}/optout`,
+            { message, signature }
+          )
+          if (data.status === 200) {
+            displaySnackbar({
+              title: 'You left the progam',
+              description:
+                'You are no longer member of the YouTube Partner Program. You can now connect your YouTube channel with another Joystream channel.',
+              iconType: 'success',
+            })
+          }
+          navigate(absoluteRoutes.studio.ypp())
+        }
       }
-      navigate(absoluteRoutes.studio.ypp())
-      closeModal()
     } catch (e) {
       if (e.message === 'Cancelled') {
         ConsoleLogger.warn('Sign cancelled')
@@ -237,7 +239,7 @@ export const YppDashboardSettingsTab = () => {
     primaryButton: {
       text: 'Leave the program',
       variant: 'destructive' as const,
-      onClick: () => handleLeaveTx(),
+      onClick: handleLeaveTx,
     },
     secondaryButton: {
       text: 'Cancel',
