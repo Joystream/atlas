@@ -14,6 +14,7 @@ export type YppSyncedChannel = {
   description: string
   aggregatedStats: number
   shouldBeIngested: boolean
+  yppStatus: 'OptedOut' | 'Active'
   isSuspended: boolean
   joystreamChannelId: number
   videoCategoryId: string
@@ -49,26 +50,34 @@ export const useGetYppSyncedChannels = () => {
     }
     // TODO We should do only one request per given memberId
     // refactor once https://github.com/Joystream/youtube-synch/issues/55 is done
-    const syncedChannels = await Promise.all(
-      channels.map(async (channel) => {
-        try {
-          const response = await axios.get<YppSyncedChannel>(`${YPP_SYNC_URL}/channels/${channel.id}`)
-          return response?.data
-        } catch (error) {
-          return undefined
-        }
-      })
-    )
-    return syncedChannels.filter((channel): channel is YppSyncedChannel => !!channel)
+    try {
+      setIsLoading(true)
+      const syncedChannels = await Promise.all(
+        channels.map(async (channel) => {
+          try {
+            const response = await axios.get<YppSyncedChannel>(`${YPP_SYNC_URL}/channels/${channel.id}`)
+            return response?.data
+          } catch (error) {
+            return
+          }
+        })
+      )
+      const fetchedChannels = syncedChannels.filter(
+        (channel): channel is YppSyncedChannel => !!channel && channel.yppStatus === 'Active'
+      )
+      setSyncedChannels(fetchedChannels)
+
+      return fetchedChannels
+    } catch (error) {
+      SentryLogger.error('Error while updating YPP setting: ', 'useGetYppSyncedChannels', error)
+    } finally {
+      setIsLoading(false)
+    }
   }, [channels])
 
   useEffect(() => {
     if (location.pathname.includes('studio') && !channels.length) return
-    setIsLoading(true)
-    getSyncedChannels().then((channels) => {
-      channels && setSyncedChannels(channels)
-      setIsLoading(false)
-    })
+    getSyncedChannels()
   }, [channels.length, getSyncedChannels, location.pathname])
 
   return {
