@@ -1,5 +1,5 @@
 import BN from 'bn.js'
-import { differenceInCalendarDays, differenceInSeconds, parseISO } from 'date-fns'
+import { differenceInCalendarDays, differenceInSeconds } from 'date-fns'
 import { useEffect } from 'react'
 
 import { useBids } from '@/api/hooks/bids'
@@ -11,6 +11,7 @@ import { useNftState } from '@/hooks/useNftState'
 import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
+import { convertDateFormat } from '@/utils/time'
 
 import { NftHistoryEntry } from './NftHistory'
 
@@ -170,10 +171,6 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
   }
 
   return null
-}
-
-const convertDateFormat = (timestamp: Date | string) => {
-  return timestamp instanceof Date ? timestamp : parseISO(timestamp)
 }
 
 export const useNftHistoryEntries = (videoId: string | null, opts?: Parameters<typeof useNftHistory>[1]) => {

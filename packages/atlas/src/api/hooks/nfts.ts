@@ -115,6 +115,7 @@ export const getNftStatus = (
 export const useNft = (id: string, opts?: QueryHookOptions<GetNftQuery, GetNftQueryVariables>) => {
   const { data, ...rest } = useGetNftQuery({ variables: { id }, skip: !id, ...opts })
   const nft = data?.ownedNftById
+  console.log(nft)
 
   return {
     nft,

@@ -5,6 +5,7 @@ import * as Types from './baseTypes.generated'
 import {
   BasicMembershipFieldsFragmentDoc,
   BasicNftOwnerFieldsFragmentDoc,
+  BasicVideoActivityFieldsFragmentDoc,
   StorageDataObjectFieldsFragmentDoc,
 } from './fragments.generated'
 
@@ -2928,7 +2929,22 @@ export type GetNftActivitiesQuery = {
                   __typename?: 'Video'
                   id: string
                   title?: string | null
-                  thumbnailPhoto?: { __typename?: 'StorageDataObject'; id: string } | null
+                  thumbnailPhoto?: {
+                    __typename?: 'StorageDataObject'
+                    id: string
+                    createdAt: Date
+                    size: string
+                    isAccepted: boolean
+                    ipfsHash: string
+                    storageBag: { __typename?: 'StorageBag'; id: string }
+                    type?:
+                      | { __typename: 'DataObjectTypeChannelAvatar' }
+                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                      | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoSubtitle' }
+                      | { __typename: 'DataObjectTypeVideoThumbnail' }
+                      | null
+                  } | null
                 }
               }
             }
@@ -3517,17 +3533,29 @@ export const GetNftActivitiesDocument = gql`
     }
     nftsSold: eventsConnection(
       where: {
-        data: {
-          isTypeOf_in: [
-            "EnglishAuctionSettledEventData"
-            "BidMadeCompletingAuctionEventData"
-            "OpenAuctionBidAcceptedEventData"
-            "NftBoughtEventData"
-          ]
-        }
         OR: [
-          { data: { previousNftOwner: { member: { id_eq: $memberId } } } }
-          { data: { previousNftOwner: { channel: { ownerMember: { id_eq: $memberId } } } } }
+          {
+            data: {
+              isTypeOf_in: [
+                "EnglishAuctionSettledEventData"
+                "BidMadeCompletingAuctionEventData"
+                "OpenAuctionBidAcceptedEventData"
+                "NftBoughtEventData"
+              ]
+              previousNftOwner: { member: { id_eq: $memberId } }
+            }
+          }
+          {
+            data: {
+              isTypeOf_in: [
+                "EnglishAuctionSettledEventData"
+                "BidMadeCompletingAuctionEventData"
+                "OpenAuctionBidAcceptedEventData"
+                "NftBoughtEventData"
+              ]
+              previousNftOwner: { channel: { ownerMember: { id_eq: $memberId } } }
+            }
+          }
         ]
       }
       orderBy: $orderBy
@@ -3536,10 +3564,9 @@ export const GetNftActivitiesDocument = gql`
     }
     nftsIssued: eventsConnection(
       where: {
-        data: { isTypeOf_eq: "NftIssuedEventData" }
         OR: [
-          { data: { nftOwner: { member: { id_eq: $memberId } } } }
-          { data: { nftOwner: { channel: { ownerMember: { id_eq: $memberId } } } } }
+          { data: { isTypeOf_eq: "NftIssuedEventData", nftOwner: { channel: { ownerMember: { id_eq: $memberId } } } } }
+          { data: { isTypeOf_eq: "NftIssuedEventData", nftOwner: { member: { id_eq: $memberId } } } }
         ]
       }
       orderBy: $orderBy
@@ -3647,11 +3674,7 @@ export const GetNftActivitiesDocument = gql`
             auction {
               nft {
                 video {
-                  id
-                  title
-                  thumbnailPhoto {
-                    ...StorageDataObjectFields
-                  }
+                  ...BasicVideoActivityFields
                 }
               }
             }
@@ -3669,11 +3692,7 @@ export const GetNftActivitiesDocument = gql`
             auction {
               nft {
                 video {
-                  id
-                  title
-                  thumbnailPhoto {
-                    ...StorageDataObjectFields
-                  }
+                  ...BasicVideoActivityFields
                 }
               }
             }
@@ -3688,11 +3707,7 @@ export const GetNftActivitiesDocument = gql`
           }
           nft {
             video {
-              id
-              title
-              thumbnailPhoto {
-                ...StorageDataObjectFields
-              }
+              ...BasicVideoActivityFields
             }
           }
           price
@@ -3708,11 +3723,7 @@ export const GetNftActivitiesDocument = gql`
             auction {
               nft {
                 video {
-                  id
-                  title
-                  thumbnailPhoto {
-                    ...StorageDataObjectFields
-                  }
+                  ...BasicVideoActivityFields
                 }
               }
             }
@@ -3728,11 +3739,7 @@ export const GetNftActivitiesDocument = gql`
             auction {
               nft {
                 video {
-                  id
-                  title
-                  thumbnailPhoto {
-                    id
-                  }
+                  ...BasicVideoActivityFields
                 }
               }
             }
@@ -3745,11 +3752,7 @@ export const GetNftActivitiesDocument = gql`
           auction {
             nft {
               video {
-                id
-                title
-                thumbnailPhoto {
-                  ...StorageDataObjectFields
-                }
+                ...BasicVideoActivityFields
               }
             }
           }
@@ -3761,11 +3764,7 @@ export const GetNftActivitiesDocument = gql`
           auction {
             nft {
               video {
-                id
-                title
-                thumbnailPhoto {
-                  ...StorageDataObjectFields
-                }
+                ...BasicVideoActivityFields
               }
             }
           }
@@ -3777,11 +3776,7 @@ export const GetNftActivitiesDocument = gql`
           price
           nft {
             video {
-              id
-              title
-              thumbnailPhoto {
-                ...StorageDataObjectFields
-              }
+              ...BasicVideoActivityFields
             }
           }
           nftOwner {
@@ -3796,11 +3791,7 @@ export const GetNftActivitiesDocument = gql`
             auction {
               nft {
                 video {
-                  id
-                  title
-                  thumbnailPhoto {
-                    ...StorageDataObjectFields
-                  }
+                  ...BasicVideoActivityFields
                 }
               }
             }
@@ -3824,11 +3815,7 @@ export const GetNftActivitiesDocument = gql`
           auction {
             nft {
               video {
-                id
-                title
-                thumbnailPhoto {
-                  ...StorageDataObjectFields
-                }
+                ...BasicVideoActivityFields
               }
             }
           }
@@ -3840,11 +3827,7 @@ export const GetNftActivitiesDocument = gql`
           newPrice
           nft {
             video {
-              id
-              title
-              thumbnailPhoto {
-                ...StorageDataObjectFields
-              }
+              ...BasicVideoActivityFields
             }
           }
           nftOwner {
@@ -3854,11 +3837,7 @@ export const GetNftActivitiesDocument = gql`
         ... on NftIssuedEventData {
           nft {
             video {
-              id
-              title
-              thumbnailPhoto {
-                ...StorageDataObjectFields
-              }
+              ...BasicVideoActivityFields
             }
           }
           nftOwner {
@@ -3870,6 +3849,7 @@ export const GetNftActivitiesDocument = gql`
   }
   ${BasicNftOwnerFieldsFragmentDoc}
   ${BasicMembershipFieldsFragmentDoc}
+  ${BasicVideoActivityFieldsFragmentDoc}
   ${StorageDataObjectFieldsFragmentDoc}
 `
 

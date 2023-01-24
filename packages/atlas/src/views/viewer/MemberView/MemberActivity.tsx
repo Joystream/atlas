@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { useNavigate } from 'react-router'
 
+import { EventOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { StorageDataObjectFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionBid, SvgActionBuyNow, SvgActionMint, SvgActionSell } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
@@ -91,12 +92,12 @@ const getDescription = (activity: ActivitiesRecord) => {
 
 type MemberActivityProps = {
   memberId?: string
-  sort?: 'createdAt_ASC' | 'createdAt_DESC'
+  sort?: EventOrderByInput
 }
 
 const PLACEHOLDERS_COUNT = 8
 
-export const MemberActivity: FC<MemberActivityProps> = ({ memberId, sort = 'createdAt_DESC' }) => {
+export const MemberActivity: FC<MemberActivityProps> = ({ memberId, sort = EventOrderByInput.TimestampDesc }) => {
   const { activities, loading, activitiesTotalCounts } = useActivities(memberId, sort)
   const navigate = useNavigate()
   const placeholderItems = Array.from({ length: PLACEHOLDERS_COUNT }, () => ({ id: undefined }))
@@ -116,7 +117,7 @@ export const MemberActivity: FC<MemberActivityProps> = ({ memberId, sort = 'crea
                     onItemClick={() => navigate(absoluteRoutes.viewer.video(activity.video?.id))}
                     date={activity?.date}
                     type={activity?.type}
-                    title={activity?.video?.title}
+                    title={activity?.video?.title || ''}
                     description={getDescription(activity)}
                     thumbnailPhoto={activity.video?.thumbnailPhoto}
                   />

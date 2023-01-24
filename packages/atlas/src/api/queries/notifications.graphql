@@ -358,17 +358,29 @@ query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [EventOrderBy
 
   nftsSold: eventsConnection(
     where: {
-      data: {
-        isTypeOf_in: [
-          "EnglishAuctionSettledEventData"
-          "BidMadeCompletingAuctionEventData"
-          "OpenAuctionBidAcceptedEventData"
-          "NftBoughtEventData"
-        ]
-      }
       OR: [
-        { data: { previousNftOwner: { member: { id_eq: $memberId } } } }
-        { data: { previousNftOwner: { channel: { ownerMember: { id_eq: $memberId } } } } }
+        {
+          data: {
+            isTypeOf_in: [
+              "EnglishAuctionSettledEventData"
+              "BidMadeCompletingAuctionEventData"
+              "OpenAuctionBidAcceptedEventData"
+              "NftBoughtEventData"
+            ]
+            previousNftOwner: { member: { id_eq: $memberId } }
+          }
+        }
+        {
+          data: {
+            isTypeOf_in: [
+              "EnglishAuctionSettledEventData"
+              "BidMadeCompletingAuctionEventData"
+              "OpenAuctionBidAcceptedEventData"
+              "NftBoughtEventData"
+            ]
+            previousNftOwner: { channel: { ownerMember: { id_eq: $memberId } } }
+          }
+        }
       ]
     }
     orderBy: $orderBy
@@ -378,10 +390,9 @@ query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [EventOrderBy
 
   nftsIssued: eventsConnection(
     where: {
-      data: { isTypeOf_eq: "NftIssuedEventData" }
       OR: [
-        { data: { nftOwner: { member: { id_eq: $memberId } } } }
-        { data: { nftOwner: { channel: { ownerMember: { id_eq: $memberId } } } } }
+        { data: { isTypeOf_eq: "NftIssuedEventData", nftOwner: { channel: { ownerMember: { id_eq: $memberId } } } } }
+        { data: { isTypeOf_eq: "NftIssuedEventData", nftOwner: { member: { id_eq: $memberId } } } }
       ]
     }
     orderBy: $orderBy
@@ -495,11 +506,7 @@ query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [EventOrderBy
           auction {
             nft {
               video {
-                id
-                title
-                thumbnailPhoto {
-                  ...StorageDataObjectFields
-                }
+                ...BasicVideoActivityFields
               }
             }
           }
@@ -517,11 +524,7 @@ query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [EventOrderBy
           auction {
             nft {
               video {
-                id
-                title
-                thumbnailPhoto {
-                  ...StorageDataObjectFields
-                }
+                ...BasicVideoActivityFields
               }
             }
           }
@@ -536,11 +539,7 @@ query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [EventOrderBy
         }
         nft {
           video {
-            id
-            title
-            thumbnailPhoto {
-              ...StorageDataObjectFields
-            }
+            ...BasicVideoActivityFields
           }
         }
         price
@@ -556,11 +555,7 @@ query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [EventOrderBy
           auction {
             nft {
               video {
-                id
-                title
-                thumbnailPhoto {
-                  ...StorageDataObjectFields
-                }
+                ...BasicVideoActivityFields
               }
             }
           }
@@ -576,11 +571,7 @@ query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [EventOrderBy
           auction {
             nft {
               video {
-                id
-                title
-                thumbnailPhoto {
-                  id
-                }
+                ...BasicVideoActivityFields
               }
             }
           }
@@ -593,11 +584,7 @@ query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [EventOrderBy
         auction {
           nft {
             video {
-              id
-              title
-              thumbnailPhoto {
-                ...StorageDataObjectFields
-              }
+              ...BasicVideoActivityFields
             }
           }
         }
@@ -609,11 +596,7 @@ query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [EventOrderBy
         auction {
           nft {
             video {
-              id
-              title
-              thumbnailPhoto {
-                ...StorageDataObjectFields
-              }
+              ...BasicVideoActivityFields
             }
           }
         }
@@ -625,11 +608,7 @@ query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [EventOrderBy
         price
         nft {
           video {
-            id
-            title
-            thumbnailPhoto {
-              ...StorageDataObjectFields
-            }
+            ...BasicVideoActivityFields
           }
         }
         nftOwner {
@@ -644,11 +623,7 @@ query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [EventOrderBy
           auction {
             nft {
               video {
-                id
-                title
-                thumbnailPhoto {
-                  ...StorageDataObjectFields
-                }
+                ...BasicVideoActivityFields
               }
             }
           }
@@ -672,11 +647,7 @@ query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [EventOrderBy
         auction {
           nft {
             video {
-              id
-              title
-              thumbnailPhoto {
-                ...StorageDataObjectFields
-              }
+              ...BasicVideoActivityFields
             }
           }
         }
@@ -688,11 +659,7 @@ query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [EventOrderBy
         newPrice
         nft {
           video {
-            id
-            title
-            thumbnailPhoto {
-              ...StorageDataObjectFields
-            }
+            ...BasicVideoActivityFields
           }
         }
         nftOwner {
@@ -702,11 +669,7 @@ query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [EventOrderBy
       ... on NftIssuedEventData {
         nft {
           video {
-            id
-            title
-            thumbnailPhoto {
-              ...StorageDataObjectFields
-            }
+            ...BasicVideoActivityFields
           }
         }
         nftOwner {

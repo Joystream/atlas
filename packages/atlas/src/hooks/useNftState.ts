@@ -17,7 +17,14 @@ export const useNftState = (nft?: BasicNftFieldsFragment | null) => {
     (nft?.transactionalStatus?.__typename === 'TransactionalStatusAuction' && nft.transactionalStatus.auction) || null
 
   const hasTimersLoaded = !!currentBlock && !!currentBlockMsTimestamp
-  const isOwner = nft?.owner.__typename === 'NftOwnerMember' ? nft.owner.member.id === activeMembership?.id : false
+
+  const isOwnerMember =
+    nft?.owner.__typename === 'NftOwnerMember' ? nft.owner.member.id === activeMembership?.id : false
+  const isOwnerChannel =
+    nft?.owner.__typename === 'NftOwnerChannel'
+      ? activeMembership?.channels.map((el) => el.id).includes(nft.owner.channel.id)
+      : false
+  const isOwner = isOwnerChannel || isOwnerMember
   const isBuyNow = nft?.transactionalStatus?.__typename === 'TransactionalStatusBuyNow'
   const isIdle = nft?.transactionalStatus?.__typename === 'TransactionalStatusIdle'
   const englishAuction = auction?.auctionType.__typename === 'AuctionTypeEnglish' && auction.auctionType

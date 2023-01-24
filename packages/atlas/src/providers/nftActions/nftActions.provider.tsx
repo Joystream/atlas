@@ -48,6 +48,8 @@ export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
         .sort((bidA, bidB) => bidB.amount.cmp(bidA.amount))
     : []
 
+  console.log(mappedBids)
+
   const closeNftAction = useCallback(() => {
     setCurrentAction(null)
     setIsBuyNowClicked(false)
@@ -67,14 +69,19 @@ export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
     [closeNftAction, currentAction, currentNftId, isBuyNowClicked, transactions]
   )
 
+  const ownerMember = nft?.owner.__typename === 'NftOwnerMember' && nft.owner.member
+  const ownerChannel = nft?.owner.__typename === 'NftOwnerChannel' && nft.owner.channel.id
+
   return (
     <NftActionsContext.Provider value={value}>
       <AcceptBidDialog
         isOpen={currentAction === 'accept-bid'}
         onModalClose={closeNftAction}
+        // todo fix bids
         bids={mappedBids}
         onAcceptBid={transactions.acceptNftBid}
         nftId={currentNftId}
+        // todo fix ownerId
         ownerId={nft?.owner.__typename === 'NftOwnerMember' ? nft.owner.member.id : undefined}
       />
       <ChangePriceDialog

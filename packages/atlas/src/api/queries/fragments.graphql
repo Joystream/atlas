@@ -386,3 +386,11 @@ fragment BasicVideoFeaturedInCategory on VideoFeaturedInCategory {
     ...BasicVideoFields
   }
 }
+
+fragment BasicVideoActivityFields on Video {
+  id
+  title
+  thumbnailPhoto {
+    ...StorageDataObjectFields
+  }
+}

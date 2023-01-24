@@ -2406,6 +2406,28 @@ export type BasicVideoFeaturedInCategoryFragment = {
   }
 }
 
+export type BasicVideoActivityFieldsFragment = {
+  __typename?: 'Video'
+  id: string
+  title?: string | null
+  thumbnailPhoto?: {
+    __typename?: 'StorageDataObject'
+    id: string
+    createdAt: Date
+    size: string
+    isAccepted: boolean
+    ipfsHash: string
+    storageBag: { __typename?: 'StorageBag'; id: string }
+    type?:
+      | { __typename: 'DataObjectTypeChannelAvatar' }
+      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeVideoMedia' }
+      | { __typename: 'DataObjectTypeVideoSubtitle' }
+      | { __typename: 'DataObjectTypeVideoThumbnail' }
+      | null
+  } | null
+}
+
 export const ExtendedVideoCategoryFieldsFragmentDoc = gql`
   fragment ExtendedVideoCategoryFields on ExtendedVideoCategory {
     category {
@@ -2824,4 +2846,14 @@ export const BasicVideoFeaturedInCategoryFragmentDoc = gql`
     }
   }
   ${BasicVideoFieldsFragmentDoc}
+`
+export const BasicVideoActivityFieldsFragmentDoc = gql`
+  fragment BasicVideoActivityFields on Video {
+    id
+    title
+    thumbnailPhoto {
+      ...StorageDataObjectFields
+    }
+  }
+  ${StorageDataObjectFieldsFragmentDoc}
 `

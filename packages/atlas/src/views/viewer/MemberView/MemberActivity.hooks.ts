@@ -1,24 +1,24 @@
 import BN from 'bn.js'
 import { useMemo } from 'react'
 
-import { createAllNotificationArray, useRawActivities } from '@/api/hooks/notifications'
+import { useRawActivities } from '@/api/hooks/notifications'
+import { EventOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import {
   BasicMembershipFieldsFragment,
   BasicNftOwnerFieldsFragment,
-  StorageDataObjectFieldsFragment,
+  BasicVideoActivityFieldsFragment,
 } from '@/api/queries/__generated__/fragments.generated'
+import { GetNftActivitiesQuery } from '@/api/queries/__generated__/notifications.generated'
+import { convertDateFormat } from '@/utils/time'
 
 // todo make sure that every activity work as it should
 export type NftActivitiesRecord = {
   id?: string
   date?: Date
   block?: number
-  video?: {
-    id: string
-    title: string
-    thumbnailPhoto: StorageDataObjectFieldsFragment | null
-  }
+  video?: BasicVideoActivityFieldsFragment
 }
+
 export type ActivitiesRecord =
   | ({
       type: 'Bid'
@@ -65,20 +65,40 @@ export type ActivitiesRecord =
       price: BN
     } & NftActivitiesRecord)
 
+const getVideoDataFromEvent = (event: GetNftActivitiesQuery['events'][number]) => {
+  switch (event.data.__typename) {
+    case 'AuctionBidMadeEventData':
+    case 'AuctionBidCanceledEventData':
+      return event.data.bid.auction.nft.video
+    case 'EnglishAuctionSettledEventData':
+    case 'BidMadeCompletingAuctionEventData':
+    case 'OpenAuctionBidAcceptedEventData':
+      return event.data.winningBid.auction.nft.video
+    case 'NftBoughtEventData':
+    case 'NftSellOrderMadeEventData':
+    case 'BuyNowCanceledEventData':
+    case 'BuyNowPriceUpdatedEventData':
+    case 'NftIssuedEventData':
+      return event.data.nft.video
+    case 'EnglishAuctionStartedEventData':
+    case 'OpenAuctionStartedEventData':
+    case 'AuctionCanceledEventData':
+      return event.data.auction.nft.video
+
+    default:
+      return undefined
+  }
+}
+
 const parseActivities = (
-  event: ReturnType<typeof createAllNotificationArray>[number],
+  event: GetNftActivitiesQuery['events'][number],
   memberId?: string
 ): ActivitiesRecord | null => {
   const commonFields: NftActivitiesRecord = {
     id: event.id,
-    date: event.timestamp,
+    date: convertDateFormat(event.timestamp),
     block: event.inBlock,
-    video: {
-      // todo figure out how to get correct video from event
-      id: 'dummy',
-      title: 'dummy',
-      thumbnailPhoto: null,
-    },
+    video: getVideoDataFromEvent(event),
   }
   switch (event.data.__typename) {
     case 'EnglishAuctionSettledEventData':
@@ -214,7 +234,7 @@ const parseActivities = (
   }
 }
 
-export const useActivities = (memberId?: string, sort?: 'createdAt_ASC' | 'createdAt_DESC') => {
+export const useActivities = (memberId?: string, sort?: EventOrderByInput) => {
   const {
     activities: rawActivities,
     nftsBiddedTotalCount,

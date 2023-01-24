@@ -1,7 +1,6 @@
 import { QueryHookOptions } from '@apollo/client'
 
 import {
-  GetNftActivitiesQuery,
   GetNotificationsQuery,
   GetNotificationsQueryVariables,
   useGetNftActivitiesQuery,
@@ -31,17 +30,15 @@ export const useRawNotifications = (
   }
 }
 
-export const createAllNotificationArray = (data: GetNftActivitiesQuery) => {
-  return data.events
-}
-// todo replace createdAt with timestamp
-export const useRawActivities = (memberId?: string, sort: 'createdAt_ASC' | 'createdAt_DESC' = 'createdAt_DESC') => {
+export const useRawActivities = (memberId?: string, sort: EventOrderByInput = EventOrderByInput.TimestampDesc) => {
   const { data, ...rest } = useGetNftActivitiesQuery({
     variables: {
       limit: 100,
-      orderBy: sort === 'createdAt_DESC' ? [EventOrderByInput.TimestampDesc] : [EventOrderByInput.TimestampAsc],
+      orderBy: [sort],
       memberId: memberId || '',
     },
+    // We use `no-cache` because for unknown reasons cache removes data about owner
+    fetchPolicy: 'no-cache',
     skip: !memberId,
   })
 

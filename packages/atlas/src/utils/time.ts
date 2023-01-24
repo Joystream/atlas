@@ -1,4 +1,4 @@
-import { format, formatDistanceToNowStrict } from 'date-fns'
+import { format, formatDistanceToNowStrict, parseISO } from 'date-fns'
 
 export const formatDate = (date: Date) => format(date, 'd MMM yyyy')
 export const formatTime = (date: Date) => format(date, 'HH:mm')
@@ -36,3 +36,7 @@ export const daysToMilliseconds = (days: number) => {
 }
 
 export const getTimeDiffInSeconds = (time: Date) => Math.max(0, Math.round((time.getTime() - Date.now()) / 1000))
+
+export const convertDateFormat = (timestamp: Date | string) => {
+  return timestamp instanceof Date ? timestamp : parseISO(timestamp)
+}
