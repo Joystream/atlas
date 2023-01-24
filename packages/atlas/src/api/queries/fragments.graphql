@@ -215,9 +215,13 @@ fragment BasicNftFields on OwnedNft {
   lastSalePrice
   owner {
     # CHANGE: Replacement for `isOwnedByChannel` and `ownerMember` fields
+    __typename
     ... on NftOwnerChannel {
       channel {
         ...BasicChannelFields
+        ownerMember {
+          ...BasicMembershipFields
+        }
       }
     }
     ... on NftOwnerMember {

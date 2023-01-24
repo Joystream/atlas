@@ -167,7 +167,7 @@ export type GetFullVideoQuery = {
       lastSalePrice?: string | null
       owner:
         | {
-            __typename?: 'NftOwnerChannel'
+            __typename: 'NftOwnerChannel'
             channel: {
               __typename?: 'Channel'
               id: string
@@ -176,6 +176,37 @@ export type GetFullVideoQuery = {
               followsNum: number
               rewardAccount: string
               channelStateBloatBond: string
+              ownerMember?: {
+                __typename?: 'Membership'
+                id: string
+                handle: string
+                metadata?: {
+                  __typename?: 'MemberMetadata'
+                  about?: string | null
+                  avatar?:
+                    | {
+                        __typename?: 'AvatarObject'
+                        avatarObject: {
+                          __typename?: 'StorageDataObject'
+                          id: string
+                          createdAt: Date
+                          size: string
+                          isAccepted: boolean
+                          ipfsHash: string
+                          storageBag: { __typename?: 'StorageBag'; id: string }
+                          type?:
+                            | { __typename: 'DataObjectTypeChannelAvatar' }
+                            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                            | { __typename: 'DataObjectTypeVideoMedia' }
+                            | { __typename: 'DataObjectTypeVideoSubtitle' }
+                            | { __typename: 'DataObjectTypeVideoThumbnail' }
+                            | null
+                        }
+                      }
+                    | { __typename?: 'AvatarUri'; avatarUri: string }
+                    | null
+                } | null
+              } | null
               avatarPhoto?: {
                 __typename?: 'StorageDataObject'
                 id: string
@@ -195,7 +226,7 @@ export type GetFullVideoQuery = {
             }
           }
         | {
-            __typename?: 'NftOwnerMember'
+            __typename: 'NftOwnerMember'
             member: {
               __typename?: 'Membership'
               id: string
@@ -467,7 +498,7 @@ export type GetBasicVideosConnectionQuery = {
           lastSalePrice?: string | null
           owner:
             | {
-                __typename?: 'NftOwnerChannel'
+                __typename: 'NftOwnerChannel'
                 channel: {
                   __typename?: 'Channel'
                   id: string
@@ -476,6 +507,37 @@ export type GetBasicVideosConnectionQuery = {
                   followsNum: number
                   rewardAccount: string
                   channelStateBloatBond: string
+                  ownerMember?: {
+                    __typename?: 'Membership'
+                    id: string
+                    handle: string
+                    metadata?: {
+                      __typename?: 'MemberMetadata'
+                      about?: string | null
+                      avatar?:
+                        | {
+                            __typename?: 'AvatarObject'
+                            avatarObject: {
+                              __typename?: 'StorageDataObject'
+                              id: string
+                              createdAt: Date
+                              size: string
+                              isAccepted: boolean
+                              ipfsHash: string
+                              storageBag: { __typename?: 'StorageBag'; id: string }
+                              type?:
+                                | { __typename: 'DataObjectTypeChannelAvatar' }
+                                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeVideoMedia' }
+                                | { __typename: 'DataObjectTypeVideoSubtitle' }
+                                | { __typename: 'DataObjectTypeVideoThumbnail' }
+                                | null
+                            }
+                          }
+                        | { __typename?: 'AvatarUri'; avatarUri: string }
+                        | null
+                    } | null
+                  } | null
                   avatarPhoto?: {
                     __typename?: 'StorageDataObject'
                     id: string
@@ -495,7 +557,7 @@ export type GetBasicVideosConnectionQuery = {
                 }
               }
             | {
-                __typename?: 'NftOwnerMember'
+                __typename: 'NftOwnerMember'
                 member: {
                   __typename?: 'Membership'
                   id: string
@@ -844,7 +906,7 @@ export type GetFullVideosConnectionQuery = {
           lastSalePrice?: string | null
           owner:
             | {
-                __typename?: 'NftOwnerChannel'
+                __typename: 'NftOwnerChannel'
                 channel: {
                   __typename?: 'Channel'
                   id: string
@@ -853,6 +915,37 @@ export type GetFullVideosConnectionQuery = {
                   followsNum: number
                   rewardAccount: string
                   channelStateBloatBond: string
+                  ownerMember?: {
+                    __typename?: 'Membership'
+                    id: string
+                    handle: string
+                    metadata?: {
+                      __typename?: 'MemberMetadata'
+                      about?: string | null
+                      avatar?:
+                        | {
+                            __typename?: 'AvatarObject'
+                            avatarObject: {
+                              __typename?: 'StorageDataObject'
+                              id: string
+                              createdAt: Date
+                              size: string
+                              isAccepted: boolean
+                              ipfsHash: string
+                              storageBag: { __typename?: 'StorageBag'; id: string }
+                              type?:
+                                | { __typename: 'DataObjectTypeChannelAvatar' }
+                                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeVideoMedia' }
+                                | { __typename: 'DataObjectTypeVideoSubtitle' }
+                                | { __typename: 'DataObjectTypeVideoThumbnail' }
+                                | null
+                            }
+                          }
+                        | { __typename?: 'AvatarUri'; avatarUri: string }
+                        | null
+                    } | null
+                  } | null
                   avatarPhoto?: {
                     __typename?: 'StorageDataObject'
                     id: string
@@ -872,7 +965,7 @@ export type GetFullVideosConnectionQuery = {
                 }
               }
             | {
-                __typename?: 'NftOwnerMember'
+                __typename: 'NftOwnerMember'
                 member: {
                   __typename?: 'Membership'
                   id: string
@@ -1141,7 +1234,7 @@ export type GetBasicVideosQuery = {
       lastSalePrice?: string | null
       owner:
         | {
-            __typename?: 'NftOwnerChannel'
+            __typename: 'NftOwnerChannel'
             channel: {
               __typename?: 'Channel'
               id: string
@@ -1150,6 +1243,37 @@ export type GetBasicVideosQuery = {
               followsNum: number
               rewardAccount: string
               channelStateBloatBond: string
+              ownerMember?: {
+                __typename?: 'Membership'
+                id: string
+                handle: string
+                metadata?: {
+                  __typename?: 'MemberMetadata'
+                  about?: string | null
+                  avatar?:
+                    | {
+                        __typename?: 'AvatarObject'
+                        avatarObject: {
+                          __typename?: 'StorageDataObject'
+                          id: string
+                          createdAt: Date
+                          size: string
+                          isAccepted: boolean
+                          ipfsHash: string
+                          storageBag: { __typename?: 'StorageBag'; id: string }
+                          type?:
+                            | { __typename: 'DataObjectTypeChannelAvatar' }
+                            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                            | { __typename: 'DataObjectTypeVideoMedia' }
+                            | { __typename: 'DataObjectTypeVideoSubtitle' }
+                            | { __typename: 'DataObjectTypeVideoThumbnail' }
+                            | null
+                        }
+                      }
+                    | { __typename?: 'AvatarUri'; avatarUri: string }
+                    | null
+                } | null
+              } | null
               avatarPhoto?: {
                 __typename?: 'StorageDataObject'
                 id: string
@@ -1169,7 +1293,7 @@ export type GetBasicVideosQuery = {
             }
           }
         | {
-            __typename?: 'NftOwnerMember'
+            __typename: 'NftOwnerMember'
             member: {
               __typename?: 'Membership'
               id: string
@@ -1509,7 +1633,7 @@ export type GetFullVideosQuery = {
       lastSalePrice?: string | null
       owner:
         | {
-            __typename?: 'NftOwnerChannel'
+            __typename: 'NftOwnerChannel'
             channel: {
               __typename?: 'Channel'
               id: string
@@ -1518,6 +1642,37 @@ export type GetFullVideosQuery = {
               followsNum: number
               rewardAccount: string
               channelStateBloatBond: string
+              ownerMember?: {
+                __typename?: 'Membership'
+                id: string
+                handle: string
+                metadata?: {
+                  __typename?: 'MemberMetadata'
+                  about?: string | null
+                  avatar?:
+                    | {
+                        __typename?: 'AvatarObject'
+                        avatarObject: {
+                          __typename?: 'StorageDataObject'
+                          id: string
+                          createdAt: Date
+                          size: string
+                          isAccepted: boolean
+                          ipfsHash: string
+                          storageBag: { __typename?: 'StorageBag'; id: string }
+                          type?:
+                            | { __typename: 'DataObjectTypeChannelAvatar' }
+                            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                            | { __typename: 'DataObjectTypeVideoMedia' }
+                            | { __typename: 'DataObjectTypeVideoSubtitle' }
+                            | { __typename: 'DataObjectTypeVideoThumbnail' }
+                            | null
+                        }
+                      }
+                    | { __typename?: 'AvatarUri'; avatarUri: string }
+                    | null
+                } | null
+              } | null
               avatarPhoto?: {
                 __typename?: 'StorageDataObject'
                 id: string
@@ -1537,7 +1692,7 @@ export type GetFullVideosQuery = {
             }
           }
         | {
-            __typename?: 'NftOwnerMember'
+            __typename: 'NftOwnerMember'
             member: {
               __typename?: 'Membership'
               id: string
@@ -1811,7 +1966,7 @@ export type GetMostViewedVideosConnectionQuery = {
           lastSalePrice?: string | null
           owner:
             | {
-                __typename?: 'NftOwnerChannel'
+                __typename: 'NftOwnerChannel'
                 channel: {
                   __typename?: 'Channel'
                   id: string
@@ -1820,6 +1975,37 @@ export type GetMostViewedVideosConnectionQuery = {
                   followsNum: number
                   rewardAccount: string
                   channelStateBloatBond: string
+                  ownerMember?: {
+                    __typename?: 'Membership'
+                    id: string
+                    handle: string
+                    metadata?: {
+                      __typename?: 'MemberMetadata'
+                      about?: string | null
+                      avatar?:
+                        | {
+                            __typename?: 'AvatarObject'
+                            avatarObject: {
+                              __typename?: 'StorageDataObject'
+                              id: string
+                              createdAt: Date
+                              size: string
+                              isAccepted: boolean
+                              ipfsHash: string
+                              storageBag: { __typename?: 'StorageBag'; id: string }
+                              type?:
+                                | { __typename: 'DataObjectTypeChannelAvatar' }
+                                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeVideoMedia' }
+                                | { __typename: 'DataObjectTypeVideoSubtitle' }
+                                | { __typename: 'DataObjectTypeVideoThumbnail' }
+                                | null
+                            }
+                          }
+                        | { __typename?: 'AvatarUri'; avatarUri: string }
+                        | null
+                    } | null
+                  } | null
                   avatarPhoto?: {
                     __typename?: 'StorageDataObject'
                     id: string
@@ -1839,7 +2025,7 @@ export type GetMostViewedVideosConnectionQuery = {
                 }
               }
             | {
-                __typename?: 'NftOwnerMember'
+                __typename: 'NftOwnerMember'
                 member: {
                   __typename?: 'Membership'
                   id: string
@@ -2086,7 +2272,7 @@ export type GetTop10VideosThisWeekQuery = {
           lastSalePrice?: string | null
           owner:
             | {
-                __typename?: 'NftOwnerChannel'
+                __typename: 'NftOwnerChannel'
                 channel: {
                   __typename?: 'Channel'
                   id: string
@@ -2095,6 +2281,37 @@ export type GetTop10VideosThisWeekQuery = {
                   followsNum: number
                   rewardAccount: string
                   channelStateBloatBond: string
+                  ownerMember?: {
+                    __typename?: 'Membership'
+                    id: string
+                    handle: string
+                    metadata?: {
+                      __typename?: 'MemberMetadata'
+                      about?: string | null
+                      avatar?:
+                        | {
+                            __typename?: 'AvatarObject'
+                            avatarObject: {
+                              __typename?: 'StorageDataObject'
+                              id: string
+                              createdAt: Date
+                              size: string
+                              isAccepted: boolean
+                              ipfsHash: string
+                              storageBag: { __typename?: 'StorageBag'; id: string }
+                              type?:
+                                | { __typename: 'DataObjectTypeChannelAvatar' }
+                                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeVideoMedia' }
+                                | { __typename: 'DataObjectTypeVideoSubtitle' }
+                                | { __typename: 'DataObjectTypeVideoThumbnail' }
+                                | null
+                            }
+                          }
+                        | { __typename?: 'AvatarUri'; avatarUri: string }
+                        | null
+                    } | null
+                  } | null
                   avatarPhoto?: {
                     __typename?: 'StorageDataObject'
                     id: string
@@ -2114,7 +2331,7 @@ export type GetTop10VideosThisWeekQuery = {
                 }
               }
             | {
-                __typename?: 'NftOwnerMember'
+                __typename: 'NftOwnerMember'
                 member: {
                   __typename?: 'Membership'
                   id: string
@@ -2360,7 +2577,7 @@ export type GetTop10VideosThisMonthQuery = {
           lastSalePrice?: string | null
           owner:
             | {
-                __typename?: 'NftOwnerChannel'
+                __typename: 'NftOwnerChannel'
                 channel: {
                   __typename?: 'Channel'
                   id: string
@@ -2369,6 +2586,37 @@ export type GetTop10VideosThisMonthQuery = {
                   followsNum: number
                   rewardAccount: string
                   channelStateBloatBond: string
+                  ownerMember?: {
+                    __typename?: 'Membership'
+                    id: string
+                    handle: string
+                    metadata?: {
+                      __typename?: 'MemberMetadata'
+                      about?: string | null
+                      avatar?:
+                        | {
+                            __typename?: 'AvatarObject'
+                            avatarObject: {
+                              __typename?: 'StorageDataObject'
+                              id: string
+                              createdAt: Date
+                              size: string
+                              isAccepted: boolean
+                              ipfsHash: string
+                              storageBag: { __typename?: 'StorageBag'; id: string }
+                              type?:
+                                | { __typename: 'DataObjectTypeChannelAvatar' }
+                                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeVideoMedia' }
+                                | { __typename: 'DataObjectTypeVideoSubtitle' }
+                                | { __typename: 'DataObjectTypeVideoThumbnail' }
+                                | null
+                            }
+                          }
+                        | { __typename?: 'AvatarUri'; avatarUri: string }
+                        | null
+                    } | null
+                  } | null
                   avatarPhoto?: {
                     __typename?: 'StorageDataObject'
                     id: string
@@ -2388,7 +2636,7 @@ export type GetTop10VideosThisMonthQuery = {
                 }
               }
             | {
-                __typename?: 'NftOwnerMember'
+                __typename: 'NftOwnerMember'
                 member: {
                   __typename?: 'Membership'
                   id: string

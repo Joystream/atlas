@@ -114,7 +114,7 @@ export type SearchVideosQuery = {
         lastSalePrice?: string | null
         owner:
           | {
-              __typename?: 'NftOwnerChannel'
+              __typename: 'NftOwnerChannel'
               channel: {
                 __typename?: 'Channel'
                 id: string
@@ -123,6 +123,37 @@ export type SearchVideosQuery = {
                 followsNum: number
                 rewardAccount: string
                 channelStateBloatBond: string
+                ownerMember?: {
+                  __typename?: 'Membership'
+                  id: string
+                  handle: string
+                  metadata?: {
+                    __typename?: 'MemberMetadata'
+                    about?: string | null
+                    avatar?:
+                      | {
+                          __typename?: 'AvatarObject'
+                          avatarObject: {
+                            __typename?: 'StorageDataObject'
+                            id: string
+                            createdAt: Date
+                            size: string
+                            isAccepted: boolean
+                            ipfsHash: string
+                            storageBag: { __typename?: 'StorageBag'; id: string }
+                            type?:
+                              | { __typename: 'DataObjectTypeChannelAvatar' }
+                              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                              | { __typename: 'DataObjectTypeVideoMedia' }
+                              | { __typename: 'DataObjectTypeVideoSubtitle' }
+                              | { __typename: 'DataObjectTypeVideoThumbnail' }
+                              | null
+                          }
+                        }
+                      | { __typename?: 'AvatarUri'; avatarUri: string }
+                      | null
+                  } | null
+                } | null
                 avatarPhoto?: {
                   __typename?: 'StorageDataObject'
                   id: string
@@ -142,7 +173,7 @@ export type SearchVideosQuery = {
               }
             }
           | {
-              __typename?: 'NftOwnerMember'
+              __typename: 'NftOwnerMember'
               member: {
                 __typename?: 'Membership'
                 id: string
