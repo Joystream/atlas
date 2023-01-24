@@ -126,7 +126,6 @@ const parseActivities = (
         bidAmount: new BN(event.data.bid.amount),
         from: event.data.bid.bidder,
       }
-    // todo fix this - replace correctly from with to
     case 'NftBoughtEventData': {
       const previousNftOwner =
         event.data.previousNftOwner.__typename === 'NftOwnerChannel'
@@ -150,7 +149,6 @@ const parseActivities = (
         }
       }
     }
-    // todo fix this - replace correctly from with to
     case 'BidMadeCompletingAuctionEventData': {
       const previousOwnerMemberId =
         event.data.previousNftOwner.__typename === 'NftOwnerChannel'

@@ -33,20 +33,20 @@ const getFromHandle = (activity: ActivitiesRecord) => {
 }
 
 const getDescription = (activity: ActivitiesRecord) => {
-  const handle = getFromHandle(activity)
+  const fromHandle = getFromHandle(activity)
 
   switch (activity.type) {
     case 'Bid':
       return (
         <>
-          {handle} placed a bid for{' '}
+          {fromHandle} placed a bid for{' '}
           <NumberFormat as="span" color="inherit" format="short" value={activity.bidAmount} withToken />
         </>
       )
     case 'Sale':
       return (
         <>
-          {handle} sold NFT to{' '}
+          {fromHandle} sold NFT to{' '}
           <StyledLink to={absoluteRoutes.viewer.member(activity.to?.handle)} onClick={(e) => e.stopPropagation()}>
             {activity.to?.handle}
           </StyledLink>{' '}
@@ -56,17 +56,17 @@ const getDescription = (activity: ActivitiesRecord) => {
     case 'Purchase':
       return (
         <>
-          {handle} purchased NFT for{' '}
-          <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken /> from{' '}
           <StyledLink to={absoluteRoutes.viewer.member(activity.to?.handle)} onClick={(e) => e.stopPropagation()}>
             {activity.to?.handle}{' '}
-          </StyledLink>
+          </StyledLink>{' '}
+          purchased NFT for <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken />{' '}
+          from {fromHandle}
         </>
       )
     case 'Listing':
       return (
         <>
-          {handle} listed NFT{' '}
+          {fromHandle} listed NFT{' '}
           {activity.typeName === 'NftSellOrderMadeEventData' && activity.price && (
             <>
               for <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken />
@@ -75,15 +75,15 @@ const getDescription = (activity: ActivitiesRecord) => {
         </>
       )
     case 'Removal':
-      return <>{handle} removed NFT from sale</>
+      return <>{fromHandle} removed NFT from sale</>
     case 'Mint':
-      return <>{handle} minted new NFT</>
+      return <>{fromHandle} minted new NFT</>
     case 'Withdrawal':
-      return <>{handle} withdrew a bid</>
+      return <>{fromHandle} withdrew a bid</>
     case 'Price change':
       return (
         <>
-          {handle} changed price to{' '}
+          {fromHandle} changed price to{' '}
           <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken />
         </>
       )
