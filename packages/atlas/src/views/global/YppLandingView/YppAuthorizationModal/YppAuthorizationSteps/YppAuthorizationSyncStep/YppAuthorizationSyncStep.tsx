@@ -1,12 +1,13 @@
 import { Controller, useFormContext } from 'react-hook-form'
 
 import { SvgAlertsWarning24 } from '@/assets/icons'
+import { Banner } from '@/components/Banner'
 import { FormField } from '@/components/_inputs/FormField'
 import { OptionCardGroupRadio } from '@/components/_inputs/OptionCardGroup'
 import { Select, SelectItem } from '@/components/_inputs/Select'
 import { displayCategories } from '@/config/categories'
 
-import { FormWrapper, StyledBanner } from './YppAuthorizationSyncStep.styles'
+import { FormWrapper } from './YppAuthorizationSyncStep.styles'
 
 export type YppSyncStepData = {
   shouldBeIngested?: boolean
@@ -73,7 +74,7 @@ export const YppAuthorizationSyncStep = () => {
           />
         </FormField>
       ) : (
-        <StyledBanner
+        <Banner
           title="Only auto-synced videos are rewarded"
           description="Manually uploaded videos are not qualifying for programme rewards. To get rewards for content upload consider switching to syncing Youtube videos."
           icon={<SvgAlertsWarning24 />}
