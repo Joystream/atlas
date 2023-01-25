@@ -54,7 +54,8 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   const signIn = useCallback(
     async (
       walletName?: string,
-      mobileCallback?: ({ onConfirm }: { onConfirm: () => void }) => void
+      mobileCallback?: ({ onConfirm }: { onConfirm: () => void }) => void,
+      invokedAutomatically?: boolean
     ): Promise<boolean> => {
       let accounts = []
 
@@ -68,7 +69,9 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       }
 
       try {
-        const initializedAccounts = await retryPromise(() => initSignerWallet(walletName), 500, 2000)
+        const initializedAccounts = await (!invokedAutomatically
+          ? initSignerWallet(walletName)
+          : retryPromise(() => initSignerWallet(walletName), 500, 2000))
         if (initializedAccounts == null) {
           SentryLogger.error('Selected wallet not found or not installed', 'UserProvider')
           setSignInModalOpen(true)
@@ -142,7 +145,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
 
     setTimeout(() => {
       // add a slight delay - sometimes the extension will not initialize by the time of this call and may appear unavailable
-      signIn(lastUsedWalletName).then(() => setIsAuthLoading(false))
+      signIn(lastUsedWalletName, undefined, true).then(() => setIsAuthLoading(false))
     }, 200)
   }, [accountId, lastUsedWalletName, memberId, signIn, walletStatus])
 
