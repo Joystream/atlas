@@ -112,7 +112,10 @@ export const useGetYppLastVerifiedChannels = () => {
     try {
       setIsVerifiedChannelsLoading(true)
       const response = await axios.get<RecentChannelsResponse>(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels`)
-      const channelIds = response.data.map((channel) => channel.joystreamChannelId.toString())
+      const channelIds = response.data
+        .filter((channel) => channel.yppStatus === 'Verified')
+        .map((channel) => channel.joystreamChannelId.toString())
+
       setRecentChannelsIds(channelIds)
     } catch (error) {
       SentryLogger.error('Failed to fetch recent channels', 'useYppGetLastVerifiedChannels', error)
