@@ -2,6 +2,7 @@ import BN from 'bn.js'
 
 import { useRawNotifications } from '@/api/hooks/notifications'
 import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { GetNotificationsQuery } from '@/api/queries/__generated__/notifications.generated'
 import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger } from '@/utils/logs'
 
@@ -38,25 +39,42 @@ export const useNotifications = () => {
   }
 }
 
+const getVideoDataFromEvent = (event: GetNotificationsQuery['events'][number]) => {
+  switch (event.data.__typename) {
+    case 'AuctionBidMadeEventData':
+      return event.data.bid.auction.nft.video
+    case 'BidMadeCompletingAuctionEventData':
+      return event.data.winningBid.nft.video
+    case 'EnglishAuctionSettledEventData':
+    case 'OpenAuctionBidAcceptedEventData':
+      return event.data.winningBid.auction.nft.video
+    case 'CommentCreatedEventData':
+      return event.data.comment.video
+    case 'NftBoughtEventData':
+      return event.data.nft.video
+
+    default:
+      return undefined
+  }
+}
+
 const parseNotification = (
-  event: ReturnType<typeof useRawNotifications>['notifications'][number],
+  event: GetNotificationsQuery['events'][number],
   memberId: string | null
 ): NotificationRecord | null => {
+  const video = getVideoDataFromEvent(event)
   const commonFields: NftNotificationRecord = {
     id: event.id,
     date: event.timestamp,
     block: event.inBlock,
     video: {
-      // todo get correct video id. It depends on the event
-      id: event.id,
-      // todo get correct video title. It depends on the event
-      title: 'dummy',
+      id: video?.id || '',
+      title: video?.title || '',
     },
   }
 
   if (event.data.__typename === 'AuctionBidMadeEventData') {
     return {
-      // todo make sure that's working
       type: event.data.bid.previousTopBid?.bidder.id === memberId ? 'got-outbid' : 'bid-made',
       ...commonFields,
       member: event.data.bid.bidder as BasicMembershipFieldsFragment,
