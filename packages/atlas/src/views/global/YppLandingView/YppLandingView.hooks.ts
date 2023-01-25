@@ -9,13 +9,15 @@ import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 const YPP_SYNC_URL = atlasConfig.features.ypp.youtubeSyncApiUrl
 
+// todo yppStatus `Active` will be deprecated. We're keeping this for the sake of backward compatibility
+type YppStatus = 'Unverified' | 'Verified' | 'Suspended' | 'OptedOut' | 'Active'
+
 export type YppSyncedChannel = {
   title: string
   description: string
   aggregatedStats: number
   shouldBeIngested: boolean
-  yppStatus: 'OptedOut' | 'Active'
-  isSuspended: boolean
+  yppStatus: YppStatus
   joystreamChannelId: number
   videoCategoryId: string
   thumbnails: {
@@ -63,7 +65,9 @@ export const useGetYppSyncedChannels = () => {
         })
       )
       const fetchedChannels = syncedChannels.filter(
-        (channel): channel is YppSyncedChannel => !!channel && channel.yppStatus === 'Active'
+        (channel): channel is YppSyncedChannel =>
+          !!channel &&
+          (channel.yppStatus === 'Unverified' || channel?.yppStatus === 'Verified' || channel.yppStatus === 'Active')
       )
       setSyncedChannels(fetchedChannels)
 

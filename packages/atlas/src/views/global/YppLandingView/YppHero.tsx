@@ -31,17 +31,17 @@ import {
 import { useGetYppLastVerifiedChannels } from './YppLandingView.hooks'
 import { BackgroundContainer, StyledLimitedWidthContainer } from './YppLandingView.styles'
 
-type YppStatus = 'have-channel' | 'no-channel' | 'ypp-signed' | 'connect-wallet' | null
+type YppAtlasStatus = 'have-channel' | 'no-channel' | 'ypp-signed' | 'connect-wallet' | null
 
 type YppHeroProps = {
   onSignUpClick: () => void
   onSelectChannel: () => void
-  yppStatus: YppStatus
+  yppAtlasStatus: YppAtlasStatus
   hasAnotherUnsyncedChannel?: boolean
   selectedChannelTitle?: string | null
 }
 
-const getButtonText = (variant: YppStatus) => {
+const getButtonText = (variant: YppAtlasStatus) => {
   switch (variant) {
     case 'have-channel':
     case 'connect-wallet':
@@ -56,7 +56,7 @@ const getButtonText = (variant: YppStatus) => {
 export const YppHero: FC<YppHeroProps> = ({
   onSignUpClick,
   onSelectChannel,
-  yppStatus,
+  yppAtlasStatus,
   hasAnotherUnsyncedChannel,
   selectedChannelTitle,
 }) => {
@@ -107,18 +107,18 @@ export const YppHero: FC<YppHeroProps> = ({
               <SwitchTransition>
                 <CSSTransition
                   timeout={parseInt(cVar('animationTimingFast', true))}
-                  key={yppStatus ? 'status-set' : 'loading'}
+                  key={yppAtlasStatus ? 'status-set' : 'loading'}
                   classNames={transitions.names.fade}
                 >
-                  {yppStatus ? (
+                  {yppAtlasStatus ? (
                     <Button
                       size="large"
-                      variant={yppStatus === 'ypp-signed' ? 'secondary' : 'primary'}
+                      variant={yppAtlasStatus === 'ypp-signed' ? 'secondary' : 'primary'}
                       icon={<SvgActionChevronR />}
                       iconPlacement="right"
                       onClick={onSignUpClick}
                     >
-                      {getButtonText(yppStatus)}
+                      {getButtonText(yppAtlasStatus)}
                     </Button>
                   ) : (
                     <SkeletonLoader width={190} height={48} />
