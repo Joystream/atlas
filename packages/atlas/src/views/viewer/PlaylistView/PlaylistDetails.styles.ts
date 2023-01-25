@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { ColumnGapBlock } from '@/components/_layouts'
 import { VideoListItem } from '@/components/_video/VideoListItem'
+import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { cVar, media, sizes } from '@/styles'
 
 export const Wrapper = styled(LimitedWidthContainer)`
@@ -68,7 +69,9 @@ export const StyledVideoListItem = styled(VideoListItem)`
 export const Counter = styled.div`
   border-radius: 50%;
   width: ${sizes(6)};
+  min-width: ${sizes(6)};
   height: ${sizes(6)};
+  min-height: ${sizes(6)};
   line-height: ${sizes(6)};
   display: grid;
   place-items: center;
@@ -79,5 +82,13 @@ export const Counter = styled.div`
   ${media.xs} {
     margin-top: 0;
     align-self: center;
+  }
+`
+export const StyledVideoTileViewer = styled(VideoTileViewer)`
+  flex: 1;
+
+  ${media.xs} {
+    display: grid;
+    grid-template-columns: minmax(160px, 197px) minmax(160px, 320px);
   }
 `

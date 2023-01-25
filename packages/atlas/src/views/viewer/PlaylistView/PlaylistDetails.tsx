@@ -10,7 +10,7 @@ import {
   DetailsButtonsWrapper,
   DetailsWrapper,
   InfoContainer,
-  StyledVideoListItem,
+  StyledVideoTileViewer,
   Thumbnail,
   Wrapper,
 } from './PlaylistDetails.styles'
@@ -49,13 +49,18 @@ export const PlaylistDetails = () => {
           <ChannelLink id="1" followButton />
         </ColumnGapBlock>
       </InfoContainer>
-      <RowGapBlock>
+      <RowGapBlock gap={4}>
         {Array(10)
           .fill(1)
           .map((_, index) => (
-            <ColumnGapBlock key={index} gap={0}>
+            <ColumnGapBlock key={index} gap={4}>
               <Counter>{index + 1}</Counter>
-              <StyledVideoListItem id={String(index)} variant="large" isInteractive={false} />
+              <StyledVideoTileViewer
+                key={index}
+                id={String(index)}
+                detailsVariant="withoutChannel"
+                direction={xsMatch ? 'horizontal' : 'vertical'}
+              />
             </ColumnGapBlock>
           ))}
       </RowGapBlock>

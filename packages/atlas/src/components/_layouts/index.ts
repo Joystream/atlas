@@ -15,6 +15,6 @@ export const ColumnGapBlock = styled.div<{ gap?: number; align?: string; justify
   display: flex;
   gap: ${(props) => sizes(props.gap ?? 1)};
   padding: ${(props) => sizes(props.padding ?? 0)};
-  align-items: ${(props) => props.align ?? 'unset'};
-  justify-content: ${(props) => props.justify ?? 'unset'};
+  align-items: ${(props) => props.align};
+  justify-content: ${(props) => props.justify};
 `
