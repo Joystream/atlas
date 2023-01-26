@@ -400,7 +400,7 @@ legal:
       - Refer new programme subscribers: 1000 Joy
       - For every video synced from YT to Joystream channel: 300 Joy
       
-    ❗ The tokens pool allocated for this programme is limited, so the programme has limited duration.
+    The tokens pool allocated for this programme is limited, so the programme has limited duration.
       
     ### Tiers Multiplier
 
@@ -446,7 +446,7 @@ legal:
 
     ## How to sign up
 
-    To sign up, user has to go through the onboarding flow provided in the Gleev web app. :TOCHECK: https://gleev.xyz/ypp and authorise with the Google Account, connected to their YT channel. During the authorisation, the access to the YT content `youtube.readonly` scope, to fetch channel meta data and content information; and access to email address for the YT account has to be granted for the JSG operated Backend Application (API client) that connects to YT API.
+    To sign up, user has to go through the onboarding flow provided in the Gleev web app. https://gleev.xyz/ypp and authorise with the Google Account, connected to their YT channel. During the authorisation, the access to the YT content `youtube.readonly` scope, to fetch channel meta data and content information; and access to email address for the YT account has to be granted for the JSG operated Backend Application (API client) that connects to YT API.
       
       Mandatory fields need to be populated to the web input form to progress, such as email, video category, and terms and conditions need to be accepted.
 
