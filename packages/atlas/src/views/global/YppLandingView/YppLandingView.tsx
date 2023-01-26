@@ -119,7 +119,7 @@ export const YppLandingView: FC = () => {
     }
   }, [channelId, handleSignUpClick, setSelectedChannelId, setShouldContinueYppFlow, shouldContinueYppFlow])
 
-  const getYppStatus = () => {
+  const getYppAtlasStatus = () => {
     if (isLoading) {
       return null
     }
@@ -150,7 +150,7 @@ export const YppLandingView: FC = () => {
         <YppHero
           onSelectChannel={() => setCurrentStep('select-channel')}
           onSignUpClick={handleSignUpClick}
-          yppStatus={getYppStatus()}
+          yppAtlasStatus={getYppAtlasStatus()}
           hasAnotherUnsyncedChannel={hasAnotherUnsyncedChannel}
           selectedChannelTitle={selectedChannelTitle}
         />
