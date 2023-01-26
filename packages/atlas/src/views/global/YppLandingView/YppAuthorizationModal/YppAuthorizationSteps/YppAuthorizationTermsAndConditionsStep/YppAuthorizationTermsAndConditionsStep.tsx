@@ -8,13 +8,13 @@ import { atlasConfig } from '@/config'
 import { MultiplierText, TierItem } from './YppAuthorizationTermsAndConditionsStep.styles'
 
 export const YppAuthorizationTermsAndConditionsStep: FC = () => {
-  const tnc = atlasConfig.legal.yppTnC
+  const tnc = atlasConfig.features.ypp.legal.yppTnC
   const groups = [...tnc.matchAll(/(.+)(### Tiers Multiplier.+)(### Example Rewards Calculation.+)/gs)][0]
-  const [_, first, __, rest] = groups
+  const [_, beforeTM, __, afterTM] = groups
 
   return (
     <div>
-      {first && <MarkdownPreview markdown={first} />}
+      {beforeTM && <MarkdownPreview markdown={beforeTM} />}
       <Text variant="t200-strong" as="h4" margin={{ bottom: 2 }}>
         Tiers Multiplier
       </Text>
@@ -54,7 +54,7 @@ export const YppAuthorizationTermsAndConditionsStep: FC = () => {
           5x
         </MultiplierText>
       </TierItem>
-      {rest && <MarkdownPreview markdown={rest} />}
+      {afterTM && <MarkdownPreview markdown={afterTM} />}
     </div>
   )
 }
