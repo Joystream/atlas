@@ -1,25 +1,66 @@
 import { SvgTierIcon1, SvgTierIcon2, SvgTierIcon3 } from '@/assets/icons'
+import { NumberFormat } from '@/components/NumberFormat'
 import { atlasConfig } from '@/config'
-import { formatNumber } from '@/utils/number'
 
 const configTiers = atlasConfig.features.ypp.tiersDefinition?.tiers
 
 export const TIERS = configTiers
   ? [
       {
-        rules: `<${formatNumber(configTiers?.[1].minimumSubscribers)} subscribers`,
+        rules: (
+          <>
+            {'<'}
+            <NumberFormat
+              as="span"
+              variant="t100"
+              color="colorText"
+              format="short"
+              value={configTiers?.[1].minimumSubscribers || 0}
+            />{' '}
+            subscribers
+          </>
+        ),
         icon: <SvgTierIcon1 />,
         subscribers: configTiers?.[0].minimumSubscribers,
       },
       {
-        rules: `${formatNumber(configTiers?.[1].minimumSubscribers)}-${formatNumber(
-          configTiers?.[2].minimumSubscribers
-        )} subscribers`,
+        rules: (
+          <>
+            <NumberFormat
+              as="span"
+              variant="t100"
+              color="colorText"
+              format="short"
+              value={configTiers?.[1].minimumSubscribers || 0}
+            />
+            -
+            <NumberFormat
+              as="span"
+              variant="t100"
+              color="colorText"
+              format="short"
+              value={configTiers?.[2].minimumSubscribers || 0}
+            />{' '}
+            subscribers
+          </>
+        ),
         icon: <SvgTierIcon2 />,
         subscribers: configTiers?.[1].minimumSubscribers,
       },
       {
-        rules: `>${formatNumber(configTiers?.[2].minimumSubscribers)} subscribers`,
+        rules: (
+          <>
+            {'> '}
+            <NumberFormat
+              as="span"
+              variant="t100"
+              color="colorText"
+              format="short"
+              value={configTiers?.[2].minimumSubscribers || 0}
+            />{' '}
+            subscribers
+          </>
+        ),
         icon: <SvgTierIcon3 />,
         subscribers: configTiers?.[2].minimumSubscribers - 1,
       },
