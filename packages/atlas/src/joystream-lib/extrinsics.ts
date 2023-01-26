@@ -257,7 +257,8 @@ export class JoystreamLibExtrinsics {
     removedAssetsIds: StringifiedNumber[],
     expectedDataObjectStateBloatBond: StringifiedNumber,
     expectedStorageBucketsCount: StringifiedNumber,
-    collaboratorMemberId?: MemberId
+    // null for removing collaborator
+    collaboratorMemberId?: MemberId | null
   ) => {
     await this.ensureApi()
 
@@ -268,12 +269,14 @@ export class JoystreamLibExtrinsics {
       assetsToRemove: removedAssetsIds.map((id) => new BN(id)),
       collaborators: createType(
         'Option<BTreeMap<u64, BTreeSet<PalletContentIterableEnumsChannelActionPermission>>>',
-        collaboratorMemberId
-          ? {
-              [collaboratorMemberId]: createType('BTreeSet<PalletContentIterableEnumsChannelActionPermission>', [
-                'AddVideo',
-              ]),
-            }
+        collaboratorMemberId !== undefined
+          ? collaboratorMemberId
+            ? {
+                [collaboratorMemberId]: createType('BTreeSet<PalletContentIterableEnumsChannelActionPermission>', [
+                  'AddVideo',
+                ]),
+              }
+            : {}
           : null
       ),
       expectedDataObjectStateBloatBond: new BN(expectedDataObjectStateBloatBond),

@@ -3,7 +3,7 @@ import '@joystream/types'
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { QueryableStorageMultiArg } from '@polkadot/api-base/types/storage'
 import { Signer } from '@polkadot/api/types'
-import { Codec } from '@polkadot/types/types'
+import { Codec, SignerPayloadRawBase } from '@polkadot/types/types'
 import BN from 'bn.js'
 import { proxy } from 'comlink'
 
@@ -78,6 +78,17 @@ export class JoystreamLib {
 
     this._selectedAccountId = accountId
     this.api.setSigner(signer)
+  }
+
+  signMessage = async (signerPayload: SignerPayloadRawBase) => {
+    await this.ensureApi()
+    if (!this.selectedAccountId) {
+      SentryLogger.error('Missing signer for signMessage', 'JoystreamLib')
+      return
+    }
+    const signature = await this.api.sign(this.selectedAccountId, signerPayload)
+
+    return signature
   }
 
   async getCurrentBlock(): Promise<number> {
