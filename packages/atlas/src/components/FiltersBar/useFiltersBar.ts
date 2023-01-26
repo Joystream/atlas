@@ -61,7 +61,7 @@ export const useFiltersBar = () => {
   const clearNftStatusFilter = () => {
     setNftStatusFilter([])
     setOwnedNftWhereInput((value) => {
-      delete value.OR
+      delete value.transactionalStatus
       return value
     })
   }
