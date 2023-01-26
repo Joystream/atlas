@@ -4,7 +4,29 @@ import styled from '@emotion/styled'
 import { ListItem } from '@/components/ListItem'
 import { cVar, media, sizes } from '@/styles'
 
-export const DetailsWrapper = styled.div<{ variant: 'small' | 'large' }>`
+export type VideoListItemVariants = 'small' | 'medium' | 'large'
+
+export const getVideoVariantDimensions = (variant: VideoListItemVariants): { width: number; height: number } => {
+  switch (variant) {
+    case 'small':
+      return {
+        width: 80,
+        height: 50,
+      }
+    case 'medium':
+      return {
+        width: 143,
+        height: 80,
+      }
+    case 'large':
+      return {
+        width: 197,
+        height: 111,
+      }
+  }
+}
+
+export const DetailsWrapper = styled.div<{ variant?: VideoListItemVariants }>`
   align-self: ${({ variant }) => (variant === 'small' ? 'center' : 'start')};
   gap: ${({ variant }) => (variant === 'small' ? 'unset' : sizes(2))};
   display: grid;
@@ -24,9 +46,12 @@ export const ContextMenuWrapper = styled.div`
   }
 `
 
-export const ThumbnailContainer = styled.div<{ variant: 'small' | 'large' }>`
+export const ThumbnailContainer = styled.div<{ variant: VideoListItemVariants }>`
   > *:first-of-type {
-    min-width: ${({ variant }) => (variant === 'small' ? '80px' : '197px')};
+    min-width: ${({ variant }) => {
+      const { width } = getVideoVariantDimensions(variant)
+      return `${width}px`
+    }};
   }
 `
 
@@ -36,6 +61,11 @@ export const StyledListItem = styled(ListItem)<{ ignoreRWD?: boolean }>`
       align-self: flex-start;
       opacity: 1;
     }
+  }
+
+  .li-caption {
+    align-self: start;
+    row-gap: ${sizes(1)};
   }
 
   ${(props) =>

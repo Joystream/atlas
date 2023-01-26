@@ -2,7 +2,6 @@ import styled from '@emotion/styled'
 
 import { Button } from '@/components/_buttons/Button'
 import { ImageUploadAndCrop } from '@/components/_inputs/ImageUploadAndCrop/ImageUploadAndCrop'
-import { VideoListItem } from '@/components/_video/VideoListItem/VideoListItem'
 import { cVar, media, sizes } from '@/styles'
 
 export const WorkspaceWrapper = styled.div`
@@ -63,17 +62,6 @@ export const InputsContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${sizes(4)};
-`
-
-export const StyledVideoListItem = styled(VideoListItem)`
-  ${media.xs} {
-    flex-direction: column;
-  }
-
-  ${media.sm} {
-    cursor: grab;
-    flex-direction: row;
-  }
 `
 
 export const EmptyFallbackWrapper = styled.div`

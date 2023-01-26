@@ -6,6 +6,7 @@ import { SvgActionSearch } from '@/assets/icons'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { VideoListItem, VideoListItemLoader } from '@/components/_video/VideoListItem'
+import { cancelledVideoFilter } from '@/config/contentFilter'
 import { useDebounceValue } from '@/hooks/useDebounceValue'
 import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { createId } from '@/utils/createId'
@@ -34,6 +35,7 @@ export const VideoSelectorDialog: FC<VideoSelectorDialogProps> = ({ onHide, show
           id_eq: channelId,
         },
         title_contains: debouncedSearch,
+        ...cancelledVideoFilter,
       },
     },
     {
