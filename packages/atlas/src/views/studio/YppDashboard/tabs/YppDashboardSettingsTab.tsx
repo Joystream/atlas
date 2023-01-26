@@ -47,8 +47,8 @@ const categoriesSelectItems: SelectItem[] =
   })) || []
 
 type SettingsParams = {
-  isSync?: boolean
-  category?: string | null
+  message: IngestChannelMessage
+  signature: string | undefined
 }
 
 export const YppDashboardSettingsTab = () => {
@@ -62,7 +62,10 @@ export const YppDashboardSettingsTab = () => {
   const { mutateAsync: settingsMutation } = useMutation(
     ['ypp-settings-post', currentChannel],
     (params: SettingsParams) =>
-      axios.put(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${currentChannel?.joystreamChannelId}`, params)
+      axios.put(
+        `${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${currentChannel?.joystreamChannelId}/ingest`,
+        params
+      )
   )
 
   const [signLoading, setSignLoading] = useState(false)
@@ -112,7 +115,7 @@ export const YppDashboardSettingsTab = () => {
         data: JSON.stringify(message),
         type: 'payload',
       })
-      // todo fix
+
       const data = await settingsMutation({
         message,
         signature,
