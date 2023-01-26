@@ -36,7 +36,14 @@ export type GetStorageBucketsWithBagsQuery = {
   storageBuckets: Array<{
     __typename?: 'StorageBucket'
     id: string
-    operatorMetadata?: { __typename?: 'StorageBucketOperatorMetadata'; nodeEndpoint?: string | null } | null
+    operatorMetadata?: {
+      __typename?: 'StorageBucketOperatorMetadata'
+      nodeEndpoint?: string | null
+      nodeLocation?: {
+        __typename?: 'NodeLocationMetadata'
+        coordinates?: { __typename?: 'GeoCoordinates'; latitude: number; longitude: number } | null
+      } | null
+    } | null
     bags: Array<{ __typename?: 'StorageBag'; id: string }>
   }>
 }
@@ -134,6 +141,12 @@ export const GetStorageBucketsWithBagsDocument = gql`
       id
       operatorMetadata {
         nodeEndpoint
+        nodeLocation {
+          coordinates {
+            latitude
+            longitude
+          }
+        }
       }
       bags {
         id
