@@ -245,31 +245,56 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
   )
 
   const handleSetOwnedNftWhereInput = () => {
-    const includeEnglishAuction = nftStatusFilter?.includes('TransactionalStatusAuction-English')
-    const includeOpenAuction = nftStatusFilter?.includes('TransactionalStatusAuction-Open')
-    const includeAuction = includeEnglishAuction || includeOpenAuction
-
-    const transactionalStatusTypes = nftStatusFilter
-      ?.filter(
-        (status) => status !== 'TransactionalStatusAuction-English' && status !== 'TransactionalStatusAuction-Open'
-      )
-      .concat(includeAuction ? ['TransactionalStatusAuction'] : [])
-
-    const auctionTypes = [
-      ...(includeEnglishAuction ? ['AuctionTypeEnglish'] : []),
-      ...(includeOpenAuction ? ['AuctionTypeOpen'] : []),
-    ]
-
     setOwnedNftWhereInput((value) => ({
       ...value,
-      transactionalStatus: {
-        isTypeOf_in: transactionalStatusTypes,
-        auction: {
-          auctionType: {
-            isTypeOf_in: auctionTypes,
-          },
-        },
-      },
+      OR: [
+        ...(nftStatusFilter?.includes('TransactionalStatusAuction-English')
+          ? [
+              {
+                transactionalStatus: {
+                  isTypeOf_eq: 'TransactionalStatusAuction',
+                  auction: {
+                    auctionType: {
+                      isTypeOf_eq: 'AuctionTypeEnglish',
+                    },
+                  },
+                },
+              },
+            ]
+          : []),
+        ...(nftStatusFilter?.includes('TransactionalStatusAuction-Open')
+          ? [
+              {
+                transactionalStatus: {
+                  isTypeOf_eq: 'TransactionalStatusAuction',
+                  auction: {
+                    auctionType: {
+                      isTypeOf_eq: 'AuctionTypeOpen',
+                    },
+                  },
+                },
+              },
+            ]
+          : []),
+        ...(nftStatusFilter?.includes('TransactionalStatusBuyNow')
+          ? [
+              {
+                transactionalStatus: {
+                  isTypeOf_eq: 'TransactionalStatusBuyNow',
+                },
+              },
+            ]
+          : []),
+        ...(nftStatusFilter?.includes('TransactionalStatusIdle')
+          ? [
+              {
+                transactionalStatus: {
+                  isTypeOf_eq: 'TransactionalStatusIdle',
+                },
+              },
+            ]
+          : []),
+      ],
     }))
   }
 
