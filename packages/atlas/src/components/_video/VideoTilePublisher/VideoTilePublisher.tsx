@@ -30,6 +30,7 @@ import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { SentryLogger } from '@/utils/logs'
 import { formatDurationShort } from '@/utils/time'
+import { YPP_POLL_INTERVAL } from '@/views/studio/MyVideosView/MyVideosView'
 
 import { SlotsObject } from '../VideoThumbnail'
 import { VideoTile } from '../VideoTile'
@@ -51,7 +52,7 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
     const { video, loading } = useFullVideo(id ?? '', {
       skip: !id,
       onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTilePublisher', error, { video: { id } }),
-      pollInterval: titlesInSync?.length && titlesInSync.includes(videoTitleMap) ? 1000 : undefined,
+      pollInterval: titlesInSync?.length && titlesInSync.includes(videoTitleMap) ? YPP_POLL_INTERVAL : undefined,
     })
 
     useEffect(() => {

@@ -50,6 +50,7 @@ const INITIAL_FIRST = 50
 const OPEN_TAB_SNACKBAR = 'OPEN_TAB_SNACKBAR'
 const REMOVE_DRAFT_SNACKBAR = 'REMOVE_DRAFT_SNACKBAR'
 const SNACKBAR_TIMEOUT = 5000
+export const YPP_POLL_INTERVAL = 3000
 
 export const MyVideosView = () => {
   const headTags = useHeadTags('My videos')
@@ -70,7 +71,7 @@ export const MyVideosView = () => {
       enabled: !!channelId,
       refetchInterval: (data) =>
         data?.data.some((resource) => resource.state === 'UploadStarted' && resource.privacyStatus !== 'private')
-          ? 1000
+          ? YPP_POLL_INTERVAL
           : false,
     }
   )
