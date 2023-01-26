@@ -8,6 +8,7 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { atlasConfig } from '@/config'
 import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useJoystream } from '@/providers/joystream/joystream.hooks'
 import { formatDateTime } from '@/utils/time'
 
 import {
@@ -42,6 +43,9 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({
   fee,
   isOwnedByChannel,
 }) => {
+  const {
+    chainState: { nftPlatformFeePercentage },
+  } = useJoystream()
   const { startDate, endDate, type } = formData
 
   const totalDaysAndHours = getTotalDaysAndHours(startDate, endDate)
@@ -92,7 +96,7 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({
       {creatorRoyalty && (
         <Row>
           <Title>
-            <TitleText>Royalties</TitleText>
+            <TitleText>Creator's royalties</TitleText>
             <StyledInformation
               text="Royalties let the video creator earn revenue from secondary NFT sales"
               multiline
@@ -109,6 +113,19 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({
           </Description>
         </Row>
       )}
+      <Row>
+        <Title>
+          <TitleText>Platform royalties</TitleText>
+          <StyledInformation
+            text="Platform royalties is a commission from every sale of this NFT that goes to the platform"
+            multiline
+            placement="top"
+          />
+        </Title>
+        <Description>
+          <DescriptionText>{nftPlatformFeePercentage}%</DescriptionText>
+        </Description>
+      </Row>
       {formData.startingPrice && isAuction && (
         <Row>
           <Title>

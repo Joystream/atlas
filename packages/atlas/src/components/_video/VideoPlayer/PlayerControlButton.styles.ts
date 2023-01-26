@@ -146,4 +146,5 @@ export const ControlButtonTooltip = styled.div<ControlButtonTooltipProps>`
 export const ControlButtonTooltipText = styled(Text)`
   /* 12px */
   font-size: 0.75em;
+  white-space: nowrap;
 `
