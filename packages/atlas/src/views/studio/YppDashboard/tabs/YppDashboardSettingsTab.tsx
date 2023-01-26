@@ -186,7 +186,7 @@ export const YppDashboardSettingsTab = () => {
           )
           if (data.status === 200) {
             displaySnackbar({
-              title: 'You left the progam',
+              title: 'You left the program',
               description:
                 'You are no longer member of the YouTube Partner Program. You can now connect your YouTube channel with another Joystream channel.',
               iconType: 'success',
