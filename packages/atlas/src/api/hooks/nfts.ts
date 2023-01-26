@@ -150,7 +150,6 @@ export const useNftHistory = (
   const { data, ...rest } = useGetNftHistoryQuery({ variables: { nftId: id || '' }, skip: !id, ...opts })
 
   return {
-    // todo make sure it's working and it's properly sorted
     events: data?.events,
     ...rest,
   }

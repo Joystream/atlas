@@ -11,7 +11,6 @@ import {
 import { GetNftActivitiesQuery } from '@/api/queries/__generated__/notifications.generated'
 import { convertDateFormat } from '@/utils/time'
 
-// todo make sure that every activity work as it should
 export type NftActivitiesRecord = {
   id?: string
   date?: Date
@@ -246,8 +245,6 @@ export const useActivities = (memberId?: string, sort?: EventOrderByInput) => {
   const activities = parsedActivities ? parsedActivities.filter((a): a is ActivitiesRecord => !!a) : undefined
 
   const totalCounts = useMemo(() => {
-    // todo make sure that's working correctly
-
     return {
       nftsBoughts: nftsBoughtTotalCount,
       nftsSold: nftsSoldTotalCount,
