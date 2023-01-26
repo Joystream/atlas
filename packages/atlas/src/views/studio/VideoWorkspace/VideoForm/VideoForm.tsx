@@ -60,6 +60,7 @@ import {
 } from './VideoForm.styles'
 
 const CUSTOM_LICENSE_CODE = 1000
+const JOYSTREAM_LICENSE_CODE = 1009
 const SCROLL_TIMEOUT = 500
 const MINT_NFT_TIMEOUT = 800
 const MIN_TITLE_LENGTH = 3
@@ -853,6 +854,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           {videoFieldsLocked && videoEditFields}
           <Controller
             name="licenseCode"
+            defaultValue={JOYSTREAM_LICENSE_CODE}
             control={control}
             rules={requiredValidation('License')}
             render={({ field: { value, onChange, ref } }) => (
