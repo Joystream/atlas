@@ -21,6 +21,7 @@ import { VideoWorkspaceProvider, useVideoWorkspaceRouting } from '@/providers/vi
 import { transitions } from '@/styles'
 import { isAllowedBrowser } from '@/utils/browser'
 import { NotificationsView } from '@/views/notifications'
+import { MyPlaylistsView } from '@/views/studio/MyPlaylists'
 
 import { CreateEditChannelView } from './CreateEditChannelView'
 import { CrtView } from './CrtView'
@@ -135,6 +136,12 @@ const StudioLayout = () => {
               <Route
                 path={relativeRoutes.studio.videos()}
                 element={<PrivateRoute element={<MyVideosView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />}
+              />
+              <Route
+                path={relativeRoutes.studio.playlist()}
+                element={
+                  <PrivateRoute element={<MyPlaylistsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                }
               />
               <Route
                 path={relativeRoutes.studio.crt()}

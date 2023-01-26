@@ -5,6 +5,7 @@ import {
   SvgActionPlay,
   SvgSidebarChannel,
   SvgSidebarPayments,
+  SvgSidebarPlaylist,
   SvgSidebarToken,
   SvgSidebarUpload,
   SvgSidebarVideos,
@@ -25,6 +26,12 @@ const studioNavbarItems: NavItemType[] = [
     name: 'Videos',
     expandedName: 'My videos',
     to: absoluteRoutes.studio.videos(),
+  },
+  {
+    icon: <SvgSidebarPlaylist />,
+    name: 'Playlists',
+    expandedName: 'My playlists',
+    to: absoluteRoutes.studio.playlist(),
   },
   {
     icon: <SvgSidebarChannel />,
