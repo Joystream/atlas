@@ -141,6 +141,7 @@ export const configSchema = z.object({
   }),
   legal: z.object({
     termsOfService: z.string(),
+    yppTnC: z.string(),
     copyrightPolicy: z.string(),
     privacyPolicy: z.string(),
   }),
