@@ -31,7 +31,7 @@ import {
 import { useGetYppLastVerifiedChannels } from './YppLandingView.hooks'
 import { BackgroundContainer, StyledLimitedWidthContainer } from './YppLandingView.styles'
 
-type YppStatus = 'have-channel' | 'no-channel' | 'ypp-signed' | 'connect-wallet' | null
+export type YppStatus = 'have-channel' | 'no-channel' | 'ypp-signed' | 'connect-wallet' | null
 
 type YppHeroProps = {
   onSignUpClick: () => void
@@ -41,7 +41,7 @@ type YppHeroProps = {
   selectedChannelTitle?: string | null
 }
 
-const getButtonText = (variant: YppStatus) => {
+export const getButtonText = (variant: YppStatus) => {
   switch (variant) {
     case 'have-channel':
     case 'connect-wallet':

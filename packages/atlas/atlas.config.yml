@@ -58,23 +58,23 @@ features:
         showInDashboard: false # Optional. If false the reward will be shown only on youtube partner program landing page. Default true
         shortDescription: Connect your YouTube channels via a simple step-by-step flow and get your first reward.
         baseAmount: 5000 # Base amount that will be multiplied by tier multiplier
-      - title: Sync videos from your YouTube Channel
+      - title: Sync videos from your YouTube channel
         shortDescription: Opt in to auto-sync feature upon sign up and all YouTube content will get uploaded to Atlas automatically. Get paid for each new video synced to your Atlas channel.
         stepsDescription: Publishing your existing and new content with Atlas is the fastest way to earn more JOY tokens.
         steps:
-          - Make sure the auto-sync feature enabled
-          - Publish new videos to Your YouTube channel
-          - Wait till it gets fully synced to your Atlas channel
-          - Get rewarded for every new video synced
+          - Make sure the auto-sync feature enabled.
+          - Publish new videos to your YouTube channel.
+          - Wait till it gets fully synced to your Atlas channel.
+          - Get rewarded for every new video synced.
         baseAmount: 300
       - title: Refer another YouTube creator
         shortDescription: Get JOY for every new creator who signs up to YPP programme using your referral link.
         stepsDescription: Earn when another YouTube creator signs up to the program by using your your referral link.
         steps:
-          - Copy your link with get referral link button
-          - Send it to as many Web3 Youtube creators as you want
-          - Get rewarded for every new successful sign up, that uses your referral link
-          - If signed up without the link they can simply add your channel name to the referral field in the registration flow
+          - Copy your link with get referral link button.
+          - Send it to as many Web3 YouTube creators as you want.
+          - Get rewarded for every new successful sign up, that uses your referral link.
+          - If signed up without the link they can simply add your channel name to the referral field in the registration flow.
         baseAmount: 1000
         actionButtonText: Get referral link
         actionButtonAction: copyReferral

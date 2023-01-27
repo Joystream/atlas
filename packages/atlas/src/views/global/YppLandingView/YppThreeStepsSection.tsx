@@ -8,6 +8,7 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { YppStatus, getButtonText } from '@/views/global/YppLandingView/YppHero'
 
 import {
   BackgroundContainer,
@@ -19,10 +20,11 @@ import { StepCard, StepCardFade, StepCardImg, StepCardNumber, StepCardsWrapper }
 
 type YppThreeStepsSectionProps = {
   onSignUpClick: () => void
+  yppStatus: YppStatus
 }
 const appName = atlasConfig.general.appName
 
-export const YppThreeStepsSection: FC<YppThreeStepsSectionProps> = ({ onSignUpClick }) => {
+export const YppThreeStepsSection: FC<YppThreeStepsSectionProps> = ({ onSignUpClick, yppStatus }) => {
   const mdMatch = useMediaMatch('md')
   return (
     <BackgroundContainer pattern="bottom">
@@ -54,6 +56,7 @@ export const YppThreeStepsSection: FC<YppThreeStepsSectionProps> = ({ onSignUpCl
             </Text>
             <Button
               size="large"
+              variant={yppStatus === 'ypp-signed' ? 'secondary' : 'primary'}
               iconPlacement="right"
               icon={<SvgActionChevronR />}
               data-aos="fade-up"
@@ -62,7 +65,7 @@ export const YppThreeStepsSection: FC<YppThreeStepsSectionProps> = ({ onSignUpCl
               data-aos-easing="atlas-easing"
               onClick={onSignUpClick}
             >
-              Sign up now
+              {getButtonText(yppStatus)}
             </Button>
             <Text
               variant="t100"
@@ -74,7 +77,7 @@ export const YppThreeStepsSection: FC<YppThreeStepsSectionProps> = ({ onSignUpCl
               data-aos-offset="40"
               data-aos-easing="atlas-easing"
             >
-              It takes under 1 minute and is 100% free.
+              {yppStatus !== 'ypp-signed' && 'It takes under 1 minute and is 100% free.'}
             </Text>
           </HeaderGridItem>
           <StepCardsWrapper
