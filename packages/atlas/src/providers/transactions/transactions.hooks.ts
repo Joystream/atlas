@@ -37,6 +37,7 @@ type HandleTransactionOpts<T extends ExtrinsicResult> = {
   onTxFinalize?: (data: T) => Promise<unknown>
   onTxSync?: (data: T, metaStatus?: MetaprotocolTransactionSuccessFieldsFragment) => Promise<unknown>
   onError?: () => void
+  onSuccessCallback?: () => void
   snackbarSuccessMessage?: DisplaySnackbarArgs
   minimized?: {
     errorMessage: string
@@ -69,6 +70,7 @@ export const useTransaction = (): HandleTransactionFn => {
       onTxSync,
       snackbarSuccessMessage,
       onError,
+      onSuccessCallback,
       minimized = null,
       allowMultiple,
       unsignedMessage,
@@ -204,6 +206,9 @@ export const useTransaction = (): HandleTransactionFn => {
             iconType: 'success',
             timeout: TX_COMPLETED_SNACKBAR_TIMEOUT,
           })
+        }
+        if (onSuccessCallback) {
+          onSuccessCallback()
         }
 
         // if it's a minimized transaction, remove it from the list right away
