@@ -31,7 +31,7 @@ import {
 import { useGetYppLastVerifiedChannels } from './YppLandingView.hooks'
 import { BackgroundContainer, StyledLimitedWidthContainer } from './YppLandingView.styles'
 
-export type YppStatus = 'have-channel' | 'no-channel' | 'ypp-signed' | 'connect-wallet' | null
+export type YppAtlasStatus = 'have-channel' | 'no-channel' | 'ypp-signed' | 'connect-wallet' | null
 
 type YppHeroProps = {
   onSignUpClick: () => void
@@ -41,7 +41,7 @@ type YppHeroProps = {
   selectedChannelTitle?: string | null
 }
 
-export const getButtonText = (variant: YppStatus) => {
+export const getButtonText = (variant: YppAtlasStatus) => {
   switch (variant) {
     case 'have-channel':
     case 'connect-wallet':
@@ -144,7 +144,7 @@ export const YppHero: FC<YppHeroProps> = ({
                   to apply again.
                 </>
               )}
-              {yppStatus !== 'ypp-signed' && 'It takes under 1 minute and is 100% free.'}
+              {yppAtlasStatus !== 'ypp-signed' && 'It takes under 1 minute and is 100% free.'}
             </Text>
           </GridItem>
         </LayoutGrid>
