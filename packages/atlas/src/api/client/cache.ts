@@ -158,48 +158,39 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
     },
   },
   commentsConnection: relayStylePagination(getCommentKeyArgs),
-  channelByUniqueInput: (existing, { toReference, args }) => {
+  channelById: (existing, { toReference, args }) => {
     return (
       existing ||
       toReference({
         __typename: 'Channel',
-        id: args?.where.id,
+        id: args?.id,
       })
     )
   },
-  videoByUniqueInput: (existing, { toReference, args }) => {
+  videoById: (existing, { toReference, args }) => {
     return (
       existing ||
       toReference({
         __typename: 'Video',
-        id: args?.where.id,
+        id: args?.id,
       })
     )
   },
-  membershipByUniqueInput: (existing, { toReference, args }) => {
-    return (
-      existing ||
-      toReference({
-        __typename: 'Membership',
-        id: args?.where.id,
-      })
-    )
-  },
-  ownedNftByUniqueInput: (existing, { toReference, args }) => {
+  ownedNftById: (existing, { toReference, args }) => {
     return (
       existing ||
       toReference({
         __typename: 'OwnedNft',
-        id: args?.where.id,
+        id: args?.id,
       })
     )
   },
-  commentByUniqueInput: (existing, { toReference, args }) => {
+  commentById: (existing, { toReference, args }) => {
     return (
       existing ||
       toReference({
         __typename: 'Comment',
-        id: args?.where.id,
+        id: args?.id,
       })
     )
   },

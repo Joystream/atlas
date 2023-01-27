@@ -37,7 +37,7 @@ export const useRawActivities = (memberId?: string, sort: EventOrderByInput = Ev
       orderBy: [sort],
       memberId: memberId || '',
     },
-    // We use `no-cache` because for unknown reasons cache removes data about owner
+    // TODO Fix me. We use `no-cache` because for unknown reasons cache removes data about owner
     fetchPolicy: 'no-cache',
     skip: !memberId,
   })

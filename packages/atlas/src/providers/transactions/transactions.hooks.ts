@@ -312,7 +312,7 @@ const useMetaprotocolTransactionStatus = () => {
         variables: {
           transactionHash: txHash,
         },
-        // FIXME: Something seems broken with the cache, causes the result to be incomplete
+        // TODO FIXME: Something seems broken with the cache, causes the result to be incomplete
         fetchPolicy: 'no-cache',
       })
       if (data?.events[0] && data.events[0].data.__typename === 'MetaprotocolTransactionStatusEventData') {

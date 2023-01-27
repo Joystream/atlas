@@ -90,7 +90,7 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
   const { entries: nftHistory } = useNftHistoryEntries(video?.id ?? '', {
     skip: !nft,
     pollInterval: atlasConfig.features.nft.statusPollingInterval,
-    // We use `no-cache` because for unknown reasons cache removes data about owner
+    // TODO Fix me. We use `no-cache` because for unknown reasons cache removes data about owner
     fetchPolicy: 'no-cache',
   })
   const isOwnedByChannel = nftOwner?.__typename === 'NftOwnerChannel'
