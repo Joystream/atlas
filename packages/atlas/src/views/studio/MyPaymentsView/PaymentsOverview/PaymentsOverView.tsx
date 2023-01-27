@@ -8,6 +8,7 @@ import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
 import { CopyAddressButton } from '@/components/_buttons/CopyAddressButton/CopyAddressButton'
 import { ClaimChannelPaymentsDialog } from '@/components/_overlays/ClaimChannelPaymentsDialog'
+import { WithdrawFundsDialog } from '@/components/_overlays/SendTransferDialogs'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useMemberAvatar } from '@/providers/assets/assets.hooks'
@@ -26,8 +27,11 @@ import {
 } from './PaymentsOverview.styles'
 
 export const PaymentsOverView = () => {
+  const { channelId, activeMembership, accountId } = useUser()
+  const { url: memberAvatarUrl } = useMemberAvatar(activeMembership)
+  const { totalBalance } = useSubscribeAccountBalance()
+  const [showWithdrawDialog, setShowWithdrawDialog] = useState(false)
   const [showClaimDialog, setShowClaimDialog] = useState<boolean>(false)
-  const { channelId, accountId, activeMembership } = useUser()
   const { channel, loading } = useFullChannel(channelId || '')
   const { availableAward, isAwardLoading } = useChannelPayout()
 
@@ -51,6 +55,15 @@ export const PaymentsOverView = () => {
 
   return (
     <>
+      <WithdrawFundsDialog
+        avatarUrl={memberAvatarUrl}
+        activeMembership={activeMembership}
+        show={showWithdrawDialog}
+        onExitClick={() => setShowWithdrawDialog(false)}
+        totalBalance={totalBalance}
+        channelBalance={channelBalance}
+        channelId={channelId}
+      />
       <ClaimChannelPaymentsDialog show={showClaimDialog} onExit={() => setShowClaimDialog(false)} />
       <TilesWrapper>
         <StyledWidgetTile
@@ -87,7 +100,7 @@ export const PaymentsOverView = () => {
             text: 'Withdraw',
             variant: 'secondary',
             fullWidth: !mdMatch,
-            // todo handle withdraw
+            onClick: () => setShowWithdrawDialog(true),
           }}
         />
         <WidgetTile
