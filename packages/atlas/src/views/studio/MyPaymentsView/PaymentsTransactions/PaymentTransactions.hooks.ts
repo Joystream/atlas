@@ -61,7 +61,7 @@ export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channe
 
   useEffect(() => {
     fetchPaymentsData()
-  }, [joystream, data, channel])
+  }, [joystream, data, channel, fetchPaymentsData])
 
   return {
     ...rest,
