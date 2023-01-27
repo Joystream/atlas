@@ -29,6 +29,7 @@ import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { sizes } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
+import { YPP_POLL_INTERVAL } from '@/utils/polling'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
 import { YppVideoDto } from '@/views/studio/MyVideosView/MyVideosView.types'
 
@@ -50,7 +51,6 @@ const INITIAL_FIRST = 50
 const OPEN_TAB_SNACKBAR = 'OPEN_TAB_SNACKBAR'
 const REMOVE_DRAFT_SNACKBAR = 'REMOVE_DRAFT_SNACKBAR'
 const SNACKBAR_TIMEOUT = 5000
-export const YPP_POLL_INTERVAL = 3000
 
 export const MyVideosView = () => {
   const headTags = useHeadTags('My videos')
