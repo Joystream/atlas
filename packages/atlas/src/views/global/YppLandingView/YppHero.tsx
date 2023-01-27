@@ -31,7 +31,7 @@ import {
 import { useGetYppLastVerifiedChannels } from './YppLandingView.hooks'
 import { BackgroundContainer, StyledLimitedWidthContainer } from './YppLandingView.styles'
 
-type YppAtlasStatus = 'have-channel' | 'no-channel' | 'ypp-signed' | 'connect-wallet' | null
+export type YppStatus = 'have-channel' | 'no-channel' | 'ypp-signed' | 'connect-wallet' | null
 
 type YppHeroProps = {
   onSignUpClick: () => void
@@ -41,7 +41,7 @@ type YppHeroProps = {
   selectedChannelTitle?: string | null
 }
 
-const getButtonText = (variant: YppAtlasStatus) => {
+export const getButtonText = (variant: YppStatus) => {
   switch (variant) {
     case 'have-channel':
     case 'connect-wallet':
@@ -135,7 +135,7 @@ export const YppHero: FC<YppHeroProps> = ({
               color="colorTextMuted"
               margin={{ top: hasAnotherUnsyncedChannel && selectedChannelTitle ? 4 : 2 }}
             >
-              {hasAnotherUnsyncedChannel && selectedChannelTitle ? (
+              {hasAnotherUnsyncedChannel && selectedChannelTitle && (
                 <>
                   Your channel "{selectedChannelTitle}" is already part of the YouTube Partner Program.{' '}
                   <SelectDifferentChannelButton onClick={onSelectChannel} color="colorTextPrimary">
@@ -143,9 +143,8 @@ export const YppHero: FC<YppHeroProps> = ({
                   </SelectDifferentChannelButton>{' '}
                   to apply again.
                 </>
-              ) : (
-                'It takes 3 minutes and is 100% free.'
               )}
+              {yppStatus !== 'ypp-signed' && 'It takes under 1 minute and is 100% free.'}
             </Text>
           </GridItem>
         </LayoutGrid>

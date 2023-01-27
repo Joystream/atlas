@@ -6,7 +6,9 @@ import memberDropdown from '@/assets/images/member-dropdown.webp'
 import selectChannel from '@/assets/images/select-channel.webp'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
+import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { YppStatus, getButtonText } from '@/views/global/YppLandingView/YppHero'
 
 import {
   BackgroundContainer,
@@ -18,9 +20,11 @@ import { StepCard, StepCardFade, StepCardImg, StepCardNumber, StepCardsWrapper }
 
 type YppThreeStepsSectionProps = {
   onSignUpClick: () => void
+  yppStatus: YppStatus
 }
+const appName = atlasConfig.general.appName
 
-export const YppThreeStepsSection: FC<YppThreeStepsSectionProps> = ({ onSignUpClick }) => {
+export const YppThreeStepsSection: FC<YppThreeStepsSectionProps> = ({ onSignUpClick, yppStatus }) => {
   const mdMatch = useMediaMatch('md')
   return (
     <BackgroundContainer pattern="bottom">
@@ -47,11 +51,12 @@ export const YppThreeStepsSection: FC<YppThreeStepsSectionProps> = ({ onSignUpCl
               data-aos-offset="40"
               data-aos-easing="atlas-easing"
             >
-              Our fully automated verification process is as simple as 1-2-3. If you don't have an Atlas channel
+              Our fully automated verification process is as simple as 1-2-3. If you don't have an {appName} channel
               already, you'll be able to create one for free.
             </Text>
             <Button
               size="large"
+              variant={yppStatus === 'ypp-signed' ? 'secondary' : 'primary'}
               iconPlacement="right"
               icon={<SvgActionChevronR />}
               data-aos="fade-up"
@@ -60,7 +65,7 @@ export const YppThreeStepsSection: FC<YppThreeStepsSectionProps> = ({ onSignUpCl
               data-aos-easing="atlas-easing"
               onClick={onSignUpClick}
             >
-              Sign up now
+              {getButtonText(yppStatus)}
             </Button>
             <Text
               variant="t100"
@@ -72,7 +77,7 @@ export const YppThreeStepsSection: FC<YppThreeStepsSectionProps> = ({ onSignUpCl
               data-aos-offset="40"
               data-aos-easing="atlas-easing"
             >
-              It takes 3 minutes and is 100% free.
+              {yppStatus !== 'ypp-signed' && 'It takes under 1 minute and is 100% free.'}
             </Text>
           </HeaderGridItem>
           <StepCardsWrapper
@@ -102,7 +107,7 @@ export const YppThreeStepsSection: FC<YppThreeStepsSectionProps> = ({ onSignUpCl
             <StepCard>
               <StepCardNumber>3</StepCardNumber>
               <Text variant={mdMatch ? 'h500' : 'h400'} as="h2">
-                Collect JOY tokens and access all Atlas features
+                Collect JOY tokens and access all ${appName} features
               </Text>
               <StepCardImg src={memberDropdown} alt="Member dropdown" width="322" height="468" />
               <StepCardFade />

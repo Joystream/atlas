@@ -18,6 +18,7 @@ import youtubeSyncFront from '@/assets/images/illustration-ypp-sync-l2.webp'
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { ContentCard } from '@/components/_ypp/ContentCard'
+import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { CardImage, CardImageRow, CardsWithImagesContainer, ImageContainer } from './YppCardsSection.styles'
@@ -38,6 +39,8 @@ export const YppCardsSections: FC = () => {
     endScroll,
     speed: 0.2,
   }
+
+  const appName = atlasConfig.general.appName
 
   return (
     <>
@@ -67,8 +70,8 @@ export const YppCardsSections: FC = () => {
                   data-aos-offset="40"
                   data-aos-easing="atlas-easing"
                 >
-                  New to Atlas? Joining our YouTube Partner Program is an exciting opportunity to try out the future of
-                  online video sharing. And we're only getting started.
+                  New to {appName}? Joining our YouTube Partner Program is an exciting opportunity to try out the future
+                  of online video sharing. And we're only getting started.
                 </Text>
               </HeaderGridItem>
             </CenteredLayoutGrid>
