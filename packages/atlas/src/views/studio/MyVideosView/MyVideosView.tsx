@@ -344,7 +344,7 @@ export const MyVideosView = () => {
               </Button>
             )}
           </TabsContainer>
-          {currentChannel && (
+          {currentChannel && isAllVideosTab && (
             <StyledBanner
               dismissibleId="yppSyncInfo"
               title="YouTube Sync is enabled"
