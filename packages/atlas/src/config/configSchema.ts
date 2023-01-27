@@ -79,6 +79,9 @@ export const configSchema = z.object({
           })
         )
         .optional(),
+      legal: z.object({
+        yppTnC: z.string(),
+      }),
     }),
     nft: z.object({
       auctionMinimumBidStepMultiplier: z.number(),

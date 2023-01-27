@@ -105,6 +105,168 @@ features:
         linkText: Go to Discord
         label: Discord
         icon: message
+    legal:
+      yppTnC: |
+        # YouTube Partnership Programme (YPP)
+        ## Key information
+
+        ### Rewards
+          - Sign up to YouTube Partnership Programme: 5000 Joy
+          - Refer new programme subscribers: 1000 Joy
+          - For every video synced from YT to Joystream channel: 300 Joy
+
+        The tokens pool allocated for this programme is limited, so the programme has limited duration.
+
+        ### Tiers Multiplier
+
+        Based on the YouTube channel followers count, a popularity Tier is assigned to each participant. Popularity tier results in multiplication effect on all rewards of the programme.
+
+          - Tier 1 -  x1 rewards - 50 to 5,000 subscribers
+          - Tier 2 - x2.5 rewards - 5,000 to 50,000 subscribers
+          - Tier 3 - x5 rewards - 50,000+ subscribers
+
+        ### Example Rewards Calculation
+
+        For a channel with 7000 subscribers, which signed up and remained in the programme with auto-sync service enabled for 1 month. During this month that channel uploaded 5 new videos to their Youtube channel, 2 videos directly to Joystream channel with manual upload, and referred 3 other YT channels that ended up signing up.
+
+        In the end of this month, the payout to this channel's account will be:
+          5000 * 2.5 + 5 * 300 * 2.5 + 1000 * 3 * 2.5 = **23,750** JOY
+
+        ### When you accept the Terms and Conditions you
+
+        1. Become enrolled to the YouTube Partnership Programme.
+        2. Your YT channel information and email will be stored in the data base, operated by JS Genesis.
+        3. Qualify for the rewards paid in JOY tokens for signing up to to this programme.
+        4. If you chose to opt in to auto-sync service, you grant permission for JS Genesis operated service to upload all videos from your YoutTube channel to Joystream blockchain and storage system, available to display on Gleev App or any other app connected to Joystream blockchain and qualify for the additional rewards paid in JOY tokens for new videos added to your Joystream channel via automatic upload service.
+        5. Qualify for additional rewards paid in JOY tokens when other creators sign up to this programme, referencing your channel as referrer.
+        6. Will remain in the programme unless access rights to Gleev service is revoked from your google account settings, opt out is triggered from YPP dashboard or suspended by the members of JS Genesis team.
+
+        Rewards are subject to the verified status of the channel, assigned by the program operators.
+
+        # T&Cs
+
+        ## Who is the programme for
+
+        The programme is targeted at YouTube creators that already have a channel focussed on Crypto and Web3 content, with substantial published videos and subscribers. The programme involves compensation in JOY tokens for YT creators who choose to opt in, meet the qualification criteria and perform actions that are linked to rewards.
+
+        ## Who Qualifies
+
+        Youtube channel has to:
+          1. Be created not earlier than 90 days before the sign up.
+          2. Have at least 50 followers and the channel followers must be set to public view.
+          3. Have at least 10 videos, each created at least 30 days before the sign up.
+          4. Channel must be focussed on Web3/ Crypto content, matching one of the categories supported by Gleev App.
+
+        Newly created Joystream channel has to have description, avatar and background image set up. The criteria for qualification can be reviewed at any time without prior notice.
+
+        ## How to sign up
+
+        To sign up, user has to go through the onboarding flow provided in the Gleev web app. https://gleev.xyz/ypp and authorise with the Google Account, connected to their YT channel. During the authorisation, the access to the YT content `youtube.readonly` scope, to fetch channel meta data and content information; and access to email address for the YT account has to be granted for the JSG operated Backend Application (API client) that connects to YT API.
+
+          Mandatory fields need to be populated to the web input form to progress, such as email, video category, and terms and conditions need to be accepted.
+
+        ## How to get rewards
+
+        Verified Youtube creators will be offered compensation in JOY tokens, native asset of Joystream blockchain for the participation in the programme. In order to earn rewards, participants need to complete the rewarded tasks, namely:
+
+        1. New sign up: Authorise with their YT channel and choose an optional opt in to auto-sync service. One-off compensation only for new sign ups.
+        2. Referral: Refer other YT Web3/ Crypto content creators to the programme, which results in successful signups. It can be done by generating unique referral code (link), which can be followed to create new membership. Once successful the new memberships created with the referred link, this will result in rewards for the originating account. The same code can be used by multiple new joiners. Alternatively referred channels can enter referring channel name to the referral field during sign up flow.
+        3. Auto-synced content: Simply post new Web3 and Crypto-focussed videos to the connected YT channel, and remain opted in to the programme and auto-sync feature till they are fully uploaded to your channel.
+
+        ## How rewards are calculated
+
+        Rewards are based on the popularity Tiers assigned to the channels upon programme registration  Tiers are calculated based on the number of subscribers. The ranges of subscribers qualifying for each Tier can be reviewed and updated by the programme operators at any time without prior notice.
+
+        Your current Tier and tier information is contained in the Dashboard, available on the gleev.xyz/ypp page for the signed in members, already opted in to the programme.
+
+        Rewards are calculated based on the internal DB records, generated automatically or added by the JSG team operating the programme.
+          - For new signups, the sign up date will be reviewed in defining which period the payout should be made.
+          - For referrals, each new channel who signs up adding the referrer's channel name to the referrer field in the onboarding flow generates a record of the referral. In the end of the related payment cycle, number of referring channel records for new sign up is multiplied by referral base payment and tier multiplier of the referring channel.
+          - For the videos synced from Youtube, all video content will be monitored by programme operator, Jsgenesis team and its partners. To qualify for compensation it has to adhere to reasonable quality, focus on Web3-Crypto topic, and match the category selected for the video. It must adhere to [Copyright Policy ](https://gleev.xyz/legal/copyright) and general [Terms of Service](https://gleev.xyz/legal/tos).
+
+        To qualify for rewards the channel needs to be verified by JSGenesis team and/or its partners operating the programme.  This is a manual process, including visual review of the Youtube channel title, description and uploaded content. To be verified the content has to be of reasonable quality, focussing on Crypto/Web3 and match the selected category selected during upload.
+
+        ## How rewards are paid
+
+        When YT creators create Joystream channel  app, they get an auto-generated polkadot account assigned to this channel automatically. This account is bound to their channel, and cannot be updated. This account can hold JOY tokens.
+
+        The data collected and recorded in the internal DB with regards to uploaded content and referral stats will be informed with when deriving the cyclical rewards to the participating channels.
+
+        Rewards are paid only for verified channels. Rewards are paid via direct transfers from JS Genesis specific account to the creators' Joystream channel account. Rewards are paid by JS Genesis company, from the funds (tokens) budgeted for the purpose of operational support.
+
+        ## How to withdraw rewards
+
+        In order to create Joystream channel, a Joystream membership is required. It can be created free of charge using the Gleev App, hosted on gleev.xyz or Pioneer app hosted on  pioneerapp.xyz. Joystream membership requires a substrate account, created using any wallets compatible with Polkadot ecosystem.
+
+        From the channel account JOY token can be transferred (withdrawn) to the member account via Gleev app interfaces or polkadot.js app (calling transfer extrinsic). This transaction must be signed with the membership controller account, that was used to create Joystream channel.
+
+        ## Programme Partners Terms and Conditions
+
+        If you opt in to the Auto-sync feature you also agree to [YouTube's Terms of Service (https://www.youtube.com/t/terms)](https://www.youtube.com/t/terms) and [Google's Privacy Policy (https://www.google.com/policies/privacy).](https://www.google.com/policies/privacy)
+
+        ## Auto-sync service
+
+        In order to simplify the upload of content to Gleev App, JS Genesis team has built a dedicated backend application, integrated with Youtube and Gleev to facilitate the content upload. It is hosted on the JSGenesis operated infrastructure and operated by JS Genesis team.
+
+        This requests access to the necessary information via YT API, namely "read_only" scope to your YouTube channel data. This happens during the authorisation flow as part of the YPP programme onboarding. The App fetches only the information that YT exposes in the read_only scope and required to effectively operate the programme via the open API.
+
+        Account Info: email address.
+        Channel Info: name, date created, URL, number of followers, number of comments, number of views, number of videos,
+        Videos info: video titles, videos date uploaded, video subtitles.
+
+        If auto-sync service is enabled, it will refetch channel information once every 24 hours, and poll video information once every 30 minutes to detect new uploads and automatically upload them to your Gleev Channel.
+
+        Only public videos are synced. Videos are synced in resolution of 720px or lower. HD videos will be supported as the programme matures. Subtitles synced only in English, and all other languages are not supported at the time of programme launch, but will be supported in the future.  The queue of syncing is defined based on the proprietary algorithm developed and maintained by JSGenesis team. It may be updated at any time without prior notice.
+
+        If access of the JSGenesis operated backend app to your youtube channel is disabled on the side of Google account, then you are automatically opted out from the YPP programme and no longer qualify for rewards.
+
+        ## License
+
+        Auto-sync service will read the videos meta-data fields, including title, description, date created, duration, language and license and transfer them to the newly created video on the creators Joystream channel.
+
+        In case the original youtube video license was set to Standard-Youtube-License, such videos will be assigned Joystream-license, limiting the replication and usage of such content without the explicit consent of the author.
+
+        In case the original youtube video license was set to Creative Commons, such videos will be assigned CC0 license, allowing all viewers to distribute such videos freely in the public domain, allowing them to be built upon, enhanced and reused by others for any purpose without restrictions.
+
+        License can be updated manually for each videos individually from the list of available options.
+
+        ## Opt out
+
+        Channel can opt out from auto-sync feature by choosing this option in the settings tab of the YPP dashboard. Opting out from Auto-sync would stop automated upload of all new content published to YT channel, but would keep the Gleev channel in the YPP programme, meaning that referral rewards can still be collected.
+
+        Opting out from the entire programme can also be done from the settings tab. This will result the channel marked in the internal data base as "opted-out" and payout calculation for this channel will stop for any activities undertaken.
+
+        Already uploaded content will remain on the platform but can be deleted by the user at any time.
+
+        ## Termination
+
+        Any channel can be suspended from the programme at any time without any disclosure of the reason. The reasons can be for violating the adherence to the content vertical policy, and continuously posting videos that do not match the content expectation/ category requirements.
+
+        If the channel is suspended from the programme, it can no longer re-apply with the same credentials and can barred indefinitely or for the period to the discretion of JS Genesis team.
+
+        ## Disclaimer
+
+        Your use of our Services is at your sole risk. Our Services are provided “as is" and “as available" without warranties of any kind, either express or implied, including, but not limited to, implied warranties of merchantability, fitness for a particular purpose, title, and non-infringement. In addition, the Company does not represent or warrant that our Services are accurate, complete, reliable, current or error-free. While the Company attempts to make your access to and use of our Services safe, we cannot and do not represent or warrant that our Services or servers are free of viruses or other harmful components. You assume the entire risk as to the quality and performance of the Services.
+
+        Manual process is involved, so errors are not inevitable.  JSG team is not liable for any reconciliations, but is committed to spend reasonable efforts to support all participants in reconciliation of rewards calculation where it deems to be operationally viable and commercially sensible to do so.
+
+        JSG team is not liable or obliged to do the payments and in case of errors will seek to provide the support in reconciliation of payments but not be obliged for channel rewards. In case of any disputes over content quality and qualification for rewards, JSG has no liability to compensate the channels and these terms are not binding, but payouts are made on total discretion of the Gleev App operator and the JS Genesis AS team. In case programme budget runs out before some of the apps are paid, there is no obligation to pay late subscribers.
+
+        ## Severability
+
+        If any term, clause or provision of these Terms is held invalid or unenforceable, then that term, clause or provision will be severable from these Terms and will not affect the validity or enforceability of any remaining part of that term, clause or provision, or any other term, clause or provision of these Terms.
+
+        ## Limitation of Liability
+
+        The Company and the other Company Parties will not be liable to you under any theory of liability—whether based in contract, tort, negligence, strict liability, warranty, or otherwise—for any indirect, consequential, exemplary, incidental, special or punitive damages or lost profits, even if the Company or the other Company Parties have been advised of the possibility of such damages.
+
+        ## Governing Law
+
+        Governing law of these terms are the same as the general Terms of Service for Gleev App as described on this page: https://gleev.xyz/legal/tos
+
+        ## Miscellaneous
+
+        These Terms constitutes the agreement between you and the Company relating to your access to and use of the Services of Youtube Partnership Programme.  We may assign our rights and obligations under these Terms. Under no circumstances may you assign your rights and obligations under these Terms, including in the event of change of control or by operation of law, without our prior written consent. The failure of the Company to exercise or enforce any right or provision of these Terms will not operate as a waiver of such right or provision. We will not be liable for any delay or failure to perform any obligation under these Terms. Except as otherwise provided in herein, the agreement is intended solely for the benefit of the parties and are not intended to confer third-party beneficiary rights upon any other person or entity.
   nft:
     auctionMinimumBidStepMultiplier: 0.02 # Multiplier for the auction's starting price used to determine auction's minimum bid step. See more: https://joystream.gitbook.io/testnet-workspace/system/content-directory/nft#auction
     openAuctionBidLockDuration: 300 # Number of blocks for which bids on open auctions are locked from withdrawal. See more: https://joystream.gitbook.io/testnet-workspace/system/content-directory/nft#auction-type
@@ -355,7 +517,7 @@ legal:
   termsOfService: |
     # Terms of Service
 
-    Last updated on the 4th of May 2021
+    Last updated on the 25th of January 2023
 
     This Terms of Service ("Agreement") is a binding obligation between you ("User") and Jsgenesis AS ("Company", "We", "Us", "Our") for use of our Joystream Player interface ("Atlas") hosted at play.joystream.org and all other products (collectively "Software") developed and published by Us.
 
