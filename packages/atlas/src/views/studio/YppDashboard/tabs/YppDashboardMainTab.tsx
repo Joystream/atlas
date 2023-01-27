@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { SvgActionNewTab, SvgAlertsError24 } from '@/assets/icons'
+import { SvgActionNewTab, SvgAlertsError24, SvgAlertsInformative24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
@@ -9,6 +9,7 @@ import { BenefitCard } from '@/components/_ypp/BenefitCard'
 import { atlasConfig } from '@/config'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useUser } from '@/providers/user/user.hooks'
+import { formatNumber } from '@/utils/number'
 import { configYppIconMapper } from '@/views/global/YppLandingView/YppFooter'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
 
@@ -46,6 +47,19 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
           }
         />
       )}
+      <StyledBanner
+        title="When rewards are paid out?"
+        icon={<SvgAlertsInformative24 />}
+        description={
+          <>
+            Once your channel is verified, you will qualify for the rewards. Payouts are made on a weekly basis, every
+            Friday, for the previous calendar week. Your first payment will involve the reward for the sign up of{' '}
+            {formatNumber((atlasConfig.features.ypp.enrollmentReward ?? 0) * multiplier)}{' '}
+            {atlasConfig.joystream.tokenTicker}!
+          </>
+        }
+        dismissibleId="ypp-first-reward-information"
+      />
       {atlasConfig.features.ypp.widgets && (
         <WidgetsWrapper>
           {atlasConfig.features.ypp.widgets.map((widget) => (
