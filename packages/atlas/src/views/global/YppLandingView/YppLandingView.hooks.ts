@@ -9,12 +9,15 @@ import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 const YPP_SYNC_URL = atlasConfig.features.ypp.youtubeSyncApiUrl
 
+// todo yppStatus `Active` will be deprecated. We're keeping this for the sake of backward compatibility
+type YppStatus = 'Unverified' | 'Verified' | 'Suspended' | 'OptedOut' | 'Active'
+
 export type YppSyncedChannel = {
   title: string
   description: string
   aggregatedStats: number
   shouldBeIngested: boolean
-  isSuspended: boolean
+  yppStatus: YppStatus
   joystreamChannelId: number
   videoCategoryId: string
   thumbnails: {
@@ -49,26 +52,36 @@ export const useGetYppSyncedChannels = () => {
     }
     // TODO We should do only one request per given memberId
     // refactor once https://github.com/Joystream/youtube-synch/issues/55 is done
-    const syncedChannels = await Promise.all(
-      channels.map(async (channel) => {
-        try {
-          const response = await axios.get<YppSyncedChannel>(`${YPP_SYNC_URL}/channels/${channel.id}`)
-          return response?.data
-        } catch (error) {
-          return undefined
-        }
-      })
-    )
-    return syncedChannels.filter((channel): channel is YppSyncedChannel => !!channel)
+    try {
+      setIsLoading(true)
+      const syncedChannels = await Promise.all(
+        channels.map(async (channel) => {
+          try {
+            const response = await axios.get<YppSyncedChannel>(`${YPP_SYNC_URL}/channels/${channel.id}`)
+            return response?.data
+          } catch (error) {
+            return
+          }
+        })
+      )
+      const fetchedChannels = syncedChannels.filter(
+        (channel): channel is YppSyncedChannel =>
+          !!channel &&
+          (channel.yppStatus === 'Unverified' || channel?.yppStatus === 'Verified' || channel.yppStatus === 'Active')
+      )
+      setSyncedChannels(fetchedChannels)
+
+      return fetchedChannels
+    } catch (error) {
+      SentryLogger.error('Error while updating YPP setting: ', 'useGetYppSyncedChannels', error)
+    } finally {
+      setIsLoading(false)
+    }
   }, [channels])
 
   useEffect(() => {
     if (location.pathname.includes('studio') && !channels.length) return
-    setIsLoading(true)
-    getSyncedChannels().then((channels) => {
-      channels && setSyncedChannels(channels)
-      setIsLoading(false)
-    })
+    getSyncedChannels()
   }, [channels.length, getSyncedChannels, location.pathname])
 
   return {
@@ -99,7 +112,10 @@ export const useGetYppLastVerifiedChannels = () => {
     try {
       setIsVerifiedChannelsLoading(true)
       const response = await axios.get<RecentChannelsResponse>(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels`)
-      const channelIds = response.data.map((channel) => channel.joystreamChannelId.toString())
+      const channelIds = response.data
+        .filter((channel) => channel.yppStatus === 'Verified')
+        .map((channel) => channel.joystreamChannelId.toString())
+
       setRecentChannelsIds(channelIds)
     } catch (error) {
       SentryLogger.error('Failed to fetch recent channels', 'useYppGetLastVerifiedChannels', error)

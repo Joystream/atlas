@@ -31,7 +31,7 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
 
   return (
     <>
-      {currentChannel?.isSuspended && (
+      {currentChannel?.yppStatus === 'Suspended' && (
         <StyledBanner
           title="This channel has been suspended in the YouTube Partner Program"
           icon={<SvgAlertsError24 />}
