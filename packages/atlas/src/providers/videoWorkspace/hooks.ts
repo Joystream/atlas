@@ -19,7 +19,7 @@ import { VideoWorkspaceVideoAssets, VideoWorkspaceVideoFormFields } from './type
 
 import { channelDraftsSelector, useDraftStore } from '../drafts'
 
-export const DEFAULT_LICENSE_ID = 1002
+export const DEFAULT_LICENSE_ID = 1009
 
 export const useVideoWorkspace = () => {
   const ctx = useContext(VideoWorkspaceContext)

@@ -24,6 +24,12 @@ query GetStorageBucketsWithBags {
     id
     operatorMetadata {
       nodeEndpoint
+      nodeLocation {
+        coordinates {
+          latitude
+          longitude
+        }
+      }
     }
     bags {
       # CHANGE: Many-to-Many relations are not supported, changed to 2-way One-to-Many

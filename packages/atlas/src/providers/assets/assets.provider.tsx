@@ -31,7 +31,6 @@ import { absoluteRoutes } from '@/config/routes'
 import { useMountEffect } from '@/hooks/useMountEffect'
 import { UserCoordinates, useUserLocationStore } from '@/providers/userLocation'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
-import { getRandomIntInclusive } from '@/utils/number'
 
 import { OperatorInfo } from './assets.types'
 
@@ -65,16 +64,8 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
 
   const client = useApolloClient()
 
-  const fetchDistributionOperators = useCallback(async () => {
+  const getUserCoordinates = useCallback(async () => {
     const now = new Date()
-    let userCoordinates: UserCoordinates | null = null
-    const distributionOperatorsPromise = client.query<
-      GetDistributionBucketsWithBagsQuery,
-      GetDistributionBucketsWithBagsQueryVariables
-    >({
-      query: GetDistributionBucketsWithBagsDocument,
-      fetchPolicy: 'network-only',
-    })
     if (
       (!coordinates || !expiry || now.getTime() > expiry) &&
       !disableUserLocation &&
@@ -82,16 +73,26 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
     ) {
       try {
         const userCoordinatesResponse = await axios.get<UserCoordinates>(atlasConfig.storage.geolocationServiceUrl)
-        userCoordinates = userCoordinatesResponse.data
-        setUserLocation(userCoordinates)
+        setUserLocation(userCoordinatesResponse.data)
+        return userCoordinatesResponse.data
       } catch (error) {
         SentryLogger.error('Failed to get user coordinates', 'operatorsProvider', error, {
           request: { url: atlasConfig.storage.geolocationServiceUrl },
         })
       }
-    } else {
-      userCoordinates = coordinates
     }
+    return coordinates
+  }, [coordinates, disableUserLocation, expiry, setUserLocation])
+
+  const fetchDistributionOperators = useCallback(async () => {
+    const distributionOperatorsPromise = client.query<
+      GetDistributionBucketsWithBagsQuery,
+      GetDistributionBucketsWithBagsQueryVariables
+    >({
+      query: GetDistributionBucketsWithBagsDocument,
+      fetchPolicy: 'network-only',
+    })
+    const userCoordinates = await getUserCoordinates()
     isFetchingDistributionOperatorsRef.current = true
     lastDistributionOperatorsFetchTimeRef.current = new Date().getTime()
     distributionOperatorsMappingPromiseRef.current = distributionOperatorsPromise.then((result) => {
@@ -138,9 +139,9 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
       isFetchingDistributionOperatorsRef.current = false
     })
     return distributionOperatorsMappingPromiseRef.current
-  }, [client, coordinates, disableUserLocation, expiry, setUserLocation])
+  }, [client, getUserCoordinates])
 
-  const fetchStorageOperators = useCallback(() => {
+  const fetchStorageOperators = useCallback(async () => {
     const storageOperatorsPromise = client.query<
       GetStorageBucketsWithBagsQuery,
       GetStorageBucketsWithBagsQueryVariables
@@ -148,6 +149,8 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
       query: GetStorageBucketsWithBagsDocument,
       fetchPolicy: 'network-only',
     })
+    const userCoordinates = await getUserCoordinates()
+
     storageOperatorsMappingPromiseRef.current = storageOperatorsPromise.then((result) => {
       const mapping: BagOperatorsMapping = {}
       const buckets = result.data.storageBuckets
@@ -158,11 +161,21 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
         if (!endpoint) {
           return
         }
+        const operatorCoordinates = bucket.operatorMetadata?.nodeLocation?.coordinates
         const operatorInfo: OperatorInfo = {
           id: bucket.id,
           endpoint,
+          distance:
+            operatorCoordinates && userCoordinates
+              ? haversine(
+                  { lat: userCoordinates.latitude, lng: userCoordinates.longitude },
+                  {
+                    lat: operatorCoordinates.latitude,
+                    lng: operatorCoordinates.longitude,
+                  }
+                )
+              : null,
         }
-
         bagIds.forEach((bagId) => {
           if (!mapping[bagId]) {
             mapping[bagId] = [operatorInfo]
@@ -178,7 +191,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
       setStorageOperatorsError(error)
     })
     return storageOperatorsMappingPromiseRef.current
-  }, [client])
+  }, [client, getUserCoordinates])
 
   const fetchOperators = useCallback(async () => {
     await Promise.all([fetchDistributionOperators(), fetchStorageOperators()])
@@ -300,14 +313,21 @@ export const useStorageOperators = () => {
     [failedStorageOperatorIds, storageOperatorsMappingPromiseRef]
   )
 
-  const getRandomStorageOperatorForBag = useCallback(
+  const getClosestStorageOperatorForBag = useCallback(
     async (storageBagId: string) => {
       const workingStorageOperators = await getAllStorageOperatorsForBag(storageBagId)
       if (!workingStorageOperators || !workingStorageOperators.length) {
         return null
       }
-      const randomStorageOperatorIdx = getRandomIntInclusive(0, workingStorageOperators.length - 1)
-      return workingStorageOperators[randomStorageOperatorIdx]
+      return workingStorageOperators.sort((a, b) => {
+        if (!b.distance) {
+          return -1
+        }
+        if (!a.distance) {
+          return 1
+        }
+        return a.distance - b.distance
+      })[0]
     },
     [getAllStorageOperatorsForBag]
   )
@@ -319,7 +339,7 @@ export const useStorageOperators = () => {
     [setFailedStorageOperatorIds]
   )
 
-  return { getAllStorageOperatorsForBag, getRandomStorageOperatorForBag, markStorageOperatorFailed }
+  return { getAllStorageOperatorsForBag, getClosestStorageOperatorForBag, markStorageOperatorFailed }
 }
 
 const removeBagOperatorsDuplicates = (mapping: BagOperatorsMapping): BagOperatorsMapping => {
