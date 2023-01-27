@@ -31,5 +31,6 @@ export type YppVideoDto = {
   destinationUrl: string
   duration: number
   language: string
+  privacyStatus: 'private' | 'public'
   // joystreamVideo: JoystreamVideo
 }
