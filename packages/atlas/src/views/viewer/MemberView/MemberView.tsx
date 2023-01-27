@@ -61,24 +61,34 @@ export const MemberView: FC = () => {
       where: {
         OR: [
           {
-            owner: {
-              isTypeOf_eq: 'NftOwnerChannel',
-              channel: {
-                ownerMember: {
-                  handle_eq: handle,
+            AND: [
+              {
+                owner: {
+                  isTypeOf_eq: 'NftOwnerChannel',
+                  channel: {
+                    ownerMember: {
+                      handle_eq: handle,
+                    },
+                  },
                 },
               },
-            },
-            ...sharedFilters,
+              { ...sharedFilters },
+            ],
           },
           {
-            owner: {
-              isTypeOf_eq: 'NftOwnerMember',
-              member: {
-                handle_eq: handle,
+            AND: [
+              {
+                owner: {
+                  isTypeOf_eq: 'NftOwnerMember',
+                  member: {
+                    handle_eq: handle,
+                  },
+                },
               },
-            },
-            ...sharedFilters,
+              {
+                ...sharedFilters,
+              },
+            ],
           },
         ],
       },
