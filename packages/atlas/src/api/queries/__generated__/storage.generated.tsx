@@ -44,7 +44,7 @@ export type GetStorageBucketsWithBagsQuery = {
         coordinates?: { __typename?: 'GeoCoordinates'; latitude: number; longitude: number } | null
       } | null
     } | null
-    bags: Array<{ __typename?: 'StorageBag'; id: string }>
+    bags: Array<{ __typename?: 'StorageBucketBag'; bag: { __typename?: 'StorageBag'; id: string } }>
   }>
 }
 
