@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { GetFullChannelsQuery, useGetChannelPaymentEventsQuery } from '@/api/queries/__generated__/channels.generated'
 import { PaymentHistory } from '@/components/TablePaymentsHistory'
@@ -19,7 +19,7 @@ export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channe
     skip: !channel,
   })
 
-  const fetchPaymentsData = () => {
+  const fetchPaymentsData = useCallback(() => {
     if (joystream && data && channel) {
       setLoading(true)
       const mapEventToPaymentHistory = mapEventToPaymentHistoryFactory(joystream, channel.rewardAccount)
@@ -57,7 +57,7 @@ export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channe
           setLoading(false)
         })
     }
-  }
+  }, [joystream, data, channel])
 
   useEffect(() => {
     fetchPaymentsData()
