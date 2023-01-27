@@ -76,7 +76,7 @@ export const YppAuthorizationSyncStep = () => {
       ) : (
         <Banner
           title="Only auto-synced videos are rewarded"
-          description="Manually uploaded videos are not qualifying for programme rewards. To get rewards for content upload consider switching to syncing Youtube videos."
+          description="Manually uploaded videos are not qualifying for program rewards. To get rewards for content upload consider switching to syncing YouTube videos."
           icon={<SvgAlertsWarning24 />}
         />
       )}
