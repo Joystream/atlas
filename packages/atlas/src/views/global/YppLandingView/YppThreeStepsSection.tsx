@@ -8,7 +8,7 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { YppStatus, getButtonText } from '@/views/global/YppLandingView/YppHero'
+import { YppAtlasStatus, getButtonText } from '@/views/global/YppLandingView/YppHero'
 
 import {
   BackgroundContainer,
@@ -20,7 +20,7 @@ import { StepCard, StepCardFade, StepCardImg, StepCardNumber, StepCardsWrapper }
 
 type YppThreeStepsSectionProps = {
   onSignUpClick: () => void
-  yppStatus: YppStatus
+  yppStatus: YppAtlasStatus
 }
 const appName = atlasConfig.general.appName
 
