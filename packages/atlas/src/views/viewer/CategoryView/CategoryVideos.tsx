@@ -74,12 +74,7 @@ export const CategoryVideos: FC<{ categoriesId?: string[] }> = ({ categoriesId }
       setLanguage(language)
       setVideoWhereInput((value) => ({
         ...value,
-        language:
-          language === 'undefined'
-            ? undefined
-            : {
-                iso_eq: language,
-              },
+        language_eq: language === 'undefined' ? undefined : language,
       }))
     },
     [setLanguage, setVideoWhereInput]

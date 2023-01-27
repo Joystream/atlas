@@ -96,9 +96,7 @@ export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
     setLanguage(selectedLanguage as string | null | undefined)
     setVideoWhereInput((value) => ({
       ...value,
-      language: {
-        iso_eq: selectedLanguage as string,
-      },
+      language_eq: selectedLanguage === 'undefined' ? undefined : (selectedLanguage as string),
     }))
   }
 

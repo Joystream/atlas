@@ -398,12 +398,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
                     id_in: mappedUniqueCategories,
                   }
                 : undefined,
-              language:
-                language !== 'undefined'
-                  ? {
-                      iso_eq: language as string,
-                    }
-                  : undefined,
+              language_eq: language,
               ...getDurationRules(),
             }))
             handleSetOwnedNftWhereInput()

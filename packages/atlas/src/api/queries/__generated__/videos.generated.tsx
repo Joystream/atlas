@@ -3187,7 +3187,7 @@ export type GetMostViewedVideosConnectionQueryResult = Apollo.QueryResult<
 >
 export const GetTop10VideosThisWeekDocument = gql`
   query GetTop10VideosThisWeek($where: VideoWhereInput) {
-    mostViewedVideosConnection(limit: 10, where: $where, periodDays: 7, orderBy: createdAt_DESC) {
+    mostViewedVideosConnection(limit: 10, where: $where, periodDays: 7, orderBy: viewsNum_DESC) {
       edges {
         node {
           ...BasicVideoFields
@@ -3240,7 +3240,7 @@ export type GetTop10VideosThisWeekQueryResult = Apollo.QueryResult<
 >
 export const GetTop10VideosThisMonthDocument = gql`
   query GetTop10VideosThisMonth($where: VideoWhereInput) {
-    mostViewedVideosConnection(limit: 10, where: $where, periodDays: 30, orderBy: createdAt_DESC) {
+    mostViewedVideosConnection(limit: 10, where: $where, periodDays: 30, orderBy: viewsNum_DESC) {
       edges {
         node {
           ...BasicVideoFields

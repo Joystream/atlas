@@ -491,6 +491,8 @@ export enum BannedMemberOrderByInput {
   ChannelIdDesc = 'channel_id_DESC',
   ChannelIsCensoredAsc = 'channel_isCensored_ASC',
   ChannelIsCensoredDesc = 'channel_isCensored_DESC',
+  ChannelIsExcludedAsc = 'channel_isExcluded_ASC',
+  ChannelIsExcludedDesc = 'channel_isExcluded_DESC',
   ChannelIsPublicAsc = 'channel_isPublic_ASC',
   ChannelIsPublicDesc = 'channel_isPublic_DESC',
   ChannelLanguageAsc = 'channel_language_ASC',
@@ -764,6 +766,8 @@ export type Channel = {
   id: Scalars['String']
   /** Flag signaling whether a channel is censored. */
   isCensored: Scalars['Boolean']
+  /** Whether a channel has been excluded/hidden (by the gateway operator) */
+  isExcluded: Scalars['Boolean']
   /** Flag signaling whether a channel is public. */
   isPublic?: Maybe<Scalars['Boolean']>
   /** The primary langauge of the channel's content */
@@ -863,6 +867,8 @@ export enum ChannelOrderByInput {
   IdDesc = 'id_DESC',
   IsCensoredAsc = 'isCensored_ASC',
   IsCensoredDesc = 'isCensored_DESC',
+  IsExcludedAsc = 'isExcluded_ASC',
+  IsExcludedDesc = 'isExcluded_DESC',
   IsPublicAsc = 'isPublic_ASC',
   IsPublicDesc = 'isPublic_DESC',
   LanguageAsc = 'language_ASC',
@@ -983,6 +989,9 @@ export type ChannelWhereInput = {
   isCensored_eq?: InputMaybe<Scalars['Boolean']>
   isCensored_isNull?: InputMaybe<Scalars['Boolean']>
   isCensored_not_eq?: InputMaybe<Scalars['Boolean']>
+  isExcluded_eq?: InputMaybe<Scalars['Boolean']>
+  isExcluded_isNull?: InputMaybe<Scalars['Boolean']>
+  isExcluded_not_eq?: InputMaybe<Scalars['Boolean']>
   isPublic_eq?: InputMaybe<Scalars['Boolean']>
   isPublic_isNull?: InputMaybe<Scalars['Boolean']>
   isPublic_not_eq?: InputMaybe<Scalars['Boolean']>
@@ -1076,6 +1085,8 @@ export type Comment = {
   id: Scalars['String']
   /** Whether comment has been edited or not */
   isEdited: Scalars['Boolean']
+  /** Whether a comment has been excluded/hidden (by the gateway operator) */
+  isExcluded: Scalars['Boolean']
   /** A (parent) comment that this comment replies to (if any) */
   parentComment?: Maybe<Comment>
   /** List of all reactions to the comment */
@@ -1132,12 +1143,16 @@ export enum CommentOrderByInput {
   IdDesc = 'id_DESC',
   IsEditedAsc = 'isEdited_ASC',
   IsEditedDesc = 'isEdited_DESC',
+  IsExcludedAsc = 'isExcluded_ASC',
+  IsExcludedDesc = 'isExcluded_DESC',
   ParentCommentCreatedAtAsc = 'parentComment_createdAt_ASC',
   ParentCommentCreatedAtDesc = 'parentComment_createdAt_DESC',
   ParentCommentIdAsc = 'parentComment_id_ASC',
   ParentCommentIdDesc = 'parentComment_id_DESC',
   ParentCommentIsEditedAsc = 'parentComment_isEdited_ASC',
   ParentCommentIsEditedDesc = 'parentComment_isEdited_DESC',
+  ParentCommentIsExcludedAsc = 'parentComment_isExcluded_ASC',
+  ParentCommentIsExcludedDesc = 'parentComment_isExcluded_DESC',
   ParentCommentReactionsAndRepliesCountAsc = 'parentComment_reactionsAndRepliesCount_ASC',
   ParentCommentReactionsAndRepliesCountDesc = 'parentComment_reactionsAndRepliesCount_DESC',
   ParentCommentReactionsCountAsc = 'parentComment_reactionsCount_ASC',
@@ -1176,6 +1191,8 @@ export enum CommentOrderByInput {
   VideoIsCensoredDesc = 'video_isCensored_DESC',
   VideoIsCommentSectionEnabledAsc = 'video_isCommentSectionEnabled_ASC',
   VideoIsCommentSectionEnabledDesc = 'video_isCommentSectionEnabled_DESC',
+  VideoIsExcludedAsc = 'video_isExcluded_ASC',
+  VideoIsExcludedDesc = 'video_isExcluded_DESC',
   VideoIsExplicitAsc = 'video_isExplicit_ASC',
   VideoIsExplicitDesc = 'video_isExplicit_DESC',
   VideoIsPublicAsc = 'video_isPublic_ASC',
@@ -1223,6 +1240,8 @@ export enum CommentReactionOrderByInput {
   CommentIdDesc = 'comment_id_DESC',
   CommentIsEditedAsc = 'comment_isEdited_ASC',
   CommentIsEditedDesc = 'comment_isEdited_DESC',
+  CommentIsExcludedAsc = 'comment_isExcluded_ASC',
+  CommentIsExcludedDesc = 'comment_isExcluded_DESC',
   CommentReactionsAndRepliesCountAsc = 'comment_reactionsAndRepliesCount_ASC',
   CommentReactionsAndRepliesCountDesc = 'comment_reactionsAndRepliesCount_DESC',
   CommentReactionsCountAsc = 'comment_reactionsCount_ASC',
@@ -1263,6 +1282,8 @@ export enum CommentReactionOrderByInput {
   VideoIsCensoredDesc = 'video_isCensored_DESC',
   VideoIsCommentSectionEnabledAsc = 'video_isCommentSectionEnabled_ASC',
   VideoIsCommentSectionEnabledDesc = 'video_isCommentSectionEnabled_DESC',
+  VideoIsExcludedAsc = 'video_isExcluded_ASC',
+  VideoIsExcludedDesc = 'video_isExcluded_DESC',
   VideoIsExplicitAsc = 'video_isExplicit_ASC',
   VideoIsExplicitDesc = 'video_isExplicit_DESC',
   VideoIsPublicAsc = 'video_isPublic_ASC',
@@ -1383,6 +1404,9 @@ export type CommentWhereInput = {
   isEdited_eq?: InputMaybe<Scalars['Boolean']>
   isEdited_isNull?: InputMaybe<Scalars['Boolean']>
   isEdited_not_eq?: InputMaybe<Scalars['Boolean']>
+  isExcluded_eq?: InputMaybe<Scalars['Boolean']>
+  isExcluded_isNull?: InputMaybe<Scalars['Boolean']>
+  isExcluded_not_eq?: InputMaybe<Scalars['Boolean']>
   parentComment?: InputMaybe<CommentWhereInput>
   parentComment_isNull?: InputMaybe<Scalars['Boolean']>
   reactionsAndRepliesCount_eq?: InputMaybe<Scalars['Int']>
@@ -2467,6 +2491,17 @@ export type EventsConnection = {
   totalCount: Scalars['Int']
 }
 
+export enum ExcludableContentType {
+  Channel = 'Channel',
+  Comment = 'Comment',
+  Video = 'Video',
+}
+
+export type ExcludeContentResult = {
+  __typename?: 'ExcludeContentResult'
+  numberOfEntitiesAffected: Scalars['Int']
+}
+
 export type ExtendedChannel = {
   __typename?: 'ExtendedChannel'
   activeVideosCount: Scalars['Int']
@@ -2999,18 +3034,26 @@ export type MetaprotocolTransactionStatusEventData = {
 export type Mutation = {
   __typename?: 'Mutation'
   addVideoView: AddVideoViewResult
+  excludeContent: ExcludeContentResult
   followChannel: ChannelFollowResult
   reportChannel: ChannelReportInfo
   reportVideo: VideoReportInfo
+  restoreContent: RestoreContentResult
   setCategoryFeaturedVideos: SetCategoryFeaturedVideosResult
   setKillSwitch: KillSwitch
   setSupportedCategories: SetSupportedCategoriesResult
   setVideoHero: SetVideoHeroResult
+  setVideoViewPerIpTimeLimit: VideoViewPerIpTimeLimit
   unfollowChannel: ChannelUnfollowResult
 }
 
 export type MutationAddVideoViewArgs = {
   videoId: Scalars['String']
+}
+
+export type MutationExcludeContentArgs = {
+  ids: Array<Scalars['String']>
+  type: ExcludableContentType
 }
 
 export type MutationFollowChannelArgs = {
@@ -3025,6 +3068,11 @@ export type MutationReportChannelArgs = {
 export type MutationReportVideoArgs = {
   rationale: Scalars['String']
   videoId: Scalars['String']
+}
+
+export type MutationRestoreContentArgs = {
+  ids: Array<Scalars['String']>
+  type: ExcludableContentType
 }
 
 export type MutationSetCategoryFeaturedVideosArgs = {
@@ -3047,6 +3095,10 @@ export type MutationSetVideoHeroArgs = {
   heroTitle: Scalars['String']
   videoCutUrl: Scalars['String']
   videoId: Scalars['String']
+}
+
+export type MutationSetVideoViewPerIpTimeLimitArgs = {
+  limitInSeconds: Scalars['Int']
 }
 
 export type MutationUnfollowChannelArgs = {
@@ -3276,6 +3328,8 @@ export enum OwnedNftOrderByInput {
   VideoIsCensoredDesc = 'video_isCensored_DESC',
   VideoIsCommentSectionEnabledAsc = 'video_isCommentSectionEnabled_ASC',
   VideoIsCommentSectionEnabledDesc = 'video_isCommentSectionEnabled_DESC',
+  VideoIsExcludedAsc = 'video_isExcluded_ASC',
+  VideoIsExcludedDesc = 'video_isExcluded_DESC',
   VideoIsExplicitAsc = 'video_isExplicit_ASC',
   VideoIsExplicitDesc = 'video_isExplicit_DESC',
   VideoIsPublicAsc = 'video_isPublic_ASC',
@@ -3473,6 +3527,7 @@ export type Query = {
   extendedChannels: Array<ExtendedChannel>
   extendedVideoCategories: Array<ExtendedVideoCategory>
   getKillSwitch: KillSwitch
+  getVideoViewPerIpTimeLimit: VideoViewPerIpTimeLimit
   licenseById?: Maybe<License>
   /** @deprecated Use licenseById */
   licenseByUniqueInput?: Maybe<License>
@@ -4330,6 +4385,11 @@ export type QueryVideosConnectionArgs = {
   first?: InputMaybe<Scalars['Int']>
   orderBy: Array<VideoOrderByInput>
   where?: InputMaybe<VideoWhereInput>
+}
+
+export type RestoreContentResult = {
+  __typename?: 'RestoreContentResult'
+  numberOfEntitiesAffected: Scalars['Int']
 }
 
 export type SetCategoryFeaturedVideosResult = {
@@ -5645,6 +5705,8 @@ export type Video = {
   isCensored: Scalars['Boolean']
   /** Is comment section enabled (true if enabled) */
   isCommentSectionEnabled: Scalars['Boolean']
+  /** Whether a video has been excluded/hidden (by the gateway operator) */
+  isExcluded: Scalars['Boolean']
   /** Whether the Video contains explicit material. */
   isExplicit?: Maybe<Scalars['Boolean']>
   /** Whether the Video is supposed to be publically displayed */
@@ -5911,6 +5973,8 @@ export enum VideoFeaturedInCategoryOrderByInput {
   VideoIsCensoredDesc = 'video_isCensored_DESC',
   VideoIsCommentSectionEnabledAsc = 'video_isCommentSectionEnabled_ASC',
   VideoIsCommentSectionEnabledDesc = 'video_isCommentSectionEnabled_DESC',
+  VideoIsExcludedAsc = 'video_isExcluded_ASC',
+  VideoIsExcludedDesc = 'video_isExcluded_DESC',
   VideoIsExplicitAsc = 'video_isExplicit_ASC',
   VideoIsExplicitDesc = 'video_isExplicit_DESC',
   VideoIsPublicAsc = 'video_isPublic_ASC',
@@ -6025,6 +6089,8 @@ export enum VideoHeroOrderByInput {
   VideoIsCensoredDesc = 'video_isCensored_DESC',
   VideoIsCommentSectionEnabledAsc = 'video_isCommentSectionEnabled_ASC',
   VideoIsCommentSectionEnabledDesc = 'video_isCommentSectionEnabled_DESC',
+  VideoIsExcludedAsc = 'video_isExcluded_ASC',
+  VideoIsExcludedDesc = 'video_isExcluded_DESC',
   VideoIsExplicitAsc = 'video_isExplicit_ASC',
   VideoIsExplicitDesc = 'video_isExplicit_DESC',
   VideoIsPublicAsc = 'video_isPublic_ASC',
@@ -6310,6 +6376,8 @@ export enum VideoMediaMetadataOrderByInput {
   VideoIsCensoredDesc = 'video_isCensored_DESC',
   VideoIsCommentSectionEnabledAsc = 'video_isCommentSectionEnabled_ASC',
   VideoIsCommentSectionEnabledDesc = 'video_isCommentSectionEnabled_DESC',
+  VideoIsExcludedAsc = 'video_isExcluded_ASC',
+  VideoIsExcludedDesc = 'video_isExcluded_DESC',
   VideoIsExplicitAsc = 'video_isExplicit_ASC',
   VideoIsExplicitDesc = 'video_isExplicit_DESC',
   VideoIsPublicAsc = 'video_isPublic_ASC',
@@ -6417,6 +6485,8 @@ export enum VideoOrderByInput {
   ChannelIdDesc = 'channel_id_DESC',
   ChannelIsCensoredAsc = 'channel_isCensored_ASC',
   ChannelIsCensoredDesc = 'channel_isCensored_DESC',
+  ChannelIsExcludedAsc = 'channel_isExcluded_ASC',
+  ChannelIsExcludedDesc = 'channel_isExcluded_DESC',
   ChannelIsPublicAsc = 'channel_isPublic_ASC',
   ChannelIsPublicDesc = 'channel_isPublic_DESC',
   ChannelLanguageAsc = 'channel_language_ASC',
@@ -6445,6 +6515,8 @@ export enum VideoOrderByInput {
   IsCensoredDesc = 'isCensored_DESC',
   IsCommentSectionEnabledAsc = 'isCommentSectionEnabled_ASC',
   IsCommentSectionEnabledDesc = 'isCommentSectionEnabled_DESC',
+  IsExcludedAsc = 'isExcluded_ASC',
+  IsExcludedDesc = 'isExcluded_DESC',
   IsExplicitAsc = 'isExplicit_ASC',
   IsExplicitDesc = 'isExplicit_DESC',
   IsPublicAsc = 'isPublic_ASC',
@@ -6501,6 +6573,8 @@ export enum VideoOrderByInput {
   PinnedCommentIdDesc = 'pinnedComment_id_DESC',
   PinnedCommentIsEditedAsc = 'pinnedComment_isEdited_ASC',
   PinnedCommentIsEditedDesc = 'pinnedComment_isEdited_DESC',
+  PinnedCommentIsExcludedAsc = 'pinnedComment_isExcluded_ASC',
+  PinnedCommentIsExcludedDesc = 'pinnedComment_isExcluded_DESC',
   PinnedCommentReactionsAndRepliesCountAsc = 'pinnedComment_reactionsAndRepliesCount_ASC',
   PinnedCommentReactionsAndRepliesCountDesc = 'pinnedComment_reactionsAndRepliesCount_DESC',
   PinnedCommentReactionsCountAsc = 'pinnedComment_reactionsCount_ASC',
@@ -6595,6 +6669,8 @@ export enum VideoReactionOrderByInput {
   VideoIsCensoredDesc = 'video_isCensored_DESC',
   VideoIsCommentSectionEnabledAsc = 'video_isCommentSectionEnabled_ASC',
   VideoIsCommentSectionEnabledDesc = 'video_isCommentSectionEnabled_DESC',
+  VideoIsExcludedAsc = 'video_isExcluded_ASC',
+  VideoIsExcludedDesc = 'video_isExcluded_DESC',
   VideoIsExplicitAsc = 'video_isExplicit_ASC',
   VideoIsExplicitDesc = 'video_isExplicit_DESC',
   VideoIsPublicAsc = 'video_isPublic_ASC',
@@ -6743,6 +6819,8 @@ export enum VideoSubtitleOrderByInput {
   VideoIsCensoredDesc = 'video_isCensored_DESC',
   VideoIsCommentSectionEnabledAsc = 'video_isCommentSectionEnabled_ASC',
   VideoIsCommentSectionEnabledDesc = 'video_isCommentSectionEnabled_DESC',
+  VideoIsExcludedAsc = 'video_isExcluded_ASC',
+  VideoIsExcludedDesc = 'video_isExcluded_DESC',
   VideoIsExplicitAsc = 'video_isExplicit_ASC',
   VideoIsExplicitDesc = 'video_isExplicit_DESC',
   VideoIsPublicAsc = 'video_isPublic_ASC',
@@ -6847,6 +6925,11 @@ export type VideoSubtitlesConnection = {
   totalCount: Scalars['Int']
 }
 
+export type VideoViewPerIpTimeLimit = {
+  __typename?: 'VideoViewPerIpTimeLimit'
+  limitInSeconds: Scalars['Int']
+}
+
 export type VideoWhereInput = {
   AND?: InputMaybe<Array<VideoWhereInput>>
   OR?: InputMaybe<Array<VideoWhereInput>>
@@ -6936,6 +7019,9 @@ export type VideoWhereInput = {
   isCommentSectionEnabled_eq?: InputMaybe<Scalars['Boolean']>
   isCommentSectionEnabled_isNull?: InputMaybe<Scalars['Boolean']>
   isCommentSectionEnabled_not_eq?: InputMaybe<Scalars['Boolean']>
+  isExcluded_eq?: InputMaybe<Scalars['Boolean']>
+  isExcluded_isNull?: InputMaybe<Scalars['Boolean']>
+  isExcluded_not_eq?: InputMaybe<Scalars['Boolean']>
   isExplicit_eq?: InputMaybe<Scalars['Boolean']>
   isExplicit_isNull?: InputMaybe<Scalars['Boolean']>
   isExplicit_not_eq?: InputMaybe<Scalars['Boolean']>
