@@ -6,18 +6,19 @@ import { parseISO } from 'date-fns'
 
 import {
   Query,
+  QueryChannelsConnectionArgs,
   QueryCommentsConnectionArgs,
+  QueryOwnedNftsConnectionArgs,
+  QueryVideosConnectionArgs,
   VideoOrderByInput,
   VideosConnection,
 } from '../queries/__generated__/baseTypes.generated'
-import { GetBasicChannelsConnectionQueryVariables } from '../queries/__generated__/channels.generated'
 import { FullChannelFieldsFragment, FullVideoFieldsFragment } from '../queries/__generated__/fragments.generated'
-import { GetNftsConnectionQueryVariables } from '../queries/__generated__/nfts.generated'
 import { GetFullVideosConnectionQueryVariables } from '../queries/__generated__/videos.generated'
 
 const stringifyValue = (value: unknown) => JSON.stringify(value || {})
 
-const getVideoKeyArgs = (args: GetFullVideosConnectionQueryVariables | null) => {
+const getVideoKeyArgs = (args: Partial<QueryVideosConnectionArgs> | null) => {
   const onlyCount = args?.first === 0
   const channel = stringifyValue(args?.where?.channel)
   const category = stringifyValue(args?.where?.category)
@@ -42,7 +43,7 @@ const getVideoKeyArgs = (args: GetFullVideosConnectionQueryVariables | null) => 
   return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${isPublic}:${idEq}:${idIn}:${sorting}:${durationGte}:${durationLte}:${titleContains}`
 }
 
-const getNftKeyArgs = (args: GetNftsConnectionQueryVariables | null) => {
+const getNftKeyArgs = (args: Partial<QueryOwnedNftsConnectionArgs> | null) => {
   const OR = stringifyValue(args?.where?.OR)
   // todo make sure that is working
   const ownerMember = stringifyValue(args?.where?.owner?.member)
@@ -57,7 +58,7 @@ const getNftKeyArgs = (args: GetNftsConnectionQueryVariables | null) => {
   return `${OR}:${ownerMember}:${creatorChannel}:${status}:${auctionStatus}:${sorting}:${createdAt_gte}:${video}`
 }
 
-const getChannelKeyArgs = (args: GetBasicChannelsConnectionQueryVariables | null) => {
+const getChannelKeyArgs = (args: Partial<QueryChannelsConnectionArgs> | null) => {
   // make sure queries asking for a specific category are separated in cache
   const language = stringifyValue(args?.where?.language_eq)
   const idIn = args?.where?.id_in || []
@@ -68,7 +69,7 @@ const getChannelKeyArgs = (args: GetBasicChannelsConnectionQueryVariables | null
   return `${language}:${idIn}:${sorting}:${titleContains}`
 }
 
-const getCommentKeyArgs = (args: QueryCommentsConnectionArgs | null) => {
+const getCommentKeyArgs = (args: Partial<QueryCommentsConnectionArgs> | null) => {
   const parentCommentId = args?.where?.parentComment?.id_eq
   const videoId = args?.where?.video?.id_eq
   const orderBy = args?.orderBy || []
@@ -156,7 +157,6 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
       return existing?.slice(offset, offset + limit)
     },
   },
-  // @ts-ignore // todo typescript error and make sure it's working
   commentsConnection: relayStylePagination(getCommentKeyArgs),
   channelByUniqueInput: (existing, { toReference, args }) => {
     return (
