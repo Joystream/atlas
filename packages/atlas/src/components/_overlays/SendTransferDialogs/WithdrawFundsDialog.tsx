@@ -85,8 +85,10 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
             amountBn.toString(),
             proxyCallback(updateStatus)
           ),
-        onTxSync: async () => onExitClick(),
-        onSuccessCallback: () => fetchPaymentsData(),
+        onTxSync: async () => {
+          fetchPaymentsData()
+          onExitClick()
+        },
       })
     })
     return handler()
