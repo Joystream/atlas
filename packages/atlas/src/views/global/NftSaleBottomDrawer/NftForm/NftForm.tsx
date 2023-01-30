@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { BN } from 'bn.js'
 import { addMilliseconds } from 'date-fns'
 import { FC, useCallback, useEffect, useMemo, useRef } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -125,7 +126,10 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
       const startingPrice = data.startingPrice
         ? tokenNumberToHapiBn(data.startingPrice)
         : chainState.nftMinStartingPrice
-      const minimalBidStep = startingPrice.muln(atlasConfig.features.nft.auctionMinimumBidStepMultiplier)
+      const minimalBidStep = BN.max(
+        startingPrice.muln(atlasConfig.features.nft.auctionMinimumBidStepMultiplier),
+        chainState.minBidStep
+      )
       const buyNowPrice = data.buyNowPrice ? tokenNumberToHapiBn(data.buyNowPrice) : undefined
 
       const sharedMetadata = {
@@ -151,7 +155,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
         }
       }
     },
-    [chainState.nftMinStartingPrice, convertMsTimestampToBlock, getValues]
+    [chainState.minBidStep, chainState.nftMinStartingPrice, convertMsTimestampToBlock, getValues]
   )
 
   const getInputMetadataData = useCallback(

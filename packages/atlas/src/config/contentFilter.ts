@@ -11,6 +11,7 @@ const filteredChannelIds: ContentFilter = atlasConfig.content.blockedChannelIds
 
 const NOTvideoFilter = []
 const NOTchannelFilters = []
+const NOTnftFilters = []
 
 if (filteredChannelIds.length) {
   NOTchannelFilters.push({ id_in: filteredChannelIds })
@@ -31,12 +32,35 @@ if (filteredChannelIds.length) {
 if (filteredAssetsFilter.length) {
   NOTvideoFilter.push({ thumbnailPhoto: { id_in: filteredAssetsFilter } }, { media: { id_in: filteredAssetsFilter } })
 }
+if (filteredChannelIds.length) {
+  NOTnftFilters.push({
+    creatorChannel: {
+      id_in: filteredChannelIds,
+    },
+  })
+}
+if (filteredVideoIds.length) {
+  NOTnftFilters.push({
+    video: {
+      id_in: filteredVideoIds,
+    },
+  })
+}
 
 export const channelFilter: ChannelWhereInput = {
   isCensored_eq: false,
   isPublic_eq: true,
   ...(NOTchannelFilters.length ? { NOT: NOTchannelFilters } : {}),
 }
+
+// export const nftFilter: OwnedNftWhereInput = {
+//   ...(!atlasConfig.content.showAllContent ? { videoCategory: { id_in: allUniqueVideoCategories } } : {}),
+//   ...(NOTnftFilters.length
+//     ? {
+//         NOT: NOTnftFilters,
+//       }
+//     : {}),
+// }
 
 export const videoFilter: VideoWhereInput = {
   isCensored_eq: false,

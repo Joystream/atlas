@@ -1,6 +1,5 @@
 import { round } from 'lodash-es'
 
-import { BUILD_ENV } from '@/config/env'
 import { createStore } from '@/store'
 
 import { DismissedMessage, FollowedChannel, RecentSearch, WatchedVideo, WatchedVideoStatus } from './types'
@@ -163,7 +162,7 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
         }),
       getIsCookiesPopoverVisible: () => {
         const cookiesAccepted = get().cookiesAccepted
-        return cookiesAccepted === undefined && BUILD_ENV === 'production'
+        return cookiesAccepted === undefined
       },
     }),
   },
