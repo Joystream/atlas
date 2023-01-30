@@ -37,11 +37,11 @@ export const YppDashboard: FC = () => {
   const content = useMemo(() => {
     switch (TABS[currentVideosTab]) {
       case 'Dashboard':
-        return <YppDashboardMainTab />
+        return <YppDashboardMainTab currentTier={currentTier} />
       case 'Settings':
         return <YppDashboardSettingsTab />
     }
-  }, [currentVideosTab])
+  }, [currentVideosTab, currentTier])
 
   return (
     <>

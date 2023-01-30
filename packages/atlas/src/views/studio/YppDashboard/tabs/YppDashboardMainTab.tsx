@@ -1,3 +1,5 @@
+import { FC } from 'react'
+
 import { SvgActionNewTab, SvgAlertsError24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { Text } from '@/components/Text'
@@ -15,15 +17,21 @@ import { RewardsWrapper, StyledBanner, StyledSvgAlertsInformative24, WidgetsWrap
 import { REWARDS } from '../YppDashboard.config'
 
 const APP_NAME = atlasConfig.general.appName
+const tiers = atlasConfig.features.ypp.tiersDefinition?.tiers
 
-export const YppDashboardMainTab = () => {
+type YppDashboardMainTabProps = {
+  currentTier?: number
+}
+
+export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier = 0 }) => {
   const { copyToClipboard } = useClipboard()
   const { channelId } = useUser()
   const { currentChannel } = useGetYppSyncedChannels()
+  const multiplier = tiers ? tiers[currentTier].multiplier : 1
 
   return (
     <>
-      {currentChannel?.isSuspended && (
+      {currentChannel?.yppStatus === 'Suspended' && (
         <StyledBanner
           title="This channel has been suspended in the YouTube Partner Program"
           icon={<SvgAlertsError24 />}
@@ -65,18 +73,26 @@ export const YppDashboardMainTab = () => {
             title={reward.title}
             description={reward.description}
             steps={reward.steps}
-            actionButton={{
-              ...reward.actionButton,
-              onClick: () => {
-                if ('copyReferral' in reward.actionButton && reward.actionButton.copyReferral === true) {
-                  copyToClipboard(
-                    `${window.location.host}/ypp?referrerId=${channelId}`,
-                    'Referral link copied to clipboard'
-                  )
-                }
-              },
-            }}
-            joyAmount={reward.joyAmount}
+            actionButton={
+              reward.actionButton !== undefined
+                ? {
+                    ...reward.actionButton,
+                    onClick: () => {
+                      if (
+                        reward.actionButton &&
+                        'copyReferral' in reward.actionButton &&
+                        reward.actionButton.copyReferral
+                      ) {
+                        copyToClipboard(
+                          `${window.location.host}/ypp?referrerId=${channelId}`,
+                          'Referral link copied to clipboard'
+                        )
+                      }
+                    },
+                  }
+                : undefined
+            }
+            joyAmount={reward.joyAmount * multiplier}
           />
         ))}
       </RewardsWrapper>

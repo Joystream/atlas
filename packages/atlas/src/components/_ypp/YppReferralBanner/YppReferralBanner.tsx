@@ -6,6 +6,7 @@ import { Avatar } from '@/components/Avatar'
 import { Information } from '@/components/Information'
 import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { atlasConfig } from '@/config'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
@@ -26,6 +27,8 @@ import {
 type YppReferralBannerProps = {
   className?: string
 }
+
+const appName = atlasConfig.general.appName
 export const YppReferralBanner: FC<YppReferralBannerProps> = ({ className }) => {
   const xsMatch = useMediaMatch('xs')
 
@@ -89,7 +92,9 @@ export const YppReferralBanner: FC<YppReferralBannerProps> = ({ className }) => 
           <Text variant="t200" as="p" color="colorText">
             {xsMatch ? 'How referrals work?' : 'Referrals'}
           </Text>
-          <Information text="Channel you've been referred by is going to be rewarded if you enroll your Atlas channel in the program." />
+          <Information
+            text={`Channel you've been referred by is going to be rewarded if you enroll your ${appName} channel in the program.`}
+          />
         </InformationWrapper>
       </ReferralBannerContainer>
     </ReferralBannerPaddingWrapper>

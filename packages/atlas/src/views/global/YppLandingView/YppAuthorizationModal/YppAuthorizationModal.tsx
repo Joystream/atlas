@@ -28,7 +28,6 @@ import { pluralizeNoun } from '@/utils/misc'
 
 import { useGetYppChannelRequirments, useYppGoogleAuth } from './YppAuthorizationModal.hooks'
 import {
-  AdditionalSubtitle,
   AdditionalSubtitleWrapper,
   Anchor,
   Content,
@@ -65,8 +64,6 @@ export type YppAuthorizationModalProps = {
 }
 
 const APP_NAME = atlasConfig.general.appName
-const TOKEN = atlasConfig.joystream.tokenTicker
-const YPP_REWARD = atlasConfig.features.ypp.enrollmentReward
 
 export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   currentStep,
@@ -408,8 +405,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       case 'terms-and-conditions':
         return {
           title: 'Terms & conditions',
-          // TODO: add proper copy once it's available in figma https://www.figma.com/file/oQqFqdAiPu16eeE2aA5AD5?node-id=1637:118716#267556722
-          description: `Once automatic YouTube videos sync is available, in order for it to work, your ${APP_NAME} channel [NEEDS TO DO WHAT?]. This is purely a technical measure and does not affect ownership and rights to the content uploaded to you ${APP_NAME} channel.`,
+          description: ``,
           primaryButton: {
             text: 'Accept terms & sign',
             onClick: handleAcceptTermsAndSubmit,
@@ -424,12 +420,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
                 <NumberFormat as="span" variant="t200" value={updateChannelFee} withToken />. Transaction fees are
                 covered from your membership account balance.
               </Text>
-              <AdditionalSubtitle variant={smMatch ? 'h400' : 'h300'} as="h3">
-                Automatic YouTube sync
-              </AdditionalSubtitle>{' '}
-              <Text variant="t100" as="span" color="colorTextMuted">
-                Coming later this year
-              </Text>
             </AdditionalSubtitleWrapper>
           ),
           component: <YppAuthorizationTermsAndConditionsStep />,
@@ -439,10 +429,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           title: 'Congratulations!',
           description: (
             <DescriptionText variant="t200" as="span" color="inherit">
-              Your channel is now successfully enrolled to {APP_NAME} YouTube Partnership Program!{' '}
-              {YPP_REWARD
-                ? `You already qualified for the new sign up reward of ${YPP_REWARD} ${TOKEN} tokens. Go to Dashboard for more information.`
-                : 'Go to Dashboard for more information.'}
+              Your channel is now successfully enrolled to {APP_NAME} YouTube Partnership Program! Go to Dashboard for
+              more information.
             </DescriptionText>
           ),
           primaryButton: { text: 'Go to dashboard', to: absoluteRoutes.studio.yppDashboard() },

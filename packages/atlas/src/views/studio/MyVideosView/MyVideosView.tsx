@@ -29,6 +29,7 @@ import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { sizes } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
+import { YPP_POLL_INTERVAL } from '@/utils/polling'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
 import { YppVideoDto } from '@/views/studio/MyVideosView/MyVideosView.types'
 
@@ -68,7 +69,10 @@ export const MyVideosView = () => {
     () => axios.get<YppVideoDto[]>(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${channelId}/videos`),
     {
       enabled: !!channelId,
-      refetchInterval: (data) => (data?.data.some((resource) => resource.state === 'UploadStarted') ? 1000 : false),
+      refetchInterval: (data) =>
+        data?.data.some((resource) => resource.state === 'UploadStarted' && resource.privacyStatus !== 'private')
+          ? YPP_POLL_INTERVAL
+          : false,
     }
   )
   const [currentVideosTab, setCurrentVideosTab] = useState(0)
@@ -123,7 +127,11 @@ export const MyVideosView = () => {
   }))
 
   const videosTitlesInSync = useMemo((): string[] => {
-    return data?.data.filter((resource) => resource.state === 'UploadStarted').map((resource) => resource.title) ?? []
+    return (
+      data?.data
+        .filter((resource) => resource.state === 'UploadStarted' && resource.privacyStatus !== 'private')
+        .map((resource) => resource.title) ?? []
+    )
   }, [data])
 
   const videosWithSkeletonLoaders = [...(videos || []), ...placeholderItems]
@@ -344,7 +352,7 @@ export const MyVideosView = () => {
               </Button>
             )}
           </TabsContainer>
-          {currentChannel && (
+          {currentChannel && isAllVideosTab && (
             <StyledBanner
               dismissibleId="yppSyncInfo"
               title="YouTube Sync is enabled"

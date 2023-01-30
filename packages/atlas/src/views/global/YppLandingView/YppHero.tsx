@@ -31,17 +31,17 @@ import {
 import { useGetYppLastVerifiedChannels } from './YppLandingView.hooks'
 import { BackgroundContainer, StyledLimitedWidthContainer } from './YppLandingView.styles'
 
-type YppStatus = 'have-channel' | 'no-channel' | 'ypp-signed' | 'connect-wallet' | null
+export type YppAtlasStatus = 'have-channel' | 'no-channel' | 'ypp-signed' | 'connect-wallet' | null
 
 type YppHeroProps = {
   onSignUpClick: () => void
   onSelectChannel: () => void
-  yppStatus: YppStatus
+  yppAtlasStatus: YppAtlasStatus
   hasAnotherUnsyncedChannel?: boolean
   selectedChannelTitle?: string | null
 }
 
-const getButtonText = (variant: YppStatus) => {
+export const getButtonText = (variant: YppAtlasStatus) => {
   switch (variant) {
     case 'have-channel':
     case 'connect-wallet':
@@ -56,7 +56,7 @@ const getButtonText = (variant: YppStatus) => {
 export const YppHero: FC<YppHeroProps> = ({
   onSignUpClick,
   onSelectChannel,
-  yppStatus,
+  yppAtlasStatus,
   hasAnotherUnsyncedChannel,
   selectedChannelTitle,
 }) => {
@@ -71,10 +71,9 @@ export const YppHero: FC<YppHeroProps> = ({
   })
 
   const { channels, loading } = useGetYppLastVerifiedChannels()
-  const items =
-    channels?.length && !loading
-      ? channels.map((channel) => <ChannelCard key={channel.id} channel={channel} withFollowButton={false} />)
-      : Array.from({ length: 30 }).map((_, idx) => <ChannelCard key={idx} loading withFollowButton={false} />)
+  const items = !loading
+    ? channels?.map((channel) => <ChannelCard key={channel.id} channel={channel} withFollowButton={false} />)
+    : Array.from({ length: 30 }).map((_, idx) => <ChannelCard key={idx} loading withFollowButton={false} />)
 
   return (
     <BackgroundContainer noBackground>
@@ -107,18 +106,18 @@ export const YppHero: FC<YppHeroProps> = ({
               <SwitchTransition>
                 <CSSTransition
                   timeout={parseInt(cVar('animationTimingFast', true))}
-                  key={yppStatus ? 'status-set' : 'loading'}
+                  key={yppAtlasStatus ? 'status-set' : 'loading'}
                   classNames={transitions.names.fade}
                 >
-                  {yppStatus ? (
+                  {yppAtlasStatus ? (
                     <Button
                       size="large"
-                      variant={yppStatus === 'ypp-signed' ? 'secondary' : 'primary'}
+                      variant={yppAtlasStatus === 'ypp-signed' ? 'secondary' : 'primary'}
                       icon={<SvgActionChevronR />}
                       iconPlacement="right"
                       onClick={onSignUpClick}
                     >
-                      {getButtonText(yppStatus)}
+                      {getButtonText(yppAtlasStatus)}
                     </Button>
                   ) : (
                     <SkeletonLoader width={190} height={48} />
@@ -136,7 +135,7 @@ export const YppHero: FC<YppHeroProps> = ({
               color="colorTextMuted"
               margin={{ top: hasAnotherUnsyncedChannel && selectedChannelTitle ? 4 : 2 }}
             >
-              {hasAnotherUnsyncedChannel && selectedChannelTitle ? (
+              {hasAnotherUnsyncedChannel && selectedChannelTitle && (
                 <>
                   Your channel "{selectedChannelTitle}" is already part of the YouTube Partner Program.{' '}
                   <SelectDifferentChannelButton onClick={onSelectChannel} color="colorTextPrimary">
@@ -144,9 +143,8 @@ export const YppHero: FC<YppHeroProps> = ({
                   </SelectDifferentChannelButton>{' '}
                   to apply again.
                 </>
-              ) : (
-                'It takes 3 minutes and is 100% free.'
               )}
+              {yppAtlasStatus !== 'ypp-signed' && 'It takes under 1 minute and is 100% free.'}
             </Text>
           </GridItem>
         </LayoutGrid>
@@ -167,17 +165,19 @@ export const YppHero: FC<YppHeroProps> = ({
         </HeroImageWrapper>
         <LayoutGrid>
           <GridItem colStart={{ base: 1, sm: 2 }} colSpan={{ base: 12, sm: 10 }}>
-            <StyledInfiniteCarousel
-              title="Recent verified channels"
-              itemWidth={200}
-              items={items}
-              subTitle="What is a verified channel?"
-              informationProps={{
-                multiline: true,
-                placement: 'top-end',
-                text: `These ${atlasConfig.general.appName} channels applied to the YouTube Partner Program and got through the verification process successfully.`,
-              }}
-            />
+            {items && (
+              <StyledInfiniteCarousel
+                title="Recent verified channels"
+                itemWidth={200}
+                items={items}
+                subTitle="What is a verified channel?"
+                informationProps={{
+                  multiline: true,
+                  placement: 'top-end',
+                  text: `These ${atlasConfig.general.appName} channels applied to the YouTube Partner Program and got through the verification process successfully.`,
+                }}
+              />
+            )}{' '}
           </GridItem>
         </LayoutGrid>
       </StyledLimitedWidthContainer>
