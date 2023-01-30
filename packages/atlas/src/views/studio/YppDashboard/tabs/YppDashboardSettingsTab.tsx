@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { useCallback, useEffect, useState } from 'react'
+import { useMutation } from 'react-query'
 import { useNavigate } from 'react-router'
 
 import { Button } from '@/components/_buttons/Button'
@@ -45,6 +46,11 @@ const categoriesSelectItems: SelectItem[] =
     value: c.defaultVideoCategory,
   })) || []
 
+type SettingsParams = {
+  message: IngestChannelMessage
+  signature: string | undefined
+}
+
 export const YppDashboardSettingsTab = () => {
   const mdMatch = useMediaMatch('md')
   const navigate = useNavigate()
@@ -53,6 +59,14 @@ export const YppDashboardSettingsTab = () => {
   const { currentChannel, refetchSyncedChannels, isLoading } = useGetYppSyncedChannels()
   const { joystream, proxyCallback } = useJoystream()
   const [openModal, closeModal] = useConfirmationModal()
+  const { mutateAsync: settingsMutation } = useMutation(
+    ['ypp-settings-post', currentChannel],
+    (params: SettingsParams) =>
+      axios.put(
+        `${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${currentChannel?.joystreamChannelId}/ingest`,
+        params
+      )
+  )
 
   const [signLoading, setSignLoading] = useState(false)
   const [categoryError, setCategoryErrror] = useState<null | string>(null)
@@ -102,10 +116,10 @@ export const YppDashboardSettingsTab = () => {
         type: 'payload',
       })
 
-      const data = await axios.put(
-        `${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${currentChannel.joystreamChannelId}/ingest`,
-        { message, signature }
-      )
+      const data = await settingsMutation({
+        message,
+        signature,
+      })
 
       if (data.status === 200) {
         displaySnackbar({
@@ -138,7 +152,17 @@ export const YppDashboardSettingsTab = () => {
     } finally {
       setSignLoading(false)
     }
-  }, [accountId, categoryId, currentChannel, displaySnackbar, isSync, joystream, navigate, refetchSyncedChannels])
+  }, [
+    settingsMutation,
+    accountId,
+    categoryId,
+    currentChannel,
+    displaySnackbar,
+    isSync,
+    joystream,
+    navigate,
+    refetchSyncedChannels,
+  ])
 
   const handleLeaveTx = useCallback(async () => {
     if (!accountId || !joystream || !channelId || !memberId) {

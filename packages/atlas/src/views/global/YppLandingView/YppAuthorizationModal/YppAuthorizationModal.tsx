@@ -2,6 +2,7 @@ import axios from 'axios'
 import { formatDuration } from 'date-fns'
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import { useMutation } from 'react-query'
 import { useNavigate } from 'react-router'
 
 import { useBasicChannel } from '@/api/hooks/channel'
@@ -80,7 +81,10 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   const setSelectedChannelId = useYppStore((store) => store.actions.setSelectedChannelId)
   const setReferrerId = useYppStore((store) => store.actions.setReferrerId)
   const setShouldContinueYppFlow = useYppStore((store) => store.actions.setShouldContinueYppFlow)
-  const fetchedChannelRequirements = useGetYppChannelRequirments()
+  const { data: fetchedChannelRequirements } = useGetYppChannelRequirments()
+  const { mutateAsync: yppChannelMutation } = useMutation('ypp-channels-post', (finalFormData: FinalFormData | null) =>
+    axios.post(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels`, finalFormData)
+  )
 
   const smMatch = useMediaMatch('sm')
 
@@ -187,7 +191,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       return
     }
     try {
-      await axios.post(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels`, finalFormData)
+      await yppChannelMutation(finalFormData)
       const completed = await handleTransaction({
         txFactory: async (updateStatus) => {
           return (await joystream.extrinsics).updateChannel(
@@ -221,17 +225,18 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       })
     }
   }, [
-    channelBucketsCount,
-    dataObjectStateBloatBondValue,
-    displaySnackbar,
+    joystream,
+    selectedChannelId,
+    memberId,
+    yppChannelMutation,
     finalFormData,
     handleTransaction,
-    joystream,
-    memberId,
-    proxyCallback,
-    selectedChannelId,
-    onChangeStep,
+    dataObjectStateBloatBondValue,
+    channelBucketsCount,
     youtubeCollaboratorMemberId,
+    proxyCallback,
+    onChangeStep,
+    displaySnackbar,
   ])
 
   useEffect(() => {
