@@ -1,4 +1,4 @@
-import { formatISO } from 'date-fns'
+import { formatISO, isValid as isValidDate } from 'date-fns'
 import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 
@@ -160,7 +160,9 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
         ...((isNew || dirtyFields.enableComments) && data.enableComments != null
           ? { enableComments: data.enableComments }
           : {}),
-        ...((isNew || dirtyFields.publishedBeforeJoystream) && data.publishedBeforeJoystream != null
+        ...((isNew || dirtyFields.publishedBeforeJoystream) &&
+        data.publishedBeforeJoystream != null &&
+        isValidDate(data.publishedBeforeJoystream)
           ? {
               publishedBeforeJoystream: formatISO(data.publishedBeforeJoystream),
             }
@@ -972,7 +974,9 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
               name="publishedBeforeJoystream"
               control={control}
               rules={{
-                validate: (value) => pastDateValidation(value),
+                validate: (value) => {
+                  return pastDateValidation(value)
+                },
               }}
               render={({ field: { value, onChange } }) => (
                 <Datepicker
