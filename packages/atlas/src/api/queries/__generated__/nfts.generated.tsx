@@ -46,6 +46,7 @@ export type GetNftQuery = {
           type?:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoSubtitle' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -63,6 +64,7 @@ export type GetNftQuery = {
         type?:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -107,6 +109,7 @@ export type GetNftQuery = {
                             type?:
                               | { __typename: 'DataObjectTypeChannelAvatar' }
                               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                              | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                               | { __typename: 'DataObjectTypeVideoMedia' }
                               | { __typename: 'DataObjectTypeVideoSubtitle' }
                               | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -128,6 +131,7 @@ export type GetNftQuery = {
                   type?:
                     | { __typename: 'DataObjectTypeChannelAvatar' }
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
                     | { __typename: 'DataObjectTypeVideoSubtitle' }
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -158,6 +162,7 @@ export type GetNftQuery = {
                           type?:
                             | { __typename: 'DataObjectTypeChannelAvatar' }
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
                             | { __typename: 'DataObjectTypeVideoSubtitle' }
                             | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -217,6 +222,7 @@ export type GetNftQuery = {
                               type?:
                                 | { __typename: 'DataObjectTypeChannelAvatar' }
                                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                                 | { __typename: 'DataObjectTypeVideoMedia' }
                                 | { __typename: 'DataObjectTypeVideoSubtitle' }
                                 | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -256,6 +262,7 @@ export type GetNftQuery = {
                               type?:
                                 | { __typename: 'DataObjectTypeChannelAvatar' }
                                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                                 | { __typename: 'DataObjectTypeVideoMedia' }
                                 | { __typename: 'DataObjectTypeVideoSubtitle' }
                                 | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -290,6 +297,7 @@ export type GetNftQuery = {
                               type?:
                                 | { __typename: 'DataObjectTypeChannelAvatar' }
                                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                                 | { __typename: 'DataObjectTypeVideoMedia' }
                                 | { __typename: 'DataObjectTypeVideoSubtitle' }
                                 | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -341,6 +349,7 @@ export type GetNftQuery = {
                         type?:
                           | { __typename: 'DataObjectTypeChannelAvatar' }
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
                           | { __typename: 'DataObjectTypeVideoSubtitle' }
                           | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -362,6 +371,7 @@ export type GetNftQuery = {
               type?:
                 | { __typename: 'DataObjectTypeChannelAvatar' }
                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                 | { __typename: 'DataObjectTypeVideoMedia' }
                 | { __typename: 'DataObjectTypeVideoSubtitle' }
                 | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -392,6 +402,7 @@ export type GetNftQuery = {
                       type?:
                         | { __typename: 'DataObjectTypeChannelAvatar' }
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
                         | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -451,6 +462,7 @@ export type GetNftQuery = {
                           type?:
                             | { __typename: 'DataObjectTypeChannelAvatar' }
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
                             | { __typename: 'DataObjectTypeVideoSubtitle' }
                             | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -490,6 +502,7 @@ export type GetNftQuery = {
                           type?:
                             | { __typename: 'DataObjectTypeChannelAvatar' }
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
                             | { __typename: 'DataObjectTypeVideoSubtitle' }
                             | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -524,6 +537,7 @@ export type GetNftQuery = {
                           type?:
                             | { __typename: 'DataObjectTypeChannelAvatar' }
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
                             | { __typename: 'DataObjectTypeVideoSubtitle' }
                             | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -586,6 +600,7 @@ export type GetNftsQuery = {
           type?:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoSubtitle' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -603,6 +618,7 @@ export type GetNftsQuery = {
         type?:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -647,6 +663,7 @@ export type GetNftsQuery = {
                             type?:
                               | { __typename: 'DataObjectTypeChannelAvatar' }
                               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                              | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                               | { __typename: 'DataObjectTypeVideoMedia' }
                               | { __typename: 'DataObjectTypeVideoSubtitle' }
                               | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -668,6 +685,7 @@ export type GetNftsQuery = {
                   type?:
                     | { __typename: 'DataObjectTypeChannelAvatar' }
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
                     | { __typename: 'DataObjectTypeVideoSubtitle' }
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -698,6 +716,7 @@ export type GetNftsQuery = {
                           type?:
                             | { __typename: 'DataObjectTypeChannelAvatar' }
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
                             | { __typename: 'DataObjectTypeVideoSubtitle' }
                             | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -757,6 +776,7 @@ export type GetNftsQuery = {
                               type?:
                                 | { __typename: 'DataObjectTypeChannelAvatar' }
                                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                                 | { __typename: 'DataObjectTypeVideoMedia' }
                                 | { __typename: 'DataObjectTypeVideoSubtitle' }
                                 | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -796,6 +816,7 @@ export type GetNftsQuery = {
                               type?:
                                 | { __typename: 'DataObjectTypeChannelAvatar' }
                                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                                 | { __typename: 'DataObjectTypeVideoMedia' }
                                 | { __typename: 'DataObjectTypeVideoSubtitle' }
                                 | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -830,6 +851,7 @@ export type GetNftsQuery = {
                               type?:
                                 | { __typename: 'DataObjectTypeChannelAvatar' }
                                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                                 | { __typename: 'DataObjectTypeVideoMedia' }
                                 | { __typename: 'DataObjectTypeVideoSubtitle' }
                                 | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -881,6 +903,7 @@ export type GetNftsQuery = {
                         type?:
                           | { __typename: 'DataObjectTypeChannelAvatar' }
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
                           | { __typename: 'DataObjectTypeVideoSubtitle' }
                           | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -902,6 +925,7 @@ export type GetNftsQuery = {
               type?:
                 | { __typename: 'DataObjectTypeChannelAvatar' }
                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                 | { __typename: 'DataObjectTypeVideoMedia' }
                 | { __typename: 'DataObjectTypeVideoSubtitle' }
                 | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -932,6 +956,7 @@ export type GetNftsQuery = {
                       type?:
                         | { __typename: 'DataObjectTypeChannelAvatar' }
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
                         | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -991,6 +1016,7 @@ export type GetNftsQuery = {
                           type?:
                             | { __typename: 'DataObjectTypeChannelAvatar' }
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
                             | { __typename: 'DataObjectTypeVideoSubtitle' }
                             | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -1030,6 +1056,7 @@ export type GetNftsQuery = {
                           type?:
                             | { __typename: 'DataObjectTypeChannelAvatar' }
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
                             | { __typename: 'DataObjectTypeVideoSubtitle' }
                             | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -1064,6 +1091,7 @@ export type GetNftsQuery = {
                           type?:
                             | { __typename: 'DataObjectTypeChannelAvatar' }
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
                             | { __typename: 'DataObjectTypeVideoSubtitle' }
                             | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -1134,6 +1162,7 @@ export type GetNftsConnectionQuery = {
               type?:
                 | { __typename: 'DataObjectTypeChannelAvatar' }
                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                 | { __typename: 'DataObjectTypeVideoMedia' }
                 | { __typename: 'DataObjectTypeVideoSubtitle' }
                 | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -1151,6 +1180,7 @@ export type GetNftsConnectionQuery = {
             type?:
               | { __typename: 'DataObjectTypeChannelAvatar' }
               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
               | { __typename: 'DataObjectTypeVideoMedia' }
               | { __typename: 'DataObjectTypeVideoSubtitle' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -1195,6 +1225,7 @@ export type GetNftsConnectionQuery = {
                                 type?:
                                   | { __typename: 'DataObjectTypeChannelAvatar' }
                                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                                   | { __typename: 'DataObjectTypeVideoMedia' }
                                   | { __typename: 'DataObjectTypeVideoSubtitle' }
                                   | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -1216,6 +1247,7 @@ export type GetNftsConnectionQuery = {
                       type?:
                         | { __typename: 'DataObjectTypeChannelAvatar' }
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
                         | { __typename: 'DataObjectTypeVideoSubtitle' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -1246,6 +1278,7 @@ export type GetNftsConnectionQuery = {
                               type?:
                                 | { __typename: 'DataObjectTypeChannelAvatar' }
                                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                                 | { __typename: 'DataObjectTypeVideoMedia' }
                                 | { __typename: 'DataObjectTypeVideoSubtitle' }
                                 | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -1305,6 +1338,7 @@ export type GetNftsConnectionQuery = {
                                   type?:
                                     | { __typename: 'DataObjectTypeChannelAvatar' }
                                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                                     | { __typename: 'DataObjectTypeVideoMedia' }
                                     | { __typename: 'DataObjectTypeVideoSubtitle' }
                                     | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -1344,6 +1378,7 @@ export type GetNftsConnectionQuery = {
                                   type?:
                                     | { __typename: 'DataObjectTypeChannelAvatar' }
                                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                                     | { __typename: 'DataObjectTypeVideoMedia' }
                                     | { __typename: 'DataObjectTypeVideoSubtitle' }
                                     | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -1378,6 +1413,7 @@ export type GetNftsConnectionQuery = {
                                   type?:
                                     | { __typename: 'DataObjectTypeChannelAvatar' }
                                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                                     | { __typename: 'DataObjectTypeVideoMedia' }
                                     | { __typename: 'DataObjectTypeVideoSubtitle' }
                                     | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -1429,6 +1465,7 @@ export type GetNftsConnectionQuery = {
                             type?:
                               | { __typename: 'DataObjectTypeChannelAvatar' }
                               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                              | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                               | { __typename: 'DataObjectTypeVideoMedia' }
                               | { __typename: 'DataObjectTypeVideoSubtitle' }
                               | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -1450,6 +1487,7 @@ export type GetNftsConnectionQuery = {
                   type?:
                     | { __typename: 'DataObjectTypeChannelAvatar' }
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
                     | { __typename: 'DataObjectTypeVideoSubtitle' }
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -1480,6 +1518,7 @@ export type GetNftsConnectionQuery = {
                           type?:
                             | { __typename: 'DataObjectTypeChannelAvatar' }
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
                             | { __typename: 'DataObjectTypeVideoSubtitle' }
                             | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -1539,6 +1578,7 @@ export type GetNftsConnectionQuery = {
                               type?:
                                 | { __typename: 'DataObjectTypeChannelAvatar' }
                                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                                 | { __typename: 'DataObjectTypeVideoMedia' }
                                 | { __typename: 'DataObjectTypeVideoSubtitle' }
                                 | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -1578,6 +1618,7 @@ export type GetNftsConnectionQuery = {
                               type?:
                                 | { __typename: 'DataObjectTypeChannelAvatar' }
                                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                                 | { __typename: 'DataObjectTypeVideoMedia' }
                                 | { __typename: 'DataObjectTypeVideoSubtitle' }
                                 | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -1612,6 +1653,7 @@ export type GetNftsConnectionQuery = {
                               type?:
                                 | { __typename: 'DataObjectTypeChannelAvatar' }
                                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                                 | { __typename: 'DataObjectTypeVideoMedia' }
                                 | { __typename: 'DataObjectTypeVideoSubtitle' }
                                 | { __typename: 'DataObjectTypeVideoThumbnail' }
