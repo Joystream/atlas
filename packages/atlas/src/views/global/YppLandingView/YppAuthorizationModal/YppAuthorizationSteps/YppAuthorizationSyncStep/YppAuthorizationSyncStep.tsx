@@ -1,5 +1,7 @@
 import { Controller, useFormContext } from 'react-hook-form'
 
+import { SvgAlertsWarning24 } from '@/assets/icons'
+import { Banner } from '@/components/Banner'
 import { FormField } from '@/components/_inputs/FormField'
 import { OptionCardGroupRadio } from '@/components/_inputs/OptionCardGroup'
 import { Select, SelectItem } from '@/components/_inputs/Select'
@@ -51,7 +53,7 @@ export const YppAuthorizationSyncStep = () => {
           />
         )}
       />
-      {isSyncActive && (
+      {isSyncActive ? (
         <FormField
           label="Category for videos"
           description="Choose one of the categories to be assigned to the imported videos by default. You can change it for each video later."
@@ -71,6 +73,12 @@ export const YppAuthorizationSyncStep = () => {
             )}
           />
         </FormField>
+      ) : (
+        <Banner
+          title="Only auto-synced videos are rewarded"
+          description="Manually uploaded videos are not qualifying for program rewards. To get rewards for content upload consider switching to syncing YouTube videos."
+          icon={<SvgAlertsWarning24 />}
+        />
       )}
     </FormWrapper>
   )
