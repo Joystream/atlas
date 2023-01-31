@@ -2,6 +2,7 @@ import BN from 'bn.js'
 import { FC, useMemo } from 'react'
 
 import { SvgActionBuyNow } from '@/assets/icons'
+import { SvgEmptyStateIllustration } from '@/assets/illustrations'
 import { Table, TableProps } from '@/components/Table'
 import { Text } from '@/components/Text'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
@@ -35,6 +36,13 @@ const COLUMNS: TableProps['columns'] = [
   },
 ]
 
+const tableEmptyState = {
+  title: 'No payments here yet',
+  description:
+    'Here you will see proceedings to your channel balance from sold NFTs and royalties, claimed council rewards, direct payments from members to your channel and withdrawals from channel balance.',
+  icon: <SvgEmptyStateIllustration />,
+}
+
 type PaymentType = 'nft-sale' | 'nft-royalty' | 'claimed-reward' | 'withdrawal' | 'ypp-reward'
 
 export type PaymentHistory = {
@@ -60,7 +68,7 @@ export const TablePaymentsHistory: FC<TablePaymentsHistoryProps> = ({ data }) =>
       })),
     [data]
   )
-  return <Table title="History" columns={COLUMNS} data={mappedData} />
+  return <Table title="History" columns={COLUMNS} data={mappedData} emptyState={tableEmptyState} />
 }
 
 const Date = ({ date }: { date: Date }) => {
