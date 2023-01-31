@@ -6,7 +6,10 @@ import { PaymentHistory } from '@/components/TablePaymentsHistory'
 type CommonEvent = Pick<
   GetChannelPaymentEventsQuery['channelRewardClaimedEvents'][number],
   'createdAt' | 'inBlock' | 'amount'
->
+> & {
+  sender: 'council' | string
+  description?: string
+}
 
 export const mapEventToPaymentHistory = <T extends CommonEvent>(
   event: T,

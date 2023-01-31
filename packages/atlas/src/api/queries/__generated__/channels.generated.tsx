@@ -648,18 +648,27 @@ export type GetChannelPaymentEventsQueryVariables = Types.Exact<{
 
 export type GetChannelPaymentEventsQuery = {
   __typename?: 'Query'
-  nftBoughtEvents: Array<{ __typename?: 'NftBoughtEvent'; inBlock: number; createdAt: Date; price: string }>
+  nftBoughtEvents: Array<{
+    __typename?: 'NftBoughtEvent'
+    inBlock: number
+    createdAt: Date
+    price: string
+    video: { __typename?: 'Video'; title?: string | null }
+    member: { __typename?: 'Membership'; id: string; controllerAccount: string }
+  }>
   bidMadeCompletingAuctionEvents: Array<{
     __typename?: 'BidMadeCompletingAuctionEvent'
     inBlock: number
     createdAt: Date
     price: string
+    video: { __typename?: 'Video'; title?: string | null }
     member: { __typename?: 'Membership'; id: string; controllerAccount: string }
   }>
   englishAuctionSettledEvents: Array<{
     __typename?: 'EnglishAuctionSettledEvent'
     createdAt: Date
     inBlock: number
+    video: { __typename?: 'Video'; title?: string | null }
     winningBid: { __typename?: 'Bid'; amount: string }
     winner: { __typename?: 'Membership'; id: string; controllerAccount: string }
   }>
@@ -667,6 +676,7 @@ export type GetChannelPaymentEventsQuery = {
     __typename?: 'OpenAuctionBidAcceptedEvent'
     inBlock: number
     createdAt: Date
+    video: { __typename?: 'Video'; title?: string | null }
     winningBid?: { __typename?: 'Bid'; amount: string } | null
     winningBidder?: { __typename?: 'Membership'; id: string; controllerAccount: string } | null
   }>
@@ -689,7 +699,12 @@ export type GetChannelPaymentEventsQuery = {
           member?: { __typename?: 'Membership'; id: string; controllerAccount: string } | null
         }
   }>
-  rewardPaidEvents: Array<{ __typename?: 'RewardPaidEvent'; inBlock: number; amount: string; createdAt: Date }>
+  rewardPaymentEvents: Array<{
+    __typename?: 'RewardPaymentEvent'
+    inBlock: number
+    paidBalance: string
+    createdAt: Date
+  }>
 }
 
 export const GetBasicChannelDocument = gql`
@@ -1561,6 +1576,9 @@ export const GetChannelPaymentEventsDocument = gql`
       inBlock
       createdAt
       price
+      video {
+        title
+      }
       member {
         id
         controllerAccount
@@ -1570,6 +1588,9 @@ export const GetChannelPaymentEventsDocument = gql`
       inBlock
       createdAt
       price
+      video {
+        title
+      }
       member {
         id
         controllerAccount
@@ -1578,6 +1599,9 @@ export const GetChannelPaymentEventsDocument = gql`
     englishAuctionSettledEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
       createdAt
       inBlock
+      video {
+        title
+      }
       winningBid {
         amount
       }
@@ -1589,6 +1613,9 @@ export const GetChannelPaymentEventsDocument = gql`
     openAuctionBidAcceptedEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
       inBlock
       createdAt
+      video {
+        title
+      }
       winningBid {
         amount
       }
@@ -1621,9 +1648,9 @@ export const GetChannelPaymentEventsDocument = gql`
         }
       }
     }
-    rewardPaidEvents(where: { worker: { membership: { id_eq: $ownerMemberId } } }) {
+    rewardPaymentEvents(where: { councilMember: { id_eq: $ownerMemberId } }) {
       inBlock
-      amount
+      paidBalance
       createdAt
     }
   }

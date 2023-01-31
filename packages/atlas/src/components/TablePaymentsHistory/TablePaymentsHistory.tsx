@@ -1,7 +1,7 @@
 import BN from 'bn.js'
 import { FC, ReactElement, useMemo } from 'react'
 
-import { SvgActionBuyNow } from '@/assets/icons'
+import { SvgActionCouncil, SvgActionCrown, SvgActionNft, SvgActionPayment, SvgActionRevenueShare } from '@/assets/icons'
 import { Table, TableProps } from '@/components/Table'
 import { Text } from '@/components/Text'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
@@ -48,22 +48,47 @@ const paymentTypeMappings: Record<
 > = {
   'nft-sale': {
     title: 'NFT sale',
+    icon: <SvgActionNft />,
   },
   'nft-royalty': {
     title: 'NFT royalty',
+    icon: <SvgActionCrown />,
   },
   'claimed-reward': {
     title: 'Claimed reward',
+    icon: <SvgActionRevenueShare />,
   },
   'withdrawal': {
     title: 'Withdrawal',
+    icon: <SvgActionRevenueShare />,
   },
   'ypp-reward': {
     title: 'YPP reward',
+    icon: <SvgActionRevenueShare />,
+  },
+  'council-reward': {
+    title: 'Council reward',
+    icon: <SvgActionCouncil />,
+  },
+  'direct-payment': {
+    title: 'Direct payment',
+    icon: <SvgActionPayment />,
+  },
+  'revenue-share': {
+    title: 'Revenue share',
+    icon: <SvgActionRevenueShare />,
   },
 }
 
-type PaymentType = 'nft-sale' | 'nft-royalty' | 'claimed-reward' | 'withdrawal' | 'ypp-reward'
+type PaymentType =
+  | 'nft-sale'
+  | 'nft-royalty'
+  | 'claimed-reward'
+  | 'withdrawal'
+  | 'ypp-reward'
+  | 'council-reward'
+  | 'direct-payment'
+  | 'revenue-share'
 
 export type PaymentHistory = {
   type: PaymentType
@@ -113,9 +138,7 @@ const Date = ({ date }: { date: Date }) => {
 const Type = ({ type }: { type: PaymentType }) => {
   return (
     <TypeWrapper>
-      <TypeIconWrapper>
-        <SvgActionBuyNow />
-      </TypeIconWrapper>
+      <TypeIconWrapper>{paymentTypeMappings[type].icon}</TypeIconWrapper>
       <Text variant="t200" as="p" margin={{ left: 2 }}>
         {paymentTypeMappings[type].title}
       </Text>
