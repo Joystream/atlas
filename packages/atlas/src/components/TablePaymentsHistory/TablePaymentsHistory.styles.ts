@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
+import { ListItem } from '@/components/ListItem'
 import { NumberFormat } from '@/components/NumberFormat'
 import { cVar, sizes } from '@/styles'
 
@@ -32,4 +33,26 @@ export const StyledJoyTokenIcon = styled(JoyTokenIcon)<{ error: boolean }>`
   path {
     fill: ${({ error }) => (error ? cVar('colorTextError') : undefined)};
   }
+`
+
+export const JoystreamSvgWrapper = styled.div`
+  height: 31px;
+  width: 31px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background-color: ${cVar('colorBackgroundMutedAlpha')};
+
+  svg {
+    height: 20px;
+
+    g {
+      fill: ${cVar('colorTextMuted')};
+    }
+  }
+`
+
+export const SenderItem = styled(ListItem)`
+  padding-left: 0;
 `

@@ -43,6 +43,7 @@ export const Table = <T extends object>({ columns, data, title, pageSize = 20 }:
                   variant="h100"
                   as="th"
                   color="colorText"
+                  width={column.width}
                   {...column.getHeaderProps()}
                   key={column.getHeaderProps().key}
                 >

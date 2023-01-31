@@ -23,7 +23,15 @@ export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channe
     if (joystream && data && channel) {
       setLoading(true)
       const rewardPromises = data.channelRewardClaimedEvents.map((event) =>
-        mapEventToPaymentHistory({ ...event, sender: 'council' }, 'claimed-reward')
+        mapEventToPaymentHistory(
+          {
+            ...event,
+            sender: 'council',
+            description:
+              'asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd',
+          },
+          'council-reward'
+        )
       )
       const ntfBoughtPromises = data.nftBoughtEvents.map((event) =>
         mapEventToPaymentHistory(
@@ -81,12 +89,6 @@ export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channe
           'nft-sale'
         )
       )
-      const councilRewardPromises = data?.rewardPaymentEvents.map((event) =>
-        mapEventToPaymentHistory(
-          { ...event, amount: event.paidBalance, sender: 'council', description: 'Claimed from rewards pool' },
-          'council-reward'
-        )
-      )
 
       Promise.all([
         ...rewardPromises,
@@ -95,7 +97,6 @@ export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channe
         ...auctionSettledPromises,
         ...auctionCompletingBidPromises,
         ...openAuctionAcceptedPromises,
-        ...councilRewardPromises,
       ])
         .then((result) => {
           setPaymentData(result.sort((a, b) => b.block - a.block))

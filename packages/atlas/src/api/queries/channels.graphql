@@ -251,10 +251,4 @@ query GetChannelPaymentEvents($ownerMemberId: ID!, $channelId: ID!) {
       }
     }
   }
-
-  rewardPaymentEvents (where: {councilMember: {id_eq: $ownerMemberId}}) {
-    inBlock
-    paidBalance
-    createdAt
-  }
 }

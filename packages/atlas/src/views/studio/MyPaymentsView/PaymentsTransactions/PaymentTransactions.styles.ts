@@ -21,6 +21,6 @@ export const TableWrapper = styled.div`
   overflow-x: auto;
 
   > * {
-    min-width: 750px;
+    min-width: 900px;
   }
 `

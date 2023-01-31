@@ -699,12 +699,6 @@ export type GetChannelPaymentEventsQuery = {
           member?: { __typename?: 'Membership'; id: string; controllerAccount: string } | null
         }
   }>
-  rewardPaymentEvents: Array<{
-    __typename?: 'RewardPaymentEvent'
-    inBlock: number
-    paidBalance: string
-    createdAt: Date
-  }>
 }
 
 export const GetBasicChannelDocument = gql`
@@ -1647,11 +1641,6 @@ export const GetChannelPaymentEventsDocument = gql`
           }
         }
       }
-    }
-    rewardPaymentEvents(where: { councilMember: { id_eq: $ownerMemberId } }) {
-      inBlock
-      paidBalance
-      createdAt
     }
   }
 `

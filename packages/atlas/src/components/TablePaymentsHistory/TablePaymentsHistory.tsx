@@ -1,15 +1,23 @@
 import BN from 'bn.js'
 import { FC, ReactElement, useMemo } from 'react'
 
+import { useMemberships } from '@/api/hooks/membership'
 import { SvgActionCouncil, SvgActionCrown, SvgActionNft, SvgActionPayment, SvgActionRevenueShare } from '@/assets/icons'
+import { SvgJoystreamLogoShort } from '@/assets/logos'
+import { Avatar } from '@/components/Avatar'
 import { Table, TableProps } from '@/components/Table'
 import { Text } from '@/components/Text'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { SentryLogger } from '@/utils/logs'
+import { shortenString } from '@/utils/misc'
 import { formatNumber } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 
 import {
   JoyAmountWrapper,
+  JoystreamSvgWrapper,
+  SenderItem,
   StyledJoyTokenIcon,
   StyledNumberFormat,
   TypeIconWrapper,
@@ -20,22 +28,27 @@ const COLUMNS: TableProps['columns'] = [
   {
     Header: 'Date',
     accessor: 'date',
+    width: 100,
   },
   {
     Header: 'Type',
     accessor: 'type',
+    width: 100,
   },
   {
     Header: 'Sender',
     accessor: 'sender',
+    width: 100,
   },
   {
     Header: 'Amount',
     accessor: 'amount',
+    width: 100,
   },
   {
     Header: 'Description',
     accessor: 'description',
+    width: 200,
   },
 ]
 
@@ -95,8 +108,8 @@ export type PaymentHistory = {
   block: number
   date: Date
   sender: string
-  description: string
   amount: BN
+  description?: string
 }
 
 export type TablePaymentsHistoryProps = {
@@ -110,15 +123,53 @@ export const TablePaymentsHistory: FC<TablePaymentsHistoryProps> = ({ data }) =>
         date: <Date date={data.date} />,
         type: <Type type={data.type} />,
         amount: <TokenAmount tokenAmount={data.amount} />,
+        sender: <Sender sender={data.sender} />,
         description: (
           <Text variant="t200" as="p">
-            {data.description}
+            {data.description ?? '-'}
           </Text>
         ),
       })),
     [data]
   )
   return <Table title="History" columns={COLUMNS} data={mappedData} />
+}
+
+const Sender = ({ sender }: { sender: PaymentHistory['sender'] }) => {
+  const { memberships } = useMemberships(
+    { where: { controllerAccount_eq: sender } },
+    {
+      onError: (error) => SentryLogger.error('Failed to fetch memberships', 'ActiveUserProvider', error),
+      skip: sender === 'council',
+    }
+  )
+  const member = memberships?.find((member) => member.controllerAccount === sender)
+  const { url: avatarUrl, isLoadingAsset: avatarLoading } = useMemberAvatar(member)
+
+  switch (true) {
+    case sender === 'council':
+      return (
+        <SenderItem
+          nodeStart={
+            <JoystreamSvgWrapper>
+              <SvgJoystreamLogoShort />
+            </JoystreamSvgWrapper>
+          }
+          label="Joystream Council"
+          isInteractive={false}
+        />
+      )
+    case !!member:
+      return (
+        <SenderItem
+          nodeStart={<Avatar assetUrl={avatarUrl} loading={avatarLoading} />}
+          label={member?.handle}
+          isInteractive={false}
+        />
+      )
+    default:
+      return <SenderItem nodeStart={<Avatar />} label={shortenString(sender, 6, 4)} isInteractive={false} />
+  }
 }
 
 const Date = ({ date }: { date: Date }) => {

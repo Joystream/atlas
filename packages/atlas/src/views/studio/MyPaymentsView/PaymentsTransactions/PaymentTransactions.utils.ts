@@ -21,8 +21,8 @@ export const mapEventToPaymentHistory = <T extends CommonEvent>(
     block: inBlock + 1,
     amount: new BN(amount),
     date: new Date(createdAt),
-    description: '',
-    sender: '',
+    description: event.description,
+    sender: event.sender,
   }
 }
 
