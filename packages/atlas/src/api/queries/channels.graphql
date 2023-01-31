@@ -173,12 +173,20 @@ query GetChannelPaymentEvents($ownerMemberId: ID!, $channelId: ID!) {
     inBlock
     createdAt
     price
+    member {
+      id
+      controllerAccount
+    }
   }
 
   bidMadeCompletingAuctionEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
     inBlock
     createdAt
     price
+    member {
+      id
+      controllerAccount
+    }
   }
 
   englishAuctionSettledEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
@@ -187,6 +195,10 @@ query GetChannelPaymentEvents($ownerMemberId: ID!, $channelId: ID!) {
     winningBid {
       amount
     }
+    winner {
+      id
+      controllerAccount
+    }
   }
 
   openAuctionBidAcceptedEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
@@ -194,6 +206,10 @@ query GetChannelPaymentEvents($ownerMemberId: ID!, $channelId: ID!) {
     createdAt
     winningBid {
       amount
+    }
+    winningBidder {
+      id
+      controllerAccount
     }
   }
 
@@ -207,5 +223,26 @@ query GetChannelPaymentEvents($ownerMemberId: ID!, $channelId: ID!) {
     amount
     createdAt
     inBlock
+    actor {
+      ...on ContentActorCurator {
+       __typename
+      }
+      ...on ContentActorLead {
+        __typename
+      }
+
+      ... on ContentActorMember {
+        member {
+           id
+          controllerAccount
+        }
+      }
+    }
+  }
+
+  rewardPaidEvents (where: {worker: {membership: {id_eq: $ownerMemberId}}}) {
+    inBlock
+    amount
+    createdAt
   }
 }

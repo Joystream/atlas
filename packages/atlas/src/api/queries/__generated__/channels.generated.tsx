@@ -654,18 +654,21 @@ export type GetChannelPaymentEventsQuery = {
     inBlock: number
     createdAt: Date
     price: string
+    member: { __typename?: 'Membership'; id: string; controllerAccount: string }
   }>
   englishAuctionSettledEvents: Array<{
     __typename?: 'EnglishAuctionSettledEvent'
     createdAt: Date
     inBlock: number
     winningBid: { __typename?: 'Bid'; amount: string }
+    winner: { __typename?: 'Membership'; id: string; controllerAccount: string }
   }>
   openAuctionBidAcceptedEvents: Array<{
     __typename?: 'OpenAuctionBidAcceptedEvent'
     inBlock: number
     createdAt: Date
     winningBid?: { __typename?: 'Bid'; amount: string } | null
+    winningBidder?: { __typename?: 'Membership'; id: string; controllerAccount: string } | null
   }>
   channelRewardClaimedEvents: Array<{
     __typename?: 'ChannelRewardClaimedEvent'
@@ -678,7 +681,15 @@ export type GetChannelPaymentEventsQuery = {
     amount: string
     createdAt: Date
     inBlock: number
+    actor:
+      | { __typename: 'ContentActorCurator' }
+      | { __typename: 'ContentActorLead' }
+      | {
+          __typename?: 'ContentActorMember'
+          member?: { __typename?: 'Membership'; id: string; controllerAccount: string } | null
+        }
   }>
+  rewardPaidEvents: Array<{ __typename?: 'RewardPaidEvent'; inBlock: number; amount: string; createdAt: Date }>
 }
 
 export const GetBasicChannelDocument = gql`
@@ -1550,11 +1561,19 @@ export const GetChannelPaymentEventsDocument = gql`
       inBlock
       createdAt
       price
+      member {
+        id
+        controllerAccount
+      }
     }
     bidMadeCompletingAuctionEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
       inBlock
       createdAt
       price
+      member {
+        id
+        controllerAccount
+      }
     }
     englishAuctionSettledEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
       createdAt
@@ -1562,12 +1581,20 @@ export const GetChannelPaymentEventsDocument = gql`
       winningBid {
         amount
       }
+      winner {
+        id
+        controllerAccount
+      }
     }
     openAuctionBidAcceptedEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
       inBlock
       createdAt
       winningBid {
         amount
+      }
+      winningBidder {
+        id
+        controllerAccount
       }
     }
     channelRewardClaimedEvents(where: { channel: { id_eq: $channelId } }) {
@@ -1579,6 +1606,25 @@ export const GetChannelPaymentEventsDocument = gql`
       amount
       createdAt
       inBlock
+      actor {
+        ... on ContentActorCurator {
+          __typename
+        }
+        ... on ContentActorLead {
+          __typename
+        }
+        ... on ContentActorMember {
+          member {
+            id
+            controllerAccount
+          }
+        }
+      }
+    }
+    rewardPaidEvents(where: { worker: { membership: { id_eq: $ownerMemberId } } }) {
+      inBlock
+      amount
+      createdAt
     }
   }
 `
