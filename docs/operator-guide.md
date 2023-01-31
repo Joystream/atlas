@@ -115,7 +115,7 @@ Atlas uses list of categories defined in `content.categories` config entry to de
 
 Atlas will, by default, only display content belonging to one of the defined display categories in the app. That means that video with a category that doesn't belong to any local category will not be available in the app. If you want to change that behavior, you can set `content.showAllContent` to `true` in the config file. That will make the app display all the content, regardless of the category.
 
-You are free to use existing metaprotocol (Query Node) categories, buy you can also create your own that match your Gateway's specific needs. To get a list of all the existing categories you can use the following QN query:
+You are free to use existing metaprotocol (Query Node) categories, but you can also create your own that match your Gateway's specific needs. To get a list of all the existing categories you can use the following QN query:
 
 ```graphql
 query {
