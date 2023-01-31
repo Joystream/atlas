@@ -3276,12 +3276,16 @@ export const GetNotificationsDocument = gql`
             data: {
               isTypeOf_eq: "CommentCreatedEventData"
               comment: {
-                OR: [
-                  { author: { id_not_eq: $memberId } }
-                  { video: { channel: { id_eq: $channelId } }, parentComment_isNull: true }
-                  { parentComment: { author: { id_eq: $memberId } } }
-                ]
+                author: { id_not_eq: $memberId }
+                video: { channel: { id_eq: $channelId } }
+                parentComment_isNull: true
               }
+            }
+          }
+          {
+            data: {
+              isTypeOf_eq: "CommentCreatedEventData"
+              comment: { author: { id_not_eq: $memberId }, parentComment: { author: { id_eq: $memberId } } }
             }
           }
         ]

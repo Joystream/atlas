@@ -109,6 +109,7 @@ const parseNotification = (
   } else if (event.data.__typename === 'OpenAuctionBidAcceptedEventData') {
     if (event.data.winningBid?.bidder.id === memberId) {
       // member is the winner, their bid was accepted
+      console.log(event.data)
       return {
         type: 'bid-accepted',
         ...commonFields,
