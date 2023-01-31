@@ -1,5 +1,5 @@
 import BN from 'bn.js'
-import { FC, useMemo } from 'react'
+import { FC, ReactElement, useMemo } from 'react'
 
 import { SvgActionBuyNow } from '@/assets/icons'
 import { Table, TableProps } from '@/components/Table'
@@ -26,14 +26,42 @@ const COLUMNS: TableProps['columns'] = [
     accessor: 'type',
   },
   {
+    Header: 'Sender',
+    accessor: 'sender',
+  },
+  {
     Header: 'Amount',
     accessor: 'amount',
   },
   {
-    Header: 'Channel balance',
-    accessor: 'channelBalance',
+    Header: 'Description',
+    accessor: 'description',
   },
 ]
+
+const paymentTypeMappings: Record<
+  PaymentType,
+  {
+    title: string
+    icon?: ReactElement
+  }
+> = {
+  'nft-sale': {
+    title: 'NFT sale',
+  },
+  'nft-royalty': {
+    title: 'NFT royalty',
+  },
+  'claimed-reward': {
+    title: 'Claimed reward',
+  },
+  'withdrawal': {
+    title: 'Withdrawal',
+  },
+  'ypp-reward': {
+    title: 'YPP reward',
+  },
+}
 
 type PaymentType = 'nft-sale' | 'nft-royalty' | 'claimed-reward' | 'withdrawal' | 'ypp-reward'
 
@@ -41,7 +69,8 @@ export type PaymentHistory = {
   type: PaymentType
   block: number
   date: Date
-  channelBalance: BN
+  sender: string
+  description: string
   amount: BN
 }
 
@@ -56,7 +85,11 @@ export const TablePaymentsHistory: FC<TablePaymentsHistoryProps> = ({ data }) =>
         date: <Date date={data.date} />,
         type: <Type type={data.type} />,
         amount: <TokenAmount tokenAmount={data.amount} />,
-        channelBalance: <TokenAmount tokenAmount={data.channelBalance} />,
+        description: (
+          <Text variant="t200" as="p">
+            {data.description}
+          </Text>
+        ),
       })),
     [data]
   )
@@ -78,20 +111,13 @@ const Date = ({ date }: { date: Date }) => {
 }
 
 const Type = ({ type }: { type: PaymentType }) => {
-  const translatedPaymentType = {
-    'nft-sale': 'NFT sale',
-    'nft-royalty': 'NFT royalty',
-    'claimed-reward': 'Claimed reward',
-    'withdrawal': 'Withdrawal',
-    'ypp-reward': 'YPP reward',
-  }
   return (
     <TypeWrapper>
       <TypeIconWrapper>
         <SvgActionBuyNow />
       </TypeIconWrapper>
       <Text variant="t200" as="p" margin={{ left: 2 }}>
-        {translatedPaymentType[type]}
+        {paymentTypeMappings[type].title}
       </Text>
     </TypeWrapper>
   )

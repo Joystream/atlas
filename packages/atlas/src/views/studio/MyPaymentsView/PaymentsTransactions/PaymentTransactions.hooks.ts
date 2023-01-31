@@ -4,7 +4,7 @@ import { GetFullChannelsQuery, useGetChannelPaymentEventsQuery } from '@/api/que
 import { PaymentHistory } from '@/components/TablePaymentsHistory'
 import { useJoystream } from '@/providers/joystream/joystream.hooks'
 
-import { mapEventToPaymentHistoryFactory } from './PaymentTransactions.utils'
+import { mapEventToPaymentHistory } from './PaymentTransactions.utils'
 
 export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channels'][number]) => {
   const { joystream } = useJoystream()
@@ -22,7 +22,6 @@ export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channe
   const fetchPaymentsData = useCallback(() => {
     if (joystream && data && channel) {
       setLoading(true)
-      const mapEventToPaymentHistory = mapEventToPaymentHistoryFactory(joystream, channel.rewardAccount)
       const rewardPromises = data.channelRewardClaimedEvents.map((event) =>
         mapEventToPaymentHistory(event, 'claimed-reward')
       )
