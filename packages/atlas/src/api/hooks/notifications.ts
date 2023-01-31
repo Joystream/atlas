@@ -20,6 +20,8 @@ export const useRawNotifications = (
       channelId: channelId || '',
       memberId: memberId || '',
     },
+    // TODO Fix me. We use `no-cache` because for unknown reasons cache removes data about owner
+    fetchPolicy: 'no-cache',
     skip: !memberId,
     ...opts,
   })

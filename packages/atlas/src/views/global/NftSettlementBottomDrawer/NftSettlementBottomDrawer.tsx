@@ -52,8 +52,9 @@ export const NftSettlementBottomDrawer: FC = () => {
         displaySnackbar({
           title: 'Auction settled',
           description: isUserSeller
-            ? 'Your auction has been settled. The ownership has been transferred.'
-            : 'The auction has been settled. You are now the owner of this NFT.',
+            ? 'The auction has been settled. You are now the owner of this NFT.'
+            : 'Your auction has been settled. The ownership has been transferred.',
+
           iconType: 'success',
         })
         closeNftAction()

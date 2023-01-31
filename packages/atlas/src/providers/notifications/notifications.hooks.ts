@@ -5,6 +5,7 @@ import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragm
 import { GetNotificationsQuery } from '@/api/queries/__generated__/notifications.generated'
 import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger } from '@/utils/logs'
+import { convertDateFormat } from '@/utils/time'
 
 import { useNotificationStore } from './notifications.store'
 import { NftNotificationRecord, NotificationRecord } from './notifications.types'
@@ -65,7 +66,7 @@ const parseNotification = (
   const video = getVideoDataFromEvent(event)
   const commonFields: NftNotificationRecord = {
     id: event.id,
-    date: event.timestamp,
+    date: convertDateFormat(event.timestamp),
     block: event.inBlock,
     video: {
       id: video?.id || '',
@@ -108,12 +109,15 @@ const parseNotification = (
     }
   } else if (event.data.__typename === 'OpenAuctionBidAcceptedEventData') {
     if (event.data.winningBid?.bidder.id === memberId) {
-      // member is the winner, their bid was accepted
-      console.log(event.data)
+      // member is the previous owner, he accepted a bid
       return {
         type: 'bid-accepted',
         ...commonFields,
-        member: (event.data.winningBid?.bidder as BasicMembershipFieldsFragment) || null,
+        // todo previous nft owner should be here
+        member:
+          (event.data.previousNftOwner.__typename === 'NftOwnerChannel'
+            ? event.data.previousNftOwner.channel.ownerMember
+            : event.data.previousNftOwner.member) || null,
         bidAmount: new BN(event.data.winningBid?.amount || 0),
       }
     } else {
