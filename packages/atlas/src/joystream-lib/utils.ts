@@ -78,7 +78,6 @@ export const parseAccountBalance = (balances: DeriveBalancesAll): AccountBalance
   const feeUsable = balances.freeBalance.sub(balances.frozenFee)
 
   const lockedBalance = feeUsable.sub(balances.availableBalance)
-  console.log(balances.lockedBreakdown.map((lock) => lock.id.toUtf8()))
   return {
     availableBalance: balances.availableBalance.toString(),
     lockedBalance: lockedBalance.toString(),
