@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 
@@ -34,27 +34,24 @@ export type YppSyncedChannel = {
 
 export const useGetYppSyncedChannels = () => {
   const { activeMembership, membershipsLoading, isAuthLoading, channelId } = useUser()
-  const [isLoading, setIsLoading] = useState(true)
   const location = useLocation()
-  const [syncedChannels, setSyncedChannels] = useState<YppSyncedChannel[]>([])
+  const { data: syncedChannels, isLoading, refetch } = useQuery('ypp-synced-channels', () => getSyncedChannels())
 
   const channels = useMemo(() => activeMembership?.channels || [], [activeMembership?.channels])
 
   const unsyncedChannels = useMemo(() => {
-    const syncedChannelIds = syncedChannels.map((channel) => channel.joystreamChannelId.toString())
-    return activeMembership?.channels.filter((channel) => !syncedChannelIds.includes(channel.id))
+    const syncedChannelIds = syncedChannels?.map((channel) => channel.joystreamChannelId.toString())
+    return activeMembership?.channels.filter((channel) => !syncedChannelIds?.includes(channel.id))
   }, [activeMembership?.channels, syncedChannels])
 
   const getSyncedChannels = useCallback(async () => {
     if (!YPP_SYNC_URL) {
       ConsoleLogger.error("Youtube sync url wasn't provided")
-      setIsLoading(false)
       return
     }
     // TODO We should do only one request per given memberId
     // refactor once https://github.com/Joystream/youtube-synch/issues/55 is done
     try {
-      setIsLoading(true)
       const syncedChannels = await Promise.all(
         channels.map(async (channel) => {
           try {
@@ -66,17 +63,12 @@ export const useGetYppSyncedChannels = () => {
         })
       )
       const fetchedChannels = syncedChannels.filter(
-        (channel): channel is YppSyncedChannel =>
-          !!channel &&
-          (channel.yppStatus === 'Unverified' || channel?.yppStatus === 'Verified' || channel.yppStatus === 'Active')
+        (channel): channel is YppSyncedChannel => !!channel && channel.yppStatus !== 'OptedOut'
       )
-      setSyncedChannels(fetchedChannels)
 
       return fetchedChannels
     } catch (error) {
       SentryLogger.error('Error while updating YPP setting: ', 'useGetYppSyncedChannels', error)
-    } finally {
-      setIsLoading(false)
     }
   }, [channels])
 
@@ -88,7 +80,7 @@ export const useGetYppSyncedChannels = () => {
   return {
     syncedChannels,
     unsyncedChannels,
-    refetchSyncedChannels: getSyncedChannels,
+    refetchSyncedChannels: refetch,
     isLoading: isLoading || membershipsLoading || isAuthLoading,
     currentChannel: syncedChannels?.find(
       (syncedChannels) => syncedChannels.joystreamChannelId.toString() === channelId
