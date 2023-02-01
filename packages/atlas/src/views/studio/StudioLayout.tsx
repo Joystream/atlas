@@ -143,14 +143,12 @@ const StudioLayout = () => {
                   <PrivateRoute element={<MyUploadsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
                 }
               />
-              {!atlasConfig.features.ypp.googleConsoleClientId && (
-                <Route
-                  path={relativeRoutes.studio.payments()}
-                  element={
-                    <PrivateRoute element={<MyPaymentsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
-                  }
-                />
-              )}
+              <Route
+                path={relativeRoutes.studio.payments()}
+                element={
+                  <PrivateRoute element={<MyPaymentsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                }
+              />
               <Route
                 path={relativeRoutes.studio.videos()}
                 element={<PrivateRoute element={<MyVideosView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />}
