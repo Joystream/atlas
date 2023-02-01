@@ -96,7 +96,7 @@ export class JoystreamLib {
 
   async subscribeAccountBalance(
     accountId: AccountId,
-    callback: (balances: { availableBalance: string; lockedBalance: string; totalLockedBalance: string }) => void
+    callback: (balances: { availableBalance: string; lockedBalance: string; totalInvitationLock: string }) => void
   ) {
     await this.ensureApi()
 
