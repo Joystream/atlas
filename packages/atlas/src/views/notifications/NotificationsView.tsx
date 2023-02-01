@@ -5,6 +5,7 @@ import { GridItem } from '@/components/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
+import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useBottomNavStore } from '@/providers/bottomNav'
 import { useNotifications } from '@/providers/notifications/notifications.hooks'
@@ -24,6 +25,7 @@ import {
 export const NotificationsView = () => {
   const smMatch = useMediaMatch('sm')
   const open = useBottomNavStore((state) => state.open)
+  const headTags = useHeadTags('Notifications')
 
   const { selectedNotifications, setNotificationSelected, selectAllNotifications, unselectAllNotifications } =
     useSelectedNotifications()
@@ -54,6 +56,7 @@ export const NotificationsView = () => {
   const markSelectedAsUnread = () => markNotificationsAsUnread(selectedNotifications)
   return (
     <StyledLayoutGrid>
+      {headTags}
       <GridItem colSpan={{ xxs: 12, md: 10, lg: 8 }} colStart={{ md: 2, lg: 3 }}>
         <Header>
           <Text as="h1" variant={smMatch ? 'h700' : 'h600'}>
