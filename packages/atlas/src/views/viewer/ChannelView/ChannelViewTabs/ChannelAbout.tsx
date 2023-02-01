@@ -21,11 +21,10 @@ import {
 
 type ChannelAboutProps = {
   channel?: FullChannelFieldsFragment | null
+  activeVideosCount: number | undefined
 }
 
-export const ChannelAbout: FC<ChannelAboutProps> = ({ channel }) => {
-  // todo. Previously active videos counter? Check if this working
-  const videoCount = channel?.videoViewsNum
+export const ChannelAbout: FC<ChannelAboutProps> = ({ channel, activeVideosCount }) => {
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(channel?.ownerMember)
   return (
     <StyledLayoutGrid>
@@ -83,7 +82,7 @@ export const ChannelAbout: FC<ChannelAboutProps> = ({ channel }) => {
             Num. of videos
           </Text>
           <Text as="span" variant="t300">
-            {videoCount}
+            {activeVideosCount}
           </Text>
         </Details>
 

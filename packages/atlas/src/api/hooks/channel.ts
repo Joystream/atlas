@@ -68,6 +68,7 @@ export const useFullChannel = (
   })
   return {
     extendedChannel: data?.extendedChannels[0].channel,
+    activeVideosCount: data?.extendedChannels[0].activeVideosCount,
     ...rest,
   }
 }

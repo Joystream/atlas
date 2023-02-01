@@ -78,6 +78,7 @@ export const ChannelView: FC = () => {
   const { id } = useParams()
   const {
     extendedChannel,
+    activeVideosCount,
     loading,
     error: channelError,
   } = useFullChannel(id ?? '', {
@@ -187,7 +188,7 @@ export const ChannelView: FC = () => {
           />
         )
       case 'Information':
-        return <ChannelAbout channel={extendedChannel} />
+        return <ChannelAbout channel={extendedChannel} activeVideosCount={activeVideosCount} />
     }
   }
 
