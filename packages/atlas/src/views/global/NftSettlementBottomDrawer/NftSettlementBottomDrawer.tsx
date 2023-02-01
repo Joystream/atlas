@@ -37,7 +37,8 @@ export const NftSettlementBottomDrawer: FC = () => {
     nft?.owner.__typename === 'NftOwnerMember' && nft.owner.member ? nft.owner.member : null
   )
 
-  const isUserSeller = memberId === (nft?.owner.__typename === 'NftOwnerMember' && nft.owner.member.id)
+  const isUserSeller =
+    memberId === (nft?.owner.__typename === 'NftOwnerMember' ? nft.owner.member.id : nft?.owner.channel.ownerMember?.id)
 
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
@@ -52,9 +53,8 @@ export const NftSettlementBottomDrawer: FC = () => {
         displaySnackbar({
           title: 'Auction settled',
           description: isUserSeller
-            ? 'The auction has been settled. You are now the owner of this NFT.'
-            : 'Your auction has been settled. The ownership has been transferred.',
-
+            ? 'Your auction has been settled. The ownership has been transferred.'
+            : 'The auction has been settled. You are now the owner of this NFT.',
           iconType: 'success',
         })
         closeNftAction()
