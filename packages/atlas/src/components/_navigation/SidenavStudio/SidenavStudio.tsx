@@ -39,12 +39,16 @@ const studioNavbarItems: NavItemType[] = [
     expandedName: 'My uploads',
     to: absoluteRoutes.studio.uploads(),
   },
-  {
-    icon: <SvgSidebarPayments />,
-    name: 'Payments',
-    expandedName: 'My payments',
-    to: absoluteRoutes.studio.payments(),
-  },
+  ...(atlasConfig.features.ypp.googleConsoleClientId
+    ? []
+    : [
+        {
+          icon: <SvgSidebarPayments />,
+          name: 'Payments',
+          expandedName: 'My payments',
+          to: absoluteRoutes.studio.payments(),
+        },
+      ]),
   {
     icon: <SvgSidebarToken />,
     name: 'Token',
