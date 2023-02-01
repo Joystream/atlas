@@ -158,6 +158,7 @@ export const useSubscribeAccountBalance = (
 ) => {
   const [accountBalance, setAccountBalance] = useState<BN | undefined>()
   const [lockedAccountBalance, setLockedAccountBalance] = useState<BN | undefined>()
+  const [totalLockedAccountBalance, setTotalLockedAccountBalance] = useState<BN | undefined>()
   const { activeMembership } = useUser()
   const { joystream, proxyCallback, chainState } = useJoystream()
 
@@ -179,8 +180,9 @@ export const useSubscribeAccountBalance = (
     const init = async () => {
       unsubscribe = await joystream.subscribeAccountBalance(
         controllerAccount || activeMembership.controllerAccount,
-        proxyCallback(({ availableBalance, lockedBalance }) => {
+        proxyCallback(({ availableBalance, lockedBalance, totalLockedBalance }) => {
           setLockedAccountBalance(new BN(lockedBalance))
+          setTotalLockedAccountBalance(new BN(totalLockedBalance))
           if (opts?.channelStateBloatBond) {
             const rewardBalance = new BN(availableBalance).sub(opts.channelStateBloatBond)
             setAccountBalance(rewardBalance.gtn(0) ? rewardBalance : new BN(0))
@@ -204,7 +206,7 @@ export const useSubscribeAccountBalance = (
     proxyCallback,
   ])
 
-  return { accountBalance, lockedAccountBalance, totalBalanceLoaded, totalBalance }
+  return { accountBalance, lockedAccountBalance, totalBalanceLoaded, totalBalance, totalLockedAccountBalance }
 }
 
 export const useBloatFeesAndPerMbFees = (assets?: VideoInputAssets | ChannelInputAssets) => {

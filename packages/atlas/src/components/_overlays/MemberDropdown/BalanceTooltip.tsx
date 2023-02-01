@@ -7,29 +7,23 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 
-import {
-  StyledSvgActionLock,
-  TextWithIcon,
-  TooltipDivider,
-  TooltipFooter,
-  TooltipRow,
-  TooltipWrapper,
-  UpperRow,
-} from './BalanceTooltip.styles'
+import { TextWithIcon, TooltipFooter, TooltipRow, TooltipWrapper, UpperRow } from './BalanceTooltip.styles'
 
 type BalanceTooltipProps = PropsWithChildren<{
   accountBalance: BN | undefined
   lockedAccountBalance: BN | undefined
   containerRefElement: Element | null
+  isInDebt?: boolean
 }>
 
 export const BalanceTooltip: FC<BalanceTooltipProps> = ({
   accountBalance,
   lockedAccountBalance = new BN(0),
   containerRefElement,
+  isInDebt,
   children,
 }) => {
-  if (accountBalance === undefined) {
+  if (accountBalance === undefined || !isInDebt) {
     return <>{children}</>
   }
   return (
@@ -45,20 +39,8 @@ export const BalanceTooltip: FC<BalanceTooltipProps> = ({
           <UpperRow>
             <TooltipRow>
               <Text as="span" variant="t100" color="colorText">
-                Transferable
+                Spendable
               </Text>
-              <TextWithIcon>
-                <JoyTokenIcon size={16} variant="gray" />
-                <NumberFormat as="span" variant="t200-strong" value={accountBalance} format="full" color="colorText" />
-              </TextWithIcon>
-            </TooltipRow>
-            <TooltipRow>
-              <TextWithIcon>
-                <StyledSvgActionLock />
-                <Text as="span" variant="t100" color="colorText">
-                  Locked funds
-                </Text>
-              </TextWithIcon>
               <TextWithIcon>
                 <JoyTokenIcon size={16} variant="gray" />
                 <NumberFormat
@@ -71,25 +53,12 @@ export const BalanceTooltip: FC<BalanceTooltipProps> = ({
               </TextWithIcon>
             </TooltipRow>
           </UpperRow>
-          <TooltipDivider />
-          <TooltipRow>
-            <Text as="span" variant="t100">
-              Total
-            </Text>
-            <TextWithIcon>
-              <JoyTokenIcon size={16} variant="regular" />
-              <NumberFormat
-                as="span"
-                variant="t200-strong"
-                value={lockedAccountBalance?.add(accountBalance)}
-                format="full"
-              />
-            </TextWithIcon>
-          </TooltipRow>
           <TooltipFooter>
             <SvgActionInformative />
             <Text as="span" variant="t100" color="colorText">
-              Locked tokens can only be spent on transaction fees and cannot be transfered.
+              You don't have any tokens to spend on NFTs or transfer, but there is a balance you can spend on paying of
+              transaction fees for creating channels, posting videos, adding comments and reactions. This balance needs
+              to be repaid before accumulating transferable balance.
             </Text>
           </TooltipFooter>
         </TooltipWrapper>

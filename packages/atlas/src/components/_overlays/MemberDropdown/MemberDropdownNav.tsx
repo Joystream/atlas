@@ -69,6 +69,7 @@ type MemberDropdownNavProps = {
   accountBalance?: BN
   channelBalance?: BN
   lockedAccountBalance?: BN
+  isInDebt?: boolean
 }
 
 export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
@@ -86,6 +87,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
   accountBalance,
   lockedAccountBalance,
   channelBalance,
+  isInDebt,
 }) => {
   const navigate = useNavigate()
   const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
@@ -206,6 +208,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                       containerRefElement={containerRefElement}
                       accountBalance={accountBalance}
                       lockedAccountBalance={lockedAccountBalance}
+                      isInDebt={isInDebt}
                     >
                       {accountBalance !== undefined ? (
                         <UserBalance>
