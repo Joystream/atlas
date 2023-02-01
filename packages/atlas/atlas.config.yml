@@ -43,7 +43,7 @@ features:
     suspendedSupportLink: https://discord.gg/NcHnCS4H # Link that will be displayed for users suspended in YPP
     suspendedLinkText: '#ypp-support channel on our Discord server'
     youtubeCollaboratorMemberId: '$VITE_YOUTUBE_COLLABORATOR_MEMBER_ID'
-    enrollmentReward: 200 # Amount for successful enrollment in YPP in joystream.tokenTicker units.
+    enrollmentReward: 5000 # Amount for successful enrollment in YPP in joystream.tokenTicker units.
     tiersDefinition: # Tiers for youtube partner program rewards. You can provide maximum three tiers. Each tier should has own multiplier.
       tiers:
         - minimumSubscribers: 50
