@@ -182,9 +182,9 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                       publisher={publisher}
                       type={dropdownType}
                       isInDebt={
-                        accountBalance &&
+                        totalBalance &&
                         totalLockedAccountBalance &&
-                        accountBalance?.sub(totalLockedAccountBalance).isNeg()
+                        totalBalance?.sub(totalLockedAccountBalance).isNeg()
                       }
                     />
                   </div>
