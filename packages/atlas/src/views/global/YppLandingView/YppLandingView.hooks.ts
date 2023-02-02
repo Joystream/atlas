@@ -35,7 +35,13 @@ export type YppSyncedChannel = {
 export const useGetYppSyncedChannels = () => {
   const { activeMembership, membershipsLoading, isAuthLoading, channelId } = useUser()
   const location = useLocation()
-  const { data: syncedChannels, isLoading, refetch } = useQuery('ypp-synced-channels', () => getSyncedChannels())
+  const {
+    data: syncedChannels,
+    isLoading,
+    refetch,
+  } = useQuery('ypp-synced-channels', () => getSyncedChannels(), {
+    refetchOnWindowFocus: false,
+  })
 
   const channels = useMemo(() => activeMembership?.channels || [], [activeMembership?.channels])
 
