@@ -13,17 +13,15 @@ type BalanceTooltipProps = PropsWithChildren<{
   accountBalance: BN | undefined
   lockedAccountBalance: BN | undefined
   containerRefElement: Element | null
-  isInDebt?: boolean
 }>
 
 export const BalanceTooltip: FC<BalanceTooltipProps> = ({
   accountBalance,
   lockedAccountBalance = new BN(0),
   containerRefElement,
-  isInDebt,
   children,
 }) => {
-  if (accountBalance === undefined || !isInDebt) {
+  if (accountBalance === undefined || accountBalance.gtn(0)) {
     return <>{children}</>
   }
   return (
@@ -56,9 +54,10 @@ export const BalanceTooltip: FC<BalanceTooltipProps> = ({
           <TooltipFooter>
             <SvgActionInformative />
             <Text as="span" variant="t100" color="colorText">
-              You don't have any tokens to spend on NFTs or transfer, but there is a balance you can spend on paying of
-              transaction fees for creating channels, posting videos, adding comments and reactions. This balance needs
-              to be repaid before accumulating transferable balance.
+              Your transferable balance is zero, meaning you cannot buy NFTs or transfer tokens. There is a spendable
+              balance from faucet, which you can still spend on paying transaction fees for creating channels, posting
+              videos, adding comments and reactions. This balance needs to be repaid before accumulating transferable
+              balance.
             </Text>
           </TooltipFooter>
         </TooltipWrapper>

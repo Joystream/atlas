@@ -208,17 +208,17 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                       containerRefElement={containerRefElement}
                       accountBalance={accountBalance}
                       lockedAccountBalance={lockedAccountBalance}
-                      isInDebt={isInDebt}
                     >
                       {accountBalance !== undefined ? (
                         <UserBalance>
-                          <JoyTokenIcon size={16} variant="regular" withoutInformationTooltip />
+                          <JoyTokenIcon isNegative={isInDebt} size={16} variant="regular" withoutInformationTooltip />
                           <NumberFormat
                             withTooltip={false}
                             as="span"
                             variant="t200-strong"
                             value={accountBalance}
                             format="short"
+                            isNegative={isInDebt}
                           />
                         </UserBalance>
                       ) : (

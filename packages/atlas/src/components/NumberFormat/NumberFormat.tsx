@@ -18,11 +18,21 @@ export type NumberFormatProps = {
   children?: never
   variant?: TextVariant
   displayedValue?: string | number
+  isNegative?: boolean
 } & Omit<TextProps, 'children' | 'variant'>
 
 export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
   (
-    { value, format = 'full', withToken, withTooltip = true, variant = 'no-variant', displayedValue, ...textProps },
+    {
+      value,
+      format = 'full',
+      withToken,
+      withTooltip = true,
+      variant = 'no-variant',
+      displayedValue,
+      isNegative,
+      ...textProps
+    },
     ref
   ) => {
     const internalValue = BN.isBN(value) ? hapiBnToTokenNumber(value) : value
@@ -30,7 +40,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
     const bnValue = new BN(value)
     let formattedValue
     let tooltipText
-    switch (bnValue.isNeg() ? 'full' : format) {
+    switch (isNegative || bnValue.isNeg() ? 'full' : format) {
       case 'short':
         formattedValue = internalValue ? (internalValue > 0.01 ? formatNumberShort(internalValue) : `< 0.01`) : 0
         tooltipText = formatNumber(internalValue)
@@ -53,7 +63,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
     const content = (
       <StyledText
         {...textProps}
-        color={bnValue.isNeg() ? 'colorTextError' : undefined}
+        color={isNegative || bnValue.isNeg() ? 'colorTextError' : undefined}
         variant={variant}
         ref={mergeRefs([ref, textRef])}
       >
