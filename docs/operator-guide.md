@@ -115,6 +115,11 @@ Atlas uses list of categories defined in `content.categories` config entry to de
 
 Atlas will, by default, only display content belonging to one of the defined display categories in the app. That means that video with a category that doesn't belong to any local category will not be available in the app. If you want to change that behavior, you can set `content.showAllContent` to `true` in the config file. That will make the app display all the content, regardless of the category.
 
+#### YPP
+
+All the YPP (YouTube Partner Program) parameters could be found in `atlas.config.yml` file located in `packages/atlas` directory.
+`features.ypp` section contains all the necessary params for setting up [youtube-synch](https://github.com/Joystream/youtube-synch/) and customizing user's rewards.
+
 #### Terms of Service, Copyright Policy and Privacy Policy
 
 You can provide your own Terms of Service, Copyright Policy and Privacy Policy by updating the `legal.termsOfService`, `legal.copyrightPolicy` and `legal.privacyPolicy` config entries. All of these support basic Markdown syntax like headings and lists.
