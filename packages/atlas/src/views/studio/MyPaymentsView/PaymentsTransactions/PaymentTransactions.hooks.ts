@@ -27,8 +27,6 @@ export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channe
           {
             ...event,
             sender: 'council',
-            description:
-              'asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd',
           },
           'council-reward'
         )

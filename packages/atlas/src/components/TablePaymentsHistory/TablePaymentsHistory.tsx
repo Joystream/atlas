@@ -1,5 +1,5 @@
 import BN from 'bn.js'
-import { FC, ReactElement, useMemo } from 'react'
+import { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMemberships } from '@/api/hooks/membership'
 import { SvgActionCouncil, SvgActionCrown, SvgActionNft, SvgActionPayment, SvgActionRevenueShare } from '@/assets/icons'
@@ -7,6 +7,8 @@ import { SvgJoystreamLogoShort } from '@/assets/logos'
 import { Avatar } from '@/components/Avatar'
 import { Table, TableProps } from '@/components/Table'
 import { Text } from '@/components/Text'
+import { TextButton } from '@/components/_buttons/Button'
+import { DialogModal } from '@/components/_overlays/DialogModal'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { SentryLogger } from '@/utils/logs'
@@ -15,11 +17,13 @@ import { formatNumber } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 
 import {
+  DialogText,
   JoyAmountWrapper,
   JoystreamSvgWrapper,
   SenderItem,
   StyledJoyTokenIcon,
   StyledNumberFormat,
+  TextWrapper,
   TypeIconWrapper,
   TypeWrapper,
 } from './TablePaymentsHistory.styles'
@@ -117,6 +121,7 @@ export type TablePaymentsHistoryProps = {
 }
 
 export const TablePaymentsHistory: FC<TablePaymentsHistoryProps> = ({ data }) => {
+  const [dialogText, setDialogText] = useState('')
   const mappedData: TableProps['data'] = useMemo(
     () =>
       data.map((data) => ({
@@ -125,14 +130,46 @@ export const TablePaymentsHistory: FC<TablePaymentsHistoryProps> = ({ data }) =>
         amount: <TokenAmount tokenAmount={data.amount} />,
         sender: <Sender sender={data.sender} />,
         description: (
-          <Text variant="t200" as="p">
-            {data.description ?? '-'}
-          </Text>
+          <TableText onShowMoreClick={() => setDialogText(data.description ?? '')} text={data.description} />
         ),
       })),
     [data]
   )
-  return <Table title="History" columns={COLUMNS} data={mappedData} />
+  return (
+    <>
+      <DialogModal title="Payout info" show={!!dialogText} size="small" onExitClick={() => setDialogText('')}>
+        <DialogText as="p" variant="t200" color="colorText">
+          {dialogText}
+        </DialogText>
+      </DialogModal>
+      <Table title="History" columns={COLUMNS} data={mappedData} />
+    </>
+  )
+}
+
+const TableText = ({ text, onShowMoreClick }: { text?: string; onShowMoreClick: () => void }) => {
+  const commentBodyRef = useRef<HTMLParagraphElement>(null)
+  const [isTruncated, setIsTruncated] = useState(false)
+
+  useEffect(() => {
+    if (!commentBodyRef.current) {
+      return
+    }
+    setIsTruncated(commentBodyRef.current?.offsetWidth < commentBodyRef.current?.scrollWidth)
+  }, [])
+
+  return (
+    <TextWrapper>
+      <Text variant="t200" as="p" ref={commentBodyRef}>
+        {text ?? '-'}
+      </Text>
+      {isTruncated && (
+        <TextButton variant="primary" size="medium" onClick={onShowMoreClick}>
+          Show more
+        </TextButton>
+      )}
+    </TextWrapper>
+  )
 }
 
 const Sender = ({ sender }: { sender: PaymentHistory['sender'] }) => {

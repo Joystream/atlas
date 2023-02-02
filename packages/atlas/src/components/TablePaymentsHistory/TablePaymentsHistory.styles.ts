@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { ListItem } from '@/components/ListItem'
 import { NumberFormat } from '@/components/NumberFormat'
+import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 
 export const TypeWrapper = styled.div`
@@ -55,4 +56,18 @@ export const JoystreamSvgWrapper = styled.div`
 
 export const SenderItem = styled(ListItem)`
   padding-left: 0;
+`
+
+export const TextWrapper = styled.div`
+  display: inline-flex;
+  overflow: hidden;
+  width: 100%;
+
+  button > * {
+    width: max-content;
+  }
+`
+
+export const DialogText = styled(Text)`
+  text-align: justify;
 `
