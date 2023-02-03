@@ -55,14 +55,16 @@ export const EmptyTableContainer = styled.div`
   justify-items: center;
   margin: ${sizes(10)} auto;
   padding: 0 ${sizes(4)};
+`
 
-  p {
-    text-align: center;
-    margin-top: ${sizes(2)};
-  }
-
+export const EmptyTableHeader = styled(Text)`
   h5 {
     margin-top: ${sizes(10)};
     text-align: center;
   }
+`
+
+export const EmptyTableDescription = styled(Text)`
+  text-align: center;
+  margin-top: ${sizes(2)};
 `

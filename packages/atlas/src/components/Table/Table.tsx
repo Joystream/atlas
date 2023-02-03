@@ -4,7 +4,17 @@ import { Column, usePagination, useTable } from 'react-table'
 import { Text } from '@/components/Text'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
-import { EmptyTableContainer, StyledPagination, TableBase, Td, Th, Thead, Wrapper } from './Table.styles'
+import {
+  EmptyTableContainer,
+  EmptyTableDescription,
+  EmptyTableHeader,
+  StyledPagination,
+  TableBase,
+  Td,
+  Th,
+  Thead,
+  Wrapper,
+} from './Table.styles'
 
 export type TableProps<T = object> = {
   columns: Column[]
@@ -77,12 +87,12 @@ export const Table = <T extends object>({ columns, data, title, pageSize = 20, e
       ) : emptyState ? (
         <EmptyTableContainer>
           {emptyState.icon}
-          <Text variant="h500" as="h5">
+          <EmptyTableHeader variant="h500" as="h5">
             {emptyState.title}
-          </Text>
-          <Text variant="t200" as="p" color="colorText">
+          </EmptyTableHeader>
+          <EmptyTableDescription variant="t200" as="p" color="colorText">
             {emptyState.description}
-          </Text>
+          </EmptyTableDescription>
         </EmptyTableContainer>
       ) : null}
 
