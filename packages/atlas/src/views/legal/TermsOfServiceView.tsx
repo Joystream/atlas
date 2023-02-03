@@ -8,7 +8,7 @@ export const TermsOfServiceView: FC = () => {
   return (
     <>
       {headTags}
-      <TermsOfService />
+      <TermsOfService hasYppTnc />
     </>
   )
 }
