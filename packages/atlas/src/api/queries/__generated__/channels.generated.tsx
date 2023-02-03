@@ -627,7 +627,7 @@ export type GetPayloadDataObjectIdByCommitmentQuery = {
   __typename?: 'Query'
   channelPayoutsUpdatedEvents: Array<{
     __typename?: 'ChannelPayoutsUpdatedEvent'
-    payloadDataObject: { __typename?: 'StorageDataObject'; id: string; storageBagId: string }
+    payloadDataObject?: { __typename?: 'StorageDataObject'; id: string; storageBagId: string } | null
   }>
 }
 
@@ -654,7 +654,7 @@ export type GetChannelPaymentEventsQuery = {
     createdAt: Date
     price: string
     video: { __typename?: 'Video'; title?: string | null }
-    member: { __typename?: 'Membership'; id: string; controllerAccount: string }
+    member: { __typename?: 'Membership'; controllerAccount: string }
   }>
   bidMadeCompletingAuctionEvents: Array<{
     __typename?: 'BidMadeCompletingAuctionEvent'
@@ -662,7 +662,7 @@ export type GetChannelPaymentEventsQuery = {
     createdAt: Date
     price: string
     video: { __typename?: 'Video'; title?: string | null }
-    member: { __typename?: 'Membership'; id: string; controllerAccount: string }
+    member: { __typename?: 'Membership'; controllerAccount: string }
   }>
   englishAuctionSettledEvents: Array<{
     __typename?: 'EnglishAuctionSettledEvent'
@@ -670,7 +670,7 @@ export type GetChannelPaymentEventsQuery = {
     inBlock: number
     video: { __typename?: 'Video'; title?: string | null }
     winningBid: { __typename?: 'Bid'; amount: string }
-    winner: { __typename?: 'Membership'; id: string; controllerAccount: string }
+    winner: { __typename?: 'Membership'; controllerAccount: string }
   }>
   openAuctionBidAcceptedEvents: Array<{
     __typename?: 'OpenAuctionBidAcceptedEvent'
@@ -678,7 +678,7 @@ export type GetChannelPaymentEventsQuery = {
     createdAt: Date
     video: { __typename?: 'Video'; title?: string | null }
     winningBid?: { __typename?: 'Bid'; amount: string } | null
-    winningBidder?: { __typename?: 'Membership'; id: string; controllerAccount: string } | null
+    winningBidder?: { __typename?: 'Membership'; controllerAccount: string } | null
   }>
   channelRewardClaimedEvents: Array<{
     __typename?: 'ChannelRewardClaimedEvent'
@@ -694,10 +694,15 @@ export type GetChannelPaymentEventsQuery = {
     actor:
       | { __typename: 'ContentActorCurator' }
       | { __typename: 'ContentActorLead' }
-      | {
-          __typename?: 'ContentActorMember'
-          member?: { __typename?: 'Membership'; id: string; controllerAccount: string } | null
-        }
+      | { __typename?: 'ContentActorMember'; member?: { __typename?: 'Membership'; controllerAccount: string } | null }
+  }>
+  channelPaymentMadeEvents: Array<{
+    __typename?: 'ChannelPaymentMadeEvent'
+    amount: string
+    createdAt: Date
+    inBlock: number
+    rationale?: string | null
+    payer: { __typename?: 'Membership'; controllerAccount: string }
   }>
 }
 
@@ -1574,7 +1579,6 @@ export const GetChannelPaymentEventsDocument = gql`
         title
       }
       member {
-        id
         controllerAccount
       }
     }
@@ -1586,7 +1590,6 @@ export const GetChannelPaymentEventsDocument = gql`
         title
       }
       member {
-        id
         controllerAccount
       }
     }
@@ -1600,7 +1603,6 @@ export const GetChannelPaymentEventsDocument = gql`
         amount
       }
       winner {
-        id
         controllerAccount
       }
     }
@@ -1614,7 +1616,6 @@ export const GetChannelPaymentEventsDocument = gql`
         amount
       }
       winningBidder {
-        id
         controllerAccount
       }
     }
@@ -1636,10 +1637,18 @@ export const GetChannelPaymentEventsDocument = gql`
         }
         ... on ContentActorMember {
           member {
-            id
             controllerAccount
           }
         }
+      }
+    }
+    channelPaymentMadeEvents(where: { payeeChannel: { id_eq: $channelId } }) {
+      amount
+      createdAt
+      inBlock
+      rationale
+      payer {
+        controllerAccount
       }
     }
   }

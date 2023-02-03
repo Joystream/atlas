@@ -1,15 +1,12 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { GetFullChannelsQuery, useGetChannelPaymentEventsQuery } from '@/api/queries/__generated__/channels.generated'
 import { PaymentHistory } from '@/components/TablePaymentsHistory'
-import { useJoystream } from '@/providers/joystream/joystream.hooks'
 
 import { mapEventToPaymentHistory } from './PaymentTransactions.utils'
 
 export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channels'][number]) => {
-  const { joystream } = useJoystream()
   const [paymentData, setPaymentData] = useState<PaymentHistory[]>([])
-  const [loading, setLoading] = useState<boolean>(false)
 
   const { data, ...rest } = useGetChannelPaymentEventsQuery({
     variables: {
@@ -19,10 +16,9 @@ export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channe
     skip: !channel,
   })
 
-  const fetchPaymentsData = useCallback(() => {
-    if (joystream && data && channel) {
-      setLoading(true)
-      const rewardPromises = data.channelRewardClaimedEvents.map((event) =>
+  useEffect(() => {
+    if (data) {
+      const rewardClaimed = data.channelRewardClaimedEvents.map((event) =>
         mapEventToPaymentHistory(
           {
             ...event,
@@ -31,7 +27,7 @@ export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channe
           'council-reward'
         )
       )
-      const ntfBoughtPromises = data.nftBoughtEvents.map((event) =>
+      const ntfBought = data.nftBoughtEvents.map((event) =>
         mapEventToPaymentHistory(
           {
             ...event,
@@ -42,7 +38,7 @@ export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channe
           'nft-sale'
         )
       )
-      const withdrawalPromises = data?.channelFundsWithdrawnEvents.map((event) =>
+      const withdrawalMade = data.channelFundsWithdrawnEvents.map((event) =>
         mapEventToPaymentHistory(
           {
             ...event,
@@ -54,7 +50,7 @@ export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channe
           'withdrawal'
         )
       )
-      const openAuctionAcceptedPromises = data?.openAuctionBidAcceptedEvents.map((event) =>
+      const openAuctionAccepted = data.openAuctionBidAcceptedEvents.map((event) =>
         mapEventToPaymentHistory(
           {
             ...event,
@@ -65,7 +61,7 @@ export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channe
           'nft-sale'
         )
       )
-      const auctionCompletingBidPromises = data?.bidMadeCompletingAuctionEvents.map((event) =>
+      const auctionCompletingBid = data.bidMadeCompletingAuctionEvents.map((event) =>
         mapEventToPaymentHistory(
           {
             ...event,
@@ -76,7 +72,7 @@ export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channe
           'nft-sale'
         )
       )
-      const auctionSettledPromises = data?.englishAuctionSettledEvents.map((event) =>
+      const auctionSettled = data.englishAuctionSettledEvents.map((event) =>
         mapEventToPaymentHistory(
           {
             ...event,
@@ -88,32 +84,31 @@ export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channe
         )
       )
 
-      Promise.all([
-        ...rewardPromises,
-        ...withdrawalPromises,
-        ...ntfBoughtPromises,
-        ...auctionSettledPromises,
-        ...auctionCompletingBidPromises,
-        ...openAuctionAcceptedPromises,
-      ])
-        .then((result) => {
-          setPaymentData(result.sort((a, b) => b.block - a.block))
-        })
-        .finally(() => {
-          setLoading(false)
-        })
-    }
-  }, [joystream, data, channel])
+      const directPayment = data.channelPaymentMadeEvents.map((event) =>
+        mapEventToPaymentHistory(
+          { ...event, sender: event.payer.controllerAccount, description: event.rationale ?? undefined },
+          'direct-payment'
+        )
+      )
 
-  useEffect(() => {
-    fetchPaymentsData()
-  }, [joystream, data, channel, fetchPaymentsData])
+      const result = [
+        ...directPayment,
+        ...auctionCompletingBid,
+        ...auctionSettled,
+        ...openAuctionAccepted,
+        ...ntfBought,
+        ...rewardClaimed,
+        ...withdrawalMade,
+      ].sort((a, b) => b.block - a.block)
+      setPaymentData(result)
+    }
+  }, [data])
 
   return {
     ...rest,
     rawData: data,
     paymentData,
-    loading: rest.loading || loading,
-    fetchPaymentsData,
+    loading: rest.loading,
+    fetchPaymentsData: rest.refetch,
   }
 }
