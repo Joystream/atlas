@@ -37,7 +37,7 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
           title="This channel has been suspended in the YouTube Partner Program"
           icon={<SvgAlertsError24 />}
           description={
-            <Text variant="t200" as="p" color="colorCoreNeutral200">
+            <Text variant="t200" as="span" color="colorCoreNeutral200">
               To learn more about the reason behind the suspension, please reach out on the{' '}
               <Button variant="primary" _textOnly to={atlasConfig.features.ypp.suspendedSupportLink ?? ''}>
                 {atlasConfig.features.ypp.suspendedLinkText ?? 'link destination'}{' '}
@@ -57,7 +57,7 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
             <NumberFormat
               value={(atlasConfig.features.ypp.enrollmentReward ?? 0) * multiplier}
               format="short"
-              as="p"
+              as="span"
               withToken
             />{' '}
             after your channel is verified by the program operators.
