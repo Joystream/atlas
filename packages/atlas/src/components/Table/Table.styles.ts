@@ -47,3 +47,22 @@ export const Td = styled(Text)`
 export const StyledPagination = styled(Pagination)`
   margin: ${sizes(6)} 0;
 `
+
+export const EmptyTableContainer = styled.div`
+  display: grid;
+  width: min(100%, 400px);
+  place-content: center;
+  justify-items: center;
+  margin: ${sizes(10)} auto;
+  padding: 0 ${sizes(4)};
+`
+
+export const EmptyTableHeader = styled(Text)`
+  margin-top: ${sizes(10)};
+  text-align: center;
+`
+
+export const EmptyTableDescription = styled(Text)`
+  text-align: center;
+  margin-top: ${sizes(2)};
+`

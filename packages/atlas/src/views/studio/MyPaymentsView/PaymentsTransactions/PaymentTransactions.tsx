@@ -35,7 +35,7 @@ export const PaymentTransactions = () => {
           icon={<SvgJoyTokenMonochrome24 />}
         />
       </TilesWrapper>
-      <TableWrapper>
+      <TableWrapper isEmpty={!paymentData.length}>
         <TablePaymentsHistory data={paymentData} />
       </TableWrapper>
     </>
