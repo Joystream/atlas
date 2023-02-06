@@ -232,10 +232,10 @@ query GetChannelPaymentEvents($ownerMemberId: ID!, $channelId: ID!) {
     createdAt
     inBlock
     actor {
-      ...on ContentActorCurator {
-       __typename
+      ... on ContentActorCurator {
+        __typename
       }
-      ...on ContentActorLead {
+      ... on ContentActorLead {
         __typename
       }
 
@@ -247,7 +247,7 @@ query GetChannelPaymentEvents($ownerMemberId: ID!, $channelId: ID!) {
     }
   }
 
-  channelPaymentMadeEvents(where: { payeeChannel: {id_eq: $channelId}}) {
+  channelPaymentMadeEvents(where: { payeeChannel: { id_eq: $channelId } }) {
     amount
     createdAt
     inBlock
