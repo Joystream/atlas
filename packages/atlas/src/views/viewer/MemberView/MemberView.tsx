@@ -15,6 +15,7 @@ import { Button } from '@/components/_buttons/Button'
 import { Select } from '@/components/_inputs/Select'
 import { absoluteRoutes } from '@/config/routes'
 import { NFT_SORT_ACTIVITY_OPTIONS, NFT_SORT_OPTIONS } from '@/config/sorting'
+import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
@@ -42,6 +43,7 @@ export const MemberView: FC = () => {
   const [currentTab, setCurrentTab] = useState<typeof TABS[number] | null>(null)
   const { memberId, activeMembership } = useUser()
   const { handle } = useParams()
+  const headTags = useHeadTags(handle)
   const filtersBarLogic = useFiltersBar()
   const {
     filters: { setIsFiltersOpen, isFiltersOpen },
@@ -186,6 +188,7 @@ export const MemberView: FC = () => {
   }
   return (
     <ViewWrapper>
+      {headTags}
       <LimitedWidthContainer>
         <StyledMembershipInfo
           avatarUrl={avatarUrl}

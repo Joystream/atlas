@@ -16,6 +16,7 @@ import { TokenInput } from '@/components/_inputs/TokenInput'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NftCard } from '@/components/_nft/NftCard'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
+import { atlasConfig } from '@/config'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
@@ -302,7 +303,11 @@ export const NftPurchaseBottomDrawer: FC = () => {
               ? isBuyNowClicked || type === 'buy_now'
                 ? handleBuyNow()
                 : handleBidOnAuction()
-              : null,
+              : displaySnackbar({
+                  title: 'Insufficient funds',
+                  description: `You don't have enough ${atlasConfig.joystream.tokenTicker} tokens to cover this transaction.`,
+                  iconType: 'error',
+                }),
         },
       }}
     >
