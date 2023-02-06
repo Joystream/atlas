@@ -1,7 +1,8 @@
 import { FC } from 'react'
 
-import { SvgActionNewTab, SvgAlertsError24 } from '@/assets/icons'
+import { SvgActionNewTab, SvgAlertsError24, SvgAlertsInformative24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
 import { Button } from '@/components/_buttons/Button'
@@ -36,7 +37,7 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
           title="This channel has been suspended in the YouTube Partner Program"
           icon={<SvgAlertsError24 />}
           description={
-            <Text variant="t200" as="p" color="colorCoreNeutral200">
+            <Text variant="t200" as="span" color="colorCoreNeutral200">
               To learn more about the reason behind the suspension, please reach out on the{' '}
               <Button variant="primary" _textOnly to={atlasConfig.features.ypp.suspendedSupportLink ?? ''}>
                 {atlasConfig.features.ypp.suspendedLinkText ?? 'link destination'}{' '}
@@ -46,6 +47,24 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
           }
         />
       )}
+      <StyledBanner
+        title="When rewards are paid out?"
+        icon={<SvgAlertsInformative24 />}
+        description={
+          <>
+            Payouts are made on a weekly basis, every Friday, for the previous calendar week. Your first payment will
+            involve the reward for the sign up of{' '}
+            <NumberFormat
+              value={(atlasConfig.features.ypp.enrollmentReward ?? 0) * multiplier}
+              format="short"
+              as="span"
+              withToken
+            />{' '}
+            after your channel is verified by the program operators.
+          </>
+        }
+        dismissibleId="ypp-first-reward-information"
+      />
       {atlasConfig.features.ypp.widgets && (
         <WidgetsWrapper>
           {atlasConfig.features.ypp.widgets.map((widget) => (

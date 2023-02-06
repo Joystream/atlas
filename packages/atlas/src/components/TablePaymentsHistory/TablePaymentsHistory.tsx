@@ -3,6 +3,7 @@ import { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMemberships } from '@/api/hooks/membership'
 import { SvgActionCouncil, SvgActionCrown, SvgActionNft, SvgActionPayment, SvgActionRevenueShare } from '@/assets/icons'
+import { SvgEmptyStateIllustration } from '@/assets/illustrations'
 import { SvgJoystreamLogoShort } from '@/assets/logos'
 import { Avatar } from '@/components/Avatar'
 import { Table, TableProps } from '@/components/Table'
@@ -107,6 +108,13 @@ type PaymentType =
   | 'direct-payment'
   | 'revenue-share'
 
+const tableEmptyState = {
+  title: 'No payments here yet',
+  description:
+    'Here you will see proceedings to your channel balance from sold NFTs and royalties, claimed council rewards, direct payments from members to your channel and withdrawals from channel balance.',
+  icon: <SvgEmptyStateIllustration />,
+}
+
 export type PaymentHistory = {
   type: PaymentType
   block: number
@@ -142,7 +150,7 @@ export const TablePaymentsHistory: FC<TablePaymentsHistoryProps> = ({ data }) =>
           {dialogText}
         </DialogText>
       </DialogModal>
-      <Table title="History" columns={COLUMNS} data={mappedData} />
+      <Table title="History" columns={COLUMNS} data={mappedData} emptyState={tableEmptyState} />
     </>
   )
 }
