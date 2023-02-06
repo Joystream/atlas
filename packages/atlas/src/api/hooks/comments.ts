@@ -112,7 +112,6 @@ export const useCommentEdits = (
     variables: { commentId: commentId || '' },
   })
 
-  // todo make sure that everything works.
   const originalComment = data?.events
     .filter((event): event is OriginalCommentEvent => event.data.__typename === 'CommentCreatedEventData')
     .map((event) => ({ ...event, data: { ...event.data, text: event.data.text } }))[0]

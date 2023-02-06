@@ -3,10 +3,7 @@ import { useMemo } from 'react'
 import { useParams } from 'react-router'
 
 import { useCategoriesFeaturedVideos } from '@/api/hooks/categoriesFeaturedVideos'
-import {
-  BasicVideoFeaturedInCategoryFragment,
-  ExtendedVideoCategoryFieldsFragment,
-} from '@/api/queries/__generated__/fragments.generated'
+import { BasicVideoFeaturedInCategoryFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionChevronR } from '@/assets/icons'
 import { CategoryIcon } from '@/components/CategoryIcon'
 import { Grid } from '@/components/Grid'
@@ -17,7 +14,7 @@ import { VideoContentTemplate } from '@/components/_templates/VideoContentTempla
 import { VideoCategoryCard } from '@/components/_video/VideoCategoryCard'
 import { VideoCategoryHero } from '@/components/_video/VideoCategoryHero'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
-import { DisplayCategory, displayCategoriesLookup } from '@/config/categories'
+import { displayCategoriesLookup } from '@/config/categories'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -34,7 +31,7 @@ export const CategoryView = () => {
 
   const { displayCategoriesWithCounter, loading, totalVideosCount } = useVideoDisplayCategoriesWithCounter()
 
-  const otherCategory: Array<DisplayCategory & ExtendedVideoCategoryFieldsFragment['category']> = useMemo(
+  const otherCategory = useMemo(
     () =>
       sampleSize(
         displayCategoriesWithCounter?.filter((category) => category.id !== id),
@@ -100,7 +97,6 @@ export const CategoryView = () => {
           {mdBreakpointMatch ? 'Browse categories' : ''}
         </Button>
       </TitleContainer>
-      {/* todo fix it */}
       <CategoriesContainer>
         {otherCategory.map((category) => (
           <GridItem key={category.id} colSpan={{ base: 6, lg: 4 }}>
@@ -109,8 +105,7 @@ export const CategoryView = () => {
               isLoading={loading}
               coverImg={category.coverImgUrl}
               color={category.color}
-              // categoryVideosCount={category.activeVideosCount}
-              categoryVideosCount={0}
+              categoryVideosCount={category.activeVideosCounter}
               icon={<CategoryIcon url={category.iconUrl} color={category.color} />}
               videosTotalCount={totalVideosCount}
               variant={mdBreakpointMatch ? 'default' : 'compact'}

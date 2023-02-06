@@ -242,7 +242,6 @@ export const useChannelNftCollectors = (
   const { data, ...rest } = useGetChannelNftCollectorsQuery({
     ...opts,
     variables: {
-      // Todo change later?
       channelId: variables?.channelId || '',
       orderBy: variables?.orderBy,
     },

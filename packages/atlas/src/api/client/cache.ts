@@ -46,7 +46,6 @@ const getVideoKeyArgs = (args: Partial<QueryVideosConnectionArgs> | null) => {
 
 const getNftKeyArgs = (args: Partial<QueryOwnedNftsConnectionArgs> | null) => {
   const OR = stringifyValue(args?.where?.OR)
-  // todo make sure that is working
   const ownerMember = stringifyValue(args?.where?.owner?.member)
   const creatorChannel = stringifyValue(args?.where?.owner?.channel)
   const status = stringifyValue(args?.where?.transactionalStatus)

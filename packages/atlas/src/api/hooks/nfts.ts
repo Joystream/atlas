@@ -20,15 +20,13 @@ import {
   GetNftHistoryQueryVariables,
   useGetNftHistoryQuery,
 } from '@/api/queries/__generated__/notifications.generated'
-import { videoFilter } from '@/config/contentFilter'
+import { nftFilter } from '@/config/contentFilter'
 
 type CommonNftProperties = {
   title: string | null | undefined
   duration: number | null | undefined
   views: number | undefined
 }
-
-const VIDEO_ID_FILTER = videoFilter.id_not_contains
 
 export type NftStatus = (
   | {
@@ -84,7 +82,6 @@ export const getNftStatus = (
       topBidder: auction.topBid?.bidder,
       auctionPlannedEndBlock: englishAuction ? englishAuction.plannedEndAtBlock : undefined,
       bidLockingTime: openAuction ? openAuction.bidLockDuration : undefined,
-      // minimalBidStep: englishAuction ? tokenNumberToHapiBn(parseInt(englishAuction?.minimalBidStep)) : undefined,
       minimalBidStep: englishAuction ? new BN(englishAuction.minimalBidStep) : undefined,
       whitelistedMembers: auction.whitelistedMembers.map((whiteListed) => whiteListed.member),
     }
@@ -122,7 +119,6 @@ export const useNft = (id: string, opts?: QueryHookOptions<GetNftQuery, GetNftQu
     ...rest,
   }
 }
-
 export const useNftsConnection = (
   variables?: GetNftsConnectionQueryVariables,
   opts?: QueryHookOptions<GetNftsConnectionQuery, GetNftsConnectionQueryVariables>
@@ -130,7 +126,18 @@ export const useNftsConnection = (
   const { data, ...rest } = useGetNftsConnectionQuery({
     variables: {
       ...variables,
-      where: { ...variables?.where, ...(VIDEO_ID_FILTER ? { NOT: [{ id_in: VIDEO_ID_FILTER }] } : {}) },
+      where: {
+        ...variables?.where,
+        video: {
+          media: {
+            isAccepted_eq: true,
+          },
+          thumbnailPhoto: {
+            isAccepted_eq: true,
+          },
+          ...(nftFilter ? nftFilter : {}),
+        },
+      },
     },
     ...opts,
   })

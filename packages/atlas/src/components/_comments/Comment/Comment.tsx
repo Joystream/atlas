@@ -252,7 +252,6 @@ export const Comment: FC<CommentProps> = memo(
       (comment &&
         getCommentReactions({
           userReactionsIds: userReactions,
-          // todo make sure that's working
           reactionsCount: comment.reactionsCountByReactionId || [],
           processingReactionsIds,
           deleted: commentType === 'deleted',

@@ -113,7 +113,6 @@ const parseNotification = (
       return {
         type: 'bid-accepted',
         ...commonFields,
-        // todo previous nft owner should be here
         member:
           (event.data.previousNftOwner.__typename === 'NftOwnerChannel'
             ? event.data.previousNftOwner.channel.ownerMember

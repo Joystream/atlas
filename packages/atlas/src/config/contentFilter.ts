@@ -1,4 +1,4 @@
-import { ChannelWhereInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { ChannelWhereInput, OwnedNftWhereInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { atlasConfig } from '@/config/config'
 
 import { allUniqueVideoCategories } from './categories'
@@ -53,14 +53,17 @@ export const channelFilter: ChannelWhereInput = {
   ...(NOTchannelFilters.length ? { NOT: NOTchannelFilters } : {}),
 }
 
-// export const nftFilter: OwnedNftWhereInput = {
-//   ...(!atlasConfig.content.showAllContent ? { videoCategory: { id_in: allUniqueVideoCategories } } : {}),
-//   ...(NOTnftFilters.length
-//     ? {
-//         NOT: NOTnftFilters,
-//       }
-//     : {}),
-// }
+export const nftFilter: OwnedNftWhereInput = {
+  ...(!atlasConfig.content.showAllContent
+    ? {
+        video: {
+          category: {
+            id_in: allUniqueVideoCategories,
+          },
+        },
+      }
+    : {}),
+}
 
 export const videoFilter: VideoWhereInput = {
   isCensored_eq: false,
@@ -79,6 +82,5 @@ export const cancelledVideoFilter: VideoWhereInput = {
   isPublic_eq: undefined,
   media: undefined,
   thumbnailPhoto: undefined,
-  // NOT: undefined,
   category: undefined,
 }
