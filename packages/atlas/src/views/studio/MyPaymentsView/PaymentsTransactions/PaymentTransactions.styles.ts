@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { media, sizes } from '@/styles'
@@ -17,10 +18,15 @@ export const TilesWrapper = styled.div`
   }
 `
 
-export const TableWrapper = styled.div`
+export const TableWrapper = styled.div<{ isEmpty?: boolean }>`
   overflow-x: auto;
 
-  > * {
-    min-width: 750px;
-  }
+  ${({ isEmpty }) =>
+    !isEmpty
+      ? css`
+          > * {
+            min-width: 750px;
+          }
+        `
+      : ''}
 `

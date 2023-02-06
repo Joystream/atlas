@@ -3,10 +3,8 @@ import { useMemo, useState } from 'react'
 
 import { useFullChannel } from '@/api/hooks/channel'
 import { SvgAlertsInformative24, SvgJoyTokenMonochrome24 } from '@/assets/icons'
-import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { WidgetTile } from '@/components/WidgetTile'
-import { CopyAddressButton } from '@/components/_buttons/CopyAddressButton/CopyAddressButton'
 import { ClaimChannelPaymentsDialog } from '@/components/_overlays/ClaimChannelPaymentsDialog'
 import { WithdrawFundsDialog } from '@/components/_overlays/SendTransferDialogs'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -17,17 +15,10 @@ import { useUser } from '@/providers/user/user.hooks'
 import { formatNumber } from '@/utils/number'
 
 import { useChannelPayout } from './PaymentsOverview.hooks'
-import {
-  AvatarAndTokenWrapper,
-  CustomNodeWrapper,
-  StyledJoyTokenIcon,
-  StyledWidgetTile,
-  TilesWrapper,
-  TokenWrapper,
-} from './PaymentsOverview.styles'
+import { CustomNodeWrapper, TilesWrapper } from './PaymentsOverview.styles'
 
 export const PaymentsOverView = () => {
-  const { channelId, activeMembership, accountId } = useUser()
+  const { channelId, activeMembership } = useUser()
   const { url: memberAvatarUrl } = useMemberAvatar(activeMembership)
   const { totalBalance } = useSubscribeAccountBalance()
   const [showWithdrawDialog, setShowWithdrawDialog] = useState(false)
@@ -39,17 +30,13 @@ export const PaymentsOverView = () => {
     return new BN(channel?.channelStateBloatBond || 0)
   }, [channel?.channelStateBloatBond])
 
-  const { accountBalance: memberBalance } = useSubscribeAccountBalance()
   const { accountBalance: channelBalance } =
     useSubscribeAccountBalance(channel?.rewardAccount, {
       channelStateBloatBond: memoizedChannelStateBloatBond,
     }) || new BN(0)
 
   const formattedChannelBalance = formatNumber(hapiBnToTokenNumber(channelBalance || new BN(0)))
-  const formattedMemberBalance = formatNumber(hapiBnToTokenNumber(memberBalance || new BN(0)))
   const formattedReward = formatNumber(availableAward || 0)
-
-  const { url, isLoadingAsset } = useMemberAvatar(activeMembership)
 
   const mdMatch = useMediaMatch('md')
 
@@ -66,7 +53,7 @@ export const PaymentsOverView = () => {
       />
       <ClaimChannelPaymentsDialog show={showClaimDialog} onExit={() => setShowClaimDialog(false)} />
       <TilesWrapper>
-        <StyledWidgetTile
+        <WidgetTile
           title="Claimable Rewards"
           loading={isAwardLoading || loading}
           text={availableAward ? formattedReward : undefined}
@@ -102,20 +89,6 @@ export const PaymentsOverView = () => {
             fullWidth: !mdMatch,
             onClick: () => setShowWithdrawDialog(true),
           }}
-        />
-        <WidgetTile
-          title="Membership wallet balance"
-          loading={loading || memberBalance === undefined}
-          icon={
-            <AvatarAndTokenWrapper>
-              <Avatar size="bid" assetUrl={url} loading={isLoadingAsset} />
-              <TokenWrapper>
-                <StyledJoyTokenIcon variant="gray" size={24} />
-              </TokenWrapper>
-            </AvatarAndTokenWrapper>
-          }
-          text={formattedMemberBalance}
-          customTopRightNode={accountId ? <CopyAddressButton size="small" address={accountId} /> : undefined}
         />
       </TilesWrapper>
     </>

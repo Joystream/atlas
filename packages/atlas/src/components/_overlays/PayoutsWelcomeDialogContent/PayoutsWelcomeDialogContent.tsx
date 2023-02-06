@@ -15,7 +15,7 @@ export const PayoutsWelcomeDialogContent = () => {
         <StyledSvgOtherSignInDialogPatterns />
       </IllustrationWrapper>
       <Text variant="h500" as="h2" color="colorTextStrong" margin={{ bottom: 2 }}>
-        Welcome to payouts
+        Welcome to payments
       </Text>
       <Text variant="t200" as="p" color="colorText">
         This page is dedicated to your channel earnings and withdrawals to membership account. Proceedings from NFT
