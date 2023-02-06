@@ -1,18 +1,21 @@
+import { useState } from 'react'
 import { Column, usePagination, useTable } from 'react-table'
 
+import { TablePagination } from '@/components/TablePagination'
 import { Text } from '@/components/Text'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
-import { StyledPagination, TableBase, Td, Th, Thead, Wrapper } from './Table.styles'
+import { TableBase, Td, Th, Thead, Wrapper } from './Table.styles'
 
 export type TableProps<T = object> = {
   columns: Column[]
   data: T[]
   title?: string
-  pageSize?: number
+  initialPageSize?: number
 }
 
-export const Table = <T extends object>({ columns, data, title, pageSize = 20 }: TableProps<T>) => {
+export const Table = <T extends object>({ columns, data, title, initialPageSize = 20 }: TableProps<T>) => {
+  const [pageSize, setPageSize] = useState(initialPageSize)
   const {
     getTableProps,
     getTableBodyProps,
@@ -67,8 +70,14 @@ export const Table = <T extends object>({ columns, data, title, pageSize = 20 }:
           })}
         </tbody>
       </TableBase>
-      {data.length > pageSize && (
-        <StyledPagination onChangePage={gotoPage} page={pageIndex} itemsPerPage={pageSize} totalCount={data.length} />
+      {data.length < pageSize && (
+        <TablePagination
+          perPage={pageSize}
+          currentPage={pageIndex}
+          setPage={gotoPage}
+          setPerPage={(perPage) => setPageSize(perPage)}
+          totalItemCount={data.length}
+        />
       )}
     </Wrapper>
   )
