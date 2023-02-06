@@ -22,6 +22,313 @@ export type AddVideoViewResult = {
   viewsNum: Scalars['Int']
 }
 
+export type App = {
+  __typename?: 'App'
+  authKey?: Maybe<Scalars['String']>
+  bigIcon?: Maybe<Scalars['String']>
+  category?: Maybe<Scalars['String']>
+  channel: Channel
+  description?: Maybe<Scalars['String']>
+  /** Runtime entity identifier (EntityId) */
+  id: Scalars['String']
+  mediumIcon?: Maybe<Scalars['String']>
+  /** The name of the App */
+  name: Scalars['String']
+  /** Tagline of the app */
+  oneLiner?: Maybe<Scalars['String']>
+  /** List of platforms on which the app will be available, e.g. [mobile, web, native] */
+  platforms?: Maybe<Array<Maybe<Scalars['String']>>>
+  smallIcon?: Maybe<Scalars['String']>
+  termsOfService?: Maybe<Scalars['String']>
+  /** Url to the app */
+  useUri?: Maybe<Scalars['String']>
+  /** Url where user can read more about the project or company for this app */
+  websiteUrl?: Maybe<Scalars['String']>
+}
+
+export type AppEdge = {
+  __typename?: 'AppEdge'
+  cursor: Scalars['String']
+  node: App
+}
+
+export enum AppOrderByInput {
+  AuthKeyAsc = 'authKey_ASC',
+  AuthKeyDesc = 'authKey_DESC',
+  BigIconAsc = 'bigIcon_ASC',
+  BigIconDesc = 'bigIcon_DESC',
+  CategoryAsc = 'category_ASC',
+  CategoryDesc = 'category_DESC',
+  ChannelChannelStateBloatBondAsc = 'channel_channelStateBloatBond_ASC',
+  ChannelChannelStateBloatBondDesc = 'channel_channelStateBloatBond_DESC',
+  ChannelCreatedAtAsc = 'channel_createdAt_ASC',
+  ChannelCreatedAtDesc = 'channel_createdAt_DESC',
+  ChannelCreatedInBlockAsc = 'channel_createdInBlock_ASC',
+  ChannelCreatedInBlockDesc = 'channel_createdInBlock_DESC',
+  ChannelCumulativeRewardClaimedAsc = 'channel_cumulativeRewardClaimed_ASC',
+  ChannelCumulativeRewardClaimedDesc = 'channel_cumulativeRewardClaimed_DESC',
+  ChannelDescriptionAsc = 'channel_description_ASC',
+  ChannelDescriptionDesc = 'channel_description_DESC',
+  ChannelFollowsNumAsc = 'channel_followsNum_ASC',
+  ChannelFollowsNumDesc = 'channel_followsNum_DESC',
+  ChannelIdAsc = 'channel_id_ASC',
+  ChannelIdDesc = 'channel_id_DESC',
+  ChannelIsCensoredAsc = 'channel_isCensored_ASC',
+  ChannelIsCensoredDesc = 'channel_isCensored_DESC',
+  ChannelIsExcludedAsc = 'channel_isExcluded_ASC',
+  ChannelIsExcludedDesc = 'channel_isExcluded_DESC',
+  ChannelIsPublicAsc = 'channel_isPublic_ASC',
+  ChannelIsPublicDesc = 'channel_isPublic_DESC',
+  ChannelLanguageAsc = 'channel_language_ASC',
+  ChannelLanguageDesc = 'channel_language_DESC',
+  ChannelRewardAccountAsc = 'channel_rewardAccount_ASC',
+  ChannelRewardAccountDesc = 'channel_rewardAccount_DESC',
+  ChannelTitleAsc = 'channel_title_ASC',
+  ChannelTitleDesc = 'channel_title_DESC',
+  ChannelVideoViewsNumAsc = 'channel_videoViewsNum_ASC',
+  ChannelVideoViewsNumDesc = 'channel_videoViewsNum_DESC',
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  MediumIconAsc = 'mediumIcon_ASC',
+  MediumIconDesc = 'mediumIcon_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  OneLinerAsc = 'oneLiner_ASC',
+  OneLinerDesc = 'oneLiner_DESC',
+  SmallIconAsc = 'smallIcon_ASC',
+  SmallIconDesc = 'smallIcon_DESC',
+  TermsOfServiceAsc = 'termsOfService_ASC',
+  TermsOfServiceDesc = 'termsOfService_DESC',
+  UseUriAsc = 'useUri_ASC',
+  UseUriDesc = 'useUri_DESC',
+  WebsiteUrlAsc = 'websiteUrl_ASC',
+  WebsiteUrlDesc = 'websiteUrl_DESC',
+}
+
+export type AppWhereInput = {
+  AND?: InputMaybe<Array<AppWhereInput>>
+  OR?: InputMaybe<Array<AppWhereInput>>
+  authKey_contains?: InputMaybe<Scalars['String']>
+  authKey_containsInsensitive?: InputMaybe<Scalars['String']>
+  authKey_endsWith?: InputMaybe<Scalars['String']>
+  authKey_eq?: InputMaybe<Scalars['String']>
+  authKey_gt?: InputMaybe<Scalars['String']>
+  authKey_gte?: InputMaybe<Scalars['String']>
+  authKey_in?: InputMaybe<Array<Scalars['String']>>
+  authKey_isNull?: InputMaybe<Scalars['Boolean']>
+  authKey_lt?: InputMaybe<Scalars['String']>
+  authKey_lte?: InputMaybe<Scalars['String']>
+  authKey_not_contains?: InputMaybe<Scalars['String']>
+  authKey_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  authKey_not_endsWith?: InputMaybe<Scalars['String']>
+  authKey_not_eq?: InputMaybe<Scalars['String']>
+  authKey_not_in?: InputMaybe<Array<Scalars['String']>>
+  authKey_not_startsWith?: InputMaybe<Scalars['String']>
+  authKey_startsWith?: InputMaybe<Scalars['String']>
+  bigIcon_contains?: InputMaybe<Scalars['String']>
+  bigIcon_containsInsensitive?: InputMaybe<Scalars['String']>
+  bigIcon_endsWith?: InputMaybe<Scalars['String']>
+  bigIcon_eq?: InputMaybe<Scalars['String']>
+  bigIcon_gt?: InputMaybe<Scalars['String']>
+  bigIcon_gte?: InputMaybe<Scalars['String']>
+  bigIcon_in?: InputMaybe<Array<Scalars['String']>>
+  bigIcon_isNull?: InputMaybe<Scalars['Boolean']>
+  bigIcon_lt?: InputMaybe<Scalars['String']>
+  bigIcon_lte?: InputMaybe<Scalars['String']>
+  bigIcon_not_contains?: InputMaybe<Scalars['String']>
+  bigIcon_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  bigIcon_not_endsWith?: InputMaybe<Scalars['String']>
+  bigIcon_not_eq?: InputMaybe<Scalars['String']>
+  bigIcon_not_in?: InputMaybe<Array<Scalars['String']>>
+  bigIcon_not_startsWith?: InputMaybe<Scalars['String']>
+  bigIcon_startsWith?: InputMaybe<Scalars['String']>
+  category_contains?: InputMaybe<Scalars['String']>
+  category_containsInsensitive?: InputMaybe<Scalars['String']>
+  category_endsWith?: InputMaybe<Scalars['String']>
+  category_eq?: InputMaybe<Scalars['String']>
+  category_gt?: InputMaybe<Scalars['String']>
+  category_gte?: InputMaybe<Scalars['String']>
+  category_in?: InputMaybe<Array<Scalars['String']>>
+  category_isNull?: InputMaybe<Scalars['Boolean']>
+  category_lt?: InputMaybe<Scalars['String']>
+  category_lte?: InputMaybe<Scalars['String']>
+  category_not_contains?: InputMaybe<Scalars['String']>
+  category_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  category_not_endsWith?: InputMaybe<Scalars['String']>
+  category_not_eq?: InputMaybe<Scalars['String']>
+  category_not_in?: InputMaybe<Array<Scalars['String']>>
+  category_not_startsWith?: InputMaybe<Scalars['String']>
+  category_startsWith?: InputMaybe<Scalars['String']>
+  channel?: InputMaybe<ChannelWhereInput>
+  channel_isNull?: InputMaybe<Scalars['Boolean']>
+  description_contains?: InputMaybe<Scalars['String']>
+  description_containsInsensitive?: InputMaybe<Scalars['String']>
+  description_endsWith?: InputMaybe<Scalars['String']>
+  description_eq?: InputMaybe<Scalars['String']>
+  description_gt?: InputMaybe<Scalars['String']>
+  description_gte?: InputMaybe<Scalars['String']>
+  description_in?: InputMaybe<Array<Scalars['String']>>
+  description_isNull?: InputMaybe<Scalars['Boolean']>
+  description_lt?: InputMaybe<Scalars['String']>
+  description_lte?: InputMaybe<Scalars['String']>
+  description_not_contains?: InputMaybe<Scalars['String']>
+  description_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  description_not_endsWith?: InputMaybe<Scalars['String']>
+  description_not_eq?: InputMaybe<Scalars['String']>
+  description_not_in?: InputMaybe<Array<Scalars['String']>>
+  description_not_startsWith?: InputMaybe<Scalars['String']>
+  description_startsWith?: InputMaybe<Scalars['String']>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  mediumIcon_contains?: InputMaybe<Scalars['String']>
+  mediumIcon_containsInsensitive?: InputMaybe<Scalars['String']>
+  mediumIcon_endsWith?: InputMaybe<Scalars['String']>
+  mediumIcon_eq?: InputMaybe<Scalars['String']>
+  mediumIcon_gt?: InputMaybe<Scalars['String']>
+  mediumIcon_gte?: InputMaybe<Scalars['String']>
+  mediumIcon_in?: InputMaybe<Array<Scalars['String']>>
+  mediumIcon_isNull?: InputMaybe<Scalars['Boolean']>
+  mediumIcon_lt?: InputMaybe<Scalars['String']>
+  mediumIcon_lte?: InputMaybe<Scalars['String']>
+  mediumIcon_not_contains?: InputMaybe<Scalars['String']>
+  mediumIcon_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  mediumIcon_not_endsWith?: InputMaybe<Scalars['String']>
+  mediumIcon_not_eq?: InputMaybe<Scalars['String']>
+  mediumIcon_not_in?: InputMaybe<Array<Scalars['String']>>
+  mediumIcon_not_startsWith?: InputMaybe<Scalars['String']>
+  mediumIcon_startsWith?: InputMaybe<Scalars['String']>
+  name_contains?: InputMaybe<Scalars['String']>
+  name_containsInsensitive?: InputMaybe<Scalars['String']>
+  name_endsWith?: InputMaybe<Scalars['String']>
+  name_eq?: InputMaybe<Scalars['String']>
+  name_gt?: InputMaybe<Scalars['String']>
+  name_gte?: InputMaybe<Scalars['String']>
+  name_in?: InputMaybe<Array<Scalars['String']>>
+  name_isNull?: InputMaybe<Scalars['Boolean']>
+  name_lt?: InputMaybe<Scalars['String']>
+  name_lte?: InputMaybe<Scalars['String']>
+  name_not_contains?: InputMaybe<Scalars['String']>
+  name_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  name_not_endsWith?: InputMaybe<Scalars['String']>
+  name_not_eq?: InputMaybe<Scalars['String']>
+  name_not_in?: InputMaybe<Array<Scalars['String']>>
+  name_not_startsWith?: InputMaybe<Scalars['String']>
+  name_startsWith?: InputMaybe<Scalars['String']>
+  oneLiner_contains?: InputMaybe<Scalars['String']>
+  oneLiner_containsInsensitive?: InputMaybe<Scalars['String']>
+  oneLiner_endsWith?: InputMaybe<Scalars['String']>
+  oneLiner_eq?: InputMaybe<Scalars['String']>
+  oneLiner_gt?: InputMaybe<Scalars['String']>
+  oneLiner_gte?: InputMaybe<Scalars['String']>
+  oneLiner_in?: InputMaybe<Array<Scalars['String']>>
+  oneLiner_isNull?: InputMaybe<Scalars['Boolean']>
+  oneLiner_lt?: InputMaybe<Scalars['String']>
+  oneLiner_lte?: InputMaybe<Scalars['String']>
+  oneLiner_not_contains?: InputMaybe<Scalars['String']>
+  oneLiner_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  oneLiner_not_endsWith?: InputMaybe<Scalars['String']>
+  oneLiner_not_eq?: InputMaybe<Scalars['String']>
+  oneLiner_not_in?: InputMaybe<Array<Scalars['String']>>
+  oneLiner_not_startsWith?: InputMaybe<Scalars['String']>
+  oneLiner_startsWith?: InputMaybe<Scalars['String']>
+  platforms_containsAll?: InputMaybe<Array<InputMaybe<Scalars['String']>>>
+  platforms_containsAny?: InputMaybe<Array<InputMaybe<Scalars['String']>>>
+  platforms_containsNone?: InputMaybe<Array<InputMaybe<Scalars['String']>>>
+  platforms_isNull?: InputMaybe<Scalars['Boolean']>
+  smallIcon_contains?: InputMaybe<Scalars['String']>
+  smallIcon_containsInsensitive?: InputMaybe<Scalars['String']>
+  smallIcon_endsWith?: InputMaybe<Scalars['String']>
+  smallIcon_eq?: InputMaybe<Scalars['String']>
+  smallIcon_gt?: InputMaybe<Scalars['String']>
+  smallIcon_gte?: InputMaybe<Scalars['String']>
+  smallIcon_in?: InputMaybe<Array<Scalars['String']>>
+  smallIcon_isNull?: InputMaybe<Scalars['Boolean']>
+  smallIcon_lt?: InputMaybe<Scalars['String']>
+  smallIcon_lte?: InputMaybe<Scalars['String']>
+  smallIcon_not_contains?: InputMaybe<Scalars['String']>
+  smallIcon_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  smallIcon_not_endsWith?: InputMaybe<Scalars['String']>
+  smallIcon_not_eq?: InputMaybe<Scalars['String']>
+  smallIcon_not_in?: InputMaybe<Array<Scalars['String']>>
+  smallIcon_not_startsWith?: InputMaybe<Scalars['String']>
+  smallIcon_startsWith?: InputMaybe<Scalars['String']>
+  termsOfService_contains?: InputMaybe<Scalars['String']>
+  termsOfService_containsInsensitive?: InputMaybe<Scalars['String']>
+  termsOfService_endsWith?: InputMaybe<Scalars['String']>
+  termsOfService_eq?: InputMaybe<Scalars['String']>
+  termsOfService_gt?: InputMaybe<Scalars['String']>
+  termsOfService_gte?: InputMaybe<Scalars['String']>
+  termsOfService_in?: InputMaybe<Array<Scalars['String']>>
+  termsOfService_isNull?: InputMaybe<Scalars['Boolean']>
+  termsOfService_lt?: InputMaybe<Scalars['String']>
+  termsOfService_lte?: InputMaybe<Scalars['String']>
+  termsOfService_not_contains?: InputMaybe<Scalars['String']>
+  termsOfService_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  termsOfService_not_endsWith?: InputMaybe<Scalars['String']>
+  termsOfService_not_eq?: InputMaybe<Scalars['String']>
+  termsOfService_not_in?: InputMaybe<Array<Scalars['String']>>
+  termsOfService_not_startsWith?: InputMaybe<Scalars['String']>
+  termsOfService_startsWith?: InputMaybe<Scalars['String']>
+  useUri_contains?: InputMaybe<Scalars['String']>
+  useUri_containsInsensitive?: InputMaybe<Scalars['String']>
+  useUri_endsWith?: InputMaybe<Scalars['String']>
+  useUri_eq?: InputMaybe<Scalars['String']>
+  useUri_gt?: InputMaybe<Scalars['String']>
+  useUri_gte?: InputMaybe<Scalars['String']>
+  useUri_in?: InputMaybe<Array<Scalars['String']>>
+  useUri_isNull?: InputMaybe<Scalars['Boolean']>
+  useUri_lt?: InputMaybe<Scalars['String']>
+  useUri_lte?: InputMaybe<Scalars['String']>
+  useUri_not_contains?: InputMaybe<Scalars['String']>
+  useUri_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  useUri_not_endsWith?: InputMaybe<Scalars['String']>
+  useUri_not_eq?: InputMaybe<Scalars['String']>
+  useUri_not_in?: InputMaybe<Array<Scalars['String']>>
+  useUri_not_startsWith?: InputMaybe<Scalars['String']>
+  useUri_startsWith?: InputMaybe<Scalars['String']>
+  websiteUrl_contains?: InputMaybe<Scalars['String']>
+  websiteUrl_containsInsensitive?: InputMaybe<Scalars['String']>
+  websiteUrl_endsWith?: InputMaybe<Scalars['String']>
+  websiteUrl_eq?: InputMaybe<Scalars['String']>
+  websiteUrl_gt?: InputMaybe<Scalars['String']>
+  websiteUrl_gte?: InputMaybe<Scalars['String']>
+  websiteUrl_in?: InputMaybe<Array<Scalars['String']>>
+  websiteUrl_isNull?: InputMaybe<Scalars['Boolean']>
+  websiteUrl_lt?: InputMaybe<Scalars['String']>
+  websiteUrl_lte?: InputMaybe<Scalars['String']>
+  websiteUrl_not_contains?: InputMaybe<Scalars['String']>
+  websiteUrl_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  websiteUrl_not_endsWith?: InputMaybe<Scalars['String']>
+  websiteUrl_not_eq?: InputMaybe<Scalars['String']>
+  websiteUrl_not_in?: InputMaybe<Array<Scalars['String']>>
+  websiteUrl_not_startsWith?: InputMaybe<Scalars['String']>
+  websiteUrl_startsWith?: InputMaybe<Scalars['String']>
+}
+
+export type AppsConnection = {
+  __typename?: 'AppsConnection'
+  edges: Array<AppEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
 /** Represents NFT auction */
 export type Auction = {
   __typename?: 'Auction'
@@ -748,6 +1055,8 @@ export type BuyNowPriceUpdatedEventData = {
 
 export type Channel = {
   __typename?: 'Channel'
+  /** The app that the channel represents */
+  app?: Maybe<App>
   /** Channel's avatar photo asset. */
   avatarPhoto?: Maybe<StorageDataObject>
   /** List of members blocked from commenting/reacting on any video of the channel. */
@@ -841,6 +1150,30 @@ export enum ChannelNftCollectorsOrderByInput {
 }
 
 export enum ChannelOrderByInput {
+  AppAuthKeyAsc = 'app_authKey_ASC',
+  AppAuthKeyDesc = 'app_authKey_DESC',
+  AppBigIconAsc = 'app_bigIcon_ASC',
+  AppBigIconDesc = 'app_bigIcon_DESC',
+  AppCategoryAsc = 'app_category_ASC',
+  AppCategoryDesc = 'app_category_DESC',
+  AppDescriptionAsc = 'app_description_ASC',
+  AppDescriptionDesc = 'app_description_DESC',
+  AppIdAsc = 'app_id_ASC',
+  AppIdDesc = 'app_id_DESC',
+  AppMediumIconAsc = 'app_mediumIcon_ASC',
+  AppMediumIconDesc = 'app_mediumIcon_DESC',
+  AppNameAsc = 'app_name_ASC',
+  AppNameDesc = 'app_name_DESC',
+  AppOneLinerAsc = 'app_oneLiner_ASC',
+  AppOneLinerDesc = 'app_oneLiner_DESC',
+  AppSmallIconAsc = 'app_smallIcon_ASC',
+  AppSmallIconDesc = 'app_smallIcon_DESC',
+  AppTermsOfServiceAsc = 'app_termsOfService_ASC',
+  AppTermsOfServiceDesc = 'app_termsOfService_DESC',
+  AppUseUriAsc = 'app_useUri_ASC',
+  AppUseUriDesc = 'app_useUri_DESC',
+  AppWebsiteUrlAsc = 'app_websiteUrl_ASC',
+  AppWebsiteUrlDesc = 'app_websiteUrl_DESC',
   AvatarPhotoCreatedAtAsc = 'avatarPhoto_createdAt_ASC',
   AvatarPhotoCreatedAtDesc = 'avatarPhoto_createdAt_DESC',
   AvatarPhotoIdAsc = 'avatarPhoto_id_ASC',
@@ -976,6 +1309,8 @@ export type ChannelUnfollowResult = {
 export type ChannelWhereInput = {
   AND?: InputMaybe<Array<ChannelWhereInput>>
   OR?: InputMaybe<Array<ChannelWhereInput>>
+  app?: InputMaybe<AppWhereInput>
+  app_isNull?: InputMaybe<Scalars['Boolean']>
   avatarPhoto?: InputMaybe<StorageDataObjectWhereInput>
   avatarPhoto_isNull?: InputMaybe<Scalars['Boolean']>
   bannedMembers_every?: InputMaybe<BannedMemberWhereInput>
@@ -3691,6 +4026,11 @@ export type ProcessorState = {
 
 export type Query = {
   __typename?: 'Query'
+  appById?: Maybe<App>
+  /** @deprecated Use appById */
+  appByUniqueInput?: Maybe<App>
+  apps: Array<App>
+  appsConnection: AppsConnection
   auctionById?: Maybe<Auction>
   /** @deprecated Use auctionById */
   auctionByUniqueInput?: Maybe<Auction>
@@ -3798,8 +4138,6 @@ export type Query = {
   ownedNftByUniqueInput?: Maybe<OwnedNft>
   ownedNfts: Array<OwnedNft>
   ownedNftsConnection: OwnedNftsConnection
-  searchChannels: Array<ChannelsSearchResult>
-  searchVideos: Array<VideosSearchResult>
   squidStatus?: Maybe<SquidStatus>
   storageBagById?: Maybe<StorageBag>
   /** @deprecated Use storageBagById */
@@ -3867,6 +4205,28 @@ export type Query = {
   videoSubtitlesConnection: VideoSubtitlesConnection
   videos: Array<Video>
   videosConnection: VideosConnection
+}
+
+export type QueryAppByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryAppByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryAppsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<AppOrderByInput>>
+  where?: InputMaybe<AppWhereInput>
+}
+
+export type QueryAppsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<AppOrderByInput>
+  where?: InputMaybe<AppWhereInput>
 }
 
 export type QueryAuctionByIdArgs = {
@@ -4335,18 +4695,6 @@ export type QueryOwnedNftsConnectionArgs = {
   first?: InputMaybe<Scalars['Int']>
   orderBy: Array<OwnedNftOrderByInput>
   where?: InputMaybe<OwnedNftWhereInput>
-}
-
-export type QuerySearchChannelsArgs = {
-  limit?: InputMaybe<Scalars['Int']>
-  query: Scalars['String']
-  where?: InputMaybe<ChannelWhereInput>
-}
-
-export type QuerySearchVideosArgs = {
-  limit?: InputMaybe<Scalars['Int']>
-  query: Scalars['String']
-  where?: InputMaybe<VideoWhereInput>
 }
 
 export type QueryStorageBagByIdArgs = {
@@ -5421,6 +5769,8 @@ export type StorageDataObjectsConnection = {
 
 export type Subscription = {
   __typename?: 'Subscription'
+  appById?: Maybe<App>
+  apps: Array<App>
   auctionById?: Maybe<Auction>
   auctionWhitelistedMemberById?: Maybe<AuctionWhitelistedMember>
   auctionWhitelistedMembers: Array<AuctionWhitelistedMember>
@@ -5488,6 +5838,17 @@ export type Subscription = {
   videoSubtitleById?: Maybe<VideoSubtitle>
   videoSubtitles: Array<VideoSubtitle>
   videos: Array<Video>
+}
+
+export type SubscriptionAppByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionAppsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<AppOrderByInput>>
+  where?: InputMaybe<AppWhereInput>
 }
 
 export type SubscriptionAuctionByIdArgs = {
