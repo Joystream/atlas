@@ -58,10 +58,8 @@ export const EmptyTableContainer = styled.div`
 `
 
 export const EmptyTableHeader = styled(Text)`
-  h5 {
-    margin-top: ${sizes(10)};
-    text-align: center;
-  }
+  margin-top: ${sizes(10)};
+  text-align: center;
 `
 
 export const EmptyTableDescription = styled(Text)`
