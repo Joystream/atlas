@@ -1,9 +1,23 @@
 import { FC, ReactNode } from 'react'
 
 import { SvgActionClose } from '@/assets/icons'
+import { ButtonProps } from '@/components/_buttons/Button'
 import { usePersonalDataStore } from '@/providers/personalData'
 
-import { BannerDescription, BannerHeader, BannerText, BannerWrapper, CloseButton, IconWrapper } from './Banner.styles'
+import {
+  ActionButton,
+  BannerDescription,
+  BannerHeader,
+  BannerText,
+  BannerWrapper,
+  CloseButton,
+  IconWrapper,
+} from './Banner.styles'
+
+type ActionButtonProps = {
+  text: string
+  onClick: () => void
+} & Omit<ButtonProps, 'children'>
 
 export type BannerProps = {
   dismissibleId?: string
@@ -11,9 +25,19 @@ export type BannerProps = {
   description?: ReactNode
   className?: string
   icon?: ReactNode
+  size?: 'small' | 'medium'
+  actionButton?: ActionButtonProps
 }
 
-export const Banner: FC<BannerProps> = ({ title, description, className, icon, dismissibleId }) => {
+export const Banner: FC<BannerProps> = ({
+  title,
+  description,
+  className,
+  icon,
+  dismissibleId,
+  size = 'small',
+  actionButton,
+}) => {
   const isDismissedMessage =
     usePersonalDataStore((state) => state.dismissedMessages.some((message) => message.id === dismissibleId)) &&
     !!dismissibleId
@@ -24,11 +48,11 @@ export const Banner: FC<BannerProps> = ({ title, description, className, icon, d
   }
 
   return (
-    <BannerWrapper className={className}>
+    <BannerWrapper size={size} className={className}>
       {title && (
         <BannerHeader>
           {icon && <IconWrapper>{icon}</IconWrapper>}
-          <BannerText as="h3" variant="h400">
+          <BannerText as="h3" variant="h400" color="colorTextStrong">
             {title}
           </BannerText>
           {dismissibleId && (
@@ -58,6 +82,11 @@ export const Banner: FC<BannerProps> = ({ title, description, className, icon, d
             />
           )}
         </BannerDescription>
+      )}
+      {actionButton && (
+        <ActionButton {...actionButton} variant="primary" _textOnly>
+          {actionButton.text}
+        </ActionButton>
       )}
     </BannerWrapper>
   )
