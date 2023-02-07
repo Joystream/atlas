@@ -2,6 +2,7 @@ import { FC } from 'react'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
@@ -49,8 +50,8 @@ export const ConnectWithYtModal: FC<ConnectWithYtModalProps> = ({ show, onClose,
         Connect with YouTube?
       </Text>
       <Text variant="t200" as="p" color="colorText">
-        Reupload and backup your YouTube videos to receive to receive a guaranteed payout in the YouTube Partner
-        Program.
+        Connect with your YouTube channel and get ${atlasConfig.joystream.tokenTicker} tokens for signup, referrals and
+        new content upload.
       </Text>
     </DialogModal>
   )
