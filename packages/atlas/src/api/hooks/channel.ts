@@ -1,4 +1,6 @@
 import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
+import { shuffle } from 'lodash-es'
+import { useEffect, useRef, useState } from 'react'
 
 import {
   FollowChannelMutation,
@@ -166,6 +168,23 @@ export const useTop10Channels = (
   }
 }
 
+export const useShuffleResults = <T>(data?: T[]) => {
+  const [shuffledResults, setShuffledResults] = useState<T[]>([])
+
+  const firstRender = useRef(true)
+  useEffect(() => {
+    if (!firstRender.current) {
+      return
+    }
+    if (data?.length) {
+      setShuffledResults(shuffle(data))
+      firstRender.current = false
+    }
+  }, [data])
+
+  return shuffledResults
+}
+
 export const useDiscoverChannels = (
   variables?: GetDiscoverChannelsQueryVariables,
   opts?: QueryHookOptions<GetDiscoverChannelsQuery, GetDiscoverChannelsQueryVariables>
@@ -183,8 +202,13 @@ export const useDiscoverChannels = (
       },
     },
   })
+
+  const shuffledChannels = useShuffleResults<GetDiscoverChannelsQuery['mostRecentChannels'][number]>(
+    data?.mostRecentChannels
+  )
+
   return {
-    channels: data?.mostRecentChannels,
+    channels: shuffledChannels,
     ...rest,
   }
 }
@@ -206,8 +230,12 @@ export const usePromisingChannels = (
       },
     },
   })
+
+  const shuffledChannels = useShuffleResults<GetDiscoverChannelsQuery['mostRecentChannels'][number]>(
+    data?.mostRecentChannels
+  )
   return {
-    channels: data?.mostRecentChannels,
+    channels: shuffledChannels,
     ...rest,
   }
 }
@@ -229,8 +257,12 @@ export const usePopularChannels = (
       },
     },
   })
+
+  const shuffledChannels = useShuffleResults<GetPopularChannelsQuery['extendedChannels'][number]>(
+    data?.extendedChannels
+  )
   return {
-    channels: data?.extendedChannels,
+    channels: shuffledChannels,
     ...rest,
   }
 }
