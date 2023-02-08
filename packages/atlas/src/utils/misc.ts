@@ -20,3 +20,27 @@ export const shortenString = (text: string, firstLettersAmount: number, lastLett
   const lastLetters = arrayFromString.slice(arrayFromString.length - 1 - lastLettersAmount).join('')
   return `${firstLetters}...${lastLetters}`
 }
+
+export const retryPromise = <T>(
+  promiseFactory: () => Promise<T | null>,
+  interval: number,
+  timeout: number
+): Promise<T | null> => {
+  return new Promise((resolve, reject) => {
+    const cleanup = () => {
+      clearTimeout(timeoutCleanup)
+      clearInterval(intervalCleanup)
+    }
+    const intervalCleanup = setInterval(async () => {
+      const result = await promiseFactory()
+      if (result) {
+        cleanup()
+        return resolve(result)
+      }
+    }, interval)
+    const timeoutCleanup = setTimeout(() => {
+      cleanup()
+      return reject(new TimeoutError('Timed out in retrying the promise'))
+    }, timeout)
+  })
+}

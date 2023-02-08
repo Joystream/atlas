@@ -96,7 +96,7 @@ export const getNftStatus = (
       return {
         ...commonProperties,
         status: 'buy-now',
-        buyNowPrice: new BN(nft.transactionalStatus.price),
+        buyNowPrice: new BN(nft.transactionalStatus.price.toLocaleString('fullWide', { useGrouping: false })),
       }
     case 'TransactionalStatusIdle':
       return {
