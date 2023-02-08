@@ -15,6 +15,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import { useMutation } from 'react-query'
 import { useLocation } from 'react-router'
 
 import {
@@ -61,6 +62,9 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
     disableUserLocation,
     actions: { setUserLocation },
   } = useUserLocationStore()
+  const { mutateAsync: geolocationFetch } = useMutation('geolocation-fetch', () =>
+    axios.get<UserCoordinates>(atlasConfig.storage.geolocationServiceUrl ?? '')
+  )
 
   const client = useApolloClient()
 
@@ -72,9 +76,9 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
       atlasConfig.storage.geolocationServiceUrl
     ) {
       try {
-        const userCoordinatesResponse = await axios.get<UserCoordinates>(atlasConfig.storage.geolocationServiceUrl)
-        setUserLocation(userCoordinatesResponse.data)
-        return userCoordinatesResponse.data
+        const userCoordinatesResponse = await geolocationFetch()
+        const userCoordinates = userCoordinatesResponse.data
+        setUserLocation(userCoordinates)
       } catch (error) {
         SentryLogger.error('Failed to get user coordinates', 'operatorsProvider', error, {
           request: { url: atlasConfig.storage.geolocationServiceUrl },
@@ -82,7 +86,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
       }
     }
     return coordinates
-  }, [coordinates, disableUserLocation, expiry, setUserLocation])
+  }, [coordinates, geolocationFetch, disableUserLocation, expiry, setUserLocation])
 
   const fetchDistributionOperators = useCallback(async () => {
     const distributionOperatorsPromise = client.query<

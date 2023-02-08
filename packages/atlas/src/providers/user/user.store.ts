@@ -1,4 +1,4 @@
-import { createStore } from '@/store'
+import { createStore } from '@/utils/store'
 
 import { ActiveUserState, SignerWallet, SignerWalletAccount, SignerWalletStatus } from './user.types'
 

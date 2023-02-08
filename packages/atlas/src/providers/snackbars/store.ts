@@ -1,7 +1,8 @@
 import { ReactNode } from 'react'
 
-import { createStore } from '@/store'
+import { ButtonProps } from '@/components/_buttons/Button'
 import { createId } from '@/utils/createId'
+import { createStore } from '@/utils/store'
 
 const DEFAULT_SNACKBAR_TIMEOUT = 5000
 
@@ -17,6 +18,7 @@ export type DisplaySnackbarArgs = {
   actionText?: string
   onActionClick?: () => void
   actionIcon?: ReactNode
+  actionIconPlacement?: ButtonProps['iconPlacement']
   sticked?: boolean
 }
 
