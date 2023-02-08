@@ -71,7 +71,7 @@ export const parseAccountBalance = (balances: DeriveBalancesAll): AccountBalance
   /*
     balances.freeBalance = all the tokens in the account
     feeUsable = balance usable for paying fees
-    more here:
+    more here: 
     https://gist.github.com/Lezek123/88b85b6af866feaa4f6b5064ce528a93
   */
 
