@@ -3,6 +3,8 @@ import { ReactNode } from 'react'
 import { createStore } from '@/store'
 import { createId } from '@/utils/createId'
 
+const DEFAULT_SNACKBAR_TIMEOUT = 5000
+
 export type SnackbarIconType = 'success' | 'error' | 'info' | 'warning' | 'uploading' | 'loading' | 'token'
 
 export type DisplaySnackbarArgs = {
@@ -52,7 +54,7 @@ export const useSnackbarStore = createStore<SnackbarStoreState, SnackbarStoreAct
         state.snackbars = state.snackbars.filter((snackbar) => snackbar.id !== id)
       }),
 
-    displaySnackbar: ({ timeout = 4000, customId, onExit, ...args }) => {
+    displaySnackbar: ({ timeout = DEFAULT_SNACKBAR_TIMEOUT, customId, onExit, ...args }) => {
       const id = customId ?? createId()
       set((state) => {
         state.snackbars.push({ id, timeout, ...args })
