@@ -1,13 +1,12 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+// TODO: remove nocheck when payments functionality is restored
 import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { useCallback, useEffect, useState } from 'react'
 
 import { useFullChannel } from '@/api/hooks/channel'
-import {
-  GetPayloadDataObjectIdByCommitmentDocument,
-  GetPayloadDataObjectIdByCommitmentQuery,
-  GetPayloadDataObjectIdByCommitmentQueryVariables,
-} from '@/api/queries/__generated__/channels.generated'
+import '@/api/queries/__generated__/channels.generated'
 import { atlasConfig } from '@/config'
 import { getClaimableReward } from '@/joystream-lib/channelPayouts'
 import { JoystreamLibExtrinsics } from '@/joystream-lib/extrinsics'

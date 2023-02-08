@@ -22,10 +22,10 @@ import { VideoWorkspaceProvider, useVideoWorkspaceRouting } from '@/providers/vi
 import { transitions } from '@/styles'
 import { isAllowedBrowser } from '@/utils/browser'
 import { NotificationsView } from '@/views/notifications'
+import { MyPaymentsHiddenView } from '@/views/studio/MyPaymentsView/MyPaymentsHiddenView'
 
 import { CreateEditChannelView } from './CreateEditChannelView'
 import { CrtView } from './CrtView'
-import { MyPaymentsView } from './MyPaymentsView'
 import { MyUploadsView } from './MyUploadsView'
 import { MyVideosView } from './MyVideosView'
 import { StudioWelcomeView } from './StudioWelcomeView'
@@ -146,7 +146,7 @@ const StudioLayout = () => {
               <Route
                 path={relativeRoutes.studio.payments()}
                 element={
-                  <PrivateRoute element={<MyPaymentsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                  <PrivateRoute element={<MyPaymentsHiddenView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
                 }
               />
               <Route

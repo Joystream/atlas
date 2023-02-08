@@ -8,7 +8,7 @@ export type EnvironmentState = {
 }
 
 const INITIAL_STATE: EnvironmentState = {
-  targetDevEnv: 'next',
+  targetDevEnv: 'development',
   nodeOverride: null,
 }
 
