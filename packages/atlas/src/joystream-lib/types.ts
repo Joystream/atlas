@@ -17,6 +17,8 @@ export type AccountBalanceInfo = {
   availableBalance: StringifiedNumber
   // locked balance (e.g. invitation lock) on top of `availableBalance`
   lockedBalance: StringifiedNumber
+  // total invitation lock amount
+  totalInvitationLock: StringifiedNumber
 }
 
 export type DataObjectMetadata = {

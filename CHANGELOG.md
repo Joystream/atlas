@@ -9,7 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Welcome dialog when content focus is present
+- Fallback state for video hero and video category hero
+- Platform royalty in NFT selling details
+
 ### Changed
+
+- Styles on SignIn dialog and Studio welcome view
 
 ### Fixed
 

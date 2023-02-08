@@ -81,5 +81,7 @@ export const parseAccountBalance = (balances: DeriveBalancesAll): AccountBalance
   return {
     availableBalance: balances.availableBalance.toString(),
     lockedBalance: lockedBalance.toString(),
+    totalInvitationLock:
+      balances.lockedBreakdown.find((lock) => lock.id.toUtf8() === 'invitemb')?.amount.toString() ?? '0',
   }
 }

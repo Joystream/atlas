@@ -29,6 +29,7 @@ export type JoyTokenIconProps = {
   size?: JoyTokenIconSize
   className?: string
   withoutInformationTooltip?: boolean
+  isNegative?: boolean
 }
 
 const VARIANT_SIZE_COMPONENT_MAPPING: Record<JoyTokenIconVariant, Record<JoyTokenIconSize, ElementType>> = {
@@ -63,6 +64,7 @@ export const JoyTokenIcon: FC<JoyTokenIconProps> = ({
   size = 16,
   className,
   withoutInformationTooltip,
+  isNegative,
 }) => {
   const ref = useRef<HTMLDivElement>(null)
   return (
@@ -80,6 +82,7 @@ export const JoyTokenIcon: FC<JoyTokenIconProps> = ({
         hasShadow={!['regular', 'gray'].includes(variant)}
         className={className}
         variant={variant}
+        isNegative={isNegative}
       />
     </>
   )
@@ -90,7 +93,15 @@ const shadowCss = css`
     drop-shadow(0 0.7513px 1.377px rgba(0 0 0 / 0.325)) drop-shadow(0 0.2717px 0.4982px rgba(0 0 0 / 0.2265));
 `
 
-const fillCss = ({ variant }: { variant: JoyTokenIconVariant }) => {
+const fillCss = ({ variant, isNegative }: { variant: JoyTokenIconVariant; isNegative?: boolean }) => {
+  if (isNegative) {
+    return css`
+      path {
+        fill: ${cVar('colorTextError')};
+      }
+    `
+  }
+
   if (variant === 'gray') {
     return css`
       path {
@@ -104,6 +115,7 @@ const fillCss = ({ variant }: { variant: JoyTokenIconVariant }) => {
 const JoyTokenIconWrapper = styled('div', { shouldForwardProp: isPropValid })<{
   hasShadow: boolean
   variant: JoyTokenIconVariant
+  isNegative?: boolean
 }>`
   ${fillCss};
 

@@ -18,18 +18,29 @@ export type NumberFormatProps = {
   children?: never
   variant?: TextVariant
   displayedValue?: string | number
+  isNegative?: boolean
 } & Omit<TextProps, 'children' | 'variant'>
 
 export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
   (
-    { value, format = 'full', withToken, withTooltip = true, variant = 'no-variant', displayedValue, ...textProps },
+    {
+      value,
+      format = 'full',
+      withToken,
+      withTooltip = true,
+      variant = 'no-variant',
+      displayedValue,
+      isNegative,
+      ...textProps
+    },
     ref
   ) => {
     const internalValue = BN.isBN(value) ? hapiBnToTokenNumber(value) : value
     const textRef = useRef<HTMLHeadingElement>(null)
+    const bnValue = new BN(value)
     let formattedValue
     let tooltipText
-    switch (format) {
+    switch (isNegative || bnValue.isNeg() ? 'full' : format) {
       case 'short':
         formattedValue = internalValue ? (internalValue > 0.01 ? formatNumberShort(internalValue) : `< 0.01`) : 0
         tooltipText = formatNumber(internalValue)
@@ -50,7 +61,12 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
       withTooltip &&
       ((format === 'short' && (internalValue > 999 || hasDecimals)) || (format === 'dollar' && hasDecimals))
     const content = (
-      <StyledText {...textProps} variant={variant} ref={mergeRefs([ref, textRef])}>
+      <StyledText
+        {...textProps}
+        color={isNegative || bnValue.isNeg() ? 'colorTextError' : undefined}
+        variant={variant}
+        ref={mergeRefs([ref, textRef])}
+      >
         {displayedValue || formattedValue}
         {withToken && ` ${atlasConfig.joystream.tokenTicker}`}
       </StyledText>

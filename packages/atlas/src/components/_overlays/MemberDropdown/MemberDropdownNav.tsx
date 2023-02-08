@@ -69,6 +69,7 @@ type MemberDropdownNavProps = {
   accountBalance?: BN
   channelBalance?: BN
   lockedAccountBalance?: BN
+  isInDebt?: boolean
 }
 
 export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
@@ -86,6 +87,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
   accountBalance,
   lockedAccountBalance,
   channelBalance,
+  isInDebt,
 }) => {
   const navigate = useNavigate()
   const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
@@ -209,13 +211,14 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                     >
                       {accountBalance !== undefined ? (
                         <UserBalance>
-                          <JoyTokenIcon size={16} variant="regular" withoutInformationTooltip />
+                          <JoyTokenIcon isNegative={isInDebt} size={16} variant="regular" withoutInformationTooltip />
                           <NumberFormat
                             withTooltip={false}
                             as="span"
                             variant="t200-strong"
                             value={accountBalance}
                             format="short"
+                            isNegative={isInDebt}
                           />
                         </UserBalance>
                       ) : (
