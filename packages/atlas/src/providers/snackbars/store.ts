@@ -52,7 +52,7 @@ export const useSnackbarStore = createStore<SnackbarStoreState, SnackbarStoreAct
         state.snackbars = state.snackbars.filter((snackbar) => snackbar.id !== id)
       }),
 
-    displaySnackbar: ({ timeout, customId, onExit, ...args }) => {
+    displaySnackbar: ({ timeout = 4000, customId, onExit, ...args }) => {
       const id = customId ?? createId()
       set((state) => {
         state.snackbars.push({ id, timeout, ...args })
