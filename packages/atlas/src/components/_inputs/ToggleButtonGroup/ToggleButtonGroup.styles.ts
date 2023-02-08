@@ -1,0 +1,39 @@
+import styled from '@emotion/styled'
+
+import { Text } from '@/components/Text'
+import { cVar, sizes } from '@/styles'
+
+import { ToggleButtonGroupProps } from './ToggleButtonGroup'
+
+export const Container = styled.div<{ size: ToggleButtonGroupProps<''>['size'] }>`
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  padding: ${sizes(1)};
+  gap: ${sizes(1)};
+  border: 1px solid ${cVar('colorCoreNeutral800Lighten')};
+  align-items: center;
+  border-radius: ${cVar('radiusSmall')};
+  width: ${(props) => (props.size === 'large' ? 'fit-content' : '320px')};
+`
+
+export const OptionWrapper = styled.div<{ shadowSide: 'left' | 'right' }>`
+  display: flex;
+  gap: ${sizes(1)};
+  width: auto;
+  overflow: auto;
+  scrollbar-width: none;
+  position: relative;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`
+
+export const Label = styled(Text)`
+  padding: ${sizes(2)};
+`
+
+export const Anchor = styled.div`
+  position: relative;
+  height: 100%;
+`
