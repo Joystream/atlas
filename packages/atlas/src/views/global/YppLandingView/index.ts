@@ -1,0 +1,1 @@
+export { YppLandingView } from './YppLandingView'
