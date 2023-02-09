@@ -9,7 +9,7 @@ general:
   pioneerMemberUrlPrefix: 'https://dao.joystream.org/#/members' # URL prefix for Pioneer member profile page - used to link to member details
   joystreamLandingPageUrl: 'https://www.joystream.org' # URL for Joystream landing page - used in the footer and in "Learn more" links
   joystreamDiscordUrl: 'https://discord.gg/DE9UN3YpRP' # URL for Joystream Discord - used for support when errors occur
-  appContentFocus: 'web3 & crypto' # Content focus of given app
+  appContentFocus: 'web3 & crypto' # Content focus of given app. Provide a string, for example `web & crypto` or `sport`
 storage:
   assetResponseTimeout: 20000 # Timeout for asset response in ms - after this timeout, different distributor will be tried
   assetUploadStatusPollingInterval: 2000 # Interval for polling asset upload status in ms - polling begins once asset is uploaded and is finished once QN reports the asset as accepted
@@ -151,8 +151,23 @@ content:
       color: '#6E5FEC'
       iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/icons/trading.svg'
       coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/images/trading.webp'
-      videoCategories: ['254450-2']
+      videoCategories: [ '254450-2' ]
       defaultVideoCategory: '254450-2'
+    - id: '12'
+      name: 'Crypto art'
+      color: '#BD4BE4'
+      iconUrl: 'https://atlas-assets.eu-central-1.linodeobjects.com/categories/gleev/icons/crypto-art.svg'
+      coverImgUrl: 'https://atlas-assets.eu-central-1.linodeobjects.com/categories/gleev/images/crypto-art.webp'
+      videoCategories: ['887567-2']
+      defaultVideoCategory: '887567-2'
+    - id: '13'
+      name: 'Education'
+      color: '#48F0B3'
+      iconUrl: 'https://atlas-assets.eu-central-1.linodeobjects.com/categories/gleev/icons/education.svg'
+      coverImgUrl: 'https://atlas-assets.eu-central-1.linodeobjects.com/categories/gleev/images/education.webp'
+      videoCategories: [ '254423-2' ]
+      defaultVideoCategory: '254423-2'
+
   showAllContent: false # With this disabled, Atlas will display only content from display categories defined above. If you want your app to display all Joystream content, set this to true.
 
   languages: # List of languages to be used in the app. Those will be used when setting video's language, for adding subtitles, etc.
@@ -357,6 +372,41 @@ legal:
     person who filed the original DMCA Notice. If we do not receive notice within 10 business days that the person
     who submitted the DMCA Notice is seeking a court order to prevent the infringement of the content at issue, we
     will replace or re-enable access to the content that was removed.
+
+    # Content Licenses Supported By Joystream Platform
+
+    1. Joystream Standard License
+
+    Joystream Standard License is the default setting for all uploads. It allows creators to retain all ownership over their content, which published on Joystream network storage nodes, while giving any App built and operated by JS Genesis, Joystream DAO or external operators that work with Joystream Blockchain to broadcast this content.
+
+    For content automatically synced from Youtube via Youtube Partnership Programme, YouTube Standard License is substituted by Joystream Standard License. 
+
+    2. CCO
+
+    The CC0 (Public Domain Dedication) License allows creators to waive all rights to their creations and release them into the Public Domain
+
+    For the synced videos with Creative Commons License, Auto-sync service assigns CCO license, explained below. 
+
+    More information can be found following _this link_ [https://creativecommons.org/share-your-work/public-domain/cc0] 
+
+    3. Custom License
+
+    Joystream channel operator may choose to add custom license to the uploaded content.
+
+    4.  Other Licenses
+
+    Other licenses supported by Joystream are:
+    - PDM - Public Domain - For items which are not protected by copyright. This is not a license, but rather a copyright status. Some government-produced works, items with expired copyrights, and those which are ineligible for copyright protection may be included in this category.
+    - CC BY - Creative Commons Attribution License - Sharing and adapting this content is permitted, but attribution must be provided. Read the License Deed for more information.
+    - CC_BY_SA - Creative Commons Attribution-ShareAlike License - Sharing and adapting this content is permitted, but attribution must be provided. Any derivative works must be distributed under the same license. Read the License Deed for more information.
+    - CC_BY_ND - Creative Commons Attribution-NoDerivs License - Sharing this content is permitted, but attribution must be provided. You may not remix, transform, or build upon the material. Read the License Deed for more information.
+    - CC_BY_NC - Creative Commons Attribution-NonCommercial License. Sharing and adapting this content is permitted, but attribution must be provided. Commercial use is not permitted. Read the License Deed for more information.
+    - CC_BY_NC_SA - Creative Commons Attribution-NonCommercial-ShareAlike License - Sharing and adapting this content is permitted, but attribution must be provided. Any derivative works must be distributed under the same license. Commercial use is not permitted. Read the License Deed for more information.
+    - CC_BY_NC_ND - Creative Commons Attribution-NonCommercial-NoDerivs License. Sharing this content is permitted, but attribution must be provided. You may not remix, transform, or build upon the material. Commercial use is not permitted. Read the License Deed for more information.
+
+    5. License Config File
+
+    Licenses supported may be updated at any time and full set of licenses that are available for selection in the App upon video upload or uploaded via Command Line interface are contained in this file: https://github.com/Joystream/atlas/blob/master/packages/atlas/src/data/knownLicenses.json
   privacyPolicy: |
     # 1. Privacy Policy
     Last updated on the 23rd of February 2022

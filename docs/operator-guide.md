@@ -115,6 +115,27 @@ Atlas uses list of categories defined in `content.categories` config entry to de
 
 Atlas will, by default, only display content belonging to one of the defined display categories in the app. That means that video with a category that doesn't belong to any local category will not be available in the app. If you want to change that behavior, you can set `content.showAllContent` to `true` in the config file. That will make the app display all the content, regardless of the category.
 
+You are free to use existing metaprotocol (Query Node) categories, but you can also create your own that match your Gateway's specific needs. To get a list of all the existing categories you can use the following QN query:
+
+```graphql
+query {
+  videoCategories(limit: 200) {
+    id
+    name
+  }
+}
+```
+
+You can also see the current categories used by specific Gateways in Apps WG Notion: https://joystream.notion.site/5b3afe994cd64c7d8144cd2978fa5ceb?v=639feb777c514c26b2d88869d67cabf8
+
+To create a new QN category, you can use [Joystream CLI](https://github.com/Joystream/joystream/tree/master/cli):
+
+```bash
+joystream-cli content:createVideoCategory "My category" "My category description"
+```
+
+Once you run the above command, you can use the query above with a `orderBy: createdAt_DESC` argument to get the ID of the newly created category. You can then add it to the `content.categories` config entry.
+
 #### Terms of Service, Copyright Policy and Privacy Policy
 
 You can provide your own Terms of Service, Copyright Policy and Privacy Policy by updating the `legal.termsOfService`, `legal.copyrightPolicy` and `legal.privacyPolicy` config entries. All of these support basic Markdown syntax like headings and lists.
