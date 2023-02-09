@@ -28,7 +28,15 @@ export type TableProps<T = object> = {
   initialPageSize?: number
 }
 
-export const Table = <T extends object>({ columns, data, title, initialPageSize = 20, emptyState }: TableProps<T>) => {
+const DEFAULT_PAGE_SIZE = 20
+
+export const Table = <T extends object>({
+  columns,
+  data,
+  title,
+  initialPageSize = DEFAULT_PAGE_SIZE,
+  emptyState,
+}: TableProps<T>) => {
   const [pageSize, setPageSize] = useState(initialPageSize)
   const {
     getTableProps,
@@ -97,7 +105,7 @@ export const Table = <T extends object>({ columns, data, title, initialPageSize 
         </EmptyTableContainer>
       ) : null}
 
-      {data.length < pageSize && (
+      {data.length > pageSize && (
         <TablePagination
           perPage={pageSize}
           currentPage={pageIndex}
