@@ -5,6 +5,7 @@ import useDraggableScroll from 'use-draggable-scroll'
 import { SvgActionChevronL, SvgActionChevronR } from '@/assets/icons'
 import { StyledButton } from '@/components/Tabs/Tabs.styles'
 import { Button } from '@/components/_buttons/Button'
+import { capitalizeFirstLetter } from '@/utils/misc'
 
 import { Anchor, Container, Label, OptionWrapper } from './ToggleButtonGroup.styles'
 
@@ -102,7 +103,7 @@ export const ToggleButtonGroup = <T extends string>({
             variant={option !== value ? 'tertiary' : 'secondary'}
             onClick={() => onChange(option)}
           >
-            {option}
+            {capitalizeFirstLetter(option)}
           </Button>
         ))}
       </OptionWrapper>
