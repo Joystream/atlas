@@ -146,7 +146,7 @@ features:
 
         ## How to sign up
 
-        To sign up, user has to go through the onboarding flow provided in the Gleev web app. https://gleev.xyz/ypp and authorise with the Google Account, connected to their YouTube channel. During the authorisation, the access to the YouTube content `youtube.readonly` scope, to fetch channel meta data and content information; and access to email address for the YouTube account has to be granted for the JSG operated Backend Application (API client) that connects to YouTube API.
+        To sign up, user has to go through the onboarding flow provided in the [Gleev web app](https://gleev.xyz/ypp) and authorise with the Google Account, connected to their YouTube channel. During the authorisation, the access to the YouTube content `youtube.readonly` scope, to fetch channel meta data and content information; and access to email address for the YouTube account has to be granted for the JSG operated Backend Application (API client) that connects to YouTube API.
 
           Mandatory fields need to be populated to the web input form to progress, such as email, video category, and terms and conditions need to be accepted.
 
@@ -247,7 +247,7 @@ features:
 
         ## Governing Law
 
-        Governing law of these terms are the same as the general Terms of Service for Gleev App as described on this page: https://gleev.xyz/legal/tos
+        Governing law of these terms are the same as the general Terms of Service for Gleev App as described on [this page](https://gleev.xyz/legal/tos)
 
         ## Miscellaneous
 
@@ -516,7 +516,7 @@ legal:
 
     ## 3. Privacy Policy
 
-    Please see our Privacy Policy (https://www.joystream.org/privacy-policy/) for information regarding privacy.
+    Please see our Privacy Policy [(https://www.joystream.org/privacy-policy/)](https://www.joystream.org/privacy-policy/) for information regarding privacy.
 
     ## 4. Membership
 
@@ -542,7 +542,7 @@ legal:
 
     ## 7. Content Takedown Policy
 
-    Jsgenesis has established a policy for content takedowns in accordance with the Digital Millennium Copyright Act (DMCA) which can be viewed at https://play.joystream.org/legal/copyright.
+    Jsgenesis has established a policy for content takedowns in accordance with the Digital Millennium Copyright Act (DMCA) which can be viewed at [https://play.joystream.org/legal/copyright](https://play.joystream.org/legal/copyright).
 
     ## 8. Governing Law
 
@@ -552,7 +552,7 @@ legal:
 
     Jsgenesis AS, the developers of the Joystream protocol, have established a copyright infringement policy in accordance with the Digital Millennium Copyright Act.
 
-    Copyright owners and their agents may notify us in cases where content hosted on our testnets (available publicly at https://play.joystream.org and https://testnet.joystream.org) infringes on their copyrights by sending a DMCA notice to us using the contact information below.
+    Copyright owners and their agents may notify us in cases where content hosted on our testnets (available publicly at [https://play.joystream.org](https://play.joystream.org) and [https://testnet.joystream.org](https://testnet.joystream.org)) infringes on their copyrights by sending a DMCA notice to us using the contact information below.
 
     Upon receipt of a valid and complete notice, we will remove the content from our public-facing applications as quickly as possible. We may also suspend the ability of the uploader to participate further on our testnet.
 
@@ -613,7 +613,7 @@ legal:
 
     For the synced videos with Creative Commons License, Auto-sync service assigns CCO license, explained below. 
 
-    More information can be found following _this link_ [https://creativecommons.org/share-your-work/public-domain/cc0] 
+    More information can be found following [this link](https://creativecommons.org/share-your-work/public-domain/cc0)
 
     3. Custom License
 
@@ -632,7 +632,7 @@ legal:
 
     5. License Config File
 
-    Licenses supported may be updated at any time and full set of licenses that are available for selection in the App upon video upload or uploaded via Command Line interface are contained in this file: https://github.com/Joystream/atlas/blob/master/packages/atlas/src/data/knownLicenses.json
+    Licenses supported may be updated at any time and full set of licenses that are available for selection in the App upon video upload or uploaded via Command Line interface are contained in [this file](https://github.com/Joystream/atlas/blob/master/packages/atlas/src/data/knownLicenses.json)
   privacyPolicy: |
     # 1. Privacy Policy
     Last updated on the 23rd of February 2022
