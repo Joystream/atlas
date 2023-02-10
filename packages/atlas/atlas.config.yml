@@ -100,14 +100,14 @@ features:
         # YouTube Partnership Program (YPP)
         ## Key information
 
-        ### Rewards
+        ## Rewards
           - Sign up to YouTube Partnership Program: 5000 Joy
           - Refer new program subscribers: 1000 Joy
           - For every video synced from YouTube to Joystream channel: 300 Joy
 
         The tokens pool allocated for this program is limited, so the program has limited duration.
 
-        ### Tiers Multiplier
+        ## Tiers Multiplier
 
         Based on the YouTube channel followers count, a popularity Tier is assigned to each participant. Popularity tier results in multiplication effect on all rewards of the program.
 
@@ -115,14 +115,14 @@ features:
           - Tier 2 - x2.5 rewards - 5,000 to 50,000 subscribers
           - Tier 3 - x5 rewards - 50,000+ subscribers
 
-        ### Example Rewards Calculation
+        ## Example Rewards Calculation
 
         For a channel with 7000 subscribers, which signed up and remained in the program with auto-sync service enabled for 1 month. During this month that channel uploaded 5 new videos to their YouTube channel, 2 videos directly to Joystream channel with manual upload, and referred 3 other YouTube channels that ended up signing up.
 
         In the end of this month, the payout to this channel's account will be:
           5000 * 2.5 + 5 * 300 * 2.5 + 1000 * 3 * 2.5 = **23,750** JOY
 
-        ### When you accept the Terms and Conditions you
+        ## When you accept the Terms and Conditions you
 
         1. Become enrolled to the YouTube Partnership Program.
         2. Your YouTube channel information and email will be stored in the data base, operated by JS Genesis.
