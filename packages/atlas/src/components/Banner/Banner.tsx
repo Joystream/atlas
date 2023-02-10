@@ -11,6 +11,7 @@ import {
   BannerText,
   BannerWrapper,
   CloseButton,
+  Container,
   IconWrapper,
 } from './Banner.styles'
 
@@ -49,45 +50,49 @@ export const Banner: FC<BannerProps> = ({
 
   return (
     <BannerWrapper size={size} className={className}>
-      {title && (
-        <BannerHeader>
-          {icon && <IconWrapper>{icon}</IconWrapper>}
-          <BannerText as="h3" variant="h400" color="colorTextStrong">
-            {title}
-          </BannerText>
-          {dismissibleId && (
-            <CloseButton
-              icon={<SvgActionClose />}
-              aria-label="close dialog"
-              onClick={() => updateDismissedMessages(dismissibleId)}
-              variant="tertiary"
-              size="small"
-            />
+      <Container>
+        <div>
+          {title && (
+            <BannerHeader>
+              {icon && <IconWrapper>{icon}</IconWrapper>}
+              <BannerText as="h3" variant="h300" color="colorTextStrong">
+                {title}
+              </BannerText>
+            </BannerHeader>
           )}
-        </BannerHeader>
-      )}
-      {description && (
-        <BannerDescription withTitle={!!title}>
-          {icon && !title && <IconWrapper>{icon}</IconWrapper>}
-          <BannerText as="p" variant="t200" color="colorText">
-            {description}
-          </BannerText>
-          {!title && dismissibleId && (
-            <CloseButton
-              icon={<SvgActionClose />}
-              aria-label="close dialog"
-              onClick={() => updateDismissedMessages(dismissibleId)}
-              variant="tertiary"
-              size="small"
-            />
+          {description && (
+            <BannerDescription withTitle={!!title}>
+              {icon && !title && <IconWrapper>{icon}</IconWrapper>}
+              <BannerText as="p" variant="t200" color="colorText">
+                {description}
+              </BannerText>
+              {!title && dismissibleId && (
+                <CloseButton
+                  icon={<SvgActionClose />}
+                  aria-label="close dialog"
+                  onClick={() => updateDismissedMessages(dismissibleId)}
+                  variant="tertiary"
+                  size="small"
+                />
+              )}
+            </BannerDescription>
           )}
-        </BannerDescription>
-      )}
-      {actionButton && (
-        <ActionButton {...actionButton} variant="primary" _textOnly>
-          {actionButton.text}
-        </ActionButton>
-      )}
+          {actionButton && (
+            <ActionButton {...actionButton} variant="primary" _textOnly>
+              {actionButton.text}
+            </ActionButton>
+          )}
+        </div>
+        {dismissibleId && (
+          <CloseButton
+            icon={<SvgActionClose />}
+            aria-label="close dialog"
+            onClick={() => updateDismissedMessages(dismissibleId)}
+            variant="tertiary"
+            size="small"
+          />
+        )}
+      </Container>
     </BannerWrapper>
   )
 }

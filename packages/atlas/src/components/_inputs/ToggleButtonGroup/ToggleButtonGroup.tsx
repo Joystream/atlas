@@ -5,7 +5,6 @@ import useDraggableScroll from 'use-draggable-scroll'
 import { SvgActionChevronL, SvgActionChevronR } from '@/assets/icons'
 import { StyledButton } from '@/components/Tabs/Tabs.styles'
 import { Button } from '@/components/_buttons/Button'
-import { capitalizeFirstLetter } from '@/utils/misc'
 
 import { Anchor, Container, Label, OptionWrapper } from './ToggleButtonGroup.styles'
 
@@ -15,6 +14,7 @@ export type ToggleButtonGroupProps<T extends string> = {
   label?: string
   size?: 'small' | 'medium' | 'large'
   onChange: (type: T) => void
+  className?: string
 }
 
 const SCROLL_SHADOW_OFFSET = 10
@@ -25,6 +25,7 @@ export const ToggleButtonGroup = <T extends string>({
   options,
   value,
   onChange,
+  className,
 }: ToggleButtonGroupProps<T>) => {
   const optionWrapperRef = useRef<HTMLDivElement>(null)
   const [isOverflowing, setIsOverflowing] = useState<boolean>(false)
@@ -71,11 +72,11 @@ export const ToggleButtonGroup = <T extends string>({
     }
 
     const addition = (direction === 'left' ? -1 : 1) * (optionGroup.clientWidth / 2)
-    optionGroup.scrollLeft = optionGroup.scrollLeft + addition
+    optionGroup.scrollBy({ left: addition, behavior: 'smooth' })
   }
 
   return (
-    <Container size={size}>
+    <Container className={className} size={size}>
       {label && (
         <Label variant="t100" as="p" color="colorText">
           {label}
@@ -91,19 +92,16 @@ export const ToggleButtonGroup = <T extends string>({
           />
         )}
       </Anchor>
-      <OptionWrapper
-        onMouseDown={onMouseDown}
-        ref={optionWrapperRef}
-        shadowSide={shadowsVisible.left ? 'left' : 'right'}
-      >
+      <OptionWrapper onMouseDown={onMouseDown} ref={optionWrapperRef} shadowsVisible={shadowsVisible}>
         {options.map((option) => (
           <Button
             key={option}
             fullWidth={size === 'small'}
             variant={option !== value ? 'tertiary' : 'secondary'}
             onClick={() => onChange(option)}
+            size="small"
           >
-            {capitalizeFirstLetter(option)}
+            {option}
           </Button>
         ))}
       </OptionWrapper>

@@ -1,7 +1,6 @@
 import { FC, ReactNode, useRef, useState } from 'react'
 
-import { Counter } from '@/components/FilterButton/FilterButton.styles'
-import { Button } from '@/components/_buttons/Button'
+import { Counter, StyledButton } from '@/components/FilterButton/FilterButton.styles'
 import { CheckboxProps } from '@/components/_inputs/Checkbox'
 import { CheckboxGroup } from '@/components/_inputs/CheckboxGroup'
 import { DialogPopover } from '@/components/_overlays/DialogPopover'
@@ -12,9 +11,10 @@ export type FilterButtonProps = {
   onApply: (ids: number[]) => void
   label?: string
   icon?: ReactNode
+  className?: string
 }
 
-export const FilterButton: FC<FilterButtonProps> = ({ label, icon, options, onApply, selected = [] }) => {
+export const FilterButton: FC<FilterButtonProps> = ({ label, icon, options, onApply, selected = [], className }) => {
   const [localSelection, setLocalSelection] = useState<number[]>([])
   const triggerRef = useRef<HTMLButtonElement>(null)
 
@@ -40,15 +40,16 @@ export const FilterButton: FC<FilterButtonProps> = ({ label, icon, options, onAp
 
   return (
     <DialogPopover
+      className={className}
       trigger={
-        <Button
+        <StyledButton
           ref={triggerRef}
           icon={selected?.length ? <Counter>{selected.length}</Counter> : icon}
           iconPlacement="right"
           variant="secondary"
         >
           {label}
-        </Button>
+        </StyledButton>
       }
       primaryButton={{ text: 'Apply', onClick: handleApply }}
       secondaryButton={{

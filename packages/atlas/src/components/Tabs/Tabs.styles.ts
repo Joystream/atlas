@@ -20,7 +20,7 @@ type TabsGroupProps = {
   }
 }
 
-const getMaskImage = ({ shadowsVisible }: TabsGroupProps) => {
+export const getMaskImage = ({ shadowsVisible }: TabsGroupProps) => {
   if (shadowsVisible.left && shadowsVisible.right) {
     return css`
       mask-image: linear-gradient(to left, transparent 5%, black 25%, black 75%, transparent 95%);

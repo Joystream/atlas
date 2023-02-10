@@ -131,10 +131,10 @@ export const FooterButtonsContainer = styled.div<{
     display: grid;
     ${(props) =>
       !props.stretchButtons &&
-      `
-       margin-left: ${sizes(2)};
-       justify-content: flex-end; 
-    `}
+      css`
+        margin-left: ${sizes(2)};
+        justify-content: flex-end;
+      `}
 
     grid-auto-columns: auto;
     grid-template-columns: unset;
