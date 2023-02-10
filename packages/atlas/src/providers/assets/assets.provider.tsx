@@ -77,8 +77,8 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
     ) {
       try {
         const userCoordinatesResponse = await geolocationFetch()
-        const userCoordinates = userCoordinatesResponse.data
-        setUserLocation(userCoordinates)
+        setUserLocation(userCoordinatesResponse.data)
+        return userCoordinatesResponse.data
       } catch (error) {
         SentryLogger.error('Failed to get user coordinates', 'operatorsProvider', error, {
           request: { url: atlasConfig.storage.geolocationServiceUrl },

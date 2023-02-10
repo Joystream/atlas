@@ -9,7 +9,6 @@ import { useBasicChannel } from '@/api/hooks/channel'
 import { FullMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionNewTab, SvgAlertsError32 } from '@/assets/icons'
 import appScreenshot from '@/assets/images/ypp-authorization/app-screenshot.webp'
-import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { Loader } from '@/components/_loaders/Loader'
@@ -18,7 +17,7 @@ import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
-import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useBloatFeesAndPerMbFees, useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
@@ -29,7 +28,6 @@ import { pluralizeNoun } from '@/utils/misc'
 
 import { useGetYppChannelRequirments, useYppGoogleAuth } from './YppAuthorizationModal.hooks'
 import {
-  AdditionalSubtitleWrapper,
   Anchor,
   Content,
   DescriptionText,
@@ -107,22 +105,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   const { channel: channel } = useBasicChannel(referrerId || '', {
     skip: !referrerId,
   })
-
-  const { fullFee: updateChannelFee } = useFee(
-    'updateChannelTx',
-    selectedChannelId && memberId
-      ? [
-          selectedChannelId,
-          memberId,
-          { ownerAccount: memberId },
-          {},
-          [],
-          dataObjectStateBloatBondValue.toString(),
-          channelBucketsCount.toString(),
-          youtubeCollaboratorMemberId,
-        ]
-      : undefined
-  )
 
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
@@ -411,24 +393,13 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         }
       case 'terms-and-conditions':
         return {
-          title: 'Terms & conditions',
+          title: null,
           description: ``,
           primaryButton: {
             text: 'Accept terms & sign',
             onClick: handleAcceptTermsAndSubmit,
           },
-          additionalSubtitleNode: (
-            <AdditionalSubtitleWrapper>
-              <Text variant={smMatch ? 'h400' : 'h300'} as="h3" margin={{ bottom: 4 }}>
-                Transaction fee
-              </Text>
-              <Text variant="t200" as="p" color="colorText" margin={{ bottom: 6 }}>
-                Applying for the program requires requires a blockchain transaction, which comes with a fee of{' '}
-                <NumberFormat as="span" variant="t200" value={updateChannelFee} withToken />. Transaction fees are
-                covered from your membership account balance.
-              </Text>
-            </AdditionalSubtitleWrapper>
-          ),
+          additionalSubtitleNode: null,
           component: <YppAuthorizationTermsAndConditionsStep />,
         }
       case 'summary':
@@ -478,8 +449,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     handleAuthorizeClick,
     requirments,
     handleAcceptTermsAndSubmit,
-    smMatch,
-    updateChannelFee,
     handleGoToDashboard,
     alreadyRegisteredChannel?.channelTitle,
     alreadyRegisteredChannel?.ownerMemberHandle,
