@@ -21,6 +21,12 @@ query GetStorageBucketsWithBags {
     id
     operatorMetadata {
       nodeEndpoint
+      nodeLocation {
+        coordinates {
+          latitude
+          longitude
+        }
+      }
     }
     bags {
       id

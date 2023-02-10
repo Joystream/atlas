@@ -79,6 +79,7 @@ export const VideoTile: FC<VideoTileProps> = memo(
           onVideoTitleClick={onClick}
           size={tileSize}
           videoHref={videoHref}
+          linkState={linkState}
           channelHref={channelHref}
           onChannelAvatarClick={onChannelAvatarClick}
           variant={detailsVariant}

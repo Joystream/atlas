@@ -70,5 +70,13 @@
     "description": "Sharing this content is permitted, but attribution must be provided. You may not remix, transform, or build upon the material. Commercial use is not permitted. Read the License Deed for more information.",
     "url": "https://creativecommons.org/licenses/by-nc-nd/4.0",
     "attributionRequired": true
+  },
+  {
+    "code": 1009,
+    "name": "Joystream License",
+    "longName": "Joystream Standard License",
+    "description": "Joystream Standard License is the default setting for all uploads. It allows creators to retain all ownership over their content, which published on Joystream network storage nodes, while giving any App built and operated by JS Genesis, Joystream DAO or external operators that work with Joystream Blockchain to broadcast this content.",
+    "url": "play.joystream.org",
+    "attributionRequired": false
   }
 ]

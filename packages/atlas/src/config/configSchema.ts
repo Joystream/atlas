@@ -8,6 +8,7 @@ export const configSchema = z.object({
   general: z.object({
     appName: z.string(),
     appDescription: z.string(),
+    appTagline: z.string().optional(),
     appTwitterId: z.string(),
     appUrl: z.string(),
     appGithubUrl: z.string(),
@@ -15,6 +16,7 @@ export const configSchema = z.object({
     pioneerMemberUrlPrefix: z.string(),
     joystreamLandingPageUrl: z.string(),
     joystreamDiscordUrl: z.string(),
+    appContentFocus: z.string().nullable(),
   }),
   storage: z.object({
     assetResponseTimeout: z.number(),

@@ -44,16 +44,26 @@ export const CategoryView = () => {
 
   const headTags = useHeadTags(currentCategory?.name)
 
-  const { categoriesFeaturedVideos } = useCategoriesFeaturedVideos(currentCategory?.id || '')
+  const { categoriesFeaturedVideos, loading: categoriesFeaturedVideosLoading } = useCategoriesFeaturedVideos(
+    currentCategory?.id || ''
+  )
   const videoHeroVideos = useVideoHeroVideos(categoriesFeaturedVideos)
 
   return (
     <VideoContentTemplate cta={['popular', 'new', 'home']}>
       {headTags}
       <VideoCategoryHero
-        header={{
+        loading={categoriesFeaturedVideosLoading}
+        category={{
           title: currentCategory?.name ?? undefined,
-          icon: <CategoryIcon url={currentCategory?.iconUrl} color={cVar('colorTextStrong')} />,
+          icon: (
+            <CategoryIcon
+              url={currentCategory?.iconUrl}
+              color={videoHeroVideos.length ? cVar('colorTextStrong') : cVar('colorCoreBaseBlack')}
+            />
+          ),
+          color: currentCategory.color,
+          coverImgUrl: currentCategory.coverImgUrl,
         }}
         videos={videoHeroVideos}
       />
