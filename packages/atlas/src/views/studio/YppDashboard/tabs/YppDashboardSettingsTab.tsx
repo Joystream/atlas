@@ -31,12 +31,12 @@ import {
 
 type OptoutChannelMessage = {
   optout: boolean
-  timestamp: number
+  timestamp: string
 }
 
 type IngestChannelMessage = {
   shouldBeIngested: boolean
-  timestamp: number
+  timestamp: string
   videoCategoryId?: string
 }
 
@@ -107,7 +107,7 @@ export const YppDashboardSettingsTab = () => {
     try {
       const message: IngestChannelMessage = {
         shouldBeIngested: isSync,
-        timestamp: Date.now(),
+        timestamp: new Date().toISOString(),
         ...(categoryId ? { videoCategoryId: categoryId } : {}),
       }
       setSignLoading(true)
@@ -177,7 +177,7 @@ export const YppDashboardSettingsTab = () => {
     try {
       const message: OptoutChannelMessage = {
         optout: true,
-        timestamp: Date.now(),
+        timestamp: new Date().toISOString(),
       }
 
       closeModal()
