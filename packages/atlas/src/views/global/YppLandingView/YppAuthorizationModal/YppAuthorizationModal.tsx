@@ -19,6 +19,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useOverlayManager } from '@/providers/overlayManager'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -72,6 +73,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
 }) => {
   const { setActiveUser, memberId } = useUser()
   const navigate = useNavigate()
+  const { decrementOverlaysOpenCount } = useOverlayManager()
   const contentRef = useRef<HTMLDivElement | null>(null)
   const channelsLoaded = !!unSyncedChannels
   const hasMoreThanOneChannel = unSyncedChannels && unSyncedChannels.length > 1
@@ -289,6 +291,11 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     _handleAuthorizeClick()
   }, [_handleAuthorizeClick, displaySnackbar, isSelectedChannelValid, navigate, selectedChannel, setActiveUser])
 
+  const handleGoToDashboard = useCallback(() => {
+    decrementOverlaysOpenCount()
+    setActiveUser({ channelId: selectedChannel?.id })
+  }, [decrementOverlaysOpenCount, selectedChannel?.id, setActiveUser])
+
   const convertHoursRequirementTime = (hours: number) => {
     if (hours > 24 * 30) {
       return formatDuration({ months: Math.round(hours / (24 * 30)) })
@@ -433,7 +440,11 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
               more information.
             </DescriptionText>
           ),
-          primaryButton: { text: 'Go to dashboard', to: absoluteRoutes.studio.yppDashboard() },
+          primaryButton: {
+            text: 'Go to dashboard',
+            to: absoluteRoutes.studio.yppDashboard(),
+            onClick: handleGoToDashboard,
+          },
           component: <Img src={appScreenshot} />,
         }
       case 'channel-already-registered':
@@ -469,6 +480,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     handleAcceptTermsAndSubmit,
     smMatch,
     updateChannelFee,
+    handleGoToDashboard,
     alreadyRegisteredChannel?.channelTitle,
     alreadyRegisteredChannel?.ownerMemberHandle,
     onChangeStep,
