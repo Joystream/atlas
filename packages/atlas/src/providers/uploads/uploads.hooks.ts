@@ -31,7 +31,7 @@ type MutationParams = {
 export const useStartFileUpload = () => {
   const navigate = useNavigate()
   const { displaySnackbar } = useSnackbar()
-  const { getRandomStorageOperatorForBag, markStorageOperatorFailed } = useStorageOperators()
+  const { getClosestStorageOperatorForBag, markStorageOperatorFailed } = useStorageOperators()
   const { mutateAsync: uploadMutation } = useMutation('subtitles-fetch', (params: MutationParams) =>
     axios.post(params.url, params.data, params.config)
   )
@@ -73,7 +73,7 @@ export const useStartFileUpload = () => {
       let uploadOperator: OperatorInfo
       const bagId = createChannelBagId(asset.owner)
       try {
-        const storageOperator = await getRandomStorageOperatorForBag(bagId)
+        const storageOperator = await getClosestStorageOperatorForBag(bagId)
         if (!storageOperator) {
           displaySnackbar({
             title: 'Failed to upload asset',
@@ -196,7 +196,7 @@ export const useStartFileUpload = () => {
     },
     [
       assetsFiles,
-      getRandomStorageOperatorForBag,
+      getClosestStorageOperatorForBag,
       displaySnackbar,
       setUploadStatus,
       addAssetFile,

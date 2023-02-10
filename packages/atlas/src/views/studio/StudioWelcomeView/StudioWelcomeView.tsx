@@ -27,6 +27,7 @@ import {
   HeaderGridItem,
   IllustrationWrapper,
   ImageGridItem,
+  InlineText,
   LEFT_ANIMATION_MD,
   LeftStep,
   LinksGroupHeaderItem,
@@ -79,13 +80,45 @@ export const StudioWelcomeView: FC = () => {
                 <Text as="h1" variant="h100" color="colorTextPrimary">
                   {atlasConfig.general.appName} studio
                 </Text>
-                <Text as="h1" variant={mdMatch ? 'h700' : 'h600'} margin={{ top: 2 }}>
-                  {isLoggedIn ? 'Ready to create your channel?' : 'Your creator journey starts here'}
+                <Text
+                  as="h1"
+                  variant={mdMatch ? 'h700' : 'h600'}
+                  color={isLoggedIn || !atlasConfig.general.appContentFocus ? undefined : 'colorTextMuted'}
+                  margin={{ top: 2 }}
+                >
+                  {isLoggedIn ? (
+                    'Ready to create your channel?'
+                  ) : atlasConfig.general.appContentFocus ? (
+                    <>
+                      Your{' '}
+                      <InlineText variant={mdMatch ? 'h700' : 'h600'} as="p">
+                        {atlasConfig.general.appContentFocus}
+                      </InlineText>{' '}
+                      creator journey starts here
+                    </>
+                  ) : (
+                    'Your creator journey starts here'
+                  )}
                 </Text>
-                <SubTitle as="p" variant="t300" color="colorText">
-                  {isLoggedIn
-                    ? 'Create a channel to upload videos, sell NFTs, make playlists (coming soon), and more!'
-                    : 'To create a channel, first set up a free Joystream membership with our simple step-by-step wizard.'}
+                <SubTitle
+                  as="span"
+                  variant="t300"
+                  color={isLoggedIn || !atlasConfig.general.appContentFocus ? undefined : 'colorTextMuted'}
+                >
+                  {isLoggedIn ? (
+                    'Create a channel to upload videos, sell NFTs, make playlists (coming soon), and more!'
+                  ) : atlasConfig.general.appContentFocus ? (
+                    <>
+                      Welcome to {atlasConfig.general.appName}, a video platform focused on{' '}
+                      <InlineText as="p" variant="t300">
+                        {atlasConfig.general.appContentFocus}
+                      </InlineText>{' '}
+                      content. To create a channel, first set up a free Joystream membership with our simple
+                      step-by-step wizard.
+                    </>
+                  ) : (
+                    'To create a channel, first set up a free Joystream membership with our simple step-by-step wizard.'
+                  )}
                 </SubTitle>
                 <StepsContainer>
                   <LeftStep
