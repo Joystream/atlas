@@ -43,13 +43,13 @@ export const JoystreamSvgWrapper = styled.div`
   display: grid;
   place-items: center;
   overflow: hidden;
-  background-color: ${cVar('colorBackgroundMutedAlpha')};
+  background-color: #5d5d5d;
 
   svg {
     height: 20px;
 
     g {
-      fill: ${cVar('colorTextMuted')};
+      fill: ${cVar('colorCoreBaseWhite')};
     }
   }
 `
@@ -70,4 +70,17 @@ export const TextWrapper = styled.div`
 
 export const DialogText = styled(Text)`
   text-align: justify;
+`
+
+export const RowBox = styled.div<{ align?: 'start' | 'end' }>`
+  display: flex;
+  flex-direction: column;
+  gap: ${sizes(1)};
+  align-items: ${(props) => (props.align === 'end' ? 'flex-end' : 'flex-start')};
+`
+
+export const ColumnBox = styled.div`
+  display: flex;
+  gap: ${sizes(2)};
+  align-items: center;
 `

@@ -36,7 +36,7 @@ export const PaymentTransactions = () => {
         />
       </TilesWrapper>
       <TableWrapper isEmpty={!paymentData.length}>
-        <TablePaymentsHistory data={paymentData} />
+        <TablePaymentsHistory isLoading={loading} data={paymentData} />
       </TableWrapper>
     </>
   )

@@ -42,6 +42,7 @@ export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channe
         mapEventToPaymentHistory(
           {
             ...event,
+            amount: `-${event.amount}`,
             sender:
               event.actor.__typename === 'ContentActorMember'
                 ? event.actor?.member?.controllerAccount ?? 'council'

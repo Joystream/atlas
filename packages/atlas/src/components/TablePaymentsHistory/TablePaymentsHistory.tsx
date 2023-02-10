@@ -1,9 +1,7 @@
 import BN from 'bn.js'
-import { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react'
+import { FC, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMemberships } from '@/api/hooks/membership'
-import { SvgActionCouncil, SvgActionCrown, SvgActionNft, SvgActionPayment, SvgActionRevenueShare } from '@/assets/icons'
-import { SvgEmptyStateIllustration } from '@/assets/illustrations'
 import { SvgJoystreamLogoShort } from '@/assets/logos'
 import { Avatar } from '@/components/Avatar'
 import { Table, TableProps } from '@/components/Table'
@@ -28,92 +26,13 @@ import {
   TypeIconWrapper,
   TypeWrapper,
 } from './TablePaymentsHistory.styles'
-
-const COLUMNS: TableProps['columns'] = [
-  {
-    Header: 'Date',
-    accessor: 'date',
-    width: 100,
-  },
-  {
-    Header: 'Type',
-    accessor: 'type',
-    width: 100,
-  },
-  {
-    Header: 'Sender',
-    accessor: 'sender',
-    width: 100,
-  },
-  {
-    Header: 'Amount',
-    accessor: 'amount',
-    width: 100,
-  },
-  {
-    Header: 'Description',
-    accessor: 'description',
-    width: 200,
-  },
-]
-
-const paymentTypeMappings: Record<
+import {
+  COLUMNS,
   PaymentType,
-  {
-    title: string
-    icon?: ReactElement
-  }
-> = {
-  'nft-sale': {
-    title: 'NFT sale',
-    icon: <SvgActionNft />,
-  },
-  'nft-royalty': {
-    title: 'NFT royalty',
-    icon: <SvgActionCrown />,
-  },
-  'claimed-reward': {
-    title: 'Claimed reward',
-    icon: <SvgActionRevenueShare />,
-  },
-  'withdrawal': {
-    title: 'Withdrawal',
-    icon: <SvgActionRevenueShare />,
-  },
-  'ypp-reward': {
-    title: 'YPP reward',
-    icon: <SvgActionRevenueShare />,
-  },
-  'council-reward': {
-    title: 'Council reward',
-    icon: <SvgActionCouncil />,
-  },
-  'direct-payment': {
-    title: 'Direct payment',
-    icon: <SvgActionPayment />,
-  },
-  'revenue-share': {
-    title: 'Revenue share',
-    icon: <SvgActionRevenueShare />,
-  },
-}
-
-type PaymentType =
-  | 'nft-sale'
-  | 'nft-royalty'
-  | 'claimed-reward'
-  | 'withdrawal'
-  | 'ypp-reward'
-  | 'council-reward'
-  | 'direct-payment'
-  | 'revenue-share'
-
-const tableEmptyState = {
-  title: 'No payments here yet',
-  description:
-    'Here you will see proceedings to your channel balance from sold NFTs and royalties, claimed council rewards, direct payments from members to your channel and withdrawals from channel balance.',
-  icon: <SvgEmptyStateIllustration />,
-}
+  paymentTypeMappings,
+  tableEmptyState,
+  tableLoadingData,
+} from './TablePaymentsHistory.utils'
 
 export type PaymentHistory = {
   type: PaymentType
@@ -126,9 +45,10 @@ export type PaymentHistory = {
 
 export type TablePaymentsHistoryProps = {
   data: PaymentHistory[]
+  isLoading: boolean
 }
 
-export const TablePaymentsHistory: FC<TablePaymentsHistoryProps> = ({ data }) => {
+export const TablePaymentsHistory: FC<TablePaymentsHistoryProps> = ({ data, isLoading }) => {
   const [dialogText, setDialogText] = useState('')
   const mappedData: TableProps['data'] = useMemo(
     () =>
@@ -150,7 +70,12 @@ export const TablePaymentsHistory: FC<TablePaymentsHistoryProps> = ({ data }) =>
           {dialogText}
         </DialogText>
       </DialogModal>
-      <Table title="History" columns={COLUMNS} data={mappedData} emptyState={tableEmptyState} />
+      <Table
+        title="History"
+        columns={COLUMNS}
+        data={isLoading ? tableLoadingData : mappedData}
+        emptyState={tableEmptyState}
+      />
     </>
   )
 }
