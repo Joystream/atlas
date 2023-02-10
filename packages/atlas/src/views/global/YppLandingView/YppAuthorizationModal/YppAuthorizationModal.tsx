@@ -17,7 +17,7 @@ import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
-import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useBloatFeesAndPerMbFees, useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
@@ -105,22 +105,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   const { channel: channel } = useBasicChannel(referrerId || '', {
     skip: !referrerId,
   })
-
-  const { fullFee: updateChannelFee } = useFee(
-    'updateChannelTx',
-    selectedChannelId && memberId
-      ? [
-          selectedChannelId,
-          memberId,
-          { ownerAccount: memberId },
-          {},
-          [],
-          dataObjectStateBloatBondValue.toString(),
-          channelBucketsCount.toString(),
-          youtubeCollaboratorMemberId,
-        ]
-      : undefined
-  )
 
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
@@ -465,8 +449,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     handleAuthorizeClick,
     requirments,
     handleAcceptTermsAndSubmit,
-    smMatch,
-    updateChannelFee,
     handleGoToDashboard,
     alreadyRegisteredChannel?.channelTitle,
     alreadyRegisteredChannel?.ownerMemberHandle,
