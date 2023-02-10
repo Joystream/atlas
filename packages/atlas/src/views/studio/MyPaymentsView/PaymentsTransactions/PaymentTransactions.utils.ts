@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import BN from 'bn.js'
 import { Remote } from 'comlink'
 

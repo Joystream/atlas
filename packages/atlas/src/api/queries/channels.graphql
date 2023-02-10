@@ -152,14 +152,14 @@ query GetChannelNftCollectors(
   }
 }
 
-#query GetPayloadDataObjectIdByCommitment($commitment: String!) {
-#  channelPayoutsUpdatedEvents(where: { commitment_eq: $commitment }, limit: 1) {
-#    payloadDataObject {
-#      id
-#      storageBagId
-#    }
-#  }
-#}
+query GetPayloadDataObjectIdByCommitment($commitment: String!) {
+  channelPayoutsUpdatedEvents(where: { commitment_eq: $commitment }, limit: 1) {
+    payloadDataObject {
+      id
+      storageBagId
+    }
+  }
+}
 
 mutation ReportChannel($channelId: ID!, $rationale: String!) {
   reportChannel(channelId: $channelId, rationale: $rationale) {
@@ -197,15 +197,15 @@ query GetChannelPaymentEvents($ownerMemberId: ID!, $channelId: ID!) {
     }
   }
 
-  #  channelRewardClaimedEvents(where: { channel: { id_eq: $channelId } }) {
-  #    amount
-  #    createdAt
-  #    inBlock
-  #  }
+  channelRewardClaimedEvents(where: { channel: { id_eq: $channelId } }) {
+    amount
+    createdAt
+    inBlock
+  }
 
-  #  channelFundsWithdrawnEvents(where: { channel: { id_eq: $channelId } }) {
-  #    amount
-  #    createdAt
-  #    inBlock
-  #  }
+  channelFundsWithdrawnEvents(where: { channel: { id_eq: $channelId } }) {
+    amount
+    createdAt
+    inBlock
+  }
 }
