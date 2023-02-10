@@ -40,9 +40,9 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
             <Text variant="t200" as="span" color="colorCoreNeutral200">
               To learn more about the reason behind the suspension, please reach out on the{' '}
               <Button variant="primary" _textOnly to={atlasConfig.features.ypp.suspendedSupportLink ?? ''}>
-                {atlasConfig.features.ypp.suspendedLinkText ?? 'link destination'}{' '}
+                {atlasConfig.features.ypp.suspendedLinkText ?? '#ypp-support channel on our Discord server'}{' '}
               </Button>
-              . You won't be rewarded for doing tasks during the time this channel is suspended.{' '}
+              . You will not be rewarded while this channel is suspended.{' '}
             </Text>
           }
         />
@@ -60,7 +60,7 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
               as="span"
               withToken
             />{' '}
-            after your channel is verified by the program operators.
+            after your channel is verified.
           </>
         }
         dismissibleId="ypp-first-reward-information"
