@@ -61,12 +61,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
       withTooltip &&
       ((format === 'short' && (internalValue > 999 || hasDecimals)) || (format === 'dollar' && hasDecimals))
     const content = (
-      <StyledText
-        {...textProps}
-        color={isNegative || bnValue.isNeg() ? 'colorTextError' : undefined}
-        variant={variant}
-        ref={mergeRefs([ref, textRef])}
-      >
+      <StyledText {...textProps} variant={variant} ref={mergeRefs([ref, textRef])}>
         {displayedValue || formattedValue}
         {withToken && ` ${atlasConfig.joystream.tokenTicker}`}
       </StyledText>
