@@ -215,7 +215,7 @@ const buttonVariantStyles = ({ variant, iconOnly }: ButtonBaseStyleProps): Seria
   }
 }
 
-export const BorderWrapper = styled.div<Pick<ButtonBaseStyleProps, 'textOnly'>>`
+export const BorderWrapper = styled.span<Pick<ButtonBaseStyleProps, 'textOnly'>>`
   display: flex;
   align-items: center;
   box-sizing: border-box;

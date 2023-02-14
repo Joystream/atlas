@@ -1,4 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import axios from 'axios'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 
 import { useFullVideosConnection } from '@/api/hooks/videosConnection'
@@ -13,6 +15,7 @@ import { Button } from '@/components/_buttons/Button'
 import { Select } from '@/components/_inputs/Select'
 import { VideoTileDraft } from '@/components/_video/VideoTileDraft'
 import { VideoTilePublisher } from '@/components/_video/VideoTilePublisher'
+import { atlasConfig } from '@/config'
 import { cancelledVideoFilter } from '@/config/contentFilter'
 import { absoluteRoutes } from '@/config/routes'
 import { VIDEO_SORT_OPTIONS } from '@/config/sorting'
@@ -26,6 +29,9 @@ import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { sizes } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
+import { YPP_POLL_INTERVAL } from '@/utils/polling'
+import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
+import { YppVideoDto } from '@/views/studio/MyVideosView/MyVideosView.types'
 
 import {
   MobileButton,
@@ -49,14 +55,26 @@ const SNACKBAR_TIMEOUT = 5000
 export const MyVideosView = () => {
   const headTags = useHeadTags('My videos')
   const navigate = useNavigate()
+  const { channelId } = useAuthorizedUser()
   const { editedVideoInfo, setEditedVideo } = useVideoWorkspace()
   const { displaySnackbar, updateSnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
+  const { currentChannel } = useGetYppSyncedChannels()
   const videosPerPage = ROWS_AMOUNT * videosPerRow
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
-
+  const { data } = useQuery(
+    'ypp-videos',
+    () => axios.get<YppVideoDto[]>(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${channelId}/videos`),
+    {
+      enabled: !!channelId,
+      refetchInterval: (data) =>
+        data?.data.some((resource) => resource.state === 'UploadStarted' && resource.privacyStatus !== 'private')
+          ? YPP_POLL_INTERVAL
+          : false,
+    }
+  )
   const [currentVideosTab, setCurrentVideosTab] = useState(0)
   const currentTabName = TABS[currentVideosTab]
   const isDraftTab = currentTabName === 'Drafts'
@@ -69,7 +87,6 @@ export const MyVideosView = () => {
   const addToTabNotificationsCount = useRef(0)
 
   const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
-  const { channelId } = useAuthorizedUser()
   const { removeDrafts, markAllDraftsAsSeenForChannel } = useDraftStore(({ actions }) => actions)
   const unseenDrafts = useDraftStore(chanelUnseenDraftsSelector(channelId))
   const _drafts = useDraftStore(channelDraftsSelector(channelId))
@@ -108,6 +125,14 @@ export const MyVideosView = () => {
     id: undefined,
     progress: undefined,
   }))
+
+  const videosTitlesInSync = useMemo((): string[] => {
+    return (
+      data?.data
+        .filter((resource) => resource.state === 'UploadStarted' && resource.privacyStatus !== 'private')
+        .map((resource) => resource.title) ?? []
+    )
+  }, [data])
 
   const videosWithSkeletonLoaders = [...(videos || []), ...placeholderItems]
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
@@ -243,6 +268,7 @@ export const MyVideosView = () => {
         return (
           <VideoTilePublisher
             key={video.id ? `video-id-${video.id}` : `video-idx-${idx}`}
+            titlesInSync={videosTitlesInSync}
             id={video.id}
             onEditClick={(e) => {
               e?.stopPropagation()
@@ -328,6 +354,14 @@ export const MyVideosView = () => {
               </Button>
             )}
           </TabsContainer>
+          {currentChannel && isAllVideosTab && (
+            <StyledBanner
+              dismissibleId="yppSyncInfo"
+              title="YouTube Sync is enabled"
+              icon={<SvgAlertsInformative24 />}
+              description={`Whenever you upload video to ${currentChannel.title} YouTube channel, it will automatically appear here after a short while. You can change this setting in your YouTube Partner Program dashboard.`}
+            />
+          )}
           {isDraftTab && (
             <StyledBanner
               dismissibleId="video-draft-saved-locally-warning"

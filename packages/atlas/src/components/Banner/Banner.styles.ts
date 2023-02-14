@@ -31,6 +31,7 @@ export const BannerDescription = styled.div<{ withTitle?: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  white-space: pre-line;
 `
 
 export const BannerWrapper = styled.div<{ size: 'small' | 'medium' }>`

@@ -3,6 +3,7 @@ import { FC, MouseEvent, ReactNode } from 'react'
 
 import {
   SvgActionChevronR,
+  SvgActionNewTab,
   SvgSidebarChannels,
   SvgSidebarExplore,
   SvgSidebarHome,
@@ -23,6 +24,7 @@ export type CallToActionButtonProps = {
   colorVariant?: ColorVariants
   iconColorVariant?: ColorVariants
   label: string
+  external?: boolean
 }
 
 export const CallToActionButton: FC<CallToActionButtonProps> = ({
@@ -32,6 +34,7 @@ export const CallToActionButton: FC<CallToActionButtonProps> = ({
   colorVariant = 'blue',
   iconColorVariant,
   label,
+  external,
 }) => {
   const xsMatch = useMediaMatch('xs')
   const linkProps = getLinkPropsFromTo(to)
@@ -42,7 +45,7 @@ export const CallToActionButton: FC<CallToActionButtonProps> = ({
         <IconWrapper colorVariant={iconColorVariant || colorVariant}>{icon}</IconWrapper>
         <BodyWrapper as="span" variant={xsMatch ? 'h400' : 'h300'}>
           {label}
-          <SvgActionChevronR />
+          {external ? <SvgActionNewTab /> : <SvgActionChevronR />}
         </BodyWrapper>
       </ContentWrapper>
     </StyledContainer>

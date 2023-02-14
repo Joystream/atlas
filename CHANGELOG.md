@@ -7,17 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2023-02-08
+
 ### Added
 
 - Welcome dialog when content focus is present
 - Fallback state for video hero and video category hero
 - Platform royalty in NFT selling details
+- Toast indication for insufficient funds transaction
+- Toast default timeout
+- Negative transferable balance tooltip
+- Included Joystream standard licence
 
 ### Changed
 
 - Styles on SignIn dialog and Studio welcome view
+- Storage operator is now picked by distance
 
 ### Fixed
+
+- Fixed issue with displaying incorrect locked funds
+- Fixed link on incorrectly uploaded asset
+- Fixed locked funds display on user's info popover
+- Fixed polkadot wallet connection in firefox
+- Various markup fixes
 
 ## [1.2.3] - 2023-01-13
 

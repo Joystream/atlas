@@ -1,5 +1,5 @@
 import { FC, MouseEvent, PropsWithChildren, ReactNode } from 'react'
-import { useMatch } from 'react-router-dom'
+import { PathPattern, useMatch } from 'react-router-dom'
 import useResizeObserver from 'use-resize-observer'
 
 import { SidebarNavItem, SidebarNavLink, SubItem, SubItemsWrapper } from './NavItem.styles'
@@ -13,6 +13,7 @@ export type NavItemType = {
   subitems?: NavSubitem[]
   icon: ReactNode
   to: string
+  matchPattern?: PathPattern
   badgeNumber?: number
   bottomNav?: boolean
 } & NavSubitem
@@ -25,6 +26,7 @@ export type NavItemProps = PropsWithChildren<{
   badgeNumber?: number
   onClick: (e: MouseEvent<HTMLAnchorElement>) => void
   isSecondary: boolean
+  matchPattern?: PathPattern
 }>
 
 export const NavItem: FC<NavItemProps> = ({
@@ -36,9 +38,10 @@ export const NavItem: FC<NavItemProps> = ({
   itemName,
   badgeNumber,
   isSecondary,
+  matchPattern,
 }) => {
   const { height: subitemsHeight, ref: subitemsRef } = useResizeObserver<HTMLUListElement>({ box: 'border-box' })
-  const match = useMatch(to)
+  const match = useMatch(matchPattern ?? to)
   return (
     <SidebarNavItem data-badge={badgeNumber} expanded={expanded}>
       <SidebarNavLink

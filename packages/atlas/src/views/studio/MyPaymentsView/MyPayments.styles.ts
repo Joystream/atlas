@@ -1,8 +1,15 @@
 import styled from '@emotion/styled'
 
 import { Svg404PatternBottomLeft, Svg404PatternTopRight, SvgSmallTokens } from '@/assets/illustrations'
-import { media, square } from '@/styles'
+import { cVar, media, sizes, square } from '@/styles'
 
+export const TabsContainer = styled.div`
+  margin-bottom: ${sizes(4)};
+  border-bottom: solid 1px ${cVar('colorCoreNeutral800')};
+  ${media.md} {
+    margin-bottom: ${sizes(6)};
+  }
+`
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
