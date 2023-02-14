@@ -43,7 +43,7 @@ export const ToggleButtonGroup = <T extends string>({
 
   useEffect(() => {
     const optionGroup = optionWrapperRef.current
-    if (!optionGroup || !isOverflowing) {
+    if (!optionGroup || !isOverflowing || size !== 'medium') {
       return
     }
     setShadowsVisible((prev) => ({ ...prev, right: true }))
@@ -63,7 +63,7 @@ export const ToggleButtonGroup = <T extends string>({
       optionGroup.removeEventListener('touchmove', touchHandler)
       optionGroup.removeEventListener('scroll', touchHandler)
     }
-  }, [isOverflowing])
+  }, [isOverflowing, size])
 
   const handleArrowScroll = (direction: 'left' | 'right') => () => {
     const optionGroup = optionWrapperRef.current
@@ -77,11 +77,13 @@ export const ToggleButtonGroup = <T extends string>({
 
   return (
     <Container className={className} size={size}>
-      {label && (
-        <Label variant="t100" as="p" color="colorText">
-          {label}
-        </Label>
-      )}
+      <div>
+        {label && (
+          <Label variant="t100" as="p" color="colorText">
+            {label}
+          </Label>
+        )}
+      </div>
       <Anchor>
         {size === 'medium' && isOverflowing && (
           <StyledButton
@@ -96,7 +98,7 @@ export const ToggleButtonGroup = <T extends string>({
         {options.map((option) => (
           <Button
             key={option}
-            fullWidth={size === 'small'}
+            fullWidth
             variant={option !== value ? 'tertiary' : 'secondary'}
             onClick={() => onChange(option)}
             size="small"

@@ -241,14 +241,20 @@ const buttonSizeStyles = ({ size, iconOnly, textOnly }: ButtonBaseStyleProps) =>
       case 'large':
         return css`
           padding: ${sizes(4)};
+          max-height: 48px;
+          max-width: 48px;
         `
       case 'medium':
         return css`
           padding: ${sizes(3.25)};
+          max-height: 40px;
+          max-width: 40px;
         `
       case 'small':
         return css`
           padding: ${sizes(2.25)};
+          max-height: 32px;
+          max-width: 32px;
         `
     }
   } else if (textOnly) {

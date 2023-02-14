@@ -10,7 +10,6 @@ export const Counter = styled.div`
   border-radius: 50%;
   text-align: center;
   font: ${cVar('typographyDesktopT100')};
-  line-height: 16px !important;
   color: ${cVar('colorTextStrong')};
 `
 

@@ -66,15 +66,6 @@ export const Banner: FC<BannerProps> = ({
               <BannerText as="p" variant="t200" color="colorText">
                 {description}
               </BannerText>
-              {!title && dismissibleId && (
-                <CloseButton
-                  icon={<SvgActionClose />}
-                  aria-label="close dialog"
-                  onClick={() => updateDismissedMessages(dismissibleId)}
-                  variant="tertiary"
-                  size="small"
-                />
-              )}
             </BannerDescription>
           )}
           {actionButton && (

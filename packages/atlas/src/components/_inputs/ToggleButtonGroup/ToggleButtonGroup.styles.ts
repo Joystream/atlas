@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 
-import { getMaskImage } from '@/components/Tabs/Tabs.styles'
 import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
+import { getMaskImage } from '@/utils/styles'
 
 import { ToggleButtonGroupProps } from './ToggleButtonGroup'
 
@@ -14,7 +14,7 @@ export const Container = styled.div<{ size: ToggleButtonGroupProps<''>['size'] }
   border: 1px solid ${cVar('colorBorderMutedAlpha')};
   align-items: center;
   border-radius: ${cVar('radiusSmall')};
-  width: ${(props) => (props.size === 'large' ? 'fit-content' : '320px')};
+  max-width: ${(props) => (props.size === 'large' ? 'fit-content' : '320px')};
 `
 
 export const OptionWrapper = styled.div<{
