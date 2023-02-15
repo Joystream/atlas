@@ -70,6 +70,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   unSyncedChannels,
 }) => {
   const { setActiveUser, memberId } = useUser()
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const navigate = useNavigate()
   const { decrementOverlaysOpenCount } = useOverlayManager()
   const contentRef = useRef<HTMLDivElement | null>(null)
@@ -175,6 +176,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       return
     }
     try {
+      setIsSubmitting(true)
       await yppChannelMutation(finalFormData)
       const completed = await handleTransaction({
         txFactory: async (updateStatus) => {
@@ -207,6 +209,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           formData: finalFormData,
         },
       })
+    } finally {
+      setIsSubmitting(false)
     }
   }, [
     joystream,
@@ -396,7 +400,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           title: null,
           description: ``,
           primaryButton: {
-            text: 'Accept terms & sign',
+            text: isSubmitting ? 'Please wait...' : 'Accept terms & sign',
+            disabled: isSubmitting,
             onClick: handleAcceptTermsAndSubmit,
           },
           additionalSubtitleNode: null,
@@ -448,6 +453,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     handleSelectChannel,
     handleAuthorizeClick,
     requirments,
+    isSubmitting,
     handleAcceptTermsAndSubmit,
     handleGoToDashboard,
     alreadyRegisteredChannel?.channelTitle,
@@ -467,9 +473,10 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
 
     return {
       text: 'Back',
+      disabled: isSubmitting,
       onClick: handleGoBack,
     }
-  }, [currentStep, handleGoBack, hasMoreThanOneChannel, handleClose])
+  }, [currentStep, hasMoreThanOneChannel, handleGoBack, isSubmitting, handleClose])
 
   return (
     <FormProvider {...detailsFormMethods}>
@@ -483,7 +490,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         additionalActionsNode={
           currentStep !== 'summary' &&
           currentStep !== 'fetching-data' && (
-            <Button variant="tertiary" onClick={handleClose}>
+            <Button variant="tertiary" disabled={isSubmitting} onClick={handleClose}>
               Cancel
             </Button>
           )
