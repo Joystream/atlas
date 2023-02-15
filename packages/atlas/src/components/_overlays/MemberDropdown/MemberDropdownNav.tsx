@@ -216,7 +216,6 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                             withTooltip={false}
                             as="span"
                             variant="t200-strong"
-                            color={isInDebt ? 'colorTextError' : 'colorTextStrong'}
                             value={accountBalance}
                             format="short"
                             isNegative={isInDebt}
