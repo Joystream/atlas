@@ -217,7 +217,7 @@ export const useYppGoogleAuth = ({
           if (isChannelNotFoundError) {
             displaySnackbar({
               title: 'Authorization failed',
-              description: `You don't have youTube channel.`,
+              description: `You don't have a YouTube channel.`,
               iconType: 'error',
             })
             setYtRequirmentsErrors(Object.values(YppAuthorizationErrorCode))
