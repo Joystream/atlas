@@ -150,7 +150,7 @@ const Date = ({ date }: { date: Date }) => {
         {formatDateTime(date)}
       </Text>
       <Text as="p" variant="t100" margin={{ top: 1 }} color="colorText">
-        {formatNumber(convertMsTimestampToBlock(date.getTime()) || 0)} blocks
+        {formatNumber(convertMsTimestampToBlock(date.getTime()) || 0)} block
       </Text>
     </>
   )
