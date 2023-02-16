@@ -17,6 +17,14 @@ export enum VideoStates {
 }
 export type VideoState = keyof typeof VideoStates
 
+export type JoystreamVideo = {
+  // Joystream runtime Video ID for successfully synced video
+  id: string
+
+  // Data Object IDs (first element is the video, the second is the thumbnail)
+  assetIds: string[]
+}
+
 export type YppVideoDto = {
   url: string
   title: string
@@ -32,5 +40,5 @@ export type YppVideoDto = {
   duration: number
   language: string
   privacyStatus: 'private' | 'public'
-  // joystreamVideo: JoystreamVideo
+  joystreamVideo?: JoystreamVideo
 }

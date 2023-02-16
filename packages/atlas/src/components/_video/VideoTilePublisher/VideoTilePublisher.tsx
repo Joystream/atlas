@@ -37,7 +37,7 @@ import { VideoTile } from '../VideoTile'
 
 type VideoTilePublisherProps = {
   id?: string
-  titlesInSync?: string[]
+  isSyncing?: boolean
   onEditClick?: (e?: MouseEvent<Element>) => void
   onMintNftClick?: (e?: MouseEvent<Element>) => void
   onDeleteVideoClick?: () => void
@@ -47,12 +47,12 @@ type VideoTilePublisherProps = {
 export const DELAYED_FADE_CLASSNAME = 'delayed-fade'
 
 export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
-  ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onMintNftClick, titlesInSync }) => {
+  ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onMintNftClick, isSyncing }) => {
     const [videoTitleMap, setVideoTitleMap] = useState('')
     const { video, loading } = useFullVideo(id ?? '', {
       skip: !id,
       onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTilePublisher', error, { video: { id } }),
-      pollInterval: titlesInSync?.length && titlesInSync.includes(videoTitleMap) ? YPP_POLL_INTERVAL : undefined,
+      pollInterval: isSyncing ? YPP_POLL_INTERVAL : undefined,
     })
 
     useEffect(() => {
@@ -107,7 +107,7 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
 
     const isSyncingWithYoutube =
       uploadVideoStatus?.lastStatus === 'yt-sync' ||
-      (titlesInSync?.includes(video?.title ?? '') && !video?.media?.isAccepted)
+      (isSyncing && (!video?.media?.isAccepted || !video?.thumbnailPhoto?.isAccepted))
 
     const isVideoUploading =
       uploadVideoStatus?.lastStatus === 'inProgress' ||
