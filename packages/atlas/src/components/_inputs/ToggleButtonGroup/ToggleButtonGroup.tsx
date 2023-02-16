@@ -21,7 +21,7 @@ const SCROLL_SHADOW_OFFSET = 10
 
 export const ToggleButtonGroup = <T extends string>({
   label,
-  size,
+  size = 'large',
   options,
   value,
   onChange,
