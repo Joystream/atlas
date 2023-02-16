@@ -56,6 +56,10 @@ export const JoystreamSvgWrapper = styled.div`
 
 export const SenderItem = styled(ListItem)`
   padding-left: 0;
+
+  & span[color] {
+    color: ${cVar('colorTextStrong')};
+  }
 `
 
 export const TextWrapper = styled.div`
