@@ -4,9 +4,7 @@ import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 import { getMaskImage } from '@/utils/styles'
 
-import { ToggleButtonGroupProps } from './ToggleButtonGroup'
-
-export const Container = styled.div<{ size: ToggleButtonGroupProps<''>['size'] }>`
+export const Container = styled.div<{ size: 'small' | 'medium' | 'large' }>`
   display: grid;
   grid-template-columns: auto auto 1fr auto;
   padding: ${sizes(1)};
