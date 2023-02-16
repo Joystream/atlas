@@ -81,7 +81,9 @@ export const MyVideosView = () => {
   const curentLySyncingVideoIds = yppDAta?.data
     .filter(
       (video): video is Required<YppVideoDto> =>
-        video.state === 'UploadStarted' && video.privacyStatus !== 'private' && !!video.joystreamVideo?.id
+        (video.state === 'UploadStarted' || video.state === 'VideoCreated') &&
+        video.privacyStatus !== 'private' &&
+        !!video.joystreamVideo?.id
     )
     .map((video) => video.joystreamVideo.id)
 
