@@ -180,7 +180,7 @@ export const useYppGoogleAuth = ({
               description: `Insufficient permissions granted. Try again and ensure YouTube channel data sharing permission is selected on Google Auth page.`,
               iconType: 'error',
             })
-
+            onChangeStep('requirements')
             return
           }
 
