@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 
@@ -29,7 +29,6 @@ import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { sizes } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
-import { YPP_POLL_INTERVAL } from '@/utils/polling'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
 import { YppVideoDto } from '@/views/studio/MyVideosView/MyVideosView.types'
 
@@ -68,31 +67,23 @@ export const MyVideosView = () => {
   const mdMatch = useMediaMatch('md')
   const [isBackendRqCompleted, setIsBackednRqCompleted] = useState(false)
 
-  const { data: currentlyUploadedVideosRes, isLoading: isCurrentlyUploadedVideoIdsLoading } = useQuery(
+  const { isLoading: isCurrentlyUploadedVideoIdsLoading, data: yppDAta } = useQuery(
     `ypp-ba-videos-${channelId}`,
     () => axios.get<YppVideoDto[]>(`${YOUTUBE_BACKEND_URL}/channels/${channelId}/videos`),
     {
-      enabled: !!channelId,
+      enabled: !!channelId || !YOUTUBE_BACKEND_URL,
       onSettled: () => {
         setIsBackednRqCompleted(true)
       },
-      refetchInterval: (res) =>
-        res?.data.some((resource) => resource.state === 'UploadStarted' && resource.privacyStatus !== 'private')
-          ? YPP_POLL_INTERVAL
-          : false,
     }
   )
 
-  const currentlyUploadedVideoIds = useMemo(
-    () =>
-      currentlyUploadedVideosRes?.data
-        .filter(
-          (video): video is Required<YppVideoDto> =>
-            video.state === 'UploadStarted' && video.privacyStatus !== 'private' && !!video.joystreamVideo?.id
-        )
-        .map((video) => video.joystreamVideo.id),
-    [currentlyUploadedVideosRes?.data]
-  )
+  const curentLySyncingVideoIds = yppDAta?.data
+    .filter(
+      (video): video is Required<YppVideoDto> =>
+        video.state === 'UploadStarted' && video.privacyStatus !== 'private' && !!video.joystreamVideo?.id
+    )
+    .map((video) => video.joystreamVideo.id)
 
   const [currentVideosTab, setCurrentVideosTab] = useState(0)
   const currentTabName = TABS[currentVideosTab]
@@ -286,7 +277,7 @@ export const MyVideosView = () => {
         return (
           <VideoTilePublisher
             key={video.id ? `video-id-${video.id}` : `video-idx-${idx}`}
-            isSyncing={currentlyUploadedVideoIds?.includes(video.id || '')}
+            isSyncing={curentLySyncingVideoIds?.includes(video.id || '')}
             id={video.id}
             onEditClick={(e) => {
               e?.stopPropagation()
