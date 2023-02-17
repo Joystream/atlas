@@ -373,15 +373,20 @@ legal:
 
     ## 1.3 Information colleted
 
-    All data written to the Blockchain, is implicitly collected not only by Company, but also anyone else in the world that is running the Full Node locally, or accessed via the App or a third party. This includes, but is not limited to, Content hashes, Membership profile, Memo field, and any other way a User can record data on the Blockchain. ‍
-
+    All data written to the Blockchain, is implicitly collected not only by Company, but also anyone else in the world that is running the Full Node locally, or accessed via the App or a third party. This includes, but is not limited to, Content hashes, Membership profile, Memo field, and any other way a User can record data on the Blockchain.
+  
     When using the faucet subpage of the Website, Company will record the IP address behind every new request for tokens. This data will be deleted every 14 days.
-
+  
     Company uses Google Analytics, with IP anonymization, to collect statistics on Website and the version of App hosted by us. All customisable data sharing settings are turned off to improve the privacy of Users.
+  
+    Company also uses Livesession to help us find bugs, improve UX and more by using session replays. Sensitive data such as passwords and IP addresses are anonimized.
+  
+    Company will not sell your data for advertising, or other purposes, but reserves the right to use the membership profile, channel and video assets meta data in advertising and promotional activities of Gleev app, Joystream blockchain or JS Genesis AS operating company.
 
-    Company also uses Livesession to help us find bugs, improve UX and more by using session replays. Sensitive data such as passwords and IP addresses are anonymized.
-
-    Company will not sell your data for advertising, or other purposes.
+    The assets are listed but not limited to:
+    - channel name, brand, logo, membership name, videos and NFTs count, video and NFT metadata, price sold, bids made, creator tokens minted, creator tokens purchased and sold via sale or AMM, royalties earned, associated YT channel and profile data where applies, as well as using actual content and user data published to Gleev or Joystream Blockchain.
+  
+    This information can be used without any limits and compensation to the owner for Gleev App, Joystream blockchain or and DAO advertising materials distributed on social media, email or any other medium subject to choice and full discretion of JS Genesis AS, Joystream DAO community or contractors of DAO or JS Genesis AS.
 
     # 2. Cookies Policy
 
