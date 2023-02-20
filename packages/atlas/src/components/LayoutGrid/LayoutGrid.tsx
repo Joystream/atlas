@@ -42,7 +42,7 @@ const createBreakpointGridItemRules =
       }
     `
 
-const filteredProps = ['colStart', 'colSpan', 'rowStart', 'rowSpan']
+const filteredProps = ['colStart', 'colSpan', 'rowStart', 'rowSpan', 'as']
 
 export const GridItem = styled('div', {
   shouldForwardProp: (prop) => !filteredProps.includes(prop as string),

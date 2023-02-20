@@ -45,6 +45,7 @@ class _SentryLogger {
     contexts?: LogContexts
   ) {
     let error = rawError
+
     const tags: Record<string, string | number> = {
       source,
     }
@@ -68,7 +69,10 @@ class _SentryLogger {
 
     const message = rawError?.message || rawGraphQLError?.message || ''
 
-    ConsoleLogger.error(!message ? title : `${title}: ${message}`, { ...error, ...contexts })
+    ConsoleLogger.error(!message ? title : `${title}: ${message}`, {
+      ...(typeof error === 'string' ? { error } : { ...error }),
+      ...contexts,
+    })
 
     if (!this.initialized) {
       ConsoleLogger.debug("Skipping Sentry error capture because SentryLogger wasn't initialized")

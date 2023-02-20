@@ -1,4 +1,4 @@
-import { formatISO } from 'date-fns'
+import { formatISO, isValid as isValidDate } from 'date-fns'
 import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 
@@ -64,7 +64,7 @@ const JOYSTREAM_LICENSE_CODE = 1009
 const SCROLL_TIMEOUT = 500
 const MINT_NFT_TIMEOUT = 800
 const MIN_TITLE_LENGTH = 3
-const MAX_TITLE_LENGTH = 60
+const MAX_TITLE_LENGTH = 84
 const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((license) => ({
   name: license.name,
   value: license.code,
@@ -160,7 +160,9 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
         ...((isNew || dirtyFields.enableComments) && data.enableComments != null
           ? { enableComments: data.enableComments }
           : {}),
-        ...((isNew || dirtyFields.publishedBeforeJoystream) && data.publishedBeforeJoystream != null
+        ...((isNew || dirtyFields.publishedBeforeJoystream) &&
+        data.publishedBeforeJoystream != null &&
+        isValidDate(data.publishedBeforeJoystream)
           ? {
               publishedBeforeJoystream: formatISO(data.publishedBeforeJoystream),
             }
@@ -972,7 +974,9 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
               name="publishedBeforeJoystream"
               control={control}
               rules={{
-                validate: (value) => pastDateValidation(value),
+                validate: (value) => {
+                  return pastDateValidation(value)
+                },
               }}
               render={({ field: { value, onChange } }) => (
                 <Datepicker

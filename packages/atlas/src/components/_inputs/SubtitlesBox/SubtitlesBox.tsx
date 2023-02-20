@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { ChangeEvent, ChangeEventHandler, FC, useRef } from 'react'
+import { useMutation } from 'react-query'
 
 import { SvgActionDownload, SvgActionMore, SvgActionTrash } from '@/assets/icons'
 import { ListItemProps } from '@/components/ListItem'
@@ -39,11 +40,14 @@ export const SubtitlesBox: FC<SubtitleBoxProps> = ({
   const inputRef = useRef<HTMLInputElement>(null)
   const [openUnsuportedFileDialog, closeUnsuportedFileDialog] = useConfirmationModal()
   const hasFile = !!file || !!id
+  const { mutateAsync: subtitlesFetch } = useMutation('subtitles-fetch', (url: string) =>
+    axios.get(url, { responseType: 'blob' })
+  )
 
   const { url } = useAsset(asset)
 
   const handleDownload = async (url = '') => {
-    const response = await axios.get(url, { responseType: 'blob' })
+    const response = await subtitlesFetch(url)
     const objectURL = window.URL.createObjectURL(new Blob([response.data]))
     const link = document.createElement('a')
     link.href = objectURL

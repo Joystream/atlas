@@ -57,7 +57,9 @@ export const AlertDialogModal: FC<AlertDialogModalProps> = ({
     <Modal show={show} onClickOutside={() => secondaryButton?.onClick?.() || onExitClick?.()} onExitClick={onExitClick}>
       <Dialog
         {...dialogProps}
-        primaryButton={primaryButton ? { ...primaryButton, variant: primaryButtonColor } : undefined}
+        primaryButton={
+          primaryButton ? { ...primaryButton, variant: primaryButton.variant || primaryButtonColor } : undefined
+        }
         secondaryButton={secondaryButton}
       >
         <>

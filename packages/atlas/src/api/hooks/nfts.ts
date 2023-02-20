@@ -21,16 +21,13 @@ import {
   GetNftHistoryQueryVariables,
   useGetNftHistoryQuery,
 } from '@/api/queries/__generated__/notifications.generated'
-import { videoFilter } from '@/config/contentFilter'
-import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
+import { nftFilter } from '@/config/contentFilter'
 
 type CommonNftProperties = {
   title: string | null | undefined
   duration: number | null | undefined
   views: number | undefined
 }
-
-const VIDEO_ID_FILTER = videoFilter.NOT?.find((item) => item.id_in)
 
 export type NftStatus = (
   | {
@@ -86,7 +83,7 @@ export const getNftStatus = (
       topBidder: auction.topBid?.bidder,
       auctionPlannedEndBlock: englishAuction ? englishAuction.plannedEndAtBlock : undefined,
       bidLockingTime: openAuction ? openAuction.bidLockDuration : undefined,
-      minimalBidStep: englishAuction ? tokenNumberToHapiBn(englishAuction.minimalBidStep) : undefined,
+      minimalBidStep: englishAuction ? new BN(englishAuction.minimalBidStep) : undefined,
       whitelistedMembers: auction.whitelistedMembers,
     }
   }
@@ -99,7 +96,7 @@ export const getNftStatus = (
       return {
         ...commonProperties,
         status: 'buy-now',
-        buyNowPrice: new BN(nft.transactionalStatus.price),
+        buyNowPrice: new BN(nft.transactionalStatus.price.toLocaleString('fullWide', { useGrouping: false })),
       }
     case 'TransactionalStatusIdle':
       return {
@@ -131,7 +128,7 @@ export const useNftsConnection = (
   const { data, ...rest } = useGetNftsConnectionQuery({
     variables: {
       ...variables,
-      where: { ...variables?.where, ...(VIDEO_ID_FILTER ? { NOT: [{ id_in: VIDEO_ID_FILTER.id_in }] } : {}) },
+      where: { ...variables?.where, ...(nftFilter ? nftFilter : {}) },
     },
     ...opts,
   })

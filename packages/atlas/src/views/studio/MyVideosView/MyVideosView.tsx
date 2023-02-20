@@ -1,4 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import axios from 'axios'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 
 import { useFullVideosConnection } from '@/api/hooks/videosConnection'
@@ -13,6 +15,7 @@ import { Button } from '@/components/_buttons/Button'
 import { Select } from '@/components/_inputs/Select'
 import { VideoTileDraft } from '@/components/_video/VideoTileDraft'
 import { VideoTilePublisher } from '@/components/_video/VideoTilePublisher'
+import { atlasConfig } from '@/config'
 import { cancelledVideoFilter } from '@/config/contentFilter'
 import { absoluteRoutes } from '@/config/routes'
 import { VIDEO_SORT_OPTIONS } from '@/config/sorting'
@@ -26,6 +29,9 @@ import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { sizes } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
+import { YPP_POLL_INTERVAL } from '@/utils/polling'
+import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
+import { YppVideoDto } from '@/views/studio/MyVideosView/MyVideosView.types'
 
 import {
   MobileButton,
@@ -46,16 +52,47 @@ const OPEN_TAB_SNACKBAR = 'OPEN_TAB_SNACKBAR'
 const REMOVE_DRAFT_SNACKBAR = 'REMOVE_DRAFT_SNACKBAR'
 const SNACKBAR_TIMEOUT = 5000
 
+const YOUTUBE_BACKEND_URL = atlasConfig.features.ypp.youtubeSyncApiUrl
+
 export const MyVideosView = () => {
   const headTags = useHeadTags('My videos')
   const navigate = useNavigate()
+  const { channelId } = useAuthorizedUser()
   const { editedVideoInfo, setEditedVideo } = useVideoWorkspace()
   const { displaySnackbar, updateSnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
+  const { currentChannel } = useGetYppSyncedChannels()
   const videosPerPage = ROWS_AMOUNT * videosPerRow
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
+  const [isBackendRqCompleted, setIsBackednRqCompleted] = useState(false)
+
+  const { data: currentlyUploadedVideosRes, isLoading: isCurrentlyUploadedVideoIdsLoading } = useQuery(
+    `ypp-ba-videos-${channelId}`,
+    () => axios.get<YppVideoDto[]>(`${YOUTUBE_BACKEND_URL}/channels/${channelId}/videos`),
+    {
+      enabled: !!channelId,
+      onSettled: () => {
+        setIsBackednRqCompleted(true)
+      },
+      refetchInterval: (res) =>
+        res?.data.some((resource) => resource.state === 'UploadStarted' && resource.privacyStatus !== 'private')
+          ? YPP_POLL_INTERVAL
+          : false,
+    }
+  )
+
+  const currentlyUploadedVideoIds = useMemo(
+    () =>
+      currentlyUploadedVideosRes?.data
+        .filter(
+          (video): video is Required<YppVideoDto> =>
+            video.state === 'UploadStarted' && video.privacyStatus !== 'private' && !!video.joystreamVideo?.id
+        )
+        .map((video) => video.joystreamVideo.id),
+    [currentlyUploadedVideosRes?.data]
+  )
 
   const [currentVideosTab, setCurrentVideosTab] = useState(0)
   const currentTabName = TABS[currentVideosTab]
@@ -69,7 +106,6 @@ export const MyVideosView = () => {
   const addToTabNotificationsCount = useRef(0)
 
   const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
-  const { channelId } = useAuthorizedUser()
   const { removeDrafts, markAllDraftsAsSeenForChannel } = useDraftStore(({ actions }) => actions)
   const unseenDrafts = useDraftStore(chanelUnseenDraftsSelector(channelId))
   const _drafts = useDraftStore(channelDraftsSelector(channelId))
@@ -94,20 +130,27 @@ export const MyVideosView = () => {
       },
     },
     {
+      skip: YOUTUBE_BACKEND_URL ? !isBackendRqCompleted : undefined,
       notifyOnNetworkStatusChange: true,
       onError: (error) => SentryLogger.error('Failed to fetch videos', 'MyVideosView', error),
     }
   )
+
   const [openDeleteDraftDialog, closeDeleteDraftDialog] = useConfirmationModal()
   const deleteVideo = useDeleteVideo()
+
+  const areTilesLoading = YOUTUBE_BACKEND_URL ? isCurrentlyUploadedVideoIdsLoading || loading : loading
 
   const videos = [...(edges?.length ? ['new-video-tile' as const, ...edges] : [])]
     ?.map((edge) => (edge === 'new-video-tile' ? edge : edge.node))
     .slice(currentPage * videosPerPage, currentPage * videosPerPage + videosPerPage)
-  const placeholderItems = Array.from({ length: loading ? videosPerPage - (videos ? videos.length : 0) : 0 }, () => ({
-    id: undefined,
-    progress: undefined,
-  }))
+  const placeholderItems = Array.from(
+    { length: areTilesLoading ? videosPerPage - (videos ? videos.length : 0) : 0 },
+    () => ({
+      id: undefined,
+      progress: undefined,
+    })
+  )
 
   const videosWithSkeletonLoaders = [...(videos || []), ...placeholderItems]
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
@@ -225,7 +268,7 @@ export const MyVideosView = () => {
         .slice(videosPerPage * currentPage, currentPage * videosPerPage + videosPerPage)
         .map((draft, idx) => {
           if (draft === 'new-video-tile') {
-            return <NewVideoTile loading={loading} key={`$draft-${idx}`} onClick={handleAddVideoTab} />
+            return <NewVideoTile loading={areTilesLoading} key={`$draft-${idx}`} onClick={handleAddVideoTab} />
           }
           return (
             <VideoTileDraft
@@ -238,11 +281,12 @@ export const MyVideosView = () => {
         })
     : videosWithSkeletonLoaders.map((video, idx) => {
         if (video === 'new-video-tile') {
-          return <NewVideoTile loading={loading} key={idx} onClick={handleAddVideoTab} />
+          return <NewVideoTile loading={areTilesLoading} key={idx} onClick={handleAddVideoTab} />
         }
         return (
           <VideoTilePublisher
             key={video.id ? `video-id-${video.id}` : `video-idx-${idx}`}
+            isSyncing={currentlyUploadedVideoIds?.includes(video.id || '')}
             id={video.id}
             onEditClick={(e) => {
               e?.stopPropagation()
@@ -328,6 +372,14 @@ export const MyVideosView = () => {
               </Button>
             )}
           </TabsContainer>
+          {currentChannel && isAllVideosTab && (
+            <StyledBanner
+              dismissibleId="yppSyncInfo"
+              title="YouTube Sync is enabled"
+              icon={<SvgAlertsInformative24 />}
+              description={`Whenever you upload video to ${currentChannel.title} YouTube channel, it will automatically appear here after a short while. You can change this setting in your YouTube Partner Program dashboard.`}
+            />
+          )}
           {isDraftTab && (
             <StyledBanner
               dismissibleId="video-draft-saved-locally-warning"

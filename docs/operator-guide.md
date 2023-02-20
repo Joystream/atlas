@@ -11,6 +11,7 @@
     - [App logo](#app-logo)
     - [App favicon](#app-favicon)
     - [Categories](#categories)
+    - [YouTube Partner Program](#youtube-partner-program)
     - [Terms of Service, Copyright Policy and Privacy Policy](#terms-of-service-copyright-policy-and-privacy-policy)
   - [Operating Atlas](#operating-atlas)
     - [Content blocking](#content-blocking)
@@ -114,6 +115,36 @@ Atlas uses list of categories defined in `content.categories` config entry to de
 `Discover` screen and when the user is publishing new content. Each local (or "display") category also has a list of associated Query Node video categories that should be displayed inside it.
 
 Atlas will, by default, only display content belonging to one of the defined display categories in the app. That means that video with a category that doesn't belong to any local category will not be available in the app. If you want to change that behavior, you can set `content.showAllContent` to `true` in the config file. That will make the app display all the content, regardless of the category.
+
+You are free to use existing metaprotocol (Query Node) categories, but you can also create your own that match your Gateway's specific needs. To get a list of all the existing categories you can use the following QN query:
+
+```graphql
+query {
+  videoCategories(limit: 200) {
+    id
+    name
+  }
+}
+```
+
+You can also see the current categories used by specific Gateways in Apps WG Notion: https://joystream.notion.site/5b3afe994cd64c7d8144cd2978fa5ceb?v=639feb777c514c26b2d88869d67cabf8
+
+To create a new QN category, you can use [Joystream CLI](https://github.com/Joystream/joystream/tree/master/cli):
+
+```bash
+joystream-cli content:createVideoCategory "My category" "My category description"
+```
+
+Once you run the above command, you can use the query above with a `orderBy: createdAt_DESC` argument to get the ID of the newly created category. You can then add it to the `content.categories` config entry.
+
+#### YouTube Partner Program
+
+All the YPP (YouTube Partner Program) parameters could be found in `atlas.config.yml` file located in `packages/atlas` directory.
+`features.ypp` section contains all the necessary params for setting up [youtube-synch](https://github.com/Joystream/youtube-synch/) and customizing user's rewards.
+
+Once youtube-synch is setup, you'll need to provide its API URL in `youtubeSyncApiUrl` variable.
+
+In order to enable YPP content in atlas, `googleConsoleClientId` variable needs to be provided. You can read more about it [here](https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid).
 
 #### Terms of Service, Copyright Policy and Privacy Policy
 
