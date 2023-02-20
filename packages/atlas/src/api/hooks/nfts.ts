@@ -22,6 +22,8 @@ import {
 } from '@/api/queries/__generated__/notifications.generated'
 import { nftFilter } from '@/config/contentFilter'
 
+import { OwnedNftWhereInput } from '../queries/__generated__/baseTypes.generated'
+
 type CommonNftProperties = {
   title: string | null | undefined
   duration: number | null | undefined
@@ -123,20 +125,36 @@ export const useNftsConnection = (
   variables?: GetNftsConnectionQueryVariables,
   opts?: QueryHookOptions<GetNftsConnectionQuery, GetNftsConnectionQueryVariables>
 ) => {
+  const getWhereVariables = (): OwnedNftWhereInput => {
+    if (variables?.where?.OR?.length) {
+      const { OR, ...whereWithoutOr } = variables.where
+      return {
+        OR: variables.where.OR.map((orVariable) => ({
+          ...orVariable,
+          ...whereWithoutOr,
+          video: {
+            ...(nftFilter.video ? nftFilter.video : {}),
+            ...whereWithoutOr.video,
+            ...orVariable.video,
+          },
+        })),
+      }
+    } else {
+      return {
+        ...variables?.where,
+        video: {
+          ...(nftFilter ? nftFilter.video : {}),
+          ...variables?.where?.video,
+        },
+      }
+    }
+  }
+
   const { data, ...rest } = useGetNftsConnectionQuery({
     variables: {
       ...variables,
       where: {
-        ...variables?.where,
-        video: {
-          media: {
-            isAccepted_eq: true,
-          },
-          thumbnailPhoto: {
-            isAccepted_eq: true,
-          },
-          ...(nftFilter ? nftFilter : {}),
-        },
+        ...getWhereVariables(),
       },
     },
     ...opts,

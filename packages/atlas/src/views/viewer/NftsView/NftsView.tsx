@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 
 import { useNftsConnection } from '@/api/hooks/nfts'
-import { OwnedNftOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { OwnedNftOrderByInput, OwnedNftWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionFilters } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
@@ -39,6 +39,15 @@ export const NftsView: FC = () => {
 
   const [sortBy, setSortBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
 
+  const commonVideoVariables: OwnedNftWhereInput['video'] = {
+    media: {
+      isAccepted_eq: true,
+    },
+    thumbnailPhoto: {
+      isAccepted_eq: true,
+    },
+  }
+
   const { nfts, loading, totalCount, fetchMore, pageInfo, variables } = useNftsConnection(
     {
       where: {
@@ -47,10 +56,11 @@ export const NftsView: FC = () => {
         video:
           videoWhereInput.hasMarketing_eq != null || videoWhereInput.isExplicit_eq != null
             ? {
+                ...commonVideoVariables,
                 hasMarketing_eq: videoWhereInput.hasMarketing_eq,
                 isExplicit_eq: videoWhereInput.isExplicit_eq,
               }
-            : undefined,
+            : commonVideoVariables,
       },
       orderBy: sortBy,
       first: 10,

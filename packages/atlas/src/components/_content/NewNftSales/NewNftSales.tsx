@@ -22,6 +22,14 @@ export const NewNftSales: FC = () => {
       transactionalStatus: {
         isTypeOf_in: ['TransactionalStatusAuction', 'TransactionalStatusBuyNow'],
       },
+      video: {
+        media: {
+          isAccepted_eq: true,
+        },
+        thumbnailPhoto: {
+          isAccepted_eq: true,
+        },
+      },
     },
     orderBy: OwnedNftOrderByInput.CreatedAtDesc,
     first: 8,
