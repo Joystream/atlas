@@ -12,7 +12,7 @@ export type ToggleButtonGroupProps<T extends string> = {
   options: T[]
   value?: T
   label?: string
-  size?: 'small' | 'medium' | 'large'
+  type?: 'contain' | 'stretch'
   onChange: (type: T) => void
   className?: string
 }
@@ -21,7 +21,7 @@ const SCROLL_SHADOW_OFFSET = 10
 
 export const ToggleButtonGroup = <T extends string>({
   label,
-  size = 'large',
+  type = 'stretch',
   options,
   value,
   onChange,
@@ -43,7 +43,7 @@ export const ToggleButtonGroup = <T extends string>({
 
   useEffect(() => {
     const optionGroup = optionWrapperRef.current
-    if (!optionGroup || !isOverflowing || size !== 'medium') {
+    if (!optionGroup || !isOverflowing || type !== 'contain') {
       return
     }
     setShadowsVisible((prev) => ({ ...prev, right: true }))
@@ -63,7 +63,7 @@ export const ToggleButtonGroup = <T extends string>({
       optionGroup.removeEventListener('touchmove', touchHandler)
       optionGroup.removeEventListener('scroll', touchHandler)
     }
-  }, [isOverflowing, size])
+  }, [isOverflowing, type])
 
   const handleArrowScroll = (direction: 'left' | 'right') => () => {
     const optionGroup = optionWrapperRef.current
@@ -76,13 +76,13 @@ export const ToggleButtonGroup = <T extends string>({
   }
 
   return (
-    <Container className={className} size={size}>
+    <Container className={className} type={type}>
       {label && (
         <Label variant="t100" as="p" color="colorText">
           {label}
         </Label>
       )}
-      {size === 'medium' && isOverflowing && (
+      {type === 'contain' && isOverflowing && (
         <Anchor>
           <StyledButton
             onClick={handleArrowScroll('left')}
@@ -105,7 +105,7 @@ export const ToggleButtonGroup = <T extends string>({
           </Button>
         ))}
       </OptionWrapper>
-      {size === 'medium' && isOverflowing && (
+      {type === 'contain' && isOverflowing && (
         <Anchor>
           <StyledButton
             onClick={handleArrowScroll('right')}
