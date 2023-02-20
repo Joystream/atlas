@@ -25,7 +25,7 @@ export const getSharedInputStyles = (ignoreBoxShadow?: boolean) => ({
     /* line height needs to be set for inputs explicitly */
     line-height: ${sizes(6)};
     border: none;
-    caret-color: ${cVar('colorCoreBaseWhite')};
+    caret-color: ${cVar('colorTextStrong')};
     background-color: ${cVar('colorBackgroundMutedAlpha')};
     transition: ${cVar('animationTransitionFast')};
     transition-property: background-color, color, box-shadow;
