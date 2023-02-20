@@ -22,6 +22,7 @@ export const Thead = styled.thead`
 
 const cellStyles = css`
   padding: ${sizes(3.5)} ${sizes(2)};
+  max-height: 72px;
 
   :first-of-type {
     padding-left: ${sizes(6)};
@@ -32,7 +33,8 @@ const cellStyles = css`
   }
 `
 
-export const Th = styled(Text)`
+export const Th = styled(Text)<{ width?: string | number }>`
+  width: ${({ width }) => (typeof width === 'number' ? `${width}px` : width ?? 'unset')};
   ${cellStyles};
 
   text-align: left;
@@ -40,6 +42,14 @@ export const Th = styled(Text)`
 
 export const Td = styled(Text)`
   ${cellStyles};
+
+  overflow: hidden;
+
+  p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
   box-shadow: ${cVar('effectDividersBottom')};
 `

@@ -53,15 +53,13 @@ export const useChannelPayout = (txCallback?: () => void) => {
           },
         }
       )
-
-      const operators = await getAllDistributionOperatorsForBag(
-        channelPayoutsUpdatedEvents[0]?.payloadDataObject.storageBagId
-      )
+      const storageBagId = channelPayoutsUpdatedEvents[0]?.payloadDataObject?.storageBagId
+      const operators = storageBagId ? await getAllDistributionOperatorsForBag(storageBagId) : null
       const randomOperatorIdx = getRandomIntInclusive(0, operators?.length ? operators.length - 1 : 0)
 
       return {
         nodeEndpoint: operators?.[randomOperatorIdx].endpoint,
-        payloadDataObjectId: channelPayoutsUpdatedEvents?.[0].payloadDataObject.id,
+        payloadDataObjectId: channelPayoutsUpdatedEvents?.[0].payloadDataObject?.id,
       }
     },
     [client, getAllDistributionOperatorsForBag]

@@ -627,7 +627,7 @@ export type GetPayloadDataObjectIdByCommitmentQuery = {
   __typename?: 'Query'
   channelPayoutsUpdatedEvents: Array<{
     __typename?: 'ChannelPayoutsUpdatedEvent'
-    payloadDataObject: { __typename?: 'StorageDataObject'; id: string; storageBagId: string }
+    payloadDataObject?: { __typename?: 'StorageDataObject'; id: string; storageBagId: string } | null
   }>
 }
 
@@ -648,24 +648,37 @@ export type GetChannelPaymentEventsQueryVariables = Types.Exact<{
 
 export type GetChannelPaymentEventsQuery = {
   __typename?: 'Query'
-  nftBoughtEvents: Array<{ __typename?: 'NftBoughtEvent'; inBlock: number; createdAt: Date; price: string }>
+  nftBoughtEvents: Array<{
+    __typename?: 'NftBoughtEvent'
+    inBlock: number
+    createdAt: Date
+    price: string
+    video: { __typename?: 'Video'; title?: string | null }
+    member: { __typename?: 'Membership'; controllerAccount: string }
+  }>
   bidMadeCompletingAuctionEvents: Array<{
     __typename?: 'BidMadeCompletingAuctionEvent'
     inBlock: number
     createdAt: Date
     price: string
+    video: { __typename?: 'Video'; title?: string | null }
+    member: { __typename?: 'Membership'; controllerAccount: string }
   }>
   englishAuctionSettledEvents: Array<{
     __typename?: 'EnglishAuctionSettledEvent'
     createdAt: Date
     inBlock: number
+    video: { __typename?: 'Video'; title?: string | null }
     winningBid: { __typename?: 'Bid'; amount: string }
+    winner: { __typename?: 'Membership'; controllerAccount: string }
   }>
   openAuctionBidAcceptedEvents: Array<{
     __typename?: 'OpenAuctionBidAcceptedEvent'
     inBlock: number
     createdAt: Date
+    video: { __typename?: 'Video'; title?: string | null }
     winningBid?: { __typename?: 'Bid'; amount: string } | null
+    winningBidder?: { __typename?: 'Membership'; controllerAccount: string } | null
   }>
   channelRewardClaimedEvents: Array<{
     __typename?: 'ChannelRewardClaimedEvent'
@@ -678,6 +691,18 @@ export type GetChannelPaymentEventsQuery = {
     amount: string
     createdAt: Date
     inBlock: number
+    actor:
+      | { __typename: 'ContentActorCurator' }
+      | { __typename: 'ContentActorLead' }
+      | { __typename?: 'ContentActorMember'; member?: { __typename?: 'Membership'; controllerAccount: string } | null }
+  }>
+  channelPaymentMadeEvents: Array<{
+    __typename?: 'ChannelPaymentMadeEvent'
+    amount: string
+    createdAt: Date
+    inBlock: number
+    rationale?: string | null
+    payer: { __typename?: 'Membership'; controllerAccount: string }
   }>
 }
 
@@ -1550,24 +1575,48 @@ export const GetChannelPaymentEventsDocument = gql`
       inBlock
       createdAt
       price
+      video {
+        title
+      }
+      member {
+        controllerAccount
+      }
     }
     bidMadeCompletingAuctionEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
       inBlock
       createdAt
       price
+      video {
+        title
+      }
+      member {
+        controllerAccount
+      }
     }
     englishAuctionSettledEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
       createdAt
       inBlock
+      video {
+        title
+      }
       winningBid {
         amount
+      }
+      winner {
+        controllerAccount
       }
     }
     openAuctionBidAcceptedEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
       inBlock
       createdAt
+      video {
+        title
+      }
       winningBid {
         amount
+      }
+      winningBidder {
+        controllerAccount
       }
     }
     channelRewardClaimedEvents(where: { channel: { id_eq: $channelId } }) {
@@ -1579,6 +1628,28 @@ export const GetChannelPaymentEventsDocument = gql`
       amount
       createdAt
       inBlock
+      actor {
+        ... on ContentActorCurator {
+          __typename
+        }
+        ... on ContentActorLead {
+          __typename
+        }
+        ... on ContentActorMember {
+          member {
+            controllerAccount
+          }
+        }
+      }
+    }
+    channelPaymentMadeEvents(where: { payeeChannel: { id_eq: $channelId } }) {
+      amount
+      createdAt
+      inBlock
+      rationale
+      payer {
+        controllerAccount
+      }
     }
   }
 `

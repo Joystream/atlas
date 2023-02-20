@@ -1,15 +1,12 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { GetFullChannelsQuery, useGetChannelPaymentEventsQuery } from '@/api/queries/__generated__/channels.generated'
 import { PaymentHistory } from '@/components/TablePaymentsHistory'
-import { useJoystream } from '@/providers/joystream/joystream.hooks'
 
-import { mapEventToPaymentHistoryFactory } from './PaymentTransactions.utils'
+import { mapEventToPaymentHistory } from './PaymentTransactions.utils'
 
 export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channels'][number]) => {
-  const { joystream } = useJoystream()
   const [paymentData, setPaymentData] = useState<PaymentHistory[]>([])
-  const [loading, setLoading] = useState<boolean>(false)
 
   const { data, ...rest } = useGetChannelPaymentEventsQuery({
     variables: {
@@ -19,55 +16,100 @@ export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channe
     skip: !channel,
   })
 
-  const fetchPaymentsData = useCallback(() => {
-    if (joystream && data && channel) {
-      setLoading(true)
-      const mapEventToPaymentHistory = mapEventToPaymentHistoryFactory(joystream, channel.rewardAccount)
-      const rewardPromises = data.channelRewardClaimedEvents.map((event) =>
-        mapEventToPaymentHistory(event, 'claimed-reward')
-      )
-      const ntfBoughtPromises = data.nftBoughtEvents.map((event) =>
-        mapEventToPaymentHistory({ ...event, amount: event.price }, 'nft-sale')
-      )
-      const withdrawalPromises = data?.channelFundsWithdrawnEvents.map((event) =>
-        mapEventToPaymentHistory(event, 'withdrawal')
-      )
-      const openAuctionAcceptedPromises = data?.openAuctionBidAcceptedEvents.map((event) =>
-        mapEventToPaymentHistory({ ...event, amount: event.winningBid?.amount ?? '0' }, 'nft-sale')
-      )
-      const auctionCompletingBidPromises = data?.bidMadeCompletingAuctionEvents.map((event) =>
-        mapEventToPaymentHistory({ ...event, amount: event.price }, 'nft-sale')
-      )
-      const auctionSettledPromises = data?.englishAuctionSettledEvents.map((event) =>
-        mapEventToPaymentHistory({ ...event, amount: event.winningBid.amount ?? '0' }, 'nft-sale')
-      )
-
-      Promise.all([
-        ...rewardPromises,
-        ...withdrawalPromises,
-        ...ntfBoughtPromises,
-        ...auctionSettledPromises,
-        ...auctionCompletingBidPromises,
-        ...openAuctionAcceptedPromises,
-      ])
-        .then((result) => {
-          setPaymentData(result.sort((a, b) => b.block - a.block))
-        })
-        .finally(() => {
-          setLoading(false)
-        })
-    }
-  }, [joystream, data, channel])
-
   useEffect(() => {
-    fetchPaymentsData()
-  }, [joystream, data, channel, fetchPaymentsData])
+    if (data) {
+      const rewardClaimed = data.channelRewardClaimedEvents.map((event) =>
+        mapEventToPaymentHistory(
+          {
+            ...event,
+            sender: 'council',
+          },
+          'council-reward'
+        )
+      )
+      const ntfBought = data.nftBoughtEvents.map((event) =>
+        mapEventToPaymentHistory(
+          {
+            ...event,
+            amount: event.price,
+            sender: event.member.controllerAccount,
+            description: `Sold NFT: ${event.video.title}`,
+          },
+          'nft-sale'
+        )
+      )
+      const withdrawalMade = data.channelFundsWithdrawnEvents.map((event) =>
+        mapEventToPaymentHistory(
+          {
+            ...event,
+            amount: `-${event.amount}`,
+            sender:
+              event.actor.__typename === 'ContentActorMember'
+                ? event.actor?.member?.controllerAccount ?? 'council'
+                : 'council',
+          },
+          'withdrawal'
+        )
+      )
+      const openAuctionAccepted = data.openAuctionBidAcceptedEvents.map((event) =>
+        mapEventToPaymentHistory(
+          {
+            ...event,
+            amount: event.winningBid?.amount ?? '0',
+            sender: event.winningBidder?.controllerAccount ?? 'council',
+            description: `Sold NFT: ${event.video.title}`,
+          },
+          'nft-sale'
+        )
+      )
+      const auctionCompletingBid = data.bidMadeCompletingAuctionEvents.map((event) =>
+        mapEventToPaymentHistory(
+          {
+            ...event,
+            amount: event.price,
+            sender: event.member.controllerAccount,
+            description: `Sold NFT: ${event.video.title}`,
+          },
+          'nft-sale'
+        )
+      )
+      const auctionSettled = data.englishAuctionSettledEvents.map((event) =>
+        mapEventToPaymentHistory(
+          {
+            ...event,
+            amount: event.winningBid.amount ?? '0',
+            sender: event.winner.controllerAccount,
+            description: `Sold NFT: ${event.video.title}`,
+          },
+          'nft-sale'
+        )
+      )
+
+      const directPayment = data.channelPaymentMadeEvents.map((event) =>
+        mapEventToPaymentHistory(
+          { ...event, sender: event.payer.controllerAccount, description: event.rationale ?? undefined },
+          'direct-payment'
+        )
+      )
+
+      const result = [
+        ...directPayment,
+        ...auctionCompletingBid,
+        ...auctionSettled,
+        ...openAuctionAccepted,
+        ...ntfBought,
+        ...rewardClaimed,
+        ...withdrawalMade,
+      ].sort((a, b) => b.block - a.block)
+      setPaymentData(result)
+    }
+  }, [data])
 
   return {
     ...rest,
     rawData: data,
     paymentData,
-    loading: rest.loading || loading,
-    fetchPaymentsData,
+    loading: rest.loading,
+    fetchPaymentsData: rest.refetch,
   }
 }
