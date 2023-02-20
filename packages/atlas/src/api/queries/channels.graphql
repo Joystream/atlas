@@ -256,3 +256,91 @@ query GetChannelPaymentEvents($channelId: String) {
     }
   }
 }
+
+#nftBoughtEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
+#inBlock
+#createdAt
+#price
+#video {
+#title
+#}
+#member {
+#controllerAccount
+#}
+#}
+#
+#bidMadeCompletingAuctionEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
+#inBlock
+#createdAt
+#price
+#video {
+#title
+#}
+#member {
+#controllerAccount
+#}
+#}
+#
+#englishAuctionSettledEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
+#createdAt
+#inBlock
+#video {
+#title
+#}
+#winningBid {
+#amount
+#}
+#winner {
+#controllerAccount
+#}
+#}
+#
+#openAuctionBidAcceptedEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
+#inBlock
+#createdAt
+#video {
+#title
+#}
+#winningBid {
+#amount
+#}
+#winningBidder {
+#controllerAccount
+#}
+#}
+#
+#channelRewardClaimedEvents(where: { channel: { id_eq: $channelId } }) {
+#amount
+#createdAt
+#inBlock
+#}
+#
+#channelFundsWithdrawnEvents(where: { channel: { id_eq: $channelId } }) {
+#amount
+#createdAt
+#inBlock
+#actor {
+#... on ContentActorCurator {
+#__typename
+#}
+#... on ContentActorLead {
+#__typename
+#}
+#
+#... on ContentActorMember {
+#member {
+#controllerAccount
+#}
+#}
+#}
+#}
+#
+#channelPaymentMadeEvents(where: { payeeChannel: { id_eq: $channelId } }) {
+#amount
+#createdAt
+#inBlock
+#rationale
+#payer {
+#controllerAccount
+#}
+#}
