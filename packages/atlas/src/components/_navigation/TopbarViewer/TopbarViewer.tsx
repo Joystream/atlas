@@ -110,58 +110,62 @@ export const TopbarViewer: FC = () => {
             />
           </CSSTransition>
         </SearchbarContainer>
-        <SwitchTransition>
-          <CSSTransition
-            key={String(topbarButtonLoaded)}
-            mountOnEnter
-            classNames={transitions.names.fade}
-            timeout={parseInt(cVar('animationTimingFast', true))}
-          >
-            <ButtonWrapper>
-              {topbarButtonLoaded ? (
-                isLoggedIn ? (
-                  <SignedButtonsWrapper>
-                    <NotificationsWidget trigger={<NotificationsButton />} />
-                    {!mdMatch && !searchOpen && (
-                      <StyledAvatar
-                        size="small"
-                        assetUrl={memberAvatarUrl}
-                        loading={memberAvatarLoading}
-                        onClick={handleDrawerToggle}
-                      />
-                    )}
-                    {mdMatch && (
-                      <StyledAvatar
-                        size="small"
-                        assetUrl={memberAvatarUrl}
-                        onClick={handleDrawerToggle}
-                        loading={memberAvatarLoading}
-                      />
-                    )}
-                  </SignedButtonsWrapper>
-                ) : (
-                  mdMatch && (
-                    <Button
-                      icon={<SvgActionMember />}
-                      iconPlacement="left"
-                      size="medium"
-                      onClick={() => signIn(undefined, openSignInDialog)}
-                    >
-                      Connect wallet
-                    </Button>
+        {!searchQuery && (
+          <SwitchTransition>
+            <CSSTransition
+              key={String(topbarButtonLoaded)}
+              mountOnEnter
+              classNames={transitions.names.fade}
+              timeout={parseInt(cVar('animationTimingFast', true))}
+            >
+              <ButtonWrapper>
+                {topbarButtonLoaded ? (
+                  isLoggedIn ? (
+                    <SignedButtonsWrapper>
+                      <NotificationsWidget trigger={<NotificationsButton />} />
+                      {!mdMatch && !searchOpen && (
+                        <StyledAvatar
+                          size="small"
+                          assetUrl={memberAvatarUrl}
+                          loading={memberAvatarLoading}
+                          onClick={handleDrawerToggle}
+                        />
+                      )}
+                      {mdMatch && (
+                        <StyledAvatar
+                          size="small"
+                          assetUrl={memberAvatarUrl}
+                          onClick={handleDrawerToggle}
+                          loading={memberAvatarLoading}
+                        />
+                      )}
+                    </SignedButtonsWrapper>
+                  ) : (
+                    mdMatch && (
+                      <Button
+                        icon={<SvgActionMember />}
+                        iconPlacement="left"
+                        size="medium"
+                        onClick={() => signIn(undefined, openSignInDialog)}
+                      >
+                        Connect wallet
+                      </Button>
+                    )
                   )
-                )
-              ) : (
-                <SignedButtonsWrapper>
-                  <StyledButtonSkeletonLoader width={mdMatch ? 102 : 78} height={40} />
-                </SignedButtonsWrapper>
-              )}
-              {!searchQuery && !mdMatch && !isLoggedIn && topbarButtonLoaded && (
-                <StyledIconButton onClick={() => signIn(undefined, openSignInDialog)}>Connect wallet</StyledIconButton>
-              )}
-            </ButtonWrapper>
-          </CSSTransition>
-        </SwitchTransition>
+                ) : (
+                  <SignedButtonsWrapper>
+                    <StyledButtonSkeletonLoader width={mdMatch ? 102 : 78} height={40} />
+                  </SignedButtonsWrapper>
+                )}
+                {!searchQuery && !mdMatch && !isLoggedIn && topbarButtonLoaded && (
+                  <StyledIconButton onClick={() => signIn(undefined, openSignInDialog)}>
+                    Connect wallet
+                  </StyledIconButton>
+                )}
+              </ButtonWrapper>
+            </CSSTransition>
+          </SwitchTransition>
+        )}
         <CSSTransition classNames="searchbar-overlay" in={searchOpen} timeout={0} unmountOnExit mountOnEnter>
           <Overlay onClick={onClose} />
         </CSSTransition>
