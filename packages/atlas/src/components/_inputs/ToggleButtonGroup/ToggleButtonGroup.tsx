@@ -77,23 +77,21 @@ export const ToggleButtonGroup = <T extends string>({
 
   return (
     <Container className={className} size={size}>
-      <div>
-        {label && (
-          <Label variant="t100" as="p" color="colorText">
-            {label}
-          </Label>
-        )}
-      </div>
-      <Anchor>
-        {size === 'medium' && isOverflowing && (
+      {label && (
+        <Label variant="t100" as="p" color="colorText">
+          {label}
+        </Label>
+      )}
+      {size === 'medium' && isOverflowing && (
+        <Anchor>
           <StyledButton
             onClick={handleArrowScroll('left')}
             size="small"
             variant="tertiary"
             icon={<SvgActionChevronL />}
           />
-        )}
-      </Anchor>
+        </Anchor>
+      )}
       <OptionWrapper onMouseDown={onMouseDown} ref={optionWrapperRef} shadowsVisible={shadowsVisible}>
         {options.map((option) => (
           <Button
@@ -107,16 +105,16 @@ export const ToggleButtonGroup = <T extends string>({
           </Button>
         ))}
       </OptionWrapper>
-      <Anchor>
-        {size === 'medium' && isOverflowing && (
+      {size === 'medium' && isOverflowing && (
+        <Anchor>
           <StyledButton
             onClick={handleArrowScroll('right')}
             size="small"
             variant="tertiary"
             icon={<SvgActionChevronR />}
           />
-        )}
-      </Anchor>
+        </Anchor>
+      )}
     </Container>
   )
 }

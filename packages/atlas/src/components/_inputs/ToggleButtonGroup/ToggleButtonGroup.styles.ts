@@ -5,12 +5,10 @@ import { cVar, sizes } from '@/styles'
 import { getMaskImage } from '@/utils/styles'
 
 export const Container = styled.div<{ size: 'small' | 'medium' | 'large' }>`
-  display: grid;
-  grid-template-columns: auto auto 1fr auto;
+  display: flex;
   padding: ${sizes(1)};
   gap: ${sizes(1)};
   border: 1px solid ${cVar('colorBorderMutedAlpha')};
-  align-items: center;
   border-radius: ${cVar('radiusSmall')};
   max-width: ${(props) => (props.size === 'large' ? 'fit-content' : '320px')};
 `
@@ -22,6 +20,7 @@ export const OptionWrapper = styled.div<{
   }
 }>`
   display: flex;
+  flex: 1;
   gap: ${sizes(1)};
   width: auto;
   overflow: auto;
@@ -40,6 +39,7 @@ export const OptionWrapper = styled.div<{
 
 export const Label = styled(Text)`
   padding: ${sizes(2)};
+  align-self: center;
 `
 
 export const Anchor = styled.div`
