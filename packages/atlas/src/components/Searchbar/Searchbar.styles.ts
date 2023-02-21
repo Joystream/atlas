@@ -29,7 +29,7 @@ export const Input = styled.input`
 
 export const CancelButton = styled(Button)`
   position: absolute;
-  right: ${sizes(4)};
+  right: 0;
   border: none;
   margin-right: ${sizes(2)};
 
@@ -39,10 +39,6 @@ export const CancelButton = styled(Button)`
 
   &:hover path {
     fill: ${cVar('colorTextStrong')};
-  }
-
-  ${media.md} {
-    right: 0;
   }
 `
 
@@ -74,13 +70,12 @@ export const InnerContainer = styled.div<{ hasFocus: boolean; hasQuery: boolean 
   will-change: background-color;
   top: 0;
   left: 0;
-  position: ${({ hasFocus }) => (hasFocus ? 'absolute' : 'unset')};
+  position: ${({ hasFocus }) => (hasFocus ? 'absolute' : 'relative')};
   background-color: ${({ hasFocus }) => (hasFocus ? cVar('colorCoreNeutral800') : cVar('colorCoreNeutral900'))};
   box-shadow: ${({ hasFocus }) => (!hasFocus ? `inset 0 0 0 1px ${cVar('colorCoreNeutral700')}` : 'unset')};
   padding-left: ${({ hasFocus, hasQuery }) => (hasFocus || hasQuery ? sizes(2) : 0)};
 
   ${media.md} {
-    position: relative;
     padding-left: ${sizes(4)};
   }
 `
