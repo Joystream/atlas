@@ -77,7 +77,7 @@ export const ChannelView: FC = () => {
   const smMatch = useMediaMatch('sm')
   const { id } = useParams()
   const {
-    extendedChannel,
+    channel,
     activeVideosCount,
     loading,
     error: channelError,
@@ -105,11 +105,11 @@ export const ChannelView: FC = () => {
   })
   const { channelNftCollectors } = useChannelNftCollectors({ channelId: id || '' })
 
-  const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, extendedChannel?.title)
+  const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, channel?.title)
   const [currentTab, setCurrentTab] = useState<typeof TABS[number]>(TABS[0])
 
-  const { url: avatarPhotoUrl } = useAsset(extendedChannel?.avatarPhoto)
-  const { url: coverPhotoUrl } = useAsset(extendedChannel?.coverPhoto)
+  const { url: avatarPhotoUrl } = useAsset(channel?.avatarPhoto)
+  const { url: coverPhotoUrl } = useAsset(channel?.coverPhoto)
 
   const [sortNftsBy, setSortNftsBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
@@ -137,16 +137,16 @@ export const ChannelView: FC = () => {
   }
 
   const channelMetaTags = useMemo(() => {
-    if (!extendedChannel || !avatarPhotoUrl) return {}
+    if (!channel || !avatarPhotoUrl) return {}
     return generateChannelMetaTags(
-      extendedChannel,
+      channel,
       avatarPhotoUrl,
       atlasConfig.general.appName,
       window.location.origin,
       atlasConfig.general.appTwitterId
     )
-  }, [extendedChannel, avatarPhotoUrl])
-  const headTags = useHeadTags(extendedChannel?.title, channelMetaTags)
+  }, [channel, avatarPhotoUrl])
+  const headTags = useHeadTags(channel?.title, channelMetaTags)
 
   const handleSetCurrentTab = async (tab: number) => {
     if (TABS[tab] === 'Videos' && isSearching) {
@@ -188,7 +188,7 @@ export const ChannelView: FC = () => {
           />
         )
       case 'Information':
-        return <ChannelAbout channel={extendedChannel} activeVideosCount={activeVideosCount} />
+        return <ChannelAbout channel={channel} activeVideosCount={activeVideosCount} />
     }
   }
 
@@ -208,7 +208,7 @@ export const ChannelView: FC = () => {
       memberUrl: absoluteRoutes.viewer.member(member?.handle),
     })) || []
 
-  if (!loading && !extendedChannel) {
+  if (!loading && !channel) {
     return (
       <NotFoundChannelContainer>
         <EmptyFallback
@@ -238,16 +238,16 @@ export const ChannelView: FC = () => {
           </CollectorsBoxContainer>
         ) : null}
         <TitleSection className={transitions.names.slide}>
-          <StyledChannelLink id={extendedChannel?.id} avatarSize="channel" hideHandle noLink />
+          <StyledChannelLink id={channel?.id} avatarSize="channel" hideHandle noLink />
           <TitleContainer>
-            {extendedChannel ? (
+            {channel ? (
               <>
                 <Text as="h1" variant={smMatch ? 'h700' : 'h600'}>
-                  {extendedChannel.title}
+                  {channel.title}
                 </Text>
                 <SubTitle as="p" variant="t300" color="colorText">
-                  {extendedChannel.followsNum ? (
-                    <NumberFormat as="span" value={extendedChannel.followsNum} format="short" variant="t300" />
+                  {channel.followsNum ? (
+                    <NumberFormat as="span" value={channel.followsNum} format="short" variant="t300" />
                   ) : (
                     0
                   )}{' '}
@@ -284,11 +284,11 @@ export const ChannelView: FC = () => {
               ]}
               trigger={<Button icon={<SvgActionMore />} variant="tertiary" size="large" />}
             />
-            {extendedChannel?.id && (
+            {channel?.id && (
               <ReportModal
                 show={showReportDialog}
                 onClose={() => setShowReportDialog(false)}
-                entityId={extendedChannel?.id}
+                entityId={channel?.id}
                 type="channel"
               />
             )}

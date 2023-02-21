@@ -79,7 +79,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const [showConnectToYtDialog, setShowConnectToYtDialog] = useState(false)
   const setShouldContinueYppFlow = useYppStore((store) => store.actions.setShouldContinueYppFlow)
   const {
-    extendedChannel,
+    channel,
     loading,
     error,
     refetch: refetchChannel,
@@ -97,8 +97,8 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const channelBucketsCount = useChannelsStorageBucketsCount(channelId)
 
   // trigger use asset to make sure the channel assets get resolved
-  useAsset(extendedChannel?.avatarPhoto)
-  useAsset(extendedChannel?.coverPhoto)
+  useAsset(channel?.avatarPhoto)
+  useAsset(channel?.coverPhoto)
 
   const {
     register,
@@ -187,8 +187,8 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
           ipfsHash: avatarHash || '',
         }
       }
-      if (extendedChannel?.avatarPhoto?.id && avatarHash) {
-        replacedAssetsIds.push(extendedChannel.avatarPhoto.id)
+      if (channel?.avatarPhoto?.id && avatarHash) {
+        replacedAssetsIds.push(channel.avatarPhoto.id)
       }
       if (coverAsset?.blob?.size) {
         newAssets.coverPhoto = {
@@ -196,12 +196,12 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
           ipfsHash: coverPhotoHash || '',
         }
       }
-      if (extendedChannel?.coverPhoto?.id && coverPhotoHash) {
-        replacedAssetsIds.push(extendedChannel.coverPhoto.id)
+      if (channel?.coverPhoto?.id && coverPhotoHash) {
+        replacedAssetsIds.push(channel.coverPhoto.id)
       }
       return [newAssets, replacedAssetsIds]
     },
-    [avatarAsset?.blob?.size, extendedChannel?.avatarPhoto?.id, extendedChannel?.coverPhoto?.id, coverAsset?.blob?.size]
+    [avatarAsset?.blob?.size, channel?.avatarPhoto?.id, channel?.coverPhoto?.id, coverAsset?.blob?.size]
   )
 
   const channelMetadata = createChannelMetadata(watch())
@@ -242,14 +242,14 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
 
   // set default values for editing channel
   useEffect(() => {
-    if (loading || newChannel || !extendedChannel) {
+    if (loading || newChannel || !channel) {
       return
     }
 
-    const { title, description, isPublic, language, avatarPhoto, coverPhoto } = extendedChannel
+    const { title, description, isPublic, language, avatarPhoto, coverPhoto } = channel
 
     const foundLanguage = atlasConfig.derived.languagesSelectValues.find(({ value }) => value === language)
-    const isChannelChanged = cachedChannelId.current !== extendedChannel.id
+    const isChannelChanged = cachedChannelId.current !== channel.id
 
     // This condition should prevent from updating cover/avatar when the upload is done
     if (isChannelChanged || firstRender.current) {
@@ -272,9 +272,9 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
         language: foundLanguage?.value || DEFAULT_LANGUAGE,
       })
       firstRender.current = false
-      cachedChannelId.current = extendedChannel.id
+      cachedChannelId.current = channel.id
     }
-  }, [extendedChannel, loading, newChannel, reset])
+  }, [channel, loading, newChannel, reset])
 
   const headTags = useHeadTags(newChannel ? 'New channel' : 'Edit channel')
 
@@ -300,7 +300,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     await handleChannelSubmit(
       {
         metadata,
-        channel: extendedChannel,
+        channel: channel,
         newChannel: !!newChannel,
         assets: {
           avatarPhoto: data.avatar,
@@ -394,10 +394,10 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
 
   const hasAvatarUploadFailed = isAvatarUploading
     ? false
-    : (extendedChannel?.avatarPhoto && !extendedChannel.avatarPhoto.isAccepted && !dirtyFields.avatar) || false
+    : (channel?.avatarPhoto && !channel.avatarPhoto.isAccepted && !dirtyFields.avatar) || false
   const hasCoverUploadFailed = isCoverUploading
     ? false
-    : (extendedChannel?.coverPhoto && !extendedChannel.coverPhoto.isAccepted && !dirtyFields.cover) || false
+    : (channel?.coverPhoto && !channel.coverPhoto.isAccepted && !dirtyFields.cover) || false
   const isDisabled = !isDirty || nodeConnectionStatus !== 'connected'
 
   return (
@@ -507,8 +507,8 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
                 />
                 {!newChannel && (
                   <SubTitle as="span" variant="t200">
-                    {extendedChannel?.followsNum ? (
-                      <NumberFormat as="span" value={extendedChannel.followsNum} format="short" variant="t200" />
+                    {channel?.followsNum ? (
+                      <NumberFormat as="span" value={channel.followsNum} format="short" variant="t200" />
                     ) : (
                       0
                     )}{' '}

@@ -135,7 +135,7 @@ export const useUploadStatus = (asset: AssetUpload) => {
   const handleVideoWorkspaceSubmit = useHandleVideoWorkspaceSubmit()
   const handleEditChannelSubmit = useCreateEditChannelSubmit()
 
-  const { extendedChannel: channel, refetch: refetchChannel } = useFullChannel(
+  const { channel, refetch: refetchChannel } = useFullChannel(
     channelId || '',
     {
       skip: !channelId,

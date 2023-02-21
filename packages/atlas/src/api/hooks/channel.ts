@@ -69,7 +69,7 @@ export const useFullChannel = (
     },
   })
   return {
-    extendedChannel: data?.extendedChannels[0].channel,
+    channel: data?.extendedChannels[0].channel,
     activeVideosCount: data?.extendedChannels[0].activeVideosCount,
     ...rest,
   }
@@ -89,7 +89,7 @@ export const useBasicChannels = (
     },
   })
   return {
-    channels: data?.extendedChannels.map((extendedChannel) => extendedChannel),
+    extendedChannels: data?.extendedChannels,
     ...rest,
   }
 }
@@ -208,7 +208,7 @@ export const useDiscoverChannels = (
   )
 
   return {
-    channels: shuffledChannels,
+    extendedChannels: shuffledChannels,
     ...rest,
   }
 }
@@ -235,7 +235,7 @@ export const usePromisingChannels = (
     data?.mostRecentChannels
   )
   return {
-    channels: shuffledChannels,
+    extendedChannels: shuffledChannels,
     ...rest,
   }
 }
@@ -262,7 +262,7 @@ export const usePopularChannels = (
     data?.extendedChannels
   )
   return {
-    channels: shuffledChannels,
+    extendedChannels: shuffledChannels,
     ...rest,
   }
 }

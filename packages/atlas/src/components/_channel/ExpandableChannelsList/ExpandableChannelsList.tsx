@@ -47,7 +47,7 @@ export const ExpandableChannelsList: FC<ExpandableChannelsListProps> = ({
   const [displayedRowsCount, setDisplayedRowsCount] = useState(INITIAL_ROWS)
   const [selectedLanguage, setSelectedLanguage] = useState<string | null | undefined>('en')
 
-  const { channels, loading, error } = useChannelsListData(queryType, selectedLanguage)
+  const { extendedChannels, loading, error } = useChannelsListData(queryType, selectedLanguage)
 
   const handleLanguageSelect = (value?: string | null) => {
     setDisplayedRowsCount(INITIAL_ROWS)
@@ -58,12 +58,12 @@ export const ExpandableChannelsList: FC<ExpandableChannelsListProps> = ({
     setDisplayedRowsCount((prevState) => prevState + 3)
   }
 
-  const totalCount = channels?.length || 0
+  const totalCount = extendedChannels?.length || 0
 
   const placeholderItems = Array.from({ length: INITIAL_ROWS }, () => ({ channel: { id: undefined } }))
   const shouldShowLoadMoreButton = !loading && totalCount >= displayedRowsCount
 
-  const itemsToShow = [...(channels || []), ...(loading ? placeholderItems : [])].slice(0, displayedRowsCount)
+  const itemsToShow = [...(extendedChannels || []), ...(loading ? placeholderItems : [])].slice(0, displayedRowsCount)
 
   if (error) {
     return null

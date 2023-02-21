@@ -14,9 +14,9 @@ import { TableWrapper, TilesWrapper } from './PaymentTransactions.styles'
 
 export const PaymentTransactions = () => {
   const { channelId } = useUser()
-  const { extendedChannel } = useFullChannel(channelId ?? '')
+  const { channel } = useFullChannel(channelId ?? '')
 
-  const { paymentData, loading } = useChannelPaymentsHistory(extendedChannel)
+  const { paymentData, loading } = useChannelPaymentsHistory(channel)
   const paymentHistoryOverview = useMemo(() => aggregatePaymentHistory(paymentData), [paymentData])
 
   return (

@@ -105,13 +105,12 @@ export const useGetYppLastVerifiedChannels = () => {
     getRecentChannels()
   )
 
-  const { channels, loading } = useBasicChannels(
+  const { extendedChannels: channels, loading } = useBasicChannels(
     {
       where: {
         channel: {
           id_in: recentChannelIds ?? [],
         },
-        // id_in: data ?? [],
       },
     },
     { skip: !recentChannelIds?.length }
