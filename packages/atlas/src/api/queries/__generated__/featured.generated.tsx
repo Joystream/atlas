@@ -27,6 +27,7 @@ export type GetVideoHeroQuery = {
         __typename?: 'Channel'
         id: string
         title?: string | null
+        description?: string | null
         createdAt: Date
         followsNum: number
         rewardAccount: string
@@ -80,6 +81,7 @@ export type GetVideoHeroQuery = {
                 __typename?: 'Channel'
                 id: string
                 title?: string | null
+                description?: string | null
                 createdAt: Date
                 followsNum: number
                 rewardAccount: string
@@ -340,6 +342,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
           __typename?: 'Channel'
           id: string
           title?: string | null
+          description?: string | null
           createdAt: Date
           followsNum: number
           rewardAccount: string
@@ -393,6 +396,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
                   __typename?: 'Channel'
                   id: string
                   title?: string | null
+                  description?: string | null
                   createdAt: Date
                   followsNum: number
                   rewardAccount: string
@@ -654,6 +658,7 @@ export type GetCategoriesFeaturedVideosQuery = {
           __typename?: 'Channel'
           id: string
           title?: string | null
+          description?: string | null
           createdAt: Date
           followsNum: number
           rewardAccount: string
@@ -707,6 +712,7 @@ export type GetCategoriesFeaturedVideosQuery = {
                   __typename?: 'Channel'
                   id: string
                   title?: string | null
+                  description?: string | null
                   createdAt: Date
                   followsNum: number
                   rewardAccount: string

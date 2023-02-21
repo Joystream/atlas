@@ -1,6 +1,7 @@
-import axios, { AxiosError, AxiosProgressEvent } from 'axios'
+import axios, { AxiosError, AxiosProgressEvent, AxiosRequestConfig } from 'axios'
 import { debounce } from 'lodash-es'
 import { useCallback, useRef } from 'react'
+import { useMutation } from 'react-query'
 import { useNavigate } from 'react-router'
 import * as rax from 'retry-axios'
 import { RetryConfig } from 'retry-axios'
@@ -21,10 +22,19 @@ const RETRIES_COUNT = 3
 const RETRY_DELAY = 1000
 const UPLOADING_SNACKBAR_TIMEOUT = 8000
 
+type MutationParams = {
+  url: string
+  data: FormData
+  config: AxiosRequestConfig
+}
+
 export const useStartFileUpload = () => {
   const navigate = useNavigate()
   const { displaySnackbar } = useSnackbar()
   const { getClosestStorageOperatorForBag, markStorageOperatorFailed } = useStorageOperators()
+  const { mutateAsync: uploadMutation } = useMutation('subtitles-fetch', (params: MutationParams) =>
+    axios.post(params.url, params.data, params.config)
+  )
 
   const { addAssetFile, addAssetToUploads, setUploadStatus, addProcessingAsset } = useUploadsStore(
     (state) => state.actions
@@ -144,18 +154,18 @@ export const useStartFileUpload = () => {
           },
         }
 
-        await axios.post(
-          createAssetUploadEndpoint(uploadOperator.endpoint, {
+        await uploadMutation({
+          url: createAssetUploadEndpoint(uploadOperator.endpoint, {
             dataObjectId: asset.id,
             storageBucketId: uploadOperator.id,
             bagId,
           }),
-          formData,
-          {
+          data: formData,
+          config: {
             raxConfig,
             onUploadProgress: setUploadProgress,
-          }
-        )
+          },
+        })
 
         assetsNotificationsCount.current.uploaded[assetKey] =
           (assetsNotificationsCount.current.uploaded[assetKey] || 0) + 1
@@ -187,11 +197,12 @@ export const useStartFileUpload = () => {
     [
       assetsFiles,
       getClosestStorageOperatorForBag,
+      displaySnackbar,
       setUploadStatus,
       addAssetFile,
-      addProcessingAsset,
+      uploadMutation,
       addAssetToUploads,
-      displaySnackbar,
+      addProcessingAsset,
       markStorageOperatorFailed,
       navigate,
     ]

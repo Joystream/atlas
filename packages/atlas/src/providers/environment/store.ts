@@ -1,4 +1,4 @@
-import { createStore } from '@/store'
+import { createStore } from '@/utils/store'
 
 const LOCAL_STORAGE_KEY = 'environment'
 

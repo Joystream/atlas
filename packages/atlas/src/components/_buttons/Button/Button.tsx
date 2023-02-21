@@ -27,6 +27,7 @@ export type ButtonProps = PropsWithChildren<{
   onKeyPress?: (e: KeyboardEvent<HTMLButtonElement>) => void
   // internal
   _textOnly?: boolean
+  ariaLabel?: string
 }>
 
 const BUTTON_SIZE_TO_TEXT_VARIANT: Record<ButtonSize, TextVariant> = {
@@ -50,6 +51,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) =>
     badge,
     _textOnly,
     variant = 'primary',
+    ariaLabel,
     ...baseButtonProps
   } = props
 
@@ -64,10 +66,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) =>
       disabled={disabled}
       aria-disabled={disabled}
       variant={variant}
-      iconOnly={!!iconOnly}
+      iconOnly={iconOnly}
       textOnly={!!_textOnly}
       size={size}
       data-badge={badge}
+      aria-label={ariaLabel || (typeof children === 'string' ? children : undefined)}
       {...linkProps}
       {...baseButtonProps}
     >

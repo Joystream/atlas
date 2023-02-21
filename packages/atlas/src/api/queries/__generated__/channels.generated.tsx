@@ -123,6 +123,7 @@ export type GetExtendedBasicChannelsQuery = {
       __typename?: 'Channel'
       id: string
       title?: string | null
+      description?: string | null
       createdAt: Date
       followsNum: number
       rewardAccount: string
@@ -261,6 +262,7 @@ export type GetBasicChannelsConnectionQuery = {
         __typename?: 'Channel'
         id: string
         title?: string | null
+        description?: string | null
         createdAt: Date
         followsNum: number
         rewardAccount: string
@@ -319,6 +321,7 @@ export type GetTop10ChannelsQuery = {
       __typename?: 'Channel'
       id: string
       title?: string | null
+      description?: string | null
       createdAt: Date
       followsNum: number
       rewardAccount: string
@@ -356,6 +359,7 @@ export type GetPromisingChannelsQuery = {
       __typename?: 'Channel'
       id: string
       title?: string | null
+      description?: string | null
       createdAt: Date
       followsNum: number
       rewardAccount: string
@@ -393,6 +397,7 @@ export type GetDiscoverChannelsQuery = {
       __typename?: 'Channel'
       id: string
       title?: string | null
+      description?: string | null
       createdAt: Date
       followsNum: number
       rewardAccount: string
@@ -430,6 +435,7 @@ export type GetPopularChannelsQuery = {
       __typename?: 'Channel'
       id: string
       title?: string | null
+      description?: string | null
       createdAt: Date
       followsNum: number
       rewardAccount: string
@@ -508,6 +514,43 @@ export type ReportChannelMutationVariables = Types.Exact<{
 export type ReportChannelMutation = {
   __typename?: 'Mutation'
   reportChannel: { __typename?: 'ChannelReportInfo'; id: number; channelId: string }
+}
+
+export type GetChannelPaymentEventsQueryVariables = Types.Exact<{ [key: string]: never }>
+
+export type GetChannelPaymentEventsQuery = {
+  __typename?: 'Query'
+  events: Array<{
+    __typename?: 'Event'
+    id: string
+    timestamp: Date
+    inBlock: number
+    data:
+      | { __typename: 'AuctionBidCanceledEventData' }
+      | { __typename: 'AuctionBidMadeEventData' }
+      | { __typename: 'AuctionCanceledEventData' }
+      | {
+          __typename: 'BidMadeCompletingAuctionEventData'
+          winningBid: { __typename?: 'Bid'; id: string; amount: string }
+        }
+      | { __typename: 'BuyNowCanceledEventData' }
+      | { __typename: 'BuyNowPriceUpdatedEventData' }
+      | { __typename: 'ChannelFundsWithdrawnEventData' }
+      | { __typename: 'ChannelPaymentMadeEventData' }
+      | { __typename: 'ChannelPayoutsUpdatedEventData' }
+      | { __typename: 'ChannelRewardClaimedAndWithdrawnEventData' }
+      | { __typename: 'ChannelRewardClaimedEventData' }
+      | { __typename: 'CommentCreatedEventData' }
+      | { __typename: 'CommentTextUpdatedEventData' }
+      | { __typename: 'EnglishAuctionSettledEventData'; winningBid: { __typename?: 'Bid'; amount: string } }
+      | { __typename: 'EnglishAuctionStartedEventData' }
+      | { __typename: 'MetaprotocolTransactionStatusEventData' }
+      | { __typename: 'NftBoughtEventData'; price: string }
+      | { __typename: 'NftIssuedEventData' }
+      | { __typename: 'NftSellOrderMadeEventData' }
+      | { __typename: 'OpenAuctionBidAcceptedEventData'; winningBid: { __typename?: 'Bid'; amount: string } }
+      | { __typename: 'OpenAuctionStartedEventData' }
+  }>
 }
 
 export const GetFullChannelDocument = gql`
@@ -1133,4 +1176,86 @@ export type ReportChannelMutationResult = Apollo.MutationResult<ReportChannelMut
 export type ReportChannelMutationOptions = Apollo.BaseMutationOptions<
   ReportChannelMutation,
   ReportChannelMutationVariables
+>
+export const GetChannelPaymentEventsDocument = gql`
+  query GetChannelPaymentEvents {
+    events(
+      where: {
+        data: {
+          isTypeOf_in: [
+            "NftBoughtEventData"
+            "BidMadeCompletingAuctionEventData"
+            "EnglishAuctionSettledEventData"
+            "OpenAuctionBidAcceptedEventData"
+          ]
+        }
+      }
+    ) {
+      id
+      timestamp
+      inBlock
+      data {
+        __typename
+        ... on NftBoughtEventData {
+          price
+        }
+        ... on BidMadeCompletingAuctionEventData {
+          winningBid {
+            id
+            amount
+          }
+        }
+        ... on EnglishAuctionSettledEventData {
+          winningBid {
+            amount
+          }
+        }
+        ... on OpenAuctionBidAcceptedEventData {
+          winningBid {
+            amount
+          }
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useGetChannelPaymentEventsQuery__
+ *
+ * To run a query within a React component, call `useGetChannelPaymentEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChannelPaymentEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChannelPaymentEventsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetChannelPaymentEventsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetChannelPaymentEventsQuery, GetChannelPaymentEventsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetChannelPaymentEventsQuery, GetChannelPaymentEventsQueryVariables>(
+    GetChannelPaymentEventsDocument,
+    options
+  )
+}
+export function useGetChannelPaymentEventsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetChannelPaymentEventsQuery, GetChannelPaymentEventsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetChannelPaymentEventsQuery, GetChannelPaymentEventsQueryVariables>(
+    GetChannelPaymentEventsDocument,
+    options
+  )
+}
+export type GetChannelPaymentEventsQueryHookResult = ReturnType<typeof useGetChannelPaymentEventsQuery>
+export type GetChannelPaymentEventsLazyQueryHookResult = ReturnType<typeof useGetChannelPaymentEventsLazyQuery>
+export type GetChannelPaymentEventsQueryResult = Apollo.QueryResult<
+  GetChannelPaymentEventsQuery,
+  GetChannelPaymentEventsQueryVariables
 >

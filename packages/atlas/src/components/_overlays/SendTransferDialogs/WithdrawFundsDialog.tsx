@@ -48,6 +48,8 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
     setValue,
     formState: { errors },
   } = useForm<{ amount: number | null }>()
+  // todo uncomment once payments table is back
+  // const { fetchPaymentsData } = useChannelPaymentsHistory()
   const { convertHapiToUSD } = useTokenPrice()
   const amountBn = tokenNumberToHapiBn(watch('amount') || 0)
   const { joystream, proxyCallback } = useJoystream()
@@ -83,7 +85,11 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
             amountBn.toString(),
             proxyCallback(updateStatus)
           ),
-        onTxSync: async () => onExitClick(),
+        onTxSync: async () => {
+          // todo uncomment once payments table is back
+          // fetchPaymentsData()
+          onExitClick()
+        },
       })
     })
     return handler()

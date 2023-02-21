@@ -38,10 +38,24 @@ export type ActionBarProps = {
   isActive?: boolean
   skipFeeCheck?: boolean
   className?: string
+  isNoneCrypto?: boolean
 }
 
 export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
-  ({ fee, feeLoading, isActive = true, className, primaryButton, secondaryButton, infoBadge, skipFeeCheck }, ref) => {
+  (
+    {
+      fee,
+      feeLoading,
+      isActive = true,
+      className,
+      primaryButton,
+      secondaryButton,
+      infoBadge,
+      skipFeeCheck,
+      isNoneCrypto,
+    },
+    ref
+  ) => {
     const smMatch = useMediaMatch('sm')
     const { signTransactionHandler, loadingState } = useHasEnoughBalance(
       !!feeLoading,
@@ -52,9 +66,11 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
 
     return (
       <ActionBarContainer ref={ref} className={className} isActive={isActive}>
-        <FeeContainer>
-          <Fee variant={smMatch ? 'h400' : 'h200'} withToken amount={fee || new BN(0)} loading={feeLoading} />
-        </FeeContainer>
+        {fee && !isNoneCrypto && (
+          <FeeContainer>
+            <Fee variant={smMatch ? 'h400' : 'h200'} withToken amount={fee || new BN(0)} loading={feeLoading} />
+          </FeeContainer>
+        )}
         {infoBadge ? (
           <DraftsBadgeContainer>
             <Text as="span" align="right" variant={smMatch ? 't200' : 't100'} color="colorText">
@@ -77,7 +93,7 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
         <ActionButtonPrimary
           {...primaryButton}
           disabled={primaryButton.disabled || loadingState}
-          onClick={signTransactionHandler}
+          onClick={isNoneCrypto ? primaryButton.onClick : signTransactionHandler}
           secondaryButtonExists={!!secondaryButton}
           size={smMatch ? 'large' : 'medium'}
           type="submit"

@@ -177,6 +177,7 @@ export type GetFullVideoQuery = {
               __typename?: 'Channel'
               id: string
               title?: string | null
+              description?: string | null
               createdAt: Date
               followsNum: number
               rewardAccount: string
@@ -464,6 +465,7 @@ export type GetBasicVideosConnectionQuery = {
           __typename?: 'Channel'
           id: string
           title?: string | null
+          description?: string | null
           createdAt: Date
           followsNum: number
           rewardAccount: string
@@ -517,6 +519,7 @@ export type GetBasicVideosConnectionQuery = {
                   __typename?: 'Channel'
                   id: string
                   title?: string | null
+                  description?: string | null
                   createdAt: Date
                   followsNum: number
                   rewardAccount: string
@@ -936,6 +939,7 @@ export type GetFullVideosConnectionQuery = {
                   __typename?: 'Channel'
                   id: string
                   title?: string | null
+                  description?: string | null
                   createdAt: Date
                   followsNum: number
                   rewardAccount: string
@@ -1220,6 +1224,7 @@ export type GetBasicVideosQuery = {
       __typename?: 'Channel'
       id: string
       title?: string | null
+      description?: string | null
       createdAt: Date
       followsNum: number
       rewardAccount: string
@@ -1273,6 +1278,7 @@ export type GetBasicVideosQuery = {
               __typename?: 'Channel'
               id: string
               title?: string | null
+              description?: string | null
               createdAt: Date
               followsNum: number
               rewardAccount: string
@@ -1683,6 +1689,7 @@ export type GetFullVideosQuery = {
               __typename?: 'Channel'
               id: string
               title?: string | null
+              description?: string | null
               createdAt: Date
               followsNum: number
               rewardAccount: string
@@ -1972,6 +1979,7 @@ export type GetMostViewedVideosConnectionQuery = {
           __typename?: 'Channel'
           id: string
           title?: string | null
+          description?: string | null
           createdAt: Date
           followsNum: number
           rewardAccount: string
@@ -2025,6 +2033,7 @@ export type GetMostViewedVideosConnectionQuery = {
                   __typename?: 'Channel'
                   id: string
                   title?: string | null
+                  description?: string | null
                   createdAt: Date
                   followsNum: number
                   rewardAccount: string
@@ -2286,6 +2295,7 @@ export type GetTop10VideosThisWeekQuery = {
           __typename?: 'Channel'
           id: string
           title?: string | null
+          description?: string | null
           createdAt: Date
           followsNum: number
           rewardAccount: string
@@ -2339,6 +2349,7 @@ export type GetTop10VideosThisWeekQuery = {
                   __typename?: 'Channel'
                   id: string
                   title?: string | null
+                  description?: string | null
                   createdAt: Date
                   followsNum: number
                   rewardAccount: string
@@ -2599,6 +2610,7 @@ export type GetTop10VideosThisMonthQuery = {
           __typename?: 'Channel'
           id: string
           title?: string | null
+          description?: string | null
           createdAt: Date
           followsNum: number
           rewardAccount: string
@@ -2652,6 +2664,7 @@ export type GetTop10VideosThisMonthQuery = {
                   __typename?: 'Channel'
                   id: string
                   title?: string | null
+                  description?: string | null
                   createdAt: Date
                   followsNum: number
                   rewardAccount: string

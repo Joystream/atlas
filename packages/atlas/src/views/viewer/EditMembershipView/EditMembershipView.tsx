@@ -2,6 +2,7 @@ import { useApolloClient } from '@apollo/client'
 import debouncePromise from 'awesome-debounce-promise'
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { useMutation } from 'react-query'
 import { useNavigate } from 'react-router'
 import useResizeObserver from 'use-resize-observer'
 
@@ -48,6 +49,9 @@ export const EditMembershipView: FC = () => {
   const handleTransaction = useTransaction()
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const { displaySnackbar } = useSnackbar()
+  const { mutateAsync: avatarMutation } = useMutation('edit-avatar-post', (croppedBlob: Blob) =>
+    uploadAvatarImage(croppedBlob)
+  )
 
   const client = useApolloClient()
 
@@ -142,7 +146,7 @@ export const EditMembershipView: FC = () => {
     let fileUrl = ''
     if (data.avatar?.blob && dirtyFields.avatar) {
       try {
-        fileUrl = await uploadAvatarImage(data.avatar.blob)
+        fileUrl = await avatarMutation(data.avatar.blob)
       } catch (error) {
         displaySnackbar({
           title: 'Something went wrong',

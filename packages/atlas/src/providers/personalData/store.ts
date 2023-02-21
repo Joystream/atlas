@@ -1,6 +1,6 @@
 import { round } from 'lodash-es'
 
-import { createStore } from '@/store'
+import { createStore } from '@/utils/store'
 
 import { DismissedMessage, FollowedChannel, RecentSearch, WatchedVideo, WatchedVideoStatus } from './types'
 

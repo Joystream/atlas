@@ -12,9 +12,7 @@ import { NftNotificationRecord, NotificationRecord } from './notifications.types
 
 export const useNotifications = () => {
   const { memberId, channelId } = useUser()
-  const { notifications: rawNotifications, ...rest } = useRawNotifications(channelId, memberId, {
-    context: { delay: 3000 },
-  })
+  const { notifications: rawNotifications, ...rest } = useRawNotifications(channelId, memberId)
   const {
     readNotificationsIdsMap,
     lastSeenNotificationBlock,

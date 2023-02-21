@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
-import { FC, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
@@ -12,6 +12,7 @@ import { StudioLoading } from '@/components/_loaders/StudioLoading'
 import { PrivateRoute } from '@/components/_navigation/PrivateRoute'
 import { SidenavStudio } from '@/components/_navigation/SidenavStudio'
 import { TopbarStudio } from '@/components/_navigation/TopbarStudio'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { ConnectionStatusManager, useConnectionStatusStore } from '@/providers/connectionStatus'
@@ -20,16 +21,19 @@ import { useUser } from '@/providers/user/user.hooks'
 import { VideoWorkspaceProvider, useVideoWorkspaceRouting } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
 import { isAllowedBrowser } from '@/utils/browser'
+import { NotificationsView } from '@/views/notifications'
+import { MyPaymentsHiddenView } from '@/views/studio/MyPaymentsView/MyPaymentsHiddenView'
 
 import { CreateEditChannelView } from './CreateEditChannelView'
 import { CrtView } from './CrtView'
-import { MyPaymentsView } from './MyPaymentsView'
 import { MyUploadsView } from './MyUploadsView'
 import { MyVideosView } from './MyVideosView'
 import { StudioWelcomeView } from './StudioWelcomeView'
 import { VideoWorkspace } from './VideoWorkspace'
+import { YppDashboard } from './YppDashboard'
 
-import { NotificationsView } from '../notifications'
+import { YppLandingView } from '../global/YppLandingView'
+import { useGetYppSyncedChannels } from '../global/YppLandingView/YppLandingView.hooks'
 import { NotFoundView } from '../viewer/NotFoundView'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
@@ -47,6 +51,9 @@ const StudioLayout = () => {
   const hasMembership = !!memberships?.length
 
   const channelSet = !!channelId && hasMembership
+  const { currentChannel, isLoading } = useGetYppSyncedChannels()
+  const isLoadingYPPData = isLoading || isAuthLoading || membershipsLoading
+  const isYppSigned = !!currentChannel
 
   useEffect(() => {
     if (!isAllowedBrowser()) {
@@ -67,6 +74,16 @@ const StudioLayout = () => {
       })
     }
   }, [closeUnsupportedBrowserDialog, openUnsupportedBrowserDialog])
+
+  const yppRedirect = useCallback(() => {
+    if (!channelSet) {
+      return ENTRY_POINT_ROUTE
+    }
+    if (!isYppSigned) {
+      return absoluteRoutes.studio.ypp()
+    }
+  }, [channelSet, isYppSigned])
+
   return (
     <>
       <TopbarStudio hideChannelInfo={!hasMembership} isMembershipLoaded={isMembershipLoaded} />
@@ -129,7 +146,7 @@ const StudioLayout = () => {
               <Route
                 path={relativeRoutes.studio.payments()}
                 element={
-                  <PrivateRoute element={<MyPaymentsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                  <PrivateRoute element={<MyPaymentsHiddenView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
                 }
               />
               <Route
@@ -146,6 +163,32 @@ const StudioLayout = () => {
                   <PrivateRoute element={<NotificationsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
                 }
               />
+              {atlasConfig.features.ypp.googleConsoleClientId && (
+                <>
+                  <Route
+                    path={relativeRoutes.studio.ypp()}
+                    element={
+                      <PrivateRoute
+                        isLoadingAuthData={isLoadingYPPData}
+                        element={<YppLandingView />}
+                        isAuth={channelSet && !isYppSigned}
+                        redirectTo={absoluteRoutes.studio.yppDashboard()}
+                      />
+                    }
+                  />
+                  <Route
+                    path={relativeRoutes.studio.yppDashboard()}
+                    element={
+                      <PrivateRoute
+                        isLoadingAuthData={isLoadingYPPData}
+                        element={<YppDashboard />}
+                        isAuth={channelSet && isYppSigned}
+                        redirectTo={yppRedirect()}
+                      />
+                    }
+                  />
+                </>
+              )}
               <Route path="*" element={<NotFoundView />} />
             </Routes>
           </MainContainer>

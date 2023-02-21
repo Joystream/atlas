@@ -132,3 +132,85 @@ mutation ReportChannel($channelId: String!, $rationale: String!) {
     channelId
   }
 }
+
+# todo needs to be rewritten in orion v2 once payments table is back
+query GetChannelPaymentEvents {
+  # nftBoughtEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
+  #   inBlock
+  #   createdAt
+  #   price
+  # }
+
+  # bidMadeCompletingAuctionEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
+  #   inBlock
+  #   createdAt
+  #   price
+  # }
+
+  # englishAuctionSettledEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
+  #   createdAt
+  #   inBlock
+  #   winningBid {
+  #     amount
+  #   }
+  # }
+
+  # openAuctionBidAcceptedEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
+  #   inBlock
+  #   createdAt
+  #   winningBid {
+  #     amount
+  #   }
+  # }
+
+  events(
+    where: {
+      data: {
+        isTypeOf_in: [
+          "NftBoughtEventData"
+          "BidMadeCompletingAuctionEventData"
+          "EnglishAuctionSettledEventData"
+          "OpenAuctionBidAcceptedEventData"
+        ]
+      }
+    }
+  ) {
+    id
+    timestamp
+    inBlock
+    data {
+      __typename
+      ... on NftBoughtEventData {
+        price
+      }
+      ... on BidMadeCompletingAuctionEventData {
+        winningBid {
+          id
+          amount
+        }
+      }
+      ... on EnglishAuctionSettledEventData {
+        winningBid {
+          amount
+        }
+      }
+      ... on OpenAuctionBidAcceptedEventData {
+        winningBid {
+          amount
+        }
+      }
+    }
+  }
+
+  #  channelRewardClaimedEvents(where: { channel: { id_eq: $channelId } }) {
+  #    amount
+  #    createdAt
+  #    inBlock
+  #  }
+
+  #  channelFundsWithdrawnEvents(where: { channel: { id_eq: $channelId } }) {
+  #    amount
+  #    createdAt
+  #    inBlock
+  #  }
+}

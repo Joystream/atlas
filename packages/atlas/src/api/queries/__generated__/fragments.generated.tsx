@@ -12,6 +12,7 @@ export type BasicChannelFieldsFragment = {
   __typename?: 'Channel'
   id: string
   title?: string | null
+  description?: string | null
   createdAt: Date
   followsNum: number
   rewardAccount: string
@@ -208,6 +209,7 @@ export type ExtendedBasicChannelFieldsFragment = {
     __typename?: 'Channel'
     id: string
     title?: string | null
+    description?: string | null
     createdAt: Date
     followsNum: number
     rewardAccount: string
@@ -273,12 +275,30 @@ export type FullMembershipFieldsFragment = {
   handle: string
   channels: Array<{
     __typename?: 'Channel'
+    description?: string | null
     id: string
     title?: string | null
     createdAt: Date
     followsNum: number
     rewardAccount: string
     channelStateBloatBond: string
+    coverPhoto?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      createdAt: Date
+      size: string
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type?:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoSubtitle' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+        | null
+    } | null
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -411,6 +431,7 @@ export type BasicVideoFieldsFragment = {
     __typename?: 'Channel'
     id: string
     title?: string | null
+    description?: string | null
     createdAt: Date
     followsNum: number
     rewardAccount: string
@@ -464,6 +485,7 @@ export type BasicVideoFieldsFragment = {
             __typename?: 'Channel'
             id: string
             title?: string | null
+            description?: string | null
             createdAt: Date
             followsNum: number
             rewardAccount: string
@@ -864,6 +886,7 @@ export type FullVideoFieldsFragment = {
             __typename?: 'Channel'
             id: string
             title?: string | null
+            description?: string | null
             createdAt: Date
             followsNum: number
             rewardAccount: string
@@ -1136,6 +1159,7 @@ export type BasicNftFieldsFragment = {
           __typename?: 'Channel'
           id: string
           title?: string | null
+          description?: string | null
           createdAt: Date
           followsNum: number
           rewardAccount: string
@@ -1389,6 +1413,7 @@ export type FullNftFieldsFragment = {
       __typename?: 'Channel'
       id: string
       title?: string | null
+      description?: string | null
       createdAt: Date
       followsNum: number
       rewardAccount: string
@@ -1442,6 +1467,7 @@ export type FullNftFieldsFragment = {
               __typename?: 'Channel'
               id: string
               title?: string | null
+              description?: string | null
               createdAt: Date
               followsNum: number
               rewardAccount: string
@@ -1682,6 +1708,7 @@ export type FullNftFieldsFragment = {
           __typename?: 'Channel'
           id: string
           title?: string | null
+          description?: string | null
           createdAt: Date
           followsNum: number
           rewardAccount: string
@@ -2379,6 +2406,7 @@ export type BasicVideoFeaturedInCategoryFragment = {
       __typename?: 'Channel'
       id: string
       title?: string | null
+      description?: string | null
       createdAt: Date
       followsNum: number
       rewardAccount: string
@@ -2432,6 +2460,7 @@ export type BasicVideoFeaturedInCategoryFragment = {
               __typename?: 'Channel'
               id: string
               title?: string | null
+              description?: string | null
               createdAt: Date
               followsNum: number
               rewardAccount: string
@@ -2718,6 +2747,7 @@ export const BasicChannelFieldsFragmentDoc = gql`
   fragment BasicChannelFields on Channel {
     id
     title
+    description
     createdAt
     followsNum
     rewardAccount
@@ -2792,10 +2822,15 @@ export const FullMembershipFieldsFragmentDoc = gql`
     createdAt
     channels {
       ...BasicChannelFields
+      description
+      coverPhoto {
+        ...StorageDataObjectFields
+      }
     }
   }
   ${BasicMembershipFieldsFragmentDoc}
   ${BasicChannelFieldsFragmentDoc}
+  ${StorageDataObjectFieldsFragmentDoc}
 `
 export const DistributionBucketOperatorFieldFragmentDoc = gql`
   fragment DistributionBucketOperatorField on DistributionBucketOperator {
