@@ -110,7 +110,7 @@ export const TopbarViewer: FC = () => {
             />
           </CSSTransition>
         </SearchbarContainer>
-        {!searchQuery && (
+        {(!searchQuery || mdMatch) && (
           <SwitchTransition>
             <CSSTransition
               key={String(topbarButtonLoaded)}
