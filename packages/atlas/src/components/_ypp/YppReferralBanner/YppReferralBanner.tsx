@@ -43,9 +43,10 @@ export const YppReferralBanner: FC<YppReferralBannerProps> = ({ className }) => 
 
   const storeReferrerId = useYppStore((state) => state.referrerId)
   const referrerId = queryReferrerId || storeReferrerId
-  const { loading: isLoadingChannel, channel: channel } = useBasicChannel(referrerId || '', {
+  const { loading: isLoadingChannel, extendedChannel } = useBasicChannel(referrerId || '', {
     skip: !referrerId,
   })
+  const channel = extendedChannel?.channel
   const { isLoadingAsset: isLoadingAvatar, url: channelAvatarUrl } = useAsset(channel?.avatarPhoto)
   const shouldShowReferrerBanner = referrerId && (isLoadingChannel || channel)
 

@@ -23,15 +23,15 @@ export const PaymentsOverView = () => {
   const { totalBalance } = useSubscribeAccountBalance()
   const [showWithdrawDialog, setShowWithdrawDialog] = useState(false)
   const [showClaimDialog, setShowClaimDialog] = useState<boolean>(false)
-  const { channel, loading } = useFullChannel(channelId || '')
+  const { extendedChannel, loading } = useFullChannel(channelId || '')
   const { availableAward, isAwardLoading } = useChannelPayout()
 
   const memoizedChannelStateBloatBond = useMemo(() => {
-    return new BN(channel?.channelStateBloatBond || 0)
-  }, [channel?.channelStateBloatBond])
+    return new BN(extendedChannel?.channelStateBloatBond || 0)
+  }, [extendedChannel?.channelStateBloatBond])
 
   const { accountBalance: channelBalance } =
-    useSubscribeAccountBalance(channel?.rewardAccount, {
+    useSubscribeAccountBalance(extendedChannel?.rewardAccount, {
       channelStateBloatBond: memoizedChannelStateBloatBond,
     }) || new BN(0)
 

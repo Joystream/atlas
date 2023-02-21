@@ -101,15 +101,20 @@ export const useGetYppLastVerifiedChannels = () => {
     }
   }, [])
 
-  const { data, isLoading: isVerifiedChannelsLoading } = useQuery('ypp-channels-fetch', () => getRecentChannels())
+  const { data: recentChannelIds, isLoading: isVerifiedChannelsLoading } = useQuery('ypp-channels-fetch', () =>
+    getRecentChannels()
+  )
 
   const { channels, loading } = useBasicChannels(
     {
       where: {
-        id_in: data ?? [],
+        channel: {
+          id_in: recentChannelIds ?? [],
+        },
+        // id_in: data ?? [],
       },
     },
-    { skip: !data?.length }
+    { skip: !recentChannelIds?.length }
   )
 
   return {

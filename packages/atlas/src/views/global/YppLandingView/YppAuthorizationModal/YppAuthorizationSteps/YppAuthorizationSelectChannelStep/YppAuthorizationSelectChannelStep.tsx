@@ -45,7 +45,7 @@ const ChannelListItem: FC<ChannelListItemProps> = ({ channel, selected, onClick 
       onClick={onClick}
       nodeStart={<Avatar size="small" assetUrl={url} loading={isLoadingAsset} />}
       label={channel?.title ?? ''}
-      caption={channel ? `${channel?.follows} followers` : undefined}
+      caption={channel ? `${channel?.followsNum} followers` : undefined}
       selected={selected}
     />
   )
