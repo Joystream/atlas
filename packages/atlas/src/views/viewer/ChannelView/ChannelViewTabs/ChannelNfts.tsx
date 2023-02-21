@@ -39,16 +39,10 @@ export const ChannelNfts: FC<ChannelNftsProps> = ({
     orderBy,
     where: {
       ...ownedNftWhereInput,
-      owner: {
+      video: {
         channel: {
           id_eq: channelId,
         },
-      },
-      // check two times if its working
-      // creatorChannel: {
-      //   id_eq: channelId,
-      // },
-      video: {
         isPublic_eq: !channelOwner || undefined,
       },
     },
