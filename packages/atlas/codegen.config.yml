@@ -1,6 +1,6 @@
 overwrite: true
 
-schema: https://194.233.167.225.nip.io/orion/graphql
+schema: ${VITE_DEV_ORION_URL}
 
 documents:
   - './src/api/queries/**/*.graphql'
