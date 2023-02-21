@@ -33,7 +33,7 @@ const getNotificationText = (notification: NotificationRecord): ReactNode => {
     case 'got-outbid':
       return (
         <>
-          outbid you for <NumberFormat as="span" value={notification.bidAmount} format="short" withToken />
+          outbid you at <NumberFormat as="span" value={notification.bidAmount} format="short" withToken />
         </>
       )
     case 'bought':
