@@ -29,7 +29,6 @@ import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { SentryLogger } from '@/utils/logs'
-import { YPP_POLL_INTERVAL } from '@/utils/polling'
 import { formatDurationShort } from '@/utils/time'
 
 import { SlotsObject } from '../VideoThumbnail'
@@ -52,7 +51,6 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
     const { video, loading } = useFullVideo(id ?? '', {
       skip: !id,
       onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTilePublisher', error, { video: { id } }),
-      pollInterval: isSyncing ? YPP_POLL_INTERVAL : undefined,
     })
 
     useEffect(() => {
