@@ -17,7 +17,6 @@ export const useRawNotifications = (
   const { data, ...rest } = useGetNotificationsQuery({
     variables: {
       limit: 1000,
-      channelId: channelId || '',
       memberId: memberId || '',
     },
     // TODO Fix me. We use `no-cache` because for unknown reasons cache removes data about owner

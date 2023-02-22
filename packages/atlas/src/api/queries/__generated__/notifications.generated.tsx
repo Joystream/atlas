@@ -11,7 +11,6 @@ import {
 
 const defaultOptions = {} as const
 export type GetNotificationsQueryVariables = Types.Exact<{
-  channelId: Types.Scalars['String']
   memberId: Types.Scalars['String']
   limit: Types.Scalars['Int']
   orderBy?: Types.InputMaybe<Array<Types.EventOrderByInput> | Types.EventOrderByInput>
@@ -3229,12 +3228,7 @@ export type GetNftActivitiesQuery = {
 }
 
 export const GetNotificationsDocument = gql`
-  query GetNotifications(
-    $channelId: String!
-    $memberId: String!
-    $limit: Int!
-    $orderBy: [EventOrderByInput!] = [timestamp_DESC]
-  ) {
+  query GetNotifications($memberId: String!, $limit: Int!, $orderBy: [EventOrderByInput!] = [timestamp_DESC]) {
     events(
       limit: $limit
       orderBy: $orderBy
@@ -3277,7 +3271,7 @@ export const GetNotificationsDocument = gql`
               isTypeOf_eq: "CommentCreatedEventData"
               comment: {
                 author: { id_not_eq: $memberId }
-                video: { channel: { id_eq: $channelId } }
+                video: { channel: { ownerMember: { id_eq: $memberId } } }
                 parentComment_isNull: true
               }
             }
@@ -3424,7 +3418,6 @@ export const GetNotificationsDocument = gql`
  * @example
  * const { data, loading, error } = useGetNotificationsQuery({
  *   variables: {
- *      channelId: // value for 'channelId'
  *      memberId: // value for 'memberId'
  *      limit: // value for 'limit'
  *      orderBy: // value for 'orderBy'

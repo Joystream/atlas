@@ -9,12 +9,7 @@
 # TODO: Check performance?
 
 # CHANGE: ID is now `String`
-query GetNotifications(
-  $channelId: String!
-  $memberId: String!
-  $limit: Int!
-  $orderBy: [EventOrderByInput!] = [timestamp_DESC]
-) {
+query GetNotifications($memberId: String!, $limit: Int!, $orderBy: [EventOrderByInput!] = [timestamp_DESC]) {
   events(
     limit: $limit
     orderBy: $orderBy # CHANGE: `timestamp` now used instead of `createdAt` (which is no longer available)
@@ -52,7 +47,7 @@ query GetNotifications(
             isTypeOf_eq: "CommentCreatedEventData"
             comment: {
               author: { id_not_eq: $memberId }
-              video: { channel: { id_eq: $channelId } }
+              video: { channel: { ownerMember: { id_eq: $memberId } } }
               parentComment_isNull: true
             }
           }
