@@ -200,7 +200,6 @@ export const useDiscoverChannels = (
           ...channelFilter,
           ...variables?.where?.channel,
         },
-        activeVideosCount_gt: 0,
       },
     },
   })
@@ -229,7 +228,6 @@ export const usePromisingChannels = (
           ...channelFilter,
           ...variables?.where?.channel,
         },
-        activeVideosCount_gt: 0,
       },
     },
   })
@@ -257,7 +255,6 @@ export const usePopularChannels = (
           ...channelFilter,
           ...variables?.where?.channel,
         },
-        activeVideosCount_gt: 0,
       },
     },
   })

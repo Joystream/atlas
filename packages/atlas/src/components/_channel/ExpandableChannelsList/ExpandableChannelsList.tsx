@@ -137,15 +137,43 @@ const useChannelsListData = (queryType: ChannelsQueryType, selectedLanguage: str
     onError: (error) => SentryLogger.error('Failed to fetch channels', 'ExpandableChannelsList', error),
     context: { delay: 2000 },
   }
-  const commonWhere = {
-    where: {
-      activeVideosCount_gt: 4,
-    },
-  }
+  const activeVideosCountGt = 4
 
-  const discover = useDiscoverChannels(commonWhere, { ...commonOpts, skip: queryType !== 'discover' })
-  const popular = usePopularChannels(commonWhere, { ...commonOpts, skip: queryType !== 'popular' })
-  const promising = usePromisingChannels(commonWhere, { ...commonOpts, skip: queryType !== 'promising' })
+  const discover = useDiscoverChannels(
+    {
+      where: {
+        activeVideosCount_gt: activeVideosCountGt,
+        channel: {
+          followsNum_gt: 0,
+        },
+      },
+    },
+    { ...commonOpts, skip: queryType !== 'discover' }
+  )
+
+  const popular = usePopularChannels(
+    {
+      where: {
+        activeVideosCount_gt: activeVideosCountGt,
+        channel: {
+          videoViewsNum_gt: 0,
+        },
+      },
+    },
+    { ...commonOpts, skip: queryType !== 'popular' }
+  )
+
+  const promising = usePromisingChannels(
+    {
+      where: {
+        activeVideosCount_gt: activeVideosCountGt,
+        channel: {
+          videoViewsNum_gt: 0,
+        },
+      },
+    },
+    { ...commonOpts, skip: queryType !== 'promising' }
+  )
   // regular channels query needs explicit limit and sorting as it's not defined by Orion
   const regular = useBasicChannels(
     {

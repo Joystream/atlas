@@ -25,13 +25,14 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = memo(({ channelId }
   const videoRows = useVideoGridRows('compact')
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const {
-    extendedChannel: extendedChannel,
+    extendedChannel,
     loading: channelLoading,
     error: channelError,
   } = useBasicChannel(channelId || '', {
     skip: !channelId,
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelWithVideos', error),
   })
+
   const {
     videos,
     loading: videosLoading,

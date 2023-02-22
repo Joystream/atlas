@@ -55,10 +55,11 @@ export const useChannelPreviewVideos = (
     ...opts,
     variables: {
       where: {
+        ...videoFilter,
         channel: {
+          ...videoFilter.channel,
           id_eq: channelId,
         },
-        ...videoFilter,
       },
       orderBy: VideoOrderByInput.CreatedAtDesc,
       offset: 0,
