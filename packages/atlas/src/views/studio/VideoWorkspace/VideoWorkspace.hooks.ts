@@ -1,11 +1,7 @@
 import { useApolloClient } from '@apollo/client'
-import { AppAction, IAppAction } from '@joystream/metadata-protobuf'
-import { Bytes, Option } from '@polkadot/types'
-import { PalletContentStorageAssetsRecord } from '@polkadot/types/lookup'
-import { stringToU8a } from '@polkadot/util'
 import { useCallback } from 'react'
 
-import { useGetAppActionSignatureMutation } from '@/api/queries/__generated__/admin.generated'
+import { useAppActionMetadataProcessor } from '@/api/hooks/apps'
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { useGetVideoCountQuery } from '@/api/queries/__generated__/channels.generated'
 import {
@@ -14,7 +10,6 @@ import {
   GetFullVideosConnectionQueryVariables,
 } from '@/api/queries/__generated__/videos.generated'
 import { atlasConfig } from '@/config'
-import { wrapMetadata } from '@/joystream-lib/metadata'
 import { VideoExtrinsicResult, VideoInputAssets } from '@/joystream-lib/types'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useAssetStore } from '@/providers/assets/assets.store'
@@ -42,7 +37,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
   const { joystream, proxyCallback } = useJoystream()
   const startFileUpload = useStartFileUpload()
   const { channelId, memberId } = useAuthorizedUser()
-  const { data: channelVideosData } = useGetVideoCountQuery({
+  const { data: channelVideosCount } = useGetVideoCountQuery({
     skip: true,
     variables: { where: { channel: { id_eq: channelId } } },
   })
@@ -53,35 +48,10 @@ export const useHandleVideoWorkspaceSubmit = () => {
   const removeDrafts = useDraftStore((state) => state.actions.removeDrafts)
   const { tabData } = useVideoWorkspaceData()
   const channelBucketsCount = useChannelsStorageBucketsCount(channelId)
-  const [signatureMutation, { loading }] = useGetAppActionSignatureMutation()
 
   const { videoStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
 
-  const rawMetadataProcessor = useCallback(
-    async (rawBytes: Option<Bytes>, assets: Option<PalletContentStorageAssetsRecord>) => {
-      if (channelVideosData?.videosConnection.totalCount && atlasConfig.general.appId) {
-        const { data } = await signatureMutation({
-          variables: {
-            assets: assets.toHex(),
-            nonce: channelVideosData.videosConnection.totalCount,
-            rawAction: rawBytes.toHex(),
-            creatorId: channelId,
-          },
-        })
-        if (data?.signAppActionCommitment) {
-          const appVideoInput: IAppAction = {
-            appId: atlasConfig.general.appId,
-            rawAction: rawBytes.toU8a(),
-            signature: stringToU8a(data.signAppActionCommitment.signature),
-            nonce: channelVideosData.videosConnection.totalCount,
-          }
-          return wrapMetadata(AppAction.encode(appVideoInput).finish())
-        }
-      }
-      return rawBytes
-    },
-    [channelId, channelVideosData?.videosConnection.totalCount, signatureMutation]
-  )
+  const rawMetadataProcessor = useAppActionMetadataProcessor(channelId, channelVideosCount?.videosConnection.totalCount)
 
   return useCallback(
     async (data: VideoFormData, videoInfo?: VideoWorkspace, assetsToBeRemoved?: string[]) => {
@@ -298,9 +268,9 @@ export const useHandleVideoWorkspaceSubmit = () => {
       channelBucketsCount,
       editedVideoInfo,
       handleTransaction,
+      tabData?.subtitlesArray,
       tabData?.assets.video.id,
       tabData?.assets.thumbnail.cropId,
-      tabData?.subtitlesArray,
       startFileUpload,
       channelId,
       client,
@@ -310,6 +280,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
       memberId,
       dataObjectStateBloatBondValue,
       videoStateBloatBondValue,
+      rawMetadataProcessor,
       proxyCallback,
       setIsWorkspaceOpen,
       isNftMintDismissed,

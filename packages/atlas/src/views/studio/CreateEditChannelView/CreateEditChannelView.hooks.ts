@@ -250,6 +250,7 @@ export const useCreateEditChannelSubmit = () => {
       joystream,
       memberId,
       proxyCallback,
+      rawMetadataProcessor,
       refetchUserMemberships,
       setActiveUser,
       startFileUpload,
