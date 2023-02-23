@@ -196,11 +196,20 @@ export class JoystreamLibExtrinsics {
     inputAssets: ChannelInputAssets,
     inputBuckets: ChannelInputBuckets,
     expectedDataObjectStateBloatBond: StringifiedNumber,
-    expectedChannelStateBloatBond: StringifiedNumber
+    expectedChannelStateBloatBond: StringifiedNumber,
+    rawMetadataProcessor?: (
+      rawMeta: Option<Bytes>,
+      assets: Option<PalletContentStorageAssetsRecord>
+    ) => Promise<Option<Bytes>>
   ) => {
     await this.ensureApi()
 
-    const [channelMetadata, channelAssets] = await parseChannelExtrinsicInput(this.api, inputMetadata, inputAssets)
+    const [channelMetadata, channelAssets] = await parseChannelExtrinsicInput(
+      this.api,
+      inputMetadata,
+      inputAssets,
+      rawMetadataProcessor
+    )
 
     const creationParameters = createType('PalletContentChannelCreationParametersRecord', {
       meta: channelMetadata,
@@ -224,6 +233,7 @@ export class JoystreamLibExtrinsics {
     inputBuckets,
     expectedDataObjectStateBloatBond,
     expectedChannelStateBloatBond,
+    rawMetadataProcessor,
     cb
   ) => {
     const tx = await this.createChannelTx(
@@ -232,7 +242,8 @@ export class JoystreamLibExtrinsics {
       inputAssets,
       inputBuckets,
       expectedDataObjectStateBloatBond,
-      expectedChannelStateBloatBond
+      expectedChannelStateBloatBond,
+      rawMetadataProcessor
     )
 
     const { block, getEventData } = await this.sendExtrinsic(tx, cb)

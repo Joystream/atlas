@@ -172,7 +172,8 @@ export const parseVideoExtrinsicInput: ParseExtrinsicInputFn<VideoInputMetadata,
 export const parseChannelExtrinsicInput: ParseExtrinsicInputFn<ChannelInputMetadata, ChannelInputAssets> = async (
   api,
   inputMetadata,
-  inputAssets
+  inputAssets,
+  rawMetadataProcessor
 ) => {
   const properties: IChannelMetadata = {}
 
@@ -201,8 +202,9 @@ export const parseChannelExtrinsicInput: ParseExtrinsicInputFn<ChannelInputMetad
     properties.language = inputMetadata.language
   }
 
-  const metadata = wrapMetadata(ChannelMetadata.encode(properties).finish())
   const storageAssets = await prepareAssetsForExtrinsic(api, channelDataObjectsMetadata)
+  const rawMetadata = wrapMetadata(ChannelMetadata.encode(properties).finish())
+  const metadata = rawMetadataProcessor ? await rawMetadataProcessor(rawMetadata, storageAssets) : rawMetadata
 
   return [metadata, storageAssets]
 }

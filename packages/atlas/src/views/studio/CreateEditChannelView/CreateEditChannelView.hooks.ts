@@ -1,7 +1,10 @@
 import BN from 'bn.js'
 import { useCallback } from 'react'
 
+import { useAppActionMetadataProcessor } from '@/api/hooks/apps'
 import { FullChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { useGetChannelCountQuery } from '@/api/queries/__generated__/memberships.generated'
+import { atlasConfig } from '@/config'
 import { ChannelAssets, ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib/types'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useOperatorsContext } from '@/providers/assets/assets.provider'
@@ -56,8 +59,17 @@ export const useCreateEditChannelSubmit = () => {
   const startFileUpload = useStartFileUpload()
   const handleTransaction = useTransaction()
   const { fetchOperators } = useOperatorsContext()
+  const { data: channelCountData } = useGetChannelCountQuery({
+    variables: { where: { ownerMember: { id_eq: memberId } } },
+    skip: !channelId,
+  })
 
   const addAsset = useAssetStore((state) => state.actions.addAsset)
+
+  const rawMetadataProcessor = useAppActionMetadataProcessor(
+    `m:${memberId}`,
+    channelCountData?.channelsConnection.totalCount
+  )
 
   return useCallback(
     async (
@@ -199,6 +211,7 @@ export const useCreateEditChannelSubmit = () => {
                 await getBucketsConfigForNewChannel(),
                 dataObjectStateBloatBondValue.toString(),
                 channelStateBloatBondValue.toString(),
+                atlasConfig.general.appId ? rawMetadataProcessor : undefined,
                 proxyCallback(updateStatus)
               )
             : (
