@@ -22,7 +22,7 @@ import {
   useGetTop10VideosThisMonthQuery,
   useGetTop10VideosThisWeekQuery,
 } from '@/api/queries/__generated__/videos.generated'
-import { videoFilter } from '@/config/contentFilter'
+import { createVideoWhereObjectWithFilters } from '@/config/contentFilter'
 
 export const useFullVideo = (
   id: string,
@@ -35,8 +35,7 @@ export const useFullVideo = (
       ...variables,
       where: {
         id_eq: id,
-        ...videoFilter,
-        ...variables?.where,
+        ...createVideoWhereObjectWithFilters(variables?.where),
       },
     },
   })
@@ -54,13 +53,7 @@ export const useChannelPreviewVideos = (
   const { data, ...rest } = useGetBasicVideosQuery({
     ...opts,
     variables: {
-      where: {
-        ...videoFilter,
-        channel: {
-          ...videoFilter.channel,
-          id_eq: channelId,
-        },
-      },
+      where: createVideoWhereObjectWithFilters({ channel: { id_eq: channelId } }),
       orderBy: VideoOrderByInput.CreatedAtDesc,
       offset: 0,
       limit: 10,
@@ -102,10 +95,7 @@ export const useBasicVideos = (
     ...opts,
     variables: {
       ...variables,
-      where: {
-        ...videoFilter,
-        ...variables?.where,
-      },
+      where: createVideoWhereObjectWithFilters(variables?.where),
     },
   })
   return {
@@ -120,7 +110,7 @@ export const useBasicVideo = (
 ) => {
   const { data, ...rest } = useGetBasicVideosQuery({
     ...opts,
-    variables: { where: { id_eq: id, ...videoFilter } },
+    variables: { where: createVideoWhereObjectWithFilters({ id_eq: id }) },
   })
   return {
     video: data?.videos[0],
@@ -136,10 +126,7 @@ export const useTop10VideosThisWeek = (
     ...opts,
     variables: {
       ...variables,
-      where: {
-        ...videoFilter,
-        ...variables?.where,
-      },
+      where: createVideoWhereObjectWithFilters(variables?.where),
     },
   })
   return {
@@ -156,10 +143,7 @@ export const useTop10VideosThisMonth = (
     ...opts,
     variables: {
       ...variables,
-      where: {
-        ...videoFilter,
-        ...variables?.where,
-      },
+      where: createVideoWhereObjectWithFilters(variables?.where),
     },
   })
   return {
@@ -176,10 +160,7 @@ export const useVideoCount = (
     ...opts,
     variables: {
       ...variables,
-      where: {
-        ...videoFilter,
-        ...variables?.where,
-      },
+      where: createVideoWhereObjectWithFilters(variables?.where),
     },
   })
   return {

@@ -1,91 +1,46 @@
-import { ChannelWhereInput, OwnedNftWhereInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { ChannelWhereInput, InputMaybe, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { atlasConfig } from '@/config/config'
 
 import { allUniqueVideoCategories } from './categories'
 
 type ContentFilter = string[]
 
-const filteredAssetsFilter: ContentFilter = atlasConfig.content.blockedDataObjectIds
-const filteredVideoIds: ContentFilter = atlasConfig.content.blockedVideoIds
-const filteredChannelIds: ContentFilter = atlasConfig.content.blockedChannelIds
+export const filteredVideoIds: ContentFilter = atlasConfig.content.blockedVideoIds
+export const filteredChannelIds: ContentFilter = atlasConfig.content.blockedChannelIds
 
-const NOTvideoFilter: Pick<VideoWhereInput, 'id_not_in' | 'channel' | 'thumbnailPhoto' | 'media'> = {
-  ...(filteredVideoIds ? { id_not_in: filteredVideoIds } : {}),
-  ...(filteredChannelIds ? { channel: { id_not_in: filteredChannelIds } } : {}),
-  ...(filteredAssetsFilter
-    ? {
-        thumbnailPhoto: {
-          id_not_in: filteredAssetsFilter,
-        },
-        media: {
-          id_not_in: filteredAssetsFilter,
-        },
-      }
-    : {}),
-}
-const NOTchannelFilters: Pick<ChannelWhereInput, 'id_not_in' | 'avatarPhoto' | 'coverPhoto'> = {
-  ...(filteredChannelIds ? { id_not_in: filteredChannelIds } : {}),
-  ...(filteredAssetsFilter
-    ? {
-        avatarPhoto: {
-          id_not_in: filteredAssetsFilter,
-        },
-        coverPhoto: {
-          id_not_in: filteredAssetsFilter,
-        },
-      }
-    : {}),
-}
-const NOTnftFilters: Pick<OwnedNftWhereInput, 'video'> = {
-  ...(Object.keys(NOTvideoFilter).length || Object.keys(NOTchannelFilters).length
-    ? {
-        video: {
-          ...NOTvideoFilter,
-          channel: {
-            ...NOTvideoFilter.channel,
-            ...NOTchannelFilters,
-          },
-        },
-      }
-    : {}),
+export const createChannelWhereObjectWithFilters = (
+  channelWhereInput?: ChannelWhereInput | null
+): ChannelWhereInput => {
+  return {
+    ...channelWhereInput,
+
+    // filter by channel ids
+    ...(filteredChannelIds.length ? { id_not_in: filteredChannelIds } : {}),
+  }
 }
 
-export const channelFilter: ChannelWhereInput = {
+export const createVideoWhereObjectWithFilters = (
+  videoWhereInput?: VideoWhereInput | InputMaybe<VideoWhereInput>
+): VideoWhereInput => {
+  return {
+    ...videoWhereInput,
+
+    // filter by video ids
+    ...(filteredVideoIds.length ? { id_not_in: filteredVideoIds } : {}),
+
+    // filter by channel ids
+    channel: createChannelWhereObjectWithFilters(videoWhereInput?.channel),
+
+    // filter by category
+    ...(!atlasConfig.content.showAllContent
+      ? { category: { ...videoWhereInput?.category, id_in: allUniqueVideoCategories } }
+      : { category: videoWhereInput?.category }),
+  }
+}
+
+export const publicChannelFilter: ChannelWhereInput = {
   isCensored_eq: false,
   isPublic_eq: true,
-  ...NOTchannelFilters,
-}
-
-export const nftFilter: OwnedNftWhereInput = {
-  ...(!atlasConfig.content.showAllContent
-    ? {
-        video: {
-          ...NOTnftFilters.video,
-          category: {
-            id_in: allUniqueVideoCategories,
-          },
-        },
-      }
-    : {
-        ...(NOTnftFilters ? { ...NOTnftFilters } : {}),
-      }),
-}
-
-export const videoFilter: VideoWhereInput = {
-  isCensored_eq: false,
-  isPublic_eq: true,
-  ...(NOTvideoFilter.id_not_in ? { id_not_in: NOTvideoFilter.id_not_in } : {}),
-  thumbnailPhoto: {
-    isAccepted_eq: true,
-    ...(NOTvideoFilter.thumbnailPhoto?.id_not_in ? { id_not_in: NOTvideoFilter.thumbnailPhoto?.id_not_in } : {}),
-  },
-  media: {
-    isAccepted_eq: true,
-    ...(NOTvideoFilter.media?.id_not_in ? { id_not_in: NOTvideoFilter.media?.id_not_in } : {}),
-  },
-  ...(NOTvideoFilter.channel ? { channel: NOTvideoFilter.channel } : {}),
-
-  ...(!atlasConfig.content.showAllContent ? { category: { id_in: allUniqueVideoCategories } } : {}),
 }
 
 export const cancelledVideoFilter: VideoWhereInput = {
@@ -94,4 +49,22 @@ export const cancelledVideoFilter: VideoWhereInput = {
   media: undefined,
   thumbnailPhoto: undefined,
   category: undefined,
+  id_not_in: undefined,
+  channel: {
+    id_not_in: undefined,
+  },
+}
+
+export const publicVideoFilter: VideoWhereInput = {
+  isPublic_eq: true,
+  isCensored_eq: false,
+  media: {
+    isAccepted_eq: true,
+  },
+  thumbnailPhoto: {
+    isAccepted_eq: true,
+  },
+  channel: {
+    isPublic_eq: true,
+  },
 }

@@ -96,9 +96,7 @@ export const useSearchResults = ({
       first,
       where: {
         title_containsInsensitive: text,
-        avatarPhoto: {
-          isAccepted_eq: true,
-        },
+        isPublic_eq: true,
       },
     },
     {

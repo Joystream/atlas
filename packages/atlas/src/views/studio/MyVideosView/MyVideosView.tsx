@@ -122,10 +122,11 @@ export const MyVideosView = () => {
       first: INITIAL_FIRST,
       orderBy: sortVideosBy,
       where: {
+        ...cancelledVideoFilter,
         channel: {
+          ...cancelledVideoFilter.channel,
           id_eq: channelId,
         },
-        ...cancelledVideoFilter,
         isPublic_eq,
       },
     },

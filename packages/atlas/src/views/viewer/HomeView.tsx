@@ -13,6 +13,7 @@ import { TopTenVideos } from '@/components/_content/TopTenVideos'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 import { VideoHero } from '@/components/_video/VideoHero'
 import { atlasConfig } from '@/config'
+import { publicVideoFilter } from '@/config/contentFilter'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { sizes, transitions } from '@/styles'
@@ -33,6 +34,7 @@ export const HomeView: FC = () => {
   } = useBasicVideosConnection(
     {
       where: {
+        ...publicVideoFilter,
         channel: {
           id_in: channelIdIn,
         },

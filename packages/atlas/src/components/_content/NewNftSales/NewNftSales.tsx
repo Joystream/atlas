@@ -23,6 +23,10 @@ export const NewNftSales: FC = () => {
         isTypeOf_in: ['TransactionalStatusAuction', 'TransactionalStatusBuyNow'],
       },
       video: {
+        isPublic_eq: true,
+        channel: {
+          isPublic_eq: true,
+        },
         media: {
           isAccepted_eq: true,
         },

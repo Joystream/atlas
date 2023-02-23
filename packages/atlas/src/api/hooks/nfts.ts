@@ -20,7 +20,7 @@ import {
   GetNftHistoryQueryVariables,
   useGetNftHistoryQuery,
 } from '@/api/queries/__generated__/notifications.generated'
-import { nftFilter } from '@/config/contentFilter'
+import { createVideoWhereObjectWithFilters } from '@/config/contentFilter'
 
 import { OwnedNftWhereInput } from '../queries/__generated__/baseTypes.generated'
 
@@ -132,20 +132,16 @@ export const useNftsConnection = (
         OR: variables.where.OR.map((orVariable) => ({
           ...orVariable,
           ...whereWithoutOr,
-          video: {
-            ...(nftFilter.video ? nftFilter.video : {}),
+          video: createVideoWhereObjectWithFilters({
             ...whereWithoutOr.video,
             ...orVariable.video,
-          },
+          }),
         })),
       }
     } else {
       return {
         ...variables?.where,
-        video: {
-          ...(nftFilter ? nftFilter.video : {}),
-          ...variables?.where?.video,
-        },
+        video: createVideoWhereObjectWithFilters(variables?.where?.video),
       }
     }
   }

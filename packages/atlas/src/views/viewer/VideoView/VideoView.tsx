@@ -77,8 +77,18 @@ export const VideoView: FC = () => {
     {
       onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
     },
-    // cancel video filters - if video is accessed directly with a link allowed it to be unlisted, censored and have un-uploaded assets
-    { where: { isPublic_eq: undefined, isCensored_eq: undefined, thumbnailPhoto: undefined, media: undefined } }
+    // cancel video filters - if video is accessed directly with a link allowed it to be unlisted, and have un-uploaded assets
+    {
+      where: {
+        isPublic_eq: undefined,
+        thumbnailPhoto: {
+          isAccepted_eq: undefined,
+        },
+        media: {
+          isAccepted_eq: undefined,
+        },
+      },
+    }
   )
   const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
   const [isCommenting, setIsCommenting] = useState<boolean>(false)

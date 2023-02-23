@@ -12,6 +12,7 @@ import { ChannelWithVideos } from '@/components/_channel/ChannelWithVideos'
 import { Select } from '@/components/_inputs/Select'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
+import { publicChannelFilter } from '@/config/contentFilter'
 import { SentryLogger } from '@/utils/logs'
 
 import {
@@ -137,13 +138,14 @@ const useChannelsListData = (queryType: ChannelsQueryType, selectedLanguage: str
     onError: (error) => SentryLogger.error('Failed to fetch channels', 'ExpandableChannelsList', error),
     context: { delay: 2000 },
   }
-  const activeVideosCountGt = 4
+  const activeVideosCountGt = 3
 
   const discover = useDiscoverChannels(
     {
       where: {
         activeVideosCount_gt: activeVideosCountGt,
         channel: {
+          ...publicChannelFilter,
           followsNum_gt: 0,
         },
       },
@@ -156,6 +158,7 @@ const useChannelsListData = (queryType: ChannelsQueryType, selectedLanguage: str
       where: {
         activeVideosCount_gt: activeVideosCountGt,
         channel: {
+          ...publicChannelFilter,
           videoViewsNum_gt: 0,
         },
       },
@@ -168,6 +171,7 @@ const useChannelsListData = (queryType: ChannelsQueryType, selectedLanguage: str
       where: {
         activeVideosCount_gt: activeVideosCountGt,
         channel: {
+          ...publicChannelFilter,
           videoViewsNum_gt: 0,
         },
       },
@@ -182,6 +186,7 @@ const useChannelsListData = (queryType: ChannelsQueryType, selectedLanguage: str
       where: {
         activeVideosCount_gt: 1,
         channel: {
+          ...publicChannelFilter,
           language_contains: selectedLanguage,
         },
       },

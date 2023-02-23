@@ -46,6 +46,10 @@ export const NftsView: FC = () => {
     thumbnailPhoto: {
       isAccepted_eq: true,
     },
+    isPublic_eq: true,
+    channel: {
+      isPublic_eq: true,
+    },
   }
 
   const { nfts, loading, totalCount, fetchMore, pageInfo, variables } = useNftsConnection(

@@ -29,9 +29,7 @@ import {
   useGetTop10ChannelsQuery,
   useUnfollowChannelMutation,
 } from '@/api/queries/__generated__/channels.generated'
-import { channelFilter } from '@/config/contentFilter'
-
-const CHANNEL_ID_FILTER = channelFilter.id_not_contains
+import { createChannelWhereObjectWithFilters } from '@/config/contentFilter'
 
 export const useBasicChannel = (
   id: string,
@@ -40,7 +38,7 @@ export const useBasicChannel = (
   const { data, ...rest } = useGetExtendedBasicChannelsQuery({
     ...opts,
     variables: {
-      where: { channel: { id_eq: id, id_not_contains: CHANNEL_ID_FILTER } },
+      where: { channel: createChannelWhereObjectWithFilters({ id_eq: id }) },
     },
   })
   return {
@@ -60,17 +58,13 @@ export const useFullChannel = (
       ...variables,
       where: {
         ...variables?.where,
-        channel: {
-          ...variables?.where?.channel,
-          id_not_contains: CHANNEL_ID_FILTER,
-          id_eq: id,
-        },
+        channel: createChannelWhereObjectWithFilters({ ...variables?.where?.channel, id_eq: id }),
       },
     },
   })
   return {
-    channel: data?.extendedChannels[0].channel,
-    activeVideosCount: data?.extendedChannels[0].activeVideosCount,
+    channel: data?.extendedChannels[0]?.channel,
+    activeVideosCount: data?.extendedChannels[0]?.activeVideosCount,
     ...rest,
   }
 }
@@ -85,6 +79,7 @@ export const useBasicChannels = (
       ...variables,
       where: {
         ...variables?.where,
+        channel: createChannelWhereObjectWithFilters({ ...variables?.where?.channel }),
       },
     },
   })
@@ -155,10 +150,7 @@ export const useTop10Channels = (
       ...variables,
       where: {
         ...variables?.where,
-        channel: {
-          ...channelFilter,
-          ...variables?.where?.channel,
-        },
+        channel: createChannelWhereObjectWithFilters(variables?.where?.channel),
         activeVideosCount_gt: 0,
       },
     },
@@ -196,10 +188,7 @@ export const useDiscoverChannels = (
       ...variables,
       where: {
         ...variables?.where,
-        channel: {
-          ...channelFilter,
-          ...variables?.where?.channel,
-        },
+        channel: createChannelWhereObjectWithFilters({ ...variables?.where?.channel }),
       },
     },
   })
@@ -224,10 +213,7 @@ export const usePromisingChannels = (
       ...variables,
       where: {
         ...variables?.where,
-        channel: {
-          ...channelFilter,
-          ...variables?.where?.channel,
-        },
+        channel: createChannelWhereObjectWithFilters({ ...variables?.where?.channel }),
       },
     },
   })
@@ -251,10 +237,7 @@ export const usePopularChannels = (
       ...variables,
       where: {
         ...variables?.where,
-        channel: {
-          ...channelFilter,
-          ...variables?.where?.channel,
-        },
+        channel: createChannelWhereObjectWithFilters({ ...variables?.where?.channel }),
       },
     },
   })
