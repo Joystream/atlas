@@ -22,7 +22,7 @@ import {
   useGetTop10VideosThisMonthQuery,
   useGetTop10VideosThisWeekQuery,
 } from '@/api/queries/__generated__/videos.generated'
-import { createVideoWhereObjectWithFilters } from '@/config/contentFilter'
+import { createVideoWhereObjectWithFilters, publicVideoFilter } from '@/config/contentFilter'
 
 export const useFullVideo = (
   id: string,
@@ -53,7 +53,7 @@ export const useChannelPreviewVideos = (
   const { data, ...rest } = useGetBasicVideosQuery({
     ...opts,
     variables: {
-      where: createVideoWhereObjectWithFilters({ channel: { id_eq: channelId } }),
+      where: createVideoWhereObjectWithFilters({ ...publicVideoFilter, channel: { id_eq: channelId } }),
       orderBy: VideoOrderByInput.CreatedAtDesc,
       offset: 0,
       limit: 10,
