@@ -184,7 +184,7 @@ const useChannelsListData = (queryType: ChannelsQueryType, selectedLanguage: str
       limit: 15,
       orderBy: ChannelOrderByInput.CreatedAtAsc,
       where: {
-        activeVideosCount_gt: 1,
+        activeVideosCount_gt: 0,
         channel: {
           ...publicChannelFilter,
           language_contains: selectedLanguage,
