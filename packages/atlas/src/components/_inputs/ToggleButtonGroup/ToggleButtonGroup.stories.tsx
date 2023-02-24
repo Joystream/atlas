@@ -19,18 +19,18 @@ const Template: StoryFn<ToggleButtonGroupProps<SbOptions>> = (args) => {
   return <ToggleButtonGroup {...args} value={value} onChange={setValue} />
 }
 
-export const Stretch = Template.bind({})
-Stretch.args = {
-  type: 'stretch',
+export const WidthAuto = Template.bind({})
+WidthAuto.args = {
+  width: 'auto',
 }
 
-export const ContainOverflow = Template.bind({})
-ContainOverflow.args = {
-  type: 'contain',
+export const WidthFixed = Template.bind({})
+WidthFixed.args = {
+  width: 'fixed',
 }
 
-export const ContainWithoutOverflow = Template.bind({})
-ContainWithoutOverflow.args = {
-  type: 'contain',
+export const WidthFixedWithoutOverflow = Template.bind({})
+WidthFixedWithoutOverflow.args = {
+  width: 'fixed',
   options: ['small', 'large'],
 }

@@ -3,17 +3,16 @@ import { useEffect, useRef, useState } from 'react'
 import useDraggableScroll from 'use-draggable-scroll'
 
 import { SvgActionChevronL, SvgActionChevronR } from '@/assets/icons'
-import { StyledButton } from '@/components/Tabs/Tabs.styles'
 import { Button } from '@/components/_buttons/Button'
 
-import { Anchor, Container, Label, OptionWrapper } from './ToggleButtonGroup.styles'
+import { ButtonLeft, ButtonRight, Container, ContentWrapper, Label, OptionWrapper } from './ToggleButtonGroup.styles'
 
 export type ToggleButtonGroupProps<T extends string> = {
   options: T[]
   value?: T
   label?: string
-  type?: 'contain' | 'stretch'
-  onChange: (type: T) => void
+  width?: 'auto' | 'fixed'
+  onChange: (width: T) => void
   className?: string
 }
 
@@ -21,7 +20,7 @@ const SCROLL_SHADOW_OFFSET = 10
 
 export const ToggleButtonGroup = <T extends string>({
   label,
-  type = 'stretch',
+  width = 'auto',
   options,
   value,
   onChange,
@@ -43,7 +42,7 @@ export const ToggleButtonGroup = <T extends string>({
 
   useEffect(() => {
     const optionGroup = optionWrapperRef.current
-    if (!optionGroup || !isOverflowing || type !== 'contain') {
+    if (!optionGroup || !isOverflowing || width !== 'fixed') {
       return
     }
     setShadowsVisible((prev) => ({ ...prev, right: true }))
@@ -63,7 +62,7 @@ export const ToggleButtonGroup = <T extends string>({
       optionGroup.removeEventListener('touchmove', touchHandler)
       optionGroup.removeEventListener('scroll', touchHandler)
     }
-  }, [isOverflowing, type])
+  }, [isOverflowing, width])
 
   const handleArrowScroll = (direction: 'left' | 'right') => () => {
     const optionGroup = optionWrapperRef.current
@@ -76,45 +75,43 @@ export const ToggleButtonGroup = <T extends string>({
   }
 
   return (
-    <Container className={className} type={type}>
+    <Container className={className} width={width}>
       {label && (
         <Label variant="t100" as="p" color="colorText">
           {label}
         </Label>
       )}
-      {type === 'contain' && isOverflowing && (
-        <Anchor>
-          <StyledButton
+      <ContentWrapper>
+        {width === 'fixed' && isOverflowing && shadowsVisible.left && (
+          <ButtonLeft
             onClick={handleArrowScroll('left')}
             size="small"
             variant="tertiary"
             icon={<SvgActionChevronL />}
           />
-        </Anchor>
-      )}
-      <OptionWrapper onMouseDown={onMouseDown} ref={optionWrapperRef} shadowsVisible={shadowsVisible}>
-        {options.map((option) => (
-          <Button
-            key={option}
-            fullWidth
-            variant={option !== value ? 'tertiary' : 'secondary'}
-            onClick={() => onChange(option)}
-            size="small"
-          >
-            {option}
-          </Button>
-        ))}
-      </OptionWrapper>
-      {type === 'contain' && isOverflowing && (
-        <Anchor>
-          <StyledButton
+        )}
+        <OptionWrapper onMouseDown={onMouseDown} ref={optionWrapperRef} shadowsVisible={shadowsVisible}>
+          {options.map((option) => (
+            <Button
+              key={option}
+              fullWidth
+              variant={option !== value ? 'tertiary' : 'secondary'}
+              onClick={() => onChange(option)}
+              size="small"
+            >
+              {option}
+            </Button>
+          ))}
+        </OptionWrapper>
+        {width === 'fixed' && isOverflowing && shadowsVisible.right && (
+          <ButtonRight
             onClick={handleArrowScroll('right')}
             size="small"
             variant="tertiary"
             icon={<SvgActionChevronR />}
           />
-        </Anchor>
-      )}
+        )}
+      </ContentWrapper>
     </Container>
   )
 }
