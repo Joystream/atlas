@@ -1,7 +1,12 @@
 import { FC, useEffect, useState } from 'react'
 
 import { useNftsConnection } from '@/api/hooks/nfts'
-import { OwnedNftOrderByInput, OwnedNftWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
+import {
+  InputMaybe,
+  OwnedNftOrderByInput,
+  OwnedNftWhereInput,
+  VideoWhereInput,
+} from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionFilters } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
@@ -52,19 +57,28 @@ export const NftsView: FC = () => {
     },
   }
 
+  const createOtherFilters = (): InputMaybe<VideoWhereInput> | undefined => {
+    const AND = []
+    if (videoWhereInput.hasMarketing_eq != null) {
+      AND.push({ OR: [{ hasMarketing_eq: false }, { hasMarketing_isNull: true }] })
+    }
+    if (videoWhereInput.isExplicit_eq != null) {
+      AND.push({ OR: [{ isExplicit_eq: false }, { isExplicit_isNull: true }] })
+    }
+
+    if (AND.length) {
+      return { ...commonVideoVariables, AND }
+    } else {
+      return commonVideoVariables
+    }
+  }
+
   const { nfts, loading, totalCount, fetchMore, pageInfo, variables } = useNftsConnection(
     {
       where: {
         ...ownedNftWhereInput,
         createdAt_gte: videoWhereInput.createdAt_gte,
-        video:
-          videoWhereInput.hasMarketing_eq != null || videoWhereInput.isExplicit_eq != null
-            ? {
-                ...commonVideoVariables,
-                hasMarketing_eq: videoWhereInput.hasMarketing_eq,
-                isExplicit_eq: videoWhereInput.isExplicit_eq,
-              }
-            : commonVideoVariables,
+        video: createOtherFilters(),
       },
       orderBy: sortBy,
       first: 10,
