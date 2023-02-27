@@ -2,7 +2,7 @@ import { Global } from '@emotion/react'
 import { isEqual } from 'lodash-es'
 import { FC, useCallback, useEffect, useRef, useState } from 'react'
 
-import { useVideoCount } from '@/api/hooks/video'
+import { useBasicVideosConnection } from '@/api/hooks/videosConnection'
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionFilters } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
@@ -11,6 +11,7 @@ import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { atlasConfig } from '@/config'
+import { publicVideoFilter } from '@/config/contentFilter'
 import { VIDEO_SORT_OPTIONS } from '@/config/sorting'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
@@ -45,8 +46,14 @@ export const CategoryVideos: FC<{ categoriesId?: string[] }> = ({ categoriesId }
 
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
 
-  const { videoCount } = useVideoCount({
-    where: { ...videoWhereInput, category: { id_in: categoriesId } },
+  const { totalCount } = useBasicVideosConnection({
+    where: {
+      ...videoWhereInput,
+      ...publicVideoFilter,
+      category: {
+        id_in: categoriesId,
+      },
+    },
   })
 
   useEffect(() => {
@@ -99,7 +106,7 @@ export const CategoryVideos: FC<{ categoriesId?: string[] }> = ({ categoriesId }
           <ControlsContainer>
             <GridItem colSpan={{ base: 2, sm: 1 }}>
               <Text as="h2" variant={mdMatch ? 'h500' : 'h400'}>
-                All videos {videoCount !== undefined && `(${videoCount})`}
+                All videos {totalCount !== undefined && `(${totalCount})`}
               </Text>
             </GridItem>
             {smMatch ? (

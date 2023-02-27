@@ -2,11 +2,6 @@ import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
 
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import {
-  GetVideoCountQuery,
-  GetVideoCountQueryVariables,
-  useGetVideoCountQuery,
-} from '@/api/queries/__generated__/channels.generated'
-import {
   AddVideoViewMutation,
   GetBasicVideosQuery,
   GetBasicVideosQueryVariables,
@@ -148,23 +143,6 @@ export const useTop10VideosThisMonth = (
   })
   return {
     videos: data?.mostViewedVideosConnection.edges.map((video) => video.node),
-    ...rest,
-  }
-}
-
-export const useVideoCount = (
-  variables?: GetVideoCountQueryVariables,
-  opts?: QueryHookOptions<GetVideoCountQuery, GetVideoCountQueryVariables>
-) => {
-  const { data, ...rest } = useGetVideoCountQuery({
-    ...opts,
-    variables: {
-      ...variables,
-      where: createVideoWhereObjectWithFilters(variables?.where),
-    },
-  })
-  return {
-    videoCount: data?.videosConnection.totalCount,
     ...rest,
   }
 }

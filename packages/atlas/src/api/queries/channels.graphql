@@ -8,13 +8,6 @@ query GetFullChannel($id: String!) {
   }
 }
 
-query GetVideoCount($where: VideoWhereInput) {
-  # CHANGE: `orderBy` added, Subsquid complains if it's not provided
-  videosConnection(first: 0, where: $where, orderBy: id_ASC) {
-    totalCount
-  }
-}
-
 # CHANGE: `channels` replaced with `extendedChannels` (which include `activeVideosCount`)
 query GetExtendedBasicChannels(
   $where: ExtendedChannelWhereInput
