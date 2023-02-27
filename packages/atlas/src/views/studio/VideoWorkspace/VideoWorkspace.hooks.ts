@@ -38,7 +38,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
   const startFileUpload = useStartFileUpload()
   const { channelId, memberId } = useAuthorizedUser()
   const { data: channelVideosCount } = useGetVideoCountQuery({
-    skip: true,
+    skip: !channelId || !atlasConfig.general.appId,
     variables: { where: { channel: { id_eq: channelId } } },
   })
 

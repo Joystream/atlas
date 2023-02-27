@@ -17,7 +17,13 @@ mutation GetAppActionSignature(
   $rawAction: String
   $rawAppActionMetadata: String
 ) {
-  signAppActionCommitment(assets: $assets, creatorId: $creatorId, nonce: $nonce, rawAction: $rawAction, rawAppActionMetadata: $rawAppActionMetadata) {
+  signAppActionCommitment(
+    assets: $assets
+    creatorId: $creatorId
+    nonce: $nonce
+    rawAction: $rawAction
+    rawAppActionMetadata: $rawAppActionMetadata
+  ) {
     signature
   }
 }

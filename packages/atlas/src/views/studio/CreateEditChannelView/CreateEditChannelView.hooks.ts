@@ -61,7 +61,7 @@ export const useCreateEditChannelSubmit = () => {
   const { fetchOperators } = useOperatorsContext()
   const { data: channelCountData } = useGetChannelCountQuery({
     variables: { where: { ownerMember: { id_eq: memberId } } },
-    skip: !channelId,
+    skip: !channelId || !atlasConfig.general.appId,
   })
 
   const addAsset = useAssetStore((state) => state.actions.addAsset)
