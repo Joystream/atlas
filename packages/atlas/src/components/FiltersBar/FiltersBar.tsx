@@ -391,8 +391,18 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
                     days: -dateUploadedFilter,
                   })
                 : undefined,
-              hasMarketing_eq: excludePaidPromotionalMaterialFilter ? !excludePaidPromotionalMaterialFilter : undefined,
-              isExplicit_eq: excludeMatureContentRatingFilter ? !excludeMatureContentRatingFilter : undefined,
+              ...(excludeMatureContentRatingFilter || excludePaidPromotionalMaterialFilter
+                ? {
+                    AND: [
+                      ...(excludeMatureContentRatingFilter
+                        ? [{ OR: [{ isExplicit_eq: false }, { isExplicit_isNull: true }] }]
+                        : []),
+                      ...(excludePaidPromotionalMaterialFilter
+                        ? [{ OR: [{ hasMarketing_eq: false }, { hasMarketing_isNull: true }] }]
+                        : []),
+                    ],
+                  }
+                : { AND: [] }),
               category: categoriesFilter
                 ? {
                     id_in: mappedUniqueCategories,
@@ -579,10 +589,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
             <DialogPopover
               ref={othersPopoverRef}
               trigger={
-                <Button
-                  badge={+(videoWhereInput?.hasMarketing_eq === false) + +(videoWhereInput?.isExplicit_eq === false)}
-                  variant="secondary"
-                >
+                <Button badge={videoWhereInput.AND?.length} variant="secondary">
                   Other filters
                 </Button>
               }
@@ -594,10 +601,18 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
                   othersPopoverRef.current?.hide()
                   setVideoWhereInput((value) => ({
                     ...value,
-                    hasMarketing_eq: excludePaidPromotionalMaterialFilter
-                      ? !excludePaidPromotionalMaterialFilter
-                      : undefined,
-                    isExplicit_eq: excludeMatureContentRatingFilter ? !excludeMatureContentRatingFilter : undefined,
+                    ...(excludeMatureContentRatingFilter || excludePaidPromotionalMaterialFilter
+                      ? {
+                          AND: [
+                            ...(excludeMatureContentRatingFilter
+                              ? [{ OR: [{ isExplicit_eq: false }, { isExplicit_isNull: true }] }]
+                              : []),
+                            ...(excludePaidPromotionalMaterialFilter
+                              ? [{ OR: [{ hasMarketing_eq: false }, { hasMarketing_isNull: true }] }]
+                              : []),
+                          ],
+                        }
+                      : { AND: [] }),
                   }))
                 },
               }}
