@@ -9,6 +9,8 @@ import {
 import { createType } from '@joystream/types'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
+import { Bytes, Option } from '@polkadot/types'
+import { PalletContentStorageAssetsRecord } from '@polkadot/types/lookup'
 import BN from 'bn.js'
 import Long from 'long'
 
@@ -194,11 +196,20 @@ export class JoystreamLibExtrinsics {
     inputAssets: ChannelInputAssets,
     inputBuckets: ChannelInputBuckets,
     expectedDataObjectStateBloatBond: StringifiedNumber,
-    expectedChannelStateBloatBond: StringifiedNumber
+    expectedChannelStateBloatBond: StringifiedNumber,
+    rawMetadataProcessor?: (
+      rawMeta: Option<Bytes>,
+      assets: Option<PalletContentStorageAssetsRecord>
+    ) => Promise<Option<Bytes>>
   ) => {
     await this.ensureApi()
 
-    const [channelMetadata, channelAssets] = await parseChannelExtrinsicInput(this.api, inputMetadata, inputAssets)
+    const [channelMetadata, channelAssets] = await parseChannelExtrinsicInput(
+      this.api,
+      inputMetadata,
+      inputAssets,
+      rawMetadataProcessor
+    )
 
     const creationParameters = createType('PalletContentChannelCreationParametersRecord', {
       meta: channelMetadata,
@@ -222,6 +233,7 @@ export class JoystreamLibExtrinsics {
     inputBuckets,
     expectedDataObjectStateBloatBond,
     expectedChannelStateBloatBond,
+    rawMetadataProcessor,
     cb
   ) => {
     const tx = await this.createChannelTx(
@@ -230,7 +242,8 @@ export class JoystreamLibExtrinsics {
       inputAssets,
       inputBuckets,
       expectedDataObjectStateBloatBond,
-      expectedChannelStateBloatBond
+      expectedChannelStateBloatBond,
+      rawMetadataProcessor
     )
 
     const { block, getEventData } = await this.sendExtrinsic(tx, cb)
@@ -330,11 +343,20 @@ export class JoystreamLibExtrinsics {
     inputAssets: VideoInputAssets,
     expectedDataObjectStateBloatBond: StringifiedNumber,
     expectedVideoStateBloatBond: StringifiedNumber,
-    expectedStorageBucketsCount: StringifiedNumber
+    expectedStorageBucketsCount: StringifiedNumber,
+    rawMetadataProcessor?: (
+      rawMeta: Option<Bytes>,
+      assets: Option<PalletContentStorageAssetsRecord>
+    ) => Promise<Option<Bytes>>
   ) => {
     await this.ensureApi()
 
-    const [videoMetadata, videoAssets] = await parseVideoExtrinsicInput(this.api, inputMetadata, inputAssets)
+    const [videoMetadata, videoAssets] = await parseVideoExtrinsicInput(
+      this.api,
+      inputMetadata,
+      inputAssets,
+      rawMetadataProcessor
+    )
 
     const nftIssuanceParameters = createNftIssuanceParameters(nftInputMetadata)
     const creationParameters = createType('PalletContentVideoCreationParametersRecord', {
@@ -361,6 +383,7 @@ export class JoystreamLibExtrinsics {
     expectedDataObjectStateBloatBond,
     expectedVideoStateBloatBond,
     expectedStorageBucketsCount,
+    rawMetadataProcessor,
     cb
   ) => {
     const tx = await this.createVideoTx(
@@ -371,7 +394,8 @@ export class JoystreamLibExtrinsics {
       inputAssets,
       expectedDataObjectStateBloatBond,
       expectedVideoStateBloatBond,
-      expectedStorageBucketsCount
+      expectedStorageBucketsCount,
+      rawMetadataProcessor
     )
     const { block, getEventData } = await this.sendExtrinsic(tx, cb)
 
