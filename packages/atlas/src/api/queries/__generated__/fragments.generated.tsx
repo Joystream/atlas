@@ -397,7 +397,7 @@ export type BasicVideoFieldsFragment = {
             __typename: 'AuctionTypeEnglish'
             duration: number
             extensionPeriod: number
-            minimalBidStep: number
+            minimalBidStep: string
             plannedEndAtBlock: number
           }
         | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -543,7 +543,7 @@ export type BasicVideoFieldsFragment = {
       }>
     } | null
     transactionalStatus?:
-      | { __typename: 'TransactionalStatusBuyNow'; price: number }
+      | { __typename: 'TransactionalStatusBuyNow'; price: string }
       | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
       | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
       | null
@@ -750,7 +750,7 @@ export type FullVideoFieldsFragment = {
             __typename: 'AuctionTypeEnglish'
             duration: number
             extensionPeriod: number
-            minimalBidStep: number
+            minimalBidStep: string
             plannedEndAtBlock: number
           }
         | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -896,7 +896,7 @@ export type FullVideoFieldsFragment = {
       }>
     } | null
     transactionalStatus?:
-      | { __typename: 'TransactionalStatusBuyNow'; price: number }
+      | { __typename: 'TransactionalStatusBuyNow'; price: string }
       | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
       | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
       | null
@@ -979,7 +979,7 @@ export type BasicNftFieldsFragment = {
           __typename: 'AuctionTypeEnglish'
           duration: number
           extensionPeriod: number
-          minimalBidStep: number
+          minimalBidStep: string
           plannedEndAtBlock: number
         }
       | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -1125,7 +1125,7 @@ export type BasicNftFieldsFragment = {
     }>
   } | null
   transactionalStatus?:
-    | { __typename: 'TransactionalStatusBuyNow'; price: number }
+    | { __typename: 'TransactionalStatusBuyNow'; price: string }
     | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
     | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
     | null
@@ -1268,7 +1268,7 @@ export type FullNftFieldsFragment = {
               __typename: 'AuctionTypeEnglish'
               duration: number
               extensionPeriod: number
-              minimalBidStep: number
+              minimalBidStep: string
               plannedEndAtBlock: number
             }
           | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -1414,7 +1414,7 @@ export type FullNftFieldsFragment = {
         }>
       } | null
       transactionalStatus?:
-        | { __typename: 'TransactionalStatusBuyNow'; price: number }
+        | { __typename: 'TransactionalStatusBuyNow'; price: string }
         | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
         | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
         | null
@@ -1464,7 +1464,7 @@ export type FullNftFieldsFragment = {
           __typename: 'AuctionTypeEnglish'
           duration: number
           extensionPeriod: number
-          minimalBidStep: number
+          minimalBidStep: string
           plannedEndAtBlock: number
         }
       | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -1610,7 +1610,7 @@ export type FullNftFieldsFragment = {
     }>
   } | null
   transactionalStatus?:
-    | { __typename: 'TransactionalStatusBuyNow'; price: number }
+    | { __typename: 'TransactionalStatusBuyNow'; price: string }
     | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
     | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
     | null
