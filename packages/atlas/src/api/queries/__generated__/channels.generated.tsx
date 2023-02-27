@@ -51,7 +51,6 @@ export type GetFullChannelQuery = {
                 type?:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -73,7 +72,6 @@ export type GetFullChannelQuery = {
       type?:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -90,7 +88,6 @@ export type GetFullChannelQuery = {
       type?:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -139,7 +136,6 @@ export type GetExtendedBasicChannelsQuery = {
         type?:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -194,7 +190,6 @@ export type GetExtendedFullChannelsQuery = {
                   type?:
                     | { __typename: 'DataObjectTypeChannelAvatar' }
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
                     | { __typename: 'DataObjectTypeVideoSubtitle' }
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -216,7 +211,6 @@ export type GetExtendedFullChannelsQuery = {
         type?:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -233,7 +227,6 @@ export type GetExtendedFullChannelsQuery = {
         type?:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -278,7 +271,6 @@ export type GetBasicChannelsConnectionQuery = {
           type?:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoSubtitle' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -337,7 +329,6 @@ export type GetTop10ChannelsQuery = {
         type?:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -375,7 +366,6 @@ export type GetPromisingChannelsQuery = {
         type?:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -413,7 +403,6 @@ export type GetDiscoverChannelsQuery = {
         type?:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -451,7 +440,6 @@ export type GetPopularChannelsQuery = {
         type?:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -492,7 +480,6 @@ export type GetChannelNftCollectorsQuery = {
                 type?:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -535,11 +522,6 @@ export type GetChannelPaymentEventsQuery = {
         }
       | { __typename: 'BuyNowCanceledEventData' }
       | { __typename: 'BuyNowPriceUpdatedEventData' }
-      | { __typename: 'ChannelFundsWithdrawnEventData' }
-      | { __typename: 'ChannelPaymentMadeEventData' }
-      | { __typename: 'ChannelPayoutsUpdatedEventData' }
-      | { __typename: 'ChannelRewardClaimedAndWithdrawnEventData' }
-      | { __typename: 'ChannelRewardClaimedEventData' }
       | { __typename: 'CommentCreatedEventData' }
       | { __typename: 'CommentTextUpdatedEventData' }
       | { __typename: 'EnglishAuctionSettledEventData'; winningBid: { __typename?: 'Bid'; amount: string } }

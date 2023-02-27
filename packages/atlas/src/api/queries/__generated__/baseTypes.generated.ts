@@ -24,10 +24,11 @@ export type AddVideoViewResult = {
 
 export type App = {
   __typename?: 'App'
+  appChannels: Array<Channel>
+  appVideos: Array<Video>
   authKey?: Maybe<Scalars['String']>
   bigIcon?: Maybe<Scalars['String']>
   category?: Maybe<Scalars['String']>
-  channel: Channel
   description?: Maybe<Scalars['String']>
   /** Runtime entity identifier (EntityId) */
   id: Scalars['String']
@@ -36,6 +37,8 @@ export type App = {
   name: Scalars['String']
   /** Tagline of the app */
   oneLiner?: Maybe<Scalars['String']>
+  /** Member owning the App */
+  ownerMember: Membership
   /** List of platforms on which the app will be available, e.g. [mobile, web, native] */
   platforms?: Maybe<Array<Maybe<Scalars['String']>>>
   smallIcon?: Maybe<Scalars['String']>
@@ -44,6 +47,20 @@ export type App = {
   useUri?: Maybe<Scalars['String']>
   /** Url where user can read more about the project or company for this app */
   websiteUrl?: Maybe<Scalars['String']>
+}
+
+export type AppAppChannelsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<ChannelOrderByInput>>
+  where?: InputMaybe<ChannelWhereInput>
+}
+
+export type AppAppVideosArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<VideoOrderByInput>>
+  where?: InputMaybe<VideoWhereInput>
 }
 
 export type AppEdge = {
@@ -59,34 +76,6 @@ export enum AppOrderByInput {
   BigIconDesc = 'bigIcon_DESC',
   CategoryAsc = 'category_ASC',
   CategoryDesc = 'category_DESC',
-  ChannelChannelStateBloatBondAsc = 'channel_channelStateBloatBond_ASC',
-  ChannelChannelStateBloatBondDesc = 'channel_channelStateBloatBond_DESC',
-  ChannelCreatedAtAsc = 'channel_createdAt_ASC',
-  ChannelCreatedAtDesc = 'channel_createdAt_DESC',
-  ChannelCreatedInBlockAsc = 'channel_createdInBlock_ASC',
-  ChannelCreatedInBlockDesc = 'channel_createdInBlock_DESC',
-  ChannelCumulativeRewardClaimedAsc = 'channel_cumulativeRewardClaimed_ASC',
-  ChannelCumulativeRewardClaimedDesc = 'channel_cumulativeRewardClaimed_DESC',
-  ChannelDescriptionAsc = 'channel_description_ASC',
-  ChannelDescriptionDesc = 'channel_description_DESC',
-  ChannelFollowsNumAsc = 'channel_followsNum_ASC',
-  ChannelFollowsNumDesc = 'channel_followsNum_DESC',
-  ChannelIdAsc = 'channel_id_ASC',
-  ChannelIdDesc = 'channel_id_DESC',
-  ChannelIsCensoredAsc = 'channel_isCensored_ASC',
-  ChannelIsCensoredDesc = 'channel_isCensored_DESC',
-  ChannelIsExcludedAsc = 'channel_isExcluded_ASC',
-  ChannelIsExcludedDesc = 'channel_isExcluded_DESC',
-  ChannelIsPublicAsc = 'channel_isPublic_ASC',
-  ChannelIsPublicDesc = 'channel_isPublic_DESC',
-  ChannelLanguageAsc = 'channel_language_ASC',
-  ChannelLanguageDesc = 'channel_language_DESC',
-  ChannelRewardAccountAsc = 'channel_rewardAccount_ASC',
-  ChannelRewardAccountDesc = 'channel_rewardAccount_DESC',
-  ChannelTitleAsc = 'channel_title_ASC',
-  ChannelTitleDesc = 'channel_title_DESC',
-  ChannelVideoViewsNumAsc = 'channel_videoViewsNum_ASC',
-  ChannelVideoViewsNumDesc = 'channel_videoViewsNum_DESC',
   DescriptionAsc = 'description_ASC',
   DescriptionDesc = 'description_DESC',
   IdAsc = 'id_ASC',
@@ -97,6 +86,18 @@ export enum AppOrderByInput {
   NameDesc = 'name_DESC',
   OneLinerAsc = 'oneLiner_ASC',
   OneLinerDesc = 'oneLiner_DESC',
+  OwnerMemberControllerAccountAsc = 'ownerMember_controllerAccount_ASC',
+  OwnerMemberControllerAccountDesc = 'ownerMember_controllerAccount_DESC',
+  OwnerMemberCreatedAtAsc = 'ownerMember_createdAt_ASC',
+  OwnerMemberCreatedAtDesc = 'ownerMember_createdAt_DESC',
+  OwnerMemberHandleAsc = 'ownerMember_handle_ASC',
+  OwnerMemberHandleDesc = 'ownerMember_handle_DESC',
+  OwnerMemberIdAsc = 'ownerMember_id_ASC',
+  OwnerMemberIdDesc = 'ownerMember_id_DESC',
+  OwnerMemberTotalChannelsCreatedAsc = 'ownerMember_totalChannelsCreated_ASC',
+  OwnerMemberTotalChannelsCreatedDesc = 'ownerMember_totalChannelsCreated_DESC',
+  OwnerMemberTotalVideosCreatedAsc = 'ownerMember_totalVideosCreated_ASC',
+  OwnerMemberTotalVideosCreatedDesc = 'ownerMember_totalVideosCreated_DESC',
   SmallIconAsc = 'smallIcon_ASC',
   SmallIconDesc = 'smallIcon_DESC',
   TermsOfServiceAsc = 'termsOfService_ASC',
@@ -110,6 +111,12 @@ export enum AppOrderByInput {
 export type AppWhereInput = {
   AND?: InputMaybe<Array<AppWhereInput>>
   OR?: InputMaybe<Array<AppWhereInput>>
+  appChannels_every?: InputMaybe<ChannelWhereInput>
+  appChannels_none?: InputMaybe<ChannelWhereInput>
+  appChannels_some?: InputMaybe<ChannelWhereInput>
+  appVideos_every?: InputMaybe<VideoWhereInput>
+  appVideos_none?: InputMaybe<VideoWhereInput>
+  appVideos_some?: InputMaybe<VideoWhereInput>
   authKey_contains?: InputMaybe<Scalars['String']>
   authKey_containsInsensitive?: InputMaybe<Scalars['String']>
   authKey_endsWith?: InputMaybe<Scalars['String']>
@@ -161,8 +168,6 @@ export type AppWhereInput = {
   category_not_in?: InputMaybe<Array<Scalars['String']>>
   category_not_startsWith?: InputMaybe<Scalars['String']>
   category_startsWith?: InputMaybe<Scalars['String']>
-  channel?: InputMaybe<ChannelWhereInput>
-  channel_isNull?: InputMaybe<Scalars['Boolean']>
   description_contains?: InputMaybe<Scalars['String']>
   description_containsInsensitive?: InputMaybe<Scalars['String']>
   description_endsWith?: InputMaybe<Scalars['String']>
@@ -248,6 +253,8 @@ export type AppWhereInput = {
   oneLiner_not_in?: InputMaybe<Array<Scalars['String']>>
   oneLiner_not_startsWith?: InputMaybe<Scalars['String']>
   oneLiner_startsWith?: InputMaybe<Scalars['String']>
+  ownerMember?: InputMaybe<MembershipWhereInput>
+  ownerMember_isNull?: InputMaybe<Scalars['Boolean']>
   platforms_containsAll?: InputMaybe<Array<InputMaybe<Scalars['String']>>>
   platforms_containsAny?: InputMaybe<Array<InputMaybe<Scalars['String']>>>
   platforms_containsNone?: InputMaybe<Array<InputMaybe<Scalars['String']>>>
@@ -467,6 +474,10 @@ export enum AuctionOrderByInput {
   WinningMemberHandleDesc = 'winningMember_handle_DESC',
   WinningMemberIdAsc = 'winningMember_id_ASC',
   WinningMemberIdDesc = 'winningMember_id_DESC',
+  WinningMemberTotalChannelsCreatedAsc = 'winningMember_totalChannelsCreated_ASC',
+  WinningMemberTotalChannelsCreatedDesc = 'winningMember_totalChannelsCreated_DESC',
+  WinningMemberTotalVideosCreatedAsc = 'winningMember_totalVideosCreated_ASC',
+  WinningMemberTotalVideosCreatedDesc = 'winningMember_totalVideosCreated_DESC',
 }
 
 /** Represents various action types */
@@ -674,6 +685,10 @@ export enum AuctionWhitelistedMemberOrderByInput {
   MemberHandleDesc = 'member_handle_DESC',
   MemberIdAsc = 'member_id_ASC',
   MemberIdDesc = 'member_id_DESC',
+  MemberTotalChannelsCreatedAsc = 'member_totalChannelsCreated_ASC',
+  MemberTotalChannelsCreatedDesc = 'member_totalChannelsCreated_DESC',
+  MemberTotalVideosCreatedAsc = 'member_totalVideosCreated_ASC',
+  MemberTotalVideosCreatedDesc = 'member_totalVideosCreated_DESC',
 }
 
 export type AuctionWhitelistedMemberWhereInput = {
@@ -790,8 +805,6 @@ export enum BannedMemberOrderByInput {
   ChannelCreatedAtDesc = 'channel_createdAt_DESC',
   ChannelCreatedInBlockAsc = 'channel_createdInBlock_ASC',
   ChannelCreatedInBlockDesc = 'channel_createdInBlock_DESC',
-  ChannelCumulativeRewardClaimedAsc = 'channel_cumulativeRewardClaimed_ASC',
-  ChannelCumulativeRewardClaimedDesc = 'channel_cumulativeRewardClaimed_DESC',
   ChannelDescriptionAsc = 'channel_description_ASC',
   ChannelDescriptionDesc = 'channel_description_DESC',
   ChannelFollowsNumAsc = 'channel_followsNum_ASC',
@@ -822,6 +835,10 @@ export enum BannedMemberOrderByInput {
   MemberHandleDesc = 'member_handle_DESC',
   MemberIdAsc = 'member_id_ASC',
   MemberIdDesc = 'member_id_DESC',
+  MemberTotalChannelsCreatedAsc = 'member_totalChannelsCreated_ASC',
+  MemberTotalChannelsCreatedDesc = 'member_totalChannelsCreated_DESC',
+  MemberTotalVideosCreatedAsc = 'member_totalVideosCreated_ASC',
+  MemberTotalVideosCreatedDesc = 'member_totalVideosCreated_DESC',
 }
 
 export type BannedMemberWhereInput = {
@@ -921,6 +938,10 @@ export enum BidOrderByInput {
   BidderHandleDesc = 'bidder_handle_DESC',
   BidderIdAsc = 'bidder_id_ASC',
   BidderIdDesc = 'bidder_id_DESC',
+  BidderTotalChannelsCreatedAsc = 'bidder_totalChannelsCreated_ASC',
+  BidderTotalChannelsCreatedDesc = 'bidder_totalChannelsCreated_DESC',
+  BidderTotalVideosCreatedAsc = 'bidder_totalVideosCreated_ASC',
+  BidderTotalVideosCreatedDesc = 'bidder_totalVideosCreated_DESC',
   CreatedAtAsc = 'createdAt_ASC',
   CreatedAtDesc = 'createdAt_DESC',
   CreatedInBlockAsc = 'createdInBlock_ASC',
@@ -1055,8 +1076,6 @@ export type BuyNowPriceUpdatedEventData = {
 
 export type Channel = {
   __typename?: 'Channel'
-  /** The app that the channel represents */
-  app?: Maybe<App>
   /** Channel's avatar photo asset. */
   avatarPhoto?: Maybe<StorageDataObject>
   /** List of members blocked from commenting/reacting on any video of the channel. */
@@ -1069,10 +1088,10 @@ export type Channel = {
   createdAt: Scalars['DateTime']
   /** Number of the block the channel was created in */
   createdInBlock: Scalars['Int']
-  /** Cumulative rewards claimed by this channel */
-  cumulativeRewardClaimed?: Maybe<Scalars['BigInt']>
   /** The description of a Channel */
   description?: Maybe<Scalars['String']>
+  /** Application used for channel creation */
+  entryApp?: Maybe<App>
   /** Number of active follows (to speed up orderBy queries by avoiding COUNT aggregation) */
   followsNum: Scalars['Int']
   /** Runtime entity identifier (EntityId) */
@@ -1126,18 +1145,6 @@ export type ChannelFollowResult = {
   follows: Scalars['Int']
 }
 
-export type ChannelFundsWithdrawnEventData = {
-  __typename?: 'ChannelFundsWithdrawnEventData'
-  /** Destination account ID. Null if claimed by curators' channel (paid to council budget in this case) */
-  account?: Maybe<Scalars['String']>
-  /** Content actor */
-  actor: ContentActor
-  /** Reward amount claimed */
-  amount: Scalars['BigInt']
-  /** The channel that claimed the reward */
-  channel: Channel
-}
-
 export type ChannelNftCollector = {
   __typename?: 'ChannelNftCollector'
   amount: Scalars['Int']
@@ -1150,30 +1157,6 @@ export enum ChannelNftCollectorsOrderByInput {
 }
 
 export enum ChannelOrderByInput {
-  AppAuthKeyAsc = 'app_authKey_ASC',
-  AppAuthKeyDesc = 'app_authKey_DESC',
-  AppBigIconAsc = 'app_bigIcon_ASC',
-  AppBigIconDesc = 'app_bigIcon_DESC',
-  AppCategoryAsc = 'app_category_ASC',
-  AppCategoryDesc = 'app_category_DESC',
-  AppDescriptionAsc = 'app_description_ASC',
-  AppDescriptionDesc = 'app_description_DESC',
-  AppIdAsc = 'app_id_ASC',
-  AppIdDesc = 'app_id_DESC',
-  AppMediumIconAsc = 'app_mediumIcon_ASC',
-  AppMediumIconDesc = 'app_mediumIcon_DESC',
-  AppNameAsc = 'app_name_ASC',
-  AppNameDesc = 'app_name_DESC',
-  AppOneLinerAsc = 'app_oneLiner_ASC',
-  AppOneLinerDesc = 'app_oneLiner_DESC',
-  AppSmallIconAsc = 'app_smallIcon_ASC',
-  AppSmallIconDesc = 'app_smallIcon_DESC',
-  AppTermsOfServiceAsc = 'app_termsOfService_ASC',
-  AppTermsOfServiceDesc = 'app_termsOfService_DESC',
-  AppUseUriAsc = 'app_useUri_ASC',
-  AppUseUriDesc = 'app_useUri_DESC',
-  AppWebsiteUrlAsc = 'app_websiteUrl_ASC',
-  AppWebsiteUrlDesc = 'app_websiteUrl_DESC',
   AvatarPhotoCreatedAtAsc = 'avatarPhoto_createdAt_ASC',
   AvatarPhotoCreatedAtDesc = 'avatarPhoto_createdAt_DESC',
   AvatarPhotoIdAsc = 'avatarPhoto_id_ASC',
@@ -1208,10 +1191,32 @@ export enum ChannelOrderByInput {
   CreatedAtDesc = 'createdAt_DESC',
   CreatedInBlockAsc = 'createdInBlock_ASC',
   CreatedInBlockDesc = 'createdInBlock_DESC',
-  CumulativeRewardClaimedAsc = 'cumulativeRewardClaimed_ASC',
-  CumulativeRewardClaimedDesc = 'cumulativeRewardClaimed_DESC',
   DescriptionAsc = 'description_ASC',
   DescriptionDesc = 'description_DESC',
+  EntryAppAuthKeyAsc = 'entryApp_authKey_ASC',
+  EntryAppAuthKeyDesc = 'entryApp_authKey_DESC',
+  EntryAppBigIconAsc = 'entryApp_bigIcon_ASC',
+  EntryAppBigIconDesc = 'entryApp_bigIcon_DESC',
+  EntryAppCategoryAsc = 'entryApp_category_ASC',
+  EntryAppCategoryDesc = 'entryApp_category_DESC',
+  EntryAppDescriptionAsc = 'entryApp_description_ASC',
+  EntryAppDescriptionDesc = 'entryApp_description_DESC',
+  EntryAppIdAsc = 'entryApp_id_ASC',
+  EntryAppIdDesc = 'entryApp_id_DESC',
+  EntryAppMediumIconAsc = 'entryApp_mediumIcon_ASC',
+  EntryAppMediumIconDesc = 'entryApp_mediumIcon_DESC',
+  EntryAppNameAsc = 'entryApp_name_ASC',
+  EntryAppNameDesc = 'entryApp_name_DESC',
+  EntryAppOneLinerAsc = 'entryApp_oneLiner_ASC',
+  EntryAppOneLinerDesc = 'entryApp_oneLiner_DESC',
+  EntryAppSmallIconAsc = 'entryApp_smallIcon_ASC',
+  EntryAppSmallIconDesc = 'entryApp_smallIcon_DESC',
+  EntryAppTermsOfServiceAsc = 'entryApp_termsOfService_ASC',
+  EntryAppTermsOfServiceDesc = 'entryApp_termsOfService_DESC',
+  EntryAppUseUriAsc = 'entryApp_useUri_ASC',
+  EntryAppUseUriDesc = 'entryApp_useUri_DESC',
+  EntryAppWebsiteUrlAsc = 'entryApp_websiteUrl_ASC',
+  EntryAppWebsiteUrlDesc = 'entryApp_websiteUrl_DESC',
   FollowsNumAsc = 'followsNum_ASC',
   FollowsNumDesc = 'followsNum_DESC',
   IdAsc = 'id_ASC',
@@ -1232,41 +1237,16 @@ export enum ChannelOrderByInput {
   OwnerMemberHandleDesc = 'ownerMember_handle_DESC',
   OwnerMemberIdAsc = 'ownerMember_id_ASC',
   OwnerMemberIdDesc = 'ownerMember_id_DESC',
+  OwnerMemberTotalChannelsCreatedAsc = 'ownerMember_totalChannelsCreated_ASC',
+  OwnerMemberTotalChannelsCreatedDesc = 'ownerMember_totalChannelsCreated_DESC',
+  OwnerMemberTotalVideosCreatedAsc = 'ownerMember_totalVideosCreated_ASC',
+  OwnerMemberTotalVideosCreatedDesc = 'ownerMember_totalVideosCreated_DESC',
   RewardAccountAsc = 'rewardAccount_ASC',
   RewardAccountDesc = 'rewardAccount_DESC',
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC',
   VideoViewsNumAsc = 'videoViewsNum_ASC',
   VideoViewsNumDesc = 'videoViewsNum_DESC',
-}
-
-/** Direct channel payment by any member by-passing the council payouts */
-export type ChannelPaymentMadeEventData = {
-  __typename?: 'ChannelPaymentMadeEventData'
-  /** Amount of the payment */
-  amount: Scalars['BigInt']
-  /** Channel that received the payment (if any) */
-  payeeChannel?: Maybe<Channel>
-  /** Actor that made the payment */
-  payer: Membership
-  /** Payment and payee context */
-  paymentContext?: Maybe<PaymentContext>
-  /** Reason of the payment */
-  rationale?: Maybe<Scalars['String']>
-}
-
-export type ChannelPayoutsUpdatedEventData = {
-  __typename?: 'ChannelPayoutsUpdatedEventData'
-  /** Can channel cashout the rewards */
-  channelCashoutsEnabled?: Maybe<Scalars['Boolean']>
-  /** Merkle root of the channel payouts */
-  commitment?: Maybe<Scalars['String']>
-  /** Maximum amount of channel reward cashout allowed at a time */
-  maxCashoutAllowed?: Maybe<Scalars['BigInt']>
-  /** Minimum amount of channel reward cashout allowed at a time */
-  minCashoutAllowed?: Maybe<Scalars['BigInt']>
-  /** Storage data object corresponding to the channel payouts payload */
-  payloadDataObject?: Maybe<StorageDataObject>
 }
 
 export type ChannelReportInfo = {
@@ -1279,26 +1259,6 @@ export type ChannelReportInfo = {
   reporterIp: Scalars['String']
 }
 
-export type ChannelRewardClaimedAndWithdrawnEventData = {
-  __typename?: 'ChannelRewardClaimedAndWithdrawnEventData'
-  /** Destination account ID. Null if claimed by curators' channel (paid to council budget in this case) */
-  account?: Maybe<Scalars['String']>
-  /** Content actor */
-  actor: ContentActor
-  /** Reward amount claimed */
-  amount: Scalars['BigInt']
-  /** The channel that claimed the reward */
-  channel: Channel
-}
-
-export type ChannelRewardClaimedEventData = {
-  __typename?: 'ChannelRewardClaimedEventData'
-  /** Reward amount claimed */
-  amount: Scalars['BigInt']
-  /** The channel that claimed the reward */
-  channel: Channel
-}
-
 export type ChannelUnfollowResult = {
   __typename?: 'ChannelUnfollowResult'
   channelId: Scalars['String']
@@ -1309,8 +1269,6 @@ export type ChannelUnfollowResult = {
 export type ChannelWhereInput = {
   AND?: InputMaybe<Array<ChannelWhereInput>>
   OR?: InputMaybe<Array<ChannelWhereInput>>
-  app?: InputMaybe<AppWhereInput>
-  app_isNull?: InputMaybe<Scalars['Boolean']>
   avatarPhoto?: InputMaybe<StorageDataObjectWhereInput>
   avatarPhoto_isNull?: InputMaybe<Scalars['Boolean']>
   bannedMembers_every?: InputMaybe<BannedMemberWhereInput>
@@ -1345,15 +1303,6 @@ export type ChannelWhereInput = {
   createdInBlock_lte?: InputMaybe<Scalars['Int']>
   createdInBlock_not_eq?: InputMaybe<Scalars['Int']>
   createdInBlock_not_in?: InputMaybe<Array<Scalars['Int']>>
-  cumulativeRewardClaimed_eq?: InputMaybe<Scalars['BigInt']>
-  cumulativeRewardClaimed_gt?: InputMaybe<Scalars['BigInt']>
-  cumulativeRewardClaimed_gte?: InputMaybe<Scalars['BigInt']>
-  cumulativeRewardClaimed_in?: InputMaybe<Array<Scalars['BigInt']>>
-  cumulativeRewardClaimed_isNull?: InputMaybe<Scalars['Boolean']>
-  cumulativeRewardClaimed_lt?: InputMaybe<Scalars['BigInt']>
-  cumulativeRewardClaimed_lte?: InputMaybe<Scalars['BigInt']>
-  cumulativeRewardClaimed_not_eq?: InputMaybe<Scalars['BigInt']>
-  cumulativeRewardClaimed_not_in?: InputMaybe<Array<Scalars['BigInt']>>
   description_contains?: InputMaybe<Scalars['String']>
   description_containsInsensitive?: InputMaybe<Scalars['String']>
   description_endsWith?: InputMaybe<Scalars['String']>
@@ -1371,6 +1320,8 @@ export type ChannelWhereInput = {
   description_not_in?: InputMaybe<Array<Scalars['String']>>
   description_not_startsWith?: InputMaybe<Scalars['String']>
   description_startsWith?: InputMaybe<Scalars['String']>
+  entryApp?: InputMaybe<AppWhereInput>
+  entryApp_isNull?: InputMaybe<Scalars['Boolean']>
   followsNum_eq?: InputMaybe<Scalars['Int']>
   followsNum_gt?: InputMaybe<Scalars['Int']>
   followsNum_gte?: InputMaybe<Scalars['Int']>
@@ -1548,6 +1499,10 @@ export enum CommentOrderByInput {
   AuthorHandleDesc = 'author_handle_DESC',
   AuthorIdAsc = 'author_id_ASC',
   AuthorIdDesc = 'author_id_DESC',
+  AuthorTotalChannelsCreatedAsc = 'author_totalChannelsCreated_ASC',
+  AuthorTotalChannelsCreatedDesc = 'author_totalChannelsCreated_DESC',
+  AuthorTotalVideosCreatedAsc = 'author_totalVideosCreated_ASC',
+  AuthorTotalVideosCreatedDesc = 'author_totalVideosCreated_DESC',
   CreatedAtAsc = 'createdAt_ASC',
   CreatedAtDesc = 'createdAt_DESC',
   IdAsc = 'id_ASC',
@@ -1622,6 +1577,8 @@ export enum CommentOrderByInput {
   VideoVideoStateBloatBondDesc = 'video_videoStateBloatBond_DESC',
   VideoViewsNumAsc = 'video_viewsNum_ASC',
   VideoViewsNumDesc = 'video_viewsNum_DESC',
+  VideoYtVideoIdAsc = 'video_ytVideoId_ASC',
+  VideoYtVideoIdDesc = 'video_ytVideoId_DESC',
 }
 
 export type CommentReaction = {
@@ -1673,6 +1630,10 @@ export enum CommentReactionOrderByInput {
   MemberHandleDesc = 'member_handle_DESC',
   MemberIdAsc = 'member_id_ASC',
   MemberIdDesc = 'member_id_DESC',
+  MemberTotalChannelsCreatedAsc = 'member_totalChannelsCreated_ASC',
+  MemberTotalChannelsCreatedDesc = 'member_totalChannelsCreated_DESC',
+  MemberTotalVideosCreatedAsc = 'member_totalVideosCreated_ASC',
+  MemberTotalVideosCreatedDesc = 'member_totalVideosCreated_DESC',
   ReactionIdAsc = 'reactionId_ASC',
   ReactionIdDesc = 'reactionId_DESC',
   VideoCommentsCountAsc = 'video_commentsCount_ASC',
@@ -1713,6 +1674,8 @@ export enum CommentReactionOrderByInput {
   VideoVideoStateBloatBondDesc = 'video_videoStateBloatBond_DESC',
   VideoViewsNumAsc = 'video_viewsNum_ASC',
   VideoViewsNumDesc = 'video_viewsNum_DESC',
+  VideoYtVideoIdAsc = 'video_ytVideoId_ASC',
+  VideoYtVideoIdDesc = 'video_ytVideoId_DESC',
 }
 
 export type CommentReactionWhereInput = {
@@ -2046,7 +2009,6 @@ export type CuratorsConnection = {
 export type DataObjectType =
   | DataObjectTypeChannelAvatar
   | DataObjectTypeChannelCoverPhoto
-  | DataObjectTypeChannelPayoutsPayload
   | DataObjectTypeVideoMedia
   | DataObjectTypeVideoSubtitle
   | DataObjectTypeVideoThumbnail
@@ -2061,11 +2023,6 @@ export type DataObjectTypeChannelCoverPhoto = {
   __typename?: 'DataObjectTypeChannelCoverPhoto'
   /** Related channel entity */
   channel: Channel
-}
-
-export type DataObjectTypeChannelPayoutsPayload = {
-  __typename?: 'DataObjectTypeChannelPayoutsPayload'
-  phantom?: Maybe<Scalars['Int']>
 }
 
 export type DataObjectTypeVideoMedia = {
@@ -2108,15 +2065,6 @@ export type DataObjectTypeWhereInput = {
   isTypeOf_not_in?: InputMaybe<Array<Scalars['String']>>
   isTypeOf_not_startsWith?: InputMaybe<Scalars['String']>
   isTypeOf_startsWith?: InputMaybe<Scalars['String']>
-  phantom_eq?: InputMaybe<Scalars['Int']>
-  phantom_gt?: InputMaybe<Scalars['Int']>
-  phantom_gte?: InputMaybe<Scalars['Int']>
-  phantom_in?: InputMaybe<Array<Scalars['Int']>>
-  phantom_isNull?: InputMaybe<Scalars['Boolean']>
-  phantom_lt?: InputMaybe<Scalars['Int']>
-  phantom_lte?: InputMaybe<Scalars['Int']>
-  phantom_not_eq?: InputMaybe<Scalars['Int']>
-  phantom_not_in?: InputMaybe<Array<Scalars['Int']>>
   subtitle?: InputMaybe<VideoSubtitleWhereInput>
   subtitle_isNull?: InputMaybe<Scalars['Boolean']>
   video?: InputMaybe<VideoWhereInput>
@@ -2708,11 +2656,6 @@ export type EventData =
   | BidMadeCompletingAuctionEventData
   | BuyNowCanceledEventData
   | BuyNowPriceUpdatedEventData
-  | ChannelFundsWithdrawnEventData
-  | ChannelPaymentMadeEventData
-  | ChannelPayoutsUpdatedEventData
-  | ChannelRewardClaimedAndWithdrawnEventData
-  | ChannelRewardClaimedEventData
   | CommentCreatedEventData
   | CommentTextUpdatedEventData
   | EnglishAuctionSettledEventData
@@ -2725,64 +2668,16 @@ export type EventData =
   | OpenAuctionStartedEventData
 
 export type EventDataWhereInput = {
-  account_contains?: InputMaybe<Scalars['String']>
-  account_containsInsensitive?: InputMaybe<Scalars['String']>
-  account_endsWith?: InputMaybe<Scalars['String']>
-  account_eq?: InputMaybe<Scalars['String']>
-  account_gt?: InputMaybe<Scalars['String']>
-  account_gte?: InputMaybe<Scalars['String']>
-  account_in?: InputMaybe<Array<Scalars['String']>>
-  account_isNull?: InputMaybe<Scalars['Boolean']>
-  account_lt?: InputMaybe<Scalars['String']>
-  account_lte?: InputMaybe<Scalars['String']>
-  account_not_contains?: InputMaybe<Scalars['String']>
-  account_not_containsInsensitive?: InputMaybe<Scalars['String']>
-  account_not_endsWith?: InputMaybe<Scalars['String']>
-  account_not_eq?: InputMaybe<Scalars['String']>
-  account_not_in?: InputMaybe<Array<Scalars['String']>>
-  account_not_startsWith?: InputMaybe<Scalars['String']>
-  account_startsWith?: InputMaybe<Scalars['String']>
   actor?: InputMaybe<ContentActorWhereInput>
   actor_isNull?: InputMaybe<Scalars['Boolean']>
-  amount_eq?: InputMaybe<Scalars['BigInt']>
-  amount_gt?: InputMaybe<Scalars['BigInt']>
-  amount_gte?: InputMaybe<Scalars['BigInt']>
-  amount_in?: InputMaybe<Array<Scalars['BigInt']>>
-  amount_isNull?: InputMaybe<Scalars['Boolean']>
-  amount_lt?: InputMaybe<Scalars['BigInt']>
-  amount_lte?: InputMaybe<Scalars['BigInt']>
-  amount_not_eq?: InputMaybe<Scalars['BigInt']>
-  amount_not_in?: InputMaybe<Array<Scalars['BigInt']>>
   auction?: InputMaybe<AuctionWhereInput>
   auction_isNull?: InputMaybe<Scalars['Boolean']>
   bid?: InputMaybe<BidWhereInput>
   bid_isNull?: InputMaybe<Scalars['Boolean']>
   buyer?: InputMaybe<MembershipWhereInput>
   buyer_isNull?: InputMaybe<Scalars['Boolean']>
-  channel?: InputMaybe<ChannelWhereInput>
-  channelCashoutsEnabled_eq?: InputMaybe<Scalars['Boolean']>
-  channelCashoutsEnabled_isNull?: InputMaybe<Scalars['Boolean']>
-  channelCashoutsEnabled_not_eq?: InputMaybe<Scalars['Boolean']>
-  channel_isNull?: InputMaybe<Scalars['Boolean']>
   comment?: InputMaybe<CommentWhereInput>
   comment_isNull?: InputMaybe<Scalars['Boolean']>
-  commitment_contains?: InputMaybe<Scalars['String']>
-  commitment_containsInsensitive?: InputMaybe<Scalars['String']>
-  commitment_endsWith?: InputMaybe<Scalars['String']>
-  commitment_eq?: InputMaybe<Scalars['String']>
-  commitment_gt?: InputMaybe<Scalars['String']>
-  commitment_gte?: InputMaybe<Scalars['String']>
-  commitment_in?: InputMaybe<Array<Scalars['String']>>
-  commitment_isNull?: InputMaybe<Scalars['Boolean']>
-  commitment_lt?: InputMaybe<Scalars['String']>
-  commitment_lte?: InputMaybe<Scalars['String']>
-  commitment_not_contains?: InputMaybe<Scalars['String']>
-  commitment_not_containsInsensitive?: InputMaybe<Scalars['String']>
-  commitment_not_endsWith?: InputMaybe<Scalars['String']>
-  commitment_not_eq?: InputMaybe<Scalars['String']>
-  commitment_not_in?: InputMaybe<Array<Scalars['String']>>
-  commitment_not_startsWith?: InputMaybe<Scalars['String']>
-  commitment_startsWith?: InputMaybe<Scalars['String']>
   isTypeOf_contains?: InputMaybe<Scalars['String']>
   isTypeOf_containsInsensitive?: InputMaybe<Scalars['String']>
   isTypeOf_endsWith?: InputMaybe<Scalars['String']>
@@ -2800,26 +2695,8 @@ export type EventDataWhereInput = {
   isTypeOf_not_in?: InputMaybe<Array<Scalars['String']>>
   isTypeOf_not_startsWith?: InputMaybe<Scalars['String']>
   isTypeOf_startsWith?: InputMaybe<Scalars['String']>
-  maxCashoutAllowed_eq?: InputMaybe<Scalars['BigInt']>
-  maxCashoutAllowed_gt?: InputMaybe<Scalars['BigInt']>
-  maxCashoutAllowed_gte?: InputMaybe<Scalars['BigInt']>
-  maxCashoutAllowed_in?: InputMaybe<Array<Scalars['BigInt']>>
-  maxCashoutAllowed_isNull?: InputMaybe<Scalars['Boolean']>
-  maxCashoutAllowed_lt?: InputMaybe<Scalars['BigInt']>
-  maxCashoutAllowed_lte?: InputMaybe<Scalars['BigInt']>
-  maxCashoutAllowed_not_eq?: InputMaybe<Scalars['BigInt']>
-  maxCashoutAllowed_not_in?: InputMaybe<Array<Scalars['BigInt']>>
   member?: InputMaybe<MembershipWhereInput>
   member_isNull?: InputMaybe<Scalars['Boolean']>
-  minCashoutAllowed_eq?: InputMaybe<Scalars['BigInt']>
-  minCashoutAllowed_gt?: InputMaybe<Scalars['BigInt']>
-  minCashoutAllowed_gte?: InputMaybe<Scalars['BigInt']>
-  minCashoutAllowed_in?: InputMaybe<Array<Scalars['BigInt']>>
-  minCashoutAllowed_isNull?: InputMaybe<Scalars['Boolean']>
-  minCashoutAllowed_lt?: InputMaybe<Scalars['BigInt']>
-  minCashoutAllowed_lte?: InputMaybe<Scalars['BigInt']>
-  minCashoutAllowed_not_eq?: InputMaybe<Scalars['BigInt']>
-  minCashoutAllowed_not_in?: InputMaybe<Array<Scalars['BigInt']>>
   newPrice_eq?: InputMaybe<Scalars['BigInt']>
   newPrice_gt?: InputMaybe<Scalars['BigInt']>
   newPrice_gte?: InputMaybe<Scalars['BigInt']>
@@ -2850,14 +2727,6 @@ export type EventDataWhereInput = {
   nftOwner?: InputMaybe<NftOwnerWhereInput>
   nftOwner_isNull?: InputMaybe<Scalars['Boolean']>
   nft_isNull?: InputMaybe<Scalars['Boolean']>
-  payeeChannel?: InputMaybe<ChannelWhereInput>
-  payeeChannel_isNull?: InputMaybe<Scalars['Boolean']>
-  payer?: InputMaybe<MembershipWhereInput>
-  payer_isNull?: InputMaybe<Scalars['Boolean']>
-  payloadDataObject?: InputMaybe<StorageDataObjectWhereInput>
-  payloadDataObject_isNull?: InputMaybe<Scalars['Boolean']>
-  paymentContext?: InputMaybe<PaymentContextWhereInput>
-  paymentContext_isNull?: InputMaybe<Scalars['Boolean']>
   previousNftOwner?: InputMaybe<NftOwnerWhereInput>
   previousNftOwner_isNull?: InputMaybe<Scalars['Boolean']>
   price_eq?: InputMaybe<Scalars['BigInt']>
@@ -2869,23 +2738,6 @@ export type EventDataWhereInput = {
   price_lte?: InputMaybe<Scalars['BigInt']>
   price_not_eq?: InputMaybe<Scalars['BigInt']>
   price_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  rationale_contains?: InputMaybe<Scalars['String']>
-  rationale_containsInsensitive?: InputMaybe<Scalars['String']>
-  rationale_endsWith?: InputMaybe<Scalars['String']>
-  rationale_eq?: InputMaybe<Scalars['String']>
-  rationale_gt?: InputMaybe<Scalars['String']>
-  rationale_gte?: InputMaybe<Scalars['String']>
-  rationale_in?: InputMaybe<Array<Scalars['String']>>
-  rationale_isNull?: InputMaybe<Scalars['Boolean']>
-  rationale_lt?: InputMaybe<Scalars['String']>
-  rationale_lte?: InputMaybe<Scalars['String']>
-  rationale_not_contains?: InputMaybe<Scalars['String']>
-  rationale_not_containsInsensitive?: InputMaybe<Scalars['String']>
-  rationale_not_endsWith?: InputMaybe<Scalars['String']>
-  rationale_not_eq?: InputMaybe<Scalars['String']>
-  rationale_not_in?: InputMaybe<Array<Scalars['String']>>
-  rationale_not_startsWith?: InputMaybe<Scalars['String']>
-  rationale_startsWith?: InputMaybe<Scalars['String']>
   result?: InputMaybe<MetaprotocolTransactionResultWhereInput>
   result_isNull?: InputMaybe<Scalars['Boolean']>
   text_contains?: InputMaybe<Scalars['String']>
@@ -2916,28 +2768,14 @@ export type EventEdge = {
 }
 
 export enum EventOrderByInput {
-  DataAccountAsc = 'data_account_ASC',
-  DataAccountDesc = 'data_account_DESC',
-  DataAmountAsc = 'data_amount_ASC',
-  DataAmountDesc = 'data_amount_DESC',
-  DataChannelCashoutsEnabledAsc = 'data_channelCashoutsEnabled_ASC',
-  DataChannelCashoutsEnabledDesc = 'data_channelCashoutsEnabled_DESC',
-  DataCommitmentAsc = 'data_commitment_ASC',
-  DataCommitmentDesc = 'data_commitment_DESC',
   DataIsTypeOfAsc = 'data_isTypeOf_ASC',
   DataIsTypeOfDesc = 'data_isTypeOf_DESC',
-  DataMaxCashoutAllowedAsc = 'data_maxCashoutAllowed_ASC',
-  DataMaxCashoutAllowedDesc = 'data_maxCashoutAllowed_DESC',
-  DataMinCashoutAllowedAsc = 'data_minCashoutAllowed_ASC',
-  DataMinCashoutAllowedDesc = 'data_minCashoutAllowed_DESC',
   DataNewPriceAsc = 'data_newPrice_ASC',
   DataNewPriceDesc = 'data_newPrice_DESC',
   DataNewTextAsc = 'data_newText_ASC',
   DataNewTextDesc = 'data_newText_DESC',
   DataPriceAsc = 'data_price_ASC',
   DataPriceDesc = 'data_price_DESC',
-  DataRationaleAsc = 'data_rationale_ASC',
-  DataRationaleDesc = 'data_rationale_DESC',
   DataTextAsc = 'data_text_ASC',
   DataTextDesc = 'data_text_DESC',
   IdAsc = 'id_ASC',
@@ -3058,6 +2896,12 @@ export type ExtendedVideoCategory = {
 export type FeaturedVideoInput = {
   videoCutUrl?: InputMaybe<Scalars['String']>
   videoId: Scalars['String']
+}
+
+export type GeneratedSignature = {
+  __typename?: 'GeneratedSignature'
+  /** App signature converted to hexadecimal string. */
+  signature: Scalars['String']
 }
 
 export type GeoCoordinates = {
@@ -3254,6 +3098,10 @@ export enum MemberMetadataOrderByInput {
   MemberHandleDesc = 'member_handle_DESC',
   MemberIdAsc = 'member_id_ASC',
   MemberIdDesc = 'member_id_DESC',
+  MemberTotalChannelsCreatedAsc = 'member_totalChannelsCreated_ASC',
+  MemberTotalChannelsCreatedDesc = 'member_totalChannelsCreated_DESC',
+  MemberTotalVideosCreatedAsc = 'member_totalVideosCreated_ASC',
+  MemberTotalVideosCreatedDesc = 'member_totalVideosCreated_DESC',
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
 }
@@ -3335,6 +3183,10 @@ export type Membership = {
   id: Scalars['String']
   /** Member's metadata */
   metadata?: Maybe<MemberMetadata>
+  /** Number of channels ever created by this member */
+  totalChannelsCreated: Scalars['Int']
+  /** Number of videos ever created by this member */
+  totalVideosCreated: Scalars['Int']
   /** Auctions in which is this user whitelisted to participate */
   whitelistedInAuctions: Array<AuctionWhitelistedMember>
 }
@@ -3384,6 +3236,10 @@ export enum MembershipOrderByInput {
   MetadataIdDesc = 'metadata_id_DESC',
   MetadataNameAsc = 'metadata_name_ASC',
   MetadataNameDesc = 'metadata_name_DESC',
+  TotalChannelsCreatedAsc = 'totalChannelsCreated_ASC',
+  TotalChannelsCreatedDesc = 'totalChannelsCreated_DESC',
+  TotalVideosCreatedAsc = 'totalVideosCreated_ASC',
+  TotalVideosCreatedDesc = 'totalVideosCreated_DESC',
 }
 
 export type MembershipWhereInput = {
@@ -3457,6 +3313,24 @@ export type MembershipWhereInput = {
   id_startsWith?: InputMaybe<Scalars['String']>
   metadata?: InputMaybe<MemberMetadataWhereInput>
   metadata_isNull?: InputMaybe<Scalars['Boolean']>
+  totalChannelsCreated_eq?: InputMaybe<Scalars['Int']>
+  totalChannelsCreated_gt?: InputMaybe<Scalars['Int']>
+  totalChannelsCreated_gte?: InputMaybe<Scalars['Int']>
+  totalChannelsCreated_in?: InputMaybe<Array<Scalars['Int']>>
+  totalChannelsCreated_isNull?: InputMaybe<Scalars['Boolean']>
+  totalChannelsCreated_lt?: InputMaybe<Scalars['Int']>
+  totalChannelsCreated_lte?: InputMaybe<Scalars['Int']>
+  totalChannelsCreated_not_eq?: InputMaybe<Scalars['Int']>
+  totalChannelsCreated_not_in?: InputMaybe<Array<Scalars['Int']>>
+  totalVideosCreated_eq?: InputMaybe<Scalars['Int']>
+  totalVideosCreated_gt?: InputMaybe<Scalars['Int']>
+  totalVideosCreated_gte?: InputMaybe<Scalars['Int']>
+  totalVideosCreated_in?: InputMaybe<Array<Scalars['Int']>>
+  totalVideosCreated_isNull?: InputMaybe<Scalars['Boolean']>
+  totalVideosCreated_lt?: InputMaybe<Scalars['Int']>
+  totalVideosCreated_lte?: InputMaybe<Scalars['Int']>
+  totalVideosCreated_not_eq?: InputMaybe<Scalars['Int']>
+  totalVideosCreated_not_in?: InputMaybe<Array<Scalars['Int']>>
   whitelistedInAuctions_every?: InputMaybe<AuctionWhitelistedMemberWhereInput>
   whitelistedInAuctions_none?: InputMaybe<AuctionWhitelistedMemberWhereInput>
   whitelistedInAuctions_some?: InputMaybe<AuctionWhitelistedMemberWhereInput>
@@ -3470,18 +3344,12 @@ export type MembershipsConnection = {
 }
 
 export type MetaprotocolTransactionResult =
-  | MetaprotocolTransactionResultChannelPaid
   | MetaprotocolTransactionResultCommentCreated
   | MetaprotocolTransactionResultCommentDeleted
   | MetaprotocolTransactionResultCommentEdited
   | MetaprotocolTransactionResultCommentModerated
   | MetaprotocolTransactionResultFailed
   | MetaprotocolTransactionResultOk
-
-export type MetaprotocolTransactionResultChannelPaid = {
-  __typename?: 'MetaprotocolTransactionResultChannelPaid'
-  channelPaid?: Maybe<Channel>
-}
 
 export type MetaprotocolTransactionResultCommentCreated = {
   __typename?: 'MetaprotocolTransactionResultCommentCreated'
@@ -3514,8 +3382,6 @@ export type MetaprotocolTransactionResultOk = {
 }
 
 export type MetaprotocolTransactionResultWhereInput = {
-  channelPaid?: InputMaybe<ChannelWhereInput>
-  channelPaid_isNull?: InputMaybe<Scalars['Boolean']>
   commentCreated?: InputMaybe<CommentWhereInput>
   commentCreated_isNull?: InputMaybe<Scalars['Boolean']>
   commentDeleted?: InputMaybe<CommentWhereInput>
@@ -3588,6 +3454,7 @@ export type Mutation = {
   setSupportedCategories: SetSupportedCategoriesResult
   setVideoHero: SetVideoHeroResult
   setVideoViewPerIpTimeLimit: VideoViewPerIpTimeLimit
+  signAppActionCommitment: GeneratedSignature
   unfollowChannel: ChannelUnfollowResult
 }
 
@@ -3645,9 +3512,92 @@ export type MutationSetVideoViewPerIpTimeLimitArgs = {
   limitInSeconds: Scalars['Int']
 }
 
+export type MutationSignAppActionCommitmentArgs = {
+  assets: Scalars['String']
+  creatorId: Scalars['String']
+  rawAction: Scalars['String']
+  rawAppActionMetadata: Scalars['String']
+}
+
 export type MutationUnfollowChannelArgs = {
   channelId: Scalars['String']
   token: Scalars['String']
+}
+
+export type NftActivitiesConnection = {
+  __typename?: 'NftActivitiesConnection'
+  edges: Array<NftActivityEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type NftActivity = {
+  __typename?: 'NftActivity'
+  /** Nft-related activity */
+  event: Event
+  /** Autoincremented */
+  id: Scalars['String']
+  /** The member the activity relates to */
+  member: Membership
+}
+
+export type NftActivityEdge = {
+  __typename?: 'NftActivityEdge'
+  cursor: Scalars['String']
+  node: NftActivity
+}
+
+export enum NftActivityOrderByInput {
+  EventIdAsc = 'event_id_ASC',
+  EventIdDesc = 'event_id_DESC',
+  EventInBlockAsc = 'event_inBlock_ASC',
+  EventInBlockDesc = 'event_inBlock_DESC',
+  EventInExtrinsicAsc = 'event_inExtrinsic_ASC',
+  EventInExtrinsicDesc = 'event_inExtrinsic_DESC',
+  EventIndexInBlockAsc = 'event_indexInBlock_ASC',
+  EventIndexInBlockDesc = 'event_indexInBlock_DESC',
+  EventTimestampAsc = 'event_timestamp_ASC',
+  EventTimestampDesc = 'event_timestamp_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  MemberControllerAccountAsc = 'member_controllerAccount_ASC',
+  MemberControllerAccountDesc = 'member_controllerAccount_DESC',
+  MemberCreatedAtAsc = 'member_createdAt_ASC',
+  MemberCreatedAtDesc = 'member_createdAt_DESC',
+  MemberHandleAsc = 'member_handle_ASC',
+  MemberHandleDesc = 'member_handle_DESC',
+  MemberIdAsc = 'member_id_ASC',
+  MemberIdDesc = 'member_id_DESC',
+  MemberTotalChannelsCreatedAsc = 'member_totalChannelsCreated_ASC',
+  MemberTotalChannelsCreatedDesc = 'member_totalChannelsCreated_DESC',
+  MemberTotalVideosCreatedAsc = 'member_totalVideosCreated_ASC',
+  MemberTotalVideosCreatedDesc = 'member_totalVideosCreated_DESC',
+}
+
+export type NftActivityWhereInput = {
+  AND?: InputMaybe<Array<NftActivityWhereInput>>
+  OR?: InputMaybe<Array<NftActivityWhereInput>>
+  event?: InputMaybe<EventWhereInput>
+  event_isNull?: InputMaybe<Scalars['Boolean']>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  member?: InputMaybe<MembershipWhereInput>
+  member_isNull?: InputMaybe<Scalars['Boolean']>
 }
 
 export type NftBoughtEventData = {
@@ -3660,6 +3610,80 @@ export type NftBoughtEventData = {
   previousNftOwner: NftOwner
   /** Price for which the NFT was bought */
   price: Scalars['BigInt']
+}
+
+export type NftHistoryEntriesConnection = {
+  __typename?: 'NftHistoryEntriesConnection'
+  edges: Array<NftHistoryEntryEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type NftHistoryEntry = {
+  __typename?: 'NftHistoryEntry'
+  /** Nft-related event */
+  event: Event
+  /** Autoincremented */
+  id: Scalars['String']
+  /** The NFT the event relates to */
+  nft: OwnedNft
+}
+
+export type NftHistoryEntryEdge = {
+  __typename?: 'NftHistoryEntryEdge'
+  cursor: Scalars['String']
+  node: NftHistoryEntry
+}
+
+export enum NftHistoryEntryOrderByInput {
+  EventIdAsc = 'event_id_ASC',
+  EventIdDesc = 'event_id_DESC',
+  EventInBlockAsc = 'event_inBlock_ASC',
+  EventInBlockDesc = 'event_inBlock_DESC',
+  EventInExtrinsicAsc = 'event_inExtrinsic_ASC',
+  EventInExtrinsicDesc = 'event_inExtrinsic_DESC',
+  EventIndexInBlockAsc = 'event_indexInBlock_ASC',
+  EventIndexInBlockDesc = 'event_indexInBlock_DESC',
+  EventTimestampAsc = 'event_timestamp_ASC',
+  EventTimestampDesc = 'event_timestamp_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  NftCreatedAtAsc = 'nft_createdAt_ASC',
+  NftCreatedAtDesc = 'nft_createdAt_DESC',
+  NftCreatorRoyaltyAsc = 'nft_creatorRoyalty_ASC',
+  NftCreatorRoyaltyDesc = 'nft_creatorRoyalty_DESC',
+  NftIdAsc = 'nft_id_ASC',
+  NftIdDesc = 'nft_id_DESC',
+  NftLastSaleDateAsc = 'nft_lastSaleDate_ASC',
+  NftLastSaleDateDesc = 'nft_lastSaleDate_DESC',
+  NftLastSalePriceAsc = 'nft_lastSalePrice_ASC',
+  NftLastSalePriceDesc = 'nft_lastSalePrice_DESC',
+}
+
+export type NftHistoryEntryWhereInput = {
+  AND?: InputMaybe<Array<NftHistoryEntryWhereInput>>
+  OR?: InputMaybe<Array<NftHistoryEntryWhereInput>>
+  event?: InputMaybe<EventWhereInput>
+  event_isNull?: InputMaybe<Scalars['Boolean']>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  nft?: InputMaybe<OwnedNftWhereInput>
+  nft_isNull?: InputMaybe<Scalars['Boolean']>
 }
 
 export type NftIssuedEventData = {
@@ -3767,6 +3791,82 @@ export type NodeLocationMetadataWhereInput = {
   countryCode_not_in?: InputMaybe<Array<Scalars['String']>>
   countryCode_not_startsWith?: InputMaybe<Scalars['String']>
   countryCode_startsWith?: InputMaybe<Scalars['String']>
+}
+
+export type Notification = {
+  __typename?: 'Notification'
+  /** The notification event */
+  event: Event
+  /** Autoincremented */
+  id: Scalars['String']
+  /** Member that should recieve the notification */
+  member: Membership
+}
+
+export type NotificationEdge = {
+  __typename?: 'NotificationEdge'
+  cursor: Scalars['String']
+  node: Notification
+}
+
+export enum NotificationOrderByInput {
+  EventIdAsc = 'event_id_ASC',
+  EventIdDesc = 'event_id_DESC',
+  EventInBlockAsc = 'event_inBlock_ASC',
+  EventInBlockDesc = 'event_inBlock_DESC',
+  EventInExtrinsicAsc = 'event_inExtrinsic_ASC',
+  EventInExtrinsicDesc = 'event_inExtrinsic_DESC',
+  EventIndexInBlockAsc = 'event_indexInBlock_ASC',
+  EventIndexInBlockDesc = 'event_indexInBlock_DESC',
+  EventTimestampAsc = 'event_timestamp_ASC',
+  EventTimestampDesc = 'event_timestamp_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  MemberControllerAccountAsc = 'member_controllerAccount_ASC',
+  MemberControllerAccountDesc = 'member_controllerAccount_DESC',
+  MemberCreatedAtAsc = 'member_createdAt_ASC',
+  MemberCreatedAtDesc = 'member_createdAt_DESC',
+  MemberHandleAsc = 'member_handle_ASC',
+  MemberHandleDesc = 'member_handle_DESC',
+  MemberIdAsc = 'member_id_ASC',
+  MemberIdDesc = 'member_id_DESC',
+  MemberTotalChannelsCreatedAsc = 'member_totalChannelsCreated_ASC',
+  MemberTotalChannelsCreatedDesc = 'member_totalChannelsCreated_DESC',
+  MemberTotalVideosCreatedAsc = 'member_totalVideosCreated_ASC',
+  MemberTotalVideosCreatedDesc = 'member_totalVideosCreated_DESC',
+}
+
+export type NotificationWhereInput = {
+  AND?: InputMaybe<Array<NotificationWhereInput>>
+  OR?: InputMaybe<Array<NotificationWhereInput>>
+  event?: InputMaybe<EventWhereInput>
+  event_isNull?: InputMaybe<Scalars['Boolean']>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  member?: InputMaybe<MembershipWhereInput>
+  member_isNull?: InputMaybe<Scalars['Boolean']>
+}
+
+export type NotificationsConnection = {
+  __typename?: 'NotificationsConnection'
+  edges: Array<NotificationEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
 }
 
 export type OpenAuctionBidAcceptedEventData = {
@@ -3892,6 +3992,8 @@ export enum OwnedNftOrderByInput {
   VideoVideoStateBloatBondDesc = 'video_videoStateBloatBond_DESC',
   VideoViewsNumAsc = 'video_viewsNum_ASC',
   VideoViewsNumDesc = 'video_viewsNum_DESC',
+  VideoYtVideoIdAsc = 'video_ytVideoId_ASC',
+  VideoYtVideoIdDesc = 'video_ytVideoId_DESC',
 }
 
 export type OwnedNftWhereInput = {
@@ -3977,45 +4079,6 @@ export type PageInfo = {
   hasNextPage: Scalars['Boolean']
   hasPreviousPage: Scalars['Boolean']
   startCursor: Scalars['String']
-}
-
-/** Various Channel Payment Contexts */
-export type PaymentContext = PaymentContextChannel | PaymentContextVideo
-
-export type PaymentContextChannel = {
-  __typename?: 'PaymentContextChannel'
-  /** Channel for which the payment was made */
-  channel: Channel
-}
-
-export type PaymentContextVideo = {
-  __typename?: 'PaymentContextVideo'
-  /** Video for which the payment was made */
-  video: Video
-}
-
-export type PaymentContextWhereInput = {
-  channel?: InputMaybe<ChannelWhereInput>
-  channel_isNull?: InputMaybe<Scalars['Boolean']>
-  isTypeOf_contains?: InputMaybe<Scalars['String']>
-  isTypeOf_containsInsensitive?: InputMaybe<Scalars['String']>
-  isTypeOf_endsWith?: InputMaybe<Scalars['String']>
-  isTypeOf_eq?: InputMaybe<Scalars['String']>
-  isTypeOf_gt?: InputMaybe<Scalars['String']>
-  isTypeOf_gte?: InputMaybe<Scalars['String']>
-  isTypeOf_in?: InputMaybe<Array<Scalars['String']>>
-  isTypeOf_isNull?: InputMaybe<Scalars['Boolean']>
-  isTypeOf_lt?: InputMaybe<Scalars['String']>
-  isTypeOf_lte?: InputMaybe<Scalars['String']>
-  isTypeOf_not_contains?: InputMaybe<Scalars['String']>
-  isTypeOf_not_containsInsensitive?: InputMaybe<Scalars['String']>
-  isTypeOf_not_endsWith?: InputMaybe<Scalars['String']>
-  isTypeOf_not_eq?: InputMaybe<Scalars['String']>
-  isTypeOf_not_in?: InputMaybe<Array<Scalars['String']>>
-  isTypeOf_not_startsWith?: InputMaybe<Scalars['String']>
-  isTypeOf_startsWith?: InputMaybe<Scalars['String']>
-  video?: InputMaybe<VideoWhereInput>
-  video_isNull?: InputMaybe<Scalars['Boolean']>
 }
 
 export type ProcessorState = {
@@ -4133,6 +4196,21 @@ export type Query = {
   membershipsConnection: MembershipsConnection
   mostRecentChannels: Array<ExtendedChannel>
   mostViewedVideosConnection: VideosConnection
+  nftActivities: Array<NftActivity>
+  nftActivitiesConnection: NftActivitiesConnection
+  nftActivityById?: Maybe<NftActivity>
+  /** @deprecated Use nftActivityById */
+  nftActivityByUniqueInput?: Maybe<NftActivity>
+  nftHistoryEntries: Array<NftHistoryEntry>
+  nftHistoryEntriesConnection: NftHistoryEntriesConnection
+  nftHistoryEntryById?: Maybe<NftHistoryEntry>
+  /** @deprecated Use nftHistoryEntryById */
+  nftHistoryEntryByUniqueInput?: Maybe<NftHistoryEntry>
+  notificationById?: Maybe<Notification>
+  /** @deprecated Use notificationById */
+  notificationByUniqueInput?: Maybe<Notification>
+  notifications: Array<Notification>
+  notificationsConnection: NotificationsConnection
   ownedNftById?: Maybe<OwnedNft>
   /** @deprecated Use ownedNftById */
   ownedNftByUniqueInput?: Maybe<OwnedNft>
@@ -4673,6 +4751,72 @@ export type QueryMostViewedVideosConnectionArgs = {
   orderBy: Array<VideoOrderByInput>
   periodDays?: InputMaybe<Scalars['Int']>
   where?: InputMaybe<VideoWhereInput>
+}
+
+export type QueryNftActivitiesArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<NftActivityOrderByInput>>
+  where?: InputMaybe<NftActivityWhereInput>
+}
+
+export type QueryNftActivitiesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<NftActivityOrderByInput>
+  where?: InputMaybe<NftActivityWhereInput>
+}
+
+export type QueryNftActivityByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryNftActivityByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryNftHistoryEntriesArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<NftHistoryEntryOrderByInput>>
+  where?: InputMaybe<NftHistoryEntryWhereInput>
+}
+
+export type QueryNftHistoryEntriesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<NftHistoryEntryOrderByInput>
+  where?: InputMaybe<NftHistoryEntryWhereInput>
+}
+
+export type QueryNftHistoryEntryByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryNftHistoryEntryByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryNotificationByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryNotificationByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryNotificationsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<NotificationOrderByInput>>
+  where?: InputMaybe<NotificationWhereInput>
+}
+
+export type QueryNotificationsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<NotificationOrderByInput>
+  where?: InputMaybe<NotificationWhereInput>
 }
 
 export type QueryOwnedNftByIdArgs = {
@@ -5672,8 +5816,6 @@ export enum StorageDataObjectOrderByInput {
   StorageBagIdDesc = 'storageBag_id_DESC',
   TypeIsTypeOfAsc = 'type_isTypeOf_ASC',
   TypeIsTypeOfDesc = 'type_isTypeOf_DESC',
-  TypePhantomAsc = 'type_phantom_ASC',
-  TypePhantomDesc = 'type_phantom_DESC',
   UnsetAtAsc = 'unsetAt_ASC',
   UnsetAtDesc = 'unsetAt_DESC',
 }
@@ -5809,6 +5951,12 @@ export type Subscription = {
   memberMetadataById?: Maybe<MemberMetadata>
   membershipById?: Maybe<Membership>
   memberships: Array<Membership>
+  nftActivities: Array<NftActivity>
+  nftActivityById?: Maybe<NftActivity>
+  nftHistoryEntries: Array<NftHistoryEntry>
+  nftHistoryEntryById?: Maybe<NftHistoryEntry>
+  notificationById?: Maybe<Notification>
+  notifications: Array<Notification>
   ownedNftById?: Maybe<OwnedNft>
   ownedNfts: Array<OwnedNft>
   processorState: ProcessorState
@@ -6060,6 +6208,39 @@ export type SubscriptionMembershipsArgs = {
   where?: InputMaybe<MembershipWhereInput>
 }
 
+export type SubscriptionNftActivitiesArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<NftActivityOrderByInput>>
+  where?: InputMaybe<NftActivityWhereInput>
+}
+
+export type SubscriptionNftActivityByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionNftHistoryEntriesArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<NftHistoryEntryOrderByInput>>
+  where?: InputMaybe<NftHistoryEntryWhereInput>
+}
+
+export type SubscriptionNftHistoryEntryByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionNotificationByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionNotificationsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<NotificationOrderByInput>>
+  where?: InputMaybe<NotificationWhereInput>
+}
+
 export type SubscriptionOwnedNftByIdArgs = {
   id: Scalars['String']
 }
@@ -6308,6 +6489,8 @@ export type Video = {
   description?: Maybe<Scalars['String']>
   /** Video duration in seconds */
   duration?: Maybe<Scalars['Int']>
+  /** Application used for video creation */
+  entryApp?: Maybe<App>
   /** Whether or not Video contains marketing */
   hasMarketing?: Maybe<Scalars['Boolean']>
   /** Runtime identifier */
@@ -6354,6 +6537,8 @@ export type Video = {
   videoStateBloatBond: Scalars['BigInt']
   /** Number of video views (to speed up orderBy queries by avoiding COUNT aggregation) */
   viewsNum: Scalars['Int']
+  /** Video ID coming from YPP */
+  ytVideoId?: Maybe<Scalars['String']>
 }
 
 export type VideoCommentsArgs = {
@@ -6604,6 +6789,8 @@ export enum VideoFeaturedInCategoryOrderByInput {
   VideoVideoStateBloatBondDesc = 'video_videoStateBloatBond_DESC',
   VideoViewsNumAsc = 'video_viewsNum_ASC',
   VideoViewsNumDesc = 'video_viewsNum_DESC',
+  VideoYtVideoIdAsc = 'video_ytVideoId_ASC',
+  VideoYtVideoIdDesc = 'video_ytVideoId_DESC',
 }
 
 export type VideoFeaturedInCategoryWhereInput = {
@@ -6720,6 +6907,8 @@ export enum VideoHeroOrderByInput {
   VideoVideoStateBloatBondDesc = 'video_videoStateBloatBond_DESC',
   VideoViewsNumAsc = 'video_viewsNum_ASC',
   VideoViewsNumDesc = 'video_viewsNum_DESC',
+  VideoYtVideoIdAsc = 'video_ytVideoId_ASC',
+  VideoYtVideoIdDesc = 'video_ytVideoId_DESC',
 }
 
 export type VideoHeroWhereInput = {
@@ -7007,6 +7196,8 @@ export enum VideoMediaMetadataOrderByInput {
   VideoVideoStateBloatBondDesc = 'video_videoStateBloatBond_DESC',
   VideoViewsNumAsc = 'video_viewsNum_ASC',
   VideoViewsNumDesc = 'video_viewsNum_DESC',
+  VideoYtVideoIdAsc = 'video_ytVideoId_ASC',
+  VideoYtVideoIdDesc = 'video_ytVideoId_DESC',
 }
 
 export type VideoMediaMetadataWhereInput = {
@@ -7088,8 +7279,6 @@ export enum VideoOrderByInput {
   ChannelCreatedAtDesc = 'channel_createdAt_DESC',
   ChannelCreatedInBlockAsc = 'channel_createdInBlock_ASC',
   ChannelCreatedInBlockDesc = 'channel_createdInBlock_DESC',
-  ChannelCumulativeRewardClaimedAsc = 'channel_cumulativeRewardClaimed_ASC',
-  ChannelCumulativeRewardClaimedDesc = 'channel_cumulativeRewardClaimed_DESC',
   ChannelDescriptionAsc = 'channel_description_ASC',
   ChannelDescriptionDesc = 'channel_description_DESC',
   ChannelFollowsNumAsc = 'channel_followsNum_ASC',
@@ -7120,6 +7309,30 @@ export enum VideoOrderByInput {
   DescriptionDesc = 'description_DESC',
   DurationAsc = 'duration_ASC',
   DurationDesc = 'duration_DESC',
+  EntryAppAuthKeyAsc = 'entryApp_authKey_ASC',
+  EntryAppAuthKeyDesc = 'entryApp_authKey_DESC',
+  EntryAppBigIconAsc = 'entryApp_bigIcon_ASC',
+  EntryAppBigIconDesc = 'entryApp_bigIcon_DESC',
+  EntryAppCategoryAsc = 'entryApp_category_ASC',
+  EntryAppCategoryDesc = 'entryApp_category_DESC',
+  EntryAppDescriptionAsc = 'entryApp_description_ASC',
+  EntryAppDescriptionDesc = 'entryApp_description_DESC',
+  EntryAppIdAsc = 'entryApp_id_ASC',
+  EntryAppIdDesc = 'entryApp_id_DESC',
+  EntryAppMediumIconAsc = 'entryApp_mediumIcon_ASC',
+  EntryAppMediumIconDesc = 'entryApp_mediumIcon_DESC',
+  EntryAppNameAsc = 'entryApp_name_ASC',
+  EntryAppNameDesc = 'entryApp_name_DESC',
+  EntryAppOneLinerAsc = 'entryApp_oneLiner_ASC',
+  EntryAppOneLinerDesc = 'entryApp_oneLiner_DESC',
+  EntryAppSmallIconAsc = 'entryApp_smallIcon_ASC',
+  EntryAppSmallIconDesc = 'entryApp_smallIcon_DESC',
+  EntryAppTermsOfServiceAsc = 'entryApp_termsOfService_ASC',
+  EntryAppTermsOfServiceDesc = 'entryApp_termsOfService_DESC',
+  EntryAppUseUriAsc = 'entryApp_useUri_ASC',
+  EntryAppUseUriDesc = 'entryApp_useUri_DESC',
+  EntryAppWebsiteUrlAsc = 'entryApp_websiteUrl_ASC',
+  EntryAppWebsiteUrlDesc = 'entryApp_websiteUrl_DESC',
   HasMarketingAsc = 'hasMarketing_ASC',
   HasMarketingDesc = 'hasMarketing_DESC',
   IdAsc = 'id_ASC',
@@ -7222,6 +7435,8 @@ export enum VideoOrderByInput {
   VideoStateBloatBondDesc = 'videoStateBloatBond_DESC',
   ViewsNumAsc = 'viewsNum_ASC',
   ViewsNumDesc = 'viewsNum_DESC',
+  YtVideoIdAsc = 'ytVideoId_ASC',
+  YtVideoIdDesc = 'ytVideoId_DESC',
 }
 
 export type VideoReaction = {
@@ -7262,6 +7477,10 @@ export enum VideoReactionOrderByInput {
   MemberHandleDesc = 'member_handle_DESC',
   MemberIdAsc = 'member_id_ASC',
   MemberIdDesc = 'member_id_DESC',
+  MemberTotalChannelsCreatedAsc = 'member_totalChannelsCreated_ASC',
+  MemberTotalChannelsCreatedDesc = 'member_totalChannelsCreated_DESC',
+  MemberTotalVideosCreatedAsc = 'member_totalVideosCreated_ASC',
+  MemberTotalVideosCreatedDesc = 'member_totalVideosCreated_DESC',
   ReactionAsc = 'reaction_ASC',
   ReactionDesc = 'reaction_DESC',
   VideoCommentsCountAsc = 'video_commentsCount_ASC',
@@ -7302,6 +7521,8 @@ export enum VideoReactionOrderByInput {
   VideoVideoStateBloatBondDesc = 'video_videoStateBloatBond_DESC',
   VideoViewsNumAsc = 'video_viewsNum_ASC',
   VideoViewsNumDesc = 'video_viewsNum_DESC',
+  VideoYtVideoIdAsc = 'video_ytVideoId_ASC',
+  VideoYtVideoIdDesc = 'video_ytVideoId_DESC',
 }
 
 export type VideoReactionWhereInput = {
@@ -7452,6 +7673,8 @@ export enum VideoSubtitleOrderByInput {
   VideoVideoStateBloatBondDesc = 'video_videoStateBloatBond_DESC',
   VideoViewsNumAsc = 'video_viewsNum_ASC',
   VideoViewsNumDesc = 'video_viewsNum_DESC',
+  VideoYtVideoIdAsc = 'video_ytVideoId_ASC',
+  VideoYtVideoIdDesc = 'video_ytVideoId_DESC',
 }
 
 export type VideoSubtitleWhereInput = {
@@ -7606,6 +7829,8 @@ export type VideoWhereInput = {
   duration_lte?: InputMaybe<Scalars['Int']>
   duration_not_eq?: InputMaybe<Scalars['Int']>
   duration_not_in?: InputMaybe<Array<Scalars['Int']>>
+  entryApp?: InputMaybe<AppWhereInput>
+  entryApp_isNull?: InputMaybe<Scalars['Boolean']>
   hasMarketing_eq?: InputMaybe<Scalars['Boolean']>
   hasMarketing_isNull?: InputMaybe<Scalars['Boolean']>
   hasMarketing_not_eq?: InputMaybe<Scalars['Boolean']>
@@ -7733,6 +7958,23 @@ export type VideoWhereInput = {
   viewsNum_lte?: InputMaybe<Scalars['Int']>
   viewsNum_not_eq?: InputMaybe<Scalars['Int']>
   viewsNum_not_in?: InputMaybe<Array<Scalars['Int']>>
+  ytVideoId_contains?: InputMaybe<Scalars['String']>
+  ytVideoId_containsInsensitive?: InputMaybe<Scalars['String']>
+  ytVideoId_endsWith?: InputMaybe<Scalars['String']>
+  ytVideoId_eq?: InputMaybe<Scalars['String']>
+  ytVideoId_gt?: InputMaybe<Scalars['String']>
+  ytVideoId_gte?: InputMaybe<Scalars['String']>
+  ytVideoId_in?: InputMaybe<Array<Scalars['String']>>
+  ytVideoId_isNull?: InputMaybe<Scalars['Boolean']>
+  ytVideoId_lt?: InputMaybe<Scalars['String']>
+  ytVideoId_lte?: InputMaybe<Scalars['String']>
+  ytVideoId_not_contains?: InputMaybe<Scalars['String']>
+  ytVideoId_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  ytVideoId_not_endsWith?: InputMaybe<Scalars['String']>
+  ytVideoId_not_eq?: InputMaybe<Scalars['String']>
+  ytVideoId_not_in?: InputMaybe<Array<Scalars['String']>>
+  ytVideoId_not_startsWith?: InputMaybe<Scalars['String']>
+  ytVideoId_startsWith?: InputMaybe<Scalars['String']>
 }
 
 export type VideosConnection = {

@@ -40,7 +40,6 @@ export type GetCommentQuery = {
                 type?:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -104,7 +103,6 @@ export type GetCommentRepliesConnectionQuery = {
                     type?:
                       | { __typename: 'DataObjectTypeChannelAvatar' }
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
                       | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -166,7 +164,6 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
                 type?:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -219,7 +216,6 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
                     type?:
                       | { __typename: 'DataObjectTypeChannelAvatar' }
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
                       | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -273,11 +269,6 @@ export type GetCommentEditsQuery = {
       | { __typename?: 'BidMadeCompletingAuctionEventData' }
       | { __typename?: 'BuyNowCanceledEventData' }
       | { __typename?: 'BuyNowPriceUpdatedEventData' }
-      | { __typename?: 'ChannelFundsWithdrawnEventData' }
-      | { __typename?: 'ChannelPaymentMadeEventData' }
-      | { __typename?: 'ChannelPayoutsUpdatedEventData' }
-      | { __typename?: 'ChannelRewardClaimedAndWithdrawnEventData' }
-      | { __typename?: 'ChannelRewardClaimedEventData' }
       | { __typename?: 'CommentCreatedEventData'; text: string }
       | { __typename?: 'CommentTextUpdatedEventData'; newText: string }
       | { __typename?: 'EnglishAuctionSettledEventData' }
