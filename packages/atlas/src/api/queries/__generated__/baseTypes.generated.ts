@@ -11731,6 +11731,12 @@ export type FundingRequestProposalDetails = {
   destinationsList?: Maybe<FundingRequestDestinationsList>
 }
 
+export type GeneratedSignature = {
+  __typename?: 'GeneratedSignature'
+  /** App signature converted to hexadecimal string. */
+  signature: Scalars['String']
+}
+
 export type GeoCoordinates = BaseGraphQlObject & {
   __typename?: 'GeoCoordinates'
   createdAt: Scalars['DateTime']
@@ -15285,6 +15291,7 @@ export type Mutation = {
   setCategoryFeaturedVideos: Array<FeaturedVideo>
   setKillSwitch: Admin
   setVideoHero: VideoHero
+  signAppActionCommitment: GeneratedSignature
   /** Remove a single follow from the target channel */
   unfollowChannel: ChannelFollowsInfo
 }
@@ -15320,6 +15327,14 @@ export type MutationSetKillSwitchArgs = {
 
 export type MutationSetVideoHeroArgs = {
   newVideoHero: VideoHeroInput
+}
+
+export type MutationSignAppActionCommitmentArgs = {
+  assets?: InputMaybe<Scalars['String']>
+  creatorId: Scalars['String']
+  nonce: Scalars['Float']
+  rawAction?: InputMaybe<Scalars['String']>
+  rawAppActionMetadata?: InputMaybe<Scalars['String']>
 }
 
 export type MutationUnfollowChannelArgs = {
@@ -30484,6 +30499,8 @@ export type Video = BaseGraphQlObject & {
   isCommentSectionEnabled: Scalars['Boolean']
   /** Whether the Video contains explicit material. */
   isExplicit?: Maybe<Scalars['Boolean']>
+  /** Is video featured or not */
+  isFeatured: Scalars['Boolean']
   /** Whether the Video is supposed to be publically displayed */
   isPublic?: Maybe<Scalars['Boolean']>
   /** Is reactions feature enabled on video (true if enabled i.e. video can be reacted) */
@@ -30859,6 +30876,7 @@ export type VideoCreateInput = {
   isCensored: Scalars['Boolean']
   isCommentSectionEnabled: Scalars['Boolean']
   isExplicit?: InputMaybe<Scalars['Boolean']>
+  isFeatured: Scalars['Boolean']
   isPublic?: InputMaybe<Scalars['Boolean']>
   isReactionFeatureEnabled: Scalars['Boolean']
   language?: InputMaybe<Scalars['ID']>
@@ -31440,6 +31458,8 @@ export enum VideoOrderByInput {
   IsCommentSectionEnabledDesc = 'isCommentSectionEnabled_DESC',
   IsExplicitAsc = 'isExplicit_ASC',
   IsExplicitDesc = 'isExplicit_DESC',
+  IsFeaturedAsc = 'isFeatured_ASC',
+  IsFeaturedDesc = 'isFeatured_DESC',
   IsPublicAsc = 'isPublic_ASC',
   IsPublicDesc = 'isPublic_DESC',
   IsReactionFeatureEnabledAsc = 'isReactionFeatureEnabled_ASC',
@@ -32113,6 +32133,7 @@ export type VideoUpdateInput = {
   isCensored?: InputMaybe<Scalars['Boolean']>
   isCommentSectionEnabled?: InputMaybe<Scalars['Boolean']>
   isExplicit?: InputMaybe<Scalars['Boolean']>
+  isFeatured?: InputMaybe<Scalars['Boolean']>
   isPublic?: InputMaybe<Scalars['Boolean']>
   isReactionFeatureEnabled?: InputMaybe<Scalars['Boolean']>
   language?: InputMaybe<Scalars['ID']>
@@ -32385,6 +32406,8 @@ export type VideoWhereInput = {
   isCommentSectionEnabled_in?: InputMaybe<Array<Scalars['Boolean']>>
   isExplicit_eq?: InputMaybe<Scalars['Boolean']>
   isExplicit_in?: InputMaybe<Array<Scalars['Boolean']>>
+  isFeatured_eq?: InputMaybe<Scalars['Boolean']>
+  isFeatured_in?: InputMaybe<Array<Scalars['Boolean']>>
   isPublic_eq?: InputMaybe<Scalars['Boolean']>
   isPublic_in?: InputMaybe<Array<Scalars['Boolean']>>
   isReactionFeatureEnabled_eq?: InputMaybe<Scalars['Boolean']>
