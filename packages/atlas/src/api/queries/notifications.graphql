@@ -134,151 +134,116 @@ query GetNotifications($memberId: String!, $limit: Int!) {
 }
 
 # CHANGE: ID is now `String`
-query GetNftHistory($nftId: String!, $orderBy: [EventOrderByInput!] = [timestamp_DESC]) {
-  # Note that `orderBy` and `limit` now applies to all events together, not on per-type basis
-  events(
-    orderBy: $orderBy # CHANGE: `timestamp` now used instead of `createdAt` (which is no longer available)
-    where: {
-      OR: [
-        {
-          data: {
-            isTypeOf_in: ["OpenAuctionStartedEventData", "EnglishAuctionStartedEventData", "AuctionCanceledEventData"]
-            auction: { nft: { id_eq: $nftId } }
-          }
-        }
-        {
-          data: {
-            isTypeOf_in: [
-              "NftIssuedEventData"
-              "NftSellOrderMadeEventData"
-              "NftBoughtEventData"
-              "BuyNowCanceledEventData"
-              "BuyNowPriceUpdatedEventData"
-            ]
-            nft: { id_eq: $nftId }
-          }
-        }
-        {
-          data: {
-            isTypeOf_in: ["AuctionBidMadeEventData", "AuctionBidCanceledEventData"]
-            bid: { auction: { nft: { id_eq: $nftId } } }
-          }
-        }
-        {
-          data: {
-            isTypeOf_in: [
-              "EnglishAuctionSettledEventData"
-              "BidMadeCompletingAuctionEventData"
-              "OpenAuctionBidAcceptedEventData"
-            ]
-            winningBid: { auction: { nft: { id_eq: $nftId } } }
-          }
-        }
-      ]
-    }
+query GetNftHistory($nftId: String!) {
+  nftHistoryEntries(
+    orderBy: event_timestamp_DESC # CHANGE: `event_timestamp` now used instead of `createdAt` (which is no longer available)
+    where: { nft: { id_eq: $nftId } } # CHANGE: Simplified filtering
   ) {
-    id
-    timestamp # CHANGE: `timestamp` now used instead of `createdAt` (which is no longer available)
-    data {
-      ... on NftIssuedEventData {
-        nftOwner {
-          ...BasicNftOwnerFields
-        }
-      }
-
-      ... on OpenAuctionStartedEventData {
-        nftOwner {
-          ...BasicNftOwnerFields
-        }
-      }
-
-      ... on EnglishAuctionStartedEventData {
-        nftOwner {
-          ...BasicNftOwnerFields
-        }
-      }
-
-      ... on NftSellOrderMadeEventData {
-        price
-        nftOwner {
-          ...BasicNftOwnerFields
-        }
-      }
-
-      ... on AuctionBidMadeEventData {
-        bid {
-          bidder {
-            ...BasicMembershipFields
-          }
-          amount
-        }
-      }
-
-      ... on BidMadeCompletingAuctionEventData {
-        previousNftOwner {
-          ...BasicNftOwnerFields
-        }
-        winningBid {
-          bidder {
-            ...BasicMembershipFields
-          }
-          amount
-        }
-      }
-
-      ... on NftBoughtEventData {
-        buyer {
-          ...BasicMembershipFields
-        }
-        price
-      }
-
-      ... on EnglishAuctionSettledEventData {
-        previousNftOwner {
-          ...BasicNftOwnerFields
-        }
-        winningBid {
-          bidder {
-            ...BasicMembershipFields
+    # CHANGE: The actual `event` is now nested as a property of `NftHistoryEntry`
+    event {
+      id
+      timestamp # CHANGE: `timestamp` now used instead of `createdAt` (which is no longer available)
+      data {
+        ... on NftIssuedEventData {
+          nftOwner {
+            ...BasicNftOwnerFields
           }
         }
-      }
 
-      ... on OpenAuctionBidAcceptedEventData {
-        previousNftOwner {
-          ...BasicNftOwnerFields
+        ... on OpenAuctionStartedEventData {
+          nftOwner {
+            ...BasicNftOwnerFields
+          }
         }
-        winningBid {
-          amount
-          bidder {
+
+        ... on EnglishAuctionStartedEventData {
+          nftOwner {
+            ...BasicNftOwnerFields
+          }
+        }
+
+        ... on NftSellOrderMadeEventData {
+          price
+          nftOwner {
+            ...BasicNftOwnerFields
+          }
+        }
+
+        ... on AuctionBidMadeEventData {
+          bid {
+            bidder {
+              ...BasicMembershipFields
+            }
+            amount
+          }
+        }
+
+        ... on BidMadeCompletingAuctionEventData {
+          previousNftOwner {
+            ...BasicNftOwnerFields
+          }
+          winningBid {
+            bidder {
+              ...BasicMembershipFields
+            }
+            amount
+          }
+        }
+
+        ... on NftBoughtEventData {
+          buyer {
+            ...BasicMembershipFields
+          }
+          price
+        }
+
+        ... on EnglishAuctionSettledEventData {
+          previousNftOwner {
+            ...BasicNftOwnerFields
+          }
+          winningBid {
+            bidder {
+              ...BasicMembershipFields
+            }
+          }
+        }
+
+        ... on OpenAuctionBidAcceptedEventData {
+          previousNftOwner {
+            ...BasicNftOwnerFields
+          }
+          winningBid {
+            amount
+            bidder {
+              ...BasicMembershipFields
+            }
+          }
+        }
+
+        ... on AuctionBidCanceledEventData {
+          member {
             ...BasicMembershipFields
           }
         }
-      }
 
-      ... on AuctionBidCanceledEventData {
-        member {
-          ...BasicMembershipFields
+        ... on AuctionCanceledEventData {
+          nftOwner {
+            ...BasicNftOwnerFields
+          }
         }
-      }
 
-      ... on AuctionCanceledEventData {
-        nftOwner {
-          ...BasicNftOwnerFields
+        ... on BuyNowCanceledEventData {
+          nftOwner {
+            ...BasicNftOwnerFields
+          }
         }
-      }
 
-      ... on BuyNowCanceledEventData {
-        nftOwner {
-          ...BasicNftOwnerFields
+        ... on BuyNowPriceUpdatedEventData {
+          nftOwner {
+            ...BasicNftOwnerFields
+          }
+          newPrice
         }
-      }
-
-      ... on BuyNowPriceUpdatedEventData {
-        nftOwner {
-          ...BasicNftOwnerFields
-        }
-        newPrice
       }
     }
   }

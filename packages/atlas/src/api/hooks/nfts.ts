@@ -171,7 +171,7 @@ export const useNftHistory = (
   const { data, ...rest } = useGetNftHistoryQuery({ variables: { nftId: id || '' }, skip: !id, ...opts })
 
   return {
-    events: data?.events,
+    events: data?.nftHistoryEntries.map((entry) => entry.event),
     ...rest,
   }
 }
