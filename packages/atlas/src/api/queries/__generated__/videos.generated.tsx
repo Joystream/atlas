@@ -114,7 +114,7 @@ export type GetBasicVideoQuery = {
               __typename: 'AuctionTypeEnglish'
               duration: number
               extensionPeriod: number
-              minimalBidStep: string
+              minimalBidStep: number
               plannedEndAtBlock: number
             }
           | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -260,7 +260,7 @@ export type GetBasicVideoQuery = {
         }>
       } | null
       transactionalStatus?:
-        | { __typename: 'TransactionalStatusBuyNow'; price: string }
+        | { __typename: 'TransactionalStatusBuyNow'; price: number }
         | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
         | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
         | null
@@ -474,7 +474,7 @@ export type GetFullVideoQuery = {
               __typename: 'AuctionTypeEnglish'
               duration: number
               extensionPeriod: number
-              minimalBidStep: string
+              minimalBidStep: number
               plannedEndAtBlock: number
             }
           | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -620,7 +620,7 @@ export type GetFullVideoQuery = {
         }>
       } | null
       transactionalStatus?:
-        | { __typename: 'TransactionalStatusBuyNow'; price: string }
+        | { __typename: 'TransactionalStatusBuyNow'; price: number }
         | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
         | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
         | null
@@ -770,7 +770,7 @@ export type GetBasicVideosConnectionQuery = {
                   __typename: 'AuctionTypeEnglish'
                   duration: number
                   extensionPeriod: number
-                  minimalBidStep: string
+                  minimalBidStep: number
                   plannedEndAtBlock: number
                 }
               | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -916,7 +916,7 @@ export type GetBasicVideosConnectionQuery = {
             }>
           } | null
           transactionalStatus?:
-            | { __typename: 'TransactionalStatusBuyNow'; price: string }
+            | { __typename: 'TransactionalStatusBuyNow'; price: number }
             | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
             | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
             | null
@@ -1142,7 +1142,7 @@ export type GetFullVideosConnectionQuery = {
                   __typename: 'AuctionTypeEnglish'
                   duration: number
                   extensionPeriod: number
-                  minimalBidStep: string
+                  minimalBidStep: number
                   plannedEndAtBlock: number
                 }
               | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -1288,7 +1288,7 @@ export type GetFullVideosConnectionQuery = {
             }>
           } | null
           transactionalStatus?:
-            | { __typename: 'TransactionalStatusBuyNow'; price: string }
+            | { __typename: 'TransactionalStatusBuyNow'; price: number }
             | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
             | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
             | null
@@ -1435,7 +1435,7 @@ export type GetBasicVideosQuery = {
               __typename: 'AuctionTypeEnglish'
               duration: number
               extensionPeriod: number
-              minimalBidStep: string
+              minimalBidStep: number
               plannedEndAtBlock: number
             }
           | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -1581,7 +1581,7 @@ export type GetBasicVideosQuery = {
         }>
       } | null
       transactionalStatus?:
-        | { __typename: 'TransactionalStatusBuyNow'; price: string }
+        | { __typename: 'TransactionalStatusBuyNow'; price: number }
         | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
         | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
         | null
@@ -1798,7 +1798,7 @@ export type GetFullVideosQuery = {
               __typename: 'AuctionTypeEnglish'
               duration: number
               extensionPeriod: number
-              minimalBidStep: string
+              minimalBidStep: number
               plannedEndAtBlock: number
             }
           | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -1944,7 +1944,7 @@ export type GetFullVideosQuery = {
         }>
       } | null
       transactionalStatus?:
-        | { __typename: 'TransactionalStatusBuyNow'; price: string }
+        | { __typename: 'TransactionalStatusBuyNow'; price: number }
         | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
         | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
         | null
@@ -2096,7 +2096,7 @@ export type GetMostViewedVideosConnectionQuery = {
                   __typename: 'AuctionTypeEnglish'
                   duration: number
                   extensionPeriod: number
-                  minimalBidStep: string
+                  minimalBidStep: number
                   plannedEndAtBlock: number
                 }
               | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -2242,7 +2242,7 @@ export type GetMostViewedVideosConnectionQuery = {
             }>
           } | null
           transactionalStatus?:
-            | { __typename: 'TransactionalStatusBuyNow'; price: string }
+            | { __typename: 'TransactionalStatusBuyNow'; price: number }
             | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
             | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
             | null
@@ -2362,7 +2362,7 @@ export type GetTop10VideosThisWeekQuery = {
               __typename: 'AuctionTypeEnglish'
               duration: number
               extensionPeriod: number
-              minimalBidStep: string
+              minimalBidStep: number
               plannedEndAtBlock: number
             }
           | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -2508,7 +2508,7 @@ export type GetTop10VideosThisWeekQuery = {
         }>
       } | null
       transactionalStatus?:
-        | { __typename: 'TransactionalStatusBuyNow'; price: string }
+        | { __typename: 'TransactionalStatusBuyNow'; price: number }
         | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
         | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
         | null
@@ -2625,7 +2625,7 @@ export type GetTop10VideosThisMonthQuery = {
               __typename: 'AuctionTypeEnglish'
               duration: number
               extensionPeriod: number
-              minimalBidStep: string
+              minimalBidStep: number
               plannedEndAtBlock: number
             }
           | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -2771,7 +2771,7 @@ export type GetTop10VideosThisMonthQuery = {
         }>
       } | null
       transactionalStatus?:
-        | { __typename: 'TransactionalStatusBuyNow'; price: string }
+        | { __typename: 'TransactionalStatusBuyNow'; price: number }
         | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
         | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
         | null

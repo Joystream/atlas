@@ -146,7 +146,7 @@ export type SearchQuery = {
                     __typename: 'AuctionTypeEnglish'
                     duration: number
                     extensionPeriod: number
-                    minimalBidStep: string
+                    minimalBidStep: number
                     plannedEndAtBlock: number
                   }
                 | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -292,7 +292,7 @@ export type SearchQuery = {
               }>
             } | null
             transactionalStatus?:
-              | { __typename: 'TransactionalStatusBuyNow'; price: string }
+              | { __typename: 'TransactionalStatusBuyNow'; price: number }
               | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
               | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
               | null
