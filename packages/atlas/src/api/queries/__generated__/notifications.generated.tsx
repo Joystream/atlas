@@ -3093,7 +3093,11 @@ export type GetNftActivitiesQuery = {
 
 export const GetNotificationsDocument = gql`
   query GetNotifications($memberId: String!, $limit: Int!) {
-    notifications(limit: $limit, orderBy: event_timestamp_DESC, where: { member: { id_eq: $memberId } }) {
+    notifications(
+      limit: $limit
+      orderBy: event_timestamp_DESC
+      where: { member: { id_eq: $memberId }, event: { data: { comment: { author: { id_not_eq: $memberId } } } } }
+    ) {
       event {
         id
         timestamp
