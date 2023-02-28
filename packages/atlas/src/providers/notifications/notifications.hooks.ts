@@ -11,8 +11,8 @@ import { useNotificationStore } from './notifications.store'
 import { NftNotificationRecord, NotificationRecord } from './notifications.types'
 
 export const useNotifications = () => {
-  const { memberId, channelId } = useUser()
-  const { notifications: rawNotifications, ...rest } = useRawNotifications(channelId, memberId)
+  const { memberId } = useUser()
+  const { notifications: rawNotifications, ...rest } = useRawNotifications(memberId)
   const {
     readNotificationsIdsMap,
     lastSeenNotificationBlock,
@@ -38,19 +38,19 @@ export const useNotifications = () => {
   }
 }
 
-const getVideoDataFromEvent = (event: GetNotificationsQuery['events'][number]) => {
-  switch (event.data.__typename) {
+const getVideoDataFromEvent = (notification: GetNotificationsQuery['notifications'][number]) => {
+  switch (notification.event.data.__typename) {
     case 'AuctionBidMadeEventData':
-      return event.data.bid.auction.nft.video
+      return notification.event.data.bid.auction.nft.video
     case 'BidMadeCompletingAuctionEventData':
-      return event.data.winningBid.nft.video
+      return notification.event.data.winningBid.nft.video
     case 'EnglishAuctionSettledEventData':
     case 'OpenAuctionBidAcceptedEventData':
-      return event.data.winningBid.auction.nft.video
+      return notification.event.data.winningBid.auction.nft.video
     case 'CommentCreatedEventData':
-      return event.data.comment.video
+      return notification.event.data.comment.video
     case 'NftBoughtEventData':
-      return event.data.nft.video
+      return notification.event.data.nft.video
 
     default:
       return undefined
@@ -58,44 +58,44 @@ const getVideoDataFromEvent = (event: GetNotificationsQuery['events'][number]) =
 }
 
 const parseNotification = (
-  event: GetNotificationsQuery['events'][number],
+  notification: GetNotificationsQuery['notifications'][number],
   memberId: string | null
 ): NotificationRecord | null => {
-  const video = getVideoDataFromEvent(event)
+  const video = getVideoDataFromEvent(notification)
   const commonFields: NftNotificationRecord = {
-    id: event.id,
-    date: convertDateFormat(event.timestamp),
-    block: event.inBlock,
+    id: notification.event.id,
+    date: convertDateFormat(notification.event.timestamp),
+    block: notification.event.inBlock,
     video: {
       id: video?.id || '',
       title: video?.title || '',
     },
   }
 
-  if (event.data.__typename === 'AuctionBidMadeEventData') {
+  if (notification.event.data.__typename === 'AuctionBidMadeEventData') {
     return {
-      type: event.data.bid.previousTopBid?.bidder.id === memberId ? 'got-outbid' : 'bid-made',
+      type: notification.event.data.bid.previousTopBid?.bidder.id === memberId ? 'got-outbid' : 'bid-made',
       ...commonFields,
-      member: event.data.bid.bidder as BasicMembershipFieldsFragment,
-      bidAmount: new BN(event.data.bid.amount),
+      member: notification.event.data.bid.bidder as BasicMembershipFieldsFragment,
+      bidAmount: new BN(notification.event.data.bid.amount),
     }
-  } else if (event.data.__typename === 'NftBoughtEventData') {
+  } else if (notification.event.data.__typename === 'NftBoughtEventData') {
     return {
       type: 'bought',
       ...commonFields,
-      member: event.data.buyer as BasicMembershipFieldsFragment,
-      price: new BN(event.data.price),
+      member: notification.event.data.buyer as BasicMembershipFieldsFragment,
+      price: new BN(notification.event.data.price),
     }
-  } else if (event.data.__typename === 'BidMadeCompletingAuctionEventData') {
-    if (event.data.winningBid.bidder.id !== memberId) {
+  } else if (notification.event.data.__typename === 'BidMadeCompletingAuctionEventData') {
+    if (notification.event.data.winningBid.bidder.id !== memberId) {
       // member is the owner, somebody bought their NFT
       return {
         type: 'bought',
         ...commonFields,
-        member: event.data.winningBid.bidder as BasicMembershipFieldsFragment,
-        price: new BN(event.data.winningBid.amount),
+        member: notification.event.data.winningBid.bidder as BasicMembershipFieldsFragment,
+        price: new BN(notification.event.data.winningBid.amount),
       }
-    } else if (event.data.winningBid.bidder.id === memberId) {
+    } else if (notification.event.data.winningBid.bidder.id === memberId) {
       // member is the winner, skip the notification
       return null
     } else {
@@ -105,17 +105,17 @@ const parseNotification = (
         ...commonFields,
       }
     }
-  } else if (event.data.__typename === 'OpenAuctionBidAcceptedEventData') {
-    if (event.data.winningBid?.bidder.id === memberId) {
+  } else if (notification.event.data.__typename === 'OpenAuctionBidAcceptedEventData') {
+    if (notification.event.data.winningBid?.bidder.id === memberId) {
       // member is the previous owner, he accepted a bid
       return {
         type: 'bid-accepted',
         ...commonFields,
         member:
-          (event.data.previousNftOwner.__typename === 'NftOwnerChannel'
-            ? event.data.previousNftOwner.channel.ownerMember
-            : event.data.previousNftOwner.member) || null,
-        bidAmount: new BN(event.data.winningBid?.amount || 0),
+          (notification.event.data.previousNftOwner.__typename === 'NftOwnerChannel'
+            ? notification.event.data.previousNftOwner.channel.ownerMember
+            : notification.event.data.previousNftOwner.member) || null,
+        bidAmount: new BN(notification.event.data.winningBid?.amount || 0),
       }
     } else {
       // member is not the winner, the participated in the auction
@@ -124,14 +124,14 @@ const parseNotification = (
         ...commonFields,
       }
     }
-  } else if (event.data.__typename === 'EnglishAuctionSettledEventData') {
-    if (event.data.winningBid.bidder?.id !== memberId) {
+  } else if (notification.event.data.__typename === 'EnglishAuctionSettledEventData') {
+    if (notification.event.data.winningBid.bidder?.id !== memberId) {
       // member is the owner, their auction got settled
       return {
         type: 'auction-settled-owner',
         ...commonFields,
       }
-    } else if (event.data.winningBid.bidder.id === memberId) {
+    } else if (notification.event.data.winningBid.bidder.id === memberId) {
       // member is the winner, auction they won got settled
       return {
         type: 'auction-settled-winner',
@@ -144,18 +144,24 @@ const parseNotification = (
         ...commonFields,
       }
     }
-  } else if (event.data.__typename === 'CommentCreatedEventData' && !event.data.comment.parentComment) {
+  } else if (
+    notification.event.data.__typename === 'CommentCreatedEventData' &&
+    !notification.event.data.comment.parentComment
+  ) {
     return {
       type: 'video-commented',
-      member: event.data.comment.author as BasicMembershipFieldsFragment,
-      commentId: event.data.comment.id,
+      member: notification.event.data.comment.author as BasicMembershipFieldsFragment,
+      commentId: notification.event.data.comment.id,
       ...commonFields,
     }
-  } else if (event.data.__typename === 'CommentCreatedEventData' && event.data.comment.parentComment) {
+  } else if (
+    notification.event.data.__typename === 'CommentCreatedEventData' &&
+    notification.event.data.comment.parentComment
+  ) {
     return {
       type: 'comment-reply',
-      member: event.data.comment.author as BasicMembershipFieldsFragment,
-      commentId: event.data.comment.id,
+      member: notification.event.data.comment.author as BasicMembershipFieldsFragment,
+      commentId: notification.event.data.comment.id,
       ...commonFields,
     }
   } else {

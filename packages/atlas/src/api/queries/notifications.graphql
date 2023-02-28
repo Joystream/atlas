@@ -6,134 +6,62 @@
 
 # Note that in this case `orderBy` and `limit` now applies to all events together, not on per-type basis
 
-# TODO: Check performance?
-
-# CHANGE: ID is now `String`
-query GetNotifications($memberId: String!, $limit: Int!, $orderBy: [EventOrderByInput!] = [timestamp_DESC]) {
-  events(
+query GetNotifications($memberId: String!, $limit: Int!) {
+  notifications(
     limit: $limit
-    orderBy: $orderBy # CHANGE: `timestamp` now used instead of `createdAt` (which is no longer available)
-    where: {
-      OR: [
-        { data: { isTypeOf_eq: "AuctionBidMadeEventData", nftOwner: { member: { id_eq: $memberId } } } }
-        {
-          data: { isTypeOf_eq: "AuctionBidMadeEventData", nftOwner: { channel: { ownerMember: { id_eq: $memberId } } } }
-        }
-        { data: { isTypeOf_eq: "AuctionBidMadeEventData", bid: { previousTopBid: { bidder: { id_eq: $memberId } } } } }
-        {
-          data: {
-            isTypeOf_in: ["EnglishAuctionSettledEventData", "BidMadeCompletingAuctionEventData", "NftBoughtEventData"]
-            previousNftOwner: { member: { id_eq: $memberId } }
-          }
-        }
-        {
-          data: {
-            isTypeOf_in: ["EnglishAuctionSettledEventData", "BidMadeCompletingAuctionEventData", "NftBoughtEventData"]
-            previousNftOwner: { channel: { ownerMember: { id_eq: $memberId } } }
-          }
-        }
-        {
-          data: {
-            isTypeOf_in: [
-              "EnglishAuctionSettledEventData"
-              "BidMadeCompletingAuctionEventData"
-              "OpenAuctionBidAcceptedEventData"
-            ]
-            winningBid: { auction: { bids_some: { bidder: { id_eq: $memberId } } } }
-          }
-        }
-        {
-          data: {
-            isTypeOf_eq: "CommentCreatedEventData"
-            comment: {
-              author: { id_not_eq: $memberId }
-              video: { channel: { ownerMember: { id_eq: $memberId } } }
-              parentComment_isNull: true
-            }
-          }
-        }
-        {
-          data: {
-            isTypeOf_eq: "CommentCreatedEventData"
-            comment: { author: { id_not_eq: $memberId }, parentComment: { author: { id_eq: $memberId } } }
-          }
-        }
-      ]
-    }
+    orderBy: event_timestamp_DESC
+    where: { member: { id_eq: $memberId } } # CHANGE: Simplified filtering
   ) {
-    id
-    timestamp # CHANGE: `timestamp` now used instead of `createdAt` (which is no longer available)
-    inBlock
-    data {
-      ... on AuctionBidMadeEventData {
-        bid {
-          amount
-          bidder {
-            ...BasicMembershipFields
-          }
-          previousTopBid {
+    # CHANGE: The actual `event` is now nested as a property of `Notification`
+    event {
+      id
+      timestamp # CHANGE: `timestamp` now used instead of `createdAt` (which is no longer available)
+      inBlock
+      data {
+        ... on AuctionBidMadeEventData {
+          bid {
+            amount
             bidder {
               ...BasicMembershipFields
             }
-          }
-          auction {
-            nft {
-              video {
-                id
-                title
+            previousTopBid {
+              bidder {
+                ...BasicMembershipFields
               }
             }
-          }
-        }
-        nftOwner {
-          ...BasicNftOwnerFields
-        }
-      }
-
-      ... on NftBoughtEventData {
-        buyer {
-          ...BasicMembershipFields
-        }
-        price
-        nft {
-          video {
-            id
-            title
-          }
-        }
-      }
-
-      ... on BidMadeCompletingAuctionEventData {
-        winningBid {
-          bidder {
-            ...BasicMembershipFields
-          }
-          amount
-          nft {
-            video {
-              id
-              title
-              # do we actually need ownerMember?
-              channel {
-                ownerMember {
-                  ...BasicMembershipFields
+            auction {
+              nft {
+                video {
+                  id
+                  title
                 }
               }
             }
           }
+          nftOwner {
+            ...BasicNftOwnerFields
+          }
         }
-        previousNftOwner {
-          ...BasicNftOwnerFields
-        }
-      }
 
-      ... on OpenAuctionBidAcceptedEventData {
-        winningBid {
-          amount
-          bidder {
+        ... on NftBoughtEventData {
+          buyer {
             ...BasicMembershipFields
           }
-          auction {
+          price
+          nft {
+            video {
+              id
+              title
+            }
+          }
+        }
+
+        ... on BidMadeCompletingAuctionEventData {
+          winningBid {
+            bidder {
+              ...BasicMembershipFields
+            }
+            amount
             nft {
               video {
                 id
@@ -141,43 +69,63 @@ query GetNotifications($memberId: String!, $limit: Int!, $orderBy: [EventOrderBy
               }
             }
           }
-        }
-        previousNftOwner {
-          ...BasicNftOwnerFields
-        }
-      }
-
-      ... on EnglishAuctionSettledEventData {
-        winningBid {
-          bidder {
-            ...BasicMembershipFields
+          previousNftOwner {
+            ...BasicNftOwnerFields
           }
-          auction {
-            nft {
-              video {
-                id
-                title
+        }
+
+        ... on OpenAuctionBidAcceptedEventData {
+          winningBid {
+            amount
+            bidder {
+              ...BasicMembershipFields
+            }
+            auction {
+              nft {
+                video {
+                  id
+                  title
+                }
               }
             }
           }
+          previousNftOwner {
+            ...BasicNftOwnerFields
+          }
         }
-        previousNftOwner {
-          ...BasicNftOwnerFields
-        }
-      }
 
-      ... on CommentCreatedEventData {
-        comment {
-          id
-          video {
-            id
-            title
+        ... on EnglishAuctionSettledEventData {
+          winningBid {
+            bidder {
+              ...BasicMembershipFields
+            }
+            auction {
+              nft {
+                video {
+                  id
+                  title
+                }
+              }
+            }
           }
-          parentComment {
-            id
+          previousNftOwner {
+            ...BasicNftOwnerFields
           }
-          author {
-            ...BasicMembershipFields
+        }
+
+        ... on CommentCreatedEventData {
+          comment {
+            id
+            video {
+              id
+              title
+            }
+            parentComment {
+              id
+            }
+            author {
+              ...BasicMembershipFields
+            }
           }
         }
       }

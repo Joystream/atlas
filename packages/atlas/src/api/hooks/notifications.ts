@@ -10,7 +10,6 @@ import {
 import { EventOrderByInput } from '../queries/__generated__/baseTypes.generated'
 
 export const useRawNotifications = (
-  channelId: string | null,
   memberId: string | null,
   opts?: QueryHookOptions<GetNotificationsQuery, GetNotificationsQueryVariables>
 ) => {
@@ -26,7 +25,7 @@ export const useRawNotifications = (
   })
 
   return {
-    notifications: data?.events || [],
+    notifications: data?.notifications || [],
     ...rest,
   }
 }
