@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { useNavigate } from 'react-router'
 
-import { EventOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { NftActivityOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { StorageDataObjectFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionBid, SvgActionBuyNow, SvgActionMint, SvgActionSell } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
@@ -92,12 +92,15 @@ const getDescription = (activity: ActivitiesRecord) => {
 
 type MemberActivityProps = {
   memberId?: string
-  sort?: EventOrderByInput
+  sort?: NftActivityOrderByInput
 }
 
 const PLACEHOLDERS_COUNT = 8
 
-export const MemberActivity: FC<MemberActivityProps> = ({ memberId, sort = EventOrderByInput.TimestampDesc }) => {
+export const MemberActivity: FC<MemberActivityProps> = ({
+  memberId,
+  sort = NftActivityOrderByInput.EventTimestampDesc,
+}) => {
   const { activities, loading, activitiesTotalCounts } = useActivities(memberId, sort)
   const navigate = useNavigate()
   const placeholderItems = Array.from({ length: PLACEHOLDERS_COUNT }, () => ({ id: undefined }))

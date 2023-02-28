@@ -249,294 +249,190 @@ query GetNftHistory($nftId: String!) {
   }
 }
 
-# CHANGE: ID is now `String`
-query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [EventOrderByInput!] = [timestamp_DESC]) {
-  # COUNT QUERIES:
-  nftsBought: eventsConnection(
+query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [NftActivityOrderByInput!] = event_timestamp_DESC) {
+  # COUNT queries
+  nftsBought: nftActivitiesConnection(
     where: {
-      OR: [
-        {
-          data: {
-            isTypeOf_in: [
-              "EnglishAuctionSettledEventData"
-              "BidMadeCompletingAuctionEventData"
-              "OpenAuctionBidAcceptedEventData"
-            ]
-            winningBid: { bidder: { id_eq: $memberId } }
+      event: {
+        OR: [
+          {
+            data: {
+              isTypeOf_in: [
+                "EnglishAuctionSettledEventData"
+                "BidMadeCompletingAuctionEventData"
+                "OpenAuctionBidAcceptedEventData"
+              ]
+              winningBid: { bidder: { id_eq: $memberId } }
+            }
           }
-        }
-        { data: { isTypeOf_eq: "NftBoughtEventData", buyer: { id_eq: $memberId } } }
-      ]
+          { data: { isTypeOf_eq: "NftBoughtEventData", buyer: { id_eq: $memberId } } }
+        ]
+      }
     }
     orderBy: $orderBy
   ) {
     totalCount
   }
 
-  nftsSold: eventsConnection(
+  nftsSold: nftActivitiesConnection(
     where: {
-      OR: [
-        {
-          data: {
-            isTypeOf_in: [
-              "EnglishAuctionSettledEventData"
-              "BidMadeCompletingAuctionEventData"
-              "OpenAuctionBidAcceptedEventData"
-              "NftBoughtEventData"
-            ]
-            previousNftOwner: { member: { id_eq: $memberId } }
+      event: {
+        OR: [
+          {
+            data: {
+              isTypeOf_in: [
+                "EnglishAuctionSettledEventData"
+                "BidMadeCompletingAuctionEventData"
+                "OpenAuctionBidAcceptedEventData"
+                "NftBoughtEventData"
+              ]
+              previousNftOwner: { member: { id_eq: $memberId } }
+            }
           }
-        }
-        {
-          data: {
-            isTypeOf_in: [
-              "EnglishAuctionSettledEventData"
-              "BidMadeCompletingAuctionEventData"
-              "OpenAuctionBidAcceptedEventData"
-              "NftBoughtEventData"
-            ]
-            previousNftOwner: { channel: { ownerMember: { id_eq: $memberId } } }
+          {
+            data: {
+              isTypeOf_in: [
+                "EnglishAuctionSettledEventData"
+                "BidMadeCompletingAuctionEventData"
+                "OpenAuctionBidAcceptedEventData"
+                "NftBoughtEventData"
+              ]
+              previousNftOwner: { channel: { ownerMember: { id_eq: $memberId } } }
+            }
           }
-        }
-      ]
+        ]
+      }
     }
     orderBy: $orderBy
   ) {
     totalCount
   }
 
-  nftsIssued: eventsConnection(
+  nftsIssued: nftActivitiesConnection(
     where: {
-      OR: [
-        { data: { isTypeOf_eq: "NftIssuedEventData", nftOwner: { channel: { ownerMember: { id_eq: $memberId } } } } }
-        { data: { isTypeOf_eq: "NftIssuedEventData", nftOwner: { member: { id_eq: $memberId } } } }
-      ]
+      event: {
+        OR: [
+          { data: { isTypeOf_eq: "NftIssuedEventData", nftOwner: { channel: { ownerMember: { id_eq: $memberId } } } } }
+          { data: { isTypeOf_eq: "NftIssuedEventData", nftOwner: { member: { id_eq: $memberId } } } }
+        ]
+      }
     }
     orderBy: $orderBy
   ) {
     totalCount
   }
 
-  nftsBidded: eventsConnection(
-    where: { data: { isTypeOf_eq: "AuctionBidMadeEventData", bid: { bidder: { id_eq: $memberId } } } }
+  nftsBidded: nftActivitiesConnection(
+    where: { event: { data: { isTypeOf_eq: "AuctionBidMadeEventData", bid: { bidder: { id_eq: $memberId } } } } }
     orderBy: $orderBy
   ) {
     totalCount
   }
 
-  # DATA QUERY
-  events(
+  # DATA query
+  nftActivities(
     limit: $limit
-    orderBy: $orderBy # CHANGE: `timestamp` now used instead of `createdAt` (which is no longer available)
-    where: {
-      OR: [
-        # Nfts bought
-        {
-          data: {
-            isTypeOf_in: [
-              "EnglishAuctionSettledEventData"
-              "BidMadeCompletingAuctionEventData"
-              "OpenAuctionBidAcceptedEventData"
-            ]
-            winningBid: { bidder: { id_eq: $memberId } }
-          }
-        }
-        { data: { isTypeOf_eq: "NftBoughtEventData", buyer: { id_eq: $memberId } } }
-        # Nfts sold
-        {
-          data: {
-            isTypeOf_in: [
-              "EnglishAuctionSettledEventData"
-              "BidMadeCompletingAuctionEventData"
-              "OpenAuctionBidAcceptedEventData"
-              "NftBoughtEventData"
-            ]
-            previousNftOwner: { member: { id_eq: $memberId } }
-          }
-        }
-        {
-          data: {
-            isTypeOf_in: [
-              "EnglishAuctionSettledEventData"
-              "BidMadeCompletingAuctionEventData"
-              "OpenAuctionBidAcceptedEventData"
-              "NftBoughtEventData"
-            ]
-            previousNftOwner: { channel: { ownerMember: { id_eq: $memberId } } }
-          }
-        }
-        # Bids made / bids that got "topped"
-        { data: { isTypeOf_eq: "AuctionBidMadeEventData", bid: { bidder: { id_eq: $memberId } } } }
-        { data: { isTypeOf_eq: "AuctionBidMadeEventData", bid: { previousTopBid: { bidder: { id_eq: $memberId } } } } }
-        # Bids canceled
-        { data: { isTypeOf_eq: "AuctionBidCanceledEventData", member: { id_eq: $memberId } } }
-        # Nft owner actions
-        {
-          data: {
-            isTypeOf_in: [
-              "NftIssuedEventData"
-              "AuctionCanceledEventData"
-              "BuyNowPriceUpdatedEventData"
-              "BuyNowCanceledEventData"
-              "NftSellOrderMadeEventData"
-              "OpenAuctionStartedEventData"
-              "EnglishAuctionStartedEventData"
-            ]
-            nftOwner: { member: { id_eq: $memberId } }
-          }
-        }
-        {
-          data: {
-            isTypeOf_in: [
-              "NftIssuedEventData"
-              "AuctionCanceledEventData"
-              "BuyNowPriceUpdatedEventData"
-              "BuyNowCanceledEventData"
-              "NftSellOrderMadeEventData"
-              "OpenAuctionStartedEventData"
-              "EnglishAuctionStartedEventData"
-            ]
-            nftOwner: { channel: { ownerMember: { id_eq: $memberId } } }
-          }
-        }
-      ]
-    }
+    orderBy: $orderBy # CHANGE: `event_timestamp` now used instead of `createdAt` (which is no longer available)
+    where: { member: { id_eq: $memberId } } # CHANGE: Simplified filtering
   ) {
-    id
-    timestamp # CHANGE: `timestamp` now used instead of `createdAt` (which is no longer available)
-    inBlock
-    data {
-      ... on AuctionBidMadeEventData {
-        nftOwner {
-          ...BasicNftOwnerFields
-        }
-        bid {
-          amount
-          bidder {
-            ...BasicMembershipFields
+    # CHANGE: The actual `event` is now nested as a property of `NftActivity`
+    event {
+      id
+      timestamp # CHANGE: `timestamp` now used instead of `createdAt` (which is no longer available)
+      inBlock
+      data {
+        ... on AuctionBidMadeEventData {
+          nftOwner {
+            ...BasicNftOwnerFields
           }
-          previousTopBid {
+          bid {
+            amount
             bidder {
               ...BasicMembershipFields
             }
-          }
-          auction {
-            nft {
-              video {
-                ...BasicVideoActivityFields
+            previousTopBid {
+              bidder {
+                ...BasicMembershipFields
+              }
+            }
+            auction {
+              nft {
+                video {
+                  ...BasicVideoActivityFields
+                }
               }
             }
           }
         }
-      }
-      ... on EnglishAuctionSettledEventData {
-        previousNftOwner {
-          ...BasicNftOwnerFields
+        ... on EnglishAuctionSettledEventData {
+          previousNftOwner {
+            ...BasicNftOwnerFields
+          }
+          winningBid {
+            bidder {
+              ...BasicMembershipFields
+            }
+            amount
+            auction {
+              nft {
+                video {
+                  ...BasicVideoActivityFields
+                }
+              }
+            }
+          }
         }
-        winningBid {
-          bidder {
+        ... on NftBoughtEventData {
+          buyer {
             ...BasicMembershipFields
           }
-          amount
-          auction {
-            nft {
-              video {
-                ...BasicVideoActivityFields
-              }
-            }
+          previousNftOwner {
+            ...BasicNftOwnerFields
           }
-        }
-      }
-      ... on NftBoughtEventData {
-        buyer {
-          ...BasicMembershipFields
-        }
-        previousNftOwner {
-          ...BasicNftOwnerFields
-        }
-        nft {
-          video {
-            ...BasicVideoActivityFields
-          }
-        }
-        price
-      }
-      ... on BidMadeCompletingAuctionEventData {
-        previousNftOwner {
-          ...BasicNftOwnerFields
-        }
-        winningBid {
-          bidder {
-            ...BasicMembershipFields
-          }
-          auction {
-            nft {
-              video {
-                ...BasicVideoActivityFields
-              }
-            }
-          }
-          amount
-        }
-      }
-      ... on OpenAuctionBidAcceptedEventData {
-        winningBid {
-          amount
-          bidder {
-            ...BasicMembershipFields
-          }
-          auction {
-            nft {
-              video {
-                ...BasicVideoActivityFields
-              }
-            }
-          }
-        }
-        previousNftOwner {
-          ...BasicNftOwnerFields
-        }
-      }
-      ... on EnglishAuctionStartedEventData {
-        auction {
           nft {
             video {
               ...BasicVideoActivityFields
             }
           }
+          price
         }
-        nftOwner {
-          ...BasicNftOwnerFields
+        ... on BidMadeCompletingAuctionEventData {
+          previousNftOwner {
+            ...BasicNftOwnerFields
+          }
+          winningBid {
+            bidder {
+              ...BasicMembershipFields
+            }
+            auction {
+              nft {
+                video {
+                  ...BasicVideoActivityFields
+                }
+              }
+            }
+            amount
+          }
         }
-      }
-      ... on OpenAuctionStartedEventData {
-        auction {
-          nft {
-            video {
-              ...BasicVideoActivityFields
+        ... on OpenAuctionBidAcceptedEventData {
+          winningBid {
+            amount
+            bidder {
+              ...BasicMembershipFields
+            }
+            auction {
+              nft {
+                video {
+                  ...BasicVideoActivityFields
+                }
+              }
             }
           }
-        }
-        nftOwner {
-          ...BasicNftOwnerFields
-        }
-      }
-      ... on NftSellOrderMadeEventData {
-        price
-        nft {
-          video {
-            ...BasicVideoActivityFields
+          previousNftOwner {
+            ...BasicNftOwnerFields
           }
         }
-        nftOwner {
-          ...BasicNftOwnerFields
-        }
-      }
-      ... on AuctionBidCanceledEventData {
-        member {
-          ...BasicMembershipFields
-        }
-        bid {
+        ... on EnglishAuctionStartedEventData {
           auction {
             nft {
               video {
@@ -544,53 +440,89 @@ query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [EventOrderBy
               }
             }
           }
-        }
-      }
-      ... on BuyNowCanceledEventData {
-        nft {
-          video {
-            id
-            title
-            thumbnailPhoto {
-              ...StorageDataObjectFields
-            }
+          nftOwner {
+            ...BasicNftOwnerFields
           }
         }
-        nftOwner {
-          ...BasicNftOwnerFields
+        ... on OpenAuctionStartedEventData {
+          auction {
+            nft {
+              video {
+                ...BasicVideoActivityFields
+              }
+            }
+          }
+          nftOwner {
+            ...BasicNftOwnerFields
+          }
         }
-      }
-      ... on AuctionCanceledEventData {
-        auction {
+        ... on NftSellOrderMadeEventData {
+          price
           nft {
             video {
               ...BasicVideoActivityFields
             }
           }
-        }
-        nftOwner {
-          ...BasicNftOwnerFields
-        }
-      }
-      ... on BuyNowPriceUpdatedEventData {
-        newPrice
-        nft {
-          video {
-            ...BasicVideoActivityFields
+          nftOwner {
+            ...BasicNftOwnerFields
           }
         }
-        nftOwner {
-          ...BasicNftOwnerFields
-        }
-      }
-      ... on NftIssuedEventData {
-        nft {
-          video {
-            ...BasicVideoActivityFields
+        ... on AuctionBidCanceledEventData {
+          member {
+            ...BasicMembershipFields
+          }
+          bid {
+            auction {
+              nft {
+                video {
+                  ...BasicVideoActivityFields
+                }
+              }
+            }
           }
         }
-        nftOwner {
-          ...BasicNftOwnerFields
+        ... on BuyNowCanceledEventData {
+          nft {
+            video {
+              ...BasicVideoActivityFields
+            }
+          }
+          nftOwner {
+            ...BasicNftOwnerFields
+          }
+        }
+        ... on AuctionCanceledEventData {
+          auction {
+            nft {
+              video {
+                ...BasicVideoActivityFields
+              }
+            }
+          }
+          nftOwner {
+            ...BasicNftOwnerFields
+          }
+        }
+        ... on BuyNowPriceUpdatedEventData {
+          newPrice
+          nft {
+            video {
+              ...BasicVideoActivityFields
+            }
+          }
+          nftOwner {
+            ...BasicNftOwnerFields
+          }
+        }
+        ... on NftIssuedEventData {
+          nft {
+            video {
+              ...BasicVideoActivityFields
+            }
+          }
+          nftOwner {
+            ...BasicNftOwnerFields
+          }
         }
       }
     }
