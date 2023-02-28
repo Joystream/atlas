@@ -491,7 +491,7 @@ export type ReportChannelMutationVariables = Types.Exact<{
 
 export type ReportChannelMutation = {
   __typename?: 'Mutation'
-  reportChannel: { __typename?: 'ChannelReportInfo'; id: number; channelId: string }
+  reportChannel: { __typename?: 'ChannelReportInfo'; id: string; channelId: string }
 }
 
 export type GetChannelPaymentEventsQueryVariables = Types.Exact<{ [key: string]: never }>

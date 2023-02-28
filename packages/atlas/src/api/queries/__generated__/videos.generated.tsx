@@ -2842,7 +2842,7 @@ export type ReportVideoMutationVariables = Types.Exact<{
 
 export type ReportVideoMutation = {
   __typename?: 'Mutation'
-  reportVideo: { __typename?: 'VideoReportInfo'; id: number; videoId: string }
+  reportVideo: { __typename?: 'VideoReportInfo'; id: string; videoId: string }
 }
 
 export const GetFullVideoDocument = gql`
