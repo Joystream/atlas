@@ -1,6 +1,6 @@
 import {
   CommentOrderByInput,
-  EventOrderByInput,
+  NftActivityOrderByInput,
   OwnedNftOrderByInput,
   VideoOrderByInput,
 } from '@/api/queries/__generated__/baseTypes.generated'
@@ -15,8 +15,8 @@ export const NFT_SORT_OPTIONS = [
   { name: 'Oldest', value: OwnedNftOrderByInput.CreatedAtAsc },
 ]
 export const NFT_SORT_ACTIVITY_OPTIONS = [
-  { name: 'Newest', value: EventOrderByInput.TimestampDesc },
-  { name: 'Oldest', value: EventOrderByInput.TimestampAsc },
+  { name: 'Newest', value: NftActivityOrderByInput.EventTimestampDesc },
+  { name: 'Oldest', value: NftActivityOrderByInput.EventTimestampAsc },
 ]
 
 export const COMMENTS_SORT_OPTIONS = [

@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom'
 
 import { useMemberships } from '@/api/hooks/membership'
 import { useNftsConnection } from '@/api/hooks/nfts'
-import { EventOrderByInput, OwnedNftOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { NftActivityOrderByInput, OwnedNftOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionFilters } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
@@ -39,7 +39,9 @@ export const MemberView: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
   const [sortBy, setSortBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
-  const [sortByTimestamp, setSortByTimestamp] = useState<EventOrderByInput>(EventOrderByInput.TimestampDesc)
+  const [sortByTimestamp, setSortByTimestamp] = useState<NftActivityOrderByInput>(
+    NftActivityOrderByInput.EventTimestampDesc
+  )
   const [currentTab, setCurrentTab] = useState<typeof TABS[number] | null>(null)
   const { memberId, activeMembership } = useUser()
   const { handle } = useParams()
@@ -120,7 +122,7 @@ export const MemberView: FC = () => {
       setSortBy(value)
     }
   }
-  const handleSortingActivity = (value?: EventOrderByInput | null) => {
+  const handleSortingActivity = (value?: NftActivityOrderByInput | null) => {
     if (value) {
       setSortByTimestamp(value)
     }
@@ -240,7 +242,6 @@ export const MemberView: FC = () => {
               </FilterButtonContainer>
             )}
           </TabsContainer>
-          {/* TODO fix filters */}
           <FiltersBar {...filtersBarLogic} activeFilters={['nftStatus']} />
         </TabsWrapper>
         {tabContent}
