@@ -6,8 +6,8 @@ import {
   SvgSidebarChannels,
   SvgSidebarExplore,
   SvgSidebarHome,
+  SvgSidebarMarketplace,
   SvgSidebarNew,
-  SvgSidebarNft,
   SvgSidebarPopular,
   SvgSidebarYpp,
 } from '@/assets/icons'
@@ -38,9 +38,9 @@ export const viewerNavItems = [
     bottomNav: true,
   },
   {
-    icon: <SvgSidebarNft />,
-    expandedName: 'Video NFTs',
-    name: 'NFT',
+    icon: <SvgSidebarMarketplace />,
+    expandedName: 'Marketplace',
+    name: 'Market',
     to: absoluteRoutes.viewer.nfts(),
     bottomNav: true,
   },
