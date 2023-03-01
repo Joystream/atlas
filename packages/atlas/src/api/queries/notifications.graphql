@@ -10,7 +10,7 @@ query GetNotifications($memberId: String!, $limit: Int!) {
   notifications(
     limit: $limit
     orderBy: event_timestamp_DESC
-    where: { member: { id_eq: $memberId }, event: { data: { comment: { author: { id_not_eq: $memberId } } } } } # CHANGE: Simplified filtering
+    where: { member: { id_eq: $memberId } } # CHANGE: Simplified filtering
   ) {
     # CHANGE: The actual `event` is now nested as a property of `Notification`
     event {
