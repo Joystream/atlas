@@ -148,6 +148,7 @@ query GetChannelPaymentEvents($channelId: String) {
     orderBy: timestamp_DESC
     where: {
       OR: [
+        # This covers sold events
         {
           data: {
             isTypeOf_in: [
@@ -182,14 +183,27 @@ query GetChannelPaymentEvents($channelId: String) {
           controllerAccount
         }
         nft {
+          creatorRoyalty
           video {
             title
           }
         }
+        previousNftOwner {
+          __typename
+        }
       }
       ... on BidMadeCompletingAuctionEventData {
+        previousNftOwner {
+          __typename
+        }
         winningBid {
+          id
+          amount
+          bidder {
+            controllerAccount
+          }
           nft {
+            creatorRoyalty
             video {
               title
             }
@@ -201,6 +215,9 @@ query GetChannelPaymentEvents($channelId: String) {
         }
       }
       ... on EnglishAuctionSettledEventData {
+        previousNftOwner {
+          __typename
+        }
         winningBid {
           nft {
             video {
@@ -216,6 +233,7 @@ query GetChannelPaymentEvents($channelId: String) {
       ... on OpenAuctionBidAcceptedEventData {
         winningBid {
           nft {
+            creatorRoyalty
             video {
               title
             }
@@ -226,6 +244,24 @@ query GetChannelPaymentEvents($channelId: String) {
           amount
         }
       }
+      ... on OpenAuctionBidAcceptedEventData {
+        previousNftOwner {
+          __typename
+        }
+        winningBid {
+          amount
+          bidder {
+            controllerAccount
+          }
+          nft {
+            creatorRoyalty
+            video {
+              title
+            }
+          }
+        }
+      }
+
       ... on ChannelRewardClaimedEventData {
         amount
       }
@@ -256,91 +292,3 @@ query GetChannelPaymentEvents($channelId: String) {
     }
   }
 }
-
-#nftBoughtEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
-#inBlock
-#createdAt
-#price
-#video {
-#title
-#}
-#member {
-#controllerAccount
-#}
-#}
-#
-#bidMadeCompletingAuctionEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
-#inBlock
-#createdAt
-#price
-#video {
-#title
-#}
-#member {
-#controllerAccount
-#}
-#}
-#
-#englishAuctionSettledEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
-#createdAt
-#inBlock
-#video {
-#title
-#}
-#winningBid {
-#amount
-#}
-#winner {
-#controllerAccount
-#}
-#}
-#
-#openAuctionBidAcceptedEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
-#inBlock
-#createdAt
-#video {
-#title
-#}
-#winningBid {
-#amount
-#}
-#winningBidder {
-#controllerAccount
-#}
-#}
-#
-#channelRewardClaimedEvents(where: { channel: { id_eq: $channelId } }) {
-#amount
-#createdAt
-#inBlock
-#}
-#
-#channelFundsWithdrawnEvents(where: { channel: { id_eq: $channelId } }) {
-#amount
-#createdAt
-#inBlock
-#actor {
-#... on ContentActorCurator {
-#__typename
-#}
-#... on ContentActorLead {
-#__typename
-#}
-#
-#... on ContentActorMember {
-#member {
-#controllerAccount
-#}
-#}
-#}
-#}
-#
-#channelPaymentMadeEvents(where: { payeeChannel: { id_eq: $channelId } }) {
-#amount
-#createdAt
-#inBlock
-#rationale
-#payer {
-#controllerAccount
-#}
-#}
