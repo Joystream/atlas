@@ -9,8 +9,8 @@ import {
   BasicChannelFieldsFragment,
   ExtendedBasicChannelFieldsFragment,
 } from '@/api/queries/__generated__/fragments.generated'
+import { Avatar } from '@/components/Avatar'
 import { InputAutocomplete } from '@/components/_inputs/InputAutocomplete'
-import { ResolvedAvatar } from '@/views/global/YppLandingView/YppAuthorizationModal/YppAuthorizationSteps'
 
 export const PlaygroundInputAutocomplete = () => {
   const [foundChannel, setFoundChannel] = useState<BasicChannelFieldsFragment | null>(null)
@@ -49,7 +49,7 @@ export const PlaygroundInputAutocomplete = () => {
             setChannel(item.channel.title ?? '')
           }
         }}
-        nodeEnd={foundChannel && <ResolvedAvatar channel={foundChannel} size="bid" />}
+        nodeEnd={foundChannel && <Avatar assetUrl={foundChannel.avatarPhoto?.resolvedUrl} size="bid" />}
         clearSelection={() => setFoundChannel(null)}
       />
       <div style={{ marginTop: 20 }}>
