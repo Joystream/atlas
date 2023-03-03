@@ -49,3 +49,15 @@ query GetBasicStorageBuckets {
     id
   }
 }
+
+query GetDistributionBucketsByBagIds($bagIds: [ID!]) {
+  storageBags(where: { id_in: $bagIds }) {
+    id
+    distributionBuckets {
+      id
+      operators {
+        ...DistributionBucketOperatorField
+      }
+    }
+  }
+}
