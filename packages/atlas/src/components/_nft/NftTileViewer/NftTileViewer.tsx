@@ -6,7 +6,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useNftState } from '@/hooks/useNftState'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useVideoContextMenu } from '@/hooks/useVideoContextMenu'
-import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
 
 import { NftTile, NftTileProps } from '../NftTile'
@@ -18,9 +18,9 @@ type NftTileViewerProps = {
 export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
   const { nftStatus, nft, loading } = useNft(nftId || '')
   const navigate = useNavigate()
-  const thumbnail = useAsset(nft?.video.thumbnailPhoto)
+  const thumbnailUrl = nft?.video.thumbnailPhoto?.resolvedUrl
   const nftActions = useNftActions()
-  const creatorAvatar = useAsset(nft?.video.channel.avatarPhoto)
+  const creatorAvatarUrl = nft?.video.channel.avatarPhoto?.resolvedUrl
   const nftState = useNftState(nft)
   const {
     auctionPlannedEndDate,
@@ -49,7 +49,7 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
   const owner = ownerChannel
     ? {
         name: ownerChannel.title || undefined,
-        assetUrl: creatorAvatar.url || undefined,
+        assetUrl: creatorAvatarUrl || undefined,
         loading,
         onClick: () => navigate(absoluteRoutes.viewer.channel(ownerChannel.id)),
       }
@@ -82,16 +82,16 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
     loading: loading || !nftId,
     thumbnail: {
       videoHref: absoluteRoutes.viewer.video(nft?.video.id),
-      thumbnailUrl: thumbnail.url,
-      loading: thumbnail.isLoadingAsset,
+      thumbnailUrl: thumbnailUrl,
+      loading: loading,
       thumbnailAlt: `${nft?.video?.title} video thumbnail`,
       type: 'video',
     },
     owner,
     creator: {
       name: nft?.video.channel.title || undefined,
-      loading: creatorAvatar.isLoadingAsset || loading,
-      assetUrl: creatorAvatar.url,
+      loading: loading,
+      assetUrl: creatorAvatarUrl,
       onClick: () => navigate(absoluteRoutes.viewer.channel(nft?.video.channel.id)),
     },
     contextMenuItems,

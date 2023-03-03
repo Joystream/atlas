@@ -60,7 +60,7 @@ const Template: StoryFn<{ activity: Array<ActivityItemProps> }> = ({ activity })
                 type={activity.type}
                 title={activity.title}
                 description={activity.description}
-                thumnailUri={activity.thumnailUri}
+                thumbnailUri={activity.thumbnailUri}
               />
             </GridItem>
           ))}

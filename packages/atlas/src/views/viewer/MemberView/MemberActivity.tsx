@@ -2,16 +2,14 @@ import { FC } from 'react'
 import { useNavigate } from 'react-router'
 
 import { NftActivityOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
-import { StorageDataObjectFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionBid, SvgActionBuyNow, SvgActionMint, SvgActionSell } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset } from '@/providers/assets/assets.hooks'
 
-import { ActivityItem, ActivityItemProps } from './ActivityItem'
+import { ActivityItem } from './ActivityItem'
 import { ActivitiesRecord, useActivities } from './MemberActivity.hooks'
 import {
   GridRowWrapper,
@@ -115,14 +113,14 @@ export const MemberActivity: FC<MemberActivityProps> = ({
             <LayoutGrid>
               {items?.map((activity, i) => (
                 <GridItem key={i} colSpan={{ base: 12 }}>
-                  <ActivityItemWithResolvedAsset
+                  <ActivityItem
+                    thumbnailUri={activity.video?.thumbnailPhoto?.resolvedUrl || ''}
                     loading={!activities || loading}
                     onItemClick={() => navigate(absoluteRoutes.viewer.video(activity.video?.id))}
                     date={activity?.date}
                     type={activity?.type}
                     title={activity?.video?.title || ''}
                     description={getDescription(activity)}
-                    thumbnailPhoto={activity.video?.thumbnailPhoto}
                   />
                 </GridItem>
               ))}
@@ -187,16 +185,4 @@ export const MemberActivity: FC<MemberActivityProps> = ({
       )}
     </section>
   )
-}
-
-type ActivityItemWithResolvedAssetProps = {
-  thumbnailPhoto?: StorageDataObjectFieldsFragment | null
-} & Omit<ActivityItemProps, 'thumnailUri'>
-
-export const ActivityItemWithResolvedAsset: FC<ActivityItemWithResolvedAssetProps> = ({
-  thumbnailPhoto,
-  ...restProps
-}) => {
-  const { url } = useAsset(thumbnailPhoto)
-  return <ActivityItem {...restProps} thumnailUri={url || ''} />
 }

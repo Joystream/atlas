@@ -8,7 +8,7 @@ import { FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.g
 import { NftWidgetProps } from '@/components/_nft/NftWidget/NftWidget'
 import { atlasConfig } from '@/config'
 import { useNftState } from '@/hooks/useNftState'
-import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
 import { convertDateFormat } from '@/utils/time'
@@ -84,7 +84,7 @@ export const useNftWidget = (video: FullVideoFieldsFragment | undefined | null):
   const ownerChannel = nftOwner?.__typename === 'NftOwnerChannel' ? nftOwner.channel : null
 
   const { url: ownerAvatarUri } = useMemberAvatar(ownerMember)
-  const { url: creatorAvatarUri } = useAsset(ownerChannel?.avatarPhoto)
+  const creatorAvatarUri = ownerChannel?.avatarPhoto?.resolvedUrl
   const { url: topBidderAvatarUri } = useMemberAvatar(nftStatus?.status === 'auction' ? nftStatus.topBidder : undefined)
 
   const { entries: nftHistory } = useNftHistoryEntries(video?.id ?? '', {

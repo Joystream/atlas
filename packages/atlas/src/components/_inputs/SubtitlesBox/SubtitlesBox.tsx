@@ -8,7 +8,6 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { atlasConfig } from '@/config'
-import { useAsset } from '@/providers/assets/assets.hooks'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { SubtitlesInput } from '@/types/subtitles'
 
@@ -44,7 +43,7 @@ export const SubtitlesBox: FC<SubtitleBoxProps> = ({
     axios.get(url, { responseType: 'blob' })
   )
 
-  const { url } = useAsset(asset)
+  const url = asset?.resolvedUrl
 
   const handleDownload = async (url = '') => {
     const response = await subtitlesFetch(url)

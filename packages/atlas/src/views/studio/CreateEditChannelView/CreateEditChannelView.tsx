@@ -26,7 +26,7 @@ import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib/types'
-import { useAsset, useChannelsStorageBucketsCount, useRawAsset } from '@/providers/assets/assets.hooks'
+import { useChannelsStorageBucketsCount, useRawAsset } from '@/providers/assets/assets.hooks'
 import { useAssetStore } from '@/providers/assets/assets.store'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joystream/joystream.hooks'
@@ -95,10 +95,6 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     { where: { channel: { isPublic_eq: undefined, isCensored_eq: undefined } } }
   )
   const channelBucketsCount = useChannelsStorageBucketsCount(channelId)
-
-  // trigger use asset to make sure the channel assets get resolved
-  useAsset(channel?.avatarPhoto)
-  useAsset(channel?.coverPhoto)
 
   const {
     register,
@@ -418,7 +414,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
           render={() => (
             <>
               <ChannelCover
-                assetUrl={loading ? null : coverAsset?.url}
+                assetUrl={loading ? null : coverAsset?.url || channel?.coverPhoto?.resolvedUrl}
                 hasCoverUploadFailed={hasCoverUploadFailed}
                 onCoverEditClick={() => {
                   const cover = getValues('cover')
@@ -453,7 +449,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
             render={() => (
               <>
                 <StyledAvatar
-                  assetUrl={avatarAsset?.url}
+                  assetUrl={avatarAsset?.url || channel?.avatarPhoto?.resolvedUrl}
                   hasAvatarUploadFailed={hasAvatarUploadFailed}
                   size="fill"
                   onClick={() => {

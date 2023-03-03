@@ -38,6 +38,7 @@ export type GetBidsQuery = {
               avatarObject: {
                 __typename?: 'StorageDataObject'
                 id: string
+                resolvedUrl?: string | null
                 createdAt: Date
                 size: string
                 isAccepted: boolean

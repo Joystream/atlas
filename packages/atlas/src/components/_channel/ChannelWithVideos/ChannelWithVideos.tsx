@@ -10,7 +10,6 @@ import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { absoluteRoutes } from '@/config/routes'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
-import { useAsset } from '@/providers/assets/assets.hooks'
 import { SentryLogger } from '@/utils/logs'
 
 import { ChannelCardAnchor, ChannelFollows, FollowButton, InfoWrapper, StyledAvatar } from './ChannelWithVideos.styles'
@@ -41,7 +40,6 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = memo(({ channelId }
     onError: (error) => SentryLogger.error('Failed to fetch videos', 'ChannelWithVideos', error),
   })
 
-  const { url: avatarUrl, isLoadingAsset: isLoadingAvatar } = useAsset(extendedChannel?.channel.avatarPhoto)
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(channelId, extendedChannel?.channel?.title)
 
   const targetItemsCount = videosPerRow * videoRows
@@ -73,7 +71,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = memo(({ channelId }
   return (
     <>
       <ChannelCardAnchor to={channelId ? absoluteRoutes.viewer.channel(channelId) : ''}>
-        <StyledAvatar size="channel" loading={isLoading || isLoadingAvatar} assetUrl={avatarUrl} />
+        <StyledAvatar size="channel" loading={isLoading} assetUrl={extendedChannel?.channel.avatarPhoto?.resolvedUrl} />
         <InfoWrapper>
           {isLoading ? (
             <SkeletonLoader width="120px" height="20px" bottomSpace="4px" />

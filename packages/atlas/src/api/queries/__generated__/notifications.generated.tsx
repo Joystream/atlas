@@ -43,6 +43,7 @@ export type GetNotificationsQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -76,6 +77,7 @@ export type GetNotificationsQuery = {
                           avatarObject: {
                             __typename?: 'StorageDataObject'
                             id: string
+                            resolvedUrl?: string | null
                             createdAt: Date
                             size: string
                             isAccepted: boolean
@@ -118,6 +120,7 @@ export type GetNotificationsQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -153,6 +156,7 @@ export type GetNotificationsQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -192,6 +196,7 @@ export type GetNotificationsQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -230,6 +235,7 @@ export type GetNotificationsQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -265,6 +271,7 @@ export type GetNotificationsQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -307,6 +314,7 @@ export type GetNotificationsQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -345,6 +353,7 @@ export type GetNotificationsQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -386,6 +395,7 @@ export type GetNotificationsQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -421,6 +431,7 @@ export type GetNotificationsQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -459,6 +470,7 @@ export type GetNotificationsQuery = {
                       avatarObject: {
                         __typename?: 'StorageDataObject'
                         id: string
+                        resolvedUrl?: string | null
                         createdAt: Date
                         size: string
                         isAccepted: boolean
@@ -499,6 +511,7 @@ export type GetNotificationsQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -540,6 +553,7 @@ export type GetNotificationsQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -575,6 +589,7 @@ export type GetNotificationsQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -628,6 +643,7 @@ export type GetNftHistoryQuery = {
                       avatarObject: {
                         __typename?: 'StorageDataObject'
                         id: string
+                        resolvedUrl?: string | null
                         createdAt: Date
                         size: string
                         isAccepted: boolean
@@ -665,6 +681,7 @@ export type GetNftHistoryQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -705,6 +722,7 @@ export type GetNftHistoryQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -740,6 +758,7 @@ export type GetNftHistoryQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -780,6 +799,7 @@ export type GetNftHistoryQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -815,6 +835,7 @@ export type GetNftHistoryQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -850,6 +871,7 @@ export type GetNftHistoryQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -890,6 +912,7 @@ export type GetNftHistoryQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -925,6 +948,7 @@ export type GetNftHistoryQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -966,6 +990,7 @@ export type GetNftHistoryQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -1001,6 +1026,7 @@ export type GetNftHistoryQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -1043,6 +1069,7 @@ export type GetNftHistoryQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -1078,6 +1105,7 @@ export type GetNftHistoryQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -1112,6 +1140,7 @@ export type GetNftHistoryQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -1152,6 +1181,7 @@ export type GetNftHistoryQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -1187,6 +1217,7 @@ export type GetNftHistoryQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -1224,6 +1255,7 @@ export type GetNftHistoryQuery = {
                       avatarObject: {
                         __typename?: 'StorageDataObject'
                         id: string
+                        resolvedUrl?: string | null
                         createdAt: Date
                         size: string
                         isAccepted: boolean
@@ -1263,6 +1295,7 @@ export type GetNftHistoryQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -1298,6 +1331,7 @@ export type GetNftHistoryQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -1339,6 +1373,7 @@ export type GetNftHistoryQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -1374,6 +1409,7 @@ export type GetNftHistoryQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -1414,6 +1450,7 @@ export type GetNftHistoryQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -1449,6 +1486,7 @@ export type GetNftHistoryQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -1484,6 +1522,7 @@ export type GetNftHistoryQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -1524,6 +1563,7 @@ export type GetNftHistoryQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -1559,6 +1599,7 @@ export type GetNftHistoryQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -1618,6 +1659,7 @@ export type GetNftActivitiesQuery = {
                       avatarObject: {
                         __typename?: 'StorageDataObject'
                         id: string
+                        resolvedUrl?: string | null
                         createdAt: Date
                         size: string
                         isAccepted: boolean
@@ -1649,6 +1691,7 @@ export type GetNftActivitiesQuery = {
                     thumbnailPhoto?: {
                       __typename?: 'StorageDataObject'
                       id: string
+                      resolvedUrl?: string | null
                       createdAt: Date
                       size: string
                       isAccepted: boolean
@@ -1687,6 +1730,7 @@ export type GetNftActivitiesQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -1722,6 +1766,7 @@ export type GetNftActivitiesQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -1757,6 +1802,7 @@ export type GetNftActivitiesQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -1790,6 +1836,7 @@ export type GetNftActivitiesQuery = {
                           avatarObject: {
                             __typename?: 'StorageDataObject'
                             id: string
+                            resolvedUrl?: string | null
                             createdAt: Date
                             size: string
                             isAccepted: boolean
@@ -1820,6 +1867,7 @@ export type GetNftActivitiesQuery = {
                     thumbnailPhoto?: {
                       __typename?: 'StorageDataObject'
                       id: string
+                      resolvedUrl?: string | null
                       createdAt: Date
                       size: string
                       isAccepted: boolean
@@ -1851,6 +1899,7 @@ export type GetNftActivitiesQuery = {
                   thumbnailPhoto?: {
                     __typename?: 'StorageDataObject'
                     id: string
+                    resolvedUrl?: string | null
                     createdAt: Date
                     size: string
                     isAccepted: boolean
@@ -1885,6 +1934,7 @@ export type GetNftActivitiesQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -1920,6 +1970,7 @@ export type GetNftActivitiesQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -1960,6 +2011,7 @@ export type GetNftActivitiesQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -1995,6 +2047,7 @@ export type GetNftActivitiesQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -2030,6 +2083,7 @@ export type GetNftActivitiesQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -2059,6 +2113,7 @@ export type GetNftActivitiesQuery = {
                     thumbnailPhoto?: {
                       __typename?: 'StorageDataObject'
                       id: string
+                      resolvedUrl?: string | null
                       createdAt: Date
                       size: string
                       isAccepted: boolean
@@ -2088,6 +2143,7 @@ export type GetNftActivitiesQuery = {
                 thumbnailPhoto?: {
                   __typename?: 'StorageDataObject'
                   id: string
+                  resolvedUrl?: string | null
                   createdAt: Date
                   size: string
                   isAccepted: boolean
@@ -2121,6 +2177,7 @@ export type GetNftActivitiesQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -2156,6 +2213,7 @@ export type GetNftActivitiesQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -2188,6 +2246,7 @@ export type GetNftActivitiesQuery = {
                 thumbnailPhoto?: {
                   __typename?: 'StorageDataObject'
                   id: string
+                  resolvedUrl?: string | null
                   createdAt: Date
                   size: string
                   isAccepted: boolean
@@ -2221,6 +2280,7 @@ export type GetNftActivitiesQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -2256,6 +2316,7 @@ export type GetNftActivitiesQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -2298,6 +2359,7 @@ export type GetNftActivitiesQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -2333,6 +2395,7 @@ export type GetNftActivitiesQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -2368,6 +2431,7 @@ export type GetNftActivitiesQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -2397,6 +2461,7 @@ export type GetNftActivitiesQuery = {
                     thumbnailPhoto?: {
                       __typename?: 'StorageDataObject'
                       id: string
+                      resolvedUrl?: string | null
                       createdAt: Date
                       size: string
                       isAccepted: boolean
@@ -2428,6 +2493,7 @@ export type GetNftActivitiesQuery = {
                   thumbnailPhoto?: {
                     __typename?: 'StorageDataObject'
                     id: string
+                    resolvedUrl?: string | null
                     createdAt: Date
                     size: string
                     isAccepted: boolean
@@ -2462,6 +2528,7 @@ export type GetNftActivitiesQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -2497,6 +2564,7 @@ export type GetNftActivitiesQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -2534,6 +2602,7 @@ export type GetNftActivitiesQuery = {
                       avatarObject: {
                         __typename?: 'StorageDataObject'
                         id: string
+                        resolvedUrl?: string | null
                         createdAt: Date
                         size: string
                         isAccepted: boolean
@@ -2570,6 +2639,7 @@ export type GetNftActivitiesQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -2605,6 +2675,7 @@ export type GetNftActivitiesQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -2633,6 +2704,7 @@ export type GetNftActivitiesQuery = {
                 thumbnailPhoto?: {
                   __typename?: 'StorageDataObject'
                   id: string
+                  resolvedUrl?: string | null
                   createdAt: Date
                   size: string
                   isAccepted: boolean
@@ -2660,6 +2732,7 @@ export type GetNftActivitiesQuery = {
                 thumbnailPhoto?: {
                   __typename?: 'StorageDataObject'
                   id: string
+                  resolvedUrl?: string | null
                   createdAt: Date
                   size: string
                   isAccepted: boolean
@@ -2693,6 +2766,7 @@ export type GetNftActivitiesQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -2728,6 +2802,7 @@ export type GetNftActivitiesQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -2760,6 +2835,7 @@ export type GetNftActivitiesQuery = {
                 thumbnailPhoto?: {
                   __typename?: 'StorageDataObject'
                   id: string
+                  resolvedUrl?: string | null
                   createdAt: Date
                   size: string
                   isAccepted: boolean
@@ -2793,6 +2869,7 @@ export type GetNftActivitiesQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -2828,6 +2905,7 @@ export type GetNftActivitiesQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -2866,6 +2944,7 @@ export type GetNftActivitiesQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -2895,6 +2974,7 @@ export type GetNftActivitiesQuery = {
                     thumbnailPhoto?: {
                       __typename?: 'StorageDataObject'
                       id: string
+                      resolvedUrl?: string | null
                       createdAt: Date
                       size: string
                       isAccepted: boolean
@@ -2930,6 +3010,7 @@ export type GetNftActivitiesQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -2965,6 +3046,7 @@ export type GetNftActivitiesQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -2998,6 +3080,7 @@ export type GetNftActivitiesQuery = {
                   thumbnailPhoto?: {
                     __typename?: 'StorageDataObject'
                     id: string
+                    resolvedUrl?: string | null
                     createdAt: Date
                     size: string
                     isAccepted: boolean
@@ -3032,6 +3115,7 @@ export type GetNftActivitiesQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -3067,6 +3151,7 @@ export type GetNftActivitiesQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean

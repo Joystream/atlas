@@ -22,7 +22,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { useNftState } from '@/hooks/useNftState'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
-import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useFee, useJoystream, useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
 import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
@@ -62,8 +62,8 @@ export const NftPurchaseBottomDrawer: FC = () => {
   const { currentAction, closeNftAction, currentNftId, isBuyNowClicked } = useNftActions()
   const { nft, nftStatus, loading, refetch } = useNft(currentNftId || '')
   const { userBid, canChangeBid, userBidUnlockDate } = useNftState(nft)
-  const { isLoadingAsset: thumbnailLoading, url: thumbnailUrl } = useAsset(nft?.video.thumbnailPhoto)
-  const { url: creatorAvatarUrl } = useAsset(nft?.video.channel.avatarPhoto)
+  const thumbnailUrl = nft?.video.thumbnailPhoto?.resolvedUrl
+  const creatorAvatarUrl = nft?.video.channel.avatarPhoto?.resolvedUrl
   const { url: ownerMemberAvatarUrl } = useMemberAvatar(
     nft?.owner.__typename === 'NftOwnerMember' ? nft.owner.member : null
   )
@@ -316,7 +316,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
           <NftCard
             title={nft?.video.title}
             thumbnail={{
-              loading: thumbnailLoading || loading || !nft,
+              loading: loading || !nft,
               thumbnailUrl: thumbnailUrl,
               type: 'video',
             }}

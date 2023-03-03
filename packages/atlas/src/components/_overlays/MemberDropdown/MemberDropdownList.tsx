@@ -1,7 +1,6 @@
 import { FC, useMemo } from 'react'
 
 import {
-  BasicChannelFieldsFragment,
   BasicMembershipFieldsFragment,
   FullMembershipFieldsFragment,
 } from '@/api/queries/__generated__/fragments.generated'
@@ -10,7 +9,7 @@ import { Avatar } from '@/components/Avatar'
 import { IconWrapper } from '@/components/IconWrapper'
 import { ListItem } from '@/components/ListItem'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 
 import { SectionContainer } from './MemberDropdown.styles'
 import { SwitchMemberItemListContainer } from './MemberDropdownList.styles'
@@ -66,11 +65,13 @@ export const MemberDropdownList: FC<MemberDropdownListProps> = ({
               />
             ))
           : sortedMemberChannels.map((channel) => (
-              <ChannelListItem
+              <ListItem
                 key={channel.id}
-                channel={channel}
-                selected={channel.id === channelId}
                 onClick={() => onChannelChange?.(channel.id)}
+                nodeStart={<Avatar assetUrl={channel.avatarPhoto?.resolvedUrl} />}
+                label={channel?.title ?? ''}
+                caption={channel ? `${channel?.followsNum} followers` : undefined}
+                selected={channel.id === channelId}
               />
             ))}
         <ListItem
@@ -87,24 +88,6 @@ export const MemberDropdownList: FC<MemberDropdownListProps> = ({
         />
       </SectionContainer>
     </>
-  )
-}
-
-type ChannelListItemProps = {
-  channel: BasicChannelFieldsFragment
-  selected: boolean
-  onClick: () => void
-}
-const ChannelListItem: FC<ChannelListItemProps> = ({ channel, selected, onClick }) => {
-  const { url, isLoadingAsset } = useAsset(channel?.avatarPhoto)
-  return (
-    <ListItem
-      onClick={onClick}
-      nodeStart={<Avatar assetUrl={url} loading={isLoadingAsset} />}
-      label={channel?.title ?? ''}
-      caption={channel ? `${channel?.followsNum} followers` : undefined}
-      selected={selected}
-    />
   )
 }
 

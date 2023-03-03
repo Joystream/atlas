@@ -3,7 +3,6 @@ import { FC, useCallback, useMemo } from 'react'
 import { BasicChannelFieldsFragment, BasicVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { Text } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset } from '@/providers/assets/assets.hooks'
 
 import { ResultTitle } from './ResultTitle'
 import { ResultWrapper } from './ResultWrapper'
@@ -20,14 +19,23 @@ type ResultProps = {
   channel?: BasicChannelFieldsFragment
   query?: string
   selected?: boolean
+  loading?: boolean
   handleSelectedItem: (top: number, title?: string | null) => void
   selectedItem: null | number
 }
 
-export const Result: FC<ResultProps> = ({ video, channel, query, selected, handleSelectedItem, selectedItem }) => {
+export const Result: FC<ResultProps> = ({
+  video,
+  channel,
+  query,
+  selected,
+  handleSelectedItem,
+  selectedItem,
+  loading,
+}) => {
   const title = video ? video.title : channel?.title
-  const { url: channelAvatar, isLoadingAsset: channelAvatarLoading } = useAsset(channel?.avatarPhoto)
-  const { url: videoThumbnail, isLoadingAsset: videoThumbnailLoading } = useAsset(video?.thumbnailPhoto)
+  const channelAvatar = channel?.avatarPhoto?.resolvedUrl
+  const videoThumbnail = video?.thumbnailPhoto?.resolvedUrl
   const to = useMemo(() => {
     if (video) {
       return absoluteRoutes.viewer.video(video.id)
@@ -37,8 +45,6 @@ export const Result: FC<ResultProps> = ({ video, channel, query, selected, handl
     }
     return ''
   }, [video, channel])
-
-  const isLoading = video ? videoThumbnailLoading : channelAvatarLoading
 
   const thumbnailUrl = video ? videoThumbnail : channelAvatar
 
@@ -52,7 +58,7 @@ export const Result: FC<ResultProps> = ({ video, channel, query, selected, handl
   return (
     <ResultWrapper to={to} selected={selected} handleSelectedItem={onSelected} selectedItem={selectedItem}>
       <ResultContent>
-        {isLoading ? (
+        {loading ? (
           <StyledSkeletonLoader width={video ? '64px' : '32px'} height={video ? '40px' : '32px'} rounded={!!channel} />
         ) : channel && !thumbnailUrl ? (
           <StyledSvgAvatarSilhouette width={32} height={32} />

@@ -31,7 +31,7 @@ import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { VideoReaction } from '@/joystream-lib/types'
-import { useAsset, useSubtitlesAssets } from '@/providers/assets/assets.hooks'
+import { useSubtitlesAssets } from '@/providers/assets/assets.hooks'
 import { useFee } from '@/providers/joystream/joystream.hooks'
 import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
 import { useOverlayManager } from '@/providers/overlayManager'
@@ -112,8 +112,8 @@ export const VideoView: FC = () => {
   const { ref: playerRef, inView: isPlayerInView } = useInView()
   const pausePlayNext = anyOverlaysOpen || !isPlayerInView || isCommenting
 
-  const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset(video?.media)
-  const { url: thumbnailUrl } = useAsset(video?.thumbnailPhoto)
+  const mediaUrl = video?.media?.resolvedUrl
+  const thumbnailUrl = video?.thumbnailPhoto?.resolvedUrl
   const subtitlesAssets = useSubtitlesAssets(video?.subtitles)
   const availableTracks = useMemo(() => {
     if (!video?.subtitles) return []
@@ -382,7 +382,7 @@ export const VideoView: FC = () => {
             >
               {videoNotAvailable ? (
                 <VideoUnavailableError isCinematic={isCinematic} />
-              ) : !isMediaLoading && video ? (
+              ) : !loading && video ? (
                 <VideoPlayer
                   onCloseShareDialog={() => setShareDialogOpen(false)}
                   onAddVideoView={handleAddVideoView}

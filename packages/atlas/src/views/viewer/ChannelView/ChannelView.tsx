@@ -25,7 +25,6 @@ import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
-import { useAsset } from '@/providers/assets/assets.hooks'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
@@ -108,8 +107,8 @@ export const ChannelView: FC = () => {
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, channel?.title)
   const [currentTab, setCurrentTab] = useState<typeof TABS[number]>(TABS[0])
 
-  const { url: avatarPhotoUrl } = useAsset(channel?.avatarPhoto)
-  const { url: coverPhotoUrl } = useAsset(channel?.coverPhoto)
+  const avatarPhotoUrl = channel?.avatarPhoto?.resolvedUrl
+  const coverPhotoUrl = channel?.coverPhoto?.resolvedUrl
 
   const [sortNftsBy, setSortNftsBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)

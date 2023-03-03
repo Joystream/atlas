@@ -7,7 +7,6 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useAsset } from '@/providers/assets/assets.hooks'
 import { cVar, transitions } from '@/styles'
 
 import {
@@ -38,8 +37,6 @@ export const ChannelCard: FC<ChannelCardProps> = ({
   const mdMatch = useMediaMatch('md')
   const [activeDisabled, setActiveDisabled] = useState(false)
 
-  const { url, isLoadingAsset } = useAsset(channel?.avatarPhoto)
-
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(channel?.id, channel?.title)
 
   const handleFollowButtonClick = (e: MouseEvent) => {
@@ -49,7 +46,7 @@ export const ChannelCard: FC<ChannelCardProps> = ({
   return (
     <ChannelCardArticle className={className} activeDisabled={activeDisabled}>
       <ChannelCardAnchor onClick={onClick} to={channel?.id ? absoluteRoutes.viewer.channel(channel.id) : ''}>
-        <StyledAvatar size="channel-card" loading={isLoadingAsset || loading} assetUrl={url} />
+        <StyledAvatar size="channel-card" loading={loading} assetUrl={channel?.avatarPhoto?.resolvedUrl} />
         <SwitchTransition>
           <CSSTransition
             key={loading ? 'placeholder' : 'content'}

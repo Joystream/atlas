@@ -1138,8 +1138,8 @@ export type ChannelEdge = {
 
 export type ChannelFollow = {
   __typename?: 'ChannelFollow'
-  /** Channel being followed */
-  channel: Channel
+  /** ID of the channel being followed (the channel may no longer exist) */
+  channelId: Scalars['String']
   /** Unique identifier of the follow, also serves as a 'cancelToken' that needs to be provided when unfollowing the channel (to prevent abuse / inconsistent state) */
   id: Scalars['String']
   /** IP address of the follower */
@@ -1155,32 +1155,8 @@ export type ChannelFollowEdge = {
 }
 
 export enum ChannelFollowOrderByInput {
-  ChannelChannelStateBloatBondAsc = 'channel_channelStateBloatBond_ASC',
-  ChannelChannelStateBloatBondDesc = 'channel_channelStateBloatBond_DESC',
-  ChannelCreatedAtAsc = 'channel_createdAt_ASC',
-  ChannelCreatedAtDesc = 'channel_createdAt_DESC',
-  ChannelCreatedInBlockAsc = 'channel_createdInBlock_ASC',
-  ChannelCreatedInBlockDesc = 'channel_createdInBlock_DESC',
-  ChannelDescriptionAsc = 'channel_description_ASC',
-  ChannelDescriptionDesc = 'channel_description_DESC',
-  ChannelFollowsNumAsc = 'channel_followsNum_ASC',
-  ChannelFollowsNumDesc = 'channel_followsNum_DESC',
-  ChannelIdAsc = 'channel_id_ASC',
-  ChannelIdDesc = 'channel_id_DESC',
-  ChannelIsCensoredAsc = 'channel_isCensored_ASC',
-  ChannelIsCensoredDesc = 'channel_isCensored_DESC',
-  ChannelIsExcludedAsc = 'channel_isExcluded_ASC',
-  ChannelIsExcludedDesc = 'channel_isExcluded_DESC',
-  ChannelIsPublicAsc = 'channel_isPublic_ASC',
-  ChannelIsPublicDesc = 'channel_isPublic_DESC',
-  ChannelLanguageAsc = 'channel_language_ASC',
-  ChannelLanguageDesc = 'channel_language_DESC',
-  ChannelRewardAccountAsc = 'channel_rewardAccount_ASC',
-  ChannelRewardAccountDesc = 'channel_rewardAccount_DESC',
-  ChannelTitleAsc = 'channel_title_ASC',
-  ChannelTitleDesc = 'channel_title_DESC',
-  ChannelVideoViewsNumAsc = 'channel_videoViewsNum_ASC',
-  ChannelVideoViewsNumDesc = 'channel_videoViewsNum_DESC',
+  ChannelIdAsc = 'channelId_ASC',
+  ChannelIdDesc = 'channelId_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
   IpAsc = 'ip_ASC',
@@ -1200,8 +1176,23 @@ export type ChannelFollowResult = {
 export type ChannelFollowWhereInput = {
   AND?: InputMaybe<Array<ChannelFollowWhereInput>>
   OR?: InputMaybe<Array<ChannelFollowWhereInput>>
-  channel?: InputMaybe<ChannelWhereInput>
-  channel_isNull?: InputMaybe<Scalars['Boolean']>
+  channelId_contains?: InputMaybe<Scalars['String']>
+  channelId_containsInsensitive?: InputMaybe<Scalars['String']>
+  channelId_endsWith?: InputMaybe<Scalars['String']>
+  channelId_eq?: InputMaybe<Scalars['String']>
+  channelId_gt?: InputMaybe<Scalars['String']>
+  channelId_gte?: InputMaybe<Scalars['String']>
+  channelId_in?: InputMaybe<Array<Scalars['String']>>
+  channelId_isNull?: InputMaybe<Scalars['Boolean']>
+  channelId_lt?: InputMaybe<Scalars['String']>
+  channelId_lte?: InputMaybe<Scalars['String']>
+  channelId_not_contains?: InputMaybe<Scalars['String']>
+  channelId_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  channelId_not_endsWith?: InputMaybe<Scalars['String']>
+  channelId_not_eq?: InputMaybe<Scalars['String']>
+  channelId_not_in?: InputMaybe<Array<Scalars['String']>>
+  channelId_not_startsWith?: InputMaybe<Scalars['String']>
+  channelId_startsWith?: InputMaybe<Scalars['String']>
   id_contains?: InputMaybe<Scalars['String']>
   id_containsInsensitive?: InputMaybe<Scalars['String']>
   id_endsWith?: InputMaybe<Scalars['String']>
@@ -1274,6 +1265,8 @@ export enum ChannelOrderByInput {
   AvatarPhotoIpfsHashDesc = 'avatarPhoto_ipfsHash_DESC',
   AvatarPhotoIsAcceptedAsc = 'avatarPhoto_isAccepted_ASC',
   AvatarPhotoIsAcceptedDesc = 'avatarPhoto_isAccepted_DESC',
+  AvatarPhotoResolvedUrlAsc = 'avatarPhoto_resolvedUrl_ASC',
+  AvatarPhotoResolvedUrlDesc = 'avatarPhoto_resolvedUrl_DESC',
   AvatarPhotoSizeAsc = 'avatarPhoto_size_ASC',
   AvatarPhotoSizeDesc = 'avatarPhoto_size_DESC',
   AvatarPhotoStateBloatBondAsc = 'avatarPhoto_stateBloatBond_ASC',
@@ -1290,6 +1283,8 @@ export enum ChannelOrderByInput {
   CoverPhotoIpfsHashDesc = 'coverPhoto_ipfsHash_DESC',
   CoverPhotoIsAcceptedAsc = 'coverPhoto_isAccepted_ASC',
   CoverPhotoIsAcceptedDesc = 'coverPhoto_isAccepted_DESC',
+  CoverPhotoResolvedUrlAsc = 'coverPhoto_resolvedUrl_ASC',
+  CoverPhotoResolvedUrlDesc = 'coverPhoto_resolvedUrl_DESC',
   CoverPhotoSizeAsc = 'coverPhoto_size_ASC',
   CoverPhotoSizeDesc = 'coverPhoto_size_DESC',
   CoverPhotoStateBloatBondAsc = 'coverPhoto_stateBloatBond_ASC',
@@ -6115,6 +6110,8 @@ export type StorageDataObject = {
   ipfsHash: Scalars['String']
   /** Whether the data object was uploaded and accepted by the storage provider */
   isAccepted: Scalars['Boolean']
+  /** Resolved asset url */
+  resolvedUrl?: Maybe<Scalars['String']>
   /** Data object size in bytes */
   size: Scalars['BigInt']
   /** State Bloat Bond for removing the data object */
@@ -6142,6 +6139,8 @@ export enum StorageDataObjectOrderByInput {
   IpfsHashDesc = 'ipfsHash_DESC',
   IsAcceptedAsc = 'isAccepted_ASC',
   IsAcceptedDesc = 'isAccepted_DESC',
+  ResolvedUrlAsc = 'resolvedUrl_ASC',
+  ResolvedUrlDesc = 'resolvedUrl_DESC',
   SizeAsc = 'size_ASC',
   SizeDesc = 'size_DESC',
   StateBloatBondAsc = 'stateBloatBond_ASC',
@@ -6203,6 +6202,23 @@ export type StorageDataObjectWhereInput = {
   isAccepted_eq?: InputMaybe<Scalars['Boolean']>
   isAccepted_isNull?: InputMaybe<Scalars['Boolean']>
   isAccepted_not_eq?: InputMaybe<Scalars['Boolean']>
+  resolvedUrl_contains?: InputMaybe<Scalars['String']>
+  resolvedUrl_containsInsensitive?: InputMaybe<Scalars['String']>
+  resolvedUrl_endsWith?: InputMaybe<Scalars['String']>
+  resolvedUrl_eq?: InputMaybe<Scalars['String']>
+  resolvedUrl_gt?: InputMaybe<Scalars['String']>
+  resolvedUrl_gte?: InputMaybe<Scalars['String']>
+  resolvedUrl_in?: InputMaybe<Array<Scalars['String']>>
+  resolvedUrl_isNull?: InputMaybe<Scalars['Boolean']>
+  resolvedUrl_lt?: InputMaybe<Scalars['String']>
+  resolvedUrl_lte?: InputMaybe<Scalars['String']>
+  resolvedUrl_not_contains?: InputMaybe<Scalars['String']>
+  resolvedUrl_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  resolvedUrl_not_endsWith?: InputMaybe<Scalars['String']>
+  resolvedUrl_not_eq?: InputMaybe<Scalars['String']>
+  resolvedUrl_not_in?: InputMaybe<Array<Scalars['String']>>
+  resolvedUrl_not_startsWith?: InputMaybe<Scalars['String']>
+  resolvedUrl_startsWith?: InputMaybe<Scalars['String']>
   size_eq?: InputMaybe<Scalars['BigInt']>
   size_gt?: InputMaybe<Scalars['BigInt']>
   size_gte?: InputMaybe<Scalars['BigInt']>
@@ -7750,6 +7766,8 @@ export enum VideoOrderByInput {
   MediaIpfsHashDesc = 'media_ipfsHash_DESC',
   MediaIsAcceptedAsc = 'media_isAccepted_ASC',
   MediaIsAcceptedDesc = 'media_isAccepted_DESC',
+  MediaResolvedUrlAsc = 'media_resolvedUrl_ASC',
+  MediaResolvedUrlDesc = 'media_resolvedUrl_DESC',
   MediaSizeAsc = 'media_size_ASC',
   MediaSizeDesc = 'media_size_DESC',
   MediaStateBloatBondAsc = 'media_stateBloatBond_ASC',
@@ -7796,6 +7814,8 @@ export enum VideoOrderByInput {
   ThumbnailPhotoIpfsHashDesc = 'thumbnailPhoto_ipfsHash_DESC',
   ThumbnailPhotoIsAcceptedAsc = 'thumbnailPhoto_isAccepted_ASC',
   ThumbnailPhotoIsAcceptedDesc = 'thumbnailPhoto_isAccepted_DESC',
+  ThumbnailPhotoResolvedUrlAsc = 'thumbnailPhoto_resolvedUrl_ASC',
+  ThumbnailPhotoResolvedUrlDesc = 'thumbnailPhoto_resolvedUrl_DESC',
   ThumbnailPhotoSizeAsc = 'thumbnailPhoto_size_ASC',
   ThumbnailPhotoSizeDesc = 'thumbnailPhoto_size_DESC',
   ThumbnailPhotoStateBloatBondAsc = 'thumbnailPhoto_stateBloatBond_ASC',
@@ -7994,6 +8014,8 @@ export enum VideoSubtitleOrderByInput {
   AssetIpfsHashDesc = 'asset_ipfsHash_DESC',
   AssetIsAcceptedAsc = 'asset_isAccepted_ASC',
   AssetIsAcceptedDesc = 'asset_isAccepted_DESC',
+  AssetResolvedUrlAsc = 'asset_resolvedUrl_ASC',
+  AssetResolvedUrlDesc = 'asset_resolvedUrl_DESC',
   AssetSizeAsc = 'asset_size_ASC',
   AssetSizeDesc = 'asset_size_DESC',
   AssetStateBloatBondAsc = 'asset_stateBloatBond_ASC',

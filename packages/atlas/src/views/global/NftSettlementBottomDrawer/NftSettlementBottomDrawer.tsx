@@ -9,7 +9,7 @@ import { Button } from '@/components/_buttons/Button'
 import { NftCard } from '@/components/_nft/NftCard'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useFee, useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
 import { useSnackbar } from '@/providers/snackbars'
@@ -31,8 +31,8 @@ export const NftSettlementBottomDrawer: FC = () => {
   const { nft, loading, refetch } = useNft(currentNftId || '')
 
   const { displaySnackbar } = useSnackbar()
-  const { isLoadingAsset: thumbnailLoading, url: thumbnailUrl } = useAsset(nft?.video.thumbnailPhoto)
-  const { url: avatarUrl } = useAsset(nft?.video.channel.avatarPhoto)
+  const thumbnailUrl = nft?.video.thumbnailPhoto?.resolvedUrl
+  const avatarUrl = nft?.video.channel.avatarPhoto?.resolvedUrl
   const { url: memberAvatarUrl } = useMemberAvatar(
     nft?.owner.__typename === 'NftOwnerMember' && nft.owner.member ? nft.owner.member : null
   )
@@ -75,7 +75,7 @@ export const NftSettlementBottomDrawer: FC = () => {
             <NftCard
               title={nft?.video.title}
               thumbnail={{
-                loading: thumbnailLoading,
+                loading: loading,
                 thumbnailUrl: thumbnailUrl,
                 type: 'video',
               }}

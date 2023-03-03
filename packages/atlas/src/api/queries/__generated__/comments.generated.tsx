@@ -32,6 +32,7 @@ export type GetCommentQuery = {
               avatarObject: {
                 __typename?: 'StorageDataObject'
                 id: string
+                resolvedUrl?: string | null
                 createdAt: Date
                 size: string
                 isAccepted: boolean
@@ -95,6 +96,7 @@ export type GetCommentRepliesConnectionQuery = {
                   avatarObject: {
                     __typename?: 'StorageDataObject'
                     id: string
+                    resolvedUrl?: string | null
                     createdAt: Date
                     size: string
                     isAccepted: boolean
@@ -156,6 +158,7 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
               avatarObject: {
                 __typename?: 'StorageDataObject'
                 id: string
+                resolvedUrl?: string | null
                 createdAt: Date
                 size: string
                 isAccepted: boolean
@@ -208,6 +211,7 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
                   avatarObject: {
                     __typename?: 'StorageDataObject'
                     id: string
+                    resolvedUrl?: string | null
                     createdAt: Date
                     size: string
                     isAccepted: boolean

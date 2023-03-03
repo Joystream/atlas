@@ -8,7 +8,6 @@ import { Text, TextVariant } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
-import { useAsset } from '@/providers/assets/assets.hooks'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
@@ -54,7 +53,6 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
     extendedChannel?.channel.id,
     extendedChannel?.channel?.title
   )
-  const { url: avatarPhotoUrl } = useAsset(extendedChannel?.channel.avatarPhoto)
 
   const displayedChannel = overrideChannel ? { channel: overrideChannel } : extendedChannel
 
@@ -72,7 +70,7 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
             withHandle={!hideHandle}
             loading={!displayedChannel}
             size={avatarSize}
-            assetUrl={avatarPhotoUrl}
+            assetUrl={displayedChannel?.channel.avatarPhoto?.resolvedUrl}
           />
         </StyledLink>
       )}

@@ -35,6 +35,7 @@ export type GetVideoHeroQuery = {
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
+          resolvedUrl?: string | null
           createdAt: Date
           size: string
           isAccepted: boolean
@@ -52,6 +53,7 @@ export type GetVideoHeroQuery = {
       thumbnailPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
+        resolvedUrl?: string | null
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -97,6 +99,7 @@ export type GetVideoHeroQuery = {
                           avatarObject: {
                             __typename?: 'StorageDataObject'
                             id: string
+                            resolvedUrl?: string | null
                             createdAt: Date
                             size: string
                             isAccepted: boolean
@@ -118,6 +121,7 @@ export type GetVideoHeroQuery = {
                 avatarPhoto?: {
                   __typename?: 'StorageDataObject'
                   id: string
+                  resolvedUrl?: string | null
                   createdAt: Date
                   size: string
                   isAccepted: boolean
@@ -148,6 +152,7 @@ export type GetVideoHeroQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -207,6 +212,7 @@ export type GetVideoHeroQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -246,6 +252,7 @@ export type GetVideoHeroQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -280,6 +287,7 @@ export type GetVideoHeroQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -342,6 +350,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
+            resolvedUrl?: string | null
             createdAt: Date
             size: string
             isAccepted: boolean
@@ -359,6 +368,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
         thumbnailPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
+          resolvedUrl?: string | null
           createdAt: Date
           size: string
           isAccepted: boolean
@@ -404,6 +414,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -425,6 +436,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
                   avatarPhoto?: {
                     __typename?: 'StorageDataObject'
                     id: string
+                    resolvedUrl?: string | null
                     createdAt: Date
                     size: string
                     isAccepted: boolean
@@ -455,6 +467,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
                           avatarObject: {
                             __typename?: 'StorageDataObject'
                             id: string
+                            resolvedUrl?: string | null
                             createdAt: Date
                             size: string
                             isAccepted: boolean
@@ -514,6 +527,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -553,6 +567,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -587,6 +602,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -650,6 +666,7 @@ export type GetCategoriesFeaturedVideosQuery = {
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
+            resolvedUrl?: string | null
             createdAt: Date
             size: string
             isAccepted: boolean
@@ -667,6 +684,7 @@ export type GetCategoriesFeaturedVideosQuery = {
         thumbnailPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
+          resolvedUrl?: string | null
           createdAt: Date
           size: string
           isAccepted: boolean
@@ -712,6 +730,7 @@ export type GetCategoriesFeaturedVideosQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -733,6 +752,7 @@ export type GetCategoriesFeaturedVideosQuery = {
                   avatarPhoto?: {
                     __typename?: 'StorageDataObject'
                     id: string
+                    resolvedUrl?: string | null
                     createdAt: Date
                     size: string
                     isAccepted: boolean
@@ -763,6 +783,7 @@ export type GetCategoriesFeaturedVideosQuery = {
                           avatarObject: {
                             __typename?: 'StorageDataObject'
                             id: string
+                            resolvedUrl?: string | null
                             createdAt: Date
                             size: string
                             isAccepted: boolean
@@ -822,6 +843,7 @@ export type GetCategoriesFeaturedVideosQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -861,6 +883,7 @@ export type GetCategoriesFeaturedVideosQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -895,6 +918,7 @@ export type GetCategoriesFeaturedVideosQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean

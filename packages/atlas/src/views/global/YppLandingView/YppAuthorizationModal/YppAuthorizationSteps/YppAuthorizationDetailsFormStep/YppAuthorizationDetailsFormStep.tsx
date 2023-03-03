@@ -10,13 +10,12 @@ import {
   BasicChannelFieldsFragment,
   ExtendedBasicChannelFieldsFragment,
 } from '@/api/queries/__generated__/fragments.generated'
-import { Avatar, AvatarProps } from '@/components/Avatar'
+import { Avatar } from '@/components/Avatar'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { InputAutocomplete } from '@/components/_inputs/InputAutocomplete'
 import { atlasConfig } from '@/config'
 import { EMAIL_PATTERN } from '@/config/regex'
-import { useAsset } from '@/providers/assets/assets.hooks'
 
 import { FormFieldsWrapper } from './YppAuthorizationDetailsFormStep.styles'
 
@@ -113,7 +112,7 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
                   setValue('referrerChannelId', item.channel.id)
                 }
               }}
-              nodeEnd={foundChannel && <ResolvedAvatar channel={foundChannel} size="bid" />}
+              nodeEnd={foundChannel && <Avatar assetUrl={foundChannel.avatarPhoto?.resolvedUrl} size="bid" />}
               clearSelection={() => {
                 setFoundChannel(undefined)
               }}
@@ -123,12 +122,4 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
       />
     </FormFieldsWrapper>
   )
-}
-
-type ResolvedAvatarProps = {
-  channel?: BasicChannelFieldsFragment
-} & AvatarProps
-export const ResolvedAvatar: FC<ResolvedAvatarProps> = ({ channel }) => {
-  const { url, isLoadingAsset } = useAsset(channel?.avatarPhoto)
-  return <Avatar assetUrl={url} loading={isLoadingAsset} size="bid" />
 }
