@@ -11,16 +11,14 @@ mutation SetKillSwitch($isKilled: Boolean!) {
 }
 
 mutation GetAppActionSignature(
-  $assets: String
   $creatorId: String!
-  $nonce: Float!
-  $rawAction: String
-  $rawAppActionMetadata: String
+  $assets: String!
+  $rawAction: String!
+  $rawAppActionMetadata: String!
 ) {
   signAppActionCommitment(
-    assets: $assets
     creatorId: $creatorId
-    nonce: $nonce
+    assets: $assets
     rawAction: $rawAction
     rawAppActionMetadata: $rawAppActionMetadata
   ) {

@@ -18,11 +18,10 @@ export type SetKillSwitchMutation = {
 }
 
 export type GetAppActionSignatureMutationVariables = Types.Exact<{
-  assets?: Types.InputMaybe<Types.Scalars['String']>
   creatorId: Types.Scalars['String']
-  nonce: Types.Scalars['Float']
-  rawAction?: Types.InputMaybe<Types.Scalars['String']>
-  rawAppActionMetadata?: Types.InputMaybe<Types.Scalars['String']>
+  assets: Types.Scalars['String']
+  rawAction: Types.Scalars['String']
+  rawAppActionMetadata: Types.Scalars['String']
 }>
 
 export type GetAppActionSignatureMutation = {
@@ -108,16 +107,14 @@ export type SetKillSwitchMutationOptions = Apollo.BaseMutationOptions<
 >
 export const GetAppActionSignatureDocument = gql`
   mutation GetAppActionSignature(
-    $assets: String
     $creatorId: String!
-    $nonce: Float!
-    $rawAction: String
-    $rawAppActionMetadata: String
+    $assets: String!
+    $rawAction: String!
+    $rawAppActionMetadata: String!
   ) {
     signAppActionCommitment(
-      assets: $assets
       creatorId: $creatorId
-      nonce: $nonce
+      assets: $assets
       rawAction: $rawAction
       rawAppActionMetadata: $rawAppActionMetadata
     ) {
@@ -143,9 +140,8 @@ export type GetAppActionSignatureMutationFn = Apollo.MutationFunction<
  * @example
  * const [getAppActionSignatureMutation, { data, loading, error }] = useGetAppActionSignatureMutation({
  *   variables: {
- *      assets: // value for 'assets'
  *      creatorId: // value for 'creatorId'
- *      nonce: // value for 'nonce'
+ *      assets: // value for 'assets'
  *      rawAction: // value for 'rawAction'
  *      rawAppActionMetadata: // value for 'rawAppActionMetadata'
  *   },

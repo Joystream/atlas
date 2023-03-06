@@ -397,7 +397,7 @@ export type BasicVideoFieldsFragment = {
             __typename: 'AuctionTypeEnglish'
             duration: number
             extensionPeriod: number
-            minimalBidStep: number
+            minimalBidStep: string
             plannedEndAtBlock: number
           }
         | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -543,7 +543,7 @@ export type BasicVideoFieldsFragment = {
       }>
     } | null
     transactionalStatus?:
-      | { __typename: 'TransactionalStatusBuyNow'; price: number }
+      | { __typename: 'TransactionalStatusBuyNow'; price: string }
       | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
       | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
       | null
@@ -554,6 +554,7 @@ export type FullVideoFieldsFragment = {
   __typename?: 'Video'
   id: string
   title?: string | null
+  ytVideoId?: string | null
   description?: string | null
   reactionsCount: number
   views: number
@@ -750,7 +751,7 @@ export type FullVideoFieldsFragment = {
             __typename: 'AuctionTypeEnglish'
             duration: number
             extensionPeriod: number
-            minimalBidStep: number
+            minimalBidStep: string
             plannedEndAtBlock: number
           }
         | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -896,7 +897,7 @@ export type FullVideoFieldsFragment = {
       }>
     } | null
     transactionalStatus?:
-      | { __typename: 'TransactionalStatusBuyNow'; price: number }
+      | { __typename: 'TransactionalStatusBuyNow'; price: string }
       | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
       | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
       | null
@@ -979,7 +980,7 @@ export type BasicNftFieldsFragment = {
           __typename: 'AuctionTypeEnglish'
           duration: number
           extensionPeriod: number
-          minimalBidStep: number
+          minimalBidStep: string
           plannedEndAtBlock: number
         }
       | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -1125,7 +1126,7 @@ export type BasicNftFieldsFragment = {
     }>
   } | null
   transactionalStatus?:
-    | { __typename: 'TransactionalStatusBuyNow'; price: number }
+    | { __typename: 'TransactionalStatusBuyNow'; price: string }
     | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
     | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
     | null
@@ -1268,7 +1269,7 @@ export type FullNftFieldsFragment = {
               __typename: 'AuctionTypeEnglish'
               duration: number
               extensionPeriod: number
-              minimalBidStep: number
+              minimalBidStep: string
               plannedEndAtBlock: number
             }
           | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -1414,7 +1415,7 @@ export type FullNftFieldsFragment = {
         }>
       } | null
       transactionalStatus?:
-        | { __typename: 'TransactionalStatusBuyNow'; price: number }
+        | { __typename: 'TransactionalStatusBuyNow'; price: string }
         | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
         | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
         | null
@@ -1464,7 +1465,7 @@ export type FullNftFieldsFragment = {
           __typename: 'AuctionTypeEnglish'
           duration: number
           extensionPeriod: number
-          minimalBidStep: number
+          minimalBidStep: string
           plannedEndAtBlock: number
         }
       | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -1610,7 +1611,7 @@ export type FullNftFieldsFragment = {
     }>
   } | null
   transactionalStatus?:
-    | { __typename: 'TransactionalStatusBuyNow'; price: number }
+    | { __typename: 'TransactionalStatusBuyNow'; price: string }
     | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
     | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
     | null
@@ -2166,6 +2167,7 @@ export const FullVideoFieldsFragmentDoc = gql`
   fragment FullVideoFields on Video {
     id
     title
+    ytVideoId
     description
     reactionsCount
     reactions {
