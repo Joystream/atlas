@@ -2,6 +2,7 @@ import BN from 'bn.js'
 import { useCallback } from 'react'
 
 import { useAppActionMetadataProcessor } from '@/api/hooks/apps'
+import { AppActionActionType } from '@/api/queries/__generated__/baseTypes.generated'
 import { FullChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { useGetChannelCountQuery } from '@/api/queries/__generated__/memberships.generated'
 import { atlasConfig } from '@/config'
@@ -68,7 +69,8 @@ export const useCreateEditChannelSubmit = () => {
 
   const rawMetadataProcessor = useAppActionMetadataProcessor(
     `m:${memberId}`,
-    channelCountData?.channelsConnection.totalCount
+    AppActionActionType.CreateChannel,
+    channelCountData?.channelsConnection.totalCount || 0
   )
 
   return useCallback(

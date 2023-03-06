@@ -118,7 +118,7 @@ export type GetVideoHeroQuery = {
                 __typename: 'AuctionTypeEnglish'
                 duration: number
                 extensionPeriod: number
-                minimalBidStep: number
+                minimalBidStep: string
                 plannedEndAtBlock: number
               }
             | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -264,7 +264,7 @@ export type GetVideoHeroQuery = {
           }>
         } | null
         transactionalStatus?:
-          | { __typename: 'TransactionalStatusBuyNow'; price: number }
+          | { __typename: 'TransactionalStatusBuyNow'; price: string }
           | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
           | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
           | null
@@ -388,7 +388,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
                   __typename: 'AuctionTypeEnglish'
                   duration: number
                   extensionPeriod: number
-                  minimalBidStep: number
+                  minimalBidStep: string
                   plannedEndAtBlock: number
                 }
               | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -534,7 +534,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
             }>
           } | null
           transactionalStatus?:
-            | { __typename: 'TransactionalStatusBuyNow'; price: number }
+            | { __typename: 'TransactionalStatusBuyNow'; price: string }
             | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
             | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
             | null
@@ -754,7 +754,7 @@ export type GetCategoriesFeaturedVideosQuery = {
                 __typename: 'AuctionTypeEnglish'
                 duration: number
                 extensionPeriod: number
-                minimalBidStep: number
+                minimalBidStep: string
                 plannedEndAtBlock: number
               }
             | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -900,7 +900,7 @@ export type GetCategoriesFeaturedVideosQuery = {
           }>
         } | null
         transactionalStatus?:
-          | { __typename: 'TransactionalStatusBuyNow'; price: number }
+          | { __typename: 'TransactionalStatusBuyNow'; price: string }
           | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
           | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
           | null

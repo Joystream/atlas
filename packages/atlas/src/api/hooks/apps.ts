@@ -5,10 +5,11 @@ import { stringToU8a } from '@polkadot/util'
 import { useCallback } from 'react'
 
 import { useGetAppActionSignatureMutation } from '@/api/queries/__generated__/admin.generated'
+import { AppActionActionType } from '@/api/queries/__generated__/baseTypes.generated'
 import { atlasConfig } from '@/config'
 import { wrapMetadata } from '@/joystream-lib/metadata'
 
-export const useAppActionMetadataProcessor = (creatorId: string, nonce?: number) => {
+export const useAppActionMetadataProcessor = (creatorId: string, actionType: AppActionActionType, nonce: number) => {
   const [signatureMutation] = useGetAppActionSignatureMutation()
 
   return useCallback(
@@ -20,6 +21,7 @@ export const useAppActionMetadataProcessor = (creatorId: string, nonce?: number)
             nonce,
             rawAction: rawBytes.toHex(),
             creatorId,
+            actionType: actionType,
           },
         })
         if (data?.signAppActionCommitment) {
@@ -27,13 +29,12 @@ export const useAppActionMetadataProcessor = (creatorId: string, nonce?: number)
             appId: atlasConfig.general.appId,
             rawAction: rawBytes.toU8a(),
             signature: stringToU8a(data.signAppActionCommitment.signature),
-            nonce,
           }
           return wrapMetadata(AppAction.encode(appVideoInput).finish())
         }
       }
       return rawBytes
     },
-    [creatorId, nonce, signatureMutation]
+    [creatorId, nonce, actionType, signatureMutation]
   )
 }
