@@ -63,6 +63,11 @@ export type AppAppVideosArgs = {
   where?: InputMaybe<VideoWhereInput>
 }
 
+export enum AppActionActionType {
+  CreateChannel = 'CREATE_CHANNEL',
+  CreateVideo = 'CREATE_VIDEO',
+}
+
 export type AppEdge = {
   __typename?: 'AppEdge'
   cursor: Scalars['String']
@@ -96,8 +101,6 @@ export enum AppOrderByInput {
   OwnerMemberIdDesc = 'ownerMember_id_DESC',
   OwnerMemberTotalChannelsCreatedAsc = 'ownerMember_totalChannelsCreated_ASC',
   OwnerMemberTotalChannelsCreatedDesc = 'ownerMember_totalChannelsCreated_DESC',
-  OwnerMemberTotalVideosCreatedAsc = 'ownerMember_totalVideosCreated_ASC',
-  OwnerMemberTotalVideosCreatedDesc = 'ownerMember_totalVideosCreated_DESC',
   SmallIconAsc = 'smallIcon_ASC',
   SmallIconDesc = 'smallIcon_DESC',
   TermsOfServiceAsc = 'termsOfService_ASC',
@@ -476,8 +479,6 @@ export enum AuctionOrderByInput {
   WinningMemberIdDesc = 'winningMember_id_DESC',
   WinningMemberTotalChannelsCreatedAsc = 'winningMember_totalChannelsCreated_ASC',
   WinningMemberTotalChannelsCreatedDesc = 'winningMember_totalChannelsCreated_DESC',
-  WinningMemberTotalVideosCreatedAsc = 'winningMember_totalVideosCreated_ASC',
-  WinningMemberTotalVideosCreatedDesc = 'winningMember_totalVideosCreated_DESC',
 }
 
 /** Represents various action types */
@@ -687,8 +688,6 @@ export enum AuctionWhitelistedMemberOrderByInput {
   MemberIdDesc = 'member_id_DESC',
   MemberTotalChannelsCreatedAsc = 'member_totalChannelsCreated_ASC',
   MemberTotalChannelsCreatedDesc = 'member_totalChannelsCreated_DESC',
-  MemberTotalVideosCreatedAsc = 'member_totalVideosCreated_ASC',
-  MemberTotalVideosCreatedDesc = 'member_totalVideosCreated_DESC',
 }
 
 export type AuctionWhitelistedMemberWhereInput = {
@@ -823,6 +822,8 @@ export enum BannedMemberOrderByInput {
   ChannelRewardAccountDesc = 'channel_rewardAccount_DESC',
   ChannelTitleAsc = 'channel_title_ASC',
   ChannelTitleDesc = 'channel_title_DESC',
+  ChannelTotalVideosCreatedAsc = 'channel_totalVideosCreated_ASC',
+  ChannelTotalVideosCreatedDesc = 'channel_totalVideosCreated_DESC',
   ChannelVideoViewsNumAsc = 'channel_videoViewsNum_ASC',
   ChannelVideoViewsNumDesc = 'channel_videoViewsNum_DESC',
   IdAsc = 'id_ASC',
@@ -837,8 +838,6 @@ export enum BannedMemberOrderByInput {
   MemberIdDesc = 'member_id_DESC',
   MemberTotalChannelsCreatedAsc = 'member_totalChannelsCreated_ASC',
   MemberTotalChannelsCreatedDesc = 'member_totalChannelsCreated_DESC',
-  MemberTotalVideosCreatedAsc = 'member_totalVideosCreated_ASC',
-  MemberTotalVideosCreatedDesc = 'member_totalVideosCreated_DESC',
 }
 
 export type BannedMemberWhereInput = {
@@ -940,8 +939,6 @@ export enum BidOrderByInput {
   BidderIdDesc = 'bidder_id_DESC',
   BidderTotalChannelsCreatedAsc = 'bidder_totalChannelsCreated_ASC',
   BidderTotalChannelsCreatedDesc = 'bidder_totalChannelsCreated_DESC',
-  BidderTotalVideosCreatedAsc = 'bidder_totalVideosCreated_ASC',
-  BidderTotalVideosCreatedDesc = 'bidder_totalVideosCreated_DESC',
   CreatedAtAsc = 'createdAt_ASC',
   CreatedAtDesc = 'createdAt_DESC',
   CreatedInBlockAsc = 'createdInBlock_ASC',
@@ -1110,6 +1107,8 @@ export type Channel = {
   rewardAccount: Scalars['String']
   /** The title of the Channel */
   title?: Maybe<Scalars['String']>
+  /** Number of videos ever created in this channel */
+  totalVideosCreated: Scalars['Int']
   /** Number of total video views (to speed up orderBy queries by avoiding COUNT aggregation) */
   videoViewsNum: Scalars['Int']
   /** List of videos that belong to the channel */
@@ -1343,12 +1342,12 @@ export enum ChannelOrderByInput {
   OwnerMemberIdDesc = 'ownerMember_id_DESC',
   OwnerMemberTotalChannelsCreatedAsc = 'ownerMember_totalChannelsCreated_ASC',
   OwnerMemberTotalChannelsCreatedDesc = 'ownerMember_totalChannelsCreated_DESC',
-  OwnerMemberTotalVideosCreatedAsc = 'ownerMember_totalVideosCreated_ASC',
-  OwnerMemberTotalVideosCreatedDesc = 'ownerMember_totalVideosCreated_DESC',
   RewardAccountAsc = 'rewardAccount_ASC',
   RewardAccountDesc = 'rewardAccount_DESC',
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC',
+  TotalVideosCreatedAsc = 'totalVideosCreated_ASC',
+  TotalVideosCreatedDesc = 'totalVideosCreated_DESC',
   VideoViewsNumAsc = 'videoViewsNum_ASC',
   VideoViewsNumDesc = 'videoViewsNum_DESC',
 }
@@ -1514,6 +1513,15 @@ export type ChannelWhereInput = {
   title_not_in?: InputMaybe<Array<Scalars['String']>>
   title_not_startsWith?: InputMaybe<Scalars['String']>
   title_startsWith?: InputMaybe<Scalars['String']>
+  totalVideosCreated_eq?: InputMaybe<Scalars['Int']>
+  totalVideosCreated_gt?: InputMaybe<Scalars['Int']>
+  totalVideosCreated_gte?: InputMaybe<Scalars['Int']>
+  totalVideosCreated_in?: InputMaybe<Array<Scalars['Int']>>
+  totalVideosCreated_isNull?: InputMaybe<Scalars['Boolean']>
+  totalVideosCreated_lt?: InputMaybe<Scalars['Int']>
+  totalVideosCreated_lte?: InputMaybe<Scalars['Int']>
+  totalVideosCreated_not_eq?: InputMaybe<Scalars['Int']>
+  totalVideosCreated_not_in?: InputMaybe<Array<Scalars['Int']>>
   videoViewsNum_eq?: InputMaybe<Scalars['Int']>
   videoViewsNum_gt?: InputMaybe<Scalars['Int']>
   videoViewsNum_gte?: InputMaybe<Scalars['Int']>
@@ -1605,8 +1613,6 @@ export enum CommentOrderByInput {
   AuthorIdDesc = 'author_id_DESC',
   AuthorTotalChannelsCreatedAsc = 'author_totalChannelsCreated_ASC',
   AuthorTotalChannelsCreatedDesc = 'author_totalChannelsCreated_DESC',
-  AuthorTotalVideosCreatedAsc = 'author_totalVideosCreated_ASC',
-  AuthorTotalVideosCreatedDesc = 'author_totalVideosCreated_DESC',
   CreatedAtAsc = 'createdAt_ASC',
   CreatedAtDesc = 'createdAt_DESC',
   IdAsc = 'id_ASC',
@@ -1736,8 +1742,6 @@ export enum CommentReactionOrderByInput {
   MemberIdDesc = 'member_id_DESC',
   MemberTotalChannelsCreatedAsc = 'member_totalChannelsCreated_ASC',
   MemberTotalChannelsCreatedDesc = 'member_totalChannelsCreated_DESC',
-  MemberTotalVideosCreatedAsc = 'member_totalVideosCreated_ASC',
-  MemberTotalVideosCreatedDesc = 'member_totalVideosCreated_DESC',
   ReactionIdAsc = 'reactionId_ASC',
   ReactionIdDesc = 'reactionId_DESC',
   VideoCommentsCountAsc = 'video_commentsCount_ASC',
@@ -3204,8 +3208,6 @@ export enum MemberMetadataOrderByInput {
   MemberIdDesc = 'member_id_DESC',
   MemberTotalChannelsCreatedAsc = 'member_totalChannelsCreated_ASC',
   MemberTotalChannelsCreatedDesc = 'member_totalChannelsCreated_DESC',
-  MemberTotalVideosCreatedAsc = 'member_totalVideosCreated_ASC',
-  MemberTotalVideosCreatedDesc = 'member_totalVideosCreated_DESC',
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
 }
@@ -3289,8 +3291,6 @@ export type Membership = {
   metadata?: Maybe<MemberMetadata>
   /** Number of channels ever created by this member */
   totalChannelsCreated: Scalars['Int']
-  /** Number of videos ever created by this member */
-  totalVideosCreated: Scalars['Int']
   /** Auctions in which is this user whitelisted to participate */
   whitelistedInAuctions: Array<AuctionWhitelistedMember>
 }
@@ -3342,8 +3342,6 @@ export enum MembershipOrderByInput {
   MetadataNameDesc = 'metadata_name_DESC',
   TotalChannelsCreatedAsc = 'totalChannelsCreated_ASC',
   TotalChannelsCreatedDesc = 'totalChannelsCreated_DESC',
-  TotalVideosCreatedAsc = 'totalVideosCreated_ASC',
-  TotalVideosCreatedDesc = 'totalVideosCreated_DESC',
 }
 
 export type MembershipWhereInput = {
@@ -3426,15 +3424,6 @@ export type MembershipWhereInput = {
   totalChannelsCreated_lte?: InputMaybe<Scalars['Int']>
   totalChannelsCreated_not_eq?: InputMaybe<Scalars['Int']>
   totalChannelsCreated_not_in?: InputMaybe<Array<Scalars['Int']>>
-  totalVideosCreated_eq?: InputMaybe<Scalars['Int']>
-  totalVideosCreated_gt?: InputMaybe<Scalars['Int']>
-  totalVideosCreated_gte?: InputMaybe<Scalars['Int']>
-  totalVideosCreated_in?: InputMaybe<Array<Scalars['Int']>>
-  totalVideosCreated_isNull?: InputMaybe<Scalars['Boolean']>
-  totalVideosCreated_lt?: InputMaybe<Scalars['Int']>
-  totalVideosCreated_lte?: InputMaybe<Scalars['Int']>
-  totalVideosCreated_not_eq?: InputMaybe<Scalars['Int']>
-  totalVideosCreated_not_in?: InputMaybe<Array<Scalars['Int']>>
   whitelistedInAuctions_every?: InputMaybe<AuctionWhitelistedMemberWhereInput>
   whitelistedInAuctions_none?: InputMaybe<AuctionWhitelistedMemberWhereInput>
   whitelistedInAuctions_some?: InputMaybe<AuctionWhitelistedMemberWhereInput>
@@ -3617,11 +3606,11 @@ export type MutationSetVideoViewPerIpTimeLimitArgs = {
 }
 
 export type MutationSignAppActionCommitmentArgs = {
+  actionType: AppActionActionType
   assets: Scalars['String']
   creatorId: Scalars['String']
   nonce: Scalars['Float']
   rawAction: Scalars['String']
-  rawAppActionMetadata: Scalars['String']
 }
 
 export type MutationUnfollowChannelArgs = {
@@ -3675,8 +3664,6 @@ export enum NftActivityOrderByInput {
   MemberIdDesc = 'member_id_DESC',
   MemberTotalChannelsCreatedAsc = 'member_totalChannelsCreated_ASC',
   MemberTotalChannelsCreatedDesc = 'member_totalChannelsCreated_DESC',
-  MemberTotalVideosCreatedAsc = 'member_totalVideosCreated_ASC',
-  MemberTotalVideosCreatedDesc = 'member_totalVideosCreated_DESC',
 }
 
 export type NftActivityWhereInput = {
@@ -3937,8 +3924,6 @@ export enum NotificationOrderByInput {
   MemberIdDesc = 'member_id_DESC',
   MemberTotalChannelsCreatedAsc = 'member_totalChannelsCreated_ASC',
   MemberTotalChannelsCreatedDesc = 'member_totalChannelsCreated_DESC',
-  MemberTotalVideosCreatedAsc = 'member_totalVideosCreated_ASC',
-  MemberTotalVideosCreatedDesc = 'member_totalVideosCreated_DESC',
 }
 
 export type NotificationWhereInput = {
@@ -7686,6 +7671,8 @@ export enum VideoOrderByInput {
   ChannelRewardAccountDesc = 'channel_rewardAccount_DESC',
   ChannelTitleAsc = 'channel_title_ASC',
   ChannelTitleDesc = 'channel_title_DESC',
+  ChannelTotalVideosCreatedAsc = 'channel_totalVideosCreated_ASC',
+  ChannelTotalVideosCreatedDesc = 'channel_totalVideosCreated_DESC',
   ChannelVideoViewsNumAsc = 'channel_videoViewsNum_ASC',
   ChannelVideoViewsNumDesc = 'channel_videoViewsNum_DESC',
   CommentsCountAsc = 'commentsCount_ASC',
@@ -7872,8 +7859,6 @@ export enum VideoReactionOrderByInput {
   MemberIdDesc = 'member_id_DESC',
   MemberTotalChannelsCreatedAsc = 'member_totalChannelsCreated_ASC',
   MemberTotalChannelsCreatedDesc = 'member_totalChannelsCreated_DESC',
-  MemberTotalVideosCreatedAsc = 'member_totalVideosCreated_ASC',
-  MemberTotalVideosCreatedDesc = 'member_totalVideosCreated_DESC',
   ReactionAsc = 'reaction_ASC',
   ReactionDesc = 'reaction_DESC',
   VideoCommentsCountAsc = 'video_commentsCount_ASC',

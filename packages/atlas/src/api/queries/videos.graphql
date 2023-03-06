@@ -129,6 +129,12 @@ query GetTop10VideosThisMonth($where: VideoWhereInput) {
   }
 }
 
+query GetVideosCount($where: VideoWhereInput) {
+  videosConnection(where: $where, orderBy: [createdAt_ASC]) {
+    totalCount
+  }
+}
+
 # CHANGE: `channelId` and `categoryId` args were removed, ID is now `String`
 mutation AddVideoView($videoId: String!) {
   addVideoView(videoId: $videoId) {

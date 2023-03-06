@@ -2,8 +2,11 @@ import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { useCallback } from 'react'
 
+import { useAppActionMetadataProcessor } from '@/api/hooks/apps'
 import { GetExtendedFullChannelsQueryHookResult } from '@/api/queries/__generated__/channels.generated'
 import { FullChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { useGetChannelCountQuery } from '@/api/queries/__generated__/memberships.generated'
+import { atlasConfig } from '@/config'
 import { ChannelAssets, ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib/types'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useOperatorsContext } from '@/providers/assets/assets.provider'
@@ -60,6 +63,16 @@ export const useCreateEditChannelSubmit = () => {
   const handleTransaction = useTransaction()
   const { fetchOperators } = useOperatorsContext()
   const client = useApolloClient()
+
+  const { data: channelCountData } = useGetChannelCountQuery({
+    variables: { where: { ownerMember: { id_eq: memberId } } },
+    skip: !channelId || !atlasConfig.general.appId,
+  })
+
+  const rawMetadataProcessor = useAppActionMetadataProcessor(
+    `m:${memberId}`,
+    channelCountData?.channelsConnection.totalCount
+  )
 
   return useCallback(
     async (
@@ -210,6 +223,7 @@ export const useCreateEditChannelSubmit = () => {
                 await getBucketsConfigForNewChannel(),
                 dataObjectStateBloatBondValue.toString(),
                 channelStateBloatBondValue.toString(),
+                atlasConfig.general.appId ? rawMetadataProcessor : undefined,
                 proxyCallback(updateStatus)
               )
             : (
@@ -248,6 +262,7 @@ export const useCreateEditChannelSubmit = () => {
       joystream,
       memberId,
       proxyCallback,
+      rawMetadataProcessor,
       refetchUserMemberships,
       setActiveUser,
       startFileUpload,

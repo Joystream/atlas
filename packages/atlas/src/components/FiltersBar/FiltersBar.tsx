@@ -32,6 +32,7 @@ type Filters = 'date' | 'date-minted' | 'other' | 'categories' | 'length' | 'nft
 
 export type FiltersBarProps = {
   activeFilters: Filters[]
+  onAnyFilterSet?: () => void
 }
 
 const nftStatuses = [
@@ -54,6 +55,7 @@ const nftStatuses = [
 ]
 
 export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> = ({
+  onAnyFilterSet,
   setVideoWhereInput,
   videoWhereInput,
   activeFilters,
@@ -384,6 +386,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
         primaryButton={{
           text: 'Apply',
           onClick: () => {
+            onAnyFilterSet?.()
             setVideoWhereInput((value) => ({
               ...value,
               createdAt_gte: dateUploadedFilter
@@ -449,6 +452,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
                 text: 'Apply',
                 disabled: !nftStatusFilter && !canClearNftStatusFilter,
                 onClick: () => {
+                  onAnyFilterSet?.()
                   categoriesPopoverRef.current?.hide()
                   handleSetOwnedNftWhereInput()
                 },
@@ -476,6 +480,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
                 disabled: (!categoriesFilter || !categoriesFilter.length) && !canClearCategoriesFilter,
                 onClick: () => {
                   categoriesPopoverRef.current?.hide()
+                  onAnyFilterSet?.()
                   setVideoWhereInput((value) => ({
                     ...value,
                     category: {
@@ -506,6 +511,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
                 disabled: !dateUploadedFilter && !canClearDateUploadedFilter,
                 onClick: () => {
                   datePopoverRef.current?.hide()
+                  onAnyFilterSet?.()
                   setVideoWhereInput((value) => ({
                     ...value,
                     createdAt_gte: dateUploadedFilter
@@ -538,6 +544,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
                 disabled: !dateUploadedFilter && !canClearDateUploadedFilter,
                 onClick: () => {
                   datePopoverRef.current?.hide()
+                  onAnyFilterSet?.()
                   setVideoWhereInput((value) => ({
                     ...value,
                     createdAt_gte: dateUploadedFilter
@@ -570,6 +577,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
                 disabled: !videoLengthFilter && !canClearVideoLengthFilter,
                 onClick: () => {
                   lengthPopoverRef.current?.hide()
+                  onAnyFilterSet?.()
                   setVideoWhereInput((value) => ({
                     ...value,
                     ...getDurationRules(videoLengthFilter),
@@ -599,6 +607,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
                   !excludePaidPromotionalMaterialFilter && !excludeMatureContentRatingFilter && !canClearOtherFilters,
                 onClick: () => {
                   othersPopoverRef.current?.hide()
+                  onAnyFilterSet?.()
                   setVideoWhereInput((value) => ({
                     ...value,
                     ...(excludeMatureContentRatingFilter || excludePaidPromotionalMaterialFilter

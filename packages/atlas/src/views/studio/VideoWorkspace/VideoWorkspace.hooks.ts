@@ -1,12 +1,15 @@
 import { useApolloClient } from '@apollo/client'
 import { useCallback } from 'react'
 
+import { useAppActionMetadataProcessor } from '@/api/hooks/apps'
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import {
   GetFullVideosConnectionDocument,
   GetFullVideosConnectionQuery,
   GetFullVideosConnectionQueryVariables,
+  useGetVideosCountQuery,
 } from '@/api/queries/__generated__/videos.generated'
+import { atlasConfig } from '@/config'
 import { VideoExtrinsicResult, VideoInputAssets } from '@/joystream-lib/types'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useDraftStore } from '@/providers/drafts'
@@ -33,6 +36,10 @@ export const useHandleVideoWorkspaceSubmit = () => {
   const { joystream, proxyCallback } = useJoystream()
   const startFileUpload = useStartFileUpload()
   const { channelId, memberId } = useAuthorizedUser()
+  const { data: channelVideosCount } = useGetVideosCountQuery({
+    skip: !channelId || !atlasConfig.general.appId,
+    variables: { where: { channel: { id_eq: channelId } } },
+  })
 
   const client = useApolloClient()
   const handleTransaction = useTransaction()
@@ -41,6 +48,8 @@ export const useHandleVideoWorkspaceSubmit = () => {
   const channelBucketsCount = useChannelsStorageBucketsCount(channelId)
 
   const { videoStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
+
+  const rawMetadataProcessor = useAppActionMetadataProcessor(channelId, channelVideosCount?.videosConnection.totalCount)
 
   return useCallback(
     async (data: VideoFormData, videoInfo?: VideoWorkspace, assetsToBeRemoved?: string[]) => {
@@ -218,6 +227,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
                 dataObjectStateBloatBondValue.toString(),
                 videoStateBloatBondValue.toString(),
                 channelBucketsCount.toString(),
+                atlasConfig.general.appId ? rawMetadataProcessor : undefined,
                 proxyCallback(updateStatus)
               )
             : (
@@ -254,9 +264,9 @@ export const useHandleVideoWorkspaceSubmit = () => {
       channelBucketsCount,
       editedVideoInfo,
       handleTransaction,
+      tabData?.subtitlesArray,
       tabData?.assets.video.id,
       tabData?.assets.thumbnail.cropId,
-      tabData?.subtitlesArray,
       startFileUpload,
       channelId,
       client,
@@ -265,6 +275,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
       memberId,
       dataObjectStateBloatBondValue,
       videoStateBloatBondValue,
+      rawMetadataProcessor,
       proxyCallback,
       setIsWorkspaceOpen,
       isNftMintDismissed,

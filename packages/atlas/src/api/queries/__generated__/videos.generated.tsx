@@ -2902,6 +2902,15 @@ export type GetTop10VideosThisMonthQuery = {
   }
 }
 
+export type GetVideosCountQueryVariables = Types.Exact<{
+  where?: Types.InputMaybe<Types.VideoWhereInput>
+}>
+
+export type GetVideosCountQuery = {
+  __typename?: 'Query'
+  videosConnection: { __typename?: 'VideosConnection'; totalCount: number }
+}
+
 export type AddVideoViewMutationVariables = Types.Exact<{
   videoId: Types.Scalars['String']
 }>
@@ -3380,6 +3389,45 @@ export type GetTop10VideosThisMonthQueryResult = Apollo.QueryResult<
   GetTop10VideosThisMonthQuery,
   GetTop10VideosThisMonthQueryVariables
 >
+export const GetVideosCountDocument = gql`
+  query GetVideosCount($where: VideoWhereInput) {
+    videosConnection(where: $where, orderBy: [createdAt_ASC]) {
+      totalCount
+    }
+  }
+`
+
+/**
+ * __useGetVideosCountQuery__
+ *
+ * To run a query within a React component, call `useGetVideosCountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetVideosCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetVideosCountQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetVideosCountQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetVideosCountQuery, GetVideosCountQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetVideosCountQuery, GetVideosCountQueryVariables>(GetVideosCountDocument, options)
+}
+export function useGetVideosCountLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetVideosCountQuery, GetVideosCountQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetVideosCountQuery, GetVideosCountQueryVariables>(GetVideosCountDocument, options)
+}
+export type GetVideosCountQueryHookResult = ReturnType<typeof useGetVideosCountQuery>
+export type GetVideosCountLazyQueryHookResult = ReturnType<typeof useGetVideosCountLazyQuery>
+export type GetVideosCountQueryResult = Apollo.QueryResult<GetVideosCountQuery, GetVideosCountQueryVariables>
 export const AddVideoViewDocument = gql`
   mutation AddVideoView($videoId: String!) {
     addVideoView(videoId: $videoId) {

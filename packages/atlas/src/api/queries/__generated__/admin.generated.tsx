@@ -20,6 +20,19 @@ export type SetKillSwitchMutation = {
   setKillSwitch: { __typename?: 'KillSwitch'; isKilled: boolean }
 }
 
+export type GetAppActionSignatureMutationVariables = Types.Exact<{
+  assets: Types.Scalars['String']
+  actionType: Types.AppActionActionType
+  creatorId: Types.Scalars['String']
+  nonce: Types.Scalars['Float']
+  rawAction: Types.Scalars['String']
+}>
+
+export type GetAppActionSignatureMutation = {
+  __typename?: 'Mutation'
+  signAppActionCommitment: { __typename?: 'GeneratedSignature'; signature: string }
+}
+
 export const GetKillSwitchDocument = gql`
   query GetKillSwitch {
     getKillSwitch {
@@ -95,4 +108,64 @@ export type SetKillSwitchMutationResult = Apollo.MutationResult<SetKillSwitchMut
 export type SetKillSwitchMutationOptions = Apollo.BaseMutationOptions<
   SetKillSwitchMutation,
   SetKillSwitchMutationVariables
+>
+export const GetAppActionSignatureDocument = gql`
+  mutation GetAppActionSignature(
+    $assets: String!
+    $actionType: AppActionActionType!
+    $creatorId: String!
+    $nonce: Float!
+    $rawAction: String!
+  ) {
+    signAppActionCommitment(
+      assets: $assets
+      actionType: $actionType
+      creatorId: $creatorId
+      nonce: $nonce
+      rawAction: $rawAction
+    ) {
+      signature
+    }
+  }
+`
+export type GetAppActionSignatureMutationFn = Apollo.MutationFunction<
+  GetAppActionSignatureMutation,
+  GetAppActionSignatureMutationVariables
+>
+
+/**
+ * __useGetAppActionSignatureMutation__
+ *
+ * To run a mutation, you first call `useGetAppActionSignatureMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useGetAppActionSignatureMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [getAppActionSignatureMutation, { data, loading, error }] = useGetAppActionSignatureMutation({
+ *   variables: {
+ *      assets: // value for 'assets'
+ *      actionType: // value for 'actionType'
+ *      creatorId: // value for 'creatorId'
+ *      nonce: // value for 'nonce'
+ *      rawAction: // value for 'rawAction'
+ *   },
+ * });
+ */
+export function useGetAppActionSignatureMutation(
+  baseOptions?: Apollo.MutationHookOptions<GetAppActionSignatureMutation, GetAppActionSignatureMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<GetAppActionSignatureMutation, GetAppActionSignatureMutationVariables>(
+    GetAppActionSignatureDocument,
+    options
+  )
+}
+export type GetAppActionSignatureMutationHookResult = ReturnType<typeof useGetAppActionSignatureMutation>
+export type GetAppActionSignatureMutationResult = Apollo.MutationResult<GetAppActionSignatureMutation>
+export type GetAppActionSignatureMutationOptions = Apollo.BaseMutationOptions<
+  GetAppActionSignatureMutation,
+  GetAppActionSignatureMutationVariables
 >

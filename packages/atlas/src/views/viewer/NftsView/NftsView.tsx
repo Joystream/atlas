@@ -141,7 +141,11 @@ export const NftsView: FC = () => {
           </div>
           {smMatch && sortingNode}
         </HeaderContainer>
-        <FiltersBar {...filtersBarLogic} activeFilters={['nftStatus', 'date-minted', 'other']} />
+        <FiltersBar
+          {...filtersBarLogic}
+          onAnyFilterSet={() => setCurrentPage(0)}
+          activeFilters={['nftStatus', 'date-minted', 'other']}
+        />
       </HeaderWrapper>
       <StyledGrid maxColumns={null} onResize={handleResizeGrid} isFiltersOpen={isFiltersOpen}>
         {nftsWithPlaceholders.map((nft, idx) => (
