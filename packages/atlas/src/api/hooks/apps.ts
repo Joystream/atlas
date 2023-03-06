@@ -27,7 +27,6 @@ export const useAppActionMetadataProcessor = (creatorId: string, nonce?: number)
             appId: atlasConfig.general.appId,
             rawAction: rawBytes.toU8a(),
             signature: stringToU8a(data.signAppActionCommitment.signature),
-            nonce,
           }
           return wrapMetadata(AppAction.encode(appVideoInput).finish())
         }

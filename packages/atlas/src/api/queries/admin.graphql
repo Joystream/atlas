@@ -16,14 +16,14 @@ mutation GetAppActionSignature(
   $actionType: AppActionActionType!
   $creatorId: String!
   $nonce: Float!
-  $rawAction: String! # $rawAppActionMetadata: String!
+  $rawAction: String!
 ) {
   signAppActionCommitment(
     assets: $assets
     actionType: $actionType
     creatorId: $creatorId
     nonce: $nonce
-    rawAction: $rawAction # rawAppActionMetadata: $rawAppActionMetadata
+    rawAction: $rawAction
   ) {
     signature
   }

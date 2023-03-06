@@ -71,7 +71,7 @@ export const useCreateEditChannelSubmit = () => {
 
   const rawMetadataProcessor = useAppActionMetadataProcessor(
     `m:${memberId}`,
-    channelCountData?.channelsConnection.totalCount
+    channelCountData?.channelsConnection.totalCount || 0
   )
 
   return useCallback(

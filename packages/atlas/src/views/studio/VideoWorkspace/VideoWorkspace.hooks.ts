@@ -49,7 +49,10 @@ export const useHandleVideoWorkspaceSubmit = () => {
 
   const { videoStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
 
-  const rawMetadataProcessor = useAppActionMetadataProcessor(channelId, channelVideosCount?.videosConnection.totalCount)
+  const rawMetadataProcessor = useAppActionMetadataProcessor(
+    channelId,
+    channelVideosCount?.videosConnection.totalCount || 0
+  )
 
   return useCallback(
     async (data: VideoFormData, videoInfo?: VideoWorkspace, assetsToBeRemoved?: string[]) => {
