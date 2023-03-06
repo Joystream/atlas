@@ -8,7 +8,6 @@ import { useFullVideo } from '@/api/hooks/video'
 import { displayCategories } from '@/config/categories'
 import { cancelledVideoFilter } from '@/config/contentFilter'
 import { absoluteRoutes } from '@/config/routes'
-import { useSubtitlesAssets } from '@/providers/assets/assets.hooks'
 import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { RoutingState } from '@/types/routing'
 import { SubtitlesInput } from '@/types/subtitles'
@@ -48,9 +47,6 @@ export const useVideoWorkspaceData = () => {
 
   const hasAnyAvailableSubtitles = video?.subtitles?.some((s) => !!s.asset?.isAccepted)
 
-  // only trigger subtitles assets resolution - components will get resolution data directly from the store to not force re-renders of the entire form
-  useSubtitlesAssets(video?.subtitles)
-
   const subtitlesArray: SubtitlesInput[] | null = useMemo(
     () =>
       video?.subtitles
@@ -88,9 +84,11 @@ export const useVideoWorkspaceData = () => {
     : {
         video: {
           id: video?.media?.id ?? null,
+          url: video?.media?.resolvedUrl,
         },
         thumbnail: {
           cropId: video?.thumbnailPhoto?.id ?? null,
+          url: video?.thumbnailPhoto?.resolvedUrl,
           originalId: null,
         },
       }

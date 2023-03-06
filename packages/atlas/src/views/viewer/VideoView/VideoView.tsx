@@ -31,7 +31,6 @@ import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { VideoReaction } from '@/joystream-lib/types'
-import { useSubtitlesAssets } from '@/providers/assets/assets.hooks'
 import { useFee } from '@/providers/joystream/joystream.hooks'
 import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
 import { useOverlayManager } from '@/providers/overlayManager'
@@ -114,15 +113,14 @@ export const VideoView: FC = () => {
 
   const mediaUrl = video?.media?.resolvedUrl
   const thumbnailUrl = video?.thumbnailPhoto?.resolvedUrl
-  const subtitlesAssets = useSubtitlesAssets(video?.subtitles)
   const availableTracks = useMemo(() => {
     if (!video?.subtitles) return []
 
     return video.subtitles
-      .filter((subtitle) => !!subtitle.asset && subtitlesAssets[subtitle.id]?.url)
+      .filter((subtitle) => !!subtitle.asset && subtitle.asset?.resolvedUrl)
       .map((subtitle) => {
         const resolvedLanguageName = atlasConfig.derived.languagesLookup[subtitle.language || '']
-        const url = subtitlesAssets[subtitle.id]?.url
+        const url = subtitle.asset?.resolvedUrl
         return {
           label: subtitle.type === 'subtitles' ? resolvedLanguageName : `${resolvedLanguageName} (CC)`,
           language: subtitle.type === 'subtitles' ? subtitle.language : `${subtitle.language}-cc`,
@@ -130,7 +128,7 @@ export const VideoView: FC = () => {
         }
       })
       .filter((subtitles): subtitles is AvailableTrack => !!subtitles.language && !!subtitles.label && !!subtitles.src)
-  }, [subtitlesAssets, video?.subtitles])
+  }, [video?.subtitles])
 
   const videoMetaTags = useMemo(() => {
     if (!video || !thumbnailUrl) return {}

@@ -26,7 +26,7 @@ import { displayCategories } from '@/config/categories'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { NftIssuanceInputMetadata, VideoInputAssets, VideoInputMetadata } from '@/joystream-lib/types'
-import { useChannelsStorageBucketsCount, useRawAssetResolver } from '@/providers/assets/assets.hooks'
+import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joystream/joystream.hooks'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useSnackbar } from '@/providers/snackbars'
@@ -109,7 +109,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const {
     chainState: { nftMaxCreatorRoyaltyPercentage, nftMinCreatorRoyaltyPercentage },
   } = useJoystream()
-  const resolveAsset = useRawAssetResolver()
 
   const deleteVideo = useDeleteVideo()
   const isEdit = !editedVideoInfo?.isDraft
@@ -210,22 +209,20 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
     if (!assets) {
       return {}
     }
-    const videoAsset = resolveAsset(assets?.video.id)
-    const thumbnailAsset = resolveAsset(assets?.thumbnail.cropId)
     return {
-      ...(videoAsset?.blob?.size
+      ...(assets.video?.blob?.size
         ? {
             media: {
               ipfsHash: '',
-              size: videoAsset.blob.size,
+              size: assets.video.blob.size,
             },
           }
         : {}),
-      ...(thumbnailAsset?.blob?.size
+      ...(assets.thumbnail?.blob?.size
         ? {
             thumbnailPhoto: {
               ipfsHash: '',
-              size: thumbnailAsset.blob.size,
+              size: assets.thumbnail.blob.size,
             },
           }
         : {}),
@@ -328,10 +325,8 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
         }
 
         const { video: videoInputFile, thumbnail: thumbnailInputFile } = data.assets
-        const videoAsset = resolveAsset(videoInputFile.id)
-        const thumbnailAsset = resolveAsset(thumbnailInputFile.cropId)
 
-        if (isNew && (!videoAsset || !videoHashPromise)) {
+        if (isNew && (!videoInputFile.blob || !videoHashPromise)) {
           ConsoleLogger.error('Video file cannot be empty')
           return
         }
@@ -359,12 +354,12 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
         )
 
         const assets: VideoFormAssets = {
-          ...(videoAsset?.blob && videoInputFile.id && videoHashPromise
+          ...(videoInputFile?.blob && videoInputFile.id && videoHashPromise
             ? {
                 media: {
                   id: videoInputFile.id,
-                  blob: videoAsset.blob,
-                  url: videoAsset.url || undefined,
+                  blob: videoInputFile.blob,
+                  url: videoInputFile.url || undefined,
                   hashPromise: videoHashPromise,
                   dimensions: videoWidth && videoHeight ? { height: videoHeight, width: videoWidth } : undefined,
                 },
@@ -380,7 +375,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                   hashPromise: thumbnailHashPromise,
                   dimensions: thumbnailInputFile?.assetDimensions,
                   cropData: thumbnailInputFile?.imageCropData,
-                  name: thumbnailInputFile.originalBlob?.name,
+                  name: (thumbnailInputFile.originalBlob as File)?.name,
                 },
               }
             : {}),
@@ -406,8 +401,8 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
       editedVideoInfo,
       isNew,
       onSubmit,
-      resolveAsset,
       subtitlesHashesPromises,
+      thumbnailAsset,
       thumbnailHashPromise,
       videoHashPromise,
     ]

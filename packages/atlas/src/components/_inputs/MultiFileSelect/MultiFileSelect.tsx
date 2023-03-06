@@ -18,7 +18,7 @@ import { FileSelect } from '../FileSelect'
 
 type InputFile = {
   url?: string | null
-  blob?: Blob | File | null
+  blob?: Blob | null
   title?: string
 }
 
