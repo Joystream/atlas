@@ -180,6 +180,11 @@ export type App = BaseGraphQlObject & {
   websiteUrl?: Maybe<Scalars['String']>
 }
 
+export enum AppActionActionType {
+  CreateChannel = 'CREATE_CHANNEL',
+  CreateVideo = 'CREATE_VIDEO',
+}
+
 export type AppConnection = {
   __typename?: 'AppConnection'
   edges: Array<AppEdge>
@@ -6696,6 +6701,8 @@ export type Channel = BaseGraphQlObject & {
   rewardAccount: Scalars['String']
   /** The title of the Channel */
   title?: Maybe<Scalars['String']>
+  /** Number of videos ever created in this channel */
+  totalVideosCreated: Scalars['Int']
   updatedAt?: Maybe<Scalars['DateTime']>
   updatedById?: Maybe<Scalars['ID']>
   version: Scalars['Int']
@@ -6879,6 +6886,7 @@ export type ChannelCreateInput = {
   privilegeLevel?: InputMaybe<Scalars['Float']>
   rewardAccount: Scalars['String']
   title?: InputMaybe<Scalars['String']>
+  totalVideosCreated: Scalars['Float']
 }
 
 export type ChannelDeletedByModeratorEvent = BaseGraphQlObject & {
@@ -7191,6 +7199,8 @@ export enum ChannelOrderByInput {
   RewardAccountDesc = 'rewardAccount_DESC',
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC',
+  TotalVideosCreatedAsc = 'totalVideosCreated_ASC',
+  TotalVideosCreatedDesc = 'totalVideosCreated_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
   UpdatedAtDesc = 'updatedAt_DESC',
 }
@@ -7232,6 +7242,7 @@ export type ChannelUpdateInput = {
   privilegeLevel?: InputMaybe<Scalars['Float']>
   rewardAccount?: InputMaybe<Scalars['String']>
   title?: InputMaybe<Scalars['String']>
+  totalVideosCreated?: InputMaybe<Scalars['Float']>
 }
 
 export type ChannelVisibilitySetByModeratorEvent = BaseGraphQlObject & {
@@ -7490,6 +7501,12 @@ export type ChannelWhereInput = {
   title_eq?: InputMaybe<Scalars['String']>
   title_in?: InputMaybe<Array<Scalars['String']>>
   title_startsWith?: InputMaybe<Scalars['String']>
+  totalVideosCreated_eq?: InputMaybe<Scalars['Int']>
+  totalVideosCreated_gt?: InputMaybe<Scalars['Int']>
+  totalVideosCreated_gte?: InputMaybe<Scalars['Int']>
+  totalVideosCreated_in?: InputMaybe<Array<Scalars['Int']>>
+  totalVideosCreated_lt?: InputMaybe<Scalars['Int']>
+  totalVideosCreated_lte?: InputMaybe<Scalars['Int']>
   updatedAt_eq?: InputMaybe<Scalars['DateTime']>
   updatedAt_gt?: InputMaybe<Scalars['DateTime']>
   updatedAt_gte?: InputMaybe<Scalars['DateTime']>
@@ -14485,8 +14502,6 @@ export type Membership = BaseGraphQlObject & {
   stakingaccountremovedeventmember?: Maybe<Array<StakingAccountRemovedEvent>>
   /** Number of channels ever created by this member */
   totalChannelsCreated: Scalars['Int']
-  /** Number of videos ever created by this member */
-  totalVideosCreated: Scalars['Int']
   updatedAt?: Maybe<Scalars['DateTime']>
   updatedById?: Maybe<Scalars['ID']>
   version: Scalars['Int']
@@ -14693,7 +14708,6 @@ export type MembershipCreateInput = {
   referredBy?: InputMaybe<Scalars['ID']>
   rootAccount: Scalars['String']
   totalChannelsCreated: Scalars['Float']
-  totalVideosCreated: Scalars['Float']
 }
 
 export type MembershipEdge = {
@@ -15051,8 +15065,6 @@ export enum MembershipOrderByInput {
   RootAccountDesc = 'rootAccount_DESC',
   TotalChannelsCreatedAsc = 'totalChannelsCreated_ASC',
   TotalChannelsCreatedDesc = 'totalChannelsCreated_DESC',
-  TotalVideosCreatedAsc = 'totalVideosCreated_ASC',
-  TotalVideosCreatedDesc = 'totalVideosCreated_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
   UpdatedAtDesc = 'updatedAt_DESC',
 }
@@ -15203,7 +15215,6 @@ export type MembershipUpdateInput = {
   referredBy?: InputMaybe<Scalars['ID']>
   rootAccount?: InputMaybe<Scalars['String']>
   totalChannelsCreated?: InputMaybe<Scalars['Float']>
-  totalVideosCreated?: InputMaybe<Scalars['Float']>
 }
 
 export type MembershipWhereInput = {
@@ -15495,12 +15506,6 @@ export type MembershipWhereInput = {
   totalChannelsCreated_in?: InputMaybe<Array<Scalars['Int']>>
   totalChannelsCreated_lt?: InputMaybe<Scalars['Int']>
   totalChannelsCreated_lte?: InputMaybe<Scalars['Int']>
-  totalVideosCreated_eq?: InputMaybe<Scalars['Int']>
-  totalVideosCreated_gt?: InputMaybe<Scalars['Int']>
-  totalVideosCreated_gte?: InputMaybe<Scalars['Int']>
-  totalVideosCreated_in?: InputMaybe<Array<Scalars['Int']>>
-  totalVideosCreated_lt?: InputMaybe<Scalars['Int']>
-  totalVideosCreated_lte?: InputMaybe<Scalars['Int']>
   updatedAt_eq?: InputMaybe<Scalars['DateTime']>
   updatedAt_gt?: InputMaybe<Scalars['DateTime']>
   updatedAt_gte?: InputMaybe<Scalars['DateTime']>
@@ -15737,10 +15742,11 @@ export type MutationSetVideoHeroArgs = {
 }
 
 export type MutationSignAppActionCommitmentArgs = {
+  actionType: AppActionActionType
   assets: Scalars['String']
   creatorId: Scalars['String']
+  nonce: Scalars['Float']
   rawAction: Scalars['String']
-  rawAppActionMetadata: Scalars['String']
 }
 
 export type MutationUnfollowChannelArgs = {

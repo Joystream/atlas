@@ -2,7 +2,7 @@ import { useApolloClient } from '@apollo/client'
 import { useCallback } from 'react'
 
 import { useAppActionMetadataProcessor } from '@/api/hooks/apps'
-import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { AppActionActionType, VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { useGetVideoCountQuery } from '@/api/queries/__generated__/channels.generated'
 import {
   GetFullVideosConnectionDocument,
@@ -51,7 +51,11 @@ export const useHandleVideoWorkspaceSubmit = () => {
 
   const { videoStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
 
-  const rawMetadataProcessor = useAppActionMetadataProcessor(channelId, channelVideosCount?.videosConnection.totalCount)
+  const rawMetadataProcessor = useAppActionMetadataProcessor(
+    channelId,
+    AppActionActionType.CreateVideo,
+    channelVideosCount?.videosConnection.totalCount || 0
+  )
 
   return useCallback(
     async (data: VideoFormData, videoInfo?: VideoWorkspace, assetsToBeRemoved?: string[]) => {

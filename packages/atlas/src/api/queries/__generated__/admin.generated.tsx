@@ -20,8 +20,9 @@ export type SetKillSwitchMutation = {
 export type GetAppActionSignatureMutationVariables = Types.Exact<{
   creatorId: Types.Scalars['String']
   assets: Types.Scalars['String']
+  nonce: Types.Scalars['Float']
   rawAction: Types.Scalars['String']
-  rawAppActionMetadata: Types.Scalars['String']
+  actionType: Types.AppActionActionType
 }>
 
 export type GetAppActionSignatureMutation = {
@@ -109,14 +110,16 @@ export const GetAppActionSignatureDocument = gql`
   mutation GetAppActionSignature(
     $creatorId: String!
     $assets: String!
+    $nonce: Float!
     $rawAction: String!
-    $rawAppActionMetadata: String!
+    $actionType: AppActionActionType!
   ) {
     signAppActionCommitment(
       creatorId: $creatorId
       assets: $assets
+      nonce: $nonce
       rawAction: $rawAction
-      rawAppActionMetadata: $rawAppActionMetadata
+      actionType: $actionType
     ) {
       signature
     }
@@ -142,8 +145,9 @@ export type GetAppActionSignatureMutationFn = Apollo.MutationFunction<
  *   variables: {
  *      creatorId: // value for 'creatorId'
  *      assets: // value for 'assets'
+ *      nonce: // value for 'nonce'
  *      rawAction: // value for 'rawAction'
- *      rawAppActionMetadata: // value for 'rawAppActionMetadata'
+ *      actionType: // value for 'actionType'
  *   },
  * });
  */
