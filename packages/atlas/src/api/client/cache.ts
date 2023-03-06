@@ -231,6 +231,13 @@ const cache = new InMemoryCache({
     },
     StorageDataObject: {
       fields: {
+        resolvedUrl: {
+          read: (resolvedUrl, { readField }) => {
+            const isAccepted = readField('isAccepted')
+
+            return isAccepted ? resolvedUrl : ''
+          },
+        },
         size: {
           merge: (_: unknown, existingData: string | number): number => {
             if (typeof existingData === 'string') {

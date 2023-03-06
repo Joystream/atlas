@@ -311,6 +311,7 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
         videoHref={getVideoHref()}
         linkState={hasAssetUploadFailed ? { highlightFailed: true } : undefined}
         videoSubTitle={getVideoSubtitle()}
+        channelTitle={video?.channel.title}
         detailsVariant="withoutChannel"
         loadingDetails={loading || !video}
         loadingThumbnail={isLoadingThumbnail && !hasThumbnailUploadFailed}
