@@ -148,7 +148,7 @@ export type GetNftQuery = {
                 __typename: 'AuctionTypeEnglish'
                 duration: number
                 extensionPeriod: number
-                minimalBidStep: number
+                minimalBidStep: string
                 plannedEndAtBlock: number
               }
             | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -294,7 +294,7 @@ export type GetNftQuery = {
           }>
         } | null
         transactionalStatus?:
-          | { __typename: 'TransactionalStatusBuyNow'; price: number }
+          | { __typename: 'TransactionalStatusBuyNow'; price: string }
           | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
           | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
           | null
@@ -344,7 +344,7 @@ export type GetNftQuery = {
             __typename: 'AuctionTypeEnglish'
             duration: number
             extensionPeriod: number
-            minimalBidStep: number
+            minimalBidStep: string
             plannedEndAtBlock: number
           }
         | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -490,7 +490,7 @@ export type GetNftQuery = {
       }>
     } | null
     transactionalStatus?:
-      | { __typename: 'TransactionalStatusBuyNow'; price: number }
+      | { __typename: 'TransactionalStatusBuyNow'; price: string }
       | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
       | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
       | null
@@ -641,7 +641,7 @@ export type GetNftsQuery = {
                 __typename: 'AuctionTypeEnglish'
                 duration: number
                 extensionPeriod: number
-                minimalBidStep: number
+                minimalBidStep: string
                 plannedEndAtBlock: number
               }
             | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -787,7 +787,7 @@ export type GetNftsQuery = {
           }>
         } | null
         transactionalStatus?:
-          | { __typename: 'TransactionalStatusBuyNow'; price: number }
+          | { __typename: 'TransactionalStatusBuyNow'; price: string }
           | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
           | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
           | null
@@ -837,7 +837,7 @@ export type GetNftsQuery = {
             __typename: 'AuctionTypeEnglish'
             duration: number
             extensionPeriod: number
-            minimalBidStep: number
+            minimalBidStep: string
             plannedEndAtBlock: number
           }
         | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -983,7 +983,7 @@ export type GetNftsQuery = {
       }>
     } | null
     transactionalStatus?:
-      | { __typename: 'TransactionalStatusBuyNow'; price: number }
+      | { __typename: 'TransactionalStatusBuyNow'; price: string }
       | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
       | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
       | null
@@ -1142,7 +1142,7 @@ export type GetNftsConnectionQuery = {
                     __typename: 'AuctionTypeEnglish'
                     duration: number
                     extensionPeriod: number
-                    minimalBidStep: number
+                    minimalBidStep: string
                     plannedEndAtBlock: number
                   }
                 | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -1288,7 +1288,7 @@ export type GetNftsConnectionQuery = {
               }>
             } | null
             transactionalStatus?:
-              | { __typename: 'TransactionalStatusBuyNow'; price: number }
+              | { __typename: 'TransactionalStatusBuyNow'; price: string }
               | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
               | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
               | null
@@ -1338,7 +1338,7 @@ export type GetNftsConnectionQuery = {
                 __typename: 'AuctionTypeEnglish'
                 duration: number
                 extensionPeriod: number
-                minimalBidStep: number
+                minimalBidStep: string
                 plannedEndAtBlock: number
               }
             | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -1484,7 +1484,7 @@ export type GetNftsConnectionQuery = {
           }>
         } | null
         transactionalStatus?:
-          | { __typename: 'TransactionalStatusBuyNow'; price: number }
+          | { __typename: 'TransactionalStatusBuyNow'; price: string }
           | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
           | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
           | null
