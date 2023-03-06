@@ -4,6 +4,7 @@ import { getMainDefinition } from '@apollo/client/utilities'
 import { createClient } from 'graphql-ws'
 
 import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config/env'
+import { useUserLocationStore } from '@/providers/userLocation'
 
 import cache from './cache'
 
@@ -33,7 +34,24 @@ const createApolloClient = () => {
   const orionLink = ApolloLink.from([delayLink, new HttpLink({ uri: ORION_GRAPHQL_URL })])
 
   const operationSplitLink = split(
-    ({ query }) => {
+    ({ query, setContext }) => {
+      const locationStore = useUserLocationStore.getState()
+
+      if (
+        !locationStore.disableUserLocation &&
+        locationStore.coordinates?.latitude &&
+        locationStore.coordinates.longitude
+      ) {
+        setContext(({ headers }: Record<string, object>) => {
+          return {
+            headers: {
+              ...headers,
+              'x-client-loc': `${locationStore?.coordinates?.latitude}, ${locationStore.coordinates?.longitude}`,
+            },
+          }
+        })
+      }
+
       const definition = getMainDefinition(query)
       return definition.kind === 'OperationDefinition' && definition.operation === 'subscription'
     },
