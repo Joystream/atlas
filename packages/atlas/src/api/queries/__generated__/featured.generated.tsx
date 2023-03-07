@@ -558,6 +558,7 @@ export type GetCategoriesFeaturedVideosQuery = {
       __typename?: 'Video'
       id: string
       title?: string | null
+      ytVideoId?: string | null
       description?: string | null
       reactionsCount: number
       views: number

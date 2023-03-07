@@ -554,6 +554,7 @@ export type FullVideoFieldsFragment = {
   __typename?: 'Video'
   id: string
   title?: string | null
+  ytVideoId?: string | null
   description?: string | null
   reactionsCount: number
   views: number
@@ -2166,6 +2167,7 @@ export const FullVideoFieldsFragmentDoc = gql`
   fragment FullVideoFields on Video {
     id
     title
+    ytVideoId
     description
     reactionsCount
     reactions {
