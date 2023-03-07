@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.1] - 2023-03-07
+
+### Fixed
+
+- Fixed the distribution buckets fetch
+
 ## [1.3.0] - 2023-02-08
 
 ### Added
