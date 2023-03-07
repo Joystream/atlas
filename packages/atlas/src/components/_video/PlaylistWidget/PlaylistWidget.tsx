@@ -16,11 +16,10 @@ import {
   PlaylistInfoWrapper,
   PlaylistWidgetWrapper,
   StyledLink,
+  StyledVideoThumbnail,
   TileItemWrapper,
   TileList,
 } from './PlaylistWidget.styles'
-
-import { VideoThumbnail } from '../VideoThumbnail'
 
 export type PlaylistWidgetProps = {
   playlistTitle: string
@@ -85,7 +84,7 @@ export const TileItem: FC<PlaylistWidgetTilesProps> = ({ video, idx }) => {
       <Counter variant="t300" as="p" color="colorText" margin={{ right: 1 }}>
         {idx + 1}
       </Counter>
-      <VideoThumbnail
+      <StyledVideoThumbnail
         videoHref={absoluteRoutes.viewer.video(video.id)}
         type="video"
         thumbnailUrl={thumbnailUrl}

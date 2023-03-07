@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 import { Text } from '@/components/Text'
 import { cVar, media, sizes } from '@/styles'
 
+import { VideoThumbnail } from '../VideoThumbnail'
+
 export const PlaylistWidgetWrapper = styled.div<{ maxHeight: number }>`
   background-color: ${cVar('colorBackgroundMuted')};
 `
@@ -55,6 +57,19 @@ export const TileItemWrapper = styled.li`
   :hover {
     background-color: ${cVar('colorBackgroundAlpha')};
     transition: background-color ${cVar('animationTransitionFast')};
+  }
+`
+
+export const StyledVideoThumbnail = styled(VideoThumbnail)`
+  min-width: 93px;
+  ${media.xs} {
+    min-width: 143px;
+  }
+  ${media.md} {
+    min-width: 93px;
+  }
+  ${media.lg} {
+    min-width: 143px;
   }
 `
 

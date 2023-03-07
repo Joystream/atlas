@@ -40,6 +40,7 @@ type RegularVideoThumbnailProps = {
 }
 
 export type VideoThumbnailProps = {
+  className?: string
   loading?: boolean
   videoHref?: To
   linkState?: LinkProps['state']
@@ -56,6 +57,7 @@ export type VideoThumbnailProps = {
 export const VideoThumbnail = forwardRef<HTMLAnchorElement, VideoThumbnailProps>(
   (
     {
+      className,
       loading,
       videoHref,
       linkState,
@@ -84,6 +86,7 @@ export const VideoThumbnail = forwardRef<HTMLAnchorElement, VideoThumbnailProps>
 
     return (
       <VideoThumbnailContainer
+        className={className}
         ref={ref}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
