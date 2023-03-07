@@ -5,7 +5,7 @@ import { StorageDataObjectFieldsFragment } from '@/api/queries/__generated__/fra
 import { atlasConfig } from '@/config'
 import { BUILD_ENV } from '@/config/env'
 import { useUserLocationStore } from '@/providers/userLocation'
-import { createAssetDownloadEndpoint } from '@/utils/asset'
+import { joinUrlFragments } from '@/utils/asset'
 import { AssetLogger, ConsoleLogger, DataObjectResponseMetric, DistributorEventEntry, SentryLogger } from '@/utils/logs'
 import { TimeoutError, withTimeout } from '@/utils/misc'
 
@@ -16,7 +16,7 @@ import { OperatorInfo } from './assets.types'
 
 export const AssetsManager: FC = () => {
   const { tryRefetchDistributionOperators } = useOperatorsContext()
-  const { getAllDistributionOperatorsForBag } = useDistributionOperators()
+  const { getAllDistributionOperatorsForBags } = useDistributionOperators()
   const pendingAssets = useAssetStore((state) => state.pendingAssets)
   const assetIdsBeingResolved = useAssetStore((state) => state.assetIdsBeingResolved)
   const { addAsset, addAssetBeingResolved, removeAssetBeingResolved, removePendingAsset } = useAssetStore(
@@ -26,96 +26,86 @@ export const AssetsManager: FC = () => {
 
   // listen to changes in list of assets pending resolution and resolve them
   useEffect(() => {
-    Object.values(pendingAssets).forEach(async (dataObject) => {
-      // make sure we handle each asset only once
-      if (assetIdsBeingResolved.has(dataObject.id)) {
-        return
-      }
-      if (!dataObject.isAccepted) {
-        addAsset(dataObject.id, { url: null })
-        removePendingAsset(dataObject.id)
-        return
-      }
-      addAssetBeingResolved(dataObject.id)
-
-      const distributionOperators = await getAllDistributionOperatorsForBag(dataObject.storageBag.id)
-      if (!distributionOperators) {
-        const refetching = await tryRefetchDistributionOperators()
-        if (refetching) {
-          // remove asset from being resolved list, so it can enter resolution again
-          removeAssetBeingResolved(dataObject.id)
-          return
+    const provideDistributorsForBags = async () => {
+      const filteredAssetsArray = Object.entries(pendingAssets).filter(([_, value]) => {
+        if (assetIdsBeingResolved.has(value.id)) {
+          return false
         }
-
-        SentryLogger.error('No distribution operator was found for the storage bag', 'AssetsManager', null, {
-          asset: {
-            id: dataObject.id,
-            storageBagId: dataObject.storageBag.id,
-            type: dataObject.type.__typename,
-          },
-        })
-        return
-      }
-
-      const sortedDistributionOperators = sortDistributionOperators(
-        distributionOperators,
-        !coordinates ? dataObject : undefined
-      )
-
-      for (const distributionOperator of sortedDistributionOperators) {
-        const assetUrl = createAssetDownloadEndpoint(distributionOperator.endpoint, dataObject.id)
-        if (pendingAssets[dataObject.id].skipAssetTest) {
-          addAsset(dataObject.id, { url: assetUrl })
-          removePendingAsset(dataObject.id)
-          removeAssetBeingResolved(dataObject.id)
-          return
+        if (!value.isAccepted) {
+          addAsset(value.id, { url: null })
+          removePendingAsset(value.id)
+          return false
         }
-        const assetTestPromise = testAssetDownload(assetUrl, dataObject)
-        const assetTestPromiseWithTimeout = withTimeout(assetTestPromise, atlasConfig.storage.assetResponseTimeout)
+        return true
+      })
 
-        const eventEntry: DistributorEventEntry = {
-          distributorId: distributionOperator.id,
-          distributorUrl: distributionOperator.endpoint,
-          dataObjectId: dataObject.id,
-          dataObjectType: dataObject.type.__typename,
-        }
+      const filteredAssets = Object.fromEntries(filteredAssetsArray)
+      const bagIds = [...new Set(Object.values(filteredAssets).map((asset) => asset.storageBag.id))]
+      const distributionOperatorsMapping = await getAllDistributionOperatorsForBags(bagIds)
+      if (!distributionOperatorsMapping) return
 
-        try {
-          await assetTestPromiseWithTimeout
-          addAsset(dataObject.id, { url: assetUrl })
-          removePendingAsset(dataObject.id)
-          removeAssetBeingResolved(dataObject.id)
-          logDistributorPerformance(assetUrl, eventEntry)
-          return
-        } catch (err) {
-          if (err instanceof TimeoutError) {
-            AssetLogger.logDistributorResponseTimeout(eventEntry)
-            ConsoleLogger.warn(`Distributor didn't respond in ${atlasConfig.storage.assetResponseTimeout} seconds`, {
-              dataObject,
-              distributionOperator,
-            })
-          } else {
-            AssetLogger.logDistributorError(eventEntry)
-            SentryLogger.error('Error during asset download test', 'AssetsManager', err, {
-              asset: { dataObject, distributionOperator },
-            })
+      Object.values(filteredAssets).map(async (dataObject) => {
+        const sortedDistributionOperators = sortDistributionOperators(
+          distributionOperatorsMapping[dataObject.storageBag.id],
+          !coordinates ? dataObject : undefined
+        )
+
+        for (const distributionOperator of sortedDistributionOperators) {
+          const assetUrl = createDistributionOperatorDataObjectUrl(distributionOperator, dataObject)
+          if (pendingAssets[dataObject.id].skipAssetTest) {
+            addAsset(dataObject.id, { url: assetUrl })
+            removePendingAsset(dataObject.id)
+            removeAssetBeingResolved(dataObject.id)
+            return
+          }
+          const assetTestPromise = testAssetDownload(assetUrl, dataObject)
+          const assetTestPromiseWithTimeout = withTimeout(assetTestPromise, atlasConfig.storage.assetResponseTimeout)
+
+          const eventEntry: DistributorEventEntry = {
+            distributorId: distributionOperator.id,
+            distributorUrl: distributionOperator.endpoint,
+            dataObjectId: dataObject.id,
+            dataObjectType: dataObject.type?.__typename,
+          }
+
+          try {
+            await assetTestPromiseWithTimeout
+            addAsset(dataObject.id, { url: assetUrl })
+            removePendingAsset(dataObject.id)
+            removeAssetBeingResolved(dataObject.id)
+            logDistributorPerformance(assetUrl, eventEntry)
+            return
+          } catch (err) {
+            if (err instanceof TimeoutError) {
+              AssetLogger.logDistributorResponseTimeout(eventEntry)
+              ConsoleLogger.warn(`Distributor didn't respond in ${atlasConfig.storage.assetResponseTimeout} seconds`, {
+                dataObject,
+                distributionOperator,
+              })
+            } else {
+              AssetLogger.logDistributorError(eventEntry)
+              SentryLogger.error('Error during asset download test', 'AssetsManager', err, {
+                asset: { dataObject, distributionOperator },
+              })
+            }
           }
         }
-      }
-      // once the asset couldn't be resolved, set URL to null, which means that only the default image placeholder will be shown
-      addAsset(dataObject.id, { url: null })
-      removePendingAsset(dataObject.id)
-      removeAssetBeingResolved(dataObject.id)
-      SentryLogger.error('None of the distributors provided the asset', 'AssetsManager', null, {
-        asset: { dataObject, sortedDistributionOperators },
+        // once the asset couldn't be resolved, set URL to null, which means that only the default image placeholder will be shown
+        addAsset(dataObject.id, { url: null })
+        removePendingAsset(dataObject.id)
+        removeAssetBeingResolved(dataObject.id)
+        SentryLogger.error('None of the distributors provided the asset', 'AssetsManager', null, {
+          asset: { dataObject, sortedDistributionOperators },
+        })
       })
-    })
+    }
+    provideDistributorsForBags()
   }, [
     addAsset,
     addAssetBeingResolved,
     assetIdsBeingResolved,
     coordinates,
-    getAllDistributionOperatorsForBag,
+    getAllDistributionOperatorsForBags,
     pendingAssets,
     removeAssetBeingResolved,
     removePendingAsset,
@@ -149,6 +139,13 @@ const sortDistributionOperators = (
     }
     return a.distance - b.distance
   })
+}
+
+const createDistributionOperatorDataObjectUrl = (
+  distributionOperator: OperatorInfo,
+  dataObject: StorageDataObjectFieldsFragment
+) => {
+  return joinUrlFragments(distributionOperator.endpoint, atlasConfig.storage.assetPath, dataObject.id)
 }
 
 const logDistributorPerformance = async (assetUrl: string, eventEntry: DistributorEventEntry) => {
