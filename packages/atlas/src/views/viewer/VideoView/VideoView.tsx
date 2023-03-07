@@ -72,7 +72,7 @@ export const VideoView: FC = () => {
   const [showReportDialog, setShowReportDialog] = useState(false)
   const [reactionFee, setReactionFee] = useState<BN | undefined>()
   const { openSignInDialog } = useDisplaySignInDialog({ interaction: true })
-  const { height: playerContainerHeight = 0, ref } = useResizeObserver({
+  const { height: playerContainerHeight = 0, ref: playerContainerRef } = useResizeObserver({
     box: 'border-box',
   })
 
@@ -397,7 +397,7 @@ export const VideoView: FC = () => {
       <PlayerGridWrapper cinematicView={isCinematic}>
         <PlayerWrapper cinematicView={isCinematic}>
           <PlayerGridItem colSpan={{ xxs: 12, md: cinematicView ? 12 : 8 }}>
-            <div ref={ref}>
+            <div ref={playerContainerRef}>
               <PlayerContainer
                 className={transitions.names.slide}
                 cinematicView={cinematicView}

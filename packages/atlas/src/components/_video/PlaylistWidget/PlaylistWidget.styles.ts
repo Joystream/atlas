@@ -20,6 +20,8 @@ export const PlaylistHeader = styled.header`
 export const StyledLink = styled(Link)`
   color: inherit;
   text-decoration: none;
+  min-width: 0;
+  word-break: break-all;
 `
 
 export const PlaylistInfoWrapper = styled.div``
@@ -59,5 +61,6 @@ export const TileItemWrapper = styled.li`
 export const Counter = styled(Text)`
   width: 30px;
   display: flex;
+  flex-shrink: 0;
   justify-content: center;
 `

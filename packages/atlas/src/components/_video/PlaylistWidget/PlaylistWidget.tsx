@@ -42,7 +42,7 @@ export const PlaylistWidget: FC<PlaylistWidgetProps> = ({
   maxHeight = 0,
 }) => {
   const [isExpanded, setIsExpanded] = useState(true)
-  const { height: headerHeight = 0, ref } = useResizeObserver({
+  const { height: headerHeight = 80, ref } = useResizeObserver({
     box: 'border-box',
   })
 
