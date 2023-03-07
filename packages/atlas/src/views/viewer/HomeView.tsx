@@ -3,6 +3,7 @@ import { FC } from 'react'
 
 import { useVideoHeroData } from '@/api/hooks/videoHero'
 import { useBasicVideosConnection } from '@/api/hooks/videosConnection'
+import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { GetMostViewedVideosConnectionDocument } from '@/api/queries/__generated__/videos.generated'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
@@ -67,6 +68,7 @@ export const HomeView: FC = () => {
         ) : null}
         <InfiniteVideoGrid
           periodDays={7}
+          orderBy={[VideoOrderByInput.CreatedAtDesc, VideoOrderByInput.ViewsNumDesc]}
           query={GetMostViewedVideosConnectionDocument}
           title={`Popular on ${atlasConfig.general.appName}`}
           onDemand

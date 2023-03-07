@@ -43,7 +43,7 @@ type InfiniteVideoGridProps = {
   excludeId?: string
   onDemand?: boolean
   onDemandInfinite?: boolean
-  orderBy?: VideoOrderByInput
+  orderBy?: VideoOrderByInput[]
   emptyFallback?: ReactNode
   additionalLink?: {
     name: string

@@ -150,7 +150,7 @@ export const CategoryVideos: FC<{ categoriesId?: string[] }> = ({ categoriesId }
             </FallbackWrapper>
           }
           videoWhereInput={{ ...videoWhereInput, category: { id_in: categoriesId } }}
-          orderBy={sortVideosBy}
+          orderBy={[sortVideosBy]}
           onDemandInfinite
         />
       </Container>
