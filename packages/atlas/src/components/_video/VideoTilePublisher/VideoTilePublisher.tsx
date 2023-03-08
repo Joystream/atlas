@@ -121,10 +121,13 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
     const hasThumbnailUploadFailed =
       (video?.thumbnailPhoto &&
         !video.thumbnailPhoto.isAccepted &&
-        uploadThumbnailStatus?.lastStatus !== 'completed') ||
+        uploadThumbnailStatus?.lastStatus !== 'completed' &&
+        !video.ytVideoId) ||
       false
+
     const hasVideoUploadFailed =
-      (video?.media && !video.media.isAccepted && uploadVideoStatus?.lastStatus !== 'completed') || false
+      (video?.media && !video.media.isAccepted && uploadVideoStatus?.lastStatus !== 'completed' && !video.ytVideoId) ||
+      false
 
     const hasAssetUploadFailed =
       (hasThumbnailUploadFailed || hasVideoUploadFailed) && !isUploading && !isSyncingWithYoutube
