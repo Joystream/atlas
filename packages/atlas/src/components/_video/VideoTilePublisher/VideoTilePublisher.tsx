@@ -105,9 +105,7 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
     const uploadVideoStatus = useUploadsStore((state) => state.uploadsStatus[video?.media?.id || ''])
     const uploadThumbnailStatus = useUploadsStore((state) => state.uploadsStatus[video?.thumbnailPhoto?.id || ''])
 
-    const isSyncingWithYoutube =
-      uploadVideoStatus?.lastStatus === 'yt-sync' ||
-      (isSyncing && (!video?.media?.isAccepted || !video?.thumbnailPhoto?.isAccepted))
+    const isSyncingWithYoutube = uploadVideoStatus?.lastStatus === 'yt-sync' || (isSyncing && video?.ytVideoId)
 
     const isVideoUploading =
       uploadVideoStatus?.lastStatus === 'inProgress' ||

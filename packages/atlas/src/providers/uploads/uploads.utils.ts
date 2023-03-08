@@ -61,10 +61,10 @@ export const fetchMissingAssets = async (
   })
 
   const pendingVideoAssetsLookup = fetchedVideos.reduce((acc, cur) => {
-    if (cur.media && !cur.media.isAccepted) {
+    if (cur.media && !cur.media.isAccepted && !cur.ytVideoId) {
       acc[cur.media.id] = true
     }
-    if (cur.thumbnailPhoto && !cur.thumbnailPhoto.isAccepted) {
+    if (cur.thumbnailPhoto && !cur.thumbnailPhoto.isAccepted && !cur.ytVideoId) {
       acc[cur.thumbnailPhoto.id] = true
     }
     return acc

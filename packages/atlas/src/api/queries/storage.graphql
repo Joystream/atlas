@@ -1,18 +1,3 @@
-query GetDistributionBucketsWithBags {
-  distributionBuckets(limit: 500, where: { distributing_eq: true }) {
-    id
-    bags {
-      # CHANGE: Many-to-Many relations are not supported, changed to 2-way One-to-Many
-      bag {
-        id
-      }
-    }
-    operators {
-      ...DistributionBucketOperatorField
-    }
-  }
-}
-
 query GetStorageBucketsWithBags {
   storageBuckets(
     limit: 500

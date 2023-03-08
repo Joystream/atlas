@@ -164,6 +164,7 @@ fragment BasicVideoFields on Video {
 fragment FullVideoFields on Video {
   id
   title
+  ytVideoId
   description
   reactionsCount
   reactions {

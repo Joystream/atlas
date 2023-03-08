@@ -15,6 +15,7 @@ export type GetFullVideoQuery = {
     __typename?: 'Video'
     id: string
     title?: string | null
+    ytVideoId?: string | null
     description?: string | null
     reactionsCount: number
     viewsNum: number
@@ -777,6 +778,7 @@ export type GetFullVideosConnectionQuery = {
         __typename?: 'Video'
         id: string
         title?: string | null
+        ytVideoId?: string | null
         description?: string | null
         reactionsCount: number
         viewsNum: number
@@ -1527,6 +1529,7 @@ export type GetFullVideosQuery = {
     __typename?: 'Video'
     id: string
     title?: string | null
+    ytVideoId?: string | null
     description?: string | null
     reactionsCount: number
     viewsNum: number

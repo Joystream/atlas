@@ -61,7 +61,7 @@ export const useCreateEditChannelSubmit = () => {
   const channelBucketsCount = useChannelsStorageBucketsCount(channelId)
   const startFileUpload = useStartFileUpload()
   const handleTransaction = useTransaction()
-  const { fetchOperators } = useOperatorsContext()
+  const { fetchStorageOperators } = useOperatorsContext()
   const client = useApolloClient()
 
   const { data: channelCountData } = useGetChannelCountQuery({
@@ -201,7 +201,7 @@ export const useCreateEditChannelSubmit = () => {
         if (data.newChannel) {
           // when creating a channel, refetch operators before uploading so that storage bag assignments gets populated for a new channel
           setActiveUser({ channelId })
-          fetchOperators().then(() => {
+          fetchStorageOperators().then(() => {
             uploadAssets(result)
           })
         } else {
@@ -256,7 +256,7 @@ export const useCreateEditChannelSubmit = () => {
       channelStateBloatBondValue,
       client,
       dataObjectStateBloatBondValue,
-      fetchOperators,
+      fetchStorageOperators,
       getBucketsConfigForNewChannel,
       handleTransaction,
       joystream,

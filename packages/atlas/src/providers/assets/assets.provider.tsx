@@ -37,7 +37,7 @@ type OperatorsContextValue = {
   storageOperatorsMappingPromiseRef: MutableRefObject<Promise<BagOperatorsMapping> | undefined>
   failedStorageOperatorIds: string[]
   setFailedStorageOperatorIds: Dispatch<SetStateAction<string[]>>
-  fetchOperators: () => Promise<void>
+  fetchStorageOperators: () => Promise<BagOperatorsMapping>
 }
 const OperatorsContext = createContext<OperatorsContextValue | undefined>(undefined)
 OperatorsContext.displayName = 'OperatorsContext'
@@ -130,10 +130,6 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
     return storageOperatorsMappingPromiseRef.current
   }, [client, getUserCoordinates])
 
-  const fetchOperators = useCallback(async () => {
-    await Promise.all([fetchStorageOperators()])
-  }, [fetchStorageOperators])
-
   const { pathname } = useLocation()
   const hasFetchedStorageProvidersRef = useRef(false)
   const isStudio = pathname.search(absoluteRoutes.studio.index()) !== -1
@@ -156,7 +152,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
         storageOperatorsMappingPromiseRef,
         failedStorageOperatorIds,
         setFailedStorageOperatorIds,
-        fetchOperators,
+        fetchStorageOperators,
       }}
     >
       {children}
