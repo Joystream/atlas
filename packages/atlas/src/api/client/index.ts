@@ -1,13 +1,12 @@
 import { ApolloClient, ApolloLink, FetchResult, HttpLink, Observable, split } from '@apollo/client'
-import { BatchHttpLink } from '@apollo/client/link/batch-http'
-import { WebSocketLink } from '@apollo/client/link/ws'
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { getMainDefinition } from '@apollo/client/utilities'
+import { createClient } from 'graphql-ws'
 
 import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config/env'
+import { useUserLocationStore } from '@/providers/userLocation'
 
 import cache from './cache'
-
-const BATCHED_QUERIES = ['GetBasicVideos', 'GetDistributionBucketsWithBags', 'GetStorageBucketsWithBags']
 
 const delayLink = new ApolloLink((operation, forward) => {
   const ctx = operation.getContext()
@@ -25,35 +24,39 @@ const delayLink = new ApolloLink((operation, forward) => {
 })
 
 const createApolloClient = () => {
-  const subscriptionLink = new WebSocketLink({
-    uri: QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL,
-    options: {
-      reconnect: true,
-      reconnectionAttempts: 5,
-    },
-  })
-
-  const orionLink = ApolloLink.from([delayLink, new HttpLink({ uri: ORION_GRAPHQL_URL })])
-  const batchedOrionLink = ApolloLink.from([
-    delayLink,
-    new BatchHttpLink({ uri: ORION_GRAPHQL_URL, batchMax: 10, batchInterval: 300 }),
-  ])
-
-  const orionSplitLink = split(
-    ({ operationName }) => {
-      return BATCHED_QUERIES.includes(operationName)
-    },
-    batchedOrionLink,
-    orionLink
+  const subscriptionLink = new GraphQLWsLink(
+    createClient({
+      url: QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL,
+      retryAttempts: 5,
+    })
   )
 
+  const orionLink = ApolloLink.from([delayLink, new HttpLink({ uri: ORION_GRAPHQL_URL })])
+
   const operationSplitLink = split(
-    ({ query }) => {
+    ({ query, setContext }) => {
+      const locationStore = useUserLocationStore.getState()
+
+      if (
+        !locationStore.disableUserLocation &&
+        locationStore.coordinates?.latitude &&
+        locationStore.coordinates.longitude
+      ) {
+        setContext(({ headers }: Record<string, object>) => {
+          return {
+            headers: {
+              ...headers,
+              'x-client-loc': `${locationStore?.coordinates?.latitude}, ${locationStore.coordinates?.longitude}`,
+            },
+          }
+        })
+      }
+
       const definition = getMainDefinition(query)
       return definition.kind === 'OperationDefinition' && definition.operation === 'subscription'
     },
     subscriptionLink,
-    orionSplitLink
+    orionLink
   )
 
   return new ApolloClient({ cache, link: operationSplitLink })

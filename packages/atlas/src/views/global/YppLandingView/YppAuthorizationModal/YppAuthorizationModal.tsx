@@ -103,9 +103,11 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   const { joystream, proxyCallback } = useJoystream()
   const youtubeCollaboratorMemberId = atlasConfig.features.ypp.youtubeCollaboratorMemberId || ''
 
-  const { channel: channel } = useBasicChannel(referrerId || '', {
+  const { extendedChannel } = useBasicChannel(referrerId || '', {
     skip: !referrerId,
   })
+
+  const channel = extendedChannel?.channel
 
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()

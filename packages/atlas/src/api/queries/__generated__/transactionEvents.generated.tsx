@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { MetaprotocolTransactionSuccessFieldsFragmentDoc } from './fragments.generated'
+import { MetaprotocolTransactionResultFieldsFragmentDoc } from './fragments.generated'
 
 const defaultOptions = {} as const
 export type GetMetaprotocolTransactionStatusEventsQueryVariables = Types.Exact<{
@@ -11,223 +11,252 @@ export type GetMetaprotocolTransactionStatusEventsQueryVariables = Types.Exact<{
 
 export type GetMetaprotocolTransactionStatusEventsQuery = {
   __typename?: 'Query'
-  metaprotocolTransactionStatusEvents: Array<{
-    __typename?: 'MetaprotocolTransactionStatusEvent'
+  events: Array<{
+    __typename?: 'Event'
     inExtrinsic?: string | null
     inBlock: number
-    status:
-      | { __typename: 'MetaprotocolTransactionErrored'; message: string }
+    data:
+      | { __typename?: 'AuctionBidCanceledEventData' }
+      | { __typename?: 'AuctionBidMadeEventData' }
+      | { __typename?: 'AuctionCanceledEventData' }
+      | { __typename?: 'BidMadeCompletingAuctionEventData' }
+      | { __typename?: 'BuyNowCanceledEventData' }
+      | { __typename?: 'BuyNowPriceUpdatedEventData' }
+      | { __typename?: 'CommentCreatedEventData' }
+      | { __typename?: 'CommentTextUpdatedEventData' }
+      | { __typename?: 'EnglishAuctionSettledEventData' }
+      | { __typename?: 'EnglishAuctionStartedEventData' }
       | {
-          __typename: 'MetaprotocolTransactionSuccessful'
-          commentCreated?: {
-            __typename?: 'Comment'
-            id: string
-            createdAt: Date
-            isEdited: boolean
-            parentCommentId?: string | null
-            repliesCount: number
-            text: string
-            status: Types.CommentStatus
-            author: {
-              __typename?: 'Membership'
-              id: string
-              handle: string
-              metadata: {
-                __typename?: 'MemberMetadata'
-                about?: string | null
-                avatar?:
-                  | {
-                      __typename?: 'AvatarObject'
-                      avatarObject?: {
-                        __typename?: 'StorageDataObject'
-                        id: string
-                        createdAt: Date
-                        size: string
-                        isAccepted: boolean
-                        ipfsHash: string
-                        storageBag: { __typename?: 'StorageBag'; id: string }
-                        type:
-                          | { __typename: 'DataObjectTypeChannelAvatar' }
-                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                          | { __typename: 'DataObjectTypeUnknown' }
-                          | { __typename: 'DataObjectTypeVideoMedia' }
-                          | { __typename: 'DataObjectTypeVideoSubtitle' }
-                          | { __typename: 'DataObjectTypeVideoThumbnail' }
-                      } | null
-                    }
-                  | { __typename?: 'AvatarUri'; avatarUri: string }
-                  | null
+          __typename?: 'MetaprotocolTransactionStatusEventData'
+          result:
+            | {
+                __typename: 'MetaprotocolTransactionResultCommentCreated'
+                commentCreated?: {
+                  __typename?: 'Comment'
+                  id: string
+                  createdAt: Date
+                  isEdited: boolean
+                  repliesCount: number
+                  text: string
+                  status: Types.CommentStatus
+                  author: {
+                    __typename?: 'Membership'
+                    id: string
+                    handle: string
+                    metadata?: {
+                      __typename?: 'MemberMetadata'
+                      about?: string | null
+                      avatar?:
+                        | {
+                            __typename?: 'AvatarObject'
+                            avatarObject: {
+                              __typename?: 'StorageDataObject'
+                              id: string
+                              resolvedUrl?: string | null
+                              createdAt: Date
+                              size: string
+                              isAccepted: boolean
+                              ipfsHash: string
+                              storageBag: { __typename?: 'StorageBag'; id: string }
+                              type?:
+                                | { __typename: 'DataObjectTypeChannelAvatar' }
+                                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeVideoMedia' }
+                                | { __typename: 'DataObjectTypeVideoSubtitle' }
+                                | { __typename: 'DataObjectTypeVideoThumbnail' }
+                                | null
+                            }
+                          }
+                        | { __typename?: 'AvatarUri'; avatarUri: string }
+                        | null
+                    } | null
+                  }
+                  reactionsCountByReactionId?: Array<{
+                    __typename?: 'CommentReactionsCountByReactionId'
+                    count: number
+                    reactionId: number
+                  }> | null
+                  parentComment?: { __typename?: 'Comment'; id: string } | null
+                } | null
               }
-            }
-            reactionsCountByReactionId: Array<{
-              __typename?: 'CommentReactionsCountByReactionId'
-              id: string
-              count: number
-              reactionId: number
-            }>
-          } | null
-          commentEdited?: {
-            __typename?: 'Comment'
-            id: string
-            createdAt: Date
-            isEdited: boolean
-            parentCommentId?: string | null
-            repliesCount: number
-            text: string
-            status: Types.CommentStatus
-            author: {
-              __typename?: 'Membership'
-              id: string
-              handle: string
-              metadata: {
-                __typename?: 'MemberMetadata'
-                about?: string | null
-                avatar?:
-                  | {
-                      __typename?: 'AvatarObject'
-                      avatarObject?: {
-                        __typename?: 'StorageDataObject'
-                        id: string
-                        createdAt: Date
-                        size: string
-                        isAccepted: boolean
-                        ipfsHash: string
-                        storageBag: { __typename?: 'StorageBag'; id: string }
-                        type:
-                          | { __typename: 'DataObjectTypeChannelAvatar' }
-                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                          | { __typename: 'DataObjectTypeUnknown' }
-                          | { __typename: 'DataObjectTypeVideoMedia' }
-                          | { __typename: 'DataObjectTypeVideoSubtitle' }
-                          | { __typename: 'DataObjectTypeVideoThumbnail' }
-                      } | null
-                    }
-                  | { __typename?: 'AvatarUri'; avatarUri: string }
-                  | null
+            | {
+                __typename: 'MetaprotocolTransactionResultCommentDeleted'
+                commentDeleted?: {
+                  __typename?: 'Comment'
+                  id: string
+                  createdAt: Date
+                  isEdited: boolean
+                  repliesCount: number
+                  text: string
+                  status: Types.CommentStatus
+                  author: {
+                    __typename?: 'Membership'
+                    id: string
+                    handle: string
+                    metadata?: {
+                      __typename?: 'MemberMetadata'
+                      about?: string | null
+                      avatar?:
+                        | {
+                            __typename?: 'AvatarObject'
+                            avatarObject: {
+                              __typename?: 'StorageDataObject'
+                              id: string
+                              resolvedUrl?: string | null
+                              createdAt: Date
+                              size: string
+                              isAccepted: boolean
+                              ipfsHash: string
+                              storageBag: { __typename?: 'StorageBag'; id: string }
+                              type?:
+                                | { __typename: 'DataObjectTypeChannelAvatar' }
+                                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeVideoMedia' }
+                                | { __typename: 'DataObjectTypeVideoSubtitle' }
+                                | { __typename: 'DataObjectTypeVideoThumbnail' }
+                                | null
+                            }
+                          }
+                        | { __typename?: 'AvatarUri'; avatarUri: string }
+                        | null
+                    } | null
+                  }
+                  reactionsCountByReactionId?: Array<{
+                    __typename?: 'CommentReactionsCountByReactionId'
+                    count: number
+                    reactionId: number
+                  }> | null
+                  parentComment?: { __typename?: 'Comment'; id: string } | null
+                } | null
               }
-            }
-            reactionsCountByReactionId: Array<{
-              __typename?: 'CommentReactionsCountByReactionId'
-              id: string
-              count: number
-              reactionId: number
-            }>
-          } | null
-          commentDeleted?: {
-            __typename?: 'Comment'
-            id: string
-            createdAt: Date
-            isEdited: boolean
-            parentCommentId?: string | null
-            repliesCount: number
-            text: string
-            status: Types.CommentStatus
-            author: {
-              __typename?: 'Membership'
-              id: string
-              handle: string
-              metadata: {
-                __typename?: 'MemberMetadata'
-                about?: string | null
-                avatar?:
-                  | {
-                      __typename?: 'AvatarObject'
-                      avatarObject?: {
-                        __typename?: 'StorageDataObject'
-                        id: string
-                        createdAt: Date
-                        size: string
-                        isAccepted: boolean
-                        ipfsHash: string
-                        storageBag: { __typename?: 'StorageBag'; id: string }
-                        type:
-                          | { __typename: 'DataObjectTypeChannelAvatar' }
-                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                          | { __typename: 'DataObjectTypeUnknown' }
-                          | { __typename: 'DataObjectTypeVideoMedia' }
-                          | { __typename: 'DataObjectTypeVideoSubtitle' }
-                          | { __typename: 'DataObjectTypeVideoThumbnail' }
-                      } | null
-                    }
-                  | { __typename?: 'AvatarUri'; avatarUri: string }
-                  | null
+            | {
+                __typename: 'MetaprotocolTransactionResultCommentEdited'
+                commentEdited?: {
+                  __typename?: 'Comment'
+                  id: string
+                  createdAt: Date
+                  isEdited: boolean
+                  repliesCount: number
+                  text: string
+                  status: Types.CommentStatus
+                  author: {
+                    __typename?: 'Membership'
+                    id: string
+                    handle: string
+                    metadata?: {
+                      __typename?: 'MemberMetadata'
+                      about?: string | null
+                      avatar?:
+                        | {
+                            __typename?: 'AvatarObject'
+                            avatarObject: {
+                              __typename?: 'StorageDataObject'
+                              id: string
+                              resolvedUrl?: string | null
+                              createdAt: Date
+                              size: string
+                              isAccepted: boolean
+                              ipfsHash: string
+                              storageBag: { __typename?: 'StorageBag'; id: string }
+                              type?:
+                                | { __typename: 'DataObjectTypeChannelAvatar' }
+                                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeVideoMedia' }
+                                | { __typename: 'DataObjectTypeVideoSubtitle' }
+                                | { __typename: 'DataObjectTypeVideoThumbnail' }
+                                | null
+                            }
+                          }
+                        | { __typename?: 'AvatarUri'; avatarUri: string }
+                        | null
+                    } | null
+                  }
+                  reactionsCountByReactionId?: Array<{
+                    __typename?: 'CommentReactionsCountByReactionId'
+                    count: number
+                    reactionId: number
+                  }> | null
+                  parentComment?: { __typename?: 'Comment'; id: string } | null
+                } | null
               }
-            }
-            reactionsCountByReactionId: Array<{
-              __typename?: 'CommentReactionsCountByReactionId'
-              id: string
-              count: number
-              reactionId: number
-            }>
-          } | null
-          commentModerated?: {
-            __typename?: 'Comment'
-            id: string
-            createdAt: Date
-            isEdited: boolean
-            parentCommentId?: string | null
-            repliesCount: number
-            text: string
-            status: Types.CommentStatus
-            author: {
-              __typename?: 'Membership'
-              id: string
-              handle: string
-              metadata: {
-                __typename?: 'MemberMetadata'
-                about?: string | null
-                avatar?:
-                  | {
-                      __typename?: 'AvatarObject'
-                      avatarObject?: {
-                        __typename?: 'StorageDataObject'
-                        id: string
-                        createdAt: Date
-                        size: string
-                        isAccepted: boolean
-                        ipfsHash: string
-                        storageBag: { __typename?: 'StorageBag'; id: string }
-                        type:
-                          | { __typename: 'DataObjectTypeChannelAvatar' }
-                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                          | { __typename: 'DataObjectTypeUnknown' }
-                          | { __typename: 'DataObjectTypeVideoMedia' }
-                          | { __typename: 'DataObjectTypeVideoSubtitle' }
-                          | { __typename: 'DataObjectTypeVideoThumbnail' }
-                      } | null
-                    }
-                  | { __typename?: 'AvatarUri'; avatarUri: string }
-                  | null
+            | {
+                __typename: 'MetaprotocolTransactionResultCommentModerated'
+                commentModerated?: {
+                  __typename?: 'Comment'
+                  id: string
+                  createdAt: Date
+                  isEdited: boolean
+                  repliesCount: number
+                  text: string
+                  status: Types.CommentStatus
+                  author: {
+                    __typename?: 'Membership'
+                    id: string
+                    handle: string
+                    metadata?: {
+                      __typename?: 'MemberMetadata'
+                      about?: string | null
+                      avatar?:
+                        | {
+                            __typename?: 'AvatarObject'
+                            avatarObject: {
+                              __typename?: 'StorageDataObject'
+                              id: string
+                              resolvedUrl?: string | null
+                              createdAt: Date
+                              size: string
+                              isAccepted: boolean
+                              ipfsHash: string
+                              storageBag: { __typename?: 'StorageBag'; id: string }
+                              type?:
+                                | { __typename: 'DataObjectTypeChannelAvatar' }
+                                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeVideoMedia' }
+                                | { __typename: 'DataObjectTypeVideoSubtitle' }
+                                | { __typename: 'DataObjectTypeVideoThumbnail' }
+                                | null
+                            }
+                          }
+                        | { __typename?: 'AvatarUri'; avatarUri: string }
+                        | null
+                    } | null
+                  }
+                  reactionsCountByReactionId?: Array<{
+                    __typename?: 'CommentReactionsCountByReactionId'
+                    count: number
+                    reactionId: number
+                  }> | null
+                  parentComment?: { __typename?: 'Comment'; id: string } | null
+                } | null
               }
-            }
-            reactionsCountByReactionId: Array<{
-              __typename?: 'CommentReactionsCountByReactionId'
-              id: string
-              count: number
-              reactionId: number
-            }>
-          } | null
+            | { __typename: 'MetaprotocolTransactionResultFailed'; errorMessage: string }
+            | { __typename: 'MetaprotocolTransactionResultOK' }
         }
+      | { __typename?: 'NftBoughtEventData' }
+      | { __typename?: 'NftIssuedEventData' }
+      | { __typename?: 'NftSellOrderMadeEventData' }
+      | { __typename?: 'OpenAuctionBidAcceptedEventData' }
+      | { __typename?: 'OpenAuctionStartedEventData' }
   }>
 }
 
 export const GetMetaprotocolTransactionStatusEventsDocument = gql`
   query GetMetaprotocolTransactionStatusEvents($transactionHash: String!) {
-    metaprotocolTransactionStatusEvents(where: { inExtrinsic_eq: $transactionHash }) {
+    events(
+      where: { data: { isTypeOf_eq: "MetaprotocolTransactionStatusEventData" }, inExtrinsic_eq: $transactionHash }
+    ) {
       inExtrinsic
       inBlock
-      status {
-        __typename
-        ... on MetaprotocolTransactionErrored {
-          message
-        }
-        ... on MetaprotocolTransactionSuccessful {
-          ...MetaprotocolTransactionSuccessFields
+      data {
+        ... on MetaprotocolTransactionStatusEventData {
+          result {
+            ...MetaprotocolTransactionResultFields
+          }
         }
       }
     }
   }
-  ${MetaprotocolTransactionSuccessFieldsFragmentDoc}
+  ${MetaprotocolTransactionResultFieldsFragmentDoc}
 `
 
 /**

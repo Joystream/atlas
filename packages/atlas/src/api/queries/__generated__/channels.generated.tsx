@@ -5,260 +5,232 @@ import * as Types from './baseTypes.generated'
 import {
   BasicChannelFieldsFragmentDoc,
   BasicMembershipFieldsFragmentDoc,
+  ExtendedBasicChannelFieldsFragmentDoc,
+  ExtendedFullChannelFieldsFragmentDoc,
   FullChannelFieldsFragmentDoc,
 } from './fragments.generated'
 
 const defaultOptions = {} as const
-export type GetBasicChannelQueryVariables = Types.Exact<{
-  where: Types.ChannelWhereUniqueInput
-}>
-
-export type GetBasicChannelQuery = {
-  __typename?: 'Query'
-  channelByUniqueInput?: {
-    __typename?: 'Channel'
-    id: string
-    title?: string | null
-    description?: string | null
-    createdAt: Date
-    follows: number
-    rewardAccount: string
-    channelStateBloatBond: string
-    avatarPhoto?: {
-      __typename?: 'StorageDataObject'
-      id: string
-      createdAt: Date
-      size: string
-      isAccepted: boolean
-      ipfsHash: string
-      storageBag: { __typename?: 'StorageBag'; id: string }
-      type:
-        | { __typename: 'DataObjectTypeChannelAvatar' }
-        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-        | { __typename: 'DataObjectTypeUnknown' }
-        | { __typename: 'DataObjectTypeVideoMedia' }
-        | { __typename: 'DataObjectTypeVideoSubtitle' }
-        | { __typename: 'DataObjectTypeVideoThumbnail' }
-    } | null
-  } | null
-}
-
 export type GetFullChannelQueryVariables = Types.Exact<{
-  where: Types.ChannelWhereUniqueInput
+  id: Types.Scalars['String']
 }>
 
 export type GetFullChannelQuery = {
   __typename?: 'Query'
-  channelByUniqueInput?: {
+  channelById?: {
     __typename?: 'Channel'
-    views: number
-    activeVideosCounter: number
+    videoViewsNum: number
     description?: string | null
     isPublic?: boolean | null
     isCensored: boolean
+    language?: string | null
     id: string
     title?: string | null
     createdAt: Date
-    follows: number
+    followsNum: number
     rewardAccount: string
     channelStateBloatBond: string
-    language?: { __typename?: 'Language'; id: string; iso: string } | null
     ownerMember?: {
       __typename?: 'Membership'
       id: string
       handle: string
-      metadata: {
+      metadata?: {
         __typename?: 'MemberMetadata'
         about?: string | null
         avatar?:
           | {
               __typename?: 'AvatarObject'
-              avatarObject?: {
+              avatarObject: {
                 __typename?: 'StorageDataObject'
                 id: string
+                resolvedUrl?: string | null
                 createdAt: Date
                 size: string
                 isAccepted: boolean
                 ipfsHash: string
                 storageBag: { __typename?: 'StorageBag'; id: string }
-                type:
+                type?:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                  | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
-              } | null
+                  | null
+              }
             }
           | { __typename?: 'AvatarUri'; avatarUri: string }
           | null
-      }
+      } | null
     } | null
     coverPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
+      resolvedUrl?: string | null
       createdAt: Date
       size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
-      type:
+      type?:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-        | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
+        | null
     } | null
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
+      resolvedUrl?: string | null
       createdAt: Date
       size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
-      type:
+      type?:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-        | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
+        | null
     } | null
   } | null
 }
 
-export type GetVideoCountQueryVariables = Types.Exact<{
-  where?: Types.InputMaybe<Types.VideoWhereInput>
-}>
-
-export type GetVideoCountQuery = {
-  __typename?: 'Query'
-  videosConnection: { __typename?: 'VideoConnection'; totalCount: number }
-}
-
-export type GetBasicChannelsQueryVariables = Types.Exact<{
-  where?: Types.InputMaybe<Types.ChannelWhereInput>
+export type GetExtendedBasicChannelsQueryVariables = Types.Exact<{
+  where?: Types.InputMaybe<Types.ExtendedChannelWhereInput>
   limit?: Types.InputMaybe<Types.Scalars['Int']>
   orderBy?: Types.InputMaybe<Array<Types.ChannelOrderByInput> | Types.ChannelOrderByInput>
 }>
 
-export type GetBasicChannelsQuery = {
+export type GetExtendedBasicChannelsQuery = {
   __typename?: 'Query'
-  channels: Array<{
-    __typename?: 'Channel'
-    id: string
-    title?: string | null
-    description?: string | null
-    createdAt: Date
-    follows: number
-    rewardAccount: string
-    channelStateBloatBond: string
-    avatarPhoto?: {
-      __typename?: 'StorageDataObject'
+  extendedChannels: Array<{
+    __typename?: 'ExtendedChannel'
+    activeVideosCount: number
+    channel: {
+      __typename?: 'Channel'
       id: string
+      title?: string | null
+      description?: string | null
       createdAt: Date
-      size: string
-      isAccepted: boolean
-      ipfsHash: string
-      storageBag: { __typename?: 'StorageBag'; id: string }
-      type:
-        | { __typename: 'DataObjectTypeChannelAvatar' }
-        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-        | { __typename: 'DataObjectTypeUnknown' }
-        | { __typename: 'DataObjectTypeVideoMedia' }
-        | { __typename: 'DataObjectTypeVideoSubtitle' }
-        | { __typename: 'DataObjectTypeVideoThumbnail' }
-    } | null
+      followsNum: number
+      rewardAccount: string
+      channelStateBloatBond: string
+      avatarPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrl?: string | null
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+    }
   }>
 }
 
-export type GetFullChannelsQueryVariables = Types.Exact<{
-  where?: Types.InputMaybe<Types.ChannelWhereInput>
+export type GetExtendedFullChannelsQueryVariables = Types.Exact<{
+  where?: Types.InputMaybe<Types.ExtendedChannelWhereInput>
   limit?: Types.InputMaybe<Types.Scalars['Int']>
   orderBy?: Types.InputMaybe<Array<Types.ChannelOrderByInput> | Types.ChannelOrderByInput>
 }>
 
-export type GetFullChannelsQuery = {
+export type GetExtendedFullChannelsQuery = {
   __typename?: 'Query'
-  channels: Array<{
-    __typename?: 'Channel'
-    views: number
-    activeVideosCounter: number
-    description?: string | null
-    isPublic?: boolean | null
-    isCensored: boolean
-    id: string
-    title?: string | null
-    createdAt: Date
-    follows: number
-    rewardAccount: string
-    channelStateBloatBond: string
-    language?: { __typename?: 'Language'; id: string; iso: string } | null
-    ownerMember?: {
-      __typename?: 'Membership'
+  extendedChannels: Array<{
+    __typename?: 'ExtendedChannel'
+    activeVideosCount: number
+    channel: {
+      __typename?: 'Channel'
+      videoViewsNum: number
+      description?: string | null
+      isPublic?: boolean | null
+      isCensored: boolean
+      language?: string | null
       id: string
-      handle: string
-      metadata: {
-        __typename?: 'MemberMetadata'
-        about?: string | null
-        avatar?:
-          | {
-              __typename?: 'AvatarObject'
-              avatarObject?: {
-                __typename?: 'StorageDataObject'
-                id: string
-                createdAt: Date
-                size: string
-                isAccepted: boolean
-                ipfsHash: string
-                storageBag: { __typename?: 'StorageBag'; id: string }
-                type:
-                  | { __typename: 'DataObjectTypeChannelAvatar' }
-                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                  | { __typename: 'DataObjectTypeUnknown' }
-                  | { __typename: 'DataObjectTypeVideoMedia' }
-                  | { __typename: 'DataObjectTypeVideoSubtitle' }
-                  | { __typename: 'DataObjectTypeVideoThumbnail' }
-              } | null
-            }
-          | { __typename?: 'AvatarUri'; avatarUri: string }
+      title?: string | null
+      createdAt: Date
+      followsNum: number
+      rewardAccount: string
+      channelStateBloatBond: string
+      ownerMember?: {
+        __typename?: 'Membership'
+        id: string
+        handle: string
+        metadata?: {
+          __typename?: 'MemberMetadata'
+          about?: string | null
+          avatar?:
+            | {
+                __typename?: 'AvatarObject'
+                avatarObject: {
+                  __typename?: 'StorageDataObject'
+                  id: string
+                  resolvedUrl?: string | null
+                  createdAt: Date
+                  size: string
+                  isAccepted: boolean
+                  ipfsHash: string
+                  storageBag: { __typename?: 'StorageBag'; id: string }
+                  type?:
+                    | { __typename: 'DataObjectTypeChannelAvatar' }
+                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoSubtitle' }
+                    | { __typename: 'DataObjectTypeVideoThumbnail' }
+                    | null
+                }
+              }
+            | { __typename?: 'AvatarUri'; avatarUri: string }
+            | null
+        } | null
+      } | null
+      coverPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrl?: string | null
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
           | null
-      }
-    } | null
-    coverPhoto?: {
-      __typename?: 'StorageDataObject'
-      id: string
-      createdAt: Date
-      size: string
-      isAccepted: boolean
-      ipfsHash: string
-      storageBag: { __typename?: 'StorageBag'; id: string }
-      type:
-        | { __typename: 'DataObjectTypeChannelAvatar' }
-        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-        | { __typename: 'DataObjectTypeUnknown' }
-        | { __typename: 'DataObjectTypeVideoMedia' }
-        | { __typename: 'DataObjectTypeVideoSubtitle' }
-        | { __typename: 'DataObjectTypeVideoThumbnail' }
-    } | null
-    avatarPhoto?: {
-      __typename?: 'StorageDataObject'
-      id: string
-      createdAt: Date
-      size: string
-      isAccepted: boolean
-      ipfsHash: string
-      storageBag: { __typename?: 'StorageBag'; id: string }
-      type:
-        | { __typename: 'DataObjectTypeChannelAvatar' }
-        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-        | { __typename: 'DataObjectTypeUnknown' }
-        | { __typename: 'DataObjectTypeVideoMedia' }
-        | { __typename: 'DataObjectTypeVideoSubtitle' }
-        | { __typename: 'DataObjectTypeVideoThumbnail' }
-    } | null
+      } | null
+      avatarPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrl?: string | null
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+    }
   }>
 }
 
@@ -272,7 +244,7 @@ export type GetBasicChannelsConnectionQueryVariables = Types.Exact<{
 export type GetBasicChannelsConnectionQuery = {
   __typename?: 'Query'
   channelsConnection: {
-    __typename?: 'ChannelConnection'
+    __typename?: 'ChannelsConnection'
     totalCount: number
     edges: Array<{
       __typename?: 'ChannelEdge'
@@ -283,326 +255,250 @@ export type GetBasicChannelsConnectionQuery = {
         title?: string | null
         description?: string | null
         createdAt: Date
-        follows: number
+        followsNum: number
         rewardAccount: string
         channelStateBloatBond: string
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
+          resolvedUrl?: string | null
           createdAt: Date
           size: string
           isAccepted: boolean
           ipfsHash: string
           storageBag: { __typename?: 'StorageBag'; id: string }
-          type:
+          type?:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-            | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoSubtitle' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
+            | null
         } | null
       }
     }>
-    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: string | null }
+    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor: string }
   }
 }
 
 export type FollowChannelMutationVariables = Types.Exact<{
-  channelId: Types.Scalars['ID']
+  channelId: Types.Scalars['String']
 }>
 
 export type FollowChannelMutation = {
   __typename?: 'Mutation'
-  followChannel: { __typename?: 'ChannelFollowsInfo'; id: string; follows: number }
+  followChannel: { __typename?: 'ChannelFollowResult'; channelId: string; follows: number; cancelToken: string }
 }
 
 export type UnfollowChannelMutationVariables = Types.Exact<{
-  channelId: Types.Scalars['ID']
+  channelId: Types.Scalars['String']
+  token: Types.Scalars['String']
 }>
 
 export type UnfollowChannelMutation = {
   __typename?: 'Mutation'
-  unfollowChannel: { __typename?: 'ChannelFollowsInfo'; id: string; follows: number }
-}
-
-export type GetMostViewedChannelsConnectionQueryVariables = Types.Exact<{
-  limit?: Types.InputMaybe<Types.Scalars['Int']>
-  periodDays?: Types.InputMaybe<Types.Scalars['Int']>
-  first?: Types.InputMaybe<Types.Scalars['Int']>
-  after?: Types.InputMaybe<Types.Scalars['String']>
-  where?: Types.InputMaybe<Types.ChannelWhereInput>
-}>
-
-export type GetMostViewedChannelsConnectionQuery = {
-  __typename?: 'Query'
-  mostViewedChannelsConnection: {
-    __typename?: 'ChannelConnection'
-    totalCount: number
-    edges: Array<{
-      __typename?: 'ChannelEdge'
-      cursor: string
-      node: {
-        __typename?: 'Channel'
-        id: string
-        title?: string | null
-        description?: string | null
-        createdAt: Date
-        follows: number
-        rewardAccount: string
-        channelStateBloatBond: string
-        avatarPhoto?: {
-          __typename?: 'StorageDataObject'
-          id: string
-          createdAt: Date
-          size: string
-          isAccepted: boolean
-          ipfsHash: string
-          storageBag: { __typename?: 'StorageBag'; id: string }
-          type:
-            | { __typename: 'DataObjectTypeChannelAvatar' }
-            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-            | { __typename: 'DataObjectTypeUnknown' }
-            | { __typename: 'DataObjectTypeVideoMedia' }
-            | { __typename: 'DataObjectTypeVideoSubtitle' }
-            | { __typename: 'DataObjectTypeVideoThumbnail' }
-        } | null
-      }
-    }>
-    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: string | null }
-  }
-}
-
-export type GetMostFollowedChannelsConnectionQueryVariables = Types.Exact<{
-  limit: Types.Scalars['Int']
-  periodDays?: Types.InputMaybe<Types.Scalars['Int']>
-  first?: Types.InputMaybe<Types.Scalars['Int']>
-  after?: Types.InputMaybe<Types.Scalars['String']>
-  where?: Types.InputMaybe<Types.ChannelWhereInput>
-}>
-
-export type GetMostFollowedChannelsConnectionQuery = {
-  __typename?: 'Query'
-  mostFollowedChannelsConnection: {
-    __typename?: 'ChannelConnection'
-    totalCount: number
-    edges: Array<{
-      __typename?: 'ChannelEdge'
-      cursor: string
-      node: {
-        __typename?: 'Channel'
-        id: string
-        title?: string | null
-        description?: string | null
-        createdAt: Date
-        follows: number
-        rewardAccount: string
-        channelStateBloatBond: string
-        avatarPhoto?: {
-          __typename?: 'StorageDataObject'
-          id: string
-          createdAt: Date
-          size: string
-          isAccepted: boolean
-          ipfsHash: string
-          storageBag: { __typename?: 'StorageBag'; id: string }
-          type:
-            | { __typename: 'DataObjectTypeChannelAvatar' }
-            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-            | { __typename: 'DataObjectTypeUnknown' }
-            | { __typename: 'DataObjectTypeVideoMedia' }
-            | { __typename: 'DataObjectTypeVideoSubtitle' }
-            | { __typename: 'DataObjectTypeVideoThumbnail' }
-        } | null
-      }
-    }>
-    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: string | null }
-  }
+  unfollowChannel: { __typename?: 'ChannelUnfollowResult'; channelId: string; follows: number }
 }
 
 export type GetTop10ChannelsQueryVariables = Types.Exact<{
-  where?: Types.InputMaybe<Types.ChannelWhereInput>
+  where?: Types.InputMaybe<Types.ExtendedChannelWhereInput>
 }>
 
 export type GetTop10ChannelsQuery = {
   __typename?: 'Query'
-  top10Channels: Array<{
-    __typename?: 'Channel'
-    id: string
-    title?: string | null
-    description?: string | null
-    createdAt: Date
-    follows: number
-    rewardAccount: string
-    channelStateBloatBond: string
-    avatarPhoto?: {
-      __typename?: 'StorageDataObject'
+  extendedChannels: Array<{
+    __typename?: 'ExtendedChannel'
+    channel: {
+      __typename?: 'Channel'
       id: string
+      title?: string | null
+      description?: string | null
       createdAt: Date
-      size: string
-      isAccepted: boolean
-      ipfsHash: string
-      storageBag: { __typename?: 'StorageBag'; id: string }
-      type:
-        | { __typename: 'DataObjectTypeChannelAvatar' }
-        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-        | { __typename: 'DataObjectTypeUnknown' }
-        | { __typename: 'DataObjectTypeVideoMedia' }
-        | { __typename: 'DataObjectTypeVideoSubtitle' }
-        | { __typename: 'DataObjectTypeVideoThumbnail' }
-    } | null
+      followsNum: number
+      rewardAccount: string
+      channelStateBloatBond: string
+      avatarPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrl?: string | null
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+    }
   }>
 }
 
 export type GetPromisingChannelsQueryVariables = Types.Exact<{
-  where?: Types.InputMaybe<Types.ChannelWhereInput>
+  where?: Types.InputMaybe<Types.ExtendedChannelWhereInput>
 }>
 
 export type GetPromisingChannelsQuery = {
   __typename?: 'Query'
-  promisingChannels: Array<{
-    __typename?: 'Channel'
-    id: string
-    title?: string | null
-    description?: string | null
-    createdAt: Date
-    follows: number
-    rewardAccount: string
-    channelStateBloatBond: string
-    avatarPhoto?: {
-      __typename?: 'StorageDataObject'
+  mostRecentChannels: Array<{
+    __typename?: 'ExtendedChannel'
+    channel: {
+      __typename?: 'Channel'
       id: string
+      title?: string | null
+      description?: string | null
       createdAt: Date
-      size: string
-      isAccepted: boolean
-      ipfsHash: string
-      storageBag: { __typename?: 'StorageBag'; id: string }
-      type:
-        | { __typename: 'DataObjectTypeChannelAvatar' }
-        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-        | { __typename: 'DataObjectTypeUnknown' }
-        | { __typename: 'DataObjectTypeVideoMedia' }
-        | { __typename: 'DataObjectTypeVideoSubtitle' }
-        | { __typename: 'DataObjectTypeVideoThumbnail' }
-    } | null
+      followsNum: number
+      rewardAccount: string
+      channelStateBloatBond: string
+      avatarPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrl?: string | null
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+    }
   }>
 }
 
 export type GetDiscoverChannelsQueryVariables = Types.Exact<{
-  where?: Types.InputMaybe<Types.ChannelWhereInput>
+  where?: Types.InputMaybe<Types.ExtendedChannelWhereInput>
 }>
 
 export type GetDiscoverChannelsQuery = {
   __typename?: 'Query'
-  discoverChannels: Array<{
-    __typename?: 'Channel'
-    id: string
-    title?: string | null
-    description?: string | null
-    createdAt: Date
-    follows: number
-    rewardAccount: string
-    channelStateBloatBond: string
-    avatarPhoto?: {
-      __typename?: 'StorageDataObject'
+  mostRecentChannels: Array<{
+    __typename?: 'ExtendedChannel'
+    channel: {
+      __typename?: 'Channel'
       id: string
+      title?: string | null
+      description?: string | null
       createdAt: Date
-      size: string
-      isAccepted: boolean
-      ipfsHash: string
-      storageBag: { __typename?: 'StorageBag'; id: string }
-      type:
-        | { __typename: 'DataObjectTypeChannelAvatar' }
-        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-        | { __typename: 'DataObjectTypeUnknown' }
-        | { __typename: 'DataObjectTypeVideoMedia' }
-        | { __typename: 'DataObjectTypeVideoSubtitle' }
-        | { __typename: 'DataObjectTypeVideoThumbnail' }
-    } | null
+      followsNum: number
+      rewardAccount: string
+      channelStateBloatBond: string
+      avatarPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrl?: string | null
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+    }
   }>
 }
 
 export type GetPopularChannelsQueryVariables = Types.Exact<{
-  where?: Types.InputMaybe<Types.ChannelWhereInput>
+  where?: Types.InputMaybe<Types.ExtendedChannelWhereInput>
 }>
 
 export type GetPopularChannelsQuery = {
   __typename?: 'Query'
-  popularChannels: Array<{
-    __typename?: 'Channel'
-    id: string
-    title?: string | null
-    description?: string | null
-    createdAt: Date
-    follows: number
-    rewardAccount: string
-    channelStateBloatBond: string
-    avatarPhoto?: {
-      __typename?: 'StorageDataObject'
+  extendedChannels: Array<{
+    __typename?: 'ExtendedChannel'
+    channel: {
+      __typename?: 'Channel'
       id: string
+      title?: string | null
+      description?: string | null
       createdAt: Date
-      size: string
-      isAccepted: boolean
-      ipfsHash: string
-      storageBag: { __typename?: 'StorageBag'; id: string }
-      type:
-        | { __typename: 'DataObjectTypeChannelAvatar' }
-        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-        | { __typename: 'DataObjectTypeUnknown' }
-        | { __typename: 'DataObjectTypeVideoMedia' }
-        | { __typename: 'DataObjectTypeVideoSubtitle' }
-        | { __typename: 'DataObjectTypeVideoThumbnail' }
-    } | null
+      followsNum: number
+      rewardAccount: string
+      channelStateBloatBond: string
+      avatarPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrl?: string | null
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+    }
   }>
 }
 
 export type GetChannelNftCollectorsQueryVariables = Types.Exact<{
-  where?: Types.InputMaybe<Types.ChannelNftCollectorsWhereInput>
-  orderBy?: Types.InputMaybe<Array<Types.ChannelNftCollectorsOrderByInput> | Types.ChannelNftCollectorsOrderByInput>
+  channelId: Types.Scalars['String']
+  orderBy?: Types.InputMaybe<Types.ChannelNftCollectorsOrderByInput>
 }>
 
 export type GetChannelNftCollectorsQuery = {
   __typename?: 'Query'
   channelNftCollectors: Array<{
-    __typename?: 'ChannelNftCollectors'
-    id: string
+    __typename?: 'ChannelNftCollector'
     amount: number
-    member?: {
+    member: {
       __typename?: 'Membership'
       id: string
       handle: string
-      metadata: {
+      metadata?: {
         __typename?: 'MemberMetadata'
         about?: string | null
         avatar?:
           | {
               __typename?: 'AvatarObject'
-              avatarObject?: {
+              avatarObject: {
                 __typename?: 'StorageDataObject'
                 id: string
+                resolvedUrl?: string | null
                 createdAt: Date
                 size: string
                 isAccepted: boolean
                 ipfsHash: string
                 storageBag: { __typename?: 'StorageBag'; id: string }
-                type:
+                type?:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                  | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
-              } | null
+                  | null
+              }
             }
           | { __typename?: 'AvatarUri'; avatarUri: string }
           | null
-      }
-    } | null
+      } | null
+    }
   }>
 }
 
 export type ReportChannelMutationVariables = Types.Exact<{
-  channelId: Types.Scalars['ID']
+  channelId: Types.Scalars['String']
   rationale: Types.Scalars['String']
 }>
 
@@ -611,77 +507,41 @@ export type ReportChannelMutation = {
   reportChannel: { __typename?: 'ChannelReportInfo'; id: string; channelId: string }
 }
 
-export type GetChannelPaymentEventsQueryVariables = Types.Exact<{
-  ownerMemberId: Types.Scalars['ID']
-  channelId: Types.Scalars['ID']
-}>
+export type GetChannelPaymentEventsQueryVariables = Types.Exact<{ [key: string]: never }>
 
 export type GetChannelPaymentEventsQuery = {
   __typename?: 'Query'
-  nftBoughtEvents: Array<{ __typename?: 'NftBoughtEvent'; inBlock: number; createdAt: Date; price: string }>
-  bidMadeCompletingAuctionEvents: Array<{
-    __typename?: 'BidMadeCompletingAuctionEvent'
+  events: Array<{
+    __typename?: 'Event'
+    id: string
+    timestamp: Date
     inBlock: number
-    createdAt: Date
-    price: string
-  }>
-  englishAuctionSettledEvents: Array<{
-    __typename?: 'EnglishAuctionSettledEvent'
-    createdAt: Date
-    inBlock: number
-    winningBid: { __typename?: 'Bid'; amount: string }
-  }>
-  openAuctionBidAcceptedEvents: Array<{
-    __typename?: 'OpenAuctionBidAcceptedEvent'
-    inBlock: number
-    createdAt: Date
-    winningBid?: { __typename?: 'Bid'; amount: string } | null
+    data:
+      | { __typename: 'AuctionBidCanceledEventData' }
+      | { __typename: 'AuctionBidMadeEventData' }
+      | { __typename: 'AuctionCanceledEventData' }
+      | {
+          __typename: 'BidMadeCompletingAuctionEventData'
+          winningBid: { __typename?: 'Bid'; id: string; amount: string }
+        }
+      | { __typename: 'BuyNowCanceledEventData' }
+      | { __typename: 'BuyNowPriceUpdatedEventData' }
+      | { __typename: 'CommentCreatedEventData' }
+      | { __typename: 'CommentTextUpdatedEventData' }
+      | { __typename: 'EnglishAuctionSettledEventData'; winningBid: { __typename?: 'Bid'; amount: string } }
+      | { __typename: 'EnglishAuctionStartedEventData' }
+      | { __typename: 'MetaprotocolTransactionStatusEventData' }
+      | { __typename: 'NftBoughtEventData'; price: string }
+      | { __typename: 'NftIssuedEventData' }
+      | { __typename: 'NftSellOrderMadeEventData' }
+      | { __typename: 'OpenAuctionBidAcceptedEventData'; winningBid: { __typename?: 'Bid'; amount: string } }
+      | { __typename: 'OpenAuctionStartedEventData' }
   }>
 }
 
-export const GetBasicChannelDocument = gql`
-  query GetBasicChannel($where: ChannelWhereUniqueInput!) {
-    channelByUniqueInput(where: $where) {
-      ...BasicChannelFields
-    }
-  }
-  ${BasicChannelFieldsFragmentDoc}
-`
-
-/**
- * __useGetBasicChannelQuery__
- *
- * To run a query within a React component, call `useGetBasicChannelQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetBasicChannelQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetBasicChannelQuery({
- *   variables: {
- *      where: // value for 'where'
- *   },
- * });
- */
-export function useGetBasicChannelQuery(
-  baseOptions: Apollo.QueryHookOptions<GetBasicChannelQuery, GetBasicChannelQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetBasicChannelQuery, GetBasicChannelQueryVariables>(GetBasicChannelDocument, options)
-}
-export function useGetBasicChannelLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetBasicChannelQuery, GetBasicChannelQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetBasicChannelQuery, GetBasicChannelQueryVariables>(GetBasicChannelDocument, options)
-}
-export type GetBasicChannelQueryHookResult = ReturnType<typeof useGetBasicChannelQuery>
-export type GetBasicChannelLazyQueryHookResult = ReturnType<typeof useGetBasicChannelLazyQuery>
-export type GetBasicChannelQueryResult = Apollo.QueryResult<GetBasicChannelQuery, GetBasicChannelQueryVariables>
 export const GetFullChannelDocument = gql`
-  query GetFullChannel($where: ChannelWhereUniqueInput!) {
-    channelByUniqueInput(where: $where) {
+  query GetFullChannel($id: String!) {
+    channelById(id: $id) {
       ...FullChannelFields
     }
   }
@@ -700,7 +560,7 @@ export const GetFullChannelDocument = gql`
  * @example
  * const { data, loading, error } = useGetFullChannelQuery({
  *   variables: {
- *      where: // value for 'where'
+ *      id: // value for 'id'
  *   },
  * });
  */
@@ -719,69 +579,30 @@ export function useGetFullChannelLazyQuery(
 export type GetFullChannelQueryHookResult = ReturnType<typeof useGetFullChannelQuery>
 export type GetFullChannelLazyQueryHookResult = ReturnType<typeof useGetFullChannelLazyQuery>
 export type GetFullChannelQueryResult = Apollo.QueryResult<GetFullChannelQuery, GetFullChannelQueryVariables>
-export const GetVideoCountDocument = gql`
-  query GetVideoCount($where: VideoWhereInput) {
-    videosConnection(first: 0, where: $where) {
-      totalCount
-    }
-  }
-`
-
-/**
- * __useGetVideoCountQuery__
- *
- * To run a query within a React component, call `useGetVideoCountQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetVideoCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetVideoCountQuery({
- *   variables: {
- *      where: // value for 'where'
- *   },
- * });
- */
-export function useGetVideoCountQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetVideoCountQuery, GetVideoCountQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetVideoCountQuery, GetVideoCountQueryVariables>(GetVideoCountDocument, options)
-}
-export function useGetVideoCountLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetVideoCountQuery, GetVideoCountQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetVideoCountQuery, GetVideoCountQueryVariables>(GetVideoCountDocument, options)
-}
-export type GetVideoCountQueryHookResult = ReturnType<typeof useGetVideoCountQuery>
-export type GetVideoCountLazyQueryHookResult = ReturnType<typeof useGetVideoCountLazyQuery>
-export type GetVideoCountQueryResult = Apollo.QueryResult<GetVideoCountQuery, GetVideoCountQueryVariables>
-export const GetBasicChannelsDocument = gql`
-  query GetBasicChannels(
-    $where: ChannelWhereInput
+export const GetExtendedBasicChannelsDocument = gql`
+  query GetExtendedBasicChannels(
+    $where: ExtendedChannelWhereInput
     $limit: Int = 50
     $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]
   ) {
-    channels(where: $where, orderBy: $orderBy, limit: $limit) {
-      ...BasicChannelFields
+    extendedChannels(where: $where, orderBy: $orderBy, limit: $limit) {
+      ...ExtendedBasicChannelFields
     }
   }
-  ${BasicChannelFieldsFragmentDoc}
+  ${ExtendedBasicChannelFieldsFragmentDoc}
 `
 
 /**
- * __useGetBasicChannelsQuery__
+ * __useGetExtendedBasicChannelsQuery__
  *
- * To run a query within a React component, call `useGetBasicChannelsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetBasicChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetExtendedBasicChannelsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetExtendedBasicChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetBasicChannelsQuery({
+ * const { data, loading, error } = useGetExtendedBasicChannelsQuery({
  *   variables: {
  *      where: // value for 'where'
  *      limit: // value for 'limit'
@@ -789,45 +610,54 @@ export const GetBasicChannelsDocument = gql`
  *   },
  * });
  */
-export function useGetBasicChannelsQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetBasicChannelsQuery, GetBasicChannelsQueryVariables>
+export function useGetExtendedBasicChannelsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetExtendedBasicChannelsQuery, GetExtendedBasicChannelsQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetBasicChannelsQuery, GetBasicChannelsQueryVariables>(GetBasicChannelsDocument, options)
+  return Apollo.useQuery<GetExtendedBasicChannelsQuery, GetExtendedBasicChannelsQueryVariables>(
+    GetExtendedBasicChannelsDocument,
+    options
+  )
 }
-export function useGetBasicChannelsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetBasicChannelsQuery, GetBasicChannelsQueryVariables>
+export function useGetExtendedBasicChannelsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetExtendedBasicChannelsQuery, GetExtendedBasicChannelsQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetBasicChannelsQuery, GetBasicChannelsQueryVariables>(GetBasicChannelsDocument, options)
+  return Apollo.useLazyQuery<GetExtendedBasicChannelsQuery, GetExtendedBasicChannelsQueryVariables>(
+    GetExtendedBasicChannelsDocument,
+    options
+  )
 }
-export type GetBasicChannelsQueryHookResult = ReturnType<typeof useGetBasicChannelsQuery>
-export type GetBasicChannelsLazyQueryHookResult = ReturnType<typeof useGetBasicChannelsLazyQuery>
-export type GetBasicChannelsQueryResult = Apollo.QueryResult<GetBasicChannelsQuery, GetBasicChannelsQueryVariables>
-export const GetFullChannelsDocument = gql`
-  query GetFullChannels(
-    $where: ChannelWhereInput
+export type GetExtendedBasicChannelsQueryHookResult = ReturnType<typeof useGetExtendedBasicChannelsQuery>
+export type GetExtendedBasicChannelsLazyQueryHookResult = ReturnType<typeof useGetExtendedBasicChannelsLazyQuery>
+export type GetExtendedBasicChannelsQueryResult = Apollo.QueryResult<
+  GetExtendedBasicChannelsQuery,
+  GetExtendedBasicChannelsQueryVariables
+>
+export const GetExtendedFullChannelsDocument = gql`
+  query GetExtendedFullChannels(
+    $where: ExtendedChannelWhereInput
     $limit: Int = 50
     $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]
   ) {
-    channels(where: $where, orderBy: $orderBy, limit: $limit) {
-      ...FullChannelFields
+    extendedChannels(where: $where, orderBy: $orderBy, limit: $limit) {
+      ...ExtendedFullChannelFields
     }
   }
-  ${FullChannelFieldsFragmentDoc}
+  ${ExtendedFullChannelFieldsFragmentDoc}
 `
 
 /**
- * __useGetFullChannelsQuery__
+ * __useGetExtendedFullChannelsQuery__
  *
- * To run a query within a React component, call `useGetFullChannelsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetFullChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetExtendedFullChannelsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetExtendedFullChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetFullChannelsQuery({
+ * const { data, loading, error } = useGetExtendedFullChannelsQuery({
  *   variables: {
  *      where: // value for 'where'
  *      limit: // value for 'limit'
@@ -835,21 +665,30 @@ export const GetFullChannelsDocument = gql`
  *   },
  * });
  */
-export function useGetFullChannelsQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetFullChannelsQuery, GetFullChannelsQueryVariables>
+export function useGetExtendedFullChannelsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetExtendedFullChannelsQuery, GetExtendedFullChannelsQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetFullChannelsQuery, GetFullChannelsQueryVariables>(GetFullChannelsDocument, options)
+  return Apollo.useQuery<GetExtendedFullChannelsQuery, GetExtendedFullChannelsQueryVariables>(
+    GetExtendedFullChannelsDocument,
+    options
+  )
 }
-export function useGetFullChannelsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetFullChannelsQuery, GetFullChannelsQueryVariables>
+export function useGetExtendedFullChannelsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetExtendedFullChannelsQuery, GetExtendedFullChannelsQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetFullChannelsQuery, GetFullChannelsQueryVariables>(GetFullChannelsDocument, options)
+  return Apollo.useLazyQuery<GetExtendedFullChannelsQuery, GetExtendedFullChannelsQueryVariables>(
+    GetExtendedFullChannelsDocument,
+    options
+  )
 }
-export type GetFullChannelsQueryHookResult = ReturnType<typeof useGetFullChannelsQuery>
-export type GetFullChannelsLazyQueryHookResult = ReturnType<typeof useGetFullChannelsLazyQuery>
-export type GetFullChannelsQueryResult = Apollo.QueryResult<GetFullChannelsQuery, GetFullChannelsQueryVariables>
+export type GetExtendedFullChannelsQueryHookResult = ReturnType<typeof useGetExtendedFullChannelsQuery>
+export type GetExtendedFullChannelsLazyQueryHookResult = ReturnType<typeof useGetExtendedFullChannelsLazyQuery>
+export type GetExtendedFullChannelsQueryResult = Apollo.QueryResult<
+  GetExtendedFullChannelsQuery,
+  GetExtendedFullChannelsQueryVariables
+>
 export const GetBasicChannelsConnectionDocument = gql`
   query GetBasicChannelsConnection(
     $first: Int
@@ -918,10 +757,11 @@ export type GetBasicChannelsConnectionQueryResult = Apollo.QueryResult<
   GetBasicChannelsConnectionQueryVariables
 >
 export const FollowChannelDocument = gql`
-  mutation FollowChannel($channelId: ID!) {
+  mutation FollowChannel($channelId: String!) {
     followChannel(channelId: $channelId) {
-      id
+      channelId
       follows
+      cancelToken
     }
   }
 `
@@ -957,9 +797,9 @@ export type FollowChannelMutationOptions = Apollo.BaseMutationOptions<
   FollowChannelMutationVariables
 >
 export const UnfollowChannelDocument = gql`
-  mutation UnfollowChannel($channelId: ID!) {
-    unfollowChannel(channelId: $channelId) {
-      id
+  mutation UnfollowChannel($channelId: String!, $token: String!) {
+    unfollowChannel(channelId: $channelId, token: $token) {
+      channelId
       follows
     }
   }
@@ -983,6 +823,7 @@ export type UnfollowChannelMutationFn = Apollo.MutationFunction<
  * const [unfollowChannelMutation, { data, loading, error }] = useUnfollowChannelMutation({
  *   variables: {
  *      channelId: // value for 'channelId'
+ *      token: // value for 'token'
  *   },
  * });
  */
@@ -998,172 +839,12 @@ export type UnfollowChannelMutationOptions = Apollo.BaseMutationOptions<
   UnfollowChannelMutation,
   UnfollowChannelMutationVariables
 >
-export const GetMostViewedChannelsConnectionDocument = gql`
-  query GetMostViewedChannelsConnection(
-    $limit: Int = 50
-    $periodDays: Int
-    $first: Int
-    $after: String
-    $where: ChannelWhereInput
-  ) {
-    mostViewedChannelsConnection(limit: $limit, first: $first, after: $after, periodDays: $periodDays, where: $where) {
-      edges {
-        cursor
-        node {
-          ...BasicChannelFields
-        }
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-      totalCount
-    }
-  }
-  ${BasicChannelFieldsFragmentDoc}
-`
-
-/**
- * __useGetMostViewedChannelsConnectionQuery__
- *
- * To run a query within a React component, call `useGetMostViewedChannelsConnectionQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetMostViewedChannelsConnectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetMostViewedChannelsConnectionQuery({
- *   variables: {
- *      limit: // value for 'limit'
- *      periodDays: // value for 'periodDays'
- *      first: // value for 'first'
- *      after: // value for 'after'
- *      where: // value for 'where'
- *   },
- * });
- */
-export function useGetMostViewedChannelsConnectionQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetMostViewedChannelsConnectionQuery,
-    GetMostViewedChannelsConnectionQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetMostViewedChannelsConnectionQuery, GetMostViewedChannelsConnectionQueryVariables>(
-    GetMostViewedChannelsConnectionDocument,
-    options
-  )
-}
-export function useGetMostViewedChannelsConnectionLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetMostViewedChannelsConnectionQuery,
-    GetMostViewedChannelsConnectionQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetMostViewedChannelsConnectionQuery, GetMostViewedChannelsConnectionQueryVariables>(
-    GetMostViewedChannelsConnectionDocument,
-    options
-  )
-}
-export type GetMostViewedChannelsConnectionQueryHookResult = ReturnType<typeof useGetMostViewedChannelsConnectionQuery>
-export type GetMostViewedChannelsConnectionLazyQueryHookResult = ReturnType<
-  typeof useGetMostViewedChannelsConnectionLazyQuery
->
-export type GetMostViewedChannelsConnectionQueryResult = Apollo.QueryResult<
-  GetMostViewedChannelsConnectionQuery,
-  GetMostViewedChannelsConnectionQueryVariables
->
-export const GetMostFollowedChannelsConnectionDocument = gql`
-  query GetMostFollowedChannelsConnection(
-    $limit: Int!
-    $periodDays: Int
-    $first: Int
-    $after: String
-    $where: ChannelWhereInput
-  ) {
-    mostFollowedChannelsConnection(
-      limit: $limit
-      first: $first
-      after: $after
-      periodDays: $periodDays
-      where: $where
-    ) {
-      edges {
-        cursor
-        node {
-          ...BasicChannelFields
-        }
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-      totalCount
-    }
-  }
-  ${BasicChannelFieldsFragmentDoc}
-`
-
-/**
- * __useGetMostFollowedChannelsConnectionQuery__
- *
- * To run a query within a React component, call `useGetMostFollowedChannelsConnectionQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetMostFollowedChannelsConnectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetMostFollowedChannelsConnectionQuery({
- *   variables: {
- *      limit: // value for 'limit'
- *      periodDays: // value for 'periodDays'
- *      first: // value for 'first'
- *      after: // value for 'after'
- *      where: // value for 'where'
- *   },
- * });
- */
-export function useGetMostFollowedChannelsConnectionQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetMostFollowedChannelsConnectionQuery,
-    GetMostFollowedChannelsConnectionQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetMostFollowedChannelsConnectionQuery, GetMostFollowedChannelsConnectionQueryVariables>(
-    GetMostFollowedChannelsConnectionDocument,
-    options
-  )
-}
-export function useGetMostFollowedChannelsConnectionLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetMostFollowedChannelsConnectionQuery,
-    GetMostFollowedChannelsConnectionQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetMostFollowedChannelsConnectionQuery, GetMostFollowedChannelsConnectionQueryVariables>(
-    GetMostFollowedChannelsConnectionDocument,
-    options
-  )
-}
-export type GetMostFollowedChannelsConnectionQueryHookResult = ReturnType<
-  typeof useGetMostFollowedChannelsConnectionQuery
->
-export type GetMostFollowedChannelsConnectionLazyQueryHookResult = ReturnType<
-  typeof useGetMostFollowedChannelsConnectionLazyQuery
->
-export type GetMostFollowedChannelsConnectionQueryResult = Apollo.QueryResult<
-  GetMostFollowedChannelsConnectionQuery,
-  GetMostFollowedChannelsConnectionQueryVariables
->
 export const GetTop10ChannelsDocument = gql`
-  query GetTop10Channels($where: ChannelWhereInput) {
-    top10Channels(where: $where) {
-      ...BasicChannelFields
+  query GetTop10Channels($where: ExtendedChannelWhereInput) {
+    extendedChannels(where: $where, orderBy: followsNum_DESC, limit: 10) {
+      channel {
+        ...BasicChannelFields
+      }
     }
   }
   ${BasicChannelFieldsFragmentDoc}
@@ -1201,9 +882,11 @@ export type GetTop10ChannelsQueryHookResult = ReturnType<typeof useGetTop10Chann
 export type GetTop10ChannelsLazyQueryHookResult = ReturnType<typeof useGetTop10ChannelsLazyQuery>
 export type GetTop10ChannelsQueryResult = Apollo.QueryResult<GetTop10ChannelsQuery, GetTop10ChannelsQueryVariables>
 export const GetPromisingChannelsDocument = gql`
-  query GetPromisingChannels($where: ChannelWhereInput) {
-    promisingChannels(where: $where) {
-      ...BasicChannelFields
+  query GetPromisingChannels($where: ExtendedChannelWhereInput) {
+    mostRecentChannels(where: $where, orderBy: videoViewsNum_DESC, mostRecentLimit: 100, resultsLimit: 15) {
+      channel {
+        ...BasicChannelFields
+      }
     }
   }
   ${BasicChannelFieldsFragmentDoc}
@@ -1250,9 +933,11 @@ export type GetPromisingChannelsQueryResult = Apollo.QueryResult<
   GetPromisingChannelsQueryVariables
 >
 export const GetDiscoverChannelsDocument = gql`
-  query GetDiscoverChannels($where: ChannelWhereInput) {
-    discoverChannels(where: $where) {
-      ...BasicChannelFields
+  query GetDiscoverChannels($where: ExtendedChannelWhereInput) {
+    mostRecentChannels(where: $where, orderBy: followsNum_DESC, mostRecentLimit: 100, resultsLimit: 15) {
+      channel {
+        ...BasicChannelFields
+      }
     }
   }
   ${BasicChannelFieldsFragmentDoc}
@@ -1299,9 +984,11 @@ export type GetDiscoverChannelsQueryResult = Apollo.QueryResult<
   GetDiscoverChannelsQueryVariables
 >
 export const GetPopularChannelsDocument = gql`
-  query GetPopularChannels($where: ChannelWhereInput) {
-    popularChannels(where: $where) {
-      ...BasicChannelFields
+  query GetPopularChannels($where: ExtendedChannelWhereInput) {
+    extendedChannels(where: $where, orderBy: videoViewsNum_DESC, limit: 15) {
+      channel {
+        ...BasicChannelFields
+      }
     }
   }
   ${BasicChannelFieldsFragmentDoc}
@@ -1345,12 +1032,8 @@ export type GetPopularChannelsQueryResult = Apollo.QueryResult<
   GetPopularChannelsQueryVariables
 >
 export const GetChannelNftCollectorsDocument = gql`
-  query GetChannelNftCollectors(
-    $where: ChannelNftCollectorsWhereInput
-    $orderBy: [ChannelNftCollectorsOrderByInput!] = [amount_DESC]
-  ) {
-    channelNftCollectors(where: $where, orderBy: $orderBy) {
-      id
+  query GetChannelNftCollectors($channelId: String!, $orderBy: ChannelNftCollectorsOrderByInput = amount_DESC) {
+    channelNftCollectors(channelId: $channelId, orderBy: $orderBy) {
       member {
         ...BasicMembershipFields
       }
@@ -1372,13 +1055,13 @@ export const GetChannelNftCollectorsDocument = gql`
  * @example
  * const { data, loading, error } = useGetChannelNftCollectorsQuery({
  *   variables: {
- *      where: // value for 'where'
+ *      channelId: // value for 'channelId'
  *      orderBy: // value for 'orderBy'
  *   },
  * });
  */
 export function useGetChannelNftCollectorsQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetChannelNftCollectorsQuery, GetChannelNftCollectorsQueryVariables>
+  baseOptions: Apollo.QueryHookOptions<GetChannelNftCollectorsQuery, GetChannelNftCollectorsQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useQuery<GetChannelNftCollectorsQuery, GetChannelNftCollectorsQueryVariables>(
@@ -1402,7 +1085,7 @@ export type GetChannelNftCollectorsQueryResult = Apollo.QueryResult<
   GetChannelNftCollectorsQueryVariables
 >
 export const ReportChannelDocument = gql`
-  mutation ReportChannel($channelId: ID!, $rationale: String!) {
+  mutation ReportChannel($channelId: String!, $rationale: String!) {
     reportChannel(channelId: $channelId, rationale: $rationale) {
       id
       channelId
@@ -1442,29 +1125,43 @@ export type ReportChannelMutationOptions = Apollo.BaseMutationOptions<
   ReportChannelMutationVariables
 >
 export const GetChannelPaymentEventsDocument = gql`
-  query GetChannelPaymentEvents($ownerMemberId: ID!, $channelId: ID!) {
-    nftBoughtEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
-      inBlock
-      createdAt
-      price
-    }
-    bidMadeCompletingAuctionEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
-      inBlock
-      createdAt
-      price
-    }
-    englishAuctionSettledEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
-      createdAt
-      inBlock
-      winningBid {
-        amount
+  query GetChannelPaymentEvents {
+    events(
+      where: {
+        data: {
+          isTypeOf_in: [
+            "NftBoughtEventData"
+            "BidMadeCompletingAuctionEventData"
+            "EnglishAuctionSettledEventData"
+            "OpenAuctionBidAcceptedEventData"
+          ]
+        }
       }
-    }
-    openAuctionBidAcceptedEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
+    ) {
+      id
+      timestamp
       inBlock
-      createdAt
-      winningBid {
-        amount
+      data {
+        __typename
+        ... on NftBoughtEventData {
+          price
+        }
+        ... on BidMadeCompletingAuctionEventData {
+          winningBid {
+            id
+            amount
+          }
+        }
+        ... on EnglishAuctionSettledEventData {
+          winningBid {
+            amount
+          }
+        }
+        ... on OpenAuctionBidAcceptedEventData {
+          winningBid {
+            amount
+          }
+        }
       }
     }
   }
@@ -1482,13 +1179,11 @@ export const GetChannelPaymentEventsDocument = gql`
  * @example
  * const { data, loading, error } = useGetChannelPaymentEventsQuery({
  *   variables: {
- *      ownerMemberId: // value for 'ownerMemberId'
- *      channelId: // value for 'channelId'
  *   },
  * });
  */
 export function useGetChannelPaymentEventsQuery(
-  baseOptions: Apollo.QueryHookOptions<GetChannelPaymentEventsQuery, GetChannelPaymentEventsQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<GetChannelPaymentEventsQuery, GetChannelPaymentEventsQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useQuery<GetChannelPaymentEventsQuery, GetChannelPaymentEventsQueryVariables>(

@@ -8,7 +8,6 @@ import { Text, TextVariant } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
-import { useAsset } from '@/providers/assets/assets.hooks'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
@@ -45,15 +44,17 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
   customTitle,
   followButton = false,
 }) => {
-  const { channel } = useBasicChannel(id || '', {
+  const { extendedChannel } = useBasicChannel(id || '', {
     skip: !id,
     onCompleted: (data) => !data && onNotFound?.(),
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelLink', error, { channel: { id } }),
   })
-  const { toggleFollowing, isFollowing } = useHandleFollowChannel(channel?.id, channel?.title)
-  const { url: avatarPhotoUrl } = useAsset(channel?.avatarPhoto)
+  const { toggleFollowing, isFollowing } = useHandleFollowChannel(
+    extendedChannel?.channel.id,
+    extendedChannel?.channel?.title
+  )
 
-  const displayedChannel = overrideChannel || channel
+  const displayedChannel = overrideChannel ? { channel: overrideChannel } : extendedChannel
 
   const handleFollowButtonClick = (e: MouseEvent) => {
     e.preventDefault()
@@ -69,7 +70,7 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
             withHandle={!hideHandle}
             loading={!displayedChannel}
             size={avatarSize}
-            assetUrl={avatarPhotoUrl}
+            assetUrl={displayedChannel?.channel.avatarPhoto?.resolvedUrl}
           />
         </StyledLink>
       )}
@@ -84,11 +85,12 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
               <TitleWrapper followButton={followButton}>
                 <StyledLink onClick={onClick} to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink}>
                   <Text as="span" variant={_textVariant} color={textSecondary ? 'colorCoreNeutral200' : undefined}>
-                    {customTitle || displayedChannel?.title}
+                    {customTitle || displayedChannel.channel.title}
                   </Text>
                   {followButton && (
                     <Text as="p" variant="t100" color="colorText" margin={{ top: 1 }}>
-                      {displayedChannel.follows} {displayedChannel.follows === 1 ? 'follower' : 'followers'}
+                      {displayedChannel.channel.followsNum}{' '}
+                      {displayedChannel.channel.followsNum === 1 ? 'follower' : 'followers'}
                     </Text>
                   )}
                 </StyledLink>

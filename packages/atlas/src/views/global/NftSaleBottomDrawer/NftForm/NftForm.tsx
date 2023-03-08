@@ -13,7 +13,7 @@ import { atlasConfig } from '@/config'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { NftBuyNowInputMetadata, NftSaleInputMetadata } from '@/joystream-lib/types'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
-import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useFee } from '@/providers/joystream/joystream.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -105,8 +105,8 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
 
   const { video, loading: loadingVideo } = useBasicVideo(videoId, { fetchPolicy: 'cache-only' })
 
-  const { url: channelAvatarUrl } = useAsset(video?.channel.avatarPhoto)
-  const { url: thumbnailPhotoUrl } = useAsset(video?.thumbnailPhoto)
+  const channelAvatarUrl = video?.channel.avatarPhoto?.resolvedUrl
+  const thumbnailPhotoUrl = video?.thumbnailPhoto?.resolvedUrl
   const { url: memberAvatarUri } = useMemberAvatar(activeMembership)
 
   const [openModal, closeModal] = useConfirmationModal()
@@ -308,7 +308,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
     creator: { assetUrl: channelAvatarUrl, name: video?.channel.title ?? '' },
     loading: loadingVideo,
     duration: video?.duration,
-    views: video?.views,
+    views: video?.viewsNum,
     buyNowPrice: tokenNumberToHapiBn(watch('buyNowPrice') || 0),
     startingPrice: tokenNumberToHapiBn(watch('startingPrice') || 0),
   }
@@ -344,7 +344,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
       creatorRoyalty={video?.nft?.creatorRoyalty}
       channelTitle={video?.channel.title}
       fee={fee}
-      isOwnedByChannel={video?.nft?.isOwnedByChannel}
+      isOwnedByChannel={video?.nft?.owner.__typename === 'NftOwnerChannel'}
     />,
   ]
 

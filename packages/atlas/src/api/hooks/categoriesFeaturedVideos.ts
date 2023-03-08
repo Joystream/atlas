@@ -15,7 +15,7 @@ export const useAllCategoriesFeaturedVideos = (
   const { data, ...rest } = useGetAllCategoriesFeaturedVideosQuery({ ...opts })
 
   return {
-    allCategoriesFeaturedVideos: data?.allCategoriesFeaturedVideos,
+    allCategoriesFeaturedVideos: data?.videoCategories,
     ...rest,
   }
 }
@@ -31,7 +31,7 @@ export const useCategoriesFeaturedVideos = (
     },
   })
   return {
-    categoriesFeaturedVideos: data?.categoryFeaturedVideos,
+    categoriesFeaturedVideos: data?.videoCategoryById?.featuredVideos,
     ...rest,
   }
 }

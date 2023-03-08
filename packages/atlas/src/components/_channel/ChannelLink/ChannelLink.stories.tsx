@@ -3,7 +3,6 @@ import { Meta, StoryFn } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { createApolloClient } from '@/api'
-import { AssetsManager } from '@/providers/assets/assets.manager'
 import { OperatorsContextProvider } from '@/providers/assets/assets.provider'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 
@@ -35,7 +34,6 @@ const Template: StoryFn<ChannelLinkProps> = (args) => {
       <ConfirmationModalProvider>
         <ApolloProvider client={apolloClient}>
           <OperatorsContextProvider>
-            <AssetsManager />
             <ChannelLink {...args} />
           </OperatorsContextProvider>
         </ApolloProvider>

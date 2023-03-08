@@ -1,27 +1,25 @@
 import { AppAction, IAppAction } from '@joystream/metadata-protobuf'
-import { Bytes, Option } from '@polkadot/types'
-import { PalletContentStorageAssetsRecord } from '@polkadot/types/lookup'
 import { stringToU8a } from '@polkadot/util'
 import { useCallback } from 'react'
 
 import { useGetAppActionSignatureMutation } from '@/api/queries/__generated__/admin.generated'
-import { AppActionActionType } from '@/api/queries/__generated__/baseTypes.generated'
 import { atlasConfig } from '@/config'
 import { wrapMetadata } from '@/joystream-lib/metadata'
+import { RawMetadataProcessorFn } from '@/joystream-lib/types'
 
-export const useAppActionMetadataProcessor = (creatorId: string, actionType: AppActionActionType, nonce: number) => {
+export const useAppActionMetadataProcessor = (creatorId: string, nonce?: number): RawMetadataProcessorFn => {
   const [signatureMutation] = useGetAppActionSignatureMutation()
 
   return useCallback(
-    async (rawBytes: Option<Bytes>, assets: Option<PalletContentStorageAssetsRecord>) => {
+    async (rawBytes, assets, actionType) => {
       if (nonce && atlasConfig.general.appId) {
         const { data } = await signatureMutation({
           variables: {
+            actionType,
             assets: assets.toHex(),
             nonce,
             rawAction: rawBytes.toHex(),
             creatorId,
-            actionType: actionType,
           },
         })
         if (data?.signAppActionCommitment) {
@@ -35,6 +33,6 @@ export const useAppActionMetadataProcessor = (creatorId: string, actionType: App
       }
       return rawBytes
     },
-    [creatorId, nonce, actionType, signatureMutation]
+    [creatorId, nonce, signatureMutation]
   )
 }

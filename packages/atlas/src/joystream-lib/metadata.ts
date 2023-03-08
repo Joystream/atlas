@@ -14,12 +14,15 @@ import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { Bytes, Option } from '@polkadot/types'
 import { PalletContentStorageAssetsRecord } from '@polkadot/types/lookup'
 
+import { AppActionActionType } from '@/api/queries/__generated__/baseTypes.generated'
+
 import { prepareAssetsForExtrinsic } from './helpers'
 import {
   ChannelInputAssets,
   ChannelInputMetadata,
   DataObjectMetadata,
   MemberInputMetadata,
+  RawMetadataProcessorFn,
   VideoInputAssets,
   VideoInputMetadata,
 } from './types'
@@ -28,10 +31,7 @@ type ParseExtrinsicInputFn<TMetadata, TAssets> = (
   api: PolkadotApi,
   inputMetadata: TMetadata,
   inputAssets: TAssets,
-  rawMetadataProcessor?: (
-    rawMeta: Option<Bytes>,
-    assets: Option<PalletContentStorageAssetsRecord>
-  ) => Promise<Option<Bytes>>
+  rawMetadataProcessor?: RawMetadataProcessorFn
 ) => Promise<[Option<Bytes>, TAssets extends undefined ? undefined : Option<PalletContentStorageAssetsRecord>]>
 
 const VIDEO_ASSETS_ORDER: (keyof VideoInputAssets)[] = ['media', 'thumbnailPhoto', 'subtitles']
@@ -164,7 +164,9 @@ export const parseVideoExtrinsicInput: ParseExtrinsicInputFn<VideoInputMetadata,
 
   const storageAssets = await prepareAssetsForExtrinsic(api, videoDataObjectsMetadata)
   const rawMetadata = wrapMetadata(ContentMetadata.encode({ videoMetadata: properties }).finish())
-  const metadata = rawMetadataProcessor ? await rawMetadataProcessor(rawMetadata, storageAssets) : rawMetadata
+  const metadata = rawMetadataProcessor
+    ? await rawMetadataProcessor(rawMetadata, storageAssets, AppActionActionType.CreateVideo)
+    : rawMetadata
 
   return [metadata, storageAssets]
 }
@@ -204,7 +206,9 @@ export const parseChannelExtrinsicInput: ParseExtrinsicInputFn<ChannelInputMetad
 
   const storageAssets = await prepareAssetsForExtrinsic(api, channelDataObjectsMetadata)
   const rawMetadata = wrapMetadata(ChannelMetadata.encode(properties).finish())
-  const metadata = rawMetadataProcessor ? await rawMetadataProcessor(rawMetadata, storageAssets) : rawMetadata
+  const metadata = rawMetadataProcessor
+    ? await rawMetadataProcessor(rawMetadata, storageAssets, AppActionActionType.CreateChannel)
+    : rawMetadata
 
   return [metadata, storageAssets]
 }

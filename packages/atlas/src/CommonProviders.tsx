@@ -7,7 +7,6 @@ import { Maintenance } from '@/Maintenance'
 import { createApolloClient } from '@/api'
 import { useGetKillSwitch } from '@/api/hooks/admin'
 import { AdminModal } from '@/components/_overlays/AdminModal'
-import { AssetsManager } from '@/providers/assets/assets.manager'
 import { OperatorsContextProvider } from '@/providers/assets/assets.provider'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
@@ -37,10 +36,7 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
                 <BrowserRouter>
                   <AdminModal />
                   <MaintenanceWrapper>
-                    <OperatorsContextProvider>
-                      <AssetsManager />
-                      {children}
-                    </OperatorsContextProvider>
+                    <OperatorsContextProvider>{children}</OperatorsContextProvider>
                   </MaintenanceWrapper>
                 </BrowserRouter>
               </ConfirmationModalProvider>

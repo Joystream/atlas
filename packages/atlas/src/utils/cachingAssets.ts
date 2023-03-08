@@ -12,6 +12,17 @@ type WriteVideoDataCacheArg = {
   client: ApolloClient<object>
 }
 
+export const modifyAssetUrlInCache = (client: ApolloClient<object>, assetId: string, assetUrl: string) => {
+  client.cache.modify({
+    id: `StorageDataObject:${assetId}`,
+    fields: {
+      resolvedUrl: (result) => {
+        return assetUrl || result
+      },
+    },
+  })
+}
+
 export const writeVideoDataInCache = ({ edge, client }: WriteVideoDataCacheArg) => {
   const video = client.cache.writeFragment({
     id: `Video:${edge.node.id}`,

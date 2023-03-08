@@ -9,8 +9,6 @@ import {
 import { createType } from '@joystream/types'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
-import { Bytes, Option } from '@polkadot/types'
-import { PalletContentStorageAssetsRecord } from '@polkadot/types/lookup'
 import BN from 'bn.js'
 import Long from 'long'
 
@@ -54,6 +52,7 @@ import {
   NftIssuanceInputMetadata,
   NftSaleInputMetadata,
   NftSaleType,
+  RawMetadataProcessorFn,
   SendExtrinsicResult,
   StringifiedNumber,
   TxMethodName,
@@ -197,10 +196,7 @@ export class JoystreamLibExtrinsics {
     inputBuckets: ChannelInputBuckets,
     expectedDataObjectStateBloatBond: StringifiedNumber,
     expectedChannelStateBloatBond: StringifiedNumber,
-    rawMetadataProcessor?: (
-      rawMeta: Option<Bytes>,
-      assets: Option<PalletContentStorageAssetsRecord>
-    ) => Promise<Option<Bytes>>
+    rawMetadataProcessor?: RawMetadataProcessorFn
   ) => {
     await this.ensureApi()
 
@@ -344,10 +340,7 @@ export class JoystreamLibExtrinsics {
     expectedDataObjectStateBloatBond: StringifiedNumber,
     expectedVideoStateBloatBond: StringifiedNumber,
     expectedStorageBucketsCount: StringifiedNumber,
-    rawMetadataProcessor?: (
-      rawMeta: Option<Bytes>,
-      assets: Option<PalletContentStorageAssetsRecord>
-    ) => Promise<Option<Bytes>>
+    rawMetadataProcessor?: RawMetadataProcessorFn
   ) => {
     await this.ensureApi()
 

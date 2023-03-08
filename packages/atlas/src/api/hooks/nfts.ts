@@ -1,6 +1,5 @@
 import { QueryHookOptions } from '@apollo/client'
 import BN from 'bn.js'
-import { useMemo } from 'react'
 
 import {
   BasicBidFieldsFragment,
@@ -21,7 +20,9 @@ import {
   GetNftHistoryQueryVariables,
   useGetNftHistoryQuery,
 } from '@/api/queries/__generated__/notifications.generated'
-import { nftFilter } from '@/config/contentFilter'
+import { createVideoWhereObjectWithFilters } from '@/config/contentFilter'
+
+import { OwnedNftWhereInput } from '../queries/__generated__/baseTypes.generated'
 
 type CommonNftProperties = {
   title: string | null | undefined
@@ -64,11 +65,11 @@ export const getNftStatus = (
   const commonProperties = {
     title: video?.title,
     duration: video?.duration,
-    views: video?.views,
+    views: video?.viewsNum,
   }
 
-  if (nft?.transactionalStatusAuction) {
-    const auction = nft.transactionalStatusAuction
+  if (nft?.transactionalStatus && nft.transactionalStatus.__typename === 'TransactionalStatusAuction') {
+    const auction = nft.transactionalStatus.auction
     const englishAuction = auction.auctionType.__typename === 'AuctionTypeEnglish' && auction.auctionType
     const openAuction = auction.auctionType.__typename === 'AuctionTypeOpen' && auction.auctionType
     return {
@@ -84,7 +85,7 @@ export const getNftStatus = (
       auctionPlannedEndBlock: englishAuction ? englishAuction.plannedEndAtBlock : undefined,
       bidLockingTime: openAuction ? openAuction.bidLockDuration : undefined,
       minimalBidStep: englishAuction ? new BN(englishAuction.minimalBidStep) : undefined,
-      whitelistedMembers: auction.whitelistedMembers,
+      whitelistedMembers: auction.whitelistedMembers.map((whiteListed) => whiteListed.member),
     }
   }
 
@@ -112,7 +113,7 @@ export const getNftStatus = (
 
 export const useNft = (id: string, opts?: QueryHookOptions<GetNftQuery, GetNftQueryVariables>) => {
   const { data, ...rest } = useGetNftQuery({ variables: { id }, skip: !id, ...opts })
-  const nft = data?.ownedNftByUniqueInput
+  const nft = data?.ownedNftById
 
   return {
     nft,
@@ -120,15 +121,37 @@ export const useNft = (id: string, opts?: QueryHookOptions<GetNftQuery, GetNftQu
     ...rest,
   }
 }
-
 export const useNftsConnection = (
   variables?: GetNftsConnectionQueryVariables,
   opts?: QueryHookOptions<GetNftsConnectionQuery, GetNftsConnectionQueryVariables>
 ) => {
+  const getWhereVariables = (): OwnedNftWhereInput => {
+    if (variables?.where?.OR?.length) {
+      const { OR, ...whereWithoutOr } = variables.where
+      return {
+        OR: variables.where.OR.map((orVariable) => ({
+          ...orVariable,
+          ...whereWithoutOr,
+          video: createVideoWhereObjectWithFilters({
+            ...whereWithoutOr.video,
+            ...orVariable.video,
+          }),
+        })),
+      }
+    } else {
+      return {
+        ...variables?.where,
+        video: createVideoWhereObjectWithFilters(variables?.where?.video),
+      }
+    }
+  }
+
   const { data, ...rest } = useGetNftsConnectionQuery({
     variables: {
       ...variables,
-      where: { ...variables?.where, ...(nftFilter ? nftFilter : {}) },
+      where: {
+        ...getWhereVariables(),
+      },
     },
     ...opts,
   })
@@ -147,30 +170,8 @@ export const useNftHistory = (
 ) => {
   const { data, ...rest } = useGetNftHistoryQuery({ variables: { nftId: id || '' }, skip: !id, ...opts })
 
-  const sortedEvents = useMemo(() => {
-    const allEvents = data
-      ? [
-          ...data.nftIssuedEvents,
-          ...data.openAuctionStartedEvents,
-          ...data.englishAuctionStartedEvents,
-          ...data.nftSellOrderMadeEvents,
-          ...data.auctionBidMadeEvents,
-          ...data.bidMadeCompletingAuctionEvents,
-          ...data.nftBoughtEvents,
-          ...data.englishAuctionSettledEvents,
-          ...data.openAuctionBidAcceptedEvents,
-          ...data.auctionBidCanceledEvents,
-          ...data.auctionCanceledEvents,
-          ...data.buyNowCanceledEvents,
-          ...data.buyNowPriceUpdatedEvents,
-        ]
-      : []
-
-    return allEvents.sort((e1, e2) => e2.createdAt.getTime() - e1.createdAt.getTime())
-  }, [data])
-
   return {
-    events: sortedEvents,
+    events: data?.nftHistoryEntries.map((entry) => entry.event),
     ...rest,
   }
 }

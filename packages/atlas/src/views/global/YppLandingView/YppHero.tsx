@@ -72,7 +72,9 @@ export const YppHero: FC<YppHeroProps> = ({
 
   const { channels, loading } = useGetYppLastVerifiedChannels()
   const items = !loading
-    ? channels?.map((channel) => <ChannelCard key={channel.id} channel={channel} withFollowButton={false} />)
+    ? channels?.map((extendedChannels) => (
+        <ChannelCard key={extendedChannels.channel.id} channel={extendedChannels.channel} withFollowButton={false} />
+      ))
     : Array.from({ length: 30 }).map((_, idx) => <ChannelCard key={idx} loading withFollowButton={false} />)
 
   return (

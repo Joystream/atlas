@@ -10,7 +10,7 @@ import { NotificationsWidget } from '@/components/_notifications/NotificationsWi
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
@@ -23,7 +23,7 @@ type StudioTopbarProps = {
 }
 
 export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembershipLoaded }) => {
-  const { channelId, activeMembership, signIn } = useUser()
+  const { channelId, activeMembership, signIn, isAuthLoading } = useUser()
   const mdMatch = useMediaMatch('md')
   const hasAtLeastOneChannel = !!activeMembership?.channels.length && activeMembership?.channels.length >= 1
 
@@ -31,7 +31,8 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
 
   const currentChannel = activeMembership?.channels.find((channel) => channel.id === channelId)
 
-  const { url: channelAvatarUrl, isLoadingAsset: channelAvatarLoading } = useAsset(currentChannel?.avatarPhoto)
+  const channelAvatarUrl = currentChannel?.avatarPhoto?.resolvedUrl
+
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
 
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
@@ -56,7 +57,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
           loading: memberAvatarLoading,
           onClick: handleDrawerToggle,
         },
-        { url: channelAvatarUrl, loading: channelAvatarLoading, onClick: handleDrawerToggle },
+        { url: channelAvatarUrl, loading: isAuthLoading, onClick: handleDrawerToggle },
       ]
     : [{ url: memberAvatarUrl, loading: memberAvatarLoading, onClick: handleDrawerToggle }]
 

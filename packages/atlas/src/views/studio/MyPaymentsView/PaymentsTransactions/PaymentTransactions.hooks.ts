@@ -8,6 +8,7 @@ import { useJoystream } from '@/providers/joystream/joystream.hooks'
 
 import { mapEventToPaymentHistoryFactory } from './PaymentTransactions.utils'
 
+//! WARNING todo needs to be rewritten with orion v2
 export const useChannelPaymentsHistory = (channel?: GetFullChannelsQuery['channels'][number]) => {
   const { joystream } = useJoystream()
   const [paymentData, setPaymentData] = useState<PaymentHistory[]>([])

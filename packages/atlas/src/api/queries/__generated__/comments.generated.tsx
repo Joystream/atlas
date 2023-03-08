@@ -6,17 +6,16 @@ import { CommentFieldsFragmentDoc } from './fragments.generated'
 
 const defaultOptions = {} as const
 export type GetCommentQueryVariables = Types.Exact<{
-  commentId: Types.Scalars['ID']
+  commentId: Types.Scalars['String']
 }>
 
 export type GetCommentQuery = {
   __typename?: 'Query'
-  commentByUniqueInput?: {
+  commentById?: {
     __typename?: 'Comment'
     id: string
     createdAt: Date
     isEdited: boolean
-    parentCommentId?: string | null
     repliesCount: number
     text: string
     status: Types.CommentStatus
@@ -24,53 +23,54 @@ export type GetCommentQuery = {
       __typename?: 'Membership'
       id: string
       handle: string
-      metadata: {
+      metadata?: {
         __typename?: 'MemberMetadata'
         about?: string | null
         avatar?:
           | {
               __typename?: 'AvatarObject'
-              avatarObject?: {
+              avatarObject: {
                 __typename?: 'StorageDataObject'
                 id: string
+                resolvedUrl?: string | null
                 createdAt: Date
                 size: string
                 isAccepted: boolean
                 ipfsHash: string
                 storageBag: { __typename?: 'StorageBag'; id: string }
-                type:
+                type?:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                  | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
-              } | null
+                  | null
+              }
             }
           | { __typename?: 'AvatarUri'; avatarUri: string }
           | null
-      }
+      } | null
     }
-    reactionsCountByReactionId: Array<{
+    reactionsCountByReactionId?: Array<{
       __typename?: 'CommentReactionsCountByReactionId'
-      id: string
       count: number
       reactionId: number
-    }>
+    }> | null
+    parentComment?: { __typename?: 'Comment'; id: string } | null
   } | null
 }
 
 export type GetCommentRepliesConnectionQueryVariables = Types.Exact<{
   first?: Types.InputMaybe<Types.Scalars['Int']>
   after?: Types.InputMaybe<Types.Scalars['String']>
-  parentCommentId: Types.Scalars['ID']
+  parentCommentId: Types.Scalars['String']
   orderBy?: Types.InputMaybe<Array<Types.CommentOrderByInput> | Types.CommentOrderByInput>
 }>
 
 export type GetCommentRepliesConnectionQuery = {
   __typename?: 'Query'
   commentsConnection: {
-    __typename?: 'CommentConnection'
+    __typename?: 'CommentsConnection'
     totalCount: number
     edges: Array<{
       __typename?: 'CommentEdge'
@@ -80,7 +80,6 @@ export type GetCommentRepliesConnectionQuery = {
         id: string
         createdAt: Date
         isEdited: boolean
-        parentCommentId?: string | null
         repliesCount: number
         text: string
         status: Types.CommentStatus
@@ -88,50 +87,51 @@ export type GetCommentRepliesConnectionQuery = {
           __typename?: 'Membership'
           id: string
           handle: string
-          metadata: {
+          metadata?: {
             __typename?: 'MemberMetadata'
             about?: string | null
             avatar?:
               | {
                   __typename?: 'AvatarObject'
-                  avatarObject?: {
+                  avatarObject: {
                     __typename?: 'StorageDataObject'
                     id: string
+                    resolvedUrl?: string | null
                     createdAt: Date
                     size: string
                     isAccepted: boolean
                     ipfsHash: string
                     storageBag: { __typename?: 'StorageBag'; id: string }
-                    type:
+                    type?:
                       | { __typename: 'DataObjectTypeChannelAvatar' }
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                      | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
                       | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
-                  } | null
+                      | null
+                  }
                 }
               | { __typename?: 'AvatarUri'; avatarUri: string }
               | null
-          }
+          } | null
         }
-        reactionsCountByReactionId: Array<{
+        reactionsCountByReactionId?: Array<{
           __typename?: 'CommentReactionsCountByReactionId'
-          id: string
           count: number
           reactionId: number
-        }>
+        }> | null
+        parentComment?: { __typename?: 'Comment'; id: string } | null
       }
     }>
-    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: string | null }
+    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor: string }
   }
 }
 
 export type GetUserCommentsAndVideoCommentsConnectionQueryVariables = Types.Exact<{
   first?: Types.InputMaybe<Types.Scalars['Int']>
   after?: Types.InputMaybe<Types.Scalars['String']>
-  memberId?: Types.InputMaybe<Types.Scalars['ID']>
-  videoId?: Types.InputMaybe<Types.Scalars['ID']>
+  memberId?: Types.InputMaybe<Types.Scalars['String']>
+  videoId?: Types.InputMaybe<Types.Scalars['String']>
   orderBy?: Types.InputMaybe<Array<Types.CommentOrderByInput> | Types.CommentOrderByInput>
 }>
 
@@ -142,7 +142,6 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
     id: string
     createdAt: Date
     isEdited: boolean
-    parentCommentId?: string | null
     repliesCount: number
     text: string
     status: Types.CommentStatus
@@ -150,42 +149,43 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
       __typename?: 'Membership'
       id: string
       handle: string
-      metadata: {
+      metadata?: {
         __typename?: 'MemberMetadata'
         about?: string | null
         avatar?:
           | {
               __typename?: 'AvatarObject'
-              avatarObject?: {
+              avatarObject: {
                 __typename?: 'StorageDataObject'
                 id: string
+                resolvedUrl?: string | null
                 createdAt: Date
                 size: string
                 isAccepted: boolean
                 ipfsHash: string
                 storageBag: { __typename?: 'StorageBag'; id: string }
-                type:
+                type?:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                  | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
-              } | null
+                  | null
+              }
             }
           | { __typename?: 'AvatarUri'; avatarUri: string }
           | null
-      }
+      } | null
     }
-    reactionsCountByReactionId: Array<{
+    reactionsCountByReactionId?: Array<{
       __typename?: 'CommentReactionsCountByReactionId'
-      id: string
       count: number
       reactionId: number
-    }>
+    }> | null
+    parentComment?: { __typename?: 'Comment'; id: string } | null
   }>
   videoCommentsConnection: {
-    __typename?: 'CommentConnection'
+    __typename?: 'CommentsConnection'
     totalCount: number
     edges: Array<{
       __typename?: 'CommentEdge'
@@ -195,7 +195,6 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
         id: string
         createdAt: Date
         isEdited: boolean
-        parentCommentId?: string | null
         repliesCount: number
         text: string
         status: Types.CommentStatus
@@ -203,73 +202,93 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
           __typename?: 'Membership'
           id: string
           handle: string
-          metadata: {
+          metadata?: {
             __typename?: 'MemberMetadata'
             about?: string | null
             avatar?:
               | {
                   __typename?: 'AvatarObject'
-                  avatarObject?: {
+                  avatarObject: {
                     __typename?: 'StorageDataObject'
                     id: string
+                    resolvedUrl?: string | null
                     createdAt: Date
                     size: string
                     isAccepted: boolean
                     ipfsHash: string
                     storageBag: { __typename?: 'StorageBag'; id: string }
-                    type:
+                    type?:
                       | { __typename: 'DataObjectTypeChannelAvatar' }
                       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                      | { __typename: 'DataObjectTypeUnknown' }
                       | { __typename: 'DataObjectTypeVideoMedia' }
                       | { __typename: 'DataObjectTypeVideoSubtitle' }
                       | { __typename: 'DataObjectTypeVideoThumbnail' }
-                  } | null
+                      | null
+                  }
                 }
               | { __typename?: 'AvatarUri'; avatarUri: string }
               | null
-          }
+          } | null
         }
-        reactionsCountByReactionId: Array<{
+        reactionsCountByReactionId?: Array<{
           __typename?: 'CommentReactionsCountByReactionId'
-          id: string
           count: number
           reactionId: number
-        }>
+        }> | null
+        parentComment?: { __typename?: 'Comment'; id: string } | null
       }
     }>
-    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: string | null }
+    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor: string }
   }
 }
 
 export type GetUserCommentsReactionsQueryVariables = Types.Exact<{
-  memberId: Types.Scalars['ID']
-  videoId: Types.Scalars['ID']
+  memberId: Types.Scalars['String']
+  videoId: Types.Scalars['String']
 }>
 
 export type GetUserCommentsReactionsQuery = {
   __typename?: 'Query'
-  commentReactions: Array<{ __typename?: 'CommentReaction'; reactionId: number; commentId: string }>
+  commentReactions: Array<{
+    __typename?: 'CommentReaction'
+    reactionId: number
+    comment: { __typename?: 'Comment'; id: string }
+  }>
 }
 
 export type GetCommentEditsQueryVariables = Types.Exact<{
-  commentId: Types.Scalars['ID']
+  commentId: Types.Scalars['String']
 }>
 
 export type GetCommentEditsQuery = {
   __typename?: 'Query'
-  commentTextUpdatedEvents: Array<{
-    __typename?: 'CommentTextUpdatedEvent'
+  events: Array<{
+    __typename?: 'Event'
     id: string
-    createdAt: Date
-    newText: string
+    timestamp: Date
+    data:
+      | { __typename?: 'AuctionBidCanceledEventData' }
+      | { __typename?: 'AuctionBidMadeEventData' }
+      | { __typename?: 'AuctionCanceledEventData' }
+      | { __typename?: 'BidMadeCompletingAuctionEventData' }
+      | { __typename?: 'BuyNowCanceledEventData' }
+      | { __typename?: 'BuyNowPriceUpdatedEventData' }
+      | { __typename?: 'CommentCreatedEventData'; text: string }
+      | { __typename?: 'CommentTextUpdatedEventData'; newText: string }
+      | { __typename?: 'EnglishAuctionSettledEventData' }
+      | { __typename?: 'EnglishAuctionStartedEventData' }
+      | { __typename?: 'MetaprotocolTransactionStatusEventData' }
+      | { __typename?: 'NftBoughtEventData' }
+      | { __typename?: 'NftIssuedEventData' }
+      | { __typename?: 'NftSellOrderMadeEventData' }
+      | { __typename?: 'OpenAuctionBidAcceptedEventData' }
+      | { __typename?: 'OpenAuctionStartedEventData' }
   }>
-  commentCreatedEvents: Array<{ __typename?: 'CommentCreatedEvent'; id: string; createdAt: Date; text: string }>
 }
 
 export const GetCommentDocument = gql`
-  query GetComment($commentId: ID!) {
-    commentByUniqueInput(where: { id: $commentId }) {
+  query GetComment($commentId: String!) {
+    commentById(id: $commentId) {
       ...CommentFields
     }
   }
@@ -309,7 +328,7 @@ export const GetCommentRepliesConnectionDocument = gql`
   query GetCommentRepliesConnection(
     $first: Int
     $after: String
-    $parentCommentId: ID!
+    $parentCommentId: String!
     $orderBy: [CommentOrderByInput!] = [createdAt_ASC]
   ) {
     commentsConnection(
@@ -381,16 +400,18 @@ export const GetUserCommentsAndVideoCommentsConnectionDocument = gql`
   query GetUserCommentsAndVideoCommentsConnection(
     $first: Int
     $after: String
-    $memberId: ID
-    $videoId: ID
+    $memberId: String
+    $videoId: String
     $orderBy: [CommentOrderByInput!] = [createdAt_DESC]
   ) {
     userComments: comments(
       where: {
-        parentComment: { id_eq: null }
-        video: { id_eq: $videoId }
-        author: { id_eq: $memberId }
-        OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }]
+        AND: [
+          { parentComment: { id_isNull: true } }
+          { video: { id_eq: $videoId } }
+          { author: { id_eq: $memberId } }
+          { OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }] }
+        ]
       }
       orderBy: [createdAt_DESC]
     ) {
@@ -400,9 +421,11 @@ export const GetUserCommentsAndVideoCommentsConnectionDocument = gql`
       first: $first
       after: $after
       where: {
-        video: { id_eq: $videoId }
-        parentComment: { id_eq: null }
-        OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }]
+        AND: [
+          { video: { id_eq: $videoId } }
+          { parentComment: { id_isNull: true } }
+          { OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }] }
+        ]
       }
       orderBy: $orderBy
     ) {
@@ -477,10 +500,12 @@ export type GetUserCommentsAndVideoCommentsConnectionQueryResult = Apollo.QueryR
   GetUserCommentsAndVideoCommentsConnectionQueryVariables
 >
 export const GetUserCommentsReactionsDocument = gql`
-  query GetUserCommentsReactions($memberId: ID!, $videoId: ID!) {
+  query GetUserCommentsReactions($memberId: String!, $videoId: String!) {
     commentReactions(where: { member: { id_eq: $memberId }, video: { id_eq: $videoId } }, limit: 1000) {
       reactionId
-      commentId
+      comment {
+        id
+      }
     }
   }
 `
@@ -527,16 +552,25 @@ export type GetUserCommentsReactionsQueryResult = Apollo.QueryResult<
   GetUserCommentsReactionsQueryVariables
 >
 export const GetCommentEditsDocument = gql`
-  query GetCommentEdits($commentId: ID!) {
-    commentTextUpdatedEvents(where: { comment: { id_eq: $commentId } }) {
+  query GetCommentEdits($commentId: String!) {
+    events(
+      where: {
+        data: {
+          isTypeOf_in: ["CommentCreatedEventData", "CommentTextUpdatedEventData"]
+          comment: { id_eq: $commentId }
+        }
+      }
+    ) {
       id
-      createdAt
-      newText
-    }
-    commentCreatedEvents(where: { comment: { id_eq: $commentId } }) {
-      id
-      createdAt
-      text
+      timestamp
+      data {
+        ... on CommentCreatedEventData {
+          text
+        }
+        ... on CommentTextUpdatedEventData {
+          newText
+        }
+      }
     }
   }
 `

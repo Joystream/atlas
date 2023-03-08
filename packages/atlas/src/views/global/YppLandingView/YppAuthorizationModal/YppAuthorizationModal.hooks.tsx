@@ -233,11 +233,11 @@ export const useYppGoogleAuth = ({
           if (isChannelAlreadyRegistered) {
             const { data } = await client.query<GetFullChannelQuery, GetFullChannelQueryVariables>({
               query: GetFullChannelDocument,
-              variables: { where: { id: errorResponseData.result.toString() } },
+              variables: { id: errorResponseData.result.toString() },
             })
             setAlreadyRegisteredChannel({
-              channelTitle: data.channelByUniqueInput?.title || '',
-              ownerMemberHandle: data.channelByUniqueInput?.ownerMember?.handle || '',
+              channelTitle: data.channelById?.title || '',
+              ownerMemberHandle: data.channelById?.ownerMember?.handle || '',
             })
 
             onChangeStep('channel-already-registered')

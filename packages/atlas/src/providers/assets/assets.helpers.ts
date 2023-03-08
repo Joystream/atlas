@@ -48,12 +48,12 @@ export const testAssetDownload = (url: string, dataObject: StorageDataObjectFiel
       _reject()
     }
 
-    if (imageAssetTypes.includes(dataObject.type.__typename)) {
+    if (imageAssetTypes.includes(dataObject.type?.__typename)) {
       img = new Image()
       img.addEventListener('error', reject)
       img.addEventListener('load', resolve)
       img.src = url
-    } else if (videoAssetTypes.includes(dataObject.type.__typename)) {
+    } else if (videoAssetTypes.includes(dataObject.type?.__typename)) {
       video = document.createElement('video')
       video.addEventListener('error', reject)
       video.addEventListener('loadedmetadata', resolve)
