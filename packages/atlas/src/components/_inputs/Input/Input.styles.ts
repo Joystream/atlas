@@ -78,6 +78,7 @@ export const NodeContainer = styled.div<NodeContainerProps>`
 
 export const InputContainer = styled.div<{ size: InputSize }>`
   position: relative;
+  height: max-content;
   font: ${({ size }) => (size === 'large' ? cVar('typographyDesktopT300') : cVar('typographyDesktopT200'))};
   overflow: hidden;
   border-radius: 0 0 ${cVar('radiusSmall')} ${cVar('radiusSmall')};

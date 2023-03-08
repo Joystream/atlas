@@ -9,7 +9,7 @@ export const Container = styled.div<{ width: 'auto' | 'fixed' }>`
   display: flex;
   padding: ${sizes(1)};
   gap: ${sizes(1)};
-  border: 1px solid ${cVar('colorBorderMutedAlpha')};
+  box-shadow: inset 0 0 0 1px ${cVar('colorBorderMutedAlpha')};
   border-radius: ${cVar('radiusSmall')};
   max-width: ${(props) => (props.width === 'auto' ? 'fit-content' : '320px')};
 `
