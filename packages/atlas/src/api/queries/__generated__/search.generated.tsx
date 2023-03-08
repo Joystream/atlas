@@ -2,7 +2,13 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { BasicChannelFieldsFragmentDoc, BasicVideoFieldsFragmentDoc } from './fragments.generated'
+import {
+  BasicChannelFieldsFragmentDoc,
+  BasicMembershipFieldsFragmentDoc,
+  BasicVideoFieldsFragmentDoc,
+  FullChannelFieldsFragmentDoc,
+  FullVideoFieldsFragmentDoc,
+} from './fragments.generated'
 
 const defaultOptions = {} as const
 export type SearchQueryVariables = Types.Exact<{
