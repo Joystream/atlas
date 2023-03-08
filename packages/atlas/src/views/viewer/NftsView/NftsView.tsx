@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useCallback, useState } from 'react'
 
 import { useNftsConnection } from '@/api/hooks/nfts'
 import { OwnedNftOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
@@ -38,6 +38,10 @@ export const NftsView: FC = () => {
   } = filtersBarLogic
 
   const [sortBy, setSortBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
+  const [currentPage, setCurrentPage] = useState(0)
+  const [tilesPerRow, setTilesPerRow] = useState(4)
+  const nftRows = useVideoGridRows('main')
+  const tilesPerPage = nftRows * tilesPerRow
 
   const { nfts, loading, totalCount, fetchMore, pageInfo, variables } = useNftsConnection(
     {
@@ -53,7 +57,7 @@ export const NftsView: FC = () => {
             : undefined,
       },
       orderBy: sortBy,
-      first: 10,
+      first: tilesPerPage,
     },
     {
       notifyOnNetworkStatusChange: true,
@@ -61,10 +65,6 @@ export const NftsView: FC = () => {
     }
   )
 
-  const [currentPage, setCurrentPage] = useState(0)
-  const [tilesPerRow, setTilesPerRow] = useState(4)
-  const nftRows = useVideoGridRows('main')
-  const tilesPerPage = nftRows * tilesPerRow
   const handleResizeGrid = (sizes: number[]) => setTilesPerRow(sizes.length)
 
   const displayedNfts = nfts?.slice(currentPage * tilesPerPage, currentPage * tilesPerPage + tilesPerPage)
@@ -78,20 +78,25 @@ export const NftsView: FC = () => {
 
   const nftsWithPlaceholders = [...(displayedNfts || []), ...placeholderItems]
 
-  useEffect(() => {
-    if (!fetchMore || !nfts?.length || !totalCount) {
-      return
-    }
-    if (totalCount <= nfts.length) {
-      return
-    }
+  const checkForRefetch = useCallback(
+    async (pageToCheck: number) => {
+      if (!fetchMore || !nfts?.length || !totalCount) {
+        return
+      }
+      if (totalCount <= nfts.length) {
+        return
+      }
 
-    if (currentPage * tilesPerPage + tilesPerPage > nfts.length) {
-      fetchMore({
-        variables: { ...variables, after: pageInfo?.endCursor },
-      })
-    }
-  }, [currentPage, nfts, fetchMore, pageInfo, totalCount, variables, tilesPerPage])
+      const dataNeededForPage = pageToCheck * tilesPerPage + tilesPerPage
+
+      if (dataNeededForPage > nfts.length) {
+        fetchMore({
+          variables: { ...variables, after: pageInfo?.endCursor, first: dataNeededForPage - nfts.length },
+        })
+      }
+    },
+    [fetchMore, nfts?.length, totalCount, tilesPerPage, variables, pageInfo?.endCursor]
+  )
 
   const handleSortingChange = (value?: OwnedNftOrderByInput | null) => {
     if (value) {
@@ -104,6 +109,7 @@ export const NftsView: FC = () => {
   }
 
   const handleChangePage = (page: number) => {
+    checkForRefetch(page)
     setCurrentPage(page)
   }
 
