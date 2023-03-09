@@ -3564,8 +3564,8 @@ __metadata:
     "@graphql-codegen/typescript-react-apollo": ^3.3.7
     "@hcaptcha/react-hcaptcha": ^1.4.4
     "@hookform/resolvers": ^2.9.10
-    "@joystream/js": ^1.2.0
-    "@joystream/metadata-protobuf": 2.5.0
+    "@joystream/js": ^1.4.0
+    "@joystream/metadata-protobuf": 2.8.1
     "@joystream/prettier-config": ^1.0.0
     "@joystream/types": 0.20.5
     "@livesession/sdk": ^1.1.4
@@ -3666,12 +3666,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@joystream/js@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "@joystream/js@npm:1.2.0"
+"@joystream/js@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "@joystream/js@npm:1.4.0"
   dependencies:
-    "@joystream/metadata-protobuf": ^2.6.0
-    "@joystream/types": ~0.20.5
+    "@joystream/metadata-protobuf": ^2.8.1
+    "@joystream/types": ^2.0.0
     "@polkadot/util-crypto": 9.5.1
     axios: ^1.2.1
     buffer: ^6.0.3
@@ -3679,13 +3679,13 @@ __metadata:
     long: ^5.2.1
     merkletreejs: ^0.3.9
     protobufjs: ^6.11.3
-  checksum: d0762fc60c4f4ffe0a6804140fd2516b5b04beccd028f75cd16ba9e7c44658263f4fe6dc85ddf237c83f14445ed0b6d8d2f5c7b4f4efb457fd18a877376ed4a3
+  checksum: b4a64a58529dbaa38b54f1be208e6e8e90a40a548375fa0a534ca8af1815ed35d09b6689170ba24f5d212085235d9d34452ec92f5edd0cedea50f62842797d6e
   languageName: node
   linkType: hard
 
-"@joystream/metadata-protobuf@npm:2.5.0":
-  version: 2.5.0
-  resolution: "@joystream/metadata-protobuf@npm:2.5.0"
+"@joystream/metadata-protobuf@npm:2.8.1, @joystream/metadata-protobuf@npm:^2.8.1":
+  version: 2.8.1
+  resolution: "@joystream/metadata-protobuf@npm:2.8.1"
   dependencies:
     "@types/iso-3166-2": ^1.0.0
     "@types/long": ^4.0.1
@@ -3695,23 +3695,7 @@ __metadata:
     iso-639-1: ^2.1.9
     long: ^4.0.0
     protobufjs: ^6.11.2
-  checksum: 53de3dc620f5062441cb8c409a3b469d066663a40cf372dddb8ea9a6628e7f789bfea73d9cd53d9aa54035481ef66af9520e3761d54a10877c0d8f7543fdec8e
-  languageName: node
-  linkType: hard
-
-"@joystream/metadata-protobuf@npm:^2.6.0":
-  version: 2.6.0
-  resolution: "@joystream/metadata-protobuf@npm:2.6.0"
-  dependencies:
-    "@types/iso-3166-2": ^1.0.0
-    "@types/long": ^4.0.1
-    google-protobuf: ^3.14.0
-    i18n-iso-countries: ^6.8.0
-    iso-3166-2: ^1.0.0
-    iso-639-1: ^2.1.9
-    long: ^4.0.0
-    protobufjs: ^6.11.2
-  checksum: 96410a3da39765342b191997b8e0c047b94bb6061be5f1e9b1db736582e741d37ea5e9f307ac094797d92cba07ee09db94dc50a25919fdd09d1a7f92accefde9
+  checksum: 914ca2c049d1d5720f5cf9e587c27c54913bc2f75a489839b72a29932c18436cc54d902e405da76ff73d5f54b12b4d6dce07e4f8571b568ff53332022eb97a34
   languageName: node
   linkType: hard
 
@@ -3724,7 +3708,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@joystream/types@npm:0.20.5, @joystream/types@npm:~0.20.5":
+"@joystream/types@npm:0.20.5":
   version: 0.20.5
   resolution: "@joystream/types@npm:0.20.5"
   dependencies:
@@ -3737,6 +3721,22 @@ __metadata:
     lodash: ^4.17.15
     moment: ^2.24.0
   checksum: a3e310f358d7aa6d51a39d639f6ceec5052959abd38bc3ef34339a3c411ea91647d4fe50d09361d2aecd7d254da5d90b774e44dc67656cf1a5cd72aa89b0ba7b
+  languageName: node
+  linkType: hard
+
+"@joystream/types@npm:^2.0.0":
+  version: 2.1.0
+  resolution: "@joystream/types@npm:2.1.0"
+  dependencies:
+    "@polkadot/api": 8.9.1
+    "@polkadot/keyring": 9.5.1
+    "@polkadot/types": 8.9.1
+    "@types/lodash": ^4.14.157
+    "@types/vfile": ^4.0.0
+    ajv: ^6.11.0
+    lodash: ^4.17.15
+    moment: ^2.24.0
+  checksum: 22411d5715b0f510f21cefbbdba45a91e180744e1c53961fef043026dd6193e9412e91bf0394875cfef325c50e63836c956c898a225223f5f064bfc017108cf4
   languageName: node
   linkType: hard
 

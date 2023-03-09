@@ -38,6 +38,7 @@ export type DialogProps = PropsWithChildren<{
   contentClassName?: string
   contentRef?: Ref<HTMLDivElement>
   fee?: BN
+  stretchButtons?: boolean
 }>
 
 export const Dialog: FC<DialogProps> = ({
@@ -57,6 +58,7 @@ export const Dialog: FC<DialogProps> = ({
   contentClassName,
   contentRef,
   fee,
+  stretchButtons = false,
 }) => {
   const isCompact = size === 'compact'
   const smMatch = useMediaMatch('sm')
@@ -100,7 +102,10 @@ export const Dialog: FC<DialogProps> = ({
         >
           {fee !== undefined && <Fee amount={fee} variant="h200" color="colorTextStrong" />}
           {additionalActionsNode}
-          <FooterButtonsContainer additionalActionsNodeMobilePosition={additionalActionsNodeMobilePosition}>
+          <FooterButtonsContainer
+            stretchButtons={stretchButtons}
+            additionalActionsNodeMobilePosition={additionalActionsNodeMobilePosition}
+          >
             {secondaryButton && (
               <Button variant={secondaryButton.variant || 'secondary'} size={buttonSize} fullWidth {...secondaryButton}>
                 {secondaryButton.text}

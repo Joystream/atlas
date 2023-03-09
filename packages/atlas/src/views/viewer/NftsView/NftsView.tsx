@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 
 import { useNftsConnection } from '@/api/hooks/nfts'
-import { OwnedNftOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { OwnedNftOrderByInput, OwnedNftWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionFilters } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
@@ -39,18 +39,25 @@ export const NftsView: FC = () => {
 
   const [sortBy, setSortBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
 
+  const commonVideoVariables: OwnedNftWhereInput['video'] = {
+    media: {
+      isAccepted_eq: true,
+    },
+    thumbnailPhoto: {
+      isAccepted_eq: true,
+    },
+    isPublic_eq: true,
+    channel: {
+      isPublic_eq: true,
+    },
+  }
+
   const { nfts, loading, totalCount, fetchMore, pageInfo, variables } = useNftsConnection(
     {
       where: {
         ...ownedNftWhereInput,
         createdAt_gte: videoWhereInput.createdAt_gte,
-        video:
-          videoWhereInput.hasMarketing_eq != null || videoWhereInput.isExplicit_eq != null
-            ? {
-                hasMarketing_eq: videoWhereInput.hasMarketing_eq,
-                isExplicit_eq: videoWhereInput.isExplicit_eq,
-              }
-            : undefined,
+        video: { ...videoWhereInput, ...commonVideoVariables },
       },
       orderBy: sortBy,
       first: 10,
@@ -134,7 +141,11 @@ export const NftsView: FC = () => {
           </div>
           {smMatch && sortingNode}
         </HeaderContainer>
-        <FiltersBar {...filtersBarLogic} activeFilters={['nftStatus', 'date-minted', 'other']} />
+        <FiltersBar
+          {...filtersBarLogic}
+          onAnyFilterSet={() => setCurrentPage(0)}
+          activeFilters={['nftStatus', 'date-minted', 'other']}
+        />
       </HeaderWrapper>
       <StyledGrid maxColumns={null} onResize={handleResizeGrid} isFiltersOpen={isFiltersOpen}>
         {nftsWithPlaceholders.map((nft, idx) => (

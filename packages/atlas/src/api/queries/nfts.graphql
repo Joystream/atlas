@@ -1,15 +1,19 @@
-query GetNft($id: ID!) {
-  ownedNftByUniqueInput(where: { id: $id }) {
+# CHANGE: ID is now `String`
+query GetNft($id: String!) {
+  # CHANGE: `ownedNftByUniqueInput` no longer available, replaced w/ `ownedNftById`
+  ownedNftById(id: $id) {
     ...FullNftFields
   }
 }
 
+# No changes
 query GetNfts($where: OwnedNftWhereInput, $orderBy: [OwnedNftOrderByInput!] = [createdAt_DESC]) {
   ownedNfts(where: $where, orderBy: $orderBy) {
     ...FullNftFields
   }
 }
 
+# No changes
 query GetNftsConnection(
   $where: OwnedNftWhereInput
   $orderBy: [OwnedNftOrderByInput!] = [createdAt_DESC]

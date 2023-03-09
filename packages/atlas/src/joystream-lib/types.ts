@@ -1,6 +1,9 @@
 import { IChannelMetadata, IMembershipMetadata, ISubtitleMetadata, IVideoMetadata } from '@joystream/metadata-protobuf'
 import { AugmentedEvent, AugmentedEvents } from '@polkadot/api/types/events'
-import { GenericEvent } from '@polkadot/types'
+import { Bytes, GenericEvent, Option } from '@polkadot/types'
+import { PalletContentStorageAssetsRecord } from '@polkadot/types/lookup'
+
+import { AppActionActionType } from '@/api/queries/__generated__/baseTypes.generated'
 
 import { JoystreamLibExtrinsics } from './extrinsics'
 
@@ -26,6 +29,12 @@ export type DataObjectMetadata = {
   ipfsHash: string
   id?: string
 }
+
+export type RawMetadataProcessorFn = (
+  rawMeta: Option<Bytes>,
+  assets: Option<PalletContentStorageAssetsRecord>,
+  appActionType: AppActionActionType
+) => Promise<Option<Bytes>>
 
 export type VideoAssets<T> = {
   thumbnailPhoto?: T

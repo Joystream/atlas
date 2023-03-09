@@ -21,7 +21,8 @@ export const BannerText = styled(Text)`
 `
 
 export const CloseButton = styled(Button)`
-  margin-left: ${sizes(2)};
+  margin-left: ${sizes(4)};
+  align-self: start;
 `
 
 export const BannerDescription = styled.div<{ withTitle?: boolean }>`
@@ -33,9 +34,20 @@ export const BannerDescription = styled.div<{ withTitle?: boolean }>`
   white-space: pre-line;
 `
 
-export const BannerWrapper = styled.div`
+export const BannerWrapper = styled.div<{ size: 'small' | 'medium' }>`
+  flex: 1;
   position: relative;
-  padding: ${sizes(4)};
-  box-shadow: inset 0 0 0 1px ${cVar('colorBorder')};
+  padding: ${(props) => (props.size === 'small' ? sizes(4) : sizes(6))};
   width: 100%;
+  background-color: ${cVar('colorBackgroundMutedAlpha')};
+  border-left: 2px solid ${cVar('colorBorderPrimary')};
+`
+
+export const ActionButton = styled(Button)`
+  margin-top: ${sizes(2)};
+`
+
+export const Container = styled.div`
+  display: flex;
+  justify-content: space-between;
 `

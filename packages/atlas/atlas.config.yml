@@ -98,16 +98,15 @@ features:
     legal:
       yppTnC: |
         # YouTube Partnership Program (YPP)
-        ## Key information
 
-        ### Rewards
+        ## Rewards
           - Sign up to YouTube Partnership Program: 5000 Joy
           - Refer new program subscribers: 1000 Joy
           - For every video synced from YouTube to Joystream channel: 300 Joy
 
         The tokens pool allocated for this program is limited, so the program has limited duration.
 
-        ### Tiers Multiplier
+        ## Tiers Multiplier
 
         Based on the YouTube channel followers count, a popularity Tier is assigned to each participant. Popularity tier results in multiplication effect on all rewards of the program.
 
@@ -115,14 +114,14 @@ features:
           - Tier 2 - x2.5 rewards - 5,000 to 50,000 subscribers
           - Tier 3 - x5 rewards - 50,000+ subscribers
 
-        ### Example Rewards Calculation
+        ## Example Rewards Calculation
 
         For a channel with 7000 subscribers, which signed up and remained in the program with auto-sync service enabled for 1 month. During this month that channel uploaded 5 new videos to their YouTube channel, 2 videos directly to Joystream channel with manual upload, and referred 3 other YouTube channels that ended up signing up.
 
         In the end of this month, the payout to this channel's account will be:
           5000 * 2.5 + 5 * 300 * 2.5 + 1000 * 3 * 2.5 = **23,750** JOY
 
-        ### When you accept the Terms and Conditions you
+        ## When you accept the Terms and Conditions you
 
         1. Become enrolled to the YouTube Partnership Program.
         2. Your YouTube channel information and email will be stored in the data base, operated by JS Genesis.
@@ -133,7 +132,7 @@ features:
 
         Rewards are subject to the verified status of the channel, assigned by the program operators.
 
-        # T&Cs
+        # Terms and Conditions
 
         ## Who is the program for
 
@@ -263,7 +262,7 @@ features:
     englishAuctionExtensionPeriod: 5 # Number of blocks from the auction's end during which auction will be extended if a bid is placed. See more: https://joystream.gitbook.io/testnet-workspace/system/content-directory/nft#auction-type
     statusPollingInterval: 20000 # Interval for polling NFT status on VideoView in ms
   notifications:
-    pollingInterval: 30000 # Interval for polling notifications in ms
+    pollingInterval: 10000 # Interval for polling notifications in ms
   members:
     avatarServiceUrl: '$VITE_AVATAR_SERVICE_URL' # URL for avatar service - used to upload member's avatar
     hcaptchaSiteKey: '$VITE_HCAPTCHA_SITE_KEY' # Site key for hCaptcha - used to verify users are not bots when creating memberships - depends on hCaptcha being enabled in the faucet
@@ -299,106 +298,106 @@ content:
       color: '#D92E61' # Color used in the UI for this category
       iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/science-and-technology.svg' # URL for category icon SVG
       coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/science-and-technology.webp' # URL for category cover image
-      videoCategories: ['254418-2'] # List of metaprotocol category IDs that should be included in this display category
-      defaultVideoCategory: '254418-2'
+      videoCategories: ['848-2'] # List of metaprotocol category IDs that should be included in this display category
+      defaultVideoCategory: '848-2'
     - id: '2'
       name: 'Pets & Animals'
       color: '#E7BE2D'
       iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/pets-and-animals.svg'
       coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/pets-and-animals.webp'
-      videoCategories: ['254419-2']
-      defaultVideoCategory: '254419-2'
+      videoCategories: ['893-2']
+      defaultVideoCategory: '893-2'
     - id: '3'
       name: 'Film & Animation'
       color: '#BD4BE4'
       iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/film-and-animation.svg'
       coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/film-and-animation.webp'
-      videoCategories: ['254420-2']
-      defaultVideoCategory: '254420-2'
+      videoCategories: ['888-2']
+      defaultVideoCategory: '888-2'
     - id: '4'
       name: 'People & Blogs'
       color: '#BDE933'
       iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/people-and-blogs.svg'
       coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/people-and-blogs.webp'
-      videoCategories: ['254421-2']
-      defaultVideoCategory: '254421-2'
+      videoCategories: ['883-2']
+      defaultVideoCategory: '883-2'
     - id: '5'
       name: 'Entertainment'
       color: '#54A7F0'
       iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/entertainment.svg'
       coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/entertainment.webp'
-      videoCategories: ['254422-2']
-      defaultVideoCategory: '254422-2'
+      videoCategories: ['878-2']
+      defaultVideoCategory: '878-2'
     - id: '6'
       name: 'Education'
       color: '#DD379D'
       iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/education.svg'
       coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/education.webp'
-      videoCategories: ['254423-2']
-      defaultVideoCategory: '254423-2'
+      videoCategories: ['873-2']
+      defaultVideoCategory: '873-2'
     - id: '7'
       name: 'Travel & Events'
       color: '#5A7AEE'
       iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/travel-and-events.svg'
       coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/travel-and-events.webp'
-      videoCategories: ['254424-2']
-      defaultVideoCategory: '254424-2'
+      videoCategories: ['868-2']
+      defaultVideoCategory: '868-2'
     - id: '8'
       name: 'Sports'
       color: '#41EE5A'
       iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/sports.svg'
       coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/sports.webp'
-      videoCategories: ['254425-2']
-      defaultVideoCategory: '254425-2'
+      videoCategories: ['864-2']
+      defaultVideoCategory: '864-2'
     - id: '9'
       name: 'Gaming'
       color: '#9455E8'
       iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/gaming.svg'
       coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/gaming.webp'
-      videoCategories: ['254426-2']
-      defaultVideoCategory: '254426-2'
+      videoCategories: ['860-2']
+      defaultVideoCategory: '860-2'
     - id: '10'
       name: 'Comedy'
       color: '#4FE1F2'
       iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/comedy.svg'
       coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/comedy.webp'
-      videoCategories: ['254427-2']
-      defaultVideoCategory: '254427-2'
+      videoCategories: ['856-2']
+      defaultVideoCategory: '856-2'
     - id: '11'
       name: 'Autos & Vehicles'
       color: '#6E5FEC'
       iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/autos-and-vehicles.svg'
       coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/autos-and-vehicles.webp'
-      videoCategories: ['254428-2']
-      defaultVideoCategory: '254428-2'
+      videoCategories: ['852-2']
+      defaultVideoCategory: '852-2'
     - id: '12'
       name: 'Howto & Style'
       color: '#E57827'
       iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/howto-and-style.svg'
       coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/howto-and-style.webp'
-      videoCategories: ['254429-2']
-      defaultVideoCategory: '254429-2'
+      videoCategories: ['898-2']
+      defaultVideoCategory: '898-2'
     - id: '13'
       name: 'Music'
       color: '#6EEC3A'
       iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/music.svg'
       coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/music.webp'
-      videoCategories: ['254430-2']
-      defaultVideoCategory: '254430-2'
+      videoCategories: ['905-2']
+      defaultVideoCategory: '905-2'
     - id: '14'
       name: 'Nonprofits & Activism'
       color: '#E141D6'
       iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/nonprofits-and-activism.svg'
       coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/nonprofit-and-activism.webp'
-      videoCategories: ['254431-2']
-      defaultVideoCategory: '254431-2'
+      videoCategories: ['910-2']
+      defaultVideoCategory: '910-2'
     - id: '15'
       name: 'News & Politics'
       color: '#48F0B3'
       iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/icons/news-and-politics.svg'
       coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/news-and-politics.webp'
-      videoCategories: ['254432-2']
-      defaultVideoCategory: '254432-2'
+      videoCategories: ['915-2']
+      defaultVideoCategory: '915-2'
   showAllContent: true # With this disabled, Atlas will display only content from display categories defined above. If you want your app to display all Joystream content, set this to true.
 
   languages: # List of languages to be used in the app. Those will be used when setting video's language, for adding subtitles, etc.

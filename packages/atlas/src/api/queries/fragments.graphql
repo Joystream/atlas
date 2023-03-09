@@ -1,17 +1,20 @@
-fragment VideoCategoryFields on VideoCategory {
-  id
-  name
-  activeVideosCounter
+# CHANGE: Replacement for `VideoCategoryFields` in order to include `activeVideosCount` (which is no longer a `Category` field)
+fragment ExtendedVideoCategoryFields on ExtendedVideoCategory {
+  category {
+    id
+    name
+  }
+  activeVideosCount
 }
+
 fragment BasicChannelFields on Channel {
   id
   title
   description
   createdAt
-  follows
+  followsNum # CHANGE: Instead of `follows` (which is now a One-to-Many field)
   rewardAccount
   channelStateBloatBond
-
   avatarPhoto {
     ...StorageDataObjectFields
   }
@@ -19,16 +22,12 @@ fragment BasicChannelFields on Channel {
 
 fragment FullChannelFields on Channel {
   ...BasicChannelFields
-  views
-  activeVideosCounter
+  videoViewsNum # CHANGE: Instead of `views`
   description
   isPublic
-  isCensored
   cumulativeRewardClaimed
-  language {
-    id
-    iso
-  }
+  isCensored
+  language # CHANGE: Language is no longer a separate entity
   ownerMember {
     ...BasicMembershipFields
   }
@@ -37,6 +36,23 @@ fragment FullChannelFields on Channel {
   }
 }
 
+# CHANGE: This is a replacement for `FullChannelFields` + `activeVideosCount`
+fragment ExtendedFullChannelFields on ExtendedChannel {
+  channel {
+    ...FullChannelFields
+  }
+  activeVideosCount
+}
+
+# CHANGE: This is a replacement for `BasicChannelFields` + `activeVideosCount`
+fragment ExtendedBasicChannelFields on ExtendedChannel {
+  channel {
+    ...BasicChannelFields
+  }
+  activeVideosCount
+}
+
+# No changes
 fragment BasicMembershipFields on Membership {
   id
   handle
@@ -55,6 +71,7 @@ fragment BasicMembershipFields on Membership {
   }
 }
 
+# No changes
 fragment FullMembershipFields on Membership {
   ...BasicMembershipFields
   controllerAccount
@@ -69,8 +86,10 @@ fragment FullMembershipFields on Membership {
   }
 }
 
+# No changes
 fragment StorageDataObjectFields on StorageDataObject {
   id
+  resolvedUrl
   createdAt
   size
   isAccepted
@@ -83,6 +102,7 @@ fragment StorageDataObjectFields on StorageDataObject {
   }
 }
 
+# No changes
 fragment DistributionBucketOperatorField on DistributionBucketOperator {
   id
   metadata {
@@ -96,12 +116,15 @@ fragment DistributionBucketOperatorField on DistributionBucketOperator {
   }
   status
 }
+
+# No changes
 fragment VideoMediaMetadataFields on VideoMediaMetadata {
   id
   pixelHeight
   pixelWidth
 }
 
+# No changes
 fragment LicenseFields on License {
   id
   code
@@ -111,22 +134,19 @@ fragment LicenseFields on License {
 
 fragment SubtitlesFields on VideoSubtitle {
   id
-  language {
-    id
-    iso
-  }
+  language # CHANGE: Language is no longer a separate entity
   asset {
     ...StorageDataObjectFields
   }
   mimeType
   type
-  assetId
+  # CHANGE: `assetId` is no longer available, use `asset.id` instead
 }
 
 fragment BasicVideoFields on Video {
   id
   title
-  views
+  viewsNum # CHANGE: Instead of `views` (which is now a One-to-Many field)
   createdAt
   duration
   reactionsCount
@@ -145,19 +165,23 @@ fragment BasicVideoFields on Video {
 fragment FullVideoFields on Video {
   id
   title
+  ytVideoId
   description
   reactionsCount
   reactions {
     id
     createdAt
     reaction
-    memberId
+    member {
+      # CHANGE: `memberId` is no longer available, use `member.id` instead
+      id
+    }
   }
   category {
     id
     name
   }
-  views
+  viewsNum # CHANGE: Instead of `views` (which is now a One-to-Many field)
   duration
   createdAt
   isPublic
@@ -166,9 +190,7 @@ fragment FullVideoFields on Video {
   isCensored
   isCommentSectionEnabled
   commentsCount
-  language {
-    iso
-  }
+  language # CHANGE: Language is no longer a separate entity
   publishedBeforeJoystream
   mediaMetadata {
     ...VideoMediaMetadataFields
@@ -180,6 +202,7 @@ fragment FullVideoFields on Video {
     ...StorageDataObjectFields
   }
   channel {
+    # CHANGE: Note `channel.activeVideosCount` is no longer available here, but it doesn't seem to be used in this context anyway
     ...FullChannelFields
   }
   license {
@@ -199,66 +222,79 @@ fragment BasicNftFields on OwnedNft {
   creatorRoyalty
   lastSaleDate
   lastSalePrice
-  isOwnedByChannel
-  ownerMember {
-    ...BasicMembershipFields
-  }
-  transactionalStatusAuction {
-    id
-    auctionType {
-      __typename
-      ... on AuctionTypeEnglish {
-        duration
-        extensionPeriod
-        minimalBidStep
-        plannedEndAtBlock
-      }
-      ... on AuctionTypeOpen {
-        bidLockDuration
+  owner {
+    # CHANGE: Replacement for `isOwnedByChannel` and `ownerMember` fields
+    __typename
+    ... on NftOwnerChannel {
+      channel {
+        ...BasicChannelFields
+        ownerMember {
+          ...BasicMembershipFields
+        }
       }
     }
-    isCompleted
-    initialOwner {
-      ...BasicMembershipFields
-    }
-    buyNowPrice
-    startingPrice
-
-    startsAtBlock
-    endedAtBlock
-
-    topBid {
-      ...BasicBidFields
-    }
-    bids {
-      ...BasicBidFields
-    }
-
-    whitelistedMembers {
-      ...BasicMembershipFields
+    ... on NftOwnerMember {
+      member {
+        ...BasicMembershipFields
+      }
     }
   }
   transactionalStatus {
+    # CHANGE: Replacement for `transactionalStatusAuction`+`transactionalStatus`
     __typename
-    ... on TransactionalStatusIdle {
-      dummy
-    }
     ... on TransactionalStatusBuyNow {
       price
+    }
+    ... on TransactionalStatusAuction {
+      auction {
+        id
+        auctionType {
+          __typename
+          ... on AuctionTypeEnglish {
+            duration
+            extensionPeriod
+            minimalBidStep
+            plannedEndAtBlock
+          }
+          ... on AuctionTypeOpen {
+            bidLockDuration
+          }
+        }
+        isCompleted
+        # CHANGE: `initialOwner` no longer available. Use `OwnedNft.owner` instead
+        buyNowPrice
+        startingPrice
+        startsAtBlock
+        endedAtBlock
+        topBid {
+          ...BasicBidFields
+        }
+        bids {
+          ...BasicBidFields
+        }
+        whitelistedMembers {
+          # CHANGE: Many-to-Many relations are not supported, changed to 2-way One-to-Many
+          member {
+            ...BasicMembershipFields
+          }
+        }
+      }
     }
   }
 }
 
 fragment FullNftFields on OwnedNft {
   ...BasicNftFields
-  creatorChannel {
-    ...BasicChannelFields
-  }
+  # CHANGE: `creatorChannel` no longer available, use `video.channel` instead
   video {
     ...BasicVideoFields
+    channel {
+      ...BasicChannelFields
+    }
   }
 }
 
+# No changes
 fragment BasicBidFields on Bid {
   bidder {
     ...BasicMembershipFields
@@ -270,6 +306,7 @@ fragment BasicBidFields on Bid {
   id
 }
 
+# No changes
 fragment FullBidFields on Bid {
   ...BasicBidFields
   auction {
@@ -277,17 +314,21 @@ fragment FullBidFields on Bid {
       __typename
     }
     isCompleted
-    winningMemberId
+    winningMember {
+      # CHANGE: `winningMemberId` no longer available, use `winningMember.id` instead
+      id
+    }
     id
   }
 }
 
+# No changes
 fragment CommentReactionsCountByReactionIdFields on CommentReactionsCountByReactionId {
-  id
   count
   reactionId
 }
 
+# No changes
 fragment CommentFields on Comment {
   id
   author {
@@ -298,23 +339,71 @@ fragment CommentFields on Comment {
   reactionsCountByReactionId {
     ...CommentReactionsCountByReactionIdFields
   }
-  parentCommentId
+  parentComment {
+    # CHANGE: `parentCommentId` no longer available, use `parentComment.id` instead
+    id
+  }
   repliesCount
   text
   status
 }
 
-fragment MetaprotocolTransactionSuccessFields on MetaprotocolTransactionSuccessful {
-  commentCreated {
-    ...CommentFields
+# CHANGE: Replacement for `MetaprotocolTransactionSuccessFields`
+fragment MetaprotocolTransactionResultFields on MetaprotocolTransactionResult {
+  __typename
+  ... on MetaprotocolTransactionResultCommentCreated {
+    commentCreated {
+      ...CommentFields
+    }
   }
-  commentEdited {
-    ...CommentFields
+  ... on MetaprotocolTransactionResultCommentEdited {
+    commentEdited {
+      ...CommentFields
+    }
   }
-  commentDeleted {
-    ...CommentFields
+  ... on MetaprotocolTransactionResultCommentDeleted {
+    commentDeleted {
+      ...CommentFields
+    }
   }
-  commentModerated {
-    ...CommentFields
+  ... on MetaprotocolTransactionResultCommentModerated {
+    commentModerated {
+      ...CommentFields
+    }
+  }
+  ... on MetaprotocolTransactionResultFailed {
+    errorMessage
+  }
+}
+
+# CHANGE: New fragment!
+fragment BasicNftOwnerFields on NftOwner {
+  __typename
+  ... on NftOwnerMember {
+    member {
+      ...BasicMembershipFields
+    }
+  }
+  ... on NftOwnerChannel {
+    channel {
+      ownerMember {
+        ...BasicMembershipFields
+      }
+    }
+  }
+}
+
+fragment BasicVideoFeaturedInCategory on VideoFeaturedInCategory {
+  videoCutUrl
+  video {
+    ...BasicVideoFields
+  }
+}
+
+fragment BasicVideoActivityFields on Video {
+  id
+  title
+  thumbnailPhoto {
+    ...StorageDataObjectFields
   }
 }

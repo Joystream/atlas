@@ -13,7 +13,9 @@ export const InactiveOverlay: FC = () => {
   return (
     <OverlayBackground>
       <InnerContainer>
-        <StyledLoader variant={loaderVariant} />
+        <LoaderContainer>
+          <Loader variant={loaderVariant} />
+        </LoaderContainer>
         <OverlayHeading as="h3" variant={smMatch ? 'h600' : 'h400'}>
           This video hasn&apos;t finished uploading yet...
         </OverlayHeading>
@@ -25,6 +27,10 @@ export const InactiveOverlay: FC = () => {
   )
 }
 
-export const StyledLoader = styled(Loader)`
-  margin: 0 auto;
+export const LoaderContainer = styled.div`
+  /* lottie player container class */
+
+  > .lf-player-container {
+    margin: 0 auto;
+  }
 `

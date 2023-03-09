@@ -31,7 +31,7 @@ export const PaymentTransactions = () => {
         <WidgetTile
           title="Total withdrawn"
           loading={loading}
-          text={formatNumber(hapiBnToTokenNumber(paymentHistoryOverview.totalWithdrawn.abs()))}
+          text={formatNumber(hapiBnToTokenNumber(paymentHistoryOverview.totalWithdrawn))}
           icon={<SvgJoyTokenMonochrome24 />}
         />
       </TilesWrapper>

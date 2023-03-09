@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 
@@ -29,7 +29,6 @@ import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { sizes } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
-import { YPP_POLL_INTERVAL } from '@/utils/polling'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
 import { YppVideoDto } from '@/views/studio/MyVideosView/MyVideosView.types'
 
@@ -52,6 +51,8 @@ const OPEN_TAB_SNACKBAR = 'OPEN_TAB_SNACKBAR'
 const REMOVE_DRAFT_SNACKBAR = 'REMOVE_DRAFT_SNACKBAR'
 const SNACKBAR_TIMEOUT = 5000
 
+const YOUTUBE_BACKEND_URL = atlasConfig.features.ypp.youtubeSyncApiUrl
+
 export const MyVideosView = () => {
   const headTags = useHeadTags('My videos')
   const navigate = useNavigate()
@@ -64,17 +65,28 @@ export const MyVideosView = () => {
   const videosPerPage = ROWS_AMOUNT * videosPerRow
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
-  const { data } = useQuery(
-    'ypp-videos',
-    () => axios.get<YppVideoDto[]>(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/${channelId}/videos`),
+  const [isBackendRqCompleted, setIsBackednRqCompleted] = useState(false)
+
+  const { isLoading: isCurrentlyUploadedVideoIdsLoading, data: yppDAta } = useQuery(
+    `ypp-ba-videos-${channelId}`,
+    () => axios.get<YppVideoDto[]>(`${YOUTUBE_BACKEND_URL}/channels/${channelId}/videos`),
     {
-      enabled: !!channelId,
-      refetchInterval: (data) =>
-        data?.data.some((resource) => resource.state === 'UploadStarted' && resource.privacyStatus !== 'private')
-          ? YPP_POLL_INTERVAL
-          : false,
+      enabled: !!channelId || !YOUTUBE_BACKEND_URL,
+      onSettled: () => {
+        setIsBackednRqCompleted(true)
+      },
     }
   )
+
+  const curentLySyncingVideoIds = yppDAta?.data
+    .filter(
+      (video): video is Required<YppVideoDto> =>
+        (video.state === 'UploadStarted' || video.state === 'VideoCreated') &&
+        video.privacyStatus !== 'private' &&
+        !!video.joystreamVideo?.id
+    )
+    .map((video) => video.joystreamVideo.id)
+
   const [currentVideosTab, setCurrentVideosTab] = useState(0)
   const currentTabName = TABS[currentVideosTab]
   const isDraftTab = currentTabName === 'Drafts'
@@ -103,36 +115,36 @@ export const MyVideosView = () => {
       first: INITIAL_FIRST,
       orderBy: sortVideosBy,
       where: {
+        ...cancelledVideoFilter,
         channel: {
+          ...cancelledVideoFilter.channel,
           id_eq: channelId,
         },
-        ...cancelledVideoFilter,
         isPublic_eq,
       },
     },
     {
+      skip: YOUTUBE_BACKEND_URL ? !isBackendRqCompleted : undefined,
       notifyOnNetworkStatusChange: true,
       onError: (error) => SentryLogger.error('Failed to fetch videos', 'MyVideosView', error),
     }
   )
+
   const [openDeleteDraftDialog, closeDeleteDraftDialog] = useConfirmationModal()
   const deleteVideo = useDeleteVideo()
+
+  const areTilesLoading = YOUTUBE_BACKEND_URL ? isCurrentlyUploadedVideoIdsLoading || loading : loading
 
   const videos = [...(edges?.length ? ['new-video-tile' as const, ...edges] : [])]
     ?.map((edge) => (edge === 'new-video-tile' ? edge : edge.node))
     .slice(currentPage * videosPerPage, currentPage * videosPerPage + videosPerPage)
-  const placeholderItems = Array.from({ length: loading ? videosPerPage - (videos ? videos.length : 0) : 0 }, () => ({
-    id: undefined,
-    progress: undefined,
-  }))
-
-  const videosTitlesInSync = useMemo((): string[] => {
-    return (
-      data?.data
-        .filter((resource) => resource.state === 'UploadStarted' && resource.privacyStatus !== 'private')
-        .map((resource) => resource.title) ?? []
-    )
-  }, [data])
+  const placeholderItems = Array.from(
+    { length: areTilesLoading ? videosPerPage - (videos ? videos.length : 0) : 0 },
+    () => ({
+      id: undefined,
+      progress: undefined,
+    })
+  )
 
   const videosWithSkeletonLoaders = [...(videos || []), ...placeholderItems]
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
@@ -250,7 +262,7 @@ export const MyVideosView = () => {
         .slice(videosPerPage * currentPage, currentPage * videosPerPage + videosPerPage)
         .map((draft, idx) => {
           if (draft === 'new-video-tile') {
-            return <NewVideoTile loading={loading} key={`$draft-${idx}`} onClick={handleAddVideoTab} />
+            return <NewVideoTile loading={areTilesLoading} key={`$draft-${idx}`} onClick={handleAddVideoTab} />
           }
           return (
             <VideoTileDraft
@@ -263,12 +275,12 @@ export const MyVideosView = () => {
         })
     : videosWithSkeletonLoaders.map((video, idx) => {
         if (video === 'new-video-tile') {
-          return <NewVideoTile loading={loading} key={idx} onClick={handleAddVideoTab} />
+          return <NewVideoTile loading={areTilesLoading} key={idx} onClick={handleAddVideoTab} />
         }
         return (
           <VideoTilePublisher
             key={video.id ? `video-id-${video.id}` : `video-idx-${idx}`}
-            titlesInSync={videosTitlesInSync}
+            isSyncing={curentLySyncingVideoIds?.includes(video.id || '')}
             id={video.id}
             onEditClick={(e) => {
               e?.stopPropagation()

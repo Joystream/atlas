@@ -114,9 +114,7 @@ export const useReactionTransactions = () => {
       client.query<GetFullVideoQuery, GetFullVideoQueryVariables>({
         query: GetFullVideoDocument,
         variables: {
-          where: {
-            id,
-          },
+          id,
         },
         fetchPolicy: 'network-only',
       }),
@@ -150,11 +148,14 @@ export const useReactionTransactions = () => {
             await joystream.extrinsics
           ).createVideoComment(memberId, videoId, commentBody, parentCommentId || null, proxyCallback(updateStatus)),
         onTxSync: async (_, metaStatus) => {
-          if (!metaStatus?.commentCreated) {
+          if (
+            !metaStatus?.__typename ||
+            !(metaStatus?.__typename === 'MetaprotocolTransactionResultCommentCreated' && metaStatus.commentCreated?.id)
+          ) {
             SentryLogger.error('No comment created found in metaprotocol status event', 'useReactionTransactions')
             return
           }
-          newCommentId = metaStatus.commentCreated.id
+          newCommentId = metaStatus.commentCreated?.id
           if (parentCommentId) {
             await Promise.all([
               refetchComment(parentCommentId), // need to refetch parent as its replyCount will change

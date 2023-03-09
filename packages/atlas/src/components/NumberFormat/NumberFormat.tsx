@@ -31,6 +31,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
       variant = 'no-variant',
       displayedValue,
       isNegative,
+      color,
       ...textProps
     },
     ref
@@ -63,7 +64,7 @@ export const NumberFormat = forwardRef<HTMLHeadingElement, NumberFormatProps>(
     const content = (
       <StyledText
         {...textProps}
-        color={isNegative || bnValue.isNeg() ? 'colorTextError' : undefined}
+        color={bnValue.isNeg() || isNegative ? 'colorTextError' : color}
         variant={variant}
         ref={mergeRefs([ref, textRef])}
       >

@@ -11,9 +11,7 @@ import {
   UseFormWatch,
 } from 'react-hook-form'
 
-import { ImageInputFile, VideoInputFile } from '@/components/_inputs/MultiFileSelect'
-import { useRawAsset } from '@/providers/assets/assets.hooks'
-import { useAssetStore } from '@/providers/assets/assets.store'
+import { ImageInputFile, InputFilesState, VideoInputFile } from '@/components/_inputs/MultiFileSelect'
 import { RawDraft, useDraftStore } from '@/providers/drafts'
 import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import {
@@ -21,7 +19,6 @@ import {
   VideoWorkspaceVideoAssets,
   VideoWorkspaceVideoFormFields,
   useVideoWorkspace,
-  useVideoWorkspaceData,
 } from '@/providers/videoWorkspace'
 import { SubtitlesInput } from '@/types/subtitles'
 import { createId } from '@/utils/createId'
@@ -40,14 +37,10 @@ export const useVideoFormAssets = (
   const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
   const [subtitlesHashesPromises, setSubtitlesHashesPromises] = useState<(Promise<string> | null)[]>([])
 
-  const { tabData } = useVideoWorkspaceData()
-
-  const addAsset = useAssetStore((state) => state.actions.addAsset)
   const assets = watch('assets')
   const subtitles = watch('subtitlesArray')
-  const mediaAsset = useRawAsset(assets?.video.id || tabData?.assets.video.id || null)
-  const thumbnailAsset = useRawAsset(assets?.thumbnail.cropId || null)
-  const originalThumbnailAsset = useRawAsset(assets?.thumbnail.originalId || null)
+  const mediaAsset = assets?.video.id ? assets?.video : null
+  const thumbnailAsset = assets?.thumbnail
 
   const hasUnsavedAssets = dirtyFields.assets?.video?.id || dirtyFields.assets?.thumbnail?.cropId || false
 
@@ -99,36 +92,32 @@ export const useVideoFormAssets = (
   const handleVideoFileChange = useCallback(
     (video: VideoInputFile | null) => {
       const currentAssetsValue = getValues('assets')
-
       if (!video) {
         setValue('assets', { ...currentAssetsValue, video: { id: null } }, { shouldDirty: true })
         return
       }
-
       const newAssetId = `local-video-${createId()}`
-      addAsset(newAssetId, { url: video.url, blob: video.blob })
+      setValue(
+        'assets.video',
+        {
+          ...video,
+          id: newAssetId,
+          blob: video?.blob as File,
+        },
+        { shouldDirty: true }
+      )
 
-      const updatedVideo = {
-        id: newAssetId,
-        ...video,
-      }
-      const updatedAssets = {
-        ...currentAssetsValue,
-        video: updatedVideo,
-      }
-      setValue('assets', updatedAssets, { shouldDirty: true })
       if (!dirtyFields.title && video?.title) {
         const removedUnnecessaryCharacters = video.title.replace(/\.[^.]+$/, '').replace(/_/g, ' ')
         setValue('title', capitalizeFirstLetter(removedUnnecessaryCharacters), {
           shouldDirty: true,
         })
       }
-
       if (errors.assets) {
         trigger('assets')
       }
     },
-    [errors, trigger, addAsset, dirtyFields.title, getValues, setValue]
+    [dirtyFields.title, errors.assets, getValues, setValue, trigger]
   )
 
   const handleThumbnailFileChange = useCallback(
@@ -145,17 +134,14 @@ export const useVideoFormAssets = (
       }
 
       const newCropAssetId = `local-thumbnail-crop-${createId()}`
-      addAsset(newCropAssetId, { url: thumbnail.url, blob: thumbnail.blob })
       const newOriginalAssetId = `local-thumbnail-original-${createId()}`
-      addAsset(newOriginalAssetId, { blob: thumbnail.originalBlob })
 
-      const updatedThumbnail = {
+      const updatedThumbnail: VideoWorkspaceVideoAssets['thumbnail'] = {
         ...thumbnail,
+        blob: thumbnail.blob || undefined,
         cropId: newCropAssetId,
         originalId: newOriginalAssetId,
-        originalBlob: {
-          name: (thumbnail.originalBlob as File).name,
-        },
+        originalBlob: thumbnail?.originalBlob || null,
       }
       const updatedAssets: VideoWorkspaceVideoAssets = {
         ...currentAssetsValue,
@@ -164,18 +150,15 @@ export const useVideoFormAssets = (
       setValue('assets', updatedAssets, { shouldDirty: true })
       trigger('assets')
     },
-    [addAsset, getValues, setValue, trigger]
+    [getValues, setValue, trigger]
   )
 
-  const files = useMemo(
+  const files = useMemo<InputFilesState>(
     () => ({
       video: mediaAsset,
-      thumbnail: {
-        ...thumbnailAsset,
-        ...(originalThumbnailAsset?.blob ? { originalBlob: originalThumbnailAsset?.blob } : {}),
-      },
+      thumbnail: { ...thumbnailAsset, originalBlob: null },
     }),
-    [mediaAsset, originalThumbnailAsset?.blob, thumbnailAsset]
+    [mediaAsset, thumbnailAsset]
   )
 
   return {

@@ -111,12 +111,16 @@ export const Footer = styled.div<FooterProps>`
   }
 `
 
-export const FooterButtonsContainer = styled.div<{ additionalActionsNodeMobilePosition?: 'bottom' | 'top' }>`
+export const FooterButtonsContainer = styled.div<{
+  additionalActionsNodeMobilePosition?: 'bottom' | 'top'
+  stretchButtons: boolean
+}>`
   margin-top: ${({ additionalActionsNodeMobilePosition = 'top' }) =>
     additionalActionsNodeMobilePosition === 'bottom' ? 0 : sizes(2)};
   margin-bottom: ${({ additionalActionsNodeMobilePosition = 'top' }) =>
     additionalActionsNodeMobilePosition === 'top' ? 0 : sizes(2)};
   display: grid;
+  width: 100%;
   grid-auto-flow: column;
   gap: ${sizes(2)};
   grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
@@ -124,9 +128,14 @@ export const FooterButtonsContainer = styled.div<{ additionalActionsNodeMobilePo
   ${media.sm} {
     margin-bottom: 0;
     margin-top: 0;
-    margin-left: ${sizes(2)};
     display: grid;
-    justify-content: flex-end;
+    ${(props) =>
+      !props.stretchButtons &&
+      css`
+        margin-left: ${sizes(2)};
+        justify-content: flex-end;
+      `}
+
     grid-auto-columns: auto;
     grid-template-columns: unset;
   }

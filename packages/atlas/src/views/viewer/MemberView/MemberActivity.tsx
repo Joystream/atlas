@@ -1,16 +1,15 @@
 import { FC } from 'react'
 import { useNavigate } from 'react-router'
 
-import { StorageDataObjectFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { NftActivityOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionBid, SvgActionBuyNow, SvgActionMint, SvgActionSell } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset } from '@/providers/assets/assets.hooks'
 
-import { ActivityItem, ActivityItemProps } from './ActivityItem'
+import { ActivityItem } from './ActivityItem'
 import { ActivitiesRecord, useActivities } from './MemberActivity.hooks'
 import {
   GridRowWrapper,
@@ -21,19 +20,31 @@ import {
   StyledLink,
 } from './MemberActivity.styles'
 
+const getFromHandle = (activity: ActivitiesRecord) => {
+  if (activity.type === 'Bid' || activity.type === 'Withdrawal') {
+    return activity.from.handle
+  } else {
+    return activity.from?.__typename === 'NftOwnerChannel'
+      ? activity.from.channel.ownerMember?.handle
+      : activity.from?.member.handle
+  }
+}
+
 const getDescription = (activity: ActivitiesRecord) => {
+  const fromHandle = getFromHandle(activity)
+
   switch (activity.type) {
     case 'Bid':
       return (
         <>
-          {activity.from.handle} placed a bid for{' '}
+          {fromHandle} placed a bid for{' '}
           <NumberFormat as="span" color="inherit" format="short" value={activity.bidAmount} withToken />
         </>
       )
     case 'Sale':
       return (
         <>
-          {activity.from?.handle} sold NFT to{' '}
+          {fromHandle} sold NFT to{' '}
           <StyledLink to={absoluteRoutes.viewer.member(activity.to?.handle)} onClick={(e) => e.stopPropagation()}>
             {activity.to?.handle}
           </StyledLink>{' '}
@@ -43,18 +54,18 @@ const getDescription = (activity: ActivitiesRecord) => {
     case 'Purchase':
       return (
         <>
-          {activity.from?.handle} purchased NFT for{' '}
-          <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken /> from{' '}
           <StyledLink to={absoluteRoutes.viewer.member(activity.to?.handle)} onClick={(e) => e.stopPropagation()}>
             {activity.to?.handle}{' '}
-          </StyledLink>
+          </StyledLink>{' '}
+          purchased NFT for <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken />{' '}
+          from {fromHandle}
         </>
       )
     case 'Listing':
       return (
         <>
-          {activity.from?.handle} listed NFT{' '}
-          {activity.typeName === 'NftSellOrderMadeEvent' && activity.price && (
+          {fromHandle} listed NFT{' '}
+          {activity.typeName === 'NftSellOrderMadeEventData' && activity.price && (
             <>
               for <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken />
             </>
@@ -62,15 +73,15 @@ const getDescription = (activity: ActivitiesRecord) => {
         </>
       )
     case 'Removal':
-      return <>{activity.from?.handle} removed NFT from sale</>
+      return <>{fromHandle} removed NFT from sale</>
     case 'Mint':
-      return <>{activity.from?.handle} minted new NFT</>
+      return <>{fromHandle} minted new NFT</>
     case 'Withdrawal':
-      return <>{activity.from.handle} withdrew a bid</>
+      return <>{fromHandle} withdrew a bid</>
     case 'Price change':
       return (
         <>
-          {activity.from?.handle} changed price to{' '}
+          {fromHandle} changed price to{' '}
           <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken />
         </>
       )
@@ -79,12 +90,15 @@ const getDescription = (activity: ActivitiesRecord) => {
 
 type MemberActivityProps = {
   memberId?: string
-  sort?: 'createdAt_ASC' | 'createdAt_DESC'
+  sort?: NftActivityOrderByInput
 }
 
 const PLACEHOLDERS_COUNT = 8
 
-export const MemberActivity: FC<MemberActivityProps> = ({ memberId, sort = 'createdAt_DESC' }) => {
+export const MemberActivity: FC<MemberActivityProps> = ({
+  memberId,
+  sort = NftActivityOrderByInput.EventTimestampDesc,
+}) => {
   const { activities, loading, activitiesTotalCounts } = useActivities(memberId, sort)
   const navigate = useNavigate()
   const placeholderItems = Array.from({ length: PLACEHOLDERS_COUNT }, () => ({ id: undefined }))
@@ -99,14 +113,14 @@ export const MemberActivity: FC<MemberActivityProps> = ({ memberId, sort = 'crea
             <LayoutGrid>
               {items?.map((activity, i) => (
                 <GridItem key={i} colSpan={{ base: 12 }}>
-                  <ActivityItemWithResolvedAsset
+                  <ActivityItem
+                    thumbnailUri={activity.video?.thumbnailPhoto?.resolvedUrl || ''}
                     loading={!activities || loading}
                     onItemClick={() => navigate(absoluteRoutes.viewer.video(activity.video?.id))}
                     date={activity?.date}
                     type={activity?.type}
-                    title={activity?.video?.title}
+                    title={activity?.video?.title || ''}
                     description={getDescription(activity)}
-                    thumbnailPhoto={activity.video?.thumbnailPhoto}
                   />
                 </GridItem>
               ))}
@@ -171,16 +185,4 @@ export const MemberActivity: FC<MemberActivityProps> = ({ memberId, sort = 'crea
       )}
     </section>
   )
-}
-
-type ActivityItemWithResolvedAssetProps = {
-  thumbnailPhoto?: StorageDataObjectFieldsFragment | null
-} & Omit<ActivityItemProps, 'thumnailUri'>
-
-export const ActivityItemWithResolvedAsset: FC<ActivityItemWithResolvedAssetProps> = ({
-  thumbnailPhoto,
-  ...restProps
-}) => {
-  const { url } = useAsset(thumbnailPhoto)
-  return <ActivityItem {...restProps} thumnailUri={url || ''} />
 }

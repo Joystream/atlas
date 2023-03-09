@@ -174,6 +174,16 @@ export const useYppGoogleAuth = ({
           const errorResponseData = error.response?.data
           const errorMessages = error.response?.data.message
 
+          if (typeof errorMessages === 'string' && errorMessages === 'Insufficient Permission') {
+            displaySnackbar({
+              title: 'Authorization failed',
+              description: `Insufficient permissions granted. Try again and ensure YouTube channel data sharing permission is selected on Google Auth page.`,
+              iconType: 'error',
+            })
+            onChangeStep('requirements')
+            return
+          }
+
           const isRequirmentsError = isArray(errorMessages)
           if (isRequirmentsError) {
             const errorCodes = isRequirmentsError ? errorMessages?.map((message) => message.errorCode) : undefined
@@ -207,7 +217,7 @@ export const useYppGoogleAuth = ({
           if (isChannelNotFoundError) {
             displaySnackbar({
               title: 'Authorization failed',
-              description: `You don't have youtube channel.`,
+              description: `You don't have a YouTube channel.`,
               iconType: 'error',
             })
             setYtRequirmentsErrors(Object.values(YppAuthorizationErrorCode))
@@ -223,11 +233,11 @@ export const useYppGoogleAuth = ({
           if (isChannelAlreadyRegistered) {
             const { data } = await client.query<GetFullChannelQuery, GetFullChannelQueryVariables>({
               query: GetFullChannelDocument,
-              variables: { where: { id: errorResponseData.result.toString() } },
+              variables: { id: errorResponseData.result.toString() },
             })
             setAlreadyRegisteredChannel({
-              channelTitle: data.channelByUniqueInput?.title || '',
-              ownerMemberHandle: data.channelByUniqueInput?.ownerMember?.handle || '',
+              channelTitle: data.channelById?.title || '',
+              ownerMemberHandle: data.channelById?.ownerMember?.handle || '',
             })
 
             onChangeStep('channel-already-registered')
