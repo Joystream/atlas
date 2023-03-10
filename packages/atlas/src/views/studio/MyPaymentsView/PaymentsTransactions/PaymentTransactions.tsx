@@ -17,7 +17,7 @@ export const PaymentTransactions = () => {
   const { channel } = useFullChannel(channelId ?? '')
 
   const { paymentData, loading } = useChannelPaymentsHistory(channel)
-  const paymentHistoryOverview = useMemo(() => aggregatePaymentHistory(paymentData), [paymentData])
+  const paymentHistoryOverview = useMemo(() => aggregatePaymentHistory(paymentData || []), [paymentData])
 
   return (
     <>
@@ -35,8 +35,8 @@ export const PaymentTransactions = () => {
           icon={<SvgJoyTokenMonochrome24 />}
         />
       </TilesWrapper>
-      <TableWrapper isEmpty={!paymentData.length}>
-        <TablePaymentsHistory isLoading={loading} data={paymentData} />
+      <TableWrapper isEmpty={!paymentData?.length}>
+        <TablePaymentsHistory isLoading={loading} data={paymentData || []} />
       </TableWrapper>
     </>
   )

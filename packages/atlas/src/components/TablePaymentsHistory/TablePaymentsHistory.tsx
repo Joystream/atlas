@@ -41,7 +41,6 @@ export type PaymentHistory = {
   sender: string
   amount: BN
   description?: string
-  channelBalance: BN
 }
 
 export type TablePaymentsHistoryProps = {
@@ -57,7 +56,6 @@ export const TablePaymentsHistory: FC<TablePaymentsHistoryProps> = ({ data, isLo
         date: <Date date={data.date} />,
         type: <Type type={data.type} />,
         amount: <TokenAmount tokenAmount={data.amount} />,
-        channelBalance: <TokenAmount tokenAmount={data.channelBalance} />,
         sender: <Sender sender={data.sender} />,
         description: (
           <TableText onShowMoreClick={() => setDialogText(data.description ?? '')} text={data.description} />
@@ -152,28 +150,13 @@ const Date = ({ date }: { date: Date }) => {
         {formatDateTime(date)}
       </Text>
       <Text as="p" variant="t100" margin={{ top: 1 }} color="colorText">
-        {formatNumber(convertMsTimestampToBlock(date.getTime()) || 0)} blocks
+        {formatNumber(convertMsTimestampToBlock(date.getTime()) || 0)} block
       </Text>
     </>
   )
 }
 
 const Type = ({ type }: { type: PaymentType }) => {
-  // todo what should we apply here?
-  // const translatedPaymentType = {
-  //   'nft-sale': 'NFT sale',
-  //   'nft-royalty': 'NFT royalty',
-  //   'claimed-reward': 'Claimed reward',
-  //   'withdrawal': 'Withdrawal',
-  //   'ypp-reward': 'YPP reward',
-  // }
-  // return (
-  //   <TypeWrapper>
-  //     <TypeIconWrapper>
-  //       <SvgActionBuyNow />
-  //     </TypeIconWrapper>
-  //     <Text variant="t200" as="p" margin={{ left: 2 }}>
-  //       {translatedPaymentType[type]}
   return (
     <TypeWrapper>
       <TypeIconWrapper>{paymentTypeMappings[type].icon}</TypeIconWrapper>

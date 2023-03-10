@@ -119,17 +119,12 @@ query GetChannelNftCollectors($channelId: String!, $orderBy: ChannelNftCollector
 }
 
 query GetPayloadDataObjectIdByCommitment($commitment: String!) {
-  events(where:{
-    data: {
-      isTypeOf_eq:"ChannelPayoutsUpdatedEventData"
-      commitment_eq: $commitment
-    }
-  }) {
+  events(where: { data: { isTypeOf_eq: "ChannelPayoutsUpdatedEventData", commitment_eq: $commitment } }) {
     data {
-      ...on ChannelPayoutsUpdatedEventData {
+      ... on ChannelPayoutsUpdatedEventData {
         commitment
         payloadDataObject {
-        	id
+          id
           resolvedUrl
           storageBag {
             id
@@ -148,60 +143,7 @@ mutation ReportChannel($channelId: String!, $rationale: String!) {
   }
 }
 
-# todo needs to be rewritten in orion v2 once payments table is back
-query GetChannelPaymentEvents {
-  # nftBoughtEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
-  #   inBlock
-  #   createdAt
-  #   price
-  # }
-
-  # bidMadeCompletingAuctionEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
-  #   inBlock
-  #   createdAt
-  #   price
-  # }
-
-  # englishAuctionSettledEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
-  #   createdAt
-  #   inBlock
-  #   winningBid {
-  #     amount
-  #   }
-  # }
-
-  # openAuctionBidAcceptedEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
-  #   inBlock
-  #   createdAt
-  #   winningBid {
-  #     amount
-  #   }
-  # }
-
-  #   channelRewardClaimedEvents(where: { channel: { id_eq: $channelId } }) {
-  #   amount
-  #   createdAt
-  #   inBlock
-  # }
-
-    # channelFundsWithdrawnEvents(where: { channel: { id_eq: $channelId } }) {
-    # amount
-    # createdAt
-    # inBlock
-    # actor {
-    #   ... on ContentActorCurator {
-    #     __typename
-    #   }
-    #   ... on ContentActorLead {
-    #     __typename
-    #   }
-
-    #   ... on ContentActorMember {
-    #     member {
-    #       controllerAccount
-
-
-
+query GetChannelPaymentEvents($ownerMemberId: String, $channelId: String) {
   events(
     where: {
       data: {
@@ -210,56 +152,94 @@ query GetChannelPaymentEvents {
           "BidMadeCompletingAuctionEventData"
           "EnglishAuctionSettledEventData"
           "OpenAuctionBidAcceptedEventData"
+          "ChannelRewardClaimedEventData"
+          "ChannelFundsWithdrawnEventData"
+          "ChannelPaymentMadeEventData"
         ]
       }
     }
   ) {
-    id
-    timestamp
     inBlock
+    timestamp
     data {
       __typename
       ... on NftBoughtEventData {
         price
+        buyer {
+          controllerAccount
+        }
+        nft {
+          video {
+            title
+          }
+        }
       }
       ... on BidMadeCompletingAuctionEventData {
         winningBid {
-          id
+          nft {
+            video {
+              title
+            }
+          }
+          bidder {
+            controllerAccount
+          }
           amount
         }
       }
       ... on EnglishAuctionSettledEventData {
         winningBid {
+          nft {
+            video {
+              title
+            }
+          }
+          bidder {
+            controllerAccount
+          }
           amount
         }
       }
       ... on OpenAuctionBidAcceptedEventData {
         winningBid {
+          nft {
+            video {
+              title
+            }
+          }
+          bidder {
+            controllerAccount
+          }
           amount
+        }
+      }
+      ... on ChannelRewardClaimedEventData {
+        amount
+      }
+      ... on ChannelFundsWithdrawnEventData {
+        amount
+        actor {
+          __typename
+          ... on ContentActorCurator {
+            __typename
+          }
+          ... on ContentActorLead {
+            __typename
+          }
+          ... on ContentActorMember {
+            member {
+              controllerAccount
+            }
+          }
+        }
+      }
+      ... on ChannelPaymentMadeEventData {
+        amount
+        rationale
+        payer {
+          controllerAccount
         }
       }
     }
   }
-
-  # channelPaymentMadeEvents(where: { payeeChannel: { id_eq: $channelId } }) {
-  #   amount
-  #   createdAt
-  #   inBlock
-  #   rationale
-  #   payer {
-  #     controllerAccount
-  #   }
-  # }
-
-  #  channelRewardClaimedEvents(where: { channel: { id_eq: $channelId } }) {
-  #    amount
-  #    createdAt
-  #    inBlock
-  #  }
-
-  #  channelFundsWithdrawnEvents(where: { channel: { id_eq: $channelId } }) {
-  #    amount
-  #    createdAt
-  #    inBlock
-  #  }
 }

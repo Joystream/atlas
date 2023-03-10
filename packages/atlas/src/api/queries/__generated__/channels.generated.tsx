@@ -564,39 +564,79 @@ export type ReportChannelMutation = {
   reportChannel: { __typename?: 'ChannelReportInfo'; id: string; channelId: string }
 }
 
-export type GetChannelPaymentEventsQueryVariables = Types.Exact<{ [key: string]: never }>
+export type GetChannelPaymentEventsQueryVariables = Types.Exact<{
+  ownerMemberId?: Types.InputMaybe<Types.Scalars['String']>
+  channelId?: Types.InputMaybe<Types.Scalars['String']>
+}>
 
 export type GetChannelPaymentEventsQuery = {
   __typename?: 'Query'
   events: Array<{
     __typename?: 'Event'
-    id: string
-    timestamp: Date
     inBlock: number
+    timestamp: Date
     data:
       | { __typename: 'AuctionBidCanceledEventData' }
       | { __typename: 'AuctionBidMadeEventData' }
       | { __typename: 'AuctionCanceledEventData' }
       | {
           __typename: 'BidMadeCompletingAuctionEventData'
-          winningBid: { __typename?: 'Bid'; id: string; amount: string }
+          winningBid: {
+            __typename?: 'Bid'
+            amount: string
+            nft: { __typename?: 'OwnedNft'; video: { __typename?: 'Video'; title?: string | null } }
+            bidder: { __typename?: 'Membership'; controllerAccount: string }
+          }
         }
       | { __typename: 'BuyNowCanceledEventData' }
       | { __typename: 'BuyNowPriceUpdatedEventData' }
-      | { __typename: 'ChannelFundsWithdrawnEventData' }
-      | { __typename: 'ChannelPaymentMadeEventData' }
+      | {
+          __typename: 'ChannelFundsWithdrawnEventData'
+          amount: string
+          actor:
+            | { __typename: 'ContentActorCurator' }
+            | { __typename: 'ContentActorLead' }
+            | { __typename: 'ContentActorMember'; member: { __typename?: 'Membership'; controllerAccount: string } }
+        }
+      | {
+          __typename: 'ChannelPaymentMadeEventData'
+          amount: string
+          rationale?: string | null
+          payer: { __typename?: 'Membership'; controllerAccount: string }
+        }
       | { __typename: 'ChannelPayoutsUpdatedEventData' }
       | { __typename: 'ChannelRewardClaimedAndWithdrawnEventData' }
-      | { __typename: 'ChannelRewardClaimedEventData' }
+      | { __typename: 'ChannelRewardClaimedEventData'; amount: string }
       | { __typename: 'CommentCreatedEventData' }
       | { __typename: 'CommentTextUpdatedEventData' }
-      | { __typename: 'EnglishAuctionSettledEventData'; winningBid: { __typename?: 'Bid'; amount: string } }
+      | {
+          __typename: 'EnglishAuctionSettledEventData'
+          winningBid: {
+            __typename?: 'Bid'
+            amount: string
+            nft: { __typename?: 'OwnedNft'; video: { __typename?: 'Video'; title?: string | null } }
+            bidder: { __typename?: 'Membership'; controllerAccount: string }
+          }
+        }
       | { __typename: 'EnglishAuctionStartedEventData' }
       | { __typename: 'MetaprotocolTransactionStatusEventData' }
-      | { __typename: 'NftBoughtEventData'; price: string }
+      | {
+          __typename: 'NftBoughtEventData'
+          price: string
+          buyer: { __typename?: 'Membership'; controllerAccount: string }
+          nft: { __typename?: 'OwnedNft'; video: { __typename?: 'Video'; title?: string | null } }
+        }
       | { __typename: 'NftIssuedEventData' }
       | { __typename: 'NftSellOrderMadeEventData' }
-      | { __typename: 'OpenAuctionBidAcceptedEventData'; winningBid: { __typename?: 'Bid'; amount: string } }
+      | {
+          __typename: 'OpenAuctionBidAcceptedEventData'
+          winningBid: {
+            __typename?: 'Bid'
+            amount: string
+            nft: { __typename?: 'OwnedNft'; video: { __typename?: 'Video'; title?: string | null } }
+            bidder: { __typename?: 'Membership'; controllerAccount: string }
+          }
+        }
       | { __typename: 'OpenAuctionStartedEventData' }
   }>
 }
@@ -1256,7 +1296,7 @@ export type ReportChannelMutationOptions = Apollo.BaseMutationOptions<
   ReportChannelMutationVariables
 >
 export const GetChannelPaymentEventsDocument = gql`
-  query GetChannelPaymentEvents {
+  query GetChannelPaymentEvents($ownerMemberId: String, $channelId: String) {
     events(
       where: {
         data: {
@@ -1265,32 +1305,92 @@ export const GetChannelPaymentEventsDocument = gql`
             "BidMadeCompletingAuctionEventData"
             "EnglishAuctionSettledEventData"
             "OpenAuctionBidAcceptedEventData"
+            "ChannelRewardClaimedEventData"
+            "ChannelFundsWithdrawnEventData"
+            "ChannelPaymentMadeEventData"
           ]
         }
       }
     ) {
-      id
-      timestamp
       inBlock
+      timestamp
       data {
         __typename
         ... on NftBoughtEventData {
           price
+          buyer {
+            controllerAccount
+          }
+          nft {
+            video {
+              title
+            }
+          }
         }
         ... on BidMadeCompletingAuctionEventData {
           winningBid {
-            id
+            nft {
+              video {
+                title
+              }
+            }
+            bidder {
+              controllerAccount
+            }
             amount
           }
         }
         ... on EnglishAuctionSettledEventData {
           winningBid {
+            nft {
+              video {
+                title
+              }
+            }
+            bidder {
+              controllerAccount
+            }
             amount
           }
         }
         ... on OpenAuctionBidAcceptedEventData {
           winningBid {
+            nft {
+              video {
+                title
+              }
+            }
+            bidder {
+              controllerAccount
+            }
             amount
+          }
+        }
+        ... on ChannelRewardClaimedEventData {
+          amount
+        }
+        ... on ChannelFundsWithdrawnEventData {
+          amount
+          actor {
+            __typename
+            ... on ContentActorCurator {
+              __typename
+            }
+            ... on ContentActorLead {
+              __typename
+            }
+            ... on ContentActorMember {
+              member {
+                controllerAccount
+              }
+            }
+          }
+        }
+        ... on ChannelPaymentMadeEventData {
+          amount
+          rationale
+          payer {
+            controllerAccount
           }
         }
       }
@@ -1310,6 +1410,8 @@ export const GetChannelPaymentEventsDocument = gql`
  * @example
  * const { data, loading, error } = useGetChannelPaymentEventsQuery({
  *   variables: {
+ *      ownerMemberId: // value for 'ownerMemberId'
+ *      channelId: // value for 'channelId'
  *   },
  * });
  */
