@@ -4,8 +4,8 @@ query GetNft($id: ID!) {
   }
 }
 
-query GetNfts($where: OwnedNftWhereInput, $orderBy: [OwnedNftOrderByInput!] = [createdAt_DESC]) {
-  ownedNfts(where: $where, orderBy: $orderBy) {
+query GetNfts($where: OwnedNftWhereInput, $orderBy: [OwnedNftOrderByInput!] = [createdAt_DESC], $limit: Int, $offset: Int) {
+  ownedNfts(where: $where, orderBy: $orderBy, limit: $limit, offset: $offset) {
     ...FullNftFields
   }
 }
