@@ -3,7 +3,6 @@ import { useParams } from 'react-router'
 import { useSearchParams } from 'react-router-dom'
 
 import { useMemberships } from '@/api/hooks/membership'
-import { useNftsConnection } from '@/api/hooks/nfts'
 import { OwnedNftOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionFilters } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
@@ -40,6 +39,7 @@ export const MemberView: FC = () => {
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
   const [sortBy, setSortBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
   const [currentTab, setCurrentTab] = useState<typeof TABS[number] | null>(null)
+  const [nftCount, setNftCount] = useState<number | undefined>()
   const { memberId, activeMembership } = useUser()
   const { handle } = useParams()
   const headTags = useHeadTags(handle)
@@ -49,20 +49,6 @@ export const MemberView: FC = () => {
     ownedNftWhereInput,
     canClearFilters: { canClearAllFilters },
   } = filtersBarLogic
-
-  const { nfts, loading } = useNftsConnection(
-    {
-      where: {
-        ownerMember: { handle_eq: handle },
-        ...ownedNftWhereInput,
-        video: {
-          isPublic_eq: handle !== activeMembership?.handle || undefined,
-        },
-      },
-      orderBy: sortBy as OwnedNftOrderByInput,
-    },
-    { skip: !handle }
-  )
 
   const {
     memberships,
@@ -91,17 +77,19 @@ export const MemberView: FC = () => {
 
   const mappedTabs = TABS.map((tab) => ({
     name: tab,
-    pillText: tab === 'NFTs owned' && nfts && nfts.length ? nfts.length : undefined,
+    pillText: tab === 'NFTs owned' ? nftCount : undefined,
   }))
+
   const tabContent = useMemo(() => {
     switch (currentTab) {
       case 'NFTs owned':
         return (
           <MemberNFTs
             isFiltersApplied={canClearAllFilters}
-            nfts={nfts}
-            loading={loading}
             owner={activeMembership?.handle === handle}
+            sortBy={sortBy}
+            ownedNftWhereInput={ownedNftWhereInput}
+            setNftCount={setNftCount}
           />
         )
       case 'Activity':
@@ -109,7 +97,7 @@ export const MemberView: FC = () => {
       case 'About':
         return <MemberAbout />
     }
-  }, [activeMembership?.handle, canClearAllFilters, currentTab, handle, loading, member?.id, nfts, sortBy])
+  }, [activeMembership?.handle, canClearAllFilters, currentTab, handle, member?.id, ownedNftWhereInput, sortBy])
 
   // At mount set the tab from the search params
   const initialRender = useRef(true)
@@ -146,6 +134,7 @@ export const MemberView: FC = () => {
   if (error) {
     return <ViewErrorFallback />
   }
+
   return (
     <ViewWrapper>
       {headTags}
