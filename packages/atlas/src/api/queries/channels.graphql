@@ -143,20 +143,32 @@ mutation ReportChannel($channelId: String!, $rationale: String!) {
   }
 }
 
-query GetChannelPaymentEvents($ownerMemberId: String, $channelId: String) {
+query GetChannelPaymentEvents($channelId: String) {
   events(
     where: {
-      data: {
-        isTypeOf_in: [
-          "NftBoughtEventData"
-          "BidMadeCompletingAuctionEventData"
-          "EnglishAuctionSettledEventData"
-          "OpenAuctionBidAcceptedEventData"
-          "ChannelRewardClaimedEventData"
-          "ChannelFundsWithdrawnEventData"
-          "ChannelPaymentMadeEventData"
-        ]
-      }
+      OR: [
+        {
+          data: {
+            isTypeOf_in: [
+              "NftBoughtEventData"
+              "BidMadeCompletingAuctionEventData"
+              "EnglishAuctionSettledEventData"
+              "OpenAuctionBidAcceptedEventData"
+            ]
+            nftOwner: { channel: { id_eq: $channelId } }
+          }
+        }
+        {
+          data: {
+            isTypeOf_in: [
+              "ChannelRewardClaimedEventData"
+              "ChannelFundsWithdrawnEventData"
+              "ChannelPaymentMadeEventData"
+            ]
+            channel: { id_eq: $channelId }
+          }
+        }
+      ]
     }
   ) {
     inBlock

@@ -1,19 +1,13 @@
-import {
-  GetExtendedFullChannelsQuery,
-  useGetChannelPaymentEventsQuery,
-} from '@/api/queries/__generated__/channels.generated'
+import { useGetChannelPaymentEventsQuery } from '@/api/queries/__generated__/channels.generated'
 
 import { mapEventToPaymentHistory } from './PaymentTransactions.utils'
 
-export const useChannelPaymentsHistory = (
-  channel?: GetExtendedFullChannelsQuery['extendedChannels'][number]['channel']
-) => {
+export const useChannelPaymentsHistory = (channelId: string) => {
   const { data, refetch, ...rest } = useGetChannelPaymentEventsQuery({
     variables: {
-      channelId: channel?.id ?? '-1',
-      ownerMemberId: channel?.ownerMember?.id ?? '-1',
+      channelId: channelId ?? '-1',
     },
-    skip: !channel,
+    skip: !channelId,
   })
 
   return {

@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 
-import { useFullChannel } from '@/api/hooks/channel'
 import { SvgJoyTokenMonochrome24 } from '@/assets/icons'
 import { TablePaymentsHistory } from '@/components/TablePaymentsHistory'
 import { WidgetTile } from '@/components/WidgetTile'
@@ -14,9 +13,8 @@ import { TableWrapper, TilesWrapper } from './PaymentTransactions.styles'
 
 export const PaymentTransactions = () => {
   const { channelId } = useUser()
-  const { channel } = useFullChannel(channelId ?? '')
 
-  const { paymentData, loading } = useChannelPaymentsHistory(channel)
+  const { paymentData, loading } = useChannelPaymentsHistory(channelId || '')
   const paymentHistoryOverview = useMemo(() => aggregatePaymentHistory(paymentData || []), [paymentData])
 
   return (

@@ -565,7 +565,6 @@ export type ReportChannelMutation = {
 }
 
 export type GetChannelPaymentEventsQueryVariables = Types.Exact<{
-  ownerMemberId?: Types.InputMaybe<Types.Scalars['String']>
   channelId?: Types.InputMaybe<Types.Scalars['String']>
 }>
 
@@ -1296,20 +1295,32 @@ export type ReportChannelMutationOptions = Apollo.BaseMutationOptions<
   ReportChannelMutationVariables
 >
 export const GetChannelPaymentEventsDocument = gql`
-  query GetChannelPaymentEvents($ownerMemberId: String, $channelId: String) {
+  query GetChannelPaymentEvents($channelId: String) {
     events(
       where: {
-        data: {
-          isTypeOf_in: [
-            "NftBoughtEventData"
-            "BidMadeCompletingAuctionEventData"
-            "EnglishAuctionSettledEventData"
-            "OpenAuctionBidAcceptedEventData"
-            "ChannelRewardClaimedEventData"
-            "ChannelFundsWithdrawnEventData"
-            "ChannelPaymentMadeEventData"
-          ]
-        }
+        OR: [
+          {
+            data: {
+              isTypeOf_in: [
+                "NftBoughtEventData"
+                "BidMadeCompletingAuctionEventData"
+                "EnglishAuctionSettledEventData"
+                "OpenAuctionBidAcceptedEventData"
+              ]
+              nftOwner: { channel: { id_eq: $channelId } }
+            }
+          }
+          {
+            data: {
+              isTypeOf_in: [
+                "ChannelRewardClaimedEventData"
+                "ChannelFundsWithdrawnEventData"
+                "ChannelPaymentMadeEventData"
+              ]
+              channel: { id_eq: $channelId }
+            }
+          }
+        ]
       }
     ) {
       inBlock
@@ -1410,7 +1421,6 @@ export const GetChannelPaymentEventsDocument = gql`
  * @example
  * const { data, loading, error } = useGetChannelPaymentEventsQuery({
  *   variables: {
- *      ownerMemberId: // value for 'ownerMemberId'
  *      channelId: // value for 'channelId'
  *   },
  * });
