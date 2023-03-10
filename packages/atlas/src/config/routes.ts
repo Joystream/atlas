@@ -29,7 +29,7 @@ export const relativeRoutes = {
     search: (query?: { query?: string }) => withQueryParameters('search', query),
     channel: (id = ':id') => `channel/${id}`,
     channels: () => 'channels',
-    video: (id = ':id', query?: { commentId?: string }) => withQueryParameters(`video/${id}`, query),
+    video: (id = ':id', query?: { commentId?: string; playlist?: string }) => withQueryParameters(`video/${id}`, query),
     editMembership: () => 'member/edit',
     member: (handle = ':handle') => `member/${handle}`,
     notifications: () => 'notifications',
@@ -80,4 +80,5 @@ export const absoluteRoutes = Object.entries(BASE_PATHS).reduce((absoluteRoutesA
 export const QUERY_PARAMS = {
   SEARCH: 'query',
   COMMENT_ID: 'commentId',
+  PLAYLIST: 'playlist',
 }

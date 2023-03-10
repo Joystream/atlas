@@ -16,6 +16,7 @@ import {
   PlaylistInfoWrapper,
   PlaylistWidgetWrapper,
   StyledLink,
+  StyledText,
   StyledVideoThumbnail,
   TileItemWrapper,
   TileList,
@@ -64,7 +65,9 @@ export const PlaylistWidget: FC<PlaylistWidgetProps> = ({
       <PlaylistBody isExpanded={isExpanded} maxHeight={maxHeight - headerHeight}>
         <TileList>
           {playlistVideos.map((video, idx) => (
-            <TileItem video={video} key={video.id} idx={idx} />
+            <StyledLink key={video.id} to={absoluteRoutes.viewer.video(video.id, { playlist: 'true' })}>
+              <TileItem video={video} key={video.id} idx={idx} />
+            </StyledLink>
           ))}
         </TileList>
       </PlaylistBody>
@@ -85,7 +88,6 @@ export const TileItem: FC<PlaylistWidgetTilesProps> = ({ video, idx }) => {
         {idx + 1}
       </Counter>
       <StyledVideoThumbnail
-        videoHref={absoluteRoutes.viewer.video(video.id)}
         type="video"
         thumbnailUrl={thumbnailUrl}
         loading={isLoadingThumbnail}
@@ -97,11 +99,9 @@ export const TileItem: FC<PlaylistWidgetTilesProps> = ({ video, idx }) => {
           },
         }}
       />
-      <StyledLink to={absoluteRoutes.viewer.video(video.id)}>
-        <Text margin={{ left: 3 }} variant="t200-strong" as="p">
-          {video.title}
-        </Text>
-      </StyledLink>
+      <StyledText margin={{ left: 3 }} variant="t200-strong" as="p">
+        {video.title}
+      </StyledText>
     </TileItemWrapper>
   )
 }

@@ -19,6 +19,11 @@ export const PlaylistHeader = styled.header`
   cursor: pointer;
 `
 
+export const StyledText = styled(Text)`
+  min-width: 0;
+  word-break: break-all;
+`
+
 export const StyledLink = styled(Link)`
   color: inherit;
   text-decoration: none;

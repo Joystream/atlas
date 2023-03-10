@@ -46,7 +46,7 @@ export const VideoTile: FC<VideoTileProps> = memo(
     playlistUrl,
   }) => {
     const [tileSize, setTileSize] = useState<'small' | 'medium'>()
-    const { ref: thumbnailRef } = useResizeObserver<HTMLAnchorElement>({
+    const { ref: thumbnailRef } = useResizeObserver<HTMLDivElement>({
       onResize: (size) => {
         const { width: videoTileWidth } = size
         if (videoTileWidth) {
