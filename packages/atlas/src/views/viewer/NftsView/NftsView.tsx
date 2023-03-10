@@ -14,6 +14,7 @@ import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useNfts } from '@/hooks/useNfts'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
+import { createPlaceholderData } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
 import { StyledPagination } from '@/views/studio/MyVideosView/MyVideos.styles'
 
@@ -117,12 +118,7 @@ export const NftsView: FC = () => {
         />
       </HeaderWrapper>
       <StyledGrid maxColumns={null} onResize={handleResizeGrid} isFiltersOpen={isFiltersOpen}>
-        {(loading
-          ? Array.from({ length: tilesPerPage }, () => ({
-              id: undefined,
-            }))
-          : nfts ?? []
-        ).map((nft, idx) => (
+        {(loading ? createPlaceholderData(tilesPerPage) : nfts ?? []).map((nft, idx) => (
           <NftTileViewer key={`${idx}-${nft.id}`} nftId={nft.id} />
         ))}
       </StyledGrid>

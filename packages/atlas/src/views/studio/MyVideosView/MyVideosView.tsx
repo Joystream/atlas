@@ -28,6 +28,7 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { sizes } from '@/styles'
+import { createPlaceholderData } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
 import { YppVideoDto } from '@/views/studio/MyVideosView/MyVideosView.types'
@@ -137,13 +138,10 @@ export const MyVideosView = () => {
   const videos = [...(edges?.length ? ['new-video-tile' as const, ...edges] : [])]
     ?.map((edge) => (edge === 'new-video-tile' ? edge : edge.node))
     .slice(currentPage * videosPerPage, currentPage * videosPerPage + videosPerPage)
-  const placeholderItems = Array.from(
-    { length: areTilesLoading ? videosPerPage - (videos ? videos.length : 0) : 0 },
-    () => ({
-      id: undefined,
-      progress: undefined,
-    })
-  )
+  const placeholderItems = createPlaceholderData(areTilesLoading ? videosPerPage - (videos ? videos.length : 0) : 0, {
+    id: undefined,
+    progress: undefined,
+  })
 
   const videosWithSkeletonLoaders = [...(videos || []), ...placeholderItems]
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)

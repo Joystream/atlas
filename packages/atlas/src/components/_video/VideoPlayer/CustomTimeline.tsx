@@ -2,6 +2,7 @@ import { clamp, round } from 'lodash-es'
 import { Dispatch, FC, MouseEvent, SetStateAction, TouchEvent, useEffect, useRef, useState } from 'react'
 import { VideoJsPlayer } from 'video.js'
 
+import { repeat } from '@/utils/data'
 import { formatDurationShort } from '@/utils/time'
 
 import {
@@ -104,7 +105,7 @@ export const CustomTimeline: FC<CustomTimelineProps> = ({
       }
 
       // get all buffered time ranges
-      const bufferedTimeRanges = Array.from({ length: buffered.length }).map((_, idx) => ({
+      const bufferedTimeRanges = repeat(buffered.length).map((_, idx) => ({
         bufferedStart: buffered.start(idx),
         bufferedEnd: buffered.end(idx),
       }))

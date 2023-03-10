@@ -8,6 +8,7 @@ import { NftTileViewer } from '@/components/_nft/NftTileViewer'
 import { useNfts } from '@/hooks/useNfts'
 import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
+import { createPlaceholderData } from '@/utils/data'
 
 import { StyledPagination, VideoSection } from './ChannelViewTabs.styles'
 
@@ -74,12 +75,7 @@ export const ChannelNfts: FC<ChannelNftsProps> = ({
           />
         )}
         <Grid maxColumns={null} onResize={onResize}>
-          {(loading
-            ? Array.from({ length: tilesPerPage }, () => ({
-                id: undefined,
-              }))
-            : nfts ?? []
-          )?.map((nft, idx) => (
+          {(loading ? createPlaceholderData(tilesPerPage) : nfts ?? [])?.map((nft, idx) => (
             <NftTileViewer key={`${nft.id}-${idx}`} nftId={nft.id} />
           ))}
         </Grid>

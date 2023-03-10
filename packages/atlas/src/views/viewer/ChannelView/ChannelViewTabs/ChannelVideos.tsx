@@ -8,6 +8,7 @@ import { Grid } from '@/components/Grid'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { transitions } from '@/styles'
+import { createPlaceholderData } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
 
 import { StyledPagination, VideoSection } from './ChannelViewTabs.styles'
@@ -98,11 +99,8 @@ export const ChannelVideos: FC<ChannelVideosProps> = ({
     ? videos.slice(currentSearchPage * tilesPerPage, currentSearchPage * tilesPerPage + tilesPerPage)
     : videos.slice(currentPage * tilesPerPage, currentPage * tilesPerPage + tilesPerPage)
 
-  const placeholderItems = Array.from(
-    { length: loadingVideos || loadingSearch ? tilesPerPage - (paginatedVideos ? paginatedVideos.length : 0) : 0 },
-    () => ({
-      id: undefined,
-    })
+  const placeholderItems = createPlaceholderData(
+    loadingVideos || loadingSearch ? tilesPerPage - (paginatedVideos ? paginatedVideos.length : 0) : 0
   )
 
   const videosWithPlaceholders = [...(paginatedVideos || []), ...placeholderItems]
