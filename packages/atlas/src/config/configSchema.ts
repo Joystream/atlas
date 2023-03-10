@@ -6,6 +6,7 @@ const YppWidgetIconEnum = z.enum(['info', 'message', 'tokenStack'])
 
 export const configSchema = z.object({
   general: z.object({
+    appId: z.string().optional(),
     appName: z.string(),
     appDescription: z.string(),
     appTagline: z.string().optional(),
@@ -102,7 +103,6 @@ export const configSchema = z.object({
     }),
   }),
   content: z.object({
-    blockedDataObjectIds: z.array(z.string()),
     blockedVideoIds: z.array(z.string()),
     blockedChannelIds: z.array(z.string()),
     officialJoystreamChannelId: z.string().nullable(),

@@ -29,7 +29,6 @@ import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { SentryLogger } from '@/utils/logs'
-import { YPP_POLL_INTERVAL } from '@/utils/polling'
 import { formatDurationShort } from '@/utils/time'
 
 import { SlotsObject } from '../VideoThumbnail'
@@ -37,7 +36,7 @@ import { VideoTile } from '../VideoTile'
 
 type VideoTilePublisherProps = {
   id?: string
-  titlesInSync?: string[]
+  isSyncing?: boolean
   onEditClick?: (e?: MouseEvent<Element>) => void
   onMintNftClick?: (e?: MouseEvent<Element>) => void
   onDeleteVideoClick?: () => void
@@ -47,12 +46,11 @@ type VideoTilePublisherProps = {
 export const DELAYED_FADE_CLASSNAME = 'delayed-fade'
 
 export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
-  ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onMintNftClick, titlesInSync }) => {
+  ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onMintNftClick, isSyncing }) => {
     const [videoTitleMap, setVideoTitleMap] = useState('')
     const { video, loading } = useFullVideo(id ?? '', {
       skip: !id,
       onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTilePublisher', error, { video: { id } }),
-      pollInterval: titlesInSync?.length && titlesInSync.includes(videoTitleMap) ? YPP_POLL_INTERVAL : undefined,
     })
 
     useEffect(() => {
@@ -67,9 +65,11 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
     const hasNft = !!video?.nft
 
     const nftActions = useNftActions()
-    const owner = video?.nft?.ownerMember?.id !== video?.channel.ownerMember?.id ? video?.nft?.ownerMember : undefined
 
-    const ownerAvatar = useMemberAvatar(video?.nft?.ownerMember)
+    const videoNftOwner = video?.nft?.owner
+    const ownerMember = videoNftOwner?.__typename === 'NftOwnerMember' ? videoNftOwner.member : null
+
+    const ownerAvatar = useMemberAvatar(ownerMember)
 
     const nftStatus = getNftStatus(video?.nft, video)
 
@@ -105,9 +105,7 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
     const uploadVideoStatus = useUploadsStore((state) => state.uploadsStatus[video?.media?.id || ''])
     const uploadThumbnailStatus = useUploadsStore((state) => state.uploadsStatus[video?.thumbnailPhoto?.id || ''])
 
-    const isSyncingWithYoutube =
-      uploadVideoStatus?.lastStatus === 'yt-sync' ||
-      (titlesInSync?.includes(video?.title ?? '') && !video?.media?.isAccepted)
+    const isSyncingWithYoutube = uploadVideoStatus?.lastStatus === 'yt-sync' || (isSyncing && video?.ytVideoId)
 
     const isVideoUploading =
       uploadVideoStatus?.lastStatus === 'inProgress' ||
@@ -123,10 +121,13 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
     const hasThumbnailUploadFailed =
       (video?.thumbnailPhoto &&
         !video.thumbnailPhoto.isAccepted &&
-        uploadThumbnailStatus?.lastStatus !== 'completed') ||
+        uploadThumbnailStatus?.lastStatus !== 'completed' &&
+        !video.ytVideoId) ||
       false
+
     const hasVideoUploadFailed =
-      (video?.media && !video.media.isAccepted && uploadVideoStatus?.lastStatus !== 'completed') || false
+      (video?.media && !video.media.isAccepted && uploadVideoStatus?.lastStatus !== 'completed' && !video.ytVideoId) ||
+      false
 
     const hasAssetUploadFailed =
       (hasThumbnailUploadFailed || hasVideoUploadFailed) && !isUploading && !isSyncingWithYoutube
@@ -142,17 +143,17 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
           element: video?.duration ? <Pill variant="overlay" label={formatDurationShort(video?.duration)} /> : null,
         },
         bottomLeft: video?.nft ? nftTilePublisher : undefined,
-        topLeft: owner
+        topLeft: ownerMember
           ? {
               element: (
                 <OwnerPill
                   onClick={(e) => {
                     e?.preventDefault()
-                    navigate(absoluteRoutes.viewer.member(owner.handle))
+                    navigate(absoluteRoutes.viewer.member(ownerMember.handle))
                   }}
                   avatar={{ assetUrl: ownerAvatar.url, loading: ownerAvatar.isLoadingAsset }}
-                  handle={owner.handle}
-                  title={owner.handle}
+                  handle={ownerMember.handle}
+                  title={ownerMember.handle}
                 />
               ),
               clickable: true,
@@ -203,7 +204,7 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
       navigate,
       nftTilePublisher,
       onEditClick,
-      owner,
+      ownerMember,
       ownerAvatar.isLoadingAsset,
       ownerAvatar.url,
       video?.duration,
@@ -311,13 +312,14 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
         videoHref={getVideoHref()}
         linkState={hasAssetUploadFailed ? { highlightFailed: true } : undefined}
         videoSubTitle={getVideoSubtitle()}
+        channelTitle={video?.channel.title}
         detailsVariant="withoutChannel"
         loadingDetails={loading || !video}
         loadingThumbnail={isLoadingThumbnail && !hasThumbnailUploadFailed}
         thumbnailUrl={isSyncingWithYoutube ? null : thumbnailPhotoUrl}
         createdAt={video?.createdAt}
         videoTitle={video?.title}
-        views={video?.views}
+        views={video?.viewsNum}
         kebabMenuItems={getPublisherKebabMenuItems()}
       />
     )

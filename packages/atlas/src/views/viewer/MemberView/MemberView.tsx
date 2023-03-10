@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom'
 
 import { useMemberships } from '@/api/hooks/membership'
 import { useNftsConnection } from '@/api/hooks/nfts'
-import { OwnedNftOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { NftActivityOrderByInput, OwnedNftOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionFilters } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
@@ -14,7 +14,7 @@ import { ViewWrapper } from '@/components/ViewWrapper'
 import { Button } from '@/components/_buttons/Button'
 import { Select } from '@/components/_inputs/Select'
 import { absoluteRoutes } from '@/config/routes'
-import { NFT_SORT_OPTIONS } from '@/config/sorting'
+import { NFT_SORT_ACTIVITY_OPTIONS, NFT_SORT_OPTIONS } from '@/config/sorting'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -39,6 +39,9 @@ export const MemberView: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
   const [sortBy, setSortBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
+  const [sortByTimestamp, setSortByTimestamp] = useState<NftActivityOrderByInput>(
+    NftActivityOrderByInput.EventTimestampDesc
+  )
   const [currentTab, setCurrentTab] = useState<typeof TABS[number] | null>(null)
   const { memberId, activeMembership } = useUser()
   const { handle } = useParams()
@@ -50,14 +53,48 @@ export const MemberView: FC = () => {
     canClearFilters: { canClearAllFilters },
   } = filtersBarLogic
 
+  const sharedFilters = {
+    video: {
+      isPublic_eq: handle !== activeMembership?.handle || undefined,
+    },
+    ...ownedNftWhereInput,
+  }
+
   const { nfts, loading } = useNftsConnection(
     {
       where: {
-        ownerMember: { handle_eq: handle },
-        ...ownedNftWhereInput,
-        video: {
-          isPublic_eq: handle !== activeMembership?.handle || undefined,
-        },
+        OR: [
+          {
+            AND: [
+              {
+                owner: {
+                  isTypeOf_eq: 'NftOwnerChannel',
+                  channel: {
+                    ownerMember: {
+                      handle_eq: handle,
+                    },
+                  },
+                },
+              },
+              { ...sharedFilters },
+            ],
+          },
+          {
+            AND: [
+              {
+                owner: {
+                  isTypeOf_eq: 'NftOwnerMember',
+                  member: {
+                    handle_eq: handle,
+                  },
+                },
+              },
+              {
+                ...sharedFilters,
+              },
+            ],
+          },
+        ],
       },
       orderBy: sortBy as OwnedNftOrderByInput,
     },
@@ -85,6 +122,11 @@ export const MemberView: FC = () => {
       setSortBy(value)
     }
   }
+  const handleSortingActivity = (value?: NftActivityOrderByInput | null) => {
+    if (value) {
+      setSortByTimestamp(value)
+    }
+  }
   const handleSetCurrentTab = async (tab: number) => {
     setSearchParams({ 'tab': TABS[tab] }, { replace: true })
   }
@@ -105,11 +147,11 @@ export const MemberView: FC = () => {
           />
         )
       case 'Activity':
-        return <MemberActivity memberId={member?.id} sort={sortBy as 'createdAt_ASC' | 'createdAt_DESC'} />
+        return <MemberActivity memberId={member?.id} sort={sortByTimestamp} />
       case 'About':
         return <MemberAbout />
     }
-  }, [activeMembership?.handle, canClearAllFilters, currentTab, handle, loading, member?.id, nfts, sortBy])
+  }, [activeMembership?.handle, canClearAllFilters, currentTab, handle, loading, member?.id, nfts, sortByTimestamp])
 
   // At mount set the tab from the search params
   const initialRender = useRef(true)
@@ -168,13 +210,23 @@ export const MemberView: FC = () => {
             />
             {currentTab && ['NFTs owned', 'Activity'].includes(currentTab) && (
               <SortContainer>
-                <Select
-                  size="medium"
-                  inlineLabel="Sort by"
-                  value={sortBy}
-                  items={NFT_SORT_OPTIONS}
-                  onChange={handleSorting}
-                />
+                {currentTab === 'NFTs owned' ? (
+                  <Select
+                    size="medium"
+                    inlineLabel="Sort by"
+                    value={sortBy}
+                    items={NFT_SORT_OPTIONS}
+                    onChange={handleSorting}
+                  />
+                ) : (
+                  <Select
+                    size="medium"
+                    inlineLabel="Sort by"
+                    value={sortByTimestamp}
+                    items={NFT_SORT_ACTIVITY_OPTIONS}
+                    onChange={handleSortingActivity}
+                  />
+                )}
               </SortContainer>
             )}
             {currentTab === 'NFTs owned' && (

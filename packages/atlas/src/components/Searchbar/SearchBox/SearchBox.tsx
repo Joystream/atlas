@@ -173,6 +173,7 @@ export const SearchBox: FC<SearchBoxProps> = memo(
             {slicedVideos.map((video, idx) => (
               <Result
                 key={`result-video-${video.id}`}
+                loading={loading}
                 video={video}
                 query={searchQuery}
                 selected={selectedItem === idx + filteredRecentSearches.length}

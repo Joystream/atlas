@@ -21,7 +21,7 @@ export const useFiltersBar = () => {
   const canClearDateUploadedFilter = videoWhereInput?.createdAt_gte !== undefined
   const canClearVideoLengthFilter =
     videoWhereInput?.duration_lte !== undefined || videoWhereInput?.duration_gte !== undefined
-  const canClearOtherFilters = videoWhereInput?.hasMarketing_eq === false || videoWhereInput?.isExplicit_eq === false
+  const canClearOtherFilters = videoWhereInput?.AND && videoWhereInput.AND.length > 0
   const canClearNftStatusFilter = nftStatusFilter && nftStatusFilter.length > 0
   const canClearCategoriesFilter =
     (videoWhereInput?.category && videoWhereInput.category.id_in && videoWhereInput.category.id_in.length !== 0) ||
@@ -52,8 +52,7 @@ export const useFiltersBar = () => {
     setExcludePaidPromotionalMaterialFilter(undefined)
     setExcludeMatureContentRatingFilter(undefined)
     setVideoWhereInput((value) => {
-      delete value.isExplicit_eq
-      delete value.hasMarketing_eq
+      delete value.AND
       return value
     })
   }

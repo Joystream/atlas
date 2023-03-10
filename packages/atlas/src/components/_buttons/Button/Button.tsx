@@ -25,6 +25,7 @@ export type ButtonProps = PropsWithChildren<{
   onMouseLeave?: (e: MouseEvent<HTMLButtonElement>) => void
   onAnimationEnd?: (e: AnimationEvent<HTMLButtonElement>) => void
   onKeyPress?: (e: KeyboardEvent<HTMLButtonElement>) => void
+  rounded?: boolean
   // internal
   _textOnly?: boolean
   ariaLabel?: string
@@ -51,6 +52,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) =>
     badge,
     _textOnly,
     variant = 'primary',
+    rounded = false,
     ariaLabel,
     ...baseButtonProps
   } = props
@@ -71,6 +73,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) =>
       size={size}
       data-badge={badge}
       aria-label={ariaLabel || (typeof children === 'string' ? children : undefined)}
+      rounded={rounded}
       {...linkProps}
       {...baseButtonProps}
     >

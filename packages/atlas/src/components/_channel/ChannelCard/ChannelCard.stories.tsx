@@ -4,7 +4,6 @@ import { BrowserRouter } from 'react-router-dom'
 
 // import { createApolloClient } from '@/api'
 import { Grid } from '@/components/Grid'
-import { AssetsManager } from '@/providers/assets/assets.manager'
 import { OperatorsContextProvider } from '@/providers/assets/assets.provider'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
@@ -36,7 +35,6 @@ export default {
             <OverlayManagerProvider>
               <OperatorsContextProvider>
                 <ConfirmationModalProvider>
-                  <AssetsManager />
                   <Story />
                 </ConfirmationModalProvider>
               </OperatorsContextProvider>

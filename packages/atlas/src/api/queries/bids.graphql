@@ -1,3 +1,4 @@
+# No changes
 query GetBids($where: BidWhereInput!) {
   bids(where: $where, orderBy: [createdAt_ASC]) {
     ...FullBidFields

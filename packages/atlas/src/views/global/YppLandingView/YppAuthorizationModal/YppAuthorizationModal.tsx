@@ -9,7 +9,6 @@ import { useBasicChannel } from '@/api/hooks/channel'
 import { FullMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionNewTab, SvgAlertsError32 } from '@/assets/icons'
 import appScreenshot from '@/assets/images/ypp-authorization/app-screenshot.webp'
-import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { Loader } from '@/components/_loaders/Loader'
@@ -18,7 +17,8 @@ import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
-import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useBloatFeesAndPerMbFees, useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useOverlayManager } from '@/providers/overlayManager'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -28,7 +28,6 @@ import { pluralizeNoun } from '@/utils/misc'
 
 import { useGetYppChannelRequirments, useYppGoogleAuth } from './YppAuthorizationModal.hooks'
 import {
-  AdditionalSubtitleWrapper,
   Anchor,
   Content,
   DescriptionText,
@@ -71,7 +70,9 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   unSyncedChannels,
 }) => {
   const { setActiveUser, memberId } = useUser()
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const navigate = useNavigate()
+  const { decrementOverlaysOpenCount } = useOverlayManager()
   const contentRef = useRef<HTMLDivElement | null>(null)
   const channelsLoaded = !!unSyncedChannels
   const hasMoreThanOneChannel = unSyncedChannels && unSyncedChannels.length > 1
@@ -102,25 +103,11 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   const { joystream, proxyCallback } = useJoystream()
   const youtubeCollaboratorMemberId = atlasConfig.features.ypp.youtubeCollaboratorMemberId || ''
 
-  const { channel: channel } = useBasicChannel(referrerId || '', {
+  const { extendedChannel } = useBasicChannel(referrerId || '', {
     skip: !referrerId,
   })
 
-  const { fullFee: updateChannelFee } = useFee(
-    'updateChannelTx',
-    selectedChannelId && memberId
-      ? [
-          selectedChannelId,
-          memberId,
-          { ownerAccount: memberId },
-          {},
-          [],
-          dataObjectStateBloatBondValue.toString(),
-          channelBucketsCount.toString(),
-          youtubeCollaboratorMemberId,
-        ]
-      : undefined
-  )
+  const channel = extendedChannel?.channel
 
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
@@ -191,6 +178,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       return
     }
     try {
+      setIsSubmitting(true)
       await yppChannelMutation(finalFormData)
       const completed = await handleTransaction({
         txFactory: async (updateStatus) => {
@@ -223,6 +211,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           formData: finalFormData,
         },
       })
+    } finally {
+      setIsSubmitting(false)
     }
   }, [
     joystream,
@@ -288,6 +278,11 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
 
     _handleAuthorizeClick()
   }, [_handleAuthorizeClick, displaySnackbar, isSelectedChannelValid, navigate, selectedChannel, setActiveUser])
+
+  const handleGoToDashboard = useCallback(() => {
+    decrementOverlaysOpenCount()
+    setActiveUser({ channelId: selectedChannel?.id })
+  }, [decrementOverlaysOpenCount, selectedChannel?.id, setActiveUser])
 
   const convertHoursRequirementTime = (hours: number) => {
     if (hours > 24 * 30) {
@@ -404,24 +399,14 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         }
       case 'terms-and-conditions':
         return {
-          title: 'Terms & conditions',
+          title: null,
           description: ``,
           primaryButton: {
-            text: 'Accept terms & sign',
+            text: isSubmitting ? 'Please wait...' : 'Accept terms & sign',
+            disabled: isSubmitting,
             onClick: handleAcceptTermsAndSubmit,
           },
-          additionalSubtitleNode: (
-            <AdditionalSubtitleWrapper>
-              <Text variant={smMatch ? 'h400' : 'h300'} as="h3" margin={{ bottom: 4 }}>
-                Transaction fee
-              </Text>
-              <Text variant="t200" as="p" color="colorText" margin={{ bottom: 6 }}>
-                Applying for the program requires requires a blockchain transaction, which comes with a fee of{' '}
-                <NumberFormat as="span" variant="t200" value={updateChannelFee} withToken />. Transaction fees are
-                covered from your membership account balance.
-              </Text>
-            </AdditionalSubtitleWrapper>
-          ),
+          additionalSubtitleNode: null,
           component: <YppAuthorizationTermsAndConditionsStep />,
         }
       case 'summary':
@@ -433,7 +418,11 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
               more information.
             </DescriptionText>
           ),
-          primaryButton: { text: 'Go to dashboard', to: absoluteRoutes.studio.yppDashboard() },
+          primaryButton: {
+            text: 'Go to dashboard',
+            to: absoluteRoutes.studio.yppDashboard(),
+            onClick: handleGoToDashboard,
+          },
           component: <Img src={appScreenshot} />,
         }
       case 'channel-already-registered':
@@ -466,9 +455,9 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     handleSelectChannel,
     handleAuthorizeClick,
     requirments,
+    isSubmitting,
     handleAcceptTermsAndSubmit,
-    smMatch,
-    updateChannelFee,
+    handleGoToDashboard,
     alreadyRegisteredChannel?.channelTitle,
     alreadyRegisteredChannel?.ownerMemberHandle,
     onChangeStep,
@@ -486,9 +475,10 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
 
     return {
       text: 'Back',
+      disabled: isSubmitting,
       onClick: handleGoBack,
     }
-  }, [currentStep, handleGoBack, hasMoreThanOneChannel, handleClose])
+  }, [currentStep, hasMoreThanOneChannel, handleGoBack, isSubmitting, handleClose])
 
   return (
     <FormProvider {...detailsFormMethods}>
@@ -502,7 +492,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         additionalActionsNode={
           currentStep !== 'summary' &&
           currentStep !== 'fetching-data' && (
-            <Button variant="tertiary" onClick={handleClose}>
+            <Button variant="tertiary" disabled={isSubmitting} onClick={handleClose}>
               Cancel
             </Button>
           )

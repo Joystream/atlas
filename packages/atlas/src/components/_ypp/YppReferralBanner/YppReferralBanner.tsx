@@ -10,7 +10,6 @@ import { atlasConfig } from '@/config'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
-import { useAsset } from '@/providers/assets/assets.hooks'
 import { useYppStore } from '@/providers/ypp/ypp.store'
 import { cVar, transitions } from '@/styles'
 
@@ -43,13 +42,12 @@ export const YppReferralBanner: FC<YppReferralBannerProps> = ({ className }) => 
 
   const storeReferrerId = useYppStore((state) => state.referrerId)
   const referrerId = queryReferrerId || storeReferrerId
-  const { loading: isLoadingChannel, channel: channel } = useBasicChannel(referrerId || '', {
+  const { loading, extendedChannel } = useBasicChannel(referrerId || '', {
     skip: !referrerId,
   })
-  const { isLoadingAsset: isLoadingAvatar, url: channelAvatarUrl } = useAsset(channel?.avatarPhoto)
-  const shouldShowReferrerBanner = referrerId && (isLoadingChannel || channel)
-
-  const isLoading = isLoadingAvatar || isLoadingChannel
+  const channel = extendedChannel?.channel
+  const channelAvatarUrl = channel?.avatarPhoto?.resolvedUrl
+  const shouldShowReferrerBanner = referrerId && (loading || channel)
 
   if (!shouldShowReferrerBanner) {
     return null
@@ -60,15 +58,15 @@ export const YppReferralBanner: FC<YppReferralBannerProps> = ({ className }) => 
       <ReferralBannerContainer className={className}>
         <ChannelInfoContainer>
           <ChannelAvatarLink to={absoluteRoutes.viewer.channel(channel?.id)}>
-            <Avatar clickable loading={isLoading} assetUrl={channelAvatarUrl} />
+            <Avatar clickable loading={loading} assetUrl={channelAvatarUrl} />
           </ChannelAvatarLink>
           <SwitchTransition>
             <CSSTransition
-              key={isLoading ? 'placeholder' : 'content'}
+              key={loading ? 'placeholder' : 'content'}
               timeout={parseInt(cVar('animationTimingFast', true))}
               classNames={transitions.names.fade}
             >
-              {isLoading ? (
+              {loading ? (
                 <>
                   <SkeletonLoader bottomSpace={4} width={70} height={14} />
                   <SkeletonLoader width={50} height={18} />

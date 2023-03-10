@@ -1,41 +1,36 @@
-query GetBasicChannel($where: ChannelWhereUniqueInput!) {
-  channelByUniqueInput(where: $where) {
-    ...BasicChannelFields
-  }
-}
+# CHANGE: Dropped because unused:
+# query GetBasicChannel(...) { ... }
 
-query GetFullChannel($where: ChannelWhereUniqueInput!) {
-  channelByUniqueInput(where: $where) {
+query GetFullChannel($id: String!) {
+  # CHANGE: `channelByUniqueInput` is no longer supported in subsquid, replaced with `channelById`
+  channelById(id: $id) {
     ...FullChannelFields
   }
 }
 
-query GetVideoCount($where: VideoWhereInput) {
-  videosConnection(first: 0, where: $where) {
-    totalCount
-  }
-}
-
-query GetBasicChannels(
-  $where: ChannelWhereInput
+# CHANGE: `channels` replaced with `extendedChannels` (which include `activeVideosCount`)
+query GetExtendedBasicChannels(
+  $where: ExtendedChannelWhereInput
   $limit: Int = 50
   $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]
 ) {
-  channels(where: $where, orderBy: $orderBy, limit: $limit) {
-    ...BasicChannelFields
+  extendedChannels(where: $where, orderBy: $orderBy, limit: $limit) {
+    ...ExtendedBasicChannelFields
   }
 }
 
-query GetFullChannels(
-  $where: ChannelWhereInput
+# CHANGE: `channels` replaced with `extendedChannels` (which include `activeVideosCount`)
+query GetExtendedFullChannels(
+  $where: ExtendedChannelWhereInput
   $limit: Int = 50
   $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]
 ) {
-  channels(where: $where, orderBy: $orderBy, limit: $limit) {
-    ...FullChannelFields
+  extendedChannels(where: $where, orderBy: $orderBy, limit: $limit) {
+    ...ExtendedFullChannelFields
   }
 }
 
+# No changes (UNLESS `activeVideosCount` is needed in "where")
 query GetBasicChannelsConnection(
   $first: Int
   $after: String
@@ -57,94 +52,65 @@ query GetBasicChannelsConnection(
   }
 }
 
-mutation FollowChannel($channelId: ID!) {
+# CHANGE: `ID` is now `String`
+mutation FollowChannel($channelId: String!) {
   followChannel(channelId: $channelId) {
-    id
+    channelId
+    follows
+    cancelToken
+  }
+}
+
+# CHANGE: `ID` is now `String`
+mutation UnfollowChannel($channelId: String!, $token: String!) {
+  unfollowChannel(channelId: $channelId, token: $token) {
+    channelId
     follows
   }
 }
 
-mutation UnfollowChannel($channelId: ID!) {
-  unfollowChannel(channelId: $channelId) {
-    id
-    follows
-  }
-}
+# CHANGE: Removed because unused:
+# query GetMostViewedChannelsConnection(...) { ... }
 
-query GetMostViewedChannelsConnection(
-  $limit: Int = 50
-  $periodDays: Int
-  $first: Int
-  $after: String
-  $where: ChannelWhereInput
-) {
-  mostViewedChannelsConnection(limit: $limit, first: $first, after: $after, periodDays: $periodDays, where: $where) {
-    edges {
-      cursor
-      node {
-        ...BasicChannelFields
-      }
+query GetTop10Channels($where: ExtendedChannelWhereInput) {
+  # CHANGE: Replacement for overly-specific `top10Channels` query
+  extendedChannels(where: $where, orderBy: followsNum_DESC, limit: 10) {
+    channel {
+      ...BasicChannelFields
     }
-    pageInfo {
-      hasNextPage
-      endCursor
+  }
+}
+
+query GetPromisingChannels($where: ExtendedChannelWhereInput) {
+  # CHANGE: Replacement for overly-specific `promisingChannels` query
+  mostRecentChannels(where: $where, orderBy: videoViewsNum_DESC, mostRecentLimit: 100, resultsLimit: 15) {
+    channel {
+      ...BasicChannelFields
     }
-    totalCount
   }
 }
 
-query GetMostFollowedChannelsConnection(
-  $limit: Int!
-  $periodDays: Int
-  $first: Int
-  $after: String
-  $where: ChannelWhereInput
-) {
-  mostFollowedChannelsConnection(limit: $limit, first: $first, after: $after, periodDays: $periodDays, where: $where) {
-    edges {
-      cursor
-      node {
-        ...BasicChannelFields
-      }
+query GetDiscoverChannels($where: ExtendedChannelWhereInput) {
+  # CHANGE: Replacement for overly-specific `discoverChannels` query
+  mostRecentChannels(where: $where, orderBy: followsNum_DESC, mostRecentLimit: 100, resultsLimit: 15) {
+    channel {
+      ...BasicChannelFields
     }
-    pageInfo {
-      hasNextPage
-      endCursor
+  }
+}
+
+query GetPopularChannels($where: ExtendedChannelWhereInput) {
+  # CHANGE: Replacement for overly-specific `popularChannels` query
+  extendedChannels(where: $where, orderBy: videoViewsNum_DESC, limit: 15) {
+    channel {
+      ...BasicChannelFields
     }
-    totalCount
   }
 }
 
-query GetTop10Channels($where: ChannelWhereInput) {
-  top10Channels(where: $where) {
-    ...BasicChannelFields
-  }
-}
-
-query GetPromisingChannels($where: ChannelWhereInput) {
-  promisingChannels(where: $where) {
-    ...BasicChannelFields
-  }
-}
-
-query GetDiscoverChannels($where: ChannelWhereInput) {
-  discoverChannels(where: $where) {
-    ...BasicChannelFields
-  }
-}
-
-query GetPopularChannels($where: ChannelWhereInput) {
-  popularChannels(where: $where) {
-    ...BasicChannelFields
-  }
-}
-
-query GetChannelNftCollectors(
-  $where: ChannelNftCollectorsWhereInput
-  $orderBy: [ChannelNftCollectorsOrderByInput!] = [amount_DESC]
-) {
-  channelNftCollectors(where: $where, orderBy: $orderBy) {
-    id
+# CHANGE: Replaced with a custom `channelNftCollectors` query taking `channelId` argument (instead of `ChannelNftCollectorsWhereInput`)
+query GetChannelNftCollectors($channelId: String!, $orderBy: ChannelNftCollectorsOrderByInput = amount_DESC) {
+  channelNftCollectors(channelId: $channelId, orderBy: $orderBy) {
     member {
       ...BasicMembershipFields
     }
@@ -153,107 +119,140 @@ query GetChannelNftCollectors(
 }
 
 query GetPayloadDataObjectIdByCommitment($commitment: String!) {
-  channelPayoutsUpdatedEvents(where: { commitment_eq: $commitment }, limit: 1) {
-    payloadDataObject {
-      id
-      storageBagId
+  events(where: { data: { isTypeOf_eq: "ChannelPayoutsUpdatedEventData", commitment_eq: $commitment } }) {
+    data {
+      ... on ChannelPayoutsUpdatedEventData {
+        commitment
+        payloadDataObject {
+          id
+          resolvedUrl
+          storageBag {
+            id
+          }
+        }
+      }
     }
   }
 }
 
-mutation ReportChannel($channelId: ID!, $rationale: String!) {
+# CHANGE: `ID` is now `String`
+mutation ReportChannel($channelId: String!, $rationale: String!) {
   reportChannel(channelId: $channelId, rationale: $rationale) {
     id
     channelId
   }
 }
 
-query GetChannelPaymentEvents($ownerMemberId: ID!, $channelId: ID!) {
-  nftBoughtEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
+query GetChannelPaymentEvents($channelId: String) {
+  events(
+    orderBy: timestamp_DESC
+    where: {
+      OR: [
+        {
+          data: {
+            isTypeOf_in: [
+              "NftBoughtEventData"
+              "BidMadeCompletingAuctionEventData"
+              "EnglishAuctionSettledEventData"
+              "OpenAuctionBidAcceptedEventData"
+            ]
+            previousNftOwner: { channel: { id_eq: $channelId } }
+          }
+        }
+        {
+          data: {
+            isTypeOf_in: [
+              "ChannelRewardClaimedEventData"
+              "ChannelFundsWithdrawnEventData"
+              "ChannelPaymentMadeEventData"
+            ]
+            channel: { id_eq: $channelId }
+          }
+        }
+      ]
+    }
+  ) {
     inBlock
-    createdAt
-    price
-    video {
-      title
-    }
-    member {
-      controllerAccount
-    }
-  }
-
-  bidMadeCompletingAuctionEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
-    inBlock
-    createdAt
-    price
-    video {
-      title
-    }
-    member {
-      controllerAccount
-    }
-  }
-
-  englishAuctionSettledEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
-    createdAt
-    inBlock
-    video {
-      title
-    }
-    winningBid {
-      amount
-    }
-    winner {
-      controllerAccount
-    }
-  }
-
-  openAuctionBidAcceptedEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
-    inBlock
-    createdAt
-    video {
-      title
-    }
-    winningBid {
-      amount
-    }
-    winningBidder {
-      controllerAccount
-    }
-  }
-
-  channelRewardClaimedEvents(where: { channel: { id_eq: $channelId } }) {
-    amount
-    createdAt
-    inBlock
-  }
-
-  channelFundsWithdrawnEvents(where: { channel: { id_eq: $channelId } }) {
-    amount
-    createdAt
-    inBlock
-    actor {
-      ... on ContentActorCurator {
-        __typename
+    timestamp
+    data {
+      __typename
+      ... on NftBoughtEventData {
+        price
+        buyer {
+          controllerAccount
+        }
+        nft {
+          video {
+            title
+          }
+        }
       }
-      ... on ContentActorLead {
-        __typename
+      ... on BidMadeCompletingAuctionEventData {
+        winningBid {
+          nft {
+            video {
+              title
+            }
+          }
+          bidder {
+            controllerAccount
+          }
+          amount
+        }
       }
-
-      ... on ContentActorMember {
-        member {
+      ... on EnglishAuctionSettledEventData {
+        winningBid {
+          nft {
+            video {
+              title
+            }
+          }
+          bidder {
+            controllerAccount
+          }
+          amount
+        }
+      }
+      ... on OpenAuctionBidAcceptedEventData {
+        winningBid {
+          nft {
+            video {
+              title
+            }
+          }
+          bidder {
+            controllerAccount
+          }
+          amount
+        }
+      }
+      ... on ChannelRewardClaimedEventData {
+        amount
+      }
+      ... on ChannelFundsWithdrawnEventData {
+        amount
+        actor {
+          __typename
+          ... on ContentActorCurator {
+            __typename
+          }
+          ... on ContentActorLead {
+            __typename
+          }
+          ... on ContentActorMember {
+            member {
+              controllerAccount
+            }
+          }
+        }
+      }
+      ... on ChannelPaymentMadeEventData {
+        amount
+        rationale
+        payer {
           controllerAccount
         }
       }
-    }
-  }
-
-  channelPaymentMadeEvents(where: { payeeChannel: { id_eq: $channelId } }) {
-    amount
-    createdAt
-    inBlock
-    rationale
-    payer {
-      controllerAccount
     }
   }
 }

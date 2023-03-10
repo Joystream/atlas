@@ -36,15 +36,15 @@ export const CommentEditHistory: FC<CommentEditHistoryProps> = ({ originalCommen
           </Container>
         ) : (
           <Container>
-            {commentEdits?.map(({ id, newText, createdAt }, idx) => {
+            {commentEdits?.map((commentEdit, idx) => {
               return (
                 <CommentSnapshot
-                  key={id}
+                  key={commentEdit.id}
                   last={commentEdits?.length === idx + 1}
-                  createdAt={createdAt}
+                  createdAt={commentEdit.timestamp}
                   memberHandle={originalComment?.author?.handle}
                   memberUrl={absoluteRoutes.viewer.member(originalComment?.author?.handle)}
-                  text={newText}
+                  text={commentEdit.data.text}
                   loading={loading}
                   memberAvatarUrl={memberAvatarUrl || ''}
                   isMemberAvatarLoading={isLoadingAsset}

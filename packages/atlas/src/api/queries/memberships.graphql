@@ -1,11 +1,15 @@
-query GetMembership($where: MembershipWhereUniqueInput!) {
-  membershipByUniqueInput(where: $where) {
-    ...FullMembershipFields
-  }
-}
+# CHANGE: Dropped because there is no `membershipByUniqueInput` in subsquid
+# In order to ge membership by handle, either use `GetMemberships` or a custom query needs to be added
+# query GetMembership(...) { ... }
 
 query GetMemberships($where: MembershipWhereInput!) {
   memberships(where: $where, orderBy: [createdAt_ASC]) {
     ...FullMembershipFields
+  }
+}
+
+query GetChannelCount($where: ChannelWhereInput) {
+  channelsConnection(where: $where, orderBy: [createdAt_ASC]) {
+    totalCount
   }
 }

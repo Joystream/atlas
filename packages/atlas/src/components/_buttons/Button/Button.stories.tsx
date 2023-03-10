@@ -126,6 +126,9 @@ const IconOnlyTemplate: StoryFn<ButtonProps> = (args) => (
     <Button {...args} size="large" variant="tertiary" />
     <Button {...args} size="medium" variant="tertiary" />
     <Button {...args} size="small" variant="tertiary" />
+    <Button {...args} size="large" variant="destructive" />
+    <Button {...args} size="medium" variant="destructive" />
+    <Button {...args} size="small" variant="destructive" />
     <Button {...args} size="large" variant="destructive-secondary" />
     <Button {...args} size="medium" variant="destructive-secondary" />
     <Button {...args} size="small" variant="destructive-secondary" />

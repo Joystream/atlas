@@ -23,9 +23,6 @@ const Template: StoryFn = (args) => {
         primaryButton={{
           text: 'Action1',
         }}
-        secondaryButton={{
-          text: 'Action2',
-        }}
       >
         <Text as="span" variant="t200">
           Example text
@@ -54,3 +51,10 @@ const Template: StoryFn = (args) => {
 }
 
 export const Regular = Template.bind({})
+Regular.args = {
+  secondaryButton: {
+    text: 'Action2',
+  },
+}
+
+export const SingleButton = Template.bind({})

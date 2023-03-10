@@ -22,7 +22,6 @@ export const Thead = styled.thead`
 
 const cellStyles = css`
   padding: ${sizes(3.5)} ${sizes(2)};
-  max-height: 72px;
 
   :first-of-type {
     padding-left: ${sizes(6)};

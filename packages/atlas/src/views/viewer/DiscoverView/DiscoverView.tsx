@@ -21,15 +21,13 @@ export const DiscoverView: FC = () => {
   const { loading, displayCategoriesWithCounter, totalVideosCount } = useVideoDisplayCategoriesWithCounter()
   const { allCategoriesFeaturedVideos } = useAllCategoriesFeaturedVideos()
 
-  const categoriesFeaturedVideos = allCategoriesFeaturedVideos
-    ? createLookup(allCategoriesFeaturedVideos.map((category) => ({ id: category.categoryId, ...category })))
-    : null
+  const categoriesFeaturedVideos = allCategoriesFeaturedVideos ? createLookup(allCategoriesFeaturedVideos) : null
 
   const featuredVideoCategoryCardsData = useMemo(() => {
     const _featuredVideoCategoryCardsData =
       displayCategoriesWithCounter
         .map((displayCategory) => {
-          const video = categoriesFeaturedVideos?.[displayCategory.id]?.categoryFeaturedVideos.find(
+          const video = categoriesFeaturedVideos?.[displayCategory.id]?.featuredVideos.find(
             (video) => !!video.videoCutUrl
           )
 

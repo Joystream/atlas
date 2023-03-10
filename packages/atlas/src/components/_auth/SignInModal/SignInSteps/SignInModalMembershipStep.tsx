@@ -5,9 +5,9 @@ import { FC, RefObject, useCallback, useEffect, useMemo, useRef, useState } from
 import { Controller, useForm } from 'react-hook-form'
 
 import {
-  GetMembershipDocument,
-  GetMembershipQuery,
-  GetMembershipQueryVariables,
+  GetMembershipsDocument,
+  GetMembershipsQuery,
+  GetMembershipsQueryVariables,
 } from '@/api/queries/__generated__/memberships.generated'
 import { Text } from '@/components/Text'
 import { FormField } from '@/components/_inputs/FormField'
@@ -56,13 +56,13 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
   const validateUserHandle = useCallback(
     async (value: string) => {
       const {
-        data: { membershipByUniqueInput },
-      } = await client.query<GetMembershipQuery, GetMembershipQueryVariables>({
-        query: GetMembershipDocument,
-        variables: { where: { handle: value } },
+        data: { memberships },
+      } = await client.query<GetMembershipsQuery, GetMembershipsQueryVariables>({
+        query: GetMembershipsDocument,
+        variables: { where: { handle_eq: value } },
       })
 
-      return !membershipByUniqueInput
+      return !memberships[0]
     },
     [client]
   )

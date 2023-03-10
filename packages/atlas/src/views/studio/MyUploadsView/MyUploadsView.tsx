@@ -30,7 +30,7 @@ export const MyUploadsView: FC = () => {
   // Grouping all assets by parent id (videos, channel)
   const groupedUploadsState = Object.values(
     channelUploads.reduce((acc: GroupByParentObjectIdAcc, asset) => {
-      if (!asset) {
+      if (!asset || asset.parentObject.ytVideoId) {
         return acc
       }
       const key = asset.parentObject.id

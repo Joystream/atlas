@@ -1,13 +1,16 @@
 import { useState } from 'react'
 
 import {
-  GetBasicChannelsDocument,
-  GetBasicChannelsQuery,
-  GetBasicChannelsQueryVariables,
+  GetExtendedBasicChannelsDocument,
+  GetExtendedBasicChannelsQuery,
+  GetExtendedBasicChannelsQueryVariables,
 } from '@/api/queries/__generated__/channels.generated'
-import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import {
+  BasicChannelFieldsFragment,
+  ExtendedBasicChannelFieldsFragment,
+} from '@/api/queries/__generated__/fragments.generated'
+import { Avatar } from '@/components/Avatar'
 import { InputAutocomplete } from '@/components/_inputs/InputAutocomplete'
-import { ResolvedAvatar } from '@/views/global/YppLandingView/YppAuthorizationModal/YppAuthorizationSteps'
 
 export const PlaygroundInputAutocomplete = () => {
   const [foundChannel, setFoundChannel] = useState<BasicChannelFieldsFragment | null>(null)
@@ -15,14 +18,26 @@ export const PlaygroundInputAutocomplete = () => {
 
   return (
     <div>
-      <InputAutocomplete<GetBasicChannelsQuery, GetBasicChannelsQueryVariables, BasicChannelFieldsFragment>
-        documentQuery={GetBasicChannelsDocument}
-        queryVariablesFactory={(value) => ({ where: { title_startsWith: value } })}
-        perfectMatcher={(res, val) => res.channels.find((channel) => channel.title === val)}
+      <InputAutocomplete<
+        GetExtendedBasicChannelsQuery,
+        GetExtendedBasicChannelsQueryVariables,
+        ExtendedBasicChannelFieldsFragment
+      >
+        documentQuery={GetExtendedBasicChannelsDocument}
+        queryVariablesFactory={(value) => ({
+          where: {
+            channel: {
+              title_startsWith: value,
+            },
+          },
+        })}
+        perfectMatcher={(res, val) =>
+          res.extendedChannels.find((extendedChannel) => extendedChannel.channel.title === val)
+        }
         renderItem={(result) =>
-          result.channels.map((channel) => ({
-            ...channel,
-            label: channel.title ?? '',
+          result.extendedChannels.map((extendedChannel) => ({
+            ...extendedChannel,
+            label: extendedChannel.channel.title ?? '',
           }))
         }
         placeholder="Enter channel name"
@@ -30,11 +45,11 @@ export const PlaygroundInputAutocomplete = () => {
         onChange={setChannel}
         onItemSelect={(item) => {
           if (item) {
-            setFoundChannel(item)
-            setChannel(item.title ?? '')
+            setFoundChannel(item.channel)
+            setChannel(item.channel.title ?? '')
           }
         }}
-        nodeEnd={foundChannel && <ResolvedAvatar channel={foundChannel} size="bid" />}
+        nodeEnd={foundChannel && <Avatar assetUrl={foundChannel.avatarPhoto?.resolvedUrl} size="bid" />}
         clearSelection={() => setFoundChannel(null)}
       />
       <div style={{ marginTop: 20 }}>

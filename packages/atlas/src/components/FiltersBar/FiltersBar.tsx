@@ -32,15 +32,16 @@ type Filters = 'date' | 'date-minted' | 'other' | 'categories' | 'length' | 'nft
 
 export type FiltersBarProps = {
   activeFilters: Filters[]
+  onAnyFilterSet?: () => void
 }
 
 const nftStatuses = [
   {
-    id: 'AuctionTypeEnglish',
+    id: 'TransactionalStatusAuction-English',
     name: 'Timed auction',
   },
   {
-    id: 'AuctionTypeOpen',
+    id: 'TransactionalStatusAuction-Open',
     name: 'Open auction',
   },
   {
@@ -54,6 +55,7 @@ const nftStatuses = [
 ]
 
 export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> = ({
+  onAnyFilterSet,
   setVideoWhereInput,
   videoWhereInput,
   activeFilters,
@@ -245,37 +247,57 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
   )
 
   const handleSetOwnedNftWhereInput = () => {
-    setOwnedNftWhereInput((value) => {
-      return {
-        ...value,
-        OR: [
-          nftStatusFilter?.includes('AuctionTypeEnglish')
-            ? {
-                transactionalStatusAuction: {
-                  auctionType_json: { isTypeOf_eq: 'AuctionTypeEnglish' },
+    setOwnedNftWhereInput((value) => ({
+      ...value,
+      OR: [
+        ...(nftStatusFilter?.includes('TransactionalStatusAuction-English')
+          ? [
+              {
+                transactionalStatus: {
+                  isTypeOf_eq: 'TransactionalStatusAuction',
+                  auction: {
+                    auctionType: {
+                      isTypeOf_eq: 'AuctionTypeEnglish',
+                    },
+                  },
                 },
-              }
-            : {},
-          nftStatusFilter?.includes('AuctionTypeOpen')
-            ? {
-                transactionalStatusAuction: {
-                  auctionType_json: { isTypeOf_eq: 'AuctionTypeOpen' },
+              },
+            ]
+          : []),
+        ...(nftStatusFilter?.includes('TransactionalStatusAuction-Open')
+          ? [
+              {
+                transactionalStatus: {
+                  isTypeOf_eq: 'TransactionalStatusAuction',
+                  auction: {
+                    auctionType: {
+                      isTypeOf_eq: 'AuctionTypeOpen',
+                    },
+                  },
                 },
-              }
-            : {},
-          nftStatusFilter?.includes('TransactionalStatusBuyNow')
-            ? {
-                transactionalStatus_json: { isTypeOf_eq: 'TransactionalStatusBuyNow' },
-              }
-            : {},
-          nftStatusFilter?.includes('TransactionalStatusIdle')
-            ? {
-                transactionalStatus_json: { isTypeOf_eq: 'TransactionalStatusIdle' },
-              }
-            : {},
-        ],
-      }
-    })
+              },
+            ]
+          : []),
+        ...(nftStatusFilter?.includes('TransactionalStatusBuyNow')
+          ? [
+              {
+                transactionalStatus: {
+                  isTypeOf_eq: 'TransactionalStatusBuyNow',
+                },
+              },
+            ]
+          : []),
+        ...(nftStatusFilter?.includes('TransactionalStatusIdle')
+          ? [
+              {
+                transactionalStatus: {
+                  isTypeOf_eq: 'TransactionalStatusIdle',
+                },
+              },
+            ]
+          : []),
+      ],
+    }))
   }
 
   const mappedUniqueCategories = categoriesFilter
@@ -364,6 +386,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
         primaryButton={{
           text: 'Apply',
           onClick: () => {
+            onAnyFilterSet?.()
             setVideoWhereInput((value) => ({
               ...value,
               createdAt_gte: dateUploadedFilter
@@ -371,19 +394,24 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
                     days: -dateUploadedFilter,
                   })
                 : undefined,
-              hasMarketing_eq: excludePaidPromotionalMaterialFilter ? !excludePaidPromotionalMaterialFilter : undefined,
-              isExplicit_eq: excludeMatureContentRatingFilter ? !excludeMatureContentRatingFilter : undefined,
+              ...(excludeMatureContentRatingFilter || excludePaidPromotionalMaterialFilter
+                ? {
+                    AND: [
+                      ...(excludeMatureContentRatingFilter
+                        ? [{ OR: [{ isExplicit_eq: false }, { isExplicit_isNull: true }] }]
+                        : []),
+                      ...(excludePaidPromotionalMaterialFilter
+                        ? [{ OR: [{ hasMarketing_eq: false }, { hasMarketing_isNull: true }] }]
+                        : []),
+                    ],
+                  }
+                : { AND: [] }),
               category: categoriesFilter
                 ? {
                     id_in: mappedUniqueCategories,
                   }
                 : undefined,
-              language:
-                language !== 'undefined'
-                  ? {
-                      iso_eq: language as string,
-                    }
-                  : undefined,
+              language_eq: language,
               ...getDurationRules(),
             }))
             handleSetOwnedNftWhereInput()
@@ -424,6 +452,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
                 text: 'Apply',
                 disabled: !nftStatusFilter && !canClearNftStatusFilter,
                 onClick: () => {
+                  onAnyFilterSet?.()
                   categoriesPopoverRef.current?.hide()
                   handleSetOwnedNftWhereInput()
                 },
@@ -451,6 +480,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
                 disabled: (!categoriesFilter || !categoriesFilter.length) && !canClearCategoriesFilter,
                 onClick: () => {
                   categoriesPopoverRef.current?.hide()
+                  onAnyFilterSet?.()
                   setVideoWhereInput((value) => ({
                     ...value,
                     category: {
@@ -481,6 +511,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
                 disabled: !dateUploadedFilter && !canClearDateUploadedFilter,
                 onClick: () => {
                   datePopoverRef.current?.hide()
+                  onAnyFilterSet?.()
                   setVideoWhereInput((value) => ({
                     ...value,
                     createdAt_gte: dateUploadedFilter
@@ -513,6 +544,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
                 disabled: !dateUploadedFilter && !canClearDateUploadedFilter,
                 onClick: () => {
                   datePopoverRef.current?.hide()
+                  onAnyFilterSet?.()
                   setVideoWhereInput((value) => ({
                     ...value,
                     createdAt_gte: dateUploadedFilter
@@ -545,6 +577,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
                 disabled: !videoLengthFilter && !canClearVideoLengthFilter,
                 onClick: () => {
                   lengthPopoverRef.current?.hide()
+                  onAnyFilterSet?.()
                   setVideoWhereInput((value) => ({
                     ...value,
                     ...getDurationRules(videoLengthFilter),
@@ -564,10 +597,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
             <DialogPopover
               ref={othersPopoverRef}
               trigger={
-                <Button
-                  badge={+(videoWhereInput?.hasMarketing_eq === false) + +(videoWhereInput?.isExplicit_eq === false)}
-                  variant="secondary"
-                >
+                <Button badge={videoWhereInput.AND?.length} variant="secondary">
                   Other filters
                 </Button>
               }
@@ -577,12 +607,21 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
                   !excludePaidPromotionalMaterialFilter && !excludeMatureContentRatingFilter && !canClearOtherFilters,
                 onClick: () => {
                   othersPopoverRef.current?.hide()
+                  onAnyFilterSet?.()
                   setVideoWhereInput((value) => ({
                     ...value,
-                    hasMarketing_eq: excludePaidPromotionalMaterialFilter
-                      ? !excludePaidPromotionalMaterialFilter
-                      : undefined,
-                    isExplicit_eq: excludeMatureContentRatingFilter ? !excludeMatureContentRatingFilter : undefined,
+                    ...(excludeMatureContentRatingFilter || excludePaidPromotionalMaterialFilter
+                      ? {
+                          AND: [
+                            ...(excludeMatureContentRatingFilter
+                              ? [{ OR: [{ isExplicit_eq: false }, { isExplicit_isNull: true }] }]
+                              : []),
+                            ...(excludePaidPromotionalMaterialFilter
+                              ? [{ OR: [{ hasMarketing_eq: false }, { hasMarketing_isNull: true }] }]
+                              : []),
+                          ],
+                        }
+                      : { AND: [] }),
                   }))
                 },
               }}

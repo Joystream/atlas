@@ -8,7 +8,6 @@ import { IconWrapper } from '@/components/IconWrapper'
 import { Text } from '@/components/Text'
 import { NavItem, NavItemProps } from '@/components/_navigation/NavItem'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset } from '@/providers/assets/assets.hooks'
 import { FollowedChannel } from '@/providers/personalData/types'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
@@ -37,19 +36,18 @@ export const ChannelNavItem: FC<NavItemProps & ChannelNavItemProps> = ({
   onChannelNotFound,
   onClick,
 }) => {
-  const { channel } = useBasicChannel(id ?? '', {
+  const { extendedChannel } = useBasicChannel(id ?? '', {
     skip: !id,
-    onCompleted: (data) => !data.channels.length && onChannelNotFound?.(id),
+    onCompleted: (data) => !data.extendedChannels.length && onChannelNotFound?.(id),
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelLink', error, { channel: { id } }),
   })
-  const { url: avatarPhotoUrl } = useAsset(channel?.avatarPhoto)
 
   return (
     <NavItem to={to} expanded={expanded} itemName={itemName} onClick={onClick} isSecondary={isSecondary}>
-      <Avatar loading={!channel} size="default" assetUrl={avatarPhotoUrl} />
-      {channel ? (
+      <Avatar loading={!extendedChannel} size="default" assetUrl={extendedChannel?.channel.avatarPhoto?.resolvedUrl} />
+      {extendedChannel ? (
         <ChannelTitle as="p" variant="h300" color="colorText">
-          {channel.title}
+          {extendedChannel.channel.title}
         </ChannelTitle>
       ) : (
         <StyledSkeletonLoader height={16} width={150} />

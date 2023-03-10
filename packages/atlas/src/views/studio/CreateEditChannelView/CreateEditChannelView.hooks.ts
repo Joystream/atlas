@@ -1,11 +1,15 @@
+import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { useCallback } from 'react'
 
+import { useAppActionMetadataProcessor } from '@/api/hooks/apps'
+import { GetExtendedFullChannelsQueryHookResult } from '@/api/queries/__generated__/channels.generated'
 import { FullChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { useGetChannelCountQuery } from '@/api/queries/__generated__/memberships.generated'
+import { atlasConfig } from '@/config'
 import { ChannelAssets, ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib/types'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useOperatorsContext } from '@/providers/assets/assets.provider'
-import { ResolvedAsset, useAssetStore } from '@/providers/assets/assets.store'
 import {
   useBloatFeesAndPerMbFees,
   useBucketsConfigForNewChannel,
@@ -16,17 +20,21 @@ import { useStartFileUpload } from '@/providers/uploads/uploads.hooks'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { useUser } from '@/providers/user/user.hooks'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
+import { modifyAssetUrlInCache } from '@/utils/cachingAssets'
 import { computeFileHash } from '@/utils/hashing'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 type ImageAsset = {
   contentId: string | null
+  croppedBlob?: File | Blob | null
+  croppedUrl?: string | null
   assetDimensions: AssetDimensions | null
   imageCropData: ImageCropData | null
   originalBlob?: File | Blob | null
+  originalUrl?: string | null
 }
 
-export type Inputs = {
+export type CreateEditChannelFormInputs = {
   title?: string
   description?: string
   isPublic: boolean
@@ -39,10 +47,8 @@ type CreateEditChannelData = {
   newChannel: boolean
   metadata: ChannelInputMetadata
   assets: ChannelAssets<ImageAsset>
-  avatarAsset: ResolvedAsset | null
-  coverAsset: ResolvedAsset | null
   channel?: FullChannelFieldsFragment
-  refetchChannel: () => void
+  refetchChannel: GetExtendedFullChannelsQueryHookResult['refetch']
   fee?: BN
 }
 
@@ -55,9 +61,18 @@ export const useCreateEditChannelSubmit = () => {
   const channelBucketsCount = useChannelsStorageBucketsCount(channelId)
   const startFileUpload = useStartFileUpload()
   const handleTransaction = useTransaction()
-  const { fetchOperators } = useOperatorsContext()
+  const { fetchStorageOperators } = useOperatorsContext()
+  const client = useApolloClient()
 
-  const addAsset = useAssetStore((state) => state.actions.addAsset)
+  const { data: channelCountData } = useGetChannelCountQuery({
+    variables: { where: { ownerMember: { id_eq: memberId } } },
+    skip: !channelId || !atlasConfig.general.appId,
+  })
+
+  const rawMetadataProcessor = useAppActionMetadataProcessor(
+    `m:${memberId}`,
+    channelCountData?.channelsConnection.totalCount || 0
+  )
 
   return useCallback(
     async (
@@ -80,18 +95,18 @@ export const useCreateEditChannelSubmit = () => {
       ): [ChannelInputAssets, string[]] => {
         const replacedAssetsIds = []
         const newAssets: ChannelInputAssets = {}
-        if (data.avatarAsset?.blob?.size) {
+        if (data.assets.avatarPhoto?.croppedBlob?.size) {
           newAssets.avatarPhoto = {
-            size: data.avatarAsset?.blob.size,
+            size: data.assets.avatarPhoto?.croppedBlob.size,
             ipfsHash: avatarHash || '',
           }
         }
         if (data.channel?.avatarPhoto?.id && avatarHash) {
           replacedAssetsIds.push(data.channel.avatarPhoto.id)
         }
-        if (data.coverAsset?.blob?.size) {
+        if (data.assets.coverPhoto?.croppedBlob?.size) {
           newAssets.coverPhoto = {
-            size: data.coverAsset.blob.size,
+            size: data.assets.coverPhoto.croppedBlob.size,
             ipfsHash: coverPhotoHash || '',
           }
         }
@@ -103,9 +118,13 @@ export const useCreateEditChannelSubmit = () => {
 
       const processAssets = async () => {
         const avatarIpfsHash =
-          data.avatarAsset?.blob && data.assets.avatarPhoto && (await computeFileHash(data.avatarAsset.blob))
+          data.assets.avatarPhoto?.croppedBlob &&
+          data.assets.avatarPhoto &&
+          (await computeFileHash(data.assets.avatarPhoto.croppedBlob))
         const coverIpfsHash =
-          data.coverAsset?.blob && data.assets.coverPhoto && (await computeFileHash(data.coverAsset.blob))
+          data.assets.coverPhoto?.croppedBlob &&
+          data.assets.coverPhoto &&
+          (await computeFileHash(data.assets.coverPhoto.croppedBlob))
 
         const [createdAssets, assetIdsToRemove] = createChannelAssets(avatarIpfsHash, coverIpfsHash)
         if (createdAssets.avatarPhoto) {
@@ -119,8 +138,8 @@ export const useCreateEditChannelSubmit = () => {
 
       const uploadAssets = async ({ channelId, assetsIds }: ChannelExtrinsicResult) => {
         const uploadPromises: Promise<unknown>[] = []
-        if (data.avatarAsset?.blob && assetsIds.avatarPhoto) {
-          const uploadPromise = startFileUpload(data.avatarAsset.blob, {
+        if (data.assets.avatarPhoto?.croppedBlob && assetsIds.avatarPhoto) {
+          const uploadPromise = startFileUpload(data.assets.avatarPhoto.croppedBlob, {
             id: assetsIds.avatarPhoto,
             owner: channelId,
             parentObject: {
@@ -134,8 +153,8 @@ export const useCreateEditChannelSubmit = () => {
           })
           uploadPromises.push(uploadPromise)
         }
-        if (data.coverAsset?.blob && assetsIds.coverPhoto) {
-          const uploadPromise = startFileUpload(data.coverAsset.blob, {
+        if (data.assets.coverPhoto?.croppedBlob && assetsIds.coverPhoto) {
+          const uploadPromise = startFileUpload(data.assets.coverPhoto.croppedBlob, {
             id: assetsIds.coverPhoto,
             owner: channelId,
             parentObject: {
@@ -156,12 +175,10 @@ export const useCreateEditChannelSubmit = () => {
 
       const refetchDataAndUploadAssets = async (result: ChannelExtrinsicResult) => {
         const { channelId, assetsIds } = result
-        if (assetsIds.avatarPhoto && data.avatarAsset?.url) {
-          addAsset(assetsIds.avatarPhoto, { url: data.avatarAsset.url })
+        if (assetsIds.avatarPhoto && data.assets.avatarPhoto?.croppedUrl) {
           onUploadAssets?.('avatar.contentId', assetsIds.avatarPhoto)
         }
-        if (assetsIds.coverPhoto && data.coverAsset?.url) {
-          addAsset(assetsIds.coverPhoto, { url: data.coverAsset.url })
+        if (assetsIds.coverPhoto && data.assets.coverPhoto?.croppedUrl) {
           onUploadAssets?.('cover.contentId', assetsIds.coverPhoto)
         }
 
@@ -174,10 +191,17 @@ export const useCreateEditChannelSubmit = () => {
           await data?.refetchChannel()
         }
 
+        if (assetsIds.avatarPhoto && data.assets.avatarPhoto?.croppedUrl) {
+          modifyAssetUrlInCache(client, assetsIds.avatarPhoto, data.assets.avatarPhoto.croppedUrl)
+        }
+        if (assetsIds.coverPhoto && data.assets.coverPhoto?.croppedUrl) {
+          modifyAssetUrlInCache(client, assetsIds.coverPhoto, data.assets.coverPhoto.croppedUrl)
+        }
+
         if (data.newChannel) {
           // when creating a channel, refetch operators before uploading so that storage bag assignments gets populated for a new channel
           setActiveUser({ channelId })
-          fetchOperators().then(() => {
+          fetchStorageOperators().then(() => {
             uploadAssets(result)
           })
         } else {
@@ -199,6 +223,7 @@ export const useCreateEditChannelSubmit = () => {
                 await getBucketsConfigForNewChannel(),
                 dataObjectStateBloatBondValue.toString(),
                 channelStateBloatBondValue.toString(),
+                atlasConfig.general.appId ? rawMetadataProcessor : undefined,
                 proxyCallback(updateStatus)
               )
             : (
@@ -225,18 +250,19 @@ export const useCreateEditChannelSubmit = () => {
       }
     },
     [
-      addAsset,
       addNewChannelIdToUploadsStore,
       channelBucketsCount,
       channelId,
       channelStateBloatBondValue,
+      client,
       dataObjectStateBloatBondValue,
-      fetchOperators,
+      fetchStorageOperators,
       getBucketsConfigForNewChannel,
       handleTransaction,
       joystream,
       memberId,
       proxyCallback,
+      rawMetadataProcessor,
       refetchUserMemberships,
       setActiveUser,
       startFileUpload,

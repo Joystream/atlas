@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom'
 import { useBasicChannels } from '@/api/hooks/channel'
 import { atlasConfig } from '@/config'
 import { useUser } from '@/providers/user/user.hooks'
-import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { SentryLogger } from '@/utils/logs'
 
 const YPP_SYNC_URL = atlasConfig.features.ypp.youtubeSyncApiUrl
 
@@ -46,7 +46,6 @@ export const useGetYppSyncedChannels = () => {
 
   const getSyncedChannels = useCallback(async () => {
     if (!YPP_SYNC_URL) {
-      ConsoleLogger.error("Youtube sync url wasn't provided")
       return
     }
     // TODO We should do only one request per given memberId
@@ -101,15 +100,19 @@ export const useGetYppLastVerifiedChannels = () => {
     }
   }, [])
 
-  const { data, isLoading: isVerifiedChannelsLoading } = useQuery('ypp-channels-fetch', () => getRecentChannels())
+  const { data: recentChannelIds, isLoading: isVerifiedChannelsLoading } = useQuery('ypp-channels-fetch', () =>
+    getRecentChannels()
+  )
 
-  const { channels, loading } = useBasicChannels(
+  const { extendedChannels: channels, loading } = useBasicChannels(
     {
       where: {
-        id_in: data ?? [],
+        channel: {
+          id_in: recentChannelIds ?? [],
+        },
       },
     },
-    { skip: !data?.length }
+    { skip: !recentChannelIds?.length }
   )
 
   return {

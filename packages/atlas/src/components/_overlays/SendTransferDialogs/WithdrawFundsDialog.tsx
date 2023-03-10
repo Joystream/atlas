@@ -49,7 +49,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
     setValue,
     formState: { errors },
   } = useForm<{ amount: number | null }>()
-  const { fetchPaymentsData } = useChannelPaymentsHistory()
+  const { fetchPaymentsData } = useChannelPaymentsHistory(channelId || '')
   const { convertHapiToUSD } = useTokenPrice()
   const amountBn = tokenNumberToHapiBn(watch('amount') || 0)
   const { joystream, proxyCallback } = useJoystream()
