@@ -155,7 +155,7 @@ query GetChannelPaymentEvents($channelId: String) {
               "EnglishAuctionSettledEventData"
               "OpenAuctionBidAcceptedEventData"
             ]
-            nftOwner: { channel: { id_eq: $channelId } }
+            previousNftOwner: { channel: { id_eq: $channelId } }
           }
         }
         {

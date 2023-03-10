@@ -1307,7 +1307,7 @@ export const GetChannelPaymentEventsDocument = gql`
                 "EnglishAuctionSettledEventData"
                 "OpenAuctionBidAcceptedEventData"
               ]
-              nftOwner: { channel: { id_eq: $channelId } }
+              previousNftOwner: { channel: { id_eq: $channelId } }
             }
           }
           {

@@ -31,8 +31,9 @@ const getAmount = (eventData: EventData) => {
     case 'OpenAuctionBidAcceptedEventData':
     case 'EnglishAuctionSettledEventData':
       return eventData.winningBid.amount
-    case 'ChannelRewardClaimedEventData':
     case 'ChannelFundsWithdrawnEventData':
+      return -eventData.amount
+    case 'ChannelRewardClaimedEventData':
     case 'ChannelPaymentMadeEventData':
       return eventData.amount
     default:
@@ -59,6 +60,24 @@ const getSender = (eventData: EventData) => {
   }
 }
 
+const getDescription = (eventData: EventData) => {
+  switch (eventData.__typename) {
+    case 'NftBoughtEventData':
+      return `Sold NFT: ${eventData.nft.video.title}`
+    case 'BidMadeCompletingAuctionEventData':
+    case 'OpenAuctionBidAcceptedEventData':
+    case 'EnglishAuctionSettledEventData':
+      return `Sold NFT: ${eventData.winningBid.nft.video.title}`
+    case 'ChannelRewardClaimedEventData':
+    case 'ChannelFundsWithdrawnEventData':
+      return ''
+    case 'ChannelPaymentMadeEventData':
+      return eventData.rationale
+    default:
+      return undefined
+  }
+}
+
 export const mapEventToPaymentHistory = (event: GetChannelPaymentEventsQuery['events'][number]): PaymentHistory => {
   const { inBlock, timestamp } = event
   return {
@@ -66,7 +85,7 @@ export const mapEventToPaymentHistory = (event: GetChannelPaymentEventsQuery['ev
     block: inBlock + 1,
     amount: new BN(getAmount(event.data)),
     date: new Date(timestamp),
-    description: (event.data.__typename === 'ChannelPaymentMadeEventData' && event.data.rationale) || undefined,
+    description: getDescription(event.data) || '',
     sender: getSender(event.data),
   }
 }
@@ -75,7 +94,7 @@ export const aggregatePaymentHistory = (arg: PaymentHistory[]) =>
   arg.reduce(
     (prev, next) => {
       if (next.type === 'withdrawal') {
-        prev.totalWithdrawn.iadd(next.amount)
+        prev.totalWithdrawn.iadd(next.amount.abs())
         return prev
       }
       prev.totalEarned.iadd(next.amount)
