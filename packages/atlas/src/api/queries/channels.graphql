@@ -145,6 +145,7 @@ mutation ReportChannel($channelId: String!, $rationale: String!) {
 
 query GetChannelPaymentEvents($channelId: String) {
   events(
+    orderBy: timestamp_DESC
     where: {
       OR: [
         {
