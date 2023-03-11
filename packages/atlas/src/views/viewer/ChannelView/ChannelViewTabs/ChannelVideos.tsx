@@ -1,6 +1,6 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 
-import { useBasicVideosConnection } from '@/api/hooks/videosConnection'
+import { useBasicVideoPagination } from '@/api/hooks/video'
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { BasicVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { EmptyFallback } from '@/components/EmptyFallback'
@@ -25,6 +25,7 @@ type ChannelVideosProps = {
   onResize: (sizes: number[]) => void
 }
 
+const USER_TIMESTAMP = new Date()
 export const ChannelVideos: FC<ChannelVideosProps> = ({
   isSearching,
   searchedText,
@@ -35,25 +36,26 @@ export const ChannelVideos: FC<ChannelVideosProps> = ({
   tilesPerPage,
   onResize,
 }) => {
+  // not sure why - but apollo hook doesn't refetch when variables change
+  const [isLoading, setIsLoading] = useState(false)
   const { currentPage, setCurrentPage, currentSearchPage, setCurrentSearchPage } = usePagination(0)
-
   const {
-    edges,
+    videos: data,
     totalCount,
-    loading: loadingVideos,
-    error: videosError,
-    fetchMore,
     refetch,
-    variables,
-    pageInfo,
-  } = useBasicVideosConnection(
-    {
+    error: videosError,
+  } = useBasicVideoPagination({
+    onError: (error) => SentryLogger.error('Failed to fetch videos', 'ChannelView', error, { channel: { channelId } }),
+    variables: {
       orderBy: sortVideosBy,
+      limit: tilesPerPage,
+      offset: currentPage * tilesPerPage,
       where: {
         channel: {
           id_eq: channelId,
         },
         isPublic_eq: true,
+        createdAt_lt: USER_TIMESTAMP,
         isCensored_eq: false,
         thumbnailPhoto: {
           isAccepted_eq: true,
@@ -63,49 +65,36 @@ export const ChannelVideos: FC<ChannelVideosProps> = ({
         },
       },
     },
-    {
-      notifyOnNetworkStatusChange: true,
-      onError: (error) =>
-        SentryLogger.error('Failed to fetch videos', 'ChannelView', error, { channel: { channelId } }),
-    }
-  )
+  })
 
   // set page to 0 when sortVideosBy changed
   useEffect(() => {
     setCurrentPage(0)
-    refetch()
-  }, [refetch, setCurrentPage, sortVideosBy])
+  }, [setCurrentPage, sortVideosBy])
 
   const handleChangePage = (page: number) => {
     if (isSearching) {
       setCurrentSearchPage(page)
     } else {
+      setIsLoading(true)
       setCurrentPage(page)
-      if (!!edges && page * tilesPerPage + tilesPerPage > edges?.length && edges?.length < (totalCount ?? 0)) {
-        fetchMore({
-          variables: {
-            ...variables,
-            first: page * tilesPerPage + tilesPerPage * 3 - edges.length,
-            after: pageInfo?.endCursor,
-          },
-        })
-      }
+      refetch({ offset: tilesPerPage * page }).finally(() => setIsLoading(false))
     }
   }
 
-  const videos = (isSearching ? foundVideos : edges?.map((edge) => edge.node)) ?? []
-  const paginatedVideos = isSearching
-    ? videos.slice(currentSearchPage * tilesPerPage, currentSearchPage * tilesPerPage + tilesPerPage)
-    : videos.slice(currentPage * tilesPerPage, currentPage * tilesPerPage + tilesPerPage)
+  const videos =
+    (isSearching
+      ? foundVideos?.slice(currentSearchPage * tilesPerPage, currentSearchPage * tilesPerPage + tilesPerPage)
+      : data) ?? []
 
   const placeholderItems = Array.from(
-    { length: loadingVideos || loadingSearch ? tilesPerPage - (paginatedVideos ? paginatedVideos.length : 0) : 0 },
+    { length: isLoading || loadingSearch ? tilesPerPage - (videos ? videos.length : 0) : 0 },
     () => ({
       id: undefined,
     })
   )
 
-  const videosWithPlaceholders = [...(paginatedVideos || []), ...placeholderItems]
+  const videosWithPlaceholders = [...(videos || []), ...placeholderItems]
 
   if (videosError) {
     return <ViewErrorFallback />
