@@ -1,11 +1,11 @@
 import { FC } from 'react'
 
+import { useNfts } from '@/api/hooks/nfts'
 import { OwnedNftOrderByInput, OwnedNftWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Grid } from '@/components/Grid'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
-import { useNfts } from '@/hooks/useNfts'
 import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'

@@ -10,7 +10,7 @@ import { useHeadTags } from '@/hooks/useHeadTags'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { AssetUpload } from '@/providers/uploads/uploads.types'
 import { useUser } from '@/providers/user/user.hooks'
-import { repeat } from '@/utils/data'
+import { arrayFrom } from '@/utils/data'
 
 import { UploadsContainer } from './MyUploadsView.styles'
 import { UploadStatusGroup } from './UploadStatusGroup'
@@ -44,7 +44,7 @@ export const MyUploadsView: FC = () => {
   )
 
   const hasUploads = groupedUploadsState.length > 0
-  const placeholderItems = repeat(5).map((_, idx) => <UploadStatusGroupSkeletonLoader key={idx} />)
+  const placeholderItems = arrayFrom(5).map((_, idx) => <UploadStatusGroupSkeletonLoader key={idx} />)
 
   return (
     <UploadsContainer>

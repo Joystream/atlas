@@ -18,16 +18,16 @@ export const promisify =
   (...args: Parameters<typeof fn>) =>
     new Promise((resolve) => resolve(fn(...args))) as Promise<T>
 
-export const repeat = <T = undefined>(count: number, data?: T) => Array.from({ length: count }, () => data)
+export const arrayFrom = <T = undefined>(length: number, data?: T) => Array.from({ length: length }, () => data)
 
 type PlaceholderData<T> = T extends undefined ? { id: undefined } : T
 
 export const createPlaceholderData = <T = { id: undefined }>(
-  count: number,
+  length: number,
   additionalData?: T
 ): PlaceholderData<T>[] => {
   if (typeof additionalData !== 'undefined') {
-    return repeat(count, additionalData) as PlaceholderData<T>[]
+    return arrayFrom(length, additionalData) as PlaceholderData<T>[]
   }
-  return repeat(count, { id: undefined }) as PlaceholderData<T>[]
+  return arrayFrom(length, { id: undefined }) as PlaceholderData<T>[]
 }

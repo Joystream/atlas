@@ -19,7 +19,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { cVar, transitions } from '@/styles'
-import { repeat } from '@/utils/data'
+import { arrayFrom } from '@/utils/data'
 
 import {
   BackImage,
@@ -74,7 +74,7 @@ export const YppHero: FC<YppHeroProps> = ({
   const { channels, loading } = useGetYppLastVerifiedChannels()
   const items = !loading
     ? channels?.map((channel) => <ChannelCard key={channel.id} channel={channel} withFollowButton={false} />)
-    : repeat(30).map((_, idx) => <ChannelCard key={idx} loading withFollowButton={false} />)
+    : arrayFrom(30).map((_, idx) => <ChannelCard key={idx} loading withFollowButton={false} />)
 
   return (
     <BackgroundContainer noBackground>

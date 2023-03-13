@@ -1,11 +1,11 @@
 import { FC, useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 
+import { useNfts } from '@/api/hooks/nfts'
 import { OwnedNftOrderByInput, OwnedNftWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Grid } from '@/components/Grid'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
-import { useNfts } from '@/hooks/useNfts'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { useUser } from '@/providers/user/user.hooks'
 import { createPlaceholderData } from '@/utils/data'
