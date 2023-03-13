@@ -3,7 +3,9 @@ import BN from 'bn.js'
 import { GetChannelPaymentEventsQuery } from '@/api/queries/__generated__/channels.generated'
 import { PaymentHistory } from '@/components/TablePaymentsHistory'
 
-type EventData = GetChannelPaymentEventsQuery['events'][number]['data']
+type EventData = GetChannelPaymentEventsQuery['events'][number]['data'] & {
+  nftPlatformFeePercentage: number
+}
 
 const getType = (eventData: EventData): PaymentHistory['type'] => {
   switch (eventData.__typename) {
@@ -23,19 +25,29 @@ const getType = (eventData: EventData): PaymentHistory['type'] => {
   }
 }
 
-const getAmount = (eventData: EventData) => {
+const getAmount = (eventData: EventData): BN => {
   switch (eventData.__typename) {
-    case 'NftBoughtEventData':
-      return eventData.price
+    case 'NftBoughtEventData': {
+      if (eventData.previousNftOwner.__typename !== 'NftOwnerChannel') {
+        return new BN(eventData.price)?.muln(eventData.nft.creatorRoyalty ? eventData.nft.creatorRoyalty : 0).divn(100)
+      }
+      return new BN(eventData.price).muln(100 - eventData.nftPlatformFeePercentage).divn(100)
+    }
     case 'BidMadeCompletingAuctionEventData':
     case 'OpenAuctionBidAcceptedEventData':
-    case 'EnglishAuctionSettledEventData':
-      return eventData.winningBid.amount
+    case 'EnglishAuctionSettledEventData': {
+      if (eventData.previousNftOwner.__typename !== 'NftOwnerChannel') {
+        return new BN(eventData.winningBid.amount)
+          ?.muln(eventData.winningBid.nft.creatorRoyalty ? eventData.winningBid.nft.creatorRoyalty : 0)
+          .divn(100)
+      }
+      return new BN(eventData.winningBid.amount).muln(100 - eventData.nftPlatformFeePercentage).divn(100)
+    }
     case 'ChannelFundsWithdrawnEventData':
-      return -eventData.amount
+      return new BN(-eventData.amount)
     case 'ChannelRewardClaimedEventData':
     case 'ChannelPaymentMadeEventData':
-      return eventData.amount
+      return new BN(eventData.amount)
     default:
       throw Error('Unknown event')
   }
@@ -62,12 +74,20 @@ const getSender = (eventData: EventData) => {
 
 const getDescription = (eventData: EventData) => {
   switch (eventData.__typename) {
-    case 'NftBoughtEventData':
+    case 'NftBoughtEventData': {
+      if (eventData.previousNftOwner.__typename !== 'NftOwnerChannel') {
+        return `Royalty from NFT: ${eventData.nft.video.title}`
+      }
       return `Sold NFT: ${eventData.nft.video.title}`
+    }
     case 'BidMadeCompletingAuctionEventData':
     case 'OpenAuctionBidAcceptedEventData':
-    case 'EnglishAuctionSettledEventData':
+    case 'EnglishAuctionSettledEventData': {
+      if (eventData.previousNftOwner.__typename !== 'NftOwnerChannel') {
+        return `Royalty from NFT: ${eventData.winningBid.nft.video.title}`
+      }
       return `Sold NFT: ${eventData.winningBid.nft.video.title}`
+    }
     case 'ChannelRewardClaimedEventData':
     case 'ChannelFundsWithdrawnEventData':
       return ''
@@ -78,17 +98,20 @@ const getDescription = (eventData: EventData) => {
   }
 }
 
-export const mapEventToPaymentHistory = (event: GetChannelPaymentEventsQuery['events'][number]): PaymentHistory => {
-  const { inBlock, timestamp } = event
-  return {
-    type: getType(event.data),
-    block: inBlock + 1,
-    amount: new BN(getAmount(event.data)),
-    date: new Date(timestamp),
-    description: getDescription(event.data) || '',
-    sender: getSender(event.data),
+export const mapEventToPaymentHistory =
+  (nftPlatformFeePercentage: number) =>
+  (event: GetChannelPaymentEventsQuery['events'][number]): PaymentHistory => {
+    const { inBlock, timestamp } = event
+    const eventData = { ...event.data, nftPlatformFeePercentage }
+    return {
+      type: getType(eventData),
+      block: inBlock + 1,
+      amount: getAmount(eventData),
+      date: new Date(timestamp),
+      description: getDescription(eventData) || '',
+      sender: getSender(eventData),
+    }
   }
-}
 
 export const aggregatePaymentHistory = (arg: PaymentHistory[]) =>
   arg.reduce(
