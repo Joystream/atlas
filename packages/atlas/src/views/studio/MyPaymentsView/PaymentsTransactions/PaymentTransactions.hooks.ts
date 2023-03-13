@@ -9,7 +9,7 @@ export const useChannelPaymentsHistory = (channelId: string) => {
   } = useJoystream()
   const { data, refetch, ...rest } = useGetChannelPaymentEventsQuery({
     variables: {
-      channelId: '4', //channelId ?? '-1',
+      channelId: channelId ?? '-1',
     },
     skip: !channelId,
   })
