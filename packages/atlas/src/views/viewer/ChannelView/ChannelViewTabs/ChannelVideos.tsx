@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect } from 'react'
 
 import { useBasicVideoPagination } from '@/api/hooks/video'
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
@@ -36,14 +36,12 @@ export const ChannelVideos: FC<ChannelVideosProps> = ({
   tilesPerPage,
   onResize,
 }) => {
-  // not sure why - but apollo hook doesn't refetch when variables change
-  const [isLoading, setIsLoading] = useState(false)
   const { currentPage, setCurrentPage, currentSearchPage, setCurrentSearchPage } = usePagination(0)
   const {
     videos: data,
     totalCount,
-    refetch,
     error: videosError,
+    loading: isLoading,
   } = useBasicVideoPagination({
     onError: (error) => SentryLogger.error('Failed to fetch videos', 'ChannelView', error, { channel: { channelId } }),
     variables: {
@@ -76,9 +74,7 @@ export const ChannelVideos: FC<ChannelVideosProps> = ({
     if (isSearching) {
       setCurrentSearchPage(page)
     } else {
-      setIsLoading(true)
       setCurrentPage(page)
-      refetch({ offset: tilesPerPage * page }).finally(() => setIsLoading(false))
     }
   }
 
