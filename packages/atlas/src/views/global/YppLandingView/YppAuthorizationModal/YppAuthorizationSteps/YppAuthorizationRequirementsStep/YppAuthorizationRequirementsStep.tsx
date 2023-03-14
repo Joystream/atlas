@@ -10,13 +10,13 @@ type Requirment = {
 }
 
 type YppAuthorizationRequirementsStepProps = {
-  requirments: Requirment[]
+  requirements: Requirment[]
 }
 
-export const YppAuthorizationRequirementsStep: FC<YppAuthorizationRequirementsStepProps> = ({ requirments }) => {
+export const YppAuthorizationRequirementsStep: FC<YppAuthorizationRequirementsStepProps> = ({ requirements }) => {
   return (
     <StyledList>
-      {requirments.map((item) => (
+      {requirements.map((item) => (
         <ListItem key={item.text} as="li" variant="t200" color="colorText">
           <TickWrapper fulfilled={item.fulfilled}>
             {item.fulfilled ? <SvgActionCheck /> : <SvgActionClose />}
