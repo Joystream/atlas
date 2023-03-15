@@ -1,20 +1,12 @@
-import Glider, { GliderEvent, GliderEventMap, Options } from 'glider-js'
-import 'glider-js/glider.min.css'
-import { isEqual } from 'lodash-es'
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import Glider, { Options } from '@glidejs/glide'
+import '@glidejs/glide/dist/css/glide.core.min.css'
+import { useEffect, useRef, useState } from 'react'
 
 type GliderEventListeners = {
-  onAdd?: (event: GliderEvent<GliderEventMap['glider-add']>) => void
-  onAnimated?: (event: GliderEvent<GliderEventMap['glider-animated']>) => void
-  onDestroy?: (event: GliderEvent<GliderEventMap['glider-destroy']>) => void
-  onLoaded?: (event: GliderEvent<GliderEventMap['glider-loaded']>) => void
-  onRefresh?: (event: GliderEvent<GliderEventMap['glider-refresh']>) => void
-  onRemove?: (event: GliderEvent<GliderEventMap['glider-remove']>) => void
-  onSlideHidden?: (event: GliderEvent<GliderEventMap['glider-slide-hidden']>) => void
-  onSlideVisible?: (event: GliderEvent<GliderEventMap['glider-slide-visible']>) => void
+  onSwipeEnd?: (glide: Glider) => void
 }
 
-export type GliderProps = Options & GliderEventListeners
+export type GliderProps = Partial<Options> & GliderEventListeners
 
 type PropsWithClassName<T> = {
   className?: string
@@ -24,33 +16,26 @@ function getPropsFor(name: string) {
     return { className: `${className ? `${className} ` : ''}${name}`, ...otherProps }
   }
 }
-const getGliderProps = getPropsFor('glider')
-const getTrackProps = getPropsFor('glider-track')
-const getNextArrowProps = getPropsFor('glider-next')
-const getPrevArrowProps = getPropsFor('glider-prev')
-const getContainerProps = getPropsFor('glider-contain')
-const getDotsProps = getPropsFor('glider-dots')
+const getGliderProps = getPropsFor('glide')
+const getTrackProps = getPropsFor('glide__track')
+const getNextArrowProps = getPropsFor('glide__arrow glide__arrow--right')
+const getPrevArrowProps = getPropsFor('glide__arrow glide__arrow--left')
+const getContainerProps = getPropsFor('glide__slides')
+const getItemProps = getPropsFor('glide__slide')
 
-export function useGlider<T extends HTMLElement>({
-  onAdd,
-  onAnimated,
-  onDestroy,
-  onLoaded,
-  onRefresh,
-  onRemove,
-  onSlideHidden,
-  onSlideVisible,
-  ...gliderOptions
-}: GliderProps) {
-  const [glider, setGlider] = useState<Glider<HTMLElement>>()
+export function useGlider<T extends HTMLElement>({ onSwipeEnd, ...gliderOptions }: GliderProps) {
+  const [glider, setGlider] = useState<Glider>()
   const element = useRef<T>(null)
-  const gliderOptionsRef = useRef(gliderOptions)
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!element.current) {
       return
     }
-    const newGlider = new Glider(element.current, { skipTrack: true })
+    const newGlider = new Glider(element.current, { type: 'carousel', ...gliderOptions })
+    newGlider.on('run.after', () => {
+      onSwipeEnd?.(newGlider)
+    })
+    newGlider.mount()
     setGlider(newGlider)
 
     return () => {
@@ -60,27 +45,6 @@ export function useGlider<T extends HTMLElement>({
     }
   }, [])
 
-  /**
-   * because gliderOptions changes it's reference through renders,
-   * we need to avoid unnecessary glider refresh by comparing gliderOptions value
-   */
-  useLayoutEffect(() => {
-    if (!glider || isEqual(gliderOptions, gliderOptionsRef.current)) {
-      return
-    }
-    gliderOptionsRef.current = gliderOptions
-    glider.setOption({ skipTrack: true, ...gliderOptions }, true)
-    glider.refresh(true)
-  }, [gliderOptions, glider])
-
-  useEventListener(element.current, 'glider-add', onAdd)
-  useEventListener(element.current, 'glider-animated', onAnimated)
-  useEventListener(element.current, 'glider-destroy', onDestroy)
-  useEventListener(element.current, 'glider-loaded', onLoaded)
-  useEventListener(element.current, 'glider-refresh', onRefresh)
-  useEventListener(element.current, 'glider-remove', onRemove)
-  useEventListener(element.current, 'glider-slide-hidden', onSlideHidden)
-  useEventListener(element.current, 'glider-slide-visible', onSlideVisible)
   return {
     ref: element,
     glider,
@@ -89,43 +53,6 @@ export function useGlider<T extends HTMLElement>({
     getNextArrowProps,
     getPrevArrowProps,
     getContainerProps,
-    getDotsProps,
-  }
-}
-
-function useEventListener<K extends keyof GliderEventMap>(
-  element: HTMLElement | undefined | null,
-  event: K,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  listener: (event: GliderEvent<GliderEventMap[K]>) => void = () => {}
-) {
-  const savedListener = useRef(listener)
-
-  useEffect(() => {
-    savedListener.current = listener
-  }, [listener])
-
-  useLayoutEffect(() => {
-    if (!element) {
-      return
-    }
-    element.addEventListener(event, savedListener.current)
-    return () => {
-      element.removeEventListener(event, savedListener.current)
-    }
-  }, [event, element])
-}
-
-declare global {
-  interface HTMLElement {
-    addEventListener<K extends keyof GliderEventMap>(
-      type: K,
-      listener: (event: GliderEvent<GliderEventMap[K]>) => void,
-      options?: boolean | AddEventListenerOptions
-    ): void
-    removeEventListener<K extends keyof GliderEventMap>(
-      type: K,
-      listener: (event: GliderEvent<GliderEventMap[K]>) => void
-    ): void
+    getItemProps,
   }
 }

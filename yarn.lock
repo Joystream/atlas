@@ -2710,6 +2710,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@glidejs/glide@npm:^3.6.0":
+  version: 3.6.0
+  resolution: "@glidejs/glide@npm:3.6.0"
+  checksum: e2c8332f03dee891be5a310c9483355492093392efb35b5040d9678cd84d2dc067609a890cbf78f6824307f315e5f7e36940a5dc291c1c2ad653d43d62c7291d
+  languageName: node
+  linkType: hard
+
 "@graphql-codegen/add@npm:^3.2.1":
   version: 3.2.1
   resolution: "@graphql-codegen/add@npm:3.2.1"
@@ -3556,6 +3563,7 @@ __metadata:
     "@emotion/babel-plugin": ^11.10.5
     "@emotion/react": ^11.10.5
     "@emotion/styled": ^11.10.5
+    "@glidejs/glide": ^3.6.0
     "@graphql-codegen/cli": ^2.16.1
     "@graphql-codegen/introspection": ^2.2.3
     "@graphql-codegen/near-operation-file-preset": ^2.4.4
@@ -3589,7 +3597,7 @@ __metadata:
     "@tippyjs/react": ^4.2.6
     "@types/aos": ^3.0.4
     "@types/bn.js": ^5.1.1
-    "@types/glider-js": ^1.7.6
+    "@types/glidejs__glide": ^3.6.1
     "@types/js-yaml": ^4.0.5
     "@types/loadable__component": ^5.13.4
     "@types/lodash-es": ^4.17.6
@@ -3613,7 +3621,6 @@ __metadata:
     cropperjs: ^1.5.13
     date-fns: ^2.29.3
     downshift: ^7.0.4
-    glider-js: ^1.7.8
     graphql: ^16.6.0
     graphql-tag: ^2.12.6
     happy-dom: ^8.1.0
@@ -6348,10 +6355,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/glider-js@npm:^1.7.6":
-  version: 1.7.6
-  resolution: "@types/glider-js@npm:1.7.6"
-  checksum: 108d6954af5de58eb454009909de5fa2cb5cc70bcb060834b4512ae2f4e87751173ac07124d85da3063dd907f56927642815ee80105b47b07c085f4219bba9eb
+"@types/glidejs__glide@npm:^3.6.1":
+  version: 3.6.1
+  resolution: "@types/glidejs__glide@npm:3.6.1"
+  checksum: 3caf63ba0f3e58b767db8e47b211bb5fcb469ed6f8406e8fb156116111d2f6ba06bf5eb5fd40fc17fdb54668441e478117f7d72960e338b0e424c1577ccd712a
   languageName: node
   linkType: hard
 
@@ -12432,13 +12439,6 @@ __metadata:
   version: 1.4.0
   resolution: "github-slugger@npm:1.4.0"
   checksum: 4f52e7a21f5c6a4c5328f01fe4fe13ae8881fea78bfe31f9e72c4038f97e3e70d52fb85aa7633a52c501dc2486874474d9abd22aa61cbe9b113099a495551c6b
-  languageName: node
-  linkType: hard
-
-"glider-js@npm:^1.7.8":
-  version: 1.7.8
-  resolution: "glider-js@npm:1.7.8"
-  checksum: d651e10be8b27a7038541e85fdf0cb47bc5cc43363e617612eb6ebe573d2e6c2ce43b077323ba558fb7446cc8124f16cb9d2fc5499b6c356ed7427082822f6d7
   languageName: node
   linkType: hard
 
