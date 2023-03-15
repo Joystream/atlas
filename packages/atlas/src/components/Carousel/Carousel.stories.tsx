@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import { Meta, StoryFn } from '@storybook/react'
-import { useRef } from 'react'
 
 import { cVar } from '@/styles'
 
@@ -12,28 +11,25 @@ export default {
 } as Meta
 
 const Template: StoryFn<CarouselProps> = (args) => {
-  const prevArrowRef = useRef<HTMLButtonElement>(null)
-  const nextArrowRef = useRef<HTMLButtonElement>(null)
   return (
-    <Carousel {...args} prevArrowRef={prevArrowRef} nextArrowRef={nextArrowRef} dotsVisible>
-      {Array.from({ length: 10 }, (_, i) => (
-        <CarouselItem key={i}> Carousel Item {i}</CarouselItem>
-      ))}
+    <Carousel {...args}>
+      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+      {/*@ts-ignore*/}
+      {() => Array.from({ length: 10 }, (_, i) => <CarouselItem key={i}> Carousel Item {i}</CarouselItem>)}
     </Carousel>
   )
 }
 export const Regular = Template.bind({})
 Regular.args = {
-  itemWidth: 300,
-  slidesToShow: 3,
-  slidesToScroll: 1,
+  perView: 3,
+  bound: true,
 }
-export const Draggable = Template.bind({})
-Draggable.args = {
-  draggable: true,
-  itemWidth: 300,
-  slidesToShow: 3,
-  slidesToScroll: 1,
+
+export const WithDots = Template.bind({})
+WithDots.args = {
+  perView: 3,
+  dotsVisible: true,
+  bound: true,
 }
 
 const CarouselItem = styled.div`

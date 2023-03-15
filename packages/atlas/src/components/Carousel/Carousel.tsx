@@ -1,14 +1,13 @@
-import Glider from 'glider-js'
-import { ComponentPropsWithoutRef, RefObject, forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
+import { ReactNode, useMemo, useState } from 'react'
 
+import { Dots } from '@/components/Carousel/Carousel.styles'
 import { GliderProps, useGlider } from '@/components/Glider'
-
-import { Container, Dots, GliderContainer, Track } from './Carousel.styles'
 
 export type CarouselProps = {
   className?: string
   arrowPosition?: number
   dotsVisible?: boolean
+  children: (props: ReturnType<typeof useGlider>) => ReactNode[]
 } & GliderProps
 
 export type CarouselRef = {
@@ -16,95 +15,44 @@ export type CarouselRef = {
   getNextArrowProps: ReturnType<typeof useGlider>['getNextArrowProps']
 }
 
-export const Carousel = forwardRef<
-  CarouselRef,
-  CarouselProps &
-    ComponentPropsWithoutRef<'div'> & {
-      prevArrowRef: RefObject<HTMLButtonElement>
-      nextArrowRef: RefObject<HTMLButtonElement>
+export const Carousel = ({ children, className = '', arrowPosition, dotsVisible, ...gliderOptions }: CarouselProps) => {
+  const [currentMiddleItem, setCurrentMiddleItem] = useState(0)
+  const gliderProps = useGlider<HTMLDivElement>({
+    ...gliderOptions,
+    type: 'slider',
+    perSwipe: '|',
+    onSwipeEnd: ({ index }) => setCurrentMiddleItem(index),
+  })
+
+  const { ref: gliderRef, getContainerProps, getGliderProps, getTrackProps } = gliderProps
+  const content = children(gliderProps)
+
+  const dots = useMemo(() => {
+    const { perView } = gliderOptions
+    if (perView && dotsVisible) {
+      const numberOfDots = Math.ceil(content?.length / perView)
+
+      return Array.from({ length: numberOfDots }, (_, idx) => (
+        <button
+          key={idx}
+          className={`glide__bullet glider-dot ${Math.ceil(currentMiddleItem / perView) === idx && 'active'}`}
+          data-glide-dir={`=${idx * (gliderOptions.perView ?? 1)}`}
+        />
+      ))
     }
->(
-  (
-    {
-      children,
-      className = '',
-      arrowPosition,
-      slidesToShow = 'auto',
-      dotsVisible,
-      prevArrowRef,
-      nextArrowRef,
-      ...gliderOptions
-    },
-    ref
-  ) => {
-    const dotsRef = useRef<HTMLDivElement>(null)
-    const gliderInstanceRef = useRef<Glider<HTMLElement>>()
-    const slidesToScrollRef = useRef<number>(0)
+    return null
+  }, [content?.length, currentMiddleItem, dotsVisible, gliderOptions])
 
-    const onAnimated = () => {
-      if (gliderInstanceRef.current && gliderOptions.responsive) {
-        const breakpointIndex = gliderOptions.responsive.findIndex(
-          (item) => item.breakpoint === gliderInstanceRef.current?.breakpoint
-        )
-        const slidesToScroll = gliderOptions.responsive[breakpointIndex].settings.slidesToScroll as number
-        const itemsRemainder = gliderInstanceRef.current.slides.length % slidesToScrollRef.current || slidesToScroll
-        if (nextArrowRef.current && nextArrowRef.current?.classList.contains('disabled') && itemsRemainder) {
-          gliderInstanceRef.current.setOption({ slidesToScroll: itemsRemainder }, false)
-        } else {
-          gliderInstanceRef.current.setOption({ slidesToScroll: slidesToScrollRef.current || slidesToScroll }, false)
-          if (!slidesToScrollRef.current) {
-            slidesToScrollRef.current = slidesToScroll
-          }
-        }
-      }
-    }
-
-    const {
-      ref: gliderRef,
-      getContainerProps,
-      getGliderProps,
-      getTrackProps,
-      getPrevArrowProps,
-      getNextArrowProps,
-      getDotsProps,
-      glider,
-    } = useGlider<HTMLDivElement>({
-      slidesToShow,
-      onAnimated,
-      arrows: { prev: prevArrowRef.current, next: nextArrowRef.current },
-      dots: dotsRef.current,
-      ...gliderOptions,
-    })
-
-    const resetSlidesToScroll = () => {
-      slidesToScrollRef.current = 0
-    }
-
-    useEffect(() => {
-      window.addEventListener('resize', resetSlidesToScroll)
-
-      return () => {
-        window.removeEventListener('resize', resetSlidesToScroll)
-      }
-    }, [])
-
-    useEffect(() => {
-      if (!glider) return
-      gliderInstanceRef.current = glider
-    }, [glider])
-
-    useImperativeHandle(ref, () => ({
-      getPrevArrowProps,
-      getNextArrowProps,
-    }))
-    return (
-      <Container {...getContainerProps({ className })}>
-        <GliderContainer {...getGliderProps()} ref={gliderRef}>
-          <Track {...getTrackProps()}>{children}</Track>
-        </GliderContainer>
-        {dotsVisible && <Dots {...getDotsProps()} ref={dotsRef} />}
-      </Container>
-    )
-  }
-)
-Carousel.displayName = 'Carousel'
+  return (
+    <div ref={gliderRef} {...getGliderProps({ className })}>
+      <div {...getTrackProps()} data-glide-el="track">
+        <div {...getContainerProps()}>{content}</div>
+      </div>
+      {dotsVisible && (
+        <Dots className="glide__bullets" data-glide-el="controls[nav]">
+          {dots}
+        </Dots>
+      )}
+    </div>
+  )
+}

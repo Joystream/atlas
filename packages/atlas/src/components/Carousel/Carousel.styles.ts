@@ -61,8 +61,8 @@ export const Track = styled.div`
 `
 
 export const Dots = styled.div`
-  margin-top: ${sizes(12)};
-  display: none;
+  display: flex;
+  justify-content: center;
 
   ${media.md} {
     display: flex;
@@ -72,6 +72,7 @@ export const Dots = styled.div`
     width: 36px;
     height: 20px;
     background-color: transparent;
+    border: none;
     border-radius: 0;
     padding: ${sizes(2)} ${sizes(0.5)};
     margin: 0;
