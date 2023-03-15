@@ -13,6 +13,9 @@ const getType = (eventData: EventData): PaymentHistory['type'] => {
     case 'BidMadeCompletingAuctionEventData':
     case 'OpenAuctionBidAcceptedEventData':
     case 'EnglishAuctionSettledEventData':
+      if (eventData.previousNftOwner.__typename !== 'NftOwnerChannel') {
+        return 'nft-royalty'
+      }
       return 'nft-sale'
     case 'ChannelRewardClaimedEventData':
       return 'claimed-reward'
