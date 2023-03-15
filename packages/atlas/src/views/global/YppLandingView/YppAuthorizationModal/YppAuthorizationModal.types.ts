@@ -50,12 +50,12 @@ type ChannelRequirementsFailedError = {
   expected: number | string | Date
 }
 
-export type YPPError = {
+export type YppError = {
   code: YppAuthorizationErrorCode
   message: string
 }
 
-export type ChannelAlreadyRegisteredError = YPPError & {
+export type ChannelAlreadyRegisteredError = YppError & {
   // already registered channel id
   code: YppAuthorizationErrorCode.CHANNEL_ALREADY_REGISTERED
   result: number
@@ -65,7 +65,7 @@ export type ChannelVerificationErrorResponse =
   | {
       message: ChannelRequirementsFailedError[]
     }
-  | YPPError
+  | YppError
   | ChannelAlreadyRegisteredError
 
 export type YoutubeResponseData = {
