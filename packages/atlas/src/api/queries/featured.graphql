@@ -25,7 +25,7 @@ query GetAllCategoriesFeaturedVideos {
 }
 
 # CHANGE: ID is now `String`
-query GetCategoriesFeaturedVideos($categoryId: String!) {
+query GetCategoryFeaturedVideos($categoryId: String!) {
   # CHANGE: Using `videoCategoryById` instead of custom `categoryFeaturedVideos` query
   videoCategoryById(id: $categoryId) {
     featuredVideos {

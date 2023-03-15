@@ -3,10 +3,10 @@ import { QueryHookOptions } from '@apollo/client'
 import {
   GetAllCategoriesFeaturedVideosQuery,
   GetAllCategoriesFeaturedVideosQueryVariables,
-  GetCategoriesFeaturedVideosQuery,
-  GetCategoriesFeaturedVideosQueryVariables,
+  GetCategoryFeaturedVideosQuery,
+  GetCategoryFeaturedVideosQueryVariables,
   useGetAllCategoriesFeaturedVideosQuery,
-  useGetCategoriesFeaturedVideosQuery,
+  useGetCategoryFeaturedVideosQuery,
 } from '@/api/queries/__generated__/featured.generated'
 
 export const useAllCategoriesFeaturedVideos = (
@@ -22,9 +22,9 @@ export const useAllCategoriesFeaturedVideos = (
 
 export const useCategoriesFeaturedVideos = (
   categoryId: string,
-  opts?: QueryHookOptions<GetCategoriesFeaturedVideosQuery, GetCategoriesFeaturedVideosQueryVariables>
+  opts?: QueryHookOptions<GetCategoryFeaturedVideosQuery, GetCategoryFeaturedVideosQueryVariables>
 ) => {
-  const { data, ...rest } = useGetCategoriesFeaturedVideosQuery({
+  const { data, ...rest } = useGetCategoryFeaturedVideosQuery({
     ...opts,
     variables: {
       categoryId,
