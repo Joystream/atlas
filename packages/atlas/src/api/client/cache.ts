@@ -4,6 +4,8 @@ import { FieldPolicy, FieldReadFunction } from '@apollo/client/cache/inmemory/po
 import { offsetLimitPagination, relayStylePagination } from '@apollo/client/utilities'
 import { parseISO } from 'date-fns'
 
+import { ConsoleLogger } from '@/utils/logs'
+
 import {
   Query,
   QueryChannelsConnectionArgs,
@@ -235,7 +237,13 @@ const cache = new InMemoryCache({
           read: (resolvedUrl, { readField }) => {
             const isAccepted = readField('isAccepted')
 
-            return isAccepted ? resolvedUrl : ''
+            if (isAccepted === undefined) {
+              ConsoleLogger.warn(
+                "You query the `resolvedUrl`, but you didn't check if the url is accepted. Pass `isAccepted` field to make sure `resolvedUrl` is valid"
+              )
+            }
+
+            return isAccepted || resolvedUrl === undefined ? resolvedUrl : ''
           },
         },
         size: {

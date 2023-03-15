@@ -531,12 +531,10 @@ export type GetPayloadDataObjectIdByCommitmentQuery = {
       | { __typename?: 'ChannelPaymentMadeEventData' }
       | {
           __typename?: 'ChannelPayoutsUpdatedEventData'
-          commitment?: string | null
           payloadDataObject?: {
             __typename?: 'StorageDataObject'
-            id: string
+            isAccepted: boolean
             resolvedUrl?: string | null
-            storageBag: { __typename?: 'StorageBag'; id: string }
           } | null
         }
       | { __typename?: 'ChannelRewardClaimedAndWithdrawnEventData' }
@@ -545,6 +543,7 @@ export type GetPayloadDataObjectIdByCommitmentQuery = {
       | { __typename?: 'CommentTextUpdatedEventData' }
       | { __typename?: 'EnglishAuctionSettledEventData' }
       | { __typename?: 'EnglishAuctionStartedEventData' }
+      | { __typename?: 'MemberBannedFromChannelEventData' }
       | { __typename?: 'MetaprotocolTransactionStatusEventData' }
       | { __typename?: 'NftBoughtEventData' }
       | { __typename?: 'NftIssuedEventData' }
@@ -618,6 +617,7 @@ export type GetChannelPaymentEventsQuery = {
           }
         }
       | { __typename: 'EnglishAuctionStartedEventData' }
+      | { __typename: 'MemberBannedFromChannelEventData' }
       | { __typename: 'MetaprotocolTransactionStatusEventData' }
       | {
           __typename: 'NftBoughtEventData'
@@ -1190,13 +1190,9 @@ export const GetPayloadDataObjectIdByCommitmentDocument = gql`
     events(where: { data: { isTypeOf_eq: "ChannelPayoutsUpdatedEventData", commitment_eq: $commitment } }) {
       data {
         ... on ChannelPayoutsUpdatedEventData {
-          commitment
           payloadDataObject {
-            id
+            isAccepted
             resolvedUrl
-            storageBag {
-              id
-            }
           }
         }
       }
@@ -1297,6 +1293,7 @@ export type ReportChannelMutationOptions = Apollo.BaseMutationOptions<
 export const GetChannelPaymentEventsDocument = gql`
   query GetChannelPaymentEvents($channelId: String) {
     events(
+      orderBy: timestamp_DESC
       where: {
         OR: [
           {

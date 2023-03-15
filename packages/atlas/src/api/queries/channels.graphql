@@ -122,13 +122,9 @@ query GetPayloadDataObjectIdByCommitment($commitment: String!) {
   events(where: { data: { isTypeOf_eq: "ChannelPayoutsUpdatedEventData", commitment_eq: $commitment } }) {
     data {
       ... on ChannelPayoutsUpdatedEventData {
-        commitment
         payloadDataObject {
-          id
+          isAccepted
           resolvedUrl
-          storageBag {
-            id
-          }
         }
       }
     }
