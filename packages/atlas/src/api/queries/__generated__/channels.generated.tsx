@@ -530,6 +530,7 @@ export type GetChannelPaymentEventsQuery = {
       | { __typename: 'CommentTextUpdatedEventData' }
       | { __typename: 'EnglishAuctionSettledEventData'; winningBid: { __typename?: 'Bid'; amount: string } }
       | { __typename: 'EnglishAuctionStartedEventData' }
+      | { __typename: 'MemberBannedFromChannelEventData' }
       | { __typename: 'MetaprotocolTransactionStatusEventData' }
       | { __typename: 'NftBoughtEventData'; price: string }
       | { __typename: 'NftIssuedEventData' }

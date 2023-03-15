@@ -277,6 +277,7 @@ export type GetCommentEditsQuery = {
       | { __typename?: 'CommentTextUpdatedEventData'; newText: string }
       | { __typename?: 'EnglishAuctionSettledEventData' }
       | { __typename?: 'EnglishAuctionStartedEventData' }
+      | { __typename?: 'MemberBannedFromChannelEventData' }
       | { __typename?: 'MetaprotocolTransactionStatusEventData' }
       | { __typename?: 'NftBoughtEventData' }
       | { __typename?: 'NftIssuedEventData' }

@@ -453,6 +453,7 @@ export type GetNotificationsQuery = {
                 }
           }
         | { __typename?: 'EnglishAuctionStartedEventData' }
+        | { __typename?: 'MemberBannedFromChannelEventData' }
         | { __typename?: 'MetaprotocolTransactionStatusEventData' }
         | {
             __typename?: 'NftBoughtEventData'
@@ -1238,6 +1239,7 @@ export type GetNftHistoryQuery = {
                   }
                 }
           }
+        | { __typename?: 'MemberBannedFromChannelEventData' }
         | { __typename?: 'MetaprotocolTransactionStatusEventData' }
         | {
             __typename?: 'NftBoughtEventData'
@@ -2585,6 +2587,7 @@ export type GetNftActivitiesQuery = {
                   }
                 }
           }
+        | { __typename?: 'MemberBannedFromChannelEventData' }
         | { __typename?: 'MetaprotocolTransactionStatusEventData' }
         | {
             __typename?: 'NftBoughtEventData'

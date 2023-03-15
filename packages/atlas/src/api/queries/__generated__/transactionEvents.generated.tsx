@@ -26,6 +26,7 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
       | { __typename?: 'CommentTextUpdatedEventData' }
       | { __typename?: 'EnglishAuctionSettledEventData' }
       | { __typename?: 'EnglishAuctionStartedEventData' }
+      | { __typename?: 'MemberBannedFromChannelEventData' }
       | {
           __typename?: 'MetaprotocolTransactionStatusEventData'
           result:
