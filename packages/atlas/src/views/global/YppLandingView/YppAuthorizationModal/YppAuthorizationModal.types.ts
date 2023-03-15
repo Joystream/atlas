@@ -24,13 +24,11 @@ export enum YppAuthorizationErrorCode {
   QUERY_NODE_NOT_CONNECTED = 'QUERY_NODE_NOT_CONNECTED',
 }
 
-export type YppRequirementsErrorCode = Omit<
+export type YppRequirementsErrorCode = PickEnum<
   YppAuthorizationErrorCode,
-  | YppAuthorizationErrorCode.CHANNEL_ALREADY_REGISTERED
-  | YppAuthorizationErrorCode.CHANNEL_NOT_FOUND
-  | YppAuthorizationErrorCode.YOUTUBE_QUOTA_LIMIT_EXCEEDED
-  | YppAuthorizationErrorCode.YOUTUBE_API_NOT_CONNECTED
-  | YppAuthorizationErrorCode.QUERY_NODE_NOT_CONNECTED
+  | YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_SUBSCRIBERS
+  | YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_VIDEOS
+  | YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_CREATION_DATE
 >
 
 export type ChannelVerificationSuccessResponse = {
@@ -52,48 +50,22 @@ type ChannelRequirementsFailedError = {
   expected: number | string | Date
 }
 
-export type TestErrorType = {
+export type YPPError = {
   code: YppAuthorizationErrorCode
   message: string
 }
 
-export type ChannelAlreadyRegisteredError = TestErrorType & {
+export type ChannelAlreadyRegisteredError = YPPError & {
+  // already registered channel id
   code: YppAuthorizationErrorCode.CHANNEL_ALREADY_REGISTERED
   result: number
-}
-
-export type ChannelNotFoundError = {
-  code: YppAuthorizationErrorCode.CHANNEL_NOT_FOUND
-  message: string
-}
-
-// export type ChannelAlreadyRegisteredError = {
-//   code: YppAuthorizationErrorCode.CHANNEL_ALREADY_REGISTERED
-//   message: string
-//   // already registered channel id
-//   result: number
-// }
-
-export type YoutubeQuotaReachedError = {
-  code: YppAuthorizationErrorCode.YOUTUBE_QUOTA_LIMIT_EXCEEDED
-  message: string
-}
-
-export type YoutubeAPINotConnectedError = {
-  code: YppAuthorizationErrorCode.YOUTUBE_API_NOT_CONNECTED
-  message: string
-}
-
-export type QueryNodeNotConnectedError = {
-  code: YppAuthorizationErrorCode.QUERY_NODE_NOT_CONNECTED
-  message: string
 }
 
 export type ChannelVerificationErrorResponse =
   | {
       message: ChannelRequirementsFailedError[]
     }
-  | TestErrorType
+  | YPPError
   | ChannelAlreadyRegisteredError
 
 export type YoutubeResponseData = {

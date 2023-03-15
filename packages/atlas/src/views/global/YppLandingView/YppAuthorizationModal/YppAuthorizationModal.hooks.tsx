@@ -174,7 +174,6 @@ export const useYppGoogleAuth = ({
         if (isAxiosError<ChannelVerificationErrorResponse>(error)) {
           const errorResponseData = error.response?.data
           const errorMessages = error.response?.data.message
-          const channelRegisteredData = errorResponseData as ChannelAlreadyRegisteredError
 
           if (typeof errorMessages === 'string' && errorMessages === 'Insufficient Permission') {
             displaySnackbar({
@@ -212,14 +211,17 @@ export const useYppGoogleAuth = ({
                   description: `You don't have a YouTube channel.`,
                   iconType: 'error',
                 })
-                setYtRequirementsErrors(Object.values(YppAuthorizationErrorCode))
+                setYtRequirementsErrors([
+                  YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_CREATION_DATE,
+                  YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_VIDEOS,
+                  YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_SUBSCRIBERS,
+                ])
                 onChangeStep('requirements')
                 return
-              case YppAuthorizationErrorCode.CHANNEL_ALREADY_REGISTERED:
-                // eslint-disable-next-line no-case-declarations
+              case YppAuthorizationErrorCode.CHANNEL_ALREADY_REGISTERED: {
                 const { data } = await client.query<GetFullChannelQuery, GetFullChannelQueryVariables>({
                   query: GetFullChannelDocument,
-                  variables: { where: { id: channelRegisteredData.result.toString() } },
+                  variables: { where: { id: (errorResponseData as ChannelAlreadyRegisteredError).result.toString() } },
                 })
                 setAlreadyRegisteredChannel({
                   channelTitle: data.channelByUniqueInput?.title || '',
@@ -228,6 +230,7 @@ export const useYppGoogleAuth = ({
 
                 onChangeStep('channel-already-registered')
                 return
+              }
               case YppAuthorizationErrorCode.YOUTUBE_API_NOT_CONNECTED:
                 displaySnackbar({
                   title: 'Something went wrong',
@@ -240,7 +243,7 @@ export const useYppGoogleAuth = ({
                 displaySnackbar({
                   title: 'Something went wrong',
                   description:
-                    'Query Node is down. Signups, video creation and upload to storage node is impacted. Please try again later',
+                    'Query Node is down. Signups, video creation and upload to storage node is impacted. Please try again later.',
                   iconType: 'error',
                 })
                 closeModal()
