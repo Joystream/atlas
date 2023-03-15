@@ -177,9 +177,16 @@ query GetChannelPaymentEvents($channelId: String) {
             isTypeOf_in: [
               "ChannelRewardClaimedEventData"
               "ChannelFundsWithdrawnEventData"
-              "ChannelPaymentMadeEventData"
             ]
             channel: { id_eq: $channelId }
+          }
+        }
+        {
+          data: {
+            isTypeOf_in: [
+              "ChannelPaymentMadeEventData"
+            ]
+            payeeChannel: { id_eq: $channelId }
           }
         }
       ]
@@ -293,6 +300,13 @@ query GetChannelPaymentEvents($channelId: String) {
               controllerAccount
             }
           }
+        }
+      }
+      ... on ChannelPaymentMadeEventData {
+        amount
+        rationale
+        payer {
+          controllerAccount
         }
       }
       ... on ChannelPaymentMadeEventData {

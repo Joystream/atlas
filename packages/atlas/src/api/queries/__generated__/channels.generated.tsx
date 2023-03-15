@@ -545,6 +545,7 @@ export type GetPayloadDataObjectIdByCommitmentQuery = {
       | { __typename?: 'CommentTextUpdatedEventData' }
       | { __typename?: 'EnglishAuctionSettledEventData' }
       | { __typename?: 'EnglishAuctionStartedEventData' }
+      | { __typename?: 'MemberBannedFromChannelEventData' }
       | { __typename?: 'MetaprotocolTransactionStatusEventData' }
       | { __typename?: 'NftBoughtEventData' }
       | { __typename?: 'NftIssuedEventData' }
@@ -629,6 +630,7 @@ export type GetChannelPaymentEventsQuery = {
           }
         }
       | { __typename: 'EnglishAuctionStartedEventData' }
+      | { __typename: 'MemberBannedFromChannelEventData' }
       | { __typename: 'MetaprotocolTransactionStatusEventData' }
       | {
           __typename: 'NftBoughtEventData'
@@ -1345,14 +1347,11 @@ export const GetChannelPaymentEventsDocument = gql`
           }
           {
             data: {
-              isTypeOf_in: [
-                "ChannelRewardClaimedEventData"
-                "ChannelFundsWithdrawnEventData"
-                "ChannelPaymentMadeEventData"
-              ]
+              isTypeOf_in: ["ChannelRewardClaimedEventData", "ChannelFundsWithdrawnEventData"]
               channel: { id_eq: $channelId }
             }
           }
+          { data: { isTypeOf_in: ["ChannelPaymentMadeEventData"], payeeChannel: { id_eq: $channelId } } }
         ]
       }
     ) {
@@ -1463,6 +1462,13 @@ export const GetChannelPaymentEventsDocument = gql`
                 controllerAccount
               }
             }
+          }
+        }
+        ... on ChannelPaymentMadeEventData {
+          amount
+          rationale
+          payer {
+            controllerAccount
           }
         }
         ... on ChannelPaymentMadeEventData {
