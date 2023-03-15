@@ -4,9 +4,9 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { useFullChannel } from '@/api/hooks/channel'
 import {
-  GetPayloadDataObjectIdByCommitmentDocument,
-  GetPayloadDataObjectIdByCommitmentQuery,
-  GetPayloadDataObjectIdByCommitmentQueryVariables,
+  GetPayloadDataByCommitmentDocument,
+  GetPayloadDataByCommitmentQuery,
+  GetPayloadDataByCommitmentQueryVariables,
 } from '@/api/queries/__generated__/channels.generated'
 import { atlasConfig } from '@/config'
 import { getClaimableReward } from '@/joystream-lib/channelPayouts'
@@ -41,14 +41,12 @@ export const useChannelPayout = (txCallback?: () => void) => {
     async (commitment: string) => {
       const {
         data: { events },
-      } = await client.query<GetPayloadDataObjectIdByCommitmentQuery, GetPayloadDataObjectIdByCommitmentQueryVariables>(
-        {
-          query: GetPayloadDataObjectIdByCommitmentDocument,
-          variables: {
-            commitment,
-          },
-        }
-      )
+      } = await client.query<GetPayloadDataByCommitmentQuery, GetPayloadDataByCommitmentQueryVariables>({
+        query: GetPayloadDataByCommitmentDocument,
+        variables: {
+          commitment,
+        },
+      })
 
       const payloadUrl =
         events[0]?.data.__typename === 'ChannelPayoutsUpdatedEventData' && events[0].data.payloadDataObject?.resolvedUrl
