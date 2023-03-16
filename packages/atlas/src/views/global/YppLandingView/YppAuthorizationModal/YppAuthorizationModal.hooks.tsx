@@ -187,7 +187,7 @@ export const useYppGoogleAuth = ({
 
           const isRequirementsError = isArray(errorMessages)
           if (isRequirementsError) {
-            const errorCodes = isRequirementsError ? errorMessages?.map((message) => message.errorCode) : undefined
+            const errorCodes = isRequirementsError ? errorMessages?.map((message) => message.code) : undefined
 
             errorCodes && setYtRequirementsErrors(errorCodes)
             onChangeStep('requirements')

@@ -44,7 +44,7 @@ export type ChannelRequirements = {
 }
 
 type ChannelRequirementsFailedError = {
-  errorCode: YppRequirementsErrorCode
+  code: YppRequirementsErrorCode
   message: string
   result: number | string | Date
   expected: number | string | Date
