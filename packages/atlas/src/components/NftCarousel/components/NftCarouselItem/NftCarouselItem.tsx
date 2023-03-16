@@ -1,14 +1,16 @@
+import { ReactNode } from 'react'
+
 import { SvgActionChevronL, SvgActionChevronR } from '@/assets/icons'
 
-import { ItemWrapper, LeftChevronContainer, RightChevronContainer } from './CarouselItem.styles'
+import { ItemWrapper, LeftChevronContainer, RightChevronContainer } from './NftCarouselItem.styles'
 
 type CarouselItemProps = {
   position: 'side' | 'active'
 
   onClick?: (dir: '<' | '>') => void
-  children?: React.ReactElement
+  children?: ReactNode
 }
-export const CarouselItem = ({ position, onClick, children }: CarouselItemProps) => {
+export const NftCarouselItem = ({ position, onClick, children }: CarouselItemProps) => {
   return (
     <ItemWrapper className="glide__slide" data-glide-el="controls">
       {position === 'side' && (

@@ -11,11 +11,12 @@ export default {
 } as Meta
 
 const Template: StoryFn<CarouselProps> = (args) => {
+  delete args.onSwipeEnd
   return (
     <Carousel {...args}>
-      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-      {/*@ts-ignore*/}
-      {() => Array.from({ length: 10 }, (_, i) => <CarouselItem key={i}> Carousel Item {i}</CarouselItem>)}
+      {Array.from({ length: 10 }, (_, i) => (
+        <CarouselItem key={i}> Carousel Item {i}</CarouselItem>
+      ))}
     </Carousel>
   )
 }

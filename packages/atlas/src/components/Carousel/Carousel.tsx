@@ -7,7 +7,7 @@ export type CarouselProps = {
   className?: string
   arrowPosition?: number
   dotsVisible?: boolean
-  children: (props: ReturnType<typeof useGlider>) => ReactNode[]
+  children: ((props: ReturnType<typeof useGlider>) => ReactNode[]) | ReactNode[]
 } & GliderProps
 
 export type CarouselRef = {
@@ -18,20 +18,19 @@ export type CarouselRef = {
 export const Carousel = ({ children, className = '', arrowPosition, dotsVisible, ...gliderOptions }: CarouselProps) => {
   const [currentMiddleItem, setCurrentMiddleItem] = useState(0)
   const gliderProps = useGlider<HTMLDivElement>({
-    ...gliderOptions,
+    onSwipeEnd: ({ index }) => setCurrentMiddleItem(index),
     type: 'slider',
     perSwipe: '|',
-    onSwipeEnd: ({ index }) => setCurrentMiddleItem(index),
+    ...gliderOptions,
   })
 
   const { ref: gliderRef, getContainerProps, getGliderProps, getTrackProps } = gliderProps
-  const content = children(gliderProps)
+  const content = typeof children === 'function' ? children(gliderProps) : children
 
   const dots = useMemo(() => {
     const { perView } = gliderOptions
     if (perView && dotsVisible) {
       const numberOfDots = Math.ceil(content?.length / perView)
-
       return Array.from({ length: numberOfDots }, (_, idx) => (
         <button
           key={idx}
