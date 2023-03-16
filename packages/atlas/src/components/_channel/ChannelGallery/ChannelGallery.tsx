@@ -2,6 +2,7 @@ import { FC, useMemo } from 'react'
 
 import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { Gallery } from '@/components/Gallery'
+import { GliderProps } from '@/components/Glider'
 import { breakpointsOfGrid } from '@/components/Grid'
 import { RankingNumberTile } from '@/components/RankingNumberTile'
 import { ChannelCard } from '@/components/_channel/ChannelCard'
@@ -19,29 +20,30 @@ const CAROUSEL_SMALL_BREAKPOINT = 688
 
 export const ChannelGallery: FC<ChannelGalleryProps> = ({ title, channels = [], loading, hasRanking }) => {
   const breakpoints = useMemo(() => {
-    return breakpointsOfGrid({
+    const breakpoints = breakpointsOfGrid({
       breakpoints: 6,
       minItemWidth: 300,
       gridColumnGap: 24,
       viewportContainerDifference: 64,
-    }).map((breakpoint, idx) => {
+    })
+    const responsive: GliderProps['responsive'] = {}
+    breakpoints.forEach((breakpoint, idx) => {
       if (breakpoint <= CAROUSEL_SMALL_BREAKPOINT && hasRanking) {
-        return {
-          breakpoint,
-          settings: {
-            slidesToShow: idx + 1.5,
-            slidesToScroll: idx + 1,
-          },
+        responsive[breakpoint] = {
+          perView: idx + 1.5,
+          bound: true,
+          perSwipe: '|',
+        }
+      } else {
+        responsive[breakpoint] = {
+          perView: idx + 1,
+          bound: true,
+          perSwipe: '|',
         }
       }
-      return {
-        breakpoint,
-        settings: {
-          slidesToShow: idx + 1,
-          slidesToScroll: idx + 1,
-        },
-      }
     })
+
+    return responsive
   }, [hasRanking])
 
   if (loading === false && channels?.length === 0) {
@@ -52,7 +54,7 @@ export const ChannelGallery: FC<ChannelGalleryProps> = ({ title, channels = [], 
     id: undefined,
   }))
   return (
-    <Gallery title={title} responsive={breakpoints} itemWidth={350} dotsVisible>
+    <Gallery title={title} responsive={breakpoints} dotsVisible>
       {[...(channels ? channels : []), ...placeholderItems].map((channel, idx) =>
         hasRanking ? (
           <RankingNumberTile number={idx + 1} key={idx}>

@@ -23,7 +23,6 @@ export const Carousel = ({ children, className = '', arrowPosition, dotsVisible,
     perSwipe: '|',
     ...gliderOptions,
   })
-
   const { ref: gliderRef, getContainerProps, getGliderProps, getTrackProps } = gliderProps
   const content = typeof children === 'function' ? children(gliderProps) : children
 

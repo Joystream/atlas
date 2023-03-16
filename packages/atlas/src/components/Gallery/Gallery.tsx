@@ -1,7 +1,8 @@
-import { FC, PropsWithChildren, useRef } from 'react'
+import Glider from '@glidejs/glide'
+import { FC, PropsWithChildren, ReactNode, useRef } from 'react'
 
 import { SvgActionChevronL, SvgActionChevronR, SvgControlsPlay } from '@/assets/icons'
-import { Carousel, CarouselProps, CarouselRef } from '@/components/Carousel'
+import { Carousel, CarouselProps } from '@/components/Carousel'
 import { Arrow } from '@/components/Carousel/Carousel.styles'
 import { GridHeadingContainer, TitleContainer } from '@/components/GridHeading'
 import { Text } from '@/components/Text'
@@ -12,14 +13,13 @@ export type GalleryProps = PropsWithChildren<{
   title?: string
   className?: string
   seeAllUrl?: string
+  children: ReactNode[] | ReactNode
 }> &
-  CarouselProps
+  Omit<CarouselProps, 'children'>
 
-export const Gallery: FC<GalleryProps> = ({ title, className, seeAllUrl, ...carouselProps }) => {
+export const Gallery: FC<GalleryProps> = ({ title, className, seeAllUrl, children, ...carouselProps }) => {
   // TODO: this is the only place in the app that requires refs to buttons. Once we refactor this component, we can remove forwardRef from buttons
-  const prevArrowRef = useRef<HTMLButtonElement>(null)
-  const nextArrowRef = useRef<HTMLButtonElement>(null)
-  const carouselRef = useRef<CarouselRef>(null)
+  const gliderRef = useRef<Glider | undefined>(undefined)
   return (
     <Container className={className}>
       <GridHeadingContainer>
@@ -42,29 +42,29 @@ export const Gallery: FC<GalleryProps> = ({ title, className, seeAllUrl, ...caro
           )}
           <CarouselArrowsContainer>
             <Arrow
-              {...carouselRef.current?.getPrevArrowProps()}
-              ref={prevArrowRef}
               icon={<SvgActionChevronL />}
               size="large"
               variant="secondary"
+              onClick={() => gliderRef.current?.go('<')}
             />
             <Arrow
-              {...carouselRef.current?.getNextArrowProps()}
-              ref={nextArrowRef}
               icon={<SvgActionChevronR />}
               size="large"
               variant="secondary"
+              onClick={() => gliderRef.current?.go('>')}
             />
           </CarouselArrowsContainer>
         </TitleContainer>
       </GridHeadingContainer>
-      <Carousel
-        {...carouselProps}
-        prevArrowRef={prevArrowRef}
-        nextArrowRef={nextArrowRef}
-        ref={carouselRef}
-        itemWidth={350}
-      />
+      <Carousel {...carouselProps}>
+        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+        {/*@ts-ignore*/}
+        {({ glider }) => {
+          gliderRef.current = glider
+
+          return children
+        }}
+      </Carousel>
     </Container>
   )
 }

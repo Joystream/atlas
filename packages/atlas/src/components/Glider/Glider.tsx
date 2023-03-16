@@ -1,12 +1,17 @@
 import Glider, { Options } from '@glidejs/glide'
 import '@glidejs/glide/dist/css/glide.core.min.css'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
+
+import { useMountEffect } from '@/hooks/useMountEffect'
 
 type GliderEventListeners = {
   onSwipeEnd?: (glide: Glider) => void
 }
 
-export type GliderProps = Partial<Options> & GliderEventListeners
+export type GliderProps = Partial<Options> &
+  GliderEventListeners & {
+    responsive?: Record<number, Partial<Options>>
+  }
 
 type PropsWithClassName<T> = {
   className?: string
@@ -23,15 +28,15 @@ const getPrevArrowProps = getPropsFor('glide__arrow glide__arrow--left')
 const getContainerProps = getPropsFor('glide__slides')
 const getItemProps = getPropsFor('glide__slide')
 
-export function useGlider<T extends HTMLElement>({ onSwipeEnd, ...gliderOptions }: GliderProps) {
+export function useGlider<T extends HTMLElement>({ onSwipeEnd, responsive, ...gliderOptions }: GliderProps) {
   const [glider, setGlider] = useState<Glider>()
   const element = useRef<T>(null)
 
-  useEffect(() => {
+  useMountEffect(() => {
     if (!element.current) {
       return
     }
-    const newGlider = new Glider(element.current, { type: 'carousel', ...gliderOptions })
+    const newGlider = new Glider(element.current, { type: 'carousel', breakpoints: responsive, ...gliderOptions })
     newGlider.on('run.after', () => {
       onSwipeEnd?.(newGlider)
     })
@@ -43,7 +48,7 @@ export function useGlider<T extends HTMLElement>({ onSwipeEnd, ...gliderOptions 
         newGlider.destroy()
       }
     }
-  }, [])
+  })
 
   return {
     ref: element,

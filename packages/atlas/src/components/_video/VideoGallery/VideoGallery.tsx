@@ -3,6 +3,7 @@ import { FC } from 'react'
 
 import { FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { Gallery } from '@/components/Gallery'
+import { GliderProps } from '@/components/Glider'
 import { RankingNumberTile } from '@/components/RankingNumberTile'
 import { breakpoints } from '@/styles/breakpoints'
 
@@ -40,57 +41,31 @@ export const VideoGallery: FC<VideoGalleryProps> = ({
   hasRanking = false,
   className,
 }) => {
-  const responsive = [
-    {
-      breakpoint: parseInt(breakpoints.xxs),
-      settings: {
-        slidesToShow: 12 / 11,
-        slidesToScroll: 1,
-      },
+  const responsive: GliderProps['responsive'] = {
+    [parseInt(breakpoints.sm)]: {
+      perView: 1,
     },
-    {
-      breakpoint: parseInt(breakpoints.xs),
-      settings: {
-        slidesToShow: 12 / 10,
-        slidesToScroll: 1,
-      },
+    [parseInt(breakpoints.md)]: {
+      perView: 2,
+      perSwipe: '|',
+      bound: true,
     },
-    {
-      breakpoint: parseInt(breakpoints.sm),
-      settings: {
-        slidesToShow: 12 / 7,
-        slidesToScroll: 1,
-      },
+    [parseInt(breakpoints.lg)]: {
+      perView: 3,
+      perSwipe: '|',
+      bound: true,
     },
-    {
-      breakpoint: parseInt(breakpoints.md),
-      settings: {
-        slidesToShow: 2,
-        slidesToScroll: 2,
-      },
+    [parseInt(breakpoints.xl)]: {
+      perView: 4,
+      perSwipe: '|',
+      bound: true,
     },
-    {
-      breakpoint: parseInt(breakpoints.lg),
-      settings: {
-        slidesToShow: 3,
-        slidesToScroll: 3,
-      },
+    [parseInt(breakpoints.xxl)]: {
+      perView: 5,
+      perSwipe: '|',
+      bound: true,
     },
-    {
-      breakpoint: parseInt(breakpoints.xl),
-      settings: {
-        slidesToShow: 4,
-        slidesToScroll: 4,
-      },
-    },
-    {
-      breakpoint: parseInt(breakpoints.xxl),
-      settings: {
-        slidesToShow: 5,
-        slidesToScroll: 5,
-      },
-    },
-  ]
+  }
 
   if (loading === false && videos?.length === 0) {
     return null
@@ -102,7 +77,7 @@ export const VideoGallery: FC<VideoGalleryProps> = ({
   }))
 
   return (
-    <Gallery title={title} responsive={responsive} dotsVisible seeAllUrl={seeAllUrl} className={className}>
+    <Gallery perView={3} title={title} responsive={responsive} dotsVisible seeAllUrl={seeAllUrl} className={className}>
       {[...(videos ? videos : []), ...placeholderItems]?.map((video, idx) =>
         hasRanking ? (
           <RankingNumberTile number={idx + 1} key={`${idx}-${video.id}`}>
