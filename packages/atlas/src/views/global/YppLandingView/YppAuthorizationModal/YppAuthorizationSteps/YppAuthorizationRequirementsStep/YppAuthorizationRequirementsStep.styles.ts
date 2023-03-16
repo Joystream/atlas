@@ -28,3 +28,7 @@ export const TickWrapper = styled.div<{ fulfilled: boolean }>`
   background-color: ${({ fulfilled }) => cVar(fulfilled ? 'colorBackgroundAlpha' : 'colorBackgroundError')};
   border-radius: 50%;
 `
+
+export const Paragraph = styled.p`
+  margin: 0;
+`
