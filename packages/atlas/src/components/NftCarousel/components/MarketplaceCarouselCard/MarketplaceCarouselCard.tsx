@@ -2,7 +2,8 @@ import { useNavigate } from 'react-router'
 
 import { getNftStatus } from '@/api/hooks/nfts'
 import { GetFeaturedNftsQuery } from '@/api/queries/__generated__/nfts.generated'
-import { NftTileDetailsProps } from '@/components/_nft/NftTile'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { NftTileDetails, NftTileDetailsProps } from '@/components/_nft/NftTile'
 import { BackgroundVideoPlayer } from '@/components/_video/BackgroundVideoPlayer'
 import { absoluteRoutes } from '@/config/routes'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
@@ -41,10 +42,11 @@ export const MarketplaceCarouselCard = (props: MarketplaceCarouselCardProps) => 
 const NftDetails = ({ nft, active }: { nft: NftCard['nft']; active: boolean }) => {
   const navigate = useNavigate()
   const creatorAvatar = useAsset(nft?.video.channel.avatarPhoto)
-  const { url: thumbnailUrl } = useAsset(nft?.video.thumbnailPhoto)
+  const { url: thumbnailUrl, isLoadingAsset: isVideoLoading } = useAsset(nft?.video.thumbnailPhoto)
 
-  const { url: mediaUrl } = useAsset(nft.video.media)
+  const { url: mediaUrl, isLoadingAsset: isPosterLoading } = useAsset(nft.video.media)
 
+  const isLoading = isPosterLoading || isVideoLoading
   // const nftState = useNftState(nft)
   // const {
   //   auctionPlannedEndDate,
@@ -100,18 +102,22 @@ const NftDetails = ({ nft, active }: { nft: NftCard['nft']; active: boolean }) =
   return (
     <Container>
       <VideoContainer>
-        <BackgroundVideoPlayer
-          muted={true}
-          autoPlay={active}
-          playing={active}
-          onPause={(e) => (e.currentTarget.currentTime = 0)}
-          preload="metadata"
-          src={mediaUrl ?? undefined}
-          poster={thumbnailUrl ?? undefined}
-        />
+        {isLoading ? (
+          <SkeletonLoader height={600} width="100%" />
+        ) : (
+          <BackgroundVideoPlayer
+            muted={true}
+            autoPlay={active}
+            playing={active}
+            onPause={(e) => (e.currentTarget.currentTime = 0)}
+            preload="auto"
+            src={mediaUrl ?? undefined}
+            poster={thumbnailUrl ?? undefined}
+          />
+        )}
       </VideoContainer>
       <InformationContainer />
-      {/*{active && <NftTileDetails {...nftCommonProps} />}*/}
+      {active && <NftTileDetails {...nftCommonProps} />}
     </Container>
   )
 }

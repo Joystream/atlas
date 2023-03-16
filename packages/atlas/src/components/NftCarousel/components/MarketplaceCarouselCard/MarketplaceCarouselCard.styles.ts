@@ -9,6 +9,7 @@ export const Container = styled.div`
   width: 100%;
   padding: 32px;
   min-height: 600px;
+  min-width: 600px;
 `
 
 export const VideoContainer = styled.div`

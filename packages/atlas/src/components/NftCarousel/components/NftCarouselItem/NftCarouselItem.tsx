@@ -12,9 +12,9 @@ type CarouselItemProps = {
 }
 export const NftCarouselItem = ({ position, onClick, children }: CarouselItemProps) => {
   return (
-    <ItemWrapper>
+    <ItemWrapper className="glide__slide">
       {position === 'side' && (
-        <NavigationContainer className="glide__slide" data-glide-el="controls">
+        <NavigationContainer data-glide-el="controls">
           <LeftChevronContainer
             className="glide__arrow glide__arrow--left"
             data-glide-dir="<"

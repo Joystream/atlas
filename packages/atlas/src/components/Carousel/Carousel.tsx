@@ -1,4 +1,4 @@
-import { ReactNode, useMemo, useState } from 'react'
+import { ReactNode, useEffect, useMemo, useState } from 'react'
 
 import { Dots } from '@/components/Carousel/Carousel.styles'
 import { GliderProps, useGlider } from '@/components/Glider'
@@ -25,6 +25,12 @@ export const Carousel = ({ children, className = '', arrowPosition, dotsVisible,
   })
   const { ref: gliderRef, getContainerProps, getGliderProps, getTrackProps } = gliderProps
   const content = typeof children === 'function' ? children(gliderProps) : children
+
+  useEffect(() => {
+    gliderProps.glider?.update()
+    // glider needs to recalc when number of children changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [content.length])
 
   const dots = useMemo(() => {
     const { perView } = gliderOptions

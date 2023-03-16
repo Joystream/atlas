@@ -5,6 +5,7 @@ import { GetFeaturedNftsQuery } from '@/api/queries/__generated__/nfts.generated
 import { Carousel, CarouselProps } from '@/components/Carousel'
 import { MarketplaceCarouselCard } from '@/components/NftCarousel/components/MarketplaceCarouselCard'
 import { NftCarouselItem } from '@/components/NftCarousel/components/NftCarouselItem/NftCarouselItem'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 
 type NftCarouselType = {
   type: 'nft'
@@ -22,21 +23,19 @@ export const NftCarousel = ({ carouselProps, ...rest }: MarketplaceCarousel) => 
 
   const contentMapper = useCallback(
     (glider: Glider | undefined, props: MarketplaceCarouselTypes) => {
-      if (props.type === 'nft') {
-        return (
-          props.nfts?.map((nft, idx) => (
-            <NftCarouselItem
-              key={idx}
-              position={currentMiddleItem === idx ? 'active' : 'side'}
-              onClick={(dir) => glider?.go(dir)}
-            >
-              <MarketplaceCarouselCard active={currentMiddleItem === idx} type="nft" nft={nft} />
-            </NftCarouselItem>
-          )) ?? [null]
-        )
+      if (props.type === 'nft' && props.nfts) {
+        return props.nfts.map((nft, idx) => (
+          <NftCarouselItem
+            key={idx}
+            position={currentMiddleItem === idx ? 'active' : 'side'}
+            onClick={(dir) => glider?.go(dir)}
+          >
+            <MarketplaceCarouselCard active={currentMiddleItem === idx} type="nft" nft={nft} />
+          </NftCarouselItem>
+        ))
       }
 
-      return [null]
+      return [<SkeletonLoader key="forever_alone" height={600} width={400} />]
     },
     [currentMiddleItem]
   )
