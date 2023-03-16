@@ -174,21 +174,11 @@ query GetChannelPaymentEvents($channelId: String) {
         }
         {
           data: {
-            isTypeOf_in: [
-              "ChannelRewardClaimedEventData"
-              "ChannelFundsWithdrawnEventData"
-            ]
+            isTypeOf_in: ["ChannelRewardClaimedEventData", "ChannelFundsWithdrawnEventData"]
             channel: { id_eq: $channelId }
           }
         }
-        {
-          data: {
-            isTypeOf_in: [
-              "ChannelPaymentMadeEventData"
-            ]
-            payeeChannel: { id_eq: $channelId }
-          }
-        }
+        { data: { isTypeOf_in: ["ChannelPaymentMadeEventData"], payeeChannel: { id_eq: $channelId } } }
       ]
     }
   ) {
