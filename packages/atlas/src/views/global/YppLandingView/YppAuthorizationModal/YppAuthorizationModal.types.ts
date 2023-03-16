@@ -56,8 +56,8 @@ export type YppError = {
 }
 
 export type ChannelAlreadyRegisteredError = YppError & {
-  // already registered channel id
   code: YppAuthorizationErrorCode.CHANNEL_ALREADY_REGISTERED
+    // already registered channel id
   result: number
 }
 
