@@ -26,7 +26,7 @@ import { useYppStore } from '@/providers/ypp/ypp.store'
 import { SentryLogger } from '@/utils/logs'
 import { pluralizeNoun } from '@/utils/misc'
 
-import { useGetYppChannelRequirments, useYppGoogleAuth } from './YppAuthorizationModal.hooks'
+import { useGetYppChannelRequirements, useYppGoogleAuth } from './YppAuthorizationModal.hooks'
 import {
   Anchor,
   Content,
@@ -82,7 +82,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   const setSelectedChannelId = useYppStore((store) => store.actions.setSelectedChannelId)
   const setReferrerId = useYppStore((store) => store.actions.setReferrerId)
   const setShouldContinueYppFlow = useYppStore((store) => store.actions.setShouldContinueYppFlow)
-  const { data: fetchedChannelRequirements } = useGetYppChannelRequirments()
+  const { data: fetchedChannelRequirements } = useGetYppChannelRequirements()
   const { mutateAsync: yppChannelMutation } = useMutation('ypp-channels-post', (finalFormData: FinalFormData | null) =>
     axios.post(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels`, finalFormData)
   )
@@ -112,9 +112,9 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
 
   const {
     handleAuthorizeClick: _handleAuthorizeClick,
-    ytRequirmentsErrors,
+    ytRequirementsErrors,
     ytResponseData,
-    setYtRequirmentsErrors,
+    setYtRequirementsErrors,
     alreadyRegisteredChannel,
   } = useYppGoogleAuth({
     closeModal: useCallback(() => onChangeStep(null), [onChangeStep]),
@@ -127,12 +127,12 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   }, [currentStep])
 
   const handleClose = useCallback(() => {
-    setYtRequirmentsErrors([])
+    setYtRequirementsErrors([])
     setReferrerId(null)
     onChangeStep(null)
     setSelectedChannelId(null)
     setShouldContinueYppFlow(false)
-  }, [onChangeStep, setReferrerId, setSelectedChannelId, setShouldContinueYppFlow, setYtRequirmentsErrors])
+  }, [onChangeStep, setReferrerId, setSelectedChannelId, setShouldContinueYppFlow, setYtRequirementsErrors])
 
   const handleGoBack = useCallback(() => {
     if (currentStep === 'ypp-sync') {
@@ -145,17 +145,17 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       onChangeStep('requirements')
     }
     if (currentStep === 'requirements' && hasMoreThanOneChannel) {
-      setYtRequirmentsErrors([])
+      setYtRequirementsErrors([])
       onChangeStep('select-channel')
     }
-  }, [currentStep, hasMoreThanOneChannel, onChangeStep, setYtRequirmentsErrors])
+  }, [currentStep, hasMoreThanOneChannel, onChangeStep, setYtRequirementsErrors])
 
   const handleSelectChannel = useCallback(
     (selectedChannelId: string) => {
-      setYtRequirmentsErrors([])
+      setYtRequirementsErrors([])
       setSelectedChannelId(selectedChannelId)
     },
-    [setSelectedChannelId, setYtRequirmentsErrors]
+    [setSelectedChannelId, setYtRequirementsErrors]
   )
 
   const handleSubmitDetailsForm = detailsFormMethods.handleSubmit((data) => {
@@ -292,7 +292,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     return formatDuration({ hours: hours })
   }
 
-  const requirments = useMemo(
+  const requirements = useMemo(
     () => [
       {
         text: `Your ${APP_NAME} channel avatar, cover image, and description are set`,
@@ -302,7 +302,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         text: `Your YouTube channel is at least ${convertHoursRequirementTime(
           fetchedChannelRequirements?.MINIMUM_CHANNEL_AGE_HOURS || 0
         )} old`,
-        fulfilled: !ytRequirmentsErrors.some(
+        fulfilled: !ytRequirementsErrors.some(
           (error) => error === YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_CREATION_DATE
         ),
       },
@@ -314,7 +314,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         )}, all published at least ${convertHoursRequirementTime(
           fetchedChannelRequirements?.MINIMUM_VIDEO_AGE_HOURS || 0
         )} ago`,
-        fulfilled: !ytRequirmentsErrors.some(
+        fulfilled: !ytRequirementsErrors.some(
           (error) => error === YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_VIDEOS
         ),
       },
@@ -324,12 +324,12 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           'subscriber',
           true
         )} and subscriptions are made public.`,
-        fulfilled: !ytRequirmentsErrors.some(
+        fulfilled: !ytRequirementsErrors.some(
           (error) => error === YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_SUBSCRIBERS
         ),
       },
     ],
-    [fetchedChannelRequirements, isSelectedChannelValid, ytRequirmentsErrors]
+    [fetchedChannelRequirements, isSelectedChannelValid, ytRequirementsErrors]
   )
 
   const authorizationStep = useMemo(() => {
@@ -359,7 +359,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
             text: 'Authorize with YouTube',
             onClick: handleAuthorizeClick,
           },
-          component: <YppAuthorizationRequirementsStep requirments={requirments} />,
+          component: <YppAuthorizationRequirementsStep requirements={requirements} />,
         }
       case 'fetching-data':
         return {
@@ -452,7 +452,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     selectedChannelId,
     handleSelectChannel,
     handleAuthorizeClick,
-    requirments,
+    requirements,
     isSubmitting,
     handleAcceptTermsAndSubmit,
     handleGoToDashboard,
