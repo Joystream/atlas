@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 
 import { SvgActionChevronL, SvgActionChevronR } from '@/assets/icons'
 
-import { ItemWrapper, LeftChevronContainer, RightChevronContainer } from './NftCarouselItem.styles'
+import { ItemWrapper, LeftChevronContainer, NavigationContainer, RightChevronContainer } from './NftCarouselItem.styles'
 
 type CarouselItemProps = {
   position: 'side' | 'active'
@@ -12,9 +12,9 @@ type CarouselItemProps = {
 }
 export const NftCarouselItem = ({ position, onClick, children }: CarouselItemProps) => {
   return (
-    <ItemWrapper className="glide__slide" data-glide-el="controls">
+    <ItemWrapper>
       {position === 'side' && (
-        <>
+        <NavigationContainer className="glide__slide" data-glide-el="controls">
           <LeftChevronContainer
             className="glide__arrow glide__arrow--left"
             data-glide-dir="<"
@@ -29,7 +29,7 @@ export const NftCarouselItem = ({ position, onClick, children }: CarouselItemPro
           >
             <SvgActionChevronR />
           </RightChevronContainer>
-        </>
+        </NavigationContainer>
       )}
       {children}
     </ItemWrapper>

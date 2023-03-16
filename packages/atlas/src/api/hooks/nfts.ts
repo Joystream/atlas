@@ -13,6 +13,7 @@ import {
   GetNftQueryVariables,
   GetNftsConnectionQuery,
   GetNftsConnectionQueryVariables,
+  useGetFeaturedNftsQuery,
   useGetNftQuery,
   useGetNftsConnectionQuery,
 } from '@/api/queries/__generated__/nfts.generated'
@@ -171,6 +172,15 @@ export const useNftHistory = (
 
   return {
     events: sortedEvents,
+    ...rest,
+  }
+}
+
+export const useFeaturedNfts = () => {
+  const { data, ...rest } = useGetFeaturedNftsQuery()
+
+  return {
+    nfts: data?.ownedNfts,
     ...rest,
   }
 }

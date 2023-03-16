@@ -30,3 +30,15 @@ query GetNftsConnection(
     totalCount
   }
 }
+
+query GetFeaturedNfts {
+  ownedNfts(limit: 5, orderBy: [createdAt_DESC]) {
+    ...FullNftFields
+    video {
+      ...BasicVideoFields
+      media {
+        ...StorageDataObjectFields
+      }
+    }
+  }
+}

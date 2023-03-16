@@ -9,13 +9,13 @@ export default {
   component: NftCarousel,
 }
 
-export const Default = () => (
-  <NftCarousel
-    nfts={Array.from({ length: 10 }, (_, i) => (
-      <CarouselItem key={i}> Carousel Item {i}</CarouselItem>
-    ))}
-  />
-)
+// export const Default = () => (
+//   <NftCarousel
+//     nfts={Array.from({ length: 10 }, (_, i) => (
+//       <CarouselItem key={i}> Carousel Item {i}</CarouselItem>
+//     ))}
+//   />
+// )
 
 const CarouselItem = styled.div`
   min-height: 200px;

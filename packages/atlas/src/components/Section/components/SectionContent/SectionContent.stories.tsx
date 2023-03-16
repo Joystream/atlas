@@ -30,7 +30,7 @@ export const Carousel = Template.bind({})
 Carousel.args = {
   type: 'carousel',
   dotsVisible: true,
-  slidesToShow: 3,
+  perView: 3,
 }
 
 const PlaceholderContainer = styled.div`

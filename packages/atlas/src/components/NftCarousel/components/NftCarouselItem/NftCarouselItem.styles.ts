@@ -4,19 +4,13 @@ import styled from '@emotion/styled'
 export const ItemWrapper = styled.div`
   position: relative;
   width: fit-content;
-  height: 200px;
-
-  img {
-    user-select: none;
-  }
 `
 
 const ChevronContainerStyles = css`
-  position: absolute;
   display: flex;
   align-items: center;
-  padding: 36px;
   cursor: pointer;
+  padding: 36px;
 `
 
 export const LeftChevronContainer = styled.div`
@@ -33,4 +27,19 @@ export const RightChevronContainer = styled.div`
   position: absolute;
   inset: 0 50% 0 0;
   justify-content: start;
+`
+
+export const NavigationContainer = styled.div`
+  position: absolute;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  inset: 0;
+  z-index: 1000;
+  background: black;
+  opacity: 0.4;
+
+  > * {
+    flex: 1;
+  }
 `
