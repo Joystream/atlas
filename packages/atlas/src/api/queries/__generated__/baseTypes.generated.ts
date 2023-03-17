@@ -2768,6 +2768,7 @@ export type EventData =
   | CommentTextUpdatedEventData
   | EnglishAuctionSettledEventData
   | EnglishAuctionStartedEventData
+  | MemberBannedFromChannelEventData
   | MetaprotocolTransactionStatusEventData
   | NftBoughtEventData
   | NftIssuedEventData
@@ -2776,6 +2777,9 @@ export type EventData =
   | OpenAuctionStartedEventData
 
 export type EventDataWhereInput = {
+  action_eq?: InputMaybe<Scalars['Boolean']>
+  action_isNull?: InputMaybe<Scalars['Boolean']>
+  action_not_eq?: InputMaybe<Scalars['Boolean']>
   actor?: InputMaybe<ContentActorWhereInput>
   actor_isNull?: InputMaybe<Scalars['Boolean']>
   auction?: InputMaybe<AuctionWhereInput>
@@ -2784,6 +2788,8 @@ export type EventDataWhereInput = {
   bid_isNull?: InputMaybe<Scalars['Boolean']>
   buyer?: InputMaybe<MembershipWhereInput>
   buyer_isNull?: InputMaybe<Scalars['Boolean']>
+  channel?: InputMaybe<ChannelWhereInput>
+  channel_isNull?: InputMaybe<Scalars['Boolean']>
   comment?: InputMaybe<CommentWhereInput>
   comment_isNull?: InputMaybe<Scalars['Boolean']>
   isTypeOf_contains?: InputMaybe<Scalars['String']>
@@ -2876,6 +2882,8 @@ export type EventEdge = {
 }
 
 export enum EventOrderByInput {
+  DataActionAsc = 'data_action_ASC',
+  DataActionDesc = 'data_action_DESC',
   DataIsTypeOfAsc = 'data_isTypeOf_ASC',
   DataIsTypeOfDesc = 'data_isTypeOf_DESC',
   DataNewPriceAsc = 'data_newPrice_ASC',
@@ -3162,6 +3170,16 @@ export type LicensesConnection = {
   edges: Array<LicenseEdge>
   pageInfo: PageInfo
   totalCount: Scalars['Int']
+}
+
+export type MemberBannedFromChannelEventData = {
+  __typename?: 'MemberBannedFromChannelEventData'
+  /** The action performed. TRUE if the member is being banned, FALSE if the member is being unbanned */
+  action: Scalars['Boolean']
+  /** The chanel the member is being banned / unbanned from */
+  channel: Channel
+  /** The member being banned / unbanned */
+  member: Membership
 }
 
 export type MemberMetadata = {
