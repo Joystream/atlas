@@ -6,6 +6,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { SvgControlsPlaylist } from '@/assets/icons'
 import { Text } from '@/components/Text'
 import { cVar, transitions } from '@/styles'
+import { getLinkPropsFromTo } from '@/utils/button'
 
 import {
   ContentContainer,
@@ -49,11 +50,11 @@ export type VideoThumbnailProps = {
   videosInPlaylist?: number
   contentSlot?: ReactNode
   onClick?: () => void
-  onMouseEnter?: (event: MouseEvent<HTMLAnchorElement>) => void
-  onMouseLeave?: (event: MouseEvent<HTMLAnchorElement>) => void
+  onMouseEnter?: (event: MouseEvent<HTMLDivElement>) => void
+  onMouseLeave?: (event: MouseEvent<HTMLDivElement>) => void
 } & (PlaylistVideoThumbnailProps | RegularVideoThumbnailProps)
 
-export const VideoThumbnail = forwardRef<HTMLAnchorElement, VideoThumbnailProps>(
+export const VideoThumbnail = forwardRef<HTMLDivElement, VideoThumbnailProps>(
   (
     {
       loading,
@@ -81,6 +82,7 @@ export const VideoThumbnail = forwardRef<HTMLAnchorElement, VideoThumbnailProps>
       }
       clickable && onClick?.()
     }
+    const linkProps = { state: linkState, ...getLinkPropsFromTo(videoHref) }
 
     return (
       <VideoThumbnailContainer
@@ -90,9 +92,8 @@ export const VideoThumbnail = forwardRef<HTMLAnchorElement, VideoThumbnailProps>
         onClick={handleClick}
         clickable={clickable}
         activeDisabled={activeDisabled}
-        to={videoHref ? videoHref : ''}
-        state={linkState}
         isPlaylist={type === 'playlist'}
+        {...linkProps}
       >
         <ContentOverlay>
           <SwitchTransition>

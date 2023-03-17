@@ -1,6 +1,5 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { Link } from 'react-router-dom'
 
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, square } from '@/styles'
@@ -134,8 +133,9 @@ export const PlaylistOverlay = styled.div`
   width: 50%;
 `
 
-export const VideoThumbnailContainer = styled(Link, {
-  shouldForwardProp: (prop) => !(prop === 'clickable' || prop === 'activeDisabled' || prop === 'isPlaylist'),
+export const VideoThumbnailContainer = styled('div', {
+  shouldForwardProp: (prop) =>
+    !(prop === 'clickable' || prop === 'activeDisabled' || prop === 'isPlaylist' || prop === 'as'),
 })<VideoThumbnailContainerProps>`
   min-width: 166px;
   display: block;
