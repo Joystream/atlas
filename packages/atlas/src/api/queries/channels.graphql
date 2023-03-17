@@ -144,6 +144,7 @@ query GetChannelPaymentEvents($channelId: String) {
     orderBy: timestamp_DESC
     where: {
       OR: [
+        # This covers sold events
         {
           data: {
             isTypeOf_in: [
@@ -155,16 +156,25 @@ query GetChannelPaymentEvents($channelId: String) {
             previousNftOwner: { channel: { id_eq: $channelId } }
           }
         }
+        # This covers royalty events
         {
           data: {
             isTypeOf_in: [
-              "ChannelRewardClaimedEventData"
-              "ChannelFundsWithdrawnEventData"
-              "ChannelPaymentMadeEventData"
+              "NftBoughtEventData"
+              "BidMadeCompletingAuctionEventData"
+              "EnglishAuctionSettledEventData"
+              "OpenAuctionBidAcceptedEventData"
             ]
+            nft: { video: { channel: { id_eq: $channelId } } }
+          }
+        }
+        {
+          data: {
+            isTypeOf_in: ["ChannelRewardClaimedEventData", "ChannelFundsWithdrawnEventData"]
             channel: { id_eq: $channelId }
           }
         }
+        { data: { isTypeOf_in: ["ChannelPaymentMadeEventData"], payeeChannel: { id_eq: $channelId } } }
       ]
     }
   ) {
@@ -178,14 +188,27 @@ query GetChannelPaymentEvents($channelId: String) {
           controllerAccount
         }
         nft {
+          creatorRoyalty
           video {
             title
           }
         }
+        previousNftOwner {
+          __typename
+        }
       }
       ... on BidMadeCompletingAuctionEventData {
+        previousNftOwner {
+          __typename
+        }
         winningBid {
+          id
+          amount
+          bidder {
+            controllerAccount
+          }
           nft {
+            creatorRoyalty
             video {
               title
             }
@@ -197,8 +220,12 @@ query GetChannelPaymentEvents($channelId: String) {
         }
       }
       ... on EnglishAuctionSettledEventData {
+        previousNftOwner {
+          __typename
+        }
         winningBid {
           nft {
+            creatorRoyalty
             video {
               title
             }
@@ -212,6 +239,7 @@ query GetChannelPaymentEvents($channelId: String) {
       ... on OpenAuctionBidAcceptedEventData {
         winningBid {
           nft {
+            creatorRoyalty
             video {
               title
             }
@@ -222,6 +250,24 @@ query GetChannelPaymentEvents($channelId: String) {
           amount
         }
       }
+      ... on OpenAuctionBidAcceptedEventData {
+        previousNftOwner {
+          __typename
+        }
+        winningBid {
+          amount
+          bidder {
+            controllerAccount
+          }
+          nft {
+            creatorRoyalty
+            video {
+              title
+            }
+          }
+        }
+      }
+
       ... on ChannelRewardClaimedEventData {
         amount
       }
@@ -240,6 +286,13 @@ query GetChannelPaymentEvents($channelId: String) {
               controllerAccount
             }
           }
+        }
+      }
+      ... on ChannelPaymentMadeEventData {
+        amount
+        rationale
+        payer {
+          controllerAccount
         }
       }
       ... on ChannelPaymentMadeEventData {

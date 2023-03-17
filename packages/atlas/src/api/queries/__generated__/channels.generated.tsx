@@ -579,11 +579,17 @@ export type GetChannelPaymentEventsQuery = {
       | { __typename: 'AuctionCanceledEventData' }
       | {
           __typename: 'BidMadeCompletingAuctionEventData'
+          previousNftOwner: { __typename: 'NftOwnerChannel' } | { __typename: 'NftOwnerMember' }
           winningBid: {
             __typename?: 'Bid'
+            id: string
             amount: string
-            nft: { __typename?: 'OwnedNft'; video: { __typename?: 'Video'; title?: string | null } }
             bidder: { __typename?: 'Membership'; controllerAccount: string }
+            nft: {
+              __typename?: 'OwnedNft'
+              creatorRoyalty?: number | null
+              video: { __typename?: 'Video'; title?: string | null }
+            }
           }
         }
       | { __typename: 'BuyNowCanceledEventData' }
@@ -609,10 +615,15 @@ export type GetChannelPaymentEventsQuery = {
       | { __typename: 'CommentTextUpdatedEventData' }
       | {
           __typename: 'EnglishAuctionSettledEventData'
+          previousNftOwner: { __typename: 'NftOwnerChannel' } | { __typename: 'NftOwnerMember' }
           winningBid: {
             __typename?: 'Bid'
             amount: string
-            nft: { __typename?: 'OwnedNft'; video: { __typename?: 'Video'; title?: string | null } }
+            nft: {
+              __typename?: 'OwnedNft'
+              creatorRoyalty?: number | null
+              video: { __typename?: 'Video'; title?: string | null }
+            }
             bidder: { __typename?: 'Membership'; controllerAccount: string }
           }
         }
@@ -623,7 +634,12 @@ export type GetChannelPaymentEventsQuery = {
           __typename: 'NftBoughtEventData'
           price: string
           buyer: { __typename?: 'Membership'; controllerAccount: string }
-          nft: { __typename?: 'OwnedNft'; video: { __typename?: 'Video'; title?: string | null } }
+          nft: {
+            __typename?: 'OwnedNft'
+            creatorRoyalty?: number | null
+            video: { __typename?: 'Video'; title?: string | null }
+          }
+          previousNftOwner: { __typename: 'NftOwnerChannel' } | { __typename: 'NftOwnerMember' }
         }
       | { __typename: 'NftIssuedEventData' }
       | { __typename: 'NftSellOrderMadeEventData' }
@@ -632,9 +648,14 @@ export type GetChannelPaymentEventsQuery = {
           winningBid: {
             __typename?: 'Bid'
             amount: string
-            nft: { __typename?: 'OwnedNft'; video: { __typename?: 'Video'; title?: string | null } }
+            nft: {
+              __typename?: 'OwnedNft'
+              creatorRoyalty?: number | null
+              video: { __typename?: 'Video'; title?: string | null }
+            }
             bidder: { __typename?: 'Membership'; controllerAccount: string }
           }
+          previousNftOwner: { __typename: 'NftOwnerChannel' } | { __typename: 'NftOwnerMember' }
         }
       | { __typename: 'OpenAuctionStartedEventData' }
   }>
@@ -1300,13 +1321,21 @@ export const GetChannelPaymentEventsDocument = gql`
           {
             data: {
               isTypeOf_in: [
-                "ChannelRewardClaimedEventData"
-                "ChannelFundsWithdrawnEventData"
-                "ChannelPaymentMadeEventData"
+                "NftBoughtEventData"
+                "BidMadeCompletingAuctionEventData"
+                "EnglishAuctionSettledEventData"
+                "OpenAuctionBidAcceptedEventData"
               ]
+              nft: { video: { channel: { id_eq: $channelId } } }
+            }
+          }
+          {
+            data: {
+              isTypeOf_in: ["ChannelRewardClaimedEventData", "ChannelFundsWithdrawnEventData"]
               channel: { id_eq: $channelId }
             }
           }
+          { data: { isTypeOf_in: ["ChannelPaymentMadeEventData"], payeeChannel: { id_eq: $channelId } } }
         ]
       }
     ) {
@@ -1320,14 +1349,27 @@ export const GetChannelPaymentEventsDocument = gql`
             controllerAccount
           }
           nft {
+            creatorRoyalty
             video {
               title
             }
           }
+          previousNftOwner {
+            __typename
+          }
         }
         ... on BidMadeCompletingAuctionEventData {
+          previousNftOwner {
+            __typename
+          }
           winningBid {
+            id
+            amount
+            bidder {
+              controllerAccount
+            }
             nft {
+              creatorRoyalty
               video {
                 title
               }
@@ -1339,8 +1381,12 @@ export const GetChannelPaymentEventsDocument = gql`
           }
         }
         ... on EnglishAuctionSettledEventData {
+          previousNftOwner {
+            __typename
+          }
           winningBid {
             nft {
+              creatorRoyalty
               video {
                 title
               }
@@ -1354,6 +1400,7 @@ export const GetChannelPaymentEventsDocument = gql`
         ... on OpenAuctionBidAcceptedEventData {
           winningBid {
             nft {
+              creatorRoyalty
               video {
                 title
               }
@@ -1362,6 +1409,23 @@ export const GetChannelPaymentEventsDocument = gql`
               controllerAccount
             }
             amount
+          }
+        }
+        ... on OpenAuctionBidAcceptedEventData {
+          previousNftOwner {
+            __typename
+          }
+          winningBid {
+            amount
+            bidder {
+              controllerAccount
+            }
+            nft {
+              creatorRoyalty
+              video {
+                title
+              }
+            }
           }
         }
         ... on ChannelRewardClaimedEventData {
@@ -1382,6 +1446,13 @@ export const GetChannelPaymentEventsDocument = gql`
                 controllerAccount
               }
             }
+          }
+        }
+        ... on ChannelPaymentMadeEventData {
+          amount
+          rationale
+          payer {
+            controllerAccount
           }
         }
         ... on ChannelPaymentMadeEventData {

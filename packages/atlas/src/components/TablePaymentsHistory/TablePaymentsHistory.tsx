@@ -177,6 +177,7 @@ const TokenAmount = ({ tokenAmount }: { tokenAmount: BN }) => {
         as="p"
         value={tokenAmount}
         margin={{ left: 1 }}
+        format="short"
         color={isNegative ? 'colorTextError' : 'colorTextStrong'}
       />
     </JoyAmountWrapper>
