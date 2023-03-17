@@ -4,7 +4,8 @@ import shallow from 'zustand/shallow'
 
 import { atlasConfig } from '@/config'
 import { formatJoystreamAddress } from '@/utils/address'
-import { ConsoleLogger } from '@/utils/logs'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { withTimeout } from '@/utils/misc'
 
 import { useUserStore } from './user.store'
 import { SignerWalletAccount } from './user.types'
@@ -79,7 +80,12 @@ export const useSignerWallet = () => {
           return null
         }
 
-        await selectedWallet.enable(atlasConfig.general.appName)
+        await withTimeout(selectedWallet.enable(atlasConfig.general.appName) as Promise<unknown>, 1000).catch(
+          (error) => {
+            //probably chrome+polkadot.js extension bug, remove if fixed
+            SentryLogger.error('Failed to connect Polkadot wallet', error)
+          }
+        )
 
         // taken from https://github.com/TalismanSociety/talisman-connect/blob/47cfefee9f1333326c0605c159d6ee8ebfba3e84/libs/wallets/src/lib/base-dotsama-wallet/index.ts#L98-L107
         // should be part of future talisman-connect release
