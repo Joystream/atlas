@@ -14,6 +14,7 @@ export type GetCommentQuery = {
   commentById?: {
     __typename?: 'Comment'
     id: string
+    isExcluded: boolean
     createdAt: Date
     isEdited: boolean
     repliesCount: number
@@ -78,6 +79,7 @@ export type GetCommentRepliesConnectionQuery = {
       node: {
         __typename?: 'Comment'
         id: string
+        isExcluded: boolean
         createdAt: Date
         isEdited: boolean
         repliesCount: number
@@ -140,6 +142,7 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
   userComments: Array<{
     __typename?: 'Comment'
     id: string
+    isExcluded: boolean
     createdAt: Date
     isEdited: boolean
     repliesCount: number
@@ -193,6 +196,7 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
       node: {
         __typename?: 'Comment'
         id: string
+        isExcluded: boolean
         createdAt: Date
         isEdited: boolean
         repliesCount: number
@@ -335,7 +339,7 @@ export const GetCommentRepliesConnectionDocument = gql`
     commentsConnection(
       first: $first
       after: $after
-      where: { parentComment: { id_eq: $parentCommentId }, status_eq: VISIBLE }
+      where: { parentComment: { id_eq: $parentCommentId }, status_eq: VISIBLE, isExcluded_eq: false }
       orderBy: $orderBy
     ) {
       edges {
@@ -411,6 +415,7 @@ export const GetUserCommentsAndVideoCommentsConnectionDocument = gql`
           { parentComment: { id_isNull: true } }
           { video: { id_eq: $videoId } }
           { author: { id_eq: $memberId } }
+          { OR: [{ isExcluded_eq: false }, { repliesCount_gt: 0 }] }
           { OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }] }
         ]
       }
@@ -425,6 +430,7 @@ export const GetUserCommentsAndVideoCommentsConnectionDocument = gql`
         AND: [
           { video: { id_eq: $videoId } }
           { parentComment: { id_isNull: true } }
+          { OR: [{ isExcluded_eq: false }, { repliesCount_gt: 0 }] }
           { OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }] }
         ]
       }

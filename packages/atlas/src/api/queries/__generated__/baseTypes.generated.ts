@@ -4191,7 +4191,6 @@ export type PageInfo = {
 
 export type ProcessorState = {
   __typename?: 'ProcessorState'
-  chainHead: Scalars['Int']
   lastProcessedBlock: Scalars['Int']
 }
 
@@ -5318,8 +5317,8 @@ export type QueryVideosConnectionArgs = {
 
 export type Report = {
   __typename?: 'Report'
-  /** ID of the channel being reported or channel that owns the video being reported (the channel may no longer exist) */
-  channelId: Scalars['String']
+  /** If it's a channel report: ID of the channel being reported (the channel may no longer exist) */
+  channelId?: Maybe<Scalars['String']>
   /** Unique identifier of the report */
   id: Scalars['String']
   /** IP address of the reporter */
@@ -5328,7 +5327,7 @@ export type Report = {
   rationale: Scalars['String']
   /** Time of the report */
   timestamp: Scalars['DateTime']
-  /** ID of the video being reported (the video may no longer exist) */
+  /** If it's a video report: ID of the video being reported (the video may no longer exist) */
   videoId?: Maybe<Scalars['String']>
 }
 

@@ -330,6 +330,7 @@ fragment CommentReactionsCountByReactionIdFields on CommentReactionsCountByReact
 # No changes
 fragment CommentFields on Comment {
   id
+  isExcluded
   author {
     ...BasicMembershipFields
   }
