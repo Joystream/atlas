@@ -2864,6 +2864,7 @@ export type EventData =
   | CommentTextUpdatedEventData
   | EnglishAuctionSettledEventData
   | EnglishAuctionStartedEventData
+  | MemberBannedFromChannelEventData
   | MetaprotocolTransactionStatusEventData
   | NftBoughtEventData
   | NftIssuedEventData
@@ -2889,6 +2890,9 @@ export type EventDataWhereInput = {
   account_not_in?: InputMaybe<Array<Scalars['String']>>
   account_not_startsWith?: InputMaybe<Scalars['String']>
   account_startsWith?: InputMaybe<Scalars['String']>
+  action_eq?: InputMaybe<Scalars['Boolean']>
+  action_isNull?: InputMaybe<Scalars['Boolean']>
+  action_not_eq?: InputMaybe<Scalars['Boolean']>
   actor?: InputMaybe<ContentActorWhereInput>
   actor_isNull?: InputMaybe<Scalars['Boolean']>
   amount_eq?: InputMaybe<Scalars['BigInt']>
@@ -3065,6 +3069,8 @@ export type EventEdge = {
 export enum EventOrderByInput {
   DataAccountAsc = 'data_account_ASC',
   DataAccountDesc = 'data_account_DESC',
+  DataActionAsc = 'data_action_ASC',
+  DataActionDesc = 'data_action_DESC',
   DataAmountAsc = 'data_amount_ASC',
   DataAmountDesc = 'data_amount_DESC',
   DataChannelCashoutsEnabledAsc = 'data_channelCashoutsEnabled_ASC',
@@ -3363,6 +3369,16 @@ export type LicensesConnection = {
   edges: Array<LicenseEdge>
   pageInfo: PageInfo
   totalCount: Scalars['Int']
+}
+
+export type MemberBannedFromChannelEventData = {
+  __typename?: 'MemberBannedFromChannelEventData'
+  /** The action performed. TRUE if the member is being banned, FALSE if the member is being unbanned */
+  action: Scalars['Boolean']
+  /** The chanel the member is being banned / unbanned from */
+  channel: Channel
+  /** The member being banned / unbanned */
+  member: Membership
 }
 
 export type MemberMetadata = {

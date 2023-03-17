@@ -512,11 +512,11 @@ export type GetChannelNftCollectorsQuery = {
   }>
 }
 
-export type GetPayloadDataObjectIdByCommitmentQueryVariables = Types.Exact<{
+export type GetPayloadDataByCommitmentQueryVariables = Types.Exact<{
   commitment: Types.Scalars['String']
 }>
 
-export type GetPayloadDataObjectIdByCommitmentQuery = {
+export type GetPayloadDataByCommitmentQuery = {
   __typename?: 'Query'
   events: Array<{
     __typename?: 'Event'
@@ -531,12 +531,10 @@ export type GetPayloadDataObjectIdByCommitmentQuery = {
       | { __typename?: 'ChannelPaymentMadeEventData' }
       | {
           __typename?: 'ChannelPayoutsUpdatedEventData'
-          commitment?: string | null
           payloadDataObject?: {
             __typename?: 'StorageDataObject'
-            id: string
+            isAccepted: boolean
             resolvedUrl?: string | null
-            storageBag: { __typename?: 'StorageBag'; id: string }
           } | null
         }
       | { __typename?: 'ChannelRewardClaimedAndWithdrawnEventData' }
@@ -545,6 +543,7 @@ export type GetPayloadDataObjectIdByCommitmentQuery = {
       | { __typename?: 'CommentTextUpdatedEventData' }
       | { __typename?: 'EnglishAuctionSettledEventData' }
       | { __typename?: 'EnglishAuctionStartedEventData' }
+      | { __typename?: 'MemberBannedFromChannelEventData' }
       | { __typename?: 'MetaprotocolTransactionStatusEventData' }
       | { __typename?: 'NftBoughtEventData' }
       | { __typename?: 'NftIssuedEventData' }
@@ -618,6 +617,7 @@ export type GetChannelPaymentEventsQuery = {
           }
         }
       | { __typename: 'EnglishAuctionStartedEventData' }
+      | { __typename: 'MemberBannedFromChannelEventData' }
       | { __typename: 'MetaprotocolTransactionStatusEventData' }
       | {
           __typename: 'NftBoughtEventData'
@@ -1185,18 +1185,14 @@ export type GetChannelNftCollectorsQueryResult = Apollo.QueryResult<
   GetChannelNftCollectorsQuery,
   GetChannelNftCollectorsQueryVariables
 >
-export const GetPayloadDataObjectIdByCommitmentDocument = gql`
-  query GetPayloadDataObjectIdByCommitment($commitment: String!) {
+export const GetPayloadDataByCommitmentDocument = gql`
+  query GetPayloadDataByCommitment($commitment: String!) {
     events(where: { data: { isTypeOf_eq: "ChannelPayoutsUpdatedEventData", commitment_eq: $commitment } }) {
       data {
         ... on ChannelPayoutsUpdatedEventData {
-          commitment
           payloadDataObject {
-            id
+            isAccepted
             resolvedUrl
-            storageBag {
-              id
-            }
           }
         }
       }
@@ -1205,54 +1201,44 @@ export const GetPayloadDataObjectIdByCommitmentDocument = gql`
 `
 
 /**
- * __useGetPayloadDataObjectIdByCommitmentQuery__
+ * __useGetPayloadDataByCommitmentQuery__
  *
- * To run a query within a React component, call `useGetPayloadDataObjectIdByCommitmentQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPayloadDataObjectIdByCommitmentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetPayloadDataByCommitmentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPayloadDataByCommitmentQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetPayloadDataObjectIdByCommitmentQuery({
+ * const { data, loading, error } = useGetPayloadDataByCommitmentQuery({
  *   variables: {
  *      commitment: // value for 'commitment'
  *   },
  * });
  */
-export function useGetPayloadDataObjectIdByCommitmentQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetPayloadDataObjectIdByCommitmentQuery,
-    GetPayloadDataObjectIdByCommitmentQueryVariables
-  >
+export function useGetPayloadDataByCommitmentQuery(
+  baseOptions: Apollo.QueryHookOptions<GetPayloadDataByCommitmentQuery, GetPayloadDataByCommitmentQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetPayloadDataObjectIdByCommitmentQuery, GetPayloadDataObjectIdByCommitmentQueryVariables>(
-    GetPayloadDataObjectIdByCommitmentDocument,
+  return Apollo.useQuery<GetPayloadDataByCommitmentQuery, GetPayloadDataByCommitmentQueryVariables>(
+    GetPayloadDataByCommitmentDocument,
     options
   )
 }
-export function useGetPayloadDataObjectIdByCommitmentLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetPayloadDataObjectIdByCommitmentQuery,
-    GetPayloadDataObjectIdByCommitmentQueryVariables
-  >
+export function useGetPayloadDataByCommitmentLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPayloadDataByCommitmentQuery, GetPayloadDataByCommitmentQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetPayloadDataObjectIdByCommitmentQuery, GetPayloadDataObjectIdByCommitmentQueryVariables>(
-    GetPayloadDataObjectIdByCommitmentDocument,
+  return Apollo.useLazyQuery<GetPayloadDataByCommitmentQuery, GetPayloadDataByCommitmentQueryVariables>(
+    GetPayloadDataByCommitmentDocument,
     options
   )
 }
-export type GetPayloadDataObjectIdByCommitmentQueryHookResult = ReturnType<
-  typeof useGetPayloadDataObjectIdByCommitmentQuery
->
-export type GetPayloadDataObjectIdByCommitmentLazyQueryHookResult = ReturnType<
-  typeof useGetPayloadDataObjectIdByCommitmentLazyQuery
->
-export type GetPayloadDataObjectIdByCommitmentQueryResult = Apollo.QueryResult<
-  GetPayloadDataObjectIdByCommitmentQuery,
-  GetPayloadDataObjectIdByCommitmentQueryVariables
+export type GetPayloadDataByCommitmentQueryHookResult = ReturnType<typeof useGetPayloadDataByCommitmentQuery>
+export type GetPayloadDataByCommitmentLazyQueryHookResult = ReturnType<typeof useGetPayloadDataByCommitmentLazyQuery>
+export type GetPayloadDataByCommitmentQueryResult = Apollo.QueryResult<
+  GetPayloadDataByCommitmentQuery,
+  GetPayloadDataByCommitmentQueryVariables
 >
 export const ReportChannelDocument = gql`
   mutation ReportChannel($channelId: String!, $rationale: String!) {
@@ -1297,6 +1283,7 @@ export type ReportChannelMutationOptions = Apollo.BaseMutationOptions<
 export const GetChannelPaymentEventsDocument = gql`
   query GetChannelPaymentEvents($channelId: String) {
     events(
+      orderBy: timestamp_DESC
       where: {
         OR: [
           {
