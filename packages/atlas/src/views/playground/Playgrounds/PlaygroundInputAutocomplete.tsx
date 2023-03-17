@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { FC, useState } from 'react'
 
 import {
   GetBasicChannelsDocument,
@@ -6,8 +6,9 @@ import {
   GetBasicChannelsQueryVariables,
 } from '@/api/queries/__generated__/channels.generated'
 import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { Avatar, AvatarProps } from '@/components/Avatar'
 import { InputAutocomplete } from '@/components/_inputs/InputAutocomplete'
-import { ResolvedAvatar } from '@/views/global/YppLandingView/YppAuthorizationModal/YppAuthorizationSteps'
+import { useAsset } from '@/providers/assets/assets.hooks'
 
 export const PlaygroundInputAutocomplete = () => {
   const [foundChannel, setFoundChannel] = useState<BasicChannelFieldsFragment | null>(null)
@@ -43,4 +44,12 @@ export const PlaygroundInputAutocomplete = () => {
       </div>
     </div>
   )
+}
+
+type ResolvedAvatarProps = {
+  channel?: BasicChannelFieldsFragment
+} & AvatarProps
+export const ResolvedAvatar: FC<ResolvedAvatarProps> = ({ channel }) => {
+  const { url, isLoadingAsset } = useAsset(channel?.avatarPhoto)
+  return <Avatar assetUrl={url} loading={isLoadingAsset} size="bid" />
 }
