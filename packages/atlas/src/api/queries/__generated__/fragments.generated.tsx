@@ -2386,6 +2386,89 @@ export type BasicNftOwnerFieldsFragment =
   | BasicNftOwnerFields_NftOwnerChannel_Fragment
   | BasicNftOwnerFields_NftOwnerMember_Fragment
 
+export type BasicFeaturedVideoFragment = {
+  __typename?: 'Video'
+  id: string
+  title?: string | null
+  viewsNum: number
+  createdAt: Date
+  duration?: number | null
+  reactionsCount: number
+  commentsCount: number
+  channel: {
+    __typename?: 'Channel'
+    id: string
+    title?: string | null
+    description?: string | null
+    createdAt: Date
+    followsNum: number
+    rewardAccount: string
+    channelStateBloatBond: string
+    avatarPhoto?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      resolvedUrl?: string | null
+      createdAt: Date
+      size: string
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type?:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoSubtitle' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+        | null
+    } | null
+  }
+  thumbnailPhoto?: {
+    __typename?: 'StorageDataObject'
+    id: string
+    resolvedUrl?: string | null
+    createdAt: Date
+    size: string
+    isAccepted: boolean
+    ipfsHash: string
+    storageBag: { __typename?: 'StorageBag'; id: string }
+    type?:
+      | { __typename: 'DataObjectTypeChannelAvatar' }
+      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeVideoMedia' }
+      | { __typename: 'DataObjectTypeVideoSubtitle' }
+      | { __typename: 'DataObjectTypeVideoThumbnail' }
+      | null
+  } | null
+  nft?: {
+    __typename?: 'OwnedNft'
+    transactionalStatus?:
+      | {
+          __typename: 'TransactionalStatusAuction'
+          auction: {
+            __typename?: 'Auction'
+            id: string
+            isCompleted: boolean
+            buyNowPrice?: string | null
+            startingPrice: string
+            startsAtBlock: number
+            endedAtBlock?: number | null
+            auctionType:
+              | {
+                  __typename: 'AuctionTypeEnglish'
+                  duration: number
+                  extensionPeriod: number
+                  plannedEndAtBlock: number
+                }
+              | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
+          }
+        }
+      | { __typename: 'TransactionalStatusBuyNow'; price: string }
+      | { __typename: 'TransactionalStatusIdle' }
+      | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
+      | null
+  } | null
+}
+
 export type BasicVideoFeaturedInCategoryFragment = {
   __typename?: 'VideoFeaturedInCategory'
   videoCutUrl?: string | null
@@ -2444,109 +2527,6 @@ export type BasicVideoFeaturedInCategoryFragment = {
     } | null
     nft?: {
       __typename?: 'OwnedNft'
-      id: string
-      createdAt: Date
-      creatorRoyalty?: number | null
-      lastSaleDate?: Date | null
-      lastSalePrice?: string | null
-      owner:
-        | {
-            __typename: 'NftOwnerChannel'
-            channel: {
-              __typename?: 'Channel'
-              id: string
-              title?: string | null
-              description?: string | null
-              createdAt: Date
-              followsNum: number
-              rewardAccount: string
-              channelStateBloatBond: string
-              ownerMember?: {
-                __typename?: 'Membership'
-                id: string
-                handle: string
-                metadata?: {
-                  __typename?: 'MemberMetadata'
-                  about?: string | null
-                  avatar?:
-                    | {
-                        __typename?: 'AvatarObject'
-                        avatarObject: {
-                          __typename?: 'StorageDataObject'
-                          id: string
-                          resolvedUrl?: string | null
-                          createdAt: Date
-                          size: string
-                          isAccepted: boolean
-                          ipfsHash: string
-                          storageBag: { __typename?: 'StorageBag'; id: string }
-                          type?:
-                            | { __typename: 'DataObjectTypeChannelAvatar' }
-                            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                            | { __typename: 'DataObjectTypeVideoMedia' }
-                            | { __typename: 'DataObjectTypeVideoSubtitle' }
-                            | { __typename: 'DataObjectTypeVideoThumbnail' }
-                            | null
-                        }
-                      }
-                    | { __typename?: 'AvatarUri'; avatarUri: string }
-                    | null
-                } | null
-              } | null
-              avatarPhoto?: {
-                __typename?: 'StorageDataObject'
-                id: string
-                resolvedUrl?: string | null
-                createdAt: Date
-                size: string
-                isAccepted: boolean
-                ipfsHash: string
-                storageBag: { __typename?: 'StorageBag'; id: string }
-                type?:
-                  | { __typename: 'DataObjectTypeChannelAvatar' }
-                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                  | { __typename: 'DataObjectTypeVideoMedia' }
-                  | { __typename: 'DataObjectTypeVideoSubtitle' }
-                  | { __typename: 'DataObjectTypeVideoThumbnail' }
-                  | null
-              } | null
-            }
-          }
-        | {
-            __typename: 'NftOwnerMember'
-            member: {
-              __typename?: 'Membership'
-              id: string
-              handle: string
-              metadata?: {
-                __typename?: 'MemberMetadata'
-                about?: string | null
-                avatar?:
-                  | {
-                      __typename?: 'AvatarObject'
-                      avatarObject: {
-                        __typename?: 'StorageDataObject'
-                        id: string
-                        resolvedUrl?: string | null
-                        createdAt: Date
-                        size: string
-                        isAccepted: boolean
-                        ipfsHash: string
-                        storageBag: { __typename?: 'StorageBag'; id: string }
-                        type?:
-                          | { __typename: 'DataObjectTypeChannelAvatar' }
-                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                          | { __typename: 'DataObjectTypeVideoMedia' }
-                          | { __typename: 'DataObjectTypeVideoSubtitle' }
-                          | { __typename: 'DataObjectTypeVideoThumbnail' }
-                          | null
-                      }
-                    }
-                  | { __typename?: 'AvatarUri'; avatarUri: string }
-                  | null
-              } | null
-            }
-          }
       transactionalStatus?:
         | {
             __typename: 'TransactionalStatusAuction'
@@ -2563,125 +2543,9 @@ export type BasicVideoFeaturedInCategoryFragment = {
                     __typename: 'AuctionTypeEnglish'
                     duration: number
                     extensionPeriod: number
-                    minimalBidStep: string
                     plannedEndAtBlock: number
                   }
                 | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
-              topBid?: {
-                __typename?: 'Bid'
-                amount: string
-                createdAt: Date
-                isCanceled: boolean
-                createdInBlock: number
-                id: string
-                bidder: {
-                  __typename?: 'Membership'
-                  id: string
-                  handle: string
-                  metadata?: {
-                    __typename?: 'MemberMetadata'
-                    about?: string | null
-                    avatar?:
-                      | {
-                          __typename?: 'AvatarObject'
-                          avatarObject: {
-                            __typename?: 'StorageDataObject'
-                            id: string
-                            resolvedUrl?: string | null
-                            createdAt: Date
-                            size: string
-                            isAccepted: boolean
-                            ipfsHash: string
-                            storageBag: { __typename?: 'StorageBag'; id: string }
-                            type?:
-                              | { __typename: 'DataObjectTypeChannelAvatar' }
-                              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                              | { __typename: 'DataObjectTypeVideoMedia' }
-                              | { __typename: 'DataObjectTypeVideoSubtitle' }
-                              | { __typename: 'DataObjectTypeVideoThumbnail' }
-                              | null
-                          }
-                        }
-                      | { __typename?: 'AvatarUri'; avatarUri: string }
-                      | null
-                  } | null
-                }
-              } | null
-              bids: Array<{
-                __typename?: 'Bid'
-                amount: string
-                createdAt: Date
-                isCanceled: boolean
-                createdInBlock: number
-                id: string
-                bidder: {
-                  __typename?: 'Membership'
-                  id: string
-                  handle: string
-                  metadata?: {
-                    __typename?: 'MemberMetadata'
-                    about?: string | null
-                    avatar?:
-                      | {
-                          __typename?: 'AvatarObject'
-                          avatarObject: {
-                            __typename?: 'StorageDataObject'
-                            id: string
-                            resolvedUrl?: string | null
-                            createdAt: Date
-                            size: string
-                            isAccepted: boolean
-                            ipfsHash: string
-                            storageBag: { __typename?: 'StorageBag'; id: string }
-                            type?:
-                              | { __typename: 'DataObjectTypeChannelAvatar' }
-                              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                              | { __typename: 'DataObjectTypeVideoMedia' }
-                              | { __typename: 'DataObjectTypeVideoSubtitle' }
-                              | { __typename: 'DataObjectTypeVideoThumbnail' }
-                              | null
-                          }
-                        }
-                      | { __typename?: 'AvatarUri'; avatarUri: string }
-                      | null
-                  } | null
-                }
-              }>
-              whitelistedMembers: Array<{
-                __typename?: 'AuctionWhitelistedMember'
-                member: {
-                  __typename?: 'Membership'
-                  id: string
-                  handle: string
-                  metadata?: {
-                    __typename?: 'MemberMetadata'
-                    about?: string | null
-                    avatar?:
-                      | {
-                          __typename?: 'AvatarObject'
-                          avatarObject: {
-                            __typename?: 'StorageDataObject'
-                            id: string
-                            resolvedUrl?: string | null
-                            createdAt: Date
-                            size: string
-                            isAccepted: boolean
-                            ipfsHash: string
-                            storageBag: { __typename?: 'StorageBag'; id: string }
-                            type?:
-                              | { __typename: 'DataObjectTypeChannelAvatar' }
-                              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                              | { __typename: 'DataObjectTypeVideoMedia' }
-                              | { __typename: 'DataObjectTypeVideoSubtitle' }
-                              | { __typename: 'DataObjectTypeVideoThumbnail' }
-                              | null
-                          }
-                        }
-                      | { __typename?: 'AvatarUri'; avatarUri: string }
-                      | null
-                  } | null
-                }
-              }>
             }
           }
         | { __typename: 'TransactionalStatusBuyNow'; price: string }
@@ -3137,14 +3001,62 @@ export const BasicNftOwnerFieldsFragmentDoc = gql`
   }
   ${BasicMembershipFieldsFragmentDoc}
 `
+export const BasicFeaturedVideoFragmentDoc = gql`
+  fragment BasicFeaturedVideo on Video {
+    id
+    title
+    viewsNum
+    createdAt
+    duration
+    reactionsCount
+    commentsCount
+    channel {
+      ...BasicChannelFields
+    }
+    thumbnailPhoto {
+      ...StorageDataObjectFields
+    }
+    nft {
+      transactionalStatus {
+        __typename
+        ... on TransactionalStatusBuyNow {
+          price
+        }
+        ... on TransactionalStatusAuction {
+          auction {
+            id
+            auctionType {
+              __typename
+              ... on AuctionTypeEnglish {
+                duration
+                extensionPeriod
+                plannedEndAtBlock
+              }
+              ... on AuctionTypeOpen {
+                bidLockDuration
+              }
+            }
+            isCompleted
+            buyNowPrice
+            startingPrice
+            startsAtBlock
+            endedAtBlock
+          }
+        }
+      }
+    }
+  }
+  ${BasicChannelFieldsFragmentDoc}
+  ${StorageDataObjectFieldsFragmentDoc}
+`
 export const BasicVideoFeaturedInCategoryFragmentDoc = gql`
   fragment BasicVideoFeaturedInCategory on VideoFeaturedInCategory {
     videoCutUrl
     video {
-      ...BasicVideoFields
+      ...BasicFeaturedVideo
     }
   }
-  ${BasicVideoFieldsFragmentDoc}
+  ${BasicFeaturedVideoFragmentDoc}
 `
 export const BasicVideoActivityFieldsFragmentDoc = gql`
   fragment BasicVideoActivityFields on Video {

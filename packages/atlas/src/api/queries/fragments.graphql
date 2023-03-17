@@ -392,10 +392,55 @@ fragment BasicNftOwnerFields on NftOwner {
   }
 }
 
+fragment BasicFeaturedVideo on Video {
+  id
+  title
+  viewsNum
+  createdAt
+  duration
+  reactionsCount
+  commentsCount
+  channel {
+    ...BasicChannelFields
+  }
+  thumbnailPhoto {
+    ...StorageDataObjectFields
+  }
+  nft {
+    transactionalStatus {
+      __typename
+      ... on TransactionalStatusBuyNow {
+        price
+      }
+      ... on TransactionalStatusAuction {
+        auction {
+          id
+          auctionType {
+            __typename
+            ... on AuctionTypeEnglish {
+              duration
+              extensionPeriod
+              plannedEndAtBlock
+            }
+            ... on AuctionTypeOpen {
+              bidLockDuration
+            }
+          }
+          isCompleted
+          buyNowPrice
+          startingPrice
+          startsAtBlock
+          endedAtBlock
+        }
+      }
+    }
+  }
+}
+
 fragment BasicVideoFeaturedInCategory on VideoFeaturedInCategory {
   videoCutUrl
   video {
-    ...BasicVideoFields
+    ...BasicFeaturedVideo
   }
 }
 
