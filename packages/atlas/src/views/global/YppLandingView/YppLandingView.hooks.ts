@@ -1,7 +1,6 @@
 import axios from 'axios'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useQuery } from 'react-query'
-import { useLocation } from 'react-router-dom'
 
 import { useBasicChannels } from '@/api/hooks/channel'
 import { atlasConfig } from '@/config'
@@ -34,8 +33,11 @@ export type YppSyncedChannel = {
 
 export const useGetYppSyncedChannels = () => {
   const { activeMembership, membershipsLoading, isAuthLoading, channelId } = useUser()
-  const location = useLocation()
-  const { data: syncedChannels, isLoading, refetch } = useQuery('ypp-synced-channels', () => getSyncedChannels())
+  const {
+    data: syncedChannels,
+    isLoading,
+    refetch,
+  } = useQuery(['membershipChannels', activeMembership?.channels], () => getSyncedChannels())
 
   const channels = useMemo(() => activeMembership?.channels || [], [activeMembership?.channels])
 
@@ -71,11 +73,6 @@ export const useGetYppSyncedChannels = () => {
       SentryLogger.error('Error while updating YPP setting: ', 'useGetYppSyncedChannels', error)
     }
   }, [channels])
-
-  useEffect(() => {
-    if (location.pathname.includes('studio') && !channels.length) return
-    getSyncedChannels()
-  }, [channels.length, getSyncedChannels, location.pathname])
 
   return {
     syncedChannels,

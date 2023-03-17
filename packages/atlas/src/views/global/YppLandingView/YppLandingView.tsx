@@ -75,7 +75,7 @@ export const YppLandingView: FC = () => {
       return
     }
     if (!channels?.length) {
-      navigate(absoluteRoutes.studio.signIn())
+      navigate(absoluteRoutes.studio.newChannel())
       return
     }
     if (isYppSigned) {

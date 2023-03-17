@@ -45,6 +45,11 @@ export const HeaderIconsWrapper = styled.div`
   margin: ${sizes(6)} 0;
 `
 
+export const CategoriesText = styled(Text)`
+  display: block;
+  margin-top: ${sizes(1)};
+`
+
 export const LogosWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(3, auto);

@@ -19,7 +19,8 @@ import { isAxiosError } from '@/utils/error'
 import { SentryLogger } from '@/utils/logs'
 
 import {
-  ChannelRequirments,
+  ChannelAlreadyRegisteredError,
+  ChannelRequirements,
   ChannelVerificationErrorResponse,
   ChannelVerificationSuccessResponse,
   YoutubeResponseData,
@@ -53,7 +54,7 @@ export const useYppGoogleAuth = ({
 }) => {
   const { authState: oldAuthState, selectedChannelId } = useYppStore((state) => state)
   const { setAuthState, setSelectedChannelId } = useYppStore((state) => state.actions)
-  const [ytRequirmentsErrors, setYtRequirmentsErrors] = useState<YppRequirementsErrorCode[]>([])
+  const [ytRequirementsErrors, setYtRequirementsErrors] = useState<YppRequirementsErrorCode[]>([])
   const [ytResponseData, setYtResponseData] = useState<YoutubeResponseData | null>(null)
   const [alreadyRegisteredChannel, setAlreadyRegisteredChannel] = useState<AlreadyRegisteredChannel | null>(null)
   const { mutateAsync: authMutation } = useMutation('ypp-auth-post', (authorizationCode: string) =>
@@ -184,64 +185,70 @@ export const useYppGoogleAuth = ({
             return
           }
 
-          const isRequirmentsError = isArray(errorMessages)
-          if (isRequirmentsError) {
-            const errorCodes = isRequirmentsError ? errorMessages?.map((message) => message.errorCode) : undefined
+          const isRequirementsError = isArray(errorMessages)
+          if (isRequirementsError) {
+            const errorCodes = isRequirementsError ? errorMessages?.map((message) => message.code) : undefined
 
-            errorCodes && setYtRequirmentsErrors(errorCodes)
+            errorCodes && setYtRequirementsErrors(errorCodes)
             onChangeStep('requirements')
             return
           }
 
-          const isQuotaError =
-            errorResponseData &&
-            'errorCode' in errorResponseData &&
-            errorResponseData.errorCode === YppAuthorizationErrorCode.YOUTUBE_QUOTA_LIMIT_EXCEEDED
+          if (errorResponseData && 'code' in errorResponseData) {
+            switch (errorResponseData.code) {
+              case YppAuthorizationErrorCode.YOUTUBE_QUOTA_LIMIT_EXCEEDED:
+                displaySnackbar({
+                  title: 'Something went wrong',
+                  description:
+                    "Due to high demand, we've reached the quota on the daily new sign ups. Please try again tomorrow.",
+                  iconType: 'error',
+                })
+                closeModal()
+                return
+              case YppAuthorizationErrorCode.CHANNEL_NOT_FOUND:
+                displaySnackbar({
+                  title: 'Authorization failed',
+                  description: `You don't have a YouTube channel.`,
+                  iconType: 'error',
+                })
+                setYtRequirementsErrors([
+                  YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_CREATION_DATE,
+                  YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_VIDEOS,
+                  YppAuthorizationErrorCode.CHANNEL_CRITERIA_UNMET_SUBSCRIBERS,
+                ])
+                onChangeStep('requirements')
+                return
+              case YppAuthorizationErrorCode.CHANNEL_ALREADY_REGISTERED: {
+                const { data } = await client.query<GetFullChannelQuery, GetFullChannelQueryVariables>({
+                  query: GetFullChannelDocument,
+                  variables: { where: { id: (errorResponseData as ChannelAlreadyRegisteredError).result.toString() } },
+                })
+                setAlreadyRegisteredChannel({
+                  channelTitle: data.channelByUniqueInput?.title || '',
+                  ownerMemberHandle: data.channelByUniqueInput?.ownerMember?.handle || '',
+                })
 
-          if (isQuotaError) {
-            displaySnackbar({
-              title: 'Something went wrong',
-              description:
-                "Due to high demand, we've reached the quota on the daily new sign ups. Please try again tomorrow.",
-              iconType: 'error',
-            })
-            closeModal()
-            return
-          }
-
-          const isChannelNotFoundError =
-            errorResponseData &&
-            'errorCode' in errorResponseData &&
-            errorResponseData.errorCode === YppAuthorizationErrorCode.CHANNEL_NOT_FOUND
-
-          if (isChannelNotFoundError) {
-            displaySnackbar({
-              title: 'Authorization failed',
-              description: `You don't have a YouTube channel.`,
-              iconType: 'error',
-            })
-            setYtRequirmentsErrors(Object.values(YppAuthorizationErrorCode))
-            onChangeStep('requirements')
-            return
-          }
-
-          const isChannelAlreadyRegistered =
-            errorResponseData &&
-            'errorCode' in errorResponseData &&
-            errorResponseData.errorCode === YppAuthorizationErrorCode.CHANNEL_ALREADY_REGISTERED
-
-          if (isChannelAlreadyRegistered) {
-            const { data } = await client.query<GetFullChannelQuery, GetFullChannelQueryVariables>({
-              query: GetFullChannelDocument,
-              variables: { where: { id: errorResponseData.result.toString() } },
-            })
-            setAlreadyRegisteredChannel({
-              channelTitle: data.channelByUniqueInput?.title || '',
-              ownerMemberHandle: data.channelByUniqueInput?.ownerMember?.handle || '',
-            })
-
-            onChangeStep('channel-already-registered')
-            return
+                onChangeStep('channel-already-registered')
+                return
+              }
+              case YppAuthorizationErrorCode.YOUTUBE_API_NOT_CONNECTED:
+                displaySnackbar({
+                  title: 'Something went wrong',
+                  description: 'YouTube API is currently unavailable. Please try again later.',
+                  iconType: 'error',
+                })
+                closeModal()
+                return
+              case YppAuthorizationErrorCode.QUERY_NODE_NOT_CONNECTED:
+                displaySnackbar({
+                  title: 'Something went wrong',
+                  description:
+                    'Query Node is down. Signups, video creation and upload to storage node is impacted. Please try again later.',
+                  iconType: 'error',
+                })
+                closeModal()
+                return
+            }
           }
           displayUnknownErrorSnackbar(error, code, state)
           return
@@ -285,13 +292,19 @@ export const useYppGoogleAuth = ({
     }
   }, [handleGoogleAuthError, searchParams])
 
-  return { handleAuthorizeClick, ytRequirmentsErrors, ytResponseData, setYtRequirmentsErrors, alreadyRegisteredChannel }
+  return {
+    handleAuthorizeClick,
+    ytRequirementsErrors,
+    ytResponseData,
+    setYtRequirementsErrors,
+    alreadyRegisteredChannel,
+  }
 }
 
-export const useGetYppChannelRequirments = () =>
+export const useGetYppChannelRequirements = () =>
   useQuery('ypp-requirements-fetch', () =>
     axios
-      .get<ChannelRequirments>(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/induction/requirements`)
+      .get<ChannelRequirements>(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels/induction/requirements`)
       .then((res) => res.data)
-      .catch((error) => SentryLogger.error("Couldn't fetch requirments", 'YppAuthorizationModal.hooks', error))
+      .catch((error) => SentryLogger.error("Couldn't fetch requirements", 'YppAuthorizationModal.hooks', error))
   )
