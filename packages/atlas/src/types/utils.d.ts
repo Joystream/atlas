@@ -6,4 +6,5 @@ declare global {
     [P in keyof T]?: DeepPartial<T[P]>
   }
   type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
+  type Reveal<T> = { [P in keyof T]: T[P] }
 }
