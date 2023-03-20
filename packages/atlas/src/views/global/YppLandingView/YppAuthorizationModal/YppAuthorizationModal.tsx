@@ -100,7 +100,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   const channelBucketsCount = useChannelsStorageBucketsCount(selectedChannelId)
 
   const { joystream, proxyCallback } = useJoystream()
-  const youtubeCollaboratorMemberId = atlasConfig.features.ypp.youtubeCollaboratorMemberId || ''
+  const youtubeCollaboratorMemberId = atlasConfig.features.ypp.youtubeCollaboratorMemberId
 
   const { channel: channel } = useBasicChannel(referrerId || '', {
     skip: !referrerId,
@@ -175,6 +175,9 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       return
     }
     try {
+      if (!youtubeCollaboratorMemberId) {
+        throw Error('Collaborator member id was not provided')
+      }
       setIsSubmitting(true)
       await yppChannelMutation(finalFormData)
       const completed = await handleTransaction({
