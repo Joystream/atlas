@@ -40,6 +40,7 @@ export const YppLandingView: FC = () => {
       .then((res) => res.data)
       .catch((e) => SentryLogger.error('Quota fetch failed', 'YppLandingView', e))
   )
+  const [wasSignInTriggered, setWasSignInTriggered] = useState(false)
   const isTodaysQuotaReached = data ? data.signupQuotaUsed > SINGUP_DAILY_QUOTA : false
   const shouldContinueYppFlow = useYppStore((store) => store.shouldContinueYppFlow)
 
@@ -59,7 +60,15 @@ export const YppLandingView: FC = () => {
     })
   }, [])
 
-  const handleSignUpClick = useCallback(() => {
+  useEffect(() => {
+    // redirect to channel form, when unsigned user clicked CTA button and has no channel
+    if (wasSignInTriggered && channels?.length === 0) {
+      navigate(absoluteRoutes.studio.newChannel())
+      setWasSignInTriggered(false)
+    }
+  }, [channels?.length, wasSignInTriggered, navigate])
+
+  const handleSignUpClick = useCallback(async () => {
     if (isTodaysQuotaReached) {
       displaySnackbar({
         title: 'Something went wrong',
@@ -71,7 +80,8 @@ export const YppLandingView: FC = () => {
     }
 
     if (!isLoggedIn) {
-      signIn()
+      await signIn()
+      setWasSignInTriggered(true)
       return
     }
     if (!channels?.length) {
@@ -92,14 +102,14 @@ export const YppLandingView: FC = () => {
     }
   }, [
     channels?.length,
+    displaySnackbar,
     isLoggedIn,
+    isTodaysQuotaReached,
     isYppSigned,
     navigate,
     setSelectedChannelId,
     signIn,
     unsyncedChannels,
-    isTodaysQuotaReached,
-    displaySnackbar,
   ])
 
   useEffect(() => {
