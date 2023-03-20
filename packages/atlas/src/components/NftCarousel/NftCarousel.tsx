@@ -6,6 +6,7 @@ import { Carousel, CarouselProps } from '@/components/Carousel'
 import { MarketplaceCarouselCard } from '@/components/NftCarousel/components/MarketplaceCarouselCard'
 import { NftCarouselItem } from '@/components/NftCarousel/components/NftCarouselItem/NftCarouselItem'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 type NftCarouselType = {
   type: 'nft'
@@ -20,6 +21,7 @@ type MarketplaceCarousel = MarketplaceCarouselTypes & {
 
 export const NftCarousel = ({ carouselProps, ...rest }: MarketplaceCarousel) => {
   const [currentMiddleItem, setCurrentMiddleItem] = useState(1)
+  const smMatch = useMediaMatch('sm')
 
   const contentMapper = useCallback(
     (glider: Glider | undefined, props: MarketplaceCarouselTypes) => {
@@ -43,7 +45,7 @@ export const NftCarousel = ({ carouselProps, ...rest }: MarketplaceCarousel) => 
   return (
     <Carousel
       type="carousel"
-      perView={2}
+      perView={smMatch ? 2 : 1}
       startAt={1}
       gap={12}
       focusAt="center"

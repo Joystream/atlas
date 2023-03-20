@@ -1,6 +1,8 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { cVar, zIndex } from '@/styles'
+
 export const ItemWrapper = styled.div`
   position: relative;
   width: fit-content;
@@ -27,6 +29,7 @@ export const RightChevronContainer = styled.div`
   position: absolute;
   inset: 0 50% 0 0;
   justify-content: start;
+  opacity: 1;
 `
 
 export const NavigationContainer = styled.div`
@@ -35,11 +38,25 @@ export const NavigationContainer = styled.div`
   align-items: center;
   cursor: pointer;
   inset: 0;
-  z-index: 1000;
-  background: black;
-  opacity: 0.4;
+  z-index: ${zIndex.modals};
 
   > * {
     flex: 1;
+  }
+
+  ::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.5;
+    background: ${cVar('colorBackgroundMuted')};
+    transition: opacity ${cVar('animationTransitionMedium')};
+  }
+
+  :hover {
+    ::after {
+      opacity: 0.25;
+    }
   }
 `
