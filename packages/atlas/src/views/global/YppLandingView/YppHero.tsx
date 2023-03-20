@@ -44,8 +44,8 @@ type YppHeroProps = {
 export const getButtonText = (variant: YppAtlasStatus) => {
   switch (variant) {
     case 'have-channel':
-    case 'connect-wallet':
       return 'Sign up now'
+    case 'connect-wallet':
     case 'no-channel':
       return 'Create channel & sign up'
     case 'ypp-signed':
