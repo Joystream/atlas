@@ -71,7 +71,7 @@ export const MyVideosView = () => {
     `ypp-ba-videos-${channelId}`,
     () => axios.get<YppVideoDto[]>(`${YOUTUBE_BACKEND_URL}/channels/${channelId}/videos`),
     {
-      enabled: !!channelId || !YOUTUBE_BACKEND_URL,
+      enabled: !!channelId && !!YOUTUBE_BACKEND_URL,
       onSettled: () => {
         setIsBackednRqCompleted(true)
       },

@@ -5,12 +5,11 @@ import { useQuery } from 'react-query'
 import { useBasicChannels } from '@/api/hooks/channel'
 import { atlasConfig } from '@/config'
 import { useUser } from '@/providers/user/user.hooks'
-import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { SentryLogger } from '@/utils/logs'
 
 const YPP_SYNC_URL = atlasConfig.features.ypp.youtubeSyncApiUrl
 
-// todo yppStatus `Active` will be deprecated. We're keeping this for the sake of backward compatibility
-type YppStatus = 'Unverified' | 'Verified' | 'Suspended' | 'OptedOut' | 'Active'
+type YppStatus = 'Unverified' | 'Verified' | 'Suspended' | 'OptedOut'
 
 export type YppSyncedChannel = {
   title: string
@@ -37,7 +36,9 @@ export const useGetYppSyncedChannels = () => {
     data: syncedChannels,
     isLoading,
     refetch,
-  } = useQuery(['membershipChannels', activeMembership?.channels], () => getSyncedChannels())
+  } = useQuery(['membershipChannels', activeMembership?.channels], () => getSyncedChannels(), {
+    enabled: !!YPP_SYNC_URL,
+  })
 
   const channels = useMemo(() => activeMembership?.channels || [], [activeMembership?.channels])
 
@@ -47,10 +48,6 @@ export const useGetYppSyncedChannels = () => {
   }, [activeMembership?.channels, syncedChannels])
 
   const getSyncedChannels = useCallback(async () => {
-    if (!YPP_SYNC_URL) {
-      ConsoleLogger.error("Youtube sync url wasn't provided")
-      return
-    }
     // TODO We should do only one request per given memberId
     // refactor once https://github.com/Joystream/youtube-synch/issues/55 is done
     try {
@@ -89,7 +86,7 @@ type RecentChannelsResponse = YppSyncedChannel[]
 export const useGetYppLastVerifiedChannels = () => {
   const getRecentChannels = useCallback(async (): Promise<string[] | void> => {
     try {
-      const response = await axios.get<RecentChannelsResponse>(`${atlasConfig.features.ypp.youtubeSyncApiUrl}/channels`)
+      const response = await axios.get<RecentChannelsResponse>(`${YPP_SYNC_URL}/channels`)
       return response.data
         .filter((channel) => channel.yppStatus === 'Verified')
         .map((channel) => channel.joystreamChannelId.toString())
@@ -98,7 +95,9 @@ export const useGetYppLastVerifiedChannels = () => {
     }
   }, [])
 
-  const { data, isLoading: isVerifiedChannelsLoading } = useQuery('ypp-channels-fetch', () => getRecentChannels())
+  const { data, isLoading: isVerifiedChannelsLoading } = useQuery('ypp-channels-fetch', () => getRecentChannels(), {
+    enabled: !!YPP_SYNC_URL,
+  })
 
   const { channels, loading } = useBasicChannels(
     {
