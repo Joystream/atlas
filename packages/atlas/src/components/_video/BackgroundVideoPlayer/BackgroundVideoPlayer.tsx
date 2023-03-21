@@ -4,6 +4,7 @@ import { CSSTransition } from 'react-transition-group'
 
 import { SvgActionPause, SvgActionPlay, SvgActionSoundOff, SvgActionSoundOn } from '@/assets/icons'
 import { Button } from '@/components/_buttons/Button'
+import { VideoProgress } from '@/components/_video/BackgroundVideoPlayer/VideoProgress'
 import { sizes, transitions, zIndex } from '@/styles'
 import { ConsoleLogger } from '@/utils/logs'
 
@@ -95,6 +96,7 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
           />
         </ButtonBox>
       )}
+      {playing && <VideoProgress video={videoRef.current} isPlaying={isPlaying} tick={10} />}
       <StyledVideo
         src={src}
         autoPlay={autoPlay}

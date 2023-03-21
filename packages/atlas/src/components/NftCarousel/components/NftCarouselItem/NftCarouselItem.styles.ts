@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { cVar, zIndex } from '@/styles'
+import { cVar, media, sizes, zIndex } from '@/styles'
 
 export const ItemWrapper = styled.div`
   position: relative;
@@ -12,7 +12,11 @@ const ChevronContainerStyles = css`
   display: flex;
   align-items: center;
   cursor: pointer;
-  padding: 36px;
+  padding: ${sizes(3)};
+
+  ${media.sm} {
+    padding: ${sizes(9)};
+  }
 `
 
 export const LeftChevronContainer = styled.div`

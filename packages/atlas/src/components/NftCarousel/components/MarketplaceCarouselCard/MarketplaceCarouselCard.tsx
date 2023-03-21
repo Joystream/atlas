@@ -1,5 +1,6 @@
 import BN from 'bn.js'
 import { useNavigate } from 'react-router'
+import { CSSTransition } from 'react-transition-group'
 
 import { getNftStatus } from '@/api/hooks/nfts'
 import { GetFeaturedNftsQuery } from '@/api/queries/__generated__/nfts.generated'
@@ -13,6 +14,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { transitions } from '@/styles'
 
 import {
   Container,
@@ -105,7 +107,7 @@ const NftDetails = ({ nft, active }: { nft: NftCard['nft']; active: boolean }) =
     <Container isActive={active}>
       <VideoContainer>
         {isLoading ? (
-          <SkeletonLoader height={600} width="100%" />
+          <SkeletonLoader height="100%" width="100%" />
         ) : (
           <BackgroundVideoPlayer
             autoPlay={active}
@@ -119,7 +121,11 @@ const NftDetails = ({ nft, active }: { nft: NftCard['nft']; active: boolean }) =
           />
         )}
       </VideoContainer>
-      {active && <InformationContainer>{active && <DetailsCard {...nftDetails} />}</InformationContainer>}
+      {active && (
+        <CSSTransition in={active} timeout={10000} classNames={transitions.names.fade} unmountOnExit>
+          <InformationContainer>{active && <DetailsCard {...nftDetails} />}</InformationContainer>
+        </CSSTransition>
+      )}
     </Container>
   )
 }

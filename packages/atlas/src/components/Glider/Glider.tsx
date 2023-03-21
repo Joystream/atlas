@@ -37,7 +37,10 @@ export function useGlider<T extends HTMLElement>({ onSwipeEnd, responsive, ...gl
       return
     }
     const newGlider = new Glider(element.current, { type: 'carousel', breakpoints: responsive, ...gliderOptions })
-    newGlider.on('run.after', () => {
+    newGlider.on('swipe.end', () => {
+      onSwipeEnd?.(newGlider)
+    })
+    newGlider.on('run', () => {
       onSwipeEnd?.(newGlider)
     })
     newGlider.mount()

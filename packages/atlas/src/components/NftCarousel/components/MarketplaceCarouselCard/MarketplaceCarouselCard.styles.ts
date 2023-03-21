@@ -7,9 +7,7 @@ export const InformationContainer = styled.div`
   width: calc(100% + 1px);
   display: flex;
   align-items: end;
-  padding: 0 ${sizes(8)};
   height: calc(50% - 32px);
-  opacity: 0.25;
   transition: all ${cVar('animationTransitionMedium')};
   margin-top: ${sizes(4)};
   margin-bottom: ${sizes(8)};
@@ -18,6 +16,8 @@ export const InformationContainer = styled.div`
   ${media.sm} {
     position: absolute;
     margin-top: 0;
+    opacity: 0.25;
+    padding: 0 ${sizes(8)};
   }
 `
 
@@ -67,10 +67,6 @@ export const Container = styled.div<{ isActive: boolean }>`
     }
   }
 
-  ${media.sm} {
-    min-height: 609px;
-  }
-
   :hover {
     ${InformationContainer} {
       opacity: 1;
@@ -80,10 +76,26 @@ export const Container = styled.div<{ isActive: boolean }>`
 
 export const VideoContainer = styled.div`
   position: relative;
-  height: 320px;
+  height: 325px;
 
   ${media.sm} {
-    min-height: 609px;
+    min-height: 340px;
+  }
+
+  ${media.md} {
+    min-height: 410px;
+  }
+
+  ${media.lg} {
+    min-height: 610px;
+  }
+
+  ${media.md} {
+    min-height: 660px;
+  }
+
+  ${media.xxl} {
+    min-height: 830px;
   }
 `
 

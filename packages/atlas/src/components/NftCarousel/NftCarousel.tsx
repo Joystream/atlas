@@ -22,6 +22,7 @@ type MarketplaceCarousel = MarketplaceCarouselTypes & {
 export const NftCarousel = ({ carouselProps, ...rest }: MarketplaceCarousel) => {
   const [currentMiddleItem, setCurrentMiddleItem] = useState(1)
   const smMatch = useMediaMatch('sm')
+  const xlMatch = useMediaMatch('xl')
 
   const contentMapper = useCallback(
     (glider: Glider | undefined, props: MarketplaceCarouselTypes) => {
@@ -45,7 +46,7 @@ export const NftCarousel = ({ carouselProps, ...rest }: MarketplaceCarousel) => 
   return (
     <Carousel
       type="carousel"
-      perView={smMatch ? 2 : 1}
+      perView={!smMatch ? 1.3 : !xlMatch ? 1.4 : 1.6}
       startAt={1}
       gap={12}
       focusAt="center"
