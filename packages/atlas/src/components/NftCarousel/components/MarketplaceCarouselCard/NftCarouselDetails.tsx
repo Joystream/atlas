@@ -101,6 +101,7 @@ export const NftCarouselDetails = ({
           src={mediaUrl ?? undefined}
           poster={thumbnailUrl ?? undefined}
           handleActions={active}
+          videoPlaytime={30}
         />
       </VideoContainer>
       {active && (

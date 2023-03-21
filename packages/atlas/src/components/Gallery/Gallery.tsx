@@ -13,12 +13,11 @@ export type GalleryProps = PropsWithChildren<{
   title?: string
   className?: string
   seeAllUrl?: string
-  children: ReactNode[] | ReactNode
+  children: ReactNode[]
 }> &
   Omit<CarouselProps, 'children'>
 
 export const Gallery: FC<GalleryProps> = ({ title, className, seeAllUrl, children, ...carouselProps }) => {
-  // TODO: this is the only place in the app that requires refs to buttons. Once we refactor this component, we can remove forwardRef from buttons
   const gliderRef = useRef<Glider | undefined>(undefined)
   return (
     <Container className={className}>
@@ -57,8 +56,6 @@ export const Gallery: FC<GalleryProps> = ({ title, className, seeAllUrl, childre
         </TitleContainer>
       </GridHeadingContainer>
       <Carousel {...carouselProps}>
-        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-        {/*@ts-ignore*/}
         {({ glider }) => {
           gliderRef.current = glider
 
