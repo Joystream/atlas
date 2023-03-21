@@ -9,6 +9,7 @@ import {
   GetPayloadDataByCommitmentQueryVariables,
 } from '@/api/queries/__generated__/channels.generated'
 import { atlasConfig } from '@/config'
+import { ESTIMATED_BLOCK_TIME_MS } from '@/hooks/useBlockTimeEstimation'
 import { getClaimableReward } from '@/joystream-lib/channelPayouts'
 import { JoystreamLibExtrinsics } from '@/joystream-lib/extrinsics'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
@@ -17,7 +18,10 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { wait } from '@/utils/misc'
 import { formatNumber } from '@/utils/number'
+
+import { useChannelPaymentsHistory } from '../PaymentsTransactions/PaymentTransactions.hooks'
 
 const TOKEN_TICKER = atlasConfig.joystream.tokenTicker
 
@@ -33,6 +37,7 @@ export const useChannelPayout = (txCallback?: () => void) => {
   const [claimError, setClaimError] = useState<string | null>(null)
   const [txParams, setTxParams] = useState<Parameters<JoystreamLibExtrinsics['claimRewardTx']> | undefined>(undefined)
   const { channel, loading, refetch } = useFullChannel(channelId || '')
+  const { fetchPaymentsData } = useChannelPaymentsHistory(channelId || '')
   const handleTransaction = useTransaction()
   const client = useApolloClient()
   const { displaySnackbar } = useSnackbar()
@@ -148,8 +153,11 @@ export const useChannelPayout = (txCallback?: () => void) => {
           commitment,
           proxyCallback(updateStatus)
         ),
-      onTxSync: () => {
+      onTxSync: async () => {
         txCallback?.()
+        // wait at least for one block before refetching
+        await wait(ESTIMATED_BLOCK_TIME_MS)
+        await fetchPaymentsData()
         return refetch()
       },
     })
