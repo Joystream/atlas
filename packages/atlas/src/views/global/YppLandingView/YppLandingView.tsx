@@ -30,7 +30,9 @@ const SINGUP_DAILY_QUOTA = 500 // 2% of the total daily quota
 export const YppLandingView: FC = () => {
   const headTags = useHeadTags('YouTube Partner Program')
   const [currentStep, setCurrentStep] = useState<YppAuthorizationStepsType>(null)
+  const [isRefetchingData, setIsRefetchingData] = useState(false)
   const { isLoggedIn, signIn, activeMembership, channelId, walletStatus } = useUser()
+  const navigate = useNavigate()
   const { setSelectedChannelId, setShouldContinueYppFlow } = useYppStore((store) => store.actions)
   const { displaySnackbar } = useSnackbar()
   const selectedChannelTitle = activeMembership?.channels.find((channel) => channel.id === channelId)?.title
@@ -44,13 +46,11 @@ export const YppLandingView: FC = () => {
   const isTodaysQuotaReached = data ? data.signupQuotaUsed > SINGUP_DAILY_QUOTA : false
   const shouldContinueYppFlow = useYppStore((store) => store.shouldContinueYppFlow)
 
-  const navigate = useNavigate()
-
   const channels = activeMembership?.channels
 
-  const { unsyncedChannels, isLoading, currentChannel } = useGetYppSyncedChannels()
-  const isYppSigned = !!currentChannel
+  const { unsyncedChannels, isLoading, currentChannel, refetchYppSyncedChannels } = useGetYppSyncedChannels()
 
+  const isYppSigned = !!currentChannel
   const hasAnotherUnsyncedChannel = isYppSigned && !!unsyncedChannels?.length
 
   useEffect(() => {
@@ -60,57 +60,71 @@ export const YppLandingView: FC = () => {
     })
   }, [])
 
-  useEffect(() => {
-    // redirect to channel form, when unsigned user clicked CTA button and has no channel
-    if (wasSignInTriggered && channels?.length === 0) {
-      navigate(absoluteRoutes.studio.newChannel())
-      setWasSignInTriggered(false)
-    }
-  }, [channels?.length, wasSignInTriggered, navigate])
+  const handleYppSignUpClick = useCallback(async () => {
+    try {
+      if (isTodaysQuotaReached) {
+        displaySnackbar({
+          title: 'Something went wrong',
+          description:
+            "Due to high demand, we've reached the quota on the daily new sign ups. Please try again tomorrow.",
+          iconType: 'error',
+        })
+        return
+      }
 
-  const handleSignUpClick = useCallback(async () => {
-    if (isTodaysQuotaReached) {
+      if (!isLoggedIn) {
+        await signIn()
+        setWasSignInTriggered(true)
+        return
+      }
+
+      setIsRefetchingData(true)
+      const { data } = await refetchYppSyncedChannels()
+
+      if (!channels?.length) {
+        navigate(absoluteRoutes.studio.newChannel())
+        return
+      }
+      if (data?.currentChannel) {
+        navigate(absoluteRoutes.studio.ypp())
+        return
+      }
+      if (data?.unsyncedChannels?.length) {
+        setSelectedChannelId(data?.unsyncedChannels[0].id)
+      }
+      if (data?.unsyncedChannels?.length && data?.unsyncedChannels.length > 1) {
+        setCurrentStep('select-channel')
+      } else {
+        setCurrentStep('requirements')
+      }
+    } catch (error) {
+      SentryLogger.error('Failed to refetch data from Ypp backend', 'YppLandingView', error)
       displaySnackbar({
         title: 'Something went wrong',
-        description:
-          "Due to high demand, we've reached the quota on the daily new sign ups. Please try again tomorrow.",
+        description: 'YouTube API is currently unavailable. Please try again later.',
         iconType: 'error',
       })
-      return
-    }
-
-    if (!isLoggedIn) {
-      await signIn()
-      setWasSignInTriggered(true)
-      return
-    }
-    if (!channels?.length) {
-      navigate(absoluteRoutes.studio.newChannel())
-      return
-    }
-    if (isYppSigned) {
-      navigate(absoluteRoutes.studio.ypp())
-      return
-    }
-    if (unsyncedChannels?.length) {
-      setSelectedChannelId(unsyncedChannels[0].id)
-    }
-    if (unsyncedChannels?.length && unsyncedChannels.length > 1) {
-      setCurrentStep('select-channel')
-    } else {
-      setCurrentStep('requirements')
+    } finally {
+      setIsRefetchingData(false)
     }
   }, [
     channels?.length,
     displaySnackbar,
     isLoggedIn,
     isTodaysQuotaReached,
-    isYppSigned,
     navigate,
+    refetchYppSyncedChannels,
     setSelectedChannelId,
     signIn,
-    unsyncedChannels,
   ])
+
+  useEffect(() => {
+    // rerun handleYppSignUpClick after sign in flow
+    if (wasSignInTriggered) {
+      handleYppSignUpClick()
+      setWasSignInTriggered(false)
+    }
+  }, [handleYppSignUpClick, wasSignInTriggered])
 
   useEffect(() => {
     if (shouldContinueYppFlow) {
@@ -118,7 +132,7 @@ export const YppLandingView: FC = () => {
       setShouldContinueYppFlow(false)
       setCurrentStep('requirements')
     }
-  }, [channelId, handleSignUpClick, setSelectedChannelId, setShouldContinueYppFlow, shouldContinueYppFlow])
+  }, [channelId, handleYppSignUpClick, setSelectedChannelId, setShouldContinueYppFlow, shouldContinueYppFlow])
 
   const getYppAtlasStatus = () => {
     if (isLoading) {
@@ -149,16 +163,17 @@ export const YppLandingView: FC = () => {
       <ParallaxProvider>
         <YppReferralBanner />
         <YppHero
+          isRefetchingData={isRefetchingData}
           onSelectChannel={() => setCurrentStep('select-channel')}
-          onSignUpClick={handleSignUpClick}
+          onSignUpClick={handleYppSignUpClick}
           yppAtlasStatus={getYppAtlasStatus()}
           hasAnotherUnsyncedChannel={hasAnotherUnsyncedChannel}
           selectedChannelTitle={selectedChannelTitle}
         />
         <YppRewardSection />
-        <YppThreeStepsSection onSignUpClick={handleSignUpClick} yppStatus={getYppAtlasStatus()} />
+        <YppThreeStepsSection onSignUpClick={handleYppSignUpClick} yppStatus={getYppAtlasStatus()} />
         <YppCardsSections />
-        <YppFooter onSignUpClick={handleSignUpClick} />
+        <YppFooter onSignUpClick={handleYppSignUpClick} />
       </ParallaxProvider>
     </Wrapper>
   )
