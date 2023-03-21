@@ -8,6 +8,7 @@ import { Table, TableProps } from '@/components/Table'
 import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
 import { DialogModal } from '@/components/_overlays/DialogModal'
+import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { SentryLogger } from '@/utils/logs'
@@ -21,6 +22,7 @@ import {
   JoystreamSvgWrapper,
   SenderItem,
   StyledJoyTokenIcon,
+  StyledLink,
   StyledNumberFormat,
   TextWrapper,
   TypeIconWrapper,
@@ -116,29 +118,31 @@ const Sender = ({ sender }: { sender: PaymentHistory['sender'] }) => {
   const member = memberships?.find((member) => member.controllerAccount === sender)
   const { url: avatarUrl, isLoadingAsset: avatarLoading } = useMemberAvatar(member)
 
-  switch (true) {
-    case sender === 'council':
-      return (
-        <SenderItem
-          nodeStart={
-            <JoystreamSvgWrapper>
-              <SvgJoystreamLogoShort />
-            </JoystreamSvgWrapper>
-          }
-          label="Joystream Council"
-          isInteractive={false}
-        />
-      )
-    case !!member:
-      return (
+  if (sender === 'council') {
+    return (
+      <SenderItem
+        nodeStart={
+          <JoystreamSvgWrapper>
+            <SvgJoystreamLogoShort />
+          </JoystreamSvgWrapper>
+        }
+        label="Joystream Council"
+        isInteractive={false}
+      />
+    )
+  }
+  if (member) {
+    return (
+      <StyledLink to={absoluteRoutes.viewer.member(member.handle)}>
         <SenderItem
           nodeStart={<Avatar assetUrl={avatarUrl} loading={avatarLoading} />}
           label={member?.handle}
           isInteractive={false}
         />
-      )
-    default:
-      return <SenderItem nodeStart={<Avatar />} label={shortenString(sender, 6, 4)} isInteractive={false} />
+      </StyledLink>
+    )
+  } else {
+    return <SenderItem nodeStart={<Avatar />} label={shortenString(sender, 6, 4)} isInteractive={false} />
   }
 }
 

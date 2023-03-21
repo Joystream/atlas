@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { ListItem } from '@/components/ListItem'
@@ -52,6 +53,10 @@ export const JoystreamSvgWrapper = styled.div`
       fill: ${cVar('colorCoreBaseWhite')};
     }
   }
+`
+
+export const StyledLink = styled(Link)`
+  text-decoration: none;
 `
 
 export const SenderItem = styled(ListItem)`
