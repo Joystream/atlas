@@ -313,7 +313,10 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       },
       () => reset(getValues()),
       setValue,
-      () => setTimeout(() => setShowConnectToYtDialog(true), 2000)
+      () =>
+        atlasConfig.features.ypp.googleConsoleClientId &&
+        atlasConfig.features.ypp.youtubeSyncApiUrl &&
+        setTimeout(() => setShowConnectToYtDialog(true), 2000)
     )
   })
 
