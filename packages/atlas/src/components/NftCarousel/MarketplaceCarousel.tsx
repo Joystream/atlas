@@ -4,8 +4,7 @@ import { useCallback, useState } from 'react'
 import { GetFeaturedNftsQuery } from '@/api/queries/__generated__/nfts.generated'
 import { Carousel, CarouselProps } from '@/components/Carousel'
 import { MarketplaceCarouselCard } from '@/components/NftCarousel/components/MarketplaceCarouselCard'
-import { NftCarouselItem } from '@/components/NftCarousel/components/NftCarouselItem/NftCarouselItem'
-import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { CarouselNavItem } from '@/components/NftCarousel/components/NftCarouselItem/CarouselNavItem'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 type NftCarouselType = {
@@ -15,11 +14,11 @@ type NftCarouselType = {
 
 type MarketplaceCarouselTypes = NftCarouselType
 
-export type MarketplaceCarousel = MarketplaceCarouselTypes & {
+export type MarketplaceCarouselProps = MarketplaceCarouselTypes & {
   carouselProps?: Omit<CarouselProps, 'children'>
 }
 
-export const NftCarousel = ({ carouselProps, ...rest }: MarketplaceCarousel) => {
+export const MarketplaceCarousel = ({ carouselProps, ...rest }: MarketplaceCarouselProps) => {
   const [currentMiddleItem, setCurrentMiddleItem] = useState(1)
   const smMatch = useMediaMatch('sm')
   const xlMatch = useMediaMatch('xl')
@@ -28,20 +27,22 @@ export const NftCarousel = ({ carouselProps, ...rest }: MarketplaceCarousel) => 
     (glider: Glider | undefined, props: MarketplaceCarouselTypes) => {
       if (props.type === 'nft' && props.nfts) {
         return props.nfts.map((nft, idx) => (
-          <NftCarouselItem
+          <CarouselNavItem
             key={idx}
             position={currentMiddleItem === idx ? 'active' : 'side'}
             onClick={(dir) => glider?.go(dir)}
           >
             <MarketplaceCarouselCard active={currentMiddleItem === idx} type="nft" nft={nft} />
-          </NftCarouselItem>
+          </CarouselNavItem>
         ))
       }
 
-      return [<SkeletonLoader key="forever_alone" height={600} width={400} />]
+      return [null]
     },
     [currentMiddleItem]
   )
+
+  if (!rest.nfts) return null
 
   return (
     <Carousel

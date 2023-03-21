@@ -1,7 +1,7 @@
 import { useFeaturedNfts } from '@/api/hooks/nfts'
-import { NftCarousel } from '@/components/NftCarousel/NftCarousel'
+import { MarketplaceCarousel } from '@/components/NftCarousel/MarketplaceCarousel'
 
 export const PlaygroundMarketplaceCarousel = () => {
   const { nfts } = useFeaturedNfts()
-  return <NftCarousel type="nft" nfts={nfts} />
+  return <MarketplaceCarousel type="nft" nfts={nfts} />
 }

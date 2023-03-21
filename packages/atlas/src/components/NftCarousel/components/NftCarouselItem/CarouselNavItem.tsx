@@ -4,13 +4,13 @@ import { SvgActionChevronL, SvgActionChevronR } from '@/assets/icons'
 
 import { ItemWrapper, LeftChevronContainer, NavigationContainer, RightChevronContainer } from './NftCarouselItem.styles'
 
-type CarouselItemProps = {
+type CarouselNavItemProps = {
   position: 'side' | 'active'
 
   onClick?: (dir: '<' | '>') => void
   children?: ReactNode
 }
-export const NftCarouselItem = ({ position, onClick, children }: CarouselItemProps) => {
+export const CarouselNavItem = ({ position, onClick, children }: CarouselNavItemProps) => {
   return (
     <ItemWrapper className="glide__slide">
       {position === 'side' && (
