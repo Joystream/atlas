@@ -35,6 +35,7 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                 commentCreated?: {
                   __typename?: 'Comment'
                   id: string
+                  isExcluded: boolean
                   createdAt: Date
                   isEdited: boolean
                   repliesCount: number
@@ -85,6 +86,7 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                 commentDeleted?: {
                   __typename?: 'Comment'
                   id: string
+                  isExcluded: boolean
                   createdAt: Date
                   isEdited: boolean
                   repliesCount: number
@@ -135,6 +137,7 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                 commentEdited?: {
                   __typename?: 'Comment'
                   id: string
+                  isExcluded: boolean
                   createdAt: Date
                   isEdited: boolean
                   repliesCount: number
@@ -185,6 +188,7 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                 commentModerated?: {
                   __typename?: 'Comment'
                   id: string
+                  isExcluded: boolean
                   createdAt: Date
                   isEdited: boolean
                   repliesCount: number

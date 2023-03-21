@@ -45,6 +45,8 @@ import { CommentRow, CommentRowProps } from '../CommentRow'
 import { ReactionChip, ReactionChipProps } from '../ReactionChip'
 import { ReactionPopover } from '../ReactionPopover'
 
+export type DeletedBy = 'author' | 'channel owner' | 'operator'
+
 export type InternalCommentProps = {
   author: BasicMembershipFieldsFragment | undefined
   memberHandle: string | undefined
@@ -53,7 +55,7 @@ export type InternalCommentProps = {
   loading: boolean | undefined
   isEdited: boolean | undefined
   isAbleToEdit: boolean | undefined
-  isModerated: boolean | undefined
+  deletedBy?: DeletedBy
   type: 'default' | 'deleted' | 'options' | 'processing'
   reactions: Omit<ReactionChipProps, 'onReactionClick'>[] | undefined
   reactionPopoverDismissed: boolean | undefined
@@ -84,7 +86,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
   type,
   loading,
   isEdited,
-  isModerated,
+  deletedBy,
   isAbleToEdit,
   reactionPopoverDismissed,
   reactionFee,
@@ -237,7 +239,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
                   </CommentHeader>
                   {isDeleted ? (
                     <DeletedComment as="span" variant="t200" color="colorTextMuted">
-                      <StyledSvgActionTrash /> Comment deleted by {isModerated ? 'channel owner' : 'author'}
+                      <StyledSvgActionTrash /> Comment deleted by {deletedBy}
                     </DeletedComment>
                   ) : (
                     <CommentBody>{text}</CommentBody>

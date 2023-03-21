@@ -15,7 +15,7 @@ query GetCommentRepliesConnection(
   commentsConnection(
     first: $first
     after: $after
-    where: { parentComment: { id_eq: $parentCommentId }, status_eq: VISIBLE }
+    where: { parentComment: { id_eq: $parentCommentId }, status_eq: VISIBLE, isExcluded_eq: false }
     orderBy: $orderBy
   ) {
     edges {
@@ -47,6 +47,7 @@ query GetUserCommentsAndVideoCommentsConnection(
         { video: { id_eq: $videoId } }
         { author: { id_eq: $memberId } }
         # if comment is deleted(has status Deleted or Moderated) and has no replies don't show the comment
+        { OR: [{ isExcluded_eq: false }, { repliesCount_gt: 0 }] }
         { OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }] }
       ]
     }
@@ -62,6 +63,7 @@ query GetUserCommentsAndVideoCommentsConnection(
       AND: [
         { video: { id_eq: $videoId } }
         { parentComment: { id_isNull: true } }
+        { OR: [{ isExcluded_eq: false }, { repliesCount_gt: 0 }] }
         { OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }] }
       ]
     }

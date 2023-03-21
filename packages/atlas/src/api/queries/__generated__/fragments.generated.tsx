@@ -2041,6 +2041,7 @@ export type CommentReactionsCountByReactionIdFieldsFragment = {
 export type CommentFieldsFragment = {
   __typename?: 'Comment'
   id: string
+  isExcluded: boolean
   createdAt: Date
   isEdited: boolean
   repliesCount: number
@@ -2091,6 +2092,7 @@ export type MetaprotocolTransactionResultFields_MetaprotocolTransactionResultCom
   commentCreated?: {
     __typename?: 'Comment'
     id: string
+    isExcluded: boolean
     createdAt: Date
     isEdited: boolean
     repliesCount: number
@@ -2142,6 +2144,7 @@ export type MetaprotocolTransactionResultFields_MetaprotocolTransactionResultCom
   commentDeleted?: {
     __typename?: 'Comment'
     id: string
+    isExcluded: boolean
     createdAt: Date
     isEdited: boolean
     repliesCount: number
@@ -2193,6 +2196,7 @@ export type MetaprotocolTransactionResultFields_MetaprotocolTransactionResultCom
   commentEdited?: {
     __typename?: 'Comment'
     id: string
+    isExcluded: boolean
     createdAt: Date
     isEdited: boolean
     repliesCount: number
@@ -2244,6 +2248,7 @@ export type MetaprotocolTransactionResultFields_MetaprotocolTransactionResultCom
   commentModerated?: {
     __typename?: 'Comment'
     id: string
+    isExcluded: boolean
     createdAt: Date
     isEdited: boolean
     repliesCount: number
@@ -2936,6 +2941,7 @@ export const CommentReactionsCountByReactionIdFieldsFragmentDoc = gql`
 export const CommentFieldsFragmentDoc = gql`
   fragment CommentFields on Comment {
     id
+    isExcluded
     author {
       ...BasicMembershipFields
     }
