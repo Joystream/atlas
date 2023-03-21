@@ -32,22 +32,16 @@ export type YppSyncedChannel = {
 
 export const useGetYppSyncedChannels = () => {
   const { activeMembership, membershipsLoading, isAuthLoading, channelId } = useUser()
+  const channels = useMemo(() => activeMembership?.channels || [], [activeMembership?.channels])
   const {
-    data: syncedChannels,
+    data: yppSyncedData,
     isLoading,
     refetch,
-  } = useQuery(['membershipChannels', activeMembership?.channels], () => getSyncedChannels(), {
+  } = useQuery(['membershipChannels', channels], () => getYppChannelsData(), {
     enabled: !!YPP_SYNC_URL,
   })
 
-  const channels = useMemo(() => activeMembership?.channels || [], [activeMembership?.channels])
-
-  const unsyncedChannels = useMemo(() => {
-    const syncedChannelIds = syncedChannels?.map((channel) => channel.joystreamChannelId.toString())
-    return activeMembership?.channels.filter((channel) => !syncedChannelIds?.includes(channel.id))
-  }, [activeMembership?.channels, syncedChannels])
-
-  const getSyncedChannels = useCallback(async () => {
+  const getYppChannelsData = useCallback(async () => {
     // TODO We should do only one request per given memberId
     // refactor once https://github.com/Joystream/youtube-synch/issues/55 is done
     try {
@@ -65,20 +59,25 @@ export const useGetYppSyncedChannels = () => {
         (channel): channel is YppSyncedChannel => !!channel && channel.yppStatus !== 'OptedOut'
       )
 
-      return fetchedChannels
+      const syncedChannelIds = fetchedChannels?.map((channel) => channel.joystreamChannelId.toString())
+      return {
+        unsyncedChannels: activeMembership?.channels.filter((channel) => !syncedChannelIds?.includes(channel.id)),
+        syncedChannels: fetchedChannels,
+        currentChannel: fetchedChannels?.find(
+          (syncedChannels) => syncedChannels.joystreamChannelId.toString() === channelId
+        ),
+      }
     } catch (error) {
       SentryLogger.error('Error while updating YPP setting: ', 'useGetYppSyncedChannels', error)
     }
-  }, [channels])
+  }, [activeMembership?.channels, channelId, channels])
 
   return {
-    syncedChannels,
-    unsyncedChannels,
-    refetchSyncedChannels: refetch,
+    unsyncedChannels: yppSyncedData?.unsyncedChannels,
+    syncedChannels: yppSyncedData?.syncedChannels,
+    currentChannel: yppSyncedData?.currentChannel,
+    refetchYppSyncedChannels: refetch,
     isLoading: isLoading || membershipsLoading || isAuthLoading,
-    currentChannel: syncedChannels?.find(
-      (syncedChannels) => syncedChannels.joystreamChannelId.toString() === channelId
-    ),
   }
 }
 type RecentChannelsResponse = YppSyncedChannel[]
