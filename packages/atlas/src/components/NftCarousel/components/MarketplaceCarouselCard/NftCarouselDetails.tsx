@@ -81,26 +81,30 @@ export const NftCarouselDetails = ({
     endsAt: auctionPlannedEndDate,
   }
 
+  if (isLoading) {
+    return (
+      <VideoContainer>
+        <SkeletonLoader height="100%" width="100%" />
+      </VideoContainer>
+    )
+  }
+
   return (
     <Container isActive={active}>
       <VideoContainer>
-        {isLoading ? (
-          <SkeletonLoader height="100%" width="100%" />
-        ) : (
-          <BackgroundVideoPlayer
-            autoPlay={active}
-            playing={active}
-            muted={true}
-            onPause={(e) => (e.currentTarget.currentTime = 0)}
-            preload="metadata"
-            src={mediaUrl ?? undefined}
-            poster={thumbnailUrl ?? undefined}
-            handleActions={active}
-          />
-        )}
+        <BackgroundVideoPlayer
+          autoPlay={active}
+          playing={active}
+          muted={true}
+          onPause={(e) => (e.currentTarget.currentTime = 0)}
+          preload="auto"
+          src={mediaUrl ?? undefined}
+          poster={thumbnailUrl ?? undefined}
+          handleActions={active}
+        />
       </VideoContainer>
-      {!isLoading && active && (
-        <CSSTransition in={active} timeout={10000} classNames={transitions.names.fade} unmountOnExit>
+      {active && (
+        <CSSTransition in={active} timeout={100} classNames={transitions.names.fade} unmountOnExit>
           <InformationContainer>
             <DetailsContainer>
               <AvatarGroup

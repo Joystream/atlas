@@ -17,12 +17,9 @@ type MarketplaceCarouselCardProps = {
 } & CardTypes
 
 export const MarketplaceCarouselCard = (props: MarketplaceCarouselCardProps) => {
-  const informations = () => {
-    if (props.type === 'nft') {
-      return <NftCarouselDetails {...props} />
-    }
-
-    return null
+  if (props.type === 'nft') {
+    return <NftCarouselDetails {...props} />
   }
-  return informations()
+
+  return null
 }

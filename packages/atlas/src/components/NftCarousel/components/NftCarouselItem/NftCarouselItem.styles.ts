@@ -5,7 +5,6 @@ import { cVar, media, sizes, zIndex } from '@/styles'
 
 export const ItemWrapper = styled.div`
   position: relative;
-  width: fit-content;
 `
 
 const ChevronContainerStyles = css`

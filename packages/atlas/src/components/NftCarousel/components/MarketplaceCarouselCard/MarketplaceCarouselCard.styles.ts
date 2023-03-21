@@ -7,7 +7,6 @@ export const InformationContainer = styled.div`
   width: calc(100% + 1px);
   display: flex;
   align-items: end;
-  height: calc(50% - 32px);
   transition: all ${cVar('animationTransitionMedium')};
   margin-top: ${sizes(4)};
   margin-bottom: ${sizes(8)};
@@ -27,11 +26,6 @@ export const Container = styled.div<{ isActive: boolean }>`
   position: relative;
   width: 100%;
   justify-content: end;
-
-  img,
-  video {
-    z-index: -1;
-  }
 
   ::after {
     ${media.sm} {
