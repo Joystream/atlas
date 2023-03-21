@@ -17,7 +17,7 @@ export const InformationContainer = styled.div`
     position: absolute;
     margin-top: 0;
     opacity: 0.25;
-    padding: 0 ${sizes(8)};
+    padding: 0 100px 0 ${sizes(8)};
   }
 `
 

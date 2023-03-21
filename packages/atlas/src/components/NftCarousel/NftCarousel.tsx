@@ -10,12 +10,12 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 type NftCarouselType = {
   type: 'nft'
-  nfts: GetFeaturedNftsQuery['ownedNfts']
+  nfts?: GetFeaturedNftsQuery['ownedNfts']
 }
 
 type MarketplaceCarouselTypes = NftCarouselType
 
-type MarketplaceCarousel = MarketplaceCarouselTypes & {
+export type MarketplaceCarousel = MarketplaceCarouselTypes & {
   carouselProps?: Omit<CarouselProps, 'children'>
 }
 
