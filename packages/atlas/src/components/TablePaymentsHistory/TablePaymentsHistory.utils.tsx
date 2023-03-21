@@ -68,7 +68,7 @@ export const paymentTypeMappings: Record<
   },
   'claimed-reward': {
     title: 'Council reward',
-    icon: <SvgActionRevenueShare />,
+    icon: <SvgActionCouncil />,
   },
   'withdrawal': {
     title: 'Withdrawal',
