@@ -12,6 +12,7 @@ type BackgroundVideoPlayerProps = {
   className?: string
   playing?: boolean
   handleActions?: boolean
+  videoPlaytime?: number
 } & VideoHTMLAttributes<HTMLVideoElement>
 
 export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
@@ -23,6 +24,7 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
   onEnded,
   src,
   handleActions,
+  videoPlaytime,
   ...props
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -96,7 +98,7 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
           />
         </ButtonBox>
       )}
-      {playing && <VideoProgress video={videoRef.current} isPlaying={isPlaying} tick={10} />}
+      {playing && <VideoProgress video={videoRef.current} isPlaying={isPlaying} tick={10} limit={videoPlaytime} />}
       <StyledVideo
         src={src}
         autoPlay={autoPlay}

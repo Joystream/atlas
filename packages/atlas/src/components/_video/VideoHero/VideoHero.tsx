@@ -128,6 +128,7 @@ export const VideoHero: FC<VideoHeroProps> = ({
             poster={videoHeroData.heroPosterUrl ?? undefined}
             onEnded={handleEnded}
             src={videoHeroData?.heroVideoCutUrl}
+            videoPlaytime={30}
           />
         )}
         <GradientOverlay withSolidOverlay />

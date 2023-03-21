@@ -7,22 +7,30 @@ export type VideoProgressProps = {
   video: HTMLVideoElement | null
   tick?: number
   isPlaying?: boolean
+  // limit in seconds for video play time
+  limit?: number
 }
 
-export const VideoProgress = ({ tick, video, isPlaying }: VideoProgressProps) => {
+export const VideoProgress = ({ tick, video, isPlaying, limit }: VideoProgressProps) => {
   const [progress, setProgress] = useState(0)
-
   useEffect(() => {
     if ((isPlaying || typeof isPlaying === 'undefined') && video) {
       const id = setInterval(() => {
-        setProgress(video.currentTime / video.duration)
+        const proccessedLimit = limit ? (limit < video.duration ? limit : video.duration) : video.duration
+        if (limit && video.currentTime > proccessedLimit) {
+          setProgress(1)
+          video.currentTime = video.duration
+          clearInterval(id)
+          return
+        }
+        setProgress(video.currentTime / proccessedLimit)
       }, tick ?? 1000)
 
       return () => {
         clearInterval(id)
       }
     }
-  }, [isPlaying, tick, video])
+  }, [isPlaying, limit, progress, tick, video, video?.duration])
 
   return (
     <VideoProgressWrapper>
