@@ -12,9 +12,11 @@ import { FormField } from '@/components/_inputs/FormField'
 import { TokenInput } from '@/components/_inputs/TokenInput'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
+import { ESTIMATED_BLOCK_TIME_MS } from '@/hooks/useBlockTimeEstimation'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useFee, useJoystream, useTokenPrice } from '@/providers/joystream/joystream.hooks'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
+import { wait } from '@/utils/misc'
 import { formatNumber } from '@/utils/number'
 import { useChannelPaymentsHistory } from '@/views/studio/MyPaymentsView/PaymentsTransactions/PaymentTransactions.hooks'
 
@@ -86,7 +88,9 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
             proxyCallback(updateStatus)
           ),
         onTxSync: async () => {
-          fetchPaymentsData()
+          // wait at least for one block before refetching
+          await wait(ESTIMATED_BLOCK_TIME_MS)
+          await fetchPaymentsData()
           onExitClick()
         },
       })

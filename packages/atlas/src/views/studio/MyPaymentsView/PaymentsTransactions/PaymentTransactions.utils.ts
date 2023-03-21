@@ -65,7 +65,7 @@ const getSender = (eventData: EventData) => {
     case 'EnglishAuctionSettledEventData':
       return eventData.winningBid.bidder.controllerAccount
     case 'ChannelRewardClaimedEventData':
-      return ''
+      return 'council'
     case 'ChannelFundsWithdrawnEventData':
       return eventData.actor.__typename === 'ContentActorMember' ? eventData.actor.member.controllerAccount : 'council'
     case 'ChannelPaymentMadeEventData':
@@ -111,7 +111,7 @@ export const mapEventToPaymentHistory =
       block: inBlock + 1,
       amount: getAmount(eventData),
       date: new Date(timestamp),
-      description: getDescription(eventData) || '',
+      description: getDescription(eventData) || '-',
       sender: getSender(eventData),
     }
   }
