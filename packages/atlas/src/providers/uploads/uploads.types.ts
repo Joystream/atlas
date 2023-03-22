@@ -12,6 +12,7 @@ export type AssetUpload = {
     type: AssetParent
     id: ChannelId | VideoId
     title?: string | null
+    ytVideoId?: string | null
   }
   owner: ChannelId
   type: AssetType

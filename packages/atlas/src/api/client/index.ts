@@ -7,7 +7,7 @@ import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config
 
 import cache from './cache'
 
-const BATCHED_QUERIES = ['GetBasicVideos', 'GetDistributionBucketsWithBags', 'GetStorageBucketsWithBags']
+const BATCHED_QUERIES = ['GetDistributionBucketsWithBags', 'GetStorageBucketsWithBags']
 
 const delayLink = new ApolloLink((operation, forward) => {
   const ctx = operation.getContext()

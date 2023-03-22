@@ -29,7 +29,9 @@ export const AnalyticsManager: FC = () => {
 
     ls.init(atlasConfig.analytics.livesession.id, {
       keystrokes: true,
-      rootHostname: atlasConfig.analytics.livesession.rootHostname,
+      ...(atlasConfig.analytics.livesession.rootHostname
+        ? { rootHostname: atlasConfig.analytics.livesession.rootHostname }
+        : {}),
     })
     ls.newPageView()
   }, [])

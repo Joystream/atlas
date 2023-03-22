@@ -86,6 +86,12 @@ const globalStyles = css`
       transition-timing-function: cubic-bezier(0.09, 0.43, 0.3, 0.99);
     }
   }
+
+  [data-popper-escaped='true'],
+  [data-popper-reference-hidden='true'] {
+    visibility: hidden;
+    pointer-events: none;
+  }
 `
 
 type GlobalStyleProps = {

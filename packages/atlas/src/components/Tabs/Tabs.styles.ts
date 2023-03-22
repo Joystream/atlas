@@ -1,8 +1,8 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { smallBadgeStyles } from '@/components/Badge'
 import { cVar, sizes, zIndex } from '@/styles'
+import { MaskProps, getMaskImage } from '@/utils/styles'
 
 import { Pill } from '../Pill'
 import { Button } from '../_buttons/Button'
@@ -12,32 +12,7 @@ export const TabsWrapper = styled.div`
   width: 100%;
 `
 
-type TabsGroupProps = {
-  'data-underline': boolean
-  shadowsVisible: {
-    left: boolean
-    right: boolean
-  }
-}
-
-const getMaskImage = ({ shadowsVisible }: TabsGroupProps) => {
-  if (shadowsVisible.left && shadowsVisible.right) {
-    return css`
-      mask-image: linear-gradient(to left, transparent 5%, black 25%, black 75%, transparent 95%);
-    `
-  }
-  if (shadowsVisible.left) {
-    return css`
-      mask-image: linear-gradient(90deg, rgb(0 0 0 / 0) 5%, rgb(0 0 0 / 1) 25%);
-    `
-  }
-  if (shadowsVisible.right) {
-    return css`
-      mask-image: linear-gradient(270deg, rgb(0 0 0 / 0) 5%, rgb(0 0 0 / 1) 25%);
-    `
-  }
-}
-export const TabsGroup = styled.div<TabsGroupProps>`
+export const TabsGroup = styled.div<MaskProps>`
   display: flex;
   position: relative;
   scroll-behavior: smooth;

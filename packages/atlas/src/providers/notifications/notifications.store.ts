@@ -1,4 +1,4 @@
-import { createStore } from '@/store'
+import { createStore } from '@/utils/store'
 
 export type NotificationsStoreState = {
   // block number of lastly seen (not read) notification

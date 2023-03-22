@@ -23,7 +23,7 @@ export type FormFieldProps = PropsWithChildren<{
   optional?: boolean
   error?: string
   disableErrorAnimation?: boolean
-  description?: string | string[]
+  description?: string | string[] | ReactNode
   className?: string
   tooltip?: TooltipProps
   switchProps?: Omit<SwitchProps, 'label'>

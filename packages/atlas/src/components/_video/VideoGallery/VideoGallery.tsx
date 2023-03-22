@@ -5,6 +5,7 @@ import { FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.g
 import { Gallery } from '@/components/Gallery'
 import { RankingNumberTile } from '@/components/RankingNumberTile'
 import { breakpoints } from '@/styles/breakpoints'
+import { createPlaceholderData } from '@/utils/data'
 
 import { VideoTileViewer } from '../VideoTileViewer'
 
@@ -96,10 +97,10 @@ export const VideoGallery: FC<VideoGalleryProps> = ({
     return null
   }
 
-  const placeholderItems = Array.from({ length: loading || !videos?.length ? PLACEHOLDERS_COUNT : 0 }, () => ({
+  const placeholderItems = createPlaceholderData(loading || !videos?.length ? PLACEHOLDERS_COUNT : 0, {
     id: undefined,
     progress: undefined,
-  }))
+  })
 
   return (
     <Gallery title={title} responsive={responsive} dotsVisible seeAllUrl={seeAllUrl} className={className}>

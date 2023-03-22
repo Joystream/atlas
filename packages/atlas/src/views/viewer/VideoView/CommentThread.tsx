@@ -6,6 +6,7 @@ import { SvgActionChevronB } from '@/assets/icons'
 import { TextButton } from '@/components/_buttons/Button'
 import { Comment, CommentProps } from '@/components/_comments/Comment'
 import { sizes } from '@/styles'
+import { createPlaceholderData } from '@/utils/data'
 
 type CommentThreadProps = {
   highlightedCommentId: string | null
@@ -60,11 +61,7 @@ const _CommentThread: FC<CommentThreadProps> = ({
     return repliesCount
   }
 
-  const placeholderItems = loading
-    ? Array.from({ length: getPlaceholderCount() }, () => ({
-        id: undefined,
-      }))
-    : []
+  const placeholderItems = loading ? createPlaceholderData(getPlaceholderCount()) : []
 
   const handleLoadMore = () => {
     fetchMore({

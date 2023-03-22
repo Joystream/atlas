@@ -27,7 +27,11 @@ import {
 type ParseExtrinsicInputFn<TMetadata, TAssets> = (
   api: PolkadotApi,
   inputMetadata: TMetadata,
-  inputAssets: TAssets
+  inputAssets: TAssets,
+  rawMetadataProcessor?: (
+    rawMeta: Option<Bytes>,
+    assets: Option<PalletContentStorageAssetsRecord>
+  ) => Promise<Option<Bytes>>
 ) => Promise<[Option<Bytes>, TAssets extends undefined ? undefined : Option<PalletContentStorageAssetsRecord>]>
 
 const VIDEO_ASSETS_ORDER: (keyof VideoInputAssets)[] = ['media', 'thumbnailPhoto', 'subtitles']
@@ -75,7 +79,8 @@ const prepareVideoAssets = (inputAssets: VideoInputAssets): [DataObjectMetadata[
 export const parseVideoExtrinsicInput: ParseExtrinsicInputFn<VideoInputMetadata, VideoInputAssets> = async (
   api,
   inputMetadata,
-  inputAssets
+  inputAssets,
+  rawMetadataProcessor
 ) => {
   const properties: IVideoMetadata = {}
 
@@ -157,8 +162,9 @@ export const parseVideoExtrinsicInput: ParseExtrinsicInputFn<VideoInputMetadata,
     properties.publishedBeforeJoystream = videoPublishedBeforeProperties
   }
 
-  const metadata = wrapMetadata(ContentMetadata.encode({ videoMetadata: properties }).finish())
   const storageAssets = await prepareAssetsForExtrinsic(api, videoDataObjectsMetadata)
+  const rawMetadata = wrapMetadata(ContentMetadata.encode({ videoMetadata: properties }).finish())
+  const metadata = rawMetadataProcessor ? await rawMetadataProcessor(rawMetadata, storageAssets) : rawMetadata
 
   return [metadata, storageAssets]
 }
@@ -166,7 +172,8 @@ export const parseVideoExtrinsicInput: ParseExtrinsicInputFn<VideoInputMetadata,
 export const parseChannelExtrinsicInput: ParseExtrinsicInputFn<ChannelInputMetadata, ChannelInputAssets> = async (
   api,
   inputMetadata,
-  inputAssets
+  inputAssets,
+  rawMetadataProcessor
 ) => {
   const properties: IChannelMetadata = {}
 
@@ -195,8 +202,9 @@ export const parseChannelExtrinsicInput: ParseExtrinsicInputFn<ChannelInputMetad
     properties.language = inputMetadata.language
   }
 
-  const metadata = wrapMetadata(ChannelMetadata.encode(properties).finish())
   const storageAssets = await prepareAssetsForExtrinsic(api, channelDataObjectsMetadata)
+  const rawMetadata = wrapMetadata(ChannelMetadata.encode(properties).finish())
+  const metadata = rawMetadataProcessor ? await rawMetadataProcessor(rawMetadata, storageAssets) : rawMetadata
 
   return [metadata, storageAssets]
 }

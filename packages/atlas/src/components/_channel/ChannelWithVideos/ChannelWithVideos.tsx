@@ -11,6 +11,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { useAsset } from '@/providers/assets/assets.hooks'
+import { createPlaceholderData } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
 
 import { ChannelCardAnchor, ChannelFollows, FollowButton, InfoWrapper, StyledAvatar } from './ChannelWithVideos.styles'
@@ -46,7 +47,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = memo(({ channelId }
   const targetItemsCount = videosPerRow * videoRows
   const displayedVideos = (videos || []).slice(0, targetItemsCount)
   const placeholderItems = useMemo(
-    () => (videosLoading ? Array.from({ length: targetItemsCount }, () => ({ id: undefined })) : []),
+    () => (videosLoading ? createPlaceholderData(targetItemsCount) : []),
     [targetItemsCount, videosLoading]
   )
 

@@ -4,19 +4,21 @@ import { BrowserRouter } from 'react-router-dom'
 
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 
-import { NftTile, NftTileProps } from '.'
+import { NftTile, NftTileProps } from './NftTile'
 
 export default {
-  title: 'NFT/Tile',
+  title: 'NFT/NftTile',
   component: NftTile,
   argTypes: {
     creator: { table: { disable: true } },
     supporters: { table: { disable: true } },
     owner: { table: { disable: true } },
+    startsAtDate: { control: { type: 'date' } },
+    auctionPlannedEndDate: { control: { type: 'date' } },
   },
   args: {
-    role: 'owner',
     title: 'Did An Alternate Reality Game Gone Wrong Predict QAnon?',
+    status: 'idle',
     startingPrice: new BN(100000000000),
     buyNowPrice: new BN(0),
     topBidAmount: new BN(123000000000),
@@ -31,6 +33,7 @@ export default {
     canCancelSale: false,
     canBuyNow: false,
     canMakeBid: false,
+    englishTimerState: null,
   },
   decorators: [
     (Story) => {

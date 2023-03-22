@@ -1,6 +1,6 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useState } from 'react'
 
-import { useNftsConnection } from '@/api/hooks/nfts'
+import { useNfts } from '@/api/hooks/nfts'
 import { OwnedNftOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionFilters } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
@@ -14,6 +14,7 @@ import { VideoContentTemplate } from '@/components/_templates/VideoContentTempla
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
+import { createPlaceholderData } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
 import { StyledPagination } from '@/views/studio/MyVideosView/MyVideos.styles'
 
@@ -24,11 +25,12 @@ const SORT_OPTIONS = [
   { name: 'oldest', value: OwnedNftOrderByInput.CreatedAtAsc },
 ]
 
+const VIEWER_TIMESTAMP = new Date()
+
 export const NftsView: FC = () => {
   const headTags = useHeadTags('Video NFTs')
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
-
   const filtersBarLogic = useFiltersBar()
   const {
     filters: { setIsFiltersOpen, isFiltersOpen },
@@ -38,12 +40,17 @@ export const NftsView: FC = () => {
   } = filtersBarLogic
 
   const [sortBy, setSortBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
+  const [currentPage, setCurrentPage] = useState(0)
+  const [tilesPerRow, setTilesPerRow] = useState(4)
+  const nftRows = useVideoGridRows('main')
+  const tilesPerPage = nftRows * tilesPerRow
 
-  const { nfts, loading, totalCount, fetchMore, pageInfo, variables } = useNftsConnection(
-    {
+  const { nfts, loading, totalCount, refetch } = useNfts({
+    variables: {
       where: {
         ...ownedNftWhereInput,
         createdAt_gte: videoWhereInput.createdAt_gte,
+        createdAt_lte: VIEWER_TIMESTAMP,
         video:
           videoWhereInput.hasMarketing_eq != null || videoWhereInput.isExplicit_eq != null
             ? {
@@ -53,45 +60,14 @@ export const NftsView: FC = () => {
             : undefined,
       },
       orderBy: sortBy,
-      first: 10,
+      limit: tilesPerPage,
+      offset: currentPage * tilesPerPage,
     },
-    {
-      notifyOnNetworkStatusChange: true,
-      onError: (error) => SentryLogger.error('Failed to fetch NFTs', 'NftsView', error),
-    }
-  )
+    notifyOnNetworkStatusChange: true,
+    onError: (error) => SentryLogger.error('Failed to fetch NFTs', 'NftsView', error),
+  })
 
-  const [currentPage, setCurrentPage] = useState(0)
-  const [tilesPerRow, setTilesPerRow] = useState(4)
-  const nftRows = useVideoGridRows('main')
-  const tilesPerPage = nftRows * tilesPerRow
   const handleResizeGrid = (sizes: number[]) => setTilesPerRow(sizes.length)
-
-  const displayedNfts = nfts?.slice(currentPage * tilesPerPage, currentPage * tilesPerPage + tilesPerPage)
-
-  const placeholderItems = Array.from(
-    { length: loading ? tilesPerPage - (displayedNfts ? displayedNfts.length : 0) : 0 },
-    () => ({
-      id: undefined,
-    })
-  )
-
-  const nftsWithPlaceholders = [...(displayedNfts || []), ...placeholderItems]
-
-  useEffect(() => {
-    if (!fetchMore || !nfts?.length || !totalCount) {
-      return
-    }
-    if (totalCount <= nfts.length) {
-      return
-    }
-
-    if (currentPage * tilesPerPage + tilesPerPage > nfts.length) {
-      fetchMore({
-        variables: { ...variables, after: pageInfo?.endCursor },
-      })
-    }
-  }, [currentPage, nfts, fetchMore, pageInfo, totalCount, variables, tilesPerPage])
 
   const handleSortingChange = (value?: OwnedNftOrderByInput | null) => {
     if (value) {
@@ -104,6 +80,7 @@ export const NftsView: FC = () => {
   }
 
   const handleChangePage = (page: number) => {
+    refetch({ offset: page * tilesPerPage })
     setCurrentPage(page)
   }
 
@@ -134,10 +111,14 @@ export const NftsView: FC = () => {
           </div>
           {smMatch && sortingNode}
         </HeaderContainer>
-        <FiltersBar {...filtersBarLogic} activeFilters={['nftStatus', 'date-minted', 'other']} />
+        <FiltersBar
+          {...filtersBarLogic}
+          onAnyFilterSet={() => setCurrentPage(0)}
+          activeFilters={['nftStatus', 'date-minted', 'other']}
+        />
       </HeaderWrapper>
       <StyledGrid maxColumns={null} onResize={handleResizeGrid} isFiltersOpen={isFiltersOpen}>
-        {nftsWithPlaceholders.map((nft, idx) => (
+        {(loading ? createPlaceholderData(tilesPerPage) : nfts ?? []).map((nft, idx) => (
           <NftTileViewer key={`${idx}-${nft.id}`} nftId={nft.id} />
         ))}
       </StyledGrid>

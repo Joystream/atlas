@@ -21,6 +21,7 @@ import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useFee } from '@/providers/joystream/joystream.hooks'
 import { useUser } from '@/providers/user/user.hooks'
+import { createPlaceholderData } from '@/utils/data'
 
 import { CommentThread } from './CommentThread'
 import {
@@ -160,7 +161,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
     setMoreComments()
   }
 
-  const placeholderItems = commentsLoading ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
+  const placeholderItems = commentsLoading ? createPlaceholderData(4) : []
 
   useEffect(() => {
     if (!commentIdQueryParam || !commentSectionWrapperRef.current) {
