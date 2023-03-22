@@ -103,19 +103,19 @@ features:
           The tokens pool allocated for this program is limited, so the program has limited duration.
 
           ## Tiers Multiplier
-
           Based on the YouTube channel followers count, a popularity Tier is assigned to each participant. Popularity tier results in multiplication effect on all rewards of the program.
-
-            - Tier 1 - x1 rewards - 50 to 5,000 subscribers
-            - Tier 2 - x2.5 rewards - 5,000 to 50,000 subscribers
-            - Tier 3 - x5 rewards - 50,000+ subscribers
-
+        
+          Tier 1 - x1 rewards
+          Tier 2 - x2.5 rewards
+          Tier 3 - x5 rewards
+        
+          Your popularity Tier will be displayed in the YPP Dashboard after you sign up. Information on all tiers will be periodically updated and posted to the programme details, which are hyperlinked from the dedicated widget in  the YPP Dashboard.
+        
           ## Example Rewards Calculation
-
-          For a channel with 7000 subscribers, which signed up and remained in the program with auto-sync service enabled for 1 month. During this month that channel uploaded 5 new videos to their YouTube channel, 2 videos directly to Joystream channel with manual upload, and referred 3 other YouTube channels that ended up signing up.
-
+          For a channel with falling under Tier 2 for subscribers, which signed up and remained in the programme with auto-sync service enabled for 1 month. During this month that channel uploaded 5 new videos to their Youtube channel, 2 videos directly to Joystream channel with manual upload, and referred 3 other YT channels that ended up signing up.
+        
           In the end of this month, the payout to this channel's account will be:
-            5000 * 2.5 + 5 * 300 * 2.5 + 1000 * 3 * 2.5 = **23,750** JOY
+          5000 * 2.5 + 5 * 300 * 2.5 + 1000 * 3 * 2.5= **23,750** JOY
 
           ## When you accept the Terms and Conditions you
 
@@ -135,13 +135,13 @@ features:
           The program is targeted at YouTube creators that already have a channel focussed on Crypto and Web3 content, with substantial published videos and subscribers. The program involves compensation in JOY tokens for YouTube creators who choose to opt in, meet the qualification criteria and perform actions that are linked to rewards.
 
           ## Who Qualifies
-
-          YouTube channel has to:
-            1. Be created not earlier than 90 days before the sign up.
-            2. Have at least 50 followers and the channel followers must be set to public view.
-            3. Have at least 10 videos, each created at least 30 days before the sign up.
-            4. Channel must be focussed on Web3/ Crypto content, matching one of the categories supported by Gleev App.
-
+          YouTube channel has to qualify the criteria shown in the sign up flow, and described in the programme page on [Notion](https://joystream.notion.site/YPP-programme-d492c2eb88ff4ace955b5f2902ec21fb#695ec23a12134be6886e4b11471105f3).
+  
+          Channel must be focussed on Web3/ Crypto content, matching one of the categories supported by Gleev App.
+          Be created not earlier than certain number of days before sign up
+          Have a certain minimum number of followers and the channel followers must be set to public view.
+          Meet minimum videos criteria, and each video must meet the requirement on latest date created, before the sign up.
+          
           Newly created Joystream channel has to have description, avatar and background image set up. The criteria for qualification can be reviewed at any time without prior notice.
 
           ## How to sign up
@@ -489,9 +489,9 @@ legal:
   termsOfService: |
     # Terms of Service
 
-    Last updated on the 4th of May 2021
+    Last updated on the 22nd of March 2023
 
-    This Terms of Service ("Agreement") is a binding obligation between you ("User") and Jsgenesis AS ("Company", "We", "Us", "Our") for use of our Joystream Player interface ("Atlas") hosted at play.joystream.org and all other products (collectively "Software") developed and published by Us.
+    This Terms of Service ("Agreement") is a binding obligation between you ("User") and Jsgenesis AS ("Company", "We", "Us", "Our") for use of our Joystream Player interface ("Gleev") hosted at gleev.xyz and all other products (collectively "Software") developed and published by Us.
 
     ## 1. Agreement to Terms
 
