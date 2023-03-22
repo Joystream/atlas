@@ -27,7 +27,7 @@ export type PersonalDataStoreState = {
   captionsLanguage: string | null
 }
 
-const WHITELIST = [
+const WHITELIST: (keyof PersonalDataStoreState)[] = [
   'watchedVideos',
   'followedChannels',
   'recentSearches',
@@ -41,7 +41,7 @@ const WHITELIST = [
   'autoPlayNext',
   'captionsEnabled',
   'captionsLanguage',
-] as (keyof PersonalDataStoreState)[]
+]
 
 export type PersonalDataStoreActions = {
   updateWatchedVideos: (__typename: WatchedVideoStatus, id: string, timestamp?: number) => void
@@ -178,9 +178,7 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
       key: 'personalData',
       whitelist: WHITELIST,
       version: 3,
-      migrate: async (
-        oldState: Pick<PersonalDataStoreState, keyof PersonalDataStoreState>
-      ): Promise<Pick<PersonalDataStoreState, keyof PersonalDataStoreState>> => {
+      migrate: async (oldState: PersonalDataStoreState): Promise<PersonalDataStoreState> => {
         const client = createApolloClient()
         try {
           const followedChannels = await Promise.all(
