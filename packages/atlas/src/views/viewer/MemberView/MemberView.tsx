@@ -108,6 +108,7 @@ export const MemberView: FC = () => {
   } = useMemberships(
     { where: { handle_eq: handle } },
     {
+      fetchPolicy: 'network-only',
       onError: (error) => SentryLogger.error('Failed to fetch memberships', 'ActiveUserProvider', error),
     }
   )
