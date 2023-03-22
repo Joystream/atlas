@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2023-03-22
+
+### Added
+
+- Introduced Apps as first-class citizens
+- Introduced YouTube Partner Program
+
+### Fixed
+
+- Fixed loading issue when viewing the last NFTs page
+- Fixed player controls size in fullscreen mode
+- Various markup fixes
+
 ## [1.3.1] - 2023-03-07
 
 ### Fixed
