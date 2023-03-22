@@ -9,6 +9,7 @@ import { ExtrinsicStatus } from '@/joystream-lib/types'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { useUserStore } from '@/providers/user/user.store'
 import { transitions } from '@/styles'
+import { createPlaceholderData } from '@/utils/data'
 
 import { getExtrinsicStatusDetails } from './TransactionModal.constants'
 import {
@@ -77,7 +78,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
       ExtrinsicStatus.Error,
     ].includes(status)
 
-  const transactionSteps = Array.from({ length: nonUploadTransaction ? 3 : 4 })
+  const transactionSteps = createPlaceholderData(nonUploadTransaction ? 3 : 4)
 
   useEffect(() => {
     return () => {

@@ -2,6 +2,7 @@ import { FC } from 'react'
 
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { VideoThumbnail, VideoThumbnailProps } from '@/components/_video/VideoThumbnail'
+import { arrayFrom } from '@/utils/data'
 
 import { Member, Members } from './Members'
 import {
@@ -28,7 +29,7 @@ export type NftCardProps = {
 }
 
 export const NftCard: FC<NftCardProps> = ({ title, creator, supporters, owner, thumbnail, fullWidth, loading }) => {
-  const reflectionCells = Array.from({ length: 100 })
+  const reflectionCells = arrayFrom(100)
   return (
     <Container fullWidth={fullWidth}>
       {reflectionCells.map((_, idx) => {

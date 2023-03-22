@@ -7,6 +7,7 @@ import { CommentFieldsFragment } from '@/api/queries/__generated__/fragments.gen
 import { absoluteRoutes } from '@/config/routes'
 import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { cVar, transitions } from '@/styles'
+import { createPlaceholderData } from '@/utils/data'
 
 import { CommentSnapshot } from '../CommentSnapshot'
 import { GAP_BETWEEN_COMMENT_SNAPSHOTS } from '../CommentSnapshot/CommentSnaphsot.styles'
@@ -19,7 +20,7 @@ export const CommentEditHistory: FC<CommentEditHistoryProps> = ({ originalCommen
   const { commentEdits, loading } = useCommentEdits(originalComment?.id)
   const { url: memberAvatarUrl, isLoadingAsset } = useMemberAvatar(originalComment?.author)
 
-  const placeholderItems = Array.from({ length: 3 }, () => ({ id: undefined }))
+  const placeholderItems = createPlaceholderData(3)
 
   return (
     <SwitchTransition>
