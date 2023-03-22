@@ -87,6 +87,7 @@ const SidenavBase: FC<SidenavProps> = ({
                 onClick={() => scrollAndToggle(false)}
                 badgeNumber={item.badgeNumber}
                 isSecondary={false}
+                matchPattern={item.matchPattern}
               >
                 {item.icon}
                 <span>{item.expandedName || item.name}</span>

@@ -55,3 +55,11 @@ WithoutIcon.args = {
 WithoutIcon.argTypes = {
   icon: { table: { disable: true } },
 }
+
+export const WithActionButton = Template.bind({})
+WithActionButton.args = {
+  actionButton: {
+    text: 'Action',
+    onClick: () => undefined,
+  },
+}

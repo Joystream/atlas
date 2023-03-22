@@ -12,6 +12,7 @@ import { ChannelWithVideos } from '@/components/_channel/ChannelWithVideos'
 import { Select } from '@/components/_inputs/Select'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
+import { createPlaceholderData } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
 
 import {
@@ -60,7 +61,7 @@ export const ExpandableChannelsList: FC<ExpandableChannelsListProps> = ({
 
   const totalCount = channels?.length || 0
 
-  const placeholderItems = Array.from({ length: INITIAL_ROWS }, () => ({ id: undefined }))
+  const placeholderItems = createPlaceholderData(INITIAL_ROWS)
   const shouldShowLoadMoreButton = !loading && totalCount >= displayedRowsCount
 
   const itemsToShow = [...(channels || []), ...(loading ? placeholderItems : [])].slice(0, displayedRowsCount)

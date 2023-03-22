@@ -21,6 +21,7 @@ export type SearchQuery = {
           __typename?: 'Channel'
           id: string
           title?: string | null
+          description?: string | null
           createdAt: Date
           follows: number
           rewardAccount: string
@@ -55,6 +56,7 @@ export type SearchQuery = {
             __typename?: 'Channel'
             id: string
             title?: string | null
+            description?: string | null
             createdAt: Date
             follows: number
             rewardAccount: string
@@ -144,7 +146,7 @@ export type SearchQuery = {
                     __typename: 'AuctionTypeEnglish'
                     duration: number
                     extensionPeriod: number
-                    minimalBidStep: number
+                    minimalBidStep: string
                     plannedEndAtBlock: number
                   }
                 | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -290,7 +292,7 @@ export type SearchQuery = {
               }>
             } | null
             transactionalStatus?:
-              | { __typename: 'TransactionalStatusBuyNow'; price: number }
+              | { __typename: 'TransactionalStatusBuyNow'; price: string }
               | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
               | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
               | null

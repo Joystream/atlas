@@ -13,6 +13,7 @@ export type BasicChannelFieldsFragment = {
   __typename?: 'Channel'
   id: string
   title?: string | null
+  description?: string | null
   createdAt: Date
   follows: number
   rewardAccount: string
@@ -154,12 +155,29 @@ export type FullMembershipFieldsFragment = {
   handle: string
   channels: Array<{
     __typename?: 'Channel'
+    description?: string | null
     id: string
     title?: string | null
     createdAt: Date
     follows: number
     rewardAccount: string
     channelStateBloatBond: string
+    coverPhoto?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      createdAt: Date
+      size: string
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoSubtitle' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+    } | null
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -289,6 +307,7 @@ export type BasicVideoFieldsFragment = {
     __typename?: 'Channel'
     id: string
     title?: string | null
+    description?: string | null
     createdAt: Date
     follows: number
     rewardAccount: string
@@ -378,7 +397,7 @@ export type BasicVideoFieldsFragment = {
             __typename: 'AuctionTypeEnglish'
             duration: number
             extensionPeriod: number
-            minimalBidStep: number
+            minimalBidStep: string
             plannedEndAtBlock: number
           }
         | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -524,7 +543,7 @@ export type BasicVideoFieldsFragment = {
       }>
     } | null
     transactionalStatus?:
-      | { __typename: 'TransactionalStatusBuyNow'; price: number }
+      | { __typename: 'TransactionalStatusBuyNow'; price: string }
       | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
       | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
       | null
@@ -535,6 +554,7 @@ export type FullVideoFieldsFragment = {
   __typename?: 'Video'
   id: string
   title?: string | null
+  ytVideoId?: string | null
   description?: string | null
   reactionsCount: number
   views: number
@@ -731,7 +751,7 @@ export type FullVideoFieldsFragment = {
             __typename: 'AuctionTypeEnglish'
             duration: number
             extensionPeriod: number
-            minimalBidStep: number
+            minimalBidStep: string
             plannedEndAtBlock: number
           }
         | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -877,7 +897,7 @@ export type FullVideoFieldsFragment = {
       }>
     } | null
     transactionalStatus?:
-      | { __typename: 'TransactionalStatusBuyNow'; price: number }
+      | { __typename: 'TransactionalStatusBuyNow'; price: string }
       | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
       | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
       | null
@@ -960,7 +980,7 @@ export type BasicNftFieldsFragment = {
           __typename: 'AuctionTypeEnglish'
           duration: number
           extensionPeriod: number
-          minimalBidStep: number
+          minimalBidStep: string
           plannedEndAtBlock: number
         }
       | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -1106,7 +1126,7 @@ export type BasicNftFieldsFragment = {
     }>
   } | null
   transactionalStatus?:
-    | { __typename: 'TransactionalStatusBuyNow'; price: number }
+    | { __typename: 'TransactionalStatusBuyNow'; price: string }
     | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
     | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
     | null
@@ -1124,6 +1144,7 @@ export type FullNftFieldsFragment = {
     __typename?: 'Channel'
     id: string
     title?: string | null
+    description?: string | null
     createdAt: Date
     follows: number
     rewardAccount: string
@@ -1158,6 +1179,7 @@ export type FullNftFieldsFragment = {
       __typename?: 'Channel'
       id: string
       title?: string | null
+      description?: string | null
       createdAt: Date
       follows: number
       rewardAccount: string
@@ -1247,7 +1269,7 @@ export type FullNftFieldsFragment = {
               __typename: 'AuctionTypeEnglish'
               duration: number
               extensionPeriod: number
-              minimalBidStep: number
+              minimalBidStep: string
               plannedEndAtBlock: number
             }
           | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -1393,7 +1415,7 @@ export type FullNftFieldsFragment = {
         }>
       } | null
       transactionalStatus?:
-        | { __typename: 'TransactionalStatusBuyNow'; price: number }
+        | { __typename: 'TransactionalStatusBuyNow'; price: string }
         | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
         | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
         | null
@@ -1443,7 +1465,7 @@ export type FullNftFieldsFragment = {
           __typename: 'AuctionTypeEnglish'
           duration: number
           extensionPeriod: number
-          minimalBidStep: number
+          minimalBidStep: string
           plannedEndAtBlock: number
         }
       | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
@@ -1589,7 +1611,7 @@ export type FullNftFieldsFragment = {
     }>
   } | null
   transactionalStatus?:
-    | { __typename: 'TransactionalStatusBuyNow'; price: number }
+    | { __typename: 'TransactionalStatusBuyNow'; price: string }
     | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
     | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
     | null
@@ -1975,6 +1997,7 @@ export const BasicChannelFieldsFragmentDoc = gql`
   fragment BasicChannelFields on Channel {
     id
     title
+    description
     createdAt
     follows
     rewardAccount
@@ -1992,10 +2015,15 @@ export const FullMembershipFieldsFragmentDoc = gql`
     createdAt
     channels {
       ...BasicChannelFields
+      description
+      coverPhoto {
+        ...StorageDataObjectFields
+      }
     }
   }
   ${BasicMembershipFieldsFragmentDoc}
   ${BasicChannelFieldsFragmentDoc}
+  ${StorageDataObjectFieldsFragmentDoc}
 `
 export const DistributionBucketOperatorFieldFragmentDoc = gql`
   fragment DistributionBucketOperatorField on DistributionBucketOperator {
@@ -2139,6 +2167,7 @@ export const FullVideoFieldsFragmentDoc = gql`
   fragment FullVideoFields on Video {
     id
     title
+    ytVideoId
     description
     reactionsCount
     reactions {

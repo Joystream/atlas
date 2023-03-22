@@ -9,3 +9,9 @@ query GetMemberships($where: MembershipWhereInput!) {
     ...FullMembershipFields
   }
 }
+
+query GetChannelCount($where: ChannelWhereInput) {
+  channelsConnection(where: $where) {
+    totalCount
+  }
+}

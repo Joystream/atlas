@@ -10,6 +10,7 @@ import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { displayCategoriesLookup } from '@/config/categories'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { createPlaceholderData } from '@/utils/data'
 
 import { MoreFrom, MoreVideosContainer, SeeMoreButton } from './VideoView.styles'
 
@@ -50,8 +51,7 @@ export const MoreVideos: FC<MoreVideosProps> = ({
     { skip: !where.category?.id_in && !where.channel?.id_eq }
   )
   const displayedItems = loading ? [] : videos.filter((video) => video.id !== videoId).slice(0, NUMBER_OF_VIDEOS)
-  const placeholderItems =
-    loading && !videos.length ? Array.from({ length: NUMBER_OF_VIDEOS }, () => ({ id: undefined })) : []
+  const placeholderItems = loading && !videos.length ? createPlaceholderData(NUMBER_OF_VIDEOS) : []
   const lgMatch = useMediaMatch('lg')
   const gridContent = (
     <>

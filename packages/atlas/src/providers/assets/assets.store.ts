@@ -1,5 +1,5 @@
 import { StorageDataObjectFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { createStore } from '@/store'
+import { createStore } from '@/utils/store'
 
 type ContentId = string
 export type ResolvedAsset = {
