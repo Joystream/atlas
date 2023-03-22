@@ -2,11 +2,11 @@ import { FC, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 
 import {
-  GetBasicChannelsDocument,
-  GetBasicChannelsQuery,
-  GetBasicChannelsQueryVariables,
+  GetFullChannelsDocument,
+  GetFullChannelsQuery,
+  GetFullChannelsQueryVariables,
 } from '@/api/queries/__generated__/channels.generated'
-import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { FullChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { Avatar, AvatarProps } from '@/components/Avatar'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
@@ -14,6 +14,7 @@ import { InputAutocomplete } from '@/components/_inputs/InputAutocomplete'
 import { atlasConfig } from '@/config'
 import { EMAIL_PATTERN } from '@/config/regex'
 import { useAsset } from '@/providers/assets/assets.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 
 import { FormFieldsWrapper } from './YppAuthorizationDetailsFormStep.styles'
 
@@ -24,7 +25,8 @@ export type DetailsFormData = {
 }
 
 export const YppAuthorizationDetailsFormStep: FC = () => {
-  const [foundChannel, setFoundChannel] = useState<BasicChannelFieldsFragment | null>()
+  const [foundChannel, setFoundChannel] = useState<FullChannelFieldsFragment | null>()
+  const { memberId } = useUser()
   const {
     register,
     control,
@@ -68,6 +70,9 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
             if (value && !foundChannel) {
               return 'No channel with this title has been found.'
             }
+            if (foundChannel?.ownerMember?.id === memberId) {
+              return 'Your own channel is not a valid referrer.'
+            }
             return true
           },
         }}
@@ -78,8 +83,9 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
             description={`Enter the title of the ${atlasConfig.general.appName} channel which recommended the program to you.`}
             error={errors.referrerChannelTitle?.message}
           >
-            <InputAutocomplete<GetBasicChannelsQuery, GetBasicChannelsQueryVariables, BasicChannelFieldsFragment>
-              documentQuery={GetBasicChannelsDocument}
+            <InputAutocomplete<GetFullChannelsQuery, GetFullChannelsQueryVariables, FullChannelFieldsFragment>
+              documentQuery={GetFullChannelsDocument}
+              error={!!errors.referrerChannelTitle?.message}
               queryVariablesFactory={(value) => ({ where: { title_startsWith: value } })}
               perfectMatcher={(res, val) => res.channels.find((channel) => channel.title === val)}
               renderItem={(result) =>
@@ -111,7 +117,7 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
 }
 
 type ResolvedAvatarProps = {
-  channel?: BasicChannelFieldsFragment
+  channel?: FullChannelFieldsFragment
 } & AvatarProps
 export const ResolvedAvatar: FC<ResolvedAvatarProps> = ({ channel }) => {
   const { url, isLoadingAsset } = useAsset(channel?.avatarPhoto)

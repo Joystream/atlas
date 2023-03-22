@@ -40,13 +40,14 @@ type YppHeroProps = {
   yppAtlasStatus: YppAtlasStatus
   hasAnotherUnsyncedChannel?: boolean
   selectedChannelTitle?: string | null
+  isRefetchingData: boolean
 }
 
 export const getButtonText = (variant: YppAtlasStatus) => {
   switch (variant) {
     case 'have-channel':
-    case 'connect-wallet':
       return 'Sign up now'
+    case 'connect-wallet':
     case 'no-channel':
       return 'Create channel & sign up'
     case 'ypp-signed':
@@ -60,6 +61,7 @@ export const YppHero: FC<YppHeroProps> = ({
   yppAtlasStatus,
   hasAnotherUnsyncedChannel,
   selectedChannelTitle,
+  isRefetchingData,
 }) => {
   const mdMatch = useMediaMatch('md')
   const smMatch = useMediaMatch('sm')
@@ -113,12 +115,13 @@ export const YppHero: FC<YppHeroProps> = ({
                   {yppAtlasStatus ? (
                     <Button
                       size="large"
+                      disabled={isRefetchingData}
                       variant={yppAtlasStatus === 'ypp-signed' ? 'secondary' : 'primary'}
                       icon={<SvgActionChevronR />}
                       iconPlacement="right"
                       onClick={onSignUpClick}
                     >
-                      {getButtonText(yppAtlasStatus)}
+                      {isRefetchingData ? 'Please wait...' : getButtonText(yppAtlasStatus)}
                     </Button>
                   ) : (
                     <SkeletonLoader width={190} height={48} />
