@@ -1,8 +1,7 @@
 import styled from '@emotion/styled'
 
-import { cVar, media, sizes } from '@/styles'
+import { media, sizes } from '@/styles'
 
-import { SvgActionCheck, SvgActionCopy } from '../../assets/icons'
 import { Text } from '../Text'
 
 export const MembershipHeader = styled.header`
@@ -46,28 +45,4 @@ export const StyledHandle = styled(Text)`
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-`
-
-export const StyledText = styled(Text)`
-  margin-top: ${sizes(2)};
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-`
-export const StyledSvgActionCopy = styled(SvgActionCopy)`
-  margin-left: ${sizes(2)};
-
-  path {
-    fill: ${cVar('colorCoreNeutral300')};
-    transition: ${cVar('animationTransitionFast')};
-  }
-
-  :hover {
-    path {
-      fill: ${cVar('colorCoreNeutral50')};
-    }
-  }
-`
-export const StyledSvgActionCheck = styled(SvgActionCheck)`
-  margin-left: ${sizes(2)};
 `

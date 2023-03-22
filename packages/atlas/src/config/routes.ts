@@ -26,14 +26,16 @@ export const relativeRoutes = {
     discover: () => 'discover',
     popular: () => 'popular',
     category: (id = ':id') => `category/${id}`,
-    search: (query?: { query?: string }) => withQueryParameters('search', query),
+    search: (query?: { [QUERY_PARAMS.SEARCH]?: string }) => withQueryParameters('search', query),
     channel: (id = ':id') => `channel/${id}`,
     channels: () => 'channels',
-    video: (id = ':id', query?: { commentId?: string }) => withQueryParameters(`video/${id}`, query),
+    video: (id = ':id', query?: { [QUERY_PARAMS.COMMENT_ID]?: string }) => withQueryParameters(`video/${id}`, query),
     editMembership: () => 'member/edit',
     member: (handle = ':handle') => `member/${handle}`,
     notifications: () => 'notifications',
     nfts: () => 'nfts',
+    ypp: (query?: { [QUERY_PARAMS.REFERRER_ID]?: string }) => withQueryParameters('ypp', query),
+    yppDashboard: () => 'ypp-dashboard',
   },
   legal: {
     index: () => '',
@@ -52,6 +54,8 @@ export const relativeRoutes = {
     signIn: () => 'signin',
     notifications: () => 'notifications',
     payments: () => 'payments',
+    ypp: () => 'ypp',
+    yppDashboard: () => 'ypp/dashboard',
   },
   playground: {
     index: () => '',
@@ -80,4 +84,5 @@ export const absoluteRoutes = Object.entries(BASE_PATHS).reduce((absoluteRoutesA
 export const QUERY_PARAMS = {
   SEARCH: 'query',
   COMMENT_ID: 'commentId',
-}
+  REFERRER_ID: 'referrerId',
+} as const

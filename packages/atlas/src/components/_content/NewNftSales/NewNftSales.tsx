@@ -12,6 +12,7 @@ import { NftTileViewer } from '@/components/_nft/NftTileViewer'
 import { absoluteRoutes } from '@/config/routes'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { cVar, sizes } from '@/styles'
+import { createPlaceholderData } from '@/utils/data'
 
 export const NewNftSales: FC = () => {
   const gridRows = useVideoGridRows('compact')
@@ -40,9 +41,7 @@ export const NewNftSales: FC = () => {
   })
   const handleResizeGrid = (sizes: number[]) => setTilesPerRow(sizes.length)
 
-  const placeholderItems = Array.from({ length: loading ? tilesPerRow - (nfts ? nfts.length : 0) : 0 }, () => ({
-    id: undefined,
-  }))
+  const placeholderItems = createPlaceholderData(loading ? tilesPerRow - (nfts ? nfts.length : 0) : 0)
 
   const nftsWithPlaceholders = [...(nfts || []), ...placeholderItems].slice(0, gridRows * tilesPerRow)
 

@@ -164,7 +164,7 @@ export const ControlsOverlay = styled.div<CustomControlsProps>`
   @media (hover: hover) {
     height: 8em;
     background: linear-gradient(180deg, transparent 0%, ${cVar('colorCoreNeutral900')} 100%);
-    font-size: ${({ elevated: isFullScreen }) => (isFullScreen ? '32px' : '16px')};
+    font-size: ${({ elevated: isFullScreen }) => (isFullScreen ? '18px' : '16px')};
   }
 `
 

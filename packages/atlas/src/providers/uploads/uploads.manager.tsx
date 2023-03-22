@@ -178,6 +178,7 @@ export const UploadsManager: FC = () => {
             parentObject: {
               type: 'video',
               id: video.id,
+              ytVideoId: video.ytVideoId,
             },
             owner: channelId,
             type: 'video',
@@ -192,6 +193,7 @@ export const UploadsManager: FC = () => {
             parentObject: {
               type: 'video',
               id: video.id,
+              ytVideoId: video.ytVideoId,
             },
             owner: channelId,
             type: 'thumbnail',

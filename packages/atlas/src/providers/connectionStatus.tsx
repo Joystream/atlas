@@ -1,8 +1,8 @@
 import { FC, useCallback, useEffect, useRef } from 'react'
 
 import { useSnackbar } from '@/providers/snackbars'
-import { createStore } from '@/store'
 import { withTimeout } from '@/utils/misc'
+import { createStore } from '@/utils/store'
 
 export type ConnectionStatus = 'connected' | 'disconnected' | 'connecting'
 
