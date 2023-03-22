@@ -2,6 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { MembershipInfo } from '@/components/MembershipInfo'
+import { Pagination } from '@/components/Pagination'
 import { Tabs } from '@/components/Tabs'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
@@ -77,4 +78,8 @@ export const TabsWrapper = styled.div<{ isFiltersOpen: boolean }>`
     margin-bottom: ${({ isFiltersOpen }) => sizes(isFiltersOpen ? 30 : 8)};
     transition: margin-bottom ${transitions.timings.routing} ${transitions.easing};
   }
+`
+
+export const StyledPagination = styled(Pagination)`
+  padding-top: ${sizes(12)};
 `

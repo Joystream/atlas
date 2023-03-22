@@ -1,6 +1,6 @@
 import { addDays } from 'date-fns'
 
-import { createStore } from '@/store'
+import { createStore } from '@/utils/store'
 
 export type UserCoordinates = { latitude: number; longitude: number }
 type UserLocationStoreState = {

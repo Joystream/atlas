@@ -186,3 +186,19 @@ export const useVideoCount = (
     ...rest,
   }
 }
+
+export const useBasicVideoPagination = (
+  baseOptions?: QueryHookOptions<GetBasicVideosQuery, GetBasicVideosQueryVariables>
+) => {
+  const { videoCount } = useVideoCount({ where: baseOptions?.variables?.where })
+  const { data, ...rest } = useGetBasicVideosQuery({
+    notifyOnNetworkStatusChange: true,
+    ...baseOptions,
+  })
+
+  return {
+    ...rest,
+    totalCount: videoCount,
+    videos: data?.videos,
+  }
+}

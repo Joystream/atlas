@@ -48,6 +48,7 @@ const _DialogPopover: ForwardRefRenderFunction<PopoverImperativeHandle, DialogPo
         primaryButton={primaryButton}
         secondaryButton={secondaryButton}
         size="compact"
+        stretchButtons
       >
         {children}
       </StyledDialog>

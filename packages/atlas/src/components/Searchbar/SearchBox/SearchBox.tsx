@@ -5,6 +5,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { SPECIAL_CHARACTERS } from '@/config/regex'
 import { useSearchResults } from '@/hooks/useSearchResults'
 import { usePersonalDataStore } from '@/providers/personalData'
+import { createPlaceholderData } from '@/utils/data'
 
 import { RecentSearchItem } from './RecentSearchItem'
 import { Result } from './Result'
@@ -87,7 +88,7 @@ export const SearchBox: FC<SearchBoxProps> = memo(
     const placeholders = useMemo(() => {
       const min = 20
       const max = 80
-      const placeholderItems = Array.from({ length: 6 }, () => ({ id: undefined }))
+      const placeholderItems = createPlaceholderData(6)
       return placeholderItems.map((_, idx) => {
         const generatedWidth = Math.floor(Math.random() * (max - min)) + min
         return (

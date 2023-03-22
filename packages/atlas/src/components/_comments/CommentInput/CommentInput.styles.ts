@@ -37,7 +37,7 @@ export const StyledTextArea = styled(TextareaAutosize)<{ 'data-processing'?: boo
   height: auto;
   border: none;
   resize: none;
-  caret-color: ${cVar('colorBackgroundPrimary')};
+  caret-color: ${cVar('colorTextStrong')};
   color: ${cVar('colorTextStrong')};
   font: ${cVar('typographyDesktopT200')};
   letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};

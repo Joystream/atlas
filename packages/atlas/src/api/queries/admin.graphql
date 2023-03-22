@@ -9,3 +9,21 @@ mutation SetKillSwitch($isKilled: Boolean!) {
     isKilled
   }
 }
+
+mutation GetAppActionSignature(
+  $creatorId: String!
+  $assets: String!
+  $nonce: Float!
+  $rawAction: String!
+  $actionType: AppActionActionType!
+) {
+  signAppActionCommitment(
+    creatorId: $creatorId
+    assets: $assets
+    nonce: $nonce
+    rawAction: $rawAction
+    actionType: $actionType
+  ) {
+    signature
+  }
+}

@@ -2,6 +2,7 @@ import { FC, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
 
 import { SvgActionClose } from '@/assets/icons'
 import { Text } from '@/components/Text'
+import { ButtonProps } from '@/components/_buttons/Button'
 
 import {
   SnackbarActionButton,
@@ -18,6 +19,7 @@ export type SnackbarProps = {
   description?: string
   actionText?: string
   actionIcon?: ReactNode
+  actionIconPlacement?: ButtonProps['iconPlacement']
   onActionClick?: (event: MouseEvent<HTMLButtonElement>) => void
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void
   onMouseEnter?: (e: MouseEvent) => void
@@ -30,6 +32,7 @@ export const Snackbar: FC<SnackbarProps> = ({
   description,
   actionText,
   actionIcon,
+  actionIconPlacement,
   onActionClick,
   onClick,
   onMouseEnter,
@@ -58,7 +61,7 @@ export const Snackbar: FC<SnackbarProps> = ({
             </Text>
           )}
           {actionText && (
-            <SnackbarActionButton onClick={onActionClick} icon={actionIcon}>
+            <SnackbarActionButton onClick={onActionClick} icon={actionIcon} iconPlacement={actionIconPlacement}>
               {actionText}
             </SnackbarActionButton>
           )}

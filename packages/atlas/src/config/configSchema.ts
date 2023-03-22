@@ -2,8 +2,11 @@ import { z } from 'zod'
 
 // keep config schema in separate file so it can be imported without relying on YAML plugin
 
+const YppWidgetIconEnum = z.enum(['info', 'message', 'tokenStack'])
+
 export const configSchema = z.object({
   general: z.object({
+    appId: z.string().nullable(),
     appName: z.string(),
     appDescription: z.string(),
     appTagline: z.string().optional(),
@@ -33,9 +36,55 @@ export const configSchema = z.object({
   }),
   features: z.object({
     ypp: z.object({
+      googleConsoleClientId: z.string().nullable(),
+      youtubeSyncApiUrl: z.string().nullable(),
+      suspendedSupportLink: z.string().nullable(),
+      suspendedLinkText: z.string().nullable(),
+      youtubeCollaboratorMemberId: z.string().nullable(),
       landingPageOgTitle: z.string().nullable(),
       landingPageOgDescription: z.string().nullable(),
       landingPageOgImgPath: z.string().nullable(),
+      enrollmentReward: z.number().nullable(),
+      tiersDefinition: z
+        .object({
+          tiersTooltip: z.string().nullable(),
+          tiers: z
+            .array(z.object({ minimumSubscribers: z.number(), multiplier: z.number().default(1) }))
+            .max(3)
+            .optional(),
+        })
+        .optional(),
+      rewards: z
+        .array(
+          z.object({
+            title: z.string(),
+            showInDashboard: z.boolean().optional().default(true),
+            shortDescription: z.string(),
+            stepsDescription: z.string().optional(),
+            steps: z.array(z.string()).optional(),
+            baseAmount: z.number(),
+            actionButtonText: z.string().optional(),
+            actionButtonAction: z
+              .string()
+              .refine((value) => value.match(/^\//gi) || value === 'copyReferral')
+              .optional(),
+          })
+        )
+        .optional(),
+      widgets: z
+        .array(
+          z.object({
+            title: z.string(),
+            link: z.string(),
+            linkText: z.string().optional(),
+            label: z.string().optional(),
+            icon: YppWidgetIconEnum.optional(),
+          })
+        )
+        .optional(),
+      legal: z.object({
+        yppTnC: z.string(),
+      }),
     }),
     nft: z.object({
       auctionMinimumBidStepMultiplier: z.number(),
@@ -102,4 +151,6 @@ export const configSchema = z.object({
     privacyPolicy: z.string(),
   }),
 })
+
 export type RawConfig = z.infer<typeof configSchema>
+export type YppWidgetIcons = z.infer<typeof YppWidgetIconEnum>

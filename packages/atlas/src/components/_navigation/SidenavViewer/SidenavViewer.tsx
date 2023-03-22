@@ -6,12 +6,14 @@ import {
   SvgSidebarChannels,
   SvgSidebarExplore,
   SvgSidebarHome,
+  SvgSidebarMarketplace,
   SvgSidebarNew,
-  SvgSidebarNft,
   SvgSidebarPopular,
+  SvgSidebarYpp,
 } from '@/assets/icons'
 import { AppLogo } from '@/components/AppLogo'
 import { Button } from '@/components/_buttons/Button'
+import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -36,9 +38,9 @@ export const viewerNavItems = [
     bottomNav: true,
   },
   {
-    icon: <SvgSidebarNft />,
-    expandedName: 'Video NFTs',
-    name: 'NFT',
+    icon: <SvgSidebarMarketplace />,
+    expandedName: 'Marketplace',
+    name: 'Market',
     to: absoluteRoutes.viewer.nfts(),
     bottomNav: true,
   },
@@ -61,6 +63,17 @@ export const viewerNavItems = [
     to: absoluteRoutes.viewer.channels(),
     bottomNav: true,
   },
+  ...(atlasConfig.features.ypp.googleConsoleClientId
+    ? [
+        {
+          icon: <SvgSidebarYpp />,
+          name: 'YPP',
+          expandedName: 'YouTube Partner Program',
+          to: absoluteRoutes.viewer.ypp(),
+          bottomNav: false,
+        },
+      ]
+    : []),
 ]
 export const SidenavViewer: FC = () => {
   const [expanded, setExpanded] = useState(false)

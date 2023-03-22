@@ -5,7 +5,7 @@ import { ListItem } from '@/components/ListItem'
 import { cVar, sizes } from '@/styles'
 
 export const SettingsContainer = styled.div<{ isFullScreen?: boolean; isModal?: boolean }>`
-  transform: ${({ isFullScreen }) => (isFullScreen ? 'scale(2)' : 'scale(1)')};
+  transform: ${({ isFullScreen }) => (isFullScreen ? 'scale(1.125)' : 'scale(1)')};
   transform-origin: bottom right;
   margin: ${({ isModal }) => (isModal ? '0 calc(-1 * var(--local-size-dialog-padding))' : 'unset')};
 `

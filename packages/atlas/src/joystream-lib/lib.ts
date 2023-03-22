@@ -3,7 +3,7 @@ import '@joystream/types'
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { QueryableStorageMultiArg } from '@polkadot/api-base/types/storage'
 import { Signer } from '@polkadot/api/types'
-import { Codec } from '@polkadot/types/types'
+import { Codec, SignerPayloadRawBase } from '@polkadot/types/types'
 import BN from 'bn.js'
 import { proxy } from 'comlink'
 
@@ -80,6 +80,17 @@ export class JoystreamLib {
     this.api.setSigner(signer)
   }
 
+  signMessage = async (signerPayload: SignerPayloadRawBase) => {
+    await this.ensureApi()
+    if (!this.selectedAccountId) {
+      SentryLogger.error('Missing signer for signMessage', 'JoystreamLib')
+      return
+    }
+    const signature = await this.api.sign(this.selectedAccountId, signerPayload)
+
+    return signature
+  }
+
   async getCurrentBlock(): Promise<number> {
     await this.ensureApi()
     const header = await this.api.rpc.chain.getHeader()
@@ -92,6 +103,13 @@ export class JoystreamLib {
 
     const balances = await this.api.derive.balances.all(accountId)
     return parseAccountBalance(balances)
+  }
+
+  async getAccountBalanceAtBlock(block: number | BN | string, accountId: AccountId) {
+    await this.ensureApi()
+
+    const blockHash = await this.api.rpc.chain.getBlockHash(block)
+    return (await this.api.query.system.account.at(blockHash, accountId)).data.free.toString()
   }
 
   async subscribeAccountBalance(
@@ -116,6 +134,12 @@ export class JoystreamLib {
     return proxy(unsubscribe)
   }
 
+  async getContentCommitment() {
+    await this.ensureApi()
+
+    return (await this.api.query.content.commitment()).toString()
+  }
+
   async getChainConstants() {
     await this.ensureApi()
 
@@ -134,6 +158,8 @@ export class JoystreamLib {
       this.api.query.content.minCreatorRoyalty as QueryableStorageMultiArg<'promise'>,
       this.api.query.content.platfromFeePercentage as QueryableStorageMultiArg<'promise'>,
       this.api.query.content.minBidStep as QueryableStorageMultiArg<'promise'>,
+      this.api.query.content.minCashoutAllowed as QueryableStorageMultiArg<'promise'>,
+      this.api.query.content.maxCashoutAllowed as QueryableStorageMultiArg<'promise'>,
     ])
 
     const [
@@ -149,6 +175,8 @@ export class JoystreamLib {
       minCreatorRoyalty,
       platformFeePercentage,
       minBidStep,
+      minCashoutAllowed,
+      maxCashoutAllowed,
     ] = results
 
     const asStringifiedBN = (raw: Codec) => {
@@ -177,6 +205,8 @@ export class JoystreamLib {
       nftMinCreatorRoyaltyPercentage: asPercentage(minCreatorRoyalty),
       nftPlatformFeePercentage: asPercentage(platformFeePercentage),
       minBidStep: asStringifiedBN(minBidStep),
+      minCashoutAllowed: asStringifiedBN(minCashoutAllowed),
+      maxCashoutAllowed: asStringifiedBN(maxCashoutAllowed),
     } as const
   }
 

@@ -1,9 +1,11 @@
 import BN from 'bn.js'
 import { useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
 
+import { useAppActionMetadataProcessor } from '@/api/hooks/apps'
+import { AppActionActionType } from '@/api/queries/__generated__/baseTypes.generated'
 import { FullChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { absoluteRoutes } from '@/config/routes'
+import { useGetChannelCountQuery } from '@/api/queries/__generated__/memberships.generated'
+import { atlasConfig } from '@/config'
 import { ChannelAssets, ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib/types'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useOperatorsContext } from '@/providers/assets/assets.provider'
@@ -57,16 +59,26 @@ export const useCreateEditChannelSubmit = () => {
   const channelBucketsCount = useChannelsStorageBucketsCount(channelId)
   const startFileUpload = useStartFileUpload()
   const handleTransaction = useTransaction()
-  const navigate = useNavigate()
   const { fetchOperators } = useOperatorsContext()
+  const { data: channelCountData } = useGetChannelCountQuery({
+    variables: { where: { ownerMember: { id_eq: memberId } } },
+    skip: !channelId || !atlasConfig.general.appId,
+  })
 
   const addAsset = useAssetStore((state) => state.actions.addAsset)
+
+  const rawMetadataProcessor = useAppActionMetadataProcessor(
+    `m:${memberId}`,
+    AppActionActionType.CreateChannel,
+    channelCountData?.channelsConnection.totalCount || 0
+  )
 
   return useCallback(
     async (
       data: CreateEditChannelData,
       onTxSync?: () => void,
-      onUploadAssets?: (field: 'avatar.contentId' | 'cover.contentId', data: string) => void
+      onUploadAssets?: (field: 'avatar.contentId' | 'cover.contentId', data: string) => void,
+      onCompleted?: () => void
     ) => {
       if (!joystream) {
         ConsoleLogger.error('No Joystream instance! Has webworker been initialized?')
@@ -201,6 +213,7 @@ export const useCreateEditChannelSubmit = () => {
                 await getBucketsConfigForNewChannel(),
                 dataObjectStateBloatBondValue.toString(),
                 channelStateBloatBondValue.toString(),
+                atlasConfig.general.appId ? rawMetadataProcessor : undefined,
                 proxyCallback(updateStatus)
               )
             : (
@@ -213,6 +226,7 @@ export const useCreateEditChannelSubmit = () => {
                 removedAssetsIds,
                 dataObjectStateBloatBondValue.toString(),
                 channelBucketsCount.toString(),
+                undefined,
                 proxyCallback(updateStatus)
               ),
         onTxSync: (result) => {
@@ -222,7 +236,7 @@ export const useCreateEditChannelSubmit = () => {
       })
 
       if (completed && data.newChannel) {
-        navigate(absoluteRoutes.studio.videos())
+        onCompleted?.()
       }
     },
     [
@@ -237,8 +251,8 @@ export const useCreateEditChannelSubmit = () => {
       handleTransaction,
       joystream,
       memberId,
-      navigate,
       proxyCallback,
+      rawMetadataProcessor,
       refetchUserMemberships,
       setActiveUser,
       startFileUpload,

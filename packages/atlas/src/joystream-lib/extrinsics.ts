@@ -1,3 +1,4 @@
+import { prepareClaimChannelRewardExtrinsicArgs, verifyChannelPayoutProof } from '@joystream/js/content'
 import {
   ChannelOwnerRemarked,
   IChannelOwnerRemarked,
@@ -8,11 +9,14 @@ import {
 import { createType } from '@joystream/types'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
+import { Bytes, Option } from '@polkadot/types'
+import { PalletContentStorageAssetsRecord } from '@polkadot/types/lookup'
 import BN from 'bn.js'
 import Long from 'long'
 
 import { SentryLogger } from '@/utils/logs'
 
+import { getClaimableReward } from './channelPayouts'
 import { JoystreamLibError } from './errors'
 import {
   createActor,
@@ -192,11 +196,20 @@ export class JoystreamLibExtrinsics {
     inputAssets: ChannelInputAssets,
     inputBuckets: ChannelInputBuckets,
     expectedDataObjectStateBloatBond: StringifiedNumber,
-    expectedChannelStateBloatBond: StringifiedNumber
+    expectedChannelStateBloatBond: StringifiedNumber,
+    rawMetadataProcessor?: (
+      rawMeta: Option<Bytes>,
+      assets: Option<PalletContentStorageAssetsRecord>
+    ) => Promise<Option<Bytes>>
   ) => {
     await this.ensureApi()
 
-    const [channelMetadata, channelAssets] = await parseChannelExtrinsicInput(this.api, inputMetadata, inputAssets)
+    const [channelMetadata, channelAssets] = await parseChannelExtrinsicInput(
+      this.api,
+      inputMetadata,
+      inputAssets,
+      rawMetadataProcessor
+    )
 
     const creationParameters = createType('PalletContentChannelCreationParametersRecord', {
       meta: channelMetadata,
@@ -220,6 +233,7 @@ export class JoystreamLibExtrinsics {
     inputBuckets,
     expectedDataObjectStateBloatBond,
     expectedChannelStateBloatBond,
+    rawMetadataProcessor,
     cb
   ) => {
     const tx = await this.createChannelTx(
@@ -228,7 +242,8 @@ export class JoystreamLibExtrinsics {
       inputAssets,
       inputBuckets,
       expectedDataObjectStateBloatBond,
-      expectedChannelStateBloatBond
+      expectedChannelStateBloatBond,
+      rawMetadataProcessor
     )
 
     const { block, getEventData } = await this.sendExtrinsic(tx, cb)
@@ -254,7 +269,9 @@ export class JoystreamLibExtrinsics {
     newAssets: ChannelInputAssets,
     removedAssetsIds: StringifiedNumber[],
     expectedDataObjectStateBloatBond: StringifiedNumber,
-    expectedStorageBucketsCount: StringifiedNumber
+    expectedStorageBucketsCount: StringifiedNumber,
+    // null for removing collaborator
+    collaboratorMemberId?: MemberId | null
   ) => {
     await this.ensureApi()
 
@@ -265,7 +282,15 @@ export class JoystreamLibExtrinsics {
       assetsToRemove: removedAssetsIds.map((id) => new BN(id)),
       collaborators: createType(
         'Option<BTreeMap<u64, BTreeSet<PalletContentIterableEnumsChannelActionPermission>>>',
-        null
+        collaboratorMemberId !== undefined
+          ? collaboratorMemberId
+            ? {
+                [collaboratorMemberId]: createType('BTreeSet<PalletContentIterableEnumsChannelActionPermission>', [
+                  'AddVideo',
+                ]),
+              }
+            : {}
+          : null
       ),
       expectedDataObjectStateBloatBond: new BN(expectedDataObjectStateBloatBond),
       storageBucketsNumWitness: createType('Option<u32>', new BN(expectedStorageBucketsCount)),
@@ -284,6 +309,7 @@ export class JoystreamLibExtrinsics {
     removedAssetsIds,
     expectedDataObjectStateBloatBond,
     expectedStorageBucketsCount,
+    collaboratorMemberId,
     cb
   ) => {
     const tx = await this.updateChannelTx(
@@ -293,7 +319,8 @@ export class JoystreamLibExtrinsics {
       newAssets,
       removedAssetsIds,
       expectedDataObjectStateBloatBond,
-      expectedStorageBucketsCount
+      expectedStorageBucketsCount,
+      collaboratorMemberId
     )
     const { block, getEventData } = await this.sendExtrinsic(tx, cb)
 
@@ -316,11 +343,20 @@ export class JoystreamLibExtrinsics {
     inputAssets: VideoInputAssets,
     expectedDataObjectStateBloatBond: StringifiedNumber,
     expectedVideoStateBloatBond: StringifiedNumber,
-    expectedStorageBucketsCount: StringifiedNumber
+    expectedStorageBucketsCount: StringifiedNumber,
+    rawMetadataProcessor?: (
+      rawMeta: Option<Bytes>,
+      assets: Option<PalletContentStorageAssetsRecord>
+    ) => Promise<Option<Bytes>>
   ) => {
     await this.ensureApi()
 
-    const [videoMetadata, videoAssets] = await parseVideoExtrinsicInput(this.api, inputMetadata, inputAssets)
+    const [videoMetadata, videoAssets] = await parseVideoExtrinsicInput(
+      this.api,
+      inputMetadata,
+      inputAssets,
+      rawMetadataProcessor
+    )
 
     const nftIssuanceParameters = createNftIssuanceParameters(nftInputMetadata)
     const creationParameters = createType('PalletContentVideoCreationParametersRecord', {
@@ -347,6 +383,7 @@ export class JoystreamLibExtrinsics {
     expectedDataObjectStateBloatBond,
     expectedVideoStateBloatBond,
     expectedStorageBucketsCount,
+    rawMetadataProcessor,
     cb
   ) => {
     const tx = await this.createVideoTx(
@@ -357,7 +394,8 @@ export class JoystreamLibExtrinsics {
       inputAssets,
       expectedDataObjectStateBloatBond,
       expectedVideoStateBloatBond,
-      expectedStorageBucketsCount
+      expectedStorageBucketsCount,
+      rawMetadataProcessor
     )
     const { block, getEventData } = await this.sendExtrinsic(tx, cb)
 
@@ -465,7 +503,63 @@ export class JoystreamLibExtrinsics {
       block,
     }
   }
+  /*
+    === Channel payouts ===
+  */
 
+  claimRewardTx = async (
+    channelId: string,
+    memberId: MemberId,
+    cumulativeRewardEarned: StringifiedNumber | null,
+    payloadUrl: string,
+    commitment: string
+  ) => {
+    await this.ensureApi()
+
+    const { payoutProof, reward } = await getClaimableReward(channelId, cumulativeRewardEarned, payloadUrl)
+
+    if (verifyChannelPayoutProof(payoutProof) !== commitment) {
+      throw new JoystreamLibError({
+        name: 'FailedError',
+        message: `Incorrect payout proof`,
+      })
+    }
+    const maxCashoutAllowed = await this.api.query.content.maxCashoutAllowed()
+    const minCashoutAllowed = await this.api.query.content.minCashoutAllowed()
+
+    if (reward.gt(maxCashoutAllowed)) {
+      throw new JoystreamLibError({
+        name: 'FailedError',
+        message: `Channel cashout amount is too high to be claimed`,
+      })
+    }
+    if (reward.lt(minCashoutAllowed)) {
+      throw new JoystreamLibError({
+        name: 'FailedError',
+        message: `Channel cashout amount is too low to be claimed`,
+      })
+    }
+
+    const { pullPayment, proofElements } = prepareClaimChannelRewardExtrinsicArgs(payoutProof)
+    const actor = createActor(memberId)
+    const tx = this.api.tx.content.claimChannelReward(actor, proofElements, pullPayment)
+    return tx
+  }
+
+  claimReward: PublicExtrinsic<typeof this.claimRewardTx, NftExtrinsicResult> = async (
+    channelId,
+    memberId,
+    cumulativeRewardEarned,
+    payloadUrl: string,
+    commitment: string,
+    cb
+  ) => {
+    const tx = await this.claimRewardTx(channelId, memberId, cumulativeRewardEarned, payloadUrl, commitment)
+
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return { block }
+  }
   /*
     === NFT extrinsics ===
   */

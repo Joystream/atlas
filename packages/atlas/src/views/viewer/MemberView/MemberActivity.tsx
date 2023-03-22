@@ -9,6 +9,7 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset } from '@/providers/assets/assets.hooks'
+import { createPlaceholderData } from '@/utils/data'
 
 import { ActivityItem, ActivityItemProps } from './ActivityItem'
 import { ActivitiesRecord, useActivities } from './MemberActivity.hooks'
@@ -87,7 +88,7 @@ const PLACEHOLDERS_COUNT = 8
 export const MemberActivity: FC<MemberActivityProps> = ({ memberId, sort = 'createdAt_DESC' }) => {
   const { activities, loading, activitiesTotalCounts } = useActivities(memberId, sort)
   const navigate = useNavigate()
-  const placeholderItems = Array.from({ length: PLACEHOLDERS_COUNT }, () => ({ id: undefined }))
+  const placeholderItems = createPlaceholderData(PLACEHOLDERS_COUNT)
   const items = activities && !loading ? activities : (placeholderItems as ActivitiesRecord[])
   return (
     <section>
