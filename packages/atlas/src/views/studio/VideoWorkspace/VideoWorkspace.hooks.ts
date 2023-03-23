@@ -235,7 +235,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
                 dataObjectStateBloatBondValue.toString(),
                 videoStateBloatBondValue.toString(),
                 channelBucketsCount.toString(),
-                atlasConfig.general.appId ? rawMetadataProcessor : undefined,
+                atlasConfig.general.appId ? proxyCallback(rawMetadataProcessor) : undefined,
                 proxyCallback(updateStatus)
               )
             : (
