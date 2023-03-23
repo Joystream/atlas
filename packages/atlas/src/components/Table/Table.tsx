@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { ReactElement, useMemo } from 'react'
 import { Column, usePagination, useTable } from 'react-table'
 
 import { Text } from '@/components/Text'
@@ -21,6 +21,7 @@ export type TableProps<T = object> = {
   data: T[]
   title?: string
   pageSize?: number
+  doubleColumn?: boolean
   emptyState?: {
     title: string
     description: string
@@ -28,16 +29,33 @@ export type TableProps<T = object> = {
   }
 }
 
-export const Table = <T extends object>({ columns, data, title, pageSize = 20, emptyState }: TableProps<T>) => {
+export const Table = <T extends object>({
+  columns,
+  data,
+  title,
+  pageSize = 20,
+  emptyState,
+  doubleColumn,
+}: TableProps<T>) => {
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    page,
+    page: rawPage,
     prepareRow,
     gotoPage,
     state: { pageIndex },
   } = useTable({ columns, data, initialState: { pageSize } }, usePagination)
+
+  const page = useMemo(() => {
+    if (doubleColumn) {
+      const sliceIndex = Math.ceil(rawPage.length / 2)
+      return [rawPage.slice(0, sliceIndex), rawPage.slice(sliceIndex)]
+    }
+
+    return [rawPage]
+  }, [doubleColumn, rawPage])
+
   const mdMatch = useMediaMatch('md')
   return (
     <Wrapper>
@@ -51,39 +69,43 @@ export const Table = <T extends object>({ columns, data, title, pageSize = 20, e
         </Text>
       )}
       {data.length ? (
-        <TableBase {...getTableProps()}>
-          <Thead>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.getHeaderGroupProps().key}>
-                {headerGroup.headers.map((column) => (
-                  <Th
-                    variant="h100"
-                    as="th"
-                    color="colorText"
-                    {...column.getHeaderProps()}
-                    key={column.getHeaderProps().key}
-                  >
-                    {column.render('Header')}
-                  </Th>
+        <div style={{ display: 'flex', gap: 10 }}>
+          {page.map((subpage, idx) => (
+            <TableBase {...getTableProps()} key={`table-slice-${idx}`}>
+              <Thead>
+                {headerGroups.map((headerGroup) => (
+                  <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.getHeaderGroupProps().key}>
+                    {headerGroup.headers.map((column) => (
+                      <Th
+                        variant="h100"
+                        as="th"
+                        color="colorText"
+                        {...column.getHeaderProps()}
+                        key={column.getHeaderProps().key}
+                      >
+                        {column.render('Header')}
+                      </Th>
+                    ))}
+                  </tr>
                 ))}
-              </tr>
-            ))}
-          </Thead>
-          <tbody {...getTableBodyProps()}>
-            {page.map((row) => {
-              prepareRow(row)
-              return (
-                <tr {...row.getRowProps()} key={row.getRowProps().key}>
-                  {row.cells.map((cell) => (
-                    <Td variant="t100" as="td" {...cell.getCellProps()} key={cell.getCellProps().key}>
-                      {cell.render('Cell')}
-                    </Td>
-                  ))}
-                </tr>
-              )
-            })}
-          </tbody>
-        </TableBase>
+              </Thead>
+              <tbody {...getTableBodyProps()}>
+                {subpage.map((row) => {
+                  prepareRow(row)
+                  return (
+                    <tr {...row.getRowProps()} key={row.getRowProps().key}>
+                      {row.cells.map((cell) => (
+                        <Td variant="t100" as="td" {...cell.getCellProps()} key={cell.getCellProps().key}>
+                          {cell.render('Cell')}
+                        </Td>
+                      ))}
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </TableBase>
+          ))}
+        </div>
       ) : emptyState ? (
         <EmptyTableContainer>
           {emptyState.icon}

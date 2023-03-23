@@ -12,8 +12,8 @@ const MOCKED_DATA: TableProps['data'] = [
   {
     column1: new Date().getDate(),
     column2: 'NFT Sale',
-    column3: 10000,
-    column4: 132334,
+    column3: 22222,
+    column4: 999999,
   },
 ]
 
@@ -52,3 +52,7 @@ export default {
 const Template: Story<TableProps> = (args) => <Table {...args} />
 
 export const Default = Template.bind({})
+export const Double = Template.bind({})
+Double.args = {
+  doubleColumn: true,
+}
