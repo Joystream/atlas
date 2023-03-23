@@ -1,25 +1,22 @@
 import { AppAction, IAppAction } from '@joystream/metadata-protobuf'
-import { Bytes, Option } from '@polkadot/types'
-import { PalletContentStorageAssetsRecord } from '@polkadot/types/lookup'
-import { stringToU8a } from '@polkadot/util'
+import { u8aToHex, u8aToU8a } from '@polkadot/util'
 import { useCallback } from 'react'
 
 import { useGetAppActionSignatureMutation } from '@/api/queries/__generated__/admin.generated'
 import { AppActionActionType } from '@/api/queries/__generated__/baseTypes.generated'
 import { atlasConfig } from '@/config'
-import { wrapMetadata } from '@/joystream-lib/metadata'
 
 export const useAppActionMetadataProcessor = (creatorId: string, actionType: AppActionActionType, nonce: number) => {
   const [signatureMutation] = useGetAppActionSignatureMutation()
 
   return useCallback(
-    async (rawBytes: Option<Bytes>, assets: Option<PalletContentStorageAssetsRecord>) => {
-      if (nonce && atlasConfig.general.appId) {
+    async (rawMetadataU8a: Uint8Array, assetsU8a: Uint8Array) => {
+      if (atlasConfig.general.appId) {
         const { data } = await signatureMutation({
           variables: {
-            assets: assets.toHex(),
+            assets: u8aToHex(assetsU8a),
             nonce,
-            rawAction: rawBytes.toHex(),
+            rawAction: u8aToHex(rawMetadataU8a),
             creatorId,
             actionType: actionType,
           },
@@ -27,13 +24,13 @@ export const useAppActionMetadataProcessor = (creatorId: string, actionType: App
         if (data?.signAppActionCommitment) {
           const appVideoInput: IAppAction = {
             appId: atlasConfig.general.appId,
-            rawAction: rawBytes.toU8a(),
-            signature: stringToU8a(data.signAppActionCommitment.signature),
+            rawAction: rawMetadataU8a,
+            signature: u8aToU8a(data.signAppActionCommitment.signature),
           }
-          return wrapMetadata(AppAction.encode(appVideoInput).finish())
+          return AppAction.encode(appVideoInput).finish()
         }
       }
-      return rawBytes
+      return rawMetadataU8a
     },
     [creatorId, nonce, actionType, signatureMutation]
   )
