@@ -1,21 +1,20 @@
 import styled from '@emotion/styled'
 import { useMemo } from 'react'
-import { Link } from 'react-router-dom'
 
 import { useMemberships } from '@/api/hooks/membership'
 import { SvgActionCreatorToken, SvgActionVerified } from '@/assets/icons'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { NumberFormat } from '@/components/NumberFormat'
-import { Table, TableProps } from '@/components/Table'
+import { TableProps } from '@/components/Table'
 import { Text } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
 import { useMemberAvatar } from '@/providers/assets/assets.hooks'
-import { cVar, sizes } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 import { shortenString } from '@/utils/misc'
 
+import { SenderItem, SenderItemIconsWrapper, StyledLink, StyledTable } from './TopSellingChannelsTable.styles'
+
 import { Avatar } from '../Avatar'
-import { ListItem } from '../ListItem'
 
 const COLUMNS: TableProps['columns'] = [
   {
@@ -39,29 +38,6 @@ const COLUMNS: TableProps['columns'] = [
     width: 50,
   },
 ]
-
-const StyledTable = styled(Table)`
-  background: transparent;
-
-  .table-base {
-    border-bottom: 1px solid ${cVar('colorBorderMutedAlpha')}!important;
-  }
-
-  .table-row {
-    background-color: transparent;
-  }
-
-  .table-header {
-    box-shadow: 0 1px 0 0 ${cVar('colorBorderMutedAlpha')};
-    background-color: transparent;
-
-    th {
-      :first-of-type {
-        padding-left: 5px;
-      }
-    }
-  }
-`
 
 export const JoyAmountWrapper = styled.div`
   display: inline-flex;
@@ -101,32 +77,6 @@ export const TopSellingChannelsTable = () => {
   )
   return <StyledTable columns={COLUMNS} data={mappedData} doubleColumn />
 }
-
-export const SenderItem = styled(ListItem)`
-  padding-left: 0;
-  width: fit-content;
-  align-items: center;
-
-  & span[color] {
-    color: ${cVar('colorTextStrong')};
-  }
-`
-
-export const SenderItemIconsWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${sizes(1)};
-
-  svg {
-    path {
-      fill: ${cVar('colorTextMuted')};
-    }
-  }
-`
-
-export const StyledLink = styled(Link)`
-  text-decoration: none;
-`
 
 const Sender = ({ sender }: { sender: string }) => {
   const { memberships } = useMemberships(
