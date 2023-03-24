@@ -11,7 +11,7 @@ export const useAppActionMetadataProcessor = (creatorId: string, actionType: App
 
   return useCallback(
     async (rawMetadataU8a: Uint8Array, assetsU8a: Uint8Array) => {
-      if (nonce && atlasConfig.general.appId) {
+      if (atlasConfig.general.appId) {
         const { data } = await signatureMutation({
           variables: {
             assets: u8aToHex(assetsU8a),
