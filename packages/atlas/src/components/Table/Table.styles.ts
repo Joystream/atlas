@@ -66,3 +66,8 @@ export const EmptyTableDescription = styled(Text)`
   text-align: center;
   margin-top: ${sizes(2)};
 `
+
+export const PageWrapper = styled.div`
+  display: flex;
+  gap: ${sizes(3)};
+`

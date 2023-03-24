@@ -8,6 +8,7 @@ import {
   EmptyTableContainer,
   EmptyTableDescription,
   EmptyTableHeader,
+  PageWrapper,
   StyledPagination,
   TableBase,
   Td,
@@ -48,7 +49,7 @@ export const Table = <T extends object>({
     gotoPage,
     state: { pageIndex },
   } = useTable({ columns, data, initialState: { pageSize } }, usePagination)
-  console.log(getTableProps(), getTableBodyProps())
+
   const page = useMemo(() => {
     if (doubleColumn) {
       const sliceIndex = Math.ceil(rawPage.length / 2)
@@ -71,8 +72,7 @@ export const Table = <T extends object>({
         </Text>
       )}
       {data.length ? (
-        // <div style={{ display: 'flex', gap: 10 }}>
-        <>
+        <PageWrapper>
           {page.map((subpage, idx) => (
             <TableBase className="table-base" {...getTableProps()} key={`table-slice-${idx}`}>
               <Thead className="table-header">
@@ -83,7 +83,7 @@ export const Table = <T extends object>({
                         variant="h100"
                         as="th"
                         color="colorText"
-                        {...column.getHeaderProps()}
+                        {...column.getHeaderProps({ style: { width: column.width } })}
                         key={column.getHeaderProps().key}
                       >
                         {column.render('Header')}
@@ -114,7 +114,7 @@ export const Table = <T extends object>({
               </tbody>
             </TableBase>
           ))}
-        </>
+        </PageWrapper>
       ) : emptyState ? (
         <EmptyTableContainer>
           {emptyState.icon}

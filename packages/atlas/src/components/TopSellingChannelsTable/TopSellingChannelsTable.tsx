@@ -7,7 +7,8 @@ const COLUMNS: TableProps['columns'] = [
   {
     Header: '',
     accessor: 'index',
-    width: 200,
+    width: 1,
+    maxWidth: 1,
   },
   {
     Header: 'CHANNEL',
@@ -17,12 +18,12 @@ const COLUMNS: TableProps['columns'] = [
   {
     Header: 'NFTS SOLD',
     accessor: 'nftsSold',
-    width: 232300,
+    width: 50,
   },
   {
     Header: 'SALES VOLUME',
     accessor: 'salesVolume',
-    width: 100,
+    width: 50,
   },
 ]
 
@@ -40,6 +41,12 @@ const StyledTable = styled(Table)`
   .table-header {
     box-shadow: 0 1px 0 0 ${cVar('colorBorderMutedAlpha')};
     background-color: transparent;
+
+    th {
+      :first-of-type {
+        padding-left: 5px;
+      }
+    }
   }
 `
 
