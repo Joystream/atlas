@@ -341,7 +341,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       case 'requirements':
         return {
           title: 'Requirements',
-          description: `Before you can apply to the program, make sure both your ${APP_NAME} and YouTube channels meet the below conditions.`,
+          description: `Before you can apply to the program, make sure your YouTube channel meets the below conditions.`,
           primaryButton: {
             text: 'Authorize with YouTube',
             onClick: handleAuthorizeClick,
