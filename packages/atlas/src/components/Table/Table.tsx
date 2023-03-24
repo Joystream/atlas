@@ -27,6 +27,7 @@ export type TableProps<T = object> = {
     description: string
     icon: ReactElement
   }
+  className?: string
 }
 
 export const Table = <T extends object>({
@@ -36,6 +37,7 @@ export const Table = <T extends object>({
   pageSize = 20,
   emptyState,
   doubleColumn,
+  className,
 }: TableProps<T>) => {
   const {
     getTableProps,
@@ -46,7 +48,7 @@ export const Table = <T extends object>({
     gotoPage,
     state: { pageIndex },
   } = useTable({ columns, data, initialState: { pageSize } }, usePagination)
-
+  console.log(getTableProps(), getTableBodyProps())
   const page = useMemo(() => {
     if (doubleColumn) {
       const sliceIndex = Math.ceil(rawPage.length / 2)
@@ -58,7 +60,7 @@ export const Table = <T extends object>({
 
   const mdMatch = useMediaMatch('md')
   return (
-    <Wrapper>
+    <Wrapper className={className}>
       {title && (
         <Text
           as="h3"
@@ -69,10 +71,11 @@ export const Table = <T extends object>({
         </Text>
       )}
       {data.length ? (
-        <div style={{ display: 'flex', gap: 10 }}>
+        // <div style={{ display: 'flex', gap: 10 }}>
+        <>
           {page.map((subpage, idx) => (
-            <TableBase {...getTableProps()} key={`table-slice-${idx}`}>
-              <Thead>
+            <TableBase className="table-base" {...getTableProps()} key={`table-slice-${idx}`}>
+              <Thead className="table-header">
                 {headerGroups.map((headerGroup) => (
                   <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.getHeaderGroupProps().key}>
                     {headerGroup.headers.map((column) => (
@@ -93,9 +96,15 @@ export const Table = <T extends object>({
                 {subpage.map((row) => {
                   prepareRow(row)
                   return (
-                    <tr {...row.getRowProps()} key={row.getRowProps().key}>
+                    <tr className="table-row" {...row.getRowProps()} key={row.getRowProps().key}>
                       {row.cells.map((cell) => (
-                        <Td variant="t100" as="td" {...cell.getCellProps()} key={cell.getCellProps().key}>
+                        <Td
+                          variant="t100"
+                          as="td"
+                          {...cell.getCellProps()}
+                          key={cell.getCellProps().key}
+                          className="table-cell"
+                        >
                           {cell.render('Cell')}
                         </Td>
                       ))}
@@ -105,7 +114,7 @@ export const Table = <T extends object>({
               </tbody>
             </TableBase>
           ))}
-        </div>
+        </>
       ) : emptyState ? (
         <EmptyTableContainer>
           {emptyState.icon}
