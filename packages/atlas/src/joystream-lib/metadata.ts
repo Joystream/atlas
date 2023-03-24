@@ -28,10 +28,7 @@ type ParseExtrinsicInputFn<TMetadata, TAssets> = (
   api: PolkadotApi,
   inputMetadata: TMetadata,
   inputAssets: TAssets,
-  rawMetadataProcessor?: (
-    rawMeta: Option<Bytes>,
-    assets: Option<PalletContentStorageAssetsRecord>
-  ) => Promise<Option<Bytes>>
+  rawMetadataProcessor?: (rawMeta: Uint8Array, assets: Uint8Array) => Promise<Uint8Array>
 ) => Promise<[Option<Bytes>, TAssets extends undefined ? undefined : Option<PalletContentStorageAssetsRecord>]>
 
 const VIDEO_ASSETS_ORDER: (keyof VideoInputAssets)[] = ['media', 'thumbnailPhoto', 'subtitles']
@@ -163,8 +160,10 @@ export const parseVideoExtrinsicInput: ParseExtrinsicInputFn<VideoInputMetadata,
   }
 
   const storageAssets = await prepareAssetsForExtrinsic(api, videoDataObjectsMetadata)
-  const rawMetadata = wrapMetadata(ContentMetadata.encode({ videoMetadata: properties }).finish())
-  const metadata = rawMetadataProcessor ? await rawMetadataProcessor(rawMetadata, storageAssets) : rawMetadata
+  const encodedMetadata = ContentMetadata.encode({ videoMetadata: properties }).finish()
+  const metadata = rawMetadataProcessor
+    ? wrapMetadata(await rawMetadataProcessor(encodedMetadata, storageAssets.toU8a()))
+    : wrapMetadata(encodedMetadata)
 
   return [metadata, storageAssets]
 }
@@ -203,9 +202,10 @@ export const parseChannelExtrinsicInput: ParseExtrinsicInputFn<ChannelInputMetad
   }
 
   const storageAssets = await prepareAssetsForExtrinsic(api, channelDataObjectsMetadata)
-  const rawMetadata = wrapMetadata(ChannelMetadata.encode(properties).finish())
-  const metadata = rawMetadataProcessor ? await rawMetadataProcessor(rawMetadata, storageAssets) : rawMetadata
-
+  const encodedMetadata = ChannelMetadata.encode(properties).finish()
+  const metadata = rawMetadataProcessor
+    ? wrapMetadata(await rawMetadataProcessor(encodedMetadata, storageAssets.toU8a()))
+    : wrapMetadata(encodedMetadata)
   return [metadata, storageAssets]
 }
 

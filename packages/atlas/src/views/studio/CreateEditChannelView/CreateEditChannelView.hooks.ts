@@ -68,7 +68,7 @@ export const useCreateEditChannelSubmit = () => {
   const addAsset = useAssetStore((state) => state.actions.addAsset)
 
   const rawMetadataProcessor = useAppActionMetadataProcessor(
-    `m:${memberId}`,
+    (memberId && memberId.toString()) || '',
     AppActionActionType.CreateChannel,
     channelCountData?.channelsConnection.totalCount || 0
   )
@@ -198,7 +198,6 @@ export const useCreateEditChannelSubmit = () => {
           uploadAssets(result)
         }
       }
-
       const completed = await handleTransaction({
         fee: data.fee,
         preProcess: processAssets,
@@ -213,7 +212,7 @@ export const useCreateEditChannelSubmit = () => {
                 await getBucketsConfigForNewChannel(),
                 dataObjectStateBloatBondValue.toString(),
                 channelStateBloatBondValue.toString(),
-                atlasConfig.general.appId ? rawMetadataProcessor : undefined,
+                atlasConfig.general.appId ? proxyCallback(rawMetadataProcessor) : undefined,
                 proxyCallback(updateStatus)
               )
             : (

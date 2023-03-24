@@ -2,6 +2,7 @@ general:
   appName: 'Atlas' # Application name - used in the copy throughout the app, in index.html, open graph meta tags, etc
   appDescription: 'The streaming platform empowering viewers, creators, and builders. Built on and operated by the Joystream blockchain and DAO.' # Application description - used in index.html meta tags
   appTagline: 'The streaming platform empowering viewers, creators, and builders. Built on and operated by the Joystream blockchain and DAO.'
+  appId: '$VITE_APP_ID' # App ID for Apps as first-class citizens
   appTwitterId: '@JoystreamDAO' # Twitter handle for the app - used in open graph meta tags in HTML
   appUrl: 'https://play.joystream.org' # URL at which the app is hosted - used in open graph meta tags in HTML
   appGithubUrl: 'https://github.com/Joystream/atlas' # URL for Atlas GitHub repository - used in the footer
@@ -102,21 +103,21 @@ features:
         The tokens pool allocated for this program is limited, so the program has limited duration.
 
         ## Tiers Multiplier
+
         Based on the YouTube channel followers count, a popularity Tier is assigned to each participant. Popularity tier results in multiplication effect on all rewards of the program.
 
-        - Tier 1 - x1 rewards
-        - Tier 2 - x2.5 rewards
-        - Tier 3 - x5 rewards
-
-        Your popularity Tier will be displayed in the YPP Dashboard after you sign up. Information on all tiers will be periodically updated and posted to the program details, which are hyperlinked from the dedicated widget in the YPP Dashboard.
+          - Tier 1 - x1 rewards - 50 to 5,000 subscribers
+          - Tier 2 - x2.5 rewards - 5,000 to 50,000 subscribers
+          - Tier 3 - x5 rewards - 50,000+ subscribers
 
         ## Example Rewards Calculation
-        For a channel with falling under Tier 2 for subscribers, which signed up and remained in the programme with auto-sync service enabled for 1 month. During this month that channel uploaded 5 new videos to their YouTube channel, 2 videos directly to Joystream channel with manual upload, and referred 3 other YouTube channels that ended up signing up.
+
+        For a channel with 7000 subscribers, which signed up and remained in the program with auto-sync service enabled for 1 month. During this month that channel uploaded 5 new videos to their YouTube channel, 2 videos directly to Joystream channel with manual upload, and referred 3 other YouTube channels that ended up signing up.
 
         In the end of this month, the payout to this channel's account will be:
-        5000 * 2.5 + 5 * 300 * 2.5 + 1000 * 3 * 2.5 = **23,750** JOY
+          5000 * 2.5 + 5 * 300 * 2.5 + 1000 * 3 * 2.5 = **23,750** JOY
 
-        ## When you accept the Terms and Conditions you:
+        ## When you accept the Terms and Conditions you
 
         1. Become enrolled to the YouTube Partnership Program.
         2. Your YouTube channel information and email will be stored in the data base, operated by JS Genesis.
@@ -134,12 +135,12 @@ features:
         The program is targeted at YouTube creators that already have a channel focussed on Crypto and Web3 content, with substantial published videos and subscribers. The program involves compensation in JOY tokens for YouTube creators who choose to opt in, meet the qualification criteria and perform actions that are linked to rewards.
 
         ## Who Qualifies
-        YouTube channel has to qualify the criteria shown in the sign up flow, and described in the programme page on [Notion](https://joystream.notion.site/YPP-programme-d492c2eb88ff4ace955b5f2902ec21fb#695ec23a12134be6886e4b11471105f3).
 
-        Channel must be focussed on Web3/ Crypto content, matching one of the categories supported by Gleev App.
-        Be created not earlier than certain number of days before sign up
-        Have a certain minimum number of followers and the channel followers must be set to public view.
-        Meet minimum videos criteria, and each video must meet the requirement on latest date created, before the sign up.
+        YouTube channel has to:
+          1. Be created not earlier than 90 days before the sign up.
+          2. Have at least 50 followers and the channel followers must be set to public view.
+          3. Have at least 10 videos, each created at least 30 days before the sign up.
+          4. Channel must be focussed on Web3/ Crypto content, matching one of the categories supported by Gleev App.
 
         Newly created Joystream channel has to have description, avatar and background image set up. The criteria for qualification can be reviewed at any time without prior notice.
 
@@ -604,7 +605,7 @@ legal:
 
     Joystream Standard License is the default setting for all uploads. It allows creators to retain all ownership over their content, which published on Joystream network storage nodes, while giving any App built and operated by JS Genesis, Joystream DAO or external operators that work with Joystream Blockchain to broadcast this content.
 
-    For content automatically synced from YouTube via YouTube Partnership Programme, YouTube Standard License is substituted by Joystream Standard License. 
+    For content automatically synced from Youtube via Youtube Partnership Programme, YouTube Standard License is substituted by Joystream Standard License. 
 
     2. CCO
 
