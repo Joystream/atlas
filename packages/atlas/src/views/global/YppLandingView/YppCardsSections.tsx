@@ -111,7 +111,7 @@ export const YppCardsSections: FC = () => {
                 <ContentCard
                   title="Manage your channel on a simple dashboard"
                   subtitle="Dashboard"
-                  body="YouTube Partner Program dashboard in Atlas Studio allows you to see the list of rewardable tasks alongside other information about the program. "
+                  body={`YouTube Partner Program dashboard in ${appName} Studio allows you to see the list of rewardable tasks alongside other information about the program. `}
                 />
               </GridItem>
             </CardImageRow>
@@ -189,12 +189,9 @@ export const YppCardsSections: FC = () => {
                 data-aos-easing="atlas-easing"
               >
                 <ContentCard
-                  pill={{
-                    label: 'Coming later this year',
-                  }}
                   title="Automatic YouTube video sync"
                   subtitle="YouTube sync"
-                  body="All the videos you upload to your YouTube channel will appear in Atlas automatically, allowing you to reach a greater audience."
+                  body={`All the videos you upload to your YouTube channel will appear in ${appName} automatically, allowing you to reach a greater audience.`}
                 />
               </GridItem>
             </CardImageRow>
