@@ -1,4 +1,3 @@
-import styled from '@emotion/styled'
 import { useMemo } from 'react'
 
 import { useMemberships } from '@/api/hooks/membership'
@@ -8,11 +7,18 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { TableProps } from '@/components/Table'
 import { Text } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { SentryLogger } from '@/utils/logs'
 import { shortenString } from '@/utils/misc'
 
-import { SenderItem, SenderItemIconsWrapper, StyledLink, StyledTable } from './TopSellingChannelsTable.styles'
+import {
+  JoyAmountWrapper,
+  SenderItem,
+  SenderItemIconsWrapper,
+  StyledLink,
+  StyledTable,
+} from './TopSellingChannelsTable.styles'
 
 import { Avatar } from '../Avatar'
 
@@ -30,20 +36,14 @@ const COLUMNS: TableProps['columns'] = [
   {
     Header: 'NFTS SOLD',
     accessor: 'nftsSold',
-    width: 50,
+    width: 70,
   },
   {
     Header: 'SALES VOLUME',
     accessor: 'salesVolume',
-    width: 50,
+    width: 70,
   },
 ]
-
-export const JoyAmountWrapper = styled.div`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-`
 
 const DATA = [
   { index: 1, channel: 'j4UBSJyBRWK9zZaR2LHj8QKWi8nhR7d6iGQ5drTzPve1QmeYS', nftsSold: 1, salesVolume: 22 },
@@ -52,6 +52,7 @@ const DATA = [
 ]
 
 export const TopSellingChannelsTable = () => {
+  const mdMatch = useMediaMatch('md')
   const mappedData: TableProps['data'] = useMemo(
     () =>
       DATA.map((data) => ({
@@ -75,7 +76,7 @@ export const TopSellingChannelsTable = () => {
       })),
     []
   )
-  return <StyledTable columns={COLUMNS} data={mappedData} doubleColumn />
+  return <StyledTable columns={COLUMNS} data={mappedData} doubleColumn={mdMatch} />
 }
 
 const Sender = ({ sender }: { sender: string }) => {

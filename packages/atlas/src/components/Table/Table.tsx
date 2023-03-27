@@ -1,5 +1,5 @@
 import { ReactElement, useMemo } from 'react'
-import { Column, usePagination, useTable } from 'react-table'
+import { Column, useFlexLayout, usePagination, useTable } from 'react-table'
 
 import { Text } from '@/components/Text'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -48,7 +48,7 @@ export const Table = <T extends object>({
     prepareRow,
     gotoPage,
     state: { pageIndex },
-  } = useTable({ columns, data, initialState: { pageSize } }, usePagination)
+  } = useTable({ columns, data, initialState: { pageSize } }, usePagination, useFlexLayout)
 
   const page = useMemo(() => {
     if (doubleColumn) {

@@ -53,3 +53,9 @@ export const SenderItemIconsWrapper = styled.div`
 export const StyledLink = styled(Link)`
   text-decoration: none;
 `
+
+export const JoyAmountWrapper = styled.div`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+`
