@@ -54,7 +54,8 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
-                              resolvedUrl?: string | null
+                              resolvedUrls: Array<string>
+                              resolvedUrl: string
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -105,7 +106,8 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
-                              resolvedUrl?: string | null
+                              resolvedUrls: Array<string>
+                              resolvedUrl: string
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -156,7 +158,8 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
-                              resolvedUrl?: string | null
+                              resolvedUrls: Array<string>
+                              resolvedUrl: string
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -207,7 +210,8 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
-                              resolvedUrl?: string | null
+                              resolvedUrls: Array<string>
+                              resolvedUrl: string
                               createdAt: Date
                               size: string
                               isAccepted: boolean

@@ -29,7 +29,8 @@ export type GetMembershipsQuery = {
       coverPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
-        resolvedUrl?: string | null
+        resolvedUrls: Array<string>
+        resolvedUrl: string
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -46,7 +47,8 @@ export type GetMembershipsQuery = {
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
-        resolvedUrl?: string | null
+        resolvedUrls: Array<string>
+        resolvedUrl: string
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -70,7 +72,8 @@ export type GetMembershipsQuery = {
             avatarObject: {
               __typename?: 'StorageDataObject'
               id: string
-              resolvedUrl?: string | null
+              resolvedUrls: Array<string>
+              resolvedUrl: string
               createdAt: Date
               size: string
               isAccepted: boolean

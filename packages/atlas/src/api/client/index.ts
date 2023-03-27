@@ -8,6 +8,8 @@ import { useUserLocationStore } from '@/providers/userLocation'
 
 import cache from './cache'
 
+import { StorageDataObject } from '../queries/__generated__/baseTypes.generated'
+
 const delayLink = new ApolloLink((operation, forward) => {
   const ctx = operation.getContext()
   if (!ctx.delay) {
@@ -59,7 +61,17 @@ const createApolloClient = () => {
     orionLink
   )
 
-  return new ApolloClient({ cache, link: operationSplitLink })
+  return new ApolloClient({
+    cache,
+    link: operationSplitLink,
+    resolvers: {
+      StorageDataObject: {
+        resolvedUrl: async (parent: StorageDataObject, args, ctx, info) => {
+          return parent.resolvedUrls[0]
+        },
+      },
+    },
+  })
 }
 
 export default createApolloClient

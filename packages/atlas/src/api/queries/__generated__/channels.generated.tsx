@@ -43,7 +43,8 @@ export type GetFullChannelQuery = {
               avatarObject: {
                 __typename?: 'StorageDataObject'
                 id: string
-                resolvedUrl?: string | null
+                resolvedUrls: Array<string>
+                resolvedUrl: string
                 createdAt: Date
                 size: string
                 isAccepted: boolean
@@ -65,7 +66,8 @@ export type GetFullChannelQuery = {
     coverPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
-      resolvedUrl?: string | null
+      resolvedUrls: Array<string>
+      resolvedUrl: string
       createdAt: Date
       size: string
       isAccepted: boolean
@@ -82,7 +84,8 @@ export type GetFullChannelQuery = {
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
-      resolvedUrl?: string | null
+      resolvedUrls: Array<string>
+      resolvedUrl: string
       createdAt: Date
       size: string
       isAccepted: boolean
@@ -122,7 +125,8 @@ export type GetExtendedBasicChannelsQuery = {
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
-        resolvedUrl?: string | null
+        resolvedUrls: Array<string>
+        resolvedUrl: string
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -177,7 +181,8 @@ export type GetExtendedFullChannelsQuery = {
                 avatarObject: {
                   __typename?: 'StorageDataObject'
                   id: string
-                  resolvedUrl?: string | null
+                  resolvedUrls: Array<string>
+                  resolvedUrl: string
                   createdAt: Date
                   size: string
                   isAccepted: boolean
@@ -199,7 +204,8 @@ export type GetExtendedFullChannelsQuery = {
       coverPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
-        resolvedUrl?: string | null
+        resolvedUrls: Array<string>
+        resolvedUrl: string
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -216,7 +222,8 @@ export type GetExtendedFullChannelsQuery = {
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
-        resolvedUrl?: string | null
+        resolvedUrls: Array<string>
+        resolvedUrl: string
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -261,7 +268,8 @@ export type GetBasicChannelsConnectionQuery = {
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
-          resolvedUrl?: string | null
+          resolvedUrls: Array<string>
+          resolvedUrl: string
           createdAt: Date
           size: string
           isAccepted: boolean
@@ -320,7 +328,8 @@ export type GetTop10ChannelsQuery = {
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
-        resolvedUrl?: string | null
+        resolvedUrls: Array<string>
+        resolvedUrl: string
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -358,7 +367,8 @@ export type GetPromisingChannelsQuery = {
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
-        resolvedUrl?: string | null
+        resolvedUrls: Array<string>
+        resolvedUrl: string
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -396,7 +406,8 @@ export type GetDiscoverChannelsQuery = {
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
-        resolvedUrl?: string | null
+        resolvedUrls: Array<string>
+        resolvedUrl: string
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -434,7 +445,8 @@ export type GetPopularChannelsQuery = {
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
-        resolvedUrl?: string | null
+        resolvedUrls: Array<string>
+        resolvedUrl: string
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -475,7 +487,8 @@ export type GetChannelNftCollectorsQuery = {
               avatarObject: {
                 __typename?: 'StorageDataObject'
                 id: string
-                resolvedUrl?: string | null
+                resolvedUrls: Array<string>
+                resolvedUrl: string
                 createdAt: Date
                 size: string
                 isAccepted: boolean

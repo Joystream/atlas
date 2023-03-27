@@ -10,7 +10,9 @@ export type Scalars = {
   Boolean: boolean
   Int: number
   Float: number
+  /** Big number integer */
   BigInt: string
+  /** A date-time string in simplified extended ISO 8601 format (YYYY-MM-DDTHH:mm:ss.sssZ) */
   DateTime: Date
 }
 
@@ -449,6 +451,8 @@ export enum AuctionOrderByInput {
   NftCreatorRoyaltyDesc = 'nft_creatorRoyalty_DESC',
   NftIdAsc = 'nft_id_ASC',
   NftIdDesc = 'nft_id_DESC',
+  NftIsFeaturedAsc = 'nft_isFeatured_ASC',
+  NftIsFeaturedDesc = 'nft_isFeatured_DESC',
   NftLastSaleDateAsc = 'nft_lastSaleDate_ASC',
   NftLastSaleDateDesc = 'nft_lastSaleDate_DESC',
   NftLastSalePriceAsc = 'nft_lastSalePrice_ASC',
@@ -955,6 +959,8 @@ export enum BidOrderByInput {
   NftCreatorRoyaltyDesc = 'nft_creatorRoyalty_DESC',
   NftIdAsc = 'nft_id_ASC',
   NftIdDesc = 'nft_id_DESC',
+  NftIsFeaturedAsc = 'nft_isFeatured_ASC',
+  NftIsFeaturedDesc = 'nft_isFeatured_DESC',
   NftLastSaleDateAsc = 'nft_lastSaleDate_ASC',
   NftLastSaleDateDesc = 'nft_lastSaleDate_DESC',
   NftLastSalePriceAsc = 'nft_lastSalePrice_ASC',
@@ -1264,8 +1270,6 @@ export enum ChannelOrderByInput {
   AvatarPhotoIpfsHashDesc = 'avatarPhoto_ipfsHash_DESC',
   AvatarPhotoIsAcceptedAsc = 'avatarPhoto_isAccepted_ASC',
   AvatarPhotoIsAcceptedDesc = 'avatarPhoto_isAccepted_DESC',
-  AvatarPhotoResolvedUrlAsc = 'avatarPhoto_resolvedUrl_ASC',
-  AvatarPhotoResolvedUrlDesc = 'avatarPhoto_resolvedUrl_DESC',
   AvatarPhotoSizeAsc = 'avatarPhoto_size_ASC',
   AvatarPhotoSizeDesc = 'avatarPhoto_size_DESC',
   AvatarPhotoStateBloatBondAsc = 'avatarPhoto_stateBloatBond_ASC',
@@ -1282,8 +1286,6 @@ export enum ChannelOrderByInput {
   CoverPhotoIpfsHashDesc = 'coverPhoto_ipfsHash_DESC',
   CoverPhotoIsAcceptedAsc = 'coverPhoto_isAccepted_ASC',
   CoverPhotoIsAcceptedDesc = 'coverPhoto_isAccepted_DESC',
-  CoverPhotoResolvedUrlAsc = 'coverPhoto_resolvedUrl_ASC',
-  CoverPhotoResolvedUrlDesc = 'coverPhoto_resolvedUrl_DESC',
   CoverPhotoSizeAsc = 'coverPhoto_size_ASC',
   CoverPhotoSizeDesc = 'coverPhoto_size_DESC',
   CoverPhotoStateBloatBondAsc = 'coverPhoto_stateBloatBond_ASC',
@@ -3559,8 +3561,10 @@ export type Mutation = {
   followChannel: ChannelFollowResult
   reportChannel: ChannelReportInfo
   reportVideo: VideoReportInfo
+  requestNftFeatured: NftFeaturedRequstInfo
   restoreContent: RestoreContentResult
   setCategoryFeaturedVideos: SetCategoryFeaturedVideosResult
+  setFeaturedNfts: SetFeaturedNftsResult
   setKillSwitch: KillSwitch
   setSupportedCategories: SetSupportedCategoriesResult
   setVideoHero: SetVideoHeroResult
@@ -3592,6 +3596,11 @@ export type MutationReportVideoArgs = {
   videoId: Scalars['String']
 }
 
+export type MutationRequestNftFeaturedArgs = {
+  nftId: Scalars['String']
+  rationale: Scalars['String']
+}
+
 export type MutationRestoreContentArgs = {
   ids: Array<Scalars['String']>
   type: ExcludableContentType
@@ -3600,6 +3609,10 @@ export type MutationRestoreContentArgs = {
 export type MutationSetCategoryFeaturedVideosArgs = {
   categoryId: Scalars['String']
   videos: Array<FeaturedVideoInput>
+}
+
+export type MutationSetFeaturedNftsArgs = {
+  featuredNftsIds: Array<Scalars['String']>
 }
 
 export type MutationSetKillSwitchArgs = {
@@ -3722,6 +3735,138 @@ export type NftBoughtEventData = {
   price: Scalars['BigInt']
 }
 
+export type NftFeaturedRequstInfo = {
+  __typename?: 'NftFeaturedRequstInfo'
+  created: Scalars['Boolean']
+  createdAt: Scalars['DateTime']
+  id: Scalars['String']
+  nftId: Scalars['String']
+  rationale: Scalars['String']
+  reporterIp: Scalars['String']
+}
+
+export type NftFeaturingRequest = {
+  __typename?: 'NftFeaturingRequest'
+  /** Unique identifier of the request */
+  id: Scalars['String']
+  /** IP address of the reporter */
+  ip: Scalars['String']
+  /** ID of the nft that is being requested to be featured by operator */
+  nftId: Scalars['String']
+  /** Rationale behind the request */
+  rationale: Scalars['String']
+  /** Time of the request */
+  timestamp: Scalars['DateTime']
+}
+
+export type NftFeaturingRequestEdge = {
+  __typename?: 'NftFeaturingRequestEdge'
+  cursor: Scalars['String']
+  node: NftFeaturingRequest
+}
+
+export enum NftFeaturingRequestOrderByInput {
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  IpAsc = 'ip_ASC',
+  IpDesc = 'ip_DESC',
+  NftIdAsc = 'nftId_ASC',
+  NftIdDesc = 'nftId_DESC',
+  RationaleAsc = 'rationale_ASC',
+  RationaleDesc = 'rationale_DESC',
+  TimestampAsc = 'timestamp_ASC',
+  TimestampDesc = 'timestamp_DESC',
+}
+
+export type NftFeaturingRequestWhereInput = {
+  AND?: InputMaybe<Array<NftFeaturingRequestWhereInput>>
+  OR?: InputMaybe<Array<NftFeaturingRequestWhereInput>>
+  id_contains?: InputMaybe<Scalars['String']>
+  id_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_endsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['String']>
+  id_gt?: InputMaybe<Scalars['String']>
+  id_gte?: InputMaybe<Scalars['String']>
+  id_in?: InputMaybe<Array<Scalars['String']>>
+  id_isNull?: InputMaybe<Scalars['Boolean']>
+  id_lt?: InputMaybe<Scalars['String']>
+  id_lte?: InputMaybe<Scalars['String']>
+  id_not_contains?: InputMaybe<Scalars['String']>
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  id_not_endsWith?: InputMaybe<Scalars['String']>
+  id_not_eq?: InputMaybe<Scalars['String']>
+  id_not_in?: InputMaybe<Array<Scalars['String']>>
+  id_not_startsWith?: InputMaybe<Scalars['String']>
+  id_startsWith?: InputMaybe<Scalars['String']>
+  ip_contains?: InputMaybe<Scalars['String']>
+  ip_containsInsensitive?: InputMaybe<Scalars['String']>
+  ip_endsWith?: InputMaybe<Scalars['String']>
+  ip_eq?: InputMaybe<Scalars['String']>
+  ip_gt?: InputMaybe<Scalars['String']>
+  ip_gte?: InputMaybe<Scalars['String']>
+  ip_in?: InputMaybe<Array<Scalars['String']>>
+  ip_isNull?: InputMaybe<Scalars['Boolean']>
+  ip_lt?: InputMaybe<Scalars['String']>
+  ip_lte?: InputMaybe<Scalars['String']>
+  ip_not_contains?: InputMaybe<Scalars['String']>
+  ip_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  ip_not_endsWith?: InputMaybe<Scalars['String']>
+  ip_not_eq?: InputMaybe<Scalars['String']>
+  ip_not_in?: InputMaybe<Array<Scalars['String']>>
+  ip_not_startsWith?: InputMaybe<Scalars['String']>
+  ip_startsWith?: InputMaybe<Scalars['String']>
+  nftId_contains?: InputMaybe<Scalars['String']>
+  nftId_containsInsensitive?: InputMaybe<Scalars['String']>
+  nftId_endsWith?: InputMaybe<Scalars['String']>
+  nftId_eq?: InputMaybe<Scalars['String']>
+  nftId_gt?: InputMaybe<Scalars['String']>
+  nftId_gte?: InputMaybe<Scalars['String']>
+  nftId_in?: InputMaybe<Array<Scalars['String']>>
+  nftId_isNull?: InputMaybe<Scalars['Boolean']>
+  nftId_lt?: InputMaybe<Scalars['String']>
+  nftId_lte?: InputMaybe<Scalars['String']>
+  nftId_not_contains?: InputMaybe<Scalars['String']>
+  nftId_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  nftId_not_endsWith?: InputMaybe<Scalars['String']>
+  nftId_not_eq?: InputMaybe<Scalars['String']>
+  nftId_not_in?: InputMaybe<Array<Scalars['String']>>
+  nftId_not_startsWith?: InputMaybe<Scalars['String']>
+  nftId_startsWith?: InputMaybe<Scalars['String']>
+  rationale_contains?: InputMaybe<Scalars['String']>
+  rationale_containsInsensitive?: InputMaybe<Scalars['String']>
+  rationale_endsWith?: InputMaybe<Scalars['String']>
+  rationale_eq?: InputMaybe<Scalars['String']>
+  rationale_gt?: InputMaybe<Scalars['String']>
+  rationale_gte?: InputMaybe<Scalars['String']>
+  rationale_in?: InputMaybe<Array<Scalars['String']>>
+  rationale_isNull?: InputMaybe<Scalars['Boolean']>
+  rationale_lt?: InputMaybe<Scalars['String']>
+  rationale_lte?: InputMaybe<Scalars['String']>
+  rationale_not_contains?: InputMaybe<Scalars['String']>
+  rationale_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  rationale_not_endsWith?: InputMaybe<Scalars['String']>
+  rationale_not_eq?: InputMaybe<Scalars['String']>
+  rationale_not_in?: InputMaybe<Array<Scalars['String']>>
+  rationale_not_startsWith?: InputMaybe<Scalars['String']>
+  rationale_startsWith?: InputMaybe<Scalars['String']>
+  timestamp_eq?: InputMaybe<Scalars['DateTime']>
+  timestamp_gt?: InputMaybe<Scalars['DateTime']>
+  timestamp_gte?: InputMaybe<Scalars['DateTime']>
+  timestamp_in?: InputMaybe<Array<Scalars['DateTime']>>
+  timestamp_isNull?: InputMaybe<Scalars['Boolean']>
+  timestamp_lt?: InputMaybe<Scalars['DateTime']>
+  timestamp_lte?: InputMaybe<Scalars['DateTime']>
+  timestamp_not_eq?: InputMaybe<Scalars['DateTime']>
+  timestamp_not_in?: InputMaybe<Array<Scalars['DateTime']>>
+}
+
+export type NftFeaturingRequestsConnection = {
+  __typename?: 'NftFeaturingRequestsConnection'
+  edges: Array<NftFeaturingRequestEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
 export type NftHistoryEntriesConnection = {
   __typename?: 'NftHistoryEntriesConnection'
   edges: Array<NftHistoryEntryEdge>
@@ -3764,6 +3909,8 @@ export enum NftHistoryEntryOrderByInput {
   NftCreatorRoyaltyDesc = 'nft_creatorRoyalty_DESC',
   NftIdAsc = 'nft_id_ASC',
   NftIdDesc = 'nft_id_DESC',
+  NftIsFeaturedAsc = 'nft_isFeatured_ASC',
+  NftIsFeaturedDesc = 'nft_isFeatured_DESC',
   NftLastSaleDateAsc = 'nft_lastSaleDate_ASC',
   NftLastSaleDateDesc = 'nft_lastSaleDate_DESC',
   NftLastSalePriceAsc = 'nft_lastSalePrice_ASC',
@@ -4009,6 +4156,8 @@ export type OwnedNft = {
   /** Creator royalty (if any) */
   creatorRoyalty?: Maybe<Scalars['Float']>
   id: Scalars['String']
+  /** Flag to indicate whether the NFT is featured or not */
+  isFeatured: Scalars['Boolean']
   /** NFT's last sale date (if any) */
   lastSaleDate?: Maybe<Scalars['DateTime']>
   /** NFT's last sale price (if any) */
@@ -4050,6 +4199,8 @@ export enum OwnedNftOrderByInput {
   CreatorRoyaltyDesc = 'creatorRoyalty_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
+  IsFeaturedAsc = 'isFeatured_ASC',
+  IsFeaturedDesc = 'isFeatured_DESC',
   LastSaleDateAsc = 'lastSaleDate_ASC',
   LastSaleDateDesc = 'lastSaleDate_DESC',
   LastSalePriceAsc = 'lastSalePrice_ASC',
@@ -4148,6 +4299,9 @@ export type OwnedNftWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']>>
   id_not_startsWith?: InputMaybe<Scalars['String']>
   id_startsWith?: InputMaybe<Scalars['String']>
+  isFeatured_eq?: InputMaybe<Scalars['Boolean']>
+  isFeatured_isNull?: InputMaybe<Scalars['Boolean']>
+  isFeatured_not_eq?: InputMaybe<Scalars['Boolean']>
   lastSaleDate_eq?: InputMaybe<Scalars['DateTime']>
   lastSaleDate_gt?: InputMaybe<Scalars['DateTime']>
   lastSaleDate_gte?: InputMaybe<Scalars['DateTime']>
@@ -4313,6 +4467,11 @@ export type Query = {
   nftActivityById?: Maybe<NftActivity>
   /** @deprecated Use nftActivityById */
   nftActivityByUniqueInput?: Maybe<NftActivity>
+  nftFeaturingRequestById?: Maybe<NftFeaturingRequest>
+  /** @deprecated Use nftFeaturingRequestById */
+  nftFeaturingRequestByUniqueInput?: Maybe<NftFeaturingRequest>
+  nftFeaturingRequests: Array<NftFeaturingRequest>
+  nftFeaturingRequestsConnection: NftFeaturingRequestsConnection
   nftHistoryEntries: Array<NftHistoryEntry>
   nftHistoryEntriesConnection: NftHistoryEntriesConnection
   nftHistoryEntryById?: Maybe<NftHistoryEntry>
@@ -4919,6 +5078,28 @@ export type QueryNftActivityByUniqueInputArgs = {
   where: WhereIdInput
 }
 
+export type QueryNftFeaturingRequestByIdArgs = {
+  id: Scalars['String']
+}
+
+export type QueryNftFeaturingRequestByUniqueInputArgs = {
+  where: WhereIdInput
+}
+
+export type QueryNftFeaturingRequestsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<NftFeaturingRequestOrderByInput>>
+  where?: InputMaybe<NftFeaturingRequestWhereInput>
+}
+
+export type QueryNftFeaturingRequestsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy: Array<NftFeaturingRequestOrderByInput>
+  where?: InputMaybe<NftFeaturingRequestWhereInput>
+}
+
 export type QueryNftHistoryEntriesArgs = {
   limit?: InputMaybe<Scalars['Int']>
   offset?: InputMaybe<Scalars['Int']>
@@ -5468,6 +5649,12 @@ export type SetCategoryFeaturedVideosResult = {
   categoryId: Scalars['String']
   numberOfFeaturedVideosSet: Scalars['Int']
   numberOfFeaturedVideosUnset: Scalars['Int']
+}
+
+export type SetFeaturedNftsResult = {
+  __typename?: 'SetFeaturedNftsResult'
+  /** The updated number of nft that are now explicitly featured by the Gateway */
+  newNumberOfNftsFeatured?: Maybe<Scalars['Int']>
 }
 
 export type SetSupportedCategoriesResult = {
@@ -6112,8 +6299,9 @@ export type StorageDataObject = {
   ipfsHash: Scalars['String']
   /** Whether the data object was uploaded and accepted by the storage provider */
   isAccepted: Scalars['Boolean']
-  /** Resolved asset url */
-  resolvedUrl?: Maybe<Scalars['String']>
+  resolvedUrl: Scalars['String']
+  /** Resolved asset urls */
+  resolvedUrls: Array<Scalars['String']>
   /** Data object size in bytes */
   size: Scalars['BigInt']
   /** State Bloat Bond for removing the data object */
@@ -6141,8 +6329,6 @@ export enum StorageDataObjectOrderByInput {
   IpfsHashDesc = 'ipfsHash_DESC',
   IsAcceptedAsc = 'isAccepted_ASC',
   IsAcceptedDesc = 'isAccepted_DESC',
-  ResolvedUrlAsc = 'resolvedUrl_ASC',
-  ResolvedUrlDesc = 'resolvedUrl_DESC',
   SizeAsc = 'size_ASC',
   SizeDesc = 'size_DESC',
   StateBloatBondAsc = 'stateBloatBond_ASC',
@@ -6204,23 +6390,10 @@ export type StorageDataObjectWhereInput = {
   isAccepted_eq?: InputMaybe<Scalars['Boolean']>
   isAccepted_isNull?: InputMaybe<Scalars['Boolean']>
   isAccepted_not_eq?: InputMaybe<Scalars['Boolean']>
-  resolvedUrl_contains?: InputMaybe<Scalars['String']>
-  resolvedUrl_containsInsensitive?: InputMaybe<Scalars['String']>
-  resolvedUrl_endsWith?: InputMaybe<Scalars['String']>
-  resolvedUrl_eq?: InputMaybe<Scalars['String']>
-  resolvedUrl_gt?: InputMaybe<Scalars['String']>
-  resolvedUrl_gte?: InputMaybe<Scalars['String']>
-  resolvedUrl_in?: InputMaybe<Array<Scalars['String']>>
-  resolvedUrl_isNull?: InputMaybe<Scalars['Boolean']>
-  resolvedUrl_lt?: InputMaybe<Scalars['String']>
-  resolvedUrl_lte?: InputMaybe<Scalars['String']>
-  resolvedUrl_not_contains?: InputMaybe<Scalars['String']>
-  resolvedUrl_not_containsInsensitive?: InputMaybe<Scalars['String']>
-  resolvedUrl_not_endsWith?: InputMaybe<Scalars['String']>
-  resolvedUrl_not_eq?: InputMaybe<Scalars['String']>
-  resolvedUrl_not_in?: InputMaybe<Array<Scalars['String']>>
-  resolvedUrl_not_startsWith?: InputMaybe<Scalars['String']>
-  resolvedUrl_startsWith?: InputMaybe<Scalars['String']>
+  resolvedUrls_containsAll?: InputMaybe<Array<Scalars['String']>>
+  resolvedUrls_containsAny?: InputMaybe<Array<Scalars['String']>>
+  resolvedUrls_containsNone?: InputMaybe<Array<Scalars['String']>>
+  resolvedUrls_isNull?: InputMaybe<Scalars['Boolean']>
   size_eq?: InputMaybe<Scalars['BigInt']>
   size_gt?: InputMaybe<Scalars['BigInt']>
   size_gte?: InputMaybe<Scalars['BigInt']>
@@ -6307,6 +6480,8 @@ export type Subscription = {
   memberships: Array<Membership>
   nftActivities: Array<NftActivity>
   nftActivityById?: Maybe<NftActivity>
+  nftFeaturingRequestById?: Maybe<NftFeaturingRequest>
+  nftFeaturingRequests: Array<NftFeaturingRequest>
   nftHistoryEntries: Array<NftHistoryEntry>
   nftHistoryEntryById?: Maybe<NftHistoryEntry>
   notificationById?: Maybe<Notification>
@@ -6586,6 +6761,17 @@ export type SubscriptionNftActivitiesArgs = {
 
 export type SubscriptionNftActivityByIdArgs = {
   id: Scalars['String']
+}
+
+export type SubscriptionNftFeaturingRequestByIdArgs = {
+  id: Scalars['String']
+}
+
+export type SubscriptionNftFeaturingRequestsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<NftFeaturingRequestOrderByInput>>
+  where?: InputMaybe<NftFeaturingRequestWhereInput>
 }
 
 export type SubscriptionNftHistoryEntriesArgs = {
@@ -7770,8 +7956,6 @@ export enum VideoOrderByInput {
   MediaIpfsHashDesc = 'media_ipfsHash_DESC',
   MediaIsAcceptedAsc = 'media_isAccepted_ASC',
   MediaIsAcceptedDesc = 'media_isAccepted_DESC',
-  MediaResolvedUrlAsc = 'media_resolvedUrl_ASC',
-  MediaResolvedUrlDesc = 'media_resolvedUrl_DESC',
   MediaSizeAsc = 'media_size_ASC',
   MediaSizeDesc = 'media_size_DESC',
   MediaStateBloatBondAsc = 'media_stateBloatBond_ASC',
@@ -7784,6 +7968,8 @@ export enum VideoOrderByInput {
   NftCreatorRoyaltyDesc = 'nft_creatorRoyalty_DESC',
   NftIdAsc = 'nft_id_ASC',
   NftIdDesc = 'nft_id_DESC',
+  NftIsFeaturedAsc = 'nft_isFeatured_ASC',
+  NftIsFeaturedDesc = 'nft_isFeatured_DESC',
   NftLastSaleDateAsc = 'nft_lastSaleDate_ASC',
   NftLastSaleDateDesc = 'nft_lastSaleDate_DESC',
   NftLastSalePriceAsc = 'nft_lastSalePrice_ASC',
@@ -7818,8 +8004,6 @@ export enum VideoOrderByInput {
   ThumbnailPhotoIpfsHashDesc = 'thumbnailPhoto_ipfsHash_DESC',
   ThumbnailPhotoIsAcceptedAsc = 'thumbnailPhoto_isAccepted_ASC',
   ThumbnailPhotoIsAcceptedDesc = 'thumbnailPhoto_isAccepted_DESC',
-  ThumbnailPhotoResolvedUrlAsc = 'thumbnailPhoto_resolvedUrl_ASC',
-  ThumbnailPhotoResolvedUrlDesc = 'thumbnailPhoto_resolvedUrl_DESC',
   ThumbnailPhotoSizeAsc = 'thumbnailPhoto_size_ASC',
   ThumbnailPhotoSizeDesc = 'thumbnailPhoto_size_DESC',
   ThumbnailPhotoStateBloatBondAsc = 'thumbnailPhoto_stateBloatBond_ASC',
@@ -8016,8 +8200,6 @@ export enum VideoSubtitleOrderByInput {
   AssetIpfsHashDesc = 'asset_ipfsHash_DESC',
   AssetIsAcceptedAsc = 'asset_isAccepted_ASC',
   AssetIsAcceptedDesc = 'asset_isAccepted_DESC',
-  AssetResolvedUrlAsc = 'asset_resolvedUrl_ASC',
-  AssetResolvedUrlDesc = 'asset_resolvedUrl_DESC',
   AssetSizeAsc = 'asset_size_ASC',
   AssetSizeDesc = 'asset_size_DESC',
   AssetStateBloatBondAsc = 'asset_stateBloatBond_ASC',
