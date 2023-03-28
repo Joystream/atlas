@@ -12,21 +12,13 @@ type CarouselNavItemProps = {
 export const CarouselNavItem = ({ onClick, children }: CarouselNavItemProps) => {
   const { isActive } = useSwiperSlide()
   return (
-    <ItemWrapper className="glide__slide">
+    <ItemWrapper>
       {!isActive && (
-        <NavigationContainer data-glide-el="controls">
-          <LeftChevronContainer
-            className="glide__arrow glide__arrow--left"
-            data-glide-dir="<"
-            onClick={() => onClick?.('<')}
-          >
+        <NavigationContainer>
+          <LeftChevronContainer onClick={() => onClick?.('<')}>
             <SvgActionChevronL />
           </LeftChevronContainer>
-          <RightChevronContainer
-            className="glide__arrow glide__arrow--right"
-            data-glide-dir=">"
-            onClick={() => onClick?.('>')}
-          >
+          <RightChevronContainer onClick={() => onClick?.('>')}>
             <SvgActionChevronR />
           </RightChevronContainer>
         </NavigationContainer>
