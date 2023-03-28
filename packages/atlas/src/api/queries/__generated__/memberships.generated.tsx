@@ -30,7 +30,7 @@ export type GetMembershipsQuery = {
         __typename?: 'StorageDataObject'
         id: string
         resolvedUrls: Array<string>
-        resolvedUrl: string
+        resolvedUrl?: string | null
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -48,7 +48,7 @@ export type GetMembershipsQuery = {
         __typename?: 'StorageDataObject'
         id: string
         resolvedUrls: Array<string>
-        resolvedUrl: string
+        resolvedUrl?: string | null
         createdAt: Date
         size: string
         isAccepted: boolean
@@ -73,7 +73,7 @@ export type GetMembershipsQuery = {
               __typename?: 'StorageDataObject'
               id: string
               resolvedUrls: Array<string>
-              resolvedUrl: string
+              resolvedUrl?: string | null
               createdAt: Date
               size: string
               isAccepted: boolean

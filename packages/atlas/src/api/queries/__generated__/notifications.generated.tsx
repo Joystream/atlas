@@ -44,7 +44,7 @@ export type GetNotificationsQuery = {
                           __typename?: 'StorageDataObject'
                           id: string
                           resolvedUrls: Array<string>
-                          resolvedUrl: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -79,7 +79,7 @@ export type GetNotificationsQuery = {
                             __typename?: 'StorageDataObject'
                             id: string
                             resolvedUrls: Array<string>
-                            resolvedUrl: string
+                            resolvedUrl?: string | null
                             createdAt: Date
                             size: string
                             isAccepted: boolean
@@ -123,7 +123,7 @@ export type GetNotificationsQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -160,7 +160,7 @@ export type GetNotificationsQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -201,7 +201,7 @@ export type GetNotificationsQuery = {
                           __typename?: 'StorageDataObject'
                           id: string
                           resolvedUrls: Array<string>
-                          resolvedUrl: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -241,7 +241,7 @@ export type GetNotificationsQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -278,7 +278,7 @@ export type GetNotificationsQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -322,7 +322,7 @@ export type GetNotificationsQuery = {
                           __typename?: 'StorageDataObject'
                           id: string
                           resolvedUrls: Array<string>
-                          resolvedUrl: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -362,7 +362,7 @@ export type GetNotificationsQuery = {
                           __typename?: 'StorageDataObject'
                           id: string
                           resolvedUrls: Array<string>
-                          resolvedUrl: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -405,7 +405,7 @@ export type GetNotificationsQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -442,7 +442,7 @@ export type GetNotificationsQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -483,7 +483,7 @@ export type GetNotificationsQuery = {
                         __typename?: 'StorageDataObject'
                         id: string
                         resolvedUrls: Array<string>
-                        resolvedUrl: string
+                        resolvedUrl?: string | null
                         createdAt: Date
                         size: string
                         isAccepted: boolean
@@ -525,7 +525,7 @@ export type GetNotificationsQuery = {
                           __typename?: 'StorageDataObject'
                           id: string
                           resolvedUrls: Array<string>
-                          resolvedUrl: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -568,7 +568,7 @@ export type GetNotificationsQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -605,7 +605,7 @@ export type GetNotificationsQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -660,7 +660,7 @@ export type GetNftHistoryQuery = {
                         __typename?: 'StorageDataObject'
                         id: string
                         resolvedUrls: Array<string>
-                        resolvedUrl: string
+                        resolvedUrl?: string | null
                         createdAt: Date
                         size: string
                         isAccepted: boolean
@@ -699,7 +699,7 @@ export type GetNftHistoryQuery = {
                           __typename?: 'StorageDataObject'
                           id: string
                           resolvedUrls: Array<string>
-                          resolvedUrl: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -741,7 +741,7 @@ export type GetNftHistoryQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -778,7 +778,7 @@ export type GetNftHistoryQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -820,7 +820,7 @@ export type GetNftHistoryQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -857,7 +857,7 @@ export type GetNftHistoryQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -894,7 +894,7 @@ export type GetNftHistoryQuery = {
                           __typename?: 'StorageDataObject'
                           id: string
                           resolvedUrls: Array<string>
-                          resolvedUrl: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -936,7 +936,7 @@ export type GetNftHistoryQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -973,7 +973,7 @@ export type GetNftHistoryQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -1016,7 +1016,7 @@ export type GetNftHistoryQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -1053,7 +1053,7 @@ export type GetNftHistoryQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -1097,7 +1097,7 @@ export type GetNftHistoryQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -1134,7 +1134,7 @@ export type GetNftHistoryQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -1170,7 +1170,7 @@ export type GetNftHistoryQuery = {
                           __typename?: 'StorageDataObject'
                           id: string
                           resolvedUrls: Array<string>
-                          resolvedUrl: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -1212,7 +1212,7 @@ export type GetNftHistoryQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -1249,7 +1249,7 @@ export type GetNftHistoryQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -1289,7 +1289,7 @@ export type GetNftHistoryQuery = {
                         __typename?: 'StorageDataObject'
                         id: string
                         resolvedUrls: Array<string>
-                        resolvedUrl: string
+                        resolvedUrl?: string | null
                         createdAt: Date
                         size: string
                         isAccepted: boolean
@@ -1330,7 +1330,7 @@ export type GetNftHistoryQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -1367,7 +1367,7 @@ export type GetNftHistoryQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -1410,7 +1410,7 @@ export type GetNftHistoryQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -1447,7 +1447,7 @@ export type GetNftHistoryQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -1489,7 +1489,7 @@ export type GetNftHistoryQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -1526,7 +1526,7 @@ export type GetNftHistoryQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -1563,7 +1563,7 @@ export type GetNftHistoryQuery = {
                           __typename?: 'StorageDataObject'
                           id: string
                           resolvedUrls: Array<string>
-                          resolvedUrl: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -1605,7 +1605,7 @@ export type GetNftHistoryQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -1642,7 +1642,7 @@ export type GetNftHistoryQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -1703,7 +1703,7 @@ export type GetNftActivitiesQuery = {
                         __typename?: 'StorageDataObject'
                         id: string
                         resolvedUrls: Array<string>
-                        resolvedUrl: string
+                        resolvedUrl?: string | null
                         createdAt: Date
                         size: string
                         isAccepted: boolean
@@ -1736,7 +1736,7 @@ export type GetNftActivitiesQuery = {
                       __typename?: 'StorageDataObject'
                       id: string
                       resolvedUrls: Array<string>
-                      resolvedUrl: string
+                      resolvedUrl?: string | null
                       createdAt: Date
                       size: string
                       isAccepted: boolean
@@ -1776,7 +1776,7 @@ export type GetNftActivitiesQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -1813,7 +1813,7 @@ export type GetNftActivitiesQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -1850,7 +1850,7 @@ export type GetNftActivitiesQuery = {
                           __typename?: 'StorageDataObject'
                           id: string
                           resolvedUrls: Array<string>
-                          resolvedUrl: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -1885,7 +1885,7 @@ export type GetNftActivitiesQuery = {
                             __typename?: 'StorageDataObject'
                             id: string
                             resolvedUrls: Array<string>
-                            resolvedUrl: string
+                            resolvedUrl?: string | null
                             createdAt: Date
                             size: string
                             isAccepted: boolean
@@ -1917,7 +1917,7 @@ export type GetNftActivitiesQuery = {
                       __typename?: 'StorageDataObject'
                       id: string
                       resolvedUrls: Array<string>
-                      resolvedUrl: string
+                      resolvedUrl?: string | null
                       createdAt: Date
                       size: string
                       isAccepted: boolean
@@ -1950,7 +1950,7 @@ export type GetNftActivitiesQuery = {
                     __typename?: 'StorageDataObject'
                     id: string
                     resolvedUrls: Array<string>
-                    resolvedUrl: string
+                    resolvedUrl?: string | null
                     createdAt: Date
                     size: string
                     isAccepted: boolean
@@ -1986,7 +1986,7 @@ export type GetNftActivitiesQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -2023,7 +2023,7 @@ export type GetNftActivitiesQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -2065,7 +2065,7 @@ export type GetNftActivitiesQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -2102,7 +2102,7 @@ export type GetNftActivitiesQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -2139,7 +2139,7 @@ export type GetNftActivitiesQuery = {
                           __typename?: 'StorageDataObject'
                           id: string
                           resolvedUrls: Array<string>
-                          resolvedUrl: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -2170,7 +2170,7 @@ export type GetNftActivitiesQuery = {
                       __typename?: 'StorageDataObject'
                       id: string
                       resolvedUrls: Array<string>
-                      resolvedUrl: string
+                      resolvedUrl?: string | null
                       createdAt: Date
                       size: string
                       isAccepted: boolean
@@ -2201,7 +2201,7 @@ export type GetNftActivitiesQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   resolvedUrls: Array<string>
-                  resolvedUrl: string
+                  resolvedUrl?: string | null
                   createdAt: Date
                   size: string
                   isAccepted: boolean
@@ -2236,7 +2236,7 @@ export type GetNftActivitiesQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -2273,7 +2273,7 @@ export type GetNftActivitiesQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -2307,7 +2307,7 @@ export type GetNftActivitiesQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   resolvedUrls: Array<string>
-                  resolvedUrl: string
+                  resolvedUrl?: string | null
                   createdAt: Date
                   size: string
                   isAccepted: boolean
@@ -2342,7 +2342,7 @@ export type GetNftActivitiesQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -2379,7 +2379,7 @@ export type GetNftActivitiesQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -2423,7 +2423,7 @@ export type GetNftActivitiesQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -2460,7 +2460,7 @@ export type GetNftActivitiesQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -2497,7 +2497,7 @@ export type GetNftActivitiesQuery = {
                           __typename?: 'StorageDataObject'
                           id: string
                           resolvedUrls: Array<string>
-                          resolvedUrl: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -2528,7 +2528,7 @@ export type GetNftActivitiesQuery = {
                       __typename?: 'StorageDataObject'
                       id: string
                       resolvedUrls: Array<string>
-                      resolvedUrl: string
+                      resolvedUrl?: string | null
                       createdAt: Date
                       size: string
                       isAccepted: boolean
@@ -2561,7 +2561,7 @@ export type GetNftActivitiesQuery = {
                     __typename?: 'StorageDataObject'
                     id: string
                     resolvedUrls: Array<string>
-                    resolvedUrl: string
+                    resolvedUrl?: string | null
                     createdAt: Date
                     size: string
                     isAccepted: boolean
@@ -2597,7 +2597,7 @@ export type GetNftActivitiesQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -2634,7 +2634,7 @@ export type GetNftActivitiesQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -2674,7 +2674,7 @@ export type GetNftActivitiesQuery = {
                         __typename?: 'StorageDataObject'
                         id: string
                         resolvedUrls: Array<string>
-                        resolvedUrl: string
+                        resolvedUrl?: string | null
                         createdAt: Date
                         size: string
                         isAccepted: boolean
@@ -2712,7 +2712,7 @@ export type GetNftActivitiesQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -2749,7 +2749,7 @@ export type GetNftActivitiesQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -2779,7 +2779,7 @@ export type GetNftActivitiesQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   resolvedUrls: Array<string>
-                  resolvedUrl: string
+                  resolvedUrl?: string | null
                   createdAt: Date
                   size: string
                   isAccepted: boolean
@@ -2808,7 +2808,7 @@ export type GetNftActivitiesQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   resolvedUrls: Array<string>
-                  resolvedUrl: string
+                  resolvedUrl?: string | null
                   createdAt: Date
                   size: string
                   isAccepted: boolean
@@ -2843,7 +2843,7 @@ export type GetNftActivitiesQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -2880,7 +2880,7 @@ export type GetNftActivitiesQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -2914,7 +2914,7 @@ export type GetNftActivitiesQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   resolvedUrls: Array<string>
-                  resolvedUrl: string
+                  resolvedUrl?: string | null
                   createdAt: Date
                   size: string
                   isAccepted: boolean
@@ -2949,7 +2949,7 @@ export type GetNftActivitiesQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -2986,7 +2986,7 @@ export type GetNftActivitiesQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -3026,7 +3026,7 @@ export type GetNftActivitiesQuery = {
                           __typename?: 'StorageDataObject'
                           id: string
                           resolvedUrls: Array<string>
-                          resolvedUrl: string
+                          resolvedUrl?: string | null
                           createdAt: Date
                           size: string
                           isAccepted: boolean
@@ -3057,7 +3057,7 @@ export type GetNftActivitiesQuery = {
                       __typename?: 'StorageDataObject'
                       id: string
                       resolvedUrls: Array<string>
-                      resolvedUrl: string
+                      resolvedUrl?: string | null
                       createdAt: Date
                       size: string
                       isAccepted: boolean
@@ -3094,7 +3094,7 @@ export type GetNftActivitiesQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -3131,7 +3131,7 @@ export type GetNftActivitiesQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean
@@ -3166,7 +3166,7 @@ export type GetNftActivitiesQuery = {
                     __typename?: 'StorageDataObject'
                     id: string
                     resolvedUrls: Array<string>
-                    resolvedUrl: string
+                    resolvedUrl?: string | null
                     createdAt: Date
                     size: string
                     isAccepted: boolean
@@ -3202,7 +3202,7 @@ export type GetNftActivitiesQuery = {
                                 __typename?: 'StorageDataObject'
                                 id: string
                                 resolvedUrls: Array<string>
-                                resolvedUrl: string
+                                resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
                                 isAccepted: boolean
@@ -3239,7 +3239,7 @@ export type GetNftActivitiesQuery = {
                               __typename?: 'StorageDataObject'
                               id: string
                               resolvedUrls: Array<string>
-                              resolvedUrl: string
+                              resolvedUrl?: string | null
                               createdAt: Date
                               size: string
                               isAccepted: boolean

@@ -34,7 +34,7 @@ export type GetCommentQuery = {
                 __typename?: 'StorageDataObject'
                 id: string
                 resolvedUrls: Array<string>
-                resolvedUrl: string
+                resolvedUrl?: string | null
                 createdAt: Date
                 size: string
                 isAccepted: boolean
@@ -100,7 +100,7 @@ export type GetCommentRepliesConnectionQuery = {
                     __typename?: 'StorageDataObject'
                     id: string
                     resolvedUrls: Array<string>
-                    resolvedUrl: string
+                    resolvedUrl?: string | null
                     createdAt: Date
                     size: string
                     isAccepted: boolean
@@ -164,7 +164,7 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
                 __typename?: 'StorageDataObject'
                 id: string
                 resolvedUrls: Array<string>
-                resolvedUrl: string
+                resolvedUrl?: string | null
                 createdAt: Date
                 size: string
                 isAccepted: boolean
@@ -219,7 +219,7 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
                     __typename?: 'StorageDataObject'
                     id: string
                     resolvedUrls: Array<string>
-                    resolvedUrl: string
+                    resolvedUrl?: string | null
                     createdAt: Date
                     size: string
                     isAccepted: boolean
