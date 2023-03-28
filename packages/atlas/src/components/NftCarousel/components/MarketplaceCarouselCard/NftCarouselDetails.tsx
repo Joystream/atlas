@@ -1,4 +1,5 @@
 import BN from 'bn.js'
+import { useLayoutEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 
@@ -32,6 +33,7 @@ export const NftCarouselDetails = ({
 }) => {
   const navigate = useNavigate()
   const creatorAvatar = useAsset(nft?.video.channel.avatarPhoto)
+  const [timeLeft, setTimeLeft] = useState<string | null>(null)
   const { url: thumbnailUrl, isLoadingAsset: isVideoLoading } = useAsset(nft?.video.thumbnailPhoto)
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
 
@@ -42,7 +44,7 @@ export const NftCarouselDetails = ({
   const auction = nft?.transactionalStatusAuction || null
   const englishAuction = auction?.auctionType.__typename === 'AuctionTypeEnglish' && auction.auctionType
   const plannedEndDateBlockTimestamp = englishAuction && convertBlockToMsTimestamp(englishAuction.plannedEndAtBlock)
-  const auctionPlannedEndDate = plannedEndDateBlockTimestamp ? new Date(plannedEndDateBlockTimestamp) : undefined
+  // const auctionPlannedEndDate = plannedEndDateBlockTimestamp ? new Date(plannedEndDateBlockTimestamp) : undefined
 
   const { url: ownerMemberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
 
@@ -78,8 +80,33 @@ export const NftCarouselDetails = ({
     topBid: nft?.transactionalStatusAuction?.topBid?.amount
       ? hapiBnToTokenNumber(new BN(nft?.transactionalStatusAuction?.topBid?.amount))
       : undefined,
-    endsAt: auctionPlannedEndDate,
   }
+
+  useLayoutEffect(() => {
+    if (plannedEndDateBlockTimestamp) {
+      const auctionPlannedEndDate = new Date(plannedEndDateBlockTimestamp)
+
+      const interval = setInterval(() => {
+        const timeDiffInSeconds = (auctionPlannedEndDate?.getTime() - new Date().getTime()) / 1000
+        if (timeDiffInSeconds < 0) {
+          clearInterval(interval)
+          setTimeLeft(null)
+          return
+        }
+
+        const hours = Math.floor(timeDiffInSeconds / (60 * 60))
+        const minutes = Math.floor((timeDiffInSeconds / 60) % 60)
+        const seconds = Math.floor(timeDiffInSeconds % 60)
+        setTimeLeft(
+          `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+        )
+      }, 1000)
+
+      return () => {
+        clearInterval(interval)
+      }
+    }
+  }, [plannedEndDateBlockTimestamp])
 
   if (isLoading) {
     return (
@@ -148,7 +175,8 @@ export const NftCarouselDetails = ({
                     icon={<JoyTokenIcon size={16} variant="regular" />}
                   />
                 )}
-                <div>{nftDetails.endsAt?.toLocaleString()}</div>
+
+                {timeLeft && <DetailsContent tileSize="big" caption="AUCTION ENDS IN" content={timeLeft} />}
               </StatsContainer>
             </DetailsContainer>
           </InformationContainer>

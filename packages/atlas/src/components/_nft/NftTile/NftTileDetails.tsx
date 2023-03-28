@@ -209,7 +209,7 @@ export const NftTileDetails: FC<NftTileDetailsProps> = ({
 
 type DetailsContentProps = {
   caption: string
-  icon: ReactNode
+  icon?: ReactNode
   content: number | string
   secondary?: boolean
   tileSize: TileSize | undefined
@@ -243,7 +243,7 @@ export const DetailsContent: FC<DetailsContentProps> = memo(({ tileSize, caption
             as="span"
             value={content}
             format="short"
-            variant={tileSize === 'medium' ? 'h300' : 'h200'}
+            variant={getSize().content}
             color={secondary ? 'colorText' : undefined}
           />
         )}
