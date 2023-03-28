@@ -1,8 +1,8 @@
 import { FC, useMemo } from 'react'
 
 import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { CarouselProps } from '@/components/Carousel'
 import { Gallery } from '@/components/Gallery'
-import { GliderProps } from '@/components/Glider'
 import { breakpointsOfGrid } from '@/components/Grid'
 import { RankingNumberTile } from '@/components/RankingNumberTile'
 import { ChannelCard } from '@/components/_channel/ChannelCard'
@@ -26,19 +26,17 @@ export const ChannelGallery: FC<ChannelGalleryProps> = ({ title, channels = [], 
       gridColumnGap: 24,
       viewportContainerDifference: 64,
     })
-    const responsive: GliderProps['responsive'] = {}
+    const responsive: CarouselProps['breakpoints'] = {}
     breakpoints.forEach((breakpoint, idx) => {
       if (breakpoint <= CAROUSEL_SMALL_BREAKPOINT && hasRanking) {
         responsive[breakpoint] = {
-          perView: idx + 1.5,
-          bound: true,
-          perSwipe: '|',
+          slidesPerView: idx + 1.5,
+          slidesPerGroup: idx + 1.5,
         }
       } else {
         responsive[breakpoint] = {
-          perView: idx + 1,
-          bound: true,
-          perSwipe: '|',
+          slidesPerView: idx + 1,
+          slidesPerGroup: idx + 1,
         }
       }
     })
@@ -54,7 +52,7 @@ export const ChannelGallery: FC<ChannelGalleryProps> = ({ title, channels = [], 
     id: undefined,
   }))
   return (
-    <Gallery title={title} responsive={breakpoints} dotsVisible>
+    <Gallery title={title} breakpoints={breakpoints}>
       {[...(channels ? channels : []), ...placeholderItems].map((channel, idx) =>
         hasRanking ? (
           <RankingNumberTile number={idx + 1} key={idx}>

@@ -2,8 +2,8 @@ import styled from '@emotion/styled'
 import { FC } from 'react'
 
 import { FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { CarouselProps } from '@/components/Carousel'
 import { Gallery } from '@/components/Gallery'
-import { GliderProps } from '@/components/Glider'
 import { RankingNumberTile } from '@/components/RankingNumberTile'
 import { breakpoints } from '@/styles/breakpoints'
 
@@ -33,6 +33,28 @@ export type VideoGalleryProps = {
 
 const PLACEHOLDERS_COUNT = 12
 
+const responsive: CarouselProps['breakpoints'] = {
+  [parseInt(breakpoints.sm)]: {
+    slidesPerView: 1,
+  },
+  [parseInt(breakpoints.md)]: {
+    slidesPerView: 2,
+    slidesPerGroup: 2,
+  },
+  [parseInt(breakpoints.lg)]: {
+    slidesPerView: 3,
+    slidesPerGroup: 3,
+  },
+  [parseInt(breakpoints.xl)]: {
+    slidesPerView: 4,
+    slidesPerGroup: 4,
+  },
+  [parseInt(breakpoints.xxl)]: {
+    slidesPerView: 5,
+    slidesPerGroup: 5,
+  },
+}
+
 export const VideoGallery: FC<VideoGalleryProps> = ({
   title,
   videos = [],
@@ -41,32 +63,6 @@ export const VideoGallery: FC<VideoGalleryProps> = ({
   hasRanking = false,
   className,
 }) => {
-  const responsive: GliderProps['responsive'] = {
-    [parseInt(breakpoints.sm)]: {
-      perView: 1,
-    },
-    [parseInt(breakpoints.md)]: {
-      perView: 2,
-      perSwipe: '|',
-      bound: true,
-    },
-    [parseInt(breakpoints.lg)]: {
-      perView: 3,
-      perSwipe: '|',
-      bound: true,
-    },
-    [parseInt(breakpoints.xl)]: {
-      perView: 4,
-      perSwipe: '|',
-      bound: true,
-    },
-    [parseInt(breakpoints.xxl)]: {
-      perView: 5,
-      perSwipe: '|',
-      bound: true,
-    },
-  }
-
   if (loading === false && videos?.length === 0) {
     return null
   }
@@ -77,7 +73,15 @@ export const VideoGallery: FC<VideoGalleryProps> = ({
   }))
 
   return (
-    <Gallery perView={3} title={title} responsive={responsive} dotsVisible seeAllUrl={seeAllUrl} className={className}>
+    <Gallery
+      slidesPerView={3}
+      title={title}
+      breakpoints={responsive}
+      dotsVisible
+      rewind
+      seeAllUrl={seeAllUrl}
+      className={className}
+    >
       {[...(videos ? videos : []), ...placeholderItems]?.map((video, idx) =>
         hasRanking ? (
           <RankingNumberTile number={idx + 1} key={`${idx}-${video.id}`}>

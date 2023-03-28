@@ -29,8 +29,7 @@ Grid.args = {
 export const Carousel = Template.bind({})
 Carousel.args = {
   type: 'carousel',
-  dotsVisible: true,
-  perView: 3,
+  slidesPerView: 3,
 }
 
 const PlaceholderContainer = styled.div`

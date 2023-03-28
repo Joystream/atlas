@@ -2710,13 +2710,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@glidejs/glide@npm:^3.6.0":
-  version: 3.6.0
-  resolution: "@glidejs/glide@npm:3.6.0"
-  checksum: e2c8332f03dee891be5a310c9483355492093392efb35b5040d9678cd84d2dc067609a890cbf78f6824307f315e5f7e36940a5dc291c1c2ad653d43d62c7291d
-  languageName: node
-  linkType: hard
-
 "@graphql-codegen/add@npm:^3.2.1":
   version: 3.2.1
   resolution: "@graphql-codegen/add@npm:3.2.1"
@@ -3563,7 +3556,6 @@ __metadata:
     "@emotion/babel-plugin": ^11.10.5
     "@emotion/react": ^11.10.5
     "@emotion/styled": ^11.10.5
-    "@glidejs/glide": ^3.6.0
     "@graphql-codegen/cli": ^2.16.1
     "@graphql-codegen/introspection": ^2.2.3
     "@graphql-codegen/near-operation-file-preset": ^2.4.4
@@ -3597,7 +3589,6 @@ __metadata:
     "@tippyjs/react": ^4.2.6
     "@types/aos": ^3.0.4
     "@types/bn.js": ^5.1.1
-    "@types/glidejs__glide": ^3.6.1
     "@types/js-yaml": ^4.0.5
     "@types/loadable__component": ^5.13.4
     "@types/lodash-es": ^4.17.6
@@ -3661,6 +3652,7 @@ __metadata:
     storybook: 7.0.0-beta.3
     style-dictionary: ^3.7.1
     subscriptions-transport-ws: ^0.11.0
+    swiper: ^9.1.1
     twemoji: ^14.0.2
     use-draggable-scroll: ^0.1.0
     use-resize-observer: ^9.1.0
@@ -6352,13 +6344,6 @@ __metadata:
     "@types/qs": "*"
     "@types/serve-static": "*"
   checksum: 15c1af46d02de834e4a225eccaa9d85c0370fdbb3ed4e1bc2d323d24872309961542b993ae236335aeb3e278630224a6ea002078d39e651d78a3b0356b1eaa79
-  languageName: node
-  linkType: hard
-
-"@types/glidejs__glide@npm:^3.6.1":
-  version: 3.6.1
-  resolution: "@types/glidejs__glide@npm:3.6.1"
-  checksum: 3caf63ba0f3e58b767db8e47b211bb5fcb469ed6f8406e8fb156116111d2f6ba06bf5eb5fd40fc17fdb54668441e478117f7d72960e338b0e424c1577ccd712a
   languageName: node
   linkType: hard
 
@@ -19157,6 +19142,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ssr-window@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "ssr-window@npm:4.0.2"
+  checksum: df182600927f4f3225224cf8c02338ea637c9750519505bbfb9a9236741a2a7ec088386fb948bca7b447b8303d9109e7dc7672e3de041c79ac2a0e03665af7d2
+  languageName: node
+  linkType: hard
+
 "ssri@npm:^9.0.0":
   version: 9.0.1
   resolution: "ssri@npm:9.0.1"
@@ -19629,6 +19621,15 @@ __metadata:
   dependencies:
     tslib: ^2.0.3
   checksum: 6e21c9e1b3cd5735eb2af679a99ec3efc78a14e3d4d5e3fd594e254b91cfd37185b3d1c6e41b22f53a2cdf5d1b963ce30c0fe8b78337e3fd43d0137084670a5f
+  languageName: node
+  linkType: hard
+
+"swiper@npm:^9.1.1":
+  version: 9.1.1
+  resolution: "swiper@npm:9.1.1"
+  dependencies:
+    ssr-window: ^4.0.2
+  checksum: 053d606f03eb4f59be95dd3a6129b6fde559b5c1f042ab0c1240df12e0cbac32e2ab81a7334ca9781309bf34edd18ebe308d31b1064fdfba98120f0b20e48b93
   languageName: node
   linkType: hard
 

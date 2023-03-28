@@ -1,19 +1,19 @@
 import { ReactNode } from 'react'
+import { useSwiperSlide } from 'swiper/react'
 
 import { SvgActionChevronL, SvgActionChevronR } from '@/assets/icons'
 
 import { ItemWrapper, LeftChevronContainer, NavigationContainer, RightChevronContainer } from './NftCarouselItem.styles'
 
 type CarouselNavItemProps = {
-  position: 'side' | 'active'
-
   onClick?: (dir: '<' | '>') => void
-  children?: ReactNode
+  children?: ((isActive: boolean) => ReactNode) | ReactNode
 }
-export const CarouselNavItem = ({ position, onClick, children }: CarouselNavItemProps) => {
+export const CarouselNavItem = ({ onClick, children }: CarouselNavItemProps) => {
+  const { isActive } = useSwiperSlide()
   return (
     <ItemWrapper className="glide__slide">
-      {position === 'side' && (
+      {!isActive && (
         <NavigationContainer data-glide-el="controls">
           <LeftChevronContainer
             className="glide__arrow glide__arrow--left"
@@ -31,7 +31,7 @@ export const CarouselNavItem = ({ position, onClick, children }: CarouselNavItem
           </RightChevronContainer>
         </NavigationContainer>
       )}
-      {children}
+      {typeof children === 'function' ? children(isActive) : children}
     </ItemWrapper>
   )
 }

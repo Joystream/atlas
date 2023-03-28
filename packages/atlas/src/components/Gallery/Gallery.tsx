@@ -1,8 +1,7 @@
-import Glider from '@glidejs/glide'
 import { FC, PropsWithChildren, ReactNode, useRef } from 'react'
 
 import { SvgActionChevronL, SvgActionChevronR, SvgControlsPlay } from '@/assets/icons'
-import { Carousel, CarouselProps } from '@/components/Carousel'
+import { Carousel, CarouselProps, SwiperInstance } from '@/components/Carousel'
 import { Arrow } from '@/components/Carousel/Carousel.styles'
 import { GridHeadingContainer, TitleContainer } from '@/components/GridHeading'
 import { Text } from '@/components/Text'
@@ -18,7 +17,7 @@ export type GalleryProps = PropsWithChildren<{
   Omit<CarouselProps, 'children'>
 
 export const Gallery: FC<GalleryProps> = ({ title, className, seeAllUrl, children, ...carouselProps }) => {
-  const gliderRef = useRef<Glider | undefined>(undefined)
+  const gliderRef = useRef<SwiperInstance | null>(null)
   return (
     <Container className={className}>
       <GridHeadingContainer>
@@ -44,23 +43,19 @@ export const Gallery: FC<GalleryProps> = ({ title, className, seeAllUrl, childre
               icon={<SvgActionChevronL />}
               size="large"
               variant="secondary"
-              onClick={() => gliderRef.current?.go('<')}
+              onClick={() => gliderRef.current?.slidePrev()}
             />
             <Arrow
               icon={<SvgActionChevronR />}
               size="large"
               variant="secondary"
-              onClick={() => gliderRef.current?.go('>')}
+              onClick={() => gliderRef.current?.slideNext()}
             />
           </CarouselArrowsContainer>
         </TitleContainer>
       </GridHeadingContainer>
-      <Carousel {...carouselProps}>
-        {({ glider }) => {
-          gliderRef.current = glider
-
-          return children
-        }}
+      <Carousel onSwiper={(swiper) => (gliderRef.current = swiper)} {...carouselProps}>
+        {children}
       </Carousel>
     </Container>
   )

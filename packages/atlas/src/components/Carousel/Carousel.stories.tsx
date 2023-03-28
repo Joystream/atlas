@@ -11,7 +11,6 @@ export default {
 } as Meta
 
 const Template: StoryFn<CarouselProps> = (args) => {
-  delete args.onSwipeEnd
   return (
     <Carousel {...args}>
       {Array.from({ length: 10 }, (_, i) => (
@@ -22,19 +21,21 @@ const Template: StoryFn<CarouselProps> = (args) => {
 }
 export const Regular = Template.bind({})
 Regular.args = {
-  perView: 3,
-  bound: true,
+  slidesPerView: 3,
+  slidesPerGroup: 3,
+  rewind: true,
 }
 
 export const WithDots = Template.bind({})
 WithDots.args = {
-  perView: 3,
+  slidesPerView: 3,
+  slidesPerGroup: 3,
+  rewind: true,
+  navigation: true,
   dotsVisible: true,
-  bound: true,
 }
 
 const CarouselItem = styled.div`
-  width: 300px;
   min-height: 200px;
   text-align: center;
   color: ${cVar('colorCoreBaseWhite')};

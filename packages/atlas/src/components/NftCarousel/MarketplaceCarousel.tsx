@@ -1,11 +1,13 @@
-import Glider from '@glidejs/glide'
-import { useCallback, useState } from 'react'
+import styled from '@emotion/styled'
+import { useMemo, useState } from 'react'
 
 import { GetFeaturedNftsQuery } from '@/api/queries/__generated__/nfts.generated'
-import { Carousel, CarouselProps } from '@/components/Carousel'
-import { MarketplaceCarouselCard } from '@/components/NftCarousel/components/MarketplaceCarouselCard'
-import { CarouselNavItem } from '@/components/NftCarousel/components/NftCarouselItem/CarouselNavItem'
-import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { Carousel, CarouselProps, SwiperInstance } from '@/components/Carousel'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { breakpoints, media } from '@/styles'
+
+import { MarketplaceCarouselCard } from './components/MarketplaceCarouselCard'
+import { CarouselNavItem } from './components/NftCarouselItem/CarouselNavItem'
 
 type NftCarouselType = {
   type: 'nft'
@@ -16,46 +18,77 @@ type MarketplaceCarouselTypes = NftCarouselType
 
 export type MarketplaceCarouselProps = MarketplaceCarouselTypes & {
   carouselProps?: Omit<CarouselProps, 'children'>
+  isLoading?: boolean
 }
 
-export const MarketplaceCarousel = ({ carouselProps, ...rest }: MarketplaceCarouselProps) => {
-  const [currentMiddleItem, setCurrentMiddleItem] = useState(1)
-  const smMatch = useMediaMatch('sm')
-  const xlMatch = useMediaMatch('xl')
+const responsive: CarouselProps['breakpoints'] = {
+  [parseInt(breakpoints.md)]: {
+    slidesPerView: 1.4,
+  },
+  [parseInt(breakpoints.xl)]: {
+    slidesPerView: 1.6,
+  },
+}
 
-  const contentMapper = useCallback(
-    (glider: Glider | undefined, props: MarketplaceCarouselTypes) => {
-      if (props.type === 'nft' && props.nfts) {
-        return props.nfts.map((nft, idx) => (
-          <CarouselNavItem
-            key={idx}
-            position={currentMiddleItem === idx ? 'active' : 'side'}
-            onClick={(dir) => glider?.go(dir)}
-          >
-            <MarketplaceCarouselCard active={currentMiddleItem === idx} type="nft" nft={nft} />
-          </CarouselNavItem>
-        ))
-      }
+export const MarketplaceCarousel = ({ carouselProps, isLoading, ...rest }: MarketplaceCarouselProps) => {
+  const [glider, setGlider] = useState<SwiperInstance | null>(null)
 
-      return [null]
-    },
-    [currentMiddleItem]
-  )
+  const content = useMemo(() => {
+    if (isLoading) {
+      return [
+        <StyledSkeleton key={1} />,
+        <StyledSkeleton key={2} />,
+        <StyledSkeleton key={3} />,
+        <StyledSkeleton key={4} />,
+      ]
+    }
 
-  if (!rest.nfts) return null
+    if (rest.type === 'nft' && rest.nfts && glider) {
+      return rest.nfts.map((nft, idx) => (
+        <CarouselNavItem key={idx} onClick={(dir) => (dir === '>' ? glider?.slideNext() : glider?.slidePrev())}>
+          {(isActive) => <MarketplaceCarouselCard active={isActive} type="nft" nft={nft} />}
+        </CarouselNavItem>
+      ))
+    }
+
+    return [null]
+  }, [rest.type, rest.nfts, glider, isLoading])
 
   return (
     <Carousel
-      type="carousel"
-      perView={!smMatch ? 1.3 : !xlMatch ? 1.4 : 1.6}
-      startAt={1}
-      gap={12}
-      focusAt="center"
-      perSwipe=""
-      onSwipeEnd={({ index }) => setCurrentMiddleItem(index)}
-      {...carouselProps}
+      spaceBetween={12}
+      loop
+      centeredSlides
+      slidesPerView={1.3}
+      breakpoints={responsive}
+      onSwiper={(swiper) => setGlider(swiper)}
     >
-      {({ glider }) => contentMapper(glider, rest)}
+      {content}
     </Carousel>
   )
 }
+
+const StyledSkeleton = styled(SkeletonLoader)`
+  height: 325px;
+  width: 100%;
+
+  ${media.sm} {
+    min-height: 340px;
+  }
+
+  ${media.md} {
+    min-height: 410px;
+  }
+
+  ${media.lg} {
+    min-height: 610px;
+  }
+
+  ${media.xl} {
+    min-height: 660px;
+  }
+
+  ${media.xxl} {
+    min-height: 830px;
+  }
+`
