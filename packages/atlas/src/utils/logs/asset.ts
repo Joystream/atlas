@@ -7,7 +7,7 @@ import { ConsoleLogger } from './console'
 import { SentryLogger } from './sentry'
 
 type DistributorEventDetails = {
-  distributorId: string
+  distributorId?: string
   distributorUrl?: string | null
 }
 

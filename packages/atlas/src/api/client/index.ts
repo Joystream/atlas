@@ -3,8 +3,12 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { createClient } from 'graphql-ws'
 
+import { atlasConfig } from '@/config'
 import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config/env'
+import { logDistributorPerformance, testAssetDownload } from '@/providers/assets/assets.helpers'
 import { useUserLocationStore } from '@/providers/userLocation'
+import { AssetLogger, ConsoleLogger, DistributorEventEntry, SentryLogger } from '@/utils/logs'
+import { TimeoutError, withTimeout } from '@/utils/misc'
 
 import cache from './cache'
 
@@ -24,6 +28,9 @@ const delayLink = new ApolloLink((operation, forward) => {
     }, ctx.delay)
   })
 })
+
+const MAX_ALLOWED_RETRIES = 10
+const bannedDistributorUrls: Record<string, number> = {}
 
 const createApolloClient = () => {
   const subscriptionLink = new GraphQLWsLink(
@@ -66,8 +73,55 @@ const createApolloClient = () => {
     link: operationSplitLink,
     resolvers: {
       StorageDataObject: {
-        resolvedUrl: async (parent: StorageDataObject, args, ctx, info) => {
-          return parent.resolvedUrls[0]
+        resolvedUrl: async (parent: StorageDataObject) => {
+          if (!parent.isAccepted) {
+            return null
+          }
+
+          // skip distributor url if he failed more than n times(where n is MAX_ALLOWED_RETRIES)
+          const resolvedUrls = parent.resolvedUrls?.filter((url) => {
+            const distributorUrl = url.split(`/${atlasConfig.storage.assetPath}/${parent.id}`)[0]
+            return (bannedDistributorUrls[distributorUrl] || 0) <= MAX_ALLOWED_RETRIES
+          })
+
+          for (const resolvedUrl of resolvedUrls) {
+            if (!parent.type) {
+              return null
+            }
+            const distributorUrl = resolvedUrl.split(`/${atlasConfig.storage.assetPath}/${parent.id}`)[0]
+
+            const assetTestPromise = testAssetDownload(resolvedUrl, parent.type)
+            const assetTestPromiseWithTimeout = withTimeout(assetTestPromise, atlasConfig.storage.assetResponseTimeout)
+            const eventEntry: DistributorEventEntry = {
+              distributorUrl,
+              dataObjectId: parent.id,
+              dataObjectType: parent.type?.__typename,
+            }
+
+            try {
+              await assetTestPromiseWithTimeout
+
+              logDistributorPerformance(resolvedUrl, eventEntry)
+              return resolvedUrl
+            } catch (err) {
+              bannedDistributorUrls[distributorUrl] = (bannedDistributorUrls[distributorUrl] || 0) + 1
+              if (err instanceof TimeoutError) {
+                AssetLogger.logDistributorResponseTimeout(eventEntry)
+                ConsoleLogger.warn(
+                  `Distributor didn't respond in ${atlasConfig.storage.assetResponseTimeout} seconds`,
+                  {
+                    dataObject: parent,
+                  }
+                )
+              } else {
+                AssetLogger.logDistributorError(eventEntry)
+                SentryLogger.error('Error during asset download test', 'AssetsManager', err, {
+                  asset: { parent, resolvedUrl },
+                })
+              }
+            }
+          }
+          return null
         },
       },
     },
