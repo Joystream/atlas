@@ -1,6 +1,7 @@
 import { DataObjectType } from '@/api/queries/__generated__/baseTypes.generated'
 import { BUILD_ENV } from '@/config/env'
 import { AssetLogger, ConsoleLogger, DataObjectResponseMetric, DistributorEventEntry } from '@/utils/logs'
+import { wait } from '@/utils/misc'
 
 const imageAssetTypes: DataObjectType['__typename'][] = [
   'DataObjectTypeChannelAvatar',
@@ -75,7 +76,7 @@ export const logDistributorPerformance = async (assetUrl: string, eventEntry: Di
   if (!AssetLogger.isEnabled) return
 
   // delay execution for 1s to make sure performance entries get populated
-  await new Promise((resolve) => setTimeout(resolve, 1000))
+  await wait(1000)
 
   const performanceEntries = window.performance.getEntriesByName(assetUrl)
   const performanceEntry = performanceEntries[0] as PerformanceResourceTiming
