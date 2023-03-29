@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useQuery } from 'react-query'
 
 import { useBasicChannels } from '@/api/hooks/channel'
@@ -71,6 +71,12 @@ export const useGetYppSyncedChannels = () => {
       SentryLogger.error('Error while updating YPP setting: ', 'useGetYppSyncedChannels', error)
     }
   }, [activeMembership?.channels, channelId, channels])
+
+  useEffect(() => {
+    if (channelId) {
+      refetch()
+    }
+  }, [channelId, refetch])
 
   return {
     unsyncedChannels: yppSyncedData?.unsyncedChannels,
