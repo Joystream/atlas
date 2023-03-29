@@ -172,6 +172,7 @@ export const useReactionTransactions = () => {
             : `Your comment to the video "${videoTitle}" has not been posted.`,
         },
         unsignedMessage: parentCommentId ? 'To leave your reply' : 'To leave your comment',
+        allowMultiple: true,
       })
 
       return newCommentId
@@ -241,6 +242,7 @@ export const useReactionTransactions = () => {
           errorMessage: `Your comment to the video "${videoTitle}" has not been edited.`,
         },
         unsignedMessage: 'To edit your comment',
+        allowMultiple: true,
       })
     },
     [memberId, handleTransaction, joystream, proxyCallback, refetchEdits]
@@ -265,6 +267,7 @@ export const useReactionTransactions = () => {
           errorMessage: `Your comment to the video "${videoTitle}" has not been deleted.`,
         },
         unsignedMessage: 'To delete your comment',
+        allowMultiple: true,
       })
     },
     [memberId, handleTransaction, joystream, navigate, proxyCallback]
@@ -290,6 +293,7 @@ export const useReactionTransactions = () => {
           errorMessage: `Comment from "${commentAuthorHandle}" to your video has not been deleted.`,
         },
         unsignedMessage: `To delete comment from "${commentAuthorHandle}"`,
+        allowMultiple: true,
       })
     },
     [memberId, handleTransaction, joystream, navigate, proxyCallback]
@@ -313,6 +317,7 @@ export const useReactionTransactions = () => {
           await refetchVideo(videoId)
         },
         unsignedMessage: 'To add your reaction',
+        allowMultiple: true,
       })
     },
     [memberId, handleTransaction, joystream, proxyCallback, refetchVideo]
