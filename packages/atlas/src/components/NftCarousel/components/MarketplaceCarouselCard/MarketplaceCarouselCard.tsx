@@ -14,6 +14,7 @@ type CardTypes = NftCard | CrtCard
 
 type MarketplaceCarouselCardProps = {
   active: boolean
+  slideNext: () => void
 } & CardTypes
 
 export const MarketplaceCarouselCard = (props: MarketplaceCarouselCardProps) => {

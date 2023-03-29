@@ -27,9 +27,11 @@ import { transitions } from '@/styles'
 export const NftCarouselDetails = ({
   nft,
   active,
+  slideNext,
 }: {
   nft: GetFeaturedNftsQuery['ownedNfts'][number]
   active: boolean
+  slideNext: () => void
 }) => {
   const navigate = useNavigate()
   const creatorAvatar = useAsset(nft?.video.channel.avatarPhoto)
@@ -129,6 +131,7 @@ export const NftCarouselDetails = ({
           poster={thumbnailUrl ?? undefined}
           handleActions={active}
           videoPlaytime={30}
+          onEnded={slideNext}
         />
       </VideoContainer>
       {active && (

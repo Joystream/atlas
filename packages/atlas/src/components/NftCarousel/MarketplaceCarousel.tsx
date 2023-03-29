@@ -46,7 +46,9 @@ export const MarketplaceCarousel = ({ carouselProps, isLoading, ...rest }: Marke
     if (rest.type === 'nft' && rest.nfts && glider) {
       return rest.nfts.map((nft, idx) => (
         <CarouselNavItem key={idx} onClick={(dir) => (dir === '>' ? glider?.slideNext() : glider?.slidePrev())}>
-          {(isActive) => <MarketplaceCarouselCard active={isActive} type="nft" nft={nft} />}
+          {(isActive) => (
+            <MarketplaceCarouselCard slideNext={() => glider?.slideNext()} active={isActive} type="nft" nft={nft} />
+          )}
         </CarouselNavItem>
       ))
     }
