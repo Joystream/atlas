@@ -343,10 +343,20 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     if (data?.unsyncedChannels?.length) {
       setSelectedChannelId(data?.unsyncedChannels[0].id)
     }
-    if (data?.unsyncedChannels?.length && data?.unsyncedChannels.length > 0) {
+    if (data?.unsyncedChannels?.length && data?.unsyncedChannels.length > 1) {
       onChangeStep('select-channel')
+      return
     }
-  }, [activeMembership?.channels, navigate, onChangeStep, refetchYppSyncedChannels, setSelectedChannelId])
+
+    handleAuthorizeClick(data?.unsyncedChannels?.[0].id)
+  }, [
+    activeMembership?.channels,
+    handleAuthorizeClick,
+    navigate,
+    onChangeStep,
+    refetchYppSyncedChannels,
+    setSelectedChannelId,
+  ])
 
   const authorizationStep = useMemo(() => {
     switch (currentStep) {
@@ -370,10 +380,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           title: 'Select channel',
           description: `Select the ${APP_NAME} channel you want your YouTube channel to be connected with.`,
           primaryButton: {
-            // text: 'Select channel',
             text: 'Authorize with YouTube',
-            // onClick: () => onChangeStep('requirements'),
-            onClick: handleAuthorizeClick,
+            onClick: () => handleAuthorizeClick,
             disabled: !selectedChannel,
           },
           component: (
@@ -452,7 +460,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           title: 'Authorization failed',
           primaryButton: {
             text: 'Select another channel',
-            onClick: handleAuthorizeClick,
+            onClick: () => handleAuthorizeClick,
           },
           description: (
             <>

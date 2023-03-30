@@ -47,7 +47,7 @@ export const YppLandingView: FC = () => {
 
   const { unsyncedChannels, isLoading, currentChannel } = useGetYppSyncedChannels()
   const isYppSigned = !!currentChannel
-  const hasAnotherUnsyncedChannel = isYppSigned && !!unsyncedChannels?.length //&& currentChannel.joystreamChannelId === channelId
+  const hasAnotherUnsyncedChannel = isYppSigned && !!unsyncedChannels?.length
 
   useEffect(() => {
     AOS.init({
