@@ -62,6 +62,7 @@ export const PaginationButton = styled(Button)<PaginationButtonProps>`
   :hover,
   :focus,
   :active {
+    background-color: ${cVar('colorCoreNeutral700Lighten')};
     color: ${cVar('colorCoreNeutral50')};
   }
 
