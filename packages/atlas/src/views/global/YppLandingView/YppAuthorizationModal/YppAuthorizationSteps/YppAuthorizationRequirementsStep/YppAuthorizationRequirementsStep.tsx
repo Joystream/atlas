@@ -1,27 +1,27 @@
-import { FC } from 'react'
+import { FC, ReactNode } from 'react'
 
 import { SvgActionCheck, SvgActionClose } from '@/assets/icons'
 
-import { ListItem, StyledList, TickWrapper } from './YppAuthorizationRequirementsStep.styles'
+import { ListItem, Paragraph, StyledList, TickWrapper } from './YppAuthorizationRequirementsStep.styles'
 
 type Requirment = {
-  text: string
+  text: ReactNode
   fulfilled: boolean
 }
 
 type YppAuthorizationRequirementsStepProps = {
-  requirments: Requirment[]
+  requirements: Requirment[]
 }
 
-export const YppAuthorizationRequirementsStep: FC<YppAuthorizationRequirementsStepProps> = ({ requirments }) => {
+export const YppAuthorizationRequirementsStep: FC<YppAuthorizationRequirementsStepProps> = ({ requirements }) => {
   return (
     <StyledList>
-      {requirments.map((item) => (
-        <ListItem key={item.text} as="li" variant="t200" color="colorText">
+      {requirements.map((item, idx) => (
+        <ListItem key={idx} as="li" variant="t200" color="colorText">
           <TickWrapper fulfilled={item.fulfilled}>
             {item.fulfilled ? <SvgActionCheck /> : <SvgActionClose />}
           </TickWrapper>
-          {item.text}
+          <Paragraph>{item.text}</Paragraph>
         </ListItem>
       ))}
     </StyledList>

@@ -33,6 +33,7 @@ export const YppLandingView: FC = () => {
   const { isLoggedIn, signIn, activeMembership, channelId, walletStatus } = useUser()
   const { setSelectedChannelId, setShouldContinueYppFlow } = useYppStore((store) => store.actions)
   const { displaySnackbar } = useSnackbar()
+  const navigate = useNavigate()
   const selectedChannelTitle = activeMembership?.channels.find((channel) => channel.id === channelId)?.title
   const { data } = useQuery('ypp-quota-fetch', () =>
     axios
@@ -40,16 +41,12 @@ export const YppLandingView: FC = () => {
       .then((res) => res.data)
       .catch((e) => SentryLogger.error('Quota fetch failed', 'YppLandingView', e))
   )
+  const [wasSignInTriggered, setWasSignInTriggered] = useState(false)
   const isTodaysQuotaReached = data ? data.signupQuotaUsed > SINGUP_DAILY_QUOTA : false
   const shouldContinueYppFlow = useYppStore((store) => store.shouldContinueYppFlow)
 
-  const navigate = useNavigate()
-
-  const channels = activeMembership?.channels
-
   const { unsyncedChannels, isLoading, currentChannel } = useGetYppSyncedChannels()
   const isYppSigned = !!currentChannel
-
   const hasAnotherUnsyncedChannel = isYppSigned && !!unsyncedChannels?.length
 
   useEffect(() => {
@@ -59,7 +56,7 @@ export const YppLandingView: FC = () => {
     })
   }, [])
 
-  const handleSignUpClick = useCallback(() => {
+  const handleYppSignUpClick = useCallback(async () => {
     if (isTodaysQuotaReached) {
       displaySnackbar({
         title: 'Something went wrong',
@@ -71,36 +68,29 @@ export const YppLandingView: FC = () => {
     }
 
     if (!isLoggedIn) {
-      signIn()
+      await signIn()
+      setWasSignInTriggered(true)
       return
     }
-    if (!channels?.length) {
-      navigate(absoluteRoutes.studio.signIn())
-      return
-    }
+
     if (isYppSigned) {
       navigate(absoluteRoutes.studio.ypp())
       return
     }
-    if (unsyncedChannels?.length) {
-      setSelectedChannelId(unsyncedChannels[0].id)
-    }
-    if (unsyncedChannels?.length && unsyncedChannels.length > 1) {
-      setCurrentStep('select-channel')
-    } else {
+
+    if (!currentStep) {
       setCurrentStep('requirements')
+      return
     }
-  }, [
-    channels?.length,
-    isLoggedIn,
-    isYppSigned,
-    navigate,
-    setSelectedChannelId,
-    signIn,
-    unsyncedChannels,
-    isTodaysQuotaReached,
-    displaySnackbar,
-  ])
+  }, [currentStep, displaySnackbar, isLoggedIn, isTodaysQuotaReached, isYppSigned, navigate, signIn])
+
+  useEffect(() => {
+    // rerun handleYppSignUpClick after sign in flow
+    if (wasSignInTriggered) {
+      handleYppSignUpClick()
+      setWasSignInTriggered(false)
+    }
+  }, [handleYppSignUpClick, wasSignInTriggered])
 
   useEffect(() => {
     if (shouldContinueYppFlow) {
@@ -108,7 +98,7 @@ export const YppLandingView: FC = () => {
       setShouldContinueYppFlow(false)
       setCurrentStep('requirements')
     }
-  }, [channelId, handleSignUpClick, setSelectedChannelId, setShouldContinueYppFlow, shouldContinueYppFlow])
+  }, [channelId, handleYppSignUpClick, setSelectedChannelId, setShouldContinueYppFlow, shouldContinueYppFlow])
 
   const getYppAtlasStatus = () => {
     if (isLoading) {
@@ -140,15 +130,15 @@ export const YppLandingView: FC = () => {
         <YppReferralBanner />
         <YppHero
           onSelectChannel={() => setCurrentStep('select-channel')}
-          onSignUpClick={handleSignUpClick}
+          onSignUpClick={handleYppSignUpClick}
           yppAtlasStatus={getYppAtlasStatus()}
           hasAnotherUnsyncedChannel={hasAnotherUnsyncedChannel}
           selectedChannelTitle={selectedChannelTitle}
         />
         <YppRewardSection />
-        <YppThreeStepsSection onSignUpClick={handleSignUpClick} yppStatus={getYppAtlasStatus()} />
+        <YppThreeStepsSection onSignUpClick={handleYppSignUpClick} yppStatus={getYppAtlasStatus()} />
         <YppCardsSections />
-        <YppFooter onSignUpClick={handleSignUpClick} />
+        <YppFooter onSignUpClick={handleYppSignUpClick} />
       </ParallaxProvider>
     </Wrapper>
   )

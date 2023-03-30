@@ -107,7 +107,7 @@ export const YppThreeStepsSection: FC<YppThreeStepsSectionProps> = ({ onSignUpCl
             <StepCard>
               <StepCardNumber>3</StepCardNumber>
               <Text variant={mdMatch ? 'h500' : 'h400'} as="h2">
-                Collect JOY tokens and access all ${appName} features
+                Collect JOY tokens and access all {appName} features
               </Text>
               <StepCardImg src={memberDropdown} alt="Member dropdown" width="322" height="468" />
               <StepCardFade />

@@ -56,7 +56,7 @@ export const YppDashboardSettingsTab = () => {
   const navigate = useNavigate()
   const { displaySnackbar } = useSnackbar()
   const { channelId, memberId, accountId } = useUser()
-  const { currentChannel, refetchSyncedChannels, isLoading } = useGetYppSyncedChannels()
+  const { currentChannel, refetchYppSyncedChannels, isLoading } = useGetYppSyncedChannels()
   const { joystream, proxyCallback } = useJoystream()
   const [openModal, closeModal] = useConfirmationModal()
   const { mutateAsync: settingsMutation } = useMutation(
@@ -131,7 +131,7 @@ export const YppDashboardSettingsTab = () => {
           actionText: isSync ? 'Go to My Videos' : undefined,
           onActionClick: () => navigate(absoluteRoutes.studio.videos()),
         })
-        refetchSyncedChannels()
+        refetchYppSyncedChannels()
       }
     } catch (e) {
       if (e.message === 'Cancelled') {
@@ -161,7 +161,7 @@ export const YppDashboardSettingsTab = () => {
     isSync,
     joystream,
     navigate,
-    refetchSyncedChannels,
+    refetchYppSyncedChannels,
   ])
 
   const handleLeaveTx = useCallback(async () => {

@@ -13,9 +13,12 @@ import {
   GetNftQueryVariables,
   GetNftsConnectionQuery,
   GetNftsConnectionQueryVariables,
+  GetNftsQuery,
+  GetNftsQueryVariables,
   useGetFeaturedNftsQuery,
   useGetNftQuery,
   useGetNftsConnectionQuery,
+  useGetNftsQuery,
 } from '@/api/queries/__generated__/nfts.generated'
 import {
   GetNftHistoryQuery,
@@ -172,6 +175,23 @@ export const useNftHistory = (
 
   return {
     events: sortedEvents,
+    ...rest,
+  }
+}
+
+export const useNfts = (baseOptions?: QueryHookOptions<GetNftsQuery, GetNftsQueryVariables>) => {
+  const { data: paginationData } = useGetNftsConnectionQuery({
+    variables: {
+      ...baseOptions?.variables,
+      where: { ...baseOptions?.variables?.where, ...(nftFilter ? nftFilter : {}) },
+    },
+  })
+
+  const { data: nftData, ...rest } = useGetNftsQuery(baseOptions)
+
+  return {
+    nfts: nftData?.ownedNfts,
+    totalCount: paginationData?.ownedNftsConnection.totalCount,
     ...rest,
   }
 }

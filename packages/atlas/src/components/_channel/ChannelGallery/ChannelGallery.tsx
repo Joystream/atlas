@@ -6,6 +6,7 @@ import { Gallery } from '@/components/Gallery'
 import { breakpointsOfGrid } from '@/components/Grid'
 import { RankingNumberTile } from '@/components/RankingNumberTile'
 import { ChannelCard } from '@/components/_channel/ChannelCard'
+import { createPlaceholderData } from '@/utils/data'
 
 type ChannelGalleryProps = {
   title?: string
@@ -48,9 +49,8 @@ export const ChannelGallery: FC<ChannelGalleryProps> = ({ title, channels = [], 
     return null
   }
 
-  const placeholderItems = Array.from({ length: loading || !channels?.length ? PLACEHOLDERS_COUNT : 0 }, () => ({
-    id: undefined,
-  }))
+  const placeholderItems = createPlaceholderData(loading || !channels?.length ? PLACEHOLDERS_COUNT : 0)
+
   return (
     <Gallery title={title} breakpoints={breakpoints}>
       {[...(channels ? channels : []), ...placeholderItems].map((channel, idx) =>

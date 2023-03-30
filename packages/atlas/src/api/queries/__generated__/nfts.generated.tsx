@@ -504,6 +504,8 @@ export type GetNftQuery = {
 export type GetNftsQueryVariables = Types.Exact<{
   where?: Types.InputMaybe<Types.OwnedNftWhereInput>
   orderBy?: Types.InputMaybe<Array<Types.OwnedNftOrderByInput> | Types.OwnedNftOrderByInput>
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+  offset?: Types.InputMaybe<Types.Scalars['Int']>
 }>
 
 export type GetNftsQuery = {
@@ -2041,8 +2043,13 @@ export type GetNftQueryHookResult = ReturnType<typeof useGetNftQuery>
 export type GetNftLazyQueryHookResult = ReturnType<typeof useGetNftLazyQuery>
 export type GetNftQueryResult = Apollo.QueryResult<GetNftQuery, GetNftQueryVariables>
 export const GetNftsDocument = gql`
-  query GetNfts($where: OwnedNftWhereInput, $orderBy: [OwnedNftOrderByInput!] = [createdAt_DESC]) {
-    ownedNfts(where: $where, orderBy: $orderBy) {
+  query GetNfts(
+    $where: OwnedNftWhereInput
+    $orderBy: [OwnedNftOrderByInput!] = [createdAt_DESC]
+    $limit: Int
+    $offset: Int
+  ) {
+    ownedNfts(where: $where, orderBy: $orderBy, limit: $limit, offset: $offset) {
       ...FullNftFields
     }
   }
@@ -2063,6 +2070,8 @@ export const GetNftsDocument = gql`
  *   variables: {
  *      where: // value for 'where'
  *      orderBy: // value for 'orderBy'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
  *   },
  * });
  */

@@ -19,6 +19,7 @@ import { useTouchDevice } from '@/hooks/useTouchDevice'
 import { CommentReaction } from '@/joystream-lib/types'
 import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { cVar, transitions } from '@/styles'
+import { createPlaceholderData } from '@/utils/data'
 import { formatDate, formatDateAgo } from '@/utils/time'
 
 import {
@@ -116,7 +117,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
   const filteredDuplicatedAvatars = repliesCount
     ? replyAvatars
       ? [...new Map(replyAvatars?.map((item) => [item.handle, item])).values()]
-      : Array.from({ length: repliesCount }, () => ({ url: undefined }))
+      : createPlaceholderData(repliesCount, { url: undefined })
     : []
 
   const tooltipDate = createdAt ? `${formatDate(createdAt || new Date())} at ${format(createdAt, 'HH:mm')}` : undefined
