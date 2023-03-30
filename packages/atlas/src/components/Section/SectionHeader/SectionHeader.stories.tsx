@@ -166,6 +166,9 @@ const WithTitleTemplate: StoryFn<SectionHeaderProps> = () => {
             options: [],
           },
         ]}
+        onResetFilters={() => {
+          setStatuses([])
+        }}
       />
       <SectionHeader
         start={{

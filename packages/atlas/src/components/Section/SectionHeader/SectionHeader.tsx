@@ -76,6 +76,7 @@ export type SectionHeaderProps = {
   start: SectionHeaderStart
   search?: SearchProps
   sort?: Sort
+  onResetFilters?: () => void
   filters?: FilterButtonProps[]
 }
 
@@ -85,10 +86,7 @@ type CallbackArg = {
   scrollWidth: number | undefined
 }
 
-export const useIsOverflow = <T extends HTMLElement>(
-  ref: React.RefObject<HTMLElement>,
-  callback?: (arg: CallbackArg) => void
-) => {
+export const useIsOverflow = (ref: React.RefObject<HTMLElement>, callback?: (arg: CallbackArg) => void) => {
   const [isOverflow, setIsOverflow] = useState<boolean>()
   const [clientWidth, setClientWidth] = useState<number>()
   const [scrollWidth, setScrollWidth] = useState<number>()
@@ -123,7 +121,7 @@ export const useIsOverflow = <T extends HTMLElement>(
   return { isOverflow, clientWidth, scrollWidth }
 }
 
-export const SectionHeader: FC<SectionHeaderProps> = ({ start, sort, search, filters }) => {
+export const SectionHeader: FC<SectionHeaderProps> = ({ start, sort, search, filters, onResetFilters }) => {
   const [isSearchInputOpen, setIsSearchInputOpen] = useState(false)
   const smMatch = useMediaMatch('sm')
 
@@ -166,7 +164,7 @@ export const SectionHeader: FC<SectionHeaderProps> = ({ start, sort, search, fil
         )}
         {search && <DynamicSearch search={search} isOpen={isSearchInputOpen} onSearchToggle={setIsSearchInputOpen} />}
       </TitleAndSearchWrapper>
-      {filters && <SectionFilters filters={filters} />}
+      {filters && <SectionFilters filters={filters} onResetFilters={onResetFilters} />}
       <FiltersAndSortWrapper>
         {sort?.type === 'toggle-button' && <ToggleButtonGroup {...sort.toggleButtonOptionTypeProps} />}
         {sort?.type === 'select' && <Select {...sort.selectProps} size="medium" />}
@@ -241,13 +239,19 @@ const SectionTitleComponent: FC<SectionTitleComponentProps> = ({ nodeStart, titl
 
 type SectionFiltersProps = {
   filters: FilterButtonProps[]
+  onResetFilters?: () => void
 }
 
-const SectionFilters: FC<SectionFiltersProps> = ({ filters }) => {
+const SectionFilters: FC<SectionFiltersProps> = ({ filters, onResetFilters }) => {
   const smMatch = useMediaMatch('sm')
   const filterWrapperRef = useRef<HTMLDivElement>(null)
   const { onMouseDown } = useDraggableScroll(filterWrapperRef, { direction: 'horizontal' })
   const { isOverflow } = useIsOverflow(filterWrapperRef)
+
+  const areThereAnyOptionsSelected = filters
+    .map((filter) => filter.selectedOptions)
+    .flat()
+    .some(Boolean)
 
   const [shadowsVisible, setShadowsVisible] = useState({
     left: false,
@@ -303,10 +307,14 @@ const SectionFilters: FC<SectionFiltersProps> = ({ filters }) => {
 
   return (
     <SectionFiltersWrapper>
-      <Button icon={<SvgActionClose />} variant="tertiary">
-        Clear
-      </Button>
-      <VerticalDivider />
+      {areThereAnyOptionsSelected && (
+        <>
+          <Button icon={<SvgActionClose />} variant="tertiary" onClick={onResetFilters}>
+            Clear
+          </Button>
+          <VerticalDivider />
+        </>
+      )}
       <ChevronButtonHandler>
         <FiltersWrapper ref={filterWrapperRef} onMouseDown={onMouseDown} shadowsVisible={shadowsVisible}>
           {filters.map((filter, idx) => (
