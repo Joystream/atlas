@@ -103,7 +103,6 @@ export const _Select = <T extends unknown>(
     () => items.find((item) => isEqual(item.value, selectedItemValue)),
     [items, selectedItemValue]
   )
-
   return (
     <SelectWrapper ref={containerRef} className={className}>
       <SelectMenuWrapper ref={setWrapperRef}>
@@ -136,7 +135,7 @@ export const _Select = <T extends unknown>(
         <span />
 
         {ReactDOM.createPortal(
-          <div ref={setDropdownRef} style={{ ...styles.popper }} {...attributes.popper}>
+          <div ref={setDropdownRef} style={{ ...styles.popper }} {...attributes.popper} data-popper-escaped="false">
             <SelectMenu {...getMenuProps()}>
               {isOpen && (
                 <List

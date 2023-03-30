@@ -7,24 +7,31 @@ import { DialogPopover } from '@/components/_overlays/DialogPopover'
 
 export type FilterButtonProps = {
   options: CheckboxProps[]
-  selected?: number[]
-  onApply: (ids: number[]) => void
+  selectedIndexes?: number[]
+  onApply: (selectedIndexes: number[]) => void
   label?: string
   icon?: ReactNode
   className?: string
 }
 
-export const FilterButton: FC<FilterButtonProps> = ({ label, icon, options, onApply, selected = [], className }) => {
-  const [localSelection, setLocalSelection] = useState<number[]>([])
+export const FilterButton: FC<FilterButtonProps> = ({
+  label,
+  icon,
+  options,
+  onApply,
+  selectedIndexes = [],
+  className,
+}) => {
+  const [locallySelectedIndexes, setLocallySelectedIndexes] = useState<number[]>([])
   const triggerRef = useRef<HTMLButtonElement>(null)
 
   const handleApply = () => {
-    onApply(localSelection)
+    onApply(locallySelectedIndexes)
     triggerRef.current?.click()
   }
 
   const handleSelection = (num: number) => {
-    setLocalSelection((prev) => {
+    setLocallySelectedIndexes((prev) => {
       if (prev.includes(num)) {
         return prev.filter((prevNum) => prevNum !== num)
       } else {
@@ -41,10 +48,12 @@ export const FilterButton: FC<FilterButtonProps> = ({ label, icon, options, onAp
   return (
     <DialogPopover
       className={className}
+      flipEnabled
+      appendTo={document.body}
       trigger={
         <StyledButton
           ref={triggerRef}
-          icon={selected?.length ? <Counter>{selected.length}</Counter> : icon}
+          icon={selectedIndexes?.length ? <Counter>{selectedIndexes.length}</Counter> : icon}
           iconPlacement="right"
           variant="secondary"
         >
@@ -56,9 +65,9 @@ export const FilterButton: FC<FilterButtonProps> = ({ label, icon, options, onAp
         text: 'Clear',
         onClick: handleClear,
       }}
-      onShow={() => setLocalSelection(selected)}
+      onShow={() => setLocallySelectedIndexes(selectedIndexes)}
     >
-      <CheckboxGroup options={options} checkedIds={localSelection} onChange={handleSelection} />
+      <CheckboxGroup options={options} checkedIds={locallySelectedIndexes} onChange={handleSelection} />
     </DialogPopover>
   )
 }

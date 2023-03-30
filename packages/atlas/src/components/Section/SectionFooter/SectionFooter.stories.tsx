@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { useState } from '@storybook/addons'
 import { Meta, StoryFn } from '@storybook/react'
 
-import { SectionFooter } from '@/components/Section/components/SectionFooter/SectionFooter'
+import { SectionFooter } from '@/components/Section/SectionFooter/SectionFooter'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 
 export default {

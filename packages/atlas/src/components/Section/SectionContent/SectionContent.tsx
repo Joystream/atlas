@@ -1,7 +1,7 @@
 import { ReactElement } from 'react'
 
 import { Carousel, CarouselProps } from '@/components/Carousel'
-import { GridWrapper } from '@/components/Section/components/SectionContent/SectionContent.styles'
+import { GridWrapper } from '@/components/Section/SectionContent/SectionContent.styles'
 
 type SectionGridTypeProps = {
   type: 'grid'

@@ -5,7 +5,9 @@ import { useVideoHeroData } from '@/api/hooks/videoHero'
 import { useBasicVideosConnection } from '@/api/hooks/videosConnection'
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { GetMostViewedVideosConnectionDocument } from '@/api/queries/__generated__/videos.generated'
+import { SvgActionAuction, SvgActionCalendar, SvgActionClock, SvgActionSettings } from '@/assets/icons'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
+import { SectionHeader } from '@/components/Section/SectionHeader'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { DiscoverChannels } from '@/components/_content/DiscoverChannels'
 import { NewNftSales } from '@/components/_content/NewNftSales'
@@ -47,6 +49,52 @@ export const HomeView: FC = () => {
   const headTags = useHeadTags()
 
   const followedChannelsVideosCount = videosConnection?.totalCount
+
+  return (
+    <SectionHeader
+      start={{
+        type: 'title',
+        title: 'Custom title',
+        nodeStart: {
+          type: 'custom',
+          node: <div style={{ width: 24, height: 24, background: 'blue', borderRadius: 5 }} />,
+        },
+      }}
+      sort={{
+        type: 'select',
+        selectProps: {
+          items: [{ name: 'hello', value: 'hello' }],
+        },
+      }}
+      filters={[
+        {
+          label: 'Date uploaded',
+          icon: <SvgActionCalendar />,
+          onApply: () => null,
+          options: [],
+        },
+        {
+          label: 'Length',
+          icon: <SvgActionClock />,
+          onApply: () => null,
+          options: [],
+        },
+        {
+          label: 'Auction type',
+          icon: <SvgActionAuction />,
+          onApply: () => null,
+          options: [],
+        },
+        {
+          label: 'Other filters',
+          icon: <SvgActionSettings />,
+          onApply: () => null,
+          options: [],
+        },
+      ]}
+      search={{}}
+    />
+  )
 
   if (followedError) {
     return <ViewErrorFallback />

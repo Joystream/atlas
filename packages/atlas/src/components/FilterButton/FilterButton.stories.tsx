@@ -26,7 +26,8 @@ export default {
 
 const Template: StoryFn<FilterButtonProps> = (args) => {
   const [value, setValue] = useState<number[]>([])
-  return <FilterButton {...args} selected={value} onApply={setValue} />
+
+  return <FilterButton {...args} selectedIndexes={value} onApply={setValue} />
 }
 
 export const Default = Template.bind({})

@@ -3,29 +3,46 @@ import { useEffect, useRef, useState } from 'react'
 import useDraggableScroll from 'use-draggable-scroll'
 
 import { SvgActionChevronL, SvgActionChevronR } from '@/assets/icons'
+import { FilterButton, FilterButtonProps } from '@/components/FilterButton'
 import { Button } from '@/components/_buttons/Button'
 
-import { ButtonLeft, ButtonRight, Container, ContentWrapper, Label, OptionWrapper } from './ToggleButtonGroup.styles'
+import {
+  ButtonLeft,
+  ButtonRight,
+  Container,
+  ContainerWidth,
+  ContentWrapper,
+  Label,
+  OptionWrapper,
+} from './ToggleButtonGroup.styles'
 
-export type ToggleButtonGroupProps<T extends string> = {
-  options: T[]
-  value?: T
+type SharedToggleButtonProps = {
   label?: string
-  width?: 'auto' | 'fixed'
-  onChange: (width: T) => void
+  width?: ContainerWidth
   className?: string
 }
 
+export type ToggleButtonOptionTypeProps<T extends string = string> = {
+  type: 'options'
+  options: T[]
+  value?: T
+  onChange: (value: T) => void
+} & SharedToggleButtonProps
+
+export type ToggleButtonFilterTypeProps = {
+  type: 'filter'
+  onClearFilters?: () => void
+  filters: FilterButtonProps[]
+} & SharedToggleButtonProps
+
+export type ToggleButtonGroupProps<T extends string = string> =
+  | ToggleButtonFilterTypeProps
+  | ToggleButtonOptionTypeProps<T>
+
 const SCROLL_SHADOW_OFFSET = 10
 
-export const ToggleButtonGroup = <T extends string>({
-  label,
-  width = 'auto',
-  options,
-  value,
-  onChange,
-  className,
-}: ToggleButtonGroupProps<T>) => {
+export const ToggleButtonGroup = <T extends string = string>(props: ToggleButtonGroupProps<T>) => {
+  const { type, label, width = 'auto', className } = props
   const optionWrapperRef = useRef<HTMLDivElement>(null)
   const [isOverflowing, setIsOverflowing] = useState<boolean>(false)
   const { onMouseDown } = useDraggableScroll(optionWrapperRef, { direction: 'horizontal' })
@@ -91,17 +108,20 @@ export const ToggleButtonGroup = <T extends string>({
           />
         )}
         <OptionWrapper onMouseDown={onMouseDown} ref={optionWrapperRef} shadowsVisible={shadowsVisible}>
-          {options.map((option) => (
-            <Button
-              key={option}
-              fullWidth
-              variant={option !== value ? 'tertiary' : 'secondary'}
-              onClick={() => onChange(option)}
-              size="small"
-            >
-              {option}
-            </Button>
-          ))}
+          {type === 'options' &&
+            props.options.map((option) => (
+              <Button
+                key={option}
+                fullWidth
+                variant={option !== props.value ? 'tertiary' : 'secondary'}
+                onClick={() => props.onChange(option)}
+                size="small"
+              >
+                {option}
+              </Button>
+            ))}
+          {type === 'filter' &&
+            props.filters.map((filterButtonProps, idx) => <FilterButton key={idx} {...filterButtonProps} />)}
         </OptionWrapper>
         {width === 'fixed' && isOverflowing && shadowsVisible.right && (
           <ButtonRight

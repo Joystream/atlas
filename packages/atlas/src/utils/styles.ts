@@ -3,7 +3,6 @@ import { css } from '@emotion/react'
 export const toPx = (n: number | string) => (typeof n === 'number' ? `${n}px` : n)
 
 export type MaskProps = {
-  'data-underline': boolean
   shadowsVisible: {
     left: boolean
     right: boolean
