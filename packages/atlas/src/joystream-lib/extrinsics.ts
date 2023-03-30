@@ -52,6 +52,7 @@ import {
   NftIssuanceInputMetadata,
   NftSaleInputMetadata,
   NftSaleType,
+  RawMetadataProcessorFn,
   SendExtrinsicResult,
   StringifiedNumber,
   TxMethodName,
@@ -195,7 +196,7 @@ export class JoystreamLibExtrinsics {
     inputBuckets: ChannelInputBuckets,
     expectedDataObjectStateBloatBond: StringifiedNumber,
     expectedChannelStateBloatBond: StringifiedNumber,
-    rawMetadataProcessor?: (rawMeta: Uint8Array, assets: Uint8Array) => Promise<Uint8Array>
+    rawMetadataProcessor?: RawMetadataProcessorFn
   ) => {
     await this.ensureApi()
 
@@ -339,7 +340,7 @@ export class JoystreamLibExtrinsics {
     expectedDataObjectStateBloatBond: StringifiedNumber,
     expectedVideoStateBloatBond: StringifiedNumber,
     expectedStorageBucketsCount: StringifiedNumber,
-    rawMetadataProcessor?: (rawMeta: Uint8Array, assets: Uint8Array) => Promise<Uint8Array>
+    rawMetadataProcessor?: RawMetadataProcessorFn
   ) => {
     await this.ensureApi()
 

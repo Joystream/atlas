@@ -1,6 +1,6 @@
 query GetVideoHero {
   videoHero {
-    videoId
+    # CHANGE: `videoId` no longer exists, use `video.id` instead
     heroTitle
     heroVideoCutUrl
     heroPosterUrl
@@ -11,27 +11,26 @@ query GetVideoHero {
 }
 
 query GetAllCategoriesFeaturedVideos {
-  allCategoriesFeaturedVideos(videosLimit: 3) {
-    categoryId
-    category {
-      name
-    }
-    categoryFeaturedVideos {
-      videoId
-      videoCutUrl
-      video {
-        ...BasicVideoFields
-      }
+  # CHANGE: Using `videoCategories` instead of custom `allCategoriesFeaturedVideos` query
+  videoCategories {
+    id
+    name
+    # CHANGE: Can now apply limit to children
+    # (can also add some `orderBy` here if required)
+    featuredVideos(limit: 3) {
+      # CHANGE: `videoId` no longer exists, use `video.id` instead
+      ...BasicVideoFeaturedInCategory
     }
   }
 }
 
-query GetCategoriesFeaturedVideos($categoryId: ID!) {
-  categoryFeaturedVideos(categoryId: $categoryId) {
-    videoId
-    videoCutUrl
-    video {
-      ...FullVideoFields
+# CHANGE: ID is now `String`
+query GetCategoryFeaturedVideos($categoryId: String!) {
+  # CHANGE: Using `videoCategoryById` instead of custom `categoryFeaturedVideos` query
+  videoCategoryById(id: $categoryId) {
+    featuredVideos {
+      # CHANGE: `videoId` no longer exists, use `video.id` instead
+      ...BasicVideoFeaturedInCategory
     }
   }
 }

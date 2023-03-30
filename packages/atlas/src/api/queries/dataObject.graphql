@@ -1,4 +1,5 @@
-query GetDataObjectAvailability($id_eq: ID, $id_in: [ID!]) {
+# CHANGE: ID is now `String`
+query GetDataObjectAvailability($id_eq: String, $id_in: [String!]) {
   storageDataObjects(where: { id_eq: $id_eq, id_in: $id_in }) {
     id
     isAccepted

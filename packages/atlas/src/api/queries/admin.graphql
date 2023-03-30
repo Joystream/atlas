@@ -1,5 +1,6 @@
 query GetKillSwitch {
-  admin {
+  # CHANGE: Renamed from `admin`
+  getKillSwitch {
     isKilled
   }
 }
@@ -11,18 +12,18 @@ mutation SetKillSwitch($isKilled: Boolean!) {
 }
 
 mutation GetAppActionSignature(
-  $creatorId: String!
   $assets: String!
+  $actionType: AppActionActionType!
+  $creatorId: String!
   $nonce: Float!
   $rawAction: String!
-  $actionType: AppActionActionType!
 ) {
   signAppActionCommitment(
-    creatorId: $creatorId
     assets: $assets
+    actionType: $actionType
+    creatorId: $creatorId
     nonce: $nonce
     rawAction: $rawAction
-    actionType: $actionType
   ) {
     signature
   }

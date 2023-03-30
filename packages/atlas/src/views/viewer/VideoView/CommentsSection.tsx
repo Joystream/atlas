@@ -88,9 +88,9 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
     }
   )
   const { comment: parentCommentFromUrl, loading: parentCommentFromUrlLoading } = useComment(
-    { commentId: commentFromUrl?.parentCommentId || '' },
+    { commentId: commentFromUrl?.parentComment?.id || '' },
     {
-      skip: !commentFromUrl || !commentFromUrl.parentCommentId,
+      skip: !commentFromUrl || !commentFromUrl.parentComment?.id,
     }
   )
 
@@ -191,7 +191,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
     [commentsLoading, highlightedCommentId, setHighlightedCommentId]
   )
 
-  const displayedCommentFromUrl = commentFromUrl?.parentCommentId ? parentCommentFromUrl : commentFromUrl
+  const displayedCommentFromUrl = commentFromUrl?.parentComment?.id ? parentCommentFromUrl : commentFromUrl
 
   // remove comment taken from url from regular array of comments
   const filteredComments = comments?.filter((comment) => comment.id !== displayedCommentFromUrl?.id) || []

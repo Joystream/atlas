@@ -3,6 +3,7 @@ import { useParams } from 'react-router'
 
 import { useNfts } from '@/api/hooks/nfts'
 import { OwnedNftOrderByInput, OwnedNftWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { FullNftFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Grid } from '@/components/Grid'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
@@ -17,7 +18,6 @@ type MemberNFTsProps = {
   isFiltersApplied?: boolean
   sortBy?: OwnedNftOrderByInput
   ownedNftWhereInput?: OwnedNftWhereInput
-
   setNftCount?: (count: number) => void
 }
 
@@ -42,23 +42,57 @@ export const MemberNFTs: FC<MemberNFTsProps> = ({
 
   const [currentPage, setCurrentPage] = useState(0)
 
+  const sharedFilters = {
+    video: {
+      isPublic_eq: handle !== activeMembership?.handle || undefined,
+    },
+    createdAt_lte: VIEWER_TIMESTAMP,
+    ...ownedNftWhereInput,
+  }
+
   const {
     nfts,
     loading,
-    totalCount: totalNftsCount,
     refetch,
+    totalCount: totalNftsCount,
   } = useNfts({
     variables: {
       where: {
-        ownerMember: { handle_eq: handle },
-        ...ownedNftWhereInput,
-        createdAt_lte: VIEWER_TIMESTAMP,
-        video: {
-          isPublic_eq: handle !== activeMembership?.handle || undefined,
-        },
+        OR: [
+          {
+            AND: [
+              {
+                owner: {
+                  isTypeOf_eq: 'NftOwnerChannel',
+                  channel: {
+                    ownerMember: {
+                      handle_eq: handle,
+                    },
+                  },
+                },
+              },
+              { ...sharedFilters },
+            ],
+          },
+          {
+            AND: [
+              {
+                owner: {
+                  isTypeOf_eq: 'NftOwnerMember',
+                  member: {
+                    handle_eq: handle,
+                  },
+                },
+              },
+              {
+                ...sharedFilters,
+              },
+            ],
+          },
+        ],
       },
-      orderBy: sortBy as OwnedNftOrderByInput,
       limit: tilesPerPage,
+      orderBy: sortBy as OwnedNftOrderByInput,
     },
     skip: !handle,
   })
@@ -77,7 +111,7 @@ export const MemberNFTs: FC<MemberNFTsProps> = ({
   return (
     <section>
       <Grid maxColumns={null} onResize={handleOnResizeGrid}>
-        {(loading ? createPlaceholderData(tilesPerPage) : nfts ?? [])?.map((nft, idx) => (
+        {(loading ? createPlaceholderData<FullNftFieldsFragment>(tilesPerPage) : nfts ?? [])?.map((nft, idx) => (
           <NftTileViewer key={`${idx}-${nft.id}`} nftId={nft.id} />
         ))}
       </Grid>

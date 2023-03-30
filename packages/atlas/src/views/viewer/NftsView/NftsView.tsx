@@ -1,7 +1,7 @@
 import { FC, useState } from 'react'
 
 import { useNfts } from '@/api/hooks/nfts'
-import { OwnedNftOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { OwnedNftOrderByInput, OwnedNftWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionFilters } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
@@ -45,19 +45,26 @@ export const NftsView: FC = () => {
   const nftRows = useVideoGridRows('main')
   const tilesPerPage = nftRows * tilesPerRow
 
+  const commonVideoVariables: OwnedNftWhereInput['video'] = {
+    media: {
+      isAccepted_eq: true,
+    },
+    thumbnailPhoto: {
+      isAccepted_eq: true,
+    },
+    isPublic_eq: true,
+    channel: {
+      isPublic_eq: true,
+    },
+  }
+
   const { nfts, loading, totalCount, refetch } = useNfts({
     variables: {
       where: {
         ...ownedNftWhereInput,
-        createdAt_gte: videoWhereInput.createdAt_gte,
         createdAt_lte: VIEWER_TIMESTAMP,
-        video:
-          videoWhereInput.hasMarketing_eq != null || videoWhereInput.isExplicit_eq != null
-            ? {
-                hasMarketing_eq: videoWhereInput.hasMarketing_eq,
-                isExplicit_eq: videoWhereInput.isExplicit_eq,
-              }
-            : undefined,
+        createdAt_gte: videoWhereInput.createdAt_gte,
+        video: { ...videoWhereInput, ...commonVideoVariables },
       },
       orderBy: sortBy,
       limit: tilesPerPage,

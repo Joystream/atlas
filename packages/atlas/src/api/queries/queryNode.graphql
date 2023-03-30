@@ -1,8 +1,6 @@
 subscription GetQueryNodeState {
-  stateSubscription {
-    chainHead
-    indexerHead
-    lastCompleteBlock
-    lastProcessedEvent
+  # CHANGE: Custom `processorState` subscription now used instead of `stateSubscription`
+  processorState {
+    lastProcessedBlock
   }
 }

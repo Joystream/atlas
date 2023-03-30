@@ -8,25 +8,21 @@ import {
   Query,
   QueryChannelsConnectionArgs,
   QueryCommentsConnectionArgs,
+  QueryOwnedNftsConnectionArgs,
   QueryVideosConnectionArgs,
-  VideoConnection,
   VideoOrderByInput,
+  VideosConnection,
 } from '../queries/__generated__/baseTypes.generated'
 import { FullChannelFieldsFragment, FullVideoFieldsFragment } from '../queries/__generated__/fragments.generated'
-import { GetNftsConnectionQueryVariables } from '../queries/__generated__/nfts.generated'
+import { GetFullVideosConnectionQueryVariables } from '../queries/__generated__/videos.generated'
 
 const stringifyValue = (value: unknown) => JSON.stringify(value || {})
 
-const getVideoKeyArgs = (
-  args: QueryVideosConnectionArgs | null,
-  ctx: {
-    variables?: Record<string, unknown>
-  }
-) => {
+const getVideoKeyArgs = (args: Partial<QueryVideosConnectionArgs> | null) => {
   const onlyCount = args?.first === 0
   const channel = stringifyValue(args?.where?.channel)
   const category = stringifyValue(args?.where?.category)
-  const language = stringifyValue(args?.where?.language)
+  const language = stringifyValue(args?.where?.language_eq)
   const nft = stringifyValue(args?.where?.nft)
   const idEq = args?.where?.id_eq || ''
   const idIn = args?.where?.id_in || []
@@ -35,7 +31,8 @@ const getVideoKeyArgs = (
   const durationGte = args?.where?.duration_gte || ''
   const durationLte = args?.where?.duration_gte || ''
   const titleContains = args?.where?.title_contains || ''
-  const offset = ctx?.variables?.offset ?? ''
+  const titleContainsInsensitive = args?.where?.title_containsInsensitive || ''
+
   const sortingArray = args?.orderBy != null ? (Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]) : []
   const sorting = stringifyValue(sortingArray)
 
@@ -43,15 +40,16 @@ const getVideoKeyArgs = (
   if (args?.where?.channel?.id_in && !args?.first) {
     return `${createdAtGte}:${channel}`
   }
-  return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${isPublic}:${idEq}:${idIn}:${sorting}:${durationGte}:${durationLte}:${titleContains}:${offset}`
+
+  return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${isPublic}:${idEq}:${idIn}:${sorting}:${durationGte}:${durationLte}:${titleContains}:${titleContainsInsensitive}`
 }
 
-const getNftKeyArgs = (args: GetNftsConnectionQueryVariables | null) => {
+const getNftKeyArgs = (args: Partial<QueryOwnedNftsConnectionArgs> | null) => {
   const OR = stringifyValue(args?.where?.OR)
-  const ownerMember = stringifyValue(args?.where?.ownerMember)
-  const creatorChannel = stringifyValue(args?.where?.creatorChannel)
-  const status = stringifyValue(args?.where?.transactionalStatus_json)
-  const auctionStatus = stringifyValue(args?.where?.transactionalStatusAuction)
+  const ownerMember = stringifyValue(args?.where?.owner?.member)
+  const creatorChannel = stringifyValue(args?.where?.owner?.channel)
+  const status = stringifyValue(args?.where?.transactionalStatus)
+  const auctionStatus = stringifyValue(args?.where?.transactionalStatus?.auction)
   const sortingArray = args?.orderBy != null ? (Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]) : []
   const sorting = stringifyValue(sortingArray)
   const createdAt_gte = stringifyValue(args?.where?.createdAt_gte)
@@ -60,9 +58,9 @@ const getNftKeyArgs = (args: GetNftsConnectionQueryVariables | null) => {
   return `${OR}:${ownerMember}:${creatorChannel}:${status}:${auctionStatus}:${sorting}:${createdAt_gte}:${video}`
 }
 
-const getChannelKeyArgs = (args: QueryChannelsConnectionArgs | null) => {
+const getChannelKeyArgs = (args: Partial<QueryChannelsConnectionArgs> | null) => {
   // make sure queries asking for a specific category are separated in cache
-  const language = stringifyValue(args?.where?.language)
+  const language = stringifyValue(args?.where?.language_eq)
   const idIn = args?.where?.id_in || []
   const sortingArray = args?.orderBy != null ? (Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]) : []
   const sorting = stringifyValue(sortingArray)
@@ -71,7 +69,7 @@ const getChannelKeyArgs = (args: QueryChannelsConnectionArgs | null) => {
   return `${language}:${idIn}:${sorting}:${titleContains}`
 }
 
-const getCommentKeyArgs = (args: QueryCommentsConnectionArgs | null) => {
+const getCommentKeyArgs = (args: Partial<QueryCommentsConnectionArgs> | null) => {
   const parentCommentId = args?.where?.parentComment?.id_eq
   const videoId = args?.where?.video?.id_eq
   const orderBy = args?.orderBy || []
@@ -91,9 +89,7 @@ type CachePolicyFields<T extends string> = Partial<Record<T, FieldPolicy | Field
 
 const queryCacheFields: CachePolicyFields<keyof Query> = {
   channelsConnection: relayStylePagination(getChannelKeyArgs),
-  mostFollowedChannelsConnection: relayStylePagination(getChannelKeyArgs),
-  mostViewedChannelsConnection: relayStylePagination(getChannelKeyArgs),
-  channels: (existing, { toReference, args, canRead }) => {
+  extendedChannels: (existing, { toReference, args, canRead }) => {
     if (args?.where.id_eq) {
       // get single channel
       const channelRef = toReference({
@@ -112,8 +108,8 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
   videosConnection: {
     ...relayStylePagination(getVideoKeyArgs),
     read(
-      existing: VideoConnection,
-      { args, readField }: { args: QueryVideosConnectionArgs | null; readField: ReadFieldFunction }
+      existing: VideosConnection,
+      { args, readField }: { args: GetFullVideosConnectionQueryVariables | null; readField: ReadFieldFunction }
     ) {
       const isPublic = args?.where?.isPublic_eq
       const filteredEdges =
@@ -162,48 +158,39 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
     },
   },
   commentsConnection: relayStylePagination(getCommentKeyArgs),
-  channelByUniqueInput: (existing, { toReference, args }) => {
+  channelById: (existing, { toReference, args }) => {
     return (
       existing ||
       toReference({
         __typename: 'Channel',
-        id: args?.where.id,
+        id: args?.id,
       })
     )
   },
-  videoByUniqueInput: (existing, { toReference, args }) => {
+  videoById: (existing, { toReference, args }) => {
     return (
       existing ||
       toReference({
         __typename: 'Video',
-        id: args?.where.id,
+        id: args?.id,
       })
     )
   },
-  membershipByUniqueInput: (existing, { toReference, args }) => {
-    return (
-      existing ||
-      toReference({
-        __typename: 'Membership',
-        id: args?.where.id,
-      })
-    )
-  },
-  ownedNftByUniqueInput: (existing, { toReference, args }) => {
+  ownedNftById: (existing, { toReference, args }) => {
     return (
       existing ||
       toReference({
         __typename: 'OwnedNft',
-        id: args?.where.id,
+        id: args?.id,
       })
     )
   },
-  commentByUniqueInput: (existing, { toReference, args }) => {
+  commentById: (existing, { toReference, args }) => {
     return (
       existing ||
       toReference({
         __typename: 'Comment',
-        id: args?.where.id,
+        id: args?.id,
       })
     )
   },
@@ -237,83 +224,20 @@ const cache = new InMemoryCache({
         createdAt: createDateHandler(),
       },
     },
-    NftIssuedEvent: {
+    Event: {
       fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    OpenAuctionStartedEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    EnglishAuctionStartedEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    NftSellOrderMadeEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    AuctionBidMadeEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    BidMadeCompletingAuctionEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    NftBoughtEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    EnglishAuctionSettledEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    OpenAuctionBidAcceptedEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    AuctionBidCanceledEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    AuctionCanceledEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    BuyNowCanceledEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    BuyNowPriceUpdatedEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    CommentTextUpdatedEvent: {
-      fields: {
-        createdAt: createDateHandler(),
-      },
-    },
-    CommentCreatedEvent: {
-      fields: {
-        createdAt: createDateHandler(),
+        timestamp: createDateHandler(),
       },
     },
     StorageDataObject: {
       fields: {
+        resolvedUrls: {
+          read: (resolvedUrl, { readField }) => {
+            const isAccepted = readField('isAccepted')
+
+            return isAccepted ? resolvedUrl : []
+          },
+        },
         size: {
           merge: (_: unknown, existingData: string | number): number => {
             if (typeof existingData === 'string') {

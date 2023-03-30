@@ -1,6 +1,8 @@
 overwrite: true
 
-schema: ${VITE_DEVELOPMENT_ORION_URL}
+schema:
+  - ${VITE_DEVELOPMENT_ORION_URL}
+  - ./src/api/schemas/schema.client.graphql
 
 documents:
   - './src/api/queries/**/*.graphql'
