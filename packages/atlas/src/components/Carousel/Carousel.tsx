@@ -9,7 +9,6 @@ import { StyledSwiper } from '@/components/Carousel/Carousel.styles'
 export type SwiperInstance = SwiperType
 export type CarouselProps = {
   className?: string
-  // arrowPosition?: number
   dotsVisible?: boolean
   children: ReactNode[]
 } & SwiperProps
