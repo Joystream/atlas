@@ -108,6 +108,8 @@ export const MemberView: FC = () => {
   } = useMemberships(
     { where: { handle_eq: handle } },
     {
+      // We're using network-only here, because for some reason the cache is not returning results after user creates membership.
+      fetchPolicy: 'network-only',
       onError: (error) => SentryLogger.error('Failed to fetch memberships', 'ActiveUserProvider', error),
     }
   )
