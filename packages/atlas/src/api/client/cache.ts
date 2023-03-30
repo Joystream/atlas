@@ -231,11 +231,11 @@ const cache = new InMemoryCache({
     },
     StorageDataObject: {
       fields: {
-        resolvedUrl: {
+        resolvedUrls: {
           read: (resolvedUrl, { readField }) => {
             const isAccepted = readField('isAccepted')
 
-            return isAccepted ? resolvedUrl : ''
+            return isAccepted ? resolvedUrl : []
           },
         },
         size: {

@@ -43,6 +43,7 @@ export type GetFullChannelQuery = {
               avatarObject: {
                 __typename?: 'StorageDataObject'
                 id: string
+                resolvedUrls: Array<string>
                 resolvedUrl?: string | null
                 createdAt: Date
                 size: string
@@ -65,6 +66,7 @@ export type GetFullChannelQuery = {
     coverPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
+      resolvedUrls: Array<string>
       resolvedUrl?: string | null
       createdAt: Date
       size: string
@@ -82,6 +84,7 @@ export type GetFullChannelQuery = {
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
+      resolvedUrls: Array<string>
       resolvedUrl?: string | null
       createdAt: Date
       size: string
@@ -122,6 +125,7 @@ export type GetExtendedBasicChannelsQuery = {
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
+        resolvedUrls: Array<string>
         resolvedUrl?: string | null
         createdAt: Date
         size: string
@@ -177,6 +181,7 @@ export type GetExtendedFullChannelsQuery = {
                 avatarObject: {
                   __typename?: 'StorageDataObject'
                   id: string
+                  resolvedUrls: Array<string>
                   resolvedUrl?: string | null
                   createdAt: Date
                   size: string
@@ -199,6 +204,7 @@ export type GetExtendedFullChannelsQuery = {
       coverPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
+        resolvedUrls: Array<string>
         resolvedUrl?: string | null
         createdAt: Date
         size: string
@@ -216,6 +222,7 @@ export type GetExtendedFullChannelsQuery = {
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
+        resolvedUrls: Array<string>
         resolvedUrl?: string | null
         createdAt: Date
         size: string
@@ -261,6 +268,7 @@ export type GetBasicChannelsConnectionQuery = {
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
+          resolvedUrls: Array<string>
           resolvedUrl?: string | null
           createdAt: Date
           size: string
@@ -320,6 +328,7 @@ export type GetTop10ChannelsQuery = {
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
+        resolvedUrls: Array<string>
         resolvedUrl?: string | null
         createdAt: Date
         size: string
@@ -358,6 +367,7 @@ export type GetPromisingChannelsQuery = {
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
+        resolvedUrls: Array<string>
         resolvedUrl?: string | null
         createdAt: Date
         size: string
@@ -396,6 +406,7 @@ export type GetDiscoverChannelsQuery = {
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
+        resolvedUrls: Array<string>
         resolvedUrl?: string | null
         createdAt: Date
         size: string
@@ -434,6 +445,7 @@ export type GetPopularChannelsQuery = {
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
+        resolvedUrls: Array<string>
         resolvedUrl?: string | null
         createdAt: Date
         size: string
@@ -475,6 +487,7 @@ export type GetChannelNftCollectorsQuery = {
               avatarObject: {
                 __typename?: 'StorageDataObject'
                 id: string
+                resolvedUrls: Array<string>
                 resolvedUrl?: string | null
                 createdAt: Date
                 size: string

@@ -35,6 +35,7 @@ export type GetVideoHeroQuery = {
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
+          resolvedUrls: Array<string>
           resolvedUrl?: string | null
           createdAt: Date
           size: string
@@ -53,6 +54,7 @@ export type GetVideoHeroQuery = {
       thumbnailPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
+        resolvedUrls: Array<string>
         resolvedUrl?: string | null
         createdAt: Date
         size: string
@@ -99,6 +101,7 @@ export type GetVideoHeroQuery = {
                           avatarObject: {
                             __typename?: 'StorageDataObject'
                             id: string
+                            resolvedUrls: Array<string>
                             resolvedUrl?: string | null
                             createdAt: Date
                             size: string
@@ -121,6 +124,7 @@ export type GetVideoHeroQuery = {
                 avatarPhoto?: {
                   __typename?: 'StorageDataObject'
                   id: string
+                  resolvedUrls: Array<string>
                   resolvedUrl?: string | null
                   createdAt: Date
                   size: string
@@ -152,6 +156,7 @@ export type GetVideoHeroQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrls: Array<string>
                           resolvedUrl?: string | null
                           createdAt: Date
                           size: string
@@ -212,6 +217,7 @@ export type GetVideoHeroQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrls: Array<string>
                               resolvedUrl?: string | null
                               createdAt: Date
                               size: string
@@ -252,6 +258,7 @@ export type GetVideoHeroQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrls: Array<string>
                               resolvedUrl?: string | null
                               createdAt: Date
                               size: string
@@ -287,6 +294,7 @@ export type GetVideoHeroQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrls: Array<string>
                               resolvedUrl?: string | null
                               createdAt: Date
                               size: string
@@ -350,6 +358,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
+            resolvedUrls: Array<string>
             resolvedUrl?: string | null
             createdAt: Date
             size: string
@@ -368,6 +377,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
         thumbnailPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
+          resolvedUrls: Array<string>
           resolvedUrl?: string | null
           createdAt: Date
           size: string
@@ -447,6 +457,7 @@ export type GetCategoryFeaturedVideosQuery = {
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
+            resolvedUrls: Array<string>
             resolvedUrl?: string | null
             createdAt: Date
             size: string
@@ -465,6 +476,7 @@ export type GetCategoryFeaturedVideosQuery = {
         thumbnailPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
+          resolvedUrls: Array<string>
           resolvedUrl?: string | null
           createdAt: Date
           size: string

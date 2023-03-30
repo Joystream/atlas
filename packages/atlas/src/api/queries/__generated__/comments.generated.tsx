@@ -33,6 +33,7 @@ export type GetCommentQuery = {
               avatarObject: {
                 __typename?: 'StorageDataObject'
                 id: string
+                resolvedUrls: Array<string>
                 resolvedUrl?: string | null
                 createdAt: Date
                 size: string
@@ -98,6 +99,7 @@ export type GetCommentRepliesConnectionQuery = {
                   avatarObject: {
                     __typename?: 'StorageDataObject'
                     id: string
+                    resolvedUrls: Array<string>
                     resolvedUrl?: string | null
                     createdAt: Date
                     size: string
@@ -161,6 +163,7 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
               avatarObject: {
                 __typename?: 'StorageDataObject'
                 id: string
+                resolvedUrls: Array<string>
                 resolvedUrl?: string | null
                 createdAt: Date
                 size: string
@@ -215,6 +218,7 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
                   avatarObject: {
                     __typename?: 'StorageDataObject'
                     id: string
+                    resolvedUrls: Array<string>
                     resolvedUrl?: string | null
                     createdAt: Date
                     size: string

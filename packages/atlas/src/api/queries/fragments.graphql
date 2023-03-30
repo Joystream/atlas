@@ -88,7 +88,8 @@ fragment FullMembershipFields on Membership {
 # No changes
 fragment StorageDataObjectFields on StorageDataObject {
   id
-  resolvedUrl
+  resolvedUrls
+  resolvedUrl @client
   createdAt
   size
   isAccepted

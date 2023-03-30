@@ -39,6 +39,7 @@ export type GetNftQuery = {
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
+          resolvedUrls: Array<string>
           resolvedUrl?: string | null
           createdAt: Date
           size: string
@@ -57,6 +58,7 @@ export type GetNftQuery = {
       thumbnailPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
+        resolvedUrls: Array<string>
         resolvedUrl?: string | null
         createdAt: Date
         size: string
@@ -103,6 +105,7 @@ export type GetNftQuery = {
                           avatarObject: {
                             __typename?: 'StorageDataObject'
                             id: string
+                            resolvedUrls: Array<string>
                             resolvedUrl?: string | null
                             createdAt: Date
                             size: string
@@ -125,6 +128,7 @@ export type GetNftQuery = {
                 avatarPhoto?: {
                   __typename?: 'StorageDataObject'
                   id: string
+                  resolvedUrls: Array<string>
                   resolvedUrl?: string | null
                   createdAt: Date
                   size: string
@@ -156,6 +160,7 @@ export type GetNftQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrls: Array<string>
                           resolvedUrl?: string | null
                           createdAt: Date
                           size: string
@@ -216,6 +221,7 @@ export type GetNftQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrls: Array<string>
                               resolvedUrl?: string | null
                               createdAt: Date
                               size: string
@@ -256,6 +262,7 @@ export type GetNftQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrls: Array<string>
                               resolvedUrl?: string | null
                               createdAt: Date
                               size: string
@@ -291,6 +298,7 @@ export type GetNftQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrls: Array<string>
                               resolvedUrl?: string | null
                               createdAt: Date
                               size: string
@@ -344,6 +352,7 @@ export type GetNftQuery = {
                       avatarObject: {
                         __typename?: 'StorageDataObject'
                         id: string
+                        resolvedUrls: Array<string>
                         resolvedUrl?: string | null
                         createdAt: Date
                         size: string
@@ -366,6 +375,7 @@ export type GetNftQuery = {
             avatarPhoto?: {
               __typename?: 'StorageDataObject'
               id: string
+              resolvedUrls: Array<string>
               resolvedUrl?: string | null
               createdAt: Date
               size: string
@@ -397,6 +407,7 @@ export type GetNftQuery = {
                     avatarObject: {
                       __typename?: 'StorageDataObject'
                       id: string
+                      resolvedUrls: Array<string>
                       resolvedUrl?: string | null
                       createdAt: Date
                       size: string
@@ -457,6 +468,7 @@ export type GetNftQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrls: Array<string>
                           resolvedUrl?: string | null
                           createdAt: Date
                           size: string
@@ -497,6 +509,7 @@ export type GetNftQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrls: Array<string>
                           resolvedUrl?: string | null
                           createdAt: Date
                           size: string
@@ -532,6 +545,7 @@ export type GetNftQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrls: Array<string>
                           resolvedUrl?: string | null
                           createdAt: Date
                           size: string
@@ -596,6 +610,7 @@ export type GetNftsQuery = {
         avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
+          resolvedUrls: Array<string>
           resolvedUrl?: string | null
           createdAt: Date
           size: string
@@ -614,6 +629,7 @@ export type GetNftsQuery = {
       thumbnailPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
+        resolvedUrls: Array<string>
         resolvedUrl?: string | null
         createdAt: Date
         size: string
@@ -660,6 +676,7 @@ export type GetNftsQuery = {
                           avatarObject: {
                             __typename?: 'StorageDataObject'
                             id: string
+                            resolvedUrls: Array<string>
                             resolvedUrl?: string | null
                             createdAt: Date
                             size: string
@@ -682,6 +699,7 @@ export type GetNftsQuery = {
                 avatarPhoto?: {
                   __typename?: 'StorageDataObject'
                   id: string
+                  resolvedUrls: Array<string>
                   resolvedUrl?: string | null
                   createdAt: Date
                   size: string
@@ -713,6 +731,7 @@ export type GetNftsQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrls: Array<string>
                           resolvedUrl?: string | null
                           createdAt: Date
                           size: string
@@ -773,6 +792,7 @@ export type GetNftsQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrls: Array<string>
                               resolvedUrl?: string | null
                               createdAt: Date
                               size: string
@@ -813,6 +833,7 @@ export type GetNftsQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrls: Array<string>
                               resolvedUrl?: string | null
                               createdAt: Date
                               size: string
@@ -848,6 +869,7 @@ export type GetNftsQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrls: Array<string>
                               resolvedUrl?: string | null
                               createdAt: Date
                               size: string
@@ -901,6 +923,7 @@ export type GetNftsQuery = {
                       avatarObject: {
                         __typename?: 'StorageDataObject'
                         id: string
+                        resolvedUrls: Array<string>
                         resolvedUrl?: string | null
                         createdAt: Date
                         size: string
@@ -923,6 +946,7 @@ export type GetNftsQuery = {
             avatarPhoto?: {
               __typename?: 'StorageDataObject'
               id: string
+              resolvedUrls: Array<string>
               resolvedUrl?: string | null
               createdAt: Date
               size: string
@@ -954,6 +978,7 @@ export type GetNftsQuery = {
                     avatarObject: {
                       __typename?: 'StorageDataObject'
                       id: string
+                      resolvedUrls: Array<string>
                       resolvedUrl?: string | null
                       createdAt: Date
                       size: string
@@ -1014,6 +1039,7 @@ export type GetNftsQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrls: Array<string>
                           resolvedUrl?: string | null
                           createdAt: Date
                           size: string
@@ -1054,6 +1080,7 @@ export type GetNftsQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrls: Array<string>
                           resolvedUrl?: string | null
                           createdAt: Date
                           size: string
@@ -1089,6 +1116,7 @@ export type GetNftsQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrls: Array<string>
                           resolvedUrl?: string | null
                           createdAt: Date
                           size: string
@@ -1161,6 +1189,7 @@ export type GetNftsConnectionQuery = {
             avatarPhoto?: {
               __typename?: 'StorageDataObject'
               id: string
+              resolvedUrls: Array<string>
               resolvedUrl?: string | null
               createdAt: Date
               size: string
@@ -1179,6 +1208,7 @@ export type GetNftsConnectionQuery = {
           thumbnailPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
+            resolvedUrls: Array<string>
             resolvedUrl?: string | null
             createdAt: Date
             size: string
@@ -1225,6 +1255,7 @@ export type GetNftsConnectionQuery = {
                               avatarObject: {
                                 __typename?: 'StorageDataObject'
                                 id: string
+                                resolvedUrls: Array<string>
                                 resolvedUrl?: string | null
                                 createdAt: Date
                                 size: string
@@ -1247,6 +1278,7 @@ export type GetNftsConnectionQuery = {
                     avatarPhoto?: {
                       __typename?: 'StorageDataObject'
                       id: string
+                      resolvedUrls: Array<string>
                       resolvedUrl?: string | null
                       createdAt: Date
                       size: string
@@ -1278,6 +1310,7 @@ export type GetNftsConnectionQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrls: Array<string>
                               resolvedUrl?: string | null
                               createdAt: Date
                               size: string
@@ -1338,6 +1371,7 @@ export type GetNftsConnectionQuery = {
                                 avatarObject: {
                                   __typename?: 'StorageDataObject'
                                   id: string
+                                  resolvedUrls: Array<string>
                                   resolvedUrl?: string | null
                                   createdAt: Date
                                   size: string
@@ -1378,6 +1412,7 @@ export type GetNftsConnectionQuery = {
                                 avatarObject: {
                                   __typename?: 'StorageDataObject'
                                   id: string
+                                  resolvedUrls: Array<string>
                                   resolvedUrl?: string | null
                                   createdAt: Date
                                   size: string
@@ -1413,6 +1448,7 @@ export type GetNftsConnectionQuery = {
                                 avatarObject: {
                                   __typename?: 'StorageDataObject'
                                   id: string
+                                  resolvedUrls: Array<string>
                                   resolvedUrl?: string | null
                                   createdAt: Date
                                   size: string
@@ -1466,6 +1502,7 @@ export type GetNftsConnectionQuery = {
                           avatarObject: {
                             __typename?: 'StorageDataObject'
                             id: string
+                            resolvedUrls: Array<string>
                             resolvedUrl?: string | null
                             createdAt: Date
                             size: string
@@ -1488,6 +1525,7 @@ export type GetNftsConnectionQuery = {
                 avatarPhoto?: {
                   __typename?: 'StorageDataObject'
                   id: string
+                  resolvedUrls: Array<string>
                   resolvedUrl?: string | null
                   createdAt: Date
                   size: string
@@ -1519,6 +1557,7 @@ export type GetNftsConnectionQuery = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrls: Array<string>
                           resolvedUrl?: string | null
                           createdAt: Date
                           size: string
@@ -1579,6 +1618,7 @@ export type GetNftsConnectionQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrls: Array<string>
                               resolvedUrl?: string | null
                               createdAt: Date
                               size: string
@@ -1619,6 +1659,7 @@ export type GetNftsConnectionQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrls: Array<string>
                               resolvedUrl?: string | null
                               createdAt: Date
                               size: string
@@ -1654,6 +1695,7 @@ export type GetNftsConnectionQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrls: Array<string>
                               resolvedUrl?: string | null
                               createdAt: Date
                               size: string

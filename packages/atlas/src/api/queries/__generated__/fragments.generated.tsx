@@ -20,6 +20,7 @@ export type BasicChannelFieldsFragment = {
   avatarPhoto?: {
     __typename?: 'StorageDataObject'
     id: string
+    resolvedUrls: Array<string>
     resolvedUrl?: string | null
     createdAt: Date
     size: string
@@ -62,6 +63,7 @@ export type FullChannelFieldsFragment = {
             avatarObject: {
               __typename?: 'StorageDataObject'
               id: string
+              resolvedUrls: Array<string>
               resolvedUrl?: string | null
               createdAt: Date
               size: string
@@ -84,6 +86,7 @@ export type FullChannelFieldsFragment = {
   coverPhoto?: {
     __typename?: 'StorageDataObject'
     id: string
+    resolvedUrls: Array<string>
     resolvedUrl?: string | null
     createdAt: Date
     size: string
@@ -101,6 +104,7 @@ export type FullChannelFieldsFragment = {
   avatarPhoto?: {
     __typename?: 'StorageDataObject'
     id: string
+    resolvedUrls: Array<string>
     resolvedUrl?: string | null
     createdAt: Date
     size: string
@@ -146,6 +150,7 @@ export type ExtendedFullChannelFieldsFragment = {
               avatarObject: {
                 __typename?: 'StorageDataObject'
                 id: string
+                resolvedUrls: Array<string>
                 resolvedUrl?: string | null
                 createdAt: Date
                 size: string
@@ -168,6 +173,7 @@ export type ExtendedFullChannelFieldsFragment = {
     coverPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
+      resolvedUrls: Array<string>
       resolvedUrl?: string | null
       createdAt: Date
       size: string
@@ -185,6 +191,7 @@ export type ExtendedFullChannelFieldsFragment = {
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
+      resolvedUrls: Array<string>
       resolvedUrl?: string | null
       createdAt: Date
       size: string
@@ -217,6 +224,7 @@ export type ExtendedBasicChannelFieldsFragment = {
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
+      resolvedUrls: Array<string>
       resolvedUrl?: string | null
       createdAt: Date
       size: string
@@ -247,6 +255,7 @@ export type BasicMembershipFieldsFragment = {
           avatarObject: {
             __typename?: 'StorageDataObject'
             id: string
+            resolvedUrls: Array<string>
             resolvedUrl?: string | null
             createdAt: Date
             size: string
@@ -285,6 +294,7 @@ export type FullMembershipFieldsFragment = {
     coverPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
+      resolvedUrls: Array<string>
       resolvedUrl?: string | null
       createdAt: Date
       size: string
@@ -302,6 +312,7 @@ export type FullMembershipFieldsFragment = {
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
+      resolvedUrls: Array<string>
       resolvedUrl?: string | null
       createdAt: Date
       size: string
@@ -326,6 +337,7 @@ export type FullMembershipFieldsFragment = {
           avatarObject: {
             __typename?: 'StorageDataObject'
             id: string
+            resolvedUrls: Array<string>
             resolvedUrl?: string | null
             createdAt: Date
             size: string
@@ -349,6 +361,7 @@ export type FullMembershipFieldsFragment = {
 export type StorageDataObjectFieldsFragment = {
   __typename?: 'StorageDataObject'
   id: string
+  resolvedUrls: Array<string>
   resolvedUrl?: string | null
   createdAt: Date
   size: string
@@ -402,6 +415,7 @@ export type SubtitlesFieldsFragment = {
   asset?: {
     __typename?: 'StorageDataObject'
     id: string
+    resolvedUrls: Array<string>
     resolvedUrl?: string | null
     createdAt: Date
     size: string
@@ -439,6 +453,7 @@ export type BasicVideoFieldsFragment = {
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
+      resolvedUrls: Array<string>
       resolvedUrl?: string | null
       createdAt: Date
       size: string
@@ -457,6 +472,7 @@ export type BasicVideoFieldsFragment = {
   thumbnailPhoto?: {
     __typename?: 'StorageDataObject'
     id: string
+    resolvedUrls: Array<string>
     resolvedUrl?: string | null
     createdAt: Date
     size: string
@@ -503,6 +519,7 @@ export type BasicVideoFieldsFragment = {
                       avatarObject: {
                         __typename?: 'StorageDataObject'
                         id: string
+                        resolvedUrls: Array<string>
                         resolvedUrl?: string | null
                         createdAt: Date
                         size: string
@@ -525,6 +542,7 @@ export type BasicVideoFieldsFragment = {
             avatarPhoto?: {
               __typename?: 'StorageDataObject'
               id: string
+              resolvedUrls: Array<string>
               resolvedUrl?: string | null
               createdAt: Date
               size: string
@@ -556,6 +574,7 @@ export type BasicVideoFieldsFragment = {
                     avatarObject: {
                       __typename?: 'StorageDataObject'
                       id: string
+                      resolvedUrls: Array<string>
                       resolvedUrl?: string | null
                       createdAt: Date
                       size: string
@@ -616,6 +635,7 @@ export type BasicVideoFieldsFragment = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrls: Array<string>
                           resolvedUrl?: string | null
                           createdAt: Date
                           size: string
@@ -656,6 +676,7 @@ export type BasicVideoFieldsFragment = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrls: Array<string>
                           resolvedUrl?: string | null
                           createdAt: Date
                           size: string
@@ -691,6 +712,7 @@ export type BasicVideoFieldsFragment = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrls: Array<string>
                           resolvedUrl?: string | null
                           createdAt: Date
                           size: string
@@ -755,6 +777,7 @@ export type FullVideoFieldsFragment = {
   media?: {
     __typename?: 'StorageDataObject'
     id: string
+    resolvedUrls: Array<string>
     resolvedUrl?: string | null
     createdAt: Date
     size: string
@@ -772,6 +795,7 @@ export type FullVideoFieldsFragment = {
   thumbnailPhoto?: {
     __typename?: 'StorageDataObject'
     id: string
+    resolvedUrls: Array<string>
     resolvedUrl?: string | null
     createdAt: Date
     size: string
@@ -812,6 +836,7 @@ export type FullVideoFieldsFragment = {
               avatarObject: {
                 __typename?: 'StorageDataObject'
                 id: string
+                resolvedUrls: Array<string>
                 resolvedUrl?: string | null
                 createdAt: Date
                 size: string
@@ -834,6 +859,7 @@ export type FullVideoFieldsFragment = {
     coverPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
+      resolvedUrls: Array<string>
       resolvedUrl?: string | null
       createdAt: Date
       size: string
@@ -851,6 +877,7 @@ export type FullVideoFieldsFragment = {
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
+      resolvedUrls: Array<string>
       resolvedUrl?: string | null
       createdAt: Date
       size: string
@@ -905,6 +932,7 @@ export type FullVideoFieldsFragment = {
                       avatarObject: {
                         __typename?: 'StorageDataObject'
                         id: string
+                        resolvedUrls: Array<string>
                         resolvedUrl?: string | null
                         createdAt: Date
                         size: string
@@ -927,6 +955,7 @@ export type FullVideoFieldsFragment = {
             avatarPhoto?: {
               __typename?: 'StorageDataObject'
               id: string
+              resolvedUrls: Array<string>
               resolvedUrl?: string | null
               createdAt: Date
               size: string
@@ -958,6 +987,7 @@ export type FullVideoFieldsFragment = {
                     avatarObject: {
                       __typename?: 'StorageDataObject'
                       id: string
+                      resolvedUrls: Array<string>
                       resolvedUrl?: string | null
                       createdAt: Date
                       size: string
@@ -1018,6 +1048,7 @@ export type FullVideoFieldsFragment = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrls: Array<string>
                           resolvedUrl?: string | null
                           createdAt: Date
                           size: string
@@ -1058,6 +1089,7 @@ export type FullVideoFieldsFragment = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrls: Array<string>
                           resolvedUrl?: string | null
                           createdAt: Date
                           size: string
@@ -1093,6 +1125,7 @@ export type FullVideoFieldsFragment = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrls: Array<string>
                           resolvedUrl?: string | null
                           createdAt: Date
                           size: string
@@ -1129,6 +1162,7 @@ export type FullVideoFieldsFragment = {
     asset?: {
       __typename?: 'StorageDataObject'
       id: string
+      resolvedUrls: Array<string>
       resolvedUrl?: string | null
       createdAt: Date
       size: string
@@ -1178,6 +1212,7 @@ export type BasicNftFieldsFragment = {
                     avatarObject: {
                       __typename?: 'StorageDataObject'
                       id: string
+                      resolvedUrls: Array<string>
                       resolvedUrl?: string | null
                       createdAt: Date
                       size: string
@@ -1200,6 +1235,7 @@ export type BasicNftFieldsFragment = {
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
+            resolvedUrls: Array<string>
             resolvedUrl?: string | null
             createdAt: Date
             size: string
@@ -1231,6 +1267,7 @@ export type BasicNftFieldsFragment = {
                   avatarObject: {
                     __typename?: 'StorageDataObject'
                     id: string
+                    resolvedUrls: Array<string>
                     resolvedUrl?: string | null
                     createdAt: Date
                     size: string
@@ -1291,6 +1328,7 @@ export type BasicNftFieldsFragment = {
                       avatarObject: {
                         __typename?: 'StorageDataObject'
                         id: string
+                        resolvedUrls: Array<string>
                         resolvedUrl?: string | null
                         createdAt: Date
                         size: string
@@ -1331,6 +1369,7 @@ export type BasicNftFieldsFragment = {
                       avatarObject: {
                         __typename?: 'StorageDataObject'
                         id: string
+                        resolvedUrls: Array<string>
                         resolvedUrl?: string | null
                         createdAt: Date
                         size: string
@@ -1366,6 +1405,7 @@ export type BasicNftFieldsFragment = {
                       avatarObject: {
                         __typename?: 'StorageDataObject'
                         id: string
+                        resolvedUrls: Array<string>
                         resolvedUrl?: string | null
                         createdAt: Date
                         size: string
@@ -1422,6 +1462,7 @@ export type FullNftFieldsFragment = {
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
+        resolvedUrls: Array<string>
         resolvedUrl?: string | null
         createdAt: Date
         size: string
@@ -1440,6 +1481,7 @@ export type FullNftFieldsFragment = {
     thumbnailPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
+      resolvedUrls: Array<string>
       resolvedUrl?: string | null
       createdAt: Date
       size: string
@@ -1486,6 +1528,7 @@ export type FullNftFieldsFragment = {
                         avatarObject: {
                           __typename?: 'StorageDataObject'
                           id: string
+                          resolvedUrls: Array<string>
                           resolvedUrl?: string | null
                           createdAt: Date
                           size: string
@@ -1508,6 +1551,7 @@ export type FullNftFieldsFragment = {
               avatarPhoto?: {
                 __typename?: 'StorageDataObject'
                 id: string
+                resolvedUrls: Array<string>
                 resolvedUrl?: string | null
                 createdAt: Date
                 size: string
@@ -1539,6 +1583,7 @@ export type FullNftFieldsFragment = {
                       avatarObject: {
                         __typename?: 'StorageDataObject'
                         id: string
+                        resolvedUrls: Array<string>
                         resolvedUrl?: string | null
                         createdAt: Date
                         size: string
@@ -1599,6 +1644,7 @@ export type FullNftFieldsFragment = {
                           avatarObject: {
                             __typename?: 'StorageDataObject'
                             id: string
+                            resolvedUrls: Array<string>
                             resolvedUrl?: string | null
                             createdAt: Date
                             size: string
@@ -1639,6 +1685,7 @@ export type FullNftFieldsFragment = {
                           avatarObject: {
                             __typename?: 'StorageDataObject'
                             id: string
+                            resolvedUrls: Array<string>
                             resolvedUrl?: string | null
                             createdAt: Date
                             size: string
@@ -1674,6 +1721,7 @@ export type FullNftFieldsFragment = {
                           avatarObject: {
                             __typename?: 'StorageDataObject'
                             id: string
+                            resolvedUrls: Array<string>
                             resolvedUrl?: string | null
                             createdAt: Date
                             size: string
@@ -1727,6 +1775,7 @@ export type FullNftFieldsFragment = {
                     avatarObject: {
                       __typename?: 'StorageDataObject'
                       id: string
+                      resolvedUrls: Array<string>
                       resolvedUrl?: string | null
                       createdAt: Date
                       size: string
@@ -1749,6 +1798,7 @@ export type FullNftFieldsFragment = {
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
+            resolvedUrls: Array<string>
             resolvedUrl?: string | null
             createdAt: Date
             size: string
@@ -1780,6 +1830,7 @@ export type FullNftFieldsFragment = {
                   avatarObject: {
                     __typename?: 'StorageDataObject'
                     id: string
+                    resolvedUrls: Array<string>
                     resolvedUrl?: string | null
                     createdAt: Date
                     size: string
@@ -1840,6 +1891,7 @@ export type FullNftFieldsFragment = {
                       avatarObject: {
                         __typename?: 'StorageDataObject'
                         id: string
+                        resolvedUrls: Array<string>
                         resolvedUrl?: string | null
                         createdAt: Date
                         size: string
@@ -1880,6 +1932,7 @@ export type FullNftFieldsFragment = {
                       avatarObject: {
                         __typename?: 'StorageDataObject'
                         id: string
+                        resolvedUrls: Array<string>
                         resolvedUrl?: string | null
                         createdAt: Date
                         size: string
@@ -1915,6 +1968,7 @@ export type FullNftFieldsFragment = {
                       avatarObject: {
                         __typename?: 'StorageDataObject'
                         id: string
+                        resolvedUrls: Array<string>
                         resolvedUrl?: string | null
                         createdAt: Date
                         size: string
@@ -1963,6 +2017,7 @@ export type BasicBidFieldsFragment = {
             avatarObject: {
               __typename?: 'StorageDataObject'
               id: string
+              resolvedUrls: Array<string>
               resolvedUrl?: string | null
               createdAt: Date
               size: string
@@ -2011,6 +2066,7 @@ export type FullBidFieldsFragment = {
             avatarObject: {
               __typename?: 'StorageDataObject'
               id: string
+              resolvedUrls: Array<string>
               resolvedUrl?: string | null
               createdAt: Date
               size: string
@@ -2060,6 +2116,7 @@ export type CommentFieldsFragment = {
             avatarObject: {
               __typename?: 'StorageDataObject'
               id: string
+              resolvedUrls: Array<string>
               resolvedUrl?: string | null
               createdAt: Date
               size: string
@@ -2111,6 +2168,7 @@ export type MetaprotocolTransactionResultFields_MetaprotocolTransactionResultCom
               avatarObject: {
                 __typename?: 'StorageDataObject'
                 id: string
+                resolvedUrls: Array<string>
                 resolvedUrl?: string | null
                 createdAt: Date
                 size: string
@@ -2163,6 +2221,7 @@ export type MetaprotocolTransactionResultFields_MetaprotocolTransactionResultCom
               avatarObject: {
                 __typename?: 'StorageDataObject'
                 id: string
+                resolvedUrls: Array<string>
                 resolvedUrl?: string | null
                 createdAt: Date
                 size: string
@@ -2215,6 +2274,7 @@ export type MetaprotocolTransactionResultFields_MetaprotocolTransactionResultCom
               avatarObject: {
                 __typename?: 'StorageDataObject'
                 id: string
+                resolvedUrls: Array<string>
                 resolvedUrl?: string | null
                 createdAt: Date
                 size: string
@@ -2267,6 +2327,7 @@ export type MetaprotocolTransactionResultFields_MetaprotocolTransactionResultCom
               avatarObject: {
                 __typename?: 'StorageDataObject'
                 id: string
+                resolvedUrls: Array<string>
                 resolvedUrl?: string | null
                 createdAt: Date
                 size: string
@@ -2329,6 +2390,7 @@ export type BasicNftOwnerFields_NftOwnerChannel_Fragment = {
               avatarObject: {
                 __typename?: 'StorageDataObject'
                 id: string
+                resolvedUrls: Array<string>
                 resolvedUrl?: string | null
                 createdAt: Date
                 size: string
@@ -2366,6 +2428,7 @@ export type BasicNftOwnerFields_NftOwnerMember_Fragment = {
             avatarObject: {
               __typename?: 'StorageDataObject'
               id: string
+              resolvedUrls: Array<string>
               resolvedUrl?: string | null
               createdAt: Date
               size: string
@@ -2412,6 +2475,7 @@ export type BasicFeaturedVideoFragment = {
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
+      resolvedUrls: Array<string>
       resolvedUrl?: string | null
       createdAt: Date
       size: string
@@ -2430,6 +2494,7 @@ export type BasicFeaturedVideoFragment = {
   thumbnailPhoto?: {
     __typename?: 'StorageDataObject'
     id: string
+    resolvedUrls: Array<string>
     resolvedUrl?: string | null
     createdAt: Date
     size: string
@@ -2498,6 +2563,7 @@ export type BasicVideoFeaturedInCategoryFragment = {
       avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
+        resolvedUrls: Array<string>
         resolvedUrl?: string | null
         createdAt: Date
         size: string
@@ -2516,6 +2582,7 @@ export type BasicVideoFeaturedInCategoryFragment = {
     thumbnailPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
+      resolvedUrls: Array<string>
       resolvedUrl?: string | null
       createdAt: Date
       size: string
@@ -2568,6 +2635,7 @@ export type BasicVideoActivityFieldsFragment = {
   thumbnailPhoto?: {
     __typename?: 'StorageDataObject'
     id: string
+    resolvedUrls: Array<string>
     resolvedUrl?: string | null
     createdAt: Date
     size: string
@@ -2596,7 +2664,8 @@ export const ExtendedVideoCategoryFieldsFragmentDoc = gql`
 export const StorageDataObjectFieldsFragmentDoc = gql`
   fragment StorageDataObjectFields on StorageDataObject {
     id
-    resolvedUrl
+    resolvedUrls
+    resolvedUrl @client
     createdAt
     size
     isAccepted

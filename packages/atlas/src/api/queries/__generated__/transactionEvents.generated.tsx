@@ -54,6 +54,7 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrls: Array<string>
                               resolvedUrl?: string | null
                               createdAt: Date
                               size: string
@@ -105,6 +106,7 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrls: Array<string>
                               resolvedUrl?: string | null
                               createdAt: Date
                               size: string
@@ -156,6 +158,7 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrls: Array<string>
                               resolvedUrl?: string | null
                               createdAt: Date
                               size: string
@@ -207,6 +210,7 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                             avatarObject: {
                               __typename?: 'StorageDataObject'
                               id: string
+                              resolvedUrls: Array<string>
                               resolvedUrl?: string | null
                               createdAt: Date
                               size: string
