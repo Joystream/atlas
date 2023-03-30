@@ -368,7 +368,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
             text: isFetchingData
               ? 'Please wait...'
               : activeMembership?.channels.length
-              ? 'Select channel'
+              ? 'Continue'
               : 'Create new channel',
             disabled: isFetchingData,
             onClick: () => verifyChannelRequirements(),
