@@ -1,4 +1,5 @@
 import { Meta, StoryFn } from '@storybook/react'
+import { useState } from 'react'
 
 import {
   SvgActionAuction,
@@ -8,6 +9,7 @@ import {
   SvgActionMember,
   SvgActionSettings,
 } from '@/assets/icons'
+import { CheckboxProps } from '@/components/_inputs/Checkbox'
 
 import { SectionHeader, SectionHeaderProps } from './SectionHeader'
 
@@ -89,7 +91,28 @@ const WithTabsTemplate = () => {
 
 export const WithTabs = WithTabsTemplate.bind({})
 
+const nftStatuses = [
+  {
+    id: 'AuctionTypeEnglish',
+    label: 'Timed auction',
+  },
+  {
+    id: 'AuctionTypeOpen',
+    label: 'Open auction',
+  },
+  {
+    id: 'TransactionalStatusBuyNow',
+    label: 'Fixed price',
+  },
+  {
+    id: 'TransactionalStatusIdle',
+    label: 'Not for sale',
+  },
+]
+
 const WithTitleTemplate: StoryFn<SectionHeaderProps> = () => {
+  const [statuses, setStatuses] = useState<CheckboxProps[]>([])
+
   return (
     <div style={{ display: 'grid', gap: 64 }}>
       <SectionHeader
@@ -115,8 +138,11 @@ const WithTitleTemplate: StoryFn<SectionHeaderProps> = () => {
           {
             label: 'Date uploaded',
             icon: <SvgActionCalendar />,
-            onApply: () => null,
-            options: [],
+            onApply: (index) => console.log(index),
+            options: [
+              { id: 'a', label: 'a' },
+              { id: 'b', label: 'b' },
+            ],
           },
           {
             label: 'Length',
@@ -125,10 +151,13 @@ const WithTitleTemplate: StoryFn<SectionHeaderProps> = () => {
             options: [],
           },
           {
-            label: 'Auction type',
+            label: 'Status',
             icon: <SvgActionAuction />,
-            onApply: () => null,
-            options: [],
+            selectedOptions: statuses,
+            onApply: (options) => {
+              setStatuses(options)
+            },
+            options: nftStatuses,
           },
           {
             label: 'Other filters',

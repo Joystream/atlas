@@ -7,8 +7,8 @@ import { DialogPopover } from '@/components/_overlays/DialogPopover'
 
 export type FilterButtonProps = {
   options: CheckboxProps[]
-  selectedIndexes?: number[]
-  onApply: (selectedIndexes: number[]) => void
+  selectedOptions?: CheckboxProps[]
+  onApply: (selectedIndexes: CheckboxProps[]) => void
   label?: string
   icon?: ReactNode
   className?: string
@@ -19,14 +19,14 @@ export const FilterButton: FC<FilterButtonProps> = ({
   icon,
   options,
   onApply,
-  selectedIndexes = [],
+  selectedOptions = [],
   className,
 }) => {
   const [locallySelectedIndexes, setLocallySelectedIndexes] = useState<number[]>([])
   const triggerRef = useRef<HTMLButtonElement>(null)
 
   const handleApply = () => {
-    onApply(locallySelectedIndexes)
+    onApply(options.filter((_, idx) => locallySelectedIndexes.includes(idx)))
     triggerRef.current?.click()
   }
 
@@ -53,7 +53,7 @@ export const FilterButton: FC<FilterButtonProps> = ({
       trigger={
         <StyledButton
           ref={triggerRef}
-          icon={selectedIndexes?.length ? <Counter>{selectedIndexes.length}</Counter> : icon}
+          icon={selectedOptions?.length ? <Counter>{selectedOptions.length}</Counter> : icon}
           iconPlacement="right"
           variant="secondary"
         >
@@ -65,7 +65,10 @@ export const FilterButton: FC<FilterButtonProps> = ({
         text: 'Clear',
         onClick: handleClear,
       }}
-      onShow={() => setLocallySelectedIndexes(selectedIndexes)}
+      onShow={() => {
+        const selectedIndexes = selectedOptions.map((_, idx) => idx)
+        setLocallySelectedIndexes(selectedIndexes)
+      }}
     >
       <CheckboxGroup options={options} checkedIds={locallySelectedIndexes} onChange={handleSelection} />
     </DialogPopover>

@@ -5,6 +5,8 @@ import { SvgActionShoppingCart } from '@/assets/icons'
 
 import { FilterButton, FilterButtonProps } from './FilterButton'
 
+import { CheckboxProps } from '../_inputs/Checkbox'
+
 export default {
   title: 'inputs/FilterButton',
   component: FilterButton,
@@ -25,9 +27,9 @@ export default {
 } as Meta<FilterButtonProps>
 
 const Template: StoryFn<FilterButtonProps> = (args) => {
-  const [value, setValue] = useState<number[]>([])
+  const [selectedOptions, setSelectedOptions] = useState<CheckboxProps[]>([])
 
-  return <FilterButton {...args} selectedIndexes={value} onApply={setValue} />
+  return <FilterButton {...args} selectedOptions={selectedOptions} onApply={setSelectedOptions} />
 }
 
 export const Default = Template.bind({})

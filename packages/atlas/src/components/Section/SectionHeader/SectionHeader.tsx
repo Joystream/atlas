@@ -241,13 +241,11 @@ const SectionTitleComponent: FC<SectionTitleComponentProps> = ({ nodeStart, titl
 
 type SectionFiltersProps = {
   filters: FilterButtonProps[]
-  maxWidth?: number
 }
 
-const SectionFilters: FC<SectionFiltersProps> = ({ filters, maxWidth }) => {
+const SectionFilters: FC<SectionFiltersProps> = ({ filters }) => {
   const smMatch = useMediaMatch('sm')
   const filterWrapperRef = useRef<HTMLDivElement>(null)
-  const [isMouseClicked, setIsMouseClicked] = useState(false)
   const { onMouseDown } = useDraggableScroll(filterWrapperRef, { direction: 'horizontal' })
   const { isOverflow } = useIsOverflow(filterWrapperRef)
 
@@ -287,7 +285,7 @@ const SectionFilters: FC<SectionFiltersProps> = ({ filters, maxWidth }) => {
       filterWrapper.removeEventListener('touchmove', touchHandler)
       filterWrapper.removeEventListener('scroll', touchHandler)
     }
-  }, [isMouseClicked])
+  }, [])
 
   if (!smMatch) {
     return <FilterButton icon={<SvgActionFilters />} label="Filters" onApply={() => null} options={[]} />
