@@ -377,6 +377,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
       title: 'Add channel title',
       completed: !!dirtyFields.title,
       onClick: () => setFocus('title'),
+      required: true,
     },
     {
       title: 'Add description',
@@ -385,12 +386,12 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     },
     {
       title: 'Add avatar image',
-      completed: !!dirtyFields.avatar,
+      completed: !!(dirtyFields.avatar && avatarContentId),
       onClick: () => avatarDialogRef.current?.open(),
     },
     {
       title: 'Add cover image',
-      completed: !!dirtyFields.cover,
+      completed: !!(dirtyFields.cover && coverContentId),
       onClick: () => coverDialogRef.current?.open(),
     },
   ]
@@ -494,10 +495,11 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
                   name="title"
                   control={control}
                   rules={textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 40, required: true })}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { value, onChange, ref } }) => (
                     <FormField error={errors.title?.message}>
                       <Tooltip text="Click to edit channel title" placement="top-start">
                         <TitleInput
+                          ref={ref}
                           min={3}
                           max={40}
                           placeholder="Channel title"

@@ -40,14 +40,25 @@ export const EditableControls = styled.div`
   position: absolute;
   display: flex;
   justify-content: center;
-  transition: opacity ${transitions.timings.loading} ${transitions.easing};
 
   ${media.md} {
-    background-color: ${cVar('colorCoreNeutral500Darken')};
-    opacity: 0;
+    opacity: 1;
+    background-color: transparent;
+
+    ::after {
+      position: absolute;
+      content: ' ';
+      inset: 0;
+      transition: opacity ${transitions.timings.loading} ${transitions.easing};
+      opacity: 0;
+      background-color: ${cVar('colorCoreNeutral500Darken')};
+      z-index: -1;
+    }
 
     :hover {
-      opacity: 1;
+      ::after {
+        opacity: 1;
+      }
     }
   }
 `
