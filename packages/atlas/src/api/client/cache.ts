@@ -17,7 +17,12 @@ import { GetNftsConnectionQueryVariables } from '../queries/__generated__/nfts.g
 
 const stringifyValue = (value: unknown) => JSON.stringify(value || {})
 
-const getVideoKeyArgs = (args: QueryVideosConnectionArgs | null) => {
+const getVideoKeyArgs = (
+  args: QueryVideosConnectionArgs | null,
+  ctx: {
+    variables?: Record<string, unknown>
+  }
+) => {
   const onlyCount = args?.first === 0
   const channel = stringifyValue(args?.where?.channel)
   const category = stringifyValue(args?.where?.category)
@@ -30,7 +35,7 @@ const getVideoKeyArgs = (args: QueryVideosConnectionArgs | null) => {
   const durationGte = args?.where?.duration_gte || ''
   const durationLte = args?.where?.duration_gte || ''
   const titleContains = args?.where?.title_contains || ''
-
+  const offset = ctx?.variables?.offset ?? ''
   const sortingArray = args?.orderBy != null ? (Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]) : []
   const sorting = stringifyValue(sortingArray)
 
@@ -38,8 +43,7 @@ const getVideoKeyArgs = (args: QueryVideosConnectionArgs | null) => {
   if (args?.where?.channel?.id_in && !args?.first) {
     return `${createdAtGte}:${channel}`
   }
-
-  return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${isPublic}:${idEq}:${idIn}:${sorting}:${durationGte}:${durationLte}:${titleContains}`
+  return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${isPublic}:${idEq}:${idIn}:${sorting}:${durationGte}:${durationLte}:${titleContains}:${offset}`
 }
 
 const getNftKeyArgs = (args: GetNftsConnectionQueryVariables | null) => {
