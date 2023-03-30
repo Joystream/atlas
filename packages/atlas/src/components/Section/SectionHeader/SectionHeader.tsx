@@ -19,7 +19,7 @@ import {
   SectionSearchWrapper,
   SectionTitle,
   SectionTitleWrapper,
-  TabsWrapper,
+  TabsMobileWrapper,
   TitleAndSearchWrapper,
   VerticalDivider,
 } from './SectionHeader.styles'
@@ -135,9 +135,9 @@ export const SectionHeader: FC<SectionHeaderProps> = ({ start, sort, search, fil
             <>
               {start.type === 'title' && <SectionTitleComponent nodeStart={start.nodeStart} title={start.title} />}
               {start.type === 'tabs' && (
-                <TabsWrapper>
+                <TabsMobileWrapper>
                   <Tabs {...start.tabsProps} />
-                </TabsWrapper>
+                </TabsMobileWrapper>
               )}
             </>
           )}
@@ -157,11 +157,7 @@ export const SectionHeader: FC<SectionHeaderProps> = ({ start, sort, search, fil
     <SectionHeaderWrapper isTabs={start.type === 'tabs'}>
       <TitleAndSearchWrapper>
         {start.type === 'title' && <SectionTitleComponent nodeStart={start.nodeStart} title={start.title} />}
-        {start.type === 'tabs' && (
-          <TabsWrapper>
-            <Tabs {...start.tabsProps} />
-          </TabsWrapper>
-        )}
+        {start.type === 'tabs' && <Tabs {...start.tabsProps} />}
         {search && <DynamicSearch search={search} isOpen={isSearchInputOpen} onSearchToggle={setIsSearchInputOpen} />}
       </TitleAndSearchWrapper>
       {filters && <SectionFilters filters={filters} onResetFilters={onResetFilters} />}

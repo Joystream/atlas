@@ -59,33 +59,55 @@ Default.args = {}
 
 const WithTabsTemplate = () => {
   return (
-    <SectionHeader
-      search={{}}
-      start={{
-        type: 'tabs',
-        tabsProps: {
-          tabs: TABS,
-          onSelectTab: () => null,
-          selected: 0,
-        },
-      }}
-      sort={{
-        type: 'select',
-        selectProps: {
-          value: 'oldest',
-          inlineLabel: 'Sort by',
-          items: ITEMS,
-        },
-      }}
-      filters={[
-        {
-          label: 'Filters',
-          icon: <SvgActionFilters />,
-          onApply: () => null,
-          options: [],
-        },
-      ]}
-    />
+    <div style={{ display: 'grid', gap: 64 }}>
+      <SectionHeader
+        search={{}}
+        start={{
+          type: 'tabs',
+          tabsProps: {
+            tabs: TABS,
+            onSelectTab: () => null,
+            selected: 0,
+          },
+        }}
+        sort={{
+          type: 'select',
+          selectProps: {
+            value: 'oldest',
+            inlineLabel: 'Sort by',
+            items: ITEMS,
+          },
+        }}
+        filters={[
+          {
+            label: 'Filters',
+            icon: <SvgActionFilters />,
+            onApply: () => null,
+            options: [],
+          },
+        ]}
+      />
+
+      <SectionHeader
+        search={{}}
+        start={{
+          type: 'tabs',
+          tabsProps: {
+            tabs: [...TABS, { name: 'More Tabs' }, { name: 'Moooar tabs' }],
+            onSelectTab: () => null,
+            selected: 0,
+          },
+        }}
+        sort={{
+          type: 'select',
+          selectProps: {
+            value: 'oldest',
+            inlineLabel: 'Sort by',
+            items: ITEMS,
+          },
+        }}
+      />
+    </div>
   )
 }
 
@@ -115,6 +137,26 @@ const WithTitleTemplate: StoryFn<SectionHeaderProps> = () => {
 
   return (
     <div style={{ display: 'grid', gap: 64 }}>
+      <SectionHeader
+        sort={{
+          type: 'select',
+          selectProps: {
+            value: 'oldest',
+            inlineLabel: 'Sort by',
+            items: ITEMS,
+          },
+        }}
+        start={{
+          type: 'title',
+          title: 'Icon',
+          nodeStart: {
+            type: 'avatar',
+            avatarProps: {
+              assetUrl: 'https://placekitten.com/g/200/300',
+            },
+          },
+        }}
+      />
       <SectionHeader
         sort={{
           type: 'select',

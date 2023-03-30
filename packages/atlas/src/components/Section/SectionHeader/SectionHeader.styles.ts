@@ -61,13 +61,14 @@ export const SectionSearchWrapper = styled.div`
   }
 `
 
-export const TabsWrapper = styled.div`
+export const TabsMobileWrapper = styled.div`
   max-width: max-content;
 `
 
 export const TitleAndSearchWrapper = styled.div`
   display: flex;
   gap: ${sizes(4)};
+  margin-right: auto;
 `
 
 export const VerticalDivider = styled.div`
@@ -84,7 +85,6 @@ export const SectionFiltersWrapper = styled.div`
   display: flex;
   gap: ${sizes(2)};
   min-width: 0;
-  margin-left: auto;
 `
 
 export const FiltersWrapper = styled.div<MaskProps>`
