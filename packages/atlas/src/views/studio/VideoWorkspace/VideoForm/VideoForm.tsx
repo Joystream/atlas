@@ -1,5 +1,5 @@
 import { formatISO, isValid as isValidDate } from 'date-fns'
-import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { FC, memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 
 import { License } from '@/api/queries/__generated__/baseTypes.generated'
@@ -95,6 +95,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const [showMintConfirmationDialog, setShowMintConfirmationDialog] = useState(false)
   const [dismissMintConfirmation, setDismissMintConfirmation] = useState(false)
   const mintNftFormFieldRef = useRef<HTMLDivElement>(null)
+  const assetErrorBanner = useRef<HTMLDivElement>(null)
   const { memberId, channelId } = useUser()
   const { displaySnackbar } = useSnackbar()
 
@@ -463,6 +464,12 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
     setFormStatus(formStatus)
   }, [formStatus, setFormStatus])
 
+  useLayoutEffect(() => {
+    if (errors.assets && assetErrorBanner.current) {
+      assetErrorBanner.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [errors.assets])
+
   const handleDeleteVideo = () => {
     editedVideoInfo && deleteVideo(editedVideoInfo.id)
   }
@@ -704,14 +711,16 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           // without this element position sticky won't work
           <div>
             {errors.assets && (
-              <FileValidationBanner
-                icon={<SvgAlertsWarning24 width={24} height={24} />}
-                description={
-                  <Text as="span" variant="t200">
-                    {(errors?.assets as FieldError)?.message}
-                  </Text>
-                }
-              />
+              <div ref={assetErrorBanner}>
+                <FileValidationBanner
+                  icon={<SvgAlertsWarning24 width={24} height={24} />}
+                  description={
+                    <Text as="span" variant="t200">
+                      {(errors?.assets as FieldError)?.message}
+                    </Text>
+                  }
+                />
+              </div>
             )}
             <StyledMultiFileSelect
               files={files}
