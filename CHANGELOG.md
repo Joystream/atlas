@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0] - 2023-03-31
 
+### Fixed
+
+ - Fixed app metadata for uploaded videos
+ - Fixed followed channels uploads on homepage
+
+## [2.0.0] - 2023-03-31
+
 ### Changed
 - Channel requirements for YPP are now shown before channel creation
 - Atlas is now using OrionV2

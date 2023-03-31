@@ -91,7 +91,7 @@ export const InfiniteVideoGrid = forwardRef<HTMLElement, InfiniteVideoGridProps>
       where: createVideoWhereObjectWithFilters({
         ...videoWhereInput,
         ...publicVideoFilter,
-        channel: publicChannelFilter,
+        channel: { ...publicChannelFilter, ...videoWhereInput?.channel },
       }),
     }
 

@@ -7,7 +7,6 @@ import {
   GetFullVideosConnectionDocument,
   GetFullVideosConnectionQuery,
   GetFullVideosConnectionQueryVariables,
-  useGetVideosCountQuery,
 } from '@/api/queries/__generated__/videos.generated'
 import { atlasConfig } from '@/config'
 import { VideoExtrinsicResult, VideoInputAssets } from '@/joystream-lib/types'
@@ -35,24 +34,22 @@ export const useHandleVideoWorkspaceSubmit = () => {
 
   const { joystream, proxyCallback } = useJoystream()
   const startFileUpload = useStartFileUpload()
-  const { channelId, memberId } = useAuthorizedUser()
-  const { data: channelVideosCount } = useGetVideosCountQuery({
-    skip: !channelId || !atlasConfig.general.appId,
-    variables: { where: { channel: { id_eq: channelId } } },
-  })
+  const { channelId, memberId, activeMembership } = useAuthorizedUser()
 
   const client = useApolloClient()
   const handleTransaction = useTransaction()
   const removeDrafts = useDraftStore((state) => state.actions.removeDrafts)
   const { tabData } = useVideoWorkspaceData()
   const channelBucketsCount = useChannelsStorageBucketsCount(channelId)
+  const channelVideosCount =
+    activeMembership?.channels.find((channel) => channel.id === channelId)?.totalVideosCreated || 0
 
   const { videoStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
 
   const rawMetadataProcessor = useAppActionMetadataProcessor(
     channelId,
     AppActionActionType.CreateVideo,
-    channelVideosCount?.videosConnection.totalCount || 0
+    channelVideosCount
   )
 
   return useCallback(
