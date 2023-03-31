@@ -24,7 +24,7 @@ export const MemberAbout = () => {
   return (
     <StyledLayoutGrid>
       <GridItem colSpan={{ base: 12, sm: 8 }} rowStart={{ base: 2, sm: 1 }}>
-        {!!member?.metadata.about && (
+        {!!member?.metadata?.about && (
           <TextContainer withDivider={!!member?.channels.length}>
             <Text as="h2" variant="h500">
               About me

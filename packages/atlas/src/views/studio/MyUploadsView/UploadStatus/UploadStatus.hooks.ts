@@ -144,7 +144,7 @@ export const useUploadStatus = (asset: AssetUpload) => {
           channel: { id: channelId },
         }),
     },
-    { where: { isPublic_eq: undefined, isCensored_eq: undefined } }
+    { where: { channel: { isPublic_eq: undefined, isCensored_eq: undefined } } }
   )
 
   const handleAvatarUpdate = useCallback(
@@ -177,6 +177,8 @@ export const useUploadStatus = (asset: AssetUpload) => {
                     ...newAsset,
                     contentId: `local-avatar-${createId()}`,
                     originalBlob,
+                    croppedUrl,
+                    croppedBlob,
                     imageCropData,
                     assetDimensions,
                   },
@@ -187,25 +189,13 @@ export const useUploadStatus = (asset: AssetUpload) => {
                     ...newAsset,
                     contentId: `local-cover-${createId()}`,
                     originalBlob,
+                    croppedUrl,
+                    croppedBlob,
                     imageCropData,
                     assetDimensions,
                   },
                   avatarPhoto: emptyAsset,
                 },
-          avatarAsset:
-            asset.type === 'avatar'
-              ? {
-                  blob: croppedBlob,
-                  url: croppedUrl,
-                }
-              : null,
-          coverAsset:
-            asset.type === 'cover'
-              ? {
-                  blob: croppedBlob,
-                  url: croppedUrl,
-                }
-              : null,
           refetchChannel,
         })
       } else {

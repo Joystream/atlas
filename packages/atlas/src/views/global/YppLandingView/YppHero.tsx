@@ -19,7 +19,6 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { cVar, transitions } from '@/styles'
-import { arrayFrom } from '@/utils/data'
 
 import {
   BackImage,
@@ -40,7 +39,6 @@ type YppHeroProps = {
   yppAtlasStatus: YppAtlasStatus
   hasAnotherUnsyncedChannel?: boolean
   selectedChannelTitle?: string | null
-  isRefetchingData: boolean
 }
 
 export const getButtonText = (variant: YppAtlasStatus) => {
@@ -61,7 +59,6 @@ export const YppHero: FC<YppHeroProps> = ({
   yppAtlasStatus,
   hasAnotherUnsyncedChannel,
   selectedChannelTitle,
-  isRefetchingData,
 }) => {
   const mdMatch = useMediaMatch('md')
   const smMatch = useMediaMatch('sm')
@@ -75,8 +72,10 @@ export const YppHero: FC<YppHeroProps> = ({
 
   const { channels, loading } = useGetYppLastVerifiedChannels()
   const items = !loading
-    ? channels?.map((channel) => <ChannelCard key={channel.id} channel={channel} withFollowButton={false} />)
-    : arrayFrom(30).map((_, idx) => <ChannelCard key={idx} loading withFollowButton={false} />)
+    ? channels?.map((extendedChannels) => (
+        <ChannelCard key={extendedChannels.channel.id} channel={extendedChannels.channel} withFollowButton={false} />
+      ))
+    : Array.from({ length: 30 }).map((_, idx) => <ChannelCard key={idx} loading withFollowButton={false} />)
 
   return (
     <BackgroundContainer noBackground>
@@ -115,13 +114,12 @@ export const YppHero: FC<YppHeroProps> = ({
                   {yppAtlasStatus ? (
                     <Button
                       size="large"
-                      disabled={isRefetchingData}
                       variant={yppAtlasStatus === 'ypp-signed' ? 'secondary' : 'primary'}
                       icon={<SvgActionChevronR />}
                       iconPlacement="right"
                       onClick={onSignUpClick}
                     >
-                      {isRefetchingData ? 'Please wait...' : getButtonText(yppAtlasStatus)}
+                      {getButtonText(yppAtlasStatus)}
                     </Button>
                   ) : (
                     <SkeletonLoader width={190} height={48} />

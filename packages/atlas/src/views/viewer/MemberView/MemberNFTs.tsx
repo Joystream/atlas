@@ -3,6 +3,7 @@ import { useParams } from 'react-router'
 
 import { useNfts } from '@/api/hooks/nfts'
 import { OwnedNftOrderByInput, OwnedNftWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { FullNftFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Grid } from '@/components/Grid'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
@@ -17,7 +18,6 @@ type MemberNFTsProps = {
   isFiltersApplied?: boolean
   sortBy?: OwnedNftOrderByInput
   ownedNftWhereInput?: OwnedNftWhereInput
-
   setNftCount?: (count: number) => void
 }
 
@@ -42,23 +42,48 @@ export const MemberNFTs: FC<MemberNFTsProps> = ({
 
   const [currentPage, setCurrentPage] = useState(0)
 
+  const ownershipOr: OwnedNftWhereInput['OR'] = [
+    {
+      owner: {
+        isTypeOf_eq: 'NftOwnerChannel',
+        channel: {
+          ownerMember: {
+            handle_eq: handle,
+          },
+        },
+      },
+    },
+    {
+      owner: {
+        isTypeOf_eq: 'NftOwnerMember',
+        member: {
+          handle_eq: handle,
+        },
+      },
+    },
+  ]
+
   const {
     nfts,
     loading,
     totalCount: totalNftsCount,
-    refetch,
   } = useNfts({
     variables: {
       where: {
-        ownerMember: { handle_eq: handle },
-        ...ownedNftWhereInput,
-        createdAt_lte: VIEWER_TIMESTAMP,
-        video: {
-          isPublic_eq: handle !== activeMembership?.handle || undefined,
-        },
+        AND: [
+          { OR: ownershipOr },
+          ...(ownedNftWhereInput?.OR?.length ? [{ OR: ownedNftWhereInput.OR }] : []),
+          {
+            video: {
+              isPublic_eq: handle !== activeMembership?.handle || undefined,
+            },
+            createdAt_lte: VIEWER_TIMESTAMP,
+          },
+        ],
       },
-      orderBy: sortBy as OwnedNftOrderByInput,
       limit: tilesPerPage,
+      offset: currentPage * tilesPerPage,
+      orderBy: sortBy as OwnedNftOrderByInput,
     },
     skip: !handle,
   })
@@ -70,14 +95,12 @@ export const MemberNFTs: FC<MemberNFTsProps> = ({
   }, [setNftCount, totalNftsCount])
 
   const handleChangePage = (page: number) => {
-    refetch({ offset: page * tilesPerPage })
     setCurrentPage(page)
   }
-
   return (
     <section>
       <Grid maxColumns={null} onResize={handleOnResizeGrid}>
-        {(loading ? createPlaceholderData(tilesPerPage) : nfts ?? [])?.map((nft, idx) => (
+        {(loading ? createPlaceholderData<FullNftFieldsFragment>(tilesPerPage) : nfts ?? [])?.map((nft, idx) => (
           <NftTileViewer key={`${idx}-${nft.id}`} nftId={nft.id} />
         ))}
       </Grid>

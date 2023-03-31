@@ -19,9 +19,6 @@ import { useMutation } from 'react-query'
 import { useLocation } from 'react-router'
 
 import {
-  GetDistributionBucketsByBagIdsDocument,
-  GetDistributionBucketsByBagIdsQuery,
-  GetDistributionBucketsByBagIdsQueryVariables,
   GetStorageBucketsWithBagsDocument,
   GetStorageBucketsWithBagsQuery,
   GetStorageBucketsWithBagsQueryVariables,
@@ -37,23 +34,16 @@ import { OperatorInfo } from './assets.types'
 type BagOperatorsMapping = Record<string, OperatorInfo[]>
 
 type OperatorsContextValue = {
-  fetchDistributionBucketsForBags: (ids: string[]) => Promise<BagOperatorsMapping>
-  distributionOperatorsMappingPromiseRef: MutableRefObject<Promise<BagOperatorsMapping> | undefined>
   storageOperatorsMappingPromiseRef: MutableRefObject<Promise<BagOperatorsMapping> | undefined>
   failedStorageOperatorIds: string[]
   setFailedStorageOperatorIds: Dispatch<SetStateAction<string[]>>
-  fetchOperators: () => Promise<void>
-  tryRefetchDistributionOperators: (bagIds: string[]) => Promise<BagOperatorsMapping | null>
+  fetchStorageOperators: () => Promise<BagOperatorsMapping>
 }
 const OperatorsContext = createContext<OperatorsContextValue | undefined>(undefined)
 OperatorsContext.displayName = 'OperatorsContext'
 
 export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) => {
-  const distributionOperatorsMappingPromiseRef = useRef<Promise<BagOperatorsMapping>>()
   const storageOperatorsMappingPromiseRef = useRef<Promise<BagOperatorsMapping>>()
-  const lastDistributionOperatorsFetchTimeRef = useRef<number>(Number.MAX_SAFE_INTEGER)
-  const isFetchingDistributionOperatorsRef = useRef(false)
-  const [distributionOperatorsError, setDistributionOperatorsError] = useState<unknown>(null)
   const [storageOperatorsError, setStorageOperatorsError] = useState<unknown>(null)
   const [failedStorageOperatorIds, setFailedStorageOperatorIds] = useState<string[]>([])
   const {
@@ -88,68 +78,6 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
     return coordinates
   }, [coordinates, geolocationFetch, disableUserLocation, expiry, setUserLocation])
 
-  const fetchDistributionBucketsForBags = useCallback(
-    async (ids: string[]) => {
-      const fetchDistributionBucketsForBagsPromise = client.query<
-        GetDistributionBucketsByBagIdsQuery,
-        GetDistributionBucketsByBagIdsQueryVariables
-      >({
-        query: GetDistributionBucketsByBagIdsDocument,
-        fetchPolicy: 'network-only',
-        variables: { bagIds: ids },
-      })
-      isFetchingDistributionOperatorsRef.current = true
-      lastDistributionOperatorsFetchTimeRef.current = new Date().getTime()
-
-      const userCoordinates = await getUserCoordinates()
-
-      const mapping: BagOperatorsMapping = {}
-
-      distributionOperatorsMappingPromiseRef.current = fetchDistributionBucketsForBagsPromise.then((res) => {
-        const storageBags = res.data.storageBags
-
-        storageBags.forEach((bag) => {
-          const bagId = bag.id
-          bag.distributionBuckets.forEach((bucket) => {
-            const operatorsInfos: OperatorInfo[] = bucket.operators
-              .filter((operator) => operator.metadata?.nodeEndpoint?.includes('http') && operator.status === 'ACTIVE')
-              .map((operator) => {
-                const coordinates = operator.metadata?.nodeLocation?.coordinates
-                return {
-                  id: operator.id,
-                  endpoint: operator.metadata?.nodeEndpoint || '',
-                  distance:
-                    coordinates && userCoordinates
-                      ? haversine(
-                          { lat: userCoordinates.latitude, lng: userCoordinates.longitude },
-                          {
-                            lat: coordinates.latitude,
-                            lng: coordinates.longitude,
-                          }
-                        )
-                      : null,
-                }
-              })
-            if (!mapping[bagId]) {
-              mapping[bagId] = operatorsInfos
-            } else {
-              mapping[bagId] = [...mapping[bagId], ...operatorsInfos]
-            }
-          })
-        })
-        return removeBagOperatorsDuplicates(mapping)
-      })
-      fetchDistributionBucketsForBagsPromise.catch((error) => {
-        SentryLogger.error('Failed to fetch distribution operators', 'OperatorsContextProvider', error)
-        setDistributionOperatorsError(error)
-        isFetchingDistributionOperatorsRef.current = false
-      })
-
-      return distributionOperatorsMappingPromiseRef.current
-    },
-    [client, getUserCoordinates]
-  )
-
   const fetchStorageOperators = useCallback(async () => {
     const storageOperatorsPromise = client.query<
       GetStorageBucketsWithBagsQuery,
@@ -164,7 +92,7 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
       const mapping: BagOperatorsMapping = {}
       const buckets = result.data.storageBuckets
       buckets.forEach((bucket) => {
-        const bagIds = bucket.bags.map((bag) => bag.id)
+        const bagIds = bucket.bags.map((distributionBucketBag) => distributionBucketBag.bag.id)
 
         const endpoint = bucket.operatorMetadata?.nodeEndpoint
         if (!endpoint) {
@@ -202,31 +130,6 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
     return storageOperatorsMappingPromiseRef.current
   }, [client, getUserCoordinates])
 
-  const fetchOperators = useCallback(async () => {
-    await fetchStorageOperators()
-  }, [fetchStorageOperators])
-
-  const tryRefetchDistributionOperators = useCallback(
-    async (bagIds: string[]) => {
-      const currentTime = new Date().getTime()
-
-      if (isFetchingDistributionOperatorsRef.current) {
-        return null
-      }
-
-      if (
-        currentTime - lastDistributionOperatorsFetchTimeRef.current <
-        atlasConfig.storage.minimumDistributorRefetchTime
-      ) {
-        return null
-      }
-
-      ConsoleLogger.log('Refetching distribution operators')
-      return await fetchDistributionBucketsForBags(bagIds)
-    },
-    [fetchDistributionBucketsForBags]
-  )
-
   const { pathname } = useLocation()
   const hasFetchedStorageProvidersRef = useRef(false)
   const isStudio = pathname.search(absoluteRoutes.studio.index()) !== -1
@@ -239,20 +142,17 @@ export const OperatorsContextProvider: FC<PropsWithChildren> = ({ children }) =>
     fetchStorageOperators()
   }, [fetchStorageOperators, isStudio])
 
-  if (distributionOperatorsError || storageOperatorsError) {
+  if (storageOperatorsError) {
     return <ViewErrorFallback />
   }
 
   return (
     <OperatorsContext.Provider
       value={{
-        fetchDistributionBucketsForBags,
-        distributionOperatorsMappingPromiseRef,
         storageOperatorsMappingPromiseRef,
         failedStorageOperatorIds,
         setFailedStorageOperatorIds,
-        fetchOperators,
-        tryRefetchDistributionOperators,
+        fetchStorageOperators,
       }}
     >
       {children}
@@ -268,28 +168,6 @@ export const useOperatorsContext = () => {
   }
 
   return ctx
-}
-
-export const useDistributionOperators = () => {
-  // const { distributionOperatorsMappingPromiseRef } = useOperatorsContext()
-
-  const { fetchDistributionBucketsForBags } = useOperatorsContext()
-
-  const getAllDistributionOperatorsForBags = useCallback(
-    async (storageBagId: string[]) => {
-      try {
-        const distributionOperatorsMapping = (await fetchDistributionBucketsForBags(storageBagId)) || {}
-
-        return distributionOperatorsMapping
-      } catch {
-        // error is handled by the context
-        return null
-      }
-    },
-    [fetchDistributionBucketsForBags]
-  )
-
-  return { getAllDistributionOperatorsForBags }
 }
 
 export const useStorageOperators = () => {

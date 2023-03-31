@@ -45,7 +45,9 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, details
   const channelHref = absoluteRoutes.viewer.channel(video?.channel.id)
   const nftActions = useNftActions()
   const { withdrawBid } = useNftTransactions()
-  const auction = video?.nft?.transactionalStatusAuction
+  const auction =
+    video?.nft?.transactionalStatus?.__typename === 'TransactionalStatusAuction' &&
+    video.nft.transactionalStatus.auction
   const isAuction = nftStatus?.status === 'auction'
   const contextMenuItems = useVideoContextMenu({
     publisher: false,
@@ -72,7 +74,7 @@ export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, details
       loadingDetails={loading || !video}
       loadingThumbnail={isLoadingThumbnail}
       thumbnailUrl={thumbnailPhotoUrl}
-      views={video?.views}
+      views={video?.viewsNum}
       createdAt={video?.createdAt}
       slots={{
         bottomRight: {

@@ -1,18 +1,18 @@
 import { QueryHookOptions } from '@apollo/client'
 
 import {
-  GetVideoCategoriesQuery,
-  GetVideoCategoriesQueryVariables,
-  useGetVideoCategoriesQuery,
+  GetExtendedVideoCategoriesQuery,
+  GetExtendedVideoCategoriesQueryVariables,
+  useGetExtendedVideoCategoriesQuery,
 } from '@/api/queries/__generated__/categories.generated'
 
 export const useQnCategories = (
-  variables?: GetVideoCategoriesQueryVariables,
-  opts?: QueryHookOptions<GetVideoCategoriesQuery, GetVideoCategoriesQueryVariables>
+  variables?: GetExtendedVideoCategoriesQueryVariables,
+  opts?: QueryHookOptions<GetExtendedVideoCategoriesQuery, GetExtendedVideoCategoriesQueryVariables>
 ) => {
-  const { data, ...rest } = useGetVideoCategoriesQuery({ ...opts, variables })
+  const { data, ...rest } = useGetExtendedVideoCategoriesQuery({ ...opts, variables })
   return {
-    categories: data?.videoCategories,
+    categories: data?.extendedVideoCategories,
     ...rest,
   }
 }

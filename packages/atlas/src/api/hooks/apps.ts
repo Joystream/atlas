@@ -5,8 +5,13 @@ import { useCallback } from 'react'
 import { useGetAppActionSignatureMutation } from '@/api/queries/__generated__/admin.generated'
 import { AppActionActionType } from '@/api/queries/__generated__/baseTypes.generated'
 import { atlasConfig } from '@/config'
+import { RawMetadataProcessorFn } from '@/joystream-lib/types'
 
-export const useAppActionMetadataProcessor = (creatorId: string, actionType: AppActionActionType, nonce: number) => {
+export const useAppActionMetadataProcessor = (
+  creatorId: string,
+  actionType: AppActionActionType,
+  nonce: number
+): RawMetadataProcessorFn => {
   const [signatureMutation] = useGetAppActionSignatureMutation()
 
   return useCallback(
@@ -15,10 +20,10 @@ export const useAppActionMetadataProcessor = (creatorId: string, actionType: App
         const { data } = await signatureMutation({
           variables: {
             assets: u8aToHex(assetsU8a),
+            actionType: actionType,
             nonce,
             rawAction: u8aToHex(rawMetadataU8a),
             creatorId,
-            actionType: actionType,
           },
         })
         if (data?.signAppActionCommitment) {
@@ -32,6 +37,6 @@ export const useAppActionMetadataProcessor = (creatorId: string, actionType: App
       }
       return rawMetadataU8a
     },
-    [creatorId, nonce, actionType, signatureMutation]
+    [creatorId, nonce, signatureMutation, actionType]
   )
 }

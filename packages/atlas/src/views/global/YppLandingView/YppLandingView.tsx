@@ -30,11 +30,10 @@ const SINGUP_DAILY_QUOTA = 500 // 2% of the total daily quota
 export const YppLandingView: FC = () => {
   const headTags = useHeadTags('YouTube Partner Program')
   const [currentStep, setCurrentStep] = useState<YppAuthorizationStepsType>(null)
-  const [isRefetchingData, setIsRefetchingData] = useState(false)
   const { isLoggedIn, signIn, activeMembership, channelId, walletStatus } = useUser()
-  const navigate = useNavigate()
   const { setSelectedChannelId, setShouldContinueYppFlow } = useYppStore((store) => store.actions)
   const { displaySnackbar } = useSnackbar()
+  const navigate = useNavigate()
   const selectedChannelTitle = activeMembership?.channels.find((channel) => channel.id === channelId)?.title
   const { data } = useQuery('ypp-quota-fetch', () =>
     axios
@@ -46,10 +45,7 @@ export const YppLandingView: FC = () => {
   const isTodaysQuotaReached = data ? data.signupQuotaUsed > SINGUP_DAILY_QUOTA : false
   const shouldContinueYppFlow = useYppStore((store) => store.shouldContinueYppFlow)
 
-  const channels = activeMembership?.channels
-
-  const { unsyncedChannels, isLoading, currentChannel, refetchYppSyncedChannels } = useGetYppSyncedChannels()
-
+  const { unsyncedChannels, isLoading, currentChannel } = useGetYppSyncedChannels()
   const isYppSigned = !!currentChannel
   const hasAnotherUnsyncedChannel = isYppSigned && !!unsyncedChannels?.length
 
@@ -61,62 +57,32 @@ export const YppLandingView: FC = () => {
   }, [])
 
   const handleYppSignUpClick = useCallback(async () => {
-    try {
-      if (isTodaysQuotaReached) {
-        displaySnackbar({
-          title: 'Something went wrong',
-          description:
-            "Due to high demand, we've reached the quota on the daily new sign ups. Please try again tomorrow.",
-          iconType: 'error',
-        })
-        return
-      }
-
-      if (!isLoggedIn) {
-        await signIn()
-        setWasSignInTriggered(true)
-        return
-      }
-
-      setIsRefetchingData(true)
-      const { data } = await refetchYppSyncedChannels()
-
-      if (!channels?.length) {
-        navigate(absoluteRoutes.studio.newChannel())
-        return
-      }
-      if (data?.currentChannel) {
-        navigate(absoluteRoutes.studio.ypp())
-        return
-      }
-      if (data?.unsyncedChannels?.length) {
-        setSelectedChannelId(data?.unsyncedChannels[0].id)
-      }
-      if (data?.unsyncedChannels?.length && data?.unsyncedChannels.length > 1) {
-        setCurrentStep('select-channel')
-      } else {
-        setCurrentStep('requirements')
-      }
-    } catch (error) {
-      SentryLogger.error('Failed to refetch data from Ypp backend', 'YppLandingView', error)
+    if (isTodaysQuotaReached) {
       displaySnackbar({
         title: 'Something went wrong',
-        description: 'YouTube API is currently unavailable. Please try again later.',
+        description:
+          "Due to high demand, we've reached the quota on the daily new sign ups. Please try again tomorrow.",
         iconType: 'error',
       })
-    } finally {
-      setIsRefetchingData(false)
+      return
     }
-  }, [
-    channels?.length,
-    displaySnackbar,
-    isLoggedIn,
-    isTodaysQuotaReached,
-    navigate,
-    refetchYppSyncedChannels,
-    setSelectedChannelId,
-    signIn,
-  ])
+
+    if (!isLoggedIn) {
+      await signIn()
+      setWasSignInTriggered(true)
+      return
+    }
+
+    if (isYppSigned) {
+      navigate(absoluteRoutes.studio.ypp())
+      return
+    }
+
+    if (!currentStep) {
+      setCurrentStep('requirements')
+      return
+    }
+  }, [currentStep, displaySnackbar, isLoggedIn, isTodaysQuotaReached, isYppSigned, navigate, signIn])
 
   useEffect(() => {
     // rerun handleYppSignUpClick after sign in flow
@@ -163,7 +129,6 @@ export const YppLandingView: FC = () => {
       <ParallaxProvider>
         <YppReferralBanner />
         <YppHero
-          isRefetchingData={isRefetchingData}
           onSelectChannel={() => setCurrentStep('select-channel')}
           onSignUpClick={handleYppSignUpClick}
           yppAtlasStatus={getYppAtlasStatus()}

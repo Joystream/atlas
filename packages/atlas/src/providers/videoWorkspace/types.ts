@@ -7,14 +7,16 @@ import { SubtitlesInput } from '@/types/subtitles'
 
 export type VideoWorkspaceVideoAssets = {
   video: {
+    url?: string | undefined | null
     id: string | null
+    blob?: File | null
   } & MediaInputMetadata
   thumbnail: {
+    url?: string | undefined | null
     cropId: string | null
     originalId: string | null
-    originalBlob?: {
-      name?: string
-    } | null
+    blob?: Blob
+    originalBlob?: Blob | File | null
   } & ImageInputMetadata
 }
 

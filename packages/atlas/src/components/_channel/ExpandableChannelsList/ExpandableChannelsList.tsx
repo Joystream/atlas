@@ -12,7 +12,7 @@ import { ChannelWithVideos } from '@/components/_channel/ChannelWithVideos'
 import { Select } from '@/components/_inputs/Select'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
-import { createPlaceholderData } from '@/utils/data'
+import { publicChannelFilter } from '@/config/contentFilter'
 import { SentryLogger } from '@/utils/logs'
 
 import {
@@ -48,7 +48,7 @@ export const ExpandableChannelsList: FC<ExpandableChannelsListProps> = ({
   const [displayedRowsCount, setDisplayedRowsCount] = useState(INITIAL_ROWS)
   const [selectedLanguage, setSelectedLanguage] = useState<string | null | undefined>('en')
 
-  const { channels, loading, error } = useChannelsListData(queryType, selectedLanguage)
+  const { extendedChannels, loading, error } = useChannelsListData(queryType, selectedLanguage)
 
   const handleLanguageSelect = (value?: string | null) => {
     setDisplayedRowsCount(INITIAL_ROWS)
@@ -59,12 +59,12 @@ export const ExpandableChannelsList: FC<ExpandableChannelsListProps> = ({
     setDisplayedRowsCount((prevState) => prevState + 3)
   }
 
-  const totalCount = channels?.length || 0
+  const totalCount = extendedChannels?.length || 0
 
-  const placeholderItems = createPlaceholderData(INITIAL_ROWS)
+  const placeholderItems = Array.from({ length: INITIAL_ROWS }, () => ({ channel: { id: undefined } }))
   const shouldShowLoadMoreButton = !loading && totalCount >= displayedRowsCount
 
-  const itemsToShow = [...(channels || []), ...(loading ? placeholderItems : [])].slice(0, displayedRowsCount)
+  const itemsToShow = [...(extendedChannels || []), ...(loading ? placeholderItems : [])].slice(0, displayedRowsCount)
 
   if (error) {
     return null
@@ -107,9 +107,9 @@ export const ExpandableChannelsList: FC<ExpandableChannelsListProps> = ({
         )}
       </GridHeadingContainer>
       {itemsToShow.length ? (
-        itemsToShow.map((channel, idx) => (
+        itemsToShow.map(({ channel }, idx) => (
           <Fragment key={`channels-with-videos-${idx}`}>
-            <ChannelWithVideos channelId={channel.id} />
+            <ChannelWithVideos channelId={channel?.id} />
             {idx + 1 < itemsToShow.length && <Separator />}
           </Fragment>
         ))
@@ -138,21 +138,58 @@ const useChannelsListData = (queryType: ChannelsQueryType, selectedLanguage: str
     onError: (error) => SentryLogger.error('Failed to fetch channels', 'ExpandableChannelsList', error),
     context: { delay: 2000 },
   }
-  const commonWhere = {
-    where: {
-      activeVideosCounter_gt: 4,
-    },
-  }
+  const activeVideosCountGt = 3
 
-  const discover = useDiscoverChannels(commonWhere, { ...commonOpts, skip: queryType !== 'discover' })
-  const popular = usePopularChannels(commonWhere, { ...commonOpts, skip: queryType !== 'popular' })
-  const promising = usePromisingChannels(commonWhere, { ...commonOpts, skip: queryType !== 'promising' })
+  const discover = useDiscoverChannels(
+    {
+      where: {
+        activeVideosCount_gt: activeVideosCountGt,
+        channel: {
+          ...publicChannelFilter,
+          followsNum_gt: 0,
+        },
+      },
+    },
+    { ...commonOpts, skip: queryType !== 'discover' }
+  )
+
+  const popular = usePopularChannels(
+    {
+      where: {
+        activeVideosCount_gt: activeVideosCountGt,
+        channel: {
+          ...publicChannelFilter,
+          videoViewsNum_gt: 0,
+        },
+      },
+    },
+    { ...commonOpts, skip: queryType !== 'popular' }
+  )
+
+  const promising = usePromisingChannels(
+    {
+      where: {
+        activeVideosCount_gt: activeVideosCountGt,
+        channel: {
+          ...publicChannelFilter,
+          videoViewsNum_gt: 0,
+        },
+      },
+    },
+    { ...commonOpts, skip: queryType !== 'promising' }
+  )
   // regular channels query needs explicit limit and sorting as it's not defined by Orion
   const regular = useBasicChannels(
     {
       limit: 15,
       orderBy: ChannelOrderByInput.CreatedAtAsc,
-      where: { activeVideosCounter_gt: 1, language: { iso_contains: selectedLanguage } },
+      where: {
+        activeVideosCount_gt: 0,
+        channel: {
+          ...publicChannelFilter,
+          language_contains: selectedLanguage,
+        },
+      },
     },
     { ...commonOpts, skip: queryType !== 'regular' }
   )

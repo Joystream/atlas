@@ -5,8 +5,8 @@ import * as Types from './baseTypes.generated'
 
 const defaultOptions = {} as const
 export type GetDataObjectAvailabilityQueryVariables = Types.Exact<{
-  id_eq?: Types.InputMaybe<Types.Scalars['ID']>
-  id_in?: Types.InputMaybe<Array<Types.Scalars['ID']> | Types.Scalars['ID']>
+  id_eq?: Types.InputMaybe<Types.Scalars['String']>
+  id_in?: Types.InputMaybe<Array<Types.Scalars['String']> | Types.Scalars['String']>
 }>
 
 export type GetDataObjectAvailabilityQuery = {
@@ -15,7 +15,7 @@ export type GetDataObjectAvailabilityQuery = {
 }
 
 export const GetDataObjectAvailabilityDocument = gql`
-  query GetDataObjectAvailability($id_eq: ID, $id_in: [ID!]) {
+  query GetDataObjectAvailability($id_eq: String, $id_in: [String!]) {
     storageDataObjects(where: { id_eq: $id_eq, id_in: $id_in }) {
       id
       isAccepted
