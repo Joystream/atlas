@@ -18,7 +18,14 @@ import { GetFullVideosConnectionQueryVariables } from '../queries/__generated__/
 
 const stringifyValue = (value: unknown) => JSON.stringify(value || {})
 
-const getVideoKeyArgs = (args: Partial<QueryVideosConnectionArgs> | null) => {
+const getVideoKeyArgs = (
+  args: Partial<QueryVideosConnectionArgs> | null,
+  ctx: {
+    variables?: Record<string, unknown>
+    fieldName: string
+  }
+) => {
+  const offset = ctx.fieldName === 'videos' ? ctx?.variables?.offset ?? '' : ''
   const onlyCount = args?.first === 0
   const channel = stringifyValue(args?.where?.channel)
   const category = stringifyValue(args?.where?.category)
@@ -28,6 +35,7 @@ const getVideoKeyArgs = (args: Partial<QueryVideosConnectionArgs> | null) => {
   const idIn = args?.where?.id_in || []
   const isPublic = args?.where?.isPublic_eq ?? ''
   const createdAtGte = args?.where?.createdAt_gte ? JSON.stringify(args.where.createdAt_gte) : ''
+  const createdAtLte = args?.where?.createdAt_lte ? JSON.stringify(args.where.createdAt_lte) : ''
   const durationGte = args?.where?.duration_gte || ''
   const durationLte = args?.where?.duration_gte || ''
   const titleContains = args?.where?.title_contains || ''
@@ -41,21 +49,30 @@ const getVideoKeyArgs = (args: Partial<QueryVideosConnectionArgs> | null) => {
     return `${createdAtGte}:${channel}`
   }
 
-  return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${isPublic}:${idEq}:${idIn}:${sorting}:${durationGte}:${durationLte}:${titleContains}:${titleContainsInsensitive}`
+  return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${createdAtLte}:${isPublic}:${idEq}:${idIn}:${sorting}:${durationGte}:${durationLte}:${titleContains}:${titleContainsInsensitive}:${offset}`
 }
 
-const getNftKeyArgs = (args: Partial<QueryOwnedNftsConnectionArgs> | null) => {
+const getNftKeyArgs = (
+  args: Partial<QueryOwnedNftsConnectionArgs> | null,
+  ctx: {
+    variables?: Record<string, unknown>
+    fieldName: string
+  }
+) => {
+  const offset = ctx.fieldName === 'ownedNfts' ? ctx?.variables?.offset ?? '' : ''
   const OR = stringifyValue(args?.where?.OR)
+  const AND = stringifyValue(args?.where?.AND)
   const ownerMember = stringifyValue(args?.where?.owner?.member)
   const creatorChannel = stringifyValue(args?.where?.owner?.channel)
   const status = stringifyValue(args?.where?.transactionalStatus)
   const auctionStatus = stringifyValue(args?.where?.transactionalStatus?.auction)
   const sortingArray = args?.orderBy != null ? (Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]) : []
   const sorting = stringifyValue(sortingArray)
-  const createdAt_gte = stringifyValue(args?.where?.createdAt_gte)
+  const createdAtGte = args?.where?.createdAt_gte ? JSON.stringify(args.where.createdAt_gte) : ''
+  const createdAtLte = args?.where?.createdAt_lte ? JSON.stringify(args.where.createdAt_lte) : ''
   const video = stringifyValue(args?.where?.video)
 
-  return `${OR}:${ownerMember}:${creatorChannel}:${status}:${auctionStatus}:${sorting}:${createdAt_gte}:${video}`
+  return `${OR}:${AND}:${ownerMember}:${creatorChannel}:${status}:${auctionStatus}:${sorting}:${createdAtGte}:${createdAtLte}:${video}:${offset}`
 }
 
 const getChannelKeyArgs = (args: Partial<QueryChannelsConnectionArgs> | null) => {
@@ -136,6 +153,26 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
     },
   },
   ownedNftsConnection: relayStylePagination(getNftKeyArgs),
+  ownedNfts: {
+    ...offsetLimitPagination(getNftKeyArgs),
+    read(existing, { args, toReference, canRead }) {
+      if (args?.where.id_eq) {
+        // get single nft
+        const nftRef = toReference({
+          __typename: 'OwnedNft',
+          id: args?.where.id_eq,
+        })
+        if (canRead(nftRef)) {
+          return [nftRef]
+        } else {
+          return undefined
+        }
+      }
+      const offset = args?.offset ?? 0
+      const limit = args?.limit ?? existing?.length
+      return existing?.slice(offset, offset + limit)
+    },
+  },
   mostViewedVideosConnection: relayStylePagination(getVideoKeyArgs),
   videos: {
     ...offsetLimitPagination(getVideoKeyArgs),
