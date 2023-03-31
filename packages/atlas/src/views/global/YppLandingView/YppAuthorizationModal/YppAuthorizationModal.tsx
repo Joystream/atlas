@@ -3,6 +3,7 @@ import { formatDuration } from 'date-fns'
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
+import { useNavigate } from 'react-router-dom'
 
 import { useBasicChannel } from '@/api/hooks/channel'
 import { FullMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
@@ -24,6 +25,7 @@ import { useUser } from '@/providers/user/user.hooks'
 import { useYppStore } from '@/providers/ypp/ypp.store'
 import { SentryLogger } from '@/utils/logs'
 import { pluralizeNoun } from '@/utils/misc'
+import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
 
 import { useGetYppChannelRequirements, useYppGoogleAuth } from './YppAuthorizationModal.hooks'
 import {
@@ -69,13 +71,16 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   onChangeStep,
   unSyncedChannels,
 }) => {
-  const { setActiveUser, memberId } = useUser()
+  const { setActiveUser, memberId, activeMembership } = useUser()
+  const navigate = useNavigate()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { decrementOverlaysOpenCount } = useOverlayManager()
+  const { refetchYppSyncedChannels } = useGetYppSyncedChannels()
   const contentRef = useRef<HTMLDivElement | null>(null)
   const channelsLoaded = !!unSyncedChannels
   const hasMoreThanOneChannel = unSyncedChannels && unSyncedChannels.length > 1
   const [finalFormData, setFinalFormData] = useState<FinalFormData | null>(null)
+  const [isFetchingData, setIsFetchingData] = useState(false)
   const selectedChannelId = useYppStore((store) => store.selectedChannelId)
   const referrerId = useYppStore((store) => store.referrerId)
   const setSelectedChannelId = useYppStore((store) => store.actions.setSelectedChannelId)
@@ -102,9 +107,11 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   const { joystream, proxyCallback } = useJoystream()
   const youtubeCollaboratorMemberId = atlasConfig.features.ypp.youtubeCollaboratorMemberId
 
-  const { channel: channel } = useBasicChannel(referrerId || '', {
+  const { extendedChannel } = useBasicChannel(referrerId || '', {
     skip: !referrerId,
   })
+
+  const channel = extendedChannel?.channel
 
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
@@ -319,15 +326,64 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     [fetchedChannelRequirements, ytRequirementsErrors]
   )
 
+  const verifyChannelRequirements = useCallback(async () => {
+    const channels = activeMembership?.channels
+
+    if (!channels?.length) {
+      navigate(absoluteRoutes.studio.newChannel())
+      return
+    }
+    setIsFetchingData(true)
+    const { data } = await refetchYppSyncedChannels().finally(() => {
+      setIsFetchingData(false)
+    })
+    if (data?.currentChannel) {
+      navigate(absoluteRoutes.studio.ypp())
+      return
+    }
+
+    if (data?.unsyncedChannels?.length) {
+      setSelectedChannelId(data?.unsyncedChannels[0].id)
+    }
+    if (data?.unsyncedChannels?.length && data?.unsyncedChannels.length > 1) {
+      onChangeStep('select-channel')
+      return
+    }
+
+    handleAuthorizeClick(data?.unsyncedChannels?.[0].id)
+  }, [
+    activeMembership?.channels,
+    handleAuthorizeClick,
+    navigate,
+    onChangeStep,
+    refetchYppSyncedChannels,
+    setSelectedChannelId,
+  ])
+
   const authorizationStep = useMemo(() => {
     switch (currentStep) {
+      case 'requirements':
+        return {
+          title: 'Requirements',
+          description: `Before you can apply to the program, make sure your YouTube channel meets the below conditions.`,
+          primaryButton: {
+            text: isFetchingData
+              ? 'Please wait...'
+              : activeMembership?.channels.length
+              ? 'Continue'
+              : 'Create new channel',
+            disabled: isFetchingData,
+            onClick: () => verifyChannelRequirements(),
+          },
+          component: <YppAuthorizationRequirementsStep requirements={requirements} />,
+        }
       case 'select-channel':
         return {
           title: 'Select channel',
           description: `Select the ${APP_NAME} channel you want your YouTube channel to be connected with.`,
           primaryButton: {
-            text: 'Select channel',
-            onClick: () => onChangeStep('requirements'),
+            text: 'Authorize with YouTube',
+            onClick: () => handleAuthorizeClick,
             disabled: !selectedChannel,
           },
           component: (
@@ -337,16 +393,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
               onSelectChannel={handleSelectChannel}
             />
           ),
-        }
-      case 'requirements':
-        return {
-          title: 'Requirements',
-          description: `Before you can apply to the program, make sure your YouTube channel meets the below conditions.`,
-          primaryButton: {
-            text: 'Authorize with YouTube',
-            onClick: handleAuthorizeClick,
-          },
-          component: <YppAuthorizationRequirementsStep requirements={requirements} />,
         }
       case 'fetching-data':
         return {
@@ -416,7 +462,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           title: 'Authorization failed',
           primaryButton: {
             text: 'Select another channel',
-            onClick: handleAuthorizeClick,
+            onClick: () => handleAuthorizeClick,
           },
           description: (
             <>
@@ -434,18 +480,20 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
     }
   }, [
     currentStep,
+    isFetchingData,
+    activeMembership?.channels.length,
+    requirements,
+    handleAuthorizeClick,
     selectedChannel,
     unSyncedChannels,
     selectedChannelId,
     handleSelectChannel,
-    handleAuthorizeClick,
-    requirements,
     isSubmitting,
     handleAcceptTermsAndSubmit,
     handleGoToDashboard,
     alreadyRegisteredChannel?.channelTitle,
     alreadyRegisteredChannel?.ownerMemberHandle,
-    onChangeStep,
+    verifyChannelRequirements,
     handleSubmitDetailsForm,
   ])
 

@@ -27,6 +27,8 @@ export type DataObjectMetadata = {
   id?: string
 }
 
+export type RawMetadataProcessorFn = (rawMeta: Uint8Array, assets: Uint8Array) => Promise<Uint8Array>
+
 export type VideoAssets<T> = {
   thumbnailPhoto?: T
   media?: T

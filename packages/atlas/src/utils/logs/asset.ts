@@ -1,13 +1,13 @@
 import axios from 'axios'
 import { debounce } from 'lodash-es'
 
-import { StorageDataObjectFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { DataObjectType } from '@/api/queries/__generated__/baseTypes.generated'
 
 import { ConsoleLogger } from './console'
 import { SentryLogger } from './sentry'
 
 type DistributorEventDetails = {
-  distributorId: string
+  distributorId?: string
   distributorUrl?: string | null
 }
 
@@ -23,7 +23,7 @@ type StorageEvent = {
 
 export type DistributorEventEntry = {
   dataObjectId: string
-  dataObjectType: StorageDataObjectFieldsFragment['type']['__typename']
+  dataObjectType: DataObjectType['__typename']
 } & DistributorEventDetails
 
 export type DataObjectResponseMetric = {

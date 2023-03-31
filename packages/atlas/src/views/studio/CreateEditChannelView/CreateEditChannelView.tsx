@@ -26,8 +26,7 @@ import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib/types'
-import { useAsset, useChannelsStorageBucketsCount, useRawAsset } from '@/providers/assets/assets.hooks'
-import { useAssetStore } from '@/providers/assets/assets.store'
+import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useSnackbar } from '@/providers/snackbars'
@@ -41,7 +40,7 @@ import { requiredValidation, textFieldValidation } from '@/utils/formValidationO
 import { SentryLogger } from '@/utils/logs'
 import { SubTitle, SubTitleSkeletonLoader, TitleSkeletonLoader } from '@/views/viewer/ChannelView/ChannelView.styles'
 
-import { Inputs, useCreateEditChannelSubmit } from './CreateEditChannelView.hooks'
+import { CreateEditChannelFormInputs, useCreateEditChannelSubmit } from './CreateEditChannelView.hooks'
 import {
   ActionBarTransactionWrapper,
   InnerFormContainer,
@@ -92,13 +91,9 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
           channel: { id: channelId },
         }),
     },
-    { where: { isPublic_eq: undefined, isCensored_eq: undefined } }
+    { where: { channel: { isPublic_eq: undefined, isCensored_eq: undefined } } }
   )
   const channelBucketsCount = useChannelsStorageBucketsCount(channelId)
-
-  // trigger use asset to make sure the channel assets get resolved
-  useAsset(channel?.avatarPhoto)
-  useAsset(channel?.coverPhoto)
 
   const {
     register,
@@ -110,7 +105,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     setValue,
     reset,
     getValues,
-  } = useForm<Inputs>({
+  } = useForm<CreateEditChannelFormInputs>({
     mode: 'onSubmit',
     defaultValues: {
       avatar: { contentId: null, assetDimensions: null, imageCropData: null, originalBlob: undefined },
@@ -123,10 +118,6 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   })
   const avatarContentId = watch('avatar').contentId
   const coverContentId = watch('cover').contentId
-
-  const addAsset = useAssetStore((state) => state.actions.addAsset)
-  const avatarAsset = useRawAsset(avatarContentId)
-  const coverAsset = useRawAsset(coverContentId)
 
   const isAvatarUploading = useUploadsStore(
     (state) =>
@@ -163,7 +154,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   }, [newChannel, reset])
 
   const createChannelMetadata = useCallback(
-    (data: Inputs) => {
+    (data: CreateEditChannelFormInputs) => {
       return isDirty
         ? {
             ...(dirtyFields.title ? { title: data.title?.trim() ?? '' } : {}),
@@ -177,32 +168,31 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     [accountId, dirtyFields, isDirty, newChannel]
   )
 
-  const createChannelAssets = useCallback(
-    (avatarHash?: string | null, coverPhotoHash?: string | null): [ChannelInputAssets, string[]] => {
-      const replacedAssetsIds = []
-      const newAssets: ChannelInputAssets = {}
-      if (avatarAsset?.blob?.size) {
-        newAssets.avatarPhoto = {
-          size: avatarAsset?.blob.size,
-          ipfsHash: avatarHash || '',
-        }
+  const createChannelAssets = useCallback((): [ChannelInputAssets, string[]] => {
+    const replacedAssetsIds: string[] = []
+    const newAssets: ChannelInputAssets = {}
+    const avatarAsset = getValues('avatar')
+    const coverAsset = getValues('cover')
+    if (avatarAsset?.croppedBlob?.size) {
+      newAssets.avatarPhoto = {
+        size: avatarAsset?.croppedBlob.size,
+        ipfsHash: '',
       }
-      if (channel?.avatarPhoto?.id && avatarHash) {
-        replacedAssetsIds.push(channel.avatarPhoto.id)
+    }
+    if (channel?.avatarPhoto?.id && channel?.avatarPhoto?.id !== avatarAsset.contentId) {
+      replacedAssetsIds.push(channel.avatarPhoto.id)
+    }
+    if (coverAsset?.croppedBlob?.size) {
+      newAssets.coverPhoto = {
+        size: coverAsset.croppedBlob.size,
+        ipfsHash: '',
       }
-      if (coverAsset?.blob?.size) {
-        newAssets.coverPhoto = {
-          size: coverAsset.blob.size,
-          ipfsHash: coverPhotoHash || '',
-        }
-      }
-      if (channel?.coverPhoto?.id && coverPhotoHash) {
-        replacedAssetsIds.push(channel.coverPhoto.id)
-      }
-      return [newAssets, replacedAssetsIds]
-    },
-    [avatarAsset?.blob?.size, channel?.avatarPhoto?.id, channel?.coverPhoto?.id, coverAsset?.blob?.size]
-  )
+    }
+    if (channel?.coverPhoto?.id && channel?.coverPhoto?.id !== coverAsset.contentId) {
+      replacedAssetsIds.push(channel.coverPhoto.id)
+    }
+    return [newAssets, replacedAssetsIds]
+  }, [channel?.avatarPhoto?.id, channel?.coverPhoto?.id, getValues])
 
   const channelMetadata = createChannelMetadata(watch())
   const [newChannelAssets, removedChannelAssetsIds] = createChannelAssets()
@@ -248,7 +238,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
 
     const { title, description, isPublic, language, avatarPhoto, coverPhoto } = channel
 
-    const foundLanguage = atlasConfig.derived.languagesSelectValues.find(({ value }) => value === language?.iso)
+    const foundLanguage = atlasConfig.derived.languagesSelectValues.find(({ value }) => value === language)
     const isChannelChanged = cachedChannelId.current !== channel.id
 
     // This condition should prevent from updating cover/avatar when the upload is done
@@ -259,12 +249,14 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
           assetDimensions: null,
           imageCropData: null,
           originalBlob: undefined,
+          originalUrl: channel.avatarPhoto?.resolvedUrl,
         },
         cover: {
           contentId: coverPhoto?.id,
           assetDimensions: null,
           imageCropData: null,
           originalBlob: undefined,
+          originalUrl: channel.coverPhoto?.resolvedUrl,
         },
         title: title || '',
         description: description || '',
@@ -300,14 +292,12 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     await handleChannelSubmit(
       {
         metadata,
-        channel,
+        channel: channel,
         newChannel: !!newChannel,
         assets: {
           avatarPhoto: data.avatar,
           coverPhoto: data.cover,
         },
-        avatarAsset,
-        coverAsset,
         refetchChannel,
         fee: newChannel ? createChannelFee : updateChannelFee,
       },
@@ -328,10 +318,16 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     originalBlob
   ) => {
     const newCoverAssetId = `local-cover-${createId()}`
-    addAsset(newCoverAssetId, { url: croppedUrl, blob: croppedBlob })
     setValue(
       'cover',
-      { contentId: newCoverAssetId, assetDimensions, imageCropData, originalBlob },
+      {
+        contentId: newCoverAssetId,
+        assetDimensions,
+        croppedBlob,
+        imageCropData,
+        originalBlob,
+        croppedUrl,
+      },
       { shouldDirty: true }
     )
   }
@@ -344,10 +340,9 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
     originalBlob
   ) => {
     const newAvatarAssetId = `local-avatar-${createId()}`
-    addAsset(newAvatarAssetId, { url: croppedUrl, blob: croppedBlob })
     setValue(
       'avatar',
-      { contentId: newAvatarAssetId, assetDimensions, imageCropData, originalBlob },
+      { contentId: newAvatarAssetId, assetDimensions, imageCropData, originalBlob, croppedUrl, croppedBlob },
       { shouldDirty: true }
     )
   }
@@ -363,7 +358,14 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const handleDeleteCover = () => {
     setValue(
       'cover',
-      { contentId: null, assetDimensions: null, imageCropData: null, originalBlob: undefined },
+      {
+        contentId: null,
+        assetDimensions: null,
+        imageCropData: null,
+        originalBlob: undefined,
+        croppedUrl: undefined,
+        originalUrl: undefined,
+      },
       { shouldDirty: true }
     )
   }
@@ -418,17 +420,16 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
         <Controller
           name="cover"
           control={control}
-          render={() => (
+          render={({ field: { value } }) => (
             <>
               <ChannelCover
-                assetUrl={loading ? null : coverAsset?.url}
+                assetUrl={loading ? null : value.croppedUrl || value.originalUrl}
                 hasCoverUploadFailed={hasCoverUploadFailed}
                 onCoverEditClick={() => {
-                  const cover = getValues('cover')
                   coverDialogRef.current?.open(
-                    cover.originalBlob,
-                    cover.imageCropData || undefined,
-                    !!cover.originalBlob
+                    value.originalBlob,
+                    value.imageCropData || undefined,
+                    !!value.originalBlob
                   )
                 }}
                 editable
@@ -449,23 +450,21 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
             </>
           )}
         />
-
         <StyledTitleSection className={transitions.names.slide}>
           <Controller
             name="avatar"
             control={control}
-            render={() => (
+            render={({ field: { value } }) => (
               <>
                 <StyledAvatar
-                  assetUrl={avatarAsset?.url}
+                  assetUrl={loading ? null : value.croppedUrl || value.originalUrl}
                   hasAvatarUploadFailed={hasAvatarUploadFailed}
                   size="fill"
                   onClick={() => {
-                    const avatar = getValues('avatar')
                     avatarDialogRef.current?.open(
-                      avatar.originalBlob,
-                      avatar.imageCropData || undefined,
-                      !!avatar.originalBlob
+                      value.originalBlob,
+                      value.imageCropData || undefined,
+                      !!value.originalBlob
                     )
                   }}
                   editable
@@ -511,8 +510,8 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
                 />
                 {!newChannel && (
                   <SubTitle as="span" variant="t200">
-                    {channel?.follows ? (
-                      <NumberFormat as="span" value={channel.follows} format="short" variant="t200" />
+                    {channel?.followsNum ? (
+                      <NumberFormat as="span" value={channel.followsNum} format="short" variant="t200" />
                     ) : (
                       0
                     )}{' '}

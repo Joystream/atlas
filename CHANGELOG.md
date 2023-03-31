@@ -5,7 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.0.0] - 2023-03-31
+
+### Changed
+- Channel requirements for YPP are now shown before channel creation
+- Atlas is now using OrionV2
+  - New distributors change logic
+  - Major performance improvements
+  - Query node is now the part of the Orion
+  - Subsquid framework is used for GraphQL schema generation
+  - Variety of minor changes and improvement, full changelog is available [here](https://github.com/Lezek123/orion/blob/orion-v2/CHANGELOG.md)
+
+### Fixed
+
+- Fixed paginations issues for videos and NFTs
+- Fixed bug with erased comment text when reaction is being processed
+- Markup minor fixes
 
 ## [1.4.2] - 2023-03-24
 

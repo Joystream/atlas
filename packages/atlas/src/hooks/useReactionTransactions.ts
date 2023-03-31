@@ -114,9 +114,7 @@ export const useReactionTransactions = () => {
       client.query<GetFullVideoQuery, GetFullVideoQueryVariables>({
         query: GetFullVideoDocument,
         variables: {
-          where: {
-            id,
-          },
+          id,
         },
         fetchPolicy: 'network-only',
       }),
@@ -150,11 +148,14 @@ export const useReactionTransactions = () => {
             await joystream.extrinsics
           ).createVideoComment(memberId, videoId, commentBody, parentCommentId || null, proxyCallback(updateStatus)),
         onTxSync: async (_, metaStatus) => {
-          if (!metaStatus?.commentCreated) {
+          if (
+            !metaStatus?.__typename ||
+            !(metaStatus?.__typename === 'MetaprotocolTransactionResultCommentCreated' && metaStatus.commentCreated?.id)
+          ) {
             SentryLogger.error('No comment created found in metaprotocol status event', 'useReactionTransactions')
             return
           }
-          newCommentId = metaStatus.commentCreated.id
+          newCommentId = metaStatus.commentCreated?.id
           if (parentCommentId) {
             await Promise.all([
               refetchComment(parentCommentId), // need to refetch parent as its replyCount will change
@@ -172,6 +173,7 @@ export const useReactionTransactions = () => {
             : `Your comment to the video "${videoTitle}" has not been posted.`,
         },
         unsignedMessage: parentCommentId ? 'To leave your reply' : 'To leave your comment',
+        allowMultiple: true,
       })
 
       return newCommentId
@@ -241,6 +243,7 @@ export const useReactionTransactions = () => {
           errorMessage: `Your comment to the video "${videoTitle}" has not been edited.`,
         },
         unsignedMessage: 'To edit your comment',
+        allowMultiple: true,
       })
     },
     [memberId, handleTransaction, joystream, proxyCallback, refetchEdits]
@@ -265,6 +268,7 @@ export const useReactionTransactions = () => {
           errorMessage: `Your comment to the video "${videoTitle}" has not been deleted.`,
         },
         unsignedMessage: 'To delete your comment',
+        allowMultiple: true,
       })
     },
     [memberId, handleTransaction, joystream, navigate, proxyCallback]
@@ -290,6 +294,7 @@ export const useReactionTransactions = () => {
           errorMessage: `Comment from "${commentAuthorHandle}" to your video has not been deleted.`,
         },
         unsignedMessage: `To delete comment from "${commentAuthorHandle}"`,
+        allowMultiple: true,
       })
     },
     [memberId, handleTransaction, joystream, navigate, proxyCallback]
@@ -313,6 +318,7 @@ export const useReactionTransactions = () => {
           await refetchVideo(videoId)
         },
         unsignedMessage: 'To add your reaction',
+        allowMultiple: true,
       })
     },
     [memberId, handleTransaction, joystream, proxyCallback, refetchVideo]

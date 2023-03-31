@@ -29,12 +29,12 @@ export const useGetKillSwitch = (opts?: QueryHookOptions<GetKillSwitchQuery, Get
   } = useAdminStore()
   const { data, ...rest } = useGetKillSwitchQuery(opts)
 
-  if (data?.admin.isKilled !== undefined) {
-    setWasKilledLastTime(data?.admin.isKilled)
+  if (data?.getKillSwitch.isKilled !== undefined) {
+    setWasKilledLastTime(data?.getKillSwitch.isKilled)
   }
 
   return {
-    isKilled: data?.admin.isKilled,
+    isKilled: data?.getKillSwitch.isKilled,
     wasKilledLastTime,
     ...rest,
   }

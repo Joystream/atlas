@@ -20,6 +20,7 @@ import {
   ChannelInputMetadata,
   DataObjectMetadata,
   MemberInputMetadata,
+  RawMetadataProcessorFn,
   VideoInputAssets,
   VideoInputMetadata,
 } from './types'
@@ -28,7 +29,7 @@ type ParseExtrinsicInputFn<TMetadata, TAssets> = (
   api: PolkadotApi,
   inputMetadata: TMetadata,
   inputAssets: TAssets,
-  rawMetadataProcessor?: (rawMeta: Uint8Array, assets: Uint8Array) => Promise<Uint8Array>
+  rawMetadataProcessor?: RawMetadataProcessorFn
 ) => Promise<[Option<Bytes>, TAssets extends undefined ? undefined : Option<PalletContentStorageAssetsRecord>]>
 
 const VIDEO_ASSETS_ORDER: (keyof VideoInputAssets)[] = ['media', 'thumbnailPhoto', 'subtitles']

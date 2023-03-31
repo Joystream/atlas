@@ -1,5 +1,5 @@
 import { formatISO, isValid as isValidDate } from 'date-fns'
-import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { FC, memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 
 import { License } from '@/api/queries/__generated__/baseTypes.generated'
@@ -26,7 +26,7 @@ import { displayCategories } from '@/config/categories'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { NftIssuanceInputMetadata, VideoInputAssets, VideoInputMetadata } from '@/joystream-lib/types'
-import { useChannelsStorageBucketsCount, useRawAssetResolver } from '@/providers/assets/assets.hooks'
+import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joystream/joystream.hooks'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useSnackbar } from '@/providers/snackbars'
@@ -95,6 +95,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const [showMintConfirmationDialog, setShowMintConfirmationDialog] = useState(false)
   const [dismissMintConfirmation, setDismissMintConfirmation] = useState(false)
   const mintNftFormFieldRef = useRef<HTMLDivElement>(null)
+  const assetErrorBanner = useRef<HTMLDivElement>(null)
   const { memberId, channelId } = useUser()
   const { displaySnackbar } = useSnackbar()
 
@@ -109,7 +110,6 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   const {
     chainState: { nftMaxCreatorRoyaltyPercentage, nftMinCreatorRoyaltyPercentage },
   } = useJoystream()
-  const resolveAsset = useRawAssetResolver()
 
   const deleteVideo = useDeleteVideo()
   const isEdit = !editedVideoInfo?.isDraft
@@ -210,22 +210,20 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
     if (!assets) {
       return {}
     }
-    const videoAsset = resolveAsset(assets?.video.id)
-    const thumbnailAsset = resolveAsset(assets?.thumbnail.cropId)
     return {
-      ...(videoAsset?.blob?.size
+      ...(assets.video?.blob?.size
         ? {
             media: {
               ipfsHash: '',
-              size: videoAsset.blob.size,
+              size: assets.video.blob.size,
             },
           }
         : {}),
-      ...(thumbnailAsset?.blob?.size
+      ...(assets.thumbnail?.blob?.size
         ? {
             thumbnailPhoto: {
               ipfsHash: '',
-              size: thumbnailAsset.blob.size,
+              size: assets.thumbnail.blob.size,
             },
           }
         : {}),
@@ -328,10 +326,8 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
         }
 
         const { video: videoInputFile, thumbnail: thumbnailInputFile } = data.assets
-        const videoAsset = resolveAsset(videoInputFile.id)
-        const thumbnailAsset = resolveAsset(thumbnailInputFile.cropId)
 
-        if (isNew && (!videoAsset || !videoHashPromise)) {
+        if (isNew && (!videoInputFile.blob || !videoHashPromise)) {
           ConsoleLogger.error('Video file cannot be empty')
           return
         }
@@ -359,12 +355,12 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
         )
 
         const assets: VideoFormAssets = {
-          ...(videoAsset?.blob && videoInputFile.id && videoHashPromise
+          ...(videoInputFile?.blob && videoInputFile.id && videoHashPromise
             ? {
                 media: {
                   id: videoInputFile.id,
-                  blob: videoAsset.blob,
-                  url: videoAsset.url || undefined,
+                  blob: videoInputFile.blob,
+                  url: videoInputFile.url || undefined,
                   hashPromise: videoHashPromise,
                   dimensions: videoWidth && videoHeight ? { height: videoHeight, width: videoWidth } : undefined,
                 },
@@ -380,7 +376,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                   hashPromise: thumbnailHashPromise,
                   dimensions: thumbnailInputFile?.assetDimensions,
                   cropData: thumbnailInputFile?.imageCropData,
-                  name: thumbnailInputFile.originalBlob?.name,
+                  name: (thumbnailInputFile.originalBlob as File)?.name,
                 },
               }
             : {}),
@@ -406,8 +402,8 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
       editedVideoInfo,
       isNew,
       onSubmit,
-      resolveAsset,
       subtitlesHashesPromises,
+      thumbnailAsset,
       thumbnailHashPromise,
       videoHashPromise,
     ]
@@ -462,6 +458,12 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
   useEffect(() => {
     setFormStatus(formStatus)
   }, [formStatus, setFormStatus])
+
+  useLayoutEffect(() => {
+    if (errors.assets && assetErrorBanner.current) {
+      assetErrorBanner.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [errors.assets])
 
   const handleDeleteVideo = () => {
     editedVideoInfo && deleteVideo(editedVideoInfo.id)
@@ -704,14 +706,16 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           // without this element position sticky won't work
           <div>
             {errors.assets && (
-              <FileValidationBanner
-                icon={<SvgAlertsWarning24 width={24} height={24} />}
-                description={
-                  <Text as="span" variant="t200">
-                    {(errors?.assets as FieldError)?.message}
-                  </Text>
-                }
-              />
+              <div ref={assetErrorBanner}>
+                <FileValidationBanner
+                  icon={<SvgAlertsWarning24 width={24} height={24} />}
+                  description={
+                    <Text as="span" variant="t200">
+                      {(errors?.assets as FieldError)?.message}
+                    </Text>
+                  }
+                />
+              </div>
             )}
             <StyledMultiFileSelect
               files={files}

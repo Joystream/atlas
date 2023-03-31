@@ -2,63 +2,65 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { VideoCategoryFieldsFragmentDoc } from './fragments.generated'
+import { ExtendedVideoCategoryFieldsFragmentDoc } from './fragments.generated'
 
 const defaultOptions = {} as const
-export type GetVideoCategoriesQueryVariables = Types.Exact<{ [key: string]: never }>
+export type GetExtendedVideoCategoriesQueryVariables = Types.Exact<{ [key: string]: never }>
 
-export type GetVideoCategoriesQuery = {
+export type GetExtendedVideoCategoriesQuery = {
   __typename?: 'Query'
-  videoCategories: Array<{
-    __typename?: 'VideoCategory'
-    id: string
-    name?: string | null
-    activeVideosCounter: number
+  extendedVideoCategories: Array<{
+    __typename?: 'ExtendedVideoCategory'
+    activeVideosCount: number
+    category: { __typename?: 'VideoCategory'; id: string; name?: string | null }
   }>
 }
 
-export const GetVideoCategoriesDocument = gql`
-  query GetVideoCategories {
-    videoCategories {
-      ...VideoCategoryFields
+export const GetExtendedVideoCategoriesDocument = gql`
+  query GetExtendedVideoCategories {
+    extendedVideoCategories {
+      ...ExtendedVideoCategoryFields
     }
   }
-  ${VideoCategoryFieldsFragmentDoc}
+  ${ExtendedVideoCategoryFieldsFragmentDoc}
 `
 
 /**
- * __useGetVideoCategoriesQuery__
+ * __useGetExtendedVideoCategoriesQuery__
  *
- * To run a query within a React component, call `useGetVideoCategoriesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetVideoCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetExtendedVideoCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetExtendedVideoCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetVideoCategoriesQuery({
+ * const { data, loading, error } = useGetExtendedVideoCategoriesQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetVideoCategoriesQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetVideoCategoriesQuery, GetVideoCategoriesQueryVariables>
+export function useGetExtendedVideoCategoriesQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetExtendedVideoCategoriesQuery, GetExtendedVideoCategoriesQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetVideoCategoriesQuery, GetVideoCategoriesQueryVariables>(GetVideoCategoriesDocument, options)
-}
-export function useGetVideoCategoriesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetVideoCategoriesQuery, GetVideoCategoriesQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetVideoCategoriesQuery, GetVideoCategoriesQueryVariables>(
-    GetVideoCategoriesDocument,
+  return Apollo.useQuery<GetExtendedVideoCategoriesQuery, GetExtendedVideoCategoriesQueryVariables>(
+    GetExtendedVideoCategoriesDocument,
     options
   )
 }
-export type GetVideoCategoriesQueryHookResult = ReturnType<typeof useGetVideoCategoriesQuery>
-export type GetVideoCategoriesLazyQueryHookResult = ReturnType<typeof useGetVideoCategoriesLazyQuery>
-export type GetVideoCategoriesQueryResult = Apollo.QueryResult<
-  GetVideoCategoriesQuery,
-  GetVideoCategoriesQueryVariables
+export function useGetExtendedVideoCategoriesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetExtendedVideoCategoriesQuery, GetExtendedVideoCategoriesQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetExtendedVideoCategoriesQuery, GetExtendedVideoCategoriesQueryVariables>(
+    GetExtendedVideoCategoriesDocument,
+    options
+  )
+}
+export type GetExtendedVideoCategoriesQueryHookResult = ReturnType<typeof useGetExtendedVideoCategoriesQuery>
+export type GetExtendedVideoCategoriesLazyQueryHookResult = ReturnType<typeof useGetExtendedVideoCategoriesLazyQuery>
+export type GetExtendedVideoCategoriesQueryResult = Apollo.QueryResult<
+  GetExtendedVideoCategoriesQuery,
+  GetExtendedVideoCategoriesQueryVariables
 >

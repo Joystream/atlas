@@ -54,7 +54,7 @@ const ChangeableTemplate: Story<InfiniteCarouselProps> = (args) => {
       channel={{
         title: idx.toString(),
         id: idx.toString(),
-        follows: getRandomIntInclusive(0, 100),
+        followsNum: getRandomIntInclusive(0, 100),
         rewardAccount: 'dummy',
         createdAt: new Date(),
         channelStateBloatBond: '',

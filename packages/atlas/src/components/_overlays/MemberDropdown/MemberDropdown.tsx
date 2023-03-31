@@ -28,7 +28,8 @@ export type MemberDropdownProps = {
 export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
   ({ publisher, isActive, closeDropdown, onChannelChange }, ref) => {
     const navigate = useNavigate()
-    const { channelId, activeMembership, memberships, signOut, setActiveUser, setSignInModalOpen } = useUser()
+    const { channelId, activeMembership, memberships, signOut, setActiveUser, setSignInModalOpen, membershipsLoading } =
+      useUser()
     const [showWithdrawDialog, setShowWithdrawDialog] = useState(false)
     const [disableScrollDuringAnimation, setDisableScrollDuringAnimation] = useState(false)
 
@@ -174,6 +175,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                       channelBalance={channelBalance}
                       lockedAccountBalance={lockedAccountBalance}
                       activeMembership={activeMembership}
+                      membershipLoading={membershipsLoading}
                       hasOneMember={hasOneMember}
                       onSwitchDropdownType={setDropdownType}
                       onSwitchToList={(type) => handleSwitch(type, true)}

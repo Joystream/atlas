@@ -59,7 +59,7 @@ export const useSearchResults = ({
     {
       first,
       where: {
-        title_contains: text,
+        title_containsInsensitive: text,
         media: {
           isAccepted_eq: true,
         },
@@ -95,10 +95,8 @@ export const useSearchResults = ({
     {
       first,
       where: {
-        title_contains: text,
-        avatarPhoto: {
-          isAccepted_eq: true,
-        },
+        title_containsInsensitive: text,
+        isPublic_eq: true,
       },
     },
     {

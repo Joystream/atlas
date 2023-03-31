@@ -1,8 +1,6 @@
 import { FC } from 'react'
 
-import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { Avatar } from '@/components/Avatar'
-import { useAsset } from '@/providers/assets/assets.hooks'
 
 import { ListItemsWrapper, StyledListItem } from './YppAuthorizationSelectChannelStep.styles'
 
@@ -22,31 +20,15 @@ export const YppAuthorizationSelectChannelStep: FC<YppAuthorizationSelectChannel
   return (
     <ListItemsWrapper>
       {channels?.map((channel) => (
-        <ChannelListItem
+        <StyledListItem
           key={channel.id}
-          channel={channel}
-          selected={selectedChannelId === channel.id}
           onClick={() => onSelectChannel(channel.id)}
+          nodeStart={<Avatar size="small" assetUrl={channel.avatarPhoto?.resolvedUrl} />}
+          label={channel?.title ?? ''}
+          caption={channel ? `${channel?.followsNum} followers` : undefined}
+          selected={selectedChannelId === channel.id}
         />
       ))}
     </ListItemsWrapper>
-  )
-}
-
-type ChannelListItemProps = {
-  channel: BasicChannelFieldsFragment
-  selected: boolean
-  onClick: () => void
-}
-const ChannelListItem: FC<ChannelListItemProps> = ({ channel, selected, onClick }) => {
-  const { url, isLoadingAsset } = useAsset(channel?.avatarPhoto)
-  return (
-    <StyledListItem
-      onClick={onClick}
-      nodeStart={<Avatar size="small" assetUrl={url} loading={isLoadingAsset} />}
-      label={channel?.title ?? ''}
-      caption={channel ? `${channel?.follows} followers` : undefined}
-      selected={selected}
-    />
   )
 }

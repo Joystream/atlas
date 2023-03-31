@@ -1,5 +1,12 @@
 import { round } from 'lodash-es'
 
+import { createApolloClient } from '@/api'
+import {
+  FollowChannelDocument,
+  FollowChannelMutation,
+  FollowChannelMutationVariables,
+} from '@/api/queries/__generated__/channels.generated'
+import { SentryLogger } from '@/utils/logs'
 import { createStore } from '@/utils/store'
 
 import { DismissedMessage, FollowedChannel, RecentSearch, WatchedVideo, WatchedVideoStatus } from './types'
@@ -20,7 +27,7 @@ export type PersonalDataStoreState = {
   captionsLanguage: string | null
 }
 
-const WHITELIST = [
+const WHITELIST: (keyof PersonalDataStoreState)[] = [
   'watchedVideos',
   'followedChannels',
   'recentSearches',
@@ -34,11 +41,12 @@ const WHITELIST = [
   'autoPlayNext',
   'captionsEnabled',
   'captionsLanguage',
-] as (keyof PersonalDataStoreState)[]
+]
 
 export type PersonalDataStoreActions = {
   updateWatchedVideos: (__typename: WatchedVideoStatus, id: string, timestamp?: number) => void
-  updateChannelFollowing: (id: string, follow: boolean) => void
+  unfollowChannel: (id: string) => void
+  followChannel: (id: string, cancelToken: string) => void
   addRecentSearch: (title: string) => void
   deleteRecentSearch: (title: string) => void
   updateDismissedMessages: (id: string, add?: boolean) => void
@@ -87,14 +95,19 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
           }
         })
       },
-      updateChannelFollowing: (id, follow) => {
+      followChannel: (id, cancelToken) => {
         set((state) => {
           const isFollowing = state.followedChannels.some((channel) => channel.id === id)
-          if (isFollowing && !follow) {
-            state.followedChannels = state.followedChannels.filter((channel) => channel.id !== id)
+          if (!isFollowing) {
+            state.followedChannels.push({ id, cancelToken })
           }
-          if (!isFollowing && follow) {
-            state.followedChannels.push({ id })
+        })
+      },
+      unfollowChannel: (id) => {
+        set((state) => {
+          const isFollowing = state.followedChannels.some((channel) => channel.id === id)
+          if (isFollowing) {
+            state.followedChannels = state.followedChannels.filter((channel) => channel.id !== id)
           }
         })
       },
@@ -164,9 +177,37 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
     persist: {
       key: 'personalData',
       whitelist: WHITELIST,
-      version: 2,
-      migrate: (oldState) => {
-        return oldState
+      version: 3,
+      migrate: async (oldState: PersonalDataStoreState): Promise<PersonalDataStoreState> => {
+        const client = createApolloClient()
+        try {
+          const followedChannels = await Promise.all(
+            oldState.followedChannels.map(async (followedChannel) => {
+              if (!followedChannel.cancelToken) {
+                const { data } = await client.mutate<FollowChannelMutation, FollowChannelMutationVariables>({
+                  mutation: FollowChannelDocument,
+                  variables: {
+                    channelId: followedChannel.id,
+                  },
+                })
+                return {
+                  ...followedChannel,
+                  cancelToken: data?.followChannel.cancelToken,
+                }
+              }
+            })
+          )
+
+          const followedChannelsWithTokens = followedChannels.filter(
+            (followedChannel): followedChannel is FollowedChannel => !!followedChannel?.cancelToken
+          )
+          oldState.followedChannels = followedChannelsWithTokens
+
+          return oldState
+        } catch (error) {
+          SentryLogger.error('Failed to migrate followed channels', 'userPersonalDataStore', error)
+          return oldState
+        }
       },
     },
   }
