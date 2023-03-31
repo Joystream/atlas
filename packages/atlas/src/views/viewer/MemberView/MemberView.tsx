@@ -41,8 +41,8 @@ export const MemberView: FC = () => {
   const [sortByTimestamp, setSortByTimestamp] = useState<NftActivityOrderByInput>(
     NftActivityOrderByInput.EventTimestampDesc
   )
-  const [nftCount, setNftCount] = useState<number | undefined>()
   const [currentTab, setCurrentTab] = useState<typeof TABS[number] | null>(null)
+  const [nftCount, setNftCount] = useState<number | undefined>()
   const { memberId, activeMembership } = useUser()
   const { handle } = useParams()
   const headTags = useHeadTags(handle)
@@ -89,6 +89,7 @@ export const MemberView: FC = () => {
     name: tab,
     pillText: tab === 'NFTs owned' ? nftCount : undefined,
   }))
+
   const tabContent = useMemo(() => {
     switch (currentTab) {
       case 'NFTs owned':
@@ -152,6 +153,7 @@ export const MemberView: FC = () => {
   if (error) {
     return <ViewErrorFallback />
   }
+
   return (
     <ViewWrapper>
       {headTags}
