@@ -19,7 +19,7 @@ const getOptionCardBorderColor = ({ checked, error, disabled }: OptionCardLabelP
   } else if (checked) {
     return cVar('colorBorderPrimary')
   }
-  return cVar('colorBorderAlpha')
+  return cVar('colorBorderMutedAlpha')
 }
 
 const getOptionCardBorderColorHover = ({ checked, error, disabled }: OptionCardLabelProps) => {
@@ -31,7 +31,7 @@ const getOptionCardBorderColorHover = ({ checked, error, disabled }: OptionCardL
   } else if (checked) {
     return cVar('colorBorderPrimary')
   }
-  return cVar('colorBorderStrongAlpha')
+  return cVar('colorBorderAlpha')
 }
 
 const getOptionCardBorderColorActive = ({ checked, error, disabled }: OptionCardLabelProps) => {
@@ -68,6 +68,7 @@ export const OptionCardLabel = styled.label<OptionCardLabelProps>`
   transition: all ${cVar('animationTransitionFast')};
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
   background: ${cVar('colorBackgroundMutedAlpha')};
+  border-radius: ${cVar('radiusSmall')};
 
   ${({ disabled, checked, error }) =>
     !disabled &&
