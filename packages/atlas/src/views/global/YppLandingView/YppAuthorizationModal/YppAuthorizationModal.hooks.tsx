@@ -70,29 +70,32 @@ export const useYppGoogleAuth = ({
   const [searchParams, setSearchParams] = useSearchParams()
   const resetSearchParams = useCallback(() => setSearchParams(new URLSearchParams()), [setSearchParams])
 
-  const handleAuthorizeClick = useCallback(() => {
-    if (!GOOGLE_CONSOLE_CLIENT_ID) {
-      return
-    }
-    const authUrl = new URL(GOOGLE_OAUTH_ENDPOINT)
-    const randomCode = createId()
+  const handleAuthorizeClick = useCallback(
+    (channelId?: string) => {
+      if (!GOOGLE_CONSOLE_CLIENT_ID) {
+        return
+      }
+      const authUrl = new URL(GOOGLE_OAUTH_ENDPOINT)
+      const randomCode = createId()
 
-    const stateParams = new URLSearchParams({
-      code: randomCode,
-      channelId: selectedChannelId || '',
-    })
-    const authState = stateParams.toString()
-    setAuthState(authState)
+      const stateParams = new URLSearchParams({
+        code: randomCode,
+        channelId: channelId ?? selectedChannelId ?? '',
+      })
+      const authState = stateParams.toString()
+      setAuthState(authState)
 
-    const authParams = {
-      ...GOOGLE_AUTH_PARAMS,
-      redirect_uri: window.location.origin + window.location.pathname,
-      state: authState,
-    }
-    Object.entries(authParams).forEach(([key, value]) => authUrl.searchParams.set(key, value))
+      const authParams = {
+        ...GOOGLE_AUTH_PARAMS,
+        redirect_uri: window.location.origin + window.location.pathname,
+        state: authState,
+      }
+      Object.entries(authParams).forEach(([key, value]) => authUrl.searchParams.set(key, value))
 
-    window.location.assign(authUrl)
-  }, [selectedChannelId, setAuthState])
+      window.location.assign(authUrl)
+    },
+    [selectedChannelId, setAuthState]
+  )
 
   const handleGoogleAuthError = useCallback(
     (error: string, state: string | null) => {
@@ -221,11 +224,11 @@ export const useYppGoogleAuth = ({
               case YppAuthorizationErrorCode.CHANNEL_ALREADY_REGISTERED: {
                 const { data } = await client.query<GetFullChannelQuery, GetFullChannelQueryVariables>({
                   query: GetFullChannelDocument,
-                  variables: { where: { id: (errorResponseData as ChannelAlreadyRegisteredError).result.toString() } },
+                  variables: { id: (errorResponseData as ChannelAlreadyRegisteredError).result.toString() },
                 })
                 setAlreadyRegisteredChannel({
-                  channelTitle: data.channelByUniqueInput?.title || '',
-                  ownerMemberHandle: data.channelByUniqueInput?.ownerMember?.handle || '',
+                  channelTitle: data.channelById?.title || '',
+                  ownerMemberHandle: data.channelById?.ownerMember?.handle || '',
                 })
 
                 onChangeStep('channel-already-registered')

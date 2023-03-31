@@ -258,7 +258,7 @@ features:
     englishAuctionExtensionPeriod: 5 # Number of blocks from the auction's end during which auction will be extended if a bid is placed. See more: https://joystream.gitbook.io/testnet-workspace/system/content-directory/nft#auction-type
     statusPollingInterval: 20000 # Interval for polling NFT status on VideoView in ms
   notifications:
-    pollingInterval: 30000 # Interval for polling notifications in ms
+    pollingInterval: 10000 # Interval for polling notifications in ms
   members:
     avatarServiceUrl: '$VITE_AVATAR_SERVICE_URL' # URL for avatar service - used to upload member's avatar
     hcaptchaSiteKey: '$VITE_HCAPTCHA_SITE_KEY' # Site key for hCaptcha - used to verify users are not bots when creating memberships - depends on hCaptcha being enabled in the faucet

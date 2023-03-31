@@ -2,11 +2,6 @@ import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
 
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import {
-  GetVideoCountQuery,
-  GetVideoCountQueryVariables,
-  useGetVideoCountQuery,
-} from '@/api/queries/__generated__/channels.generated'
-import {
   AddVideoViewMutation,
   GetBasicVideosQuery,
   GetBasicVideosQueryVariables,
@@ -16,13 +11,16 @@ import {
   GetTop10VideosThisMonthQueryVariables,
   GetTop10VideosThisWeekQuery,
   GetTop10VideosThisWeekQueryVariables,
+  GetVideosCountQuery,
+  GetVideosCountQueryVariables,
   useAddVideoViewMutation,
   useGetBasicVideosQuery,
   useGetFullVideosQuery,
   useGetTop10VideosThisMonthQuery,
   useGetTop10VideosThisWeekQuery,
+  useGetVideosCountQuery,
 } from '@/api/queries/__generated__/videos.generated'
-import { videoFilter } from '@/config/contentFilter'
+import { createVideoWhereObjectWithFilters, publicVideoFilter } from '@/config/contentFilter'
 
 export const useFullVideo = (
   id: string,
@@ -35,8 +33,7 @@ export const useFullVideo = (
       ...variables,
       where: {
         id_eq: id,
-        ...videoFilter,
-        ...variables?.where,
+        ...createVideoWhereObjectWithFilters(variables?.where),
       },
     },
   })
@@ -54,12 +51,7 @@ export const useChannelPreviewVideos = (
   const { data, ...rest } = useGetBasicVideosQuery({
     ...opts,
     variables: {
-      where: {
-        channel: {
-          id_eq: channelId,
-        },
-        ...videoFilter,
-      },
+      where: createVideoWhereObjectWithFilters({ ...publicVideoFilter, channel: { id_eq: channelId } }),
       orderBy: VideoOrderByInput.CreatedAtDesc,
       offset: 0,
       limit: 10,
@@ -78,10 +70,10 @@ export const useAddVideoView = (opts?: Omit<MutationHookOptions<AddVideoViewMuta
       cache.modify({
         id: cache.identify({
           __typename: 'Video',
-          id: mutationResult.data?.addVideoView.id,
+          id: mutationResult.data?.addVideoView.videoId,
         }),
         fields: {
-          views: () => mutationResult.data?.addVideoView.views,
+          viewsNum: () => mutationResult.data?.addVideoView.viewsNum,
         },
       })
     },
@@ -101,10 +93,7 @@ export const useBasicVideos = (
     ...opts,
     variables: {
       ...variables,
-      where: {
-        ...videoFilter,
-        ...variables?.where,
-      },
+      where: createVideoWhereObjectWithFilters(variables?.where),
     },
   })
   return {
@@ -119,7 +108,7 @@ export const useBasicVideo = (
 ) => {
   const { data, ...rest } = useGetBasicVideosQuery({
     ...opts,
-    variables: { where: { id_eq: id, ...videoFilter } },
+    variables: { where: createVideoWhereObjectWithFilters({ id_eq: id }) },
   })
   return {
     video: data?.videos[0],
@@ -135,14 +124,11 @@ export const useTop10VideosThisWeek = (
     ...opts,
     variables: {
       ...variables,
-      where: {
-        ...videoFilter,
-        ...variables?.where,
-      },
+      where: createVideoWhereObjectWithFilters(variables?.where),
     },
   })
   return {
-    videos: data?.top10VideosThisWeek,
+    videos: data?.mostViewedVideosConnection.edges.map((video) => video.node),
     ...rest,
   }
 }
@@ -155,28 +141,24 @@ export const useTop10VideosThisMonth = (
     ...opts,
     variables: {
       ...variables,
-      where: {
-        ...videoFilter,
-        ...variables?.where,
-      },
+      where: createVideoWhereObjectWithFilters(variables?.where),
     },
   })
   return {
-    videos: data?.top10VideosThisMonth,
+    videos: data?.mostViewedVideosConnection.edges.map((video) => video.node),
     ...rest,
   }
 }
 
 export const useVideoCount = (
-  variables?: GetVideoCountQueryVariables,
-  opts?: QueryHookOptions<GetVideoCountQuery, GetVideoCountQueryVariables>
+  variables?: GetBasicVideosQueryVariables,
+  opts?: QueryHookOptions<GetVideosCountQuery, GetVideosCountQueryVariables>
 ) => {
-  const { data, ...rest } = useGetVideoCountQuery({
+  const { data, ...rest } = useGetVideosCountQuery({
     ...opts,
     variables: {
       ...variables,
       where: {
-        ...videoFilter,
         ...variables?.where,
       },
     },

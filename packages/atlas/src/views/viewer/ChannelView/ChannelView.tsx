@@ -25,7 +25,6 @@ import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
-import { useAsset } from '@/providers/assets/assets.hooks'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
@@ -78,6 +77,7 @@ export const ChannelView: FC = () => {
   const { id } = useParams()
   const {
     channel,
+    activeVideosCount,
     loading,
     error: channelError,
   } = useFullChannel(id ?? '', {
@@ -102,13 +102,13 @@ export const ChannelView: FC = () => {
         search: { channelId: id, query: searchQuery },
       }),
   })
-  const { channelNftCollectors } = useChannelNftCollectors({ where: { channel: { id_eq: id } } })
+  const { channelNftCollectors } = useChannelNftCollectors({ channelId: id || '' })
 
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, channel?.title)
   const [currentTab, setCurrentTab] = useState<typeof TABS[number]>(TABS[0])
 
-  const { url: avatarPhotoUrl } = useAsset(channel?.avatarPhoto)
-  const { url: coverPhotoUrl } = useAsset(channel?.coverPhoto)
+  const avatarPhotoUrl = channel?.avatarPhoto?.resolvedUrl
+  const coverPhotoUrl = channel?.coverPhoto?.resolvedUrl
 
   const [sortNftsBy, setSortNftsBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
@@ -187,7 +187,7 @@ export const ChannelView: FC = () => {
           />
         )
       case 'Information':
-        return <ChannelAbout channel={channel} />
+        return <ChannelAbout channel={channel} activeVideosCount={activeVideosCount} />
     }
   }
 
@@ -201,7 +201,7 @@ export const ChannelView: FC = () => {
   const mappedChannelNftCollectors =
     channelNftCollectors?.map(({ amount, member }) => ({
       nftsAmount: amount,
-      url: member?.metadata.avatar?.__typename === 'AvatarUri' ? member?.metadata.avatar?.avatarUri : '',
+      url: member?.metadata?.avatar?.__typename === 'AvatarUri' ? member?.metadata.avatar?.avatarUri : '',
       tooltipText: member?.handle,
       onClick: () => navigate(absoluteRoutes.viewer.member(member?.handle)),
       memberUrl: absoluteRoutes.viewer.member(member?.handle),
@@ -245,8 +245,8 @@ export const ChannelView: FC = () => {
                   {channel.title}
                 </Text>
                 <SubTitle as="p" variant="t300" color="colorText">
-                  {channel.follows ? (
-                    <NumberFormat as="span" value={channel.follows} format="short" variant="t300" />
+                  {channel.followsNum ? (
+                    <NumberFormat as="span" value={channel.followsNum} format="short" variant="t300" />
                   ) : (
                     0
                   )}{' '}

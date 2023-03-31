@@ -6,7 +6,10 @@ import * as Types from './baseTypes.generated'
 const defaultOptions = {} as const
 export type GetKillSwitchQueryVariables = Types.Exact<{ [key: string]: never }>
 
-export type GetKillSwitchQuery = { __typename?: 'Query'; admin: { __typename?: 'Admin'; isKilled: boolean } }
+export type GetKillSwitchQuery = {
+  __typename?: 'Query'
+  getKillSwitch: { __typename?: 'KillSwitch'; isKilled: boolean }
+}
 
 export type SetKillSwitchMutationVariables = Types.Exact<{
   isKilled: Types.Scalars['Boolean']
@@ -14,15 +17,15 @@ export type SetKillSwitchMutationVariables = Types.Exact<{
 
 export type SetKillSwitchMutation = {
   __typename?: 'Mutation'
-  setKillSwitch: { __typename?: 'Admin'; isKilled: boolean }
+  setKillSwitch: { __typename?: 'KillSwitch'; isKilled: boolean }
 }
 
 export type GetAppActionSignatureMutationVariables = Types.Exact<{
-  creatorId: Types.Scalars['String']
   assets: Types.Scalars['String']
+  actionType: Types.AppActionActionType
+  creatorId: Types.Scalars['String']
   nonce: Types.Scalars['Float']
   rawAction: Types.Scalars['String']
-  actionType: Types.AppActionActionType
 }>
 
 export type GetAppActionSignatureMutation = {
@@ -32,7 +35,7 @@ export type GetAppActionSignatureMutation = {
 
 export const GetKillSwitchDocument = gql`
   query GetKillSwitch {
-    admin {
+    getKillSwitch {
       isKilled
     }
   }
@@ -108,18 +111,18 @@ export type SetKillSwitchMutationOptions = Apollo.BaseMutationOptions<
 >
 export const GetAppActionSignatureDocument = gql`
   mutation GetAppActionSignature(
-    $creatorId: String!
     $assets: String!
+    $actionType: AppActionActionType!
+    $creatorId: String!
     $nonce: Float!
     $rawAction: String!
-    $actionType: AppActionActionType!
   ) {
     signAppActionCommitment(
-      creatorId: $creatorId
       assets: $assets
+      actionType: $actionType
+      creatorId: $creatorId
       nonce: $nonce
       rawAction: $rawAction
-      actionType: $actionType
     ) {
       signature
     }
@@ -143,11 +146,11 @@ export type GetAppActionSignatureMutationFn = Apollo.MutationFunction<
  * @example
  * const [getAppActionSignatureMutation, { data, loading, error }] = useGetAppActionSignatureMutation({
  *   variables: {
- *      creatorId: // value for 'creatorId'
  *      assets: // value for 'assets'
+ *      actionType: // value for 'actionType'
+ *      creatorId: // value for 'creatorId'
  *      nonce: // value for 'nonce'
  *      rawAction: // value for 'rawAction'
- *      actionType: // value for 'actionType'
  *   },
  * });
  */

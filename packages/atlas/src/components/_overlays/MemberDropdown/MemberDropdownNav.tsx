@@ -25,7 +25,7 @@ import { Tooltip } from '@/components/Tooltip'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useUserStore } from '@/providers/user/user.store'
 import { cVar } from '@/styles'
 import { isMobile } from '@/utils/browser'
@@ -64,6 +64,7 @@ type MemberDropdownNavProps = {
   onSignOut: () => void
   onShowFundsDialog: () => void
   activeMembership?: FullMembershipFieldsFragment | null
+  membershipLoading?: boolean
   hasOneMember?: boolean
   channelId: string | null
   accountBalance?: BN
@@ -83,6 +84,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
   onShowFundsDialog,
   channelId,
   activeMembership,
+  membershipLoading,
   hasOneMember,
   accountBalance,
   lockedAccountBalance,
@@ -92,7 +94,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
   const navigate = useNavigate()
   const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
-  const { url: channelAvatarUrl, isLoadingAsset: isChannelAvatarLoading } = useAsset(selectedChannel?.avatarPhoto)
+  const channelAvatarUrl = selectedChannel?.avatarPhoto?.resolvedUrl
   const setSignInModalOpen = useUserStore((state) => state.actions.setSignInModalOpen)
   const memberAvatarWrapperRef = useRef<HTMLButtonElement>(null)
   const channelAvatarWrapperRef = useRef<HTMLButtonElement>(null)
@@ -171,7 +173,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                 isDisabled={type === 'member'}
                 size="small"
                 assetUrl={channelAvatarUrl}
-                loading={isChannelAvatarLoading}
+                loading={membershipLoading}
               >
                 {!hasAtLeastOneChannel ? (
                   <AddAvatar>

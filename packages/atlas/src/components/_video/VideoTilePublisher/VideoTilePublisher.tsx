@@ -65,9 +65,11 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
     const hasNft = !!video?.nft
 
     const nftActions = useNftActions()
-    const owner = video?.nft?.ownerMember?.id !== video?.channel.ownerMember?.id ? video?.nft?.ownerMember : undefined
 
-    const ownerAvatar = useMemberAvatar(video?.nft?.ownerMember)
+    const videoNftOwner = video?.nft?.owner
+    const ownerMember = videoNftOwner?.__typename === 'NftOwnerMember' ? videoNftOwner.member : null
+
+    const ownerAvatar = useMemberAvatar(ownerMember)
 
     const nftStatus = getNftStatus(video?.nft, video)
 
@@ -141,17 +143,17 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
           element: video?.duration ? <Pill variant="overlay" label={formatDurationShort(video?.duration)} /> : null,
         },
         bottomLeft: video?.nft ? nftTilePublisher : undefined,
-        topLeft: owner
+        topLeft: ownerMember
           ? {
               element: (
                 <OwnerPill
                   onClick={(e) => {
                     e?.preventDefault()
-                    navigate(absoluteRoutes.viewer.member(owner.handle))
+                    navigate(absoluteRoutes.viewer.member(ownerMember.handle))
                   }}
                   avatar={{ assetUrl: ownerAvatar.url, loading: ownerAvatar.isLoadingAsset }}
-                  handle={owner.handle}
-                  title={owner.handle}
+                  handle={ownerMember.handle}
+                  title={ownerMember.handle}
                 />
               ),
               clickable: true,
@@ -202,7 +204,7 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
       navigate,
       nftTilePublisher,
       onEditClick,
-      owner,
+      ownerMember,
       ownerAvatar.isLoadingAsset,
       ownerAvatar.url,
       video?.duration,
@@ -310,13 +312,14 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
         videoHref={getVideoHref()}
         linkState={hasAssetUploadFailed ? { highlightFailed: true } : undefined}
         videoSubTitle={getVideoSubtitle()}
+        channelTitle={video?.channel.title}
         detailsVariant="withoutChannel"
         loadingDetails={loading || !video}
         loadingThumbnail={isLoadingThumbnail && !hasThumbnailUploadFailed}
         thumbnailUrl={isSyncingWithYoutube ? null : thumbnailPhotoUrl}
         createdAt={video?.createdAt}
         videoTitle={video?.title}
-        views={video?.views}
+        views={video?.viewsNum}
         kebabMenuItems={getPublisherKebabMenuItems()}
       />
     )

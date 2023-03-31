@@ -38,25 +38,36 @@ export const ChannelNfts: FC<ChannelNftsProps> = ({
 
   const userChannels = memberships?.map((membership) => membership.channels).flat()
   const channelOwner = userChannels?.map((channel) => channel.id).includes(channelId)
-  const { nfts, totalCount, loading, error, refetch } = useNfts({
+
+  const basicWhereVariablesWithoutFilter: OwnedNftWhereInput = {
+    createdAt_lte: VIEWER_TIMESTAMP,
+    video: {
+      channel: {
+        id_eq: channelId,
+      },
+      isPublic_eq: !channelOwner || undefined,
+    },
+  }
+  // if OR is passed put every variable inside every element of OR
+  const orVariablesFromFilter: OwnedNftWhereInput['OR'] = ownedNftWhereInput?.OR?.map((or) => ({
+    ...basicWhereVariablesWithoutFilter,
+    ...or,
+  }))
+
+  const { nfts, totalCount, loading, error } = useNfts({
     variables: {
       orderBy,
       limit: tilesPerPage,
       where: {
-        ...ownedNftWhereInput,
-        createdAt_lte: VIEWER_TIMESTAMP,
-        creatorChannel: {
-          id_eq: channelId,
-        },
-        video: {
-          isPublic_eq: !channelOwner || undefined,
-        },
+        ...(orVariablesFromFilter?.length
+          ? { OR: orVariablesFromFilter }
+          : { ...ownedNftWhereInput, ...basicWhereVariablesWithoutFilter }),
       },
+      offset: currentPage * tilesPerPage,
     },
   })
 
   const handleChangePage = (page: number) => {
-    refetch({ offset: page * tilesPerPage })
     setCurrentPage(page)
   }
 

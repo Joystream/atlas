@@ -2,7 +2,7 @@ import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { useCallback } from 'react'
 
-import { MetaprotocolTransactionSuccessFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { MetaprotocolTransactionResultFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import {
   GetMetaprotocolTransactionStatusEventsDocument,
   GetMetaprotocolTransactionStatusEventsQuery,
@@ -35,7 +35,7 @@ type HandleTransactionOpts<T extends ExtrinsicResult> = {
   preProcess?: () => void | Promise<void>
   onTxSign?: () => void
   onTxFinalize?: (data: T) => Promise<unknown>
-  onTxSync?: (data: T, metaStatus?: MetaprotocolTransactionSuccessFieldsFragment) => Promise<unknown>
+  onTxSync?: (data: T, metaStatus?: MetaprotocolTransactionResultFieldsFragment) => Promise<unknown>
   onError?: () => void
   snackbarSuccessMessage?: DisplaySnackbarArgs
   minimized?: {
@@ -168,7 +168,7 @@ export const useTransaction = (): HandleTransactionFn => {
         // if this is a metaprotocol transaction, we will also wait until we successfully query the transaction result from QN
         const queryNodeSyncPromise = new Promise<void>((resolve, reject) => {
           const syncCallback = async () => {
-            let status: MetaprotocolTransactionSuccessFieldsFragment | undefined = undefined
+            let status: MetaprotocolTransactionResultFieldsFragment | undefined = undefined
             try {
               if (result.metaprotocol && result.transactionHash) {
                 status = await getMetaprotocolTxStatus(result.transactionHash)
@@ -312,14 +312,19 @@ const useMetaprotocolTransactionStatus = () => {
         variables: {
           transactionHash: txHash,
         },
+        // TODO FIXME: Something seems broken with the cache, causes the result to be incomplete
+        fetchPolicy: 'no-cache',
       })
-      return data?.metaprotocolTransactionStatusEvents[0]?.status || null
+      if (data?.events[0] && data.events[0].data.__typename === 'MetaprotocolTransactionStatusEventData') {
+        return data.events[0].data
+      }
+      return null
     },
     [client]
   )
 
   return useCallback(
-    async (txHash: string): Promise<MetaprotocolTransactionSuccessFieldsFragment> => {
+    async (txHash: string) => {
       let status = await getTransactionStatus(txHash)
 
       if (!status) {
@@ -329,7 +334,7 @@ const useMetaprotocolTransactionStatus = () => {
 
           status = await getTransactionStatus(txHash)
 
-          if (status?.__typename === 'MetaprotocolTransactionSuccessful') {
+          if (status?.result.__typename !== 'MetaprotocolTransactionResultFailed') {
             break
           }
         }
@@ -342,17 +347,14 @@ const useMetaprotocolTransactionStatus = () => {
         }
       }
 
-      if (status.__typename !== 'MetaprotocolTransactionSuccessful') {
+      if (status.result.__typename === 'MetaprotocolTransactionResultFailed') {
         throw new JoystreamLibError({
           name: 'MetaprotocolTransactionError',
-          message:
-            status.__typename === 'MetaprotocolTransactionErrored'
-              ? status.message
-              : 'Transaction still in pending state after retries',
+          message: status.result.errorMessage,
         })
       }
 
-      return status
+      return status.result
     },
     [getTransactionStatus]
   )
