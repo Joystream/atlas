@@ -75,9 +75,10 @@ fragment FullMembershipFields on Membership {
   ...BasicMembershipFields
   controllerAccount
   createdAt
+  totalChannelsCreated
   channels {
     ...BasicChannelFields
-
+    totalVideosCreated
     description
     coverPhoto {
       ...StorageDataObjectFields
