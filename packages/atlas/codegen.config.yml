@@ -1,7 +1,7 @@
 overwrite: true
 
 schema:
-  - ${VITE_DEVELOPMENT_ORION_URL}
+  - ${VITE_PRODUCTION_ORION_URL}
   - ./src/api/schemas/schema.client.graphql
 
 documents:

@@ -3,7 +3,9 @@ import { FC, PropsWithChildren } from 'react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { BrowserRouter } from 'react-router-dom'
 
+import { Maintenance } from '@/Maintenance'
 import { createApolloClient } from '@/api'
+import { useGetKillSwitch } from '@/api/hooks/admin'
 import { AdminModal } from '@/components/_overlays/AdminModal'
 import { OperatorsContextProvider } from '@/providers/assets/assets.provider'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
@@ -47,5 +49,11 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
 }
 
 const MaintenanceWrapper: FC<PropsWithChildren> = ({ children }) => {
-  return <>{children}</>
+  const { isKilled, wasKilledLastTime, error, loading } = useGetKillSwitch({ context: { delay: 1000 } })
+
+  if (isKilled || (error && wasKilledLastTime) || (loading && wasKilledLastTime)) {
+    return <Maintenance />
+  } else {
+    return <>{children}</>
+  }
 }
