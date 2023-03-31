@@ -1,12 +1,14 @@
-import { Meta } from '@storybook/react'
+import { Meta, StoryFn } from '@storybook/react'
 
-import { Section } from './Section'
+import { Section, SectionProps } from './Section'
 
 export default {
   title: 'other/Section',
   component: Section,
 } as Meta
 
-const DefaultTemplate: StoryFn<SectionHeaderProps> = (args) => {
+const DefaultTemplate: StoryFn<SectionProps> = (args) => {
   return <Section {...args} />
 }
+
+export const Default = DefaultTemplate.bind({})

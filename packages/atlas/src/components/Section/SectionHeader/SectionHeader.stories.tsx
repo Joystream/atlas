@@ -180,7 +180,7 @@ const WithTitleTemplate: StoryFn<SectionHeaderProps> = () => {
           {
             label: 'Date uploaded',
             icon: <SvgActionCalendar />,
-            onApply: (index) => console.log(index),
+            onApply: (index) => null,
             options: [
               { id: 'a', label: 'a' },
               { id: 'b', label: 'b' },

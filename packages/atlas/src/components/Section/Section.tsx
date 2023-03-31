@@ -4,7 +4,7 @@ import { SectionContent, SectionContentProps } from './SectionContent'
 import { SectionFooter, SectionFooterProps } from './SectionFooter'
 import { SectionHeader, SectionHeaderProps } from './SectionHeader'
 
-type SectionProps = {
+export type SectionProps = {
   headerProps: SectionHeaderProps
   contentProps: SectionContentProps
   footerProps: SectionFooterProps
