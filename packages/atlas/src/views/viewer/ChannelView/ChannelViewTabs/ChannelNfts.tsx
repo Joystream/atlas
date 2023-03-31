@@ -8,6 +8,7 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
 import { useUser } from '@/providers/user/user.hooks'
 import { transitions } from '@/styles'
+import { createPlaceholderData } from '@/utils/data'
 
 import { StyledPagination, VideoSection } from './ChannelViewTabs.styles'
 
@@ -37,20 +38,32 @@ export const ChannelNfts: FC<ChannelNftsProps> = ({
 
   const userChannels = memberships?.map((membership) => membership.channels).flat()
   const channelOwner = userChannels?.map((channel) => channel.id).includes(channelId)
+
+  const basicWhereVariablesWithoutFilter: OwnedNftWhereInput = {
+    createdAt_lte: VIEWER_TIMESTAMP,
+    video: {
+      channel: {
+        id_eq: channelId,
+      },
+      isPublic_eq: !channelOwner || undefined,
+    },
+  }
+  // if OR is passed put every variable inside every element of OR
+  const orVariablesFromFilter: OwnedNftWhereInput['OR'] = ownedNftWhereInput?.OR?.map((or) => ({
+    ...basicWhereVariablesWithoutFilter,
+    ...or,
+  }))
+
   const { nfts, totalCount, loading, error, refetch } = useNfts({
     variables: {
       orderBy,
       limit: tilesPerPage,
       where: {
-        ...ownedNftWhereInput,
-        createdAt_lte: VIEWER_TIMESTAMP,
-        video: {
-          channel: {
-            id_eq: channelId,
-          },
-          isPublic_eq: !channelOwner || undefined,
-        },
+        ...(orVariablesFromFilter?.length
+          ? { OR: orVariablesFromFilter }
+          : { ...ownedNftWhereInput, ...basicWhereVariablesWithoutFilter }),
       },
+      offset: currentPage * tilesPerPage,
     },
   })
 
@@ -59,17 +72,6 @@ export const ChannelNfts: FC<ChannelNftsProps> = ({
     setCurrentPage(page)
   }
 
-  const paginatedNfts = (nfts || []).slice(currentPage * tilesPerPage, currentPage * tilesPerPage + tilesPerPage)
-
-  const placeholderItems = Array.from(
-    { length: loading ? tilesPerPage - (paginatedNfts ? paginatedNfts.length : 0) : 0 },
-    () => ({
-      id: undefined,
-    })
-  )
-
-  const nftsWithPlaceholders = [...(paginatedNfts || []), ...placeholderItems]
-
   if (error) {
     return <ViewErrorFallback />
   }
@@ -77,7 +79,7 @@ export const ChannelNfts: FC<ChannelNftsProps> = ({
   return (
     <>
       <VideoSection className={transitions.names.slide}>
-        {!nftsWithPlaceholders.length && (
+        {!loading && !nfts?.length && (
           <EmptyFallback
             title={isFiltersApplied ? 'No NFTs found' : 'No NFTs minted'}
             subtitle={isFiltersApplied ? 'Try changing the filters.' : `This channel hasn't minted any NFTs yet.`}
@@ -85,7 +87,7 @@ export const ChannelNfts: FC<ChannelNftsProps> = ({
           />
         )}
         <Grid maxColumns={null} onResize={onResize}>
-          {nftsWithPlaceholders?.map((nft, idx) => (
+          {(loading ? createPlaceholderData(tilesPerPage) : nfts ?? [])?.map((nft, idx) => (
             <NftTileViewer key={`${nft.id}-${idx}`} nftId={nft.id} />
           ))}
         </Grid>

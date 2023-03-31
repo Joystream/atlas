@@ -48,6 +48,7 @@ export const MemberView: FC = () => {
   const headTags = useHeadTags(handle)
   const filtersBarLogic = useFiltersBar()
   const {
+    ownedNftWhereInput,
     filters: { setIsFiltersOpen, isFiltersOpen },
     canClearFilters: { canClearAllFilters },
   } = filtersBarLogic
@@ -93,6 +94,8 @@ export const MemberView: FC = () => {
       case 'NFTs owned':
         return (
           <MemberNFTs
+            ownedNftWhereInput={ownedNftWhereInput}
+            sortBy={sortBy}
             isFiltersApplied={canClearAllFilters}
             owner={activeMembership?.handle === handle}
             setNftCount={setNftCount}
@@ -103,7 +106,16 @@ export const MemberView: FC = () => {
       case 'About':
         return <MemberAbout />
     }
-  }, [activeMembership?.handle, canClearAllFilters, currentTab, handle, member?.id, sortByTimestamp])
+  }, [
+    activeMembership?.handle,
+    canClearAllFilters,
+    currentTab,
+    handle,
+    member?.id,
+    ownedNftWhereInput,
+    sortBy,
+    sortByTimestamp,
+  ])
 
   // At mount set the tab from the search params
   const initialRender = useRef(true)
