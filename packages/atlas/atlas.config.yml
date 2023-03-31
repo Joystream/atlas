@@ -682,3 +682,7 @@ legal:
     If you would like to delete cookies or instruct your web browser to delete or refuse cookies, please visit the help pages of your web browser.
 
     Please note, however, that if you delete cookies or refuse to accept them, you might not be able to use all of the features we offer, you may not be able to store your preferences, and some of our pages might not display properly.
+
+    # 3. YouTube Integration Disclosure
+
+    Gleev is integrated with Google API for the YouTube partnership program of creator onboarding. This feature is available at [gleev.xyz/ypp](gleev.xyz/ypp). Gleev’s app use and transfer to any other app of information received from Google APIs will adhere to [Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy#additional_requirements_for_specific_api_scopes), including the Limited Use requirements.
