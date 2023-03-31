@@ -78,12 +78,12 @@ export const viewerNavItems = [
 export const SidenavViewer: FC = () => {
   const [expanded, setExpanded] = useState(false)
   const followedChannels = usePersonalDataStore((state) => state.followedChannels)
-  const updateChannelFollowing = usePersonalDataStore((state) => state.actions.updateChannelFollowing)
+  const unFollow = usePersonalDataStore((state) => state.actions.unfollowChannel)
   const { openSignInDialog } = useDisplaySignInDialog()
 
   const handleChannelNotFound = (id: string) => {
     ConsoleLogger.warn(`Followed channel not found, removing id: ${id}`)
-    updateChannelFollowing(id, false)
+    unFollow(id)
   }
 
   const { signIn, isLoggedIn } = useUser()

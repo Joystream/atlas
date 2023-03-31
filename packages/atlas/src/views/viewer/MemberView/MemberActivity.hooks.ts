@@ -1,22 +1,23 @@
 import BN from 'bn.js'
 import { useMemo } from 'react'
 
-import { createAllNotificationArray, useRawActivities } from '@/api/hooks/notifications'
+import { useRawActivities } from '@/api/hooks/notifications'
+import { NftActivityOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import {
   BasicMembershipFieldsFragment,
-  StorageDataObjectFieldsFragment,
+  BasicNftOwnerFieldsFragment,
+  BasicVideoActivityFieldsFragment,
 } from '@/api/queries/__generated__/fragments.generated'
+import { GetNftActivitiesQuery } from '@/api/queries/__generated__/notifications.generated'
+import { convertDateFormat } from '@/utils/time'
 
 export type NftActivitiesRecord = {
   id?: string
   date?: Date
   block?: number
-  video?: {
-    id: string
-    title: string
-    thumbnailPhoto: StorageDataObjectFieldsFragment | null
-  }
+  video?: BasicVideoActivityFieldsFragment
 }
+
 export type ActivitiesRecord =
   | ({
       type: 'Bid'
@@ -25,7 +26,7 @@ export type ActivitiesRecord =
     } & NftActivitiesRecord)
   | ({
       type: 'Purchase'
-      from: BasicMembershipFieldsFragment | null
+      from: BasicNftOwnerFieldsFragment | null
       price: BN
       to: BasicMembershipFieldsFragment | null
     } & NftActivitiesRecord)
@@ -35,145 +36,197 @@ export type ActivitiesRecord =
     } & NftActivitiesRecord)
   | ({
       type: 'Sale'
-      from: BasicMembershipFieldsFragment | null
+      from: BasicNftOwnerFieldsFragment | null
       price: BN
       to: BasicMembershipFieldsFragment | null
     } & NftActivitiesRecord)
   | ({
       type: 'Removal'
-      from: BasicMembershipFieldsFragment | null
+      from: BasicNftOwnerFieldsFragment | null
     } & NftActivitiesRecord)
   | ({
       type: 'Transfer'
-      from: BasicMembershipFieldsFragment
+      from: BasicNftOwnerFieldsFragment
     } & NftActivitiesRecord)
   | ({
       type: 'Listing'
-      typeName: 'EnglishAuctionStartedEvent' | 'OpenAuctionStartedEvent' | 'NftSellOrderMadeEvent'
-      from: BasicMembershipFieldsFragment | null
+      typeName: 'EnglishAuctionStartedEventData' | 'OpenAuctionStartedEventData' | 'NftSellOrderMadeEventData'
+      from: BasicNftOwnerFieldsFragment | null
       price?: BN
     } & NftActivitiesRecord)
   | ({
       type: 'Mint'
-      from: BasicMembershipFieldsFragment | null
+      from: BasicNftOwnerFieldsFragment | null
     } & NftActivitiesRecord)
   | ({
       type: 'Price change'
-      from: BasicMembershipFieldsFragment | null
+      from: BasicNftOwnerFieldsFragment | null
       price: BN
     } & NftActivitiesRecord)
 
+const getVideoDataFromEvent = (nftActivity: GetNftActivitiesQuery['nftActivities'][number]) => {
+  switch (nftActivity.event.data.__typename) {
+    case 'AuctionBidMadeEventData':
+    case 'AuctionBidCanceledEventData':
+      return nftActivity.event.data.bid.auction.nft.video
+    case 'EnglishAuctionSettledEventData':
+    case 'BidMadeCompletingAuctionEventData':
+    case 'OpenAuctionBidAcceptedEventData':
+      return nftActivity.event.data.winningBid.auction.nft.video
+    case 'NftBoughtEventData':
+    case 'NftSellOrderMadeEventData':
+    case 'BuyNowCanceledEventData':
+    case 'BuyNowPriceUpdatedEventData':
+    case 'NftIssuedEventData':
+      return nftActivity.event.data.nft.video
+    case 'EnglishAuctionStartedEventData':
+    case 'OpenAuctionStartedEventData':
+    case 'AuctionCanceledEventData':
+      return nftActivity.event.data.auction.nft.video
+
+    default:
+      return undefined
+  }
+}
+
 const parseActivities = (
-  event: ReturnType<typeof createAllNotificationArray>[number],
+  nftActivity: GetNftActivitiesQuery['nftActivities'][number],
   memberId?: string
 ): ActivitiesRecord | null => {
   const commonFields: NftActivitiesRecord = {
-    id: event.id,
-    date: event.createdAt,
-    block: event.inBlock,
-    video: {
-      id: event.video.id,
-      title: event.video.title || '',
-      thumbnailPhoto: event.video.thumbnailPhoto || null,
-    },
+    id: nftActivity.event.id,
+    date: convertDateFormat(nftActivity.event.timestamp),
+    block: nftActivity.event.inBlock,
+    video: getVideoDataFromEvent(nftActivity),
   }
-  switch (event.__typename) {
-    case 'EnglishAuctionSettledEvent':
-      if (memberId === event.ownerMember?.id) {
+  switch (nftActivity.event.data.__typename) {
+    case 'EnglishAuctionSettledEventData':
+      if (memberId === nftActivity.event.data.winningBid.bidder?.id) {
         return {
           type: 'Purchase',
           ...commonFields,
-          price: new BN(event.winningBid.amount),
-          to: event.winner || null,
-          from: event.ownerMember || null,
+          price: new BN(nftActivity.event.data.winningBid.amount),
+          from: nftActivity.event.data.previousNftOwner || null,
+          to: nftActivity.event.data.winningBid.bidder || null,
         }
       } else {
         return {
           ...commonFields,
           type: 'Sale',
-          price: new BN(event.winningBid.amount),
-          from: event.winner || null,
-          to: event.ownerMember || null,
+          price: new BN(nftActivity.event.data.winningBid.amount),
+          from: nftActivity.event.data.previousNftOwner || null,
+          to: nftActivity.event.data.winningBid.bidder || null,
         }
       }
-    case 'AuctionBidMadeEvent':
+    case 'AuctionBidMadeEventData':
       return {
         ...commonFields,
         type: 'Bid',
-        bidAmount: new BN(event.bidAmount),
-        from: event.member,
+        bidAmount: new BN(nftActivity.event.data.bid.amount),
+        from: nftActivity.event.data.bid.bidder,
       }
-    case 'NftBoughtEvent':
-    case 'BidMadeCompletingAuctionEvent':
-      if (memberId === event.ownerMember?.id) {
+    case 'NftBoughtEventData': {
+      const previousNftOwner =
+        nftActivity.event.data.previousNftOwner.__typename === 'NftOwnerChannel'
+          ? nftActivity.event.data.previousNftOwner?.channel?.ownerMember
+          : nftActivity.event.data.previousNftOwner.member
+      if (memberId === previousNftOwner?.id) {
         return {
           ...commonFields,
           type: 'Sale',
-          price: new BN(event.price),
-          from: event.ownerMember || null,
-          to: event.member,
+          price: new BN(nftActivity.event.data.price),
+          from: nftActivity.event.data.previousNftOwner,
+          to: nftActivity.event.data.buyer,
         }
       } else {
         return {
           ...commonFields,
           type: 'Purchase',
-          price: new BN(event.price),
-          from: event.member,
-          to: event.ownerMember || null,
+          price: new BN(nftActivity.event.data.price),
+          from: nftActivity.event.data.previousNftOwner,
+          to: nftActivity.event.data.buyer,
         }
       }
-    case 'EnglishAuctionStartedEvent':
-    case 'OpenAuctionStartedEvent':
-    case 'NftSellOrderMadeEvent':
+    }
+    case 'BidMadeCompletingAuctionEventData': {
+      const previousOwnerMemberId =
+        nftActivity.event.data.previousNftOwner.__typename === 'NftOwnerChannel'
+          ? nftActivity.event.data.previousNftOwner?.channel?.ownerMember?.id
+          : nftActivity.event.data.previousNftOwner.member.id
+
+      if (memberId === previousOwnerMemberId) {
+        return {
+          ...commonFields,
+          type: 'Sale',
+          price: new BN(nftActivity.event.data.winningBid.amount),
+          from: nftActivity.event.data.previousNftOwner || null,
+          to: nftActivity.event.data.winningBid.bidder,
+        }
+      } else {
+        return {
+          ...commonFields,
+          type: 'Purchase',
+          price: new BN(nftActivity.event.data.winningBid.amount),
+          from: nftActivity.event.data.previousNftOwner,
+          to: nftActivity.event.data.winningBid.bidder || null,
+        }
+      }
+    }
+    case 'EnglishAuctionStartedEventData':
+    case 'OpenAuctionStartedEventData':
+    case 'NftSellOrderMadeEventData':
       return {
         ...commonFields,
         type: 'Listing',
-        typeName: event.__typename,
-        from: event.ownerMember || null,
-        price: event.__typename === 'NftSellOrderMadeEvent' ? new BN(event.price) : undefined,
+        typeName: nftActivity.event.data.__typename,
+        from: nftActivity.event.data.nftOwner || null,
+        price:
+          nftActivity.event.data.__typename === 'NftSellOrderMadeEventData'
+            ? new BN(nftActivity.event.data.price)
+            : undefined,
       }
-    case 'AuctionCanceledEvent':
-    case 'BuyNowCanceledEvent':
+    case 'AuctionCanceledEventData':
+    case 'BuyNowCanceledEventData':
       return {
         ...commonFields,
         type: 'Removal',
-        from: event.ownerMember || null,
+        from: nftActivity.event.data.nftOwner || null,
       }
-    case 'NftIssuedEvent':
+    case 'NftIssuedEventData':
       return {
         ...commonFields,
         type: 'Mint',
-        from: event.ownerMember || null,
+        from: nftActivity.event.data.nftOwner || null,
       }
-    case 'AuctionBidCanceledEvent':
+    case 'AuctionBidCanceledEventData':
       return {
         ...commonFields,
         type: 'Withdrawal',
-        from: event.member,
+        from: nftActivity.event.data.member,
       }
-    case 'BuyNowPriceUpdatedEvent':
+    case 'BuyNowPriceUpdatedEventData':
       return {
         ...commonFields,
         type: 'Price change',
-        from: event.ownerMember || null,
-        price: new BN(event.newPrice),
+        from: nftActivity.event.data.nftOwner || null,
+        price: new BN(nftActivity.event.data.newPrice),
       }
-    case 'OpenAuctionBidAcceptedEvent':
-      if (memberId === event.ownerMember?.id) {
+    case 'OpenAuctionBidAcceptedEventData':
+      if (memberId !== nftActivity.event.data.winningBid.bidder?.id) {
         return {
           ...commonFields,
           type: 'Sale',
-          price: new BN(event.winningBid?.amount ?? 0),
-          to: event.winningBid?.bidder || null,
-          from: event.ownerMember || null,
+          price: new BN(nftActivity.event.data.winningBid?.amount ?? 0),
+          from: nftActivity.event.data.previousNftOwner || null,
+          to: nftActivity.event.data.winningBid?.bidder || null,
         }
       } else {
         return {
           ...commonFields,
           type: 'Purchase',
-          price: new BN(event.winningBid?.amount ?? 0),
-          from: event.winningBid?.bidder || null,
-          to: event.ownerMember || null,
+          price: new BN(nftActivity.event.data.winningBid?.amount ?? 0),
+          from: nftActivity.event.data.previousNftOwner || null,
+          to: nftActivity.event.data.winningBid.bidder || null,
         }
       }
     default:
@@ -181,41 +234,27 @@ const parseActivities = (
   }
 }
 
-export const useActivities = (memberId?: string, sort?: 'createdAt_ASC' | 'createdAt_DESC') => {
-  const { activities: rawActivities, rawData, error, loading } = useRawActivities(memberId, sort)
+export const useActivities = (memberId?: string, sort?: NftActivityOrderByInput) => {
+  const {
+    activities: rawActivities,
+    nftsBiddedTotalCount,
+    nftsIssuedTotalCount,
+    nftsSoldTotalCount,
+    nftsBoughtTotalCount,
+    error,
+    loading,
+  } = useRawActivities(memberId, sort)
   const parsedActivities = rawActivities && rawActivities.map((a) => parseActivities(a, memberId))
   const activities = parsedActivities ? parsedActivities.filter((a): a is ActivitiesRecord => !!a) : undefined
 
   const totalCounts = useMemo(() => {
-    const purchaseNftBoughtCount = rawData?.purchaseNftBoughtEventsConnection.totalCount || 0
-    const auctionBidMadeCount = rawData?.auctionBidMadeEventsConnection.totalCount || 0
-    const purchaseBidMadeCompletingAuctionCount =
-      rawData?.purchaseBidMadeCompletingAuctionEventsConnection.totalCount || 0
-    const purchaseOpenAuctionBidAcceptedCount = rawData?.purchaseOpenAuctionBidAcceptedEventsConnection.totalCount || 0
-    const purchaseEnglishAuctionSettledCount = rawData?.purchaseEnglishAuctionSettledEventsConnection.totalCount || 0
-    const saleNftBoughtCount = rawData?.saleNftBoughtEventsConnection.totalCount || 0
-    const saleBidMadeCompletingAuctionCount = rawData?.saleBidMadeCompletingAuctionEventsConnection.totalCount || 0
-    const saleEnglishAuctionSettledCount = rawData?.saleEnglishAuctionSettledEventsConnection.totalCount || 0
-    const saleOpenAuctionBidAcceptedCount = rawData?.saleOpenAuctionBidAcceptedEventsConnection.totalCount || 0
-    const nftIssuedCount = rawData?.nftIssuedEventsConnection.totalCount || 0
-
-    return rawData
-      ? {
-          nftsBoughts:
-            purchaseNftBoughtCount +
-            purchaseBidMadeCompletingAuctionCount +
-            purchaseOpenAuctionBidAcceptedCount +
-            purchaseEnglishAuctionSettledCount,
-          nftsSold:
-            saleNftBoughtCount +
-            saleBidMadeCompletingAuctionCount +
-            saleOpenAuctionBidAcceptedCount +
-            saleEnglishAuctionSettledCount,
-          nftsIssued: nftIssuedCount,
-          nftsBidded: auctionBidMadeCount,
-        }
-      : undefined
-  }, [rawData])
+    return {
+      nftsBoughts: nftsBoughtTotalCount,
+      nftsSold: nftsSoldTotalCount,
+      nftsIssued: nftsIssuedTotalCount,
+      nftsBidded: nftsBiddedTotalCount,
+    }
+  }, [nftsBiddedTotalCount, nftsBoughtTotalCount, nftsIssuedTotalCount, nftsSoldTotalCount])
 
   return {
     activities,

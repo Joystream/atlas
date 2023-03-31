@@ -3,8 +3,7 @@ import { useMemo } from 'react'
 import { useParams } from 'react-router'
 
 import { useCategoriesFeaturedVideos } from '@/api/hooks/categoriesFeaturedVideos'
-import { GetCategoriesFeaturedVideosQuery } from '@/api/queries/__generated__/featured.generated'
-import { VideoCategoryFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { BasicVideoFeaturedInCategoryFragment } from '@/api/queries/__generated__/fragments.generated'
 import { SvgActionChevronR } from '@/assets/icons'
 import { CategoryIcon } from '@/components/CategoryIcon'
 import { Grid } from '@/components/Grid'
@@ -15,12 +14,11 @@ import { VideoContentTemplate } from '@/components/_templates/VideoContentTempla
 import { VideoCategoryCard } from '@/components/_video/VideoCategoryCard'
 import { VideoCategoryHero } from '@/components/_video/VideoCategoryHero'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
-import { DisplayCategory, displayCategoriesLookup } from '@/config/categories'
+import { displayCategoriesLookup } from '@/config/categories'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useVideoDisplayCategoriesWithCounter } from '@/hooks/useVideoDisplayCategoriesWithCounter'
-import { useAsset } from '@/providers/assets/assets.hooks'
 import { cVar } from '@/styles'
 
 import { CategoryVideos } from './CategoryVideos'
@@ -32,7 +30,7 @@ export const CategoryView = () => {
 
   const { displayCategoriesWithCounter, loading, totalVideosCount } = useVideoDisplayCategoriesWithCounter()
 
-  const otherCategory: Array<DisplayCategory & VideoCategoryFieldsFragment> = useMemo(
+  const otherCategory = useMemo(
     () =>
       sampleSize(
         displayCategoriesWithCounter?.filter((category) => category.id !== id),
@@ -45,8 +43,9 @@ export const CategoryView = () => {
   const headTags = useHeadTags(currentCategory?.name)
 
   const { categoriesFeaturedVideos, loading: categoriesFeaturedVideosLoading } = useCategoriesFeaturedVideos(
-    currentCategory?.id || ''
+    currentCategory?.defaultVideoCategory || ''
   )
+
   const videoHeroVideos = useVideoHeroVideos(categoriesFeaturedVideos)
 
   return (
@@ -67,7 +66,6 @@ export const CategoryView = () => {
         }}
         videos={videoHeroVideos}
       />
-
       {!!categoriesFeaturedVideos?.length && (
         <>
           <TitleContainer>
@@ -119,7 +117,7 @@ export const CategoryView = () => {
   )
 }
 
-const useVideoHeroVideos = (featuredVideos: GetCategoriesFeaturedVideosQuery['categoryFeaturedVideos'] = []) => {
+const useVideoHeroVideos = (featuredVideos: BasicVideoFeaturedInCategoryFragment[] = []) => {
   const videoHeroVideos = featuredVideos
     .filter((vid) => !!vid.videoCutUrl)
     .filter((vid) => !!vid.video)
@@ -128,32 +126,24 @@ const useVideoHeroVideos = (featuredVideos: GetCategoriesFeaturedVideosQuery['ca
       video: featuredVideo.video,
       videoCutUrl: featuredVideo.videoCutUrl || '',
       thumbnailPhotoUrl: '',
-      isLoadingThumbnail: true,
     }))
 
-  const { url: thumbnailPhotoUrl1, isLoadingAsset: isLoadingThumbnail1 } = useAsset(
-    videoHeroVideos?.[0]?.video?.thumbnailPhoto
-  )
-  const { url: thumbnailPhotoUrl2, isLoadingAsset: isLoadingThumbnail2 } = useAsset(
-    videoHeroVideos?.[1]?.video?.thumbnailPhoto
-  )
-  const { url: thumbnailPhotoUrl3, isLoadingAsset: isLoadingThumbnail3 } = useAsset(
-    videoHeroVideos?.[2]?.video?.thumbnailPhoto
-  )
+  const thumbnailPhotoUrl1 = videoHeroVideos?.[0]?.video?.thumbnailPhoto?.resolvedUrl
+
+  const thumbnailPhotoUrl2 = videoHeroVideos?.[1]?.video?.thumbnailPhoto?.resolvedUrl
+
+  const thumbnailPhotoUrl3 = videoHeroVideos?.[2]?.video?.thumbnailPhoto?.resolvedUrl
 
   if (!videoHeroVideos) return [null, null, null]
 
   if (videoHeroVideos[0]) {
     videoHeroVideos[0].thumbnailPhotoUrl = thumbnailPhotoUrl1 ?? ''
-    videoHeroVideos[0].isLoadingThumbnail = isLoadingThumbnail1
   }
   if (videoHeroVideos[1]) {
     videoHeroVideos[1].thumbnailPhotoUrl = thumbnailPhotoUrl2 ?? ''
-    videoHeroVideos[1].isLoadingThumbnail = isLoadingThumbnail2
   }
   if (videoHeroVideos[2]) {
     videoHeroVideos[2].thumbnailPhotoUrl = thumbnailPhotoUrl3 ?? ''
-    videoHeroVideos[2].isLoadingThumbnail = isLoadingThumbnail3
   }
 
   return videoHeroVideos

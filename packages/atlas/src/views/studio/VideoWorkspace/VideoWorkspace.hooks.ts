@@ -3,16 +3,15 @@ import { useCallback } from 'react'
 
 import { useAppActionMetadataProcessor } from '@/api/hooks/apps'
 import { AppActionActionType, VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
-import { useGetVideoCountQuery } from '@/api/queries/__generated__/channels.generated'
 import {
   GetFullVideosConnectionDocument,
   GetFullVideosConnectionQuery,
   GetFullVideosConnectionQueryVariables,
+  useGetVideosCountQuery,
 } from '@/api/queries/__generated__/videos.generated'
 import { atlasConfig } from '@/config'
 import { VideoExtrinsicResult, VideoInputAssets } from '@/joystream-lib/types'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
-import { useAssetStore } from '@/providers/assets/assets.store'
 import { useDraftStore } from '@/providers/drafts'
 import { useBloatFeesAndPerMbFees, useJoystream } from '@/providers/joystream/joystream.hooks'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -22,7 +21,7 @@ import { useStartFileUpload } from '@/providers/uploads/uploads.hooks'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { VideoFormData, VideoWorkspace, useVideoWorkspace, useVideoWorkspaceData } from '@/providers/videoWorkspace'
-import { writeVideoDataInCache } from '@/utils/cachingAssets'
+import { modifyAssetUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
 import { createLookup } from '@/utils/data'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
@@ -37,14 +36,13 @@ export const useHandleVideoWorkspaceSubmit = () => {
   const { joystream, proxyCallback } = useJoystream()
   const startFileUpload = useStartFileUpload()
   const { channelId, memberId } = useAuthorizedUser()
-  const { data: channelVideosCount } = useGetVideoCountQuery({
+  const { data: channelVideosCount } = useGetVideosCountQuery({
     skip: !channelId || !atlasConfig.general.appId,
     variables: { where: { channel: { id_eq: channelId } } },
   })
 
   const client = useApolloClient()
   const handleTransaction = useTransaction()
-  const addAsset = useAssetStore((state) => state.actions.addAsset)
   const removeDrafts = useDraftStore((state) => state.actions.removeDrafts)
   const { tabData } = useVideoWorkspaceData()
   const channelBucketsCount = useChannelsStorageBucketsCount(channelId)
@@ -182,15 +180,10 @@ export const useHandleVideoWorkspaceSubmit = () => {
       }
 
       const refetchDataAndUploadAssets = async (result: VideoExtrinsicResult) => {
-        const { assetsIds, videoId } = result
+        const { videoId, assetsIds } = result
 
         // start asset upload
         uploadAssets(result)
-
-        // add resolution for newly created asset
-        if (assetsIds.thumbnailPhoto) {
-          addAsset(assetsIds.thumbnailPhoto, { url: data.assets.thumbnailPhoto?.url })
-        }
 
         const fetchedVideo = await client.query<GetFullVideosConnectionQuery, GetFullVideosConnectionQueryVariables>({
           query: GetFullVideosConnectionDocument,
@@ -217,6 +210,9 @@ export const useHandleVideoWorkspaceSubmit = () => {
             isNew: false,
           })
           removeDrafts([editedInfo?.id])
+        }
+        if (data.assets.thumbnailPhoto?.url && assetsIds.thumbnailPhoto) {
+          modifyAssetUrlInCache(client, assetsIds.thumbnailPhoto, data.assets.thumbnailPhoto.url)
         }
       }
 
@@ -278,7 +274,6 @@ export const useHandleVideoWorkspaceSubmit = () => {
       startFileUpload,
       channelId,
       client,
-      addAsset,
       setEditedVideo,
       removeDrafts,
       memberId,

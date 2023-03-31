@@ -1,7 +1,7 @@
 import { FC, useState } from 'react'
 
 import { useNfts } from '@/api/hooks/nfts'
-import { OwnedNftOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import { OwnedNftOrderByInput, OwnedNftWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionFilters } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
@@ -45,24 +45,41 @@ export const NftsView: FC = () => {
   const nftRows = useVideoGridRows('main')
   const tilesPerPage = nftRows * tilesPerRow
 
-  const { nfts, loading, totalCount, refetch } = useNfts({
+  const basicVariables: OwnedNftWhereInput = {
+    createdAt_lte: VIEWER_TIMESTAMP,
+    createdAt_gte: videoWhereInput.createdAt_gte,
+    video: {
+      ...videoWhereInput,
+      media: {
+        isAccepted_eq: true,
+      },
+      thumbnailPhoto: {
+        isAccepted_eq: true,
+      },
+      isPublic_eq: true,
+      channel: {
+        isPublic_eq: true,
+      },
+    },
+  }
+
+  const orVariablesFromFilter = ownedNftWhereInput.OR?.map((value) => ({
+    ...basicVariables,
+    ...value,
+  }))
+
+  const { nfts, loading, totalCount } = useNfts({
     variables: {
       where: {
-        ...ownedNftWhereInput,
-        createdAt_gte: videoWhereInput.createdAt_gte,
-        createdAt_lte: VIEWER_TIMESTAMP,
-        video:
-          videoWhereInput.hasMarketing_eq != null || videoWhereInput.isExplicit_eq != null
-            ? {
-                hasMarketing_eq: videoWhereInput.hasMarketing_eq,
-                isExplicit_eq: videoWhereInput.isExplicit_eq,
-              }
-            : undefined,
+        ...(orVariablesFromFilter?.length
+          ? { OR: orVariablesFromFilter }
+          : { ...ownedNftWhereInput, ...basicVariables }),
       },
       orderBy: sortBy,
       limit: tilesPerPage,
       offset: currentPage * tilesPerPage,
     },
+    fetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true,
     onError: (error) => SentryLogger.error('Failed to fetch NFTs', 'NftsView', error),
   })
@@ -80,7 +97,6 @@ export const NftsView: FC = () => {
   }
 
   const handleChangePage = (page: number) => {
-    refetch({ offset: page * tilesPerPage })
     setCurrentPage(page)
   }
 

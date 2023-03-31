@@ -75,7 +75,7 @@ export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
         bids={mappedBids}
         onAcceptBid={transactions.acceptNftBid}
         nftId={currentNftId}
-        ownerId={nft?.ownerMember?.id}
+        ownerId={nft?.owner.__typename === 'NftOwnerMember' ? nft.owner.member.id : nft?.owner.channel.ownerMember?.id}
       />
       <ChangePriceDialog
         isOpen={currentAction === 'change-price'}

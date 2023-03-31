@@ -1,15 +1,17 @@
 import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
+import { shuffle } from 'lodash-es'
+import { useEffect, useRef, useState } from 'react'
 
 import {
   FollowChannelMutation,
-  GetBasicChannelsQuery,
-  GetBasicChannelsQueryVariables,
   GetChannelNftCollectorsQuery,
   GetChannelNftCollectorsQueryVariables,
   GetDiscoverChannelsQuery,
   GetDiscoverChannelsQueryVariables,
-  GetFullChannelsQuery,
-  GetFullChannelsQueryVariables,
+  GetExtendedBasicChannelsQuery,
+  GetExtendedBasicChannelsQueryVariables,
+  GetExtendedFullChannelsQuery,
+  GetExtendedFullChannelsQueryVariables,
   GetPopularChannelsQuery,
   GetPopularChannelsQueryVariables,
   GetPromisingChannelsQuery,
@@ -18,71 +20,71 @@ import {
   GetTop10ChannelsQueryVariables,
   UnfollowChannelMutation,
   useFollowChannelMutation,
-  useGetBasicChannelsQuery,
   useGetChannelNftCollectorsQuery,
   useGetDiscoverChannelsQuery,
-  useGetFullChannelsQuery,
+  useGetExtendedBasicChannelsQuery,
+  useGetExtendedFullChannelsQuery,
   useGetPopularChannelsQuery,
   useGetPromisingChannelsQuery,
   useGetTop10ChannelsQuery,
   useUnfollowChannelMutation,
 } from '@/api/queries/__generated__/channels.generated'
-import { channelFilter } from '@/config/contentFilter'
-
-const CHANNEL_ID_FILTER = channelFilter.NOT?.find((item) => item.id_in)
+import { createChannelWhereObjectWithFilters } from '@/config/contentFilter'
 
 export const useBasicChannel = (
   id: string,
-  opts?: QueryHookOptions<GetBasicChannelsQuery, GetBasicChannelsQueryVariables>
+  opts?: QueryHookOptions<GetExtendedBasicChannelsQuery, GetExtendedBasicChannelsQueryVariables>
 ) => {
-  const { data, ...rest } = useGetBasicChannelsQuery({
+  const { data, ...rest } = useGetExtendedBasicChannelsQuery({
     ...opts,
-    variables: { where: { id_eq: id, ...(CHANNEL_ID_FILTER ? { NOT: [{ id_in: CHANNEL_ID_FILTER.id_in }] } : {}) } },
+    variables: {
+      where: { channel: createChannelWhereObjectWithFilters({ id_eq: id }) },
+    },
   })
   return {
-    channel: data?.channels[0],
+    extendedChannel: data?.extendedChannels[0],
     ...rest,
   }
 }
 
 export const useFullChannel = (
   id: string,
-  opts?: QueryHookOptions<GetFullChannelsQuery, GetFullChannelsQueryVariables>,
-  variables?: GetFullChannelsQueryVariables
+  opts?: QueryHookOptions<GetExtendedFullChannelsQuery, GetExtendedFullChannelsQueryVariables>,
+  variables?: GetExtendedFullChannelsQueryVariables
 ) => {
-  const { data, ...rest } = useGetFullChannelsQuery({
+  const { data, ...rest } = useGetExtendedFullChannelsQuery({
     ...opts,
     variables: {
       ...variables,
       where: {
-        id_eq: id,
-        ...(CHANNEL_ID_FILTER ? { NOT: [{ id_in: CHANNEL_ID_FILTER.id_in }] } : {}),
         ...variables?.where,
+        channel: createChannelWhereObjectWithFilters({ ...variables?.where?.channel, id_eq: id }),
       },
     },
   })
   return {
-    channel: data?.channels[0],
+    channel: data?.extendedChannels[0]?.channel,
+    activeVideosCount: data?.extendedChannels[0]?.activeVideosCount,
     ...rest,
   }
 }
 
 export const useBasicChannels = (
-  variables?: GetBasicChannelsQueryVariables,
-  opts?: QueryHookOptions<GetBasicChannelsQuery, GetBasicChannelsQueryVariables>
+  variables?: GetExtendedBasicChannelsQueryVariables,
+  opts?: QueryHookOptions<GetExtendedBasicChannelsQuery, GetExtendedBasicChannelsQueryVariables>
 ) => {
-  const { data, ...rest } = useGetBasicChannelsQuery({
+  const { data, ...rest } = useGetExtendedBasicChannelsQuery({
     ...opts,
     variables: {
       ...variables,
       where: {
-        ...channelFilter,
         ...variables?.where,
+        channel: createChannelWhereObjectWithFilters({ ...variables?.where?.channel }),
       },
     },
   })
   return {
-    channels: data?.channels,
+    extendedChannels: data?.extendedChannels,
     ...rest,
   }
 }
@@ -103,7 +105,7 @@ export const useFollowChannel = (opts?: MutationHookOptions<FollowChannelMutatio
               id,
             }),
             fields: {
-              follows: () => mutationResult.data?.followChannel.follows,
+              followsNum: () => mutationResult.data?.followChannel.follows,
             },
           })
         },
@@ -115,11 +117,12 @@ export const useFollowChannel = (opts?: MutationHookOptions<FollowChannelMutatio
 export const useUnfollowChannel = (opts?: MutationHookOptions<UnfollowChannelMutation>) => {
   const [unfollowChannel, rest] = useUnfollowChannelMutation()
   return {
-    unfollowChannel: (id: string) =>
+    unfollowChannel: (id: string, token: string) =>
       unfollowChannel({
         ...opts,
         variables: {
           channelId: id,
+          token,
         },
         update: (cache, mutationResult) => {
           cache.modify({
@@ -128,7 +131,7 @@ export const useUnfollowChannel = (opts?: MutationHookOptions<UnfollowChannelMut
               id,
             }),
             fields: {
-              follows: () => mutationResult.data?.unfollowChannel.follows,
+              followsNum: () => mutationResult.data?.unfollowChannel.follows,
             },
           })
         },
@@ -146,16 +149,33 @@ export const useTop10Channels = (
     variables: {
       ...variables,
       where: {
-        ...channelFilter,
-        activeVideosCounter_gt: 0,
         ...variables?.where,
+        channel: createChannelWhereObjectWithFilters(variables?.where?.channel),
+        activeVideosCount_gt: 0,
       },
     },
   })
   return {
-    channels: data?.top10Channels,
+    channels: data?.extendedChannels.map((extended) => extended.channel),
     ...rest,
   }
+}
+
+export const useShuffleResults = <T>(data?: T[]) => {
+  const [shuffledResults, setShuffledResults] = useState<T[]>([])
+
+  const firstRender = useRef(true)
+  useEffect(() => {
+    if (!firstRender.current) {
+      return
+    }
+    if (data?.length) {
+      setShuffledResults(shuffle(data))
+      firstRender.current = false
+    }
+  }, [data])
+
+  return shuffledResults
 }
 
 export const useDiscoverChannels = (
@@ -167,14 +187,18 @@ export const useDiscoverChannels = (
     variables: {
       ...variables,
       where: {
-        ...channelFilter,
-        activeVideosCounter_gt: 0,
         ...variables?.where,
+        channel: createChannelWhereObjectWithFilters({ ...variables?.where?.channel }),
       },
     },
   })
+
+  const shuffledChannels = useShuffleResults<GetDiscoverChannelsQuery['mostRecentChannels'][number]>(
+    data?.mostRecentChannels
+  )
+
   return {
-    channels: data?.discoverChannels,
+    extendedChannels: shuffledChannels,
     ...rest,
   }
 }
@@ -188,14 +212,17 @@ export const usePromisingChannels = (
     variables: {
       ...variables,
       where: {
-        ...channelFilter,
-        activeVideosCounter_gt: 0,
         ...variables?.where,
+        channel: createChannelWhereObjectWithFilters({ ...variables?.where?.channel }),
       },
     },
   })
+
+  const shuffledChannels = useShuffleResults<GetDiscoverChannelsQuery['mostRecentChannels'][number]>(
+    data?.mostRecentChannels
+  )
   return {
-    channels: data?.promisingChannels,
+    extendedChannels: shuffledChannels,
     ...rest,
   }
 }
@@ -209,14 +236,17 @@ export const usePopularChannels = (
     variables: {
       ...variables,
       where: {
-        ...channelFilter,
-        activeVideosCounter_gt: 0,
         ...variables?.where,
+        channel: createChannelWhereObjectWithFilters({ ...variables?.where?.channel }),
       },
     },
   })
+
+  const shuffledChannels = useShuffleResults<GetPopularChannelsQuery['extendedChannels'][number]>(
+    data?.extendedChannels
+  )
   return {
-    channels: data?.popularChannels,
+    extendedChannels: shuffledChannels,
     ...rest,
   }
 }
@@ -228,8 +258,8 @@ export const useChannelNftCollectors = (
   const { data, ...rest } = useGetChannelNftCollectorsQuery({
     ...opts,
     variables: {
-      ...variables,
-      where: { ...variables?.where, ...(CHANNEL_ID_FILTER ? { NOT: [{ id_in: CHANNEL_ID_FILTER.id_in }] } : {}) },
+      channelId: variables?.channelId || '',
+      orderBy: variables?.orderBy,
     },
   })
 

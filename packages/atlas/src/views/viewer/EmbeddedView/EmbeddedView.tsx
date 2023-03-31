@@ -11,7 +11,6 @@ import { Button } from '@/components/_buttons/Button'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { absoluteRoutes } from '@/config/routes'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
-import { useAsset } from '@/providers/assets/assets.hooks'
 import { SentryLogger } from '@/utils/logs'
 
 import { NotFoundVideoContainer, PlayerSkeletonLoader } from '../VideoView/VideoView.styles'
@@ -23,15 +22,14 @@ export const EmbeddedView: FC = () => {
   })
   const { addVideoView } = useAddVideoView()
 
-  const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset(video?.media)
-  const { url: thumbnailUrl, isLoadingAsset: isThumbnailLoading } = useAsset(video?.thumbnailPhoto)
-  const { url: channelAvatarUrl, isLoadingAsset: isChannelAvatarLoading } = useAsset(video?.channel.avatarPhoto)
+  const mediaUrl = video?.media?.resolvedUrl
+  const thumbnailUrl = video?.thumbnailPhoto?.resolvedUrl
+  const channelAvatarUrl = video?.channel.avatarPhoto?.resolvedUrl
 
   const startTimestamp = useVideoStartTimestamp(video?.duration)
 
   const channelId = video?.channel?.id
   const videoId = video?.id
-  const categoryId = video?.category?.id
 
   const handleAddVideoView = useCallback(() => {
     if (!videoId || !channelId) {
@@ -40,13 +38,11 @@ export const EmbeddedView: FC = () => {
     addVideoView({
       variables: {
         videoId,
-        channelId,
-        categoryId,
       },
     }).catch((error) => {
       SentryLogger.error('Failed to increase video views', 'VideoView', error)
     })
-  }, [addVideoView, categoryId, channelId, videoId])
+  }, [addVideoView, channelId, videoId])
 
   const handleVideoEnded = () => {
     if (window.top) {
@@ -96,12 +92,12 @@ export const EmbeddedView: FC = () => {
     <>
       <EmbeddedGlobalStyles />
       <Container>
-        {!isMediaLoading && !isThumbnailLoading && video ? (
+        {loading && video ? (
           <VideoPlayer
             onAddVideoView={handleAddVideoView}
             isVideoPending={!video?.media?.isAccepted}
             channelAvatarUrl={channelAvatarUrl}
-            isChannelAvatarLoading={isChannelAvatarLoading}
+            isChannelAvatarLoading={loading}
             videoId={video.id}
             src={mediaUrl}
             posterUrl={thumbnailUrl}

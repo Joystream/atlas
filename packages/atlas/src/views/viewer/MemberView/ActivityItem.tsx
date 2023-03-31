@@ -26,7 +26,7 @@ export type ActivityItemProps = {
   date?: Date
   title?: string
   description?: ReactNode
-  thumnailUri: string
+  thumbnailUri: string
   thumbnailLoading?: boolean
   loading?: boolean
   onItemClick?: () => void
@@ -36,7 +36,7 @@ export const ActivityItem: FC<ActivityItemProps> = ({
   type,
   title,
   description,
-  thumnailUri,
+  thumbnailUri: thumnailUri,
   thumbnailLoading,
   loading,
   onItemClick,

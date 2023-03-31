@@ -1,5 +1,5 @@
 import BN from 'bn.js'
-import { Dispatch, FC, SetStateAction, memo, useRef, useState } from 'react'
+import { Dispatch, FC, SetStateAction, memo, useCallback, useRef, useState } from 'react'
 
 import { useComment } from '@/api/hooks/comments'
 import { CommentStatus } from '@/api/queries/__generated__/baseTypes.generated'
@@ -17,7 +17,7 @@ import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user/user.hooks'
 
 import { getCommentReactions } from './Comment.utils'
-import { InternalComment } from './InternalComment'
+import { DeletedBy, InternalComment } from './InternalComment'
 
 import { CommentEditHistory } from '../CommentEditHistory'
 import { CommentInput } from '../CommentInput'
@@ -238,11 +238,24 @@ export const Comment: FC<CommentProps> = memo(
       comment && setOriginalComment?.(comment)
     }
 
+    const getDeletedBy = useCallback((): DeletedBy | undefined => {
+      if (comment?.isExcluded) {
+        return 'operator'
+      }
+      if (comment?.status === CommentStatus.Deleted) {
+        return 'author'
+      }
+      if (comment?.status === CommentStatus.Moderated) {
+        return 'channel owner'
+      }
+      return
+    }, [comment?.isExcluded, comment?.status])
+
     const loading = !commentId
 
     const commentType = isCommentProcessing
       ? 'processing'
-      : comment && ['DELETED', 'MODERATED'].includes(comment.status)
+      : (comment && ['DELETED', 'MODERATED'].includes(comment.status)) || comment?.isExcluded
       ? 'deleted'
       : comment && (video?.channel.ownerMember?.id === memberId || comment?.author.id === memberId)
       ? 'options'
@@ -252,7 +265,7 @@ export const Comment: FC<CommentProps> = memo(
       (comment &&
         getCommentReactions({
           userReactionsIds: userReactions,
-          reactionsCount: comment?.reactionsCountByReactionId,
+          reactionsCount: comment.reactionsCountByReactionId || [],
           processingReactionsIds,
           deleted: commentType === 'deleted',
         })) ||
@@ -287,7 +300,7 @@ export const Comment: FC<CommentProps> = memo(
       return (
         <>
           <InternalComment
-            indented={!!comment?.parentCommentId}
+            indented={!!comment?.parentComment?.id}
             isCommentFromUrl={commentId === commentIdQueryParam}
             videoId={video?.id}
             commentId={commentId}
@@ -302,7 +315,7 @@ export const Comment: FC<CommentProps> = memo(
             text={comment?.text}
             reactionPopoverDismissed={reactionPopoverDismissed || !isLoggedIn}
             isAbleToEdit={comment?.author.id === memberId}
-            isModerated={comment?.status === CommentStatus.Moderated}
+            deletedBy={getDeletedBy()}
             memberHandle={comment?.author.handle}
             isEdited={comment?.isEdited}
             reactions={reactions}

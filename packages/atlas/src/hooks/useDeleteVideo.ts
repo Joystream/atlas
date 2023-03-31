@@ -33,10 +33,10 @@ export const useDeleteVideo = () => {
       }
 
       const {
-        data: { videoByUniqueInput: video },
+        data: { videoById: video },
       } = await client.query<GetFullVideoQuery, GetFullVideoQueryVariables>({
         query: GetFullVideoDocument,
-        variables: { where: { id: videoId } },
+        variables: { id: videoId },
       })
       if (!video) {
         ConsoleLogger.error('No video found when deleting', { videoId })

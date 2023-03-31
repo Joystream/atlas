@@ -1,9 +1,9 @@
 import { ReactNode } from 'react'
 
-import { FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { BasicFeaturedVideoFragment } from '@/api/queries/__generated__/fragments.generated'
 
 export type VideoHeroFeaturedVideo = {
-  video: FullVideoFieldsFragment
+  video: BasicFeaturedVideoFragment
   videoCutUrl: string
   thumbnailPhotoUrl?: string
   isLoadingThumbnail?: boolean

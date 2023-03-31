@@ -6,7 +6,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useNftState } from '@/hooks/useNftState'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useVideoContextMenu } from '@/hooks/useVideoContextMenu'
-import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { useMemberAvatar } from '@/providers/assets/assets.hooks'
 import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
 
 import { NftTile, NftTileProps } from '../NftTile'
@@ -18,9 +18,9 @@ type NftTileViewerProps = {
 export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
   const { nftStatus, nft, loading } = useNft(nftId || '')
   const navigate = useNavigate()
-  const thumbnail = useAsset(nft?.video.thumbnailPhoto)
+  const thumbnailUrl = nft?.video.thumbnailPhoto?.resolvedUrl
   const nftActions = useNftActions()
-  const creatorAvatar = useAsset(nft?.video.channel.avatarPhoto)
+  const creatorAvatarUrl = nft?.video.channel.avatarPhoto?.resolvedUrl
   const nftState = useNftState(nft)
   const {
     auctionPlannedEndDate,
@@ -32,8 +32,10 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
     userBidAmount,
   } = nftState
   const { withdrawBid } = useNftTransactions()
+  const ownerMember = nft?.owner.__typename === 'NftOwnerMember' && nft.owner.member
+  const ownerChannel = nft?.owner.__typename === 'NftOwnerChannel' && nft.owner.channel
 
-  const { url: ownerMemberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
+  const { url: ownerMemberAvatarUrl } = useMemberAvatar(ownerMember || null)
 
   const isAuction = nftStatus?.status === 'auction'
 
@@ -44,19 +46,19 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
     withdrawBid(nftId, userBidAmount, userBidCreatedAt)
   }
 
-  const owner = nft?.isOwnedByChannel
+  const owner = ownerChannel
     ? {
-        name: nft.creatorChannel.title || undefined,
-        assetUrl: creatorAvatar.url || undefined,
+        name: ownerChannel.title || undefined,
+        assetUrl: creatorAvatarUrl || undefined,
         loading,
-        onClick: () => navigate(absoluteRoutes.viewer.channel(nft.creatorChannel.id)),
+        onClick: () => navigate(absoluteRoutes.viewer.channel(ownerChannel.id)),
       }
-    : nft?.ownerMember?.id
+    : ownerMember
     ? {
-        name: nft?.ownerMember?.handle,
+        name: ownerMember.handle,
         assetUrl: ownerMemberAvatarUrl,
         loading,
-        onClick: () => navigate(absoluteRoutes.viewer.member(nft?.ownerMember?.handle)),
+        onClick: () => navigate(absoluteRoutes.viewer.member(ownerMember.handle)),
       }
     : undefined
 
@@ -80,16 +82,16 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
     loading: loading || !nftId,
     thumbnail: {
       videoHref: absoluteRoutes.viewer.video(nft?.video.id),
-      thumbnailUrl: thumbnail.url,
-      loading: thumbnail.isLoadingAsset,
+      thumbnailUrl: thumbnailUrl,
+      loading: loading,
       thumbnailAlt: `${nft?.video?.title} video thumbnail`,
       type: 'video',
     },
     owner,
     creator: {
       name: nft?.video.channel.title || undefined,
-      loading: creatorAvatar.isLoadingAsset || loading,
-      assetUrl: creatorAvatar.url,
+      loading: loading,
+      assetUrl: creatorAvatarUrl,
       onClick: () => navigate(absoluteRoutes.viewer.channel(nft?.video.channel.id)),
     },
     contextMenuItems,

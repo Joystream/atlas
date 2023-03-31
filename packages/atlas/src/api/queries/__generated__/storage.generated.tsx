@@ -2,33 +2,8 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { DistributionBucketOperatorFieldFragmentDoc } from './fragments.generated'
 
 const defaultOptions = {} as const
-export type GetDistributionBucketsWithBagsQueryVariables = Types.Exact<{ [key: string]: never }>
-
-export type GetDistributionBucketsWithBagsQuery = {
-  __typename?: 'Query'
-  distributionBuckets: Array<{
-    __typename?: 'DistributionBucket'
-    id: string
-    bags: Array<{ __typename?: 'StorageBag'; id: string }>
-    operators: Array<{
-      __typename?: 'DistributionBucketOperator'
-      id: string
-      status: Types.DistributionBucketOperatorStatus
-      metadata?: {
-        __typename?: 'DistributionBucketOperatorMetadata'
-        nodeEndpoint?: string | null
-        nodeLocation?: {
-          __typename?: 'NodeLocationMetadata'
-          coordinates?: { __typename?: 'GeoCoordinates'; latitude: number; longitude: number } | null
-        } | null
-      } | null
-    }>
-  }>
-}
-
 export type GetStorageBucketsWithBagsQueryVariables = Types.Exact<{ [key: string]: never }>
 
 export type GetStorageBucketsWithBagsQuery = {
@@ -44,7 +19,7 @@ export type GetStorageBucketsWithBagsQuery = {
         coordinates?: { __typename?: 'GeoCoordinates'; latitude: number; longitude: number } | null
       } | null
     } | null
-    bags: Array<{ __typename?: 'StorageBag'; id: string }>
+    bags: Array<{ __typename?: 'StorageBucketBag'; bag: { __typename?: 'StorageBag'; id: string } }>
   }>
 }
 
@@ -67,103 +42,12 @@ export type GetBasicStorageBucketsQuery = {
   storageBuckets: Array<{ __typename?: 'StorageBucket'; id: string }>
 }
 
-export type GetDistributionBucketsByBagIdsQueryVariables = Types.Exact<{
-  bagIds?: Types.InputMaybe<Array<Types.Scalars['ID']> | Types.Scalars['ID']>
-}>
-
-export type GetDistributionBucketsByBagIdsQuery = {
-  __typename?: 'Query'
-  storageBags: Array<{
-    __typename?: 'StorageBag'
-    id: string
-    distributionBuckets: Array<{
-      __typename?: 'DistributionBucket'
-      id: string
-      operators: Array<{
-        __typename?: 'DistributionBucketOperator'
-        id: string
-        status: Types.DistributionBucketOperatorStatus
-        metadata?: {
-          __typename?: 'DistributionBucketOperatorMetadata'
-          nodeEndpoint?: string | null
-          nodeLocation?: {
-            __typename?: 'NodeLocationMetadata'
-            coordinates?: { __typename?: 'GeoCoordinates'; latitude: number; longitude: number } | null
-          } | null
-        } | null
-      }>
-    }>
-  }>
-}
-
-export const GetDistributionBucketsWithBagsDocument = gql`
-  query GetDistributionBucketsWithBags {
-    distributionBuckets(limit: 500, where: { distributing_eq: true }) {
-      id
-      bags {
-        id
-      }
-      operators {
-        ...DistributionBucketOperatorField
-      }
-    }
-  }
-  ${DistributionBucketOperatorFieldFragmentDoc}
-`
-
-/**
- * __useGetDistributionBucketsWithBagsQuery__
- *
- * To run a query within a React component, call `useGetDistributionBucketsWithBagsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetDistributionBucketsWithBagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetDistributionBucketsWithBagsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetDistributionBucketsWithBagsQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetDistributionBucketsWithBagsQuery,
-    GetDistributionBucketsWithBagsQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetDistributionBucketsWithBagsQuery, GetDistributionBucketsWithBagsQueryVariables>(
-    GetDistributionBucketsWithBagsDocument,
-    options
-  )
-}
-export function useGetDistributionBucketsWithBagsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetDistributionBucketsWithBagsQuery,
-    GetDistributionBucketsWithBagsQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetDistributionBucketsWithBagsQuery, GetDistributionBucketsWithBagsQueryVariables>(
-    GetDistributionBucketsWithBagsDocument,
-    options
-  )
-}
-export type GetDistributionBucketsWithBagsQueryHookResult = ReturnType<typeof useGetDistributionBucketsWithBagsQuery>
-export type GetDistributionBucketsWithBagsLazyQueryHookResult = ReturnType<
-  typeof useGetDistributionBucketsWithBagsLazyQuery
->
-export type GetDistributionBucketsWithBagsQueryResult = Apollo.QueryResult<
-  GetDistributionBucketsWithBagsQuery,
-  GetDistributionBucketsWithBagsQueryVariables
->
 export const GetStorageBucketsWithBagsDocument = gql`
   query GetStorageBucketsWithBags {
     storageBuckets(
       limit: 500
       where: {
-        operatorStatus_json: { isTypeOf_eq: "StorageBucketOperatorStatusActive" }
+        operatorStatus: { isTypeOf_eq: "StorageBucketOperatorStatusActive" }
         operatorMetadata: { nodeEndpoint_contains: "http" }
       }
     ) {
@@ -178,7 +62,9 @@ export const GetStorageBucketsWithBagsDocument = gql`
         }
       }
       bags {
-        id
+        bag {
+          id
+        }
       }
     }
   }
@@ -320,67 +206,4 @@ export type GetBasicStorageBucketsLazyQueryHookResult = ReturnType<typeof useGet
 export type GetBasicStorageBucketsQueryResult = Apollo.QueryResult<
   GetBasicStorageBucketsQuery,
   GetBasicStorageBucketsQueryVariables
->
-export const GetDistributionBucketsByBagIdsDocument = gql`
-  query GetDistributionBucketsByBagIds($bagIds: [ID!]) {
-    storageBags(where: { id_in: $bagIds }) {
-      id
-      distributionBuckets {
-        id
-        operators {
-          ...DistributionBucketOperatorField
-        }
-      }
-    }
-  }
-  ${DistributionBucketOperatorFieldFragmentDoc}
-`
-
-/**
- * __useGetDistributionBucketsByBagIdsQuery__
- *
- * To run a query within a React component, call `useGetDistributionBucketsByBagIdsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetDistributionBucketsByBagIdsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetDistributionBucketsByBagIdsQuery({
- *   variables: {
- *      bagIds: // value for 'bagIds'
- *   },
- * });
- */
-export function useGetDistributionBucketsByBagIdsQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetDistributionBucketsByBagIdsQuery,
-    GetDistributionBucketsByBagIdsQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetDistributionBucketsByBagIdsQuery, GetDistributionBucketsByBagIdsQueryVariables>(
-    GetDistributionBucketsByBagIdsDocument,
-    options
-  )
-}
-export function useGetDistributionBucketsByBagIdsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetDistributionBucketsByBagIdsQuery,
-    GetDistributionBucketsByBagIdsQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetDistributionBucketsByBagIdsQuery, GetDistributionBucketsByBagIdsQueryVariables>(
-    GetDistributionBucketsByBagIdsDocument,
-    options
-  )
-}
-export type GetDistributionBucketsByBagIdsQueryHookResult = ReturnType<typeof useGetDistributionBucketsByBagIdsQuery>
-export type GetDistributionBucketsByBagIdsLazyQueryHookResult = ReturnType<
-  typeof useGetDistributionBucketsByBagIdsLazyQuery
->
-export type GetDistributionBucketsByBagIdsQueryResult = Apollo.QueryResult<
-  GetDistributionBucketsByBagIdsQuery,
-  GetDistributionBucketsByBagIdsQueryVariables
 >

@@ -13,10 +13,18 @@ export const useNftState = (nft?: BasicNftFieldsFragment | null) => {
   const { currentBlock, currentBlockMsTimestamp } = useJoystreamStore()
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
 
-  const auction = nft?.transactionalStatusAuction || null
+  const auction =
+    (nft?.transactionalStatus?.__typename === 'TransactionalStatusAuction' && nft.transactionalStatus.auction) || null
 
   const hasTimersLoaded = !!currentBlock && !!currentBlockMsTimestamp
-  const isOwner = nft?.ownerMember?.id === activeMembership?.id
+
+  const isOwnerMember =
+    nft?.owner.__typename === 'NftOwnerMember' ? nft.owner.member.id === activeMembership?.id : false
+  const isOwnerChannel =
+    nft?.owner.__typename === 'NftOwnerChannel'
+      ? activeMembership?.channels.map((el) => el.id).includes(nft.owner.channel.id)
+      : false
+  const isOwner = isOwnerChannel || isOwnerMember
   const isBuyNow = nft?.transactionalStatus?.__typename === 'TransactionalStatusBuyNow'
   const isIdle = nft?.transactionalStatus?.__typename === 'TransactionalStatusIdle'
   const englishAuction = auction?.auctionType.__typename === 'AuctionTypeEnglish' && auction.auctionType
@@ -54,7 +62,7 @@ export const useNftState = (nft?: BasicNftFieldsFragment | null) => {
     isUserWhitelisted =
       auction.whitelistedMembers.length === 0 || isOwner
         ? true
-        : auction.whitelistedMembers.some((member) => member.id === activeMembership.id)
+        : auction.whitelistedMembers.some((whitelisted) => whitelisted.member.id === activeMembership.id)
   }
 
   const canBuyNow = !isOwner && ((!!Number(auction?.buyNowPrice) && isRunning) || isBuyNow) && isUserWhitelisted
