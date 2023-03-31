@@ -75,6 +75,7 @@ export const ButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  gap: ${sizes(6)};
 `
 
 export const StyledButton = styled(Button)`
