@@ -85,6 +85,8 @@ export type VideoPlayerProps = {
   isEmbedded?: boolean
   isPlayNextDisabled?: boolean
   availableTextTracks?: AvailableTrack[]
+  isFixed?: boolean
+  scrollIntoView?: () => void
 } & VideoJsConfig
 
 declare global {
@@ -116,6 +118,8 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     isEmbedded,
     isPlayNextDisabled,
     availableTextTracks,
+    isFixed,
+    scrollIntoView,
     ...videoJsConfig
   },
   externalRef
@@ -657,6 +661,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
 
   const toggleCinematicView = (event: MouseEvent) => {
     event.stopPropagation()
+    scrollIntoView?.()
     setCinematicView(!cinematicView)
   }
 

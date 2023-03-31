@@ -1,4 +1,4 @@
-import { css } from '@emotion/react'
+import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
@@ -73,7 +73,6 @@ export const PlayerContainer = styled.div<CinematicView>`
   width: 100%;
   position: relative;
 `
-
 export const PlayerSkeletonLoader = styled(SkeletonLoader)`
   position: absolute;
   top: 0;
@@ -222,4 +221,22 @@ export const BlockedVideoPlaceholder = styled.div`
 export const BlockedVideoGradientPlaceholder = styled.div`
   background: linear-gradient(180deg, ${cVar('colorBackgroundMuted')}, rgb(0 0 0 / 0) 100%);
   height: 160px;
+`
+
+const asd = keyframes`
+  0% { opacity: 0}
+  100% { opacity: 1}
+`
+export const Test = styled.div<{ in: boolean }>`
+  ${(props) =>
+    !props.in &&
+    css`
+      width: 400px;
+      height: 225px;
+      position: fixed;
+      z-index: 1000;
+      right: 40px;
+      bottom: 50px;
+      animation: ${asd} 0.1s linear;
+    `}
 `
