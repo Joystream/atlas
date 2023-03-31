@@ -54,7 +54,7 @@ export const ChannelNfts: FC<ChannelNftsProps> = ({
     ...or,
   }))
 
-  const { nfts, totalCount, loading, error, refetch } = useNfts({
+  const { nfts, totalCount, loading, error } = useNfts({
     variables: {
       orderBy,
       limit: tilesPerPage,
@@ -68,7 +68,6 @@ export const ChannelNfts: FC<ChannelNftsProps> = ({
   })
 
   const handleChangePage = (page: number) => {
-    refetch({ offset: page * tilesPerPage })
     setCurrentPage(page)
   }
 

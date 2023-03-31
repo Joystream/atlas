@@ -66,7 +66,6 @@ export const MemberNFTs: FC<MemberNFTsProps> = ({
   const {
     nfts,
     loading,
-    refetch,
     totalCount: totalNftsCount,
   } = useNfts({
     variables: {
@@ -96,7 +95,6 @@ export const MemberNFTs: FC<MemberNFTsProps> = ({
   }, [setNftCount, totalNftsCount])
 
   const handleChangePage = (page: number) => {
-    refetch({ offset: page * tilesPerPage })
     setCurrentPage(page)
   }
   return (

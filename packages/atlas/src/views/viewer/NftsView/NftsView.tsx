@@ -68,7 +68,7 @@ export const NftsView: FC = () => {
     ...value,
   }))
 
-  const { nfts, loading, totalCount, refetch, variables } = useNfts({
+  const { nfts, loading, totalCount } = useNfts({
     variables: {
       where: {
         ...(orVariablesFromFilter?.length
@@ -97,7 +97,6 @@ export const NftsView: FC = () => {
   }
 
   const handleChangePage = (page: number) => {
-    refetch({ ...variables, offset: page * tilesPerPage })
     setCurrentPage(page)
   }
 
