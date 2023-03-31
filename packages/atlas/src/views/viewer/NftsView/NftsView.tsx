@@ -45,31 +45,41 @@ export const NftsView: FC = () => {
   const nftRows = useVideoGridRows('main')
   const tilesPerPage = nftRows * tilesPerRow
 
-  const commonVideoVariables: OwnedNftWhereInput['video'] = {
-    media: {
-      isAccepted_eq: true,
-    },
-    thumbnailPhoto: {
-      isAccepted_eq: true,
-    },
-    isPublic_eq: true,
-    channel: {
+  const basicVariables: OwnedNftWhereInput = {
+    createdAt_lte: VIEWER_TIMESTAMP,
+    createdAt_gte: videoWhereInput.createdAt_gte,
+    video: {
+      ...videoWhereInput,
+      media: {
+        isAccepted_eq: true,
+      },
+      thumbnailPhoto: {
+        isAccepted_eq: true,
+      },
       isPublic_eq: true,
+      channel: {
+        isPublic_eq: true,
+      },
     },
   }
 
-  const { nfts, loading, totalCount, refetch } = useNfts({
+  const orVariablesFromFilter = ownedNftWhereInput.OR?.map((value) => ({
+    ...basicVariables,
+    ...value,
+  }))
+
+  const { nfts, loading, totalCount, refetch, variables } = useNfts({
     variables: {
       where: {
-        ...ownedNftWhereInput,
-        createdAt_lte: VIEWER_TIMESTAMP,
-        createdAt_gte: videoWhereInput.createdAt_gte,
-        video: { ...videoWhereInput, ...commonVideoVariables },
+        ...(orVariablesFromFilter?.length
+          ? { OR: orVariablesFromFilter }
+          : { ...ownedNftWhereInput, ...basicVariables }),
       },
       orderBy: sortBy,
       limit: tilesPerPage,
       offset: currentPage * tilesPerPage,
     },
+    fetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true,
     onError: (error) => SentryLogger.error('Failed to fetch NFTs', 'NftsView', error),
   })
@@ -87,7 +97,7 @@ export const NftsView: FC = () => {
   }
 
   const handleChangePage = (page: number) => {
-    refetch({ offset: page * tilesPerPage })
+    refetch({ ...variables, offset: page * tilesPerPage })
     setCurrentPage(page)
   }
 

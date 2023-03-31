@@ -42,13 +42,26 @@ export const MemberNFTs: FC<MemberNFTsProps> = ({
 
   const [currentPage, setCurrentPage] = useState(0)
 
-  const sharedFilters = {
-    video: {
-      isPublic_eq: handle !== activeMembership?.handle || undefined,
+  const ownershipOr: OwnedNftWhereInput['OR'] = [
+    {
+      owner: {
+        isTypeOf_eq: 'NftOwnerChannel',
+        channel: {
+          ownerMember: {
+            handle_eq: handle,
+          },
+        },
+      },
     },
-    createdAt_lte: VIEWER_TIMESTAMP,
-    ...ownedNftWhereInput,
-  }
+    {
+      owner: {
+        isTypeOf_eq: 'NftOwnerMember',
+        member: {
+          handle_eq: handle,
+        },
+      },
+    },
+  ]
 
   const {
     nfts,
@@ -58,40 +71,19 @@ export const MemberNFTs: FC<MemberNFTsProps> = ({
   } = useNfts({
     variables: {
       where: {
-        OR: [
+        AND: [
+          { OR: ownershipOr },
+          ...(ownedNftWhereInput?.OR?.length ? [{ OR: ownedNftWhereInput.OR }] : []),
           {
-            AND: [
-              {
-                owner: {
-                  isTypeOf_eq: 'NftOwnerChannel',
-                  channel: {
-                    ownerMember: {
-                      handle_eq: handle,
-                    },
-                  },
-                },
-              },
-              { ...sharedFilters },
-            ],
-          },
-          {
-            AND: [
-              {
-                owner: {
-                  isTypeOf_eq: 'NftOwnerMember',
-                  member: {
-                    handle_eq: handle,
-                  },
-                },
-              },
-              {
-                ...sharedFilters,
-              },
-            ],
+            video: {
+              isPublic_eq: handle !== activeMembership?.handle || undefined,
+            },
+            createdAt_lte: VIEWER_TIMESTAMP,
           },
         ],
       },
       limit: tilesPerPage,
+      offset: currentPage * tilesPerPage,
       orderBy: sortBy as OwnedNftOrderByInput,
     },
     skip: !handle,
@@ -107,7 +99,6 @@ export const MemberNFTs: FC<MemberNFTsProps> = ({
     refetch({ offset: page * tilesPerPage })
     setCurrentPage(page)
   }
-
   return (
     <section>
       <Grid maxColumns={null} onResize={handleOnResizeGrid}>
