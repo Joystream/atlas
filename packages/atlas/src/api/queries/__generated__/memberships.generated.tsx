@@ -15,10 +15,12 @@ export type GetMembershipsQuery = {
     __typename?: 'Membership'
     controllerAccount: string
     createdAt: Date
+    totalChannelsCreated: number
     id: string
     handle: string
     channels: Array<{
       __typename?: 'Channel'
+      totalVideosCreated: number
       description?: string | null
       id: string
       title?: string | null
