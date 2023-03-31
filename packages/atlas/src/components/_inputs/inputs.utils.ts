@@ -10,8 +10,8 @@ export type NodeWidthProps = {
 }
 
 export const inputBorderColors = {
-  default: cVar('colorBorderAlpha'),
-  hover: cVar('colorBorderStrongAlpha'),
+  default: cVar('colorBorderMutedAlpha'),
+  hover: cVar('colorBorderAlpha'),
   error: cVar('colorBorderError'),
   focus: cVar('colorBorderPrimary'),
 }
@@ -32,7 +32,7 @@ export const getSharedInputStyles = (ignoreBoxShadow?: boolean) => ({
     box-shadow: inset 0 -1px 0 0 ${ignoreBoxShadow ? 'transparent' : inputBorderColors.default};
 
     /* ios specific - fixes issue with missing box-shadow and rounded corners in input component */
-    border-radius: 0;
+    border-radius: ${cVar('radiusSmall')};
     appearance: none;
 
     ::placeholder {
