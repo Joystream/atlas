@@ -14,7 +14,6 @@ export const TabsWrapper = styled.div`
 export const TabsGroup = styled.div<MaskProps>`
   display: flex;
   position: relative;
-  scroll-behavior: smooth;
   overflow: auto;
   ${getMaskImage}
 

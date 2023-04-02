@@ -5,12 +5,13 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { DynamicSearch, SearchProps } from './DynamicSearch/DynamicSearch'
 import { SectionFilters } from './SectionFilters/SectionFilters'
 import {
-  FiltersAndSortWrapper,
   MobileFirstRow,
   MobileSecondRow,
+  RightSideWrapper,
   SectionHeaderWrapper,
+  StartWrapper,
+  StyledSelect,
   TabsMobileWrapper,
-  TitleAndSearchWrapper,
 } from './SectionHeader.styles'
 import { SectionTitleComponent } from './SectionTitle/SectionTitle'
 
@@ -98,16 +99,16 @@ export const SectionHeader: FC<SectionHeaderProps> = ({ start, sort, search, fil
   // DESKTOP
   return (
     <SectionHeaderWrapper isTabs={start.type === 'tabs'}>
-      <TitleAndSearchWrapper>
+      <StartWrapper isTabs={start.type === 'tabs'}>
         {start.type === 'title' && <SectionTitleComponent nodeStart={start.nodeStart} title={start.title} />}
-        {start.type === 'tabs' && <Tabs {...start.tabsProps} />}
-        {search && <DynamicSearch search={search} isOpen={isSearchInputOpen} onSearchToggle={setIsSearchInputOpen} />}
-      </TitleAndSearchWrapper>
-      {filters && <SectionFilters filters={filters} onResetFilters={onResetFilters} />}
-      <FiltersAndSortWrapper>
+        <TabsMobileWrapper>{start.type === 'tabs' && <Tabs {...start.tabsProps} />}</TabsMobileWrapper>
+      </StartWrapper>
+      {search && <DynamicSearch search={search} isOpen={isSearchInputOpen} onSearchToggle={setIsSearchInputOpen} />}
+      <RightSideWrapper isTabs={start.type === 'tabs'}>
+        {filters && <SectionFilters filters={filters} onResetFilters={onResetFilters} />}
         {sort?.type === 'toggle-button' && <ToggleButtonGroup {...sort.toggleButtonOptionTypeProps} />}
-        {sort?.type === 'select' && <Select {...sort.selectProps} size="medium" />}
-      </FiltersAndSortWrapper>
+        {sort?.type === 'select' && <StyledSelect {...sort.selectProps} size="medium" />}
+      </RightSideWrapper>
     </SectionHeaderWrapper>
   )
 }

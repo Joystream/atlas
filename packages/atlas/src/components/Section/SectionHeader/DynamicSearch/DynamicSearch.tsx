@@ -16,7 +16,7 @@ type DynamicSearchProps = {
 
 export const DynamicSearch: FC<DynamicSearchProps> = ({ isOpen, onSearchToggle, search }) => {
   return (
-    <SectionSearchWrapper>
+    <SectionSearchWrapper isMobileSearchOpen={isOpen}>
       {isOpen ? (
         <SearchInput
           {...search}

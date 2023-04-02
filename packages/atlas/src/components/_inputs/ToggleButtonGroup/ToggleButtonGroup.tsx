@@ -1,10 +1,9 @@
-import { throttle } from 'lodash-es'
-import { useEffect, useRef, useState } from 'react'
-import useDraggableScroll from 'use-draggable-scroll'
+import { useRef } from 'react'
 
 import { SvgActionChevronL, SvgActionChevronR } from '@/assets/icons'
 import { FilterButton, FilterButtonProps } from '@/components/FilterButton'
 import { Button } from '@/components/_buttons/Button'
+import { useHorizonthalFade } from '@/hooks/useHorizonthalFade'
 
 import {
   ButtonLeft,
@@ -39,57 +38,11 @@ export type ToggleButtonGroupProps<T extends string = string> =
   | ToggleButtonFilterTypeProps
   | ToggleButtonOptionTypeProps<T>
 
-const SCROLL_SHADOW_OFFSET = 10
-
 export const ToggleButtonGroup = <T extends string = string>(props: ToggleButtonGroupProps<T>) => {
   const { type, label, width = 'auto', className } = props
   const optionWrapperRef = useRef<HTMLDivElement>(null)
-  const [isOverflowing, setIsOverflowing] = useState<boolean>(false)
-  const { onMouseDown } = useDraggableScroll(optionWrapperRef, { direction: 'horizontal' })
-  const [shadowsVisible, setShadowsVisible] = useState({
-    left: false,
-    right: false,
-  })
 
-  useEffect(() => {
-    if (optionWrapperRef.current) {
-      setIsOverflowing(optionWrapperRef.current.clientWidth < optionWrapperRef.current.scrollWidth)
-    }
-  }, [])
-
-  useEffect(() => {
-    const optionGroup = optionWrapperRef.current
-    if (!optionGroup || !isOverflowing || width !== 'fixed') {
-      return
-    }
-    setShadowsVisible((prev) => ({ ...prev, right: true }))
-    const { clientWidth, scrollWidth } = optionGroup
-
-    const touchHandler = throttle(() => {
-      setShadowsVisible({
-        left: optionGroup.scrollLeft > SCROLL_SHADOW_OFFSET,
-        right: optionGroup.scrollLeft < scrollWidth - clientWidth - SCROLL_SHADOW_OFFSET,
-      })
-    }, 100)
-
-    optionGroup.addEventListener('touchmove', touchHandler, { passive: true })
-    optionGroup.addEventListener('scroll', touchHandler)
-    return () => {
-      touchHandler.cancel()
-      optionGroup.removeEventListener('touchmove', touchHandler)
-      optionGroup.removeEventListener('scroll', touchHandler)
-    }
-  }, [isOverflowing, width])
-
-  const handleArrowScroll = (direction: 'left' | 'right') => () => {
-    const optionGroup = optionWrapperRef.current
-    if (!optionGroup || !isOverflowing) {
-      return
-    }
-
-    const addition = (direction === 'left' ? -1 : 1) * (optionGroup.clientWidth / 2)
-    optionGroup.scrollBy({ left: addition, behavior: 'smooth' })
-  }
+  const { handleArrowScroll, handleMouseDown, isOverflow, visibleShadows } = useHorizonthalFade(optionWrapperRef)
 
   return (
     <Container className={className} width={width}>
@@ -99,7 +52,7 @@ export const ToggleButtonGroup = <T extends string = string>(props: ToggleButton
         </Label>
       )}
       <ContentWrapper>
-        {width === 'fixed' && isOverflowing && shadowsVisible.left && (
+        {width === 'fixed' && isOverflow && visibleShadows.left && (
           <ButtonLeft
             onClick={handleArrowScroll('left')}
             size="small"
@@ -107,7 +60,7 @@ export const ToggleButtonGroup = <T extends string = string>(props: ToggleButton
             icon={<SvgActionChevronL />}
           />
         )}
-        <OptionWrapper onMouseDown={onMouseDown} ref={optionWrapperRef} shadowsVisible={shadowsVisible}>
+        <OptionWrapper onMouseDown={handleMouseDown} ref={optionWrapperRef} visibleShadows={visibleShadows}>
           {type === 'options' &&
             props.options.map((option) => (
               <Button
@@ -123,7 +76,7 @@ export const ToggleButtonGroup = <T extends string = string>(props: ToggleButton
           {type === 'filter' &&
             props.filters.map((filterButtonProps, idx) => <FilterButton key={idx} {...filterButtonProps} />)}
         </OptionWrapper>
-        {width === 'fixed' && isOverflowing && shadowsVisible.right && (
+        {width === 'fixed' && isOverflow && visibleShadows.right && (
           <ButtonRight
             onClick={handleArrowScroll('right')}
             size="small"

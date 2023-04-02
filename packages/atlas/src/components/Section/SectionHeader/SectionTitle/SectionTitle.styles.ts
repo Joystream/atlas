@@ -5,6 +5,7 @@ import { sizes } from '@/styles'
 
 export const HeaderTitleWrapper = styled.div`
   display: flex;
+  flex-shrink: 0;
   width: max-content;
   align-items: center;
   gap: ${sizes(3)};

@@ -10,8 +10,8 @@ export const SearchInput = styled(Input)`
   }
 `
 
-export const SectionSearchWrapper = styled.div`
-  width: 100%;
+export const SectionSearchWrapper = styled.div<{ isMobileSearchOpen: boolean }>`
+  width: ${({ isMobileSearchOpen }) => (isMobileSearchOpen ? '100%' : 'unset')};
   ${media.sm} {
     width: unset;
   }

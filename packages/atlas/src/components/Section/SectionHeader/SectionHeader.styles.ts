@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { Select } from '@/components/_inputs/Select'
 import { cVar, media, sizes } from '@/styles'
 
 type SectionHeaderWrapperProps = {
@@ -9,6 +10,7 @@ type SectionHeaderWrapperProps = {
 export const MobileFirstRow = styled.div`
   display: flex;
   width: 100%;
+  overflow: hidden;
 `
 
 export const MobileSecondRow = styled.div`
@@ -25,10 +27,10 @@ export const FiltersAndSortWrapper = styled.div`
 export const SectionHeaderWrapper = styled.header<SectionHeaderWrapperProps>`
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   gap: ${sizes(4)};
   ${media.sm} {
     width: 100%;
-    overflow: hidden;
     display: flex;
     flex-direction: row;
     align-items: ${({ isTabs }) => (isTabs ? 'start' : 'center')};
@@ -37,11 +39,23 @@ export const SectionHeaderWrapper = styled.header<SectionHeaderWrapperProps>`
 `
 
 export const TabsMobileWrapper = styled.div`
-  max-width: max-content;
+  min-width: 0;
+  overflow: hidden;
 `
 
-export const TitleAndSearchWrapper = styled.div`
+export const RightSideWrapper = styled.div<{ isTabs: boolean }>`
+  overflow: ${({ isTabs }) => (isTabs ? 'unset' : 'hidden')};
+  display: flex;
+  margin-left: auto;
+  gap: ${sizes(4)};
+`
+
+export const StyledSelect = styled(Select)`
+  width: unset;
+` as typeof Select
+
+export const StartWrapper = styled.div<{ isTabs: boolean }>`
+  overflow: ${({ isTabs }) => (isTabs ? 'hidden' : 'unset')};
   display: flex;
   gap: ${sizes(4)};
-  margin-right: auto;
 `
