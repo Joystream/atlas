@@ -6,7 +6,7 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { formatDate } from '@/utils/time'
 
 import {
@@ -25,7 +25,7 @@ type ChannelAboutProps = {
 }
 
 export const ChannelAbout: FC<ChannelAboutProps> = ({ channel, activeVideosCount }) => {
-  const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(channel?.ownerMember)
+  const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(channel?.ownerMember)
   return (
     <StyledLayoutGrid>
       <GridItem colSpan={{ xxs: 12, sm: 8 }} rowStart={{ xxs: 2, sm: 1 }}>

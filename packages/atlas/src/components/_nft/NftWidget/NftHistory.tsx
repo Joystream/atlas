@@ -10,7 +10,7 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
 import { useToggle } from '@/hooks/useToggle'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useTokenPrice } from '@/providers/joystream/joystream.hooks'
 import { formatDateTime } from '@/utils/time'
 
@@ -66,7 +66,7 @@ type HistoryItemProps = {
 } & NftHistoryEntry
 export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmount, text }) => {
   const navigate = useNavigate()
-  const { url, isLoadingAsset } = useMemberAvatar(member)
+  const { url, isLoadingAsset } = getMemberAvatar(member)
   const { convertHapiToUSD } = useTokenPrice()
 
   const dollarValue = joyAmount ? convertHapiToUSD(joyAmount) : null
