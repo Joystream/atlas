@@ -103,8 +103,6 @@ export const configSchema = z.object({
     }),
   }),
   content: z.object({
-    blockedVideoIds: z.array(z.string()),
-    blockedChannelIds: z.array(z.string()),
     officialJoystreamChannelId: z.string().nullable(),
     categories: z.array(
       z.object({
