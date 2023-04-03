@@ -98,11 +98,14 @@ export const useVideoFormAssets = (
       }
       const newAssetId = `local-video-${createId()}`
       setValue(
-        'assets.video',
+        'assets',
         {
-          ...video,
-          id: newAssetId,
-          blob: video?.blob as File,
+          ...currentAssetsValue,
+          video: {
+            ...video,
+            id: newAssetId,
+            blob: video?.blob as File,
+          },
         },
         { shouldDirty: true }
       )
