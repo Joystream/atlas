@@ -3,19 +3,11 @@ import { atlasConfig } from '@/config/config'
 
 import { allUniqueVideoCategories } from './categories'
 
-type ContentFilter = string[]
-
-export const filteredVideoIds: ContentFilter = atlasConfig.content.blockedVideoIds
-export const filteredChannelIds: ContentFilter = atlasConfig.content.blockedChannelIds
-
 export const createChannelWhereObjectWithFilters = (
   channelWhereInput?: ChannelWhereInput | null
 ): ChannelWhereInput => {
   return {
     ...channelWhereInput,
-
-    // filter by channel ids
-    ...(filteredChannelIds.length ? { id_not_in: filteredChannelIds } : {}),
   }
 }
 
@@ -25,14 +17,11 @@ export const createVideoWhereObjectWithFilters = (
   return {
     ...videoWhereInput,
 
-    // filter by video ids
-    ...(filteredVideoIds.length ? { id_not_in: filteredVideoIds } : {}),
-
     // filter by channel ids
     channel: createChannelWhereObjectWithFilters(videoWhereInput?.channel),
 
     // filter by category
-    ...(!atlasConfig.content.showAllContent
+    ...(atlasConfig.content.showAllContent
       ? { category: { ...videoWhereInput?.category, id_in: allUniqueVideoCategories } }
       : { category: videoWhereInput?.category }),
   }
