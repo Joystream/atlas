@@ -6,6 +6,7 @@ import { SvgActionShoppingCart } from '@/assets/icons'
 import { FilterButton, FilterButtonProps } from './FilterButton'
 
 import { CheckboxProps } from '../_inputs/Checkbox'
+import { RadioButtonProps } from '../_inputs/RadioButton'
 
 export default {
   title: 'inputs/FilterButton',
@@ -15,10 +16,12 @@ export default {
       {
         label: 'Small',
         id: 'small',
+        value: 'small',
       },
       {
         label: 'Medium',
         id: 'medium',
+        value: 'medium',
       },
     ],
     label: 'Label',
@@ -26,10 +29,18 @@ export default {
   },
 } as Meta<FilterButtonProps>
 
-const Template: StoryFn<FilterButtonProps> = (args) => {
+const CheckboxTemplate: StoryFn<FilterButtonProps> = (args: Extract<FilterButtonProps, { type: 'checkbox' }>) => {
   const [selectedOptions, setSelectedOptions] = useState<CheckboxProps[]>([])
 
-  return <FilterButton {...args} selectedOptions={selectedOptions} onApply={setSelectedOptions} />
+  return <FilterButton {...args} type="checkbox" selectedOptions={selectedOptions} onApply={setSelectedOptions} />
 }
 
-export const Default = Template.bind({})
+export const Checkbox = CheckboxTemplate.bind({})
+
+const RadioTemplate: StoryFn<FilterButtonProps> = (args: Extract<FilterButtonProps, { type: 'radio' }>) => {
+  const [selectedOption, setSelectedOption] = useState<RadioButtonProps | null>(null)
+
+  return <FilterButton {...args} type="radio" selectedOption={selectedOption} onApply={setSelectedOption} />
+}
+
+export const Radio = RadioTemplate.bind({})

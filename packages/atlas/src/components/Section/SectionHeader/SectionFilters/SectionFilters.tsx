@@ -1,6 +1,6 @@
 import { FC, useRef } from 'react'
 
-import { SvgActionChevronL, SvgActionChevronR, SvgActionClose, SvgActionFilters } from '@/assets/icons'
+import { SvgActionChevronL, SvgActionChevronR, SvgActionClose } from '@/assets/icons'
 import { FilterButton, FilterButtonProps } from '@/components/FilterButton'
 import { Button } from '@/components/_buttons/Button'
 import { useHorizonthalFade } from '@/hooks/useHorizonthalFade'
@@ -27,12 +27,14 @@ export const SectionFilters: FC<SectionFiltersProps> = ({ filters, onResetFilter
   const { handleMouseDown, visibleShadows, handleArrowScroll, isOverflow } = useHorizonthalFade(filterWrapperRef)
 
   const areThereAnyOptionsSelected = filters
-    .map((filter) => filter.selectedOptions)
+    .map((filter) => (filter.type === 'checkbox' ? filter.selectedOptions : filter.selectedOption))
     .flat()
     .some(Boolean)
 
   if (!smMatch) {
-    return <FilterButton icon={<SvgActionFilters />} label="Filters" onApply={() => null} options={[]} />
+    return null
+    // todo create a variant for mobile
+    // return <FilterButton icon={<SvgActionFilters />} label="Filters" onApply={() => null} options={[]} />
   }
 
   return (
