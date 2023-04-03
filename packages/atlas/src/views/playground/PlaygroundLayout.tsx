@@ -26,6 +26,7 @@ import {
   PlaygroundImageDownsizing,
   PlaygroundIndirectSignInDialog,
   PlaygroundInputAutocomplete,
+  PlaygroundMarketplaceCarousel,
   PlaygroundNftPurchase,
   PlaygroundNftSettleAuction,
   PlaygroundNftWhitelistMembers,
@@ -46,6 +47,7 @@ const playgroundRoutes = [
   { path: 'captcha', element: <PlaygroundCaptcha />, name: 'Captcha' },
   { path: 'google-authentication', element: <PlaygroundGoogleAuthentication />, name: 'Google authentication' },
   { path: 'input-autocomplete', element: <PlaygroundInputAutocomplete />, name: 'Input autocomplete' },
+  { path: 'marketplace-carousel', element: <PlaygroundMarketplaceCarousel />, name: 'Marketplace carousel' },
 ]
 
 const PlaygroundLayout = () => {

@@ -14,6 +14,7 @@ import {
   GetNftsConnectionQueryVariables,
   GetNftsQuery,
   GetNftsQueryVariables,
+  useGetFeaturedNftsQuery,
   useGetNftQuery,
   useGetNftsConnectionQuery,
   useGetNftsQuery,
@@ -192,6 +193,15 @@ export const useNfts = (baseOptions?: QueryHookOptions<GetNftsQuery, GetNftsQuer
   return {
     nfts: nftData?.ownedNfts,
     totalCount: paginationData?.ownedNftsConnection.totalCount,
+    ...rest,
+  }
+}
+
+export const useFeaturedNfts = () => {
+  const { data, ...rest } = useGetFeaturedNftsQuery()
+
+  return {
+    nfts: data?.ownedNfts,
     ...rest,
   }
 }

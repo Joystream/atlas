@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { FC } from 'react'
 
 import { FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
+import { CarouselProps } from '@/components/Carousel'
 import { Gallery } from '@/components/Gallery'
 import { RankingNumberTile } from '@/components/RankingNumberTile'
 import { breakpoints } from '@/styles/breakpoints'
@@ -33,6 +34,28 @@ export type VideoGalleryProps = {
 
 const PLACEHOLDERS_COUNT = 12
 
+const responsive: CarouselProps['breakpoints'] = {
+  [parseInt(breakpoints.sm)]: {
+    slidesPerView: 1,
+  },
+  [parseInt(breakpoints.md)]: {
+    slidesPerView: 2,
+    slidesPerGroup: 2,
+  },
+  [parseInt(breakpoints.lg)]: {
+    slidesPerView: 3,
+    slidesPerGroup: 3,
+  },
+  [parseInt(breakpoints.xl)]: {
+    slidesPerView: 4,
+    slidesPerGroup: 4,
+  },
+  [parseInt(breakpoints.xxl)]: {
+    slidesPerView: 5,
+    slidesPerGroup: 5,
+  },
+}
+
 export const VideoGallery: FC<VideoGalleryProps> = ({
   title,
   videos = [],
@@ -41,58 +64,6 @@ export const VideoGallery: FC<VideoGalleryProps> = ({
   hasRanking = false,
   className,
 }) => {
-  const responsive = [
-    {
-      breakpoint: parseInt(breakpoints.xxs),
-      settings: {
-        slidesToShow: 12 / 11,
-        slidesToScroll: 1,
-      },
-    },
-    {
-      breakpoint: parseInt(breakpoints.xs),
-      settings: {
-        slidesToShow: 12 / 10,
-        slidesToScroll: 1,
-      },
-    },
-    {
-      breakpoint: parseInt(breakpoints.sm),
-      settings: {
-        slidesToShow: 12 / 7,
-        slidesToScroll: 1,
-      },
-    },
-    {
-      breakpoint: parseInt(breakpoints.md),
-      settings: {
-        slidesToShow: 2,
-        slidesToScroll: 2,
-      },
-    },
-    {
-      breakpoint: parseInt(breakpoints.lg),
-      settings: {
-        slidesToShow: 3,
-        slidesToScroll: 3,
-      },
-    },
-    {
-      breakpoint: parseInt(breakpoints.xl),
-      settings: {
-        slidesToShow: 4,
-        slidesToScroll: 4,
-      },
-    },
-    {
-      breakpoint: parseInt(breakpoints.xxl),
-      settings: {
-        slidesToShow: 5,
-        slidesToScroll: 5,
-      },
-    },
-  ]
-
   if (loading === false && videos?.length === 0) {
     return null
   }
@@ -103,7 +74,15 @@ export const VideoGallery: FC<VideoGalleryProps> = ({
   })
 
   return (
-    <Gallery title={title} responsive={responsive} dotsVisible seeAllUrl={seeAllUrl} className={className}>
+    <Gallery
+      slidesPerView={3}
+      title={title}
+      breakpoints={responsive}
+      dotsVisible
+      rewind
+      seeAllUrl={seeAllUrl}
+      className={className}
+    >
       {[...(videos ? videos : []), ...placeholderItems]?.map((video, idx) =>
         hasRanking ? (
           <RankingNumberTile number={idx + 1} key={`${idx}-${video.id}`}>
