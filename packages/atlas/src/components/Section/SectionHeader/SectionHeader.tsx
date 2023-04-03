@@ -7,11 +7,10 @@ import { SectionFilters } from './SectionFilters/SectionFilters'
 import {
   MobileFirstRow,
   MobileSecondRow,
-  RightSideWrapper,
+  OverflowHiddenWrapper,
   SectionHeaderWrapper,
   StartWrapper,
   StyledSelect,
-  TabsMobileWrapper,
 } from './SectionHeader.styles'
 import { SectionTitleComponent } from './SectionTitle/SectionTitle'
 
@@ -78,11 +77,7 @@ export const SectionHeader: FC<SectionHeaderProps> = ({ start, sort, search, fil
           {!isSearchInputOpen && (
             <>
               {start.type === 'title' && <SectionTitleComponent nodeStart={start.nodeStart} title={start.title} />}
-              {start.type === 'tabs' && (
-                <TabsMobileWrapper>
-                  <Tabs {...start.tabsProps} />
-                </TabsMobileWrapper>
-              )}
+              {start.type === 'tabs' && <Tabs {...start.tabsProps} />}
             </>
           )}
           {search && <DynamicSearch search={search} isOpen={isSearchInputOpen} onSearchToggle={setIsSearchInputOpen} />}
@@ -99,16 +94,16 @@ export const SectionHeader: FC<SectionHeaderProps> = ({ start, sort, search, fil
   // DESKTOP
   return (
     <SectionHeaderWrapper isTabs={start.type === 'tabs'}>
-      <StartWrapper isTabs={start.type === 'tabs'}>
+      <StartWrapper enableHorizonthalScrolling={start.type === 'tabs'}>
         {start.type === 'title' && <SectionTitleComponent nodeStart={start.nodeStart} title={start.title} />}
-        <TabsMobileWrapper>{start.type === 'tabs' && <Tabs {...start.tabsProps} />}</TabsMobileWrapper>
+        {start.type === 'tabs' && <Tabs {...start.tabsProps} />}
       </StartWrapper>
       {search && <DynamicSearch search={search} isOpen={isSearchInputOpen} onSearchToggle={setIsSearchInputOpen} />}
-      <RightSideWrapper isTabs={start.type === 'tabs'}>
+      <OverflowHiddenWrapper>
         {filters && <SectionFilters filters={filters} onResetFilters={onResetFilters} />}
-        {sort?.type === 'toggle-button' && <ToggleButtonGroup {...sort.toggleButtonOptionTypeProps} />}
-        {sort?.type === 'select' && <StyledSelect {...sort.selectProps} size="medium" />}
-      </RightSideWrapper>
+      </OverflowHiddenWrapper>
+      {sort?.type === 'toggle-button' && <ToggleButtonGroup {...sort.toggleButtonOptionTypeProps} />}
+      {sort?.type === 'select' && <StyledSelect {...sort.selectProps} size="medium" />}
     </SectionHeaderWrapper>
   )
 }

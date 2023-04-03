@@ -1,14 +1,7 @@
 import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 
-import {
-  SvgActionAuction,
-  SvgActionCalendar,
-  SvgActionClock,
-  SvgActionFilters,
-  SvgActionMember,
-  SvgActionSettings,
-} from '@/assets/icons'
+import { SvgActionAuction, SvgActionCalendar, SvgActionClock, SvgActionMember, SvgActionSettings } from '@/assets/icons'
 import { CheckboxProps } from '@/components/_inputs/Checkbox'
 
 import { SectionHeader, SectionHeaderProps } from './SectionHeader'
@@ -58,6 +51,7 @@ export const Default = DefaultTemplate.bind({})
 Default.args = {}
 
 const WithTabsTemplate = () => {
+  const [statuses, setStatuses] = useState<CheckboxProps[]>([])
   return (
     <div style={{ display: 'grid', gap: 64 }}>
       <SectionHeader
@@ -80,8 +74,32 @@ const WithTabsTemplate = () => {
         }}
         filters={[
           {
-            label: 'Filters',
-            icon: <SvgActionFilters />,
+            label: 'Date uploaded',
+            icon: <SvgActionCalendar />,
+            onApply: (index) => null,
+            options: [
+              { id: 'a', label: 'a' },
+              { id: 'b', label: 'b' },
+            ],
+          },
+          {
+            label: 'Length',
+            icon: <SvgActionClock />,
+            onApply: () => null,
+            options: [],
+          },
+          {
+            label: 'Status',
+            icon: <SvgActionAuction />,
+            selectedOptions: statuses,
+            onApply: (options) => {
+              setStatuses(options)
+            },
+            options: nftStatuses,
+          },
+          {
+            label: 'Other filters',
+            icon: <SvgActionSettings />,
             onApply: () => null,
             options: [],
           },

@@ -9,6 +9,7 @@ import { Button } from '../_buttons/Button'
 
 export const TabsWrapper = styled.div`
   position: relative;
+  min-width: 0;
 `
 
 export const TabsGroup = styled.div<MaskProps>`

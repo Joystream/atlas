@@ -38,24 +38,17 @@ export const SectionHeaderWrapper = styled.header<SectionHeaderWrapperProps>`
   }
 `
 
-export const TabsMobileWrapper = styled.div`
-  min-width: 0;
+export const OverflowHiddenWrapper = styled.div`
   overflow: hidden;
-`
-
-export const RightSideWrapper = styled.div<{ isTabs: boolean }>`
-  overflow: ${({ isTabs }) => (isTabs ? 'unset' : 'hidden')};
-  display: flex;
   margin-left: auto;
-  gap: ${sizes(4)};
 `
 
 export const StyledSelect = styled(Select)`
   width: unset;
 ` as typeof Select
 
-export const StartWrapper = styled.div<{ isTabs: boolean }>`
-  overflow: ${({ isTabs }) => (isTabs ? 'hidden' : 'unset')};
+export const StartWrapper = styled.div<{ enableHorizonthalScrolling: boolean }>`
+  overflow: ${({ enableHorizonthalScrolling }) => (enableHorizonthalScrolling ? 'hidden' : 'unset')};
   display: flex;
   gap: ${sizes(4)};
 `
