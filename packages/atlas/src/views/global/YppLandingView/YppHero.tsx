@@ -167,7 +167,7 @@ export const YppHero: FC<YppHeroProps> = ({
         </HeroImageWrapper>
         <LayoutGrid>
           <GridItem colStart={{ base: 1, sm: 2 }} colSpan={{ base: 12, sm: 10 }}>
-            {items && (
+            {items && items.length >= 6 && (
               <StyledInfiniteCarousel
                 title="Recent verified channels"
                 itemWidth={200}

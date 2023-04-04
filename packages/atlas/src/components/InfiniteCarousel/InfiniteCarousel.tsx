@@ -74,6 +74,11 @@ export const InfiniteCarousel: FC<InfiniteCarouselProps> = ({
                   {number}
                 </ItemContainer>
               ))}
+              {items.map((number, idx) => (
+                <ItemContainer itemWidth={itemWidth} key={idx}>
+                  {number}
+                </ItemContainer>
+              ))}
             </ItemsWrapper>
           )}
         </InnerContainer>
