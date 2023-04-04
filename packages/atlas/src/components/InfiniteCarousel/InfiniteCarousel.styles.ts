@@ -3,18 +3,32 @@ import styled from '@emotion/styled'
 
 import { media, sizes } from '@/styles'
 
-export const InfiniteCarouselWrapper = styled.div`
-  overflow-x: hidden;
-  overflow-y: visible;
+import { LimitedWidthContainer } from '../LimitedWidthContainer'
+
+export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
+  padding-bottom: unset;
 `
 
 export const InfiniteCarouselHeader = styled.header`
   margin-bottom: ${sizes(6)};
+  text-align: left;
   ${media.md} {
     margin-bottom: ${sizes(10)};
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+`
+export const InfiniteCarouselWrapper = styled.div<{ carouselHorizonthalOffset?: number }>`
+  overflow-x: hidden;
+  overflow-y: visible;
+  margin-top: -${sizes(2)};
+  padding-top: ${sizes(2)};
+  margin-left: ${({ carouselHorizonthalOffset }) => `${carouselHorizonthalOffset || 0}px`};
+  margin-right: ${({ carouselHorizonthalOffset }) => `${carouselHorizonthalOffset || 0}px`};
+  ${InfiniteCarouselHeader} {
+    padding-left: ${({ carouselHorizonthalOffset }) => `${(carouselHorizonthalOffset || 0) * -1}px`};
+    padding-right: ${({ carouselHorizonthalOffset }) => `${(carouselHorizonthalOffset || 0) * -1}px`};
   }
 `
 
@@ -24,8 +38,6 @@ export const SubtitleWrapper = styled.div`
 `
 
 export const OverFlowHiddenWrapper = styled.div`
-  margin-top: -${sizes(2)};
-  padding-top: ${sizes(2)};
   width: 100%;
 `
 

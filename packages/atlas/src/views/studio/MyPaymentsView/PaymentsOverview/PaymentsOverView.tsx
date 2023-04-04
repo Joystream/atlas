@@ -9,7 +9,7 @@ import { ClaimChannelPaymentsDialog } from '@/components/_overlays/ClaimChannelP
 import { WithdrawFundsDialog } from '@/components/_overlays/SendTransferDialogs'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { formatNumber } from '@/utils/number'
@@ -19,7 +19,7 @@ import { CustomNodeWrapper, TilesWrapper } from './PaymentsOverview.styles'
 
 export const PaymentsOverView = () => {
   const { channelId, activeMembership } = useUser()
-  const { url: memberAvatarUrl } = useMemberAvatar(activeMembership)
+  const { url: memberAvatarUrl } = getMemberAvatar(activeMembership)
   const { totalBalance } = useSubscribeAccountBalance()
   const [showWithdrawDialog, setShowWithdrawDialog] = useState(false)
   const [showClaimDialog, setShowClaimDialog] = useState<boolean>(false)

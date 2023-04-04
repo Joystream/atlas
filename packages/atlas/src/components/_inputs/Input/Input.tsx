@@ -145,6 +145,7 @@ const InputComponent: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
         tabIndex={disabled ? -1 : 0}
         defaultValue={defaultValue}
       />
+      <span className="border-span" />
       {nodeStart && (
         <NodeContainer size={size} onClick={() => inputRef.current?.focus()} ref={nodeLeftRef} left disabled={disabled}>
           {renderedNodeStart}

@@ -510,6 +510,20 @@ export type GetChannelNftCollectorsQuery = {
   }>
 }
 
+export type GetTotalChannelsAndTotalVideosQueryVariables = Types.Exact<{
+  memberId: Types.Scalars['String']
+  channelId: Types.Scalars['String']
+}>
+
+export type GetTotalChannelsAndTotalVideosQuery = {
+  __typename?: 'Query'
+  membershipById?: {
+    __typename?: 'Membership'
+    totalChannelsCreated: number
+    channels: Array<{ __typename?: 'Channel'; totalVideosCreated: number }>
+  } | null
+}
+
 export type ReportChannelMutationVariables = Types.Exact<{
   channelId: Types.Scalars['String']
   rationale: Types.Scalars['String']
@@ -1097,6 +1111,66 @@ export type GetChannelNftCollectorsLazyQueryHookResult = ReturnType<typeof useGe
 export type GetChannelNftCollectorsQueryResult = Apollo.QueryResult<
   GetChannelNftCollectorsQuery,
   GetChannelNftCollectorsQueryVariables
+>
+export const GetTotalChannelsAndTotalVideosDocument = gql`
+  query GetTotalChannelsAndTotalVideos($memberId: String!, $channelId: String!) {
+    membershipById(id: $memberId) {
+      totalChannelsCreated
+      channels(where: { id_eq: $channelId }) {
+        totalVideosCreated
+      }
+    }
+  }
+`
+
+/**
+ * __useGetTotalChannelsAndTotalVideosQuery__
+ *
+ * To run a query within a React component, call `useGetTotalChannelsAndTotalVideosQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTotalChannelsAndTotalVideosQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTotalChannelsAndTotalVideosQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *      channelId: // value for 'channelId'
+ *   },
+ * });
+ */
+export function useGetTotalChannelsAndTotalVideosQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetTotalChannelsAndTotalVideosQuery,
+    GetTotalChannelsAndTotalVideosQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetTotalChannelsAndTotalVideosQuery, GetTotalChannelsAndTotalVideosQueryVariables>(
+    GetTotalChannelsAndTotalVideosDocument,
+    options
+  )
+}
+export function useGetTotalChannelsAndTotalVideosLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetTotalChannelsAndTotalVideosQuery,
+    GetTotalChannelsAndTotalVideosQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetTotalChannelsAndTotalVideosQuery, GetTotalChannelsAndTotalVideosQueryVariables>(
+    GetTotalChannelsAndTotalVideosDocument,
+    options
+  )
+}
+export type GetTotalChannelsAndTotalVideosQueryHookResult = ReturnType<typeof useGetTotalChannelsAndTotalVideosQuery>
+export type GetTotalChannelsAndTotalVideosLazyQueryHookResult = ReturnType<
+  typeof useGetTotalChannelsAndTotalVideosLazyQuery
+>
+export type GetTotalChannelsAndTotalVideosQueryResult = Apollo.QueryResult<
+  GetTotalChannelsAndTotalVideosQuery,
+  GetTotalChannelsAndTotalVideosQueryVariables
 >
 export const ReportChannelDocument = gql`
   mutation ReportChannel($channelId: String!, $rationale: String!) {

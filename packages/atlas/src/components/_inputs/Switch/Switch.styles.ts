@@ -10,13 +10,13 @@ export const SwitchLabel = styled.label<{ disabled?: boolean }>`
 `
 
 export const SwitchSlider = styled.div`
-  box-shadow: inset 0 0 0 1px ${cVar('colorBorderAlpha')};
+  box-shadow: inset 0 0 0 1px ${cVar('colorBorderMutedAlpha')};
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: transparent;
+  background-color: ${cVar('colorBackgroundMutedAlpha')};
   border-radius: 24px;
   transition: box-shadow ${cVar('animationTransitionFast')}, background-color ${cVar('animationTransitionFast')};
 
@@ -30,7 +30,7 @@ export const SwitchSlider = styled.div`
     width: 16px;
     left: 4px;
     bottom: 4px;
-    background-color: ${cVar('colorBorderAlpha')};
+    background-color: ${cVar('colorTextMuted')};
     transition: transform ${cVar('animationTransitionFast')}, width ${cVar('animationTransitionFast')},
       background-color ${cVar('animationTransitionFast')};
   }
@@ -38,11 +38,8 @@ export const SwitchSlider = styled.div`
 
 const hoverUncheckedStyles = css`
   + ${SwitchSlider} {
-    box-shadow: inset 0 0 0 2px ${cVar('colorBorderStrongAlpha')};
-
-    ::before {
-      background-color: ${cVar('colorBorderStrongAlpha')};
-    }
+    background-color: ${cVar('colorBackgroundAlpha')};
+    box-shadow: inset 0 0 0 1px ${cVar('colorBorderAlpha')};
   }
 `
 

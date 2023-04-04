@@ -53,7 +53,6 @@ export const ActionBarTransactionWrapper = styled.div`
 `
 
 export const StyledProgressDrawer = styled(ProgressDrawer)`
-  display: none;
   ${media.md} {
     position: absolute;
     right: 0;

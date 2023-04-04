@@ -11,7 +11,7 @@ import { TopbarBase } from '@/components/_navigation/TopbarBase'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
 import { useUser } from '@/providers/user/user.hooks'
@@ -26,6 +26,7 @@ import {
   PlaygroundImageDownsizing,
   PlaygroundIndirectSignInDialog,
   PlaygroundInputAutocomplete,
+  PlaygroundMarketplaceCarousel,
   PlaygroundNftPurchase,
   PlaygroundNftSettleAuction,
   PlaygroundNftWhitelistMembers,
@@ -46,12 +47,13 @@ const playgroundRoutes = [
   { path: 'captcha', element: <PlaygroundCaptcha />, name: 'Captcha' },
   { path: 'google-authentication', element: <PlaygroundGoogleAuthentication />, name: 'Google authentication' },
   { path: 'input-autocomplete', element: <PlaygroundInputAutocomplete />, name: 'Input autocomplete' },
+  { path: 'marketplace-carousel', element: <PlaygroundMarketplaceCarousel />, name: 'Marketplace carousel' },
 ]
 
 const PlaygroundLayout = () => {
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
   const { activeMembership, isLoggedIn, signIn } = useUser()
-  const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
+  const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
   const { openSignInDialog } = useDisplaySignInDialog()
   return (
     <UserProvider>

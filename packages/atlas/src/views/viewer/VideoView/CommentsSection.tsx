@@ -18,7 +18,7 @@ import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useFee } from '@/providers/joystream/joystream.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { createPlaceholderData } from '@/utils/data'
@@ -54,7 +54,7 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
   const { id: videoId } = useParams()
   const { memberId, signIn, activeMembership, isLoggedIn } = useUser()
   const { openSignInDialog } = useDisplaySignInDialog({ interaction: true })
-  const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)
+  const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = getMemberAvatar(activeMembership)
 
   const { fullFee: fee, loading: feeLoading } = useFee(
     'createVideoCommentTx',

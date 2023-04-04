@@ -1,7 +1,7 @@
-import { FC, PropsWithChildren, useRef } from 'react'
+import { FC, PropsWithChildren, ReactNode, useRef } from 'react'
 
 import { SvgActionChevronL, SvgActionChevronR, SvgControlsPlay } from '@/assets/icons'
-import { Carousel, CarouselProps, CarouselRef } from '@/components/Carousel'
+import { Carousel, CarouselProps, SwiperInstance } from '@/components/Carousel'
 import { Arrow } from '@/components/Carousel/Carousel.styles'
 import { GridHeadingContainer, TitleContainer } from '@/components/GridHeading'
 import { Text } from '@/components/Text'
@@ -12,14 +12,12 @@ export type GalleryProps = PropsWithChildren<{
   title?: string
   className?: string
   seeAllUrl?: string
+  children: ReactNode[]
 }> &
-  CarouselProps
+  Omit<CarouselProps, 'children'>
 
-export const Gallery: FC<GalleryProps> = ({ title, className, seeAllUrl, ...carouselProps }) => {
-  // TODO: this is the only place in the app that requires refs to buttons. Once we refactor this component, we can remove forwardRef from buttons
-  const prevArrowRef = useRef<HTMLButtonElement>(null)
-  const nextArrowRef = useRef<HTMLButtonElement>(null)
-  const carouselRef = useRef<CarouselRef>(null)
+export const Gallery: FC<GalleryProps> = ({ title, className, seeAllUrl, children, ...carouselProps }) => {
+  const gliderRef = useRef<SwiperInstance | null>(null)
   return (
     <Container className={className}>
       <GridHeadingContainer>
@@ -42,29 +40,23 @@ export const Gallery: FC<GalleryProps> = ({ title, className, seeAllUrl, ...caro
           )}
           <CarouselArrowsContainer>
             <Arrow
-              {...carouselRef.current?.getPrevArrowProps()}
-              ref={prevArrowRef}
               icon={<SvgActionChevronL />}
               size="large"
               variant="secondary"
+              onClick={() => gliderRef.current?.slidePrev()}
             />
             <Arrow
-              {...carouselRef.current?.getNextArrowProps()}
-              ref={nextArrowRef}
               icon={<SvgActionChevronR />}
               size="large"
               variant="secondary"
+              onClick={() => gliderRef.current?.slideNext()}
             />
           </CarouselArrowsContainer>
         </TitleContainer>
       </GridHeadingContainer>
-      <Carousel
-        {...carouselProps}
-        prevArrowRef={prevArrowRef}
-        nextArrowRef={nextArrowRef}
-        ref={carouselRef}
-        itemWidth={350}
-      />
+      <Carousel onSwiper={(swiper) => (gliderRef.current = swiper)} {...carouselProps}>
+        {children}
+      </Carousel>
     </Container>
   )
 }

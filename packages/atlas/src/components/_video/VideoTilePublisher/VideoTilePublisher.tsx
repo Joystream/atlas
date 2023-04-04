@@ -25,7 +25,7 @@ import { useGetNftSlot } from '@/hooks/useGetNftSlot'
 import { useNftState } from '@/hooks/useNftState'
 import { useVideoContextMenu } from '@/hooks/useVideoContextMenu'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { SentryLogger } from '@/utils/logs'
@@ -69,7 +69,7 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
     const videoNftOwner = video?.nft?.owner
     const ownerMember = videoNftOwner?.__typename === 'NftOwnerMember' ? videoNftOwner.member : null
 
-    const ownerAvatar = useMemberAvatar(ownerMember)
+    const ownerAvatar = getMemberAvatar(ownerMember)
 
     const nftStatus = getNftStatus(video?.nft, video)
 

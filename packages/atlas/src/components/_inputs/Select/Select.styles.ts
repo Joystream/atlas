@@ -13,6 +13,8 @@ export const SelectWrapper = styled.div`
 export const SelectMenuWrapper = styled.div`
   position: relative;
   width: 100%;
+  border-radius: ${cVar('radiusSmall')};
+  overflow: hidden;
 `
 
 export const InlineLabel = styled(Text)`

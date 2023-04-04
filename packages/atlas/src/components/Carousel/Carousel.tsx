@@ -1,110 +1,33 @@
-import Glider from 'glider-js'
-import { ComponentPropsWithoutRef, RefObject, forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
+import { ReactNode } from 'react'
+import { Pagination } from 'swiper'
+import 'swiper/css'
+import { SwiperProps, SwiperSlide } from 'swiper/react'
+import { Swiper as SwiperType } from 'swiper/types'
 
-import { GliderProps, useGlider } from '@/components/Glider'
+import { StyledSwiper } from '@/components/Carousel/Carousel.styles'
 
-import { Container, Dots, GliderContainer, Track } from './Carousel.styles'
-
+export type SwiperInstance = SwiperType
 export type CarouselProps = {
   className?: string
-  arrowPosition?: number
   dotsVisible?: boolean
-} & GliderProps
+  children: ReactNode[]
+} & SwiperProps
 
-export type CarouselRef = {
-  getPrevArrowProps: ReturnType<typeof useGlider>['getPrevArrowProps']
-  getNextArrowProps: ReturnType<typeof useGlider>['getNextArrowProps']
+const dotsProps = {
+  modules: [Pagination],
+  pagination: {
+    clickable: true,
+    bulletClass: 'bullet',
+    bulletActiveClass: 'active',
+  },
 }
 
-export const Carousel = forwardRef<
-  CarouselRef,
-  CarouselProps &
-    ComponentPropsWithoutRef<'div'> & {
-      prevArrowRef: RefObject<HTMLButtonElement>
-      nextArrowRef: RefObject<HTMLButtonElement>
-    }
->(
-  (
-    {
-      children,
-      className = '',
-      arrowPosition,
-      slidesToShow = 'auto',
-      dotsVisible,
-      prevArrowRef,
-      nextArrowRef,
-      ...gliderOptions
-    },
-    ref
-  ) => {
-    const dotsRef = useRef<HTMLDivElement>(null)
-    const gliderInstanceRef = useRef<Glider<HTMLElement>>()
-    const slidesToScrollRef = useRef<number>(0)
-
-    const onAnimated = () => {
-      if (gliderInstanceRef.current && gliderOptions.responsive) {
-        const breakpointIndex = gliderOptions.responsive.findIndex(
-          (item) => item.breakpoint === gliderInstanceRef.current?.breakpoint
-        )
-        const slidesToScroll = gliderOptions.responsive[breakpointIndex].settings.slidesToScroll as number
-        const itemsRemainder = gliderInstanceRef.current.slides.length % slidesToScrollRef.current || slidesToScroll
-        if (nextArrowRef.current && nextArrowRef.current?.classList.contains('disabled') && itemsRemainder) {
-          gliderInstanceRef.current.setOption({ slidesToScroll: itemsRemainder }, false)
-        } else {
-          gliderInstanceRef.current.setOption({ slidesToScroll: slidesToScrollRef.current || slidesToScroll }, false)
-          if (!slidesToScrollRef.current) {
-            slidesToScrollRef.current = slidesToScroll
-          }
-        }
-      }
-    }
-
-    const {
-      ref: gliderRef,
-      getContainerProps,
-      getGliderProps,
-      getTrackProps,
-      getPrevArrowProps,
-      getNextArrowProps,
-      getDotsProps,
-      glider,
-    } = useGlider<HTMLDivElement>({
-      slidesToShow,
-      onAnimated,
-      arrows: { prev: prevArrowRef.current, next: nextArrowRef.current },
-      dots: dotsRef.current,
-      ...gliderOptions,
-    })
-
-    const resetSlidesToScroll = () => {
-      slidesToScrollRef.current = 0
-    }
-
-    useEffect(() => {
-      window.addEventListener('resize', resetSlidesToScroll)
-
-      return () => {
-        window.removeEventListener('resize', resetSlidesToScroll)
-      }
-    }, [])
-
-    useEffect(() => {
-      if (!glider) return
-      gliderInstanceRef.current = glider
-    }, [glider])
-
-    useImperativeHandle(ref, () => ({
-      getPrevArrowProps,
-      getNextArrowProps,
-    }))
-    return (
-      <Container {...getContainerProps({ className })}>
-        <GliderContainer {...getGliderProps()} ref={gliderRef}>
-          <Track {...getTrackProps()}>{children}</Track>
-        </GliderContainer>
-        {dotsVisible && <Dots {...getDotsProps()} ref={dotsRef} />}
-      </Container>
-    )
-  }
-)
-Carousel.displayName = 'Carousel'
+export const Carousel = ({ children, dotsVisible, ...swiperOptions }: CarouselProps) => {
+  return (
+    <StyledSwiper navigation spaceBetween={12} {...(dotsVisible ? dotsProps : {})} {...swiperOptions}>
+      {children?.map((child, idx) => (
+        <SwiperSlide key={idx}>{child}</SwiperSlide>
+      ))}
+    </StyledSwiper>
+  )
+}

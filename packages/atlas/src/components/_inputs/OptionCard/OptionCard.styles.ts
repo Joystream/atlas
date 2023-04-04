@@ -19,7 +19,7 @@ const getOptionCardBorderColor = ({ checked, error, disabled }: OptionCardLabelP
   } else if (checked) {
     return cVar('colorBorderPrimary')
   }
-  return cVar('colorBorderAlpha')
+  return cVar('colorBorderMutedAlpha')
 }
 
 const getOptionCardBorderColorHover = ({ checked, error, disabled }: OptionCardLabelProps) => {
@@ -31,7 +31,7 @@ const getOptionCardBorderColorHover = ({ checked, error, disabled }: OptionCardL
   } else if (checked) {
     return cVar('colorBorderPrimary')
   }
-  return cVar('colorBorderStrongAlpha')
+  return cVar('colorBorderAlpha')
 }
 
 const getOptionCardBorderColorActive = ({ checked, error, disabled }: OptionCardLabelProps) => {
@@ -58,16 +58,30 @@ export const IconContainer = styled.div<OptionCardLabelProps>`
 `
 
 export const OptionCardLabel = styled.label<OptionCardLabelProps>`
-  --border-height: ${({ checked }) => (checked ? '-2px' : '-1px')};
+  --underline-y: ${({ checked }) => (checked ? '0' : '1px')};
 
   padding: ${sizes(4)};
   display: flex;
   flex-direction: column;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-  box-shadow: inset 0 var(--border-height) 0 0 ${getOptionCardBorderColor};
   transition: all ${cVar('animationTransitionFast')};
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
   background: ${cVar('colorBackgroundMutedAlpha')};
+  border-radius: ${cVar('radiusSmall')};
+  overflow: hidden;
+  position: relative;
+
+  .underline {
+    transition: ${cVar('animationTransitionFast')};
+    transition-property: background-color, transform;
+    width: 100%;
+    background-color: ${getOptionCardBorderColor};
+    position: absolute;
+    height: 2px;
+    left: 0;
+    bottom: 0;
+    transform: translateY(var(--underline-y));
+  }
 
   ${({ disabled, checked, error }) =>
     !disabled &&
@@ -75,7 +89,10 @@ export const OptionCardLabel = styled.label<OptionCardLabelProps>`
       :focus-within,
       :hover {
         background: ${cVar('colorBackgroundAlpha')};
-        box-shadow: inset 0 var(--border-height) 0 0 ${getOptionCardBorderColorHover({ checked, error, disabled })};
+
+        .underline {
+          background-color: ${getOptionCardBorderColorHover({ checked, error, disabled })};
+        }
 
         ${IconContainer} {
           * path {
@@ -87,7 +104,10 @@ export const OptionCardLabel = styled.label<OptionCardLabelProps>`
 
   :active {
     background: ${cVar('colorBackgroundMutedAlpha')};
-    box-shadow: inset 0 var(--border-height) 0 0 ${getOptionCardBorderColorActive};
+  }
+
+  :active .underline {
+    background-color: ${getOptionCardBorderColorActive};
   }
 `
 

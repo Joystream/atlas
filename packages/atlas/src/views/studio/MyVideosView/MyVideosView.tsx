@@ -66,16 +66,13 @@ export const MyVideosView = () => {
   const videosPerPage = ROWS_AMOUNT * videosPerRow
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
-  const [isBackendRqCompleted, setIsBackednRqCompleted] = useState(false)
 
   const { isLoading: isCurrentlyUploadedVideoIdsLoading, data: yppDAta } = useQuery(
     `ypp-ba-videos-${channelId}`,
     () => axios.get<YppVideoDto[]>(`${YOUTUBE_BACKEND_URL}/channels/${channelId}/videos`),
     {
       enabled: !!channelId && !!YOUTUBE_BACKEND_URL,
-      onSettled: () => {
-        setIsBackednRqCompleted(true)
-      },
+      retry: 1,
     }
   )
 
@@ -125,7 +122,6 @@ export const MyVideosView = () => {
       },
     },
     {
-      skip: YOUTUBE_BACKEND_URL ? !isBackendRqCompleted : undefined,
       notifyOnNetworkStatusChange: true,
       onError: (error) => SentryLogger.error('Failed to fetch videos', 'MyVideosView', error),
     }
@@ -134,10 +130,19 @@ export const MyVideosView = () => {
   const [openDeleteDraftDialog, closeDeleteDraftDialog] = useConfirmationModal()
   const deleteVideo = useDeleteVideo()
 
-  const areTilesLoading = YOUTUBE_BACKEND_URL ? isCurrentlyUploadedVideoIdsLoading || loading : loading
+  const areTilesLoading = loading
 
   const videos = [...(edges?.length ? ['new-video-tile' as const, ...edges] : [])]
-    ?.map((edge) => (edge === 'new-video-tile' ? edge : edge.node))
+    ?.map((edge) => {
+      if (edge === 'new-video-tile') {
+        return edge
+      }
+
+      if (!edge.node.media?.isAccepted && isCurrentlyUploadedVideoIdsLoading) {
+        return 'possibly-syncing'
+      }
+      return edge.node
+    })
     .slice(currentPage * videosPerPage, currentPage * videosPerPage + videosPerPage)
   const placeholderItems = createPlaceholderData(areTilesLoading ? videosPerPage - (videos ? videos.length : 0) : 0, {
     id: undefined,
@@ -272,8 +277,14 @@ export const MyVideosView = () => {
           )
         })
     : videosWithSkeletonLoaders.map((video, idx) => {
-        if (video === 'new-video-tile') {
-          return <NewVideoTile loading={areTilesLoading} key={idx} onClick={handleAddVideoTab} />
+        if (video === 'new-video-tile' || video === 'possibly-syncing') {
+          return (
+            <NewVideoTile
+              loading={video === 'new-video-tile' ? areTilesLoading : true}
+              key={idx}
+              onClick={video === 'new-video-tile' ? handleAddVideoTab : undefined}
+            />
+          )
         }
         return (
           <VideoTilePublisher

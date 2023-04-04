@@ -3589,7 +3589,6 @@ __metadata:
     "@tippyjs/react": ^4.2.6
     "@types/aos": ^3.0.4
     "@types/bn.js": ^5.1.1
-    "@types/glider-js": ^1.7.6
     "@types/js-yaml": ^4.0.5
     "@types/loadable__component": ^5.13.4
     "@types/lodash-es": ^4.17.6
@@ -3613,7 +3612,6 @@ __metadata:
     cropperjs: ^1.5.13
     date-fns: ^2.29.3
     downshift: ^7.0.4
-    glider-js: ^1.7.8
     graphql: ^16.6.0
     graphql-tag: ^2.12.6
     happy-dom: ^8.1.0
@@ -3654,6 +3652,7 @@ __metadata:
     storybook: 7.0.0-beta.3
     style-dictionary: ^3.7.1
     subscriptions-transport-ws: ^0.11.0
+    swiper: ^9.1.1
     twemoji: ^14.0.2
     use-draggable-scroll: ^0.1.0
     use-resize-observer: ^9.1.0
@@ -6345,13 +6344,6 @@ __metadata:
     "@types/qs": "*"
     "@types/serve-static": "*"
   checksum: 15c1af46d02de834e4a225eccaa9d85c0370fdbb3ed4e1bc2d323d24872309961542b993ae236335aeb3e278630224a6ea002078d39e651d78a3b0356b1eaa79
-  languageName: node
-  linkType: hard
-
-"@types/glider-js@npm:^1.7.6":
-  version: 1.7.6
-  resolution: "@types/glider-js@npm:1.7.6"
-  checksum: 108d6954af5de58eb454009909de5fa2cb5cc70bcb060834b4512ae2f4e87751173ac07124d85da3063dd907f56927642815ee80105b47b07c085f4219bba9eb
   languageName: node
   linkType: hard
 
@@ -12432,13 +12424,6 @@ __metadata:
   version: 1.4.0
   resolution: "github-slugger@npm:1.4.0"
   checksum: 4f52e7a21f5c6a4c5328f01fe4fe13ae8881fea78bfe31f9e72c4038f97e3e70d52fb85aa7633a52c501dc2486874474d9abd22aa61cbe9b113099a495551c6b
-  languageName: node
-  linkType: hard
-
-"glider-js@npm:^1.7.8":
-  version: 1.7.8
-  resolution: "glider-js@npm:1.7.8"
-  checksum: d651e10be8b27a7038541e85fdf0cb47bc5cc43363e617612eb6ebe573d2e6c2ce43b077323ba558fb7446cc8124f16cb9d2fc5499b6c356ed7427082822f6d7
   languageName: node
   linkType: hard
 
@@ -19157,6 +19142,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ssr-window@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "ssr-window@npm:4.0.2"
+  checksum: df182600927f4f3225224cf8c02338ea637c9750519505bbfb9a9236741a2a7ec088386fb948bca7b447b8303d9109e7dc7672e3de041c79ac2a0e03665af7d2
+  languageName: node
+  linkType: hard
+
 "ssri@npm:^9.0.0":
   version: 9.0.1
   resolution: "ssri@npm:9.0.1"
@@ -19629,6 +19621,15 @@ __metadata:
   dependencies:
     tslib: ^2.0.3
   checksum: 6e21c9e1b3cd5735eb2af679a99ec3efc78a14e3d4d5e3fd594e254b91cfd37185b3d1c6e41b22f53a2cdf5d1b963ce30c0fe8b78337e3fd43d0137084670a5f
+  languageName: node
+  linkType: hard
+
+"swiper@npm:^9.1.1":
+  version: 9.1.1
+  resolution: "swiper@npm:9.1.1"
+  dependencies:
+    ssr-window: ^4.0.2
+  checksum: 053d606f03eb4f59be95dd3a6129b6fde559b5c1f042ab0c1240df12e0cbac32e2ab81a7334ca9781309bf34edd18ebe308d31b1064fdfba98120f0b20e48b93
   languageName: node
   linkType: hard
 

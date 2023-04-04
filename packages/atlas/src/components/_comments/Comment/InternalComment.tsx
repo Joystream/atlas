@@ -17,7 +17,7 @@ import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useTouchDevice } from '@/hooks/useTouchDevice'
 import { CommentReaction } from '@/joystream-lib/types'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { cVar, transitions } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'
 import { formatDate, formatDateAgo } from '@/utils/time'
@@ -115,7 +115,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
 
   const popoverRef = useRef<PopoverImperativeHandle>(null)
   const isTouchDevice = useTouchDevice()
-  const { url: memberAvatarUrl, isLoadingAsset: isMemberAvatarLoading } = useMemberAvatar(author)
+  const { url: memberAvatarUrl, isLoadingAsset: isMemberAvatarLoading } = getMemberAvatar(author)
   const filteredDuplicatedAvatars = repliesCount
     ? replyAvatars
       ? [...new Map(replyAvatars?.map((item) => [item.handle, item])).values()]

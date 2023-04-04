@@ -156,7 +156,7 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
   ownedNfts: {
     ...offsetLimitPagination(getNftKeyArgs),
     read(existing, { args, toReference, canRead }) {
-      if (args?.where.id_eq) {
+      if (args?.where?.id_eq) {
         // get single nft
         const nftRef = toReference({
           __typename: 'OwnedNft',
@@ -177,7 +177,7 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
   videos: {
     ...offsetLimitPagination(getVideoKeyArgs),
     read(existing, { args, toReference, canRead }) {
-      if (args?.where.id_eq) {
+      if (args?.where?.id_eq) {
         // get single video
         const videoRef = toReference({
           __typename: 'Video',
