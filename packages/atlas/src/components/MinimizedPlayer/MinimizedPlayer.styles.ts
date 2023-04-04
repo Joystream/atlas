@@ -1,5 +1,5 @@
-import { css, keyframes } from '@emotion/react/dist/emotion-react.cjs'
-import styled from '@emotion/styled/dist/emotion-styled.cjs'
+import { css, keyframes } from '@emotion/react'
+import styled from '@emotion/styled'
 
 import { cVar, sizes } from '@/styles'
 
