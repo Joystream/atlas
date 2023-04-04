@@ -1,12 +1,51 @@
 import styled from '@emotion/styled'
+import { Swiper } from 'swiper/react'
 
 import { Button } from '@/components/_buttons/Button'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 export const CAROUSEL_ARROW_HEIGHT = 48
 
-export const Container = styled.div`
-  position: relative;
+export const StyledSwiper = styled(Swiper)`
+  width: 100%;
+
+  .swiper-pagination {
+    display: flex;
+    justify-content: center;
+  }
+
+  .bullet {
+    cursor: pointer;
+    width: 36px;
+    height: 20px;
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    padding: ${sizes(2)} ${sizes(0.5)};
+    margin: 0;
+
+    &::after {
+      content: '';
+      width: 100%;
+      height: ${sizes(1)};
+      display: block;
+      background-color: ${cVar('colorCoreNeutral700')};
+      transition: all ${transitions.timings.regular} ${transitions.easing};
+    }
+
+    &:hover:not(.active) {
+      &::after {
+        background-color: ${cVar('colorCoreNeutral50')};
+        transform: translateY(-2px);
+      }
+    }
+
+    &.active {
+      &::after {
+        background-color: ${cVar('colorCoreNeutral300')};
+      }
+    }
+  }
 `
 
 export const Arrow = styled(Button)`
@@ -39,63 +78,5 @@ export const Arrow = styled(Button)`
 
   &.glider-next {
     right: 0;
-  }
-`
-
-export const GliderContainer = styled.div`
-  padding-left: ${sizes(2)};
-  padding-top: ${sizes(2)};
-
-  /* hides scrollbar on firefox */
-  scrollbar-width: none;
-`
-
-export const Track = styled.div`
-  .glider-slide:not(:first-of-type) {
-    margin-left: ${sizes(4)};
-
-    ${media.lg} {
-      margin-left: ${sizes(6)};
-    }
-  }
-`
-
-export const Dots = styled.div`
-  margin-top: ${sizes(12)};
-  display: none;
-
-  ${media.md} {
-    display: flex;
-  }
-
-  .glider-dot {
-    width: 36px;
-    height: 20px;
-    background-color: transparent;
-    border-radius: 0;
-    padding: ${sizes(2)} ${sizes(0.5)};
-    margin: 0;
-
-    &::after {
-      content: '';
-      width: 100%;
-      height: ${sizes(1)};
-      display: block;
-      background-color: ${cVar('colorCoreNeutral700')};
-      transition: all ${transitions.timings.regular} ${transitions.easing};
-    }
-
-    &:hover:not(.active) {
-      &::after {
-        background-color: ${cVar('colorCoreNeutral50')};
-        transform: translateY(-2px);
-      }
-    }
-
-    &.active {
-      &::after {
-        background-color: ${cVar('colorCoreNeutral300')};
-      }
-    }
   }
 `

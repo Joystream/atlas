@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import { Meta, StoryFn } from '@storybook/react'
-import { useRef } from 'react'
 
 import { cVar } from '@/styles'
 
@@ -12,10 +11,8 @@ export default {
 } as Meta
 
 const Template: StoryFn<CarouselProps> = (args) => {
-  const prevArrowRef = useRef<HTMLButtonElement>(null)
-  const nextArrowRef = useRef<HTMLButtonElement>(null)
   return (
-    <Carousel {...args} prevArrowRef={prevArrowRef} nextArrowRef={nextArrowRef} dotsVisible>
+    <Carousel {...args}>
       {Array.from({ length: 10 }, (_, i) => (
         <CarouselItem key={i}> Carousel Item {i}</CarouselItem>
       ))}
@@ -24,20 +21,21 @@ const Template: StoryFn<CarouselProps> = (args) => {
 }
 export const Regular = Template.bind({})
 Regular.args = {
-  itemWidth: 300,
-  slidesToShow: 3,
-  slidesToScroll: 1,
+  slidesPerView: 3,
+  slidesPerGroup: 3,
+  rewind: true,
 }
-export const Draggable = Template.bind({})
-Draggable.args = {
-  draggable: true,
-  itemWidth: 300,
-  slidesToShow: 3,
-  slidesToScroll: 1,
+
+export const WithDots = Template.bind({})
+WithDots.args = {
+  slidesPerView: 3,
+  slidesPerGroup: 3,
+  rewind: true,
+  navigation: true,
+  dotsVisible: true,
 }
 
 const CarouselItem = styled.div`
-  width: 300px;
   min-height: 200px;
   text-align: center;
   color: ${cVar('colorCoreBaseWhite')};

@@ -16,7 +16,7 @@ import { GridHeadingContainer, TitleContainer } from '@/components/GridHeading'
 import { Text } from '@/components/Text'
 import { LoadMoreButton } from '@/components/_buttons/LoadMoreButton'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { createVideoWhereObjectWithFilters, publicChannelFilter, publicVideoFilter } from '@/config/contentFilter'
+import { publicChannelFilter, publicVideoFilter } from '@/config/contentFilter'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { SentryLogger } from '@/utils/logs'
 
@@ -88,11 +88,11 @@ export const InfiniteVideoGrid = forwardRef<HTMLElement, InfiniteVideoGridProps>
       periodDays,
       limit,
       orderBy,
-      where: createVideoWhereObjectWithFilters({
+      where: {
         ...videoWhereInput,
         ...publicVideoFilter,
         channel: { ...publicChannelFilter, ...videoWhereInput?.channel },
-      }),
+      },
     }
 
     const fetchMore = useCallback(() => {

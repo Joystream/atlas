@@ -6,7 +6,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useNftState } from '@/hooks/useNftState'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useVideoContextMenu } from '@/hooks/useVideoContextMenu'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
 
 import { NftTile, NftTileProps } from '../NftTile'
@@ -35,7 +35,7 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
   const ownerMember = nft?.owner.__typename === 'NftOwnerMember' && nft.owner.member
   const ownerChannel = nft?.owner.__typename === 'NftOwnerChannel' && nft.owner.channel
 
-  const { url: ownerMemberAvatarUrl } = useMemberAvatar(ownerMember || null)
+  const { url: ownerMemberAvatarUrl } = getMemberAvatar(ownerMember || null)
 
   const isAuction = nftStatus?.status === 'auction'
 

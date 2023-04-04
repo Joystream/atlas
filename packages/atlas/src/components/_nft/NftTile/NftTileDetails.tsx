@@ -44,7 +44,7 @@ export type NftTileDetailsProps = {
   contextMenuItems?: ListItemProps[]
 }
 
-type TileSize = 'small' | 'medium'
+type TileSize = 'small' | 'medium' | 'big'
 
 const SMALL_SIZE_WIDTH = 288
 
@@ -209,32 +209,46 @@ export const NftTileDetails: FC<NftTileDetailsProps> = ({
 
 type DetailsContentProps = {
   caption: string
-  icon: ReactNode
+  icon?: ReactNode
   content: number | string
   secondary?: boolean
   tileSize: TileSize | undefined
 }
-const DetailsContent: FC<DetailsContentProps> = memo(({ tileSize, caption, icon, content, secondary }) => (
-  <div>
-    <Text as="span" variant={tileSize === 'medium' ? 't200' : 't100'} color="colorText">
-      {caption}
-    </Text>
-    <DetailsContentWrapper secondary={secondary}>
-      {icon}{' '}
-      {typeof content === 'string' ? (
-        <Text as="span" variant={tileSize === 'medium' ? 'h300' : 'h200'} color={secondary ? 'colorText' : undefined}>
-          {content}
-        </Text>
-      ) : (
-        <NumberFormat
-          as="span"
-          value={content}
-          format="short"
-          variant={tileSize === 'medium' ? 'h300' : 'h200'}
-          color={secondary ? 'colorText' : undefined}
-        />
-      )}
-    </DetailsContentWrapper>
-  </div>
-))
+export const DetailsContent: FC<DetailsContentProps> = memo(({ tileSize, caption, icon, content, secondary }) => {
+  const getSize = () => {
+    switch (tileSize) {
+      case 'small':
+        return { title: 't100', content: 'h200' } as const
+      default:
+      case 'medium':
+        return { title: 't200', content: 'h300' } as const
+      case 'big':
+        return { title: 'h100', content: 'h500' } as const
+    }
+  }
+
+  return (
+    <div>
+      <Text as="span" variant={getSize().title} color="colorText">
+        {caption}
+      </Text>
+      <DetailsContentWrapper secondary={secondary}>
+        {icon}{' '}
+        {typeof content === 'string' ? (
+          <Text as="span" variant={getSize().content} color={secondary ? 'colorText' : undefined}>
+            {content}
+          </Text>
+        ) : (
+          <NumberFormat
+            as="span"
+            value={content}
+            format="short"
+            variant={getSize().content}
+            color={secondary ? 'colorText' : undefined}
+          />
+        )}
+      </DetailsContentWrapper>
+    </div>
+  )
+})
 DetailsContent.displayName = 'DetailsContent'

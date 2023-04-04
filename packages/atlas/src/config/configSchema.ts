@@ -103,8 +103,6 @@ export const configSchema = z.object({
     }),
   }),
   content: z.object({
-    blockedVideoIds: z.array(z.string()),
-    blockedChannelIds: z.array(z.string()),
     officialJoystreamChannelId: z.string().nullable(),
     categories: z.array(
       z.object({
@@ -117,7 +115,6 @@ export const configSchema = z.object({
         defaultVideoCategory: z.string(),
       })
     ),
-    showAllContent: z.boolean(),
     languages: z.array(z.object({ isoCode: z.string(), name: z.string() })),
     popularLanguages: z.array(z.string()),
   }),

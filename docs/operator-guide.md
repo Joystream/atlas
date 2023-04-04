@@ -114,9 +114,9 @@ Once you update the logo used in the app, you should also update the favicon tha
 Atlas uses list of categories defined in `content.categories` config entry to determine which content categories should be handled by the app. Categories defined in that list are local to the app - they will be used in the
 `Discover` screen and when the user is publishing new content. Each local (or "display") category also has a list of associated Query Node video categories that should be displayed inside it.
 
-Atlas will, by default, only display content belonging to one of the defined display categories in the app. That means that video with a category that doesn't belong to any local category will not be available in the app. If you want to change that behavior, you can set `content.showAllContent` to `true` in the config file. That will make the app display all the content, regardless of the category.
+Atlas will, by default, only display content belonging to one of the defined display categories in the app. That means that video with a category that doesn't belong to any local category will not be available in the app. If you want to change that behavior, so app will display all the content regardless of the category, you can adjust this in Orion service.
 
-You are free to use existing metaprotocol (Query Node) categories, but you can also create your own that match your Gateway's specific needs. To get a list of all the existing categories you can use the following QN query:
+You are free to use existing metaprotocol (Orion) categories, but you can also create your own that match your Gateway's specific needs. To get a list of all the existing categories you can use the following QN query:
 
 ```graphql
 query {

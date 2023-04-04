@@ -54,7 +54,7 @@ type CreateEditChannelData = {
 
 export const useCreateEditChannelSubmit = () => {
   const { joystream, proxyCallback } = useJoystream()
-  const { channelId, memberId, setActiveUser, refetchUserMemberships, activeMembership } = useUser()
+  const { channelId, memberId, setActiveUser, refetchUserMemberships } = useUser()
   const addNewChannelIdToUploadsStore = useUploadsStore((state) => state.actions.addNewChannelId)
   const getBucketsConfigForNewChannel = useBucketsConfigForNewChannel()
   const { channelStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
@@ -66,8 +66,7 @@ export const useCreateEditChannelSubmit = () => {
 
   const rawMetadataProcessor = useAppActionMetadataProcessor(
     (memberId && memberId.toString()) || '',
-    AppActionActionType.CreateChannel,
-    activeMembership?.totalChannelsCreated || 0
+    AppActionActionType.CreateChannel
   )
 
   return useCallback(
