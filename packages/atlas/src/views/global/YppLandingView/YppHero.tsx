@@ -165,24 +165,22 @@ export const YppHero: FC<YppHeroProps> = ({
             height="824"
           />
         </HeroImageWrapper>
-        <LayoutGrid>
-          <GridItem colStart={{ base: 1, sm: 2 }} colSpan={{ base: 12, sm: 10 }}>
-            {items && (
-              <StyledInfiniteCarousel
-                title="Recent verified channels"
-                itemWidth={200}
-                items={items}
-                subTitle="What is a verified channel?"
-                informationProps={{
-                  multiline: true,
-                  placement: 'top-end',
-                  text: `These ${atlasConfig.general.appName} channels applied to the YouTube Partner Program and got through the verification process successfully.`,
-                }}
-              />
-            )}{' '}
-          </GridItem>
-        </LayoutGrid>
       </StyledLimitedWidthContainer>
+      {items && items.length >= 7 && (
+        <StyledInfiniteCarousel
+          headerGridItemProps={{ colStart: { base: 1, lg: 2 }, colSpan: { base: 12, lg: 10 } }}
+          carouselHorizonthalOffset={-32}
+          title="Recent verified channels"
+          itemWidth={200}
+          items={items}
+          subTitle="What is a verified channel?"
+          informationProps={{
+            multiline: true,
+            placement: 'top-end',
+            text: `These ${atlasConfig.general.appName} channels applied to the YouTube Partner Program and got through the verification process successfully.`,
+          }}
+        />
+      )}
     </BackgroundContainer>
   )
 }
