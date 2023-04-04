@@ -282,10 +282,6 @@ features:
         emoji: '😠'
         name: 'anger'
 content:
-  blockedDataObjectIds: [] # Array of data object IDs that should be blocked from being displayed in the app
-  blockedVideoIds: [] # Array of video IDs that should be blocked from being displayed in the app
-  blockedChannelIds: [] # Array of channel IDs that should be blocked from being displayed in the app
-
   officialJoystreamChannelId: null # ID of the official Joystream channel to display "Official Joystream updates" section on the homepage - can be set to null to disable this section
 
   categories: # List of display categories to be used in the app. Those are local to the application and are related to metaprotocol categories via 'videoCategories' array.
@@ -394,7 +390,6 @@ content:
       coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/atlas/images/news-and-politics.webp'
       videoCategories: ['915-2']
       defaultVideoCategory: '915-2'
-  showAllContent: true # With this disabled, Atlas will display only content from display categories defined above. If you want your app to display all Joystream content, set this to true.
 
   languages: # List of languages to be used in the app. Those will be used when setting video's language, for adding subtitles, etc.
     - isoCode: ar
