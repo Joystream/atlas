@@ -34,23 +34,16 @@ export const useHandleVideoWorkspaceSubmit = () => {
 
   const { joystream, proxyCallback } = useJoystream()
   const startFileUpload = useStartFileUpload()
-  const { channelId, memberId, activeMembership } = useAuthorizedUser()
+  const { channelId, memberId } = useAuthorizedUser()
 
   const client = useApolloClient()
   const handleTransaction = useTransaction()
   const removeDrafts = useDraftStore((state) => state.actions.removeDrafts)
   const { tabData } = useVideoWorkspaceData()
   const channelBucketsCount = useChannelsStorageBucketsCount(channelId)
-  const channelVideosCount =
-    activeMembership?.channels.find((channel) => channel.id === channelId)?.totalVideosCreated || 0
-
   const { videoStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
 
-  const rawMetadataProcessor = useAppActionMetadataProcessor(
-    channelId,
-    AppActionActionType.CreateVideo,
-    channelVideosCount
-  )
+  const rawMetadataProcessor = useAppActionMetadataProcessor(channelId, AppActionActionType.CreateVideo)
 
   return useCallback(
     async (data: VideoFormData, videoInfo?: VideoWorkspace, assetsToBeRemoved?: string[]) => {

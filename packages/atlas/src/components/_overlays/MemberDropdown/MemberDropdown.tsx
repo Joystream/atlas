@@ -7,7 +7,7 @@ import { useTransition } from 'react-spring'
 import useResizeObserver from 'use-resize-observer'
 
 import { absoluteRoutes } from '@/config/routes'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { cVar } from '@/styles'
@@ -34,7 +34,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const [disableScrollDuringAnimation, setDisableScrollDuringAnimation] = useState(false)
 
     const [showSendDialog, setShowSendDialog] = useState(false)
-    const { url: memberAvatarUrl } = useMemberAvatar(activeMembership)
+    const { url: memberAvatarUrl } = getMemberAvatar(activeMembership)
     const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
 
     const memoizedChannelStateBloatBond = useMemo(() => {

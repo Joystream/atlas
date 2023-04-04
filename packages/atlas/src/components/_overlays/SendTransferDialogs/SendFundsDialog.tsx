@@ -22,7 +22,7 @@ import { TokenInput } from '@/components/_inputs/TokenInput'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useFee, useJoystream, useTokenPrice } from '@/providers/joystream/joystream.hooks'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { formatJoystreamAddress, isValidAddressPolkadotAddress } from '@/utils/address'
@@ -247,7 +247,7 @@ type ResolvedAvatarProps = {
   member: BasicMembershipFieldsFragment
 } & AvatarProps
 const ResolvedAvatar: FC<ResolvedAvatarProps> = ({ member }) => {
-  const { url, isLoadingAsset } = useMemberAvatar(member)
+  const { url, isLoadingAsset } = getMemberAvatar(member)
   return (
     <Tooltip text={member?.handle} placement="top">
       <Avatar assetUrl={url} loading={isLoadingAsset} size="bid" />

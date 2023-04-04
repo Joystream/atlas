@@ -7,7 +7,7 @@ import { SvgAlertsInformative24 } from '@/assets/icons'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { atlasConfig } from '@/config'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useJoystream } from '@/providers/joystream/joystream.hooks'
 import { formatDateTime } from '@/utils/time'
 
@@ -247,7 +247,7 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({
 }
 
 export const MemberWithResolvedAvatar: FC<{ member: BasicMembershipFieldsFragment }> = ({ member }) => {
-  const { isLoadingAsset, url } = useMemberAvatar(member)
+  const { isLoadingAsset, url } = getMemberAvatar(member)
   return <StyledOutputPill avatarUri={url} isLoadingAvatar={isLoadingAsset} handle={member.handle} withAvatar />
 }
 

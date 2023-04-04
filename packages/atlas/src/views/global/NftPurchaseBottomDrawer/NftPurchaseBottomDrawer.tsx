@@ -22,7 +22,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { useNftState } from '@/hooks/useNftState'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useFee, useJoystream, useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
 import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 import { useNftActions } from '@/providers/nftActions/nftActions.hooks'
@@ -64,7 +64,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
   const { userBid, canChangeBid, userBidUnlockDate } = useNftState(nft)
   const thumbnailUrl = nft?.video.thumbnailPhoto?.resolvedUrl
   const creatorAvatarUrl = nft?.video.channel.avatarPhoto?.resolvedUrl
-  const { url: ownerMemberAvatarUrl } = useMemberAvatar(
+  const { url: ownerMemberAvatarUrl } = getMemberAvatar(
     nft?.owner.__typename === 'NftOwnerMember' ? nft.owner.member : null
   )
   const mdMatch = useMediaMatch('md')
@@ -282,8 +282,8 @@ export const NftPurchaseBottomDrawer: FC = () => {
     }
   }, [isOpen, setValue])
 
-  const { isLoadingAsset: userBidAvatarLoading, url: userBidAvatarUrl } = useMemberAvatar(userBid?.bidder)
-  const { isLoadingAsset: topBidderAvatarLoading, url: topBidderAvatarUrl } = useMemberAvatar(topBidder)
+  const { isLoadingAsset: userBidAvatarLoading, url: userBidAvatarUrl } = getMemberAvatar(userBid?.bidder)
+  const { isLoadingAsset: topBidderAvatarLoading, url: topBidderAvatarUrl } = getMemberAvatar(topBidder)
   const timeToUnlockSeconds = userBidUnlockDate ? differenceInSeconds(userBidUnlockDate, new Date()) : 0
 
   return (

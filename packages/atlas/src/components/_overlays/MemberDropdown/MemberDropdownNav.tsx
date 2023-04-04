@@ -25,7 +25,7 @@ import { Tooltip } from '@/components/Tooltip'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useUserStore } from '@/providers/user/user.store'
 import { cVar } from '@/styles'
 import { isMobile } from '@/utils/browser'
@@ -93,7 +93,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
 }) => {
   const navigate = useNavigate()
   const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
-  const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
+  const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
   const channelAvatarUrl = selectedChannel?.avatarPhoto?.resolvedUrl
   const setSignInModalOpen = useUserStore((state) => state.actions.setSignInModalOpen)
   const memberAvatarWrapperRef = useRef<HTMLButtonElement>(null)

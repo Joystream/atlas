@@ -40,6 +40,7 @@ export const OptionCardBase: FC<OptionCardProps> = ({
 }) => {
   return (
     <OptionCardLabel disabled={disabled} checked={checked} error={error} className={className}>
+      <span className="underline" />
       <InputAndTitleWrapper>
         <TitleIconWrapper>
           {!!icon && (
