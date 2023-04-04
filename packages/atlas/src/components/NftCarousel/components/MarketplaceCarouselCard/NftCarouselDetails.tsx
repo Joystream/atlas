@@ -21,7 +21,7 @@ import { BackgroundVideoPlayer } from '@/components/_video/BackgroundVideoPlayer
 import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
-import { useAsset, useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { transitions } from '@/styles'
 
 export const NftCarouselDetails = ({
@@ -34,36 +34,42 @@ export const NftCarouselDetails = ({
   slideNext: () => void
 }) => {
   const navigate = useNavigate()
-  const creatorAvatar = useAsset(nft?.video.channel.avatarPhoto)
+  const creatorAvatarUrl =
+    nft.owner.__typename === 'NftOwnerChannel'
+      ? nft.owner.channel.avatarPhoto?.resolvedUrl
+      : getMemberAvatar(nft.owner.member).url
+
   const [timeLeft, setTimeLeft] = useState<string | null>(null)
-  const { url: thumbnailUrl, isLoadingAsset: isVideoLoading } = useAsset(nft?.video.thumbnailPhoto)
+  const thumbnailUrl = nft.video.thumbnailPhoto?.resolvedUrl
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
 
-  const { url: mediaUrl, isLoadingAsset: isPosterLoading } = useAsset(nft.video.media)
+  const mediaUrl = nft.video.media?.resolvedUrl
 
-  const isLoading = isPosterLoading || isVideoLoading
+  const isLoading = !thumbnailUrl || !mediaUrl
 
-  const auction = nft?.transactionalStatusAuction || null
-  const englishAuction = auction?.auctionType.__typename === 'AuctionTypeEnglish' && auction.auctionType
-  const plannedEndDateBlockTimestamp = englishAuction && convertBlockToMsTimestamp(englishAuction.plannedEndAtBlock)
-  // const auctionPlannedEndDate = plannedEndDateBlockTimestamp ? new Date(plannedEndDateBlockTimestamp) : undefined
-
-  const { url: ownerMemberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
-
-  const owner = nft?.isOwnedByChannel
-    ? {
-        name: nft.creatorChannel.title || undefined,
-        assetUrl: creatorAvatar.url || undefined,
-        onClick: () => navigate(absoluteRoutes.viewer.channel(nft.creatorChannel.id)),
-      }
-    : nft?.ownerMember?.id
-    ? {
-        name: nft?.ownerMember?.handle,
-        assetUrl: ownerMemberAvatarUrl,
-        onClick: () => navigate(absoluteRoutes.viewer.member(nft?.ownerMember?.handle)),
-      }
-    : undefined
   const nftStatus = getNftStatus(nft, nft?.video)
+  const plannedEndDateBlockTimestamp =
+    nftStatus?.status === 'auction' &&
+    nftStatus.auctionPlannedEndBlock &&
+    convertBlockToMsTimestamp(nftStatus.auctionPlannedEndBlock)
+
+  const name = nft.owner.__typename === 'NftOwnerChannel' ? nft.video.channel.title : nft.owner.member.handle
+
+  const owner =
+    nft?.owner.__typename === 'NftOwnerChannel'
+      ? {
+          name,
+          assetUrl: creatorAvatarUrl,
+          onClick: () => navigate(absoluteRoutes.viewer.channel(nft.video.channel.id)),
+        }
+      : nft?.owner.__typename === 'NftOwnerMember'
+      ? {
+          name,
+          assetUrl: creatorAvatarUrl,
+          onClick: () => name && navigate(absoluteRoutes.viewer.member(name)),
+        }
+      : undefined
+
   const nftDetails = {
     buyNow:
       nftStatus?.status === 'auction' || nftStatus?.status === 'buy-now'
@@ -73,15 +79,15 @@ export const NftCarouselDetails = ({
         : undefined,
     creator: {
       name: nft?.video.channel.title || undefined,
-      loading: creatorAvatar.isLoadingAsset,
-      assetUrl: creatorAvatar.url,
+      assetUrl: creatorAvatarUrl,
       onClick: () => navigate(absoluteRoutes.viewer.channel(nft?.video.channel.id)),
     },
     title: nft.video.title,
     type: 'nft',
-    topBid: nft?.transactionalStatusAuction?.topBid?.amount
-      ? hapiBnToTokenNumber(new BN(nft?.transactionalStatusAuction?.topBid?.amount))
-      : undefined,
+    topBid:
+      nftStatus?.status === 'auction' && nftStatus.topBid?.amount
+        ? hapiBnToTokenNumber(new BN(nftStatus.topBid?.amount))
+        : undefined,
   }
 
   useLayoutEffect(() => {
@@ -145,7 +151,6 @@ export const NftCarouselDetails = ({
                     url: nftDetails.creator?.assetUrl,
                     tooltipText: `Creator: ${nftDetails.creator?.name}`,
                     onClick: nftDetails.creator?.onClick,
-                    loading: nftDetails.creator?.loading,
                   },
                   ...(owner
                     ? [

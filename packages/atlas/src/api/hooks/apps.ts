@@ -6,16 +6,35 @@ import { useGetAppActionSignatureMutation } from '@/api/queries/__generated__/ad
 import { AppActionActionType } from '@/api/queries/__generated__/baseTypes.generated'
 import { atlasConfig } from '@/config'
 import { RawMetadataProcessorFn } from '@/joystream-lib/types'
+import { useUser } from '@/providers/user/user.hooks'
+
+import { useGetTotalChannelsAndTotalVideosLazyQuery } from '../queries/__generated__/channels.generated'
 
 export const useAppActionMetadataProcessor = (
   creatorId: string,
-  actionType: AppActionActionType,
-  nonce: number
+  actionType: AppActionActionType
 ): RawMetadataProcessorFn => {
   const [signatureMutation] = useGetAppActionSignatureMutation()
+  const { channelId, memberId } = useUser()
+  const [getTotalChannelsAndTotalVideos] = useGetTotalChannelsAndTotalVideosLazyQuery()
 
   return useCallback(
     async (rawMetadataU8a: Uint8Array, assetsU8a: Uint8Array) => {
+      if (!channelId || !memberId) {
+        throw Error("channelId or memberId wasn't provided")
+      }
+      const { data } = await getTotalChannelsAndTotalVideos({
+        variables: {
+          channelId: channelId || '',
+          memberId: memberId || '',
+        },
+        fetchPolicy: 'network-only',
+      })
+      const nonce =
+        (actionType === AppActionActionType.CreateVideo
+          ? data?.membershipById?.channels[0].totalVideosCreated
+          : data?.membershipById?.totalChannelsCreated) || 0
+
       if (atlasConfig.general.appId) {
         const { data } = await signatureMutation({
           variables: {
@@ -37,6 +56,6 @@ export const useAppActionMetadataProcessor = (
       }
       return rawMetadataU8a
     },
-    [creatorId, nonce, signatureMutation, actionType]
+    [channelId, memberId, getTotalChannelsAndTotalVideos, actionType, signatureMutation, creatorId]
   )
 }

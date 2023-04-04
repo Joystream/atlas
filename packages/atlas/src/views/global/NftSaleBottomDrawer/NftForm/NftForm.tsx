@@ -13,7 +13,7 @@ import { atlasConfig } from '@/config'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { NftBuyNowInputMetadata, NftSaleInputMetadata } from '@/joystream-lib/types'
 import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useFee } from '@/providers/joystream/joystream.hooks'
 import { useUser } from '@/providers/user/user.hooks'
@@ -107,7 +107,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
 
   const channelAvatarUrl = video?.channel.avatarPhoto?.resolvedUrl
   const thumbnailPhotoUrl = video?.thumbnailPhoto?.resolvedUrl
-  const { url: memberAvatarUri } = useMemberAvatar(activeMembership)
+  const { url: memberAvatarUri } = getMemberAvatar(activeMembership)
 
   const [openModal, closeModal] = useConfirmationModal()
 

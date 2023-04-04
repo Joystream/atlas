@@ -5,7 +5,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { useCommentEdits } from '@/api/hooks/comments'
 import { CommentFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { absoluteRoutes } from '@/config/routes'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { cVar, transitions } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'
 
@@ -18,7 +18,7 @@ type CommentEditHistoryProps = {
 
 export const CommentEditHistory: FC<CommentEditHistoryProps> = ({ originalComment }) => {
   const { commentEdits, loading } = useCommentEdits(originalComment?.id)
-  const { url: memberAvatarUrl, isLoadingAsset } = useMemberAvatar(originalComment?.author)
+  const { url: memberAvatarUrl, isLoadingAsset } = getMemberAvatar(originalComment?.author)
 
   const placeholderItems = createPlaceholderData(3)
 

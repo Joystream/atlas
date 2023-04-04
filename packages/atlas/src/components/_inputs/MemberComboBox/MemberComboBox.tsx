@@ -10,7 +10,7 @@ import {
 } from '@/api/queries/__generated__/memberships.generated'
 import { SvgActionCancel } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { createLookup } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
 
@@ -137,7 +137,7 @@ type AvatarWithResolvedAssetProps = {
 }
 
 const AvatarWithResolvedAsset: FC<AvatarWithResolvedAssetProps> = ({ member }) => {
-  const { url, isLoadingAsset } = useMemberAvatar(member)
+  const { url, isLoadingAsset } = getMemberAvatar(member)
   return <Avatar assetUrl={url} loading={isLoadingAsset} />
 }
 
@@ -154,7 +154,7 @@ const StyledOutputPillWithResolvedAsset: FC<StyledOutputPillWithResolvedAssetPro
   onKeyPress,
   focused,
 }) => {
-  const { url, isLoadingAsset } = useMemberAvatar(member)
+  const { url, isLoadingAsset } = getMemberAvatar(member)
   return (
     <StyledOutputPill
       handle={member.handle}

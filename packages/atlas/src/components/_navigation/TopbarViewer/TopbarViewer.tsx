@@ -12,7 +12,7 @@ import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { useSearchStore } from '@/providers/search'
 import { useUser } from '@/providers/user/user.hooks'
@@ -33,7 +33,7 @@ export const TopbarViewer: FC = () => {
   const { isLoggedIn, activeMembership, signIn, isAuthLoading } = useUser()
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
 
-  const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
+  const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
 
   const { pathname, search } = useLocation()
   const mdMatch = useMediaMatch('md')

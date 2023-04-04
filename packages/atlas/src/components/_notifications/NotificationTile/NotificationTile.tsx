@@ -7,7 +7,7 @@ import { Text } from '@/components/Text'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { NotificationRecord } from '@/providers/notifications/notifications.types'
 import { formatDateAgo } from '@/utils/time'
 
@@ -81,7 +81,7 @@ export const NotificationTile: FC<NotificationProps> = ({
   className,
 }) => {
   const { date, video, member, read } = notification
-  const { url: avatarUrl, isLoadingAsset: isLoadingAvatar } = useMemberAvatar(member)
+  const { url: avatarUrl, isLoadingAsset: isLoadingAvatar } = getMemberAvatar(member)
 
   const formattedDate = useMemo(() => {
     const differenceDays = differenceInDays(new Date(), date)

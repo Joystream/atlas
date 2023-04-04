@@ -15,7 +15,7 @@ import { Select } from '@/components/_inputs/Select'
 import { absoluteRoutes } from '@/config/routes'
 import { NFT_SORT_ACTIVITY_OPTIONS, NFT_SORT_OPTIONS } from '@/config/sorting'
 import { useHeadTags } from '@/hooks/useHeadTags'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useUser } from '@/providers/user/user.hooks'
 import { SentryLogger } from '@/utils/logs'
 
@@ -66,7 +66,7 @@ export const MemberView: FC = () => {
     }
   )
   const member = memberships?.find((member) => member.handle === handle)
-  const { url: avatarUrl, isLoadingAsset: avatarLoading } = useMemberAvatar(member)
+  const { url: avatarUrl, isLoadingAsset: avatarLoading } = getMemberAvatar(member)
 
   const toggleFilters = () => {
     setIsFiltersOpen((value) => !value)
