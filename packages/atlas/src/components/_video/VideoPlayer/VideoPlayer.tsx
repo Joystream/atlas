@@ -85,7 +85,7 @@ export type VideoPlayerProps = {
   isEmbedded?: boolean
   isPlayNextDisabled?: boolean
   availableTextTracks?: AvailableTrack[]
-  isFixed?: boolean
+  isMinified?: boolean
   scrollIntoView?: () => void
 } & VideoJsConfig
 
@@ -118,7 +118,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     isEmbedded,
     isPlayNextDisabled,
     availableTextTracks,
-    isFixed,
+    isMinified,
     scrollIntoView,
     ...videoJsConfig
   },
@@ -778,7 +778,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                   </CurrentTime>
                 </CurrentTimeWrapper>
                 <ScreenControls>
-                  {availableTextTracks && !!availableTextTracks.length && (
+                  {!isMinified && availableTextTracks && !!availableTextTracks.length && (
                     <PlayerControlButton
                       tooltipText={captionsEnabled ? 'Turn off subtitles / CC (c)' : 'Subtitles / CC (c)'}
                       onClick={handleToggleCaptions}
@@ -786,7 +786,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                       {captionsEnabled ? <SvgControlsCaptionsSolid /> : <SvgControlsCaptionsOutline />}
                     </PlayerControlButton>
                   )}
-                  {mdMatch && !isEmbedded && !player?.isFullscreen() && (
+                  {!isMinified && mdMatch && !isEmbedded && !player?.isFullscreen() && (
                     <PlayerControlButton
                       tooltipEnabled={!isSettingsPopoverOpened}
                       onClick={toggleCinematicView}
@@ -799,7 +799,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                       )}
                     </PlayerControlButton>
                   )}
-                  {isPiPSupported && (
+                  {!isMinified && isPiPSupported && (
                     <PlayerControlButton
                       onClick={handlePictureInPicture}
                       tooltipText="Picture-in-picture"
@@ -808,26 +808,34 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                       {isPiPEnabled ? <StyledSvgControlsPipOff /> : <StyledSvgControlsPipOn />}
                     </PlayerControlButton>
                   )}
-                  <SettingsButtonWithPopover
-                    onSettingsPopoverToggle={setIsSettingsPopoverOpened}
-                    isSettingsPopoverOpened={isSettingsPopoverOpened}
-                    playerHeightWithoutCustomControls={playerHeightWithoutCustomControls}
-                    boundariesElement={playerRef.current}
-                    isFullScreen={isFullScreen}
-                    availableTracks={availableTextTracks}
-                    onTrackChange={handleTrackChange}
-                    activeTrack={activeTrack}
-                    player={player}
-                  />
-                  <PlayerControlButton
-                    isDisabled={!isFullScreenEnabled}
-                    tooltipEnabled={!isSettingsPopoverOpened}
-                    tooltipPosition="top-right"
-                    tooltipText={isFullScreen ? 'Exit full screen (f)' : 'Full screen (f)'}
-                    onClick={handleFullScreen}
-                  >
-                    {isFullScreen ? <StyledSvgControlsSmallScreen /> : <StyledSvgControlsFullScreen />}
-                  </PlayerControlButton>
+                  {!isMinified && (
+                    <SettingsButtonWithPopover
+                      onSettingsPopoverToggle={setIsSettingsPopoverOpened}
+                      isSettingsPopoverOpened={isSettingsPopoverOpened}
+                      playerHeightWithoutCustomControls={playerHeightWithoutCustomControls}
+                      boundariesElement={playerRef.current}
+                      isFullScreen={isFullScreen}
+                      availableTracks={availableTextTracks}
+                      onTrackChange={handleTrackChange}
+                      activeTrack={activeTrack}
+                      player={player}
+                    />
+                  )}
+                  {isMinified ? (
+                    <PlayerControlButton tooltipEnabled tooltipText="Back to video" onClick={() => scrollIntoView?.()}>
+                      Top
+                    </PlayerControlButton>
+                  ) : (
+                    <PlayerControlButton
+                      isDisabled={!isFullScreenEnabled}
+                      tooltipEnabled={!isSettingsPopoverOpened}
+                      tooltipPosition="top-right"
+                      tooltipText={isFullScreen ? 'Exit full screen (f)' : 'Full screen (f)'}
+                      onClick={handleFullScreen}
+                    >
+                      {isFullScreen ? <StyledSvgControlsSmallScreen /> : <StyledSvgControlsFullScreen />}
+                    </PlayerControlButton>
+                  )}
                   {isEmbedded && (
                     <a
                       onClick={(e) => e.stopPropagation()}

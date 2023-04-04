@@ -10,6 +10,7 @@ import { useAddVideoView, useFullVideo } from '@/api/hooks/video'
 import { SvgActionFlag, SvgActionMore, SvgActionShare } from '@/assets/icons'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { MiniVideo } from '@/components/MiniVideo'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Tooltip } from '@/components/Tooltip'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
@@ -20,7 +21,6 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NftWidget, useNftWidget } from '@/components/_nft/NftWidget'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { ReportModal } from '@/components/_overlays/ReportModal'
-import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { AvailableTrack } from '@/components/_video/VideoPlayer/SettingsButtonWithPopover'
 import { atlasConfig } from '@/config'
 import { displayCategories } from '@/config/categories'
@@ -57,7 +57,6 @@ import {
   PlayerWrapper,
   StyledCallToActionWrapper,
   StyledReactionStepper,
-  Test,
   TitleContainer,
   TitleText,
   VideoUtils,
@@ -384,25 +383,26 @@ export const VideoView: FC = () => {
               {videoNotAvailable ? (
                 <VideoUnavailableError isCinematic={isCinematic} />
               ) : !loading && video ? (
-                <Test in={isInView}>
-                  <VideoPlayer
-                    onCloseShareDialog={() => setShareDialogOpen(false)}
-                    onAddVideoView={handleAddVideoView}
-                    isShareDialogOpen={isShareDialogOpen}
-                    isVideoPending={!video?.media?.isAccepted}
-                    videoId={video?.id}
-                    autoplay
-                    src={mediaUrl}
-                    onEnd={handleVideoEnd}
-                    onTimeUpdated={handleTimeUpdate}
-                    startTime={startTimestamp}
-                    isPlayNextDisabled={pausePlayNext}
-                    ref={playerRef}
-                    availableTextTracks={availableTracks}
-                    isFixed={isInView}
-                    scrollIntoView={() => ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-                  />
-                </Test>
+                <MiniVideo
+                  author={video.channel.title}
+                  title={video.title}
+                  isInView={isInView}
+                  onCloseShareDialog={() => setShareDialogOpen(false)}
+                  onAddVideoView={handleAddVideoView}
+                  isShareDialogOpen={isShareDialogOpen}
+                  isVideoPending={!video?.media?.isAccepted}
+                  videoId={video?.id}
+                  autoplay
+                  src={mediaUrl}
+                  onEnd={handleVideoEnd}
+                  onTimeUpdated={handleTimeUpdate}
+                  startTime={startTimestamp}
+                  isPlayNextDisabled={pausePlayNext}
+                  ref={playerRef}
+                  availableTextTracks={availableTracks}
+                  isMinified={!isInView}
+                  scrollIntoView={() => ref.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })}
+                />
               ) : (
                 <PlayerSkeletonLoader />
               )}
