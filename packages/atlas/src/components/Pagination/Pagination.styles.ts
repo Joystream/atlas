@@ -60,9 +60,13 @@ export const PaginationButton = styled(Button)<PaginationButtonProps>`
   user-select: none;
 
   :hover,
-  :focus,
-  :active {
+  :focus-visible {
+    background-color: ${cVar('colorBackgroundStrongAlpha')};
     color: ${cVar('colorCoreNeutral50')};
+  }
+
+  :active {
+    ${buttonActiveState};
   }
 
   ${({ isActive }) => isActive && buttonActiveState};
