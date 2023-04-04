@@ -26,6 +26,8 @@ export const TextAreaContainer = styled.div`
   position: relative;
   display: inline-block;
   width: 100%;
+  border-radius: 2px;
+  overflow: hidden;
 `
 
 export const CustomBorder = styled.div<{ disabled?: boolean }>`

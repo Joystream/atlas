@@ -10,8 +10,8 @@ export type NodeWidthProps = {
 }
 
 export const inputBorderColors = {
-  default: cVar('colorBorderAlpha'),
-  hover: cVar('colorBorderStrongAlpha'),
+  default: cVar('colorBorderMutedAlpha'),
+  hover: cVar('colorBorderAlpha'),
   error: cVar('colorBorderError'),
   focus: cVar('colorBorderPrimary'),
 }
@@ -28,12 +28,23 @@ export const getSharedInputStyles = (ignoreBoxShadow?: boolean) => ({
     caret-color: ${cVar('colorTextStrong')};
     background-color: ${cVar('colorBackgroundMutedAlpha')};
     transition: ${cVar('animationTransitionFast')};
-    transition-property: background-color, color, box-shadow;
-    box-shadow: inset 0 -1px 0 0 ${ignoreBoxShadow ? 'transparent' : inputBorderColors.default};
+    transition-property: background-color, color;
 
     /* ios specific - fixes issue with missing box-shadow and rounded corners in input component */
-    border-radius: 0;
+    border-radius: ${cVar('radiusSmall')};
     appearance: none;
+
+    & + span {
+      transition: ${cVar('animationTransitionFast')};
+      transition-property: background-color, transform;
+      width: 100%;
+      background-color: ${ignoreBoxShadow ? 'transparent' : inputBorderColors.default};
+      position: absolute;
+      height: 2px;
+      left: 0;
+      bottom: 0;
+      transform: translateY(1px);
+    }
 
     ::placeholder {
       font: inherit;
@@ -45,10 +56,15 @@ export const getSharedInputStyles = (ignoreBoxShadow?: boolean) => ({
   `,
   hover: css`
     background-color: ${cVar('colorBackgroundAlpha')};
-    box-shadow: inset 0 -1px 0 0 ${ignoreBoxShadow ? 'transparent' : inputBorderColors.hover};
+
+    & + span {
+      background-color: ${ignoreBoxShadow ? 'transparent' : inputBorderColors.hover};
+    }
   `,
   error: css`
-    box-shadow: inset 0 -1px 0 0 ${ignoreBoxShadow ? 'transparent' : inputBorderColors.error};
+    & + span {
+      background-color: ${ignoreBoxShadow ? 'transparent' : inputBorderColors.error};
+    }
   `,
   disabled: css`
     opacity: 0.5;
@@ -56,8 +72,12 @@ export const getSharedInputStyles = (ignoreBoxShadow?: boolean) => ({
     cursor: not-allowed;
   `,
   focus: css`
+    & + span {
+      background-color: ${ignoreBoxShadow ? 'transparent' : inputBorderColors.focus};
+      transform: translateY(0);
+    }
+
     background-color: ${cVar('colorBackgroundMutedAlpha')};
-    box-shadow: inset 0 -2px 0 0 ${ignoreBoxShadow ? 'transparent' : inputBorderColors.focus};
   `,
 })
 

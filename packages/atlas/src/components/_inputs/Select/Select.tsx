@@ -133,6 +133,8 @@ export const _Select = <T extends unknown>(
           </ValueAndPlaceholderText>
           <SelectChevronWrapper>{isOpen ? <SvgActionChevronT /> : <SvgActionChevronB />}</SelectChevronWrapper>
         </SelectButton>
+        <span />
+
         {ReactDOM.createPortal(
           <div ref={setDropdownRef} style={{ ...styles.popper }} {...attributes.popper}>
             <SelectMenu {...getMenuProps()}>
