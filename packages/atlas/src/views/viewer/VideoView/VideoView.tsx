@@ -10,7 +10,7 @@ import { useAddVideoView, useFullVideo } from '@/api/hooks/video'
 import { SvgActionFlag, SvgActionMore, SvgActionShare } from '@/assets/icons'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { MiniVideo } from '@/components/MiniVideo'
+import { MinimizedPlayer } from '@/components/MinimizedPlayer/MinimizedPlayer'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Tooltip } from '@/components/Tooltip'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
@@ -383,7 +383,7 @@ export const VideoView: FC = () => {
               {videoNotAvailable ? (
                 <VideoUnavailableError isCinematic={isCinematic} />
               ) : !loading && video ? (
-                <MiniVideo
+                <MinimizedPlayer
                   author={video.channel.title}
                   title={video.title}
                   isInView={isInView}
@@ -400,8 +400,6 @@ export const VideoView: FC = () => {
                   isPlayNextDisabled={pausePlayNext}
                   ref={playerRef}
                   availableTextTracks={availableTracks}
-                  isMinified={!isInView}
-                  scrollIntoView={() => ref.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })}
                 />
               ) : (
                 <PlayerSkeletonLoader />
