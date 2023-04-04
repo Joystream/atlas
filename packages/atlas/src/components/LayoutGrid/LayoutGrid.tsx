@@ -15,7 +15,7 @@ export const LayoutGrid = styled.div`
   }
 `
 
-type GridItemProps = {
+export type GridItemProps = {
   colStart?: number | 'initial' | ReponsivenessObject
   colSpan?: number | ReponsivenessObject
   rowStart?: number | 'initial' | ReponsivenessObject

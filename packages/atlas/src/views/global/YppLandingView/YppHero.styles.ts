@@ -54,8 +54,6 @@ export const BackImage = styled.img`
 
 export const StyledInfiniteCarousel = styled(InfiniteCarousel)`
   margin-top: ${sizes(16)};
-  text-align: left;
-  overflow: unset;
   ${media.md} {
     margin-top: ${sizes(24)};
   }
