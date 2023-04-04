@@ -60,9 +60,9 @@ export const PaginationButton = styled(Button)<PaginationButtonProps>`
   user-select: none;
 
   :hover,
-  :focus,
+  :focus-visible,
   :active {
-    background-color: ${cVar('colorCoreNeutral700Lighten')};
+    background-color: ${cVar('colorBackgroundStrongAlpha')};
     color: ${cVar('colorCoreNeutral50')};
   }
 
