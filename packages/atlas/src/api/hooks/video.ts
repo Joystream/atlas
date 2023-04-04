@@ -20,7 +20,7 @@ import {
   useGetTop10VideosThisWeekQuery,
   useGetVideosCountQuery,
 } from '@/api/queries/__generated__/videos.generated'
-import { createVideoWhereObjectWithFilters, publicVideoFilter } from '@/config/contentFilter'
+import { publicVideoFilter } from '@/config/contentFilter'
 
 export const useFullVideo = (
   id: string,
@@ -33,7 +33,7 @@ export const useFullVideo = (
       ...variables,
       where: {
         id_eq: id,
-        ...createVideoWhereObjectWithFilters(variables?.where),
+        ...variables?.where,
       },
     },
   })
@@ -51,7 +51,7 @@ export const useChannelPreviewVideos = (
   const { data, ...rest } = useGetBasicVideosQuery({
     ...opts,
     variables: {
-      where: createVideoWhereObjectWithFilters({ ...publicVideoFilter, channel: { id_eq: channelId } }),
+      where: { ...publicVideoFilter, channel: { id_eq: channelId } },
       orderBy: VideoOrderByInput.CreatedAtDesc,
       offset: 0,
       limit: 10,
@@ -91,10 +91,7 @@ export const useBasicVideos = (
 ) => {
   const { data, ...queryRest } = useGetBasicVideosQuery({
     ...opts,
-    variables: {
-      ...variables,
-      where: createVideoWhereObjectWithFilters(variables?.where),
-    },
+    variables,
   })
   return {
     videos: data?.videos,
@@ -108,7 +105,7 @@ export const useBasicVideo = (
 ) => {
   const { data, ...rest } = useGetBasicVideosQuery({
     ...opts,
-    variables: { where: createVideoWhereObjectWithFilters({ id_eq: id }) },
+    variables: { where: { id_eq: id } },
   })
   return {
     video: data?.videos[0],
@@ -122,10 +119,7 @@ export const useTop10VideosThisWeek = (
 ) => {
   const { data, ...rest } = useGetTop10VideosThisWeekQuery({
     ...opts,
-    variables: {
-      ...variables,
-      where: createVideoWhereObjectWithFilters(variables?.where),
-    },
+    variables,
   })
   return {
     videos: data?.mostViewedVideosConnection.edges.map((video) => video.node),
@@ -139,10 +133,7 @@ export const useTop10VideosThisMonth = (
 ) => {
   const { data, ...rest } = useGetTop10VideosThisMonthQuery({
     ...opts,
-    variables: {
-      ...variables,
-      where: createVideoWhereObjectWithFilters(variables?.where),
-    },
+    variables,
   })
   return {
     videos: data?.mostViewedVideosConnection.edges.map((video) => video.node),

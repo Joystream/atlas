@@ -1,31 +1,4 @@
-import { ChannelWhereInput, InputMaybe, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
-import { atlasConfig } from '@/config/config'
-
-import { allUniqueVideoCategories } from './categories'
-
-export const createChannelWhereObjectWithFilters = (
-  channelWhereInput?: ChannelWhereInput | null
-): ChannelWhereInput => {
-  return {
-    ...channelWhereInput,
-  }
-}
-
-export const createVideoWhereObjectWithFilters = (
-  videoWhereInput?: VideoWhereInput | InputMaybe<VideoWhereInput>
-): VideoWhereInput => {
-  return {
-    ...videoWhereInput,
-
-    // filter by channel ids
-    channel: createChannelWhereObjectWithFilters(videoWhereInput?.channel),
-
-    // filter by category
-    ...(atlasConfig.content.showAllContent
-      ? { category: { ...videoWhereInput?.category, id_in: allUniqueVideoCategories } }
-      : { category: videoWhereInput?.category }),
-  }
-}
+import { ChannelWhereInput, VideoWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 
 export const publicChannelFilter: ChannelWhereInput = {
   isCensored_eq: false,

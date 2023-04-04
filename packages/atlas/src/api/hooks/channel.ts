@@ -29,7 +29,6 @@ import {
   useGetTop10ChannelsQuery,
   useUnfollowChannelMutation,
 } from '@/api/queries/__generated__/channels.generated'
-import { createChannelWhereObjectWithFilters } from '@/config/contentFilter'
 
 export const useBasicChannel = (
   id: string,
@@ -38,7 +37,7 @@ export const useBasicChannel = (
   const { data, ...rest } = useGetExtendedBasicChannelsQuery({
     ...opts,
     variables: {
-      where: { channel: createChannelWhereObjectWithFilters({ id_eq: id }) },
+      where: { channel: { id_eq: id } },
     },
   })
   return {
@@ -54,13 +53,7 @@ export const useFullChannel = (
 ) => {
   const { data, ...rest } = useGetExtendedFullChannelsQuery({
     ...opts,
-    variables: {
-      ...variables,
-      where: {
-        ...variables?.where,
-        channel: createChannelWhereObjectWithFilters({ ...variables?.where?.channel, id_eq: id }),
-      },
-    },
+    variables,
   })
   return {
     channel: data?.extendedChannels[0]?.channel,
@@ -75,13 +68,7 @@ export const useBasicChannels = (
 ) => {
   const { data, ...rest } = useGetExtendedBasicChannelsQuery({
     ...opts,
-    variables: {
-      ...variables,
-      where: {
-        ...variables?.where,
-        channel: createChannelWhereObjectWithFilters({ ...variables?.where?.channel }),
-      },
-    },
+    variables,
   })
   return {
     extendedChannels: data?.extendedChannels,
@@ -150,7 +137,6 @@ export const useTop10Channels = (
       ...variables,
       where: {
         ...variables?.where,
-        channel: createChannelWhereObjectWithFilters(variables?.where?.channel),
         activeVideosCount_gt: 0,
       },
     },
@@ -184,13 +170,7 @@ export const useDiscoverChannels = (
 ) => {
   const { data, ...rest } = useGetDiscoverChannelsQuery({
     ...opts,
-    variables: {
-      ...variables,
-      where: {
-        ...variables?.where,
-        channel: createChannelWhereObjectWithFilters({ ...variables?.where?.channel }),
-      },
-    },
+    variables,
   })
 
   const shuffledChannels = useShuffleResults<GetDiscoverChannelsQuery['mostRecentChannels'][number]>(
@@ -209,13 +189,7 @@ export const usePromisingChannels = (
 ) => {
   const { data, ...rest } = useGetPromisingChannelsQuery({
     ...opts,
-    variables: {
-      ...variables,
-      where: {
-        ...variables?.where,
-        channel: createChannelWhereObjectWithFilters({ ...variables?.where?.channel }),
-      },
-    },
+    variables,
   })
 
   const shuffledChannels = useShuffleResults<GetDiscoverChannelsQuery['mostRecentChannels'][number]>(
@@ -233,13 +207,7 @@ export const usePopularChannels = (
 ) => {
   const { data, ...rest } = useGetPopularChannelsQuery({
     ...opts,
-    variables: {
-      ...variables,
-      where: {
-        ...variables?.where,
-        channel: createChannelWhereObjectWithFilters({ ...variables?.where?.channel }),
-      },
-    },
+    variables,
   })
 
   const shuffledChannels = useShuffleResults<GetPopularChannelsQuery['extendedChannels'][number]>(
