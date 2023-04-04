@@ -1,7 +1,7 @@
 import { FC, Fragment, PropsWithChildren, useRef, useState } from 'react'
 
 import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 
 import { AvatarProps } from './Avatar'
 import {
@@ -95,7 +95,7 @@ type SingleAvatarProps = {
   size: AvatarProps['size']
 }
 const SingleAvatar: FC<SingleAvatarProps> = ({ avatar, loading: loadingProp, size }) => {
-  const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(
+  const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(
     avatar.__typename === 'Membership' ? avatar : null
   )
 

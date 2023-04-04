@@ -8,7 +8,7 @@ import { Text } from '@/components/Text'
 import { RadioInput } from '@/components/_inputs/RadioInput'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { formatDateTime } from '@/utils/time'
 
 import { Bid, SelectedBid } from './AcceptBidDialog.types'
@@ -46,7 +46,7 @@ export const AcceptBidList: FC<AcceptBidListProps> = ({ items, onSelect, selecte
 export const BidRow: FC<BidRowProps> = ({ bidder, createdAt, amount, amountUSD, selectedBid, onSelect }) => {
   const xsMatch = useMediaMatch('xs')
   const selected = selectedBid?.bidderId === bidder.id
-  const { url, isLoadingAsset } = useMemberAvatar(bidder)
+  const { url, isLoadingAsset } = getMemberAvatar(bidder)
   return (
     <BidRowWrapper selected={selected} onClick={() => onSelect?.(bidder.id, amount)}>
       <RadioInput

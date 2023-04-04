@@ -118,6 +118,15 @@ query GetChannelNftCollectors($channelId: String!, $orderBy: ChannelNftCollector
   }
 }
 
+query GetTotalChannelsAndTotalVideos($memberId: String!, $channelId: String!) {
+  membershipById(id: $memberId) {
+    totalChannelsCreated
+    channels(where: { id_eq: $channelId }) {
+      totalVideosCreated
+    }
+  }
+}
+
 # CHANGE: `ID` is now `String`
 mutation ReportChannel($channelId: String!, $rationale: String!) {
   reportChannel(channelId: $channelId, rationale: $rationale) {

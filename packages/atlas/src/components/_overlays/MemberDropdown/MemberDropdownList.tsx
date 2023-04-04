@@ -9,7 +9,7 @@ import { Avatar } from '@/components/Avatar'
 import { IconWrapper } from '@/components/IconWrapper'
 import { ListItem } from '@/components/ListItem'
 import { absoluteRoutes } from '@/config/routes'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 
 import { SectionContainer } from './MemberDropdown.styles'
 import { SwitchMemberItemListContainer } from './MemberDropdownList.styles'
@@ -97,7 +97,7 @@ type MemberListItemProps = {
   onClick: () => void
 }
 const MemberListItem: FC<MemberListItemProps> = ({ member, selected, onClick }) => {
-  const { url, isLoadingAsset } = useMemberAvatar(member)
+  const { url, isLoadingAsset } = getMemberAvatar(member)
   return (
     <ListItem
       onClick={onClick}

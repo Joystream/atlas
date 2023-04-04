@@ -1,4 +1,5 @@
 import { DataObjectType } from '@/api/queries/__generated__/baseTypes.generated'
+import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { BUILD_ENV } from '@/config/env'
 import { AssetLogger, ConsoleLogger, DataObjectResponseMetric, DistributorEventEntry } from '@/utils/logs'
 import { wait } from '@/utils/misc'
@@ -10,6 +11,18 @@ const imageAssetTypes: DataObjectType['__typename'][] = [
 ]
 const videoAssetTypes: DataObjectType['__typename'][] = ['DataObjectTypeVideoMedia']
 const subtitleAssetTypes: DataObjectType['__typename'][] = ['DataObjectTypeVideoSubtitle']
+
+export const getMemberAvatar = (member?: BasicMembershipFieldsFragment | null) => {
+  const avatar = member?.metadata?.avatar
+
+  if (avatar?.__typename === 'AvatarUri') {
+    return { url: avatar.avatarUri, isLoadingAsset: false }
+  } else if (avatar?.__typename === 'AvatarObject') {
+    return { url: avatar.avatarObject.resolvedUrl, isLoadingAsset: false }
+  }
+  // if avatar is `undefined` it means that avatar is not loaded yet, If it's `null` it means that it's not set
+  return { url: null, isLoadingAsset: avatar === null ? false : true }
+}
 
 export const testAssetDownload = (url: string, type: DataObjectType): Promise<number> => {
   return new Promise((_resolve, _reject) => {
