@@ -162,9 +162,40 @@ export const ControlsOverlay = styled.div<CustomControlsProps>`
   ${sharedOverlayStyles}
 
   @media (hover: hover) {
-    height: 8em;
     background: linear-gradient(180deg, transparent 0%, ${cVar('colorCoreNeutral900')} 100%);
     font-size: ${({ elevated: isFullScreen }) => (isFullScreen ? '18px' : '16px')};
+  }
+`
+
+export const MinimizedPlayerContorols = styled.div`
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  align-items: center;
+  transition: opacity, transform;
+  transition-duration: 200ms;
+  transition-timing-function: ${transitions.easing};
+  transition-delay: ${TRANSITION_DELAY};
+  z-index: ${zIndex.nearOverlay - 2};
+  background-color: ${cVar('colorCoreNeutral500Darken')};
+
+  > button {
+    transform: scale(2);
+    cursor: pointer;
+
+    :hover {
+      background-color: transparent;
+      backdrop-filter: none;
+    }
+
+    :last-of-type {
+      position: absolute;
+      right: 5px;
+      top: 5px;
+      transform: scale(1);
+    }
   }
 `
 
@@ -468,7 +499,7 @@ export const Container = styled.div<ContainerProps>`
   .vjs-user-inactive.vjs-playing,
   /* don't hide player controls when paused(mobile) */
   .vjs-user-inactive:not(.vjs-ended):not(.vjs-paused) {
-    ${ControlsOverlay}, ${EmbbeddedTopBarOverlay} {
+    ${ControlsOverlay}, ${MinimizedPlayerContorols},${EmbbeddedTopBarOverlay} {
       opacity: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 1 : 0)};
       visibility: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 'visible' : 'hidden')};
       ${CustomControls} {
@@ -496,7 +527,7 @@ export const Container = styled.div<ContainerProps>`
   .vjs-ended,
   .vjs-paused,
   .vjs-user-active:not(.vjs-waiting) {
-    ${ControlsOverlay}, ${EmbbeddedTopBarOverlay} {
+    ${ControlsOverlay}, ${MinimizedPlayerContorols} ,${EmbbeddedTopBarOverlay} {
       opacity: 1;
       visibility: visible;
       ${CustomControls} {
@@ -515,7 +546,7 @@ export const Container = styled.div<ContainerProps>`
 
   @media (hover: hover) {
     .vjs-user-active.vjs-playing {
-      ${ControlsOverlay}, ${EmbbeddedTopBarOverlay} {
+      ${ControlsOverlay}, ${MinimizedPlayerContorols},${EmbbeddedTopBarOverlay} {
         opacity: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 1 : 0)};
         visibility: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 'visible' : 'hidden')};
         ${CustomControls} {
@@ -542,7 +573,7 @@ export const Container = styled.div<ContainerProps>`
     }
 
     .vjs-playing:hover {
-      ${ControlsOverlay}, ${EmbbeddedTopBarOverlay} {
+      ${ControlsOverlay}, ${MinimizedPlayerContorols}, ${EmbbeddedTopBarOverlay} {
         opacity: 1;
         visibility: visible;
         ${CustomControls} {
@@ -567,7 +598,7 @@ export const Container = styled.div<ContainerProps>`
 
     .vjs-user-inactive.vjs-playing,
     .vjs-user-inactive.vjs-paused:not(.vjs-ended) {
-      ${ControlsOverlay}, ${EmbbeddedTopBarOverlay} {
+      ${ControlsOverlay}, ${MinimizedPlayerContorols},${EmbbeddedTopBarOverlay} {
         opacity: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 1 : 0)};
         visibility: ${({ isSettingsPopoverOpened }) => (isSettingsPopoverOpened ? 'visible' : 'hidden')};
         ${CustomControls} {
