@@ -53,7 +53,16 @@ export const useFullChannel = (
 ) => {
   const { data, ...rest } = useGetExtendedFullChannelsQuery({
     ...opts,
-    variables,
+    variables: {
+      ...variables,
+      where: {
+        ...variables?.where,
+        channel: {
+          ...variables?.where?.channel,
+          id_eq: id,
+        },
+      },
+    },
   })
   return {
     channel: data?.extendedChannels[0]?.channel,
