@@ -11,6 +11,7 @@ import {
 import { ErrorCode, JoystreamLibError, JoystreamLibErrorType } from '@/joystream-lib/errors'
 import { ExtrinsicResult, ExtrinsicStatus, ExtrinsicStatusCallbackFn } from '@/joystream-lib/types'
 import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 import { useUserStore } from '@/providers/user/user.store'
 import { createId } from '@/utils/createId'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
@@ -59,6 +60,7 @@ export const useTransaction = (): HandleTransactionFn => {
   const { displaySnackbar } = useSnackbar()
   const getMetaprotocolTxStatus = useMetaprotocolTransactionStatus()
   const { totalBalance } = useSubscribeAccountBalance()
+  const { isSignerMetadataOutdated, updateSignerMetadata } = useUser()
 
   return useCallback(
     async ({
@@ -79,6 +81,28 @@ export const useTransaction = (): HandleTransactionFn => {
       if (nodeConnectionStatus !== 'connected') {
         ConsoleLogger.error('Tried submitting transaction when not connected to Joystream node')
         return false
+      }
+
+      if (isSignerMetadataOutdated) {
+        await new Promise((resolve) => {
+          openOngoingTransactionModal({
+            title: 'We deteted that your extension metadata is outdated',
+            type: 'informative',
+            description: 'Updating signer metadata will allow you to see transaction details in signer popup',
+            primaryButton: {
+              text: 'Update',
+              onClick: () => {
+                updateSignerMetadata().then(() => {
+                  resolve(null)
+                })
+              },
+            },
+            secondaryButton: {
+              text: 'Ignore',
+              onClick: () => resolve(null),
+            },
+          })
+        })
       }
 
       if (fee && totalBalance?.lt(fee)) {
@@ -289,10 +313,12 @@ export const useTransaction = (): HandleTransactionFn => {
       closeOngoingTransactionModal,
       displaySnackbar,
       getMetaprotocolTxStatus,
+      isSignerMetadataOutdated,
       nodeConnectionStatus,
       openOngoingTransactionModal,
       removeTransaction,
       totalBalance,
+      updateSignerMetadata,
       updateTransaction,
       userWalletName,
     ]
