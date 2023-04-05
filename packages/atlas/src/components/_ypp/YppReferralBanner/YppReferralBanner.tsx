@@ -35,7 +35,6 @@ export const YppReferralBanner: FC<YppReferralBannerProps> = ({ className }) => 
 
   const queryReferrerId = useRouterQuery(QUERY_PARAMS.REFERRER_ID)
   const setReferrerId = useYppStore((state) => state.actions.setReferrerId)
-  // persist referrer id in store
 
   const storeReferrerId = useYppStore((state) => state.referrerId)
   const referrerId = queryReferrerId || storeReferrerId
@@ -56,6 +55,7 @@ export const YppReferralBanner: FC<YppReferralBannerProps> = ({ className }) => 
   const channelAvatarUrl = channel?.avatarPhoto?.resolvedUrl
   const shouldShowReferrerBanner = referrerId && channel && !isLoadingChannel
 
+  // persist referrer id in store
   useEffect(() => {
     setReferrerId(channel ? channel.id : null)
   }, [channel, setReferrerId])
