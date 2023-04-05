@@ -7,13 +7,20 @@ import { sizes } from '@/styles'
 export type CheckboxGroupProps = {
   options: CheckboxProps[]
   onChange?: (id: number, event: ChangeEvent<HTMLInputElement>) => void
-  checkedIds: number[]
+  checkedIds?: number[]
   name?: string
   disabled?: boolean
   error?: boolean
 }
 
-export const CheckboxGroup: FC<CheckboxGroupProps> = ({ options, checkedIds, onChange, name, disabled, error }) => {
+export const CheckboxGroup: FC<CheckboxGroupProps> = ({
+  options,
+  checkedIds = [],
+  onChange,
+  name,
+  disabled,
+  error,
+}) => {
   return (
     <Wrapper>
       {options.map((option, idx) => (

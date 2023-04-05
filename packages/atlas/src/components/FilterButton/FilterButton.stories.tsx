@@ -3,10 +3,7 @@ import { useState } from 'react'
 
 import { SvgActionShoppingCart } from '@/assets/icons'
 
-import { FilterButton, FilterButtonProps } from './FilterButton'
-
-import { CheckboxProps } from '../_inputs/Checkbox'
-import { RadioButtonProps } from '../_inputs/RadioButton'
+import { FilterButton, FilterButtonOption, FilterButtonProps } from './FilterButton'
 
 export default {
   title: 'inputs/FilterButton',
@@ -15,12 +12,14 @@ export default {
     options: [
       {
         label: 'Small',
-        id: 'small',
+        selected: false,
+        applied: false,
         value: 'small',
       },
       {
         label: 'Medium',
-        id: 'medium',
+        selected: false,
+        applied: false,
         value: 'medium',
       },
     ],
@@ -29,18 +28,18 @@ export default {
   },
 } as Meta<FilterButtonProps>
 
-const CheckboxTemplate: StoryFn<FilterButtonProps> = (args: Extract<FilterButtonProps, { type: 'checkbox' }>) => {
-  const [selectedOptions, setSelectedOptions] = useState<CheckboxProps[]>([])
+const CheckboxTemplate: StoryFn<FilterButtonProps> = (args) => {
+  const [options, setOptions] = useState<FilterButtonOption[]>(args.options || [])
 
-  return <FilterButton {...args} type="checkbox" selectedOptions={selectedOptions} onApply={setSelectedOptions} />
+  return <FilterButton {...args} type="checkbox" options={options} onChange={setOptions} />
 }
 
 export const Checkbox = CheckboxTemplate.bind({})
 
-const RadioTemplate: StoryFn<FilterButtonProps> = (args: Extract<FilterButtonProps, { type: 'radio' }>) => {
-  const [selectedOption, setSelectedOption] = useState<RadioButtonProps | null>(null)
+const RadioTemplate: StoryFn<FilterButtonProps> = (args) => {
+  const [options, setOptions] = useState<FilterButtonOption[]>(args.options || [])
 
-  return <FilterButton {...args} type="radio" selectedOption={selectedOption} onApply={setSelectedOption} />
+  return <FilterButton {...args} type="radio" options={options} onChange={setOptions} />
 }
 
 export const Radio = RadioTemplate.bind({})

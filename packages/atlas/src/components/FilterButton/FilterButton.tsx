@@ -1,74 +1,60 @@
-import { ChangeEvent, FC, ReactNode, useRef, useState } from 'react'
+import { ChangeEvent, FC, ReactNode, useRef } from 'react'
 
 import { Counter, StyledButton } from '@/components/FilterButton/FilterButton.styles'
-import { CheckboxProps } from '@/components/_inputs/Checkbox'
 import { CheckboxGroup } from '@/components/_inputs/CheckboxGroup'
 import { DialogPopover } from '@/components/_overlays/DialogPopover'
 
-import { RadioButtonProps } from '../_inputs/RadioButton'
 import { RadioButtonGroup } from '../_inputs/RadioButtonGroup'
 
-export type RadioOption = Pick<RadioButtonProps, 'value' | 'label' | 'id'>
-export type CheckboxOption = Pick<CheckboxProps, 'value' | 'label' | 'id'>
-
-export type FilterButtonRadio = {
-  type: 'radio'
-  options: RadioOption[]
-  selectedOption?: RadioOption | null
-  onApply: (selectedOption: RadioOption | null) => void
+export type FilterButtonOption = {
+  value: string
+  label: string
+  selected: boolean
+  applied: boolean
 }
 
-export type FilterButtonCheckbox = {
-  type: 'checkbox'
-  options: CheckboxOption[]
-  selectedOptions?: CheckboxOption[]
-  onApply: (selectedIndexes: CheckboxOption[]) => void
-}
-
-type SharedFilterButtonProps = {
+export type FilterButtonProps = {
+  name: string
+  type: 'checkbox' | 'radio'
   label?: string
   icon?: ReactNode
   className?: string
+  onChange: (selectedOptions: FilterButtonOption[]) => void
+  options?: FilterButtonOption[]
 }
 
-export type FilterButtonProps = (FilterButtonCheckbox | FilterButtonRadio) & SharedFilterButtonProps
-
-export const FilterButton: FC<FilterButtonProps> = (props) => {
-  const { type, onApply, className, icon, label, options } = props
-
-  const counter = type === 'checkbox' ? props.selectedOptions?.length : props.selectedOption && 1
-  const [locallySelectedCheckboxIndexes, setLocallyCheckboxSelectedIndexes] = useState<number[]>([])
-  const [locallySelectedRadioOption, setLocallySelectedRadioOption] = useState<string>()
+export const FilterButton: FC<FilterButtonProps> = ({ type, name, onChange, className, icon, label, options = [] }) => {
+  const counter = options.filter((option) => option.applied)?.length
   const triggerRef = useRef<HTMLButtonElement>(null)
 
   const handleApply = () => {
-    type === 'checkbox' && onApply(options.filter((_, idx) => locallySelectedCheckboxIndexes.includes(idx)))
-    if (type === 'radio') {
-      onApply(options.find((option) => option.value?.toString() === locallySelectedRadioOption?.toString()) || {})
-    }
+    onChange(options.map((option) => ({ ...option, applied: option.selected })))
     triggerRef.current?.click()
   }
 
   const handleCheckboxSelection = (num: number) => {
-    setLocallyCheckboxSelectedIndexes((prev) => {
-      if (prev.includes(num)) {
-        return prev.filter((prevNum) => prevNum !== num)
-      } else {
-        return [...prev, num]
+    const selected = options.map((option, idx) => {
+      if (num === idx) {
+        return { ...option, selected: true }
       }
+      return option
     })
+    onChange(selected)
   }
 
   const handleRadioButtonClick = (e: ChangeEvent<Omit<HTMLInputElement, 'value'> & { value: string | boolean }>) => {
-    setLocallySelectedRadioOption(e.currentTarget.value.toString())
+    const optionIdx = options.findIndex((option) => option.value === e.currentTarget.value)
+    const selected = options.map((option, idx) => {
+      if (optionIdx === idx) {
+        return { ...option, selected: true }
+      }
+      return { ...option, selected: false }
+    })
+    onChange(selected)
   }
 
   const handleClear = () => {
-    if (type === 'checkbox') {
-      onApply([])
-    } else {
-      onApply(null)
-    }
+    onChange(options.map((option) => ({ ...option, selected: false, applied: false })))
     triggerRef.current?.click()
   }
 
@@ -92,28 +78,20 @@ export const FilterButton: FC<FilterButtonProps> = (props) => {
         text: 'Clear',
         onClick: handleClear,
       }}
-      onShow={() => {
-        if (type === 'checkbox') {
-          const selectedIndexes = props.selectedOptions?.map((_, idx) => idx) || []
-          setLocallyCheckboxSelectedIndexes(selectedIndexes)
-        } else {
-          const selectedOption = props.selectedOption?.value?.toString()
-          setLocallySelectedRadioOption(selectedOption)
-        }
-      }}
     >
       {type === 'checkbox' && (
         <CheckboxGroup
-          options={options}
-          checkedIds={locallySelectedCheckboxIndexes}
+          name={name}
+          options={options.map((option) => ({ ...option, value: option.selected }))}
+          checkedIds={options.map((option, index) => (option.selected ? index : -1)).filter((index) => index !== -1)}
           onChange={handleCheckboxSelection}
         />
       )}
       {type === 'radio' && (
         <RadioButtonGroup
-          name="aaaa"
+          name={name}
           options={options}
-          value={locallySelectedRadioOption}
+          value={options.find((option) => option.selected)?.value}
           onChange={handleRadioButtonClick}
         />
       )}
