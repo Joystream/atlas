@@ -1,10 +1,12 @@
 import { FC, useRef } from 'react'
 
 import { SvgActionChevronL, SvgActionChevronR, SvgActionClose } from '@/assets/icons'
-import { FilterButton, FilterButtonProps } from '@/components/FilterButton'
+import { FilterButton, FilterButtonOption, FilterButtonProps } from '@/components/FilterButton'
+import { MobileFilterButton } from '@/components/MobileFilterButton'
 import { Button } from '@/components/_buttons/Button'
 import { useHorizonthalFade } from '@/hooks/useHorizonthalFade'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { createFiltersObject } from '@/utils/filters'
 
 import {
   ChevronButton,
@@ -15,33 +17,52 @@ import {
   VerticalDivider,
 } from './SectionFilters.styles'
 
+export type SectionFilter = Omit<FilterButtonProps, 'onChange'>
+
+// todo provide better types
+export type AppliedFilters<T extends string = string> = Record<T, FilterButtonOption[]>
+
 type SectionFiltersProps = {
-  filters: FilterButtonProps[]
-  onResetFilters?: () => void
+  filters: SectionFilter[]
+  onApplyFilters?: (appliedFilters: AppliedFilters) => void
 }
 
-export const SectionFilters: FC<SectionFiltersProps> = ({ filters, onResetFilters }) => {
+export const SectionFilters: FC<SectionFiltersProps> = ({ filters, onApplyFilters }) => {
   const smMatch = useMediaMatch('sm')
   const filterWrapperRef = useRef<HTMLDivElement>(null)
 
   const { handleMouseDown, visibleShadows, handleArrowScroll, isOverflow } = useHorizonthalFade(filterWrapperRef)
 
   const areThereAnyOptionsSelected = filters
-    .map((filter) => (filter.type === 'checkbox' ? filter.selectedOptions : filter.selectedOption))
+    .map((filter) => filter.options?.map((option) => option.applied))
     .flat()
     .some(Boolean)
 
+  const handleApply = (name: string, selectedOptions: FilterButtonOption[]) => {
+    onApplyFilters?.({
+      ...createFiltersObject(filters),
+      [name]: selectedOptions,
+    })
+  }
+
+  const handleResetFilters = () => {
+    const newFilters = filters.map((filter) => ({
+      ...filter,
+      options: filter.options?.map((option) => ({ ...option, selected: false, applied: false })),
+    }))
+
+    onApplyFilters?.(createFiltersObject(newFilters))
+  }
+
   if (!smMatch) {
-    return null
-    // todo create a variant for mobile
-    // return <FilterButton icon={<SvgActionFilters />} label="Filters" onApply={() => null} options={[]} />
+    return <MobileFilterButton filters={filters} onChangeFilters={onApplyFilters} />
   }
 
   return (
     <SectionFiltersWrapper>
       {areThereAnyOptionsSelected && (
         <>
-          <Button icon={<SvgActionClose />} variant="tertiary" onClick={onResetFilters}>
+          <Button icon={<SvgActionClose />} variant="tertiary" onClick={handleResetFilters}>
             Clear
           </Button>
           <VerticalDivider />
@@ -49,11 +70,13 @@ export const SectionFilters: FC<SectionFiltersProps> = ({ filters, onResetFilter
       )}
       <ChevronButtonHandler>
         <FiltersWrapper ref={filterWrapperRef} onMouseDown={handleMouseDown} visibleShadows={visibleShadows}>
-          {filters.map((filter, idx) => (
-            <FilterButtonWrapper key={idx}>
-              <FilterButton {...filter} />
-            </FilterButtonWrapper>
-          ))}
+          {filters.map((filter, idx) => {
+            return (
+              <FilterButtonWrapper key={idx}>
+                <FilterButton {...filter} onChange={(selectedOptions) => handleApply(filter.name, selectedOptions)} />
+              </FilterButtonWrapper>
+            )
+          })}
         </FiltersWrapper>
         {visibleShadows.left && isOverflow && (
           <ChevronButton

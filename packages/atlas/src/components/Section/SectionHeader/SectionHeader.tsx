@@ -3,7 +3,7 @@ import { FC, ReactNode, useState } from 'react'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { DynamicSearch, SearchProps } from './DynamicSearch/DynamicSearch'
-import { SectionFilters } from './SectionFilters/SectionFilters'
+import { AppliedFilters, SectionFilter, SectionFilters } from './SectionFilters/SectionFilters'
 import {
   MobileFirstRow,
   MobileSecondRow,
@@ -15,7 +15,6 @@ import {
 import { SectionTitleComponent } from './SectionTitle/SectionTitle'
 
 import { AvatarProps } from '../../Avatar'
-import { FilterButtonProps } from '../../FilterButton'
 import { IconWrapperProps } from '../../IconWrapper'
 import { Tabs, TabsProps } from '../../Tabs'
 import { Select, SelectProps } from '../../_inputs/Select'
@@ -60,11 +59,11 @@ export type SectionHeaderProps = {
   start: SectionHeaderStart
   search?: SearchProps
   sort?: Sort
-  onResetFilters?: () => void
-  filters?: FilterButtonProps[]
+  onApplyFilters?: (appliedFilters: AppliedFilters) => void
+  filters?: SectionFilter[]
 }
 
-export const SectionHeader: FC<SectionHeaderProps> = ({ start, sort, search, filters, onResetFilters }) => {
+export const SectionHeader: FC<SectionHeaderProps> = ({ start, sort, search, filters, onApplyFilters }) => {
   const [isSearchInputOpen, setIsSearchInputOpen] = useState(false)
   const smMatch = useMediaMatch('sm')
 
@@ -81,10 +80,10 @@ export const SectionHeader: FC<SectionHeaderProps> = ({ start, sort, search, fil
             </>
           )}
           {search && <DynamicSearch search={search} isOpen={isSearchInputOpen} onSearchToggle={setIsSearchInputOpen} />}
-          {filters && filtersInFirstRow && <SectionFilters filters={filters} />}
+          {filters && filtersInFirstRow && <SectionFilters filters={filters} onApplyFilters={onApplyFilters} />}
         </MobileFirstRow>
         <MobileSecondRow>
-          {filters && !filtersInFirstRow && <SectionFilters filters={filters} />}
+          {filters && !filtersInFirstRow && <SectionFilters filters={filters} onApplyFilters={onApplyFilters} />}
           {sort?.type === 'select' && <Select {...sort.selectProps} size="medium" />}
         </MobileSecondRow>
       </SectionHeaderWrapper>
@@ -100,7 +99,7 @@ export const SectionHeader: FC<SectionHeaderProps> = ({ start, sort, search, fil
       </StartWrapper>
       {search && <DynamicSearch search={search} isOpen={isSearchInputOpen} onSearchToggle={setIsSearchInputOpen} />}
       <OverflowHiddenWrapper>
-        {filters && <SectionFilters filters={filters} onResetFilters={onResetFilters} />}
+        {filters && <SectionFilters filters={filters} onApplyFilters={onApplyFilters} />}
       </OverflowHiddenWrapper>
       {sort?.type === 'toggle-button' && <ToggleButtonGroup {...sort.toggleButtonOptionTypeProps} />}
       {sort?.type === 'select' && <StyledSelect {...sort.selectProps} size="medium" />}
