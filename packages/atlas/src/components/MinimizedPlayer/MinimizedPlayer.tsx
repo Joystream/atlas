@@ -1,10 +1,10 @@
 import { forwardRef, useEffect, useState } from 'react'
 
-import { Text } from '@/components/Text'
 import { VideoPlayer, VideoPlayerProps } from '@/components/_video/VideoPlayer'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { usePersonalDataStore } from '@/providers/personalData'
 
-import { Details, Wrapper } from './MinimizedPlayer.styles'
+import { Wrapper } from './MinimizedPlayer.styles'
 
 type MiniVideoProps = {
   isInView: boolean
@@ -16,6 +16,7 @@ export const MinimizedPlayer = forwardRef<HTMLVideoElement, MiniVideoProps>(
   ({ isInView, author, title, ...videoPlayerProps }, ref) => {
     const [forceExit, setForceExit] = useState(false)
     const isAllowed = usePersonalDataStore((state) => state.allowMinimizedPleyer)
+    const mdMatch = useMediaMatch('md')
 
     useEffect(() => {
       if (isInView) {
@@ -23,21 +24,11 @@ export const MinimizedPlayer = forwardRef<HTMLVideoElement, MiniVideoProps>(
       }
     }, [isInView])
 
-    const inView = isAllowed ? isInView || forceExit : true
+    const inView = isAllowed && mdMatch ? isInView || forceExit : true
 
     return (
       <Wrapper isInView={inView}>
         <VideoPlayer ref={ref} isMinimized={!inView} onMinimizedExit={() => setForceExit(true)} {...videoPlayerProps} />
-        {!inView && (
-          <Details>
-            <Text variant="h300" as="p" color="colorTextStrong">
-              {title}
-            </Text>
-            <Text variant="t100" as="p" color="colorText">
-              {author}
-            </Text>
-          </Details>
-        )}
       </Wrapper>
     )
   }
