@@ -107,7 +107,7 @@ type CachePolicyFields<T extends string> = Partial<Record<T, FieldPolicy | Field
 const queryCacheFields: CachePolicyFields<keyof Query> = {
   channelsConnection: relayStylePagination(getChannelKeyArgs),
   extendedChannels: (existing, { toReference, args, canRead }) => {
-    if (args?.where.id_eq) {
+    if (args?.where?.id_eq) {
       // get single channel
       const channelRef = toReference({
         __typename: 'Channel',
@@ -160,7 +160,7 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
         // get single nft
         const nftRef = toReference({
           __typename: 'OwnedNft',
-          id: args?.where.id_eq,
+          id: args?.where?.id_eq,
         })
         if (canRead(nftRef)) {
           return [nftRef]
