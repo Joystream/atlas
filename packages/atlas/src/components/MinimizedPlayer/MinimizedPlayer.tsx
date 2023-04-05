@@ -2,6 +2,7 @@ import { forwardRef, useEffect, useState } from 'react'
 
 import { Text } from '@/components/Text'
 import { VideoPlayer, VideoPlayerProps } from '@/components/_video/VideoPlayer'
+import { usePersonalDataStore } from '@/providers/personalData'
 
 import { Details, Wrapper } from './MinimizedPlayer.styles'
 
@@ -14,6 +15,7 @@ type MiniVideoProps = {
 export const MinimizedPlayer = forwardRef<HTMLVideoElement, MiniVideoProps>(
   ({ isInView, author, title, ...videoPlayerProps }, ref) => {
     const [forceExit, setForceExit] = useState(false)
+    const isAllowed = usePersonalDataStore((state) => state.allowMinimizedPleyer)
 
     useEffect(() => {
       if (isInView) {
@@ -21,7 +23,7 @@ export const MinimizedPlayer = forwardRef<HTMLVideoElement, MiniVideoProps>(
       }
     }, [isInView])
 
-    const inView = isInView || forceExit
+    const inView = isAllowed ? isInView || forceExit : true
 
     return (
       <Wrapper isInView={inView}>

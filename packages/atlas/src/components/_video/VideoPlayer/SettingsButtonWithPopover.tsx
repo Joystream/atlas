@@ -67,8 +67,9 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
   const {
     playbackRate,
     autoPlayNext: playNext,
+    allowMinimizedPleyer,
     captionsEnabled,
-    actions: { setPlaybackRate, setAutoPlayNext, setCaptionsLanguage, setCaptionsEnabled },
+    actions: { setPlaybackRate, setAutoPlayNext, setCaptionsLanguage, setCaptionsEnabled, setMinimizedPlayerAllowed },
   } = usePersonalDataStore((state) => state)
 
   const subtitlesSettings: Setting | null =
@@ -144,7 +145,26 @@ export const SettingsButtonWithPopover: FC<SettingsPopoverProps> = ({
     },
   }
 
-  const settings: Setting[] = [speedSettings, ...(subtitlesSettings ? [subtitlesSettings] : []), autoPlaySettings]
+  const minimizedPlayerSettings: Setting | null = !mobile
+    ? {
+        type: 'boolean',
+        label: 'Minimized player',
+        value: allowMinimizedPleyer,
+        onSwitchClick: (value) => {
+          setMinimizedPlayerAllowed(value)
+          if (mobile) {
+            handleClose()
+          }
+        },
+      }
+    : null
+
+  const settings: Setting[] = [
+    speedSettings,
+    ...(subtitlesSettings ? [subtitlesSettings] : []),
+    ...(minimizedPlayerSettings ? [minimizedPlayerSettings] : []),
+    autoPlaySettings,
+  ]
 
   return (
     <span>
