@@ -73,7 +73,7 @@ export const useGetYppSyncedChannels = () => {
   }, [activeMembership?.channels, channelId, channels])
 
   useEffect(() => {
-    if (channelId) {
+    if (channelId && YPP_SYNC_URL) {
       refetch()
     }
   }, [channelId, refetch])
