@@ -1,7 +1,7 @@
 import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 
-import { SvgActionAuction, SvgActionCalendar, SvgActionClock, SvgActionMember } from '@/assets/icons'
+import { SvgActionAuction, SvgActionCalendar, SvgActionChevronR, SvgActionClock, SvgActionMember } from '@/assets/icons'
 import { FilterButtonOption } from '@/components/FilterButton'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 
@@ -138,6 +138,7 @@ const WithTabsTemplate = () => {
     <div style={{ display: 'grid', gap: 64 }}>
       <SectionHeader
         search={{}}
+        button={{ children: 'Browse', icon: <SvgActionChevronR />, iconPlacement: 'right' }}
         start={{
           type: 'tabs',
           tabsProps: {
@@ -212,11 +213,12 @@ const WithTabsTemplate = () => {
 export const WithTabs = WithTabsTemplate.bind({})
 
 const WithTitleTemplate: StoryFn<SectionHeaderProps> = () => {
-  const [filters, setFilters] = useState(INITIAL_STATE)
+  const [options, setOptions] = useState<AppliedFilters<keyof typeof INITIAL_STATE>>(INITIAL_STATE)
 
   return (
     <div style={{ display: 'grid', gap: 64 }}>
       <SectionHeader
+        button={{ children: 'Browse', icon: <SvgActionChevronR />, iconPlacement: 'right' }}
         sort={{
           type: 'select',
           selectProps: {
@@ -261,29 +263,30 @@ const WithTitleTemplate: StoryFn<SectionHeaderProps> = () => {
             name: 'date',
             label: 'Date uploaded',
             icon: <SvgActionCalendar />,
-            options: DATE_UPLOADED,
+            options: options.date,
           },
           {
             label: 'Length',
             name: 'length',
             type: 'radio',
             icon: <SvgActionClock />,
-            options: LENGTHS,
+            options: options.length,
           },
           {
             type: 'checkbox',
             label: 'Status',
             name: 'status',
             icon: <SvgActionAuction />,
-            options: NFT_STATUSES,
+            options: options.status,
           },
           {
             type: 'checkbox',
             name: 'other',
             label: 'Other filters',
-            options: OTHER,
+            options: options.other,
           },
         ]}
+        onApplyFilters={(options) => setOptions(options)}
       />
       <SectionHeader
         start={{
@@ -294,6 +297,7 @@ const WithTitleTemplate: StoryFn<SectionHeaderProps> = () => {
             node: <div style={{ width: 24, height: 24, background: 'blue', borderRadius: 5 }} />,
           },
         }}
+        button={{ children: 'Browse', icon: <SvgActionChevronR />, iconPlacement: 'right' }}
         sort={{
           type: 'toggle-button',
           toggleButtonOptionTypeProps: {

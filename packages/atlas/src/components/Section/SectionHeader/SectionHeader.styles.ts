@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { Button } from '@/components/_buttons/Button'
 import { Select } from '@/components/_inputs/Select'
 import { cVar, media, sizes } from '@/styles'
 
@@ -35,6 +36,14 @@ export const SectionHeaderWrapper = styled.header<SectionHeaderWrapperProps>`
     flex-direction: row;
     align-items: ${({ isTabs }) => (isTabs ? 'start' : 'center')};
     box-shadow: ${({ isTabs }) => (isTabs ? `inset 0 -1px 0 ${cVar('colorBorderMutedAlpha')}` : 'unset')};
+  }
+`
+
+export const StyledButton = styled(Button)`
+  margin-left: auto;
+  align-self: flex-start;
+  ${media.sm} {
+    margin-left: unset;
   }
 `
 

@@ -1,5 +1,6 @@
 import { FC, ReactNode, useState } from 'react'
 
+import { ButtonProps } from '@/components/_buttons/Button'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { DynamicSearch, SearchProps } from './DynamicSearch/DynamicSearch'
@@ -10,6 +11,7 @@ import {
   OverflowHiddenWrapper,
   SectionHeaderWrapper,
   StartWrapper,
+  StyledButton,
   StyledSelect,
 } from './SectionHeader.styles'
 import { SectionTitleComponent } from './SectionTitle/SectionTitle'
@@ -59,11 +61,12 @@ export type SectionHeaderProps = {
   start: SectionHeaderStart
   search?: SearchProps
   sort?: Sort
-  onApplyFilters?: (appliedFilters: AppliedFilters) => void
   filters?: SectionFilter[]
+  onApplyFilters?: (appliedFilters: AppliedFilters) => void
+  button?: Omit<ButtonProps, 'size' | 'variant'>
 }
 
-export const SectionHeader: FC<SectionHeaderProps> = ({ start, sort, search, filters, onApplyFilters }) => {
+export const SectionHeader: FC<SectionHeaderProps> = ({ start, sort, search, filters, onApplyFilters, button }) => {
   const [isSearchInputOpen, setIsSearchInputOpen] = useState(false)
   const smMatch = useMediaMatch('sm')
 
@@ -80,7 +83,10 @@ export const SectionHeader: FC<SectionHeaderProps> = ({ start, sort, search, fil
             </>
           )}
           {search && <DynamicSearch search={search} isOpen={isSearchInputOpen} onSearchToggle={setIsSearchInputOpen} />}
-          {filters && filtersInFirstRow && <SectionFilters filters={filters} onApplyFilters={onApplyFilters} />}
+          {filters && filtersInFirstRow && !isSearchInputOpen && (
+            <SectionFilters filters={filters} onApplyFilters={onApplyFilters} />
+          )}
+          {button && !isSearchInputOpen && <StyledButton {...button} size="medium" variant="secondary" />}
         </MobileFirstRow>
         <MobileSecondRow>
           {filters && !filtersInFirstRow && <SectionFilters filters={filters} onApplyFilters={onApplyFilters} />}
@@ -103,6 +109,7 @@ export const SectionHeader: FC<SectionHeaderProps> = ({ start, sort, search, fil
       </OverflowHiddenWrapper>
       {sort?.type === 'toggle-button' && <ToggleButtonGroup {...sort.toggleButtonOptionTypeProps} />}
       {sort?.type === 'select' && <StyledSelect {...sort.selectProps} size="medium" />}
+      {button && <StyledButton {...button} size="medium" variant="secondary" />}
     </SectionHeaderWrapper>
   )
 }
