@@ -17,9 +17,9 @@ export type UserContextValue = {
   memberships: Membership[]
   membershipsLoading: boolean
   activeMembership: Membership | null
-
+  isSignerMetadataOutdated: boolean
   isAuthLoading: boolean
-
   signIn: (walletName?: string, mobileCallback?: ({ onConfirm }: { onConfirm: () => void }) => void) => Promise<boolean>
+  updateSignerMetadata: () => Promise<boolean>
   refetchUserMemberships: ReturnType<typeof useMemberships>['refetch']
 }

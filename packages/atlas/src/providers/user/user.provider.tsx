@@ -2,6 +2,7 @@ import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffec
 
 import { useMemberships } from '@/api/hooks/membership'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
+import { useJoystream } from '@/providers/joystream/joystream.hooks'
 import { isMobile } from '@/utils/browser'
 import { AssetLogger, SentryLogger } from '@/utils/logs'
 import { retryPromise } from '@/utils/misc'
@@ -16,13 +17,15 @@ UserContext.displayName = 'UserContext'
 const isMobileDevice = isMobile()
 
 export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
-  const { accountId, memberId, channelId, walletAccounts, walletStatus, lastUsedWalletName } = useUserStore(
+  const { accountId, memberId, channelId, walletAccounts, walletStatus, lastUsedWalletName, wallet } = useUserStore(
     (state) => state
   )
   const { setActiveUser, setSignInModalOpen } = useUserStore((state) => state.actions)
   const { initSignerWallet } = useSignerWallet()
+  const { joystream } = useJoystream()
 
   const [isAuthLoading, setIsAuthLoading] = useState(true)
+  const [isSignerMetadataOutdated, setIsSignerMetadataOutdated] = useState(false)
 
   const accountsIds = walletAccounts.map((a) => a.address)
 
@@ -151,6 +154,37 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const activeMembership = (memberId && memberships?.find((membership) => membership.id === memberId)) || null
 
+  const checkSignerStatus = useCallback(async () => {
+    const chainMetadata = await joystream?.getChainMetadata()
+
+    if (wallet?.extension.metadata && chainMetadata) {
+      const currentChain = (await wallet.extension.metadata.get()).find(
+        (infoEntry: { specVersion: number; genesisHash: string }) =>
+          infoEntry.genesisHash === chainMetadata?.genesisHash
+      )
+      if (!currentChain) {
+        return setIsSignerMetadataOutdated(true)
+      }
+      const isOutdated = currentChain.specVersion < chainMetadata.specVersion
+
+      setIsSignerMetadataOutdated(isOutdated)
+    }
+  }, [joystream, wallet?.extension.metadata])
+
+  const updateSignerMetadata = useCallback(async () => {
+    await checkSignerStatus()
+
+    if (isSignerMetadataOutdated) {
+      const chainMetadata = await joystream?.getChainMetadata()
+      return wallet?.extension.metadata.provide(chainMetadata)
+    }
+    return false
+  }, [checkSignerStatus, isSignerMetadataOutdated, joystream, wallet?.extension.metadata])
+
+  useEffect(() => {
+    checkSignerStatus()
+  }, [checkSignerStatus])
+
   const contextValue: UserContextValue = useMemo(
     () => ({
       memberships: memberships || [],
@@ -159,8 +193,19 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       isAuthLoading,
       signIn,
       refetchUserMemberships,
+      isSignerMetadataOutdated,
+      updateSignerMetadata,
     }),
-    [memberships, activeMembership, isAuthLoading, signIn, refetchUserMemberships, membershipsLoading]
+    [
+      memberships,
+      membershipsLoading,
+      activeMembership,
+      isAuthLoading,
+      signIn,
+      refetchUserMemberships,
+      isSignerMetadataOutdated,
+      updateSignerMetadata,
+    ]
   )
 
   if (error) {
