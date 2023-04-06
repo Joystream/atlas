@@ -5,7 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0] - 2023-03-31
+## [2.0.3] - 2023-04-05
+
+### Fixed
+
+- Fixed bug with channel view
+- Fixed YPP extra requests
+
+## [2.0.2] - 2023-04-04
+
+### Fixed
+
+- Fixed bug with invalid file format when creating a video
+- Fixed loading times on "My videos" page
+- Fixed issues with appId metadata
+
+### Changed
+
+- Changed the validated channels carousel behaviour on YPP landing page
+
+## [2.0.1] - 2023-03-31
 
 ### Fixed
 
