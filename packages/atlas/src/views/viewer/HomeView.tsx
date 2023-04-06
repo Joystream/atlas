@@ -6,7 +6,6 @@ import { useBasicVideosConnection } from '@/api/hooks/videosConnection'
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { GetMostViewedVideosConnectionDocument } from '@/api/queries/__generated__/videos.generated'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
-import { Section } from '@/components/Section/Section'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { DiscoverChannels } from '@/components/_content/DiscoverChannels'
 import { NewNftSales } from '@/components/_content/NewNftSales'
@@ -14,13 +13,11 @@ import { OfficialJoystreamUpdate } from '@/components/_content/OfficialJoystream
 import { TopTenVideos } from '@/components/_content/TopTenVideos'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 import { VideoHero } from '@/components/_video/VideoHero'
-import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { atlasConfig } from '@/config'
 import { publicVideoFilter } from '@/config/contentFilter'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { sizes, transitions } from '@/styles'
-import { createPlaceholderData } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
 
 export const HomeView: FC = () => {
@@ -51,7 +48,6 @@ export const HomeView: FC = () => {
 
   const followedChannelsVideosCount = videosConnection?.totalCount
 
-  const placeholderItems = createPlaceholderData(8)
   if (followedError) {
     return <ViewErrorFallback />
   }
@@ -83,19 +79,6 @@ export const HomeView: FC = () => {
         <OfficialJoystreamUpdate />
         <DiscoverChannels withLink />
         <InfiniteVideoGrid title="All content" onDemand queryOpts={{ context: { delay: 2000 } }} />
-        <Section
-          headerProps={{
-            start: {
-              type: 'title',
-              title: 'All content',
-            },
-          }}
-          contentProps={{
-            type: 'grid',
-            minChildrenWidth: 400,
-            children: placeholderItems.map((_, idx) => <VideoTileViewer key={idx} />),
-          }}
-        />
       </Container>
     </VideoContentTemplate>
   )
