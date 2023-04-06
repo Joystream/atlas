@@ -2,9 +2,10 @@ import { FC, ReactNode, useState } from 'react'
 
 import { ButtonProps } from '@/components/_buttons/Button'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { AppliedFilters, SectionFilter } from '@/utils/filters'
 
 import { DynamicSearch, SearchProps } from './DynamicSearch/DynamicSearch'
-import { AppliedFilters, SectionFilter, SectionFilters } from './SectionFilters/SectionFilters'
+import { SectionFilters } from './SectionFilters/SectionFilters'
 import {
   MobileFirstRow,
   MobileSecondRow,

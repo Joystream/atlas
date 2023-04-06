@@ -9,9 +9,9 @@ import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { UserProvider } from '@/providers/user/user.provider'
 import { createPlaceholderData } from '@/utils/data'
+import { AppliedFilters } from '@/utils/filters'
 
 import { Section, SectionProps } from './Section'
-import { AppliedFilters } from './SectionHeader/SectionFilters/SectionFilters'
 
 import { FilterButtonOption } from '../FilterButton'
 import { SelectItem } from '../_inputs/Select'

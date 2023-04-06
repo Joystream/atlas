@@ -4,8 +4,8 @@ import { useState } from 'react'
 import { SvgActionAuction, SvgActionCalendar, SvgActionChevronR, SvgActionClock, SvgActionMember } from '@/assets/icons'
 import { FilterButtonOption } from '@/components/FilterButton'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
+import { AppliedFilters } from '@/utils/filters'
 
-import { AppliedFilters } from './SectionFilters/SectionFilters'
 import { SectionHeader, SectionHeaderProps } from './SectionHeader'
 
 import { SelectItem } from '../../_inputs/Select'
