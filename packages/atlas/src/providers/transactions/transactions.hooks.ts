@@ -60,7 +60,8 @@ export const useTransaction = (): HandleTransactionFn => {
   const { displaySnackbar } = useSnackbar()
   const getMetaprotocolTxStatus = useMetaprotocolTransactionStatus()
   const { totalBalance } = useSubscribeAccountBalance()
-  const { isSignerMetadataOutdated, updateSignerMetadata } = useUser()
+  const { isSignerMetadataOutdated, updateSignerMetadata, skipSignerMetadataUpdate } = useUser()
+  const { wallet } = useUserStore()
 
   return useCallback(
     async ({
@@ -86,9 +87,9 @@ export const useTransaction = (): HandleTransactionFn => {
       if (isSignerMetadataOutdated) {
         await new Promise((resolve) => {
           openOngoingTransactionModal({
-            title: 'We deteted that your extension metadata is outdated',
+            title: 'Update Wallet Metadata',
             type: 'informative',
-            description: 'Updating signer metadata will allow you to see transaction details in signer popup',
+            description: `Updated metadata in ${wallet?.title} wallet will allow to view all transactions details before signing. If you choose to ignore it, you will not be prompted until next version of node update is released.`,
             primaryButton: {
               text: 'Update',
               onClick: () => {
@@ -98,11 +99,15 @@ export const useTransaction = (): HandleTransactionFn => {
               },
             },
             secondaryButton: {
-              text: 'Ignore',
-              onClick: () => resolve(null),
+              text: 'Skip',
+              onClick: () => {
+                resolve(null)
+                skipSignerMetadataUpdate()
+              },
             },
           })
         })
+        closeOngoingTransactionModal()
       }
 
       if (fee && totalBalance?.lt(fee)) {
@@ -317,10 +322,12 @@ export const useTransaction = (): HandleTransactionFn => {
       nodeConnectionStatus,
       openOngoingTransactionModal,
       removeTransaction,
+      skipSignerMetadataUpdate,
       totalBalance,
       updateSignerMetadata,
       updateTransaction,
       userWalletName,
+      wallet?.title,
     ]
   )
 }

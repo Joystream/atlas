@@ -7,7 +7,7 @@ export type UserStoreState = ActiveUserState & {
   walletAccounts: SignerWalletAccount[]
   walletStatus: SignerWalletStatus
   lastUsedWalletName: string | null
-
+  lastChainMetadataVersion: [string, number] | null // [genesisHash, number]
   signInModalOpen: boolean
 }
 
@@ -21,6 +21,7 @@ export type UserStoreActions = {
   setWalletStatus: (status: SignerWalletStatus) => void
 
   setSignInModalOpen: (isOpen: boolean) => void
+  setLastChainMetadataVersion: (genesisHash: string, version: number) => void
 }
 
 export const useUserStore = createStore<UserStoreState, UserStoreActions>(
@@ -34,7 +35,7 @@ export const useUserStore = createStore<UserStoreState, UserStoreActions>(
       walletAccounts: [],
       walletStatus: 'unknown',
       lastUsedWalletName: null,
-
+      lastChainMetadataVersion: null,
       signInModalOpen: false,
     },
     actionsFactory: (set) => ({
@@ -85,13 +86,18 @@ export const useUserStore = createStore<UserStoreState, UserStoreActions>(
           state.signInModalOpen = isOpen
         })
       },
+      setLastChainMetadataVersion: (genesisHash, version) => {
+        set((state) => {
+          state.lastChainMetadataVersion = [genesisHash, version]
+        })
+      },
     }),
   },
   {
     persist: {
       key: 'activeUser',
       version: 0,
-      whitelist: ['accountId', 'memberId', 'channelId', 'lastUsedWalletName'],
+      whitelist: ['accountId', 'memberId', 'channelId', 'lastUsedWalletName', 'lastChainMetadataVersion'],
       migrate: (oldState) => {
         return oldState
       },

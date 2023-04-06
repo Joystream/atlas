@@ -17,10 +17,17 @@ UserContext.displayName = 'UserContext'
 const isMobileDevice = isMobile()
 
 export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
-  const { accountId, memberId, channelId, walletAccounts, walletStatus, lastUsedWalletName, wallet } = useUserStore(
-    (state) => state
-  )
-  const { setActiveUser, setSignInModalOpen } = useUserStore((state) => state.actions)
+  const {
+    accountId,
+    memberId,
+    channelId,
+    walletAccounts,
+    walletStatus,
+    lastUsedWalletName,
+    wallet,
+    lastChainMetadataVersion,
+  } = useUserStore((state) => state)
+  const { setActiveUser, setSignInModalOpen, setLastChainMetadataVersion } = useUserStore((state) => state.actions)
   const { initSignerWallet } = useSignerWallet()
   const { joystream } = useJoystream()
 
@@ -158,28 +165,42 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
     const chainMetadata = await joystream?.getChainMetadata()
 
     if (wallet?.extension.metadata && chainMetadata) {
-      const currentChain = (await wallet.extension.metadata.get()).find(
+      const [localGenesisHash, localSpecVersion] = lastChainMetadataVersion ?? ['', 0]
+
+      // update was skipped
+      if (localGenesisHash === chainMetadata.genesisHash && localSpecVersion === chainMetadata.specVersion) {
+        return setIsSignerMetadataOutdated(false)
+      }
+
+      const extensionMetadata = await wallet.extension.metadata.get()
+      const currentChain = extensionMetadata.find(
         (infoEntry: { specVersion: number; genesisHash: string }) =>
           infoEntry.genesisHash === chainMetadata?.genesisHash
       )
+
+      // if there isn't even a metadata entry for node with specific genesis hash then update
       if (!currentChain) {
         return setIsSignerMetadataOutdated(true)
       }
-      const isOutdated = currentChain.specVersion < chainMetadata.specVersion
 
+      // if there is metadata for this node then verify specVersion
+      const isOutdated = currentChain.specVersion < chainMetadata.specVersion
       setIsSignerMetadataOutdated(isOutdated)
     }
-  }, [joystream, wallet?.extension.metadata])
+  }, [joystream, lastChainMetadataVersion, wallet?.extension.metadata])
 
   const updateSignerMetadata = useCallback(async () => {
-    await checkSignerStatus()
+    const chainMetadata = await joystream?.getChainMetadata()
+    return wallet?.extension.metadata.provide(chainMetadata)
+  }, [joystream, wallet?.extension.metadata])
 
-    if (isSignerMetadataOutdated) {
-      const chainMetadata = await joystream?.getChainMetadata()
-      return wallet?.extension.metadata.provide(chainMetadata)
+  const skipSignerMetadataUpdate = useCallback(async () => {
+    const chainMetadata = await joystream?.getChainMetadata()
+    if (chainMetadata) {
+      setLastChainMetadataVersion(chainMetadata.genesisHash, chainMetadata.specVersion)
+      setIsSignerMetadataOutdated(false)
     }
-    return false
-  }, [checkSignerStatus, isSignerMetadataOutdated, joystream, wallet?.extension.metadata])
+  }, [joystream, setLastChainMetadataVersion])
 
   useEffect(() => {
     checkSignerStatus()
@@ -195,6 +216,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       refetchUserMemberships,
       isSignerMetadataOutdated,
       updateSignerMetadata,
+      skipSignerMetadataUpdate,
     }),
     [
       memberships,
@@ -205,6 +227,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       refetchUserMemberships,
       isSignerMetadataOutdated,
       updateSignerMetadata,
+      skipSignerMetadataUpdate,
     ]
   )
 
