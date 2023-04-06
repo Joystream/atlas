@@ -20,8 +20,8 @@ export const useAppActionMetadataProcessor = (
 
   return useCallback(
     async (rawMetadataU8a: Uint8Array, assetsU8a: Uint8Array) => {
-      if (!channelId || !memberId) {
-        throw Error("channelId or memberId wasn't provided")
+      if (!memberId) {
+        throw Error("MemberId wasn't provided")
       }
       const { data } = await getTotalChannelsAndTotalVideos({
         variables: {
@@ -32,7 +32,7 @@ export const useAppActionMetadataProcessor = (
       })
       const nonce =
         (actionType === AppActionActionType.CreateVideo
-          ? data?.membershipById?.channels[0].totalVideosCreated
+          ? data?.membershipById?.channels[0]?.totalVideosCreated
           : data?.membershipById?.totalChannelsCreated) || 0
 
       if (atlasConfig.general.appId) {
