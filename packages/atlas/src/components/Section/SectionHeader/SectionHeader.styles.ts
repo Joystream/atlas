@@ -12,6 +12,7 @@ export const MobileFirstRow = styled.div`
   display: flex;
   width: 100%;
   overflow: hidden;
+  gap: ${sizes(2)};
 `
 
 export const MobileSecondRow = styled.div`
@@ -39,12 +40,14 @@ export const SectionHeaderWrapper = styled.header<SectionHeaderWrapperProps>`
   }
 `
 
-export const StyledButton = styled(Button)`
+export const RightSide = styled.div`
   margin-left: auto;
+  display: flex;
+  gap: ${sizes(4)};
+`
+
+export const StyledButton = styled(Button)`
   align-self: flex-start;
-  ${media.sm} {
-    margin-left: unset;
-  }
 `
 
 export const OverflowHiddenWrapper = styled.div`

@@ -9,6 +9,7 @@ import {
   MobileFirstRow,
   MobileSecondRow,
   OverflowHiddenWrapper,
+  RightSide,
   SectionHeaderWrapper,
   StartWrapper,
   StyledButton,
@@ -83,10 +84,12 @@ export const SectionHeader: FC<SectionHeaderProps> = ({ start, sort, search, fil
             </>
           )}
           {search && <DynamicSearch search={search} isOpen={isSearchInputOpen} onSearchToggle={setIsSearchInputOpen} />}
-          {filters && filtersInFirstRow && !isSearchInputOpen && (
-            <SectionFilters filters={filters} onApplyFilters={onApplyFilters} />
+          {!isSearchInputOpen && (
+            <RightSide>
+              {filters && filtersInFirstRow && <SectionFilters filters={filters} onApplyFilters={onApplyFilters} />}
+              {button && <StyledButton {...button} size="medium" variant="secondary" />}
+            </RightSide>
           )}
-          {button && !isSearchInputOpen && <StyledButton {...button} size="medium" variant="secondary" />}
         </MobileFirstRow>
         <MobileSecondRow>
           {filters && !filtersInFirstRow && <SectionFilters filters={filters} onApplyFilters={onApplyFilters} />}

@@ -1,5 +1,6 @@
-import { FC } from 'react'
+import { FC, PropsWithChildren } from 'react'
 
+import { SectionWrapper } from './Section.styles'
 import { SectionContent, SectionContentProps } from './SectionContent'
 import { SectionFooter, SectionFooterProps } from './SectionFooter'
 import { SectionHeader, SectionHeaderProps } from './SectionHeader'
@@ -7,15 +8,16 @@ import { SectionHeader, SectionHeaderProps } from './SectionHeader'
 export type SectionProps = {
   headerProps: SectionHeaderProps
   contentProps: SectionContentProps
-  footerProps: SectionFooterProps
+  footerProps?: SectionFooterProps
+  className?: string
 }
 
-export const Section: FC<SectionProps> = ({ headerProps, contentProps, footerProps }) => {
+export const Section: FC<PropsWithChildren<SectionProps>> = ({ headerProps, contentProps, footerProps, className }) => {
   return (
-    <div>
+    <SectionWrapper className={className}>
       <SectionHeader {...headerProps} />
       <SectionContent {...contentProps} />
-      <SectionFooter {...footerProps} />
-    </div>
+      {footerProps && <SectionFooter {...footerProps} />}
+    </SectionWrapper>
   )
 }
