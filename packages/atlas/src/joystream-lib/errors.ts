@@ -7,6 +7,7 @@ export type JoystreamLibErrorType =
   | 'MissingRequiredEventError'
   | 'MetaprotocolTransactionError'
   | 'AccountBalanceTooLow'
+  | 'ChannelExcludedError'
 
 // ExtrinsicStatus:: 1010: Invalid Transaction: Inability to pay some fees , e.g. account balance too low,
 type JoystreamLibErrorArgs = {
