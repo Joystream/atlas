@@ -5,6 +5,7 @@ import { useCallback } from 'react'
 import { useGetAppActionSignatureMutation } from '@/api/queries/__generated__/admin.generated'
 import { AppActionActionType } from '@/api/queries/__generated__/baseTypes.generated'
 import { atlasConfig } from '@/config'
+import { JoystreamLibError } from '@/joystream-lib/errors'
 import { RawMetadataProcessorFn } from '@/joystream-lib/types'
 import { useUser } from '@/providers/user/user.hooks'
 
@@ -30,6 +31,12 @@ export const useAppActionMetadataProcessor = (
         },
         fetchPolicy: 'network-only',
       })
+
+      // If channels length is 0 it probably means that during the video creation channel was excluded by operator
+      if (actionType === AppActionActionType.CreateVideo && !data?.membershipById?.channels.length) {
+        throw new JoystreamLibError({ name: 'ChannelExcludedError' })
+      }
+
       const nonce =
         (actionType === AppActionActionType.CreateVideo
           ? data?.membershipById?.channels[0]?.totalVideosCreated
