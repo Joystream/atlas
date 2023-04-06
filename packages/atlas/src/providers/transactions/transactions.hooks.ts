@@ -306,6 +306,7 @@ export const useTransaction = (): HandleTransactionFn => {
       closeOngoingTransactionModal,
       displaySnackbar,
       getMetaprotocolTxStatus,
+      navigate,
       nodeConnectionStatus,
       openOngoingTransactionModal,
       removeTransaction,
