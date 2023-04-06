@@ -1,11 +1,10 @@
 import { ChangeEvent, FC, ReactNode, useState } from 'react'
 
 import { SvgActionFilters } from '@/assets/icons'
-import { createFiltersObject } from '@/utils/filters'
+import { AppliedFilters, SectionFilter, createFiltersObject } from '@/utils/filters'
 
 import { Counter } from '../FilterButton/FilterButton.styles'
 import { MobileFilterContainer } from '../FiltersBar/FiltersBar.styles'
-import { AppliedFilters, SectionFilter } from '../Section/SectionHeader/SectionFilters/SectionFilters'
 import { Text } from '../Text'
 import { Button } from '../_buttons/Button'
 import { CheckboxGroup } from '../_inputs/CheckboxGroup'

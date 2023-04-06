@@ -1,12 +1,12 @@
 import { FC, useRef } from 'react'
 
 import { SvgActionChevronL, SvgActionChevronR, SvgActionClose } from '@/assets/icons'
-import { FilterButton, FilterButtonOption, FilterButtonProps } from '@/components/FilterButton'
+import { FilterButton, FilterButtonOption } from '@/components/FilterButton'
 import { MobileFilterButton } from '@/components/MobileFilterButton'
 import { Button } from '@/components/_buttons/Button'
 import { useHorizonthalFade } from '@/hooks/useHorizonthalFade'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { createFiltersObject } from '@/utils/filters'
+import { AppliedFilters, SectionFilter, createFiltersObject } from '@/utils/filters'
 
 import {
   ChevronButton,
@@ -16,11 +16,6 @@ import {
   SectionFiltersWrapper,
   VerticalDivider,
 } from './SectionFilters.styles'
-
-export type SectionFilter = Omit<FilterButtonProps, 'onChange'>
-
-// todo provide better types
-export type AppliedFilters<T extends string = string> = Record<T, FilterButtonOption[]>
 
 type SectionFiltersProps = {
   filters: SectionFilter[]

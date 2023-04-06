@@ -1,4 +1,7 @@
-import { AppliedFilters, SectionFilter } from '@/components/Section/SectionHeader/SectionFilters/SectionFilters'
+import { FilterButtonOption, FilterButtonProps } from '@/components/FilterButton'
+
+export type SectionFilter = Omit<FilterButtonProps, 'onChange'>
+export type AppliedFilters<T extends string = string> = Record<T, FilterButtonOption[]>
 
 export const createFiltersObject = (filters: SectionFilter[]): AppliedFilters => {
   return filters.reduce<AppliedFilters>((prev, current) => {
