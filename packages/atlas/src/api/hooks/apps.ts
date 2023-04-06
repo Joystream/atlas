@@ -32,7 +32,7 @@ export const useAppActionMetadataProcessor = (
       })
       const nonce =
         (actionType === AppActionActionType.CreateVideo
-          ? data?.membershipById?.channels[0].totalVideosCreated
+          ? data?.membershipById?.channels[0]?.totalVideosCreated
           : data?.membershipById?.totalChannelsCreated) || 0
 
       if (atlasConfig.general.appId) {
