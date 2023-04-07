@@ -1,6 +1,6 @@
 {
   "description": "UI for consuming Joystream - a user governed video platform",
-  "version": "2.0.5",
+  "version": "2.1.0",
   "license": "GPL-3.0",
   "workspaces": [
     "packages/*"
