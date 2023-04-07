@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { SvgJoyTokenMonochrome16 } from '@/assets/icons'
 import { Tabs } from '@/components/Tabs'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
@@ -47,6 +48,30 @@ export const TitleContainer = styled.div`
   }
 `
 
+export const ChannelInfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ${sizes(2)};
+  margin: ${sizes(2)} 0;
+
+  .divider-dot {
+    display: none;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  ${media.xs} {
+    flex-direction: row;
+
+    .divider-dot {
+      display: block;
+    }
+  }
+`
+
 export const StyledSelect = styled(Select)`
   grid-area: sort;
 
@@ -67,6 +92,18 @@ export const FilterButton = styled(Button)`
 export const SubTitle = styled(Text)`
   margin: ${sizes(2)} 0;
   display: inline-block;
+`
+
+export const Balance = styled(Text)`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+`
+
+export const SvgToken = styled(SvgJoyTokenMonochrome16)`
+  path {
+    fill: ${cVar('colorText')};
+  }
 `
 
 export const StyledChannelLink = styled(ChannelLink)`
