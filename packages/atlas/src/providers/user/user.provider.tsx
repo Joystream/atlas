@@ -2,7 +2,7 @@ import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffec
 
 import { useMemberships } from '@/api/hooks/membership'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
-import { useJoystream } from '@/providers/joystream/joystream.hooks'
+import { JoystreamContext, JoystreamContextValue } from '@/providers/joystream/joystream.provider'
 import { isMobile } from '@/utils/browser'
 import { AssetLogger, SentryLogger } from '@/utils/logs'
 import { retryPromise } from '@/utils/misc'
@@ -29,7 +29,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   } = useUserStore((state) => state)
   const { setActiveUser, setSignInModalOpen, setLastChainMetadataVersion } = useUserStore((state) => state.actions)
   const { initSignerWallet } = useSignerWallet()
-  const { joystream } = useJoystream()
+  const joystreamCtx = useContext<JoystreamContextValue | undefined>(JoystreamContext)
 
   const [isAuthLoading, setIsAuthLoading] = useState(true)
   const [isSignerMetadataOutdated, setIsSignerMetadataOutdated] = useState(false)
@@ -162,7 +162,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   const activeMembership = (memberId && memberships?.find((membership) => membership.id === memberId)) || null
 
   const checkSignerStatus = useCallback(async () => {
-    const chainMetadata = await joystream?.getChainMetadata()
+    const chainMetadata = await joystreamCtx?.joystream?.getChainMetadata()
 
     if (wallet?.extension.metadata && chainMetadata) {
       const [localGenesisHash, localSpecVersion] = lastChainMetadataVersion ?? ['', 0]
@@ -187,20 +187,20 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       const isOutdated = currentChain.specVersion < chainMetadata.specVersion
       setIsSignerMetadataOutdated(isOutdated)
     }
-  }, [joystream, lastChainMetadataVersion, wallet?.extension.metadata])
+  }, [joystreamCtx?.joystream, lastChainMetadataVersion, wallet?.extension.metadata])
 
   const updateSignerMetadata = useCallback(async () => {
-    const chainMetadata = await joystream?.getChainMetadata()
+    const chainMetadata = await joystreamCtx?.joystream?.getChainMetadata()
     return wallet?.extension.metadata.provide(chainMetadata)
-  }, [joystream, wallet?.extension.metadata])
+  }, [joystreamCtx?.joystream, wallet?.extension.metadata])
 
   const skipSignerMetadataUpdate = useCallback(async () => {
-    const chainMetadata = await joystream?.getChainMetadata()
+    const chainMetadata = await joystreamCtx?.joystream?.getChainMetadata()
     if (chainMetadata) {
       setLastChainMetadataVersion(chainMetadata.genesisHash, chainMetadata.specVersion)
       setIsSignerMetadataOutdated(false)
     }
-  }, [joystream, setLastChainMetadataVersion])
+  }, [joystreamCtx?.joystream, setLastChainMetadataVersion])
 
   useEffect(() => {
     checkSignerStatus()
