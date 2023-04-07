@@ -162,7 +162,7 @@ export class JoystreamLibExtrinsics {
     await this.ensureApi()
 
     const metadata = wrapMetadata(MemberRemarked.encode(msg).finish()).unwrap()
-    const tx = this.api.tx.members.memberRemark(memberId, metadata, null)
+    const tx = this.api.tx.members.memberRemark(memberId, metadata)
     return tx
   }
 
