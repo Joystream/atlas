@@ -64,3 +64,7 @@ export const StartWrapper = styled.div<{ enableHorizonthalScrolling: boolean }>`
   display: flex;
   gap: ${sizes(4)};
 `
+
+export const StyledArrowButton = styled(Button)`
+  border-radius: unset;
+`

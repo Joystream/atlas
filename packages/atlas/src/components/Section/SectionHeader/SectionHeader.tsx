@@ -1,5 +1,6 @@
 import { FC, ReactNode, useState } from 'react'
 
+import { SvgActionChevronL, SvgActionChevronR } from '@/assets/icons'
 import { ButtonProps } from '@/components/_buttons/Button'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { AppliedFilters, SectionFilter } from '@/utils/filters'
@@ -13,6 +14,7 @@ import {
   RightSide,
   SectionHeaderWrapper,
   StartWrapper,
+  StyledArrowButton,
   StyledButton,
   StyledSelect,
 } from './SectionHeader.styles'
@@ -59,6 +61,16 @@ type SectionHeaderStart =
       tabsProps: TabsProps
     }
 
+type Carousel =
+  | {
+      isCarousel?: true
+      onMoveCarouselRight?: () => void
+      onMoveCarouselLeft?: () => void
+    }
+  | {
+      isCarousel?: false
+    }
+
 export type SectionHeaderProps = {
   start: SectionHeaderStart
   search?: SearchProps
@@ -66,9 +78,10 @@ export type SectionHeaderProps = {
   filters?: SectionFilter[]
   onApplyFilters?: (appliedFilters: AppliedFilters) => void
   button?: Omit<ButtonProps, 'size' | 'variant'>
-}
+} & Carousel
 
-export const SectionHeader: FC<SectionHeaderProps> = ({ start, sort, search, filters, onApplyFilters, button }) => {
+export const SectionHeader: FC<SectionHeaderProps> = (props) => {
+  const { start, sort, search, filters, onApplyFilters, button, isCarousel } = props
   const [isSearchInputOpen, setIsSearchInputOpen] = useState(false)
   const smMatch = useMediaMatch('sm')
 
@@ -88,6 +101,22 @@ export const SectionHeader: FC<SectionHeaderProps> = ({ start, sort, search, fil
           {!isSearchInputOpen && (
             <RightSide>
               {filters && filtersInFirstRow && <SectionFilters filters={filters} onApplyFilters={onApplyFilters} />}
+              {isCarousel && (
+                <>
+                  <StyledArrowButton
+                    size="medium"
+                    icon={<SvgActionChevronL />}
+                    variant="tertiary"
+                    onClick={props.onMoveCarouselLeft}
+                  />
+                  <StyledArrowButton
+                    size="medium"
+                    icon={<SvgActionChevronR />}
+                    variant="tertiary"
+                    onClick={props.onMoveCarouselRight}
+                  />
+                </>
+              )}
               {button && <StyledButton {...button} size="medium" variant="secondary" />}
             </RightSide>
           )}
@@ -113,6 +142,22 @@ export const SectionHeader: FC<SectionHeaderProps> = ({ start, sort, search, fil
       </OverflowHiddenWrapper>
       {sort?.type === 'toggle-button' && <ToggleButtonGroup {...sort.toggleButtonOptionTypeProps} />}
       {sort?.type === 'select' && <StyledSelect {...sort.selectProps} size="medium" />}
+      {isCarousel && (
+        <>
+          <StyledArrowButton
+            size="medium"
+            icon={<SvgActionChevronL />}
+            variant="tertiary"
+            onClick={props.onMoveCarouselLeft}
+          />
+          <StyledArrowButton
+            size="medium"
+            icon={<SvgActionChevronR />}
+            variant="tertiary"
+            onClick={props.onMoveCarouselRight}
+          />
+        </>
+      )}
       {button && <StyledButton {...button} size="medium" variant="secondary" />}
     </SectionHeaderWrapper>
   )

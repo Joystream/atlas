@@ -14,7 +14,9 @@ import { AppliedFilters } from '@/utils/filters'
 import { Section, SectionProps } from './Section'
 
 import { FilterButtonOption } from '../FilterButton'
+import { RankingNumberTile } from '../RankingNumberTile'
 import { SelectItem } from '../_inputs/Select'
+import { NftTile } from '../_nft/NftTile'
 import { VideoTile } from '../_video/VideoTile'
 
 const TABS = [
@@ -288,3 +290,103 @@ const DefaultTemplate: StoryFn<SectionProps> = () => {
 }
 
 export const Default = DefaultTemplate.bind({})
+
+const CarouselTemplate: StoryFn<SectionProps> = () => {
+  const placeholderItems = createPlaceholderData(10)
+  return (
+    <div style={{ display: 'grid', gap: 64, paddingBottom: 200 }}>
+      <Section
+        headerProps={{
+          start: {
+            type: 'title',
+            title: 'Carousel',
+          },
+        }}
+        contentProps={{
+          type: 'carousel',
+          slidesPerView: 3,
+          children: placeholderItems.map((_, idx) => (
+            <RankingNumberTile key={idx} number={idx + 1}>
+              <VideoTile
+                loadingDetails={true}
+                loadingAvatar={true}
+                thumbnailUrl={`http://placekitten.com/g/${320 + idx}/180`}
+              />
+            </RankingNumberTile>
+          )),
+        }}
+      />
+      <Section
+        headerProps={{
+          start: {
+            type: 'tabs',
+            tabsProps: {
+              tabs: TABS,
+              onSelectTab: () => null,
+            },
+          },
+        }}
+        contentProps={{
+          type: 'carousel',
+          slidesPerView: 3,
+          children: placeholderItems.map((_, idx) => (
+            <RankingNumberTile key={idx} number={idx + 1}>
+              <VideoTile
+                loadingDetails={true}
+                loadingAvatar={true}
+                thumbnailUrl={`https://place.dog/${320 + idx}/180`}
+              />
+            </RankingNumberTile>
+          )),
+        }}
+      />
+      <Section
+        headerProps={{
+          start: {
+            type: 'tabs',
+            tabsProps: {
+              tabs: TABS,
+              onSelectTab: () => null,
+            },
+          },
+        }}
+        contentProps={{
+          type: 'carousel',
+          slidesPerView: 5,
+          children: placeholderItems.map((_, idx) => (
+            <NftTile
+              key={idx}
+              thumbnail={{ type: 'video', thumbnailUrl: `https://place.dog/${320 + idx}/180` }}
+              title={`Nft number ${idx}`}
+            />
+          )),
+        }}
+      />
+      <Section
+        headerProps={{
+          start: {
+            type: 'tabs',
+            tabsProps: {
+              tabs: TABS,
+              onSelectTab: () => null,
+            },
+          },
+        }}
+        contentProps={{
+          type: 'carousel',
+          slidesPerView: 5,
+          children: placeholderItems.map((_, idx) => (
+            <VideoTile
+              key={idx}
+              loadingDetails={true}
+              loadingAvatar={true}
+              thumbnailUrl={`https://place.dog/${320 + idx}/180`}
+            />
+          )),
+        }}
+      />
+    </div>
+  )
+}
+
+export const Carousel = CarouselTemplate.bind({})

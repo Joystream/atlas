@@ -116,7 +116,7 @@ export default {
     },
   },
   decorators: [
-    (Story) => (
+    (Story: StoryFn) => (
       <OverlayManagerProvider>
         <Story />
       </OverlayManagerProvider>
@@ -124,7 +124,7 @@ export default {
   ],
 } as Meta<SectionHeaderProps>
 
-const DefaultTemplate: StoryFn<SectionHeaderProps> = (args) => {
+const DefaultTemplate: StoryFn<SectionHeaderProps> = (args: SectionHeaderProps) => {
   return <SectionHeader {...args} />
 }
 
