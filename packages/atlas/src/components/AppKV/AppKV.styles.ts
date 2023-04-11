@@ -30,6 +30,8 @@ export const LogoWrapper = styled.div`
 
 export const AppLogoContainer = styled.div`
   max-height: 48px;
+  display: flex;
+  justify-content: center;
 `
 export const StyledAppLogo = styled(AppLogo)`
   max-height: 100%;
