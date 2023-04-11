@@ -16,7 +16,7 @@ export const Wrapper = styled.div<{ isInView: boolean }>`
       position: fixed;
       z-index: ${zIndex.modals};
       right: 40px;
-      bottom: 40px;
+      bottom: 0;
       animation: ${FadeIn} 0.1s linear;
       height: 180px;
     `}
