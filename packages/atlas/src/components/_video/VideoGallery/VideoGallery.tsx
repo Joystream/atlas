@@ -35,10 +35,11 @@ export type VideoGalleryProps = {
 const PLACEHOLDERS_COUNT = 12
 
 const responsive: CarouselProps['breakpoints'] = {
-  [parseInt(breakpoints.sm)]: {
-    slidesPerView: 1,
+  [parseInt(breakpoints.xs)]: {
+    slidesPerView: 1.2,
+    slidesPerGroup: 1,
   },
-  [parseInt(breakpoints.md)]: {
+  [parseInt(breakpoints.sm)]: {
     slidesPerView: 2,
     slidesPerGroup: 2,
   },
@@ -75,7 +76,7 @@ export const VideoGallery: FC<VideoGalleryProps> = ({
 
   return (
     <Gallery
-      slidesPerView={3}
+      slidesPerView={1}
       title={title}
       breakpoints={responsive}
       dotsVisible
