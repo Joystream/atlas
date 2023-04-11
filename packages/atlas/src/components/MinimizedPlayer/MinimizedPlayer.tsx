@@ -15,6 +15,7 @@ type MiniVideoProps = {
 export const MinimizedPlayer = forwardRef<HTMLVideoElement, MiniVideoProps>(
   ({ isInView, author, title, ...videoPlayerProps }, ref) => {
     const [forceExit, setForceExit] = useState(false)
+    const [isPaused, setIsPaused] = useState(false)
     const isAllowed = usePersonalDataStore((state) => state.allowMinimizedPleyer)
     const mdMatch = useMediaMatch('md')
 
@@ -24,11 +25,24 @@ export const MinimizedPlayer = forwardRef<HTMLVideoElement, MiniVideoProps>(
       }
     }, [isInView])
 
-    const inView = isAllowed && mdMatch ? isInView || forceExit : true
+    const inView = isAllowed && mdMatch && !isPaused ? isInView || forceExit : true
 
     return (
       <Wrapper isInView={inView}>
-        <VideoPlayer ref={ref} isMinimized={!inView} onMinimizedExit={() => setForceExit(true)} {...videoPlayerProps} />
+        <VideoPlayer
+          ref={ref}
+          isMinimized={!inView}
+          onPause={() => {
+            setIsPaused(true)
+            videoPlayerProps.onPause?.()
+          }}
+          onPlay={() => {
+            setIsPaused(false)
+            videoPlayerProps.onPlay?.()
+          }}
+          onMinimizedExit={() => setForceExit(true)}
+          {...videoPlayerProps}
+        />
       </Wrapper>
     )
   }
