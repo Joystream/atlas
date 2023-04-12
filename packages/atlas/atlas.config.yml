@@ -412,14 +412,22 @@ legal:
       - Mailchimp (Only when signing up for any of our newsletters)
       - Godaddy
 
-    Please see Item 3. of the Privacy Policy for more information on the extent of these providers.
-
     ## 2.4 Regarding Your Cookies
 
     If you would like to delete cookies or instruct your web browser to delete or refuse cookies, please visit the help pages of your web browser.
 
     Please note, however, that if you delete cookies or refuse to accept them, you might not be able to use all of the features we offer, you may not be able to store your preferences, and some of our pages might not display properly.
-    
+
     # 3. Youtube Integration Disclosure
-    
+
     Gleev is integrated with Google API for the YouTube partnership program of creator onboarding. This feature is available at [gleev.xyz/ypp](gleev.xyz/ypp). Gleev’s app use and transfer to any other app of information received from Google APIs will adhere to [Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy#additional_requirements_for_specific_api_scopes), including the Limited Use requirements.
+
+    # 4. Sentry Disclosure
+
+    ## 4.1 Sentry Logging Data Processing
+
+    We are using Sentry for collecting client side error logs. Sentry's Data Processing Policy is covered in [this document](https://sentry.io/legal/dpa/#data-processing).
+
+    ## 4.2 Sentry Sessions Replay
+
+    We also have Sentry Sessions Replay feature. To reduce the risk of Personally Identifiable Information (PII) being ingested and stored on our servers, Sentry’s Session Replay SDK is designed to be “private by default”. The Session Replay SDK in its default configuration redacts all HTML text nodes and images before it leaves the browser. During playback, redacted text nodes and images are clearly denoted using asterisks and static gray boxes, respectively. So none of the sensitive data is recorded or available for Gleev Product and Operations team.
