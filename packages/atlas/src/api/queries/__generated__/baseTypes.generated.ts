@@ -4550,11 +4550,6 @@ export type PageInfo = {
   startCursor: Scalars['String']
 }
 
-export type PayloadDataObject = {
-  __typename?: 'PayloadDataObject'
-  resolvedUrl?: Maybe<Scalars['String']>
-}
-
 /** Various Channel Payment Contexts */
 export type PaymentContext = PaymentContextChannel | PaymentContextVideo
 

@@ -1,7 +1,3 @@
 type StorageDataObject {
   resolvedUrl: String
 }
-
-type PayloadDataObject {
-  resolvedUrl: String
-}
