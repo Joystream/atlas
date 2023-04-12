@@ -149,7 +149,6 @@ const WithTabsTemplate = () => {
     <div style={{ display: 'grid', gap: 64 }}>
       <SectionHeader
         search={{}}
-        button={{ children: 'Browse', icon: <SvgActionChevronR />, iconPlacement: 'right' }}
         start={{
           type: 'tabs',
           tabsProps: {
@@ -252,7 +251,6 @@ const WithTitleTemplate: StoryFn<SectionHeaderProps> = () => {
             node: <div style={{ width: 24, height: 24, background: 'blue', borderRadius: 5 }} />,
           },
         }}
-        button={{ children: 'Browse', icon: <SvgActionChevronR />, iconPlacement: 'right' }}
         sort={{
           type: 'toggle-button',
           toggleButtonOptionTypeProps: {

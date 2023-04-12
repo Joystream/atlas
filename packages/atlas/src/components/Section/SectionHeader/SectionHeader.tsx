@@ -84,12 +84,13 @@ export const SectionHeader: FC<SectionHeaderProps> = (props) => {
   const { start, sort, search, filters, onApplyFilters, button, isCarousel } = props
   const [isSearchInputOpen, setIsSearchInputOpen] = useState(false)
   const smMatch = useMediaMatch('sm')
+  const mdMatch = useMediaMatch('md')
 
   // MOBILE
   if (!smMatch) {
     const filtersInFirstRow = !sort && start.type === 'title'
     return (
-      <SectionHeaderWrapper isTabs={start.type === 'tabs'}>
+      <SectionHeaderWrapper isTabs={start.type === 'tabs'} isSearchInputOpen={isSearchInputOpen}>
         <MobileFirstRow>
           {!isSearchInputOpen && (
             <>
@@ -129,6 +130,7 @@ export const SectionHeader: FC<SectionHeaderProps> = (props) => {
     )
   }
 
+  const shouldShowFilters = !mdMatch ? !isSearchInputOpen : true
   // DESKTOP
   return (
     <SectionHeaderWrapper isTabs={start.type === 'tabs'}>
@@ -138,7 +140,7 @@ export const SectionHeader: FC<SectionHeaderProps> = (props) => {
       </StartWrapper>
       {search && <DynamicSearch search={search} isOpen={isSearchInputOpen} onSearchToggle={setIsSearchInputOpen} />}
       <OverflowHiddenWrapper>
-        {filters && <SectionFilters filters={filters} onApplyFilters={onApplyFilters} />}
+        {filters && shouldShowFilters && <SectionFilters filters={filters} onApplyFilters={onApplyFilters} />}
       </OverflowHiddenWrapper>
       {sort?.type === 'toggle-button' && <ToggleButtonGroup {...sort.toggleButtonOptionTypeProps} />}
       {sort?.type === 'select' && <StyledSelect {...sort.selectProps} size="medium" />}

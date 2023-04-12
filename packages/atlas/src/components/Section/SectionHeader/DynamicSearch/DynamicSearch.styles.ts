@@ -5,14 +5,14 @@ import { media } from '@/styles'
 
 export const SearchInput = styled(Input)`
   max-width: 100%;
-  ${media.sm} {
+  ${media.md} {
     width: 240px;
   }
 `
 
 export const SectionSearchWrapper = styled.div<{ isMobileSearchOpen: boolean }>`
   width: ${({ isMobileSearchOpen }) => (isMobileSearchOpen ? '100%' : 'unset')};
-  ${media.sm} {
+  ${media.md} {
     width: unset;
   }
 `

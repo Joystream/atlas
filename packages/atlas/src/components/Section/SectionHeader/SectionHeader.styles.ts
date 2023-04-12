@@ -4,10 +4,6 @@ import { Button } from '@/components/_buttons/Button'
 import { Select } from '@/components/_inputs/Select'
 import { cVar, media, sizes } from '@/styles'
 
-type SectionHeaderWrapperProps = {
-  isTabs: boolean
-}
-
 export const MobileFirstRow = styled.div`
   display: flex;
   width: 100%;
@@ -25,13 +21,17 @@ export const FiltersAndSortWrapper = styled.div`
   display: flex;
   gap: ${sizes(4)};
 `
-
+type SectionHeaderWrapperProps = {
+  isTabs: boolean
+  isSearchInputOpen?: boolean
+}
 export const SectionHeaderWrapper = styled.header<SectionHeaderWrapperProps>`
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  gap: ${sizes(4)};
+  gap: ${({ isSearchInputOpen, isTabs }) => sizes(isSearchInputOpen && isTabs ? 8 : 4)};
   ${media.sm} {
+    gap: ${sizes(4)};
     width: 100%;
     display: flex;
     flex-direction: row;
