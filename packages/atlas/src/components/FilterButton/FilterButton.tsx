@@ -35,7 +35,7 @@ export const FilterButton: FC<FilterButtonProps> = ({ type, name, onChange, clas
   const handleCheckboxSelection = (num: number) => {
     const selected = options.map((option, idx) => {
       if (num === idx) {
-        return { ...option, selected: true }
+        return { ...option, selected: !option.selected }
       }
       return option
     })
@@ -44,12 +44,7 @@ export const FilterButton: FC<FilterButtonProps> = ({ type, name, onChange, clas
 
   const handleRadioButtonClick = (e: ChangeEvent<Omit<HTMLInputElement, 'value'> & { value: string | boolean }>) => {
     const optionIdx = options.findIndex((option) => option.value === e.currentTarget.value)
-    const selected = options.map((option, idx) => {
-      if (optionIdx === idx) {
-        return { ...option, selected: true }
-      }
-      return { ...option, selected: false }
-    })
+    const selected = options.map((option, idx) => ({ ...option, selected: optionIdx === idx }))
     onChange(selected)
   }
 

@@ -11,7 +11,7 @@ import { CheckboxGroup } from '../_inputs/CheckboxGroup'
 import { RadioButtonGroup } from '../_inputs/RadioButtonGroup'
 import { DialogModal, DialogModalProps } from '../_overlays/DialogModal'
 
-type MobileFilterButtonProps = {
+export type MobileFilterButtonProps = {
   filters: SectionFilter[]
   onChangeFilters?: (appliedFilters: AppliedFilters) => void
 }
@@ -42,10 +42,7 @@ export const MobileFilterButton: FC<MobileFilterButtonProps> = ({ filters, onCha
         return {
           ...filter,
           options: filter.options?.map((option, optionIdx) => {
-            if (num === optionIdx) {
-              return { ...option, selected: true }
-            }
-            return option
+            return { ...option, selected: num === optionIdx }
           }),
         }
       }

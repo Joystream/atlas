@@ -129,7 +129,6 @@ const DefaultTemplate: StoryFn<SectionHeaderProps> = (args: SectionHeaderProps) 
 }
 
 export const Default = DefaultTemplate.bind({})
-Default.args = {}
 
 const WithTabsTemplate = () => {
   const [options, setOptions] = useState<AppliedFilters<keyof typeof INITIAL_STATE>>(INITIAL_STATE)

@@ -13,29 +13,32 @@ export const useIsOverflow = (ref: React.RefObject<HTMLElement>, callback?: (arg
   const [scrollWidth, setScrollWidth] = useState<number>()
 
   useLayoutEffect(() => {
-    if (!ref.current) {
+    const el = ref.current
+    if (!el) {
       return
     }
 
     const trigger = () => {
-      if (!ref.current) {
-        return
-      }
-      const hasOverflow = ref.current.scrollWidth > ref.current.clientWidth
-      setClientWidth(ref.current.clientWidth)
+      const hasOverflow = el.scrollWidth > el.clientWidth
+      setClientWidth(el.clientWidth)
       setIsOverflow(hasOverflow)
-      setScrollWidth(ref.current.scrollWidth)
+      setScrollWidth(el.scrollWidth)
 
-      if (callback)
-        callback({ hasOverflow, clientWidth: ref.current.clientWidth, scrollWidth: ref.current.scrollWidth })
+      if (callback) callback({ hasOverflow, clientWidth: el.clientWidth, scrollWidth: el.scrollWidth })
     }
 
-    if (ref.current) {
-      if ('ResizeObserver' in window) {
-        new ResizeObserver(trigger).observe(ref.current)
-      }
+    let resizeObserver: ResizeObserver
+    if ('ResizeObserver' in window) {
+      resizeObserver = new ResizeObserver(trigger)
+      resizeObserver.observe(el)
+    }
 
-      trigger()
+    trigger()
+    return () => {
+      if ('ResizeObserver' in window) {
+        resizeObserver.unobserve(el)
+        resizeObserver.disconnect()
+      }
     }
   }, [callback, ref])
 
