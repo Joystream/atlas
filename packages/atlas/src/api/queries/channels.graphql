@@ -135,84 +135,183 @@ mutation ReportChannel($channelId: String!, $rationale: String!) {
   }
 }
 
-# todo needs to be rewritten in orion v2 once payments table is back
-query GetChannelPaymentEvents {
-  # nftBoughtEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
-  #   inBlock
-  #   createdAt
-  #   price
-  # }
-
-  # bidMadeCompletingAuctionEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
-  #   inBlock
-  #   createdAt
-  #   price
-  # }
-
-  # englishAuctionSettledEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
-  #   createdAt
-  #   inBlock
-  #   winningBid {
-  #     amount
-  #   }
-  # }
-
-  # openAuctionBidAcceptedEvents(where: { ownerMember: { id_eq: $ownerMemberId } }) {
-  #   inBlock
-  #   createdAt
-  #   winningBid {
-  #     amount
-  #   }
-  # }
-
-  events(
-    where: {
-      data: {
-        isTypeOf_in: [
-          "NftBoughtEventData"
-          "BidMadeCompletingAuctionEventData"
-          "EnglishAuctionSettledEventData"
-          "OpenAuctionBidAcceptedEventData"
-        ]
+query GetPayloadDataByCommitment($commitment: String!) {
+  events(where: { data: { isTypeOf_eq: "ChannelPayoutsUpdatedEventData", commitment_eq: $commitment } }) {
+    data {
+      ... on ChannelPayoutsUpdatedEventData {
+        payloadDataObject {
+          isAccepted
+          resolvedUrls
+          resolvedUrl @client
+        }
       }
     }
+  }
+}
+
+query GetChannelPaymentEvents($channelId: String) {
+  events(
+    orderBy: timestamp_DESC
+    where: {
+      OR: [
+        # This covers sold events
+        {
+          data: {
+            isTypeOf_in: [
+              "NftBoughtEventData"
+              "BidMadeCompletingAuctionEventData"
+              "EnglishAuctionSettledEventData"
+              "OpenAuctionBidAcceptedEventData"
+            ]
+            previousNftOwner: { channel: { id_eq: $channelId } }
+          }
+        }
+        # This covers royalty events
+        {
+          data: {
+            isTypeOf_in: [
+              "NftBoughtEventData"
+              "BidMadeCompletingAuctionEventData"
+              "EnglishAuctionSettledEventData"
+              "OpenAuctionBidAcceptedEventData"
+            ]
+            nft: { video: { channel: { id_eq: $channelId } } }
+          }
+        }
+        {
+          data: {
+            isTypeOf_in: ["ChannelRewardClaimedEventData", "ChannelFundsWithdrawnEventData"]
+            channel: { id_eq: $channelId }
+          }
+        }
+        { data: { isTypeOf_in: ["ChannelPaymentMadeEventData"], payeeChannel: { id_eq: $channelId } } }
+      ]
+    }
   ) {
-    id
-    timestamp
     inBlock
+    timestamp
     data {
       __typename
       ... on NftBoughtEventData {
         price
+        buyer {
+          controllerAccount
+        }
+        nft {
+          creatorRoyalty
+          video {
+            title
+          }
+        }
+        previousNftOwner {
+          __typename
+        }
       }
       ... on BidMadeCompletingAuctionEventData {
+        previousNftOwner {
+          __typename
+        }
         winningBid {
           id
+          amount
+          bidder {
+            controllerAccount
+          }
+          nft {
+            creatorRoyalty
+            video {
+              title
+            }
+          }
+          bidder {
+            controllerAccount
+          }
           amount
         }
       }
       ... on EnglishAuctionSettledEventData {
+        previousNftOwner {
+          __typename
+        }
         winningBid {
+          nft {
+            creatorRoyalty
+            video {
+              title
+            }
+          }
+          bidder {
+            controllerAccount
+          }
           amount
         }
       }
       ... on OpenAuctionBidAcceptedEventData {
         winningBid {
+          nft {
+            creatorRoyalty
+            video {
+              title
+            }
+          }
+          bidder {
+            controllerAccount
+          }
           amount
+        }
+      }
+      ... on OpenAuctionBidAcceptedEventData {
+        previousNftOwner {
+          __typename
+        }
+        winningBid {
+          amount
+          bidder {
+            controllerAccount
+          }
+          nft {
+            creatorRoyalty
+            video {
+              title
+            }
+          }
+        }
+      }
+
+      ... on ChannelRewardClaimedEventData {
+        amount
+      }
+      ... on ChannelFundsWithdrawnEventData {
+        amount
+        actor {
+          __typename
+          ... on ContentActorCurator {
+            __typename
+          }
+          ... on ContentActorLead {
+            __typename
+          }
+          ... on ContentActorMember {
+            member {
+              controllerAccount
+            }
+          }
+        }
+      }
+      ... on ChannelPaymentMadeEventData {
+        amount
+        rationale
+        payer {
+          controllerAccount
+        }
+      }
+      ... on ChannelPaymentMadeEventData {
+        amount
+        rationale
+        payer {
+          controllerAccount
         }
       }
     }
   }
-
-  #  channelRewardClaimedEvents(where: { channel: { id_eq: $channelId } }) {
-  #    amount
-  #    createdAt
-  #    inBlock
-  #  }
-
-  #  channelFundsWithdrawnEvents(where: { channel: { id_eq: $channelId } }) {
-  #    amount
-  #    createdAt
-  #    inBlock
-  #  }
 }

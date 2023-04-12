@@ -25,6 +25,7 @@ fragment FullChannelFields on Channel {
   videoViewsNum # CHANGE: Instead of `views`
   description
   isPublic
+  cumulativeRewardClaimed
   isCensored
   language # CHANGE: Language is no longer a separate entity
   ownerMember {

@@ -39,6 +39,7 @@ export type ListItemProps = {
     download?: string
   }
   isSeparator?: boolean
+  isInteractive?: boolean
 }
 
 export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
@@ -61,6 +62,7 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
       to,
       externalLink,
       isSeparator,
+      isInteractive = true,
     },
     ref
   ) => {
@@ -74,11 +76,11 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
       if (isSeparator) {
         return 'colorTextMuted'
       }
-      if (isHovering || selected || highlight) {
+      if (isInteractive && (isHovering || selected || highlight)) {
         return
       }
       return 'colorText'
-    }, [destructive, highlight, isHovering, isSeparator, selected])
+    }, [destructive, highlight, isHovering, isInteractive, isSeparator, selected])
 
     return (
       <>
@@ -92,6 +94,7 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
           hasNodeStart={!!nodeStart}
           size={size}
           isSeparator={isSeparator}
+          isInteractive={isInteractive}
           ref={mergeRefs([hoverRef, ref])}
           {...linkProps}
           {...externalLink}
@@ -113,7 +116,7 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(
           </LabelCaptionContainer>
           {selected && <SelectedIcon />}
           {!!nodeEnd && (
-            <NodeContainer isSelected={selected} isHovering={isHovering} destructive={destructive}>
+            <NodeContainer isSelected={selected} isHovering={isInteractive && isHovering} destructive={destructive}>
               {nodeEnd}
             </NodeContainer>
           )}
