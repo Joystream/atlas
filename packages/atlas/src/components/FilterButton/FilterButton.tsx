@@ -23,6 +23,8 @@ export type FilterButtonProps = {
   options?: FilterButtonOption[]
 }
 
+export type SectionFilter = Omit<FilterButtonProps, 'onChange'>
+
 export const FilterButton: FC<FilterButtonProps> = ({ type, name, onChange, className, icon, label, options = [] }) => {
   const counter = options.filter((option) => option.applied)?.length
   const triggerRef = useRef<HTMLButtonElement>(null)

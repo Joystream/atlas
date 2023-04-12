@@ -1,10 +1,16 @@
 import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 
-import { SvgActionAuction, SvgActionCalendar, SvgActionChevronR, SvgActionClock, SvgActionMember } from '@/assets/icons'
-import { FilterButtonOption } from '@/components/FilterButton'
+import {
+  SvgActionAuction,
+  SvgActionCalendar,
+  SvgActionChevronR,
+  SvgActionClock,
+  SvgActionMember,
+  SvgActionSettings,
+} from '@/assets/icons'
+import { FilterButtonOption, SectionFilter } from '@/components/FilterButton'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
-import { AppliedFilters } from '@/utils/filters'
 
 import { SectionHeader, SectionHeaderProps } from './SectionHeader'
 
@@ -99,12 +105,18 @@ const OTHER: FilterButtonOption[] = [
   { label: 'Mature content rating', selected: false, applied: false, value: 'mature' },
 ]
 
-const INITIAL_STATE = {
-  date: DATE_UPLOADED,
-  length: LENGTHS,
-  status: NFT_STATUSES,
-  other: OTHER,
-}
+const INITIAL_STATE: SectionFilter[] = [
+  {
+    name: 'date-uploaded',
+    type: 'radio',
+    options: DATE_UPLOADED,
+    label: 'Date uploaded',
+    icon: <SvgActionCalendar />,
+  },
+  { name: 'lengths', type: 'radio', options: LENGTHS, label: 'Length', icon: <SvgActionClock /> },
+  { name: 'nft-statuses', type: 'checkbox', options: NFT_STATUSES, label: 'Status', icon: <SvgActionAuction /> },
+  { name: 'other', type: 'checkbox', options: OTHER, label: 'Other', icon: <SvgActionSettings /> },
+]
 
 export default {
   title: 'other/SectionHeader',
@@ -131,7 +143,7 @@ const DefaultTemplate: StoryFn<SectionHeaderProps> = (args: SectionHeaderProps) 
 export const Default = DefaultTemplate.bind({})
 
 const WithTabsTemplate = () => {
-  const [options, setOptions] = useState<AppliedFilters<keyof typeof INITIAL_STATE>>(INITIAL_STATE)
+  const [filters, setFilters] = useState<SectionFilter[]>(INITIAL_STATE)
 
   return (
     <div style={{ display: 'grid', gap: 64 }}>
@@ -154,36 +166,8 @@ const WithTabsTemplate = () => {
             items: ORDER_ITEMS,
           },
         }}
-        filters={[
-          {
-            type: 'radio',
-            name: 'date',
-            label: 'Date uploaded',
-            icon: <SvgActionCalendar />,
-            options: options.date,
-          },
-          {
-            label: 'Length',
-            name: 'length',
-            type: 'radio',
-            icon: <SvgActionClock />,
-            options: options.length,
-          },
-          {
-            type: 'checkbox',
-            label: 'Status',
-            name: 'status',
-            icon: <SvgActionAuction />,
-            options: options.status,
-          },
-          {
-            type: 'checkbox',
-            name: 'other',
-            label: 'Other filters',
-            options: options.other,
-          },
-        ]}
-        onApplyFilters={(options) => setOptions(options)}
+        filters={filters}
+        onApplyFilters={setFilters}
       />
 
       <SectionHeader
@@ -212,7 +196,7 @@ const WithTabsTemplate = () => {
 export const WithTabs = WithTabsTemplate.bind({})
 
 const WithTitleTemplate: StoryFn<SectionHeaderProps> = () => {
-  const [options, setOptions] = useState<AppliedFilters<keyof typeof INITIAL_STATE>>(INITIAL_STATE)
+  const [filters, setFilters] = useState<SectionFilter[]>(INITIAL_STATE)
 
   return (
     <div style={{ display: 'grid', gap: 64 }}>
@@ -256,36 +240,8 @@ const WithTitleTemplate: StoryFn<SectionHeaderProps> = () => {
             },
           },
         }}
-        filters={[
-          {
-            type: 'radio',
-            name: 'date',
-            label: 'Date uploaded',
-            icon: <SvgActionCalendar />,
-            options: options.date,
-          },
-          {
-            label: 'Length',
-            name: 'length',
-            type: 'radio',
-            icon: <SvgActionClock />,
-            options: options.length,
-          },
-          {
-            type: 'checkbox',
-            label: 'Status',
-            name: 'status',
-            icon: <SvgActionAuction />,
-            options: options.status,
-          },
-          {
-            type: 'checkbox',
-            name: 'other',
-            label: 'Other filters',
-            options: options.other,
-          },
-        ]}
-        onApplyFilters={(options) => setOptions(options)}
+        filters={filters}
+        onApplyFilters={setFilters}
       />
       <SectionHeader
         start={{
@@ -305,35 +261,8 @@ const WithTitleTemplate: StoryFn<SectionHeaderProps> = () => {
             onChange: () => null,
           },
         }}
-        filters={[
-          {
-            type: 'radio',
-            name: 'date',
-            label: 'Date uploaded',
-            icon: <SvgActionCalendar />,
-            options: DATE_UPLOADED,
-          },
-          {
-            label: 'Length',
-            name: 'length',
-            type: 'radio',
-            icon: <SvgActionClock />,
-            options: LENGTHS,
-          },
-          {
-            type: 'checkbox',
-            label: 'Status',
-            name: 'status',
-            icon: <SvgActionAuction />,
-            options: NFT_STATUSES,
-          },
-          {
-            type: 'checkbox',
-            name: 'other',
-            label: 'Other filters',
-            options: OTHER,
-          },
-        ]}
+        filters={filters}
+        onApplyFilters={setFilters}
         search={{}}
       />
     </div>

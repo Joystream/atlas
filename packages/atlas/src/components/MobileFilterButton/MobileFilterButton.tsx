@@ -1,8 +1,8 @@
 import { ChangeEvent, FC, ReactNode, useState } from 'react'
 
 import { SvgActionFilters } from '@/assets/icons'
-import { AppliedFilters, SectionFilter, createFiltersObject } from '@/utils/filters'
 
+import { SectionFilter } from '../FilterButton'
 import { Counter } from '../FilterButton/FilterButton.styles'
 import { MobileFilterContainer } from '../FiltersBar/FiltersBar.styles'
 import { Text } from '../Text'
@@ -13,7 +13,7 @@ import { DialogModal, DialogModalProps } from '../_overlays/DialogModal'
 
 export type MobileFilterButtonProps = {
   filters: SectionFilter[]
-  onChangeFilters?: (appliedFilters: AppliedFilters) => void
+  onChangeFilters?: (newFilters: SectionFilter[]) => void
 }
 
 export const MobileFilterButton: FC<MobileFilterButtonProps> = ({ filters, onChangeFilters }) => {
@@ -28,7 +28,7 @@ export const MobileFilterButton: FC<MobileFilterButtonProps> = ({ filters, onCha
       options: filter.options?.map((option) => ({ ...option, applied: option.selected })),
     }))
 
-    onChangeFilters?.(createFiltersObject(newFilters))
+    onChangeFilters?.(newFilters)
     setIsFiltersOpen(false)
   }
 
@@ -49,7 +49,7 @@ export const MobileFilterButton: FC<MobileFilterButtonProps> = ({ filters, onCha
       return filter
     })
 
-    onChangeFilters?.(createFiltersObject(newFilters))
+    onChangeFilters?.(newFilters)
   }
 
   const handleRadioButtonClick = (e: ChangeEvent<Omit<HTMLInputElement, 'value'> & { value: string | boolean }>) => {
@@ -73,7 +73,7 @@ export const MobileFilterButton: FC<MobileFilterButtonProps> = ({ filters, onCha
       return filter
     })
 
-    onChangeFilters?.(createFiltersObject(newFilters))
+    onChangeFilters?.(newFilters)
   }
 
   const handleClear = () => {
@@ -82,7 +82,7 @@ export const MobileFilterButton: FC<MobileFilterButtonProps> = ({ filters, onCha
       options: filter.options?.map((option) => ({ ...option, selected: false, applied: false })),
     }))
 
-    onChangeFilters?.(createFiltersObject(newFilters))
+    onChangeFilters?.(newFilters)
     setIsFiltersOpen(false)
   }
 

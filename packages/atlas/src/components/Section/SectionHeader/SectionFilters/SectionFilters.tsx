@@ -1,12 +1,11 @@
 import { FC, useRef } from 'react'
 
 import { SvgActionChevronL, SvgActionChevronR, SvgActionClose } from '@/assets/icons'
-import { FilterButton, FilterButtonOption } from '@/components/FilterButton'
+import { FilterButton, FilterButtonOption, SectionFilter } from '@/components/FilterButton'
 import { MobileFilterButton } from '@/components/MobileFilterButton'
 import { Button } from '@/components/_buttons/Button'
 import { useHorizonthalFade } from '@/hooks/useHorizonthalFade'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { AppliedFilters, SectionFilter, createFiltersObject } from '@/utils/filters'
 
 import {
   ChevronButton,
@@ -19,7 +18,7 @@ import {
 
 type SectionFiltersProps = {
   filters: SectionFilter[]
-  onApplyFilters?: (appliedFilters: AppliedFilters) => void
+  onApplyFilters?: (appliedFilters: SectionFilter[]) => void
 }
 
 export const SectionFilters: FC<SectionFiltersProps> = ({ filters, onApplyFilters }) => {
@@ -34,10 +33,14 @@ export const SectionFilters: FC<SectionFiltersProps> = ({ filters, onApplyFilter
     .some(Boolean)
 
   const handleApply = (name: string, selectedOptions: FilterButtonOption[]) => {
-    onApplyFilters?.({
-      ...createFiltersObject(filters),
-      [name]: selectedOptions,
-    })
+    onApplyFilters?.(
+      filters.map((filter) => {
+        if (filter.name === name) {
+          return { ...filter, options: selectedOptions }
+        }
+        return filter
+      })
+    )
   }
 
   const handleResetFilters = () => {
@@ -46,7 +49,7 @@ export const SectionFilters: FC<SectionFiltersProps> = ({ filters, onApplyFilter
       options: filter.options?.map((option) => ({ ...option, selected: false, applied: false })),
     }))
 
-    onApplyFilters?.(createFiltersObject(newFilters))
+    onApplyFilters?.(newFilters)
   }
 
   if (!smMatch) {

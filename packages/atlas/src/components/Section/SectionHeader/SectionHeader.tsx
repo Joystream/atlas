@@ -1,9 +1,9 @@
 import { FC, ReactNode, useState } from 'react'
 
 import { SvgActionChevronL, SvgActionChevronR } from '@/assets/icons'
+import { SectionFilter } from '@/components/FilterButton'
 import { ButtonProps } from '@/components/_buttons/Button'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { AppliedFilters, SectionFilter } from '@/utils/filters'
 
 import { DynamicSearch, SearchProps } from './DynamicSearch/DynamicSearch'
 import { SectionFilters } from './SectionFilters/SectionFilters'
@@ -76,7 +76,7 @@ export type SectionHeaderProps = {
   search?: SearchProps
   sort?: Sort
   filters?: SectionFilter[]
-  onApplyFilters?: (appliedFilters: AppliedFilters) => void
+  onApplyFilters?: (appliedFilters: SectionFilter[]) => void
   button?: Omit<ButtonProps, 'size' | 'variant'>
 } & Carousel
 
