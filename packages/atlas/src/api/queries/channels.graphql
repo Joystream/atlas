@@ -142,6 +142,7 @@ query GetPayloadDataByCommitment($commitment: String!) {
         payloadDataObject {
           isAccepted
           resolvedUrls
+          resolvedUrl @client
         }
       }
     }
