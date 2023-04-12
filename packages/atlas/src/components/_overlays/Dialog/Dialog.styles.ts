@@ -120,6 +120,7 @@ export const FooterButtonsContainer = styled.div<{
   margin-bottom: ${({ additionalActionsNodeMobilePosition = 'top' }) =>
     additionalActionsNodeMobilePosition === 'top' ? 0 : sizes(2)};
   display: grid;
+  width: 100%;
   grid-auto-flow: column;
   gap: ${sizes(2)};
   grid-template-columns: repeat(auto-fit, minmax(0, 1fr));

@@ -1,7 +1,10 @@
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
+import { ListItem } from '@/components/ListItem'
 import { NumberFormat } from '@/components/NumberFormat'
+import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 
 export const TypeWrapper = styled.div`
@@ -32,4 +35,61 @@ export const StyledJoyTokenIcon = styled(JoyTokenIcon)<{ error: boolean }>`
   path {
     fill: ${({ error }) => (error ? cVar('colorTextError') : undefined)};
   }
+`
+
+export const JoystreamSvgWrapper = styled.div`
+  height: 31px;
+  width: 31px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background-color: #5d5d5d;
+
+  svg {
+    height: 20px;
+
+    g {
+      fill: ${cVar('colorCoreBaseWhite')};
+    }
+  }
+`
+
+export const StyledLink = styled(Link)`
+  text-decoration: none;
+`
+
+export const SenderItem = styled(ListItem)`
+  padding-left: 0;
+
+  & span[color] {
+    color: ${cVar('colorTextStrong')};
+  }
+`
+
+export const TextWrapper = styled.div`
+  display: inline-flex;
+  overflow: hidden;
+  width: 100%;
+
+  button > * {
+    width: max-content;
+  }
+`
+
+export const DialogText = styled(Text)`
+  text-align: justify;
+`
+
+export const RowBox = styled.div<{ align?: 'start' | 'end' }>`
+  display: flex;
+  flex-direction: column;
+  gap: ${sizes(1)};
+  align-items: ${(props) => (props.align === 'end' ? 'flex-end' : 'flex-start')};
+`
+
+export const ColumnBox = styled.div`
+  display: flex;
+  gap: ${sizes(2)};
+  align-items: center;
 `

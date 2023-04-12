@@ -22,6 +22,11 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
       | { __typename?: 'BidMadeCompletingAuctionEventData' }
       | { __typename?: 'BuyNowCanceledEventData' }
       | { __typename?: 'BuyNowPriceUpdatedEventData' }
+      | { __typename?: 'ChannelFundsWithdrawnEventData' }
+      | { __typename?: 'ChannelPaymentMadeEventData' }
+      | { __typename?: 'ChannelPayoutsUpdatedEventData' }
+      | { __typename?: 'ChannelRewardClaimedAndWithdrawnEventData' }
+      | { __typename?: 'ChannelRewardClaimedEventData' }
       | { __typename?: 'CommentCreatedEventData' }
       | { __typename?: 'CommentTextUpdatedEventData' }
       | { __typename?: 'EnglishAuctionSettledEventData' }
@@ -30,6 +35,7 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
       | {
           __typename?: 'MetaprotocolTransactionStatusEventData'
           result:
+            | { __typename: 'MetaprotocolTransactionResultChannelPaid' }
             | {
                 __typename: 'MetaprotocolTransactionResultCommentCreated'
                 commentCreated?: {
@@ -64,6 +70,7 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                               type?:
                                 | { __typename: 'DataObjectTypeChannelAvatar' }
                                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                                 | { __typename: 'DataObjectTypeVideoMedia' }
                                 | { __typename: 'DataObjectTypeVideoSubtitle' }
                                 | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -116,6 +123,7 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                               type?:
                                 | { __typename: 'DataObjectTypeChannelAvatar' }
                                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                                 | { __typename: 'DataObjectTypeVideoMedia' }
                                 | { __typename: 'DataObjectTypeVideoSubtitle' }
                                 | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -168,6 +176,7 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                               type?:
                                 | { __typename: 'DataObjectTypeChannelAvatar' }
                                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                                 | { __typename: 'DataObjectTypeVideoMedia' }
                                 | { __typename: 'DataObjectTypeVideoSubtitle' }
                                 | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -220,6 +229,7 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
                               type?:
                                 | { __typename: 'DataObjectTypeChannelAvatar' }
                                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                                | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                                 | { __typename: 'DataObjectTypeVideoMedia' }
                                 | { __typename: 'DataObjectTypeVideoSubtitle' }
                                 | { __typename: 'DataObjectTypeVideoThumbnail' }
