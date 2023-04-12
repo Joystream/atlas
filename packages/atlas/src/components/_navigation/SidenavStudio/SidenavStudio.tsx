@@ -4,8 +4,8 @@ import {
   SvgActionAddVideo,
   SvgActionPlay,
   SvgSidebarChannel,
-  SvgSidebarPayments, // todo: uncomment when CRT are ready
-  // SvgSidebarToken,
+  SvgSidebarPayments,
+  SvgSidebarToken,
   SvgSidebarUpload,
   SvgSidebarVideos,
   SvgSidebarYpp,
@@ -45,13 +45,12 @@ const studioNavbarItems: NavItemType[] = [
     expandedName: 'My payments',
     to: absoluteRoutes.studio.payments(),
   },
-  // todo: uncomment when CRT are ready
-  // {
-  //   icon: <SvgSidebarToken />,
-  //   name: 'Token',
-  //   expandedName: 'Creator token',
-  //   to: absoluteRoutes.studio.crtWelcome(),
-  // },
+  {
+    icon: <SvgSidebarToken />,
+    name: 'Token',
+    expandedName: 'Creator token',
+    to: absoluteRoutes.studio.crtWelcome(),
+  },
   ...(atlasConfig.features.ypp.googleConsoleClientId
     ? [
         {
