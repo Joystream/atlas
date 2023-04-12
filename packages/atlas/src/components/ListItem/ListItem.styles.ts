@@ -49,6 +49,7 @@ type ContainerProps = {
   disabled?: boolean
   highlight?: boolean
   isSeparator?: boolean
+  isInteractive?: boolean
 }
 export const Container = styled('div', { shouldForwardProp: isPropValid })<ContainerProps>`
   border: none;
@@ -60,14 +61,14 @@ export const Container = styled('div', { shouldForwardProp: isPropValid })<Conta
   grid-template-columns: ${({ hasNodeStart }) => (hasNodeStart ? 'auto 1fr' : '1fr')};
   align-items: center;
   user-select: none;
-  cursor: pointer;
+  cursor: ${({ isInteractive }) => (isInteractive ? 'cursor' : 'unset')};
   background-color: ${({ highlight }) => (highlight ? cVar('colorBackgroundMutedAlpha') : 'unset')};
   text-decoration: none;
   position: relative;
 
   ${({ disabled, isSeparator }) => disabled && !isSeparator && disabledStyles};
   ${({ size }) => getContainerPadding(size)};
-  ${({ disabled, isSeparator }) => !disabled && !isSeparator && interactiveStyles};
+  ${({ disabled, isSeparator, isInteractive }) => isInteractive && !disabled && !isSeparator && interactiveStyles};
   ${({ isSeparator }) => isSeparator && separatorStyles};
 `
 
