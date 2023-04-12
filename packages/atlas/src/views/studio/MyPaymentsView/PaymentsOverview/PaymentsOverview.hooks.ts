@@ -1,24 +1,27 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-// TODO: remove nocheck when payments functionality is restored
 import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { useCallback, useEffect, useState } from 'react'
 
 import { useFullChannel } from '@/api/hooks/channel'
-import '@/api/queries/__generated__/channels.generated'
+import {
+  GetPayloadDataByCommitmentDocument,
+  GetPayloadDataByCommitmentQuery,
+  GetPayloadDataByCommitmentQueryVariables,
+} from '@/api/queries/__generated__/channels.generated'
 import { atlasConfig } from '@/config'
+import { ESTIMATED_BLOCK_TIME_MS } from '@/hooks/useBlockTimeEstimation'
 import { getClaimableReward } from '@/joystream-lib/channelPayouts'
 import { JoystreamLibExtrinsics } from '@/joystream-lib/extrinsics'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
-import { useDistributionOperators } from '@/providers/assets/assets.provider'
 import { useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
-import { createAssetDownloadEndpoint } from '@/utils/asset'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
-import { formatNumber, getRandomIntInclusive } from '@/utils/number'
+import { wait } from '@/utils/misc'
+import { formatNumber } from '@/utils/number'
+
+import { useChannelPaymentsHistory } from '../PaymentsTransactions/PaymentTransactions.hooks'
 
 const TOKEN_TICKER = atlasConfig.joystream.tokenTicker
 
@@ -34,36 +37,28 @@ export const useChannelPayout = (txCallback?: () => void) => {
   const [claimError, setClaimError] = useState<string | null>(null)
   const [txParams, setTxParams] = useState<Parameters<JoystreamLibExtrinsics['claimRewardTx']> | undefined>(undefined)
   const { channel, loading, refetch } = useFullChannel(channelId || '')
+  const { fetchPaymentsData } = useChannelPaymentsHistory(channelId || '')
   const handleTransaction = useTransaction()
   const client = useApolloClient()
   const { displaySnackbar } = useSnackbar()
 
-  const { getAllDistributionOperatorsForBag } = useDistributionOperators()
-
-  const getPayloadDataObjectIdAndNodeEndpoint = useCallback(
+  const getPayloadUrl = useCallback(
     async (commitment: string) => {
       const {
-        data: { channelPayoutsUpdatedEvents },
-      } = await client.query<GetPayloadDataObjectIdByCommitmentQuery, GetPayloadDataObjectIdByCommitmentQueryVariables>(
-        {
-          query: GetPayloadDataObjectIdByCommitmentDocument,
-          variables: {
-            commitment,
-          },
-        }
-      )
+        data: { events },
+      } = await client.query<GetPayloadDataByCommitmentQuery, GetPayloadDataByCommitmentQueryVariables>({
+        query: GetPayloadDataByCommitmentDocument,
+        variables: {
+          commitment,
+        },
+      })
 
-      const operators = await getAllDistributionOperatorsForBag(
-        channelPayoutsUpdatedEvents[0]?.payloadDataObject.storageBagId
-      )
-      const randomOperatorIdx = getRandomIntInclusive(0, operators?.length ? operators.length - 1 : 0)
+      const payloadUrl =
+        events[0]?.data.__typename === 'ChannelPayoutsUpdatedEventData' && events[0].data.payloadDataObject?.resolvedUrl
 
-      return {
-        nodeEndpoint: operators?.[randomOperatorIdx].endpoint,
-        payloadDataObjectId: channelPayoutsUpdatedEvents?.[0].payloadDataObject.id,
-      }
+      return payloadUrl
     },
-    [client, getAllDistributionOperatorsForBag]
+    [client]
   )
 
   const getRewardData = useCallback(
@@ -75,11 +70,10 @@ export const useChannelPayout = (txCallback?: () => void) => {
       try {
         const commitment = await joystream.getContentCommitment()
 
-        const { payloadDataObjectId, nodeEndpoint } = await getPayloadDataObjectIdAndNodeEndpoint(commitment)
-        if (!payloadDataObjectId || !nodeEndpoint) {
+        const payloadUrl = await getPayloadUrl(commitment)
+        if (!payloadUrl) {
           return
         }
-        const payloadUrl = createAssetDownloadEndpoint(nodeEndpoint, payloadDataObjectId)
         const { reward } = await getClaimableReward(channelId, cumulativeRewardClaimed, payloadUrl)
 
         if (reward.gt(maxCashoutAllowed) || reward.lt(minCashoutAllowed)) {
@@ -100,7 +94,7 @@ export const useChannelPayout = (txCallback?: () => void) => {
         SentryLogger.error("Couldn't get reward data", 'PaymentOverviewTab.hooks', error)
       }
     },
-    [getPayloadDataObjectIdAndNodeEndpoint, joystream, maxCashoutAllowed, minCashoutAllowed]
+    [getPayloadUrl, joystream, maxCashoutAllowed, minCashoutAllowed]
   )
 
   const handleFetchReward = useCallback(async () => {
@@ -159,8 +153,11 @@ export const useChannelPayout = (txCallback?: () => void) => {
           commitment,
           proxyCallback(updateStatus)
         ),
-      onTxSync: () => {
+      onTxSync: async () => {
         txCallback?.()
+        // wait at least for one block before refetching
+        await wait(ESTIMATED_BLOCK_TIME_MS)
+        await fetchPaymentsData()
         return refetch()
       },
     })

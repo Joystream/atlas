@@ -25,7 +25,7 @@ export const TableWrapper = styled.div<{ isEmpty?: boolean }>`
     !isEmpty
       ? css`
           > * {
-            min-width: 750px;
+            min-width: 900px;
           }
         `
       : ''}
