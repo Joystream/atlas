@@ -571,7 +571,7 @@ export type GetPayloadDataByCommitmentQuery = {
           payloadDataObject?: {
             __typename?: 'StorageDataObject'
             isAccepted: boolean
-            resolvedUrl?: string | null
+            resolvedUrls: Array<string>
           } | null
         }
       | { __typename?: 'ChannelRewardClaimedAndWithdrawnEventData' }
@@ -1340,7 +1340,7 @@ export const GetPayloadDataByCommitmentDocument = gql`
         ... on ChannelPayoutsUpdatedEventData {
           payloadDataObject {
             isAccepted
-            resolvedUrl
+            resolvedUrls
           }
         }
       }

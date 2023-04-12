@@ -141,7 +141,7 @@ query GetPayloadDataByCommitment($commitment: String!) {
       ... on ChannelPayoutsUpdatedEventData {
         payloadDataObject {
           isAccepted
-          resolvedUrl
+          resolvedUrls
         }
       }
     }
