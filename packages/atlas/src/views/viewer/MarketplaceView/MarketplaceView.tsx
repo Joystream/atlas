@@ -18,7 +18,7 @@ import { createPlaceholderData } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
 import { StyledPagination } from '@/views/studio/MyVideosView/MyVideos.styles'
 
-import { HeaderContainer, HeaderWrapper, StyledGrid } from './NftsView.styles'
+import { HeaderContainer, HeaderWrapper, StyledGrid } from './MarketplaceView.styles'
 
 const SORT_OPTIONS = [
   { name: 'newest', value: OwnedNftOrderByInput.CreatedAtDesc },
@@ -27,7 +27,7 @@ const SORT_OPTIONS = [
 
 const VIEWER_TIMESTAMP = new Date()
 
-export const NftsView: FC = () => {
+export const MarketplaceView: FC = () => {
   const headTags = useHeadTags('Video NFTs')
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')

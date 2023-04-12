@@ -41,7 +41,7 @@ export const viewerNavItems = [
     icon: <SvgSidebarMarketplace />,
     expandedName: 'Marketplace',
     name: 'Market',
-    to: absoluteRoutes.viewer.nfts(),
+    to: absoluteRoutes.viewer.marketplace(),
     bottomNav: true,
   },
   {
