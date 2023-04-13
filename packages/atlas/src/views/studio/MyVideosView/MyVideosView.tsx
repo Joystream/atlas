@@ -13,6 +13,7 @@ import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { Select } from '@/components/_inputs/Select'
+import { ContentTypeDialog } from '@/components/_overlays/ContentTypeDialog'
 import { VideoTileDraft } from '@/components/_video/VideoTileDraft'
 import { VideoTilePublisher } from '@/components/_video/VideoTilePublisher'
 import { atlasConfig } from '@/config'
@@ -24,6 +25,7 @@ import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { chanelUnseenDraftsSelector, channelDraftsSelector, useDraftStore } from '@/providers/drafts'
+import { usePersonalDataStore } from '@/providers/personalData'
 import { useSnackbar } from '@/providers/snackbars'
 import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
@@ -54,6 +56,8 @@ const SNACKBAR_TIMEOUT = 5000
 
 const YOUTUBE_BACKEND_URL = atlasConfig.features.ypp.youtubeSyncApiUrl
 
+const CONTENT_TYPE_INFO = 'content-type'
+
 export const MyVideosView = () => {
   const headTags = useHeadTags('My videos')
   const navigate = useNavigate()
@@ -66,6 +70,12 @@ export const MyVideosView = () => {
   const videosPerPage = ROWS_AMOUNT * videosPerRow
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
+  const isContentTypeInfoDismissed = usePersonalDataStore((state) =>
+    state.dismissedMessages.some((message) => message.id === CONTENT_TYPE_INFO)
+  )
+  const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
+
+  const [isContentTypeDialogOpen, setIsContentDialogOpen] = useState(false)
 
   const { isLoading: isCurrentlyUploadedVideoIdsLoading, data: yppDAta } = useQuery(
     `ypp-ba-videos-${channelId}`,
@@ -181,7 +191,13 @@ export const MyVideosView = () => {
     }
   }
 
-  const handleAddVideoTab = useCallback(() => setEditedVideo(), [setEditedVideo])
+  const handleOpenVideoWorkspace = useCallback(() => {
+    if (!isContentTypeInfoDismissed) {
+      setIsContentDialogOpen(true)
+      return
+    }
+    setEditedVideo()
+  }, [isContentTypeInfoDismissed, setEditedVideo])
 
   type HandleVideoClickOpts = {
     draft?: boolean
@@ -265,7 +281,7 @@ export const MyVideosView = () => {
         .slice(videosPerPage * currentPage, currentPage * videosPerPage + videosPerPage)
         .map((draft, idx) => {
           if (draft === 'new-video-tile') {
-            return <NewVideoTile loading={areTilesLoading} key={`$draft-${idx}`} onClick={handleAddVideoTab} />
+            return <NewVideoTile loading={areTilesLoading} key={`$draft-${idx}`} onClick={handleOpenVideoWorkspace} />
           }
           return (
             <VideoTileDraft
@@ -282,7 +298,7 @@ export const MyVideosView = () => {
             <NewVideoTile
               loading={video === 'new-video-tile' ? areTilesLoading : true}
               key={idx}
-              onClick={video === 'new-video-tile' ? handleAddVideoTab : undefined}
+              onClick={video === 'new-video-tile' ? handleOpenVideoWorkspace : undefined}
             />
           )
         }
@@ -329,15 +345,24 @@ export const MyVideosView = () => {
   return (
     <LimitedWidthContainer>
       {headTags}
+      <ContentTypeDialog
+        isOpen={isContentTypeDialogOpen}
+        onClose={() => setIsContentDialogOpen(false)}
+        onSubmit={() => {
+          updateDismissedMessages(CONTENT_TYPE_INFO)
+          setIsContentDialogOpen(false)
+          navigate(absoluteRoutes.studio.videoWorkspace())
+        }}
+      />
       <Text as="h1" variant="h700" margin={{ top: 12, bottom: 12 }}>
         My videos
       </Text>
       {!smMatch && sortVisibleAndUploadButtonVisible && (
         <MobileButton
           size="large"
-          to={absoluteRoutes.studio.videoWorkspace()}
+          to={isContentTypeInfoDismissed ? absoluteRoutes.studio.videoWorkspace() : ''}
           icon={<SvgActionAddVideo />}
-          onClick={handleAddVideoTab}
+          onClick={handleOpenVideoWorkspace}
           fullWidth
         >
           Upload video
@@ -351,10 +376,10 @@ export const MyVideosView = () => {
           button={
             <Button
               icon={<SvgActionUpload />}
-              to={absoluteRoutes.studio.videoWorkspace()}
+              to={isContentTypeInfoDismissed ? absoluteRoutes.studio.videoWorkspace() : ''}
               variant="secondary"
               size="large"
-              onClick={handleAddVideoTab}
+              onClick={handleOpenVideoWorkspace}
             >
               Upload video
             </Button>
@@ -367,9 +392,9 @@ export const MyVideosView = () => {
             {mdMatch && sortVisibleAndUploadButtonVisible && sortSelectNode}
             {smMatch && sortVisibleAndUploadButtonVisible && (
               <Button
-                to={absoluteRoutes.studio.videoWorkspace()}
+                to={isContentTypeInfoDismissed ? absoluteRoutes.studio.videoWorkspace() : ''}
                 icon={<SvgActionAddVideo />}
-                onClick={handleAddVideoTab}
+                onClick={handleOpenVideoWorkspace}
               >
                 Upload video
               </Button>
@@ -436,10 +461,10 @@ export const MyVideosView = () => {
               button={
                 <Button
                   icon={<SvgActionUpload />}
-                  to={absoluteRoutes.studio.videoWorkspace()}
+                  to={isContentTypeInfoDismissed ? absoluteRoutes.studio.videoWorkspace() : ''}
                   variant="secondary"
                   size="large"
-                  onClick={handleAddVideoTab}
+                  onClick={handleOpenVideoWorkspace}
                 >
                   Upload video
                 </Button>
