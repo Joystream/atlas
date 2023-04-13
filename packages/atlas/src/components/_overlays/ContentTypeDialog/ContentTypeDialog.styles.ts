@@ -2,6 +2,11 @@ import styled from '@emotion/styled'
 
 import { cVar, sizes } from '@/styles'
 
+export const StyledImg = styled.img`
+  object-fit: cover;
+  min-width: 100%;
+`
+
 export const HeaderWrapper = styled.header`
   padding: ${sizes(6)};
 `

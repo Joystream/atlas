@@ -6,7 +6,7 @@ import { Text } from '@/components/Text'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { atlasConfig } from '@/config'
 
-import { CheckboxWrapper, HeaderWrapper } from './ContentTypeDialog.styles'
+import { CheckboxWrapper, HeaderWrapper, StyledImg } from './ContentTypeDialog.styles'
 
 import { DialogModal } from '../DialogModal'
 
@@ -42,7 +42,7 @@ export const ContentTypeDialog: FC<ContentTypeDialogProps> = ({ onClose, isOpen,
         },
       }}
     >
-      <img src={discoverView} alt="Discover subpage" width={480} height={264} />
+      <StyledImg src={discoverView} alt="Discover subpage" width={480} height={264} />
       <HeaderWrapper>
         <Text variant="h500" as="p" color="colorTextStrong">
           Upload only {atlasConfig.general.appContentFocus} related content
