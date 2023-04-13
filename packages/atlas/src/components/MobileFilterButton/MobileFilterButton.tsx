@@ -37,12 +37,16 @@ export const MobileFilterButton: FC<MobileFilterButtonProps> = ({ filters, onCha
     if (filterIdxToEdit === -1) {
       return
     }
+
     const newFilters = filters.map((filter, filterIdx) => {
       if (filterIdx === filterIdxToEdit) {
         return {
           ...filter,
           options: filter.options?.map((option, optionIdx) => {
-            return { ...option, selected: num === optionIdx }
+            if (num === optionIdx) {
+              return { ...option, selected: !option.selected }
+            }
+            return option
           }),
         }
       }
