@@ -77,7 +77,7 @@ features:
           - Send it to as many Web3 YouTube creators as you want.
           - Get rewarded for every new successful sign up, that uses your referral link. Referral reward depends on their popularity tier.
           - If signed up without the link they can simply add your channel name to the referral field in the registration flow.
-        baseAmount: 
+        baseAmount:
           min: 1000
           max: 5000
         actionButtonText: Get referral link

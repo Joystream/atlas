@@ -46,6 +46,7 @@
   },
   "devDependencies": {
     "@emotion/eslint-plugin": "^11.10.0",
+    "@joystream/prettier-config": "^1.0.0",
     "@stylelint/postcss-css-in-js": "^0.38.0",
     "@trivago/prettier-plugin-sort-imports": "^4.0.0",
     "@types/node": "^16.18.8",
