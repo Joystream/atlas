@@ -40,8 +40,14 @@ export default {
     actionButton: {
       text: 'Publish new video',
     },
-    dollarAmount: 2.56,
-    joyAmount: 1234,
+    dollarAmount: {
+      type: 'number',
+      amount: 2.56,
+    },
+    joyAmount: {
+      type: 'number',
+      amount: 12356,
+    },
   },
 } as Meta<BenefitCardProps>
 

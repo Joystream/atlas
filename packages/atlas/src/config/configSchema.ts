@@ -62,7 +62,13 @@ export const configSchema = z.object({
             shortDescription: z.string(),
             stepsDescription: z.string().optional(),
             steps: z.array(z.string()).optional(),
-            baseAmount: z.number(),
+            baseAmount: z.union([
+              z.number(),
+              z.object({
+                min: z.number(),
+                max: z.number(),
+              }),
+            ]),
             actionButtonText: z.string().optional(),
             actionButtonAction: z
               .string()

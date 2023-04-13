@@ -21,6 +21,26 @@ import {
   Wrapper,
 } from './BenefitCard.styles'
 
+type JoyAmountRange = {
+  type: 'range'
+  max: BN | number
+  min: BN | number
+}
+type JoyAmountNumber = {
+  type: 'number'
+  amount: BN | number
+}
+
+type DollarAmountRange = {
+  type: 'range'
+  max: number
+  min: number
+}
+type DollarAmountNumber = {
+  type: 'number'
+  amount: number
+}
+
 export type BenefitCardProps = {
   variant?: Variant
   title: string
@@ -31,8 +51,8 @@ export type BenefitCardProps = {
     onClick?: () => void
     to?: string
   }
-  joyAmount: BN | number
-  dollarAmount?: number
+  joyAmount: JoyAmountNumber | JoyAmountRange
+  dollarAmount?: DollarAmountNumber | DollarAmountRange
   className?: string
 }
 
@@ -54,14 +74,35 @@ export const BenefitCard: FC<BenefitCardProps> = ({
       (!smMatch && !isFullVariant && dollarAmount) || (!isFullVariant && dollarAmount) || isFullVariant
     return (
       <RewardWrapper isCompact={!isFullVariant}>
-        {!!dollarAmount && (
+        {!!dollarAmount && dollarAmount.type === 'number' && (
           <NumberFormat
             as="p"
             format="dollar"
             variant={!smMatch ? 'h500' : 'h600'}
-            value={dollarAmount}
+            value={dollarAmount.amount}
             margin={{ right: dollarAmount && !isFullVariant && !smMatch ? 2 : 0 }}
           />
+        )}
+        {!!dollarAmount && dollarAmount.type === 'range' && (
+          <>
+            <NumberFormat
+              as="p"
+              format="dollar"
+              variant={!smMatch ? 'h500' : 'h600'}
+              value={dollarAmount.min}
+              margin={{ right: dollarAmount && !isFullVariant && !smMatch ? 2 : 0 }}
+            />
+            <Text as="span" variant={smMatch ? 'h600' : 'h500'} color="colorText" margin={{ right: 1 }}>
+              -
+            </Text>
+            <NumberFormat
+              as="p"
+              format="dollar"
+              variant={!smMatch ? 'h500' : 'h600'}
+              value={dollarAmount.max}
+              margin={{ right: dollarAmount && !isFullVariant && !smMatch ? 2 : 0 }}
+            />
+          </>
         )}
         <TokenRewardWrapper>
           {isJoyTokenIconVisible ? (
@@ -71,13 +112,36 @@ export const BenefitCard: FC<BenefitCardProps> = ({
               +
             </Text>
           )}
-          <NumberFormat
-            as="span"
-            format="short"
-            color={!dollarAmount ? 'colorTextStrong' : 'colorText'}
-            variant={!dollarAmount ? (!smMatch ? 'h500' : 'h600') : !smMatch ? 'h300' : 'h400'}
-            value={joyAmount}
-          />
+          {joyAmount.type === 'number' && (
+            <NumberFormat
+              as="span"
+              format="short"
+              color={!dollarAmount ? 'colorTextStrong' : 'colorText'}
+              variant={!dollarAmount ? (!smMatch ? 'h500' : 'h600') : !smMatch ? 'h300' : 'h400'}
+              value={joyAmount.amount}
+            />
+          )}
+          {joyAmount.type === 'range' && (
+            <>
+              <NumberFormat
+                as="span"
+                format="short"
+                color={!dollarAmount ? 'colorTextStrong' : 'colorText'}
+                variant={!dollarAmount ? (!smMatch ? 'h500' : 'h600') : !smMatch ? 'h300' : 'h400'}
+                value={joyAmount.min}
+              />
+              <Text as="span" variant={smMatch ? 'h600' : 'h500'} color="colorText" margin={{ right: 1 }}>
+                -
+              </Text>
+              <NumberFormat
+                as="span"
+                format="short"
+                color={!dollarAmount ? 'colorTextStrong' : 'colorText'}
+                variant={!dollarAmount ? (!smMatch ? 'h500' : 'h600') : !smMatch ? 'h300' : 'h400'}
+                value={joyAmount.max}
+              />
+            </>
+          )}
           {!dollarAmount && !isFullVariant && (
             <Text as="span" variant={smMatch ? 'h400' : 'h300'} color="colorText" margin={{ left: 1 }}>
               {atlasConfig.joystream.tokenTicker}

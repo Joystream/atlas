@@ -86,34 +86,40 @@ export const YppDashboardMainTab: FC<YppDashboardMainTabProps> = ({ currentTier 
         </WidgetsWrapper>
       )}
       <RewardsWrapper>
-        {REWARDS?.map((reward) => (
-          <BenefitCard
-            key={reward.title}
-            title={reward.title}
-            description={reward.description}
-            steps={reward.steps}
-            actionButton={
-              reward.actionButton !== undefined
-                ? {
-                    ...reward.actionButton,
-                    onClick: () => {
-                      if (
-                        reward.actionButton &&
-                        'copyReferral' in reward.actionButton &&
-                        reward.actionButton.copyReferral
-                      ) {
-                        copyToClipboard(
-                          `${window.location.host}/ypp?referrerId=${channelId}`,
-                          'Referral link copied to clipboard'
-                        )
-                      }
-                    },
-                  }
-                : undefined
-            }
-            joyAmount={reward.joyAmount * multiplier}
-          />
-        ))}
+        {REWARDS?.map((reward) => {
+          const joyAmount =
+            typeof reward.joyAmount === 'number'
+              ? { type: 'number' as const, amount: reward.joyAmount * multiplier }
+              : { type: 'range' as const, min: reward.joyAmount.min, max: reward.joyAmount.max }
+          return (
+            <BenefitCard
+              key={reward.title}
+              title={reward.title}
+              description={reward.description}
+              steps={reward.steps}
+              actionButton={
+                reward.actionButton !== undefined
+                  ? {
+                      ...reward.actionButton,
+                      onClick: () => {
+                        if (
+                          reward.actionButton &&
+                          'copyReferral' in reward.actionButton &&
+                          reward.actionButton.copyReferral
+                        ) {
+                          copyToClipboard(
+                            `${window.location.host}/ypp?referrerId=${channelId}`,
+                            'Referral link copied to clipboard'
+                          )
+                        }
+                      },
+                    }
+                  : undefined
+              }
+              joyAmount={joyAmount}
+            />
+          )
+        })}
       </RewardsWrapper>
       <Banner
         icon={<StyledSvgAlertsInformative24 />}
