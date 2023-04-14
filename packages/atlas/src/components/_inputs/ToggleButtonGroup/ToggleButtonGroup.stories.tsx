@@ -9,28 +9,36 @@ export default {
   title: 'inputs/ToggleButtonGroup',
   component: ToggleButtonGroup,
   args: {
+    type: 'options',
     options: ['small', 'large', 'medium', 'medium3', 'medium2'],
   },
 } as Meta<ToggleButtonGroupProps<SbOptions>>
 
-const Template: StoryFn<ToggleButtonGroupProps<SbOptions>> = (args) => {
+const OptionsTemplate: StoryFn<ToggleButtonGroupProps> = (args: ToggleButtonGroupProps<SbOptions>) => {
   const [value, setValue] = useState<SbOptions>('large')
 
-  return <ToggleButtonGroup {...args} value={value} onChange={setValue} />
+  return (
+    <ToggleButtonGroup<SbOptions>
+      {...args}
+      options={args.type === 'options' ? args.options : []}
+      type="options"
+      value={value}
+      onChange={(value: SbOptions) => setValue(value)}
+    />
+  )
 }
 
-export const WidthAuto = Template.bind({})
+export const WidthAuto = OptionsTemplate.bind({})
 WidthAuto.args = {
   width: 'auto',
 }
 
-export const WidthFixed = Template.bind({})
+export const WidthFixed = OptionsTemplate.bind({})
 WidthFixed.args = {
   width: 'fixed',
 }
 
-export const WidthFixedWithoutOverflow = Template.bind({})
+export const WidthFixedWithoutOverflow = OptionsTemplate.bind({})
 WidthFixedWithoutOverflow.args = {
   width: 'fixed',
-  options: ['small', 'large'],
 }

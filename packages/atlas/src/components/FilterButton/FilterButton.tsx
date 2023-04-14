@@ -1,50 +1,69 @@
-import { FC, ReactNode, useRef, useState } from 'react'
+import { ChangeEvent, FC, ReactNode, useRef } from 'react'
 
 import { Counter, StyledButton } from '@/components/FilterButton/FilterButton.styles'
-import { CheckboxProps } from '@/components/_inputs/Checkbox'
 import { CheckboxGroup } from '@/components/_inputs/CheckboxGroup'
 import { DialogPopover } from '@/components/_overlays/DialogPopover'
 
+import { RadioButtonGroup } from '../_inputs/RadioButtonGroup'
+
+export type FilterButtonOption = {
+  value: string
+  label: string
+  selected: boolean
+  applied: boolean
+}
+
 export type FilterButtonProps = {
-  options: CheckboxProps[]
-  selected?: number[]
-  onApply: (ids: number[]) => void
+  name: string
+  type: 'checkbox' | 'radio'
   label?: string
   icon?: ReactNode
   className?: string
+  onChange: (selectedOptions: FilterButtonOption[]) => void
+  options?: FilterButtonOption[]
 }
 
-export const FilterButton: FC<FilterButtonProps> = ({ label, icon, options, onApply, selected = [], className }) => {
-  const [localSelection, setLocalSelection] = useState<number[]>([])
+export type SectionFilter = Omit<FilterButtonProps, 'onChange'>
+
+export const FilterButton: FC<FilterButtonProps> = ({ type, name, onChange, className, icon, label, options = [] }) => {
+  const counter = options.filter((option) => option.applied)?.length
   const triggerRef = useRef<HTMLButtonElement>(null)
 
   const handleApply = () => {
-    onApply(localSelection)
+    onChange(options.map((option) => ({ ...option, applied: option.selected })))
     triggerRef.current?.click()
   }
 
-  const handleSelection = (num: number) => {
-    setLocalSelection((prev) => {
-      if (prev.includes(num)) {
-        return prev.filter((prevNum) => prevNum !== num)
-      } else {
-        return [...prev, num]
+  const handleCheckboxSelection = (num: number) => {
+    const selected = options.map((option, idx) => {
+      if (num === idx) {
+        return { ...option, selected: !option.selected }
       }
+      return option
     })
+    onChange(selected)
+  }
+
+  const handleRadioButtonClick = (e: ChangeEvent<Omit<HTMLInputElement, 'value'> & { value: string | boolean }>) => {
+    const optionIdx = options.findIndex((option) => option.value === e.currentTarget.value)
+    const selected = options.map((option, idx) => ({ ...option, selected: optionIdx === idx }))
+    onChange(selected)
   }
 
   const handleClear = () => {
-    onApply([])
+    onChange(options.map((option) => ({ ...option, selected: false, applied: false })))
     triggerRef.current?.click()
   }
 
   return (
     <DialogPopover
       className={className}
+      flipEnabled
+      appendTo={document.body}
       trigger={
         <StyledButton
           ref={triggerRef}
-          icon={selected?.length ? <Counter>{selected.length}</Counter> : icon}
+          icon={counter ? <Counter>{counter}</Counter> : icon}
           iconPlacement="right"
           variant="secondary"
         >
@@ -56,9 +75,23 @@ export const FilterButton: FC<FilterButtonProps> = ({ label, icon, options, onAp
         text: 'Clear',
         onClick: handleClear,
       }}
-      onShow={() => setLocalSelection(selected)}
     >
-      <CheckboxGroup options={options} checkedIds={localSelection} onChange={handleSelection} />
+      {type === 'checkbox' && (
+        <CheckboxGroup
+          name={name}
+          options={options.map((option) => ({ ...option, value: option.selected }))}
+          checkedIds={options.map((option, index) => (option.selected ? index : -1)).filter((index) => index !== -1)}
+          onChange={handleCheckboxSelection}
+        />
+      )}
+      {type === 'radio' && (
+        <RadioButtonGroup
+          name={name}
+          options={options}
+          value={options.find((option) => option.selected)?.value}
+          onChange={handleRadioButtonClick}
+        />
+      )}
     </DialogPopover>
   )
 }

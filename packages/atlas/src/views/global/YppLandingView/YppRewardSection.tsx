@@ -136,15 +136,21 @@ export const YppRewardSection: FC = () => {
         )}
         <LayoutGrid data-aos="fade-up" data-aos-delay="200" data-aos-offset="80" data-aos-easing="atlas-easing">
           <BenefitsCardsContainerGridItem colStart={{ lg: 2 }} colSpan={{ base: 12, lg: 10 }}>
-            {rewards.map((reward) => (
-              <BenefitCard
-                key={reward.title}
-                title={reward.title}
-                joyAmount={reward.baseAmount * rewardMultiplier}
-                variant="compact"
-                description={reward.shortDescription}
-              />
-            ))}
+            {rewards.map((reward) => {
+              const joyAmount =
+                typeof reward.baseAmount === 'number'
+                  ? { type: 'number' as const, amount: reward.baseAmount * rewardMultiplier }
+                  : { type: 'range' as const, min: reward.baseAmount.min, max: reward.baseAmount.max }
+              return (
+                <BenefitCard
+                  key={reward.title}
+                  title={reward.title}
+                  joyAmount={joyAmount}
+                  variant="compact"
+                  description={reward.shortDescription}
+                />
+              )
+            })}
           </BenefitsCardsContainerGridItem>
         </LayoutGrid>
       </StyledLimitedWidthContainer>
