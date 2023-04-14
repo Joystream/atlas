@@ -232,6 +232,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       skipSignerMetadataUpdate,
     }),
     [
+      activeChannel,
       memberships,
       membershipsLoading,
       activeMembership,
