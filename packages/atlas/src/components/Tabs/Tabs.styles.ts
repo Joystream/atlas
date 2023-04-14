@@ -9,13 +9,12 @@ import { Button } from '../_buttons/Button'
 
 export const TabsWrapper = styled.div`
   position: relative;
-  width: 100%;
+  min-width: 0;
 `
 
 export const TabsGroup = styled.div<MaskProps>`
   display: flex;
   position: relative;
-  scroll-behavior: smooth;
   overflow: auto;
   ${getMaskImage}
 

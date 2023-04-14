@@ -27,7 +27,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
   const mdMatch = useMediaMatch('md')
   const hasAtLeastOneChannel = !!activeMembership?.channels.length && activeMembership?.channels.length >= 1
 
-  const { isWorkspaceOpen, setEditedVideo, setIsWorkspaceOpen } = useVideoWorkspace()
+  const { isWorkspaceOpen, setIsWorkspaceOpen, uploadVideoButtonProps } = useVideoWorkspace()
 
   const currentChannel = activeMembership?.channels.find((channel) => channel.id === channelId)
 
@@ -79,11 +79,10 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
                 classNames={transitions.names.fade}
               >
                 <Button
-                  to={absoluteRoutes.studio.videoWorkspace()}
-                  onClick={() => setEditedVideo()}
                   variant="secondary"
                   icon={<SvgActionAddVideo />}
                   iconPlacement="left"
+                  {...uploadVideoButtonProps}
                 >
                   {mdMatch && 'Upload video'}
                 </Button>

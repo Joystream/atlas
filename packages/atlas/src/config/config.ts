@@ -23,11 +23,11 @@ let parsedConfig: RawConfig
 try {
   const configWithEnv = cloneDeepWith(rawConfig, (value) => {
     if (typeof value === 'string') {
-      const match = value.match(/^\$(.*)$/)
+      const match = value.match(/\$\w+/)
       if (!match) return
-      const envVar = match[1]
+      const envVar = match[0].split('$')[1]
       const envValue = import.meta.env[envVar]
-      return envValue ?? null
+      return match.input?.replaceAll(match[0], envValue) ?? null
     }
   })
   parsedConfig = configSchema.parse(configWithEnv)

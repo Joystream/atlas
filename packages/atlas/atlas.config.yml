@@ -1,5 +1,5 @@
 general:
-  appName: 'Atlas' # Application name - used in the copy throughout the app, in index.html, open graph meta tags, etc
+  appName: Atlas # Application name - used in the copy throughout the app, in index.html, open graph meta tags, etc. Don't use env variables here
   appDescription: 'The streaming platform empowering viewers, creators, and builders. Built on and operated by the Joystream blockchain and DAO.' # Application description - used in index.html meta tags
   appTagline: 'The streaming platform empowering viewers, creators, and builders. Built on and operated by the Joystream blockchain and DAO.'
   appId: '$VITE_APP_ID' # App ID for Apps as first-class citizens
@@ -61,23 +61,25 @@ features:
         shortDescription: Connect your YouTube channels via a simple step-by-step flow and get your first reward.
         baseAmount: 5000 # Base amount that will be multiplied by tier multiplier
       - title: Sync videos from your YouTube channel
-        shortDescription: Opt in to auto-sync feature upon sign up and all YouTube content will get uploaded to Atlas automatically. Get paid for each new video synced to your Atlas channel.
-        stepsDescription: Publishing your existing and new content with Atlas is the fastest way to earn more JOY tokens.
+        shortDescription: Opt in to auto-sync feature upon sign up and all YouTube content will get uploaded to $VITE_APP_NAME automatically. Get paid for every new video synced to your $VITE_APP_NAME channel.
+        stepsDescription: Publishing your existing and new content with $VITE_APP_NAME is the fastest way to earn more JOY tokens.
         steps:
           - Make sure the auto-sync feature enabled.
+          - Wait till your videos get synced to your $VITE_APP_NAME channel.
           - Publish new videos to your YouTube channel.
-          - Wait till it gets fully synced to your Atlas channel.
-          - Get rewarded for every new video synced.
+          - Get rewarded for every new video synced to $VITE_APP_NAME.
         baseAmount: 300
       - title: Refer another YouTube creator
-        shortDescription: Get JOY for every new creator who signs up to YPP program using your referral link.
+        shortDescription: Get JOY for every new creator who signs up to YPP program using your referral link. Referrals multiplier depends on the popularity tier of the channel signed up using referral link.
         stepsDescription: Earn when another YouTube creator signs up to the program by using your your referral link.
         steps:
           - Copy your link with get referral link button.
           - Send it to as many Web3 YouTube creators as you want.
-          - Get rewarded for every new successful sign up, that uses your referral link.
+          - Get rewarded for every new successful sign up, that uses your referral link. Referral reward depends on their popularity tier.
           - If signed up without the link they can simply add your channel name to the referral field in the registration flow.
-        baseAmount: 1000
+        baseAmount:
+          min: 1000
+          max: 5000
         actionButtonText: Get referral link
         actionButtonAction: copyReferral
     widgets: # Widgets on Ypp landing page
@@ -98,9 +100,9 @@ features:
         ## Rewards
           - Sign up to YouTube Partnership Program: 5000 Joy
           - Refer new program subscribers: 1000 Joy
-          - For every video synced from YouTube to Joystream channel: 300 Joy
+          - For every new video synced from YouTube: 300 Joy
 
-        The tokens pool allocated for this program is limited, so the program has limited duration.
+        ❗️ The tokens pool allocated for this program is limited, so the program has limited duration.
 
         ## Tiers Multiplier
 
@@ -110,9 +112,11 @@ features:
           - Tier 2 - x2.5 rewards - 5,000 to 50,000 subscribers
           - Tier 3 - x5 rewards - 50,000+ subscribers
 
+        Referrals multiplier depends on the popularity tier of the channel signed up using referral link.
+
         ## Example Rewards Calculation
 
-        For a channel with 7000 subscribers, which signed up and remained in the program with auto-sync service enabled for 1 month. During this month that channel uploaded 5 new videos to their YouTube channel, 2 videos directly to Joystream channel with manual upload, and referred 3 other YouTube channels that ended up signing up.
+        For a channel with 7000 subscribers, which signed up and remained in the program with auto-sync service enabled for 1 month. During this month that channel uploaded 5 new videos to their YouTube channel, 2 videos directly to Joystream channel with manual upload, and successfully referred 3 other YouTube channels that had circa 10k subscribers each. 
 
         In the end of this month, the payout to this channel's account will be:
           5000 * 2.5 + 5 * 300 * 2.5 + 1000 * 3 * 2.5 = **23,750** JOY
@@ -122,9 +126,9 @@ features:
         1. Become enrolled to the YouTube Partnership Program.
         2. Your YouTube channel information and email will be stored in the data base, operated by JS Genesis.
         3. Qualify for the rewards paid in JOY tokens for signing up to to this program.
-        4. If you chose to opt in to auto-sync service, you grant permission for JS Genesis operated service to upload all videos from your YouTube channel to Joystream blockchain and storage system, available to display on Gleev App or any other app connected to Joystream blockchain and qualify for the additional rewards paid in JOY tokens for new videos added to your Joystream channel via automatic upload service.
+        4. If you chose to opt in to auto-sync service, you grant permission for JS Genesis operated service to upload all videos from your YouTube channel to Joystream blockchain and storage system, available to display on $VITE_APP_NAME App or any other app connected to Joystream blockchain and qualify for the additional rewards paid in JOY tokens for new videos added to your Joystream channel via automatic upload service.
         5. Qualify for additional rewards paid in JOY tokens when other creators sign up to this program, referencing your channel as referrer.
-        6. Will remain in the program unless access rights to Gleev service is revoked from your google account settings, opt out is triggered from YPP dashboard or suspended by the members of JS Genesis team.
+        6. Will remain in the program unless access rights to $VITE_APP_NAME service is revoked from your google account settings, opt out is triggered from YPP dashboard or suspended by the members of JS Genesis team.
 
         Rewards are subject to the verified status of the channel, assigned by the program operators.
 
@@ -140,13 +144,13 @@ features:
           1. Be created not earlier than 90 days before the sign up.
           2. Have at least 50 followers and the channel followers must be set to public view.
           3. Have at least 10 videos, each created at least 30 days before the sign up.
-          4. Channel must be focussed on Web3/ Crypto content, matching one of the categories supported by Gleev App.
+          4. Channel must be focussed on Web3/ Crypto content, matching one of the categories supported by $VITE_APP_NAME App.
 
         Newly created Joystream channel has to have description, avatar and background image set up. The criteria for qualification can be reviewed at any time without prior notice.
 
         ## How to sign up
 
-        To sign up, user has to go through the onboarding flow provided in the [Gleev web app](https://gleev.xyz/ypp) and authorise with the Google Account, connected to their YouTube channel. During the authorisation, the access to the YouTube content `youtube.readonly` scope, to fetch channel meta data and content information; and access to email address for the YouTube account has to be granted for the JSG operated Backend Application (API client) that connects to YouTube API.
+        To sign up, user has to go through the onboarding flow provided in the [$VITE_APP_NAME web app](https://gleev.xyz/ypp) and authorise with the Google Account, connected to their YouTube channel. During the authorisation, the access to the YouTube content `youtube.readonly` scope, to fetch channel meta data and content information; and access to email address for the YouTube account has to be granted for the JSG operated Backend Application (API client) that connects to YouTube API.
 
           Mandatory fields need to be populated to the web input form to progress, such as email, video category, and terms and conditions need to be accepted.
 
@@ -181,9 +185,9 @@ features:
 
         ## How to withdraw rewards
 
-        In order to create Joystream channel, a Joystream membership is required. It can be created free of charge using the Gleev App, hosted on gleev.xyz or Pioneer app hosted on  pioneerapp.xyz. Joystream membership requires a substrate account, created using any wallets compatible with Polkadot ecosystem.
+        In order to create Joystream channel, a Joystream membership is required. It can be created free of charge using the $VITE_APP_NAME App, hosted on gleev.xyz or Pioneer app hosted on  pioneerapp.xyz. Joystream membership requires a substrate account, created using any wallets compatible with Polkadot ecosystem.
 
-        From the channel account JOY token can be transferred (withdrawn) to the member account via Gleev app interfaces or polkadot.js app (calling transfer extrinsic). This transaction must be signed with the membership controller account, that was used to create Joystream channel.
+        From the channel account JOY token can be transferred (withdrawn) to the member account via $VITE_APP_NAME app interfaces or polkadot.js app (calling transfer extrinsic). This transaction must be signed with the membership controller account, that was used to create Joystream channel.
 
         ## Program Partners Terms and Conditions
 
@@ -191,7 +195,7 @@ features:
 
         ## Auto-sync service
 
-        In order to simplify the upload of content to Gleev App, JS Genesis team has built a dedicated backend application, integrated with YouTube and Gleev to facilitate the content upload. It is hosted on the JSGenesis operated infrastructure and operated by JS Genesis team.
+        In order to simplify the upload of content to $VITE_APP_NAME App, JS Genesis team has built a dedicated backend application, integrated with YouTube and $VITE_APP_NAME to facilitate the content upload. It is hosted on the JSGenesis operated infrastructure and operated by JS Genesis team.
 
         This requests access to the necessary information via YouTube API, namely "read_only" scope to your YouTube channel data. This happens during the authorisation flow as part of the YPP program onboarding. The App fetches only the information that YouTube exposes in the read_only scope and required to effectively operate the program via the open API.
 
@@ -199,7 +203,7 @@ features:
         Channel Info: name, date created, URL, number of followers, number of comments, number of views, number of videos,
         Videos info: video titles, videos date uploaded, video subtitles.
 
-        If auto-sync service is enabled, it will refetch channel information once every 24 hours, and poll video information once every 30 minutes to detect new uploads and automatically upload them to your Gleev Channel.
+        If auto-sync service is enabled, it will refetch channel information once every 24 hours, and poll video information once every 30 minutes to detect new uploads and automatically upload them to your $VITE_APP_NAME Channel.
 
         Only public videos are synced. Videos are synced in resolution of 720px or lower. HD videos will be supported as the program matures. Subtitles synced only in English, and all other languages are not supported at the time of program launch, but will be supported in the future.  The queue of syncing is defined based on the proprietary algorithm developed and maintained by JSGenesis team. It may be updated at any time without prior notice.
 
@@ -217,7 +221,7 @@ features:
 
         ## Opt out
 
-        Channel can opt out from auto-sync feature by choosing this option in the settings tab of the YPP dashboard. Opting out from Auto-sync would stop automated upload of all new content published to YouTube channel, but would keep the Gleev channel in the YPP program, meaning that referral rewards can still be collected.
+        Channel can opt out from auto-sync feature by choosing this option in the settings tab of the YPP dashboard. Opting out from Auto-sync would stop automated upload of all new content published to YouTube channel, but would keep the $VITE_APP_NAME channel in the YPP program, meaning that referral rewards can still be collected.
 
         Opting out from the entire program can also be done from the settings tab. This will result the channel marked in the internal data base as "opted-out" and payout calculation for this channel will stop for any activities undertaken.
 
@@ -235,7 +239,7 @@ features:
 
         Manual process is involved, so errors are not inevitable.  JSG team is not liable for any reconciliations, but is committed to spend reasonable efforts to support all participants in reconciliation of rewards calculation where it deems to be operationally viable and commercially sensible to do so.
 
-        JSG team is not liable or obliged to do the payments and in case of errors will seek to provide the support in reconciliation of payments but not be obliged for channel rewards. In case of any disputes over content quality and qualification for rewards, JSG has no liability to compensate the channels and these terms are not binding, but payouts are made on total discretion of the Gleev App operator and the JS Genesis AS team. In case program budget runs out before some of the apps are paid, there is no obligation to pay late subscribers.
+        JSG team is not liable or obliged to do the payments and in case of errors will seek to provide the support in reconciliation of payments but not be obliged for channel rewards. In case of any disputes over content quality and qualification for rewards, JSG has no liability to compensate the channels and these terms are not binding, but payouts are made on total discretion of the $VITE_APP_NAME App operator and the JS Genesis AS team. In case program budget runs out before some of the apps are paid, there is no obligation to pay late subscribers.
 
         ## Severability
 
@@ -247,7 +251,7 @@ features:
 
         ## Governing Law
 
-        Governing law of these terms are the same as the general Terms of Service for Gleev App as described on [this page](https://gleev.xyz/legal/tos)
+        Governing law of these terms are the same as the general Terms of Service for $VITE_APP_NAME App as described on [this page](https://gleev.xyz/legal/tos)
 
         ## Miscellaneous
 
@@ -499,7 +503,7 @@ legal:
 
     Last updated on the 25th of January 2023
 
-    This Terms of Service ("Agreement") is a binding obligation between you ("User") and Jsgenesis AS ("Company", "We", "Us", "Our") for use of our Joystream Player interface ("Atlas") hosted at play.joystream.org and all other products (collectively "Software") developed and published by Us.
+    This Terms of Service ("Agreement") is a binding obligation between you ("User") and Jsgenesis AS ("Company", "We", "Us", "Our") for use of our Joystream Player interface ("$VITE_APP_NAME") hosted at play.joystream.org and all other products (collectively "Software") developed and published by Us.
 
     ## 1. Agreement to Terms
 

@@ -13,6 +13,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { ErrorCode, JoystreamLibError, JoystreamLibErrorType } from '@/joystream-lib/errors'
 import { ExtrinsicResult, ExtrinsicStatus, ExtrinsicStatusCallbackFn } from '@/joystream-lib/types'
 import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
+import { useUser } from '@/providers/user/user.hooks'
 import { useUserStore } from '@/providers/user/user.store'
 import { createId } from '@/utils/createId'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
@@ -62,6 +63,8 @@ export const useTransaction = (): HandleTransactionFn => {
   const { displaySnackbar } = useSnackbar()
   const getMetaprotocolTxStatus = useMetaprotocolTransactionStatus()
   const { totalBalance } = useSubscribeAccountBalance()
+  const { isSignerMetadataOutdated, updateSignerMetadata, skipSignerMetadataUpdate } = useUser()
+  const { wallet } = useUserStore()
 
   return useCallback(
     async ({
@@ -82,6 +85,32 @@ export const useTransaction = (): HandleTransactionFn => {
       if (nodeConnectionStatus !== 'connected') {
         ConsoleLogger.error('Tried submitting transaction when not connected to Joystream node')
         return false
+      }
+
+      if (isSignerMetadataOutdated) {
+        await new Promise((resolve) => {
+          openOngoingTransactionModal({
+            title: 'Update Wallet Metadata',
+            type: 'informative',
+            description: `Updated metadata in ${wallet?.title} wallet will allow to view all transactions details before signing. If you choose to ignore it, you will not be prompted until next version of node update is released.`,
+            primaryButton: {
+              text: 'Update',
+              onClick: () => {
+                updateSignerMetadata().then(() => {
+                  resolve(null)
+                })
+              },
+            },
+            secondaryButton: {
+              text: 'Skip',
+              onClick: () => {
+                resolve(null)
+                skipSignerMetadataUpdate()
+              },
+            },
+          })
+        })
+        closeOngoingTransactionModal()
       }
 
       if (fee && totalBalance?.lt(fee)) {
@@ -306,13 +335,17 @@ export const useTransaction = (): HandleTransactionFn => {
       closeOngoingTransactionModal,
       displaySnackbar,
       getMetaprotocolTxStatus,
+      isSignerMetadataOutdated,
       navigate,
       nodeConnectionStatus,
       openOngoingTransactionModal,
       removeTransaction,
+      skipSignerMetadataUpdate,
       totalBalance,
+      updateSignerMetadata,
       updateTransaction,
       userWalletName,
+      wallet?.title,
     ]
   )
 }
