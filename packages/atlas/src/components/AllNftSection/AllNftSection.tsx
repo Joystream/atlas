@@ -44,6 +44,13 @@ const OTHER: FilterButtonOption[] = [
 
 const FILTERS: SectionFilter[] = [
   {
+    name: 'price',
+    type: 'range',
+    label: 'Price',
+    icon: <SvgActionSettings />,
+    range: { min: undefined, max: undefined },
+  },
+  {
     name: 'status',
     label: 'Status',
     icon: <SvgActionAuction />,
@@ -69,7 +76,14 @@ export const AllNftSection = () => {
     const otherFilters = filters.find((filter) => filter.name === 'other')
     const isMature = otherFilters?.options?.some((option) => option.value === 'mature' && option.applied)
     const isPromotional = otherFilters?.options?.some((option) => option.value === 'promotional' && option.applied)
+
+    const priceFilter = filters.find((filter) => filter.name === 'price')
+    const minPrice = priceFilter?.range?.appliedMin
+    const maxPrice = priceFilter?.range?.appliedMax
     return {
+      // lastSalePrice_gte: '10000102000000',
+      lastSalePrice_gte: minPrice ? String(minPrice) : undefined,
+      lastSalePrice_lte: maxPrice ? String(maxPrice) : undefined,
       ...(mappedStatus.length
         ? {
             transactionalStatus: {

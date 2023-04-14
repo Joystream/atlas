@@ -1,7 +1,7 @@
 import { FC, useRef } from 'react'
 
 import { SvgActionChevronL, SvgActionChevronR, SvgActionClose } from '@/assets/icons'
-import { FilterButton, FilterButtonOption, SectionFilter } from '@/components/FilterButton'
+import { FilterButton, FilterButtonOption, FilterRange, SectionFilter, isFilterRange } from '@/components/FilterButton'
 import { MobileFilterButton } from '@/components/MobileFilterButton'
 import { Button } from '@/components/_buttons/Button'
 import { useHorizonthalFade } from '@/hooks/useHorizonthalFade'
@@ -32,11 +32,12 @@ export const SectionFilters: FC<SectionFiltersProps> = ({ filters, onApplyFilter
     .flat()
     .some(Boolean)
 
-  const handleApply = (name: string, selectedOptions: FilterButtonOption[]) => {
+  const handleApply = (name: string, selectedOptions: FilterButtonOption[] | FilterRange) => {
     onApplyFilters?.(
       filters.map((filter) => {
         if (filter.name === name) {
-          return { ...filter, options: selectedOptions }
+          const isFilter = isFilterRange(selectedOptions)
+          return { ...filter, [isFilter ? 'range' : 'options']: selectedOptions }
         }
         return filter
       })

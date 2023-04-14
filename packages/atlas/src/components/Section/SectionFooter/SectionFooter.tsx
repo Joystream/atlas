@@ -16,6 +16,7 @@ type SectionFooterLoadProps = {
   type: 'load'
   label: string
   fetchMore: () => Promise<void>
+  reachedEnd: boolean
 }
 
 type SectionFooterPaginationProps = {
