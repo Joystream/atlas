@@ -13,6 +13,11 @@ const badgeTabs = [
   { name: 'six', badgeNumber: 6 },
   { name: 'seven', badgeNumber: 7 },
   { name: 'eight', badgeNumber: 8 },
+  { name: 'nine', badgeNumber: 8 },
+  { name: 'ten', badgeNumber: 8 },
+  { name: 'eleven', badgeNumber: 8 },
+  { name: 'twelve', badgeNumber: 8 },
+  { name: 'thirteen', badgeNumber: 8 },
 ]
 const pillTabs = [
   { name: 'one', pillText: 1 },
@@ -58,6 +63,5 @@ const Template: StoryFn<TabsProps> = (args) => {
 export const Default = Template.bind({})
 
 export const Container = styled.div`
-  width: 300px;
   gap: 64px;
 `

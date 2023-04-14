@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 
@@ -58,7 +58,7 @@ export const MyVideosView = () => {
   const headTags = useHeadTags('My videos')
   const navigate = useNavigate()
   const { channelId } = useAuthorizedUser()
-  const { editedVideoInfo, setEditedVideo } = useVideoWorkspace()
+  const { editedVideoInfo, setEditedVideo, uploadVideoButtonProps } = useVideoWorkspace()
   const { displaySnackbar, updateSnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
@@ -181,8 +181,6 @@ export const MyVideosView = () => {
     }
   }
 
-  const handleAddVideoTab = useCallback(() => setEditedVideo(), [setEditedVideo])
-
   type HandleVideoClickOpts = {
     draft?: boolean
     minimized?: boolean
@@ -265,7 +263,9 @@ export const MyVideosView = () => {
         .slice(videosPerPage * currentPage, currentPage * videosPerPage + videosPerPage)
         .map((draft, idx) => {
           if (draft === 'new-video-tile') {
-            return <NewVideoTile loading={areTilesLoading} key={`$draft-${idx}`} onClick={handleAddVideoTab} />
+            return (
+              <NewVideoTile loading={areTilesLoading} key={`$draft-${idx}`} onClick={uploadVideoButtonProps.onClick} />
+            )
           }
           return (
             <VideoTileDraft
@@ -282,7 +282,7 @@ export const MyVideosView = () => {
             <NewVideoTile
               loading={video === 'new-video-tile' ? areTilesLoading : true}
               key={idx}
-              onClick={video === 'new-video-tile' ? handleAddVideoTab : undefined}
+              onClick={video === 'new-video-tile' ? uploadVideoButtonProps.onClick : undefined}
             />
           )
         }
@@ -333,13 +333,7 @@ export const MyVideosView = () => {
         My videos
       </Text>
       {!smMatch && sortVisibleAndUploadButtonVisible && (
-        <MobileButton
-          size="large"
-          to={absoluteRoutes.studio.videoWorkspace()}
-          icon={<SvgActionAddVideo />}
-          onClick={handleAddVideoTab}
-          fullWidth
-        >
+        <MobileButton size="large" icon={<SvgActionAddVideo />} fullWidth {...uploadVideoButtonProps}>
           Upload video
         </MobileButton>
       )}
@@ -349,13 +343,7 @@ export const MyVideosView = () => {
           title="Add your first video"
           subtitle="No videos uploaded yet. Start publishing by adding your first video to Joystream."
           button={
-            <Button
-              icon={<SvgActionUpload />}
-              to={absoluteRoutes.studio.videoWorkspace()}
-              variant="secondary"
-              size="large"
-              onClick={handleAddVideoTab}
-            >
+            <Button icon={<SvgActionUpload />} variant="secondary" size="large" {...uploadVideoButtonProps}>
               Upload video
             </Button>
           }
@@ -366,11 +354,7 @@ export const MyVideosView = () => {
             <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
             {mdMatch && sortVisibleAndUploadButtonVisible && sortSelectNode}
             {smMatch && sortVisibleAndUploadButtonVisible && (
-              <Button
-                to={absoluteRoutes.studio.videoWorkspace()}
-                icon={<SvgActionAddVideo />}
-                onClick={handleAddVideoTab}
-              >
+              <Button {...uploadVideoButtonProps} icon={<SvgActionAddVideo />}>
                 Upload video
               </Button>
             )}
@@ -434,13 +418,7 @@ export const MyVideosView = () => {
                   : 'Videos published with "Unlisted" privacy setting will show up here.'
               }
               button={
-                <Button
-                  icon={<SvgActionUpload />}
-                  to={absoluteRoutes.studio.videoWorkspace()}
-                  variant="secondary"
-                  size="large"
-                  onClick={handleAddVideoTab}
-                >
+                <Button icon={<SvgActionUpload />} variant="secondary" size="large" {...uploadVideoButtonProps}>
                   Upload video
                 </Button>
               }

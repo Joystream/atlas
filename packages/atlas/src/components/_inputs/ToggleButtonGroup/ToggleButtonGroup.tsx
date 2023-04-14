@@ -1,78 +1,48 @@
-import { throttle } from 'lodash-es'
-import { useEffect, useRef, useState } from 'react'
-import useDraggableScroll from 'use-draggable-scroll'
+import { useRef } from 'react'
 
 import { SvgActionChevronL, SvgActionChevronR } from '@/assets/icons'
+import { FilterButton, FilterButtonProps } from '@/components/FilterButton'
 import { Button } from '@/components/_buttons/Button'
+import { useHorizonthalFade } from '@/hooks/useHorizonthalFade'
 
-import { ButtonLeft, ButtonRight, Container, ContentWrapper, Label, OptionWrapper } from './ToggleButtonGroup.styles'
+import {
+  ButtonLeft,
+  ButtonRight,
+  Container,
+  ContainerWidth,
+  ContentWrapper,
+  Label,
+  OptionWrapper,
+} from './ToggleButtonGroup.styles'
 
-export type ToggleButtonGroupProps<T extends string> = {
-  options: T[]
-  value?: T
+type SharedToggleButtonProps = {
   label?: string
-  width?: 'auto' | 'fixed'
-  onChange: (width: T) => void
+  width?: ContainerWidth
   className?: string
 }
 
-const SCROLL_SHADOW_OFFSET = 10
+export type ToggleButtonOptionTypeProps<T extends string = string> = {
+  type: 'options'
+  options: T[]
+  value?: T
+  onChange: (value: T) => void
+} & SharedToggleButtonProps
 
-export const ToggleButtonGroup = <T extends string>({
-  label,
-  width = 'auto',
-  options,
-  value,
-  onChange,
-  className,
-}: ToggleButtonGroupProps<T>) => {
+export type ToggleButtonFilterTypeProps = {
+  type: 'filter'
+  onClearFilters?: () => void
+  filters: FilterButtonProps[]
+} & SharedToggleButtonProps
+
+export type ToggleButtonGroupProps<T extends string = string> =
+  | ToggleButtonFilterTypeProps
+  | ToggleButtonOptionTypeProps<T>
+
+export const ToggleButtonGroup = <T extends string = string>(props: ToggleButtonGroupProps<T>) => {
+  const { type, label, width = 'auto', className } = props
   const optionWrapperRef = useRef<HTMLDivElement>(null)
-  const [isOverflowing, setIsOverflowing] = useState<boolean>(false)
-  const { onMouseDown } = useDraggableScroll(optionWrapperRef, { direction: 'horizontal' })
-  const [shadowsVisible, setShadowsVisible] = useState({
-    left: false,
-    right: false,
-  })
 
-  useEffect(() => {
-    if (optionWrapperRef.current) {
-      setIsOverflowing(optionWrapperRef.current.clientWidth < optionWrapperRef.current.scrollWidth)
-    }
-  }, [])
-
-  useEffect(() => {
-    const optionGroup = optionWrapperRef.current
-    if (!optionGroup || !isOverflowing || width !== 'fixed') {
-      return
-    }
-    setShadowsVisible((prev) => ({ ...prev, right: true }))
-    const { clientWidth, scrollWidth } = optionGroup
-
-    const touchHandler = throttle(() => {
-      setShadowsVisible({
-        left: optionGroup.scrollLeft > SCROLL_SHADOW_OFFSET,
-        right: optionGroup.scrollLeft < scrollWidth - clientWidth - SCROLL_SHADOW_OFFSET,
-      })
-    }, 100)
-
-    optionGroup.addEventListener('touchmove', touchHandler, { passive: true })
-    optionGroup.addEventListener('scroll', touchHandler)
-    return () => {
-      touchHandler.cancel()
-      optionGroup.removeEventListener('touchmove', touchHandler)
-      optionGroup.removeEventListener('scroll', touchHandler)
-    }
-  }, [isOverflowing, width])
-
-  const handleArrowScroll = (direction: 'left' | 'right') => () => {
-    const optionGroup = optionWrapperRef.current
-    if (!optionGroup || !isOverflowing) {
-      return
-    }
-
-    const addition = (direction === 'left' ? -1 : 1) * (optionGroup.clientWidth / 2)
-    optionGroup.scrollBy({ left: addition, behavior: 'smooth' })
-  }
+  const { handleArrowScroll, handleMouseDown, isOverflow, visibleShadows } = useHorizonthalFade(optionWrapperRef)
 
   return (
     <Container className={className} width={width}>
@@ -82,7 +52,7 @@ export const ToggleButtonGroup = <T extends string>({
         </Label>
       )}
       <ContentWrapper>
-        {width === 'fixed' && isOverflowing && shadowsVisible.left && (
+        {width === 'fixed' && isOverflow && visibleShadows.left && (
           <ButtonLeft
             onClick={handleArrowScroll('left')}
             size="small"
@@ -90,20 +60,23 @@ export const ToggleButtonGroup = <T extends string>({
             icon={<SvgActionChevronL />}
           />
         )}
-        <OptionWrapper onMouseDown={onMouseDown} ref={optionWrapperRef} shadowsVisible={shadowsVisible}>
-          {options.map((option) => (
-            <Button
-              key={option}
-              fullWidth
-              variant={option !== value ? 'tertiary' : 'secondary'}
-              onClick={() => onChange(option)}
-              size="small"
-            >
-              {option}
-            </Button>
-          ))}
+        <OptionWrapper onMouseDown={handleMouseDown} ref={optionWrapperRef} visibleShadows={visibleShadows}>
+          {type === 'options' &&
+            props.options.map((option) => (
+              <Button
+                key={option}
+                fullWidth
+                variant={option !== props.value ? 'tertiary' : 'secondary'}
+                onClick={() => props.onChange(option)}
+                size="small"
+              >
+                {option}
+              </Button>
+            ))}
+          {type === 'filter' &&
+            props.filters.map((filterButtonProps, idx) => <FilterButton key={idx} {...filterButtonProps} />)}
         </OptionWrapper>
-        {width === 'fixed' && isOverflowing && shadowsVisible.right && (
+        {width === 'fixed' && isOverflow && visibleShadows.right && (
           <ButtonRight
             onClick={handleArrowScroll('right')}
             size="small"

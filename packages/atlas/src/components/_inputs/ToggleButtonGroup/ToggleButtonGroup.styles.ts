@@ -3,23 +3,31 @@ import styled from '@emotion/styled'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { cVar, sizes, zIndex } from '@/styles'
-import { getMaskImage } from '@/utils/styles'
+import { MaskProps, getMaskImage } from '@/utils/styles'
 
-export const Container = styled.div<{ width: 'auto' | 'fixed' }>`
+export type ContainerWidth = 'auto' | 'fixed' | 'fluid'
+
+const getContainerMaxWidth = (width: ContainerWidth) => {
+  switch (width) {
+    case 'fluid':
+      return 'unset'
+    case 'auto':
+      return 'fit-content'
+    case 'fixed':
+      return '320px'
+  }
+}
+
+export const Container = styled.div<{ width: ContainerWidth }>`
   display: flex;
   padding: ${sizes(1)};
   gap: ${sizes(1)};
-  border: 1px solid ${cVar('colorBorderMutedAlpha')};
+  box-shadow: inset 0 0 0 1px ${cVar('colorBorderMutedAlpha')};
   border-radius: ${cVar('radiusSmall')};
-  max-width: ${(props) => (props.width === 'auto' ? 'fit-content' : '320px')};
+  max-width: ${(props) => getContainerMaxWidth(props.width)};
 `
 
-export const OptionWrapper = styled.div<{
-  shadowsVisible: {
-    left: boolean
-    right: boolean
-  }
-}>`
+export const OptionWrapper = styled.div<MaskProps>`
   display: flex;
   flex: 1;
   gap: ${sizes(1)};
@@ -27,11 +35,7 @@ export const OptionWrapper = styled.div<{
   overflow: auto;
   scrollbar-width: none;
   position: relative;
-  ${(props) =>
-    getMaskImage({
-      shadowsVisible: props.shadowsVisible,
-      'data-underline': false,
-    })};
+  ${getMaskImage};
 
   ::-webkit-scrollbar {
     display: none;

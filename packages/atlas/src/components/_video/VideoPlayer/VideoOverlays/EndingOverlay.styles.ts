@@ -151,7 +151,6 @@ export const StyledCircularProgress = styled(CircularProgress)`
 `
 
 export const CountDownButton = styled(Button)`
-  display: block;
   position: absolute;
 `
 
