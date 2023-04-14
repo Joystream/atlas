@@ -5,11 +5,11 @@ import { SvgActionUpload } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { AssetUpload } from '@/providers/uploads/uploads.types'
 import { useUser } from '@/providers/user/user.hooks'
+import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { arrayFrom } from '@/utils/data'
 
 import { UploadsContainer } from './MyUploadsView.styles'
@@ -24,6 +24,7 @@ export const MyUploadsView: FC = () => {
   const { channelId } = useUser()
 
   const headTags = useHeadTags('My uploads')
+  const { uploadVideoButtonProps } = useVideoWorkspace()
 
   const channelUploads = useUploadsStore((state) => state.uploads.filter((asset) => asset.owner === channelId), shallow)
   const isSyncing = useUploadsStore((state) => state.isSyncing)
@@ -62,12 +63,7 @@ export const MyUploadsView: FC = () => {
           title="No ongoing uploads"
           subtitle="You will see status of each ongoing upload here."
           button={
-            <Button
-              icon={<SvgActionUpload />}
-              variant="secondary"
-              size="large"
-              to={absoluteRoutes.studio.videoWorkspace()}
-            >
+            <Button icon={<SvgActionUpload />} variant="secondary" size="large" {...uploadVideoButtonProps}>
               Upload video
             </Button>
           }

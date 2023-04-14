@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 
@@ -13,7 +13,6 @@ import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { Select } from '@/components/_inputs/Select'
-import { ContentTypeDialog } from '@/components/_overlays/ContentTypeDialog'
 import { VideoTileDraft } from '@/components/_video/VideoTileDraft'
 import { VideoTilePublisher } from '@/components/_video/VideoTilePublisher'
 import { atlasConfig } from '@/config'
@@ -25,7 +24,6 @@ import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { chanelUnseenDraftsSelector, channelDraftsSelector, useDraftStore } from '@/providers/drafts'
-import { usePersonalDataStore } from '@/providers/personalData'
 import { useSnackbar } from '@/providers/snackbars'
 import { useAuthorizedUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
@@ -56,13 +54,11 @@ const SNACKBAR_TIMEOUT = 5000
 
 const YOUTUBE_BACKEND_URL = atlasConfig.features.ypp.youtubeSyncApiUrl
 
-const CONTENT_TYPE_INFO = 'content-type'
-
 export const MyVideosView = () => {
   const headTags = useHeadTags('My videos')
   const navigate = useNavigate()
   const { channelId } = useAuthorizedUser()
-  const { editedVideoInfo, setEditedVideo } = useVideoWorkspace()
+  const { editedVideoInfo, setEditedVideo, uploadVideoButtonProps } = useVideoWorkspace()
   const { displaySnackbar, updateSnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
@@ -70,12 +66,6 @@ export const MyVideosView = () => {
   const videosPerPage = ROWS_AMOUNT * videosPerRow
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
-  const isContentTypeInfoDismissed = usePersonalDataStore((state) =>
-    state.dismissedMessages.some((message) => message.id === CONTENT_TYPE_INFO)
-  )
-  const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
-
-  const [isContentTypeDialogOpen, setIsContentDialogOpen] = useState(false)
 
   const { isLoading: isCurrentlyUploadedVideoIdsLoading, data: yppDAta } = useQuery(
     `ypp-ba-videos-${channelId}`,
@@ -191,14 +181,6 @@ export const MyVideosView = () => {
     }
   }
 
-  const handleOpenVideoWorkspace = useCallback(() => {
-    if (!isContentTypeInfoDismissed) {
-      setIsContentDialogOpen(true)
-      return
-    }
-    setEditedVideo()
-  }, [isContentTypeInfoDismissed, setEditedVideo])
-
   type HandleVideoClickOpts = {
     draft?: boolean
     minimized?: boolean
@@ -281,7 +263,9 @@ export const MyVideosView = () => {
         .slice(videosPerPage * currentPage, currentPage * videosPerPage + videosPerPage)
         .map((draft, idx) => {
           if (draft === 'new-video-tile') {
-            return <NewVideoTile loading={areTilesLoading} key={`$draft-${idx}`} onClick={handleOpenVideoWorkspace} />
+            return (
+              <NewVideoTile loading={areTilesLoading} key={`$draft-${idx}`} onClick={uploadVideoButtonProps.onClick} />
+            )
           }
           return (
             <VideoTileDraft
@@ -298,7 +282,7 @@ export const MyVideosView = () => {
             <NewVideoTile
               loading={video === 'new-video-tile' ? areTilesLoading : true}
               key={idx}
-              onClick={video === 'new-video-tile' ? handleOpenVideoWorkspace : undefined}
+              onClick={video === 'new-video-tile' ? uploadVideoButtonProps.onClick : undefined}
             />
           )
         }
@@ -345,26 +329,11 @@ export const MyVideosView = () => {
   return (
     <LimitedWidthContainer>
       {headTags}
-      <ContentTypeDialog
-        isOpen={isContentTypeDialogOpen}
-        onClose={() => setIsContentDialogOpen(false)}
-        onSubmit={() => {
-          updateDismissedMessages(CONTENT_TYPE_INFO)
-          setIsContentDialogOpen(false)
-          navigate(absoluteRoutes.studio.videoWorkspace())
-        }}
-      />
       <Text as="h1" variant="h700" margin={{ top: 12, bottom: 12 }}>
         My videos
       </Text>
       {!smMatch && sortVisibleAndUploadButtonVisible && (
-        <MobileButton
-          size="large"
-          to={isContentTypeInfoDismissed ? absoluteRoutes.studio.videoWorkspace() : ''}
-          icon={<SvgActionAddVideo />}
-          onClick={handleOpenVideoWorkspace}
-          fullWidth
-        >
+        <MobileButton size="large" icon={<SvgActionAddVideo />} fullWidth {...uploadVideoButtonProps}>
           Upload video
         </MobileButton>
       )}
@@ -374,13 +343,7 @@ export const MyVideosView = () => {
           title="Add your first video"
           subtitle="No videos uploaded yet. Start publishing by adding your first video to Joystream."
           button={
-            <Button
-              icon={<SvgActionUpload />}
-              to={isContentTypeInfoDismissed ? absoluteRoutes.studio.videoWorkspace() : ''}
-              variant="secondary"
-              size="large"
-              onClick={handleOpenVideoWorkspace}
-            >
+            <Button icon={<SvgActionUpload />} variant="secondary" size="large" {...uploadVideoButtonProps}>
               Upload video
             </Button>
           }
@@ -391,11 +354,7 @@ export const MyVideosView = () => {
             <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
             {mdMatch && sortVisibleAndUploadButtonVisible && sortSelectNode}
             {smMatch && sortVisibleAndUploadButtonVisible && (
-              <Button
-                to={isContentTypeInfoDismissed ? absoluteRoutes.studio.videoWorkspace() : ''}
-                icon={<SvgActionAddVideo />}
-                onClick={handleOpenVideoWorkspace}
-              >
+              <Button {...uploadVideoButtonProps} icon={<SvgActionAddVideo />}>
                 Upload video
               </Button>
             )}
@@ -459,13 +418,7 @@ export const MyVideosView = () => {
                   : 'Videos published with "Unlisted" privacy setting will show up here.'
               }
               button={
-                <Button
-                  icon={<SvgActionUpload />}
-                  to={isContentTypeInfoDismissed ? absoluteRoutes.studio.videoWorkspace() : ''}
-                  variant="secondary"
-                  size="large"
-                  onClick={handleOpenVideoWorkspace}
-                >
+                <Button icon={<SvgActionUpload />} variant="secondary" size="large" {...uploadVideoButtonProps}>
                   Upload video
                 </Button>
               }
