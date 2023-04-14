@@ -32,6 +32,10 @@ export type ContextValue = {
   setEditedVideo: (video?: VideoWorkspace) => void
   isWorkspaceOpen: boolean
   setIsWorkspaceOpen: (open: boolean) => void
+  uploadVideoButtonProps: {
+    to?: string
+    onClick: () => void
+  }
 }
 
 export type VideoWorkspaceVideoFormFields = {

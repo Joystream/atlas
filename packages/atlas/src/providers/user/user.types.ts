@@ -17,6 +17,7 @@ export type UserContextValue = {
   memberships: Membership[]
   membershipsLoading: boolean
   activeMembership: Membership | null
+  activeChannel: Membership['channels'][number] | null
 
   isAuthLoading: boolean
 

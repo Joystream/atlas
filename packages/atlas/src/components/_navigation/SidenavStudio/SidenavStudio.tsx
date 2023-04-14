@@ -19,6 +19,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { chanelUnseenDraftsSelector, useDraftStore } from '@/providers/drafts'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { useUser } from '@/providers/user/user.hooks'
+import { useVideoWorkspace } from '@/providers/videoWorkspace'
 
 const studioNavbarItems: NavItemType[] = [
   {
@@ -72,6 +73,7 @@ type SidenavStudioProps = {
 
 export const SidenavStudio: FC<SidenavStudioProps> = ({ className }) => {
   const [expanded, setExpanded] = useState(false)
+  const { uploadVideoButtonProps } = useVideoWorkspace()
   const { channelId } = useUser()
   const unseenDrafts = useDraftStore(chanelUnseenDraftsSelector(channelId || ''))
 
@@ -95,8 +97,11 @@ export const SidenavStudio: FC<SidenavStudioProps> = ({ className }) => {
     <>
       <Button
         icon={<SvgActionAddVideo />}
-        onClick={() => setExpanded(false)}
-        to={absoluteRoutes.studio.videoWorkspace()}
+        to={uploadVideoButtonProps.to}
+        onClick={() => {
+          setExpanded(false)
+          uploadVideoButtonProps.onClick()
+        }}
       >
         Upload video
       </Button>
