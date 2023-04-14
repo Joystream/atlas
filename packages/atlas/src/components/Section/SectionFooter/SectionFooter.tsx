@@ -25,6 +25,7 @@ type SectionFooterPaginationProps = {
 type SectionFooterInfiniteLoadingProps = {
   type: 'infinite'
   fetchMore: () => Promise<void>
+  reachedEnd: boolean
 }
 
 export type SectionFooterProps =
@@ -43,7 +44,11 @@ export const SectionFooter = (props: SectionFooterProps) => {
   const { ref, inView } = useInView()
 
   useEffect(() => {
-    if ((props.type === 'infinite' || (props.type === 'load' && isSwitchedToInfinite)) && inView && !isLoading) {
+    if (
+      ((props.type === 'infinite' && !props.reachedEnd) || (props.type === 'load' && isSwitchedToInfinite)) &&
+      inView &&
+      !isLoading
+    ) {
       setIsLoading(true)
       props.fetchMore().finally(() => setIsLoading(false))
     }
