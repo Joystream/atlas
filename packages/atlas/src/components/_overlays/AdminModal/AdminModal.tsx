@@ -1,5 +1,6 @@
 import { ChangeEvent, FC, useEffect, useState } from 'react'
 
+import packageJson from '@/../package.json'
 import { useGetKillSwitch, useSetKillSwitch } from '@/api/hooks/admin'
 import { SvgActionNewTab, SvgAlertsError24, SvgAlertsWarning24 } from '@/assets/icons'
 import { Information } from '@/components/Information'
@@ -23,12 +24,19 @@ import { ActiveUserState } from '@/providers/user/user.types'
 import { useUserLocationStore } from '@/providers/userLocation'
 import { SentryLogger } from '@/utils/logs'
 
-import { CustomNodeUrlWrapper, HorizontalSpacedContainer, VerticalSpacedContainer } from './AdminModal.styles'
+import {
+  CustomNodeUrlWrapper,
+  HorizontalSpacedContainer,
+  VersionText,
+  VerticalSpacedContainer,
+} from './AdminModal.styles'
 
 const ENVIRONMENT_NAMES: Record<string, string> = {
   production: 'Joystream Mainnet',
   development: `${atlasConfig.general.appName} Dev Testnet`,
   next: `${atlasConfig.general.appName} Next Testnet`,
+  // todo for removal, created only for testing purposes
+  orion2test: `${atlasConfig.general.appName} Orion v2 production Testnet`,
   local: 'Local chain',
 }
 
@@ -116,6 +124,9 @@ export const AdminModal: FC = () => {
       {selectedTabIdx === 2 && <UserTab />}
       {selectedTabIdx === 3 && <LocationTab />}
       {selectedTabIdx === 4 && <KillSwitch />}
+      <VersionText variant="t200" as="p">
+        Built on Atlas v{packageJson.version}
+      </VersionText>
     </DialogModal>
   )
 }

@@ -37,7 +37,8 @@ export const useBasicChannel = (
   const { data, ...rest } = useGetExtendedBasicChannelsQuery({
     ...opts,
     variables: {
-      where: { channel: { id_eq: id } },
+      ...opts?.variables,
+      where: { ...opts?.variables?.where, channel: { ...opts?.variables?.where?.channel, id_eq: id } },
     },
   })
   return {

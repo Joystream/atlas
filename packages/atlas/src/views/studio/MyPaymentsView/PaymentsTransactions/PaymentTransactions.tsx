@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 
-import { useFullChannel } from '@/api/hooks/channel'
 import { SvgJoyTokenMonochrome24 } from '@/assets/icons'
 import { TablePaymentsHistory } from '@/components/TablePaymentsHistory'
 import { WidgetTile } from '@/components/WidgetTile'
@@ -14,10 +13,9 @@ import { TableWrapper, TilesWrapper } from './PaymentTransactions.styles'
 
 export const PaymentTransactions = () => {
   const { channelId } = useUser()
-  const { channel } = useFullChannel(channelId ?? '')
 
-  const { paymentData, loading } = useChannelPaymentsHistory(channel)
-  const paymentHistoryOverview = useMemo(() => aggregatePaymentHistory(paymentData), [paymentData])
+  const { paymentData, loading } = useChannelPaymentsHistory(channelId || '')
+  const paymentHistoryOverview = useMemo(() => aggregatePaymentHistory(paymentData || []), [paymentData])
 
   return (
     <>
@@ -31,12 +29,12 @@ export const PaymentTransactions = () => {
         <WidgetTile
           title="Total withdrawn"
           loading={loading}
-          text={formatNumber(hapiBnToTokenNumber(paymentHistoryOverview.totalWithdrawn))}
+          text={formatNumber(hapiBnToTokenNumber(paymentHistoryOverview.totalWithdrawn.abs()))}
           icon={<SvgJoyTokenMonochrome24 />}
         />
       </TilesWrapper>
-      <TableWrapper isEmpty={!paymentData.length}>
-        <TablePaymentsHistory data={paymentData} />
+      <TableWrapper isEmpty={!paymentData?.length}>
+        <TablePaymentsHistory isLoading={loading} data={paymentData ?? []} />
       </TableWrapper>
     </>
   )

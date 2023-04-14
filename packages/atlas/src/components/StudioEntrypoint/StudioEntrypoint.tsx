@@ -14,7 +14,7 @@ type StudioEntrypointProps = {
 export const StudioEntrypoint: FC<StudioEntrypointProps> = ({ enterLocation }) => {
   const { channelId, isLoggedIn, activeMembership } = useUser()
 
-  const channelSet = !!channelId
+  const channelSet = !!(channelId && activeMembership?.channels.find((channel) => channel.id === channelId))
 
   // not signed user with not account set and/or no extension
   if (!isLoggedIn) {

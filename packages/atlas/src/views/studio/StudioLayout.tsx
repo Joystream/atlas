@@ -22,10 +22,12 @@ import { VideoWorkspaceProvider, useVideoWorkspaceRouting } from '@/providers/vi
 import { transitions } from '@/styles'
 import { isAllowedBrowser } from '@/utils/browser'
 import { NotificationsView } from '@/views/notifications'
-import { MyPaymentsHiddenView } from '@/views/studio/MyPaymentsView/MyPaymentsHiddenView'
+import { CrtPreviewEditView } from '@/views/studio/CrtPreviewEditView'
+import { CrtPreviewView } from '@/views/studio/CrtPreviewView'
+import { CrtWelcomeView } from '@/views/studio/CrtWelcomeView/CrtWelcomeView'
+import { MyPaymentsView } from '@/views/studio/MyPaymentsView'
 
 import { CreateEditChannelView } from './CreateEditChannelView'
-import { CrtView } from './CrtView'
 import { MyUploadsView } from './MyUploadsView'
 import { MyVideosView } from './MyVideosView'
 import { StudioWelcomeView } from './StudioWelcomeView'
@@ -146,7 +148,7 @@ const StudioLayout = () => {
               <Route
                 path={relativeRoutes.studio.payments()}
                 element={
-                  <PrivateRoute element={<MyPaymentsHiddenView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                  <PrivateRoute element={<MyPaymentsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
                 }
               />
               <Route
@@ -154,8 +156,22 @@ const StudioLayout = () => {
                 element={<PrivateRoute element={<MyVideosView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />}
               />
               <Route
-                path={relativeRoutes.studio.crt()}
-                element={<PrivateRoute element={<CrtView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />}
+                path={relativeRoutes.studio.crtWelcome()}
+                element={
+                  <PrivateRoute element={<CrtWelcomeView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                }
+              />
+              <Route
+                path={relativeRoutes.studio.crtTokenPreview()}
+                element={
+                  <PrivateRoute element={<CrtPreviewView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                }
+              />
+              <Route
+                path={relativeRoutes.studio.crtTokenPreviewEdit()}
+                element={
+                  <PrivateRoute element={<CrtPreviewEditView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                }
               />
               <Route
                 path={relativeRoutes.studio.notifications()}

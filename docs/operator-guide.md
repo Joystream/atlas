@@ -146,6 +146,36 @@ Once youtube-synch is setup, you'll need to provide its API URL in `youtubeSyncA
 
 In order to enable YPP content in atlas, `googleConsoleClientId` variable needs to be provided. You can read more about it [here](https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid).
 
+You are free to use existing metaprotocol (Query Node) categories, but you can also create your own that match your Gateway's specific needs. To get a list of all the existing categories you can use the following QN query:
+
+```graphql
+query {
+  videoCategories(limit: 200) {
+    id
+    name
+  }
+}
+```
+
+You can also see the current categories used by specific Gateways in Apps WG Notion: https://joystream.notion.site/5b3afe994cd64c7d8144cd2978fa5ceb?v=639feb777c514c26b2d88869d67cabf8
+
+To create a new QN category, you can use [Joystream CLI](https://github.com/Joystream/joystream/tree/master/cli):
+
+```bash
+joystream-cli content:createVideoCategory "My category" "My category description"
+```
+
+Once you run the above command, you can use the query above with a `orderBy: createdAt_DESC` argument to get the ID of the newly created category. You can then add it to the `content.categories` config entry.
+
+#### YouTube Partner Program
+
+All the YPP (YouTube Partner Program) parameters could be found in `atlas.config.yml` file located in `packages/atlas` directory.
+`features.ypp` section contains all the necessary params for setting up [youtube-synch](https://github.com/Joystream/youtube-synch/) and customizing user's rewards.
+
+Once youtube-synch is setup, you'll need to provide its API URL in `youtubeSyncApiUrl` variable.
+
+In order to enable YPP content in atlas, `googleConsoleClientId` variable needs to be provided. You can read more about it [here](https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid).
+
 #### Terms of Service, Copyright Policy and Privacy Policy
 
 You can provide your own Terms of Service, Copyright Policy and Privacy Policy by updating the `legal.termsOfService`, `legal.copyrightPolicy` and `legal.privacyPolicy` config entries. All of these support basic Markdown syntax like headings and lists.

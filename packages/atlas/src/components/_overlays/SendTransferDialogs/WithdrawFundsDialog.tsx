@@ -16,6 +16,7 @@ import { hapiBnToTokenNumber, tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { useFee, useJoystream, useTokenPrice } from '@/providers/joystream/joystream.hooks'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { formatNumber } from '@/utils/number'
+import { useChannelPaymentsHistory } from '@/views/studio/MyPaymentsView/PaymentsTransactions/PaymentTransactions.hooks'
 
 import { PriceWrapper, StyledMaxButton, Summary, SummaryRow, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
 
@@ -48,8 +49,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
     setValue,
     formState: { errors },
   } = useForm<{ amount: number | null }>()
-  // todo uncomment once payments table is back
-  // const { fetchPaymentsData } = useChannelPaymentsHistory()
+  const { fetchPaymentsData } = useChannelPaymentsHistory(channelId || '')
   const { convertHapiToUSD } = useTokenPrice()
   const amountBn = tokenNumberToHapiBn(watch('amount') || 0)
   const { joystream, proxyCallback } = useJoystream()
@@ -86,8 +86,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
             proxyCallback(updateStatus)
           ),
         onTxSync: async () => {
-          // todo uncomment once payments table is back
-          // fetchPaymentsData()
+          fetchPaymentsData()
           onExitClick()
         },
       })

@@ -1,6 +1,7 @@
 import { useApolloClient } from '@apollo/client'
 import BN from 'bn.js'
 import { useCallback } from 'react'
+import { useNavigate } from 'react-router'
 
 import { MetaprotocolTransactionResultFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import {
@@ -8,6 +9,7 @@ import {
   GetMetaprotocolTransactionStatusEventsQuery,
   GetMetaprotocolTransactionStatusEventsQueryVariables,
 } from '@/api/queries/__generated__/transactionEvents.generated'
+import { absoluteRoutes } from '@/config/routes'
 import { ErrorCode, JoystreamLibError, JoystreamLibErrorType } from '@/joystream-lib/errors'
 import { ExtrinsicResult, ExtrinsicStatus, ExtrinsicStatusCallbackFn } from '@/joystream-lib/types'
 import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
@@ -54,6 +56,7 @@ export const useTransaction = (): HandleTransactionFn => {
     (state) => state.actions
   )
   const userWalletName = useUserStore((state) => state.wallet?.title)
+  const navigate = useNavigate()
 
   const [openOngoingTransactionModal, closeOngoingTransactionModal] = useConfirmationModal()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
@@ -262,6 +265,20 @@ export const useTransaction = (): HandleTransactionFn => {
           return false
         }
 
+        if (errorName === 'ChannelExcludedError') {
+          removeTransaction(transactionId)
+          displaySnackbar({
+            title: 'Something went wrong',
+            description:
+              "The channel you're using either doesn't exist, was deleted by creator, has been moderated by the DAO content curation team, or not included to be viewed by the application operators. Choose different channel. If you need support, reach out to our community on Discord.",
+            iconType: 'error',
+            timeout: MINIMIZED_SIGN_CANCELLED_SNACKBAR_TIMEOUT,
+          })
+
+          navigate(absoluteRoutes.viewer.index())
+          return false
+        }
+
         if (errorName === 'SignCancelledError') {
           ConsoleLogger.warn('Sign cancelled')
           removeTransaction(transactionId)
@@ -319,6 +336,7 @@ export const useTransaction = (): HandleTransactionFn => {
       displaySnackbar,
       getMetaprotocolTxStatus,
       isSignerMetadataOutdated,
+      navigate,
       nodeConnectionStatus,
       openOngoingTransactionModal,
       removeTransaction,

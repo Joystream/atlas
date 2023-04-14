@@ -22,6 +22,7 @@ export type GetFullChannelQuery = {
     videoViewsNum: number
     description?: string | null
     isPublic?: boolean | null
+    cumulativeRewardClaimed?: string | null
     isCensored: boolean
     language?: string | null
     id: string
@@ -53,6 +54,7 @@ export type GetFullChannelQuery = {
                 type?:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -76,6 +78,7 @@ export type GetFullChannelQuery = {
       type?:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -94,6 +97,7 @@ export type GetFullChannelQuery = {
       type?:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoSubtitle' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -135,6 +139,7 @@ export type GetExtendedBasicChannelsQuery = {
         type?:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -160,6 +165,7 @@ export type GetExtendedFullChannelsQuery = {
       videoViewsNum: number
       description?: string | null
       isPublic?: boolean | null
+      cumulativeRewardClaimed?: string | null
       isCensored: boolean
       language?: string | null
       id: string
@@ -191,6 +197,7 @@ export type GetExtendedFullChannelsQuery = {
                   type?:
                     | { __typename: 'DataObjectTypeChannelAvatar' }
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
                     | { __typename: 'DataObjectTypeVideoSubtitle' }
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -214,6 +221,7 @@ export type GetExtendedFullChannelsQuery = {
         type?:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -232,6 +240,7 @@ export type GetExtendedFullChannelsQuery = {
         type?:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -278,6 +287,7 @@ export type GetBasicChannelsConnectionQuery = {
           type?:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoSubtitle' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -338,6 +348,7 @@ export type GetTop10ChannelsQuery = {
         type?:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -377,6 +388,7 @@ export type GetPromisingChannelsQuery = {
         type?:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -416,6 +428,7 @@ export type GetDiscoverChannelsQuery = {
         type?:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -455,6 +468,7 @@ export type GetPopularChannelsQuery = {
         type?:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoSubtitle' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -497,6 +511,7 @@ export type GetChannelNftCollectorsQuery = {
                 type?:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoSubtitle' }
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -534,35 +549,142 @@ export type ReportChannelMutation = {
   reportChannel: { __typename?: 'ChannelReportInfo'; id: string; channelId: string }
 }
 
-export type GetChannelPaymentEventsQueryVariables = Types.Exact<{ [key: string]: never }>
+export type GetPayloadDataByCommitmentQueryVariables = Types.Exact<{
+  commitment: Types.Scalars['String']
+}>
+
+export type GetPayloadDataByCommitmentQuery = {
+  __typename?: 'Query'
+  events: Array<{
+    __typename?: 'Event'
+    data:
+      | { __typename?: 'AuctionBidCanceledEventData' }
+      | { __typename?: 'AuctionBidMadeEventData' }
+      | { __typename?: 'AuctionCanceledEventData' }
+      | { __typename?: 'BidMadeCompletingAuctionEventData' }
+      | { __typename?: 'BuyNowCanceledEventData' }
+      | { __typename?: 'BuyNowPriceUpdatedEventData' }
+      | { __typename?: 'ChannelFundsWithdrawnEventData' }
+      | { __typename?: 'ChannelPaymentMadeEventData' }
+      | {
+          __typename?: 'ChannelPayoutsUpdatedEventData'
+          payloadDataObject?: {
+            __typename?: 'StorageDataObject'
+            isAccepted: boolean
+            resolvedUrls: Array<string>
+            resolvedUrl?: string | null
+          } | null
+        }
+      | { __typename?: 'ChannelRewardClaimedAndWithdrawnEventData' }
+      | { __typename?: 'ChannelRewardClaimedEventData' }
+      | { __typename?: 'CommentCreatedEventData' }
+      | { __typename?: 'CommentTextUpdatedEventData' }
+      | { __typename?: 'EnglishAuctionSettledEventData' }
+      | { __typename?: 'EnglishAuctionStartedEventData' }
+      | { __typename?: 'MemberBannedFromChannelEventData' }
+      | { __typename?: 'MetaprotocolTransactionStatusEventData' }
+      | { __typename?: 'NftBoughtEventData' }
+      | { __typename?: 'NftIssuedEventData' }
+      | { __typename?: 'NftSellOrderMadeEventData' }
+      | { __typename?: 'OpenAuctionBidAcceptedEventData' }
+      | { __typename?: 'OpenAuctionStartedEventData' }
+  }>
+}
+
+export type GetChannelPaymentEventsQueryVariables = Types.Exact<{
+  channelId?: Types.InputMaybe<Types.Scalars['String']>
+}>
 
 export type GetChannelPaymentEventsQuery = {
   __typename?: 'Query'
   events: Array<{
     __typename?: 'Event'
-    id: string
-    timestamp: Date
     inBlock: number
+    timestamp: Date
     data:
       | { __typename: 'AuctionBidCanceledEventData' }
       | { __typename: 'AuctionBidMadeEventData' }
       | { __typename: 'AuctionCanceledEventData' }
       | {
           __typename: 'BidMadeCompletingAuctionEventData'
-          winningBid: { __typename?: 'Bid'; id: string; amount: string }
+          previousNftOwner: { __typename: 'NftOwnerChannel' } | { __typename: 'NftOwnerMember' }
+          winningBid: {
+            __typename?: 'Bid'
+            id: string
+            amount: string
+            bidder: { __typename?: 'Membership'; controllerAccount: string }
+            nft: {
+              __typename?: 'OwnedNft'
+              creatorRoyalty?: number | null
+              video: { __typename?: 'Video'; title?: string | null }
+            }
+          }
         }
       | { __typename: 'BuyNowCanceledEventData' }
       | { __typename: 'BuyNowPriceUpdatedEventData' }
+      | {
+          __typename: 'ChannelFundsWithdrawnEventData'
+          amount: string
+          actor:
+            | { __typename: 'ContentActorCurator' }
+            | { __typename: 'ContentActorLead' }
+            | { __typename: 'ContentActorMember'; member: { __typename?: 'Membership'; controllerAccount: string } }
+        }
+      | {
+          __typename: 'ChannelPaymentMadeEventData'
+          amount: string
+          rationale?: string | null
+          payer: { __typename?: 'Membership'; controllerAccount: string }
+        }
+      | { __typename: 'ChannelPayoutsUpdatedEventData' }
+      | { __typename: 'ChannelRewardClaimedAndWithdrawnEventData' }
+      | { __typename: 'ChannelRewardClaimedEventData'; amount: string }
       | { __typename: 'CommentCreatedEventData' }
       | { __typename: 'CommentTextUpdatedEventData' }
-      | { __typename: 'EnglishAuctionSettledEventData'; winningBid: { __typename?: 'Bid'; amount: string } }
+      | {
+          __typename: 'EnglishAuctionSettledEventData'
+          previousNftOwner: { __typename: 'NftOwnerChannel' } | { __typename: 'NftOwnerMember' }
+          winningBid: {
+            __typename?: 'Bid'
+            amount: string
+            nft: {
+              __typename?: 'OwnedNft'
+              creatorRoyalty?: number | null
+              video: { __typename?: 'Video'; title?: string | null }
+            }
+            bidder: { __typename?: 'Membership'; controllerAccount: string }
+          }
+        }
       | { __typename: 'EnglishAuctionStartedEventData' }
       | { __typename: 'MemberBannedFromChannelEventData' }
       | { __typename: 'MetaprotocolTransactionStatusEventData' }
-      | { __typename: 'NftBoughtEventData'; price: string }
+      | {
+          __typename: 'NftBoughtEventData'
+          price: string
+          buyer: { __typename?: 'Membership'; controllerAccount: string }
+          nft: {
+            __typename?: 'OwnedNft'
+            creatorRoyalty?: number | null
+            video: { __typename?: 'Video'; title?: string | null }
+          }
+          previousNftOwner: { __typename: 'NftOwnerChannel' } | { __typename: 'NftOwnerMember' }
+        }
       | { __typename: 'NftIssuedEventData' }
       | { __typename: 'NftSellOrderMadeEventData' }
-      | { __typename: 'OpenAuctionBidAcceptedEventData'; winningBid: { __typename?: 'Bid'; amount: string } }
+      | {
+          __typename: 'OpenAuctionBidAcceptedEventData'
+          winningBid: {
+            __typename?: 'Bid'
+            amount: string
+            nft: {
+              __typename?: 'OwnedNft'
+              creatorRoyalty?: number | null
+              video: { __typename?: 'Video'; title?: string | null }
+            }
+            bidder: { __typename?: 'Membership'; controllerAccount: string }
+          }
+          previousNftOwner: { __typename: 'NftOwnerChannel' } | { __typename: 'NftOwnerMember' }
+        }
       | { __typename: 'OpenAuctionStartedEventData' }
   }>
 }
@@ -1212,42 +1334,221 @@ export type ReportChannelMutationOptions = Apollo.BaseMutationOptions<
   ReportChannelMutation,
   ReportChannelMutationVariables
 >
-export const GetChannelPaymentEventsDocument = gql`
-  query GetChannelPaymentEvents {
-    events(
-      where: {
-        data: {
-          isTypeOf_in: [
-            "NftBoughtEventData"
-            "BidMadeCompletingAuctionEventData"
-            "EnglishAuctionSettledEventData"
-            "OpenAuctionBidAcceptedEventData"
-          ]
+export const GetPayloadDataByCommitmentDocument = gql`
+  query GetPayloadDataByCommitment($commitment: String!) {
+    events(where: { data: { isTypeOf_eq: "ChannelPayoutsUpdatedEventData", commitment_eq: $commitment } }) {
+      data {
+        ... on ChannelPayoutsUpdatedEventData {
+          payloadDataObject {
+            isAccepted
+            resolvedUrls
+            resolvedUrl @client
+          }
         }
       }
+    }
+  }
+`
+
+/**
+ * __useGetPayloadDataByCommitmentQuery__
+ *
+ * To run a query within a React component, call `useGetPayloadDataByCommitmentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPayloadDataByCommitmentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPayloadDataByCommitmentQuery({
+ *   variables: {
+ *      commitment: // value for 'commitment'
+ *   },
+ * });
+ */
+export function useGetPayloadDataByCommitmentQuery(
+  baseOptions: Apollo.QueryHookOptions<GetPayloadDataByCommitmentQuery, GetPayloadDataByCommitmentQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetPayloadDataByCommitmentQuery, GetPayloadDataByCommitmentQueryVariables>(
+    GetPayloadDataByCommitmentDocument,
+    options
+  )
+}
+export function useGetPayloadDataByCommitmentLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPayloadDataByCommitmentQuery, GetPayloadDataByCommitmentQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetPayloadDataByCommitmentQuery, GetPayloadDataByCommitmentQueryVariables>(
+    GetPayloadDataByCommitmentDocument,
+    options
+  )
+}
+export type GetPayloadDataByCommitmentQueryHookResult = ReturnType<typeof useGetPayloadDataByCommitmentQuery>
+export type GetPayloadDataByCommitmentLazyQueryHookResult = ReturnType<typeof useGetPayloadDataByCommitmentLazyQuery>
+export type GetPayloadDataByCommitmentQueryResult = Apollo.QueryResult<
+  GetPayloadDataByCommitmentQuery,
+  GetPayloadDataByCommitmentQueryVariables
+>
+export const GetChannelPaymentEventsDocument = gql`
+  query GetChannelPaymentEvents($channelId: String) {
+    events(
+      orderBy: timestamp_DESC
+      where: {
+        OR: [
+          {
+            data: {
+              isTypeOf_in: [
+                "NftBoughtEventData"
+                "BidMadeCompletingAuctionEventData"
+                "EnglishAuctionSettledEventData"
+                "OpenAuctionBidAcceptedEventData"
+              ]
+              previousNftOwner: { channel: { id_eq: $channelId } }
+            }
+          }
+          {
+            data: {
+              isTypeOf_in: [
+                "NftBoughtEventData"
+                "BidMadeCompletingAuctionEventData"
+                "EnglishAuctionSettledEventData"
+                "OpenAuctionBidAcceptedEventData"
+              ]
+              nft: { video: { channel: { id_eq: $channelId } } }
+            }
+          }
+          {
+            data: {
+              isTypeOf_in: ["ChannelRewardClaimedEventData", "ChannelFundsWithdrawnEventData"]
+              channel: { id_eq: $channelId }
+            }
+          }
+          { data: { isTypeOf_in: ["ChannelPaymentMadeEventData"], payeeChannel: { id_eq: $channelId } } }
+        ]
+      }
     ) {
-      id
-      timestamp
       inBlock
+      timestamp
       data {
         __typename
         ... on NftBoughtEventData {
           price
+          buyer {
+            controllerAccount
+          }
+          nft {
+            creatorRoyalty
+            video {
+              title
+            }
+          }
+          previousNftOwner {
+            __typename
+          }
         }
         ... on BidMadeCompletingAuctionEventData {
+          previousNftOwner {
+            __typename
+          }
           winningBid {
             id
+            amount
+            bidder {
+              controllerAccount
+            }
+            nft {
+              creatorRoyalty
+              video {
+                title
+              }
+            }
+            bidder {
+              controllerAccount
+            }
             amount
           }
         }
         ... on EnglishAuctionSettledEventData {
+          previousNftOwner {
+            __typename
+          }
           winningBid {
+            nft {
+              creatorRoyalty
+              video {
+                title
+              }
+            }
+            bidder {
+              controllerAccount
+            }
             amount
           }
         }
         ... on OpenAuctionBidAcceptedEventData {
           winningBid {
+            nft {
+              creatorRoyalty
+              video {
+                title
+              }
+            }
+            bidder {
+              controllerAccount
+            }
             amount
+          }
+        }
+        ... on OpenAuctionBidAcceptedEventData {
+          previousNftOwner {
+            __typename
+          }
+          winningBid {
+            amount
+            bidder {
+              controllerAccount
+            }
+            nft {
+              creatorRoyalty
+              video {
+                title
+              }
+            }
+          }
+        }
+        ... on ChannelRewardClaimedEventData {
+          amount
+        }
+        ... on ChannelFundsWithdrawnEventData {
+          amount
+          actor {
+            __typename
+            ... on ContentActorCurator {
+              __typename
+            }
+            ... on ContentActorLead {
+              __typename
+            }
+            ... on ContentActorMember {
+              member {
+                controllerAccount
+              }
+            }
+          }
+        }
+        ... on ChannelPaymentMadeEventData {
+          amount
+          rationale
+          payer {
+            controllerAccount
+          }
+        }
+        ... on ChannelPaymentMadeEventData {
+          amount
+          rationale
+          payer {
+            controllerAccount
           }
         }
       }
@@ -1267,6 +1568,7 @@ export const GetChannelPaymentEventsDocument = gql`
  * @example
  * const { data, loading, error } = useGetChannelPaymentEventsQuery({
  *   variables: {
+ *      channelId: // value for 'channelId'
  *   },
  * });
  */

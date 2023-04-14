@@ -206,6 +206,16 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
     checkSignerStatus()
   }, [checkSignerStatus])
 
+  const isChannelBelongsToTheUserOrExists = activeMembership?.channels.length
+    ? activeMembership.channels.some((channel) => channel.id === channelId)
+    : true
+
+  useEffect(() => {
+    if (!isChannelBelongsToTheUserOrExists) {
+      setActiveUser({ channelId: activeMembership?.channels.length ? activeMembership.channels[0].id : null })
+    }
+  }, [activeMembership?.channels, isChannelBelongsToTheUserOrExists, setActiveUser])
+
   const contextValue: UserContextValue = useMemo(
     () => ({
       memberships: memberships || [],

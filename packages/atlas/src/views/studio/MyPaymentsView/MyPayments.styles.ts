@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { Svg404PatternBottomLeft, Svg404PatternTopRight, SvgSmallTokens } from '@/assets/illustrations'
+import { SvgSmallTokens } from '@/assets/illustrations'
 import { cVar, media, sizes, square } from '@/styles'
 
 export const TabsContainer = styled.div`
@@ -35,51 +35,6 @@ export const TextContainer = styled.div`
   }
 
   ${media.md} {
-    width: 584px;
-  }
-
-  ${media.lg} {
-    width: 640px;
-  }
-
-  ${media.xl} {
-    width: 880px;
-  }
-
-  ${media.xxl} {
-    width: 724px;
-  }
-`
-
-export const BottomPattern = styled(Svg404PatternBottomLeft)`
-  position: absolute;
-  bottom: 0;
-  left: calc(var(--size-global-horizontal-padding) * -1);
-
-  ${square('216px')};
-
-  ${media.sm} {
-    ${square('unset')};
-  }
-
-  ${media.xxl} {
-    left: 0;
-  }
-`
-
-export const TopPattern = styled(Svg404PatternTopRight)`
-  position: absolute;
-  top: 0;
-  right: calc(var(--size-global-horizontal-padding) * -1);
-  width: 270px;
-  height: 216px;
-
-  ${media.sm} {
-    width: unset;
-    height: unset;
-  }
-
-  ${media.xxl} {
-    right: 0;
+    margin-bottom: ${sizes(6)};
   }
 `

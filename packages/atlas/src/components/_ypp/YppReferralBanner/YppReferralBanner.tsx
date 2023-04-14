@@ -10,6 +10,7 @@ import { atlasConfig } from '@/config'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
+import { useUser } from '@/providers/user/user.hooks'
 import { useYppStore } from '@/providers/ypp/ypp.store'
 import { cVar, transitions } from '@/styles'
 
@@ -30,24 +31,34 @@ type YppReferralBannerProps = {
 const appName = atlasConfig.general.appName
 export const YppReferralBanner: FC<YppReferralBannerProps> = ({ className }) => {
   const xsMatch = useMediaMatch('xs')
+  const { memberId } = useUser()
 
   const queryReferrerId = useRouterQuery(QUERY_PARAMS.REFERRER_ID)
   const setReferrerId = useYppStore((state) => state.actions.setReferrerId)
-  // persist referrer id in store
-  useEffect(() => {
-    if (queryReferrerId) {
-      setReferrerId(queryReferrerId)
-    }
-  }, [queryReferrerId, setReferrerId])
 
   const storeReferrerId = useYppStore((state) => state.referrerId)
   const referrerId = queryReferrerId || storeReferrerId
   const { loading: isLoadingChannel, extendedChannel } = useBasicChannel(referrerId || '', {
+    variables: {
+      where: {
+        channel: {
+          ownerMember: {
+            id_not_eq: memberId || '',
+          },
+        },
+      },
+    },
     skip: !referrerId,
   })
+
   const channel = extendedChannel?.channel
   const channelAvatarUrl = channel?.avatarPhoto?.resolvedUrl
-  const shouldShowReferrerBanner = referrerId && (isLoadingChannel || channel)
+  const shouldShowReferrerBanner = referrerId && channel && !isLoadingChannel
+
+  // persist referrer id in store
+  useEffect(() => {
+    setReferrerId(channel ? channel.id : null)
+  }, [channel, setReferrerId])
 
   const isLoading = isLoadingChannel
 

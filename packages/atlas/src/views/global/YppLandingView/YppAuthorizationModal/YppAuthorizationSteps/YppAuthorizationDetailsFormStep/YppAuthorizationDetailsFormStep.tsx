@@ -72,9 +72,6 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
             if (value && !foundChannel) {
               return 'No channel with this title has been found.'
             }
-            if (foundChannel?.ownerMember?.id === memberId) {
-              return 'Your own channel is not a valid referrer.'
-            }
             return true
           },
         }}
@@ -95,6 +92,9 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
                 where: {
                   channel: {
                     title_startsWith: value,
+                    ownerMember: {
+                      id_not_eq: memberId,
+                    },
                   },
                 },
               })}
