@@ -3,7 +3,9 @@ import '@joystream/types'
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { QueryableStorageMultiArg } from '@polkadot/api-base/types/storage'
 import { Signer } from '@polkadot/api/types'
+import { getSpecTypes } from '@polkadot/types-known'
 import { Codec, SignerPayloadRawBase } from '@polkadot/types/types'
+import { base64Encode } from '@polkadot/util-crypto'
 import BN from 'bn.js'
 import { proxy } from 'comlink'
 
@@ -225,6 +227,29 @@ export class JoystreamLib {
     return {
       storageBucketsCount: numberOfStorageBuckets.toNumber(),
       distributionBucketsCountPerFamily: transformedFamilies,
+    }
+  }
+
+  async getChainMetadata() {
+    await this.ensureApi()
+    const systemChain = await this.api.rpc.system.chain()
+
+    return {
+      icon: 'substrate',
+      chainType: 'substrate',
+      chain: systemChain.toString(),
+      metaCalls: base64Encode(this.api.runtimeMetadata.asCallsOnly.toU8a()),
+      types: getSpecTypes(
+        this.api.registry,
+        systemChain.toString(),
+        this.api.runtimeVersion.specName.toString(),
+        this.api.runtimeVersion.specVersion
+      ),
+      specVersion: this.api.runtimeVersion.specVersion.toNumber(),
+      ss58Format: this.api.registry.chainSS58 ?? 0,
+      tokenDecimals: this.api.registry.chainDecimals[0],
+      tokenSymbol: this.api.registry.chainTokens[0],
+      genesisHash: this.api.genesisHash.toHex(),
     }
   }
 }

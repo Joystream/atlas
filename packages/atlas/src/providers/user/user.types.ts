@@ -17,10 +17,11 @@ export type UserContextValue = {
   memberships: Membership[]
   membershipsLoading: boolean
   activeMembership: Membership | null
+  isSignerMetadataOutdated: boolean
   activeChannel: Membership['channels'][number] | null
-
   isAuthLoading: boolean
-
   signIn: (walletName?: string, mobileCallback?: ({ onConfirm }: { onConfirm: () => void }) => void) => Promise<boolean>
+  updateSignerMetadata: () => Promise<boolean>
+  skipSignerMetadataUpdate: () => Promise<void>
   refetchUserMemberships: ReturnType<typeof useMemberships>['refetch']
 }
