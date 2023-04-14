@@ -1,5 +1,5 @@
 general:
-  appName: '$VITE_APP_NAME' # Application name - used in the copy throughout the app, in index.html, open graph meta tags, etc
+  appName: Atlas # Application name - used in the copy throughout the app, in index.html, open graph meta tags, etc. Don't use env variables here
   appDescription: 'The streaming platform empowering viewers, creators, and builders. Built on and operated by the Joystream blockchain and DAO.' # Application description - used in index.html meta tags
   appTagline: 'The streaming platform empowering viewers, creators, and builders. Built on and operated by the Joystream blockchain and DAO.'
   appId: '$VITE_APP_ID' # App ID for Apps as first-class citizens
@@ -61,13 +61,13 @@ features:
         shortDescription: Connect your YouTube channels via a simple step-by-step flow and get your first reward.
         baseAmount: 5000 # Base amount that will be multiplied by tier multiplier
       - title: Sync videos from your YouTube channel
-        shortDescription: Opt in to auto-sync feature upon sign up and all YouTube content will get uploaded to $VITE_APP_NAME automatically. Get paid for the 10 most recent and each new video synced to your $VITE_APP_NAME channel.
+        shortDescription: Opt in to auto-sync feature upon sign up and all YouTube content will get uploaded to $VITE_APP_NAME automatically. Get paid for every new video synced to your $VITE_APP_NAME channel.
         stepsDescription: Publishing your existing and new content with $VITE_APP_NAME is the fastest way to earn more JOY tokens.
         steps:
           - Make sure the auto-sync feature enabled.
           - Wait till your videos get synced to your $VITE_APP_NAME channel.
           - Publish new videos to your YouTube channel.
-          - Get rewarded for 10 most recent and all new videos uploaded to YouTube.
+          - Get rewarded for every new video synced to $VITE_APP_NAME.
         baseAmount: 300
       - title: Refer another YouTube creator
         shortDescription: Get JOY for every new creator who signs up to YPP program using your referral link. Referrals multiplier depends on the popularity tier of the channel signed up using referral link.
@@ -100,7 +100,7 @@ features:
         ## Rewards
           - Sign up to YouTube Partnership Program: 5000 Joy
           - Refer new program subscribers: 1000 Joy
-          - For the 10 most recent videos and every new video synced from YouTube: 300 Joy
+          - For every new video synced from YouTube: 300 Joy
 
         ❗️ The tokens pool allocated for this program is limited, so the program has limited duration.
 
