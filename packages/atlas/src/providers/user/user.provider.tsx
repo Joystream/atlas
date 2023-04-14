@@ -150,6 +150,8 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [accountId, lastUsedWalletName, memberId, signIn, walletStatus])
 
   const activeMembership = (memberId && memberships?.find((membership) => membership.id === memberId)) || null
+  const activeChannel =
+    (activeMembership && activeMembership?.channels.find((channel) => channel.id === channelId)) || null
 
   const isChannelBelongsToTheUserOrExists = activeMembership?.channels.length
     ? activeMembership.channels.some((channel) => channel.id === channelId)
@@ -166,11 +168,12 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       memberships: memberships || [],
       membershipsLoading,
       activeMembership,
+      activeChannel,
       isAuthLoading,
       signIn,
       refetchUserMemberships,
     }),
-    [memberships, activeMembership, isAuthLoading, signIn, refetchUserMemberships, membershipsLoading]
+    [memberships, membershipsLoading, activeMembership, activeChannel, isAuthLoading, signIn, refetchUserMemberships]
   )
 
   if (error) {

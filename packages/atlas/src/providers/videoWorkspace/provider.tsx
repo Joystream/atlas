@@ -9,6 +9,7 @@ import { createId } from '@/utils/createId'
 import { ContextValue, VideoWorkspace } from './types'
 
 import { usePersonalDataStore } from '../personalData'
+import { useUser } from '../user/user.hooks'
 
 export const VideoWorkspaceContext = createContext<ContextValue | undefined>(undefined)
 VideoWorkspaceContext.displayName = 'VideoWorkspaceContext'
@@ -30,9 +31,12 @@ export const VideoWorkspaceProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [])
   const navigate = useNavigate()
 
+  const { activeChannel } = useUser()
+
   const isContentTypeInfoDismissed = usePersonalDataStore((state) =>
     atlasConfig.general.appContentFocus
-      ? state.dismissedMessages.some((message) => message.id === CONTENT_TYPE_INFO)
+      ? state.dismissedMessages.some((message) => message.id === CONTENT_TYPE_INFO) ||
+        (activeChannel?.totalVideosCreated && activeChannel?.totalVideosCreated > 0)
       : true
   )
   const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
