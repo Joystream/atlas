@@ -160,6 +160,8 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [accountId, lastUsedWalletName, memberId, signIn, walletStatus])
 
   const activeMembership = (memberId && memberships?.find((membership) => membership.id === memberId)) || null
+  const activeChannel =
+    (activeMembership && activeMembership?.channels.find((channel) => channel.id === channelId)) || null
 
   const checkSignerStatus = useCallback(async () => {
     const chainMetadata = await joystreamCtx?.joystream?.getChainMetadata()
@@ -221,6 +223,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       memberships: memberships || [],
       membershipsLoading,
       activeMembership,
+      activeChannel,
       isAuthLoading,
       signIn,
       refetchUserMemberships,
