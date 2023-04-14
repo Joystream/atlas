@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Meta, StoryFn } from '@storybook/react'
 
-import { SectionContent, SectionContentProps } from '@/components/Section/components/SectionContent'
+import { SectionContent, SectionContentProps } from '@/components/Section/SectionContent'
 
 export default {
   title: 'other/SectionContent',

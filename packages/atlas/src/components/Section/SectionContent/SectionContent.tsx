@@ -1,7 +1,7 @@
-import { ReactElement } from 'react'
+import { FC, ReactElement } from 'react'
 
 import { Carousel, CarouselProps } from '@/components/Carousel'
-import { GridWrapper } from '@/components/Section/components/SectionContent/SectionContent.styles'
+import { GridWrapper } from '@/components/Section/SectionContent/SectionContent.styles'
 
 type SectionGridTypeProps = {
   type: 'grid'
@@ -19,7 +19,7 @@ export type SectionContentProps = {
   children: ReactElement[]
 } & SectionContentTypes
 
-export const SectionContent = (props: SectionContentProps) => {
+export const SectionContent: FC<SectionContentProps> = (props) => {
   if (props.type === 'grid') {
     return (
       <GridWrapper className={props.className} minWidth={props.minChildrenWidth}>
@@ -28,6 +28,5 @@ export const SectionContent = (props: SectionContentProps) => {
     )
   }
 
-  // todo: replace with new carousel when implemented by #3775
   return <Carousel {...props}>{props.children}</Carousel>
 }
