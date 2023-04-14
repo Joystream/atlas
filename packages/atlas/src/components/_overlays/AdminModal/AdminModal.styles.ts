@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { Text } from '@/components/Text'
 import { sizes } from '@/styles'
 
 export const HorizontalSpacedContainer = styled.div`
@@ -31,4 +32,8 @@ export const CustomNodeUrlWrapper = styled.div`
   > * + * {
     margin-left: ${sizes(4)};
   }
+`
+
+export const VersionText = styled(Text)`
+  padding-top: ${sizes(4)};
 `
