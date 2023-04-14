@@ -114,7 +114,7 @@ features:
           Your popularity Tier will be displayed in the YPP Dashboard after you sign up. Information on all tiers will be periodically updated and posted to the program details, which are hyperlinked from the dedicated widget in  the YPP Dashboard.
         
           ## Example Rewards Calculation
-          For a channel with falling under Tier 2 for subscribers, which signed up and remained in the program with auto-sync service enabled for 1 month. During this month that channel uploaded 5 new videos to their YouTube channel, 2 videos directly to Joystream channel with manual upload, and referred 3 other YT channels that ended up signing up.
+          For a channel with falling under Tier 2 for subscribers, which signed up and remained in the program with auto-sync service enabled for 1 month. During this month that channel uploaded 5 new videos to their YouTube channel, 2 videos directly to Joystream channel with manual upload, and referred 3 other YouTube channels that ended up signing up.
         
           In the end of this month, the payout to this channel's account will be:
           5000 * 2.5 + 5 * 300 * 2.5 + 1000 * 3 * 2.5= **23,750** JOY
@@ -149,7 +149,7 @@ features:
 
           To sign up, user has to go through the onboarding flow provided in the [$VITE_APP_NAME web app](https://gleev.xyz/ypp) and authorise with the Google Account, connected to their YouTube channel. During the authorisation, the access to the YouTube content `youtube.readonly` scope, to fetch channel meta data and content information; and access to email address for the YouTube account has to be granted for the JSG operated Backend Application (API client) that connects to YouTube API.
 
-            Mandatory fields need to be populated to the web input form to progress, such as email, video category, and terms and conditions need to be accepted.
+          Mandatory fields need to be populated to the web input form to progress, such as email, video category, and terms and conditions need to be accepted.
 
           ## How to get rewards
 
@@ -633,7 +633,7 @@ legal:
     Licenses supported may be updated at any time and full set of licenses that are available for selection in the App upon video upload or uploaded via Command Line interface are contained in this file: https://github.com/Joystream/atlas/blob/master/packages/atlas/src/data/knownLicenses.json
   privacyPolicy: |
     # 1. Privacy Policy
-    Last updated on the 12th of April 2023
+    Last updated on the 14th of April 2023
 
     ## 1.1 Agreement to the Policy
 
@@ -658,7 +658,7 @@ legal:
     Company will not sell your data for advertising, or other purposes, but reserves the right to use the membership profile, channel and video assets meta data in advertising and promotional activities of $VITE_APP_NAME app, Joystream blockchain or JS Genesis AS operating company.
 
     The assets are listed but not limited to:
-    - channel name, brand, logo, membership name, videos and NFTs count, video and NFT metadata, price sold, bids made, creator tokens minted, creator tokens purchased and sold via sale or AMM, royalties earned, associated YT channel and profile data where applies, as well as using actual content and user data published to $VITE_APP_NAME or Joystream Blockchain.
+    - channel name, brand, logo, membership name, videos and NFTs count, video and NFT metadata, price sold, bids made, creator tokens minted, creator tokens purchased and sold via sale or AMM, royalties earned, associated YouTube channel and profile data where applies, as well as using actual content and user data published to $VITE_APP_NAME or Joystream Blockchain.
 
     This information can be used without any limits and compensation to the owner for $VITE_APP_NAME App, Joystream blockchain or and DAO advertising materials distributed on social media, email or any other medium subject to choice and full discretion of JS Genesis AS, Joystream DAO community or contractors of DAO or JS Genesis AS.
 
