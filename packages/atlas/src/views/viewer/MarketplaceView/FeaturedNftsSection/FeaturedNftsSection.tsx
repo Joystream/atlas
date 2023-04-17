@@ -7,11 +7,14 @@ import { Section } from '@/components/Section/Section'
 import { StyledSvgAlertsInformative24 } from '@/components/Tooltip/Tooltip.styles'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useUser } from '@/providers/user/user.hooks'
 import { createPlaceholderData } from '@/utils/data'
 
 import { FeaturedNftsWrapper } from './FeaturedNftsSection.styles'
 
 export const FeaturedNftsSection: FC = () => {
+  const { activeChannel } = useUser()
+
   const { nfts, loading } = useNfts({
     variables: {
       limit: 50,
@@ -52,17 +55,19 @@ export const FeaturedNftsSection: FC = () => {
           }}
         />
       )}
-      <Banner
-        title="How to get featured?"
-        icon={<StyledSvgAlertsInformative24 />}
-        description="The Gleev team handpicks featured video NFTs as a way to recognize and promote high-quality content. To increase your chances of getting your NFT featured on the marketplace, upload videos related to web3 & crypto and make sure your NFT is up for sale."
-        actionButton={{
-          text: 'Submit your video NFT to be featured',
-          onClick: () => {
-            // todo
-          },
-        }}
-      />
+      {activeChannel && activeChannel.totalVideosCreated > 0 && (
+        <Banner
+          title="How to get featured?"
+          icon={<StyledSvgAlertsInformative24 />}
+          description="The Gleev team handpicks featured video NFTs as a way to recognize and promote high-quality content. To increase your chances of getting your NFT featured on the marketplace, upload videos related to web3 & crypto and make sure your NFT is up for sale."
+          actionButton={{
+            text: 'Submit your video NFT to be featured',
+            onClick: () => {
+              // todo
+            },
+          }}
+        />
+      )}
     </FeaturedNftsWrapper>
   )
 }

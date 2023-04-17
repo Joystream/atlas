@@ -7,6 +7,8 @@ import { normalize } from './normalize'
 import { sizes } from './sizes'
 import { transitionStyles } from './transitions'
 
+export const SCROLLBAR_WIDTH = 8
+
 const scrollbarBackgroundColor = cVar('colorCoreNeutral800Lighten')
 const scrollbarThumbColor = cVar('colorCoreNeutral700Lighten')
 
@@ -28,7 +30,7 @@ const globalStyles = css`
   }
 
   *::-webkit-scrollbar {
-    width: 8px;
+    width: ${SCROLLBAR_WIDTH}px;
   }
 
   *::-webkit-scrollbar-track {
