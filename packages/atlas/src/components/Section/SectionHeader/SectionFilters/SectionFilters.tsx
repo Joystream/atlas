@@ -28,7 +28,10 @@ export const SectionFilters: FC<SectionFiltersProps> = ({ filters, onApplyFilter
   const { handleMouseDown, visibleShadows, handleArrowScroll, isOverflow } = useHorizonthalFade(filterWrapperRef)
 
   const areThereAnyOptionsSelected = filters
-    .map((filter) => filter.options?.map((option) => option.applied))
+    .map(
+      (filter) =>
+        filter.options?.map((option) => option.applied) ?? (filter.range?.appliedMin || filter.range?.appliedMax)
+    )
     .flat()
     .some(Boolean)
 
@@ -48,6 +51,7 @@ export const SectionFilters: FC<SectionFiltersProps> = ({ filters, onApplyFilter
     const newFilters = filters.map((filter) => ({
       ...filter,
       options: filter.options?.map((option) => ({ ...option, selected: false, applied: false })),
+      range: { min: undefined, max: undefined, maxApplied: undefined, minApplied: undefined },
     }))
 
     onApplyFilters?.(newFilters)

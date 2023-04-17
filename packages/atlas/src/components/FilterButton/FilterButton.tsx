@@ -151,7 +151,7 @@ export const FilterButton: FC<FilterButtonProps> = (props) => {
             size="medium"
             nodeStart={<SvgJoyTokenMonochrome16 />}
             placeholder="Min"
-            value={range?.min}
+            value={range?.min ?? ''}
             onChange={handleRangeInputChange('min')}
           />
           <Input
@@ -159,7 +159,7 @@ export const FilterButton: FC<FilterButtonProps> = (props) => {
             size="medium"
             nodeStart={<SvgJoyTokenMonochrome16 />}
             placeholder="Max"
-            value={range?.max}
+            value={range?.max ?? ''}
             onChange={handleRangeInputChange('max')}
           />
         </InputsContainer>

@@ -1,11 +1,14 @@
+import styled from '@emotion/styled'
 import { useMemo, useState } from 'react'
 
 import { useNftsConnection } from '@/api/hooks/nfts'
 import { OwnedNftOrderByInput, OwnedNftWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionAuction, SvgActionSettings } from '@/assets/icons'
+import { EmptyFallback } from '@/components/EmptyFallback'
 import { FilterButtonOption, SectionFilter } from '@/components/FilterButton'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Section } from '@/components/Section/Section'
+import { Button } from '@/components/_buttons/Button'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { createPlaceholderData } from '@/utils/data'
@@ -64,6 +67,7 @@ const LIMIT = 10
 
 export const AllNftSection = () => {
   const [filters, setFilters] = useState<SectionFilter[]>(FILTERS)
+  const [hasAppliedFilters, setHasAppliedFilters] = useState(false)
   const [order, setOrder] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
   const smMatch = useMediaMatch('sm')
 
@@ -80,8 +84,10 @@ export const AllNftSection = () => {
     const priceFilter = filters.find((filter) => filter.name === 'price')
     const minPrice = priceFilter?.range?.appliedMin
     const maxPrice = priceFilter?.range?.appliedMax
+
+    setHasAppliedFilters(Boolean(minPrice || maxPrice || isPromotional || isMature || mappedStatus.length))
+
     return {
-      // lastSalePrice_gte: '10000102000000',
       lastSalePrice_gte: minPrice ? String(minPrice) : undefined,
       lastSalePrice_lte: maxPrice ? String(maxPrice) : undefined,
       ...(mappedStatus.length
@@ -107,7 +113,6 @@ export const AllNftSection = () => {
 
   const placeholderItems = loading || isLoading ? createPlaceholderData(LIMIT) : []
   const nftsWithPlaceholders = [...(nfts || []), ...placeholderItems]
-
   return (
     <Section
       headerProps={{
@@ -134,7 +139,24 @@ export const AllNftSection = () => {
       contentProps={{
         type: 'grid',
         minChildrenWidth: 300,
-        children: nftsWithPlaceholders.map((nft, idx) => <NftTileViewer key={(nft.id ?? '') + idx} nftId={nft.id} />),
+        children:
+          !(isLoading || loading) && !nfts?.length
+            ? [
+                <FallbackContainer key="fallback">
+                  <EmptyFallback
+                    title="No NFTs found"
+                    subtitle="Please, try changing your filtering criteria."
+                    button={
+                      hasAppliedFilters && (
+                        <Button variant="secondary" onClick={() => setFilters(FILTERS)}>
+                          Clear all filters
+                        </Button>
+                      )
+                    }
+                  />
+                </FallbackContainer>,
+              ]
+            : nftsWithPlaceholders.map((nft, idx) => <NftTileViewer key={(nft.id ?? '') + idx} nftId={nft.id} />),
       }}
       footerProps={{
         type: 'infinite',
@@ -153,3 +175,7 @@ export const AllNftSection = () => {
     />
   )
 }
+
+export const FallbackContainer = styled.div`
+  grid-column: 1/4;
+`
