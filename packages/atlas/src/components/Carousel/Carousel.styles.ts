@@ -6,8 +6,18 @@ import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 export const CAROUSEL_ARROW_HEIGHT = 48
 
-export const StyledSwiper = styled(Swiper)`
-  width: 100%;
+type StyledSwiperProps = {
+  canOverflowContainer?: boolean
+  minSlideWidth?: number
+}
+
+export const StyledSwiper = styled(Swiper)<StyledSwiperProps>`
+  width: ${({ canOverflowContainer }) => (canOverflowContainer ? '100vw' : '100%')};
+
+  .swiper-slide {
+    min-width: ${({ minSlideWidth }) => (minSlideWidth ? `${minSlideWidth}px` : 'unset')};
+    width: auto;
+  }
 
   .swiper-pagination {
     display: flex;

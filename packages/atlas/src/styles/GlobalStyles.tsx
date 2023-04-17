@@ -48,6 +48,7 @@ const globalStyles = css`
     font-family: ${cVar('typographyFontsSecondary')};
     background: ${cVar('colorCoreBaseBlack')};
     color: ${cVar('colorCoreNeutral50')};
+    overflow-x: hidden;
   }
 
   h1,

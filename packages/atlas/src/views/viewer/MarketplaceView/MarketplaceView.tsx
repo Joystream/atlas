@@ -18,6 +18,7 @@ import { createPlaceholderData } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
 import { StyledPagination } from '@/views/studio/MyVideosView/MyVideos.styles'
 
+import { FeaturedNftsSection } from './FeaturedNftsSection/FeaturedNftsSection'
 import { HeaderContainer, HeaderWrapper, StyledGrid } from './MarketplaceView.styles'
 
 const SORT_OPTIONS = [
@@ -107,6 +108,7 @@ export const MarketplaceView: FC = () => {
   return (
     <VideoContentTemplate title="Video NFTs">
       {headTags}
+      <FeaturedNftsSection />
       <HeaderWrapper>
         <HeaderContainer>
           <GridItem colSpan={{ base: 2, sm: 1 }}>
