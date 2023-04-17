@@ -11,7 +11,9 @@ type StyledSwiperProps = {
   minSlideWidth?: number
 }
 
-export const StyledSwiper = styled(Swiper)<StyledSwiperProps>`
+const isPropValid = (prop: string) => prop !== 'canOverflowContainer' && prop !== 'minSlideWidth'
+
+export const StyledSwiper = styled(Swiper, { shouldForwardProp: isPropValid })<StyledSwiperProps>`
   width: ${({ canOverflowContainer }) => (canOverflowContainer ? '100vw' : '100%')};
 
   .swiper-slide {
