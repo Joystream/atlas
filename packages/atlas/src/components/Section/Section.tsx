@@ -1,4 +1,5 @@
-import { FC, PropsWithChildren, useRef } from 'react'
+import { FC, PropsWithChildren, useEffect, useState } from 'react'
+import Swiper, { Controller } from 'swiper'
 
 import { SectionWrapper } from './Section.styles'
 import { SectionContent, SectionContentProps } from './SectionContent'
@@ -16,19 +17,36 @@ export type SectionProps = {
 
 export const Section: FC<PropsWithChildren<SectionProps>> = ({ headerProps, contentProps, footerProps, className }) => {
   const isCarousel = contentProps.type === 'carousel'
-  const gliderRef = useRef<SwiperInstance>()
+  const [glider, setGlider] = useState<SwiperInstance>()
+  const [isCarouselEnd, setIsCarouselEnd] = useState(false)
+  const [isCarouselBeginning, setIsCarouselBeginning] = useState(true)
 
   const handleSlideLeft = () => {
-    gliderRef.current?.slidePrev()
+    glider?.slidePrev()
   }
   const handleSlideRight = () => {
-    gliderRef.current?.slideNext()
+    glider?.slideNext()
   }
+
+  useEffect(() => {
+    const handler = (slider: Swiper) => {
+      setIsCarouselBeginning(slider.isBeginning)
+      setIsCarouselEnd(slider.isEnd)
+    }
+    glider?.on('slideChange', handler)
+
+    return () => {
+      glider?.off('slideChange', handler)
+    }
+  }, [glider])
+
   return (
     <SectionWrapper className={className}>
       {isCarousel ? (
         <SectionHeader
           {...headerProps}
+          isBeginning={isCarouselBeginning}
+          isEnd={isCarouselEnd}
           isCarousel
           onMoveCarouselLeft={handleSlideLeft}
           onMoveCarouselRight={handleSlideRight}
@@ -37,7 +55,12 @@ export const Section: FC<PropsWithChildren<SectionProps>> = ({ headerProps, cont
         <SectionHeader {...headerProps} />
       )}
       {isCarousel ? (
-        <SectionContent {...contentProps} onSwiper={(swiper) => (gliderRef.current = swiper)} />
+        <SectionContent
+          {...contentProps}
+          modules={[Controller]}
+          controller={{ control: glider }}
+          onSwiper={setGlider}
+        />
       ) : (
         <SectionContent {...contentProps} />
       )}
