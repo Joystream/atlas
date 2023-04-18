@@ -2,6 +2,8 @@ import { FC } from 'react'
 import { useParallax } from 'react-scroll-parallax'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import googleLogo from '@/assets/google/googleLogo.webp'
+import youtubeLogo from '@/assets/google/youtubeLogo.webp'
 import { SvgActionChevronR } from '@/assets/icons'
 import hero576 from '@/assets/images/ypp-hero/hero-576.webp'
 import hero864 from '@/assets/images/ypp-hero/hero-864.webp'
@@ -25,6 +27,7 @@ import {
   ButtonWrapper,
   FrontImage,
   HeroImageWrapper,
+  LogosContainer,
   SelectDifferentChannelButton,
   StyledInfiniteCarousel,
 } from './YppHero.styles'
@@ -104,6 +107,10 @@ export const YppHero: FC<YppHeroProps> = ({
             >
               Reupload and backup your YouTube videos to receive a guaranteed payout in the YouTube Partner Program.
             </Text>
+            <LogosContainer data-aos="fade-up" data-aos-delay="350" data-aos-offset="40" data-aos-easing="atlas-easing">
+              <img src={youtubeLogo} alt="youtube logo" />
+              <img src={googleLogo} alt="google logo" />
+            </LogosContainer>
             <ButtonWrapper data-aos="fade-up" data-aos-delay="450" data-aos-offset="40" data-aos-easing="atlas-easing">
               <SwitchTransition>
                 <CSSTransition
