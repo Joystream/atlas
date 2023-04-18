@@ -88,6 +88,7 @@ const InfiniteTemplate: StoryFn<{ type: 'infinite' | 'load' }> = ({ type }) => {
       </Grid>
       <SectionFooter
         type={type}
+        reachEnd={true}
         label="Load more boxes"
         fetchMore={() =>
           new Promise((res) => {
