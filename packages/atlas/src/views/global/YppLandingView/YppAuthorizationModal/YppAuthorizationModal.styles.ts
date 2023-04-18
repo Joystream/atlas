@@ -4,7 +4,8 @@ import styled from '@emotion/styled'
 import { SvgControlsConnect, SvgLogoYoutube } from '@/assets/icons'
 import { SvgAppLogoShort, SvgAppLogoShortMonochrome } from '@/assets/logos'
 import { Text } from '@/components/Text'
-import { cVar, sizes } from '@/styles'
+import { GoogleButton } from '@/components/_buttons/GoogleButton'
+import { cVar, media, sizes } from '@/styles'
 
 export const StyledSvgAppLogoShort = styled(SvgAppLogoShort)`
   height: 36px;
@@ -75,4 +76,11 @@ export const StyledSvgControlsConnect = styled(SvgControlsConnect)`
 // todo replace with AppLogo
 export const StyledAppLogo = styled(SvgAppLogoShortMonochrome)`
   ${logoStyles};
+`
+
+export const StyledGoogleButton = styled(GoogleButton)`
+  width: 100% !important;
+  ${media.sm} {
+    width: 250px !important;
+  }
 `
