@@ -20,6 +20,7 @@ import { cVar } from '@/styles'
 
 import {
   PlaygroundCaptcha,
+  PlaygroundChannelsSection,
   PlaygroundEstimatingBlockTime,
   PlaygroundGoogleAuthentication,
   PlaygroundIframe,
@@ -48,6 +49,7 @@ const playgroundRoutes = [
   { path: 'google-authentication', element: <PlaygroundGoogleAuthentication />, name: 'Google authentication' },
   { path: 'input-autocomplete', element: <PlaygroundInputAutocomplete />, name: 'Input autocomplete' },
   { path: 'marketplace-carousel', element: <PlaygroundMarketplaceCarousel />, name: 'Marketplace carousel' },
+  { path: 'channels-section', element: <PlaygroundChannelsSection />, name: 'Channels section' },
 ]
 
 const PlaygroundLayout = () => {
