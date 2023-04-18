@@ -57,7 +57,7 @@ const ToggleableTemplate: StoryFn<DialogModalProps> = ({ ...args }) => {
         onExitClick={() => setOpen(false)}
         primaryButton={{
           ...args.primaryButton,
-          text: args.primaryButton?.text || 'Default',
+          text: args.primaryButton && 'text' in args.primaryButton ? args.primaryButton?.text : 'Default',
           onClick: () => setOpen(false),
         }}
         secondaryButton={{
