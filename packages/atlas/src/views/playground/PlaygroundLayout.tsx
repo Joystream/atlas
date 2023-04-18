@@ -19,7 +19,6 @@ import { UserProvider } from '@/providers/user/user.provider'
 import { cVar } from '@/styles'
 
 import {
-  PlaygroundAllNftsSection,
   PlaygroundCaptcha,
   PlaygroundEstimatingBlockTime,
   PlaygroundGoogleAuthentication,
@@ -49,7 +48,6 @@ const playgroundRoutes = [
   { path: 'google-authentication', element: <PlaygroundGoogleAuthentication />, name: 'Google authentication' },
   { path: 'input-autocomplete', element: <PlaygroundInputAutocomplete />, name: 'Input autocomplete' },
   { path: 'marketplace-carousel', element: <PlaygroundMarketplaceCarousel />, name: 'Marketplace carousel' },
-  { path: 'all-nfts-section', element: <PlaygroundAllNftsSection />, name: 'All NFTs Section' },
 ]
 
 const PlaygroundLayout = () => {
