@@ -1,159 +1,102 @@
-import { Global } from '@emotion/react'
-import { isEqual } from 'lodash-es'
-import { FC, useCallback, useEffect, useRef, useState } from 'react'
+import { FC, useRef } from 'react'
 
 import { useBasicVideosConnection } from '@/api/hooks/videosConnection'
-import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
-import { SvgActionFilters } from '@/assets/icons'
-import { EmptyFallback } from '@/components/EmptyFallback'
-import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
-import { GridItem } from '@/components/LayoutGrid'
-import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
-import { atlasConfig } from '@/config'
+import { Section } from '@/components/Section/Section'
+import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { publicVideoFilter } from '@/config/contentFilter'
-import { VIDEO_SORT_OPTIONS } from '@/config/sorting'
-import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useBreakpointKey } from '@/hooks/useBreakPointKey'
+import { useVideoGridRows } from '@/hooks/useVideoGridRows'
+import { createPlaceholderData } from '@/utils/data'
 
-import {
-  Container,
-  ControlsContainer,
-  StyledSelect,
-  StyledSticky,
-  StyledVideoGrid,
-  categoryGlobalStyles,
-} from './CategoryVideos.styles'
-import { FallbackWrapper } from './CategoryView.styles'
+import { Container } from './CategoryVideos.styles'
 
-const SELECT_LANGUAGE_ITEMS = [
-  { name: 'All languages', value: 'undefined' },
-  ...atlasConfig.derived.languagesSelectValues,
-]
+type CategoryVideosProps = {
+  categoriesId?: string[]
+}
 
-export const CategoryVideos: FC<{ categoriesId?: string[] }> = ({ categoriesId }) => {
-  const smMatch = useMediaMatch('sm')
-  const mdMatch = useMediaMatch('md')
+const GRID = {
+  xxs: {
+    columns: 1,
+  },
+  xs: {
+    columns: 1,
+  },
+  sm: {
+    columns: 2,
+  },
+  md: {
+    columns: 3,
+  },
+  lg: {
+    columns: 4,
+  },
+  xl: {
+    columns: 5,
+  },
+  xxl: {
+    columns: 6,
+  },
+}
+
+export const CategoryVideos: FC<CategoryVideosProps> = ({ categoriesId }) => {
   const containerRef = useRef<HTMLDivElement>(null)
-  const scrollWhenFilterChange = useRef(false)
 
-  const filtersBarLogic = useFiltersBar()
-  const {
-    setVideoWhereInput,
-    filters: { setIsFiltersOpen, isFiltersOpen, language, setLanguage },
-    canClearFilters: { canClearAllFilters, clearAllFilters },
-    videoWhereInput,
-  } = filtersBarLogic
+  const rowsToLoad = useVideoGridRows('main')
 
-  const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
+  const breakPointKey = useBreakpointKey()
 
-  const { totalCount } = useBasicVideosConnection({
-    where: {
-      ...videoWhereInput,
-      ...publicVideoFilter,
-      category: {
-        id_in: categoriesId,
+  const columns = (breakPointKey && GRID[breakPointKey].columns) ?? 0
+
+  const { edges, fetchMore, pageInfo, loading, totalCount } = useBasicVideosConnection(
+    {
+      first: columns * rowsToLoad,
+      where: {
+        ...publicVideoFilter,
+        category: {
+          id_in: categoriesId,
+        },
       },
     },
-  })
-
-  useEffect(() => {
-    if (scrollWhenFilterChange.current) {
-      containerRef.current?.scrollIntoView()
-    }
-    // account for videoWhereInput initialization
-    if (!isEqual(videoWhereInput, {})) {
-      scrollWhenFilterChange.current = true
-    }
-  }, [videoWhereInput])
-
-  const handleSorting = (value?: VideoOrderByInput | null) => {
-    if (value) {
-      setSortVideosBy(value)
-    }
-  }
-
-  const handleFilterClick = () => {
-    setIsFiltersOpen((value) => !value)
-  }
-
-  const handleSelectLanguage = useCallback(
-    (language: string | null | undefined) => {
-      setLanguage(language)
-      setVideoWhereInput((value) => ({
-        ...value,
-        language_eq: language === 'undefined' ? undefined : language,
-      }))
-    },
-    [setLanguage, setVideoWhereInput]
+    { skip: !columns }
   )
 
-  const topbarHeight = mdMatch ? 80 : 64
+  const loadedItemsCount = edges?.length ?? 0
+  const allItemsLoaded = !pageInfo?.hasNextPage || false
 
-  const sortingNode = (
-    <StyledSelect
-      size="medium"
-      value={sortVideosBy}
-      inlineLabel="Sort by"
-      items={VIDEO_SORT_OPTIONS}
-      onChange={handleSorting}
-    />
-  )
+  const firstLoad = !loadedItemsCount && loading
+  const firstPlaceholders = firstLoad ? createPlaceholderData(columns * rowsToLoad) : []
+  const displayedItems = edges?.map((edge) => edge.node) || []
+
+  const itemsLeft = (totalCount || 0) - (edges?.length || 0)
+  const itemsToLoad = Math.min(itemsLeft, columns)
+
+  const newPlaceholders = allItemsLoaded ? [] : createPlaceholderData(itemsToLoad)
+
+  const children = [...firstPlaceholders, ...displayedItems, ...newPlaceholders]?.map((video, idx) => (
+    <VideoTileViewer id={video.id} key={idx} />
+  ))
+
   return (
-    <>
-      <Global styles={categoryGlobalStyles} />
-      <Container ref={containerRef}>
-        <StyledSticky style={{ top: topbarHeight - 1 }}>
-          <ControlsContainer>
-            <GridItem colSpan={{ base: 2, sm: 1 }}>
-              <Text as="h2" variant={mdMatch ? 'h500' : 'h400'}>
-                All videos {totalCount !== undefined && `(${totalCount})`}
-              </Text>
-            </GridItem>
-            {smMatch ? (
-              <StyledSelect
-                onChange={handleSelectLanguage}
-                size="medium"
-                value={language}
-                items={SELECT_LANGUAGE_ITEMS}
-              />
-            ) : (
-              sortingNode
-            )}
-            <div>
-              <Button
-                badge={canClearAllFilters}
-                variant="secondary"
-                icon={<SvgActionFilters />}
-                onClick={handleFilterClick}
-              >
-                Filters
-              </Button>
-            </div>
-            {smMatch && sortingNode}
-          </ControlsContainer>
-          <FiltersBar {...filtersBarLogic} activeFilters={['date', 'length', 'other', 'language']} />
-        </StyledSticky>
-
-        <StyledVideoGrid
-          isFiltersOpen={isFiltersOpen}
-          emptyFallback={
-            <FallbackWrapper>
-              <EmptyFallback
-                title="No videos found"
-                subtitle="Please, try changing your filtering criteria"
-                button={
-                  <Button onClick={clearAllFilters} variant="secondary">
-                    Clear all filters
-                  </Button>
-                }
-              />
-            </FallbackWrapper>
-          }
-          videoWhereInput={{ ...videoWhereInput, category: { id_in: categoriesId } }}
-          orderBy={[sortVideosBy]}
-          onDemandInfinite
-        />
-      </Container>
-    </>
+    <Container ref={containerRef}>
+      <Section
+        contentProps={{
+          children,
+          type: 'grid',
+          grid: GRID,
+        }}
+        footerProps={{
+          reachEnd: pageInfo?.hasNextPage,
+          fetchMore: async () => {
+            if (pageInfo?.hasNextPage) {
+              await fetchMore({
+                variables: { first: columns, after: pageInfo.endCursor },
+              })
+            }
+            return
+          },
+          type: 'infinite',
+        }}
+      />
+    </Container>
   )
 }

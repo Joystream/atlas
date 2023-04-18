@@ -8,7 +8,7 @@ import { SectionHeader, SectionHeaderProps } from './SectionHeader'
 import { SwiperInstance } from '../Carousel'
 
 export type SectionProps = {
-  headerProps: Omit<SectionHeaderProps, 'isCarousel'>
+  headerProps?: Omit<SectionHeaderProps, 'isCarousel'>
   contentProps: SectionContentProps
   footerProps?: SectionFooterProps
   className?: string
@@ -26,16 +26,17 @@ export const Section: FC<PropsWithChildren<SectionProps>> = ({ headerProps, cont
   }
   return (
     <SectionWrapper className={className}>
-      {isCarousel ? (
-        <SectionHeader
-          {...headerProps}
-          isCarousel
-          onMoveCarouselLeft={handleSlideLeft}
-          onMoveCarouselRight={handleSlideRight}
-        />
-      ) : (
-        <SectionHeader {...headerProps} />
-      )}
+      {headerProps &&
+        (isCarousel ? (
+          <SectionHeader
+            {...headerProps}
+            isCarousel
+            onMoveCarouselLeft={handleSlideLeft}
+            onMoveCarouselRight={handleSlideRight}
+          />
+        ) : (
+          <SectionHeader {...headerProps} />
+        ))}
       {isCarousel ? (
         <SectionContent {...contentProps} onSwiper={(swiper) => (gliderRef.current = swiper)} />
       ) : (
