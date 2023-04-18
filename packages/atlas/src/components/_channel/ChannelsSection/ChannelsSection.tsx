@@ -1,22 +1,29 @@
 import { useState } from 'react'
 
-import { useBasicChannels } from '@/api/hooks/channel'
+import { useBasicChannelsConnection } from '@/api/hooks/channelsConnection'
 import { ChannelOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { Section } from '@/components/Section/Section'
 import { ChannelCard } from '@/components/_channel/ChannelCard'
 
 export const ChannelsSection = () => {
   const [sortBy, setSortBy] = useState<string>('Most followed')
-  const { extendedChannels, loading } = useBasicChannels({
+  const {
+    edges: channels,
+    pageInfo,
+    loading,
+    fetchMore,
+  } = useBasicChannelsConnection({
     orderBy:
       sortBy === 'Newest'
         ? ChannelOrderByInput.CreatedAtDesc
         : sortBy === 'Oldest'
         ? ChannelOrderByInput.CreatedAtAsc
         : ChannelOrderByInput.FollowsNumDesc,
+    first: 10,
   })
+  const [isLoading, setIsLoading] = useState(false)
 
-  if (!extendedChannels || (!extendedChannels?.length && !loading)) {
+  if (!channels || (!channels?.length && !(loading || isLoading))) {
     return null
   }
 
@@ -40,9 +47,21 @@ export const ChannelsSection = () => {
       contentProps={{
         type: 'grid',
         minChildrenWidth: 200,
-        children: extendedChannels.map((extended) => (
-          <ChannelCard key={extended.channel.id} channel={extended.channel} />
-        )),
+        children: channels.map(({ node }) => <ChannelCard key={node.id} channel={node} />),
+      }}
+      footerProps={{
+        type: 'infinite',
+        reachedEnd: !pageInfo?.hasNextPage ?? true,
+        fetchMore: async () => {
+          setIsLoading(true)
+          await fetchMore({
+            variables: {
+              after: pageInfo?.endCursor,
+            },
+          }).finally(() => {
+            setIsLoading(false)
+          })
+        },
       }}
     />
   )
