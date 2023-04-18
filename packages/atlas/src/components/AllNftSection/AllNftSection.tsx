@@ -63,14 +63,16 @@ const FILTERS: SectionFilter[] = [
   { name: 'other', type: 'checkbox', options: OTHER, label: 'Other', icon: <SvgActionSettings /> },
 ]
 
-const LIMIT = 10
+const LIMIT = 12
+const LG_LIMIT = 30
 
 export const AllNftSection = () => {
   const [filters, setFilters] = useState<SectionFilter[]>(FILTERS)
   const [hasAppliedFilters, setHasAppliedFilters] = useState(false)
   const [order, setOrder] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
   const smMatch = useMediaMatch('sm')
-
+  const lgMatch = useMediaMatch('lg')
+  const limit = lgMatch ? LG_LIMIT : LIMIT
   const mappedFilters = useMemo((): OwnedNftWhereInput => {
     const mappedStatus =
       filters
@@ -107,11 +109,11 @@ export const AllNftSection = () => {
   const { nfts, loading, totalCount, fetchMore, pageInfo } = useNftsConnection({
     where: mappedFilters,
     orderBy: order,
-    first: LIMIT,
+    first: limit,
   })
   const [isLoading, setIsLoading] = useState(false)
 
-  const placeholderItems = loading || isLoading ? createPlaceholderData(LIMIT) : []
+  const placeholderItems = loading || isLoading ? createPlaceholderData(limit) : []
   const nftsWithPlaceholders = [...(nfts || []), ...placeholderItems]
   return (
     <Section
@@ -138,7 +140,7 @@ export const AllNftSection = () => {
       }}
       contentProps={{
         type: 'grid',
-        minChildrenWidth: 300,
+        minChildrenWidth: 250,
         children:
           !(isLoading || loading) && !nfts?.length
             ? [
