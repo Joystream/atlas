@@ -50,7 +50,8 @@ export const ChannelsSection = () => {
         children: channels.map(({ node }) => <ChannelCard key={node.id} channel={node} />),
       }}
       footerProps={{
-        type: 'infinite',
+        type: 'load',
+        label: 'Load more channels',
         reachedEnd: !pageInfo?.hasNextPage ?? true,
         fetchMore: async () => {
           setIsLoading(true)
