@@ -4,7 +4,7 @@ import { useBasicVideosConnection } from '@/api/hooks/videosConnection'
 import { Section } from '@/components/Section/Section'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { publicVideoFilter } from '@/config/contentFilter'
-import { useBreakpointKey } from '@/hooks/useBreakPointKey'
+import { useBreakpointKey } from '@/hooks/useBreakpointKey'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { createPlaceholderData } from '@/utils/data'
 
