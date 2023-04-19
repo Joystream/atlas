@@ -1,9 +1,9 @@
-import { ChangeEvent, FC, ReactNode, useRef } from 'react'
+import { ChangeEvent, FC, ReactNode, useEffect, useRef, useState } from 'react'
+import { useInView } from 'react-intersection-observer'
 
-import { SvgJoyTokenMonochrome16 } from '@/assets/icons'
-import { Counter, InputsContainer, StyledButton } from '@/components/FilterButton/FilterButton.styles'
+import { Counter, StyledButton } from '@/components/FilterButton/FilterButton.styles'
 import { CheckboxGroup } from '@/components/_inputs/CheckboxGroup'
-import { Input } from '@/components/_inputs/Input'
+import { PriceRangeInput } from '@/components/_inputs/PriceRangeInput'
 import { DialogPopover } from '@/components/_overlays/DialogPopover'
 
 import { RadioButtonGroup } from '../_inputs/RadioButtonGroup'
@@ -39,6 +39,16 @@ export type SectionFilter = Omit<FilterButtonProps, 'onChange'>
 
 export const FilterButton: FC<FilterButtonProps> = (props) => {
   const triggerRef = useRef<HTMLButtonElement>(null)
+  const firstRangeInput = useRef<HTMLInputElement | null>(null)
+  const [shouldFocus, setShouldFocus] = useState(false)
+  const { ref, inView } = useInView()
+
+  useEffect(() => {
+    if (inView && shouldFocus) {
+      firstRangeInput.current?.focus()
+      setShouldFocus(false)
+    }
+  }, [inView, shouldFocus])
 
   if (props.type === 'checkbox' || props.type === 'radio') {
     const { type, name, onChange, className, icon, label, options = [] } = props
@@ -115,9 +125,7 @@ export const FilterButton: FC<FilterButtonProps> = (props) => {
   if (props.type === 'range') {
     const { onChange, className, icon, label, range } = props
 
-    const handleRangeInputChange = (side: 'min' | 'max') => (e: ChangeEvent<HTMLInputElement>) => {
-      onChange({ ...range, [side]: e.target.value })
-    }
+    const isApplied = Boolean(range?.appliedMax || range?.appliedMin)
 
     const handleApply = () => {
       onChange({ ...range, appliedMin: range?.min, appliedMax: range?.max })
@@ -133,9 +141,15 @@ export const FilterButton: FC<FilterButtonProps> = (props) => {
       <DialogPopover
         className={className}
         flipEnabled
+        onShow={() => setShouldFocus(true)}
         appendTo={document.body}
         trigger={
-          <StyledButton ref={triggerRef} icon={icon} iconPlacement="right" variant="secondary">
+          <StyledButton
+            ref={triggerRef}
+            icon={isApplied ? <Counter>1</Counter> : icon}
+            iconPlacement="right"
+            variant="secondary"
+          >
             {label}
           </StyledButton>
         }
@@ -145,24 +159,14 @@ export const FilterButton: FC<FilterButtonProps> = (props) => {
           onClick: handleClear,
         }}
       >
-        <InputsContainer>
-          <Input
-            type="number"
-            size="medium"
-            nodeStart={<SvgJoyTokenMonochrome16 />}
-            placeholder="Min"
-            value={range?.min ?? ''}
-            onChange={handleRangeInputChange('min')}
-          />
-          <Input
-            type="number"
-            size="medium"
-            nodeStart={<SvgJoyTokenMonochrome16 />}
-            placeholder="Max"
-            value={range?.max ?? ''}
-            onChange={handleRangeInputChange('max')}
-          />
-        </InputsContainer>
+        <PriceRangeInput
+          ref={(inputRef) => {
+            ref(inputRef)
+            firstRangeInput.current = inputRef
+          }}
+          value={range}
+          onChange={(value) => onChange({ ...range, ...value })}
+        />
       </DialogPopover>
     )
   }

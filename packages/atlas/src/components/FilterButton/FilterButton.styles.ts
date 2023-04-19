@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Button } from '@/components/_buttons/Button'
-import { cVar, sizes } from '@/styles'
+import { cVar } from '@/styles'
 
 export const Counter = styled.div`
   height: 16px;
@@ -14,12 +14,7 @@ export const Counter = styled.div`
 `
 
 export const StyledButton = styled(Button)`
-  > svg > path {
+  svg > path {
     fill: ${cVar('colorTextMuted')};
   }
-`
-
-export const InputsContainer = styled.div`
-  display: flex;
-  gap: ${sizes(2)};
 `

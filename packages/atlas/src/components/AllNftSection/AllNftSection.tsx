@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react'
 
 import { useNftsConnection } from '@/api/hooks/nfts'
 import { OwnedNftOrderByInput, OwnedNftWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
-import { SvgActionAuction, SvgActionSettings } from '@/assets/icons'
+import { SvgActionSell, SvgActionSettings, SvgActionShoppingCart } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FilterButtonOption, SectionFilter } from '@/components/FilterButton'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -41,8 +41,8 @@ const NFT_STATUSES: FilterButtonOption[] = [
 ]
 
 const OTHER: FilterButtonOption[] = [
-  { label: 'Paid promotional material', selected: false, applied: false, value: 'promotional' },
-  { label: 'Mature content rating', selected: false, applied: false, value: 'mature' },
+  { label: 'Exclude paid promotional materials', selected: false, applied: false, value: 'promotional' },
+  { label: 'Exclude mature content rating', selected: false, applied: false, value: 'mature' },
 ]
 
 const FILTERS: SectionFilter[] = [
@@ -50,13 +50,13 @@ const FILTERS: SectionFilter[] = [
     name: 'price',
     type: 'range',
     label: 'Price',
-    icon: <SvgActionSettings />,
+    icon: <SvgActionSell />,
     range: { min: undefined, max: undefined },
   },
   {
     name: 'status',
     label: 'Status',
-    icon: <SvgActionAuction />,
+    icon: <SvgActionShoppingCart />,
     type: 'checkbox',
     options: NFT_STATUSES,
   },
@@ -78,31 +78,51 @@ export const AllNftSection = () => {
       filters
         .find((filter) => filter.name === 'status')
         ?.options?.filter((option) => option.applied)
-        .map((option) => option.value) ?? []
-    const otherFilters = filters.find((filter) => filter.name === 'other')
-    const isMature = otherFilters?.options?.some((option) => option.value === 'mature' && option.applied)
-    const isPromotional = otherFilters?.options?.some((option) => option.value === 'promotional' && option.applied)
+        .reduce((prev, option) => {
+          if (['AuctionTypeOpen', 'AuctionTypeEnglish'].includes(option.value)) {
+            prev[1] = {
+              ...prev[1],
+              auction: {
+                auctionType: {
+                  isTypeOf_in: [...(prev[1]?.auction?.auctionType?.isTypeOf_in ?? []), option.value],
+                },
+              },
+            }
+            return prev
+          }
 
+          prev[0] = { ...prev[0], isTypeOf_in: [...(prev[0]?.isTypeOf_in ?? []), option.value] }
+          return prev
+        }, [] as OwnedNftWhereInput['transactionalStatus'][])
+        .filter((filter) => !!filter) ?? []
+    const otherFilters = filters.find((filter) => filter.name === 'other')
+    const isMatureExcluded = otherFilters?.options?.some((option) => option.value === 'mature' && option.applied)
+    const isPromotionalExcluded = otherFilters?.options?.some(
+      (option) => option.value === 'promotional' && option.applied
+    )
     const priceFilter = filters.find((filter) => filter.name === 'price')
     const minPrice = priceFilter?.range?.appliedMin
     const maxPrice = priceFilter?.range?.appliedMax
 
-    setHasAppliedFilters(Boolean(minPrice || maxPrice || isPromotional || isMature || mappedStatus.length))
+    setHasAppliedFilters(
+      Boolean(minPrice || maxPrice || isPromotionalExcluded || isMatureExcluded || mappedStatus.length)
+    )
 
-    return {
+    const commonFilters = {
       lastSalePrice_gte: minPrice ? String(minPrice) : undefined,
       lastSalePrice_lte: maxPrice ? String(maxPrice) : undefined,
-      ...(mappedStatus.length
-        ? {
-            transactionalStatus: {
-              isTypeOf_in: mappedStatus,
-            },
-          }
-        : {}),
       video: {
-        isExcluded_eq: isMature,
-        hasMarketing_eq: isPromotional,
+        ...(isMatureExcluded ? { isExcluded_eq: false } : {}),
+        ...(isPromotionalExcluded ? { hasMarketing_eq: false } : {}),
       },
+    }
+    return {
+      OR: mappedStatus.length
+        ? mappedStatus.map((transactionalStatus) => ({
+            ...commonFilters,
+            transactionalStatus,
+          }))
+        : [commonFilters],
     }
   }, [filters])
 
@@ -122,9 +142,10 @@ export const AllNftSection = () => {
         start: {
           type: 'title',
           title: 'All NFTs',
-          nodeEnd: totalCount ? (
-            <NumberFormat value={totalCount} as="p" variant={smMatch ? 'h500' : 'h400'} color="colorTextMuted" />
-          ) : undefined,
+          nodeEnd:
+            typeof totalCount === 'number' ? (
+              <NumberFormat value={totalCount} as="p" variant={smMatch ? 'h500' : 'h400'} color="colorTextMuted" />
+            ) : undefined,
         },
         filters,
         sort: {
@@ -179,5 +200,5 @@ export const AllNftSection = () => {
 }
 
 export const FallbackContainer = styled.div`
-  grid-column: 1/4;
+  grid-column: 1/-1;
 `
