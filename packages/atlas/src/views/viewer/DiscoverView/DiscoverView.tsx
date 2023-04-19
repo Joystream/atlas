@@ -1,53 +1,33 @@
-import { FC, useMemo } from 'react'
+import { FC } from 'react'
 
-import { useAllCategoriesFeaturedVideos } from '@/api/hooks/categoriesFeaturedVideos'
 import { CategoryIcon } from '@/components/CategoryIcon'
-import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
-import { Text } from '@/components/Text'
-import { FeaturedVideoCategoryCard, VideoCategoryCard } from '@/components/_video/VideoCategoryCard'
+import { Section } from '@/components/Section/Section'
+import { Grid } from '@/components/Section/SectionContent/SectionContent.styles'
+import { VideoCategoryCard } from '@/components/_video/VideoCategoryCard'
+import { atlasConfig } from '@/config'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useVideoDisplayCategoriesWithCounter } from '@/hooks/useVideoDisplayCategoriesWithCounter'
 import { cVar } from '@/styles'
-import { createLookup } from '@/utils/data'
 
-import {
-  FeaturedCategoriesContainer,
-  StyledGridHeadingContainer,
-  StyledLimitedWidthContainer,
-} from './DiscoverView.styles'
+import { StyledLimitedWidthContainer } from './DiscoverView.styles'
+
+const GRID: Grid = {
+  xxs: {
+    columns: 2,
+  },
+  lg: {
+    columns: 3,
+  },
+  xl: {
+    columns: 4,
+  },
+}
 
 export const DiscoverView: FC = () => {
   const { loading, displayCategoriesWithCounter, totalVideosCount } = useVideoDisplayCategoriesWithCounter()
-  const { allCategoriesFeaturedVideos } = useAllCategoriesFeaturedVideos()
 
-  const categoriesFeaturedVideos = allCategoriesFeaturedVideos ? createLookup(allCategoriesFeaturedVideos) : null
-
-  const featuredVideoCategoryCardsData = useMemo(() => {
-    const _featuredVideoCategoryCardsData =
-      displayCategoriesWithCounter
-        .map((displayCategory) => {
-          const video = categoriesFeaturedVideos?.[displayCategory.id]?.featuredVideos.find(
-            (video) => !!video.videoCutUrl
-          )
-
-          if (!video) return null
-
-          return {
-            videoTitle: video?.video.title ?? '',
-            videoUrl: video?.videoCutUrl ?? '',
-            ...displayCategory,
-          }
-        })
-        .filter((cat) => !!cat)
-        .slice(0, 3) ?? []
-
-    if (_featuredVideoCategoryCardsData.length > 0) {
-      return _featuredVideoCategoryCardsData
-    }
-
-    return null
-  }, [displayCategoriesWithCounter, categoriesFeaturedVideos])
+  const categoriesNumber = atlasConfig.content.categories.length
 
   const isMdBreakpoint = useMediaMatch('md')
 
@@ -56,35 +36,13 @@ export const DiscoverView: FC = () => {
   return (
     <StyledLimitedWidthContainer big>
       {headTags}
-      <Text as="p" variant="h700">
-        Discover
-      </Text>
-      {featuredVideoCategoryCardsData && (
-        <FeaturedCategoriesContainer>
-          {featuredVideoCategoryCardsData.map((category, i) => (
-            <GridItem key={category?.id ?? `placeholder-${i}`} colSpan={{ base: 12, sm: i === 0 ? 12 : 6, xl: 4 }}>
-              <FeaturedVideoCategoryCard
-                variant={isMdBreakpoint ? 'default' : 'compact'}
-                title={category?.name ?? ''}
-                videoTitle={category?.videoTitle ?? ''}
-                videoUrl={category?.videoUrl ?? ''}
-                color={category?.color ?? cVar('colorCoreBaseWhite')}
-                icon={<CategoryIcon url={category?.iconUrl} color={cVar('colorCoreBaseBlack')} />}
-                id={category?.id}
-              />
-            </GridItem>
-          ))}
-        </FeaturedCategoriesContainer>
-      )}
-      <StyledGridHeadingContainer>
-        <Text as="h2" variant="h500">
-          All categories
-        </Text>
-      </StyledGridHeadingContainer>
-      <LayoutGrid>
-        {(displayCategoriesWithCounter ?? new Array(15).fill(null))?.map((category, i) => (
-          <GridItem key={i} colSpan={{ base: 6, lg: 4, xl: 3 }}>
+      <Section
+        contentProps={{
+          type: 'grid',
+          grid: GRID,
+          children: (displayCategoriesWithCounter ?? new Array(categoriesNumber).fill(null))?.map((category, i) => (
             <VideoCategoryCard
+              key={i}
               isLoading={category === null || loading}
               title={category?.name ?? ''}
               categoryVideosCount={category?.activeVideosCounter}
@@ -95,9 +53,9 @@ export const DiscoverView: FC = () => {
               variant={isMdBreakpoint ? 'default' : 'compact'}
               id={category?.id}
             />
-          </GridItem>
-        ))}
-      </LayoutGrid>
+          )),
+        }}
+      />
     </StyledLimitedWidthContainer>
   )
 }
