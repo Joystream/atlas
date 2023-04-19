@@ -81,15 +81,6 @@ query GetTop10Channels($where: ExtendedChannelWhereInput) {
   }
 }
 
-query GetPromisingChannels($where: ExtendedChannelWhereInput) {
-  # CHANGE: Replacement for overly-specific `promisingChannels` query
-  mostRecentChannels(where: $where, orderBy: videoViewsNum_DESC, mostRecentLimit: 100, resultsLimit: 15) {
-    channel {
-      ...BasicChannelFields
-    }
-  }
-}
-
 query GetDiscoverChannels($where: ExtendedChannelWhereInput) {
   # CHANGE: Replacement for overly-specific `discoverChannels` query
   mostRecentChannels(where: $where, orderBy: followsNum_DESC, mostRecentLimit: 100, resultsLimit: 15) {

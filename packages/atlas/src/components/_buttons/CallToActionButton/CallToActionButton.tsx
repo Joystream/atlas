@@ -6,7 +6,6 @@ import {
   SvgActionNewTab,
   SvgSidebarExplore,
   SvgSidebarHome,
-  SvgSidebarNew,
   SvgSidebarPopular,
 } from '@/assets/icons'
 import { atlasConfig } from '@/config'
@@ -56,12 +55,6 @@ export const CTA_MAP: Record<string, CallToActionButtonProps> = {
     to: absoluteRoutes.viewer.index(),
     colorVariant: 'yellow',
     icon: <SvgSidebarHome />,
-  },
-  new: {
-    label: 'New & Noteworthy',
-    to: absoluteRoutes.viewer.new(),
-    colorVariant: 'green',
-    icon: <SvgSidebarNew />,
   },
   popular: {
     label: `Popular on ${atlasConfig.general.appName}`,

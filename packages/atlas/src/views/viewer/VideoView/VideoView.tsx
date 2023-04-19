@@ -434,8 +434,8 @@ export const VideoView: FC = () => {
             {sideItems}
           </LayoutGrid>
         )}
-        <StyledCallToActionWrapper itemsCount={3}>
-          {['popular', 'new', 'discover'].map((item, idx) => (
+        <StyledCallToActionWrapper itemsCount={2}>
+          {['popular', 'discover'].map((item, idx) => (
             <CallToActionButton key={`cta-${idx}`} {...CTA_MAP[item]} />
           ))}
         </StyledCallToActionWrapper>

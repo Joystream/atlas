@@ -22,7 +22,6 @@ export const relativeRoutes = {
   },
   viewer: {
     index: () => '',
-    new: () => 'new',
     discover: () => 'discover',
     popular: () => 'popular',
     category: (id = ':id') => `category/${id}`,
