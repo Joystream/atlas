@@ -7,17 +7,14 @@ import {
   GetBasicVideosQueryVariables,
   GetFullVideosQuery,
   GetFullVideosQueryVariables,
-  GetTop10VideosThisMonthQuery,
-  GetTop10VideosThisMonthQueryVariables,
-  GetTop10VideosThisWeekQuery,
-  GetTop10VideosThisWeekQueryVariables,
+  GetMostViewedVideosConnectionQuery,
+  GetMostViewedVideosConnectionQueryVariables,
   GetVideosCountQuery,
   GetVideosCountQueryVariables,
   useAddVideoViewMutation,
   useGetBasicVideosQuery,
   useGetFullVideosQuery,
-  useGetTop10VideosThisMonthQuery,
-  useGetTop10VideosThisWeekQuery,
+  useGetMostViewedVideosConnectionQuery,
   useGetVideosCountQuery,
 } from '@/api/queries/__generated__/videos.generated'
 import { publicVideoFilter } from '@/config/contentFilter'
@@ -113,25 +110,11 @@ export const useBasicVideo = (
   }
 }
 
-export const useTop10VideosThisWeek = (
-  variables?: GetTop10VideosThisWeekQueryVariables,
-  opts?: QueryHookOptions<GetTop10VideosThisWeekQuery, GetTop10VideosThisWeekQueryVariables>
+export const useMostViewedVideosConnection = (
+  variables?: GetMostViewedVideosConnectionQueryVariables,
+  opts?: QueryHookOptions<GetMostViewedVideosConnectionQuery, GetMostViewedVideosConnectionQueryVariables>
 ) => {
-  const { data, ...rest } = useGetTop10VideosThisWeekQuery({
-    ...opts,
-    variables,
-  })
-  return {
-    videos: data?.mostViewedVideosConnection.edges.map((video) => video.node),
-    ...rest,
-  }
-}
-
-export const useTop10VideosThisMonth = (
-  variables?: GetTop10VideosThisMonthQueryVariables,
-  opts?: QueryHookOptions<GetTop10VideosThisMonthQuery, GetTop10VideosThisMonthQueryVariables>
-) => {
-  const { data, ...rest } = useGetTop10VideosThisMonthQuery({
+  const { data, ...rest } = useGetMostViewedVideosConnectionQuery({
     ...opts,
     variables,
   })

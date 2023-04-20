@@ -1,27 +1,56 @@
 import { FC } from 'react'
 
 import { GetMostViewedVideosConnectionDocument } from '@/api/queries/__generated__/videos.generated'
-import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
-import { ExpandableChannelsList } from '@/components/_channel/ExpandableChannelsList'
+import { Section } from '@/components/Section/Section'
 import { TopTenVideos } from '@/components/_content/TopTenVideos'
-import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
-import { atlasConfig } from '@/config'
-import { absoluteRoutes } from '@/config/routes'
+import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { useHeadTags } from '@/hooks/useHeadTags'
-import { CtaData } from '@/types/cta'
+import { useInfiniteVideoGrid } from '@/hooks/useInfiniteVideoGrid'
+import { DEFAULT_VIDEO_GRID } from '@/styles/grids'
 
-const CTA: CtaData[] = ['new', 'home', 'channels']
-const ADDITIONAL_LINK = { name: 'Browse channels', url: absoluteRoutes.viewer.channels() }
+import { StyledLimidtedWidth } from './PopularView.styles'
 
 export const PopularView: FC = () => {
   const headTags = useHeadTags('Popular')
 
+  const { columns, fetchMore, pageInfo, tiles } = useInfiniteVideoGrid({
+    query: GetMostViewedVideosConnectionDocument,
+    variables: {
+      limit: 100,
+    },
+  })
+
+  const children = tiles?.map((video, idx) => <VideoTileViewer id={video.id} key={idx} />)
+
   return (
-    <VideoContentTemplate title={`Popular on ${atlasConfig.general.appName}`} cta={CTA}>
+    <StyledLimidtedWidth big>
       {headTags}
       <TopTenVideos period="month" />
-      <InfiniteVideoGrid title="Popular videos" query={GetMostViewedVideosConnectionDocument} limit={50} onDemand />
-      <ExpandableChannelsList title="Popular channels" additionalLink={ADDITIONAL_LINK} queryType="popular" />
-    </VideoContentTemplate>
+      <Section
+        headerProps={{
+          start: {
+            type: 'title',
+            title: 'Popular videos',
+          },
+        }}
+        contentProps={{
+          children: children,
+          type: 'grid',
+          grid: DEFAULT_VIDEO_GRID,
+        }}
+        footerProps={{
+          reachEnd: pageInfo?.hasNextPage,
+          fetchMore: async () => {
+            if (pageInfo?.hasNextPage) {
+              await fetchMore({
+                variables: { first: columns, after: pageInfo.endCursor },
+              })
+            }
+            return
+          },
+          type: 'infinite',
+        }}
+      />
+    </StyledLimidtedWidth>
   )
 }

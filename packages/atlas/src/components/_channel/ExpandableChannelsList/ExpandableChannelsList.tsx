@@ -1,7 +1,7 @@
 import { QueryHookOptions } from '@apollo/client'
 import { FC, Fragment, useState } from 'react'
 
-import { useBasicChannels, useDiscoverChannels, usePopularChannels, usePromisingChannels } from '@/api/hooks/channel'
+import { useBasicChannels, useDiscoverChannels, usePromisingChannels } from '@/api/hooks/channel'
 import { ChannelOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionChevronR } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
@@ -153,19 +153,6 @@ const useChannelsListData = (queryType: ChannelsQueryType, selectedLanguage: str
     { ...commonOpts, skip: queryType !== 'discover' }
   )
 
-  const popular = usePopularChannels(
-    {
-      where: {
-        activeVideosCount_gt: activeVideosCountGt,
-        channel: {
-          ...publicChannelFilter,
-          videoViewsNum_gt: 0,
-        },
-      },
-    },
-    { ...commonOpts, skip: queryType !== 'popular' }
-  )
-
   const promising = usePromisingChannels(
     {
       where: {
@@ -196,8 +183,6 @@ const useChannelsListData = (queryType: ChannelsQueryType, selectedLanguage: str
 
   if (queryType === 'discover') {
     return discover
-  } else if (queryType === 'popular') {
-    return popular
   } else if (queryType === 'promising') {
     return promising
   } else {
