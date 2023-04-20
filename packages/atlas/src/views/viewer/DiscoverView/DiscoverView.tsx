@@ -2,13 +2,12 @@ import { FC } from 'react'
 
 import { CategoryIcon } from '@/components/CategoryIcon'
 import { Section } from '@/components/Section/Section'
-import { Grid } from '@/components/Section/SectionContent/SectionContent.styles'
 import { VideoCategoryCard } from '@/components/_video/VideoCategoryCard'
 import { atlasConfig } from '@/config'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useVideoDisplayCategoriesWithCounter } from '@/hooks/useVideoDisplayCategoriesWithCounter'
-import { cVar } from '@/styles'
+import { Grid, cVar } from '@/styles'
 
 import { StyledLimitedWidthContainer } from './DiscoverView.styles'
 

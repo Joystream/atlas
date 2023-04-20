@@ -9,10 +9,6 @@ export type BreakpointKey = keyof typeof breakpoints
 
 export type Grid = Partial<Record<BreakpointKey, BreakPointValue>>
 
-export type GridWrapperProps = {
-  grid?: Grid
-}
-
 export const DEFAULT_VIDEO_GRID = {
   xxs: {
     columns: 1,
