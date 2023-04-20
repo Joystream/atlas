@@ -78,21 +78,18 @@ export const AllNftSection = () => {
       filters
         .find((filter) => filter.name === 'status')
         ?.options?.filter((option) => option.applied)
-        .reduce((prev, option) => {
+        .map((option) => {
           if (['AuctionTypeOpen', 'AuctionTypeEnglish'].includes(option.value)) {
-            prev[1] = {
-              ...prev[1],
+            return {
               auction: {
                 auctionType: {
-                  isTypeOf_in: [...(prev[1]?.auction?.auctionType?.isTypeOf_in ?? []), option.value],
+                  isTypeOf_eq: option.value,
                 },
               },
             }
-            return prev
           }
 
-          prev[0] = { ...prev[0], isTypeOf_in: [...(prev[0]?.isTypeOf_in ?? []), option.value] }
-          return prev
+          return { isTypeOf_eq: option.value }
         }, [] as OwnedNftWhereInput['transactionalStatus'][])
         .filter((filter) => !!filter) ?? []
     const otherFilters = filters.find((filter) => filter.name === 'other')
