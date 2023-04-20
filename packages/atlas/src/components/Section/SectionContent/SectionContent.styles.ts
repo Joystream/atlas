@@ -1,16 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { breakpoints, media, sizes } from '@/styles'
-
-type BreakPointValue = {
-  columns: number | 'auto'
-  minItemWidth?: number
-}
-
-type BreakpointKey = keyof typeof breakpoints
-
-export type Grid = Partial<Record<BreakpointKey, BreakPointValue>>
+import { BreakpointKey, Grid, media, sizes } from '@/styles'
 
 export type GridWrapperProps = {
   grid?: Grid
