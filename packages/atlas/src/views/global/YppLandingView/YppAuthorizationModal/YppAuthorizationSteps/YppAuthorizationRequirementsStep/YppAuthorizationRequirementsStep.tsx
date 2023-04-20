@@ -2,6 +2,7 @@ import { FC, ReactNode } from 'react'
 
 import { SvgActionCheck, SvgActionClose } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
+import { atlasConfig } from '@/config'
 
 import { ListItem, Paragraph, StyledList, TickWrapper } from './YppAuthorizationRequirementsStep.styles'
 
@@ -27,7 +28,9 @@ export const YppAuthorizationRequirementsStep: FC<YppAuthorizationRequirementsSt
           </ListItem>
         ))}
       </StyledList>
-      <Banner description="Gleev uses Google OAuth to get access to your public profile and account email address as part of sign up flow, and integrates with YouTube API to obtain details about your YouTube channel data, such as followers and video statistics." />
+      <Banner
+        description={`${atlasConfig.general.appName} uses Google OAuth to get access to your public profile and account email address as part of sign up flow, and integrates with YouTube API to obtain details about your YouTube channel data, such as followers and video statistics.`}
+      />
     </>
   )
 }

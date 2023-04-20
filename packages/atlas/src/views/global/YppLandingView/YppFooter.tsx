@@ -1,6 +1,6 @@
 import { FC, ReactElement } from 'react'
 
-import { SvgActionChevronR, SvgActionInfo, SvgActionSpeech, SvgActionTokensStack } from '@/assets/icons'
+import { SvgActionInfo, SvgActionSpeech, SvgActionTokensStack } from '@/assets/icons'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { CallToActionButton } from '@/components/_buttons/CallToActionButton'
@@ -47,9 +47,7 @@ export const YppFooter: FC<YppFooterSectionProps> = ({ onSignUpClick }) => {
                 Get the most out of your YouTube channel
               </StyledBannerText>
 
-              <StyledButton size="large" icon={<SvgActionChevronR />} onClick={onSignUpClick} iconPlacement="right">
-                Authorize with YouTube
-              </StyledButton>
+              <StyledButton onClick={onSignUpClick}>Authorize with YouTube</StyledButton>
             </CtaBanner>
           </GridItem>
         </LayoutGrid>

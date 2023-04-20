@@ -17543,17 +17543,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-google-button@npm:^0.7.2":
-  version: 0.7.2
-  resolution: "react-google-button@npm:0.7.2"
-  dependencies:
-    prop-types: ^15.7.2
-  peerDependencies:
-    react: "*"
-  checksum: 7d55d4cc7c6f00ed1a6847d9d8b37ded602309e827170e22dfa0045f2a511c802f64105fb924936b12c0dc8375eb202f6f846a0997ebba15130057e101f23aa7
-  languageName: node
-  linkType: hard
-
 "react-helmet@npm:^6.1.0":
   version: 6.1.0
   resolution: "react-helmet@npm:6.1.0"
@@ -18499,7 +18488,6 @@ __metadata:
     husky: ^8.0.2
     lint-staged: ^13.1.0
     prettier: ~2.8.1
-    react-google-button: ^0.7.2
     stylelint: ^14.16.0
     stylelint-config-prettier: ^9.0.4
     stylelint-config-standard: ^29.0.0

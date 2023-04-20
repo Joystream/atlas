@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import bottomLeftPattern from '@/assets/images/ypp-background-pattern.svg'
 import topLeftBannerPattern from '@/assets/images/ypp-banner-pattern.svg'
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
+import { GoogleButton } from '@/components/_buttons/GoogleButton'
 import { cVar, media, sizes } from '@/styles'
 
 export const CtaBanner = styled.div`
@@ -35,9 +35,8 @@ export const StyledBannerText = styled(Text)`
   }
 `
 
-export const StyledButton = styled(Button)`
+export const StyledButton = styled(GoogleButton)`
   margin-top: ${sizes(8)};
-  background-color: ${cVar('colorCoreBaseBlack')};
 `
 
 export const CtaCardRow = styled.div<{ itemsCount: number }>`

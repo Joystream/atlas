@@ -82,8 +82,5 @@
   "engines": {
     "node": "^16"
   },
-  "packageManager": "yarn@3.2.1",
-  "dependencies": {
-    "react-google-button": "^0.7.2"
-  }
+  "packageManager": "yarn@3.2.1"
 }

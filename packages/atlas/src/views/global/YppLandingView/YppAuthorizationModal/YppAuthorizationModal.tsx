@@ -11,6 +11,7 @@ import { SvgAlertsError32 } from '@/assets/icons'
 import appScreenshot from '@/assets/images/ypp-authorization/app-screenshot.webp'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
+import { GoogleButton } from '@/components/_buttons/GoogleButton'
 import { Loader } from '@/components/_loaders/Loader'
 import { Spinner } from '@/components/_loaders/Spinner'
 import { DialogModal } from '@/components/_overlays/DialogModal'
@@ -36,7 +37,6 @@ import {
   DescriptionText,
   HeaderIconsWrapper,
   Img,
-  StyledGoogleButton,
   StyledSvgAppLogoShort,
 } from './YppAuthorizationModal.styles'
 import { YppAuthorizationErrorCode, YppAuthorizationStepsType } from './YppAuthorizationModal.types'
@@ -84,7 +84,6 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   } = useGetYppSyncedChannels()
   const contentRef = useRef<HTMLDivElement | null>(null)
   const channelsLoaded = !!unSyncedChannels
-  const hasMoreThanOneChannel = unSyncedChannels && unSyncedChannels.length > 1
   const [finalFormData, setFinalFormData] = useState<FinalFormData | null>(null)
   const selectedChannelId = useYppStore((store) => store.selectedChannelId)
   const referrerId = useYppStore((store) => store.referrerId)
@@ -153,13 +152,9 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       onChangeStep('ypp-sync')
     }
     if (currentStep === 'details' || currentStep === 'channel-already-registered') {
-      onChangeStep('requirements')
+      onChangeStep('select-channel')
     }
-    if (currentStep === 'requirements' && hasMoreThanOneChannel) {
-      setYtRequirementsErrors([])
-      // onChangeStep('select-channel')
-    }
-  }, [currentStep, hasMoreThanOneChannel, onChangeStep, setYtRequirementsErrors])
+  }, [currentStep, onChangeStep])
 
   const handleSelectChannel = useCallback(
     (selectedChannelId: string) => {
@@ -362,7 +357,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           }
 
           return (
-            <StyledGoogleButton
+            <GoogleButton
               onClick={() => {
                 setSelectedChannelId(yppUnsyncedChannels?.[0].id ?? '')
                 handleAuthorizeClick(yppUnsyncedChannels?.[0].id)
@@ -383,13 +378,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         return {
           title: 'Select channel',
           description: `Select the ${APP_NAME} channel you want your YouTube channel to be connected with.`,
-          primaryButton: (
-            <StyledGoogleButton
-              disabled={!selectedChannel}
-              onClick={() => handleAuthorizeClick()}
-              label="Authorize with YouTube"
-            />
-          ),
+          primaryButton: <GoogleButton disabled={!selectedChannel} onClick={() => handleAuthorizeClick()} />,
           component: (
             <YppAuthorizationSelectChannelStep
               channels={unSyncedChannels}
@@ -506,7 +495,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   ])
 
   const secondaryButton = useMemo(() => {
-    if (currentStep === 'select-channel' || (currentStep === 'requirements' && !hasMoreThanOneChannel)) return
+    if (currentStep === 'requirements' || currentStep === 'select-channel') return
     if (currentStep === 'summary') {
       return {
         text: 'Close',
@@ -519,7 +508,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       disabled: isSubmitting,
       onClick: handleGoBack,
     }
-  }, [currentStep, hasMoreThanOneChannel, handleGoBack, isSubmitting, handleClose])
+  }, [currentStep, handleGoBack, isSubmitting, handleClose])
 
   return (
     <FormProvider {...detailsFormMethods}>

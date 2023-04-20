@@ -2,9 +2,7 @@ import { FC } from 'react'
 import { useParallax } from 'react-scroll-parallax'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import googleLogo from '@/assets/google/googleLogo.webp'
-import youtubeLogo from '@/assets/google/youtubeLogo.webp'
-import { SvgActionChevronR } from '@/assets/icons'
+import { SvgActionChevronR, SvgLogoGoogleWhiteFull, SvgLogoYoutubeWhiteFull } from '@/assets/icons'
 import hero576 from '@/assets/images/ypp-hero/hero-576.webp'
 import hero864 from '@/assets/images/ypp-hero/hero-864.webp'
 import hero1152 from '@/assets/images/ypp-hero/hero-1152.webp'
@@ -16,6 +14,7 @@ import yt2304 from '@/assets/images/ypp-hero/yt-2304.webp'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
+import { GoogleButton } from '@/components/_buttons/GoogleButton'
 import { ChannelCard } from '@/components/_channel/ChannelCard'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
@@ -42,18 +41,6 @@ type YppHeroProps = {
   yppAtlasStatus: YppAtlasStatus
   hasAnotherUnsyncedChannel?: boolean
   selectedChannelTitle?: string | null
-}
-
-export const getButtonText = (variant: YppAtlasStatus) => {
-  switch (variant) {
-    case 'have-channel':
-      return 'Sign up now'
-    case 'connect-wallet':
-    case 'no-channel':
-      return 'Create channel & sign up'
-    case 'ypp-signed':
-      return 'Go to dashboard'
-  }
 }
 
 export const YppHero: FC<YppHeroProps> = ({
@@ -108,8 +95,8 @@ export const YppHero: FC<YppHeroProps> = ({
               Reupload and backup your YouTube videos to receive a guaranteed payout in the YouTube Partner Program.
             </Text>
             <LogosContainer data-aos="fade-up" data-aos-delay="350" data-aos-offset="40" data-aos-easing="atlas-easing">
-              <img src={youtubeLogo} alt="youtube logo" />
-              <img src={googleLogo} alt="google logo" />
+              <SvgLogoYoutubeWhiteFull />
+              <SvgLogoGoogleWhiteFull />
             </LogosContainer>
             <ButtonWrapper data-aos="fade-up" data-aos-delay="450" data-aos-offset="40" data-aos-easing="atlas-easing">
               <SwitchTransition>
@@ -119,15 +106,19 @@ export const YppHero: FC<YppHeroProps> = ({
                   classNames={transitions.names.fade}
                 >
                   {yppAtlasStatus ? (
-                    <Button
-                      size="large"
-                      variant={yppAtlasStatus === 'ypp-signed' ? 'secondary' : 'primary'}
-                      icon={<SvgActionChevronR />}
-                      iconPlacement="right"
-                      onClick={onSignUpClick}
-                    >
-                      {getButtonText(yppAtlasStatus)}
-                    </Button>
+                    yppAtlasStatus === 'ypp-signed' ? (
+                      <Button
+                        size="large"
+                        variant="secondary"
+                        icon={<SvgActionChevronR />}
+                        iconPlacement="right"
+                        onClick={onSignUpClick}
+                      >
+                        Go to dashboard
+                      </Button>
+                    ) : (
+                      <GoogleButton onClick={onSignUpClick} />
+                    )
                   ) : (
                     <SkeletonLoader width={190} height={48} />
                   )}
