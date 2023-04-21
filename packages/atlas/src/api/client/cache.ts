@@ -70,9 +70,11 @@ const getNftKeyArgs = (
   const sorting = stringifyValue(sortingArray)
   const createdAtGte = args?.where?.createdAt_gte ? JSON.stringify(args.where.createdAt_gte) : ''
   const createdAtLte = args?.where?.createdAt_lte ? JSON.stringify(args.where.createdAt_lte) : ''
+  const lastSalePriceGte = args?.where?.lastSalePrice_gte ? JSON.stringify(args.where.lastSalePrice_gte) : ''
+  const lastSalePriceLte = args?.where?.lastSalePrice_lte ? JSON.stringify(args.where.lastSalePrice_lte) : ''
   const video = stringifyValue(args?.where?.video)
 
-  return `${OR}:${AND}:${ownerMember}:${creatorChannel}:${status}:${auctionStatus}:${sorting}:${createdAtGte}:${createdAtLte}:${video}:${offset}`
+  return `${OR}:${AND}:${ownerMember}:${creatorChannel}:${status}:${auctionStatus}:${sorting}:${createdAtGte}:${createdAtLte}:${video}:${offset}:${lastSalePriceGte}:${lastSalePriceLte}`
 }
 
 const getChannelKeyArgs = (args: Partial<QueryChannelsConnectionArgs> | null) => {
