@@ -11,6 +11,7 @@ import { Section } from '@/components/Section/Section'
 import { Button } from '@/components/_buttons/Button'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { createPlaceholderData } from '@/utils/data'
 
 const NFT_STATUSES: FilterButtonOption[] = [
@@ -90,8 +91,7 @@ export const AllNftSection = () => {
           }
 
           return { isTypeOf_eq: option.value }
-        }, [] as OwnedNftWhereInput['transactionalStatus'][])
-        .filter((filter) => !!filter) ?? []
+        }, [] as OwnedNftWhereInput['transactionalStatus'][]) ?? []
     const otherFilters = filters.find((filter) => filter.name === 'other')
     const isMatureExcluded = otherFilters?.options?.some((option) => option.value === 'mature' && option.applied)
     const isPromotionalExcluded = otherFilters?.options?.some(
@@ -106,8 +106,8 @@ export const AllNftSection = () => {
     )
 
     const commonFilters = {
-      lastSalePrice_gte: minPrice ? String(minPrice) : undefined,
-      lastSalePrice_lte: maxPrice ? String(maxPrice) : undefined,
+      lastSalePrice_gte: minPrice ? tokenNumberToHapiBn(minPrice).toString() : undefined,
+      lastSalePrice_lte: maxPrice ? tokenNumberToHapiBn(maxPrice).toString() : undefined,
       video: {
         ...(isMatureExcluded ? { isExcluded_eq: false } : {}),
         ...(isPromotionalExcluded ? { hasMarketing_eq: false } : {}),
