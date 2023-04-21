@@ -51,11 +51,12 @@ type HandleTransactionOpts<T extends ExtrinsicResult> = {
 }
 type HandleTransactionFn = <T extends ExtrinsicResult>(opts: HandleTransactionOpts<T>) => Promise<boolean>
 
+const WALLETS_WITH_METADATA = ['talisman', 'polkadot-js', 'subwallet-js']
+
 export const useTransaction = (): HandleTransactionFn => {
   const { addBlockAction, addTransaction, updateTransaction, removeTransaction } = useTransactionManagerStore(
     (state) => state.actions
   )
-  const userWalletName = useUserStore((state) => state.wallet?.title)
   const navigate = useNavigate()
 
   const [openOngoingTransactionModal, closeOngoingTransactionModal] = useConfirmationModal()
@@ -87,7 +88,7 @@ export const useTransaction = (): HandleTransactionFn => {
         return false
       }
 
-      if (isSignerMetadataOutdated) {
+      if (isSignerMetadataOutdated && WALLETS_WITH_METADATA.includes(wallet?.extensionName ?? '')) {
         await new Promise((resolve) => {
           openOngoingTransactionModal({
             title: 'Update Wallet Metadata',
@@ -136,7 +137,7 @@ export const useTransaction = (): HandleTransactionFn => {
           title: anyUnsignedTransaction ? 'Sign outstanding transactions' : 'Wait for other transactions',
           type: 'informative',
           description: anyUnsignedTransaction
-            ? `You have outstanding blockchain transactions waiting for you to sign them in ${userWalletName}. Please, sign or cancel previous transactions in ${userWalletName} to continue.`
+            ? `You have outstanding blockchain transactions waiting for you to sign them in ${wallet?.title}. Please, sign or cancel previous transactions in ${wallet?.title} to continue.`
             : 'You have other blockchain transactions which are still being processed. Please, try again in about a minute.',
           primaryButton: {
             text: 'Got it',
@@ -344,7 +345,7 @@ export const useTransaction = (): HandleTransactionFn => {
       totalBalance,
       updateSignerMetadata,
       updateTransaction,
-      userWalletName,
+      wallet?.extensionName,
       wallet?.title,
     ]
   )
