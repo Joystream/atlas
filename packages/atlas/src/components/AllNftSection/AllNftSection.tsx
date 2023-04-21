@@ -176,7 +176,7 @@ export const AllNftSection = () => {
                   />
                 </FallbackContainer>,
               ]
-            : nftsWithPlaceholders.map((nft, idx) => <NftTileViewer key={(nft.id ?? '') + idx} nftId={nft.id} />),
+            : nftsWithPlaceholders.map((nft, idx) => <NftTileViewer key={idx} nftId={nft.id} />),
       }}
       footerProps={{
         type: 'infinite',
