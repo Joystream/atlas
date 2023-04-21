@@ -2,7 +2,8 @@ import styled from '@emotion/styled'
 
 import { SvgAppLogoShort } from '@/assets/logos'
 import { Text } from '@/components/Text'
-import { cVar, sizes } from '@/styles'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { cVar, media, sizes } from '@/styles'
 
 export const StyledSvgAppLogoShort = styled(SvgAppLogoShort)`
   height: 36px;
@@ -39,4 +40,13 @@ export const HeaderIconsWrapper = styled.div`
 export const CategoriesText = styled(Text)`
   display: block;
   margin-top: ${sizes(1)};
+`
+
+export const RequirementsButtonSkeleton = styled(SkeletonLoader)`
+  height: 40px;
+  width: 100%;
+
+  ${media.sm} {
+    width: 150px;
+  }
 `

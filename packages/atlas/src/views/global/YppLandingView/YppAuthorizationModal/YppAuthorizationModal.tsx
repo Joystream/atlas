@@ -13,7 +13,6 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { GoogleButton } from '@/components/_buttons/GoogleButton'
 import { Loader } from '@/components/_loaders/Loader'
-import { Spinner } from '@/components/_loaders/Spinner'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
@@ -37,6 +36,7 @@ import {
   DescriptionText,
   HeaderIconsWrapper,
   Img,
+  RequirementsButtonSkeleton,
   StyledSvgAppLogoShort,
 } from './YppAuthorizationModal.styles'
 import { YppAuthorizationErrorCode, YppAuthorizationStepsType } from './YppAuthorizationModal.types'
@@ -331,7 +331,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
       case 'requirements': {
         const getPrimaryButton = () => {
           if (isLoading) {
-            return <Spinner />
+            return <RequirementsButtonSkeleton />
           }
 
           if (yppCurrentChannel) {
