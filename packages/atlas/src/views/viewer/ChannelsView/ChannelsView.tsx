@@ -19,7 +19,7 @@ export const ChannelsView: FC = () => {
   return (
     <>
       {headTags}
-      <VideoContentTemplate title="Browse channels" cta={['popular', 'new', 'home']}>
+      <VideoContentTemplate title="Browse channels">
         {!error ? <ChannelGallery hasRanking channels={channels} loading={loading} title="Top 10 channels" /> : null}
         <DiscoverChannels />
         <ExpandableChannelsList queryType="regular" title="Channels in your language" languageSelector />
