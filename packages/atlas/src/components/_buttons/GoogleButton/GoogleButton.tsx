@@ -9,12 +9,12 @@ interface GoogleButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
 }
 export const GoogleButton = ({ label, ...rest }: GoogleButtonProps) => {
   return (
-    <Container as="button" {...rest}>
+    <StyledButton {...rest}>
       <IconContainer>
         <SvgGoogleSmallLogo />
       </IconContainer>
       <span>Sign in with Google</span>
-    </Container>
+    </StyledButton>
   )
 }
 
@@ -25,7 +25,7 @@ const IconContainer = styled.div`
   place-items: center;
 `
 
-const Container = styled.button`
+const StyledButton = styled.button`
   display: inline-flex;
   align-items: center;
   text-align: center;
