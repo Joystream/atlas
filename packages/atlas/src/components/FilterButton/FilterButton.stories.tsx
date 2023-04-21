@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 import { SvgActionShoppingCart } from '@/assets/icons'
 
-import { FilterButton, FilterButtonOption, FilterButtonProps } from './FilterButton'
+import { FilterButton, FilterButtonOption, FilterButtonProps, isFilterRange } from './FilterButton'
 
 export default {
   title: 'inputs/FilterButton',
@@ -31,7 +31,14 @@ export default {
 const CheckboxTemplate: StoryFn<FilterButtonProps> = (args) => {
   const [options, setOptions] = useState<FilterButtonOption[]>(args.options || [])
 
-  return <FilterButton {...args} type="checkbox" options={options} onChange={setOptions} />
+  return (
+    <FilterButton
+      {...args}
+      type="checkbox"
+      options={options}
+      onChange={(val) => !isFilterRange(val) && setOptions(val)}
+    />
+  )
 }
 
 export const Checkbox = CheckboxTemplate.bind({})
@@ -39,7 +46,9 @@ export const Checkbox = CheckboxTemplate.bind({})
 const RadioTemplate: StoryFn<FilterButtonProps> = (args) => {
   const [options, setOptions] = useState<FilterButtonOption[]>(args.options || [])
 
-  return <FilterButton {...args} type="radio" options={options} onChange={setOptions} />
+  return (
+    <FilterButton {...args} type="radio" options={options} onChange={(val) => !isFilterRange(val) && setOptions(val)} />
+  )
 }
 
 export const Radio = RadioTemplate.bind({})

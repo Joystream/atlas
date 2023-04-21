@@ -26,7 +26,7 @@ export type DialogProps = PropsWithChildren<{
   title?: ReactNode
   dividers?: boolean
   size?: DialogSize
-  primaryButton?: DialogButtonProps
+  primaryButton?: DialogButtonProps | JSX.Element
   secondaryButton?: DialogButtonProps
   additionalActionsNode?: ReactNode
   additionalActionsNodeMobilePosition?: 'top' | 'bottom'
@@ -111,11 +111,14 @@ export const Dialog: FC<DialogProps> = ({
                 {secondaryButton.text}
               </Button>
             )}
-            {primaryButton && (
-              <Button variant={primaryButton.variant || 'primary'} size={buttonSize} fullWidth {...primaryButton}>
-                {primaryButton.text}
-              </Button>
-            )}
+            {primaryButton &&
+              ('text' in primaryButton ? (
+                <Button variant={primaryButton.variant || 'primary'} size={buttonSize} fullWidth {...primaryButton}>
+                  {primaryButton.text}
+                </Button>
+              ) : (
+                (primaryButton as JSX.Element)
+              ))}
           </FooterButtonsContainer>
         </Footer>
       )}

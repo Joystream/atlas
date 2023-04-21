@@ -8,16 +8,14 @@ import { VideoContentTemplate } from '@/components/_templates/VideoContentTempla
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
-import { CtaData } from '@/types/cta'
 
-const CTA: CtaData[] = ['new', 'home', 'channels']
 const ADDITIONAL_LINK = { name: 'Browse channels', url: absoluteRoutes.viewer.channels() }
 
 export const PopularView: FC = () => {
   const headTags = useHeadTags('Popular')
 
   return (
-    <VideoContentTemplate title={`Popular on ${atlasConfig.general.appName}`} cta={CTA}>
+    <VideoContentTemplate title={`Popular on ${atlasConfig.general.appName}`}>
       {headTags}
       <TopTenVideos period="month" />
       <InfiniteVideoGrid title="Popular videos" query={GetMostViewedVideosConnectionDocument} limit={50} onDemand />

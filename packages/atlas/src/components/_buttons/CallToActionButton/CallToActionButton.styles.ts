@@ -15,13 +15,19 @@ const mappedColors = {
   white: cVar('colorCoreNeutral50'),
 }
 
-export const CallToActionWrapper = styled.div`
-  margin-top: ${sizes(32)};
+export const CallToActionWrapper = styled.div<{ itemsCount: number }>`
+  display: grid;
+  gap: ${sizes(4)};
+  padding-bottom: ${sizes(16)};
+  justify-items: center;
 
   ${media.md} {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-column-gap: ${sizes(6)};
+    margin: 0 auto;
+    justify-content: center;
+    grid-template-columns: repeat(auto-fit, minmax(219px, 1fr));
+    max-width: ${({ itemsCount }) => `calc(${itemsCount - 1} * ${sizes(6)} + 419px * ${itemsCount}) `};
+    gap: ${sizes(6)};
+    padding-bottom: ${sizes(24)};
   }
 `
 type IconWrapperProps = {

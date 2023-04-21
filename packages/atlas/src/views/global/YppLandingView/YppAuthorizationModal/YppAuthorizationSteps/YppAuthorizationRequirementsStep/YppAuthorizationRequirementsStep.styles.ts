@@ -4,7 +4,7 @@ import { Text } from '@/components/Text'
 import { cVar, sizes, square } from '@/styles'
 
 export const StyledList = styled.ul`
-  margin: 0;
+  margin: 0 0 ${sizes(6)} 0;
   padding-left: 0;
   display: grid;
   gap: ${sizes(4)};

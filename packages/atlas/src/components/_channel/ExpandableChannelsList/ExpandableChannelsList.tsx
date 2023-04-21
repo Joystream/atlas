@@ -1,7 +1,7 @@
 import { QueryHookOptions } from '@apollo/client'
 import { FC, Fragment, useState } from 'react'
 
-import { useBasicChannels, useDiscoverChannels, usePopularChannels, usePromisingChannels } from '@/api/hooks/channel'
+import { useBasicChannels, useDiscoverChannels, usePopularChannels } from '@/api/hooks/channel'
 import { ChannelOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionChevronR } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
@@ -22,7 +22,7 @@ import {
   Separator,
 } from './ExpandableChannelsList.styles'
 
-type ChannelsQueryType = 'discover' | 'promising' | 'popular' | 'regular'
+type ChannelsQueryType = 'discover' | 'popular' | 'regular'
 
 type ExpandableChannelsListProps = {
   queryType: ChannelsQueryType
@@ -166,18 +166,6 @@ const useChannelsListData = (queryType: ChannelsQueryType, selectedLanguage: str
     { ...commonOpts, skip: queryType !== 'popular' }
   )
 
-  const promising = usePromisingChannels(
-    {
-      where: {
-        activeVideosCount_gt: activeVideosCountGt,
-        channel: {
-          ...publicChannelFilter,
-          videoViewsNum_gt: 0,
-        },
-      },
-    },
-    { ...commonOpts, skip: queryType !== 'promising' }
-  )
   // regular channels query needs explicit limit and sorting as it's not defined by Orion
   const regular = useBasicChannels(
     {
@@ -198,8 +186,6 @@ const useChannelsListData = (queryType: ChannelsQueryType, selectedLanguage: str
     return discover
   } else if (queryType === 'popular') {
     return popular
-  } else if (queryType === 'promising') {
-    return promising
   } else {
     return regular
   }

@@ -88,6 +88,11 @@ const createApolloClient = () => {
             if (!parent.type) {
               return null
             }
+
+            if (parent.type.__typename === 'DataObjectTypeChannelPayoutsPayload') {
+              // if this is a payload file skip testing and just return first url.
+              return resolvedUrls[0]
+            }
             const distributorUrl = resolvedUrl.split(`/${atlasConfig.storage.assetPath}/${parent.id}`)[0]
 
             const assetTestPromise = testAssetDownload(resolvedUrl, parent.type)

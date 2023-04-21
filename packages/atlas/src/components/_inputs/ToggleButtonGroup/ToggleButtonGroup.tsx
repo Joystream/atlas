@@ -2,7 +2,6 @@ import { useRef } from 'react'
 
 import { SvgActionChevronL, SvgActionChevronR } from '@/assets/icons'
 import { FilterButton, FilterButtonProps } from '@/components/FilterButton'
-import { Button } from '@/components/_buttons/Button'
 import { useHorizonthalFade } from '@/hooks/useHorizonthalFade'
 
 import {
@@ -13,6 +12,7 @@ import {
   ContentWrapper,
   Label,
   OptionWrapper,
+  ToggleButton,
 } from './ToggleButtonGroup.styles'
 
 type SharedToggleButtonProps = {
@@ -63,7 +63,7 @@ export const ToggleButtonGroup = <T extends string = string>(props: ToggleButton
         <OptionWrapper onMouseDown={handleMouseDown} ref={optionWrapperRef} visibleShadows={visibleShadows}>
           {type === 'options' &&
             props.options.map((option) => (
-              <Button
+              <ToggleButton
                 key={option}
                 fullWidth
                 variant={option !== props.value ? 'tertiary' : 'secondary'}
@@ -71,7 +71,7 @@ export const ToggleButtonGroup = <T extends string = string>(props: ToggleButton
                 size="small"
               >
                 {option}
-              </Button>
+              </ToggleButton>
             ))}
           {type === 'filter' &&
             props.filters.map((filterButtonProps, idx) => <FilterButton key={idx} {...filterButtonProps} />)}
