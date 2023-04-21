@@ -25,12 +25,15 @@ import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
+import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
 import { ChannelSearch } from './ChannelSearch'
 import { useSearchVideos } from './ChannelView.hooks'
 import {
+  Balance,
+  ChannelInfoContainer,
   CollectorsBoxContainer,
   FilterButton,
   NotFoundChannelContainer,
@@ -41,6 +44,7 @@ import {
   StyledTabs,
   SubTitle,
   SubTitleSkeletonLoader,
+  SvgToken,
   TabsContainer,
   TabsWrapper,
   TitleContainer,
@@ -102,6 +106,7 @@ export const ChannelView: FC = () => {
         search: { channelId: id, query: searchQuery },
       }),
   })
+  const { accountBalance } = useSubscribeAccountBalance(channel?.rewardAccount)
   const { channelNftCollectors } = useChannelNftCollectors({ channelId: id || '' })
 
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, channel?.title)
@@ -244,14 +249,36 @@ export const ChannelView: FC = () => {
                 <Text as="h1" variant={smMatch ? 'h700' : 'h600'}>
                   {channel.title}
                 </Text>
-                <SubTitle as="p" variant="t300" color="colorText">
-                  {channel.followsNum ? (
-                    <NumberFormat as="span" value={channel.followsNum} format="short" variant="t300" />
-                  ) : (
-                    0
-                  )}{' '}
-                  Followers
-                </SubTitle>
+                <ChannelInfoContainer>
+                  <SubTitle as="p" variant="t300" color="colorText">
+                    {channel.followsNum ? (
+                      <NumberFormat
+                        as="span"
+                        value={channel.followsNum}
+                        format="short"
+                        color="colorText"
+                        variant="t300"
+                      />
+                    ) : (
+                      0
+                    )}{' '}
+                    Followers
+                  </SubTitle>
+                  <SubTitle className="divider-dot" as="p" variant="t300" color="colorText">
+                    •
+                  </SubTitle>
+                  <Balance as="span" variant="t300" color="colorText">
+                    Balance:
+                    <SvgToken />
+                    <NumberFormat
+                      as="span"
+                      value={accountBalance ?? 0}
+                      format="short"
+                      color="colorText"
+                      variant="t300"
+                    />
+                  </Balance>
+                </ChannelInfoContainer>
               </>
             ) : (
               <>

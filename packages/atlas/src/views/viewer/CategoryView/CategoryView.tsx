@@ -49,7 +49,7 @@ export const CategoryView = () => {
   const videoHeroVideos = useVideoHeroVideos(categoriesFeaturedVideos)
 
   return (
-    <VideoContentTemplate cta={['popular', 'new', 'home']}>
+    <VideoContentTemplate>
       {headTags}
       <VideoCategoryHero
         loading={categoriesFeaturedVideosLoading}

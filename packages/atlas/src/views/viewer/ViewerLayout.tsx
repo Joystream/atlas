@@ -26,7 +26,6 @@ import { DiscoverView } from './DiscoverView'
 import { EditMembershipView } from './EditMembershipView'
 import { HomeView } from './HomeView'
 import { MemberView } from './MemberView'
-import { NewView } from './NewView'
 import { NftsView } from './NftsView'
 import { NotFoundView } from './NotFoundView'
 import { PopularView } from './PopularView'
@@ -37,7 +36,6 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.search(), element: <SearchView /> },
   { path: relativeRoutes.viewer.index(), element: <HomeView /> },
   { path: relativeRoutes.viewer.popular(), element: <PopularView /> },
-  { path: relativeRoutes.viewer.new(), element: <NewView /> },
   { path: relativeRoutes.viewer.discover(), element: <DiscoverView /> },
   { path: relativeRoutes.viewer.video(), element: <VideoView /> },
   { path: relativeRoutes.viewer.channels(), element: <ChannelsView /> },

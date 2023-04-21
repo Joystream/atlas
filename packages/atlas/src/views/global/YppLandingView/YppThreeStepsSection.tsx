@@ -6,9 +6,10 @@ import memberDropdown from '@/assets/images/member-dropdown.webp'
 import selectChannel from '@/assets/images/select-channel.webp'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
+import { GoogleButton } from '@/components/_buttons/GoogleButton'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { YppAtlasStatus, getButtonText } from '@/views/global/YppLandingView/YppHero'
+import { YppAtlasStatus } from '@/views/global/YppLandingView/YppHero'
 
 import {
   BackgroundContainer,
@@ -54,19 +55,29 @@ export const YppThreeStepsSection: FC<YppThreeStepsSectionProps> = ({ onSignUpCl
               Our fully automated verification process is as simple as 1-2-3. If you don't have an {appName} channel
               already, you'll be able to create one for free.
             </Text>
-            <Button
-              size="large"
-              variant={yppStatus === 'ypp-signed' ? 'secondary' : 'primary'}
-              iconPlacement="right"
-              icon={<SvgActionChevronR />}
-              data-aos="fade-up"
-              data-aos-delay="200"
-              data-aos-offset="40"
-              data-aos-easing="atlas-easing"
-              onClick={onSignUpClick}
-            >
-              {getButtonText(yppStatus)}
-            </Button>
+            {yppStatus === 'ypp-signed' ? (
+              <Button
+                size="large"
+                variant="secondary"
+                iconPlacement="right"
+                icon={<SvgActionChevronR />}
+                data-aos="fade-up"
+                data-aos-delay="200"
+                data-aos-offset="40"
+                data-aos-easing="atlas-easing"
+                onClick={onSignUpClick}
+              >
+                Go to dashboard
+              </Button>
+            ) : (
+              <GoogleButton
+                data-aos="fade-up"
+                data-aos-delay="200"
+                data-aos-offset="40"
+                data-aos-easing="atlas-easing"
+                onClick={onSignUpClick}
+              />
+            )}
             <Text
               variant="t100"
               as="p"

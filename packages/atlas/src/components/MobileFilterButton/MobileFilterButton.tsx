@@ -8,6 +8,7 @@ import { MobileFilterContainer } from '../FiltersBar/FiltersBar.styles'
 import { Text } from '../Text'
 import { Button } from '../_buttons/Button'
 import { CheckboxGroup } from '../_inputs/CheckboxGroup'
+import { InputRange, PriceRangeInput } from '../_inputs/PriceRangeInput'
 import { RadioButtonGroup } from '../_inputs/RadioButtonGroup'
 import { DialogModal, DialogModalProps } from '../_overlays/DialogModal'
 
@@ -26,6 +27,7 @@ export const MobileFilterButton: FC<MobileFilterButtonProps> = ({ filters, onCha
     const newFilters = filters.map((filter) => ({
       ...filter,
       options: filter.options?.map((option) => ({ ...option, applied: option.selected })),
+      range: { ...filter.range, appliedMin: filter.range?.min, appliedMax: filter.range?.max },
     }))
 
     onChangeFilters?.(newFilters)
@@ -80,10 +82,25 @@ export const MobileFilterButton: FC<MobileFilterButtonProps> = ({ filters, onCha
     onChangeFilters?.(newFilters)
   }
 
+  const handleRangeChange = (name: string, range: InputRange) => {
+    const newFilters = filters.map((filter) => {
+      if (filter.name === name) {
+        return {
+          ...filter,
+          range,
+        }
+      }
+      return filter
+    })
+
+    onChangeFilters?.(newFilters)
+  }
+
   const handleClear = () => {
     const newFilters = filters.map((filter) => ({
       ...filter,
       options: filter.options?.map((option) => ({ ...option, selected: false, applied: false })),
+      range: { min: undefined, max: undefined, appliedMin: undefined, appliedMax: undefined },
     }))
 
     onChangeFilters?.(newFilters)
@@ -114,7 +131,7 @@ export const MobileFilterButton: FC<MobileFilterButtonProps> = ({ filters, onCha
         show={isFiltersOpen}
         content={
           <>
-            {filters.map(({ name, options = [], label, type }, idx) => (
+            {filters.map(({ name, options = [], label, type, range }, idx) => (
               <MobileFilterContainer key={idx}>
                 <Text as="span" variant="h300">
                   {label}
@@ -136,6 +153,9 @@ export const MobileFilterButton: FC<MobileFilterButtonProps> = ({ filters, onCha
                     options={options}
                     value={options.find((option) => option.selected)?.value}
                   />
+                )}
+                {type === 'range' && (
+                  <PriceRangeInput value={range} onChange={(newRange) => handleRangeChange(name, newRange)} />
                 )}
               </MobileFilterContainer>
             ))}
