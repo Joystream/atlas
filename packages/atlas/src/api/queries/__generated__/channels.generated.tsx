@@ -8,6 +8,7 @@ import {
   ExtendedBasicChannelFieldsFragmentDoc,
   ExtendedFullChannelFieldsFragmentDoc,
   FullChannelFieldsFragmentDoc,
+  StorageDataObjectFieldsFragmentDoc,
 } from './fragments.generated'
 
 const defaultOptions = {} as const
@@ -570,9 +571,22 @@ export type GetPayloadDataByCommitmentQuery = {
           __typename?: 'ChannelPayoutsUpdatedEventData'
           payloadDataObject?: {
             __typename?: 'StorageDataObject'
-            isAccepted: boolean
+            id: string
             resolvedUrls: Array<string>
             resolvedUrl?: string | null
+            createdAt: Date
+            size: string
+            isAccepted: boolean
+            ipfsHash: string
+            storageBag: { __typename?: 'StorageBag'; id: string }
+            type?:
+              | { __typename: 'DataObjectTypeChannelAvatar' }
+              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+              | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoSubtitle' }
+              | { __typename: 'DataObjectTypeVideoThumbnail' }
+              | null
           } | null
         }
       | { __typename?: 'ChannelRewardClaimedAndWithdrawnEventData' }
@@ -1340,14 +1354,13 @@ export const GetPayloadDataByCommitmentDocument = gql`
       data {
         ... on ChannelPayoutsUpdatedEventData {
           payloadDataObject {
-            isAccepted
-            resolvedUrls
-            resolvedUrl @client
+            ...StorageDataObjectFields
           }
         }
       }
     }
   }
+  ${StorageDataObjectFieldsFragmentDoc}
 `
 
 /**
