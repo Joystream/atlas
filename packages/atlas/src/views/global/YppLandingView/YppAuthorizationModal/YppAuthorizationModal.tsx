@@ -383,7 +383,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           description: `Select the ${APP_NAME} channel you want your YouTube channel to be connected with.`,
           primaryButton: {
             text: 'Authorize with YouTube',
-            onClick: () => handleAuthorizeClick,
+            onClick: () => handleAuthorizeClick(),
             disabled: !selectedChannel,
           },
           component: (
