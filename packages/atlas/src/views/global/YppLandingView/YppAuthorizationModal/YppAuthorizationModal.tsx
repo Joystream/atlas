@@ -453,10 +453,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
         return {
           headerIcon: <SvgAlertsError32 />,
           title: 'Authorization failed',
-          primaryButton: {
-            text: 'Select another channel',
-            onClick: () => handleAuthorizeClick,
-          },
+          primaryButton: <GoogleButton onClick={() => handleAuthorizeClick()} />,
           description: (
             <>
               The YouTube channel you selected is already enrolled in the YouTube Partner Program and is tied to the{' '}
