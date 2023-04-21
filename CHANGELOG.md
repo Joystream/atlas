@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2023-04-21
+
+### Changed
+
+- NFT section rework
+- YPP sign-up buttons changed according to Google guidelines
+- Channels section removed from navigation
+- New & noteworthy pages were removed
+- Metadata update for supported wallets only
+
+### Fixed
+
+- Fixed bug with channel payouts
+- Fixed parsing of asset URL
+- Fixed YPP opt-in for memberships with multiple channels
+
 ## [3.1.0] - 2023-04-14
 
 ### Added
