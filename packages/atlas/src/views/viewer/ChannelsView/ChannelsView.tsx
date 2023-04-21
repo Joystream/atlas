@@ -2,6 +2,7 @@ import { FC } from 'react'
 
 import { useTop10Channels } from '@/api/hooks/channel'
 import { ChannelGallery } from '@/components/_channel/ChannelGallery'
+import { ChannelsSection } from '@/components/_channel/ChannelsSection'
 import { ExpandableChannelsList } from '@/components/_channel/ExpandableChannelsList'
 import { DiscoverChannels } from '@/components/_content/DiscoverChannels'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
@@ -22,6 +23,7 @@ export const ChannelsView: FC = () => {
         {!error ? <ChannelGallery hasRanking channels={channels} loading={loading} title="Top 10 channels" /> : null}
         <DiscoverChannels />
         <ExpandableChannelsList queryType="regular" title="Channels in your language" languageSelector />
+        <ChannelsSection />
       </VideoContentTemplate>
     </>
   )

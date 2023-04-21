@@ -91,7 +91,13 @@ export const useChannelPayout = (txCallback?: () => void) => {
         }
         return { reward, payloadUrl, commitment }
       } catch (error) {
-        SentryLogger.error("Couldn't get reward data", 'PaymentOverviewTab.hooks', error)
+        const errorMessage = error?.message
+        if (typeof errorMessage === 'string' && errorMessage.startsWith('No payout Proof exists for channel')) {
+          // This error will experience every user that don't have claimable reward. No need to send this to sentry or log it.
+          return
+        } else {
+          SentryLogger.error("Couldn't get reward data", 'PaymentOverviewTab.hooks', error)
+        }
       }
     },
     [getPayloadUrl, joystream, maxCashoutAllowed, minCashoutAllowed]

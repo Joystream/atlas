@@ -10,7 +10,7 @@ export const NewView: FC = () => {
   const headTags = useHeadTags('New & Noteworthy')
 
   return (
-    <VideoContentTemplate title="New & Noteworthy" cta={['home', 'channels', 'popular']}>
+    <VideoContentTemplate title="New & Noteworthy" cta={['home', 'popular']}>
       {headTags}
       <InfiniteVideoGrid title="Recently uploaded" onDemand />
       <ExpandableChannelsList

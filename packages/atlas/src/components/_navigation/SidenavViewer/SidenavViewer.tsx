@@ -3,7 +3,6 @@ import { FC, useState } from 'react'
 import {
   SvgActionMember,
   SvgActionNewTab,
-  SvgSidebarChannels,
   SvgSidebarExplore,
   SvgSidebarHome,
   SvgSidebarMarketplace,
@@ -56,12 +55,6 @@ export const viewerNavItems = [
     name: 'Discover',
     to: absoluteRoutes.viewer.discover(),
     bottomNav: false,
-  },
-  {
-    icon: <SvgSidebarChannels />,
-    name: 'Channels',
-    to: absoluteRoutes.viewer.channels(),
-    bottomNav: true,
   },
   ...(atlasConfig.features.ypp.googleConsoleClientId
     ? [

@@ -402,9 +402,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           title: 'Details',
           description: 'Provide additional information to set up your program membership.',
           primaryButton: {
-            onClick: () => {
-              handleSubmitDetailsForm()
-            },
+            onClick: () => handleSubmitDetailsForm(),
             text: 'Continue',
           },
           component: <YppAuthorizationDetailsFormStep />,
@@ -414,9 +412,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
           title: 'YouTube Sync',
           description: `With YouTube Sync enabled, ${APP_NAME} will import videos from your YouTube channel over to Joystream. This can be changed later.`,
           primaryButton: {
-            onClick: () => {
-              handleSubmitDetailsForm()
-            },
+            onClick: () => handleSubmitDetailsForm(),
             text: 'Continue',
           },
           component: <YppAuthorizationSyncStep />,
