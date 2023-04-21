@@ -19,6 +19,14 @@ export const ButtonWrapper = styled.div`
   justify-content: center;
 `
 
+export const LogosContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: ${sizes(10)};
+  margin-bottom: ${sizes(8)};
+`
+
 export const SelectDifferentChannelButton = styled.button`
   white-space: normal;
   border: none;
