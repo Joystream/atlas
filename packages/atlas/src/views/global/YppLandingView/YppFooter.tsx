@@ -3,12 +3,12 @@ import { FC, ReactElement } from 'react'
 import { SvgActionChevronR, SvgActionInfo, SvgActionSpeech, SvgActionTokensStack } from '@/assets/icons'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
-import { CallToActionButton } from '@/components/_buttons/CallToActionButton'
+import { CallToActionButton, CallToActionWrapper } from '@/components/_buttons/CallToActionButton'
 import { atlasConfig } from '@/config'
 import { YppWidgetIcons } from '@/config/configSchema'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
-import { CtaBanner, CtaCardRow, StyledBannerText, StyledButton } from './YppFooter.styles'
+import { CtaBanner, StyledBannerText, StyledButton } from './YppFooter.styles'
 import { StyledLimitedWidthContainer } from './YppLandingView.styles'
 
 export const configYppIconMapper: Record<YppWidgetIcons, ReactElement> = {
@@ -55,7 +55,7 @@ export const YppFooter: FC<YppFooterSectionProps> = ({ onSignUpClick }) => {
         </LayoutGrid>
       </StyledLimitedWidthContainer>
       {atlasConfig.features.ypp.widgets && (
-        <CtaCardRow itemsCount={atlasConfig.features.ypp.widgets.length}>
+        <CallToActionWrapper itemsCount={atlasConfig.features.ypp.widgets.length}>
           {atlasConfig.features.ypp.widgets.map((widget) => (
             <CallToActionButton
               icon={widget.icon && configYppIconMapper[widget.icon]}
@@ -66,7 +66,7 @@ export const YppFooter: FC<YppFooterSectionProps> = ({ onSignUpClick }) => {
               to={widget.link}
             />
           ))}
-        </CtaCardRow>
+        </CallToActionWrapper>
       )}
     </>
   )

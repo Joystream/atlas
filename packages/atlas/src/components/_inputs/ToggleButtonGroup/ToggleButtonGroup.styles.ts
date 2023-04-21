@@ -42,6 +42,12 @@ export const OptionWrapper = styled.div<MaskProps>`
   }
 `
 
+export const ToggleButton = styled(Button)`
+  span {
+    white-space: nowrap;
+  }
+`
+
 export const Label = styled(Text)`
   padding: ${sizes(2)};
   align-self: center;

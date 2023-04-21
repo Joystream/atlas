@@ -11,7 +11,7 @@ export default {
 
 const Template: StoryFn<CallToActionButtonProps> = (args) => {
   return (
-    <CallToActionWrapper>
+    <CallToActionWrapper itemsCount={1}>
       <CallToActionButton {...args} />
     </CallToActionWrapper>
   )

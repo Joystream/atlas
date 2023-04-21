@@ -4,7 +4,6 @@ import { FC, MouseEvent, ReactNode } from 'react'
 import {
   SvgActionChevronR,
   SvgActionNewTab,
-  SvgSidebarChannels,
   SvgSidebarExplore,
   SvgSidebarHome,
   SvgSidebarNew,
@@ -63,13 +62,6 @@ export const CTA_MAP: Record<string, CallToActionButtonProps> = {
     to: absoluteRoutes.viewer.new(),
     colorVariant: 'green',
     icon: <SvgSidebarNew />,
-  },
-  channels: {
-    label: 'Browse channels',
-    to: absoluteRoutes.viewer.channels(),
-    colorVariant: 'blue',
-    iconColorVariant: 'lightBlue',
-    icon: <SvgSidebarChannels />,
   },
   popular: {
     label: `Popular on ${atlasConfig.general.appName}`,
