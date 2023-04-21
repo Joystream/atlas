@@ -86,9 +86,14 @@ const getChannelKeyArgs = (args: Partial<QueryChannelsConnectionArgs> | null) =>
   return `${language}:${idIn}:${sorting}:${titleContains}`
 }
 
-const getCommentKeyArgs = (args: Partial<QueryCommentsConnectionArgs> | null) => {
+const getCommentKeyArgs = (
+  args: Partial<QueryCommentsConnectionArgs> | null,
+  ctx: {
+    variables?: Record<string, unknown>
+  }
+) => {
   const parentCommentId = args?.where?.parentComment?.id_eq
-  const videoId = args?.where?.video?.id_eq
+  const videoId = args?.where?.video?.id_eq ?? ctx.variables?.videoId
   const orderBy = args?.orderBy || []
   return `${parentCommentId}:${videoId}:${orderBy}`
 }
