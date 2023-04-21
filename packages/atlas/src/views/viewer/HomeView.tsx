@@ -53,7 +53,7 @@ export const HomeView: FC = () => {
   }
 
   return (
-    <VideoContentTemplate cta={['popular', 'new', 'channels']}>
+    <VideoContentTemplate cta={['popular', 'new']}>
       {headTags}
       <VideoHero videoHeroData={videoHero} withMuteButton loading={loading} />
       <Container className={transitions.names.slide}>

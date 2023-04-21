@@ -28,7 +28,7 @@ export const VideoContentTemplate: FC<VideoContentTemplateProps> = ({ children, 
         </Text>
       )}
       {children}
-      {cta && <CallToActionWrapper>{ctaContent}</CallToActionWrapper>}
+      {cta && <CallToActionWrapper itemsCount={cta.length}>{ctaContent}</CallToActionWrapper>}
     </StyledViewWrapper>
   )
 }

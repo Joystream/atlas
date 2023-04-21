@@ -10,7 +10,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { CtaData } from '@/types/cta'
 
-const CTA: CtaData[] = ['new', 'home', 'channels']
+const CTA: CtaData[] = ['new', 'home']
 const ADDITIONAL_LINK = { name: 'Browse channels', url: absoluteRoutes.viewer.channels() }
 
 export const PopularView: FC = () => {
