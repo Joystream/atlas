@@ -50,7 +50,7 @@ const FILTERS: SectionFilter[] = [
   {
     name: 'price',
     type: 'range',
-    label: 'Price',
+    label: 'Last price',
     icon: <SvgActionSell />,
     range: { min: undefined, max: undefined },
   },
