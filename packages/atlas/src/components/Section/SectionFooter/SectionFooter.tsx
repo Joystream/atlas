@@ -46,7 +46,8 @@ export const SectionFooter = (props: SectionFooterProps) => {
 
   useEffect(() => {
     if (
-      ((props.type === 'infinite' && !props.reachedEnd) || (props.type === 'load' && isSwitchedToInfinite)) &&
+      (props.type === 'infinite' || (props.type === 'load' && isSwitchedToInfinite)) &&
+      !props.reachedEnd &&
       inView &&
       !isLoading
     ) {

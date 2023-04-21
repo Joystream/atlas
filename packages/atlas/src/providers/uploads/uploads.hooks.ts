@@ -32,7 +32,7 @@ export const useStartFileUpload = () => {
   const navigate = useNavigate()
   const { displaySnackbar } = useSnackbar()
   const { getClosestStorageOperatorForBag, markStorageOperatorFailed } = useStorageOperators()
-  const { mutateAsync: uploadMutation } = useMutation('subtitles-fetch', (params: MutationParams) =>
+  const { mutateAsync: uploadMutation } = useMutation('upload-assets', (params: MutationParams) =>
     axios.post(params.url, params.data, params.config)
   )
 
