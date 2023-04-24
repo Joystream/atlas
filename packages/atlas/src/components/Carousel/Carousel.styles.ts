@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { SwiperOptions } from 'swiper'
 import { Swiper } from 'swiper/react'
 
 import { Button } from '@/components/_buttons/Button'
@@ -9,7 +10,7 @@ export const CAROUSEL_ARROW_HEIGHT = 48
 type StyledSwiperProps = {
   canOverflowContainer?: boolean
   minSlideWidth?: number
-}
+} & SwiperOptions
 
 const isPropValid = (prop: string) => prop !== 'canOverflowContainer' && prop !== 'minSlideWidth'
 
@@ -18,7 +19,8 @@ export const StyledSwiper = styled(Swiper, { shouldForwardProp: isPropValid })<S
 
   .swiper-slide {
     min-width: ${({ minSlideWidth }) => (minSlideWidth ? `${minSlideWidth}px` : 'unset')};
-    width: auto;
+    width: ${({ slidesPerView }) => (slidesPerView === 'auto' ? 'auto' : 'unset')};
+    flex-shrink: ${({ slidesPerView }) => (slidesPerView === 'auto' ? 'unset' : '0')};
   }
 
   .swiper-pagination {

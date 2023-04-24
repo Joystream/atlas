@@ -17,14 +17,14 @@ export const FeaturedNftsSection: FC = () => {
 
   const { nfts, loading } = useNfts({
     variables: {
-      limit: 50,
+      limit: 20,
       orderBy: [OwnedNftOrderByInput.VideoViewsNumDesc],
       where: {
-        isFeatured_eq: true,
+        // isFeatured_eq: true,
         transactionalStatus: {
-          isTypeOf_in: ['TransactionalStatusAuction', 'TransactionalStatusBuyNow'],
+          // isTypeOf_in: ['TransactionalStatusAuction', 'TransactionalStatusBuyNow'],
           auction: {
-            isCompleted_eq: false,
+            // isCompleted_eq: false,
           },
         },
       },
