@@ -17,7 +17,7 @@ import { useUser } from '@/providers/user/user.hooks'
 import { useUserStore } from '@/providers/user/user.store'
 import { createId } from '@/utils/createId'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
-import { wait } from '@/utils/misc'
+import { wait, withTimeout } from '@/utils/misc'
 
 import {
   METAPROTOCOL_TX_STATUS_RETRIES,
@@ -197,10 +197,15 @@ export const useTransaction = (): HandleTransactionFn => {
         }
 
         /* === wait until QN reports the block in which the tx was included as processed === */
+
+        // for debugging purposes more -> https://github.com/Joystream/atlas/issues/4111
+        let isAfterBlockCheck = false
+        let isAfterMetaStatusCheck = false
         // if this is a metaprotocol transaction, we will also wait until we successfully query the transaction result from QN
         const queryNodeSyncPromise = new Promise<void>((resolve, reject) => {
           const syncCallback = async () => {
             let status: MetaprotocolTransactionResultFieldsFragment | undefined = undefined
+            isAfterBlockCheck = true
             try {
               if (result.metaprotocol && result.transactionHash) {
                 status = await getMetaprotocolTxStatus(result.transactionHash)
@@ -208,6 +213,8 @@ export const useTransaction = (): HandleTransactionFn => {
             } catch (e) {
               reject(e)
               return
+            } finally {
+              isAfterMetaStatusCheck = true
             }
 
             if (onTxSync) {
@@ -226,7 +233,15 @@ export const useTransaction = (): HandleTransactionFn => {
             addBlockAction({ callback: syncCallback, targetBlock: result.block })
           }
         })
-        await queryNodeSyncPromise
+
+        await withTimeout(queryNodeSyncPromise, 20_000).catch((error) => {
+          SentryLogger.error('TEST: Processor sync promise timeout error', 'TransactionManager', {
+            error,
+            txResult: result,
+            isAfterBlockCheck,
+            isAfterMetaStatusCheck,
+          })
+        })
 
         /* === transaction was successful, do necessary cleanup === */
         updateStatus(ExtrinsicStatus.Completed)
