@@ -1,15 +1,6 @@
 fragment DataObjectFields on StorageDataObject {
   id
-  storageBag {
-    distributionBuckets {
-      distributing
-      operators {
-        metadata {
-          nodeEndpoint
-        }
-      }
-    }
-  }
+  resolvedUrls
 }
 
 fragment BasicChannelFields on Channel {
@@ -50,8 +41,8 @@ query TestQuery {
   }
 }
 
-query GetChannel($id: ID!) {
-  channelByUniqueInput(where: { id: $id }) {
+query GetChannel($id: String!) {
+  channelById(id: $id) {
     ...BasicChannelFields
     avatarPhoto {
       ...DataObjectFields
@@ -59,8 +50,8 @@ query GetChannel($id: ID!) {
   }
 }
 
-query GetVideo($id: ID!) {
-  videoByUniqueInput(where: { id: $id }) {
+query GetVideo($id: String!) {
+  videoById(id: $id) {
     ...BasicVideoFields
     thumbnailPhoto {
       ...DataObjectFields
