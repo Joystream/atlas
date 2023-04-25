@@ -4,13 +4,16 @@ import {
   GetBasicVideosConnectionDocument,
   GetBasicVideosConnectionQuery,
 } from '@/api/queries/__generated__/videos.generated'
+import { EmptyFallback } from '@/components/EmptyFallback'
 import { Section } from '@/components/Section/Section'
+import { Button } from '@/components/_buttons/Button'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { publicVideoFilter } from '@/config/contentFilter'
+import { absoluteRoutes } from '@/config/routes'
 import { useInfiniteVideoGrid } from '@/hooks/useInfiniteVideoGrid'
 import { DEFAULT_VIDEO_GRID } from '@/styles'
 
-import { Container } from './CategoryVideos.styles'
+import { Container, FallbackContainer } from './CategoryVideos.styles'
 
 type CategoryVideosProps = {
   categoriesId?: string[]
@@ -31,7 +34,20 @@ export const CategoryVideos: FC<CategoryVideosProps> = ({ categoriesId }) => {
     },
   })
 
-  const children = tiles?.map((video, idx) => <VideoTileViewer id={video.id} key={idx} />)
+  const children = tiles.length
+    ? tiles?.map((video, idx) => <VideoTileViewer id={video.id} key={idx} />)
+    : [
+        <FallbackContainer key="fallback">
+          <EmptyFallback
+            title="No Videos found"
+            button={
+              <Button variant="secondary" to={absoluteRoutes.viewer.discover()}>
+                Go back to Discover page
+              </Button>
+            }
+          />
+        </FallbackContainer>,
+      ]
 
   return (
     <Container ref={containerRef}>
