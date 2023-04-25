@@ -53,11 +53,11 @@ export const FeaturedNftsSection: FC = () => {
       limit: 20,
       orderBy: [OwnedNftOrderByInput.VideoViewsNumDesc],
       where: {
-        // isFeatured_eq: true,
+        isFeatured_eq: true,
         transactionalStatus: {
-          // isTypeOf_in: ['TransactionalStatusAuction', 'TransactionalStatusBuyNow'],
+          isTypeOf_in: ['TransactionalStatusAuction', 'TransactionalStatusBuyNow'],
           auction: {
-            // isCompleted_eq: false,
+            isCompleted_eq: false,
           },
         },
       },
@@ -67,6 +67,10 @@ export const FeaturedNftsSection: FC = () => {
   const items = loading ? createPlaceholderData(10) : nfts ?? []
 
   const mdMatch = useMediaMatch('md')
+
+  if ((!activeChannel || activeChannel?.totalVideosCreated === 0) && items.length === 0) {
+    return null
+  }
 
   return (
     <FeaturedNftsWrapper>

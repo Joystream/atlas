@@ -14,7 +14,7 @@ import {
   GetNftsConnectionQueryVariables,
   GetNftsQuery,
   GetNftsQueryVariables,
-  useGetFeaturedNftsQuery,
+  useGetFeaturedNftsVideosQuery,
   useGetNftQuery,
   useGetNftsConnectionQuery,
   useGetNftsQuery,
@@ -190,7 +190,7 @@ export const useNfts = (baseOptions?: QueryHookOptions<GetNftsQuery, GetNftsQuer
 }
 
 export const useFeaturedNfts = () => {
-  const { data, ...rest } = useGetFeaturedNftsQuery()
+  const { data, ...rest } = useGetFeaturedNftsVideosQuery()
 
   return {
     nfts: data?.ownedNfts,

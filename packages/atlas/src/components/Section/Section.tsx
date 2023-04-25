@@ -1,5 +1,5 @@
-import { FC, PropsWithChildren, useEffect, useState } from 'react'
-import Swiper, { Controller } from 'swiper'
+import { FC, PropsWithChildren, useEffect, useRef, useState } from 'react'
+import Swiper from 'swiper'
 
 import { SectionWrapper } from './Section.styles'
 import { SectionContent, SectionContentProps } from './SectionContent'
@@ -17,15 +17,16 @@ export type SectionProps = {
 
 export const Section: FC<PropsWithChildren<SectionProps>> = ({ headerProps, contentProps, footerProps, className }) => {
   const isCarousel = contentProps.type === 'carousel'
-  const [glider, setGlider] = useState<SwiperInstance>()
   const [isCarouselEnd, setIsCarouselEnd] = useState(false)
   const [isCarouselBeginning, setIsCarouselBeginning] = useState(true)
 
+  const gliderRef = useRef<SwiperInstance>()
+
   const handleSlideLeft = () => {
-    glider?.slidePrev()
+    gliderRef.current?.slidePrev()
   }
   const handleSlideRight = () => {
-    glider?.slideNext()
+    gliderRef.current?.slideNext()
   }
 
   useEffect(() => {
@@ -33,34 +34,32 @@ export const Section: FC<PropsWithChildren<SectionProps>> = ({ headerProps, cont
       setIsCarouselBeginning(slider.isBeginning)
       setIsCarouselEnd(slider.isEnd)
     }
-    glider?.on('slideChange', handler)
+    gliderRef.current?.on('slideChange', handler)
 
     return () => {
-      glider?.off('slideChange', handler)
+      gliderRef.current?.off('slideChange', handler)
     }
-  }, [glider])
+  }, [])
 
   return (
     <SectionWrapper className={className}>
+      {headerProps &&
+        (isCarousel ? (
+          <SectionHeader
+            {...headerProps}
+            isBeginning={isCarouselBeginning}
+            isEnd={isCarouselEnd}
+            isCarousel
+            onMoveCarouselLeft={handleSlideLeft}
+            onMoveCarouselRight={handleSlideRight}
+          />
+        ) : (
+          <SectionHeader {...headerProps} />
+        ))}
       {isCarousel ? (
-        <SectionHeader
-          {...headerProps}
-          isBeginning={isCarouselBeginning}
-          isEnd={isCarouselEnd}
-          isCarousel
-          onMoveCarouselLeft={handleSlideLeft}
-          onMoveCarouselRight={handleSlideRight}
-        />
-      ) : (
-        <SectionHeader {...headerProps} />
-      )}
-      {isCarousel ? (
-        <SectionContent
-          {...contentProps}
-          modules={[Controller]}
-          controller={{ control: glider }}
-          onSwiper={setGlider}
-        />
+        contentProps.children.length > 0 && (
+          <SectionContent {...contentProps} onSwiper={(swiper) => (gliderRef.current = swiper)} />
+        )
       ) : (
         <SectionContent {...contentProps} />
       )}
