@@ -1,5 +1,6 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import { Meta, StoryFn } from '@storybook/react'
+import { QueryClient, QueryClientProvider } from 'react-query'
 import { BrowserRouter } from 'react-router-dom'
 
 // import { createApolloClient } from '@/api'
@@ -29,16 +30,25 @@ export default {
   decorators: [
     (Story) => {
       const apolloClient = new ApolloClient({ cache: new InMemoryCache() })
+      const queryClient = new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+          },
+        },
+      })
       return (
         <BrowserRouter>
           <ApolloProvider client={apolloClient}>
-            <OverlayManagerProvider>
-              <OperatorsContextProvider>
-                <ConfirmationModalProvider>
-                  <Story />
-                </ConfirmationModalProvider>
-              </OperatorsContextProvider>
-            </OverlayManagerProvider>
+            <QueryClientProvider client={queryClient}>
+              <OverlayManagerProvider>
+                <OperatorsContextProvider>
+                  <ConfirmationModalProvider>
+                    <Story />
+                  </ConfirmationModalProvider>
+                </OperatorsContextProvider>
+              </OverlayManagerProvider>
+            </QueryClientProvider>
           </ApolloProvider>
         </BrowserRouter>
       )

@@ -25,6 +25,7 @@ export const Container = styled.div<{ width: ContainerWidth }>`
   box-shadow: inset 0 0 0 1px ${cVar('colorBorderMutedAlpha')};
   border-radius: ${cVar('radiusSmall')};
   max-width: ${(props) => getContainerMaxWidth(props.width)};
+  width: 100%;
 `
 
 export const OptionWrapper = styled.div<MaskProps>`
@@ -39,6 +40,12 @@ export const OptionWrapper = styled.div<MaskProps>`
 
   ::-webkit-scrollbar {
     display: none;
+  }
+`
+
+export const ToggleButton = styled(Button)`
+  span {
+    white-space: nowrap;
   }
 `
 

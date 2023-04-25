@@ -8,6 +8,7 @@ import {
   ExtendedBasicChannelFieldsFragmentDoc,
   ExtendedFullChannelFieldsFragmentDoc,
   FullChannelFieldsFragmentDoc,
+  StorageDataObjectFieldsFragmentDoc,
 } from './fragments.generated'
 
 const defaultOptions = {} as const
@@ -358,46 +359,6 @@ export type GetTop10ChannelsQuery = {
   }>
 }
 
-export type GetPromisingChannelsQueryVariables = Types.Exact<{
-  where?: Types.InputMaybe<Types.ExtendedChannelWhereInput>
-}>
-
-export type GetPromisingChannelsQuery = {
-  __typename?: 'Query'
-  mostRecentChannels: Array<{
-    __typename?: 'ExtendedChannel'
-    channel: {
-      __typename?: 'Channel'
-      id: string
-      title?: string | null
-      description?: string | null
-      createdAt: Date
-      followsNum: number
-      rewardAccount: string
-      channelStateBloatBond: string
-      avatarPhoto?: {
-        __typename?: 'StorageDataObject'
-        id: string
-        resolvedUrls: Array<string>
-        resolvedUrl?: string | null
-        createdAt: Date
-        size: string
-        isAccepted: boolean
-        ipfsHash: string
-        storageBag: { __typename?: 'StorageBag'; id: string }
-        type?:
-          | { __typename: 'DataObjectTypeChannelAvatar' }
-          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-          | { __typename: 'DataObjectTypeVideoMedia' }
-          | { __typename: 'DataObjectTypeVideoSubtitle' }
-          | { __typename: 'DataObjectTypeVideoThumbnail' }
-          | null
-      } | null
-    }
-  }>
-}
-
 export type GetDiscoverChannelsQueryVariables = Types.Exact<{
   where?: Types.InputMaybe<Types.ExtendedChannelWhereInput>
 }>
@@ -570,9 +531,22 @@ export type GetPayloadDataByCommitmentQuery = {
           __typename?: 'ChannelPayoutsUpdatedEventData'
           payloadDataObject?: {
             __typename?: 'StorageDataObject'
-            isAccepted: boolean
+            id: string
             resolvedUrls: Array<string>
             resolvedUrl?: string | null
+            createdAt: Date
+            size: string
+            isAccepted: boolean
+            ipfsHash: string
+            storageBag: { __typename?: 'StorageBag'; id: string }
+            type?:
+              | { __typename: 'DataObjectTypeChannelAvatar' }
+              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+              | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoSubtitle' }
+              | { __typename: 'DataObjectTypeVideoThumbnail' }
+              | null
           } | null
         }
       | { __typename?: 'ChannelRewardClaimedAndWithdrawnEventData' }
@@ -1031,57 +1005,6 @@ export function useGetTop10ChannelsLazyQuery(
 export type GetTop10ChannelsQueryHookResult = ReturnType<typeof useGetTop10ChannelsQuery>
 export type GetTop10ChannelsLazyQueryHookResult = ReturnType<typeof useGetTop10ChannelsLazyQuery>
 export type GetTop10ChannelsQueryResult = Apollo.QueryResult<GetTop10ChannelsQuery, GetTop10ChannelsQueryVariables>
-export const GetPromisingChannelsDocument = gql`
-  query GetPromisingChannels($where: ExtendedChannelWhereInput) {
-    mostRecentChannels(where: $where, orderBy: videoViewsNum_DESC, mostRecentLimit: 100, resultsLimit: 15) {
-      channel {
-        ...BasicChannelFields
-      }
-    }
-  }
-  ${BasicChannelFieldsFragmentDoc}
-`
-
-/**
- * __useGetPromisingChannelsQuery__
- *
- * To run a query within a React component, call `useGetPromisingChannelsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPromisingChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetPromisingChannelsQuery({
- *   variables: {
- *      where: // value for 'where'
- *   },
- * });
- */
-export function useGetPromisingChannelsQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetPromisingChannelsQuery, GetPromisingChannelsQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetPromisingChannelsQuery, GetPromisingChannelsQueryVariables>(
-    GetPromisingChannelsDocument,
-    options
-  )
-}
-export function useGetPromisingChannelsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetPromisingChannelsQuery, GetPromisingChannelsQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetPromisingChannelsQuery, GetPromisingChannelsQueryVariables>(
-    GetPromisingChannelsDocument,
-    options
-  )
-}
-export type GetPromisingChannelsQueryHookResult = ReturnType<typeof useGetPromisingChannelsQuery>
-export type GetPromisingChannelsLazyQueryHookResult = ReturnType<typeof useGetPromisingChannelsLazyQuery>
-export type GetPromisingChannelsQueryResult = Apollo.QueryResult<
-  GetPromisingChannelsQuery,
-  GetPromisingChannelsQueryVariables
->
 export const GetDiscoverChannelsDocument = gql`
   query GetDiscoverChannels($where: ExtendedChannelWhereInput) {
     mostRecentChannels(where: $where, orderBy: followsNum_DESC, mostRecentLimit: 100, resultsLimit: 15) {
@@ -1340,14 +1263,13 @@ export const GetPayloadDataByCommitmentDocument = gql`
       data {
         ... on ChannelPayoutsUpdatedEventData {
           payloadDataObject {
-            isAccepted
-            resolvedUrls
-            resolvedUrl @client
+            ...StorageDataObjectFields
           }
         }
       }
     }
   }
+  ${StorageDataObjectFieldsFragmentDoc}
 `
 
 /**

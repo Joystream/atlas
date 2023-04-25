@@ -55,6 +55,7 @@ type SectionHeaderStart =
       type: 'title'
       title: string
       nodeStart?: TitleNodeStart
+      nodeEnd?: ReactNode
     }
   | {
       type: 'tabs'
@@ -96,7 +97,7 @@ export const SectionHeader: FC<SectionHeaderProps> = (props) => {
         <MobileFirstRow>
           {!isSearchInputOpen && (
             <>
-              {start.type === 'title' && <SectionTitleComponent nodeStart={start.nodeStart} title={start.title} />}
+              {start.type === 'title' && <SectionTitleComponent {...start} />}
               {start.type === 'tabs' && <Tabs {...start.tabsProps} />}
             </>
           )}
@@ -127,6 +128,7 @@ export const SectionHeader: FC<SectionHeaderProps> = (props) => {
         <MobileSecondRow>
           {filters && !filtersInFirstRow && <SectionFilters filters={filters} onApplyFilters={onApplyFilters} />}
           {sort?.type === 'select' && <Select {...sort.selectProps} size="medium" />}
+          {sort?.type === 'toggle-button' && <ToggleButtonGroup {...sort.toggleButtonOptionTypeProps} width="fluid" />}
         </MobileSecondRow>
       </SectionHeaderWrapper>
     )
@@ -137,7 +139,7 @@ export const SectionHeader: FC<SectionHeaderProps> = (props) => {
   return (
     <SectionHeaderWrapper isTabs={start.type === 'tabs'}>
       <StartWrapper enableHorizonthalScrolling={start.type === 'tabs'}>
-        {start.type === 'title' && <SectionTitleComponent nodeStart={start.nodeStart} title={start.title} />}
+        {start.type === 'title' && <SectionTitleComponent {...start} />}
         {start.type === 'tabs' && <Tabs {...start.tabsProps} />}
       </StartWrapper>
       {search && <DynamicSearch search={search} isOpen={isSearchInputOpen} onSearchToggle={setIsSearchInputOpen} />}

@@ -22,10 +22,11 @@ type TitleNodeStart =
 
 type SectionTitleComponentProps = {
   nodeStart?: TitleNodeStart
+  nodeEnd?: ReactNode
   title: string
 }
 
-export const SectionTitleComponent: FC<SectionTitleComponentProps> = ({ nodeStart, title }) => {
+export const SectionTitleComponent: FC<SectionTitleComponentProps> = ({ nodeStart, title, nodeEnd }) => {
   const smMatch = useMediaMatch('sm')
 
   const renderNodeStart = () => {
@@ -46,6 +47,7 @@ export const SectionTitleComponent: FC<SectionTitleComponentProps> = ({ nodeStar
       <HeaderTitle variant={smMatch ? 'h500' : 'h400'} as="h3">
         {title}
       </HeaderTitle>
+      {nodeEnd}
     </HeaderTitleWrapper>
   )
 }
