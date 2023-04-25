@@ -16,7 +16,7 @@ export const PopularView: FC = () => {
   const { columns, fetchMore, pageInfo, tiles } = useInfiniteVideoGrid({
     query: GetMostViewedVideosConnectionDocument,
     variables: {
-      limit: 100,
+      limit: 200,
     },
   })
 
@@ -43,7 +43,7 @@ export const PopularView: FC = () => {
           fetchMore: async () => {
             if (pageInfo?.hasNextPage) {
               await fetchMore({
-                variables: { first: columns, after: pageInfo.endCursor },
+                variables: { first: columns * 4, after: pageInfo.endCursor },
               })
             }
             return

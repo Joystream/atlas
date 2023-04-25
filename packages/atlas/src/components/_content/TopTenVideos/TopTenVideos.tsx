@@ -28,20 +28,20 @@ const responsive: CarouselProps['breakpoints'] = {
     slidesPerGroup: 2,
   },
   [parseInt(breakpoints.md)]: {
-    slidesPerView: 2.1,
-    slidesPerGroup: 2.1,
+    slidesPerView: 2,
+    slidesPerGroup: 2,
   },
   [parseInt(breakpoints.lg)]: {
-    slidesPerView: 3.1,
-    slidesPerGroup: 3.1,
+    slidesPerView: 3,
+    slidesPerGroup: 3,
   },
   [parseInt(breakpoints.xl)]: {
     slidesPerView: 4,
     slidesPerGroup: 4,
   },
   [parseInt(breakpoints.xxl)]: {
-    slidesPerView: 6.3,
-    slidesPerGroup: 6.3,
+    slidesPerView: 6,
+    slidesPerGroup: 6,
   },
 }
 

@@ -28,7 +28,7 @@ export const useInfiniteVideoGrid = <Query extends VideoInfiniteQueries>({
   variables,
   options,
 }: useGridTilesOpts<Query>) => {
-  const rowsToLoad = useVideoGridRows('main')
+  const initialRowsToLoad = useVideoGridRows('main')
 
   const breakPointKey = useBreakpointKey()
   const columns = (breakPointKey && DEFAULT_VIDEO_GRID[breakPointKey]?.columns) ?? 0
@@ -38,18 +38,18 @@ export const useInfiniteVideoGrid = <Query extends VideoInfiniteQueries>({
     skip: !columns,
     variables: {
       ...variables,
-      first: columns * rowsToLoad,
+      first: columns * initialRowsToLoad,
     },
   })
   const dataConnection =
     data && ('mostViewedVideosConnection' in data ? data.mostViewedVideosConnection : data.videosConnection)
 
   const firstLoad = !dataConnection?.edges && loading
-  const firstLoadPlaceholders = firstLoad ? createPlaceholderData(columns * rowsToLoad) : []
+  const firstLoadPlaceholders = firstLoad ? createPlaceholderData(columns * initialRowsToLoad) : []
 
   const displayedItems = dataConnection?.edges.map((edge) => edge.node) || []
   const itemsLeft = (dataConnection?.totalCount || 0) - (dataConnection?.edges?.length || 0)
-  const itemsToLoad = Math.min(itemsLeft, columns)
+  const itemsToLoad = Math.min(itemsLeft, columns * 4)
 
   const nextLoadPlaceholders = !dataConnection?.pageInfo.hasNextPage || false ? [] : createPlaceholderData(itemsToLoad)
   return {

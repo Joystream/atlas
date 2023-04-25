@@ -46,7 +46,23 @@ export const ChannelsSection = () => {
       }}
       contentProps={{
         type: 'grid',
-        minChildrenWidth: 200,
+        grid: {
+          sm: {
+            columns: 2,
+          },
+          md: {
+            columns: 3,
+          },
+          lg: {
+            columns: 4,
+          },
+          xl: {
+            columns: 5,
+          },
+          xxl: {
+            columns: 6,
+          },
+        },
         children: channels.map(({ node }) => <ChannelCard key={node.id} channel={node} />),
       }}
       footerProps={{

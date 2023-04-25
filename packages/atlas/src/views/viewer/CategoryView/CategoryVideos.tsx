@@ -46,10 +46,9 @@ export const CategoryVideos: FC<CategoryVideosProps> = ({ categoriesId }) => {
           fetchMore: async () => {
             if (pageInfo?.hasNextPage) {
               await fetchMore({
-                variables: { first: columns, after: pageInfo.endCursor },
+                variables: { first: columns * 4, after: pageInfo.endCursor },
               })
             }
-            return
           },
           type: 'infinite',
         }}

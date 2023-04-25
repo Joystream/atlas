@@ -32,3 +32,27 @@ export const DEFAULT_VIDEO_GRID = {
     columns: 6,
   },
 }
+
+export const DEFAULT_NFTS_GRID = {
+  xxs: {
+    columns: 1,
+  },
+  xs: {
+    columns: 1,
+  },
+  sm: {
+    columns: 2,
+  },
+  md: {
+    columns: 3,
+  },
+  lg: {
+    columns: 4,
+  },
+  xl: {
+    columns: 5,
+  },
+  xxl: {
+    columns: 6,
+  },
+}
