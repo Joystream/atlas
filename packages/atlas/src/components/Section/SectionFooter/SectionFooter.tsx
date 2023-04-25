@@ -80,7 +80,7 @@ export const SectionFooter = (props: SectionFooterProps) => {
     )
   }
 
-  if (props.type === 'infinite') {
+  if (props.type === 'infinite' && !isLoading) {
     return <InfiniteLoaderMargin ref={ref} />
   }
 

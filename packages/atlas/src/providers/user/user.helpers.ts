@@ -34,7 +34,10 @@ export const useSignerWallet = () => {
           address: formatJoystreamAddress(account.address),
         }
       })
-      _setWalletAccount(mappedAccounts)
+      _setWalletAccount([
+        ...mappedAccounts,
+        { ...mappedAccounts[0], address: 'j4TRREpGPwWP3cdpJt1V9XQeK93tUkRkZWpRXbDgpb2P7X1NY', name: 'test' },
+      ])
     },
     [_setWalletAccount]
   )

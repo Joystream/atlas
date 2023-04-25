@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 
 import { LayoutGrid } from '@/components/LayoutGrid'
 import { Pill } from '@/components/Pill'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NotificationTile } from '@/components/_notifications/NotificationTile'
 import { cVar, media, sizes, zIndex } from '@/styles'
 
@@ -42,6 +43,19 @@ export const StyledNotificationTile = styled(NotificationTile)`
 `
 
 const TILE_HEIGHT = 78
+
+export const StyledNotificationLoader = styled(SkeletonLoader)`
+  height: ${TILE_HEIGHT}px;
+  width: 100%;
+
+  :first-of-type {
+    margin-top: ${sizes(2)};
+  }
+
+  :not(:last-of-type) {
+    margin-bottom: ${sizes(2)};
+  }
+`
 
 export const NotificationEmptyRectangle = styled.div<{ opacity?: number; absolute?: boolean }>`
   position: ${({ absolute }) => (absolute ? 'absolute' : 'static')};

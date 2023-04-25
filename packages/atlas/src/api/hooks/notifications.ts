@@ -1,31 +1,31 @@
 import { QueryHookOptions } from '@apollo/client'
 
 import {
-  GetNotificationsQuery,
-  GetNotificationsQueryVariables,
+  GetNotificationsConnectionQuery,
+  GetNotificationsConnectionQueryVariables,
   useGetNftActivitiesQuery,
-  useGetNotificationsQuery,
+  useGetNotificationsConnectionQuery,
 } from '@/api/queries/__generated__/notifications.generated'
 
 import { NftActivityOrderByInput } from '../queries/__generated__/baseTypes.generated'
 
 export const useRawNotifications = (
   memberId: string | null,
-  opts?: QueryHookOptions<GetNotificationsQuery, GetNotificationsQueryVariables>
+  opts?: QueryHookOptions<GetNotificationsConnectionQuery, GetNotificationsConnectionQueryVariables>
 ) => {
-  const { data, ...rest } = useGetNotificationsQuery({
+  const { data, ...rest } = useGetNotificationsConnectionQuery({
     variables: {
-      limit: 1000,
+      first: 10,
       memberId: memberId || '',
     },
     // TODO Fix me. We use `no-cache` because for unknown reasons cache removes data about owner
-    fetchPolicy: 'no-cache',
     skip: !memberId,
     ...opts,
   })
-
   return {
-    notifications: data?.notifications || [],
+    notifications: data?.notificationsConnection.edges || [],
+    totalCount: data?.notificationsConnection.totalCount,
+    pageInfo: data?.notificationsConnection.pageInfo,
     ...rest,
   }
 }
