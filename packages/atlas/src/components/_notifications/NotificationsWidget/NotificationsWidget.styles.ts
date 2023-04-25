@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Button } from '@/components/_buttons/Button'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, media, sizes } from '@/styles'
 
 export const Wrapper = styled.div`
@@ -24,6 +25,7 @@ export const Header = styled.div`
 
 export const Content = styled.div`
   overflow-y: auto;
+  overscroll-behavior: contain;
 
   ${media.sm} {
     max-height: 336px;
@@ -32,4 +34,17 @@ export const Content = styled.div`
 
 export const StyledButton = styled(Button)`
   box-shadow: ${cVar('effectDividersTop')};
+`
+
+export const StyledCompactNotificationLoader = styled(SkeletonLoader)`
+  height: 56px;
+  width: 100%;
+
+  :first-of-type {
+    margin-top: ${sizes(2 / 4)};
+  }
+
+  :not(:last-of-type) {
+    margin-bottom: ${sizes(2 / 4)};
+  }
 `

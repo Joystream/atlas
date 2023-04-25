@@ -2,10 +2,10 @@ import styled from '@emotion/styled'
 
 import { media, sizes } from '@/styles'
 
-export const SectionWrapper = styled.section`
+export const SectionWrapper = styled.section<{ withoutGap: boolean }>`
   display: grid;
-  gap: ${sizes(4)};
+  gap: ${({ withoutGap }) => (withoutGap ? 0 : sizes(4))};
   ${media.sm} {
-    gap: ${sizes(6)};
+    gap: ${({ withoutGap }) => (withoutGap ? 0 : sizes(6))};
   }
 `

@@ -12,9 +12,16 @@ export type SectionProps = {
   contentProps: SectionContentProps
   footerProps?: SectionFooterProps
   className?: string
+  withoutGap?: boolean
 }
 
-export const Section: FC<PropsWithChildren<SectionProps>> = ({ headerProps, contentProps, footerProps, className }) => {
+export const Section: FC<PropsWithChildren<SectionProps>> = ({
+  headerProps,
+  contentProps,
+  footerProps,
+  className,
+  withoutGap = false,
+}) => {
   const isCarousel = contentProps.type === 'carousel'
   const gliderRef = useRef<SwiperInstance>()
 
@@ -25,7 +32,7 @@ export const Section: FC<PropsWithChildren<SectionProps>> = ({ headerProps, cont
     gliderRef.current?.slideNext()
   }
   return (
-    <SectionWrapper className={className}>
+    <SectionWrapper withoutGap={withoutGap} className={className}>
       {!headerProps ? null : isCarousel ? (
         <SectionHeader
           {...headerProps}
