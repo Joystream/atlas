@@ -12,15 +12,16 @@ type UploadRequestParams = {
   bagId: string
 }
 export const createAssetUploadEndpoint = (operatorEndpoint: string, uploadParams: UploadRequestParams) => {
-  const uploadEndpoint = new URL(atlasConfig.storage.uploadPath, operatorEndpoint)
-  Object.entries(uploadParams).forEach(([key, value]) => {
-    uploadEndpoint.searchParams.set(key, value)
-  })
-  return uploadEndpoint.toString()
-}
-
-export const createAssetDownloadEndpoint = (distributionOperatorEndpoint: string, dataObjectId: string) => {
-  return joinUrlFragments(distributionOperatorEndpoint, atlasConfig.storage.assetPath, dataObjectId)
+  try {
+    const url = operatorEndpoint[operatorEndpoint.length - 1] === '/' ? operatorEndpoint : operatorEndpoint + '/'
+    const uploadEndpoint = new URL(atlasConfig.storage.uploadPath, url)
+    Object.entries(uploadParams).forEach(([key, value]) => {
+      uploadEndpoint.searchParams.set(key, value)
+    })
+    return uploadEndpoint.toString()
+  } catch (error) {
+    throw new Error(error)
+  }
 }
 
 export const imageUrlValidation = async (imageUrl: string): Promise<boolean> =>

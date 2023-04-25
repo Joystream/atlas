@@ -1,7 +1,7 @@
 import { FC, useRef } from 'react'
 
 import { SvgActionChevronL, SvgActionChevronR, SvgActionClose } from '@/assets/icons'
-import { FilterButton, FilterButtonOption, SectionFilter } from '@/components/FilterButton'
+import { FilterButton, FilterButtonOption, FilterRange, SectionFilter, isFilterRange } from '@/components/FilterButton'
 import { MobileFilterButton } from '@/components/MobileFilterButton'
 import { Button } from '@/components/_buttons/Button'
 import { useHorizonthalFade } from '@/hooks/useHorizonthalFade'
@@ -28,15 +28,19 @@ export const SectionFilters: FC<SectionFiltersProps> = ({ filters, onApplyFilter
   const { handleMouseDown, visibleShadows, handleArrowScroll, isOverflow } = useHorizonthalFade(filterWrapperRef)
 
   const areThereAnyOptionsSelected = filters
-    .map((filter) => filter.options?.map((option) => option.applied))
+    .map(
+      (filter) =>
+        filter.options?.map((option) => option.applied) ?? (filter.range?.appliedMin || filter.range?.appliedMax)
+    )
     .flat()
     .some(Boolean)
 
-  const handleApply = (name: string, selectedOptions: FilterButtonOption[]) => {
+  const handleApply = (name: string, selectedOptions: FilterButtonOption[] | FilterRange) => {
     onApplyFilters?.(
       filters.map((filter) => {
         if (filter.name === name) {
-          return { ...filter, options: selectedOptions }
+          const isFilter = isFilterRange(selectedOptions)
+          return { ...filter, [isFilter ? 'range' : 'options']: selectedOptions }
         }
         return filter
       })
@@ -47,6 +51,7 @@ export const SectionFilters: FC<SectionFiltersProps> = ({ filters, onApplyFilter
     const newFilters = filters.map((filter) => ({
       ...filter,
       options: filter.options?.map((option) => ({ ...option, selected: false, applied: false })),
+      range: { min: undefined, max: undefined, maxApplied: undefined, minApplied: undefined },
     }))
 
     onApplyFilters?.(newFilters)

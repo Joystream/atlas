@@ -42,7 +42,7 @@ export const CategoryVideos: FC<CategoryVideosProps> = ({ categoriesId }) => {
           grid: DEFAULT_VIDEO_GRID,
         }}
         footerProps={{
-          reachEnd: pageInfo?.hasNextPage,
+          reachedEnd: !pageInfo?.hasNextPage,
           fetchMore: async () => {
             if (pageInfo?.hasNextPage) {
               await fetchMore({

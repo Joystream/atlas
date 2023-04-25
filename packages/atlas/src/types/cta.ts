@@ -1,1 +1,1 @@
-export type CtaData = 'home' | 'new' | 'channels' | 'popular'
+export type CtaData = 'home' | 'channels' | 'popular'

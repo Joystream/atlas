@@ -235,6 +235,7 @@ const DefaultTemplate: StoryFn<SectionProps> = () => {
           reachEnd: true,
           type: 'infinite',
           fetchMore: async () => setSecondPlaceholdersCount((count) => count + 8),
+          reachedEnd: secondPlaceholderItems.length > 40,
         }}
       />
     </div>

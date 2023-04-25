@@ -1,10 +1,9 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SvgControlsConnect, SvgLogoYoutube } from '@/assets/icons'
-import { SvgAppLogoShort, SvgAppLogoShortMonochrome } from '@/assets/logos'
+import { SvgAppLogoShort } from '@/assets/logos'
 import { Text } from '@/components/Text'
-import { cVar, sizes } from '@/styles'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { cVar, media, sizes } from '@/styles'
 
 export const StyledSvgAppLogoShort = styled(SvgAppLogoShort)`
   height: 36px;
@@ -16,13 +15,6 @@ export const StyledSvgAppLogoShort = styled(SvgAppLogoShort)`
 
 export const Content = styled.div`
   margin-top: ${sizes(6)};
-`
-export const AdditionalSubtitleWrapper = styled.div`
-  margin-top: ${sizes(6)};
-  margin-bottom: ${sizes(4)};
-`
-export const AdditionalSubtitle = styled(Text)`
-  display: inline;
 `
 
 export const DescriptionText = styled(Text)`
@@ -50,29 +42,11 @@ export const CategoriesText = styled(Text)`
   margin-top: ${sizes(1)};
 `
 
-export const LogosWrapper = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, auto);
-  justify-content: start;
-  align-items: center;
-  gap: ${sizes(4)};
-`
+export const RequirementsButtonSkeleton = styled(SkeletonLoader)`
+  height: 40px;
+  width: 100%;
 
-const logoStyles = css`
-  path {
-    fill: ${cVar('colorTextMuted')};
+  ${media.sm} {
+    width: 150px;
   }
-`
-
-export const StyledSvgLogoYoutube = styled(SvgLogoYoutube)`
-  ${logoStyles};
-`
-export const StyledSvgControlsConnect = styled(SvgControlsConnect)`
-  path {
-    fill: ${cVar('colorCoreNeutral500')};
-  }
-`
-// todo replace with AppLogo
-export const StyledAppLogo = styled(SvgAppLogoShortMonochrome)`
-  ${logoStyles};
 `

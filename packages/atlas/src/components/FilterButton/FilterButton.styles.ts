@@ -14,7 +14,7 @@ export const Counter = styled.div`
 `
 
 export const StyledButton = styled(Button)`
-  > svg > path {
+  svg > path {
     fill: ${cVar('colorTextMuted')};
   }
 `

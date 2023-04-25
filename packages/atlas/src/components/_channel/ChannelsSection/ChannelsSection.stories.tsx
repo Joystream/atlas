@@ -3,30 +3,14 @@ import { Meta, StoryFn } from '@storybook/react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { BrowserRouter } from 'react-router-dom'
 
-// import { createApolloClient } from '@/api'
-import { Grid } from '@/components/Grid'
+import { ChannelsSection } from '@/components/_channel/ChannelsSection/ChannelsSection'
 import { OperatorsContextProvider } from '@/providers/assets/assets.provider'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 
-import { ChannelCard, ChannelCardProps } from './ChannelCard'
-
 export default {
-  title: 'channel/ChannelCard',
-  component: ChannelCard,
-  args: {
-    loading: false,
-    withFollowButton: true,
-    channel: {
-      title: 'my channel',
-      id: '3',
-      follows: 4,
-      avatarPhoto: {
-        id: '1',
-      },
-      __typename: 'Channel',
-    },
-  },
+  title: 'Channel/ChannelsSection',
+  component: ChannelsSection,
   decorators: [
     (Story) => {
       const apolloClient = new ApolloClient({ cache: new InMemoryCache() })
@@ -56,23 +40,6 @@ export default {
   ],
 } as Meta
 
-const Template: StoryFn<ChannelCardProps> = (args) => (
-  <div style={{ maxWidth: 400 }}>
-    <ChannelCard {...args} />
-  </div>
-)
-
-export const Default = Template.bind({})
-
-const WithinGrid: StoryFn<ChannelCardProps> = (args) => (
-  <Grid>
-    <ChannelCard {...args} />
-    <ChannelCard {...args} />
-    <ChannelCard {...args} />
-    <ChannelCard {...args} />
-    <ChannelCard {...args} />
-    <ChannelCard {...args} />
-  </Grid>
-)
-
-export const InsideGrid = WithinGrid.bind({})
+export const Default: StoryFn = () => {
+  return <ChannelsSection />
+}
