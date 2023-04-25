@@ -3,14 +3,47 @@ import { FC } from 'react'
 import { useNfts } from '@/api/hooks/nfts'
 import { OwnedNftOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { Banner } from '@/components/Banner'
+import { CarouselProps } from '@/components/Carousel'
 import { Section } from '@/components/Section/Section'
 import { StyledSvgAlertsInformative24 } from '@/components/Tooltip/Tooltip.styles'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useUser } from '@/providers/user/user.hooks'
+import { breakpoints } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'
 
 import { FeaturedNftsWrapper } from './FeaturedNftsSection.styles'
+
+const responsive: CarouselProps['breakpoints'] = {
+  [parseInt(breakpoints.xxs)]: {
+    slidesPerView: 1.2,
+    slidesPerGroup: 1,
+  },
+  [parseInt(breakpoints.xs)]: {
+    slidesPerView: 1.4,
+    slidesPerGroup: 1,
+  },
+  [parseInt(breakpoints.sm)]: {
+    slidesPerView: 2.2,
+    slidesPerGroup: 2,
+  },
+  [parseInt(breakpoints.md)]: {
+    slidesPerView: 3,
+    slidesPerGroup: 3,
+  },
+  [parseInt(breakpoints.lg)]: {
+    slidesPerView: 4,
+    slidesPerGroup: 4,
+  },
+  [parseInt(breakpoints.xl)]: {
+    slidesPerView: 5,
+    slidesPerGroup: 5,
+  },
+  [parseInt(breakpoints.xxl)]: {
+    slidesPerView: 6,
+    slidesPerGroup: 6,
+  },
+}
 
 export const FeaturedNftsSection: FC = () => {
   const { activeChannel } = useUser()
@@ -50,8 +83,7 @@ export const FeaturedNftsSection: FC = () => {
             children: items.map((nft, idx) => <NftTileViewer nftId={nft.id} key={`${nft.id}-${idx}`} />),
             canOverflowContainer: true,
             spaceBetween: mdMatch ? 24 : 16,
-            minSlideWidth: 300,
-            slidesPerView: 'auto',
+            breakpoints: responsive,
           }}
         />
       )}

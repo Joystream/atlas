@@ -15,13 +15,7 @@ type StyledSwiperProps = {
 const isPropValid = (prop: string) => prop !== 'canOverflowContainer' && prop !== 'minSlideWidth'
 
 export const StyledSwiper = styled(Swiper, { shouldForwardProp: isPropValid })<StyledSwiperProps>`
-  width: ${({ canOverflowContainer }) => (canOverflowContainer ? '100vw' : '100%')};
-
-  .swiper-slide {
-    min-width: ${({ minSlideWidth }) => (minSlideWidth ? `${minSlideWidth}px` : 'unset')};
-    width: ${({ slidesPerView }) => (slidesPerView === 'auto' ? 'auto' : 'unset')};
-    flex-shrink: ${({ slidesPerView }) => (slidesPerView === 'auto' ? 'unset' : '0')};
-  }
+  width: 100%;
 
   .swiper-pagination {
     display: flex;
