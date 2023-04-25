@@ -39,7 +39,7 @@ export const CategoryVideos: FC<CategoryVideosProps> = ({ categoriesId }) => {
     : [
         <FallbackContainer key="fallback">
           <EmptyFallback
-            title="No Videos found"
+            title="No videos here for now"
             button={
               <Button variant="secondary" to={absoluteRoutes.viewer.discover()}>
                 Go back to Discover page
