@@ -248,6 +248,9 @@ const channelCacheFields: CachePolicyFields<keyof FullChannelFieldsFragment> = {
 }
 
 const cache = new InMemoryCache({
+  possibleTypes: {
+    NftOwner: ['NftOwnerChannel', 'NftOwnerMember'],
+  },
   typePolicies: {
     Query: {
       fields: queryCacheFields,
