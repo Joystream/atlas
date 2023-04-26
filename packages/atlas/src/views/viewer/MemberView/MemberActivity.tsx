@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { NftActivityOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
@@ -6,6 +6,7 @@ import { SvgActionBid, SvgActionBuyNow, SvgActionMint, SvgActionSell } from '@/a
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
+import { Section } from '@/components/Section/Section'
 import { Text } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
 import { createPlaceholderData } from '@/utils/data'
@@ -100,21 +101,30 @@ export const MemberActivity: FC<MemberActivityProps> = ({
   memberId,
   sort = NftActivityOrderByInput.EventTimestampDesc,
 }) => {
-  const { activities, loading, activitiesTotalCounts } = useActivities(memberId, sort)
+  const { activities, loading, activitiesTotalCounts, pageInfo, fetchMore } = useActivities(memberId, sort)
   const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState(false)
   const placeholderItems = createPlaceholderData(PLACEHOLDERS_COUNT)
-  const items = activities && !loading ? activities : (placeholderItems as ActivitiesRecord[])
+  const items =
+    loading || isLoading ? [...(activities ?? []), ...(placeholderItems as ActivitiesRecord[])] : activities ?? []
   return (
     <section>
-      {activities?.length === 0 ? (
+      {!(loading || isLoading) && items.length === 0 ? (
         <EmptyFallback title="No activity" subtitle="Go out there and explore!" variant="small" />
       ) : (
         <LayoutGrid>
           <GridItem colSpan={{ base: 12, sm: 8 }} rowStart={{ base: 2, sm: 1 }}>
-            <LayoutGrid>
-              {items?.map((activity, i) => (
-                <GridItem key={i} colSpan={{ base: 12 }}>
+            <Section
+              contentProps={{
+                type: 'grid',
+                grid: {
+                  sm: {
+                    columns: 1,
+                  },
+                },
+                children: items.map((activity, i) => (
                   <ActivityItem
+                    key={i}
                     thumbnailUri={activity.video?.thumbnailPhoto?.resolvedUrl || ''}
                     loading={!activities || loading}
                     onItemClick={() => navigate(absoluteRoutes.viewer.video(activity.video?.id))}
@@ -123,9 +133,30 @@ export const MemberActivity: FC<MemberActivityProps> = ({
                     title={activity?.video?.title || ''}
                     description={getDescription(activity)}
                   />
-                </GridItem>
-              ))}
-            </LayoutGrid>
+                )),
+              }}
+              footerProps={{
+                type: 'load',
+                label: 'Load more activities',
+                reachedEnd: !pageInfo?.hasNextPage ?? true,
+                fetchMore: async () => {
+                  setIsLoading(true)
+                  await fetchMore({
+                    variables: {
+                      after: pageInfo?.endCursor,
+                      first: 10,
+                    },
+                    updateQuery: (prev, { fetchMoreResult }) => {
+                      fetchMoreResult.nftActivitiesConnection.edges = [
+                        ...(prev.nftActivitiesConnection?.edges ?? []),
+                        ...fetchMoreResult.nftActivitiesConnection.edges,
+                      ]
+                      return fetchMoreResult
+                    },
+                  }).finally(() => setIsLoading(false))
+                },
+              }}
+            />
           </GridItem>
           {!loading && activitiesTotalCounts && (
             <GridItem colSpan={{ base: 12, sm: 3 }} colStart={{ sm: -4 }}>
@@ -187,3 +218,21 @@ export const MemberActivity: FC<MemberActivityProps> = ({
     </section>
   )
 }
+
+// children: [
+//   <LayoutGrid key="single">
+//     {items?.map((activity, i) => (
+//         <GridItem key={i} colSpan={{ base: 12 }}>
+//           <ActivityItem
+//               thumbnailUri={activity.video?.thumbnailPhoto?.resolvedUrl || ''}
+//               loading={!activities || loading}
+//               onItemClick={() => navigate(absoluteRoutes.viewer.video(activity.video?.id))}
+//               date={activity?.date}
+//               type={activity?.type}
+//               title={activity?.video?.title || ''}
+//               description={getDescription(activity)}
+//           />
+//         </GridItem>
+//     ))}
+//   </LayoutGrid>
+// ]
