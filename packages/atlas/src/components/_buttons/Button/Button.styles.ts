@@ -67,7 +67,7 @@ const buttonVariantStyles = ({ variant, iconOnly }: ButtonBaseStyleProps): Seria
 
         &:disabled,
         &[aria-disabled='true'] {
-          background-color: ${cVar('colorBackground')};
+          background-color: ${cVar('colorBackgroundAlpha')};
           box-shadow: none;
         }
       `
@@ -126,7 +126,7 @@ const buttonVariantStyles = ({ variant, iconOnly }: ButtonBaseStyleProps): Seria
 
         &:disabled,
         &[aria-disabled='true'] {
-          background-color: ${cVar('colorBackgroundElevated')};
+          background-color: ${cVar('colorBackgroundAlpha')};
         }
       `
     case 'destructive-secondary':
@@ -180,7 +180,7 @@ const buttonVariantStyles = ({ variant, iconOnly }: ButtonBaseStyleProps): Seria
 
         &:disabled,
         &[aria-disabled='true'] {
-          background-color: ${cVar('colorBackgroundElevated')};
+          background-color: ${cVar('colorBackgroundAlpha')};
           box-shadow: none;
         }
       `
