@@ -26,13 +26,13 @@ import {
   PlaygroundImageDownsizing,
   PlaygroundIndirectSignInDialog,
   PlaygroundInputAutocomplete,
-  PlaygroundMarketplaceCarousel,
   PlaygroundNftPurchase,
   PlaygroundNftSettleAuction,
   PlaygroundNftWhitelistMembers,
   PlaygroundReactionsComments,
   PlaygroundTokenPrice,
 } from './Playgrounds'
+import { PlaygroundMarketplaceCarousel } from './Playgrounds/PlaygroundMarketplaceCarousel'
 
 const playgroundRoutes = [
   { path: 'nft-purchase', element: <PlaygroundNftPurchase />, name: 'NFT Purchase' },
