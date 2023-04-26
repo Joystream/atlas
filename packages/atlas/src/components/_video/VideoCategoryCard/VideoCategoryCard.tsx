@@ -74,7 +74,7 @@ export const VideoCategoryCard: FC<VideoCategoryCardProps> = ({
               <Text
                 as="span"
                 variant={variant === 'default' ? 'h500' : 'h300'}
-                margin={{ bottom: variant === 'default' ? 6 : 4 }}
+                margin={{ bottom: variant === 'default' ? 6 : 3 }}
               >
                 {title}
               </Text>

@@ -6,8 +6,6 @@ import { SvgCategoriesAutosAndVehicles } from '@/assets/icons'
 
 import { VideoCategoryCard, VideoCategoryCardProps } from './VideoCategoryCard'
 
-import { FeaturedVideoCategoryCard } from '.'
-
 export default {
   title: 'video/VideoCategoryCard',
   args: {
@@ -45,26 +43,6 @@ const Template: StoryFn<VideoCategoryCardProps> = (args) => {
 export const Default = Template.bind({})
 Default.args = {}
 
-const TemplateFeatured: StoryFn<VideoCategoryCardProps> = (args) => {
-  return (
-    <Container2>
-      <FeaturedVideoCategoryCard
-        videoUrl="https://sumer-dev-2.joystream.app/storage/asset/v0/5Fbef6KfEP3ncHxroVsdWQF6gLb8ph47dcAmzWptjuMMWHnP"
-        videoTitle="Anderson .Paak and The Free Nationals"
-        {...args}
-      >
-        VideoCategoryCard
-      </FeaturedVideoCategoryCard>
-    </Container2>
-  )
-}
-export const Featured = TemplateFeatured.bind({})
-Featured.args = {}
-
 const Container = styled.div`
   width: 414px;
-`
-
-const Container2 = styled.div`
-  width: 636px;
 `

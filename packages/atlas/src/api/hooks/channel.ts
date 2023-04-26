@@ -12,8 +12,6 @@ import {
   GetExtendedBasicChannelsQueryVariables,
   GetExtendedFullChannelsQuery,
   GetExtendedFullChannelsQueryVariables,
-  GetPopularChannelsQuery,
-  GetPopularChannelsQueryVariables,
   GetTop10ChannelsQuery,
   GetTop10ChannelsQueryVariables,
   UnfollowChannelMutation,
@@ -22,7 +20,6 @@ import {
   useGetDiscoverChannelsQuery,
   useGetExtendedBasicChannelsQuery,
   useGetExtendedFullChannelsQuery,
-  useGetPopularChannelsQuery,
   useGetTop10ChannelsQuery,
   useUnfollowChannelMutation,
 } from '@/api/queries/__generated__/channels.generated'
@@ -184,24 +181,6 @@ export const useDiscoverChannels = (
     data?.mostRecentChannels
   )
 
-  return {
-    extendedChannels: shuffledChannels,
-    ...rest,
-  }
-}
-
-export const usePopularChannels = (
-  variables?: GetPopularChannelsQueryVariables,
-  opts?: QueryHookOptions<GetPopularChannelsQuery, GetPopularChannelsQueryVariables>
-) => {
-  const { data, ...rest } = useGetPopularChannelsQuery({
-    ...opts,
-    variables,
-  })
-
-  const shuffledChannels = useShuffleResults<GetPopularChannelsQuery['extendedChannels'][number]>(
-    data?.extendedChannels
-  )
   return {
     extendedChannels: shuffledChannels,
     ...rest,

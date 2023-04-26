@@ -1,12 +1,11 @@
 import { FC, ReactElement } from 'react'
 
 import { Carousel, CarouselProps } from '@/components/Carousel'
-import { GridWrapper } from '@/components/Section/SectionContent/SectionContent.styles'
+import { GridWrapper, GridWrapperProps } from '@/components/Section/SectionContent/SectionContent.styles'
 
 type SectionGridTypeProps = {
   type: 'grid'
-  minChildrenWidth: number
-}
+} & GridWrapperProps
 
 type SectionCarouselTypeProps = {
   type: 'carousel'
@@ -22,7 +21,7 @@ export type SectionContentProps = {
 export const SectionContent: FC<SectionContentProps> = (props) => {
   if (props.type === 'grid') {
     return (
-      <GridWrapper className={props.className} minWidth={props.minChildrenWidth}>
+      <GridWrapper grid={props.grid} className={props.className}>
         {props.children}
       </GridWrapper>
     )

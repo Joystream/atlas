@@ -1,18 +1,19 @@
 import styled from '@emotion/styled'
 import { useMemo, useState } from 'react'
 
-import { useNftsConnection } from '@/api/hooks/nfts'
 import { OwnedNftOrderByInput, OwnedNftWhereInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { SvgActionSell, SvgActionSettings, SvgActionShoppingCart } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FilterButtonOption, SectionFilter } from '@/components/FilterButton'
-import { NumberFormat } from '@/components/NumberFormat'
 import { Section } from '@/components/Section/Section'
 import { Button } from '@/components/_buttons/Button'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
+import { useInfiniteNftsGrid } from '@/hooks/useInfiniteNftsGrid'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
-import { createPlaceholderData } from '@/utils/data'
+import { DEFAULT_NFTS_GRID } from '@/styles'
+
+import { NumberFormat } from '../NumberFormat'
 
 const NFT_STATUSES: FilterButtonOption[] = [
   {
@@ -64,16 +65,11 @@ const FILTERS: SectionFilter[] = [
   { name: 'other', type: 'checkbox', options: OTHER, label: 'Other', icon: <SvgActionSettings /> },
 ]
 
-const LIMIT = 12
-const LG_LIMIT = 30
-
 export const AllNftSection = () => {
   const [filters, setFilters] = useState<SectionFilter[]>(FILTERS)
   const [hasAppliedFilters, setHasAppliedFilters] = useState(false)
   const [order, setOrder] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
   const smMatch = useMediaMatch('sm')
-  const lgMatch = useMediaMatch('lg')
-  const limit = lgMatch ? LG_LIMIT : LIMIT
   const mappedFilters = useMemo((): OwnedNftWhereInput => {
     const mappedStatus =
       filters
@@ -123,15 +119,12 @@ export const AllNftSection = () => {
     }
   }, [filters])
 
-  const { nfts, loading, totalCount, fetchMore, pageInfo } = useNftsConnection({
+  const { columns, fetchMore, pageInfo, tiles, totalCount } = useInfiniteNftsGrid({
     where: mappedFilters,
     orderBy: order,
-    first: limit,
   })
-  const [isLoading, setIsLoading] = useState(false)
 
-  const placeholderItems = loading || isLoading ? createPlaceholderData(limit) : []
-  const nftsWithPlaceholders = [...(nfts || []), ...placeholderItems]
+  const children = tiles?.map((nft, idx) => <NftTileViewer key={idx} nftId={nft.id} />)
   return (
     <Section
       headerProps={{
@@ -158,38 +151,37 @@ export const AllNftSection = () => {
       }}
       contentProps={{
         type: 'grid',
-        minChildrenWidth: 250,
-        children:
-          !(isLoading || loading) && !nfts?.length
-            ? [
-                <FallbackContainer key="fallback">
-                  <EmptyFallback
-                    title="No NFTs found"
-                    subtitle="Please, try changing your filtering criteria."
-                    button={
-                      hasAppliedFilters && (
-                        <Button variant="secondary" onClick={() => setFilters(FILTERS)}>
-                          Clear all filters
-                        </Button>
-                      )
-                    }
-                  />
-                </FallbackContainer>,
-              ]
-            : nftsWithPlaceholders.map((nft, idx) => <NftTileViewer key={idx} nftId={nft.id} />),
+        grid: DEFAULT_NFTS_GRID,
+        children: children.length
+          ? children
+          : [
+              <FallbackContainer key="fallback">
+                <EmptyFallback
+                  title="No NFTs found"
+                  subtitle="Please, try changing your filtering criteria."
+                  button={
+                    hasAppliedFilters && (
+                      <Button variant="secondary" onClick={() => setFilters(FILTERS)}>
+                        Clear all filters
+                      </Button>
+                    )
+                  }
+                />
+              </FallbackContainer>,
+            ],
       }}
       footerProps={{
         type: 'infinite',
         reachedEnd: !pageInfo?.hasNextPage ?? true,
         fetchMore: async () => {
-          setIsLoading(true)
-          await fetchMore({
-            variables: {
-              after: pageInfo?.endCursor,
-            },
-          }).finally(() => {
-            setIsLoading(false)
-          })
+          if (pageInfo?.hasNextPage) {
+            await fetchMore({
+              variables: {
+                first: columns * 4,
+                after: pageInfo?.endCursor,
+              },
+            })
+          }
         },
       }}
     />
