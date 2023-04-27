@@ -90,15 +90,6 @@ query GetDiscoverChannels($where: ExtendedChannelWhereInput) {
   }
 }
 
-query GetPopularChannels($where: ExtendedChannelWhereInput) {
-  # CHANGE: Replacement for overly-specific `popularChannels` query
-  extendedChannels(where: $where, orderBy: videoViewsNum_DESC, limit: 15) {
-    channel {
-      ...BasicChannelFields
-    }
-  }
-}
-
 # CHANGE: Replaced with a custom `channelNftCollectors` query taking `channelId` argument (instead of `ChannelNftCollectorsWhereInput`)
 query GetChannelNftCollectors($channelId: String!, $orderBy: ChannelNftCollectorsOrderByInput = amount_DESC) {
   channelNftCollectors(channelId: $channelId, orderBy: $orderBy) {

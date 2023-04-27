@@ -171,7 +171,6 @@ const DefaultTemplate: StoryFn<SectionProps> = () => {
         }}
         contentProps={{
           type: 'grid',
-          minChildrenWidth: 200,
           children: placeholderItems.map((_, idx) => (
             <VideoTile key={idx} loadingDetails={true} loadingAvatar={true} loadingThumbnail={true} />
           )),
@@ -204,7 +203,6 @@ const DefaultTemplate: StoryFn<SectionProps> = () => {
         }}
         contentProps={{
           type: 'grid',
-          minChildrenWidth: 200,
           children: secondPlaceholderItems.map((_, idx) => (
             <VideoTile key={idx} loadingDetails={true} loadingAvatar={true} loadingThumbnail={true} />
           )),
@@ -229,7 +227,6 @@ const DefaultTemplate: StoryFn<SectionProps> = () => {
         }}
         contentProps={{
           type: 'grid',
-          minChildrenWidth: 200,
           children: secondPlaceholderItems.map((_, idx) => (
             <VideoTile key={idx} loadingDetails={true} loadingAvatar={true} loadingThumbnail={true} />
           )),

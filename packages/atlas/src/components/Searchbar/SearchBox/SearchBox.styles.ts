@@ -87,7 +87,7 @@ export const Container = styled.div<ContainerProps>`
   }
 `
 
-export const Section = styled.section`
+export const SearchSection = styled.section`
   padding: ${sizes(2)} 0;
 
   :not(:last-child) {

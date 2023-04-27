@@ -9,7 +9,7 @@ import { SectionHeader, SectionHeaderProps } from './SectionHeader'
 import { SwiperInstance } from '../Carousel'
 
 export type SectionProps = {
-  headerProps: Omit<SectionHeaderProps, 'isCarousel'>
+  headerProps?: Omit<SectionHeaderProps, 'isCarousel'>
   contentProps: SectionContentProps
   footerProps?: SectionFooterProps
   className?: string

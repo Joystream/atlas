@@ -26,6 +26,8 @@ export const CategoryBackgroundImageOverlay = styled.div<{ coverImgUrl?: string;
 
 export const PlaceholderInfoContainer = styled.div`
   position: relative;
+  margin: auto;
+  max-width: 2284px;
 `
 
 export const CategoryTitleWrapper = styled.div`
