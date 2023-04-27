@@ -75,19 +75,17 @@ export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ ...rest }) =
                   },
                   children: [
                     <div key="single">
-                      {Array.from({ length: 10 }, () => notifications)
-                        .flat()
-                        .map((notification, idx) => (
-                          <NotificationTile
-                            variant="compact"
-                            key={`notification-${notification.id}-${idx}`}
-                            notification={notification}
-                            onClick={() => {
-                              popoverRef.current?.hide()
-                              markNotificationsAsRead(notification)
-                            }}
-                          />
-                        ))}
+                      {notifications.map((notification, idx) => (
+                        <NotificationTile
+                          variant="compact"
+                          key={`notification-${notification.id}-${idx}`}
+                          notification={notification}
+                          onClick={() => {
+                            popoverRef.current?.hide()
+                            markNotificationsAsRead(notification)
+                          }}
+                        />
+                      ))}
                     </div>,
                   ],
                 }}
