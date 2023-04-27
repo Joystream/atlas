@@ -249,7 +249,12 @@ query GetNftHistory($nftId: String!) {
   }
 }
 
-query GetNftActivities($memberId: String!, $first: Int!, $after: String, $orderBy: [NftActivityOrderByInput!] = event_timestamp_DESC) {
+query GetNftActivities(
+  $memberId: String!
+  $first: Int!
+  $after: String
+  $orderBy: [NftActivityOrderByInput!] = event_timestamp_DESC
+) {
   # COUNT queries
   nftsBought: nftActivitiesConnection(
     where: {
