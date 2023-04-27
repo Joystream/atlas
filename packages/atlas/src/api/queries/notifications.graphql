@@ -144,10 +144,7 @@ query GetNotificationsConnection($memberId: String!, $first: Int!, $after: Strin
 }
 
 query GetNftHistory($nftId: String!) {
-  nftHistoryEntries(
-    orderBy: event_timestamp_DESC
-    where: { nft: { id_eq: $nftId } }
-  ) {
+  nftHistoryEntries(orderBy: event_timestamp_DESC, where: { nft: { id_eq: $nftId } }) {
     event {
       id
       timestamp
@@ -338,11 +335,7 @@ query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [NftActivityO
   }
 
   # DATA query
-  nftActivities(
-    limit: $limit
-    orderBy: $orderBy
-    where: { member: { id_eq: $memberId } }
-  ) {
+  nftActivities(limit: $limit, orderBy: $orderBy, where: { member: { id_eq: $memberId } }) {
     event {
       id
       timestamp
