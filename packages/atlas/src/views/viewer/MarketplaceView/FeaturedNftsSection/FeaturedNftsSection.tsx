@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 
 import { useNfts } from '@/api/hooks/nfts'
 import { OwnedNftOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
@@ -13,6 +13,7 @@ import { useUser } from '@/providers/user/user.hooks'
 import { breakpoints } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'
 
+import { FeatureNftModal } from './FeatureNftModal'
 import { FeaturedNftsWrapper } from './FeaturedNftsSection.styles'
 
 const responsive: CarouselProps['breakpoints'] = {
@@ -48,6 +49,7 @@ const responsive: CarouselProps['breakpoints'] = {
 
 export const FeaturedNftsSection: FC = () => {
   const { activeChannel } = useUser()
+  const [isFeatureNftModalOpen, setIsFeatureNfrModalOpen] = useState(false)
 
   const { nfts, loading } = useNfts({
     variables: {
@@ -75,6 +77,7 @@ export const FeaturedNftsSection: FC = () => {
 
   return (
     <FeaturedNftsWrapper>
+      <FeatureNftModal isOpen={isFeatureNftModalOpen} onClose={() => setIsFeatureNfrModalOpen(false)} />
       {items.length >= 4 && (
         <Section
           headerProps={{
@@ -106,7 +109,7 @@ export const FeaturedNftsSection: FC = () => {
           actionButton={{
             text: 'Submit your video NFT to be featured',
             onClick: () => {
-              // todo
+              setIsFeatureNfrModalOpen(true)
             },
           }}
         />

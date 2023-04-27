@@ -61,3 +61,11 @@ query GetFeaturedNftsVideos($limit: Int) {
     }
   }
 }
+
+mutation RequestNftFeatured($nftId: String!, $rationale: String!) {
+  requestNftFeatured(nftId: $nftId, rationale: $rationale) {
+    rationale
+    nftId
+    createdAt
+  }
+}
