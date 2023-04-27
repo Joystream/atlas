@@ -1776,7 +1776,9 @@ export type GetNftsConnectionQuery = {
   }
 }
 
-export type GetFeaturedNftsVideosQueryVariables = Types.Exact<{ [key: string]: never }>
+export type GetFeaturedNftsVideosQueryVariables = Types.Exact<{
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+}>
 
 export type GetFeaturedNftsVideosQuery = {
   __typename?: 'Query'
@@ -2519,15 +2521,15 @@ export type GetNftsConnectionQueryHookResult = ReturnType<typeof useGetNftsConne
 export type GetNftsConnectionLazyQueryHookResult = ReturnType<typeof useGetNftsConnectionLazyQuery>
 export type GetNftsConnectionQueryResult = Apollo.QueryResult<GetNftsConnectionQuery, GetNftsConnectionQueryVariables>
 export const GetFeaturedNftsVideosDocument = gql`
-  query GetFeaturedNftsVideos {
+  query GetFeaturedNftsVideos($limit: Int) {
     ownedNfts(
-      limit: 5
+      limit: $limit
       orderBy: [createdAt_DESC]
       where: {
         isFeatured_eq: true
         transactionalStatus: {
           isTypeOf_in: ["TransactionalStatusAuction", "TransactionalStatusBuyNow"]
-          auction: { isCompleted_eq: false }
+          auction: { isCompleted_eq: false, isCanceled_eq: false }
         }
       }
     ) {
@@ -2557,6 +2559,7 @@ export const GetFeaturedNftsVideosDocument = gql`
  * @example
  * const { data, loading, error } = useGetFeaturedNftsVideosQuery({
  *   variables: {
+ *      limit: // value for 'limit'
  *   },
  * });
  */

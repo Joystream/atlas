@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { useFeaturedNfts } from '@/api/hooks/nfts'
+import { useFeaturedNftsVideos } from '@/api/hooks/nfts'
 import { AllNftSection } from '@/components/AllNftSection/AllNftSection'
 import { MarketplaceCarousel } from '@/components/NftCarousel/MarketplaceCarousel'
 import { Text } from '@/components/Text'
@@ -12,7 +12,7 @@ import { StyledLimitedWidth } from './MarketplaceView.styles'
 
 export const MarketplaceView: FC = () => {
   const headTags = useHeadTags('Marketplace')
-  const { nfts, loading } = useFeaturedNfts()
+  const { nfts, loading } = useFeaturedNftsVideos(5)
   const lgMatch = useMediaMatch('lg')
 
   return (

@@ -189,8 +189,12 @@ export const useNfts = (baseOptions?: QueryHookOptions<GetNftsQuery, GetNftsQuer
   }
 }
 
-export const useFeaturedNfts = () => {
-  const { data, ...rest } = useGetFeaturedNftsVideosQuery()
+export const useFeaturedNftsVideos = (limit: number) => {
+  const { data, ...rest } = useGetFeaturedNftsVideosQuery({
+    variables: {
+      limit,
+    },
+  })
 
   return {
     nfts: data?.ownedNfts,
