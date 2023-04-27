@@ -3,12 +3,6 @@ import styled from '@emotion/styled'
 import { Button } from '@/components/_buttons/Button'
 import { cVar, media, sizes, zIndex } from '@/styles'
 
-export const MobilePopover = styled.div`
-  position: fixed;
-  inset: var(--size-topbar-height) 0 auto 0;
-  z-index: ${zIndex.modals};
-`
-
 export const MobileBackdrop = styled.div`
   background-color: transparent;
   inset: 0;
@@ -17,6 +11,7 @@ export const MobileBackdrop = styled.div`
 `
 
 export const Wrapper = styled.div`
+  width: 100vw;
   background-color: ${cVar('colorBackgroundStrong')};
   ${media.sm} {
     left: 0;
@@ -35,6 +30,7 @@ export const Header = styled.div`
 export const Content = styled.div`
   overflow-y: auto;
   overscroll-behavior: contain;
+  max-height: 40vh;
 
   ${media.sm} {
     max-height: 336px;

@@ -1,5 +1,4 @@
-import { FC, ReactElement, useEffect, useRef, useState } from 'react'
-import ReactDOM from 'react-dom'
+import { FC, useEffect, useRef, useState } from 'react'
 
 import { SvgActionNotifications } from '@/assets/icons'
 import { EmptyFallback } from '@/components/EmptyFallback'
@@ -11,15 +10,13 @@ import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useNotifications } from '@/providers/notifications/notifications.hooks'
 
-import { Content, Header, MobileBackdrop, MobilePopover, StyledButton, Wrapper } from './NotificationsWidget.styles'
+import { Content, Header, MobileBackdrop, StyledButton, Wrapper } from './NotificationsWidget.styles'
 
 import { NotificationTile } from '../NotificationTile'
 
-type NotificationsWidgetProps = Omit<PopoverProps, 'content' | 'instanceRef' | 'trigger'> & {
-  trigger: (props: { onClick?: () => void }) => ReactElement
-}
+type NotificationsWidgetProps = Omit<PopoverProps, 'content' | 'instanceRef'>
 
-export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ trigger: TriggerButton, ...rest }) => {
+export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ ...rest }) => {
   const popoverRef = useRef<PopoverImperativeHandle>()
   const { notifications, markNotificationsAsRead, setLastSeenNotificationBlock, pageInfo, fetchMore } =
     useNotifications()
@@ -44,109 +41,94 @@ export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ trigger: Tri
     setIsOpen(false)
   }
 
-  const content = (
-    <Wrapper>
-      <Header>
-        <Text as="h3" variant="h400">
-          Notifications
-        </Text>
-        <Button variant="secondary" size="small" onClick={() => markNotificationsAsRead(notifications)}>
-          Mark all as read
-        </Button>
-      </Header>
-      <Content>
-        {notifications.length > 0 ? (
-          <Section
-            withoutGap
-            contentProps={{
-              type: 'grid',
-              grid: {
-                sm: {
-                  columns: 1,
-                },
-              },
-              children: [
-                <div key="single">
-                  {notifications.map((notification, idx) => (
-                    <NotificationTile
-                      variant="compact"
-                      key={`notification-${notification.id}-${idx}`}
-                      notification={notification}
-                      onClick={() => {
-                        popoverRef.current?.hide()
-                        markNotificationsAsRead(notification)
-                      }}
-                    />
-                  ))}
-                </div>,
-              ],
-            }}
-            footerProps={{
-              type: 'infinite',
-              reachedEnd: !pageInfo?.hasNextPage ?? true,
-              fetchMore: async () => {
-                await fetchMore({
-                  variables: {
-                    after: pageInfo?.endCursor,
-                    first: 10,
-                  },
-                  updateQuery: (prev, { fetchMoreResult }) => {
-                    fetchMoreResult.notificationsConnection.edges = [
-                      ...(prev.notificationsConnection?.edges ?? []),
-                      ...fetchMoreResult.notificationsConnection.edges,
-                    ]
-                    return fetchMoreResult
-                  },
-                })
-              },
-            }}
-          />
-        ) : (
-          <EmptyFallback variant="small" title="You don't have any notifications" />
-        )}
-      </Content>
-      <StyledButton
-        variant="tertiary"
-        size="large"
-        icon={<SvgActionNotifications />}
-        fullWidth
-        to={absoluteRoutes.viewer.notifications()}
-        onClick={popoverRef.current?.hide}
-      >
-        <Text as="span" variant="t100">
-          Go to notification center
-        </Text>
-      </StyledButton>
-    </Wrapper>
-  )
-
-  if (!smMatch) {
-    return (
-      <>
-        <TriggerButton onClick={() => handleShow()} />
-        {isOpen &&
-          ReactDOM.createPortal(
-            <>
-              <MobilePopover>{content}</MobilePopover>
-              <MobileBackdrop onClick={() => handleHide()} />
-            </>,
-            document.body
-          )}
-      </>
-    )
-  }
-
   return (
-    <Popover
-      hideOnClick
-      trigger={<TriggerButton />}
-      ref={popoverRef}
-      {...rest}
-      onShow={handleShow}
-      appendTo={document.body}
-      onHide={handleHide}
-    >
-      {content}
-    </Popover>
+    <>
+      {!smMatch && isOpen && <MobileBackdrop onClick={() => handleHide()} />}
+      <Popover
+        hideOnClick
+        boundariesElement={document.body}
+        ref={popoverRef}
+        {...rest}
+        onShow={handleShow}
+        appendTo={document.body}
+        onHide={handleHide}
+      >
+        <Wrapper>
+          <Header>
+            <Text as="h3" variant="h400">
+              Notifications
+            </Text>
+            <Button variant="secondary" size="small" onClick={() => markNotificationsAsRead(notifications)}>
+              Mark all as read
+            </Button>
+          </Header>
+          <Content>
+            {notifications.length > 0 ? (
+              <Section
+                withoutGap
+                contentProps={{
+                  type: 'grid',
+                  grid: {
+                    sm: {
+                      columns: 1,
+                    },
+                  },
+                  children: [
+                    <div key="single">
+                      {Array.from({ length: 10 }, () => notifications)
+                        .flat()
+                        .map((notification, idx) => (
+                          <NotificationTile
+                            variant="compact"
+                            key={`notification-${notification.id}-${idx}`}
+                            notification={notification}
+                            onClick={() => {
+                              popoverRef.current?.hide()
+                              markNotificationsAsRead(notification)
+                            }}
+                          />
+                        ))}
+                    </div>,
+                  ],
+                }}
+                footerProps={{
+                  type: 'infinite',
+                  reachedEnd: !pageInfo?.hasNextPage ?? true,
+                  fetchMore: async () => {
+                    await fetchMore({
+                      variables: {
+                        after: pageInfo?.endCursor,
+                        first: 10,
+                      },
+                      updateQuery: (prev, { fetchMoreResult }) => {
+                        fetchMoreResult.notificationsConnection.edges = [
+                          ...(prev.notificationsConnection?.edges ?? []),
+                          ...fetchMoreResult.notificationsConnection.edges,
+                        ]
+                        return fetchMoreResult
+                      },
+                    })
+                  },
+                }}
+              />
+            ) : (
+              <EmptyFallback variant="small" title="You don't have any notifications" />
+            )}
+          </Content>
+          <StyledButton
+            variant="tertiary"
+            size="large"
+            icon={<SvgActionNotifications />}
+            fullWidth
+            to={absoluteRoutes.viewer.notifications()}
+            onClick={popoverRef.current?.hide}
+          >
+            <Text as="span" variant="t100">
+              Go to notification center
+            </Text>
+          </StyledButton>
+        </Wrapper>
+      </Popover>
+    </>
   )
 }
