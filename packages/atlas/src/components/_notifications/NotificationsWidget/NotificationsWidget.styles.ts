@@ -1,13 +1,22 @@
 import styled from '@emotion/styled'
 
 import { Button } from '@/components/_buttons/Button'
-import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { cVar, media, sizes } from '@/styles'
+import { cVar, media, sizes, zIndex } from '@/styles'
+
+export const MobilePopover = styled.div`
+  position: fixed;
+  inset: var(--size-topbar-height) 0 auto 0;
+  z-index: ${zIndex.modals};
+`
+
+export const MobileBackdrop = styled.div`
+  background-color: transparent;
+  inset: 0;
+  position: fixed;
+  z-index: ${zIndex.globalOverlay};
+`
 
 export const Wrapper = styled.div`
-  position: relative;
-  left: -5px;
-  width: 100vw;
   background-color: ${cVar('colorBackgroundStrong')};
   ${media.sm} {
     left: 0;
@@ -34,17 +43,4 @@ export const Content = styled.div`
 
 export const StyledButton = styled(Button)`
   box-shadow: ${cVar('effectDividersTop')};
-`
-
-export const StyledCompactNotificationLoader = styled(SkeletonLoader)`
-  height: 56px;
-  width: 100%;
-
-  :first-of-type {
-    margin-top: ${sizes(2 / 4)};
-  }
-
-  :not(:last-of-type) {
-    margin-bottom: ${sizes(2 / 4)};
-  }
 `

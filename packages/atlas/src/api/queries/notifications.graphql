@@ -11,7 +11,7 @@ query GetNotificationsConnection($memberId: String!, $first: Int!, $after: Strin
     first: $first
     after: $after
     orderBy: event_timestamp_DESC
-    where: { member: { id_eq: $memberId } } # CHANGE: Simplified filtering
+    where: { member: { id_eq: $memberId } }
   ) {
     pageInfo {
       hasNextPage
@@ -21,10 +21,9 @@ query GetNotificationsConnection($memberId: String!, $first: Int!, $after: Strin
     edges {
       cursor
       node {
-        # CHANGE: The actual `event` is now nested as a property of `Notification`
         event {
           id
-          timestamp # CHANGE: `timestamp` now used instead of `createdAt` (which is no longer available)
+          timestamp
           inBlock
           data {
             ... on AuctionBidMadeEventData {
@@ -144,16 +143,14 @@ query GetNotificationsConnection($memberId: String!, $first: Int!, $after: Strin
   }
 }
 
-# CHANGE: ID is now `String`
 query GetNftHistory($nftId: String!) {
   nftHistoryEntries(
-    orderBy: event_timestamp_DESC # CHANGE: `event_timestamp` now used instead of `createdAt` (which is no longer available)
-    where: { nft: { id_eq: $nftId } } # CHANGE: Simplified filtering
+    orderBy: event_timestamp_DESC
+    where: { nft: { id_eq: $nftId } }
   ) {
-    # CHANGE: The actual `event` is now nested as a property of `NftHistoryEntry`
     event {
       id
-      timestamp # CHANGE: `timestamp` now used instead of `createdAt` (which is no longer available)
+      timestamp
       data {
         ... on NftIssuedEventData {
           nftOwner {
@@ -343,13 +340,12 @@ query GetNftActivities($memberId: String!, $limit: Int!, $orderBy: [NftActivityO
   # DATA query
   nftActivities(
     limit: $limit
-    orderBy: $orderBy # CHANGE: `event_timestamp` now used instead of `createdAt` (which is no longer available)
-    where: { member: { id_eq: $memberId } } # CHANGE: Simplified filtering
+    orderBy: $orderBy
+    where: { member: { id_eq: $memberId } }
   ) {
-    # CHANGE: The actual `event` is now nested as a property of `NftActivity`
     event {
       id
-      timestamp # CHANGE: `timestamp` now used instead of `createdAt` (which is no longer available)
+      timestamp
       inBlock
       data {
         ... on AuctionBidMadeEventData {

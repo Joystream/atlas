@@ -90,8 +90,8 @@ export const NotificationsView = () => {
         <div>
           {notifications.length > 0 ? (
             <Section
+              withoutGap
               contentProps={{
-                minChildrenWidth: 900,
                 type: 'grid',
                 children: [
                   <div key="single">

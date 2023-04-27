@@ -18,7 +18,6 @@ export const useRawNotifications = (
       first: 10,
       memberId: memberId || '',
     },
-    // TODO Fix me. We use `no-cache` because for unknown reasons cache removes data about owner
     skip: !memberId,
     ...opts,
   })
