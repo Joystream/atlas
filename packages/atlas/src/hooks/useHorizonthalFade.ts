@@ -1,55 +1,14 @@
 import { throttle } from 'lodash-es'
-import { useEffect, useLayoutEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import useDraggableScroll from 'use-draggable-scroll'
 
-type CallbackArg = {
-  hasOverflow: boolean
-  clientWidth: number | undefined
-  scrollWidth: number | undefined
-}
-export const useIsOverflow = (ref: React.RefObject<HTMLElement>, callback?: (arg: CallbackArg) => void) => {
-  const [isOverflow, setIsOverflow] = useState<boolean>()
-  const [clientWidth, setClientWidth] = useState<number>()
-  const [scrollWidth, setScrollWidth] = useState<number>()
-
-  useLayoutEffect(() => {
-    const el = ref.current
-    if (!el) {
-      return
-    }
-
-    const trigger = () => {
-      const hasOverflow = el.scrollWidth > el.clientWidth
-      setClientWidth(el.clientWidth)
-      setIsOverflow(hasOverflow)
-      setScrollWidth(el.scrollWidth)
-
-      if (callback) callback({ hasOverflow, clientWidth: el.clientWidth, scrollWidth: el.scrollWidth })
-    }
-
-    let resizeObserver: ResizeObserver
-    if ('ResizeObserver' in window) {
-      resizeObserver = new ResizeObserver(trigger)
-      resizeObserver.observe(el)
-    }
-
-    trigger()
-    return () => {
-      if ('ResizeObserver' in window) {
-        resizeObserver.unobserve(el)
-        resizeObserver.disconnect()
-      }
-    }
-  }, [callback, ref])
-
-  return { isOverflow, clientWidth, scrollWidth }
-}
+import { useIsOverflow } from './useIsOverflow'
 
 const SCROLL_SHADOW_OFFSET = 10
 
 export const useHorizonthalFade = (ref: React.RefObject<HTMLElement>) => {
   const { onMouseDown } = useDraggableScroll(ref, { direction: 'horizontal' })
-  const { isOverflow } = useIsOverflow(ref)
+  const { isOverflow } = useIsOverflow({ ref })
 
   const [visibleShadows, setVisibleShadows] = useState({
     left: false,

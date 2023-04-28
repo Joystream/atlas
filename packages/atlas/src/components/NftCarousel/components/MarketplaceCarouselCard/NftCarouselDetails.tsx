@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 
 import { getNftStatus } from '@/api/hooks/nfts'
-import { GetFeaturedNftsQuery } from '@/api/queries/__generated__/nfts.generated'
+import { GetFeaturedNftsVideosQuery } from '@/api/queries/__generated__/nfts.generated'
 import { AvatarGroup } from '@/components/Avatar/AvatarGroup'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import {
@@ -29,7 +29,7 @@ export const NftCarouselDetails = ({
   active,
   slideNext,
 }: {
-  nft: GetFeaturedNftsQuery['ownedNfts'][number]
+  nft: GetFeaturedNftsVideosQuery['ownedNfts'][number]
   active: boolean
   slideNext: () => void
 }) => {

@@ -55,7 +55,7 @@ export const NewNftSales: FC = () => {
           icon={<SvgActionChevronR />}
           iconPlacement="right"
           variant="secondary"
-          to={absoluteRoutes.viewer.nfts()}
+          to={absoluteRoutes.viewer.marketplace()}
         >
           Browse NFTs
         </Button>
