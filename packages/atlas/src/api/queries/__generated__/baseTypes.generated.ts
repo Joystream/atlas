@@ -1761,6 +1761,8 @@ export enum CommentOrderByInput {
   VideoReactionsCountDesc = 'video_reactionsCount_DESC',
   VideoTitleAsc = 'video_title_ASC',
   VideoTitleDesc = 'video_title_DESC',
+  VideoVideoRelevanceAsc = 'video_videoRelevance_ASC',
+  VideoVideoRelevanceDesc = 'video_videoRelevance_DESC',
   VideoVideoStateBloatBondAsc = 'video_videoStateBloatBond_ASC',
   VideoVideoStateBloatBondDesc = 'video_videoStateBloatBond_DESC',
   VideoViewsNumAsc = 'video_viewsNum_ASC',
@@ -1856,6 +1858,8 @@ export enum CommentReactionOrderByInput {
   VideoReactionsCountDesc = 'video_reactionsCount_DESC',
   VideoTitleAsc = 'video_title_ASC',
   VideoTitleDesc = 'video_title_DESC',
+  VideoVideoRelevanceAsc = 'video_videoRelevance_ASC',
+  VideoVideoRelevanceDesc = 'video_videoRelevance_DESC',
   VideoVideoStateBloatBondAsc = 'video_videoStateBloatBond_ASC',
   VideoVideoStateBloatBondDesc = 'video_videoStateBloatBond_DESC',
   VideoViewsNumAsc = 'video_viewsNum_ASC',
@@ -3776,6 +3780,7 @@ export type Mutation = {
   setSupportedCategories: SetSupportedCategoriesResult
   setVideoHero: SetVideoHeroResult
   setVideoViewPerIpTimeLimit: VideoViewPerIpTimeLimit
+  setVideoWeights: VideoWeights
   signAppActionCommitment: GeneratedSignature
   unfollowChannel: ChannelUnfollowResult
 }
@@ -3841,6 +3846,13 @@ export type MutationSetVideoHeroArgs = {
 
 export type MutationSetVideoViewPerIpTimeLimitArgs = {
   limitInSeconds: Scalars['Int']
+}
+
+export type MutationSetVideoWeightsArgs = {
+  commentsWeight: Scalars['Float']
+  newnessWeight: Scalars['Float']
+  reactionsWeight: Scalars['Float']
+  viewsWeight: Scalars['Float']
 }
 
 export type MutationSignAppActionCommitmentArgs = {
@@ -4454,6 +4466,8 @@ export enum OwnedNftOrderByInput {
   VideoReactionsCountDesc = 'video_reactionsCount_DESC',
   VideoTitleAsc = 'video_title_ASC',
   VideoTitleDesc = 'video_title_DESC',
+  VideoVideoRelevanceAsc = 'video_videoRelevance_ASC',
+  VideoVideoRelevanceDesc = 'video_videoRelevance_DESC',
   VideoVideoStateBloatBondAsc = 'video_videoStateBloatBond_ASC',
   VideoVideoStateBloatBondDesc = 'video_videoStateBloatBond_DESC',
   VideoViewsNumAsc = 'video_viewsNum_ASC',
@@ -4682,6 +4696,7 @@ export type Query = {
   distributionBucketOperatorsConnection: DistributionBucketOperatorsConnection
   distributionBuckets: Array<DistributionBucket>
   distributionBucketsConnection: DistributionBucketsConnection
+  endingAuctionsNfts: Array<OwnedNft>
   eventById?: Maybe<Event>
   /** @deprecated Use eventById */
   eventByUniqueInput?: Maybe<Event>
@@ -4764,6 +4779,7 @@ export type Query = {
   storageDataObjectByUniqueInput?: Maybe<StorageDataObject>
   storageDataObjects: Array<StorageDataObject>
   storageDataObjectsConnection: StorageDataObjectsConnection
+  topSellingChannels: Array<TopSellingChannelsResult>
   videoById?: Maybe<Video>
   /** @deprecated Use videoById */
   videoByUniqueInput?: Maybe<Video>
@@ -5192,6 +5208,12 @@ export type QueryDistributionBucketsConnectionArgs = {
   where?: InputMaybe<DistributionBucketWhereInput>
 }
 
+export type QueryEndingAuctionsNftsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  where?: InputMaybe<OwnedNftWhereInput>
+}
+
 export type QueryEventByIdArgs = {
   id: Scalars['String']
 }
@@ -5542,6 +5564,12 @@ export type QueryStorageDataObjectsConnectionArgs = {
   first?: InputMaybe<Scalars['Int']>
   orderBy: Array<StorageDataObjectOrderByInput>
   where?: InputMaybe<StorageDataObjectWhereInput>
+}
+
+export type QueryTopSellingChannelsArgs = {
+  limit: Scalars['Int']
+  periodDays: Scalars['Int']
+  where?: InputMaybe<ExtendedChannelWhereInput>
 }
 
 export type QueryVideoByIdArgs = {
@@ -7220,6 +7248,13 @@ export type SubscriptionVideosArgs = {
   where?: InputMaybe<VideoWhereInput>
 }
 
+export type TopSellingChannelsResult = {
+  __typename?: 'TopSellingChannelsResult'
+  amount: Scalars['String']
+  channel: Channel
+  nftSold: Scalars['Int']
+}
+
 /** NFT transactional state */
 export type TransactionalStatus =
   | TransactionalStatusAuction
@@ -7358,6 +7393,8 @@ export type Video = {
   thumbnailPhoto?: Maybe<StorageDataObject>
   /** The title of the video */
   title?: Maybe<Scalars['String']>
+  /** Video relevance score based on the views, reactions, comments and update date */
+  videoRelevance: Scalars['Float']
   /** Value of video state bloat bond fee paid by channel owner */
   videoStateBloatBond: Scalars['BigInt']
   /** Number of video views (to speed up orderBy queries by avoiding COUNT aggregation) */
@@ -7610,6 +7647,8 @@ export enum VideoFeaturedInCategoryOrderByInput {
   VideoReactionsCountDesc = 'video_reactionsCount_DESC',
   VideoTitleAsc = 'video_title_ASC',
   VideoTitleDesc = 'video_title_DESC',
+  VideoVideoRelevanceAsc = 'video_videoRelevance_ASC',
+  VideoVideoRelevanceDesc = 'video_videoRelevance_DESC',
   VideoVideoStateBloatBondAsc = 'video_videoStateBloatBond_ASC',
   VideoVideoStateBloatBondDesc = 'video_videoStateBloatBond_DESC',
   VideoViewsNumAsc = 'video_viewsNum_ASC',
@@ -7728,6 +7767,8 @@ export enum VideoHeroOrderByInput {
   VideoReactionsCountDesc = 'video_reactionsCount_DESC',
   VideoTitleAsc = 'video_title_ASC',
   VideoTitleDesc = 'video_title_DESC',
+  VideoVideoRelevanceAsc = 'video_videoRelevance_ASC',
+  VideoVideoRelevanceDesc = 'video_videoRelevance_DESC',
   VideoVideoStateBloatBondAsc = 'video_videoStateBloatBond_ASC',
   VideoVideoStateBloatBondDesc = 'video_videoStateBloatBond_DESC',
   VideoViewsNumAsc = 'video_viewsNum_ASC',
@@ -8017,6 +8058,8 @@ export enum VideoMediaMetadataOrderByInput {
   VideoReactionsCountDesc = 'video_reactionsCount_DESC',
   VideoTitleAsc = 'video_title_ASC',
   VideoTitleDesc = 'video_title_DESC',
+  VideoVideoRelevanceAsc = 'video_videoRelevance_ASC',
+  VideoVideoRelevanceDesc = 'video_videoRelevance_DESC',
   VideoVideoStateBloatBondAsc = 'video_videoStateBloatBond_ASC',
   VideoVideoStateBloatBondDesc = 'video_videoStateBloatBond_DESC',
   VideoViewsNumAsc = 'video_viewsNum_ASC',
@@ -8262,6 +8305,8 @@ export enum VideoOrderByInput {
   ThumbnailPhotoUnsetAtDesc = 'thumbnailPhoto_unsetAt_DESC',
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC',
+  VideoRelevanceAsc = 'videoRelevance_ASC',
+  VideoRelevanceDesc = 'videoRelevance_DESC',
   VideoStateBloatBondAsc = 'videoStateBloatBond_ASC',
   VideoStateBloatBondDesc = 'videoStateBloatBond_DESC',
   ViewsNumAsc = 'viewsNum_ASC',
@@ -8346,6 +8391,8 @@ export enum VideoReactionOrderByInput {
   VideoReactionsCountDesc = 'video_reactionsCount_DESC',
   VideoTitleAsc = 'video_title_ASC',
   VideoTitleDesc = 'video_title_DESC',
+  VideoVideoRelevanceAsc = 'video_videoRelevance_ASC',
+  VideoVideoRelevanceDesc = 'video_videoRelevance_DESC',
   VideoVideoStateBloatBondAsc = 'video_videoStateBloatBond_ASC',
   VideoVideoStateBloatBondDesc = 'video_videoStateBloatBond_DESC',
   VideoViewsNumAsc = 'video_viewsNum_ASC',
@@ -8498,6 +8545,8 @@ export enum VideoSubtitleOrderByInput {
   VideoReactionsCountDesc = 'video_reactionsCount_DESC',
   VideoTitleAsc = 'video_title_ASC',
   VideoTitleDesc = 'video_title_DESC',
+  VideoVideoRelevanceAsc = 'video_videoRelevance_ASC',
+  VideoVideoRelevanceDesc = 'video_videoRelevance_DESC',
   VideoVideoStateBloatBondAsc = 'video_videoStateBloatBond_ASC',
   VideoVideoStateBloatBondDesc = 'video_videoStateBloatBond_DESC',
   VideoViewsNumAsc = 'video_viewsNum_ASC',
@@ -8696,6 +8745,11 @@ export type VideoViewPerIpTimeLimit = {
   limitInSeconds: Scalars['Int']
 }
 
+export type VideoWeights = {
+  __typename?: 'VideoWeights'
+  isApplied: Scalars['Boolean']
+}
+
 export type VideoWhereInput = {
   AND?: InputMaybe<Array<VideoWhereInput>>
   OR?: InputMaybe<Array<VideoWhereInput>>
@@ -8870,6 +8924,15 @@ export type VideoWhereInput = {
   title_not_in?: InputMaybe<Array<Scalars['String']>>
   title_not_startsWith?: InputMaybe<Scalars['String']>
   title_startsWith?: InputMaybe<Scalars['String']>
+  videoRelevance_eq?: InputMaybe<Scalars['Float']>
+  videoRelevance_gt?: InputMaybe<Scalars['Float']>
+  videoRelevance_gte?: InputMaybe<Scalars['Float']>
+  videoRelevance_in?: InputMaybe<Array<Scalars['Float']>>
+  videoRelevance_isNull?: InputMaybe<Scalars['Boolean']>
+  videoRelevance_lt?: InputMaybe<Scalars['Float']>
+  videoRelevance_lte?: InputMaybe<Scalars['Float']>
+  videoRelevance_not_eq?: InputMaybe<Scalars['Float']>
+  videoRelevance_not_in?: InputMaybe<Array<Scalars['Float']>>
   videoStateBloatBond_eq?: InputMaybe<Scalars['BigInt']>
   videoStateBloatBond_gt?: InputMaybe<Scalars['BigInt']>
   videoStateBloatBond_gte?: InputMaybe<Scalars['BigInt']>
