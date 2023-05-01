@@ -12,6 +12,7 @@ import { isBrowserOutdated } from '@/utils/browser'
 import { AppLogo } from './components/AppLogo'
 import { TopbarBase } from './components/_navigation/TopbarBase'
 import { useConfirmationModal } from './providers/confirmationModal'
+import { useOverlayManager } from './providers/overlayManager'
 import { LegalLayout } from './views/legal/LegalLayout'
 import { ViewerLayout } from './views/viewer/ViewerLayout'
 
@@ -52,6 +53,8 @@ export const MainLayout: FC = () => {
     onExitClick: () => closeDialog(),
   })
 
+  const { clearOverlays } = useOverlayManager()
+
   useEffect(() => {
     if (isBrowserOutdated) {
       openDialog()
@@ -62,6 +65,7 @@ export const MainLayout: FC = () => {
     if (location.pathname === cachedLocation.pathname) {
       return
     }
+    clearOverlays()
 
     setCachedLocation(location)
 
@@ -76,7 +80,7 @@ export const MainLayout: FC = () => {
     setTimeout(() => {
       window.scrollTo(0, navigationType !== 'POP' ? 0 : scrollPosition.current)
     }, parseInt(transitions.timings.routing) + ROUTING_ANIMATION_OFFSET)
-  }, [location, cachedLocation, locationState, navigationType])
+  }, [location, cachedLocation, locationState, navigationType, clearOverlays])
 
   return (
     <>
