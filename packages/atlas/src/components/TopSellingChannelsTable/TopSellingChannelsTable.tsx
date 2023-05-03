@@ -1,21 +1,24 @@
+import BN from 'bn.js'
 import { useMemo } from 'react'
 
-import { useMemberships } from '@/api/hooks/membership'
+import {
+  GetTopSellingChannelsQuery,
+  useGetTopSellingChannelsQuery,
+} from '@/api/queries/__generated__/channels.generated'
 import { SvgActionCreatorToken, SvgActionVerified } from '@/assets/icons'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { NumberFormat } from '@/components/NumberFormat'
 import { TableProps } from '@/components/Table'
 import { Text } from '@/components/Text'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useMemberAvatar } from '@/providers/assets/assets.hooks'
-import { SentryLogger } from '@/utils/logs'
-import { shortenString } from '@/utils/misc'
 
 import {
   JoyAmountWrapper,
   SenderItem,
   SenderItemIconsWrapper,
+  SkeletonChannelContainer,
   StyledLink,
   StyledTable,
 } from './TopSellingChannelsTable.styles'
@@ -45,68 +48,66 @@ const COLUMNS: TableProps['columns'] = [
   },
 ]
 
-const DATA = [
-  { index: 1, channel: 'j4UBSJyBRWK9zZaR2LHj8QKWi8nhR7d6iGQ5drTzPve1QmeYS', nftsSold: 1, salesVolume: 22 },
-  { index: 2, channel: 'j4UBSJyBRWK9zZaR2LHj8QKWi8nhR7d6iGQ5drTzPve1QmeYS', nftsSold: 1, salesVolume: 22 },
-  { index: 3, channel: 'j4UBSJyBRWK9zZaR2LHj8QKWi8nhR7d6iGQ5drTzPve1QmeYS', nftsSold: 1, salesVolume: 22 },
-]
-
 export const TopSellingChannelsTable = () => {
+  const { data, loading } = useGetTopSellingChannelsQuery({
+    variables: {
+      limit: 10,
+      periodDays: 7,
+    },
+  })
   const mdMatch = useMediaMatch('md')
   const mappedData: TableProps['data'] = useMemo(
     () =>
-      DATA.map((data) => ({
-        index: (
-          <Text variant="t100" as="p" color="colorTextMuted">
-            {data.index}
-          </Text>
-        ),
-        salesVolume: (
-          <JoyAmountWrapper>
-            <JoyTokenIcon variant="gray" />
-            <NumberFormat variant="t200-strong" as="p" value={data.salesVolume} margin={{ left: 1 }} />
-          </JoyAmountWrapper>
-        ),
-        nftsSold: (
-          <Text variant="t100" as="p">
-            {data.nftsSold}
-          </Text>
-        ),
-        channel: <Sender sender={data.channel} />,
-      })),
-    []
+      loading
+        ? Array.from({ length: 10 }, () => ({
+            index: null,
+            channel: (
+              <SkeletonChannelContainer>
+                <SkeletonLoader width={32} height={32} rounded />
+                <SkeletonLoader width="30%" height={20} />
+              </SkeletonChannelContainer>
+            ),
+            nftsSold: <SkeletonLoader width="50%" height={16} />,
+            salesVolume: <SkeletonLoader width="100%" height={16} />,
+          }))
+        : data?.topSellingChannels.map((data, index) => ({
+            index: (
+              <Text variant="t100" as="p" color="colorTextMuted">
+                {index + 1}
+              </Text>
+            ),
+            salesVolume: (
+              <JoyAmountWrapper>
+                <JoyTokenIcon variant="gray" />
+                <NumberFormat variant="t200-strong" as="p" value={new BN(data.amount)} margin={{ left: 1 }} />
+              </JoyAmountWrapper>
+            ),
+            nftsSold: (
+              <Text variant="t100" as="p">
+                {data.nftSold}
+              </Text>
+            ),
+            channel: <Channel channel={data.channel} />,
+          })) ?? [],
+    [data?.topSellingChannels, loading]
   )
   return <StyledTable columns={COLUMNS} data={mappedData} doubleColumn={mdMatch} />
 }
 
-const Sender = ({ sender }: { sender: string }) => {
-  const { memberships } = useMemberships(
-    { where: { controllerAccount_eq: sender } },
-    {
-      onError: (error) => SentryLogger.error('Failed to fetch memberships', 'ActiveUserProvider', error),
-      skip: sender === 'council',
-    }
+const Channel = ({ channel }: { channel: GetTopSellingChannelsQuery['topSellingChannels'][number]['channel'] }) => {
+  return (
+    <StyledLink to={absoluteRoutes.viewer.member(channel.ownerMember?.handle)}>
+      <SenderItem
+        nodeStart={<Avatar assetUrl={channel.avatarPhoto?.resolvedUrl ?? undefined} />}
+        label={channel.ownerMember?.handle}
+        isInteractive={false}
+        nodeEnd={
+          <SenderItemIconsWrapper>
+            <SvgActionCreatorToken />
+            <SvgActionVerified />
+          </SenderItemIconsWrapper>
+        }
+      />
+    </StyledLink>
   )
-  const member = memberships?.find((member) => member.controllerAccount === sender)
-  const { url: avatarUrl, isLoadingAsset: avatarLoading } = useMemberAvatar(member)
-
-  if (member) {
-    return (
-      <StyledLink to={absoluteRoutes.viewer.member(member.handle)}>
-        <SenderItem
-          nodeStart={<Avatar assetUrl={avatarUrl} loading={avatarLoading} />}
-          label={member?.handle}
-          isInteractive={false}
-          nodeEnd={
-            <SenderItemIconsWrapper>
-              <SvgActionCreatorToken />
-              <SvgActionVerified />
-            </SenderItemIconsWrapper>
-          }
-        />
-      </StyledLink>
-    )
-  } else {
-    return <SenderItem nodeStart={<Avatar />} label={shortenString(sender, 6, 4)} isInteractive={false} />
-  }
 }

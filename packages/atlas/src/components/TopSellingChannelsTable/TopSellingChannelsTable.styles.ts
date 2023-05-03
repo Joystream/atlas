@@ -59,3 +59,10 @@ export const JoyAmountWrapper = styled.div`
   align-items: center;
   justify-content: center;
 `
+
+export const SkeletonChannelContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+`
