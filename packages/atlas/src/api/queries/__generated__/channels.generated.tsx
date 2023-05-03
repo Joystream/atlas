@@ -623,6 +623,108 @@ export type GetChannelPaymentEventsQuery = {
   }>
 }
 
+export type GetTopSellingChannelsQueryVariables = Types.Exact<{
+  limit: Types.Scalars['Int']
+  periodDays: Types.Scalars['Int']
+  where?: Types.InputMaybe<Types.ExtendedChannelWhereInput>
+}>
+
+export type GetTopSellingChannelsQuery = {
+  __typename?: 'Query'
+  topSellingChannels: Array<{
+    __typename?: 'TopSellingChannelsResult'
+    amount: string
+    nftSold: number
+    channel: {
+      __typename?: 'Channel'
+      videoViewsNum: number
+      description?: string | null
+      isPublic?: boolean | null
+      cumulativeRewardClaimed?: string | null
+      isCensored: boolean
+      language?: string | null
+      id: string
+      title?: string | null
+      createdAt: Date
+      followsNum: number
+      rewardAccount: string
+      channelStateBloatBond: string
+      ownerMember?: {
+        __typename?: 'Membership'
+        id: string
+        handle: string
+        metadata?: {
+          __typename?: 'MemberMetadata'
+          about?: string | null
+          avatar?:
+            | {
+                __typename?: 'AvatarObject'
+                avatarObject: {
+                  __typename?: 'StorageDataObject'
+                  id: string
+                  resolvedUrls: Array<string>
+                  resolvedUrl?: string | null
+                  createdAt: Date
+                  size: string
+                  isAccepted: boolean
+                  ipfsHash: string
+                  storageBag: { __typename?: 'StorageBag'; id: string }
+                  type?:
+                    | { __typename: 'DataObjectTypeChannelAvatar' }
+                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                    | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoSubtitle' }
+                    | { __typename: 'DataObjectTypeVideoThumbnail' }
+                    | null
+                }
+              }
+            | { __typename?: 'AvatarUri'; avatarUri: string }
+            | null
+        } | null
+      } | null
+      coverPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrls: Array<string>
+        resolvedUrl?: string | null
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+      avatarPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrls: Array<string>
+        resolvedUrl?: string | null
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+    }
+  }>
+}
+
 export const GetFullChannelDocument = gql`
   query GetFullChannel($id: String!) {
     channelById(id: $id) {
@@ -1429,4 +1531,59 @@ export type GetChannelPaymentEventsLazyQueryHookResult = ReturnType<typeof useGe
 export type GetChannelPaymentEventsQueryResult = Apollo.QueryResult<
   GetChannelPaymentEventsQuery,
   GetChannelPaymentEventsQueryVariables
+>
+export const GetTopSellingChannelsDocument = gql`
+  query GetTopSellingChannels($limit: Int!, $periodDays: Int!, $where: ExtendedChannelWhereInput) {
+    topSellingChannels(where: $where, limit: $limit, periodDays: $periodDays) {
+      amount
+      nftSold
+      channel {
+        ...FullChannelFields
+      }
+    }
+  }
+  ${FullChannelFieldsFragmentDoc}
+`
+
+/**
+ * __useGetTopSellingChannelsQuery__
+ *
+ * To run a query within a React component, call `useGetTopSellingChannelsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTopSellingChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTopSellingChannelsQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      periodDays: // value for 'periodDays'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetTopSellingChannelsQuery(
+  baseOptions: Apollo.QueryHookOptions<GetTopSellingChannelsQuery, GetTopSellingChannelsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetTopSellingChannelsQuery, GetTopSellingChannelsQueryVariables>(
+    GetTopSellingChannelsDocument,
+    options
+  )
+}
+export function useGetTopSellingChannelsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetTopSellingChannelsQuery, GetTopSellingChannelsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetTopSellingChannelsQuery, GetTopSellingChannelsQueryVariables>(
+    GetTopSellingChannelsDocument,
+    options
+  )
+}
+export type GetTopSellingChannelsQueryHookResult = ReturnType<typeof useGetTopSellingChannelsQuery>
+export type GetTopSellingChannelsLazyQueryHookResult = ReturnType<typeof useGetTopSellingChannelsLazyQuery>
+export type GetTopSellingChannelsQueryResult = Apollo.QueryResult<
+  GetTopSellingChannelsQuery,
+  GetTopSellingChannelsQueryVariables
 >
