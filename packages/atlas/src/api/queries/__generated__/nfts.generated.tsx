@@ -1778,6 +1778,8 @@ export type GetNftsConnectionQuery = {
 
 export type GetFeaturedNftsVideosQueryVariables = Types.Exact<{
   limit?: Types.InputMaybe<Types.Scalars['Int']>
+  where?: Types.InputMaybe<Types.OwnedNftWhereInput>
+  orderBy?: Types.InputMaybe<Array<Types.OwnedNftOrderByInput> | Types.OwnedNftOrderByInput>
 }>
 
 export type GetFeaturedNftsVideosQuery = {
@@ -2521,18 +2523,12 @@ export type GetNftsConnectionQueryHookResult = ReturnType<typeof useGetNftsConne
 export type GetNftsConnectionLazyQueryHookResult = ReturnType<typeof useGetNftsConnectionLazyQuery>
 export type GetNftsConnectionQueryResult = Apollo.QueryResult<GetNftsConnectionQuery, GetNftsConnectionQueryVariables>
 export const GetFeaturedNftsVideosDocument = gql`
-  query GetFeaturedNftsVideos($limit: Int) {
-    ownedNfts(
-      limit: $limit
-      orderBy: [createdAt_DESC]
-      where: {
-        isFeatured_eq: true
-        transactionalStatus: {
-          isTypeOf_in: ["TransactionalStatusAuction", "TransactionalStatusBuyNow"]
-          auction: { isCompleted_eq: false, isCanceled_eq: false }
-        }
-      }
-    ) {
+  query GetFeaturedNftsVideos(
+    $limit: Int
+    $where: OwnedNftWhereInput
+    $orderBy: [OwnedNftOrderByInput!] = [createdAt_DESC]
+  ) {
+    ownedNfts(limit: $limit, orderBy: $orderBy, where: $where) {
       ...FullNftFields
       video {
         ...BasicVideoFields
@@ -2560,6 +2556,8 @@ export const GetFeaturedNftsVideosDocument = gql`
  * const { data, loading, error } = useGetFeaturedNftsVideosQuery({
  *   variables: {
  *      limit: // value for 'limit'
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
  *   },
  * });
  */
