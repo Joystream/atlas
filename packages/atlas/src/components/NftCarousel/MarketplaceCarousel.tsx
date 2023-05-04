@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { useMemo, useState } from 'react'
 
-import { GetFeaturedNftsQuery } from '@/api/queries/__generated__/nfts.generated'
+import { GetFeaturedNftsVideosQuery } from '@/api/queries/__generated__/nfts.generated'
 import { Carousel, CarouselProps, SwiperInstance } from '@/components/Carousel'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { breakpoints, media } from '@/styles'
@@ -11,7 +11,7 @@ import { CarouselNavItem } from './components/NftCarouselItem/CarouselNavItem'
 
 type NftCarouselType = {
   type: 'nft'
-  nfts?: GetFeaturedNftsQuery['ownedNfts']
+  nfts?: GetFeaturedNftsVideosQuery['ownedNfts']
 }
 
 type MarketplaceCarouselTypes = NftCarouselType
@@ -55,6 +55,10 @@ export const MarketplaceCarousel = ({ carouselProps, isLoading, ...rest }: Marke
 
     return [null]
   }, [rest.type, rest.nfts, glider, isLoading])
+
+  if (!content.length) {
+    return null
+  }
 
   return (
     <Carousel

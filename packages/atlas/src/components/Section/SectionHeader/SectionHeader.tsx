@@ -67,6 +67,8 @@ type Carousel =
       isCarousel?: true
       onMoveCarouselRight?: () => void
       onMoveCarouselLeft?: () => void
+      isBeginning?: boolean
+      isEnd?: boolean
     }
   | {
       isCarousel?: false
@@ -149,12 +151,14 @@ export const SectionHeader: FC<SectionHeaderProps> = (props) => {
       {isCarousel && (
         <>
           <StyledArrowButton
+            disabled={props.isBeginning}
             size="medium"
             icon={<SvgActionChevronL />}
             variant="tertiary"
             onClick={props.onMoveCarouselLeft}
           />
           <StyledArrowButton
+            disabled={props.isEnd}
             size="medium"
             icon={<SvgActionChevronR />}
             variant="tertiary"

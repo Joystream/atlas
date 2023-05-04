@@ -1776,9 +1776,11 @@ export type GetNftsConnectionQuery = {
   }
 }
 
-export type GetFeaturedNftsQueryVariables = Types.Exact<{ [key: string]: never }>
+export type GetFeaturedNftsVideosQueryVariables = Types.Exact<{
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+}>
 
-export type GetFeaturedNftsQuery = {
+export type GetFeaturedNftsVideosQuery = {
   __typename?: 'Query'
   ownedNfts: Array<{
     __typename?: 'OwnedNft'
@@ -2518,9 +2520,19 @@ export function useGetNftsConnectionLazyQuery(
 export type GetNftsConnectionQueryHookResult = ReturnType<typeof useGetNftsConnectionQuery>
 export type GetNftsConnectionLazyQueryHookResult = ReturnType<typeof useGetNftsConnectionLazyQuery>
 export type GetNftsConnectionQueryResult = Apollo.QueryResult<GetNftsConnectionQuery, GetNftsConnectionQueryVariables>
-export const GetFeaturedNftsDocument = gql`
-  query GetFeaturedNfts {
-    ownedNfts(limit: 5, orderBy: [createdAt_DESC]) {
+export const GetFeaturedNftsVideosDocument = gql`
+  query GetFeaturedNftsVideos($limit: Int) {
+    ownedNfts(
+      limit: $limit
+      orderBy: [createdAt_DESC]
+      where: {
+        isFeatured_eq: true
+        transactionalStatus: {
+          isTypeOf_in: ["TransactionalStatusAuction", "TransactionalStatusBuyNow"]
+          auction: { isCompleted_eq: false, isCanceled_eq: false }
+        }
+      }
+    ) {
       ...FullNftFields
       video {
         ...BasicVideoFields
@@ -2536,32 +2548,42 @@ export const GetFeaturedNftsDocument = gql`
 `
 
 /**
- * __useGetFeaturedNftsQuery__
+ * __useGetFeaturedNftsVideosQuery__
  *
- * To run a query within a React component, call `useGetFeaturedNftsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetFeaturedNftsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetFeaturedNftsVideosQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFeaturedNftsVideosQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetFeaturedNftsQuery({
+ * const { data, loading, error } = useGetFeaturedNftsVideosQuery({
  *   variables: {
+ *      limit: // value for 'limit'
  *   },
  * });
  */
-export function useGetFeaturedNftsQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetFeaturedNftsQuery, GetFeaturedNftsQueryVariables>
+export function useGetFeaturedNftsVideosQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetFeaturedNftsVideosQuery, GetFeaturedNftsVideosQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetFeaturedNftsQuery, GetFeaturedNftsQueryVariables>(GetFeaturedNftsDocument, options)
+  return Apollo.useQuery<GetFeaturedNftsVideosQuery, GetFeaturedNftsVideosQueryVariables>(
+    GetFeaturedNftsVideosDocument,
+    options
+  )
 }
-export function useGetFeaturedNftsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetFeaturedNftsQuery, GetFeaturedNftsQueryVariables>
+export function useGetFeaturedNftsVideosLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetFeaturedNftsVideosQuery, GetFeaturedNftsVideosQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetFeaturedNftsQuery, GetFeaturedNftsQueryVariables>(GetFeaturedNftsDocument, options)
+  return Apollo.useLazyQuery<GetFeaturedNftsVideosQuery, GetFeaturedNftsVideosQueryVariables>(
+    GetFeaturedNftsVideosDocument,
+    options
+  )
 }
-export type GetFeaturedNftsQueryHookResult = ReturnType<typeof useGetFeaturedNftsQuery>
-export type GetFeaturedNftsLazyQueryHookResult = ReturnType<typeof useGetFeaturedNftsLazyQuery>
-export type GetFeaturedNftsQueryResult = Apollo.QueryResult<GetFeaturedNftsQuery, GetFeaturedNftsQueryVariables>
+export type GetFeaturedNftsVideosQueryHookResult = ReturnType<typeof useGetFeaturedNftsVideosQuery>
+export type GetFeaturedNftsVideosLazyQueryHookResult = ReturnType<typeof useGetFeaturedNftsVideosLazyQuery>
+export type GetFeaturedNftsVideosQueryResult = Apollo.QueryResult<
+  GetFeaturedNftsVideosQuery,
+  GetFeaturedNftsVideosQueryVariables
+>

@@ -32,7 +32,7 @@ export const relativeRoutes = {
     editMembership: () => 'member/edit',
     member: (handle = ':handle') => `member/${handle}`,
     notifications: () => 'notifications',
-    nfts: () => 'nfts',
+    marketplace: () => 'marketplace',
     ypp: (query?: { [QUERY_PARAMS.REFERRER_ID]?: string }) => withQueryParameters('ypp', query),
     yppDashboard: () => 'ypp-dashboard',
   },

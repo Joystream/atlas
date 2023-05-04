@@ -1,4 +1,5 @@
-import { FC, PropsWithChildren, useRef } from 'react'
+import { FC, PropsWithChildren, useEffect, useRef, useState } from 'react'
+import Swiper from 'swiper'
 
 import { SectionWrapper } from './Section.styles'
 import { SectionContent, SectionContentProps } from './SectionContent'
@@ -23,6 +24,9 @@ export const Section: FC<PropsWithChildren<SectionProps>> = ({
   withoutGap = false,
 }) => {
   const isCarousel = contentProps.type === 'carousel'
+  const [isCarouselEnd, setIsCarouselEnd] = useState(false)
+  const [isCarouselBeginning, setIsCarouselBeginning] = useState(true)
+
   const gliderRef = useRef<SwiperInstance>()
 
   const handleSlideLeft = () => {
@@ -31,20 +35,38 @@ export const Section: FC<PropsWithChildren<SectionProps>> = ({
   const handleSlideRight = () => {
     gliderRef.current?.slideNext()
   }
+
+  useEffect(() => {
+    const handler = (slider: Swiper) => {
+      setIsCarouselBeginning(slider.isBeginning)
+      setIsCarouselEnd(slider.isEnd)
+    }
+    gliderRef.current?.on('slideChange', handler)
+
+    return () => {
+      gliderRef.current?.off('slideChange', handler)
+    }
+  }, [])
+
   return (
     <SectionWrapper withoutGap={withoutGap} className={className}>
-      {!headerProps ? null : isCarousel ? (
-        <SectionHeader
-          {...headerProps}
-          isCarousel
-          onMoveCarouselLeft={handleSlideLeft}
-          onMoveCarouselRight={handleSlideRight}
-        />
-      ) : (
-        <SectionHeader {...headerProps} />
-      )}
+      {headerProps &&
+        (isCarousel ? (
+          <SectionHeader
+            {...headerProps}
+            isBeginning={isCarouselBeginning}
+            isEnd={isCarouselEnd}
+            isCarousel
+            onMoveCarouselLeft={handleSlideLeft}
+            onMoveCarouselRight={handleSlideRight}
+          />
+        ) : (
+          <SectionHeader {...headerProps} />
+        ))}
       {isCarousel ? (
-        <SectionContent {...contentProps} onSwiper={(swiper) => (gliderRef.current = swiper)} />
+        contentProps.children.length > 0 && (
+          <SectionContent {...contentProps} onSwiper={(swiper) => (gliderRef.current = swiper)} />
+        )
       ) : (
         <SectionContent {...contentProps} />
       )}
