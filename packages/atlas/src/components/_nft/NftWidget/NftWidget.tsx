@@ -1,6 +1,6 @@
 import BN from 'bn.js'
 import { differenceInSeconds } from 'date-fns'
-import { FC, memo } from 'react'
+import { FC, memo, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import { BasicBidFieldsFragment, FullBidFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
@@ -24,6 +24,8 @@ import { NftHistory, NftHistoryEntry } from './NftHistory'
 import { NftInfoItem, NftTimerItem } from './NftInfoItem'
 import {
   ButtonGrid,
+  CollapsibleElement,
+  CollapsibleWrapper,
   Container,
   Content,
   NftOwnerContainer,
@@ -121,6 +123,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
   const { ref, width = SMALL_VARIANT_MAXIMUM_SIZE + 1 } = useResizeObserver({
     box: 'border-box',
   })
+  const [isCollapsed, setIsCollapsed] = useState(false)
 
   const size: Size = width > SMALL_VARIANT_MAXIMUM_SIZE ? 'medium' : 'small'
   const { convertHapiToUSD, isLoadingPrice } = useTokenPrice()
@@ -601,7 +604,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
 
   return (
     <Container ref={ref}>
-      <NftOwnerContainer data-size={size}>
+      <NftOwnerContainer data-size={size} onClick={() => setIsCollapsed((isCollapsed) => !isCollapsed)}>
         <OwnerAvatar assetUrl={ownerAvatar} size={40} />
         <OwnerLabel as="span" variant="t100" color="colorText">
           This NFT is owned by
@@ -620,9 +623,12 @@ export const NftWidget: FC<NftWidgetProps> = ({
           </Text>
         </OwnerHandle>
       </NftOwnerContainer>
-      <Content data-size={size}>{content}</Content>
-
-      <NftHistory size={size} width={width} historyItems={nftHistory} />
+      <CollapsibleWrapper collapsed={isCollapsed}>
+        <CollapsibleElement>
+          <Content data-size={size}>{content}</Content>
+          <NftHistory size={size} width={width} historyItems={nftHistory} />
+        </CollapsibleElement>
+      </CollapsibleWrapper>
     </Container>
   )
 }

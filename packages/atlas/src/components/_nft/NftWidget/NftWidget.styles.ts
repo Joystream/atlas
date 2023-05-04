@@ -13,6 +13,15 @@ export const Container = styled.div`
   background-color: ${cVar('colorBackgroundMuted')};
   min-width: 0;
 `
+export const CollapsibleWrapper = styled.div<{ collapsed: boolean }>`
+  display: grid;
+  grid-template-rows: ${({ collapsed }) => (collapsed ? '0fr' : '1fr')};
+  transition: grid-template-rows ${cVar('animationTransitionMedium')};
+`
+
+export const CollapsibleElement = styled.div`
+  overflow: hidden;
+`
 
 export const Content = styled.div<SizeProps>`
   display: grid;
@@ -55,6 +64,7 @@ export const OwnerLabel = styled(Text)`
 export const OwnerHandle = styled(Link)`
   grid-area: owner;
   justify-content: start;
+  justify-self: start;
   text-decoration: none;
 `
 
