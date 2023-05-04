@@ -43,7 +43,7 @@ export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ ...rest }) =
 
   return (
     <>
-      {!smMatch && isOpen && <MobileBackdrop onClick={() => handleHide()} />}
+      {!smMatch && isOpen && <MobileBackdrop />}
       <Popover
         hideOnClick
         boundariesElement={document.body}
