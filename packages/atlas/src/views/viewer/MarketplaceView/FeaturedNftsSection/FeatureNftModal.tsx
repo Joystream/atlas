@@ -22,6 +22,7 @@ type FeatureNftModalProps = {
   isOpen: boolean
   onClose: () => void
 }
+const abortController = new AbortController()
 
 export const FeatureNftModal: FC<FeatureNftModalProps> = ({ isOpen, onClose }) => {
   const {
@@ -32,9 +33,7 @@ export const FeatureNftModal: FC<FeatureNftModalProps> = ({ isOpen, onClose }) =
     formState: { errors },
   } = useForm<{ url: string }>()
   const [isInputValidating, setIsInputValidating] = useState(false)
-
   const [videoId, setVideoId] = useState('')
-  const abortController = useMemo(() => new AbortController(), [])
   const [requestNftFeaturedMutation, { loading }] = useRequestNftFeaturedMutation({
     context: {
       fetchOptions: {
@@ -66,7 +65,7 @@ export const FeatureNftModal: FC<FeatureNftModalProps> = ({ isOpen, onClose }) =
     if (loading) {
       abortController.abort()
     }
-  }, [abortController, loading, onClose, reset])
+  }, [loading, onClose, reset])
 
   const { displaySnackbar } = useSnackbar()
 
