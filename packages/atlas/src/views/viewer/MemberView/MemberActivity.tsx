@@ -218,21 +218,3 @@ export const MemberActivity: FC<MemberActivityProps> = ({
     </section>
   )
 }
-
-// children: [
-//   <LayoutGrid key="single">
-//     {items?.map((activity, i) => (
-//         <GridItem key={i} colSpan={{ base: 12 }}>
-//           <ActivityItem
-//               thumbnailUri={activity.video?.thumbnailPhoto?.resolvedUrl || ''}
-//               loading={!activities || loading}
-//               onItemClick={() => navigate(absoluteRoutes.viewer.video(activity.video?.id))}
-//               date={activity?.date}
-//               type={activity?.type}
-//               title={activity?.video?.title || ''}
-//               description={getDescription(activity)}
-//           />
-//         </GridItem>
-//     ))}
-//   </LayoutGrid>
-// ]
