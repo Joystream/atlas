@@ -33,13 +33,14 @@ export const FeatureNftModal: FC<FeatureNftModalProps> = ({ isOpen, onClose }) =
   } = useForm<{ url: string }>()
   const [isInputValidating, setIsInputValidating] = useState(false)
 
-  const handleClose = () => {
-    onClose()
-    setVideoId('')
-    reset({ url: '' })
-  }
   const [videoId, setVideoId] = useState('')
+  const abortController = useMemo(() => new AbortController(), [])
   const [requestNftFeaturedMutation, { loading }] = useRequestNftFeaturedMutation({
+    context: {
+      fetchOptions: {
+        signal: abortController.signal,
+      },
+    },
     onError: (error) => {
       displaySnackbar({
         title: 'Something went wrong',
@@ -57,6 +58,15 @@ export const FeatureNftModal: FC<FeatureNftModalProps> = ({ isOpen, onClose }) =
       handleClose()
     },
   })
+
+  const handleClose = useCallback(() => {
+    onClose()
+    setVideoId('')
+    reset({ url: '' })
+    if (loading) {
+      abortController.abort()
+    }
+  }, [abortController, loading, onClose, reset])
 
   const { displaySnackbar } = useSnackbar()
 
@@ -165,7 +175,6 @@ export const FeatureNftModal: FC<FeatureNftModalProps> = ({ isOpen, onClose }) =
       }}
       secondaryButton={{
         text: 'Cancel',
-        disabled: loading,
         onClick: handleClose,
       }}
       onExitClick={handleClose}
