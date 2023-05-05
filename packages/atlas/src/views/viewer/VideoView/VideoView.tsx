@@ -113,6 +113,7 @@ export const VideoView: FC = () => {
 
   const mediaUrl = video?.media?.resolvedUrl
   const thumbnailUrl = video?.thumbnailPhoto?.resolvedUrl
+
   const availableTracks = useMemo(() => {
     if (!video?.subtitles) return []
 
@@ -366,7 +367,6 @@ export const VideoView: FC = () => {
       <VideoDetails video={video} categoryData={belongsToCategories} />
     </>
   )
-
   return (
     <>
       {headTags}

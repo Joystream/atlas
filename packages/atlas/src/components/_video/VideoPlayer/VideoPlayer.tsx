@@ -293,6 +293,14 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     player.defaultPlaybackRate(playbackRate)
   }, [playbackRate, player])
 
+  // When src is null that means something went wrong during asset resolution
+  // No need to log anything here, error logging is handled in resolvers
+  useEffect(() => {
+    if (videoJsConfig.src === null) {
+      setPlayerState('error')
+    }
+  }, [videoJsConfig.src])
+
   // handle video loading
   useEffect(() => {
     if (!player) {

@@ -58,9 +58,9 @@ export const testAssetDownload = (url: string, type: DataObjectType): Promise<nu
       _resolve(performanceEntries[0].duration)
     }
 
-    const reject = () => {
+    const reject = (err?: unknown) => {
       cleanup()
-      _reject()
+      _reject(err)
     }
 
     if (imageAssetTypes.includes(type?.__typename)) {
@@ -74,7 +74,12 @@ export const testAssetDownload = (url: string, type: DataObjectType): Promise<nu
       video.addEventListener('loadeddata', resolve)
       video.addEventListener('canplay', resolve)
       video.addEventListener('progress', resolve)
-      video.addEventListener('error', reject)
+      video.addEventListener('error', (err) => {
+        if (err.target) {
+          reject((err.target as HTMLVideoElement).error)
+        }
+        reject(err)
+      })
       video.src = url
     } else if (subtitleAssetTypes.includes(type?.__typename)) {
       fetch(url, { method: 'HEAD', cache: 'no-store' }).then(resolve).catch(reject)
