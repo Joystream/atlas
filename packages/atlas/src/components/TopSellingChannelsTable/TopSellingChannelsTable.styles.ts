@@ -8,10 +8,6 @@ import { cVar, sizes } from '@/styles'
 export const StyledTable = styled(Table)`
   background: transparent;
 
-  .table-base {
-    border-bottom: 1px solid ${cVar('colorBorderMutedAlpha')}!important;
-  }
-
   .table-row {
     background-color: transparent;
   }

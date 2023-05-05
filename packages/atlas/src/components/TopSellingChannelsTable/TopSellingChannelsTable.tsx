@@ -1,13 +1,15 @@
 import BN from 'bn.js'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 
 import {
   GetTopSellingChannelsQuery,
   useGetTopSellingChannelsQuery,
 } from '@/api/queries/__generated__/channels.generated'
 import { SvgActionCreatorToken, SvgActionVerified } from '@/assets/icons'
+import { SvgEmptyStateIllustration } from '@/assets/illustrations'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { NumberFormat } from '@/components/NumberFormat'
+import { Section } from '@/components/Section/Section'
 import { TableProps } from '@/components/Table'
 import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
@@ -48,11 +50,19 @@ const COLUMNS: TableProps['columns'] = [
   },
 ]
 
+const tableEmptyState = {
+  title: 'No top selling channels found',
+  description:
+    'There are no top selling channels to display for the selected period. You can try selecting a different period to see if there were any sales during that time.',
+  icon: <SvgEmptyStateIllustration />,
+}
+
 export const TopSellingChannelsTable = () => {
+  const [sort, setSort] = useState('Last week')
   const { data, loading } = useGetTopSellingChannelsQuery({
     variables: {
       limit: 10,
-      periodDays: 7,
+      periodDays: sort === 'All time' ? 0 : sort === 'Last week' ? 7 : 30,
     },
   })
   const mdMatch = useMediaMatch('md')
@@ -91,7 +101,42 @@ export const TopSellingChannelsTable = () => {
           })) ?? [],
     [data?.topSellingChannels, loading]
   )
-  return <StyledTable columns={COLUMNS} data={mappedData} doubleColumn={mdMatch} />
+  return (
+    <Section
+      headerProps={{
+        start: {
+          type: 'title',
+          title: 'Top selling channels',
+        },
+        sort: {
+          type: 'toggle-button',
+          toggleButtonOptionTypeProps: {
+            type: 'options',
+            value: sort,
+            onChange: setSort,
+            options: ['Last week', 'Last month', 'All time'],
+          },
+        },
+      }}
+      contentProps={{
+        type: 'grid',
+        grid: {
+          sm: {
+            columns: 1,
+          },
+        },
+        children: [
+          <StyledTable
+            key="single"
+            emptyState={tableEmptyState}
+            columns={COLUMNS}
+            data={mappedData}
+            doubleColumn={mdMatch}
+          />,
+        ],
+      }}
+    />
+  )
 }
 
 const Channel = ({ channel }: { channel: GetTopSellingChannelsQuery['topSellingChannels'][number]['channel'] }) => {
