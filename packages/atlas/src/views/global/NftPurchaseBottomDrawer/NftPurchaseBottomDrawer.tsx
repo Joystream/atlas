@@ -111,7 +111,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
   const auctionBuyNowPrice = isAuction ? hapiBnToTokenNumber(nftStatus.buyNowPrice || new BN(0)) : 0
   const bidLockingTime = isAuction && nftStatus.bidLockingTime && convertBlocksToDuration(nftStatus.bidLockingTime)
   const buyNowPrice = isBuyNow ? hapiBnToTokenNumber(nftStatus.buyNowPrice || new BN(0)) : 0
-  const startingPrice = isAuction ? hapiBnToTokenNumber(nftStatus.startingPrice) : 0
+  const startingPrice = isAuction ? hapiBnToTokenNumber(nftStatus.startingPrice, true) : 0
   const topBidder = isAuction && nftStatus.topBidder ? nftStatus.topBidder : undefined
   const topBidAmount =
     isAuction && !nftStatus.topBid?.isCanceled && !!nftStatus.topBidAmount
