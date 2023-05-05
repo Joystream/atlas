@@ -270,11 +270,15 @@ export const SetUp: FC<SetUpProps> = ({
               label="Minimum bid"
               error={errors.startingPrice?.message}
               description="Only bids higher than this value will be accepted."
-              switchProps={{
-                name: 'startingPrice',
-                onChange: toggleActiveInput,
-                value: activeInputs.includes('startingPrice'),
-              }}
+              switchProps={
+                chainState.nftMinStartingPrice.isZero()
+                  ? {
+                      name: 'startingPrice',
+                      onChange: toggleActiveInput,
+                      value: activeInputs.includes('startingPrice'),
+                    }
+                  : undefined
+              }
             >
               <Controller
                 control={control}
