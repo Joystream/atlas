@@ -4,12 +4,13 @@ import { FC, memo, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import { BasicBidFieldsFragment, FullBidFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { SvgAlertsInformative24 } from '@/assets/icons'
+import { SvgActionAuction, SvgAlertsInformative24 } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { Banner } from '@/components/Banner'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { GridItem } from '@/components/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
+import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { absoluteRoutes } from '@/config/routes'
@@ -24,6 +25,7 @@ import { NftHistory, NftHistoryEntry } from './NftHistory'
 import { NftInfoItem, NftTimerItem } from './NftInfoItem'
 import {
   ButtonGrid,
+  CollapsibleButtonWrapper,
   CollapsibleElement,
   CollapsibleWrapper,
   Container,
@@ -33,6 +35,7 @@ import {
   OwnerHandle,
   OwnerLabel,
   Size,
+  StyledSvgActionChevronT,
   TopBidderContainer,
   TopBidderTokenContainer,
 } from './NftWidget.styles'
@@ -604,7 +607,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
 
   return (
     <Container ref={ref}>
-      <NftOwnerContainer data-size={size} onClick={() => setIsCollapsed((isCollapsed) => !isCollapsed)}>
+      <NftOwnerContainer data-size={size}>
         <OwnerAvatar assetUrl={ownerAvatar} size={40} />
         <OwnerLabel as="span" variant="t100" color="colorText">
           This NFT is owned by
@@ -622,6 +625,15 @@ export const NftWidget: FC<NftWidgetProps> = ({
             {ownerHandle}
           </Text>
         </OwnerHandle>
+        <CollapsibleButtonWrapper>
+          {nftStatus.status !== 'idle' && <Pill label="On Auction" icon={<SvgActionAuction />} />}
+          <Button
+            icon={<StyledSvgActionChevronT isCollapsed={isCollapsed} />}
+            variant="tertiary"
+            size="small"
+            onClick={() => setIsCollapsed((isCollapsed) => !isCollapsed)}
+          />
+        </CollapsibleButtonWrapper>
       </NftOwnerContainer>
       <CollapsibleWrapper collapsed={isCollapsed}>
         <CollapsibleElement>

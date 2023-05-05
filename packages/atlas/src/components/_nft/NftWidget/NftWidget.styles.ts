@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
+import { SvgActionChevronT } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
@@ -42,8 +43,8 @@ export const NftOwnerContainer = styled.div<SizeProps>`
   display: grid;
   gap: ${sizes(1)} ${sizes(6)};
   grid-template:
-    'avatar owner-label' auto
-    'avatar owner' auto / auto 1fr;
+    'avatar owner-label collapsible-button' auto
+    'avatar owner collapsible-button' auto / min-content auto auto;
   align-items: center;
   padding: ${sizes(6)};
 
@@ -53,12 +54,25 @@ export const NftOwnerContainer = styled.div<SizeProps>`
   }
 `
 
+export const StyledSvgActionChevronT = styled(SvgActionChevronT)<{ isCollapsed: boolean }>`
+  transform: rotate(${({ isCollapsed }) => (isCollapsed ? '-180deg' : '0deg')});
+  transition: transform ${cVar('animationTransitionMedium')};
+`
+
 export const OwnerAvatar = styled(Avatar)`
   grid-area: avatar;
 `
 
 export const OwnerLabel = styled(Text)`
   grid-area: owner-label;
+`
+
+export const CollapsibleButtonWrapper = styled.div`
+  grid-area: collapsible-button;
+  justify-self: end;
+  display: flex;
+  gap: ${sizes(3)};
+  align-items: center;
 `
 
 export const OwnerHandle = styled(Link)`
