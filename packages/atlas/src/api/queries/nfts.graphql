@@ -40,18 +40,12 @@ query GetNftsConnection(
   }
 }
 
-query GetFeaturedNftsVideos($limit: Int) {
-  ownedNfts(
-    limit: $limit
-    orderBy: [createdAt_DESC]
-    where: {
-      isFeatured_eq: true
-      transactionalStatus: {
-        isTypeOf_in: ["TransactionalStatusAuction", "TransactionalStatusBuyNow"]
-        auction: { isCompleted_eq: false, isCanceled_eq: false }
-      }
-    }
-  ) {
+query GetFeaturedNftsVideos(
+  $limit: Int
+  $where: OwnedNftWhereInput
+  $orderBy: [OwnedNftOrderByInput!] = [createdAt_DESC]
+) {
+  ownedNfts(limit: $limit, orderBy: $orderBy, where: $where) {
     ...FullNftFields
     video {
       ...BasicVideoFields

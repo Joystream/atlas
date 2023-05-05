@@ -12,7 +12,7 @@ import { StyledLimitedWidth } from './MarketplaceView.styles'
 
 export const MarketplaceView: FC = () => {
   const headTags = useHeadTags('Marketplace')
-  const { nfts, loading } = useFeaturedNftsVideos(5)
+  const { nfts, loading } = useFeaturedNftsVideos()
   const lgMatch = useMediaMatch('lg')
 
   return (
