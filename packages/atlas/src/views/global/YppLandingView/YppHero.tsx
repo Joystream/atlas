@@ -92,7 +92,8 @@ export const YppHero: FC<YppHeroProps> = ({
               data-aos-offset="40"
               data-aos-easing="atlas-easing"
             >
-              Reupload and backup your YouTube videos to receive a guaranteed payout in the YouTube Partner Program.
+              Videos from YouTube channel get automatically synced to {atlasConfig.general.appName} and you get JOY
+              tokens for every new sync and more.
             </Text>
             <LogosContainer data-aos="fade-up" data-aos-delay="350" data-aos-offset="40" data-aos-easing="atlas-easing">
               <SvgLogoYoutubeWhiteFull />
