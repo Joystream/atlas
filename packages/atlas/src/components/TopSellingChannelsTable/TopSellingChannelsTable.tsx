@@ -58,13 +58,21 @@ const tableEmptyState = {
 }
 
 export const TopSellingChannelsTable = () => {
-  const [sort, setSort] = useState('Last week')
+  const [sort, setSort] = useState(7)
+  const [emptyPeriods, setEmptyPeriods] = useState<number[]>([])
   const { data, loading } = useGetTopSellingChannelsQuery({
     variables: {
       limit: 10,
-      periodDays: sort === 'All time' ? 0 : sort === 'Last week' ? 7 : 30,
+      periodDays: sort,
+    },
+    onCompleted: (data) => {
+      if (sort !== 0 && !data.topSellingChannels.length) {
+        setEmptyPeriods((prev) => [...prev, sort])
+        setSort((prev) => (prev === 7 ? 30 : 0))
+      }
     },
   })
+
   const mdMatch = useMediaMatch('md')
   const mappedData: TableProps['data'] = useMemo(
     () =>
@@ -101,6 +109,34 @@ export const TopSellingChannelsTable = () => {
           })) ?? [],
     [data?.topSellingChannels, loading]
   )
+
+  const sortingOptions = useMemo(
+    () =>
+      [
+        {
+          label: 'Last week',
+          value: 7,
+        },
+        {
+          label: 'Last month',
+          value: 30,
+        },
+        {
+          label: 'All time',
+          value: 0,
+        },
+      ].map((option) => ({
+        ...option,
+        disabled: emptyPeriods.includes(option.value),
+        tooltipText: emptyPeriods.includes(option.value) ? 'No channels available for this period' : undefined,
+      })),
+    [emptyPeriods]
+  )
+
+  if (!data?.topSellingChannels.length && sort === 0 && !loading) {
+    return null
+  }
+
   return (
     <Section
       headerProps={{
@@ -114,7 +150,7 @@ export const TopSellingChannelsTable = () => {
             type: 'options',
             value: sort,
             onChange: setSort,
-            options: ['Last week', 'Last month', 'All time'],
+            options: sortingOptions,
           },
         },
       }}
