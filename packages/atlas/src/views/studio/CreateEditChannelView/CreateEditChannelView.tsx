@@ -462,7 +462,6 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
                 <StyledAvatar
                   assetUrl={loading ? null : value.croppedUrl || value.originalUrl}
                   hasAvatarUploadFailed={hasAvatarUploadFailed}
-                  // todo avatar fill(100% x 100%) in styles 80 x 80 and sm 136. Should this be 88? check the styles and adjust them
                   size={smMatch ? 136 : 88}
                   onClick={() => {
                     avatarDialogRef.current?.open(

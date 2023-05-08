@@ -52,8 +52,6 @@ export const MembershipInfo: FC<MembershipInfoProps> = ({
         <MembershipHeader className={className}>
           <MembershipInfoContainer>
             <Avatar
-              // todo avatar preview 136, channel-card default: 88px x 88px, md: 104px x 104px should be correct but worth double checking
-              // size={smMatch ? 'preview' : 'channel-card'}
               size={smMatch ? 136 : 88}
               editable={editable}
               onImageValidation={onImageValidation}

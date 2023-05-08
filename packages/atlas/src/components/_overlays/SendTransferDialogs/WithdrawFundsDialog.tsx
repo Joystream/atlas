@@ -7,7 +7,6 @@ import { Fee } from '@/components/Fee'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
-import { StyledAvatar } from '@/components/_auth/SignInModal/SignInSteps/SignInSteps.styles'
 import { FormField } from '@/components/_inputs/FormField'
 import { TokenInput } from '@/components/_inputs/TokenInput'
 import { DialogModal } from '@/components/_overlays/DialogModal'
@@ -18,7 +17,14 @@ import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { formatNumber } from '@/utils/number'
 import { useChannelPaymentsHistory } from '@/views/studio/MyPaymentsView/PaymentsTransactions/PaymentTransactions.hooks'
 
-import { PriceWrapper, StyledMaxButton, Summary, SummaryRow, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
+import {
+  PriceWrapper,
+  StyledAvatar,
+  StyledMaxButton,
+  Summary,
+  SummaryRow,
+  VerticallyCenteredDiv,
+} from './SendTransferDialogs.styles'
 
 type WithdrawFundsDialogProps = {
   onExitClick: () => void
@@ -180,7 +186,6 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
             Destination account
           </Text>
           <VerticallyCenteredDiv>
-            {/* todo avatar what means extra small, should have 16 px, check the styles */}
             <StyledAvatar assetUrl={avatarUrl} />
             <Text as="span" variant="t100" margin={{ left: 2, right: 1 }}>
               {activeMembership?.handle}
