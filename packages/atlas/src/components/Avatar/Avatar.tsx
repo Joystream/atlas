@@ -30,16 +30,6 @@ export type AvatarProps = PropsWithChildren<{
   hasAvatarUploadFailed?: boolean
   loading?: boolean
   className?: string
-  /**
-   * @description preview - 136px x 136px
-   * @description cover - default: 64px x 64px, md: 88px x 88px
-   * @description default - 32px x 32px
-   * @description fill - 100% x 100%
-   * @description bid - 24px x 24px
-   * @description small - 40px x 40px
-   * @description channel - default: 88px x 88px, md: 136px x 136px
-   * @description channel-card - default: 88px x 88px, md: 104px x 104px
-   */
   size?: AvatarSize
   newChannel?: boolean
   editable?: boolean
