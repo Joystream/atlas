@@ -148,7 +148,7 @@ export default {
   ],
 } as Meta
 
-const DefaultTemplate: StoryFn<SectionProps> = () => {
+const DefaultTemplate: StoryFn<SectionProps<unknown>> = () => {
   const [filters, setFilters] = useState<SectionFilter[]>(INITIAL_STATE)
   const [placeholdersCount, setPlaceholdersCount] = useState(8)
   const [secondPlaceholdersCount, setSecondPlaceholdersCount] = useState(8)
@@ -243,7 +243,7 @@ const DefaultTemplate: StoryFn<SectionProps> = () => {
 
 export const Default = DefaultTemplate.bind({})
 
-const CarouselTemplate: StoryFn<SectionProps> = () => {
+const CarouselTemplate: StoryFn<SectionProps<unknown>> = () => {
   const placeholderItems = createPlaceholderData(10)
   return (
     <div style={{ display: 'grid', gap: 64, paddingBottom: 200 }}>
