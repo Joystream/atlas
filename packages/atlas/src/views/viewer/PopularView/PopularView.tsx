@@ -4,6 +4,7 @@ import { GetMostViewedVideosConnectionDocument } from '@/api/queries/__generated
 import { Section } from '@/components/Section/Section'
 import { TopTenVideos } from '@/components/_content/TopTenVideos'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
+import { publicVideoFilter } from '@/config/contentFilter'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useInfiniteVideoGrid } from '@/hooks/useInfiniteVideoGrid'
 import { DEFAULT_VIDEO_GRID } from '@/styles/grids'
@@ -17,6 +18,9 @@ export const PopularView: FC = () => {
     query: GetMostViewedVideosConnectionDocument,
     variables: {
       limit: 200,
+      where: {
+        ...publicVideoFilter,
+      },
     },
   })
 
