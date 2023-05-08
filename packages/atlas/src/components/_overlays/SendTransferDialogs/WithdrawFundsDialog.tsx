@@ -3,11 +3,11 @@ import { FC, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { FullMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { Avatar } from '@/components/Avatar'
 import { Fee } from '@/components/Fee'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
+import { StyledAvatar } from '@/components/_auth/SignInModal/SignInSteps/SignInSteps.styles'
 import { FormField } from '@/components/_inputs/FormField'
 import { TokenInput } from '@/components/_inputs/TokenInput'
 import { DialogModal } from '@/components/_overlays/DialogModal'
@@ -180,7 +180,8 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
             Destination account
           </Text>
           <VerticallyCenteredDiv>
-            <Avatar size="extra-small" assetUrl={avatarUrl} />
+            {/* todo avatar what means extra small, should have 16 px, check the styles */}
+            <StyledAvatar assetUrl={avatarUrl} />
             <Text as="span" variant="t100" margin={{ left: 2, right: 1 }}>
               {activeMembership?.handle}
             </Text>

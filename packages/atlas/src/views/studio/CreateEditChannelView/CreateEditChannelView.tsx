@@ -25,6 +25,7 @@ import {
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib/types'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
@@ -74,6 +75,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
   const handleChannelSubmit = useCreateEditChannelSubmit()
+  const smMatch = useMediaMatch('sm')
 
   const [showConnectToYtDialog, setShowConnectToYtDialog] = useState(false)
   const setShouldContinueYppFlow = useYppStore((store) => store.actions.setShouldContinueYppFlow)
@@ -460,7 +462,8 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
                 <StyledAvatar
                   assetUrl={loading ? null : value.croppedUrl || value.originalUrl}
                   hasAvatarUploadFailed={hasAvatarUploadFailed}
-                  size="fill"
+                  // todo avatar fill(100% x 100%) in styles 80 x 80 and sm 136. Should this be 88? check the styles and adjust them
+                  size={smMatch ? 136 : 88}
                   onClick={() => {
                     avatarDialogRef.current?.open(
                       value.originalBlob,

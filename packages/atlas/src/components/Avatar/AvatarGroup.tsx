@@ -44,11 +44,11 @@ const getSizeofAvatar = (size: AvatarGroupSize) => {
   // converts size of avatar group to avatar size
   switch (size) {
     case 'large':
-      return 'small'
+      return 40
     case 'medium':
-      return 'default'
+      return 32
     case 'small':
-      return 'bid'
+      return 24
   }
 }
 

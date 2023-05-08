@@ -50,7 +50,7 @@ export const Avatar: FC<AvatarProps> = ({
   assetUrl,
   hasAvatarUploadFailed,
   loading = false,
-  size = 'default',
+  size = 32,
   children,
   className,
   editable,
@@ -60,7 +60,7 @@ export const Avatar: FC<AvatarProps> = ({
   onClick,
   onImageValidation,
 }) => {
-  const isEditable = !loading && editable && size !== 'default' && size !== 'bid'
+  const isEditable = !loading && editable && size !== 32 && size !== 24
 
   const checkIfImageIsValid = useCallback(async () => {
     if (!assetUrl) {
@@ -83,7 +83,7 @@ export const Avatar: FC<AvatarProps> = ({
   }, [assetUrl, checkIfImageIsValid])
 
   const getEditableIconSize = useCallback(() => {
-    const smallIconSizes = ['bid', 'default', 'small']
+    const smallIconSizes = [24, 32, 40]
     if (smallIconSizes.includes(size)) {
       return
     } else {
@@ -120,7 +120,7 @@ export const Avatar: FC<AvatarProps> = ({
         ) : hasAvatarUploadFailed ? (
           <NewChannelAvatar>
             <StyledSvgIllustrativeFileFailed />
-            {size === 'preview' && (
+            {size === 136 && (
               <Text variant="t100" as="span" margin={{ top: 2 }}>
                 Failed upload
               </Text>

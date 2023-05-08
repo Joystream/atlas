@@ -46,7 +46,8 @@ export const ChannelCard: FC<ChannelCardProps> = ({
   return (
     <ChannelCardArticle className={className} activeDisabled={activeDisabled}>
       <ChannelCardAnchor onClick={onClick} to={channel?.id ? absoluteRoutes.viewer.channel(channel.id) : ''}>
-        <StyledAvatar size="channel-card" loading={loading} assetUrl={channel?.avatarPhoto?.resolvedUrl} />
+        {/* todo avatar @description — channel-card - default: 88px x 88px, md: 104px x 104px */}
+        <StyledAvatar size={88} loading={loading} assetUrl={channel?.avatarPhoto?.resolvedUrl} />
         <SwitchTransition>
           <CSSTransition
             key={loading ? 'placeholder' : 'content'}

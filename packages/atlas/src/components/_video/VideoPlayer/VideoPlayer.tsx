@@ -889,7 +889,9 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
               <a href={absoluteRoutes.viewer.channel(video?.channel.id)} target="_blank" rel="noopener noreferrer">
                 <Avatar
                   clickable
-                  size={isFullScreen && !isMobile() ? 'cover' : 'default'}
+                  // todo avatar @description — cover - default: 64px x 64px, md: 88px x 88px
+                  // size={isFullScreen && !isMobile() ? 'cover' : 'default'}
+                  size={isFullScreen && !isMobile() ? 88 : 32}
                   assetUrl={channelAvatarUrl}
                   loading={isChannelAvatarLoading}
                 />

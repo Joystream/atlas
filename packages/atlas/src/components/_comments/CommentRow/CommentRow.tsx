@@ -37,14 +37,14 @@ export const CommentRow: FC<CommentRowProps> = ({
   const getAvatarSize = useCallback((): AvatarSize => {
     if (smMatch) {
       if (indented) {
-        return 'default'
+        return 32
       }
-      return 'small'
+      return 40
     } else {
       if (indented) {
-        return 'bid'
+        return 24
       }
-      return 'default'
+      return 32
     }
   }, [indented, smMatch])
 

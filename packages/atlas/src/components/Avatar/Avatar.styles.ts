@@ -1,22 +1,13 @@
 import isPropValid from '@emotion/is-prop-valid'
-import { SerializedStyles, css } from '@emotion/react'
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { SvgActionAddImage, SvgActionEdit, SvgIllustrativeFileFailed } from '@/assets/icons'
 import { SvgAvatarSilhouette } from '@/assets/illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { cVar, media, square, zIndex } from '@/styles'
+import { cVar, square, zIndex } from '@/styles'
 
-export type AvatarSize =
-  | 'preview'
-  | 'cover'
-  | 'default'
-  | 'fill'
-  | 'bid'
-  | 'small'
-  | 'channel'
-  | 'channel-card'
-  | 'extra-small'
+export type AvatarSize = 136 | 104 | 88 | 40 | 32 | 24
 
 type ContainerProps = {
   size: AvatarSize
@@ -66,74 +57,26 @@ export const Overlay = styled.div<{ isEdit?: boolean }>`
     `};
 `
 
-const previewAvatarCss = css`
-  ${square('136px')};
-`
+// const coverAvatarCss = css`
+//   ${square('64px')};
 
-const coverAvatarCss = css`
-  ${square('64px')};
+//   ${media.md} {
+//     ${square('88px')};
+//   }
+// `
 
-  ${media.md} {
-    ${square('88px')};
-  }
-`
-
-const channelAvatarCss = css`
-  ${square('88px')};
-  ${media.md} {
-    ${square('136px')};
-  }
-`
-const channelCardAvatarCss = css`
-  ${square('88px')};
-  ${media.md} {
-    ${square('104px')};
-  }
-`
-
-const bidAvatarCss = css`
-  ${square('24px')};
-`
-
-const smallAvatarCss = css`
-  ${square('40px')};
-`
-
-const defaultAvatarCss = css`
-  ${square('32px')};
-`
-
-const fillAvatarCss = css`
-  width: 100%;
-  height: 100%;
-`
-
-const extraSmallAvatarCss = css`
-  ${square('16px')};
-`
-
-const getAvatarSizeCss = ({ size }: ContainerProps): SerializedStyles => {
-  switch (size) {
-    case 'preview':
-      return previewAvatarCss
-    case 'cover':
-      return coverAvatarCss
-    case 'channel':
-      return channelAvatarCss
-    case 'channel-card':
-      return channelCardAvatarCss
-    case 'fill':
-      return fillAvatarCss
-    case 'bid':
-      return bidAvatarCss
-    case 'small':
-      return smallAvatarCss
-    case 'extra-small':
-      return extraSmallAvatarCss
-    default:
-      return defaultAvatarCss
-  }
-}
+// const channelAvatarCss = css`
+//   ${square('88px')};
+//   ${media.md} {
+//     ${square('136px')};
+//   }
+// `
+// const channelCardAvatarCss = css`
+//   ${square('88px')};
+//   ${media.md} {
+//     ${square('104px')};
+//   }
+// `
 
 export const sharedAvatarHoverStyles = css`
   ::after {
@@ -170,7 +113,7 @@ const getInteractiveStyles = ({ isLoading, isClickable }: Omit<ContainerProps, '
 }
 
 export const Container = styled('div', { shouldForwardProp: isPropValid })<ContainerProps>`
-  ${getAvatarSizeCss};
+  ${({ size }) => square(`${size}px`)};
   ${getInteractiveStyles};
 
   border-radius: 100%;

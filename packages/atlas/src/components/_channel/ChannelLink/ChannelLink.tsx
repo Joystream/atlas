@@ -36,7 +36,7 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
   hideAvatar,
   noLink,
   overrideChannel,
-  avatarSize = 'default',
+  avatarSize = 32,
   onNotFound,
   className,
   textVariant,

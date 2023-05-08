@@ -9,6 +9,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { absoluteRoutes } from '@/config/routes'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { createPlaceholderData } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
@@ -32,6 +33,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = memo(({ channelId }
     skip: !channelId,
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelWithVideos', error),
   })
+  const mdMatch = useMediaMatch('md')
 
   const {
     videos,
@@ -72,7 +74,11 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = memo(({ channelId }
   return (
     <>
       <ChannelCardAnchor to={channelId ? absoluteRoutes.viewer.channel(channelId) : ''}>
-        <StyledAvatar size="channel" loading={isLoading} assetUrl={extendedChannel?.channel.avatarPhoto?.resolvedUrl} />
+        <StyledAvatar
+          size={mdMatch ? 136 : 88}
+          loading={isLoading}
+          assetUrl={extendedChannel?.channel.avatarPhoto?.resolvedUrl}
+        />
         <InfoWrapper>
           {isLoading ? (
             <SkeletonLoader width="120px" height="20px" bottomSpace="4px" />

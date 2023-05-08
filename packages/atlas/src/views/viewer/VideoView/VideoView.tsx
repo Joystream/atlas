@@ -362,7 +362,7 @@ export const VideoView: FC = () => {
         </VideoUtils>
       </TitleContainer>
       <ChannelContainer>
-        <ChannelLink followButton id={channelId} textVariant="h300" avatarSize="small" />
+        <ChannelLink followButton id={channelId} textVariant="h300" avatarSize={40} />
       </ChannelContainer>
       <VideoDetails video={video} categoryData={belongsToCategories} />
     </>
