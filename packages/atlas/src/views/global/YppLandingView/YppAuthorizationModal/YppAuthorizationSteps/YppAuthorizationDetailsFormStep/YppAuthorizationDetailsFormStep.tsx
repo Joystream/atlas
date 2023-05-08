@@ -117,7 +117,7 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
                   setValue('referrerChannelId', item.channel.id)
                 }
               }}
-              nodeEnd={foundChannel && <Avatar assetUrl={foundChannel.avatarPhoto?.resolvedUrl} size="bid" />}
+              nodeEnd={foundChannel && <Avatar assetUrl={foundChannel.avatarPhoto?.resolvedUrl} size={24} />}
               clearSelection={() => {
                 setFoundChannel(undefined)
               }}

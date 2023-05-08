@@ -18,7 +18,7 @@ type AvatarProps = {
 }
 
 export const StyledAvatar = styled(Avatar)<AvatarProps>`
-  margin-right: ${({ withHandle, size }) => (withHandle ? (size === 'small' ? sizes(4) : sizes(3)) : 0)};
+  margin-right: ${({ withHandle, size }) => (withHandle ? (size === 40 ? sizes(4) : sizes(3)) : 0)};
 `
 
 export const TitleWrapper = styled.div<{ followButton?: boolean }>`

@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
 
+import { Avatar } from '@/components/Avatar'
 import { Button } from '@/components/_buttons/Button'
-import { sizes } from '@/styles'
+import { sizes, square } from '@/styles'
 
 export const VerticallyCenteredDiv = styled.div`
   display: flex;
@@ -31,4 +32,8 @@ export const FormFieldsWrapper = styled.div`
 
 export const StyledMaxButton = styled(Button)`
   margin-left: auto;
+`
+
+export const StyledAvatar = styled(Avatar)`
+  ${square('16px')}
 `

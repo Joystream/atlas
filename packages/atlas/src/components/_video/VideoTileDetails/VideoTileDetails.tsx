@@ -71,6 +71,7 @@ export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
     <VideoDetailsContainer>
       {variant === 'withChannelNameAndAvatar' && (
         <StyledAvatar
+          size={32}
           assetUrl={channelAvatarUrl}
           loading={loadingAvatar}
           onClick={onChannelAvatarClick}

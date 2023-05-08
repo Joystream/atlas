@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { breakpoints, cVar, sizes } from '@/styles'
+import { breakpoints, cVar, sizes, square } from '@/styles'
 
 export const ChannelCardArticle = styled.article<{ activeDisabled?: boolean }>`
   position: relative;
@@ -46,6 +46,7 @@ export const ChannelCardAnchor = styled(Link)`
 
 export const StyledAvatar = styled(Avatar)`
   margin-bottom: ${sizes(4)};
+  ${square('104px')}
 `
 
 export const InfoWrapper = styled.div`

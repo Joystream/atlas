@@ -135,7 +135,7 @@ const Sender = ({ sender }: { sender: PaymentHistory['sender'] }) => {
     return (
       <StyledLink to={absoluteRoutes.viewer.member(member.handle)}>
         <SenderItem
-          nodeStart={<Avatar assetUrl={avatarUrl} loading={avatarLoading} />}
+          nodeStart={<Avatar assetUrl={avatarUrl} size={32} loading={avatarLoading} />}
           label={member?.handle}
           isInteractive={false}
         />

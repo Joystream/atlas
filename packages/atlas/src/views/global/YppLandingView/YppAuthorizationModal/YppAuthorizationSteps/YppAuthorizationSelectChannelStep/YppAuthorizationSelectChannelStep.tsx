@@ -23,7 +23,7 @@ export const YppAuthorizationSelectChannelStep: FC<YppAuthorizationSelectChannel
         <StyledListItem
           key={channel.id}
           onClick={() => onSelectChannel(channel.id)}
-          nodeStart={<Avatar size="small" assetUrl={channel.avatarPhoto?.resolvedUrl} />}
+          nodeStart={<Avatar size={40} assetUrl={channel.avatarPhoto?.resolvedUrl} />}
           label={channel?.title ?? ''}
           caption={channel ? `${channel?.followsNum} followers` : undefined}
           selected={selectedChannelId === channel.id}

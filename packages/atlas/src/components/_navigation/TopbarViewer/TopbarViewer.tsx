@@ -125,7 +125,7 @@ export const TopbarViewer: FC = () => {
                       <NotificationsWidget trigger={<NotificationsButton />} />
                       {!mdMatch && !searchOpen && (
                         <StyledAvatar
-                          size="small"
+                          size={40}
                           assetUrl={memberAvatarUrl}
                           loading={memberAvatarLoading}
                           onClick={handleDrawerToggle}
@@ -133,7 +133,7 @@ export const TopbarViewer: FC = () => {
                       )}
                       {mdMatch && (
                         <StyledAvatar
-                          size="small"
+                          size={40}
                           assetUrl={memberAvatarUrl}
                           onClick={handleDrawerToggle}
                           loading={memberAvatarLoading}

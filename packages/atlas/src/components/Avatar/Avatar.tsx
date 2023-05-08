@@ -30,16 +30,6 @@ export type AvatarProps = PropsWithChildren<{
   hasAvatarUploadFailed?: boolean
   loading?: boolean
   className?: string
-  /**
-   * @description preview - 136px x 136px
-   * @description cover - default: 64px x 64px, md: 88px x 88px
-   * @description default - 32px x 32px
-   * @description fill - 100% x 100%
-   * @description bid - 24px x 24px
-   * @description small - 40px x 40px
-   * @description channel - default: 88px x 88px, md: 136px x 136px
-   * @description channel-card - default: 88px x 88px, md: 104px x 104px
-   */
   size?: AvatarSize
   newChannel?: boolean
   editable?: boolean
@@ -50,7 +40,7 @@ export const Avatar: FC<AvatarProps> = ({
   assetUrl,
   hasAvatarUploadFailed,
   loading = false,
-  size = 'default',
+  size = 32,
   children,
   className,
   editable,
@@ -60,7 +50,7 @@ export const Avatar: FC<AvatarProps> = ({
   onClick,
   onImageValidation,
 }) => {
-  const isEditable = !loading && editable && size !== 'default' && size !== 'bid'
+  const isEditable = !loading && editable && size !== 32 && size !== 24
 
   const checkIfImageIsValid = useCallback(async () => {
     if (!assetUrl) {
@@ -83,7 +73,7 @@ export const Avatar: FC<AvatarProps> = ({
   }, [assetUrl, checkIfImageIsValid])
 
   const getEditableIconSize = useCallback(() => {
-    const smallIconSizes = ['bid', 'default', 'small']
+    const smallIconSizes = [24, 32, 40]
     if (smallIconSizes.includes(size)) {
       return
     } else {
@@ -120,7 +110,7 @@ export const Avatar: FC<AvatarProps> = ({
         ) : hasAvatarUploadFailed ? (
           <NewChannelAvatar>
             <StyledSvgIllustrativeFileFailed />
-            {size === 'preview' && (
+            {size === 136 && (
               <Text variant="t100" as="span" margin={{ top: 2 }}>
                 Failed upload
               </Text>
