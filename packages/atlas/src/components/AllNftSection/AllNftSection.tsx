@@ -66,6 +66,17 @@ const FILTERS: SectionFilter[] = [
   { name: 'other', type: 'checkbox', options: OTHER, label: 'Other', icon: <SvgActionSettings /> },
 ]
 
+const sortingOptions = [
+  {
+    label: 'Newest',
+    value: OwnedNftOrderByInput.CreatedAtDesc,
+  },
+  {
+    label: 'Oldest',
+    value: OwnedNftOrderByInput.CreatedAtAsc,
+  },
+]
+
 export const AllNftSection = () => {
   const [filters, setFilters] = useState<SectionFilter[]>(FILTERS)
   const [hasAppliedFilters, setHasAppliedFilters] = useState(false)
@@ -144,10 +155,9 @@ export const AllNftSection = () => {
           type: 'toggle-button',
           toggleButtonOptionTypeProps: {
             type: 'options',
-            options: ['Newest', 'Oldest'],
-            value: order === OwnedNftOrderByInput.CreatedAtDesc ? 'Newest' : 'Oldest',
-            onChange: (order) =>
-              setOrder(order === 'Oldest' ? OwnedNftOrderByInput.CreatedAtAsc : OwnedNftOrderByInput.CreatedAtDesc),
+            options: sortingOptions,
+            value: order,
+            onChange: setOrder,
           },
         },
       }}
