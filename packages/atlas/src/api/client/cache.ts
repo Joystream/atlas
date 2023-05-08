@@ -10,7 +10,6 @@ import {
   QueryCommentsConnectionArgs,
   QueryOwnedNftsConnectionArgs,
   QueryVideosConnectionArgs,
-  VideoOrderByInput,
   VideosConnection,
 } from '../queries/__generated__/baseTypes.generated'
 import { FullChannelFieldsFragment, FullVideoFieldsFragment } from '../queries/__generated__/fragments.generated'
@@ -144,17 +143,10 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
           return nodeFieldValue === isPublic
         }) ?? []
 
-      const sortingArray = args?.orderBy != null ? (Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]) : []
-      const sortingASC = sortingArray[0] === VideoOrderByInput.CreatedAtAsc
-      const preSortedDESC = (filteredEdges || []).slice().sort((a, b) => {
-        return (readField('createdAt', b.node) as Date).getTime() - (readField('createdAt', a.node) as Date).getTime()
-      })
-      const sortedEdges = sortingASC ? preSortedDESC.reverse() : preSortedDESC
-
       return (
         existing && {
           ...existing,
-          edges: sortedEdges,
+          edges: filteredEdges,
         }
       )
     },
