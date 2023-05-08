@@ -8,6 +8,7 @@ import { FilterButtonOption, SectionFilter } from '@/components/FilterButton'
 import { Section } from '@/components/Section/Section'
 import { Button } from '@/components/_buttons/Button'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
+import { publicVideoFilter } from '@/config/contentFilter'
 import { useInfiniteNftsGrid } from '@/hooks/useInfiniteNftsGrid'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
@@ -105,6 +106,7 @@ export const AllNftSection = () => {
       lastSalePrice_gte: minPrice ? tokenNumberToHapiBn(minPrice).toString() : undefined,
       lastSalePrice_lte: maxPrice ? tokenNumberToHapiBn(maxPrice).toString() : undefined,
       video: {
+        ...publicVideoFilter,
         ...(isMatureExcluded ? { isExcluded_eq: false } : {}),
         ...(isPromotionalExcluded ? { hasMarketing_eq: false } : {}),
       },

@@ -2,7 +2,7 @@ import { generateVideoMetaTags } from '@joystream/atlas-meta-server/src/tags'
 import BN from 'bn.js'
 import { format } from 'date-fns'
 import { throttle } from 'lodash-es'
-import { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import { FC, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { useParams } from 'react-router-dom'
 
@@ -10,6 +10,7 @@ import { useAddVideoView, useFullVideo } from '@/api/hooks/video'
 import { SvgActionFlag, SvgActionMore, SvgActionShare } from '@/assets/icons'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { MinimizedPlayer } from '@/components/MinimizedPlayer/MinimizedPlayer'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Tooltip } from '@/components/Tooltip'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
@@ -20,7 +21,6 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NftWidget, useNftWidget } from '@/components/_nft/NftWidget'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { ReportModal } from '@/components/_overlays/ReportModal'
-import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { AvailableTrack } from '@/components/_video/VideoPlayer/SettingsButtonWithPopover'
 import { atlasConfig } from '@/config'
 import { displayCategories } from '@/config/categories'
@@ -89,6 +89,7 @@ export const VideoView: FC = () => {
       },
     }
   )
+  const [isInView, ref] = useIntersectionObserver()
   const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
   const [isCommenting, setIsCommenting] = useState<boolean>(false)
   const nftWidgetProps = useNftWidget(video)
@@ -374,6 +375,7 @@ export const VideoView: FC = () => {
         <PlayerWrapper cinematicView={isCinematic}>
           <PlayerGridItem colSpan={{ xxs: 12, md: cinematicView ? 12 : 8 }}>
             <PlayerContainer
+              ref={ref}
               className={transitions.names.slide}
               cinematicView={cinematicView}
               noVideo={videoNotAvailable}
@@ -381,7 +383,10 @@ export const VideoView: FC = () => {
               {videoNotAvailable ? (
                 <VideoUnavailableError isCinematic={isCinematic} />
               ) : !loading && video ? (
-                <VideoPlayer
+                <MinimizedPlayer
+                  author={video.channel.title}
+                  title={video.title}
+                  isInView={isInView}
                   onCloseShareDialog={() => setShareDialogOpen(false)}
                   onAddVideoView={handleAddVideoView}
                   isShareDialogOpen={isShareDialogOpen}
@@ -442,4 +447,23 @@ export const VideoView: FC = () => {
       </LimitedWidthContainer>
     </>
   )
+}
+
+const useIntersectionObserver = (options: IntersectionObserverInit = {}): [boolean, RefObject<HTMLDivElement>] => {
+  const [isIntersecting, setIsIntersecting] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => setIsIntersecting(entry.isIntersecting), options)
+
+    if (ref.current) {
+      observer.observe(ref.current)
+    }
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [options])
+
+  return [isIntersecting, ref]
 }

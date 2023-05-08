@@ -1,4 +1,4 @@
-import { GetFeaturedNftsQuery } from '@/api/queries/__generated__/nfts.generated'
+import { GetFeaturedNftsVideosQuery } from '@/api/queries/__generated__/nfts.generated'
 import { NftCarouselDetails } from '@/components/NftCarousel/components/MarketplaceCarouselCard/NftCarouselDetails'
 
 type CrtCard = {
@@ -7,7 +7,7 @@ type CrtCard = {
 
 type NftCard = {
   type: 'nft'
-  nft: GetFeaturedNftsQuery['ownedNfts'][number]
+  nft: GetFeaturedNftsVideosQuery['ownedNfts'][number]
 }
 
 type CardTypes = NftCard | CrtCard
