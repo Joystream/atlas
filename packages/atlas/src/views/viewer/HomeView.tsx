@@ -6,6 +6,7 @@ import { GetBasicVideosConnectionDocument } from '@/api/queries/__generated__/vi
 import { Section } from '@/components/Section/Section'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
+import { publicVideoFilter } from '@/config/contentFilter'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useInfiniteVideoGrid } from '@/hooks/useInfiniteVideoGrid'
 import { DEFAULT_VIDEO_GRID, sizes } from '@/styles'
@@ -16,6 +17,7 @@ export const HomeView: FC = () => {
     query: GetBasicVideosConnectionDocument,
     variables: {
       limit: 200,
+      where: publicVideoFilter,
       orderBy: [VideoOrderByInput.VideoRelevanceDesc, VideoOrderByInput.CreatedAtDesc, VideoOrderByInput.ViewsNumDesc],
     },
   })
