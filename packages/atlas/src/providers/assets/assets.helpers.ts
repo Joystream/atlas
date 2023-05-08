@@ -77,8 +77,9 @@ export const testAssetDownload = (url: string, type: DataObjectType): Promise<nu
       video.addEventListener('error', (err) => {
         if (err.target) {
           reject((err.target as HTMLVideoElement).error)
+        } else {
+          reject(err)
         }
-        reject(err)
       })
       video.src = url
     } else if (subtitleAssetTypes.includes(type?.__typename)) {
