@@ -109,6 +109,12 @@ const createApolloClient = () => {
               logDistributorPerformance(resolvedUrl, eventEntry)
               return resolvedUrl
             } catch (err) {
+              if (err instanceof MediaError) {
+                SentryLogger.error('Error during asset download test, media is not supported', 'AssetsManager', err, {
+                  asset: { parent, resolvedUrl, mediaError: err },
+                })
+                return null
+              }
               bannedDistributorUrls[distributorUrl] = (bannedDistributorUrls[distributorUrl] || 0) + 1
               if (err instanceof TimeoutError) {
                 AssetLogger.logDistributorResponseTimeout(eventEntry)
