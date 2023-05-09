@@ -1,4 +1,4 @@
-import { FC, ReactNode, useState } from 'react'
+import { ReactNode, useState } from 'react'
 
 import { SvgActionChevronL, SvgActionChevronR } from '@/assets/icons'
 import { SectionFilter } from '@/components/FilterButton'
@@ -26,10 +26,10 @@ import { Tabs, TabsProps } from '../../Tabs'
 import { Select, SelectProps } from '../../_inputs/Select'
 import { ToggleButtonGroup, ToggleButtonOptionTypeProps } from '../../_inputs/ToggleButtonGroup'
 
-type Sort =
+type Sort<T> =
   | {
       type: 'toggle-button'
-      toggleButtonOptionTypeProps: ToggleButtonOptionTypeProps
+      toggleButtonOptionTypeProps: ToggleButtonOptionTypeProps<T>
     }
   | {
       type: 'select'
@@ -74,16 +74,16 @@ type Carousel =
       isCarousel?: false
     }
 
-export type SectionHeaderProps = {
+export type SectionHeaderProps<T> = {
   start: SectionHeaderStart
   search?: SearchProps
-  sort?: Sort
+  sort?: Sort<T>
   filters?: SectionFilter[]
   onApplyFilters?: (appliedFilters: SectionFilter[]) => void
   button?: Omit<ButtonProps, 'size' | 'variant'>
 } & Carousel
 
-export const SectionHeader: FC<SectionHeaderProps> = (props) => {
+export function SectionHeader<T>(props: SectionHeaderProps<T>) {
   const { start, sort, search, filters, onApplyFilters, button, isCarousel } = props
   const [isSearchInputOpen, setIsSearchInputOpen] = useState(false)
   const smMatch = useMediaMatch('sm')

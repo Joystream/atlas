@@ -5,20 +5,30 @@ import { ChannelOrderByInput } from '@/api/queries/__generated__/baseTypes.gener
 import { Section } from '@/components/Section/Section'
 import { ChannelCard } from '@/components/_channel/ChannelCard'
 
+const sortingOptions = [
+  {
+    label: 'Newest',
+    value: ChannelOrderByInput.CreatedAtDesc,
+  },
+  {
+    label: 'Oldest',
+    value: ChannelOrderByInput.CreatedAtAsc,
+  },
+  {
+    label: 'Most followed',
+    value: ChannelOrderByInput.FollowsNumDesc,
+  },
+]
+
 export const ChannelsSection = () => {
-  const [sortBy, setSortBy] = useState<string>('Most followed')
+  const [sortBy, setSortBy] = useState(ChannelOrderByInput.FollowsNumDesc)
   const {
     edges: channels,
     pageInfo,
     loading,
     fetchMore,
   } = useBasicChannelsConnection({
-    orderBy:
-      sortBy === 'Newest'
-        ? ChannelOrderByInput.CreatedAtDesc
-        : sortBy === 'Oldest'
-        ? ChannelOrderByInput.CreatedAtAsc
-        : ChannelOrderByInput.FollowsNumDesc,
+    orderBy: sortBy,
     first: 10,
   })
   const [isLoading, setIsLoading] = useState(false)
@@ -38,7 +48,7 @@ export const ChannelsSection = () => {
           type: 'toggle-button',
           toggleButtonOptionTypeProps: {
             type: 'options',
-            options: ['Newest', 'Oldest', 'Most followed'],
+            options: sortingOptions,
             value: sortBy,
             onChange: setSortBy,
           },
