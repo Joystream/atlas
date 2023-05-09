@@ -3,7 +3,6 @@ import { FC, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { FullMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { Avatar } from '@/components/Avatar'
 import { Fee } from '@/components/Fee'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -18,7 +17,14 @@ import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { formatNumber } from '@/utils/number'
 import { useChannelPaymentsHistory } from '@/views/studio/MyPaymentsView/PaymentsTransactions/PaymentTransactions.hooks'
 
-import { PriceWrapper, StyledMaxButton, Summary, SummaryRow, VerticallyCenteredDiv } from './SendTransferDialogs.styles'
+import {
+  PriceWrapper,
+  StyledAvatar,
+  StyledMaxButton,
+  Summary,
+  SummaryRow,
+  VerticallyCenteredDiv,
+} from './SendTransferDialogs.styles'
 
 type WithdrawFundsDialogProps = {
   onExitClick: () => void
@@ -180,7 +186,7 @@ export const WithdrawFundsDialog: FC<WithdrawFundsDialogProps> = ({
             Destination account
           </Text>
           <VerticallyCenteredDiv>
-            <Avatar size="extra-small" assetUrl={avatarUrl} />
+            <StyledAvatar assetUrl={avatarUrl} />
             <Text as="span" variant="t100" margin={{ left: 2, right: 1 }}>
               {activeMembership?.handle}
             </Text>

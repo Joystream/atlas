@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Swiper from 'swiper'
 
 import { SectionWrapper } from './Section.styles'
@@ -8,21 +8,15 @@ import { SectionHeader, SectionHeaderProps } from './SectionHeader'
 
 import { SwiperInstance } from '../Carousel'
 
-export type SectionProps = {
-  headerProps?: Omit<SectionHeaderProps, 'isCarousel'>
+export type SectionProps<T> = {
+  headerProps?: Omit<SectionHeaderProps<T>, 'isCarousel'>
   contentProps: SectionContentProps
   footerProps?: SectionFooterProps
   className?: string
   withoutGap?: boolean
 }
 
-export const Section: FC<PropsWithChildren<SectionProps>> = ({
-  headerProps,
-  contentProps,
-  footerProps,
-  className,
-  withoutGap = false,
-}) => {
+export function Section<T>({ headerProps, contentProps, footerProps, className, withoutGap }: SectionProps<T>) {
   const isCarousel = contentProps.type === 'carousel'
   const [isCarouselEnd, setIsCarouselEnd] = useState(false)
   const [isCarouselBeginning, setIsCarouselBeginning] = useState(true)

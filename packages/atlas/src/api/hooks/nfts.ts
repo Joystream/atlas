@@ -25,7 +25,7 @@ import {
   useGetNftHistoryQuery,
 } from '@/api/queries/__generated__/notifications.generated'
 
-import { OwnedNftWhereInput } from '../queries/__generated__/baseTypes.generated'
+import { OwnedNftOrderByInput, OwnedNftWhereInput } from '../queries/__generated__/baseTypes.generated'
 
 type CommonNftProperties = {
   title: string | null | undefined
@@ -189,10 +189,21 @@ export const useNfts = (baseOptions?: QueryHookOptions<GetNftsQuery, GetNftsQuer
   }
 }
 
-export const useFeaturedNftsVideos = (limit: number) => {
+export const useFeaturedNftsVideos = () => {
   const { data, ...rest } = useGetFeaturedNftsVideosQuery({
     variables: {
-      limit,
+      limit: 10,
+      orderBy: [OwnedNftOrderByInput.VideoViewsNumDesc],
+      where: {
+        isFeatured_eq: true,
+        transactionalStatus: {
+          isTypeOf_in: ['TransactionalStatusAuction', 'TransactionalStatusBuyNow'],
+          auction: {
+            isCompleted_eq: false,
+            isCanceled_eq: false,
+          },
+        },
+      },
     },
   })
 

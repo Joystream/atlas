@@ -22,6 +22,8 @@ export const Thead = styled.thead`
 
 const cellStyles = css`
   padding: ${sizes(3.5)} ${sizes(2)};
+  display: flex;
+  align-items: center;
 
   :first-of-type {
     padding-left: ${sizes(6)};
@@ -65,4 +67,9 @@ export const EmptyTableHeader = styled(Text)`
 export const EmptyTableDescription = styled(Text)`
   text-align: center;
   margin-top: ${sizes(2)};
+`
+
+export const PageWrapper = styled.div`
+  display: flex;
+  gap: ${sizes(3)};
 `

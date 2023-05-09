@@ -140,7 +140,7 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
             render={({ field: { value: imageInputFile, onChange } }) => (
               <>
                 <StyledAvatar
-                  size="cover"
+                  size={88}
                   onClick={() =>
                     avatarDialogRef.current?.open(
                       imageInputFile?.originalBlob ? imageInputFile.originalBlob : imageInputFile?.blob,

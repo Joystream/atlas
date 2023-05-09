@@ -64,7 +64,9 @@ export type ActivitiesRecord =
       price: BN
     } & NftActivitiesRecord)
 
-const getVideoDataFromEvent = (nftActivity: GetNftActivitiesQuery['nftActivities'][number]) => {
+const getVideoDataFromEvent = (
+  nftActivity: GetNftActivitiesQuery['nftActivitiesConnection']['edges'][number]['node']
+) => {
   switch (nftActivity.event.data.__typename) {
     case 'AuctionBidMadeEventData':
     case 'AuctionBidCanceledEventData':
@@ -90,7 +92,7 @@ const getVideoDataFromEvent = (nftActivity: GetNftActivitiesQuery['nftActivities
 }
 
 const parseActivities = (
-  nftActivity: GetNftActivitiesQuery['nftActivities'][number],
+  { node: nftActivity }: GetNftActivitiesQuery['nftActivitiesConnection']['edges'][number],
   memberId?: string
 ): ActivitiesRecord | null => {
   const commonFields: NftActivitiesRecord = {
@@ -241,8 +243,7 @@ export const useActivities = (memberId?: string, sort?: NftActivityOrderByInput)
     nftsIssuedTotalCount,
     nftsSoldTotalCount,
     nftsBoughtTotalCount,
-    error,
-    loading,
+    ...rest
   } = useRawActivities(memberId, sort)
   const parsedActivities = rawActivities && rawActivities.map((a) => parseActivities(a, memberId))
   const activities = parsedActivities ? parsedActivities.filter((a): a is ActivitiesRecord => !!a) : undefined
@@ -257,9 +258,8 @@ export const useActivities = (memberId?: string, sort?: NftActivityOrderByInput)
   }, [nftsBiddedTotalCount, nftsBoughtTotalCount, nftsIssuedTotalCount, nftsSoldTotalCount])
 
   return {
+    ...rest,
     activities,
     activitiesTotalCounts: totalCounts,
-    error,
-    loading,
   }
 }

@@ -138,7 +138,7 @@ type AvatarWithResolvedAssetProps = {
 
 const AvatarWithResolvedAsset: FC<AvatarWithResolvedAssetProps> = ({ member }) => {
   const { url, isLoadingAsset } = getMemberAvatar(member)
-  return <Avatar assetUrl={url} loading={isLoadingAsset} />
+  return <Avatar size={32} assetUrl={url} loading={isLoadingAsset} />
 }
 
 type StyledOutputPillWithResolvedAssetProps = {

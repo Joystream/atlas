@@ -10,7 +10,20 @@ export default {
   component: ToggleButtonGroup,
   args: {
     type: 'options',
-    options: ['small', 'large', 'medium', 'medium3', 'medium2'],
+    options: [
+      {
+        value: 'large',
+        label: 'Large',
+      },
+      {
+        label: 'Small',
+        value: 'small',
+      },
+      {
+        label: 'Medium',
+        value: 'medium',
+      },
+    ],
   },
 } as Meta<ToggleButtonGroupProps<SbOptions>>
 

@@ -54,7 +54,7 @@ export const BidRow: FC<BidRowProps> = ({ bidder, createdAt, amount, amountUSD, 
         value={bidder.id}
         onChange={() => onSelect?.(bidder.id, amount)}
       />
-      {xsMatch && <Avatar assetUrl={url} loading={isLoadingAsset} size="small" />}
+      {xsMatch && <Avatar assetUrl={url} loading={isLoadingAsset} size={40} />}
       <div>
         <Text as="p" variant="h300" color={!selected ? 'colorText' : undefined} margin={{ bottom: 1 }}>
           {bidder?.handle}

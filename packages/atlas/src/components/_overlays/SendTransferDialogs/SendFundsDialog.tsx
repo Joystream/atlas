@@ -10,7 +10,7 @@ import {
   GetMembershipsQuery,
   GetMembershipsQueryVariables,
 } from '@/api/queries/__generated__/memberships.generated'
-import { Avatar, AvatarProps } from '@/components/Avatar'
+import { Avatar } from '@/components/Avatar'
 import { Fee } from '@/components/Fee'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { NumberFormat } from '@/components/NumberFormat'
@@ -233,7 +233,7 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
                 }
               },
             })}
-            nodeEnd={destinationAccount && <ResolvedAvatar member={destinationAccount} size="bid" />}
+            nodeEnd={destinationAccount && <ResolvedAvatar member={destinationAccount} />}
             placeholder="Polkadot wallet address"
             error={!!errors.account}
           />
@@ -245,12 +245,12 @@ export const SendFundsDialog: FC<SendFundsDialogProps> = ({ onExitClick, account
 
 type ResolvedAvatarProps = {
   member: BasicMembershipFieldsFragment
-} & AvatarProps
+}
 const ResolvedAvatar: FC<ResolvedAvatarProps> = ({ member }) => {
   const { url, isLoadingAsset } = getMemberAvatar(member)
   return (
     <Tooltip text={member?.handle} placement="top">
-      <Avatar assetUrl={url} loading={isLoadingAsset} size="bid" />
+      <Avatar assetUrl={url} loading={isLoadingAsset} size={24} />
     </Tooltip>
   )
 }

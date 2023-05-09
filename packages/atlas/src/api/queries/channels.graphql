@@ -295,3 +295,13 @@ query GetChannelPaymentEvents($channelId: String) {
     }
   }
 }
+
+query GetTopSellingChannels($limit: Int!, $periodDays: Int!, $where: ExtendedChannelWhereInput) {
+  topSellingChannels(where: $where, limit: $limit, periodDays: $periodDays) {
+    amount
+    nftSold
+    channel {
+      ...FullChannelFields
+    }
+  }
+}

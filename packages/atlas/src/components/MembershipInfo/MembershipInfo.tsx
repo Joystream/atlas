@@ -52,7 +52,7 @@ export const MembershipInfo: FC<MembershipInfoProps> = ({
         <MembershipHeader className={className}>
           <MembershipInfoContainer>
             <Avatar
-              size={smMatch ? 'preview' : 'channel-card'}
+              size={smMatch ? 136 : 88}
               editable={editable}
               onImageValidation={onImageValidation}
               onClick={onAvatarEditClick}

@@ -63,7 +63,7 @@ export const SectionFooter = (props: SectionFooterProps) => {
     }
   }, [isLoading, props])
 
-  if (props.type === 'load') {
+  if (props.type === 'load' && !props.reachedEnd) {
     return !isSwitchedToInfinite ? (
       <Button
         variant="tertiary"
@@ -80,7 +80,7 @@ export const SectionFooter = (props: SectionFooterProps) => {
     )
   }
 
-  if (props.type === 'infinite' && !isLoading) {
+  if (props.type === 'infinite' && !props.reachedEnd && !isLoading) {
     return <InfiniteLoaderMargin ref={ref} />
   }
 
@@ -104,5 +104,5 @@ export const SectionFooter = (props: SectionFooterProps) => {
     return <Pagination {...paginationProps} />
   }
 
-  return <div />
+  return null
 }

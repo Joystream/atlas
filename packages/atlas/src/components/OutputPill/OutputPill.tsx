@@ -35,7 +35,7 @@ export const OutputPill: FC<OutputPillProps> = ({
 
   return (
     <OutputPillWrapper className={className} withoutButton={!onDeleteClick || readonly}>
-      {withAvatar && <StyledAvatar size="bid" assetUrl={avatarUri} loading={isLoadingAvatar} />}
+      {withAvatar && <StyledAvatar size={24} assetUrl={avatarUri} loading={isLoadingAvatar} />}
       <Text variant="t200" as="p">
         {handle}
       </Text>

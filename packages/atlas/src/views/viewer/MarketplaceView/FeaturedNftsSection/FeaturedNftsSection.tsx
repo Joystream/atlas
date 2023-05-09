@@ -1,7 +1,6 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 
 import { useNfts } from '@/api/hooks/nfts'
-import { OwnedNftOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import { Banner } from '@/components/Banner'
 import { CarouselProps } from '@/components/Carousel'
 import { Section } from '@/components/Section/Section'
@@ -9,10 +8,12 @@ import { StyledSvgAlertsInformative24 } from '@/components/Tooltip/Tooltip.style
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useJoystreamStore } from '@/providers/joystream/joystream.store'
 import { useUser } from '@/providers/user/user.hooks'
 import { breakpoints } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'
 
+import { FeatureNftModal } from './FeatureNftModal'
 import { FeaturedNftsWrapper } from './FeaturedNftsSection.styles'
 
 const responsive: CarouselProps['breakpoints'] = {
@@ -48,11 +49,10 @@ const responsive: CarouselProps['breakpoints'] = {
 
 export const FeaturedNftsSection: FC = () => {
   const { activeChannel } = useUser()
+  const [isFeatureNftModalOpen, setIsFeatureNfrModalOpen] = useState(false)
 
   const { nfts, loading } = useNfts({
     variables: {
-      limit: 20,
-      orderBy: [OwnedNftOrderByInput.VideoViewsNumDesc],
       where: {
         isFeatured_eq: true,
         transactionalStatus: {
@@ -65,7 +65,64 @@ export const FeaturedNftsSection: FC = () => {
     },
   })
 
-  const items = loading ? createPlaceholderData(10) : nfts ?? []
+  const { currentBlock } = useJoystreamStore()
+
+  // 1. English auctions(not upcoming) first - sorted by blocks left
+  const englishAuctions = nfts
+    ?.filter(
+      (nft) =>
+        nft.transactionalStatus?.__typename === 'TransactionalStatusAuction' &&
+        nft.transactionalStatus.auction.auctionType.__typename === 'AuctionTypeEnglish' &&
+        nft.transactionalStatus.auction.startsAtBlock < currentBlock
+    )
+    .sort((a, b) => {
+      const aBlocksLeft =
+        ((a.transactionalStatus?.__typename === 'TransactionalStatusAuction' &&
+          a.transactionalStatus.auction.auctionType.__typename === 'AuctionTypeEnglish' &&
+          a.transactionalStatus.auction.auctionType.plannedEndAtBlock) ||
+          0) - currentBlock
+      const bBlocksLeft =
+        ((b.transactionalStatus?.__typename === 'TransactionalStatusAuction' &&
+          b.transactionalStatus.auction.auctionType.__typename === 'AuctionTypeEnglish' &&
+          b.transactionalStatus.auction.auctionType.plannedEndAtBlock) ||
+          0) - currentBlock
+
+      return aBlocksLeft - bBlocksLeft
+    })
+
+  // 2. Open and buy now auctions(not upcoming) - sorted by popularity
+  const openAuctionsAndBuyNowAuctions = nfts
+    ?.filter(
+      (nft) =>
+        nft.transactionalStatus?.__typename === 'TransactionalStatusAuction' &&
+        nft.transactionalStatus.auction.auctionType.__typename === 'AuctionTypeOpen' &&
+        nft.transactionalStatus.auction.startsAtBlock < currentBlock
+    )
+    .sort((a, b) => b.video.viewsNum - a.video.viewsNum)
+
+  // 3. Upcoming auctions - sorted by planned start
+  const plannedAuctions = nfts
+    ?.filter(
+      (nft) =>
+        nft.transactionalStatus?.__typename === 'TransactionalStatusAuction' &&
+        nft.transactionalStatus.auction.startsAtBlock > currentBlock
+    )
+    .sort((a, b) => {
+      const aPlannedStart =
+        ((a.transactionalStatus?.__typename === 'TransactionalStatusAuction' &&
+          a.transactionalStatus.auction.startsAtBlock) ||
+          0) - currentBlock
+      const bPlannedStart =
+        ((b.transactionalStatus?.__typename === 'TransactionalStatusAuction' &&
+          b.transactionalStatus.auction.startsAtBlock) ||
+          0) - currentBlock
+
+      return aPlannedStart - bPlannedStart
+    })
+
+  const sorted = [...(englishAuctions || []), ...(openAuctionsAndBuyNowAuctions || []), ...(plannedAuctions || [])]
+
+  const items = loading ? createPlaceholderData(10) : sorted ?? []
 
   const mdMatch = useMediaMatch('md')
 
@@ -75,6 +132,7 @@ export const FeaturedNftsSection: FC = () => {
 
   return (
     <FeaturedNftsWrapper>
+      <FeatureNftModal isOpen={isFeatureNftModalOpen} onClose={() => setIsFeatureNfrModalOpen(false)} />
       {items.length >= 4 && (
         <Section
           headerProps={{
@@ -106,7 +164,7 @@ export const FeaturedNftsSection: FC = () => {
           actionButton={{
             text: 'Submit your video NFT to be featured',
             onClick: () => {
-              // todo
+              setIsFeatureNfrModalOpen(true)
             },
           }}
         />

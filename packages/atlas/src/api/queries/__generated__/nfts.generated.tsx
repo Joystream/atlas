@@ -1778,6 +1778,8 @@ export type GetNftsConnectionQuery = {
 
 export type GetFeaturedNftsVideosQueryVariables = Types.Exact<{
   limit?: Types.InputMaybe<Types.Scalars['Int']>
+  where?: Types.InputMaybe<Types.OwnedNftWhereInput>
+  orderBy?: Types.InputMaybe<Array<Types.OwnedNftOrderByInput> | Types.OwnedNftOrderByInput>
 }>
 
 export type GetFeaturedNftsVideosQuery = {
@@ -2379,6 +2381,16 @@ export type GetFeaturedNftsVideosQuery = {
   }>
 }
 
+export type RequestNftFeaturedMutationVariables = Types.Exact<{
+  nftId: Types.Scalars['String']
+  rationale: Types.Scalars['String']
+}>
+
+export type RequestNftFeaturedMutation = {
+  __typename?: 'Mutation'
+  requestNftFeatured: { __typename?: 'NftFeaturedRequstInfo'; rationale: string; nftId: string; createdAt: Date }
+}
+
 export const GetNftDocument = gql`
   query GetNft($id: String!) {
     ownedNftById(id: $id) {
@@ -2521,18 +2533,12 @@ export type GetNftsConnectionQueryHookResult = ReturnType<typeof useGetNftsConne
 export type GetNftsConnectionLazyQueryHookResult = ReturnType<typeof useGetNftsConnectionLazyQuery>
 export type GetNftsConnectionQueryResult = Apollo.QueryResult<GetNftsConnectionQuery, GetNftsConnectionQueryVariables>
 export const GetFeaturedNftsVideosDocument = gql`
-  query GetFeaturedNftsVideos($limit: Int) {
-    ownedNfts(
-      limit: $limit
-      orderBy: [createdAt_DESC]
-      where: {
-        isFeatured_eq: true
-        transactionalStatus: {
-          isTypeOf_in: ["TransactionalStatusAuction", "TransactionalStatusBuyNow"]
-          auction: { isCompleted_eq: false, isCanceled_eq: false }
-        }
-      }
-    ) {
+  query GetFeaturedNftsVideos(
+    $limit: Int
+    $where: OwnedNftWhereInput
+    $orderBy: [OwnedNftOrderByInput!] = [createdAt_DESC]
+  ) {
+    ownedNfts(limit: $limit, orderBy: $orderBy, where: $where) {
       ...FullNftFields
       video {
         ...BasicVideoFields
@@ -2560,6 +2566,8 @@ export const GetFeaturedNftsVideosDocument = gql`
  * const { data, loading, error } = useGetFeaturedNftsVideosQuery({
  *   variables: {
  *      limit: // value for 'limit'
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
  *   },
  * });
  */
@@ -2586,4 +2594,51 @@ export type GetFeaturedNftsVideosLazyQueryHookResult = ReturnType<typeof useGetF
 export type GetFeaturedNftsVideosQueryResult = Apollo.QueryResult<
   GetFeaturedNftsVideosQuery,
   GetFeaturedNftsVideosQueryVariables
+>
+export const RequestNftFeaturedDocument = gql`
+  mutation RequestNftFeatured($nftId: String!, $rationale: String!) {
+    requestNftFeatured(nftId: $nftId, rationale: $rationale) {
+      rationale
+      nftId
+      createdAt
+    }
+  }
+`
+export type RequestNftFeaturedMutationFn = Apollo.MutationFunction<
+  RequestNftFeaturedMutation,
+  RequestNftFeaturedMutationVariables
+>
+
+/**
+ * __useRequestNftFeaturedMutation__
+ *
+ * To run a mutation, you first call `useRequestNftFeaturedMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRequestNftFeaturedMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [requestNftFeaturedMutation, { data, loading, error }] = useRequestNftFeaturedMutation({
+ *   variables: {
+ *      nftId: // value for 'nftId'
+ *      rationale: // value for 'rationale'
+ *   },
+ * });
+ */
+export function useRequestNftFeaturedMutation(
+  baseOptions?: Apollo.MutationHookOptions<RequestNftFeaturedMutation, RequestNftFeaturedMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<RequestNftFeaturedMutation, RequestNftFeaturedMutationVariables>(
+    RequestNftFeaturedDocument,
+    options
+  )
+}
+export type RequestNftFeaturedMutationHookResult = ReturnType<typeof useRequestNftFeaturedMutation>
+export type RequestNftFeaturedMutationResult = Apollo.MutationResult<RequestNftFeaturedMutation>
+export type RequestNftFeaturedMutationOptions = Apollo.BaseMutationOptions<
+  RequestNftFeaturedMutation,
+  RequestNftFeaturedMutationVariables
 >

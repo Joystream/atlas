@@ -35,12 +35,10 @@ export const useRawActivities = (
 ) => {
   const { data, ...rest } = useGetNftActivitiesQuery({
     variables: {
-      limit: 100,
+      first: 10,
       orderBy: sort,
       memberId: memberId || '',
     },
-    // TODO Fix me. We use `no-cache` because for unknown reasons cache removes data about owner
-    fetchPolicy: 'no-cache',
     skip: !memberId,
   })
 
@@ -49,8 +47,9 @@ export const useRawActivities = (
     nftsBoughtTotalCount: data?.nftsBought.totalCount,
     nftsSoldTotalCount: data?.nftsSold.totalCount,
     nftsIssuedTotalCount: data?.nftsIssued.totalCount,
-    nftsBidded: data?.nftsBidded,
-    activities: data?.nftActivities,
+    totalCount: data?.nftActivitiesConnection.totalCount,
+    pageInfo: data?.nftActivitiesConnection.pageInfo,
+    activities: data?.nftActivitiesConnection.edges,
     ...rest,
   }
 }

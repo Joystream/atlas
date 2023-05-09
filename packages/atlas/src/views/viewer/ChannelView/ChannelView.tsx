@@ -78,6 +78,7 @@ export const ChannelView: FC = () => {
   })
 
   const smMatch = useMediaMatch('sm')
+  const mdMatch = useMediaMatch('md')
   const { id } = useParams()
   const {
     channel,
@@ -242,7 +243,7 @@ export const ChannelView: FC = () => {
           </CollectorsBoxContainer>
         ) : null}
         <TitleSection className={transitions.names.slide}>
-          <StyledChannelLink id={channel?.id} avatarSize="channel" hideHandle noLink />
+          <StyledChannelLink id={channel?.id} avatarSize={mdMatch ? 136 : 88} hideHandle noLink />
           <TitleContainer>
             {channel ? (
               <>
