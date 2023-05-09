@@ -97,7 +97,13 @@ export const TopSellingChannelsTable = () => {
             salesVolume: (
               <JoyAmountWrapper>
                 <JoyTokenIcon variant="gray" />
-                <NumberFormat variant="t200-strong" as="p" value={new BN(data.amount)} margin={{ left: 1 }} />
+                <NumberFormat
+                  variant="t200-strong"
+                  as="p"
+                  value={new BN(data.amount)}
+                  margin={{ left: 1 }}
+                  format="short"
+                />
               </JoyAmountWrapper>
             ),
             nftsSold: (
