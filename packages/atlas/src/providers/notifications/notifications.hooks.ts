@@ -2,7 +2,7 @@ import BN from 'bn.js'
 
 import { useRawNotifications } from '@/api/hooks/notifications'
 import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { GetNotificationsQuery } from '@/api/queries/__generated__/notifications.generated'
+import { GetNotificationsConnectionQuery } from '@/api/queries/__generated__/notifications.generated'
 import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger } from '@/utils/logs'
 import { convertDateFormat } from '@/utils/time'
@@ -38,7 +38,9 @@ export const useNotifications = () => {
   }
 }
 
-const getVideoDataFromEvent = (notification: GetNotificationsQuery['notifications'][number]) => {
+const getVideoDataFromEvent = ({
+  node: notification,
+}: GetNotificationsConnectionQuery['notificationsConnection']['edges'][number]) => {
   switch (notification.event.data.__typename) {
     case 'AuctionBidMadeEventData':
       return notification.event.data.bid.auction.nft.video
@@ -58,10 +60,11 @@ const getVideoDataFromEvent = (notification: GetNotificationsQuery['notification
 }
 
 const parseNotification = (
-  notification: GetNotificationsQuery['notifications'][number],
+  result: GetNotificationsConnectionQuery['notificationsConnection']['edges'][number],
   memberId: string | null
 ): NotificationRecord | null => {
-  const video = getVideoDataFromEvent(notification)
+  const notification = result.node
+  const video = getVideoDataFromEvent(result)
   const commonFields: NftNotificationRecord = {
     id: notification.event.id,
     date: convertDateFormat(notification.event.timestamp),

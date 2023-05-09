@@ -6,30 +6,56 @@
 
 # Note that in this case `orderBy` and `limit` now applies to all events together, not on per-type basis
 
-query GetNotifications($memberId: String!, $limit: Int!) {
-  notifications(
-    limit: $limit
+query GetNotificationsConnection($memberId: String!, $first: Int!, $after: String) {
+  notificationsConnection(
+    first: $first
+    after: $after
     orderBy: event_timestamp_DESC
-    where: { member: { id_eq: $memberId } } # CHANGE: Simplified filtering
+    where: { member: { id_eq: $memberId } }
   ) {
-    # CHANGE: The actual `event` is now nested as a property of `Notification`
-    event {
-      id
-      timestamp # CHANGE: `timestamp` now used instead of `createdAt` (which is no longer available)
-      inBlock
-      data {
-        ... on AuctionBidMadeEventData {
-          bid {
-            amount
-            bidder {
-              ...BasicMembershipFields
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
+    edges {
+      cursor
+      node {
+        event {
+          id
+          timestamp
+          inBlock
+          data {
+            ... on AuctionBidMadeEventData {
+              bid {
+                amount
+                bidder {
+                  ...BasicMembershipFields
+                }
+                previousTopBid {
+                  bidder {
+                    ...BasicMembershipFields
+                  }
+                }
+                auction {
+                  nft {
+                    video {
+                      id
+                      title
+                    }
+                  }
+                }
+              }
+              nftOwner {
+                ...BasicNftOwnerFields
+              }
             }
-            previousTopBid {
-              bidder {
+
+            ... on NftBoughtEventData {
+              buyer {
                 ...BasicMembershipFields
               }
-            }
-            auction {
+              price
               nft {
                 video {
                   id
@@ -37,94 +63,78 @@ query GetNotifications($memberId: String!, $limit: Int!) {
                 }
               }
             }
-          }
-          nftOwner {
-            ...BasicNftOwnerFields
-          }
-        }
 
-        ... on NftBoughtEventData {
-          buyer {
-            ...BasicMembershipFields
-          }
-          price
-          nft {
-            video {
-              id
-              title
+            ... on BidMadeCompletingAuctionEventData {
+              winningBid {
+                bidder {
+                  ...BasicMembershipFields
+                }
+                amount
+                nft {
+                  video {
+                    id
+                    title
+                  }
+                }
+              }
+              previousNftOwner {
+                ...BasicNftOwnerFields
+              }
             }
-          }
-        }
 
-        ... on BidMadeCompletingAuctionEventData {
-          winningBid {
-            bidder {
-              ...BasicMembershipFields
+            ... on OpenAuctionBidAcceptedEventData {
+              winningBid {
+                amount
+                bidder {
+                  ...BasicMembershipFields
+                }
+                auction {
+                  nft {
+                    video {
+                      id
+                      title
+                    }
+                  }
+                }
+              }
+              previousNftOwner {
+                ...BasicNftOwnerFields
+              }
             }
-            amount
-            nft {
-              video {
+
+            ... on EnglishAuctionSettledEventData {
+              winningBid {
+                bidder {
+                  ...BasicMembershipFields
+                }
+                auction {
+                  nft {
+                    video {
+                      id
+                      title
+                    }
+                  }
+                }
+              }
+              previousNftOwner {
+                ...BasicNftOwnerFields
+              }
+            }
+
+            ... on CommentCreatedEventData {
+              comment {
                 id
-                title
-              }
-            }
-          }
-          previousNftOwner {
-            ...BasicNftOwnerFields
-          }
-        }
-
-        ... on OpenAuctionBidAcceptedEventData {
-          winningBid {
-            amount
-            bidder {
-              ...BasicMembershipFields
-            }
-            auction {
-              nft {
                 video {
                   id
                   title
                 }
-              }
-            }
-          }
-          previousNftOwner {
-            ...BasicNftOwnerFields
-          }
-        }
-
-        ... on EnglishAuctionSettledEventData {
-          winningBid {
-            bidder {
-              ...BasicMembershipFields
-            }
-            auction {
-              nft {
-                video {
+                parentComment {
                   id
-                  title
+                }
+                author {
+                  ...BasicMembershipFields
                 }
               }
-            }
-          }
-          previousNftOwner {
-            ...BasicNftOwnerFields
-          }
-        }
-
-        ... on CommentCreatedEventData {
-          comment {
-            id
-            video {
-              id
-              title
-            }
-            parentComment {
-              id
-            }
-            author {
-              ...BasicMembershipFields
             }
           }
         }
@@ -133,16 +143,11 @@ query GetNotifications($memberId: String!, $limit: Int!) {
   }
 }
 
-# CHANGE: ID is now `String`
 query GetNftHistory($nftId: String!) {
-  nftHistoryEntries(
-    orderBy: event_timestamp_DESC # CHANGE: `event_timestamp` now used instead of `createdAt` (which is no longer available)
-    where: { nft: { id_eq: $nftId } } # CHANGE: Simplified filtering
-  ) {
-    # CHANGE: The actual `event` is now nested as a property of `NftHistoryEntry`
+  nftHistoryEntries(orderBy: event_timestamp_DESC, where: { nft: { id_eq: $nftId } }) {
     event {
       id
-      timestamp # CHANGE: `timestamp` now used instead of `createdAt` (which is no longer available)
+      timestamp
       data {
         ... on NftIssuedEventData {
           nftOwner {
@@ -255,7 +260,6 @@ query GetNftActivities(
   $after: String
   $orderBy: [NftActivityOrderByInput!] = event_timestamp_DESC
 ) {
-  # COUNT queries
   nftsBought: nftActivitiesConnection(
     where: {
       event: {

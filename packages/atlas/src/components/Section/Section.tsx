@@ -13,9 +13,10 @@ export type SectionProps<T> = {
   contentProps: SectionContentProps
   footerProps?: SectionFooterProps
   className?: string
+  withoutGap?: boolean
 }
 
-export function Section<T>({ headerProps, contentProps, footerProps, className }: SectionProps<T>) {
+export function Section<T>({ headerProps, contentProps, footerProps, className, withoutGap }: SectionProps<T>) {
   const isCarousel = contentProps.type === 'carousel'
   const [isCarouselEnd, setIsCarouselEnd] = useState(false)
   const [isCarouselBeginning, setIsCarouselBeginning] = useState(true)
@@ -42,7 +43,7 @@ export function Section<T>({ headerProps, contentProps, footerProps, className }
   }, [])
 
   return (
-    <SectionWrapper className={className}>
+    <SectionWrapper withoutGap={withoutGap} className={className}>
       {headerProps &&
         (isCarousel ? (
           <SectionHeader

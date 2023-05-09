@@ -3,7 +3,9 @@ import { useNotifications } from '@/providers/notifications/notifications.hooks'
 
 import { StyledButton } from './NotificationsButton.styles'
 
-export const NotificationsButton = () => {
+export const NotificationsButton = (props: { onClick?: () => void }) => {
   const { unseenNotificationsCounts } = useNotifications()
-  return <StyledButton variant="secondary" icon={<SvgActionNotifications />} badge={unseenNotificationsCounts} />
+  return (
+    <StyledButton {...props} variant="secondary" icon={<SvgActionNotifications />} badge={unseenNotificationsCounts} />
+  )
 }
