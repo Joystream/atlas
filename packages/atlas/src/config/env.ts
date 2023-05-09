@@ -4,7 +4,7 @@ type BuildEnv = 'production' | 'development'
 
 export const ENV_PREFIX = 'VITE'
 
-const getEnvName = (name: string) => {
+export const getEnvName = (name: string) => {
   return `${ENV_PREFIX}_${name}`
 }
 
