@@ -14,6 +14,7 @@ import { MinimizedPlayer } from '@/components/MinimizedPlayer/MinimizedPlayer'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Tooltip } from '@/components/Tooltip'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
+import { ProtectedActionWrapper } from '@/components/_auth/ProtectedActionWrapper'
 import { Button } from '@/components/_buttons/Button'
 import { CTA_MAP, CallToActionButton } from '@/components/_buttons/CallToActionButton'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
@@ -336,9 +337,14 @@ export const VideoView: FC = () => {
             dislikes={numberOfDislikes}
           />
           <ButtonsContainer>
-            <Button variant="tertiary" icon={<SvgActionShare />} onClick={handleShare}>
-              Share
-            </Button>
+            <ProtectedActionWrapper
+              title="You want to report this video?"
+              description="Log in to report harmful content"
+            >
+              <Button variant="tertiary" icon={<SvgActionShare />} onClick={handleShare}>
+                Share
+              </Button>
+            </ProtectedActionWrapper>
             <ContextMenu
               placement="bottom-end"
               items={[
@@ -346,6 +352,10 @@ export const VideoView: FC = () => {
                   onClick: () => setShowReportDialog(true),
                   label: 'Report video',
                   nodeStart: <SvgActionFlag />,
+                  protected: {
+                    title: 'You want to report this video?',
+                    description: 'Log in to report harmful content',
+                  },
                 },
               ]}
               trigger={<Button icon={<SvgActionMore />} variant="tertiary" size="medium" />}

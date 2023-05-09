@@ -11,6 +11,7 @@ import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { GridItem } from '@/components/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
+import { ProtectedActionWrapper } from '@/components/_auth/ProtectedActionWrapper'
 import { Button } from '@/components/_buttons/Button'
 import { absoluteRoutes } from '@/config/routes'
 import { useDeepMemo } from '@/hooks/useDeepMemo'
@@ -524,12 +525,23 @@ export const NftWidget: FC<NftWidgetProps> = ({
                   (nftStatus.buyNowPrice?.gtn(0) ? (
                     <GridItem colSpan={buttonColumnSpan}>
                       <ButtonGrid data-size={size} data-two-columns={size === 'medium'}>
-                        <Button fullWidth variant="secondary" size={buttonSize} onClick={onNftPurchase}>
-                          {nftStatus.canChangeBid ? 'Change bid' : 'Place bid'}
-                        </Button>
-                        <Button fullWidth size={buttonSize} onClick={onNftBuyNow}>
-                          Buy now
-                        </Button>
+                        <ProtectedActionWrapper
+                          title="You want to place a bid on this NFT?"
+                          description="Log in to take part in NFT auctions"
+                        >
+                          <Button fullWidth variant="secondary" size={buttonSize} onClick={onNftPurchase}>
+                            {nftStatus.canChangeBid ? 'Change bid' : 'Place bid'}
+                          </Button>
+                        </ProtectedActionWrapper>
+                        <ProtectedActionWrapper
+                          title="You want to buy this NFT?"
+                          description="Log in to take part in NFT auctions"
+                        >
+                          <Button fullWidth size={buttonSize} onClick={onNftBuyNow}>
+                            Buy now
+                          </Button>
+                        </ProtectedActionWrapper>
+
                         {/* second row button */}
                         {nftStatus.canWithdrawBid && (
                           <GridItem colSpan={buttonColumnSpan}>
@@ -551,9 +563,14 @@ export const NftWidget: FC<NftWidgetProps> = ({
                     <GridItem colSpan={buttonColumnSpan}>
                       <ButtonGrid data-size={size}>
                         <GridItem colSpan={buttonColumnSpan}>
-                          <Button fullWidth size={buttonSize} onClick={onNftPurchase}>
-                            {nftStatus.canChangeBid ? 'Change bid' : 'Place bid'}
-                          </Button>
+                          <ProtectedActionWrapper
+                            title="You want to place a bid on this NFT?"
+                            description="Log in to take part in NFT auctions"
+                          >
+                            <Button fullWidth size={buttonSize} onClick={onNftPurchase}>
+                              {nftStatus.canChangeBid ? 'Change bid' : 'Place bid'}
+                            </Button>
+                          </ProtectedActionWrapper>
                         </GridItem>
                         {nftStatus.canWithdrawBid && (
                           <GridItem colSpan={buttonColumnSpan}>
