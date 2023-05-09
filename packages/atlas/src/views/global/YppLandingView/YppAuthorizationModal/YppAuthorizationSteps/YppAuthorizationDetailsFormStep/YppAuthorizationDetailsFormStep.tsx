@@ -87,6 +87,7 @@ export const YppAuthorizationDetailsFormStep: FC = () => {
               GetExtendedFullChannelsQueryVariables,
               ExtendedFullChannelFieldsFragment
             >
+              notFoundLabel="Channel with this title not found, please check spelling and try again."
               documentQuery={GetExtendedBasicChannelsDocument}
               queryVariablesFactory={(value) => ({
                 where: {
