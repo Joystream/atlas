@@ -1,12 +1,16 @@
 import { ApolloClient, ApolloLink, FetchResult, HttpLink, Observable, split } from '@apollo/client'
+import { RetryLink } from '@apollo/client/link/retry'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { getMainDefinition } from '@apollo/client/utilities'
+import axios from 'axios'
 import { createClient } from 'graphql-ws'
 
 import { atlasConfig } from '@/config'
-import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config/env'
+import { ORION_AUTH_URL, ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config/env'
 import { logDistributorPerformance, testAssetDownload } from '@/providers/assets/assets.helpers'
+import { useUserStore } from '@/providers/user/user.store'
 import { useUserLocationStore } from '@/providers/userLocation'
+import { isAxiosError } from '@/utils/error'
 import { AssetLogger, ConsoleLogger, DistributorEventEntry, SentryLogger } from '@/utils/logs'
 import { TimeoutError, withTimeout } from '@/utils/misc'
 
@@ -29,6 +33,53 @@ const delayLink = new ApolloLink((operation, forward) => {
   })
 })
 
+const getUserId = async (userId?: string | null) => {
+  return axios.post<{
+    success: boolean
+    userId: string
+  }>(
+    ORION_AUTH_URL,
+    { ...(userId ? { userId } : {}) },
+    {
+      method: 'POST',
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+}
+
+const retryLink = new RetryLink({
+  attempts: {
+    max: 5,
+    retryIf: async (error) => {
+      const userId = useUserStore.getState().userId
+      const isUnauthorizedError =
+        error.statusCode === 400 &&
+        error?.result?.errors?.find((err: { message: string }) => err.message === 'Unauthorized')
+
+      if (isUnauthorizedError) {
+        try {
+          const response = await getUserId(userId)
+          if (response.data.userId) {
+            useUserStore.setState({ userId: response.data.userId })
+            return true
+          }
+          return true
+        } catch (error) {
+          if (isAxiosError(error) && error.response?.status === 401) {
+            useUserStore.setState({ userId: null })
+          }
+          return true
+        }
+      } else {
+        return false
+      }
+    },
+  },
+})
+
 const MAX_ALLOWED_RETRIES = 10
 const bannedDistributorUrls: Record<string, number> = {}
 
@@ -40,7 +91,11 @@ const createApolloClient = () => {
     })
   )
 
-  const orionLink = ApolloLink.from([delayLink, new HttpLink({ uri: ORION_GRAPHQL_URL })])
+  const orionLink = ApolloLink.from([
+    delayLink,
+    retryLink,
+    new HttpLink({ uri: ORION_GRAPHQL_URL, credentials: 'include' }),
+  ])
 
   const operationSplitLink = split(
     ({ query, setContext }) => {
