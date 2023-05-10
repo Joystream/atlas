@@ -15,7 +15,6 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Tooltip } from '@/components/Tooltip'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
-import { CTA_MAP, CallToActionButton } from '@/components/_buttons/CallToActionButton'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NftWidget, useNftWidget } from '@/components/_nft/NftWidget'
@@ -55,7 +54,6 @@ import {
   PlayerGridWrapper,
   PlayerSkeletonLoader,
   PlayerWrapper,
-  StyledCallToActionWrapper,
   StyledReactionStepper,
   TitleContainer,
   TitleText,
@@ -439,11 +437,6 @@ export const VideoView: FC = () => {
             {sideItems}
           </LayoutGrid>
         )}
-        <StyledCallToActionWrapper itemsCount={2}>
-          {['popular', 'discover'].map((item, idx) => (
-            <CallToActionButton key={`cta-${idx}`} {...CTA_MAP[item]} />
-          ))}
-        </StyledCallToActionWrapper>
       </LimitedWidthContainer>
     </>
   )

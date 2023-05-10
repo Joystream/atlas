@@ -1,15 +1,7 @@
 import { To } from 'history'
 import { FC, MouseEvent, ReactNode } from 'react'
 
-import {
-  SvgActionChevronR,
-  SvgActionNewTab,
-  SvgSidebarExplore,
-  SvgSidebarHome,
-  SvgSidebarPopular,
-} from '@/assets/icons'
-import { atlasConfig } from '@/config'
-import { absoluteRoutes } from '@/config/routes'
+import { SvgActionChevronR, SvgActionNewTab } from '@/assets/icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { getLinkPropsFromTo } from '@/utils/button'
 
@@ -48,24 +40,4 @@ export const CallToActionButton: FC<CallToActionButtonProps> = ({
       </ContentWrapper>
     </StyledContainer>
   )
-}
-export const CTA_MAP: Record<string, CallToActionButtonProps> = {
-  home: {
-    label: 'Home',
-    to: absoluteRoutes.viewer.index(),
-    colorVariant: 'yellow',
-    icon: <SvgSidebarHome />,
-  },
-  popular: {
-    label: `Popular on ${atlasConfig.general.appName}`,
-    to: absoluteRoutes.viewer.popular(),
-    colorVariant: 'red',
-    icon: <SvgSidebarPopular />,
-  },
-  discover: {
-    label: 'Discover videos',
-    to: absoluteRoutes.viewer.discover(),
-    colorVariant: 'yellow',
-    icon: <SvgSidebarExplore />,
-  },
 }
