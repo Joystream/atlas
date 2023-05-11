@@ -42,7 +42,7 @@ export const SignInModalStepTemplate: FC<SignInModalStepTemplateProps> = ({
       <CustomBackgroundContainer
         darkBackground={darkBackground}
         hasDivider={!!(backgroundImage || darkBackground)}
-        bottomPadding={!!(backgroundImage || darkBackground)}
+        hasBottomPadding={!!(backgroundImage || darkBackground)}
       >
         {backgroundImage && (
           <>

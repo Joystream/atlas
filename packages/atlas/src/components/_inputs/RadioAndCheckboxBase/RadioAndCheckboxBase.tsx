@@ -1,4 +1,4 @@
-import { FC, MouseEvent, PropsWithChildren } from 'react'
+import { FC, MouseEvent, PropsWithChildren, ReactNode } from 'react'
 
 import { Text } from '@/components/Text'
 
@@ -7,7 +7,7 @@ import { CaptionText, RadioAndCheckboxLabel } from './RadioAndCheckboxBase.style
 type RadioAndCheckboxBaseProps = PropsWithChildren<{
   disabled?: boolean
   className?: string
-  label?: string
+  label?: ReactNode
   caption?: string
   error?: boolean
   onClick?: (e: MouseEvent) => void

@@ -29,6 +29,9 @@ import {
   SignInModalTermsStep,
   SignInModalWalletStep,
   SignInStepProps,
+  SignUpEmailStep,
+  SignUpPasswordStep,
+  SignUpSeedStep,
 } from './SignInSteps'
 
 type FaucetParams = {
@@ -77,7 +80,7 @@ export const SignInModal: FC = () => {
       setCurrentStepIdx(1)
       return
     }
-    setCurrentStepIdx(0)
+    setCurrentStepIdx(5)
   }, [signInModalOpen, currentStep, walletConnected])
 
   // keep cachedStepIdx updated
@@ -244,6 +247,12 @@ export const SignInModal: FC = () => {
     }
 
     switch (displayedStep) {
+      case 'signup-email':
+        return <SignUpEmailStep />
+      case 'signup-password':
+        return <SignUpPasswordStep />
+      case 'signup-seed':
+        return <SignUpSeedStep />
       case 'wallet':
         return <SignInModalWalletStep {...commonProps} />
       case 'account':
@@ -276,7 +285,12 @@ export const SignInModal: FC = () => {
   return (
     <StyledDialogModal
       show={!!currentStep}
-      dividers={currentStep !== 'creating'}
+      dividers={
+        currentStep !== 'creating' &&
+        currentStep !== 'signup-email' &&
+        currentStep !== 'signup-password' &&
+        currentStep !== 'signup-seed'
+      }
       primaryButton={primaryButtonProps}
       secondaryButton={backButtonVisible ? { text: 'Back', onClick: () => goToPreviousStep() } : undefined}
       additionalActionsNode={

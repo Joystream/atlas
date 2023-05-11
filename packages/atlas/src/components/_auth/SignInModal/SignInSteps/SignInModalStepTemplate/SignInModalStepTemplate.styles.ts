@@ -47,12 +47,6 @@ const backAnimation = keyframes`
   }
   `
 
-type CustomBackgroundContainerProps = {
-  darkBackground?: boolean
-  hasDivider?: boolean
-  bottomPadding?: boolean
-}
-
 export const BackgroundImageOverlay = styled.div`
   position: absolute;
   top: 0;
@@ -74,6 +68,12 @@ export const BackgroundImage = styled.img`
   z-index: -1;
 `
 
+type CustomBackgroundContainerProps = {
+  darkBackground?: boolean
+  hasDivider?: boolean
+  hasBottomPadding?: boolean
+}
+
 export const CustomBackgroundContainer = styled.div<CustomBackgroundContainerProps>`
   position: relative;
   overflow: hidden;
@@ -83,8 +83,8 @@ export const CustomBackgroundContainer = styled.div<CustomBackgroundContainerPro
 
   margin: calc(-1 * var(--local-size-dialog-padding)) calc(-1 * var(--local-size-dialog-padding)) 0
     calc(-1 * var(--local-size-dialog-padding));
-  padding: ${({ bottomPadding }) =>
-    bottomPadding
+  padding: ${({ hasBottomPadding }) =>
+    hasBottomPadding
       ? 'var(--local-size-dialog-padding)'
       : 'var(--local-size-dialog-padding) var(--local-size-dialog-padding) 0 var(--local-size-dialog-padding)'};
   background-color: ${({ darkBackground }) => (darkBackground ? cVar('colorBackground') : 'unset')};
