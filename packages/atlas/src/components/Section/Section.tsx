@@ -36,9 +36,13 @@ export function Section<T>({ headerProps, contentProps, footerProps, className, 
       setIsCarouselEnd(slider.isEnd)
     }
     gliderRef.current?.on('slideChange', handler)
+    gliderRef.current?.on('resize', handler)
+    gliderRef.current?.on('update', handler)
 
     return () => {
       gliderRef.current?.off('slideChange', handler)
+      gliderRef.current?.off('resize', handler)
+      gliderRef.current?.off('update', handler)
     }
   }, [])
 
