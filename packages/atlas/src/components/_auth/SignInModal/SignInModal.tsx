@@ -81,7 +81,7 @@ export const SignInModal: FC = () => {
       return
     }
     // todo bring back to 0
-    setCurrentStepIdx(6)
+    setCurrentStepIdx(7)
   }, [signInModalOpen, currentStep, walletConnected])
 
   // keep cachedStepIdx updated
