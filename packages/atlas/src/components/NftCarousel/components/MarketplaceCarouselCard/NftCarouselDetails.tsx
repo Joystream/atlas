@@ -88,6 +88,10 @@ export const NftCarouselDetails = ({
       nftStatus?.status === 'auction' && nftStatus.topBid?.amount
         ? hapiBnToTokenNumber(new BN(nftStatus.topBid?.amount))
         : undefined,
+    minBid:
+      nftStatus?.status === 'auction' && nftStatus.startingPrice
+        ? hapiBnToTokenNumber(nftStatus.startingPrice)
+        : undefined,
   }
 
   useLayoutEffect(() => {
@@ -128,6 +132,8 @@ export const NftCarouselDetails = ({
     <Container isActive={active}>
       <VideoContainer>
         <BackgroundVideoPlayer
+          videoId={nft.video.id}
+          withFade={active}
           autoPlay={active}
           playing={active}
           muted={true}
@@ -180,6 +186,14 @@ export const NftCarouselDetails = ({
                     tileSize="big"
                     caption="TOP BID"
                     content={nftDetails.topBid}
+                    icon={<JoyTokenIcon size={16} variant="regular" />}
+                  />
+                )}
+                {nftDetails.minBid && (
+                  <DetailsContent
+                    tileSize="big"
+                    caption="MIN BID"
+                    content={nftDetails.minBid}
                     icon={<JoyTokenIcon size={16} variant="regular" />}
                   />
                 )}

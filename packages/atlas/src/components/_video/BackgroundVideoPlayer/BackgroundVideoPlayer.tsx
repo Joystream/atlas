@@ -1,11 +1,14 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { FC, SyntheticEvent, VideoHTMLAttributes, useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 import { SvgActionPause, SvgActionPlay, SvgActionSoundOff, SvgActionSoundOn } from '@/assets/icons'
 import { Button } from '@/components/_buttons/Button'
 import { VideoProgress } from '@/components/_video/BackgroundVideoPlayer/VideoProgress'
-import { sizes, transitions, zIndex } from '@/styles'
+import { absoluteRoutes } from '@/config/routes'
+import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 import { ConsoleLogger } from '@/utils/logs'
 
 type BackgroundVideoPlayerProps = {
@@ -13,6 +16,8 @@ type BackgroundVideoPlayerProps = {
   playing?: boolean
   handleActions?: boolean
   videoPlaytime?: number
+  videoId?: string
+  withFade?: boolean
 } & VideoHTMLAttributes<HTMLVideoElement>
 
 export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
@@ -25,6 +30,8 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
   src,
   handleActions,
   videoPlaytime,
+  videoId,
+  withFade,
   ...props
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -99,28 +106,30 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
         </ButtonBox>
       )}
       {playing && <VideoProgress video={videoRef.current} isPlaying={isPlaying} tick={10} limit={videoPlaytime} />}
-      <StyledVideo
-        src={src}
-        autoPlay={autoPlay}
-        playsInline={playsInline}
-        ref={videoRef}
-        onEnded={handleEnded}
-        onPlay={handlePlay}
-        poster={poster}
-        {...props}
-        muted={handleActions ? isMuted : props.muted}
-      />
-      {poster && (
-        <CSSTransition
-          in={isPosterVisible}
-          unmountOnExit
-          mountOnEnter
-          classNames={transitions.names.fade}
-          timeout={300}
-        >
-          <VideoPoster src={poster} alt="" />
-        </CSSTransition>
-      )}
+      <StyledLink withFade={withFade} to={videoId ? absoluteRoutes.viewer.video(videoId) : ''}>
+        <StyledVideo
+          src={src}
+          autoPlay={autoPlay}
+          playsInline={playsInline}
+          ref={videoRef}
+          onEnded={handleEnded}
+          onPlay={handlePlay}
+          poster={poster}
+          {...props}
+          muted={handleActions ? isMuted : props.muted}
+        />
+        {poster && (
+          <CSSTransition
+            in={isPosterVisible}
+            unmountOnExit
+            mountOnEnter
+            classNames={transitions.names.fade}
+            timeout={300}
+          >
+            <VideoPoster src={poster} alt="" />
+          </CSSTransition>
+        )}
+      </StyledLink>
     </VideoWrapper>
   )
 }
@@ -166,4 +175,41 @@ const ButtonBox = styled.div`
   z-index: ${zIndex.modals};
   display: flex;
   gap: ${sizes(4)};
+`
+
+// on Firefox there is a gap between fades, negative margin fixes that
+export const StyledLink = styled(Link)<{ withFade?: boolean }>`
+  ::after {
+    ${media.sm} {
+      content: '';
+      position: absolute;
+      inset: 50% 0 0 0;
+      margin: 0 0 -2px;
+
+      ${(props) =>
+        props.withFade &&
+        css`
+          background: linear-gradient(
+            180deg,
+            rgb(7 8 8 / 0) 0%,
+            rgb(7 8 8 / 0.0071) 11.79%,
+            rgb(7 8 8 / 0.0276) 21.38%,
+            rgb(7 8 8 / 0.0598) 29.12%,
+            rgb(7 8 8 / 0.1026) 35.34%,
+            rgb(7 8 8 / 0.1543) 40.37%,
+            rgb(7 8 8 / 0.2135) 44.56%,
+            rgb(7 8 8 / 0.2789) 48.24%,
+            rgb(7 8 8 / 0.349) 51.76%,
+            rgb(7 8 8 / 0.4222) 55.44%,
+            rgb(7 8 8 / 0.4974) 59.63%,
+            rgb(7 8 8 / 0.5729) 64.66%,
+            rgb(7 8 8 / 0.6474) 70.88%,
+            rgb(7 8 8 / 0.7193) 78.62%,
+            rgb(7 8 8 / 0.7873) 88.21%,
+            rgb(7 8 8 / 0.85) 100%
+          );
+          border-bottom: 32px solid ${cVar('colorCoreNeutral700Darken')};
+        `}
+    }
+  }
 `

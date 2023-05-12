@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react'
 import { GetFeaturedNftsVideosQuery } from '@/api/queries/__generated__/nfts.generated'
 import { Carousel, CarouselProps, SwiperInstance } from '@/components/Carousel'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { breakpoints, media } from '@/styles'
+import { breakpoints } from '@/styles'
 
 import { MarketplaceCarouselCard } from './components/MarketplaceCarouselCard'
 import { CarouselNavItem } from './components/NftCarouselItem/CarouselNavItem'
@@ -56,7 +56,7 @@ export const MarketplaceCarousel = ({ carouselProps, isLoading, ...rest }: Marke
     return [null]
   }, [rest.type, rest.nfts, glider, isLoading])
 
-  if (!content.length) {
+  if (!content.length || content.length < 4) {
     return null
   }
 
@@ -75,26 +75,6 @@ export const MarketplaceCarousel = ({ carouselProps, isLoading, ...rest }: Marke
 }
 
 const StyledSkeleton = styled(SkeletonLoader)`
-  height: 325px;
   width: 100%;
-
-  ${media.sm} {
-    min-height: 340px;
-  }
-
-  ${media.md} {
-    min-height: 410px;
-  }
-
-  ${media.lg} {
-    min-height: 610px;
-  }
-
-  ${media.xl} {
-    min-height: 660px;
-  }
-
-  ${media.xxl} {
-    min-height: 830px;
-  }
+  aspect-ratio: 16/9;
 `
