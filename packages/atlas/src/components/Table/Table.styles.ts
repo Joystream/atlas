@@ -37,7 +37,7 @@ const cellStyles = css`
 export const Th = styled(Text)`
   ${cellStyles};
 
-  text-align: left;
+  white-space: nowrap;
 `
 
 export const Td = styled(Text)`
@@ -72,4 +72,9 @@ export const EmptyTableDescription = styled(Text)`
 export const PageWrapper = styled.div`
   display: flex;
   gap: ${sizes(3)};
+`
+
+export const RightAlignedHeader = styled.div`
+  width: 100%;
+  text-align: right;
 `

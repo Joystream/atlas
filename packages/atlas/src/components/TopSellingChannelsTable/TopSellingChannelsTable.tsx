@@ -11,6 +11,7 @@ import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Section } from '@/components/Section/Section'
 import { TableProps } from '@/components/Table'
+import { RightAlignedHeader } from '@/components/Table/Table.styles'
 import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
@@ -18,6 +19,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import {
   JoyAmountWrapper,
+  NftSoldText,
   SenderItem,
   SenderItemIconsWrapper,
   SkeletonChannelContainer,
@@ -31,22 +33,22 @@ const COLUMNS: TableProps['columns'] = [
   {
     Header: '',
     accessor: 'index',
-    width: 20,
+    width: 1,
   },
   {
     Header: 'CHANNEL',
     accessor: 'channel',
-    width: 200,
+    width: 9,
   },
   {
-    Header: 'NFTS SOLD',
+    Header: () => <RightAlignedHeader>NFTS SOLD</RightAlignedHeader>,
     accessor: 'nftsSold',
-    width: 70,
+    width: 4,
   },
   {
-    Header: 'SALES VOLUME',
+    Header: () => <RightAlignedHeader>SALES VOLUME</RightAlignedHeader>,
     accessor: 'salesVolume',
-    width: 70,
+    width: 4,
   },
 ]
 
@@ -107,9 +109,9 @@ export const TopSellingChannelsTable = () => {
               </JoyAmountWrapper>
             ),
             nftsSold: (
-              <Text variant="t100" as="p">
+              <NftSoldText variant="t100" as="p">
                 {data.nftSold}
-              </Text>
+              </NftSoldText>
             ),
             channel: <Channel channel={data.channel} />,
           })) ?? [],
