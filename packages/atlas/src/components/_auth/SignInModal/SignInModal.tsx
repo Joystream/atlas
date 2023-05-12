@@ -50,6 +50,13 @@ export const SignInModal: FC = () => {
   const [hasNavigatedBack, setHasNavigatedBack] = useState(false)
   const { joystream } = useJoystream()
   const dialogContentRef = useRef<HTMLDivElement>(null)
+  const [userForm, setUserForm] = useState<{
+    email: string
+    password: string
+  }>({
+    email: '',
+    password: '',
+  })
   const [previouslyFailedData, setPreviouslyFailedData] = useState<MemberFormData | null>(null)
   const { mutateAsync: faucetMutation } = useMutation('faucet-post', (body: FaucetParams) =>
     axios.post<NewMemberResponse>(FAUCET_URL, body)
@@ -81,7 +88,7 @@ export const SignInModal: FC = () => {
       return
     }
     // todo bring back to 0
-    setCurrentStepIdx(7)
+    setCurrentStepIdx(5)
   }, [signInModalOpen, currentStep, walletConnected])
 
   // keep cachedStepIdx updated
@@ -249,11 +256,21 @@ export const SignInModal: FC = () => {
 
     switch (displayedStep) {
       case 'signup-email':
-        return <SignUpEmailStep />
+        return (
+          <SignUpEmailStep
+            {...commonProps}
+            onEmailSubmit={(email) => setUserForm((userForm) => ({ ...userForm, email }))}
+          />
+        )
       case 'signup-password':
-        return <SignUpPasswordStep />
+        return (
+          <SignUpPasswordStep
+            {...commonProps}
+            onPasswordSubmit={(password) => setUserForm((userForm) => ({ ...userForm, password }))}
+          />
+        )
       case 'signup-seed':
-        return <SignUpSeedStep />
+        return <SignUpSeedStep {...commonProps} />
       case 'wallet':
         return <SignInModalWalletStep {...commonProps} />
       case 'account':

@@ -16,6 +16,7 @@ import {
 
 import { SignInModalStepTemplate } from '../SignInModalStepTemplate'
 import { StyledSignUpForm } from '../SignInSteps.styles'
+import { SignInStepProps } from '../SignInSteps.types'
 
 type PasswordStepForm = {
   password: string
@@ -23,7 +24,11 @@ type PasswordStepForm = {
 }
 type PasswordInputNames = keyof PasswordStepForm
 
-export const SignUpPasswordStep = () => {
+type SignUpPasswordStepProps = {
+  onPasswordSubmit: (password: string) => void
+} & SignInStepProps
+
+export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = () => {
   const { register } = useForm<PasswordStepForm>()
   const [isFieldVisible, setIsFieldVisible] = useState<Record<PasswordInputNames, boolean>>({
     password: false,

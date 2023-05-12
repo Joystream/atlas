@@ -1,4 +1,5 @@
 import { mnemonicGenerate } from '@polkadot/util-crypto'
+import { FC } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { SvgActionCopy } from '@/assets/icons'
@@ -10,8 +11,9 @@ import { StyledTextArea, StyledTextButton } from './SignupSeedStep.styles'
 
 import { SignInModalStepTemplate } from '../SignInModalStepTemplate'
 import { CheckboxWrapper, StyledSignUpForm } from '../SignInSteps.styles'
+import { SignInStepProps } from '../SignInSteps.types'
 
-export const SignUpSeedStep = () => {
+export const SignUpSeedStep: FC<SignInStepProps> = () => {
   const { copyToClipboard } = useClipboard()
   const { control } = useForm<{ confirmedCopy: boolean }>({
     defaultValues: {
