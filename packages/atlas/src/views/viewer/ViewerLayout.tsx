@@ -28,14 +28,12 @@ import { HomeView } from './HomeView'
 import { MarketplaceView } from './MarketplaceView'
 import { MemberView } from './MemberView'
 import { NotFoundView } from './NotFoundView'
-import { PopularView } from './PopularView'
 import { SearchView } from './SearchView'
 import { VideoView } from './VideoView'
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.search(), element: <SearchView /> },
   { path: relativeRoutes.viewer.index(), element: <HomeView /> },
-  { path: relativeRoutes.viewer.popular(), element: <PopularView /> },
   { path: relativeRoutes.viewer.discover(), element: <DiscoverView /> },
   { path: relativeRoutes.viewer.video(), element: <VideoView /> },
   { path: relativeRoutes.viewer.channels(), element: <ChannelsView /> },

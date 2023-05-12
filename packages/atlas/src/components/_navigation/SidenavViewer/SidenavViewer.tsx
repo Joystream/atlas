@@ -6,7 +6,6 @@ import {
   SvgSidebarExplore,
   SvgSidebarHome,
   SvgSidebarMarketplace,
-  SvgSidebarPopular,
   SvgSidebarYpp,
 } from '@/assets/icons'
 import { AppLogo } from '@/components/AppLogo'
@@ -30,12 +29,6 @@ export const viewerNavItems = [
     bottomNav: true,
   },
   {
-    icon: <SvgSidebarPopular />,
-    name: 'Popular',
-    to: absoluteRoutes.viewer.popular(),
-    bottomNav: true,
-  },
-  {
     icon: <SvgSidebarMarketplace />,
     expandedName: 'Marketplace',
     name: 'Market',
@@ -46,7 +39,7 @@ export const viewerNavItems = [
     icon: <SvgSidebarExplore />,
     name: 'Discover',
     to: absoluteRoutes.viewer.discover(),
-    bottomNav: false,
+    bottomNav: true,
   },
   ...(atlasConfig.features.ypp.googleConsoleClientId
     ? [
@@ -55,7 +48,7 @@ export const viewerNavItems = [
           name: 'YPP',
           expandedName: 'YouTube Partner Program',
           to: absoluteRoutes.viewer.ypp(),
-          bottomNav: false,
+          bottomNav: true,
         },
       ]
     : []),
