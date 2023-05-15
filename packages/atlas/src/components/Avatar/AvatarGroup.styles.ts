@@ -48,7 +48,7 @@ export const AvatarGroupContainer = styled.div<AvatarGroupContainerProps>`
     shouldHighlightEveryAvatar &&
     css`
       :hover ${StyledAvatar} {
-        ${sharedAvatarHoverStyles};
+        ${sharedAvatarHoverStyles({ disableHoverDimm: true })};
       }
       :active ${StyledAvatar} {
         ${sharedAvatarActiveStyles};
