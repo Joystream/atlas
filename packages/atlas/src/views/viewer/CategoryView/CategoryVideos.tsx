@@ -1,8 +1,8 @@
 import { FC, useRef } from 'react'
 
 import {
-  GetBasicVideosConnectionDocument,
-  GetBasicVideosConnectionQuery,
+  GetTilesVideosConnectionDocument,
+  GetTilesVideosConnectionQuery,
 } from '@/api/queries/__generated__/videos.generated'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Section } from '@/components/Section/Section'
@@ -22,8 +22,8 @@ type CategoryVideosProps = {
 export const CategoryVideos: FC<CategoryVideosProps> = ({ categoriesId }) => {
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const { tiles, pageInfo, fetchMore, columns } = useInfiniteVideoGrid<GetBasicVideosConnectionQuery>({
-    query: GetBasicVideosConnectionDocument,
+  const { tiles, pageInfo, fetchMore, columns } = useInfiniteVideoGrid<GetTilesVideosConnectionQuery>({
+    query: GetTilesVideosConnectionDocument,
     variables: {
       where: {
         ...publicVideoFilter,

@@ -768,6 +768,66 @@ export type BasicVideoFieldsFragment = {
   } | null
 }
 
+export type TileVideoFieldsFragment = {
+  __typename?: 'Video'
+  id: string
+  title?: string | null
+  viewsNum: number
+  createdAt: Date
+  duration?: number | null
+  reactionsCount: number
+  commentsCount: number
+  channel: {
+    __typename?: 'Channel'
+    id: string
+    title?: string | null
+    description?: string | null
+    createdAt: Date
+    followsNum: number
+    rewardAccount: string
+    channelStateBloatBond: string
+    avatarPhoto?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      resolvedUrls: Array<string>
+      resolvedUrl?: string | null
+      createdAt: Date
+      size: string
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type?:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoSubtitle' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+        | null
+    } | null
+  }
+  thumbnailPhoto?: {
+    __typename?: 'StorageDataObject'
+    id: string
+    resolvedUrls: Array<string>
+    resolvedUrl?: string | null
+    createdAt: Date
+    size: string
+    isAccepted: boolean
+    ipfsHash: string
+    storageBag: { __typename?: 'StorageBag'; id: string }
+    type?:
+      | { __typename: 'DataObjectTypeChannelAvatar' }
+      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+      | { __typename: 'DataObjectTypeVideoMedia' }
+      | { __typename: 'DataObjectTypeVideoSubtitle' }
+      | { __typename: 'DataObjectTypeVideoThumbnail' }
+      | null
+  } | null
+  nft?: { __typename?: 'OwnedNft'; id: string } | null
+}
+
 export type FullVideoFieldsFragment = {
   __typename?: 'Video'
   id: string
@@ -2862,6 +2922,28 @@ export const DistributionBucketOperatorFieldFragmentDoc = gql`
     }
     status
   }
+`
+export const TileVideoFieldsFragmentDoc = gql`
+  fragment TileVideoFields on Video {
+    id
+    title
+    viewsNum
+    createdAt
+    duration
+    reactionsCount
+    commentsCount
+    channel {
+      ...BasicChannelFields
+    }
+    thumbnailPhoto {
+      ...StorageDataObjectFields
+    }
+    nft {
+      id
+    }
+  }
+  ${BasicChannelFieldsFragmentDoc}
+  ${StorageDataObjectFieldsFragmentDoc}
 `
 export const VideoMediaMetadataFieldsFragmentDoc = gql`
   fragment VideoMediaMetadataFields on VideoMediaMetadata {

@@ -30,6 +30,27 @@ query GetBasicVideosConnection(
   }
 }
 
+query GetTilesVideosConnection(
+  $first: Int
+  $after: String
+  $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
+  $where: VideoWhereInput
+) {
+  videosConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
+    edges {
+      cursor
+      node {
+        ...TileVideoFields
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
+  }
+}
+
 # No changes
 query GetFullVideosConnection(
   $first: Int

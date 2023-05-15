@@ -6,6 +6,8 @@ import {
   GetBasicVideosConnectionQueryVariables,
   GetMostViewedVideosConnectionQuery,
   GetMostViewedVideosConnectionQueryVariables,
+  GetTilesVideosConnectionQuery,
+  GetTilesVideosConnectionQueryVariables,
 } from '@/api/queries/__generated__/videos.generated'
 import { DEFAULT_VIDEO_GRID } from '@/styles'
 import { createPlaceholderData } from '@/utils/data'
@@ -13,13 +15,18 @@ import { createPlaceholderData } from '@/utils/data'
 import { useBreakpointKey } from './useBreakpointKey'
 import { useVideoGridRows } from './useVideoGridRows'
 
-type VideoInfiniteQueries = GetBasicVideosConnectionQuery | GetMostViewedVideosConnectionQuery
+type VideoInfiniteQueries =
+  | GetBasicVideosConnectionQuery
+  | GetMostViewedVideosConnectionQuery
+  | GetTilesVideosConnectionQuery
 
 type useGridTilesOpts<Query extends VideoInfiniteQueries> = {
   query: DocumentNode
   variables: Query extends GetBasicVideosConnectionQuery
     ? GetBasicVideosConnectionQueryVariables
-    : GetMostViewedVideosConnectionQueryVariables
+    : Query extends GetMostViewedVideosConnectionQuery
+    ? GetMostViewedVideosConnectionQueryVariables
+    : GetTilesVideosConnectionQueryVariables
   options?: Omit<QueryHookOptions, 'variables'>
 }
 

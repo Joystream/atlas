@@ -2,7 +2,11 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { BasicVideoFieldsFragmentDoc, FullVideoFieldsFragmentDoc } from './fragments.generated'
+import {
+  BasicVideoFieldsFragmentDoc,
+  FullVideoFieldsFragmentDoc,
+  TileVideoFieldsFragmentDoc,
+} from './fragments.generated'
 
 const defaultOptions = {} as const
 export type GetFullVideoQueryVariables = Types.Exact<{
@@ -794,6 +798,85 @@ export type GetBasicVideosConnectionQuery = {
             | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
             | null
         } | null
+      }
+    }>
+    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor: string }
+  }
+}
+
+export type GetTilesVideosConnectionQueryVariables = Types.Exact<{
+  first?: Types.InputMaybe<Types.Scalars['Int']>
+  after?: Types.InputMaybe<Types.Scalars['String']>
+  orderBy?: Types.InputMaybe<Array<Types.VideoOrderByInput> | Types.VideoOrderByInput>
+  where?: Types.InputMaybe<Types.VideoWhereInput>
+}>
+
+export type GetTilesVideosConnectionQuery = {
+  __typename?: 'Query'
+  videosConnection: {
+    __typename?: 'VideosConnection'
+    totalCount: number
+    edges: Array<{
+      __typename?: 'VideoEdge'
+      cursor: string
+      node: {
+        __typename?: 'Video'
+        id: string
+        title?: string | null
+        viewsNum: number
+        createdAt: Date
+        duration?: number | null
+        reactionsCount: number
+        commentsCount: number
+        channel: {
+          __typename?: 'Channel'
+          id: string
+          title?: string | null
+          description?: string | null
+          createdAt: Date
+          followsNum: number
+          rewardAccount: string
+          channelStateBloatBond: string
+          avatarPhoto?: {
+            __typename?: 'StorageDataObject'
+            id: string
+            resolvedUrls: Array<string>
+            resolvedUrl?: string | null
+            createdAt: Date
+            size: string
+            isAccepted: boolean
+            ipfsHash: string
+            storageBag: { __typename?: 'StorageBag'; id: string }
+            type?:
+              | { __typename: 'DataObjectTypeChannelAvatar' }
+              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+              | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoSubtitle' }
+              | { __typename: 'DataObjectTypeVideoThumbnail' }
+              | null
+          } | null
+        }
+        thumbnailPhoto?: {
+          __typename?: 'StorageDataObject'
+          id: string
+          resolvedUrls: Array<string>
+          resolvedUrl?: string | null
+          createdAt: Date
+          size: string
+          isAccepted: boolean
+          ipfsHash: string
+          storageBag: { __typename?: 'StorageBag'; id: string }
+          type?:
+            | { __typename: 'DataObjectTypeChannelAvatar' }
+            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+            | { __typename: 'DataObjectTypeVideoMedia' }
+            | { __typename: 'DataObjectTypeVideoSubtitle' }
+            | { __typename: 'DataObjectTypeVideoThumbnail' }
+            | null
+        } | null
+        nft?: { __typename?: 'OwnedNft'; id: string } | null
       }
     }>
     pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor: string }
@@ -2532,6 +2615,73 @@ export type GetBasicVideosConnectionLazyQueryHookResult = ReturnType<typeof useG
 export type GetBasicVideosConnectionQueryResult = Apollo.QueryResult<
   GetBasicVideosConnectionQuery,
   GetBasicVideosConnectionQueryVariables
+>
+export const GetTilesVideosConnectionDocument = gql`
+  query GetTilesVideosConnection(
+    $first: Int
+    $after: String
+    $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
+    $where: VideoWhereInput
+  ) {
+    videosConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
+      edges {
+        cursor
+        node {
+          ...TileVideoFields
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      totalCount
+    }
+  }
+  ${TileVideoFieldsFragmentDoc}
+`
+
+/**
+ * __useGetTilesVideosConnectionQuery__
+ *
+ * To run a query within a React component, call `useGetTilesVideosConnectionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTilesVideosConnectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTilesVideosConnectionQuery({
+ *   variables: {
+ *      first: // value for 'first'
+ *      after: // value for 'after'
+ *      orderBy: // value for 'orderBy'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetTilesVideosConnectionQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetTilesVideosConnectionQuery, GetTilesVideosConnectionQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetTilesVideosConnectionQuery, GetTilesVideosConnectionQueryVariables>(
+    GetTilesVideosConnectionDocument,
+    options
+  )
+}
+export function useGetTilesVideosConnectionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetTilesVideosConnectionQuery, GetTilesVideosConnectionQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetTilesVideosConnectionQuery, GetTilesVideosConnectionQueryVariables>(
+    GetTilesVideosConnectionDocument,
+    options
+  )
+}
+export type GetTilesVideosConnectionQueryHookResult = ReturnType<typeof useGetTilesVideosConnectionQuery>
+export type GetTilesVideosConnectionLazyQueryHookResult = ReturnType<typeof useGetTilesVideosConnectionLazyQuery>
+export type GetTilesVideosConnectionQueryResult = Apollo.QueryResult<
+  GetTilesVideosConnectionQuery,
+  GetTilesVideosConnectionQueryVariables
 >
 export const GetFullVideosConnectionDocument = gql`
   query GetFullVideosConnection(

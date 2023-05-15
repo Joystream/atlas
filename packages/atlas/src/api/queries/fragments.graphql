@@ -164,6 +164,25 @@ fragment BasicVideoFields on Video {
   }
 }
 
+fragment TileVideoFields on Video {
+  id
+  title
+  viewsNum # CHANGE: Instead of `views` (which is now a One-to-Many field)
+  createdAt
+  duration
+  reactionsCount
+  commentsCount
+  channel {
+    ...BasicChannelFields
+  }
+  thumbnailPhoto {
+    ...StorageDataObjectFields
+  }
+  nft {
+    id
+  }
+}
+
 fragment FullVideoFields on Video {
   id
   title
