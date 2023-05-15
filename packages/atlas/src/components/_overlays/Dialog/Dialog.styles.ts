@@ -15,6 +15,7 @@ type SizeProps = {
 
 type ContentProps = {
   noContentPadding?: boolean
+  hasFooter: boolean
 }
 
 const getDialogPaddingVariableStyles = ({ size }: SizeProps) =>
@@ -77,9 +78,11 @@ export const HeaderContent = styled.div`
 export const Content = styled.div<ContentProps>`
   overflow-y: auto;
   overflow-x: hidden;
-  padding: ${({ noContentPadding }) =>
+  padding: ${({ noContentPadding, hasFooter }) =>
     !noContentPadding
-      ? 'var(--local-size-dialog-padding) var(--local-size-dialog-padding) 0 var(--local-size-dialog-padding)'
+      ? `var(--local-size-dialog-padding) var(--local-size-dialog-padding) ${
+          hasFooter ? 0 : 'var(--local-size-dialog-padding)'
+        } var(--local-size-dialog-padding) `
       : 0};
 `
 
