@@ -826,17 +826,10 @@ export type GetTilesVideosConnectionQuery = {
         viewsNum: number
         createdAt: Date
         duration?: number | null
-        reactionsCount: number
-        commentsCount: number
         channel: {
           __typename?: 'Channel'
           id: string
           title?: string | null
-          description?: string | null
-          createdAt: Date
-          followsNum: number
-          rewardAccount: string
-          channelStateBloatBond: string
           avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string

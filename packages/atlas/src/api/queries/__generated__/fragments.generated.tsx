@@ -8,6 +8,31 @@ export type ExtendedVideoCategoryFieldsFragment = {
   category: { __typename?: 'VideoCategory'; id: string; name?: string | null }
 }
 
+export type TileChannelFieldsFragment = {
+  __typename?: 'Channel'
+  id: string
+  title?: string | null
+  avatarPhoto?: {
+    __typename?: 'StorageDataObject'
+    id: string
+    resolvedUrls: Array<string>
+    resolvedUrl?: string | null
+    createdAt: Date
+    size: string
+    isAccepted: boolean
+    ipfsHash: string
+    storageBag: { __typename?: 'StorageBag'; id: string }
+    type?:
+      | { __typename: 'DataObjectTypeChannelAvatar' }
+      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+      | { __typename: 'DataObjectTypeVideoMedia' }
+      | { __typename: 'DataObjectTypeVideoSubtitle' }
+      | { __typename: 'DataObjectTypeVideoThumbnail' }
+      | null
+  } | null
+}
+
 export type BasicChannelFieldsFragment = {
   __typename?: 'Channel'
   id: string
@@ -775,17 +800,10 @@ export type TileVideoFieldsFragment = {
   viewsNum: number
   createdAt: Date
   duration?: number | null
-  reactionsCount: number
-  commentsCount: number
   channel: {
     __typename?: 'Channel'
     id: string
     title?: string | null
-    description?: string | null
-    createdAt: Date
-    followsNum: number
-    rewardAccount: string
-    channelStateBloatBond: string
     avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -2923,6 +2941,16 @@ export const DistributionBucketOperatorFieldFragmentDoc = gql`
     status
   }
 `
+export const TileChannelFieldsFragmentDoc = gql`
+  fragment TileChannelFields on Channel {
+    id
+    title
+    avatarPhoto {
+      ...StorageDataObjectFields
+    }
+  }
+  ${StorageDataObjectFieldsFragmentDoc}
+`
 export const TileVideoFieldsFragmentDoc = gql`
   fragment TileVideoFields on Video {
     id
@@ -2930,10 +2958,8 @@ export const TileVideoFieldsFragmentDoc = gql`
     viewsNum
     createdAt
     duration
-    reactionsCount
-    commentsCount
     channel {
-      ...BasicChannelFields
+      ...TileChannelFields
     }
     thumbnailPhoto {
       ...StorageDataObjectFields
@@ -2942,7 +2968,7 @@ export const TileVideoFieldsFragmentDoc = gql`
       id
     }
   }
-  ${BasicChannelFieldsFragmentDoc}
+  ${TileChannelFieldsFragmentDoc}
   ${StorageDataObjectFieldsFragmentDoc}
 `
 export const VideoMediaMetadataFieldsFragmentDoc = gql`
