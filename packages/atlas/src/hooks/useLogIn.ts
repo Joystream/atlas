@@ -6,8 +6,10 @@ import { AES, enc } from 'crypto-js'
 import { useCallback } from 'react'
 
 import { atlasConfig } from '@/config'
+import { ORION_AUTH_URL } from '@/config/env'
 import { SentryLogger } from '@/utils/logs'
 
+// todo extract these 3 Fn to `packages/atlas/src/utils/user.ts` after #4168 is merged
 export async function scryptHash(
   data: string,
   salt: Buffer | string,
@@ -21,34 +23,45 @@ export async function scryptHash(
 function aes256CbcDecrypt(encryptedData: string, key: Buffer, iv: Buffer): string {
   const keyHex = enc.Hex.parse(key.toString('hex'))
   const ivHex = enc.Hex.parse(iv.toString('hex'))
-  const decrypted = AES.decrypt(encryptedData, keyHex, {
-    iv: ivHex,
-  })
+  const decrypted = AES.decrypt(encryptedData, keyHex, { iv: ivHex })
   return decrypted.toString(enc.Utf8)
 }
 
-export const useLogIn = () => {
-  const getArtifacts = async (id: string) => {
-    try {
-      // todo fix typing
-      const res = await axios.get<{ cipherIv: any; encryptedSeed: any }>(
-        `https://atlas-dev.joystream.org/orion-auth/api/v1/artifacts?id=${id}`
-      )
+const getArtifacts = async (id: string) => {
+  try {
+    const res = await axios.get<{ cipherIv: any; encryptedSeed: any }>(`${ORION_AUTH_URL}/artifacts?id=${id}`)
 
-      return res.data
-    } catch (error) {
-      SentryLogger.error('Error when fetching artifacts', 'useLogIn', error)
-    }
+    return res.data
+  } catch (error) {
+    SentryLogger.error('Error when fetching artifacts', 'useLogIn', error)
   }
-  return useCallback(async (email: string, password: string) => {
+}
+
+export enum LogInErrors {
+  ArtifactsNotFound = 'ArtifactsNotFound',
+  LoginError = 'LoginError',
+}
+
+type LogInHandler = {
+  data: {
+    accountId: string
+  } | null
+  error?: LogInErrors
+}
+
+export const useLogIn = () => {
+  return useCallback(async (email: string, password: string): Promise<LogInHandler> => {
     await cryptoWaitReady()
-    const id = (await scryptHash(`lookupKey:${email}:${password}`, 'lookupKeySalt')).toString('hex')
+    const id = (await scryptHash(`${email}:${password}`, '0x4f7242b39969c3ac4c6712524d633ce9')).toString('hex')
     const data = await getArtifacts(id)
     if (!data) {
-      return
+      return {
+        data: null,
+        error: LogInErrors.ArtifactsNotFound,
+      }
     }
     const { cipherIv, encryptedSeed } = data
-    const cipherKey = await scryptHash(`cipherKey:${email}:${password}`, Buffer.from(cipherIv, 'hex'))
+    const cipherKey = await scryptHash(`${email}:${password}`, Buffer.from(cipherIv, 'hex'))
     const decryptedSeed = aes256CbcDecrypt(encryptedSeed, cipherKey, Buffer.from(cipherIv, 'hex'))
     const keypair = sr25519PairFromSeed(decryptedSeed)
     const payload = {
@@ -59,16 +72,20 @@ export const useLogIn = () => {
     }
     const signatureOverPayload = sr25519Sign(JSON.stringify(payload), keypair)
     try {
-      const {
-        data: { accountId },
-      } = await axios.post<{ accountId: string }>('https://atlas-dev.joystream.org/orion-auth/api/v1/login', {
+      const response = await axios.post<{ accountId: string }>(`${ORION_AUTH_URL}/login`, {
         signature: signatureOverPayload,
         payload,
       })
 
-      return accountId
+      return {
+        data: response.data,
+      }
     } catch (error) {
       SentryLogger.error('Error when posting login action', 'useLogIn', error)
+      return {
+        data: null,
+        error: LogInErrors.LoginError,
+      }
     }
   }, [])
 }
