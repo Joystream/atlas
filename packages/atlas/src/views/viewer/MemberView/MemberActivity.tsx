@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import { useNavigate } from 'react-router'
 
 import { NftActivityOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
@@ -101,15 +101,17 @@ export const MemberActivity: FC<MemberActivityProps> = ({
   memberId,
   sort = NftActivityOrderByInput.EventTimestampDesc,
 }) => {
-  const { activities, loading, activitiesTotalCounts, pageInfo, fetchMore } = useActivities(memberId, sort)
+  const { activities, loading, activitiesTotalCounts, pageInfo, fetchMore } = useActivities(memberId, sort, {
+    notifyOnNetworkStatusChange: true,
+  })
   const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(false)
   const placeholderItems = createPlaceholderData(PLACEHOLDERS_COUNT)
-  const items =
-    loading || isLoading ? [...(activities ?? []), ...(placeholderItems as ActivitiesRecord[])] : activities ?? []
+
+  const items = [...(activities || []), ...(loading ? placeholderItems : [])] ?? []
+
   return (
     <section>
-      {!(loading || isLoading) && items.length === 0 ? (
+      {!loading && items.length === 0 ? (
         <EmptyFallback title="No activity" subtitle="Go out there and explore!" variant="small" />
       ) : (
         <LayoutGrid>
@@ -122,25 +124,27 @@ export const MemberActivity: FC<MemberActivityProps> = ({
                     columns: 1,
                   },
                 },
-                children: items.map((activity, i) => (
-                  <ActivityItem
-                    key={i}
-                    thumbnailUri={activity.video?.thumbnailPhoto?.resolvedUrl || ''}
-                    loading={!activities || loading}
-                    onItemClick={() => navigate(absoluteRoutes.viewer.video(activity.video?.id))}
-                    date={activity?.date}
-                    type={activity?.type}
-                    title={activity?.video?.title || ''}
-                    description={getDescription(activity)}
-                  />
-                )),
+                children: items.map((activity, i) =>
+                  activity.id === undefined ? (
+                    <ActivityItem key={i} loading={loading} thumbnailUri="" />
+                  ) : (
+                    <ActivityItem
+                      key={i}
+                      thumbnailUri={activity.video?.thumbnailPhoto?.resolvedUrl || ''}
+                      onItemClick={() => navigate(absoluteRoutes.viewer.video(activity.video?.id))}
+                      date={activity?.date}
+                      type={activity?.type}
+                      title={activity?.video?.title || ''}
+                      description={getDescription(activity)}
+                    />
+                  )
+                ),
               }}
               footerProps={{
                 type: 'load',
                 label: 'Load more activities',
                 reachedEnd: !pageInfo?.hasNextPage ?? true,
                 fetchMore: async () => {
-                  setIsLoading(true)
                   await fetchMore({
                     variables: {
                       after: pageInfo?.endCursor,
@@ -153,7 +157,7 @@ export const MemberActivity: FC<MemberActivityProps> = ({
                       ]
                       return fetchMoreResult
                     },
-                  }).finally(() => setIsLoading(false))
+                  })
                 },
               }}
             />

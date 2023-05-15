@@ -16,9 +16,9 @@ export const HomeView: FC = () => {
   const { columns, fetchMore, pageInfo, tiles } = useInfiniteVideoGrid({
     query: GetBasicVideosConnectionDocument,
     variables: {
-      limit: 200,
+      // limit: 200,
       where: publicVideoFilter,
-      orderBy: [VideoOrderByInput.VideoRelevanceDesc, VideoOrderByInput.CreatedAtDesc, VideoOrderByInput.ViewsNumDesc],
+      orderBy: VideoOrderByInput.VideoRelevanceDesc,
     },
   })
 

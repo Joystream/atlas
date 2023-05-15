@@ -1,6 +1,8 @@
 import { QueryHookOptions } from '@apollo/client'
 
 import {
+  GetNftActivitiesQuery,
+  GetNftActivitiesQueryVariables,
   GetNotificationsConnectionQuery,
   GetNotificationsConnectionQueryVariables,
   useGetNftActivitiesQuery,
@@ -31,9 +33,11 @@ export const useRawNotifications = (
 
 export const useRawActivities = (
   memberId?: string,
-  sort: NftActivityOrderByInput = NftActivityOrderByInput.EventTimestampDesc
+  sort: NftActivityOrderByInput = NftActivityOrderByInput.EventTimestampDesc,
+  opts?: QueryHookOptions<GetNftActivitiesQuery, GetNftActivitiesQueryVariables>
 ) => {
   const { data, ...rest } = useGetNftActivitiesQuery({
+    ...opts,
     variables: {
       first: 10,
       orderBy: sort,
