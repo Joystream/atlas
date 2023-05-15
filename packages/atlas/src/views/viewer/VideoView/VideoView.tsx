@@ -14,7 +14,6 @@ import { MinimizedPlayer } from '@/components/MinimizedPlayer/MinimizedPlayer'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Tooltip } from '@/components/Tooltip'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
-import { ProtectedActionWrapper } from '@/components/_auth/ProtectedActionWrapper'
 import { Button } from '@/components/_buttons/Button'
 import { CTA_MAP, CallToActionButton } from '@/components/_buttons/CallToActionButton'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
@@ -337,14 +336,9 @@ export const VideoView: FC = () => {
             dislikes={numberOfDislikes}
           />
           <ButtonsContainer>
-            <ProtectedActionWrapper
-              title="You want to report this video?"
-              description="Log in to report harmful content"
-            >
-              <Button variant="tertiary" icon={<SvgActionShare />} onClick={handleShare}>
-                Share
-              </Button>
-            </ProtectedActionWrapper>
+            <Button variant="tertiary" icon={<SvgActionShare />} onClick={handleShare}>
+              Share
+            </Button>
             <ContextMenu
               placement="bottom-end"
               items={[

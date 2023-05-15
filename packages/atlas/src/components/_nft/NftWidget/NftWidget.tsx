@@ -266,9 +266,14 @@ export const NftWidget: FC<NftWidgetProps> = ({
                   </>
                 ) : (
                   <GridItem colSpan={buttonColumnSpan}>
-                    <Button fullWidth size={buttonSize} onClick={onNftPurchase}>
-                      Buy now
-                    </Button>
+                    <ProtectedActionWrapper
+                      title="You want to buy this NFT?"
+                      description="Log in to take part in NFT auctions"
+                    >
+                      <Button fullWidth size={buttonSize} onClick={onNftPurchase}>
+                        Buy now
+                      </Button>
+                    </ProtectedActionWrapper>
                   </GridItem>
                 )}
                 {bidFromPreviousAuction && (
