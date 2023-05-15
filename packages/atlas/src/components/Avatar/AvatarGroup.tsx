@@ -113,6 +113,7 @@ const SingleAvatar: FC<SingleAvatarProps> = ({ avatar, loading: loadingProp, siz
       loading={loading}
       assetUrl={url}
       size={size}
+      disableHoverDimm
       onClick={(e) => {
         e.stopPropagation()
         e.preventDefault()

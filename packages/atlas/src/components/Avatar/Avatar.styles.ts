@@ -16,6 +16,7 @@ type ContainerProps = {
   disableInteractiveStyles?: boolean
   // allow passing 'type' prop to Container because it can be rendered as 'button' depending on context
   type?: 'button'
+  disableHoverDimm?: boolean
 }
 
 export const IconAndOverlayWrapper = styled.div`
@@ -78,7 +79,7 @@ export const Overlay = styled.div<{ isEdit?: boolean }>`
 //   }
 // `
 
-export const sharedAvatarHoverStyles = css`
+export const sharedAvatarHoverStyles = (props: { disableHoverDimm?: boolean }) => css`
   ::after {
     border: 1px solid ${cVar('colorBackgroundAlpha')};
   }
@@ -86,7 +87,8 @@ export const sharedAvatarHoverStyles = css`
     opacity: 1;
   }
   ${Overlay} {
-    opacity: 0.5;
+    ${props.disableHoverDimm ? '' : 'opacity: 0.5;'}
+
     background-color: ${cVar('colorBackgroundOverlay')};
   }
 `

@@ -34,6 +34,7 @@ export type AvatarProps = PropsWithChildren<{
   newChannel?: boolean
   editable?: boolean
   clickable?: boolean
+  disableHoverDimm?: boolean
 }>
 
 export const Avatar: FC<AvatarProps> = ({
@@ -49,6 +50,7 @@ export const Avatar: FC<AvatarProps> = ({
   onError,
   onClick,
   onImageValidation,
+  disableHoverDimm,
 }) => {
   const isEditable = !loading && editable && size !== 32 && size !== 24
 
@@ -89,6 +91,7 @@ export const Avatar: FC<AvatarProps> = ({
       size={size}
       className={className}
       isLoading={loading}
+      disableHoverDimm={disableHoverDimm}
       isClickable={clickable || (clickable == null && !!onClick)} // default to true if onClick is provided
     >
       {(clickable || !!onClick) && (
