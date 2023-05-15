@@ -6,7 +6,6 @@ import { CommentStatus } from '@/api/queries/__generated__/baseTypes.generated'
 import { CommentFieldsFragment, FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
-import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { CommentReaction } from '@/joystream-lib/types'
@@ -58,7 +57,7 @@ export const Comment: FC<CommentProps> = memo(
     const [isEditingComment, setIsEditingComment] = useState(false)
     const [processingReactionsIds, setProcessingReactionsIds] = useState<CommentReaction[]>([])
 
-    const { memberId, activeMembership, isLoggedIn, signIn } = useUser()
+    const { memberId, activeMembership, isLoggedIn } = useUser()
     const { comment } = useComment(
       { commentId: commentId ?? '' },
       {
@@ -69,7 +68,6 @@ export const Comment: FC<CommentProps> = memo(
 
     const commentIdQueryParam = useRouterQuery(QUERY_PARAMS.COMMENT_ID)
     const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
-    const { openSignInDialog } = useDisplaySignInDialog()
     const [reactionFee, setReactionFee] = useState<undefined | BN>(undefined)
     const [replyCommentInputActive, setCommentInputActive] = useState(false)
     const [openModal, closeModal] = useConfirmationModal()
@@ -172,16 +170,12 @@ export const Comment: FC<CommentProps> = memo(
       }
     }
     const handleCommentReaction = async (commentId: string, reactionId: CommentReaction) => {
-      if (isLoggedIn) {
-        setProcessingReactionsIds((previous) => [...previous, reactionId])
-        const fee =
-          reactionFee ||
-          (await getReactToVideoCommentFee(memberId && comment?.id ? [memberId, comment.id, reactionId] : undefined))
-        await reactToComment(commentId, video?.id || '', reactionId, comment?.author.handle || '', fee)
-        setProcessingReactionsIds((previous) => previous.filter((r) => r !== reactionId))
-      } else {
-        openSignInDialog({ onConfirm: signIn })
-      }
+      setProcessingReactionsIds((previous) => [...previous, reactionId])
+      const fee =
+        reactionFee ||
+        (await getReactToVideoCommentFee(memberId && comment?.id ? [memberId, comment.id, reactionId] : undefined))
+      await reactToComment(commentId, video?.id || '', reactionId, comment?.author.handle || '', fee)
+      setProcessingReactionsIds((previous) => previous.filter((r) => r !== reactionId))
     }
 
     const handleOnBoardingPopoverOpen = async (reactionId: number) => {
@@ -212,10 +206,6 @@ export const Comment: FC<CommentProps> = memo(
     }
 
     const handleReplyClick = () => {
-      if (!isLoggedIn) {
-        handleOpenSignInDialog()
-        return
-      }
       if (replyInputOpen) {
         replyCommentInputRef.current?.focus()
       }
@@ -227,10 +217,6 @@ export const Comment: FC<CommentProps> = memo(
         setIsEditingComment(true)
         setEditCommentInputText?.(comment.text)
       }
-    }
-
-    const handleOpenSignInDialog = () => {
-      !memberId && openSignInDialog({ onConfirm: signIn })
     }
 
     const handleOnEditLabelClick = () => {
@@ -284,7 +270,6 @@ export const Comment: FC<CommentProps> = memo(
           isMemberAvatarLoading={isMemberAvatarLoading}
           value={editCommentInputText}
           hasInitialValueChanged={comment?.text !== editCommentInputText}
-          onFocus={handleOpenSignInDialog}
           onComment={handleUpdateComment}
           onChange={(e) => setEditCommentInputText(e.target.value)}
           onCancel={() =>
@@ -339,7 +324,6 @@ export const Comment: FC<CommentProps> = memo(
               processing={replyCommentInputIsProcessing}
               readOnly={!memberId}
               memberHandle={activeMembership?.handle}
-              onFocus={handleOpenSignInDialog}
               onComment={handleComment}
               hasInitialValueChanged={!!replyCommentInputText}
               value={replyCommentInputText}

@@ -5,7 +5,6 @@ import { Text } from '@/components/Text'
 import { SubTitle, WelcomeView } from '@/components/WelcomeView'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
-import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useUser } from '@/providers/user/user.hooks'
 
@@ -20,7 +19,6 @@ export type Membership = {
 
 export const StudioWelcomeView: FC = () => {
   const { signIn, isLoggedIn } = useUser()
-  const { openSignInDialog } = useDisplaySignInDialog()
   const mdMatch = useMediaMatch('md')
 
   return (
@@ -91,7 +89,7 @@ export const StudioWelcomeView: FC = () => {
       buttons={[
         isLoggedIn
           ? { size: 'large', to: absoluteRoutes.studio.newChannel(), children: 'Create channel' }
-          : { size: 'large', onClick: () => signIn(undefined, openSignInDialog), children: 'Set up membership' },
+          : { size: 'large', onClick: () => signIn(undefined), children: 'Set up membership' },
         {
           size: 'large',
           variant: 'tertiary',
