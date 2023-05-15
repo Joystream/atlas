@@ -184,6 +184,10 @@ export const TopSellingChannelsTable = () => {
 }
 
 const Channel = ({ channel }: { channel: GetTopSellingChannelsQuery['topSellingChannels'][number]['channel'] }) => {
+  // todo to be implemented
+  const creatorToken = false
+  // todo to be implemented
+  const verified = false
   return (
     <StyledLink to={absoluteRoutes.viewer.member(channel.ownerMember?.handle)}>
       <SenderItem
@@ -192,8 +196,16 @@ const Channel = ({ channel }: { channel: GetTopSellingChannelsQuery['topSellingC
         isInteractive={false}
         nodeEnd={
           <SenderItemIconsWrapper>
-            <SvgActionCreatorToken />
-            <SvgActionVerified />
+            {creatorToken && (
+              <span title="Creator token">
+                <SvgActionCreatorToken />
+              </span>
+            )}
+            {verified && (
+              <span title="Verified">
+                <SvgActionVerified />
+              </span>
+            )}
           </SenderItemIconsWrapper>
         }
       />
