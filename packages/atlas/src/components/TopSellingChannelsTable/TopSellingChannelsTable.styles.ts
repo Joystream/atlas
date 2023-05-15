@@ -3,10 +3,15 @@ import { Link } from 'react-router-dom'
 
 import { ListItem } from '@/components/ListItem'
 import { Table } from '@/components/Table'
+import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 
 export const StyledTable = styled(Table)`
   background: transparent;
+
+  .table-base {
+    height: fit-content;
+  }
 
   .table-row {
     background-color: transparent;
@@ -54,6 +59,7 @@ export const JoyAmountWrapper = styled.div`
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  margin-left: auto;
 `
 
 export const SkeletonChannelContainer = styled.div`
@@ -61,4 +67,8 @@ export const SkeletonChannelContainer = styled.div`
   align-items: center;
   gap: 8px;
   width: 100%;
+`
+
+export const NftSoldText = styled(Text)`
+  margin-left: auto;
 `
