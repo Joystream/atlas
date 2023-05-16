@@ -38,6 +38,7 @@ export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
   goToNextStep,
   setPrimaryButtonProps,
   hasNavigatedBack,
+  onEmailSubmit,
 }) => {
   const {
     register,
@@ -55,15 +56,16 @@ export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
   })
 
   const handleGoToNextStep = useCallback(() => {
-    handleSubmit(() => {
+    handleSubmit((data) => {
+      onEmailSubmit(data.email)
       goToNextStep()
     })()
-  }, [goToNextStep, handleSubmit])
+  }, [goToNextStep, handleSubmit, onEmailSubmit])
 
   useEffect(() => {
     setPrimaryButtonProps({
       text: 'Continue',
-      onClick: () => handleGoToNextStep(),
+      onClick: handleGoToNextStep,
     })
   }, [goToNextStep, handleGoToNextStep, setPrimaryButtonProps])
 

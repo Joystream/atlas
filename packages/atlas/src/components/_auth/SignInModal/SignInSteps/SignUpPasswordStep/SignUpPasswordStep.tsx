@@ -1,5 +1,7 @@
-import { FC, useCallback, useState } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { FC, useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 import { SvgActionCheck, SvgActionClose, SvgActionHide, SvgActionMinus, SvgActionShow } from '@/assets/icons'
 import { IconWrapper } from '@/components/IconWrapper'
@@ -18,9 +20,29 @@ import { SignInModalStepTemplate } from '../SignInModalStepTemplate'
 import { StyledSignUpForm } from '../SignInSteps.styles'
 import { SignInStepProps } from '../SignInSteps.types'
 
+const commonPasswordValidation = z
+  .string()
+  .regex(/^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#$%^&*()_+]).*$/, { message: 'Password has to meet requirements' })
+  .min(9, { message: 'Password has to meet requirements' })
+
+const zodSchema = z
+  .object({
+    password: commonPasswordValidation,
+    confirmPassword: commonPasswordValidation,
+  })
+  .refine(
+    (data) => {
+      return data.password === data.confirmPassword
+    },
+    {
+      path: ['confirmPassword'],
+      message: 'Password address has to match.',
+    }
+  )
+
 type PasswordStepForm = {
   password: string
-  repeatPassword: string
+  confirmPassword: string
 }
 type PasswordInputNames = keyof PasswordStepForm
 
@@ -28,12 +50,83 @@ type SignUpPasswordStepProps = {
   onPasswordSubmit: (password: string) => void
 } & SignInStepProps
 
-export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = () => {
-  const { register } = useForm<PasswordStepForm>()
+type ValidationState = 'pending' | 'success' | 'error'
+
+type PasswordRequirementsErrors = {
+  length: ValidationState
+  upperCase: ValidationState
+  number: ValidationState
+  specialCharacter: ValidationState
+}
+
+const PASSWORD_REQUIREMENTS_ERRORS_INITIAL_STATE: PasswordRequirementsErrors = {
+  length: 'pending',
+  upperCase: 'pending',
+  number: 'pending',
+  specialCharacter: 'pending',
+}
+
+const getValidationState = (isError: boolean) => {
+  if (isError) {
+    return 'error'
+  } else {
+    return 'success'
+  }
+}
+
+export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
+  setPrimaryButtonProps,
+  goToNextStep,
+  hasNavigatedBack,
+  onPasswordSubmit,
+}) => {
+  const {
+    register,
+    watch,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<PasswordStepForm>({
+    criteriaMode: 'all',
+    resolver: zodResolver(zodSchema),
+  })
   const [isFieldVisible, setIsFieldVisible] = useState<Record<PasswordInputNames, boolean>>({
     password: false,
-    repeatPassword: false,
+    confirmPassword: false,
   })
+
+  const [passwordRequirementsErrors, setPasswordRequirementsErrors] = useState<PasswordRequirementsErrors>(
+    PASSWORD_REQUIREMENTS_ERRORS_INITIAL_STATE
+  )
+  const handleGoToNextStep = useCallback(() => {
+    handleSubmit((data) => {
+      onPasswordSubmit(data.password)
+      goToNextStep()
+    })()
+  }, [goToNextStep, handleSubmit, onPasswordSubmit])
+
+  useEffect(() => {
+    setPrimaryButtonProps({
+      text: 'Continue',
+      onClick: () => handleGoToNextStep(),
+    })
+  }, [goToNextStep, handleGoToNextStep, setPrimaryButtonProps])
+
+  useEffect(() => {
+    const subscription = watch(({ password }) => {
+      if (!password) {
+        setPasswordRequirementsErrors(PASSWORD_REQUIREMENTS_ERRORS_INITIAL_STATE)
+        return
+      }
+
+      setPasswordRequirementsErrors(() => ({
+        length: getValidationState(password.length <= 9),
+        number: getValidationState(/^[^0-9]*$/.test(password)),
+        upperCase: getValidationState(/^[^A-Z]*$/.test(password)),
+        specialCharacter: getValidationState(/^[^!@#$%^&*()_+]*$/.test(password)),
+      }))
+    })
+    return () => subscription.unsubscribe()
+  }, [watch])
 
   const handleTogglePassword = (name: PasswordInputNames) => {
     setIsFieldVisible((fields) => ({ ...fields, [name]: !fields[name] }))
@@ -57,33 +150,40 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = () => {
   return (
     <SignInModalStepTemplate
       title="Sign up"
-      hasNavigatedBack={false}
+      hasNavigatedBack={hasNavigatedBack}
       subtitle="Please note that there is no option for us to recover your password if you forget it."
     >
       <StyledSignUpForm>
-        <FormField label="Password">
+        <FormField label="Password" error={errors.password?.message}>
           <Input placeholder="Password" {...getInputProps('password')} autoComplete="new-password" />
         </FormField>
-        <FormField label="Repeat Password">
-          <Input placeholder="Repeat password" {...getInputProps('repeatPassword')} autoComplete="new-password" />
+        <FormField label="Repeat Password" error={errors.confirmPassword?.message}>
+          <Input placeholder="Repeat password" {...getInputProps('confirmPassword')} autoComplete="new-password" />
         </FormField>
         <PasswordRequirementsWrapper>
           <Text as="h2" variant="h200">
             Password must:
           </Text>
           <PasswordRequirementsList>
-            <PasswordCriteria validationState="pending" text="Be between 9 and 64 character" />
-            <PasswordCriteria validationState="pending" text="Include an uppercase character" />
-            <PasswordCriteria validationState="pending" text="Include a number" />
-            <PasswordCriteria validationState="pending" text="Include a special character (eg. !, ?, %)" />
+            <PasswordCriteria
+              validationState={passwordRequirementsErrors.length}
+              text="Be between 9 and 64 character"
+            />
+            <PasswordCriteria
+              validationState={passwordRequirementsErrors.upperCase}
+              text="Include an uppercase character"
+            />
+            <PasswordCriteria validationState={passwordRequirementsErrors.number} text="Include a number" />
+            <PasswordCriteria
+              validationState={passwordRequirementsErrors.specialCharacter}
+              text="Include a special character (eg. !, ?, %)"
+            />
           </PasswordRequirementsList>
         </PasswordRequirementsWrapper>
       </StyledSignUpForm>
     </SignInModalStepTemplate>
   )
 }
-
-type ValidationState = 'pending' | 'success' | 'error'
 
 type PasswordCriteriaProps = {
   validationState: ValidationState

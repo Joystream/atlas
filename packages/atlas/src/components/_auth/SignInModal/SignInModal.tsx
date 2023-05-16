@@ -8,6 +8,7 @@ import { Button } from '@/components/_buttons/Button'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { atlasConfig } from '@/config'
 import { FAUCET_URL } from '@/config/env'
+import { useRegister } from '@/hooks/useRegister'
 import { MemberId } from '@/joystream-lib/types'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useJoystream } from '@/providers/joystream/joystream.hooks'
@@ -53,10 +54,14 @@ export const SignInModal: FC = () => {
   const [userForm, setUserForm] = useState<{
     email: string
     password: string
+    seed: string
   }>({
     email: '',
     password: '',
+    seed: '',
   })
+
+  console.log(userForm.password)
   const [previouslyFailedData, setPreviouslyFailedData] = useState<MemberFormData | null>(null)
   const { mutateAsync: faucetMutation } = useMutation('faucet-post', (body: FaucetParams) =>
     axios.post<NewMemberResponse>(FAUCET_URL, body)
@@ -129,6 +134,7 @@ export const SignInModal: FC = () => {
     },
     [avatarMutation, faucetMutation]
   )
+  const handleRegister = useRegister()
 
   const handleSubmit = useCallback(
     async (data: MemberFormData) => {
@@ -247,7 +253,23 @@ export const SignInModal: FC = () => {
     dialogContentRef.current.scrollTo({ top: 0 })
   }, [displayedStep])
 
-  const renderStep = () => {
+  const handleEmailChange = useCallback((email: string) => {
+    setUserForm((userForm) => ({ ...userForm, email }))
+  }, [])
+
+  const handlePasswordChange = useCallback((password: string) => {
+    setUserForm((userForm) => ({ ...userForm, password }))
+  }, [])
+
+  const handleSeedChange = useCallback(
+    (seed: string) => {
+      setUserForm((userForm) => ({ ...userForm, seed }))
+      handleRegister(userForm.email, userForm.password, seed)
+    },
+    [handleRegister, userForm.email, userForm.password]
+  )
+
+  const renderStep = useCallback(() => {
     const commonProps: SignInStepProps = {
       setPrimaryButtonProps,
       goToNextStep,
@@ -256,21 +278,11 @@ export const SignInModal: FC = () => {
 
     switch (displayedStep) {
       case 'signup-email':
-        return (
-          <SignUpEmailStep
-            {...commonProps}
-            onEmailSubmit={(email) => setUserForm((userForm) => ({ ...userForm, email }))}
-          />
-        )
+        return <SignUpEmailStep {...commonProps} onEmailSubmit={handleEmailChange} />
       case 'signup-password':
-        return (
-          <SignUpPasswordStep
-            {...commonProps}
-            onPasswordSubmit={(password) => setUserForm((userForm) => ({ ...userForm, password }))}
-          />
-        )
+        return <SignUpPasswordStep {...commonProps} onPasswordSubmit={handlePasswordChange} />
       case 'signup-seed':
-        return <SignUpSeedStep {...commonProps} />
+        return <SignUpSeedStep {...commonProps} onSeedSubmit={handleSeedChange} />
       case 'wallet':
         return <SignInModalWalletStep {...commonProps} />
       case 'account':
@@ -295,7 +307,17 @@ export const SignInModal: FC = () => {
       case 'creating':
         return <SignInModalCreatingStep {...commonProps} />
     }
-  }
+  }, [
+    displayedStep,
+    goToNextStep,
+    handleEmailChange,
+    handlePasswordChange,
+    handleSeedChange,
+    handleSubmit,
+    hasNavigatedBack,
+    previouslyFailedData,
+    selectedAddress,
+  ])
 
   const backButtonVisible =
     currentStepIdx && currentStepIdx > 0 && currentStep !== 'creating' && (currentStep !== 'account' || !isLoggedIn)

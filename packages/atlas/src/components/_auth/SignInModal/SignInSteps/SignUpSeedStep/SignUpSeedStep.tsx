@@ -1,5 +1,5 @@
 import { mnemonicGenerate } from '@polkadot/util-crypto'
-import { FC } from 'react'
+import { FC, useCallback, useEffect, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { SvgActionCopy } from '@/assets/icons'
@@ -13,39 +13,93 @@ import { SignInModalStepTemplate } from '../SignInModalStepTemplate'
 import { CheckboxWrapper, StyledSignUpForm } from '../SignInSteps.styles'
 import { SignInStepProps } from '../SignInSteps.types'
 
-export const SignUpSeedStep: FC<SignInStepProps> = () => {
+type SignUpSeedStepProps = {
+  onSeedSubmit: (seed: string) => void
+} & SignInStepProps
+
+export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
+  goToNextStep,
+  hasNavigatedBack,
+  setPrimaryButtonProps,
+  onSeedSubmit,
+}) => {
   const { copyToClipboard } = useClipboard()
-  const { control } = useForm<{ confirmedCopy: boolean }>({
+  const {
+    control,
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm<{ confirmedCopy: boolean; seed: string }>({
     defaultValues: {
       confirmedCopy: false,
     },
   })
-  const seed = mnemonicGenerate()
+  const firstRender = useRef(true)
+
+  useEffect(() => {
+    if (firstRender.current) {
+      setValue('seed', mnemonicGenerate())
+      firstRender.current = false
+    }
+  }, [setValue])
+
+  const handleGoToNextStep = useCallback(() => {
+    handleSubmit((data) => {
+      onSeedSubmit(data.seed)
+      goToNextStep()
+    })()
+  }, [goToNextStep, handleSubmit, onSeedSubmit])
+
+  useEffect(() => {
+    setPrimaryButtonProps({
+      text: 'Continue',
+      onClick: () => handleGoToNextStep(),
+    })
+  }, [goToNextStep, handleGoToNextStep, setPrimaryButtonProps])
 
   return (
     <SignInModalStepTemplate
       title="Write down your seed"
-      hasNavigatedBack={false}
+      hasNavigatedBack={hasNavigatedBack}
       subtitle="Please write down your password recovery seed and keep it in a safe place. It's the only way to recover your password if you forget it."
     >
       <StyledSignUpForm>
         <FormField label="Password recovery seed">
-          <StyledTextArea value={seed} disabled />
+          <StyledTextArea {...register('seed')} disabled />
         </FormField>
         <StyledTextButton
           variant="secondary"
           icon={<SvgActionCopy />}
           iconPlacement="left"
-          onClick={() => copyToClipboard(seed, 'Seed copied to your clipboard')}
+          onClick={() => copyToClipboard(getValues('seed'), 'Seed copied to your clipboard')}
         >
           Copy to clipboard
         </StyledTextButton>
         <Controller
           control={control}
           name="confirmedCopy"
+          rules={{
+            validate: {
+              valid: (value) => {
+                if (!value) {
+                  return 'Enter amount to transfer.'
+                } else {
+                  return value
+                }
+              },
+            },
+          }}
           render={({ field: { onChange, value } }) => (
             <CheckboxWrapper isAccepted={value}>
-              <Checkbox onChange={(val) => onChange(val)} value={value} label="I have saved my mnemonic seed safely" />
+              <Checkbox
+                onChange={(val) => onChange(val)}
+                caption={errors.confirmedCopy?.message}
+                error={!!errors.confirmedCopy}
+                value={value}
+                label="I have saved my mnemonic seed safely"
+              />
             </CheckboxWrapper>
           )}
         />
