@@ -13,7 +13,7 @@ const createGridBreakpoints = ({ grid = { xxs: { columns: 'auto', minItemWidth: 
   const styles = gridKeys.map((key) => {
     const gridValue = grid[key]
     const repeatCounts = gridValue?.columns === 'auto' ? 'auto-fill' : gridValue?.columns
-    const tracks = gridValue?.columns === 'auto' ? `minmax(${gridValue.minItemWidth}, 1fr)` : '1fr'
+    const tracks = gridValue?.columns === 'auto' ? `minmax(${gridValue.minItemWidth}, 1fr)` : 'minmax(0, 1fr)'
     return css`
       ${media[key]} {
         grid-template-columns: repeat(${repeatCounts}, ${tracks});
