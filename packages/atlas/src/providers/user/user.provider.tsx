@@ -1,4 +1,14 @@
-import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import {
+  FC,
+  PropsWithChildren,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
 import { useMemberships } from '@/api/hooks/membership'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
@@ -6,6 +16,7 @@ import { JoystreamContext, JoystreamContextValue } from '@/providers/joystream/j
 import { isMobile } from '@/utils/browser'
 import { AssetLogger, SentryLogger } from '@/utils/logs'
 import { retryPromise } from '@/utils/misc'
+import { setAnonymousAuth } from '@/utils/user'
 
 import { useSignerWallet } from './user.helpers'
 import { useUserStore } from './user.store'
@@ -26,8 +37,11 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
     lastUsedWalletName,
     wallet,
     lastChainMetadataVersion,
+    userId,
   } = useUserStore((state) => state)
-  const { setActiveUser, setSignInModalOpen, setLastChainMetadataVersion } = useUserStore((state) => state.actions)
+  const { setActiveUser, setSignInModalOpen, setLastChainMetadataVersion, setUserId } = useUserStore(
+    (state) => state.actions
+  )
   const { initSignerWallet } = useSignerWallet()
   const joystreamCtx = useContext<JoystreamContextValue | undefined>(JoystreamContext)
 
@@ -35,6 +49,15 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   const [isSignerMetadataOutdated, setIsSignerMetadataOutdated] = useState(false)
 
   const accountsIds = walletAccounts.map((a) => a.address)
+
+  const firstRender = useRef(true)
+  // run this once to make sure that userId is set in localstorage and its up to date
+  useEffect(() => {
+    if (firstRender.current) {
+      setAnonymousAuth(userId).then((userId) => setUserId(userId || null))
+      firstRender.current = false
+    }
+  }, [setUserId, userId])
 
   const {
     memberships: currentMemberships,

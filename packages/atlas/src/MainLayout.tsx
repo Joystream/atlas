@@ -13,8 +13,6 @@ import { AppLogo } from './components/AppLogo'
 import { TopbarBase } from './components/_navigation/TopbarBase'
 import { useConfirmationModal } from './providers/confirmationModal'
 import { useOverlayManager } from './providers/overlayManager'
-import { useUserStore } from './providers/user/user.store'
-import { getUserId } from './utils/user'
 import { LegalLayout } from './views/legal/LegalLayout'
 import { ViewerLayout } from './views/viewer/ViewerLayout'
 
@@ -40,8 +38,6 @@ const LoadablePlaygroundLayout = loadable(() => import('./views/playground/Playg
 export const MainLayout: FC = () => {
   const scrollPosition = useRef<number>(0)
   const location = useLocation()
-  const userId = useUserStore((state) => state.userId)
-  const setUserId = useUserStore((state) => state.actions.setUserId)
 
   const navigationType = useNavigationType()
   const [cachedLocation, setCachedLocation] = useState(location)
@@ -57,14 +53,6 @@ export const MainLayout: FC = () => {
     },
     onExitClick: () => closeDialog(),
   })
-  const firstRender = useRef(true)
-  // make sure that userId is set in localstorage and its up to date
-  useEffect(() => {
-    if (firstRender.current) {
-      getUserId(userId).then((response) => setUserId(response.data.userId))
-      firstRender.current = false
-    }
-  }, [setUserId, userId])
 
   const { clearOverlays } = useOverlayManager()
 

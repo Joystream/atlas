@@ -2,17 +2,17 @@ import { ApolloClient, ApolloLink, FetchResult, HttpLink, Observable, split } fr
 import { RetryLink } from '@apollo/client/link/retry'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { getMainDefinition } from '@apollo/client/utilities'
-import axios from 'axios'
 import { createClient } from 'graphql-ws'
 
 import { atlasConfig } from '@/config'
-import { ORION_AUTH_URL, ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config/env'
+import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config/env'
 import { logDistributorPerformance, testAssetDownload } from '@/providers/assets/assets.helpers'
 import { useUserStore } from '@/providers/user/user.store'
 import { useUserLocationStore } from '@/providers/userLocation'
 import { isAxiosError } from '@/utils/error'
 import { AssetLogger, ConsoleLogger, DistributorEventEntry, SentryLogger } from '@/utils/logs'
 import { TimeoutError, withTimeout } from '@/utils/misc'
+import { setAnonymousAuth } from '@/utils/user'
 
 import cache from './cache'
 
@@ -33,23 +33,6 @@ const delayLink = new ApolloLink((operation, forward) => {
   })
 })
 
-const getUserId = async (userId?: string | null) => {
-  return axios.post<{
-    success: boolean
-    userId: string
-  }>(
-    ORION_AUTH_URL,
-    { ...(userId ? { userId } : {}) },
-    {
-      method: 'POST',
-      withCredentials: true,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-  )
-}
-
 const retryLink = new RetryLink({
   attempts: {
     max: 5,
@@ -61,9 +44,9 @@ const retryLink = new RetryLink({
 
       if (isUnauthorizedError) {
         try {
-          const response = await getUserId(userId)
-          if (response.data.userId) {
-            useUserStore.setState({ userId: response.data.userId })
+          const newUserId = await setAnonymousAuth(userId)
+          if (newUserId) {
+            useUserStore.setState({ userId: newUserId })
             return true
           }
           return true
