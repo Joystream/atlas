@@ -148,7 +148,7 @@ export const TopbarViewer: FC = () => {
                         size="medium"
                         onClick={() => signIn(undefined, openSignInDialog)}
                       >
-                        Connect wallet
+                        Log in
                       </Button>
                     )
                   )
@@ -158,9 +158,7 @@ export const TopbarViewer: FC = () => {
                   </SignedButtonsWrapper>
                 )}
                 {!searchQuery && !mdMatch && !isLoggedIn && topbarButtonLoaded && (
-                  <StyledIconButton onClick={() => signIn(undefined, openSignInDialog)}>
-                    Connect wallet
-                  </StyledIconButton>
+                  <StyledIconButton onClick={() => signIn(undefined, openSignInDialog)}>Log in</StyledIconButton>
                 )}
               </ButtonWrapper>
             </CSSTransition>

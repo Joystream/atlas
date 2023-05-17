@@ -1,6 +1,3 @@
 export * from './SignInModalWalletStep/SignInModalWalletStep'
-export * from './SignInModalAccountStep'
-export * from './SignInModalTermsStep'
-export * from './SignInModalMembershipStep'
-export * from './SignInModalCreatingStep'
+export * from './SignInModalMembershipsStep'
 export type { SignInStepProps } from './SignInSteps.types'

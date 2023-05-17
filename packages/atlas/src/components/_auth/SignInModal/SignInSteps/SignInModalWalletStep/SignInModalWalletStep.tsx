@@ -40,7 +40,7 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
   const walletFromStore = useUserStore((state) => state.wallet)
 
   const wallets = useMemo(() => {
-    const unsortedWallets = getWalletsList()
+    const unsortedWallets = getWalletsList().filter((wallet) => wallet.installed)
     if (isMobileDevice) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const rawWallets = Object.keys((window as any).injectedWeb3 || {})
@@ -121,7 +121,7 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
       text: isConnecting
         ? 'Connecting...'
         : selectedWallet?.installed || isMobileDevice
-        ? 'Select wallet'
+        ? 'Use wallet'
         : `Install ${selectedWallet?.title}`,
       disabled: isConnecting,
       icon: selectedWallet?.installed ? null : <SvgActionNewTab />,

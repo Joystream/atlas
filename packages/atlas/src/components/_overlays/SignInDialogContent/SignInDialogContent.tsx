@@ -21,9 +21,7 @@ export const SignInDialogContent: FC<SignInDialogContentProps> = ({ isMobileDevi
       </IllustrationWrapper>
       <SignInDialogTextWrapper>
         <Text as="h1" variant={smMatch ? 'h500' : 'h400'}>
-          {isMobileDevice
-            ? `${atlasConfig.general.appName} is best experienced on desktop`
-            : 'Connect wallet to continue'}
+          {isMobileDevice ? `${atlasConfig.general.appName} is best experienced on desktop` : 'Log in to continue'}
         </Text>
         {!isMobileDevice ? (
           <Text as="p" variant="t200" color="colorText">

@@ -27,7 +27,7 @@ export const useDisplaySignInDialog = (props?: { interaction: boolean }) => {
         children: <SignInDialogContent isMobileDevice={isMobileDevice} interaction={interaction} />,
         noIcon: true,
         primaryButton: {
-          text: isMobileDevice ? 'Connect anyway' : 'Connect wallet',
+          text: isMobileDevice ? 'Log in anyway' : 'Log in',
           onClick: () => {
             onConfirm?.()
             closeDialog()
