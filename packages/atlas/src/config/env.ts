@@ -29,8 +29,6 @@ export const availableEnvs = () => {
 export const readEnv = (name: string, required = true, direct = false): string => {
   const fullName = direct
     ? getEnvName(name)
-    : BUILD_ENV === 'production'
-    ? getEnvName(`PRODUCTION_${name}`)
     : getEnvName(`${useEnvironmentStore.getState().targetDevEnv.toUpperCase()}_${name}`)
   const value = import.meta.env[fullName]
   if (!value && required) {
