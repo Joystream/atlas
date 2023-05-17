@@ -10,6 +10,7 @@ import { publicVideoFilter } from '@/config/contentFilter'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useInfiniteVideoGrid } from '@/hooks/useInfiniteVideoGrid'
 import { DEFAULT_VIDEO_GRID, sizes } from '@/styles'
+import { InfiniteLoadingOffsets } from '@/utils/loading.contants'
 
 export const HomeView: FC = () => {
   const headTags = useHeadTags()
@@ -42,6 +43,7 @@ export const HomeView: FC = () => {
             return
           },
           type: 'infinite',
+          loadingTriggerOffset: InfiniteLoadingOffsets.VideoTile,
         }}
       />
     </VideoContentTemplate>
