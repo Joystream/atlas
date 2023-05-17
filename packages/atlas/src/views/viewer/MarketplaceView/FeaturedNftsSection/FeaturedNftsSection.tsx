@@ -62,6 +62,7 @@ export const FeaturedNftsSection: FC = () => {
               isTypeOf_eq: 'TransactionalStatusAuction',
               auction: {
                 isCompleted_eq: false,
+                isCanceled_eq: false,
               },
             },
           },
