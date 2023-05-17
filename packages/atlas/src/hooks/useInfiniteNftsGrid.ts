@@ -24,6 +24,7 @@ export const useInfiniteNftsGrid = (
     },
     {
       skip: !columns,
+      notifyOnNetworkStatusChange: true,
       ...opts,
     }
   )
@@ -36,7 +37,7 @@ export const useInfiniteNftsGrid = (
 
   const nextLoadPlaceholders = !pageInfo?.hasNextPage || false ? [] : createPlaceholderData(itemsToLoad)
   return {
-    tiles: [...firstLoadPlaceholders, ...(nfts || []), ...nextLoadPlaceholders],
+    tiles: [...firstLoadPlaceholders, ...(nfts || []), ...(loading ? nextLoadPlaceholders : [])],
     fetchMore,
     pageInfo,
     totalCount,

@@ -27,13 +27,17 @@ export const ChannelsSection = () => {
     pageInfo,
     loading,
     fetchMore,
-  } = useBasicChannelsConnection({
-    orderBy: sortBy,
-    first: 10,
-  })
-  const [isLoading, setIsLoading] = useState(false)
+  } = useBasicChannelsConnection(
+    {
+      orderBy: sortBy,
+      first: 10,
+    },
+    {
+      notifyOnNetworkStatusChange: true,
+    }
+  )
 
-  if (!channels || (!channels?.length && !(loading || isLoading))) {
+  if (!channels || (!channels?.length && !loading)) {
     return null
   }
 
@@ -80,13 +84,10 @@ export const ChannelsSection = () => {
         label: 'Load more channels',
         reachedEnd: !pageInfo?.hasNextPage ?? true,
         fetchMore: async () => {
-          setIsLoading(true)
           await fetchMore({
             variables: {
               after: pageInfo?.endCursor,
             },
-          }).finally(() => {
-            setIsLoading(false)
           })
         },
       }}
