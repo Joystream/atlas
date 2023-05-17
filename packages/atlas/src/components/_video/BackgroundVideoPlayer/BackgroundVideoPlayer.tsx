@@ -177,14 +177,12 @@ const ButtonBox = styled.div`
   gap: ${sizes(4)};
 `
 
-// on Firefox there is a gap between fades, negative margin fixes that
 export const StyledLink = styled(Link)<{ withFade?: boolean }>`
   ::after {
     ${media.sm} {
       content: '';
       position: absolute;
       inset: 50% 0 0 0;
-      margin: 0 0 -2px;
 
       ${(props) =>
         props.withFade &&
@@ -208,7 +206,7 @@ export const StyledLink = styled(Link)<{ withFade?: boolean }>`
             rgb(7 8 8 / 0.7873) 88.21%,
             rgb(7 8 8 / 0.85) 100%
           );
-          border-bottom: 32px solid ${cVar('colorCoreNeutral700Darken')};
+          box-shadow: 0 32px 0 0 ${cVar('colorCoreNeutral700Darken')};
         `}
     }
   }
