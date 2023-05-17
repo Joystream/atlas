@@ -50,6 +50,7 @@
     "awesome-debounce-promise": "^2.1.0",
     "axios": "^1.2.1",
     "bezier-easing": "^2.1.0",
+    "bip39": "^3.1.0",
     "blake3": "2.1.7",
     "bn.js": "^5.2.1",
     "buffer": "^6.0.3",
