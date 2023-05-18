@@ -28,6 +28,12 @@ export const StyledTable = styled(Table)`
 
   .table-row {
     background-color: transparent;
+
+    td {
+      :first-of-type {
+        max-width: 40px;
+      }
+    }
   }
 
   .table-header {
@@ -36,7 +42,7 @@ export const StyledTable = styled(Table)`
 
     th {
       :first-of-type {
-        padding-left: 5px;
+        max-width: 40px;
       }
     }
   }
