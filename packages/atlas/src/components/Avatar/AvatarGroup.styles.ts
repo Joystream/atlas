@@ -14,18 +14,17 @@ const getSizeOfGridColumn = ({ size, spreadAvatars }: AvatarGroupContainerProps)
   switch (size) {
     case 'small':
       return css`
-        grid-auto-columns: 20px;
+        grid-auto-columns: ${spreadAvatars ? '36px' : '20px'};
         padding-right: 4px;
       `
     case 'medium':
       return css`
-        grid-auto-columns: 24px;
+        grid-auto-columns: ${spreadAvatars ? '40px' : '24px'};
         padding-right: 8px;
       `
     case 'large':
       return css`
-        grid-auto-columns: ${spreadAvatars ? '40px' : '32px'};
-        //grid-auto-columns: 32px;
+        grid-auto-columns: ${spreadAvatars ? '46px' : '32px'};
         padding-right: 8px;
       `
   }

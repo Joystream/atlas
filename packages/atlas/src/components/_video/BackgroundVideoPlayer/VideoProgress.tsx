@@ -34,7 +34,7 @@ export const VideoProgress = ({ tick, video, isPlaying, limit }: VideoProgressPr
 
   return (
     <VideoProgressWrapper>
-      <VideoProgressBar progress={isPlaying ? progress : 1} />
+      <VideoProgressBar progress={progress ?? 1} />
     </VideoProgressWrapper>
   )
 }

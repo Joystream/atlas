@@ -140,6 +140,28 @@ export const NftTileDetails: FC<NftTileDetailsProps> = ({
     }
   }, [loading, nftStatus, tileSize, buyNowPrice, topBid, startingPrice])
 
+  const avatars = useMemo(
+    () => [
+      {
+        url: creator?.assetUrl,
+        tooltipText: `Creator: ${creator?.name}`,
+        onClick: creator?.onClick,
+        loading: creator?.loading,
+      },
+      ...(owner
+        ? [
+            {
+              url: owner?.assetUrl,
+              tooltipText: `Owner: ${owner?.name}`,
+              onClick: owner?.onClick,
+              loading: owner.loading,
+            },
+          ]
+        : []),
+    ],
+    [creator?.assetUrl, creator?.loading, creator?.name, creator?.onClick, owner]
+  )
+
   return (
     <Content
       to={videoHref || ''}
@@ -158,24 +180,7 @@ export const NftTileDetails: FC<NftTileDetailsProps> = ({
               : cVar('colorBackgroundMuted', true)
           }
           loading={loading}
-          avatars={[
-            {
-              url: creator?.assetUrl,
-              tooltipText: `Creator: ${creator?.name}`,
-              onClick: creator?.onClick,
-              loading: creator?.loading,
-            },
-            ...(owner
-              ? [
-                  {
-                    url: owner?.assetUrl,
-                    tooltipText: `Owner: ${owner?.name}`,
-                    onClick: owner?.onClick,
-                    loading: owner.loading,
-                  },
-                ]
-              : []),
-          ]}
+          avatars={avatars}
         />
         {contextMenuItems && (
           <div
