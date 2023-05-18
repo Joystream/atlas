@@ -71,7 +71,7 @@ export const EmptyTableDescription = styled(Text)`
 
 export const PageWrapper = styled.div`
   display: flex;
-  gap: ${sizes(3)};
+  gap: ${sizes(6)};
 `
 
 export const RightAlignedHeader = styled.div`

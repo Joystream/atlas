@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
+import { Tooltip } from '@/components/Tooltip'
 import { Button } from '@/components/_buttons/Button'
 import { cVar, sizes, zIndex } from '@/styles'
 import { MaskProps, getMaskImage } from '@/utils/styles'
@@ -47,6 +48,11 @@ export const ToggleButton = styled(Button)`
   span {
     white-space: nowrap;
   }
+`
+
+export const StyledTooltip = styled(Tooltip)`
+  width: 100%;
+  display: block;
 `
 
 export const Label = styled(Text)`
