@@ -1,8 +1,12 @@
+import { QueryHookOptions } from '@apollo/client'
 import BN from 'bn.js'
 
 import { useRawNotifications } from '@/api/hooks/notifications'
 import { BasicMembershipFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { GetNotificationsConnectionQuery } from '@/api/queries/__generated__/notifications.generated'
+import {
+  GetNotificationsConnectionQuery,
+  GetNotificationsConnectionQueryVariables,
+} from '@/api/queries/__generated__/notifications.generated'
 import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger } from '@/utils/logs'
 import { convertDateFormat } from '@/utils/time'
@@ -10,9 +14,11 @@ import { convertDateFormat } from '@/utils/time'
 import { useNotificationStore } from './notifications.store'
 import { NftNotificationRecord, NotificationRecord } from './notifications.types'
 
-export const useNotifications = () => {
+export const useNotifications = (
+  opts?: QueryHookOptions<GetNotificationsConnectionQuery, GetNotificationsConnectionQueryVariables>
+) => {
   const { memberId } = useUser()
-  const { notifications: rawNotifications, ...rest } = useRawNotifications(memberId)
+  const { notifications: rawNotifications, ...rest } = useRawNotifications(memberId, opts)
   const {
     readNotificationsIdsMap,
     lastSeenNotificationBlock,

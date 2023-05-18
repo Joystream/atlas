@@ -35,6 +35,7 @@ export const useInfiniteVideoGrid = <Query extends VideoInfiniteQueries>({
 
   const { data, loading, fetchMore } = useApolloQuery<Query>(query, {
     ...options,
+    notifyOnNetworkStatusChange: true,
     skip: !columns,
     variables: {
       ...variables,
@@ -53,7 +54,7 @@ export const useInfiniteVideoGrid = <Query extends VideoInfiniteQueries>({
 
   const nextLoadPlaceholders = !dataConnection?.pageInfo.hasNextPage || false ? [] : createPlaceholderData(itemsToLoad)
   return {
-    tiles: [...firstLoadPlaceholders, ...displayedItems, ...nextLoadPlaceholders],
+    tiles: [...firstLoadPlaceholders, ...displayedItems, ...(loading ? nextLoadPlaceholders : [])],
     fetchMore,
     pageInfo: dataConnection?.pageInfo,
     columns,

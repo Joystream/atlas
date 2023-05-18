@@ -50,22 +50,32 @@ const responsive: CarouselProps['breakpoints'] = {
 export const FeaturedNftsSection: FC = () => {
   const { activeChannel } = useUser()
   const [isFeatureNftModalOpen, setIsFeatureNfrModalOpen] = useState(false)
+  const { currentBlock } = useJoystreamStore()
 
   const { nfts, loading } = useNfts({
     variables: {
       where: {
-        isFeatured_eq: true,
-        transactionalStatus: {
-          isTypeOf_in: ['TransactionalStatusAuction', 'TransactionalStatusBuyNow'],
-          auction: {
-            isCompleted_eq: false,
+        OR: [
+          {
+            isFeatured_eq: true,
+            transactionalStatus: {
+              isTypeOf_eq: 'TransactionalStatusAuction',
+              auction: {
+                isCompleted_eq: false,
+                isCanceled_eq: false,
+              },
+            },
           },
-        },
+          {
+            isFeatured_eq: true,
+            transactionalStatus: {
+              isTypeOf_eq: 'TransactionalStatusBuyNow',
+            },
+          },
+        ],
       },
     },
   })
-
-  const { currentBlock } = useJoystreamStore()
 
   // 1. English auctions(not upcoming) first - sorted by blocks left
   const englishAuctions = nfts
@@ -73,7 +83,8 @@ export const FeaturedNftsSection: FC = () => {
       (nft) =>
         nft.transactionalStatus?.__typename === 'TransactionalStatusAuction' &&
         nft.transactionalStatus.auction.auctionType.__typename === 'AuctionTypeEnglish' &&
-        nft.transactionalStatus.auction.startsAtBlock < currentBlock
+        nft.transactionalStatus.auction.startsAtBlock < currentBlock &&
+        nft.transactionalStatus.auction.auctionType.plannedEndAtBlock > currentBlock
     )
     .sort((a, b) => {
       const aBlocksLeft =
@@ -94,9 +105,10 @@ export const FeaturedNftsSection: FC = () => {
   const openAuctionsAndBuyNowAuctions = nfts
     ?.filter(
       (nft) =>
-        nft.transactionalStatus?.__typename === 'TransactionalStatusAuction' &&
-        nft.transactionalStatus.auction.auctionType.__typename === 'AuctionTypeOpen' &&
-        nft.transactionalStatus.auction.startsAtBlock < currentBlock
+        nft.transactionalStatus?.__typename === 'TransactionalStatusBuyNow' ||
+        (nft.transactionalStatus?.__typename === 'TransactionalStatusAuction' &&
+          nft.transactionalStatus.auction.auctionType.__typename === 'AuctionTypeOpen' &&
+          nft.transactionalStatus.auction.startsAtBlock < currentBlock)
     )
     .sort((a, b) => b.video.viewsNum - a.video.viewsNum)
 
