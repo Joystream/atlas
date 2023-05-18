@@ -38,6 +38,7 @@ export type AvatarGroupProps = {
   loading?: boolean
   className?: string
   shouldHighlightEveryAvatar?: boolean
+  spreadAvatars?: boolean
 }
 
 const getSizeofAvatar = (size: AvatarGroupSize) => {
@@ -61,12 +62,18 @@ export const AvatarGroup: FC<AvatarGroupProps> = ({
   reverse,
   shouldHighlightEveryAvatar,
   className,
+  spreadAvatars,
 }) => {
   const [hoveredAvatarIdx, setHoveredAvatarIdx] = useState<number | null>(null)
   const ref = useRef<HTMLDivElement | null>(null)
 
   return (
-    <AvatarGroupContainer size={size} className={className} shouldHighlightEveryAvatar={shouldHighlightEveryAvatar}>
+    <AvatarGroupContainer
+      size={size}
+      className={className}
+      shouldHighlightEveryAvatar={shouldHighlightEveryAvatar}
+      spreadAvatars={spreadAvatars}
+    >
       {avatars.map((avatarProps, idx) => (
         <Fragment key={idx}>
           <AvatarWrapper

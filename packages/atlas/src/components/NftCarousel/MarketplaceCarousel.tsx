@@ -4,7 +4,8 @@ import { useMemo, useState } from 'react'
 import { GetFeaturedNftsVideosQuery } from '@/api/queries/__generated__/nfts.generated'
 import { Carousel, CarouselProps, SwiperInstance } from '@/components/Carousel'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { breakpoints } from '@/styles'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { breakpoints, media } from '@/styles'
 
 import { MarketplaceCarouselCard } from './components/MarketplaceCarouselCard'
 import { CarouselNavItem } from './components/NftCarouselItem/CarouselNavItem'
@@ -32,6 +33,7 @@ const responsive: CarouselProps['breakpoints'] = {
 
 export const MarketplaceCarousel = ({ carouselProps, isLoading, ...rest }: MarketplaceCarouselProps) => {
   const [glider, setGlider] = useState<SwiperInstance | null>(null)
+  const mdMatch = useMediaMatch('md')
 
   const content = useMemo(() => {
     if (isLoading) {
@@ -62,7 +64,7 @@ export const MarketplaceCarousel = ({ carouselProps, isLoading, ...rest }: Marke
 
   return (
     <Carousel
-      spaceBetween={12}
+      spaceBetween={mdMatch ? 24 : 16}
       loop
       centeredSlides
       slidesPerView={1.3}
@@ -76,5 +78,9 @@ export const MarketplaceCarousel = ({ carouselProps, isLoading, ...rest }: Marke
 
 const StyledSkeleton = styled(SkeletonLoader)`
   width: 100%;
-  aspect-ratio: 16/9;
+  aspect-ratio: 1/1;
+
+  ${media.sm} {
+    aspect-ratio: 16/9;
+  }
 `

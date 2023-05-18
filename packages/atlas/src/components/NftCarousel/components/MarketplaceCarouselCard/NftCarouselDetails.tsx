@@ -1,5 +1,5 @@
 import BN from 'bn.js'
-import { useLayoutEffect, useState } from 'react'
+import { useLayoutEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 
@@ -20,6 +20,7 @@ import { DetailsContent } from '@/components/_nft/NftTile'
 import { BackgroundVideoPlayer } from '@/components/_video/BackgroundVideoPlayer'
 import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { transitions } from '@/styles'
@@ -33,66 +34,89 @@ export const NftCarouselDetails = ({
   active: boolean
   slideNext: () => void
 }) => {
+  const smMatch = useMediaMatch('sm')
   const navigate = useNavigate()
+  const [timeLeft, setTimeLeft] = useState<string | null>(null)
+  const [isPaused, setIsPaused] = useState(!active)
+  const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
+  const nftStatus = getNftStatus(nft, nft?.video)
+
   const creatorAvatarUrl =
     nft.owner.__typename === 'NftOwnerChannel'
       ? nft.owner.channel.avatarPhoto?.resolvedUrl
       : getMemberAvatar(nft.owner.member).url
-
-  const [timeLeft, setTimeLeft] = useState<string | null>(null)
   const thumbnailUrl = nft.video.thumbnailPhoto?.resolvedUrl
-  const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
-
   const mediaUrl = nft.video.media?.resolvedUrl
-
-  const isLoading = !thumbnailUrl || !mediaUrl
-
-  const nftStatus = getNftStatus(nft, nft?.video)
   const plannedEndDateBlockTimestamp =
     nftStatus?.status === 'auction' &&
     nftStatus.auctionPlannedEndBlock &&
     convertBlockToMsTimestamp(nftStatus.auctionPlannedEndBlock)
-
+  const isLoading = !thumbnailUrl || !mediaUrl
   const name = nft.owner.__typename === 'NftOwnerChannel' ? nft.video.channel.title : nft.owner.member.handle
+  const owner = useMemo(
+    () =>
+      nft?.owner.__typename === 'NftOwnerChannel'
+        ? {
+            name,
+            assetUrl: creatorAvatarUrl,
+            onClick: () => navigate(absoluteRoutes.viewer.channel(nft.video.channel.id)),
+          }
+        : nft?.owner.__typename === 'NftOwnerMember'
+        ? {
+            name,
+            assetUrl: creatorAvatarUrl,
+            onClick: () => name && navigate(absoluteRoutes.viewer.member(name)),
+          }
+        : undefined,
+    [creatorAvatarUrl, name, navigate, nft]
+  )
 
-  const owner =
-    nft?.owner.__typename === 'NftOwnerChannel'
-      ? {
-          name,
-          assetUrl: creatorAvatarUrl,
-          onClick: () => navigate(absoluteRoutes.viewer.channel(nft.video.channel.id)),
-        }
-      : nft?.owner.__typename === 'NftOwnerMember'
-      ? {
-          name,
-          assetUrl: creatorAvatarUrl,
-          onClick: () => name && navigate(absoluteRoutes.viewer.member(name)),
-        }
-      : undefined
+  const nftDetails = useMemo(
+    () => ({
+      buyNow:
+        nftStatus?.status === 'auction' || nftStatus?.status === 'buy-now'
+          ? nftStatus.buyNowPrice
+            ? hapiBnToTokenNumber(nftStatus.buyNowPrice)
+            : undefined
+          : undefined,
+      creator: {
+        name: nft?.video.channel.title || undefined,
+        assetUrl: creatorAvatarUrl,
+        onClick: () => navigate(absoluteRoutes.viewer.channel(nft?.video.channel.id)),
+      },
+      title: nft.video.title,
+      type: 'nft',
+      topBid:
+        nftStatus?.status === 'auction' && nftStatus.topBid?.amount
+          ? hapiBnToTokenNumber(new BN(nftStatus.topBid?.amount))
+          : undefined,
+      minBid:
+        nftStatus?.status === 'auction' && nftStatus.startingPrice
+          ? hapiBnToTokenNumber(nftStatus.startingPrice)
+          : undefined,
+    }),
+    [creatorAvatarUrl, navigate, nft, nftStatus]
+  )
 
-  const nftDetails = {
-    buyNow:
-      nftStatus?.status === 'auction' || nftStatus?.status === 'buy-now'
-        ? nftStatus.buyNowPrice
-          ? hapiBnToTokenNumber(nftStatus.buyNowPrice)
-          : undefined
-        : undefined,
-    creator: {
-      name: nft?.video.channel.title || undefined,
-      assetUrl: creatorAvatarUrl,
-      onClick: () => navigate(absoluteRoutes.viewer.channel(nft?.video.channel.id)),
-    },
-    title: nft.video.title,
-    type: 'nft',
-    topBid:
-      nftStatus?.status === 'auction' && nftStatus.topBid?.amount
-        ? hapiBnToTokenNumber(new BN(nftStatus.topBid?.amount))
-        : undefined,
-    minBid:
-      nftStatus?.status === 'auction' && nftStatus.startingPrice
-        ? hapiBnToTokenNumber(nftStatus.startingPrice)
-        : undefined,
-  }
+  const avatars = useMemo(
+    () => [
+      {
+        url: nftDetails.creator?.assetUrl,
+        tooltipText: `Creator: ${nftDetails.creator?.name}`,
+        onClick: nftDetails.creator?.onClick,
+      },
+      ...(owner
+        ? [
+            {
+              url: owner?.assetUrl,
+              tooltipText: `Owner: ${owner?.name}`,
+              onClick: owner?.onClick,
+            },
+          ]
+        : []),
+    ],
+    [nftDetails.creator?.assetUrl, nftDetails.creator?.name, nftDetails.creator?.onClick, owner]
+  )
 
   useLayoutEffect(() => {
     if (plannedEndDateBlockTimestamp) {
@@ -112,7 +136,7 @@ export const NftCarouselDetails = ({
         setTimeLeft(
           `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
         )
-      }, 1000)
+      }, 12000)
 
       return () => {
         clearInterval(interval)
@@ -137,7 +161,8 @@ export const NftCarouselDetails = ({
           autoPlay={active}
           playing={active}
           muted={true}
-          onPause={(e) => (e.currentTarget.currentTime = 0)}
+          onPause={() => setIsPaused(true)}
+          onPlay={() => setIsPaused(false)}
           preload="auto"
           src={mediaUrl ?? undefined}
           poster={thumbnailUrl ?? undefined}
@@ -148,34 +173,16 @@ export const NftCarouselDetails = ({
       </VideoContainer>
       {active && (
         <CSSTransition in={active} timeout={100} classNames={transitions.names.fade} unmountOnExit>
-          <InformationContainer>
+          <InformationContainer isPaused={isPaused}>
             <DetailsContainer>
-              <AvatarGroup
-                avatarStrokeColor="transparent"
-                avatars={[
-                  {
-                    url: nftDetails.creator?.assetUrl,
-                    tooltipText: `Creator: ${nftDetails.creator?.name}`,
-                    onClick: nftDetails.creator?.onClick,
-                  },
-                  ...(owner
-                    ? [
-                        {
-                          url: owner?.assetUrl,
-                          tooltipText: `Owner: ${owner?.name}`,
-                          onClick: owner?.onClick,
-                        },
-                      ]
-                    : []),
-                ]}
-              />
-              <Text variant="h500" as="p">
+              <AvatarGroup spreadAvatars={!smMatch} avatarStrokeColor="transparent" avatars={avatars} />
+              <Text variant={smMatch ? 'h500' : 'h400'} as={smMatch ? 'h5' : 'h4'}>
                 {nftDetails.title}
               </Text>
               <StatsContainer>
                 {nftDetails.buyNow && (
                   <DetailsContent
-                    tileSize="big"
+                    tileSize={smMatch ? 'big' : 'bigSmall'}
                     caption="BUY NOW"
                     content={nftDetails.buyNow}
                     icon={<JoyTokenIcon size={16} variant="regular" />}
@@ -183,7 +190,7 @@ export const NftCarouselDetails = ({
                 )}
                 {nftDetails.topBid && (
                   <DetailsContent
-                    tileSize="big"
+                    tileSize={smMatch ? 'big' : 'bigSmall'}
                     caption="TOP BID"
                     content={nftDetails.topBid}
                     icon={<JoyTokenIcon size={16} variant="regular" />}
@@ -191,10 +198,10 @@ export const NftCarouselDetails = ({
                 )}
                 {nftDetails.minBid && (
                   <DetailsContent
-                    tileSize="big"
+                    tileSize={smMatch ? 'big' : 'bigSmall'}
                     caption="MIN BID"
                     content={nftDetails.minBid}
-                    icon={<JoyTokenIcon size={16} variant="regular" />}
+                    icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="regular" />}
                   />
                 )}
 

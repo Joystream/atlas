@@ -32,7 +32,7 @@ export const VideoProgress = ({ tick, video, isPlaying, limit }: VideoProgressPr
     }
   }, [isPlaying, limit, progress, tick, video, video?.duration])
 
-  const width = useMemo(() => (isPlaying ? (progress ? `${progress * 100}%` : 0) : 1), [isPlaying, progress])
+  const width = useMemo(() => (progress ? `${progress * 100}%` : 1), [progress])
   return (
     <VideoProgressWrapper>
       <VideoProgressBar style={{ width }} />

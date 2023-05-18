@@ -44,7 +44,7 @@ export type NftTileDetailsProps = {
   contextMenuItems?: ListItemProps[]
 }
 
-type TileSize = 'small' | 'medium' | 'big'
+type TileSize = 'small' | 'medium' | 'big' | 'bigSmall'
 
 const SMALL_SIZE_WIDTH = 288
 
@@ -140,6 +140,28 @@ export const NftTileDetails: FC<NftTileDetailsProps> = ({
     }
   }, [loading, nftStatus, tileSize, buyNowPrice, topBid, startingPrice])
 
+  const avatars = useMemo(
+    () => [
+      {
+        url: creator?.assetUrl,
+        tooltipText: `Creator: ${creator?.name}`,
+        onClick: creator?.onClick,
+        loading: creator?.loading,
+      },
+      ...(owner
+        ? [
+            {
+              url: owner?.assetUrl,
+              tooltipText: `Owner: ${owner?.name}`,
+              onClick: owner?.onClick,
+              loading: owner.loading,
+            },
+          ]
+        : []),
+    ],
+    [creator?.assetUrl, creator?.loading, creator?.name, creator?.onClick, owner]
+  )
+
   return (
     <Content
       to={videoHref || ''}
@@ -158,24 +180,7 @@ export const NftTileDetails: FC<NftTileDetailsProps> = ({
               : cVar('colorBackgroundMuted', true)
           }
           loading={loading}
-          avatars={[
-            {
-              url: creator?.assetUrl,
-              tooltipText: `Creator: ${creator?.name}`,
-              onClick: creator?.onClick,
-              loading: creator?.loading,
-            },
-            ...(owner
-              ? [
-                  {
-                    url: owner?.assetUrl,
-                    tooltipText: `Owner: ${owner?.name}`,
-                    onClick: owner?.onClick,
-                    loading: owner.loading,
-                  },
-                ]
-              : []),
-          ]}
+          avatars={avatars}
         />
         {contextMenuItems && (
           <div
@@ -224,6 +229,8 @@ export const DetailsContent: FC<DetailsContentProps> = memo(({ tileSize, caption
         return { title: 't200', content: 'h300' } as const
       case 'big':
         return { title: 'h100', content: 'h500' } as const
+      case 'bigSmall':
+        return { title: 'h100', content: 'h400' } as const
     }
   }
 
