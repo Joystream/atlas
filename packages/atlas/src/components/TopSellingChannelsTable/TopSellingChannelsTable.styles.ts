@@ -6,8 +6,21 @@ import { Table } from '@/components/Table'
 import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 
+import { LabelContainer, LabelText } from '../ListItem/ListItem.styles'
+
+export const ScrollWrapper = styled.div`
+  scrollbar-width: none;
+  position: relative;
+  overflow: auto;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`
+
 export const StyledTable = styled(Table)`
   background: transparent;
+  min-width: 528px;
 
   .table-base {
     height: fit-content;
@@ -29,12 +42,19 @@ export const StyledTable = styled(Table)`
   }
 `
 
-export const SenderItem = styled(ListItem)`
+export const StyledListItem = styled(ListItem)`
   padding-left: 0;
   width: fit-content;
   align-items: center;
 
-  & span[color] {
+  ${LabelContainer} {
+    overflow: hidden;
+  }
+
+  ${LabelText} {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     color: ${cVar('colorTextStrong')};
   }
 `
