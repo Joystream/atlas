@@ -170,11 +170,20 @@ export const StyledVideo = styled.video`
 
 const ButtonBox = styled.div`
   position: absolute;
-  bottom: 32px;
-  right: 32px;
+  bottom: 30px;
+  right: 26px;
   z-index: ${zIndex.modals};
   display: flex;
   gap: ${sizes(4)};
+
+  ${media.sm} {
+    bottom: 40px;
+    right: 42px;
+  }
+
+  svg {
+    height: 16px;
+  }
 `
 
 // on Firefox there is a gap between fades, negative margin fixes that

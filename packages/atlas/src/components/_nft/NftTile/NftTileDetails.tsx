@@ -44,7 +44,7 @@ export type NftTileDetailsProps = {
   contextMenuItems?: ListItemProps[]
 }
 
-type TileSize = 'small' | 'medium' | 'big'
+type TileSize = 'small' | 'medium' | 'big' | 'bigSmall'
 
 const SMALL_SIZE_WIDTH = 288
 
@@ -224,6 +224,8 @@ export const DetailsContent: FC<DetailsContentProps> = memo(({ tileSize, caption
         return { title: 't200', content: 'h300' } as const
       case 'big':
         return { title: 'h100', content: 'h500' } as const
+      case 'bigSmall':
+        return { title: 'h100', content: 'h400' } as const
     }
   }
 

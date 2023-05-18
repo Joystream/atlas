@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import { FC } from 'react'
 
 import { useFeaturedNftsVideos } from '@/api/hooks/nfts'
@@ -16,10 +17,19 @@ export const MarketplaceView: FC = () => {
   return (
     <StyledLimitedWidth big>
       {headTags}
-      <MarketplaceCarousel type="nft" nfts={nfts} isLoading={loading} />
+      <FullWidthWrapper>
+        <MarketplaceCarousel type="nft" nfts={nfts} isLoading={loading} />
+      </FullWidthWrapper>
       <FeaturedNftsSection />
       <TopSellingChannelsTable />
       <AllNftSection />
     </StyledLimitedWidth>
   )
 }
+
+export const FullWidthWrapper = styled.div`
+  width: calc(100% + var(--size-global-horizontal-padding) * 2);
+  margin-left: calc(var(--size-global-horizontal-padding) * -1);
+  overflow: hidden;
+  position: relative;
+`

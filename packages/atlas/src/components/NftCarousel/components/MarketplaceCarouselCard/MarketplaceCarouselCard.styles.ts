@@ -13,9 +13,9 @@ export const InformationContainer = styled.div`
 
   ${media.sm} {
     position: absolute;
-    margin-top: 0;
+    margin: 0;
     opacity: 0.25;
-    padding: 0 100px 0 ${sizes(8)};
+    inset: auto auto 40px 32px;
   }
 `
 
@@ -35,8 +35,12 @@ export const Container = styled.div<{ isActive: boolean }>`
 
 export const VideoContainer = styled.div`
   position: relative;
-  aspect-ratio: 16/9;
   width: 100%;
+  aspect-ratio: 1/1;
+
+  ${media.sm} {
+    aspect-ratio: 16/9;
+  }
 `
 
 export const DetailsContainer = styled.div`

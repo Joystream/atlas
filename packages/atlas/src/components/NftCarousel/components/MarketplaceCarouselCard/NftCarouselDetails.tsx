@@ -20,6 +20,7 @@ import { DetailsContent } from '@/components/_nft/NftTile'
 import { BackgroundVideoPlayer } from '@/components/_video/BackgroundVideoPlayer'
 import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { transitions } from '@/styles'
@@ -33,6 +34,7 @@ export const NftCarouselDetails = ({
   active: boolean
   slideNext: () => void
 }) => {
+  const smMatch = useMediaMatch('sm')
   const navigate = useNavigate()
   const creatorAvatarUrl =
     nft.owner.__typename === 'NftOwnerChannel'
@@ -151,6 +153,7 @@ export const NftCarouselDetails = ({
           <InformationContainer>
             <DetailsContainer>
               <AvatarGroup
+                spreadAvatars={!smMatch}
                 avatarStrokeColor="transparent"
                 avatars={[
                   {
@@ -169,13 +172,13 @@ export const NftCarouselDetails = ({
                     : []),
                 ]}
               />
-              <Text variant="h500" as="p">
+              <Text variant={smMatch ? 'h500' : 'h400'} as={smMatch ? 'h5' : 'h4'}>
                 {nftDetails.title}
               </Text>
               <StatsContainer>
                 {nftDetails.buyNow && (
                   <DetailsContent
-                    tileSize="big"
+                    tileSize={smMatch ? 'big' : 'bigSmall'}
                     caption="BUY NOW"
                     content={nftDetails.buyNow}
                     icon={<JoyTokenIcon size={16} variant="regular" />}
@@ -183,7 +186,7 @@ export const NftCarouselDetails = ({
                 )}
                 {nftDetails.topBid && (
                   <DetailsContent
-                    tileSize="big"
+                    tileSize={smMatch ? 'big' : 'bigSmall'}
                     caption="TOP BID"
                     content={nftDetails.topBid}
                     icon={<JoyTokenIcon size={16} variant="regular" />}
@@ -191,10 +194,10 @@ export const NftCarouselDetails = ({
                 )}
                 {nftDetails.minBid && (
                   <DetailsContent
-                    tileSize="big"
+                    tileSize={smMatch ? 'big' : 'bigSmall'}
                     caption="MIN BID"
                     content={nftDetails.minBid}
-                    icon={<JoyTokenIcon size={16} variant="regular" />}
+                    icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="regular" />}
                   />
                 )}
 

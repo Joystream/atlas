@@ -9,7 +9,7 @@ import { Avatar } from '.'
 
 export type AvatarGroupSize = 'small' | 'medium' | 'large'
 
-const getSizeOfGridColumn = ({ size }: AvatarGroupContainerProps) => {
+const getSizeOfGridColumn = ({ size, spreadAvatars }: AvatarGroupContainerProps) => {
   // grid-auto-columns = size of the avatar - offset
   switch (size) {
     case 'small':
@@ -24,7 +24,8 @@ const getSizeOfGridColumn = ({ size }: AvatarGroupContainerProps) => {
       `
     case 'large':
       return css`
-        grid-auto-columns: 32px;
+        grid-auto-columns: ${spreadAvatars ? '40px' : '32px'};
+        //grid-auto-columns: 32px;
         padding-right: 8px;
       `
   }
@@ -37,6 +38,7 @@ export const StyledAvatar = styled(Avatar)`
 type AvatarGroupContainerProps = {
   size?: AvatarGroupSize
   shouldHighlightEveryAvatar?: boolean
+  spreadAvatars?: boolean
 }
 
 export const AvatarGroupContainer = styled.div<AvatarGroupContainerProps>`
