@@ -156,7 +156,6 @@ export const FeaturedNftsSection: FC = () => {
           contentProps={{
             type: 'carousel',
             children: items.map((nft, idx) => <NftTileViewer nftId={nft.id} key={idx} />),
-            canOverflowContainer: true,
             spaceBetween: mdMatch ? 24 : 16,
             breakpoints: responsive,
           }}

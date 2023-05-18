@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react'
+import { FC, ReactNode, useState } from 'react'
 
 import { SvgActionChevronL, SvgActionChevronR } from '@/assets/icons'
 import { SectionFilter } from '@/components/FilterButton'
@@ -107,18 +107,8 @@ export function SectionHeader<T>(props: SectionHeaderProps<T>) {
               {filters && filtersInFirstRow && <SectionFilters filters={filters} onApplyFilters={onApplyFilters} />}
               {isCarousel && (
                 <>
-                  <StyledArrowButton
-                    size="medium"
-                    icon={<SvgActionChevronL />}
-                    variant="tertiary"
-                    onClick={props.onMoveCarouselLeft}
-                  />
-                  <StyledArrowButton
-                    size="medium"
-                    icon={<SvgActionChevronR />}
-                    variant="tertiary"
-                    onClick={props.onMoveCarouselRight}
-                  />
+                  <ArrowButton disabled={props.isBeginning} direction="left" onClick={props.onMoveCarouselLeft} />
+                  <ArrowButton disabled={props.isEnd} direction="right" onClick={props.onMoveCarouselRight} />
                 </>
               )}
               {button && <StyledButton {...button} size="medium" variant="secondary" />}
@@ -150,23 +140,28 @@ export function SectionHeader<T>(props: SectionHeaderProps<T>) {
       {sort?.type === 'select' && <StyledSelect {...sort.selectProps} size="medium" />}
       {isCarousel && (
         <>
-          <StyledArrowButton
-            disabled={props.isBeginning}
-            size="medium"
-            icon={<SvgActionChevronL />}
-            variant="tertiary"
-            onClick={props.onMoveCarouselLeft}
-          />
-          <StyledArrowButton
-            disabled={props.isEnd}
-            size="medium"
-            icon={<SvgActionChevronR />}
-            variant="tertiary"
-            onClick={props.onMoveCarouselRight}
-          />
+          <ArrowButton disabled={props.isBeginning} direction="left" onClick={props.onMoveCarouselLeft} />
+          <ArrowButton disabled={props.isEnd} direction="right" onClick={props.onMoveCarouselRight} />
         </>
       )}
       {button && <StyledButton {...button} size="medium" variant="secondary" />}
     </SectionHeaderWrapper>
+  )
+}
+
+type ArrowButtonProps = {
+  disabled?: boolean
+  onClick?: () => void
+  direction: 'left' | 'right'
+}
+const ArrowButton: FC<ArrowButtonProps> = ({ disabled, onClick, direction }) => {
+  return (
+    <StyledArrowButton
+      disabled={disabled}
+      size="medium"
+      icon={direction === 'left' ? <SvgActionChevronL /> : <SvgActionChevronR />}
+      variant="tertiary"
+      onClick={onClick}
+    />
   )
 }
