@@ -31,7 +31,7 @@ export const KebabMenuButtonIcon = styled(Button)<ActiveProps>`
 type ContentProps = {
   loading?: boolean
   shouldHover?: boolean
-  tileSize?: 'small' | 'medium' | 'big'
+  tileSize?: 'small' | 'medium' | 'big' | 'bigSmall'
 }
 
 const containerHoverStyles = ({ loading, shouldHover = true }: ContentProps) => {

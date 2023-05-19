@@ -1,5 +1,6 @@
 import BN from 'bn.js'
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
+import useDraggableScroll from 'use-draggable-scroll'
 
 import {
   GetTopSellingChannelsQuery,
@@ -20,10 +21,11 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import {
   JoyAmountWrapper,
   NftSoldText,
-  SenderItem,
+  ScrollWrapper,
   SenderItemIconsWrapper,
   SkeletonChannelContainer,
   StyledLink,
+  StyledListItem,
   StyledTable,
 } from './TopSellingChannelsTable.styles'
 
@@ -75,7 +77,10 @@ export const TopSellingChannelsTable = () => {
     },
   })
 
-  const mdMatch = useMediaMatch('md')
+  const ref = useRef<HTMLDivElement>(null)
+  const { onMouseDown } = useDraggableScroll(ref, { direction: 'horizontal' })
+
+  const lgMatch = useMediaMatch('lg')
   const mappedData: TableProps['data'] = useMemo(
     () =>
       loading
@@ -170,13 +175,9 @@ export const TopSellingChannelsTable = () => {
           },
         },
         children: [
-          <StyledTable
-            key="single"
-            emptyState={tableEmptyState}
-            columns={COLUMNS}
-            data={mappedData}
-            doubleColumn={mdMatch}
-          />,
+          <ScrollWrapper key="single" ref={ref} onMouseDown={onMouseDown}>
+            <StyledTable emptyState={tableEmptyState} columns={COLUMNS} data={mappedData} doubleColumn={lgMatch} />
+          </ScrollWrapper>,
         ],
       }}
     />
@@ -189,8 +190,8 @@ const Channel = ({ channel }: { channel: GetTopSellingChannelsQuery['topSellingC
   // todo to be implemented
   const verified = false
   return (
-    <StyledLink to={absoluteRoutes.viewer.member(channel.ownerMember?.handle)}>
-      <SenderItem
+    <StyledLink to={absoluteRoutes.viewer.member(channel.ownerMember?.handle)} title={channel.ownerMember?.handle}>
+      <StyledListItem
         nodeStart={<Avatar assetUrl={channel.avatarPhoto?.resolvedUrl ?? undefined} />}
         label={channel.ownerMember?.handle}
         isInteractive={false}

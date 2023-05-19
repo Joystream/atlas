@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { cVar, zIndex } from '@/styles'
 
@@ -32,15 +32,15 @@ export const VideoProgress = ({ tick, video, isPlaying, limit }: VideoProgressPr
     }
   }, [isPlaying, limit, progress, tick, video, video?.duration])
 
+  const width = useMemo(() => (progress ? `${progress * 100}%` : 1), [progress])
   return (
     <VideoProgressWrapper>
-      <VideoProgressBar progress={isPlaying ? progress : 1} />
+      <VideoProgressBar style={{ width }} />
     </VideoProgressWrapper>
   )
 }
 
-const VideoProgressBar = styled.div<{ progress: number }>`
-  width: ${({ progress }) => (progress ? `${progress * 100}%` : 0)};
+const VideoProgressBar = styled.div`
   min-height: 2px;
   background-color: ${cVar('colorCoreNeutral100')};
 `
