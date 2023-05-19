@@ -89,7 +89,7 @@ export const StyledLink = styled(Link, { shouldForwardProp: isPropValid })<{ wit
             rgb(7 8 8 / 0.7873) 88.21%,
             rgb(7 8 8 / 0.85) 100%
           );
-          border-bottom: 32px solid ${cVar('colorCoreNeutral700Darken')};
+          box-shadow: 0 32px 0 0 ${cVar('colorCoreNeutral700Darken')};
         `}
     }
   }

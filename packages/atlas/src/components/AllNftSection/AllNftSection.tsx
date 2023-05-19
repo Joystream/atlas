@@ -13,6 +13,7 @@ import { useInfiniteNftsGrid } from '@/hooks/useInfiniteNftsGrid'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
 import { DEFAULT_NFTS_GRID } from '@/styles'
+import { InfiniteLoadingOffsets } from '@/utils/loading.contants'
 
 import { NumberFormat } from '../NumberFormat'
 
@@ -184,6 +185,7 @@ export const AllNftSection = () => {
       }}
       footerProps={{
         type: 'infinite',
+        loadingTriggerOffset: InfiniteLoadingOffsets.NftTile,
         reachedEnd: !pageInfo?.hasNextPage ?? true,
         fetchMore: async () => {
           if (pageInfo?.hasNextPage) {
