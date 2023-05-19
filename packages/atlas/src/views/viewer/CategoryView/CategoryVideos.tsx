@@ -12,6 +12,7 @@ import { publicVideoFilter } from '@/config/contentFilter'
 import { absoluteRoutes } from '@/config/routes'
 import { useInfiniteVideoGrid } from '@/hooks/useInfiniteVideoGrid'
 import { DEFAULT_VIDEO_GRID } from '@/styles'
+import { InfiniteLoadingOffsets } from '@/utils/loading.contants'
 
 import { Container, FallbackContainer } from './CategoryVideos.styles'
 
@@ -67,6 +68,7 @@ export const CategoryVideos: FC<CategoryVideosProps> = ({ categoriesId }) => {
             }
           },
           type: 'infinite',
+          loadingTriggerOffset: InfiniteLoadingOffsets.VideoTile,
         }}
       />
     </Container>

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 import { cVar, media, sizes } from '@/styles'
 
@@ -66,4 +67,9 @@ export const StatsContainer = styled.div`
       flex: 1;
     }
   }
+`
+
+export const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
 `

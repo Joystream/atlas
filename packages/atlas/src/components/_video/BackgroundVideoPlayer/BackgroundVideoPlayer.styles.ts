@@ -1,3 +1,4 @@
+import isPropValid from '@emotion/is-prop-valid'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
@@ -58,7 +59,7 @@ export const ButtonBox = styled.div`
 `
 
 // on Firefox there is a gap between fades, negative margin fixes that
-export const StyledLink = styled(Link)<{ withFade?: boolean }>`
+export const StyledLink = styled(Link, { shouldForwardProp: isPropValid })<{ withFade?: boolean }>`
   ::after {
     content: '';
     position: absolute;
@@ -87,7 +88,7 @@ export const StyledLink = styled(Link)<{ withFade?: boolean }>`
           rgb(7 8 8 / 0.7873) 88.21%,
           rgb(7 8 8 / 0.85) 100%
         );
-        border-bottom: 32px solid ${cVar('colorCoreNeutral700Darken')};
+        box-shadow: 0 32px 0 0 ${cVar('colorCoreNeutral700Darken')};
       `}
   }
 `
