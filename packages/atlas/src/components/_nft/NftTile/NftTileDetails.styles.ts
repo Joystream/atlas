@@ -108,10 +108,8 @@ export const DetailsContentWrapper = styled.div<{ secondary?: boolean; avoidIcon
     ${({ avoidIconStyling, secondary }) =>
       !avoidIconStyling &&
       css`
-        * {
-          * {
-            fill: ${secondary ? cVar('colorText') : cVar('colorTextStrong')};
-          }
+        path {
+          fill: ${secondary ? cVar('colorText') : cVar('colorTextStrong')};
         }
       `}
   }
