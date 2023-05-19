@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { cVar, media, sizes } from '@/styles'
 
 export const MarketplaceWrapper = styled.div`
@@ -26,4 +27,8 @@ export const TableFullWitdhtWrapper = styled(FullWidthWrapper)`
   ${media.md} {
     padding: ${sizes(16)} var(--size-global-horizontal-padding);
   }
+`
+
+export const AllNftLimitedWidthContainer = styled(LimitedWidthContainer)`
+  width: 100%;
 `
