@@ -121,7 +121,7 @@ export const TopSellingChannelsTable = () => {
 
   const sortingOptions = useMemo(
     () => [
-      ...((data?.topWeekSellingChannels.length || 0) > MIN_TOP_SELLING_ITEMS
+      ...((data?.topWeekSellingChannels.length || 0) >= MIN_TOP_SELLING_ITEMS
         ? [
             {
               label: 'Last week',
@@ -129,7 +129,7 @@ export const TopSellingChannelsTable = () => {
             },
           ]
         : []),
-      ...((data?.topMonthSellingChannels.length || 0) > MIN_TOP_SELLING_ITEMS
+      ...((data?.topMonthSellingChannels.length || 0) >= MIN_TOP_SELLING_ITEMS
         ? [
             {
               label: 'Last month',
@@ -137,7 +137,7 @@ export const TopSellingChannelsTable = () => {
             },
           ]
         : []),
-      ...((data?.topAllTimeSellingChannels.length || 0) > MIN_TOP_SELLING_ITEMS
+      ...((data?.topAllTimeSellingChannels.length || 0) >= MIN_TOP_SELLING_ITEMS
         ? [
             {
               label: 'All time',
@@ -160,7 +160,7 @@ export const TopSellingChannelsTable = () => {
           type: 'title',
           title: 'Top selling channels',
         },
-        ...(sortingOptions.length
+        ...(sortingOptions.length > 1
           ? {
               sort: {
                 type: 'toggle-button',
