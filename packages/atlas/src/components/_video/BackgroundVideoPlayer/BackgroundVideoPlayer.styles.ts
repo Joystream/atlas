@@ -46,7 +46,6 @@ export const ButtonBox = styled.div`
   z-index: ${zIndex.modals};
   display: flex;
   gap: ${sizes(2)};
-  filter: ${cVar('filterEffectElevation1Layer1')};
 
   ${media.sm} {
     bottom: 32px;
@@ -54,6 +53,7 @@ export const ButtonBox = styled.div`
   }
 
   svg {
+    filter: ${cVar('filterEffectElevation1Layer1')};
     height: 18px;
     width: 18px;
   }
