@@ -12,6 +12,7 @@ import {
   DetailsContainer,
   InformationContainer,
   StatsContainer,
+  StyledLink,
   VideoContainer,
 } from '@/components/NftCarousel/components/MarketplaceCarouselCard/MarketplaceCarouselCard.styles'
 import { Text } from '@/components/Text'
@@ -177,7 +178,7 @@ export const NftCarouselDetails = ({
             <DetailsContainer>
               <AvatarGroup spreadAvatars={!smMatch} avatarStrokeColor="transparent" avatars={avatars} />
               <Text variant={smMatch ? 'h500' : 'h400'} as={smMatch ? 'h5' : 'h4'}>
-                {nftDetails.title}
+                <StyledLink to={absoluteRoutes.viewer.video(nft.video.id)}>{nftDetails.title}</StyledLink>
               </Text>
               <StatsContainer>
                 {nftDetails.buyNow && (

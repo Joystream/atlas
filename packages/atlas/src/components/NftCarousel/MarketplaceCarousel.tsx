@@ -8,7 +8,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { breakpoints, media } from '@/styles'
 
 import { MarketplaceCarouselCard } from './components/MarketplaceCarouselCard'
-import { CarouselNavItem } from './components/NftCarouselItem/CarouselNavItem'
+import { NftCarouselItem } from './components/NftCarouselItem/NftCarouselItem'
 
 type NftCarouselType = {
   type: 'nft'
@@ -47,11 +47,11 @@ export const MarketplaceCarousel = ({ carouselProps, isLoading, ...rest }: Marke
 
     if (rest.type === 'nft' && rest.nfts && glider) {
       return rest.nfts.map((nft, idx) => (
-        <CarouselNavItem key={idx} onClick={(dir) => (dir === '>' ? glider?.slideNext() : glider?.slidePrev())}>
+        <NftCarouselItem key={idx} onClick={(dir) => (dir === '>' ? glider?.slideNext() : glider?.slidePrev())}>
           {(isActive) => (
             <MarketplaceCarouselCard slideNext={() => glider?.slideNext()} active={isActive} type="nft" nft={nft} />
           )}
-        </CarouselNavItem>
+        </NftCarouselItem>
       ))
     }
 
@@ -66,6 +66,7 @@ export const MarketplaceCarousel = ({ carouselProps, isLoading, ...rest }: Marke
     <Carousel
       spaceBetween={mdMatch ? 24 : 16}
       loop
+      roundLengths
       centeredSlides
       slidesPerView={1.3}
       breakpoints={responsive}
