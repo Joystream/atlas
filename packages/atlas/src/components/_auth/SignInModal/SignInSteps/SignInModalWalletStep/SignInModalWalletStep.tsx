@@ -22,15 +22,11 @@ import {
   StyledTopBanner,
   WalletLogo,
 } from '../SignInSteps.styles'
-import { SignInStepProps } from '../SignInSteps.types'
+import { ModalSteps, SignInStepProps } from '../SignInSteps.types'
 
 export const isMobileDevice = isMobile()
 
-export const SignInModalWalletStep: FC<SignInStepProps> = ({
-  setPrimaryButtonProps,
-  goToNextStep,
-  hasNavigatedBack,
-}) => {
+export const SignInModalWalletStep: FC<SignInStepProps> = ({ setPrimaryButtonProps, goToStep, hasNavigatedBack }) => {
   const smMatch = useMediaMatch('sm')
 
   const [selectedWalletIdx, setSelectedWalletIdx] = useState<number>(0)
@@ -96,8 +92,8 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
       return
     }
 
-    goToNextStep()
-  }, [goToNextStep, selectedWallet, signIn])
+    goToStep(ModalSteps.Membership)
+  }, [goToStep, selectedWallet, signIn])
 
   const handleSelectWallet = useCallback((idx: number) => {
     setSelectedWalletIdx(idx)
