@@ -296,12 +296,28 @@ query GetChannelPaymentEvents($channelId: String) {
   }
 }
 
-query GetTopSellingChannels($limit: Int!, $periodDays: Int!, $where: ExtendedChannelWhereInput) {
-  topSellingChannels(where: $where, limit: $limit, periodDays: $periodDays) {
+query GetTopSellingChannelsFromThreePeriods($limit: Int!, $where: ExtendedChannelWhereInput) {
+  topAllTimeSellingChannels: topSellingChannels(where: $where, limit: $limit, periodDays: 0) {
     amount
     nftSold
     channel {
-      ...FullChannelFields
+      ...BasicChannelFields
+    }
+  }
+  # week
+  topWeekSellingChannels: topSellingChannels(where: $where, limit: $limit, periodDays: 7) {
+    amount
+    nftSold
+    channel {
+      ...BasicChannelFields
+    }
+  }
+  # month
+  topMonthSellingChannels: topSellingChannels(where: $where, limit: $limit, periodDays: 30) {
+    amount
+    nftSold
+    channel {
+      ...BasicChannelFields
     }
   }
 }
