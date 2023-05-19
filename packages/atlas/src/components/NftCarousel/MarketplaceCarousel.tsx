@@ -66,6 +66,7 @@ export const MarketplaceCarousel = ({ carouselProps, isLoading, ...rest }: Marke
     <Carousel
       spaceBetween={mdMatch ? 24 : 16}
       loop
+      roundLengths
       centeredSlides
       slidesPerView={1.3}
       breakpoints={responsive}
