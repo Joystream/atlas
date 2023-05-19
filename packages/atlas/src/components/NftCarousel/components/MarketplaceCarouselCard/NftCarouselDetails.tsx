@@ -189,7 +189,7 @@ export const NftCarouselDetails = ({
                     tileSize={smMatch ? 'big' : 'bigSmall'}
                     caption="BUY NOW"
                     content={nftDetails.buyNow}
-                    icon={<JoyTokenIcon size={16} variant="silver" />}
+                    icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
                   />
                 )}
                 {nftDetails.topBid && (
@@ -198,7 +198,7 @@ export const NftCarouselDetails = ({
                     tileSize={smMatch ? 'big' : 'bigSmall'}
                     caption="TOP BID"
                     content={nftDetails.topBid}
-                    icon={<JoyTokenIcon size={16} variant="silver" />}
+                    icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
                   />
                 )}
                 {nftDetails.minBid && (
