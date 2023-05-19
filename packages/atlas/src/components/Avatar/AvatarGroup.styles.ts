@@ -96,7 +96,7 @@ type AvatarWrapperProps = {
 export const AvatarWrapper = styled.div<AvatarWrapperProps>`
   position: relative;
   border-radius: 50%;
-  width: calc(100% + ${({ size }) => (size === 'small' ? 4 : 8)}px);
+  width: fit-content;
   grid-row: 1;
 
   ${({ clickable }) =>
