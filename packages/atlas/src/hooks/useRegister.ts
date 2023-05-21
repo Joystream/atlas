@@ -9,7 +9,6 @@ import { Buffer } from 'buffer'
 import { AES, enc, lib, mode } from 'crypto-js'
 import { useCallback } from 'react'
 
-import { atlasConfig } from '@/config'
 import { useLogIn } from '@/hooks/useLogIn'
 
 // import { ORION_AUTH_URL } from '@/config/env'
@@ -52,7 +51,7 @@ export const useRegister = () => {
     async (params: RegisterParams) => {
       await cryptoWaitReady()
       const registerPayload = {
-        gatewayName: atlasConfig.general.appName,
+        gatewayName: 'Gleev',
         joystreamAccountId: '',
         timestamp: Date.now(),
         action: 'createAccount',

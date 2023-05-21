@@ -16,13 +16,14 @@ type UseUserHookReturn = ActiveUserState &
   }
 
 export const useUser = (): UseUserHookReturn => {
-  const { accountId, memberId, channelId, walletStatus, walletAccounts, actions } = useUserStore()
+  const { accountId, memberId, channelId, walletStatus, walletAccounts, loggedInAccountId, actions } = useUserStore()
   const userContext = useUserContext()
   const { getWalletsList } = useSignerWallet()
 
-  const isLoggedIn = !!accountId && !!memberId && walletStatus === 'connected'
+  const isLoggedIn = loggedInAccountId === accountId && !!memberId
 
   return {
+    loggedInAccountId,
     accountId,
     memberId,
     channelId,

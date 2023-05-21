@@ -4,8 +4,6 @@ import shallow from 'zustand/shallow'
 import { SignInModalEmailStep } from '@/components/_auth/SignInModal/SignInSteps/SignInModalEmailStep'
 import { Button } from '@/components/_buttons/Button'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
-import { useLogIn } from '@/hooks/useLogIn'
-import { useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { useUserStore } from '@/providers/user/user.store'
 
@@ -19,9 +17,7 @@ export const SignInModal: FC = () => {
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Select wallet' }) // start with sensible default so that there are no jumps after first effect runs
   const [hasNavigatedBack, setHasNavigatedBack] = useState(false)
   const dialogContentRef = useRef<HTMLDivElement>(null)
-  const { joystream } = useJoystream()
   const { walletStatus } = useUser()
-  const handleLogin = useLogIn()
   const { signInModalOpen, setSignInModalOpen } = useUserStore(
     (state) => ({ signInModalOpen: state.signInModalOpen, setSignInModalOpen: state.actions.setSignInModalOpen }),
     shallow
@@ -63,30 +59,6 @@ export const SignInModal: FC = () => {
     dialogContentRef.current.scrollTo({ top: 0 })
   }, [displayedStep])
 
-  const onMemberSelect = useCallback(
-    async (address: string) => {
-      if (!joystream?.signMessage) return
-      setCurrentStep(ModalSteps.Logging)
-      const res = await handleLogin({
-        type: 'extension',
-        sign: (data) =>
-          joystream.signMessage({
-            type: 'payload',
-            data,
-          }),
-        address,
-      })
-
-      if (res.error) {
-        return setCurrentStep(ModalSteps.Email)
-      }
-
-      setSignInModalOpen(false)
-      // todo add cookie so user can perform actions
-    },
-    [handleLogin, joystream, setSignInModalOpen]
-  )
-
   const renderStep = () => {
     const commonProps: SignInStepProps = {
       setPrimaryButtonProps,
@@ -98,7 +70,7 @@ export const SignInModal: FC = () => {
       case ModalSteps.Wallet:
         return <SignInModalWalletStep {...commonProps} />
       case ModalSteps.Membership:
-        return <SignInModalMembershipsStep {...commonProps} onConfirm={onMemberSelect} />
+        return <SignInModalMembershipsStep {...commonProps} />
       case ModalSteps.Email:
         return <SignInModalEmailStep {...commonProps} />
       case ModalSteps.Logging:
