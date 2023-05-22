@@ -25,6 +25,7 @@ export type ChannelCardProps = {
   onClick?: () => void
   loading?: boolean
   channel?: BasicChannelFieldsFragment
+  withFollows?: boolean
 }
 
 export const ChannelCard: FC<ChannelCardProps> = ({
@@ -33,6 +34,7 @@ export const ChannelCard: FC<ChannelCardProps> = ({
   withFollowButton = true,
   channel,
   loading,
+  withFollows = true,
 }) => {
   const mdMatch = useMediaMatch('md')
   const [activeDisabled, setActiveDisabled] = useState(false)
@@ -65,10 +67,12 @@ export const ChannelCard: FC<ChannelCardProps> = ({
                   <ChannelTitle as="h3" variant={mdMatch ? 'h300' : 't200-strong'}>
                     {channel.title}
                   </ChannelTitle>
-                  <ChannelFollows as="p" variant={mdMatch ? 't200' : 't100'} color="colorText">
-                    <NumberFormat as="span" format="short" value={channel.followsNum || 0} color="colorText" />{' '}
-                    followers
-                  </ChannelFollows>
+                  {withFollows && (
+                    <ChannelFollows as="p" variant={mdMatch ? 't200' : 't100'} color="colorText">
+                      <NumberFormat as="span" format="short" value={channel.followsNum || 0} color="colorText" />{' '}
+                      followers
+                    </ChannelFollows>
+                  )}
                   {withFollowButton && (
                     <FollowButton
                       variant="secondary"
