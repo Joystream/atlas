@@ -8,12 +8,7 @@ import { TopSellingChannelsTable } from '@/components/TopSellingChannelsTable'
 import { useHeadTags } from '@/hooks/useHeadTags'
 
 import { FeaturedNftsSection } from './FeaturedNftsSection/FeaturedNftsSection'
-import {
-  AllNftLimitedWidthContainer,
-  FullWidthWrapper,
-  MarketplaceWrapper,
-  TableFullWitdhtWrapper,
-} from './MarketplaceView.styles'
+import { FullWidthWrapper, MarketplaceWrapper, TableFullWitdhtWrapper } from './MarketplaceView.styles'
 
 export const MarketplaceView: FC = () => {
   const headTags = useHeadTags('Marketplace')
@@ -25,7 +20,7 @@ export const MarketplaceView: FC = () => {
       <FullWidthWrapper>
         <MarketplaceCarousel type="nft" nfts={nfts} isLoading={loading} />
       </FullWidthWrapper>
-      <LimitedWidthContainer big noBottomPadding>
+      <LimitedWidthContainer big noBottomPadding fullWidth>
         <FeaturedNftsSection />
       </LimitedWidthContainer>
       <TableFullWitdhtWrapper>
@@ -33,9 +28,9 @@ export const MarketplaceView: FC = () => {
           <TopSellingChannelsTable />
         </LimitedWidthContainer>
       </TableFullWitdhtWrapper>
-      <AllNftLimitedWidthContainer big noBottomPadding>
+      <LimitedWidthContainer big noBottomPadding fullWidth>
         <AllNftSection />
-      </AllNftLimitedWidthContainer>
+      </LimitedWidthContainer>
     </MarketplaceWrapper>
   )
 }
