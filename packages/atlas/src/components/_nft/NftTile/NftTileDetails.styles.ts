@@ -47,13 +47,13 @@ const containerHoverStyles = ({ loading, shouldHover = true }: ContentProps) => 
   }
 }
 
-const tileSizeVariants = ({ tileSize }: ContentProps) => `
+const tileSizeVariants = ({ tileSize }: ContentProps) => css`
   padding: ${sizes(tileSize === 'medium' ? 6 : 4)};
 
   ${StyledAvatarGroup} {
     margin-bottom: ${sizes(tileSize === 'medium' ? 4 : 3)};
   }
-  
+
   ${Details} {
     margin-top: ${sizes(tileSize === 'medium' ? 4 : 3)};
   }
@@ -64,7 +64,7 @@ export const Content = styled(Link, { shouldForwardProp: isContentPropValid })<C
   display: block;
   text-decoration: none;
   background-color: ${cVar('colorBackgroundMuted')};
-  transition: ${cVar('animationTransitionFast')};
+  transition: background-color ${cVar('animationTransitionFast')};
 
   ${containerHoverStyles};
   ${tileSizeVariants};
