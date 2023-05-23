@@ -4,7 +4,7 @@ type BuildEnv = 'production' | 'development'
 
 export const ENV_PREFIX = 'VITE'
 
-const getEnvName = (name: string) => {
+export const getEnvName = (name: string) => {
   return `${ENV_PREFIX}_${name}`
 }
 
@@ -29,8 +29,6 @@ export const availableEnvs = () => {
 export const readEnv = (name: string, required = true, direct = false): string => {
   const fullName = direct
     ? getEnvName(name)
-    : BUILD_ENV === 'production'
-    ? getEnvName(`PRODUCTION_${name}`)
     : getEnvName(`${useEnvironmentStore.getState().targetDevEnv.toUpperCase()}_${name}`)
   const value = import.meta.env[fullName]
   if (!value && required) {

@@ -1,3 +1,4 @@
+import { QueryHookOptions } from '@apollo/client'
 import BN from 'bn.js'
 import { useMemo } from 'react'
 
@@ -8,7 +9,10 @@ import {
   BasicNftOwnerFieldsFragment,
   BasicVideoActivityFieldsFragment,
 } from '@/api/queries/__generated__/fragments.generated'
-import { GetNftActivitiesQuery } from '@/api/queries/__generated__/notifications.generated'
+import {
+  GetNftActivitiesQuery,
+  GetNftActivitiesQueryVariables,
+} from '@/api/queries/__generated__/notifications.generated'
 import { convertDateFormat } from '@/utils/time'
 
 export type NftActivitiesRecord = {
@@ -64,7 +68,9 @@ export type ActivitiesRecord =
       price: BN
     } & NftActivitiesRecord)
 
-const getVideoDataFromEvent = (nftActivity: GetNftActivitiesQuery['nftActivities'][number]) => {
+const getVideoDataFromEvent = (
+  nftActivity: GetNftActivitiesQuery['nftActivitiesConnection']['edges'][number]['node']
+) => {
   switch (nftActivity.event.data.__typename) {
     case 'AuctionBidMadeEventData':
     case 'AuctionBidCanceledEventData':
@@ -90,7 +96,7 @@ const getVideoDataFromEvent = (nftActivity: GetNftActivitiesQuery['nftActivities
 }
 
 const parseActivities = (
-  nftActivity: GetNftActivitiesQuery['nftActivities'][number],
+  { node: nftActivity }: GetNftActivitiesQuery['nftActivitiesConnection']['edges'][number],
   memberId?: string
 ): ActivitiesRecord | null => {
   const commonFields: NftActivitiesRecord = {
@@ -234,16 +240,19 @@ const parseActivities = (
   }
 }
 
-export const useActivities = (memberId?: string, sort?: NftActivityOrderByInput) => {
+export const useActivities = (
+  memberId?: string,
+  sort?: NftActivityOrderByInput,
+  opts?: QueryHookOptions<GetNftActivitiesQuery, GetNftActivitiesQueryVariables>
+) => {
   const {
     activities: rawActivities,
     nftsBiddedTotalCount,
     nftsIssuedTotalCount,
     nftsSoldTotalCount,
     nftsBoughtTotalCount,
-    error,
-    loading,
-  } = useRawActivities(memberId, sort)
+    ...rest
+  } = useRawActivities(memberId, sort, opts)
   const parsedActivities = rawActivities && rawActivities.map((a) => parseActivities(a, memberId))
   const activities = parsedActivities ? parsedActivities.filter((a): a is ActivitiesRecord => !!a) : undefined
 
@@ -257,9 +266,8 @@ export const useActivities = (memberId?: string, sort?: NftActivityOrderByInput)
   }, [nftsBiddedTotalCount, nftsBoughtTotalCount, nftsIssuedTotalCount, nftsSoldTotalCount])
 
   return {
+    ...rest,
     activities,
     activitiesTotalCounts: totalCounts,
-    error,
-    loading,
   }
 }

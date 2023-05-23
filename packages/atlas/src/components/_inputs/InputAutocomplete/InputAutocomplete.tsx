@@ -8,12 +8,8 @@ import { SvgActionCancel } from '@/assets/icons'
 import { ComboBox, ComboBoxProps } from '@/components/_inputs/ComboBox'
 import { SentryLogger } from '@/utils/logs'
 
-const notFoundNode = {
-  label: `We couldn't find any result. Please check if spelling is correct.`,
-  nodeStart: <SvgActionCancel />,
-}
-
 type InputAutocompleteProps<Q extends object, V extends OperationVariables, R = object> = {
+  notFoundLabel?: string
   value: string
   onChange: (value: string) => void
   clearSelection: () => void
@@ -27,6 +23,7 @@ type InputAutocompleteProps<Q extends object, V extends OperationVariables, R = 
 } & Pick<ComboBoxProps, 'onBlur' | 'disabled' | 'error' | 'className'>
 
 export const InputAutocomplete = <Q extends object, V extends OperationVariables, R = object>({
+  notFoundLabel = "We couldn't find any result. Please check if spelling is correct.",
   onItemSelect,
   queryVariablesFactory,
   documentQuery,
@@ -86,7 +83,10 @@ export const InputAutocomplete = <Q extends object, V extends OperationVariables
       {...comboBoxProps}
       items={result ? renderItem(result) : []}
       placeholder={placeholder}
-      notFoundNode={notFoundNode}
+      notFoundNode={{
+        nodeStart: <SvgActionCancel />,
+        label: notFoundLabel,
+      }}
       processing={isLoading}
       nodeEnd={nodeEnd}
       value={value}

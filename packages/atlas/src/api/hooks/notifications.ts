@@ -1,47 +1,48 @@
 import { QueryHookOptions } from '@apollo/client'
 
 import {
-  GetNotificationsQuery,
-  GetNotificationsQueryVariables,
+  GetNftActivitiesQuery,
+  GetNftActivitiesQueryVariables,
+  GetNotificationsConnectionQuery,
+  GetNotificationsConnectionQueryVariables,
   useGetNftActivitiesQuery,
-  useGetNotificationsQuery,
+  useGetNotificationsConnectionQuery,
 } from '@/api/queries/__generated__/notifications.generated'
 
 import { NftActivityOrderByInput } from '../queries/__generated__/baseTypes.generated'
 
 export const useRawNotifications = (
   memberId: string | null,
-  opts?: QueryHookOptions<GetNotificationsQuery, GetNotificationsQueryVariables>
+  opts?: QueryHookOptions<GetNotificationsConnectionQuery, GetNotificationsConnectionQueryVariables>
 ) => {
-  const { data, ...rest } = useGetNotificationsQuery({
+  const { data, ...rest } = useGetNotificationsConnectionQuery({
     variables: {
-      limit: 1000,
+      first: 10,
       memberId: memberId || '',
     },
-    // TODO Fix me. We use `no-cache` because for unknown reasons cache removes data about owner
-    fetchPolicy: 'no-cache',
     skip: !memberId,
     ...opts,
   })
-
   return {
-    notifications: data?.notifications || [],
+    notifications: data?.notificationsConnection.edges || [],
+    totalCount: data?.notificationsConnection.totalCount,
+    pageInfo: data?.notificationsConnection.pageInfo,
     ...rest,
   }
 }
 
 export const useRawActivities = (
   memberId?: string,
-  sort: NftActivityOrderByInput = NftActivityOrderByInput.EventTimestampDesc
+  sort: NftActivityOrderByInput = NftActivityOrderByInput.EventTimestampDesc,
+  opts?: QueryHookOptions<GetNftActivitiesQuery, GetNftActivitiesQueryVariables>
 ) => {
   const { data, ...rest } = useGetNftActivitiesQuery({
+    ...opts,
     variables: {
-      limit: 100,
+      first: 10,
       orderBy: sort,
       memberId: memberId || '',
     },
-    // TODO Fix me. We use `no-cache` because for unknown reasons cache removes data about owner
-    fetchPolicy: 'no-cache',
     skip: !memberId,
   })
 
@@ -50,8 +51,9 @@ export const useRawActivities = (
     nftsBoughtTotalCount: data?.nftsBought.totalCount,
     nftsSoldTotalCount: data?.nftsSold.totalCount,
     nftsIssuedTotalCount: data?.nftsIssued.totalCount,
-    nftsBidded: data?.nftsBidded,
-    activities: data?.nftActivities,
+    totalCount: data?.nftActivitiesConnection.totalCount,
+    pageInfo: data?.nftActivitiesConnection.pageInfo,
+    activities: data?.nftActivitiesConnection.edges,
     ...rest,
   }
 }

@@ -3,14 +3,14 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { cVar, sizes, transitions } from '@/styles'
+import { cVar, sizes } from '@/styles'
 
 type ColorProps = { color?: string }
 type LoadingProps = { isLoading?: boolean }
 type VariantProps = { variantCategory?: 'default' | 'compact' }
 
 export const CoverImg = styled.div<{ bgImgUrl: string }>`
-  transition: opacity ${transitions.timings.regular} ${transitions.easing};
+  transition: opacity ${cVar('animationTransitionFast')};
   position: relative;
   width: 100%;
   height: 100%;
@@ -21,7 +21,7 @@ export const CoverImg = styled.div<{ bgImgUrl: string }>`
 `
 
 export const CoverImgOverlay = styled.div`
-  transition: opacity ${transitions.timings.regular} ${transitions.easing};
+  transition: opacity ${cVar('animationTransitionFast')};
   position: absolute;
   width: 100%;
   height: 100%;
@@ -43,7 +43,8 @@ const hoverStyles = ({ isLoading, color }: LoadingProps & ColorProps) =>
 
 export const Container = styled(Link, { shouldForwardProp: isPropValid })<ColorProps & VariantProps & LoadingProps>`
   text-decoration: unset;
-  transition: all ${transitions.timings.regular} ${transitions.easing};
+  transition: ${cVar('animationTransitionFast')};
+  transition-property: box-shadow, transform;
   display: grid;
   cursor: ${({ isLoading }) => (isLoading ? 'initial' : 'pointer')};
   box-shadow: inset 4px 0 ${({ color, isLoading }) => (color && !isLoading ? color : 'transparent')};
@@ -84,9 +85,9 @@ const generalStyles = ({ variantCategory }: VariantProps) =>
     grid-template-columns: 2fr 1fr;
   `
 export const GeneralContainer = styled(Container)`
-  ${generalStyles};
-
   height: 100%;
+
+  ${generalStyles};
 `
 
 export const Content = styled.div<VariantProps>`
@@ -168,4 +169,5 @@ export const PieSegment = styled.div<{ value: number }>`
 export const VideosNumberContainer = styled.div`
   display: flex;
   align-items: center;
+  align-self: flex-end;
 `

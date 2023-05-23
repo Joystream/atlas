@@ -1,11 +1,16 @@
 import styled from '@emotion/styled'
 
 import { Button } from '@/components/_buttons/Button'
-import { cVar, media, sizes } from '@/styles'
+import { cVar, media, sizes, zIndex } from '@/styles'
+
+export const MobileBackdrop = styled.div`
+  background-color: transparent;
+  inset: 0;
+  position: fixed;
+  z-index: ${zIndex.globalOverlay};
+`
 
 export const Wrapper = styled.div`
-  position: relative;
-  left: -5px;
   width: 100vw;
   background-color: ${cVar('colorBackgroundStrong')};
   ${media.sm} {
@@ -24,6 +29,8 @@ export const Header = styled.div`
 
 export const Content = styled.div`
   overflow-y: auto;
+  overscroll-behavior: contain;
+  max-height: 40vh;
 
   ${media.sm} {
     max-height: 336px;

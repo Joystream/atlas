@@ -25,24 +25,22 @@ import { ChannelsView } from './ChannelsView'
 import { DiscoverView } from './DiscoverView'
 import { EditMembershipView } from './EditMembershipView'
 import { HomeView } from './HomeView'
+import { MarketplaceView } from './MarketplaceView'
 import { MemberView } from './MemberView'
-import { NftsView } from './NftsView'
 import { NotFoundView } from './NotFoundView'
-import { PopularView } from './PopularView'
 import { SearchView } from './SearchView'
 import { VideoView } from './VideoView'
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.search(), element: <SearchView /> },
   { path: relativeRoutes.viewer.index(), element: <HomeView /> },
-  { path: relativeRoutes.viewer.popular(), element: <PopularView /> },
   { path: relativeRoutes.viewer.discover(), element: <DiscoverView /> },
   { path: relativeRoutes.viewer.video(), element: <VideoView /> },
   { path: relativeRoutes.viewer.channels(), element: <ChannelsView /> },
   { path: relativeRoutes.viewer.channel(), element: <ChannelView /> },
   { path: relativeRoutes.viewer.category(), element: <CategoryView /> },
   { path: relativeRoutes.viewer.member(), element: <MemberView /> },
-  { path: relativeRoutes.viewer.nfts(), element: <NftsView /> },
+  { path: relativeRoutes.viewer.marketplace(), element: <MarketplaceView /> },
   ...(atlasConfig.features.ypp.googleConsoleClientId
     ? [{ path: relativeRoutes.viewer.ypp(), element: <YppLandingView /> }]
     : []),

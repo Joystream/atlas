@@ -26,10 +26,10 @@ import { Tabs, TabsProps } from '../../Tabs'
 import { Select, SelectProps } from '../../_inputs/Select'
 import { ToggleButtonGroup, ToggleButtonOptionTypeProps } from '../../_inputs/ToggleButtonGroup'
 
-type Sort =
+type Sort<T> =
   | {
       type: 'toggle-button'
-      toggleButtonOptionTypeProps: ToggleButtonOptionTypeProps
+      toggleButtonOptionTypeProps: ToggleButtonOptionTypeProps<T>
     }
   | {
       type: 'select'
@@ -67,21 +67,23 @@ type Carousel =
       isCarousel?: true
       onMoveCarouselRight?: () => void
       onMoveCarouselLeft?: () => void
+      isBeginning?: boolean
+      isEnd?: boolean
     }
   | {
       isCarousel?: false
     }
 
-export type SectionHeaderProps = {
+export type SectionHeaderProps<T> = {
   start: SectionHeaderStart
   search?: SearchProps
-  sort?: Sort
+  sort?: Sort<T>
   filters?: SectionFilter[]
   onApplyFilters?: (appliedFilters: SectionFilter[]) => void
   button?: Omit<ButtonProps, 'size' | 'variant'>
 } & Carousel
 
-export const SectionHeader: FC<SectionHeaderProps> = (props) => {
+export function SectionHeader<T>(props: SectionHeaderProps<T>) {
   const { start, sort, search, filters, onApplyFilters, button, isCarousel } = props
   const [isSearchInputOpen, setIsSearchInputOpen] = useState(false)
   const smMatch = useMediaMatch('sm')
@@ -105,18 +107,8 @@ export const SectionHeader: FC<SectionHeaderProps> = (props) => {
               {filters && filtersInFirstRow && <SectionFilters filters={filters} onApplyFilters={onApplyFilters} />}
               {isCarousel && (
                 <>
-                  <StyledArrowButton
-                    size="medium"
-                    icon={<SvgActionChevronL />}
-                    variant="tertiary"
-                    onClick={props.onMoveCarouselLeft}
-                  />
-                  <StyledArrowButton
-                    size="medium"
-                    icon={<SvgActionChevronR />}
-                    variant="tertiary"
-                    onClick={props.onMoveCarouselRight}
-                  />
+                  <ArrowButton disabled={props.isBeginning} direction="left" onClick={props.onMoveCarouselLeft} />
+                  <ArrowButton disabled={props.isEnd} direction="right" onClick={props.onMoveCarouselRight} />
                 </>
               )}
               {button && <StyledButton {...button} size="medium" variant="secondary" />}
@@ -148,21 +140,28 @@ export const SectionHeader: FC<SectionHeaderProps> = (props) => {
       {sort?.type === 'select' && <StyledSelect {...sort.selectProps} size="medium" />}
       {isCarousel && (
         <>
-          <StyledArrowButton
-            size="medium"
-            icon={<SvgActionChevronL />}
-            variant="tertiary"
-            onClick={props.onMoveCarouselLeft}
-          />
-          <StyledArrowButton
-            size="medium"
-            icon={<SvgActionChevronR />}
-            variant="tertiary"
-            onClick={props.onMoveCarouselRight}
-          />
+          <ArrowButton disabled={props.isBeginning} direction="left" onClick={props.onMoveCarouselLeft} />
+          <ArrowButton disabled={props.isEnd} direction="right" onClick={props.onMoveCarouselRight} />
         </>
       )}
       {button && <StyledButton {...button} size="medium" variant="secondary" />}
     </SectionHeaderWrapper>
+  )
+}
+
+type ArrowButtonProps = {
+  disabled?: boolean
+  onClick?: () => void
+  direction: 'left' | 'right'
+}
+const ArrowButton: FC<ArrowButtonProps> = ({ disabled, onClick, direction }) => {
+  return (
+    <StyledArrowButton
+      disabled={disabled}
+      size="medium"
+      icon={direction === 'left' ? <SvgActionChevronL /> : <SvgActionChevronR />}
+      variant="tertiary"
+      onClick={onClick}
+    />
   )
 }

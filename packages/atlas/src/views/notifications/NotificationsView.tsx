@@ -3,12 +3,14 @@ import { useEffect } from 'react'
 import { SvgActionClose, SvgActionRead, SvgActionUnread } from '@/assets/icons'
 import { GridItem } from '@/components/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
+import { Section } from '@/components/Section/Section'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useBottomNavStore } from '@/providers/bottomNav'
 import { useNotifications } from '@/providers/notifications/notifications.hooks'
+import { createPlaceholderData } from '@/utils/data'
 
 import { useSelectedNotifications } from './Notifications.hooks'
 import {
@@ -18,6 +20,7 @@ import {
   NotificationEmptyRectangle,
   NotificationEmptyRectangleWithText,
   StyledLayoutGrid,
+  StyledNotificationLoader,
   StyledNotificationTile,
   StyledPill,
 } from './NotificationsView.styles'
@@ -29,10 +32,19 @@ export const NotificationsView = () => {
 
   const { selectedNotifications, setNotificationSelected, selectAllNotifications, unselectAllNotifications } =
     useSelectedNotifications()
-  const { notifications, markNotificationsAsRead, markNotificationsAsUnread, setLastSeenNotificationBlock } =
-    useNotifications()
-  const firstNotification = notifications[0]
+  const {
+    notifications,
+    markNotificationsAsRead,
+    markNotificationsAsUnread,
+    setLastSeenNotificationBlock,
+    pageInfo,
+    fetchMore,
+    loading,
+  } = useNotifications({
+    notifyOnNetworkStatusChange: true,
+  })
 
+  const firstNotification = notifications[0]
   // set last seen notification block to first notification to manage the badge for notification button
   useEffect(() => {
     if (!firstNotification) return
@@ -50,10 +62,12 @@ export const NotificationsView = () => {
       icon={<SvgActionClose />}
     />
   )
-
   const markAllAsRead = () => markNotificationsAsRead(notifications)
   const markSelectedAsRead = () => markNotificationsAsRead(selectedNotifications)
   const markSelectedAsUnread = () => markNotificationsAsUnread(selectedNotifications)
+
+  const placeholderItems = createPlaceholderData(loading ? 10 : 0)
+
   return (
     <StyledLayoutGrid>
       {headTags}
@@ -76,19 +90,52 @@ export const NotificationsView = () => {
 
         <div>
           {notifications.length > 0 ? (
-            notifications.map((notification, idx) => (
-              <StyledNotificationTile
-                key={`notification-${notification.id}-${idx}`}
-                notification={notification}
-                selected={!!selectedNotifications.find((notif) => notif.id === notification.id)}
-                onCheckboxChange={(selected, e) => {
-                  setNotificationSelected(notification, selected)
-                  e.preventDefault()
-                  e.stopPropagation()
-                }}
-                onClick={() => markNotificationsAsRead(notification)}
-              />
-            ))
+            <Section
+              withoutGap
+              contentProps={{
+                type: 'grid',
+                children: [
+                  <div key="single">
+                    {[...notifications, ...placeholderItems].map((notification, idx) =>
+                      notification.id ? (
+                        <StyledNotificationTile
+                          key={`notification-${notification.id}-${idx}`}
+                          notification={notification}
+                          selected={!!selectedNotifications.find((notif) => notif.id === notification.id)}
+                          onCheckboxChange={(selected, e) => {
+                            setNotificationSelected(notification, selected)
+                            e.preventDefault()
+                            e.stopPropagation()
+                          }}
+                          onClick={() => markNotificationsAsRead(notification)}
+                        />
+                      ) : (
+                        <StyledNotificationLoader key={idx} />
+                      )
+                    )}
+                  </div>,
+                ],
+              }}
+              footerProps={{
+                type: 'infinite',
+                reachedEnd: !pageInfo?.hasNextPage ?? true,
+                fetchMore: async () => {
+                  await fetchMore({
+                    variables: {
+                      after: pageInfo?.endCursor,
+                      first: 10,
+                    },
+                    updateQuery: (prev, { fetchMoreResult }) => {
+                      fetchMoreResult.notificationsConnection.edges = [
+                        ...(prev.notificationsConnection?.edges ?? []),
+                        ...fetchMoreResult.notificationsConnection.edges,
+                      ]
+                      return fetchMoreResult
+                    },
+                  })
+                },
+              }}
+            />
           ) : (
             <NotificationsEmptyFallback />
           )}

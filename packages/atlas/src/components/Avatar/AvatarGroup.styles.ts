@@ -9,22 +9,22 @@ import { Avatar } from '.'
 
 export type AvatarGroupSize = 'small' | 'medium' | 'large'
 
-const getSizeOfGridColumn = ({ size }: AvatarGroupContainerProps) => {
+const getSizeOfGridColumn = ({ size, spreadAvatars }: AvatarGroupContainerProps) => {
   // grid-auto-columns = size of the avatar - offset
   switch (size) {
     case 'small':
       return css`
-        grid-auto-columns: 20px;
+        grid-auto-columns: ${spreadAvatars ? '36px' : '20px'};
         padding-right: 4px;
       `
     case 'medium':
       return css`
-        grid-auto-columns: 24px;
+        grid-auto-columns: ${spreadAvatars ? '40px' : '24px'};
         padding-right: 8px;
       `
     case 'large':
       return css`
-        grid-auto-columns: 32px;
+        grid-auto-columns: ${spreadAvatars ? '46px' : '32px'};
         padding-right: 8px;
       `
   }
@@ -37,6 +37,7 @@ export const StyledAvatar = styled(Avatar)`
 type AvatarGroupContainerProps = {
   size?: AvatarGroupSize
   shouldHighlightEveryAvatar?: boolean
+  spreadAvatars?: boolean
 }
 
 export const AvatarGroupContainer = styled.div<AvatarGroupContainerProps>`
@@ -48,7 +49,7 @@ export const AvatarGroupContainer = styled.div<AvatarGroupContainerProps>`
     shouldHighlightEveryAvatar &&
     css`
       :hover ${StyledAvatar} {
-        ${sharedAvatarHoverStyles};
+        ${sharedAvatarHoverStyles({ disableHoverDimm: true })};
       }
       :active ${StyledAvatar} {
         ${sharedAvatarActiveStyles};
@@ -95,7 +96,7 @@ type AvatarWrapperProps = {
 export const AvatarWrapper = styled.div<AvatarWrapperProps>`
   position: relative;
   border-radius: 50%;
-  width: calc(100% + ${({ size }) => (size === 'small' ? 4 : 8)}px);
+  width: fit-content;
   grid-row: 1;
 
   ${({ clickable }) =>

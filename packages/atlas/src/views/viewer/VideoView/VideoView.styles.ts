@@ -73,7 +73,6 @@ export const PlayerContainer = styled.div<CinematicView>`
   width: 100%;
   position: relative;
 `
-
 export const PlayerSkeletonLoader = styled(SkeletonLoader)`
   position: absolute;
   top: 0;

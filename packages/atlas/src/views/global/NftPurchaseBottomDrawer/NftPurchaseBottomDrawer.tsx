@@ -111,7 +111,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
   const auctionBuyNowPrice = isAuction ? hapiBnToTokenNumber(nftStatus.buyNowPrice || new BN(0)) : 0
   const bidLockingTime = isAuction && nftStatus.bidLockingTime && convertBlocksToDuration(nftStatus.bidLockingTime)
   const buyNowPrice = isBuyNow ? hapiBnToTokenNumber(nftStatus.buyNowPrice || new BN(0)) : 0
-  const startingPrice = isAuction && hapiBnToTokenNumber(nftStatus.startingPrice)
+  const startingPrice = isAuction ? hapiBnToTokenNumber(nftStatus.startingPrice, true) : 0
   const topBidder = isAuction && nftStatus.topBidder ? nftStatus.topBidder : undefined
   const topBidAmount =
     isAuction && !nftStatus.topBid?.isCanceled && !!nftStatus.topBidAmount
@@ -378,7 +378,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                           Top bid
                         </Text>
                         <FlexWrapper>
-                          <Avatar size="bid" assetUrl={topBidderAvatarUrl} loading={topBidderAvatarLoading} />
+                          <Avatar size={24} assetUrl={topBidderAvatarUrl} loading={topBidderAvatarLoading} />
                           <TokenWrapper>
                             <StyledJoyTokenIcon variant="gray" size={24} />
                           </TokenWrapper>
@@ -399,7 +399,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                             Your Bid
                           </Text>
                           <FlexWrapper>
-                            <Avatar size="bid" assetUrl={userBidAvatarUrl} loading={userBidAvatarLoading} />
+                            <Avatar size={24} assetUrl={userBidAvatarUrl} loading={userBidAvatarLoading} />
                             <TokenWrapper>
                               <StyledJoyTokenIcon variant="gray" size={24} />
                             </TokenWrapper>
@@ -531,7 +531,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   Owner
                 </Text>
                 <PaymentSplitValues>
-                  <Avatar size="bid" assetUrl={ownerMemberAvatarUrl} />
+                  <Avatar size={24} assetUrl={ownerMemberAvatarUrl} />
                   <Text as="span" variant="h400" color="colorText" margin={{ left: 2 }}>
                     {ownerRoyalty}%
                   </Text>
@@ -542,7 +542,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   Creator
                 </Text>
                 <PaymentSplitValues>
-                  <Avatar size="bid" assetUrl={creatorAvatarUrl} />
+                  <Avatar size={24} assetUrl={creatorAvatarUrl} />
                   <Text as="span" variant="h400" color="colorText" margin={{ left: 2 }}>
                     {creatorRoyalty}%
                   </Text>
