@@ -63,17 +63,19 @@ export const MarketplaceCarousel = ({ carouselProps, isLoading, ...rest }: Marke
   }
 
   return (
-    <Carousel
-      spaceBetween={mdMatch ? 24 : 16}
-      loop
-      roundLengths
-      centeredSlides
-      slidesPerView={1.3}
-      breakpoints={responsive}
-      onSwiper={(swiper) => setGlider(swiper)}
-    >
-      {content}
-    </Carousel>
+    <FullWidthWrapper>
+      <Carousel
+        spaceBetween={mdMatch ? 24 : 16}
+        loop
+        roundLengths
+        centeredSlides
+        slidesPerView={1.3}
+        breakpoints={responsive}
+        onSwiper={(swiper) => setGlider(swiper)}
+      >
+        {content}
+      </Carousel>
+    </FullWidthWrapper>
   )
 }
 
@@ -84,4 +86,11 @@ const StyledSkeleton = styled(SkeletonLoader)`
   ${media.sm} {
     aspect-ratio: 16/9;
   }
+`
+
+export const FullWidthWrapper = styled.div`
+  width: calc(100% + var(--size-global-horizontal-padding) * 2);
+  margin-left: calc(var(--size-global-horizontal-padding) * -1);
+  overflow: hidden;
+  position: relative;
 `
