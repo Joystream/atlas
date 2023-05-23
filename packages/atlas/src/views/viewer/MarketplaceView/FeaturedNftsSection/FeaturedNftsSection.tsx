@@ -3,6 +3,7 @@ import { FC, useState } from 'react'
 import { useNfts } from '@/api/hooks/nfts'
 import { Banner } from '@/components/Banner'
 import { CarouselProps } from '@/components/Carousel'
+import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Section } from '@/components/Section/Section'
 import { StyledSvgAlertsInformative24 } from '@/components/Tooltip/Tooltip.styles'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
@@ -143,43 +144,45 @@ export const FeaturedNftsSection: FC = () => {
   }
 
   return (
-    <FeaturedNftsWrapper>
-      <FeatureNftModal isOpen={isFeatureNftModalOpen} onClose={() => setIsFeatureNfrModalOpen(false)} />
-      {items.length >= 4 && (
-        <Section
-          headerProps={{
-            start: {
-              type: 'title',
-              title: 'Featured',
-            },
-          }}
-          contentProps={{
-            type: 'carousel',
-            children: items.map((nft, idx) => <NftTileViewer nftId={nft.id} key={idx} />),
-            spaceBetween: mdMatch ? 24 : 16,
-            breakpoints: responsive,
-          }}
-        />
-      )}
-      {activeChannel && activeChannel.totalVideosCreated > 0 && (
-        <Banner
-          title="How to get featured?"
-          icon={<StyledSvgAlertsInformative24 />}
-          description={`The ${
-            atlasConfig.general.appName
-          } team handpicks featured video NFTs as a way to recognize and promote high-quality content. To increase your chances of getting your NFT featured on the marketplace, ${
-            atlasConfig.general.appContentFocus
-              ? `upload videos related to ${atlasConfig.general.appContentFocus} and `
-              : ''
-          }make sure your NFT is up for sale.`}
-          actionButton={{
-            text: 'Submit your video NFT to be featured',
-            onClick: () => {
-              setIsFeatureNfrModalOpen(true)
-            },
-          }}
-        />
-      )}
-    </FeaturedNftsWrapper>
+    <LimitedWidthContainer big noBottomPadding fullWidth>
+      <FeaturedNftsWrapper>
+        <FeatureNftModal isOpen={isFeatureNftModalOpen} onClose={() => setIsFeatureNfrModalOpen(false)} />
+        {items.length >= 4 && (
+          <Section
+            headerProps={{
+              start: {
+                type: 'title',
+                title: 'Featured',
+              },
+            }}
+            contentProps={{
+              type: 'carousel',
+              children: items.map((nft, idx) => <NftTileViewer nftId={nft.id} key={idx} />),
+              spaceBetween: mdMatch ? 24 : 16,
+              breakpoints: responsive,
+            }}
+          />
+        )}
+        {activeChannel && activeChannel.totalVideosCreated > 0 && (
+          <Banner
+            title="How to get featured?"
+            icon={<StyledSvgAlertsInformative24 />}
+            description={`The ${
+              atlasConfig.general.appName
+            } team handpicks featured video NFTs as a way to recognize and promote high-quality content. To increase your chances of getting your NFT featured on the marketplace, ${
+              atlasConfig.general.appContentFocus
+                ? `upload videos related to ${atlasConfig.general.appContentFocus} and `
+                : ''
+            }make sure your NFT is up for sale.`}
+            actionButton={{
+              text: 'Submit your video NFT to be featured',
+              onClick: () => {
+                setIsFeatureNfrModalOpen(true)
+              },
+            }}
+          />
+        )}
+      </FeaturedNftsWrapper>
+    </LimitedWidthContainer>
   )
 }

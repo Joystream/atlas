@@ -12,14 +12,9 @@ export const MarketplaceWrapper = styled.div`
   }
 `
 
-export const FullWidthWrapper = styled.div`
+export const TableFullWitdhtWrapper = styled.div`
   width: calc(100% + var(--size-global-horizontal-padding) * 2);
   margin-left: calc(var(--size-global-horizontal-padding) * -1);
-  overflow: hidden;
-  position: relative;
-`
-
-export const TableFullWitdhtWrapper = styled(FullWidthWrapper)`
   background-color: ${cVar('colorBackgroundMuted')};
   padding: ${sizes(8)} var(--size-global-horizontal-padding);
 
