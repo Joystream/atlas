@@ -1,18 +1,22 @@
-import styled from '@emotion/styled'
 import { FC, SyntheticEvent, VideoHTMLAttributes, useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { SvgActionPause, SvgActionPlay, SvgActionSoundOff, SvgActionSoundOn } from '@/assets/icons'
 import { Button } from '@/components/_buttons/Button'
 import { VideoProgress } from '@/components/_video/BackgroundVideoPlayer/VideoProgress'
-import { sizes, transitions, zIndex } from '@/styles'
+import { absoluteRoutes } from '@/config/routes'
+import { transitions } from '@/styles'
 import { ConsoleLogger } from '@/utils/logs'
+
+import { ButtonBox, StyledLink, StyledVideo, VideoPoster, VideoWrapper } from './BackgroundVideoPlayer.styles'
 
 type BackgroundVideoPlayerProps = {
   className?: string
   playing?: boolean
   handleActions?: boolean
   videoPlaytime?: number
+  videoId?: string
+  withFade?: boolean
 } & VideoHTMLAttributes<HTMLVideoElement>
 
 export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
@@ -25,6 +29,8 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
   src,
   handleActions,
   videoPlaytime,
+  videoId,
+  withFade,
   ...props
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -53,7 +59,9 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
     if (videoRef.current) {
       videoRef.current.pause()
       setIsPlaying(false)
-      setIsPosterVisible(true)
+      if (videoRef.current?.currentTime && videoRef.current.currentTime < 1) {
+        setIsPosterVisible(true)
+      }
     }
   }
 
@@ -71,9 +79,10 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
   }, [handleActions, playing, src])
 
   const handlePlay = (e: SyntheticEvent<HTMLVideoElement, Event>) => {
-    setIsPosterVisible(false)
     setIsPlaying(true)
     onPlay?.(e)
+
+    setIsPosterVisible(false)
   }
 
   const handleEnded = (e: SyntheticEvent<HTMLVideoElement, Event>) => {
@@ -99,71 +108,30 @@ export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
         </ButtonBox>
       )}
       {playing && <VideoProgress video={videoRef.current} isPlaying={isPlaying} tick={10} limit={videoPlaytime} />}
-      <StyledVideo
-        src={src}
-        autoPlay={autoPlay}
-        playsInline={playsInline}
-        ref={videoRef}
-        onEnded={handleEnded}
-        onPlay={handlePlay}
-        poster={poster}
-        {...props}
-        muted={handleActions ? isMuted : props.muted}
-      />
-      {poster && (
-        <CSSTransition
-          in={isPosterVisible}
-          unmountOnExit
-          mountOnEnter
-          classNames={transitions.names.fade}
-          timeout={300}
-        >
-          <VideoPoster src={poster} alt="" />
-        </CSSTransition>
-      )}
+      <StyledLink withFade={withFade} to={videoId ? absoluteRoutes.viewer.video(videoId) : ''}>
+        <StyledVideo
+          src={src}
+          autoPlay={autoPlay}
+          playsInline={playsInline}
+          ref={videoRef}
+          onEnded={handleEnded}
+          onPlay={handlePlay}
+          poster={poster}
+          {...props}
+          muted={handleActions ? isMuted : props.muted}
+        />
+        {poster && (
+          <CSSTransition
+            in={isPosterVisible}
+            unmountOnExit
+            mountOnEnter
+            classNames={transitions.names.fade}
+            timeout={300}
+          >
+            <VideoPoster src={poster} alt="" />
+          </CSSTransition>
+        )}
+      </StyledLink>
     </VideoWrapper>
   )
 }
-
-type VideoWrapperProps = {
-  poster?: string
-}
-export const VideoWrapper = styled.div<VideoWrapperProps>`
-  height: 0;
-  overflow: hidden;
-`
-
-export const VideoPoster = styled.img`
-  position: absolute;
-  object-fit: cover;
-  max-height: 100%;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-
-  :hover {
-    & + span {
-      opacity: 0;
-    }
-  }
-`
-
-export const StyledVideo = styled.video`
-  position: absolute;
-  object-fit: cover;
-  max-height: 100%;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-`
-
-const ButtonBox = styled.div`
-  position: absolute;
-  bottom: 32px;
-  right: 32px;
-  z-index: ${zIndex.modals};
-  display: flex;
-  gap: ${sizes(4)};
-`

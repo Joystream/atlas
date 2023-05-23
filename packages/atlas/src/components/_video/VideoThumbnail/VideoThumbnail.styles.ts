@@ -134,9 +134,9 @@ export const PlaylistOverlay = styled.div`
   width: 50%;
 `
 
-export const VideoThumbnailContainer = styled(Link, {
-  shouldForwardProp: (prop) => !(prop === 'clickable' || prop === 'activeDisabled' || prop === 'isPlaylist'),
-})<VideoThumbnailContainerProps>`
+const isPropValid = (prop: string) => !(prop === 'clickable' || prop === 'activeDisabled' || prop === 'isPlaylist')
+
+export const VideoThumbnailContainer = styled(Link, { shouldForwardProp: isPropValid })<VideoThumbnailContainerProps>`
   min-width: 166px;
   display: block;
   position: relative;

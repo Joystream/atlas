@@ -277,14 +277,11 @@ export const MyVideosView = () => {
           )
         })
     : videosWithSkeletonLoaders.map((video, idx) => {
-        if (video === 'new-video-tile' || video === 'possibly-syncing') {
-          return (
-            <NewVideoTile
-              loading={video === 'new-video-tile' ? areTilesLoading : true}
-              key={idx}
-              onClick={video === 'new-video-tile' ? uploadVideoButtonProps.onClick : undefined}
-            />
-          )
+        if (video === 'new-video-tile') {
+          return <NewVideoTile loading={areTilesLoading} key={idx} onClick={uploadVideoButtonProps.onClick} />
+        }
+        if (video === 'possibly-syncing') {
+          return <VideoTilePublisher key={idx} />
         }
         return (
           <VideoTilePublisher

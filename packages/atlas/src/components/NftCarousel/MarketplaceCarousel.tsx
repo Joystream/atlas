@@ -1,17 +1,18 @@
 import styled from '@emotion/styled'
 import { useMemo, useState } from 'react'
 
-import { GetFeaturedNftsQuery } from '@/api/queries/__generated__/nfts.generated'
+import { GetFeaturedNftsVideosQuery } from '@/api/queries/__generated__/nfts.generated'
 import { Carousel, CarouselProps, SwiperInstance } from '@/components/Carousel'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { breakpoints, media } from '@/styles'
 
 import { MarketplaceCarouselCard } from './components/MarketplaceCarouselCard'
-import { CarouselNavItem } from './components/NftCarouselItem/CarouselNavItem'
+import { NftCarouselItem } from './components/NftCarouselItem/NftCarouselItem'
 
 type NftCarouselType = {
   type: 'nft'
-  nfts?: GetFeaturedNftsQuery['ownedNfts']
+  nfts?: GetFeaturedNftsVideosQuery['ownedNfts']
 }
 
 type MarketplaceCarouselTypes = NftCarouselType
@@ -32,6 +33,7 @@ const responsive: CarouselProps['breakpoints'] = {
 
 export const MarketplaceCarousel = ({ carouselProps, isLoading, ...rest }: MarketplaceCarouselProps) => {
   const [glider, setGlider] = useState<SwiperInstance | null>(null)
+  const mdMatch = useMediaMatch('md')
 
   const content = useMemo(() => {
     if (isLoading) {
@@ -45,52 +47,50 @@ export const MarketplaceCarousel = ({ carouselProps, isLoading, ...rest }: Marke
 
     if (rest.type === 'nft' && rest.nfts && glider) {
       return rest.nfts.map((nft, idx) => (
-        <CarouselNavItem key={idx} onClick={(dir) => (dir === '>' ? glider?.slideNext() : glider?.slidePrev())}>
+        <NftCarouselItem key={idx} onClick={(dir) => (dir === '>' ? glider?.slideNext() : glider?.slidePrev())}>
           {(isActive) => (
             <MarketplaceCarouselCard slideNext={() => glider?.slideNext()} active={isActive} type="nft" nft={nft} />
           )}
-        </CarouselNavItem>
+        </NftCarouselItem>
       ))
     }
 
     return [null]
   }, [rest.type, rest.nfts, glider, isLoading])
 
+  if (!isLoading && (!rest.nfts || rest.nfts.length < 4)) {
+    return null
+  }
+
   return (
-    <Carousel
-      spaceBetween={12}
-      loop
-      centeredSlides
-      slidesPerView={1.3}
-      breakpoints={responsive}
-      onSwiper={(swiper) => setGlider(swiper)}
-    >
-      {content}
-    </Carousel>
+    <FullWidthWrapper>
+      <Carousel
+        spaceBetween={mdMatch ? 24 : 16}
+        loop
+        roundLengths
+        centeredSlides
+        slidesPerView={1.3}
+        breakpoints={responsive}
+        onSwiper={(swiper) => setGlider(swiper)}
+      >
+        {content}
+      </Carousel>
+    </FullWidthWrapper>
   )
 }
 
 const StyledSkeleton = styled(SkeletonLoader)`
-  height: 325px;
   width: 100%;
+  aspect-ratio: 1/1;
 
   ${media.sm} {
-    min-height: 340px;
+    aspect-ratio: 16/9;
   }
+`
 
-  ${media.md} {
-    min-height: 410px;
-  }
-
-  ${media.lg} {
-    min-height: 610px;
-  }
-
-  ${media.xl} {
-    min-height: 660px;
-  }
-
-  ${media.xxl} {
-    min-height: 830px;
-  }
+export const FullWidthWrapper = styled.div`
+  width: calc(100% + var(--size-global-horizontal-padding) * 2);
+  margin-left: calc(var(--size-global-horizontal-padding) * -1);
+  overflow: hidden;
+  position: relative;
 `

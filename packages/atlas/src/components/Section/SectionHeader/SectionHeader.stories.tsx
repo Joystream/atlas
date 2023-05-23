@@ -134,9 +134,9 @@ export default {
       </OverlayManagerProvider>
     ),
   ],
-} as Meta<SectionHeaderProps>
+} as Meta<SectionHeaderProps<unknown>>
 
-const DefaultTemplate: StoryFn<SectionHeaderProps> = (args: SectionHeaderProps) => {
+const DefaultTemplate: StoryFn<SectionHeaderProps<unknown>> = (args: SectionHeaderProps<unknown>) => {
   return <SectionHeader {...args} />
 }
 
@@ -194,7 +194,7 @@ const WithTabsTemplate = () => {
 
 export const WithTabs = WithTabsTemplate.bind({})
 
-const WithTitleTemplate: StoryFn<SectionHeaderProps> = () => {
+const WithTitleTemplate: StoryFn<SectionHeaderProps<unknown>> = () => {
   const [filters, setFilters] = useState<SectionFilter[]>(INITIAL_STATE)
 
   return (
@@ -255,7 +255,16 @@ const WithTitleTemplate: StoryFn<SectionHeaderProps> = () => {
           type: 'toggle-button',
           toggleButtonOptionTypeProps: {
             type: 'options',
-            options: ['Newest', 'Oldest'],
+            options: [
+              {
+                label: 'Newest',
+                value: 'Newest',
+              },
+              {
+                label: 'Oldest',
+                value: 'Oldest',
+              },
+            ],
             onChange: () => null,
           },
         }}

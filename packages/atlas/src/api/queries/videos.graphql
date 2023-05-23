@@ -107,28 +107,6 @@ query GetMostViewedVideosConnection(
   }
 }
 
-query GetTop10VideosThisWeek($where: VideoWhereInput) {
-  # CHANGE: Replaced overly-specific `top10VideosThisWeek` with more generic `mostViewedVideosConnection` query
-  mostViewedVideosConnection(limit: 10, where: $where, periodDays: 7, orderBy: viewsNum_DESC) {
-    edges {
-      node {
-        ...BasicVideoFields
-      }
-    }
-  }
-}
-
-query GetTop10VideosThisMonth($where: VideoWhereInput) {
-  # CHANGE: Replaced overly-specific `top10VideosThisMonth` with more generic `mostViewedVideosConnection` query
-  mostViewedVideosConnection(limit: 10, where: $where, periodDays: 30, orderBy: viewsNum_DESC) {
-    edges {
-      node {
-        ...BasicVideoFields
-      }
-    }
-  }
-}
-
 query GetVideosCount($where: VideoWhereInput) {
   videosConnection(where: $where, orderBy: [createdAt_ASC]) {
     totalCount

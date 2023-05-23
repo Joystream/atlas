@@ -16,7 +16,7 @@ import { VideoJsPlayer } from 'video.js'
 
 import { useFullVideo } from '@/api/hooks/video'
 import { FullVideoFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
-import { SvgControlsCaptionsOutline, SvgControlsCaptionsSolid } from '@/assets/icons'
+import { SvgActionClose, SvgControlsCaptionsOutline, SvgControlsCaptionsSolid } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -39,6 +39,7 @@ import {
   CurrentTimeWrapper,
   CustomControls,
   EmbbeddedTopBarOverlay,
+  MinimizedPlayerContorols,
   PlayButton,
   PlayControl,
   ScreenControls,
@@ -85,6 +86,8 @@ export type VideoPlayerProps = {
   isEmbedded?: boolean
   isPlayNextDisabled?: boolean
   availableTextTracks?: AvailableTrack[]
+  isMinimized?: boolean
+  onMinimizedExit?: () => void
 } & VideoJsConfig
 
 declare global {
@@ -116,6 +119,8 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     isEmbedded,
     isPlayNextDisabled,
     availableTextTracks,
+    isMinimized,
+    onMinimizedExit,
     ...videoJsConfig
   },
   externalRef
@@ -292,6 +297,14 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
     player.playbackRate(playbackRate)
     player.defaultPlaybackRate(playbackRate)
   }, [playbackRate, player])
+
+  // When src is null that means something went wrong during asset resolution
+  // No need to log anything here, error logging is handled in resolvers
+  useEffect(() => {
+    if (videoJsConfig.src === null) {
+      setPlayerState('error')
+    }
+  }, [videoJsConfig.src])
 
   // handle video loading
   useEffect(() => {
@@ -693,7 +706,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
   }
 
   const showPlayerControls = isEmbedded ? !needsManualPlay : isLoaded && playerState && !isSharingOverlayOpen
-  const showControlsIndicator = playerState !== 'ended'
+  const showControlsIndicator = playerState !== 'ended' && !isMinimized
 
   const playNextDisabled = isPlayNextDisabled || !autoPlayNext || isShareDialogOpen || isSharingOverlayOpen
 
@@ -720,6 +733,22 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
         {showPlayerControls && (
           <>
             <ControlsOverlay isSettingsPopoverOpened={isSettingsPopoverOpened} elevated={isFullScreen}>
+              {isMinimized && (
+                <MinimizedPlayerContorols onClick={(e) => e.stopPropagation()}>
+                  <PlayerControlButton onClick={() => handlePlayPause(playerState === 'ended')} tooltipEnabled={false}>
+                    {playerState === 'ended' ? (
+                      <StyledSvgControlsReplay />
+                    ) : isPlaying ? (
+                      <StyledSvgControlsPause />
+                    ) : (
+                      <StyledSvgControlsPlay />
+                    )}
+                  </PlayerControlButton>
+                  <PlayerControlButton tooltipEnabled={false} onClick={onMinimizedExit}>
+                    <SvgActionClose />
+                  </PlayerControlButton>
+                </MinimizedPlayerContorols>
+              )}
               <CustomTimeline
                 playVideo={playVideo}
                 pauseVideo={pauseVideo}
@@ -730,50 +759,54 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
               />
               <CustomControls
                 elevated={isFullScreen || isEmbedded}
-                isEnded={playerState === 'ended'}
+                isEnded={playerState === 'ended' && !isMinimized}
                 ref={customControlsRef}
                 isSettingsPopoverOpened={isSettingsPopoverOpened}
               >
-                <PlayControl isLoading={playerState === 'loading'}>
-                  {(!needsManualPlay || mdMatch) && (
-                    <PlayButton
-                      isEnded={playerState === 'ended'}
-                      onClick={() => handlePlayPause(playerState === 'ended')}
-                      tooltipText={isPlaying ? 'Pause (k)' : playerState === 'ended' ? 'Play again (k)' : 'Play (k)'}
-                      tooltipPosition="top-left"
-                    >
-                      {playerState === 'ended' ? (
-                        <StyledSvgControlsReplay />
-                      ) : isPlaying ? (
-                        <StyledSvgControlsPause />
-                      ) : (
-                        <StyledSvgControlsPlay />
-                      )}
-                    </PlayButton>
-                  )}
-                </PlayControl>
-                <VolumeControl onClick={(e) => e.stopPropagation()}>
-                  <VolumeButton tooltipText="Volume" showTooltipOnlyOnFocus onClick={handleMute}>
-                    {renderVolumeButton()}
-                  </VolumeButton>
-                  <VolumeSliderContainer>
-                    <VolumeSlider
-                      step={0.01}
-                      max={1}
-                      min={0}
-                      value={currentVolume}
-                      onChange={handleChangeVolume}
-                      type="range"
-                    />
-                  </VolumeSliderContainer>
-                </VolumeControl>
+                {!isMinimized && (
+                  <PlayControl isLoading={playerState === 'loading'}>
+                    {(!needsManualPlay || mdMatch) && (
+                      <PlayButton
+                        isEnded={playerState === 'ended'}
+                        onClick={() => handlePlayPause(playerState === 'ended')}
+                        tooltipText={isPlaying ? 'Pause (k)' : playerState === 'ended' ? 'Play again (k)' : 'Play (k)'}
+                        tooltipPosition="top-left"
+                      >
+                        {playerState === 'ended' ? (
+                          <StyledSvgControlsReplay />
+                        ) : isPlaying ? (
+                          <StyledSvgControlsPause />
+                        ) : (
+                          <StyledSvgControlsPlay />
+                        )}
+                      </PlayButton>
+                    )}
+                  </PlayControl>
+                )}
+                {!isMinimized && (
+                  <VolumeControl onClick={(e) => e.stopPropagation()}>
+                    <VolumeButton tooltipText="Volume" showTooltipOnlyOnFocus onClick={handleMute}>
+                      {renderVolumeButton()}
+                    </VolumeButton>
+                    <VolumeSliderContainer>
+                      <VolumeSlider
+                        step={0.01}
+                        max={1}
+                        min={0}
+                        value={currentVolume}
+                        onChange={handleChangeVolume}
+                        type="range"
+                      />
+                    </VolumeSliderContainer>
+                  </VolumeControl>
+                )}
                 <CurrentTimeWrapper>
                   <CurrentTime as="span" variant="t200">
                     {formatDurationShort(videoTime)} / {formatDurationShort(round(player?.duration() || 0))}
                   </CurrentTime>
                 </CurrentTimeWrapper>
                 <ScreenControls>
-                  {availableTextTracks && !!availableTextTracks.length && (
+                  {!isMinimized && availableTextTracks && !!availableTextTracks.length && (
                     <PlayerControlButton
                       tooltipText={captionsEnabled ? 'Turn off subtitles / CC (c)' : 'Subtitles / CC (c)'}
                       onClick={handleToggleCaptions}
@@ -781,7 +814,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                       {captionsEnabled ? <SvgControlsCaptionsSolid /> : <SvgControlsCaptionsOutline />}
                     </PlayerControlButton>
                   )}
-                  {mdMatch && !isEmbedded && !player?.isFullscreen() && (
+                  {!isMinimized && mdMatch && !isEmbedded && !player?.isFullscreen() && (
                     <PlayerControlButton
                       tooltipEnabled={!isSettingsPopoverOpened}
                       onClick={toggleCinematicView}
@@ -794,7 +827,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                       )}
                     </PlayerControlButton>
                   )}
-                  {isPiPSupported && (
+                  {!isMinimized && isPiPSupported && (
                     <PlayerControlButton
                       onClick={handlePictureInPicture}
                       tooltipText="Picture-in-picture"
@@ -803,17 +836,19 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
                       {isPiPEnabled ? <StyledSvgControlsPipOff /> : <StyledSvgControlsPipOn />}
                     </PlayerControlButton>
                   )}
-                  <SettingsButtonWithPopover
-                    onSettingsPopoverToggle={setIsSettingsPopoverOpened}
-                    isSettingsPopoverOpened={isSettingsPopoverOpened}
-                    playerHeightWithoutCustomControls={playerHeightWithoutCustomControls}
-                    boundariesElement={playerRef.current}
-                    isFullScreen={isFullScreen}
-                    availableTracks={availableTextTracks}
-                    onTrackChange={handleTrackChange}
-                    activeTrack={activeTrack}
-                    player={player}
-                  />
+                  {!isMinimized && (
+                    <SettingsButtonWithPopover
+                      onSettingsPopoverToggle={setIsSettingsPopoverOpened}
+                      isSettingsPopoverOpened={isSettingsPopoverOpened}
+                      playerHeightWithoutCustomControls={playerHeightWithoutCustomControls}
+                      boundariesElement={playerRef.current}
+                      isFullScreen={isFullScreen}
+                      availableTracks={availableTextTracks}
+                      onTrackChange={handleTrackChange}
+                      activeTrack={activeTrack}
+                      player={player}
+                    />
+                  )}
                   <PlayerControlButton
                     isDisabled={!isFullScreenEnabled}
                     tooltipEnabled={!isSettingsPopoverOpened}
@@ -853,6 +888,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
           channelId={video?.channel.id}
           currentThumbnailUrl={videoJsConfig.posterUrl}
           playRandomVideoOnEnded={!isEmbedded}
+          isMinimized={isMinimized}
         />
         {showControlsIndicator && <ControlsIndicator player={player} isLoading={playerState === 'loading'} />}
         {isEmbedded && !isSharingOverlayOpen && (
@@ -861,7 +897,7 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
               <a href={absoluteRoutes.viewer.channel(video?.channel.id)} target="_blank" rel="noopener noreferrer">
                 <Avatar
                   clickable
-                  size={isFullScreen && !isMobile() ? 'cover' : 'default'}
+                  size={isFullScreen && !isMobile() ? 88 : 32}
                   assetUrl={channelAvatarUrl}
                   loading={isChannelAvatarLoading}
                 />

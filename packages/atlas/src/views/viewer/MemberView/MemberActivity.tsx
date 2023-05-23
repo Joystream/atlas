@@ -6,6 +6,7 @@ import { SvgActionBid, SvgActionBuyNow, SvgActionMint, SvgActionSell } from '@/a
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
+import { Section } from '@/components/Section/Section'
 import { Text } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
 import { createPlaceholderData } from '@/utils/data'
@@ -100,32 +101,66 @@ export const MemberActivity: FC<MemberActivityProps> = ({
   memberId,
   sort = NftActivityOrderByInput.EventTimestampDesc,
 }) => {
-  const { activities, loading, activitiesTotalCounts } = useActivities(memberId, sort)
+  const { activities, loading, activitiesTotalCounts, pageInfo, fetchMore } = useActivities(memberId, sort, {
+    notifyOnNetworkStatusChange: true,
+  })
   const navigate = useNavigate()
   const placeholderItems = createPlaceholderData(PLACEHOLDERS_COUNT)
-  const items = activities && !loading ? activities : (placeholderItems as ActivitiesRecord[])
+
+  const items = [...(activities || []), ...(loading ? placeholderItems : [])] ?? []
+
   return (
     <section>
-      {activities?.length === 0 ? (
+      {!loading && items.length === 0 ? (
         <EmptyFallback title="No activity" subtitle="Go out there and explore!" variant="small" />
       ) : (
         <LayoutGrid>
           <GridItem colSpan={{ base: 12, sm: 8 }} rowStart={{ base: 2, sm: 1 }}>
-            <LayoutGrid>
-              {items?.map((activity, i) => (
-                <GridItem key={i} colSpan={{ base: 12 }}>
-                  <ActivityItem
-                    thumbnailUri={activity.video?.thumbnailPhoto?.resolvedUrl || ''}
-                    loading={!activities || loading}
-                    onItemClick={() => navigate(absoluteRoutes.viewer.video(activity.video?.id))}
-                    date={activity?.date}
-                    type={activity?.type}
-                    title={activity?.video?.title || ''}
-                    description={getDescription(activity)}
-                  />
-                </GridItem>
-              ))}
-            </LayoutGrid>
+            <Section
+              contentProps={{
+                type: 'grid',
+                grid: {
+                  sm: {
+                    columns: 1,
+                  },
+                },
+                children: items.map((activity, i) =>
+                  activity.id === undefined ? (
+                    <ActivityItem key={i} loading={loading} thumbnailUri="" />
+                  ) : (
+                    <ActivityItem
+                      key={i}
+                      thumbnailUri={activity.video?.thumbnailPhoto?.resolvedUrl || ''}
+                      onItemClick={() => navigate(absoluteRoutes.viewer.video(activity.video?.id))}
+                      date={activity?.date}
+                      type={activity?.type}
+                      title={activity?.video?.title || ''}
+                      description={getDescription(activity)}
+                    />
+                  )
+                ),
+              }}
+              footerProps={{
+                type: 'load',
+                label: 'Load more activities',
+                reachedEnd: !pageInfo?.hasNextPage ?? true,
+                fetchMore: async () => {
+                  await fetchMore({
+                    variables: {
+                      after: pageInfo?.endCursor,
+                      first: 10,
+                    },
+                    updateQuery: (prev, { fetchMoreResult }) => {
+                      fetchMoreResult.nftActivitiesConnection.edges = [
+                        ...(prev.nftActivitiesConnection?.edges ?? []),
+                        ...fetchMoreResult.nftActivitiesConnection.edges,
+                      ]
+                      return fetchMoreResult
+                    },
+                  })
+                },
+              }}
+            />
           </GridItem>
           {!loading && activitiesTotalCounts && (
             <GridItem colSpan={{ base: 12, sm: 3 }} colStart={{ sm: -4 }}>

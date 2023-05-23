@@ -8,7 +8,7 @@ import { ConsoleLogger } from '@/utils/logs'
 const MAX_SAFE_NUMBER_BN = new BN(Number.MAX_SAFE_INTEGER)
 const HAPI_TO_JOY_RATE_BN = new BN(HAPI_TO_JOY_RATE)
 
-export const hapiBnToTokenNumber = (bn: BN) => {
+export const hapiBnToTokenNumber = (bn: BN, roundUpToTwoDecimalPlaces?: boolean) => {
   const wholeUnitsBn = bn.div(HAPI_TO_JOY_RATE_BN)
   const fractionalUnitsBn = bn.mod(HAPI_TO_JOY_RATE_BN)
 
@@ -19,7 +19,9 @@ export const hapiBnToTokenNumber = (bn: BN) => {
   const wholeUnits = wholeUnitsBn.toNumber()
   const fractionalHapiUnits = fractionalUnitsBn.toNumber()
   const fractionalJoyUnits = fractionalHapiUnits / HAPI_TO_JOY_RATE
-
+  if (roundUpToTwoDecimalPlaces) {
+    return Math.ceil((wholeUnits + fractionalJoyUnits) * 100) / 100
+  }
   return wholeUnits + fractionalJoyUnits
 }
 

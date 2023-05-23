@@ -23,7 +23,6 @@ export const relativeRoutes = {
   viewer: {
     index: () => '',
     discover: () => 'discover',
-    popular: () => 'popular',
     category: (id = ':id') => `category/${id}`,
     search: (query?: { [QUERY_PARAMS.SEARCH]?: string }) => withQueryParameters('search', query),
     channel: (id = ':id') => `channel/${id}`,
@@ -32,7 +31,7 @@ export const relativeRoutes = {
     editMembership: () => 'member/edit',
     member: (handle = ':handle') => `member/${handle}`,
     notifications: () => 'notifications',
-    nfts: () => 'nfts',
+    marketplace: () => 'marketplace',
     ypp: (query?: { [QUERY_PARAMS.REFERRER_ID]?: string }) => withQueryParameters('ypp', query),
     yppDashboard: () => 'ypp-dashboard',
   },

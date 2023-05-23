@@ -10,7 +10,6 @@ import {
   QueryCommentsConnectionArgs,
   QueryOwnedNftsConnectionArgs,
   QueryVideosConnectionArgs,
-  VideoOrderByInput,
   VideosConnection,
 } from '../queries/__generated__/baseTypes.generated'
 import { FullChannelFieldsFragment, FullVideoFieldsFragment } from '../queries/__generated__/fragments.generated'
@@ -88,9 +87,14 @@ const getChannelKeyArgs = (args: Partial<QueryChannelsConnectionArgs> | null) =>
   return `${language}:${idIn}:${sorting}:${titleContains}`
 }
 
-const getCommentKeyArgs = (args: Partial<QueryCommentsConnectionArgs> | null) => {
+const getCommentKeyArgs = (
+  args: Partial<QueryCommentsConnectionArgs> | null,
+  ctx: {
+    variables?: Record<string, unknown>
+  }
+) => {
   const parentCommentId = args?.where?.parentComment?.id_eq
-  const videoId = args?.where?.video?.id_eq
+  const videoId = args?.where?.video?.id_eq ?? ctx.variables?.videoId
   const orderBy = args?.orderBy || []
   return `${parentCommentId}:${videoId}:${orderBy}`
 }
@@ -139,17 +143,10 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
           return nodeFieldValue === isPublic
         }) ?? []
 
-      const sortingArray = args?.orderBy != null ? (Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]) : []
-      const sortingASC = sortingArray[0] === VideoOrderByInput.CreatedAtAsc
-      const preSortedDESC = (filteredEdges || []).slice().sort((a, b) => {
-        return (readField('createdAt', b.node) as Date).getTime() - (readField('createdAt', a.node) as Date).getTime()
-      })
-      const sortedEdges = sortingASC ? preSortedDESC.reverse() : preSortedDESC
-
       return (
         existing && {
           ...existing,
-          edges: sortedEdges,
+          edges: filteredEdges,
         }
       )
     },
@@ -248,6 +245,9 @@ const channelCacheFields: CachePolicyFields<keyof FullChannelFieldsFragment> = {
 }
 
 const cache = new InMemoryCache({
+  possibleTypes: {
+    NftOwner: ['NftOwnerChannel', 'NftOwnerMember'],
+  },
   typePolicies: {
     Query: {
       fields: queryCacheFields,

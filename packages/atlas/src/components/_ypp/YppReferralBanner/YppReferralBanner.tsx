@@ -71,7 +71,7 @@ export const YppReferralBanner: FC<YppReferralBannerProps> = ({ className }) => 
       <ReferralBannerContainer className={className}>
         <ChannelInfoContainer>
           <ChannelAvatarLink to={absoluteRoutes.viewer.channel(channel?.id)}>
-            <Avatar clickable loading={isLoading} assetUrl={channelAvatarUrl} />
+            <Avatar clickable loading={isLoading} assetUrl={channelAvatarUrl} size={32} />
           </ChannelAvatarLink>
           <SwitchTransition>
             <CSSTransition

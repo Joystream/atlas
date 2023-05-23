@@ -46,7 +46,7 @@ export const ChannelAbout: FC<ChannelAboutProps> = ({ channel, activeVideosCount
         </Text>
 
         <DetailsMember>
-          <StyledAvatar size="small" assetUrl={memberAvatarUrl} loading={memberAvatarLoading} />
+          <StyledAvatar size={40} assetUrl={memberAvatarUrl} loading={memberAvatarLoading} />
           <MemberContainer>
             <Text as="span" variant="t100" color="colorText">
               Owned by member

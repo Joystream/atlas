@@ -12,6 +12,7 @@ import {
   ContentWrapper,
   Label,
   OptionWrapper,
+  StyledTooltip,
   ToggleButton,
 } from './ToggleButtonGroup.styles'
 
@@ -21,9 +22,16 @@ type SharedToggleButtonProps = {
   className?: string
 }
 
-export type ToggleButtonOptionTypeProps<T extends string = string> = {
+type ToggleButtonOption<T = string> = {
+  label: string
+  value: T
+  disabled?: boolean
+  tooltipText?: string
+}
+
+export type ToggleButtonOptionTypeProps<T = string> = {
   type: 'options'
-  options: T[]
+  options: ToggleButtonOption<T>[]
   value?: T
   onChange: (value: T) => void
 } & SharedToggleButtonProps
@@ -34,11 +42,9 @@ export type ToggleButtonFilterTypeProps = {
   filters: FilterButtonProps[]
 } & SharedToggleButtonProps
 
-export type ToggleButtonGroupProps<T extends string = string> =
-  | ToggleButtonFilterTypeProps
-  | ToggleButtonOptionTypeProps<T>
+export type ToggleButtonGroupProps<T = string> = ToggleButtonFilterTypeProps | ToggleButtonOptionTypeProps<T>
 
-export const ToggleButtonGroup = <T extends string = string>(props: ToggleButtonGroupProps<T>) => {
+export function ToggleButtonGroup<T = string>(props: ToggleButtonGroupProps<T>) {
   const { type, label, width = 'auto', className } = props
   const optionWrapperRef = useRef<HTMLDivElement>(null)
 
@@ -62,16 +68,18 @@ export const ToggleButtonGroup = <T extends string = string>(props: ToggleButton
         )}
         <OptionWrapper onMouseDown={handleMouseDown} ref={optionWrapperRef} visibleShadows={visibleShadows}>
           {type === 'options' &&
-            props.options.map((option) => (
-              <ToggleButton
-                key={option}
-                fullWidth
-                variant={option !== props.value ? 'tertiary' : 'secondary'}
-                onClick={() => props.onChange(option)}
-                size="small"
-              >
-                {option}
-              </ToggleButton>
+            props.options.map((option, i) => (
+              <StyledTooltip key={i} text={option.tooltipText}>
+                <ToggleButton
+                  fullWidth
+                  variant={option.value !== props.value ? 'tertiary' : 'secondary'}
+                  onClick={() => props.onChange(option.value)}
+                  size="small"
+                  disabled={option.disabled}
+                >
+                  {option.label}
+                </ToggleButton>
+              </StyledTooltip>
             ))}
           {type === 'filter' &&
             props.filters.map((filterButtonProps, idx) => <FilterButton key={idx} {...filterButtonProps} />)}

@@ -382,7 +382,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
                 content={
                   <>
                     <TopBidderContainer>
-                      <Avatar assetUrl={nftStatus.topBidderAvatarUri} size="bid" />
+                      <Avatar assetUrl={nftStatus.topBidderAvatarUri} size={24} />
                       <TopBidderTokenContainer data-size={size}>
                         <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
                       </TopBidderTokenContainer>
@@ -602,7 +602,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
   return (
     <Container ref={ref}>
       <NftOwnerContainer data-size={size}>
-        <OwnerAvatar assetUrl={ownerAvatar} size="small" />
+        <OwnerAvatar assetUrl={ownerAvatar} size={40} />
         <OwnerLabel as="span" variant="t100" color="colorText">
           This NFT is owned by
         </OwnerLabel>

@@ -52,14 +52,14 @@ export const NavigationContainer = styled.div`
     position: absolute;
     inset: 0;
     z-index: -1;
-    opacity: 0.5;
+    opacity: 0.7;
     background: ${cVar('colorBackgroundMuted')};
     transition: opacity ${cVar('animationTransitionMedium')};
   }
 
   :hover {
     ::after {
-      opacity: 0.25;
+      opacity: 0.55;
     }
   }
 `

@@ -147,7 +147,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
               <StyledAvatar
                 clickable={false}
                 isDisabled={type === 'channel'}
-                size="small"
+                size={40}
                 assetUrl={memberAvatarUrl}
                 loading={memberAvatarLoading}
               />
@@ -171,7 +171,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
               <StyledAvatar
                 clickable={false}
                 isDisabled={type === 'member'}
-                size="small"
+                size={40}
                 assetUrl={channelAvatarUrl}
                 loading={membershipLoading}
               >

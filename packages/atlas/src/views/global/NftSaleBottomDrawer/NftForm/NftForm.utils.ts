@@ -38,7 +38,7 @@ export const createValidationSchema = (
     })
     .min(1, 'Fixed price must be at least 1')
 
-  const minStartingPriceNumber = hapiBnToTokenNumber(minStartingPrice)
+  const minStartingPriceNumber = hapiBnToTokenNumber(minStartingPrice, true)
   const maxStartingPriceNumber = hapiBnToTokenNumber(maxStartingPrice)
 
   const startingPriceBase = z

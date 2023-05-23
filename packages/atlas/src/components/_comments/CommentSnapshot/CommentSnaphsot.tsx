@@ -44,7 +44,7 @@ export const CommentSnapshot: FC<CommentSnapshotProps> = ({
     <ContentWrapper>
       <AvatarWrapper>
         <Link to={memberUrl}>
-          <Avatar assetUrl={memberAvatarUrl} size="small" loading={isMemberAvatarLoading} clickable />
+          <Avatar assetUrl={memberAvatarUrl} size={40} loading={isMemberAvatarLoading} clickable />
         </Link>
         {!last && <Line />}
       </AvatarWrapper>
