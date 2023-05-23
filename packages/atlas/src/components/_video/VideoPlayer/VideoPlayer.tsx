@@ -938,16 +938,16 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
             )}
           </>
         )}
-        <VideoShare
-          onCloseShareDialog={handleCloseSharingDialog}
-          isEmbedded={isEmbedded}
-          currentTime={videoTime}
-          isFullScreen={isFullScreen}
-          videoId={videoId}
-          isShareDialogOpen={isShareDialogOpen || isSharingOverlayOpen}
-          videoTitle={video?.title}
-        />
       </div>
+      <VideoShare
+        onCloseShareDialog={handleCloseSharingDialog}
+        isEmbedded={isEmbedded}
+        currentTime={videoTime}
+        isFullScreen={isFullScreen}
+        videoId={videoId}
+        isShareDialogOpen={isShareDialogOpen || isSharingOverlayOpen}
+        videoTitle={video?.title}
+      />
     </Container>
   )
 }
