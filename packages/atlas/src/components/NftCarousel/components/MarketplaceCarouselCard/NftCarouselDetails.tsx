@@ -215,7 +215,20 @@ export const NftCarouselDetails = ({
                   <DetailsContent
                     tileSize={smMatch ? 'big' : 'bigSmall'}
                     caption="AUCTION ENDS IN"
-                    content={timeLeft}
+                    content={timeLeft.split(':').map((tick, i) => {
+                      return (
+                        <>
+                          {i !== 0 ? (
+                            <Text as="span" color="colorText" variant={smMatch ? 'h500' : 'h400'}>
+                              :
+                            </Text>
+                          ) : null}
+                          <Text as="span" variant={smMatch ? 'h500' : 'h400'}>
+                            {tick}
+                          </Text>
+                        </>
+                      )
+                    })}
                   />
                 )}
               </StatsContainer>

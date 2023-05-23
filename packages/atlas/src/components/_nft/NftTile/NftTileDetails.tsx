@@ -1,4 +1,4 @@
-import { FC, ReactNode, memo, useMemo, useState } from 'react'
+import { FC, ReactElement, ReactNode, memo, useMemo, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import { SvgActionMore, SvgActionNotForSale } from '@/assets/icons'
@@ -216,7 +216,7 @@ type DetailsContentProps = {
   caption: string
   icon?: ReactNode
   avoidIconStyling?: boolean
-  content: number | string
+  content: number | string | ReactElement | ReactElement[]
   secondary?: boolean
   tileSize: TileSize | undefined
 }
@@ -247,7 +247,7 @@ export const DetailsContent: FC<DetailsContentProps> = memo(
             <Text as="span" variant={getSize().content} color={secondary ? 'colorText' : undefined}>
               {content}
             </Text>
-          ) : (
+          ) : typeof content === 'number' ? (
             <NumberFormat
               as="span"
               value={content}
@@ -255,6 +255,8 @@ export const DetailsContent: FC<DetailsContentProps> = memo(
               variant={getSize().content}
               color={secondary ? 'colorText' : undefined}
             />
+          ) : (
+            content
           )}
         </DetailsContentWrapper>
       </div>
