@@ -41,18 +41,19 @@ export const StyledVideo = styled.video`
 
 export const ButtonBox = styled.div`
   position: absolute;
-  bottom: 25px;
-  right: 26px;
+  bottom: 16px;
+  right: 16px;
   z-index: ${zIndex.modals};
   display: flex;
-  gap: ${sizes(4)};
+  gap: ${sizes(2)};
 
   ${media.sm} {
-    bottom: 30px;
-    right: 42px;
+    bottom: 32px;
+    right: 32px;
   }
 
   svg {
+    filter: ${cVar('filterEffectElevation1Layer1')};
     height: 18px;
     width: 18px;
   }
@@ -61,12 +62,12 @@ export const ButtonBox = styled.div`
 // on Firefox there is a gap between fades, negative margin fixes that
 export const StyledLink = styled(Link, { shouldForwardProp: isPropValid })<{ withFade?: boolean }>`
   ::after {
-    ${media.sm} {
-      content: '';
-      position: absolute;
-      inset: 50% 0 0 0;
-      margin: 0 0 -2px;
+    content: '';
+    position: absolute;
+    inset: 50% 0 0 0;
+    margin: 0 0 -2px;
 
+    ${media.sm} {
       ${(props) =>
         props.withFade &&
         css`

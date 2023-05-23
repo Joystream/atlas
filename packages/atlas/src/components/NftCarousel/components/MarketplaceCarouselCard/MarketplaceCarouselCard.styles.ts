@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { cVar, media, sizes } from '@/styles'
 
 export const InformationContainer = styled.div<{ isPaused: boolean }>`
-  width: fit-content;
+  width: 100%;
   display: flex;
   align-items: end;
   transition: all ${cVar('animationTransitionMedium')};
@@ -12,6 +12,7 @@ export const InformationContainer = styled.div<{ isPaused: boolean }>`
   z-index: 12;
 
   ${media.sm} {
+    width: fit-content;
     position: absolute;
     margin: 0;
     opacity: ${({ isPaused }) => (isPaused ? 1 : 0.25)};
@@ -47,16 +48,24 @@ export const DetailsContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${sizes(4)};
+  width: 100%;
 `
 
 export const StatsContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  row-gap: ${sizes(4)};
-  column-gap: ${sizes(6)};
+  display: grid;
+  width: 100%;
+  grid-gap: ${sizes(4)};
+  grid-template-columns: 1fr 1fr;
 
-  * > {
-    flex: 1;
+  ${media.sm} {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: ${sizes(4)};
+    column-gap: ${sizes(8)};
+
+    * > {
+      flex: 1;
+    }
   }
 `
 

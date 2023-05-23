@@ -135,9 +135,11 @@ export const NftCarouselDetails = ({
         const minutes = Math.floor((timeDiffInSeconds / 60) % 60)
         const seconds = Math.floor(timeDiffInSeconds % 60)
         setTimeLeft(
-          `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+          `${hours ? `${String(hours).padStart(2, '0')}:` : ''}${
+            minutes ? `${String(minutes).padStart(2, '0')}:` : ''
+          }${String(seconds).padStart(2, '0')}`
         )
-      }, 12000)
+      }, 1000)
 
       return () => {
         clearInterval(interval)
@@ -176,37 +178,59 @@ export const NftCarouselDetails = ({
         <CSSTransition in={active} timeout={100} classNames={transitions.names.fade} unmountOnExit>
           <InformationContainer isPaused={isPaused}>
             <DetailsContainer>
-              <AvatarGroup spreadAvatars={!smMatch} avatarStrokeColor="transparent" avatars={avatars} />
+              <AvatarGroup spreadAvatars avatarStrokeColor="transparent" avatars={avatars} />
               <Text variant={smMatch ? 'h500' : 'h400'} as={smMatch ? 'h5' : 'h4'}>
                 <StyledLink to={absoluteRoutes.viewer.video(nft.video.id)}>{nftDetails.title}</StyledLink>
               </Text>
               <StatsContainer>
                 {nftDetails.buyNow && (
                   <DetailsContent
+                    avoidIconStyling
                     tileSize={smMatch ? 'big' : 'bigSmall'}
                     caption="BUY NOW"
                     content={nftDetails.buyNow}
-                    icon={<JoyTokenIcon size={16} variant="regular" />}
+                    icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
                   />
                 )}
                 {nftDetails.topBid && (
                   <DetailsContent
+                    avoidIconStyling
                     tileSize={smMatch ? 'big' : 'bigSmall'}
                     caption="TOP BID"
                     content={nftDetails.topBid}
-                    icon={<JoyTokenIcon size={16} variant="regular" />}
+                    icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
                   />
                 )}
                 {nftDetails.minBid && (
                   <DetailsContent
+                    avoidIconStyling
                     tileSize={smMatch ? 'big' : 'bigSmall'}
                     caption="MIN BID"
                     content={nftDetails.minBid}
-                    icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="regular" />}
+                    icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
                   />
                 )}
 
-                {timeLeft && <DetailsContent tileSize="big" caption="AUCTION ENDS IN" content={timeLeft} />}
+                {timeLeft && (
+                  <DetailsContent
+                    tileSize={smMatch ? 'big' : 'bigSmall'}
+                    caption="AUCTION ENDS IN"
+                    content={timeLeft.split(':').map((tick, i) => {
+                      return (
+                        <>
+                          {i !== 0 ? (
+                            <Text as="span" color="colorText" variant={smMatch ? 'h500' : 'h400'}>
+                              :
+                            </Text>
+                          ) : null}
+                          <Text as="span" variant={smMatch ? 'h500' : 'h400'}>
+                            {tick}
+                          </Text>
+                        </>
+                      )
+                    })}
+                  />
+                )}
               </StatsContainer>
             </DetailsContainer>
           </InformationContainer>

@@ -1,4 +1,4 @@
-import { FC, ReactNode, memo, useMemo, useState } from 'react'
+import { FC, ReactElement, ReactNode, memo, useMemo, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import { SvgActionMore, SvgActionNotForSale } from '@/assets/icons'
@@ -215,47 +215,52 @@ export const NftTileDetails: FC<NftTileDetailsProps> = ({
 type DetailsContentProps = {
   caption: string
   icon?: ReactNode
-  content: number | string
+  avoidIconStyling?: boolean
+  content: number | string | ReactElement | ReactElement[]
   secondary?: boolean
   tileSize: TileSize | undefined
 }
-export const DetailsContent: FC<DetailsContentProps> = memo(({ tileSize, caption, icon, content, secondary }) => {
-  const getSize = () => {
-    switch (tileSize) {
-      case 'small':
-        return { title: 't100', content: 'h200' } as const
-      default:
-      case 'medium':
-        return { title: 't200', content: 'h300' } as const
-      case 'big':
-        return { title: 'h100', content: 'h500' } as const
-      case 'bigSmall':
-        return { title: 'h100', content: 'h400' } as const
+export const DetailsContent: FC<DetailsContentProps> = memo(
+  ({ tileSize, caption, icon, content, secondary, avoidIconStyling }) => {
+    const getSize = () => {
+      switch (tileSize) {
+        case 'small':
+          return { title: 't100', content: 'h200' } as const
+        default:
+        case 'medium':
+          return { title: 't200', content: 'h300' } as const
+        case 'big':
+          return { title: 'h100', content: 'h500' } as const
+        case 'bigSmall':
+          return { title: 'h100', content: 'h400' } as const
+      }
     }
-  }
 
-  return (
-    <div>
-      <Text as="span" variant={getSize().title} color="colorText">
-        {caption}
-      </Text>
-      <DetailsContentWrapper secondary={secondary}>
-        {icon}{' '}
-        {typeof content === 'string' ? (
-          <Text as="span" variant={getSize().content} color={secondary ? 'colorText' : undefined}>
-            {content}
-          </Text>
-        ) : (
-          <NumberFormat
-            as="span"
-            value={content}
-            format="short"
-            variant={getSize().content}
-            color={secondary ? 'colorText' : undefined}
-          />
-        )}
-      </DetailsContentWrapper>
-    </div>
-  )
-})
+    return (
+      <div>
+        <Text as="span" variant={getSize().title} color="colorText">
+          {caption}
+        </Text>
+        <DetailsContentWrapper avoidIconStyling={avoidIconStyling} secondary={secondary}>
+          {icon}{' '}
+          {typeof content === 'string' ? (
+            <Text as="span" variant={getSize().content} color={secondary ? 'colorText' : undefined}>
+              {content}
+            </Text>
+          ) : typeof content === 'number' ? (
+            <NumberFormat
+              as="span"
+              value={content}
+              format="short"
+              variant={getSize().content}
+              color={secondary ? 'colorText' : undefined}
+            />
+          ) : (
+            content
+          )}
+        </DetailsContentWrapper>
+      </div>
+    )
+  }
+)
 DetailsContent.displayName = 'DetailsContent'

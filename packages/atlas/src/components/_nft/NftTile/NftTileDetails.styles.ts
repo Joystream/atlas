@@ -97,7 +97,7 @@ export const Details = styled.div`
   }
 `
 
-export const DetailsContentWrapper = styled.div<{ secondary?: boolean }>`
+export const DetailsContentWrapper = styled.div<{ secondary?: boolean; avoidIconStyling?: boolean }>`
   display: flex;
   align-items: center;
   margin-top: ${sizes(1)};
@@ -105,9 +105,13 @@ export const DetailsContentWrapper = styled.div<{ secondary?: boolean }>`
   > svg {
     margin-right: ${sizes(1)};
 
-    * {
-      fill: ${({ secondary }) => (secondary ? cVar('colorText') : cVar('colorTextStrong'))};
-    }
+    ${({ avoidIconStyling, secondary }) =>
+      !avoidIconStyling &&
+      css`
+        path {
+          fill: ${secondary ? cVar('colorText') : cVar('colorTextStrong')};
+        }
+      `}
   }
 `
 
