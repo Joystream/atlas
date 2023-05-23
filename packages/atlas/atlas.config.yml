@@ -1,5 +1,5 @@
 general:
-  appName: Gleev # Application name - used in the copy throughout the app, in index.html, open graph meta tags, etc. Don't use env variables here
+  appName: Atlas # Application name - used in the copy throughout the app, in index.html, open graph meta tags, etc. Don't use env variables here
   appDescription: 'The streaming platform empowering viewers, creators, and builders. Built on and operated by the Joystream blockchain and DAO.' # Application description - used in index.html meta tags
   appTagline: 'The streaming platform empowering viewers, creators, and builders. Built on and operated by the Joystream blockchain and DAO.'
   appId: '$VITE_APP_ID' # App ID for Apps as first-class citizens

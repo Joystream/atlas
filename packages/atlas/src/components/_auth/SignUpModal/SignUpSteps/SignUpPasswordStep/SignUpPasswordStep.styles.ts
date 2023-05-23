@@ -5,7 +5,7 @@ import { sizes } from '@/styles'
 
 export const PasswordRequirementsWrapper = styled.section`
   display: grid;
-  gap: ${sizes(4)};
+  gap: ${sizes(2)};
 `
 
 export const PasswordRequirementsList = styled.ul`
@@ -13,7 +13,7 @@ export const PasswordRequirementsList = styled.ul`
   margin: 0;
   list-style-type: none;
   display: grid;
-  gap: ${sizes(4)};
+  gap: ${sizes(2)};
 `
 
 export const PasswordRequirementItem = styled(Text)`

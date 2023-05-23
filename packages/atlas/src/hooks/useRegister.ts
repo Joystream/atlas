@@ -51,7 +51,7 @@ export const useRegister = () => {
       const keypair = keyring.addFromMnemonic(mnemonic)
 
       const registerPayload = {
-        gatewayName: atlasConfig.general.appName,
+        gatewayName: 'Gleev',
         joystreamAccountId: keypair.address,
         timestamp: Date.now(),
         action: 'createAccount',

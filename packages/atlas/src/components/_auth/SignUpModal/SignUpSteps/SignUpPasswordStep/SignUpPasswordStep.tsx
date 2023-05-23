@@ -6,6 +6,7 @@ import { z } from 'zod'
 import { SvgActionCheck, SvgActionClose, SvgActionHide, SvgActionMinus, SvgActionShow } from '@/assets/icons'
 import { IconWrapper } from '@/components/IconWrapper'
 import { Text } from '@/components/Text'
+import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input, InputProps } from '@/components/_inputs/Input'
 import { cVar } from '@/styles'
@@ -16,9 +17,8 @@ import {
   PasswordRequirementsWrapper,
 } from './SignUpPasswordStep.styles'
 
-import { SignInModalStepTemplate } from '../SignInModalStepTemplate'
-import { StyledSignUpForm } from '../SignInSteps.styles'
-import { SignInStepProps } from '../SignInSteps.types'
+import { StyledSignUpForm } from '../SignUpSteps.styles'
+import { SignUpStepsCommonProps } from '../SignUpSteps.types'
 
 const commonPasswordValidation = z
   .string()
@@ -48,7 +48,7 @@ type PasswordInputNames = keyof PasswordStepForm
 
 type SignUpPasswordStepProps = {
   onPasswordSubmit: (password: string) => void
-} & SignInStepProps
+} & SignUpStepsCommonProps
 
 type ValidationState = 'pending' | 'success' | 'error'
 
@@ -148,7 +148,7 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
   )
 
   return (
-    <SignInModalStepTemplate
+    <AuthenticationModalStepTemplate
       title="Sign up"
       hasNavigatedBack={hasNavigatedBack}
       subtitle="Please note that there is no option for us to recover your password if you forget it."
@@ -181,7 +181,7 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
           </PasswordRequirementsList>
         </PasswordRequirementsWrapper>
       </StyledSignUpForm>
-    </SignInModalStepTemplate>
+    </AuthenticationModalStepTemplate>
   )
 }
 

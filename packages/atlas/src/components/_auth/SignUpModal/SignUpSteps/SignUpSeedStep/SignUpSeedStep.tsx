@@ -3,19 +3,19 @@ import { FC, useCallback, useEffect, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { SvgActionCopy } from '@/assets/icons'
+import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { FormField } from '@/components/_inputs/FormField'
 import { useClipboard } from '@/hooks/useClipboard'
 
 import { StyledTextArea, StyledTextButton } from './SignupSeedStep.styles'
 
-import { SignInModalStepTemplate } from '../SignInModalStepTemplate'
-import { CheckboxWrapper, StyledSignUpForm } from '../SignInSteps.styles'
-import { SignInStepProps } from '../SignInSteps.types'
+import { CheckboxWrapper, StyledSignUpForm } from '../SignUpSteps.styles'
+import { SignUpStepsCommonProps } from '../SignUpSteps.types'
 
 type SignUpSeedStepProps = {
   onSeedSubmit: (seed: string) => void
-} & SignInStepProps
+} & SignUpStepsCommonProps
 
 export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
   goToNextStep,
@@ -60,7 +60,7 @@ export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
   }, [goToNextStep, handleGoToNextStep, setPrimaryButtonProps])
 
   return (
-    <SignInModalStepTemplate
+    <AuthenticationModalStepTemplate
       title="Write down your seed"
       hasNavigatedBack={hasNavigatedBack}
       subtitle="Please write down your password recovery seed and keep it in a safe place. It's the only way to recover your password if you forget it."
@@ -104,6 +104,6 @@ export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
           )}
         />
       </StyledSignUpForm>
-    </SignInModalStepTemplate>
+    </AuthenticationModalStepTemplate>
   )
 }

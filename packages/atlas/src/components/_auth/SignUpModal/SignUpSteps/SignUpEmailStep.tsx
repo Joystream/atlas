@@ -8,9 +8,10 @@ import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { absoluteRoutes } from '@/config/routes'
 
-import { SignInModalStepTemplate } from './SignInModalStepTemplate'
-import { CheckboxWrapper, StyledLink, StyledSignUpForm } from './SignInSteps.styles'
-import { SignInStepProps } from './SignInSteps.types'
+import { CheckboxWrapper, StyledLink, StyledSignUpForm } from './SignUpSteps.styles'
+import { SignUpStepsCommonProps } from './SignUpSteps.types'
+
+import { AuthenticationModalStepTemplate } from '../../AuthenticationModalStepTemplate'
 
 const zodSchema = z
   .object({
@@ -32,7 +33,7 @@ type EmailStepForm = z.infer<typeof zodSchema>
 
 type SignUpEmailStepProps = {
   onEmailSubmit: (email: string) => void
-} & SignInStepProps
+} & SignUpStepsCommonProps
 
 export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
   goToNextStep,
@@ -70,7 +71,7 @@ export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
   }, [goToNextStep, handleGoToNextStep, setPrimaryButtonProps])
 
   return (
-    <SignInModalStepTemplate
+    <AuthenticationModalStepTemplate
       title="Sign up"
       hasNavigatedBack={hasNavigatedBack}
       subtitle="If you misspell your email address, please note that there is no option for us to recover your account."
@@ -105,6 +106,6 @@ export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
           )}
         />
       </StyledSignUpForm>
-    </SignInModalStepTemplate>
+    </AuthenticationModalStepTemplate>
   )
 }

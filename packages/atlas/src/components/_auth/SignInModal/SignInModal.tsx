@@ -8,7 +8,6 @@ import { Button } from '@/components/_buttons/Button'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { atlasConfig } from '@/config'
 import { FAUCET_URL } from '@/config/env'
-import { useRegister } from '@/hooks/useRegister'
 import { MemberId } from '@/joystream-lib/types'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useJoystream } from '@/providers/joystream/joystream.hooks'
@@ -30,9 +29,6 @@ import {
   SignInModalTermsStep,
   SignInModalWalletStep,
   SignInStepProps,
-  SignUpEmailStep,
-  SignUpPasswordStep,
-  SignUpSeedStep,
 } from './SignInSteps'
 
 type FaucetParams = {
@@ -51,17 +47,7 @@ export const SignInModal: FC = () => {
   const [hasNavigatedBack, setHasNavigatedBack] = useState(false)
   const { joystream } = useJoystream()
   const dialogContentRef = useRef<HTMLDivElement>(null)
-  const [userForm, setUserForm] = useState<{
-    email: string
-    password: string
-    seed: string
-  }>({
-    email: '',
-    password: '',
-    seed: '',
-  })
 
-  console.log(userForm.password)
   const [previouslyFailedData, setPreviouslyFailedData] = useState<MemberFormData | null>(null)
   const { mutateAsync: faucetMutation } = useMutation('faucet-post', (body: FaucetParams) =>
     axios.post<NewMemberResponse>(FAUCET_URL, body)
@@ -92,8 +78,8 @@ export const SignInModal: FC = () => {
       setCurrentStepIdx(1)
       return
     }
-    // todo bring back to 0
-    setCurrentStepIdx(5)
+
+    setCurrentStepIdx(0)
   }, [signInModalOpen, currentStep, walletConnected])
 
   // keep cachedStepIdx updated
@@ -134,7 +120,6 @@ export const SignInModal: FC = () => {
     },
     [avatarMutation, faucetMutation]
   )
-  const handleRegister = useRegister()
 
   const handleSubmit = useCallback(
     async (data: MemberFormData) => {
@@ -253,22 +238,6 @@ export const SignInModal: FC = () => {
     dialogContentRef.current.scrollTo({ top: 0 })
   }, [displayedStep])
 
-  const handleEmailChange = useCallback((email: string) => {
-    setUserForm((userForm) => ({ ...userForm, email }))
-  }, [])
-
-  const handlePasswordChange = useCallback((password: string) => {
-    setUserForm((userForm) => ({ ...userForm, password }))
-  }, [])
-
-  const handleSeedChange = useCallback(
-    (seed: string) => {
-      setUserForm((userForm) => ({ ...userForm, seed }))
-      handleRegister(userForm.email, userForm.password, seed)
-    },
-    [handleRegister, userForm.email, userForm.password]
-  )
-
   const renderStep = useCallback(() => {
     const commonProps: SignInStepProps = {
       setPrimaryButtonProps,
@@ -277,12 +246,6 @@ export const SignInModal: FC = () => {
     }
 
     switch (displayedStep) {
-      case 'signup-email':
-        return <SignUpEmailStep {...commonProps} onEmailSubmit={handleEmailChange} />
-      case 'signup-password':
-        return <SignUpPasswordStep {...commonProps} onPasswordSubmit={handlePasswordChange} />
-      case 'signup-seed':
-        return <SignUpSeedStep {...commonProps} onSeedSubmit={handleSeedChange} />
       case 'wallet':
         return <SignInModalWalletStep {...commonProps} />
       case 'account':
@@ -307,17 +270,7 @@ export const SignInModal: FC = () => {
       case 'creating':
         return <SignInModalCreatingStep {...commonProps} />
     }
-  }, [
-    displayedStep,
-    goToNextStep,
-    handleEmailChange,
-    handlePasswordChange,
-    handleSeedChange,
-    handleSubmit,
-    hasNavigatedBack,
-    previouslyFailedData,
-    selectedAddress,
-  ])
+  }, [displayedStep, goToNextStep, handleSubmit, hasNavigatedBack, previouslyFailedData, selectedAddress])
 
   const backButtonVisible =
     currentStepIdx && currentStepIdx > 0 && currentStep !== 'creating' && (currentStep !== 'account' || !isLoggedIn)
@@ -325,12 +278,7 @@ export const SignInModal: FC = () => {
   return (
     <StyledDialogModal
       show={!!currentStep}
-      dividers={
-        currentStep !== 'creating' &&
-        currentStep !== 'signup-email' &&
-        currentStep !== 'signup-password' &&
-        currentStep !== 'signup-seed'
-      }
+      dividers={currentStep !== 'creating'}
       primaryButton={primaryButtonProps}
       secondaryButton={backButtonVisible ? { text: 'Back', onClick: () => goToPreviousStep() } : undefined}
       additionalActionsNode={

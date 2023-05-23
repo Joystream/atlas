@@ -30,6 +30,7 @@ import {
   PlaygroundNftSettleAuction,
   PlaygroundNftWhitelistMembers,
   PlaygroundReactionsComments,
+  PlaygroundSignUp,
   PlaygroundTokenPrice,
 } from './Playgrounds'
 import { PlaygroundMarketplaceCarousel } from './Playgrounds/PlaygroundMarketplaceCarousel'
@@ -48,6 +49,7 @@ const playgroundRoutes = [
   { path: 'google-authentication', element: <PlaygroundGoogleAuthentication />, name: 'Google authentication' },
   { path: 'input-autocomplete', element: <PlaygroundInputAutocomplete />, name: 'Input autocomplete' },
   { path: 'marketplace-carousel', element: <PlaygroundMarketplaceCarousel />, name: 'Marketplace carousel' },
+  { path: 'sign-up', element: <PlaygroundSignUp />, name: 'Sign up' },
 ]
 
 const PlaygroundLayout = () => {
