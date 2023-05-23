@@ -18,12 +18,12 @@ export class OrionClient {
   }
 
   async getVideo(id: string) {
-    const { videoByUniqueInput } = await this.sdk.GetVideo({ id })
-    return videoByUniqueInput
+    const { videoById } = await this.sdk.GetVideo({ id })
+    return videoById
   }
 
   async getChannel(id: string) {
-    const { channelByUniqueInput } = await this.sdk.GetChannel({ id })
-    return channelByUniqueInput
+    const { channelById } = await this.sdk.GetChannel({ id })
+    return channelById
   }
 }
