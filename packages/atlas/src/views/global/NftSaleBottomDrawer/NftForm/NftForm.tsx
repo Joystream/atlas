@@ -90,7 +90,7 @@ export const NftForm: FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) 
     defaultValues: {
       startDate: null,
       endDate: null,
-      startingPrice: hapiBnToTokenNumber(chainState.nftMinStartingPrice),
+      startingPrice: hapiBnToTokenNumber(chainState.nftMinStartingPrice, true),
     },
   })
   const {

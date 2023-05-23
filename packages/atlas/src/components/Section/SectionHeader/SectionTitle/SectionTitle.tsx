@@ -31,7 +31,7 @@ export const SectionTitleComponent: FC<SectionTitleComponentProps> = ({ nodeStar
 
   const renderNodeStart = () => {
     if (nodeStart?.type === 'avatar') {
-      return <Avatar {...nodeStart.avatarProps} size={smMatch ? 'default' : 'bid'} />
+      return <Avatar {...nodeStart.avatarProps} size={smMatch ? 32 : 24} />
     }
     if (nodeStart?.type === 'icon') {
       return <IconWrapper {...nodeStart?.iconWrapperProps} size="medium" />

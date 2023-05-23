@@ -77,7 +77,7 @@ export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmoun
         onClick={() => navigate(absoluteRoutes.viewer.member(member?.handle))}
         assetUrl={url}
         loading={isLoadingAsset}
-        size={size === 'medium' ? 'small' : 'default'}
+        size={size === 'medium' ? 40 : 32}
       />
       <TextContainer>
         <CopyContainer>

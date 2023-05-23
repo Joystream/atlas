@@ -25,6 +25,7 @@ export type PersonalDataStoreState = {
   autoPlayNext: boolean
   captionsEnabled: boolean
   captionsLanguage: string | null
+  allowMinimizedPleyer: boolean
 }
 
 const WHITELIST: (keyof PersonalDataStoreState)[] = [
@@ -58,6 +59,7 @@ export type PersonalDataStoreActions = {
   setCookiesAccepted: (accept: boolean) => void
   setReactionPopoverDismission: (reactionPopoverDismissed: boolean) => void
   setCaptionsEnabled: (captionsEnabled: boolean) => void
+  setMinimizedPlayerAllowed: (allowed: boolean) => void
   setCaptionsLanguage: (captionsLanguage: string | null) => void
 
   getIsCookiesPopoverVisible: () => boolean
@@ -77,6 +79,7 @@ const initialState: PersonalDataStoreState = {
   autoPlayNext: true,
   captionsEnabled: false,
   captionsLanguage: null,
+  allowMinimizedPleyer: true,
 }
 
 export const usePersonalDataStore = createStore<PersonalDataStoreState, PersonalDataStoreActions>(
@@ -171,6 +174,10 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
         const cookiesAccepted = get().cookiesAccepted
         return cookiesAccepted === undefined
       },
+      setMinimizedPlayerAllowed: (allowed) =>
+        set((state) => {
+          state.allowMinimizedPleyer = allowed
+        }),
     }),
   },
   {

@@ -399,46 +399,6 @@ export type GetDiscoverChannelsQuery = {
   }>
 }
 
-export type GetPopularChannelsQueryVariables = Types.Exact<{
-  where?: Types.InputMaybe<Types.ExtendedChannelWhereInput>
-}>
-
-export type GetPopularChannelsQuery = {
-  __typename?: 'Query'
-  extendedChannels: Array<{
-    __typename?: 'ExtendedChannel'
-    channel: {
-      __typename?: 'Channel'
-      id: string
-      title?: string | null
-      description?: string | null
-      createdAt: Date
-      followsNum: number
-      rewardAccount: string
-      channelStateBloatBond: string
-      avatarPhoto?: {
-        __typename?: 'StorageDataObject'
-        id: string
-        resolvedUrls: Array<string>
-        resolvedUrl?: string | null
-        createdAt: Date
-        size: string
-        isAccepted: boolean
-        ipfsHash: string
-        storageBag: { __typename?: 'StorageBag'; id: string }
-        type?:
-          | { __typename: 'DataObjectTypeChannelAvatar' }
-          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-          | { __typename: 'DataObjectTypeVideoMedia' }
-          | { __typename: 'DataObjectTypeVideoSubtitle' }
-          | { __typename: 'DataObjectTypeVideoThumbnail' }
-          | null
-      } | null
-    }
-  }>
-}
-
 export type GetChannelNftCollectorsQueryVariables = Types.Exact<{
   channelId: Types.Scalars['String']
   orderBy?: Types.InputMaybe<Types.ChannelNftCollectorsOrderByInput>
@@ -660,6 +620,117 @@ export type GetChannelPaymentEventsQuery = {
           previousNftOwner: { __typename: 'NftOwnerChannel' } | { __typename: 'NftOwnerMember' }
         }
       | { __typename: 'OpenAuctionStartedEventData' }
+  }>
+}
+
+export type GetTopSellingChannelsFromThreePeriodsQueryVariables = Types.Exact<{
+  limit: Types.Scalars['Int']
+  where?: Types.InputMaybe<Types.ExtendedChannelWhereInput>
+}>
+
+export type GetTopSellingChannelsFromThreePeriodsQuery = {
+  __typename?: 'Query'
+  topAllTimeSellingChannels: Array<{
+    __typename?: 'TopSellingChannelsResult'
+    amount: string
+    nftSold: number
+    channel: {
+      __typename?: 'Channel'
+      id: string
+      title?: string | null
+      description?: string | null
+      createdAt: Date
+      followsNum: number
+      rewardAccount: string
+      channelStateBloatBond: string
+      avatarPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrls: Array<string>
+        resolvedUrl?: string | null
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+    }
+  }>
+  topWeekSellingChannels: Array<{
+    __typename?: 'TopSellingChannelsResult'
+    amount: string
+    nftSold: number
+    channel: {
+      __typename?: 'Channel'
+      id: string
+      title?: string | null
+      description?: string | null
+      createdAt: Date
+      followsNum: number
+      rewardAccount: string
+      channelStateBloatBond: string
+      avatarPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrls: Array<string>
+        resolvedUrl?: string | null
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+    }
+  }>
+  topMonthSellingChannels: Array<{
+    __typename?: 'TopSellingChannelsResult'
+    amount: string
+    nftSold: number
+    channel: {
+      __typename?: 'Channel'
+      id: string
+      title?: string | null
+      description?: string | null
+      createdAt: Date
+      followsNum: number
+      rewardAccount: string
+      channelStateBloatBond: string
+      avatarPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        resolvedUrls: Array<string>
+        resolvedUrl?: string | null
+        createdAt: Date
+        size: string
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type?:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoSubtitle' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | null
+      } | null
+    }
   }>
 }
 
@@ -1055,54 +1126,6 @@ export type GetDiscoverChannelsLazyQueryHookResult = ReturnType<typeof useGetDis
 export type GetDiscoverChannelsQueryResult = Apollo.QueryResult<
   GetDiscoverChannelsQuery,
   GetDiscoverChannelsQueryVariables
->
-export const GetPopularChannelsDocument = gql`
-  query GetPopularChannels($where: ExtendedChannelWhereInput) {
-    extendedChannels(where: $where, orderBy: videoViewsNum_DESC, limit: 15) {
-      channel {
-        ...BasicChannelFields
-      }
-    }
-  }
-  ${BasicChannelFieldsFragmentDoc}
-`
-
-/**
- * __useGetPopularChannelsQuery__
- *
- * To run a query within a React component, call `useGetPopularChannelsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPopularChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetPopularChannelsQuery({
- *   variables: {
- *      where: // value for 'where'
- *   },
- * });
- */
-export function useGetPopularChannelsQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetPopularChannelsQuery, GetPopularChannelsQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetPopularChannelsQuery, GetPopularChannelsQueryVariables>(GetPopularChannelsDocument, options)
-}
-export function useGetPopularChannelsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetPopularChannelsQuery, GetPopularChannelsQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetPopularChannelsQuery, GetPopularChannelsQueryVariables>(
-    GetPopularChannelsDocument,
-    options
-  )
-}
-export type GetPopularChannelsQueryHookResult = ReturnType<typeof useGetPopularChannelsQuery>
-export type GetPopularChannelsLazyQueryHookResult = ReturnType<typeof useGetPopularChannelsLazyQuery>
-export type GetPopularChannelsQueryResult = Apollo.QueryResult<
-  GetPopularChannelsQuery,
-  GetPopularChannelsQueryVariables
 >
 export const GetChannelNftCollectorsDocument = gql`
   query GetChannelNftCollectors($channelId: String!, $orderBy: ChannelNftCollectorsOrderByInput = amount_DESC) {
@@ -1517,4 +1540,82 @@ export type GetChannelPaymentEventsLazyQueryHookResult = ReturnType<typeof useGe
 export type GetChannelPaymentEventsQueryResult = Apollo.QueryResult<
   GetChannelPaymentEventsQuery,
   GetChannelPaymentEventsQueryVariables
+>
+export const GetTopSellingChannelsFromThreePeriodsDocument = gql`
+  query GetTopSellingChannelsFromThreePeriods($limit: Int!, $where: ExtendedChannelWhereInput) {
+    topAllTimeSellingChannels: topSellingChannels(where: $where, limit: $limit, periodDays: 0) {
+      amount
+      nftSold
+      channel {
+        ...BasicChannelFields
+      }
+    }
+    topWeekSellingChannels: topSellingChannels(where: $where, limit: $limit, periodDays: 7) {
+      amount
+      nftSold
+      channel {
+        ...BasicChannelFields
+      }
+    }
+    topMonthSellingChannels: topSellingChannels(where: $where, limit: $limit, periodDays: 30) {
+      amount
+      nftSold
+      channel {
+        ...BasicChannelFields
+      }
+    }
+  }
+  ${BasicChannelFieldsFragmentDoc}
+`
+
+/**
+ * __useGetTopSellingChannelsFromThreePeriodsQuery__
+ *
+ * To run a query within a React component, call `useGetTopSellingChannelsFromThreePeriodsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTopSellingChannelsFromThreePeriodsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTopSellingChannelsFromThreePeriodsQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetTopSellingChannelsFromThreePeriodsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetTopSellingChannelsFromThreePeriodsQuery,
+    GetTopSellingChannelsFromThreePeriodsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    GetTopSellingChannelsFromThreePeriodsQuery,
+    GetTopSellingChannelsFromThreePeriodsQueryVariables
+  >(GetTopSellingChannelsFromThreePeriodsDocument, options)
+}
+export function useGetTopSellingChannelsFromThreePeriodsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetTopSellingChannelsFromThreePeriodsQuery,
+    GetTopSellingChannelsFromThreePeriodsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetTopSellingChannelsFromThreePeriodsQuery,
+    GetTopSellingChannelsFromThreePeriodsQueryVariables
+  >(GetTopSellingChannelsFromThreePeriodsDocument, options)
+}
+export type GetTopSellingChannelsFromThreePeriodsQueryHookResult = ReturnType<
+  typeof useGetTopSellingChannelsFromThreePeriodsQuery
+>
+export type GetTopSellingChannelsFromThreePeriodsLazyQueryHookResult = ReturnType<
+  typeof useGetTopSellingChannelsFromThreePeriodsLazyQuery
+>
+export type GetTopSellingChannelsFromThreePeriodsQueryResult = Apollo.QueryResult<
+  GetTopSellingChannelsFromThreePeriodsQuery,
+  GetTopSellingChannelsFromThreePeriodsQueryVariables
 >

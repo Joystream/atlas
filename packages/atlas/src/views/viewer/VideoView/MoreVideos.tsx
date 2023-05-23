@@ -8,6 +8,7 @@ import { Button } from '@/components/_buttons/Button'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { displayCategoriesLookup } from '@/config/categories'
+import { publicVideoFilter } from '@/config/contentFilter'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { createPlaceholderData } from '@/utils/data'
@@ -36,8 +37,9 @@ export const MoreVideos: FC<MoreVideosProps> = ({
   const videoCategories = categoryId ? displayCategoriesLookup[categoryId].videoCategories : undefined
   const where =
     type === 'channel'
-      ? { channel: { id_eq: channelId } }
+      ? { ...publicVideoFilter, channel: { ...publicVideoFilter.channel, id_eq: channelId } }
       : {
+          ...publicVideoFilter,
           category: {
             id_in: videoCategories,
           },

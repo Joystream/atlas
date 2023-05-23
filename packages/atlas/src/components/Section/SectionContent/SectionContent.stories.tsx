@@ -23,7 +23,6 @@ const Template: StoryFn<SectionContentProps> = (args: SectionContentProps) => {
 export const Grid = Template.bind({})
 Grid.args = {
   type: 'grid',
-  minChildrenWidth: 200,
 }
 
 export const Carousel = Template.bind({})

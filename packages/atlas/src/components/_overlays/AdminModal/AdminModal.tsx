@@ -14,7 +14,7 @@ import { Select } from '@/components/_inputs/Select'
 import { Switch } from '@/components/_inputs/Switch'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
-import { BUILD_ENV, NODE_URL, availableEnvs } from '@/config/env'
+import { NODE_URL, availableEnvs, getEnvName } from '@/config/env'
 import { absoluteRoutes } from '@/config/routes'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useEnvironmentStore } from '@/providers/environment'
@@ -30,6 +30,8 @@ import {
   VersionText,
   VerticalSpacedContainer,
 } from './AdminModal.styles'
+
+const ENV_SELECTION_ENABLED: boolean = import.meta.env[getEnvName('ENV_SELECTION_ENABLED')] === 'true'
 
 const ENVIRONMENT_NAMES: Record<string, string> = {
   production: 'Joystream Mainnet',
@@ -185,7 +187,7 @@ const EnvTab: FC = () => {
           items={environmentsItems}
           onChange={handleEnvironmentChange}
           value={targetDevEnv}
-          disabled={BUILD_ENV === 'production'}
+          disabled={!ENV_SELECTION_ENABLED}
         />
       </FormField>
 

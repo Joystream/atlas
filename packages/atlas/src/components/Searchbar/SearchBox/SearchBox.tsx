@@ -13,7 +13,7 @@ import {
   Caption,
   Container,
   PlaceholderWrapper,
-  Section,
+  SearchSection,
   ShortcutsGroup,
   ShortcutsWrapper,
   SkeletonAvatar,
@@ -147,7 +147,7 @@ export const SearchBox: FC<SearchBoxProps> = memo(
         data-scroll-lock-scrollable
       >
         {!!filteredRecentSearches.length && (
-          <Section>
+          <SearchSection>
             <Caption as="span" color="colorText" variant="t100">
               Recent searches
             </Caption>
@@ -163,11 +163,11 @@ export const SearchBox: FC<SearchBoxProps> = memo(
                 selectedItem={selectedItem}
               />
             ))}
-          </Section>
+          </SearchSection>
         )}
-        {loading && !!searchQuery && <Section>{placeholders}</Section>}
+        {loading && !!searchQuery && <SearchSection>{placeholders}</SearchSection>}
         {!!slicedVideos.length && !loading && (
-          <Section>
+          <SearchSection>
             <Caption as="span" color="colorText" variant="t100">
               Videos
             </Caption>
@@ -182,10 +182,10 @@ export const SearchBox: FC<SearchBoxProps> = memo(
                 selectedItem={selectedItem}
               />
             ))}
-          </Section>
+          </SearchSection>
         )}
         {!!slicedChannels.length && !loading && (
-          <Section>
+          <SearchSection>
             <Caption as="span" color="colorText" variant="t100">
               Channels
             </Caption>
@@ -199,7 +199,7 @@ export const SearchBox: FC<SearchBoxProps> = memo(
                 selectedItem={selectedItem}
               />
             ))}
-          </Section>
+          </SearchSection>
         )}
         <ShortcutsWrapper>
           <ShortcutsGroup>

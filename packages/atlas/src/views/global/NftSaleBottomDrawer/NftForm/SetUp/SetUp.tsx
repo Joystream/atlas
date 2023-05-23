@@ -102,7 +102,7 @@ export const SetUp: FC<SetUpProps> = ({
         setValue('startDate', null)
         setValue('endDate', null)
       } else if (name === 'startingPrice') {
-        setValue('startingPrice', hapiBnToTokenNumber(chainState.nftMinStartingPrice))
+        setValue('startingPrice', hapiBnToTokenNumber(chainState.nftMinStartingPrice, true))
       } else {
         reset({ ...getValues(), [name]: undefined })
       }
@@ -269,12 +269,19 @@ export const SetUp: FC<SetUpProps> = ({
             <FormField
               label="Minimum bid"
               error={errors.startingPrice?.message}
-              description="Only bids higher than this value will be accepted."
-              switchProps={{
-                name: 'startingPrice',
-                onChange: toggleActiveInput,
-                value: activeInputs.includes('startingPrice'),
+              tooltip={{
+                text: `A minimum bid must be at least ${hapiBnToTokenNumber(chainState.nftMinStartingPrice, true)} JOY`,
               }}
+              description="Only bids higher than this value will be accepted."
+              switchProps={
+                chainState.nftMinStartingPrice.isZero()
+                  ? {
+                      name: 'startingPrice',
+                      onChange: toggleActiveInput,
+                      value: activeInputs.includes('startingPrice'),
+                    }
+                  : undefined
+              }
             >
               <Controller
                 control={control}

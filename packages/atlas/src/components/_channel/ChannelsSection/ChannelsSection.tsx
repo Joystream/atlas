@@ -5,25 +5,39 @@ import { ChannelOrderByInput } from '@/api/queries/__generated__/baseTypes.gener
 import { Section } from '@/components/Section/Section'
 import { ChannelCard } from '@/components/_channel/ChannelCard'
 
+const sortingOptions = [
+  {
+    label: 'Newest',
+    value: ChannelOrderByInput.CreatedAtDesc,
+  },
+  {
+    label: 'Oldest',
+    value: ChannelOrderByInput.CreatedAtAsc,
+  },
+  {
+    label: 'Most followed',
+    value: ChannelOrderByInput.FollowsNumDesc,
+  },
+]
+
 export const ChannelsSection = () => {
-  const [sortBy, setSortBy] = useState<string>('Most followed')
+  const [sortBy, setSortBy] = useState(ChannelOrderByInput.FollowsNumDesc)
   const {
     edges: channels,
     pageInfo,
     loading,
     fetchMore,
-  } = useBasicChannelsConnection({
-    orderBy:
-      sortBy === 'Newest'
-        ? ChannelOrderByInput.CreatedAtDesc
-        : sortBy === 'Oldest'
-        ? ChannelOrderByInput.CreatedAtAsc
-        : ChannelOrderByInput.FollowsNumDesc,
-    first: 10,
-  })
-  const [isLoading, setIsLoading] = useState(false)
+  } = useBasicChannelsConnection(
+    {
+      orderBy: sortBy,
+      first: 10,
+    },
+    {
+      notifyOnNetworkStatusChange: true,
+    }
+  )
 
-  if (!channels || (!channels?.length && !(loading || isLoading))) {
+  if (!channels || (!channels?.length && !loading)) {
     return null
   }
 
@@ -38,7 +52,7 @@ export const ChannelsSection = () => {
           type: 'toggle-button',
           toggleButtonOptionTypeProps: {
             type: 'options',
-            options: ['Newest', 'Oldest', 'Most followed'],
+            options: sortingOptions,
             value: sortBy,
             onChange: setSortBy,
           },
@@ -46,7 +60,23 @@ export const ChannelsSection = () => {
       }}
       contentProps={{
         type: 'grid',
-        minChildrenWidth: 200,
+        grid: {
+          sm: {
+            columns: 2,
+          },
+          md: {
+            columns: 3,
+          },
+          lg: {
+            columns: 4,
+          },
+          xl: {
+            columns: 5,
+          },
+          xxl: {
+            columns: 6,
+          },
+        },
         children: channels.map(({ node }) => <ChannelCard key={node.id} channel={node} />),
       }}
       footerProps={{
@@ -54,13 +84,10 @@ export const ChannelsSection = () => {
         label: 'Load more channels',
         reachedEnd: !pageInfo?.hasNextPage ?? true,
         fetchMore: async () => {
-          setIsLoading(true)
           await fetchMore({
             variables: {
               after: pageInfo?.endCursor,
             },
-          }).finally(() => {
-            setIsLoading(false)
           })
         },
       }}

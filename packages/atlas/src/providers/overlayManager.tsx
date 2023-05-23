@@ -87,10 +87,15 @@ export const useOverlayManager = () => {
     })
   }, [setOverlays])
 
+  const clearOverlays = useCallback(() => {
+    setOverlays([])
+  }, [setOverlays])
+
   return {
     anyOverlaysOpen,
     incrementOverlaysOpenCount,
     decrementOverlaysOpenCount,
+    clearOverlays,
     modalContainerRef,
     lastOverlayId,
   }

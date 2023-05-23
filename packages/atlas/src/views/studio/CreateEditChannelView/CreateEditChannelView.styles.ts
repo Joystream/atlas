@@ -31,13 +31,7 @@ export const StyledAvatar = styled(Avatar)`
   position: relative;
   margin-right: ${sizes(4)};
   flex-shrink: 0;
-  width: 80px;
-  height: 80px;
   visibility: visible;
-  ${media.sm} {
-    width: 136px;
-    height: 136px;
-  }
 `
 
 export const ActionBarTransactionWrapper = styled.div`

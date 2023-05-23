@@ -88,7 +88,7 @@ const RegularTemplate: StoryFn<ImageCropModalProps> = () => {
         assetUrl={avatarImage?.url}
         editable
         onClick={() => avatarDialogRef.current?.open(avatarImage?.originalBlob, avatarImage?.cropData, true)}
-        size="cover"
+        size={88}
       />
 
       {thumbnailImage ? (

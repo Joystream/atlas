@@ -5,11 +5,11 @@ import { SvgActionChevronL, SvgActionChevronR } from '@/assets/icons'
 
 import { ItemWrapper, LeftChevronContainer, NavigationContainer, RightChevronContainer } from './NftCarouselItem.styles'
 
-type CarouselNavItemProps = {
+type NftCarouselItemProps = {
   onClick?: (dir: '<' | '>') => void
   children?: ((isActive: boolean) => ReactNode) | ReactNode
 }
-export const CarouselNavItem = ({ onClick, children }: CarouselNavItemProps) => {
+export const NftCarouselItem = ({ onClick, children }: NftCarouselItemProps) => {
   const { isActive } = useSwiperSlide()
   return (
     <ItemWrapper>

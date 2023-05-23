@@ -3,17 +3,37 @@ import { Ref, SVGProps, forwardRef, memo } from 'react'
 
 const SvgJoyTokenSilver24 = forwardRef((props: SVGProps<SVGSVGElement>, ref: Ref<SVGSVGElement>) => (
   <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" ref={ref} {...props}>
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10Zm-.004-6a4 4 0 0 1-4-4h-3a7 7 0 1 0 14 0h-3a4 4 0 0 1-4 4Z"
-      fill="url(#paint0_linear_911_331)"
-    />
+    <g filter="url(#filter0_i_911_331)">
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10Zm-.004-6a4 4 0 0 1-4-4h-3a7 7 0 1 0 14 0h-3a4 4 0 0 1-4 4Z"
+        fill="url(#paint0_linear_911_331)"
+      />
+    </g>
     <defs>
       <linearGradient id="paint0_linear_911_331" x1={12} y1={2} x2={12} y2={22} gradientUnits="userSpaceOnUse">
         <stop stopColor="#7B8A95" />
         <stop offset={1} stopColor="#424E57" />
       </linearGradient>
+      <filter
+        id="filter0_i_911_331"
+        x={2}
+        y={2}
+        width={20}
+        height={20.5}
+        filterUnits="userSpaceOnUse"
+        colorInterpolationFilters="sRGB"
+      >
+        <feFlood floodOpacity={0} result="BackgroundImageFix" />
+        <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+        <feColorMatrix in="SourceAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+        <feOffset dy={0.5} />
+        <feGaussianBlur stdDeviation={0.25} />
+        <feComposite in2="hardAlpha" operator="arithmetic" k2={-1} k3={1} />
+        <feColorMatrix values="0 0 0 0 0.70875 0 0 0 0 0.756 0 0 0 0 0.7875 0 0 0 1 0" />
+        <feBlend in2="shape" result="effect1_innerShadow_911_331" />
+      </filter>
     </defs>
   </svg>
 ))

@@ -40,8 +40,12 @@ query GetNftsConnection(
   }
 }
 
-query GetFeaturedNfts {
-  ownedNfts(limit: 5, orderBy: [createdAt_DESC]) {
+query GetFeaturedNftsVideos(
+  $limit: Int
+  $where: OwnedNftWhereInput
+  $orderBy: [OwnedNftOrderByInput!] = [createdAt_DESC]
+) {
+  ownedNfts(limit: $limit, orderBy: $orderBy, where: $where) {
     ...FullNftFields
     video {
       ...BasicVideoFields
@@ -49,5 +53,13 @@ query GetFeaturedNfts {
         ...StorageDataObjectFields
       }
     }
+  }
+}
+
+mutation RequestNftFeatured($nftId: String!, $rationale: String!) {
+  requestNftFeatured(nftId: $nftId, rationale: $rationale) {
+    rationale
+    nftId
+    createdAt
   }
 }
