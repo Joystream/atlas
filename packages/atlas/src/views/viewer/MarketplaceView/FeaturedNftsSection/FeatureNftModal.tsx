@@ -109,22 +109,11 @@ export const FeatureNftModal: FC<FeatureNftModalProps> = ({ isOpen, onClose }) =
         },
       })
       if (!ownedNftById) {
-        return 'This video is not an NFT.'
+        setVideoId('')
+        return "This video doesn't exists or is not an NFT."
       }
       setVideoId(id)
-      if (
-        ownedNftById.transactionalStatus?.__typename === 'TransactionalStatusIdle' ||
-        ownedNftById.transactionalStatus?.__typename === 'TransactionalStatusInitiatedOfferToMember'
-      ) {
-        return "This video's NFT is not put on sale."
-      }
 
-      if (
-        ownedNftById.transactionalStatus?.__typename === 'TransactionalStatusAuction' &&
-        ownedNftById.transactionalStatus.auction.isCompleted
-      ) {
-        return "This video's NFT is not put on sale."
-      }
       return true
     },
     [client]

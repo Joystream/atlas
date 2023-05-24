@@ -196,13 +196,6 @@ export const useFeaturedNftsVideos = () => {
       orderBy: [OwnedNftOrderByInput.VideoViewsNumDesc],
       where: {
         isFeatured_eq: true,
-        transactionalStatus: {
-          isTypeOf_in: ['TransactionalStatusAuction', 'TransactionalStatusBuyNow'],
-          auction: {
-            isCompleted_eq: false,
-            isCanceled_eq: false,
-          },
-        },
       },
     },
   })
