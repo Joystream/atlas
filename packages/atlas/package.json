@@ -1,7 +1,7 @@
 {
   "name": "@joystream/atlas",
   "description": "UI for consuming Joystream - a user governed video platform",
-  "version": "2.1.0",
+  "version": "3.3.0",
   "license": "GPL-3.0",
   "scripts": {
     "start": "vite",

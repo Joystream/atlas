@@ -5,6 +5,66 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.0] - 2023-05-23
+
+### Added
+
+ - New NFT marketplace page
+ - New homepage with videos feed
+
+### Changed
+
+ - Improved notifications fetch query 
+
+### Fixed
+
+ - Fixed incorrect comments display
+ - Fixed tiles status in studio
+ - Fixed bug with modal windows blocking the scroll
+ - Minor bugfixes
+
+## [3.2.0] - 2023-04-21
+
+### Changed
+
+- NFT section rework
+- YPP sign-up buttons changed according to Google guidelines
+- Channels section removed from navigation
+- New & noteworthy pages were removed
+- Metadata update for supported wallets only
+
+### Fixed
+
+- Fixed bug with channel payouts
+- Fixed parsing of asset URL
+- Fixed YPP opt-in for memberships with multiple channels
+
+## [3.1.0] - 2023-04-14
+
+### Added
+
+- New content focus modal
+- Channel's balance is now displayed publicly
+
+### Changed
+
+- YPP TnCs were updated
+
+### Fixed
+
+- Fixed carousel styling for mobile screens
+- Various markup fixes
+
+## [3.0.0] - 2023-04-12
+
+### Added
+
+- Channel payouts were introduced
+
+### Changed
+
+- Atlas now supports Ephesus runtime upgrade
+
 ## [2.1.0] - 2023-04-07
 
 ### Changed
