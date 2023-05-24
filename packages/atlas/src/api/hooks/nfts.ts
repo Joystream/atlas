@@ -195,14 +195,24 @@ export const useFeaturedNftsVideos = () => {
       limit: 10,
       orderBy: [OwnedNftOrderByInput.VideoViewsNumDesc],
       where: {
-        isFeatured_eq: true,
-        transactionalStatus: {
-          isTypeOf_in: ['TransactionalStatusAuction', 'TransactionalStatusBuyNow'],
-          auction: {
-            isCompleted_eq: false,
-            isCanceled_eq: false,
+        OR: [
+          {
+            isFeatured_eq: true,
+            transactionalStatus: {
+              isTypeOf_eq: 'TransactionalStatusAuction',
+              auction: {
+                isCompleted_eq: false,
+                isCanceled_eq: false,
+              },
+            },
           },
-        },
+          {
+            isFeatured_eq: true,
+            transactionalStatus: {
+              isTypeOf_eq: 'TransactionalStatusBuyNow',
+            },
+          },
+        ],
       },
     },
   })
