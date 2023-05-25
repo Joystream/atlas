@@ -5,6 +5,7 @@ import { CSSTransition } from 'react-transition-group'
 
 import { getNftStatus } from '@/api/hooks/nfts'
 import { GetFeaturedNftsVideosQuery } from '@/api/queries/__generated__/nfts.generated'
+import { SvgActionNotForSale } from '@/assets/icons'
 import { AvatarGroup } from '@/components/Avatar/AvatarGroup'
 import { JoyTokenIcon } from '@/components/JoyTokenIcon'
 import {
@@ -208,6 +209,15 @@ export const NftCarouselDetails = ({
                     caption="MIN BID"
                     content={nftDetails.minBid}
                     icon={<JoyTokenIcon size={smMatch ? 24 : 16} variant="silver" />}
+                  />
+                )}
+                {nftStatus?.status === 'idle' && (
+                  <DetailsContent
+                    tileSize={smMatch ? 'big' : 'bigSmall'}
+                    caption="STATUS"
+                    content="Not for sale"
+                    secondary
+                    icon={<SvgActionNotForSale width={smMatch ? 24 : 16} height={smMatch ? 24 : 16} />}
                   />
                 )}
 

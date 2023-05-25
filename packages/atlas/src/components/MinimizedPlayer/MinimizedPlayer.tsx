@@ -16,16 +16,18 @@ export const MinimizedPlayer = forwardRef<HTMLVideoElement, MiniVideoProps>(
   ({ isInView, author, title, ...videoPlayerProps }, ref) => {
     const [forceExit, setForceExit] = useState(false)
     const [isPaused, setIsPaused] = useState(false)
+    const [wasPausedOnTop, setWasPausedTop] = useState(false)
     const isAllowed = usePersonalDataStore((state) => state.allowMinimizedPleyer)
     const mdMatch = useMediaMatch('md')
 
     useEffect(() => {
       if (isInView) {
         setForceExit(false)
+        setWasPausedTop(isPaused)
       }
-    }, [isInView])
+    }, [isInView, isPaused])
 
-    const inView = isAllowed && mdMatch && !isPaused ? isInView || forceExit : true
+    const inView = isAllowed && mdMatch && !wasPausedOnTop ? isInView || forceExit : true
 
     return (
       <Wrapper isInView={inView}>
