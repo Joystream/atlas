@@ -122,7 +122,7 @@ export const useCreateMember = () => {
   const { joystream } = useJoystream()
   const addBlockAction = useTransactionManagerStore((state) => state.actions.addBlockAction)
   const { displaySnackbar } = useSnackbar()
-  const [previouslyFailedData, setPreviouslyFailedData] = useState<MemberFormData | null>(null)
+  const [, setPreviouslyFailedData] = useState<MemberFormData | null>(null)
 
   const register = useRegister()
 
