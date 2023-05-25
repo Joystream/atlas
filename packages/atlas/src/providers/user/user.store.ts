@@ -113,7 +113,15 @@ export const useUserStore = createStore<UserStoreState, UserStoreActions>(
     persist: {
       key: 'activeUser',
       version: 0,
-      whitelist: ['accountId', 'memberId', 'channelId', 'lastUsedWalletName', 'lastChainMetadataVersion', 'userId'],
+      whitelist: [
+        'accountId',
+        'memberId',
+        'channelId',
+        'lastUsedWalletName',
+        'lastChainMetadataVersion',
+        'userId',
+        'loggedInAccountId',
+      ],
       migrate: (oldState) => {
         return oldState
       },

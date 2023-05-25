@@ -27,6 +27,23 @@ export async function scryptHash(
     resolve(Buffer.from(scrypt(Buffer.from(data), salt, options)))
   })
 }
+
+type EncryptionArtifacts = {
+  id: string
+  encryptedSeed: string
+  cipherIv: string
+}
+
+type RegisterPayload = {
+  joystreamAccountId: string
+  gatewayName: string
+  timestamp: number
+  action: 'createAccount'
+  memberId: string
+  email: string
+  encryptionArtifacts?: EncryptionArtifacts
+}
+
 type ExtensionParams = {
   type: 'extension'
   signature: (payload: string) => Promise<string | undefined>
@@ -52,14 +69,13 @@ export const useRegister = () => {
   return useCallback(
     async (params: RegisterParams) => {
       await cryptoWaitReady()
-      const registerPayload = {
+      const registerPayload: RegisterPayload = {
         gatewayName: 'Gleev',
         memberId: params.memberId,
         joystreamAccountId: '',
         timestamp: Date.now(),
         action: 'createAccount',
         email: params.email,
-        encryptionArtifacts: {},
       }
       let registerSignature = null
       let keypair: KeyringPair | null = null
