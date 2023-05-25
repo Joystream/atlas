@@ -3,6 +3,7 @@ import { FC, useState } from 'react'
 import { useNfts } from '@/api/hooks/nfts'
 import { Banner } from '@/components/Banner'
 import { CarouselProps } from '@/components/Carousel'
+import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Section } from '@/components/Section/Section'
 import { StyledSvgAlertsInformative24 } from '@/components/Tooltip/Tooltip.styles'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
@@ -55,31 +56,15 @@ export const FeaturedNftsSection: FC = () => {
   const { nfts, loading } = useNfts({
     variables: {
       where: {
-        OR: [
-          {
-            isFeatured_eq: true,
-            transactionalStatus: {
-              isTypeOf_eq: 'TransactionalStatusAuction',
-              auction: {
-                isCompleted_eq: false,
-                isCanceled_eq: false,
-              },
-            },
-          },
-          {
-            isFeatured_eq: true,
-            transactionalStatus: {
-              isTypeOf_eq: 'TransactionalStatusBuyNow',
-            },
-          },
-        ],
+        isFeatured_eq: true,
       },
     },
   })
+  const nftsToSort = nfts || []
 
   // 1. English auctions(not upcoming) first - sorted by blocks left
-  const englishAuctions = nfts
-    ?.filter(
+  const englishAuctions = nftsToSort
+    .filter(
       (nft) =>
         nft.transactionalStatus?.__typename === 'TransactionalStatusAuction' &&
         nft.transactionalStatus.auction.auctionType.__typename === 'AuctionTypeEnglish' &&
@@ -102,8 +87,8 @@ export const FeaturedNftsSection: FC = () => {
     })
 
   // 2. Open and buy now auctions(not upcoming) - sorted by popularity
-  const openAuctionsAndBuyNowAuctions = nfts
-    ?.filter(
+  const openAuctionsAndBuyNowAuctions = nftsToSort
+    .filter(
       (nft) =>
         nft.transactionalStatus?.__typename === 'TransactionalStatusBuyNow' ||
         (nft.transactionalStatus?.__typename === 'TransactionalStatusAuction' &&
@@ -113,8 +98,8 @@ export const FeaturedNftsSection: FC = () => {
     .sort((a, b) => b.video.viewsNum - a.video.viewsNum)
 
   // 3. Upcoming auctions - sorted by planned start
-  const plannedAuctions = nfts
-    ?.filter(
+  const plannedAuctions = nftsToSort
+    .filter(
       (nft) =>
         nft.transactionalStatus?.__typename === 'TransactionalStatusAuction' &&
         nft.transactionalStatus.auction.startsAtBlock > currentBlock
@@ -132,9 +117,15 @@ export const FeaturedNftsSection: FC = () => {
       return aPlannedStart - bPlannedStart
     })
 
-  const sorted = [...(englishAuctions || []), ...(openAuctionsAndBuyNowAuctions || []), ...(plannedAuctions || [])]
+  // 4. Not for sale - sorted by popularity
 
-  const items = loading ? createPlaceholderData(10) : sorted ?? []
+  const notForSale = nftsToSort
+    .filter((nft) => nft.transactionalStatus?.__typename === 'TransactionalStatusIdle')
+    .sort((a, b) => b.video.viewsNum - a.video.viewsNum)
+
+  const sortedNfts = [...englishAuctions, ...openAuctionsAndBuyNowAuctions, ...plannedAuctions, ...notForSale]
+
+  const items = loading ? createPlaceholderData(10) : sortedNfts ?? []
 
   const mdMatch = useMediaMatch('md')
 
@@ -143,44 +134,45 @@ export const FeaturedNftsSection: FC = () => {
   }
 
   return (
-    <FeaturedNftsWrapper>
-      <FeatureNftModal isOpen={isFeatureNftModalOpen} onClose={() => setIsFeatureNfrModalOpen(false)} />
-      {items.length >= 4 && (
-        <Section
-          headerProps={{
-            start: {
-              type: 'title',
-              title: 'Featured',
-            },
-          }}
-          contentProps={{
-            type: 'carousel',
-            children: items.map((nft, idx) => <NftTileViewer nftId={nft.id} key={idx} />),
-            canOverflowContainer: true,
-            spaceBetween: mdMatch ? 24 : 16,
-            breakpoints: responsive,
-          }}
-        />
-      )}
-      {activeChannel && activeChannel.totalVideosCreated > 0 && (
-        <Banner
-          title="How to get featured?"
-          icon={<StyledSvgAlertsInformative24 />}
-          description={`The ${
-            atlasConfig.general.appName
-          } team handpicks featured video NFTs as a way to recognize and promote high-quality content. To increase your chances of getting your NFT featured on the marketplace, ${
-            atlasConfig.general.appContentFocus
-              ? `upload videos related to ${atlasConfig.general.appContentFocus} and `
-              : ''
-          }make sure your NFT is up for sale.`}
-          actionButton={{
-            text: 'Submit your video NFT to be featured',
-            onClick: () => {
-              setIsFeatureNfrModalOpen(true)
-            },
-          }}
-        />
-      )}
-    </FeaturedNftsWrapper>
+    <LimitedWidthContainer big noBottomPadding fullWidth>
+      <FeaturedNftsWrapper>
+        <FeatureNftModal isOpen={isFeatureNftModalOpen} onClose={() => setIsFeatureNfrModalOpen(false)} />
+        {items.length >= 4 && (
+          <Section
+            headerProps={{
+              start: {
+                type: 'title',
+                title: 'Featured',
+              },
+            }}
+            contentProps={{
+              type: 'carousel',
+              children: items.map((nft, idx) => <NftTileViewer nftId={nft.id} key={idx} />),
+              spaceBetween: mdMatch ? 24 : 16,
+              breakpoints: responsive,
+            }}
+          />
+        )}
+        {activeChannel && activeChannel.totalVideosCreated > 0 && (
+          <Banner
+            title="How to get featured?"
+            icon={<StyledSvgAlertsInformative24 />}
+            description={`The ${
+              atlasConfig.general.appName
+            } team handpicks featured video NFTs as a way to recognize and promote high-quality content. To increase your chances of getting your NFT featured on the marketplace, ${
+              atlasConfig.general.appContentFocus
+                ? `upload videos related to ${atlasConfig.general.appContentFocus} and `
+                : ''
+            }make sure your NFT is up for sale.`}
+            actionButton={{
+              text: 'Submit your video NFT to be featured',
+              onClick: () => {
+                setIsFeatureNfrModalOpen(true)
+              },
+            }}
+          />
+        )}
+      </FeaturedNftsWrapper>
+    </LimitedWidthContainer>
   )
 }

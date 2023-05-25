@@ -17,6 +17,7 @@ type SectionFooterLoadProps = {
   label: string
   fetchMore: () => Promise<void>
   reachedEnd: boolean
+  loadingTriggerOffset?: number
 }
 
 type SectionFooterPaginationProps = {
@@ -27,6 +28,7 @@ type SectionFooterInfiniteLoadingProps = {
   type: 'infinite'
   fetchMore: () => Promise<void>
   reachedEnd: boolean
+  loadingTriggerOffset?: number
 }
 
 export type SectionFooterProps =
@@ -35,9 +37,11 @@ export type SectionFooterProps =
   | SectionFooterPaginationProps
   | SectionFooterInfiniteLoadingProps
 
-const InfiniteLoaderMargin = styled.div`
+const InfiniteLoaderMargin = styled.div<{ loadingTriggerOffset?: number }>`
   width: 100%;
   height: 1px;
+  position: absolute;
+  bottom: ${({ loadingTriggerOffset }) => (loadingTriggerOffset ? `${loadingTriggerOffset}px` : 0)};
 `
 export const SectionFooter = (props: SectionFooterProps) => {
   const [isSwitchedToInfinite, setIsSwitchedToInfinite] = useState(false)
@@ -76,12 +80,12 @@ export const SectionFooter = (props: SectionFooterProps) => {
         {props.label}
       </Button>
     ) : (
-      <InfiniteLoaderMargin ref={ref} />
+      <InfiniteLoaderMargin ref={ref} loadingTriggerOffset={props.loadingTriggerOffset} />
     )
   }
 
   if (props.type === 'infinite' && !props.reachedEnd && !isLoading) {
-    return <InfiniteLoaderMargin ref={ref} />
+    return <InfiniteLoaderMargin ref={ref} loadingTriggerOffset={props.loadingTriggerOffset} />
   }
 
   if (props.type === 'link') {

@@ -8,11 +8,10 @@ import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 export const CAROUSEL_ARROW_HEIGHT = 48
 
 type StyledSwiperProps = {
-  canOverflowContainer?: boolean
   minSlideWidth?: number
 } & SwiperOptions
 
-const isPropValid = (prop: string) => prop !== 'canOverflowContainer' && prop !== 'minSlideWidth'
+const isPropValid = (prop: string) => prop !== 'minSlideWidth'
 
 export const StyledSwiper = styled(Swiper, { shouldForwardProp: isPropValid })<StyledSwiperProps>`
   width: 100%;

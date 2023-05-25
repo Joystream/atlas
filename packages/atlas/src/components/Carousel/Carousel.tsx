@@ -10,7 +10,6 @@ export type SwiperInstance = SwiperType
 export type CarouselProps = {
   className?: string
   dotsVisible?: boolean
-  canOverflowContainer?: boolean
   minSlideWidth?: number
   children: ReactNode[]
 } & SwiperProps
@@ -27,7 +26,6 @@ const dotsProps = {
 export const Carousel = ({
   children,
   dotsVisible,
-  canOverflowContainer,
   spaceBetween = 12,
   minSlideWidth,
   ...swiperOptions
@@ -36,7 +34,6 @@ export const Carousel = ({
     <StyledSwiper
       navigation
       minSlideWidth={minSlideWidth}
-      canOverflowContainer={canOverflowContainer}
       {...(dotsVisible ? dotsProps : {})}
       {...swiperOptions}
       spaceBetween={spaceBetween}

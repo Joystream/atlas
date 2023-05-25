@@ -1,6 +1,6 @@
 import { useEnvironmentStore } from '@/providers/environment'
 
-type BuildEnv = 'production' | 'development'
+type BuildEnv = 'production' | 'development' | 'accounts'
 
 export const ENV_PREFIX = 'VITE'
 
@@ -29,8 +29,6 @@ export const availableEnvs = () => {
 export const readEnv = (name: string, required = true, direct = false): string => {
   const fullName = direct
     ? getEnvName(name)
-    : BUILD_ENV === 'production'
-    ? getEnvName(`PRODUCTION_${name}`)
     : getEnvName(`${useEnvironmentStore.getState().targetDevEnv.toUpperCase()}_${name}`)
   const value = import.meta.env[fullName]
   if (!value && required) {
@@ -42,6 +40,7 @@ export const readEnv = (name: string, required = true, direct = false): string =
 }
 
 export const ORION_GRAPHQL_URL = readEnv('ORION_URL')
+export const ORION_AUTH_URL = readEnv('ORION_AUTH_URL')
 export const QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL = readEnv('QUERY_NODE_SUBSCRIPTION_URL')
 export const NODE_URL = readEnv('NODE_URL')
 export const FAUCET_URL = readEnv('FAUCET_URL')

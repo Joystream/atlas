@@ -92,7 +92,7 @@ export const EmbeddedView: FC = () => {
     <>
       <EmbeddedGlobalStyles />
       <Container>
-        {loading && video ? (
+        {!loading && video ? (
           <VideoPlayer
             onAddVideoView={handleAddVideoView}
             isVideoPending={!video?.media?.isAccepted}

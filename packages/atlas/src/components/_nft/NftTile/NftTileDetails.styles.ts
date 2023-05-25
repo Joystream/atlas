@@ -31,7 +31,7 @@ export const KebabMenuButtonIcon = styled(Button)<ActiveProps>`
 type ContentProps = {
   loading?: boolean
   shouldHover?: boolean
-  tileSize?: 'small' | 'medium' | 'big'
+  tileSize?: 'small' | 'medium' | 'big' | 'bigSmall'
 }
 
 const containerHoverStyles = ({ loading, shouldHover = true }: ContentProps) => {
@@ -47,13 +47,13 @@ const containerHoverStyles = ({ loading, shouldHover = true }: ContentProps) => 
   }
 }
 
-const tileSizeVariants = ({ tileSize }: ContentProps) => `
+const tileSizeVariants = ({ tileSize }: ContentProps) => css`
   padding: ${sizes(tileSize === 'medium' ? 6 : 4)};
 
   ${StyledAvatarGroup} {
     margin-bottom: ${sizes(tileSize === 'medium' ? 4 : 3)};
   }
-  
+
   ${Details} {
     margin-top: ${sizes(tileSize === 'medium' ? 4 : 3)};
   }
@@ -64,7 +64,7 @@ export const Content = styled(Link, { shouldForwardProp: isContentPropValid })<C
   display: block;
   text-decoration: none;
   background-color: ${cVar('colorBackgroundMuted')};
-  transition: ${cVar('animationTransitionFast')};
+  transition: background-color ${cVar('animationTransitionFast')};
 
   ${containerHoverStyles};
   ${tileSizeVariants};
@@ -97,7 +97,7 @@ export const Details = styled.div`
   }
 `
 
-export const DetailsContentWrapper = styled.div<{ secondary?: boolean }>`
+export const DetailsContentWrapper = styled.div<{ secondary?: boolean; avoidIconStyling?: boolean }>`
   display: flex;
   align-items: center;
   margin-top: ${sizes(1)};
@@ -105,9 +105,13 @@ export const DetailsContentWrapper = styled.div<{ secondary?: boolean }>`
   > svg {
     margin-right: ${sizes(1)};
 
-    * {
-      fill: ${({ secondary }) => (secondary ? cVar('colorText') : cVar('colorTextStrong'))};
-    }
+    ${({ avoidIconStyling, secondary }) =>
+      !avoidIconStyling &&
+      css`
+        path {
+          fill: ${secondary ? cVar('colorText') : cVar('colorTextStrong')};
+        }
+      `}
   }
 `
 
