@@ -8,8 +8,19 @@ export const getEnvName = (name: string) => {
   return `${ENV_PREFIX}_${name}`
 }
 
+export const ENV_SELECTION_ENABLED: boolean = import.meta.env[getEnvName('ENV_SELECTION_ENABLED')] === 'true'
+
 export const BUILD_ENV = (import.meta.env[getEnvName('ENV')] || 'production') as BuildEnv
 
+// if it's a case that the environment selection is disabled, but user has different value in the localstorage
+// we need to reset the state
+if (ENV_SELECTION_ENABLED === false) {
+  const environmentState = useEnvironmentStore.getState()
+
+  if (environmentState.actions.getInitialState().targetDevEnv !== environmentState.targetDevEnv) {
+    useEnvironmentStore.getState().actions.reset()
+  }
+}
 export const availableEnvs = () => {
   return Array.from(
     new Set(
