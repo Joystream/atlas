@@ -3,6 +3,7 @@ import { createStore } from '@/utils/store'
 import { ActiveUserState, SignerWallet, SignerWalletAccount, SignerWalletStatus } from './user.types'
 
 export type UserStoreState = ActiveUserState & {
+  userId: string | null
   wallet: SignerWallet | null
   walletAccounts: SignerWalletAccount[]
   walletStatus: SignerWalletStatus
@@ -16,6 +17,7 @@ export type UserStoreActions = {
   setActiveUser: (activeUserChanges: Partial<ActiveUserState>) => void
   signOut: () => void
 
+  setUserId: (userId: string | null) => void
   setWallet: (wallet: SignerWallet) => void
   setWalletAccounts: (accounts: SignerWalletAccount[]) => void
   setWalletStatus: (status: SignerWalletStatus) => void
@@ -31,6 +33,7 @@ export const useUserStore = createStore<UserStoreState, UserStoreActions>(
       memberId: null,
       channelId: null,
 
+      userId: null,
       wallet: null,
       walletAccounts: [],
       walletStatus: 'unknown',
@@ -65,6 +68,11 @@ export const useUserStore = createStore<UserStoreState, UserStoreActions>(
         })
       },
 
+      setUserId: (userId) => {
+        set((state) => {
+          state.userId = userId
+        })
+      },
       setWallet: (wallet) => {
         set((state) => {
           state.wallet = wallet
@@ -97,7 +105,7 @@ export const useUserStore = createStore<UserStoreState, UserStoreActions>(
     persist: {
       key: 'activeUser',
       version: 0,
-      whitelist: ['accountId', 'memberId', 'channelId', 'lastUsedWalletName', 'lastChainMetadataVersion'],
+      whitelist: ['accountId', 'memberId', 'channelId', 'lastUsedWalletName', 'lastChainMetadataVersion', 'userId'],
       migrate: (oldState) => {
         return oldState
       },

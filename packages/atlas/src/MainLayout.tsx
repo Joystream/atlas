@@ -38,6 +38,7 @@ const LoadablePlaygroundLayout = loadable(() => import('./views/playground/Playg
 export const MainLayout: FC = () => {
   const scrollPosition = useRef<number>(0)
   const location = useLocation()
+
   const navigationType = useNavigationType()
   const [cachedLocation, setCachedLocation] = useState(location)
   const locationState = location.state as RoutingState

@@ -37,8 +37,6 @@ const ENVIRONMENT_NAMES: Record<string, string> = {
   production: 'Joystream Mainnet',
   development: `${atlasConfig.general.appName} Dev Testnet`,
   next: `${atlasConfig.general.appName} Next Testnet`,
-  // todo for removal, created only for testing purposes
-  orion2test: `${atlasConfig.general.appName} Orion v2 production Testnet`,
   local: 'Local chain',
 }
 
