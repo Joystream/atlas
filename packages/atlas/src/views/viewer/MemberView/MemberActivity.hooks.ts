@@ -1,3 +1,4 @@
+import { QueryHookOptions } from '@apollo/client'
 import BN from 'bn.js'
 import { useMemo } from 'react'
 
@@ -8,7 +9,10 @@ import {
   BasicNftOwnerFieldsFragment,
   BasicVideoActivityFieldsFragment,
 } from '@/api/queries/__generated__/fragments.generated'
-import { GetNftActivitiesQuery } from '@/api/queries/__generated__/notifications.generated'
+import {
+  GetNftActivitiesQuery,
+  GetNftActivitiesQueryVariables,
+} from '@/api/queries/__generated__/notifications.generated'
 import { convertDateFormat } from '@/utils/time'
 
 export type NftActivitiesRecord = {
@@ -236,7 +240,11 @@ const parseActivities = (
   }
 }
 
-export const useActivities = (memberId?: string, sort?: NftActivityOrderByInput) => {
+export const useActivities = (
+  memberId?: string,
+  sort?: NftActivityOrderByInput,
+  opts?: QueryHookOptions<GetNftActivitiesQuery, GetNftActivitiesQueryVariables>
+) => {
   const {
     activities: rawActivities,
     nftsBiddedTotalCount,
@@ -244,7 +252,7 @@ export const useActivities = (memberId?: string, sort?: NftActivityOrderByInput)
     nftsSoldTotalCount,
     nftsBoughtTotalCount,
     ...rest
-  } = useRawActivities(memberId, sort)
+  } = useRawActivities(memberId, sort, opts)
   const parsedActivities = rawActivities && rawActivities.map((a) => parseActivities(a, memberId))
   const activities = parsedActivities ? parsedActivities.filter((a): a is ActivitiesRecord => !!a) : undefined
 

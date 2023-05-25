@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import { SvgActionClose, SvgActionRead, SvgActionUnread } from '@/assets/icons'
 import { GridItem } from '@/components/LayoutGrid'
@@ -40,8 +40,9 @@ export const NotificationsView = () => {
     pageInfo,
     fetchMore,
     loading,
-  } = useNotifications()
-  const [isLoading, setIsLoading] = useState(false)
+  } = useNotifications({
+    notifyOnNetworkStatusChange: true,
+  })
 
   const firstNotification = notifications[0]
   // set last seen notification block to first notification to manage the badge for notification button
@@ -65,7 +66,7 @@ export const NotificationsView = () => {
   const markSelectedAsRead = () => markNotificationsAsRead(selectedNotifications)
   const markSelectedAsUnread = () => markNotificationsAsUnread(selectedNotifications)
 
-  const placeholderItems = createPlaceholderData(loading || isLoading ? 10 : 0)
+  const placeholderItems = createPlaceholderData(loading ? 10 : 0)
 
   return (
     <StyledLayoutGrid>
@@ -119,7 +120,6 @@ export const NotificationsView = () => {
                 type: 'infinite',
                 reachedEnd: !pageInfo?.hasNextPage ?? true,
                 fetchMore: async () => {
-                  setIsLoading(true)
                   await fetchMore({
                     variables: {
                       after: pageInfo?.endCursor,
@@ -132,7 +132,7 @@ export const NotificationsView = () => {
                       ]
                       return fetchMoreResult
                     },
-                  }).finally(() => setIsLoading(false))
+                  })
                 },
               }}
             />

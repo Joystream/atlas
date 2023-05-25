@@ -56,7 +56,7 @@ export const MarketplaceCarousel = ({ carouselProps, isLoading, ...rest }: Marke
     return [null]
   }, [rest.type, rest.nfts, glider, isLoading])
 
-  if (!content.length || content.length < 4) {
+  if (!isLoading && (!rest.nfts || rest.nfts.length < 4)) {
     return null
   }
 
