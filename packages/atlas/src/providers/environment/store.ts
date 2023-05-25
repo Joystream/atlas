@@ -15,6 +15,8 @@ const INITIAL_STATE: EnvironmentState = {
 export type EnvironmentStoreActions = {
   setTargetDevEnv: (env: string) => void
   setNodeOverride: (node: string | null) => void
+  reset: () => void
+  getInitialState: () => EnvironmentState
 }
 
 export const useEnvironmentStore = createStore<EnvironmentState, EnvironmentStoreActions>(
@@ -31,6 +33,10 @@ export const useEnvironmentStore = createStore<EnvironmentState, EnvironmentStor
           state.targetDevEnv = env
         })
       },
+      reset: () => {
+        set(() => INITIAL_STATE)
+      },
+      getInitialState: () => INITIAL_STATE,
     }),
   },
   {
