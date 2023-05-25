@@ -717,7 +717,14 @@ const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlay
       className={className}
       isSettingsPopoverOpened={isSettingsPopoverOpened}
     >
-      <div data-vjs-player onClick={() => handlePlayPause()}>
+      <div
+        data-vjs-player
+        onClick={() => {
+          if (!(isShareDialogOpen || isSharingOverlayOpen)) {
+            handlePlayPause()
+          }
+        }}
+      >
         {needsManualPlay && (
           <BigPlayButtonContainer
             onClick={() => {
