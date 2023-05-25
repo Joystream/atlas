@@ -33,7 +33,8 @@ export const ModalContent = styled.div<ModalContentProps>`
   position: fixed;
   width: 100vw;
   max-height: calc(100vh - var(--size-topbar-height));
-  overflow: hidden;
+
+  /* overflow: hidden; */
   bottom: 0;
   ${({ noBoxShadow }) =>
     !noBoxShadow &&
@@ -63,5 +64,21 @@ export const ModalContent = styled.div<ModalContentProps>`
     &[data-size=${sizeObj.large}] {
       width: min(1120px, var(--max-width));
     }
+  }
+`
+
+export const ConfettiWrapper = styled.div`
+  z-index: ${zIndex.modals};
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  pointer-events: none;
+
+  svg {
+    width: 100vw !important;
+    height: 100vh !important;
   }
 `

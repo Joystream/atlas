@@ -5,12 +5,19 @@ import shallow from 'zustand/shallow'
 import { Button } from '@/components/_buttons/Button'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { useRegister } from '@/hooks/useRegister'
 import { useUserStore } from '@/providers/user/user.store'
 import { media } from '@/styles'
 
-import { SignUpSteps } from './SignUpModal.types'
-import { SignUpEmailStep, SignUpPasswordStep, SignUpSeedStep } from './SignUpSteps'
+import { useCreateMember } from './SignUpModal.hooks'
+import { MemberFormData, NewUserFormData, SignUpSteps } from './SignUpModal.types'
+import {
+  SignUpCreatingMemberStep,
+  SignUpEmailStep,
+  SignUpMembershipStep,
+  SignUpPasswordStep,
+  SignUpSeedStep,
+  SignUpSuccessStep,
+} from './SignUpSteps'
 import { SignUpStepsCommonProps } from './SignUpSteps/SignUpSteps.types'
 
 export const SignUpModal = () => {
@@ -32,19 +39,18 @@ export const SignUpModal = () => {
     }
     if (currentStep != null) return
 
-    setCurrentStep(SignUpSteps.SignUpEmail)
+    setCurrentStep(0)
   }, [signUpModalOpen, currentStep])
 
-  const [userForm, setUserForm] = useState<{
-    email: string
-    password: string
-    seed: string
-  }>({
+  const [newUserFormData, setNewUserFormData] = useState<NewUserFormData>({
     email: '',
     password: '',
     seed: '',
+    handle: '',
+    avatar: undefined,
+    captchaToken: undefined,
   })
-  const handleRegister = useRegister()
+  const createMember = useCreateMember()
 
   const goToNextStep = useCallback(() => {
     setCurrentStep((previousIdx) => (previousIdx ?? -1) + 1)
@@ -57,19 +63,27 @@ export const SignUpModal = () => {
   }, [])
 
   const handleEmailChange = useCallback((email: string) => {
-    setUserForm((userForm) => ({ ...userForm, email }))
+    setNewUserFormData((userForm) => ({ ...userForm, email }))
   }, [])
 
   const handlePasswordChange = useCallback((password: string) => {
-    setUserForm((userForm) => ({ ...userForm, password }))
+    setNewUserFormData((userForm) => ({ ...userForm, password }))
   }, [])
 
-  const handleSeedChange = useCallback(
-    (seed: string) => {
-      setUserForm((userForm) => ({ ...userForm, seed }))
-      handleRegister(userForm.email, userForm.password, seed)
+  const handleSeedChange = useCallback((seed: string) => {
+    setNewUserFormData((userForm) => ({ ...userForm, seed }))
+  }, [])
+
+  const handleMemberFormData = useCallback(
+    (data: MemberFormData) => {
+      createMember({
+        data: { ...newUserFormData, ...data },
+        onError: () => goToPreviousStep(),
+        onStart: () => goToNextStep(),
+        onSuccess: () => goToNextStep(),
+      })
     },
-    [handleRegister, userForm.email, userForm.password]
+    [createMember, goToNextStep, goToPreviousStep, newUserFormData]
   )
 
   const commonProps: SignUpStepsCommonProps = useMemo(
@@ -80,21 +94,29 @@ export const SignUpModal = () => {
     }),
     [goToNextStep, hasNavigatedBack]
   )
+  const backButtonVisible =
+    currentStep === SignUpSteps.CreateMember ||
+    currentStep === SignUpSteps.SignUpPassword ||
+    currentStep === SignUpSteps.SignUpSeed
 
+  const cancelButtonVisible = currentStep !== SignUpSteps.Success && currentStep !== SignUpSteps.Creating
   return (
     <StyledDialogModal
       show={currentStep !== null}
       primaryButton={primaryButtonProps}
-      secondaryButton={{ text: 'Back', onClick: () => goToPreviousStep() }}
+      secondaryButton={backButtonVisible ? { text: 'Back', onClick: () => goToPreviousStep() } : undefined}
+      confetti={currentStep === SignUpSteps.Success}
       additionalActionsNode={
-        <Button
-          variant="tertiary"
-          onClick={() => {
-            setSignUpModalOpen(false)
-          }}
-        >
-          Cancel
-        </Button>
+        cancelButtonVisible ? (
+          <Button
+            variant="tertiary"
+            onClick={() => {
+              setSignUpModalOpen(false)
+            }}
+          >
+            Cancel
+          </Button>
+        ) : undefined
       }
       additionalActionsNodeMobilePosition="bottom"
       contentRef={dialogContentRef}
@@ -106,6 +128,11 @@ export const SignUpModal = () => {
         <SignUpPasswordStep {...commonProps} onPasswordSubmit={handlePasswordChange} />
       )}
       {currentStep === SignUpSteps.SignUpSeed && <SignUpSeedStep {...commonProps} onSeedSubmit={handleSeedChange} />}
+      {currentStep === SignUpSteps.CreateMember && (
+        <SignUpMembershipStep {...commonProps} onSubmit={handleMemberFormData} />
+      )}
+      {currentStep === SignUpSteps.Creating && <SignUpCreatingMemberStep {...commonProps} />}
+      {currentStep === SignUpSteps.Success && <SignUpSuccessStep />}
     </StyledDialogModal>
   )
 }

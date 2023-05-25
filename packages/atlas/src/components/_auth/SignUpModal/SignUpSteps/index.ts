@@ -1,3 +1,6 @@
 export * from './SignUpEmailStep'
 export * from './SignUpPasswordStep'
 export * from './SignUpSeedStep'
+export * from './SignUpCreatingMemberStep'
+export * from './SignUpMembershipStep'
+export * from './SignUpSuccessStep'
