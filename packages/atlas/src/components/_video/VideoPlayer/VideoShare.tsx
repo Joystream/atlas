@@ -63,7 +63,12 @@ export const VideoShare: FC<VideoShareProps> = ({
   }
   if (!isEmbedded) {
     return (
-      <DialogModal title="Share video" show={isShareDialogOpen} onExitClick={onCloseShareDialog}>
+      <DialogModal
+        title="Share video"
+        show={isShareDialogOpen}
+        onClickOutside={onCloseShareDialog}
+        onExitClick={onCloseShareDialog}
+      >
         <VideoShareContent {...commonVideoShareContentProps} />
       </DialogModal>
     )
