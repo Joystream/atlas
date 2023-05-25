@@ -38,9 +38,11 @@ function aes256CbcDecrypt(encryptedData: string, key: Buffer, iv: Buffer): strin
   return decrypted.toString(enc.Hex)
 }
 
-const getArtifacts = async (id: string) => {
+const getArtifacts = async (id: string, email: string) => {
   try {
-    const res = await axios.get<{ cipherIv: string; encryptedSeed: string }>(`${ORION_AUTH_URL}/artifacts?id=${id}`)
+    const res = await axios.get<{ cipherIv: string; encryptedSeed: string }>(
+      `${ORION_AUTH_URL}/artifacts?id=${id}&email=${email}`
+    )
 
     return res.data
   } catch (error) {
@@ -94,7 +96,7 @@ export const useLogIn = () => {
       if (params.type === 'emailPassword') {
         const { email, password } = params
         const id = (await scryptHash(`${email}:${password}`, '0x0818ee04c541716831bdd0f598fa4bbb')).toString('hex')
-        const data = await getArtifacts(id)
+        const data = await getArtifacts(id, email)
         if (!data) {
           return {
             data: null,

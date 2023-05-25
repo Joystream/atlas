@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect } from 'react'
 import shallow from 'zustand/shallow'
 
 import { Avatar } from '@/components/Avatar'
@@ -14,34 +14,40 @@ import { SignInModalStepTemplate } from './SignInModalStepTemplate'
 import { ListItemsWrapper, StyledListItem } from './SignInSteps.styles'
 import { ModalSteps, SignInStepProps } from './SignInSteps.types'
 
-type SignInModalAccountStepProps = SignInStepProps
+type SignInModalAccountStepProps = SignInStepProps & {
+  memberId: string | null
+  setMemberId: (id: string) => void
+}
 
 export const SignInModalMembershipsStep: FC<SignInModalAccountStepProps> = ({
   setPrimaryButtonProps,
   hasNavigatedBack,
   goToStep,
+  setMemberId,
+  memberId,
 }) => {
   const smMatch = useMediaMatch('sm')
-  const { setSignInModalOpen } = useUserStore(
-    (state) => ({ setSignInModalOpen: state.actions.setSignInModalOpen }),
+  const { setSignInModalOpen, setActiveUser } = useUserStore(
+    (state) => ({ setSignInModalOpen: state.actions.setSignInModalOpen, setActiveUser: state.actions.setActiveUser }),
     shallow
   )
-  const [localSelectedMembership, setLocalSelectedMembership] = useState<string | null>(null)
   const { memberships } = useUser()
   const { joystream } = useJoystream()
   const handleLogin = useLogIn()
   const { displaySnackbar } = useSnackbar()
 
-  const {
-    actions: { setActiveUser },
-  } = useUserStore()
-
   const handleConfirm = useCallback(async () => {
     if (!joystream?.signMessage) return
 
-    const member = memberships.find((entity) => entity.id === localSelectedMembership)
+    const member = memberships.find((entity) => entity.id === memberId)
 
     if (!member) return
+
+    setActiveUser({
+      memberId: member.id,
+      accountId: member.controllerAccount,
+      channelId: member.channels[0]?.id,
+    })
 
     goToStep(ModalSteps.Logging)
     const res = await handleLogin({
@@ -69,38 +75,24 @@ export const SignInModalMembershipsStep: FC<SignInModalAccountStepProps> = ({
     }
 
     if (res.data) {
-      setActiveUser({
-        memberId: member.id,
-        accountId: member.controllerAccount,
-        channelId: member.channels[0].id,
-      })
       setSignInModalOpen(false)
     }
-  }, [
-    displaySnackbar,
-    goToStep,
-    handleLogin,
-    joystream,
-    localSelectedMembership,
-    memberships,
-    setActiveUser,
-    setSignInModalOpen,
-  ])
+  }, [displaySnackbar, goToStep, handleLogin, joystream, memberId, memberships, setActiveUser, setSignInModalOpen])
 
   useEffect(() => {
-    if (localSelectedMembership) return
+    if (memberId) return
 
-    setLocalSelectedMembership(memberships[0].id)
-  }, [localSelectedMembership, memberships])
+    setMemberId(memberships[0]?.id)
+  }, [memberId, memberships, setMemberId])
 
   // send updates to SignInModal on state of primary button
   useEffect(() => {
     setPrimaryButtonProps({
       text: 'Log in',
-      disabled: !localSelectedMembership,
+      disabled: !memberId,
       onClick: handleConfirm,
     })
-  }, [handleConfirm, localSelectedMembership, setPrimaryButtonProps])
+  }, [handleConfirm, memberId, setPrimaryButtonProps])
 
   return (
     <SignInModalStepTemplate
@@ -115,14 +107,14 @@ export const SignInModalMembershipsStep: FC<SignInModalAccountStepProps> = ({
             label={handle ?? 'Account'}
             caption={shortenString(controllerAccount, 5)}
             size={smMatch ? 'large' : 'medium'}
-            selected={localSelectedMembership === id}
+            selected={memberId === id}
             nodeStart={
               <Avatar
                 size={40}
                 assetUrl={metadata?.avatar?.__typename === 'AvatarUri' ? metadata.avatar.avatarUri ?? '' : ''}
               />
             }
-            onClick={() => setLocalSelectedMembership(id)}
+            onClick={() => setMemberId(id)}
           />
         ))}
       </ListItemsWrapper>

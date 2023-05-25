@@ -15,9 +15,10 @@ import { ModalSteps, SignInStepProps } from './SignInSteps.types'
 
 type SignInModalEmailStepProps = SignInStepProps & {
   onConfirm?: (address: string) => void
+  memberId: string | null
 }
 
-export const SignInModalEmailStep: FC<SignInModalEmailStepProps> = ({ setPrimaryButtonProps, goToStep }) => {
+export const SignInModalEmailStep: FC<SignInModalEmailStepProps> = ({ setPrimaryButtonProps, goToStep, memberId }) => {
   const handleRegister = useRegister()
   const { joystream } = useJoystream()
   const { setSignInModalOpen } = useUserStore(
@@ -36,7 +37,7 @@ export const SignInModalEmailStep: FC<SignInModalEmailStepProps> = ({ setPrimary
 
   const handleConfirm = useCallback(async () => {
     const address = await joystream?.selectedAccountId
-    if (!joystream?.signMessage || !address) return
+    if (!joystream?.signMessage || !address || !memberId) return
     goToStep(ModalSteps.Logging)
     await handleSubmit((data) => {
       handleRegister({
@@ -48,11 +49,12 @@ export const SignInModalEmailStep: FC<SignInModalEmailStepProps> = ({ setPrimary
             type: 'payload',
             data,
           }),
+        memberId,
       })
         .then(() => setSignInModalOpen(false))
         .catch(() => goToStep(ModalSteps.Email))
     })()
-  }, [goToStep, handleRegister, handleSubmit, joystream, setSignInModalOpen])
+  }, [goToStep, handleRegister, handleSubmit, joystream, memberId, setSignInModalOpen])
 
   // send updates to SignInModal on state of primary button
   useEffect(() => {

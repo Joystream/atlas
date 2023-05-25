@@ -16,6 +16,7 @@ export const SignInModal: FC = () => {
   const [cachedStep, setCachedStep] = useState<ModalSteps>(ModalSteps.Wallet) // keep cached step so that we can keep showing content when modal is in exit transition
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Select wallet' }) // start with sensible default so that there are no jumps after first effect runs
   const [hasNavigatedBack, setHasNavigatedBack] = useState(false)
+  const [selectedMembership, setSelectedMembership] = useState<string | null>(null)
   const dialogContentRef = useRef<HTMLDivElement>(null)
   const { walletStatus } = useUser()
   const { signInModalOpen, setSignInModalOpen } = useUserStore(
@@ -70,9 +71,15 @@ export const SignInModal: FC = () => {
       case ModalSteps.Wallet:
         return <SignInModalWalletStep {...commonProps} />
       case ModalSteps.Membership:
-        return <SignInModalMembershipsStep {...commonProps} />
+        return (
+          <SignInModalMembershipsStep
+            {...commonProps}
+            memberId={selectedMembership}
+            setMemberId={setSelectedMembership}
+          />
+        )
       case ModalSteps.Email:
-        return <SignInModalEmailStep {...commonProps} />
+        return <SignInModalEmailStep {...commonProps} memberId={selectedMembership} />
       case ModalSteps.Logging:
         return (
           <SignInModalStepTemplate

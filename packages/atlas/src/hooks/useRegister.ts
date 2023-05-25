@@ -32,6 +32,7 @@ type ExtensionParams = {
   signature: (payload: string) => Promise<string | undefined>
   email: string
   address: string
+  memberId: string
 }
 
 type EmailPasswordParams = {
@@ -39,6 +40,7 @@ type EmailPasswordParams = {
   email: string
   password: string
   mnemonic: string
+  memberId: string
 }
 
 type RegisterParams = ExtensionParams | EmailPasswordParams
@@ -52,10 +54,12 @@ export const useRegister = () => {
       await cryptoWaitReady()
       const registerPayload = {
         gatewayName: 'Gleev',
+        memberId: params.memberId,
         joystreamAccountId: '',
         timestamp: Date.now(),
         action: 'createAccount',
         email: params.email,
+        encryptionArtifacts: {},
       }
       let registerSignature = null
       let keypair: KeyringPair | null = null
@@ -80,7 +84,11 @@ export const useRegister = () => {
         })
 
         keypair = keyring.addFromMnemonic(mnemonic)
-
+        registerPayload.encryptionArtifacts = {
+          cipherIv,
+          id,
+          encryptedSeed: encrypted.ciphertext.toString(enc.Hex),
+        }
         registerPayload.joystreamAccountId = keypair.address
         registerSignature = u8aToHex(keypair.sign(JSON.stringify(registerPayload)))
       }
