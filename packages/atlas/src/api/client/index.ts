@@ -1,4 +1,5 @@
 import { ApolloClient, ApolloLink, FetchResult, HttpLink, Observable, split } from '@apollo/client'
+import { RetryLink } from '@apollo/client/link/retry'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { createClient } from 'graphql-ws'
@@ -31,7 +32,11 @@ const createApolloClient = () => {
     })
   )
 
-  const orionLink = ApolloLink.from([delayLink, new HttpLink({ uri: ORION_GRAPHQL_URL })])
+  const orionLink = ApolloLink.from([
+    delayLink,
+    retryLink,
+    new HttpLink({ uri: ORION_GRAPHQL_URL, credentials: 'include' }),
+  ])
 
   const operationSplitLink = split(
     ({ query, setContext }) => {
