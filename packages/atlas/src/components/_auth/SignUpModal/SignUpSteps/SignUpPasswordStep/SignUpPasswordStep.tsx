@@ -79,7 +79,6 @@ type SignUpPasswordStepProps = {
 
 export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
   setPrimaryButtonProps,
-  goToNextStep,
   hasNavigatedBack,
   password,
   onPasswordSubmit,
@@ -107,16 +106,15 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
   const handleGoToNextStep = useCallback(() => {
     handleSubmit((data) => {
       onPasswordSubmit(data.password)
-      goToNextStep()
     })()
-  }, [goToNextStep, handleSubmit, onPasswordSubmit])
+  }, [handleSubmit, onPasswordSubmit])
 
   useEffect(() => {
     setPrimaryButtonProps({
       text: 'Continue',
       onClick: () => handleGoToNextStep(),
     })
-  }, [goToNextStep, handleGoToNextStep, setPrimaryButtonProps])
+  }, [handleGoToNextStep, setPrimaryButtonProps])
 
   useEffect(() => {
     const subscription = watch(({ password }) => {

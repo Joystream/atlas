@@ -20,7 +20,6 @@ type SignUpSeedStepProps = {
   Pick<SignUpFormData, 'confirmedCopy' | 'seed'>
 
 export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
-  goToNextStep,
   hasNavigatedBack,
   setPrimaryButtonProps,
   seed,
@@ -53,16 +52,15 @@ export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
   const handleGoToNextStep = useCallback(() => {
     handleSubmit((data) => {
       onSeedSubmit(data.seed, data.confirmedCopy)
-      goToNextStep()
     })()
-  }, [goToNextStep, handleSubmit, onSeedSubmit])
+  }, [handleSubmit, onSeedSubmit])
 
   useEffect(() => {
     setPrimaryButtonProps({
       text: 'Continue',
       onClick: () => handleGoToNextStep(),
     })
-  }, [goToNextStep, handleGoToNextStep, setPrimaryButtonProps])
+  }, [handleGoToNextStep, setPrimaryButtonProps])
 
   return (
     <AuthenticationModalStepTemplate

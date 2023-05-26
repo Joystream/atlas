@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Ref, useCallback, useEffect, useMemo, useState } from 'react'
+import { useOverflowDetector } from 'react-detectable-overflow'
 import shallow from 'zustand/shallow'
 
 import { Button } from '@/components/_buttons/Button'
@@ -24,13 +25,13 @@ import { SignUpStepsCommonProps } from './SignUpSteps/SignUpSteps.types'
 export const SignUpModal = () => {
   const [currentStep, setCurrentStep] = useState<SignUpSteps | null>(null)
   const [hasNavigatedBack, setHasNavigatedBack] = useState(false)
-  const dialogContentRef = useRef<HTMLDivElement>(null)
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Continue' })
 
   const { signUpModalOpen, setSignUpModalOpen } = useUserStore(
     (state) => ({ signUpModalOpen: state.signUpModalOpen, setSignUpModalOpen: state.actions.setSignUpModalOpen }),
     shallow
   )
+  const { ref, overflow } = useOverflowDetector({})
 
   // handle opening/closing of modal and setting initial step
   useEffect(() => {
@@ -65,17 +66,29 @@ export const SignUpModal = () => {
     setHasNavigatedBack(true)
   }, [])
 
-  const handleEmailChange = useCallback((email: string, confirmedTerms: boolean) => {
-    setSignupFormData((userForm) => ({ ...userForm, email, confirmedTerms }))
-  }, [])
+  const handleEmailChange = useCallback(
+    (email: string, confirmedTerms: boolean) => {
+      goToNextStep()
+      setSignupFormData((userForm) => ({ ...userForm, email, confirmedTerms }))
+    },
+    [goToNextStep]
+  )
 
-  const handlePasswordChange = useCallback((password: string) => {
-    setSignupFormData((userForm) => ({ ...userForm, password }))
-  }, [])
+  const handlePasswordChange = useCallback(
+    (password: string) => {
+      goToNextStep()
+      setSignupFormData((userForm) => ({ ...userForm, password }))
+    },
+    [goToNextStep]
+  )
 
-  const handleSeedChange = useCallback((seed: string, confirmedCopy: boolean) => {
-    setSignupFormData((userForm) => ({ ...userForm, seed, confirmedCopy }))
-  }, [])
+  const handleSeedChange = useCallback(
+    (seed: string, confirmedCopy: boolean) => {
+      goToNextStep()
+      setSignupFormData((userForm) => ({ ...userForm, seed, confirmedCopy }))
+    },
+    [goToNextStep]
+  )
 
   const handleMemberFormData = useCallback(
     (data: MemberFormData) => {
@@ -107,9 +120,11 @@ export const SignUpModal = () => {
   const isSuccess = currentStep === SignUpSteps.Success
 
   const smMatch = useMediaMatch('sm')
+
   return (
     <StyledDialogModal
       show={currentStep !== null}
+      dividers={overflow || !smMatch}
       primaryButton={
         isSuccess
           ? {
@@ -135,7 +150,7 @@ export const SignUpModal = () => {
         ) : undefined
       }
       additionalActionsNodeMobilePosition="bottom"
-      contentRef={dialogContentRef}
+      contentRef={ref as Ref<HTMLDivElement>}
     >
       {currentStep === SignUpSteps.SignUpEmail && (
         <SignUpEmailStep

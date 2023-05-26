@@ -4125,6 +4125,7 @@ __metadata:
     rc-slider: ^10.1.0
     react: ^18.2.0
     react-datepicker: ^4.8.0
+    react-detectable-overflow: ^0.7.1
     react-dom: ^18.2.0
     react-dropzone: ^14.2.3
     react-helmet: ^6.1.0
@@ -16801,6 +16802,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-detectable-overflow@npm:^0.7.1":
+  version: 0.7.1
+  resolution: "react-detectable-overflow@npm:0.7.1"
+  dependencies:
+    react-resize-detector: ^8.0.3
+  peerDependencies:
+    react: ^16.0.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0
+  checksum: 5f6d125092d69ea812ef4b8ef66d06e3c3a3c60b28c833c84f916245667b230a68b5bff583c737decade36f4fbf980de4a03f1bbdba4638ae9d4bab26a47044e
+  languageName: node
+  linkType: hard
+
 "react-docgen-typescript@npm:^2.2.2":
   version: 2.2.2
   resolution: "react-docgen-typescript@npm:2.2.2"
@@ -17048,6 +17061,18 @@ __metadata:
   version: 0.14.0
   resolution: "react-refresh@npm:0.14.0"
   checksum: dc69fa8c993df512f42dd0f1b604978ae89bd747c0ed5ec595c0cc50d535fb2696619ccd98ae28775cc01d0a7c146a532f0f7fb81dc22e1977c242a4912312f4
+  languageName: node
+  linkType: hard
+
+"react-resize-detector@npm:^8.0.3":
+  version: 8.1.0
+  resolution: "react-resize-detector@npm:8.1.0"
+  dependencies:
+    lodash: ^4.17.21
+  peerDependencies:
+    react: ^16.0.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0
+  checksum: 45e6b87ea7331406bed2a806d0cea98c1467d53a7cfcdf19c2dd55a3460047917d3b175d9cceea6f314b65eb54858cbb981acffd007d67aa16388e517dafb83e
   languageName: node
   linkType: hard
 

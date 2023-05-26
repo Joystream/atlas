@@ -38,7 +38,6 @@ type SignUpEmailStepProps = {
   Pick<SignUpFormData, 'email' | 'confirmedTerms'>
 
 export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
-  goToNextStep,
   setPrimaryButtonProps,
   hasNavigatedBack,
   onEmailSubmit,
@@ -53,6 +52,7 @@ export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
   } = useForm<EmailStepForm>({
     criteriaMode: 'all',
     resolver: zodResolver(zodSchema),
+    shouldFocusError: true,
     defaultValues: {
       confirmedTerms: confirmedTerms || false,
       confirmEmail: email,
@@ -63,16 +63,15 @@ export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
   const handleGoToNextStep = useCallback(() => {
     handleSubmit((data) => {
       onEmailSubmit(data.email, data.confirmedTerms)
-      goToNextStep()
     })()
-  }, [goToNextStep, handleSubmit, onEmailSubmit])
+  }, [handleSubmit, onEmailSubmit])
 
   useEffect(() => {
     setPrimaryButtonProps({
       text: 'Continue',
       onClick: handleGoToNextStep,
     })
-  }, [goToNextStep, handleGoToNextStep, setPrimaryButtonProps])
+  }, [handleGoToNextStep, setPrimaryButtonProps])
 
   return (
     <AuthenticationModalStepTemplate
