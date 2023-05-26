@@ -1,17 +1,22 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import shallow from 'zustand/shallow'
 
-import { SignInModalEmailStep } from '@/components/_auth/SignInModal/SignInSteps/SignInModalEmailStep'
+import { ExternalSignInModalEmailStep } from '@/components/_auth/ExternalSignInModal/ExternalSignInSteps/ExternalSignInModalEmailStep'
 import { Button } from '@/components/_buttons/Button'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { useUser } from '@/providers/user/user.hooks'
 import { useUserStore } from '@/providers/user/user.store'
 
-import { StyledDialogModal } from './SignInModal.styles'
-import { ModalSteps, SignInModalMembershipsStep, SignInModalWalletStep, SignInStepProps } from './SignInSteps'
-import { SignInModalStepTemplate } from './SignInSteps/SignInModalStepTemplate'
+import { StyledDialogModal } from './ExternalSignInModal.styles'
+import {
+  ExternalSignInModalMembershipsStep,
+  ExternalSignInModalWalletStep,
+  ModalSteps,
+  SignInStepProps,
+} from './ExternalSignInSteps'
+import { ExternalSignInModalStepTemplate } from './ExternalSignInSteps/ExternalSignInModalStepTemplate'
 
-export const SignInModal: FC = () => {
+export const ExternalSignInModal: FC = () => {
   const [currentStep, setCurrentStep] = useState<ModalSteps | null>(null)
   const [cachedStep, setCachedStep] = useState<ModalSteps>(ModalSteps.Wallet) // keep cached step so that we can keep showing content when modal is in exit transition
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Select wallet' }) // start with sensible default so that there are no jumps after first effect runs
@@ -69,20 +74,20 @@ export const SignInModal: FC = () => {
 
     switch (displayedStep) {
       case ModalSteps.Wallet:
-        return <SignInModalWalletStep {...commonProps} />
+        return <ExternalSignInModalWalletStep {...commonProps} />
       case ModalSteps.Membership:
         return (
-          <SignInModalMembershipsStep
+          <ExternalSignInModalMembershipsStep
             {...commonProps}
             memberId={selectedMembership}
             setMemberId={setSelectedMembership}
           />
         )
       case ModalSteps.Email:
-        return <SignInModalEmailStep {...commonProps} memberId={selectedMembership} />
+        return <ExternalSignInModalEmailStep {...commonProps} memberId={selectedMembership} />
       case ModalSteps.Logging:
         return (
-          <SignInModalStepTemplate
+          <ExternalSignInModalStepTemplate
             title="Logginng in"
             subtitle="Please wait while we log you in. This should take about 10 seconds."
             loader
@@ -91,7 +96,7 @@ export const SignInModal: FC = () => {
         )
       case ModalSteps.ExtensionSigning:
         return (
-          <SignInModalStepTemplate
+          <ExternalSignInModalStepTemplate
             title="Waiting for extension"
             subtitle="Please sign the payload with your extension."
             loader

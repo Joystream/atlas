@@ -10,15 +10,19 @@ import { useRegister } from '@/hooks/useRegister'
 import { useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useUserStore } from '@/providers/user/user.store'
 
-import { SignInModalStepTemplate } from './SignInModalStepTemplate'
-import { ModalSteps, SignInStepProps } from './SignInSteps.types'
+import { ExternalSignInModalStepTemplate } from './ExternalSignInModalStepTemplate'
+import { ModalSteps, SignInStepProps } from './ExternalSignInSteps.types'
 
 type SignInModalEmailStepProps = SignInStepProps & {
   onConfirm?: (address: string) => void
   memberId: string | null
 }
 
-export const SignInModalEmailStep: FC<SignInModalEmailStepProps> = ({ setPrimaryButtonProps, goToStep, memberId }) => {
+export const ExternalSignInModalEmailStep: FC<SignInModalEmailStepProps> = ({
+  setPrimaryButtonProps,
+  goToStep,
+  memberId,
+}) => {
   const handleRegister = useRegister()
   const { joystream } = useJoystream()
   const { setSignInModalOpen } = useUserStore(
@@ -65,7 +69,7 @@ export const SignInModalEmailStep: FC<SignInModalEmailStepProps> = ({ setPrimary
   }, [handleConfirm, setPrimaryButtonProps])
 
   return (
-    <SignInModalStepTemplate
+    <ExternalSignInModalStepTemplate
       title="Add your email"
       subtitle="Get notified about important events and stay updated. You can change all notifications permissions in your profile settings."
       hasNavigatedBack={false}
@@ -73,6 +77,6 @@ export const SignInModalEmailStep: FC<SignInModalEmailStepProps> = ({ setPrimary
       <FormField label="Email" error={formState.errors.email?.message}>
         <Input {...register('email')} placeholder="Email" />
       </FormField>
-    </SignInModalStepTemplate>
+    </ExternalSignInModalStepTemplate>
   )
 }

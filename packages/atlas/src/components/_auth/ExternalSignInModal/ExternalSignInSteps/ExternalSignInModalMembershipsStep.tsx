@@ -10,16 +10,16 @@ import { useUser } from '@/providers/user/user.hooks'
 import { useUserStore } from '@/providers/user/user.store'
 import { shortenString } from '@/utils/misc'
 
-import { SignInModalStepTemplate } from './SignInModalStepTemplate'
-import { ListItemsWrapper, StyledListItem } from './SignInSteps.styles'
-import { ModalSteps, SignInStepProps } from './SignInSteps.types'
+import { ExternalSignInModalStepTemplate } from './ExternalSignInModalStepTemplate'
+import { ListItemsWrapper, StyledListItem } from './ExternalSignInSteps.styles'
+import { ModalSteps, SignInStepProps } from './ExternalSignInSteps.types'
 
 type SignInModalAccountStepProps = SignInStepProps & {
   memberId: string | null
   setMemberId: (id: string) => void
 }
 
-export const SignInModalMembershipsStep: FC<SignInModalAccountStepProps> = ({
+export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps> = ({
   setPrimaryButtonProps,
   hasNavigatedBack,
   goToStep,
@@ -95,7 +95,7 @@ export const SignInModalMembershipsStep: FC<SignInModalAccountStepProps> = ({
   }, [handleConfirm, memberId, setPrimaryButtonProps])
 
   return (
-    <SignInModalStepTemplate
+    <ExternalSignInModalStepTemplate
       title="Select membership"
       subtitle="It looks like you have multiple memberships connected to this wallet. Select membership which you want to log in."
       hasNavigatedBack={hasNavigatedBack}
@@ -118,6 +118,6 @@ export const SignInModalMembershipsStep: FC<SignInModalAccountStepProps> = ({
           />
         ))}
       </ListItemsWrapper>
-    </SignInModalStepTemplate>
+    </ExternalSignInModalStepTemplate>
   )
 }

@@ -12,21 +12,25 @@ import { useUserStore } from '@/providers/user/user.store'
 import { isMobile } from '@/utils/browser'
 import { capitalizeFirstLetter } from '@/utils/misc'
 
-import { MOBILE_SUPPORTED_WALLETS, walletSort } from './SignInModalWalletStep.utils'
+import { MOBILE_SUPPORTED_WALLETS, walletSort } from './ExternalSignInModalWalletStep.utils'
 
-import { SignInModalStepTemplate } from '../SignInModalStepTemplate'
+import { ExternalSignInModalStepTemplate } from '../ExternalSignInModalStepTemplate'
 import {
   ListItemsWrapper,
   StyledBottomBanner,
   StyledListItem,
   StyledTopBanner,
   WalletLogo,
-} from '../SignInSteps.styles'
-import { ModalSteps, SignInStepProps } from '../SignInSteps.types'
+} from '../ExternalSignInSteps.styles'
+import { ModalSteps, SignInStepProps } from '../ExternalSignInSteps.types'
 
 export const isMobileDevice = isMobile()
 
-export const SignInModalWalletStep: FC<SignInStepProps> = ({ setPrimaryButtonProps, goToStep, hasNavigatedBack }) => {
+export const ExternalSignInModalWalletStep: FC<SignInStepProps> = ({
+  setPrimaryButtonProps,
+  goToStep,
+  hasNavigatedBack,
+}) => {
   const smMatch = useMediaMatch('sm')
 
   const [selectedWalletIdx, setSelectedWalletIdx] = useState<number>(0)
@@ -128,7 +132,7 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({ setPrimaryButtonPro
   }, [handleConfirm, isConnecting, selectedWallet, setPrimaryButtonProps])
 
   return (
-    <SignInModalStepTemplate
+    <ExternalSignInModalStepTemplate
       title={`Select wallet ${isMobileDevice ? 'app' : ''}`}
       subtitle={
         isMobileDevice
@@ -178,6 +182,6 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({ setPrimaryButtonPro
           icon={<SvgAlertsInformative24 />}
         />
       ) : null}
-    </SignInModalStepTemplate>
+    </ExternalSignInModalStepTemplate>
   )
 }
