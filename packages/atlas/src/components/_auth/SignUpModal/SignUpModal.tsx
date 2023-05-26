@@ -5,6 +5,7 @@ import shallow from 'zustand/shallow'
 import { Button } from '@/components/_buttons/Button'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useUserStore } from '@/providers/user/user.store'
 import { media } from '@/styles'
 
@@ -104,6 +105,8 @@ export const SignUpModal = () => {
 
   const cancelButtonVisible = currentStep !== SignUpSteps.Success && currentStep !== SignUpSteps.Creating
   const isSuccess = currentStep === SignUpSteps.Success
+
+  const smMatch = useMediaMatch('sm')
   return (
     <StyledDialogModal
       show={currentStep !== null}
@@ -118,7 +121,7 @@ export const SignUpModal = () => {
           : primaryButtonProps
       }
       secondaryButton={backButtonVisible ? { text: 'Back', onClick: () => goToPreviousStep() } : undefined}
-      confetti={currentStep === SignUpSteps.Success}
+      confetti={currentStep === SignUpSteps.Success && !smMatch}
       additionalActionsNode={
         cancelButtonVisible ? (
           <Button
