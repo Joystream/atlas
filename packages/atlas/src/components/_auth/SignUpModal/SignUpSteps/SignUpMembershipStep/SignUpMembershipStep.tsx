@@ -81,7 +81,7 @@ export const SignUpMembershipStep: FC<SignInModalMembershipStepProps> = ({
   // send updates to SignInModal on state of primary button
   useEffect(() => {
     setPrimaryButtonProps({
-      text: isSubmitting ? 'Please wait...' : 'Create membership',
+      text: isSubmitting ? 'Please wait...' : 'Sign up',
       disabled: isSubmitting,
       onClick: requestFormSubmit,
     })

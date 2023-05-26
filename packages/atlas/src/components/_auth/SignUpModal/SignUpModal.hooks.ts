@@ -1,17 +1,10 @@
-import { JOYSTREAM_ADDRESS_PREFIX } from '@joystream/types/.'
-import { ScryptOpts, scrypt } from '@noble/hashes/scrypt'
-import { Keyring } from '@polkadot/keyring'
-import { hexToU8a, u8aToHex } from '@polkadot/util'
-import { cryptoWaitReady, mnemonicToEntropy } from '@polkadot/util-crypto'
 import axios, { isAxiosError } from 'axios'
 import BN from 'bn.js'
-import { Buffer } from 'buffer'
-import { AES, enc, lib, mode } from 'crypto-js'
 import { useCallback, useState } from 'react'
 import { useMutation } from 'react-query'
 
 import { atlasConfig } from '@/config'
-import { FAUCET_URL, ORION_AUTH_URL } from '@/config/env'
+import { FAUCET_URL } from '@/config/env'
 import { MemberId } from '@/joystream-lib/types'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useJoystream } from '@/providers/joystream/joystream.hooks'
@@ -19,79 +12,12 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
 import { useUser } from '@/providers/user/user.hooks'
 import { useUserStore } from '@/providers/user/user.store'
-import { uploadAvatarImage } from '@/utils/image'
+import { UploadAvatarServiceError, uploadAvatarImage } from '@/utils/image'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { formatNumber } from '@/utils/number'
 
-import { MemberFormData, SignUpFormData } from './SignUpModal.types'
-
-export const keyring = new Keyring({ type: 'sr25519', ss58Format: JOYSTREAM_ADDRESS_PREFIX })
-
-export async function scryptHash(
-  data: string,
-  salt: Buffer | string,
-  options: ScryptOpts = { N: 32768, r: 8, p: 1, dkLen: 32 }
-): Promise<Buffer> {
-  return new Promise((resolve) => {
-    resolve(Buffer.from(scrypt(Buffer.from(data), salt, options)))
-  })
-}
-
-export const useRegister = () => {
-  const setUserId = useUserStore((store) => store.actions.setUserId)
-  return useCallback(
-    async (email: string, password: string, mnemonic: string, memberId: string) => {
-      await cryptoWaitReady()
-      const entropy = mnemonicToEntropy(mnemonic)
-
-      const seed = u8aToHex(entropy)
-
-      const id = (await scryptHash(`${email}:${password}`, '0x0818ee04c541716831bdd0f598fa4bbb')).toString('hex')
-      const cipherIv = lib.WordArray.random(16).toString(enc.Hex)
-      const cipherKey = await scryptHash(`${email}:${password}`, Buffer.from(hexToU8a(cipherIv)))
-      const keyWA = enc.Hex.parse(cipherKey.toString('hex'))
-      const ivWA = enc.Hex.parse(cipherIv)
-      const wordArray = enc.Hex.parse(seed)
-
-      const encrypted = AES.encrypt(wordArray, keyWA, { iv: ivWA, mode: mode.CBC })
-
-      const keypair = keyring.addFromMnemonic(mnemonic)
-
-      const registerPayload = {
-        joystreamAccountId: keypair.address,
-        memberId,
-        gatewayName: 'Gleev',
-        timestamp: Date.now(),
-        action: 'createAccount',
-        email,
-        encryptionArtifacts: {
-          id,
-          encryptedSeed: encrypted.ciphertext.toString(enc.Hex),
-          cipherIv,
-        },
-      }
-      const registerSignature = u8aToHex(keypair.sign(JSON.stringify(registerPayload)))
-
-      await axios.post(
-        `${ORION_AUTH_URL}/account`,
-        {
-          payload: registerPayload,
-          signature: registerSignature,
-        },
-        {
-          withCredentials: true,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      )
-
-      setUserId('')
-      return keypair.address
-    },
-    [setUserId]
-  )
-}
+import { MemberFormData, SignUpFormData, SignUpSteps } from './SignUpModal.types'
+import { OrionAccountError, keyring, registerAccount } from './SignUpModal.utils'
 
 type NewMemberResponse = {
   memberId: MemberId
@@ -115,16 +41,15 @@ type CreateMemberArgs = {
   data: SignUpFormData
   onStart: () => void
   onSuccess: () => void
-  onError: () => void
+  onError: (step: SignUpSteps) => void
 }
 export const useCreateMember = () => {
   const { refetchUserMemberships, setActiveUser } = useUser()
+  const [emailAlreadyRegisteredMemberId, setEmailAlreadyRegisteredMemberId] = useState('')
+  const setUserId = useUserStore((store) => store.actions.setUserId)
   const { joystream } = useJoystream()
   const addBlockAction = useTransactionManagerStore((state) => state.actions.addBlockAction)
   const { displaySnackbar } = useSnackbar()
-  const [, setPreviouslyFailedData] = useState<MemberFormData | null>(null)
-
-  const register = useRegister()
 
   const { mutateAsync: avatarMutation } = useMutation('avatar-post', (croppedBlob: Blob) =>
     uploadAvatarImage(croppedBlob)
@@ -163,51 +88,84 @@ export const useCreateMember = () => {
 
       try {
         const callback = async () => {
-          const { data: memberShipData } = await refetchUserMemberships()
-          const lastCreatedMembership = memberShipData.memberships[memberShipData.memberships.length - 1]
-          if (lastCreatedMembership) {
-            await register(data.email, data.password, data.mnemonic, memberId.toString())
-            setActiveUser({ accountId: address, memberId: lastCreatedMembership.id, channelId: null })
+          try {
+            const { data: memberShipData } = await refetchUserMemberships()
+            const lastCreatedMembership = memberShipData.memberships[memberShipData.memberships.length - 1]
+
+            if (lastCreatedMembership) {
+              await registerAccount(data.email, data.password, data.mnemonic, memberId.toString())
+              setUserId('')
+              setActiveUser({ accountId: address, memberId: lastCreatedMembership.id, channelId: null })
+            }
+
+            if (!joystream) {
+              ConsoleLogger.error('No joystream instance')
+              return
+            }
+            const { lockedBalance } = await joystream.getAccountBalance(address)
+            const amountOfTokens = `${formatNumber(hapiBnToTokenNumber(new BN(lockedBalance)))} ${
+              atlasConfig.joystream.tokenTicker
+            }`
             displaySnackbar({
-              title: 'Your membership has been created',
-              description: 'Browse, watch, create, collect videos across the platform and have fun!',
-              iconType: 'success',
+              title: `You received ${amountOfTokens}`,
+              description: `Enjoy your ${amountOfTokens} tokens to help you cover transaction fees. These tokens are non-transferable and can't be spent on NFTs or other purchases.`,
+              iconType: 'token',
             })
+            onSuccess()
+          } catch (error) {
+            if (error instanceof OrionAccountError) {
+              const errorCode = error.status
+              const errorMessage = error.message
+              if (errorMessage === 'Account with the provided e-mail address already exists.') {
+                displaySnackbar({
+                  title: 'Something went wrong',
+                  description: `Account with the provided e-mail address already exists. Use different e-mail.`,
+                  iconType: 'error',
+                })
+                setEmailAlreadyRegisteredMemberId(memberId)
+                onError(SignUpSteps.SignUpEmail)
+              } else {
+                displaySnackbar({
+                  title: 'Something went wrong',
+                  description: `There was a problem with creating your account. Please try again later.${
+                    errorCode ? ` Error code: ${errorCode}` : ''
+                  }`,
+                  iconType: 'error',
+                })
+                onError(SignUpSteps.CreateMember)
+              }
+
+              SentryLogger.error('Failed to create an account', 'SignUpModal', error)
+            }
           }
-          if (!joystream) {
-            ConsoleLogger.error('No joystream instance')
-            return
-          }
-          const { lockedBalance } = await joystream.getAccountBalance(address)
-          const amountOfTokens = `${formatNumber(hapiBnToTokenNumber(new BN(lockedBalance)))} ${
-            atlasConfig.joystream.tokenTicker
-          }`
-          displaySnackbar({
-            title: `You received ${amountOfTokens}`,
-            description: `Enjoy your ${amountOfTokens} tokens to help you cover transaction fees. These tokens are non-transferable and can't be spent on NFTs or other purchases.`,
-            iconType: 'token',
-          })
+        }
+
+        // skip member creation in case of email already exists error
+        if (emailAlreadyRegisteredMemberId) {
+          await registerAccount(data.email, data.password, data.mnemonic, emailAlreadyRegisteredMemberId.toString())
+          setUserId('')
+          setActiveUser({ accountId: address, memberId: emailAlreadyRegisteredMemberId, channelId: null })
           onSuccess()
+          return
         }
         const { block, memberId } = await createNewMember(address, data)
 
         addBlockAction({ targetBlock: block, callback })
-        setPreviouslyFailedData(null)
       } catch (error) {
-        if (error.name === 'UploadAvatarServiceError') {
+        if (error instanceof UploadAvatarServiceError) {
           displaySnackbar({
             title: 'Something went wrong',
             description: 'Avatar could not be uploaded. Try again later',
             iconType: 'error',
           })
-          onError()
-          SentryLogger.error('Failed to upload member avatar', 'SignInModal', error)
+          onError(SignUpSteps.CreateMember)
+          SentryLogger.error('Failed to upload member avatar', 'SignUpModal', error)
           return
         }
 
         const errorCode = isAxiosError<NewMemberErrorResponse>(error) ? error.response?.data?.error : null
 
-        SentryLogger.error('Failed to create a membership', 'SignInModal', error, { error: { errorCode } })
+        SentryLogger.error('Failed to create a membership', 'SignUpModal', error, { error: { errorCode } })
 
         switch (errorCode) {
           case 'TooManyRequestsPerIp':
@@ -246,11 +204,20 @@ export const useCreateMember = () => {
             break
         }
 
-        onError()
+        onError(SignUpSteps.CreateMember)
         return
       }
     },
-    [addBlockAction, createNewMember, displaySnackbar, joystream, refetchUserMemberships, register, setActiveUser]
+    [
+      addBlockAction,
+      createNewMember,
+      displaySnackbar,
+      emailAlreadyRegisteredMemberId,
+      joystream,
+      refetchUserMemberships,
+      setActiveUser,
+      setUserId,
+    ]
   )
   return handleSubmit
 }

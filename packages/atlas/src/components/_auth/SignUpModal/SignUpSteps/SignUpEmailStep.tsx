@@ -34,12 +34,14 @@ type EmailStepForm = z.infer<typeof zodSchema>
 
 type SignUpEmailStepProps = {
   onEmailSubmit: (email: string, confirmedTerms: boolean) => void
+  isEmailAlreadyTakenError?: boolean
 } & SignUpStepsCommonProps &
   Pick<SignUpFormData, 'email' | 'confirmedTerms'>
 
 export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
   setPrimaryButtonProps,
   hasNavigatedBack,
+  isEmailAlreadyTakenError,
   onEmailSubmit,
   confirmedTerms,
   email,
@@ -68,10 +70,10 @@ export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
 
   useEffect(() => {
     setPrimaryButtonProps({
-      text: 'Continue',
+      text: isEmailAlreadyTakenError ? 'Sign up' : 'Continue',
       onClick: handleGoToNextStep,
     })
-  }, [handleGoToNextStep, setPrimaryButtonProps])
+  }, [handleGoToNextStep, isEmailAlreadyTakenError, setPrimaryButtonProps])
 
   return (
     <AuthenticationModalStepTemplate

@@ -22,8 +22,20 @@ import {
 } from './SignUpSteps'
 import { SignUpStepsCommonProps } from './SignUpSteps/SignUpSteps.types'
 
+const SIGNUP_FORM_DATA_INITIAL_STATE = {
+  email: '',
+  password: '',
+  mnemonic: '',
+  handle: '',
+  avatar: undefined,
+  captchaToken: undefined,
+  confirmedTerms: false,
+  confirmedCopy: false,
+}
+
 export const SignUpModal = () => {
   const [currentStep, setCurrentStep] = useState<SignUpSteps | null>(null)
+  const [emailAlreadyTakenError, setEmailAlreadyTakenError] = useState(false)
   const [hasNavigatedBack, setHasNavigatedBack] = useState(false)
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Continue' })
 
@@ -44,16 +56,7 @@ export const SignUpModal = () => {
     setCurrentStep(0)
   }, [signUpModalOpen, currentStep])
 
-  const [signUpFormData, setSignupFormData] = useState<SignUpFormData>({
-    email: '',
-    password: '',
-    mnemonic: '',
-    handle: '',
-    avatar: undefined,
-    captchaToken: undefined,
-    confirmedTerms: false,
-    confirmedCopy: false,
-  })
+  const [signUpFormData, setSignupFormData] = useState<SignUpFormData>(SIGNUP_FORM_DATA_INITIAL_STATE)
   const createMember = useCreateMember()
 
   const goToNextStep = useCallback(() => {
@@ -66,12 +69,34 @@ export const SignUpModal = () => {
     setHasNavigatedBack(true)
   }, [])
 
+  const goToStep = useCallback(
+    (step: SignUpSteps) => {
+      if (currentStep && currentStep < step) {
+        setHasNavigatedBack(true)
+      }
+      setCurrentStep(step)
+    },
+    [currentStep]
+  )
+
   const handleEmailChange = useCallback(
     (email: string, confirmedTerms: boolean) => {
-      goToNextStep()
       setSignupFormData((userForm) => ({ ...userForm, email, confirmedTerms }))
+      if (emailAlreadyTakenError) {
+        createMember({
+          data: { ...signUpFormData, email, confirmedTerms },
+          onError: (step) => {
+            goToStep(step)
+            if (step === SignUpSteps.SignUpEmail) setEmailAlreadyTakenError(true)
+          },
+          onStart: () => goToStep(SignUpSteps.Creating),
+          onSuccess: () => goToNextStep(),
+        })
+        return
+      }
+      goToNextStep()
     },
-    [goToNextStep]
+    [createMember, emailAlreadyTakenError, goToNextStep, goToStep, signUpFormData]
   )
 
   const handlePasswordChange = useCallback(
@@ -95,12 +120,15 @@ export const SignUpModal = () => {
       setSignupFormData((userForm) => ({ ...userForm, handle: data.handle, avatar: data.avatar }))
       createMember({
         data: { ...signUpFormData, ...data },
-        onError: () => goToPreviousStep(),
+        onError: (step) => {
+          goToStep(step)
+          setEmailAlreadyTakenError(true)
+        },
         onStart: () => goToNextStep(),
         onSuccess: () => goToNextStep(),
       })
     },
-    [createMember, goToNextStep, goToPreviousStep, signUpFormData]
+    [createMember, goToNextStep, goToStep, signUpFormData]
   )
 
   const commonProps: SignUpStepsCommonProps = useMemo(
@@ -143,6 +171,7 @@ export const SignUpModal = () => {
             variant="tertiary"
             onClick={() => {
               setSignUpModalOpen(false)
+              setSignupFormData(SIGNUP_FORM_DATA_INITIAL_STATE)
             }}
           >
             Cancel
@@ -155,6 +184,7 @@ export const SignUpModal = () => {
       {currentStep === SignUpSteps.SignUpEmail && (
         <SignUpEmailStep
           {...commonProps}
+          isEmailAlreadyTakenError={emailAlreadyTakenError}
           onEmailSubmit={handleEmailChange}
           email={signUpFormData.email}
           confirmedTerms={signUpFormData.confirmedTerms}
