@@ -17,6 +17,7 @@ import {
   PasswordRequirementsWrapper,
 } from './SignUpPasswordStep.styles'
 
+import { SignUpFormData } from '../../SignUpModal.types'
 import { StyledSignUpForm } from '../SignUpSteps.styles'
 import { SignUpStepsCommonProps } from '../SignUpSteps.types'
 
@@ -46,10 +47,6 @@ type PasswordStepForm = {
 }
 type PasswordInputNames = keyof PasswordStepForm
 
-type SignUpPasswordStepProps = {
-  onPasswordSubmit: (password: string) => void
-} & SignUpStepsCommonProps
-
 type ValidationState = 'pending' | 'success' | 'error'
 
 type PasswordRequirementsErrors = {
@@ -74,10 +71,17 @@ const getValidationState = (isError: boolean) => {
   }
 }
 
+type SignUpPasswordStepProps = {
+  onPasswordSubmit: (password: string) => void
+  password?: string
+} & SignUpStepsCommonProps &
+  Pick<SignUpFormData, 'password'>
+
 export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
   setPrimaryButtonProps,
   goToNextStep,
   hasNavigatedBack,
+  password,
   onPasswordSubmit,
 }) => {
   const {
@@ -86,7 +90,10 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
     handleSubmit,
     formState: { errors },
   } = useForm<PasswordStepForm>({
-    criteriaMode: 'all',
+    defaultValues: {
+      password,
+      confirmPassword: password,
+    },
     resolver: zodResolver(zodSchema),
   })
   const [isFieldVisible, setIsFieldVisible] = useState<Record<PasswordInputNames, boolean>>({

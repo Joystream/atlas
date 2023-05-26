@@ -12,12 +12,13 @@ import { CheckboxWrapper, StyledLink, StyledSignUpForm } from './SignUpSteps.sty
 import { SignUpStepsCommonProps } from './SignUpSteps.types'
 
 import { AuthenticationModalStepTemplate } from '../../AuthenticationModalStepTemplate'
+import { SignUpFormData } from '../SignUpModal.types'
 
 const zodSchema = z
   .object({
     email: z.string().min(3, { message: 'Enter email address' }).email({ message: 'Enter valid email address' }),
     confirmEmail: z.string().min(1, { message: 'Enter email address' }).email({ message: 'Enter valid email address' }),
-    confirmedTerms: z.literal(true, { errorMap: () => ({ message: 'Agree to Terms and Conditions to continue.' }) }),
+    confirmedTerms: z.boolean().refine((value) => value, { message: 'Agree to Terms and Conditions to continue.' }),
   })
   .refine(
     (data) => {
@@ -32,14 +33,17 @@ const zodSchema = z
 type EmailStepForm = z.infer<typeof zodSchema>
 
 type SignUpEmailStepProps = {
-  onEmailSubmit: (email: string) => void
-} & SignUpStepsCommonProps
+  onEmailSubmit: (email: string, confirmedTerms: boolean) => void
+} & SignUpStepsCommonProps &
+  Pick<SignUpFormData, 'email' | 'confirmedTerms'>
 
 export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
   goToNextStep,
   setPrimaryButtonProps,
   hasNavigatedBack,
   onEmailSubmit,
+  confirmedTerms,
+  email,
 }) => {
   const {
     register,
@@ -50,15 +54,15 @@ export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
     criteriaMode: 'all',
     resolver: zodResolver(zodSchema),
     defaultValues: {
-      confirmedTerms: undefined,
-      confirmEmail: '',
-      email: '',
+      confirmedTerms: confirmedTerms || false,
+      confirmEmail: email,
+      email: email,
     },
   })
 
   const handleGoToNextStep = useCallback(() => {
     handleSubmit((data) => {
-      onEmailSubmit(data.email)
+      onEmailSubmit(data.email, data.confirmedTerms)
       goToNextStep()
     })()
   }, [goToNextStep, handleSubmit, onEmailSubmit])

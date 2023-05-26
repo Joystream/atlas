@@ -23,7 +23,7 @@ import { uploadAvatarImage } from '@/utils/image'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { formatNumber } from '@/utils/number'
 
-import { MemberFormData, NewUserFormData } from './SignUpModal.types'
+import { MemberFormData, SignUpFormData } from './SignUpModal.types'
 
 export const keyring = new Keyring({ type: 'sr25519', ss58Format: JOYSTREAM_ADDRESS_PREFIX })
 
@@ -112,7 +112,7 @@ type FaucetParams = {
 }
 
 type CreateMemberArgs = {
-  data: NewUserFormData
+  data: SignUpFormData
   onStart: () => void
   onSuccess: () => void
   onError: () => void

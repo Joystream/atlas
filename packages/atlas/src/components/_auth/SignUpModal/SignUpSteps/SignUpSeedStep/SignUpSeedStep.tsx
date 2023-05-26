@@ -10,17 +10,21 @@ import { useClipboard } from '@/hooks/useClipboard'
 
 import { StyledTextArea, StyledTextButton } from './SignupSeedStep.styles'
 
+import { SignUpFormData } from '../../SignUpModal.types'
 import { CheckboxWrapper, StyledSignUpForm } from '../SignUpSteps.styles'
 import { SignUpStepsCommonProps } from '../SignUpSteps.types'
 
 type SignUpSeedStepProps = {
-  onSeedSubmit: (seed: string) => void
-} & SignUpStepsCommonProps
+  onSeedSubmit: (seed: string, confirmedCopy: boolean) => void
+} & SignUpStepsCommonProps &
+  Pick<SignUpFormData, 'confirmedCopy' | 'seed'>
 
 export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
   goToNextStep,
   hasNavigatedBack,
   setPrimaryButtonProps,
+  seed,
+  confirmedCopy,
   onSeedSubmit,
 }) => {
   const { copyToClipboard } = useClipboard()
@@ -33,21 +37,22 @@ export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
     formState: { errors },
   } = useForm<{ confirmedCopy: boolean; seed: string }>({
     defaultValues: {
-      confirmedCopy: false,
+      confirmedCopy: confirmedCopy,
+      seed: seed,
     },
   })
   const firstRender = useRef(true)
 
   useEffect(() => {
-    if (firstRender.current) {
+    if (firstRender.current && !seed) {
       setValue('seed', mnemonicGenerate())
       firstRender.current = false
     }
-  }, [setValue])
+  }, [seed, setValue])
 
   const handleGoToNextStep = useCallback(() => {
     handleSubmit((data) => {
-      onSeedSubmit(data.seed)
+      onSeedSubmit(data.seed, data.confirmedCopy)
       goToNextStep()
     })()
   }, [goToNextStep, handleSubmit, onSeedSubmit])

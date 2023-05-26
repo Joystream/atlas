@@ -19,21 +19,21 @@ import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
 
 import { Anchor, StyledAvatar, StyledForm } from './SignUpMembershipStep.styles'
 
-import { MemberFormData } from '../../SignUpModal.types'
+import { MemberFormData, SignUpFormData } from '../../SignUpModal.types'
 import { SignUpStepsCommonProps } from '../SignUpSteps.types'
 
 type SignInModalMembershipStepProps = SignUpStepsCommonProps & {
   onSubmit: (data: MemberFormData) => void
-  previouslyFailedData?: MemberFormData | null
   dialogContentRef?: RefObject<HTMLDivElement>
-}
+} & Pick<SignUpFormData, 'avatar' | 'handle'>
 
 export const SignUpMembershipStep: FC<SignInModalMembershipStepProps> = ({
   setPrimaryButtonProps,
   onSubmit,
   hasNavigatedBack,
   dialogContentRef,
-  previouslyFailedData,
+  avatar,
+  handle,
 }) => {
   const {
     register,
@@ -42,7 +42,13 @@ export const SignUpMembershipStep: FC<SignInModalMembershipStepProps> = ({
     watch,
     control,
     formState: { errors, isSubmitting },
-  } = useForm<MemberFormData>({ reValidateMode: 'onSubmit', defaultValues: previouslyFailedData || undefined })
+  } = useForm<MemberFormData>({
+    reValidateMode: 'onSubmit',
+    defaultValues: {
+      avatar,
+      handle,
+    },
+  })
 
   const handleInputRef = useRef<HTMLInputElement | null>(null)
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)

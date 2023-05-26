@@ -9,7 +9,7 @@ import { useUserStore } from '@/providers/user/user.store'
 import { media } from '@/styles'
 
 import { useCreateMember } from './SignUpModal.hooks'
-import { MemberFormData, NewUserFormData, SignUpSteps } from './SignUpModal.types'
+import { MemberFormData, SignUpFormData, SignUpSteps } from './SignUpModal.types'
 import {
   SignUpCreatingMemberStep,
   SignUpEmailStep,
@@ -42,13 +42,15 @@ export const SignUpModal = () => {
     setCurrentStep(0)
   }, [signUpModalOpen, currentStep])
 
-  const [newUserFormData, setNewUserFormData] = useState<NewUserFormData>({
+  const [signUpFormData, setSignupFormData] = useState<SignUpFormData>({
     email: '',
     password: '',
     seed: '',
     handle: '',
     avatar: undefined,
     captchaToken: undefined,
+    confirmedTerms: false,
+    confirmedCopy: false,
   })
   const createMember = useCreateMember()
 
@@ -62,28 +64,29 @@ export const SignUpModal = () => {
     setHasNavigatedBack(true)
   }, [])
 
-  const handleEmailChange = useCallback((email: string) => {
-    setNewUserFormData((userForm) => ({ ...userForm, email }))
+  const handleEmailChange = useCallback((email: string, confirmedTerms: boolean) => {
+    setSignupFormData((userForm) => ({ ...userForm, email, confirmedTerms }))
   }, [])
 
   const handlePasswordChange = useCallback((password: string) => {
-    setNewUserFormData((userForm) => ({ ...userForm, password }))
+    setSignupFormData((userForm) => ({ ...userForm, password }))
   }, [])
 
-  const handleSeedChange = useCallback((seed: string) => {
-    setNewUserFormData((userForm) => ({ ...userForm, seed }))
+  const handleSeedChange = useCallback((seed: string, confirmedCopy: boolean) => {
+    setSignupFormData((userForm) => ({ ...userForm, seed, confirmedCopy }))
   }, [])
 
   const handleMemberFormData = useCallback(
     (data: MemberFormData) => {
+      setSignupFormData((userForm) => ({ ...userForm, handle: data.handle, avatar: data.avatar }))
       createMember({
-        data: { ...newUserFormData, ...data },
+        data: { ...signUpFormData, ...data },
         onError: () => goToPreviousStep(),
         onStart: () => goToNextStep(),
         onSuccess: () => goToNextStep(),
       })
     },
-    [createMember, goToNextStep, goToPreviousStep, newUserFormData]
+    [createMember, goToNextStep, goToPreviousStep, signUpFormData]
   )
 
   const commonProps: SignUpStepsCommonProps = useMemo(
@@ -122,14 +125,35 @@ export const SignUpModal = () => {
       contentRef={dialogContentRef}
     >
       {currentStep === SignUpSteps.SignUpEmail && (
-        <SignUpEmailStep {...commonProps} onEmailSubmit={handleEmailChange} />
+        <SignUpEmailStep
+          {...commonProps}
+          onEmailSubmit={handleEmailChange}
+          email={signUpFormData.email}
+          confirmedTerms={signUpFormData.confirmedTerms}
+        />
       )}
       {currentStep === SignUpSteps.SignUpPassword && (
-        <SignUpPasswordStep {...commonProps} onPasswordSubmit={handlePasswordChange} />
+        <SignUpPasswordStep
+          {...commonProps}
+          onPasswordSubmit={handlePasswordChange}
+          password={signUpFormData.password}
+        />
       )}
-      {currentStep === SignUpSteps.SignUpSeed && <SignUpSeedStep {...commonProps} onSeedSubmit={handleSeedChange} />}
+      {currentStep === SignUpSteps.SignUpSeed && (
+        <SignUpSeedStep
+          {...commonProps}
+          onSeedSubmit={handleSeedChange}
+          seed={signUpFormData.seed}
+          confirmedCopy={signUpFormData.confirmedCopy}
+        />
+      )}
       {currentStep === SignUpSteps.CreateMember && (
-        <SignUpMembershipStep {...commonProps} onSubmit={handleMemberFormData} />
+        <SignUpMembershipStep
+          {...commonProps}
+          onSubmit={handleMemberFormData}
+          avatar={signUpFormData.avatar}
+          handle={signUpFormData.handle}
+        />
       )}
       {currentStep === SignUpSteps.Creating && <SignUpCreatingMemberStep {...commonProps} />}
       {currentStep === SignUpSteps.Success && <SignUpSuccessStep />}
