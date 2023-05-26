@@ -12,7 +12,6 @@ import { AppLogo } from '@/components/AppLogo'
 import { Button } from '@/components/_buttons/Button'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
-import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger } from '@/utils/logs'
@@ -57,7 +56,6 @@ export const SidenavViewer: FC = () => {
   const [expanded, setExpanded] = useState(false)
   const followedChannels = usePersonalDataStore((state) => state.followedChannels)
   const unFollow = usePersonalDataStore((state) => state.actions.unfollowChannel)
-  const { openSignInDialog } = useDisplaySignInDialog()
 
   const handleChannelNotFound = (id: string) => {
     ConsoleLogger.warn(`Followed channel not found, removing id: ${id}`)
@@ -68,11 +66,11 @@ export const SidenavViewer: FC = () => {
 
   const closeAndSignIn = () => {
     setExpanded(false)
-    signIn(undefined, openSignInDialog)
+    signIn(undefined)
   }
   const buttonsContent = !isLoggedIn ? (
     <Button icon={<SvgActionMember />} onClick={closeAndSignIn}>
-      Connect wallet
+      Log in
     </Button>
   ) : (
     <Button
