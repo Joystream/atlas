@@ -200,21 +200,24 @@ export const useStorageOperators = () => {
     [failedStorageOperatorIds, storageOperatorsMappingPromiseRef]
   )
 
-  const getAvailableBucketsCountForBag = useCallback(async (storageBagId: string) => {
-    const getStorageBucketsForBagPromise = client.query<
-      GetAvailableStorageBucketsForBagQuery,
-      GetAvailableStorageBucketsForBagQueryVariables
-    >({
-      query: GetAvailableStorageBucketsForBagDocument,
-      fetchPolicy: 'network-only',
-      variables: { where: { bags_some: { id_contains: storageBagId } } },
-    })
+  const getAvailableBucketsCountForBag = useCallback(
+    async (storageBagId: string) => {
+      const getStorageBucketsForBagPromise = client.query<
+        GetAvailableStorageBucketsForBagQuery,
+        GetAvailableStorageBucketsForBagQueryVariables
+      >({
+        query: GetAvailableStorageBucketsForBagDocument,
+        fetchPolicy: 'network-only',
+        variables: { where: { bags_some: { id_contains: storageBagId } } },
+      })
 
-    const availableBucketsResult = await getStorageBucketsForBagPromise
-    const storageBuckets = availableBucketsResult.data.storageBuckets
+      const availableBucketsResult = await getStorageBucketsForBagPromise
+      const storageBuckets = availableBucketsResult.data.storageBuckets
 
-    return storageBuckets.length
-  }, [])
+      return storageBuckets.length
+    },
+    [client]
+  )
 
   const getClosestStorageOperatorForBag = useCallback(
     async (storageBagId: string) => {
