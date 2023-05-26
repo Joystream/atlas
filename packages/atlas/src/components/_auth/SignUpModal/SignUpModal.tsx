@@ -103,10 +103,20 @@ export const SignUpModal = () => {
     currentStep === SignUpSteps.SignUpSeed
 
   const cancelButtonVisible = currentStep !== SignUpSteps.Success && currentStep !== SignUpSteps.Creating
+  const isSuccess = currentStep === SignUpSteps.Success
   return (
     <StyledDialogModal
       show={currentStep !== null}
-      primaryButton={primaryButtonProps}
+      primaryButton={
+        isSuccess
+          ? {
+              text: 'Continue',
+              onClick: () => {
+                setSignUpModalOpen(false)
+              },
+            }
+          : primaryButtonProps
+      }
       secondaryButton={backButtonVisible ? { text: 'Back', onClick: () => goToPreviousStep() } : undefined}
       confetti={currentStep === SignUpSteps.Success}
       additionalActionsNode={
