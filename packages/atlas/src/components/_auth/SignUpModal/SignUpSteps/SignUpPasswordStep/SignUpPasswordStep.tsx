@@ -89,6 +89,7 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
     handleSubmit,
     formState: { errors },
   } = useForm<PasswordStepForm>({
+    shouldFocusError: true,
     defaultValues: {
       password,
       confirmPassword: password,

@@ -14,15 +14,17 @@ import { SignUpFormData } from '../../SignUpModal.types'
 import { CheckboxWrapper, StyledSignUpForm } from '../SignUpSteps.styles'
 import { SignUpStepsCommonProps } from '../SignUpSteps.types'
 
+type FormData = Pick<SignUpFormData, 'confirmedCopy' | 'mnemonic'>
+
 type SignUpSeedStepProps = {
-  onSeedSubmit: (seed: string, confirmedCopy: boolean) => void
+  onSeedSubmit: (mnemonic: string, confirmedCopy: boolean) => void
 } & SignUpStepsCommonProps &
-  Pick<SignUpFormData, 'confirmedCopy' | 'seed'>
+  FormData
 
 export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
   hasNavigatedBack,
   setPrimaryButtonProps,
-  seed,
+  mnemonic,
   confirmedCopy,
   onSeedSubmit,
 }) => {
@@ -34,24 +36,25 @@ export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
     setValue,
     getValues,
     formState: { errors },
-  } = useForm<{ confirmedCopy: boolean; seed: string }>({
+  } = useForm<FormData>({
+    shouldFocusError: true,
     defaultValues: {
       confirmedCopy: confirmedCopy,
-      seed: seed,
+      mnemonic,
     },
   })
   const firstRender = useRef(true)
 
   useEffect(() => {
-    if (firstRender.current && !seed) {
-      setValue('seed', mnemonicGenerate())
+    if (firstRender.current && !mnemonic) {
+      setValue('mnemonic', mnemonicGenerate())
       firstRender.current = false
     }
-  }, [seed, setValue])
+  }, [mnemonic, setValue])
 
   const handleGoToNextStep = useCallback(() => {
     handleSubmit((data) => {
-      onSeedSubmit(data.seed, data.confirmedCopy)
+      onSeedSubmit(data.mnemonic, data.confirmedCopy)
     })()
   }, [handleSubmit, onSeedSubmit])
 
@@ -70,13 +73,13 @@ export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
     >
       <StyledSignUpForm>
         <FormField label="Password recovery seed">
-          <StyledTextArea {...register('seed')} disabled />
+          <StyledTextArea {...register('mnemonic')} disabled />
         </FormField>
         <StyledTextButton
           variant="secondary"
           icon={<SvgActionCopy />}
           iconPlacement="left"
-          onClick={() => copyToClipboard(getValues('seed'), 'Seed copied to your clipboard')}
+          onClick={() => copyToClipboard(getValues('mnemonic'), 'Seed copied to your clipboard')}
         >
           Copy to clipboard
         </StyledTextButton>
@@ -87,7 +90,7 @@ export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
             validate: {
               valid: (value) => {
                 if (!value) {
-                  return 'Enter amount to transfer.'
+                  return 'Agree that you saved your mnemonic seed safely.'
                 } else {
                   return value
                 }

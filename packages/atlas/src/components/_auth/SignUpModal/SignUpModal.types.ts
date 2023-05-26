@@ -18,7 +18,7 @@ export type MemberFormData = {
 export type AccountFormData = {
   email: string
   password: string
-  seed: string
+  mnemonic: string
   confirmedTerms: boolean
   confirmedCopy: boolean
 }

@@ -47,7 +47,7 @@ export const SignUpModal = () => {
   const [signUpFormData, setSignupFormData] = useState<SignUpFormData>({
     email: '',
     password: '',
-    seed: '',
+    mnemonic: '',
     handle: '',
     avatar: undefined,
     captchaToken: undefined,
@@ -85,7 +85,7 @@ export const SignUpModal = () => {
   const handleSeedChange = useCallback(
     (seed: string, confirmedCopy: boolean) => {
       goToNextStep()
-      setSignupFormData((userForm) => ({ ...userForm, seed, confirmedCopy }))
+      setSignupFormData((userForm) => ({ ...userForm, mnemonic: seed, confirmedCopy }))
     },
     [goToNextStep]
   )
@@ -171,7 +171,7 @@ export const SignUpModal = () => {
         <SignUpSeedStep
           {...commonProps}
           onSeedSubmit={handleSeedChange}
-          seed={signUpFormData.seed}
+          mnemonic={signUpFormData.mnemonic}
           confirmedCopy={signUpFormData.confirmedCopy}
         />
       )}

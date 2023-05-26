@@ -157,19 +157,16 @@ export const useCreateMember = () => {
     async ({ data, onError, onStart, onSuccess }: CreateMemberArgs) => {
       onStart()
 
-      // todo rename to mnemonic
-      const keypair = keyring.addFromMnemonic(data.seed)
+      const keypair = keyring.addFromMnemonic(data.mnemonic)
 
       const address = keypair.address
-
-      // const address = await register(data.email, data.password, data.seed)
 
       try {
         const callback = async () => {
           const { data: memberShipData } = await refetchUserMemberships()
           const lastCreatedMembership = memberShipData.memberships[memberShipData.memberships.length - 1]
           if (lastCreatedMembership) {
-            await register(data.email, data.password, data.seed, memberId.toString())
+            await register(data.email, data.password, data.mnemonic, memberId.toString())
             setActiveUser({ accountId: address, memberId: lastCreatedMembership.id, channelId: null })
             displaySnackbar({
               title: 'Your membership has been created',
@@ -203,7 +200,6 @@ export const useCreateMember = () => {
             description: 'Avatar could not be uploaded. Try again later',
             iconType: 'error',
           })
-          // goToPreviousStep(data)
           onError()
           SentryLogger.error('Failed to upload member avatar', 'SignInModal', error)
           return
@@ -250,7 +246,6 @@ export const useCreateMember = () => {
             break
         }
 
-        // goToPreviousStep(data)
         onError()
         return
       }
