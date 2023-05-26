@@ -12,9 +12,18 @@ import { useCallback } from 'react'
 import { ORION_AUTH_URL } from '@/config/env'
 import { SentryLogger } from '@/utils/logs'
 
-export const keyring = new Keyring({ type: 'sr25519', ss58Format: JOYSTREAM_ADDRESS_PREFIX })
+export const getArtifacts = async (id: string, email: string) => {
+  try {
+    const res = await axios.get<{ cipherIv: string; encryptedSeed: string }>(
+      `${ORION_AUTH_URL}/artifacts?id=${id}&email=${encodeURIComponent(email)}`
+    )
 
-// todo extract these 3 Fn to `packages/atlas/src/utils/user.ts` after #4168 is merged
+    return res.data
+  } catch (error) {
+    SentryLogger.error('Error when fetching artifacts', 'useLogIn', error)
+  }
+}
+
 export async function scryptHash(
   data: string,
   salt: Buffer | string,
@@ -25,7 +34,7 @@ export async function scryptHash(
   })
 }
 
-function aes256CbcDecrypt(encryptedData: string, key: Buffer, iv: Buffer): string {
+export function aes256CbcDecrypt(encryptedData: string, key: Buffer, iv: Buffer): string {
   const keyWA = enc.Hex.parse(key.toString('hex'))
   const ivWA = enc.Hex.parse(iv.toString('hex'))
   const decrypted = AES.decrypt(lib.CipherParams.create({ ciphertext: enc.Hex.parse(encryptedData) }), keyWA, {
@@ -35,18 +44,12 @@ function aes256CbcDecrypt(encryptedData: string, key: Buffer, iv: Buffer): strin
   return decrypted.toString(enc.Hex)
 }
 
-const getArtifacts = async (id: string) => {
-  try {
-    const res = await axios.get<{ cipherIv: string; encryptedSeed: string }>(`${ORION_AUTH_URL}/artifacts?id=${id}`)
-
-    return res.data
-  } catch (error) {
-    SentryLogger.error('Error when fetching artifacts', 'useLogIn', error)
-  }
-}
+export const keyring = new Keyring({ type: 'sr25519', ss58Format: JOYSTREAM_ADDRESS_PREFIX })
 
 export enum LogInErrors {
   ArtifactsNotFound = 'ArtifactsNotFound',
+  NoAccountFound = 'NoAccountFound',
+  InvalidPayload = 'InvalidPayload',
   LoginError = 'LoginError',
 }
 
@@ -57,32 +60,57 @@ type LogInHandler = {
   error?: LogInErrors
 }
 
+type EmailPasswordLogin = {
+  type: 'emailPassword'
+  email: string
+  password: string
+}
+
+type ExtensionLogin = {
+  type: 'extension'
+  sign: (payload: string) => Promise<string | undefined>
+  address: string
+}
+
+type LoginParams = EmailPasswordLogin | ExtensionLogin
+
 export const useLogIn = () => {
-  return useCallback(async (email: string, password: string): Promise<LogInHandler> => {
+  return useCallback(async (params: LoginParams): Promise<LogInHandler> => {
     await cryptoWaitReady()
     const time = Date.now() - 1000
-    const id = (await scryptHash(`${email}:${password}`, '0x0818ee04c541716831bdd0f598fa4bbb')).toString('hex')
-    const data = await getArtifacts(id)
-    if (!data) {
-      return {
-        data: null,
-        error: LogInErrors.ArtifactsNotFound,
-      }
-    }
-
-    const { cipherIv, encryptedSeed } = data
-    const cipherKey = await scryptHash(`${email}:${password}`, Buffer.from(cipherIv, 'hex'))
-    const decryptedSeed = aes256CbcDecrypt(encryptedSeed, cipherKey, Buffer.from(cipherIv, 'hex'))
-    const keypair = keyring.addFromMnemonic(
-      entropyToMnemonic(Buffer.from(decryptedSeed.slice(2, decryptedSeed.length), 'hex'))
-    )
     const payload = {
-      joystreamAccountId: keypair.address,
+      joystreamAccountId: '',
       gatewayName: 'Gleev',
       timestamp: time,
       action: 'login',
     }
-    const signatureOverPayload = u8aToHex(keypair.sign(JSON.stringify(payload)))
+    let signatureOverPayload = null
+    if (params.type === 'emailPassword') {
+      const { email, password } = params
+      const id = (await scryptHash(`${email}:${password}`, '0x0818ee04c541716831bdd0f598fa4bbb')).toString('hex')
+      const data = await getArtifacts(id, email)
+      if (!data) {
+        return {
+          data: null,
+          error: LogInErrors.ArtifactsNotFound,
+        }
+      }
+
+      const { cipherIv, encryptedSeed } = data
+      const cipherKey = await scryptHash(`${email}:${password}`, Buffer.from(cipherIv, 'hex'))
+      const decryptedSeed = aes256CbcDecrypt(encryptedSeed, cipherKey, Buffer.from(cipherIv, 'hex'))
+      const keypair = keyring.addFromMnemonic(
+        entropyToMnemonic(Buffer.from(decryptedSeed.slice(2, decryptedSeed.length), 'hex'))
+      )
+      payload.joystreamAccountId = keypair.address
+      signatureOverPayload = u8aToHex(keypair.sign(JSON.stringify(payload)))
+    }
+
+    if (params.type === 'extension') {
+      payload.joystreamAccountId = params.address
+      signatureOverPayload = await params.sign(JSON.stringify(payload))
+    }
+
     try {
       const response = await axios.post<{ accountId: string }>(
         `${ORION_AUTH_URL}/login`,
@@ -102,7 +130,22 @@ export const useLogIn = () => {
         data: response.data,
       }
     } catch (error) {
-      SentryLogger.error('Error when posting login action', 'useLogIn', error)
+      const orionMessage = error.response.data.message
+      if (orionMessage.includes('Invalid credentials')) {
+        return {
+          data: null,
+          error: LogInErrors.NoAccountFound,
+        }
+      }
+
+      if (orionMessage.includes('Payload signature is invalid.')) {
+        return {
+          data: null,
+          error: LogInErrors.InvalidPayload,
+        }
+      }
+
+      SentryLogger.error('Unsupported error when posting login action', 'useLogIn', error)
       return {
         data: null,
         error: LogInErrors.LoginError,

@@ -33,26 +33,22 @@ export const LogInModal = () => {
     setError,
     formState: { errors },
   } = useForm<{ email: string; password: string }>({
-    resolver: (data, ctx, options) => {
-      const resolver = zodResolver(
-        z.object({
-          email: z.string().email(),
-          password: z.string().min(1, 'Please provide password'),
-        })
-      )
-
-      return resolver(data, ctx, options)
-    },
+    resolver: zodResolver(
+      z.object({
+        email: z.string().email(),
+        password: z.string().min(1, 'Please provide password'),
+      })
+    ),
   })
 
-  const onLogin = async (email: string, password: string) => {
+  const handleLoginClick = async (email: string, password: string) => {
     setIsLoading(true)
-    const res = await handleLogIn(email, password)
+    const res = await handleLogIn({ type: 'emailPassword', email, password })
 
     if (res.error === LogInErrors.ArtifactsNotFound) {
       displaySnackbar({
         title: `We can’t find ${atlasConfig.general.appName} membership associated with this email`,
-        description: `Make sure that you are using the same email that tou used to create your membership on ${atlasConfig.general.appName}.`,
+        description: `Make sure that you are using the same email that you used to create your membership on ${atlasConfig.general.appName}.`,
         iconType: 'error',
       })
       setError('email', { type: 'custom', message: 'Incorrect email or password.' })
@@ -67,21 +63,14 @@ export const LogInModal = () => {
   return (
     <DialogModal
       show
-      primaryButton={
-        !isLoading
-          ? {
-              text: 'Log in',
-              disabled: isLoading,
-              onClick: () =>
-                handleSubmit((data) => {
-                  onLogin(data.email, data.password)
-                })(),
-            }
-          : {
-              text: 'Waiting...',
-              disabled: true,
-            }
-      }
+      primaryButton={{
+        text: isLoading ? 'Waiting...' : 'Log in',
+        disabled: isLoading,
+        onClick: () =>
+          handleSubmit((data) => {
+            handleLoginClick(data.email, data.password)
+          })(),
+      }}
       secondaryButton={
         !isLoading
           ? {
@@ -92,6 +81,7 @@ export const LogInModal = () => {
       additionalActionsNode={!isLoading && <Button variant="tertiary">Close</Button>}
     >
       {!isLoading ? (
+        // todo: after merge replace with AuthenticationModalStepTemplate
         <Container>
           <StyledAppLogo variant="short-monochrome" />
           <TextCointainer>
