@@ -1,5 +1,4 @@
 import { JOYSTREAM_ADDRESS_PREFIX } from '@joystream/types/.'
-import { ScryptOpts, scrypt } from '@noble/hashes/scrypt'
 import { Keyring } from '@polkadot/keyring'
 import { KeyringPair } from '@polkadot/keyring/types'
 import { hexToU8a, u8aToHex } from '@polkadot/util'
@@ -9,24 +8,11 @@ import { Buffer } from 'buffer'
 import { AES, enc, lib, mode } from 'crypto-js'
 import { useCallback } from 'react'
 
+import { ORION_AUTH_URL } from '@/config/env'
 import { useLogIn } from '@/hooks/useLogIn'
-
-// import { ORION_AUTH_URL } from '@/config/env'
-// import { useUserStore } from '@/providers/user/user.store'
-
-const ORION_AUTH_URL = 'https://atlas-dev.joystream.org/orion-auth/api/v1'
+import { scryptHash } from '@/utils/user'
 
 export const keyring = new Keyring({ type: 'sr25519', ss58Format: JOYSTREAM_ADDRESS_PREFIX })
-
-export async function scryptHash(
-  data: string,
-  salt: Buffer | string,
-  options: ScryptOpts = { N: 32768, r: 8, p: 1, dkLen: 32 }
-): Promise<Buffer> {
-  return new Promise((resolve) => {
-    resolve(Buffer.from(scrypt(Buffer.from(data), salt, options)))
-  })
-}
 
 type EncryptionArtifacts = {
   id: string
@@ -65,7 +51,6 @@ type RegisterParams = ExtensionParams | EmailPasswordParams
 export const useRegister = () => {
   const handleLogin = useLogIn()
 
-  // const setUserId = useUserStore((store) => store.actions.setUserId)
   return useCallback(
     async (params: RegisterParams) => {
       await cryptoWaitReady()
