@@ -15,6 +15,7 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
 import { useUser } from '@/providers/user/user.hooks'
 import { useUserStore } from '@/providers/user/user.store'
+import { useWallet } from '@/providers/wallet/wallet.hooks'
 import { isAxiosError } from '@/utils/error'
 import { uploadAvatarImage } from '@/utils/image'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
@@ -56,7 +57,8 @@ export const SignInModal: FC = () => {
   )
 
   const { displaySnackbar } = useSnackbar()
-  const { walletStatus, refetchUserMemberships, setActiveUser, isLoggedIn } = useUser()
+  const { refetchUserMemberships, setActiveUser, isLoggedIn } = useUser()
+  const { walletStatus } = useWallet()
   const { signInModalOpen, setSignInModalOpen } = useUserStore(
     (state) => ({ signInModalOpen: state.signInModalOpen, setSignInModalOpen: state.actions.setSignInModalOpen }),
     shallow

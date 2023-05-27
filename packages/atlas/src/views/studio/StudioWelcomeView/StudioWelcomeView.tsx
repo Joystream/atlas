@@ -18,7 +18,7 @@ export type Membership = {
 }
 
 export const StudioWelcomeView: FC = () => {
-  const { signIn, isLoggedIn } = useUser()
+  const { isLoggedIn } = useUser()
   const mdMatch = useMediaMatch('md')
 
   return (
@@ -89,7 +89,8 @@ export const StudioWelcomeView: FC = () => {
       buttons={[
         isLoggedIn
           ? { size: 'large', to: absoluteRoutes.studio.newChannel(), children: 'Create channel' }
-          : { size: 'large', onClick: () => signIn(undefined), children: 'Set up membership' },
+          : // todo: add signin callback
+            { size: 'large', onClick: () => undefined, children: 'Set up membership' },
         {
           size: 'large',
           variant: 'tertiary',

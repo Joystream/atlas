@@ -1,7 +1,7 @@
 import { Wallet } from '@talismn/connect-wallets'
 
 import polkaWalletLogo from '@/assets/images/polkawallet-logo.webp'
-import { UnknownWallet } from '@/providers/user/user.helpers'
+import { UnknownWallet } from '@/providers/wallet/wallet.helpers'
 
 export const PRIORITY_WALLETS = ['talisman', 'subwallet-js']
 export const DEFAULT_PRIORITY = 100000

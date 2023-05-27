@@ -8,6 +8,7 @@ import { HAPI_TO_JOY_RATE } from '@/joystream-lib/config'
 import { JoystreamLib } from '@/joystream-lib/lib'
 import { useEnvironmentStore } from '@/providers/environment/store'
 import { useUserStore } from '@/providers/user/user.store'
+import { useWalletStore } from '@/providers/wallet/wallet.store'
 import { SentryLogger } from '@/utils/logs'
 
 import { useConnectionStatusStore } from '../connectionStatus'
@@ -29,7 +30,8 @@ const worker = new Worker(new URL('../../utils/polkadot-worker', import.meta.url
 const api = wrap<typeof JoystreamLib>(worker)
 
 export const JoystreamProvider: FC<PropsWithChildren> = ({ children }) => {
-  const { accountId, walletAccounts, wallet } = useUserStore()
+  const { walletAccounts, wallet } = useWalletStore()
+  const { accountId } = useUserStore()
   const { nodeOverride } = useEnvironmentStore((state) => state)
   const setNodeConnection = useConnectionStatusStore((state) => state.actions.setNodeConnection)
   const [initialized, setInitialized] = useState(false)

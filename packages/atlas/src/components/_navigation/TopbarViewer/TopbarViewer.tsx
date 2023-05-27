@@ -29,7 +29,7 @@ import {
 } from './TopbarViewer.styles'
 
 export const TopbarViewer: FC = () => {
-  const { isLoggedIn, activeMembership, signIn, isAuthLoading } = useUser()
+  const { isLoggedIn, activeMembership } = useUser()
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
 
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
@@ -84,7 +84,7 @@ export const TopbarViewer: FC = () => {
     setIsMemberDropdownActive(!isMemberDropdownActive)
   }
 
-  const topbarButtonLoaded = !isAuthLoading
+  const topbarButtonLoaded = true
 
   return (
     <>
@@ -111,7 +111,6 @@ export const TopbarViewer: FC = () => {
         {(!searchQuery || mdMatch) && (
           <SwitchTransition>
             <CSSTransition
-              key={String(topbarButtonLoaded)}
               mountOnEnter
               classNames={transitions.names.fade}
               timeout={parseInt(cVar('animationTimingFast', true))}
@@ -144,7 +143,8 @@ export const TopbarViewer: FC = () => {
                         icon={<SvgActionMember />}
                         iconPlacement="left"
                         size="medium"
-                        onClick={() => signIn(undefined)}
+                        // todo: add handler
+                        onClick={() => undefined}
                       >
                         Connect wallet
                       </Button>
@@ -156,7 +156,8 @@ export const TopbarViewer: FC = () => {
                   </SignedButtonsWrapper>
                 )}
                 {!searchQuery && !mdMatch && !isLoggedIn && topbarButtonLoaded && (
-                  <StyledIconButton onClick={() => signIn(undefined)}>Connect wallet</StyledIconButton>
+                  // todo: add handler
+                  <StyledIconButton onClick={() => undefined}>Connect wallet</StyledIconButton>
                 )}
               </ButtonWrapper>
             </CSSTransition>

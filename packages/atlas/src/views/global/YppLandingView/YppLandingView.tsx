@@ -30,7 +30,7 @@ const SINGUP_DAILY_QUOTA = 500 // 2% of the total daily quota
 export const YppLandingView: FC = () => {
   const headTags = useHeadTags('YouTube Partner Program')
   const [currentStep, setCurrentStep] = useState<YppAuthorizationStepsType>(null)
-  const { isLoggedIn, signIn, activeMembership, channelId, walletStatus } = useUser()
+  const { isLoggedIn, activeMembership, channelId } = useUser()
   const { setSelectedChannelId, setShouldContinueYppFlow } = useYppStore((store) => store.actions)
   const { displaySnackbar } = useSnackbar()
   const navigate = useNavigate()
@@ -68,7 +68,8 @@ export const YppLandingView: FC = () => {
     }
 
     if (!isLoggedIn) {
-      await signIn()
+      // todo: login callback
+      // await signIn()
       setWasSignInTriggered(true)
       return
     }
@@ -82,7 +83,7 @@ export const YppLandingView: FC = () => {
       setCurrentStep('requirements')
       return
     }
-  }, [currentStep, displaySnackbar, isLoggedIn, isTodaysQuotaReached, isYppSigned, navigate, signIn])
+  }, [currentStep, displaySnackbar, isLoggedIn, isTodaysQuotaReached, isYppSigned, navigate])
 
   useEffect(() => {
     // rerun handleYppSignUpClick after sign in flow
@@ -104,10 +105,10 @@ export const YppLandingView: FC = () => {
     if (isLoading) {
       return null
     }
-
-    if (walletStatus !== 'connected') {
-      return 'connect-wallet'
-    }
+    // todo: replace
+    // if (walletStatus !== 'connected') {
+    //   return 'connect-wallet'
+    // }
 
     if (!activeMembership?.channels.length) {
       return 'no-channel'

@@ -13,8 +13,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { ErrorCode, JoystreamLibError, JoystreamLibErrorType } from '@/joystream-lib/errors'
 import { ExtrinsicResult, ExtrinsicStatus, ExtrinsicStatusCallbackFn } from '@/joystream-lib/types'
 import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
-import { useUser } from '@/providers/user/user.hooks'
-import { useUserStore } from '@/providers/user/user.store'
+import { useWallet } from '@/providers/wallet/wallet.hooks'
 import { createId } from '@/utils/createId'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { wait, withTimeout } from '@/utils/misc'
@@ -64,8 +63,7 @@ export const useTransaction = (): HandleTransactionFn => {
   const { displaySnackbar } = useSnackbar()
   const getMetaprotocolTxStatus = useMetaprotocolTransactionStatus()
   const { totalBalance } = useSubscribeAccountBalance()
-  const { isSignerMetadataOutdated, updateSignerMetadata, skipSignerMetadataUpdate } = useUser()
-  const { wallet } = useUserStore()
+  const { isSignerMetadataOutdated, updateSignerMetadata, skipSignerMetadataUpdate, wallet } = useWallet()
 
   return useCallback(
     async ({

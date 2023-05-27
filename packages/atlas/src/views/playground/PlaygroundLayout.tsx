@@ -49,7 +49,7 @@ const playgroundRoutes = [
 
 const PlaygroundLayout = () => {
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
-  const { activeMembership, isLoggedIn, signIn } = useUser()
+  const { activeMembership, isLoggedIn } = useUser()
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
   return (
     <UserProvider>
@@ -79,7 +79,8 @@ const PlaygroundLayout = () => {
               onClick={() => setIsMemberDropdownActive(true)}
             />
           ) : (
-            <Button onClick={() => signIn(undefined)}>Sign in</Button>
+            // todo: add sigin
+            <Button onClick={() => undefined}>Sign in</Button>
           )}
         </ButtonContainer>
       </TopbarBase>

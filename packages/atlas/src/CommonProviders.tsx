@@ -11,6 +11,7 @@ import { OperatorsContextProvider } from '@/providers/assets/assets.provider'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { UserProvider } from '@/providers/user/user.provider'
+import { WalletProvider } from '@/providers/wallet/wallet.provider'
 import { GlobalStyles } from '@/styles'
 
 const queryClient = new QueryClient({
@@ -30,18 +31,20 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
       <GlobalStyles />
       <ApolloProvider client={apolloClient}>
         <QueryClientProvider client={queryClient}>
-          <UserProvider>
-            <OverlayManagerProvider>
-              <ConfirmationModalProvider>
-                <BrowserRouter>
-                  <AdminModal />
-                  <MaintenanceWrapper>
-                    <OperatorsContextProvider>{children}</OperatorsContextProvider>
-                  </MaintenanceWrapper>
-                </BrowserRouter>
-              </ConfirmationModalProvider>
-            </OverlayManagerProvider>
-          </UserProvider>
+          <WalletProvider>
+            <UserProvider>
+              <OverlayManagerProvider>
+                <ConfirmationModalProvider>
+                  <BrowserRouter>
+                    <AdminModal />
+                    <MaintenanceWrapper>
+                      <OperatorsContextProvider>{children}</OperatorsContextProvider>
+                    </MaintenanceWrapper>
+                  </BrowserRouter>
+                </ConfirmationModalProvider>
+              </OverlayManagerProvider>
+            </UserProvider>
+          </WalletProvider>
         </QueryClientProvider>
       </ApolloProvider>
     </>

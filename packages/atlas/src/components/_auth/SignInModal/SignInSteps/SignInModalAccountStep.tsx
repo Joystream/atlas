@@ -5,7 +5,7 @@ import { PolkadotIdenticon } from '@/components/PolkadotIdenticon'
 import { Loader } from '@/components/_loaders/Loader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useUser } from '@/providers/user/user.hooks'
-import { useUserStore } from '@/providers/user/user.store'
+import { useWallet } from '@/providers/wallet/wallet.hooks'
 import { shortenString } from '@/utils/misc'
 
 import { SignInModalStepTemplate } from './SignInModalStepTemplate'
@@ -27,8 +27,8 @@ export const SignInModalAccountStep: FC<SignInModalAccountStepProps> = ({
   const smMatch = useMediaMatch('sm')
 
   const [localSelectedAddress, setLocalSelectedAddress] = useState<string | null>(selectedAddress)
-  const { walletAccounts, memberships } = useUser()
-  const wallet = useUserStore((state) => state.wallet)
+  const { memberships } = useUser()
+  const { walletAccounts, wallet } = useWallet()
 
   const membershipsControllerAccounts = memberships?.map((a) => a.controllerAccount)
   const accountsWithNoMembership = walletAccounts.filter((el) => !membershipsControllerAccounts?.includes(el.address))

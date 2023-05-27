@@ -6,9 +6,8 @@ import { IconWrapper } from '@/components/IconWrapper'
 import { Loader } from '@/components/_loaders/Loader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMountEffect } from '@/hooks/useMountEffect'
-import { UnknownWallet } from '@/providers/user/user.helpers'
-import { useUser } from '@/providers/user/user.hooks'
-import { useUserStore } from '@/providers/user/user.store'
+import { UnknownWallet, getWalletsList } from '@/providers/wallet/wallet.helpers'
+import { useWallet } from '@/providers/wallet/wallet.hooks'
 import { isMobile } from '@/utils/browser'
 import { capitalizeFirstLetter } from '@/utils/misc'
 
@@ -36,8 +35,7 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
   const [selectedWalletIdx, setSelectedWalletIdx] = useState<number>(0)
   const [hasError, setHasError] = useState(false)
   const [isConnecting, setIsConnecting] = useState(false)
-  const { getWalletsList, signIn } = useUser()
-  const walletFromStore = useUserStore((state) => state.wallet)
+  const { wallet: walletFromStore, signInToWallet } = useWallet()
 
   const wallets = useMemo(() => {
     const unsortedWallets = getWalletsList()
@@ -78,7 +76,7 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
         .sort(walletSort)
     }
     return unsortedWallets.sort(walletSort)
-  }, [getWalletsList])
+  }, [])
 
   const selectedWallet = (selectedWalletIdx != null && wallets[selectedWalletIdx]) || null
 
@@ -87,7 +85,7 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
 
     setIsConnecting(true)
     setHasError(false)
-    const success = await signIn(selectedWallet.extensionName)
+    const success = await signInToWallet(selectedWallet.extensionName)
     setIsConnecting(false)
 
     if (!success) {
@@ -97,7 +95,7 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
     }
 
     goToNextStep()
-  }, [goToNextStep, selectedWallet, signIn])
+  }, [goToNextStep, selectedWallet, signInToWallet])
 
   const handleSelectWallet = useCallback((idx: number) => {
     setSelectedWalletIdx(idx)

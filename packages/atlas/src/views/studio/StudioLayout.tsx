@@ -45,16 +45,16 @@ const StudioLayout = () => {
   const displayedLocation = useVideoWorkspaceRouting()
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-  const { channelId, memberships, isLoggedIn, isAuthLoading, membershipsLoading, isWalletLoading } = useUser()
+  const { channelId, memberships, isLoggedIn, membershipsLoading } = useUser()
 
   const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useConfirmationModal()
   const [enterLocation] = useState(location.pathname)
-  const isMembershipLoaded = !membershipsLoading && !isAuthLoading && !isWalletLoading
+  const isMembershipLoaded = !membershipsLoading
   const hasMembership = !!memberships?.length
 
   const channelSet = !!channelId && hasMembership
   const { currentChannel, isLoading } = useGetYppSyncedChannels()
-  const isLoadingYPPData = isLoading || isAuthLoading || membershipsLoading
+  const isLoadingYPPData = isLoading || membershipsLoading
   const isYppSigned = !!currentChannel
 
   useEffect(() => {
@@ -94,7 +94,7 @@ const StudioLayout = () => {
         nodeConnectionStatus={nodeConnectionStatus}
         isConnectedToInternet={internetConnectionStatus === 'connected'}
       />
-      {isAuthLoading || membershipsLoading || isWalletLoading ? (
+      {membershipsLoading ? (
         <StudioLoading />
       ) : (
         <>
