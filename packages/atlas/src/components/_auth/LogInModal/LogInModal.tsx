@@ -5,6 +5,7 @@ import { z } from 'zod'
 
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
+import { ExternalSignInModalStepTemplate } from '@/components/_auth/ExternalSignInModal/ExternalSignInSteps/ExternalSignInModalStepTemplate'
 import {
   Container,
   StyledAppLogo,
@@ -13,7 +14,6 @@ import {
   StyledShowSvg,
   TextCointainer,
 } from '@/components/_auth/LogInModal/LogInModal.styles'
-import { SignInModalStepTemplate } from '@/components/_auth/SignInModal/SignInSteps/SignInModalStepTemplate'
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
@@ -115,7 +115,7 @@ export const LogInModal = () => {
           </FormField>
         </Container>
       ) : (
-        <SignInModalStepTemplate
+        <ExternalSignInModalStepTemplate
           title="Logginng in"
           subtitle="Please wait while we log you in. This should take about 10 seconds."
           loader
