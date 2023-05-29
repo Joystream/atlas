@@ -42,3 +42,9 @@ query GetBasicStorageBuckets {
     id
   }
 }
+
+query GetAvailableStorageBucketsForBag($where: StorageBucketWhereInput) {
+  storageBuckets(limit: 500, where: $where) {
+    id
+  }
+}

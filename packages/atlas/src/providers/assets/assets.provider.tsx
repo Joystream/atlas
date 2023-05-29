@@ -19,6 +19,9 @@ import { useMutation } from 'react-query'
 import { useLocation } from 'react-router'
 
 import {
+  GetAvailableStorageBucketsForBagDocument,
+  GetAvailableStorageBucketsForBagQuery,
+  GetAvailableStorageBucketsForBagQueryVariables,
   GetStorageBucketsWithBagsDocument,
   GetStorageBucketsWithBagsQuery,
   GetStorageBucketsWithBagsQueryVariables,
@@ -171,6 +174,7 @@ export const useOperatorsContext = () => {
 }
 
 export const useStorageOperators = () => {
+  const client = useApolloClient()
   const { storageOperatorsMappingPromiseRef, failedStorageOperatorIds, setFailedStorageOperatorIds } =
     useOperatorsContext()
 
@@ -194,6 +198,25 @@ export const useStorageOperators = () => {
       }
     },
     [failedStorageOperatorIds, storageOperatorsMappingPromiseRef]
+  )
+
+  const getAvailableBucketsCountForBag = useCallback(
+    async (storageBagId: string) => {
+      const getStorageBucketsForBagPromise = client.query<
+        GetAvailableStorageBucketsForBagQuery,
+        GetAvailableStorageBucketsForBagQueryVariables
+      >({
+        query: GetAvailableStorageBucketsForBagDocument,
+        fetchPolicy: 'network-only',
+        variables: { where: { bags_some: { id_contains: storageBagId } } },
+      })
+
+      const availableBucketsResult = await getStorageBucketsForBagPromise
+      const storageBuckets = availableBucketsResult.data.storageBuckets
+
+      return storageBuckets.length
+    },
+    [client]
   )
 
   const getClosestStorageOperatorForBag = useCallback(
@@ -222,7 +245,12 @@ export const useStorageOperators = () => {
     [setFailedStorageOperatorIds]
   )
 
-  return { getAllStorageOperatorsForBag, getClosestStorageOperatorForBag, markStorageOperatorFailed }
+  return {
+    getAllStorageOperatorsForBag,
+    getClosestStorageOperatorForBag,
+    markStorageOperatorFailed,
+    getAvailableBucketsCountForBag,
+  }
 }
 
 const removeBagOperatorsDuplicates = (mapping: BagOperatorsMapping): BagOperatorsMapping => {
