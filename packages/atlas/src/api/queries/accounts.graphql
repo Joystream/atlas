@@ -1,0 +1,9 @@
+query GetCurrentAccount {
+    accountData {
+        email
+        id
+        isEmailConfirmed
+        joystreamAccount
+        membershipId
+    }
+}
