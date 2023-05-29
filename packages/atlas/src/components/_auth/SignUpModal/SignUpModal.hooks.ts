@@ -4,7 +4,6 @@ import BN from 'bn.js'
 import { useCallback, useState } from 'react'
 import { useMutation } from 'react-query'
 
-import { atlasConfig } from '@/config'
 import { FAUCET_URL } from '@/config/env'
 import { MemberId } from '@/joystream-lib/types'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
@@ -15,7 +14,6 @@ import { useUser } from '@/providers/user/user.hooks'
 import { useUserStore } from '@/providers/user/user.store'
 import { UploadAvatarServiceError, uploadAvatarImage } from '@/utils/image'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
-import { formatNumber } from '@/utils/number'
 
 import { MemberFormData, SignUpFormData, SignUpSteps } from './SignUpModal.types'
 import { OrionAccountError, keyring, registerAccount } from './SignUpModal.utils'
@@ -41,7 +39,7 @@ type FaucetParams = {
 type CreateMemberArgs = {
   data: SignUpFormData
   onStart: () => void
-  onSuccess: () => void
+  onSuccess: (amountOfTokens?: number) => void
   onError: (step: SignUpSteps) => void
 }
 export const useCreateMember = () => {
@@ -105,15 +103,8 @@ export const useCreateMember = () => {
               return
             }
             const { lockedBalance } = await joystream.getAccountBalance(address)
-            const amountOfTokens = `${formatNumber(hapiBnToTokenNumber(new BN(lockedBalance)))} ${
-              atlasConfig.joystream.tokenTicker
-            }`
-            displaySnackbar({
-              title: `You received ${amountOfTokens}`,
-              description: `Enjoy your ${amountOfTokens} tokens to help you cover transaction fees. These tokens are non-transferable and can't be spent on NFTs or other purchases.`,
-              iconType: 'token',
-            })
-            onSuccess()
+            const amountOfTokens = hapiBnToTokenNumber(new BN(lockedBalance))
+            onSuccess(amountOfTokens)
           } catch (error) {
             if (error instanceof OrionAccountError) {
               const errorCode = error.status

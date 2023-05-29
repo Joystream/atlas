@@ -170,7 +170,7 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
           <Input
             placeholder="Password"
             {...getInputProps('password')}
-            autoComplete="new-password"
+            autoComplete="off"
             onClick={() => {
               if (hasDoneInitialScroll.current || !dialogContentRef?.current) return
               hasDoneInitialScroll.current = true
@@ -179,7 +179,7 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
           />
         </FormField>
         <FormField label="Repeat Password" error={errors.confirmPassword?.message}>
-          <Input placeholder="Repeat password" {...getInputProps('confirmPassword')} autoComplete="new-password" />
+          <Input placeholder="Repeat password" {...getInputProps('confirmPassword')} autoComplete="off" />
         </FormField>
         <PasswordRequirementsWrapper>
           <Text as="h2" variant="h200">

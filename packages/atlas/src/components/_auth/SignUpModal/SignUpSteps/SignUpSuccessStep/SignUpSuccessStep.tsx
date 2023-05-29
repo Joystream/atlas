@@ -5,15 +5,18 @@ import { AppKV } from '@/components/AppKV'
 import { Avatar } from '@/components/Avatar'
 import { LottiePlayer } from '@/components/LottiePlayer'
 import { Text } from '@/components/Text'
+import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { formatNumber } from '@/utils/number'
 
 import { ContentWrapper, IllustrationWrapper, LottieContainer } from './SignUpSuccessStep.styles'
 
 type SignUpSuccessStepProps = {
   avatarUrl?: string
+  amountOfTokens?: number
 }
 
-export const SignUpSuccessStep: FC<SignUpSuccessStepProps> = ({ avatarUrl }) => {
+export const SignUpSuccessStep: FC<SignUpSuccessStepProps> = ({ avatarUrl, amountOfTokens }) => {
   const smMatch = useMediaMatch('sm')
   return (
     <>
@@ -37,10 +40,14 @@ export const SignUpSuccessStep: FC<SignUpSuccessStepProps> = ({ avatarUrl }) => 
         </Text>
         <Text variant="t200" as="p" color="colorText">
           Congratulations! Now you can browse, watch, create, collect videos across the platform and have fun!
-          <br />
-          <br />
-          Enjoy your X JOY tokens to help you cover transaction fees. These tokens are non-transferable and can't be
-          spent on NFTs or other purchases.
+          {amountOfTokens && amountOfTokens > 0 && (
+            <>
+              <br />
+              <br />
+              Enjoy your {formatNumber(amountOfTokens)} {atlasConfig.joystream.tokenTicker} tokens to help you cover
+              transaction fees. These tokens are non-transferable and can't be spent on NFTs or other purchases.
+            </>
+          )}
         </Text>
       </ContentWrapper>
     </>

@@ -38,6 +38,7 @@ export const SignUpModal = () => {
   const [emailAlreadyTakenError, setEmailAlreadyTakenError] = useState(false)
   const [hasNavigatedBack, setHasNavigatedBack] = useState(false)
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Continue' })
+  const [amountOfTokens, setAmountofTokens] = useState<number>()
 
   const { signUpModalOpen, setSignUpModalOpen } = useUserStore(
     (state) => ({ signUpModalOpen: state.signUpModalOpen, setSignUpModalOpen: state.actions.setSignUpModalOpen }),
@@ -90,7 +91,10 @@ export const SignUpModal = () => {
             if (step === SignUpSteps.SignUpEmail) setEmailAlreadyTakenError(true)
           },
           onStart: () => goToStep(SignUpSteps.Creating),
-          onSuccess: () => goToNextStep(),
+          onSuccess: (amountOfTokens) => {
+            setAmountofTokens(amountOfTokens)
+            goToNextStep()
+          },
         })
         return
       }
@@ -125,7 +129,10 @@ export const SignUpModal = () => {
           setEmailAlreadyTakenError(true)
         },
         onStart: () => goToNextStep(),
-        onSuccess: () => goToNextStep(),
+        onSuccess: (amountOfTokens) => {
+          setAmountofTokens(amountOfTokens)
+          goToNextStep()
+        },
       })
     },
     [createMember, goToNextStep, goToStep, signUpFormData]
@@ -148,7 +155,6 @@ export const SignUpModal = () => {
   const isSuccess = currentStep === SignUpSteps.Success
 
   const smMatch = useMediaMatch('sm')
-
   return (
     <StyledDialogModal
       show={currentStep !== null}
@@ -217,7 +223,9 @@ export const SignUpModal = () => {
         />
       )}
       {currentStep === SignUpSteps.Creating && <SignUpCreatingMemberStep {...commonProps} />}
-      {currentStep === SignUpSteps.Success && <SignUpSuccessStep avatarUrl={signUpFormData.avatar?.url || ''} />}
+      {currentStep === SignUpSteps.Success && (
+        <SignUpSuccessStep avatarUrl={signUpFormData.avatar?.url || ''} amountOfTokens={amountOfTokens} />
+      )}
     </StyledDialogModal>
   )
 }

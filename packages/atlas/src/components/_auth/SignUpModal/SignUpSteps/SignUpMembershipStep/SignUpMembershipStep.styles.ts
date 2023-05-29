@@ -22,6 +22,7 @@ export const StyledForm = styled.form`
   padding-top: ${sizes(17)};
   display: grid;
   gap: ${sizes(6)};
+  margin-bottom: ${sizes(6)};
 `
 
 export const Anchor = styled.a`
