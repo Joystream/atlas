@@ -4,6 +4,7 @@ import shallow from 'zustand/shallow'
 import { Avatar } from '@/components/Avatar'
 import { LogInErrors, useLogIn } from '@/hooks/useLogIn'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useUser } from '@/providers/user/user.hooks'
@@ -101,20 +102,15 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
       hasNavigatedBack={hasNavigatedBack}
     >
       <ListItemsWrapper>
-        {memberships.map(({ controllerAccount, metadata, handle, id }) => (
+        {memberships.map((member) => (
           <StyledListItem
-            key={handle}
-            label={handle ?? 'Account'}
-            caption={shortenString(controllerAccount, 5)}
+            key={member.id}
+            label={member.handle ?? 'Account'}
+            caption={shortenString(member.controllerAccount, 5)}
             size={smMatch ? 'large' : 'medium'}
-            selected={memberId === id}
-            nodeStart={
-              <Avatar
-                size={40}
-                assetUrl={metadata?.avatar?.__typename === 'AvatarUri' ? metadata.avatar.avatarUri ?? '' : ''}
-              />
-            }
-            onClick={() => setMemberId(id)}
+            selected={memberId === member.id}
+            nodeStart={<Avatar size={40} assetUrl={getMemberAvatar(member).url} />}
+            onClick={() => setMemberId(member.id)}
           />
         ))}
       </ListItemsWrapper>

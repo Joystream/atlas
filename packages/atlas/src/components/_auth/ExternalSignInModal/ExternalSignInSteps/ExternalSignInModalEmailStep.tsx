@@ -30,13 +30,11 @@ export const ExternalSignInModalEmailStep: FC<SignInModalEmailStepProps> = ({
     shallow
   )
   const { register, formState, handleSubmit } = useForm<{ email: string }>({
-    resolver: (data, ctx, options) => {
-      return zodResolver(
-        z.object({
-          email: z.string().email(),
-        })
-      )(data, ctx, options)
-    },
+    resolver: zodResolver(
+      z.object({
+        email: z.string().email(),
+      })
+    ),
   })
 
   const handleConfirm = useCallback(async () => {
