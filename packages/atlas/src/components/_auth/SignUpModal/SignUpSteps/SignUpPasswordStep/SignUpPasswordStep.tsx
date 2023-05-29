@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { FC, useCallback, useEffect, useState } from 'react'
+import { FC, RefObject, useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -74,6 +74,7 @@ const getValidationState = (isError: boolean) => {
 type SignUpPasswordStepProps = {
   onPasswordSubmit: (password: string) => void
   password?: string
+  dialogContentRef?: RefObject<HTMLDivElement>
 } & SignUpStepsCommonProps &
   Pick<SignUpFormData, 'password'>
 
@@ -81,6 +82,7 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
   setPrimaryButtonProps,
   hasNavigatedBack,
   password,
+  dialogContentRef,
   onPasswordSubmit,
 }) => {
   const {
@@ -116,6 +118,9 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
       onClick: () => handleGoToNextStep(),
     })
   }, [handleGoToNextStep, setPrimaryButtonProps])
+
+  // used to scroll the form to the bottom upon first handle field focus - this is done to let the user see password requirements
+  const hasDoneInitialScroll = useRef(false)
 
   useEffect(() => {
     const subscription = watch(({ password }) => {
@@ -162,7 +167,16 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
     >
       <StyledSignUpForm>
         <FormField label="Password" error={errors.password?.message}>
-          <Input placeholder="Password" {...getInputProps('password')} autoComplete="new-password" />
+          <Input
+            placeholder="Password"
+            {...getInputProps('password')}
+            autoComplete="new-password"
+            onClick={() => {
+              if (hasDoneInitialScroll.current || !dialogContentRef?.current) return
+              hasDoneInitialScroll.current = true
+              dialogContentRef.current.scrollTo({ top: dialogContentRef.current.scrollHeight, behavior: 'smooth' })
+            }}
+          />
         </FormField>
         <FormField label="Repeat Password" error={errors.confirmPassword?.message}>
           <Input placeholder="Repeat password" {...getInputProps('confirmPassword')} autoComplete="new-password" />

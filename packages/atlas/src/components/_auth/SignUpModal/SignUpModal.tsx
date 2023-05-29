@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Ref, useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useOverflowDetector } from 'react-detectable-overflow'
 import shallow from 'zustand/shallow'
 
@@ -43,7 +43,7 @@ export const SignUpModal = () => {
     (state) => ({ signUpModalOpen: state.signUpModalOpen, setSignUpModalOpen: state.actions.setSignUpModalOpen }),
     shallow
   )
-  const { ref, overflow } = useOverflowDetector({})
+  const { ref, overflow } = useOverflowDetector<HTMLDivElement>({})
 
   // handle opening/closing of modal and setting initial step
   useEffect(() => {
@@ -180,7 +180,7 @@ export const SignUpModal = () => {
         ) : undefined
       }
       additionalActionsNodeMobilePosition="bottom"
-      contentRef={ref as Ref<HTMLDivElement>}
+      contentRef={ref}
     >
       {currentStep === SignUpSteps.SignUpEmail && (
         <SignUpEmailStep
@@ -194,6 +194,7 @@ export const SignUpModal = () => {
       {currentStep === SignUpSteps.SignUpPassword && (
         <SignUpPasswordStep
           {...commonProps}
+          dialogContentRef={ref}
           onPasswordSubmit={handlePasswordChange}
           password={signUpFormData.password}
         />
@@ -209,6 +210,7 @@ export const SignUpModal = () => {
       {currentStep === SignUpSteps.CreateMember && (
         <SignUpMembershipStep
           {...commonProps}
+          dialogContentRef={ref}
           onSubmit={handleMemberFormData}
           avatar={signUpFormData.avatar}
           handle={signUpFormData.handle}
