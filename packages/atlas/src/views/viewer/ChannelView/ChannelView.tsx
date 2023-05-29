@@ -13,6 +13,7 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
+import { ProtectedActionWrapper } from '@/components/_auth/ProtectedActionWrapper'
 import { Button } from '@/components/_buttons/Button'
 import { ChannelCover } from '@/components/_channel/ChannelCover'
 import { CollectorsBox } from '@/components/_channel/CollectorsBox'
@@ -292,14 +293,19 @@ export const ChannelView: FC = () => {
             <CollectorsBox collectors={mappedChannelNftCollectors} maxShowedCollectors={4} />
           )}
           <StyledButtonContainer>
-            <StyledButton
-              icon={isFollowing ? <SvgActionCheck /> : <SvgActionPlus />}
-              variant={isFollowing ? 'secondary' : 'primary'}
-              onClick={toggleFollowing}
-              size="large"
+            <ProtectedActionWrapper
+              title="You want to follow this channel?"
+              description={`Log in to follow ${channel?.title}`}
             >
-              {isFollowing ? 'Unfollow' : 'Follow'}
-            </StyledButton>
+              <StyledButton
+                icon={isFollowing ? <SvgActionCheck /> : <SvgActionPlus />}
+                variant={isFollowing ? 'secondary' : 'primary'}
+                onClick={toggleFollowing}
+                size="large"
+              >
+                {isFollowing ? 'Unfollow' : 'Follow'}
+              </StyledButton>
+            </ProtectedActionWrapper>
             <ContextMenu
               placement="bottom-end"
               items={[
@@ -307,6 +313,10 @@ export const ChannelView: FC = () => {
                   onClick: () => setShowReportDialog(true),
                   label: 'Report channel',
                   nodeStart: <SvgActionFlag />,
+                  protected: {
+                    title: 'You want to report this channel?',
+                    description: 'Log in to report harmful content',
+                  },
                 },
               ]}
               trigger={<Button icon={<SvgActionMore />} variant="tertiary" size="large" />}

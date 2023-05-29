@@ -10,7 +10,6 @@ import { NotificationsButton } from '@/components/_navigation/NotificationsButto
 import { NotificationsWidget } from '@/components/_notifications/NotificationsWidget'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
-import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useOverlayManager } from '@/providers/overlayManager'
@@ -43,7 +42,6 @@ export const TopbarViewer: FC = () => {
     searchQuery,
     actions: { setSearchOpen, setSearchQuery },
   } = useSearchStore()
-  const { openSignInDialog } = useDisplaySignInDialog()
 
   useEffect(() => {
     if (searchOpen) {
@@ -146,7 +144,7 @@ export const TopbarViewer: FC = () => {
                         icon={<SvgActionMember />}
                         iconPlacement="left"
                         size="medium"
-                        onClick={() => signIn(undefined, openSignInDialog)}
+                        onClick={() => signIn(undefined)}
                       >
                         Log in
                       </Button>
@@ -158,7 +156,7 @@ export const TopbarViewer: FC = () => {
                   </SignedButtonsWrapper>
                 )}
                 {!searchQuery && !mdMatch && !isLoggedIn && topbarButtonLoaded && (
-                  <StyledIconButton onClick={() => signIn(undefined, openSignInDialog)}>Log in</StyledIconButton>
+                  <StyledIconButton onClick={() => signIn(undefined)}>Connect wallet</StyledIconButton>
                 )}
               </ButtonWrapper>
             </CSSTransition>

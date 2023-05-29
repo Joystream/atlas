@@ -5,13 +5,15 @@ import { useBasicChannel } from '@/api/hooks/channel'
 import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/fragments.generated'
 import { AvatarSize } from '@/components/Avatar'
 import { Text, TextVariant } from '@/components/Text'
+import { ProtectedActionWrapper } from '@/components/_auth/ProtectedActionWrapper'
+import { Button } from '@/components/_buttons/Button'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
-import { Container, FollowButton, StyledAvatar, StyledLink, TitleWrapper } from './ChannelLink.styles'
+import { Container, FollowButtonWrapper, StyledAvatar, StyledLink, TitleWrapper } from './ChannelLink.styles'
 
 export type ChannelLinkProps = {
   id?: string
@@ -95,9 +97,16 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
                   )}
                 </StyledLink>
                 {followButton && (
-                  <FollowButton variant="secondary" onClick={handleFollowButtonClick}>
-                    {isFollowing ? 'Unfollow' : 'Follow'}
-                  </FollowButton>
+                  <FollowButtonWrapper>
+                    <ProtectedActionWrapper
+                      title="You want to follow this channel?"
+                      description={`Log in to follow ${displayedChannel.channel.title}`}
+                    >
+                      <Button variant="secondary" onClick={handleFollowButtonClick}>
+                        {isFollowing ? 'Unfollow' : 'Follow'}
+                      </Button>
+                    </ProtectedActionWrapper>
+                  </FollowButtonWrapper>
                 )}
               </TitleWrapper>
             ) : (
