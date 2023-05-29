@@ -8,6 +8,7 @@ import { createApolloClient } from '@/api'
 import { useGetKillSwitch } from '@/api/hooks/admin'
 import { AdminModal } from '@/components/_overlays/AdminModal'
 import { OperatorsContextProvider } from '@/providers/assets/assets.provider'
+import { AuthProvider } from '@/providers/auth/auth.provider'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { UserProvider } from '@/providers/user/user.provider'
@@ -32,18 +33,20 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
       <ApolloProvider client={apolloClient}>
         <QueryClientProvider client={queryClient}>
           <WalletProvider>
-            <UserProvider>
-              <OverlayManagerProvider>
-                <ConfirmationModalProvider>
-                  <BrowserRouter>
-                    <AdminModal />
-                    <MaintenanceWrapper>
-                      <OperatorsContextProvider>{children}</OperatorsContextProvider>
-                    </MaintenanceWrapper>
-                  </BrowserRouter>
-                </ConfirmationModalProvider>
-              </OverlayManagerProvider>
-            </UserProvider>
+            <AuthProvider>
+              <UserProvider>
+                <OverlayManagerProvider>
+                  <ConfirmationModalProvider>
+                    <BrowserRouter>
+                      <AdminModal />
+                      <MaintenanceWrapper>
+                        <OperatorsContextProvider>{children}</OperatorsContextProvider>
+                      </MaintenanceWrapper>
+                    </BrowserRouter>
+                  </ConfirmationModalProvider>
+                </OverlayManagerProvider>
+              </UserProvider>
+            </AuthProvider>
           </WalletProvider>
         </QueryClientProvider>
       </ApolloProvider>

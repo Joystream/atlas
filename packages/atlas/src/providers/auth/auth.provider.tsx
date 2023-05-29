@@ -9,6 +9,7 @@ import { Buffer } from 'buffer'
 import { AES, enc, lib, mode } from 'crypto-js'
 import { FC, PropsWithChildren, createContext, useCallback, useContext, useMemo, useState } from 'react'
 
+import { useGetCurrentAccountQuery } from '@/api/queries/__generated__/accounts.generated'
 import { atlasConfig } from '@/config'
 import { ORION_AUTH_URL } from '@/config/env'
 // import { ViewErrorFallback } from '@/components/ViewErrorFallback'
@@ -30,55 +31,47 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [initializationState, setInitializationState] = useState<null | AuthContextValue['initializationState']>(null)
   const [loggedAddress, setLoggedAddress] = useState<null | string>(null)
   const [keypair, setKeypair] = useState<null | KeyringPair>(null)
+  const { data: currentSessionAccount } = useGetCurrentAccountQuery()
   const {
     anonymousUserId,
-    previouslyLoggedUserAccount,
-    previouslyUsedSigner,
     encodedSeed,
-    actions: { setAnonymousUserId, setPreviouslyLoggedUserAccount, setPreviouslyUsedSigner, setEncodedSeed },
+    actions: { setAnonymousUserId, setEncodedSeed },
   } = useAuthStore()
   const lastUsedWalletName = useWalletStore((store) => store.lastUsedWalletName)
-  const { wallet, signInToWallet } = useWallet()
+  const { signInToWallet } = useWallet()
 
   useMountEffect(() => {
     const init = async () => {
-      if (!(previouslyLoggedUserAccount || previouslyUsedSigner)) {
+      if (!currentSessionAccount) {
         handleAnonymousAuth(anonymousUserId).then((userId) => setAnonymousUserId(userId ?? null))
         return
       }
-      setInitializationState('logging')
-      if (previouslyUsedSigner === 'external') {
-        if (!wallet && !lastUsedWalletName) {
-          setInitializationState('needAuthentication')
-          return
-        }
 
-        if (!wallet && lastUsedWalletName) {
-          setTimeout(() => {
-            // add a slight delay - sometimes the extension will not initialize by the time of this call and may appear unavailable
-            signInToWallet(lastUsedWalletName, true).then((res) => {
-              if (res?.find((walletAcc) => walletAcc.address === previouslyLoggedUserAccount)) {
-                setLoggedAddress(previouslyLoggedUserAccount)
-                return
-              }
-              setInitializationState('needAuthentication')
-            })
-          }, 200)
+      setInitializationState('logging')
+
+      if (encodedSeed) {
+        const keypair = await decodeSessionEncodedSeedToKeypair(encodedSeed)
+        if (keypair && keypair.address === currentSessionAccount.accountData.joystreamAccount) {
+          setKeypair(keypair)
+          setLoggedAddress(keypair.address)
+          setInitializationState('loggedIn')
+          return
         }
       }
 
-      if (previouslyUsedSigner === 'internal') {
-        if (encodedSeed) {
-          const keypair = await decodeSessionEncodedSeedToKeypair(encodedSeed)
-          if (keypair) {
-            setKeypair(keypair)
-            setLoggedAddress(keypair.address)
+      if (lastUsedWalletName) {
+        setTimeout(async () => {
+          // add a slight delay - sometimes the extension will not initialize by the time of this call and may appear unavailable
+          const res = await signInToWallet(lastUsedWalletName, true)
+          if (res?.find((walletAcc) => walletAcc.address === currentSessionAccount.accountData.joystreamAccount)) {
+            setLoggedAddress(currentSessionAccount.accountData.joystreamAccount)
             setInitializationState('loggedIn')
             return
           }
-        }
-        setInitializationState('needAuthentication')
+        }, 200)
       }
+
+      setInitializationState('needAuthentication')
     }
 
     init()
@@ -178,8 +171,6 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
         setInitializationState('loggedIn')
         setAnonymousUserId(null)
-        setPreviouslyUsedSigner(params.type)
-        setPreviouslyLoggedUserAccount(payload.joystreamAccountId)
 
         if (plainSeed) {
           saveEncodedSeed(plainSeed)
@@ -212,7 +203,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         }
       }
     },
-    [saveEncodedSeed, setAnonymousUserId, setPreviouslyLoggedUserAccount, setPreviouslyUsedSigner]
+    [saveEncodedSeed, setAnonymousUserId]
   )
 
   const contextValue: AuthContextValue = useMemo(
