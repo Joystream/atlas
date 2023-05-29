@@ -138,13 +138,21 @@ features:
         
         There is a separate document, [YouTube Partner Program Outline](https://www.notion.so/joystream/YouTube-Partner-Program-Outline-d492c2eb88ff4ace955b5f2902ec21fb?pvs=4). All the program particulars, such as: how to join YouTube Partnership Program, rewards calculation explanation and example, payment information are contained in the program document on Notion. The company has the right to update the terms of the program upon its discretion, unilaterally and without any prior notice. Significant changes will be communicated via public communication channels, such as Discord server or social media accounts.
       
-        ## How rewards are paid  
+        ## How YouTube Partnership Program rewards are paid
 
         When YouTube creators create Joystream channel app, they get an auto-generated polkadot account assigned to this channel automatically. This account is bound to their channel, and cannot be updated. This account can hold JOY tokens.
 
         The data collected and recorded in the internal DB with regards to uploaded content and referral stats will be informed with when deriving the cyclical rewards to the participating channels.
 
         Rewards are paid only for verified channels. Rewards are paid via direct transfers from JS Genesis specific account to the creators' Joystream channel account. Rewards are paid by JS Genesis company, from the funds (tokens) budgeted for the purpose of operational support.
+
+        ## Other ways Joystream Channels can get rewards
+        
+        Joystream DAO operating model encapsulates rewards for Joystream channels paid out outside of the Youtube Partnership Program. Gleev Operator, JS Genesis AS has no responsibility or control over such mechanisms and they are listed below.
+        
+        1. Payout Proposal to Channels by DAO Council.
+        2. Direct Payment from DAO Working Group Budget by WG Lead.
+        3. Direct Member Payments from any member of Joystream Network.
 
         ## How to withdraw rewards
 
