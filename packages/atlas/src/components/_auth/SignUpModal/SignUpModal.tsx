@@ -158,13 +158,14 @@ export const SignUpModal = () => {
           ? {
               text: 'Continue',
               onClick: () => {
+                setSignupFormData(SIGNUP_FORM_DATA_INITIAL_STATE)
                 setSignUpModalOpen(false)
               },
             }
           : primaryButtonProps
       }
       secondaryButton={backButtonVisible ? { text: 'Back', onClick: () => goToPreviousStep() } : undefined}
-      confetti={currentStep === SignUpSteps.Success && !smMatch}
+      confetti={currentStep === SignUpSteps.Success && smMatch}
       additionalActionsNode={
         cancelButtonVisible ? (
           <Button
@@ -214,7 +215,7 @@ export const SignUpModal = () => {
         />
       )}
       {currentStep === SignUpSteps.Creating && <SignUpCreatingMemberStep {...commonProps} />}
-      {currentStep === SignUpSteps.Success && <SignUpSuccessStep />}
+      {currentStep === SignUpSteps.Success && <SignUpSuccessStep avatarUrl={signUpFormData.avatar?.url || ''} />}
     </StyledDialogModal>
   )
 }

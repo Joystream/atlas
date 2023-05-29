@@ -1,3 +1,5 @@
+import { FC } from 'react'
+
 import confettiAnimation from '@/assets/animations/confetti.json'
 import { AppKV } from '@/components/AppKV'
 import { Avatar } from '@/components/Avatar'
@@ -7,12 +9,16 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { ContentWrapper, IllustrationWrapper, LottieContainer } from './SignUpSuccessStep.styles'
 
-export const SignUpSuccessStep = () => {
+type SignUpSuccessStepProps = {
+  avatarUrl?: string
+}
+
+export const SignUpSuccessStep: FC<SignUpSuccessStepProps> = ({ avatarUrl }) => {
   const smMatch = useMediaMatch('sm')
   return (
     <>
       <IllustrationWrapper>
-        <AppKV customNode={<Avatar size={136} assetUrl="https://placedog.net/500" />} />
+        <AppKV customNode={<Avatar size={136} assetUrl={avatarUrl} />} />
         {!smMatch && (
           <LottieContainer>
             <LottiePlayer

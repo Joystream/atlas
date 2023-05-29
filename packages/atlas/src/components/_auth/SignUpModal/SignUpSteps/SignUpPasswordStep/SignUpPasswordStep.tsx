@@ -23,8 +23,8 @@ import { SignUpStepsCommonProps } from '../SignUpSteps.types'
 
 const commonPasswordValidation = z
   .string()
-  .regex(/^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#$%^&*()_+]).*$/, { message: 'Password has to meet requirements' })
-  .min(9, { message: 'Password has to meet requirements' })
+  .regex(/^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#$%^&*()_+]).*$/, { message: 'Password has to meet requirements.' })
+  .min(9, { message: 'Password has to meet requirements.' })
 
 const zodSchema = z
   .object({
@@ -145,6 +145,7 @@ export const SignUpPasswordStep: FC<SignUpPasswordStepProps> = ({
         type: isFieldVisible[name] ? 'text' : 'password',
         actionButton: {
           children: isFieldVisible[name] ? 'Hide' : 'Show',
+          dontFocusOnClick: true,
           icon: isFieldVisible[name] ? <SvgActionHide /> : <SvgActionShow />,
           onClick: () => handleTogglePassword(name),
         },

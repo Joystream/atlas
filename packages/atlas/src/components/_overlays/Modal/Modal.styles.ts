@@ -33,8 +33,6 @@ export const ModalContent = styled.div<ModalContentProps>`
   position: fixed;
   width: 100vw;
   max-height: calc(100vh - var(--size-topbar-height));
-
-  /* overflow: hidden; */
   bottom: 0;
   ${({ noBoxShadow }) =>
     !noBoxShadow &&
