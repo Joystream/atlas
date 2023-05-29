@@ -1,32 +1,21 @@
-import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
+import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo } from 'react'
 
 import { useMemberships } from '@/api/hooks/membership'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
-import { useWallet } from '@/providers/wallet/wallet.hooks'
 import { AssetLogger, SentryLogger } from '@/utils/logs'
-import { setAnonymousAuth } from '@/utils/user'
 
 import { useUserStore } from './user.store'
 import { UserContextValue } from './user.types'
+
+import { useAuth } from '../auth/auth.hooks'
 
 const UserContext = createContext<undefined | UserContextValue>(undefined)
 UserContext.displayName = 'UserContext'
 
 export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
-  const { accountId, memberId, channelId, userId } = useUserStore((state) => state)
-  const { setActiveUser, setUserId } = useUserStore((state) => state.actions)
-  const { walletAccounts } = useWallet()
-
-  const accountsIds = walletAccounts.map((a) => a.address)
-
-  const firstRender = useRef(true)
-  // run this once to make sure that userId is set in localstorage and its up to date
-  useEffect(() => {
-    if (firstRender.current) {
-      setAnonymousAuth(userId).then((userId) => setUserId(userId || null))
-      firstRender.current = false
-    }
-  }, [setUserId, userId])
+  const { channelId } = useUserStore((state) => state)
+  const { setActiveUser } = useUserStore((state) => state.actions)
+  const { currentUser } = useAuth()
 
   const {
     memberships: currentMemberships,
@@ -37,13 +26,13 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   } = useMemberships(
     {
       where: {
-        controllerAccount_in: accountsIds,
+        id_eq: currentUser?.id,
       },
     },
     {
-      skip: !accountsIds.length,
+      skip: !currentUser,
       onError: (error) =>
-        SentryLogger.error('Failed to fetch user memberships', 'UserProvider', error, { user: { accountsIds } }),
+        SentryLogger.error('Failed to fetch user memberships', 'UserProvider', error, { user: currentUser ?? {} }),
     }
   )
 
@@ -56,15 +45,17 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   // keep user used by loggers in sync
   useEffect(() => {
     const user = {
-      accountId,
-      memberId,
+      accountId: currentUser?.joystreamAccount,
+      memberId: currentUser?.membershipId,
       channelId,
     }
     SentryLogger.setUser(user)
     AssetLogger.setUser(user)
-  }, [accountId, channelId, memberId])
+  }, [channelId, currentUser?.joystreamAccount, currentUser?.membershipId])
 
-  const activeMembership = (memberId && memberships?.find((membership) => membership.id === memberId)) || null
+  const activeMembership =
+    (currentUser?.membershipId && memberships?.find((membership) => membership.id === currentUser?.membershipId)) ||
+    null
   const activeChannel =
     (activeMembership && activeMembership?.channels.find((channel) => channel.id === channelId)) || null
 

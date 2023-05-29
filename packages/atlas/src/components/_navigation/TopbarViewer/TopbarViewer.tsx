@@ -111,6 +111,7 @@ export const TopbarViewer: FC = () => {
         {(!searchQuery || mdMatch) && (
           <SwitchTransition>
             <CSSTransition
+              key="anim"
               mountOnEnter
               classNames={transitions.names.fade}
               timeout={parseInt(cVar('animationTimingFast', true))}
@@ -146,7 +147,7 @@ export const TopbarViewer: FC = () => {
                         // todo: add handler
                         onClick={() => undefined}
                       >
-                        Connect wallet
+                        Log in
                       </Button>
                     )
                   )
@@ -157,7 +158,7 @@ export const TopbarViewer: FC = () => {
                 )}
                 {!searchQuery && !mdMatch && !isLoggedIn && topbarButtonLoaded && (
                   // todo: add handler
-                  <StyledIconButton onClick={() => undefined}>Connect wallet</StyledIconButton>
+                  <StyledIconButton onClick={() => undefined}>Log in</StyledIconButton>
                 )}
               </ButtonWrapper>
             </CSSTransition>

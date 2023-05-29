@@ -212,8 +212,9 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       initializationState,
       loggedAddress,
       keypair,
+      currentUser: initializationState === 'loggedIn' ? currentSessionAccount?.accountData : undefined,
     }),
-    [handleLogin, initializationState, keypair, loggedAddress]
+    [currentSessionAccount?.accountData, handleLogin, initializationState, keypair, loggedAddress]
   )
 
   // if (error) {
