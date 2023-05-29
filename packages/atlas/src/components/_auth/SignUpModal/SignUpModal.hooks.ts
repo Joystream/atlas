@@ -1,3 +1,4 @@
+import { cryptoWaitReady } from '@polkadot/util-crypto'
 import axios, { isAxiosError } from 'axios'
 import BN from 'bn.js'
 import { useCallback, useState } from 'react'
@@ -82,6 +83,7 @@ export const useCreateMember = () => {
     async ({ data, onError, onStart, onSuccess }: CreateMemberArgs) => {
       onStart()
 
+      await cryptoWaitReady()
       const keypair = keyring.addFromMnemonic(data.mnemonic)
 
       const address = keypair.address
