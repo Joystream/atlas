@@ -97,30 +97,6 @@ features:
       yppTnC: |
         # YouTube Partnership Program (YPP)
 
-        ## Rewards
-          - Sign up to YouTube Partnership Program: 5000 Joy
-          - Refer new program subscribers: 1000 Joy
-          - For every new video synced from YouTube: 300 Joy
-
-        ❗️ The tokens pool allocated for this program is limited, so the program has limited duration.
-
-        ## Tiers Multiplier
-
-        Based on the YouTube channel followers count, a popularity Tier is assigned to each participant. Popularity tier results in multiplication effect on all rewards of the program.
-
-          - Tier 1 - x1 rewards - 50 to 5,000 subscribers
-          - Tier 2 - x2.5 rewards - 5,000 to 50,000 subscribers
-          - Tier 3 - x5 rewards - 50,000+ subscribers
-
-        Referrals multiplier depends on the popularity tier of the channel signed up using referral link.
-
-        ## Example Rewards Calculation
-
-        For a channel with 7000 subscribers, which signed up and remained in the program with auto-sync service enabled for 1 month. During this month that channel uploaded 5 new videos to their YouTube channel, 2 videos directly to Joystream channel with manual upload, and successfully referred 3 other YouTube channels that had circa 10k subscribers each. 
-
-        In the end of this month, the payout to this channel's account will be:
-          5000 * 2.5 + 5 * 300 * 2.5 + 1000 * 3 * 2.5 = **23,750** JOY
-
         ## When you accept the Terms and Conditions you
 
         1. Become enrolled to the YouTube Partnership Program.
@@ -132,56 +108,31 @@ features:
 
         Rewards are subject to the verified status of the channel, assigned by the program operators.
 
-        # Terms and Conditions
+        ## YouTube Partnership Program Terms and Conditions
 
         ## Who is the program for
 
         The program is targeted at YouTube creators that already have a channel focussed on Crypto and Web3 content, with substantial published videos and subscribers. The program involves compensation in JOY tokens for YouTube creators who choose to opt in, meet the qualification criteria and perform actions that are linked to rewards.
 
-        ## Who Qualifies
+        ## YPP Rewards and Key Information
 
-        YouTube channel has to:
-          1. Be created not earlier than 90 days before the sign up.
-          2. Have at least 50 followers and the channel followers must be set to public view.
-          3. Have at least 10 videos, each created at least 30 days before the sign up.
-          4. Channel must be focussed on Web3/ Crypto content, matching one of the categories supported by $VITE_APP_NAME App.
+        There is a separate document, [YouTube Partner Program Outline](https://www.notion.so/joystream/YouTube-Partner-Program-Outline-d492c2eb88ff4ace955b5f2902ec21fb?pvs=4). All the program particulars, such as: how to join YouTube Partnership Program, rewards calculation explanation and example, payment information are contained in the program document on Notion. The company has the right to update the terms of the program upon its discretion, unilaterally and without any prior notice. Significant changes will be communicated via public communication channels, such as Discord server or social media accounts.
 
-        Newly created Joystream channel has to have description, avatar and background image set up. The criteria for qualification can be reviewed at any time without prior notice.
-
-        ## How to sign up
-
-        To sign up, user has to go through the onboarding flow provided in the [$VITE_APP_NAME web app](https://gleev.xyz/ypp) and authorise with the Google Account, connected to their YouTube channel. During the authorisation, the access to the YouTube content `youtube.readonly` scope, to fetch channel meta data and content information; and access to email address for the YouTube account has to be granted for the JSG operated Backend Application (API client) that connects to YouTube API.
-
-          Mandatory fields need to be populated to the web input form to progress, such as email, video category, and terms and conditions need to be accepted.
-
-        ## How to get rewards
-
-        Verified YouTube creators will be offered compensation in JOY tokens, native asset of Joystream blockchain for the participation in the program. In order to earn rewards, participants need to complete the rewarded tasks, namely:
-
-        1. New sign up: Authorise with their YouTube channel and choose an optional opt in to auto-sync service. One-off compensation only for new sign ups.
-        2. Referral: Refer other YouTube Web3/ Crypto content creators to the program, which results in successful signups. It can be done by generating unique referral code (link), which can be followed to create new membership. Once successful the new memberships created with the referred link, this will result in rewards for the originating account. The same code can be used by multiple new joiners. Alternatively referred channels can enter referring channel name to the referral field during sign up flow.
-        3. Auto-synced content: Simply post new Web3 and Crypto-focussed videos to the connected YouTube channel, and remain opted in to the program and auto-sync feature till they are fully uploaded to your channel.
-
-        ## How rewards are calculated
-
-        Rewards are based on the popularity Tiers assigned to the channels upon program registration tiers are calculated based on the number of subscribers. The ranges of subscribers qualifying for each Tier can be reviewed and updated by the program operators at any time without prior notice.
-
-        Your current Tier and tier information is contained in the Dashboard, available on the gleev.xyz/ypp page for the signed in members, already opted in to the program.
-
-        Rewards are calculated based on the internal DB records, generated automatically or added by the JSG team operating the program.
-          - For new signups, the sign up date will be reviewed in defining which period the payout should be made.
-          - For referrals, each new channel who signs up adding the referrer's channel name to the referrer field in the onboarding flow generates a record of the referral. In the end of the related payment cycle, number of referring channel records for new sign up is multiplied by referral base payment and tier multiplier of the referring channel.
-          - For the videos synced from YouTube, all video content will be monitored by program operator, Jsgenesis team and its partners. To qualify for compensation it has to adhere to reasonable quality, focus on Web3-Crypto topic, and match the category selected for the video. It must adhere to [Copyright Policy ](https://gleev.xyz/legal/copyright) and general [Terms of Service](https://gleev.xyz/legal/tos).
-
-        To qualify for rewards the channel needs to be verified by JSGenesis team and/or its partners operating the program. This is a manual process, including visual review of the YouTube channel title, description and uploaded content. To be verified the content has to be of reasonable quality, focussing on Crypto/Web3 and match the selected category selected during upload.
-
-        ## How rewards are paid
+        ## How YouTube Partnership Program rewards are paid
 
         When YouTube creators create Joystream channel app, they get an auto-generated polkadot account assigned to this channel automatically. This account is bound to their channel, and cannot be updated. This account can hold JOY tokens.
 
         The data collected and recorded in the internal DB with regards to uploaded content and referral stats will be informed with when deriving the cyclical rewards to the participating channels.
 
         Rewards are paid only for verified channels. Rewards are paid via direct transfers from JS Genesis specific account to the creators' Joystream channel account. Rewards are paid by JS Genesis company, from the funds (tokens) budgeted for the purpose of operational support.
+
+        ## Other ways Joystream Channels can get rewards
+
+        Joystream DAO operating model encapsulates rewards for Joystream channels paid out outside of the Youtube Partnership Program. Gleev Operator, JS Genesis AS has no responsibility or control over such mechanisms and they are listed below.
+
+        1. Payout Proposal to Channels by DAO Council.
+        2. Direct Payment from DAO Working Group Budget by WG Lead.
+        3. Direct Member Payments from any member of Joystream Network.
 
         ## How to withdraw rewards
 
@@ -208,6 +159,18 @@ features:
         Only public videos are synced. Videos are synced in resolution of 720px or lower. HD videos will be supported as the program matures. Subtitles synced only in English, and all other languages are not supported at the time of program launch, but will be supported in the future.  The queue of syncing is defined based on the proprietary algorithm developed and maintained by JSGenesis team. It may be updated at any time without prior notice.
 
         If access of the JSGenesis operated backend app to your YouTube channel is disabled on the side of Google account, then you are automatically opted out from the YPP program and no longer qualify for rewards.
+
+        #### Rights of Jsgenesis and Third Party Applications
+
+        Accepting these terms and conditions between the creator and JS Genesis AS, warrants the rights for $VITE_APP_NAME App to sync the content from creator’s YouTube Channel with the Joystream Network. 
+
+        Syncing content means replicating or uploading the creator’s content to the storage nodes and make it available to content distribution nodes of Joystream Network infrastructure which is operated by Joystream DAO. The content record of ownership by the channel created by YouTube creators signing up to YouTube Partnership Program, is kept on the Joystream Blockchain, that is a public ledger. Joystream platform is an open source project and its operating model implies multiple Apps and Gateways connected to Joystream blockchain and network infrastructure. 
+
+        Synced content can be monetized by any participants of the Joystream Network, and specifically gateways (Apps) connected to Joystream blockchain and infrastructure. All connected Apps can distribute, display and monetize creator's video content and its attributes, such as likes by members of network, comments, reactions, metadata of channel and membership owning the video content.
+
+        Creator has the rights to claim monetization of their content as part of general platform T&Cs, and the compensation in JOY tokens from JS Genesis AS for the synced content from YouTube as part of the YouTube Partnership Program agreement.
+
+        For the full duration of the content existing on Joystream Network and as long as creator does not delete their content and/or channel from the blockchain, any third party application can use the content of such channel as described in this paragraph. This applies even to the cases when Jsgenesis AS is no longer operating $VITE_APP_NAME App and seizes to exist as a legal entity.
 
         ## License
 
@@ -501,7 +464,7 @@ legal:
   termsOfService: |
     # Terms of Service
 
-    Last updated on the 25th of January 2023
+    Last updated on the 29th of May 2023
 
     This Terms of Service ("Agreement") is a binding obligation between you ("User") and Jsgenesis AS ("Company", "We", "Us", "Our") for use of our Joystream Player interface ("$VITE_APP_NAME") hosted at play.joystream.org and all other products (collectively "Software") developed and published by Us.
 
@@ -511,7 +474,13 @@ legal:
 
     ## 2. Changes to Terms
 
-    This Agreement may be modified or updated at the sole discretion of Company without notice. Your continued use of our Software is confirmation of your acceptance of the latest Agreement.
+    This Agreement may be modified or updated at the sole discretion of Company in a unilateral way, without prior notice. In case of significant change of terms the Company takes the obligation to take reasonable efforts to notify its customers about the change of the Terms.
+
+    This may take a non-personalised form, such as a banner in the app for all users, post on Company's Discord server channel or Company's social media accounts. It is your obligation to follow the Company's communication channels to stay informed about the changes. 
+
+    Upon the receipt of the notification you may choose to continue using the software, or conduct cessation of services via request to remove your membership and channel from Joystream Network. This request must be sent via email to leave@jsgenesis.com. 
+
+    Your continued use of our Software is confirmation of your acceptance of the latest Agreement.
 
     ## 3. Privacy Policy
 
