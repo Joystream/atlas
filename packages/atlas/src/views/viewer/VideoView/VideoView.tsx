@@ -23,7 +23,6 @@ import { ReportModal } from '@/components/_overlays/ReportModal'
 import { AvailableTrack } from '@/components/_video/VideoPlayer/SettingsButtonWithPopover'
 import { atlasConfig } from '@/config'
 import { displayCategories } from '@/config/categories'
-import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
@@ -62,10 +61,9 @@ import {
 
 export const VideoView: FC = () => {
   const { id } = useParams()
-  const { memberId, signIn, isLoggedIn } = useUser()
+  const { memberId, isLoggedIn } = useUser()
   const [showReportDialog, setShowReportDialog] = useState(false)
   const [reactionFee, setReactionFee] = useState<BN | undefined>()
-  const { openSignInDialog } = useDisplaySignInDialog({ interaction: true })
   const { openNftPutOnSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement, cancelNftSale } =
     useNftActions()
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
@@ -201,10 +199,7 @@ export const VideoView: FC = () => {
 
   const handleReact = useCallback(
     async (reaction: VideoReaction) => {
-      if (!isLoggedIn) {
-        openSignInDialog({ onConfirm: signIn })
-        return false
-      } else if (video?.id) {
+      if (video?.id) {
         setVideoReactionProcessing(true)
         const fee = reactionFee || (await getReactionFee([memberId || '', video?.id, reaction]))
         const reacted = await likeOrDislikeVideo(video.id, reaction, video.title, fee)
@@ -213,7 +208,7 @@ export const VideoView: FC = () => {
       }
       return false
     },
-    [getReactionFee, isLoggedIn, likeOrDislikeVideo, memberId, openSignInDialog, reactionFee, signIn, video]
+    [getReactionFee, likeOrDislikeVideo, memberId, reactionFee, video]
   )
 
   // use Media Session API to provide rich metadata to the browser
@@ -344,6 +339,10 @@ export const VideoView: FC = () => {
                   onClick: () => setShowReportDialog(true),
                   label: 'Report video',
                   nodeStart: <SvgActionFlag />,
+                  protected: {
+                    title: 'You want to report this video?',
+                    description: 'Log in to report harmful content',
+                  },
                 },
               ]}
               trigger={<Button icon={<SvgActionMore />} variant="tertiary" size="medium" />}

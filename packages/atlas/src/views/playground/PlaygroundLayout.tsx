@@ -10,7 +10,6 @@ import { Button } from '@/components/_buttons/Button'
 import { TopbarBase } from '@/components/_navigation/TopbarBase'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { absoluteRoutes } from '@/config/routes'
-import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
@@ -24,7 +23,6 @@ import {
   PlaygroundGoogleAuthentication,
   PlaygroundIframe,
   PlaygroundImageDownsizing,
-  PlaygroundIndirectSignInDialog,
   PlaygroundInputAutocomplete,
   PlaygroundNftPurchase,
   PlaygroundNftSettleAuction,
@@ -41,7 +39,6 @@ const playgroundRoutes = [
   { path: 'whitelisting-members', element: <PlaygroundNftWhitelistMembers />, name: 'NFT Whitelisting members' },
   { path: 'block-time', element: <PlaygroundEstimatingBlockTime />, name: 'Estimating block time' },
   { path: 'token-price', element: <PlaygroundTokenPrice />, name: 'Token price' },
-  { path: 'indirect-signin-dialog', element: <PlaygroundIndirectSignInDialog />, name: 'Indirect sign in dialog' },
   { path: 'image-downsizing', element: <PlaygroundImageDownsizing />, name: 'Image downsizing' },
   { path: 'reactions-comments', element: <PlaygroundReactionsComments />, name: 'Reactions & comments' },
   { path: 'iframe', element: <PlaygroundIframe />, name: 'Iframe' },
@@ -56,7 +53,6 @@ const PlaygroundLayout = () => {
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
   const { activeMembership, isLoggedIn, signIn } = useUser()
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
-  const { openSignInDialog } = useDisplaySignInDialog()
   return (
     <UserProvider>
       <TopbarBase
@@ -85,7 +81,7 @@ const PlaygroundLayout = () => {
               onClick={() => setIsMemberDropdownActive(true)}
             />
           ) : (
-            <Button onClick={() => signIn(undefined, openSignInDialog)}>Sign in</Button>
+            <Button onClick={() => signIn(undefined)}>Sign in</Button>
           )}
         </ButtonContainer>
       </TopbarBase>
