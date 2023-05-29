@@ -6,7 +6,6 @@ export type SignerWalletAccount = WalletAccount
 
 export type WalletContextValue = {
   isSignerMetadataOutdated: boolean
-  isAuthLoading: boolean
   skipSignerMetadataUpdate: () => Promise<void>
   signInToWallet: (walletName?: string, invokedAutomatically?: boolean) => Promise<SignerWalletAccount[] | null>
   updateSignerMetadata: () => Promise<void>

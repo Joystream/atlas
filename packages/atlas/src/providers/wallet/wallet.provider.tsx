@@ -16,7 +16,7 @@ const WalletContext = createContext<undefined | WalletContextValue>(undefined)
 WalletContext.displayName = 'WalletContext'
 
 export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
-  const { walletStatus, lastUsedWalletName, wallet, lastChainMetadataVersion } = useWalletStore()
+  const { walletStatus, wallet, lastChainMetadataVersion } = useWalletStore()
   const {
     setLastChainMetadataVersion,
     setWallet,
@@ -25,7 +25,6 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
   } = useWalletStore((state) => state.actions)
   const joystreamCtx = useContext<JoystreamContextValue | undefined>(JoystreamContext)
 
-  const [isAuthLoading, setIsAuthLoading] = useState(true)
   const [isSignerMetadataOutdated, setIsSignerMetadataOutdated] = useState(false)
 
   const setWalletAccounts = useCallback(
@@ -159,19 +158,6 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
     checkSignerStatus()
   }, [checkSignerStatus])
 
-  // if the user has account/member IDs set, initialize sign in automatically
-  useEffect(() => {
-    if (walletStatus !== 'unknown' || !lastUsedWalletName) {
-      setIsAuthLoading(false)
-      return
-    }
-
-    setTimeout(() => {
-      // add a slight delay - sometimes the extension will not initialize by the time of this call and may appear unavailable
-      signInToWallet(lastUsedWalletName, true).then(() => setIsAuthLoading(false))
-    }, 200)
-  }, [lastUsedWalletName, signInToWallet, walletStatus])
-
   useEffect(() => {
     if (!wallet || walletStatus !== 'connected') {
       return
@@ -189,13 +175,12 @@ export const WalletProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const contextValue: WalletContextValue = useMemo(
     () => ({
-      isAuthLoading,
       signInToWallet,
       isSignerMetadataOutdated,
       updateSignerMetadata,
       skipSignerMetadataUpdate,
     }),
-    [isAuthLoading, signInToWallet, isSignerMetadataOutdated, updateSignerMetadata, skipSignerMetadataUpdate]
+    [signInToWallet, isSignerMetadataOutdated, updateSignerMetadata, skipSignerMetadataUpdate]
   )
 
   // if (error) {
