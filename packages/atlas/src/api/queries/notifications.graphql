@@ -392,11 +392,9 @@ query GetNftActivities(
                   ...BasicMembershipFields
                 }
                 amount
-                auction {
-                  nft {
-                    video {
-                      ...BasicVideoActivityFields
-                    }
+                nft {
+                  video {
+                    ...BasicVideoActivityFields
                   }
                 }
               }
@@ -423,13 +421,21 @@ query GetNftActivities(
                 bidder {
                   ...BasicMembershipFields
                 }
-                auction {
-                  nft {
-                    video {
-                      ...BasicVideoActivityFields
-                    }
+                # here's bug
+                # auction {
+                #   nft {
+                #     video {
+                #       ...BasicVideoActivityFields
+                #     }
+                #   }
+                # }
+                nft {
+                  video {
+                    ...BasicVideoActivityFields
                   }
                 }
+                # auction {
+                # }
                 amount
               }
             }

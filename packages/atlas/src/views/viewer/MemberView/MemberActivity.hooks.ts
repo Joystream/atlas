@@ -75,8 +75,9 @@ const getVideoDataFromEvent = (
     case 'AuctionBidMadeEventData':
     case 'AuctionBidCanceledEventData':
       return nftActivity.event.data.bid.auction.nft.video
-    case 'EnglishAuctionSettledEventData':
     case 'BidMadeCompletingAuctionEventData':
+    case 'EnglishAuctionSettledEventData':
+      return nftActivity.event.data.winningBid.nft.video
     case 'OpenAuctionBidAcceptedEventData':
       return nftActivity.event.data.winningBid.auction.nft.video
     case 'NftBoughtEventData':

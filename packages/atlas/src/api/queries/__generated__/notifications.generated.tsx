@@ -2248,34 +2248,31 @@ export type GetNftActivitiesQuery = {
                         | null
                     } | null
                   }
-                  auction: {
-                    __typename?: 'Auction'
-                    nft: {
-                      __typename?: 'OwnedNft'
-                      video: {
-                        __typename?: 'Video'
+                  nft: {
+                    __typename?: 'OwnedNft'
+                    video: {
+                      __typename?: 'Video'
+                      id: string
+                      title?: string | null
+                      thumbnailPhoto?: {
+                        __typename?: 'StorageDataObject'
                         id: string
-                        title?: string | null
-                        thumbnailPhoto?: {
-                          __typename?: 'StorageDataObject'
-                          id: string
-                          resolvedUrls: Array<string>
-                          resolvedUrl?: string | null
-                          createdAt: Date
-                          size: string
-                          isAccepted: boolean
-                          ipfsHash: string
-                          storageBag: { __typename?: 'StorageBag'; id: string }
-                          type?:
-                            | { __typename: 'DataObjectTypeChannelAvatar' }
-                            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                            | { __typename: 'DataObjectTypeVideoMedia' }
-                            | { __typename: 'DataObjectTypeVideoSubtitle' }
-                            | { __typename: 'DataObjectTypeVideoThumbnail' }
-                            | null
-                        } | null
-                      }
+                        resolvedUrls: Array<string>
+                        resolvedUrl?: string | null
+                        createdAt: Date
+                        size: string
+                        isAccepted: boolean
+                        ipfsHash: string
+                        storageBag: { __typename?: 'StorageBag'; id: string }
+                        type?:
+                          | { __typename: 'DataObjectTypeChannelAvatar' }
+                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                          | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
+                          | { __typename: 'DataObjectTypeVideoThumbnail' }
+                          | null
+                      } | null
                     }
                   }
                 }
@@ -2621,34 +2618,31 @@ export type GetNftActivitiesQuery = {
                         | null
                     } | null
                   }
-                  auction: {
-                    __typename?: 'Auction'
-                    nft: {
-                      __typename?: 'OwnedNft'
-                      video: {
-                        __typename?: 'Video'
+                  nft: {
+                    __typename?: 'OwnedNft'
+                    video: {
+                      __typename?: 'Video'
+                      id: string
+                      title?: string | null
+                      thumbnailPhoto?: {
+                        __typename?: 'StorageDataObject'
                         id: string
-                        title?: string | null
-                        thumbnailPhoto?: {
-                          __typename?: 'StorageDataObject'
-                          id: string
-                          resolvedUrls: Array<string>
-                          resolvedUrl?: string | null
-                          createdAt: Date
-                          size: string
-                          isAccepted: boolean
-                          ipfsHash: string
-                          storageBag: { __typename?: 'StorageBag'; id: string }
-                          type?:
-                            | { __typename: 'DataObjectTypeChannelAvatar' }
-                            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                            | { __typename: 'DataObjectTypeVideoMedia' }
-                            | { __typename: 'DataObjectTypeVideoSubtitle' }
-                            | { __typename: 'DataObjectTypeVideoThumbnail' }
-                            | null
-                        } | null
-                      }
+                        resolvedUrls: Array<string>
+                        resolvedUrl?: string | null
+                        createdAt: Date
+                        size: string
+                        isAccepted: boolean
+                        ipfsHash: string
+                        storageBag: { __typename?: 'StorageBag'; id: string }
+                        type?:
+                          | { __typename: 'DataObjectTypeChannelAvatar' }
+                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                          | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
+                          | { __typename: 'DataObjectTypeVideoThumbnail' }
+                          | null
+                      } | null
                     }
                   }
                 }
@@ -3878,11 +3872,9 @@ export const GetNftActivitiesDocument = gql`
                     ...BasicMembershipFields
                   }
                   amount
-                  auction {
-                    nft {
-                      video {
-                        ...BasicVideoActivityFields
-                      }
+                  nft {
+                    video {
+                      ...BasicVideoActivityFields
                     }
                   }
                 }
@@ -3909,11 +3901,9 @@ export const GetNftActivitiesDocument = gql`
                   bidder {
                     ...BasicMembershipFields
                   }
-                  auction {
-                    nft {
-                      video {
-                        ...BasicVideoActivityFields
-                      }
+                  nft {
+                    video {
+                      ...BasicVideoActivityFields
                     }
                   }
                   amount
