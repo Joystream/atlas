@@ -1,11 +1,12 @@
+import { JOYSTREAM_ADDRESS_PREFIX } from '@joystream/types'
 import { ScryptOpts, scrypt } from '@noble/hashes/scrypt'
+import { Keyring } from '@polkadot/keyring'
 import axios from 'axios'
 import { entropyToMnemonic } from 'bip39'
 import { Buffer } from 'buffer'
 import { AES, enc, lib, mode } from 'crypto-js'
 
 import { ORION_AUTH_URL } from '@/config/env'
-import { keyring } from '@/providers/auth/auth.provider'
 import { SentryLogger } from '@/utils/logs'
 
 export const handleAnonymousAuth = async (userId?: string | null) => {
@@ -33,6 +34,8 @@ export const handleAnonymousAuth = async (userId?: string | null) => {
 }
 
 export const getArtifacts = async (id: string, email: string, password: string) => {
+  const keyring = new Keyring({ type: 'sr25519', ss58Format: JOYSTREAM_ADDRESS_PREFIX })
+
   try {
     const res = await axios.get<{ cipherIv: string; encryptedSeed: string }>(
       `${ORION_AUTH_URL}/artifacts?id=${id}&email=${email}`
