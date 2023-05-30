@@ -10,11 +10,11 @@ import { atlasConfig } from '@/config'
 import { FAUCET_URL } from '@/config/env'
 import { MemberId } from '@/joystream-lib/types'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
 import { useUser } from '@/providers/user/user.hooks'
-import { useUserStore } from '@/providers/user/user.store'
 import { useWallet } from '@/providers/wallet/wallet.hooks'
 import { isAxiosError } from '@/utils/error'
 import { uploadAvatarImage } from '@/utils/image'
@@ -59,7 +59,7 @@ export const SignInModal: FC = () => {
   const { displaySnackbar } = useSnackbar()
   const { refetchUserMemberships, setActiveUser, isLoggedIn } = useUser()
   const { walletStatus } = useWallet()
-  const { signInModalOpen, setSignInModalOpen } = useUserStore(
+  const { signInModalOpen, setSignInModalOpen } = useAuthStore(
     (state) => ({ signInModalOpen: state.signInModalOpen, setSignInModalOpen: state.actions.setSignInModalOpen }),
     shallow
   )

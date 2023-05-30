@@ -7,7 +7,7 @@ import { createClient } from 'graphql-ws'
 import { atlasConfig } from '@/config'
 import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config/env'
 import { logDistributorPerformance, testAssetDownload } from '@/providers/assets/assets.helpers'
-import { useUserStore } from '@/providers/user/user.store'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { useUserLocationStore } from '@/providers/userLocation'
 import { isAxiosError } from '@/utils/error'
 import { AssetLogger, ConsoleLogger, DistributorEventEntry, SentryLogger } from '@/utils/logs'
@@ -37,7 +37,7 @@ const retryLink = new RetryLink({
   attempts: {
     max: 5,
     retryIf: async (error) => {
-      const userId = useUserStore.getState().userId
+      const userId = useAuthStore.getState().anonymousUserId
       const isUnauthorizedError =
         error.statusCode === 400 &&
         error?.result?.errors?.find((err: { message: string }) => err.message === 'Unauthorized')
@@ -46,13 +46,13 @@ const retryLink = new RetryLink({
         try {
           const newUserId = await setAnonymousAuth(userId)
           if (newUserId) {
-            useUserStore.setState({ userId: newUserId })
+            useAuthStore.setState({ anonymousUserId: newUserId })
             return true
           }
           return true
         } catch (error) {
           if (isAxiosError(error) && error.response?.status === 401) {
-            useUserStore.setState({ userId: null })
+            useAuthStore.setState({ anonymousUserId: null })
           }
           return true
         }

@@ -8,6 +8,7 @@ import useResizeObserver from 'use-resize-observer'
 
 import { absoluteRoutes } from '@/config/routes'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { cVar } from '@/styles'
@@ -28,8 +29,10 @@ export type MemberDropdownProps = {
 export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
   ({ publisher, isActive, closeDropdown, onChannelChange }, ref) => {
     const navigate = useNavigate()
-    const { channelId, activeMembership, memberships, signOut, setActiveUser, setSignInModalOpen, membershipsLoading } =
-      useUser()
+    const { channelId, activeMembership, memberships, signOut, setActiveUser, membershipsLoading } = useUser()
+    const {
+      actions: { setSignInModalOpen },
+    } = useAuthStore()
     const [showWithdrawDialog, setShowWithdrawDialog] = useState(false)
     const [disableScrollDuringAnimation, setDisableScrollDuringAnimation] = useState(false)
 
