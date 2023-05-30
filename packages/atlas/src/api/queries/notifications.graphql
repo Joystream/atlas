@@ -254,12 +254,7 @@ query GetNftHistory($nftId: String!) {
   }
 }
 
-query GetNftActivities(
-  $memberId: String!
-  $first: Int!
-  $after: String
-  $orderBy: [NftActivityOrderByInput!] = event_timestamp_DESC
-) {
+query GetNftActivitiesCount($memberId: String!) {
   nftsBought: nftActivitiesConnection(
     where: {
       event: {
@@ -278,7 +273,7 @@ query GetNftActivities(
         ]
       }
     }
-    orderBy: $orderBy
+    orderBy: event_timestamp_DESC
   ) {
     totalCount
   }
@@ -312,7 +307,7 @@ query GetNftActivities(
         ]
       }
     }
-    orderBy: $orderBy
+    orderBy: event_timestamp_DESC
   ) {
     totalCount
   }
@@ -326,18 +321,25 @@ query GetNftActivities(
         ]
       }
     }
-    orderBy: $orderBy
+    orderBy: event_timestamp_DESC
   ) {
     totalCount
   }
 
   nftsBidded: nftActivitiesConnection(
     where: { event: { data: { isTypeOf_eq: "AuctionBidMadeEventData", bid: { bidder: { id_eq: $memberId } } } } }
-    orderBy: $orderBy
+    orderBy: event_timestamp_DESC
   ) {
     totalCount
   }
+}
 
+query GetNftActivities(
+  $memberId: String!
+  $first: Int!
+  $after: String
+  $orderBy: [NftActivityOrderByInput!] = event_timestamp_DESC
+) {
   nftActivitiesConnection(
     first: $first
     after: $after
