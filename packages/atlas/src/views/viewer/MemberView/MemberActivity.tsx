@@ -101,7 +101,6 @@ const getDescription = (activity: ActivitiesRecord) => {
     case 'Removal':
       return (
         <>
-          {' '}
           <StyledLink
             to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs owned' })}
             onClick={(e) => e.stopPropagation()}
@@ -114,7 +113,6 @@ const getDescription = (activity: ActivitiesRecord) => {
     case 'Mint':
       return (
         <>
-          {' '}
           <StyledLink
             to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs owned' })}
             onClick={(e) => e.stopPropagation()}
@@ -127,7 +125,6 @@ const getDescription = (activity: ActivitiesRecord) => {
     case 'Withdrawal':
       return (
         <>
-          {' '}
           <StyledLink
             to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs owned' })}
             onClick={(e) => e.stopPropagation()}
