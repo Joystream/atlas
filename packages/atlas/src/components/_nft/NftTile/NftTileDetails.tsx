@@ -201,7 +201,7 @@ export const NftTileDetails: FC<NftTileDetailsProps> = ({
                   // fix for https://github.com/Joystream/atlas/issues/4239
                   // We're manually removing popovers, because tippy is not working with swiper carousel
                   document.body.querySelectorAll('[data-tippy-root]').forEach((el) => {
-                    if (el.id !== `tippy-${instance.id.toString()}`) {
+                    if (el.id !== `tippy-${instance?.id.toString()}`) {
                       el.remove()
                     }
                   })

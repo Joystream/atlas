@@ -21,7 +21,7 @@ export type PopoverProps = PropsWithChildren<{
   className?: string
   appendTo?: Element | 'parent' | ((ref: Element) => Element) | undefined
   onHide?: () => void
-  onShow?: (instance: Instance) => void
+  onShow?: (instance?: Instance) => void
   disabled?: boolean
   flipEnabled?: boolean
   animation?: boolean
