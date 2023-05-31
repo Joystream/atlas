@@ -37,12 +37,9 @@ query GetNotificationsConnection($memberId: String!, $first: Int!, $after: Strin
                     ...BasicMembershipFields
                   }
                 }
-                auction {
-                  nft {
-                    video {
-                      id
-                      title
-                    }
+                nft {
+                  video {
+                    ...BasicVideoActivityFields
                   }
                 }
               }
@@ -58,8 +55,7 @@ query GetNotificationsConnection($memberId: String!, $first: Int!, $after: Strin
               price
               nft {
                 video {
-                  id
-                  title
+                  ...BasicVideoActivityFields
                 }
               }
             }
@@ -72,8 +68,7 @@ query GetNotificationsConnection($memberId: String!, $first: Int!, $after: Strin
                 amount
                 nft {
                   video {
-                    id
-                    title
+                    ...BasicVideoActivityFields
                   }
                 }
               }
@@ -88,12 +83,9 @@ query GetNotificationsConnection($memberId: String!, $first: Int!, $after: Strin
                 bidder {
                   ...BasicMembershipFields
                 }
-                auction {
-                  nft {
-                    video {
-                      id
-                      title
-                    }
+                nft {
+                  video {
+                    ...BasicVideoActivityFields
                   }
                 }
               }
@@ -107,12 +99,9 @@ query GetNotificationsConnection($memberId: String!, $first: Int!, $after: Strin
                 bidder {
                   ...BasicMembershipFields
                 }
-                auction {
-                  nft {
-                    video {
-                      id
-                      title
-                    }
+                nft {
+                  video {
+                    ...BasicVideoActivityFields
                   }
                 }
               }
@@ -257,9 +246,10 @@ query GetNftHistory($nftId: String!) {
 query GetNftActivitiesCount($memberId: String!) {
   nftsBought: nftActivitiesConnection(
     where: {
-      event: {
-        OR: [
-          {
+      OR: [
+        {
+          member: { id_eq: $memberId }
+          event: {
             data: {
               isTypeOf_in: [
                 "EnglishAuctionSettledEventData"
@@ -269,9 +259,12 @@ query GetNftActivitiesCount($memberId: String!) {
               winningBid: { bidder: { id_eq: $memberId } }
             }
           }
-          { data: { isTypeOf_eq: "NftBoughtEventData", buyer: { id_eq: $memberId } } }
-        ]
-      }
+        }
+        {
+          member: { id_eq: $memberId }
+          event: { data: { isTypeOf_eq: "NftBoughtEventData", buyer: { id_eq: $memberId } } }
+        }
+      ]
     }
     orderBy: event_timestamp_DESC
   ) {
@@ -280,9 +273,10 @@ query GetNftActivitiesCount($memberId: String!) {
 
   nftsSold: nftActivitiesConnection(
     where: {
-      event: {
-        OR: [
-          {
+      OR: [
+        {
+          member: { id_eq: $memberId }
+          event: {
             data: {
               isTypeOf_in: [
                 "EnglishAuctionSettledEventData"
@@ -293,7 +287,10 @@ query GetNftActivitiesCount($memberId: String!) {
               previousNftOwner: { member: { id_eq: $memberId } }
             }
           }
-          {
+        }
+        {
+          member: { id_eq: $memberId }
+          event: {
             data: {
               isTypeOf_in: [
                 "EnglishAuctionSettledEventData"
@@ -304,8 +301,8 @@ query GetNftActivitiesCount($memberId: String!) {
               previousNftOwner: { channel: { ownerMember: { id_eq: $memberId } } }
             }
           }
-        ]
-      }
+        }
+      ]
     }
     orderBy: event_timestamp_DESC
   ) {
@@ -374,11 +371,9 @@ query GetNftActivities(
                     ...BasicMembershipFields
                   }
                 }
-                auction {
-                  nft {
-                    video {
-                      ...BasicVideoActivityFields
-                    }
+                nft {
+                  video {
+                    ...BasicVideoActivityFields
                   }
                 }
               }
@@ -421,21 +416,12 @@ query GetNftActivities(
                 bidder {
                   ...BasicMembershipFields
                 }
-                # here's bug
-                # auction {
-                #   nft {
-                #     video {
-                #       ...BasicVideoActivityFields
-                #     }
-                #   }
-                # }
+
                 nft {
                   video {
                     ...BasicVideoActivityFields
                   }
                 }
-                # auction {
-                # }
                 amount
               }
             }
@@ -445,11 +431,9 @@ query GetNftActivities(
                 bidder {
                   ...BasicMembershipFields
                 }
-                auction {
-                  nft {
-                    video {
-                      ...BasicVideoActivityFields
-                    }
+                nft {
+                  video {
+                    ...BasicVideoActivityFields
                   }
                 }
               }
@@ -497,11 +481,9 @@ query GetNftActivities(
                 ...BasicMembershipFields
               }
               bid {
-                auction {
-                  nft {
-                    video {
-                      ...BasicVideoActivityFields
-                    }
+                nft {
+                  video {
+                    ...BasicVideoActivityFields
                   }
                 }
               }
