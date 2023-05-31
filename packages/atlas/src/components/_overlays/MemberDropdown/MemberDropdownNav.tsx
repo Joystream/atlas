@@ -323,7 +323,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
       </FixedSizeContainer>
       <SectionContainer>
         <ListItem
-          label="Disconnect wallet"
+          label="Log out"
           destructive
           nodeStart={<IconWrapper destructive icon={<SvgActionLogOut />} />}
           onClick={() => {

@@ -13,7 +13,7 @@ import {
   HeaderContainer,
   LogoContainer,
   StyledAppLogo,
-} from './SignInModalStepTemplate.styles'
+} from './ExternalSignInModalStepTemplate.styles'
 
 type SignInModalStepTemplateProps = PropsWithChildren<{
   title: string
@@ -25,7 +25,7 @@ type SignInModalStepTemplateProps = PropsWithChildren<{
   formNode?: ReactNode
 }>
 
-export const SignInModalStepTemplate: FC<SignInModalStepTemplateProps> = ({
+export const ExternalSignInModalStepTemplate: FC<SignInModalStepTemplateProps> = ({
   title,
   subtitle,
   children,
@@ -42,7 +42,7 @@ export const SignInModalStepTemplate: FC<SignInModalStepTemplateProps> = ({
       <CustomBackgroundContainer
         darkBackground={darkBackground}
         hasDivider={!!(backgroundImage || darkBackground)}
-        bottomPadding={!!(backgroundImage || darkBackground)}
+        hasBottomPadding={!!(backgroundImage || darkBackground)}
       >
         {backgroundImage && (
           <>

@@ -10,30 +10,30 @@ import {
   GetMembershipsQueryVariables,
 } from '@/api/queries/__generated__/memberships.generated'
 import { Text } from '@/components/Text'
+import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
 import { atlasConfig } from '@/config'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
 
-import { SignInModalStepTemplate } from './SignInModalStepTemplate'
-import { Anchor, StyledAvatar, StyledForm } from './SignInSteps.styles'
-import { SignInStepProps } from './SignInSteps.types'
+import { Anchor, StyledAvatar, StyledForm } from './SignUpMembershipStep.styles'
 
-import { MemberFormData } from '../SignInModal.types'
+import { MemberFormData, SignUpFormData } from '../../SignUpModal.types'
+import { SignUpStepsCommonProps } from '../SignUpSteps.types'
 
-type SignInModalMembershipStepProps = SignInStepProps & {
+type SignInModalMembershipStepProps = SignUpStepsCommonProps & {
   onSubmit: (data: MemberFormData) => void
-  previouslyFailedData?: MemberFormData | null
   dialogContentRef?: RefObject<HTMLDivElement>
-}
+} & Pick<SignUpFormData, 'avatar' | 'handle'>
 
-export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
+export const SignUpMembershipStep: FC<SignInModalMembershipStepProps> = ({
   setPrimaryButtonProps,
   onSubmit,
   hasNavigatedBack,
   dialogContentRef,
-  previouslyFailedData,
+  avatar,
+  handle,
 }) => {
   const {
     register,
@@ -42,7 +42,13 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
     watch,
     control,
     formState: { errors, isSubmitting },
-  } = useForm<MemberFormData>({ reValidateMode: 'onSubmit', defaultValues: previouslyFailedData || undefined })
+  } = useForm<MemberFormData>({
+    reValidateMode: 'onSubmit',
+    defaultValues: {
+      avatar,
+      handle,
+    },
+  })
 
   const handleInputRef = useRef<HTMLInputElement | null>(null)
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
@@ -75,7 +81,7 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
   // send updates to SignInModal on state of primary button
   useEffect(() => {
     setPrimaryButtonProps({
-      text: isSubmitting ? 'Please wait...' : 'Create membership',
+      text: isSubmitting ? 'Please wait...' : 'Sign up',
       disabled: isSubmitting,
       onClick: requestFormSubmit,
     })
@@ -117,7 +123,7 @@ export const SignInModalMembershipStep: FC<SignInModalMembershipStepProps> = ({
   }, [errors.handle])
 
   return (
-    <SignInModalStepTemplate
+    <AuthenticationModalStepTemplate
       darkBackground
       title="Create membership"
       backgroundImage={watch('avatar')?.url || undefined}

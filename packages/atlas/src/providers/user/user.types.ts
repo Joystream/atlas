@@ -6,6 +6,7 @@ export type ActiveUserState = {
   accountId: string | null
   memberId: string | null
   channelId: string | null
+  loggedInAccountId: string | null
 }
 
 export type UserContextValue = {

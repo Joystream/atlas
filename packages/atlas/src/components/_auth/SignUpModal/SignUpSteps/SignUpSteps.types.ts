@@ -1,7 +1,6 @@
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
 
-export type SignInStepProps = {
+export type SignUpStepsCommonProps = {
   setPrimaryButtonProps: (props: DialogButtonProps) => void
-  goToNextStep: () => void
   hasNavigatedBack: boolean
 }
