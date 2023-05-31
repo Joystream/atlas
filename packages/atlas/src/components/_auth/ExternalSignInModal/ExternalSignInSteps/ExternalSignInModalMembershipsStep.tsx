@@ -5,10 +5,10 @@ import { Avatar } from '@/components/Avatar'
 import { LogInErrors, useLogIn } from '@/hooks/useLogIn'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useUser } from '@/providers/user/user.hooks'
-import { useUserStore } from '@/providers/user/user.store'
 import { shortenString } from '@/utils/misc'
 
 import { ExternalSignInModalStepTemplate } from './ExternalSignInModalStepTemplate'
@@ -28,11 +28,13 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
   memberId,
 }) => {
   const smMatch = useMediaMatch('sm')
-  const { setSignInModalOpen, setActiveUser } = useUserStore(
-    (state) => ({ setSignInModalOpen: state.actions.setSignInModalOpen, setActiveUser: state.actions.setActiveUser }),
+  const { setSignInModalOpen } = useAuthStore(
+    (state) => ({ setSignInModalOpen: state.actions.setSignInModalOpen }),
     shallow
   )
   const { memberships } = useUser()
+  const { setApiActiveAccount } = useJoystream()
+
   const { joystream } = useJoystream()
   const handleLogin = useLogIn()
   const { displaySnackbar } = useSnackbar()
@@ -44,11 +46,7 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
 
     if (!member) return
 
-    setActiveUser({
-      memberId: member.id,
-      accountId: member.controllerAccount,
-      channelId: member.channels[0]?.id,
-    })
+    setApiActiveAccount(member.controllerAccount)
 
     goToStep(ModalSteps.Logging)
     const res = await handleLogin({
@@ -78,7 +76,16 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
     if (res.data) {
       setSignInModalOpen(false)
     }
-  }, [displaySnackbar, goToStep, handleLogin, joystream, memberId, memberships, setActiveUser, setSignInModalOpen])
+  }, [
+    displaySnackbar,
+    goToStep,
+    handleLogin,
+    joystream,
+    memberId,
+    memberships,
+    setApiActiveAccount,
+    setSignInModalOpen,
+  ])
 
   useEffect(() => {
     if (memberId) return

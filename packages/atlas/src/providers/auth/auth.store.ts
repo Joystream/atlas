@@ -3,6 +3,7 @@ import { createStore } from '@/utils/store'
 export type AuthStoreState = {
   anonymousUserId: string | null
   signInModalOpen: boolean
+  signUpModalOpen: boolean
   encodedSeed: string | null
 }
 
@@ -10,6 +11,7 @@ export type AuthStoreActions = {
   setAnonymousUserId: (anonymousUserId: string | null) => void
   setEncodedSeed: (encodedSeed: string) => void
   setSignInModalOpen: (isOpen: boolean) => void
+  setSignUpModalOpen: (isOpen: boolean) => void
 }
 
 export const useAuthStore = createStore<AuthStoreState, AuthStoreActions>(
@@ -17,6 +19,7 @@ export const useAuthStore = createStore<AuthStoreState, AuthStoreActions>(
     state: {
       anonymousUserId: null,
       signInModalOpen: false,
+      signUpModalOpen: false,
       encodedSeed: null,
     },
     actionsFactory: (set) => ({
@@ -31,6 +34,11 @@ export const useAuthStore = createStore<AuthStoreState, AuthStoreActions>(
         })
       },
       setSignInModalOpen: (isOpen) => {
+        set((state) => {
+          state.signInModalOpen = isOpen
+        })
+      },
+      setSignUpModalOpen: (isOpen) => {
         set((state) => {
           state.signInModalOpen = isOpen
         })

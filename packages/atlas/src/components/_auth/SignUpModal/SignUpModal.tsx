@@ -7,7 +7,7 @@ import { Button } from '@/components/_buttons/Button'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useUserStore } from '@/providers/user/user.store'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { media } from '@/styles'
 
 import { useCreateMember } from './SignUpModal.hooks'
@@ -40,7 +40,7 @@ export const SignUpModal = () => {
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Continue' })
   const [amountOfTokens, setAmountofTokens] = useState<number>()
 
-  const { signUpModalOpen, setSignUpModalOpen } = useUserStore(
+  const { signUpModalOpen, setSignUpModalOpen } = useAuthStore(
     (state) => ({ signUpModalOpen: state.signUpModalOpen, setSignUpModalOpen: state.actions.setSignUpModalOpen }),
     shallow
   )

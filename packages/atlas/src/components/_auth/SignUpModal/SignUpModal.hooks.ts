@@ -7,11 +7,11 @@ import { useMutation } from 'react-query'
 import { FAUCET_URL } from '@/config/env'
 import { MemberId } from '@/joystream-lib/types'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { useJoystream } from '@/providers/joystream/joystream.hooks'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransactionManagerStore } from '@/providers/transactions/transactions.store'
 import { useUser } from '@/providers/user/user.hooks'
-import { useUserStore } from '@/providers/user/user.store'
 import { UploadAvatarServiceError, uploadAvatarImage } from '@/utils/image'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
@@ -45,7 +45,7 @@ type CreateMemberArgs = {
 export const useCreateMember = () => {
   const { refetchUserMemberships, setActiveUser } = useUser()
   const [emailAlreadyRegisteredMemberId, setEmailAlreadyRegisteredMemberId] = useState('')
-  const setUserId = useUserStore((store) => store.actions.setUserId)
+  const setAnonymousUserId = useAuthStore((store) => store.actions.setAnonymousUserId)
   const { joystream } = useJoystream()
   const addBlockAction = useTransactionManagerStore((state) => state.actions.addBlockAction)
   const { displaySnackbar } = useSnackbar()
@@ -94,7 +94,7 @@ export const useCreateMember = () => {
 
             if (lastCreatedMembership) {
               await registerAccount(data.email, data.password, data.mnemonic, memberId.toString())
-              setUserId('')
+              setAnonymousUserId('')
               setActiveUser({ accountId: address, memberId: lastCreatedMembership.id, channelId: null })
             }
 
@@ -136,7 +136,7 @@ export const useCreateMember = () => {
         // skip member creation in case of email already exists error
         if (emailAlreadyRegisteredMemberId) {
           await registerAccount(data.email, data.password, data.mnemonic, emailAlreadyRegisteredMemberId.toString())
-          setUserId('')
+          setAnonymousUserId('')
           setActiveUser({ accountId: address, memberId: emailAlreadyRegisteredMemberId, channelId: null })
           onSuccess()
           return
@@ -209,7 +209,7 @@ export const useCreateMember = () => {
       joystream,
       refetchUserMemberships,
       setActiveUser,
-      setUserId,
+      setAnonymousUserId,
     ]
   )
   return handleSubmit

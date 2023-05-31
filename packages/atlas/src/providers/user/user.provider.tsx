@@ -2,6 +2,7 @@ import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffec
 
 import { useMemberships } from '@/api/hooks/membership'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
+import { useJoystream } from '@/providers/joystream/joystream.hooks'
 import { AssetLogger, SentryLogger } from '@/utils/logs'
 
 import { useUserStore } from './user.store'
@@ -16,6 +17,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   const { channelId } = useUserStore((state) => state)
   const { setActiveUser } = useUserStore((state) => state.actions)
   const { currentUser } = useAuth()
+  const { setApiActiveAccount } = useJoystream()
 
   const {
     memberships: currentMemberships,
@@ -49,9 +51,15 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       memberId: currentUser?.membershipId,
       channelId,
     }
+
+    // update Joystream Lib selected on change
+    if (currentUser?.joystreamAccount) {
+      setApiActiveAccount(currentUser.joystreamAccount)
+    }
+
     SentryLogger.setUser(user)
     AssetLogger.setUser(user)
-  }, [channelId, currentUser?.joystreamAccount, currentUser?.membershipId])
+  }, [channelId, currentUser?.joystreamAccount, currentUser?.membershipId, setApiActiveAccount])
 
   const activeMembership =
     (currentUser?.membershipId && memberships?.find((membership) => membership.id === currentUser?.membershipId)) ||
