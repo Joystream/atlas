@@ -36,7 +36,12 @@ const delayLink = new ApolloLink((operation, forward) => {
 const retryLink = new RetryLink({
   attempts: {
     max: 5,
-    retryIf: async (error) => {
+    retryIf: async (error, operation) => {
+      // For the sign up purposes don't retry when operationName GetNotificationsConnection, which is called constantly
+      if (operation.operationName === 'GetNotificationsConnection') {
+        return false
+      }
+
       const userId = useUserStore.getState().userId
       const isUnauthorizedError =
         error.statusCode === 400 &&
