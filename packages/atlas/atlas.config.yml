@@ -474,6 +474,8 @@ content:
       name: Swedish
     - isoCode: ta
       name: Tamil
+    - isoCode: te
+      name: Telugu
     - isoCode: th
       name: Thai
     - isoCode: tr
