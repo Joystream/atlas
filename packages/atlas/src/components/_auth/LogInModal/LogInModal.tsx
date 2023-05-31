@@ -3,17 +3,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import { Text } from '@/components/Text'
-import { Tooltip } from '@/components/Tooltip'
-import {
-  Container,
-  StyledAppLogo,
-  StyledButton,
-  StyledHideSvg,
-  StyledShowSvg,
-  TextCointainer,
-} from '@/components/_auth/LogInModal/LogInModal.styles'
-import { SignInModalStepTemplate } from '@/components/_auth/SignInModal/SignInSteps/SignInModalStepTemplate'
+import { SvgActionHide, SvgActionShow } from '@/assets/icons'
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
@@ -21,6 +11,10 @@ import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
 import { LogInErrors, useLogIn } from '@/hooks/useLogIn'
 import { useSnackbar } from '@/providers/snackbars'
+
+import { Container } from './LogInModal.styles'
+
+import { AuthenticationModalStepTemplate } from '../AuthenticationModalStepTemplate'
 
 export const LogInModal = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -35,8 +29,8 @@ export const LogInModal = () => {
   } = useForm<{ email: string; password: string }>({
     resolver: zodResolver(
       z.object({
-        email: z.string().email(),
-        password: z.string().min(1, 'Please provide password'),
+        email: z.string().min(3, { message: 'Enter email address.' }).email({ message: 'Enter valid email address.' }),
+        password: z.string().min(1, 'Enter password.'),
       })
     ),
   })
@@ -47,7 +41,7 @@ export const LogInModal = () => {
 
     if (res.error === LogInErrors.ArtifactsNotFound) {
       displaySnackbar({
-        title: `We can’t find ${atlasConfig.general.appName} membership associated with this email`,
+        title: `We can't find ${atlasConfig.general.appName} membership associated with this email`,
         description: `Make sure that you are using the same email that you used to create your membership on ${atlasConfig.general.appName}.`,
         iconType: 'error',
       })
@@ -81,41 +75,34 @@ export const LogInModal = () => {
       additionalActionsNode={!isLoading && <Button variant="tertiary">Close</Button>}
     >
       {!isLoading ? (
-        // todo: after merge replace with AuthenticationModalStepTemplate
-        <Container>
-          <StyledAppLogo variant="short-monochrome" />
-          <TextCointainer>
-            <Text variant="h500" as="h5">
-              Log in
-            </Text>
-            <Text variant="t200" as="p" color="colorText">
-              Use your {atlasConfig.general.appName} account.
-            </Text>
-          </TextCointainer>
-          <FormField label="Email" error={errors.email?.message}>
-            <Input {...register('email')} placeholder="Email" />
-          </FormField>
-          <FormField label="Password" error={errors.password?.message}>
-            <Input
-              {...register('password')}
-              placeholder="Password"
-              type={isPasswordShown ? 'text' : 'password'}
-              nodeEnd={
-                <Tooltip text={isPasswordShown ? 'Hide' : 'Show'} placement="top">
-                  <StyledButton
-                    icon={isPasswordShown ? <StyledHideSvg /> : <StyledShowSvg />}
-                    variant="tertiary"
-                    onClick={() => {
-                      setPasswordShown((prev) => !prev)
-                    }}
-                  />
-                </Tooltip>
-              }
-            />
-          </FormField>
-        </Container>
+        <AuthenticationModalStepTemplate
+          title="Log in"
+          subtitle={`Use your ${atlasConfig.general.appName} account.`}
+          hasNavigatedBack
+        >
+          <Container>
+            <FormField label="Email" error={errors.email?.message}>
+              <Input {...register('email')} placeholder="Email" />
+            </FormField>
+            <FormField label="Password" error={errors.password?.message}>
+              <Input
+                {...register('password')}
+                placeholder="Password"
+                type={isPasswordShown ? 'text' : 'password'}
+                actionButton={{
+                  tooltipText: isPasswordShown ? 'Hide' : 'Show',
+                  dontFocusOnClick: true,
+                  icon: isPasswordShown ? <SvgActionHide /> : <SvgActionShow />,
+                  onClick: () => {
+                    setPasswordShown((prev) => !prev)
+                  },
+                }}
+              />
+            </FormField>
+          </Container>
+        </AuthenticationModalStepTemplate>
       ) : (
-        <SignInModalStepTemplate
+        <AuthenticationModalStepTemplate
           title="Logginng in"
           subtitle="Please wait while we log you in. This should take about 10 seconds."
           loader

@@ -13,9 +13,9 @@ import {
   HeaderContainer,
   LogoContainer,
   StyledAppLogo,
-} from './SignInModalStepTemplate.styles'
+} from './AuthenticationModalStepTemplate.styles'
 
-type SignInModalStepTemplateProps = PropsWithChildren<{
+type AuthenticationModalStepTemplateProps = PropsWithChildren<{
   title: string
   subtitle?: ReactNode
   loader?: boolean
@@ -25,7 +25,7 @@ type SignInModalStepTemplateProps = PropsWithChildren<{
   formNode?: ReactNode
 }>
 
-export const SignInModalStepTemplate: FC<SignInModalStepTemplateProps> = ({
+export const AuthenticationModalStepTemplate: FC<AuthenticationModalStepTemplateProps> = ({
   title,
   subtitle,
   children,
