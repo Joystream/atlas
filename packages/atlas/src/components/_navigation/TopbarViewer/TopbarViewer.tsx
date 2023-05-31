@@ -146,7 +146,7 @@ export const TopbarViewer: FC = () => {
                         size="medium"
                         onClick={() => signIn(undefined)}
                       >
-                        Connect wallet
+                        Log in
                       </Button>
                     )
                   )

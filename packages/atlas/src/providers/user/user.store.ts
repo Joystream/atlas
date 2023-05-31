@@ -26,6 +26,7 @@ export type UserStoreActions = {
   setSignInModalOpen: (isOpen: boolean) => void
   setSignUpModalOpen: (isOpen: boolean) => void
   setLastChainMetadataVersion: (genesisHash: string, version: number) => void
+  setLoggedInAccountId: (address: string) => void
 }
 
 export const useUserStore = createStore<UserStoreState, UserStoreActions>(
@@ -34,6 +35,7 @@ export const useUserStore = createStore<UserStoreState, UserStoreActions>(
       accountId: null,
       memberId: null,
       channelId: null,
+      loggedInAccountId: null,
 
       userId: null,
       wallet: null,
@@ -52,6 +54,11 @@ export const useUserStore = createStore<UserStoreState, UserStoreActions>(
           state.channelId = null
         })
       },
+      setLoggedInAccountId: (address) => {
+        set((state) => {
+          state.loggedInAccountId = address
+        })
+      },
       setActiveUser: (activeUserChanges) => {
         set((state) => {
           state.accountId = activeUserChanges.accountId !== undefined ? activeUserChanges.accountId : state.accountId
@@ -68,6 +75,7 @@ export const useUserStore = createStore<UserStoreState, UserStoreActions>(
           state.walletStatus = 'unknown'
           state.walletAccounts = []
           state.lastUsedWalletName = null
+          state.loggedInAccountId = null
         })
       },
 
@@ -113,7 +121,15 @@ export const useUserStore = createStore<UserStoreState, UserStoreActions>(
     persist: {
       key: 'activeUser',
       version: 0,
-      whitelist: ['accountId', 'memberId', 'channelId', 'lastUsedWalletName', 'lastChainMetadataVersion', 'userId'],
+      whitelist: [
+        'accountId',
+        'memberId',
+        'channelId',
+        'lastUsedWalletName',
+        'lastChainMetadataVersion',
+        'userId',
+        'loggedInAccountId',
+      ],
       migrate: (oldState) => {
         return oldState
       },

@@ -82,13 +82,13 @@ export class JoystreamLib {
     this.api.setSigner(signer)
   }
 
-  signMessage = async (signerPayload: SignerPayloadRawBase) => {
+  signMessage = async (signerPayload: SignerPayloadRawBase, customAddress?: string) => {
     await this.ensureApi()
     if (!this.selectedAccountId) {
       SentryLogger.error('Missing signer for signMessage', 'JoystreamLib')
       return
     }
-    const signature = await this.api.sign(this.selectedAccountId, signerPayload)
+    const signature = await this.api.sign(customAddress ?? this.selectedAccountId, signerPayload)
 
     return signature
   }
