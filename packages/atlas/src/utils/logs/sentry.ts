@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/react'
-import { Severity, SeverityLevel } from '@sentry/react'
+import { Replay, Severity, SeverityLevel } from '@sentry/react'
 
 import { ConsoleLogger } from './console'
 
@@ -17,8 +17,9 @@ class SentryError extends Error {
 }
 
 class _SentryLogger {
-  private initialized = false
   private user?: Record<string, unknown>
+  public initialized = false
+  public replay?: Replay
 
   initialize(dsn: string | undefined | null) {
     if (!dsn) return
@@ -29,15 +30,11 @@ class _SentryLogger {
         'ResizeObserver loop limit exceeded',
         'ResizeObserver loop completed with undelivered notifications',
       ],
-      // This sets the sample rate to be 10%. You may want this to be 100% while
-      // in development and sample at a lower rate in production
-      replaysSessionSampleRate: 0.1,
-      // If the entire session is not sampled, use the below sample rate to sample
-      // sessions when an error occurs.
-      replaysOnErrorSampleRate: 1.0,
-
-      integrations: [new Sentry.Replay()],
+      // This sets the sample rate to be 0%, so we'll only use manually recorded replays
+      replaysSessionSampleRate: 0,
+      replaysOnErrorSampleRate: 0,
     })
+    this.replay = new Sentry.Replay({ sessionSampleRate: 0, errorSampleRate: 0 })
     this.initialized = true
   }
 
