@@ -10,7 +10,7 @@ import { WithdrawFundsDialog } from '@/components/_overlays/SendTransferDialogs'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
-import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
+import { useSubscribeAccountBalance } from '@/providers/joystream'
 import { useUser } from '@/providers/user/user.hooks'
 import { formatNumber } from '@/utils/number'
 

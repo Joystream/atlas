@@ -1,6 +1,6 @@
 import BN from 'bn.js'
 import { ProxyMarked, Remote, proxy, wrap } from 'comlink'
-import { FC, PropsWithChildren, createContext, useCallback, useEffect, useRef, useState } from 'react'
+import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
 
 import { atlasConfig } from '@/config'
 import { NODE_URL } from '@/config/env'
@@ -177,4 +177,12 @@ const useJoystreamChainConstants = (joystream: Remote<JoystreamLib> | undefined)
   }, [joystream])
 
   return chainConstant
+}
+
+export const useJoystream = (): JoystreamContextValue => {
+  const ctx = useContext(JoystreamContext)
+  if (!ctx) {
+    throw new Error('useJoystream must be used within JoystreamProvider')
+  }
+  return ctx
 }

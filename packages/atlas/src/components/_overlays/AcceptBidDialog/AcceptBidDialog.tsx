@@ -3,7 +3,7 @@ import { FC, useState } from 'react'
 
 import { Fee } from '@/components/Fee'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { useFee } from '@/providers/joystream/joystream.hooks'
+import { useFee } from '@/providers/joystream'
 
 import { Bid, SelectedBid } from './AcceptBidDialog.types'
 import { AcceptBidList } from './AcceptBidList'

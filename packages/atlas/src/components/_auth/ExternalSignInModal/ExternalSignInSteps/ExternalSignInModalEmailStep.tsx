@@ -8,7 +8,7 @@ import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { useRegister } from '@/hooks/useRegister'
 import { useAuthStore } from '@/providers/auth/auth.store'
-import { useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useJoystream } from '@/providers/joystream'
 
 import { ExternalSignInModalStepTemplate } from './ExternalSignInModalStepTemplate'
 import { ModalSteps, SignInStepProps } from './ExternalSignInSteps.types'

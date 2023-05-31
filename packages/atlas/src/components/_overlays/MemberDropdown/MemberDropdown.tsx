@@ -9,7 +9,7 @@ import useResizeObserver from 'use-resize-observer'
 import { absoluteRoutes } from '@/config/routes'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
-import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
+import { useSubscribeAccountBalance } from '@/providers/joystream'
 import { useUser } from '@/providers/user/user.hooks'
 import { cVar } from '@/styles'
 

@@ -2,7 +2,7 @@ import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffec
 
 import { useMemberships } from '@/api/hooks/membership'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
-import { useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useJoystream } from '@/providers/joystream/joystream.provider'
 import { AssetLogger, SentryLogger } from '@/utils/logs'
 
 import { useUserStore } from './user.store'

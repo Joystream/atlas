@@ -12,7 +12,7 @@ import {
 import { absoluteRoutes } from '@/config/routes'
 import { ErrorCode, JoystreamLibError, JoystreamLibErrorType } from '@/joystream-lib/errors'
 import { ExtrinsicResult, ExtrinsicStatus, ExtrinsicStatusCallbackFn } from '@/joystream-lib/types'
-import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
+import { useSubscribeAccountBalance } from '@/providers/joystream'
 import { useWallet } from '@/providers/wallet/wallet.hooks'
 import { createId } from '@/utils/createId'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'

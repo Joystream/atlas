@@ -7,7 +7,7 @@ import { GetNftDocument, GetNftQuery, GetNftQueryVariables } from '@/api/queries
 import { NumberFormat } from '@/components/NumberFormat'
 import { NftSaleType } from '@/joystream-lib/types'
 import { useConfirmationModal } from '@/providers/confirmationModal'
-import { useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { formatDateTime } from '@/utils/time'

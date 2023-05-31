@@ -7,7 +7,7 @@ import { Text } from '@/components/Text'
 import { TokenInput } from '@/components/_inputs/TokenInput'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
-import { useFee } from '@/providers/joystream/joystream.hooks'
+import { useFee } from '@/providers/joystream'
 import { sizes } from '@/styles'
 
 type ChangePriceDialogProps = {
