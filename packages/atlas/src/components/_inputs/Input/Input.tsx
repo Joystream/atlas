@@ -35,7 +35,7 @@ export type InputProps = {
   className?: string
   placeholder?: string
   defaultValue?: string
-  autoComplete?: 'off'
+  autoComplete?: 'off' | 'new-password'
   error?: boolean
   disabled?: boolean
   size?: InputSize

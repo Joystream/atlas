@@ -27,6 +27,13 @@ export const TextInput = styled.input<TextInputProps>`
     margin: 0;
   }
 
+  :-webkit-autofill,
+  :-webkit-autofill:hover,
+  :-webkit-autofill:focus {
+    -webkit-text-fill-color: ${cVar('colorTextStrong')};
+    transition: background-color 9999s ease-in-out 0s;
+  }
+
   &[type='number'],
   &[type='search'] {
     appearance: textfield;

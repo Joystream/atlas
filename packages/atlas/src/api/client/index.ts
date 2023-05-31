@@ -24,6 +24,44 @@ const delayLink = new ApolloLink((operation, forward) => {
   })
 })
 
+const retryLink = new RetryLink({
+  attempts: {
+    max: 5,
+    retryIf: async (error, operation) => {
+      // For the sign up purposes don't retry when operationName GetNotificationsConnection, which is called constantly
+      if (operation.operationName === 'GetNotificationsConnection') {
+        return false
+      }
+
+      const userId = useUserStore.getState().userId
+      const isUnauthorizedError =
+        error.statusCode === 400 &&
+        error?.result?.errors?.find((err: { message: string }) => err.message === 'Unauthorized')
+
+      if (isUnauthorizedError) {
+        try {
+          const newUserId = await setAnonymousAuth(userId)
+          if (newUserId) {
+            useUserStore.setState({ userId: newUserId })
+            return true
+          }
+          return true
+        } catch (error) {
+          if (isAxiosError(error) && error.response?.status === 401) {
+            useUserStore.setState({ userId: null })
+          }
+          return true
+        }
+      } else {
+        return false
+      }
+    },
+  },
+})
+
+const MAX_ALLOWED_RETRIES = 10
+const bannedDistributorUrls: Record<string, number> = {}
+
 const createApolloClient = () => {
   const subscriptionLink = new GraphQLWsLink(
     createClient({

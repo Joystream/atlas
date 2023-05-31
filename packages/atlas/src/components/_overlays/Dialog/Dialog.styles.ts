@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { cVar, media, sizes } from '@/styles'
+import { cVar, media, sizes, zIndex } from '@/styles'
 
 export type DialogSize = 'default' | 'compact'
 
@@ -15,6 +15,7 @@ type SizeProps = {
 
 type ContentProps = {
   noContentPadding?: boolean
+  hasFooter: boolean
 }
 
 const getDialogPaddingVariableStyles = ({ size }: SizeProps) =>
@@ -35,6 +36,7 @@ export const DialogContainer = styled.div`
   flex-direction: column;
   width: 100%;
   overflow: hidden;
+  z-index: ${zIndex.modals + 2};
   background-color: ${cVar('colorBackgroundStrong')};
   border-radius: ${cVar('radiusMedium')};
   box-shadow: ${cVar('effectElevation24Layer1')}, ${cVar('effectElevation24Layer2')};
@@ -77,12 +79,16 @@ export const HeaderContent = styled.div`
 export const Content = styled.div<ContentProps>`
   overflow-y: auto;
   overflow-x: hidden;
-  padding: ${({ noContentPadding }) => !noContentPadding && 'var(--local-size-dialog-padding)'};
+  padding: ${({ noContentPadding, hasFooter }) =>
+    !noContentPadding
+      ? `var(--local-size-dialog-padding) var(--local-size-dialog-padding) ${
+          hasFooter ? 0 : 'var(--local-size-dialog-padding)'
+        } var(--local-size-dialog-padding) `
+      : 0};
 `
 
 export const footerDividersStyles = css`
   box-shadow: ${cVar('effectDividersTop')};
-  padding-top: var(--local-size-dialog-padding);
 `
 
 type FooterProps = {
@@ -97,6 +103,7 @@ export const Footer = styled.div<FooterProps>`
   justify-content: space-between;
   flex-direction: ${({ additionalActionsNodeMobilePosition = 'top' }) =>
     additionalActionsNodeMobilePosition === 'bottom' ? 'column-reverse' : 'column'};
+  padding-top: var(--local-size-dialog-padding);
 
   ${({ dividers }) => dividers && footerDividersStyles};
 

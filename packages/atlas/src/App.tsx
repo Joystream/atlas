@@ -13,6 +13,7 @@ import { NftSaleBottomDrawer } from '@/views/global/NftSaleBottomDrawer'
 import { NftSettlementBottomDrawer } from '@/views/global/NftSettlementBottomDrawer'
 
 import { MainLayout } from './MainLayout'
+import { SignUpModal } from './components/_auth/SignUpModal'
 
 export const App = () => {
   return (
@@ -26,6 +27,7 @@ export const App = () => {
           <JoystreamManager />
           <NotificationsManager />
           <SignInModal />
+          <SignUpModal />
           <WelcomeDialog />
           <NftSettlementBottomDrawer />
           <NftPurchaseBottomDrawer />

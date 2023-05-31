@@ -1,4 +1,4 @@
-import { ChangeEvent, DetailedHTMLProps, InputHTMLAttributes, forwardRef } from 'react'
+import { ChangeEvent, DetailedHTMLProps, InputHTMLAttributes, ReactNode, forwardRef } from 'react'
 
 import { SvgActionMinus } from '@/assets/icons'
 
@@ -15,7 +15,7 @@ export interface CheckboxProps extends Omit<HTMLCheckboxProps, 'value' | 'onChan
   error?: boolean
   className?: string
   onChange?: (value: boolean, event: ChangeEvent<HTMLInputElement>) => void
-  label?: string
+  label?: ReactNode
   caption?: string
 }
 

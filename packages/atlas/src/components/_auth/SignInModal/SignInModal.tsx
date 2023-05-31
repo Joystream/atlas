@@ -48,6 +48,7 @@ export const SignInModal: FC = () => {
   const [hasNavigatedBack, setHasNavigatedBack] = useState(false)
   const { joystream } = useJoystream()
   const dialogContentRef = useRef<HTMLDivElement>(null)
+
   const [previouslyFailedData, setPreviouslyFailedData] = useState<MemberFormData | null>(null)
   const { mutateAsync: faucetMutation } = useMutation('faucet-post', (body: FaucetParams) =>
     axios.post<NewMemberResponse>(FAUCET_URL, body)
@@ -79,6 +80,7 @@ export const SignInModal: FC = () => {
       setCurrentStepIdx(1)
       return
     }
+
     setCurrentStepIdx(0)
   }, [signInModalOpen, currentStep, walletConnected])
 
@@ -240,7 +242,7 @@ export const SignInModal: FC = () => {
     dialogContentRef.current.scrollTo({ top: 0 })
   }, [displayedStep])
 
-  const renderStep = () => {
+  const renderStep = useCallback(() => {
     const commonProps: SignInStepProps = {
       setPrimaryButtonProps,
       goToNextStep,
@@ -272,7 +274,7 @@ export const SignInModal: FC = () => {
       case 'creating':
         return <SignInModalCreatingStep {...commonProps} />
     }
-  }
+  }, [displayedStep, goToNextStep, handleSubmit, hasNavigatedBack, previouslyFailedData, selectedAddress])
 
   const backButtonVisible =
     currentStepIdx && currentStepIdx > 0 && currentStep !== 'creating' && (currentStep !== 'account' || !isLoggedIn)
