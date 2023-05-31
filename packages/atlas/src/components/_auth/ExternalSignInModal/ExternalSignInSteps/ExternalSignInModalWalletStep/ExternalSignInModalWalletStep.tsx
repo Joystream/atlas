@@ -12,23 +12,23 @@ import { useUserStore } from '@/providers/user/user.store'
 import { isMobile } from '@/utils/browser'
 import { capitalizeFirstLetter } from '@/utils/misc'
 
-import { MOBILE_SUPPORTED_WALLETS, walletSort } from './SignInModalWalletStep.utils'
+import { MOBILE_SUPPORTED_WALLETS, walletSort } from './ExternalSignInModalWalletStep.utils'
 
-import { SignInModalStepTemplate } from '../SignInModalStepTemplate'
+import { ExternalSignInModalStepTemplate } from '../ExternalSignInModalStepTemplate'
 import {
   ListItemsWrapper,
   StyledBottomBanner,
   StyledListItem,
   StyledTopBanner,
   WalletLogo,
-} from '../SignInSteps.styles'
-import { SignInStepProps } from '../SignInSteps.types'
+} from '../ExternalSignInSteps.styles'
+import { ModalSteps, SignInStepProps } from '../ExternalSignInSteps.types'
 
 export const isMobileDevice = isMobile()
 
-export const SignInModalWalletStep: FC<SignInStepProps> = ({
+export const ExternalSignInModalWalletStep: FC<SignInStepProps> = ({
   setPrimaryButtonProps,
-  goToNextStep,
+  goToStep,
   hasNavigatedBack,
 }) => {
   const smMatch = useMediaMatch('sm')
@@ -40,7 +40,7 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
   const walletFromStore = useUserStore((state) => state.wallet)
 
   const wallets = useMemo(() => {
-    const unsortedWallets = getWalletsList()
+    const unsortedWallets = getWalletsList().filter((wallet) => wallet.installed)
     if (isMobileDevice) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const rawWallets = Object.keys((window as any).injectedWeb3 || {})
@@ -96,8 +96,8 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
       return
     }
 
-    goToNextStep()
-  }, [goToNextStep, selectedWallet, signIn])
+    goToStep(ModalSteps.Membership)
+  }, [goToStep, selectedWallet, signIn])
 
   const handleSelectWallet = useCallback((idx: number) => {
     setSelectedWalletIdx(idx)
@@ -121,7 +121,7 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
       text: isConnecting
         ? 'Connecting...'
         : selectedWallet?.installed || isMobileDevice
-        ? 'Select wallet'
+        ? 'Use wallet'
         : `Install ${selectedWallet?.title}`,
       disabled: isConnecting,
       icon: selectedWallet?.installed ? null : <SvgActionNewTab />,
@@ -132,7 +132,7 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
   }, [handleConfirm, isConnecting, selectedWallet, setPrimaryButtonProps])
 
   return (
-    <SignInModalStepTemplate
+    <ExternalSignInModalStepTemplate
       title={`Select wallet ${isMobileDevice ? 'app' : ''}`}
       subtitle={
         isMobileDevice
@@ -182,6 +182,6 @@ export const SignInModalWalletStep: FC<SignInStepProps> = ({
           icon={<SvgAlertsInformative24 />}
         />
       ) : null}
-    </SignInModalStepTemplate>
+    </ExternalSignInModalStepTemplate>
   )
 }
