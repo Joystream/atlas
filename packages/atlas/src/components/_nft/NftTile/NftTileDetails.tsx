@@ -30,6 +30,7 @@ export type Member = {
 
 export type NftTileDetailsProps = {
   loading?: boolean
+  isInCarousel?: boolean
   owner?: Member
   creator?: Member
   role?: 'owner' | 'viewer'
@@ -50,6 +51,7 @@ const SMALL_SIZE_WIDTH = 288
 
 export const NftTileDetails: FC<NftTileDetailsProps> = ({
   loading,
+  isInCarousel,
   creator,
   owner,
   nftStatus,
@@ -190,8 +192,21 @@ export const NftTileDetails: FC<NftTileDetailsProps> = ({
             }}
           >
             <ContextMenu
+              appendTo={document.body}
               placement="bottom-end"
               disabled={loading}
+              hideOnClick
+              onShow={(instance) => {
+                if (isInCarousel) {
+                  // fix for https://github.com/Joystream/atlas/issues/4239
+                  // We're manually removing popovers, because tippy is not working with swiper carousel
+                  document.body.querySelectorAll('[data-tippy-root]').forEach((el) => {
+                    if (el.id !== `tippy-${instance.id.toString()}`) {
+                      el.remove()
+                    }
+                  })
+                }
+              }}
               items={contextMenuItems}
               trigger={
                 <KebabMenuButtonIcon icon={<SvgActionMore />} variant="tertiary" size="small" isActive={!loading} />
