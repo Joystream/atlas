@@ -4,10 +4,12 @@ import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 
 import { StudioLoading } from '@/components/_loaders/StudioLoading'
 import { CookiePopover } from '@/components/_overlays/CookiePopover'
+import { atlasConfig } from '@/config'
 import { BASE_PATHS, absoluteRoutes } from '@/config/routes'
 import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
 import { isBrowserOutdated } from '@/utils/browser'
+import { SentryLogger } from '@/utils/logs'
 
 import { AppLogo } from './components/AppLogo'
 import { TopbarBase } from './components/_navigation/TopbarBase'
@@ -52,6 +54,23 @@ export const MainLayout: FC = () => {
     },
     onExitClick: () => closeDialog(),
   })
+
+  useEffect(() => {
+    if (!atlasConfig.analytics.sentry?.dsn) {
+      return
+    }
+    const stopReplay = async () => await SentryLogger.replay?.stop()
+
+    if (location.pathname === absoluteRoutes.viewer.ypp()) {
+      if (SentryLogger.initialized && !SentryLogger.replay?.getReplayId()) {
+        SentryLogger.replay?.start()
+      }
+    } else {
+      if (SentryLogger.replay?.getReplayId()) {
+        stopReplay()
+      }
+    }
+  }, [location.pathname])
 
   const { clearOverlays } = useOverlayManager()
 
