@@ -8,7 +8,6 @@ import useResizeObserver from 'use-resize-observer'
 
 import { absoluteRoutes } from '@/config/routes'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
-import { useAuthStore } from '@/providers/auth/auth.store'
 import { useSubscribeAccountBalance } from '@/providers/joystream'
 import { useUser } from '@/providers/user/user.hooks'
 import { cVar } from '@/styles'
@@ -30,9 +29,6 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
   ({ publisher, isActive, closeDropdown, onChannelChange }, ref) => {
     const navigate = useNavigate()
     const { channelId, activeMembership, memberships, signOut, setActiveUser, membershipsLoading } = useUser()
-    const {
-      actions: { setSignInModalOpen },
-    } = useAuthStore()
     const [showWithdrawDialog, setShowWithdrawDialog] = useState(false)
     const [disableScrollDuringAnimation, setDisableScrollDuringAnimation] = useState(false)
 
@@ -71,11 +67,6 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
       onStart: () => setDisableScrollDuringAnimation(true),
       onRest: () => setDisableScrollDuringAnimation(false),
     })
-
-    const handleAddNewMember = useCallback(() => {
-      closeDropdown?.()
-      setSignInModalOpen(true)
-    }, [closeDropdown, setSignInModalOpen])
 
     const handleMemberChange = useCallback(
       (memberId: string, accountId: string, channelId: string | null) => {
@@ -197,7 +188,6 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                       onMemberChange={handleMemberChange}
                       onChannelChange={handleChannelChange}
                       onAddNewChannel={handleAddNewChannel}
-                      onAddNewMember={handleAddNewMember}
                       onSwitchToNav={(type) => handleSwitch(type, false)}
                       type={dropdownType}
                     />

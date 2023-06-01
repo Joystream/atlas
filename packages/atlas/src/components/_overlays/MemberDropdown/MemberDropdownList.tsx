@@ -4,7 +4,7 @@ import {
   BasicMembershipFieldsFragment,
   FullMembershipFieldsFragment,
 } from '@/api/queries/__generated__/fragments.generated'
-import { SvgActionChannel, SvgActionChevronL, SvgActionNewChannel } from '@/assets/icons'
+import { SvgActionChannel, SvgActionChevronL } from '@/assets/icons'
 import { Avatar } from '@/components/Avatar'
 import { IconWrapper } from '@/components/IconWrapper'
 import { ListItem } from '@/components/ListItem'
@@ -25,7 +25,6 @@ type MemberDropdownListProps = {
   onChannelChange?: (channelId: string) => void
   onSwitchToNav: (type: DropdownType) => void
   onMemberChange: (memberId: string, accountId: string, channelId: string | null) => void
-  onAddNewMember: () => void
 }
 export const MemberDropdownList: FC<MemberDropdownListProps> = ({
   type,
@@ -36,7 +35,6 @@ export const MemberDropdownList: FC<MemberDropdownListProps> = ({
   onSwitchToNav,
   onChannelChange,
   onMemberChange,
-  onAddNewMember,
 }) => {
   const sortedMemberChannels = useMemo(() => {
     if (!activeMembership) {
@@ -74,18 +72,14 @@ export const MemberDropdownList: FC<MemberDropdownListProps> = ({
                 selected={channel.id === channelId}
               />
             ))}
-        <ListItem
-          nodeStart={
-            type === 'member' ? (
-              <IconWrapper icon={<SvgActionNewChannel />} />
-            ) : (
-              <IconWrapper icon={<SvgActionChannel />} />
-            )
-          }
-          onClick={() => (type === 'member' ? onAddNewMember() : onAddNewChannel?.())}
-          label={type === 'member' ? 'Add new member...' : 'Add new channel...'}
-          to={type === 'channel' ? absoluteRoutes.studio.newChannel() : undefined}
-        />
+        {type === 'channel' && (
+          <ListItem
+            nodeStart={<IconWrapper icon={<SvgActionChannel />} />}
+            onClick={() => onAddNewChannel?.()}
+            label="Add new channel..."
+            to={absoluteRoutes.studio.newChannel()}
+          />
+        )}
       </SectionContainer>
     </>
   )

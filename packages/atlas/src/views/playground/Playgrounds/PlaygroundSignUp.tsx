@@ -3,7 +3,7 @@ import { useAuthStore } from '@/providers/auth/auth.store'
 
 export const PlaygroundSignUp = () => {
   const {
-    actions: { setSignUpModalOpen },
+    actions: { setAuthModalOpen },
   } = useAuthStore()
-  return <Button onClick={() => setSignUpModalOpen(true)}>Sign up</Button>
+  return <Button onClick={() => setAuthModalOpen('signUp')}>Sign up</Button>
 }

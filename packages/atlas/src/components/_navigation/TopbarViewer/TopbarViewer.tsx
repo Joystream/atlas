@@ -1,6 +1,7 @@
 import { ChangeEvent, FC, MouseEvent, useCallback, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
+import shallow from 'zustand/shallow'
 
 import { SvgActionMember } from '@/assets/icons'
 import { AppLogo } from '@/components/AppLogo'
@@ -12,6 +13,7 @@ import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { useSearchStore } from '@/providers/search'
 import { useUser } from '@/providers/user/user.hooks'
@@ -42,6 +44,10 @@ export const TopbarViewer: FC = () => {
     searchQuery,
     actions: { setSearchOpen, setSearchQuery },
   } = useSearchStore()
+  const { setAuthModalOpen } = useAuthStore(
+    (state) => ({ authModalOpen: state.authModalOpen, setAuthModalOpen: state.actions.setAuthModalOpen }),
+    shallow
+  )
 
   useEffect(() => {
     if (searchOpen) {
@@ -144,8 +150,7 @@ export const TopbarViewer: FC = () => {
                         icon={<SvgActionMember />}
                         iconPlacement="left"
                         size="medium"
-                        // todo: add handler
-                        onClick={() => undefined}
+                        onClick={() => setAuthModalOpen('externalLogIn')}
                       >
                         Log in
                       </Button>
@@ -157,8 +162,7 @@ export const TopbarViewer: FC = () => {
                   </SignedButtonsWrapper>
                 )}
                 {!searchQuery && !mdMatch && !isLoggedIn && topbarButtonLoaded && (
-                  // todo: add handler
-                  <StyledIconButton onClick={() => undefined}>Log in</StyledIconButton>
+                  <StyledIconButton onClick={() => setAuthModalOpen('externalLogIn')}>Log in</StyledIconButton>
                 )}
               </ButtonWrapper>
             </CSSTransition>

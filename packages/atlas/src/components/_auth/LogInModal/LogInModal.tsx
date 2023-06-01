@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import shallow from 'zustand/shallow'
 
 import { SvgActionHide, SvgActionShow } from '@/assets/icons'
 import { Button } from '@/components/_buttons/Button'
@@ -10,6 +11,7 @@ import { Input } from '@/components/_inputs/Input'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
 import { LogInErrors, useLogIn } from '@/hooks/useLogIn'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { useSnackbar } from '@/providers/snackbars'
 
 import { Container } from './LogInModal.styles'
@@ -34,6 +36,10 @@ export const LogInModal = () => {
       })
     ),
   })
+  const { authModalOpen, setAuthModalOpen } = useAuthStore(
+    (state) => ({ authModalOpen: state.authModalOpen, setAuthModalOpen: state.actions.setAuthModalOpen }),
+    shallow
+  )
 
   const handleLoginClick = async (email: string, password: string) => {
     setIsLoading(true)
@@ -51,12 +57,13 @@ export const LogInModal = () => {
       return
     }
 
+    setAuthModalOpen(undefined)
     setIsLoading(false)
   }
 
   return (
     <DialogModal
-      show
+      show={authModalOpen === 'logIn'}
       primaryButton={{
         text: isLoading ? 'Waiting...' : 'Log in',
         disabled: isLoading,
@@ -69,6 +76,7 @@ export const LogInModal = () => {
         !isLoading
           ? {
               text: 'Sign up',
+              onClick: () => setAuthModalOpen('signUp'),
             }
           : undefined
       }

@@ -24,14 +24,14 @@ export const ExternalSignInModal: FC = () => {
   const [selectedMembership, setSelectedMembership] = useState<string | null>(null)
   const dialogContentRef = useRef<HTMLDivElement>(null)
   const { walletStatus } = useWallet()
-  const { signInModalOpen, setSignInModalOpen } = useAuthStore(
-    (state) => ({ signInModalOpen: state.signInModalOpen, setSignInModalOpen: state.actions.setSignInModalOpen }),
+  const { authModalOpen, setAuthModalOpen } = useAuthStore(
+    (state) => ({ authModalOpen: state.authModalOpen, setAuthModalOpen: state.actions.setAuthModalOpen }),
     shallow
   )
   const walletConnected = walletStatus === 'connected'
   // handle opening/closing of modal and setting initial step
   useEffect(() => {
-    if (!signInModalOpen) {
+    if (authModalOpen !== 'externalLogIn') {
       setCurrentStep(null)
       return
     }
@@ -42,7 +42,7 @@ export const ExternalSignInModal: FC = () => {
       return
     }
     setCurrentStep(ModalSteps.Wallet)
-  }, [signInModalOpen, currentStep, walletConnected])
+  }, [currentStep, walletConnected, authModalOpen])
 
   // keep cachedStepIdx updated
   useEffect(() => {
@@ -115,13 +115,13 @@ export const ExternalSignInModal: FC = () => {
             displayedStep === ModalSteps.Membership
               ? { text: 'Back', onClick: () => goToPreviousStep(ModalSteps.Wallet) }
               : displayedStep === ModalSteps.Wallet
-              ? { text: 'Use email & password' }
+              ? { text: 'Use email & password', onClick: () => setAuthModalOpen('logIn') }
               : undefined,
           additionalActionsNode: (
             <Button
               variant="tertiary"
               onClick={() => {
-                setSignInModalOpen(false)
+                setAuthModalOpen(undefined)
               }}
             >
               Cancel

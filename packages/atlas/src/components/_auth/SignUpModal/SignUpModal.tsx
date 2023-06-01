@@ -40,22 +40,22 @@ export const SignUpModal = () => {
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Continue' })
   const [amountOfTokens, setAmountofTokens] = useState<number>()
 
-  const { signUpModalOpen, setSignUpModalOpen } = useAuthStore(
-    (state) => ({ signUpModalOpen: state.signUpModalOpen, setSignUpModalOpen: state.actions.setSignUpModalOpen }),
+  const { authModalOpen, setAuthModalOpen } = useAuthStore(
+    (state) => ({ authModalOpen: state.authModalOpen, setAuthModalOpen: state.actions.setAuthModalOpen }),
     shallow
   )
   const { ref, overflow } = useOverflowDetector<HTMLDivElement>({})
 
   // handle opening/closing of modal and setting initial step
   useEffect(() => {
-    if (!signUpModalOpen) {
+    if (authModalOpen !== 'signUp') {
       setCurrentStep(null)
       return
     }
     if (currentStep != null) return
 
     setCurrentStep(0)
-  }, [signUpModalOpen, currentStep])
+  }, [currentStep, authModalOpen])
 
   const [signUpFormData, setSignupFormData] = useState<SignUpFormData>(SIGNUP_FORM_DATA_INITIAL_STATE)
   const createMember = useCreateMember()
@@ -165,7 +165,7 @@ export const SignUpModal = () => {
               text: 'Continue',
               onClick: () => {
                 setSignupFormData(SIGNUP_FORM_DATA_INITIAL_STATE)
-                setSignUpModalOpen(false)
+                setAuthModalOpen(undefined)
               },
             }
           : primaryButtonProps
@@ -177,7 +177,7 @@ export const SignUpModal = () => {
           <Button
             variant="tertiary"
             onClick={() => {
-              setSignUpModalOpen(false)
+              setAuthModalOpen(undefined)
               setSignupFormData(SIGNUP_FORM_DATA_INITIAL_STATE)
             }}
           >

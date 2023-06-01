@@ -28,10 +28,7 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
   memberId,
 }) => {
   const smMatch = useMediaMatch('sm')
-  const { setSignInModalOpen } = useAuthStore(
-    (state) => ({ setSignInModalOpen: state.actions.setSignInModalOpen }),
-    shallow
-  )
+  const { setAuthModalOpen } = useAuthStore((state) => ({ setAuthModalOpen: state.actions.setAuthModalOpen }), shallow)
   const { memberships } = useUser()
   const { setApiActiveAccount } = useJoystream()
 
@@ -74,18 +71,9 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
     }
 
     if (res.data) {
-      setSignInModalOpen(false)
+      setAuthModalOpen(undefined)
     }
-  }, [
-    displaySnackbar,
-    goToStep,
-    handleLogin,
-    joystream,
-    memberId,
-    memberships,
-    setApiActiveAccount,
-    setSignInModalOpen,
-  ])
+  }, [displaySnackbar, goToStep, handleLogin, joystream, memberId, memberships, setApiActiveAccount, setAuthModalOpen])
 
   useEffect(() => {
     if (memberId) return

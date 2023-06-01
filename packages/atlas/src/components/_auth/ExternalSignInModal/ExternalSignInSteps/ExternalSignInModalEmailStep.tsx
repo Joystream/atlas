@@ -25,8 +25,8 @@ export const ExternalSignInModalEmailStep: FC<SignInModalEmailStepProps> = ({
 }) => {
   const handleRegister = useRegister()
   const { joystream } = useJoystream()
-  const { setSignInModalOpen } = useAuthStore(
-    (state) => ({ signInModalOpen: state.signInModalOpen, setSignInModalOpen: state.actions.setSignInModalOpen }),
+  const { setAuthModalOpen } = useAuthStore(
+    (state) => ({ authModalOpen: state.authModalOpen, setAuthModalOpen: state.actions.setAuthModalOpen }),
     shallow
   )
   const { register, formState, handleSubmit } = useForm<{ email: string }>({
@@ -53,10 +53,10 @@ export const ExternalSignInModalEmailStep: FC<SignInModalEmailStepProps> = ({
           }),
         memberId,
       })
-        .then(() => setSignInModalOpen(false))
+        .then(() => setAuthModalOpen(undefined))
         .catch(() => goToStep(ModalSteps.Email))
     })()
-  }, [goToStep, handleRegister, handleSubmit, joystream, memberId, setSignInModalOpen])
+  }, [goToStep, handleRegister, handleSubmit, joystream, memberId, setAuthModalOpen])
 
   // send updates to SignInModal on state of primary button
   useEffect(() => {
