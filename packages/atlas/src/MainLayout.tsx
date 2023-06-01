@@ -4,6 +4,7 @@ import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 
 import { StudioLoading } from '@/components/_loaders/StudioLoading'
 import { CookiePopover } from '@/components/_overlays/CookiePopover'
+import { atlasConfig } from '@/config'
 import { BASE_PATHS, absoluteRoutes } from '@/config/routes'
 import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
@@ -55,6 +56,9 @@ export const MainLayout: FC = () => {
   })
 
   useEffect(() => {
+    if (!atlasConfig.analytics.sentry?.dsn) {
+      return
+    }
     const stopReplay = async () => await SentryLogger.replay?.stop()
 
     if (location.pathname === absoluteRoutes.viewer.ypp()) {
