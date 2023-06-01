@@ -42,6 +42,15 @@ export type GetBasicStorageBucketsQuery = {
   storageBuckets: Array<{ __typename?: 'StorageBucket'; id: string }>
 }
 
+export type GetAvailableStorageBucketsForBagQueryVariables = Types.Exact<{
+  where?: Types.InputMaybe<Types.StorageBucketWhereInput>
+}>
+
+export type GetAvailableStorageBucketsForBagQuery = {
+  __typename?: 'Query'
+  storageBuckets: Array<{ __typename?: 'StorageBucket'; id: string }>
+}
+
 export const GetStorageBucketsWithBagsDocument = gql`
   query GetStorageBucketsWithBags {
     storageBuckets(
@@ -206,4 +215,62 @@ export type GetBasicStorageBucketsLazyQueryHookResult = ReturnType<typeof useGet
 export type GetBasicStorageBucketsQueryResult = Apollo.QueryResult<
   GetBasicStorageBucketsQuery,
   GetBasicStorageBucketsQueryVariables
+>
+export const GetAvailableStorageBucketsForBagDocument = gql`
+  query GetAvailableStorageBucketsForBag($where: StorageBucketWhereInput) {
+    storageBuckets(limit: 500, where: $where) {
+      id
+    }
+  }
+`
+
+/**
+ * __useGetAvailableStorageBucketsForBagQuery__
+ *
+ * To run a query within a React component, call `useGetAvailableStorageBucketsForBagQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAvailableStorageBucketsForBagQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAvailableStorageBucketsForBagQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetAvailableStorageBucketsForBagQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetAvailableStorageBucketsForBagQuery,
+    GetAvailableStorageBucketsForBagQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetAvailableStorageBucketsForBagQuery, GetAvailableStorageBucketsForBagQueryVariables>(
+    GetAvailableStorageBucketsForBagDocument,
+    options
+  )
+}
+export function useGetAvailableStorageBucketsForBagLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAvailableStorageBucketsForBagQuery,
+    GetAvailableStorageBucketsForBagQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetAvailableStorageBucketsForBagQuery, GetAvailableStorageBucketsForBagQueryVariables>(
+    GetAvailableStorageBucketsForBagDocument,
+    options
+  )
+}
+export type GetAvailableStorageBucketsForBagQueryHookResult = ReturnType<
+  typeof useGetAvailableStorageBucketsForBagQuery
+>
+export type GetAvailableStorageBucketsForBagLazyQueryHookResult = ReturnType<
+  typeof useGetAvailableStorageBucketsForBagLazyQuery
+>
+export type GetAvailableStorageBucketsForBagQueryResult = Apollo.QueryResult<
+  GetAvailableStorageBucketsForBagQuery,
+  GetAvailableStorageBucketsForBagQueryVariables
 >
