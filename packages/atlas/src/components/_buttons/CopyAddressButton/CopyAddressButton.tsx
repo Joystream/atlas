@@ -1,10 +1,9 @@
 import { FC, useState } from 'react'
 
-import { Tooltip } from '@/components/Tooltip'
 import { useClipboard } from '@/hooks/useClipboard'
 import { shortenString } from '@/utils/misc'
 
-import { StyledSvgActionCheck, StyledSvgActionCopy, StyledText } from './CopyAddressButton.styles'
+import { StyledSvgActionCheck, StyledSvgActionCopy, StyledText, StyledTooltip } from './CopyAddressButton.styles'
 
 export type CopyAddressButtonProps = {
   address: string
@@ -20,7 +19,7 @@ export const CopyAddressButton: FC<CopyAddressButtonProps> = ({ address, classNa
     if (!address) {
       return
     }
-    copyToClipboard(address, 'Account address copied to clipboard')
+    copyToClipboard(address)
     setCopyButtonClicked(true)
     setTimeout(() => {
       setCopyButtonClicked(false)
@@ -28,17 +27,17 @@ export const CopyAddressButton: FC<CopyAddressButtonProps> = ({ address, classNa
   }
 
   return (
-    <StyledText
-      as="button"
-      variant={size === 'big' ? 't300' : 't100'}
-      color="colorText"
-      className={className}
-      onClick={handleCopyAddress}
-    >
-      {shortenString(address, 6, 4)}
-      <Tooltip text="Copy account address" placement="top">
+    <StyledTooltip hideOnClick={false} text={copyButtonClicked ? 'Copied!' : 'Copy account address'} placement="top">
+      <StyledText
+        as="button"
+        variant={size === 'big' ? 't300' : 't100'}
+        color="colorText"
+        className={className}
+        onClick={handleCopyAddress}
+      >
+        {shortenString(address, 6, 4)}
         {copyButtonClicked ? <StyledSvgActionCheck /> : <StyledSvgActionCopy />}
-      </Tooltip>
-    </StyledText>
+      </StyledText>
+    </StyledTooltip>
   )
 }
