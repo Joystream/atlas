@@ -7,7 +7,7 @@ import { cVar, transitions } from '@/styles'
 
 import { MembershipDetails, MembershipHeader, MembershipInfoContainer, StyledHandle } from './MembershipInfo.style'
 
-import { SvgActionEdit } from '../../assets/icons'
+import { SvgActionSettings } from '../../assets/icons'
 import { Avatar } from '../Avatar'
 import { Button } from '../_buttons/Button'
 import { CopyAddressButton } from '../_buttons/CopyAddressButton/CopyAddressButton'
@@ -81,12 +81,12 @@ export const MembershipInfo: FC<MembershipInfoProps> = ({
             ) : (
               <Button
                 to={absoluteRoutes.viewer.editMembership()}
-                icon={<SvgActionEdit />}
+                icon={<SvgActionSettings />}
                 size="large"
                 variant="secondary"
                 fullWidth={!smMatch}
               >
-                Edit profile
+                Settings
               </Button>
             ))}
         </MembershipHeader>

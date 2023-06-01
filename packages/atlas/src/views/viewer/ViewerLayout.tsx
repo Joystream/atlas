@@ -23,10 +23,10 @@ import { CategoryView } from './CategoryView'
 import { ChannelView } from './ChannelView'
 import { ChannelsView } from './ChannelsView'
 import { DiscoverView } from './DiscoverView'
-import { EditMembershipView } from './EditMembershipView'
 import { HomeView } from './HomeView'
 import { MarketplaceView } from './MarketplaceView'
 import { MemberView } from './MemberView'
+import { MembershipSettingsView } from './MembershipSettingsView'
 import { NotFoundView } from './NotFoundView'
 import { SearchView } from './SearchView'
 import { VideoView } from './VideoView'
@@ -82,7 +82,11 @@ export const ViewerLayout: FC = () => {
                 <Route
                   path={relativeRoutes.viewer.editMembership()}
                   element={
-                    <PrivateRoute isAuth={isLoggedIn} element={<EditMembershipView />} redirectTo={ENTRY_POINT_ROUTE} />
+                    <PrivateRoute
+                      isAuth={isLoggedIn}
+                      element={<MembershipSettingsView />}
+                      redirectTo={ENTRY_POINT_ROUTE}
+                    />
                   }
                 />
                 <Route

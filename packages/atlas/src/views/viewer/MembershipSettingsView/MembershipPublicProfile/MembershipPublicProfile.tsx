@@ -30,7 +30,7 @@ import { useUser } from '@/providers/user/user.hooks'
 import { uploadAvatarImage } from '@/utils/image'
 import { ConsoleLogger } from '@/utils/logs'
 
-import { StyledActionBar, TextFieldsWrapper, Wrapper } from './EditMembershipView.styles'
+import { StyledActionBar, TextFieldsWrapper, Wrapper } from './MembershipPublicProfile.styles'
 
 export type EditMemberFormInputs = {
   handle: string | null
@@ -38,7 +38,7 @@ export type EditMemberFormInputs = {
   about: string | null
 }
 
-export const EditMembershipView: FC = () => {
+export const MembershipPublicProfile: FC = () => {
   const navigate = useNavigate()
   const handleInputRef = useRef<HTMLInputElement | null>(null)
   const [isImageValid, setIsImageValid] = useState(true)
