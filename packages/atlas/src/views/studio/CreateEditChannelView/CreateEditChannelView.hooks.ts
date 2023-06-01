@@ -10,11 +10,7 @@ import { atlasConfig } from '@/config'
 import { ChannelAssets, ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib/types'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useOperatorsContext } from '@/providers/assets/assets.provider'
-import {
-  useBloatFeesAndPerMbFees,
-  useBucketsConfigForNewChannel,
-  useJoystream,
-} from '@/providers/joystream/joystream.hooks'
+import { useBloatFeesAndPerMbFees, useBucketsConfigForNewChannel, useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useStartFileUpload } from '@/providers/uploads/uploads.hooks'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'

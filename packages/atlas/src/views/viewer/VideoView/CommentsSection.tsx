@@ -19,7 +19,7 @@ import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
-import { useFee } from '@/providers/joystream/joystream.hooks'
+import { useFee } from '@/providers/joystream'
 import { useUser } from '@/providers/user/user.hooks'
 import { createPlaceholderData } from '@/utils/data'
 

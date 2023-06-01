@@ -1,7 +1,9 @@
 import { Button } from '@/components/_buttons/Button'
-import { useUser } from '@/providers/user/user.hooks'
+import { useAuthStore } from '@/providers/auth/auth.store'
 
 export const PlaygroundSignUp = () => {
-  const { setSignUpModalOpen } = useUser()
+  const {
+    actions: { setSignUpModalOpen },
+  } = useAuthStore()
   return <Button onClick={() => setSignUpModalOpen(true)}>Sign up</Button>
 }

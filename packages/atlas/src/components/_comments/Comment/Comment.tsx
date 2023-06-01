@@ -11,7 +11,7 @@ import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { CommentReaction } from '@/joystream-lib/types'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useConfirmationModal } from '@/providers/confirmationModal'
-import { useFee } from '@/providers/joystream/joystream.hooks'
+import { useFee } from '@/providers/joystream'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user/user.hooks'
 

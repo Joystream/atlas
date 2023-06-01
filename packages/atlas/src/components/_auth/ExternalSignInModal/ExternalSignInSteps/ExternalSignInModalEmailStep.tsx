@@ -7,8 +7,8 @@ import shallow from 'zustand/shallow'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { useRegister } from '@/hooks/useRegister'
-import { useJoystream } from '@/providers/joystream/joystream.hooks'
-import { useUserStore } from '@/providers/user/user.store'
+import { useAuthStore } from '@/providers/auth/auth.store'
+import { useJoystream } from '@/providers/joystream'
 
 import { ExternalSignInModalStepTemplate } from './ExternalSignInModalStepTemplate'
 import { ModalSteps, SignInStepProps } from './ExternalSignInSteps.types'
@@ -25,7 +25,7 @@ export const ExternalSignInModalEmailStep: FC<SignInModalEmailStepProps> = ({
 }) => {
   const handleRegister = useRegister()
   const { joystream } = useJoystream()
-  const { setSignInModalOpen } = useUserStore(
+  const { setSignInModalOpen } = useAuthStore(
     (state) => ({ signInModalOpen: state.signInModalOpen, setSignInModalOpen: state.actions.setSignInModalOpen }),
     shallow
   )

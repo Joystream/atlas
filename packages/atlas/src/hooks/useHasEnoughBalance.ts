@@ -1,7 +1,7 @@
 import BN from 'bn.js'
 import { useCallback, useEffect, useState } from 'react'
 
-import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
+import { useSubscribeAccountBalance } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 
 export const useHasEnoughBalance = (feeLoading: boolean, fee?: BN, callback?: () => void, skipFeeCheck?: boolean) => {

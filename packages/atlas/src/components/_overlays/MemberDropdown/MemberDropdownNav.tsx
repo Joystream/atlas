@@ -26,7 +26,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
-import { useUserStore } from '@/providers/user/user.store'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { cVar } from '@/styles'
 import { isMobile } from '@/utils/browser'
 

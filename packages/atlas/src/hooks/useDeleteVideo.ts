@@ -8,7 +8,7 @@ import {
 } from '@/api/queries/__generated__/videos.generated'
 import { useStorageOperators } from '@/providers/assets/assets.provider'
 import { useConfirmationModal } from '@/providers/confirmationModal'
-import { useJoystream } from '@/providers/joystream/joystream.hooks'
+import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { useAuthorizedUser } from '@/providers/user/user.hooks'

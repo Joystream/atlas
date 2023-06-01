@@ -27,7 +27,7 @@ import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
-import { useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
+import { useSubscribeAccountBalance } from '@/providers/joystream'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 

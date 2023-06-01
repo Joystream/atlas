@@ -31,7 +31,7 @@ export type YppSyncedChannel = {
 }
 
 export const useGetYppSyncedChannels = () => {
-  const { activeMembership, membershipsLoading, isAuthLoading, channelId } = useUser()
+  const { activeMembership, membershipsLoading, channelId } = useUser()
   const channels = useMemo(() => activeMembership?.channels || [], [activeMembership?.channels])
   const {
     data: yppSyncedData,
@@ -83,7 +83,7 @@ export const useGetYppSyncedChannels = () => {
     syncedChannels: yppSyncedData?.syncedChannels,
     currentChannel: yppSyncedData?.currentChannel,
     refetchYppSyncedChannels: refetch,
-    isLoading: isLoading || membershipsLoading || isAuthLoading,
+    isLoading: isLoading || membershipsLoading,
   }
 }
 type RecentChannelsResponse = YppSyncedChannel[]

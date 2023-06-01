@@ -1,13 +1,13 @@
 import BN from 'bn.js'
 import { ProxyMarked, Remote, proxy, wrap } from 'comlink'
-import { FC, PropsWithChildren, createContext, useCallback, useEffect, useRef, useState } from 'react'
+import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
 
 import { atlasConfig } from '@/config'
 import { NODE_URL } from '@/config/env'
 import { HAPI_TO_JOY_RATE } from '@/joystream-lib/config'
 import { JoystreamLib } from '@/joystream-lib/lib'
 import { useEnvironmentStore } from '@/providers/environment/store'
-import { useUserStore } from '@/providers/user/user.store'
+import { useWalletStore } from '@/providers/wallet/wallet.store'
 import { SentryLogger } from '@/utils/logs'
 
 import { useConnectionStatusStore } from '../connectionStatus'
@@ -18,6 +18,7 @@ export type JoystreamContextValue = {
   joystream: Remote<JoystreamLib> | undefined
   proxyCallback: ProxyCallbackFn
   chainState: ReturnType<typeof useJoystreamChainConstants>
+  setApiActiveAccount: (address: string) => void
 } & ReturnType<typeof useJoystreamUtilFns>
 
 export const JoystreamContext = createContext<JoystreamContextValue | undefined>(undefined)
@@ -29,7 +30,7 @@ const worker = new Worker(new URL('../../utils/polkadot-worker', import.meta.url
 const api = wrap<typeof JoystreamLib>(worker)
 
 export const JoystreamProvider: FC<PropsWithChildren> = ({ children }) => {
-  const { accountId, walletAccounts, wallet } = useUserStore()
+  const { wallet } = useWalletStore()
   const { nodeOverride } = useEnvironmentStore((state) => state)
   const setNodeConnection = useConnectionStatusStore((state) => state.actions.setNodeConnection)
   const [initialized, setInitialized] = useState(false)
@@ -65,43 +66,38 @@ export const JoystreamProvider: FC<PropsWithChildren> = ({ children }) => {
     }
   }, [handleNodeConnectionUpdate, nodeOverride, setNodeConnection])
 
-  // update Joystream Lib selected on change
-  useEffect(() => {
-    if (!initialized) {
-      return
-    }
-    const init = async () => {
+  const setApiActiveAccount = useCallback(
+    async (address: string) => {
       const instance = joystream.current
-      if (!instance || !accountId || !walletAccounts || !wallet) {
+
+      if (!initialized || !instance || !wallet) {
         return
       }
 
       const previousAccountId = await instance?.selectedAccountId
-      if (accountId === previousAccountId) {
+      if (address === previousAccountId) {
         return
       }
 
-      const setActiveAccount = async () => {
-        if (accountId) {
-          const { signer } = wallet
-          if (!signer) {
-            SentryLogger.error('Failed to get signer from web3FromAddress', 'JoystreamProvider')
-            return
-          }
-          await instance.setActiveAccount(accountId, proxy(signer))
-        } else {
-          await instance.setActiveAccount(accountId)
-        }
+      const { signer } = wallet
+      if (!signer) {
+        SentryLogger.error('Failed to get signer from web3FromAddress', 'JoystreamProvider')
+        return
       }
-
-      setActiveAccount()
-    }
-    init()
-  }, [accountId, initialized, wallet, walletAccounts])
+      await instance.setActiveAccount(address, proxy(signer))
+    },
+    [initialized, wallet]
+  )
 
   return (
     <JoystreamContext.Provider
-      value={{ joystream: initialized ? joystream.current : undefined, proxyCallback, chainState, ...utilFns }}
+      value={{
+        joystream: initialized ? joystream.current : undefined,
+        proxyCallback,
+        chainState,
+        setApiActiveAccount,
+        ...utilFns,
+      }}
     >
       {children}
     </JoystreamContext.Provider>
@@ -181,4 +177,12 @@ const useJoystreamChainConstants = (joystream: Remote<JoystreamLib> | undefined)
   }, [joystream])
 
   return chainConstant
+}
+
+export const useJoystream = (): JoystreamContextValue => {
+  const ctx = useContext(JoystreamContext)
+  if (!ctx) {
+    throw new Error('useJoystream must be used within JoystreamProvider')
+  }
+  return ctx
 }

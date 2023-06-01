@@ -6,7 +6,6 @@ import { AcceptBidDialog } from '@/components/_overlays/AcceptBidDialog'
 import { ChangePriceDialog } from '@/components/_overlays/ChangePriceDialog'
 import { useNftState } from '@/hooks/useNftState'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
-import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useTokenPrice } from '@/providers/joystream/joystream.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 

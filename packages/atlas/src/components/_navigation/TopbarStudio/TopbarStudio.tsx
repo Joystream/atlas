@@ -23,7 +23,7 @@ type StudioTopbarProps = {
 }
 
 export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembershipLoaded }) => {
-  const { channelId, activeMembership, signIn, isAuthLoading } = useUser()
+  const { channelId, activeMembership } = useUser()
   const mdMatch = useMediaMatch('md')
   const hasAtLeastOneChannel = !!activeMembership?.channels.length && activeMembership?.channels.length >= 1
 
@@ -91,7 +91,8 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
               <StyledAvatarGroup size="large" shouldHighlightEveryAvatar reverse avatars={avatars} clickable={false} />
             </StudioTopbarContainer>
           ) : (
-            <Button size="medium" onClick={() => signIn()}>
+            // todo: add handler
+            <Button size="medium" onClick={() => undefined}>
               Set up membership
             </Button>
           ))}
