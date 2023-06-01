@@ -140,13 +140,16 @@ const _Popover: ForwardRefRenderFunction<PopoverImperativeHandle | undefined, Po
       placement={placement}
       offset={offset}
     >
-      <TriggerContainer tabIndex={1}>{trigger}</TriggerContainer>
+      <TriggerContainer tabIndex={1} isTrigger={!!trigger}>
+        {trigger}
+      </TriggerContainer>
     </Tippy>
   )
 }
 
-const TriggerContainer = styled.div`
-  height: max-content;
+const TriggerContainer = styled.div<{ isTrigger: boolean }>`
+  /* if we use triggerElement, don't set height */
+  height: ${({ isTrigger }) => (isTrigger ? 'max-content' : 'unset')};
 `
 
 const ContentContainer = styled.div<{ animation?: boolean }>`
