@@ -4,8 +4,8 @@ import shallow from 'zustand/shallow'
 import { ExternalSignInModalEmailStep } from '@/components/_auth/ExternalSignInModal/ExternalSignInSteps/ExternalSignInModalEmailStep'
 import { Button } from '@/components/_buttons/Button'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
-import { useUser } from '@/providers/user/user.hooks'
-import { useUserStore } from '@/providers/user/user.store'
+import { useAuthStore } from '@/providers/auth/auth.store'
+import { useWallet } from '@/providers/wallet/wallet.hooks'
 
 import { StyledDialogModal } from './ExternalSignInModal.styles'
 import {
@@ -23,8 +23,8 @@ export const ExternalSignInModal: FC = () => {
   const [hasNavigatedBack, setHasNavigatedBack] = useState(false)
   const [selectedMembership, setSelectedMembership] = useState<string | null>(null)
   const dialogContentRef = useRef<HTMLDivElement>(null)
-  const { walletStatus } = useUser()
-  const { signInModalOpen, setSignInModalOpen } = useUserStore(
+  const { walletStatus } = useWallet()
+  const { signInModalOpen, setSignInModalOpen } = useAuthStore(
     (state) => ({ signInModalOpen: state.signInModalOpen, setSignInModalOpen: state.actions.setSignInModalOpen }),
     shallow
   )

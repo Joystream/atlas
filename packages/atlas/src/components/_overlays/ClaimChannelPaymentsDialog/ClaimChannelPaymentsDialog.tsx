@@ -10,7 +10,7 @@ import { BalanceWrapper } from '@/components/_overlays/ClaimChannelPaymentsDialo
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
-import { useFee, useSubscribeAccountBalance } from '@/providers/joystream/joystream.hooks'
+import { useFee, useSubscribeAccountBalance } from '@/providers/joystream'
 import { useUser } from '@/providers/user/user.hooks'
 import { useChannelPayout } from '@/views/studio/MyPaymentsView/PaymentsOverview/PaymentsOverview.hooks'
 

@@ -17,7 +17,7 @@ import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_ov
 import { atlasConfig } from '@/config'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
-import { useBloatFeesAndPerMbFees } from '@/providers/joystream/joystream.hooks'
+import { useBloatFeesAndPerMbFees } from '@/providers/joystream'
 import { useStartFileUpload } from '@/providers/uploads/uploads.hooks'
 import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { AssetUpload } from '@/providers/uploads/uploads.types'

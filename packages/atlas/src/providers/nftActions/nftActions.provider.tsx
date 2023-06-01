@@ -6,7 +6,7 @@ import { AcceptBidDialog } from '@/components/_overlays/AcceptBidDialog'
 import { ChangePriceDialog } from '@/components/_overlays/ChangePriceDialog'
 import { useNftState } from '@/hooks/useNftState'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
-import { useTokenPrice } from '@/providers/joystream/joystream.hooks'
+import { useTokenPrice } from '@/providers/joystream'
 import { useUser } from '@/providers/user/user.hooks'
 
 type NftAction = 'putOnSale' | 'purchase' | 'settle' | 'accept-bid' | 'change-price' | 'cancel-sale' | 'withdraw-bid'

@@ -62,11 +62,11 @@ export const SidenavViewer: FC = () => {
     unFollow(id)
   }
 
-  const { signIn, isLoggedIn } = useUser()
+  const { isLoggedIn } = useUser()
 
   const closeAndSignIn = () => {
     setExpanded(false)
-    signIn(undefined)
+    // todo: add sigin
   }
   const buttonsContent = !isLoggedIn ? (
     <Button icon={<SvgActionMember />} onClick={closeAndSignIn}>

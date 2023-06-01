@@ -18,7 +18,7 @@ import { useDeepMemo } from '@/hooks/useDeepMemo'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { EnglishTimerState } from '@/hooks/useNftState'
 import { NftSaleType } from '@/joystream-lib/types'
-import { useTokenPrice } from '@/providers/joystream/joystream.hooks'
+import { useTokenPrice } from '@/providers/joystream'
 import { formatDateTime, formatDurationShort, formatTime } from '@/utils/time'
 
 import { NftHistory, NftHistoryEntry } from './NftHistory'

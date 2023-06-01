@@ -2,7 +2,7 @@ import { useApolloClient } from '@apollo/client'
 import debouncePromise from 'awesome-debounce-promise'
 import BN from 'bn.js'
 import { isEqual, sampleSize } from 'lodash-es'
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import {
   GetBasicDistributionBucketsDocument,
@@ -23,17 +23,9 @@ import {
 import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger } from '@/utils/logs'
 
-import { JoystreamContext, JoystreamContextValue } from './joystream.provider'
+import { useJoystream } from './joystream.provider'
 
 const USE_FEE_DEBOUNCE = 500
-
-export const useJoystream = (): JoystreamContextValue => {
-  const ctx = useContext(JoystreamContext)
-  if (!ctx) {
-    throw new Error('useJoystream must be used within JoystreamProvider')
-  }
-  return ctx
-}
 
 export const useTokenPrice = () => {
   const { tokenPrice } = useJoystream()

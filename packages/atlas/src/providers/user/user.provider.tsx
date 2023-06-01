@@ -1,63 +1,23 @@
-import {
-  FC,
-  PropsWithChildren,
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo } from 'react'
 
 import { useMemberships } from '@/api/hooks/membership'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
-import { JoystreamContext, JoystreamContextValue } from '@/providers/joystream/joystream.provider'
-import { isMobile } from '@/utils/browser'
+import { useJoystream } from '@/providers/joystream/joystream.provider'
 import { AssetLogger, SentryLogger } from '@/utils/logs'
-import { retryPromise } from '@/utils/misc'
-import { setAnonymousAuth } from '@/utils/user'
 
-import { useSignerWallet } from './user.helpers'
 import { useUserStore } from './user.store'
 import { UserContextValue } from './user.types'
+
+import { useAuth } from '../auth/auth.hooks'
 
 const UserContext = createContext<undefined | UserContextValue>(undefined)
 UserContext.displayName = 'UserContext'
 
-const isMobileDevice = isMobile()
-
 export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
-  const {
-    accountId,
-    memberId,
-    channelId,
-    walletAccounts,
-    walletStatus,
-    lastUsedWalletName,
-    wallet,
-    lastChainMetadataVersion,
-    userId,
-  } = useUserStore((state) => state)
-  const { setActiveUser, setSignInModalOpen, setLastChainMetadataVersion, setUserId } = useUserStore(
-    (state) => state.actions
-  )
-  const { initSignerWallet } = useSignerWallet()
-  const joystreamCtx = useContext<JoystreamContextValue | undefined>(JoystreamContext)
-
-  const [isAuthLoading, setIsAuthLoading] = useState(true)
-  const [isSignerMetadataOutdated, setIsSignerMetadataOutdated] = useState(false)
-
-  const accountsIds = walletAccounts.map((a) => a.address)
-
-  const firstRender = useRef(true)
-  // run this once to make sure that userId is set in localstorage and its up to date
-  useEffect(() => {
-    if (firstRender.current) {
-      setAnonymousAuth(userId).then((userId) => setUserId(userId || null))
-      firstRender.current = false
-    }
-  }, [setUserId, userId])
+  const { channelId } = useUserStore((state) => state)
+  const { setActiveUser } = useUserStore((state) => state.actions)
+  const { currentUser } = useAuth()
+  const { setApiActiveAccount } = useJoystream()
 
   const {
     memberships: currentMemberships,
@@ -68,13 +28,13 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   } = useMemberships(
     {
       where: {
-        controllerAccount_in: accountsIds,
+        id_eq: currentUser?.id,
       },
     },
     {
-      skip: !accountsIds.length,
+      skip: !currentUser,
       onError: (error) =>
-        SentryLogger.error('Failed to fetch user memberships', 'UserProvider', error, { user: { accountsIds } }),
+        SentryLogger.error('Failed to fetch user memberships', 'UserProvider', error, { user: currentUser ?? {} }),
     }
   )
 
@@ -84,124 +44,28 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
     return refetch()
   }, [refetch])
 
-  const signIn = useCallback(
-    async (
-      walletName?: string,
-      mobileCallback?: ({ onConfirm }: { onConfirm: () => void }) => void,
-      invokedAutomatically?: boolean
-    ): Promise<boolean> => {
-      let accounts = []
-
-      if (!walletName) {
-        if (isMobileDevice && mobileCallback) {
-          mobileCallback?.({ onConfirm: () => setSignInModalOpen(true) })
-          return true
-        }
-        setSignInModalOpen(true)
-        return true
-      }
-
-      try {
-        const initializedAccounts = await (!invokedAutomatically
-          ? initSignerWallet(walletName)
-          : retryPromise(() => initSignerWallet(walletName), 500, 2000))
-        if (initializedAccounts == null) {
-          SentryLogger.error('Selected wallet not found or not installed', 'UserProvider')
-          setSignInModalOpen(true)
-          return false
-        }
-        accounts = initializedAccounts
-      } catch (e) {
-        SentryLogger.error('Failed to enable selected wallet', 'UserProvider', e)
-        return false
-      }
-
-      const accountsIds = accounts.map((a) => a.address)
-
-      await refetch({ where: { controllerAccount_in: accountsIds } })
-
-      return true
-    },
-    [initSignerWallet, refetch, setSignInModalOpen]
-  )
-
   // keep user used by loggers in sync
   useEffect(() => {
     const user = {
-      accountId,
-      memberId,
+      accountId: currentUser?.joystreamAccount,
+      memberId: currentUser?.membershipId,
       channelId,
     }
+
+    // update Joystream Lib selected on change
+    if (currentUser?.joystreamAccount) {
+      setApiActiveAccount(currentUser.joystreamAccount)
+    }
+
     SentryLogger.setUser(user)
     AssetLogger.setUser(user)
-  }, [accountId, channelId, memberId])
+  }, [channelId, currentUser?.joystreamAccount, currentUser?.membershipId, setApiActiveAccount])
 
-  // if the user has account/member IDs set, initialize sign in automatically
-  useEffect(() => {
-    if (walletStatus !== 'unknown' || !lastUsedWalletName) {
-      setIsAuthLoading(false)
-      return
-    }
-
-    if (!accountId || !memberId) {
-      setIsAuthLoading(false)
-      return
-    }
-
-    setTimeout(() => {
-      // add a slight delay - sometimes the extension will not initialize by the time of this call and may appear unavailable
-      signIn(lastUsedWalletName, undefined, true).then(() => setIsAuthLoading(false))
-    }, 200)
-  }, [accountId, lastUsedWalletName, memberId, signIn, walletStatus])
-
-  const activeMembership = (memberId && memberships?.find((membership) => membership.id === memberId)) || null
+  const activeMembership =
+    (currentUser?.membershipId && memberships?.find((membership) => membership.id === currentUser?.membershipId)) ||
+    null
   const activeChannel =
     (activeMembership && activeMembership?.channels.find((channel) => channel.id === channelId)) || null
-
-  const checkSignerStatus = useCallback(async () => {
-    const chainMetadata = await joystreamCtx?.joystream?.getChainMetadata()
-
-    if (wallet?.extension.metadata && chainMetadata) {
-      const [localGenesisHash, localSpecVersion] = lastChainMetadataVersion ?? ['', 0]
-
-      // update was skipped
-      if (localGenesisHash === chainMetadata.genesisHash && localSpecVersion === chainMetadata.specVersion) {
-        return setIsSignerMetadataOutdated(false)
-      }
-
-      const extensionMetadata = await wallet.extension.metadata.get()
-      const currentChain = extensionMetadata.find(
-        (infoEntry: { specVersion: number; genesisHash: string }) =>
-          infoEntry.genesisHash === chainMetadata?.genesisHash
-      )
-
-      // if there isn't even a metadata entry for node with specific genesis hash then update
-      if (!currentChain) {
-        return setIsSignerMetadataOutdated(true)
-      }
-
-      // if there is metadata for this node then verify specVersion
-      const isOutdated = currentChain.specVersion < chainMetadata.specVersion
-      setIsSignerMetadataOutdated(isOutdated)
-    }
-  }, [joystreamCtx?.joystream, lastChainMetadataVersion, wallet?.extension.metadata])
-
-  const updateSignerMetadata = useCallback(async () => {
-    const chainMetadata = await joystreamCtx?.joystream?.getChainMetadata()
-    return wallet?.extension.metadata.provide(chainMetadata)
-  }, [joystreamCtx?.joystream, wallet?.extension.metadata])
-
-  const skipSignerMetadataUpdate = useCallback(async () => {
-    const chainMetadata = await joystreamCtx?.joystream?.getChainMetadata()
-    if (chainMetadata) {
-      setLastChainMetadataVersion(chainMetadata.genesisHash, chainMetadata.specVersion)
-      setIsSignerMetadataOutdated(false)
-    }
-  }, [joystreamCtx?.joystream, setLastChainMetadataVersion])
-
-  useEffect(() => {
-    checkSignerStatus()
-  }, [checkSignerStatus])
 
   const isChannelBelongsToTheUserOrExists = activeMembership?.channels.length
     ? activeMembership.channels.some((channel) => channel.id === channelId)
@@ -219,25 +83,9 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       membershipsLoading,
       activeMembership,
       activeChannel,
-      isAuthLoading,
-      signIn,
       refetchUserMemberships,
-      isSignerMetadataOutdated,
-      updateSignerMetadata,
-      skipSignerMetadataUpdate,
     }),
-    [
-      activeChannel,
-      memberships,
-      membershipsLoading,
-      activeMembership,
-      isAuthLoading,
-      signIn,
-      refetchUserMemberships,
-      isSignerMetadataOutdated,
-      updateSignerMetadata,
-      skipSignerMetadataUpdate,
-    ]
+    [activeChannel, memberships, membershipsLoading, activeMembership, refetchUserMemberships]
   )
 
   if (error) {
