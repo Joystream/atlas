@@ -10,7 +10,7 @@ export type AuthStoreState = {
 
 export type AuthStoreActions = {
   setAnonymousUserId: (anonymousUserId: string | null) => void
-  setEncodedSeed: (encodedSeed: string) => void
+  setEncodedSeed: (encodedSeed: string | null) => void
   setAuthModalOpen: (modal?: AuthModals) => void
 }
 

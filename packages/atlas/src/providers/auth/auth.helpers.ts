@@ -43,12 +43,11 @@ export const getArtifacts = async (id: string, email: string, password: string) 
     const { cipherIv, encryptedSeed } = res.data
     const cipherKey = await scryptHash(`${email}:${password}`, Buffer.from(cipherIv, 'hex'))
     const decryptedSeed = aes256CbcDecrypt(encryptedSeed, cipherKey, Buffer.from(cipherIv, 'hex'))
-    const keypair = keyring.addFromMnemonic(
-      entropyToMnemonic(Buffer.from(decryptedSeed.slice(2, decryptedSeed.length), 'hex'))
-    )
+    const mnemonic = entropyToMnemonic(Buffer.from(decryptedSeed.slice(2, decryptedSeed.length), 'hex'))
+    const keypair = keyring.addFromMnemonic(mnemonic)
     return {
       keypair,
-      decryptedSeed,
+      mnemonic,
     }
   } catch (error) {
     SentryLogger.error('Error when fetching artifacts', 'useLogIn', error)

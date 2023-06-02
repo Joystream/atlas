@@ -1,7 +1,6 @@
 import { useApolloClient } from '@apollo/client'
 import { JOYSTREAM_ADDRESS_PREFIX } from '@joystream/types/.'
 import { Keyring } from '@polkadot/keyring'
-import { KeyringPair } from '@polkadot/keyring/types'
 import { u8aToHex } from '@polkadot/util'
 import { cryptoWaitReady } from '@polkadot/util-crypto'
 import axios from 'axios'
@@ -30,9 +29,8 @@ AuthContext.displayName = 'AuthContext'
 export const keyring = new Keyring({ type: 'sr25519', ss58Format: JOYSTREAM_ADDRESS_PREFIX })
 
 export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [initializationState, setInitializationState] = useState<null | AuthContextValue['initializationState']>(null)
+  const [isAuthenticating, setIsAuthenticating] = useState(true)
   const [loggedAddress, setLoggedAddress] = useState<null | string>(null)
-  const [keypair, setKeypair] = useState<null | KeyringPair>(null)
   const [currentUser, setCurrentUser] = useState<GetCurrentAccountQuery['accountData'] | null>(null)
   const [lazyCurrentAccountQuery, { refetch }] = useGetCurrentAccountLazyQuery()
   const { setApiActiveAccount } = useJoystream()
@@ -60,7 +58,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
   useMountEffect(() => {
     const init = async () => {
-      setInitializationState('logging')
+      setIsAuthenticating(true)
 
       const { data } = await lazyCurrentAccountQuery()
       if (!data) {
@@ -68,6 +66,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
           client.refetchQueries({ include: 'active' })
           setAnonymousUserId(userId ?? null)
         })
+        setIsAuthenticating(false)
         return
       }
 
@@ -76,10 +75,9 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         if (mnemonic) {
           const keypair = keyring.addFromMnemonic(mnemonic)
           if (keypair.address === data.accountData.joystreamAccount) {
-            setKeypair(keypair)
             setLoggedAddress(keypair.address)
             setCurrentUser(data.accountData)
-            setInitializationState('loggedIn')
+            setIsAuthenticating(false)
             setApiActiveAccount('seed', mnemonic)
             return
           }
@@ -93,13 +91,13 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
           if (res?.find((walletAcc) => walletAcc.address === data.accountData.joystreamAccount)) {
             setLoggedAddress(data.accountData.joystreamAccount)
             setCurrentUser(data.accountData)
-            setInitializationState('loggedIn')
+            setIsAuthenticating(false)
             setApiActiveAccount('address', data.accountData.joystreamAccount)
             return
           }
-          setInitializationState('needAuthentication')
         }, 200)
       }
+      setIsAuthenticating(false)
     }
     init()
   })
@@ -135,7 +133,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const handleLogin = useCallback(
     async (params: LoginParams): Promise<LogInHandler> => {
-      setInitializationState('logging')
+      setIsAuthenticating(true)
       await cryptoWaitReady()
       const time = Date.now() - 1000
       const payload = {
@@ -145,20 +143,20 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         action: 'login',
       }
       let signatureOverPayload = null
-      let plainSeed: string | null = null
+      let localMnemonic: string | null = null
       if (params.type === 'internal') {
         const { email, password } = params
         const id = (await scryptHash(`${email}:${password}`, '0x0818ee04c541716831bdd0f598fa4bbb')).toString('hex')
         const data = await getArtifacts(id, email, password)
         if (!data) {
-          setInitializationState('needAuthentication')
+          setIsAuthenticating(false)
           return {
             data: null,
             error: LogInErrors.ArtifactsNotFound,
           }
         }
-        const { keypair, decryptedSeed } = data
-        plainSeed = decryptedSeed
+        const { keypair, mnemonic } = data
+        localMnemonic = mnemonic
         payload.joystreamAccountId = keypair.address
         signatureOverPayload = u8aToHex(keypair.sign(JSON.stringify(payload)))
       }
@@ -183,23 +181,25 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
           }
         )
 
-        setInitializationState('loggedIn')
         setAnonymousUserId(null)
 
-        if (plainSeed) {
-          saveEncodedSeed(plainSeed)
-          refetch().then((res) => {
-            if (res.data) {
-              setCurrentUser(res.data.accountData)
-            }
-          })
+        if (localMnemonic) {
+          saveEncodedSeed(localMnemonic)
+          setApiActiveAccount('seed', localMnemonic)
+        } else {
+          setApiActiveAccount('address', payload.joystreamAccountId)
         }
+
+        refetch().then((res) => {
+          if (res.data) {
+            setCurrentUser(res.data.accountData)
+          }
+        })
 
         return {
           data: response.data,
         }
       } catch (error) {
-        setInitializationState('needAuthentication')
         const orionMessage = error.response.data.message
         if (orionMessage.includes('Invalid credentials')) {
           return {
@@ -220,9 +220,11 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
           data: null,
           error: LogInErrors.LoginError,
         }
+      } finally {
+        setIsAuthenticating(false)
       }
     },
-    [refetch, saveEncodedSeed, setAnonymousUserId]
+    [refetch, saveEncodedSeed, setAnonymousUserId, setApiActiveAccount]
   )
 
   const handleLogout = useCallback(async () => {
@@ -232,22 +234,22 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         setAnonymousUserId(userId ?? null)
       })
       setCurrentUser(null)
+      setEncodedSeed(null)
     } catch (error) {
       SentryLogger.error('Error when logging out', 'auth.provider', error)
     }
-  }, [anonymousUserId, setAnonymousUserId])
+  }, [anonymousUserId, setAnonymousUserId, setEncodedSeed])
 
   const contextValue: AuthContextValue = useMemo(
     () => ({
       handleLogin,
-      initializationState,
+      isAuthenticating,
       loggedAddress,
-      keypair,
       refetchCurrentUser: refetch,
       currentUser: currentUser,
       handleLogout,
     }),
-    [currentUser, handleLogin, handleLogout, initializationState, keypair, loggedAddress, refetch]
+    [currentUser, handleLogin, handleLogout, isAuthenticating, loggedAddress, refetch]
   )
 
   // if (error) {

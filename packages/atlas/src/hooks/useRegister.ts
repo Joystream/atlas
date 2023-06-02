@@ -9,7 +9,7 @@ import { AES, enc, lib, mode } from 'crypto-js'
 import { useCallback } from 'react'
 
 import { ORION_AUTH_URL } from '@/config/env'
-import { useLogIn } from '@/hooks/useLogIn'
+import { useAuth } from '@/providers/auth/auth.hooks'
 import { scryptHash } from '@/utils/user'
 
 export const keyring = new Keyring({ type: 'sr25519', ss58Format: JOYSTREAM_ADDRESS_PREFIX })
@@ -49,7 +49,7 @@ type EmailPasswordParams = {
 type RegisterParams = ExtensionParams | EmailPasswordParams
 
 export const useRegister = () => {
-  const handleLogin = useLogIn()
+  const { handleLogin } = useAuth()
 
   return useCallback(
     async (params: RegisterParams) => {
@@ -115,7 +115,7 @@ export const useRegister = () => {
       )
 
       await handleLogin({
-        type: 'extension',
+        type: 'external',
         address: registerPayload.joystreamAccountId,
         sign:
           params.type === 'extension'

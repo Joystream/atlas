@@ -10,9 +10,9 @@ import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
-import { LogInErrors } from '@/hooks/useLogIn'
 import { useAuth } from '@/providers/auth/auth.hooks'
 import { useAuthStore } from '@/providers/auth/auth.store'
+import { LogInErrors } from '@/providers/auth/auth.types'
 import { useSnackbar } from '@/providers/snackbars'
 
 import { Container } from './LogInModal.styles'
@@ -82,7 +82,13 @@ export const LogInModal = () => {
             }
           : undefined
       }
-      additionalActionsNode={!isLoading && <Button variant="tertiary">Close</Button>}
+      additionalActionsNode={
+        !isLoading && (
+          <Button variant="tertiary" onClick={() => setAuthModalOpen(undefined)}>
+            Close
+          </Button>
+        )
+      }
     >
       {!isLoading ? (
         <AuthenticationModalStepTemplate

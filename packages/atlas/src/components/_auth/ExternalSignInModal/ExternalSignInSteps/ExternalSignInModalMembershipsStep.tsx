@@ -1,14 +1,15 @@
 import { FC, useCallback, useEffect } from 'react'
 import shallow from 'zustand/shallow'
 
+import { GetMembershipsQuery } from '@/api/queries/__generated__/memberships.generated'
 import { Avatar } from '@/components/Avatar'
-import { LogInErrors, useLogIn } from '@/hooks/useLogIn'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
+import { useAuth } from '@/providers/auth/auth.hooks'
 import { useAuthStore } from '@/providers/auth/auth.store'
+import { LogInErrors } from '@/providers/auth/auth.types'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
-import { useUser } from '@/providers/user/user.hooks'
 import { shortenString } from '@/utils/misc'
 
 import { ExternalSignInModalStepTemplate } from './ExternalSignInModalStepTemplate'
@@ -18,6 +19,7 @@ import { ModalSteps, SignInStepProps } from './ExternalSignInSteps.types'
 type SignInModalAccountStepProps = SignInStepProps & {
   memberId: string | null
   setMemberId: (id: string) => void
+  memberships: GetMembershipsQuery['memberships'] | null
 }
 
 export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps> = ({
@@ -26,28 +28,28 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
   goToStep,
   setMemberId,
   memberId,
+  memberships,
 }) => {
   const smMatch = useMediaMatch('sm')
   const { setAuthModalOpen } = useAuthStore((state) => ({ setAuthModalOpen: state.actions.setAuthModalOpen }), shallow)
-  const { memberships } = useUser()
   const { setApiActiveAccount } = useJoystream()
 
   const { joystream } = useJoystream()
-  const handleLogin = useLogIn()
+  const { handleLogin } = useAuth()
   const { displaySnackbar } = useSnackbar()
 
   const handleConfirm = useCallback(async () => {
     if (!joystream?.signMessage) return
 
-    const member = memberships.find((entity) => entity.id === memberId)
+    const member = memberships?.find((entity) => entity.id === memberId)
 
     if (!member) return
 
-    setApiActiveAccount('address', member.controllerAccount)
+    await setApiActiveAccount('address', member.controllerAccount)
 
     goToStep(ModalSteps.Logging)
     const res = await handleLogin({
-      type: 'extension',
+      type: 'external',
       sign: (data) =>
         joystream.signMessage({
           type: 'payload',
@@ -75,7 +77,7 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
   useEffect(() => {
     if (memberId) return
 
-    setMemberId(memberships[0]?.id)
+    setMemberId(memberships?.[0]?.id ?? '')
   }, [memberId, memberships, setMemberId])
 
   // send updates to SignInModal on state of primary button
@@ -94,7 +96,7 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
       hasNavigatedBack={hasNavigatedBack}
     >
       <ListItemsWrapper>
-        {memberships.map((member) => (
+        {memberships?.map((member) => (
           <StyledListItem
             key={member.id}
             label={member.handle ?? 'Account'}
