@@ -26,7 +26,7 @@ export const LogInModal = () => {
   const { displaySnackbar } = useSnackbar()
   const {
     register,
-    handleSubmit,
+    handleSubmit: _handleSubmit,
     setError,
     formState: { errors },
   } = useForm<{ email: string; password: string }>({
@@ -63,16 +63,18 @@ export const LogInModal = () => {
     setIsLoading(false)
   }
 
+  const handleSubmit = () =>
+    _handleSubmit((data) => {
+      handleLoginClick(data.email, data.password)
+    })()
+
   return (
     <DialogModal
       show={authModalOpen === 'logIn'}
       primaryButton={{
         text: isLoading ? 'Waiting...' : 'Log in',
         disabled: isLoading,
-        onClick: () =>
-          handleSubmit((data) => {
-            handleLoginClick(data.email, data.password)
-          })(),
+        onClick: handleSubmit,
       }}
       secondaryButton={
         !isLoading
@@ -105,6 +107,11 @@ export const LogInModal = () => {
                 {...register('password')}
                 placeholder="Password"
                 type={isPasswordShown ? 'text' : 'password'}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSubmit()
+                  }
+                }}
                 actionButton={{
                   tooltipText: isPasswordShown ? 'Hide' : 'Show',
                   dontFocusOnClick: true,

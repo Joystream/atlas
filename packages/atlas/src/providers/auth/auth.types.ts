@@ -19,6 +19,7 @@ export enum LogInErrors {
   NoAccountFound = 'NoAccountFound',
   InvalidPayload = 'InvalidPayload',
   LoginError = 'LoginError',
+  SignatureCancelled = 'SignatureCancelled',
 }
 
 export type LogInHandler = {

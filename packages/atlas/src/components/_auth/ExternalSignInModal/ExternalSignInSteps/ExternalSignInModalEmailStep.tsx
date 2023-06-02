@@ -40,7 +40,7 @@ export const ExternalSignInModalEmailStep: FC<SignInModalEmailStepProps> = ({
   const handleConfirm = useCallback(async () => {
     const account = await joystream?.selectedAccountId
     if (!joystream?.signMessage || !account || !memberId) return
-    goToStep(ModalSteps.Logging)
+    goToStep(ModalSteps.ExtensionSigning)
     const userAddress = typeof account === 'object' ? account.address : account
     await handleSubmit((data) => {
       handleRegister({

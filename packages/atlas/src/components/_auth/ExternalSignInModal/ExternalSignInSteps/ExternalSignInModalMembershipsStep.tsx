@@ -47,7 +47,7 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
 
     await setApiActiveAccount('address', member.controllerAccount)
 
-    goToStep(ModalSteps.Logging)
+    goToStep(ModalSteps.ExtensionSigning)
     const res = await handleLogin({
       type: 'external',
       sign: (data) =>
@@ -67,6 +67,14 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
         iconType: 'error',
         title: 'There was a problem with signature. Please try again.',
       })
+    }
+
+    if (res.error === LogInErrors.SignatureCancelled) {
+      displaySnackbar({
+        iconType: 'error',
+        title: 'Message signing cancelled',
+      })
+      goToStep(ModalSteps.Membership)
     }
 
     if (res.data) {

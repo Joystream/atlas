@@ -6,7 +6,6 @@ import { ExternalSignInModalEmailStep } from '@/components/_auth/ExternalSignInM
 import { Button } from '@/components/_buttons/Button'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { useAuthStore } from '@/providers/auth/auth.store'
-import { useWallet } from '@/providers/wallet/wallet.hooks'
 
 import { StyledDialogModal } from './ExternalSignInModal.styles'
 import {
@@ -18,46 +17,28 @@ import {
 import { ExternalSignInModalStepTemplate } from './ExternalSignInSteps/ExternalSignInModalStepTemplate'
 
 export const ExternalSignInModal: FC = () => {
-  const [currentStep, setCurrentStep] = useState<ModalSteps | null>(null)
+  const [currentStep, setCurrentStep] = useState<ModalSteps>(ModalSteps.Wallet)
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Select wallet' }) // start with sensible default so that there are no jumps after first effect runs
   const [hasNavigatedBack, setHasNavigatedBack] = useState(false)
   const [selectedMembership, setSelectedMembership] = useState<string | null>(null)
   const [availableMemberships, setAvailableMemberships] = useState<GetMembershipsQuery['memberships'] | null>(null)
   const dialogContentRef = useRef<HTMLDivElement>(null)
-  const { walletStatus } = useWallet()
   const { authModalOpen, setAuthModalOpen } = useAuthStore(
     (state) => ({ authModalOpen: state.authModalOpen, setAuthModalOpen: state.actions.setAuthModalOpen }),
     shallow
   )
-  const walletConnected = walletStatus === 'connected'
-  // handle opening/closing of modal and setting initial step
-  useEffect(() => {
-    if (authModalOpen !== 'externalLogIn') {
-      setCurrentStep(null)
-      return
-    }
-    if (currentStep !== null) return
-
-    if (walletConnected) {
-      setCurrentStep(availableMemberships?.length ? ModalSteps.Membership : ModalSteps.NoMembership)
-      return
-    }
-    setCurrentStep(ModalSteps.Wallet)
-  }, [currentStep, walletConnected, authModalOpen, availableMemberships?.length])
 
   const goToPreviousStep = useCallback((step: ModalSteps) => {
     setCurrentStep(step)
     setHasNavigatedBack(true)
   }, [])
 
-  const displayedStep = currentStep ?? ModalSteps.ExtensionSigning
-
   // scroll the dialog content to top whenever the displayed step changes
   useEffect(() => {
     if (!dialogContentRef.current) return
 
     dialogContentRef.current.scrollTo({ top: 0 })
-  }, [displayedStep])
+  }, [currentStep])
 
   const renderStep = () => {
     const commonProps: SignInStepProps = {
@@ -66,7 +47,7 @@ export const ExternalSignInModal: FC = () => {
       hasNavigatedBack,
     }
 
-    switch (displayedStep) {
+    switch (currentStep) {
       case ModalSteps.Wallet:
         return <ExternalSignInModalWalletStep {...commonProps} setAvailableMemberships={setAvailableMemberships} />
       case ModalSteps.Membership:
@@ -120,13 +101,13 @@ export const ExternalSignInModal: FC = () => {
   }, [currentStep, setAuthModalOpen])
 
   const modalButtons =
-    displayedStep === ModalSteps.Logging
+    currentStep === ModalSteps.Logging
       ? {}
       : {
           primaryButton: primaryButtonProps,
-          secondaryButton: [ModalSteps.Membership, ModalSteps.NoMembership].includes(displayedStep)
+          secondaryButton: [ModalSteps.Membership, ModalSteps.NoMembership].includes(currentStep)
             ? { text: 'Back', onClick: () => goToPreviousStep(ModalSteps.Wallet) }
-            : [ModalSteps.Wallet, ModalSteps.NoMembership].includes(displayedStep)
+            : [ModalSteps.Wallet, ModalSteps.NoMembership].includes(currentStep)
             ? { text: 'Use email & password', onClick: () => setAuthModalOpen('logIn') }
             : undefined,
           additionalActionsNode: (
@@ -144,8 +125,8 @@ export const ExternalSignInModal: FC = () => {
   return (
     <StyledDialogModal
       {...modalButtons}
-      show={!!currentStep}
-      dividers={displayedStep !== ModalSteps.NoMembership}
+      show={authModalOpen === 'externalLogIn'}
+      dividers={currentStep !== ModalSteps.NoMembership}
       additionalActionsNodeMobilePosition="bottom"
       contentRef={dialogContentRef}
     >

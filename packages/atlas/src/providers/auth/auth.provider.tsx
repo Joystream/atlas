@@ -163,7 +163,14 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
       if (params.type === 'external') {
         payload.joystreamAccountId = params.address
-        signatureOverPayload = await params.sign(JSON.stringify(payload))
+        try {
+          signatureOverPayload = await params.sign(JSON.stringify(payload))
+        } catch (_) {
+          return {
+            data: null,
+            error: LogInErrors.SignatureCancelled,
+          }
+        }
       }
 
       try {
