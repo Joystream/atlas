@@ -20,11 +20,11 @@ import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/YppLandingView.hooks'
-import { StyledActionBar } from '@/views/viewer/MembershipSettingsView/MembershipSettingsView.styles'
 
 import {
   Divider,
   SettingsInputsWrapper,
+  StyledActionBar,
   StyledSvgActionArrowRight,
   StyledSvgAlertsWarning32,
 } from './YppDashboardTabs.styles'
