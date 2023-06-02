@@ -80,7 +80,7 @@ export const MembershipInfo: FC<MembershipInfoProps> = ({
               <SkeletonLoader width={smMatch ? 148 : '100%'} height={48} />
             ) : (
               <Button
-                to={absoluteRoutes.viewer.editMembership()}
+                to={absoluteRoutes.viewer.memberSettings()}
                 icon={<SvgActionSettings />}
                 size="large"
                 variant="secondary"

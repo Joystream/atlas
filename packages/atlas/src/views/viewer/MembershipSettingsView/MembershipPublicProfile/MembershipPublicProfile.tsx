@@ -11,8 +11,9 @@ import {
   GetMembershipsQuery,
   GetMembershipsQueryVariables,
 } from '@/api/queries/__generated__/memberships.generated'
-import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { GridItem } from '@/components/LayoutGrid'
 import { MembershipInfo } from '@/components/MembershipInfo'
+import { Text } from '@/components/Text'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { ImageInputFile } from '@/components/_inputs/MultiFileSelect'
@@ -29,6 +30,7 @@ import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 import { uploadAvatarImage } from '@/utils/image'
 import { ConsoleLogger } from '@/utils/logs'
+import { StyledLayoutGrid } from '@/views/global/NftSettlementBottomDrawer/NftSettlementBottomDrawer.styles'
 
 import { StyledActionBar, TextFieldsWrapper, Wrapper } from './MembershipPublicProfile.styles'
 
@@ -214,95 +216,106 @@ export const MembershipPublicProfile: FC = () => {
   )
   const isHandleInputActiveElement = document.activeElement === handleInputRef.current
   return (
-    <form onSubmit={handleEditMember}>
-      {headTags}
-      <LimitedWidthContainer>
-        <Controller
-          control={control}
-          name="avatar"
-          render={({ field: { onChange, value: avatarInputFile } }) => (
-            <>
-              <MembershipInfo
-                address={accountId}
-                avatarUrl={avatarInputFile?.url}
-                onImageValidation={setIsImageValid}
-                hasAvatarUploadFailed={!isImageValid}
-                onAvatarEditClick={() =>
-                  avatarDialogRef.current?.open(
-                    avatarInputFile?.originalBlob ? avatarInputFile.originalBlob : avatarInputFile?.blob,
-                    avatarInputFile?.imageCropData,
-                    !!avatarInputFile?.blob
-                  )
-                }
-                loading={!isLoggedIn}
-                editable
-                handle={watch('handle')}
-              />
-              <ImageCropModal
-                imageType="avatar"
-                onConfirm={(blob, url, _, imageCropData, originalBlob) => {
-                  onChange({
-                    blob,
-                    url,
-                    imageCropData,
-                    originalBlob,
-                  })
-                }}
-                onDelete={() => {
-                  onChange(null)
-                }}
-                ref={avatarDialogRef}
-              />
-            </>
-          )}
-        />
-        <Wrapper actionBarHeight={actionBarBoundsHeight}>
-          <TextFieldsWrapper>
-            <FormField
-              label="Member handle"
-              disableErrorAnimation={isHandleInputActiveElement}
-              description="Member handle may contain only lowercase letters, numbers and underscores"
-              error={errors?.handle?.message}
-            >
-              <Input
-                autoComplete="off"
-                {...handleRest}
-                ref={(e) => {
-                  ref(e)
-                  handleInputRef.current = e
-                }}
-                processing={isHandleValidating}
-                placeholder="johnnysmith"
-                error={!!errors?.handle}
-              />
-            </FormField>
-            <FormField label="About" error={errors?.about?.message}>
-              <TextArea
-                placeholder={`Anything you'd like to share about yourself with the ${atlasConfig.general.appName} community`}
-                maxLength={1000}
-                {...register('about', {
-                  maxLength: { value: 1000, message: 'About cannot be longer than 1000 characters' },
-                })}
-                error={!!errors?.about}
-              />
-            </FormField>
-          </TextFieldsWrapper>
-        </Wrapper>
-        <StyledActionBar
-          ref={actionBarRef}
-          fee={fee}
-          feeLoading={feeLoading}
-          primaryButton={{
-            disabled: !isDirty || isHandleValidating || isSubmitting,
-            text: isSubmitting ? 'Please wait...' : 'Publish changes',
-            type: 'submit',
-          }}
-          secondaryButton={{
-            text: 'Cancel',
-            to: absoluteRoutes.viewer.member(activeMembership?.handle),
-          }}
-        />
-      </LimitedWidthContainer>
-    </form>
+    <StyledLayoutGrid>
+      <GridItem colStart={{ base: 1 }} colSpan={{ base: 12, sm: 5, lg: 4 }} rowStart={{ base: 1 }}>
+        <Text variant="h400" as="h3">
+          Profile info
+        </Text>
+        <Text variant="t300" as="p" color="colorText">
+          This membership information is stored on Joystream blockchain and can be displayed in all apps connected to
+          the chain.
+        </Text>
+      </GridItem>
+      <GridItem colStart={{ base: 1, sm: 7, lg: 6 }} colSpan={{ base: 12, sm: 6, lg: 8 }} rowStart={{ base: 2, sm: 1 }}>
+        <form onSubmit={handleEditMember}>
+          {headTags}
+          <Controller
+            control={control}
+            name="avatar"
+            render={({ field: { onChange, value: avatarInputFile } }) => (
+              <>
+                <MembershipInfo
+                  address={accountId}
+                  avatarUrl={avatarInputFile?.url}
+                  onImageValidation={setIsImageValid}
+                  hasAvatarUploadFailed={!isImageValid}
+                  onAvatarEditClick={() =>
+                    avatarDialogRef.current?.open(
+                      avatarInputFile?.originalBlob ? avatarInputFile.originalBlob : avatarInputFile?.blob,
+                      avatarInputFile?.imageCropData,
+                      !!avatarInputFile?.blob
+                    )
+                  }
+                  loading={!isLoggedIn}
+                  editable
+                  handle={watch('handle')}
+                />
+                <ImageCropModal
+                  imageType="avatar"
+                  onConfirm={(blob, url, _, imageCropData, originalBlob) => {
+                    onChange({
+                      blob,
+                      url,
+                      imageCropData,
+                      originalBlob,
+                    })
+                  }}
+                  onDelete={() => {
+                    onChange(null)
+                  }}
+                  ref={avatarDialogRef}
+                />
+              </>
+            )}
+          />
+          <Wrapper actionBarHeight={actionBarBoundsHeight}>
+            <TextFieldsWrapper>
+              <FormField
+                label="Member handle"
+                disableErrorAnimation={isHandleInputActiveElement}
+                description="Member handle may contain only lowercase letters, numbers and underscores"
+                error={errors?.handle?.message}
+              >
+                <Input
+                  autoComplete="off"
+                  {...handleRest}
+                  ref={(e) => {
+                    ref(e)
+                    handleInputRef.current = e
+                  }}
+                  processing={isHandleValidating}
+                  placeholder="johnnysmith"
+                  error={!!errors?.handle}
+                />
+              </FormField>
+              <FormField label="About" error={errors?.about?.message}>
+                <TextArea
+                  placeholder={`Anything you'd like to share about yourself with the ${atlasConfig.general.appName} community`}
+                  maxLength={1000}
+                  {...register('about', {
+                    maxLength: { value: 1000, message: 'About cannot be longer than 1000 characters' },
+                  })}
+                  error={!!errors?.about}
+                />
+              </FormField>
+            </TextFieldsWrapper>
+          </Wrapper>
+          <StyledActionBar
+            ref={actionBarRef}
+            fee={fee}
+            feeLoading={feeLoading}
+            primaryButton={{
+              disabled: !isDirty || isHandleValidating || isSubmitting,
+              text: isSubmitting ? 'Please wait...' : 'Publish changes',
+              type: 'submit',
+            }}
+            secondaryButton={{
+              text: 'Cancel',
+              to: absoluteRoutes.viewer.member(activeMembership?.handle),
+            }}
+          />
+        </form>
+      </GridItem>
+    </StyledLayoutGrid>
   )
 }
