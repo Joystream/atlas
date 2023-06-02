@@ -185,8 +185,8 @@ export const useTransaction = (): HandleTransactionFn => {
           }
           updateStatus(status)
         }
-        const result = await txFactory(handleTxStatusChange) // txFactory will return only once the tx has been included in a block and that block has been finalized
 
+        const result = await txFactory(handleTxStatusChange) // txFactory will return only once the tx has been included in a block and that block has been finalized
         /* === if provided, run finalize callback === */
         updateStatus(ExtrinsicStatus.Syncing)
         if (onTxFinalize) {

@@ -1,3 +1,4 @@
+import { useApolloClient } from '@apollo/client'
 import { JOYSTREAM_ADDRESS_PREFIX } from '@joystream/types/.'
 import { Keyring } from '@polkadot/keyring'
 import { KeyringPair } from '@polkadot/keyring/types'
@@ -9,12 +10,13 @@ import { Buffer } from 'buffer'
 import { AES, enc, lib, mode } from 'crypto-js'
 import { FC, PropsWithChildren, createContext, useCallback, useContext, useMemo, useState } from 'react'
 
-import { useGetCurrentAccountQuery } from '@/api/queries/__generated__/accounts.generated'
+import { GetCurrentAccountQuery, useGetCurrentAccountLazyQuery } from '@/api/queries/__generated__/accounts.generated'
 import { atlasConfig } from '@/config'
 import { ORION_AUTH_URL } from '@/config/env'
-// import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { useMountEffect } from '@/hooks/useMountEffect'
+// import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { useAuthStore } from '@/providers/auth/auth.store'
+import { useJoystream } from '@/providers/joystream'
 import { useWallet } from '@/providers/wallet/wallet.hooks'
 import { useWalletStore } from '@/providers/wallet/wallet.store'
 import { SentryLogger } from '@/utils/logs'
@@ -31,7 +33,10 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [initializationState, setInitializationState] = useState<null | AuthContextValue['initializationState']>(null)
   const [loggedAddress, setLoggedAddress] = useState<null | string>(null)
   const [keypair, setKeypair] = useState<null | KeyringPair>(null)
-  const { data: currentSessionAccount } = useGetCurrentAccountQuery()
+  const [currentUser, setCurrentUser] = useState<GetCurrentAccountQuery['accountData'] | null>(null)
+  const [lazyCurrentAccountQuery, { refetch }] = useGetCurrentAccountLazyQuery()
+  const { setApiActiveAccount } = useJoystream()
+  const client = useApolloClient()
   const {
     anonymousUserId,
     encodedSeed,
@@ -40,22 +45,44 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const lastUsedWalletName = useWalletStore((store) => store.lastUsedWalletName)
   const { signInToWallet } = useWallet()
 
+  const decodeSessionEncodedSeedToMnemonic = useCallback(async (encodedSeed: string) => {
+    const { data } = await axios.get(`${ORION_AUTH_URL}/session-artifacts`, { withCredentials: true })
+
+    if (!(data.cipherKey || data.cipherIv)) {
+      return null
+    }
+
+    const { cipherKey, cipherIv } = data
+    const decryptedSeed = aes256CbcDecrypt(encodedSeed, Buffer.from(cipherKey, 'hex'), Buffer.from(cipherIv, 'hex'))
+
+    return entropyToMnemonic(Buffer.from(decryptedSeed.slice(2, decryptedSeed.length), 'hex'))
+  }, [])
+
   useMountEffect(() => {
     const init = async () => {
-      if (!currentSessionAccount) {
-        handleAnonymousAuth(anonymousUserId).then((userId) => setAnonymousUserId(userId ?? null))
+      setInitializationState('logging')
+
+      const { data } = await lazyCurrentAccountQuery()
+      if (!data) {
+        handleAnonymousAuth(anonymousUserId).then((userId) => {
+          client.refetchQueries({ include: 'active' })
+          setAnonymousUserId(userId ?? null)
+        })
         return
       }
 
-      setInitializationState('logging')
-
       if (encodedSeed) {
-        const keypair = await decodeSessionEncodedSeedToKeypair(encodedSeed)
-        if (keypair && keypair.address === currentSessionAccount.accountData.joystreamAccount) {
-          setKeypair(keypair)
-          setLoggedAddress(keypair.address)
-          setInitializationState('loggedIn')
-          return
+        const mnemonic = await decodeSessionEncodedSeedToMnemonic(encodedSeed)
+        if (mnemonic) {
+          const keypair = keyring.addFromMnemonic(mnemonic)
+          if (keypair.address === data.accountData.joystreamAccount) {
+            setKeypair(keypair)
+            setLoggedAddress(keypair.address)
+            setCurrentUser(data.accountData)
+            setInitializationState('loggedIn')
+            setApiActiveAccount('seed', mnemonic)
+            return
+          }
         }
       }
 
@@ -63,17 +90,17 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         setTimeout(async () => {
           // add a slight delay - sometimes the extension will not initialize by the time of this call and may appear unavailable
           const res = await signInToWallet(lastUsedWalletName, true)
-          if (res?.find((walletAcc) => walletAcc.address === currentSessionAccount.accountData.joystreamAccount)) {
-            setLoggedAddress(currentSessionAccount.accountData.joystreamAccount)
+          if (res?.find((walletAcc) => walletAcc.address === data.accountData.joystreamAccount)) {
+            setLoggedAddress(data.accountData.joystreamAccount)
+            setCurrentUser(data.accountData)
             setInitializationState('loggedIn')
+            setApiActiveAccount('address', data.accountData.joystreamAccount)
             return
           }
+          setInitializationState('needAuthentication')
         }, 200)
       }
-
-      setInitializationState('needAuthentication')
     }
-
     init()
   })
 
@@ -105,19 +132,6 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     },
     [setEncodedSeed]
   )
-
-  const decodeSessionEncodedSeedToKeypair = useCallback(async (encodedSeed: string) => {
-    const { data } = await axios.get(`${ORION_AUTH_URL}/session-artifacts`, { withCredentials: true })
-
-    if (!(data.cipherKey || data.cipherIv)) {
-      return null
-    }
-
-    const { cipherKey, cipherIv } = data
-    const decryptedSeed = aes256CbcDecrypt(encodedSeed, Buffer.from(cipherKey, 'hex'), Buffer.from(cipherIv, 'hex'))
-
-    return keyring.addFromMnemonic(entropyToMnemonic(Buffer.from(decryptedSeed.slice(2, decryptedSeed.length), 'hex')))
-  }, [])
 
   const handleLogin = useCallback(
     async (params: LoginParams): Promise<LogInHandler> => {
@@ -174,6 +188,11 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
         if (plainSeed) {
           saveEncodedSeed(plainSeed)
+          refetch().then((res) => {
+            if (res.data) {
+              setCurrentUser(res.data.accountData)
+            }
+          })
         }
 
         return {
@@ -196,15 +215,27 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
           }
         }
 
-        SentryLogger.error('Unsupported error when posting login action', 'useLogIn', error)
+        SentryLogger.error('Unsupported error when posting login action', 'auth.provider', error)
         return {
           data: null,
           error: LogInErrors.LoginError,
         }
       }
     },
-    [saveEncodedSeed, setAnonymousUserId]
+    [refetch, saveEncodedSeed, setAnonymousUserId]
   )
+
+  const handleLogout = useCallback(async () => {
+    try {
+      await axios.post(`${ORION_AUTH_URL}/logout`, {}, { withCredentials: true })
+      handleAnonymousAuth(anonymousUserId).then((userId) => {
+        setAnonymousUserId(userId ?? null)
+      })
+      setCurrentUser(null)
+    } catch (error) {
+      SentryLogger.error('Error when logging out', 'auth.provider', error)
+    }
+  }, [anonymousUserId, setAnonymousUserId])
 
   const contextValue: AuthContextValue = useMemo(
     () => ({
@@ -212,9 +243,11 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       initializationState,
       loggedAddress,
       keypair,
-      currentUser: initializationState === 'loggedIn' ? currentSessionAccount?.accountData : undefined,
+      refetchCurrentUser: refetch,
+      currentUser: currentUser,
+      handleLogout,
     }),
-    [currentSessionAccount?.accountData, handleLogin, initializationState, keypair, loggedAddress]
+    [currentUser, handleLogin, handleLogout, initializationState, keypair, loggedAddress, refetch]
   )
 
   // if (error) {

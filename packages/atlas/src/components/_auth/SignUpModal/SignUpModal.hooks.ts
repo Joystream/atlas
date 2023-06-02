@@ -43,7 +43,7 @@ type CreateMemberArgs = {
   onError: (step: SignUpSteps) => void
 }
 export const useCreateMember = () => {
-  const { refetchUserMemberships, setActiveUser } = useUser()
+  const { refetchUserMemberships } = useUser()
   const [emailAlreadyRegisteredMemberId, setEmailAlreadyRegisteredMemberId] = useState('')
   const setAnonymousUserId = useAuthStore((store) => store.actions.setAnonymousUserId)
   const { joystream } = useJoystream()
@@ -95,7 +95,6 @@ export const useCreateMember = () => {
             if (lastCreatedMembership) {
               await registerAccount(data.email, data.password, data.mnemonic, memberId.toString())
               setAnonymousUserId('')
-              setActiveUser({ accountId: address, memberId: lastCreatedMembership.id, channelId: null })
             }
 
             if (!joystream) {
@@ -137,7 +136,6 @@ export const useCreateMember = () => {
         if (emailAlreadyRegisteredMemberId) {
           await registerAccount(data.email, data.password, data.mnemonic, emailAlreadyRegisteredMemberId.toString())
           setAnonymousUserId('')
-          setActiveUser({ accountId: address, memberId: emailAlreadyRegisteredMemberId, channelId: null })
           onSuccess()
           return
         }
@@ -208,7 +206,6 @@ export const useCreateMember = () => {
       emailAlreadyRegisteredMemberId,
       joystream,
       refetchUserMemberships,
-      setActiveUser,
       setAnonymousUserId,
     ]
   )

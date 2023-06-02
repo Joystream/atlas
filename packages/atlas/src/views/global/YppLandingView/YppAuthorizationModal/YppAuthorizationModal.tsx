@@ -73,7 +73,7 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
   onChangeStep,
   unSyncedChannels,
 }) => {
-  const { setActiveUser, memberId, activeMembership } = useUser()
+  const { setActiveChannel, memberId, activeMembership } = useUser()
   const navigate = useNavigate()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { decrementOverlaysOpenCount } = useOverlayManager()
@@ -258,8 +258,8 @@ export const YppAuthorizationModal: FC<YppAuthorizationModalProps> = ({
 
   const handleGoToDashboard = useCallback(() => {
     decrementOverlaysOpenCount()
-    setActiveUser({ channelId: selectedChannel?.id })
-  }, [decrementOverlaysOpenCount, selectedChannel?.id, setActiveUser])
+    if (selectedChannel?.id) setActiveChannel(selectedChannel.id)
+  }, [decrementOverlaysOpenCount, selectedChannel?.id, setActiveChannel])
 
   const convertHoursRequirementTime = (hours: number) => {
     if (hours > 24 * 30) {

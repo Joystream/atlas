@@ -38,7 +38,7 @@ export const getArtifacts = async (id: string, email: string, password: string) 
 
   try {
     const res = await axios.get<{ cipherIv: string; encryptedSeed: string }>(
-      `${ORION_AUTH_URL}/artifacts?id=${id}&email=${email}`
+      `${ORION_AUTH_URL}/artifacts?id=${id}&email=${encodeURIComponent(email)}`
     )
     const { cipherIv, encryptedSeed } = res.data
     const cipherKey = await scryptHash(`${email}:${password}`, Buffer.from(cipherIv, 'hex'))

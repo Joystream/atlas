@@ -10,6 +10,7 @@ import {
 } from '@/components/_auth/ProtectedActionWrapper/ProtectedActionWrapper.styles'
 import { Button } from '@/components/_buttons/Button'
 import { Popover } from '@/components/_overlays/Popover'
+import { useUser } from '@/providers/user/user.hooks'
 
 type ProtectedActionWrapperProps = {
   title: string
@@ -18,16 +19,15 @@ type ProtectedActionWrapperProps = {
   className?: string
 }
 
-const useAuthUser = () => ({ isLogged: false })
 export const ProtectedActionWrapper = ({
   children,
   title,
   description,
   className,
 }: ProtectedActionWrapperProps): ReactElement => {
-  const { isLogged } = useAuthUser()
+  const { isLoggedIn } = useUser()
 
-  if (!isLogged) {
+  if (!isLoggedIn) {
     return (
       <Popover
         boundariesElement={document.body}

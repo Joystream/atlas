@@ -43,19 +43,16 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
 
     if (!member) return
 
-    setApiActiveAccount(member.controllerAccount)
+    setApiActiveAccount('address', member.controllerAccount)
 
     goToStep(ModalSteps.Logging)
     const res = await handleLogin({
       type: 'extension',
       sign: (data) =>
-        joystream.signMessage(
-          {
-            type: 'payload',
-            data,
-          },
-          member.controllerAccount
-        ),
+        joystream.signMessage({
+          type: 'payload',
+          data,
+        }),
       address: member.controllerAccount,
     })
 

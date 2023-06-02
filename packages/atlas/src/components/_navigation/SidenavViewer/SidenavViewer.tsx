@@ -62,8 +62,8 @@ export const SidenavViewer: FC = () => {
     unFollow(id)
   }
 
-  const { isLoggedIn } = useUser()
-
+  const { isLoggedIn, activeMembership, activeChannel } = useUser()
+  console.log('inSide', activeMembership, activeChannel, isLoggedIn)
   const closeAndSignIn = () => {
     setExpanded(false)
     // todo: add sigin

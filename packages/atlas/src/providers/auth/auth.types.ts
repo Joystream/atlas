@@ -1,3 +1,4 @@
+import { ApolloQueryResult } from '@apollo/client'
 import { KeyringPair } from '@polkadot/keyring/types'
 
 import { GetCurrentAccountQuery } from '@/api/queries/__generated__/accounts.generated'
@@ -7,7 +8,9 @@ export type AuthContextValue = {
   initializationState: 'loggedIn' | 'logging' | 'needAuthentication' | null
   keypair: KeyringPair | null
   loggedAddress: string | null
-  currentUser?: GetCurrentAccountQuery['accountData']
+  currentUser?: GetCurrentAccountQuery['accountData'] | null
+  refetchCurrentUser: () => Promise<ApolloQueryResult<GetCurrentAccountQuery>>
+  handleLogout: () => Promise<void>
 }
 
 export type UserSigner = 'external' | 'internal'

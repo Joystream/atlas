@@ -10,7 +10,8 @@ import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
-import { LogInErrors, useLogIn } from '@/hooks/useLogIn'
+import { LogInErrors } from '@/hooks/useLogIn'
+import { useAuth } from '@/providers/auth/auth.hooks'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useSnackbar } from '@/providers/snackbars'
 
@@ -21,7 +22,7 @@ import { AuthenticationModalStepTemplate } from '../AuthenticationModalStepTempl
 export const LogInModal = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isPasswordShown, setPasswordShown] = useState(false)
-  const handleLogIn = useLogIn()
+  const { handleLogin, refetchCurrentUser } = useAuth()
   const { displaySnackbar } = useSnackbar()
   const {
     register,
@@ -43,7 +44,7 @@ export const LogInModal = () => {
 
   const handleLoginClick = async (email: string, password: string) => {
     setIsLoading(true)
-    const res = await handleLogIn({ type: 'emailPassword', email, password })
+    const res = await handleLogin({ type: 'internal', email, password })
 
     if (res.error === LogInErrors.ArtifactsNotFound) {
       displaySnackbar({
@@ -58,6 +59,7 @@ export const LogInModal = () => {
     }
 
     setAuthModalOpen(undefined)
+    refetchCurrentUser()
     setIsLoading(false)
   }
 

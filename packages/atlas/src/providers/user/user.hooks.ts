@@ -1,26 +1,17 @@
 import { useUserContext } from './user.provider'
-import { UserStoreActions, useUserStore } from './user.store'
-import { ActiveUserState, UserContextValue } from './user.types'
+import { UserContextValue } from './user.types'
 
-type UseUserHookReturn = ActiveUserState &
-  UserStoreActions &
-  UserContextValue & {
-    isLoggedIn: boolean
-  }
+type UseUserHookReturn = UserContextValue & {
+  isLoggedIn: boolean
+}
 
 export const useUser = (): UseUserHookReturn => {
-  const { accountId, memberId, channelId, actions } = useUserStore()
   const userContext = useUserContext()
-
-  const isLoggedIn = !!accountId && !!memberId
+  const isLoggedIn = !!userContext.activeMembership
 
   return {
-    accountId,
-    memberId,
-    channelId,
     isLoggedIn,
     ...userContext,
-    ...actions,
   }
 }
 export const useAuthorizedUser = () => {
