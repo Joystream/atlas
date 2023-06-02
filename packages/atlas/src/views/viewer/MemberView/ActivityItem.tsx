@@ -36,7 +36,7 @@ export const ActivityItem: FC<ActivityItemProps> = ({
   type,
   title,
   description,
-  thumbnailUri: thumnailUri,
+  thumbnailUri,
   thumbnailLoading,
   loading,
   onItemClick,
@@ -47,11 +47,11 @@ export const ActivityItem: FC<ActivityItemProps> = ({
 
   useEffect(() => {
     const validateImg = async () => {
-      const res = await imageUrlValidation(thumnailUri)
+      const res = await imageUrlValidation(thumbnailUri)
       setThumbnailLoaded(res)
     }
     validateImg()
-  }, [thumnailUri])
+  }, [thumbnailUri])
 
   const getTitleTextVariant = () => {
     if (lgMatch) {
@@ -66,7 +66,7 @@ export const ActivityItem: FC<ActivityItemProps> = ({
   const isImageLoading = loading || thumbnailLoading || !thumbnailLoaded
   return (
     <ActivityItemContainer loading={loading} onClick={onItemClick}>
-      {isImageLoading ? <ThumbnailSkeletonLoader /> : <Thumbnail src={thumnailUri} />}
+      {isImageLoading ? <ThumbnailSkeletonLoader /> : <Thumbnail src={thumbnailUri} />}
       <TitleAndDescriptionContainer>
         {loading ? (
           <TitleSkeletonLoader />

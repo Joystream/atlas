@@ -18,7 +18,7 @@ export const useNotifications = (
   opts?: QueryHookOptions<GetNotificationsConnectionQuery, GetNotificationsConnectionQueryVariables>
 ) => {
   const { memberId } = useUser()
-  const { notifications: rawNotifications, ...rest } = useRawNotifications(memberId, opts)
+  const { notifications: rawNotifications, ...rest } = useRawNotifications('111', opts)
   const {
     readNotificationsIdsMap,
     lastSeenNotificationBlock,
@@ -49,12 +49,11 @@ const getVideoDataFromEvent = ({
 }: GetNotificationsConnectionQuery['notificationsConnection']['edges'][number]) => {
   switch (notification.event.data.__typename) {
     case 'AuctionBidMadeEventData':
-      return notification.event.data.bid.auction.nft.video
+      return notification.event.data.bid.nft.video
     case 'BidMadeCompletingAuctionEventData':
-      return notification.event.data.winningBid.nft.video
     case 'EnglishAuctionSettledEventData':
     case 'OpenAuctionBidAcceptedEventData':
-      return notification.event.data.winningBid.auction.nft.video
+      return notification.event.data.winningBid.nft.video
     case 'CommentCreatedEventData':
       return notification.event.data.comment.video
     case 'NftBoughtEventData':
