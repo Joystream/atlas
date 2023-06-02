@@ -16,6 +16,7 @@ import { Member, NftTileDetails } from './NftTileDetails'
 
 export type NftTileProps = {
   status?: 'idle' | 'buy-now' | 'auction'
+  isInCarousel?: boolean
   thumbnail?: VideoThumbnailProps
   title?: string | null
   owner?: Member
@@ -38,6 +39,7 @@ export type NftTileProps = {
 
 export const NftTile: FC<NftTileProps> = ({
   status,
+  isInCarousel,
   thumbnail,
   loading,
   title,
@@ -99,6 +101,7 @@ export const NftTile: FC<NftTileProps> = ({
         }}
       />
       <NftTileDetails
+        isInCarousel={isInCarousel}
         videoHref={thumbnail?.videoHref as string}
         hovered={hovered}
         owner={owner}
