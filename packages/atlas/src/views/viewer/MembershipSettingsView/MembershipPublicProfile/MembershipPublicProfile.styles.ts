@@ -1,15 +1,18 @@
 import styled from '@emotion/styled'
 
 import { ActionBar } from '@/components/ActionBar'
-import { cVar, sizes, zIndex } from '@/styles'
+import { LayoutGrid } from '@/components/LayoutGrid'
+import { sizes, zIndex } from '@/styles'
+
+export const StyledLayoutGrid = styled(LayoutGrid)`
+  row-gap: ${sizes(8)};
+`
 
 export const Wrapper = styled.div<{ actionBarHeight: number }>`
-  border-top: 1px solid ${cVar('colorCoreNeutral700')};
   padding-bottom: ${({ actionBarHeight = 0 }) => actionBarHeight}px;
 `
 export const TextFieldsWrapper = styled.div`
-  max-width: 640px;
-  margin: ${sizes(8)} auto 0;
+  margin-top: ${sizes(8)};
   display: grid;
   gap: ${sizes(8)};
 `

@@ -23,7 +23,6 @@ export type MembershipInfoProps = {
   address?: string | null
   loading?: boolean
   isOwner?: boolean
-  editable?: boolean
   className?: string
 }
 
@@ -32,12 +31,10 @@ export const MembershipInfo: FC<MembershipInfoProps> = ({
   avatarUrl,
   avatarLoading,
   hasAvatarUploadFailed,
-  onAvatarEditClick,
   onImageValidation,
   handle,
   loading,
   isOwner,
-  editable,
   className,
 }) => {
   const smMatch = useMediaMatch('sm')
@@ -53,9 +50,7 @@ export const MembershipInfo: FC<MembershipInfoProps> = ({
           <MembershipInfoContainer>
             <Avatar
               size={smMatch ? 136 : 88}
-              editable={editable}
               onImageValidation={onImageValidation}
-              onClick={onAvatarEditClick}
               assetUrl={avatarUrl}
               loading={avatarLoading}
               hasAvatarUploadFailed={hasAvatarUploadFailed}

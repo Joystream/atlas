@@ -10,6 +10,7 @@ export const PageTabs: FC<PageTabsProps> = ({ className, ...tabsProps }) => {
   return (
     <PageTabsWrapper className={className}>
       <Tabs {...tabsProps} />
+      {/* todo add support for filters */}
     </PageTabsWrapper>
   )
 }

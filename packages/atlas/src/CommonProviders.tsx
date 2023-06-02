@@ -35,16 +35,16 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
           <WalletProvider>
             <AuthProvider>
               <UserProvider>
-                <OverlayManagerProvider>
-                  <ConfirmationModalProvider>
-                    <BrowserRouter>
+                <BrowserRouter>
+                  <OverlayManagerProvider>
+                    <ConfirmationModalProvider>
                       <AdminModal />
                       <MaintenanceWrapper>
                         <OperatorsContextProvider>{children}</OperatorsContextProvider>
                       </MaintenanceWrapper>
-                    </BrowserRouter>
-                  </ConfirmationModalProvider>
-                </OverlayManagerProvider>
+                    </ConfirmationModalProvider>
+                  </OverlayManagerProvider>
+                </BrowserRouter>
               </UserProvider>
             </AuthProvider>
           </WalletProvider>

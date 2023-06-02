@@ -5,9 +5,9 @@ import { PageTabs } from '@/components/PageTabs'
 import { MemberSettingsTabs, QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 
 import { MembershipPublicProfile } from './MembershipPublicProfile'
-import { NoGlobalPaddingWrapper } from './MembershipSettingsView.styles'
+import { NoGlobalPaddingWrapper, StyledLimitedWidthContainer } from './MembershipSettingsView.styles'
 
-const TABS: MemberSettingsTabs[] = ['Public profile', 'Wallet', 'Notifications']
+const TABS: MemberSettingsTabs[] = ['Public profile']
 
 export const MembershipSettingsView: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -34,11 +34,13 @@ export const MembershipSettingsView: FC = () => {
   )
 
   return (
-    <div>
+    <>
       <NoGlobalPaddingWrapper>
         <PageTabs tabs={TABS.map((tab) => ({ name: tab }))} onSelectTab={handleChangeTab} selected={currentTab} />
       </NoGlobalPaddingWrapper>
-      <MembershipPublicProfile />
-    </div>
+      <StyledLimitedWidthContainer>
+        <MembershipPublicProfile />
+      </StyledLimitedWidthContainer>
+    </>
   )
 }
