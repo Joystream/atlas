@@ -21,7 +21,7 @@ export type PopoverProps = PropsWithChildren<{
   className?: string
   appendTo?: Element | 'parent' | ((ref: Element) => Element) | undefined
   onHide?: () => void
-  onShow?: () => void
+  onShow?: (instance?: Instance) => void
   disabled?: boolean
   flipEnabled?: boolean
   animation?: boolean
@@ -103,7 +103,7 @@ const _Popover: ForwardRefRenderFunction<PopoverImperativeHandle | undefined, Po
       onTrigger={onTrigger}
       onShow={(instance) => {
         onTrigger(instance)
-        onShow?.()
+        onShow?.(instance)
       }}
       onHide={(instance) => {
         const box = instance.popper?.firstElementChild
@@ -140,13 +140,16 @@ const _Popover: ForwardRefRenderFunction<PopoverImperativeHandle | undefined, Po
       placement={placement}
       offset={offset}
     >
-      <TriggerContainer tabIndex={1}>{trigger}</TriggerContainer>
+      <TriggerContainer tabIndex={1} isTrigger={!!trigger}>
+        {trigger}
+      </TriggerContainer>
     </Tippy>
   )
 }
 
-const TriggerContainer = styled.div`
-  height: max-content;
+const TriggerContainer = styled.div<{ isTrigger: boolean }>`
+  /* if we use triggerElement, don't set height */
+  height: ${({ isTrigger }) => (isTrigger ? 'max-content' : 'unset')};
 `
 
 const ContentContainer = styled.div<{ animation?: boolean }>`

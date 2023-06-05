@@ -6,7 +6,7 @@ import { createChannelBagId } from '@/utils/asset'
 
 export const useChannelsStorageBucketsCount = (channelId: ChannelId | null): number => {
   const [bucketsCount, setBucketsCount] = useState<number | null>(null)
-  const { getAllStorageOperatorsForBag } = useStorageOperators()
+  const { getAvailableBucketsCountForBag } = useStorageOperators()
 
   // update bucketsCount whenever channel changes
   useEffect(() => {
@@ -17,10 +17,10 @@ export const useChannelsStorageBucketsCount = (channelId: ChannelId | null): num
 
     const bagId = createChannelBagId(channelId)
 
-    getAllStorageOperatorsForBag(bagId, true).then((operators) => {
-      setBucketsCount(operators?.length ?? null)
+    getAvailableBucketsCountForBag(bagId).then((length) => {
+      setBucketsCount(length ?? null)
     })
-  }, [channelId, getAllStorageOperatorsForBag])
+  }, [channelId, getAvailableBucketsCountForBag])
 
   return bucketsCount ?? 0
 }

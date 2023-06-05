@@ -29,7 +29,8 @@ export const relativeRoutes = {
     channels: () => 'channels',
     video: (id = ':id', query?: { [QUERY_PARAMS.COMMENT_ID]?: string }) => withQueryParameters(`video/${id}`, query),
     editMembership: () => 'member/edit',
-    member: (handle = ':handle') => `member/${handle}`,
+    member: (handle = ':handle', query?: { [QUERY_PARAMS.TAB]?: MemberTabs }) =>
+      withQueryParameters(`member/${handle}`, query),
     notifications: () => 'notifications',
     marketplace: () => 'marketplace',
     ypp: (query?: { [QUERY_PARAMS.REFERRER_ID]?: string }) => withQueryParameters('ypp', query),
@@ -81,8 +82,11 @@ export const absoluteRoutes = Object.entries(BASE_PATHS).reduce((absoluteRoutesA
   return absoluteRoutesAcc
 }, {} as typeof relativeRoutes)
 
+export type MemberTabs = 'NFTs owned' | 'Activity' | 'About'
+
 export const QUERY_PARAMS = {
   SEARCH: 'query',
   COMMENT_ID: 'commentId',
   REFERRER_ID: 'referrerId',
+  TAB: 'tab',
 } as const
