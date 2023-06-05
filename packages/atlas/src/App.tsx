@@ -1,7 +1,7 @@
 import { AnalyticsManager } from '@/AnalyticsManager'
 import { CommonProviders } from '@/CommonProviders'
 import { WelcomeDialog } from '@/components/WelcomeDialog'
-import { AuthModals } from '@/components/_auth/AuthModals/AuthModals'
+import { AuthModals } from '@/components/_auth/AuthModals'
 import { JoystreamManager } from '@/providers/joystream/joystream.manager'
 import { JoystreamProvider } from '@/providers/joystream/joystream.provider'
 import { NftActionsProvider } from '@/providers/nftActions/nftActions.provider'
