@@ -13,6 +13,7 @@ import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
+import { useAuth } from '@/providers/auth/auth.hooks'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { useSearchStore } from '@/providers/search'
@@ -31,7 +32,8 @@ import {
 } from './TopbarViewer.styles'
 
 export const TopbarViewer: FC = () => {
-  const { isLoggedIn, activeMembership } = useUser()
+  const { isLoggedIn, activeMembership, membershipsLoading } = useUser()
+  const { isAuthenticating } = useAuth()
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
 
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
@@ -90,7 +92,7 @@ export const TopbarViewer: FC = () => {
     setIsMemberDropdownActive(!isMemberDropdownActive)
   }
 
-  const topbarButtonLoaded = true
+  const topbarButtonLoaded = !isAuthenticating && !membershipsLoading
 
   return (
     <>

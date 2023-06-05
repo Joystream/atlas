@@ -4,8 +4,6 @@ import { Keyring } from '@polkadot/keyring'
 import { u8aToHex } from '@polkadot/util'
 import { cryptoWaitReady } from '@polkadot/util-crypto'
 import axios from 'axios'
-import { entropyToMnemonic } from 'bip39'
-import { Buffer } from 'buffer'
 import { AES, enc, lib, mode } from 'crypto-js'
 import { FC, PropsWithChildren, createContext, useCallback, useContext, useMemo, useState } from 'react'
 
@@ -20,7 +18,13 @@ import { useWallet } from '@/providers/wallet/wallet.hooks'
 import { useWalletStore } from '@/providers/wallet/wallet.store'
 import { SentryLogger } from '@/utils/logs'
 
-import { aes256CbcDecrypt, getArtifacts, handleAnonymousAuth, scryptHash } from './auth.helpers'
+import {
+  decodeSessionEncodedSeedToMnemonic,
+  getArtifacts,
+  handleAnonymousAuth,
+  scryptHash,
+  seedToMnemonic,
+} from './auth.helpers'
 import { AuthContextValue, LogInErrors, LogInHandler, LoginParams } from './auth.types'
 
 const AuthContext = createContext<undefined | AuthContextValue>(undefined)
@@ -42,19 +46,6 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   } = useAuthStore()
   const lastUsedWalletName = useWalletStore((store) => store.lastUsedWalletName)
   const { signInToWallet } = useWallet()
-
-  const decodeSessionEncodedSeedToMnemonic = useCallback(async (encodedSeed: string) => {
-    const { data } = await axios.get(`${ORION_AUTH_URL}/session-artifacts`, { withCredentials: true })
-
-    if (!(data.cipherKey || data.cipherIv)) {
-      return null
-    }
-
-    const { cipherKey, cipherIv } = data
-    const decryptedSeed = aes256CbcDecrypt(encodedSeed, Buffer.from(cipherKey, 'hex'), Buffer.from(cipherIv, 'hex'))
-
-    return entropyToMnemonic(Buffer.from(decryptedSeed.slice(2, decryptedSeed.length), 'hex'))
-  }, [])
 
   useMountEffect(() => {
     const init = async () => {
@@ -143,7 +134,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         action: 'login',
       }
       let signatureOverPayload = null
-      let localMnemonic: string | null = null
+      let localSeed: string | null = null
       if (params.type === 'internal') {
         const { email, password } = params
         const id = (await scryptHash(`${email}:${password}`, '0x0818ee04c541716831bdd0f598fa4bbb')).toString('hex')
@@ -155,8 +146,8 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
             error: LogInErrors.ArtifactsNotFound,
           }
         }
-        const { keypair, mnemonic } = data
-        localMnemonic = mnemonic
+        const { keypair, decryptedSeed } = data
+        localSeed = decryptedSeed
         payload.joystreamAccountId = keypair.address
         signatureOverPayload = u8aToHex(keypair.sign(JSON.stringify(payload)))
       }
@@ -166,6 +157,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         try {
           signatureOverPayload = await params.sign(JSON.stringify(payload))
         } catch (_) {
+          setIsAuthenticating(false)
           return {
             data: null,
             error: LogInErrors.SignatureCancelled,
@@ -190,9 +182,9 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
         setAnonymousUserId(null)
 
-        if (localMnemonic) {
-          saveEncodedSeed(localMnemonic)
-          setApiActiveAccount('seed', localMnemonic)
+        if (localSeed) {
+          saveEncodedSeed(localSeed)
+          setApiActiveAccount('seed', seedToMnemonic(localSeed))
         } else {
           setApiActiveAccount('address', payload.joystreamAccountId)
         }

@@ -55,10 +55,6 @@ export const JoystreamProvider: FC<PropsWithChildren> = ({ children }) => {
         setAwaitingAccount([payloadType, payload])
         return false
       }
-      const previousAccountId = await instance?.selectedAccountId
-      if (payload === previousAccountId) {
-        return false
-      }
 
       if (!wallet?.signer && payloadType === 'address') {
         SentryLogger.error(
