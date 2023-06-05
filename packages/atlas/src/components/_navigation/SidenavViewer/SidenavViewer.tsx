@@ -12,6 +12,7 @@ import { AppLogo } from '@/components/AppLogo'
 import { Button } from '@/components/_buttons/Button'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user/user.hooks'
 import { ConsoleLogger } from '@/utils/logs'
@@ -56,17 +57,20 @@ export const SidenavViewer: FC = () => {
   const [expanded, setExpanded] = useState(false)
   const followedChannels = usePersonalDataStore((state) => state.followedChannels)
   const unFollow = usePersonalDataStore((state) => state.actions.unfollowChannel)
+  const {
+    actions: { setAuthModalOpen },
+  } = useAuthStore()
 
   const handleChannelNotFound = (id: string) => {
     ConsoleLogger.warn(`Followed channel not found, removing id: ${id}`)
     unFollow(id)
   }
 
-  const { isLoggedIn, activeMembership, activeChannel } = useUser()
-  console.log('inSide', activeMembership, activeChannel, isLoggedIn)
+  const { isLoggedIn } = useUser()
+
   const closeAndSignIn = () => {
     setExpanded(false)
-    // todo: add sigin
+    setAuthModalOpen('externalLogIn')
   }
   const buttonsContent = !isLoggedIn ? (
     <Button icon={<SvgActionMember />} onClick={closeAndSignIn}>

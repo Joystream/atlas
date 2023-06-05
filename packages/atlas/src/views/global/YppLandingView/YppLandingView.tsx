@@ -10,6 +10,7 @@ import { YppReferralBanner } from '@/components/_ypp/YppReferralBanner'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { useSnackbar } from '@/providers/snackbars'
 import { useUser } from '@/providers/user/user.hooks'
 import { useYppStore } from '@/providers/ypp/ypp.store'
@@ -31,6 +32,9 @@ export const YppLandingView: FC = () => {
   const headTags = useHeadTags('YouTube Partner Program')
   const [currentStep, setCurrentStep] = useState<YppAuthorizationStepsType>(null)
   const { isLoggedIn, activeMembership, channelId } = useUser()
+  const {
+    actions: { setAuthModalOpen },
+  } = useAuthStore()
   const { setSelectedChannelId, setShouldContinueYppFlow } = useYppStore((store) => store.actions)
   const { displaySnackbar } = useSnackbar()
   const navigate = useNavigate()
@@ -68,8 +72,7 @@ export const YppLandingView: FC = () => {
     }
 
     if (!isLoggedIn) {
-      // todo: login callback
-      // await signIn()
+      setAuthModalOpen('externalLogIn')
       setWasSignInTriggered(true)
       return
     }
@@ -83,7 +86,7 @@ export const YppLandingView: FC = () => {
       setCurrentStep('requirements')
       return
     }
-  }, [currentStep, displaySnackbar, isLoggedIn, isTodaysQuotaReached, isYppSigned, navigate])
+  }, [currentStep, displaySnackbar, isLoggedIn, isTodaysQuotaReached, isYppSigned, navigate, setAuthModalOpen])
 
   useEffect(() => {
     // rerun handleYppSignUpClick after sign in flow
