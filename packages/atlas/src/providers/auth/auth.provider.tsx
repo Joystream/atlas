@@ -68,8 +68,8 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
           if (keypair.address === data.accountData.joystreamAccount) {
             setLoggedAddress(keypair.address)
             setCurrentUser(data.accountData)
-            setIsAuthenticating(false)
             setApiActiveAccount('seed', mnemonic)
+            setIsAuthenticating(false)
             return
           }
         }
@@ -84,9 +84,9 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
             setCurrentUser(data.accountData)
             setIsAuthenticating(false)
             setApiActiveAccount('address', data.accountData.joystreamAccount)
-            return
           }
         }, 200)
+        return
       }
       setIsAuthenticating(false)
     }
@@ -232,12 +232,13 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       handleAnonymousAuth(anonymousUserId).then((userId) => {
         setAnonymousUserId(userId ?? null)
       })
+      refetch()
       setCurrentUser(null)
       setEncodedSeed(null)
     } catch (error) {
       SentryLogger.error('Error when logging out', 'auth.provider', error)
     }
-  }, [anonymousUserId, setAnonymousUserId, setEncodedSeed])
+  }, [anonymousUserId, refetch, setAnonymousUserId, setEncodedSeed])
 
   const contextValue: AuthContextValue = useMemo(
     () => ({
@@ -247,6 +248,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       refetchCurrentUser: refetch,
       currentUser: currentUser,
       handleLogout,
+      isLoggedIn: !!currentUser && !isAuthenticating,
     }),
     [currentUser, handleLogin, handleLogout, isAuthenticating, loggedAddress, refetch]
   )

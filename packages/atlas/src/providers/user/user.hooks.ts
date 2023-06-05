@@ -1,3 +1,5 @@
+import { useAuth } from '@/providers/auth/auth.hooks'
+
 import { useUserContext } from './user.provider'
 import { UserContextValue } from './user.types'
 
@@ -7,7 +9,7 @@ type UseUserHookReturn = UserContextValue & {
 
 export const useUser = (): UseUserHookReturn => {
   const userContext = useUserContext()
-  const isLoggedIn = !!userContext.activeMembership
+  const { isLoggedIn } = useAuth()
 
   return {
     isLoggedIn,

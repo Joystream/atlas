@@ -32,7 +32,7 @@ import {
 } from './TopbarViewer.styles'
 
 export const TopbarViewer: FC = () => {
-  const { isLoggedIn, activeMembership, membershipsLoading } = useUser()
+  const { activeMembership, isLoggedIn, membershipsLoading } = useUser()
   const { isAuthenticating } = useAuth()
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
 
@@ -92,7 +92,7 @@ export const TopbarViewer: FC = () => {
     setIsMemberDropdownActive(!isMemberDropdownActive)
   }
 
-  const topbarButtonLoaded = !isAuthenticating && !membershipsLoading
+  const topbarButtonLoading = isAuthenticating || membershipsLoading
 
   return (
     <>
@@ -125,7 +125,7 @@ export const TopbarViewer: FC = () => {
               timeout={parseInt(cVar('animationTimingFast', true))}
             >
               <ButtonWrapper>
-                {topbarButtonLoaded ? (
+                {!topbarButtonLoading ? (
                   isLoggedIn ? (
                     <SignedButtonsWrapper>
                       <NotificationsWidget trigger={<NotificationsButton />} />
@@ -163,7 +163,7 @@ export const TopbarViewer: FC = () => {
                     <StyledButtonSkeletonLoader width={mdMatch ? 102 : 78} height={40} />
                   </SignedButtonsWrapper>
                 )}
-                {!searchQuery && !mdMatch && !isLoggedIn && topbarButtonLoaded && (
+                {!searchQuery && !mdMatch && !isLoggedIn && !topbarButtonLoading && (
                   <StyledIconButton onClick={() => setAuthModalOpen('externalLogIn')}>Log in</StyledIconButton>
                 )}
               </ButtonWrapper>
