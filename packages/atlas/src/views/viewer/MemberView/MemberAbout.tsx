@@ -1,25 +1,27 @@
 import { useParams } from 'react-router'
 
 import { useMemberships } from '@/api/hooks/membership'
+import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
+import { ChannelCard } from '@/components/_channel/ChannelCard'
 import { atlasConfig } from '@/config'
+import { createPlaceholderData } from '@/utils/data'
 import { formatDate } from '@/utils/time'
 
-import {
-  Anchor,
-  ChannelsOwnedContainerGrid,
-  Details,
-  StyledChannelCard,
-  StyledLayoutGrid,
-  TextContainer,
-} from './MemberAbout.styles'
+import { Anchor, ChannelsOwnedContainerGrid, Details, StyledLayoutGrid, TextContainer } from './MemberAbout.styles'
 
 export const MemberAbout = () => {
   const { handle } = useParams()
-  const { memberships } = useMemberships({ where: { handle_eq: handle } })
+  const { memberships, loading } = useMemberships({ where: { handle_eq: handle } })
   const member = memberships?.find((member) => member.handle === handle)
+
+  const placeholderItems = createPlaceholderData(2).map((_, idx) => <ChannelCard key={idx} loading={loading} />)
+
+  const channels = loading
+    ? placeholderItems
+    : member?.channels.map((channel) => <ChannelCard key={channel.id} withFollowButton={false} channel={channel} />)
 
   return (
     <StyledLayoutGrid>
@@ -34,20 +36,17 @@ export const MemberAbout = () => {
             </Text>
           </TextContainer>
         )}
-        {!!member?.channels.length && (
-          <div>
-            <Text as="h2" variant="h500">
-              Channels owned
-            </Text>
-            <ChannelsOwnedContainerGrid>
-              {member?.channels.map((channel) => (
-                <GridItem key={channel.id} colSpan={{ base: 6, lg: 3 }}>
-                  <StyledChannelCard withFollowButton={false} channel={channel} />
-                </GridItem>
-              ))}
-            </ChannelsOwnedContainerGrid>
-          </div>
-        )}
+
+        <div>
+          <Text as="h2" variant="h500">
+            Channels owned
+          </Text>
+          {channels?.length ? (
+            <ChannelsOwnedContainerGrid>{channels}</ChannelsOwnedContainerGrid>
+          ) : (
+            <EmptyFallback title="No channels" subtitle="This member hasn't created any channels yet." />
+          )}
+        </div>
       </GridItem>
       <GridItem colSpan={{ base: 12, sm: 3 }} colStart={{ sm: -4 }}>
         <Text as="h3" variant="h500" margin={{ bottom: 4 }}>
