@@ -1,8 +1,7 @@
 import { AnalyticsManager } from '@/AnalyticsManager'
 import { CommonProviders } from '@/CommonProviders'
 import { WelcomeDialog } from '@/components/WelcomeDialog'
-import { ExternalSignInModal } from '@/components/_auth/ExternalSignInModal'
-import { LogInModal } from '@/components/_auth/LogInModal'
+import { AuthModals } from '@/components/_auth/AuthModals/AuthModals'
 import { JoystreamManager } from '@/providers/joystream/joystream.manager'
 import { JoystreamProvider } from '@/providers/joystream/joystream.provider'
 import { NftActionsProvider } from '@/providers/nftActions/nftActions.provider'
@@ -14,7 +13,6 @@ import { NftSaleBottomDrawer } from '@/views/global/NftSaleBottomDrawer'
 import { NftSettlementBottomDrawer } from '@/views/global/NftSettlementBottomDrawer'
 
 import { MainLayout } from './MainLayout'
-import { SignUpModal } from './components/_auth/SignUpModal'
 
 export const App = () => {
   return (
@@ -27,9 +25,7 @@ export const App = () => {
           <TransactionsManager />
           <JoystreamManager />
           <NotificationsManager />
-          <ExternalSignInModal />
-          <SignUpModal />
-          <LogInModal />
+          <AuthModals />
           <WelcomeDialog />
           <NftSettlementBottomDrawer />
           <NftPurchaseBottomDrawer />

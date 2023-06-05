@@ -33,13 +33,6 @@ export const ExternalSignInModal: FC = () => {
     setHasNavigatedBack(true)
   }, [])
 
-  useEffect(() => {
-    if (!authModalOpen) {
-      setCurrentStep(ModalSteps.Wallet)
-      setAvailableMemberships([])
-    }
-  }, [authModalOpen])
-
   // scroll the dialog content to top whenever the displayed step changes
   useEffect(() => {
     if (!dialogContentRef.current) return
