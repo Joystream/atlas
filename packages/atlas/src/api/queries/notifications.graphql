@@ -1,11 +1,3 @@
-# CHANGE: Throught this file we're now using one `events` query to receive all related events
-# (instead of separate queries for each event type)
-
-# Some redundant fields (result of schema "flattening") were also removed from the events,
-# as they can now be accessed though deep filtering.
-
-# Note that in this case `orderBy` and `limit` now applies to all events together, not on per-type basis
-
 query GetNotificationsConnection($memberId: String!, $first: Int!, $after: String) {
   notificationsConnection(
     first: $first
@@ -37,12 +29,9 @@ query GetNotificationsConnection($memberId: String!, $first: Int!, $after: Strin
                     ...BasicMembershipFields
                   }
                 }
-                auction {
-                  nft {
-                    video {
-                      id
-                      title
-                    }
+                nft {
+                  video {
+                    ...BasicVideoActivityFields
                   }
                 }
               }
@@ -58,8 +47,7 @@ query GetNotificationsConnection($memberId: String!, $first: Int!, $after: Strin
               price
               nft {
                 video {
-                  id
-                  title
+                  ...BasicVideoActivityFields
                 }
               }
             }
@@ -72,8 +60,7 @@ query GetNotificationsConnection($memberId: String!, $first: Int!, $after: Strin
                 amount
                 nft {
                   video {
-                    id
-                    title
+                    ...BasicVideoActivityFields
                   }
                 }
               }
@@ -88,12 +75,9 @@ query GetNotificationsConnection($memberId: String!, $first: Int!, $after: Strin
                 bidder {
                   ...BasicMembershipFields
                 }
-                auction {
-                  nft {
-                    video {
-                      id
-                      title
-                    }
+                nft {
+                  video {
+                    ...BasicVideoActivityFields
                   }
                 }
               }
@@ -107,12 +91,9 @@ query GetNotificationsConnection($memberId: String!, $first: Int!, $after: Strin
                 bidder {
                   ...BasicMembershipFields
                 }
-                auction {
-                  nft {
-                    video {
-                      id
-                      title
-                    }
+                nft {
+                  video {
+                    ...BasicVideoActivityFields
                   }
                 }
               }
@@ -254,17 +235,13 @@ query GetNftHistory($nftId: String!) {
   }
 }
 
-query GetNftActivities(
-  $memberId: String!
-  $first: Int!
-  $after: String
-  $orderBy: [NftActivityOrderByInput!] = event_timestamp_DESC
-) {
+query GetNftActivitiesCount($memberId: String!) {
   nftsBought: nftActivitiesConnection(
     where: {
-      event: {
-        OR: [
-          {
+      OR: [
+        {
+          member: { id_eq: $memberId }
+          event: {
             data: {
               isTypeOf_in: [
                 "EnglishAuctionSettledEventData"
@@ -274,20 +251,24 @@ query GetNftActivities(
               winningBid: { bidder: { id_eq: $memberId } }
             }
           }
-          { data: { isTypeOf_eq: "NftBoughtEventData", buyer: { id_eq: $memberId } } }
-        ]
-      }
+        }
+        {
+          member: { id_eq: $memberId }
+          event: { data: { isTypeOf_eq: "NftBoughtEventData", buyer: { id_eq: $memberId } } }
+        }
+      ]
     }
-    orderBy: $orderBy
+    orderBy: event_timestamp_DESC
   ) {
     totalCount
   }
 
   nftsSold: nftActivitiesConnection(
     where: {
-      event: {
-        OR: [
-          {
+      OR: [
+        {
+          member: { id_eq: $memberId }
+          event: {
             data: {
               isTypeOf_in: [
                 "EnglishAuctionSettledEventData"
@@ -298,7 +279,10 @@ query GetNftActivities(
               previousNftOwner: { member: { id_eq: $memberId } }
             }
           }
-          {
+        }
+        {
+          member: { id_eq: $memberId }
+          event: {
             data: {
               isTypeOf_in: [
                 "EnglishAuctionSettledEventData"
@@ -309,10 +293,10 @@ query GetNftActivities(
               previousNftOwner: { channel: { ownerMember: { id_eq: $memberId } } }
             }
           }
-        ]
-      }
+        }
+      ]
     }
-    orderBy: $orderBy
+    orderBy: event_timestamp_DESC
   ) {
     totalCount
   }
@@ -326,25 +310,26 @@ query GetNftActivities(
         ]
       }
     }
-    orderBy: $orderBy
+    orderBy: event_timestamp_DESC
   ) {
     totalCount
   }
 
   nftsBidded: nftActivitiesConnection(
     where: { event: { data: { isTypeOf_eq: "AuctionBidMadeEventData", bid: { bidder: { id_eq: $memberId } } } } }
-    orderBy: $orderBy
+    orderBy: event_timestamp_DESC
   ) {
     totalCount
   }
+}
 
-  nftActivitiesConnection(
-    first: $first
-    after: $after
-    orderBy: $orderBy # CHANGE: `event_timestamp` now used instead of `createdAt` (which is no longer available)
-    where: { member: { id_eq: $memberId } } # CHANGE: Simplified filtering
-  ) {
-    # CHANGE: The actual `event` is now nested as a property of `NftActivity`
+query GetNftActivities(
+  $memberId: String!
+  $first: Int!
+  $after: String
+  $orderBy: [NftActivityOrderByInput!] = event_timestamp_DESC
+) {
+  nftActivitiesConnection(first: $first, after: $after, orderBy: $orderBy, where: { member: { id_eq: $memberId } }) {
     totalCount
     pageInfo {
       endCursor
@@ -355,7 +340,7 @@ query GetNftActivities(
       node {
         event {
           id
-          timestamp # CHANGE: `timestamp` now used instead of `createdAt` (which is no longer available)
+          timestamp
           inBlock
           data {
             ... on AuctionBidMadeEventData {
@@ -372,11 +357,9 @@ query GetNftActivities(
                     ...BasicMembershipFields
                   }
                 }
-                auction {
-                  nft {
-                    video {
-                      ...BasicVideoActivityFields
-                    }
+                nft {
+                  video {
+                    ...BasicVideoActivityFields
                   }
                 }
               }
@@ -390,11 +373,9 @@ query GetNftActivities(
                   ...BasicMembershipFields
                 }
                 amount
-                auction {
-                  nft {
-                    video {
-                      ...BasicVideoActivityFields
-                    }
+                nft {
+                  video {
+                    ...BasicVideoActivityFields
                   }
                 }
               }
@@ -421,11 +402,10 @@ query GetNftActivities(
                 bidder {
                   ...BasicMembershipFields
                 }
-                auction {
-                  nft {
-                    video {
-                      ...BasicVideoActivityFields
-                    }
+
+                nft {
+                  video {
+                    ...BasicVideoActivityFields
                   }
                 }
                 amount
@@ -437,11 +417,9 @@ query GetNftActivities(
                 bidder {
                   ...BasicMembershipFields
                 }
-                auction {
-                  nft {
-                    video {
-                      ...BasicVideoActivityFields
-                    }
+                nft {
+                  video {
+                    ...BasicVideoActivityFields
                   }
                 }
               }
@@ -489,11 +467,9 @@ query GetNftActivities(
                 ...BasicMembershipFields
               }
               bid {
-                auction {
-                  nft {
-                    video {
-                      ...BasicVideoActivityFields
-                    }
+                nft {
+                  video {
+                    ...BasicVideoActivityFields
                   }
                 }
               }

@@ -2,7 +2,7 @@ import { QueryHookOptions } from '@apollo/client'
 import BN from 'bn.js'
 import { useMemo } from 'react'
 
-import { useRawActivities } from '@/api/hooks/notifications'
+import { useActivitiesCount, useRawActivities } from '@/api/hooks/notifications'
 import { NftActivityOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
 import {
   BasicMembershipFieldsFragment,
@@ -74,11 +74,11 @@ const getVideoDataFromEvent = (
   switch (nftActivity.event.data.__typename) {
     case 'AuctionBidMadeEventData':
     case 'AuctionBidCanceledEventData':
-      return nftActivity.event.data.bid.auction.nft.video
-    case 'EnglishAuctionSettledEventData':
+      return nftActivity.event.data.bid.nft.video
     case 'BidMadeCompletingAuctionEventData':
+    case 'EnglishAuctionSettledEventData':
     case 'OpenAuctionBidAcceptedEventData':
-      return nftActivity.event.data.winningBid.auction.nft.video
+      return nftActivity.event.data.winningBid.nft.video
     case 'NftBoughtEventData':
     case 'NftSellOrderMadeEventData':
     case 'BuyNowCanceledEventData':
@@ -245,14 +245,10 @@ export const useActivities = (
   sort?: NftActivityOrderByInput,
   opts?: QueryHookOptions<GetNftActivitiesQuery, GetNftActivitiesQueryVariables>
 ) => {
-  const {
-    activities: rawActivities,
-    nftsBiddedTotalCount,
-    nftsIssuedTotalCount,
-    nftsSoldTotalCount,
-    nftsBoughtTotalCount,
-    ...rest
-  } = useRawActivities(memberId, sort, opts)
+  const { activities: rawActivities, ...rest } = useRawActivities(memberId, sort, opts)
+
+  const { nftsBiddedTotalCount, nftsBoughtTotalCount, nftsIssuedTotalCount, nftsSoldTotalCount } =
+    useActivitiesCount(memberId)
   const parsedActivities = rawActivities && rawActivities.map((a) => parseActivities(a, memberId))
   const activities = parsedActivities ? parsedActivities.filter((a): a is ActivitiesRecord => !!a) : undefined
 

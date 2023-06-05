@@ -1,10 +1,13 @@
 import { QueryHookOptions } from '@apollo/client'
 
 import {
+  GetNftActivitiesCountQuery,
+  GetNftActivitiesCountQueryVariables,
   GetNftActivitiesQuery,
   GetNftActivitiesQueryVariables,
   GetNotificationsConnectionQuery,
   GetNotificationsConnectionQueryVariables,
+  useGetNftActivitiesCountQuery,
   useGetNftActivitiesQuery,
   useGetNotificationsConnectionQuery,
 } from '@/api/queries/__generated__/notifications.generated'
@@ -31,6 +34,27 @@ export const useRawNotifications = (
   }
 }
 
+export const useActivitiesCount = (
+  memberId?: string,
+  opts?: QueryHookOptions<GetNftActivitiesCountQuery, GetNftActivitiesCountQueryVariables>
+) => {
+  const { data, ...rest } = useGetNftActivitiesCountQuery({
+    ...opts,
+    variables: {
+      memberId: memberId || '',
+    },
+    skip: !memberId,
+  })
+
+  return {
+    nftsBiddedTotalCount: data?.nftsBidded.totalCount,
+    nftsBoughtTotalCount: data?.nftsBought.totalCount,
+    nftsSoldTotalCount: data?.nftsSold.totalCount,
+    nftsIssuedTotalCount: data?.nftsIssued.totalCount,
+    ...rest,
+  }
+}
+
 export const useRawActivities = (
   memberId?: string,
   sort: NftActivityOrderByInput = NftActivityOrderByInput.EventTimestampDesc,
@@ -47,10 +71,6 @@ export const useRawActivities = (
   })
 
   return {
-    nftsBiddedTotalCount: data?.nftsBidded.totalCount,
-    nftsBoughtTotalCount: data?.nftsBought.totalCount,
-    nftsSoldTotalCount: data?.nftsSold.totalCount,
-    nftsIssuedTotalCount: data?.nftsIssued.totalCount,
     totalCount: data?.nftActivitiesConnection.totalCount,
     pageInfo: data?.nftActivitiesConnection.pageInfo,
     activities: data?.nftActivitiesConnection.edges,

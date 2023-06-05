@@ -13,9 +13,10 @@ import { NftTile, NftTileProps } from '../NftTile'
 
 type NftTileViewerProps = {
   nftId?: string
+  isInCarousel?: boolean
 }
 
-export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
+export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId, isInCarousel }) => {
   const { nftStatus, nft, loading } = useNft(nftId || '')
   const navigate = useNavigate()
   const thumbnailUrl = nft?.video.thumbnailPhoto?.resolvedUrl
@@ -100,6 +101,7 @@ export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
   return (
     <NftTile
       {...nftCommonProps}
+      isInCarousel={isInCarousel}
       timerLoading={timerLoading}
       buyNowPrice={
         nftStatus?.status === 'auction' || nftStatus?.status === 'buy-now' ? nftStatus.buyNowPrice : undefined

@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.2] - 2023-06-02
+
+### Added
+
+- Added Telugu language
+
+### Changed
+
+- Sentry replays are enabled on YPP page only
+- Atlas TnC were updated
+
+### Fixed
+
+- Fixed issue when Atlas was sending incorrect storage buckets number
+- Fixed bug with multiple context menus for carousel NFT items
+- Fixed recurring updates on user activity page
+
 ## [3.3.1] - 2023-05-25
 
 ### Changed

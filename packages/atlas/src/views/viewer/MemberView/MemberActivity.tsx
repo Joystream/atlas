@@ -39,14 +39,26 @@ const getDescription = (activity: ActivitiesRecord) => {
     case 'Bid':
       return (
         <>
-          {fromHandle} placed a bid for{' '}
+          <StyledLink
+            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs owned' })}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {fromHandle}
+          </StyledLink>{' '}
+          placed a bid for{' '}
           <NumberFormat as="span" color="inherit" format="short" value={activity.bidAmount} withToken />
         </>
       )
     case 'Sale':
       return (
         <>
-          {fromHandle} sold NFT to{' '}
+          <StyledLink
+            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs owned' })}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {fromHandle}
+          </StyledLink>{' '}
+          sold NFT to{' '}
           <StyledLink to={absoluteRoutes.viewer.member(activity.to?.handle)} onClick={(e) => e.stopPropagation()}>
             {activity.to?.handle}
           </StyledLink>{' '}
@@ -60,13 +72,25 @@ const getDescription = (activity: ActivitiesRecord) => {
             {activity.to?.handle}{' '}
           </StyledLink>{' '}
           purchased NFT for <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken />{' '}
-          from {fromHandle}
+          from{' '}
+          <StyledLink
+            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs owned' })}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {fromHandle}
+          </StyledLink>{' '}
         </>
       )
     case 'Listing':
       return (
         <>
-          {fromHandle} listed NFT{' '}
+          <StyledLink
+            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs owned' })}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {fromHandle}
+          </StyledLink>{' '}
+          listed NFT{' '}
           {activity.typeName === 'NftSellOrderMadeEventData' && activity.price && (
             <>
               for <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken />
@@ -75,16 +99,51 @@ const getDescription = (activity: ActivitiesRecord) => {
         </>
       )
     case 'Removal':
-      return <>{fromHandle} removed NFT from sale</>
+      return (
+        <>
+          <StyledLink
+            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs owned' })}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {fromHandle}
+          </StyledLink>{' '}
+          removed NFT from sale
+        </>
+      )
     case 'Mint':
-      return <>{fromHandle} minted new NFT</>
+      return (
+        <>
+          <StyledLink
+            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs owned' })}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {fromHandle}
+          </StyledLink>{' '}
+          minted new NFT
+        </>
+      )
     case 'Withdrawal':
-      return <>{fromHandle} withdrew a bid</>
+      return (
+        <>
+          <StyledLink
+            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs owned' })}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {fromHandle}
+          </StyledLink>{' '}
+          withdrew a bid
+        </>
+      )
     case 'Price change':
       return (
         <>
-          {fromHandle} changed price to{' '}
-          <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken />
+          <StyledLink
+            to={absoluteRoutes.viewer.member(fromHandle, { tab: 'NFTs owned' })}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {fromHandle}
+          </StyledLink>{' '}
+          changed price to <NumberFormat as="span" color="inherit" format="short" value={activity.price} withToken />
         </>
       )
   }

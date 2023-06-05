@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
-import { FC, useRef } from 'react'
+import { forwardRef, useRef } from 'react'
+import { mergeRefs } from 'react-merge-refs'
 
 import { List } from '@/components/List'
 import { ListItemProps, ListItemSizes } from '@/components/ListItem'
@@ -12,31 +13,28 @@ export type ContextMenuProps = {
   size?: ListItemSizes
 } & Omit<PopoverProps, 'content' | 'instanceRef'>
 
-export const ContextMenu: FC<ContextMenuProps> = ({
-  children,
-  items,
-  scrollable = false,
-  size = 'medium',
-  ...rest
-}) => {
-  const contextMenuInstanceRef = useRef<PopoverImperativeHandle>(null)
-  return (
-    <Popover hideOnClick ref={contextMenuInstanceRef} {...rest}>
-      <StyledList
-        scrollable={scrollable}
-        size={size}
-        items={items.map((item) => ({
-          ...item,
-          onClick: (e) => {
-            item.onClick?.(e)
-            contextMenuInstanceRef.current?.hide()
-          },
-        }))}
-      />
-    </Popover>
-  )
-}
+export const ContextMenu = forwardRef<PopoverImperativeHandle, ContextMenuProps>(
+  ({ children, items, scrollable = false, size = 'medium', ...rest }, ref) => {
+    const contextMenuInstanceRef = useRef<PopoverImperativeHandle>(null)
+    return (
+      <Popover hideOnClick ref={mergeRefs([contextMenuInstanceRef, ref])} {...rest}>
+        <StyledList
+          scrollable={scrollable}
+          size={size}
+          items={items.map((item) => ({
+            ...item,
+            onClick: (e) => {
+              item.onClick?.(e)
+              contextMenuInstanceRef.current?.hide()
+            },
+          }))}
+        />
+      </Popover>
+    )
+  }
+)
 
+ContextMenu.displayName = 'ContextMenu'
 export const StyledList = styled(List)`
   width: 192px;
 `
