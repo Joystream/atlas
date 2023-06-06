@@ -12,8 +12,6 @@ import {
   GetMembershipsQueryVariables,
 } from '@/api/queries/__generated__/memberships.generated'
 import { Avatar } from '@/components/Avatar'
-import { GridItem } from '@/components/LayoutGrid'
-import { Text } from '@/components/Text'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { ImageInputFile } from '@/components/_inputs/MultiFileSelect'
@@ -31,7 +29,9 @@ import { useUser } from '@/providers/user/user.hooks'
 import { uploadAvatarImage } from '@/utils/image'
 import { ConsoleLogger } from '@/utils/logs'
 
-import { StyledActionBar, StyledLayoutGrid, TextFieldsWrapper, Wrapper } from './MembershipPublicProfile.styles'
+import { StyledActionBar, TextFieldsWrapper, Wrapper } from './MembershipPublicProfile.styles'
+
+import { MembershipSettingTemplate } from '../MembershipSettingTemplate'
 
 export type EditMemberFormInputs = {
   handle: string | null
@@ -231,106 +231,98 @@ export const MembershipPublicProfile: FC = () => {
   const isHandleInputActiveElement = document.activeElement === handleInputRef.current
 
   return (
-    <StyledLayoutGrid>
-      <GridItem colStart={{ base: 1 }} colSpan={{ base: 12, sm: 5, lg: 4 }} rowStart={{ base: 1 }}>
-        <Text variant="h400" as="h3" margin={{ bottom: 4 }}>
-          Profile info
-        </Text>
-        <Text variant="t300" as="p" color="colorText">
-          This membership information is stored on Joystream blockchain and can be displayed in all apps connected to
-          the chain.
-        </Text>
-      </GridItem>
-      <GridItem colStart={{ base: 1, sm: 7, lg: 6 }} colSpan={{ base: 12, sm: 6, lg: 8 }} rowStart={{ base: 2, sm: 1 }}>
-        <form onSubmit={handleEditMember}>
-          {headTags}
-          <Controller
-            control={control}
-            name="avatar"
-            render={({ field: { onChange, value: avatarInputFile } }) => (
-              <FormField label="Member avatar" description="Max file size is 5MB">
-                <Avatar
-                  size={88}
-                  editable
-                  onClick={() => {
-                    avatarDialogRef.current?.open(
-                      avatarInputFile?.originalBlob ? avatarInputFile.originalBlob : avatarInputFile?.blob,
-                      avatarInputFile?.imageCropData,
-                      !!avatarInputFile?.blob
-                    )
-                  }}
-                  onImageValidation={setIsImageValid}
-                  assetUrl={avatarInputFile?.url}
-                  loading={!isLoggedIn}
-                  hasAvatarUploadFailed={!isImageValid}
-                />
-                <ImageCropModal
-                  imageType="avatar"
-                  onConfirm={(blob, url, _, imageCropData, originalBlob) => {
-                    onChange({
-                      blob,
-                      url,
-                      imageCropData,
-                      originalBlob,
-                    })
-                  }}
-                  onDelete={() => {
-                    onChange(null)
-                  }}
-                  ref={avatarDialogRef}
-                />
-              </FormField>
-            )}
-          />
-          <Wrapper actionBarHeight={actionBarBoundsHeight}>
-            <TextFieldsWrapper>
-              <FormField
-                label="Member handle"
-                disableErrorAnimation={isHandleInputActiveElement}
-                description="Member handle may contain only lowercase letters, numbers and underscores"
-                error={errors?.handle?.message}
-              >
-                <Input
-                  autoComplete="off"
-                  {...handleRest}
-                  ref={(e) => {
-                    ref(e)
-                    handleInputRef.current = e
-                  }}
-                  processing={isHandleValidating}
-                  placeholder="johnnysmith"
-                  error={!!errors?.handle}
-                />
-              </FormField>
-              <FormField label="About me" optional error={errors?.about?.message}>
-                <TextArea
-                  placeholder="Write something about yourself..."
-                  maxLength={1000}
-                  {...register('about', {
-                    maxLength: { value: 1000, message: 'About cannot be longer than 1000 characters' },
-                  })}
-                  error={!!errors?.about}
-                />
-              </FormField>
-            </TextFieldsWrapper>
-          </Wrapper>
-          <StyledActionBar
-            ref={actionBarRef}
-            fee={fee}
-            feeLoading={feeLoading}
-            primaryButton={{
-              disabled: isSubmitting,
-              text: isSubmitting ? 'Please wait...' : 'Publish changes',
-              type: 'submit',
-            }}
-            secondaryButton={{
-              text: 'Cancel',
-              to: isDirty ? undefined : absoluteRoutes.viewer.member(activeMembership?.handle),
-              onClick: () => (isDirty ? openDialog() : undefined),
-            }}
-          />
-        </form>
-      </GridItem>
-    </StyledLayoutGrid>
+    <MembershipSettingTemplate
+      title="Profile info"
+      description="This membership information is stored on Joystream blockchain and can be displayed in all apps connected to the chain."
+    >
+      <form onSubmit={handleEditMember}>
+        {headTags}
+        <Controller
+          control={control}
+          name="avatar"
+          render={({ field: { onChange, value: avatarInputFile } }) => (
+            <FormField label="Member avatar" description="Max file size is 5MB">
+              <Avatar
+                size={88}
+                editable
+                onClick={() => {
+                  avatarDialogRef.current?.open(
+                    avatarInputFile?.originalBlob ? avatarInputFile.originalBlob : avatarInputFile?.blob,
+                    avatarInputFile?.imageCropData,
+                    !!avatarInputFile?.blob
+                  )
+                }}
+                onImageValidation={setIsImageValid}
+                assetUrl={avatarInputFile?.url}
+                loading={!isLoggedIn}
+                hasAvatarUploadFailed={!isImageValid}
+              />
+              <ImageCropModal
+                imageType="avatar"
+                onConfirm={(blob, url, _, imageCropData, originalBlob) => {
+                  onChange({
+                    blob,
+                    url,
+                    imageCropData,
+                    originalBlob,
+                  })
+                }}
+                onDelete={() => {
+                  onChange(null)
+                }}
+                ref={avatarDialogRef}
+              />
+            </FormField>
+          )}
+        />
+        <Wrapper actionBarHeight={actionBarBoundsHeight}>
+          <TextFieldsWrapper>
+            <FormField
+              label="Member handle"
+              disableErrorAnimation={isHandleInputActiveElement}
+              description="Member handle may contain only lowercase letters, numbers and underscores"
+              error={errors?.handle?.message}
+            >
+              <Input
+                autoComplete="off"
+                {...handleRest}
+                ref={(e) => {
+                  ref(e)
+                  handleInputRef.current = e
+                }}
+                processing={isHandleValidating}
+                placeholder="johnnysmith"
+                error={!!errors?.handle}
+              />
+            </FormField>
+            <FormField label="About me" optional error={errors?.about?.message}>
+              <TextArea
+                placeholder="Write something about yourself..."
+                maxLength={1000}
+                {...register('about', {
+                  maxLength: { value: 1000, message: 'About cannot be longer than 1000 characters' },
+                })}
+                error={!!errors?.about}
+              />
+            </FormField>
+          </TextFieldsWrapper>
+        </Wrapper>
+        <StyledActionBar
+          ref={actionBarRef}
+          fee={fee}
+          feeLoading={feeLoading}
+          primaryButton={{
+            disabled: isSubmitting,
+            text: isSubmitting ? 'Please wait...' : 'Publish changes',
+            type: 'submit',
+          }}
+          secondaryButton={{
+            text: 'Cancel',
+            to: isDirty ? undefined : absoluteRoutes.viewer.member(activeMembership?.handle),
+            onClick: () => (isDirty ? openDialog() : undefined),
+          }}
+        />
+      </form>
+    </MembershipSettingTemplate>
   )
 }
