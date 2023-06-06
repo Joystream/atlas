@@ -25,7 +25,7 @@ import { MemberAbout } from './MemberAbout'
 import { MemberActivity } from './MemberActivity'
 import { NotFoundMemberContainer, StyledMembershipInfo } from './MemberView.styles'
 
-const TABS: MemberTabs[] = ['NFTs owned', 'Activity', 'About']
+const TABS: MemberTabs[] = ['NFTs', 'Activity', 'About']
 
 const ACTIVITY_SORTING_FILTERS = [
   {

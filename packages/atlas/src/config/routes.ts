@@ -82,7 +82,7 @@ export const absoluteRoutes = Object.entries(BASE_PATHS).reduce((absoluteRoutesA
   return absoluteRoutesAcc
 }, {} as typeof relativeRoutes)
 
-export type MemberTabs = 'NFTs owned' | 'Activity' | 'About'
+export type MemberTabs = 'NFTs' | 'Activity' | 'About'
 
 export const QUERY_PARAMS = {
   SEARCH: 'query',
