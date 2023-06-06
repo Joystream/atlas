@@ -8,12 +8,11 @@ export const GridRowWrapper = styled.div`
   display: contents;
 `
 
-export const OverviewItem = styled.div<{ divider?: boolean }>`
+export const InfoListItem = styled.div<{ divider?: boolean }>`
   display: flex;
   align-items: center;
-  gap: ${sizes(4)};
+  gap: ${sizes(2)};
   padding-bottom: ${sizes(4)};
-  margin-bottom: ${sizes(4)};
   box-shadow: ${cVar('effectDividersBottom')};
 
   ${GridRowWrapper}:last-of-type > & {
@@ -40,12 +39,13 @@ export const StyledIconWrapper = styled(IconWrapper)`
 export const OverviewTextContainer = styled.div`
   display: grid;
   grid-auto-flow: row;
-  gap: ${sizes(2)};
+  gap: ${sizes(0.5)};
 `
 
 export const OverviewContainer = styled.div`
   margin-top: ${sizes(6)};
   display: grid;
+  row-gap: ${sizes(4)};
   grid-template-columns: 1fr 1fr;
 
   ${media.sm} {

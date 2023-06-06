@@ -1,4 +1,4 @@
-import { FC, ReactElement, ReactNode, memo, useMemo, useState } from 'react'
+import { FC, ReactElement, ReactNode, memo, useEffect, useId, useMemo, useRef, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import { SvgActionMore, SvgActionNotForSale } from '@/assets/icons'
@@ -8,6 +8,8 @@ import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
+import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
+import { useMiscStore } from '@/providers/misc/store'
 import { cVar } from '@/styles'
 
 import {
@@ -30,6 +32,7 @@ export type Member = {
 
 export type NftTileDetailsProps = {
   loading?: boolean
+  isInCarousel?: boolean
   owner?: Member
   creator?: Member
   role?: 'owner' | 'viewer'
@@ -48,169 +51,201 @@ type TileSize = 'small' | 'medium' | 'big' | 'bigSmall'
 
 const SMALL_SIZE_WIDTH = 288
 
-export const NftTileDetails: FC<NftTileDetailsProps> = ({
-  loading,
-  creator,
-  owner,
-  nftStatus,
-  startingPrice,
-  buyNowPrice,
-  topBid,
-  title,
-  hovered,
-  videoHref,
-  interactable = true,
-  contextMenuItems,
-}) => {
-  const [contentHovered, setContentHovered] = useState(false)
-  const toggleContentHover = () => setContentHovered((prevState) => !prevState)
-  const [tileSize, setTileSize] = useState<TileSize>()
-  const { ref: contentRef } = useResizeObserver<HTMLAnchorElement>({
-    box: 'border-box',
-    onResize: (size) => {
-      const { width } = size
-      if (width) {
-        if (tileSize !== 'small' && width < SMALL_SIZE_WIDTH) {
-          setTileSize('small')
-        }
-        if (tileSize !== 'medium' && width >= SMALL_SIZE_WIDTH) {
-          setTileSize('medium')
-        }
-      }
-    },
-  })
-
-  const getDetails = useMemo(() => {
-    if (loading) {
-      return (
-        <CaptionSkeletonWrapper>
-          <SkeletonLoader width="17%" height={tileSize === 'medium' ? 20 : 16} bottomSpace={4} />
-          <SkeletonLoader width="28%" height={tileSize === 'medium' ? 24 : 20} />
-        </CaptionSkeletonWrapper>
-      )
-    }
-    switch (nftStatus) {
-      case 'idle':
-        return (
-          <DetailsContent
-            tileSize={tileSize}
-            caption="Status"
-            content="Not for sale"
-            icon={<SvgActionNotForSale />}
-            secondary
-          />
-        )
-      case 'buy-now':
-        return (
-          <DetailsContent
-            tileSize={tileSize}
-            caption="Buy now"
-            content={buyNowPrice ?? 0}
-            icon={<JoyTokenIcon size={16} variant="regular" />}
-          />
-        )
-      case 'auction':
-        return (
-          <>
-            {topBid ? (
-              <DetailsContent
-                tileSize={tileSize}
-                caption="Top bid"
-                content={topBid}
-                icon={<JoyTokenIcon size={16} variant="regular" />}
-              />
-            ) : (
-              <DetailsContent
-                tileSize={tileSize}
-                caption="Min bid"
-                content={startingPrice ?? 0}
-                icon={<JoyTokenIcon size={16} variant="regular" />}
-              />
-            )}
-            {!!buyNowPrice && (
-              <DetailsContent
-                tileSize={tileSize}
-                caption="Buy now"
-                content={buyNowPrice}
-                icon={<JoyTokenIcon size={16} variant="regular" />}
-              />
-            )}
-          </>
-        )
-    }
-  }, [loading, nftStatus, tileSize, buyNowPrice, topBid, startingPrice])
-
-  const avatars = useMemo(
-    () => [
-      {
-        url: creator?.assetUrl,
-        tooltipText: `Creator: ${creator?.name}`,
-        onClick: creator?.onClick,
-        loading: creator?.loading,
-      },
-      ...(owner
-        ? [
-            {
-              url: owner?.assetUrl,
-              tooltipText: `Owner: ${owner?.name}`,
-              onClick: owner?.onClick,
-              loading: owner.loading,
-            },
-          ]
-        : []),
-    ],
-    [creator?.assetUrl, creator?.loading, creator?.name, creator?.onClick, owner]
-  )
-
-  return (
-    <Content
-      to={videoHref || ''}
-      ref={contentRef}
-      loading={loading}
-      onMouseEnter={toggleContentHover}
-      onMouseLeave={toggleContentHover}
-      tileSize={tileSize}
-      shouldHover={(contentHovered || hovered) && interactable}
-    >
-      <Header>
-        <StyledAvatarGroup
-          avatarStrokeColor={
-            (contentHovered || hovered) && interactable
-              ? cVar('colorBackground', true)
-              : cVar('colorBackgroundMuted', true)
+export const NftTileDetails: FC<NftTileDetailsProps> = memo(
+  ({
+    loading,
+    isInCarousel,
+    creator,
+    owner,
+    nftStatus,
+    startingPrice,
+    buyNowPrice,
+    topBid,
+    title,
+    hovered,
+    videoHref,
+    interactable = true,
+    contextMenuItems,
+  }) => {
+    const [contentHovered, setContentHovered] = useState(false)
+    const setOpenedContextMenuId = useMiscStore((state) => state.actions.setOpenedContextMenuId)
+    const openedContexMenuId = useMiscStore((state) => state.openedContexMenuId)
+    const [tileSize, setTileSize] = useState<TileSize>()
+    const { ref: contentRef } = useResizeObserver<HTMLAnchorElement>({
+      box: 'border-box',
+      onResize: (size) => {
+        const { width } = size
+        if (width) {
+          if (tileSize !== 'small' && width < SMALL_SIZE_WIDTH) {
+            setTileSize('small')
           }
-          loading={loading}
-          avatars={avatars}
-        />
-        {contextMenuItems && (
-          <div
-            onClick={(e) => {
-              e.stopPropagation()
-              e.preventDefault()
-            }}
-          >
-            <ContextMenu
-              placement="bottom-end"
-              disabled={loading}
-              items={contextMenuItems}
-              trigger={
-                <KebabMenuButtonIcon icon={<SvgActionMore />} variant="tertiary" size="small" isActive={!loading} />
-              }
+          if (tileSize !== 'medium' && width >= SMALL_SIZE_WIDTH) {
+            setTileSize('medium')
+          }
+        }
+      },
+    })
+    const id = useId()
+    const ref = useRef<HTMLButtonElement>(null)
+    const contextMenuInstanceRef = useRef<PopoverImperativeHandle>(null)
+
+    // This useEffect is called only inside carousel and it's a workaround fix for https://github.com/Joystream/atlas/issues/4239
+    // We need manually remove all popovers, because tippy is not working well with swiper carousel
+    useEffect(() => {
+      if (!openedContexMenuId || !isInCarousel) {
+        return
+      }
+      if (openedContexMenuId !== id) {
+        contextMenuInstanceRef.current?.hide()
+      }
+    }, [id, isInCarousel, openedContexMenuId])
+
+    const getDetails = useMemo(() => {
+      if (loading) {
+        return (
+          <CaptionSkeletonWrapper>
+            <SkeletonLoader width="17%" height={tileSize === 'medium' ? 20 : 16} bottomSpace={4} />
+            <SkeletonLoader width="28%" height={tileSize === 'medium' ? 24 : 20} />
+          </CaptionSkeletonWrapper>
+        )
+      }
+      switch (nftStatus) {
+        case 'idle':
+          return (
+            <DetailsContent
+              tileSize={tileSize}
+              caption="Status"
+              content="Not for sale"
+              icon={<SvgActionNotForSale />}
+              secondary
             />
-          </div>
+          )
+        case 'buy-now':
+          return (
+            <DetailsContent
+              tileSize={tileSize}
+              caption="Buy now"
+              content={buyNowPrice ?? 0}
+              icon={<JoyTokenIcon size={16} variant="regular" />}
+            />
+          )
+        case 'auction':
+          return (
+            <>
+              {topBid ? (
+                <DetailsContent
+                  tileSize={tileSize}
+                  caption="Top bid"
+                  content={topBid}
+                  icon={<JoyTokenIcon size={16} variant="regular" />}
+                />
+              ) : (
+                <DetailsContent
+                  tileSize={tileSize}
+                  caption="Min bid"
+                  content={startingPrice ?? 0}
+                  icon={<JoyTokenIcon size={16} variant="regular" />}
+                />
+              )}
+              {!!buyNowPrice && (
+                <DetailsContent
+                  tileSize={tileSize}
+                  caption="Buy now"
+                  content={buyNowPrice}
+                  icon={<JoyTokenIcon size={16} variant="regular" />}
+                />
+              )}
+            </>
+          )
+      }
+    }, [loading, nftStatus, tileSize, buyNowPrice, topBid, startingPrice])
+
+    const avatars = useMemo(
+      () => [
+        {
+          url: creator?.assetUrl,
+          tooltipText: `Creator: ${creator?.name}`,
+          onClick: creator?.onClick,
+          loading: creator?.loading,
+        },
+        ...(owner
+          ? [
+              {
+                url: owner?.assetUrl,
+                tooltipText: `Owner: ${owner?.name}`,
+                onClick: owner?.onClick,
+                loading: owner.loading,
+              },
+            ]
+          : []),
+      ],
+      [creator?.assetUrl, creator?.loading, creator?.name, creator?.onClick, owner]
+    )
+
+    return (
+      <Content
+        to={videoHref || ''}
+        ref={contentRef}
+        loading={loading}
+        onMouseEnter={() => setContentHovered(true)}
+        onMouseLeave={() => setContentHovered(false)}
+        tileSize={tileSize}
+        shouldHover={(contentHovered || hovered) && interactable}
+      >
+        <Header>
+          <StyledAvatarGroup
+            avatarStrokeColor={
+              (contentHovered || hovered) && interactable
+                ? cVar('colorBackground', true)
+                : cVar('colorBackgroundMuted', true)
+            }
+            loading={loading}
+            avatars={avatars}
+          />
+          {contextMenuItems && (
+            <div
+              onClick={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
+              }}
+            >
+              <KebabMenuButtonIcon
+                ref={ref}
+                icon={<SvgActionMore />}
+                variant="tertiary"
+                size="small"
+                isActive={!loading}
+              />
+              <ContextMenu
+                ref={contextMenuInstanceRef}
+                appendTo={document.body}
+                placement="bottom-end"
+                flipEnabled={false}
+                disabled={loading}
+                onShow={() => {
+                  setOpenedContextMenuId(id)
+                }}
+                items={contextMenuItems}
+                trigger={null}
+                triggerTarget={ref.current}
+              />
+            </div>
+          )}
+        </Header>
+        {loading ? (
+          <SkeletonLoader width="55.6%" height={24} />
+        ) : (
+          <Title as="h3" variant={tileSize === 'medium' ? 'h400' : 'h300'}>
+            {title}
+          </Title>
         )}
-      </Header>
-      {loading ? (
-        <SkeletonLoader width="55.6%" height={24} />
-      ) : (
-        <Title as="h3" variant={tileSize === 'medium' ? 'h400' : 'h300'}>
-          {title}
-        </Title>
-      )}
-      <Details>{getDetails}</Details>
-    </Content>
-  )
-}
+        <Details>{getDetails}</Details>
+      </Content>
+    )
+  }
+)
+
+NftTileDetails.displayName = 'NftTileDetails'
 
 type DetailsContentProps = {
   caption: string

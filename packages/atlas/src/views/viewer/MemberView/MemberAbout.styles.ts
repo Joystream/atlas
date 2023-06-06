@@ -3,7 +3,6 @@ import { HTMLProps } from 'react'
 
 import { LayoutGrid } from '@/components/LayoutGrid/LayoutGrid'
 import { Text } from '@/components/Text'
-import { ChannelCard } from '@/components/_channel/ChannelCard'
 import { cVar, media, sizes } from '@/styles'
 
 export const TextContainer = styled.div<{ withDivider?: boolean }>`
@@ -26,16 +25,23 @@ export const StyledLayoutGrid = styled(LayoutGrid)`
   margin-bottom: 50px;
 `
 
-export const ChannelsOwnedContainerGrid = styled(LayoutGrid)`
+export const ChannelsOwnedContainerGrid = styled.div`
   margin-top: ${sizes(4)};
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: ${sizes(4)};
 
+  ${media.sm} {
+    grid-template-columns: repeat(2, 1fr);
+  }
   ${media.md} {
+    grid-template-columns: repeat(3, 1fr);
+    gap: ${sizes(6)};
     margin-top: ${sizes(6)};
   }
-`
-
-export const StyledChannelCard = styled(ChannelCard)`
-  min-width: 136px;
+  ${media.lg} {
+    grid-template-columns: repeat(4, 1fr);
+  }
 `
 
 export const Anchor = styled(Text)<HTMLProps<HTMLAnchorElement>>`

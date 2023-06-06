@@ -14,7 +14,7 @@ import { Select } from '@/components/_inputs/Select'
 import { Switch } from '@/components/_inputs/Switch'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
-import { ENV_SELECTION_ENABLED, NODE_URL, availableEnvs } from '@/config/env'
+import { ENV_SELECTION_ENABLED, NODE_URL } from '@/config/env'
 import { absoluteRoutes } from '@/config/routes'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useEnvironmentStore } from '@/providers/environment'
@@ -22,6 +22,7 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useUserStore } from '@/providers/user/user.store'
 import { ActiveUserState } from '@/providers/user/user.types'
 import { useUserLocationStore } from '@/providers/userLocation'
+import { availableEnvs } from '@/utils/envVariables'
 import { SentryLogger } from '@/utils/logs'
 
 import {
@@ -35,8 +36,6 @@ const ENVIRONMENT_NAMES: Record<string, string> = {
   production: 'Joystream Mainnet',
   development: `${atlasConfig.general.appName} Dev Testnet`,
   next: `${atlasConfig.general.appName} Next Testnet`,
-  // todo for removal, created only for testing purposes
-  orion2test: `${atlasConfig.general.appName} Orion v2 production Testnet`,
   local: 'Local chain',
 }
 
@@ -133,9 +132,9 @@ export const AdminModal: FC = () => {
 
 const EnvTab: FC = () => {
   const {
-    targetDevEnv,
+    defaultDataEnv,
     nodeOverride,
-    actions: { setTargetDevEnv, setNodeOverride },
+    actions: { setDefaultDataEnv, setNodeOverride },
   } = useEnvironmentStore()
 
   const determinedNode = nodeOverride || NODE_URL
@@ -148,7 +147,7 @@ const EnvTab: FC = () => {
     if (!value) {
       return
     }
-    setTargetDevEnv(value)
+    setDefaultDataEnv(value)
     setNodeOverride(null)
     resetActiveUser()
 
@@ -184,7 +183,7 @@ const EnvTab: FC = () => {
         <Select
           items={environmentsItems}
           onChange={handleEnvironmentChange}
-          value={targetDevEnv}
+          value={defaultDataEnv}
           disabled={!ENV_SELECTION_ENABLED}
         />
       </FormField>

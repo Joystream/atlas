@@ -109,9 +109,32 @@ export type GetNotificationsConnectionQuery = {
                       } | null
                     }
                   } | null
-                  auction: {
-                    __typename?: 'Auction'
-                    nft: { __typename?: 'OwnedNft'; video: { __typename?: 'Video'; id: string; title?: string | null } }
+                  nft: {
+                    __typename?: 'OwnedNft'
+                    video: {
+                      __typename?: 'Video'
+                      id: string
+                      title?: string | null
+                      thumbnailPhoto?: {
+                        __typename?: 'StorageDataObject'
+                        id: string
+                        resolvedUrls: Array<string>
+                        resolvedUrl?: string | null
+                        createdAt: Date
+                        size: string
+                        isAccepted: boolean
+                        ipfsHash: string
+                        storageBag: { __typename?: 'StorageBag'; id: string }
+                        type?:
+                          | { __typename: 'DataObjectTypeChannelAvatar' }
+                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                          | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
+                          | { __typename: 'DataObjectTypeVideoThumbnail' }
+                          | null
+                      } | null
+                    }
                   }
                 }
                 nftOwner:
@@ -233,7 +256,33 @@ export type GetNotificationsConnectionQuery = {
                         | null
                     } | null
                   }
-                  nft: { __typename?: 'OwnedNft'; video: { __typename?: 'Video'; id: string; title?: string | null } }
+                  nft: {
+                    __typename?: 'OwnedNft'
+                    video: {
+                      __typename?: 'Video'
+                      id: string
+                      title?: string | null
+                      thumbnailPhoto?: {
+                        __typename?: 'StorageDataObject'
+                        id: string
+                        resolvedUrls: Array<string>
+                        resolvedUrl?: string | null
+                        createdAt: Date
+                        size: string
+                        isAccepted: boolean
+                        ipfsHash: string
+                        storageBag: { __typename?: 'StorageBag'; id: string }
+                        type?:
+                          | { __typename: 'DataObjectTypeChannelAvatar' }
+                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                          | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
+                          | { __typename: 'DataObjectTypeVideoThumbnail' }
+                          | null
+                      } | null
+                    }
+                  }
                 }
                 previousNftOwner:
                   | {
@@ -403,9 +452,32 @@ export type GetNotificationsConnectionQuery = {
                         | null
                     } | null
                   }
-                  auction: {
-                    __typename?: 'Auction'
-                    nft: { __typename?: 'OwnedNft'; video: { __typename?: 'Video'; id: string; title?: string | null } }
+                  nft: {
+                    __typename?: 'OwnedNft'
+                    video: {
+                      __typename?: 'Video'
+                      id: string
+                      title?: string | null
+                      thumbnailPhoto?: {
+                        __typename?: 'StorageDataObject'
+                        id: string
+                        resolvedUrls: Array<string>
+                        resolvedUrl?: string | null
+                        createdAt: Date
+                        size: string
+                        isAccepted: boolean
+                        ipfsHash: string
+                        storageBag: { __typename?: 'StorageBag'; id: string }
+                        type?:
+                          | { __typename: 'DataObjectTypeChannelAvatar' }
+                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                          | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
+                          | { __typename: 'DataObjectTypeVideoThumbnail' }
+                          | null
+                      } | null
+                    }
                   }
                 }
                 previousNftOwner:
@@ -527,7 +599,33 @@ export type GetNotificationsConnectionQuery = {
                       | null
                   } | null
                 }
-                nft: { __typename?: 'OwnedNft'; video: { __typename?: 'Video'; id: string; title?: string | null } }
+                nft: {
+                  __typename?: 'OwnedNft'
+                  video: {
+                    __typename?: 'Video'
+                    id: string
+                    title?: string | null
+                    thumbnailPhoto?: {
+                      __typename?: 'StorageDataObject'
+                      id: string
+                      resolvedUrls: Array<string>
+                      resolvedUrl?: string | null
+                      createdAt: Date
+                      size: string
+                      isAccepted: boolean
+                      ipfsHash: string
+                      storageBag: { __typename?: 'StorageBag'; id: string }
+                      type?:
+                        | { __typename: 'DataObjectTypeChannelAvatar' }
+                        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                        | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                        | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoSubtitle' }
+                        | { __typename: 'DataObjectTypeVideoThumbnail' }
+                        | null
+                    } | null
+                  }
+                }
               }
             | { __typename?: 'NftIssuedEventData' }
             | { __typename?: 'NftSellOrderMadeEventData' }
@@ -570,9 +668,32 @@ export type GetNotificationsConnectionQuery = {
                         | null
                     } | null
                   }
-                  auction: {
-                    __typename?: 'Auction'
-                    nft: { __typename?: 'OwnedNft'; video: { __typename?: 'Video'; id: string; title?: string | null } }
+                  nft: {
+                    __typename?: 'OwnedNft'
+                    video: {
+                      __typename?: 'Video'
+                      id: string
+                      title?: string | null
+                      thumbnailPhoto?: {
+                        __typename?: 'StorageDataObject'
+                        id: string
+                        resolvedUrls: Array<string>
+                        resolvedUrl?: string | null
+                        createdAt: Date
+                        size: string
+                        isAccepted: boolean
+                        ipfsHash: string
+                        storageBag: { __typename?: 'StorageBag'; id: string }
+                        type?:
+                          | { __typename: 'DataObjectTypeChannelAvatar' }
+                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                          | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
+                          | { __typename: 'DataObjectTypeVideoThumbnail' }
+                          | null
+                      } | null
+                    }
                   }
                 }
                 previousNftOwner:
@@ -1728,6 +1849,18 @@ export type GetNftHistoryQuery = {
   }>
 }
 
+export type GetNftActivitiesCountQueryVariables = Types.Exact<{
+  memberId: Types.Scalars['String']
+}>
+
+export type GetNftActivitiesCountQuery = {
+  __typename?: 'Query'
+  nftsBought: { __typename?: 'NftActivitiesConnection'; totalCount: number }
+  nftsSold: { __typename?: 'NftActivitiesConnection'; totalCount: number }
+  nftsIssued: { __typename?: 'NftActivitiesConnection'; totalCount: number }
+  nftsBidded: { __typename?: 'NftActivitiesConnection'; totalCount: number }
+}
+
 export type GetNftActivitiesQueryVariables = Types.Exact<{
   memberId: Types.Scalars['String']
   first: Types.Scalars['Int']
@@ -1737,10 +1870,6 @@ export type GetNftActivitiesQueryVariables = Types.Exact<{
 
 export type GetNftActivitiesQuery = {
   __typename?: 'Query'
-  nftsBought: { __typename?: 'NftActivitiesConnection'; totalCount: number }
-  nftsSold: { __typename?: 'NftActivitiesConnection'; totalCount: number }
-  nftsIssued: { __typename?: 'NftActivitiesConnection'; totalCount: number }
-  nftsBidded: { __typename?: 'NftActivitiesConnection'; totalCount: number }
   nftActivitiesConnection: {
     __typename?: 'NftActivitiesConnection'
     totalCount: number
@@ -1794,34 +1923,31 @@ export type GetNftActivitiesQuery = {
                 }
                 bid: {
                   __typename?: 'Bid'
-                  auction: {
-                    __typename?: 'Auction'
-                    nft: {
-                      __typename?: 'OwnedNft'
-                      video: {
-                        __typename?: 'Video'
+                  nft: {
+                    __typename?: 'OwnedNft'
+                    video: {
+                      __typename?: 'Video'
+                      id: string
+                      title?: string | null
+                      thumbnailPhoto?: {
+                        __typename?: 'StorageDataObject'
                         id: string
-                        title?: string | null
-                        thumbnailPhoto?: {
-                          __typename?: 'StorageDataObject'
-                          id: string
-                          resolvedUrls: Array<string>
-                          resolvedUrl?: string | null
-                          createdAt: Date
-                          size: string
-                          isAccepted: boolean
-                          ipfsHash: string
-                          storageBag: { __typename?: 'StorageBag'; id: string }
-                          type?:
-                            | { __typename: 'DataObjectTypeChannelAvatar' }
-                            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                            | { __typename: 'DataObjectTypeVideoMedia' }
-                            | { __typename: 'DataObjectTypeVideoSubtitle' }
-                            | { __typename: 'DataObjectTypeVideoThumbnail' }
-                            | null
-                        } | null
-                      }
+                        resolvedUrls: Array<string>
+                        resolvedUrl?: string | null
+                        createdAt: Date
+                        size: string
+                        isAccepted: boolean
+                        ipfsHash: string
+                        storageBag: { __typename?: 'StorageBag'; id: string }
+                        type?:
+                          | { __typename: 'DataObjectTypeChannelAvatar' }
+                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                          | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
+                          | { __typename: 'DataObjectTypeVideoThumbnail' }
+                          | null
+                      } | null
                     }
                   }
                 }
@@ -1980,34 +2106,31 @@ export type GetNftActivitiesQuery = {
                       } | null
                     }
                   } | null
-                  auction: {
-                    __typename?: 'Auction'
-                    nft: {
-                      __typename?: 'OwnedNft'
-                      video: {
-                        __typename?: 'Video'
+                  nft: {
+                    __typename?: 'OwnedNft'
+                    video: {
+                      __typename?: 'Video'
+                      id: string
+                      title?: string | null
+                      thumbnailPhoto?: {
+                        __typename?: 'StorageDataObject'
                         id: string
-                        title?: string | null
-                        thumbnailPhoto?: {
-                          __typename?: 'StorageDataObject'
-                          id: string
-                          resolvedUrls: Array<string>
-                          resolvedUrl?: string | null
-                          createdAt: Date
-                          size: string
-                          isAccepted: boolean
-                          ipfsHash: string
-                          storageBag: { __typename?: 'StorageBag'; id: string }
-                          type?:
-                            | { __typename: 'DataObjectTypeChannelAvatar' }
-                            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                            | { __typename: 'DataObjectTypeVideoMedia' }
-                            | { __typename: 'DataObjectTypeVideoSubtitle' }
-                            | { __typename: 'DataObjectTypeVideoThumbnail' }
-                            | null
-                        } | null
-                      }
+                        resolvedUrls: Array<string>
+                        resolvedUrl?: string | null
+                        createdAt: Date
+                        size: string
+                        isAccepted: boolean
+                        ipfsHash: string
+                        storageBag: { __typename?: 'StorageBag'; id: string }
+                        type?:
+                          | { __typename: 'DataObjectTypeChannelAvatar' }
+                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                          | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
+                          | { __typename: 'DataObjectTypeVideoThumbnail' }
+                          | null
+                      } | null
                     }
                   }
                 }
@@ -2240,34 +2363,31 @@ export type GetNftActivitiesQuery = {
                         | null
                     } | null
                   }
-                  auction: {
-                    __typename?: 'Auction'
-                    nft: {
-                      __typename?: 'OwnedNft'
-                      video: {
-                        __typename?: 'Video'
+                  nft: {
+                    __typename?: 'OwnedNft'
+                    video: {
+                      __typename?: 'Video'
+                      id: string
+                      title?: string | null
+                      thumbnailPhoto?: {
+                        __typename?: 'StorageDataObject'
                         id: string
-                        title?: string | null
-                        thumbnailPhoto?: {
-                          __typename?: 'StorageDataObject'
-                          id: string
-                          resolvedUrls: Array<string>
-                          resolvedUrl?: string | null
-                          createdAt: Date
-                          size: string
-                          isAccepted: boolean
-                          ipfsHash: string
-                          storageBag: { __typename?: 'StorageBag'; id: string }
-                          type?:
-                            | { __typename: 'DataObjectTypeChannelAvatar' }
-                            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                            | { __typename: 'DataObjectTypeVideoMedia' }
-                            | { __typename: 'DataObjectTypeVideoSubtitle' }
-                            | { __typename: 'DataObjectTypeVideoThumbnail' }
-                            | null
-                        } | null
-                      }
+                        resolvedUrls: Array<string>
+                        resolvedUrl?: string | null
+                        createdAt: Date
+                        size: string
+                        isAccepted: boolean
+                        ipfsHash: string
+                        storageBag: { __typename?: 'StorageBag'; id: string }
+                        type?:
+                          | { __typename: 'DataObjectTypeChannelAvatar' }
+                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                          | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
+                          | { __typename: 'DataObjectTypeVideoThumbnail' }
+                          | null
+                      } | null
                     }
                   }
                 }
@@ -2613,34 +2733,31 @@ export type GetNftActivitiesQuery = {
                         | null
                     } | null
                   }
-                  auction: {
-                    __typename?: 'Auction'
-                    nft: {
-                      __typename?: 'OwnedNft'
-                      video: {
-                        __typename?: 'Video'
+                  nft: {
+                    __typename?: 'OwnedNft'
+                    video: {
+                      __typename?: 'Video'
+                      id: string
+                      title?: string | null
+                      thumbnailPhoto?: {
+                        __typename?: 'StorageDataObject'
                         id: string
-                        title?: string | null
-                        thumbnailPhoto?: {
-                          __typename?: 'StorageDataObject'
-                          id: string
-                          resolvedUrls: Array<string>
-                          resolvedUrl?: string | null
-                          createdAt: Date
-                          size: string
-                          isAccepted: boolean
-                          ipfsHash: string
-                          storageBag: { __typename?: 'StorageBag'; id: string }
-                          type?:
-                            | { __typename: 'DataObjectTypeChannelAvatar' }
-                            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                            | { __typename: 'DataObjectTypeVideoMedia' }
-                            | { __typename: 'DataObjectTypeVideoSubtitle' }
-                            | { __typename: 'DataObjectTypeVideoThumbnail' }
-                            | null
-                        } | null
-                      }
+                        resolvedUrls: Array<string>
+                        resolvedUrl?: string | null
+                        createdAt: Date
+                        size: string
+                        isAccepted: boolean
+                        ipfsHash: string
+                        storageBag: { __typename?: 'StorageBag'; id: string }
+                        type?:
+                          | { __typename: 'DataObjectTypeChannelAvatar' }
+                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                          | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
+                          | { __typename: 'DataObjectTypeVideoThumbnail' }
+                          | null
+                      } | null
                     }
                   }
                 }
@@ -3157,34 +3274,31 @@ export type GetNftActivitiesQuery = {
                         | null
                     } | null
                   }
-                  auction: {
-                    __typename?: 'Auction'
-                    nft: {
-                      __typename?: 'OwnedNft'
-                      video: {
-                        __typename?: 'Video'
+                  nft: {
+                    __typename?: 'OwnedNft'
+                    video: {
+                      __typename?: 'Video'
+                      id: string
+                      title?: string | null
+                      thumbnailPhoto?: {
+                        __typename?: 'StorageDataObject'
                         id: string
-                        title?: string | null
-                        thumbnailPhoto?: {
-                          __typename?: 'StorageDataObject'
-                          id: string
-                          resolvedUrls: Array<string>
-                          resolvedUrl?: string | null
-                          createdAt: Date
-                          size: string
-                          isAccepted: boolean
-                          ipfsHash: string
-                          storageBag: { __typename?: 'StorageBag'; id: string }
-                          type?:
-                            | { __typename: 'DataObjectTypeChannelAvatar' }
-                            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                            | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
-                            | { __typename: 'DataObjectTypeVideoMedia' }
-                            | { __typename: 'DataObjectTypeVideoSubtitle' }
-                            | { __typename: 'DataObjectTypeVideoThumbnail' }
-                            | null
-                        } | null
-                      }
+                        resolvedUrls: Array<string>
+                        resolvedUrl?: string | null
+                        createdAt: Date
+                        size: string
+                        isAccepted: boolean
+                        ipfsHash: string
+                        storageBag: { __typename?: 'StorageBag'; id: string }
+                        type?:
+                          | { __typename: 'DataObjectTypeChannelAvatar' }
+                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeChannelPayoutsPayload' }
+                          | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoSubtitle' }
+                          | { __typename: 'DataObjectTypeVideoThumbnail' }
+                          | null
+                      } | null
                     }
                   }
                 }
@@ -3416,12 +3530,9 @@ export const GetNotificationsConnectionDocument = gql`
                       ...BasicMembershipFields
                     }
                   }
-                  auction {
-                    nft {
-                      video {
-                        id
-                        title
-                      }
+                  nft {
+                    video {
+                      ...BasicVideoActivityFields
                     }
                   }
                 }
@@ -3436,8 +3547,7 @@ export const GetNotificationsConnectionDocument = gql`
                 price
                 nft {
                   video {
-                    id
-                    title
+                    ...BasicVideoActivityFields
                   }
                 }
               }
@@ -3449,8 +3559,7 @@ export const GetNotificationsConnectionDocument = gql`
                   amount
                   nft {
                     video {
-                      id
-                      title
+                      ...BasicVideoActivityFields
                     }
                   }
                 }
@@ -3464,12 +3573,9 @@ export const GetNotificationsConnectionDocument = gql`
                   bidder {
                     ...BasicMembershipFields
                   }
-                  auction {
-                    nft {
-                      video {
-                        id
-                        title
-                      }
+                  nft {
+                    video {
+                      ...BasicVideoActivityFields
                     }
                   }
                 }
@@ -3482,12 +3588,9 @@ export const GetNotificationsConnectionDocument = gql`
                   bidder {
                     ...BasicMembershipFields
                   }
-                  auction {
-                    nft {
-                      video {
-                        id
-                        title
-                      }
+                  nft {
+                    video {
+                      ...BasicVideoActivityFields
                     }
                   }
                 }
@@ -3517,6 +3620,7 @@ export const GetNotificationsConnectionDocument = gql`
     }
   }
   ${BasicMembershipFieldsFragmentDoc}
+  ${BasicVideoActivityFieldsFragmentDoc}
   ${BasicNftOwnerFieldsFragmentDoc}
 `
 
@@ -3696,18 +3800,14 @@ export function useGetNftHistoryLazyQuery(
 export type GetNftHistoryQueryHookResult = ReturnType<typeof useGetNftHistoryQuery>
 export type GetNftHistoryLazyQueryHookResult = ReturnType<typeof useGetNftHistoryLazyQuery>
 export type GetNftHistoryQueryResult = Apollo.QueryResult<GetNftHistoryQuery, GetNftHistoryQueryVariables>
-export const GetNftActivitiesDocument = gql`
-  query GetNftActivities(
-    $memberId: String!
-    $first: Int!
-    $after: String
-    $orderBy: [NftActivityOrderByInput!] = event_timestamp_DESC
-  ) {
+export const GetNftActivitiesCountDocument = gql`
+  query GetNftActivitiesCount($memberId: String!) {
     nftsBought: nftActivitiesConnection(
       where: {
-        event: {
-          OR: [
-            {
+        OR: [
+          {
+            member: { id_eq: $memberId }
+            event: {
               data: {
                 isTypeOf_in: [
                   "EnglishAuctionSettledEventData"
@@ -3717,19 +3817,23 @@ export const GetNftActivitiesDocument = gql`
                 winningBid: { bidder: { id_eq: $memberId } }
               }
             }
-            { data: { isTypeOf_eq: "NftBoughtEventData", buyer: { id_eq: $memberId } } }
-          ]
-        }
+          }
+          {
+            member: { id_eq: $memberId }
+            event: { data: { isTypeOf_eq: "NftBoughtEventData", buyer: { id_eq: $memberId } } }
+          }
+        ]
       }
-      orderBy: $orderBy
+      orderBy: event_timestamp_DESC
     ) {
       totalCount
     }
     nftsSold: nftActivitiesConnection(
       where: {
-        event: {
-          OR: [
-            {
+        OR: [
+          {
+            member: { id_eq: $memberId }
+            event: {
               data: {
                 isTypeOf_in: [
                   "EnglishAuctionSettledEventData"
@@ -3740,7 +3844,10 @@ export const GetNftActivitiesDocument = gql`
                 previousNftOwner: { member: { id_eq: $memberId } }
               }
             }
-            {
+          }
+          {
+            member: { id_eq: $memberId }
+            event: {
               data: {
                 isTypeOf_in: [
                   "EnglishAuctionSettledEventData"
@@ -3751,10 +3858,10 @@ export const GetNftActivitiesDocument = gql`
                 previousNftOwner: { channel: { ownerMember: { id_eq: $memberId } } }
               }
             }
-          ]
-        }
+          }
+        ]
       }
-      orderBy: $orderBy
+      orderBy: event_timestamp_DESC
     ) {
       totalCount
     }
@@ -3769,16 +3876,66 @@ export const GetNftActivitiesDocument = gql`
           ]
         }
       }
-      orderBy: $orderBy
+      orderBy: event_timestamp_DESC
     ) {
       totalCount
     }
     nftsBidded: nftActivitiesConnection(
       where: { event: { data: { isTypeOf_eq: "AuctionBidMadeEventData", bid: { bidder: { id_eq: $memberId } } } } }
-      orderBy: $orderBy
+      orderBy: event_timestamp_DESC
     ) {
       totalCount
     }
+  }
+`
+
+/**
+ * __useGetNftActivitiesCountQuery__
+ *
+ * To run a query within a React component, call `useGetNftActivitiesCountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetNftActivitiesCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetNftActivitiesCountQuery({
+ *   variables: {
+ *      memberId: // value for 'memberId'
+ *   },
+ * });
+ */
+export function useGetNftActivitiesCountQuery(
+  baseOptions: Apollo.QueryHookOptions<GetNftActivitiesCountQuery, GetNftActivitiesCountQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetNftActivitiesCountQuery, GetNftActivitiesCountQueryVariables>(
+    GetNftActivitiesCountDocument,
+    options
+  )
+}
+export function useGetNftActivitiesCountLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetNftActivitiesCountQuery, GetNftActivitiesCountQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetNftActivitiesCountQuery, GetNftActivitiesCountQueryVariables>(
+    GetNftActivitiesCountDocument,
+    options
+  )
+}
+export type GetNftActivitiesCountQueryHookResult = ReturnType<typeof useGetNftActivitiesCountQuery>
+export type GetNftActivitiesCountLazyQueryHookResult = ReturnType<typeof useGetNftActivitiesCountLazyQuery>
+export type GetNftActivitiesCountQueryResult = Apollo.QueryResult<
+  GetNftActivitiesCountQuery,
+  GetNftActivitiesCountQueryVariables
+>
+export const GetNftActivitiesDocument = gql`
+  query GetNftActivities(
+    $memberId: String!
+    $first: Int!
+    $after: String
+    $orderBy: [NftActivityOrderByInput!] = event_timestamp_DESC
+  ) {
     nftActivitiesConnection(first: $first, after: $after, orderBy: $orderBy, where: { member: { id_eq: $memberId } }) {
       totalCount
       pageInfo {
@@ -3807,11 +3964,9 @@ export const GetNftActivitiesDocument = gql`
                       ...BasicMembershipFields
                     }
                   }
-                  auction {
-                    nft {
-                      video {
-                        ...BasicVideoActivityFields
-                      }
+                  nft {
+                    video {
+                      ...BasicVideoActivityFields
                     }
                   }
                 }
@@ -3825,11 +3980,9 @@ export const GetNftActivitiesDocument = gql`
                     ...BasicMembershipFields
                   }
                   amount
-                  auction {
-                    nft {
-                      video {
-                        ...BasicVideoActivityFields
-                      }
+                  nft {
+                    video {
+                      ...BasicVideoActivityFields
                     }
                   }
                 }
@@ -3856,11 +4009,9 @@ export const GetNftActivitiesDocument = gql`
                   bidder {
                     ...BasicMembershipFields
                   }
-                  auction {
-                    nft {
-                      video {
-                        ...BasicVideoActivityFields
-                      }
+                  nft {
+                    video {
+                      ...BasicVideoActivityFields
                     }
                   }
                   amount
@@ -3872,11 +4023,9 @@ export const GetNftActivitiesDocument = gql`
                   bidder {
                     ...BasicMembershipFields
                   }
-                  auction {
-                    nft {
-                      video {
-                        ...BasicVideoActivityFields
-                      }
+                  nft {
+                    video {
+                      ...BasicVideoActivityFields
                     }
                   }
                 }
@@ -3924,11 +4073,9 @@ export const GetNftActivitiesDocument = gql`
                   ...BasicMembershipFields
                 }
                 bid {
-                  auction {
-                    nft {
-                      video {
-                        ...BasicVideoActivityFields
-                      }
+                  nft {
+                    video {
+                      ...BasicVideoActivityFields
                     }
                   }
                 }

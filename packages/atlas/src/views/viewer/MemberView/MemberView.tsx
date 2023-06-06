@@ -1,5 +1,5 @@
 import { FC, useEffect, useMemo, useRef, useState } from 'react'
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import { useSearchParams } from 'react-router-dom'
 
 import { useMemberships } from '@/api/hooks/membership'
@@ -12,7 +12,7 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { Button } from '@/components/_buttons/Button'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
-import { absoluteRoutes } from '@/config/routes'
+import { MemberTabs, QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useInfiniteNftsGrid } from '@/hooks/useInfiniteNftsGrid'
 import { SORTING_FILTERS, useNftSectionFilters } from '@/hooks/useNftSectionFilters'
@@ -25,7 +25,7 @@ import { MemberAbout } from './MemberAbout'
 import { MemberActivity } from './MemberActivity'
 import { NotFoundMemberContainer, StyledMembershipInfo } from './MemberView.styles'
 
-const TABS = ['NFTs', 'Activity', 'About'] as const
+const TABS: MemberTabs[] = ['NFTs owned', 'Activity', 'About']
 
 const ACTIVITY_SORTING_FILTERS = [
   {
@@ -40,10 +40,11 @@ const ACTIVITY_SORTING_FILTERS = [
 
 export const MemberView: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
-  const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
+  const currentTabName = searchParams.get(QUERY_PARAMS.TAB) as MemberTabs | null
   const [sortByTimestamp, setSortByTimestamp] = useState<NftActivityOrderByInput>(
     NftActivityOrderByInput.EventTimestampDesc
   )
+  const navigate = useNavigate()
   const [currentTab, setCurrentTab] = useState<typeof TABS[number] | null>(null)
   const { memberId } = useUser()
   const { handle } = useParams()
@@ -103,7 +104,7 @@ export const MemberView: FC = () => {
   })
 
   const handleSetCurrentTab = async (tab: number) => {
-    setSearchParams({ 'tab': TABS[tab] }, { replace: true })
+    navigate(absoluteRoutes.viewer.member(handle, { tab: TABS[tab] }))
   }
 
   const mappedTabs = TABS.map((tab) => ({
