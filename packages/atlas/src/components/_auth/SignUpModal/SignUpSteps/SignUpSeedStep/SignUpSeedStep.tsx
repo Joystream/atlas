@@ -67,6 +67,7 @@ export const SignUpSeedStep: FC<SignUpSeedStepProps> = ({
 
   return (
     <AuthenticationModalStepTemplate
+      hasNegativeBottomMargin
       title="Write down your seed"
       hasNavigatedBack={hasNavigatedBack}
       subtitle="Please write down your password recovery seed and keep it in a safe place. It's the only way to recover your password if you forget it."

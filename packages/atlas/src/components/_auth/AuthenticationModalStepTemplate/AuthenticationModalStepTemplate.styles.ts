@@ -69,6 +69,7 @@ export const BackgroundImage = styled.img`
 
 type CustomBackgroundContainerProps = {
   darkBackground?: boolean
+  hasNegativeBottomMargin?: boolean
   hasDivider?: boolean
   hasBottomPadding?: boolean
 }
@@ -80,7 +81,8 @@ export const CustomBackgroundContainer = styled.div<CustomBackgroundContainerPro
 
   /* add negative margin to allow changing background of the container */
 
-  margin: calc(-1 * var(--local-size-dialog-padding)) calc(-1 * var(--local-size-dialog-padding)) 0
+  margin: calc(-1 * var(--local-size-dialog-padding)) calc(-1 * var(--local-size-dialog-padding))
+    ${({ hasNegativeBottomMargin }) => (hasNegativeBottomMargin ? 'calc(-1 * var(--local-size-dialog-padding))' : 0)}
     calc(-1 * var(--local-size-dialog-padding));
   padding: ${({ hasBottomPadding }) =>
     hasBottomPadding
