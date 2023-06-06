@@ -80,6 +80,7 @@ export const SignUpEmailStep: FC<SignUpEmailStepProps> = ({
 
   return (
     <AuthenticationModalStepTemplate
+      hasNegativeBottomMargin
       title="Sign up"
       hasNavigatedBack={hasNavigatedBack}
       subtitle="If you misspell your email address, please note that there is no option for us to recover your account."
