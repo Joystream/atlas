@@ -16,18 +16,22 @@ export const CopyAddressButton: FC<CopyAddressButtonProps> = ({ address, classNa
   const [copyButtonClicked, setCopyButtonClicked] = useState(false)
 
   const handleCopyAddress = () => {
-    if (!address) {
+    if (!address || copyButtonClicked) {
       return
     }
     copyToClipboard(address)
     setCopyButtonClicked(true)
     setTimeout(() => {
       setCopyButtonClicked(false)
-    }, 3000)
+    }, 2_000)
   }
 
   return (
-    <StyledTooltip hideOnClick={false} text={copyButtonClicked ? 'Copied!' : 'Copy account address'} placement="top">
+    <StyledTooltip
+      hideOnClick={false}
+      text={copyButtonClicked ? 'Copied!' : 'Copy account address'}
+      placement="top-start"
+    >
       <StyledText
         as="button"
         variant={size === 'big' ? 't300' : 't100'}

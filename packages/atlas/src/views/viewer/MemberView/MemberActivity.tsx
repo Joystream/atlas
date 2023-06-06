@@ -112,7 +112,7 @@ export const MemberActivity: FC<MemberActivityProps> = ({
   return (
     <section>
       {!loading && items.length === 0 ? (
-        <EmptyFallback title="No activity" subtitle="Go out there and explore!" variant="large" />
+        <EmptyFallback title="No activity" subtitle="This member hasn’t done anything yet." variant="large" />
       ) : (
         <LayoutGrid>
           <GridItem colSpan={{ base: 12, sm: 8 }} rowStart={{ base: 2, sm: 1 }}>
