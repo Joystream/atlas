@@ -6,8 +6,9 @@ import { MemberSettingsTabs, QUERY_PARAMS, absoluteRoutes } from '@/config/route
 
 import { MembershipPublicProfile } from './MembershipPublicProfile'
 import { NoGlobalPaddingWrapper, StyledLimitedWidthContainer } from './MembershipSettingsView.styles'
+import { MembershipWallet } from './MembershipWallet/MembershipWallet'
 
-const TABS: MemberSettingsTabs[] = ['Public profile']
+const TABS: MemberSettingsTabs[] = ['Public profile', 'Wallet']
 
 export const MembershipSettingsView: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -39,7 +40,8 @@ export const MembershipSettingsView: FC = () => {
         <PageTabs tabs={TABS.map((tab) => ({ name: tab }))} onSelectTab={handleChangeTab} selected={currentTab} />
       </NoGlobalPaddingWrapper>
       <StyledLimitedWidthContainer>
-        <MembershipPublicProfile />
+        {currentTab === 0 && <MembershipPublicProfile />}
+        {currentTab === 1 && <MembershipWallet />}
       </StyledLimitedWidthContainer>
     </>
   )
