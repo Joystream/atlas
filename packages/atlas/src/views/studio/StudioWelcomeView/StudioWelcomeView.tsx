@@ -22,7 +22,7 @@ export const StudioWelcomeView: FC = () => {
   const { isLoggedIn } = useUser()
   const mdMatch = useMediaMatch('md')
   const {
-    actions: { setAuthModalOpen },
+    actions: { setAuthModalOpenName },
   } = useAuthStore()
 
   return (
@@ -93,7 +93,7 @@ export const StudioWelcomeView: FC = () => {
       buttons={[
         isLoggedIn
           ? { size: 'large', to: absoluteRoutes.studio.newChannel(), children: 'Create channel' }
-          : { size: 'large', onClick: () => setAuthModalOpen('externalLogIn'), children: 'Log in' },
+          : { size: 'large', onClick: () => setAuthModalOpenName('externalLogIn'), children: 'Log in' },
         {
           size: 'large',
           variant: 'tertiary',

@@ -28,7 +28,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
   const mdMatch = useMediaMatch('md')
   const hasAtLeastOneChannel = !!activeMembership?.channels.length && activeMembership?.channels.length >= 1
   const {
-    actions: { setAuthModalOpen },
+    actions: { setAuthModalOpenName },
   } = useAuthStore()
   const { isWorkspaceOpen, setIsWorkspaceOpen, uploadVideoButtonProps } = useVideoWorkspace()
 
@@ -94,7 +94,7 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
               <StyledAvatarGroup size="large" shouldHighlightEveryAvatar reverse avatars={avatars} clickable={false} />
             </StudioTopbarContainer>
           ) : (
-            <Button size="medium" onClick={() => setAuthModalOpen('externalLogIn')}>
+            <Button size="medium" onClick={() => setAuthModalOpenName('externalLogIn')}>
               Log in
             </Button>
           ))}

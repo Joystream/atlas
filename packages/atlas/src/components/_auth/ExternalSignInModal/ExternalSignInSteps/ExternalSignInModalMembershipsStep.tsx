@@ -3,6 +3,7 @@ import shallow from 'zustand/shallow'
 
 import { GetMembershipsQuery } from '@/api/queries/__generated__/memberships.generated'
 import { Avatar } from '@/components/Avatar'
+import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
 import { useAuth } from '@/providers/auth/auth.hooks'
@@ -12,7 +13,6 @@ import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { shortenString } from '@/utils/misc'
 
-import { ExternalSignInModalStepTemplate } from './ExternalSignInModalStepTemplate'
 import { ListItemsWrapper, StyledListItem } from './ExternalSignInSteps.styles'
 import { ModalSteps, SignInStepProps } from './ExternalSignInSteps.types'
 
@@ -31,7 +31,10 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
   memberships,
 }) => {
   const smMatch = useMediaMatch('sm')
-  const { setAuthModalOpen } = useAuthStore((state) => ({ setAuthModalOpen: state.actions.setAuthModalOpen }), shallow)
+  const { setAuthModalOpenName } = useAuthStore(
+    (state) => ({ setAuthModalOpenName: state.actions.setAuthModalOpenName }),
+    shallow
+  )
   const { setApiActiveAccount } = useJoystream()
 
   const { joystream } = useJoystream()
@@ -48,7 +51,7 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
     await setApiActiveAccount('address', member.controllerAccount)
 
     goToStep(ModalSteps.ExtensionSigning)
-    const res = await handleLogin({
+    await handleLogin({
       type: 'external',
       sign: (data) =>
         joystream.signMessage({
@@ -57,30 +60,37 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
         }),
       address: member.controllerAccount,
     })
-
-    if (res.error === LogInErrors.NoAccountFound) {
-      return goToStep(ModalSteps.Email)
-    }
-
-    if (res.error === LogInErrors.InvalidPayload) {
-      displaySnackbar({
-        iconType: 'error',
-        title: 'There was a problem with signature. Please try again.',
+      .then(() => {
+        setAuthModalOpenName(undefined)
       })
-    }
-
-    if (res.error === LogInErrors.SignatureCancelled) {
-      displaySnackbar({
-        iconType: 'error',
-        title: 'Message signing cancelled',
+      .catch((error) => {
+        if (error.message === LogInErrors.NoAccountFound) {
+          return goToStep(ModalSteps.Email)
+        }
+        if (error.message === LogInErrors.InvalidPayload) {
+          displaySnackbar({
+            iconType: 'error',
+            title: 'There was a problem with signature. Please try again.',
+          })
+        }
+        if (error.message === LogInErrors.SignatureCancelled) {
+          displaySnackbar({
+            iconType: 'warning',
+            title: 'Message signing cancelled',
+          })
+          goToStep(ModalSteps.Membership)
+        }
       })
-      goToStep(ModalSteps.Membership)
-    }
-
-    if (res.data) {
-      setAuthModalOpen(undefined)
-    }
-  }, [displaySnackbar, goToStep, handleLogin, joystream, memberId, memberships, setApiActiveAccount, setAuthModalOpen])
+  }, [
+    displaySnackbar,
+    goToStep,
+    handleLogin,
+    joystream,
+    memberId,
+    memberships,
+    setApiActiveAccount,
+    setAuthModalOpenName,
+  ])
 
   useEffect(() => {
     if (memberId) return
@@ -98,7 +108,7 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
   }, [handleConfirm, memberId, setPrimaryButtonProps])
 
   return (
-    <ExternalSignInModalStepTemplate
+    <AuthenticationModalStepTemplate
       title="Select membership"
       subtitle="It looks like you have multiple memberships connected to this wallet. Select membership which you want to log in."
       hasNavigatedBack={hasNavigatedBack}
@@ -116,6 +126,6 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
           />
         ))}
       </ListItemsWrapper>
-    </ExternalSignInModalStepTemplate>
+    </AuthenticationModalStepTemplate>
   )
 }

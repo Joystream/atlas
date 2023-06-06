@@ -55,7 +55,7 @@ const PlaygroundLayout = () => {
   const { activeMembership, isLoggedIn } = useUser()
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
   const {
-    actions: { setAuthModalOpen },
+    actions: { setAuthModalOpenName },
   } = useAuthStore()
 
   return (
@@ -86,7 +86,7 @@ const PlaygroundLayout = () => {
               onClick={() => setIsMemberDropdownActive(true)}
             />
           ) : (
-            <Button onClick={() => setAuthModalOpen('externalLogIn')}>Sign in</Button>
+            <Button onClick={() => setAuthModalOpenName('externalLogIn')}>Sign in</Button>
           )}
         </ButtonContainer>
       </TopbarBase>

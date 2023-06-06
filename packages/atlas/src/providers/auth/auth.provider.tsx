@@ -11,7 +11,6 @@ import { GetCurrentAccountQuery, useGetCurrentAccountLazyQuery } from '@/api/que
 import { atlasConfig } from '@/config'
 import { ORION_AUTH_URL } from '@/config/env'
 import { useMountEffect } from '@/hooks/useMountEffect'
-// import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useJoystream } from '@/providers/joystream'
 import { useWallet } from '@/providers/wallet/wallet.hooks'
@@ -22,10 +21,11 @@ import {
   decodeSessionEncodedSeedToMnemonic,
   getArtifacts,
   handleAnonymousAuth,
+  logoutRequest,
   scryptHash,
   seedToMnemonic,
 } from './auth.helpers'
-import { AuthContextValue, LogInErrors, LogInHandler, LoginParams } from './auth.types'
+import { AuthContextValue, LogInErrors } from './auth.types'
 
 const AuthContext = createContext<undefined | AuthContextValue>(undefined)
 AuthContext.displayName = 'AuthContext'
@@ -49,6 +49,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
   useMountEffect(() => {
     const init = async () => {
+      await cryptoWaitReady()
       setIsAuthenticating(true)
 
       const { data } = await lazyCurrentAccountQuery()
@@ -122,8 +123,8 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     [setEncodedSeed]
   )
 
-  const handleLogin = useCallback(
-    async (params: LoginParams): Promise<LogInHandler> => {
+  const handleLogin: AuthContextValue['handleLogin'] = useCallback(
+    async (params) => {
       setIsAuthenticating(true)
       await cryptoWaitReady()
       const time = Date.now() - 1000
@@ -141,10 +142,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         const data = await getArtifacts(id, email, password)
         if (!data) {
           setIsAuthenticating(false)
-          return {
-            data: null,
-            error: LogInErrors.ArtifactsNotFound,
-          }
+          throw new Error(LogInErrors.ArtifactsNotFound)
         }
         const { keypair, decryptedSeed } = data
         localSeed = decryptedSeed
@@ -156,12 +154,12 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         payload.joystreamAccountId = params.address
         try {
           signatureOverPayload = await params.sign(JSON.stringify(payload))
-        } catch (_) {
+        } catch (e) {
           setIsAuthenticating(false)
-          return {
-            data: null,
-            error: LogInErrors.SignatureCancelled,
+          if (e.message === 'Cancelled') {
+            throw new Error(LogInErrors.SignatureCancelled)
           }
+          throw new Error(LogInErrors.UnknownError)
         }
       }
 
@@ -181,7 +179,6 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         )
 
         setAnonymousUserId(null)
-
         if (localSeed) {
           saveEncodedSeed(localSeed)
           setApiActiveAccount('seed', seedToMnemonic(localSeed))
@@ -189,36 +186,22 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
           setApiActiveAccount('address', payload.joystreamAccountId)
         }
 
-        refetch().then((res) => {
-          if (res.data) {
-            setCurrentUser(res.data.accountData)
-          }
-        })
+        const res = await refetch()
+        setCurrentUser(res.data.accountData)
 
-        return {
-          data: response.data,
-        }
+        return response.data.accountId
       } catch (error) {
         const orionMessage = error.response.data.message
         if (orionMessage.includes('Invalid credentials')) {
-          return {
-            data: null,
-            error: LogInErrors.NoAccountFound,
-          }
+          throw new Error(LogInErrors.NoAccountFound)
         }
 
         if (orionMessage.includes('Payload signature is invalid.')) {
-          return {
-            data: null,
-            error: LogInErrors.InvalidPayload,
-          }
+          throw new Error(LogInErrors.InvalidPayload)
         }
 
         SentryLogger.error('Unsupported error when posting login action', 'auth.provider', error)
-        return {
-          data: null,
-          error: LogInErrors.LoginError,
-        }
+        throw new Error(LogInErrors.UnknownError)
       } finally {
         setIsAuthenticating(false)
       }
@@ -226,19 +209,18 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     [refetch, saveEncodedSeed, setAnonymousUserId, setApiActiveAccount]
   )
 
-  const handleLogout = useCallback(async () => {
+  const handleLogout: AuthContextValue['handleLogout'] = useCallback(async () => {
     try {
-      await axios.post(`${ORION_AUTH_URL}/logout`, {}, { withCredentials: true })
+      await logoutRequest()
       handleAnonymousAuth(anonymousUserId).then((userId) => {
         setAnonymousUserId(userId ?? null)
       })
-      refetch()
       setCurrentUser(null)
       setEncodedSeed(null)
     } catch (error) {
       SentryLogger.error('Error when logging out', 'auth.provider', error)
     }
-  }, [anonymousUserId, refetch, setAnonymousUserId, setEncodedSeed])
+  }, [anonymousUserId, setAnonymousUserId, setEncodedSeed])
 
   const contextValue: AuthContextValue = useMemo(
     () => ({
@@ -252,10 +234,6 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     }),
     [currentUser, handleLogin, handleLogout, isAuthenticating, loggedAddress, refetch]
   )
-
-  // if (error) {
-  //   return <ViewErrorFallback />
-  // }
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
 }

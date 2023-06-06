@@ -1,7 +1,7 @@
 import { JOYSTREAM_ADDRESS_PREFIX } from '@joystream/types'
 import { ScryptOpts, scrypt } from '@noble/hashes/scrypt'
 import { Keyring } from '@polkadot/keyring'
-import axios from 'axios'
+import axios, { isAxiosError } from 'axios'
 import { entropyToMnemonic } from 'bip39'
 import { Buffer } from 'buffer'
 import { AES, enc, lib, mode } from 'crypto-js'
@@ -78,13 +78,22 @@ export function aes256CbcDecrypt(encryptedData: string, key: Buffer, iv: Buffer)
 }
 
 export const decodeSessionEncodedSeedToMnemonic = async (encodedSeed: string) => {
-  const { data } = await axios.get(`${ORION_AUTH_URL}/session-artifacts`, { withCredentials: true })
+  try {
+    const { data } = await axios.get(`${ORION_AUTH_URL}/session-artifacts`, { withCredentials: true })
 
-  if (!(data.cipherKey || data.cipherIv)) {
+    if (!(data.cipherKey || data.cipherIv)) {
+      return null
+    }
+
+    const { cipherKey, cipherIv } = data
+    const decryptedSeed = aes256CbcDecrypt(encodedSeed, Buffer.from(cipherKey, 'hex'), Buffer.from(cipherIv, 'hex'))
+    return entropyToMnemonic(Buffer.from(decryptedSeed.slice(2, decryptedSeed.length), 'hex'))
+  } catch (e) {
+    if (isAxiosError(e) && e.response?.data.message === 'isAxiosError') {
+      logoutRequest()
+    }
     return null
   }
-
-  const { cipherKey, cipherIv } = data
-  const decryptedSeed = aes256CbcDecrypt(encodedSeed, Buffer.from(cipherKey, 'hex'), Buffer.from(cipherIv, 'hex'))
-  return entropyToMnemonic(Buffer.from(decryptedSeed.slice(2, decryptedSeed.length), 'hex'))
 }
+
+export const logoutRequest = () => axios.post(`${ORION_AUTH_URL}/logout`, {}, { withCredentials: true })

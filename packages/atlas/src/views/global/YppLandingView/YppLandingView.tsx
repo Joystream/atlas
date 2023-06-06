@@ -33,7 +33,7 @@ export const YppLandingView: FC = () => {
   const [currentStep, setCurrentStep] = useState<YppAuthorizationStepsType>(null)
   const { isLoggedIn, activeMembership, channelId } = useUser()
   const {
-    actions: { setAuthModalOpen },
+    actions: { setAuthModalOpenName },
   } = useAuthStore()
   const { setSelectedChannelId, setShouldContinueYppFlow } = useYppStore((store) => store.actions)
   const { displaySnackbar } = useSnackbar()
@@ -72,7 +72,7 @@ export const YppLandingView: FC = () => {
     }
 
     if (!isLoggedIn) {
-      setAuthModalOpen('externalLogIn')
+      setAuthModalOpenName('externalLogIn')
       setWasSignInTriggered(true)
       return
     }
@@ -86,7 +86,7 @@ export const YppLandingView: FC = () => {
       setCurrentStep('requirements')
       return
     }
-  }, [currentStep, displaySnackbar, isLoggedIn, isTodaysQuotaReached, isYppSigned, navigate, setAuthModalOpen])
+  }, [currentStep, displaySnackbar, isLoggedIn, isTodaysQuotaReached, isYppSigned, navigate, setAuthModalOpenName])
 
   useEffect(() => {
     // rerun handleYppSignUpClick after sign in flow

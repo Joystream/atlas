@@ -1,5 +1,4 @@
 import { JOYSTREAM_ADDRESS_PREFIX } from '@joystream/types/.'
-import { ScryptOpts, scrypt } from '@noble/hashes/scrypt'
 import { Keyring } from '@polkadot/keyring'
 import { hexToU8a, u8aToHex } from '@polkadot/util'
 import { cryptoWaitReady, mnemonicToEntropy } from '@polkadot/util-crypto'
@@ -8,6 +7,7 @@ import { Buffer } from 'buffer'
 import { AES, enc, lib, mode } from 'crypto-js'
 
 import { ORION_AUTH_URL } from '@/config/env'
+import { scryptHash } from '@/providers/auth/auth.helpers'
 import { isAxiosError } from '@/utils/error'
 
 type OrionAccountErrorArgs = {
@@ -27,16 +27,6 @@ export class OrionAccountError extends Error {
 }
 
 export const keyring = new Keyring({ type: 'sr25519', ss58Format: JOYSTREAM_ADDRESS_PREFIX })
-
-export async function scryptHash(
-  data: string,
-  salt: Buffer | string,
-  options: ScryptOpts = { N: 32768, r: 8, p: 1, dkLen: 32 }
-): Promise<Buffer> {
-  return new Promise((resolve) => {
-    resolve(Buffer.from(scrypt(Buffer.from(data), salt, options)))
-  })
-}
 
 export const registerAccount = async (email: string, password: string, mnemonic: string, memberId: string) => {
   try {

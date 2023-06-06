@@ -37,30 +37,35 @@ export const LogInModal = () => {
       })
     ),
   })
-  const { authModalOpen, setAuthModalOpen } = useAuthStore(
-    (state) => ({ authModalOpen: state.authModalOpen, setAuthModalOpen: state.actions.setAuthModalOpen }),
+  const { authModalOpenName, setAuthModalOpenName } = useAuthStore(
+    (state) => ({
+      authModalOpenName: state.authModalOpenName,
+      setAuthModalOpenName: state.actions.setAuthModalOpenName,
+    }),
     shallow
   )
 
   const handleLoginClick = async (email: string, password: string) => {
     setIsLoading(true)
-    const res = await handleLogin({ type: 'internal', email, password })
-
-    if (res.error === LogInErrors.ArtifactsNotFound) {
-      displaySnackbar({
-        title: `We can't find ${atlasConfig.general.appName} membership associated with this email`,
-        description: `Make sure that you are using the same email that you used to create your membership on ${atlasConfig.general.appName}.`,
-        iconType: 'error',
+    handleLogin({ type: 'internal', email, password })
+      .then(() => {
+        setAuthModalOpenName(undefined)
+        refetchCurrentUser()
       })
-      setError('email', { type: 'custom', message: 'Incorrect email or password.' })
-      setError('password', { type: 'custom', message: 'Incorrect email or password.' })
-      setIsLoading(false)
-      return
-    }
-
-    setAuthModalOpen(undefined)
-    refetchCurrentUser()
-    setIsLoading(false)
+      .catch((error) => {
+        if (error.message === LogInErrors.ArtifactsNotFound) {
+          displaySnackbar({
+            title: `We can't find ${atlasConfig.general.appName} membership associated with this email`,
+            description: `Make sure that you are using the same email that you used to create your membership on ${atlasConfig.general.appName}.`,
+            iconType: 'error',
+          })
+          setError('email', { type: 'custom', message: 'Incorrect email or password.' })
+          setError('password', { type: 'custom', message: 'Incorrect email or password.' })
+        }
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
   }
 
   const handleSubmit = () =>
@@ -70,7 +75,7 @@ export const LogInModal = () => {
 
   return (
     <DialogModal
-      show={authModalOpen === 'logIn'}
+      show={authModalOpenName === 'logIn'}
       primaryButton={{
         text: isLoading ? 'Waiting...' : 'Log in',
         disabled: isLoading,
@@ -80,13 +85,13 @@ export const LogInModal = () => {
         !isLoading
           ? {
               text: 'Sign up',
-              onClick: () => setAuthModalOpen('signUp'),
+              onClick: () => setAuthModalOpenName('signUp'),
             }
           : undefined
       }
       additionalActionsNode={
         !isLoading && (
-          <Button variant="tertiary" onClick={() => setAuthModalOpen(undefined)}>
+          <Button variant="tertiary" onClick={() => setAuthModalOpenName(undefined)}>
             Close
           </Button>
         )

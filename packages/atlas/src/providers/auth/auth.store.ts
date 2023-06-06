@@ -4,21 +4,21 @@ type AuthModals = 'logIn' | 'externalLogIn' | 'signUp'
 
 export type AuthStoreState = {
   anonymousUserId: string | null
-  authModalOpen?: AuthModals
+  authModalOpenName?: AuthModals
   encodedSeed: string | null
 }
 
 export type AuthStoreActions = {
   setAnonymousUserId: (anonymousUserId: string | null) => void
   setEncodedSeed: (encodedSeed: string | null) => void
-  setAuthModalOpen: (modal?: AuthModals) => void
+  setAuthModalOpenName: (modal?: AuthModals) => void
 }
 
 export const useAuthStore = createStore<AuthStoreState, AuthStoreActions>(
   {
     state: {
       anonymousUserId: null,
-      authModalOpen: undefined,
+      authModalOpenName: undefined,
       encodedSeed: null,
     },
     actionsFactory: (set) => ({
@@ -32,9 +32,9 @@ export const useAuthStore = createStore<AuthStoreState, AuthStoreActions>(
           state.encodedSeed = encodedSeed
         })
       },
-      setAuthModalOpen: (modal) => {
+      setAuthModalOpenName: (modal) => {
         set((state) => {
-          state.authModalOpen = modal
+          state.authModalOpenName = modal
         })
       },
     }),

@@ -46,8 +46,11 @@ export const TopbarViewer: FC = () => {
     searchQuery,
     actions: { setSearchOpen, setSearchQuery },
   } = useSearchStore()
-  const { setAuthModalOpen } = useAuthStore(
-    (state) => ({ authModalOpen: state.authModalOpen, setAuthModalOpen: state.actions.setAuthModalOpen }),
+  const { setAuthModalOpenName } = useAuthStore(
+    (state) => ({
+      authModalOpenName: state.authModalOpenName,
+      setAuthModalOpenName: state.actions.setAuthModalOpenName,
+    }),
     shallow
   )
 
@@ -152,7 +155,7 @@ export const TopbarViewer: FC = () => {
                         icon={<SvgActionMember />}
                         iconPlacement="left"
                         size="medium"
-                        onClick={() => setAuthModalOpen('externalLogIn')}
+                        onClick={() => setAuthModalOpenName('externalLogIn')}
                       >
                         Log in
                       </Button>
@@ -164,7 +167,7 @@ export const TopbarViewer: FC = () => {
                   </SignedButtonsWrapper>
                 )}
                 {!searchQuery && !mdMatch && !isLoggedIn && !topbarButtonLoading && (
-                  <StyledIconButton onClick={() => setAuthModalOpen('externalLogIn')}>Log in</StyledIconButton>
+                  <StyledIconButton onClick={() => setAuthModalOpenName('externalLogIn')}>Log in</StyledIconButton>
                 )}
               </ButtonWrapper>
             </CSSTransition>

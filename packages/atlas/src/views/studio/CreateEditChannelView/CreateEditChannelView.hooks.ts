@@ -239,7 +239,6 @@ export const useCreateEditChannelSubmit = () => {
         onCompleted?.()
       }
     },
-    // eslint-disable-next-line no-sparse-arrays
     [
       addNewChannelIdToUploadsStore,
       channelBucketsCount,

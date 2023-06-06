@@ -4,6 +4,7 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { GetMembershipsQuery, useGetMembershipsLazyQuery } from '@/api/queries/__generated__/memberships.generated'
 import { SvgActionNewTab, SvgAlertsError24, SvgAlertsInformative24, SvgLogoPolkadot } from '@/assets/icons'
 import { IconWrapper } from '@/components/IconWrapper'
+import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
 import { Loader } from '@/components/_loaders/Loader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMountEffect } from '@/hooks/useMountEffect'
@@ -14,7 +15,6 @@ import { capitalizeFirstLetter } from '@/utils/misc'
 
 import { MOBILE_SUPPORTED_WALLETS, walletSort } from './ExternalSignInModalWalletStep.utils'
 
-import { ExternalSignInModalStepTemplate } from '../ExternalSignInModalStepTemplate'
 import {
   ListItemsWrapper,
   StyledBottomBanner,
@@ -149,7 +149,7 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
   }, [handleConfirm, isConnecting, selectedWallet, setPrimaryButtonProps])
 
   return (
-    <ExternalSignInModalStepTemplate
+    <AuthenticationModalStepTemplate
       title={`Select wallet ${isMobileDevice ? 'app' : ''}`}
       subtitle={
         isMobileDevice
@@ -199,6 +199,6 @@ export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProp
           icon={<SvgAlertsInformative24 />}
         />
       ) : null}
-    </ExternalSignInModalStepTemplate>
+    </AuthenticationModalStepTemplate>
   )
 }

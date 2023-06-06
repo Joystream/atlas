@@ -58,7 +58,7 @@ export const SidenavViewer: FC = () => {
   const followedChannels = usePersonalDataStore((state) => state.followedChannels)
   const unFollow = usePersonalDataStore((state) => state.actions.unfollowChannel)
   const {
-    actions: { setAuthModalOpen },
+    actions: { setAuthModalOpenName },
   } = useAuthStore()
 
   const handleChannelNotFound = (id: string) => {
@@ -70,7 +70,7 @@ export const SidenavViewer: FC = () => {
 
   const closeAndSignIn = () => {
     setExpanded(false)
-    setAuthModalOpen('externalLogIn')
+    setAuthModalOpenName('externalLogIn')
   }
   const buttonsContent = !isLoggedIn ? (
     <Button icon={<SvgActionMember />} onClick={closeAndSignIn}>

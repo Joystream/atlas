@@ -272,7 +272,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                   {
                     asButton: true,
                     label: 'My profile',
-                    onClick: onCloseDropdown ?? (() => undefined),
+                    onClick: onCloseDropdown,
                     nodeStart: <IconWrapper icon={<SvgActionMember />} />,
                     to: absoluteRoutes.viewer.member(activeMembership?.handle),
                   },
