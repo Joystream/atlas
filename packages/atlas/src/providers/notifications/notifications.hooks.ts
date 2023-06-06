@@ -18,7 +18,7 @@ export const useNotifications = (
   opts?: QueryHookOptions<GetNotificationsConnectionQuery, GetNotificationsConnectionQueryVariables>
 ) => {
   const { memberId } = useUser()
-  const { notifications: rawNotifications, ...rest } = useRawNotifications('111', opts)
+  const { notifications: rawNotifications, ...rest } = useRawNotifications(memberId, opts)
   const {
     readNotificationsIdsMap,
     lastSeenNotificationBlock,
