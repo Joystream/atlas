@@ -11,18 +11,17 @@ import {
   GetMembershipsQuery,
   GetMembershipsQueryVariables,
 } from '@/api/queries/__generated__/memberships.generated'
-import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { MembershipInfo } from '@/components/MembershipInfo'
+import { Avatar } from '@/components/Avatar'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { ImageInputFile } from '@/components/_inputs/MultiFileSelect'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
-import { atlasConfig } from '@/config'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { MemberInputMetadata } from '@/joystream-lib/types'
+import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useFee, useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
@@ -30,7 +29,9 @@ import { useUser } from '@/providers/user/user.hooks'
 import { uploadAvatarImage } from '@/utils/image'
 import { ConsoleLogger } from '@/utils/logs'
 
-import { StyledActionBar, TextFieldsWrapper, Wrapper } from './EditMembershipView.styles'
+import { StyledActionBar, TextFieldsWrapper, Wrapper } from './MembershipPublicProfile.styles'
+
+import { MembershipSettingTemplate } from '../MembershipSettingTemplate'
 
 export type EditMemberFormInputs = {
   handle: string | null
@@ -38,12 +39,28 @@ export type EditMemberFormInputs = {
   about: string | null
 }
 
-export const EditMembershipView: FC = () => {
+export const MembershipPublicProfile: FC = () => {
   const navigate = useNavigate()
   const handleInputRef = useRef<HTMLInputElement | null>(null)
   const [isImageValid, setIsImageValid] = useState(true)
   const [isHandleValidating, setIsHandleValidating] = useState(false)
-  const { accountId, memberId, activeMembership, isLoggedIn, refetchUserMemberships } = useUser()
+  const { memberId, activeMembership, isLoggedIn, refetchUserMemberships } = useUser()
+
+  const [openDialog, closeDialog] = useConfirmationModal({
+    title: 'Discard changes?',
+    description:
+      'You have unsaved changes which are going to be lost if you change the tab. Are you sure you want to continue?',
+    type: 'warning',
+    primaryButton: {
+      text: 'Discard changes',
+      to: absoluteRoutes.viewer.member(activeMembership?.handle),
+      onClick: () => closeDialog(),
+    },
+    secondaryButton: {
+      text: 'Cancel',
+      onClick: () => closeDialog(),
+    },
+  })
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
@@ -138,9 +155,8 @@ export const EditMembershipView: FC = () => {
     'updateMemberTx',
     memberId ? [memberId, watch('handle'), metadata] : undefined
   )
-
   const handleEditMember = handleSubmit(async (data) => {
-    if (!joystream || !activeMembership) {
+    if (!joystream || !activeMembership || !isDirty) {
       return
     }
     let fileUrl = ''
@@ -213,30 +229,33 @@ export const EditMembershipView: FC = () => {
     [activeMembership?.handle, register, trigger, validateUserHandle]
   )
   const isHandleInputActiveElement = document.activeElement === handleInputRef.current
+
   return (
-    <form onSubmit={handleEditMember}>
-      {headTags}
-      <LimitedWidthContainer>
+    <MembershipSettingTemplate
+      title="Profile info"
+      description="This membership information is stored on Joystream blockchain and can be displayed in all apps connected to the chain."
+    >
+      <form onSubmit={handleEditMember}>
+        {headTags}
         <Controller
           control={control}
           name="avatar"
           render={({ field: { onChange, value: avatarInputFile } }) => (
-            <>
-              <MembershipInfo
-                address={accountId}
-                avatarUrl={avatarInputFile?.url}
-                onImageValidation={setIsImageValid}
-                hasAvatarUploadFailed={!isImageValid}
-                onAvatarEditClick={() =>
+            <FormField label="Member avatar" description="Max file size is 5MB">
+              <Avatar
+                size={88}
+                editable
+                onClick={() => {
                   avatarDialogRef.current?.open(
                     avatarInputFile?.originalBlob ? avatarInputFile.originalBlob : avatarInputFile?.blob,
                     avatarInputFile?.imageCropData,
                     !!avatarInputFile?.blob
                   )
-                }
+                }}
+                onImageValidation={setIsImageValid}
+                assetUrl={avatarInputFile?.url}
                 loading={!isLoggedIn}
-                editable
-                handle={watch('handle')}
+                hasAvatarUploadFailed={!isImageValid}
               />
               <ImageCropModal
                 imageType="avatar"
@@ -253,7 +272,7 @@ export const EditMembershipView: FC = () => {
                 }}
                 ref={avatarDialogRef}
               />
-            </>
+            </FormField>
           )}
         />
         <Wrapper actionBarHeight={actionBarBoundsHeight}>
@@ -276,9 +295,9 @@ export const EditMembershipView: FC = () => {
                 error={!!errors?.handle}
               />
             </FormField>
-            <FormField label="About" error={errors?.about?.message}>
+            <FormField label="About me" optional error={errors?.about?.message}>
               <TextArea
-                placeholder={`Anything you'd like to share about yourself with the ${atlasConfig.general.appName} community`}
+                placeholder="Write something about yourself..."
                 maxLength={1000}
                 {...register('about', {
                   maxLength: { value: 1000, message: 'About cannot be longer than 1000 characters' },
@@ -293,16 +312,17 @@ export const EditMembershipView: FC = () => {
           fee={fee}
           feeLoading={feeLoading}
           primaryButton={{
-            disabled: !isDirty || isHandleValidating || isSubmitting,
+            disabled: isSubmitting,
             text: isSubmitting ? 'Please wait...' : 'Publish changes',
             type: 'submit',
           }}
           secondaryButton={{
             text: 'Cancel',
-            to: absoluteRoutes.viewer.member(activeMembership?.handle),
+            to: isDirty ? undefined : absoluteRoutes.viewer.member(activeMembership?.handle),
+            onClick: () => (isDirty ? openDialog() : undefined),
           }}
         />
-      </LimitedWidthContainer>
-    </form>
+      </form>
+    </MembershipSettingTemplate>
   )
 }

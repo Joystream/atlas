@@ -7,7 +7,7 @@ import { cVar, transitions } from '@/styles'
 
 import { MembershipDetails, MembershipHeader, MembershipInfoContainer, StyledHandle } from './MembershipInfo.style'
 
-import { SvgActionEdit } from '../../assets/icons'
+import { SvgActionSettings } from '../../assets/icons'
 import { Avatar } from '../Avatar'
 import { Button } from '../_buttons/Button'
 import { CopyAddressButton } from '../_buttons/CopyAddressButton/CopyAddressButton'
@@ -23,7 +23,6 @@ export type MembershipInfoProps = {
   address?: string | null
   loading?: boolean
   isOwner?: boolean
-  editable?: boolean
   className?: string
 }
 
@@ -32,12 +31,10 @@ export const MembershipInfo: FC<MembershipInfoProps> = ({
   avatarUrl,
   avatarLoading,
   hasAvatarUploadFailed,
-  onAvatarEditClick,
   onImageValidation,
   handle,
   loading,
   isOwner,
-  editable,
   className,
 }) => {
   const smMatch = useMediaMatch('sm')
@@ -53,9 +50,7 @@ export const MembershipInfo: FC<MembershipInfoProps> = ({
           <MembershipInfoContainer>
             <Avatar
               size={smMatch ? 136 : 88}
-              editable={editable}
               onImageValidation={onImageValidation}
-              onClick={onAvatarEditClick}
               assetUrl={avatarUrl}
               loading={avatarLoading}
               hasAvatarUploadFailed={hasAvatarUploadFailed}
@@ -80,13 +75,13 @@ export const MembershipInfo: FC<MembershipInfoProps> = ({
               <SkeletonLoader width={smMatch ? 148 : '100%'} height={48} />
             ) : (
               <Button
-                to={absoluteRoutes.viewer.editMembership()}
-                icon={<SvgActionEdit />}
+                to={absoluteRoutes.viewer.memberSettings()}
+                icon={<SvgActionSettings />}
                 size="large"
                 variant="secondary"
                 fullWidth={!smMatch}
               >
-                Edit profile
+                Settings
               </Button>
             ))}
         </MembershipHeader>
