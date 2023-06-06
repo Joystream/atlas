@@ -7,6 +7,7 @@ import { useMutation } from 'react-query'
 import { FAUCET_URL } from '@/config/env'
 import { MemberId } from '@/joystream-lib/types'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
+import { useAuth } from '@/providers/auth/auth.hooks'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
@@ -43,6 +44,7 @@ type CreateMemberArgs = {
   onError: (step: SignUpSteps) => void
 }
 export const useCreateMember = () => {
+  const { handleLogin } = useAuth()
   const { refetchUserMemberships } = useUser()
   const [emailAlreadyRegisteredMemberId, setEmailAlreadyRegisteredMemberId] = useState('')
   const setAnonymousUserId = useAuthStore((store) => store.actions.setAnonymousUserId)
@@ -104,6 +106,7 @@ export const useCreateMember = () => {
             const { lockedBalance } = await joystream.getAccountBalance(address)
             const amountOfTokens = hapiBnToTokenNumber(new BN(lockedBalance))
             onSuccess(amountOfTokens)
+            handleLogin({ type: 'internal', ...data })
           } catch (error) {
             if (error instanceof OrionAccountError) {
               const errorCode = error.status
