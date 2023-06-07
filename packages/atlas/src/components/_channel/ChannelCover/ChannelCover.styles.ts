@@ -32,6 +32,7 @@ export const CoverImage = styled.img`
 
 export const CoverWrapper = styled.div`
   position: relative;
+  overflow: hidden;
 `
 
 export const EditableControls = styled.div`

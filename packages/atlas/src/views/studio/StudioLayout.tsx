@@ -25,6 +25,7 @@ import { NotificationsView } from '@/views/notifications'
 import { CrtPreviewEditView } from '@/views/studio/CrtPreviewEditView'
 import { CrtPreviewView } from '@/views/studio/CrtPreviewView'
 import { CrtWelcomeView } from '@/views/studio/CrtWelcomeView/CrtWelcomeView'
+import { MyChannelView } from '@/views/studio/MyChannelView'
 import { MyPaymentsView } from '@/views/studio/MyPaymentsView'
 
 import { CreateEditChannelView } from './CreateEditChannelView'
@@ -130,13 +131,9 @@ const StudioLayout = () => {
                 }
               />
               <Route
-                path={relativeRoutes.studio.editChannel()}
+                path={relativeRoutes.studio.myChannel()}
                 element={
-                  <PrivateRoute
-                    element={<CreateEditChannelView />}
-                    isAuth={channelSet}
-                    redirectTo={ENTRY_POINT_ROUTE}
-                  />
+                  <PrivateRoute element={<MyChannelView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
                 }
               />
               <Route
