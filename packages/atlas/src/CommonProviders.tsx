@@ -13,6 +13,8 @@ import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { UserProvider } from '@/providers/user/user.provider'
 import { GlobalStyles } from '@/styles'
 
+import { FORCE_MAINTENANCE } from './config/env'
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -49,9 +51,13 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
 }
 
 const MaintenanceWrapper: FC<PropsWithChildren> = ({ children }) => {
-  const { isKilled, wasKilledLastTime, error, loading } = useGetKillSwitch({ context: { delay: 1000 } })
+  const isMaintenanceForced = FORCE_MAINTENANCE === 'true'
+  const { isKilled, wasKilledLastTime, error, loading } = useGetKillSwitch({
+    context: { delay: 1000 },
+    skip: isMaintenanceForced,
+  })
 
-  if (isKilled || (error && wasKilledLastTime) || (loading && wasKilledLastTime)) {
+  if (isKilled || (error && wasKilledLastTime) || (loading && wasKilledLastTime) || isMaintenanceForced) {
     return <Maintenance />
   } else {
     return <>{children}</>
