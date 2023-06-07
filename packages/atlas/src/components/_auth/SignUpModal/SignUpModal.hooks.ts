@@ -207,6 +207,7 @@ export const useCreateMember = () => {
       createNewMember,
       displaySnackbar,
       emailAlreadyRegisteredMemberId,
+      handleLogin,
       joystream,
       refetchUserMemberships,
       setAnonymousUserId,
