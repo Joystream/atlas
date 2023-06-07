@@ -1,7 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { Controller, FieldError, useForm } from 'react-hook-form'
-import useResizeObserver from 'use-resize-observer'
-import shallow from 'zustand/shallow'
+import { RefObject } from 'react'
+import { Controller, FieldError } from 'react-hook-form'
 
 import { useFullChannel } from '@/api/hooks/channel'
 import { ActionBar } from '@/components/ActionBar'
@@ -12,57 +10,31 @@ import { FormField } from '@/components/_inputs/FormField'
 import { TextInput } from '@/components/_inputs/Input/Input.styles'
 import { Select, SelectItem } from '@/components/_inputs/Select'
 import { TextArea } from '@/components/_inputs/TextArea'
-import {
-  ImageCropModal,
-  ImageCropModalImperativeHandle,
-  ImageCropModalProps,
-} from '@/components/_overlays/ImageCropModal'
+import { ImageCropModal } from '@/components/_overlays/ImageCropModal'
 import { EntitySettingTemplate } from '@/components/_templates/EntitySettingTemplate'
 import { atlasConfig } from '@/config'
+import { useChannelForm } from '@/hooks/useChannelForm'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib/types'
-import { useChannelsStorageBucketsCount } from '@/providers/assets/assets.hooks'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
-import { useBloatFeesAndPerMbFees, useFee, useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
-import { useUploadsStore } from '@/providers/uploads/uploads.store'
 import { useUser } from '@/providers/user/user.hooks'
-import { useVideoWorkspace } from '@/providers/videoWorkspace'
-import { useYppStore } from '@/providers/ypp/ypp.store'
-import { createId } from '@/utils/createId'
 import { requiredValidation } from '@/utils/formValidationOptions'
 import { SentryLogger } from '@/utils/logs'
-import {
-  CreateEditChannelFormInputs,
-  useCreateEditChannelSubmit,
-} from '@/views/studio/CreateEditChannelView/CreateEditChannelView.hooks'
 import { StyledAvatar } from '@/views/studio/CreateEditChannelView/CreateEditChannelView.styles'
 
 import { InputsWrapper } from './GeneralTab.styles'
-
-const DEFAULT_LANGUAGE = atlasConfig.derived.popularLanguagesSelectValues[0].value
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public', value: true },
   { name: 'Unlisted (channel will not appear in feeds and search)', value: false },
 ]
 
-export const GeneralTab = ({ actionBarPortal }: { actionBarPortal: any }) => {
-  const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
-  const coverDialogRef = useRef<ImageCropModalImperativeHandle>(null)
-  console.log('channel view')
-  const { memberId, accountId, channelId } = useUser()
-  const cachedChannelId = useRef(channelId)
-  const firstRender = useRef(true)
-  const { joystream } = useJoystream()
+export const GeneralTab = ({ actionBarPortal }: { actionBarPortal: RefObject<HTMLDivElement> }) => {
+  const { channelId } = useUser()
   const { displaySnackbar } = useSnackbar()
-  const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-  const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
-  const handleChannelSubmit = useCreateEditChannelSubmit()
   const smMatch = useMediaMatch('sm')
+  const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
 
-  const [showConnectToYtDialog, setShowConnectToYtDialog] = useState(false)
-  const setShouldContinueYppFlow = useYppStore((store) => store.actions.setShouldContinueYppFlow)
   const {
     channel,
     loading,
@@ -79,264 +51,26 @@ export const GeneralTab = ({ actionBarPortal }: { actionBarPortal: any }) => {
     },
     { where: { channel: { isPublic_eq: undefined, isCensored_eq: undefined } } }
   )
-  const channelBucketsCount = useChannelsStorageBucketsCount(channelId)
-
+  const {
+    feeLoading,
+    form,
+    hasCoverUploadFailed,
+    hasAvatarUploadFailed,
+    hideActionBar,
+    fee,
+    actions: { handleDeleteAvatar, handleAvatarChange, handleDeleteCover, handleCoverChange, handleSubmit },
+    refs: { coverDialogRef, avatarDialogRef },
+  } = useChannelForm({ type: 'edit', refetchChannel, channel })
   const {
     register,
-    handleSubmit: createSubmitHandler,
     control,
-    formState: { isDirty, dirtyFields, errors },
-    watch,
-    setFocus,
-    setValue,
     reset,
-    getValues,
-  } = useForm<CreateEditChannelFormInputs>({
-    mode: 'onSubmit',
-    defaultValues: {
-      avatar: { contentId: null, assetDimensions: null, imageCropData: null, originalBlob: undefined },
-      cover: { contentId: null, assetDimensions: null, imageCropData: null, originalBlob: undefined },
-      title: '',
-      description: '',
-      language: DEFAULT_LANGUAGE,
-      isPublic: true,
-    },
-  })
-  const avatarContentId = watch('avatar').contentId
-  const coverContentId = watch('cover').contentId
-
-  const isAvatarUploading = useUploadsStore(
-    (state) =>
-      avatarContentId
-        ? state.uploadsStatus[avatarContentId]?.lastStatus === 'processing' ||
-          state.uploadsStatus[avatarContentId]?.lastStatus === 'inProgress' ||
-          state.uploadsStatus[avatarContentId]?.lastStatus === 'reconnecting'
-        : null,
-    shallow
-  )
-  const isCoverUploading = useUploadsStore(
-    (state) =>
-      coverContentId
-        ? state.uploadsStatus[coverContentId]?.lastStatus === 'processing' ||
-          state.uploadsStatus[coverContentId]?.lastStatus === 'inProgress' ||
-          state.uploadsStatus[coverContentId]?.lastStatus === 'reconnecting'
-        : null,
-    shallow
-  )
-
-  const { isWorkspaceOpen, setIsWorkspaceOpen } = useVideoWorkspace()
-
-  const createChannelMetadata = useCallback(
-    (data: CreateEditChannelFormInputs) => {
-      return isDirty
-        ? {
-            ...(dirtyFields.title ? { title: data.title?.trim() ?? '' } : {}),
-            ...(dirtyFields.description ? { description: data.description?.trim() ?? '' } : {}),
-            ...(dirtyFields.language ? { language: data.language } : {}),
-            ...(dirtyFields.isPublic ? { isPublic: data.isPublic } : {}),
-            ownerAccount: accountId || '',
-          }
-        : null
-    },
-    [accountId, dirtyFields, isDirty]
-  )
-
-  const createChannelAssets = useCallback((): [ChannelInputAssets, string[]] => {
-    const replacedAssetsIds: string[] = []
-    const newAssets: ChannelInputAssets = {}
-    const avatarAsset = getValues('avatar')
-    const coverAsset = getValues('cover')
-    if (avatarAsset?.croppedBlob?.size) {
-      newAssets.avatarPhoto = {
-        size: avatarAsset?.croppedBlob.size,
-        ipfsHash: '',
-      }
-    }
-    if (channel?.avatarPhoto?.id && channel?.avatarPhoto?.id !== avatarAsset.contentId) {
-      replacedAssetsIds.push(channel.avatarPhoto.id)
-    }
-    if (coverAsset?.croppedBlob?.size) {
-      newAssets.coverPhoto = {
-        size: coverAsset.croppedBlob.size,
-        ipfsHash: '',
-      }
-    }
-    if (channel?.coverPhoto?.id && channel?.coverPhoto?.id !== coverAsset.contentId) {
-      replacedAssetsIds.push(channel.coverPhoto.id)
-    }
-    return [newAssets, replacedAssetsIds]
-  }, [channel?.avatarPhoto?.id, channel?.coverPhoto?.id, getValues])
-
-  const channelMetadata = createChannelMetadata(watch())
-  const [newChannelAssets, removedChannelAssetsIds] = createChannelAssets()
-
-  const { channelStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
-
-  const { fullFee: updateChannelFee, loading: updateChannelFeeLoading } = useFee(
-    'updateChannelTx',
-    channelId && memberId && channelMetadata && isDirty
-      ? [
-          channelId,
-          memberId,
-          channelMetadata,
-          newChannelAssets,
-          removedChannelAssetsIds,
-          dataObjectStateBloatBondValue.toString(),
-          channelBucketsCount.toString(),
-        ]
-      : undefined,
-    newChannelAssets
-  )
-
-  // set default values for editing channel
-  useEffect(() => {
-    if (loading || !channel) {
-      return
-    }
-
-    const { title, description, isPublic, language, avatarPhoto, coverPhoto } = channel
-
-    const foundLanguage = atlasConfig.derived.languagesSelectValues.find(({ value }) => value === language)
-    const isChannelChanged = cachedChannelId.current !== channel.id
-
-    // This condition should prevent from updating cover/avatar when the upload is done
-    if (isChannelChanged || firstRender.current) {
-      reset({
-        avatar: {
-          contentId: avatarPhoto?.id,
-          assetDimensions: null,
-          imageCropData: null,
-          originalBlob: undefined,
-          originalUrl: channel.avatarPhoto?.resolvedUrl,
-        },
-        cover: {
-          contentId: coverPhoto?.id,
-          assetDimensions: null,
-          imageCropData: null,
-          originalBlob: undefined,
-          originalUrl: channel.coverPhoto?.resolvedUrl,
-        },
-        title: title || '',
-        description: description || '',
-        isPublic: isPublic ?? false,
-        language: foundLanguage?.value || DEFAULT_LANGUAGE,
-      })
-      firstRender.current = false
-      cachedChannelId.current = channel.id
-    }
-  }, [channel, loading, reset])
-
-  const handleSubmit = createSubmitHandler(async (data) => {
-    if (!joystream || !memberId || !accountId) {
-      return
-    }
-
-    if (!channelBucketsCount) {
-      SentryLogger.error('Channel buckets count is not set', 'CreateEditChannelView')
-      return
-    }
-
-    setIsWorkspaceOpen(false)
-    const metadata: ChannelInputMetadata = {
-      ...(dirtyFields.title ? { title: data.title?.trim() ?? '' } : {}),
-      ...(dirtyFields.description ? { description: data.description?.trim() ?? '' } : {}),
-      ...(dirtyFields.language ? { language: data.language } : {}),
-      ...(dirtyFields.isPublic ? { isPublic: data.isPublic } : {}),
-      ownerAccount: accountId ?? '',
-    }
-
-    await handleChannelSubmit(
-      {
-        metadata,
-        channel: channel,
-        assets: {
-          avatarPhoto: data.avatar,
-          coverPhoto: data.cover,
-        },
-        refetchChannel,
-        fee: updateChannelFee,
-        newChannel: false,
-      },
-      () => reset(getValues()),
-      setValue,
-      () =>
-        atlasConfig.features.ypp.googleConsoleClientId &&
-        atlasConfig.features.ypp.youtubeSyncApiUrl &&
-        setTimeout(() => setShowConnectToYtDialog(true), 2000)
-    )
-  })
-
-  const handleCoverChange: ImageCropModalProps['onConfirm'] = (
-    croppedBlob,
-    croppedUrl,
-    assetDimensions,
-    imageCropData,
-    originalBlob
-  ) => {
-    const newCoverAssetId = `local-cover-${createId()}`
-    setValue(
-      'cover',
-      {
-        contentId: newCoverAssetId,
-        assetDimensions,
-        croppedBlob,
-        imageCropData,
-        originalBlob,
-        croppedUrl,
-      },
-      { shouldDirty: true }
-    )
-  }
-
-  const handleAvatarChange: ImageCropModalProps['onConfirm'] = (
-    croppedBlob,
-    croppedUrl,
-    assetDimensions,
-    imageCropData,
-    originalBlob
-  ) => {
-    const newAvatarAssetId = `local-avatar-${createId()}`
-    setValue(
-      'avatar',
-      { contentId: newAvatarAssetId, assetDimensions, imageCropData, originalBlob, croppedUrl, croppedBlob },
-      { shouldDirty: true }
-    )
-  }
-
-  const handleDeleteAvatar = () => {
-    setValue(
-      'avatar',
-      { contentId: null, assetDimensions: null, imageCropData: null, originalBlob: undefined },
-      { shouldDirty: true }
-    )
-  }
-
-  const handleDeleteCover = () => {
-    setValue(
-      'cover',
-      {
-        contentId: null,
-        assetDimensions: null,
-        imageCropData: null,
-        originalBlob: undefined,
-        croppedUrl: undefined,
-        originalUrl: undefined,
-      },
-      { shouldDirty: true }
-    )
-  }
+    formState: { errors, isDirty },
+  } = form
 
   if (error) {
     return <ViewErrorFallback />
   }
-
-  const hasAvatarUploadFailed = isAvatarUploading
-    ? false
-    : (channel?.avatarPhoto && !channel.avatarPhoto.isAccepted && !dirtyFields.avatar) || false
-  const hasCoverUploadFailed = isCoverUploading
-    ? false
-    : (channel?.coverPhoto && !channel.coverPhoto.isAccepted && !dirtyFields.cover) || false
-  const hideActionBar = !isDirty || nodeConnectionStatus !== 'connected'
 
   return (
     <>
@@ -479,8 +213,8 @@ export const GeneralTab = ({ actionBarPortal }: { actionBarPortal: any }) => {
       {!hideActionBar && (
         <Portal containerRef={actionBarPortal}>
           <ActionBar
-            fee={updateChannelFee}
-            feeLoading={updateChannelFeeLoading}
+            fee={fee}
+            feeLoading={feeLoading}
             primaryButton={{
               text: 'Publish changes',
               onClick: handleSubmit,

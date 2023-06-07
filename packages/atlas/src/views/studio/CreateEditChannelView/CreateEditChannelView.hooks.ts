@@ -44,7 +44,7 @@ type CreateEditChannelData = {
   metadata: ChannelInputMetadata
   assets: ChannelAssets<ImageAsset>
   channel?: FullChannelFieldsFragment
-  refetchChannel: GetExtendedFullChannelsQueryHookResult['refetch']
+  refetchChannel?: GetExtendedFullChannelsQueryHookResult['refetch']
   fee?: BN
 }
 
@@ -179,7 +179,7 @@ export const useCreateEditChannelSubmit = () => {
           // membership includes full list of channels so the channel update will be fetched too
           await refetchUserMemberships()
         } else {
-          await data?.refetchChannel()
+          await data?.refetchChannel?.()
         }
 
         if (assetsIds.avatarPhoto && data.assets.avatarPhoto?.croppedUrl) {
