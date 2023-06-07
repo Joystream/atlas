@@ -6,6 +6,7 @@ import { SubTitle, WelcomeView } from '@/components/WelcomeView'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useUser } from '@/providers/user/user.hooks'
 
@@ -93,7 +94,7 @@ export const StudioWelcomeView: FC = () => {
       buttons={[
         isLoggedIn
           ? { size: 'large', to: absoluteRoutes.studio.newChannel(), children: 'Create channel' }
-          : { size: 'large', onClick: () => setAuthModalOpenName('externalLogIn'), children: 'Log in' },
+          : { size: 'large', onClick: () => setAuthModalOpenName(getCorrectLoginModal()), children: 'Log in' },
         {
           size: 'large',
           variant: 'tertiary',

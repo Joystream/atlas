@@ -1,6 +1,6 @@
 import { createStore } from '@/utils/store'
 
-type AuthModals = 'logIn' | 'externalLogIn' | 'signUp'
+import { AuthModals } from './auth.types'
 
 export type AuthStoreState = {
   anonymousUserId: string | null

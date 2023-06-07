@@ -7,7 +7,10 @@ import { Buffer } from 'buffer'
 import { AES, enc, lib, mode } from 'crypto-js'
 
 import { ORION_AUTH_URL } from '@/config/env'
+import { getWalletsList } from '@/providers/wallet/wallet.helpers'
 import { SentryLogger } from '@/utils/logs'
+
+import { AuthModals } from './auth.types'
 
 export const handleAnonymousAuth = async (userId?: string | null) => {
   try {
@@ -97,3 +100,8 @@ export const decodeSessionEncodedSeedToMnemonic = async (encodedSeed: string) =>
 }
 
 export const logoutRequest = () => axios.post(`${ORION_AUTH_URL}/logout`, {}, { withCredentials: true })
+
+export const getCorrectLoginModal = (): AuthModals => {
+  const hasAtleastOneWallet = getWalletsList().some((wallet) => wallet.installed)
+  return hasAtleastOneWallet ? 'externalLogIn' : 'logIn'
+}

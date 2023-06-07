@@ -13,6 +13,7 @@ import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
+import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
 import { useAuth } from '@/providers/auth/auth.hooks'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useOverlayManager } from '@/providers/overlayManager'
@@ -155,7 +156,7 @@ export const TopbarViewer: FC = () => {
                         icon={<SvgActionMember />}
                         iconPlacement="left"
                         size="medium"
-                        onClick={() => setAuthModalOpenName('externalLogIn')}
+                        onClick={() => setAuthModalOpenName(getCorrectLoginModal())}
                       >
                         Log in
                       </Button>
@@ -167,7 +168,9 @@ export const TopbarViewer: FC = () => {
                   </SignedButtonsWrapper>
                 )}
                 {!searchQuery && !mdMatch && !isLoggedIn && !topbarButtonLoading && (
-                  <StyledIconButton onClick={() => setAuthModalOpenName('externalLogIn')}>Log in</StyledIconButton>
+                  <StyledIconButton onClick={() => setAuthModalOpenName(getCorrectLoginModal())}>
+                    Log in
+                  </StyledIconButton>
                 )}
               </ButtonWrapper>
             </CSSTransition>

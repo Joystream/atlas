@@ -12,6 +12,7 @@ import { AppLogo } from '@/components/AppLogo'
 import { Button } from '@/components/_buttons/Button'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
+import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user/user.hooks'
@@ -70,7 +71,7 @@ export const SidenavViewer: FC = () => {
 
   const closeAndSignIn = () => {
     setExpanded(false)
-    setAuthModalOpenName('externalLogIn')
+    setAuthModalOpenName(getCorrectLoginModal())
   }
   const buttonsContent = !isLoggedIn ? (
     <Button icon={<SvgActionMember />} onClick={closeAndSignIn}>

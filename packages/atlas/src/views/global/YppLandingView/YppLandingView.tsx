@@ -10,6 +10,7 @@ import { YppReferralBanner } from '@/components/_ypp/YppReferralBanner'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
+import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useSnackbar } from '@/providers/snackbars'
 import { useUser } from '@/providers/user/user.hooks'
@@ -72,7 +73,7 @@ export const YppLandingView: FC = () => {
     }
 
     if (!isLoggedIn) {
-      setAuthModalOpenName('externalLogIn')
+      setAuthModalOpenName(getCorrectLoginModal())
       setWasSignInTriggered(true)
       return
     }

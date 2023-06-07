@@ -140,6 +140,7 @@ export const useCreateMember = () => {
           await registerAccount(data.email, data.password, data.mnemonic, emailAlreadyRegisteredMemberId.toString())
           setAnonymousUserId('')
           onSuccess()
+          handleLogin({ type: 'internal', ...data })
           return
         }
         const { block, memberId } = await createNewMember(address, data)

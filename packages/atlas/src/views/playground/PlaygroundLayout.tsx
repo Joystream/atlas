@@ -11,6 +11,7 @@ import { TopbarBase } from '@/components/_navigation/TopbarBase'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { absoluteRoutes } from '@/config/routes'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
+import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
@@ -86,7 +87,7 @@ const PlaygroundLayout = () => {
               onClick={() => setIsMemberDropdownActive(true)}
             />
           ) : (
-            <Button onClick={() => setAuthModalOpenName('externalLogIn')}>Sign in</Button>
+            <Button onClick={() => setAuthModalOpenName(getCorrectLoginModal())}>Sign in</Button>
           )}
         </ButtonContainer>
       </TopbarBase>

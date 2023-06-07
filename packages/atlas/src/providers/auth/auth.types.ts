@@ -36,3 +36,5 @@ export type ExternalLogin = {
 }
 
 export type LoginParams = InternalLogin | ExternalLogin
+
+export type AuthModals = 'logIn' | 'externalLogIn' | 'signUp'

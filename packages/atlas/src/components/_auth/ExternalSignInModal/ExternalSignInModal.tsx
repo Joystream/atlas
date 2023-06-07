@@ -122,7 +122,7 @@ export const ExternalSignInModal: FC = () => {
           : [ModalSteps.Wallet, ModalSteps.NoMembership].includes(currentStep)
           ? { text: 'Use email & password', onClick: () => setAuthModalOpenName('logIn') }
           : undefined,
-        additionalActionsNode: [ModalSteps.Wallet, ModalSteps.Membership].includes(currentStep) && (
+        additionalActionsNode: [ModalSteps.Wallet, ModalSteps.Membership, ModalSteps.Email].includes(currentStep) && (
           <Button
             variant="tertiary"
             onClick={() => {
