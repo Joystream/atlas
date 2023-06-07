@@ -38,6 +38,7 @@ export type InputProps = {
   autoComplete?: 'off' | 'new-password'
   error?: boolean
   disabled?: boolean
+  disabledAttributeOnly?: boolean
   size?: InputSize
   processing?: boolean
   nodeStart?: ReactNode
@@ -59,6 +60,7 @@ const InputComponent: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
     onClick,
     error,
     disabled,
+    disabledAttributeOnly,
     placeholder,
     defaultValue,
     nodeStart,
@@ -123,7 +125,7 @@ const InputComponent: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
   }
 
   return (
-    <InputContainer size={size} className={className}>
+    <InputContainer size={size} className={className} ignoreBoxShadow={disabledAttributeOnly}>
       <TextInput
         inputSize={size}
         error={error}
@@ -134,6 +136,7 @@ const InputComponent: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
         name={name}
         value={value}
         disabled={disabled}
+        disabledAttributeOnly={disabledAttributeOnly}
         onChange={onChange}
         onFocus={onFocus}
         onBlur={onBlur}
@@ -147,19 +150,30 @@ const InputComponent: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
       />
       <span className="border-span" />
       {nodeStart && (
-        <NodeContainer size={size} onClick={() => inputRef.current?.focus()} ref={nodeLeftRef} left disabled={disabled}>
+        <NodeContainer
+          size={size}
+          onClick={() => inputRef.current?.focus()}
+          ref={nodeLeftRef}
+          left
+          disabled={disabled && !disabledAttributeOnly}
+        >
           {renderedNodeStart}
         </NodeContainer>
       )}
       {(nodeEnd || actionButton || processing) && (
-        <NodeContainer size={size} ref={nodeRightRef} disabled={disabled} isButton={!!actionButton}>
+        <NodeContainer
+          size={size}
+          ref={nodeRightRef}
+          disabled={disabled && !disabledAttributeOnly}
+          isButton={!!actionButton}
+        >
           {processing && <Loader variant="xsmall" />}
           {actionButton ? (
             <Tooltip text={actionButton.tooltipText} placement="top" hideOnClick={false}>
               <Button
                 {...actionButton}
                 variant="tertiary"
-                disabled={disabled}
+                disabled={disabled && !disabledAttributeOnly}
                 size="small"
                 onClick={handleButtonClick}
               />

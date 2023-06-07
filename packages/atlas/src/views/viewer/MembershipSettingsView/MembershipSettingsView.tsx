@@ -6,7 +6,7 @@ import { MemberSettingsTabs, QUERY_PARAMS, absoluteRoutes } from '@/config/route
 
 import { MembershipPublicProfile } from './MembershipPublicProfile'
 import { NoGlobalPaddingWrapper, StyledLimitedWidthContainer } from './MembershipSettingsView.styles'
-import { MembershipWallet } from './MembershipWallet/MembershipWallet'
+import { MembershipWallet } from './MembershipWallet'
 
 const TABS: MemberSettingsTabs[] = ['Public profile', 'Wallet']
 
