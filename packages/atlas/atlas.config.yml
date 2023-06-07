@@ -443,6 +443,8 @@ content:
       name: Thai
     - isoCode: tr
       name: Turkish
+    - isoCode: uk
+      name: Ukrainian
     - isoCode: ur
       name: Urdu
     - isoCode: vi
