@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { Link } from 'react-router-dom'
 
 import discoverView from '@/assets/images/discover-view.webp'
 import { Text } from '@/components/Text'
@@ -45,11 +46,12 @@ export const ContentTypeDialog: FC<ContentTypeDialogProps> = ({ onClose, isOpen,
       <StyledImg src={discoverView} alt="Discover subpage" width={480} height={264} />
       <HeaderWrapper>
         <Text variant="h500" as="p" color="colorTextStrong">
-          Upload only {atlasConfig.general.appContentFocus} related content
+          {atlasConfig.general.appName} only supports {atlasConfig.general.appContentFocus} related content
         </Text>
         <Text variant="t200" as="p" color="colorText" margin={{ top: 2 }}>
-          Uploading any other type of content will result in taking down your channel. Please make sure that your
-          content falls under one of {atlasConfig.general.appName} categories before uploading.
+          Uploading content of any other topic will result in your channel excluded from {atlasConfig.general.appName}{' '}
+          by moderators. Joystream Network has multiple Apps connected, so please feel free to check{' '}
+          <Link to="https://joystream.org">joystream.org</Link> to find a suitable App for your channel.
         </Text>
       </HeaderWrapper>
       <CheckboxWrapper>
