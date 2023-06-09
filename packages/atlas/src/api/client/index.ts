@@ -1,5 +1,4 @@
 import { ApolloClient, ApolloLink, FetchResult, HttpLink, Observable, split } from '@apollo/client'
-import { RetryLink } from '@apollo/client/link/retry'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { createClient } from 'graphql-ws'
@@ -7,12 +6,9 @@ import { createClient } from 'graphql-ws'
 import { atlasConfig } from '@/config'
 import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config/env'
 import { logDistributorPerformance, testAssetDownload } from '@/providers/assets/assets.helpers'
-import { useAuthStore } from '@/providers/auth/auth.store'
 import { useUserLocationStore } from '@/providers/userLocation'
-import { isAxiosError } from '@/utils/error'
 import { AssetLogger, ConsoleLogger, DistributorEventEntry, SentryLogger } from '@/utils/logs'
 import { TimeoutError, withTimeout } from '@/utils/misc'
-import { setAnonymousAuth } from '@/utils/user'
 
 import cache from './cache'
 
@@ -33,41 +29,6 @@ const delayLink = new ApolloLink((operation, forward) => {
   })
 })
 
-const retryLink = new RetryLink({
-  attempts: {
-    max: 5,
-    retryIf: async (error, operation) => {
-      // For the sign up purposes don't retry when operationName GetNotificationsConnection, which is called constantly
-      if (operation.operationName === 'GetNotificationsConnection') {
-        return false
-      }
-
-      const userId = useAuthStore.getState().anonymousUserId
-      const isUnauthorizedError =
-        error.statusCode === 400 &&
-        error?.result?.errors?.find((err: { message: string }) => err.message === 'Unauthorized')
-
-      if (isUnauthorizedError) {
-        try {
-          const newUserId = await setAnonymousAuth(userId)
-          if (newUserId) {
-            useAuthStore.setState({ anonymousUserId: newUserId })
-            return true
-          }
-          return true
-        } catch (error) {
-          if (isAxiosError(error) && error.response?.status === 401) {
-            useAuthStore.setState({ anonymousUserId: null })
-          }
-          return true
-        }
-      } else {
-        return false
-      }
-    },
-  },
-})
-
 const MAX_ALLOWED_RETRIES = 10
 const bannedDistributorUrls: Record<string, number> = {}
 
@@ -79,11 +40,7 @@ const createApolloClient = () => {
     })
   )
 
-  const orionLink = ApolloLink.from([
-    delayLink,
-    retryLink,
-    new HttpLink({ uri: ORION_GRAPHQL_URL, credentials: 'include' }),
-  ])
+  const orionLink = ApolloLink.from([delayLink, new HttpLink({ uri: ORION_GRAPHQL_URL, credentials: 'include' })])
 
   const operationSplitLink = split(
     ({ query, setContext }) => {

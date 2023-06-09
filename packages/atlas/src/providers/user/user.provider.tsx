@@ -1,11 +1,10 @@
-import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo } from 'react'
+import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
 import { useMemberships } from '@/api/hooks/membership'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { useJoystream } from '@/providers/joystream/joystream.provider'
 import { AssetLogger, SentryLogger } from '@/utils/logs'
 
-import { useUserStore } from './user.store'
 import { UserContextValue } from './user.types'
 
 import { useAuth } from '../auth/auth.hooks'
@@ -14,9 +13,8 @@ const UserContext = createContext<undefined | UserContextValue>(undefined)
 UserContext.displayName = 'UserContext'
 
 export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
-  const { channelId } = useUserStore((state) => state)
-  const { setActiveUser } = useUserStore((state) => state.actions)
   const { currentUser } = useAuth()
+  const [channelId, setChannelId] = useState<string | null>(null)
   const { setApiActiveAccount } = useJoystream()
 
   const {
@@ -28,7 +26,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   } = useMemberships(
     {
       where: {
-        id_eq: currentUser?.id,
+        id_eq: currentUser?.membershipId,
       },
     },
     {
@@ -49,33 +47,25 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
     const user = {
       accountId: currentUser?.joystreamAccount,
       memberId: currentUser?.membershipId,
-      channelId,
-    }
-
-    // update Joystream Lib selected on change
-    if (currentUser?.joystreamAccount) {
-      setApiActiveAccount(currentUser.joystreamAccount)
+      channelId: currentMemberships?.[0].channels[0]?.id,
     }
 
     SentryLogger.setUser(user)
     AssetLogger.setUser(user)
-  }, [channelId, currentUser?.joystreamAccount, currentUser?.membershipId, setApiActiveAccount])
+  }, [currentMemberships, currentUser?.joystreamAccount, currentUser?.membershipId, setApiActiveAccount])
 
   const activeMembership =
     (currentUser?.membershipId && memberships?.find((membership) => membership.id === currentUser?.membershipId)) ||
     null
-  const activeChannel =
-    (activeMembership && activeMembership?.channels.find((channel) => channel.id === channelId)) || null
 
-  const isChannelBelongsToTheUserOrExists = activeMembership?.channels.length
-    ? activeMembership.channels.some((channel) => channel.id === channelId)
-    : true
+  const activeChannel =
+    (channelId
+      ? activeMembership?.channels.find((channel) => channel.id === channelId)
+      : activeMembership?.channels[0]) || null
 
   useEffect(() => {
-    if (!isChannelBelongsToTheUserOrExists) {
-      setActiveUser({ channelId: activeMembership?.channels.length ? activeMembership.channels[0].id : null })
-    }
-  }, [activeMembership?.channels, isChannelBelongsToTheUserOrExists, setActiveUser])
+    setChannelId(activeMembership?.channels[0]?.id ?? null)
+  }, [activeMembership?.channels])
 
   const contextValue: UserContextValue = useMemo(
     () => ({
@@ -84,8 +74,21 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       activeMembership,
       activeChannel,
       refetchUserMemberships,
+      memberId: currentUser?.membershipId ?? null,
+      accountId: currentUser?.joystreamAccount ?? null,
+      channelId,
+      setActiveChannel: setChannelId,
     }),
-    [activeChannel, memberships, membershipsLoading, activeMembership, refetchUserMemberships]
+    [
+      memberships,
+      membershipsLoading,
+      activeMembership,
+      activeChannel,
+      refetchUserMemberships,
+      currentUser?.membershipId,
+      currentUser?.joystreamAccount,
+      channelId,
+    ]
   )
 
   if (error) {

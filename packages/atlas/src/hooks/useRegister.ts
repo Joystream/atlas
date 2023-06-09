@@ -9,8 +9,8 @@ import { AES, enc, lib, mode } from 'crypto-js'
 import { useCallback } from 'react'
 
 import { ORION_AUTH_URL } from '@/config/env'
-import { useLogIn } from '@/hooks/useLogIn'
-import { scryptHash } from '@/utils/user'
+import { scryptHash } from '@/providers/auth/auth.helpers'
+import { useAuth } from '@/providers/auth/auth.hooks'
 
 export const keyring = new Keyring({ type: 'sr25519', ss58Format: JOYSTREAM_ADDRESS_PREFIX })
 
@@ -48,8 +48,13 @@ type EmailPasswordParams = {
 
 type RegisterParams = ExtensionParams | EmailPasswordParams
 
+export enum RegisterError {
+  EmailAlreadyExists = 'EmailAlreadyExists',
+  UnknownError = 'UnknownError',
+}
+
 export const useRegister = () => {
-  const handleLogin = useLogIn()
+  const { handleLogin } = useAuth()
 
   return useCallback(
     async (params: RegisterParams) => {
@@ -99,23 +104,29 @@ export const useRegister = () => {
         registerPayload.email = params.email
         registerSignature = await params.signature(JSON.stringify(registerPayload))
       }
-
-      await axios.post(
-        `${ORION_AUTH_URL}/account`,
-        {
-          payload: registerPayload,
-          signature: registerSignature,
-        },
-        {
-          withCredentials: true,
-          headers: {
-            'Content-Type': 'application/json',
+      try {
+        await axios.post(
+          `${ORION_AUTH_URL}/account`,
+          {
+            payload: registerPayload,
+            signature: registerSignature,
           },
+          {
+            withCredentials: true,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+      } catch (e) {
+        if (e.response.data.message === 'Account with the provided e-mail address already exists.') {
+          throw new Error(RegisterError.EmailAlreadyExists)
         }
-      )
+        throw new Error(RegisterError.EmailAlreadyExists)
+      }
 
       await handleLogin({
-        type: 'extension',
+        type: 'external',
         address: registerPayload.joystreamAccountId,
         sign:
           params.type === 'extension'

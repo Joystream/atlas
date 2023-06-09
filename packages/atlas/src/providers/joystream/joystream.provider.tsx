@@ -18,7 +18,7 @@ export type JoystreamContextValue = {
   joystream: Remote<JoystreamLib> | undefined
   proxyCallback: ProxyCallbackFn
   chainState: ReturnType<typeof useJoystreamChainConstants>
-  setApiActiveAccount: (address: string) => void
+  setApiActiveAccount: (type: 'seed' | 'address', address: string) => Promise<boolean>
 } & ReturnType<typeof useJoystreamUtilFns>
 
 export const JoystreamContext = createContext<JoystreamContextValue | undefined>(undefined)
@@ -34,6 +34,7 @@ export const JoystreamProvider: FC<PropsWithChildren> = ({ children }) => {
   const { nodeOverride } = useEnvironmentStore((state) => state)
   const setNodeConnection = useConnectionStatusStore((state) => state.actions.setNodeConnection)
   const [initialized, setInitialized] = useState(false)
+  const [awaitingAccount, setAwaitingAccount] = useState<['seed' | 'address', string] | null>(null)
   const handleNodeConnectionUpdate = useCallback(
     (connected: boolean) => {
       setNodeConnection(connected ? 'connected' : 'disconnected')
@@ -46,6 +47,28 @@ export const JoystreamProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const utilFns = useJoystreamUtilFns()
   const chainState = useJoystreamChainConstants(joystream.current)
+
+  const setApiActiveAccount: JoystreamContextValue['setApiActiveAccount'] = useCallback(
+    async (payloadType, payload) => {
+      const instance = joystream.current
+      if (!initialized || !instance) {
+        setAwaitingAccount([payloadType, payload])
+        return false
+      }
+
+      if (!wallet?.signer && payloadType === 'address') {
+        SentryLogger.error(
+          "Failed to get signer from web3FromAddress and customSigner wasn't provided",
+          'JoystreamProvider'
+        )
+        return false
+      }
+      await instance.setActiveAccount(payloadType, payload, wallet?.signer ? proxy(wallet.signer) : undefined)
+
+      return true
+    },
+    [initialized, wallet?.signer]
+  )
 
   // initialize Joystream Lib
   useEffect(() => {
@@ -66,28 +89,12 @@ export const JoystreamProvider: FC<PropsWithChildren> = ({ children }) => {
     }
   }, [handleNodeConnectionUpdate, nodeOverride, setNodeConnection])
 
-  const setApiActiveAccount = useCallback(
-    async (address: string) => {
-      const instance = joystream.current
-
-      if (!initialized || !instance || !wallet) {
-        return
-      }
-
-      const previousAccountId = await instance?.selectedAccountId
-      if (address === previousAccountId) {
-        return
-      }
-
-      const { signer } = wallet
-      if (!signer) {
-        SentryLogger.error('Failed to get signer from web3FromAddress', 'JoystreamProvider')
-        return
-      }
-      await instance.setActiveAccount(address, proxy(signer))
-    },
-    [initialized, wallet]
-  )
+  useEffect(() => {
+    if (initialized && awaitingAccount) {
+      setApiActiveAccount(...awaitingAccount)
+      setAwaitingAccount(null)
+    }
+  }, [awaitingAccount, initialized, setApiActiveAccount])
 
   return (
     <JoystreamContext.Provider

@@ -1,8 +1,10 @@
 import { Wallet } from '@talismn/connect-wallets'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 
+import { GetMembershipsQuery, useGetMembershipsLazyQuery } from '@/api/queries/__generated__/memberships.generated'
 import { SvgActionNewTab, SvgAlertsError24, SvgAlertsInformative24, SvgLogoPolkadot } from '@/assets/icons'
 import { IconWrapper } from '@/components/IconWrapper'
+import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
 import { Loader } from '@/components/_loaders/Loader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMountEffect } from '@/hooks/useMountEffect'
@@ -13,7 +15,6 @@ import { capitalizeFirstLetter } from '@/utils/misc'
 
 import { MOBILE_SUPPORTED_WALLETS, walletSort } from './ExternalSignInModalWalletStep.utils'
 
-import { ExternalSignInModalStepTemplate } from '../ExternalSignInModalStepTemplate'
 import {
   ListItemsWrapper,
   StyledBottomBanner,
@@ -25,10 +26,15 @@ import { ModalSteps, SignInStepProps } from '../ExternalSignInSteps.types'
 
 export const isMobileDevice = isMobile()
 
-export const ExternalSignInModalWalletStep: FC<SignInStepProps> = ({
+export type ExternalSignInModalWalletStepProps = SignInStepProps & {
+  setAvailableMemberships: (members: GetMembershipsQuery['memberships']) => void
+}
+
+export const ExternalSignInModalWalletStep: FC<ExternalSignInModalWalletStepProps> = ({
   setPrimaryButtonProps,
   goToStep,
   hasNavigatedBack,
+  setAvailableMemberships,
 }) => {
   const smMatch = useMediaMatch('sm')
 
@@ -36,7 +42,7 @@ export const ExternalSignInModalWalletStep: FC<SignInStepProps> = ({
   const [hasError, setHasError] = useState(false)
   const [isConnecting, setIsConnecting] = useState(false)
   const { wallet: walletFromStore, signInToWallet } = useWallet()
-
+  const [fetchMemberships] = useGetMembershipsLazyQuery({})
   const wallets = useMemo(() => {
     const unsortedWallets = getWalletsList().filter((wallet) => wallet.installed)
     if (isMobileDevice) {
@@ -85,17 +91,30 @@ export const ExternalSignInModalWalletStep: FC<SignInStepProps> = ({
 
     setIsConnecting(true)
     setHasError(false)
-    const success = await signInToWallet(selectedWallet.extensionName)
-    setIsConnecting(false)
+    const accounts = await signInToWallet(selectedWallet.extensionName)
 
-    if (!success) {
+    if (!accounts) {
       setHasError(true)
       // set error state
       return
     }
 
-    goToStep(ModalSteps.Membership)
-  }, [goToStep, selectedWallet, signInToWallet])
+    const res = await fetchMemberships({
+      variables: {
+        where: {
+          controllerAccount_in: accounts.map((acc) => acc.address),
+        },
+      },
+    })
+    setIsConnecting(false)
+
+    if (res.data?.memberships.length) {
+      setAvailableMemberships(res.data.memberships)
+      goToStep(ModalSteps.Membership)
+    } else {
+      goToStep(ModalSteps.NoMembership)
+    }
+  }, [fetchMemberships, goToStep, selectedWallet, setAvailableMemberships, signInToWallet])
 
   const handleSelectWallet = useCallback((idx: number) => {
     setSelectedWalletIdx(idx)
@@ -130,7 +149,7 @@ export const ExternalSignInModalWalletStep: FC<SignInStepProps> = ({
   }, [handleConfirm, isConnecting, selectedWallet, setPrimaryButtonProps])
 
   return (
-    <ExternalSignInModalStepTemplate
+    <AuthenticationModalStepTemplate
       title={`Select wallet ${isMobileDevice ? 'app' : ''}`}
       subtitle={
         isMobileDevice
@@ -180,6 +199,6 @@ export const ExternalSignInModalWalletStep: FC<SignInStepProps> = ({
           icon={<SvgAlertsInformative24 />}
         />
       ) : null}
-    </ExternalSignInModalStepTemplate>
+    </AuthenticationModalStepTemplate>
   )
 }

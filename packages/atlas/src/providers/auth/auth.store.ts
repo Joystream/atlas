@@ -1,25 +1,24 @@
 import { createStore } from '@/utils/store'
 
+import { AuthModals } from './auth.types'
+
 export type AuthStoreState = {
   anonymousUserId: string | null
-  signInModalOpen: boolean
-  signUpModalOpen: boolean
+  authModalOpenName?: AuthModals
   encodedSeed: string | null
 }
 
 export type AuthStoreActions = {
   setAnonymousUserId: (anonymousUserId: string | null) => void
-  setEncodedSeed: (encodedSeed: string) => void
-  setSignInModalOpen: (isOpen: boolean) => void
-  setSignUpModalOpen: (isOpen: boolean) => void
+  setEncodedSeed: (encodedSeed: string | null) => void
+  setAuthModalOpenName: (modal?: AuthModals) => void
 }
 
 export const useAuthStore = createStore<AuthStoreState, AuthStoreActions>(
   {
     state: {
       anonymousUserId: null,
-      signInModalOpen: false,
-      signUpModalOpen: false,
+      authModalOpenName: undefined,
       encodedSeed: null,
     },
     actionsFactory: (set) => ({
@@ -33,14 +32,9 @@ export const useAuthStore = createStore<AuthStoreState, AuthStoreActions>(
           state.encodedSeed = encodedSeed
         })
       },
-      setSignInModalOpen: (isOpen) => {
+      setAuthModalOpenName: (modal) => {
         set((state) => {
-          state.signInModalOpen = isOpen
-        })
-      },
-      setSignUpModalOpen: (isOpen) => {
-        set((state) => {
-          state.signInModalOpen = isOpen
+          state.authModalOpenName = modal
         })
       },
     }),

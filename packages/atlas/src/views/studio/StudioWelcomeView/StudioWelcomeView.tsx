@@ -6,6 +6,8 @@ import { SubTitle, WelcomeView } from '@/components/WelcomeView'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { useUser } from '@/providers/user/user.hooks'
 
 import { InlineText, LeftStep, RightStep, StepsContainer, StyledSvgActionChevronR } from './StudioWelcomeView.styles'
@@ -20,6 +22,9 @@ export type Membership = {
 export const StudioWelcomeView: FC = () => {
   const { isLoggedIn } = useUser()
   const mdMatch = useMediaMatch('md')
+  const {
+    actions: { setAuthModalOpenName },
+  } = useAuthStore()
 
   return (
     <WelcomeView
@@ -89,8 +94,7 @@ export const StudioWelcomeView: FC = () => {
       buttons={[
         isLoggedIn
           ? { size: 'large', to: absoluteRoutes.studio.newChannel(), children: 'Create channel' }
-          : // todo: add signin callback
-            { size: 'large', onClick: () => undefined, children: 'Set up membership' },
+          : { size: 'large', onClick: () => setAuthModalOpenName(getCorrectLoginModal()), children: 'Log in' },
         {
           size: 'large',
           variant: 'tertiary',

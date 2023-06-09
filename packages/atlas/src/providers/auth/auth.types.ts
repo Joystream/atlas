@@ -1,13 +1,15 @@
-import { KeyringPair } from '@polkadot/keyring/types'
+import { ApolloQueryResult } from '@apollo/client'
 
 import { GetCurrentAccountQuery } from '@/api/queries/__generated__/accounts.generated'
 
 export type AuthContextValue = {
-  handleLogin: (params: LoginParams) => Promise<LogInHandler>
-  initializationState: 'loggedIn' | 'logging' | 'needAuthentication' | null
-  keypair: KeyringPair | null
+  handleLogin: (params: LoginParams) => Promise<string>
+  isAuthenticating: boolean
   loggedAddress: string | null
-  currentUser?: GetCurrentAccountQuery['accountData']
+  currentUser?: GetCurrentAccountQuery['accountData'] | null
+  refetchCurrentUser: () => Promise<ApolloQueryResult<GetCurrentAccountQuery>>
+  handleLogout: () => Promise<void>
+  isLoggedIn: boolean
 }
 
 export type UserSigner = 'external' | 'internal'
@@ -17,14 +19,8 @@ export enum LogInErrors {
   ArtifactsNotFound = 'ArtifactsNotFound',
   NoAccountFound = 'NoAccountFound',
   InvalidPayload = 'InvalidPayload',
-  LoginError = 'LoginError',
-}
-
-export type LogInHandler = {
-  data: {
-    accountId: string
-  } | null
-  error?: LogInErrors
+  UnknownError = 'UnknownError',
+  SignatureCancelled = 'SignatureCancelled',
 }
 
 export type InternalLogin = {
@@ -40,3 +36,5 @@ export type ExternalLogin = {
 }
 
 export type LoginParams = InternalLogin | ExternalLogin
+
+export type AuthModals = 'logIn' | 'externalLogIn' | 'signUp'

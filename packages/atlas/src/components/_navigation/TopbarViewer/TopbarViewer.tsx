@@ -1,6 +1,7 @@
 import { ChangeEvent, FC, MouseEvent, useCallback, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
+import shallow from 'zustand/shallow'
 
 import { SvgActionMember } from '@/assets/icons'
 import { AppLogo } from '@/components/AppLogo'
@@ -12,6 +13,9 @@ import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
+import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
+import { useAuth } from '@/providers/auth/auth.hooks'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { useSearchStore } from '@/providers/search'
 import { useUser } from '@/providers/user/user.hooks'
@@ -29,7 +33,8 @@ import {
 } from './TopbarViewer.styles'
 
 export const TopbarViewer: FC = () => {
-  const { isLoggedIn, activeMembership } = useUser()
+  const { activeMembership, isLoggedIn, membershipsLoading } = useUser()
+  const { isAuthenticating } = useAuth()
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
 
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
@@ -42,6 +47,13 @@ export const TopbarViewer: FC = () => {
     searchQuery,
     actions: { setSearchOpen, setSearchQuery },
   } = useSearchStore()
+  const { setAuthModalOpenName } = useAuthStore(
+    (state) => ({
+      authModalOpenName: state.authModalOpenName,
+      setAuthModalOpenName: state.actions.setAuthModalOpenName,
+    }),
+    shallow
+  )
 
   useEffect(() => {
     if (searchOpen) {
@@ -84,7 +96,7 @@ export const TopbarViewer: FC = () => {
     setIsMemberDropdownActive(!isMemberDropdownActive)
   }
 
-  const topbarButtonLoaded = true
+  const topbarButtonLoading = isAuthenticating || membershipsLoading
 
   return (
     <>
@@ -117,7 +129,7 @@ export const TopbarViewer: FC = () => {
               timeout={parseInt(cVar('animationTimingFast', true))}
             >
               <ButtonWrapper>
-                {topbarButtonLoaded ? (
+                {!topbarButtonLoading ? (
                   isLoggedIn ? (
                     <SignedButtonsWrapper>
                       <NotificationsWidget trigger={<NotificationsButton />} />
@@ -144,8 +156,7 @@ export const TopbarViewer: FC = () => {
                         icon={<SvgActionMember />}
                         iconPlacement="left"
                         size="medium"
-                        // todo: add handler
-                        onClick={() => undefined}
+                        onClick={() => setAuthModalOpenName(getCorrectLoginModal())}
                       >
                         Log in
                       </Button>
@@ -156,9 +167,10 @@ export const TopbarViewer: FC = () => {
                     <StyledButtonSkeletonLoader width={mdMatch ? 102 : 78} height={40} />
                   </SignedButtonsWrapper>
                 )}
-                {!searchQuery && !mdMatch && !isLoggedIn && topbarButtonLoaded && (
-                  // todo: add handler
-                  <StyledIconButton onClick={() => undefined}>Log in</StyledIconButton>
+                {!searchQuery && !mdMatch && !isLoggedIn && !topbarButtonLoading && (
+                  <StyledIconButton onClick={() => setAuthModalOpenName(getCorrectLoginModal())}>
+                    Log in
+                  </StyledIconButton>
                 )}
               </ButtonWrapper>
             </CSSTransition>

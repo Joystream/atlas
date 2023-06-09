@@ -79,16 +79,12 @@ export const HeaderContent = styled.div`
 export const Content = styled.div<ContentProps>`
   overflow-y: auto;
   overflow-x: hidden;
-  padding: ${({ noContentPadding, hasFooter }) =>
-    !noContentPadding
-      ? `var(--local-size-dialog-padding) var(--local-size-dialog-padding) ${
-          hasFooter ? 0 : 'var(--local-size-dialog-padding)'
-        } var(--local-size-dialog-padding) `
-      : 0};
+  padding: ${({ noContentPadding }) => !noContentPadding && 'var(--local-size-dialog-padding)'};
 `
 
 export const footerDividersStyles = css`
   box-shadow: ${cVar('effectDividersTop')};
+  padding-top: var(--local-size-dialog-padding);
 `
 
 type FooterProps = {

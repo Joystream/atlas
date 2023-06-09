@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import shallow from 'zustand/shallow'
 
 import { SvgActionHide, SvgActionShow } from '@/assets/icons'
 import { Button } from '@/components/_buttons/Button'
@@ -9,7 +10,9 @@ import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { atlasConfig } from '@/config'
-import { LogInErrors, useLogIn } from '@/hooks/useLogIn'
+import { useAuth } from '@/providers/auth/auth.hooks'
+import { useAuthStore } from '@/providers/auth/auth.store'
+import { LogInErrors } from '@/providers/auth/auth.types'
 import { useSnackbar } from '@/providers/snackbars'
 
 import { Container } from './LogInModal.styles'
@@ -19,11 +22,11 @@ import { AuthenticationModalStepTemplate } from '../AuthenticationModalStepTempl
 export const LogInModal = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isPasswordShown, setPasswordShown] = useState(false)
-  const handleLogIn = useLogIn()
+  const { handleLogin, refetchCurrentUser } = useAuth()
   const { displaySnackbar } = useSnackbar()
   const {
     register,
-    handleSubmit,
+    handleSubmit: _handleSubmit,
     setError,
     formState: { errors },
   } = useForm<{ email: string; password: string }>({
@@ -34,45 +37,65 @@ export const LogInModal = () => {
       })
     ),
   })
+  const { authModalOpenName, setAuthModalOpenName } = useAuthStore(
+    (state) => ({
+      authModalOpenName: state.authModalOpenName,
+      setAuthModalOpenName: state.actions.setAuthModalOpenName,
+    }),
+    shallow
+  )
 
   const handleLoginClick = async (email: string, password: string) => {
     setIsLoading(true)
-    const res = await handleLogIn({ type: 'emailPassword', email, password })
-
-    if (res.error === LogInErrors.ArtifactsNotFound) {
-      displaySnackbar({
-        title: `We can't find ${atlasConfig.general.appName} membership associated with this email`,
-        description: `Make sure that you are using the same email that you used to create your membership on ${atlasConfig.general.appName}.`,
-        iconType: 'error',
+    handleLogin({ type: 'internal', email, password })
+      .then(() => {
+        setAuthModalOpenName(undefined)
+        refetchCurrentUser()
       })
-      setError('email', { type: 'custom', message: 'Incorrect email or password.' })
-      setError('password', { type: 'custom', message: 'Incorrect email or password.' })
-      setIsLoading(false)
-      return
-    }
-
-    setIsLoading(false)
+      .catch((error) => {
+        if (error.message === LogInErrors.ArtifactsNotFound) {
+          displaySnackbar({
+            title: `We can't find ${atlasConfig.general.appName} membership associated with this email`,
+            description: `Make sure that you are using the same email that you used to create your membership on ${atlasConfig.general.appName}.`,
+            iconType: 'error',
+          })
+          setError('email', { type: 'custom', message: 'Incorrect email or password.' })
+          setError('password', { type: 'custom', message: 'Incorrect email or password.' })
+        }
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
   }
+
+  const handleSubmit = () =>
+    _handleSubmit((data) => {
+      handleLoginClick(data.email, data.password)
+    })()
 
   return (
     <DialogModal
-      show
+      show={authModalOpenName === 'logIn'}
       primaryButton={{
         text: isLoading ? 'Waiting...' : 'Log in',
         disabled: isLoading,
-        onClick: () =>
-          handleSubmit((data) => {
-            handleLoginClick(data.email, data.password)
-          })(),
+        onClick: handleSubmit,
       }}
       secondaryButton={
         !isLoading
           ? {
               text: 'Sign up',
+              onClick: () => setAuthModalOpenName('signUp'),
             }
           : undefined
       }
-      additionalActionsNode={!isLoading && <Button variant="tertiary">Close</Button>}
+      additionalActionsNode={
+        !isLoading && (
+          <Button variant="tertiary" onClick={() => setAuthModalOpenName(undefined)}>
+            Close
+          </Button>
+        )
+      }
     >
       {!isLoading ? (
         <AuthenticationModalStepTemplate
@@ -89,6 +112,11 @@ export const LogInModal = () => {
                 {...register('password')}
                 placeholder="Password"
                 type={isPasswordShown ? 'text' : 'password'}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSubmit()
+                  }
+                }}
                 actionButton={{
                   tooltipText: isPasswordShown ? 'Hide' : 'Show',
                   dontFocusOnClick: true,
