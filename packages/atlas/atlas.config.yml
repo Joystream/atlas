@@ -144,10 +144,6 @@ features:
 
         If you opt in to the Auto-sync feature you also agree to [YouTube's Terms of Service (https://www.youtube.com/t/terms)](https://www.youtube.com/t/terms) and [Google's Privacy Policy (https://www.google.com/policies/privacy).](https://www.google.com/policies/privacy)
 
-        ## Auto-sync service
-
-        In order to simplify the upload of content to $VITE_APP_NAME App, JS Genesis team has built a dedicated backend application, integrated with YouTube and $VITE_APP_NAME to facilitate the content upload. It is hosted on the JSGenesis operated infrastructure and operated by JS Genesis team.
-
         This requests access to the necessary information via YouTube API, namely "read_only" scope to your YouTube channel data. This happens during the authorisation flow as part of the YPP program onboarding. The App fetches only the information that YouTube exposes in the read_only scope and required to effectively operate the program via the open API.
 
         Account Info: email address.
@@ -181,6 +177,10 @@ features:
         In case the original YouTube video license was set to Creative Commons, such videos will be assigned CC0 license, allowing all viewers to distribute such videos freely in the public domain, allowing them to be built upon, enhanced and reused by others for any purpose without restrictions.
 
         License can be updated manually for each videos individually from the list of available options.
+
+        ## Auto-sync service
+
+        In order to simplify the upload of content to $VITE_APP_NAME App, JS Genesis team has built a dedicated backend application, integrated with YouTube and $VITE_APP_NAME to facilitate the content upload. It is hosted on the JSGenesis operated infrastructure and operated by JS Genesis team.
 
         ## Opt out
 
@@ -443,6 +443,8 @@ content:
       name: Thai
     - isoCode: tr
       name: Turkish
+    - isoCode: uk
+      name: Ukrainian
     - isoCode: ur
       name: Urdu
     - isoCode: vi
@@ -461,12 +463,16 @@ analytics:
     rootHostname: '$VITE_LIVESESSION_ROOT_HOSTNAME'
   usersnap: # Usersnap can be used to capture user feedback
     id: '$VITE_USERSNAP_ID'
+  GA: # Google Analytics
+    id: '$VITE_GA_ID'
+  segment: # Segment Analytics
+    id: '$VITE_SEGMENT_ID'
 
 legal:
   termsOfService: |
     # Terms of Service
 
-    Last updated on the 29th of May 2023
+    Last updated on the 9th of June 2023
 
     This Terms of Service ("Agreement") is a binding obligation between you ("User") and Jsgenesis AS ("Company", "We", "Us", "Our") for use of our Joystream Player interface ("$VITE_APP_NAME") hosted at play.joystream.org and all other products (collectively "Software") developed and published by Us.
 
@@ -486,7 +492,7 @@ legal:
 
     ## 3. Privacy Policy
 
-    Please see our Privacy Policy [(https://www.joystream.org/privacy-policy/)](https://www.joystream.org/privacy-policy/) for information regarding privacy.
+    Please see our Privacy Policy [(https://gleev.xyz/legal/privacyPolicy)](https://gleev.xyz/legal/privacyPolicy/) for information regarding privacy.
 
     ## 4. Membership
 
@@ -605,7 +611,7 @@ legal:
     Licenses supported may be updated at any time and full set of licenses that are available for selection in the App upon video upload or uploaded via Command Line interface are contained in [this file](https://github.com/Joystream/atlas/blob/master/packages/atlas/src/data/knownLicenses.json)
   privacyPolicy: |
     # 1. Privacy Policy
-    Last updated on the 23rd of February 2022
+    Last updated on the 9th of June 2023
 
     ## 1.1 Agreement to the Policy
 
@@ -617,7 +623,7 @@ legal:
 
     This Privacy Policy may be changed at the sole discretion of Company. If any material changes are made, the User will be notified in the Service that is used. Note that adding new products to be included in the term Software, e.g. a new User facing product replacing the App or a new tool for uploading Content, is not considered material as it will not affect Users unless they adopt the new product. Changing software names, terminology used in this Privacy Policy, and changing link locations are also examples of non-material changes.
 
-    ## 1.3 Information colleted
+    ## 1.3 Information collected
 
     All data written to the Blockchain, is implicitly collected not only by Company, but also anyone else in the world that is running the Full Node locally, or accessed via the App or a third party. This includes, but is not limited to, Content hashes, Membership profile, Memo field, and any other way a User can record data on the Blockchain. ‍
 
@@ -641,18 +647,16 @@ legal:
 
     We use cookies for the following purposes our Service:
 
-      - Provide Analytics
-      - Store preferences
-      - Persistant local storage of Keys and Membership.
+    Essential cookies for storing guest anonymous user session information and store preferences.
+    Non-essential cookies to provide Website Analytics.
 
     ## 2.3 Third-party Cookies
 
-    In addition to our own cookies, we also use various third-party cookies to report usage statistics of the Service, deliver advertisements on and through the Service, and so on. They include:
+    In addition to our own cookies, we also use various third-party cookies to report usage statistics of the Service. They include:
 
-      - Google Analytics
-      - Mailchimp (Only when signing up for any of our newsletters)
-      - Godaddy
-      - Sentry
+    - Google Analytics: collect information and report site usage statistics without personally identifying individual visitors to Google. '_ga', the main cookie used by Google Analytics, enables a service to distinguish one visitor from another.
+    - Segment CDP:  writes the user's IDs to the user's local storage and uses that as the Segment ID on the cookie whenever possible.
+    - Livesession: writes cookies to distinguish users from one another for the purpose of tracking website usage patterns.
 
     ## 2.4 Regarding Your Cookies
 

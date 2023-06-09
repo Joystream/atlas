@@ -10,8 +10,11 @@ import { AdminModal } from '@/components/_overlays/AdminModal'
 import { OperatorsContextProvider } from '@/providers/assets/assets.provider'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
+import { SegmentAnalyticsProvider } from '@/providers/segmentAnalytics/segment.provider'
 import { UserProvider } from '@/providers/user/user.provider'
 import { GlobalStyles } from '@/styles'
+
+import { FORCE_MAINTENANCE } from './config/env'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,14 +35,16 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
         <QueryClientProvider client={queryClient}>
           <UserProvider>
             <OverlayManagerProvider>
-              <ConfirmationModalProvider>
-                <BrowserRouter>
-                  <AdminModal />
-                  <MaintenanceWrapper>
-                    <OperatorsContextProvider>{children}</OperatorsContextProvider>
-                  </MaintenanceWrapper>
-                </BrowserRouter>
-              </ConfirmationModalProvider>
+              <SegmentAnalyticsProvider>
+                <ConfirmationModalProvider>
+                  <BrowserRouter>
+                    <AdminModal />
+                    <MaintenanceWrapper>
+                      <OperatorsContextProvider>{children}</OperatorsContextProvider>
+                    </MaintenanceWrapper>
+                  </BrowserRouter>
+                </ConfirmationModalProvider>
+              </SegmentAnalyticsProvider>
             </OverlayManagerProvider>
           </UserProvider>
         </QueryClientProvider>
@@ -49,9 +54,13 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
 }
 
 const MaintenanceWrapper: FC<PropsWithChildren> = ({ children }) => {
-  const { isKilled, wasKilledLastTime, error, loading } = useGetKillSwitch({ context: { delay: 1000 } })
+  const isMaintenanceForced = FORCE_MAINTENANCE === 'true'
+  const { isKilled, wasKilledLastTime, error, loading } = useGetKillSwitch({
+    context: { delay: 1000 },
+    skip: isMaintenanceForced,
+  })
 
-  if (isKilled || (error && wasKilledLastTime) || (loading && wasKilledLastTime)) {
+  if (isKilled || (error && wasKilledLastTime) || (loading && wasKilledLastTime) || isMaintenanceForced) {
     return <Maintenance />
   } else {
     return <>{children}</>

@@ -1,9 +1,10 @@
 import styled from '@emotion/styled'
 import BN from 'bn.js'
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 
 import { Fee } from '@/components/Fee'
-import { Text } from '@/components/Text'
+import { FormField } from '@/components/_inputs/FormField'
 import { TokenInput } from '@/components/_inputs/TokenInput'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { tokenNumberToHapiBn } from '@/joystream-lib/utils'
@@ -13,6 +14,7 @@ import { sizes } from '@/styles'
 type ChangePriceDialogProps = {
   onModalClose: () => void
   isOpen: boolean
+  currentPrice: number
   onChangePrice: (id: string, price: BN) => void
   nftId: string | null
   memberId: string | null
@@ -21,31 +23,46 @@ type ChangePriceDialogProps = {
 export const ChangePriceDialog: FC<ChangePriceDialogProps> = ({
   onModalClose,
   isOpen,
+  currentPrice,
   onChangePrice,
   nftId,
   memberId,
 }) => {
-  const [price, setPrice] = useState<number | null>(null)
-  const amountBn = tokenNumberToHapiBn(price || 0)
+  const {
+    reset,
+    handleSubmit,
+    watch,
+    control,
+    formState: { errors },
+  } = useForm<{ price: number }>({
+    defaultValues: {
+      price: currentPrice,
+    },
+  })
+  const amountBn = tokenNumberToHapiBn(watch('price') || 0)
   const { fullFee, loading: feeLoading } = useFee(
     'changeNftPriceTx',
     isOpen && memberId && nftId ? [memberId, nftId, amountBn.toString()] : undefined
   )
 
-  const handleSubmitPriceChange = () => {
-    if (!nftId || !price) {
-      return
-    }
-    setPrice(null)
-    onModalClose()
-    onChangePrice(nftId, tokenNumberToHapiBn(price))
-  }
+  useEffect(() => {
+    reset({ price: currentPrice })
+  }, [currentPrice, reset])
 
   useEffect(() => {
     if (!isOpen) {
-      setPrice(null)
+      reset({ price: currentPrice })
     }
-  }, [isOpen])
+  }, [currentPrice, isOpen, reset])
+
+  const handleSubmitPriceChange = () => {
+    handleSubmit((data) => {
+      if (!nftId) {
+        return
+      }
+      onChangePrice(nftId, tokenNumberToHapiBn(data.price))
+    })()
+  }
 
   return (
     <DialogModal
@@ -53,7 +70,6 @@ export const ChangePriceDialog: FC<ChangePriceDialogProps> = ({
       show={isOpen}
       primaryButton={{
         text: 'Change price',
-        disabled: !price,
         onClick: handleSubmitPriceChange,
       }}
       secondaryButton={{
@@ -64,10 +80,27 @@ export const ChangePriceDialog: FC<ChangePriceDialogProps> = ({
       additionalActionsNode={<Fee amount={fullFee} loading={feeLoading} variant="h200" />}
     >
       <>
-        <Text as="p" variant="t200" color="colorText">
-          You can update the price of this NFT anytime.
-        </Text>
-        <StyledTokenInput value={price} onChange={(value) => setPrice(value)} />
+        <Controller
+          control={control}
+          name="price"
+          rules={{
+            validate: {
+              valid: (val) => {
+                if (!val) {
+                  return 'Provide a price.'
+                }
+                if (val === currentPrice) {
+                  return 'Provide new price.'
+                }
+              },
+            },
+          }}
+          render={({ field: { onChange, value } }) => (
+            <FormField error={errors.price?.message}>
+              <StyledTokenInput value={value} onChange={(value) => onChange(value)} />
+            </FormField>
+          )}
+        />
       </>
     </DialogModal>
   )

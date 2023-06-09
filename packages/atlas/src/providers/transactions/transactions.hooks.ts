@@ -203,45 +203,49 @@ export const useTransaction = (): HandleTransactionFn => {
         let isAfterBlockCheck = false
         let isAfterMetaStatusCheck = false
         // if this is a metaprotocol transaction, we will also wait until we successfully query the transaction result from QN
-        const queryNodeSyncPromise = new Promise<void>((resolve, reject) => {
-          const syncCallback = async () => {
-            let status: MetaprotocolTransactionResultFieldsFragment | undefined = undefined
-            isAfterBlockCheck = true
-            try {
-              if (result.metaprotocol && result.transactionHash) {
-                status = await getMetaprotocolTxStatus(result.transactionHash)
-              }
-            } catch (e) {
-              reject(e)
-              return
-            } finally {
-              isAfterMetaStatusCheck = true
-            }
-
-            if (onTxSync) {
+        const queryNodeSyncPromiseFactory = () =>
+          new Promise<void>((resolve, reject) => {
+            const syncCallback = async () => {
+              let status: MetaprotocolTransactionResultFieldsFragment | undefined = undefined
+              isAfterBlockCheck = true
               try {
-                await onTxSync(result, status)
-              } catch (error) {
-                SentryLogger.error('Failed transaction sync callback', 'TransactionManager', error)
+                if (result.metaprotocol && result.transactionHash) {
+                  status = await getMetaprotocolTxStatus(result.transactionHash)
+                }
+              } catch (e) {
+                reject(e)
+                return
+              } finally {
+                isAfterMetaStatusCheck = true
               }
+
+              if (onTxSync) {
+                try {
+                  await onTxSync(result, status)
+                } catch (error) {
+                  SentryLogger.error('Failed transaction sync callback', 'TransactionManager', error)
+                }
+              }
+              resolve()
             }
-            resolve()
-          }
 
-          if (disableQNSync) {
-            syncCallback()
-          } else {
-            addBlockAction({ callback: syncCallback, targetBlock: result.block })
-          }
-        })
+            if (disableQNSync) {
+              syncCallback()
+            } else {
+              addBlockAction({ callback: syncCallback, targetBlock: result.block })
+            }
+          })
 
-        await withTimeout(queryNodeSyncPromise, 20_000).catch((error) => {
+        await withTimeout(queryNodeSyncPromiseFactory(), 15_000).catch(async (error) => {
           SentryLogger.error('TEST: Processor sync promise timeout error', 'TransactionManager', {
             error,
             txResult: result,
             isAfterBlockCheck,
             isAfterMetaStatusCheck,
           })
+
+          disableQNSync = true
+          await queryNodeSyncPromiseFactory()
         })
 
         /* === transaction was successful, do necessary cleanup === */
