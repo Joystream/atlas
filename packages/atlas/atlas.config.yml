@@ -128,7 +128,7 @@ features:
 
         ## Other ways Joystream Channels can get rewards
 
-        Joystream DAO operating model encapsulates rewards for Joystream channels paid out outside of the Youtube Partnership Program. Gleev Operator, JS Genesis AS has no responsibility or control over such mechanisms and they are listed below.
+        Joystream DAO operating model encapsulates rewards for Joystream channels paid out outside of the YouTube Partnership Program. Gleev Operator, JS Genesis AS has no responsibility or control over such mechanisms and they are listed below.
 
         1. Payout Proposal to Channels by DAO Council.
         2. Direct Payment from DAO Working Group Budget by WG Lead.
@@ -144,11 +144,7 @@ features:
 
           If access of the JSGenesis operated backend app to your YouTube channel is disabled on the side of Google account, then you are automatically opted out from the YPP program and no longer qualify for rewards.
 
-          ## License
-
-        In order to simplify the upload of content to $VITE_APP_NAME App, JS Genesis team has built a dedicated backend application, integrated with YouTube and $VITE_APP_NAME to facilitate the content upload. It is hosted on the JSGenesis operated infrastructure and operated by JS Genesis team.
-
-          In case the original YouTube video license was set to Standard-YouTube-License, such videos will be assigned Joystream-license, limiting the replication and usage of such content without the explicit consent of the author.
+        This requests access to the necessary information via YouTube API, namely "read_only" scope to your YouTube channel data. This happens during the authorisation flow as part of the YPP program onboarding. The App fetches only the information that YouTube exposes in the read_only scope and required to effectively operate the program via the open API.
 
           In case the original YouTube video license was set to Creative Commons, such videos will be assigned CC0 license, allowing all viewers to distribute such videos freely in the public domain, allowing them to be built upon, enhanced and reused by others for any purpose without restrictions.
 
@@ -180,7 +176,11 @@ features:
 
           If the channel is suspended from the program, it can no longer re-apply with the same credentials and can barred indefinitely or for the period to the discretion of JS Genesis team.
 
-          ## Disclaimer
+        ## Auto-sync service
+
+        In order to simplify the upload of content to $VITE_APP_NAME App, JS Genesis team has built a dedicated backend application, integrated with YouTube and $VITE_APP_NAME to facilitate the content upload. It is hosted on the JSGenesis operated infrastructure and operated by JS Genesis team.
+
+        ## Opt out
 
         Channel can opt out from auto-sync feature by choosing this option in the settings tab of the YPP dashboard. Opting out from Auto-sync would stop automated upload of all new content published to YouTube channel, but would keep the $VITE_APP_NAME channel in the YPP program, meaning that referral rewards can still be collected.
 
@@ -422,6 +422,8 @@ content:
       name: Thai
     - isoCode: tr
       name: Turkish
+    - isoCode: uk
+      name: Ukrainian
     - isoCode: ur
       name: Urdu
     - isoCode: vi
@@ -440,12 +442,16 @@ analytics:
     rootHostname: '$VITE_LIVESESSION_ROOT_HOSTNAME'
   usersnap: # Usersnap can be used to capture user feedback
     id: '$VITE_USERSNAP_ID'
+  GA: # Google Analytics
+    id: '$VITE_GA_ID'
+  segment: # Segment Analytics
+    id: '$VITE_SEGMENT_ID'
 
 legal:
   termsOfService: |
     # Terms of Service
 
-    Last updated on the 29th of May 2023
+    Last updated on the 9th of June 2023
 
     This Terms of Service ("Agreement") is a binding obligation between you ("User") and Jsgenesis AS ("Company", "We", "Us", "Our") for use of our Joystream Player interface ("$VITE_APP_NAME") hosted at play.joystream.org and all other products (collectively "Software") developed and published by Us.
 
@@ -465,7 +471,7 @@ legal:
 
     ## 3. Privacy Policy
 
-    Please see our Privacy Policy (https://www.joystream.org/privacy-policy/) for information regarding privacy.
+    Please see our Privacy Policy [(https://gleev.xyz/legal/privacyPolicy)](https://gleev.xyz/legal/privacyPolicy/) for information regarding privacy.
 
     ## 4. Membership
 
@@ -491,7 +497,7 @@ legal:
 
     ## 7. Content Takedown Policy
 
-    Jsgenesis has established a policy for content takedowns in accordance with the Digital Millennium Copyright Act (DMCA) which can be viewed at https://play.joystream.org/legal/copyright.
+    Jsgenesis has established a policy for content takedowns in accordance with the Digital Millennium Copyright Act (DMCA) which can be viewed at [https://play.joystream.org/legal/copyright](https://play.joystream.org/legal/copyright).
 
     ## 8. Governing Law
 
@@ -501,7 +507,7 @@ legal:
 
     Jsgenesis AS, the developers of the Joystream protocol, have established a copyright infringement policy in accordance with the Digital Millennium Copyright Act.
 
-    Copyright owners and their agents may notify us in cases where content hosted on our testnets (available publicly at https://play.joystream.org and https://testnet.joystream.org) infringes on their copyrights by sending a DMCA notice to us using the contact information below.
+    Copyright owners and their agents may notify us in cases where content hosted on our testnets (available publicly at [https://play.joystream.org](https://play.joystream.org) and [https://testnet.joystream.org](https://testnet.joystream.org)) infringes on their copyrights by sending a DMCA notice to us using the contact information below.
 
     Upon receipt of a valid and complete notice, we will remove the content from our public-facing applications as quickly as possible. We may also suspend the ability of the uploader to participate further on our testnet.
 
@@ -562,7 +568,7 @@ legal:
 
     For the synced videos with Creative Commons License, Auto-sync service assigns CCO license, explained below. 
 
-    More information can be found following _this link_ [https://creativecommons.org/share-your-work/public-domain/cc0] 
+    More information can be found following [this link](https://creativecommons.org/share-your-work/public-domain/cc0)
 
     3. Custom License
 
@@ -581,10 +587,10 @@ legal:
 
     5. License Config File
 
-    Licenses supported may be updated at any time and full set of licenses that are available for selection in the App upon video upload or uploaded via Command Line interface are contained in this file: https://github.com/Joystream/atlas/blob/master/packages/atlas/src/data/knownLicenses.json
+    Licenses supported may be updated at any time and full set of licenses that are available for selection in the App upon video upload or uploaded via Command Line interface are contained in [this file](https://github.com/Joystream/atlas/blob/master/packages/atlas/src/data/knownLicenses.json)
   privacyPolicy: |
     # 1. Privacy Policy
-    Last updated on the 14th of April 2023
+    Last updated on the 9th of June 2023
 
     ## 1.1 Agreement to the Policy
 
@@ -598,20 +604,15 @@ legal:
 
     ## 1.3 Information collected
 
-    All data written to the Blockchain, is implicitly collected not only by Company, but also anyone else in the world that is running the Full Node locally, or accessed via the App or a third party. This includes, but is not limited to, Content hashes, Membership profile, Memo field, and any other way a User can record data on the Blockchain.
+    All data written to the Blockchain, is implicitly collected not only by Company, but also anyone else in the world that is running the Full Node locally, or accessed via the App or a third party. This includes, but is not limited to, Content hashes, Membership profile, Memo field, and any other way a User can record data on the Blockchain. ‍
 
     When using the faucet subpage of the Website, Company will record the IP address behind every new request for tokens. This data will be deleted every 14 days.
 
     Company uses Google Analytics, with IP anonymization, to collect statistics on Website and the version of App hosted by us. All customisable data sharing settings are turned off to improve the privacy of Users.
 
-    Company also uses Livesession to help us find bugs, improve UX and more by using session replays. Sensitive data such as passwords and IP addresses are anonimized.
+    Company also uses Livesession to help us find bugs, improve UX and more by using session replays. Sensitive data such as passwords and IP addresses are anonymized.
 
-    Company will not sell your data for advertising, or other purposes, but reserves the right to use the membership profile, channel and video assets meta data in advertising and promotional activities of $VITE_APP_NAME app, Joystream blockchain or JS Genesis AS operating company.
-
-    The assets are listed but not limited to:
-    - channel name, brand, logo, membership name, videos and NFTs count, video and NFT metadata, price sold, bids made, creator tokens minted, creator tokens purchased and sold via sale or AMM, royalties earned, associated YouTube channel and profile data where applies, as well as using actual content and user data published to $VITE_APP_NAME or Joystream Blockchain.
-
-    This information can be used without any limits and compensation to the owner for $VITE_APP_NAME App, Joystream blockchain or and DAO advertising materials distributed on social media, email or any other medium subject to choice and full discretion of JS Genesis AS, Joystream DAO community or contractors of DAO or JS Genesis AS.
+    Company will not sell your data for advertising, or other purposes.
 
     # 2. Cookies Policy
 
@@ -625,35 +626,19 @@ legal:
 
     We use cookies for the following purposes our Service:
 
-      - Provide Analytics
-      - Store preferences
-      - Persistant local storage of Keys and Membership.
+    Essential cookies for storing guest anonymous user session information and store preferences.
+    Non-essential cookies to provide Website Analytics.
 
     ## 2.3 Third-party Cookies
 
-    In addition to our own cookies, we also use various third-party cookies to report usage statistics of the Service, deliver advertisements on and through the Service, and so on. They include:
+    In addition to our own cookies, we also use various third-party cookies to report usage statistics of the Service. They include:
 
-      - Google Analytics
-      - Mailchimp (Only when signing up for any of our newsletters)
-      - Godaddy
-      - Sentry
+    - Google Analytics: collect information and report site usage statistics without personally identifying individual visitors to Google. '_ga', the main cookie used by Google Analytics, enables a service to distinguish one visitor from another.
+    - Segment CDP:  writes the user's IDs to the user's local storage and uses that as the Segment ID on the cookie whenever possible.
+    - Livesession: writes cookies to distinguish users from one another for the purpose of tracking website usage patterns.
 
     ## 2.4 Regarding Your Cookies
 
     If you would like to delete cookies or instruct your web browser to delete or refuse cookies, please visit the help pages of your web browser.
 
     Please note, however, that if you delete cookies or refuse to accept them, you might not be able to use all of the features we offer, you may not be able to store your preferences, and some of our pages might not display properly.
-
-    # 3. YouTube Integration Disclosure
-
-    $VITE_APP_NAME is integrated with Google API for the YouTube partnership program of creator onboarding. This feature is available at [gleev.xyz/ypp](gleev.xyz/ypp). $VITE_APP_NAME’s app use and transfer to any other app of information received from Google APIs will adhere to [Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy#additional_requirements_for_specific_api_scopes), including the Limited Use requirements.
-
-    # 4. Sentry Disclosure
-
-    ## 4.1 Sentry Logging Data Processing
-
-    We are using Sentry for collecting client side error logs. Sentry's Data Processing Policy is covered in [this document](https://sentry.io/legal/dpa/#data-processing).
-
-    ## 4.2 Sentry Sessions Replay
-
-    We also have Sentry Sessions Replay feature. To reduce the risk of Personally Identifiable Information (PII) being ingested and stored on our servers, Sentry’s Session Replay SDK is designed to be “private by default”. The Session Replay SDK in its default configuration redacts all HTML text nodes and images before it leaves the browser. During playback, redacted text nodes and images are clearly denoted using asterisks and static gray boxes, respectively. So none of the sensitive data is recorded or available for $VITE_APP_NAME Product and Operations team.

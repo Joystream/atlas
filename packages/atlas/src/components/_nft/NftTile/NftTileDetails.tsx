@@ -70,7 +70,6 @@ export const NftTileDetails: FC<NftTileDetailsProps> = memo(
     const [contentHovered, setContentHovered] = useState(false)
     const setOpenedContextMenuId = useMiscStore((state) => state.actions.setOpenedContextMenuId)
     const openedContexMenuId = useMiscStore((state) => state.openedContexMenuId)
-    const toggleContentHover = () => setContentHovered((prevState) => !prevState)
     const [tileSize, setTileSize] = useState<TileSize>()
     const { ref: contentRef } = useResizeObserver<HTMLAnchorElement>({
       box: 'border-box',
@@ -188,8 +187,8 @@ export const NftTileDetails: FC<NftTileDetailsProps> = memo(
         to={videoHref || ''}
         ref={contentRef}
         loading={loading}
-        onMouseEnter={toggleContentHover}
-        onMouseLeave={toggleContentHover}
+        onMouseEnter={() => setContentHovered(true)}
+        onMouseLeave={() => setContentHovered(false)}
         tileSize={tileSize}
         shouldHover={(contentHovered || hovered) && interactable}
       >
@@ -204,17 +203,18 @@ export const NftTileDetails: FC<NftTileDetailsProps> = memo(
             avatars={avatars}
           />
           {contextMenuItems && (
-            <div>
+            <div
+              onClick={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
+              }}
+            >
               <KebabMenuButtonIcon
                 ref={ref}
                 icon={<SvgActionMore />}
                 variant="tertiary"
                 size="small"
                 isActive={!loading}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  e.preventDefault()
-                }}
               />
               <ContextMenu
                 ref={contextMenuInstanceRef}

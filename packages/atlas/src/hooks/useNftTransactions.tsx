@@ -105,8 +105,12 @@ export const useNftTransactions = () => {
 
       openModal({
         title: 'Remove from sale?',
-        description: 'Are you sure you want to remove this NFT from sale? You can put it back on sale anytime.',
-        type: 'warning',
+        description: `Are you sure you want to remove this NFT from sale? ${
+          saleType === 'buyNow'
+            ? 'You can put it back on sale anytime.'
+            : 'You may lose the bids that were already placed.'
+        } `,
+        type: 'destructive',
         primaryButton: {
           text: 'Remove',
           onClick: () => {

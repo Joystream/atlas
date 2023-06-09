@@ -8,7 +8,6 @@ import { imageUrlValidation } from '@/utils/asset'
 
 import {
   ActivityItemContainer,
-  DateRow,
   DateText,
   DescriptionSkeletonLoader,
   PillAndDateContainer,
@@ -71,7 +70,7 @@ export const ActivityItem: FC<ActivityItemProps> = ({
         {loading ? (
           <TitleSkeletonLoader />
         ) : (
-          <Title as="h3" variant={getTitleTextVariant()} clampAfterLine={smMatch ? 2 : 1}>
+          <Title as="h3" variant={getTitleTextVariant()} title={title}>
             {title}
           </Title>
         )}
@@ -90,8 +89,7 @@ export const ActivityItem: FC<ActivityItemProps> = ({
           <Pill label={type} size="medium" />
           {date && (
             <DateText as="p" variant="t100" color="colorText">
-              <DateRow>{format(date, 'd MMM yyyy')},</DateRow>
-              <DateRow> {format(date, 'HH:mm')}</DateRow>
+              {format(date, 'd MMM yyyy')} at {format(date, 'HH:mm')}
             </DateText>
           )}
         </PillAndDateContainer>

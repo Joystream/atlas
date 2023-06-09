@@ -15,8 +15,8 @@ import { ActivityItem } from './ActivityItem'
 import { ActivitiesRecord, useActivities } from './MemberActivity.hooks'
 import {
   GridRowWrapper,
+  InfoListItem,
   OverviewContainer,
-  OverviewItem,
   OverviewTextContainer,
   StyledIconWrapper,
   StyledLink,
@@ -227,7 +227,7 @@ export const MemberActivity: FC<MemberActivityProps> = ({
                 Overview
               </Text>
               <OverviewContainer>
-                <OverviewItem>
+                <InfoListItem>
                   <StyledIconWrapper icon={<SvgActionBuyNow />} size="large" />
                   <OverviewTextContainer>
                     <Text as="span" variant="t100" color="colorText">
@@ -237,8 +237,8 @@ export const MemberActivity: FC<MemberActivityProps> = ({
                       {activitiesTotalCounts.nftsBoughts}
                     </Text>
                   </OverviewTextContainer>
-                </OverviewItem>
-                <OverviewItem>
+                </InfoListItem>
+                <InfoListItem>
                   <StyledIconWrapper icon={<SvgActionSell />} size="large" />
                   <OverviewTextContainer>
                     <Text as="span" variant="t100" color="colorText">
@@ -248,9 +248,9 @@ export const MemberActivity: FC<MemberActivityProps> = ({
                       {activitiesTotalCounts.nftsSold}
                     </Text>
                   </OverviewTextContainer>
-                </OverviewItem>
+                </InfoListItem>
                 <GridRowWrapper>
-                  <OverviewItem>
+                  <InfoListItem>
                     <StyledIconWrapper icon={<SvgActionMint />} size="large" />
                     <OverviewTextContainer>
                       <Text as="span" variant="t100" color="colorText">
@@ -260,8 +260,8 @@ export const MemberActivity: FC<MemberActivityProps> = ({
                         {activitiesTotalCounts.nftsIssued}
                       </Text>
                     </OverviewTextContainer>
-                  </OverviewItem>
-                  <OverviewItem>
+                  </InfoListItem>
+                  <InfoListItem>
                     <StyledIconWrapper icon={<SvgActionBid />} size="large" />
                     <OverviewTextContainer>
                       <Text as="span" variant="t100" color="colorText">
@@ -271,7 +271,7 @@ export const MemberActivity: FC<MemberActivityProps> = ({
                         {activitiesTotalCounts.nftsBidded}
                       </Text>
                     </OverviewTextContainer>
-                  </OverviewItem>
+                  </InfoListItem>
                 </GridRowWrapper>
               </OverviewContainer>
             </GridItem>
