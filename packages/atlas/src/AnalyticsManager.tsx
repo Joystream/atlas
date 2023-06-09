@@ -1,6 +1,7 @@
 import ls from '@livesession/sdk'
 import { FC, useCallback, useEffect } from 'react'
 import ReactGA from 'react-ga'
+import { useLocation } from 'react-router-dom'
 
 import { atlasConfig } from '@/config'
 import { BUILD_ENV } from '@/config/env'
@@ -9,6 +10,7 @@ import { usePersonalDataStore } from '@/providers/personalData'
 export const AnalyticsManager: FC = () => {
   const cookiesAccepted = usePersonalDataStore((state) => state.cookiesAccepted)
   const analyticsEnabled = BUILD_ENV === 'production' && cookiesAccepted
+  const location = useLocation()
 
   const initUsersnap = useCallback(() => {
     if (!atlasConfig.analytics.usersnap?.id) return
