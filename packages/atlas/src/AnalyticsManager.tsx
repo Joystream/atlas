@@ -1,5 +1,6 @@
 import ls from '@livesession/sdk'
 import { FC, useCallback, useEffect } from 'react'
+import ReactGA from 'react-ga'
 
 import { atlasConfig } from '@/config'
 import { BUILD_ENV } from '@/config/env'
@@ -36,6 +37,12 @@ export const AnalyticsManager: FC = () => {
     ls.newPageView()
   }, [])
 
+  const initGA = useCallback(() => {
+    if (!atlasConfig.analytics.GA?.id) return
+
+    ReactGA.initialize(atlasConfig.analytics.GA.id)
+  }, [])
+
   // initialize livesession
   useEffect(() => {
     if (!analyticsEnabled) return
@@ -49,6 +56,21 @@ export const AnalyticsManager: FC = () => {
 
     initUsersnap()
   }, [analyticsEnabled, initUsersnap])
+
+  //initialize Google Analytics
+  useEffect(() => {
+    if (!analyticsEnabled) return
+
+    initGA()
+  }, [analyticsEnabled, initGA])
+
+  //track pageview in GA
+  useEffect(() => {
+    if (!analyticsEnabled || !atlasConfig.analytics.GA?.id) {
+      return
+    }
+    ReactGA.pageview(location.pathname)
+  }, [location.pathname, analyticsEnabled])
 
   return null
 }

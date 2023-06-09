@@ -463,6 +463,10 @@ analytics:
     rootHostname: '$VITE_LIVESESSION_ROOT_HOSTNAME'
   usersnap: # Usersnap can be used to capture user feedback
     id: '$VITE_USERSNAP_ID'
+  GA: # Google Analytics
+    id: '$VITE_GA_ID'
+  segment: # Segment Analytics
+    id: '$VITE_SEGMENT_ID'
 
 legal:
   termsOfService: |
