@@ -44,3 +44,4 @@ export const DEFAULT_DATA_ENV = readEnv('DEFAUL_DATA_ENV', false, true) || BUILD
 export const JOY_PRICE_SERVICE_URL = readEnv('PRICE_SERVICE_URL', false, true)
 export const USER_LOCATION_SERVICE_URL = readEnv('GEOLOCATION_SERVICE_URL', true, true)
 export const HCAPTCHA_SITE_KEY = readEnv('HCAPTCHA_SITE_KEY', false, true)
+export const FORCE_MAINTENANCE = readEnv('FORCE_MAINTENANCE', false, true)
