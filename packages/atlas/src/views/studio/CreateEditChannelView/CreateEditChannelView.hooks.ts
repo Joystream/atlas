@@ -50,7 +50,7 @@ type CreateEditChannelData = {
 
 export const useCreateEditChannelSubmit = () => {
   const { joystream, proxyCallback } = useJoystream()
-  const { channelId, memberId, setActiveUser, refetchUserMemberships } = useUser()
+  const { channelId, memberId, setActiveChannel, refetchUserMemberships } = useUser()
   const addNewChannelIdToUploadsStore = useUploadsStore((state) => state.actions.addNewChannelId)
   const getBucketsConfigForNewChannel = useBucketsConfigForNewChannel()
   const { channelStateBloatBondValue, dataObjectStateBloatBondValue } = useBloatFeesAndPerMbFees()
@@ -191,7 +191,7 @@ export const useCreateEditChannelSubmit = () => {
 
         if (data.newChannel) {
           // when creating a channel, refetch operators before uploading so that storage bag assignments gets populated for a new channel
-          setActiveUser({ channelId })
+          setActiveChannel(channelId)
           fetchStorageOperators().then(() => {
             uploadAssets(result)
           })
@@ -254,7 +254,7 @@ export const useCreateEditChannelSubmit = () => {
       proxyCallback,
       rawMetadataProcessor,
       refetchUserMemberships,
-      setActiveUser,
+      setActiveChannel,
       startFileUpload,
     ]
   )

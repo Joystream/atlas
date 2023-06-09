@@ -7,6 +7,7 @@ import { useMutation } from 'react-query'
 import { FAUCET_URL } from '@/config/env'
 import { MemberId } from '@/joystream-lib/types'
 import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
+import { useAuth } from '@/providers/auth/auth.hooks'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
@@ -43,7 +44,8 @@ type CreateMemberArgs = {
   onError: (step: SignUpSteps) => void
 }
 export const useCreateMember = () => {
-  const { refetchUserMemberships, setActiveUser } = useUser()
+  const { handleLogin } = useAuth()
+  const { refetchUserMemberships } = useUser()
   const [emailAlreadyRegisteredMemberId, setEmailAlreadyRegisteredMemberId] = useState('')
   const setAnonymousUserId = useAuthStore((store) => store.actions.setAnonymousUserId)
   const { joystream } = useJoystream()
@@ -95,7 +97,6 @@ export const useCreateMember = () => {
             if (lastCreatedMembership) {
               await registerAccount(data.email, data.password, data.mnemonic, memberId.toString())
               setAnonymousUserId('')
-              setActiveUser({ accountId: address, memberId: lastCreatedMembership.id, channelId: null })
             }
 
             if (!joystream) {
@@ -105,6 +106,7 @@ export const useCreateMember = () => {
             const { lockedBalance } = await joystream.getAccountBalance(address)
             const amountOfTokens = hapiBnToTokenNumber(new BN(lockedBalance))
             onSuccess(amountOfTokens)
+            handleLogin({ type: 'internal', ...data })
           } catch (error) {
             if (error instanceof OrionAccountError) {
               const errorCode = error.status
@@ -137,8 +139,8 @@ export const useCreateMember = () => {
         if (emailAlreadyRegisteredMemberId) {
           await registerAccount(data.email, data.password, data.mnemonic, emailAlreadyRegisteredMemberId.toString())
           setAnonymousUserId('')
-          setActiveUser({ accountId: address, memberId: emailAlreadyRegisteredMemberId, channelId: null })
           onSuccess()
+          handleLogin({ type: 'internal', ...data })
           return
         }
         const { block, memberId } = await createNewMember(address, data)
@@ -206,9 +208,9 @@ export const useCreateMember = () => {
       createNewMember,
       displaySnackbar,
       emailAlreadyRegisteredMemberId,
+      handleLogin,
       joystream,
       refetchUserMemberships,
-      setActiveUser,
       setAnonymousUserId,
     ]
   )

@@ -339,9 +339,9 @@ export const VideoView: FC = () => {
                   placement="top-start"
                   offsetY={8}
                   delay={[1000, null]}
-                  text={`${formatDate(video.createdAt)} at ${format(video.createdAt, 'HH:mm')}`}
+                  text={`${formatDate(new Date(video.createdAt))} at ${format(new Date(video.createdAt), 'HH:mm')}`}
                 >
-                  {formatDate(video.createdAt)}
+                  {formatDate(new Date(video.createdAt))}
                 </Tooltip>{' '}
                 • <NumberFormat as="span" format="full" value={video.viewsNum} color="colorText" /> views
               </>

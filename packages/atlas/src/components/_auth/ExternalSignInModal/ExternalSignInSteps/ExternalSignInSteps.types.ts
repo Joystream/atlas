@@ -7,6 +7,7 @@ export enum ModalSteps {
   Email = 'Email',
   Register = 'Register',
   ExtensionSigning = 'ExtensionSigning',
+  NoMembership = 'NoMembership',
 }
 
 export type SignInStepProps = {

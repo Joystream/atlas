@@ -11,6 +11,8 @@ import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
+import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { useUser } from '@/providers/user/user.hooks'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
@@ -26,7 +28,9 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
   const { channelId, activeMembership } = useUser()
   const mdMatch = useMediaMatch('md')
   const hasAtLeastOneChannel = !!activeMembership?.channels.length && activeMembership?.channels.length >= 1
-
+  const {
+    actions: { setAuthModalOpenName },
+  } = useAuthStore()
   const { isWorkspaceOpen, setIsWorkspaceOpen, uploadVideoButtonProps } = useVideoWorkspace()
 
   const currentChannel = activeMembership?.channels.find((channel) => channel.id === channelId)
@@ -91,9 +95,8 @@ export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo, isMembers
               <StyledAvatarGroup size="large" shouldHighlightEveryAvatar reverse avatars={avatars} clickable={false} />
             </StudioTopbarContainer>
           ) : (
-            // todo: add handler
-            <Button size="medium" onClick={() => undefined}>
-              Set up membership
+            <Button size="medium" onClick={() => setAuthModalOpenName(getCorrectLoginModal())}>
+              Log in
             </Button>
           ))}
       </StyledTopbarBase>

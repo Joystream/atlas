@@ -15,6 +15,7 @@ import { TopbarStudio } from '@/components/_navigation/TopbarStudio'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
+import { useAuth } from '@/providers/auth/auth.hooks'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { ConnectionStatusManager, useConnectionStatusStore } from '@/providers/connectionStatus'
 import { UploadsManager } from '@/providers/uploads/uploads.manager'
@@ -63,16 +64,17 @@ const StudioLayout = () => {
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const { channelId, memberships, isLoggedIn, membershipsLoading } = useUser()
+  const { isAuthenticating } = useAuth()
 
   const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useConfirmationModal()
   const [enterLocation] = useState(location.pathname)
+  const isMembershipLoaded = !membershipsLoading && !isAuthenticating
   const { trackPageView } = useSegmentAnalytics()
-  const isMembershipLoaded = !membershipsLoading
   const hasMembership = !!memberships?.length
 
   const channelSet = !!channelId && hasMembership
   const { currentChannel, isLoading } = useGetYppSyncedChannels()
-  const isLoadingYPPData = isLoading || membershipsLoading
+  const isLoadingYPPData = isLoading || membershipsLoading || isAuthenticating
   const isYppSigned = !!currentChannel
 
   useEffect(() => {
@@ -121,7 +123,7 @@ const StudioLayout = () => {
         nodeConnectionStatus={nodeConnectionStatus}
         isConnectedToInternet={internetConnectionStatus === 'connected'}
       />
-      {membershipsLoading ? (
+      {membershipsLoading || isAuthenticating ? (
         <StudioLoading />
       ) : (
         <>

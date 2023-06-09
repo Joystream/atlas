@@ -1,11 +1,13 @@
 import { IChannelMetadata, IMembershipMetadata, ISubtitleMetadata, IVideoMetadata } from '@joystream/metadata-protobuf'
 import { AugmentedEvent, AugmentedEvents } from '@polkadot/api/types/events'
 import { GenericEvent } from '@polkadot/types'
+import { IKeyringPair } from '@polkadot/types/types/interfaces'
 
 import { JoystreamLibExtrinsics } from './extrinsics'
 
 export type StringifiedNumber = string
 
+export type AtlasSigner = IKeyringPair | string
 export type AccountId = string
 export type MemberId = string
 export type ChannelId = string

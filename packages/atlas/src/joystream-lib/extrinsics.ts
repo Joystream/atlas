@@ -32,7 +32,7 @@ import {
   wrapMetadata,
 } from './metadata'
 import {
-  AccountId,
+  AtlasSigner,
   ChannelExtrinsicResult,
   ChannelId,
   ChannelInputAssets,
@@ -63,7 +63,7 @@ import {
   VideoReaction,
 } from './types'
 
-type AccountIdAccessor = () => AccountId | null
+type AccountIdAccessor = () => AtlasSigner | null
 type PublicExtrinsic<TxFunction, ReturnValue> = TxFunction extends (...a: infer U) => unknown
   ? (...a: [...U, ExtrinsicStatusCallbackFn | undefined]) => Promise<ReturnValue>
   : never

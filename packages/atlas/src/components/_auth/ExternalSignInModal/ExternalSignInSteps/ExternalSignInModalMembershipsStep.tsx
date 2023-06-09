@@ -1,23 +1,25 @@
 import { FC, useCallback, useEffect } from 'react'
 import shallow from 'zustand/shallow'
 
+import { GetMembershipsQuery } from '@/api/queries/__generated__/memberships.generated'
 import { Avatar } from '@/components/Avatar'
-import { LogInErrors, useLogIn } from '@/hooks/useLogIn'
+import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
+import { useAuth } from '@/providers/auth/auth.hooks'
 import { useAuthStore } from '@/providers/auth/auth.store'
+import { LogInErrors } from '@/providers/auth/auth.types'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
-import { useUser } from '@/providers/user/user.hooks'
 import { shortenString } from '@/utils/misc'
 
-import { ExternalSignInModalStepTemplate } from './ExternalSignInModalStepTemplate'
 import { ListItemsWrapper, StyledListItem } from './ExternalSignInSteps.styles'
 import { ModalSteps, SignInStepProps } from './ExternalSignInSteps.types'
 
 type SignInModalAccountStepProps = SignInStepProps & {
   memberId: string | null
   setMemberId: (id: string) => void
+  memberships: GetMembershipsQuery['memberships'] | null
 }
 
 export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps> = ({
@@ -26,56 +28,59 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
   goToStep,
   setMemberId,
   memberId,
+  memberships,
 }) => {
   const smMatch = useMediaMatch('sm')
-  const { setSignInModalOpen } = useAuthStore(
-    (state) => ({ setSignInModalOpen: state.actions.setSignInModalOpen }),
+  const { setAuthModalOpenName } = useAuthStore(
+    (state) => ({ setAuthModalOpenName: state.actions.setAuthModalOpenName }),
     shallow
   )
-  const { memberships } = useUser()
   const { setApiActiveAccount } = useJoystream()
 
   const { joystream } = useJoystream()
-  const handleLogin = useLogIn()
+  const { handleLogin } = useAuth()
   const { displaySnackbar } = useSnackbar()
 
   const handleConfirm = useCallback(async () => {
     if (!joystream?.signMessage) return
 
-    const member = memberships.find((entity) => entity.id === memberId)
+    const member = memberships?.find((entity) => entity.id === memberId)
 
     if (!member) return
 
-    setApiActiveAccount(member.controllerAccount)
+    await setApiActiveAccount('address', member.controllerAccount)
 
-    goToStep(ModalSteps.Logging)
-    const res = await handleLogin({
-      type: 'extension',
+    goToStep(ModalSteps.ExtensionSigning)
+    await handleLogin({
+      type: 'external',
       sign: (data) =>
-        joystream.signMessage(
-          {
-            type: 'payload',
-            data,
-          },
-          member.controllerAccount
-        ),
+        joystream.signMessage({
+          type: 'payload',
+          data,
+        }),
       address: member.controllerAccount,
     })
-
-    if (res.error === LogInErrors.NoAccountFound) {
-      return goToStep(ModalSteps.Email)
-    }
-
-    if (res.error === LogInErrors.InvalidPayload) {
-      displaySnackbar({
-        iconType: 'error',
-        title: 'There was a problem with signature. Please try again.',
+      .then(() => {
+        setAuthModalOpenName(undefined)
       })
-    }
-
-    if (res.data) {
-      setSignInModalOpen(false)
-    }
+      .catch((error) => {
+        if (error.message === LogInErrors.NoAccountFound) {
+          return goToStep(ModalSteps.Email)
+        }
+        if (error.message === LogInErrors.InvalidPayload) {
+          displaySnackbar({
+            iconType: 'error',
+            title: 'There was a problem with signature. Please try again.',
+          })
+        }
+        if (error.message === LogInErrors.SignatureCancelled) {
+          displaySnackbar({
+            iconType: 'warning',
+            title: 'Message signing cancelled',
+          })
+          goToStep(ModalSteps.Membership)
+        }
+      })
   }, [
     displaySnackbar,
     goToStep,
@@ -84,13 +89,13 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
     memberId,
     memberships,
     setApiActiveAccount,
-    setSignInModalOpen,
+    setAuthModalOpenName,
   ])
 
   useEffect(() => {
     if (memberId) return
 
-    setMemberId(memberships[0]?.id)
+    setMemberId(memberships?.[0]?.id ?? '')
   }, [memberId, memberships, setMemberId])
 
   // send updates to SignInModal on state of primary button
@@ -103,13 +108,13 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
   }, [handleConfirm, memberId, setPrimaryButtonProps])
 
   return (
-    <ExternalSignInModalStepTemplate
+    <AuthenticationModalStepTemplate
       title="Select membership"
       subtitle="It looks like you have multiple memberships connected to this wallet. Select membership which you want to log in."
       hasNavigatedBack={hasNavigatedBack}
     >
       <ListItemsWrapper>
-        {memberships.map((member) => (
+        {memberships?.map((member) => (
           <StyledListItem
             key={member.id}
             label={member.handle ?? 'Account'}
@@ -121,6 +126,6 @@ export const ExternalSignInModalMembershipsStep: FC<SignInModalAccountStepProps>
           />
         ))}
       </ListItemsWrapper>
-    </ExternalSignInModalStepTemplate>
+    </AuthenticationModalStepTemplate>
   )
 }

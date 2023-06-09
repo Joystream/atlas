@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode } from 'react'
+import { ReactElement, ReactNode, useRef } from 'react'
 
 import { SvgActionMember } from '@/assets/icons'
 import {
@@ -9,7 +9,10 @@ import {
   Wrapper,
 } from '@/components/_auth/ProtectedActionWrapper/ProtectedActionWrapper.styles'
 import { Button } from '@/components/_buttons/Button'
-import { Popover } from '@/components/_overlays/Popover'
+import { Popover, PopoverImperativeHandle } from '@/components/_overlays/Popover'
+import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
+import { useAuthStore } from '@/providers/auth/auth.store'
+import { useUser } from '@/providers/user/user.hooks'
 
 type ProtectedActionWrapperProps = {
   title: string
@@ -18,18 +21,22 @@ type ProtectedActionWrapperProps = {
   className?: string
 }
 
-const useAuthUser = () => ({ isLogged: false })
 export const ProtectedActionWrapper = ({
   children,
   title,
   description,
   className,
 }: ProtectedActionWrapperProps): ReactElement => {
-  const { isLogged } = useAuthUser()
+  const { isLoggedIn } = useUser()
+  const popperRef = useRef<PopoverImperativeHandle>()
+  const {
+    actions: { setAuthModalOpenName },
+  } = useAuthStore()
 
-  if (!isLogged) {
+  if (!isLoggedIn) {
     return (
       <Popover
+        ref={popperRef}
         boundariesElement={document.body}
         trigger={<UnclickableWrapper className={className}>{children}</UnclickableWrapper>}
       >
@@ -42,7 +49,15 @@ export const ProtectedActionWrapper = ({
               {description}
             </Description>
           </TextContainer>
-          <Button size="small" icon={<SvgActionMember />} variant="primary">
+          <Button
+            size="small"
+            icon={<SvgActionMember />}
+            onClick={() => {
+              setAuthModalOpenName(getCorrectLoginModal())
+              popperRef.current?.hide()
+            }}
+            variant="primary"
+          >
             Log in
           </Button>
         </Wrapper>

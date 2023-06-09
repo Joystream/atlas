@@ -2,14 +2,13 @@ import bezier from 'bezier-easing'
 import { BN } from 'bn.js'
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { mergeRefs } from 'react-merge-refs'
-import { useNavigate } from 'react-router'
 import { useTransition } from 'react-spring'
 import useResizeObserver from 'use-resize-observer'
 
 import { absoluteRoutes } from '@/config/routes'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
-import { useAuthStore } from '@/providers/auth/auth.store'
+import { useAuth } from '@/providers/auth/auth.hooks'
 import { useSubscribeAccountBalance } from '@/providers/joystream'
 import { useUser } from '@/providers/user/user.hooks'
 import { cVar } from '@/styles'
@@ -29,12 +28,8 @@ export type MemberDropdownProps = {
 
 export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
   ({ publisher, isActive, closeDropdown, onChannelChange }, ref) => {
-    const navigate = useNavigate()
-    const { channelId, activeMembership, memberships, signOut, setActiveUser, membershipsLoading } = useUser()
-    const {
-      actions: { setSignInModalOpen },
-    } = useAuthStore()
-    const { identifyUser } = useSegmentAnalytics()
+    const { channelId, activeMembership, memberships, setActiveChannel, membershipsLoading } = useUser()
+    const { handleLogout } = useAuth()
     const [showWithdrawDialog, setShowWithdrawDialog] = useState(false)
     const [disableScrollDuringAnimation, setDisableScrollDuringAnimation] = useState(false)
 
@@ -74,24 +69,6 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
       onRest: () => setDisableScrollDuringAnimation(false),
     })
 
-    const handleAddNewMember = useCallback(() => {
-      closeDropdown?.()
-      setSignInModalOpen(true)
-    }, [closeDropdown, setSignInModalOpen])
-
-    const handleMemberChange = useCallback(
-      (memberId: string, accountId: string, channelId: string | null) => {
-        setActiveUser({ accountId, memberId, channelId })
-        identifyUser(memberId)
-        setIsList(false)
-
-        if (publisher) {
-          navigate(absoluteRoutes.studio.index())
-        }
-      },
-      [identifyUser, navigate, publisher, setActiveUser]
-    )
-
     const handleAddNewChannel = useCallback(() => {
       setDropdownType('channel')
       setIsList(false)
@@ -102,10 +79,10 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
       (channelId: string) => {
         setDropdownType('channel')
         setIsList(false)
-        setActiveUser({ channelId })
+        setActiveChannel(channelId)
         onChannelChange?.(channelId)
       },
-      [onChannelChange, setActiveUser]
+      [onChannelChange, setActiveChannel]
     )
 
     const handleSwitch = useCallback((type: 'channel' | 'member', changeToList: boolean) => {
@@ -173,7 +150,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                     <MemberDropdownNav
                       containerRefElement={containerRef.current}
                       channelId={channelId}
-                      onSignOut={signOut}
+                      onSignOut={handleLogout}
                       onShowFundsDialog={() =>
                         dropdownType === 'channel' ? setShowWithdrawDialog(true) : setShowSendDialog(true)
                       }
@@ -195,12 +172,9 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                   <div ref={measureContainerRef}>
                     <MemberDropdownList
                       channelId={channelId}
-                      memberships={memberships}
                       activeMembership={activeMembership}
-                      onMemberChange={handleMemberChange}
                       onChannelChange={handleChannelChange}
                       onAddNewChannel={handleAddNewChannel}
-                      onAddNewMember={handleAddNewMember}
                       onSwitchToNav={(type) => handleSwitch(type, false)}
                       type={dropdownType}
                     />

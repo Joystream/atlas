@@ -1,17 +1,16 @@
-import { zodResolver } from '@hookform/resolvers/zod'
 import { FC, useCallback, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+import { useFormContext } from 'react-hook-form'
 import shallow from 'zustand/shallow'
 
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
-import { useRegister } from '@/hooks/useRegister'
+import { RegisterError, useRegister } from '@/hooks/useRegister'
 import { useAuthStore } from '@/providers/auth/auth.store'
 import { useJoystream } from '@/providers/joystream'
 
-import { ExternalSignInModalStepTemplate } from './ExternalSignInModalStepTemplate'
 import { ModalSteps, SignInStepProps } from './ExternalSignInSteps.types'
+
+import { AuthenticationModalStepTemplate } from '../../AuthenticationModalStepTemplate'
 
 type SignInModalEmailStepProps = SignInStepProps & {
   onConfirm?: (address: string) => void
@@ -25,27 +24,24 @@ export const ExternalSignInModalEmailStep: FC<SignInModalEmailStepProps> = ({
 }) => {
   const handleRegister = useRegister()
   const { joystream } = useJoystream()
-  const { setSignInModalOpen } = useAuthStore(
-    (state) => ({ signInModalOpen: state.signInModalOpen, setSignInModalOpen: state.actions.setSignInModalOpen }),
+  const { setAuthModalOpenName } = useAuthStore(
+    (state) => ({
+      authModalOpenName: state.authModalOpenName,
+      setAuthModalOpenName: state.actions.setAuthModalOpenName,
+    }),
     shallow
   )
-  const { register, formState, handleSubmit } = useForm<{ email: string }>({
-    resolver: zodResolver(
-      z.object({
-        email: z.string().email(),
-      })
-    ),
-  })
-
+  const { handleSubmit, setError, formState, register } = useFormContext<{ email: string }>()
   const handleConfirm = useCallback(async () => {
-    const address = await joystream?.selectedAccountId
-    if (!joystream?.signMessage || !address || !memberId) return
-    goToStep(ModalSteps.Logging)
+    const account = await joystream?.selectedAccountId
+    if (!joystream?.signMessage || !account || !memberId) return
+    const userAddress = typeof account === 'object' ? account.address : account
     await handleSubmit((data) => {
+      goToStep(ModalSteps.ExtensionSigning)
       handleRegister({
         type: 'extension',
         email: data.email,
-        address,
+        address: userAddress,
         signature: (data) =>
           joystream?.signMessage({
             type: 'payload',
@@ -53,10 +49,15 @@ export const ExternalSignInModalEmailStep: FC<SignInModalEmailStepProps> = ({
           }),
         memberId,
       })
-        .then(() => setSignInModalOpen(false))
-        .catch(() => goToStep(ModalSteps.Email))
+        .then(() => setAuthModalOpenName(undefined))
+        .catch((error) => {
+          goToStep(ModalSteps.Email)
+          if (error.message === RegisterError.EmailAlreadyExists) {
+            setError('email', { type: 'custom', message: 'Email already exists' })
+          }
+        })
     })()
-  }, [goToStep, handleRegister, handleSubmit, joystream, memberId, setSignInModalOpen])
+  }, [goToStep, handleRegister, handleSubmit, joystream, memberId, setAuthModalOpenName, setError])
 
   // send updates to SignInModal on state of primary button
   useEffect(() => {
@@ -67,7 +68,7 @@ export const ExternalSignInModalEmailStep: FC<SignInModalEmailStepProps> = ({
   }, [handleConfirm, setPrimaryButtonProps])
 
   return (
-    <ExternalSignInModalStepTemplate
+    <AuthenticationModalStepTemplate
       title="Add your email"
       subtitle="Get notified about important events and stay updated. You can change all notifications permissions in your profile settings."
       hasNavigatedBack={false}
@@ -75,6 +76,6 @@ export const ExternalSignInModalEmailStep: FC<SignInModalEmailStepProps> = ({
       <FormField label="Email" error={formState.errors.email?.message}>
         <Input {...register('email')} placeholder="Email" />
       </FormField>
-    </ExternalSignInModalStepTemplate>
+    </AuthenticationModalStepTemplate>
   )
 }

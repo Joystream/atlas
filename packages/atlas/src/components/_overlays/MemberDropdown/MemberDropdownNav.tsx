@@ -26,7 +26,6 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { getMemberAvatar } from '@/providers/assets/assets.helpers'
-import { useAuthStore } from '@/providers/auth/auth.store'
 import { cVar } from '@/styles'
 import { isMobile } from '@/utils/browser'
 
@@ -85,7 +84,6 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
   channelId,
   activeMembership,
   membershipLoading,
-  hasOneMember,
   accountBalance,
   lockedAccountBalance,
   channelBalance,
@@ -95,7 +93,6 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
   const selectedChannel = activeMembership?.channels.find((chanel) => chanel.id === channelId)
   const { urls: memberAvatarUrls, isLoadingAsset: memberAvatarLoading } = getMemberAvatar(activeMembership)
   const channelAvatarUrls = selectedChannel?.avatarPhoto?.resolvedUrls
-  const setSignInModalOpen = useUserStore((state) => state.actions.setSignInModalOpen)
   const memberAvatarWrapperRef = useRef<HTMLButtonElement>(null)
   const channelAvatarWrapperRef = useRef<HTMLButtonElement>(null)
 
@@ -125,11 +122,6 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
 
   const hasAtLeastOneChannel = activeMembership?.channels.length && activeMembership?.channels.length >= 1
   const hasAtleastTwoChannels = activeMembership?.channels.length && activeMembership?.channels.length >= 2
-
-  const handleAddNewMember = () => {
-    setSignInModalOpen(true)
-    onCloseDropdown?.()
-  }
 
   return (
     <div ref={blockAnimationRef}>
@@ -296,13 +288,6 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
                     nodeStart: <IconWrapper icon={<SvgActionMember />} />,
                     to: absoluteRoutes.viewer.member(activeMembership?.handle),
                   },
-                  {
-                    asButton: true,
-                    label: hasOneMember ? 'Add new member...' : 'Switch member',
-                    nodeStart: <IconWrapper icon={hasOneMember ? <SvgActionPlus /> : <SvgActionSwitchMember />} />,
-                    nodeEnd: !hasOneMember && <SvgActionChevronR />,
-                    onClick: () => (hasOneMember ? handleAddNewMember() : onSwitchToList(type)),
-                  },
                 ]}
               />
             ) : (
@@ -351,7 +336,7 @@ export const MemberDropdownNav: FC<MemberDropdownNavProps> = ({
 type ListItemOptionsProps = {
   publisher?: boolean
   closeDropdown?: () => void
-  listItems: [ListItemProps, ListItemProps]
+  listItems: [ListItemProps, ListItemProps] | [ListItemProps]
 }
 const ListItemOptions: FC<ListItemOptionsProps> = ({ publisher, closeDropdown, listItems }) => {
   return (

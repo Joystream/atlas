@@ -4,6 +4,7 @@ import { CSSTransition } from 'react-transition-group'
 import confettiAnimation from '@/assets/animations/confetti.json'
 import { LottiePlayer } from '@/components/LottiePlayer'
 import { Portal } from '@/components/Portal'
+import { useMountEffect } from '@/hooks/useMountEffect'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { cVar, transitions } from '@/styles'
 
@@ -51,6 +52,12 @@ export const Modal: FC<ModalProps> = ({
       document.removeEventListener('keydown', handleEscPress)
     }
   }, [lastOverlayId, onClickOutside, overlayId])
+
+  useMountEffect(() => {
+    return () => {
+      decrementOverlaysOpenCount()
+    }
+  })
 
   return (
     <Portal containerRef={modalContainerRef}>

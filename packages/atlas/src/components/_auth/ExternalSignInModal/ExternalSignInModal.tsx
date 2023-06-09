@@ -1,11 +1,15 @@
+import { zodResolver } from '@hookform/resolvers/zod/dist/zod'
 import { FC, useCallback, useEffect, useRef, useState } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
+import { z } from 'zod'
 import shallow from 'zustand/shallow'
 
+import { GetMembershipsQuery } from '@/api/queries/__generated__/memberships.generated'
+import { AuthenticationModalStepTemplate } from '@/components/_auth/AuthenticationModalStepTemplate'
 import { ExternalSignInModalEmailStep } from '@/components/_auth/ExternalSignInModal/ExternalSignInSteps/ExternalSignInModalEmailStep'
 import { Button } from '@/components/_buttons/Button'
 import { DialogButtonProps } from '@/components/_overlays/Dialog'
 import { useAuthStore } from '@/providers/auth/auth.store'
-import { useWallet } from '@/providers/wallet/wallet.hooks'
 
 import { StyledDialogModal } from './ExternalSignInModal.styles'
 import {
@@ -14,56 +18,40 @@ import {
   ModalSteps,
   SignInStepProps,
 } from './ExternalSignInSteps'
-import { ExternalSignInModalStepTemplate } from './ExternalSignInSteps/ExternalSignInModalStepTemplate'
 
 export const ExternalSignInModal: FC = () => {
-  const [currentStep, setCurrentStep] = useState<ModalSteps | null>(null)
-  const [cachedStep, setCachedStep] = useState<ModalSteps>(ModalSteps.Wallet) // keep cached step so that we can keep showing content when modal is in exit transition
+  const [currentStep, setCurrentStep] = useState<ModalSteps>(ModalSteps.Wallet)
   const [primaryButtonProps, setPrimaryButtonProps] = useState<DialogButtonProps>({ text: 'Select wallet' }) // start with sensible default so that there are no jumps after first effect runs
   const [hasNavigatedBack, setHasNavigatedBack] = useState(false)
   const [selectedMembership, setSelectedMembership] = useState<string | null>(null)
+  const [availableMemberships, setAvailableMemberships] = useState<GetMembershipsQuery['memberships'] | null>(null)
   const dialogContentRef = useRef<HTMLDivElement>(null)
-  const { walletStatus } = useWallet()
-  const { signInModalOpen, setSignInModalOpen } = useAuthStore(
-    (state) => ({ signInModalOpen: state.signInModalOpen, setSignInModalOpen: state.actions.setSignInModalOpen }),
+  const form = useForm<{ email: string }>({
+    resolver: zodResolver(
+      z.object({
+        email: z.string().email(),
+      })
+    ),
+  })
+  const { authModalOpenName, setAuthModalOpenName } = useAuthStore(
+    (state) => ({
+      authModalOpenName: state.authModalOpenName,
+      setAuthModalOpenName: state.actions.setAuthModalOpenName,
+    }),
     shallow
   )
-  const walletConnected = walletStatus === 'connected'
-  // handle opening/closing of modal and setting initial step
-  useEffect(() => {
-    if (!signInModalOpen) {
-      setCurrentStep(null)
-      return
-    }
-    if (currentStep !== null) return
-
-    if (walletConnected) {
-      setCurrentStep(ModalSteps.Membership)
-      return
-    }
-    setCurrentStep(ModalSteps.Wallet)
-  }, [signInModalOpen, currentStep, walletConnected])
-
-  // keep cachedStepIdx updated
-  useEffect(() => {
-    if (currentStep != null) {
-      setCachedStep(currentStep)
-    }
-  }, [currentStep])
 
   const goToPreviousStep = useCallback((step: ModalSteps) => {
     setCurrentStep(step)
     setHasNavigatedBack(true)
   }, [])
 
-  const displayedStep = currentStep || cachedStep
-
   // scroll the dialog content to top whenever the displayed step changes
   useEffect(() => {
     if (!dialogContentRef.current) return
 
     dialogContentRef.current.scrollTo({ top: 0 })
-  }, [displayedStep])
+  }, [currentStep])
 
   const renderStep = () => {
     const commonProps: SignInStepProps = {
@@ -72,13 +60,14 @@ export const ExternalSignInModal: FC = () => {
       hasNavigatedBack,
     }
 
-    switch (displayedStep) {
+    switch (currentStep) {
       case ModalSteps.Wallet:
-        return <ExternalSignInModalWalletStep {...commonProps} />
+        return <ExternalSignInModalWalletStep {...commonProps} setAvailableMemberships={setAvailableMemberships} />
       case ModalSteps.Membership:
         return (
           <ExternalSignInModalMembershipsStep
             {...commonProps}
+            memberships={availableMemberships}
             memberId={selectedMembership}
             setMemberId={setSelectedMembership}
           />
@@ -87,7 +76,7 @@ export const ExternalSignInModal: FC = () => {
         return <ExternalSignInModalEmailStep {...commonProps} memberId={selectedMembership} />
       case ModalSteps.Logging:
         return (
-          <ExternalSignInModalStepTemplate
+          <AuthenticationModalStepTemplate
             title="Logginng in"
             subtitle="Please wait while we log you in. This should take about 10 seconds."
             loader
@@ -96,48 +85,63 @@ export const ExternalSignInModal: FC = () => {
         )
       case ModalSteps.ExtensionSigning:
         return (
-          <ExternalSignInModalStepTemplate
+          <AuthenticationModalStepTemplate
             title="Waiting for extension"
             subtitle="Please sign the payload with your extension."
             loader
             hasNavigatedBack={false}
           />
         )
+      case ModalSteps.NoMembership: {
+        return (
+          <AuthenticationModalStepTemplate
+            title="No memberships connected"
+            subtitle="It looks like you don’t have a membership connected to this wallet. Use your email and password to log in."
+            hasNavigatedBack={false}
+          />
+        )
+      }
     }
   }
 
-  const modalButtons =
-    displayedStep === ModalSteps.Logging
-      ? {}
-      : {
-          primaryButton: primaryButtonProps,
-          secondaryButton:
-            displayedStep === ModalSteps.Membership
-              ? { text: 'Back', onClick: () => goToPreviousStep(ModalSteps.Wallet) }
-              : displayedStep === ModalSteps.Wallet
-              ? { text: 'Use email & password' }
-              : undefined,
-          additionalActionsNode: (
-            <Button
-              variant="tertiary"
-              onClick={() => {
-                setSignInModalOpen(false)
-              }}
-            >
-              Cancel
-            </Button>
-          ),
-        }
+  useEffect(() => {
+    if (currentStep === ModalSteps.NoMembership) {
+      setPrimaryButtonProps({
+        text: 'Use email & password',
+        onClick: () => setAuthModalOpenName('logIn'),
+      })
+    }
+  }, [currentStep, setAuthModalOpenName])
+
+  const modalButtons = [ModalSteps.Logging, ModalSteps.ExtensionSigning].includes(currentStep)
+    ? {}
+    : {
+        primaryButton: primaryButtonProps,
+        secondaryButton: [ModalSteps.Membership, ModalSteps.NoMembership].includes(currentStep)
+          ? { text: 'Back', onClick: () => goToPreviousStep(ModalSteps.Wallet) }
+          : [ModalSteps.Wallet, ModalSteps.NoMembership].includes(currentStep)
+          ? { text: 'Use email & password', onClick: () => setAuthModalOpenName('logIn') }
+          : undefined,
+        additionalActionsNode: [ModalSteps.Wallet, ModalSteps.Membership, ModalSteps.Email].includes(currentStep) && (
+          <Button
+            variant="tertiary"
+            onClick={() => {
+              setAuthModalOpenName(undefined)
+            }}
+          >
+            Cancel
+          </Button>
+        ),
+      }
 
   return (
     <StyledDialogModal
       {...modalButtons}
-      show={!!currentStep}
-      dividers
+      show={authModalOpenName === 'externalLogIn'}
       additionalActionsNodeMobilePosition="bottom"
       contentRef={dialogContentRef}
     >
-      {renderStep()}
+      <FormProvider {...form}>{renderStep()}</FormProvider>
     </StyledDialogModal>
   )
 }

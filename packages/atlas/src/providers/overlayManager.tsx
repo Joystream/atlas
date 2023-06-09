@@ -83,9 +83,9 @@ export const useOverlayManager = () => {
 
   const decrementOverlaysOpenCount = useCallback(() => {
     setOverlays((prev) => {
-      return prev.filter((_, i) => i !== prev.length - 1)
+      return prev.filter((id) => id !== overlayId)
     })
-  }, [setOverlays])
+  }, [overlayId, setOverlays])
 
   const clearOverlays = useCallback(() => {
     setOverlays([])

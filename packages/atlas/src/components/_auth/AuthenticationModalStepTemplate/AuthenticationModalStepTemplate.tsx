@@ -21,6 +21,7 @@ type AuthenticationModalStepTemplateProps = PropsWithChildren<{
   loader?: boolean
   hasNavigatedBack: boolean
   darkBackground?: boolean
+  hasNegativeBottomMargin?: boolean
   backgroundImage?: string
   formNode?: ReactNode
 }>
@@ -31,6 +32,7 @@ export const AuthenticationModalStepTemplate: FC<AuthenticationModalStepTemplate
   children,
   loader,
   hasNavigatedBack,
+  hasNegativeBottomMargin,
   darkBackground,
   backgroundImage,
   formNode,
@@ -41,6 +43,7 @@ export const AuthenticationModalStepTemplate: FC<AuthenticationModalStepTemplate
     <>
       <CustomBackgroundContainer
         darkBackground={darkBackground}
+        hasNegativeBottomMargin={hasNegativeBottomMargin}
         hasDivider={!!(backgroundImage || darkBackground)}
         hasBottomPadding={!!(backgroundImage || darkBackground)}
       >

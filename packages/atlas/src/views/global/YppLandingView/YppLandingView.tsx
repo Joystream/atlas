@@ -10,6 +10,8 @@ import { YppReferralBanner } from '@/components/_ypp/YppReferralBanner'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
+import { getCorrectLoginModal } from '@/providers/auth/auth.helpers'
+import { useAuthStore } from '@/providers/auth/auth.store'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useSnackbar } from '@/providers/snackbars'
 import { useUser } from '@/providers/user/user.hooks'
@@ -32,6 +34,9 @@ export const YppLandingView: FC = () => {
   const headTags = useHeadTags('YouTube Partner Program')
   const [currentStep, setCurrentStep] = useState<YppAuthorizationStepsType>(null)
   const { isLoggedIn, activeMembership, channelId } = useUser()
+  const {
+    actions: { setAuthModalOpenName },
+  } = useAuthStore()
   const { setSelectedChannelId, setShouldContinueYppFlow } = useYppStore((store) => store.actions)
   const { displaySnackbar } = useSnackbar()
   const navigate = useNavigate()
@@ -70,8 +75,7 @@ export const YppLandingView: FC = () => {
     }
 
     if (!isLoggedIn) {
-      // todo: login callback
-      // await signIn()
+      setAuthModalOpenName(getCorrectLoginModal())
       setWasSignInTriggered(true)
       return
     }
