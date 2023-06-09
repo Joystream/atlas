@@ -106,13 +106,13 @@ features:
         5. Qualify for additional rewards paid in JOY tokens when other creators sign up to this program, referencing your channel as referrer.
         6. Will remain in the program unless access rights to $VITE_APP_NAME service is revoked from your google account settings, opt out is triggered from YPP dashboard or suspended by the members of JS Genesis team.
 
-          ## How to sign up
+        Rewards are subject to the verified status of the channel, assigned by the program operators.
 
         ## YouTube Partnership Program Terms and Conditions
 
-          Mandatory fields need to be populated to the web input form to progress, such as email, video category, and terms and conditions need to be accepted.
+        ## Who is the program for
 
-          ## How to get rewards
+        The program is targeted at YouTube creators that already have a channel focussed on Crypto and Web3 content, with substantial published videos and subscribers. The program involves compensation in JOY tokens for YouTube creators who choose to opt in, meet the qualification criteria and perform actions that are linked to rewards.
 
         ## YPP Rewards and Key Information
 
@@ -122,13 +122,13 @@ features:
 
         When YouTube creators create Joystream channel app, they get an auto-generated polkadot account assigned to this channel automatically. This account is bound to their channel, and cannot be updated. This account can hold JOY tokens.
 
-          ## Auto-sync service
+        The data collected and recorded in the internal DB with regards to uploaded content and referral stats will be informed with when deriving the cyclical rewards to the participating channels.
 
-          In order to simplify the upload of content to $VITE_APP_NAME App, JS Genesis team has built a dedicated backend application, integrated with YouTube and $VITE_APP_NAME to facilitate the content upload. It is hosted on the JSGenesis operated infrastructure and operated by JS Genesis team.
+        Rewards are paid only for verified channels. Rewards are paid via direct transfers from JS Genesis specific account to the creators' Joystream channel account. Rewards are paid by JS Genesis company, from the funds (tokens) budgeted for the purpose of operational support.
 
         ## Other ways Joystream Channels can get rewards
 
-        Joystream DAO operating model encapsulates rewards for Joystream channels paid out outside of the YouTube Partnership Program. Gleev Operator, JS Genesis AS has no responsibility or control over such mechanisms and they are listed below.
+        Joystream DAO operating model encapsulates rewards for Joystream channels paid out outside of the Youtube Partnership Program. Gleev Operator, JS Genesis AS has no responsibility or control over such mechanisms and they are listed below.
 
         1. Payout Proposal to Channels by DAO Council.
         2. Direct Payment from DAO Working Group Budget by WG Lead.
@@ -140,19 +140,21 @@ features:
 
         From the channel account JOY token can be transferred (withdrawn) to the member account via $VITE_APP_NAME app interfaces or polkadot.js app (calling transfer extrinsic). This transaction must be signed with the membership controller account, that was used to create Joystream channel.
 
-          Only public videos are synced. Videos are synced in resolution of 720px or lower. HD videos will be supported as the program matures. Subtitles synced only in English, and all other languages are not supported at the time of program launch, but will be supported in the future.  The queue of syncing is defined based on the proprietary algorithm developed and maintained by JSGenesis team. It may be updated at any time without prior notice.
+        ## Program Partners Terms and Conditions
 
-          If access of the JSGenesis operated backend app to your YouTube channel is disabled on the side of Google account, then you are automatically opted out from the YPP program and no longer qualify for rewards.
+        If you opt in to the Auto-sync feature you also agree to [YouTube's Terms of Service (https://www.youtube.com/t/terms)](https://www.youtube.com/t/terms) and [Google's Privacy Policy (https://www.google.com/policies/privacy).](https://www.google.com/policies/privacy)
 
         This requests access to the necessary information via YouTube API, namely "read_only" scope to your YouTube channel data. This happens during the authorisation flow as part of the YPP program onboarding. The App fetches only the information that YouTube exposes in the read_only scope and required to effectively operate the program via the open API.
 
-          In case the original YouTube video license was set to Creative Commons, such videos will be assigned CC0 license, allowing all viewers to distribute such videos freely in the public domain, allowing them to be built upon, enhanced and reused by others for any purpose without restrictions.
+        Account Info: email address.
+        Channel Info: name, date created, URL, number of followers, number of comments, number of views, number of videos,
+        Videos info: video titles, videos date uploaded, video subtitles.
 
         If auto-sync service is enabled, it will refetch channel information once every 24 hours, and poll video information once every 30 minutes to detect new uploads and automatically upload them to your $VITE_APP_NAME Channel.
 
-          ## Opt out
+        Only public videos are synced. Videos are synced in resolution of 720px or lower. HD videos will be supported as the program matures. Subtitles synced only in English, and all other languages are not supported at the time of program launch, but will be supported in the future.  The queue of syncing is defined based on the proprietary algorithm developed and maintained by JSGenesis team. It may be updated at any time without prior notice.
 
-          Channel can opt out from auto-sync feature by choosing this option in the settings tab of the YPP dashboard. Opting out from Auto-sync would stop automated upload of all new content published to YouTube channel, but would keep the $VITE_APP_NAME channel in the YPP program, meaning that referral rewards can still be collected.
+        If access of the JSGenesis operated backend app to your YouTube channel is disabled on the side of Google account, then you are automatically opted out from the YPP program and no longer qualify for rewards.
 
         #### Rights of Jsgenesis and Third Party Applications
 
@@ -168,13 +170,13 @@ features:
 
         ## License
 
-          Already uploaded content will remain on the platform but can be deleted by the user at any time.
+        Auto-sync service will read the videos meta-data fields, including title, description, date created, duration, language and license and transfer them to the newly created video on the creators Joystream channel.
 
-          ## Termination
+        In case the original YouTube video license was set to Standard-YouTube-License, such videos will be assigned Joystream-license, limiting the replication and usage of such content without the explicit consent of the author.
 
-          Any channel can be suspended from the program at any time without any disclosure of the reason. The reasons can be for violating the adherence to the content vertical policy, and continuously posting videos that do not match the content expectation/ category requirements.
+        In case the original YouTube video license was set to Creative Commons, such videos will be assigned CC0 license, allowing all viewers to distribute such videos freely in the public domain, allowing them to be built upon, enhanced and reused by others for any purpose without restrictions.
 
-          If the channel is suspended from the program, it can no longer re-apply with the same credentials and can barred indefinitely or for the period to the discretion of JS Genesis team.
+        License can be updated manually for each videos individually from the list of available options.
 
         ## Auto-sync service
 
@@ -184,21 +186,21 @@ features:
 
         Channel can opt out from auto-sync feature by choosing this option in the settings tab of the YPP dashboard. Opting out from Auto-sync would stop automated upload of all new content published to YouTube channel, but would keep the $VITE_APP_NAME channel in the YPP program, meaning that referral rewards can still be collected.
 
-          Manual process is involved, so errors are not inevitable.  JSG team is not liable for any reconciliations, but is committed to spend reasonable efforts to support all participants in reconciliation of rewards calculation where it deems to be operationally viable and commercially sensible to do so.
+        Opting out from the entire program can also be done from the settings tab. This will result the channel marked in the internal data base as "opted-out" and payout calculation for this channel will stop for any activities undertaken.
 
-          JSG team is not liable or obliged to do the payments and in case of errors will seek to provide the support in reconciliation of payments but not be obliged for channel rewards. In case of any disputes over content quality and qualification for rewards, JSG has no liability to compensate the channels and these terms are not binding, but payouts are made on total discretion of the $VITE_APP_NAME App operator and the JS Genesis AS team. In case program budget runs out before some of the apps are paid, there is no obligation to pay late subscribers.
+        Already uploaded content will remain on the platform but can be deleted by the user at any time.
 
-          ## Severability
+        ## Termination
 
-          If any term, clause or provision of these Terms is held invalid or unenforceable, then that term, clause or provision will be severable from these Terms and will not affect the validity or enforceability of any remaining part of that term, clause or provision, or any other term, clause or provision of these Terms.
+        Any channel can be suspended from the program at any time without any disclosure of the reason. The reasons can be for violating the adherence to the content vertical policy, and continuously posting videos that do not match the content expectation/ category requirements.
 
-          ## Limitation of Liability
+        If the channel is suspended from the program, it can no longer re-apply with the same credentials and can barred indefinitely or for the period to the discretion of JS Genesis team.
 
-          The Company and the other Company Parties will not be liable to you under any theory of liability—whether based in contract, tort, negligence, strict liability, warranty, or otherwise—for any indirect, consequential, exemplary, incidental, special or punitive damages or lost profits, even if the Company or the other Company Parties have been advised of the possibility of such damages.
+        ## Disclaimer
 
-          ## Governing Law
+        Your use of our Services is at your sole risk. Our Services are provided “as is" and “as available" without warranties of any kind, either express or implied, including, but not limited to, implied warranties of merchantability, fitness for a particular purpose, title, and non-infringement. In addition, the Company does not represent or warrant that our Services are accurate, complete, reliable, current or error-free. While the Company attempts to make your access to and use of our Services safe, we cannot and do not represent or warrant that our Services or servers are free of viruses or other harmful components. You assume the entire risk as to the quality and performance of the Services.
 
-          Governing law of these terms are the same as the general Terms of Service for $VITE_APP_NAME App as described on [this page](https://gleev.xyz/legal/tos)
+        Manual process is involved, so errors are not inevitable.  JSG team is not liable for any reconciliations, but is committed to spend reasonable efforts to support all participants in reconciliation of rewards calculation where it deems to be operationally viable and commercially sensible to do so.
 
         JSG team is not liable or obliged to do the payments and in case of errors will seek to provide the support in reconciliation of payments but not be obliged for channel rewards. In case of any disputes over content quality and qualification for rewards, JSG has no liability to compensate the channels and these terms are not binding, but payouts are made on total discretion of the $VITE_APP_NAME App operator and the JS Genesis AS team. In case program budget runs out before some of the apps are paid, there is no obligation to pay late subscribers.
 
@@ -318,7 +320,7 @@ content:
       color: '#6E5FEC'
       iconUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/icons/trading.svg'
       coverImgUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/categories/gleev/images/trading.webp'
-      videoCategories: [ '254450-2' ]
+      videoCategories: ['254450-2']
       defaultVideoCategory: '254450-2'
     - id: '11'
       name: 'Crypto art'
@@ -332,7 +334,7 @@ content:
       color: '#48F0B3'
       iconUrl: 'https://atlas-assets.eu-central-1.linodeobjects.com/categories/gleev/icons/education.svg'
       coverImgUrl: 'https://atlas-assets.eu-central-1.linodeobjects.com/categories/gleev/images/education.webp'
-      videoCategories: [ '254423-2' ]
+      videoCategories: ['254423-2']
       defaultVideoCategory: '254423-2'
 
   showAllContent: false # With this disabled, Atlas will display only content from display categories defined above. If you want your app to display all Joystream content, set this to true.
