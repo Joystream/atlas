@@ -10,6 +10,7 @@ import { AdminModal } from '@/components/_overlays/AdminModal'
 import { OperatorsContextProvider } from '@/providers/assets/assets.provider'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
+import { SegmentAnalyticsProvider } from '@/providers/segmentAnalytics/segment.provider'
 import { UserProvider } from '@/providers/user/user.provider'
 import { GlobalStyles } from '@/styles'
 
@@ -34,14 +35,16 @@ export const CommonProviders: FC<PropsWithChildren> = ({ children }) => {
         <QueryClientProvider client={queryClient}>
           <UserProvider>
             <OverlayManagerProvider>
-              <ConfirmationModalProvider>
-                <BrowserRouter>
-                  <AdminModal />
-                  <MaintenanceWrapper>
-                    <OperatorsContextProvider>{children}</OperatorsContextProvider>
-                  </MaintenanceWrapper>
-                </BrowserRouter>
-              </ConfirmationModalProvider>
+              <SegmentAnalyticsProvider>
+                <ConfirmationModalProvider>
+                  <BrowserRouter>
+                    <AdminModal />
+                    <MaintenanceWrapper>
+                      <OperatorsContextProvider>{children}</OperatorsContextProvider>
+                    </MaintenanceWrapper>
+                  </BrowserRouter>
+                </ConfirmationModalProvider>
+              </SegmentAnalyticsProvider>
             </OverlayManagerProvider>
           </UserProvider>
         </QueryClientProvider>

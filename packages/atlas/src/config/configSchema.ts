@@ -146,6 +146,16 @@ export const configSchema = z.object({
         id: z.string().nullable(),
       })
       .nullable(),
+    GA: z
+      .object({
+        id: z.string().nullable(),
+      })
+      .nullable(),
+    segment: z
+      .object({
+        id: z.string().nullable(),
+      })
+      .nullable(),
   }),
   legal: z.object({
     termsOfService: z.string(),
