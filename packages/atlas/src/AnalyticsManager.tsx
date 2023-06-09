@@ -1,5 +1,7 @@
 import ls from '@livesession/sdk'
 import { FC, useCallback, useEffect } from 'react'
+import ReactGA from 'react-ga'
+import { useLocation } from 'react-router-dom'
 
 import { atlasConfig } from '@/config'
 import { BUILD_ENV } from '@/config/env'
@@ -8,6 +10,7 @@ import { usePersonalDataStore } from '@/providers/personalData'
 export const AnalyticsManager: FC = () => {
   const cookiesAccepted = usePersonalDataStore((state) => state.cookiesAccepted)
   const analyticsEnabled = BUILD_ENV === 'production' && cookiesAccepted
+  const location = useLocation()
 
   const initUsersnap = useCallback(() => {
     if (!atlasConfig.analytics.usersnap?.id) return
@@ -36,6 +39,12 @@ export const AnalyticsManager: FC = () => {
     ls.newPageView()
   }, [])
 
+  const initGA = useCallback(() => {
+    if (!atlasConfig.analytics.GA?.id) return
+
+    ReactGA.initialize(atlasConfig.analytics.GA.id)
+  }, [])
+
   // initialize livesession
   useEffect(() => {
     if (!analyticsEnabled) return
@@ -49,6 +58,21 @@ export const AnalyticsManager: FC = () => {
 
     initUsersnap()
   }, [analyticsEnabled, initUsersnap])
+
+  //initialize Google Analytics
+  useEffect(() => {
+    if (!analyticsEnabled) return
+
+    initGA()
+  }, [analyticsEnabled, initGA])
+
+  //track pageview in GA
+  useEffect(() => {
+    if (!analyticsEnabled || !atlasConfig.analytics.GA?.id) {
+      return
+    }
+    ReactGA.pageview(location.pathname)
+  }, [location.pathname, analyticsEnabled])
 
   return null
 }

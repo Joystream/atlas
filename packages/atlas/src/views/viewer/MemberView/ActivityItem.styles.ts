@@ -58,6 +58,9 @@ export const TitleAndDescriptionContainer = styled.div`
 `
 export const Title = styled(Text)`
   word-break: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 export const Thumbnail = styled.img`
   height: 40px;
@@ -88,6 +91,10 @@ export const ThumbnailSkeletonLoader = styled(SkeletonLoader)`
 export const PillSkeletonLoader = styled(SkeletonLoader)`
   width: 40px;
   height: 20px;
+  align-self: flex-start;
+  ${media.sm} {
+    align-self: unset;
+  }
 `
 
 export const TitleSkeletonLoader = styled(SkeletonLoader)`
@@ -106,15 +113,4 @@ export const DescriptionSkeletonLoader = styled(SkeletonLoader)`
 
 export const DateText = styled(Text)`
   text-align: end;
-`
-
-export const DateRow = styled.span`
-  display: inline;
-
-  ${media.sm} {
-    display: block;
-  }
-  ${media.lg} {
-    display: inline;
-  }
 `

@@ -6,6 +6,7 @@ import { AcceptBidDialog } from '@/components/_overlays/AcceptBidDialog'
 import { ChangePriceDialog } from '@/components/_overlays/ChangePriceDialog'
 import { useNftState } from '@/hooks/useNftState'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
+import { hapiBnToTokenNumber } from '@/joystream-lib/utils'
 import { useTokenPrice } from '@/providers/joystream/joystream.hooks'
 import { useUser } from '@/providers/user/user.hooks'
 
@@ -67,6 +68,10 @@ export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
     [closeNftAction, currentAction, currentNftId, isBuyNowClicked, transactions]
   )
 
+  const currentBuyNowPrice =
+    (nft?.transactionalStatus?.__typename === 'TransactionalStatusBuyNow' &&
+      hapiBnToTokenNumber(new BN(nft.transactionalStatus.price))) ||
+    0
   return (
     <NftActionsContext.Provider value={value}>
       <AcceptBidDialog
@@ -78,6 +83,7 @@ export const NftActionsProvider: FC<PropsWithChildren> = ({ children }) => {
         ownerId={nft?.owner.__typename === 'NftOwnerMember' ? nft.owner.member.id : nft?.owner.channel.ownerMember?.id}
       />
       <ChangePriceDialog
+        currentPrice={currentBuyNowPrice}
         isOpen={currentAction === 'change-price'}
         onModalClose={closeNftAction}
         onChangePrice={transactions.changeNftPrice}
