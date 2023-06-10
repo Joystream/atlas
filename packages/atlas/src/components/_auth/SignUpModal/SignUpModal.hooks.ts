@@ -46,6 +46,7 @@ type CreateMemberArgs = {
 export const useCreateMember = () => {
   const { handleLogin } = useAuth()
   const { refetchUserMemberships } = useUser()
+  const [wasMemberCreated, setWasMemberCreated] = useState(false)
   const [emailAlreadyRegisteredMemberId, setEmailAlreadyRegisteredMemberId] = useState('')
   const setAnonymousUserId = useAuthStore((store) => store.actions.setAnonymousUserId)
   const { joystream } = useJoystream()
@@ -74,9 +75,14 @@ export const useCreateMember = () => {
         captchaToken: data.captchaToken,
       }
       const response = await faucetMutation(body)
-      return response.data
+      addBlockAction({
+        targetBlock: response.data.block,
+        callback: () => {
+          setWasMemberCreated(true)
+        },
+      })
     },
-    [avatarMutation, faucetMutation]
+    [addBlockAction, avatarMutation, faucetMutation]
   )
 
   const handleSubmit = useCallback(
@@ -144,8 +150,6 @@ export const useCreateMember = () => {
           return
         }
         const { block, memberId } = await createNewMember(address, data)
-
-        addBlockAction({ targetBlock: block, callback })
       } catch (error) {
         if (error instanceof UploadAvatarServiceError) {
           displaySnackbar({
@@ -214,5 +218,8 @@ export const useCreateMember = () => {
       setAnonymousUserId,
     ]
   )
-  return handleSubmit
+  return {
+    createNewMember,
+    handleSubmit,
+  }
 }

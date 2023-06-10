@@ -122,24 +122,21 @@ export const SignUpModal = () => {
     [goToNextStep]
   )
 
-  const handleMemberFormData = useCallback(
-    (data: MemberFormData) => {
-      setSignupFormData((userForm) => ({ ...userForm, handle: data.handle, avatar: data.avatar }))
-      createMember({
-        data: { ...signUpFormData, ...data },
-        onError: (step) => {
-          goToStep(step)
-          setEmailAlreadyTakenError(true)
-        },
-        onStart: () => goToNextStep(),
-        onSuccess: (amountOfTokens) => {
-          setAmountofTokens(amountOfTokens)
-          goToNextStep()
-        },
-      })
-    },
-    [createMember, goToNextStep, goToStep, signUpFormData]
-  )
+  const handleMemberFormData = useCallback((data: MemberFormData) => {
+    setSignupFormData((userForm) => ({ ...userForm, handle: data.handle, avatar: data.avatar }))
+    // createMember({
+    //   data: { ...signUpFormData, ...data },
+    //   onError: (step) => {
+    //     goToStep(step)
+    //     setEmailAlreadyTakenError(true)
+    //   },
+    //   onStart: () => goToNextStep(),
+    //   onSuccess: (amountOfTokens) => {
+    //     setAmountofTokens(amountOfTokens)
+    //     goToNextStep()
+    //   },
+    // })
+  }, [])
 
   const commonProps: SignUpStepsCommonProps = useMemo(
     () => ({
@@ -191,6 +188,23 @@ export const SignUpModal = () => {
       additionalActionsNodeMobilePosition="bottom"
       contentRef={ref}
     >
+      {currentStep === SignUpSteps.CreateMember && (
+        <SignUpMembershipStep
+          {...commonProps}
+          dialogContentRef={ref}
+          onSubmit={handleMemberFormData}
+          avatar={signUpFormData.avatar}
+          handle={signUpFormData.handle}
+        />
+      )}
+      {currentStep === SignUpSteps.SignUpSeed && (
+        <SignUpSeedStep
+          {...commonProps}
+          onSeedSubmit={handleSeedChange}
+          mnemonic={signUpFormData.mnemonic}
+          confirmedCopy={signUpFormData.confirmedCopy}
+        />
+      )}
       {currentStep === SignUpSteps.SignUpEmail && (
         <SignUpEmailStep
           {...commonProps}
@@ -208,23 +222,7 @@ export const SignUpModal = () => {
           password={signUpFormData.password}
         />
       )}
-      {currentStep === SignUpSteps.SignUpSeed && (
-        <SignUpSeedStep
-          {...commonProps}
-          onSeedSubmit={handleSeedChange}
-          mnemonic={signUpFormData.mnemonic}
-          confirmedCopy={signUpFormData.confirmedCopy}
-        />
-      )}
-      {currentStep === SignUpSteps.CreateMember && (
-        <SignUpMembershipStep
-          {...commonProps}
-          dialogContentRef={ref}
-          onSubmit={handleMemberFormData}
-          avatar={signUpFormData.avatar}
-          handle={signUpFormData.handle}
-        />
-      )}
+
       {currentStep === SignUpSteps.Creating && <SignUpCreatingMemberStep {...commonProps} />}
       {currentStep === SignUpSteps.Success && (
         <SignUpSuccessStep avatarUrl={signUpFormData.avatar?.url || ''} amountOfTokens={amountOfTokens} />

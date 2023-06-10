@@ -1,10 +1,10 @@
 import { ImageInputFile } from '@/components/_inputs/MultiFileSelect'
 
 export enum SignUpSteps {
+  CreateMember,
+  SignUpSeed,
   SignUpEmail,
   SignUpPassword,
-  SignUpSeed,
-  CreateMember,
   Creating,
   Success,
 }
