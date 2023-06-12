@@ -13,6 +13,8 @@ export type MemberFormData = {
   handle: string
   avatar?: ImageInputFile
   captchaToken?: string
+  mnemonic: string
+  confirmedCopy: boolean
 }
 
 export type AccountFormData = {
@@ -20,7 +22,5 @@ export type AccountFormData = {
   password: string
   mnemonic: string
   confirmedTerms: boolean
-  confirmedCopy: boolean
+  memberId: string
 }
-
-export type SignUpFormData = MemberFormData & AccountFormData

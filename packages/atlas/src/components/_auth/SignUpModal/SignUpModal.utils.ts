@@ -50,7 +50,7 @@ export const registerAccount = async (email: string, password: string, mnemonic:
       joystreamAccountId: keypair.address,
       memberId,
       gatewayName: 'Gleev',
-      timestamp: Date.now() - 20_000,
+      timestamp: Date.now() - 30_000,
       action: 'createAccount',
       email,
       encryptionArtifacts: {
